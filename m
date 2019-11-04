@@ -2,99 +2,112 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D86BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:32:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AAE6CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:35:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03694218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:32:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11F22218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:35:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FZhgUCwU"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="ggTtJZfb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfKDIc5 (ORCPT
+        id S1727847AbfKDIfM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:32:57 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33443 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727267AbfKDIc4 (ORCPT
+        Mon, 4 Nov 2019 03:35:12 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:50545 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726633AbfKDIfL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:32:56 -0500
-Received: by mail-wr1-f66.google.com with SMTP id s1so15974802wro.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 00:32:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=XF7J+DG7tWV9RXyc1r5Ixjph12lPvVDvV5bwthUbBEI=;
-        b=FZhgUCwUZX7igZi16yQODx8+KbkHGclBlDJjHYCZxM7KjufVHj1csQ1x5nU3ZRUFHy
-         W6P9jDawE7Aci66askzFeHB+6ipqKGEIDPN2Ki1vkVD8jIZdzdVPPYWAaH9cUTuCQGcu
-         mtMasHpUeWbSaJ5F7hZ/6NQ574mhrl4uqfRZE8El7uTMrRhF5gbGUZYwLU9a5kvxVE/L
-         k4FbZTQzVozpd/OHSfrPOPT/2ZE3nmsKoaKh0pdcsjJFPZUbMDzqQKX+3+8VrIUAWPbz
-         Dh2lV4z13F7IEOp8RrfBBB0mXD8VVMXOiUwDIV2Fvb8GQi4ZrkAH1gqu/gdbTfTKb/bR
-         gbnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=XF7J+DG7tWV9RXyc1r5Ixjph12lPvVDvV5bwthUbBEI=;
-        b=ln9HUcobiSb5Lt75X9DX4pySZye0vBuK9jG0mInL2gBfp0lUkTqvoh1EaNHBBKUXAw
-         A+ek18v2l141t0kY80CymowN6zoxJGDzlxJNuuCj/QXW9ZUi8tOjm4IkiE42ZYWLcoSW
-         zEzdshn+NV1dFPHNTSmmN+ep91SiW7KDgKQQZhxv4qJS3cJSZoTezBBQeuvl4loq9Fxd
-         m8BRBva2dMkXe46RInhnou4BRn2fr8Ydv0PPkGJ9ItbIYDWQcVqz+Z8qy4rAjPEbr0J9
-         V1fCdbjfTr7pAxZyN4R7JhPYDSbU1CFMPcYO5sUAEjPEKcw31jPbZRx7D3VW/EEe4NC2
-         Yqkw==
-X-Gm-Message-State: APjAAAUqodHaq2wgAF8viTIEQYZ2safgaFKZ4Ii/wHJ0Q9owCXhdg2/X
-        VJSL5B2peYNQ5UsRpgnRjKT4+w==
-X-Google-Smtp-Source: APXvYqy3vFTV9LTgmQjmmhjTc6kU9Rr4Y6pS3SE6yuds7uL1u/ShsusG3J537rgd9MSMTZj9mf8vxA==
-X-Received: by 2002:adf:fd08:: with SMTP id e8mr1452202wrr.42.1572856373332;
-        Mon, 04 Nov 2019 00:32:53 -0800 (PST)
-Received: from [192.168.86.166] (83-86-89-107.cable.dynamic.v4.ziggo.nl. [83.86.89.107])
-        by smtp.gmail.com with ESMTPSA id z13sm17303360wrm.64.2019.11.04.00.32.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 00:32:52 -0800 (PST)
-Subject: Re: ALSA: pcm: use dma_can_mmap() to check if a device supports
- dma_mmap_*
-To:     youling 257 <youling257@gmail.com>, Takashi Iwai <tiwai@suse.de>
-Cc:     linux-xtensa@linux-xtensa.org, Michal Simek <monstr@monstr.eu>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        linux-parisc@vger.kernel.org, linux-sh@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Helge Deller <deller@gmx.de>,
-        x86@kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-m68k@lists.linux-m68k.org,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org, hch@lst.de
-References: <CAOzgRdYSaaF6OkXGME2=fn1dfTbpyt_GqEs=10oXH=V6SudfyA@mail.gmail.com>
- <s5himo0cbmm.wl-tiwai@suse.de>
- <CAOzgRdYTa-nAa7QV6c2aZs910BACg91vAjcjw4V-Oy8KCZVmmQ@mail.gmail.com>
-From:   Greg Kroah-Hartman <gregkh@google.com>
-Message-ID: <60ee349a-1fe7-46f0-5161-1dcfcb6fbee9@google.com>
-Date:   Mon, 4 Nov 2019 09:32:50 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Mon, 4 Nov 2019 03:35:11 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA48WDmY020782;
+        Mon, 4 Nov 2019 09:34:49 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type :
+ content-transfer-encoding; s=STMicroelectronics;
+ bh=kUIJgRUYCwvUGrw3/RFfJamPn8ewXorlKg57BCT1g9k=;
+ b=ggTtJZfbLXrpe7IVac3NHsuCCM1T0mR+J5gz2uZVeltPsXpyBplF1EeNGCcOF2MKq+c2
+ AuhouYABvIY1Le9BTCb5rG1SRKg5dG89gUPzd6sOdbfY+guwi6g6l00sc1ViEU6Ft/kj
+ r1+pDVPfGja3agydPg0IsIPnIXC0ojIrVfM9zhehFNm+KfhQTHegYcvmoeR2H1TI9kIN
+ XuyJmV+bJSZFYLCKVzyb/2HiQC1ODqFjMcS4jLGuaAmnYGKX7uBxXqetfmm+xvEhTrDH
+ p62zM52eZdKPnBhKRedpwVkfDZpKNiQ/zxyt+hNtBrj57wh7uCdFIzMHjKJUKVdcsy0W 8Q== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w10f188yn-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 09:34:49 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 346E1100039;
+        Mon,  4 Nov 2019 09:34:47 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 139D12AD33A;
+        Mon,  4 Nov 2019 09:34:47 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 09:34:46 +0100
+Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 09:34:46
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <andrew@lunn.ch>
+Subject: [PATCH  1/1] net: ethernet: stmmac: fix warning when w=1 option is used during build
+Date:   Mon, 4 Nov 2019 09:34:38 +0100
+Message-ID: <20191104083438.8288-1-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <CAOzgRdYTa-nAa7QV6c2aZs910BACg91vAjcjw4V-Oy8KCZVmmQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US-large
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.201.22.222]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 9:27 AM, youling 257 wrote:
- > This driver 
-https://android.googlesource.com/kernel/common/+/refs/heads/android-mainline/drivers/usb/gadget/function/f_audio_source.c
- >
+This patch fix the following warning:
 
-The driver is broken and needs to be fixed.  Please feel free to submit
-patches to AOSP to do so as you can trigger this easily.
+warning: variable ‘ret’ set but not used [-Wunused-but-set-variable]
+  int val, ret;
 
-thanks,
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-greg k-h
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..595af2ec89fb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -175,7 +175,7 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ {
+ 	struct stm32_dwmac *dwmac = plat_dat->bsp_priv;
+ 	u32 reg = dwmac->mode_reg;
+-	int val, ret;
++	int val;
+ 
+ 	switch (plat_dat->interface) {
+ 	case PHY_INTERFACE_MODE_MII:
+@@ -211,8 +211,8 @@ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+ 	}
+ 
+ 	/* Need to update PMCCLRR (clear register) */
+-	ret = regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
+-			   dwmac->ops->syscfg_eth_mask);
++	regmap_write(dwmac->regmap, reg + SYSCFG_PMCCLRR_OFFSET,
++		     dwmac->ops->syscfg_eth_mask);
+ 
+ 	/* Update PMCSETR (set register) */
+ 	return regmap_update_bits(dwmac->regmap, reg,
+-- 
+2.17.1
+
