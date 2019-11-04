@@ -2,153 +2,246 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D547CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:24:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16986CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 328F92084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:24:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB07A20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:28:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572895461;
-	bh=p5oxHkz+XffoiPDUx3sPXwZhyebwSjUMDL1jJ/lAveA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nk7TGzIZwzoADrR2rOSW/epmrowLbZtFjrwO+8o2QeQa/fAK0YAklVAz/g2/kXDwl
-	 2Eh3pKiOqtepmZ6bxWYSxthC/oQT60a1VnfbIi7qAFs7YC1eenWn9ckpGLPIBWokG7
-	 75UHt+y1RUlLnwkMu1dtNPTI41Ol1hmEzp/Fvc5A=
+	s=default; t=1572895697;
+	bh=pt68eIojioAlUvFfemW0bhMdFB6WrpOnQ3bfAPgc+AE=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=TRHCMBECafvX6rj/8UrYBnm9LgX3EpCAH8QpYzOPg+s24pj1H5nKuTxfx+Qa9rrbx
+	 8TcrvTwdd3keAY+jVj7FBalaP0/wS5oDuNdGrSmPj5LjBOpCkZkmCk6g+UenYhJnE3
+	 Db9H21aK1+ntvn4h7pTI/THkxQ0QJ3OwYnOdxVnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729455AbfKDTYT (ORCPT
+        id S1729393AbfKDT2P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:24:19 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37206 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbfKDTYT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:24:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=14g9oyYQ5ejwP+HUIBS3ppdCvtef/yyJ/Ou2n23wvc8=; b=DaH6+BIfshQ0a09JXhFX+7+Ve
-        ocWCl5jQjr0NcdEy7TAyfTb4PkflhPzkycnSRVOxppcwKPJgCThtZXdwIC+3UW5otE5O93Wbp9uo+
-        RFJ4CMQU7IT9Tqv/kQCjkrtpLI2UgDhQhr51Zq28U63aFosnxyo8xS13oNy1rZLN2mdes=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iRhxR-00030B-2u; Mon, 04 Nov 2019 19:24:09 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 6231A274301E; Mon,  4 Nov 2019 19:24:06 +0000 (GMT)
-Date:   Mon, 4 Nov 2019 19:24:06 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        xuejiancheng@hisilicon.com, fengsheng5@huawei.com
-Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-Message-ID: <20191104192406.GH5238@sirena.co.uk>
-References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
- <1572886297-45400-3-git-send-email-john.garry@huawei.com>
+        Mon, 4 Nov 2019 14:28:15 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52714 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728174AbfKDT2P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:28:15 -0500
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B58E1214E0;
+        Mon,  4 Nov 2019 19:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572895693;
+        bh=pt68eIojioAlUvFfemW0bhMdFB6WrpOnQ3bfAPgc+AE=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=OHylc50Pr11p+2uQI16beu7RqPEN8j4u8nB+YbPjZry2BCythROALHQEXKIb8IPSN
+         /Ij2uXFw+35axNKhT6zFtzyKo37OrhG0VFXIAE/5dQKVTQPyjVQFZB1YYKczqa1ISu
+         MVf6vW4xhhlmJQCidTtoULrO1iQdOxq5gsq5nelA=
+Received: by mail-qk1-f178.google.com with SMTP id m16so18425681qki.11;
+        Mon, 04 Nov 2019 11:28:13 -0800 (PST)
+X-Gm-Message-State: APjAAAWKJhBUfqMaHNmoGPIOxnLbtrJ2fSSNUOC0biSxAj4XiQ53hV8l
+        EIZyLB0zId4WU6G4epKvhxWs16j6/EpYytt+TA==
+X-Google-Smtp-Source: APXvYqxIWjhlyQXoP3/EhmDYLOTpQ0t5Ybm7/5yMCKcuYQv/HF1ACIGPrPRERHamqHnNZnSGK9XiatayZOOA+FooTyk=
+X-Received: by 2002:a37:f703:: with SMTP id q3mr24413885qkj.254.1572895692687;
+ Mon, 04 Nov 2019 11:28:12 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="Rn7IEEq3VEzCw+ji"
-Content-Disposition: inline
-In-Reply-To: <1572886297-45400-3-git-send-email-john.garry@huawei.com>
-X-Cookie: This page intentionally left blank.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <cover.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <0182df3c49c6c804ee20ef32fc4b85b50ff45fca.1571915550.git.matti.vaittinen@fi.rohmeurope.com>
+ <ed0b2aa8-8a70-0341-4ecf-8959f37c53bd@ti.com> <5c793f1308ccc6e787260b64fe6a875a8d0eb9d0.camel@fi.rohmeurope.com>
+ <20191029193440.GA1812@bogus> <3e0f0943cd599cae544bd7a7a49dded46d57a604.camel@fi.rohmeurope.com>
+ <CAL_JsqJgnYqv1q=wf++5FOX-niRWQ=H9wWYgUKy+z=H933Qraw@mail.gmail.com>
+ <1e3901d1c7c26f4dbbc1de78b607b92bf9ddc098.camel@fi.rohmeurope.com>
+ <CAL_JsqJ6kmZyfXtZy_gz_6sxgK2CTXKTcpARkaf462QiwJXYZA@mail.gmail.com> <a8acd74fa9c6abc8c2daea9f016d035a1ef87b02.camel@fi.rohmeurope.com>
+In-Reply-To: <a8acd74fa9c6abc8c2daea9f016d035a1ef87b02.camel@fi.rohmeurope.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Mon, 4 Nov 2019 13:28:01 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqLWMfmRkxJr1NLi1FkHBO-NZR=ycq6kjbFpjNNM6mOV8g@mail.gmail.com>
+Message-ID: <CAL_JsqLWMfmRkxJr1NLi1FkHBO-NZR=ycq6kjbFpjNNM6mOV8g@mail.gmail.com>
+Subject: Re: [RFC PATCH v2 02/13] dt-bindings: mfd: Document ROHM BD71828 bindings
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "broonie@kernel.org" <broonie@kernel.org>,
+        "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Nov 1, 2019 at 7:52 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+>
+>
+> On Thu, 2019-10-31 at 12:50 -0500, Rob Herring wrote:
+> > On Thu, Oct 31, 2019 at 7:54 AM Vaittinen, Matti
+> > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > >
+> > > On Wed, 2019-10-30 at 14:22 -0500, Rob Herring wrote:
+> > > > On Wed, Oct 30, 2019 at 3:27 AM Vaittinen, Matti
+> > > > <Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> > > > > On Tue, 2019-10-29 at 14:34 -0500, Rob Herring wrote:
+> > > > > > On Fri, Oct 25, 2019 at 05:49:17AM +0000, Vaittinen, Matti
+> > > ...which brings me here. I looked at the
+> > > Documentation/devicetree/bindings folder and did read the 'writing-
+> > > bindings.txt' and 'submitting-patches.txt' from there. Then I also
+> > > checked the Documentation/devicetree/usage-model.txt None of which
+> > > helped me out. I did also open the 'writing-schema.rst' but I
+> > > didn't
+> > > read it carefully enough. Probably because I thought after reading
+> > > the
+> > > opening chapter that this described how to do actual dts in yaml.
+> >
+> > Things are a bit scattered around I'll admit. I feel like we need a
+> > 'start here', but the challenge is people have different starting
+> > points.
+>
+> cross-referencing? =)
+>
+> I guess that if yaml is what is expected to be used as patch format,
+> then we should probably mention this in submitting-patches.txt and
+> writing-bindings.txt.
 
---Rn7IEEq3VEzCw+ji
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+I've actually added that to submitting-patches.txt already and
+checkpatch.pl now warns for non-schema bindings. Both are pending for
+5.5.
 
-On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
+> Actyually, I think that writing-bindings.txt
+> could be combined with writing-schema.rst - they are about the same
+> thing, right?
 
-> Only ACPI firmware is supported.
+Not really. writing-bindings.txt is about how to design bindings. It's
+the DO's and DON'Ts that I give in review comments over and over and
+over. Mostly an attempt to ensure I'm saying things that are
+documented somewhere. Probably need to come up with better names, but
+naming is hard(TM).
 
-There's no ACPI dependency though?  If the driver only works with ACPI
-I'd expect to see one with an || COMPILE_TEST like the architecture
-dependency.
 
-> @@ -0,0 +1,287 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets
-> + *
+> > > > There is some notion to convert the DT spec to schema and then
+> > > > generate the spec from the schema. Take properties, their type,
+> > > > and
+> > > > descriptions and put that back into tables for example. Would
+> > > > love to
+> > > > have someone work on that. :)
+> > >
+> > > I am glad to hear you have developed / are developing such tooling.
+> >
+> > TBC, I have not and am not. It's just an idea. There's been nothing
+> > done beyond experimenting if rST could be embedded into yaml.
+> >
+> > > I
+> > > really appreciate it. What comes to giving a helping hand - I'd
+> > > better
+> > > to stick the simple C drivers for now ;) But if I ever get the
+> > > feeling
+> > > that I don't know what to do I'll keep this in mind :] Let me do
+> > > some
+> > > calculus... Only 11 years and my youngest son will probably leave
+> > > our
+> > > house - do you think 2030 is a bit too late? Just let me know if
+> > > this
+> > > is still relevant then - and I'll buy you a beer or write a tool
+> > > (of
+> > > some kind) xD
+> >
+> > I've scheduled you in for 2030. :)
+>
+> Fine. Let's see if it is a beer or a tool then :]
+>
+> > > Meanwhile... I have tried to convert the BD71828 DT doc from the
+> > > RFC
+> > > patch to yaml - and I am having hard time. Especially with the
+> > > regulators node - which I would like to place in
+> > > Documentation/devicetree/bindings/regulator/rohm,bd71828-
+> > > regulator.yaml
+> > >
+> > > My problem is the
+> > > regulators {
+> > > buck1: BUCK1 {
+> > >                     regulator-name = "buck1";
+> > >                     regulator-min-microvolt = <500000>;
+> > >                     regulator-max-microvolt = <2000000>;
+> > >                     regulator-ramp-delay = <2500>;
+> > >                     rohm,dvs-runlvl-ctrl;
+> > >                     rohm,dvs-runlevel0-voltage = <500000>;
+> > >                     rohm,dvs-runlevel1-voltage = <506250>;
+> > >                     rohm,dvs-runlevel2-voltage = <512500>;
+> > >                     rohm,dvs-runlevel3-voltage = <518750>;
+> > >                     regulator-boot-on;
+> > >     };
+> > >     ...
+> > > };
+> > > node which only contains BUCKX and LDOX sub-nodes. It has no own
+> > > properties.
+> > >
+> > > From MFD yaml I did try:
+> > >
+> > >   regulators:
+> > >     $ref: ../regulator/rohm,bd71828-regulator.yaml
+> > >     description:
+> > >       List of child nodes that specify the regulators.
+> > >
+> > > and in rohm,bd71828-regulator.yaml
+> > >
+> > > I tried doing:
+> > >
+> > > patternProperties:
+> > >   "^BUCK[1-7]$":
+> > >     type: object
+> > >     description:
+> > >       Properties for single regulator.
+> > >     properties:
+> > >         ...
+> > >
+> > > but this fails validation as properties: is not given.
+> > >
+> > > [mvaittin@localhost linux]$ dt-doc-validate
+> > > Documentation/devicetree/bindings/regulator/rohm,bd71828-
+> > > regulator.yaml
+> > > /home/mvaittin/torvalds/linux/Documentation/devicetree/bindings/reg
+> > > ulat
+> > > or/rohm,bd71828-regulator.yaml: 'properties' is a required property
+> > >
+> > > If I try and add:
+> > >
+> > > properties:
+> > >   foo: true
+> > >
+> > > patternProperties:
+> > >     "^BUCK[1-7]$":
+> > >       type: object
+> > >       description:
+> > >         Properties for single regulator.
+> > >       properties:
+> > >         ...
+> >
+> > That's a case of needing to adjust the meta-schema (the schema that
+> > checks the schemas). It's a bit overly restrictive just to try to
+> > contain what's allowed. I've fixed it now. Update dtschema and it
+> > should work now.
+>
+> Thanks. At least the make dt_binding_check passed now. dt-doc-validate
+> is not able to locate the regulator.yaml and errors out - but it does
+> no longer complain about missing 'properties:'.
 
-Please make the entire comment a C++ one for neatness.
+Either look at how Kbuild calls dt-doc-validate or just use 'make
+dt_binding_check'. (It needs the base path to the schema passed in.)
 
-> + * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
-> + * Author: John Garry <john.garry@huawei.com>
-> + */
-> +//#define DEBUG 1
-
-Please remove this.
-
-> +#define GLOBAL_CFG (0x100)
-> +
-> +#define BUS_CFG1 (0x200)
-> +#define BUS_CFG2 (0x204)
-> +#define BUS_FLASH_SIZE (0x210)
-> +
-> +#define VERSION (0x1f8)
-
-These could use some namespacing, especially the last one - it seems
-quite likely there'll be some collisions at some point.
-
-> +#define HISI_SFC_V3XX_WAIT_TIMEOUT_US		1000000
-> +#define HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US	10
-
-Plus if we've got these long prefixes here it'd be good to be
-consistent.
-
-> +	if (IS_ALIGNED((uintptr_t)to, 4)) {
-> +		int words = len / 4;
-> +
-> +		__ioread32_copy(to, host->regbase + CMD_DATABUF(0), words);
-> +
-> +		len -= words * 4;
-> +		if (len) {
-> +			u32 val;
-> +
-> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
-> +
-> +			to += words * 4;
-> +			for (i = 0; i < len; i++, val >>= 8, to++)
-> +				*to = (u8)val;
-> +		}
-> +	} else {
-> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
-> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
-> +			int j;
-
-The more usual pattern for these would be to do some unaligned accesses
-for the start/end of the buffer to get to alignment and then transfer
-the rest as aligned data.
-
---Rn7IEEq3VEzCw+ji
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3AetUACgkQJNaLcl1U
-h9AUDggAhbUOC9Q2ExVskNhuRVMVMw5Xq0UlE6+60CYcvZfy1w/TQvgxMcP5764e
-+EhXHAQ8BZ+JleaTtcuIoAg7OyBF1OOTQLEsSJ5AE5UOidvK1ft1Pud5D5rIXgYK
-kUxszOb2BCfW/rZMaLiKB2ydw1o1TsUEH76COG9+J8rVnLoLC/BwcMat7DVFtnPW
-orgevaNjPRUzmWOb7HuSziDLA+okmX+nLF+buquH1LR585JXMbTJd+1cgDk0aJFx
-bojmWsK0E1Ra52pwKO7qFdJS9mIzFN6GOVUqT47XhZm3BVmUkTHiugVun+AKT7el
-YpZbCCyYdb2H27r96NdBA3Ns3o/fJg==
-=PHLm
------END PGP SIGNATURE-----
-
---Rn7IEEq3VEzCw+ji--
+Rob
