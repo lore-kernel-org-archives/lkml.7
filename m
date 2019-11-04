@@ -8,61 +8,61 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95E1DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 424E4CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C3A521E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 11BB2217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:01:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FaSodyjq"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WW2g8g9k"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728624AbfKDPBD (ORCPT
+        id S1728812AbfKDPBP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:01:03 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52933 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727788AbfKDPBD (ORCPT
+        Mon, 4 Nov 2019 10:01:15 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46273 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfKDPBP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:01:03 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c17so9664259wmk.2;
-        Mon, 04 Nov 2019 07:01:01 -0800 (PST)
+        Mon, 4 Nov 2019 10:01:15 -0500
+Received: by mail-wr1-f65.google.com with SMTP id b3so11691434wrs.13
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:01:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BT9YBqZKiz2HvVHCMcbm7iccT4OKFPOob8w/3y/w+v0=;
-        b=FaSodyjqCmumV/TI2UFoHmOMF5dU8qpXnDR/6g8ZCMlTjZxbIOUmDoeb1AnVwHanzy
-         rl7SRzfoYF3NBlcUcKzef1i8DuJfgIPjKfisMn7spZcGTjOT/pMsHSuf5EjtALtPTPBc
-         pqM/DvR9Fmi5yx0vX8O3R0Pik/x2sudIzNUh31s8yn59geRGi/mlbJSq+ZMEHOf4S62g
-         E0WI2oRnHdGK7kCjDvn3xD9k3c4Kg8OKX0tl86VfnEXtQugQg7kaMP1CkVOVprtdimRy
-         PXdspFR7bbRdkQr1FMUIKkQ6+rYBZxaSkA0BvbM0IGMAZwqMk7V5r4W5ZkJhDy/DuIrG
-         qTJQ==
+        bh=D1ClJD7qHHTGYOoAGZcm92C1EBgrR1Y66qzK4bPRJVg=;
+        b=WW2g8g9kjHYD6d7n9gPACYe4sD8R00xk11RgzesniVwm3iVvFcjFHCGmNYtIgCZ26F
+         dzIqT0+CW38uzIfOQk+JTPeLpfxM3xq1jf9HAArYobKNo8h4sJaHF2zumnOhwZgt5IWT
+         9mJ7AXQIhShah0Tmxo8Wt/b79r38/Rj/UimJkbyfUHv0BGBvO/OaxlaRj0wRcWRNjhQs
+         DwVA0uDvPEW3r8fQvZgePAQYUZAjrp0McYyQvKFnPPDAMgP87Gv+ApkLh3yDM5zwyNfS
+         ofHLGCc538ZXVwinSZoE4TkddzX5nJsL/VC8b9cq4NmZedekeCWozjO7n4gmaqBDRXkP
+         EBdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=BT9YBqZKiz2HvVHCMcbm7iccT4OKFPOob8w/3y/w+v0=;
-        b=Ygmsa0ONSMksV7Hr987DGXt1tbV6vLvPlQpeCxRylwFz0aZEJTeVnpG3oTJJVSj4+t
-         85aXT3DxZKNHAtU6avdZdvrIFI5A34lCsTPAS/r99K/cUp78+cAaKm99TfjR1tj7cv2Y
-         C1A5X7V0AENR/s/BYH6QESjgODUYRT6ZnaoaDM6pAn063eGL/cKYG+eTDeiWHRqmOl1U
-         O9L8T+CZp2/sk3rdRjLxdOu4sNb3FJyA8q66gHApNCIa60WGptLj8FWmYuNjt1Y/4wz9
-         YulshQ3CoEzy9arkWju9bQZl3XhlO4zRGNOX8daU9xJfzVTh9WWsThtjf7Pe4NI10BQ6
-         2dLQ==
-X-Gm-Message-State: APjAAAVoSYw1Naq9X9lDogATDk+7lSqtzgFAYIPosX2B16nzYsRAaIS1
-        8Hp/0L8qpIrpYa19y+kzaQtFG8UnxXA=
-X-Google-Smtp-Source: APXvYqywGRSQBr9zY0NjGjdjmaAK99TtLJdTvgBXgMEVATksrpdgAlZ/2mjRQBlZqUAt6uzAJOlOPw==
-X-Received: by 2002:a7b:c84b:: with SMTP id c11mr16963467wml.158.1572879660689;
-        Mon, 04 Nov 2019 07:01:00 -0800 (PST)
+        bh=D1ClJD7qHHTGYOoAGZcm92C1EBgrR1Y66qzK4bPRJVg=;
+        b=ZhOZ/w+7jGY1RnosA0TwlGzjOCdzJH5T4pYDfrq1jTfmAczyhsdY82/Ksm/zH884NR
+         9ISk31LPbNfEjYLLK6OCm2jZvPJH3hLmJ/Jo7btJP7bLIOGLpKKEO2oRv0OSi6xV0CkI
+         EIjliNcJBj/KAY1paYrV53j+Wa6B6IkX6j7aLULGKlAwGFeDwc/WUwhlWjEsabgaTf1L
+         JfEOnfMp/uWYWkrdjpfQSojjfQIcW/ZhQxzlbOfw2Ix/j2lIuqgmNCKWoZmzMf/f7GxN
+         gLitX3lejJouMHo2j0JobSmW3+zssd9NKxfLE7k5x1SvNy5bj61FF1oSEi4hownAMZj0
+         Q+AQ==
+X-Gm-Message-State: APjAAAXyfcJ4PxwJc2C9CI6eKCu0l0xRGzDEEv2HjEaLNSODYXgauIKd
+        W+tEJCtY9Sc1GFhoLCOyh/EKapJahPk=
+X-Google-Smtp-Source: APXvYqxedQjBcxaxhbDh/Nq/GJR9l/4UGh09Sup0C7VI37910lKIQapWqqBVFJoZYIKdcfWwmEEf9Q==
+X-Received: by 2002:a5d:5262:: with SMTP id l2mr22100564wrc.113.1572879673073;
+        Mon, 04 Nov 2019 07:01:13 -0800 (PST)
 Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id o25sm21377302wro.21.2019.11.04.07.00.57
+        by smtp.gmail.com with ESMTPSA id l18sm21808043wrn.48.2019.11.04.07.01.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 07:01:00 -0800 (PST)
+        Mon, 04 Nov 2019 07:01:12 -0800 (PST)
 From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] i2c: hix5hd2: add missed clk_disable_unprepare in remove
-Date:   Mon,  4 Nov 2019 23:00:48 +0800
-Message-Id: <20191104150049.6366-1-hslester96@gmail.com>
+Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] phy: cadence: sierra: add missed clk_disable_unprepare in remove
+Date:   Mon,  4 Nov 2019 23:01:02 +0800
+Message-Id: <20191104150102.6424-1-hslester96@gmail.com>
 X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -77,21 +77,21 @@ Add a call to clk_disable_unprepare to fix it.
 
 Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
 ---
- drivers/i2c/busses/i2c-hix5hd2.c | 1 +
+ drivers/phy/cadence/phy-cadence-sierra.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i2c/busses/i2c-hix5hd2.c b/drivers/i2c/busses/i2c-hix5hd2.c
-index 8497c7a95dd4..224f830f77f9 100644
---- a/drivers/i2c/busses/i2c-hix5hd2.c
-+++ b/drivers/i2c/busses/i2c-hix5hd2.c
-@@ -477,6 +477,7 @@ static int hix5hd2_i2c_remove(struct platform_device *pdev)
- 	i2c_del_adapter(&priv->adap);
- 	pm_runtime_disable(priv->dev);
- 	pm_runtime_set_suspended(priv->dev);
-+	clk_disable_unprepare(priv->clk);
+diff --git a/drivers/phy/cadence/phy-cadence-sierra.c b/drivers/phy/cadence/phy-cadence-sierra.c
+index de10402f2931..81a987ca54a5 100644
+--- a/drivers/phy/cadence/phy-cadence-sierra.c
++++ b/drivers/phy/cadence/phy-cadence-sierra.c
+@@ -291,6 +291,7 @@ static int cdns_sierra_phy_remove(struct platform_device *pdev)
+ 	struct cdns_sierra_phy *phy = dev_get_drvdata(pdev->dev.parent);
+ 	int i;
  
- 	return 0;
- }
++	clk_disable_unprepare(phy->clk);
+ 	reset_control_assert(phy->phy_rst);
+ 	reset_control_assert(phy->apb_rst);
+ 	pm_runtime_disable(&pdev->dev);
 -- 
 2.23.0
 
