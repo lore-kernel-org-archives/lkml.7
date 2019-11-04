@@ -2,83 +2,81 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B85E1CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:20:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C20CCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE90A20578
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:20:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="zpgn0jd0"
+	by mail.kernel.org (Postfix) with ESMTP id 321EE20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729578AbfKDSUt (ORCPT
+        id S1729593AbfKDSVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:20:49 -0500
-Received: from mx1.cock.li ([185.10.68.5]:45545 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728216AbfKDSUt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:20:49 -0500
+        Mon, 4 Nov 2019 13:21:11 -0500
+Received: from imap1.codethink.co.uk ([176.9.8.82]:53875 "EHLO
+        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728216AbfKDSVK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 13:21:10 -0500
+Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
+        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
+        id 1iRgyS-0007QC-RG; Mon, 04 Nov 2019 18:21:08 +0000
+Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
+        (envelope-from <ben@rainbowdash.codethink.co.uk>)
+        id 1iRgyS-00068u-E8; Mon, 04 Nov 2019 18:21:08 +0000
+From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+To:     linux-kernel@lists.codethink.co.uk
+Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] byteorder: fix warning due to type mismatch in be32 array code
+Date:   Mon,  4 Nov 2019 18:21:07 +0000
+Message-Id: <20191104182107.23568-1-ben.dooks@codethink.co.uk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
-        t=1572891647; bh=qkasHMBgDg6iO9CdM753A+3VB9fjbontl7Ks74KCzHQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=zpgn0jd0OM1+tU9z9WbPzXHm7DY/ZofYqNa6vB9GKdL6Hl5MAw5DcF1Frza0BzAma
-         j9i/22gMKw3+mEb2cz6mc2r0ISF+zmT31PgWqeUWuwTSB+R4wmZv+tvdXQWxHOUGXV
-         Uy4bEDbixSIbih0RQhiYD2ggvY68E5HhxdjIhJXSfX5KRVzNjW4GC8ZTqFcQQafavu
-         0O8XqUh8LKopkXEd7i5CymLbeICQzl/RZ+f/Uixfui2S0JoQAbMG+R6f2lmk9N3u88
-         puVO81ZlyO8QYF2WYBIdzjb70u0WBBtbUQvgodlUCUE8Xmox/mgBq6YcOidrJebsfD
-         YeEWYAVtslV+A==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Nov 2019 18:20:46 +0000
-From:   nipponmail@firemail.cc
-To:     linux-kernel@vger.kernel.org
-Cc:     ruben@mrbrklyn.com, mrbrklyn@panix.com
-Subject: Re: Will no-one sue GrSecurity for their blatant GPL violation (of
- GCC and the linux kernel)? - He is violating, but you can also rescind the
- license
-In-Reply-To: <E1iRgHg-0007e0-Gd@fencepost.gnu.org>
-References: <b0668893d6fbfeca10a724e1c5846e92@firemail.cc>
- <E1iRgHg-0007e0-Gd@fencepost.gnu.org>
-Message-ID: <217b99f456fb178603a9cece07a7d8ee@firemail.cc>
-X-Sender: nipponmail@firemail.cc
-User-Agent: Roundcube Webmail/1.3.6
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-You do know, correct?, that the Copyright holder can simply rescind the 
-license if he is displeased with the way the licensee is behaving - 
-since the license is not supported by a contract.
+The loop should use a "size_t" as the len parameter is a size_t which
+should silence the following warning:
 
-The licensee would then rush to the Federal Court in his district to 
-seek a declaratory judgement regarding his rights, and then you're in a 
-diversity and federal-question suit.
+./include/linux/byteorder/generic.h:195:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘unsigned int’} [-Wsign-compare]
+./include/linux/byteorder/generic.h:203:16: warning: comparison of integer expressions of different signedness: ‘int’ and ‘size_t’ {aka ‘unsigned int’} [-Wsign-compare]
 
-But that is an option where the licensee paid no consideration for the 
-non-exclusive licensee grant (and no: obeying a pre-existing legal duty 
-is not sufficient for consideration)
+Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+---
+Cc: linux-kernel@vger.kernel.org
+---
+ include/linux/byteorder/generic.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-I would like to note that in the Kasner(sp)? decision in the 9th circuit 
-the uneducated like to bandy about; the Artistic License was found NOT 
-to be a contract but a simple copyright license.
+diff --git a/include/linux/byteorder/generic.h b/include/linux/byteorder/generic.h
+index 4b13e0a3e15b..c9a4c96c9943 100644
+--- a/include/linux/byteorder/generic.h
++++ b/include/linux/byteorder/generic.h
+@@ -190,7 +190,7 @@ static inline void be64_add_cpu(__be64 *var, u64 val)
+ 
+ static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
+ {
+-	int i;
++	size_t i;
+ 
+ 	for (i = 0; i < len; i++)
+ 		dst[i] = cpu_to_be32(src[i]);
+@@ -198,7 +198,7 @@ static inline void cpu_to_be32_array(__be32 *dst, const u32 *src, size_t len)
+ 
+ static inline void be32_to_cpu_array(u32 *dst, const __be32 *src, size_t len)
+ {
+-	int i;
++	size_t i;
+ 
+ 	for (i = 0; i < len; i++)
+ 		dst[i] = be32_to_cpu(src[i]);
+-- 
+2.23.0
 
-Also in the lower-court (California) Artifex decision the court didn't 
-even identify the "GPL" correctly, conflating it with the 
-offer-to-do-paying-bushiness preliminary writing (pay us, or accept the 
-GPL), but the court then allowed the Copyright holder to choose which 
-theory to go ahead with: Contract damages for the price of the 
-proprietary license OR pure Federal Copyright damages under the GPL 
-(because the GPL is not a contract: it's only a license. If the court 
-found it to be a contract it would limit the recovery to contract 
-damages under state law: which is WHY in Kasner the violator wanted the 
-Artistic license to be deemed a contract: damages of 0 (free))
-
-However, GrSecurity is violating the GPL so you can just sue for 
-Copyright damages off the bat (as my other 2 posts quickly explain, I 
-haven't repeated the arguments here).
