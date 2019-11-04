@@ -2,85 +2,137 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D923FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:20:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05343CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:21:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9D3E2053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:20:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572870018;
-	bh=q+5CsE1R6eI+gms5EsuP+pT+In6Ccjn15PiekdN1X3w=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jSy2j9xwtX0gLq4vUhmw5Ejwn5FW4AYuHqXOvqsZ4wUi830mkuj+BHXbq5IrUZl1c
-	 K3JKP7la+ifsET+7vJQOA+lcZ3hjE65reiSqSxnnhiAtEMH2rVoRuEg2Sj11ZMFoeL
-	 cSsgq6SluEk8KiKrjmCYTq0I5ebLqCkyZHwvvdiM=
+	by mail.kernel.org (Postfix) with ESMTP id D339621E6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:21:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728669AbfKDMUR (ORCPT
+        id S1728619AbfKDMV4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:20:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47618 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 07:21:56 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:56156 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbfKDMUR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:20:17 -0500
-Received: from localhost (unknown [89.205.135.36])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1726100AbfKDMV4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:21:56 -0500
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com [209.85.128.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC8432053B;
-        Mon,  4 Nov 2019 12:20:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572870016;
-        bh=q+5CsE1R6eI+gms5EsuP+pT+In6Ccjn15PiekdN1X3w=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tck1HNmfadKcdco76MQiYsj1JnAksj3ANetsIpltNpINg+G5q2mzdd3IqdvBRp84F
-         E3TBLS50w9Nwra2GEQqlUhwhjW/miSJmo+v0Ee5VDTT1mdryav6ax9d3DQovhPE3zy
-         1ZNc9UmyDmQ29N2ChbncKf7RzXxcTaYNnpmdqndc=
-Date:   Mon, 4 Nov 2019 13:20:09 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Jack Ping CHNG <jack.ping.chng@intel.com>
-Cc:     devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, davem@davemloft.net,
-        andriy.shevchenko@intel.com, mallikarjunax.reddy@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v1] staging: intel-dpa: gswip: Introduce Gigabit Ethernet
- Switch (GSWIP) device driver
-Message-ID: <20191104122009.GA2126921@kroah.com>
-References: <03832ecb6a34876ef26a24910816f22694c0e325.1572863013.git.jack.ping.chng@intel.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id BD83D3DD47
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 12:21:55 +0000 (UTC)
+Received: by mail-wm1-f70.google.com with SMTP id z5so6073259wma.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 04:21:55 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SnAmxt67QITd4idD27zmFwQoIn//FDiJRgfk5w70PuY=;
+        b=diGRn4xFazAxJb6Fvtq8N6qN7F9+qYpjRUYF32eSU7f4uTvHLYYLjtqAC8iyxN6s1x
+         8a7O7nVgc9kG/zQWFyAYRMzdl9eaA0x02eyPqUzhN7u8YqZTydlOrrkqt0eYc5warXTB
+         Sqj7FtM5P/ytZeBE6h50QIFpNo6WLE1fKP1bikMh9hSWOZdlkgo3OGx+u0e4ifQQXGLu
+         uBdJOGMRBBRADNlL9Sozc06bcCN0V39+3jdnIrbEREjR+ayhTtklrc7xlRLGP2pqzTY6
+         as7o9zahLxQ158OtNiXYz0eeU04yEe18KiOjk5VN1DVo4DRKa0rZxQcGDggH4Rk8RRAZ
+         IFlg==
+X-Gm-Message-State: APjAAAUUDTwfsLJC5PeBzFrY/Cgz9Vo9bTl+3oiDfeaObZC3BRNBk0Px
+        xmhqABQNhdoKWqKTqdDwWv8oNlz3whgs7U9l4m8Qv3Ps8RFBGCfyoPkMXR+6qsK6pn4HacNymov
+        Rm+wRe1jAjcPndyIxpnPz6xtI
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr21810270wrq.255.1572870114414;
+        Mon, 04 Nov 2019 04:21:54 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxPxprR782mRFbAmu9nXhQC8TRKYPA9z8jPOZPgx02pyqcnrKyzrWeITE3wZWZoKj7oiPfd5w==
+X-Received: by 2002:a5d:4612:: with SMTP id t18mr21810251wrq.255.1572870114117;
+        Mon, 04 Nov 2019 04:21:54 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
+        by smtp.gmail.com with ESMTPSA id i13sm9382368wrp.12.2019.11.04.04.21.52
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2019 04:21:53 -0800 (PST)
+Subject: Re: [PATCH 2/2] KVM: Fix rcu splat if vm creation fails
+To:     Wanpeng Li <kernellwp@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
+ <1572848879-21011-2-git-send-email-wanpengli@tencent.com>
+ <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
+ <CANRm+CzkbrbE2C2yFKL1=mQCBCZMfVH8Tue3eXXqTL5Z1VUB5w@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <ee896a34-0914-8d3c-bcdd-5aede1743190@redhat.com>
+Date:   Mon, 4 Nov 2019 13:21:52 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <03832ecb6a34876ef26a24910816f22694c0e325.1572863013.git.jack.ping.chng@intel.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <CANRm+CzkbrbE2C2yFKL1=mQCBCZMfVH8Tue3eXXqTL5Z1VUB5w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 07:22:20PM +0800, Jack Ping CHNG wrote:
-> This driver enables the Intel's LGM SoC GSWIP block.
-> GSWIP is a core module tailored for L2/L3/L4+ data plane and QoS functions.
-> It allows CPUs and other accelerators connected to the SoC datapath
-> to enqueue and dequeue packets through DMAs.
-> Most configuration values are stored in tables such as
-> Parsing and Classification Engine tables, Buffer Manager tables and
-> Pseudo MAC tables.
+On 04/11/19 13:16, Wanpeng Li wrote:
+>> I don't understand this one, hasn't
+>>
+>>         WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+>>
+>> decreased the conut already?  With your patch the refcount would then
+>> underflow.
+> 
+> r = kvm_arch_init_vm(kvm, type);
+> if (r)
+>     goto out_err_no_arch_destroy_vm;
+> 
+> out_err_no_disable:
+>     kvm_arch_destroy_vm(kvm);
+>     WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+> out_err_no_arch_destroy_vm:
+> 
+> So, if kvm_arch_init_vm() fails, we will not execute
+> WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
 
-Why is this being submitted to staging?  What is wrong with the "real"
-part of the kernel for this?
+Uuh of course.  But I'd rather do the opposite: move the refcount_set
+earlier so that refcount_dec_and_test can be moved after
+no_arch_destroy_vm.  Moving the refcount_set is not strictly necessary,
+but avoids the introduction of yet another label.
 
-Your TODO file is really vague, and doesn't give anyone any real things
-to work on with you, which is odd.
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index e22ff63e5b1a..e7a07132cd7f 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -650,6 +650,7 @@ static struct kvm *kvm_create_vm(unsigned long type)
+ 	if (init_srcu_struct(&kvm->irq_srcu))
+ 		goto out_err_no_irq_srcu;
 
-> Signed-off-by: Jack Ping CHNG <jack.ping.chng@intel.com>
-> Signed-off-by: Amireddy Mallikarjuna reddy <mallikarjunax.reddy@linux.intel.com>
++	refcount_set(&kvm->users_count, 1);
+ 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++) {
+ 		struct kvm_memslots *slots = kvm_alloc_memslots();
 
-There is a group of people within Intel that you have to get code
-reviewed by before you can send it to me.  Please go by that process and
-not try to circumvent it by dumping it on staging without that review.
-It is there for good reasons.
+@@ -667,7 +668,6 @@ static struct kvm *kvm_create_vm(unsigned long type)
+ 			goto out_err_no_arch_destroy_vm;
+ 	}
 
-greg k-h
+-	refcount_set(&kvm->users_count, 1);
+ 	r = kvm_arch_init_vm(kvm, type);
+ 	if (r)
+ 		goto out_err_no_arch_destroy_vm;
+@@ -696,8 +696,8 @@ static struct kvm *kvm_create_vm(unsigned long type)
+ 	hardware_disable_all();
+ out_err_no_disable:
+ 	kvm_arch_destroy_vm(kvm);
+-	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+ out_err_no_arch_destroy_vm:
++	WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
+ 	for (i = 0; i < KVM_NR_BUSES; i++)
+ 		kfree(kvm_get_bus(kvm, i));
+ 	for (i = 0; i < KVM_ADDRESS_SPACE_NUM; i++)
+
+
