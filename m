@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA426CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CBA21CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF7E204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0B1D204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906331;
-	bh=ChFRGwLJ3VQnvQ2hdzzcMyib6eDJz9YUYbi7p0EdSSQ=;
+	s=default; t=1572906332;
+	bh=OyhXsx4XtH2ZdP5pHX68Ev2Em10iwdmYnfxc9c33zyM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i72H729WAes6fQFJa7ndJNW5Q3WfUNkBaF9AYxwVple5Ntx6mLS6cWSIX+J67BERH
-	 SK7jYvtSR3WSB75323ovn0ySwHhz1v8SGMa0660CWrI0VjvN8nVBr2pHt3oeBm5/0b
-	 L9Zb22GXnM8WQoTgm7/wcZx50qj097p+Ugrpn6d8=
+	b=vzQFBBQNWxbCxYADi+dPQABnKiP58ggR/dPICTRLi/IeomFJddlp9zfk5ULLgTTCV
+	 LeyS40CzAY/8qOBWMlXY8xvGRt6xRmw50kY9AfqELjHQ6acAxnxL5ihvoqTEHPfNjL
+	 sCyCctP0W9CFu99SuEh1cuZB7xniADxebFMqWQyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389171AbfKDWZa (ORCPT
+        id S2388946AbfKDWZ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:25:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44854 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730591AbfKDVvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:44 -0500
+        id S1730601AbfKDVvq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:46 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E748A217F5;
-        Mon,  4 Nov 2019 21:51:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 676C12053B;
+        Mon,  4 Nov 2019 21:51:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904303;
-        bh=ChFRGwLJ3VQnvQ2hdzzcMyib6eDJz9YUYbi7p0EdSSQ=;
+        s=default; t=1572904305;
+        bh=OyhXsx4XtH2ZdP5pHX68Ev2Em10iwdmYnfxc9c33zyM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SHZbnL4/iZlMLlBRvDGF47KLdHyMKESFCVEebIqsxxhsBzU5bGqRRQLQQF5MGzLX1
-         GKwT1P6f3CsOa2lI8NJqODwDGQCJXn+FmouBdjkJOnWSDOGQYmS4+S/OWWN0WldkNd
-         sev7twEshRvJNyXWeKN++dsZisTev4S4iJue8SkY=
+        b=j1dL2elwqu48LSJwOTtFNzhQeCrHSIaOHS1Xp+gucQrbl/JlUCwbHI42p2YU6iZBg
+         k7BBkNCvSobUguXCGgVgOAHEUS2XLIS8tCDhwUffug3qdnrD+T4agPXEVhBBZOHZq3
+         p2eHgO2yZhEx3oKMrUaWTAF2QnNQnT0tZVekAFYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com,
-        Xin Long <lucien.xin@gmail.com>,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 57/62] sctp: not bind the socket in sctp_connect
-Date:   Mon,  4 Nov 2019 22:45:19 +0100
-Message-Id: <20191104211958.592547035@linuxfoundation.org>
+        stable@vger.kernel.org, Vratislav Bendel <vbendel@redhat.com>,
+        Brian Foster <bfoster@redhat.com>,
+        Christoph Hellwig <hch@lst.de>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Alex Lyakas <alex@zadara.com>
+Subject: [PATCH 4.9 58/62] xfs: Correctly invert xfs_buftarg LRU isolation logic
+Date:   Mon,  4 Nov 2019 22:45:20 +0100
+Message-Id: <20191104211959.290977993@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -62,72 +62,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Xin Long <lucien.xin@gmail.com>
+From: Vratislav Bendel <vbendel@redhat.com>
 
-commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e upstream.
+commit 19957a181608d25c8f4136652d0ea00b3738972d upstream.
 
-Now when sctp_connect() is called with a wrong sa_family, it binds
-to a port but doesn't set bp->port, then sctp_get_af_specific will
-return NULL and sctp_connect() returns -EINVAL.
+Due to an inverted logic mistake in xfs_buftarg_isolate()
+the xfs_buffers with zero b_lru_ref will take another trip
+around LRU, while isolating buffers with non-zero b_lru_ref.
 
-Then if sctp_bind() is called to bind to another port, the last
-port it has bound will leak due to bp->port is NULL by then.
+Additionally those isolated buffers end up right back on the LRU
+once they are released, because b_lru_ref remains elevated.
 
-sctp_connect() doesn't need to bind ports, as later __sctp_connect
-will do it if bp->port is NULL. So remove it from sctp_connect().
-While at it, remove the unnecessary sockaddr.sa_family len check
-as it's already done in sctp_inet_connect.
+Fix that circuitous route by leaving them on the LRU
+as originally intended.
 
-Fixes: 644fbdeacf1d ("sctp: fix the issue that flags are ignored when using kernel_connect")
-Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
-Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Vratislav Bendel <vbendel@redhat.com>
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
+Signed-off-by: Alex Lyakas <alex@zadara.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- net/sctp/socket.c |   21 ++-------------------
- 1 file changed, 2 insertions(+), 19 deletions(-)
+ fs/xfs/xfs_buf.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/sctp/socket.c
-+++ b/net/sctp/socket.c
-@@ -3981,34 +3981,17 @@ out_nounlock:
- static int sctp_connect(struct sock *sk, struct sockaddr *addr,
- 			int addr_len, int flags)
- {
--	struct inet_sock *inet = inet_sk(sk);
- 	struct sctp_af *af;
--	int err = 0;
-+	int err = -EINVAL;
- 
- 	lock_sock(sk);
--
- 	pr_debug("%s: sk:%p, sockaddr:%p, addr_len:%d\n", __func__, sk,
- 		 addr, addr_len);
- 
--	/* We may need to bind the socket. */
--	if (!inet->inet_num) {
--		if (sk->sk_prot->get_port(sk, 0)) {
--			release_sock(sk);
--			return -EAGAIN;
--		}
--		inet->inet_sport = htons(inet->inet_num);
--	}
--
- 	/* Validate addr_len before calling common connect/connectx routine. */
- 	af = sctp_get_af_specific(addr->sa_family);
--	if (!af || addr_len < af->sockaddr_len) {
--		err = -EINVAL;
--	} else {
--		/* Pass correct addr len to common routine (so it knows there
--		 * is only one address being passed.
--		 */
-+	if (af && addr_len >= af->sockaddr_len)
- 		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
--	}
- 
- 	release_sock(sk);
- 	return err;
+--- a/fs/xfs/xfs_buf.c
++++ b/fs/xfs/xfs_buf.c
+@@ -1674,7 +1674,7 @@ xfs_buftarg_isolate(
+ 	 * zero. If the value is already zero, we need to reclaim the
+ 	 * buffer, otherwise it gets another trip through the LRU.
+ 	 */
+-	if (!atomic_add_unless(&bp->b_lru_ref, -1, 0)) {
++	if (atomic_add_unless(&bp->b_lru_ref, -1, 0)) {
+ 		spin_unlock(&bp->b_lock);
+ 		return LRU_ROTATE;
+ 	}
 
 
