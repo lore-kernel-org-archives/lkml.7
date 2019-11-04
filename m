@@ -5,56 +5,51 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DCACA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E393CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DD132053B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F0D9217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:54:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904471;
-	bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
+	s=default; t=1572904474;
+	bh=2IVWjNwRLLdOVwnOg0i7pBTAZwv/3UMSQUs8kXBuoWY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mesikexW1wta27ooc0f+D4Fs/Xm+B3zLQxyy+hiWaL2o5RgapFE3MkAeGcCl2AO8D
-	 0Dp8ElMiySPcUdpt2A7kgjaG4XDDCcSVq3MCWVIOcUip6YYzuzo5/LqNxNZcysImkn
-	 IgX5ov0iw6mkXX2usNom8bkpDB5nM3nLH0bTlowY=
+	b=Frw2+/MJqcUfvaR9yIztor7POOj9Pm0Htrz98rE2Nbnup0cU0crweSL6hBRhAkIMB
+	 wgNbJiejWhIH3fkRk5rjHuIc57tJSEO8FleTjLNIR8XHo0STY4ObTzXYdzGFpZxaV6
+	 X/e9D1MWTs4MN1hid7hzLVB/pY7PvTZnuSQ8UOd4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387951AbfKDVya (ORCPT
+        id S2387959AbfKDVyc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:54:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49186 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:54:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49258 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387459AbfKDVyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:54:25 -0500
+        id S2387942AbfKDVy2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:54:28 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 80E2D2053B;
-        Mon,  4 Nov 2019 21:54:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63BE0217F4;
+        Mon,  4 Nov 2019 21:54:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904465;
-        bh=6lfw3MQx37kk/pOuC3qfn5dmCfIy7mklSWz7Kk50wx8=;
+        s=default; t=1572904468;
+        bh=2IVWjNwRLLdOVwnOg0i7pBTAZwv/3UMSQUs8kXBuoWY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WDR/9lZOggmZ/c0CjwKKBF5CeAGH+1FxHPTVszepReFC8L+1Q1iNtK51nd5zKeudQ
-         P0KFKGy8+y8Kj1vNfNrXLAF43aca1pYpzdSUoDQJdRi9OFkCE+dgbJ7MNbTAJ1vwHK
-         2GZKW+PTtgl4KEykn3H4hL6rMdUw37RyxS3AqeKw=
+        b=fXr02znag58EkQpjkvew7KlXcDfGe09tCRj3AyqLcH/4w7POdW5Puhqrovg/3+37p
+         KZTwZEHgWDlSZkrXfsAaDKnFmTcQmHcvaJ3gL+4Kv5h0J/cjdsVsoIwOkuNi89b46m
+         WRjh13Y+YD7/INjcoz5MZocjaI2RjOljc3DjflVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 48/95] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Mon,  4 Nov 2019 22:44:46 +0100
-Message-Id: <20191104212103.355281543@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com,
+        "Richard W.M. Jones" <rjones@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 57/95] nbd: verify socket is supported during setup
+Date:   Mon,  4 Nov 2019 22:44:55 +0100
+Message-Id: <20191104212106.300239492@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -67,56 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Mike Christie <mchristi@redhat.com>
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+[ Upstream commit cf1b2326b734896734c6e167e41766f9cee7686a ]
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+nbd requires socket families to support the shutdown method so the nbd
+recv workqueue can be woken up from its sock_recvmsg call. If the socket
+does not support the callout we will leave recv works running or get hangs
+later when the device or module is removed.
 
-    if (inode_alloc)
+This adds a check during socket connection/reconnection to make sure the
+socket being passed in supports the needed callout.
 
-When inode_alloc is NULL, it is used on line 287:
-
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Tested-by: Richard W.M. Jones <rjones@redhat.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/nbd.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index ab30c005cc4bc..9fa98abecfc6b 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -290,7 +290,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index 3e45004407963..f3d0bc9a99058 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -912,6 +912,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	return ret;
+ }
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
++static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
++				     int *err)
++{
++	struct socket *sock;
++
++	*err = 0;
++	sock = sockfd_lookup(fd, err);
++	if (!sock)
++		return NULL;
++
++	if (sock->ops->shutdown == sock_no_shutdown) {
++		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
++		*err = -EINVAL;
++		return NULL;
++	}
++
++	return sock;
++}
++
+ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 			  bool netlink)
+ {
+@@ -921,7 +940,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	struct nbd_sock *nsock;
+ 	int err;
+ 
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
+ 
+@@ -973,7 +992,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
+ 	int i;
+ 	int err;
+ 
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
+ 
 -- 
 2.20.1
 
