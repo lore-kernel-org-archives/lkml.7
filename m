@@ -2,111 +2,109 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A95BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:58:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F410CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:59:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3211421D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:58:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Us4rdO0E"
+	by mail.kernel.org (Postfix) with ESMTP id 04AFA21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:59:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572865155;
+	bh=HUdxCMu6xBUopH6EcbPDSSLqXUxI0M4SppvWvEPfEqs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HvKVmlau+7/OkHmgHSbaJHPI397dpLmGUz5Z3lJScA0D1IoB4aRk5yFq7FukhP3nl
+	 7n90LvGABKz/duhlDhE4/97Bz0mqjmJhW2q0uhRGY/Qs77uEdQ2awPCHrkbjpKnVBy
+	 S9ge5Sr3TgLBYHpybSs8nalWkvrmZEv/N+8kSKl8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728560AbfKDK62 (ORCPT
+        id S1728611AbfKDK7O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:58:28 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:36732 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727985AbfKDK61 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:58:27 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4AtrM6192477;
-        Mon, 4 Nov 2019 10:58:21 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
- bh=4Huoh6wIugbFZjm22QuBBMKrcUJPLMn8KTchxHNOYUs=;
- b=Us4rdO0EZAqnQE6q0ebNjGiLk/WCjwlneykewTNpgc7fSmdinOhKH/ZQeXpBmQOxxi7J
- 51gnEg3dU75yEIGmH5ni4BnLMp5p2dNq0oyY6eqSyLUrBL7gc4XXdT3eKg65IQqgiNsl
- 98ahwAuAyY8CqGaT4c+ITllsOKkqByJrJNr0yMTFTW4vGIBM+ezl/9Jl+ss9SwIIv7Ca
- 30D6y0HsjcePt7sGVfu1Sv+TMS7GTmGSXFsqNW2ZfZDJQQFZx4Gu7/HX6tXyl7g6lIwZ
- H1GmnuusRDTQa4uRFSAiWkAzNBYYVClL7XOv2VD8KodLu/ZSPyWg3smrrldWf8AKcdiU uQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2120.oracle.com with ESMTP id 2w12eqxa8e-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:58:21 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4AssUd142627;
-        Mon, 4 Nov 2019 10:56:20 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2w1kxd1qcm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 10:56:20 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4AuJ7s000754;
-        Mon, 4 Nov 2019 10:56:19 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 02:56:19 -0800
-Date:   Mon, 4 Nov 2019 13:56:12 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     linux-fsdevel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 07/10] staging: exfat: Clean up return codes -
- FFS_SUCCESS
-Message-ID: <20191104105612.GG21796@kadam>
-References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
- <20191104014510.102356-8-Valdis.Kletnieks@vt.edu>
- <20191104100413.GC10409@kadam>
- <128761.1572864835@turing-police>
+        Mon, 4 Nov 2019 05:59:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46912 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfKDK7N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:59:13 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5306221D71;
+        Mon,  4 Nov 2019 10:59:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572865152;
+        bh=HUdxCMu6xBUopH6EcbPDSSLqXUxI0M4SppvWvEPfEqs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=kJ5Hj/mtkdgzOR3bdrfZhnnr5sFiwZWuPbBF16OhIo0gKg4uerNuOVtWt8Cj4gLZH
+         ZFSxzpbAoI37D8a5ZCXnZuXjrlNSvw/SA4sjK9XgRsluGY2ZyMFB8JxZo4LD+ZsDyZ
+         5BdL1nCchdXhk772IsIrWEtUDPU+hnGmQHwNaObE=
+Date:   Mon, 4 Nov 2019 11:59:10 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Hanjun Guo <guohanjun@huawei.com>
+Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Hanjun Guo <hanjun.guo@linaro.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, suzuki.poulose@arm.com,
+        catalin.marinas@arm.com, john.garry@huawei.com,
+        open list <linux-kernel@vger.kernel.org>,
+        linux- stable <stable@vger.kernel.org>,
+        zhangshaokun@hisilicon.com, lkft-triage@lists.linaro.org,
+        andrew.murray@arm.com, will@kernel.org,
+        Dave P Martin <Dave.Martin@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: stable-rc-4.19: cpufeature.c:909:21: error: 'MIDR_HISI_TSV110'
+ undeclared
+Message-ID: <20191104105910.GB1945210@kroah.com>
+References: <CA+G9fYtoODTuayzXdsv=bFuRPvw1-+dmZxHqQePy6LX8ixOG5A@mail.gmail.com>
+ <98f10e13-8ec8-1690-a867-f212bcea969f@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <128761.1572864835@turing-police>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040109
+In-Reply-To: <98f10e13-8ec8-1690-a867-f212bcea969f@huawei.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:53:55AM -0500, Valdis Klētnieks wrote:
-> On Mon, 04 Nov 2019 13:04:14 +0300, Dan Carpenter said:
-> > On Sun, Nov 03, 2019 at 08:45:03PM -0500, Valdis Kletnieks wrote:
-> > > -	if (sector_read(sb, sec, &bp->buf_bh, 1) != FFS_SUCCESS) {
-> > > +	if (sector_read(sb, sec, &bp->buf_bh, 1) != 0) {
-> >
-> > It's better to just remove the "!= 0" double negative.  != 0 should be
-> > used when we are talking about the number zero as in "cnt != 0" and for
-> > "strcmp(foo, bar) != 0" where it means that "foo != bar".
+On Mon, Nov 04, 2019 at 09:10:06AM +0800, Hanjun Guo wrote:
+> Hi Sasha, Greg,
 > 
-> "Fix up ==0 and !=0" is indeed on the to-do list.
+> On 2019/11/4 7:22, Naresh Kamboju wrote:
+> > stable rc 4.19  branch build broken for arm64 with the below error log,
+> > 
+> > Build error log,
+> > arch/arm64/kernel/cpufeature.c: In function 'unmap_kernel_at_el0':
+> > arch/arm64/kernel/cpufeature.c:909:21: error: 'MIDR_HISI_TSV110'
+> > undeclared (first use in this function); did you mean
+> > 'GICR_ISACTIVER0'?
+> >   MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+> >                     ^
+> > arch/arm64/include/asm/cputype.h:141:12: note: in definition of macro
+> > 'MIDR_RANGE'
+> >   .model = m,     \
+> >            ^
+> > arch/arm64/kernel/cpufeature.c:909:3: note: in expansion of macro
+> > 'MIDR_ALL_VERSIONS'
+> >   MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+> >   ^~~~~~~~~~~~~~~~~
+> > arch/arm64/kernel/cpufeature.c:909:21: note: each undeclared
+> > identifier is reported only once for each function it appears in
+> >   MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
+> >                     ^
+> > arch/arm64/include/asm/cputype.h:141:12: note: in definition of macro
+> > 'MIDR_RANGE'
+> >   .model = m,     \
+> >            ^
+> > arch/arm64/kernel/cpufeature.c:909:3: note: in expansion of macro
+> > 'MIDR_ALL_VERSIONS'
+> >   MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
 > 
-> This patch converted 82 uses of FFS_SUCCESS, of which 33 had the != idiom in
-> use.  Meanwhile, overall there's 53 '!= 0' and 95 '== 0' uses.
-> 
-> In other words, even if I fixed all of those that were involved in this patch,
-> there would *still* be more patching to do.
+> Patch "efd00c7 arm64: Add MIDR encoding for HiSilicon Taishan CPUs" needs to
+> be bacported as well, would you like me to do that, or just cherry-pick by yourself?
 
-Very good.  Sounds like the plan.
+I need the backport please, cherry-pick fails :(
 
-regards,
-dan carpenter
+thanks,
 
+greg k-h
