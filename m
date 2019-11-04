@@ -2,90 +2,67 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7151DCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:00:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4387CCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 355112080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:00:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572886810;
-	bh=WjM0Plqy5EG9cfYEXcKD9iMlyRNJz3PsJPWqLzB7nLI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=mG0u690du4WMnMV/uaelPeJ1J8C4tJB+93K1bT0yZBldFcH7cQkACNs/LUVW/t9wn
-	 O8sb2prg6AQ7rzqMaZgJLl91u8FZCBk6hGp5A399X/9uFvdmqGkA7ZFNvR1ku/Wbi4
-	 TAaXfQEkOBjBmnfVTLFiAyXHksQKKHnG4h6g0dFI=
+	by mail.kernel.org (Postfix) with ESMTP id 220CA2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:00:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728789AbfKDRAJ (ORCPT
+        id S1728955AbfKDRAc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:00:09 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:49465 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727998AbfKDRAI (ORCPT
+        Mon, 4 Nov 2019 12:00:32 -0500
+Received: from mailscanner02.zoner.fi ([84.34.166.11]:45024 "EHLO
+        mailscanner02.zoner.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDRAc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:00:08 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iRfhR-0008Lz-89; Mon, 04 Nov 2019 17:59:29 +0100
-To:     Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v4 06/17] scs: add accounting
-X-PHP-Originating-Script: 0:main.inc
+        Mon, 4 Nov 2019 12:00:32 -0500
+X-Greylist: delayed 553 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 12:00:31 EST
+Received: from www25.zoner.fi (www25.zoner.fi [84.34.147.45])
+        by mailscanner02.zoner.fi (Postfix) with ESMTPS id 3464240AB9;
+        Mon,  4 Nov 2019 18:51:12 +0200 (EET)
+Received: from mail.zoner.fi ([84.34.147.244])
+        by www25.zoner.fi with esmtp (Exim 4.92.3)
+        (envelope-from <lasse.collin@tukaani.org>)
+        id 1iRfZU-0003Ur-E0; Mon, 04 Nov 2019 18:51:16 +0200
+Date:   Mon, 4 Nov 2019 18:51:07 +0200
+From:   Lasse Collin <lasse.collin@tukaani.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     linux-kernel@vger.kernel.org, "Yu Sun (yusun2)" <yusun2@cisco.com>,
+        "Yixia Si (yisi)" <yisi@cisco.com>
+Subject: [PATCH] lib/xz: Fix XZ_DYNALLOC to avoid useless memory
+ reallocations
+Message-ID: <20191104185107.3b6330df@tukaani.org>
+X-Mailer: Claws Mail 3.17.4 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Nov 2019 18:08:50 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CABCJKuegREpQiJCY01B_=nsNJFFCkyxxp63tQOPT=h+yAPifyA@mail.gmail.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-7-samitolvanen@google.com>
- <791fc70f7bcaf13a89abaee9aae52dfe@www.loen.fr>
- <CABCJKuegREpQiJCY01B_=nsNJFFCkyxxp63tQOPT=h+yAPifyA@mail.gmail.com>
-Message-ID: <5aaee4e0339daef7deadf29db9ea1747@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: samitolvanen@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, mhiramat@kernel.org, ard.biesheuvel@linaro.org, dave.martin@arm.com, keescook@chromium.org, labbott@redhat.com, mark.rutland@arm.com, ndesaulniers@google.com, jannh@google.com, miguel.ojeda.sandonis@gmail.com, yamada.masahiro@socionext.com, clang-built-linux@googlegroups.com, kernel-hardening@lists.openwall.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-04 17:52, Sami Tolvanen wrote:
-> On Mon, Nov 4, 2019 at 5:13 AM Marc Zyngier <maz@kernel.org> wrote:
->> Is there any reason why you're not consistently using only one of
->> "#if IS_ENABLED(...)" or "#ifdef ...", but instead a mix of both?
->
-> This is to match the style already used in each file. For example,
-> fs/proc/meminfo.c uses #ifdef for other configs in the same function,
-> and include/linux/mmzone.h uses #if IS_ENABLED(...).
+From: Lasse Collin <lasse.collin@tukaani.org>
 
-Ah, fair enough.
+s->dict.allocated was initialized to 0 but never set after a successful
+allocation, thus the code always thought that the dictionary buffer has
+to be reallocated.
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
+Signed-off-by: Lasse Collin <lasse.collin@tukaani.org>
+Reported-by: Yu Sun <yusun2@cisco.com>
+---
+
+diff -Nrup linux-5.3-vanilla/lib/xz/xz_dec_lzma2.c linux-5.3/lib/xz/xz_dec_lzma2.c
+--- linux-5.3-vanilla/lib/xz/xz_dec_lzma2.c	2019-09-16 00:19:32.000000000 +0300
++++ linux-5.3/lib/xz/xz_dec_lzma2.c	2019-10-30 20:33:15.460857851 +0200
+@@ -1146,6 +1146,7 @@ XZ_EXTERN enum xz_ret xz_dec_lzma2_reset
+ 
+ 		if (DEC_IS_DYNALLOC(s->dict.mode)) {
+ 			if (s->dict.allocated < s->dict.size) {
++				s->dict.allocated = s->dict.size;
+ 				vfree(s->dict.buf);
+ 				s->dict.buf = vmalloc(s->dict.size);
+ 				if (s->dict.buf == NULL) {
