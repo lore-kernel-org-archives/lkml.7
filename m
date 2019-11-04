@@ -2,363 +2,261 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BB9ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:36:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C9FCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:37:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6CEB21D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:36:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E32F21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:37:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="W+o9FB+F"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="sUE9SHEQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728748AbfKDOgO (ORCPT
+        id S1728775AbfKDOh1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:36:14 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40106 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbfKDOgN (ORCPT
+        Mon, 4 Nov 2019 09:37:27 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39982 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1728287AbfKDOh0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:36:13 -0500
-Received: by mail-lj1-f196.google.com with SMTP id q2so11316881ljg.7;
-        Mon, 04 Nov 2019 06:36:10 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=gPQQP/qjmg2dlwkav1DuOwvLlvZF9FO9IP7DPZJ9/Vw=;
-        b=W+o9FB+Fq9eKA7uy2HKHD5wY12WjKnRrh0ZtbuTH6knWzG9OwbCEmD0j+dD+uJ66bs
-         fICgT1ozhtrQqWTVUa+Sfsuytee5HdjzhZpB65wwhCiyJXhYeoowuVIc0f4LCnl45LOf
-         bMnz5HcxX2kYs86GFph90NEKcpM8ZhIwGSAxZv71VNSIQzGLswCXBONr+HURt7bZ7dv+
-         F5T3xZxBs8V4sBU5xfQ9Si+hbeLn/N3XO/ZbAnQuy5EhlSy+eg+ONzI9e2obzeqWNGZM
-         qtIoIgob0LFWcHNRxIFiswVrq+4ox6jL7BSMOY/+f//sb5GzwZ8/x/eVEyxTJJ0IkDK5
-         DAQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=gPQQP/qjmg2dlwkav1DuOwvLlvZF9FO9IP7DPZJ9/Vw=;
-        b=hLOSY2BvjH4eIWVHJ3BLN2iXRAlFzZPQV+cQJvlr0BZH8cKHzNkLWqy31WCCnl7Lu4
-         KkumAboWFiF7QMy103gPTaO/RJb1AGnA4pV5U+HnRwazNCqG22Y3Wm7jR5XwF2yOKZLn
-         68EaXNbeaxJt/gMyyKXkiewNb6gCa3Cv+Z+BxKvpaAK07DCSd7vp8LCT8iz185DIZpBx
-         95SwPJWrPm4dAjSGZ+2aPgxrCQA106Ky2GLBn2ODTqCJJX1uljJXVcF1vtSWQ2Agv+RD
-         bSmw8zpDytSBsU4jnCZ65amIvD6B/mXYdBsI5RJ67J0rJ5PKg8+G7pY/Q4OgvLbbyvd/
-         rzlw==
-X-Gm-Message-State: APjAAAV3U4L5X+5ve6QtysEorWSlC2ASMiezc7WiFI59coQpIktinSdl
-        3yYTrDj/JVeRvvyuvGWjye0J9myE
-X-Google-Smtp-Source: APXvYqx898kg3ng5mWaMp9dykrgsu5c8WFqffRShXuH/K5s0D2gHKY8hx5168mIXkWDTqw43eYd8dQ==
-X-Received: by 2002:a05:651c:120c:: with SMTP id i12mr13367612lja.123.1572878169530;
-        Mon, 04 Nov 2019 06:36:09 -0800 (PST)
-Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.googlemail.com with ESMTPSA id n11sm10190116lfd.88.2019.11.04.06.36.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 06:36:08 -0800 (PST)
-Subject: Re: [PATCH v8 16/18] PM / devfreq: tegra30: Support variable polling
- interval
-To:     Chanwoo Choi <cw00.choi@samsung.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>,
-        linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191103204130.2172-1-digetx@gmail.com>
- <CGME20191103204245epcas4p48f5ab2a36b3728439799adb41fed6a24@epcas4p4.samsung.com>
- <20191103204130.2172-17-digetx@gmail.com>
- <e3967b07-b53f-0d9c-8f1b-bad238c4ef68@samsung.com>
-From:   Dmitry Osipenko <digetx@gmail.com>
-Message-ID: <a7c3215d-e663-1382-440a-4e37a27bf22f@gmail.com>
-Date:   Mon, 4 Nov 2019 17:36:07 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 4 Nov 2019 09:37:26 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4ERGoq004129;
+        Mon, 4 Nov 2019 15:37:15 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=+pqW3tmknQkUaVLMwtyyZmv86PtC0OIFE0YGfYD6OSY=;
+ b=sUE9SHEQzHgrRVmmtmeCgVACIzEsKwviy+pGX1tYxHdIdTWtA505OzSqxbqm+NE2FVJy
+ w32klntmh+IhTYqBlYbkYdj5Oy1DhTzuuyeMv0Zp6a5kNML+8nfufVrpm/s0ZqD0e2Fz
+ okqEJBjBMCMwGFnlNvQgzRemdTTleLRGSfR9G3G1kmQId15m/yixlpDFFxTLYwdfXiSg
+ 1TV93vMCj34PFqkAOmPxuIjhfYa6UMUZCVRH3SlZXhzoNiW070Bh6Wp6VK0pU5WzWbA8
+ Nv9ybJvhu9rGEva5qQRE9Afk4ftpKC7vKiH/X8LQnn4syX4DgW7WwWEfZQEMa5aWM2/g ig== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w11jn25wy-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 15:37:15 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DB43F10002A;
+        Mon,  4 Nov 2019 15:37:14 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C433E220FCD;
+        Mon,  4 Nov 2019 15:37:14 +0100 (CET)
+Received: from localhost (10.75.127.45) by SFHDAG3NODE2.st.com (10.75.127.8)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 4 Nov 2019 15:37:14
+ +0100
+From:   Alexandre Torgue <alexandre.torgue@st.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        <linux-kernel@vger.kernel.org>, <linux-usb@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH] phy: core: Add consumer device link support
+Date:   Mon, 4 Nov 2019 15:37:13 +0100
+Message-ID: <20191104143713.11137-1-alexandre.torgue@st.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-In-Reply-To: <e3967b07-b53f-0d9c-8f1b-bad238c4ef68@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG3NODE3.st.com (10.75.127.9) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-04.11.2019 05:53, Chanwoo Choi пишет:
-> On 19. 11. 4. 오전 5:41, Dmitry Osipenko wrote:
->> The ACTMON governor is interrupt-driven and currently hardware's polling
->> interval is fixed to 16ms in the driver. Devfreq supports variable polling
->> interval by the generic governors, let's re-use the generic interface for
->> changing of the polling interval. Now the polling interval can be changed
->> dynamically via /sys/class/devfreq/devfreq0/polling_interval.
->>
->> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->> ---
->>  drivers/devfreq/tegra30-devfreq.c | 83 +++++++++++++++++++++++--------
->>  1 file changed, 61 insertions(+), 22 deletions(-)
->>
->> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
->> index 852bde6249c7..9c645e83ef8b 100644
->> --- a/drivers/devfreq/tegra30-devfreq.c
->> +++ b/drivers/devfreq/tegra30-devfreq.c
->> @@ -96,9 +96,10 @@ struct tegra_devfreq_device_config {
->>  	unsigned int	boost_down_threshold;
->>  
->>  	/*
->> -	 * Threshold of activity (cycles) below which the CPU frequency isn't
->> -	 * to be taken into account. This is to avoid increasing the EMC
->> -	 * frequency when the CPU is very busy but not accessing the bus often.
->> +	 * Threshold of activity (cycles translated to kHz) below which the
->> +	 * CPU frequency isn't to be taken into account. This is to avoid
->> +	 * increasing the EMC frequency when the CPU is very busy but not
->> +	 * accessing the bus often.
->>  	 */
->>  	u32		avg_dependency_threshold;
->>  };
->> @@ -126,7 +127,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
->>  		.boost_down_coeff = 90,
->>  		.boost_up_threshold = 27,
->>  		.boost_down_threshold = 10,
->> -		.avg_dependency_threshold = 50000,
->> +		.avg_dependency_threshold = 5 * KHZ,
-> 
-> nitpick.
-> Actually, this change is not related to this patch.
-> Even if it is trivial, it is not proper.
+In order to enforce suspend/resume ordering, this commit creates link
+between phy consumers and phy devices. This link avoids to suspend phy
+before phy consumers.
 
-As I wrote in the cover letter, this change is directly related to this
-patch. It was missed in v7 by accident. Please see more comments below.
+Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
 
->>  	},
->>  };
->>  
->> @@ -208,9 +209,16 @@ static void device_writel(struct tegra_devfreq_device *dev, u32 val,
->>  	writel_relaxed(val, dev->regs + offset);
->>  }
->>  
->> -static unsigned long do_percent(unsigned long val, unsigned int pct)
->> +static unsigned long do_percent(unsigned long long val, unsigned int pct)
->>  {
->> -	return val * pct / 100;
->> +	val = val * pct;
->> +	do_div(val, 100);
->> +
->> +	/*
->> +	 * High freq + high boosting percent + large polling interval are
->> +	 * resulting in integer overflow when watermarks are calculated.
->> +	 */
->> +	return min_t(u64, val, U32_MAX);
->>  }
->>  
->>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->> @@ -218,8 +226,9 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->>  {
->>  	u32 avg = dev->avg_count;
->>  	u32 avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
->> -	u32 band = avg_band_freq * ACTMON_SAMPLING_PERIOD;
->> +	u32 band = avg_band_freq * tegra->devfreq->profile->polling_ms;
->>  
->> +	avg = min(dev->avg_count, U32_MAX - band);
->>  	device_writel(dev, avg + band, ACTMON_DEV_AVG_UPPER_WMARK);
->>  
->>  	avg = max(dev->avg_count, band);
->> @@ -229,7 +238,7 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
->>  static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
->>  				       struct tegra_devfreq_device *dev)
->>  {
->> -	u32 val = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
->> +	u32 val = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
->>  
->>  	device_writel(dev, do_percent(val, dev->config->boost_up_threshold),
->>  		      ACTMON_DEV_UPPER_WMARK);
->> @@ -308,10 +317,9 @@ static unsigned long actmon_device_target_freq(struct tegra_devfreq *tegra,
->>  	unsigned int avg_sustain_coef;
->>  	unsigned long target_freq;
->>  
->> -	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
->> +	target_freq = dev->avg_count / tegra->devfreq->profile->polling_ms;
->>  	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
->>  	target_freq = do_percent(target_freq, avg_sustain_coef);
->> -	target_freq += dev->boost_freq;
->>  
->>  	return target_freq;
->>  }
->> @@ -322,15 +330,18 @@ static void actmon_update_target(struct tegra_devfreq *tegra,
->>  	unsigned long cpu_freq = 0;
->>  	unsigned long static_cpu_emc_freq = 0;
->>  
->> -	if (dev->config->avg_dependency_threshold) {
->> +	dev->target_freq = actmon_device_target_freq(tegra, dev);
->> +
->> +	if (dev->config->avg_dependency_threshold &&
->> +	    dev->config->avg_dependency_threshold <= dev->target_freq) {
-> 
-> This changes are related to polling interval change at the run time?
-> This patch touched the 'avg_dependency_threshold'. It is related to the 
-> dynamic change of polling interval?
-Before this patch the avg_dependency_threshold was defined in "cycle"
-units and the the predefined value was fixed for the polling interval of
-12ms.
+---
 
-After this patch the avg_dependency_threshold is redefined to use "kHz"
-units which are independent of the polling interval.
+Hi,
 
-So yes, this change is related to the dynamic changing of the polling
-interval at run time.
+To manage device_link in phy-core I had to "balance" get and put APIs a bit
+more. Fot this reason, you'll find updates in Renesas usbhs rcar and rza drivers
+as phy API changes.
 
->>  		cpu_freq = cpufreq_quick_get(0);
->>  		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
->> -	}
->>  
->> -	dev->target_freq = actmon_device_target_freq(tegra, dev);
->> -
->> -	if (dev->avg_count >= dev->config->avg_dependency_threshold)
->> +		dev->target_freq += dev->boost_freq;
->>  		dev->target_freq = max(dev->target_freq, static_cpu_emc_freq);
->> +	} else {
->> +		dev->target_freq += dev->boost_freq;
->> +	}
-> 
-> ditto. This changes are related to polling interval change at the run time?
+Regards
+Alex
 
-It is possible to derive these changes into a separate patch. This
-should help a tad with the following of the code changes. I'll do it in v9
-
->>  }
->>  
->>  static irqreturn_t actmon_thread_isr(int irq, void *data)
->> @@ -396,15 +407,16 @@ static unsigned long
->>  tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
->>  				  unsigned int cpu_freq)
->>  {
->> +	struct tegra_devfreq_device *dev = &tegra->devices[MCCPU];
->>  	unsigned long static_cpu_emc_freq, dev_freq;
->>  
->> +	dev_freq = actmon_device_target_freq(tegra, dev);
->> +
->>  	/* check whether CPU's freq is taken into account at all */
->> -	if (tegra->devices[MCCPU].avg_count <
->> -	    tegra->devices[MCCPU].config->avg_dependency_threshold)
->> +	if (dev_freq < dev->config->avg_dependency_threshold)
-> 
-> ditto.
-> 
->>  		return 0;
->>  
->>  	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
->> -	dev_freq = actmon_device_target_freq(tegra, &tegra->devices[MCCPU]);
->>  
->>  	if (dev_freq >= static_cpu_emc_freq)
->>  		return 0;
->> @@ -465,7 +477,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
->>  
->>  	dev->target_freq = tegra->cur_freq;
->>  
->> -	dev->avg_count = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
->> +	dev->avg_count = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
->>  	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
->>  
->>  	tegra_devfreq_update_avg_wmark(tegra, dev);
->> @@ -506,7 +518,10 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
->>  	unsigned int i;
->>  	int err;
->>  
->> -	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
->> +	if (!tegra->devfreq->profile->polling_ms || tegra->cur_freq)
->> +		return 0;
->> +
->> +	actmon_writel(tegra, tegra->devfreq->profile->polling_ms - 1,
->>  		      ACTMON_GLB_PERIOD_CTRL);
->>  
->>  	/*
->> @@ -551,11 +566,16 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
->>  
->>  	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
->>  
->> +	tegra->cur_freq = 0;
->> +
->>  	return err;
->>  }
->>  
->>  static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->>  {
->> +	if (!tegra->devfreq->profile->polling_ms || !tegra->cur_freq)
->> +		return;
->> +
->>  	disable_irq(tegra->irq);
->>  
->>  	cpufreq_unregister_notifier(&tegra->cpu_rate_change_nb,
->> @@ -566,6 +586,8 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
->>  	tegra_actmon_stop_devices(tegra);
->>  
->>  	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
->> +
->> +	tegra->cur_freq = 0;
->>  }
->>  
->>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
->> @@ -625,7 +647,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
->>  	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
->>  
->>  	/* Number of cycles in a sampling period */
->> -	stat->total_time = ACTMON_SAMPLING_PERIOD * cur_freq;
->> +	stat->total_time = tegra->devfreq->profile->polling_ms * cur_freq;
->>  
->>  	stat->busy_time = min(stat->busy_time, stat->total_time);
->>  
->> @@ -633,7 +655,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
->>  }
->>  
->>  static struct devfreq_dev_profile tegra_devfreq_profile = {
->> -	.polling_ms	= 0,
->> +	.polling_ms	= ACTMON_SAMPLING_PERIOD,
->>  	.target		= tegra_devfreq_target,
->>  	.get_dev_status	= tegra_devfreq_get_dev_status,
->>  };
->> @@ -673,6 +695,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>  					unsigned int event, void *data)
->>  {
->>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
->> +	unsigned int *new_delay = data;
->>  	int ret = 0;
->>  
->>  	/*
->> @@ -692,6 +715,21 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
->>  		devfreq_monitor_stop(devfreq);
->>  		break;
->>  
->> +	case DEVFREQ_GOV_INTERVAL:
->> +		/*
->> +		 * ACTMON hardware supports up to 256 milliseconds for the
->> +		 * sampling period.
->> +		 */
->> +		if (*new_delay > 256) {
->> +			ret = -EINVAL;
->> +			break;
->> +		}
->> +
->> +		tegra_actmon_stop(tegra);
->> +		devfreq_interval_update(devfreq, new_delay);
->> +		ret = tegra_actmon_start(tegra);
->> +		break;
->> +
->>  	case DEVFREQ_GOV_SUSPEND:
->>  		tegra_actmon_stop(tegra);
->>  		devfreq_monitor_suspend(devfreq);
->> @@ -711,6 +749,7 @@ static struct devfreq_governor tegra_devfreq_governor = {
->>  	.get_target_freq = tegra_governor_get_target,
->>  	.event_handler = tegra_governor_event_handler,
->>  	.immutable = true,
->> +	.interrupt_driven = true,
->>  };
->>  
->>  static int tegra_devfreq_probe(struct platform_device *pdev)
->>
-> 
-> 
+diff --git a/drivers/phy/phy-core.c b/drivers/phy/phy-core.c
+index b04f4fe85ac2..8dfb4868c8c3 100644
+--- a/drivers/phy/phy-core.c
++++ b/drivers/phy/phy-core.c
+@@ -29,7 +29,7 @@ static void devm_phy_release(struct device *dev, void *res)
+ {
+ 	struct phy *phy = *(struct phy **)res;
+ 
+-	phy_put(phy);
++	phy_put(dev, phy);
+ }
+ 
+ static void devm_phy_provider_release(struct device *dev, void *res)
+@@ -566,12 +566,12 @@ struct phy *of_phy_get(struct device_node *np, const char *con_id)
+ EXPORT_SYMBOL_GPL(of_phy_get);
+ 
+ /**
+- * phy_put() - release the PHY
+- * @phy: the phy returned by phy_get()
++ * of_phy_put() - release the PHY
++ * @phy: the phy returned by of_phy_get()
+  *
+- * Releases a refcount the caller received from phy_get().
++ * Releases a refcount the caller received from of_phy_get().
+  */
+-void phy_put(struct phy *phy)
++void of_phy_put(struct phy *phy)
+ {
+ 	if (!phy || IS_ERR(phy))
+ 		return;
+@@ -584,6 +584,20 @@ void phy_put(struct phy *phy)
+ 	module_put(phy->ops->owner);
+ 	put_device(&phy->dev);
+ }
++EXPORT_SYMBOL_GPL(of_phy_put);
++
++/**
++ * phy_put() - release the PHY
++ * @dev: device that wants to release this phy
++ * @phy: the phy returned by phy_get()
++ *
++ * Releases a refcount the caller received from phy_get().
++ */
++void phy_put(struct device *dev, struct phy *phy)
++{
++	device_link_remove(dev, &phy->dev);
++	of_phy_put(phy);
++}
+ EXPORT_SYMBOL_GPL(phy_put);
+ 
+ /**
+@@ -651,6 +665,7 @@ struct phy *phy_get(struct device *dev, const char *string)
+ {
+ 	int index = 0;
+ 	struct phy *phy;
++	struct device_link *link;
+ 
+ 	if (string == NULL) {
+ 		dev_WARN(dev, "missing string\n");
+@@ -672,6 +687,13 @@ struct phy *phy_get(struct device *dev, const char *string)
+ 
+ 	get_device(&phy->dev);
+ 
++	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(phy_get);
+@@ -765,6 +787,7 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+ 			    const char *con_id)
+ {
+ 	struct phy **ptr, *phy;
++	struct device_link *link;
+ 
+ 	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
+ 	if (!ptr)
+@@ -778,6 +801,13 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+ 		devres_free(ptr);
+ 	}
+ 
++	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(devm_of_phy_get);
+@@ -798,6 +828,7 @@ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
+ 				     int index)
+ {
+ 	struct phy **ptr, *phy;
++	struct device_link *link;
+ 
+ 	ptr = devres_alloc(devm_phy_release, sizeof(*ptr), GFP_KERNEL);
+ 	if (!ptr)
+@@ -819,6 +850,13 @@ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
+ 	*ptr = phy;
+ 	devres_add(dev, ptr);
+ 
++	link = device_link_add(dev, &phy->dev, DL_FLAG_STATELESS);
++	if (!link) {
++		dev_err(dev, "failed to create device link to %s\n",
++			dev_name(phy->dev.parent));
++		return ERR_PTR(-EINVAL);
++	}
++
+ 	return phy;
+ }
+ EXPORT_SYMBOL_GPL(devm_of_phy_get_by_index);
+diff --git a/drivers/usb/renesas_usbhs/rcar2.c b/drivers/usb/renesas_usbhs/rcar2.c
+index 440d213e1749..791908f8cf73 100644
+--- a/drivers/usb/renesas_usbhs/rcar2.c
++++ b/drivers/usb/renesas_usbhs/rcar2.c
+@@ -34,7 +34,7 @@ static int usbhs_rcar2_hardware_exit(struct platform_device *pdev)
+ 	struct usbhs_priv *priv = usbhs_pdev_to_priv(pdev);
+ 
+ 	if (priv->phy) {
+-		phy_put(priv->phy);
++		phy_put(&pdev->dev, priv->phy);
+ 		priv->phy = NULL;
+ 	}
+ 
+diff --git a/drivers/usb/renesas_usbhs/rza2.c b/drivers/usb/renesas_usbhs/rza2.c
+index 021749594389..3eed3334a17f 100644
+--- a/drivers/usb/renesas_usbhs/rza2.c
++++ b/drivers/usb/renesas_usbhs/rza2.c
+@@ -29,7 +29,7 @@ static int usbhs_rza2_hardware_exit(struct platform_device *pdev)
+ {
+ 	struct usbhs_priv *priv = usbhs_pdev_to_priv(pdev);
+ 
+-	phy_put(priv->phy);
++	phy_put(&pdev->dev, priv->phy);
+ 	priv->phy = NULL;
+ 
+ 	return 0;
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 56d3a100006a..19eddd64c8f6 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -234,7 +234,8 @@ struct phy *devm_of_phy_get(struct device *dev, struct device_node *np,
+ 			    const char *con_id);
+ struct phy *devm_of_phy_get_by_index(struct device *dev, struct device_node *np,
+ 				     int index);
+-void phy_put(struct phy *phy);
++void of_phy_put(struct phy *phy);
++void phy_put(struct device *dev, struct phy *phy);
+ void devm_phy_put(struct device *dev, struct phy *phy);
+ struct phy *of_phy_get(struct device_node *np, const char *con_id);
+ struct phy *of_phy_simple_xlate(struct device *dev,
+@@ -419,7 +420,11 @@ static inline struct phy *devm_of_phy_get_by_index(struct device *dev,
+ 	return ERR_PTR(-ENOSYS);
+ }
+ 
+-static inline void phy_put(struct phy *phy)
++static inline void of_phy_put(struct phy *phy)
++{
++}
++
++static inline void phy_put(struct device *dev, struct phy *phy)
+ {
+ }
+ 
+-- 
+2.17.1
 
