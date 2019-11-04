@@ -2,72 +2,102 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5671CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5786CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0500204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A0966204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572905840;
+	bh=2wCmBqoCUtQczstuSu+E79NktzrLM54hbOybIdGj5sM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=ZzwV0bAiYcE+SdgZseIKB3zHyi3U10rQaRkejYUKnXcRjoLMmLCpuZOpVP3md0+Bn
+	 2LNOLFSXmxGExyQwC0LiTEdVyNroUwnAPQ+18Zjuw2JF5jjN4VJdv8i6m0WJCw4PUH
+	 v1ZEfVTldC9/UbdvWatxbkLPMPyAZglOI9n/I9co=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389692AbfKDWRL (ORCPT
+        id S2389400AbfKDWCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:17:11 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39031 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389083AbfKDWRI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:17:08 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iRkel-0008F2-Mq; Mon, 04 Nov 2019 23:17:03 +0100
-Date:   Mon, 4 Nov 2019 23:17:02 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Scott Wood <swood@redhat.com>
-cc:     Peter Zijlstra <peterz@infradead.org>,
-        Frederic Weisbecker <frederic@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] timers/nohz: Update nohz load even if tick already
- stopped
-In-Reply-To: <813ed21938aa47b15f35f8834ffd98ad4dd27771.camel@redhat.com>
-Message-ID: <alpine.DEB.2.21.1911042315390.17054@nanos.tec.linutronix.de>
-References: <20191028150716.22890-1-frederic@kernel.org>  <20191029100506.GJ4114@hirez.programming.kicks-ass.net>  <52d963553deda810113accd8d69b6dffdb37144f.camel@redhat.com>  <20191030133130.GY4097@hirez.programming.kicks-ass.net>
- <813ed21938aa47b15f35f8834ffd98ad4dd27771.camel@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 4 Nov 2019 17:02:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32942 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388532AbfKDWCp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:45 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BCF520650;
+        Mon,  4 Nov 2019 22:02:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904965;
+        bh=2wCmBqoCUtQczstuSu+E79NktzrLM54hbOybIdGj5sM=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=DrH/liCp+pYwYsY0inVkZspEPCgEEBXIbOy0FjtzT+Z6qAToJ4adq5xBuunp5zQYc
+         Gkqp7BmeBU6nRDIHXfvuAf2nMeo3AxU68lfwZQPktvqmqZdUVDtGjegWPSfycALleM
+         x93W+ZRc/XXJ2g9hke8wGU42VYWPoSh/dLZyTQUY=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Yunfeng Ye <yeyunfeng@huawei.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 089/149] arm64: armv8_deprecated: Checking return value for memory allocation
+Date:   Mon,  4 Nov 2019 22:44:42 +0100
+Message-Id: <20191104212142.735331194@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 1 Nov 2019, Scott Wood wrote:
-> On Wed, 2019-10-30 at 14:31 +0100, Peter Zijlstra wrote:
-> > Oh argh! that's a bit radical of the remote tick. The normal tick runs
-> > just fine on idle CPUs, so lets mirror that.
-> > 
-> > How's this then?
+From: Yunfeng Ye <yeyunfeng@huawei.com>
 
-....
+[ Upstream commit 3e7c93bd04edfb0cae7dad1215544c9350254b8f ]
+
+There are no return value checking when using kzalloc() and kcalloc() for
+memory allocation. so add it.
+
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm64/kernel/armv8_deprecated.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm64/kernel/armv8_deprecated.c b/arch/arm64/kernel/armv8_deprecated.c
+index 92be1d12d5908..39dc98dd78ebf 100644
+--- a/arch/arm64/kernel/armv8_deprecated.c
++++ b/arch/arm64/kernel/armv8_deprecated.c
+@@ -177,6 +177,9 @@ static void __init register_insn_emulation(struct insn_emulation_ops *ops)
+ 	struct insn_emulation *insn;
  
-> 
-> Needs to be tick_nohz_tick_stopped_cpu(cpu)
-> 
-> After fixing that, I get:
-> 
-> [    7.439068] WARNING: CPU: 20 PID: 7 at /home/root/linux/kernel/sched/core.c:3681 sched_tick_remote+0x132/0x150
+ 	insn = kzalloc(sizeof(*insn), GFP_KERNEL);
++	if (!insn)
++		return;
++
+ 	insn->ops = ops;
+ 	insn->min = INSN_UNDEF;
+ 
+@@ -236,6 +239,8 @@ static void __init register_insn_emulation_sysctl(void)
+ 
+ 	insns_sysctl = kcalloc(nr_insn_emulated + 1, sizeof(*sysctl),
+ 			       GFP_KERNEL);
++	if (!insns_sysctl)
++		return;
+ 
+ 	raw_spin_lock_irqsave(&insn_emulation_lock, flags);
+ 	list_for_each_entry(insn, &insn_emulation, node) {
+-- 
+2.20.1
 
-So I'm going to apply Scotts patch if nobody comes up with a better idea
-until tomorrow.
 
-Thanks,
 
-	tglx
