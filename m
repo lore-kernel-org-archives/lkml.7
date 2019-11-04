@@ -2,134 +2,169 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45861CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11E20CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 185A920869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906508;
-	bh=agAkvTWZFFdKdfVy16eemcEMCQ6nl36Yj2C8OA2MB8A=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=naTLY+bKdORojvQM1Ra7XWIlxecwUald8TahAZYb21lbTpV9ZqtBOjwNiwu13v5A9
-	 TNnDhvfSUPu0tmymnCAXIwLpvBtub87HXY+pon+YSCrv8wbHItZfNn16ywfC4MPsBD
-	 KGHr/OfmsBsXTKnqTLVJGnJEDhRYOFoWJOMIpyiE=
+	by mail.kernel.org (Postfix) with ESMTP id E20742080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388453AbfKDW21 (ORCPT
+        id S1730191AbfKDVs5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:28:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40122 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:48:57 -0500
+Received: from mga07.intel.com ([134.134.136.100]:20152 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730228AbfKDVtF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:05 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D5547214D8;
-        Mon,  4 Nov 2019 21:49:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904144;
-        bh=agAkvTWZFFdKdfVy16eemcEMCQ6nl36Yj2C8OA2MB8A=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=foQfdHAXA8PandPfvwMAUPIaB14+KGV+R3YyGoM5iRgKh5S8p+jI30SwJTPpGQvv7
-         c5Lgn4AB6Vp8ZDvogVmX+V0QspwhHxn5u0eDIIwItO7FFp9ZIgM2fBOwHeTNnVjaSS
-         4Px1or8WFnvUBVrttGuoXMWpg/3mH+sHrFqYeIxs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
-        Mahesh Bandewar <maheshb@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.4 41/46] bonding: fix potential NULL deref in bond_update_slave_arr
-Date:   Mon,  4 Nov 2019 22:45:12 +0100
-Message-Id: <20191104211913.609425740@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
-References: <20191104211830.912265604@linuxfoundation.org>
-User-Agent: quilt/0.66
+        id S1730159AbfKDVsx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 13:48:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
+   d="scan'208";a="226887119"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga004.fm.intel.com with ESMTP; 04 Nov 2019 13:48:51 -0800
+Date:   Mon, 4 Nov 2019 13:48:51 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     "Moger, Babu" <Babu.Moger@amd.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
+        "pbonzini@redhat.com" <pbonzini@redhat.com>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "wanpengli@tencent.com" <wanpengli@tencent.com>,
+        "jmattson@google.com" <jmattson@google.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
+        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
+        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
+Subject: Re: [PATCH v2] x86/Kconfig: Rename UMIP config parameter
+Message-ID: <20191104214851.GD5960@linux.intel.com>
+References: <157290058655.2477.5193340480187879024.stgit@naples-babu.amd.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157290058655.2477.5193340480187879024.stgit@naples-babu.amd.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+On Mon, Nov 04, 2019 at 08:50:51PM +0000, Moger, Babu wrote:
+> AMD 2nd generation EPYC processors support the UMIP (User-Mode
+> Instruction Prevention) feature. So, rename X86_INTEL_UMIP to
+> generic X86_UMIP and modify the text to cover both Intel and AMD.
 
-commit a7137534b597b7c303203e6bc3ed87e87a273bb8 upstream.
+There's a similar comment in the umip.c documentation that needs to be
+updated, and a grammatical error that can be opportunistically fixed, i.e.
 
-syzbot got a NULL dereference in bond_update_slave_arr() [1],
-happening after a failure to allocate bond->slave_arr
+ * The feature User-Mode Instruction Prevention present in recent Intel
+ * processor
 
-A workqueue (bond_slave_arr_handler) is supposed to retry
-the allocation later, but if the slave is removed before
-the workqueue had a chance to complete, bond->slave_arr
-can still be NULL.
+to 
 
-[1]
-
-Failed to build slave-array.
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] SMP KASAN PTI
-Modules linked in:
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-RIP: 0010:bond_update_slave_arr.cold+0xc6/0x198 drivers/net/bonding/bond_main.c:4039
-RSP: 0018:ffff88018fe33678 EFLAGS: 00010246
-RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000290b000
-RDX: 0000000000000000 RSI: ffffffff82b63037 RDI: ffff88019745ea20
-RBP: ffff88018fe33760 R08: ffff880170754280 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
-R13: ffff88019745ea00 R14: 0000000000000000 R15: ffff88018fe338b0
-FS:  00007febd837d700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00000000004540a0 CR3: 00000001c242e005 CR4: 00000000001626f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- [<ffffffff82b5b45e>] __bond_release_one+0x43e/0x500 drivers/net/bonding/bond_main.c:1923
- [<ffffffff82b5b966>] bond_release drivers/net/bonding/bond_main.c:2039 [inline]
- [<ffffffff82b5b966>] bond_do_ioctl+0x416/0x870 drivers/net/bonding/bond_main.c:3562
- [<ffffffff83ae25f4>] dev_ifsioc+0x6f4/0x940 net/core/dev_ioctl.c:328
- [<ffffffff83ae2e58>] dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:495
- [<ffffffff83995ffd>] sock_do_ioctl+0x1bd/0x300 net/socket.c:1088
- [<ffffffff83996a80>] sock_ioctl+0x300/0x5d0 net/socket.c:1196
- [<ffffffff81b124db>] vfs_ioctl fs/ioctl.c:47 [inline]
- [<ffffffff81b124db>] file_ioctl fs/ioctl.c:501 [inline]
- [<ffffffff81b124db>] do_vfs_ioctl+0xacb/0x1300 fs/ioctl.c:688
- [<ffffffff81b12dc6>] SYSC_ioctl fs/ioctl.c:705 [inline]
- [<ffffffff81b12dc6>] SyS_ioctl+0xb6/0xe0 fs/ioctl.c:696
- [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
- [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
-
-Fixes: ee6377147409 ("bonding: Simplify the xmit function for modes that use xmit_hash")
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Cc: Mahesh Bandewar <maheshb@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- drivers/net/bonding/bond_main.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
---- a/drivers/net/bonding/bond_main.c
-+++ b/drivers/net/bonding/bond_main.c
-@@ -3889,7 +3889,7 @@ out:
- 		 * this to-be-skipped slave to send a packet out.
- 		 */
- 		old_arr = rtnl_dereference(bond->slave_arr);
--		for (idx = 0; idx < old_arr->count; idx++) {
-+		for (idx = 0; old_arr != NULL && idx < old_arr->count; idx++) {
- 			if (skipslave == old_arr->arr[idx]) {
- 				old_arr->arr[idx] =
- 				    old_arr->arr[old_arr->count-1];
+ * The feature User-Mode Instruction Prevention present in recent x86
+ * processors
 
 
+IMO, the whole opening paragraph of the umip.c docs is weirdly worded and
+could be rewritten to something similar to the Kconfig help text, e.g.
+
+ * User-Mode Instruction Prevention is a security feature present in recent x86
+ * processors that, when enabled, prevents a group of instructions (SGDT, SIDT,
+ * SLDT, SMSW and STR) from being run in user mode by issuing a general
+ * protection fault if the instruction is executed with CPL > 0.
+
+> 
+> Signed-off-by: Babu Moger <babu.moger@amd.com>
+> ---
+> v2:
+>   Learned that for the hardware that support UMIP, we dont need to
+>   emulate. Removed the emulation related code and just submitting
+>   the config changes.
+> 
+>  arch/x86/Kconfig                         |    8 ++++----
+>  arch/x86/include/asm/disabled-features.h |    2 +-
+>  arch/x86/include/asm/umip.h              |    4 ++--
+>  arch/x86/kernel/Makefile                 |    2 +-
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index d6e1faa28c58..821b7cebff31 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -1880,13 +1880,13 @@ config X86_SMAP
+>  
+>  	  If unsure, say Y.
+>  
+> -config X86_INTEL_UMIP
+> +config X86_UMIP
+>  	def_bool y
+> -	depends on CPU_SUP_INTEL
+> -	prompt "Intel User Mode Instruction Prevention" if EXPERT
+> +	depends on X86 && (CPU_SUP_INTEL || CPU_SUP_AMD)
+> +	prompt "User Mode Instruction Prevention" if EXPERT
+>  	---help---
+>  	  The User Mode Instruction Prevention (UMIP) is a security
+
+Maybe opportunistically drop "The"?
+
+> -	  feature in newer Intel processors. If enabled, a general
+> +	  feature in newer x86 processors. If enabled, a general
+>  	  protection fault is issued if the SGDT, SLDT, SIDT, SMSW
+>  	  or STR instructions are executed in user mode. These instructions
+>  	  unnecessarily expose information about the hardware state.
+> diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
+> index a5ea841cc6d2..8e1d0bb46361 100644
+> --- a/arch/x86/include/asm/disabled-features.h
+> +++ b/arch/x86/include/asm/disabled-features.h
+> @@ -22,7 +22,7 @@
+>  # define DISABLE_SMAP	(1<<(X86_FEATURE_SMAP & 31))
+>  #endif
+>  
+> -#ifdef CONFIG_X86_INTEL_UMIP
+> +#ifdef CONFIG_X86_UMIP
+>  # define DISABLE_UMIP	0
+>  #else
+>  # define DISABLE_UMIP	(1<<(X86_FEATURE_UMIP & 31))
+> diff --git a/arch/x86/include/asm/umip.h b/arch/x86/include/asm/umip.h
+> index db43f2a0d92c..aeed98c3c9e1 100644
+> --- a/arch/x86/include/asm/umip.h
+> +++ b/arch/x86/include/asm/umip.h
+> @@ -4,9 +4,9 @@
+>  #include <linux/types.h>
+>  #include <asm/ptrace.h>
+>  
+> -#ifdef CONFIG_X86_INTEL_UMIP
+> +#ifdef CONFIG_X86_UMIP
+>  bool fixup_umip_exception(struct pt_regs *regs);
+>  #else
+>  static inline bool fixup_umip_exception(struct pt_regs *regs) { return false; }
+> -#endif  /* CONFIG_X86_INTEL_UMIP */
+> +#endif  /* CONFIG_X86_UMIP */
+>  #endif  /* _ASM_X86_UMIP_H */
+> diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+> index 3578ad248bc9..52ce1e239525 100644
+> --- a/arch/x86/kernel/Makefile
+> +++ b/arch/x86/kernel/Makefile
+> @@ -134,7 +134,7 @@ obj-$(CONFIG_EFI)			+= sysfb_efi.o
+>  obj-$(CONFIG_PERF_EVENTS)		+= perf_regs.o
+>  obj-$(CONFIG_TRACING)			+= tracepoint.o
+>  obj-$(CONFIG_SCHED_MC_PRIO)		+= itmt.o
+> -obj-$(CONFIG_X86_INTEL_UMIP)		+= umip.o
+> +obj-$(CONFIG_X86_UMIP)			+= umip.o
+>  
+>  obj-$(CONFIG_UNWINDER_ORC)		+= unwind_orc.o
+>  obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+> 
