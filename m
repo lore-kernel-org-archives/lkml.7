@@ -2,317 +2,151 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84B0AC47E49
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AE60CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50B3920869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FA5pznYb"
+	by mail.kernel.org (Postfix) with ESMTP id 39A3A2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572886313;
+	bh=ZmHGadF8VrETaBFi+B+Z6MDGAsQZ0t9Gj/4iezFDasU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0FWpgM9RY0DSY6nj8l7xv8twSHqWxTGyV/0FSUG2qzHf0XRFuVnQx5bUutc3Bum3X
+	 cGn+U1Uogk1FfVArIokyWujKjzGUzdxyLNgbNFowYdgd1TrtR3VBsesULBUp7KUHVM
+	 TS3YudsT5ApSr19ZjBonLgkYUVg5NvSteIGg5OK4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729062AbfKDQvh (ORCPT
+        id S1729224AbfKDQvw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:51:37 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:35866 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728144AbfKDQvg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:51:36 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572886294;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=TXrEUfVJUcd1erXFQw9FjfdFZzoYFLyJ24kgJsiz4yg=;
-        b=FA5pznYbTukMnXNxUYEsr2a+sllUt2kUWtAghROFSu5I3R1caZebkFMC7bhvO3LvtAkDE/
-        Q+vG1DDObqg4RQRmF1Ui4k8QwslEzxZl3u5pAyodA4YKKyO29NUXIZJsgk++a/ZANOwxAf
-        057fbnJH43/COtEdZ8dXVklRKI09/xQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-308-zE3MYcgnMCiZjQzFEos_IQ-1; Mon, 04 Nov 2019 11:51:30 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 4 Nov 2019 11:51:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39476 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728482AbfKDQvv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:51:51 -0500
+Received: from localhost (host6-102.lan-isdn.imaginet.fr [195.68.6.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 5AF6E8017DD;
-        Mon,  4 Nov 2019 16:51:26 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3E86D5C1B2;
-        Mon,  4 Nov 2019 16:51:20 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 11:51:18 -0500
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        Christoph Hellwig <hch@lst.de>,
-        "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>
-Subject: Re: [PATCH v2 02/18] mm/gup: factor out duplicate code from four
- routines
-Message-ID: <20191104165118.GB5134@redhat.com>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-3-jhubbard@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 61A772080F;
+        Mon,  4 Nov 2019 16:51:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572886311;
+        bh=ZmHGadF8VrETaBFi+B+Z6MDGAsQZ0t9Gj/4iezFDasU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=qVUFC0x9QvBB6c7Za3K5mBIEw+ZH7xtUz3kovv0i72+I9G4zU3GDixfLyhghR7VJQ
+         wQYkEojIK2stVJQFPjsEd5u6xAzGlGRwlUI3tVpbK0SpOcXjDEPsSHHCYY9QmCTNid
+         Wi5VJnwkLplkT55ISaydRIrptKkjA0RgWMVbTvwA=
+Date:   Mon, 4 Nov 2019 17:51:48 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Jules Irenge <jbi.octave@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] staging: rts5208: rewrite macro with GNU extension
+ __auto_type
+Message-ID: <20191104165148.GA2293059@kroah.com>
+References: <20191104164400.9935-1-jbi.octave@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191103211813.213227-3-jhubbard@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: zE3MYcgnMCiZjQzFEos_IQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191104164400.9935-1-jbi.octave@gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 01:17:57PM -0800, John Hubbard wrote:
-> There are four locations in gup.c that have a fair amount of code
-> duplication. This means that changing one requires making the same
-> changes in four places, not to mention reading the same code four
-> times, and wondering if there are subtle differences.
->=20
-> Factor out the common code into static functions, thus reducing the
-> overall line count and the code's complexity.
->=20
-> Also, take the opportunity to slightly improve the efficiency of the
-> error cases, by doing a mass subtraction of the refcount, surrounded
-> by get_page()/put_page().
->=20
-> Also, further simplify (slightly), by waiting until the the successful
-> end of each routine, to increment *nr.
->=20
-> Cc: Ira Weiny <ira.weiny@intel.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-
-Good cleanup.
-
-Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
-
+On Mon, Nov 04, 2019 at 04:44:00PM +0000, Jules Irenge wrote:
+> Rewrite macro function with GNU extension __auto_type
+> to remove issue detected by checkpatch tool.
+> CHECK: MACRO argument reuse - possible side-effects?
+> 
+> Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
 > ---
->  mm/gup.c | 104 ++++++++++++++++++++++++-------------------------------
->  1 file changed, 45 insertions(+), 59 deletions(-)
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 85caf76b3012..199da99e8ffc 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1969,6 +1969,34 @@ static int __gup_device_huge_pud(pud_t pud, pud_t =
-*pudp, unsigned long addr,
->  }
->  #endif
-> =20
-> +static int __record_subpages(struct page *page, unsigned long addr,
-> +=09=09=09     unsigned long end, struct page **pages, int nr)
-> +{
-> +=09int nr_recorded_pages =3D 0;
-> +
-> +=09do {
-> +=09=09pages[nr] =3D page;
-> +=09=09nr++;
-> +=09=09page++;
-> +=09=09nr_recorded_pages++;
-> +=09} while (addr +=3D PAGE_SIZE, addr !=3D end);
-> +=09return nr_recorded_pages;
-> +}
-> +
-> +static void put_compound_head(struct page *page, int refs)
-> +{
-> +=09/* Do a get_page() first, in case refs =3D=3D page->_refcount */
-> +=09get_page(page);
-> +=09page_ref_sub(page, refs);
-> +=09put_page(page);
-> +}
-> +
-> +static void __huge_pt_done(struct page *head, int nr_recorded_pages, int=
- *nr)
-> +{
-> +=09*nr +=3D nr_recorded_pages;
-> +=09SetPageReferenced(head);
-> +}
-> +
->  #ifdef CONFIG_ARCH_HAS_HUGEPD
->  static unsigned long hugepte_addr_end(unsigned long addr, unsigned long =
-end,
->  =09=09=09=09      unsigned long sz)
-> @@ -1998,33 +2026,20 @@ static int gup_hugepte(pte_t *ptep, unsigned long=
- sz, unsigned long addr,
->  =09/* hugepages are never "special" */
->  =09VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
-> =20
-> -=09refs =3D 0;
->  =09head =3D pte_page(pte);
-> -
->  =09page =3D head + ((addr & (sz-1)) >> PAGE_SHIFT);
-> -=09do {
-> -=09=09VM_BUG_ON(compound_head(page) !=3D head);
-> -=09=09pages[*nr] =3D page;
-> -=09=09(*nr)++;
-> -=09=09page++;
-> -=09=09refs++;
-> -=09} while (addr +=3D PAGE_SIZE, addr !=3D end);
-> +=09refs =3D __record_subpages(page, addr, end, pages, *nr);
-> =20
->  =09head =3D try_get_compound_head(head, refs);
-> -=09if (!head) {
-> -=09=09*nr -=3D refs;
-> +=09if (!head)
->  =09=09return 0;
-> -=09}
-> =20
->  =09if (unlikely(pte_val(pte) !=3D pte_val(*ptep))) {
-> -=09=09/* Could be optimized better */
-> -=09=09*nr -=3D refs;
-> -=09=09while (refs--)
-> -=09=09=09put_page(head);
-> +=09=09put_compound_head(head, refs);
->  =09=09return 0;
->  =09}
-> =20
-> -=09SetPageReferenced(head);
-> +=09__huge_pt_done(head, refs, nr);
->  =09return 1;
->  }
-> =20
-> @@ -2071,29 +2086,19 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, =
-unsigned long addr,
->  =09=09=09=09=09     pages, nr);
->  =09}
-> =20
-> -=09refs =3D 0;
->  =09page =3D pmd_page(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> -=09do {
-> -=09=09pages[*nr] =3D page;
-> -=09=09(*nr)++;
-> -=09=09page++;
-> -=09=09refs++;
-> -=09} while (addr +=3D PAGE_SIZE, addr !=3D end);
-> +=09refs =3D __record_subpages(page, addr, end, pages, *nr);
-> =20
->  =09head =3D try_get_compound_head(pmd_page(orig), refs);
-> -=09if (!head) {
-> -=09=09*nr -=3D refs;
-> +=09if (!head)
->  =09=09return 0;
-> -=09}
-> =20
->  =09if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
-> -=09=09*nr -=3D refs;
-> -=09=09while (refs--)
-> -=09=09=09put_page(head);
-> +=09=09put_compound_head(head, refs);
->  =09=09return 0;
->  =09}
-> =20
-> -=09SetPageReferenced(head);
-> +=09__huge_pt_done(head, refs, nr);
->  =09return 1;
->  }
-> =20
-> @@ -2114,29 +2119,19 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, =
-unsigned long addr,
->  =09=09=09=09=09     pages, nr);
->  =09}
-> =20
-> -=09refs =3D 0;
->  =09page =3D pud_page(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> -=09do {
-> -=09=09pages[*nr] =3D page;
-> -=09=09(*nr)++;
-> -=09=09page++;
-> -=09=09refs++;
-> -=09} while (addr +=3D PAGE_SIZE, addr !=3D end);
-> +=09refs =3D __record_subpages(page, addr, end, pages, *nr);
-> =20
->  =09head =3D try_get_compound_head(pud_page(orig), refs);
-> -=09if (!head) {
-> -=09=09*nr -=3D refs;
-> +=09if (!head)
->  =09=09return 0;
-> -=09}
-> =20
->  =09if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
-> -=09=09*nr -=3D refs;
-> -=09=09while (refs--)
-> -=09=09=09put_page(head);
-> +=09=09put_compound_head(head, refs);
->  =09=09return 0;
->  =09}
-> =20
-> -=09SetPageReferenced(head);
-> +=09__huge_pt_done(head, refs, nr);
->  =09return 1;
->  }
-> =20
-> @@ -2151,29 +2146,20 @@ static int gup_huge_pgd(pgd_t orig, pgd_t *pgdp, =
-unsigned long addr,
->  =09=09return 0;
-> =20
->  =09BUILD_BUG_ON(pgd_devmap(orig));
-> -=09refs =3D 0;
-> +
->  =09page =3D pgd_page(orig) + ((addr & ~PGDIR_MASK) >> PAGE_SHIFT);
-> -=09do {
-> -=09=09pages[*nr] =3D page;
-> -=09=09(*nr)++;
-> -=09=09page++;
-> -=09=09refs++;
-> -=09} while (addr +=3D PAGE_SIZE, addr !=3D end);
-> +=09refs =3D __record_subpages(page, addr, end, pages, *nr);
-> =20
->  =09head =3D try_get_compound_head(pgd_page(orig), refs);
-> -=09if (!head) {
-> -=09=09*nr -=3D refs;
-> +=09if (!head)
->  =09=09return 0;
-> -=09}
-> =20
->  =09if (unlikely(pgd_val(orig) !=3D pgd_val(*pgdp))) {
-> -=09=09*nr -=3D refs;
-> -=09=09while (refs--)
-> -=09=09=09put_page(head);
-> +=09=09put_compound_head(head, refs);
->  =09=09return 0;
->  =09}
-> =20
-> -=09SetPageReferenced(head);
-> +=09__huge_pt_done(head, refs, nr);
->  =09return 1;
->  }
-> =20
-> --=20
-> 2.23.0
->=20
+>  drivers/staging/rts5208/rtsx_chip.h | 92 +++++++++++++++++------------
+>  1 file changed, 55 insertions(+), 37 deletions(-)
+> 
+> diff --git a/drivers/staging/rts5208/rtsx_chip.h b/drivers/staging/rts5208/rtsx_chip.h
+> index bac65784d4a1..4b986d5c68da 100644
+> --- a/drivers/staging/rts5208/rtsx_chip.h
+> +++ b/drivers/staging/rts5208/rtsx_chip.h
+> @@ -386,23 +386,31 @@ struct zone_entry {
+>  
+>  /* SD card */
+>  #define CHK_SD(sd_card)			(((sd_card)->sd_type & 0xFF) == TYPE_SD)
+> -#define CHK_SD_HS(sd_card)		(CHK_SD(sd_card) && \
+> -					 ((sd_card)->sd_type & SD_HS))
+> -#define CHK_SD_SDR50(sd_card)		(CHK_SD(sd_card) && \
+> -					 ((sd_card)->sd_type & SD_SDR50))
+> -#define CHK_SD_DDR50(sd_card)		(CHK_SD(sd_card) && \
+> -					 ((sd_card)->sd_type & SD_DDR50))
+> -#define CHK_SD_SDR104(sd_card)		(CHK_SD(sd_card) && \
+> -					 ((sd_card)->sd_type & SD_SDR104))
+> -#define CHK_SD_HCXC(sd_card)		(CHK_SD(sd_card) && \
+> -					 ((sd_card)->sd_type & SD_HCXC))
+> -#define CHK_SD_HC(sd_card)		(CHK_SD_HCXC(sd_card) && \
+> -					 ((sd_card)->capacity <= 0x4000000))
+> -#define CHK_SD_XC(sd_card)		(CHK_SD_HCXC(sd_card) && \
+> -					 ((sd_card)->capacity > 0x4000000))
+> -#define CHK_SD30_SPEED(sd_card)		(CHK_SD_SDR50(sd_card) || \
+> -					 CHK_SD_DDR50(sd_card) || \
+> -					 CHK_SD_SDR104(sd_card))
+> +#define CHK_SD_HS(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
+> +					 (_sd->sd_type & SD_HS); })
+> +#define CHK_SD_SDR50(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
+> +					 (_sd->sd_type & SD_SDR50); })
+> +#define CHK_SD_DDR50(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
+> +					 (_sd->sd_type & SD_DDR50); })
+> +#define CHK_SD_SDR104(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
+> +					 (_sd->sd_type & SD_SDR104); })
+> +#define CHK_SD_HCXC(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
+> +					 (_sd->sd_type & SD_HCXC); })
+> +#define CHK_SD_HC(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
+> +					(_sd->capacity <= 0x4000000); })
+> +#define CHK_SD_XC(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
+> +					 (_sd->capacity > 0x4000000); })
+> +#define CHK_SD30_SPEED(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_SD_SDR50(_sd) || \
+> +					CHK_SD_DDR50(_sd) || \
+> +					CHK_SD_SDR104(_sd); })
+>  
+>  #define SET_SD(sd_card)			((sd_card)->sd_type = TYPE_SD)
+>  #define SET_SD_HS(sd_card)		((sd_card)->sd_type |= SD_HS)
+> @@ -420,18 +428,24 @@ struct zone_entry {
+>  /* MMC card */
+>  #define CHK_MMC(sd_card)		(((sd_card)->sd_type & 0xFF) == \
+>  					 TYPE_MMC)
+> -#define CHK_MMC_26M(sd_card)		(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_26M))
+> -#define CHK_MMC_52M(sd_card)		(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_52M))
+> -#define CHK_MMC_4BIT(sd_card)		(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_4BIT))
+> -#define CHK_MMC_8BIT(sd_card)		(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_8BIT))
+> -#define CHK_MMC_SECTOR_MODE(sd_card)	(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_SECTOR_MODE))
+> -#define CHK_MMC_DDR52(sd_card)		(CHK_MMC(sd_card) && \
+> -					 ((sd_card)->sd_type & MMC_DDR52))
+> +#define CHK_MMC_26M(sd_card)\
+> +	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
+> +					 (_sd->sd_type & MMC_26M); })
 
+Ick, no.  These are obviously pointers, which can not be "evaluated
+twice" so this whole thing is just fine.
+
+checkpatch is just a "hint" that you might want to look at the code.
+This stuff is just fine, look at how it is being used for proof of that.
+
+thanks,
+
+greg k-h
