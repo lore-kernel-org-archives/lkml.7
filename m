@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 981CFCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22A59C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65B1C20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF77620663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P0Ah3+a1"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="HvL+o4np"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729999AbfKDXAL (ORCPT
+        id S1730130AbfKDXAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:00:11 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:55418 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729194AbfKDXAL (ORCPT
+        Mon, 4 Nov 2019 18:00:16 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54714 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730040AbfKDXAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:00:11 -0500
+        Mon, 4 Nov 2019 18:00:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572908409;
+        s=mimecast20190719; t=1572908413;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=tktmbgMbA44XbKL0C1wWEcJpxBYyzYw3dy09GJTCB3c=;
-        b=P0Ah3+a1on+Bc45a/ZIonkqN7f1Vv9eEMGYwwo5mG0LgAI/gIWO0XUbxuq/G6VLqkZ11/G
-        WCRp/585uAr6HqV2ShVh+Thh+kswDUZ7m+OYJeo/HtGk7BfpcA046D/qC4aEbtaR/rj3Jm
-        w8rNxjX5tWDgP4jIKwP/yshDKWaz8e0=
+        bh=qV3OgrjNYfT/kr+aj4kw4nJxA2gAsFaFbytpcJxxu3Q=;
+        b=HvL+o4npNtizMRVEuJlawlB+Q1JUm0u0TPCKfJCtaScxpiyS41VmmgeqjXvd+kUlmsK+qY
+        tVJj788VQ6XWP/75lToRZJaV0LFUcOtykIAE3ff6P3f2BwII6Wowv/tk3maF4KOrHV7O7v
+        bMechZqWAAhSj//iqLidq8yE08mBg+c=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-248-8Y_kaONzMEuyO5vOv_3xzg-1; Mon, 04 Nov 2019 18:00:08 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+ us-mta-189-KhOeieY8NJaPLT88Yzs1zg-1; Mon, 04 Nov 2019 18:00:09 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 44F0E1800DFB;
-        Mon,  4 Nov 2019 23:00:07 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A76AA107ACC2;
+        Mon,  4 Nov 2019 23:00:08 +0000 (UTC)
 Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B0E1B1001B34;
-        Mon,  4 Nov 2019 23:00:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0F968600D5;
+        Mon,  4 Nov 2019 23:00:06 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 01/13] KVM: monolithic: x86: remove kvm.ko
-Date:   Mon,  4 Nov 2019 17:59:49 -0500
-Message-Id: <20191104230001.27774-2-aarcange@redhat.com>
+Subject: [PATCH 06/13] KVM: monolithic: x86: remove __exit section prefix from machine_unsetup
+Date:   Mon,  4 Nov 2019 17:59:54 -0500
+Message-Id: <20191104230001.27774-7-aarcange@redhat.com>
 In-Reply-To: <20191104230001.27774-1-aarcange@redhat.com>
 References: <20191104230001.27774-1-aarcange@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: 8Y_kaONzMEuyO5vOv_3xzg-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: KhOeieY8NJaPLT88Yzs1zg-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -65,111 +65,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is the first commit of a patch series that aims to replace the
-modular kvm.ko kernel module with a monolithic kvm-intel/kvm-amd
-model. This change has the only possible cons of wasting some disk
-space in /lib/modules/. The pros are that it saves CPUS and some minor
-iTLB and RAM which are more scarse resources than disk space.
+Adjusts the section prefixes of some KVM x86 code function because
+with the monolithic KVM model the section checker can now do a more
+accurate static analysis at build time and it found a potentially
+kernel crashing bug. This also allows to build without
+CONFIG_SECTION_MISMATCH_WARN_ONLY=3Dn.
 
-The pointer to function virtual template model cannot provide any
-runtime benefit because kvm-intel and kvm-amd can't be loaded at the
-same time.
-
-This removes kvm.ko and it links and duplicates all kvm.ko objects to
-both kvm-amd and kvm-intel.
-
-Linking both vmx and svm into the kernel at the same time isn't
-possible anymore or the kvm_x86/kvm_x86_pmu external function names
-would collide.
-
-Explanation of Kbuild from Paolo Bonzini follows:
-
-=3D=3D=3D
-The left side of the "||" ensures that, if KVM=3Dm, you can only choose
-module build for both KVM_INTEL and KVM_AMD.  Having just "depends on
-KVM" would allow a pre-existing .config to choose the now-invalid
-combination
-
-        CONFIG_KVM=3Dy
-        CONFIG_KVM_INTEL=3Dy
-        CONFIG_KVM_AMD=3Dy
-
-The right side of the "||" part is just for documentation, to avoid
-that a selected symbol does not satisfy its dependencies.
-=3D=3D=3D=3D
+The __exit removed from machine_unsetup is because
+kvm_arch_hardware_unsetup() is called by kvm_init() which is in the
+__init section. It's not allowed to call a function located in the
+__exit section and dropped during the kernel link from the __init
+section or the kernel will crash if that call is made.
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/kvm/Kconfig  | 30 ++++++++++++++++++++++++++----
- arch/x86/kvm/Makefile |  5 ++---
- 2 files changed, 28 insertions(+), 7 deletions(-)
+ arch/x86/include/asm/kvm_host.h | 4 ++--
+ arch/x86/kvm/svm.c              | 2 +-
+ arch/x86/kvm/vmx/vmx.c          | 2 +-
+ 3 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/kvm/Kconfig b/arch/x86/kvm/Kconfig
-index 840e12583b85..0d6e8809e359 100644
---- a/arch/x86/kvm/Kconfig
-+++ b/arch/x86/kvm/Kconfig
-@@ -59,9 +59,30 @@ config KVM
+diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
+t.h
+index b36dd3265036..2b03ec80f6d7 100644
+--- a/arch/x86/include/asm/kvm_host.h
++++ b/arch/x86/include/asm/kvm_host.h
+@@ -1004,7 +1004,7 @@ extern int kvm_x86_hardware_enable(void);
+ extern void kvm_x86_hardware_disable(void);
+ extern __init int kvm_x86_check_processor_compatibility(void);
+ extern __init int kvm_x86_hardware_setup(void);
+-extern __exit void kvm_x86_hardware_unsetup(void);
++extern void kvm_x86_hardware_unsetup(void);
+ extern bool kvm_x86_cpu_has_accelerated_tpr(void);
+ extern bool kvm_x86_has_emulated_msr(int index);
+ extern void kvm_x86_cpuid_update(struct kvm_vcpu *vcpu);
+@@ -1196,7 +1196,7 @@ struct kvm_x86_ops {
+ =09void (*hardware_disable)(void);
+ =09int (*check_processor_compatibility)(void);/* __init */
+ =09int (*hardware_setup)(void);               /* __init */
+-=09void (*hardware_unsetup)(void);            /* __exit */
++=09void (*hardware_unsetup)(void);
+ =09bool (*cpu_has_accelerated_tpr)(void);
+ =09bool (*has_emulated_msr)(int index);
+ =09void (*cpuid_update)(struct kvm_vcpu *vcpu);
+diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
+index 1705608246fb..4ce102f6f075 100644
+--- a/arch/x86/kvm/svm.c
++++ b/arch/x86/kvm/svm.c
+@@ -1412,7 +1412,7 @@ __init int kvm_x86_hardware_setup(void)
+ =09return r;
+ }
 =20
- =09  If unsure, say N.
+-__exit void kvm_x86_hardware_unsetup(void)
++void kvm_x86_hardware_unsetup(void)
+ {
+ =09int cpu;
 =20
-+if KVM=3Dy
-+
-+choice
-+=09prompt "KVM built-in support"
-+=09help
-+=09  In order to build a kernel with support for both AMD and Intel
-+=09  CPUs, you need to set CONFIG_KVM=3Dm instead.
-+
-+config KVM_AMD_STATIC
-+=09select KVM_AMD
-+=09bool "AMD"
-+
-+config KVM_INTEL_STATIC
-+=09select KVM_INTEL
-+=09bool "Intel"
-+
-+endchoice
-+
-+endif
-+
- config KVM_INTEL
--=09tristate "KVM for Intel processors support"
--=09depends on KVM
-+=09tristate
-+=09prompt "KVM for Intel processors support" if KVM=3Dm
-+=09depends on (KVM=3Dm && m) || KVM_INTEL_STATIC
- =09# for perf_guest_get_msrs():
- =09depends on CPU_SUP_INTEL
- =09---help---
-@@ -72,8 +93,9 @@ config KVM_INTEL
- =09  will be called kvm-intel.
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 9c5f0c67b899..e406707381a4 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -7737,7 +7737,7 @@ __init int kvm_x86_hardware_setup(void)
+ =09return r;
+ }
 =20
- config KVM_AMD
--=09tristate "KVM for AMD processors support"
--=09depends on KVM
-+=09tristate
-+=09prompt "KVM for AMD processors support" if KVM=3Dm
-+=09depends on (KVM=3Dm && m) || KVM_AMD_STATIC
- =09---help---
- =09  Provides support for KVM on AMD processors equipped with the AMD-V
- =09  (SVM) extensions.
-diff --git a/arch/x86/kvm/Makefile b/arch/x86/kvm/Makefile
-index 31ecf7a76d5a..68b81f381369 100644
---- a/arch/x86/kvm/Makefile
-+++ b/arch/x86/kvm/Makefile
-@@ -12,9 +12,8 @@ kvm-y=09=09=09+=3D x86.o mmu.o emulate.o i8259.o irq.o la=
-pic.o \
- =09=09=09   i8254.o ioapic.o irq_comm.o cpuid.o pmu.o mtrr.o \
- =09=09=09   hyperv.o page_track.o debugfs.o
-=20
--kvm-intel-y=09=09+=3D vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o=
- vmx/evmcs.o vmx/nested.o
--kvm-amd-y=09=09+=3D svm.o pmu_amd.o
-+kvm-intel-y=09=09+=3D vmx/vmx.o vmx/vmenter.o vmx/pmu_intel.o vmx/vmcs12.o=
- vmx/evmcs.o vmx/nested.o $(kvm-y)
-+kvm-amd-y=09=09+=3D svm.o pmu_amd.o $(kvm-y)
-=20
--obj-$(CONFIG_KVM)=09+=3D kvm.o
- obj-$(CONFIG_KVM_INTEL)=09+=3D kvm-intel.o
- obj-$(CONFIG_KVM_AMD)=09+=3D kvm-amd.o
+-__exit void kvm_x86_hardware_unsetup(void)
++void kvm_x86_hardware_unsetup(void)
+ {
+ =09if (nested)
+ =09=09nested_vmx_hardware_unsetup();
 
