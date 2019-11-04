@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 756F8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95236CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42D3B204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68FE4204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906339;
-	bh=ICY7z8h2C9Up1gekhmJEUUIkWA03qeNFTQkxkn+LRDA=;
+	s=default; t=1572906346;
+	bh=amwiZazbFCzmGdcy7wJmN5hK9XOXC1IYu73p5ph2XXM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hTIO+ct931KPo5KAq1PgQfufBCHRS/gv3KXv/rN6QO3vsS9fGULYEAOV0OeHNqix7
-	 mRek2LxTsUJGYSRQ0gUzp3GpQSzuHxzLVByWvniSDbnuZM0oqlA810WZona6pVk5ir
-	 6gtwU3+bdbw8LTor3+NYFNfaxUKPw8rylqoS8Bys=
+	b=sD0FgWJlcJxdIqLaMwnkGzT5v5cacbHAOk68NokNWEXrLZZByjy8jlNsEW9UH7+xz
+	 bGv+tB3GFc2xeMefN2a2gaRbTcZSXrwsMNawlCL7gJI0tDVmRGLq5Z13Z19z8SsFLW
+	 aoRAR/8nZXZR0xyOBcH+by+6+neyxuETkKaDIHw0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730564AbfKDVve (ORCPT
+        id S2388763AbfKDWZp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44498 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730528AbfKDVva (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:30 -0500
+        id S1730547AbfKDVvb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:31 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7DE0C218BA;
-        Mon,  4 Nov 2019 21:51:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DFEEF217F4;
+        Mon,  4 Nov 2019 21:51:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904289;
-        bh=ICY7z8h2C9Up1gekhmJEUUIkWA03qeNFTQkxkn+LRDA=;
+        s=default; t=1572904291;
+        bh=amwiZazbFCzmGdcy7wJmN5hK9XOXC1IYu73p5ph2XXM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0kvJ2RPFEpPHf3BZC/ZEr610ECkrIsm9DAsugtn0XpMW1RO6/drrvg8/jnJK1VME2
-         7IDaGgYuNrVo8k34Nzm3yOytYLacUjeNpXKs9NJ97yNAy8lBqsP0B56IVVqAOnN4l8
-         OPcCW7aLj/GDdAVJuXF0A3mBTzIaTzM91fsyy/9k=
+        b=dWZA8DGk4ZSr8LMNZqYRclFKAiaq6VFjghRxd23CaSbWUR4/S0Trzjw/qWYr2XhW0
+         8qvAAn/5ihHiN05/TF0uCOCsjpckhkfm9nXRAjSkZyn+9m+QYLeWgrjQy6GH/Hk6Gv
+         s0LPE+7UQ7QkGPn4TnWBibayZ5vqyvFjPC1tgi+0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        Mahesh Bandewar <maheshb@google.com>,
         Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.9 52/62] llc: fix sk_buff leak in llc_conn_service()
-Date:   Mon,  4 Nov 2019 22:45:14 +0100
-Message-Id: <20191104211953.971052924@linuxfoundation.org>
+Subject: [PATCH 4.9 53/62] bonding: fix potential NULL deref in bond_update_slave_arr
+Date:   Mon,  4 Nov 2019 22:45:15 +0100
+Message-Id: <20191104211954.599976834@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,187 +61,75 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Eric Dumazet <edumazet@google.com>
 
-commit b74555de21acd791f12c4a1aeaf653dd7ac21133 upstream.
+commit a7137534b597b7c303203e6bc3ed87e87a273bb8 upstream.
 
-syzbot reported:
+syzbot got a NULL dereference in bond_update_slave_arr() [1],
+happening after a failure to allocate bond->slave_arr
 
-    BUG: memory leak
-    unreferenced object 0xffff88811eb3de00 (size 224):
-       comm "syz-executor559", pid 7315, jiffies 4294943019 (age 10.300s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 a0 38 24 81 88 ff ff 00 c0 f2 15 81 88 ff ff  ..8$............
-       backtrace:
-         [<000000008d1c66a1>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000008d1c66a1>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000008d1c66a1>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000008d1c66a1>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000447d9496>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000000cdbf82f>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000000cdbf82f>] llc_alloc_frame+0x66/0x110 net/llc/llc_sap.c:54
-         [<000000002418b52e>] llc_conn_ac_send_sabme_cmd_p_set_x+0x2f/0x140  net/llc/llc_c_ac.c:777
-         [<000000001372ae17>] llc_exec_conn_trans_actions net/llc/llc_conn.c:475  [inline]
-         [<000000001372ae17>] llc_conn_service net/llc/llc_conn.c:400 [inline]
-         [<000000001372ae17>] llc_conn_state_process+0x1ac/0x640  net/llc/llc_conn.c:75
-         [<00000000f27e53c1>] llc_establish_connection+0x110/0x170  net/llc/llc_if.c:109
-         [<00000000291b2ca0>] llc_ui_connect+0x10e/0x370 net/llc/af_llc.c:477
-         [<000000000f9c740b>] __sys_connect+0x11d/0x170 net/socket.c:1840
-         [...]
+A workqueue (bond_slave_arr_handler) is supposed to retry
+the allocation later, but if the slave is removed before
+the workqueue had a chance to complete, bond->slave_arr
+can still be NULL.
 
-The bug is that most callers of llc_conn_send_pdu() assume it consumes a
-reference to the skb, when actually due to commit b85ab56c3f81 ("llc:
-properly handle dev_queue_xmit() return value") it doesn't.
+[1]
 
-Revert most of that commit, and instead make the few places that need
-llc_conn_send_pdu() to *not* consume a reference call skb_get() before.
+Failed to build slave-array.
+kasan: CONFIG_KASAN_INLINE enabled
+kasan: GPF could be caused by NULL-ptr deref or user memory access
+general protection fault: 0000 [#1] SMP KASAN PTI
+Modules linked in:
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+RIP: 0010:bond_update_slave_arr.cold+0xc6/0x198 drivers/net/bonding/bond_main.c:4039
+RSP: 0018:ffff88018fe33678 EFLAGS: 00010246
+RAX: dffffc0000000000 RBX: 0000000000000000 RCX: ffffc9000290b000
+RDX: 0000000000000000 RSI: ffffffff82b63037 RDI: ffff88019745ea20
+RBP: ffff88018fe33760 R08: ffff880170754280 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: ffff88019745ea00 R14: 0000000000000000 R15: ffff88018fe338b0
+FS:  00007febd837d700(0000) GS:ffff8801dad00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00000000004540a0 CR3: 00000001c242e005 CR4: 00000000001626f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ [<ffffffff82b5b45e>] __bond_release_one+0x43e/0x500 drivers/net/bonding/bond_main.c:1923
+ [<ffffffff82b5b966>] bond_release drivers/net/bonding/bond_main.c:2039 [inline]
+ [<ffffffff82b5b966>] bond_do_ioctl+0x416/0x870 drivers/net/bonding/bond_main.c:3562
+ [<ffffffff83ae25f4>] dev_ifsioc+0x6f4/0x940 net/core/dev_ioctl.c:328
+ [<ffffffff83ae2e58>] dev_ioctl+0x1b8/0xc70 net/core/dev_ioctl.c:495
+ [<ffffffff83995ffd>] sock_do_ioctl+0x1bd/0x300 net/socket.c:1088
+ [<ffffffff83996a80>] sock_ioctl+0x300/0x5d0 net/socket.c:1196
+ [<ffffffff81b124db>] vfs_ioctl fs/ioctl.c:47 [inline]
+ [<ffffffff81b124db>] file_ioctl fs/ioctl.c:501 [inline]
+ [<ffffffff81b124db>] do_vfs_ioctl+0xacb/0x1300 fs/ioctl.c:688
+ [<ffffffff81b12dc6>] SYSC_ioctl fs/ioctl.c:705 [inline]
+ [<ffffffff81b12dc6>] SyS_ioctl+0xb6/0xe0 fs/ioctl.c:696
+ [<ffffffff8101ccc8>] do_syscall_64+0x528/0x770 arch/x86/entry/common.c:305
+ [<ffffffff84400091>] entry_SYSCALL_64_after_hwframe+0x42/0xb7
 
-Fixes: b85ab56c3f81 ("llc: properly handle dev_queue_xmit() return value")
-Reported-by: syzbot+6b825a6494a04cc0e3f7@syzkaller.appspotmail.com
-Signed-off-by: Eric Biggers <ebiggers@google.com>
+Fixes: ee6377147409 ("bonding: Simplify the xmit function for modes that use xmit_hash")
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Cc: Mahesh Bandewar <maheshb@google.com>
 Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/llc_conn.h |    2 +-
- net/llc/llc_c_ac.c     |    8 ++++++--
- net/llc/llc_conn.c     |   32 +++++++++-----------------------
- 3 files changed, 16 insertions(+), 26 deletions(-)
+ drivers/net/bonding/bond_main.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/llc_conn.h
-+++ b/include/net/llc_conn.h
-@@ -104,7 +104,7 @@ void llc_sk_reset(struct sock *sk);
- 
- /* Access to a connection */
- int llc_conn_state_process(struct sock *sk, struct sk_buff *skb);
--int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
-+void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb);
- void llc_conn_rtn_pdu(struct sock *sk, struct sk_buff *skb);
- void llc_conn_resend_i_pdu_as_cmd(struct sock *sk, u8 nr, u8 first_p_bit);
- void llc_conn_resend_i_pdu_as_rsp(struct sock *sk, u8 nr, u8 first_f_bit);
---- a/net/llc/llc_c_ac.c
-+++ b/net/llc/llc_c_ac.c
-@@ -372,6 +372,7 @@ int llc_conn_ac_send_i_cmd_p_set_1(struc
- 	llc_pdu_init_as_i_cmd(skb, 1, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
-+		skb_get(skb);
- 		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
-@@ -389,7 +390,8 @@ static int llc_conn_ac_send_i_cmd_p_set_
- 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
--		rc = llc_conn_send_pdu(sk, skb);
-+		skb_get(skb);
-+		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
- 	return rc;
-@@ -406,6 +408,7 @@ int llc_conn_ac_send_i_xxx_x_set_0(struc
- 	llc_pdu_init_as_i_cmd(skb, 0, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
-+		skb_get(skb);
- 		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
-@@ -916,7 +919,8 @@ static int llc_conn_ac_send_i_rsp_f_set_
- 	llc_pdu_init_as_i_cmd(skb, llc->ack_pf, llc->vS, llc->vR);
- 	rc = llc_mac_hdr_init(skb, llc->dev->dev_addr, llc->daddr.mac);
- 	if (likely(!rc)) {
--		rc = llc_conn_send_pdu(sk, skb);
-+		skb_get(skb);
-+		llc_conn_send_pdu(sk, skb);
- 		llc_conn_ac_inc_vs_by_1(sk, skb);
- 	}
- 	return rc;
---- a/net/llc/llc_conn.c
-+++ b/net/llc/llc_conn.c
-@@ -30,7 +30,7 @@
- #endif
- 
- static int llc_find_offset(int state, int ev_type);
--static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *skb);
-+static void llc_conn_send_pdus(struct sock *sk);
- static int llc_conn_service(struct sock *sk, struct sk_buff *skb);
- static int llc_exec_conn_trans_actions(struct sock *sk,
- 				       struct llc_conn_state_trans *trans,
-@@ -193,11 +193,11 @@ out_skb_put:
- 	return rc;
- }
- 
--int llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
-+void llc_conn_send_pdu(struct sock *sk, struct sk_buff *skb)
- {
- 	/* queue PDU to send to MAC layer */
- 	skb_queue_tail(&sk->sk_write_queue, skb);
--	return llc_conn_send_pdus(sk, skb);
-+	llc_conn_send_pdus(sk);
- }
- 
- /**
-@@ -255,7 +255,7 @@ void llc_conn_resend_i_pdu_as_cmd(struct
- 	if (howmany_resend > 0)
- 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
- 	/* any PDUs to re-send are queued up; start sending to MAC */
--	llc_conn_send_pdus(sk, NULL);
-+	llc_conn_send_pdus(sk);
- out:;
- }
- 
-@@ -296,7 +296,7 @@ void llc_conn_resend_i_pdu_as_rsp(struct
- 	if (howmany_resend > 0)
- 		llc->vS = (llc->vS + 1) % LLC_2_SEQ_NBR_MODULO;
- 	/* any PDUs to re-send are queued up; start sending to MAC */
--	llc_conn_send_pdus(sk, NULL);
-+	llc_conn_send_pdus(sk);
- out:;
- }
- 
-@@ -340,16 +340,12 @@ out:
- /**
-  *	llc_conn_send_pdus - Sends queued PDUs
-  *	@sk: active connection
-- *	@hold_skb: the skb held by caller, or NULL if does not care
-  *
-- *	Sends queued pdus to MAC layer for transmission. When @hold_skb is
-- *	NULL, always return 0. Otherwise, return 0 if @hold_skb is sent
-- *	successfully, or 1 for failure.
-+ *	Sends queued pdus to MAC layer for transmission.
-  */
--static int llc_conn_send_pdus(struct sock *sk, struct sk_buff *hold_skb)
-+static void llc_conn_send_pdus(struct sock *sk)
- {
- 	struct sk_buff *skb;
--	int ret = 0;
- 
- 	while ((skb = skb_dequeue(&sk->sk_write_queue)) != NULL) {
- 		struct llc_pdu_sn *pdu = llc_pdu_sn_hdr(skb);
-@@ -361,20 +357,10 @@ static int llc_conn_send_pdus(struct soc
- 			skb_queue_tail(&llc_sk(sk)->pdu_unack_q, skb);
- 			if (!skb2)
- 				break;
--			dev_queue_xmit(skb2);
--		} else {
--			bool is_target = skb == hold_skb;
--			int rc;
--
--			if (is_target)
--				skb_get(skb);
--			rc = dev_queue_xmit(skb);
--			if (is_target)
--				ret = rc;
-+			skb = skb2;
- 		}
-+		dev_queue_xmit(skb);
- 	}
--
--	return ret;
- }
- 
- /**
+--- a/drivers/net/bonding/bond_main.c
++++ b/drivers/net/bonding/bond_main.c
+@@ -3963,7 +3963,7 @@ out:
+ 		 * this to-be-skipped slave to send a packet out.
+ 		 */
+ 		old_arr = rtnl_dereference(bond->slave_arr);
+-		for (idx = 0; idx < old_arr->count; idx++) {
++		for (idx = 0; old_arr != NULL && idx < old_arr->count; idx++) {
+ 			if (skipslave == old_arr->arr[idx]) {
+ 				old_arr->arr[idx] =
+ 				    old_arr->arr[old_arr->count-1];
 
 
