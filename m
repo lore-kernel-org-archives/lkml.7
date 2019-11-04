@@ -2,98 +2,65 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57997CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2553CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:03:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2336320717
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:01:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="psHy4bvA"
+	by mail.kernel.org (Postfix) with ESMTP id 781A7204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:03:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572901425;
+	bh=n3I/GXodjAc2ailEgazvTeiRrg2euShf1ziuoKHX/wk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2brcMbGjhJXbhe0QKeCZo4nDza3Cjq49ab35uCPESwKdJgXzK3tpvBura4iFk+BeZ
+	 u7sEIkHik1L45G59bk3zIYbRRl8W37btKoEvv/b1i7Ouj4PuWG+kmNTOXYS8/tAUVZ
+	 YpOcoOxBOQIXOAk9yx8GLVNmC6MTZ7teP3COljFM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729534AbfKDVBj (ORCPT
+        id S1729446AbfKDVDo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:01:39 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40351 "EHLO ozlabs.org"
+        Mon, 4 Nov 2019 16:03:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfKDVBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:01:38 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1728377AbfKDVDo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:03:44 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476QFq6vnYz9sP4;
-        Tue,  5 Nov 2019 08:01:35 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572901296;
-        bh=brx9ehP4FCaic0vmXRQ06+f8+KlGVKbOLJleBD7faYg=;
-        h=Date:From:To:Cc:Subject:From;
-        b=psHy4bvAIm0FYQ07rJGiqy1/GKaW7Jc7m/+Ps7bMISdZboZcqWaaZxXT5O8ItoHPo
-         uXxJQbhfWv57ZgSCUkMEpVlTlt4BzLlMU9oh8wsvGsfDwJhp1EsGULZTk3gOx8jAmO
-         G1PSOkhFbEH1JpAeQehlLbheSh1nW+P/e7FCei3aNQvAaOAQsCBDGJG3Rz6AovRHza
-         a7VfWtyRpYU0QUBRdXezsOaDv/iURklYX+oKX4VYsnOaplrUS+c8uo3/umaElpD4wY
-         QaJ7A/mjfMOMhtEn4LnQaZflB+3PkQswzGCwMHoOi9LlS6AIGyL8WpD2oqripVWdYQ
-         4q0VK5XAjWoEQ==
-Date:   Tue, 5 Nov 2019 08:01:34 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Tonghao Zhang <xiangxia.m.yue@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the net-next tree
-Message-ID: <20191105080134.33aab6a1@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id 321E720717;
+        Mon,  4 Nov 2019 21:03:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572901423;
+        bh=n3I/GXodjAc2ailEgazvTeiRrg2euShf1ziuoKHX/wk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=tgl8ivGyx0ARu3aabpW+8Rb3YzpsH5Fs2BJItwTpzwpxlkxki2CsCMa/DmmEorEDO
+         oqUno/dMmbRiHIst7H3QXmDufjlqNKZda+PVz9o09Zza4J+dMDI0P7ixXFiLb7UWWp
+         TaUnj+I5rrNmBODqwzF8zdswHqJD89mG2oVKFUv4=
+Date:   Mon, 4 Nov 2019 22:03:25 +0100
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/14] coresight: next v5.4-rc6
+Message-ID: <20191104210325.GA2454533@kroah.com>
+References: <20191104181251.26732-1-mathieu.poirier@linaro.org>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/avb18f9WLh=P4yYwbKJ6AmW";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104181251.26732-1-mathieu.poirier@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/avb18f9WLh=P4yYwbKJ6AmW
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Nov 04, 2019 at 11:12:37AM -0700, Mathieu Poirier wrote:
+> Hi Greg,
+> 
+> I collected the following for inclusion in the v5.5 kernel cycle.  Please have a
+> have a look when time permits.
 
-Hi all,
+Time permits now, looks good, all queued up, thanks.
 
-In commit
-
-  4c76bf696a60 ("net: openvswitch: don't unlock mutex when changing the use=
-r_features fails")
-
-Fixes tag
-
-  Fixes: 95a7233c4 ("net: openvswitch: Set OvS recirc_id from tc chain inde=
-x")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/avb18f9WLh=P4yYwbKJ6AmW
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3Aka4ACgkQAVBC80lX
-0Gxh1Qf/VPbOCMjnC53qoYQ/sjCHnkCid+CZjpDd658pC5jjnnGjFsG/80tAu20F
-Vq9Pn1wsh0bnb6Ws1W3AP52VYsTlPmsdUqD/OySA/FgqUCGS5wj4BT1F4HFlDmGT
-nqiiPsoK7YJ5GwFry+GX8CgfmN4agQ6UQUIz4NQ5x1XEO0y6xPj43tM4VyjRLJHy
-HAWn1XAfLBhUYl0KKIZYt22eIR1KNchx4bsD473fem11wQ7Wus/9Aqf6s+3oD+oW
-2IbDhTh1U8opcUDoVBtVOEYDug/YvNRUgFgdiWUG8MschX/1wCXbXGBJg6Fh/FM/
-wU1vtxVibJK+HyN3nepEfuQu7uQsdA==
-=YSCu
------END PGP SIGNATURE-----
-
---Sig_/avb18f9WLh=P4yYwbKJ6AmW--
+greg k-h
