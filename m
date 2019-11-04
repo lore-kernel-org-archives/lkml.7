@@ -2,143 +2,106 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7014CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0C3CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FD26214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:40:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E7+Dxgcy"
+	by mail.kernel.org (Postfix) with ESMTP id 1B6AC21882
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:41:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729757AbfKDXkn (ORCPT
+        id S1729892AbfKDXlU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:40:43 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43230 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728810AbfKDXkm (ORCPT
+        Mon, 4 Nov 2019 18:41:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:39134 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728810AbfKDXlT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:40:42 -0500
-Received: by mail-io1-f67.google.com with SMTP id c11so20490845iom.10;
-        Mon, 04 Nov 2019 15:40:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+gtFDV+OpfwB0979knGRFYbNMfIw7O9jwwSuGq5+Zgs=;
-        b=E7+DxgcyNVeFNVm9wYzr0ifdeLJ0jma+zZfBL808bD6j1A6qAJIgWcrMMhztO4TtLz
-         5CZlM3kddrgAjiQjbO20gdwNZMPaxq+XFcJQa35vdtC05LIRl0iKbQffbczGy7vLwzCH
-         vRLk3ISuZ46Zg3PksFT6HcxFiZEjRP8fpITChDIplBOxdQmCMN0pkeT1ilLrqpfC3lp0
-         kmMwSnJXjwfhp8/CZtnFFwZkwzdLWlvoFZSTyYegCCFM99jq74OraA5VYkE3M1vGU8+l
-         laaB1C1uUZl7kxzvIBlDQRg/7LBoO7meipORauv+K+C+rTKEOEBvNONZzU5Pj1nciBzi
-         japg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+gtFDV+OpfwB0979knGRFYbNMfIw7O9jwwSuGq5+Zgs=;
-        b=TKJM42KG8ja3Q/XcsKW5TFvq26BGffn3SOD0H/MBx7Tus3awfnVRy5wxjK6if7/EcN
-         RcYoEAkEib8lIsHxCN3pn1zwZVMcasA+37cSawF/88b8m8pC2anc+oBWBiKH8/sivNmV
-         uJYjnhpqtSpJP9JehdU85CedBICQiAmLvWgvuZatORy3XhceAmFtw5QDz8V8CMYPmchj
-         Dqv4uVpE6w7Jy/suR2eX8ZxsQ8dud46Bcev8Pr8xVCfqE7F+cC7MA6K0d0IBmLn7Pxv6
-         DqhYbsUeS3JgQ9UhKN/Sw8nj24kP/KY7ek54piMyMbRbhkvE0GIWJ3q4CJxs4pHEnTcU
-         9pyw==
-X-Gm-Message-State: APjAAAXlA+SO73d05AgBU5SeqgaQgsbb/l9yqXRhkUcxwF21sRqbdlDs
-        I0C6ups0E/KUr4hJmcGmemgJq7pMnNbA8gFHFJI21Q==
-X-Google-Smtp-Source: APXvYqxNSg/frjj6xHig5pnaf8JfCzeOaOBnqbSPp61Bf33M4W13Qld8bOjXR1x4ZZKAyJTG+AqWlMXa2kY5oJc/EtM=
-X-Received: by 2002:a6b:6f16:: with SMTP id k22mr11789259ioc.205.1572910839803;
- Mon, 04 Nov 2019 15:40:39 -0800 (PST)
+        Mon, 4 Nov 2019 18:41:19 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iRlyC-00019P-9m; Tue, 05 Nov 2019 00:41:12 +0100
+Date:   Tue, 5 Nov 2019 00:41:11 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+cc:     Kar Hin Ong <kar.hin.ong@ni.com>,
+        linux-rt-users <linux-rt-users@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-x86_64@vger.kernel.org, linux-pci@vger.kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>
+Subject: Re: "oneshot" interrupt causes another interrupt to be fired
+ erroneously in Haswell system
+In-Reply-To: <20191031230532.GA170712@google.com>
+Message-ID: <alpine.DEB.2.21.1911050017410.17054@nanos.tec.linutronix.de>
+References: <20191031230532.GA170712@google.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
- <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
- <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
- <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com> <20191104233621.GP57214@dtor-ws>
-In-Reply-To: <20191104233621.GP57214@dtor-ws>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 4 Nov 2019 17:40:28 -0600
-Message-ID: <CAHCN7x+=_FM32JTEKAb=5pPJNvim88cUFuEXgdGhMG9gdr0Emg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
-        Marek Vasut <marex@denx.de>, linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 5:36 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> On Mon, Nov 04, 2019 at 05:25:23PM -0600, Adam Ford wrote:
-> > On Mon, Nov 4, 2019 at 3:43 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
-> > >
-> > > Hi Adam,
-> > >
-> > > On Mon, Nov 4, 2019 at 4:28 PM Adam Ford <aford173@gmail.com> wrote:
-> > > >
-> > > > I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
-> > > > my touchscreen, the IRQ line is low until a touch is detected, so I
-> > > > assume we want to capure on the rising edge.
-> > >
-> > > That is correct for the 2117A, as far as I know. I am using the same
-> > > setting.
-> > >
-> > > >
-> > > > Regarding Dmitry's patch,
-> > > > Is it a good idea to use msleep in an IRQ?  It seems like using the
-> > > > schedule_delayed_work() call seems like it will get in and get out of
-> > > > the ISR faster.
-> > > >
-> > > > If we use msleep and scan again, isn't it possible to starve other processes?
-> > >
-> > > I believe using msleep() is ok because this is not a "real" interrupt handler,
-> > > but a threaded one. It runs in a regular kernel thread, with its interrupt
-> > > turned off (but all other interrupts remain enabled). Its interrupt is
-> > > re-enabled automatically after the threaded handler returns.
-> > >
-> > > See
-> > > https://elixir.bootlin.com/linux/latest/source/include/linux/interrupt.h#L50
-> > >
-> > > > > @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
-> > > > >                 }
-> > > > >
-> > > > >                 touch = ili210x_report_events(priv, touchdata);
-> > > > > -               keep_polling = touch || chip->continue_polling(touchdata);
-> > > > > +               keep_polling = chip->continue_polling(touchdata, touch);
-> > > > >                 if (keep_polling)
-> > > >
-> > > > Why not just check the value of touch instead of invoking the function
-> > > > pointer which takes the value of touch in as a parameter?
-> > > >
-> > >
-> > > The value of touch must be checked inside the callback, because
-> > > some variants use it to decide if they should poll again, and
-> > > some do not, such as the ili211x.
+On Thu, 31 Oct 2019, Bjorn Helgaas wrote:
+> On Thu, Oct 31, 2019 at 03:53:50AM +0000, Kar Hin Ong wrote:
+> > I've an Intel Haswell system running Linux kernel v4.14 with
+> > preempt_rt patch. The system contain 2 IOAPICs: IOAPIC 1 is on the
+> > PCH where IOAPIC 2 is on the CPU.
+> > 
+> > I observed that whenever a PCI device is firing interrupt (INTx) to
+> > Pin 20 of IOAPIC 2 (GSI 44); the kernel will receives 2 interrupts: 
+> >    1. Interrupt from Pin 20 of IOAPIC 2  -> Expected
+> >    2. Interrupt from Pin 19 of IOAPIC 1  -> UNEXPECTED, erroneously
+> >       triggered
 > >
-> > That makes sense.
-> > >
-> > > If I have misinterpreted your suggestion, could you perhaps
-> > > express it in C, so I can understand better?
-> >
-> > You explained it.
-> > I'm good.
->
-> OK, I refreshed the branch with fixes and a couple of new patches. It is
-> on top of 5.3 now. If this works for you guys I will be merging it for
-> 5.5.
+> > The unexpected interrupt is unhandled eventually. When this scenario
+> > happen more than 99,000 times, kernel disables the interrupt line
+> > (Pin 19 of IOAPIC 1) and causing device that has requested it become
+> > malfunction.
+> > 
+> > I managed to also reproduced this issue on RHEL 8 and Ubuntu 19-04
+> > (without preempt_rt patch) after added "threadirqs" to the kernel
+> > command line.
+> > 
+> > After digging further, I noticed that the said issue is happened
+> > whenever an interrupt pin on IOAPIC 2 is masked:
+> >  - Masking Pin 20 of IOAPIC 2 triggers Pin 19 of IOAPIC 1  
+> >  - Masking Pin 22 of IOAPIC 2 triggers Pin 18 of IOAPIC 1
 
-I will test it tomorrow on a 2117a and reply with results.  I am very
-excited to see this integrated.
+This is pretty much the same problem which we had analyzed and worked
+around years ago.
 
-adam
->
-> Thanks.
->
-> --
-> Dmitry
+> > From Intel Xeon Processor E5/E7 v3 Product Family External Design
+> > Specification (EDS), Volume One: Architecture, section 13.1 (Legacy
+> > PCI Interrupt Handling), it mention: "If the I/OxAPIC entry is
+> > masked (via the 'mask' bit in the corresponding Redirection Table
+> > Entry), then the corresponding PCI Express interrupt(s) is forwarded
+> > to the legacy PCH"
+
+Oh well. Really useful behaviour - NOT!
+
+> > I would like to understand if my interpretation is make sense. If
+> > yes, should the "oneshot" algorithm need to be updated to support
+> > Haswell system?
+
+No. You cannot change the oneshot algorithm.
+
+The workarounds for this are enabled by PCI quirls and either
+CONFIG_X86_REROUTE_FOR_BROKEN_BOOT_IRQS=y or 'ioapicreroute' on the command
+line.
+
+It might be wortha try to add the PCI ID of that box to the quirk list,
+i.e. the PCI ID matches in drivers/pci/quirks.c which belong to the
+function: quirk_reroute_to_boot_interrupts_intel().
+
+Thanks,
+
+	tglx
