@@ -2,51 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF3BBCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7099CCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9733E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 436E1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905815;
-	bh=EAMdQDt1Bh0/+ld61Uyi+Vl71YdSRzIHXTD9npB2VVc=;
+	s=default; t=1572905821;
+	bh=UUWyLzojf/Zc9gwtlPTyBsk6pLDJ7tKQg7iqzvGhiO0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FzWaOW0jNZi1P9SNrp9XSnLpAyY2Ai3hiJkm3H3RU/xXOQgcOor8t4tQtwm7QvQj4
-	 58nqwEdzeh+FbZBYy7HOgUuw6dp89EGYtCDM1cgO/uYLIfs2x5Nth4uXJRUPEA2SLj
-	 IjUopK7QZmMAsULUAwZWa3Wms4JGhyeUlHp6utjs=
+	b=DJS9p3qVr2RFwcnfpGN0eSadxO89Moy0YJh9nVHPEs24NtypWbPgujMFuPy3+4b6J
+	 un/FfSRbLJ+/khS42/o/jknsXWfst5Vkdu1W7cMIz+AUVJPbdCim4UcrdVNy1tOaeb
+	 sKX+cYFVdStHOCrXiaVsM5kHKW5c15oXcs1cNvlQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390105AbfKDWQy (ORCPT
+        id S2389495AbfKDWDY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:16:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33818 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:03:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33626 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389515AbfKDWDa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:03:30 -0500
+        id S2387970AbfKDWDT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:03:19 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5575214D8;
-        Mon,  4 Nov 2019 22:03:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 978162084D;
+        Mon,  4 Nov 2019 22:03:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905009;
-        bh=EAMdQDt1Bh0/+ld61Uyi+Vl71YdSRzIHXTD9npB2VVc=;
+        s=default; t=1572904997;
+        bh=UUWyLzojf/Zc9gwtlPTyBsk6pLDJ7tKQg7iqzvGhiO0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jS11C8VrnMftlDcSY5Mt+Cod8iXpI9rMBi5QYe5nUlI1plmyeYs7Bk3buakEEBoDb
-         FFWGS9ercxNwABqchDIyB/C4nc1T7QThGBo88bDtQfYMVlaIhEX2ZMRI+AF9RQvUgI
-         FfHdL0Lbp4FpRwnrIoGOgNLOIxziipYUpnfuB968=
+        b=R9VB28x1qeah9FjNE19rZUOKIISuka37uhX5HNnZCSDwkpRiVMC92FAp2Q5XdPh/2
+         ORsWfiWzpcmO9+PNCSRXt5vnc2p9rW0rXF9x3fc23f7S9wlmiweAamYQSek/i5xHdF
+         09R/8j0FTDEpbCmmy3bjSceh6/L9/rkPbknq7aLI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 147/149] ALSA: usb-audio: DSD auto-detection for Playback Designs
-Date:   Mon,  4 Nov 2019 22:45:40 +0100
-Message-Id: <20191104212146.986443597@linuxfoundation.org>
+        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
+        syzbot <syzkaller@googlegroups.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.19 144/149] sch_netem: fix rcu splat in netem_enqueue()
+Date:   Mon,  4 Nov 2019 22:45:37 +0100
+Message-Id: <20191104212146.800662268@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,49 +60,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jussi Laako <jussi@sonarnerd.net>
+From: Eric Dumazet <edumazet@google.com>
 
-[ Upstream commit eb7505d52a2f8b0cfc3fd7146d8cb2dab5a73f0d ]
+commit 159d2c7d8106177bd9a986fd005a311fe0d11285 upstream.
 
-Add DSD support auto-detection for newer Playback Designs devices. Older
-device generations have a different USB interface implementation.
+qdisc_root() use from netem_enqueue() triggers a lockdep warning.
 
-Keep the auto-detection VID whitelist sorted.
+__dev_queue_xmit() uses rcu_read_lock_bh() which is
+not equivalent to rcu_read_lock() + local_bh_disable_bh as far
+as lockdep is concerned.
 
-Signed-off-by: Jussi Laako <jussi@sonarnerd.net>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+WARNING: suspicious RCU usage
+5.3.0-rc7+ #0 Not tainted
+-----------------------------
+include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
+
+other info that might help us debug this:
+
+rcu_scheduler_active = 2, debug_locks = 1
+3 locks held by syz-executor427/8855:
+ #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
+ #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
+ #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
+ #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
+ #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
+ #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
+
+stack backtrace:
+CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+ lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
+ qdisc_root include/net/sch_generic.h:492 [inline]
+ netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
+ __dev_xmit_skb net/core/dev.c:3527 [inline]
+ __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
+ dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
+ neigh_hh_output include/net/neighbour.h:500 [inline]
+ neigh_output include/net/neighbour.h:509 [inline]
+ ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
+ __ip_finish_output net/ipv4/ip_output.c:308 [inline]
+ __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
+ ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
+ NF_HOOK_COND include/linux/netfilter.h:294 [inline]
+ ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
+ dst_output include/net/dst.h:436 [inline]
+ ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
+ ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
+ udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
+ udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
+ inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
+ sock_sendmsg_nosec net/socket.c:637 [inline]
+ sock_sendmsg+0xd7/0x130 net/socket.c:657
+ ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
+ __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
+ __do_sys_sendmmsg net/socket.c:2442 [inline]
+ __se_sys_sendmmsg net/socket.c:2439 [inline]
+ __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
+ do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Signed-off-by: Eric Dumazet <edumazet@google.com>
+Reported-by: syzbot <syzkaller@googlegroups.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/usb/quirks.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ include/net/sch_generic.h |    5 +++++
+ net/sched/sch_netem.c     |    2 +-
+ 2 files changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index e5dde06c31a6f..0a8a0978a2dba 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1343,7 +1343,8 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 	struct usb_interface *iface;
+--- a/include/net/sch_generic.h
++++ b/include/net/sch_generic.h
+@@ -421,6 +421,11 @@ static inline struct Qdisc *qdisc_root(c
+ 	return q;
+ }
  
- 	/* Playback Designs */
--	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba) {
-+	if (USB_ID_VENDOR(chip->usb_id) == 0x23ba &&
-+	    USB_ID_PRODUCT(chip->usb_id) < 0x0110) {
- 		switch (fp->altsetting) {
- 		case 1:
- 			fp->dsd_dop = true;
-@@ -1431,8 +1432,9 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 	 * from XMOS/Thesycon
++static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
++{
++	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
++}
++
+ static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
+ {
+ 	return qdisc->dev_queue->qdisc_sleeping;
+--- a/net/sched/sch_netem.c
++++ b/net/sched/sch_netem.c
+@@ -474,7 +474,7 @@ static int netem_enqueue(struct sk_buff
+ 	 * skb will be queued.
  	 */
- 	switch (USB_ID_VENDOR(chip->usb_id)) {
--	case 0x20b1:  /* XMOS based devices */
- 	case 0x152a:  /* Thesycon devices */
-+	case 0x20b1:  /* XMOS based devices */
-+	case 0x23ba:  /* Playback Designs */
- 	case 0x25ce:  /* Mytek devices */
- 	case 0x2ab6:  /* T+A devices */
- 	case 0x3842:  /* EVGA */
--- 
-2.20.1
-
+ 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
+-		struct Qdisc *rootq = qdisc_root(sch);
++		struct Qdisc *rootq = qdisc_root_bh(sch);
+ 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
+ 
+ 		q->duplicate = 0;
 
 
