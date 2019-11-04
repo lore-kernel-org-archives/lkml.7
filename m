@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D58CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA426CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BB2B204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEF7E204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906324;
-	bh=a0RqE74YTnAhuGVNpQ377VEU2Pekte0oH+GvY8xj9Co=;
+	s=default; t=1572906331;
+	bh=ChFRGwLJ3VQnvQ2hdzzcMyib6eDJz9YUYbi7p0EdSSQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=L/Ybje5PM3qOMjWB2VcCkP9OxXqn4DttK89Nrlx7iA1xwHB7emGcACpj3Bi+X9WKr
-	 2WAhRdOqCXuzTet1dco9mkHxSwCenvKiTU4ScFFbUTfokbQwFNbY8ahz/tONfCBOxU
-	 dpOPyfEWtIgv1veMd2Wv/vHgGngD7tYKXauKmnBI=
+	b=i72H729WAes6fQFJa7ndJNW5Q3WfUNkBaF9AYxwVple5Ntx6mLS6cWSIX+J67BERH
+	 SK7jYvtSR3WSB75323ovn0ySwHhz1v8SGMa0660CWrI0VjvN8nVBr2pHt3oeBm5/0b
+	 L9Zb22GXnM8WQoTgm7/wcZx50qj097p+Ugrpn6d8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730604AbfKDVvq (ORCPT
+        id S2389171AbfKDWZa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44646 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:25:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44784 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730125AbfKDVvk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:40 -0500
+        id S1730591AbfKDVvo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3D51D21850;
-        Mon,  4 Nov 2019 21:51:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E748A217F5;
+        Mon,  4 Nov 2019 21:51:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904298;
-        bh=a0RqE74YTnAhuGVNpQ377VEU2Pekte0oH+GvY8xj9Co=;
+        s=default; t=1572904303;
+        bh=ChFRGwLJ3VQnvQ2hdzzcMyib6eDJz9YUYbi7p0EdSSQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xaI9QaoQosIWQ8nYtPNw7UNXzhBmycZOfF14jwS8VBDB5L1h43rGk+Bx1sZYKkRDN
-         tlUo3llzoEvyyAbZKDT2Ihf9sFnBD6NUnfcJ0CJIX+oELnSZ1JrtCFriccvPbL+PDp
-         eSZzJgaUrw4pEzerTfEhwidyhIxlGLjgl0SKlhrQ=
+        b=SHZbnL4/iZlMLlBRvDGF47KLdHyMKESFCVEebIqsxxhsBzU5bGqRRQLQQF5MGzLX1
+         GKwT1P6f3CsOa2lI8NJqODwDGQCJXn+FmouBdjkJOnWSDOGQYmS4+S/OWWN0WldkNd
+         sev7twEshRvJNyXWeKN++dsZisTev4S4iJue8SkY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com,
         Xin Long <lucien.xin@gmail.com>,
-        Neil Horman <nhorman@tuxdriver.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 56/62] sctp: fix the issue that flags are ignored when using kernel_connect
-Date:   Mon,  4 Nov 2019 22:45:18 +0100
-Message-Id: <20191104211958.367105842@linuxfoundation.org>
+Subject: [PATCH 4.9 57/62] sctp: not bind the socket in sctp_connect
+Date:   Mon,  4 Nov 2019 22:45:19 +0100
+Message-Id: <20191104211958.592547035@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -65,212 +64,70 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Xin Long <lucien.xin@gmail.com>
 
-commit 644fbdeacf1d3edd366e44b8ba214de9d1dd66a9 upstream.
+commit 9b6c08878e23adb7cc84bdca94d8a944b03f099e upstream.
 
-Now sctp uses inet_dgram_connect as its proto_ops .connect, and the flags
-param can't be passed into its proto .connect where this flags is really
-needed.
+Now when sctp_connect() is called with a wrong sa_family, it binds
+to a port but doesn't set bp->port, then sctp_get_af_specific will
+return NULL and sctp_connect() returns -EINVAL.
 
-sctp works around it by getting flags from socket file in __sctp_connect.
-It works for connecting from userspace, as inherently the user sock has
-socket file and it passes f_flags as the flags param into the proto_ops
-.connect.
+Then if sctp_bind() is called to bind to another port, the last
+port it has bound will leak due to bp->port is NULL by then.
 
-However, the sock created by sock_create_kern doesn't have a socket file,
-and it passes the flags (like O_NONBLOCK) by using the flags param in
-kernel_connect, which calls proto_ops .connect later.
+sctp_connect() doesn't need to bind ports, as later __sctp_connect
+will do it if bp->port is NULL. So remove it from sctp_connect().
+While at it, remove the unnecessary sockaddr.sa_family len check
+as it's already done in sctp_inet_connect.
 
-So to fix it, this patch defines a new proto_ops .connect for sctp,
-sctp_inet_connect, which calls __sctp_connect() directly with this
-flags param. After this, the sctp's proto .connect can be removed.
-
-Note that sctp_inet_connect doesn't need to do some checks that are not
-needed for sctp, which makes thing better than with inet_dgram_connect.
-
-Suggested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Fixes: 644fbdeacf1d ("sctp: fix the issue that flags are ignored when using kernel_connect")
+Reported-by: syzbot+079bf326b38072f849d9@syzkaller.appspotmail.com
 Signed-off-by: Xin Long <lucien.xin@gmail.com>
-Acked-by: Neil Horman <nhorman@tuxdriver.com>
 Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
----
- include/net/sctp/sctp.h |    2 +
- net/sctp/ipv6.c         |    2 -
- net/sctp/protocol.c     |    2 -
- net/sctp/socket.c       |   56 ++++++++++++++++++++++++++++++++----------------
- 4 files changed, 42 insertions(+), 20 deletions(-)
 
---- a/include/net/sctp/sctp.h
-+++ b/include/net/sctp/sctp.h
-@@ -103,6 +103,8 @@ void sctp_addr_wq_mgmt(struct net *, str
- /*
-  * sctp/socket.c
-  */
-+int sctp_inet_connect(struct socket *sock, struct sockaddr *uaddr,
-+		      int addr_len, int flags);
- int sctp_backlog_rcv(struct sock *sk, struct sk_buff *skb);
- int sctp_inet_listen(struct socket *sock, int backlog);
- void sctp_write_space(struct sock *sk);
---- a/net/sctp/ipv6.c
-+++ b/net/sctp/ipv6.c
-@@ -973,7 +973,7 @@ static const struct proto_ops inet6_seqp
- 	.owner		   = THIS_MODULE,
- 	.release	   = inet6_release,
- 	.bind		   = inet6_bind,
--	.connect	   = inet_dgram_connect,
-+	.connect	   = sctp_inet_connect,
- 	.socketpair	   = sock_no_socketpair,
- 	.accept		   = inet_accept,
- 	.getname	   = sctp_getname,
---- a/net/sctp/protocol.c
-+++ b/net/sctp/protocol.c
-@@ -1014,7 +1014,7 @@ static const struct proto_ops inet_seqpa
- 	.owner		   = THIS_MODULE,
- 	.release	   = inet_release,	/* Needs to be wrapped... */
- 	.bind		   = inet_bind,
--	.connect	   = inet_dgram_connect,
-+	.connect	   = sctp_inet_connect,
- 	.socketpair	   = sock_no_socketpair,
- 	.accept		   = inet_accept,
- 	.getname	   = inet_getname,	/* Semantics are different.  */
+---
+ net/sctp/socket.c |   21 ++-------------------
+ 1 file changed, 2 insertions(+), 19 deletions(-)
+
 --- a/net/sctp/socket.c
 +++ b/net/sctp/socket.c
-@@ -1074,7 +1074,7 @@ out:
-  */
- static int __sctp_connect(struct sock *sk,
- 			  struct sockaddr *kaddrs,
--			  int addrs_size,
-+			  int addrs_size, int flags,
- 			  sctp_assoc_t *assoc_id)
- {
- 	struct net *net = sock_net(sk);
-@@ -1092,7 +1092,6 @@ static int __sctp_connect(struct sock *s
- 	union sctp_addr *sa_addr = NULL;
- 	void *addr_buf;
- 	unsigned short port;
--	unsigned int f_flags = 0;
- 
- 	sp = sctp_sk(sk);
- 	ep = sp->ep;
-@@ -1240,13 +1239,7 @@ static int __sctp_connect(struct sock *s
- 	sp->pf->to_sk_daddr(sa_addr, sk);
- 	sk->sk_err = 0;
- 
--	/* in-kernel sockets don't generally have a file allocated to them
--	 * if all they do is call sock_create_kern().
--	 */
--	if (sk->sk_socket->file)
--		f_flags = sk->sk_socket->file->f_flags;
--
--	timeo = sock_sndtimeo(sk, f_flags & O_NONBLOCK);
-+	timeo = sock_sndtimeo(sk, flags & O_NONBLOCK);
- 
- 	if (assoc_id)
- 		*assoc_id = asoc->assoc_id;
-@@ -1341,7 +1334,7 @@ static int __sctp_setsockopt_connectx(st
- {
- 	struct sockaddr *kaddrs;
- 	gfp_t gfp = GFP_KERNEL;
--	int err = 0;
-+	int err = 0, flags = 0;
- 
- 	pr_debug("%s: sk:%p addrs:%p addrs_size:%d\n",
- 		 __func__, sk, addrs, addrs_size);
-@@ -1361,11 +1354,18 @@ static int __sctp_setsockopt_connectx(st
- 		return -ENOMEM;
- 
- 	if (__copy_from_user(kaddrs, addrs, addrs_size)) {
--		err = -EFAULT;
--	} else {
--		err = __sctp_connect(sk, kaddrs, addrs_size, assoc_id);
-+		kfree(kaddrs);
-+		return -EFAULT;
- 	}
- 
-+	/* in-kernel sockets don't generally have a file allocated to them
-+	 * if all they do is call sock_create_kern().
-+	 */
-+	if (sk->sk_socket->file)
-+		flags = sk->sk_socket->file->f_flags;
-+
-+	err = __sctp_connect(sk, kaddrs, addrs_size, flags, assoc_id);
-+
- 	kfree(kaddrs);
- 
- 	return err;
-@@ -3979,16 +3979,26 @@ out_nounlock:
-  * len: the size of the address.
-  */
+@@ -3981,34 +3981,17 @@ out_nounlock:
  static int sctp_connect(struct sock *sk, struct sockaddr *addr,
--			int addr_len)
-+			int addr_len, int flags)
+ 			int addr_len, int flags)
  {
--	int err = 0;
-+	struct inet_sock *inet = inet_sk(sk);
+-	struct inet_sock *inet = inet_sk(sk);
  	struct sctp_af *af;
-+	int err = 0;
+-	int err = 0;
++	int err = -EINVAL;
  
  	lock_sock(sk);
- 
+-
  	pr_debug("%s: sk:%p, sockaddr:%p, addr_len:%d\n", __func__, sk,
  		 addr, addr_len);
  
-+	/* We may need to bind the socket. */
-+	if (!inet->inet_num) {
-+		if (sk->sk_prot->get_port(sk, 0)) {
-+			release_sock(sk);
-+			return -EAGAIN;
-+		}
-+		inet->inet_sport = htons(inet->inet_num);
-+	}
-+
+-	/* We may need to bind the socket. */
+-	if (!inet->inet_num) {
+-		if (sk->sk_prot->get_port(sk, 0)) {
+-			release_sock(sk);
+-			return -EAGAIN;
+-		}
+-		inet->inet_sport = htons(inet->inet_num);
+-	}
+-
  	/* Validate addr_len before calling common connect/connectx routine. */
  	af = sctp_get_af_specific(addr->sa_family);
- 	if (!af || addr_len < af->sockaddr_len) {
-@@ -3997,13 +4007,25 @@ static int sctp_connect(struct sock *sk,
- 		/* Pass correct addr len to common routine (so it knows there
- 		 * is only one address being passed.
- 		 */
--		err = __sctp_connect(sk, addr, af->sockaddr_len, NULL);
-+		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
- 	}
+-	if (!af || addr_len < af->sockaddr_len) {
+-		err = -EINVAL;
+-	} else {
+-		/* Pass correct addr len to common routine (so it knows there
+-		 * is only one address being passed.
+-		 */
++	if (af && addr_len >= af->sockaddr_len)
+ 		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
+-	}
  
  	release_sock(sk);
  	return err;
- }
- 
-+int sctp_inet_connect(struct socket *sock, struct sockaddr *uaddr,
-+		      int addr_len, int flags)
-+{
-+	if (addr_len < sizeof(uaddr->sa_family))
-+		return -EINVAL;
-+
-+	if (uaddr->sa_family == AF_UNSPEC)
-+		return -EOPNOTSUPP;
-+
-+	return sctp_connect(sock->sk, uaddr, addr_len, flags);
-+}
-+
- /* FIXME: Write comments. */
- static int sctp_disconnect(struct sock *sk, int flags)
- {
-@@ -7896,7 +7918,6 @@ struct proto sctp_prot = {
- 	.name        =	"SCTP",
- 	.owner       =	THIS_MODULE,
- 	.close       =	sctp_close,
--	.connect     =	sctp_connect,
- 	.disconnect  =	sctp_disconnect,
- 	.accept      =	sctp_accept,
- 	.ioctl       =	sctp_ioctl,
-@@ -7935,7 +7956,6 @@ struct proto sctpv6_prot = {
- 	.name		= "SCTPv6",
- 	.owner		= THIS_MODULE,
- 	.close		= sctp_close,
--	.connect	= sctp_connect,
- 	.disconnect	= sctp_disconnect,
- 	.accept		= sctp_accept,
- 	.ioctl		= sctp_ioctl,
 
 
