@@ -2,56 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8204CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B36DFCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56BC321E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 85475217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904503;
-	bh=ovT+YY6J3EIP56Anwt7CNtWnyGZ15befber1YB3kycw=;
+	s=default; t=1572904505;
+	bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ewI6HcqJn9VyOe+p1uoPmkBps0EFI+69rTAw4db15W6iLHYzG1UpQ+F8SYfc1JXCJ
-	 sd/nbkgYx0BZW5EcWE6dM51QD5lE5TyJP/QxqvV5zb08GM/sfDthvCWtBf8m64S2G8
-	 Vraf4xkF5dFajz3apu/Z92Aq4KIqWxwBZpvR/DT8=
+	b=xXMUXbO7hIN8VS0TXg2XEl0HQhgXuvfXUDPQFM1wL2eT9S99Jw23pSVqKtC3LVKXK
+	 dl9N5v2yZVKvhL4s7KodmRzQgUwf2YbqsvftzkdTNkrUZ+aL+B2p6gEMY3gb65FGMk
+	 N/YD3KgBW+QuAr1c4bn+5G4RHEkoa1a8+zsF2PUI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388073AbfKDVzC (ORCPT
+        id S2388084AbfKDVzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50012 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50090 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387550AbfKDVy7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:54:59 -0500
+        id S2388066AbfKDVzB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:01 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4BB272184C;
-        Mon,  4 Nov 2019 21:54:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2B369217F4;
+        Mon,  4 Nov 2019 21:54:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904497;
-        bh=ovT+YY6J3EIP56Anwt7CNtWnyGZ15befber1YB3kycw=;
+        s=default; t=1572904500;
+        bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=smm9BVFiT6XB6YITUoFmiBFRVwf+r26EB+JPCLYXctIUeR4i4JjTd4yKO9nDkjipU
-         IHlt8vuZKT7mtyCvLlLfqOwfTga8SlAqkZBWMHOKCAG2a2BejmllOLt1WHcwq8rOWc
-         hDxjW/9LAxjmmNcM5EDxmaWjmKU5mkHjmQzH7Tjs=
+        b=SZcIbRK7+SwZAgt1T6C69OYmHC3R/rv4OWlVOOgRCLW0iEDm07PsiXRip14CiFR6P
+         Gaw0qashHWgpUiGNadCWax9zdNP/kyyUEbtV1baLDl3ARZPd2x3QdBAsjyaoDGG7H9
+         D3//Jiaxr5MWXYBMKeutot+I/uXvOHQ/HzE4gtsY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Rik van Riel <riel@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 49/95] sched/vtime: Fix guest/system mis-accounting on task switch
-Date:   Mon,  4 Nov 2019 22:44:47 +0100
-Message-Id: <20191104212103.626150804@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 4.14 67/95] UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Date:   Mon,  4 Nov 2019 22:45:05 +0100
+Message-Id: <20191104212111.409017128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -64,79 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Frederic Weisbecker <frederic@kernel.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
+commit 1186f86a71130a7635a20843e355bb880c7349b2 upstream.
 
-vtime_account_system() assumes that the target task to account cputime
-to is always the current task. This is most often true indeed except on
-task switch where we call:
+Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments"),
+copying a similar commit for usb-storage, attempted to solve a problem
+involving scatter-gather I/O and USB/IP by setting the
+virt_boundary_mask for mass-storage devices.
 
-	vtime_common_task_switch(prev)
-		vtime_account_system(prev)
+However, it now turns out that the analogous change in usb-storage
+interacted badly with commit 09324d32d2a0 ("block: force an unlimited
+segment size on queues with a virt boundary"), which was added later.
+A typical error message is:
 
-Here prev is the scheduling-out task where we account the cputime to. It
-doesn't match current that is already the scheduling-in task at this
-stage of the context switch.
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
 
-So we end up checking the wrong task flags to determine if we are
-accounting guest or system time to the previous task.
+There is no longer any reason to keep the virt_boundary_mask setting
+in the uas driver.  It was needed in the first place only for
+handling devices with a block size smaller than the maxpacket size and
+where the host controller was not capable of fully general
+scatter-gather operation (that is, able to merge two SG segments into
+a single USB packet).  But:
 
-As a result the wrong task is used to check if the target is running in
-guest mode. We may then spuriously account or leak either system or
-guest time on task switch.
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
 
-Fix this assumption and also turn vtime_guest_enter/exit() to use the
-task passed in parameter as well to avoid future similar issues.
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
 
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Rik van Riel <riel@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Wanpeng Li <wanpengli@tencent.com>
-Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
-Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to head
+off potential problems similar to those affecting usb-storage, this
+patch reverts commit 3ae62a42090f.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Oliver Neukum <oneukum@suse.com>
+CC: <stable@vger.kernel.org>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Fixes: 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910231132470.1878-100000@iolanthe.rowland.org
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- kernel/sched/cputime.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/usb/storage/uas.c |   20 --------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 14d2dbf97c531..45c2cd37fe6b0 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -738,7 +738,7 @@ void vtime_account_system(struct task_struct *tsk)
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -796,30 +796,10 @@ static int uas_slave_alloc(struct scsi_d
+ {
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
+-	int maxp;
  
- 	write_seqcount_begin(&vtime->seqcount);
- 	/* We might have scheduled out from guest path */
--	if (current->flags & PF_VCPU)
-+	if (tsk->flags & PF_VCPU)
- 		vtime_account_guest(tsk, vtime);
- 	else
- 		__vtime_account_system(tsk, vtime);
-@@ -781,7 +781,7 @@ void vtime_guest_enter(struct task_struct *tsk)
- 	 */
- 	write_seqcount_begin(&vtime->seqcount);
- 	__vtime_account_system(tsk, vtime);
--	current->flags |= PF_VCPU;
-+	tsk->flags |= PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_enter);
-@@ -792,7 +792,7 @@ void vtime_guest_exit(struct task_struct *tsk)
+ 	sdev->hostdata = devinfo;
  
- 	write_seqcount_begin(&vtime->seqcount);
- 	vtime_account_guest(tsk, vtime);
--	current->flags &= ~PF_VCPU;
-+	tsk->flags &= ~PF_VCPU;
- 	write_seqcount_end(&vtime->seqcount);
- }
- EXPORT_SYMBOL_GPL(vtime_guest_exit);
--- 
-2.20.1
-
+ 	/*
+-	 * We have two requirements here. We must satisfy the requirements
+-	 * of the physical HC and the demands of the protocol, as we
+-	 * definitely want no additional memory allocation in this path
+-	 * ruling out using bounce buffers.
+-	 *
+-	 * For a transmission on USB to continue we must never send
+-	 * a package that is smaller than maxpacket. Hence the length of each
+-         * scatterlist element except the last must be divisible by the
+-         * Bulk maxpacket value.
+-	 * If the HC does not ensure that through SG,
+-	 * the upper layer must do that. We must assume nothing
+-	 * about the capabilities off the HC, so we use the most
+-	 * pessimistic requirement.
+-	 */
+-
+-	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * The protocol has no requirements on alignment in the strict sense.
+ 	 * Controllers may or may not have alignment restrictions.
+ 	 * As this is not exported, we use an extremely conservative guess.
 
 
