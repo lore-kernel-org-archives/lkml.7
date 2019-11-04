@@ -7,51 +7,51 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9AE8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E809BCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 701A2214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCF4F222C4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:06:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905213;
-	bh=1Bp5QXY3r3Fb+fDqXdQe66OxpU2X041hGzALEvclh84=;
+	s=default; t=1572905217;
+	bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=LVcxHbG2zqUkUDsV1/iOun/rpYJKUdVQtzuXt7NY2aDT+w8vO4xFKj5WUJ9W/zEGZ
-	 ZQM99v/ntkniodURtn8KrsRrxI2QlLOtIunUX1xmDSR7AcIj0vh2ahOwmd2ZAkD7K8
-	 PqNIBQVwdE3pNnoYucLr9KfoSynxND9aOFpozY3I=
+	b=IRCBlNSVn8qSA8Mwvmp8kZAERpxTemKljENfhbJZ69LmLFWtp/DTEak3Z/pxWegRe
+	 iAtCWI+2Z6S34IaSbTtzGeNCDXKVuLkRi3FoXZaBV9rodkjdCm5a5jypEni9wqBNY/
+	 Ioiwd9o5AShvGhRYtQD2Efyx7dq3jxtmOBCwOisg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390002AbfKDWGv (ORCPT
+        id S2390017AbfKDWG4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:51 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38674 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38960 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389044AbfKDWGl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:41 -0500
+        id S2389069AbfKDWGu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:50 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7339320650;
-        Mon,  4 Nov 2019 22:06:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C2E3D21D71;
+        Mon,  4 Nov 2019 22:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905201;
-        bh=1Bp5QXY3r3Fb+fDqXdQe66OxpU2X041hGzALEvclh84=;
+        s=default; t=1572905209;
+        bh=NynUHA4qevW95zKm+h3K9YX279or91FM4C/MRJ+5jkI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jQnDWIH9el/BCYI26n6kSF6uFoDQv+4Pv3D3JDu3oDOaF/nwPhoiKI2Npr+DesqB2
-         dgxORVEWfERbmkxu4wv6MdyKY8Tl0DNEKoMlBb6VCY8yB8xweCZkp+PuhSIiAWm0xi
-         mwHibZluB19wsTnTQOWas4tI5zHrLM1BLF2N+4aw=
+        b=zuz8B4qJhICFmXIc51xB7+GtOlnxMVTwlS06rLk+msKIB5LmV7R3YSkj2wUdEZzJk
+         atFGiINUQRBQP7sEnCxpIMT6KgjPkPxb9WOR04hPSnEvyiX53eAngUarwjo84+8TwH
+         vdEPcG/FElaWQrczpKFdmAIbg9fe21APu4zZQKVw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
-        ak@linux.intel.com, "H. Peter Anvin" <hpa@zytor.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 064/163] x86/cpu: Add Comet Lake to the Intel CPU models header
-Date:   Mon,  4 Nov 2019 22:44:14 +0100
-Message-Id: <20191104212144.657911293@linuxfoundation.org>
+        stable@vger.kernel.org, Frederic Weisbecker <frederic@kernel.org>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Rik van Riel <riel@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 066/163] sched/vtime: Fix guest/system mis-accounting on task switch
+Date:   Mon,  4 Nov 2019 22:44:16 +0100
+Message-Id: <20191104212144.767062618@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -64,47 +64,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Frederic Weisbecker <frederic@kernel.org>
 
-[ Upstream commit 8d7c6ac3b2371eb1cbc9925a88f4d10efff374de ]
+[ Upstream commit 68e7a4d66b0ce04bf18ff2ffded5596ab3618585 ]
 
-Comet Lake is the new 10th Gen Intel processor. Add two new CPU model
-numbers to the Intel family list.
+vtime_account_system() assumes that the target task to account cputime
+to is always the current task. This is most often true indeed except on
+task switch where we call:
 
-The CPU model numbers are not published in the SDM yet but they come
-from an authoritative internal source.
+	vtime_common_task_switch(prev)
+		vtime_account_system(prev)
 
- [ bp: Touch up commit message. ]
+Here prev is the scheduling-out task where we account the cputime to. It
+doesn't match current that is already the scheduling-in task at this
+stage of the context switch.
 
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Cc: ak@linux.intel.com
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@kernel.org>
+So we end up checking the wrong task flags to determine if we are
+accounting guest or system time to the previous task.
+
+As a result the wrong task is used to check if the target is running in
+guest mode. We may then spuriously account or leak either system or
+guest time on task switch.
+
+Fix this assumption and also turn vtime_guest_enter/exit() to use the
+task passed in parameter as well to avoid future similar issues.
+
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Rik van Riel <riel@redhat.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1570549810-25049-2-git-send-email-kan.liang@linux.intel.com
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Fixes: 2a42eb9594a1 ("sched/cputime: Accumulate vtime on top of nsec clocksource")
+Link: https://lkml.kernel.org/r/20190925214242.21873-1-frederic@kernel.org
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 +++
- 1 file changed, 3 insertions(+)
+ kernel/sched/cputime.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 9ae1c0f05fd2d..3525014c71da9 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -76,6 +76,9 @@
- #define INTEL_FAM6_TIGERLAKE_L		0x8C
- #define INTEL_FAM6_TIGERLAKE		0x8D
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index 2305ce89a26cf..46ed4e1383e21 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -740,7 +740,7 @@ void vtime_account_system(struct task_struct *tsk)
  
-+#define INTEL_FAM6_COMETLAKE		0xA5
-+#define INTEL_FAM6_COMETLAKE_L		0xA6
-+
- /* "Small Core" Processors (Atom) */
+ 	write_seqcount_begin(&vtime->seqcount);
+ 	/* We might have scheduled out from guest path */
+-	if (current->flags & PF_VCPU)
++	if (tsk->flags & PF_VCPU)
+ 		vtime_account_guest(tsk, vtime);
+ 	else
+ 		__vtime_account_system(tsk, vtime);
+@@ -783,7 +783,7 @@ void vtime_guest_enter(struct task_struct *tsk)
+ 	 */
+ 	write_seqcount_begin(&vtime->seqcount);
+ 	__vtime_account_system(tsk, vtime);
+-	current->flags |= PF_VCPU;
++	tsk->flags |= PF_VCPU;
+ 	write_seqcount_end(&vtime->seqcount);
+ }
+ EXPORT_SYMBOL_GPL(vtime_guest_enter);
+@@ -794,7 +794,7 @@ void vtime_guest_exit(struct task_struct *tsk)
  
- #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
+ 	write_seqcount_begin(&vtime->seqcount);
+ 	vtime_account_guest(tsk, vtime);
+-	current->flags &= ~PF_VCPU;
++	tsk->flags &= ~PF_VCPU;
+ 	write_seqcount_end(&vtime->seqcount);
+ }
+ EXPORT_SYMBOL_GPL(vtime_guest_exit);
 -- 
 2.20.1
 
