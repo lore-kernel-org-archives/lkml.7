@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F6E6CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7D84CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6EAB204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 847F1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905732;
-	bh=9+ICddfZi98XsuN/HkDELNh3ybAfa/RqmjvYrgcKWMY=;
+	s=default; t=1572905736;
+	bh=/TiINZmJsoedbiu+tJ48La03mc4J9pQ/MseuO/2nh5w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q9FDjWC9L/9aCsIBDwHdpbHaixiQyXkUFL5aqfAGYqOZWi0Yv8BImTQXZTcspDGqe
-	 Q8PhWy8lBF5qJlOrFBgb8NZDes8RHwxQDFTiYyM6Bb9TKRAlSfe5oTnw9G9qGFhRKh
-	 hL3dUu/THCRMR+eP/KgegSvaRL14Ihnigk8Yerj4=
+	b=RvFzMnIqA+vjidBpOO643xTLAnLcfKbLGHtNszygNU3CGlK1+O+LuvHBM9j6F148+
+	 fUaW5/dK5Gm8O4qqHxCzlvw2eZGKq03YqIMdUrh8kQEQYXVWaYjDRMGFw5mFSyMQ4X
+	 IQyPJwBlbDE4fOxbnqNARnvd4budSndxbkXkXO9c=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390091AbfKDWP0 (ORCPT
+        id S2389872AbfKDWFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:15:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37742 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:05:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37302 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389904AbfKDWGE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:04 -0500
+        id S2388286AbfKDWFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:46 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6A10B21744;
-        Mon,  4 Nov 2019 22:06:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 96DCF205C9;
+        Mon,  4 Nov 2019 22:05:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905164;
-        bh=9+ICddfZi98XsuN/HkDELNh3ybAfa/RqmjvYrgcKWMY=;
+        s=default; t=1572905146;
+        bh=/TiINZmJsoedbiu+tJ48La03mc4J9pQ/MseuO/2nh5w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sc3G1hzwm/Y7xM5SQRXicCoSrI0H8yv2AnOR4+CYJmno18ociCEZzvkpN3zAuwd8t
-         EcaCqd31zt2+bR4rE1JZt2LVQcMbRrVjt8K35eC34ig8Ayyn362XIi0TrJIf3UH8pt
-         Z+w2AO6MAgoQeFj/LvQXSujjEoNkHOQpD8KYYcyM=
+        b=hjSjrtvCExkIGII6glN6AX8sMr+MNmwF8Rvu2/gp6WemaaGHWmXPA2PwE1hPLDDTY
+         OFasr45yqpyvD9OdUVyk8T3WIh7q4vjXqH5FnBDFBz+cOX4YqOFwmsA3WgV4FMVaxw
+         geCmNNy89fhgUBaJcg/vi/hhTKnflCK1hodRzxzE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Thierry Reding <treding@nvidia.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 012/163] perf jevents: Fix period for Intel fixed counters
-Date:   Mon,  4 Nov 2019 22:43:22 +0100
-Message-Id: <20191104212141.364499073@linuxfoundation.org>
+Subject: [PATCH 5.3 043/163] gpio: max77620: Use correct unit for debounce times
+Date:   Mon,  4 Nov 2019 22:43:53 +0100
+Message-Id: <20191104212143.370815953@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,51 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Thierry Reding <treding@nvidia.com>
 
-[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
+[ Upstream commit fffa6af94894126994a7600c6f6f09b892e89fa9 ]
 
-The Intel fixed counters use a special table to override the JSON
-information.
+The gpiod_set_debounce() function takes the debounce time in
+microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
+the correct unit.
 
-During this override the period information from the JSON file got
-dropped, which results in inst_retired.any and similar running with
-frequency mode instead of a period.
-
-Just specify the expected period in the table.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+Link: https://lore.kernel.org/r/20191002122825.3948322-1-thierry.reding@gmail.com
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/gpio/gpio-max77620.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index d413761621b09..fa85e33762f72 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -449,12 +449,12 @@ static struct fixed {
- 	const char *name;
- 	const char *event;
- } fixed[] = {
--	{ "inst_retired.any", "event=0xc0" },
--	{ "inst_retired.any_p", "event=0xc0" },
--	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
--	{ "cpu_clk_unhalted.thread", "event=0x3c" },
--	{ "cpu_clk_unhalted.core", "event=0x3c" },
--	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
-+	{ "inst_retired.any", "event=0xc0,period=2000003" },
-+	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
-+	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
-+	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
- 	{ NULL, NULL},
- };
- 
+diff --git a/drivers/gpio/gpio-max77620.c b/drivers/gpio/gpio-max77620.c
+index b7d89e30131e2..06e8caaafa811 100644
+--- a/drivers/gpio/gpio-max77620.c
++++ b/drivers/gpio/gpio-max77620.c
+@@ -192,13 +192,13 @@ static int max77620_gpio_set_debounce(struct max77620_gpio *mgpio,
+ 	case 0:
+ 		val = MAX77620_CNFG_GPIO_DBNC_None;
+ 		break;
+-	case 1 ... 8:
++	case 1000 ... 8000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_8ms;
+ 		break;
+-	case 9 ... 16:
++	case 9000 ... 16000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_16ms;
+ 		break;
+-	case 17 ... 32:
++	case 17000 ... 32000:
+ 		val = MAX77620_CNFG_GPIO_DBNC_32ms;
+ 		break;
+ 	default:
 -- 
 2.20.1
 
