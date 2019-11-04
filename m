@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B848CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A3ACA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5E5204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0064204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906227;
-	bh=CpmR5KCxaZdYZAuo/G9nFJCamGR7Fa+x8iD1T/oOxEI=;
+	s=default; t=1572906237;
+	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r4gFMDr2f8WyizpPy4831h6CcyAUmzEyXbAjZOOx4tQO3LQJMzToXqUTawJrBQYfb
-	 lOyj50KfywtO2eKo8U35hC0jykUqyWmOtJTUKCaxFAJXqY380Ldh78BMuTyDHfg+Ry
-	 yey0x0A7qJBXyVnpOgvO0rQ+Ah0i4oT7Z+LkEJZk=
+	b=zGhY65q+/pV0tR89asGP1RJE2EUwB/TmorhRsyAknt1K17N5x7fLZe1K2ONsIIGIu
+	 MEmLTS1V7RJqPJC8w11MtVCKzw7VEg7L5cGMal/A+JOccp8NcJX+0+CwSbIJc9hOAy
+	 akJcrExyCmxLIrd3X7kQIukrqWIT2aVnZg+nRdEU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387836AbfKDWXp (ORCPT
+        id S1731054AbfKDVxq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:23:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48244 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47760 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387814AbfKDVyA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:54:00 -0500
+        id S1731037AbfKDVxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:41 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 374FD21D7D;
-        Mon,  4 Nov 2019 21:53:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 313162053B;
+        Mon,  4 Nov 2019 21:53:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904438;
-        bh=CpmR5KCxaZdYZAuo/G9nFJCamGR7Fa+x8iD1T/oOxEI=;
+        s=default; t=1572904420;
+        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DYQ/MSUyTbOXbE6Upu+tIpsfAlpbjy2QPhWONxAssNzI++OB5nlIGJ84xl0r91ICd
-         8xH/kCWhsNLgUrXbLYihCOGWrZvgd9qy7nXvassxdQEhk0Gq4QBN2sy8TZZI+Sm2I2
-         bax3NAlfmaGBRZie+MUTB5Micc9PZqPbwu86KNMM=
+        b=CaQ2FsyfmPbuyh12WjyEo7/4PteYITUG0HVHdK9f2BNa/rCn4+9SA56XwswG2fy6Y
+         bKu13IxXFj89XZNr1M/owOOTiGSRWfMNbkZmOR6udHr7DuYSQ4BvSs8Y/1qO0kIG7v
+         orblvCg1UZk/5z0+lonr+a0/8CgYe+UnEPH5QMck=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, James Dingwall <james@dingwall.me.uk>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        Juergen Gross <jgross@suse.com>,
+        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 44/95] x86/xen: Return from panic notifier
-Date:   Mon,  4 Nov 2019 22:44:42 +0100
-Message-Id: <20191104212102.348306265@linuxfoundation.org>
+Subject: [PATCH 4.14 39/95] fs: cifs: mute -Wunused-const-variable message
+Date:   Mon,  4 Nov 2019 22:44:37 +0100
+Message-Id: <20191104212101.461313664@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -61,100 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit c6875f3aacf2a5a913205accddabf0bfb75cac76 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-Currently execution of panic() continues until Xen's panic notifier
-(xen_panic_event()) is called at which point we make a hypercall that
-never returns.
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-This means that any notifier that is supposed to be called later as
-well as significant part of panic() code (such as pstore writes from
-kmsg_dump()) is never executed.
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
 
-There is no reason for xen_panic_event() to be this last point in
-execution since panic()'s emergency_restart() will call into
-xen_emergency_restart() from where we can perform our hypercall.
-
-Nevertheless, we will provide xen_legacy_crash boot option that will
-preserve original behavior during crash. This option could be used,
-for example, if running kernel dumper (which happens after panic
-notifiers) is undesirable.
-
-Reported-by: James Dingwall <james@dingwall.me.uk>
-Signed-off-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Reviewed-by: Juergen Gross <jgross@suse.com>
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../admin-guide/kernel-parameters.txt         |  4 +++
- arch/x86/xen/enlighten.c                      | 28 +++++++++++++++++--
- 2 files changed, 29 insertions(+), 3 deletions(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index b67a6cd08ca16..671f518b09eeb 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4875,6 +4875,10 @@
- 				the unplug protocol
- 			never -- do not unplug even if version check succeeds
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index cc88f4f0325ef..bed9733302279 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
  
-+	xen_legacy_crash	[X86,XEN]
-+			Crash from Xen panic notifier, without executing late
-+			panic() code such as dumping handler.
-+
- 	xen_nopvspin	[X86,XEN]
- 			Disables the ticketlock slowpath using Xen PV
- 			optimizations.
-diff --git a/arch/x86/xen/enlighten.c b/arch/x86/xen/enlighten.c
-index 515d5e4414c29..00fc683a20110 100644
---- a/arch/x86/xen/enlighten.c
-+++ b/arch/x86/xen/enlighten.c
-@@ -259,19 +259,41 @@ void xen_reboot(int reason)
- 		BUG();
- }
- 
-+static int reboot_reason = SHUTDOWN_reboot;
-+static bool xen_legacy_crash;
- void xen_emergency_restart(void)
- {
--	xen_reboot(SHUTDOWN_reboot);
-+	xen_reboot(reboot_reason);
- }
- 
- static int
- xen_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
- {
--	if (!kexec_crash_loaded())
--		xen_reboot(SHUTDOWN_crash);
-+	if (!kexec_crash_loaded()) {
-+		if (xen_legacy_crash)
-+			xen_reboot(SHUTDOWN_crash);
-+
-+		reboot_reason = SHUTDOWN_crash;
-+
-+		/*
-+		 * If panic_timeout==0 then we are supposed to wait forever.
-+		 * However, to preserve original dom0 behavior we have to drop
-+		 * into hypervisor. (domU behavior is controlled by its
-+		 * config file)
-+		 */
-+		if (panic_timeout == 0)
-+			panic_timeout = -1;
-+	}
- 	return NOTIFY_DONE;
- }
- 
-+static int __init parse_xen_legacy_crash(char *arg)
-+{
-+	xen_legacy_crash = true;
-+	return 0;
-+}
-+early_param("xen_legacy_crash", parse_xen_legacy_crash);
-+
- static struct notifier_block xen_panic_block = {
- 	.notifier_call = xen_panic_event,
- 	.priority = INT_MIN
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
