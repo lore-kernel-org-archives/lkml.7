@@ -7,49 +7,54 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4216CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1994CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9172080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707A22080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906538;
-	bh=J+M9xJlubZ3B9Qk9rJN/x3wpS+yrx7KSHcdDWEk4+lE=;
+	s=default; t=1572906549;
+	bh=1FToogkIY8Hsa4SVq/KUItZyuhUtpk68aHUfQPLdhjM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IK5/Ik4tugUkgPtPmlW9YgeHpgqdnJvrHMoAyFKOkhNvcv1L6RB8VEIX2eGF67X/x
-	 gEklEg6ttopsNbY71O5V8xdoOAGoDzpMuNlpc26bTlCgyG+p2ML+MnVvuXZU1x1Yi9
-	 li2matR3XrnKDeAyj6NhJq2snehOV8j8UZsE8DJg=
+	b=oosqMxjQCY0/HbV80KoVb25f1bqNkM1NszH1eL3ID9B/XuKRCpwMOzZ4dM1Eh2HAJ
+	 seK/HaizOA5ANcOFWPRDB50/XBcq075qXvNW2wzpm4PSrsYLPSO+wAM/NE8BsImCA6
+	 MJbOhvDRGn8jwey4NOOmko72qCA/ufWmdzkRWQ9A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389097AbfKDW25 (ORCPT
+        id S2389242AbfKDW3I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:28:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38758 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:29:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730004AbfKDVsY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:24 -0500
+        id S1729899AbfKDVsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:09 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4091F21D71;
-        Mon,  4 Nov 2019 21:48:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B347B21850;
+        Mon,  4 Nov 2019 21:48:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904103;
-        bh=J+M9xJlubZ3B9Qk9rJN/x3wpS+yrx7KSHcdDWEk4+lE=;
+        s=default; t=1572904089;
+        bh=1FToogkIY8Hsa4SVq/KUItZyuhUtpk68aHUfQPLdhjM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=s0VguZKkSrZeFQiI0lwCPVri3K6Smw2HvYEXAvRwvKsGtiQFbVM6zyGELUsgntBc7
-         IRpZvcKvDGPvNdimrbavhjGO7lz1FbITPzavxSuPInd2m2nuHyvtUX9SV8rclOo1Vg
-         R5fVxFr758os+i9XUfQRSC+0XUfzYhapDc99A42M=
+        b=DRaLP6Z5wV4Ddo0yxax2Ib3PlmP6+sy7TyqLD1YPP8afeiWSDLmWU2SywUiYr53b5
+         evyExS05SU8jO9VTJYCNN6HKASq3xnJfhMMLCmcdYkfH1pZmCtBWiAEDOdqVYHaETA
+         h/jSYR4Tg9lN/SFCGvJpdBTs2dUn8jTlNzJ5o6Kw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Yehezkel Bernat <YehezkelShB@gmail.com>,
-        Mario Limonciello <mario.limonciello@dell.com>,
+        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
+        Joseph Qi <joseph.qi@linux.alibaba.com>,
+        Mark Fasheh <mark@fasheh.com>,
+        Joel Becker <jlbec@evilplan.org>,
+        Junxiao Bi <junxiao.bi@oracle.com>,
+        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
+        Jun Piao <piaojun@huawei.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 23/46] thunderbolt: Use 32-bit writes when writing ring producer/consumer
-Date:   Mon,  4 Nov 2019 22:44:54 +0100
-Message-Id: <20191104211853.908206468@linuxfoundation.org>
+Subject: [PATCH 4.4 18/46] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Mon,  4 Nov 2019 22:44:49 +0100
+Message-Id: <20191104211848.170365924@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -62,71 +67,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
+From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 943795219d3cb9f8ce6ce51cad3ffe1f61e95c6b ]
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-The register access should be using 32-bit reads/writes according to the
-datasheet. With the previous generation hardware 16-bit writes have been
-working but starting with ICL this is not the case anymore so fix
-producer/consumer register update to use correct width register address.
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
-Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
-Tested-by: Mario Limonciello <mario.limonciello@dell.com>
+    if (inode_alloc)
+
+When inode_alloc is NULL, it is used on line 287:
+
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
+
+Thus, a possible null-pointer dereference may occur.
+
+To fix this bug, inode_alloc is checked on line 286.
+
+This bug is found by a static analysis tool STCheck written by us.
+
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
+Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
+Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
+Cc: Mark Fasheh <mark@fasheh.com>
+Cc: Joel Becker <jlbec@evilplan.org>
+Cc: Junxiao Bi <junxiao.bi@oracle.com>
+Cc: Changwei Ge <gechangwei@live.cn>
+Cc: Gang He <ghe@suse.com>
+Cc: Jun Piao <piaojun@huawei.com>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/thunderbolt/nhi.c | 22 ++++++++++++++++++----
- 1 file changed, 18 insertions(+), 4 deletions(-)
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/thunderbolt/nhi.c b/drivers/thunderbolt/nhi.c
-index 6713fd1958e73..3a39d7d0175ab 100644
---- a/drivers/thunderbolt/nhi.c
-+++ b/drivers/thunderbolt/nhi.c
-@@ -94,9 +94,20 @@ static void __iomem *ring_options_base(struct tb_ring *ring)
- 	return io;
- }
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index 3cb097ccce607..79232296b7d2b 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -289,7 +289,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		mutex_lock(&inode_alloc->i_mutex);
  
--static void ring_iowrite16desc(struct tb_ring *ring, u32 value, u32 offset)
-+static void ring_iowrite_cons(struct tb_ring *ring, u16 cons)
- {
--	iowrite16(value, ring_desc_base(ring) + offset);
-+	/*
-+	 * The other 16-bits in the register is read-only and writes to it
-+	 * are ignored by the hardware so we can save one ioread32() by
-+	 * filling the read-only bits with zeroes.
-+	 */
-+	iowrite32(cons, ring_desc_base(ring) + 8);
-+}
-+
-+static void ring_iowrite_prod(struct tb_ring *ring, u16 prod)
-+{
-+	/* See ring_iowrite_cons() above for explanation */
-+	iowrite32(prod << 16, ring_desc_base(ring) + 8);
- }
- 
- static void ring_iowrite32desc(struct tb_ring *ring, u32 value, u32 offset)
-@@ -148,7 +159,10 @@ static void ring_write_descriptors(struct tb_ring *ring)
- 			descriptor->sof = frame->sof;
- 		}
- 		ring->head = (ring->head + 1) % ring->size;
--		ring_iowrite16desc(ring, ring->head, ring->is_tx ? 10 : 8);
-+		if (ring->is_tx)
-+			ring_iowrite_prod(ring, ring->head);
-+		else
-+			ring_iowrite_cons(ring, ring->head);
- 	}
- }
- 
-@@ -368,7 +382,7 @@ void ring_stop(struct tb_ring *ring)
- 
- 	ring_iowrite32options(ring, 0, 0);
- 	ring_iowrite64desc(ring, 0, 0);
--	ring_iowrite16desc(ring, 0, ring->is_tx ? 10 : 8);
-+	ring_iowrite32desc(ring, 0, 8);
- 	ring_iowrite32desc(ring, 0, 12);
- 	ring->head = 0;
- 	ring->tail = 0;
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
 -- 
 2.20.1
 
