@@ -2,159 +2,80 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5550BCA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C771ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3635021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A803921744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727880AbfKDJld (ORCPT
+        id S1728020AbfKDJle (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:41:33 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:60129 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727499AbfKDJlc (ORCPT
+        Mon, 4 Nov 2019 04:41:34 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:53207 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727553AbfKDJld (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:41:32 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iRYrU-0001Jf-Ra; Mon, 04 Nov 2019 10:41:24 +0100
-Message-ID: <776ec4265217cc83e9e847ff3c80a52a86390b1b.camel@pengutronix.de>
-Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for SDM845 PCIe controller
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Stanimir Varbanov <svarbanov@mm-sol.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Date:   Mon, 04 Nov 2019 10:41:23 +0100
-In-Reply-To: <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-References: <20191102002721.4091180-1-bjorn.andersson@linaro.org>
-         <20191102002721.4091180-3-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Mon, 4 Nov 2019 04:41:33 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id RYrQia6J69P9bRYrViVSex; Mon, 04 Nov 2019 10:41:30 +0100
+Subject: Re: [PATCH 4/4] v4l2-ctl: Support setting V4L2_CTRL_TYPE_AREA
+ controls
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191101112509.29723-1-ribalda@kernel.org>
+ <20191101112509.29723-4-ribalda@kernel.org>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <31815641-550c-88ab-c037-2e743cea59b3@xs4all.nl>
+Date:   Mon, 4 Nov 2019 10:41:20 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <20191101112509.29723-4-ribalda@kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+X-CMAE-Envelope: MS4wfLHx2lXm3zADOqbQZkkkD01AMPJ03Xm5aaOAeDjEfL6lIZPvSL2vMYiRWEQIlH0m0UG0JSdDG5JwQUhH16IMnAoVfGabqymDiL56uwuQwb4jjwkS+rpU
+ XBoJO/1JWPZPxw8NC9bt1lHIgSqvND4zeJkh9OD1rmX9h3AGnkUgf2+2XDnsHWqKo+PyJPjrnm8AQHOgCQ7yiePxJu6OJWWgWysz8G9O655xNd+e9ZYqOn4+
+ jkJ/J/T7M08tkCtLKUcsFA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
-
-On Fri, 2019-11-01 at 17:27 -0700, Bjorn Andersson wrote:
-> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
+On 11/1/19 12:25 PM, Ricardo Ribalda Delgado wrote:
+> $ v4l2-ctl  -d /dev/video1  -c area=123123x233
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
 > ---
+>  utils/v4l2-ctl/v4l2-ctl-common.cpp | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
-> Changes since v1:
-> - Style changes requested by Stan
-> - Tested with second PCIe controller as well
+> diff --git a/utils/v4l2-ctl/v4l2-ctl-common.cpp b/utils/v4l2-ctl/v4l2-ctl-common.cpp
+> index 95339561..676b05e0 100644
+> --- a/utils/v4l2-ctl/v4l2-ctl-common.cpp
+> +++ b/utils/v4l2-ctl/v4l2-ctl-common.cpp
+> @@ -973,6 +973,10 @@ void common_set(cv4l_fd &_fd)
+>  					strncpy(ctrl.string, iter->second.c_str(), qc.maximum);
+>  					ctrl.string[qc.maximum] = 0;
+>  					break;
+> +				case V4L2_CTRL_TYPE_AREA:
+> +					sscanf(iter->second.c_str(), "%dx%d",
+
+Use %ux%u since these are unsigned values.
+
+Regards,
+
+	Hans
+
+> +					       &ctrl.p_area->width, &ctrl.p_area->height);
+> +					break;
+>  				default:
+>  					fprintf(stderr, "%s: unsupported payload type\n",
+>  							qc.name);
 > 
->  drivers/pci/controller/dwc/pcie-qcom.c | 152 +++++++++++++++++++++++++
->  1 file changed, 152 insertions(+)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 7e581748ee9f..35f4980480bb 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -54,6 +54,7 @@
-[...]
-> +static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
-> +{
-> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
-> +	struct dw_pcie *pci = pcie->pci;
-> +	struct device *dev = pci->dev;
-> +	u32 val;
-> +	int ret;
-> +
-> +	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot enable regulators\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
-> +	if (ret < 0)
-> +		goto err_disable_regulators;
-> +
-> +	ret = reset_control_assert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_disable_clocks;
-> +	}
-
-If for any of the above fails, the reset line is left in its default
-state, presumably unasserted. Is there a reason to assert and keep it
-asserted if enabling the clocks fails below?
-
-> +	msleep(20);
-> +
-> +	ret = reset_control_deassert(res->pci_reset);
-> +	if (ret < 0) {
-> +		dev_err(dev, "cannot deassert pci reset\n");
-> +		goto err_assert_resets;
-
-Nitpick: this seems superfluous since the reset line was just asserted
-20 ms before. Maybe just:
-
-		goto err_disable_clocks;
-
-> +	}
-> +
-> +	ret = clk_prepare_enable(res->pipe_clk);
-> +	if (ret) {
-> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
-> +		goto err_assert_resets;
-> +	}
-> +
-> +	/* configure PCIe to RC mode */
-> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
-> +
-> +	/* enable PCIe clocks and resets */
-> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +	val &= ~BIT(0);
-> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
-> +
-> +	/* change DBI base address */
-> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
-> +
-> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
-> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +	val &= ~BIT(29);
-> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
-> +
-> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +	val |= BIT(4);
-> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
-> +
-> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
-> +		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +		val |= BIT(31);
-> +		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
-> +	}
-> +
-> +	return 0;
-> +err_assert_resets:
-> +	reset_control_assert(res->pci_reset);
-
-So maybe this can just be removed. The reset isn't asserted in deinit
-either.
-
-regards
-Philipp
 
