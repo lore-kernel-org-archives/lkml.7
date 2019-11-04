@@ -4,49 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E794FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D80DCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC429204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBABC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905577;
-	bh=dtedUUNYdKE+VVmQFQSzK9xIZLBlAcMYOmBLUMfQseY=;
+	s=default; t=1572905584;
+	bh=kiqSDfakghTbJOA43TAye7jS9c+JcWR0lr5s80yto1E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Xl7By/eGeXmP6crTqHxUJezkrbNZGMd4A/6lLP+7Rtp/PXbU5FHmLgqQs/ycnmgf
-	 BLGQk7TxVc+1AwbmEKuk5rTBoLjlxEJPKogf6Iair3oPBrkB9c6HHcugGaj9ZFNP3r
-	 c/o49z1xLnYGVixHI0hh3P92OLP/e0KkID1YURvM=
+	b=p2XRNLMQ/yKt2DvzhrFX744NKBR910IIAjBWudYpn5AoebkAl2Ybjo6xxjC4zeLIh
+	 fgy9X6LKuo5BcRX9qCeXHAC7ibKmohPpN02ud9t3nLskxqfShNS47HpTin7d2820GR
+	 dMAQo9nvW4BUeQ/opifZgtYt3ZkQeqt6MAB82uBM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390539AbfKDWKa (ORCPT
+        id S2390142AbfKDWNC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:10:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43612 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:13:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390535AbfKDWK0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:26 -0500
+        id S2388431AbfKDWKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:22 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3CF712084D;
-        Mon,  4 Nov 2019 22:10:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D6EA20650;
+        Mon,  4 Nov 2019 22:10:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905424;
-        bh=dtedUUNYdKE+VVmQFQSzK9xIZLBlAcMYOmBLUMfQseY=;
+        s=default; t=1572905421;
+        bh=kiqSDfakghTbJOA43TAye7jS9c+JcWR0lr5s80yto1E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Z2J6hMHycPCWSa0WOzUfIu2M7mH5GTwRWxHpbo7g0juoOS0nzwoTZRf1vMq2ed+NW
-         PW8My3ugswfn4abmPxEXReJx61yJb403k+czefEYcR/eblDqDAjiqHXe8xlQRNLai6
-         bLRouRDV68MtQELS6HPZqRWWFZJRvsn4VkCAbdqs=
+        b=dVh8mZlyXtZgNPzygQ+Qn/Dxx05cqad2JdOCq3ZdrpDpGzhGtsKLmiQRR68GwDmx5
+         CdsoX414MGZTj43idQbuW61cKXxso63yV+QinwbSploneYiboeuF0VyFQULta0atVr
+         mveDUO2rCVh0soibbTiOpI41OMjQmlvyI7v0rH3Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: [PATCH 5.3 098/163] ALSA: timer: Fix mutex deadlock at releasing card
-Date:   Mon,  4 Nov 2019 22:44:48 +0100
-Message-Id: <20191104212147.192229503@linuxfoundation.org>
+        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.3 097/163] ALSA: bebob: Fix prototype of helper function to return negative value
+Date:   Mon,  4 Nov 2019 22:44:47 +0100
+Message-Id: <20191104212147.127226477@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,129 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Iwai <tiwai@suse.de>
+From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
 
-commit a39331867335d4a94b6165e306265c9e24aca073 upstream.
+commit f2bbdbcb075f3977a53da3bdcb7cd460bc8ae5f2 upstream.
 
-When a card is disconnected while in use, the system waits until all
-opened files are closed then releases the card.  This is done via
-put_device() of the card device in each device release code.
+A helper function of ALSA bebob driver returns negative value in a
+function which has a prototype to return unsigned value.
 
-The recently reported mutex deadlock bug happens in this code path;
-snd_timer_close() for the timer device deals with the global
-register_mutex and it calls put_device() there.  When this timer
-device is the last one, the card gets freed and it eventually calls
-snd_timer_free(), which has again the protection with the global
-register_mutex -- boom.
+This commit fixes it by changing the prototype.
 
-Basically put_device() call itself is race-free, so a relative simple
-workaround is to move this put_device() call out of the mutex.  For
-achieving that, in this patch, snd_timer_close_locked() got a new
-argument to store the card device pointer in return, and each caller
-invokes put_device() with the returned object after the mutex unlock.
-
-Reported-and-tested-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-Cc: <stable@vger.kernel.org>
+Fixes: eb7b3a056cd8 ("ALSA: bebob: Add commands and connections/streams management")
+Cc: <stable@vger.kernel.org> # v3.16+
+Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+Link: https://lore.kernel.org/r/20191026030620.12077-1-o-takashi@sakamocchi.jp
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/core/timer.c |   24 +++++++++++++++++-------
- 1 file changed, 17 insertions(+), 7 deletions(-)
+ sound/firewire/bebob/bebob_stream.c |    3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
---- a/sound/core/timer.c
-+++ b/sound/core/timer.c
-@@ -226,7 +226,8 @@ static int snd_timer_check_master(struct
- 	return 0;
- }
- 
--static int snd_timer_close_locked(struct snd_timer_instance *timeri);
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put);
- 
- /*
-  * open a timer instance
-@@ -238,6 +239,7 @@ int snd_timer_open(struct snd_timer_inst
- {
- 	struct snd_timer *timer;
- 	struct snd_timer_instance *timeri = NULL;
-+	struct device *card_dev_to_put = NULL;
- 	int err;
- 
- 	mutex_lock(&register_mutex);
-@@ -261,7 +263,7 @@ int snd_timer_open(struct snd_timer_inst
- 		list_add_tail(&timeri->open_list, &snd_timer_slave_list);
- 		err = snd_timer_check_slave(timeri);
- 		if (err < 0) {
--			snd_timer_close_locked(timeri);
-+			snd_timer_close_locked(timeri, &card_dev_to_put);
- 			timeri = NULL;
- 		}
- 		goto unlock;
-@@ -313,7 +315,7 @@ int snd_timer_open(struct snd_timer_inst
- 			timeri = NULL;
- 
- 			if (timer->card)
--				put_device(&timer->card->card_dev);
-+				card_dev_to_put = &timer->card->card_dev;
- 			module_put(timer->module);
- 			goto unlock;
- 		}
-@@ -323,12 +325,15 @@ int snd_timer_open(struct snd_timer_inst
- 	timer->num_instances++;
- 	err = snd_timer_check_master(timeri);
- 	if (err < 0) {
--		snd_timer_close_locked(timeri);
-+		snd_timer_close_locked(timeri, &card_dev_to_put);
- 		timeri = NULL;
- 	}
- 
-  unlock:
- 	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
- 	*ti = timeri;
+--- a/sound/firewire/bebob/bebob_stream.c
++++ b/sound/firewire/bebob/bebob_stream.c
+@@ -252,8 +252,7 @@ end:
  	return err;
  }
-@@ -338,7 +343,8 @@ EXPORT_SYMBOL(snd_timer_open);
-  * close a timer instance
-  * call this with register_mutex down.
-  */
--static int snd_timer_close_locked(struct snd_timer_instance *timeri)
-+static int snd_timer_close_locked(struct snd_timer_instance *timeri,
-+				  struct device **card_devp_to_put)
+ 
+-static unsigned int
+-map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
++static int map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
  {
- 	struct snd_timer *timer = timeri->timer;
- 	struct snd_timer_instance *slave, *tmp;
-@@ -395,7 +401,7 @@ static int snd_timer_close_locked(struct
- 			timer->hw.close(timer);
- 		/* release a card refcount for safe disconnection */
- 		if (timer->card)
--			put_device(&timer->card->card_dev);
-+			*card_devp_to_put = &timer->card->card_dev;
- 		module_put(timer->module);
- 	}
- 
-@@ -407,14 +413,18 @@ static int snd_timer_close_locked(struct
-  */
- int snd_timer_close(struct snd_timer_instance *timeri)
- {
-+	struct device *card_dev_to_put = NULL;
- 	int err;
- 
- 	if (snd_BUG_ON(!timeri))
- 		return -ENXIO;
- 
- 	mutex_lock(&register_mutex);
--	err = snd_timer_close_locked(timeri);
-+	err = snd_timer_close_locked(timeri, &card_dev_to_put);
- 	mutex_unlock(&register_mutex);
-+	/* put_device() is called after unlock for avoiding deadlock */
-+	if (card_dev_to_put)
-+		put_device(card_dev_to_put);
- 	return err;
- }
- EXPORT_SYMBOL(snd_timer_close);
+ 	unsigned int sec, sections, ch, channels;
+ 	unsigned int pcm, midi, location;
 
 
