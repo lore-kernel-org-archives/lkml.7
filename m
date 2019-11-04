@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D80DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC00ACA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBABC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 82153204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905584;
-	bh=kiqSDfakghTbJOA43TAye7jS9c+JcWR0lr5s80yto1E=;
+	s=default; t=1572905587;
+	bh=4evb73l0lxzxtEelxA/HONgL9oWxq4l3Vpph6+gsftU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=p2XRNLMQ/yKt2DvzhrFX744NKBR910IIAjBWudYpn5AoebkAl2Ybjo6xxjC4zeLIh
-	 fgy9X6LKuo5BcRX9qCeXHAC7ibKmohPpN02ud9t3nLskxqfShNS47HpTin7d2820GR
-	 dMAQo9nvW4BUeQ/opifZgtYt3ZkQeqt6MAB82uBM=
+	b=XyWQv4+yVwZAm62xMYQFV8y9G6rJ0tTO7aZ0ISUo12Sk17/wyoO0Z8HcMJidDCulJ
+	 ACx/MBDqT61sLSiTXRAmFjoXAUJrO5kFOOFdJq0741njb7SgjZmgx4MBi7HLG+QWVB
+	 eRljDInqki1ztIsrl3RW8Lcz2G8BVtyitiZGacnk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390142AbfKDWNC (ORCPT
+        id S2390113AbfKDWKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:13:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43560 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:10:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388431AbfKDWKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:22 -0500
+        id S2390504AbfKDWKL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:11 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D6EA20650;
-        Mon,  4 Nov 2019 22:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A57C120650;
+        Mon,  4 Nov 2019 22:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905421;
-        bh=kiqSDfakghTbJOA43TAye7jS9c+JcWR0lr5s80yto1E=;
+        s=default; t=1572905410;
+        bh=4evb73l0lxzxtEelxA/HONgL9oWxq4l3Vpph6+gsftU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dVh8mZlyXtZgNPzygQ+Qn/Dxx05cqad2JdOCq3ZdrpDpGzhGtsKLmiQRR68GwDmx5
-         CdsoX414MGZTj43idQbuW61cKXxso63yV+QinwbSploneYiboeuF0VyFQULta0atVr
-         mveDUO2rCVh0soibbTiOpI41OMjQmlvyI7v0rH3Q=
+        b=QQ/fWChI7+k20OZ22P9J3YNZPcuLJLcqAFr0UFztVXiShqROkQ/CpZdbOqIkvz3BL
+         nr6XSaFoMPcIonPJA7PHGqJ+W6WAcZIg10g1zuBCbjapb/K2AuXnGu/M+Rkb3l2flY
+         C2KryJQgKOLNUAwhnKSrxBLjITZvoPXRAcZliYP4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Takashi Sakamoto <o-takashi@sakamocchi.jp>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 097/163] ALSA: bebob: Fix prototype of helper function to return negative value
-Date:   Mon,  4 Nov 2019 22:44:47 +0100
-Message-Id: <20191104212147.127226477@linuxfoundation.org>
+        stable@vger.kernel.org, Sameer Pujar <spujar@nvidia.com>,
+        Jon Hunter <jonathanh@nvidia.com>,
+        Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 5.3 134/163] dmaengine: tegra210-adma: fix transfer failure
+Date:   Mon,  4 Nov 2019 22:45:24 +0100
+Message-Id: <20191104212150.048352178@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,37 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Takashi Sakamoto <o-takashi@sakamocchi.jp>
+From: Sameer Pujar <spujar@nvidia.com>
 
-commit f2bbdbcb075f3977a53da3bdcb7cd460bc8ae5f2 upstream.
+commit 9ec691f48b5ef741a48af8932ccaec859c67e8f1 upstream.
 
-A helper function of ALSA bebob driver returns negative value in a
-function which has a prototype to return unsigned value.
+>From Tegra186 onwards OUTSTANDING_REQUESTS field is added in channel
+configuration register(bits 7:4) which defines the maximum number of reads
+from the source and writes to the destination that may be outstanding at
+any given point of time. This field must be programmed with a value
+between 1 and 8. A value of 0 will prevent any transfers from happening.
 
-This commit fixes it by changing the prototype.
+Thus added 'has_outstanding_reqs' bool member in chip data structure and is
+set to false for Tegra210, since the field is not applicable. For Tegra186
+it is set to true and channel configuration is updated with maximum
+outstanding requests.
 
-Fixes: eb7b3a056cd8 ("ALSA: bebob: Add commands and connections/streams management")
-Cc: <stable@vger.kernel.org> # v3.16+
-Signed-off-by: Takashi Sakamoto <o-takashi@sakamocchi.jp>
-Link: https://lore.kernel.org/r/20191026030620.12077-1-o-takashi@sakamocchi.jp
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Fixes: 433de642a76c ("dmaengine: tegra210-adma: add support for Tegra186/Tegra194")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sameer Pujar <spujar@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+Link: https://lore.kernel.org/r/1568626513-16541-1-git-send-email-spujar@nvidia.com
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/firewire/bebob/bebob_stream.c |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/dma/tegra210-adma.c |    7 +++++++
+ 1 file changed, 7 insertions(+)
 
---- a/sound/firewire/bebob/bebob_stream.c
-+++ b/sound/firewire/bebob/bebob_stream.c
-@@ -252,8 +252,7 @@ end:
- 	return err;
- }
+--- a/drivers/dma/tegra210-adma.c
++++ b/drivers/dma/tegra210-adma.c
+@@ -40,6 +40,7 @@
+ #define ADMA_CH_CONFIG_MAX_BURST_SIZE                   16
+ #define ADMA_CH_CONFIG_WEIGHT_FOR_WRR(val)		((val) & 0xf)
+ #define ADMA_CH_CONFIG_MAX_BUFS				8
++#define TEGRA186_ADMA_CH_CONFIG_OUTSTANDING_REQS(reqs)	(reqs << 4)
  
--static unsigned int
--map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
-+static int map_data_channels(struct snd_bebob *bebob, struct amdtp_stream *s)
- {
- 	unsigned int sec, sections, ch, channels;
- 	unsigned int pcm, midi, location;
+ #define ADMA_CH_FIFO_CTRL				0x2c
+ #define TEGRA210_ADMA_CH_FIFO_CTRL_OFLWTHRES(val)	(((val) & 0xf) << 24)
+@@ -85,6 +86,7 @@ struct tegra_adma;
+  * @ch_req_tx_shift: Register offset for AHUB transmit channel select.
+  * @ch_req_rx_shift: Register offset for AHUB receive channel select.
+  * @ch_base_offset: Register offset of DMA channel registers.
++ * @has_outstanding_reqs: If DMA channel can have outstanding requests.
+  * @ch_fifo_ctrl: Default value for channel FIFO CTRL register.
+  * @ch_req_mask: Mask for Tx or Rx channel select.
+  * @ch_req_max: Maximum number of Tx or Rx channels available.
+@@ -103,6 +105,7 @@ struct tegra_adma_chip_data {
+ 	unsigned int ch_req_max;
+ 	unsigned int ch_reg_size;
+ 	unsigned int nr_channels;
++	bool has_outstanding_reqs;
+ };
+ 
+ /*
+@@ -602,6 +605,8 @@ static int tegra_adma_set_xfer_params(st
+ 			 ADMA_CH_CTRL_FLOWCTRL_EN;
+ 	ch_regs->config |= cdata->adma_get_burst_config(burst_size);
+ 	ch_regs->config |= ADMA_CH_CONFIG_WEIGHT_FOR_WRR(1);
++	if (cdata->has_outstanding_reqs)
++		ch_regs->config |= TEGRA186_ADMA_CH_CONFIG_OUTSTANDING_REQS(8);
+ 	ch_regs->fifo_ctrl = cdata->ch_fifo_ctrl;
+ 	ch_regs->tc = desc->period_len & ADMA_CH_TC_COUNT_MASK;
+ 
+@@ -786,6 +791,7 @@ static const struct tegra_adma_chip_data
+ 	.ch_req_tx_shift	= 28,
+ 	.ch_req_rx_shift	= 24,
+ 	.ch_base_offset		= 0,
++	.has_outstanding_reqs	= false,
+ 	.ch_fifo_ctrl		= TEGRA210_FIFO_CTRL_DEFAULT,
+ 	.ch_req_mask		= 0xf,
+ 	.ch_req_max		= 10,
+@@ -800,6 +806,7 @@ static const struct tegra_adma_chip_data
+ 	.ch_req_tx_shift	= 27,
+ 	.ch_req_rx_shift	= 22,
+ 	.ch_base_offset		= 0x10000,
++	.has_outstanding_reqs	= true,
+ 	.ch_fifo_ctrl		= TEGRA186_FIFO_CTRL_DEFAULT,
+ 	.ch_req_mask		= 0x1f,
+ 	.ch_req_max		= 20,
 
 
