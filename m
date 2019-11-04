@@ -7,60 +7,60 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB008CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:13:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63899CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:13:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5637214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:13:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D67F2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:13:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sCW7KUGI"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ncL1xXHW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729552AbfKDSNA (ORCPT
+        id S1729585AbfKDSNF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:13:00 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:43546 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729312AbfKDSM5 (ORCPT
+        Mon, 4 Nov 2019 13:13:05 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:44685 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729551AbfKDSNA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:12:57 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l24so11849503pgh.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:12:57 -0800 (PST)
+        Mon, 4 Nov 2019 13:13:00 -0500
+Received: by mail-pf1-f196.google.com with SMTP id q26so12824108pfn.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:13:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=6tmVV51SnSk2HYvVHQW3Mgj1F0ShkbzQvD8YUBsAymU=;
-        b=sCW7KUGIc3HUE/GqsL9BzjnT6sINFkDABF3L4NVTNMpCiVH7pENhwh6OKQKYZB2MbO
-         CjMf6NICEFUuCou6SNeKlkeuiqvshvVGcVvFrIxz1zL3M/LRrF1+XVQDIzmxjh1YS3MT
-         B43VjLhL7ZiuVqm9Gm+zPezFN+24EEBjkweQ0MKJgSIhhLvVFoumq5DQeSxf7ymH6HNW
-         FdzJPcQ2hjawP9UTYMeFbbQCUpztJHek3Hyd0ryyG3j65Qt4BH2RYCzlbO+fXpqSFcv5
-         ZVOAyNlYSLQo7tztXFvQj/SS9f/Bq8P9d+//OYRZQUY9wyJfqoiJJomD73hO1OySYycI
-         RBSw==
+        bh=y7fhR2xIT71DtVa1uCjsmuyALGEUbfwLZ/uWrAtc5Ds=;
+        b=ncL1xXHW8P5PY1KFS4fr2rCjeF2sMk7iCiCvP5ewN58vIqpf6Rk7KIPwWJ4UL8t5YD
+         YYnfOLoEGsFqg7qgmY4p8cERoL3Uj+k3kbnmUKhvlr9kQFM3wojFfN3ZM65dBok06MfV
+         wSXhWlJmSdmEquXZz/Ly5hdUm4ZKvCxsJrnfuM4hTXRBPA9aMaHGfUG9CCweujtLSB5D
+         Z0PyiIe36Z3vKEgKByN+KrWgLj4Fw1J2XjbHNts9//oUwu4rn8VpybUEkPpVVhRSAEsk
+         5V9EOoMUphNsDxdm2mQ0yF1JDGS6ULnV94+Qv8m7pCID4hQ9DBBNFeUoG2qB/siHWBdL
+         nKcA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=6tmVV51SnSk2HYvVHQW3Mgj1F0ShkbzQvD8YUBsAymU=;
-        b=IUtPXu5DXGPkiqiNFcDkcTFfj2uo+onzOj0jhe4QQczrpKVUobBtUZbD95QtZ6ejEv
-         Ftr9fsluUIXJY6/yOWyqZUdy5tiPjKk9KcJ13mz/+M7CFL64nK5zu9eePReAPIqQRuVT
-         ri51s6EbLHsCP/gGxFnduz+FDbuwS3TE28TQpepr2ICnmDrqwaYApfWiAKX9ROaPsYyN
-         wkd2NC+XBCL9lnvhhD7S/rRPASikNbhJI8ezf80j29FEfN9QA5Uyir55qbsRvIyiAHtH
-         oEPLG+cy8VFuHxJupdLG6mkOEeTwnJwH2Jkm9QAz83vcgB0JWvq5CtIQAm2kcOHDcLbu
-         jy4A==
-X-Gm-Message-State: APjAAAUY0gaFOa0Cd7Zh5aBEX+LlCxjG1kdm4bSuGIPeSJDl8BJCsvio
-        cboVSiSSNCmqUowvhzUQN1PMGg==
-X-Google-Smtp-Source: APXvYqzXup5kFh+zU7dXgRCBdDuKqJJYbpQ0F3tarAJNBFrh0YuprUsd4gWgCWKC1AjnDuI55Funqg==
-X-Received: by 2002:a63:5f44:: with SMTP id t65mr23902892pgb.124.1572891176673;
-        Mon, 04 Nov 2019 10:12:56 -0800 (PST)
+        bh=y7fhR2xIT71DtVa1uCjsmuyALGEUbfwLZ/uWrAtc5Ds=;
+        b=MCG935es5SkdSatzpNe16/6hGlvxBuDo2TnIgDsA1MvYI2dB3AqHtT5qugFWNQGNOu
+         DTGMSt8FM38T4Tdt97HC3LaJ6hAn5BVo+zW6mYBNHUWtH2UZAZ8A6Se7w1oF5xnW/kFK
+         4cM5eh9Lv+Z7gBVha3s89riy02LJr9VZX4aQyD0BFhvdDD6Y1frZSIcDKFYxgb+qqmZR
+         rC0DBXc6cclR7ojVezKEAsL/B3T1iVqPOu/n8e6L+7AqrQSMwCA8i5WXjicdFCy0qTiV
+         Wnoo3j4NhxhL2V5KYjLMD97W9LrIgVW/oyEF5Cu5l5vQKtdpE2zGXrPVm2MOwi53tOuH
+         GE/g==
+X-Gm-Message-State: APjAAAUxOVvr0UZDFISdk451QdiTCFGkFWfd5Rp/KTlV89sd51CfeHVQ
+        64Verw6mKj+Z1nAb7lzTkFgNKl5NpcI=
+X-Google-Smtp-Source: APXvYqwcjS8PQWDXoU04+7uYKJgaNIt5TMbPyiNLgdD8R3/8rHEJehtKvK3piISL7+DIS4jVvvUjwA==
+X-Received: by 2002:a63:2d81:: with SMTP id t123mr31539251pgt.306.1572891179732;
+        Mon, 04 Nov 2019 10:12:59 -0800 (PST)
 Received: from xps15.cg.shawcable.net (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id o12sm16149520pgl.86.2019.11.04.10.12.55
+        by smtp.gmail.com with ESMTPSA id o12sm16149520pgl.86.2019.11.04.10.12.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 10:12:56 -0800 (PST)
+        Mon, 04 Nov 2019 10:12:59 -0800 (PST)
 From:   Mathieu Poirier <mathieu.poirier@linaro.org>
 To:     gregkh@linuxfoundation.org
 Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 03/14] coresight: etm4x: Add support for ThunderX2
-Date:   Mon,  4 Nov 2019 11:12:40 -0700
-Message-Id: <20191104181251.26732-4-mathieu.poirier@linaro.org>
+Subject: [PATCH 06/14] coresight: etm4x: Add missing API to set EL match on address filters
+Date:   Mon,  4 Nov 2019 11:12:43 -0700
+Message-Id: <20191104181251.26732-7-mathieu.poirier@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104181251.26732-1-mathieu.poirier@linaro.org>
 References: <20191104181251.26732-1-mathieu.poirier@linaro.org>
@@ -69,29 +69,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tanmay Vilas Kumar Jagdale <tanmay@marvell.com>
+From: Mike Leach <mike.leach@linaro.org>
 
-Add ETMv4 periperhal ID for Marvell's ThunderX2 chip.
-This chip contains ETMv4.1 version.
+TRCACATRn registers have match bits for secure and non-secure exception
+levels which are not accessible by the sysfs API.
+This adds a new sysfs parameter to enable this - addr_exlevel_s_ns.
 
-Signed-off-by: Tanmay Vilas Kumar Jagdale <tanmay@marvell.com>
+Signed-off-by: Mike Leach <mike.leach@linaro.org>
+Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Signed-off-by: Mathieu Poirier <mathieu.poirier@linaro.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../coresight/coresight-etm4x-sysfs.c         | 42 +++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 4cecabdd051b..8f98701cadc5 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1529,6 +1529,7 @@ static const struct amba_id etm4_ids[] = {
- 	CS_AMBA_UCI_ID(0x000f0211, uci_id_etm4),/* Qualcomm Kryo */
- 	CS_AMBA_ID(0x000bb802),			/* Qualcomm Kryo 385 Cortex-A55 */
- 	CS_AMBA_ID(0x000bb803),			/* Qualcomm Kryo 385 Cortex-A75 */
-+	CS_AMBA_UCI_ID(0x000cc0af, uci_id_etm4),/* Marvell ThunderX2 */
- 	{},
- };
+diff --git a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+index cc8156318018..97a33cf98797 100644
+--- a/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
++++ b/drivers/hwtracing/coresight/coresight-etm4x-sysfs.c
+@@ -1233,6 +1233,47 @@ static ssize_t addr_context_store(struct device *dev,
+ }
+ static DEVICE_ATTR_RW(addr_context);
  
++static ssize_t addr_exlevel_s_ns_show(struct device *dev,
++				      struct device_attribute *attr,
++				      char *buf)
++{
++	u8 idx;
++	unsigned long val;
++	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct etmv4_config *config = &drvdata->config;
++
++	spin_lock(&drvdata->spinlock);
++	idx = config->addr_idx;
++	val = BMVAL(config->addr_acc[idx], 14, 8);
++	spin_unlock(&drvdata->spinlock);
++	return scnprintf(buf, PAGE_SIZE, "%#lx\n", val);
++}
++
++static ssize_t addr_exlevel_s_ns_store(struct device *dev,
++				       struct device_attribute *attr,
++				       const char *buf, size_t size)
++{
++	u8 idx;
++	unsigned long val;
++	struct etmv4_drvdata *drvdata = dev_get_drvdata(dev->parent);
++	struct etmv4_config *config = &drvdata->config;
++
++	if (kstrtoul(buf, 0, &val))
++		return -EINVAL;
++
++	if (val & ~((GENMASK(14, 8) >> 8)))
++		return -EINVAL;
++
++	spin_lock(&drvdata->spinlock);
++	idx = config->addr_idx;
++	/* clear Exlevel_ns & Exlevel_s bits[14:12, 11:8], bit[15] is res0 */
++	config->addr_acc[idx] &= ~(GENMASK(14, 8));
++	config->addr_acc[idx] |= (val << 8);
++	spin_unlock(&drvdata->spinlock);
++	return size;
++}
++static DEVICE_ATTR_RW(addr_exlevel_s_ns);
++
+ static ssize_t seq_idx_show(struct device *dev,
+ 			    struct device_attribute *attr,
+ 			    char *buf)
+@@ -2038,6 +2079,7 @@ static struct attribute *coresight_etmv4_attrs[] = {
+ 	&dev_attr_addr_stop.attr,
+ 	&dev_attr_addr_ctxtype.attr,
+ 	&dev_attr_addr_context.attr,
++	&dev_attr_addr_exlevel_s_ns.attr,
+ 	&dev_attr_seq_idx.attr,
+ 	&dev_attr_seq_state.attr,
+ 	&dev_attr_seq_event.attr,
 -- 
 2.17.1
 
