@@ -2,167 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C23DCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D46E6CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:59:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 988D121D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7BCC21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:59:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="u8uS4jJd"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bD7OxtAO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728782AbfKDLzd (ORCPT
+        id S1728582AbfKDL7j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:55:33 -0500
-Received: from mx1.cock.li ([185.10.68.5]:40375 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726633AbfKDLzd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:55:33 -0500
+        Mon, 4 Nov 2019 06:59:39 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:47845 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727838AbfKDL7j (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:59:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572868778;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=b/s3YEvh2xEz6f1xfLOfcSC2xtpmsXL9FCggxTE73dE=;
+        b=bD7OxtAOHJ8nqQsSxGqmTbHu9mmiSSde3c9W9d1xdn/bRR1aabFqvWgwV8IRdvtd8mrdoM
+        AZnh8JSGWjU10JarFaEi3HxXF/xCIvmrGeQD7lkwo2J9bpW/enmvO76lETgtAOs0Qgkwee
+        b2WhLKz39rtW6Oe1aar4s6637ZEwSos=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-417-wGlYFAqDPFWTCF1rJvLJaQ-1; Mon, 04 Nov 2019 06:59:35 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EBA6E1005500;
+        Mon,  4 Nov 2019 11:59:33 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (unknown [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 51BF560C88;
+        Mon,  4 Nov 2019 11:59:33 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH] iocost: add a comment about locking in ioc_weight_write()
+References: <20191104101811.GA20821@mwanda>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Mon, 04 Nov 2019 06:59:32 -0500
+In-Reply-To: <20191104101811.GA20821@mwanda> (Dan Carpenter's message of "Mon,
+        4 Nov 2019 13:18:11 +0300")
+Message-ID: <x491runq2cb.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1572868528; bh=vmxjRyQgEUDK/8GgIfNKnes8hfD4jOj3v99OYfZ6FZ0=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=u8uS4jJdXlkcZaXC2J9dXaG+7JbtLi5q4EPmIdnieJO9zqPoyjX+SKGGoe8wSQAjx
-         zeuMRebv3xd5D1RuwS3gY6yOe0/oWVoMk5vpggrb6dtwnoI0cWf7hip/nriBzNX7nU
-         Lbu5N+LIV+oQfkdNBr6pJnt2NMS4HcFuxFegiFSPAQTV7WmNcgV9TJT+PLv5dWTMX1
-         b2LMx1rS29RnkKXmf7EfjC2ufd21XTQ4Ve0NUHKeNNY8qBcr2Lr4vtEjPB0+cGwVEx
-         akkfehQjehBCm6E1XhdO+263SrUqmGgv1y71ZrIIafIr2vtjDHrhO8jutxceh+QcO6
-         Z1NDkE1xkgYCw==
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Mon, 04 Nov 2019 11:55:28 +0000
-From:   gameonlinux@redchan.it
-To:     =?UTF-8?Q?Alexandre_Fran=C3=A7ois_Garreau?= 
-        <galex-713@galex-713.eu>
-Cc:     Jean Louis <bugs@gnu.support>, gnu-misc-discuss@gnu.org,
-        gnu-misc-discuss 
-        <gnu-misc-discuss-bounces+gameonlinux=redchan.it@gnu.org>,
-        rms@gnu.org, ruben@mrbrklyn.com, mrbrklyn@panix.com,
-        linux-kernel@vger.kernel.org
-Subject: Re: Support for RMS and criticism of the bottom-up/social contract
- power grab attempt. - Why fewer contributors?
-In-Reply-To: <3597943.aDa7FIykWb@pc-713>
-References: <5ec38bda-be9c-337e-ec18-a3b983a68b73@runbox.com>
- <6191342.WJX1yqFeDY@pc-713> <20191104111140.GU21905@protected.rcdrun.com>
- <3597943.aDa7FIykWb@pc-713>
-Message-ID: <adb26c6a71ea3b38018a99dca22cf200@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: wGlYFAqDPFWTCF1rJvLJaQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bird in the hand is worth three in the bush.
+Dan Carpenter <dan.carpenter@oracle.com> writes:
 
-You have men contributing to GNU now.
-You want to bend them to obey women's speech codes, so you "can get more 
-women".
-You do not value your male contributors: you take them for granted.
+> It wasn't very clear that blkg_conf_prep() disables IRQ and that they
+> are enabled in blkg_conf_finish() so this patch adds a comment about it.
+>
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
 
-Reasons fewer men contribute to GNU:
-Have to reveal identity.
-Have to assign copyright (a submissive act).
+Reviewed-by: Jeff Moyer <jmoyer@redhat.com>
 
-Reasons very few women contribute to GNU:
-Have to reveal identity.
-Have to assign copyright.
-Too many "loser" men involved.
+Thanks, Dan!
 
-RMS's previous statements that the woman finds "disgusting" were fine.
-I'm sad he walked them back.
+> ---
+> I don't know if it's too late to fold this in with the previous patch?
+>
+>  block/blk-iocost.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/block/blk-iocost.c b/block/blk-iocost.c
+> index a7ed434eae03..c5a8703ca6aa 100644
+> --- a/block/blk-iocost.c
+> +++ b/block/blk-iocost.c
+> @@ -2095,6 +2095,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_=
+file *of, char *buf,
+>  =09=09return nbytes;
+>  =09}
+> =20
+> +=09/* blkg_conf_prep() takes the q->queue_lock and disables IRQs */
+>  =09ret =3D blkg_conf_prep(blkcg, &blkcg_policy_iocost, buf, &ctx);
+>  =09if (ret)
+>  =09=09return ret;
+> @@ -2115,6 +2116,7 @@ static ssize_t ioc_weight_write(struct kernfs_open_=
+file *of, char *buf,
+>  =09weight_updated(iocg);
+>  =09spin_unlock(&iocg->ioc->lock);
+> =20
+> +=09/* blkg_conf_finish() unlocks the q->queue_lock and enables IRQs */
+>  =09blkg_conf_finish(&ctx);
+>  =09return nbytes;
 
-Most old religions allowed men to marry young girls.
-See: Devarim chapter 22, verse 28.
-(Masoretic Text: Na'ar) (Nachmanides points out that a child may be 
-called na'ar from the moment he is born.)
-(Greek Septuagint: Padia) (padia+philos = paedophillia)
-(Latin Vulgate: Puella (young girl))
-
-Bukari Hadiths book 5, hadith number 200+ or so (Ashia's age at 
-marriage)
-
-Vedic tradition (father who fails to marry his daughter by 12 or 9 goes 
-to a hell)
-
-
-American men prevent all this, in keeping with their crusade against the 
-beliefs of the rest of the world; to bend it into something that is 
-"safe" for their "democracy" (white women ruling the world, with her 
-unleashed dog (he is leashed and muzzled at home, ofcourse)
-Islam will probably win, however, and bring it back. We had hoped the 
-Jews would have been successful in doing so, but they were unable to 
-bring freedom and have given up now. They tried very hard however (60s, 
-70s, 80s), but were violently beaten back by the Proud American Men in 
-the latter 80s, 90s, 2000s, 2010s.
-
-RMS's now-reversed views were perhaps part of that wider liberation 
-attempt. But what has he gotten for it? He's given up that attempt now, 
-sadly. But what can you do? America only cares about the happiness of 
-it's white women: it cares nothing for males who are simply beasts of 
-burden to "provide" for the woman, under the American religion. (It 
-cares even less for everyone else: who it sets the dogs on)
-
-The Muslims will solve it all, I'm glad the politicians brought them in. 
-They also don't rip you off when you get your car fixed: very honest in 
-business from my view.
-
-> Nachmanides points out that a child may be called na'ar from the moment
-> he is born.
-> https://ohr.edu/ask_db/ask_main.php/179/Q3/
-
-----
-
-I wish RMS could have a nice marriage.
-Ruben Safir: could you help him in that, from your community.
-The American Men and Women have attacked him and "canceled" him; after 
-all he's done for them.
-
-
-On 2019-11-04 11:28, Alexandre François Garreau wrote:
-> Le lundi 4 novembre 2019 12:11:40 CET, vous avez écrit :
->> * Alexandre François Garreau <galex-713@galex-713.eu> [2019-11-04 
->> 11:52]:
->> > Le lundi 4 novembre 2019 10:50:56 CET, vous avez écrit :
->> > > * Federico Leva <nemowiki@gmail.com> [2019-11-04 09:02]:
->> > > > Alexandre François Garreau, 01/11/19 18:30:
->> > > > > Though women participate in GNU,
->> > > > > are any of them fortunately software package maintainer?
->> > > > > Unfortunately,
->> > > > > I’m
->> > > > > not sure about this :/
->> > >
->> > > LibrePlanet media is good place to see that it is not male society:
->> > > https://media.libreplanet.org/
->> > >
->> > > There is no discrimination. Package maintainer are not looked upon
->> > > because of their gender.
->> >
->> > I think people may be worried about either internal inconscious, unwilling
->> > discrimination, either about external discrimination that might make women
->> > dislike that place.
->> 
->> Do you mean ""unconscious" with "inconscious"? I don't share opinion
->> that internal uncoscious unwilling discrimination is making worry to
->> anybody. Such statement is based on imagination or could be said to be
->> fabrication.
-> 
-> I think women (and more generally, contributors, and stable ones) are 
-> even too
-> few to see any formal preference of anybody over anybody within GNU 
-> yet.
-> 
->> External discrimination is maybe what you think as "public"
->> discrimination, such does not exist in GNU project, and statement
->> falls into fabrications.
-> 
-> No, external means external to GNU, not coming from GNU members, but 
-> from
-> women who might not want to join.  And that could be caused because of 
-> stuff
-> internal to GNU (image, atmosphere, etc.).  That’s the position of the
-> signatories of the Joint statement, I think.
