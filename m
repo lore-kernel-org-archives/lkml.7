@@ -4,52 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9251CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 540BFCA9ED5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70E3F217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B77321744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904160;
-	bh=9qduArsyX3+F16PKcIsoCcFHd0P++Og3KlntLhn8pY4=;
+	s=default; t=1572904164;
+	bh=2WJRi8DP8DqGTf6NYmHpPXfIjADbeGfQXHFPy3YFDgg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RcjCjucmo1tH9Qah1MmuvBnwjraZd+5ygdvJAl2tB5Rj6awFT/8hP5kc5yHDKbF/q
-	 fFfKnn0hvicd5AaWvD5Hi9i5ZCvHseo+K3V5E5EzblqrBrtFKowdGEq/jV9hVW/9Lb
-	 O/msvHBNvlHdBWhodAemAzUjppT4S69n6tEcQyio=
+	b=obDIy3RRxbfchgLHNUoRZS7UEC3Z2F9kBilCTpTnGIrsRRui0p7iocYUsfzi5Anky
+	 d4OrWAqqyd8OMCOlPHBq1ffAPKV5KGC6FcetCHsjdZJVfbwFKXsov8o3nVlw7Z5pW1
+	 ZFvrBNgtjg310+dorqiLDc9CJFRy9iOSmQjrNm8I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730344AbfKDVtT (ORCPT
+        id S1728409AbfKDVtX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:49:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:49:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730318AbfKDVtR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:17 -0500
+        id S1730337AbfKDVtT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:49:19 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1C12214D8;
-        Mon,  4 Nov 2019 21:49:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7428E20B7C;
+        Mon,  4 Nov 2019 21:49:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904156;
-        bh=9qduArsyX3+F16PKcIsoCcFHd0P++Og3KlntLhn8pY4=;
+        s=default; t=1572904158;
+        bh=2WJRi8DP8DqGTf6NYmHpPXfIjADbeGfQXHFPy3YFDgg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qzMpNTxwHtPNdSyS/b2gYizfA9M0L82VkxWMmqpvArHRVfXkkYkw3oJOioX387UWE
-         QyTs2FEXZPkQ1PqxWMdpc4D4k45+LYDTBwRXoSGStjgQCAeOgCVtEtS51UJHDGJubV
-         JtKI4CF1EeecGgJ1Dwe0cVocpghzK8OrE8EQC77w=
+        b=dyQk7lAJV9gn5gN+Lhi3saKJGpu7vLT482k/sZoN6ssQQd62JQYOyaAB/2Icl9sE1
+         q6TFyUcL9J6kZKpQYySe/HQ2/mJgmA1jpxOEln5XL4lcWP4HkK923LxVMdz894LLyB
+         EvAlWBvdPDP1TOLiEQkuEof6QCa6STFqBmhETgTc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vratislav Bendel <vbendel@redhat.com>,
-        Brian Foster <bfoster@redhat.com>,
-        Christoph Hellwig <hch@lst.de>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Alex Lyakas <alex@zadara.com>
-Subject: [PATCH 4.4 46/46] xfs: Correctly invert xfs_buftarg LRU isolation logic
-Date:   Mon,  4 Nov 2019 22:45:17 +0100
-Message-Id: <20191104211918.151678760@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.4 32/46] USB: serial: whiteheat: fix potential slab corruption
+Date:   Mon,  4 Nov 2019 22:45:03 +0100
+Message-Id: <20191104211906.870415903@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -62,42 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vratislav Bendel <vbendel@redhat.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit 19957a181608d25c8f4136652d0ea00b3738972d upstream.
+commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
 
-Due to an inverted logic mistake in xfs_buftarg_isolate()
-the xfs_buffers with zero b_lru_ref will take another trip
-around LRU, while isolating buffers with non-zero b_lru_ref.
+Fix a user-controlled slab buffer overflow due to a missing sanity check
+on the bulk-out transfer buffer used for control requests.
 
-Additionally those isolated buffers end up right back on the LRU
-once they are released, because b_lru_ref remains elevated.
-
-Fix that circuitous route by leaving them on the LRU
-as originally intended.
-
-Signed-off-by: Vratislav Bendel <vbendel@redhat.com>
-Reviewed-by: Brian Foster <bfoster@redhat.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Darrick J. Wong <darrick.wong@oracle.com>
-Signed-off-by: Alex Lyakas <alex@zadara.com>
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/xfs/xfs_buf.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/serial/whiteheat.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/fs/xfs/xfs_buf.c
-+++ b/fs/xfs/xfs_buf.c
-@@ -1584,7 +1584,7 @@ xfs_buftarg_isolate(
- 	 * zero. If the value is already zero, we need to reclaim the
- 	 * buffer, otherwise it gets another trip through the LRU.
- 	 */
--	if (!atomic_add_unless(&bp->b_lru_ref, -1, 0)) {
-+	if (atomic_add_unless(&bp->b_lru_ref, -1, 0)) {
- 		spin_unlock(&bp->b_lock);
- 		return LRU_ROTATE;
- 	}
+--- a/drivers/usb/serial/whiteheat.c
++++ b/drivers/usb/serial/whiteheat.c
+@@ -604,6 +604,10 @@ static int firm_send_command(struct usb_
+ 
+ 	command_port = port->serial->port[COMMAND_PORT];
+ 	command_info = usb_get_serial_port_data(command_port);
++
++	if (command_port->bulk_out_size < datasize + 1)
++		return -EIO;
++
+ 	mutex_lock(&command_info->mutex);
+ 	command_info->command_finished = false;
+ 
 
 
