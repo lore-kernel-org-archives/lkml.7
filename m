@@ -2,157 +2,187 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A352BCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A705CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:04:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A0EA20869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B9C620869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:04:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ONtaL7rq"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JxEoCPU5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729382AbfKDTDs (ORCPT
+        id S1729418AbfKDTEJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:03:48 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:44022 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728321AbfKDTDs (ORCPT
+        Mon, 4 Nov 2019 14:04:09 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24707 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728321AbfKDTEI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:03:48 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA4J3dLa091837;
-        Mon, 4 Nov 2019 13:03:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572894219;
-        bh=pLLK4+ACh7QrJ1SyNfFVKzNGvx/SlSKoWSbHsDNpqMk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=ONtaL7rqPZ/8aljR3GRLp2j3yQGmYNbN45f4kzb20MsPJC0FoiThJk6tD3iAzqqJD
-         +jrr5GqSKZ+z4QfuN7BLKvQg17QrvKpgji4pPH/HWUBlhVfD6QEFo0pmbzZ6mfeuxq
-         KECTu8SPwtAOZTzKEhcnU7oE8If970ZJdmvWPe7k=
-Received: from DFLE107.ent.ti.com (dfle107.ent.ti.com [10.64.6.28])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA4J3dNp078964
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 13:03:39 -0600
-Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 13:03:24 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE111.ent.ti.com
- (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 13:03:23 -0600
-Received: from [10.1.3.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA4J3aNI097290;
-        Mon, 4 Nov 2019 13:03:37 -0600
-Subject: Re: [PATCH] reset: Free struct reset_control_array in
- reset_control_array_put()
-To:     Philipp Zabel <p.zabel@pengutronix.de>,
-        <linux-kernel@vger.kernel.org>
-CC:     <tomi.valkeinen@ti.com>, <colin.king@canonical.com>,
-        <treding@nvidia.com>
-References: <9c8c5c337a9351a561a4bf18f2faa1e9a01b50e6.1572884515.git.jsarha@ti.com>
- <3a970f3f3518485f58e86f2523e5085f47ec4b15.camel@pengutronix.de>
-From:   Jyri Sarha <jsarha@ti.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=jsarha@ti.com; prefer-encrypt=mutual; keydata=
- mQINBFbdWt8BEADnCIkQrHIvAmuDcDzp1h2pO9s22nacEffl0ZyzIS//ruiwjMfSnuzhhB33
- fNEWzMjm7eqoUBi1BUAQIReS6won0cXIEXFg9nDYQ3wNTPyh+VRjBvlb/gRJlf4MQnJDTGDP
- S5i63HxYtOfjPMSsUSu8NvhbzayNkN5YKspJDu1cK5toRtyUn1bMzUSKDHfwpdmuCDgXZSj2
- t+z+c6u7yx99/j4m9t0SVlaMt00p1vJJ3HJ2Pkm3IImWvtIfvCmxnOsK8hmwgNQY6PYK1Idk
- puSRjMIGLqjZo071Z6dyDe08zv6DWL1fMoOYbAk/H4elYBaqEsdhUlDCJxZURcheQUnOMYXo
- /kg+7TP6RqjcyXoGgqjfkqlf3hYKmyNMq0FaYmUAfeqCWGOOy3PPxR/IiACezs8mMya1XcIK
- Hk/5JAGuwsqT80bvDFAB2XfnF+fNIie/n5SUHHejJBxngb9lFE90BsSfdcVwzNJ9gVf/TOJc
- qJEHuUx0WPi0taO7hw9+jXV8KTHp6CQPmDSikEIlW7/tJmVDBXQx8n4RMUk4VzjE9Y/m9kHE
- UVJ0bJYzMqECMTAP6KgzgkQCD7n8OzswC18PrK69ByGFpcm664uCAa8YiMuX92MnesKMiYPQ
- z1rvR5riXZdplziIRjFRX+68fvhPverrvjNVmzz0bAFwfVjBsQARAQABtBpKeXJpIFNhcmhh
- IDxqc2FyaGFAdGkuY29tPokCOAQTAQIAIgUCVt1a3wIbAwYLCQgHAwIGFQgCCQoLBBYCAwEC
- HgECF4AACgkQkDazUNfWGUEVVhAAmFL/21tUhZECrDrP9FWuAUuDvg+1CgrrqBj7ZxKtMaiz
- qTcZwZdggp8bKlFaNrmsyrBsuPlAk99f7ToxufqbV5l/lAT3DdIkjb4nwN4rJkxqSU3PaUnh
- mDMKIAp6bo1N9L+h82LE6CjI89W4ydQp5i+cOeD/kbdxbHHvxgNwrv5x4gg1JvEQLVnUSHva
- R2kx7u2rlnq7OOyh9vU0MUq7U5enNNqdBjjBTeaOwa5xb3S2Cc9dR10mpFiy+jSSkuFOjPpc
- fLfr/s03NGqbZ4aXvZCGjCw4jclpTJkuWPKO+Gb+a/3oJ4qpGN9pJ+48n2Tx9MdSrR4aaXHi
- EYMrbYQz9ICJ5V80P5+yCY5PzCvqpkizP6vtKvRSi8itzsglauMZGu6GwGraMJNBgu5u+HIZ
- nfRtJO1AAiwuupOHxe1nH05c0zBJaEP4xJHyeyDsMDh+ThwbGwQmAkrLJZtOd3rTmqlJXnuj
- sfgQlFyC68t1YoMHukz9LHzg02xxBCaLb0KjslfwuDUTPrWtcDL1a5hccksrkHx7k9crVFA1
- o6XWsOPGKRHOGvYyo3TU3CRygXysO41UnGG40Q3B5R8RMwRHV925LOQIwEGF/6Os8MLgFXCb
- Lv3iJtan+PBdqO1Bv3u2fXUMbYgQ3v7jHctB8nHphwSwnHuGN7FAmto+SxzotE25Ag0EVt1a
- 3wEQAMHwOgNaIidGN8UqhSJJWDEfF/SPSCrsd3WsJklanbDlUCB3WFP2EB4k03JroIRvs7/V
- VMyITLQvPoKgaECbDS5U20r/Po/tmaAOEgC7m1VaWJUUEXhjYQIw7t/tSdWlo5XxZIcO4LwO
- Kf0S4BPrQux6hDLIFL8RkDH/8lKKc44ZnSLoF1gyjc5PUt6iwgGJRRkOD8gGxCv1RcUsu1xU
- U9lHBxdWdPmMwyXiyui1Vx7VJJyD55mqc7+qGrpDHG9yh3pUm2IWp7jVt/qw9+OE9dVwwhP9
- GV2RmBpDmB3oSFpk7lNvLJ11VPixl+9PpmRlozMBO00wA1W017EpDHgOm8XGkq++3wsFNOmx
- 6p631T2WuIthdCSlZ2kY32nGITWn4d8L9plgb4HnDX6smrMTy1VHVYX9vsHXzbqffDszQrHS
- wFo5ygKhbGNXO15Ses1r7Cs/XAZk3PkFsL78eDBHbQd+MveApRB7IyfffIz7pW1R1ZmCrmAg
- Bn36AkDXJTgUwWqGyJMd+5GHEOg1UPjR5Koxa4zFhj1jp1Fybn1t4N11cmEmWh0aGgI/zsty
- g/qtGRnFEywBbzyrDEoV4ZJy2Q5pnZohVhpbhsyETeYKQrRnMk/dIPWg6AJx38Cl4P9PK1JX
- 8VK661BG8GXsXJ3uZbPSu6K0+FiJy09N4IW7CPJNABEBAAGJAh8EGAECAAkFAlbdWt8CGwwA
- CgkQkDazUNfWGUFOfRAA5K/z9DXVEl2kkuMuIWkgtuuLQ7ZwqgxGP3dMA5z3Iv/N+VNRGbaw
- oxf+ZkTbJHEE/dWclj1TDtpET/t6BJNLaldLtJ1PborQH+0jTmGbsquemKPgaHeSU8vYLCdc
- GV/Rz+3FN0/fRdmoq2+bIHght4T6KZJ6jsrnBhm7y6gzjMOiftH6M5GXPjU0/FsU09qsk/af
- jbwLETaea0mlWMrLd9FC2KfVITA/f/YG2gqtUUF9WlizidyctWJqSTZn08MdzaoPItIkRUTv
- 6Bv6rmFn0daWkHt23BLd0ZP7e7pON1rqNVljWjWQ/b/E/SzeETrehgiyDr8pP+CLlC+vSQxi
- XtjhWjt1ItFLXxb4/HLZbb/L4gYX7zbZ3NwkON6Ifn3VU7UwqxGLmKfUwu/mFV+DXif1cKSS
- v6vWkVQ6Go9jPsSMFxMXPA5317sZZk/v18TAkIiwFqda3/SSjwc3e8Y76/DwPvUQd36lEbva
- uBrUXDDhCoiZnjQaNz/J+o9iYjuMTpY1Wp+igjIretYr9+kLvGsoPo/kTPWyiuh/WiFU2d6J
- PMCGFGhodTS5qmQA6IOuazek1qSZIl475u3E2uG98AEX/kRhSzgpsbvADPEUPaz75uvlmOCX
- tv+Sye9QT4Z1QCh3lV/Zh4GlY5lt4MwYnqFCxroK/1LpkLgdyQ4rRVw=
-Message-ID: <7280f9d5-1048-f130-37fd-9a3068f54df7@ti.com>
-Date:   Mon, 4 Nov 2019 21:03:36 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 14:04:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572894246;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=o+b8NjPRUKQ+2J5og0i8ZiirbNKP/A0yVqr+r6mXyYc=;
+        b=JxEoCPU5hOv6oRv7X1TyoQ9jAvc2X27Ytm1jXk5ZoX6uWESYgv4VyKMTwv7q+dS0XPY1z0
+        hsobXPVZXpuJkymhOetaCTg7iNbQnZXewXJb+IyMsqRYrcrFB9PqND35lOoOFnV99GLkcM
+        klObKsHHAAitRgIvvLJ3ih1DX1nmx5w=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-418-VlZXnWgFNza582B-zOtudA-1; Mon, 04 Nov 2019 14:04:03 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D20041005500;
+        Mon,  4 Nov 2019 19:03:58 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A0925D6D0;
+        Mon,  4 Nov 2019 19:03:57 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 14:03:55 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Hillf Danton <hdanton@sina.com>
+Cc:     John Hubbard <jhubbard@nvidia.com>, linux-mm <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, Jan Kara <jack@suse.cz>,
+        Mel Gorman <mgorman@suse.de>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [RFC] mm: gup: add helper page_try_gup_pin(page)
+Message-ID: <20191104190355.GH5134@redhat.com>
+References: <20191103112113.8256-1-hdanton@sina.com>
+ <20191104043420.15648-1-hdanton@sina.com>
+ <20191104102050.15988-1-hdanton@sina.com>
 MIME-Version: 1.0
-In-Reply-To: <3a970f3f3518485f58e86f2523e5085f47ec4b15.camel@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+In-Reply-To: <20191104102050.15988-1-hdanton@sina.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: VlZXnWgFNza582B-zOtudA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/2019 18:30, Philipp Zabel wrote:
-> Hi Jyri,
-> 
-> On Mon, 2019-11-04 at 18:24 +0200, Jyri Sarha wrote:
->> Fix memory leak in devm_reset_control_array_get(). Free also the
->> struct reset_control_array pointer in reset_control_array_put() not
->> only the reset-controls stored in it.
->>
->> Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
->> Signed-off-by: Jyri Sarha <jsarha@ti.com>
->> ---
->>  drivers/reset/core.c | 2 ++
->>  1 file changed, 2 insertions(+)
->>
->> diff --git a/drivers/reset/core.c b/drivers/reset/core.c
->> index 213ff40dda11..85d9676ee969 100644
->> --- a/drivers/reset/core.c
->> +++ b/drivers/reset/core.c
->> @@ -748,6 +748,8 @@ static void reset_control_array_put(struct reset_control_array *resets)
->>  	for (i = 0; i < resets->num_rstcs; i++)
->>  		__reset_control_put_internal(resets->rstc[i]);
->>  	mutex_unlock(&reset_list_mutex);
->> +
->> +	kfree(resets);
->>  }
->>  
->>  /**
-> 
-> Thank you, this just got fixed in 532f9cd6ee99 ("reset: Fix memory leak
-> in reset_control_array_put()").
-> 
+On Mon, Nov 04, 2019 at 06:20:50PM +0800, Hillf Danton wrote:
+>=20
+> On Sun, 3 Nov 2019 22:09:03 -0800 John Hubbard wrote:
+> > On 11/3/19 8:34 PM, Hillf Danton wrote:
+> > ...
+> > >>
+> > >> Well, as long as we're counting bits, I've taken 21 bits (!) to trac=
+k
+> > >> "gupers". :)  More accurately, I'm sharing 31 bits with get_page()..=
+.please
+> > >=20
+> > > Would you please specify the reasoning of tracking multiple gupers
+> > > for a dirty page? Do you mean that it is all fine for guper-A to add
+> > > changes to guper-B's data without warning and vice versa?
+> >=20
+> > It's generally OK to call get_user_pages() on a page more than once.
+>=20
+> Does this explain that it's generally OK to gup pin a page under
+> writeback and then start DMA to it behind the flusher's back without
+> warning?=20
 
-Ok, sorry. I just checked the mainline, not the mailing lists etc.
+It can happens today, is it ok ... well no but we live in an imperfect
+world. GUP have been abuse by few device driver over the years and those
+never checked what it meant to use it so now we are left with existing
+device driver that we can not break that do wrong thing.
 
-Best regards,
-Jyri
+I personaly think that we should use bounce page for writeback so that
+writeback can still happens if a page is GUPed. John's patchset is the
+first step to be able to identify GUPed page and maybe special case them.
+
+>=20
+> > And even though we are seeing some work to reduce the number of places
+> > in the kernel that call get_user_pages(), there are still lots of call =
+sites.
+> > That means lots of combinations and situations that could result in mor=
+e
+> > than one gup call per page.
+> >=20
+> > Furthermore, there is no mechanism, convention, documentation, nor anyt=
+hing
+> > at all that attempts to enforce "for each page, get_user_pages() may on=
+ly
+> > be called once."
+>=20
+> What sense is this making wrt the data corruption resulting specifically
+> from multiple gup references?
+
+Multiple GUP references do not imply corruption. Only one or more devices
+writing to the page while writeback is happening is a cause of corruption.
+Multiple device writting in the same page concurrently is like multiple
+CPU thread doing the same. Either the application/device drivers are doing
+this rightfully on purpose or the application has a bug. Either way it is
+not our problem (note here i am talking about userspace portion of the
+device driver).
 
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> > >> I think you must have missed the many contentious debates about the
+> > >> tension between gup-pinned pages, and writeback. File systems can't
+> > >> just ignore writeback in all cases. This patch leads to either
+> > >> system hangs or filesystem corruption, in the presence of long-lasti=
+ng
+> > >> gup pins.
+> > >=20
+> > > The current risk of data corruption due to writeback with long-lived
+> > > gup references all ignored is zeroed out by detecting gup-pinned dirt=
+y
+> > > pages and skipping them; that may lead to problems you mention above.
+> > >=20
+> >=20
+> > Here, I believe you're pointing out that the current situation in the
+> > kernel is already broken, with respect to fs interactions (especially
+> > writeback) with gup. Yes, you are correct, there is a problem.
+> >=20
+> > > Though I doubt anything helpful about it can be expected from fs in n=
+ear
+> >=20
+> > Actually, fs and mm folks are working together to solve this.
+> >=20
+> > > future, we have options for instance that gupers periodically release
+> > > their references and re-pin pages after data sync the same way as the
+> > > current flusher does.
+> > >=20
+> >=20
+> > That's one idea. I don't see it as viable, given the behavior of, say,
+> > a compute process running OpenCL jobs on a GPU that is connected via
+> > a network or Infiniband card--the idea of "pause" really looks more lik=
+e
+> > "tear down the complicated multi-driver connection, writeback, then set=
+ it
+> > all up again", I suspect. (And if we could easily interrupt the job, we=
+'d
+> > probably really be running with a page-fault-capable GPU plus and IB ca=
+rd
+> > that does ODP, plus HMM, and we wouldn't need to gup-pin anyway...)
+>=20
+> Well is it OK to shorten the behavior above to "data corruption in
+> writeback is tolerable in practice because of the expensive cost of
+> data sync"?
+>=20
+> What is the point of writeback? Why can the writeback of long-lived
+> gup-pinned pages not be skipped while data sync can be entirely
+> ignored?
+
+I do not think we want that (skip writeback on GUPed page). I think what
+we should do is use a bounce page ie take a snapshot of the page and
+starts writeback with the snapshot. We need a snapshot because fs code
+expect stable page content for things like encryption or hashing or other
+crazy fs features :)
+
+Cheers,
+J=E9r=F4me
+
