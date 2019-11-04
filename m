@@ -2,128 +2,138 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC864CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:17:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C1CDCA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9CA822184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:17:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FPu6E5dG"
+	by mail.kernel.org (Postfix) with ESMTP id 36F2F2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:18:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729000AbfKDMRG (ORCPT
+        id S1729005AbfKDMSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:17:06 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:46333 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728481AbfKDMRG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:17:06 -0500
-Received: by mail-ot1-f65.google.com with SMTP id n23so3928511otr.13;
-        Mon, 04 Nov 2019 04:17:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=47JQeuFealI4jSM8NIAlNeCFyhat+1KtTcPGYTc+/B8=;
-        b=FPu6E5dGuSRTF6T/chyqu3HS3QEMsl5rfwZPsGs0ptx4/DFVAWuoxW4eupR2kW6pLB
-         YzkXisGoHccl2mdW/jxtTSupOn6Xz+LQask4MV4S3TD3xNI27X2Hq1UEatMuGosoPXE8
-         rHgxMMVgoP96+VFrD3+hA6OKb2042UKfJtHTcJ3re5M3lPEmsZ12f7RKIPCmqdQ8h4mw
-         QDvRZgP5bRoAg0DfUyjxAljiCDCMN0zJWS/Mj3xNjCNHp+c2d6xcfOLFJPuhN5U5RN2D
-         0AJMjvEZdCFcuNzb6YjqqqssJUTokMhoHpdp+Svm9U5mWxOcEdC4PqFDnTqky2UrKLSS
-         C/6w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=47JQeuFealI4jSM8NIAlNeCFyhat+1KtTcPGYTc+/B8=;
-        b=e6ni6SIsngQd3O4btfQmt0S4W8O2cOIlDbieYzCcfU8yALSUU4UL+oc/zBiV8Tx3Uz
-         x0IepCY5APOjzbkBo9Deqetn0Un8JSA2ZgXkzmadEsOr06gUzjWg2yDmeJxBqEUFhcLm
-         JCZZWx2a6jG6lvyEUePbN3QYIxSC3dZGF3mpTQ8jfkfX6DID0oOY+TDWoo0C1IGfc+rJ
-         Nj7k/s+Adwe6jK5uaGp0Dqa9s18aiFV/KhhUIJdU9n2YHSJwUaOxG3x4F0u+JWesoVKd
-         PWxB4yEgW3wZ55t/7zXlVCT+ADLCvkdyLeymMYQAtM7GUW0n6XhKdre4Y72FjLwdrGMf
-         MuAw==
-X-Gm-Message-State: APjAAAV/96etiBSWJ/BER2AdiIJ9wjnj5pgiMJu9rKc4CkfH1RPTma37
-        6dHWN3TkfXExfF52mn3EumjTlPC2AI5eirDTJKI=
-X-Google-Smtp-Source: APXvYqy9eyChpvYwt1pJ3TRds008moU69SaOBiaC6RH8bQb1NPio/GjYEzuL+cmwtrnLMDcu8iGwlKWXjA/XvAmUyuY=
-X-Received: by 2002:a9d:7b43:: with SMTP id f3mr17403056oto.254.1572869825122;
- Mon, 04 Nov 2019 04:17:05 -0800 (PST)
+        Mon, 4 Nov 2019 07:18:04 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2069 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727454AbfKDMSE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:18:04 -0500
+Received: from lhreml703-cah.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id 10DD0AD4A230D753F85C;
+        Mon,  4 Nov 2019 12:18:03 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml703-cah.china.huawei.com (10.201.108.44) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Mon, 4 Nov 2019 12:18:02 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
+ 12:18:02 +0000
+Subject: Re: arm64 iommu groups issue
+From:   John Garry <john.garry@huawei.com>
+To:     Robin Murphy <robin.murphy@arm.com>, Marc Zyngier <maz@kernel.org>,
+        "Will Deacon" <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>,
+        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>
+CC:     iommu <iommu@lists.linux-foundation.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Linuxarm <linuxarm@huawei.com>,
+        Shameer Kolothum <shameerali.kolothum.thodi@huawei.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Saravana Kannan" <saravanak@google.com>
+References: <9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com>
+ <4768c541-ebf4-61d5-0c5e-77dee83f8f94@arm.com>
+ <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
+Message-ID: <abea92b0-7e6c-a3c8-fef3-bc8aabe93436@huawei.com>
+Date:   Mon, 4 Nov 2019 12:18:01 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
- <1572848879-21011-2-git-send-email-wanpengli@tencent.com> <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
-In-Reply-To: <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
-From:   Wanpeng Li <kernellwp@gmail.com>
-Date:   Mon, 4 Nov 2019 20:16:58 +0800
-Message-ID: <CANRm+CzkbrbE2C2yFKL1=mQCBCZMfVH8Tue3eXXqTL5Z1VUB5w@mail.gmail.com>
-Subject: Re: [PATCH 2/2] KVM: Fix rcu splat if vm creation fails
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, kvm <kvm@vger.kernel.org>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <a18b7f26-9713-a5c7-507e-ed70e40bc007@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019 at 19:18, Paolo Bonzini <pbonzini@redhat.com> wrote:
->
-> On 04/11/19 07:27, Wanpeng Li wrote:
-> > From: Wanpeng Li <wanpengli@tencent.com>
-> >
-> > Reported by syzkaller:
-> >
-> >    =============================
-> >    WARNING: suspicious RCU usage
-> >    -----------------------------
-> >    ./include/linux/kvm_host.h:536 suspicious rcu_dereference_check() usage!
-> >
-> >    other info that might help us debug this:
-> >
-> >    rcu_scheduler_active = 2, debug_locks = 1
-> >    no locks held by repro_11/12688.
-> >
-> >    stack backtrace:
-> >    Call Trace:
-> >     dump_stack+0x7d/0xc5
-> >     lockdep_rcu_suspicious+0x123/0x170
-> >     kvm_dev_ioctl+0x9a9/0x1260 [kvm]
-> >     do_vfs_ioctl+0x1a1/0xfb0
-> >     ksys_ioctl+0x6d/0x80
-> >     __x64_sys_ioctl+0x73/0xb0
-> >     do_syscall_64+0x108/0xaa0
-> >     entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> >
-> > Commit a97b0e773e4 (kvm: call kvm_arch_destroy_vm if vm creation fails)
-> > sets users_count to 1 before kvm_arch_init_vm(), however, if kvm_arch_init_vm()
-> > fails, we need to dec this count. Or, we can move the sets refcount after
-> > kvm_arch_init_vm().
->
-> I don't understand this one, hasn't
->
->         WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
->
-> decreased the conut already?  With your patch the refcount would then
-> underflow.
++
 
-r = kvm_arch_init_vm(kvm, type);
-if (r)
-    goto out_err_no_arch_destroy_vm;
+On 19/09/2019 15:35, John Garry wrote:
+> On 19/09/2019 14:25, Robin Murphy wrote:
+>>> When the port eventually probes it gets a new, separate group.
+>>>
+>>> This all seems to be as the built-in module init ordering is as
+>>> follows: pcieport drv, smmu drv, mlx5 drv
+>>>
+>>> I notice that if I build the mlx5 drv as a ko and insert after boot,
+>>> all functions + pcieport are in the same group:
+>>>
+>>> [   11.530046] hisi_sas_v2_hw HISI0162:01: Adding to iommu group 0
+>>> [   17.301093] hns_dsaf HISI00B2:00: Adding to iommu group 1
+>>> [   18.743600] ehci-platform PNP0D20:00: Adding to iommu group 2
+>>> [   20.212284] pcieport 0002:f8:00.0: Adding to iommu group 3
+>>> [   20.356303] pcieport 0004:88:00.0: Adding to iommu group 4
+>>> [   20.493337] pcieport 0005:78:00.0: Adding to iommu group 5
+>>> [   20.702999] pcieport 000a:10:00.0: Adding to iommu group 6
+>>> [   20.859183] pcieport 000c:20:00.0: Adding to iommu group 7
+>>> [   20.996140] pcieport 000d:30:00.0: Adding to iommu group 8
+>>> [   21.152637] serial 0002:f9:00.0: Adding to iommu group 3
+>>> [   21.346991] serial 0002:f9:00.1: Adding to iommu group 3
+>>> [  100.754306] mlx5_core 000a:11:00.0: Adding to iommu group 6
+>>> [  101.420156] mlx5_core 000a:11:00.1: Adding to iommu group 6
+>>> [  292.481714] mlx5_core 000a:11:00.2: Adding to iommu group 6
+>>> [  293.281061] mlx5_core 000a:11:00.3: Adding to iommu group 6
+>>>
+>>> This does seem like a problem for arm64 platforms which don't support
+>>> ACS, yet enable an SMMU. Maybe also a problem even if they do support
+>>> ACS.
+>>>
+>>> Opinion?
+>>
+> 
+> Hi Robin,
+> 
+>> Yeah, this is less than ideal.
+> 
+> For sure. Our production D05 boards don't ship with the SMMU enabled in 
+> BIOS, but it would be slightly concerning in this regard if they did.
+> 
+>  > One way to bodge it might be to make
+>> pci_device_group() also walk downwards to see if any non-ACS-isolated
+>> children already have a group, rather than assuming that groups get
+>> allocated in hierarchical order, but that's far from ideal.
+> 
+> Agree.
+> 
+> My own workaround was to hack the mentioned iort code to defer the PF 
+> probe if the parent port had also yet to probe.
+> 
+>>
+>> The underlying issue is that, for historical reasons, OF/IORT-based
+>> IOMMU drivers have ended up with group allocation being tied to endpoint
+>> driver probing via the dma_configure() mechanism (long story short,
+>> driver probe is the only thing which can be delayed in order to wait for
+>> a specific IOMMU instance to be ready).However, in the meantime, the
+>> IOMMU API internals have evolved sufficiently that I think there's a way
+>> to really put things right - I have the spark of an idea which I'll try
+>> to sketch out ASAP...
+>>
+> 
+> OK, great.
+> 
+> Thanks,
+> John
+> 
+>> Robin.
+> 
 
-out_err_no_disable:
-    kvm_arch_destroy_vm(kvm);
-    WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
-out_err_no_arch_destroy_vm:
-
-So, if kvm_arch_init_vm() fails, we will not execute
-WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
-
-    Wanpeng
