@@ -4,55 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F49CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B70ACCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B36C20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8888E217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904758;
-	bh=tpAVAnK71TJcLRF8HNao0iOpJMcL5f3JdlcazgJy7vs=;
+	s=default; t=1572904763;
+	bh=sP7BL7tqYErBOvL8W0EM0ifrxBAL2ZwmaMUBXDKCsdQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqMwItHY7JlUW0+nPvBYzwxLxDvmib0FZGNImHPVuiuFBP++AsPvwFWPzmozu7TzD
-	 p089jewCjPlbssgPdaKK14qBwxBDn7ZUseCUiP50F7fyL6G6+Xz8BVUDFRxAN1DZOX
-	 7gPjxuiQmc35F9llccal9s6a5CJvOnM1kBSwq8Z4=
+	b=2A014y/YC6D95BwsVub6kFdUhOROqWgK9Izga7l7EG769bFPZaWY/kL5Z/KkHslCu
+	 WSV58bcR2frFS+rfmzLgHFPJMslZDzr/jlPzCNPsey3G+M0rllM/3tEMK7wg+NxVz6
+	 oPXvOdsDoc6hp0GgkwP4K+LDq22vCQbDp3e8fsVA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731076AbfKDV7Q (ORCPT
+        id S2387854AbfKDV7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56202 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56304 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730952AbfKDV7E (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:04 -0500
+        id S1731038AbfKDV7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:09 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6EDB20659;
-        Mon,  4 Nov 2019 21:59:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C438520659;
+        Mon,  4 Nov 2019 21:59:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904743;
-        bh=tpAVAnK71TJcLRF8HNao0iOpJMcL5f3JdlcazgJy7vs=;
+        s=default; t=1572904749;
+        bh=sP7BL7tqYErBOvL8W0EM0ifrxBAL2ZwmaMUBXDKCsdQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VKmiEGxvwREU6FC6T299COOIabkeo4CFtWQY9bK2Bfy5uTT72OFhzdD3xe7pCd/Bd
-         hIAWZjYVdJsOFScvMD0ANjxOwISxoCWrlO0Pi82VnnvGpoBlXwqCv/ARsBGaqc8ZdU
-         nbK98b9NPgFNWRu2pX9LKJ3m5XNxH6sr8RE1X3vk=
+        b=x8tYiGklybRxgLqrTEvTdZewwLO7TvHBKBfXAsSTmO5EOOLW2Y8iTtiPV3sHD0MWR
+         RLQakrmRTFmvFWGu3i3wtTkmTHyO9qu7uJObopbnOrfty2YOE5Sg0pjF55qP9VbfV1
+         /qM3ucEOsAGPCYd/jfXG9HzRpCLuz7RR+xvSU/Xc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sven Van Asbroeck <TheSven73@gmail.com>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Sinan Kaya <okaya@kernel.org>,
-        Frederick Lawler <fred@fredlawl.com>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        stable@vger.kernel.org,
+        Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>,
+        Tony Cheng <Tony.Cheng@amd.com>,
+        Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 055/149] PCI/PME: Fix possible use-after-free on remove
-Date:   Mon,  4 Nov 2019 22:44:08 +0100
-Message-Id: <20191104212140.134967027@linuxfoundation.org>
+Subject: [PATCH 4.19 056/149] drm/amd/display: fix odm combine pipe reset
+Date:   Mon,  4 Nov 2019 22:44:09 +0100
+Message-Id: <20191104212140.255532616@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -65,38 +63,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Van Asbroeck <thesven73@gmail.com>
+From: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
 
-[ Upstream commit 7cf58b79b3072029af127ae865ffc6f00f34b1f8 ]
+[ Upstream commit f25f06b67ba237b76092a6fc522b1a94e84bfa85 ]
 
-In remove(), ensure that the PME work cannot run after kfree() is called.
-Otherwise, this could result in a use-after-free.
+We fail to reset the second odm combine pipe. This change fixes
+odm pointer management.
 
-This issue was detected with the help of Coccinelle.
-
-Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sinan Kaya <okaya@kernel.org>
-Cc: Frederick Lawler <fred@fredlawl.com>
-Cc: Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc: Keith Busch <keith.busch@intel.com>
-Cc: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Dmytro Laktyushkin <Dmytro.Laktyushkin@amd.com>
+Reviewed-by: Tony Cheng <Tony.Cheng@amd.com>
+Acked-by: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/pci/pcie/pme.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/gpu/drm/amd/display/dc/core/dc_resource.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/pci/pcie/pme.c b/drivers/pci/pcie/pme.c
-index e85c5a8206c43..6ac17f0c40775 100644
---- a/drivers/pci/pcie/pme.c
-+++ b/drivers/pci/pcie/pme.c
-@@ -437,6 +437,7 @@ static void pcie_pme_remove(struct pcie_device *srv)
+diff --git a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+index d440b28ee43fb..6896d69b8c240 100644
+--- a/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
++++ b/drivers/gpu/drm/amd/display/dc/core/dc_resource.c
+@@ -1399,9 +1399,9 @@ bool dc_remove_plane_from_context(
+ 			 * For head pipe detach surfaces from pipe for tail
+ 			 * pipe just zero it out
+ 			 */
+-			if (!pipe_ctx->top_pipe ||
+-				(!pipe_ctx->top_pipe->top_pipe &&
++			if (!pipe_ctx->top_pipe || (!pipe_ctx->top_pipe->top_pipe &&
+ 					pipe_ctx->top_pipe->stream_res.opp != pipe_ctx->stream_res.opp)) {
++				pipe_ctx->top_pipe = NULL;
+ 				pipe_ctx->plane_state = NULL;
+ 				pipe_ctx->bottom_pipe = NULL;
+ 			} else {
+@@ -1803,8 +1803,6 @@ enum dc_status dc_remove_stream_from_ctx(
+ 				dc->res_pool->funcs->remove_stream_from_ctx(dc, new_ctx, stream);
  
- 	pcie_pme_disable_interrupt(srv->port, data);
- 	free_irq(srv->irq, srv);
-+	cancel_work_sync(&data->work);
- 	kfree(data);
- }
+ 			memset(del_pipe, 0, sizeof(*del_pipe));
+-
+-			break;
+ 		}
+ 	}
  
 -- 
 2.20.1
