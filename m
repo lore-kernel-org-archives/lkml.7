@@ -2,129 +2,130 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A41C1CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:10:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46980CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 783CE2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:10:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="j+VsS3+p";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Hqr3aDFd"
+	by mail.kernel.org (Postfix) with ESMTP id 24A9E2190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727942AbfKDGK0 (ORCPT
+        id S1728042AbfKDGLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:10:26 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:39394 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726018AbfKDGK0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:10:26 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 6F8B860DB2; Mon,  4 Nov 2019 06:10:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572847824;
-        bh=8tcOCKHQZRIcJjtP4P0n1Zbt/82iSgNJOJvKIHBc88M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=j+VsS3+p0Z72Vg9rMV7WxIUXLDiAhcOR+Z50UskGg7DaowwEJd/8nuoDeODaYW3MA
-         D2qKCh0pGjdjLloa5GuO6uGcLXWYaMVJRjim7s049vZ2GYOzt/8V/79YmmTuDKBCPT
-         MnDXOxpN8O3tHwg6nvF23XX/YwlZWzC3VEhD6tl8=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id D865760DB1;
-        Mon,  4 Nov 2019 06:10:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572847823;
-        bh=8tcOCKHQZRIcJjtP4P0n1Zbt/82iSgNJOJvKIHBc88M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=Hqr3aDFdURVqyEdj7QkUfbqV86NGo91ALjELqmtbJxes6vfws38wmxv0aO4xpTGd+
-         7wVeOw1fx2R7qBe8UzwfgOCxFMPuNKCUpnVcPz7ehg4CQkrwdkN8qQgqPPj/10cTWL
-         fWyZBKC36J4uUQfBmXDw9Gb5l9zdPZL4mT+QuBaI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org D865760DB1
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 07/11] arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter
- device
-To:     Stephen Boyd <swboyd@chromium.org>, kgunda@codeaurora.org
-Cc:     agross@kernel.org, bjorn.andersson@linaro.org, robh+dt@kernel.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-8-rnayak@codeaurora.org>
- <5db86bb1.1c69fb81.dc254.ec0b@mx.google.com>
- <78809ef8464c46018f3803454c1165ab@codeaurora.org>
- <5db9a00d.1c69fb81.c3df6.04eb@mx.google.com>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <4a8801c0-97a3-69f9-abf7-4a74c90d40a3@codeaurora.org>
-Date:   Mon, 4 Nov 2019 11:40:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 01:11:16 -0500
+Received: from mga02.intel.com ([134.134.136.20]:10074 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfKDGLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:11:15 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 22:11:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,266,1569308400"; 
+   d="scan'208";a="204511187"
+Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
+  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2019 22:11:11 -0800
+From:   "Huang\, Ying" <ying.huang@intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Fengguang Wu <fengguang.wu@intel.com>
+Subject: Re: [RFC 10/10] autonuma, memory tiering: Adjust hot threshold automatically
+References: <20191101075727.26683-1-ying.huang@intel.com>
+        <20191101075727.26683-11-ying.huang@intel.com>
+        <20191101093145.GT4131@hirez.programming.kicks-ass.net>
+Date:   Mon, 04 Nov 2019 14:11:11 +0800
+In-Reply-To: <20191101093145.GT4131@hirez.programming.kicks-ass.net> (Peter
+        Zijlstra's message of "Fri, 1 Nov 2019 10:31:45 +0100")
+Message-ID: <877e4gcgsg.fsf@yhuang-dev.intel.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-In-Reply-To: <5db9a00d.1c69fb81.c3df6.04eb@mx.google.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=ascii
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Peter Zijlstra <peterz@infradead.org> writes:
 
-On 10/30/2019 8:07 PM, Stephen Boyd wrote:
-> Quoting kgunda@codeaurora.org (2019-10-29 23:06:43)
->> On 2019-10-29 22:11, Stephen Boyd wrote:
->>> Quoting Rajendra Nayak (2019-10-23 02:02:15)
->>>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> index 04808a07d7da..6584ac6e6c7b 100644
->>>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
->>>> @@ -224,6 +224,25 @@
->>>>                          };
->>>>                  };
->>>>
->>>> +               spmi_bus: spmi@c440000 {
->>>> +                       compatible = "qcom,spmi-pmic-arb";
->>>> +                       reg = <0 0xc440000 0 0x1100>,
->>>
->>> Please pad out the registers to 8 numbers. See sdm845.
->> Ok.. Will address it in the next series.
->>>
->>>> +                             <0 0xc600000 0 0x2000000>,
->>>> +                             <0 0xe600000 0 0x100000>,
->>>> +                             <0 0xe700000 0 0xa0000>,
->>>> +                             <0 0xc40a000 0 0x26000>;
->>>> +                       reg-names = "core", "chnls", "obsrvr", "intr",
->>>> "cnfg";
->>>> +                       interrupt-names = "periph_irq";
->>>> +                       interrupts-extended = <&pdc 1
->>>> IRQ_TYPE_LEVEL_HIGH>;
->>>
->>> This is different than sdm845. I guess pdc is working?
->>>
->> Yes. For SDM845 pdc controller support was not yet added. That's why
->> still the GIC interrupt is used.
->> Where as for SC7180 the same is added with
->> https://lore.kernel.org/patchwork/patch/1143335/.
->>
->> Yes. pdc is working.
-> 
-> Cool. The patch that adds pdc to the DT should come before this one
-> then. In reality, it would be better if it was all squashed down into
-> one big commit that just introduces the SoC file and one commit for
-> PMICs and then one commit for the idp board. Then we don't have this
-> ordering problem.
+> On Fri, Nov 01, 2019 at 03:57:27PM +0800, Huang, Ying wrote:
+>
+>> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+>> index 0a83e9cf6685..22bdbb7afac2 100644
+>> --- a/kernel/sched/fair.c
+>> +++ b/kernel/sched/fair.c
+>> @@ -1486,6 +1486,41 @@ static bool numa_migration_check_rate_limit(struct pglist_data *pgdat,
+>>  	return true;
+>>  }
+>>  
+>> +#define NUMA_MIGRATION_ADJUST_STEPS	16
+>> +
+>> +static void numa_migration_adjust_threshold(struct pglist_data *pgdat,
+>> +					    unsigned long rate_limit,
+>> +					    unsigned long ref_threshold)
+>> +{
+>> +	unsigned long now = jiffies, last_threshold_jiffies;
+>> +	unsigned long unit_threshold, threshold;
+>> +	unsigned long try_migrate, ref_try_migrate, mdiff;
+>> +
+>> +	last_threshold_jiffies = pgdat->autonuma_threshold_jiffies;
+>> +	if (now > last_threshold_jiffies +
+>> +	    msecs_to_jiffies(sysctl_numa_balancing_scan_period_max) &&
+>> +	    cmpxchg(&pgdat->autonuma_threshold_jiffies,
+>> +		    last_threshold_jiffies, now) == last_threshold_jiffies) {
+>
+> That is seriously unreadable gunk.
 
-I'll fix the ordering issues when I respin.
-I could squash all of the patches touching the SoC dtsi, but given the
-authorship for each varies, I will keep it as is perhaps.
+The basic idea here is to adjust hot threshold every
+sysctl_numa_balancing_scan_period_max.  Because the application
+accessing pattern may have spatial locality, and autonuma scans address
+space linearly.  In general, the statistics of NUMA hint page fault
+latency isn't stable in arbitrary internal (such as 1 s, or 200 ms,
+etc).  But the scanning of the whole address space of the application is
+expected to be finished within sysctl_numa_balancing_scan_period_max.
+The statistics of NUMA hint page fault latency is expected to be much
+more stable for the whole application.  So we choose to adjust hot
+threshold every sysctl_numa_balancing_scan_period_max.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I will add comments for this in the next version.
+
+>> +
+>> +		ref_try_migrate = rate_limit *
+>> +			sysctl_numa_balancing_scan_period_max / 1000;
+>> +		try_migrate = node_page_state(pgdat, NUMA_TRY_MIGRATE);
+>> +		mdiff = try_migrate - pgdat->autonuma_threshold_try_migrate;
+>> +		unit_threshold = ref_threshold / NUMA_MIGRATION_ADJUST_STEPS;
+>> +		threshold = pgdat->autonuma_threshold;
+>> +		if (!threshold)
+>> +			threshold = ref_threshold;
+>> +		if (mdiff > ref_try_migrate * 11 / 10)
+>> +			threshold = max(threshold - unit_threshold,
+>> +					unit_threshold);
+>> +		else if (mdiff < ref_try_migrate * 9 / 10)
+>> +			threshold = min(threshold + unit_threshold,
+>> +					ref_threshold);
+>
+> And that is violating codingstyle.
+
+You mean I need to use braces here?
+
+>> +		pgdat->autonuma_threshold_try_migrate = try_migrate;
+>> +		pgdat->autonuma_threshold = threshold;
+>> +	}
+>> +}
+>
+>
+> Maybe if you use variable names that are slightly shorter than half your
+> line length?
+
+Sure.  I will use shorter variable name in the next version.
+
+Best Regards,
+Huang, Ying
