@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 758CDCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C89BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AF9B218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F1602084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:05:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905118;
-	bh=quMH6BLAanqnkodOpRh/9pwNNiHQ946QHMuulLUv/x4=;
+	s=default; t=1572905122;
+	bh=Paqb7OqL+I6rrIchpLW5US/fo31+mNb4aU/UsTEfsTQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZEQ0kNyWm+Tr92lCYnwMHsYvF/gL0td0wU4ng6aLkQU0TTCo29ajmPzscfpUidOyT
-	 b2YEiKNWLO+/RNTWCwpDtEBOfNttgyj2o0O28gt83xXhTce6eTYVUcYQql2+18SXnc
-	 ND5bDbE3BmNdTgOn4ZPPvDd+9th82S8pFxp3eP0U=
+	b=sGdjWK9nvvNV2GLVyGwDXo4M4fDYTKV54tdRp+bacpvB760puR+qKuvnBhme7errc
+	 7qqJpxI2hTEwYnQCyGSKzZ4BNcy94AXiQAES9SXmch+4Nbj8gQ80JkvzT7ZeDyvjV/
+	 Ft/FLmItkOttfI1pd71V+RLATjRNiT/GQbDrCEZg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389818AbfKDWFQ (ORCPT
+        id S2389826AbfKDWFT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:05:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36476 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:05:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36548 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388517AbfKDWFO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:14 -0500
+        id S2389819AbfKDWFR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:17 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C44D021744;
-        Mon,  4 Nov 2019 22:05:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CD971217F5;
+        Mon,  4 Nov 2019 22:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905114;
-        bh=quMH6BLAanqnkodOpRh/9pwNNiHQ946QHMuulLUv/x4=;
+        s=default; t=1572905117;
+        bh=Paqb7OqL+I6rrIchpLW5US/fo31+mNb4aU/UsTEfsTQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pccOTdbst18G4j7c/mg7OF2EcY+/eYJ75Mh36eEmL/5r1o8oOMEzMyh5okcJG1CUO
-         cG/JmnUywXC7ryWkVkJbw5B39JblBmejVGe0UBrOILGGyrNiFltSF9wT2SRnS8Kclt
-         Hy46batfynJv5rHbPbSGoJFjviXiQ/bRRGLjO+LI=
+        b=IUgrf0lRl+9AGrhg4VEtC8WrPF+cjE2/yBrvFM2X6VbeXHnr8BYvpCFV7GA+xQj/F
+         l+kWjUad5TMqpaKFXJw1KVLliIFrKiEjSMTqHWvqVyU9Cd3lsf+l7Yeua5G/Kaimf6
+         NPkbMjJGEBfIceMsdYqiaISKHZr6OjYUSJCClcyc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
+        stable@vger.kernel.org, Christoph Hellwig <hch@lst.de>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 033/163] tty: serial: rda: Fix the link time qualifier of rda_uart_exit()
-Date:   Mon,  4 Nov 2019 22:43:43 +0100
-Message-Id: <20191104212142.662948272@linuxfoundation.org>
+Subject: [PATCH 5.3 034/163] serial/sifive: select SERIAL_EARLYCON
+Date:   Mon,  4 Nov 2019 22:43:44 +0100
+Message-Id: <20191104212142.716077799@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,34 +60,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+From: Christoph Hellwig <hch@lst.de>
 
-[ Upstream commit 5080d127127ac5b610b57900774d9559ae55e817 ]
+[ Upstream commit 7e2a165de5a52003d10a611ee3884cdb5c44e8cd ]
 
-'exit' functions should be marked as __exit, not __init.
+The sifive serial driver implements earlycon support, but unless
+another driver is built in that supports earlycon support it won't
+be usable.  Explicitly select SERIAL_EARLYCON instead.
 
-Fixes: c10b13325ced ("tty: serial: Add RDA8810PL UART driver")
-Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Link: https://lore.kernel.org/r/20190910041702.7357-1-christophe.jaillet@wanadoo.fr
+Signed-off-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Paul Walmsley <paul.walmsley@sifive.com>
+Link: https://lore.kernel.org/r/20190910055923.28384-1-hch@lst.de
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/rda-uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/tty/serial/Kconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/tty/serial/rda-uart.c b/drivers/tty/serial/rda-uart.c
-index 284623eefaeba..ba5e488a03742 100644
---- a/drivers/tty/serial/rda-uart.c
-+++ b/drivers/tty/serial/rda-uart.c
-@@ -817,7 +817,7 @@ static int __init rda_uart_init(void)
- 	return ret;
- }
- 
--static void __init rda_uart_exit(void)
-+static void __exit rda_uart_exit(void)
- {
- 	platform_driver_unregister(&rda_uart_platform_driver);
- 	uart_unregister_driver(&rda_uart_driver);
+diff --git a/drivers/tty/serial/Kconfig b/drivers/tty/serial/Kconfig
+index 3083dbae35f7e..3b436ccd29dad 100644
+--- a/drivers/tty/serial/Kconfig
++++ b/drivers/tty/serial/Kconfig
+@@ -1075,6 +1075,7 @@ config SERIAL_SIFIVE_CONSOLE
+ 	bool "Console on SiFive UART"
+ 	depends on SERIAL_SIFIVE=y
+ 	select SERIAL_CORE_CONSOLE
++	select SERIAL_EARLYCON
+ 	help
+ 	  Select this option if you would like to use a SiFive UART as the
+ 	  system console.
 -- 
 2.20.1
 
