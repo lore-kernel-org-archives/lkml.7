@@ -2,132 +2,110 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.4 required=3.0
+	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7B3CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:29:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 425C1CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BCFA2184C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:29:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A59B20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:30:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572874245;
+	bh=L0CpSJJDD0EuaMfa/75UHM2+CFtxIfgkeT9QHWr3jp8=;
+	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
+	b=RX57474oFFco6OBpeLyf/ylHXfNq9GtLUjmHAejlQm9AGukLkH/HS29OuZKVDjtkb
+	 Skq/e7v/U2D8qnTBZjsZX6li8Or//s+cxwnmEJqrSama5Illcd1snVg5HSM7PkBrfA
+	 Yv/C/cxTKK0pYoSwK80SGps+7NlGp+1XFjADeErI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729028AbfKDN3m (ORCPT
+        id S1728927AbfKDNan (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:29:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:42912 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727236AbfKDN3l (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:29:41 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4814E1FB;
-        Mon,  4 Nov 2019 05:29:41 -0800 (PST)
-Received: from [10.1.196.37] (unknown [10.1.196.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 562063F6C4;
-        Mon,  4 Nov 2019 05:29:40 -0800 (PST)
-Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
-To:     John Garry <john.garry@huawei.com>,
-        Saravana Kannan <saravanak@google.com>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <20191030145112.19738-1-will@kernel.org>
- <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
- <20191030155444.GC19096@willie-the-truck>
- <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
- <20191031193758.GA2607492@lophozonia>
- <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
- <6994ae35-2b89-2feb-2bcb-cffc5a01963c@huawei.com>
- <CAGETcx-9M8vvHA2Lykcv0hHWoC2OAw5kfBrjcNJN2CYCwR4eWQ@mail.gmail.com>
- <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <7e2429ed-6b25-a452-5e4d-51a5195b872f@arm.com>
-Date:   Mon, 4 Nov 2019 13:29:31 +0000
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 08:30:43 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:45383 "EHLO
+        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727236AbfKDNan (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:30:43 -0500
+Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
+        (envelope-from <maz@kernel.org>)
+        id 1iRcQv-0005Lj-UU; Mon, 04 Nov 2019 14:30:13 +0100
+To:     Sami Tolvanen <samitolvanen@google.com>
+Subject: Re: [PATCH v4 03/17] arm64: kvm: stop treating register x18 as  caller save
+X-PHP-Originating-Script: 0:main.inc
 MIME-Version: 1.0
-In-Reply-To: <47418554-e7a7-f9f3-8852-60cecef3d5c7@huawei.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 04 Nov 2019 14:39:34 +0109
+From:   Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <dave.martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        <clang-built-linux@googlegroups.com>,
+        <kernel-hardening@lists.openwall.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: <79e8f958cbde52a3d90aec24dd4638d9@www.loen.fr>
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com>
+ <20191101221150.116536-4-samitolvanen@google.com>
+ <79e8f958cbde52a3d90aec24dd4638d9@www.loen.fr>
+Message-ID: <63921b46250e2eb8eb9fcf0f8ec93b0c@www.loen.fr>
+X-Sender: maz@kernel.org
+User-Agent: Roundcube Webmail/0.7.2
+X-SA-Exim-Connect-IP: <locally generated>
+X-SA-Exim-Rcpt-To: samitolvanen@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, mhiramat@kernel.org, ard.biesheuvel@linaro.org, dave.martin@arm.com, keescook@chromium.org, labbott@redhat.com, mark.rutland@arm.com, ndesaulniers@google.com, jannh@google.com, miguel.ojeda.sandonis@gmail.com, yamada.masahiro@socionext.com, clang-built-linux@googlegroups.com, kernel-hardening@lists.openwall.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+X-SA-Exim-Mail-From: maz@kernel.org
+X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/2019 12:16, John Garry wrote:
-> On 01/11/2019 21:13, Saravana Kannan wrote:
->> On Fri, Nov 1, 2019 at 3:28 AM John Garry <john.garry@huawei.com> wrote:
->>>
->>> On 31/10/2019 23:34, Saravana Kannan via iommu wrote:
->>>> I looked into the iommu-map property and it shouldn't be too hard to
->>>> add support for it. Looks like we can simply hold off on probing the
->>>> root bridge device till all the iommus in its iommu-map are probed and
->>>> we should be fine.
->>>>
->>>>> I'm also unsure about distro vendors agreeing to a mandatory kernel
->>>>> parameter (of_devlink). Do you plan to eventually enable it by 
->>>>> default?
->>>>>
->>>>>> static const struct supplier_bindings of_supplier_bindings[] = {
->>>>>>           { .parse_prop = parse_clocks, },
->>>>>>           { .parse_prop = parse_interconnects, },
->>>>>>           { .parse_prop = parse_regulators, },
->>>>>> +        { .parse_prop = parse_iommus, },
->>>>>>           {},
->>>>>> };
->>>>>>
->>>>>> I plan to upstream this pretty soon, but I have other patches in
->>>>>> flight that touch the same file and I'm waiting for those to get
->>>>>> accepted. I also want to clean up the code a bit to reduce some
->>>>>> repetition before I add support for more bindings.
->>>>> I'm also wondering about ACPI support.
->>>> I'd love to add ACPI support too, but I have zero knowledge of ACPI.
->>>> I'd be happy to help anyone who wants to add ACPI support that allows
->>>> ACPI to add device links.
->>>
->>> If possible to add, that may be useful for remedying this:
->>>
->>> https://lore.kernel.org/linux-iommu/9625faf4-48ef-2dd3-d82f-931d9cf26976@huawei.com/ 
->>>
+On 2019-11-04 12:13, Marc Zyngier wrote:
+> Hi Sami,
+>
+> On 2019-11-01 23:20, Sami Tolvanen wrote:
+>> From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 >>
->> I'm happy that this change might fix that problem, but isn't the
->> problem reported in that thread more to do with child devices getting
->> added before the parent probes successfully? That doesn't make sense
->> to me. 
-> 
-> So the pcieport device and then the child device are added in the PCI 
-> scan, but only some time later do the device drivers probe for these 
-> devices; so it's not that the that pcieport driver creates the child 
-> device.
-> 
-> The problem then occurs in that the ordering the of device driver probe 
-> is such that we have this: pcieport probe + defer (as no IOMMU group 
-> registered), SMMU probe (registers the IOMMU group), child device probe, 
-> pcieport really probe.
-> 
-> Can't the piceport driver not add its child devices before it
->> probes successfully? Or more specifically, who adds the child devices
->> of the pcieport before the pcieport itself probes?
-> 
-> The devices are actually added in order pcieport, child device, but not 
-> really probed in that same order, as above.
+>> In preparation of reserving x18, stop treating it as caller save in
+>> the KVM guest entry/exit code. Currently, the code assumes there is
+>> no need to preserve it for the host, given that it would have been
+>> assumed clobbered anyway by the function call to __guest_enter().
+>> Instead, preserve its value and restore it upon return.
+>>
+>> Link: https://patchwork.kernel.org/patch/9836891/
+>> Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>> [Sami: updated commit message, switched from x18 to x29 for the 
+>> guest
+>> context]
+>> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+>> Reviewed-by: Kees Cook <keescook@chromium.org>
+>
+> If you intend for this to be merged via the arm64 tree, please add my
+>
+> Reviewed-by: Marc Zyngier <marc.zyngier@arm.com>
 
-Right, in short the fundamental problem is that of_iommu_configure() now 
-does the wrong thing. Deferring probe of the entire host bridge/root 
-complex based on "iommu-map" would indeed happen to solve the problem by 
-brute force, I think, but could lead to a dependency cycle for PCI-based 
-IOMMUs as Jean points out. I hope to have time this week to work a bit 
-more on pulling of_iommu_configure() apart to fix it properly, after 
-which of_devlink *should* only have to worry about the child devices 
-themselves...
+Erm... Muscle memory strikes again. Please ignore the above and use the
+following instead:
 
-Robin.
+Reviewed-by: Marc Zyngier <maz@kernel.org>
 
-> I'll add you to that thread if you want to discuss further.
-> 
-> Thanks,
-> John
-> 
+Thanks,
+
+         M.
+-- 
+Jazz is not dead. It just smells funny...
