@@ -2,86 +2,114 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CACC4CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:41:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78CACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:44:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7AB0620848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:41:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="Yb3J0HOh"
+	by mail.kernel.org (Postfix) with ESMTP id 93FAD20848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:44:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729051AbfKDPly (ORCPT
+        id S1728558AbfKDPoU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:41:54 -0500
-Received: from mail-m974.mail.163.com ([123.126.97.4]:48190 "EHLO
-        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPly (ORCPT
+        Mon, 4 Nov 2019 10:44:20 -0500
+Received: from out01.mta.xmission.com ([166.70.13.231]:58238 "EHLO
+        out01.mta.xmission.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfKDPoT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:41:54 -0500
-X-Greylist: delayed 907 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 10:41:53 EST
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=QSgtOXkbXuicNqiow0
-        3N2HCq4OKg8JvV2XV+/oS6MGY=; b=Yb3J0HOhJ/bCeLf8C4bjqTA2Gpu9yt0+KN
-        Lrz/Xk7s/MHO+9u+2jwRqAwZWSZ+D3GbqgoKvQcdbG5REtAw0or8muTWO2amiL9e
-        xVfwqtMu1x5b4Ok1xd+DFd8TQ6WNC2H+nvQPUohW2824loKckjhaZvjqt5EqWm7s
-        MId5r8yeI=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp4 (Coremail) with SMTP id HNxpCgAXyXInQ8BdlN5RBA--.46S3;
-        Mon, 04 Nov 2019 23:26:35 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Satish Kharat <satishkh@cisco.com>,
-        Sesidhar Baddela <sebaddel@cisco.com>,
-        Karan Tilak Kumar <kartilak@cisco.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: [PATCH 1/1] scsi: fnic: fix use after free
-Date:   Mon,  4 Nov 2019 23:26:22 +0800
-Message-Id: <1572881182-37664-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: HNxpCgAXyXInQ8BdlN5RBA--.46S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWruF47tF4UAF4UXw17GrW7Arb_yoWDAwbE9r
-        WrtrZFkry5Krs3Gw12vw4rAFWS9aykXrn2kF10gw1ay3yUZrZrAwnFvrn5JryUWw47urZx
-        trsxJr1SkF1UJjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjCeHPUUUUU==
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiVB9jclUMK9ogvAABsv
+        Mon, 4 Nov 2019 10:44:19 -0500
+Received: from in02.mta.xmission.com ([166.70.13.52])
+        by out01.mta.xmission.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iReWg-0001fq-Dd; Mon, 04 Nov 2019 08:44:18 -0700
+Received: from ip68-227-160-95.om.om.cox.net ([68.227.160.95] helo=x220.xmission.com)
+        by in02.mta.xmission.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.87)
+        (envelope-from <ebiederm@xmission.com>)
+        id 1iReWf-000835-Ge; Mon, 04 Nov 2019 08:44:18 -0700
+From:   ebiederm@xmission.com (Eric W. Biederman)
+To:     Topi Miettinen <toiwoton@gmail.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list\:FILESYSTEMS \(VFS and infrastructure\)" 
+        <linux-fsdevel@vger.kernel.org>
+References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
+        <87d0e8g5f4.fsf@x220.int.ebiederm.org>
+        <f272bdd3-526d-6737-c906-143d5e5fc478@gmail.com>
+Date:   Mon, 04 Nov 2019 09:44:05 -0600
+In-Reply-To: <f272bdd3-526d-6737-c906-143d5e5fc478@gmail.com> (Topi
+        Miettinen's message of "Sun, 3 Nov 2019 21:38:50 +0200")
+Message-ID: <87h83jejei.fsf@x220.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+MIME-Version: 1.0
+Content-Type: text/plain
+X-XM-SPF: eid=1iReWf-000835-Ge;;;mid=<87h83jejei.fsf@x220.int.ebiederm.org>;;;hst=in02.mta.xmission.com;;;ip=68.227.160.95;;;frm=ebiederm@xmission.com;;;spf=neutral
+X-XM-AID: U2FsdGVkX1+/SMoGN16q2hVm978SNtdL3kX2YwA8k1Q=
+X-SA-Exim-Connect-IP: 68.227.160.95
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
+X-SA-Exim-Version: 4.2.1 (built Thu, 05 May 2016 13:38:54 -0600)
+X-SA-Exim-Scanned: Yes (on in02.mta.xmission.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memory chunk io_req is released by mempool_free. Accessing
-io_req->start_time will result in a use after free bug. Thevariable
-start_time is a backup of the timestamp. So, use start_time here to
-avoid use after free.
+Topi Miettinen <toiwoton@gmail.com> writes:
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/scsi/fnic/fnic_scsi.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+> On 3.11.2019 20.50, Eric W. Biederman wrote:
+>> Topi Miettinen <toiwoton@gmail.com> writes:
+>>
+>>> Several items in /proc/sys need not be accessible to unprivileged
+>>> tasks. Let the system administrator change the permissions, but only
+>>> to more restrictive modes than what the sysctl tables allow.
+>>
+>> This looks quite buggy.  You neither update table->mode nor
+>> do you ever read from table->mode to initialize the inode.
+>> I am missing something in my quick reading of your patch?
+>
+> inode->i_mode gets initialized in proc_sys_make_inode().
+>
+> I didn't want to touch the table, so that the original permissions can
+> be used to restrict the changes made. In case the restrictions are
+> removed as suggested by Theodore Ts'o, table->mode could be
+> changed. Otherwise I'd rather add a new field to store the current
+> mode and the mode field can remain for reference. As the original
+> author of the code from 2007, would you let the administrator to
+> chmod/chown the items in /proc/sys without restrictions (e.g. 0400 ->
+> 0777)?
 
-diff --git a/drivers/scsi/fnic/fnic_scsi.c b/drivers/scsi/fnic/fnic_scsi.c
-index 80608b53897b..d3986a25d9c2 100644
---- a/drivers/scsi/fnic/fnic_scsi.c
-+++ b/drivers/scsi/fnic/fnic_scsi.c
-@@ -1024,7 +1024,8 @@ static void fnic_fcpio_icmnd_cmpl_handler(struct fnic *fnic,
- 		atomic64_inc(&fnic_stats->io_stats.io_completions);
- 
- 
--	io_duration_time = jiffies_to_msecs(jiffies) - jiffies_to_msecs(io_req->start_time);
-+	io_duration_time = jiffies_to_msecs(jiffies) -
-+						jiffies_to_msecs(start_time);
- 
- 	if(io_duration_time <= 10)
- 		atomic64_inc(&fnic_stats->io_stats.io_btw_0_to_10_msec);
--- 
-2.7.4
+At an architectural level I think we need to do this carefully and have
+a compelling reason.  The code has survived nearly the entire life of
+linux without this capability.
+
+I think right now the common solution is to mount another file over the
+file you are trying to hide/limit.  Changing the permissions might be
+better but that is not at all clear.
+
+Do you have specific examples of the cases where you would like to
+change the permissions?
+
+>> The not updating table->mode almost certainly means that as soon as the
+>> cached inode is invalidated the mode changes will disappear.  Not to
+>> mention they will fail to propogate between  different instances of
+>> proc.
+>>
+>> Loosing all of your changes at cache invalidation seems to make this a
+>> useless feature.
+>
+> At least different proc instances seem to work just fine here (they
+> show the same changes), but I suppose you are right about cache
+> invalidation.
+
+It is going to take the creation of a pid namespace to see different
+proc instances.  All mounts of the proc within the same pid_namespace
+return the same instance.
+
+Eric
 
