@@ -2,139 +2,104 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82BA0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D65A6CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:38:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 537AD20848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8B5320848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:38:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="nsp4z2A0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="AMgSst2h"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729604AbfKDVhe (ORCPT
+        id S1729658AbfKDVin (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:37:34 -0500
-Received: from canardo.mork.no ([148.122.252.1]:48009 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728377AbfKDVhd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:37:33 -0500
-X-Greylist: delayed 887 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 16:37:33 EST
-Received: from miraculix.mork.no (miraculix.mork.no [IPv6:2001:4641:0:2:7627:374e:db74:e353])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xA4LMV2u006902
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Mon, 4 Nov 2019 22:22:34 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1572902556; bh=48oj23vht5x5+7JKYCCyMc5bdK+KmMf3l3mvdQ60FJQ=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=nsp4z2A0Ol0ZPMNtpvgXHP/QHASiVnZT0tLNU9H0xfszOUbrCOyeBClHdJHWz1/im
-         cy+MsmDRoekwPAsBW7OmzgqJ5K3fR6gi8KlZdBmLOf+ECqQ4CcehiszZpfY7TXfyQC
-         6umMwZjJVfImOgRcPXXfNRL2AoBoKQHDnJ8+5heQ=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1iRjnx-0003Uh-Se; Mon, 04 Nov 2019 22:22:29 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>
-Cc:     davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, oliver@neukum.org,
-        syzkaller-bugs@googlegroups.com
-Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
-Organization: m
-References: <00000000000013c4c1059625a655@google.com>
-Date:   Mon, 04 Nov 2019 22:22:29 +0100
-In-Reply-To: <00000000000013c4c1059625a655@google.com> (syzbot's message of
-        "Wed, 30 Oct 2019 12:22:07 -0700")
-Message-ID: <87ftj32v6y.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 4 Nov 2019 16:38:43 -0500
+Received: from mail-vk1-f193.google.com ([209.85.221.193]:44487 "EHLO
+        mail-vk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728634AbfKDVin (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:38:43 -0500
+Received: by mail-vk1-f193.google.com with SMTP id o198so4162214vko.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:38:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=erA0+CgO32nkALAW/U97P1GwaRL1ou+VA5YnrGmuWIY=;
+        b=AMgSst2hoIv0GZSG/6Hv3sj7G4QTMHoXZaK+uecCN92VkYk2ZpXGLlGKNE7LaQkMOV
+         GALbiSTH4QXZuxCs4vXVQ+PvBEvuBmB7k5aqf+G9gnmvHWB5/Y+uNebLr8WkNd+bS+Ov
+         /XXES1wI9li/uMeZkpl2e89se5snh4JkYGrWHWMFeboxhZVboLE1Ab4qQKsBrgjgaJ0Z
+         TPALZl6SFGfHwCWeRXmzVYpIwJ+aRCFQbHaYCGtjIRAIEY7ObGDK19pVPN3DP2bzseFq
+         kO3Sq+THrsVH8U3L8DmX49sKk84SksyJMDaTiPQHmYPUwA9Od1QsJS2NmYqwVYjSpzCB
+         i+5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=erA0+CgO32nkALAW/U97P1GwaRL1ou+VA5YnrGmuWIY=;
+        b=m7+UgB7d4QreXovQvMQoyfhQmEXPx79SdsdHwmiELN6hfcsYKhYPLeG/Wg+Z2B0mw8
+         Ml+W+vSMdlwt7JHOZsbKOmcdKAuvDQIl+QklLv76R7uC5DVspG1V7VhGphSqg8PGZ4Ew
+         Zc2bkZVdPKIuZ/8xcea4UOBxNFz0Lr/hrCnGReqfsPnw2TY5l05JkuyxjysNiDR+SpNT
+         tGOMCRpZTJ6RZ7Jur/oOP7S4bEOZqs4ddkFTPSb+PlX3LIIotrX93KuyCsUBrULO2nEl
+         2/2be1522xr+FB7pY/WEb45xxinL7q1w45ijAVtX6pCN92tGkOfdwo6qZpHn/FmKVjj+
+         vIIw==
+X-Gm-Message-State: APjAAAXZzFxUu1ds231j5DBvzKltHNyZvPH4dYNzuOfM2EPB3ItVj04M
+        XUXQZGJ6hzX66sv5dCiB27Cp8OhcBGI8H9Cp56cQeg==
+X-Google-Smtp-Source: APXvYqwHIA8tjMB/idsGTHUTWfDb2R4/Q6AYLqiE/ovPTmnmanOsh2FI1AtdGkwKNIfH3EsSyXxnypTSqw/H2MHfj8Y=
+X-Received: by 2002:a1f:7d88:: with SMTP id y130mr12696794vkc.71.1572903521740;
+ Mon, 04 Nov 2019 13:38:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at canardo
-X-Virus-Status: Clean
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-14-samitolvanen@google.com>
+ <02c56a5273f94e9d832182f1b3cb5097@www.loen.fr>
+In-Reply-To: <02c56a5273f94e9d832182f1b3cb5097@www.loen.fr>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 4 Nov 2019 13:38:30 -0800
+Message-ID: <CABCJKucVON6uUMH6hVP7RODqH8u63AP3SgTCBWirrS30yDOmdA@mail.gmail.com>
+Subject: Re: [PATCH v4 13/17] arm64: preserve x18 when CPU is suspended
+To:     Marc Zyngier <maz@kernel.org>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <dave.martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com> writes:
-
-> syzbot found the following crash on:
+On Mon, Nov 4, 2019 at 5:20 AM Marc Zyngier <maz@kernel.org> wrote:
+> >  ENTRY(cpu_do_suspend)
+> >       mrs     x2, tpidr_el0
+> > @@ -73,6 +75,9 @@ alternative_endif
+> >       stp     x8, x9, [x0, #48]
+> >       stp     x10, x11, [x0, #64]
+> >       stp     x12, x13, [x0, #80]
+> > +#ifdef CONFIG_SHADOW_CALL_STACK
+> > +     str     x18, [x0, #96]
+> > +#endif
 >
-> HEAD commit:    96c6c319 net: kasan: kmsan: support CONFIG_GENERIC_CSUM o=
-n..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=3D11f103bce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=3D9e324dfe9c7b0=
-360
-> dashboard link: https://syzkaller.appspot.com/bug?extid=3D0631d878823ce24=
-11636
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=3D10dd9774e00=
-000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=3D13651a24e00000
->
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
->
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
-> BUG: KMSAN: uninit-value in cdc_ncm_set_dgram_size+0x6ba/0xbc0
-> drivers/net/usb/cdc_ncm.c:587
-> CPU: 0 PID: 11865 Comm: kworker/0:3 Not tainted 5.4.0-rc5+ #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine,
-> BIOS Google 01/01/2011
-> Workqueue: usb_hub_wq hub_event
-> Call Trace:
->  __dump_stack lib/dump_stack.c:77 [inline]
->  dump_stack+0x191/0x1f0 lib/dump_stack.c:113
->  kmsan_report+0x128/0x220 mm/kmsan/kmsan_report.c:108
->  __msan_warning+0x73/0xe0 mm/kmsan/kmsan_instr.c:245
->  cdc_ncm_set_dgram_size+0x6ba/0xbc0 drivers/net/usb/cdc_ncm.c:587
+> Do we need the #ifdefery here? We didn't add that to the KVM path,
+> and I'd feel better having a single behaviour, specially when
+> NR_CTX_REGS is unconditionally sized to hold 13 regs.
 
-..
-> Variable was created at:
->  cdc_ncm_set_dgram_size+0xf5/0xbc0 drivers/net/usb/cdc_ncm.c:564
->  cdc_ncm_set_dgram_size+0xf5/0xbc0 drivers/net/usb/cdc_ncm.c:564
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D
+I'm fine with dropping the ifdefs here in v5 unless someone objects to this.
 
-This looks like a false positive to me. max_datagram_size is two bytes
-declared as
-
-	__le16 max_datagram_size;
-
-and the code leading up to the access on drivers/net/usb/cdc_ncm.c:587
-is:
-
-	/* read current mtu value from device */
-	err =3D usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
-			      USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
-			      0, iface_no, &max_datagram_size, 2);
-	if (err < 0) {
-		dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
-		goto out;
-	}
-
-	if (le16_to_cpu(max_datagram_size) =3D=3D ctx->max_datagram_size)
-
-
-
-AFAICS, there is no way max_datagram_size can be uninitialized here.
-usbnet_read_cmd() either read 2 bytes into it or returned an error,
-causing the access to be skipped.  Or am I missing something?
-
-I tried to read the syzbot manual to figure out how to tell this to the
-bot, but couldn't find that either.  Not my day today it seems ;-)
-
-Please let me know what to do about this.
-
-
-Bj=C3=B8rn
+Sami
