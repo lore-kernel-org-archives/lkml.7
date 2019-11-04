@@ -5,59 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E59CA9ED6
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CC3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C65D9204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 555CC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906121;
-	bh=8h+FkDc3xXvETtsrZrbsTH8LmB+VdeBjN9RyUmQkvEs=;
+	s=default; t=1572906126;
+	bh=SdMDKzJ1hk6QRdsBvU2IGu5E+EuH4lEosEJzMyA5ovs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=vjCkSC9qxsLf2Zph4NQXPm3tQ+5imUvhPjbx6wGruN/684CAX0Hlubjhh5BROiR24
-	 2bq0X9QTbSBO3KWUaTMzPRXKOFZ5NlMvcSnG/fzsfYkkTeFgshzx9KtPITtweTIX8X
-	 /rGMIj3FUQCOTor1cyZbbDTfwaHQhHXPjY97HHMk=
+	b=DwTIHyZjv02jcmbb81+LFDETXKghnil5o355sYilGwN9bCmu+TlPj/mWHMEJjmn9h
+	 fuWs0lsiluiRms4LXRuSDHDrFWeFpWKEK5JWpVBtTRGdHaem/nlwK4cWt5dkwWb9p/
+	 t7PcssIFQurxuRESAfRBAPCL29mHQ0tr/XBFZ5Ps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388577AbfKDV5Z (ORCPT
+        id S2388832AbfKDWWE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53484 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:22:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53400 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387818AbfKDV5T (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:19 -0500
+        id S2388538AbfKDV5R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:17 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6719D2184C;
-        Mon,  4 Nov 2019 21:57:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6E5E2217F5;
+        Mon,  4 Nov 2019 21:57:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904639;
-        bh=8h+FkDc3xXvETtsrZrbsTH8LmB+VdeBjN9RyUmQkvEs=;
+        s=default; t=1572904636;
+        bh=SdMDKzJ1hk6QRdsBvU2IGu5E+EuH4lEosEJzMyA5ovs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=imenMDP9BHo9/Tg+KjECk4+XhNY6Fp3iqmyBGShcm27zUwIVvgkH7pDq14qtBAMj8
-         TMZC33MP6HxdvffAbZ/UdzEaq0CZE7m9YypEUjw2Wo+ERlE6fqAFfBlfR05DEKGJk5
-         SeapVj99j+r8DjdgkygLfFIrDDM3pNa/WK7xVwxU=
+        b=Xx0OlU3wrJcYKzDGhFp/0JOLS+KR6zDd9kXSBCMPrKPMawpyPS+vnG3mfO6rubBmt
+         eWlDvg3Ewtnllj045kFXrJZf9bP4TJCbutUimvBHeywiHopjQP5ANqAboiZkgYpQKB
+         +OezJBGmlFeVn63sUJRP75NJvEJQIAF+PxfxADiw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
-        Qiuxu Zhuo <qiuxu.zhuo@intel.com>,
-        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Aristeu Rozanski <aris@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        linux-edac <linux-edac@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Megha Dey <megha.dey@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
+        stable@vger.kernel.org, Len Brown <len.brown@intel.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 018/149] x86/cpu: Add Atom Tremont (Jacobsville)
-Date:   Mon,  4 Nov 2019 22:43:31 +0100
-Message-Id: <20191104212136.034136452@linuxfoundation.org>
+Subject: [PATCH 4.19 017/149] tools/power turbostat: fix goldmont C-state limit decoding
+Date:   Mon,  4 Nov 2019 22:43:30 +0100
+Message-Id: <20191104212135.963287914@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -70,58 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+From: Len Brown <len.brown@intel.com>
 
-[ Upstream commit 00ae831dfe4474ef6029558f5eb3ef0332d80043 ]
+[ Upstream commit 445640a563493f28d15f47e151e671281101e7dc ]
 
-Add the Atom Tremont model number to the Intel family list.
+When the C-state limit is 8 on Goldmont, PC10 is enabled.
+Previously turbostat saw this as "undefined", and thus assumed
+it should not show some counters, such as pc3, pc6, pc7.
 
-[ Tony: Also update comment at head of file to say "_X" suffix is
-  also used for microserver parts. ]
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Signed-off-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Aristeu Rozanski <aris@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: linux-edac <linux-edac@vger.kernel.org>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Cc: Megha Dey <megha.dey@linux.intel.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Qiuxu Zhuo <qiuxu.zhuo@intel.com>
-Cc: Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190125195902.17109-4-tony.luck@intel.com
+Signed-off-by: Len Brown <len.brown@intel.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/intel-family.h | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ tools/power/x86/turbostat/turbostat.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
-index 5d0b72f281402..82a57d344b9bc 100644
---- a/arch/x86/include/asm/intel-family.h
-+++ b/arch/x86/include/asm/intel-family.h
-@@ -6,7 +6,7 @@
-  * "Big Core" Processors (Branded as Core, Xeon, etc...)
-  *
-  * The "_X" parts are generally the EP and EX Xeons, or the
-- * "Extreme" ones, like Broadwell-E.
-+ * "Extreme" ones, like Broadwell-E, or Atom microserver.
-  *
-  * While adding a new CPUID for a new microarchitecture, add a new
-  * group to keep logically sorted out in chronological order. Within
-@@ -80,6 +80,7 @@
- #define INTEL_FAM6_ATOM_GOLDMONT	0x5C /* Apollo Lake */
- #define INTEL_FAM6_ATOM_GOLDMONT_X	0x5F /* Denverton */
- #define INTEL_FAM6_ATOM_GOLDMONT_PLUS	0x7A /* Gemini Lake */
-+#define INTEL_FAM6_ATOM_TREMONT_X	0x86 /* Jacobsville */
+diff --git a/tools/power/x86/turbostat/turbostat.c b/tools/power/x86/turbostat/turbostat.c
+index 71cf7e77291ad..823bbc741ad7a 100644
+--- a/tools/power/x86/turbostat/turbostat.c
++++ b/tools/power/x86/turbostat/turbostat.c
+@@ -1953,11 +1953,12 @@ done:
+ #define PCL_7S 11 /* PC7 Shrink */
+ #define PCL__8 12 /* PC8 */
+ #define PCL__9 13 /* PC9 */
+-#define PCLUNL 14 /* Unlimited */
++#define PCL_10 14 /* PC10 */
++#define PCLUNL 15 /* Unlimited */
  
- /* Xeon Phi */
+ int pkg_cstate_limit = PCLUKN;
+ char *pkg_cstate_limit_strings[] = { "reserved", "unknown", "pc0", "pc1", "pc2",
+-	"pc3", "pc4", "pc6", "pc6n", "pc6r", "pc7", "pc7s", "pc8", "pc9", "unlimited"};
++	"pc3", "pc4", "pc6", "pc6n", "pc6r", "pc7", "pc7s", "pc8", "pc9", "pc10", "unlimited"};
  
+ int nhm_pkg_cstate_limits[16] = {PCL__0, PCL__1, PCL__3, PCL__6, PCL__7, PCLRSV, PCLRSV, PCLUNL, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+ int snb_pkg_cstate_limits[16] = {PCL__0, PCL__2, PCL_6N, PCL_6R, PCL__7, PCL_7S, PCLRSV, PCLUNL, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+@@ -1965,7 +1966,7 @@ int hsw_pkg_cstate_limits[16] = {PCL__0, PCL__2, PCL__3, PCL__6, PCL__7, PCL_7S,
+ int slv_pkg_cstate_limits[16] = {PCL__0, PCL__1, PCLRSV, PCLRSV, PCL__4, PCLRSV, PCL__6, PCL__7, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCL__6, PCL__7};
+ int amt_pkg_cstate_limits[16] = {PCLUNL, PCL__1, PCL__2, PCLRSV, PCLRSV, PCLRSV, PCL__6, PCL__7, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+ int phi_pkg_cstate_limits[16] = {PCL__0, PCL__2, PCL_6N, PCL_6R, PCLRSV, PCLRSV, PCLRSV, PCLUNL, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+-int bxt_pkg_cstate_limits[16] = {PCL__0, PCL__2, PCLUNL, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
++int glm_pkg_cstate_limits[16] = {PCLUNL, PCL__1, PCL__3, PCL__6, PCL__7, PCL_7S, PCL__8, PCL__9, PCL_10, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+ int skx_pkg_cstate_limits[16] = {PCL__0, PCL__2, PCL_6N, PCL_6R, PCLRSV, PCLRSV, PCLRSV, PCLUNL, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV, PCLRSV};
+ 
+ 
+@@ -3165,7 +3166,7 @@ int probe_nhm_msrs(unsigned int family, unsigned int model)
+ 	case INTEL_FAM6_ATOM_GOLDMONT:	/* BXT */
+ 	case INTEL_FAM6_ATOM_GOLDMONT_PLUS:
+ 	case INTEL_FAM6_ATOM_GOLDMONT_X:	/* DNV */
+-		pkg_cstate_limits = bxt_pkg_cstate_limits;
++		pkg_cstate_limits = glm_pkg_cstate_limits;
+ 		break;
+ 	default:
+ 		return 0;
 -- 
 2.20.1
 
