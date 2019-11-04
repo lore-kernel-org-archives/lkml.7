@@ -7,48 +7,50 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0BDCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 655CDCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F9B7214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3639821744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904650;
-	bh=Wnu7Z2OKcnzbqlOid24zXeShG/t1Wp8CuboYXR7f6/g=;
+	s=default; t=1572904654;
+	bh=0gUaHbmUNWSuBhVlbrDOsK+zcamryfNCf/wCRKeD/t8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DxCAAS6/iY1odQeENlyuEU7KErbdI1dqxeQMvk7PEwRHcZL+a1VLrMAg8/o6uLs2R
-	 EPYDdMCASpVB5wnahnAtoBKaFNnCGh+etqmCiGXqwNZWrupr5WLnFpiSwKuLSSv9UD
-	 5fDcg835NgDchXTQVNAH5YtKzOl8AOGDxbJQOfgk=
+	b=fYUpUD+GUZb+8oiSZDpoB5n+TkXLji8Vr0zz/+UwPVLf5lEnbZihOJKWaablPKcns
+	 2WXj9xGkozBkPsOF/5RJLCESiozuHAMmyop8cDdfHMn1Xf7GwDfGWhOnMgD/RG10HJ
+	 pctIdH/dU215B6uCf4bPzC6xhJwLBMUERZcYzTvs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388600AbfKDV52 (ORCPT
+        id S2387884AbfKDV5c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53660 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:32 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388576AbfKDV5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:25 -0500
+        id S2387861AbfKDV5b (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:31 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0D378214D8;
-        Mon,  4 Nov 2019 21:57:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 178FF21D7F;
+        Mon,  4 Nov 2019 21:57:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904644;
-        bh=Wnu7Z2OKcnzbqlOid24zXeShG/t1Wp8CuboYXR7f6/g=;
+        s=default; t=1572904650;
+        bh=0gUaHbmUNWSuBhVlbrDOsK+zcamryfNCf/wCRKeD/t8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=QFf6rGZ5k/WAM4crPwFqZYA6fDeoMnNnMSsaTx9AHOuFfe7I4AjGkK5E2w+F2xcCM
-         5uH6bbBlOqY+NzBnoiBK8r9f1n70TKrVZYxwZjDc+iWyzgrbiMDeSLXXIu5RzSXoPO
-         MjtjBgde3USz7NUX0YdeFuuTmhtqjF3Mr7I1plY8=
+        b=mfPtsc5FtH18WqV9MyCBPYwZx0fxdQpt163yLTL/YugTEnqhvVRNgi/Y6SR5jFvm3
+         rovQBqkpVjZBYAj9EIsTxmMa71UPCi3XESI9186TXjqOhb0rZAi9CWUqvFSZZXt8GI
+         k3MlfwMMFCdKure84QDYmAQANeecXFhVD1X+AyvM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Nikos Tsironis <ntsironis@arrikto.com>,
-        Mike Snitzer <snitzer@redhat.com>,
+        stable@vger.kernel.org, Stephen Bates <sbates@raithlin.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Doug Meyer <dmeyer@gigaio.com>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 002/149] dm snapshot: introduce account_start_copy() and account_end_copy()
-Date:   Mon,  4 Nov 2019 22:43:15 +0100
-Message-Id: <20191104212126.900348411@linuxfoundation.org>
+Subject: [PATCH 4.19 021/149] PCI: Fix Switchtec DMA aliasing quirk dmesg noise
+Date:   Mon,  4 Nov 2019 22:43:34 +0100
+Message-Id: <20191104212136.775198702@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,71 +63,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Logan Gunthorpe <logang@deltatee.com>
 
-[ Upstream commit a2f83e8b0c82c9500421a26c49eb198b25fcdea3 ]
+[ Upstream commit 742bbe1ee35b5699c092541f97c7cec326556bb1 ]
 
-This simple refactoring moves code for modifying the semaphore cow_count
-into separate functions to prepare for changes that will extend these
-methods to provide for a more sophisticated mechanism for COW
-throttling.
+Currently the Switchtec quirk runs on all endpoints in the switch,
+including all the upstream and downstream ports.  These other functions do
+not contain BARs, so the quirk fails when trying to map the BAR and prints
+the error "Cannot iomap Switchtec device".  The user will see a few of
+these useless and scary errors, one for each port in the switch.
 
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+At most, the quirk should only run on either a management endpoint
+(PCI_CLASS_MEMORY_OTHER) or an NTB endpoint (PCI_CLASS_BRIDGE_OTHER).
+However, the quirk is useless except in NTB applications, so we will
+only run it when the class is PCI_CLASS_BRIDGE_OTHER.
+
+Switch to using DECLARE_PCI_FIXUP_CLASS_FINAL and only match
+PCI_CLASS_BRIDGE_OTHER.
+
+Reported-by: Stephen Bates <sbates@raithlin.com>
+Fixes: ad281ecf1c7d ("PCI: Add DMA alias quirk for Microsemi Switchtec NTB")
+Signed-off-by: Logan Gunthorpe <logang@deltatee.com>
+[bhelgaas: split SWITCHTEC_QUIRK() introduction to separate patch]
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Doug Meyer <dmeyer@gigaio.com>
+Cc: Kurt Schwemmer <kurt.schwemmer@microsemi.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/md/dm-snap.c | 16 +++++++++++++---
- 1 file changed, 13 insertions(+), 3 deletions(-)
+ drivers/pci/quirks.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
-index 36805b12661e1..d9216afbd490f 100644
---- a/drivers/md/dm-snap.c
-+++ b/drivers/md/dm-snap.c
-@@ -1399,6 +1399,16 @@ static void snapshot_dtr(struct dm_target *ti)
- 	kfree(s);
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index 06be52912dcdb..64933994f7722 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -5083,8 +5083,8 @@ static void quirk_switchtec_ntb_dma_alias(struct pci_dev *pdev)
+ 	pci_disable_device(pdev);
  }
+ #define SWITCHTEC_QUIRK(vid) \
+-	DECLARE_PCI_FIXUP_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
+-				quirk_switchtec_ntb_dma_alias)
++	DECLARE_PCI_FIXUP_CLASS_FINAL(PCI_VENDOR_ID_MICROSEMI, vid, \
++		PCI_CLASS_BRIDGE_OTHER, 8, quirk_switchtec_ntb_dma_alias)
  
-+static void account_start_copy(struct dm_snapshot *s)
-+{
-+	down(&s->cow_count);
-+}
-+
-+static void account_end_copy(struct dm_snapshot *s)
-+{
-+	up(&s->cow_count);
-+}
-+
- /*
-  * Flush a list of buffers.
-  */
-@@ -1594,7 +1604,7 @@ static void copy_callback(int read_err, unsigned long write_err, void *context)
- 		rb_link_node(&pe->out_of_order_node, parent, p);
- 		rb_insert_color(&pe->out_of_order_node, &s->out_of_order_tree);
- 	}
--	up(&s->cow_count);
-+	account_end_copy(s);
- }
- 
- /*
-@@ -1618,7 +1628,7 @@ static void start_copy(struct dm_snap_pending_exception *pe)
- 	dest.count = src.count;
- 
- 	/* Hand over to kcopyd */
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	dm_kcopyd_copy(s->kcopyd_client, &src, 1, &dest, 0, copy_callback, pe);
- }
- 
-@@ -1638,7 +1648,7 @@ static void start_full_bio(struct dm_snap_pending_exception *pe,
- 	pe->full_bio = bio;
- 	pe->full_bio_end_io = bio->bi_end_io;
- 
--	down(&s->cow_count);
-+	account_start_copy(s);
- 	callback_data = dm_kcopyd_prepare_callback(s->kcopyd_client,
- 						   copy_callback, pe);
- 
+ SWITCHTEC_QUIRK(0x8531);  /* PFX 24xG3 */
+ SWITCHTEC_QUIRK(0x8532);  /* PFX 32xG3 */
 -- 
 2.20.1
 
