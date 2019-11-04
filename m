@@ -2,93 +2,100 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2E50CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3627ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9946C21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572873014;
-	bh=949vWIINs2DmNoKqK1hD5vH+gLVeNnPzbPqsjchDiyA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JxW/yT57fIFyvz1fB93V/Hqx2NcwhHyspNh5WKOVyhpjYcwcMqhMxdg+lz4rSau/y
-	 0qEAIpZYokFc2PNVdz07JC+MbTLpsu391UUgzKe5FbZ7FuI4s6C9HZsPw0IfB6tW48
-	 xrEuYWQEsS1FdfzZpR88PlZQsGtcHIz7YwfyeehA=
+	by mail.kernel.org (Postfix) with ESMTP id 11BD221D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:10:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729274AbfKDNKN (ORCPT
+        id S1728809AbfKDNK3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:10:13 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44032 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729252AbfKDNKL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:10:11 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v4so12192009lfd.11;
-        Mon, 04 Nov 2019 05:10:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=VqMrwoYt+5Te3Fp0RTQohq/LCLMxxZa1B7gKAbWNkJo=;
-        b=r/lVsDNgdTDGSHejiSjIrVqVkLlvN4erS8w9vtwjGPfRIcBAQzUDrqda25O7PnZHjI
-         gfuNnZsLC/DrzqaU0k9RQ1ZeqFcLaw3Z7y/cXlaRCvXP3+JDOFydXPz2y3t2BfqIJJbU
-         P936hdjxwxJQsX78F6laRsLcGIjtnpIO8E7zWmfRwAlJBufs/CEFgVvy6sB4PodAfu49
-         YV5EhNOox8qBjRoatgHlgyWB//YPSsDInz/YxE99aaMopHqEZxkPQCZNwh+HYUq646vC
-         8JoZy0NunGU1Xpb6hf5c3lW6SmTzmbWPMkQLiUEj0g8ry/c7nJYfgaSpP2VNH81a6kg8
-         NTXQ==
-X-Gm-Message-State: APjAAAWd6gk4Re97JWHod28+vI/O8qYLkMCjsxCoquVTNuHqlogOJodb
-        lW42Dqv/eJneUSOrzdWljeQ=
-X-Google-Smtp-Source: APXvYqwZMbg/m6nbHubf97d8K0xUKVmBD1Rr8yfixTsKSLakuNH3dxdbOTepGNGQ7j4VPnGRXPT5YA==
-X-Received: by 2002:a19:9116:: with SMTP id t22mr15917787lfd.99.1572873009470;
-        Mon, 04 Nov 2019 05:10:09 -0800 (PST)
-Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
-        by smtp.gmail.com with ESMTPSA id z3sm5931801ljz.51.2019.11.04.05.10.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 05:10:08 -0800 (PST)
-From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
-To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
-Subject: [PATCH v2 3/3] v4l2-ctl: Support setting V4L2_CTRL_TYPE_AREA controls
-Date:   Mon,  4 Nov 2019 14:10:00 +0100
-Message-Id: <20191104131000.22359-3-ribalda@kernel.org>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191104131000.22359-1-ribalda@kernel.org>
-References: <20191104131000.22359-1-ribalda@kernel.org>
+        Mon, 4 Nov 2019 08:10:29 -0500
+Received: from mga17.intel.com ([192.55.52.151]:13556 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728600AbfKDNK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:10:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 05:10:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="212312059"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
+  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 05:10:25 -0800
+Received: by lahna (sSMTP sendmail emulation); Mon, 04 Nov 2019 15:10:24 +0200
+Date:   Mon, 4 Nov 2019 15:10:24 +0200
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Paul Menzel <pmenzel@molgen.mpg.de>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>,
+        intel-gfx@lists.freedesktop.org, Takashi Iwai <tiwai@suse.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Mario Limonciello <mario.limonciello@dell.com>
+Subject: Re: snd_hda_intel 0000:00:1f.3: No response from codec, resetting
+ bus: last cmd=
+Message-ID: <20191104131024.GB2552@lahna.fi.intel.com>
+References: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <b31b8649-cb2d-890b-2d4d-881e47895ee6@molgen.mpg.de>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-$ v4l2-ctl  -d /dev/video1  -c area=123123x233
+Hi,
 
-Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
----
- utils/v4l2-ctl/v4l2-ctl-common.cpp | 4 ++++
- 1 file changed, 4 insertions(+)
+On Mon, Nov 04, 2019 at 01:57:54PM +0100, Paul Menzel wrote:
+> Dear Linux folks,
+> 
+> 
+> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+> resuming0with Dell’s Thunderbolt TB16 dock connected, Linux spews
+> the errors below.
 
-diff --git a/utils/v4l2-ctl/v4l2-ctl-common.cpp b/utils/v4l2-ctl/v4l2-ctl-common.cpp
-index 95339561..e079c274 100644
---- a/utils/v4l2-ctl/v4l2-ctl-common.cpp
-+++ b/utils/v4l2-ctl/v4l2-ctl-common.cpp
-@@ -973,6 +973,10 @@ void common_set(cv4l_fd &_fd)
- 					strncpy(ctrl.string, iter->second.c_str(), qc.maximum);
- 					ctrl.string[qc.maximum] = 0;
- 					break;
-+				case V4L2_CTRL_TYPE_AREA:
-+					sscanf(iter->second.c_str(), "%ux%u",
-+					       &ctrl.p_area->width, &ctrl.p_area->height);
-+					break;
- 				default:
- 					fprintf(stderr, "%s: unsupported payload type\n",
- 							qc.name);
--- 
-2.24.0.rc1
+I have this machine here so can try to reproduce it as well.
 
+> ```
+> [    0.000000] Linux version 5.3.0-1-amd64 (debian-kernel@lists.debian.org) (gcc version 9.2.1 20191008 (Debian 9.2.1-9)) #1 SMP Debian 5.3.7-1 (2019-10-19)
+> […]
+> [    1.596619] pci 0000:00:1f.3: Adding to iommu group 12
+> [   14.536274] snd_hda_intel 0000:00:1f.3: enabling device (0000 -> 0002)
+> [   14.544100] snd_hda_intel 0000:00:1f.3: bound 0000:00:02.0 (ops i915_audio_component_bind_ops [i915])
+> [   14.760751] input: HDA Intel PCH Headphone Mic as /devices/pci0000:00/0000:00:1f.3/sound/card0/input16
+> [   14.760790] input: HDA Intel PCH HDMI as /devices/pci0000:00/0000:00:1f.3/sound/card0/input17
+> [  156.614284] snd_hda_intel 0000:00:1f.3: No response from codec, disabling MSI: last cmd=0x20270503
+> [  157.622232] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> [  158.626371] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> [  159.634102] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> [  161.678121] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> [  162.682272] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20370503
+> [  163.694234] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x201f0500
+> [  165.730142] snd_hda_intel 0000:00:1f.3: No response from codec, resetting bus: last cmd=0x20270503
+> […]
+> ```
+> 
+> In the bug report *[Intel Ice Lake, snd-hda-intel, HDMI] "No
+> response from codec" (after display hotplug?)* [1], note it’s a
+> different model, Takashi comments that this is a Thunderbolt or
+> i915 issue.
+
+0000:00:1f.3 is on PCH so not sure how it could be related to
+Thunderbolt, well or i915 for that matter.
+
+> Please tell me, how to debug this further.
+
+Unfortunately I don't know much about the HDA driver so can't really
+suggest anything.
