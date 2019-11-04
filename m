@@ -2,52 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44510CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926062084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 111A5214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905645;
-	bh=4TiYdvVxUzCNJ4QExnV8+tw17p0jkR3fYFgZLjCIeBE=;
+	s=default; t=1572905648;
+	bh=ehCd2uKuzcKZKMe7PXCnQAaDe+V/GG9EgLqTY/lcbkw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=thKg+O83uuLJF9HDHTCe4+6tlx53EviHZYhapCNp23Sas5YcFL8qZxzy9j5/J1W2A
-	 YUfs6W0/fvtD2NTEdx1+WTW3Wj/tsous053KERJsoORf9G5VwaoFHxvIgLNUYPmQGe
-	 vyV1lxlOWyXt+05a7g8oHnNEJ+lPV7U/JgetYCeo=
+	b=MORHe3Q5AlCFtDNQR/XjEfdEKXHr78Nk7kQk5S9gmr3YRU8Ev2tlMkMxTqF4NCMAE
+	 ciR/P+uWnoHGL2k8omO1fQ0HoliRxLxw1Rvgu93DywWZgwh3oYeOumyAz59tyVgBEJ
+	 fNbtqZxamCs7MCxwvqHfMMYL4FsDZITM8Zxz3X3Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390250AbfKDWIh (ORCPT
+        id S2390242AbfKDWIe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41412 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41288 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390229AbfKDWIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:30 -0500
+        id S2387934AbfKDWIY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:24 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 24D3E2084D;
-        Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 57B90205C9;
+        Mon,  4 Nov 2019 22:08:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905309;
-        bh=4TiYdvVxUzCNJ4QExnV8+tw17p0jkR3fYFgZLjCIeBE=;
+        s=default; t=1572905303;
+        bh=ehCd2uKuzcKZKMe7PXCnQAaDe+V/GG9EgLqTY/lcbkw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=UeSCYyJaT8x1sCIHbFnGbdeQr8BhOHHSE6/SIAGcLl1pf3xUs35TOkldNY4TLLO+M
-         10KpRkfzgPCm+BLnfsnIeFsQ3BjJPXGwz5noTl7q7hn5ysgDPhTXtUaZJtVpql9yGr
-         fopllGgeGLnaGYTonUy7vFnaA59Jp9/RelXG0Ru0=
+        b=jynx4T0+lY4MQK7G5g5yIk1iER/qFCbX94J2AyZXiCZ6qey4nz23WEJ68odBwULv+
+         Wn4bxlIYVKHdzt1andPLDwkciJ6+gqKu2cZupnmYgQe6hQ4kc9J2BeWhEh7xRdELoH
+         bneS34NHrY8dhfPEE0/SKYh2AADkXRrpy/31UUII=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 5.3 102/163] UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
-Date:   Mon,  4 Nov 2019 22:44:52 +0100
-Message-Id: <20191104212147.452249094@linuxfoundation.org>
+        stable@vger.kernel.org, Rajmohan Mani <rajmohan.mani@intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 092/163] thunderbolt: Correct path indices for PCIe tunnel
+Date:   Mon,  4 Nov 2019 22:44:42 +0100
+Message-Id: <20191104212146.842453698@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,92 +61,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Mika Westerberg <mika.westerberg@linux.intel.com>
 
-commit 1186f86a71130a7635a20843e355bb880c7349b2 upstream.
+[ Upstream commit ce19f91eae43e39d5a1da55344756ab5a3c7e8d1 ]
 
-Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments"),
-copying a similar commit for usb-storage, attempted to solve a problem
-involving scatter-gather I/O and USB/IP by setting the
-virt_boundary_mask for mass-storage devices.
+PCIe tunnel path indices got mixed up when we added support for tunnels
+between switches that are not adjacent. This did not affect the
+functionality as it is just an index but fix it now nevertheless to make
+the code easier to understand.
 
-However, it now turns out that the analogous change in usb-storage
-interacted badly with commit 09324d32d2a0 ("block: force an unlimited
-segment size on queues with a virt boundary"), which was added later.
-A typical error message is:
-
-	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
-	total 32768 (slots), used 97 (slots)
-
-There is no longer any reason to keep the virt_boundary_mask setting
-in the uas driver.  It was needed in the first place only for
-handling devices with a block size smaller than the maxpacket size and
-where the host controller was not capable of fully general
-scatter-gather operation (that is, able to merge two SG segments into
-a single USB packet).  But:
-
-	High-speed or slower connections never use a bulk maxpacket
-	value larger than 512;
-
-	The SCSI layer does not handle block devices with a block size
-	smaller than 512 bytes;
-
-	All the host controllers capable of SuperSpeed operation can
-	handle fully general SG;
-
-	Since commit ea44d190764b ("usbip: Implement SG support to
-	vhci-hcd and stub driver") was merged, the USB/IP driver can
-	also handle SG.
-
-Therefore all supported device/controller combinations should be okay
-with no need for any special virt_boundary_mask.  So in order to head
-off potential problems similar to those affecting usb-storage, this
-patch reverts commit 3ae62a42090f.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Oliver Neukum <oneukum@suse.com>
-CC: <stable@vger.kernel.org>
-Acked-by: Christoph Hellwig <hch@lst.de>
-Fixes: 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910231132470.1878-100000@iolanthe.rowland.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-by: Rajmohan Mani <rajmohan.mani@intel.com>
+Fixes: 8c7acaaf020f ("thunderbolt: Extend tunnel creation to more than 2 adjacent switches")
+Signed-off-by: Mika Westerberg <mika.westerberg@linux.intel.com>
+Reviewed-by: Yehezkel Bernat <YehezkelShB@gmail.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/storage/uas.c |   20 --------------------
- 1 file changed, 20 deletions(-)
+ drivers/thunderbolt/tunnel.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -789,30 +789,10 @@ static int uas_slave_alloc(struct scsi_d
- {
- 	struct uas_dev_info *devinfo =
- 		(struct uas_dev_info *)sdev->host->hostdata;
--	int maxp;
+diff --git a/drivers/thunderbolt/tunnel.c b/drivers/thunderbolt/tunnel.c
+index 31d0234837e45..5a99234826e73 100644
+--- a/drivers/thunderbolt/tunnel.c
++++ b/drivers/thunderbolt/tunnel.c
+@@ -211,7 +211,7 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+ 		return NULL;
+ 	}
+ 	tb_pci_init_path(path);
+-	tunnel->paths[TB_PCI_PATH_UP] = path;
++	tunnel->paths[TB_PCI_PATH_DOWN] = path;
  
- 	sdev->hostdata = devinfo;
+ 	path = tb_path_alloc(tb, up, TB_PCI_HOPID, down, TB_PCI_HOPID, 0,
+ 			     "PCIe Up");
+@@ -220,7 +220,7 @@ struct tb_tunnel *tb_tunnel_alloc_pci(struct tb *tb, struct tb_port *up,
+ 		return NULL;
+ 	}
+ 	tb_pci_init_path(path);
+-	tunnel->paths[TB_PCI_PATH_DOWN] = path;
++	tunnel->paths[TB_PCI_PATH_UP] = path;
  
- 	/*
--	 * We have two requirements here. We must satisfy the requirements
--	 * of the physical HC and the demands of the protocol, as we
--	 * definitely want no additional memory allocation in this path
--	 * ruling out using bounce buffers.
--	 *
--	 * For a transmission on USB to continue we must never send
--	 * a package that is smaller than maxpacket. Hence the length of each
--         * scatterlist element except the last must be divisible by the
--         * Bulk maxpacket value.
--	 * If the HC does not ensure that through SG,
--	 * the upper layer must do that. We must assume nothing
--	 * about the capabilities off the HC, so we use the most
--	 * pessimistic requirement.
--	 */
--
--	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
--	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
--
--	/*
- 	 * The protocol has no requirements on alignment in the strict sense.
- 	 * Controllers may or may not have alignment restrictions.
- 	 * As this is not exported, we use an extremely conservative guess.
+ 	return tunnel;
+ }
+-- 
+2.20.1
+
 
 
