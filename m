@@ -2,183 +2,275 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 947E1CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47A04CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70AA121E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12D6021E6F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572904585;
+	bh=L0ho6bf5l8Xbz1j6S+ejSKfLn7v+U53NaIoYXmrjc+M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LCrEGQ323GhYFeZyMRO2mnOUR08+Wdsmf+n6y3jFksEfiEyiPdrXr/dlpYlByj7nT
+	 7rZVzX6vLxZ5Jr79ZZmcvGJaaHVRX85KVXMfk5NyYNFXIpJlKc/dd6gCZFr5rpwo6U
+	 nXLELyn7TrmStOfXcJ5cNL0J1x9gWRuLU7Vuyqqk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388345AbfKDV4U (ORCPT
+        id S2388357AbfKDV4X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:56:20 -0500
-Received: from mga07.intel.com ([134.134.136.100]:20673 "EHLO mga07.intel.com"
+        Mon, 4 Nov 2019 16:56:23 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51878 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388302AbfKDV4S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:56:18 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 13:56:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
-   d="scan'208";a="226888844"
-Received: from trowland-mobl.amr.corp.intel.com (HELO [10.254.97.182]) ([10.254.97.182])
-  by fmsmga004.fm.intel.com with ESMTP; 04 Nov 2019 13:56:11 -0800
-Subject: Re: [alsa-devel] [PATCH 13/14] soundwire: intel: free all resources
- on hw_free()
-To:     Cezary Rojewski <cezary.rojewski@intel.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
-        tiwai@suse.de, broonie@kernel.org, vkoul@kernel.org,
-        gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-References: <20191023212823.608-1-pierre-louis.bossart@linux.intel.com>
- <20191023212823.608-14-pierre-louis.bossart@linux.intel.com>
- <42403ea0-e337-81b6-f11a-2a32c1473750@intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <0374d162-2cea-2fca-ec12-a0377130c711@linux.intel.com>
-Date:   Mon, 4 Nov 2019 15:46:49 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        id S2388330AbfKDV4U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:56:20 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 017B92184C;
+        Mon,  4 Nov 2019 21:56:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904578;
+        bh=L0ho6bf5l8Xbz1j6S+ejSKfLn7v+U53NaIoYXmrjc+M=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=yMb+ZRgnqwtS+waTJ40uhP0rPQXvDgmW4BgKqOzM49u7Krfr0rjuor0UgtnfPe/SF
+         T2XW4eAPTVGrecu0JbQ5nWH8Q8HXNkIaN+UOunvf/EGiqp20g89ulo46ceK25AYPUK
+         VWt8bNq+D74budsDzbvYsnQ/oEbyoUSaU9sN5/sQ=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Xin Long <lucien.xin@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 91/95] sctp: fix the issue that flags are ignored when using kernel_connect
+Date:   Mon,  4 Nov 2019 22:45:29 +0100
+Message-Id: <20191104212124.113952695@linuxfoundation.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
+References: <20191104212038.056365853@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-In-Reply-To: <42403ea0-e337-81b6-f11a-2a32c1473750@intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Xin Long <lucien.xin@gmail.com>
+
+commit 644fbdeacf1d3edd366e44b8ba214de9d1dd66a9 upstream.
+
+Now sctp uses inet_dgram_connect as its proto_ops .connect, and the flags
+param can't be passed into its proto .connect where this flags is really
+needed.
+
+sctp works around it by getting flags from socket file in __sctp_connect.
+It works for connecting from userspace, as inherently the user sock has
+socket file and it passes f_flags as the flags param into the proto_ops
+.connect.
+
+However, the sock created by sock_create_kern doesn't have a socket file,
+and it passes the flags (like O_NONBLOCK) by using the flags param in
+kernel_connect, which calls proto_ops .connect later.
+
+So to fix it, this patch defines a new proto_ops .connect for sctp,
+sctp_inet_connect, which calls __sctp_connect() directly with this
+flags param. After this, the sctp's proto .connect can be removed.
+
+Note that sctp_inet_connect doesn't need to do some checks that are not
+needed for sctp, which makes thing better than with inet_dgram_connect.
+
+Suggested-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Acked-by: Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
+---
+ include/net/sctp/sctp.h |    2 +
+ net/sctp/ipv6.c         |    2 -
+ net/sctp/protocol.c     |    2 -
+ net/sctp/socket.c       |   56 ++++++++++++++++++++++++++++++++----------------
+ 4 files changed, 42 insertions(+), 20 deletions(-)
+
+--- a/include/net/sctp/sctp.h
++++ b/include/net/sctp/sctp.h
+@@ -103,6 +103,8 @@ void sctp_addr_wq_mgmt(struct net *, str
+ /*
+  * sctp/socket.c
+  */
++int sctp_inet_connect(struct socket *sock, struct sockaddr *uaddr,
++		      int addr_len, int flags);
+ int sctp_backlog_rcv(struct sock *sk, struct sk_buff *skb);
+ int sctp_inet_listen(struct socket *sock, int backlog);
+ void sctp_write_space(struct sock *sk);
+--- a/net/sctp/ipv6.c
++++ b/net/sctp/ipv6.c
+@@ -974,7 +974,7 @@ static const struct proto_ops inet6_seqp
+ 	.owner		   = THIS_MODULE,
+ 	.release	   = inet6_release,
+ 	.bind		   = inet6_bind,
+-	.connect	   = inet_dgram_connect,
++	.connect	   = sctp_inet_connect,
+ 	.socketpair	   = sock_no_socketpair,
+ 	.accept		   = inet_accept,
+ 	.getname	   = sctp_getname,
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -1019,7 +1019,7 @@ static const struct proto_ops inet_seqpa
+ 	.owner		   = THIS_MODULE,
+ 	.release	   = inet_release,	/* Needs to be wrapped... */
+ 	.bind		   = inet_bind,
+-	.connect	   = inet_dgram_connect,
++	.connect	   = sctp_inet_connect,
+ 	.socketpair	   = sock_no_socketpair,
+ 	.accept		   = inet_accept,
+ 	.getname	   = inet_getname,	/* Semantics are different.  */
+--- a/net/sctp/socket.c
++++ b/net/sctp/socket.c
+@@ -1076,7 +1076,7 @@ out:
+  */
+ static int __sctp_connect(struct sock *sk,
+ 			  struct sockaddr *kaddrs,
+-			  int addrs_size,
++			  int addrs_size, int flags,
+ 			  sctp_assoc_t *assoc_id)
+ {
+ 	struct net *net = sock_net(sk);
+@@ -1094,7 +1094,6 @@ static int __sctp_connect(struct sock *s
+ 	union sctp_addr *sa_addr = NULL;
+ 	void *addr_buf;
+ 	unsigned short port;
+-	unsigned int f_flags = 0;
+ 
+ 	sp = sctp_sk(sk);
+ 	ep = sp->ep;
+@@ -1244,13 +1243,7 @@ static int __sctp_connect(struct sock *s
+ 	sp->pf->to_sk_daddr(sa_addr, sk);
+ 	sk->sk_err = 0;
+ 
+-	/* in-kernel sockets don't generally have a file allocated to them
+-	 * if all they do is call sock_create_kern().
+-	 */
+-	if (sk->sk_socket->file)
+-		f_flags = sk->sk_socket->file->f_flags;
+-
+-	timeo = sock_sndtimeo(sk, f_flags & O_NONBLOCK);
++	timeo = sock_sndtimeo(sk, flags & O_NONBLOCK);
+ 
+ 	if (assoc_id)
+ 		*assoc_id = asoc->assoc_id;
+@@ -1345,7 +1338,7 @@ static int __sctp_setsockopt_connectx(st
+ {
+ 	struct sockaddr *kaddrs;
+ 	gfp_t gfp = GFP_KERNEL;
+-	int err = 0;
++	int err = 0, flags = 0;
+ 
+ 	pr_debug("%s: sk:%p addrs:%p addrs_size:%d\n",
+ 		 __func__, sk, addrs, addrs_size);
+@@ -1365,11 +1358,18 @@ static int __sctp_setsockopt_connectx(st
+ 		return -ENOMEM;
+ 
+ 	if (__copy_from_user(kaddrs, addrs, addrs_size)) {
+-		err = -EFAULT;
+-	} else {
+-		err = __sctp_connect(sk, kaddrs, addrs_size, assoc_id);
++		kfree(kaddrs);
++		return -EFAULT;
+ 	}
+ 
++	/* in-kernel sockets don't generally have a file allocated to them
++	 * if all they do is call sock_create_kern().
++	 */
++	if (sk->sk_socket->file)
++		flags = sk->sk_socket->file->f_flags;
++
++	err = __sctp_connect(sk, kaddrs, addrs_size, flags, assoc_id);
++
+ 	kfree(kaddrs);
+ 
+ 	return err;
+@@ -4166,16 +4166,26 @@ out_nounlock:
+  * len: the size of the address.
+  */
+ static int sctp_connect(struct sock *sk, struct sockaddr *addr,
+-			int addr_len)
++			int addr_len, int flags)
+ {
+-	int err = 0;
++	struct inet_sock *inet = inet_sk(sk);
+ 	struct sctp_af *af;
++	int err = 0;
+ 
+ 	lock_sock(sk);
+ 
+ 	pr_debug("%s: sk:%p, sockaddr:%p, addr_len:%d\n", __func__, sk,
+ 		 addr, addr_len);
+ 
++	/* We may need to bind the socket. */
++	if (!inet->inet_num) {
++		if (sk->sk_prot->get_port(sk, 0)) {
++			release_sock(sk);
++			return -EAGAIN;
++		}
++		inet->inet_sport = htons(inet->inet_num);
++	}
++
+ 	/* Validate addr_len before calling common connect/connectx routine. */
+ 	af = sctp_get_af_specific(addr->sa_family);
+ 	if (!af || addr_len < af->sockaddr_len) {
+@@ -4184,13 +4194,25 @@ static int sctp_connect(struct sock *sk,
+ 		/* Pass correct addr len to common routine (so it knows there
+ 		 * is only one address being passed.
+ 		 */
+-		err = __sctp_connect(sk, addr, af->sockaddr_len, NULL);
++		err = __sctp_connect(sk, addr, af->sockaddr_len, flags, NULL);
+ 	}
+ 
+ 	release_sock(sk);
+ 	return err;
+ }
+ 
++int sctp_inet_connect(struct socket *sock, struct sockaddr *uaddr,
++		      int addr_len, int flags)
++{
++	if (addr_len < sizeof(uaddr->sa_family))
++		return -EINVAL;
++
++	if (uaddr->sa_family == AF_UNSPEC)
++		return -EOPNOTSUPP;
++
++	return sctp_connect(sock->sk, uaddr, addr_len, flags);
++}
++
+ /* FIXME: Write comments. */
+ static int sctp_disconnect(struct sock *sk, int flags)
+ {
+@@ -8298,7 +8320,6 @@ struct proto sctp_prot = {
+ 	.name        =	"SCTP",
+ 	.owner       =	THIS_MODULE,
+ 	.close       =	sctp_close,
+-	.connect     =	sctp_connect,
+ 	.disconnect  =	sctp_disconnect,
+ 	.accept      =	sctp_accept,
+ 	.ioctl       =	sctp_ioctl,
+@@ -8337,7 +8358,6 @@ struct proto sctpv6_prot = {
+ 	.name		= "SCTPv6",
+ 	.owner		= THIS_MODULE,
+ 	.close		= sctp_close,
+-	.connect	= sctp_connect,
+ 	.disconnect	= sctp_disconnect,
+ 	.accept		= sctp_accept,
+ 	.ioctl		= sctp_ioctl,
 
 
-On 11/4/19 2:08 PM, Cezary Rojewski wrote:
-> On 2019-10-23 23:28, Pierre-Louis Bossart wrote:
->> Make sure all calls to the SoundWire stream API are done and involve
->> callback
->>
->> Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
->> Signed-off-by: Pierre-Louis Bossart 
->> <pierre-louis.bossart@linux.intel.com>
->> ---
->>   drivers/soundwire/intel.c | 40 +++++++++++++++++++++++++++++++++++++--
->>   1 file changed, 38 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
->> index af24fa048add..cad1c0b64ee3 100644
->> --- a/drivers/soundwire/intel.c
->> +++ b/drivers/soundwire/intel.c
->> @@ -548,6 +548,25 @@ static int intel_params_stream(struct sdw_intel 
->> *sdw,
->>       return -EIO;
->>   }
->> +static int intel_free_stream(struct sdw_intel *sdw,
->> +                 struct snd_pcm_substream *substream,
->> +                 struct snd_soc_dai *dai,
->> +                 int link_id)
->> +{
->> +    struct sdw_intel_link_res *res = sdw->link_res;
->> +    struct sdw_intel_stream_free_data free_data;
->> +
->> +    free_data.substream = substream;
->> +    free_data.dai = dai;
->> +    free_data.link_id = link_id;
->> +
->> +    if (res->ops && res->ops->free_stream && res->dev)
-> 
-> Can res->dev even be null?
-
-in error cases yes. this 'res' structure is setup by the DSP driver, and 
-it could be wrong or not set.
-
-Note that in the previous solution we tested the res->arg pointer, we 
-did find a case where we could oops here.
-
-> 
->> +        return res->ops->free_stream(res->dev,
->> +                         &free_data);
->> +
->> +    return 0;
->> +}
->> +
->>   /*
->>    * bank switch routines
->>    */
->> @@ -816,6 +835,7 @@ static int
->>   intel_hw_free(struct snd_pcm_substream *substream, struct 
->> snd_soc_dai *dai)
->>   {
->>       struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
->> +    struct sdw_intel *sdw = cdns_to_intel(cdns);
->>       struct sdw_cdns_dma_data *dma;
->>       int ret;
->> @@ -823,12 +843,28 @@ intel_hw_free(struct snd_pcm_substream 
->> *substream, struct snd_soc_dai *dai)
->>       if (!dma)
->>           return -EIO;
->> +    ret = sdw_deprepare_stream(dma->stream);
->> +    if (ret) {
->> +        dev_err(dai->dev, "sdw_deprepare_stream: failed %d", ret);
->> +        return ret;
->> +    }
->> +
-> 
-> I understand that you want to be transparent to caller with failure 
-> reasons via dev_err/_warn. However, sdw_deprepare_stream already dumps 
-> all the logs we need. The same applies for most of the other calls (and 
-> not just in this patch..).
-> 
-> Do we really need to be that verbose? Maybe just agree on caller -or- 
-> subject being the source for the messaging, align existing usages and 
-> thus preventing further duplication?
-> 
-> Not forcing anything, just asking for your opinion on this.
-
-the sdw_prepare/deprepare_stream calls provide error logs, but they are 
-not mapped to specific devices/dais (pr_err vs. dev_dbg). I found it was 
-easier to check for which dai the error was reported.
-
-We are also in the middle of integration with new hardware/boards, and 
-erring on the side of more traces will help everyone involved. We can 
-revisit later which ones are strictly necessary.
-
-> 
->>       ret = sdw_stream_remove_master(&cdns->bus, dma->stream);
->> -    if (ret < 0)
->> +    if (ret < 0) {
->>           dev_err(dai->dev, "remove master from stream %s failed: %d\n",
->>               dma->stream->name, ret);
->> +        return ret;
->> +    }
->> -    return ret;
->> +    ret = intel_free_stream(sdw, substream, dai, sdw->instance);
->> +    if (ret < 0) {
->> +        dev_err(dai->dev, "intel_free_stream: failed %d", ret);
->> +        return ret;
->> +    }
->> +
->> +    sdw_release_stream(dma->stream);
->> +
->> +    return 0;
->>   }
-> 
-> Given the structure of this function, shouldn't the generic flow be 
-> handled by upper layer i.e. part of sdw core?. Apart from 
-> intel_free_stream, the rest looks pretty generic to me and this sole 
-> call could easily be extracted into ops.
-
-The mapping between DAI and stream is not necessarily the same for all 
-platforms, we just had this discussion while reviewing the QCOM patches 
-last week. whether you release the resources in .hw_free() or 
-.shutdown() is also platform dependent.
-
-Also this code will change when we support the multi-CPU dais, more work 
-will be handled at the dailink level than at the dai.
-We can (and will) refactor at a later point.
