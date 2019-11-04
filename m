@@ -4,121 +4,150 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB94CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DB57CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15DC421E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54F1321D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:44:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JisxScNl"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hQx3J7ww"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728991AbfKDMno (ORCPT
+        id S1729033AbfKDMoE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:43:44 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:45618 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728504AbfKDMnn (ORCPT
+        Mon, 4 Nov 2019 07:44:04 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23463 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727236AbfKDMoE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:43:43 -0500
+        Mon, 4 Nov 2019 07:44:04 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572871423;
+        s=mimecast20190719; t=1572871443;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=by0LJRZGbj39K8dHeEoPBdx+Y6mM9EbKDWT2TWm0iZo=;
-        b=JisxScNlh0ra4gDMyzxLRczmS6q+lxU6Hjw334LN0v4rNpcNXFZt01kSQIdat6PXK3pwR9
-        kQQ04FvD52phfW4QPNbIDaaVHyc4TrbIjHbAWgtRJspoFlxG9MU/9YEKceHh0vWGVLxbJw
-        sA54Yc+OXy/X3ijbBFqEefXaljIg8/g=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kyIvhY3BXMqZ4TEtR3KTmpEF86AeFHO8xa0fKWzJeAE=;
+        b=hQx3J7wwzZYathJFMs1CPLKp1dRrrstUaIudRdC+DnrIXwucqXpAi+Y6Ek/jH2RPqDeUfZ
+        MyEzihIjzH5I+gTCnwjoEJ9QwLuGsdfkaf31ajfnv8mj1LB9IbV4ab+9Ph6vsKIRKzx/+z
+        WaSzWT6q+c4a31yuuV61/pZvoJfketk=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-90-U6HVbOMqNu-WA_nfEpHEwg-1; Mon, 04 Nov 2019 07:43:39 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+ us-mta-28-vRISspVuMJ6kcJukeiQ94w-1; Mon, 04 Nov 2019 07:43:57 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A180D1005500;
-        Mon,  4 Nov 2019 12:43:38 +0000 (UTC)
-Received: from dhcp-128-227.nay.redhat.com (unknown [10.66.128.227])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 556275D6C8;
-        Mon,  4 Nov 2019 12:43:35 +0000 (UTC)
-From:   Honggang LI <honli@redhat.com>
-To:     jlbec@evilplan.org, hch@lst.de
-Cc:     linux-kernel@vger.kernel.org, linux-rdma@vger.kernel.org,
-        bvanassche@acm.org, Honggang Li <honli@redhat.com>
-Subject: [PATCH] configfs: calculate the depth of parent item
-Date:   Mon,  4 Nov 2019 20:43:22 +0800
-Message-Id: <20191104124322.31226-1-honli@redhat.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 738DC1005500;
+        Mon,  4 Nov 2019 12:43:53 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-65.pek2.redhat.com [10.72.12.65])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2DDB060CD0;
+        Mon,  4 Nov 2019 12:43:00 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V7 2/6] modpost: add support for mdev class id
+Date:   Mon,  4 Nov 2019 20:39:48 +0800
+Message-Id: <20191104123952.17276-3-jasowang@redhat.com>
+In-Reply-To: <20191104123952.17276-1-jasowang@redhat.com>
+References: <20191104123952.17276-1-jasowang@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: U6HVbOMqNu-WA_nfEpHEwg-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: vRISspVuMJ6kcJukeiQ94w-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Honggang Li <honli@redhat.com>
+Add support to parse mdev class id table.
 
-When create symbolic link, create_link should calculate the depth
-of the parent item. However, both the first and second parameters
-of configfs_get_target_path had been set to the target. Broken
-symbolic link created.
-
-$ targetcli ls /
-o- / ............................................................. [...]
-  o- backstores .................................................. [...]
-  | o- block ...................................... [Storage Objects: 0]
-  | o- fileio ..................................... [Storage Objects: 2]
-  | | o- vdev0 .......... [/dev/ramdisk1 (16.0MiB) write-thru activated]
-  | | | o- alua ....................................... [ALUA Groups: 1]
-  | | |   o- default_tg_pt_gp ........... [ALUA state: Active/optimized]
-  | | o- vdev1 .......... [/dev/ramdisk2 (16.0MiB) write-thru activated]
-  | |   o- alua ....................................... [ALUA Groups: 1]
-  | |     o- default_tg_pt_gp ........... [ALUA state: Active/optimized]
-  | o- pscsi ...................................... [Storage Objects: 0]
-  | o- ramdisk .................................... [Storage Objects: 0]
-  o- iscsi ................................................ [Targets: 0]
-  o- loopback ............................................. [Targets: 0]
-  o- srpt ................................................. [Targets: 2]
-  | o- ib.e89a8f91cb3200000000000000000000 ............... [no-gen-acls]
-  | | o- acls ................................................ [ACLs: 2]
-  | | | o- ib.e89a8f91cb3200000000000000000000 ........ [Mapped LUNs: 2]
-  | | | | o- mapped_lun0 ............................. [BROKEN LUN LINK]
-  | | | | o- mapped_lun1 ............................. [BROKEN LUN LINK]
-  | | | o- ib.e89a8f91cb3300000000000000000000 ........ [Mapped LUNs: 2]
-  | | |   o- mapped_lun0 ............................. [BROKEN LUN LINK]
-  | | |   o- mapped_lun1 ............................. [BROKEN LUN LINK]
-  | | o- luns ................................................ [LUNs: 2]
-  | |   o- lun0 ...... [fileio/vdev0 (/dev/ramdisk1) (default_tg_pt_gp)]
-  | |   o- lun1 ...... [fileio/vdev1 (/dev/ramdisk2) (default_tg_pt_gp)]
-  | o- ib.e89a8f91cb3300000000000000000000 ............... [no-gen-acls]
-  |   o- acls ................................................ [ACLs: 0]
-  |   o- luns ................................................ [LUNs: 0]
-  o- vhost ................................................ [Targets: 0]
-
-Fixes: e9c03af21cc7 ("configfs: calculate the symlink target only once")
-Signed-off-by: Honggang Li <honli@redhat.com>
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
 ---
- fs/configfs/symlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+ scripts/mod/devicetable-offsets.c |  3 +++
+ scripts/mod/file2alias.c          | 11 +++++++++++
+ 3 files changed, 16 insertions(+)
 
-diff --git a/fs/configfs/symlink.c b/fs/configfs/symlink.c
-index dc5dbf6a81d7..cb61467478ca 100644
---- a/fs/configfs/symlink.c
-+++ b/fs/configfs/symlink.c
-@@ -101,7 +101,7 @@ static int create_link(struct config_item *parent_item,
- =09}
- =09target_sd->s_links++;
- =09spin_unlock(&configfs_dirent_lock);
--=09ret =3D configfs_get_target_path(item, item, body);
-+=09ret =3D configfs_get_target_path(parent_item, item, body);
- =09if (!ret)
- =09=09ret =3D configfs_create_link(target_sd, parent_item->ci_dentry,
- =09=09=09=09=09   dentry, body);
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index 38431e9ef7f5..a6641cd8b5a3 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] =3D {
+ =09{ 0 },
+ };
+=20
++MODULE_DEVICE_TABLE(mdev, vfio_id_table);
++
+ static struct mdev_driver vfio_mdev_driver =3D {
+ =09.name=09=3D "vfio_mdev",
+ =09.probe=09=3D vfio_mdev_probe,
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
+fsets.c
+index 054405b90ba4..6cbb1062488a 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -231,5 +231,8 @@ int main(void)
+ =09DEVID(wmi_device_id);
+ =09DEVID_FIELD(wmi_device_id, guid_string);
+=20
++=09DEVID(mdev_class_id);
++=09DEVID_FIELD(mdev_class_id, id);
++
+ =09return 0;
+ }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index c91eba751804..45f1c22f49be 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *=
+symval, char *alias)
+ =09return 1;
+ }
+=20
++/* looks like: "mdev:cN" */
++static int do_mdev_entry(const char *filename, void *symval, char *alias)
++{
++=09DEF_FIELD(symval, mdev_class_id, id);
++
++=09sprintf(alias, "mdev:c%02X", id);
++=09add_wildcard(alias);
++=09return 1;
++}
++
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ {
+@@ -1407,6 +1417,7 @@ static const struct devtable devtable[] =3D {
+ =09{"typec", SIZE_typec_device_id, do_typec_entry},
+ =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
+ =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
++=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
+ };
+=20
+ /* Create MODULE_ALIAS() statements.
 --=20
-2.21.0
+2.19.1
 
