@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F00CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24861CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB231214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB4D3214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:50:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904236;
-	bh=UXs6zSj+eLEnOLZq+4WUzH3BveT4SgoNgiOc6NkYYRY=;
+	s=default; t=1572904239;
+	bh=WrkoDNef+MIgPngwmgddZ54YoMNzZoaA6iUJr2B/nGg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=fUR92flzz2ecZAyONgZWRF4y1toIi+Z59xaQ6J5nqk4a+6pndKZxjAWpJrldUfauj
-	 ZiAtDBARpv/N6N39ZgPC/mEejalb6PKPwAH2cBliA3de9PfRzbDN0qAYTbbzdBL/Lx
-	 G2vOHyuONAmYbqiI114+0NoT0WqQQrwxeGqZXYnY=
+	b=11n3MNYR628N3iiisf63OdQ/MHZO2ozELlgEyREdRJsSjp4/o0Ht0YbYLrGvhf2qJ
+	 wiyzxnqpIAKP9mG8YaSJwFv5GAfkozVXc26lfMLNq46QhiwBIecmAtq1v/01GfX8ON
+	 8M80Rkx++11SPDHTrGX2lBUZDH7wU53ztQYr+awM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387746AbfKDVuf (ORCPT
+        id S2387762AbfKDVuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:50:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42826 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387735AbfKDVud (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:33 -0500
+        id S2387722AbfKDVub (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:31 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF1CC214D8;
-        Mon,  4 Nov 2019 21:50:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 63ECB217F5;
+        Mon,  4 Nov 2019 21:50:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904233;
-        bh=UXs6zSj+eLEnOLZq+4WUzH3BveT4SgoNgiOc6NkYYRY=;
+        s=default; t=1572904230;
+        bh=WrkoDNef+MIgPngwmgddZ54YoMNzZoaA6iUJr2B/nGg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ggmrMDgYIm+1UTL+Ea02xo+0TgPSW1lq7psOCdlAscA0/PU6iJ+jYWsQVfwpdsjB9
-         xJ30rwtoT4qcBkUitS5PbgnRxjlerH7fcfB8fIYDPfad/pSJLbRIpDQEpbnOrABVKF
-         4MvKnUg/daO1CCigruJd8OzyJg2WFhCrxf00OyP4=
+        b=2pwF228H71vLiDmDhkWNRzoiD0dh/G+LSdwv3RTwzPU1WVda4/yIo6QQ9O7Fgh0Dn
+         RpdMSbBg3kUfBmegBtzPj24Cbi4qWsmAoQuPogC113WgkhO0mCChlfSefHM1tMxGlJ
+         +9/YvrHOsq9czms7kKdDZIomAylPH0zZC/cVEwEE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Petr Mladek <pmladek@suse.com>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 31/62] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Mon,  4 Nov 2019 22:44:53 +0100
-Message-Id: <20191104211930.647221425@linuxfoundation.org>
+Subject: [PATCH 4.9 30/62] tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
+Date:   Mon,  4 Nov 2019 22:44:52 +0100
+Message-Id: <20191104211929.681537321@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,37 +60,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Petr Mladek <pmladek@suse.com>
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+[ Upstream commit d303de1fcf344ff7c15ed64c3f48a991c9958775 ]
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+A customer reported the following softlockup:
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+[899688.160002] NMI watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [test.sh:16464]
+[899688.160002] CPU: 0 PID: 16464 Comm: test.sh Not tainted 4.12.14-6.23-azure #1 SLE12-SP4
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] Kernel panic - not syncing: softlockup: hung tasks
+[899688.160002] RIP: 0010:up_write+0x1a/0x30
+[899688.160002] RSP: 0018:ffffa86784d4fde8 EFLAGS: 00000257 ORIG_RAX: ffffffffffffff12
+[899688.160002] RAX: ffffffff970fea00 RBX: 0000000000000001 RCX: 0000000000000000
+[899688.160002] RDX: ffffffff00000001 RSI: 0000000000000080 RDI: ffffffff970fea00
+[899688.160002] RBP: ffffffffffffffff R08: ffffffffffffffff R09: 0000000000000000
+[899688.160002] R10: 0000000000000000 R11: 0000000000000000 R12: ffff8b59014720d8
+[899688.160002] R13: ffff8b59014720c0 R14: ffff8b5901471090 R15: ffff8b5901470000
+[899688.160002]  tracing_read_pipe+0x336/0x3c0
+[899688.160002]  __vfs_read+0x26/0x140
+[899688.160002]  vfs_read+0x87/0x130
+[899688.160002]  SyS_read+0x42/0x90
+[899688.160002]  do_syscall_64+0x74/0x160
+
+It caught the process in the middle of trace_access_unlock(). There is
+no loop. So, it must be looping in the caller tracing_read_pipe()
+via the "waitagain" label.
+
+Crashdump analyze uncovered that iter->seq was completely zeroed
+at this point, including iter->seq.seq.size. It means that
+print_trace_line() was never able to print anything and
+there was no forward progress.
+
+The culprit seems to be in the code:
+
+	/* reset all but tr, trace, and overruns */
+	memset(&iter->seq, 0,
+	       sizeof(struct trace_iterator) -
+	       offsetof(struct trace_iterator, seq));
+
+It was added by the commit 53d0aa773053ab182877 ("ftrace:
+add logic to record overruns"). It was v2.6.27-rc1.
+It was the time when iter->seq looked like:
+
+     struct trace_seq {
+	unsigned char		buffer[PAGE_SIZE];
+	unsigned int		len;
+     };
+
+There was no "size" variable and zeroing was perfectly fine.
+
+The solution is to reinitialize the structure after or without
+zeroing.
+
+Link: http://lkml.kernel.org/r/20191011142134.11997-1-pmladek@suse.com
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/trace/trace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index f56307059d48c..7cac3ee09b09d 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -898,7 +898,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
+diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
+index 827ba2caea097..6a170a78b4535 100644
+--- a/kernel/trace/trace.c
++++ b/kernel/trace/trace.c
+@@ -5217,6 +5217,7 @@ waitagain:
+ 	       sizeof(struct trace_iterator) -
+ 	       offsetof(struct trace_iterator, seq));
+ 	cpumask_clear(iter->started);
++	trace_seq_init(&iter->seq);
+ 	iter->pos = -1;
+ 
+ 	trace_event_read_lock();
 -- 
 2.20.1
 
