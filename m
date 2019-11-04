@@ -2,50 +2,52 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DF59CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0728CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 429CF204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7239204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905884;
-	bh=iOwJt4PH0vF7tQobDg6MlteMOkoS0OlM2wN4cLQY6wE=;
+	s=default; t=1572905886;
+	bh=Y4Jjm+UFuSPpecmTbok0TTBZHuoAbBl57twrWhu9J6I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KRavGxl6gXg7wfDm0c1SUJmUD1JPenDpVVC9cXECBcedb33jrNaH6uczVKX/qlnO5
-	 YeNmLvpUu2Xr50WrxWuAcXhjNJb+AHz51jBhA2xz9wc2s47bwwgpVvE7wOX+3yNyyW
-	 m/j3t1Hm1QX00FUyZhfw4a8jNhNhYei/MnyWza4M=
+	b=x9lXx19Kz8MTEegGqycCZgIPL/5UxY8LCowJ9LsGhwTVUFuqaWvPPxRzxjMvm2c9j
+	 nmfq7mnXKxvksm5BQrJJF8li4JbUNLfvRLxntKX4q+GQ+yruz+WJscYuDaNX2+Y7b+
+	 TlAN0ylcffRWgCDGegJn1cM/6kAgxiN8zasSOiFk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389844AbfKDWSD (ORCPT
+        id S2389216AbfKDWCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60566 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:11 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389224AbfKDWCO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:14 -0500
+        id S2388235AbfKDWBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:21 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 391092089C;
-        Mon,  4 Nov 2019 22:02:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0A4420650;
+        Mon,  4 Nov 2019 22:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904933;
-        bh=iOwJt4PH0vF7tQobDg6MlteMOkoS0OlM2wN4cLQY6wE=;
+        s=default; t=1572904880;
+        bh=Y4Jjm+UFuSPpecmTbok0TTBZHuoAbBl57twrWhu9J6I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Mzofvc2Tw965kMI4iB12AHdReN3n0VsvsV8Mwy63fpcZjl83sjzpd+J11fGZR2fgh
-         +D7nvPeQ2wZiCELktB4dbivKQQDppw9F4ALvsqwlQUQ1NOj2OO/ik+QQwXjSl11PE7
-         qczvTeP7+bT/dZ4wam7jS1aE6Na3pWYT7vS7GllA=
+        b=D1qkVOX6HCEUduVw6qaDsINBkFCKgEgP/jOWM4cFpLGTMMld6Wzp/rLyblJoL24gY
+         mporMfClwIbbEKhqIvNFLYz8yNdvoMWU+tfCxO7M+J8eFtHXbc5+XxqsuTDTpGNBN+
+         ddU0yaLdcpiFSAp/zSORMT2aLQOPOebUhhPOpm5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Subject: [PATCH 4.19 120/149] USB: serial: whiteheat: fix potential slab corruption
-Date:   Mon,  4 Nov 2019 22:45:13 +0100
-Message-Id: <20191104212144.726422498@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 103/149] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
+Date:   Mon,  4 Nov 2019 22:44:56 +0100
+Message-Id: <20191104212143.696357128@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -58,35 +60,100 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Kai-Heng Feng <kai.heng.feng@canonical.com>
 
-commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
+[ Upstream commit 1099f48457d06b816359fb43ac32a4a07e33219b ]
 
-Fix a user-controlled slab buffer overflow due to a missing sanity check
-on the bulk-out transfer buffer used for control requests.
+Headphone on XPS 9350/9360 produces a background white noise. The The
+noise level somehow correlates with "Headphone Mic Boost", when it sets
+to 1 the noise disappears. However, doing this has a side effect, which
+also decreases the overall headphone volume so I didn't send the patch
+upstream.
 
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Cc: stable <stable@vger.kernel.org>
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
+hda/realtek - Update headset mode for ALC256") the noise exacerbates to
+a point it starts hurting ears.
 
+So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
+it so it's not touchable by userspace.
+
+Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
+BugLink: https://bugs.launchpad.net/bugs/1654448
+BugLink: https://bugs.launchpad.net/bugs/1845810
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+Link: https://lore.kernel.org/r/20191003043919.10960-1-kai.heng.feng@canonical.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/serial/whiteheat.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ sound/pci/hda/patch_realtek.c | 24 +++++++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
 
---- a/drivers/usb/serial/whiteheat.c
-+++ b/drivers/usb/serial/whiteheat.c
-@@ -571,6 +571,10 @@ static int firm_send_command(struct usb_
+diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
+index 7480218f32ba7..45eebfea1d883 100644
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5253,6 +5253,17 @@ static void alc271_hp_gate_mic_jack(struct hda_codec *codec,
+ 	}
+ }
  
- 	command_port = port->serial->port[COMMAND_PORT];
- 	command_info = usb_get_serial_port_data(command_port);
++static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
++						      const struct hda_fixup *fix,
++						      int action)
++{
++	if (action != HDA_FIXUP_ACT_PRE_PROBE)
++		return;
 +
-+	if (command_port->bulk_out_size < datasize + 1)
-+		return -EIO;
++	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
++	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
++}
 +
- 	mutex_lock(&command_info->mutex);
- 	command_info->command_finished = false;
- 
+ static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
+ 					     const struct hda_fixup *fix,
+ 					     int action)
+@@ -5635,6 +5646,7 @@ enum {
+ 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
+ 	ALC275_FIXUP_DELL_XPS,
+ 	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
++	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
+ 	ALC293_FIXUP_LENOVO_SPK_NOISE,
+ 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
+ 	ALC255_FIXUP_DELL_SPK_NOISE,
+@@ -6352,6 +6364,12 @@ static const struct hda_fixup alc269_fixups[] = {
+ 		.chained = true,
+ 		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
+ 	},
++	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
++		.type = HDA_FIXUP_FUNC,
++		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
++		.chained = true,
++		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
++	},
+ 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc_fixup_disable_aamix,
+@@ -6794,17 +6812,17 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
+ 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+ 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
+-	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
+ 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
+-	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
+ 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
+ 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
+ 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
+-	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
++	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
+ 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
+ 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
+-- 
+2.20.1
+
 
 
