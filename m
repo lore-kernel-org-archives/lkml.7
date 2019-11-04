@@ -7,20 +7,20 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 937E5CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE63FCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65CFD2080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B454320663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="SQs++U6Q"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EjUDxVnm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbfKDXAZ (ORCPT
+        id S1730277AbfKDXA3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:00:25 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:52479 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387449AbfKDXAU (ORCPT
+        Mon, 4 Nov 2019 18:00:29 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:22081 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2387460AbfKDXAU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 18:00:20 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
@@ -29,34 +29,34 @@ DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=MPSLE44CrTdmlpvXHFayzgdX5FlkhhVbp9gFdKUYL+k=;
-        b=SQs++U6QZjBp+3irouLEZIWS9rkj/2HUxBwPr/75BDx7PDD2NHZgwhGVQ2TvMR/UKqKLFU
-        q/MVv97J1WdQCk8xkfbMaLNxjag8lurIldBcvmbqG1HuWJQ/m8Sc+Ed4iqgUnLNdCENOjb
-        jbeNlzjV0XcQp8qtKcEhYdsCSgenF30=
+        bh=+St/beuhRsF58YDE5+DYdZxQDc75u5Mr+KI9l9PvbEo=;
+        b=EjUDxVnm44Lwe8OLuClxTKWICLgtsDAjGTxVzSLPlg/cnomtHUYxurAu9tKaD2AX/bTn9w
+        zRRsofVSicQVZ4bb6Iv0P/bbs7IFn53wr13+JSuvFjrzSAgmFd5Cxh8C+xYr0g4dfLAuEd
+        aV5X5L6suIV3HOq3tHLzGjHhCufjn/k=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-240-b5UzRDpCM4imlDSRq6tXOg-1; Mon, 04 Nov 2019 18:00:09 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+ us-mta-431-CGX2VpKtOe6go1JKpAHU7Q-1; Mon, 04 Nov 2019 18:00:12 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8221B1005500;
-        Mon,  4 Nov 2019 23:00:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C74BA66F;
+        Mon,  4 Nov 2019 23:00:11 +0000 (UTC)
 Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 0B31C4A0E;
-        Mon,  4 Nov 2019 23:00:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 029CA5D9CD;
+        Mon,  4 Nov 2019 23:00:06 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 07/13] KVM: monolithic: x86: remove __init section prefix from kvm_x86_cpu_has_kvm_support
-Date:   Mon,  4 Nov 2019 17:59:55 -0500
-Message-Id: <20191104230001.27774-8-aarcange@redhat.com>
+Subject: [PATCH 05/13] KVM: monolithic: add more section prefixes
+Date:   Mon,  4 Nov 2019 17:59:53 -0500
+Message-Id: <20191104230001.27774-6-aarcange@redhat.com>
 In-Reply-To: <20191104230001.27774-1-aarcange@redhat.com>
 References: <20191104230001.27774-1-aarcange@redhat.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: b5UzRDpCM4imlDSRq6tXOg-1
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: CGX2VpKtOe6go1JKpAHU7Q-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -65,62 +65,117 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Adjusts the section prefixes of some KVM x86 code function because
-with the monolithic KVM model the section checker can now do a more
-accurate static analysis at build time. This also allows to build
-without CONFIG_SECTION_MISMATCH_WARN_ONLY=3Dn.
-
-The __init needs to be removed on vmx despite it's only svm calling it
-from kvm_x86_hardware_enable which is eventually called by
-hardware_enable_nolock() or there's a (potentially false positive)
-warning (false positive because this function isn't called in the vmx
-case). If this isn't needed the right cleanup isn't to put it in the
-__init section, but to drop it. As long as it's defined in vmx as a
-kvm_x86 operation, it's expectable that might eventually be called at
-runtime while hot plugging new CPUs.
+Add more section prefixes because with the monolithic KVM model the
+section checker can now do a more accurate static analysis at build
+time and this allows to build without
+CONFIG_SECTION_MISMATCH_WARN_ONLY=3Dn.
 
 Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
 ---
- arch/x86/include/asm/kvm_host.h | 4 ++--
- arch/x86/kvm/vmx/vmx.c          | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/powerpc/kvm/book3s.c | 2 +-
+ arch/x86/kvm/x86.c        | 4 ++--
+ include/linux/kvm_host.h  | 8 ++++----
+ virt/kvm/arm/arm.c        | 2 +-
+ virt/kvm/kvm_main.c       | 6 +++---
+ 5 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
-t.h
-index 2b03ec80f6d7..2ddc61fdcd09 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -998,7 +998,7 @@ struct kvm_lapic_irq {
- =09bool msi_redir_hint;
- };
+diff --git a/arch/powerpc/kvm/book3s.c b/arch/powerpc/kvm/book3s.c
+index ec2547cc5ecb..e80e9504722a 100644
+--- a/arch/powerpc/kvm/book3s.c
++++ b/arch/powerpc/kvm/book3s.c
+@@ -1067,7 +1067,7 @@ int kvm_irq_map_chip_pin(struct kvm *kvm, unsigned ir=
+qchip, unsigned pin)
 =20
--extern __init int kvm_x86_cpu_has_kvm_support(void);
-+extern int kvm_x86_cpu_has_kvm_support(void);
- extern __init int kvm_x86_disabled_by_bios(void);
- extern int kvm_x86_hardware_enable(void);
- extern void kvm_x86_hardware_disable(void);
-@@ -1190,7 +1190,7 @@ extern bool kvm_x86_apic_init_signal_blocked(struct k=
-vm_vcpu *vcpu);
- extern int kvm_x86_enable_direct_tlbflush(struct kvm_vcpu *vcpu);
+ #endif /* CONFIG_KVM_XICS */
 =20
- struct kvm_x86_ops {
--=09int (*cpu_has_kvm_support)(void);          /* __init */
-+=09int (*cpu_has_kvm_support)(void);
- =09int (*disabled_by_bios)(void);             /* __init */
- =09int (*hardware_enable)(void);
- =09void (*hardware_disable)(void);
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index e406707381a4..87e5d7276ea4 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -2178,7 +2178,7 @@ void kvm_x86_cache_reg(struct kvm_vcpu *vcpu, enum kv=
-m_reg reg)
- =09}
- }
-=20
--__init int kvm_x86_cpu_has_kvm_support(void)
-+int kvm_x86_cpu_has_kvm_support(void)
+-static int kvmppc_book3s_init(void)
++static __init int kvmppc_book3s_init(void)
  {
- =09return cpu_has_vmx();
+ =09int r;
+=20
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index fb963e6b2e54..5e98fa6b7bf8 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -9272,7 +9272,7 @@ void kvm_arch_hardware_disable(void)
+ =09drop_user_return_notifiers();
  }
+=20
+-int kvm_arch_hardware_setup(void)
++__init int kvm_arch_hardware_setup(void)
+ {
+ =09int r;
+=20
+@@ -9303,7 +9303,7 @@ void kvm_arch_hardware_unsetup(void)
+ =09kvm_x86_hardware_unsetup();
+ }
+=20
+-int kvm_arch_check_processor_compat(void)
++__init int kvm_arch_check_processor_compat(void)
+ {
+ =09return kvm_x86_check_processor_compatibility();
+ }
+diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+index 719fc3e15ea4..426bc2f485a9 100644
+--- a/include/linux/kvm_host.h
++++ b/include/linux/kvm_host.h
+@@ -616,8 +616,8 @@ static inline void kvm_irqfd_exit(void)
+ {
+ }
+ #endif
+-int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+-=09=09  struct module *module);
++__init int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
++=09=09    struct module *module);
+ void kvm_exit(void);
+=20
+ void kvm_get_kvm(struct kvm *kvm);
+@@ -867,9 +867,9 @@ void kvm_arch_create_vcpu_debugfs(struct kvm_vcpu *vcpu=
+);
+=20
+ int kvm_arch_hardware_enable(void);
+ void kvm_arch_hardware_disable(void);
+-int kvm_arch_hardware_setup(void);
++__init int kvm_arch_hardware_setup(void);
+ void kvm_arch_hardware_unsetup(void);
+-int kvm_arch_check_processor_compat(void);
++__init int kvm_arch_check_processor_compat(void);
+ int kvm_arch_vcpu_runnable(struct kvm_vcpu *vcpu);
+ bool kvm_arch_vcpu_in_kernel(struct kvm_vcpu *vcpu);
+ int kvm_arch_vcpu_should_kick(struct kvm_vcpu *vcpu);
+diff --git a/virt/kvm/arm/arm.c b/virt/kvm/arm/arm.c
+index 86c6aa1cb58e..65f7f0f6868d 100644
+--- a/virt/kvm/arm/arm.c
++++ b/virt/kvm/arm/arm.c
+@@ -1726,7 +1726,7 @@ void kvm_arch_exit(void)
+ =09kvm_perf_teardown();
+ }
+=20
+-static int arm_init(void)
++static __init int arm_init(void)
+ {
+ =09int rc =3D kvm_init(NULL, sizeof(struct kvm_vcpu), 0, THIS_MODULE);
+ =09return rc;
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index d6f0696d98ef..1b7fbd138406 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -4246,13 +4246,13 @@ static void kvm_sched_out(struct preempt_notifier *=
+pn,
+ =09kvm_arch_vcpu_put(vcpu);
+ }
+=20
+-static void check_processor_compat(void *rtn)
++static __init void check_processor_compat(void *rtn)
+ {
+ =09*(int *)rtn =3D kvm_arch_check_processor_compat();
+ }
+=20
+-int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
+-=09=09  struct module *module)
++__init int kvm_init(void *opaque, unsigned vcpu_size, unsigned vcpu_align,
++=09=09    struct module *module)
+ {
+ =09int r;
+ =09int cpu;
 
