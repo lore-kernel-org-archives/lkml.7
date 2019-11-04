@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A119ACA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56367CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75F71204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FDFC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905937;
-	bh=yyDxAlgn41+7DL22CfifjWjYAq8KV40/xCcwkHyz6u8=;
+	s=default; t=1572905942;
+	bh=OxJUN0GrULCx4YrxlFaDCHBM54iQLptJdAzFRmA69q8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qnAhYf96DQ46ITu9Fymq1TbFPND6ln2AyLCtZOXu85/WRfQkErfDpo2YWyCPrJO35
-	 2RZwB9NuZmJTGNu2AM0T4Z/nKcKvrZlhPNxH87uDnJ48I+425dccQ0en7MFKbzNPHy
-	 IrSPQ56dZ16ugxPPqHXQZ6NIkj4qDoP5IQPpnPL8=
+	b=Ltuc4bSj3TOf25Id2zlZqldyzNdZskIig+Ws+E95nghuBG027lAC/WNcZviX4yEUF
+	 VH9ueVIUsVhDWI15MrviiyPT0qlt05Sd9pP2tLC9+Agyq2reDKetfDqWuvWIWWPRBZ
+	 EEv+1G1+iLD3b7ZT/zwYW+UDiIVKKzx7R1vm761k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390186AbfKDWS4 (ORCPT
+        id S2389001AbfKDWBQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59360 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:01:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58970 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389012AbfKDWBS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:18 -0500
+        id S2388932AbfKDWBA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:00 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DFDDB21744;
-        Mon,  4 Nov 2019 22:01:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 632DE2084D;
+        Mon,  4 Nov 2019 22:00:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904877;
-        bh=yyDxAlgn41+7DL22CfifjWjYAq8KV40/xCcwkHyz6u8=;
+        s=default; t=1572904859;
+        bh=OxJUN0GrULCx4YrxlFaDCHBM54iQLptJdAzFRmA69q8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mVUfgZ5BQfwDc4db/TJNUNfvb24oIDMLbqkhimBglnNs9SECoNN+GbCq6XEXQK73o
-         wy2COsBe2N6Hbzb11+5UbY3kkyTeywQ6LJUtSkQ2QLKjOFX3VS0Y8SjlHSlhhtlbaT
-         sdoLxatrrawL6K6XnBfjECedy0a/dL7OjJzWylwI=
+        b=n5luihu3BtKeibnOp7ZUVuc+SgE+nvLIymsZ0rZH088P2jQVqELoLgsLQrzqcUM+8
+         JQGiuqdIT9UocDC8AKvBLHC/RMtbQlPWrmtWvbGQgLb//VjJkqH6egXkLW4v3Y9HPg
+         /acyUV00lvGztvyttVHc/C5v/yUG1H92NpTn27I8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, afzal mohammed <afzal.mohd.ma@gmail.com>,
-        Vladimir Murzin <vladimir.murzin@arm.com>,
-        Russell King <rmk+kernel@armlinux.org.uk>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Hans de Goede <hdegoede@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 102/149] ARM: 8914/1: NOMMU: Fix exc_ret for XIP
-Date:   Mon,  4 Nov 2019 22:44:55 +0100
-Message-Id: <20191104212143.637154910@linuxfoundation.org>
+Subject: [PATCH 4.19 097/149] virt: vbox: fix memory leak in hgcm_call_preprocess_linaddr
+Date:   Mon,  4 Nov 2019 22:44:50 +0100
+Message-Id: <20191104212143.328568824@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,82 +61,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vladimir Murzin <vladimir.murzin@arm.com>
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-[ Upstream commit 4c0742f65b4ee466546fd24b71b56516cacd4613 ]
+[ Upstream commit e0b0cb9388642c104838fac100a4af32745621e2 ]
 
-It was reported that 72cd4064fcca "NOMMU: Toggle only bits in
-EXC_RETURN we are really care of" breaks NOMMU+XIP combination.
-It happens because saved EXC_RETURN gets overwritten when data
-section is relocated.
+In hgcm_call_preprocess_linaddr memory is allocated for bounce_buf but
+is not released if copy_form_user fails. In order to prevent memory leak
+in case of failure, the assignment to bounce_buf_ret is moved before the
+error check. This way the allocated bounce_buf will be released by the
+caller.
 
-The fix is to propagate EXC_RETURN via register and let relocation
-code to commit that value into memory.
-
-Fixes: 72cd4064fcca ("ARM: 8830/1: NOMMU: Toggle only bits in EXC_RETURN we are really care of")
-Reported-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Tested-by: afzal mohammed <afzal.mohd.ma@gmail.com>
-Signed-off-by: Vladimir Murzin <vladimir.murzin@arm.com>
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Fixes: 579db9d45cb4 ("virt: Add vboxguest VMMDEV communication code")
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+Link: https://lore.kernel.org/r/20190930204223.3660-1-navid.emamdoost@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/kernel/head-common.S | 5 +++--
- arch/arm/kernel/head-nommu.S  | 2 ++
- arch/arm/mm/proc-v7m.S        | 5 ++---
- 3 files changed, 7 insertions(+), 5 deletions(-)
+ drivers/virt/vboxguest/vboxguest_utils.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/kernel/head-common.S b/arch/arm/kernel/head-common.S
-index 997b02302c314..9328f2010bc19 100644
---- a/arch/arm/kernel/head-common.S
-+++ b/arch/arm/kernel/head-common.S
-@@ -72,7 +72,7 @@ ENDPROC(__vet_atags)
-  * The following fragment of code is executed with the MMU on in MMU mode,
-  * and uses absolute addresses; this is not position independent.
-  *
-- *  r0  = cp#15 control register
-+ *  r0  = cp#15 control register (exc_ret for M-class)
-  *  r1  = machine ID
-  *  r2  = atags/dtb pointer
-  *  r9  = processor ID
-@@ -141,7 +141,8 @@ __mmap_switched_data:
- #ifdef CONFIG_CPU_CP15
- 	.long	cr_alignment			@ r3
- #else
--	.long	0				@ r3
-+M_CLASS(.long	exc_ret)			@ r3
-+AR_CLASS(.long	0)				@ r3
- #endif
- 	.size	__mmap_switched_data, . - __mmap_switched_data
+diff --git a/drivers/virt/vboxguest/vboxguest_utils.c b/drivers/virt/vboxguest/vboxguest_utils.c
+index bf4474214b4d3..92091006589a9 100644
+--- a/drivers/virt/vboxguest/vboxguest_utils.c
++++ b/drivers/virt/vboxguest/vboxguest_utils.c
+@@ -217,6 +217,8 @@ static int hgcm_call_preprocess_linaddr(
+ 	if (!bounce_buf)
+ 		return -ENOMEM;
  
-diff --git a/arch/arm/kernel/head-nommu.S b/arch/arm/kernel/head-nommu.S
-index cab89479d15ef..326a97aa3ea0c 100644
---- a/arch/arm/kernel/head-nommu.S
-+++ b/arch/arm/kernel/head-nommu.S
-@@ -205,6 +205,8 @@ M_CLASS(streq	r3, [r12, #PMSAv8_MAIR1])
- 	bic	r0, r0, #V7M_SCB_CCR_IC
- #endif
- 	str	r0, [r12, V7M_SCB_CCR]
-+	/* Pass exc_ret to __mmap_switched */
-+	mov	r0, r10
- #endif /* CONFIG_CPU_CP15 elif CONFIG_CPU_V7M */
- 	ret	lr
- ENDPROC(__after_proc_init)
-diff --git a/arch/arm/mm/proc-v7m.S b/arch/arm/mm/proc-v7m.S
-index 92e84181933ad..59d82864c134b 100644
---- a/arch/arm/mm/proc-v7m.S
-+++ b/arch/arm/mm/proc-v7m.S
-@@ -139,9 +139,8 @@ __v7m_setup_cont:
- 	cpsie	i
- 	svc	#0
- 1:	cpsid	i
--	ldr	r0, =exc_ret
--	orr	lr, lr, #EXC_RET_THREADMODE_PROCESSSTACK
--	str	lr, [r0]
-+	/* Calculate exc_ret */
-+	orr	r10, lr, #EXC_RET_THREADMODE_PROCESSSTACK
- 	ldmia	sp, {r0-r3, r12}
- 	str	r5, [r12, #11 * 4]	@ restore the original SVC vector entry
- 	mov	lr, r6			@ restore LR
++	*bounce_buf_ret = bounce_buf;
++
+ 	if (copy_in) {
+ 		ret = copy_from_user(bounce_buf, (void __user *)buf, len);
+ 		if (ret)
+@@ -225,7 +227,6 @@ static int hgcm_call_preprocess_linaddr(
+ 		memset(bounce_buf, 0, len);
+ 	}
+ 
+-	*bounce_buf_ret = bounce_buf;
+ 	hgcm_call_add_pagelist_size(bounce_buf, len, extra);
+ 	return 0;
+ }
 -- 
 2.20.1
 
