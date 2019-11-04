@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DE1CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21E10CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BD7121E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF1820659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904805;
-	bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
+	s=default; t=1572904810;
+	bh=3RwQde0ZzNB68eHexpuzGLHkQGp/ERq16XNQj1ekhA8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=etI+2NsyC8LDfG7j+pqX8V2BnUJyT2i7N7rIhnCNtoiB0Awt8dY02zTXoBpNVPgHY
-	 ve7rTAU/MB0nzCQ/RbbDoE2olTp8U2Y8beT2Q/oiNTQrfRSAL4mCPQHvQOjK/+yc2u
-	 p7hSVzlj+caP8DsbqXJRdyP9+uvddS/JTwLvLn2o=
+	b=v/9ZZAehB/6Jvus9duuSOqMSUjfVdBlh5uyYvlTrx5uCyO2DAEA4oYWUGk1H3yhJx
+	 DAm7hTFwG6INmDHeoqpWeYmtyiLPPioCpBivp6aRigLvxYrw/CD9LHZ5mGX9fP/5Lo
+	 JEnt9wjG+LHLeZHC1GveYsDMTMnKLH7CQBkyKlM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388795AbfKDWAE (ORCPT
+        id S2388812AbfKDWAI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57468 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57658 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388377AbfKDWAC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:02 -0500
+        id S2388794AbfKDWAH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:07 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9A2B320650;
-        Mon,  4 Nov 2019 22:00:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 26740217F4;
+        Mon,  4 Nov 2019 22:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904801;
-        bh=BYsbJjo25ob2w4vEbmdMvtR1SJRInPAA1UGSNr2lkXU=;
+        s=default; t=1572904806;
+        bh=3RwQde0ZzNB68eHexpuzGLHkQGp/ERq16XNQj1ekhA8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tEyz9tq2L5/8/TXx3BXjMGDbadYS/bQ57orfzrncrvJ8aUvgyajL0aPq90Wy9HqTw
-         VzmTvO6fyfu/f8HxFI8FQecH4EO3TR4rJ0eu1NDT56TtbHiqdLfzWMmQGXsbfBCdgT
-         eLSrzbTa7KVaT/7SC715dbRTIlLfI+2Acqu8xAYE=
+        b=aobAEGSOsxAs+q+ziWyVnaDBPO5vQ2BisajyYdAAixmkJhFOxv0dWrrEdB7m7fTXo
+         raPhMbmDJShzLV3ssAJKHheB30lprEdZbT2h54nLNwJGQtQ5r8xIfv/OZYHwV9OS9f
+         +KodnX43sUIK2GvCK0D2KkaOXBcqEGsl5DXFXJLo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
-        ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
-        Anna Schumaker <Anna.Schumaker@Netapp.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 074/149] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
-Date:   Mon,  4 Nov 2019 22:44:27 +0100
-Message-Id: <20191104212141.859801797@linuxfoundation.org>
+        stable@vger.kernel.org, Jussi Laako <jussi@sonarnerd.net>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 040/149] ALSA: usb-audio: Cleanup DSD whitelist
+Date:   Mon,  4 Nov 2019 22:43:53 +0100
+Message-Id: <20191104212138.618410374@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,89 +59,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+From: Jussi Laako <jussi@sonarnerd.net>
 
-[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
+[ Upstream commit 202e69e645545e8dcec5e239658125276a7a315a ]
 
-When xfstests testing, there are some WARNING as below:
+XMOS/Thesycon family of USB Audio Class firmware flags DSD altsetting
+separate from the PCM ones. Thus the DSD altsetting can be auto-detected
+based on the flag and doesn't need maintaining specific altsetting
+whitelist.
 
-WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
-Modules linked in:
-CPU: 0 PID: 6235 Comm: umount.nfs
-Hardware name: linux,dummy-virt (DT)
-pstate: 60000005 (nZCv daif -PAN -UAO)
-pc : nfs_clear_inode+0x9c/0xd8
-lr : nfs_evict_inode+0x60/0x78
-sp : fffffc000f68fc00
-x29: fffffc000f68fc00 x28: fffffe00c53155c0
-x27: fffffe00c5315000 x26: fffffc0009a63748
-x25: fffffc000f68fd18 x24: fffffc000bfaaf40
-x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
-x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
-x19: fffffc000c056000 x18: 000000000000003c
-x17: 0000000000000000 x16: 0000000000000000
-x15: 0000000000000040 x14: 0000000000000228
-x13: fffffc000c3a2000 x12: 0000000000000045
-x11: 0000000000000000 x10: 0000000000000000
-x9 : 0000000000000000 x8 : 0000000000000000
-x7 : 0000000000000000 x6 : fffffc00084b027c
-x5 : fffffc0009a64000 x4 : fffffe00c0e77400
-x3 : fffffc000c0563a8 x2 : fffffffffffffffb
-x1 : 000000000000764e x0 : 0000000000000001
-Call trace:
- nfs_clear_inode+0x9c/0xd8
- nfs_evict_inode+0x60/0x78
- evict+0x108/0x380
- dispose_list+0x70/0xa0
- evict_inodes+0x194/0x210
- generic_shutdown_super+0xb0/0x220
- nfs_kill_super+0x40/0x88
- deactivate_locked_super+0xb4/0x120
- deactivate_super+0x144/0x160
- cleanup_mnt+0x98/0x148
- __cleanup_mnt+0x38/0x50
- task_work_run+0x114/0x160
- do_notify_resume+0x2f8/0x308
- work_pending+0x8/0x14
+In addition, static VID:PID-to-altsetting whitelisting causes problems
+when firmware update changes the altsetting, or same VID:PID is reused
+for another device that has different kind of firmware.
 
-The nrequest should be increased/decreased only if PG_INODE_REF flag
-was setted.
+This patch removes existing explicit whitelist mappings for XMOS VID
+(0x20b1) and Thesycon VID (0x152a).
 
-But in the nfs_inode_remove_request function, it maybe decrease when
-no PG_INODE_REF flag, this maybe lead nrequests count error.
+Also corrects placement of Hegel HD12 and NuPrime DAC-10 to keep list
+sorted based on VID.
 
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
-Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Jussi Laako <jussi@sonarnerd.net>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/nfs/write.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ sound/usb/quirks.c | 18 ++----------------
+ 1 file changed, 2 insertions(+), 16 deletions(-)
 
-diff --git a/fs/nfs/write.c b/fs/nfs/write.c
-index 5ab997912d8d5..117ffd90419e2 100644
---- a/fs/nfs/write.c
-+++ b/fs/nfs/write.c
-@@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 	struct nfs_inode *nfsi = NFS_I(inode);
- 	struct nfs_page *head;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 60d00091f64b2..e5dde06c31a6f 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1360,10 +1360,6 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	/* XMOS based USB DACs */
+ 	switch (chip->usb_id) {
+ 	case USB_ID(0x1511, 0x0037): /* AURALiC VEGA */
+-	case USB_ID(0x20b1, 0x0002): /* Wyred 4 Sound DAC-2 DSD */
+-	case USB_ID(0x20b1, 0x2004): /* Matrix Audio X-SPDIF 2 */
+-	case USB_ID(0x20b1, 0x2008): /* Matrix Audio X-Sabre */
+-	case USB_ID(0x20b1, 0x300a): /* Matrix Audio Mini-i Pro */
+ 	case USB_ID(0x22d9, 0x0416): /* OPPO HA-1 */
+ 	case USB_ID(0x22d9, 0x0436): /* OPPO Sonica */
+ 	case USB_ID(0x22d9, 0x0461): /* OPPO UDP-205 */
+@@ -1373,23 +1369,13 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 			return SNDRV_PCM_FMTBIT_DSD_U32_BE;
+ 		break;
  
--	atomic_long_dec(&nfsi->nrequests);
- 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
- 		head = req->wb_head;
- 
-@@ -796,8 +795,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
- 		spin_unlock(&mapping->private_lock);
- 	}
- 
--	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
-+	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
- 		nfs_release_request(req);
-+		atomic_long_dec(&nfsi->nrequests);
-+	}
- }
- 
- static void
+-	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+-	case USB_ID(0x152a, 0x85de): /* SMSL D1 DAC */
+-	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+ 	case USB_ID(0x0d8c, 0x0316): /* Hegel HD12 DSD */
++	case USB_ID(0x10cb, 0x0103): /* The Bit Opus #3; with fp->dsd_raw */
+ 	case USB_ID(0x16b0, 0x06b2): /* NuPrime DAC-10 */
++	case USB_ID(0x16d0, 0x09dd): /* Encore mDSD */
+ 	case USB_ID(0x16d0, 0x0733): /* Furutech ADL Stratos */
+ 	case USB_ID(0x16d0, 0x09db): /* NuPrime Audio DAC-9 */
+ 	case USB_ID(0x1db5, 0x0003): /* Bryston BDA3 */
+-	case USB_ID(0x20b1, 0x000a): /* Gustard DAC-X20U */
+-	case USB_ID(0x20b1, 0x2005): /* Denafrips Ares DAC */
+-	case USB_ID(0x20b1, 0x2009): /* DIYINHK DSD DXD 384kHz USB to I2S/DSD */
+-	case USB_ID(0x20b1, 0x2023): /* JLsounds I2SoverUSB */
+-	case USB_ID(0x20b1, 0x3021): /* Eastern El. MiniMax Tube DAC Supreme */
+-	case USB_ID(0x20b1, 0x3023): /* Aune X1S 32BIT/384 DSD DAC */
+-	case USB_ID(0x20b1, 0x302d): /* Unison Research Unico CD Due */
+-	case USB_ID(0x20b1, 0x307b): /* CH Precision C1 DAC */
+-	case USB_ID(0x20b1, 0x3086): /* Singxer F-1 converter board */
+ 	case USB_ID(0x22d9, 0x0426): /* OPPO HA-2 */
+ 	case USB_ID(0x22e1, 0xca01): /* HDTA Serenade DSD */
+ 	case USB_ID(0x249c, 0x9326): /* M2Tech Young MkIII */
 -- 
 2.20.1
 
