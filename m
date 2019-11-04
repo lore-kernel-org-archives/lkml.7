@@ -7,52 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD1CDCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E45CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B216D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DBA0204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905739;
-	bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
+	s=default; t=1572905744;
+	bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SuHgMMpiJa5/kVEqWzUTcX+bGMhjNfxZrj/mOgtrU4XEWTgYC8qTgxGWxQK6xcSv5
-	 rcIHUCF3s0YnCW8/7GnSKFUEKwLWeW4v1b8azw9eswdY5JQZ9oyIu3UiWdSLNYguIb
-	 8sjLoh9vXv9S27Z2DMc2Wl+FegQ3IRAeZGhehDHc=
+	b=sl2Lo8NivvVZDYZrLmFQWutoCAY7uZLS5hZFCweJwkz8fSD7cQXN5NrUyx8RUXT50
+	 3jaWapNwsG9XDbHfyid9v8UtRUYiBh7gPSB+mtYhs1JEKCYysuyTeB8Z4baO+X/pHd
+	 S55z11wB+ybfcccZL/9oRP7YVfuIU4AtzqYatKZ4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390450AbfKDWPi (ORCPT
+        id S2390396AbfKDWPn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:15:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37450 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:15:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387876AbfKDWFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:52 -0500
+        id S2389861AbfKDWFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:41 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3C50D2084D;
-        Mon,  4 Nov 2019 22:05:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 06D5E20650;
+        Mon,  4 Nov 2019 22:05:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905152;
-        bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
+        s=default; t=1572905140;
+        bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wLW8TSf+uAZEjqvklYSIGKsb/U2KOqvGO4pBcGj6GSgbK9zkySExP0fi52t13mJgC
-         wT5FRoYHLQUiBMGl/qvX7iAeVW+GTeyQ5ABYNneDNsqDDoDLwGtVcoPQorwFMy4Xd3
-         C7TT6zns1U8drKgKYpiiy280MUuh4G3Fcsk5fSb4=
+        b=fxnxZ83xgubDV/4D5rhhFjRdUoS7VnPZ0yvmEZ/ybuzEBsSiSqgxUeGZh8LPm8JUk
+         033jhslRSXAbdOc+kFPP8dc/q0oVQY+g5RR9C2yKwsqKlXqRKKy7vVbSErHIBr9cWN
+         S0sQkEE7KZ6u2PE9EG18ORdbhBFUHKSnEEvNBACI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Stephane Eranian <eranian@google.com>,
-        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 009/163] perf tests: Avoid raising SEGV using an obvious NULL dereference
-Date:   Mon,  4 Nov 2019 22:43:19 +0100
-Message-Id: <20191104212141.185441579@linuxfoundation.org>
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 041/163] RDMA/mlx5: Order num_pending_prefetch properly with synchronize_srcu
+Date:   Mon,  4 Nov 2019 22:43:51 +0100
+Message-Id: <20191104212143.254999850@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -65,88 +60,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ian Rogers <irogers@google.com>
+From: Jason Gunthorpe <jgg@mellanox.com>
 
-[ Upstream commit e3e2cf3d5b1fe800b032e14c0fdcd9a6fb20cf3b ]
+[ Upstream commit aa116b810ac9077a263ed8679fb4d595f180e0eb ]
 
-An optimized build such as:
+During destroy setting live = 0 and then synchronize_srcu() prevents
+num_pending_prefetch from incrementing, and also, ensures that all work
+holding that count is queued on the WQ. Testing before causes races of the
+form:
 
-  make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
+    CPU0                                         CPU1
+  dereg_mr()
+                                          mlx5_ib_advise_mr_prefetch()
+            				   srcu_read_lock()
+                                            num_pending_prefetch_inc()
+					      if (!live)
+   live = 0
+   atomic_read() == 0
+     // skip flush_workqueue()
+                                              atomic_inc()
+ 					      queue_work();
+            				   srcu_read_unlock()
+   WARN_ON(atomic_read())  // Fails
 
-will turn the dereference operation into a ud2 instruction, raising a
-SIGILL rather than a SIGSEGV. Use raise(..) for correctness and clarity.
+Swap the order so that the synchronize_srcu() prevents this.
 
-Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
-
-  https://lkml.org/lkml/2019/7/8/1234
-
-Committer testing:
-
-Before:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17092
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-After:
-
-  [root@quaco ~]# perf test hooks
-  55: perf hooks                                            : Ok
-  [root@quaco ~]# perf test -v hooks
-  55: perf hooks                                            :
-  --- start ---
-  test child forked, pid 17909
-  SIGSEGV is observed as expected, try to recover.
-  Fatal error (SEGFAULT) in perf hook 'test'
-  test child finished with 0
-  ---- end ----
-  perf hooks: Ok
-  [root@quaco ~]#
-
-Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
-Signed-off-by: Ian Rogers <irogers@google.com>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Wang Nan <wangnan0@huawei.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-2-irogers@google.com
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: a6bc3875f176 ("IB/mlx5: Protect against prefetch of invalid MR")
+Link: https://lore.kernel.org/r/20191001153821.23621-5-jgg@ziepe.ca
+Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/tests/perf-hooks.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/infiniband/hw/mlx5/mr.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
-index a693bcf017ea2..44c16fd11bf6e 100644
---- a/tools/perf/tests/perf-hooks.c
-+++ b/tools/perf/tests/perf-hooks.c
-@@ -20,12 +20,11 @@ static void sigsegv_handler(int sig __maybe_unused)
- static void the_hook(void *_hook_flags)
- {
- 	int *hook_flags = _hook_flags;
--	int *p = NULL;
+diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
+index c4ba8838d2c46..96c8a6835592d 100644
+--- a/drivers/infiniband/hw/mlx5/mr.c
++++ b/drivers/infiniband/hw/mlx5/mr.c
+@@ -1591,13 +1591,14 @@ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
+ 		 */
+ 		mr->live = 0;
  
- 	*hook_flags = 1234;
++		/* Wait for all running page-fault handlers to finish. */
++		synchronize_srcu(&dev->mr_srcu);
++
+ 		/* dequeue pending prefetch requests for the mr */
+ 		if (atomic_read(&mr->num_pending_prefetch))
+ 			flush_workqueue(system_unbound_wq);
+ 		WARN_ON(atomic_read(&mr->num_pending_prefetch));
  
- 	/* Generate a segfault, test perf_hooks__recover */
--	*p = 0;
-+	raise(SIGSEGV);
- }
- 
- int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
+-		/* Wait for all running page-fault handlers to finish. */
+-		synchronize_srcu(&dev->mr_srcu);
+ 		/* Destroy all page mappings */
+ 		if (umem_odp->page_list)
+ 			mlx5_ib_invalidate_range(umem_odp,
 -- 
 2.20.1
 
