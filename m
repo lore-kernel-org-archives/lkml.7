@@ -4,62 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81DBFCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67E3DCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 513A021D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B8F121D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904435;
-	bh=BQznuFgVQfqp84u8/GPWmIUgThSN1012WBeQa99r7uE=;
+	s=default; t=1572904437;
+	bh=3csVmTOHNGTB+c9xUv/fHEeweHnvr5OV6v+ydEEUMDo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2j9k8tEIhavOIEDok9mcvT6Ty1GYZsdFGdJfnIVW7wUfhlidLktPhixXxwmsfBbhO
-	 4bNI/XeCPZSTjCktmwXYzozxQWOZLIyhkGMBkineFV0zh6ugYHcAZ3kVKP7WPp6NRm
-	 CH9xd/3WKgWfyL30g93rDTUtO5bKhEvHkec2CrbM=
+	b=RGjpb4P6MuN6t9U1b/4k0KYXLVgEi3kU+veCABEwwhwS7rU1UujG0hHF5WQ3PD5QV
+	 R1ym5bUKgf9P1SlAvuvrTL/7ECHDRqw8Q8nBpnnRVrB0LeZuBoUl5r9pWMlkQrZLwt
+	 QoeE72J6faw/2v5PMTRO/47gyHqQAtj4daPsExVw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387729AbfKDVxy (ORCPT
+        id S2387797AbfKDVxz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47980 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:48082 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387588AbfKDVxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:50 -0500
+        id S2387703AbfKDVxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ADE0321D81;
-        Mon,  4 Nov 2019 21:53:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF08021D7D;
+        Mon,  4 Nov 2019 21:53:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904429;
-        bh=BQznuFgVQfqp84u8/GPWmIUgThSN1012WBeQa99r7uE=;
+        s=default; t=1572904432;
+        bh=3csVmTOHNGTB+c9xUv/fHEeweHnvr5OV6v+ydEEUMDo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=U1yKKV1YC6Gfe2u1DPFZIokSkBsXcVf3lFEhAdwcAgG1EwXAdbRX8O62HtY1pXKHo
-         /x4/h8+EeCzzG+eeoKd2R6FYx3P+jwpgSZ/kUYXnkU5fVqqNI+m30q43/mk88epzks
-         7GqG2T7wy8zP3TEoN9Z28V+UcIzDvak1KAHO9WZY=
+        b=OFFw9X9TRR7WG3WhWpHH4xN134/26T8ejAbJ/z27+TNWjC8lLtSTHm65m8HWUdH58
+         qhxbPPABeGIf6Sf0qVOwxwioRRwIxGRlf7XhCvq0w1vsh1PQrYJftkvSVyCzyUcrQh
+         Mf4GkpomPVyQHAT/jn1IwWeEgC7MDqBiLvBFgg2I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dave Young <dyoung@redhat.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Ben Dooks <ben.dooks@codethink.co.uk>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jerry Snitselaar <jsnitsel@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lukas Wunner <lukas@wunner.de>, Lyude Paul <lyude@redhat.com>,
-        Octavian Purdila <octavian.purdila@intel.com>,
-        Peter Jones <pjones@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Scott Talbert <swt@techie.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 42/95] efi/x86: Do not clean dummy variable in kexec path
-Date:   Mon,  4 Nov 2019 22:44:40 +0100
-Message-Id: <20191104212101.999539577@linuxfoundation.org>
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 07/95] scsi: lpfc: Fix a duplicate 0711 log message number.
+Date:   Mon,  4 Nov 2019 22:44:05 +0100
+Message-Id: <20191104212041.565874080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -72,59 +61,33 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Young <dyoung@redhat.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 2ecb7402cfc7f22764e7bbc80790e66eadb20560 ]
+[ Upstream commit 2c4c91415a05677acc5c8131a5eb472d4aa96ae1 ]
 
-kexec reboot fails randomly in UEFI based KVM guest.  The firmware
-just resets while calling efi_delete_dummy_variable();  Unfortunately
-I don't know how to debug the firmware, it is also possible a potential
-problem on real hardware as well although nobody reproduced it.
+Renumber one of the 0711 log messages so there isn't a duplication.
 
-The intention of the efi_delete_dummy_variable is to trigger garbage collection
-when entering virtual mode.  But SetVirtualAddressMap can only run once
-for each physical reboot, thus kexec_enter_virtual_mode() is not necessarily
-a good place to clean a dummy object.
-
-Drop the efi_delete_dummy_variable so that kexec reboot can work.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Acked-by: Matthew Garrett <mjg59@google.com>
-Cc: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Cc: Jerry Snitselaar <jsnitsel@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Lukas Wunner <lukas@wunner.de>
-Cc: Lyude Paul <lyude@redhat.com>
-Cc: Octavian Purdila <octavian.purdila@intel.com>
-Cc: Peter Jones <pjones@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Scott Talbert <swt@techie.net>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux-integrity@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191002165904.8819-8-ard.biesheuvel@linaro.org
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/platform/efi/efi.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/scsi/lpfc/lpfc_scsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-index 9061babfbc83d..335a62e74a2e9 100644
---- a/arch/x86/platform/efi/efi.c
-+++ b/arch/x86/platform/efi/efi.c
-@@ -893,9 +893,6 @@ static void __init kexec_enter_virtual_mode(void)
- 
- 	if (efi_enabled(EFI_OLD_MEMMAP) && (__supported_pte_mask & _PAGE_NX))
- 		runtime_code_page_mkexec();
--
--	/* clean DUMMY object */
--	efi_delete_dummy_variable();
- #endif
- }
- 
+diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
+index 4ade13d72deb3..07cb671bb8550 100644
+--- a/drivers/scsi/lpfc/lpfc_scsi.c
++++ b/drivers/scsi/lpfc/lpfc_scsi.c
+@@ -4152,7 +4152,7 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
+ 	/* If pCmd was set to NULL from abort path, do not call scsi_done */
+ 	if (xchg(&lpfc_cmd->pCmd, NULL) == NULL) {
+ 		lpfc_printf_vlog(vport, KERN_INFO, LOG_FCP,
+-				 "0711 FCP cmd already NULL, sid: 0x%06x, "
++				 "5688 FCP cmd already NULL, sid: 0x%06x, "
+ 				 "did: 0x%06x, oxid: 0x%04x\n",
+ 				 vport->fc_myDID,
+ 				 (pnode) ? pnode->nlp_DID : 0,
 -- 
 2.20.1
 
