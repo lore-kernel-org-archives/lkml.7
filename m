@@ -2,107 +2,173 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 708C8CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798D0CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA9520659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4621720663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:16:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=kalray.eu header.i=@kalray.eu header.b="DwOKDmRs"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="V8Fupi4c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729213AbfKDPQR (ORCPT
+        id S1729244AbfKDPQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:16:17 -0500
-Received: from zimbra2.kalray.eu ([92.103.151.219]:54496 "EHLO
-        zimbra2.kalray.eu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727796AbfKDPQQ (ORCPT
+        Mon, 4 Nov 2019 10:16:32 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:33842 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727796AbfKDPQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:16:16 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id C20EA27E03F9;
-        Mon,  4 Nov 2019 16:16:15 +0100 (CET)
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id KfDxJ_klKXSE; Mon,  4 Nov 2019 16:16:15 +0100 (CET)
-Received: from localhost (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 6640227E064D;
-        Mon,  4 Nov 2019 16:16:15 +0100 (CET)
-DKIM-Filter: OpenDKIM Filter v2.10.3 zimbra2.kalray.eu 6640227E064D
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kalray.eu;
-        s=32AE1B44-9502-11E5-BA35-3734643DEF29; t=1572880575;
-        bh=AjnnDpDaF7bW9PCgTtGxUhgirQ2AQU543GX7VWx8kp4=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=DwOKDmRs+wSBhUmzJSSKP2Mcz7b8xxO65LNQITeTMQdJmPkueWiQFGa/TxprqgUZu
-         NEASZwXjQNq7+ck51KhFPhy+FNT6wyFmMYIqXG0tn7ZGMD+rdgs4zTzVDE483Z3kix
-         6RSlf2eqpAuQMStLbOa2RFZtnPzDELA9v2aAvWsA=
-X-Virus-Scanned: amavisd-new at zimbra2.kalray.eu
-Received: from zimbra2.kalray.eu ([127.0.0.1])
-        by localhost (zimbra2.kalray.eu [127.0.0.1]) (amavisd-new, port 10026)
-        with ESMTP id IAkr1OWFfAie; Mon,  4 Nov 2019 16:16:15 +0100 (CET)
-Received: from zimbra2.kalray.eu (localhost [127.0.0.1])
-        by zimbra2.kalray.eu (Postfix) with ESMTP id 4DF6927E03F9;
-        Mon,  4 Nov 2019 16:16:15 +0100 (CET)
-Date:   Mon, 4 Nov 2019 16:16:15 +0100 (CET)
-From:   Marta Rybczynska <mrybczyn@kalray.eu>
-To:     Charles Machalow <csm10495@gmail.com>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        linux-nvme <linux-nvme@lists.infradead.org>,
-        kbusch <kbusch@kernel.org>, axboe <axboe@fb.com>,
-        Sagi Grimberg <sagi@grimberg.me>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Message-ID: <266047531.90300507.1572880575232.JavaMail.zimbra@kalray.eu>
-In-Reply-To: <CANSCoS_MX97_JyLkKrZ7YjTS9L+JsZcPsHpoZ-keA8t3W394Dg@mail.gmail.com>
-References: <20191031050338.12700-1-csm10495@gmail.com> <20191031133921.GA4763@lst.de> <1977598237.90293761.1572878080625.JavaMail.zimbra@kalray.eu> <CANSCoS-2k08Si3a4b+h-4QTR86EfZHZx_oaGAHWorsYkdp35Bg@mail.gmail.com> <871357470.90297451.1572879417091.JavaMail.zimbra@kalray.eu> <CANSCoS_MX97_JyLkKrZ7YjTS9L+JsZcPsHpoZ-keA8t3W394Dg@mail.gmail.com>
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64's result field.
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [192.168.40.202]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF57 (Linux)/8.8.12_GA_3794)
-Thread-Topic: nvme: change nvme_passthru_cmd64's result field.
-Thread-Index: lwHoMaVJp4iAGDQQRMXUf/hZljBQaQ==
+        Mon, 4 Nov 2019 10:16:32 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FCOqk018209;
+        Mon, 4 Nov 2019 15:14:30 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=4g6rIyW2HVYzag3aHGnsRCeX4Q0Rd09J0Dv6UEG9yS0=;
+ b=V8Fupi4cyW56hfzBq+dFWXkR+05lvuQ6x9/a0+g9I8ubebW3pKJiavAWlsTXq2G/WN6W
+ G6zey1A7vmiy9mi5M8t7DkxY5WwtOh8o3aP/6ahza+L6xn3VoYZ2xYeyvvGI1FuyrN4s
+ PxQtjeTGkmVIgwgKEq3wauXdPDRKGQI862DU7GUfH+fba6/Owlh9eaGfS86+PeCvepDC
+ BzqNHLQUJOYClCOUo4lIeMdL4DXaGKyCORwi3exKcuud5Pe0ju/EJ7nvUNUD7LG7HnPp
+ Br8e6igUmYwf16GVU3AQI2N/3J3H1rXTGKIOPO1ytj0iXWFyexP5UQ87uPpvRueY+md1 4Q== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2w12eqyv4g-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 15:14:30 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FB3o2136319;
+        Mon, 4 Nov 2019 15:14:30 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2w1k8uxuu1-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 15:14:30 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4FEPcQ014465;
+        Mon, 4 Nov 2019 15:14:26 GMT
+Received: from tomti.i.net-space.pl (/10.175.168.29)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 07:14:25 -0800
+From:   Daniel Kiper <daniel.kiper@oracle.com>
+To:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        x86@kernel.org, xen-devel@lists.xenproject.org
+Cc:     ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
+        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
+        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
+        hpa@zytor.com, jgross@suse.com, kanth.ghatraju@oracle.com,
+        konrad.wilk@oracle.com, mingo@redhat.com, rdunlap@infradead.org,
+        ross.philipson@oracle.com, tglx@linutronix.de
+Subject: [PATCH v5 2/3] x86/boot: Introduce the kernel_info.setup_type_max
+Date:   Mon,  4 Nov 2019 16:13:53 +0100
+Message-Id: <20191104151354.28145-3-daniel.kiper@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191104151354.28145-1-daniel.kiper@oracle.com>
+References: <20191104151354.28145-1-daniel.kiper@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040151
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040151
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This field contains maximal allowed type for setup_data.
 
+This patch does not bump setup_header version in arch/x86/boot/header.S
+because it will be followed by additional changes coming into the
+Linux/x86 boot protocol.
 
------ On 4 Nov, 2019, at 16:01, Charles Machalow csm10495@gmail.com wrote:
+Suggested-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+Signed-off-by: Daniel Kiper <daniel.kiper@oracle.com>
+Reviewed-by: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Reviewed-by: Ross Philipson <ross.philipson@oracle.com>
+Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+---
+v5 - suggestions/fixes:
+   - move incorrect references to the setup_indirect to the
+     patch introducing it,
+   - do not bump setup_header version in arch/x86/boot/header.S
+     (suggested by H. Peter Anvin).
+---
+ Documentation/x86/boot.rst             | 9 ++++++++-
+ arch/x86/boot/compressed/kernel_info.S | 5 +++++
+ arch/x86/include/uapi/asm/bootparam.h  | 3 +++
+ 3 files changed, 16 insertions(+), 1 deletion(-)
 
-> Yes. The idea is just to change the 64 IOCTL structure so it lines up
-> with the old ones so that the same struct can be used from userspace.
-> Right now the first 32 of 64's result doesn't line up with the old
-> result field.
-> 
-> - Charlie Scott Machalow
+diff --git a/Documentation/x86/boot.rst b/Documentation/x86/boot.rst
+index c60fafda9427..1dad6eee8a5c 100644
+--- a/Documentation/x86/boot.rst
++++ b/Documentation/x86/boot.rst
+@@ -73,7 +73,7 @@ Protocol 2.14:	BURNT BY INCORRECT COMMIT ae7e1238e68f2a472a125673ab506d49158c188
+ 		(x86/boot: Add ACPI RSDP address to setup_header)
+ 		DO NOT USE!!! ASSUME SAME AS 2.13.
+ 
+-Protocol 2.15:	(Kernel 5.5) Added the kernel_info.
++Protocol 2.15:	(Kernel 5.5) Added the kernel_info and kernel_info.setup_type_max.
+ =============	============================================================
+ 
+ .. note::
+@@ -981,6 +981,13 @@ Offset/size:	0x0008/4
+   This field contains the size of the kernel_info including kernel_info.header
+   and kernel_info.kernel_info_var_len_data.
+ 
++============	==============
++Field name:	setup_type_max
++Offset/size:	0x0008/4
++============	==============
++
++  This field contains maximal allowed type for setup_data.
++
+ 
+ The Image Checksum
+ ==================
+diff --git a/arch/x86/boot/compressed/kernel_info.S b/arch/x86/boot/compressed/kernel_info.S
+index 8ea6f6e3feef..018dacbd753e 100644
+--- a/arch/x86/boot/compressed/kernel_info.S
++++ b/arch/x86/boot/compressed/kernel_info.S
+@@ -1,5 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
++#include <asm/bootparam.h>
++
+ 	.section ".rodata.kernel_info", "a"
+ 
+ 	.global kernel_info
+@@ -12,6 +14,9 @@ kernel_info:
+ 	/* Size total. */
+ 	.long	kernel_info_end - kernel_info
+ 
++	/* Maximal allowed type for setup_data. */
++	.long	SETUP_TYPE_MAX
++
+ kernel_info_var_len_data:
+ 	/* Empty for time being... */
+ kernel_info_end:
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index a1ebcd7a991c..dbb41128e5a0 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -11,6 +11,9 @@
+ #define SETUP_APPLE_PROPERTIES		5
+ #define SETUP_JAILHOUSE			6
+ 
++/* max(SETUP_*) */
++#define SETUP_TYPE_MAX			SETUP_JAILHOUSE
++
+ /* ram_size flags */
+ #define RAMDISK_IMAGE_START_MASK	0x07FF
+ #define RAMDISK_PROMPT_FLAG		0x8000
+-- 
+2.11.0
 
-OK, then this will work on all architectures I know:
-
-struct nvme_passthru_cmd64 {
-        __u8	opcode;
-	__u8	flags;
-	__u16	rsvd1;
-	__u32	nsid;
-	__u32	cdw2;
-	__u32	cdw3;
-	__u64	metadata;
-	__u64	addr;
-	__u32	metadata_len;
-	__u32	data_len;
-	__u32	cdw10;
-	__u32	cdw11;
-	__u32	cdw12;
-	__u32	cdw13;
-	__u32	cdw14;
-	__u32	cdw15;
-	__u32	timeout_ms;
-        __u32   rsvd2;
-	__u64	result;
-};
-
-Marta
