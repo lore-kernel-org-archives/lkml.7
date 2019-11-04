@@ -5,49 +5,48 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7E45CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D44CCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DBA0204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B272204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905744;
-	bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
+	s=default; t=1572905754;
+	bh=KDouM1x/ZhUC/AxhtbM10VlvxvdYU4eTIV21usld9RQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=sl2Lo8NivvVZDYZrLmFQWutoCAY7uZLS5hZFCweJwkz8fSD7cQXN5NrUyx8RUXT50
-	 3jaWapNwsG9XDbHfyid9v8UtRUYiBh7gPSB+mtYhs1JEKCYysuyTeB8Z4baO+X/pHd
-	 S55z11wB+ybfcccZL/9oRP7YVfuIU4AtzqYatKZ4=
+	b=XsMiFqHzmW4fMX+em37jU1m0Vcia0cHqKfyU6esrSwNX0AG/8RLT/TjOvYEITLu7B
+	 dfoUM1odSe6ScZCh+PAwkSr1yyeIhNFJhHJsfi3iaPZAqvERjUCf1QOkb6gmudr1iS
+	 SCQXfDzewGudRk4yDRTqZxh6mE4hHVYrvk/8jevM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390396AbfKDWPn (ORCPT
+        id S2388354AbfKDWFM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:15:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37162 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:05:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389861AbfKDWFl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:05:41 -0500
+        id S2389801AbfKDWFJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:09 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06D5E20650;
-        Mon,  4 Nov 2019 22:05:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B121421E6F;
+        Mon,  4 Nov 2019 22:05:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905140;
-        bh=ZN/G0DCHvmoMD9ezTpP+BUSAzatO5A2Gky/EnJq3BiM=;
+        s=default; t=1572905108;
+        bh=KDouM1x/ZhUC/AxhtbM10VlvxvdYU4eTIV21usld9RQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fxnxZ83xgubDV/4D5rhhFjRdUoS7VnPZ0yvmEZ/ybuzEBsSiSqgxUeGZh8LPm8JUk
-         033jhslRSXAbdOc+kFPP8dc/q0oVQY+g5RR9C2yKwsqKlXqRKKy7vVbSErHIBr9cWN
-         S0sQkEE7KZ6u2PE9EG18ORdbhBFUHKSnEEvNBACI=
+        b=ZaqydWIBqUX3JD1O8kMnKc96N+185Hc/sk8ZFYmhCi4PaigzrNh2G1y0iS5KXBArT
+         p9tUV4cQGmllF18nHLx9OiBodJvudfH3wOZZBRnmGN6cFhp1OmPUUy19huFjjWYSUT
+         qlsUyEGiIW5EvOEgg2d2cfpcONem2fobs/cfHNC0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 041/163] RDMA/mlx5: Order num_pending_prefetch properly with synchronize_srcu
-Date:   Mon,  4 Nov 2019 22:43:51 +0100
-Message-Id: <20191104212143.254999850@linuxfoundation.org>
+        stable@vger.kernel.org, James Morse <james.morse@arm.com>,
+        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 031/163] arm64: ftrace: Ensure synchronisation in PLT setup for Neoverse-N1 #1542419
+Date:   Mon,  4 Nov 2019 22:43:41 +0100
+Message-Id: <20191104212142.544193256@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,61 +59,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jason Gunthorpe <jgg@mellanox.com>
+From: James Morse <james.morse@arm.com>
 
-[ Upstream commit aa116b810ac9077a263ed8679fb4d595f180e0eb ]
+[ Upstream commit dd8a1f13488438c6c220b7cafa500baaf21a6e53 ]
 
-During destroy setting live = 0 and then synchronize_srcu() prevents
-num_pending_prefetch from incrementing, and also, ensures that all work
-holding that count is queued on the WQ. Testing before causes races of the
-form:
+CPUs affected by Neoverse-N1 #1542419 may execute a stale instruction if
+it was recently modified. The affected sequence requires freshly written
+instructions to be executable before a branch to them is updated.
 
-    CPU0                                         CPU1
-  dereg_mr()
-                                          mlx5_ib_advise_mr_prefetch()
-            				   srcu_read_lock()
-                                            num_pending_prefetch_inc()
-					      if (!live)
-   live = 0
-   atomic_read() == 0
-     // skip flush_workqueue()
-                                              atomic_inc()
- 					      queue_work();
-            				   srcu_read_unlock()
-   WARN_ON(atomic_read())  // Fails
+There are very few places in the kernel that modify executable text,
+all but one come with sufficient synchronisation:
+ * The module loader's flush_module_icache() calls flush_icache_range(),
+   which does a kick_all_cpus_sync()
+ * bpf_int_jit_compile() calls flush_icache_range().
+ * Kprobes calls aarch64_insn_patch_text(), which does its work in
+   stop_machine().
+ * static keys and ftrace both patch between nops and branches to
+   existing kernel code (not generated code).
 
-Swap the order so that the synchronize_srcu() prevents this.
+The affected sequence is the interaction between ftrace and modules.
+The module PLT is cleaned using __flush_icache_range() as the trampoline
+shouldn't be executable until we update the branch to it.
 
-Fixes: a6bc3875f176 ("IB/mlx5: Protect against prefetch of invalid MR")
-Link: https://lore.kernel.org/r/20191001153821.23621-5-jgg@ziepe.ca
-Reviewed-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Jason Gunthorpe <jgg@mellanox.com>
+Drop the double-underscore so that this path runs kick_all_cpus_sync()
+too.
+
+Signed-off-by: James Morse <james.morse@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/infiniband/hw/mlx5/mr.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ arch/arm64/kernel/ftrace.c | 12 +++++++++---
+ 1 file changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/infiniband/hw/mlx5/mr.c b/drivers/infiniband/hw/mlx5/mr.c
-index c4ba8838d2c46..96c8a6835592d 100644
---- a/drivers/infiniband/hw/mlx5/mr.c
-+++ b/drivers/infiniband/hw/mlx5/mr.c
-@@ -1591,13 +1591,14 @@ static void dereg_mr(struct mlx5_ib_dev *dev, struct mlx5_ib_mr *mr)
- 		 */
- 		mr->live = 0;
+diff --git a/arch/arm64/kernel/ftrace.c b/arch/arm64/kernel/ftrace.c
+index 1717732579742..06e56b4703153 100644
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -121,10 +121,16 @@ int ftrace_make_call(struct dyn_ftrace *rec, unsigned long addr)
  
-+		/* Wait for all running page-fault handlers to finish. */
-+		synchronize_srcu(&dev->mr_srcu);
-+
- 		/* dequeue pending prefetch requests for the mr */
- 		if (atomic_read(&mr->num_pending_prefetch))
- 			flush_workqueue(system_unbound_wq);
- 		WARN_ON(atomic_read(&mr->num_pending_prefetch));
- 
--		/* Wait for all running page-fault handlers to finish. */
--		synchronize_srcu(&dev->mr_srcu);
- 		/* Destroy all page mappings */
- 		if (umem_odp->page_list)
- 			mlx5_ib_invalidate_range(umem_odp,
+ 			/*
+ 			 * Ensure updated trampoline is visible to instruction
+-			 * fetch before we patch in the branch.
++			 * fetch before we patch in the branch. Although the
++			 * architecture doesn't require an IPI in this case,
++			 * Neoverse-N1 erratum #1542419 does require one
++			 * if the TLB maintenance in module_enable_ro() is
++			 * skipped due to rodata_enabled. It doesn't seem worth
++			 * it to make it conditional given that this is
++			 * certainly not a fast-path.
+ 			 */
+-			__flush_icache_range((unsigned long)&dst[0],
+-					     (unsigned long)&dst[1]);
++			flush_icache_range((unsigned long)&dst[0],
++					   (unsigned long)&dst[1]);
+ 		}
+ 		addr = (unsigned long)dst;
+ #else /* CONFIG_ARM64_MODULE_PLTS */
 -- 
 2.20.1
 
