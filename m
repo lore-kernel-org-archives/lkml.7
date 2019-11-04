@@ -2,205 +2,93 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 178CFCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:44:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 537ABCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7BD62089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:44:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24AFA214B2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:44:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AcFXtNo0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="qEkD0RxP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728743AbfKDQoO (ORCPT
+        id S1728831AbfKDQoz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:44:14 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:45923 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfKDQoO (ORCPT
+        Mon, 4 Nov 2019 11:44:55 -0500
+Received: from mail-vs1-f66.google.com ([209.85.217.66]:38504 "EHLO
+        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbfKDQoy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:44:14 -0500
-Received: by mail-wr1-f66.google.com with SMTP id q13so17896175wrs.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:44:12 -0800 (PST)
+        Mon, 4 Nov 2019 11:44:54 -0500
+Received: by mail-vs1-f66.google.com with SMTP id b184so7877565vsc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:44:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=0t94XLffreVVovHGukxf8hICR+94LpUO6Px1WI34vBE=;
-        b=AcFXtNo0+1Chg6ruZiD0XY+IdNfhv36E7xA73VrgzEJE997OtyuA97IC5jhjJfsGu3
-         47iEsxh/TcwAuANiseYMYuZXuQEi3IRW1BZdRi5WGnuL/Vq/ITSSMYylJ+Fc+Oolnhtm
-         5WuHyw73MZEBQL8SVVy0FKkmClvWc1mYZbctnnf63FIpjur3DFSM1wDa/UJTIHOhk1c5
-         RA7jw7Nfgou10yM84n0tipylKj8b+i6f91pvE5R8GsCBH31/omO46FqNYhdFYXeHOtwH
-         EJSHO58d9thdkRpzbMuei09+dX8AvcIS2cSSWKf0Vn7DbGCik0oCIjhdLODmwDAbozot
-         dIbQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=q70jm26u9XZ544CMir5SgVhhn3tMv2fVqzMb9N7sOwo=;
+        b=qEkD0RxP0JDg+iMZcotgM/qHTN7at2kFFBokdWdXqjYduM5zyOwEzb2TF5aPwnGyJ3
+         GT34egYWkFkybFCyXjpeUOgGUtHsLdMnwR3r/tcosjVnk2TPjaMxbZ3zqxLuzq3Q0RRF
+         Oh6wfgCq2rIMgP+jt++OGpp1ISqo7UHu30guV7cm5uCCX+H4r4MBigW/CgWaNmLW9VJq
+         2/gTPJkjrgjcGtP0nhe7qgw9AbOTU6CTmiss7csboTA+BTH/G63RbPHj+XXDW3dCA7n6
+         TjIEjff1vDHSp3oHMOdERptntr71iuv2O2Oj7Sgb9b+R9FJV11RdWSg+4F/Tl4xy3wDJ
+         TjTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=0t94XLffreVVovHGukxf8hICR+94LpUO6Px1WI34vBE=;
-        b=cb/XAuad3f0iPO6wXU+0s6MYF08fBNWXn+J/GVqeQoDPUi0LJ1jB7Lz4u+vs3sMF0j
-         61FGVhmWxesZv7EB0oKrCAcs+0ee7cBbxre3q7UQHqitBF8CoTFvz0ZtAVLrKvH48pqp
-         a/uOytWFlDeAYsfVs/FfGfm0FahKlSBz/g5EmJeHwE6CcJHRA82plkhSVgic5YVWwTe8
-         zuISlwsuR1eledULvu5Td2tEPnhb6Qp5zCOQ+VYdXLLf0WkY4Svr9WwxL1skseWKfYQD
-         N1zpWzHAwSmsCkdcEZZSJmx/Xa7fH7U7wSQY+IXAIAftgOZvYoOjq0wCZrajM1EyaUXP
-         LY0A==
-X-Gm-Message-State: APjAAAUGsin0helrulekF1xxXRlKKTvBb1HZBd9Ml9i9qvl7K7NHwalg
-        cu//P44nTc9HpjZJfb31zrJBsvRUTfHZ
-X-Google-Smtp-Source: APXvYqxBesDB4GQs7XQd7MVcpHiy1j4Bh/l/FwCfRsTaZUuicmiqYqSRJ60kQfR5/nFdXZtemuyxBA==
-X-Received: by 2002:adf:d1a3:: with SMTP id w3mr25891043wrc.9.1572885851234;
-        Mon, 04 Nov 2019 08:44:11 -0800 (PST)
-Received: from buntux.lan (79-73-36-243.dynamic.dsl.as9105.com. [79.73.36.243])
-        by smtp.googlemail.com with ESMTPSA id i3sm17371844wrw.69.2019.11.04.08.44.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 08:44:10 -0800 (PST)
-From:   Jules Irenge <jbi.octave@gmail.com>
-To:     outreachy-kernel@googlegroups.com
-Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, Jules Irenge <jbi.octave@gmail.com>
-Subject: [PATCH] staging: rts5208: rewrite macro with GNU extension __auto_type
-Date:   Mon,  4 Nov 2019 16:44:00 +0000
-Message-Id: <20191104164400.9935-1-jbi.octave@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=q70jm26u9XZ544CMir5SgVhhn3tMv2fVqzMb9N7sOwo=;
+        b=CzAyq88b+3vGL8PN4Ja/lgvQn4UUzcJz5gH0kEDamvEnpVp7hQtzCk259Q6D25lvZa
+         A/OYe5BZbpOVw59PLH4Pa5qRqgVeQlWnG7+m20eHsApDHkSPGFnqSeXte//bopujvjor
+         N/PY/FtJZkvnXrpMTz3eGhX5RDm1XIpZINvXvu9iwyb3pUhuDLohdg6vkPBONNg7SlyK
+         c1F31d/Qx/C++4Sh9JFu9hn6qUJEnYTzz4TrngP9ZVrhs725LvEAbtzPrg/EMbFGQV2Y
+         kcN+qKqKlDNOgd8ycaBLa6r1TW0Z9fipcvOD9ECMJ8kM5dzslwyR/ZVFcsiMe2YHl7eX
+         PXuA==
+X-Gm-Message-State: APjAAAVHkYuIVd7IcJaV6Ki4i4bU2B5JN0XEBBoXGF/ztAGaCdCWru5l
+        1a8foIuvgTx6BgjceaaHljGTkMazNqLVN3kBhSqTAQ==
+X-Google-Smtp-Source: APXvYqz99RRfqGSGz1y7Naug/FRS2hfuYbKBvPPaSvNiJXzefuD28R3923vYy3sTY07Eql7i/9jWqya1BNOh2XyJLNc=
+X-Received: by 2002:a05:6102:2041:: with SMTP id q1mr13051687vsr.15.1572885891823;
+ Mon, 04 Nov 2019 08:44:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-5-samitolvanen@google.com>
+ <20191104113929.GA45140@lakrids.cambridge.arm.com>
+In-Reply-To: <20191104113929.GA45140@lakrids.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Mon, 4 Nov 2019 08:44:40 -0800
+Message-ID: <CABCJKueiLpJTB3Vv7EpuQc5mn-n5k2x12dyXsuBdvbp7dDYm=Q@mail.gmail.com>
+Subject: Re: [PATCH v4 04/17] arm64: kernel: avoid x18 __cpu_soft_restart
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rewrite macro function with GNU extension __auto_type
-to remove issue detected by checkpatch tool.
-CHECK: MACRO argument reuse - possible side-effects?
+On Mon, Nov 4, 2019 at 3:39 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> Trivial nit, but the commit title is missing "in" between x18 and
+> __cpu_soft_restart.
 
-Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
----
- drivers/staging/rts5208/rtsx_chip.h | 92 +++++++++++++++++------------
- 1 file changed, 55 insertions(+), 37 deletions(-)
+Oops, thanks for pointing that out. I'll fix this in v5.
 
-diff --git a/drivers/staging/rts5208/rtsx_chip.h b/drivers/staging/rts5208/rtsx_chip.h
-index bac65784d4a1..4b986d5c68da 100644
---- a/drivers/staging/rts5208/rtsx_chip.h
-+++ b/drivers/staging/rts5208/rtsx_chip.h
-@@ -386,23 +386,31 @@ struct zone_entry {
- 
- /* SD card */
- #define CHK_SD(sd_card)			(((sd_card)->sd_type & 0xFF) == TYPE_SD)
--#define CHK_SD_HS(sd_card)		(CHK_SD(sd_card) && \
--					 ((sd_card)->sd_type & SD_HS))
--#define CHK_SD_SDR50(sd_card)		(CHK_SD(sd_card) && \
--					 ((sd_card)->sd_type & SD_SDR50))
--#define CHK_SD_DDR50(sd_card)		(CHK_SD(sd_card) && \
--					 ((sd_card)->sd_type & SD_DDR50))
--#define CHK_SD_SDR104(sd_card)		(CHK_SD(sd_card) && \
--					 ((sd_card)->sd_type & SD_SDR104))
--#define CHK_SD_HCXC(sd_card)		(CHK_SD(sd_card) && \
--					 ((sd_card)->sd_type & SD_HCXC))
--#define CHK_SD_HC(sd_card)		(CHK_SD_HCXC(sd_card) && \
--					 ((sd_card)->capacity <= 0x4000000))
--#define CHK_SD_XC(sd_card)		(CHK_SD_HCXC(sd_card) && \
--					 ((sd_card)->capacity > 0x4000000))
--#define CHK_SD30_SPEED(sd_card)		(CHK_SD_SDR50(sd_card) || \
--					 CHK_SD_DDR50(sd_card) || \
--					 CHK_SD_SDR104(sd_card))
-+#define CHK_SD_HS(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-+					 (_sd->sd_type & SD_HS); })
-+#define CHK_SD_SDR50(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-+					 (_sd->sd_type & SD_SDR50); })
-+#define CHK_SD_DDR50(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-+					 (_sd->sd_type & SD_DDR50); })
-+#define CHK_SD_SDR104(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-+					 (_sd->sd_type & SD_SDR104); })
-+#define CHK_SD_HCXC(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD(_sd) && \
-+					 (_sd->sd_type & SD_HCXC); })
-+#define CHK_SD_HC(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
-+					(_sd->capacity <= 0x4000000); })
-+#define CHK_SD_XC(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD_HCXC(_sd) && \
-+					 (_sd->capacity > 0x4000000); })
-+#define CHK_SD30_SPEED(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_SD_SDR50(_sd) || \
-+					CHK_SD_DDR50(_sd) || \
-+					CHK_SD_SDR104(_sd); })
- 
- #define SET_SD(sd_card)			((sd_card)->sd_type = TYPE_SD)
- #define SET_SD_HS(sd_card)		((sd_card)->sd_type |= SD_HS)
-@@ -420,18 +428,24 @@ struct zone_entry {
- /* MMC card */
- #define CHK_MMC(sd_card)		(((sd_card)->sd_type & 0xFF) == \
- 					 TYPE_MMC)
--#define CHK_MMC_26M(sd_card)		(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_26M))
--#define CHK_MMC_52M(sd_card)		(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_52M))
--#define CHK_MMC_4BIT(sd_card)		(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_4BIT))
--#define CHK_MMC_8BIT(sd_card)		(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_8BIT))
--#define CHK_MMC_SECTOR_MODE(sd_card)	(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_SECTOR_MODE))
--#define CHK_MMC_DDR52(sd_card)		(CHK_MMC(sd_card) && \
--					 ((sd_card)->sd_type & MMC_DDR52))
-+#define CHK_MMC_26M(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+					 (_sd->sd_type & MMC_26M); })
-+#define CHK_MMC_52M(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+					 (_sd->sd_type & MMC_52M); })
-+#define CHK_MMC_4BIT(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+					 (_sd->sd_type & MMC_4BIT); })
-+#define CHK_MMC_8BIT(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+	 (_sd->sd_type & MMC_8BIT); })
-+#define CHK_MMC_SECTOR_MODE(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+					 (_sd->sd_type & MMC_SECTOR_MODE); })
-+#define CHK_MMC_DDR52(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC(_sd) && \
-+					 (_sd->sd_type & MMC_DDR52); })
- 
- #define SET_MMC(sd_card)		((sd_card)->sd_type = TYPE_MMC)
- #define SET_MMC_26M(sd_card)		((sd_card)->sd_type |= MMC_26M)
-@@ -448,8 +462,9 @@ struct zone_entry {
- #define CLR_MMC_SECTOR_MODE(sd_card)	((sd_card)->sd_type &= ~MMC_SECTOR_MODE)
- #define CLR_MMC_DDR52(sd_card)		((sd_card)->sd_type &= ~MMC_DDR52)
- 
--#define CHK_MMC_HS(sd_card)		(CHK_MMC_52M(sd_card) && \
--					 CHK_MMC_26M(sd_card))
-+#define CHK_MMC_HS(sd_card)\
-+	({__auto_type _sd = sd_card; CHK_MMC_52M(_sd) && \
-+					 CHK_MMC_26M(_sd); })
- #define CLR_MMC_HS(sd_card)			\
- do {						\
- 	CLR_MMC_DDR52(sd_card);			\
-@@ -560,12 +575,15 @@ struct xd_info {
- #define HG8BIT			(MS_HG | MS_8BIT)
- 
- #define CHK_MSPRO(ms_card)	(((ms_card)->ms_type & 0xFF) == TYPE_MSPRO)
--#define CHK_HG8BIT(ms_card)	(CHK_MSPRO(ms_card) && \
--				 (((ms_card)->ms_type & HG8BIT) == HG8BIT))
--#define CHK_MSXC(ms_card)	(CHK_MSPRO(ms_card) && \
--				 ((ms_card)->ms_type & MS_XC))
--#define CHK_MSHG(ms_card)	(CHK_MSPRO(ms_card) && \
--				 ((ms_card)->ms_type & MS_HG))
-+#define CHK_HG8BIT(ms_card)\
-+	({__auto_type _ms = ms_card; CHK_MSPRO(_ms) && \
-+		((_ms->ms_type & HG8BIT) == HG8BIT); })
-+#define CHK_MSXC(ms_card)\
-+	({__auto_type _ms = ms_card; CHK_MSPRO(_ms) && \
-+				 ((_ms)->ms_type & MS_XC); })
-+#define CHK_MSHG(ms_card)\
-+	({__auto_type _ms = ms_card; CHK_MSPRO(_ms) && \
-+				 ((_ms)->ms_type & MS_HG); })
- 
- #define CHK_MS8BIT(ms_card)	(((ms_card)->ms_type & MS_8BIT))
- #define CHK_MS4BIT(ms_card)	(((ms_card)->ms_type & MS_4BIT))
--- 
-2.17.1
-
+Sami
