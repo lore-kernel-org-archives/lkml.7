@@ -2,138 +2,132 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 158DFCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:28:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A39DACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E068020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76E4B20578
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:33:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T/npz0Rd"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NCyO1NSR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728389AbfKDG2M (ORCPT
+        id S1728250AbfKDGdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:28:12 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:43078 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727911AbfKDG2L (ORCPT
+        Mon, 4 Nov 2019 01:33:53 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38627 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDGdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:28:11 -0500
-Received: by mail-pf1-f193.google.com with SMTP id 3so11458799pfb.10;
-        Sun, 03 Nov 2019 22:28:10 -0800 (PST)
+        Mon, 4 Nov 2019 01:33:52 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w8so7151989plq.5
+        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 22:33:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=2OtwjKZ1o9BlPFo9MmqlnhkpjgLbY+pfS9lNNjoKCmc=;
-        b=T/npz0RdlYaEe1kuqJUtS2GEYAu4quFvYbf+oWj2p+3Wp8NDVAB0OFV7UcoxLCA/He
-         tdIwotd2rfdjNJD5CeuzxfQTg6+zChJAnv7hmmIbA/JIjLUqnSdSUvMZHrthlYChwj4J
-         Ng/cPF95vWdp4OCv/MLzzvnIQWAc/jG5RhMBXI4CWFCsDx083wqTW7XtEk8hbK0aM9nU
-         t1v1nUrRNRQ+WomXz77Oz4Qgb29/SX9zqEif27/5MR24mv8FLdAjBdEwcr2ZrIv1x4lx
-         Xb9bXFDSvZwRhG19G5FfF9kVSDcdfiiYcTLD0mB40AIGfoRRlJ92gygyu8vnkbk+Plfx
-         cXGQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0Ass+24tFlqpReyltDSt47RFVZA2qHTtO7ep5Q7UfMI=;
+        b=NCyO1NSRonSyXrYq7apmUVzU98eR5hMXhQVKS0d78bYAR4p/QBl2QXEIfhKwRjt2a3
+         kWrQuROowm5YNAWH0bHCs9aqgzK1Lz0a3F9jPcIrXzw3dqgQXeVvnkInbXbvd8Jgsov5
+         bvXcii/iEu/3GRGbpjw9r0bFOotnqtK25rrJiobHz/HXsuEyzJKszhsRvv0Jf6M07tyi
+         ffW+iNAKXlZz73Gqj4HWvAuk9r9AByYBv+b9lA6Atz8kE3kiVrLGyzzetdQVtzryAgbc
+         26wppNvB/4JxODkCJBFhr79bHSotZEuUYd0D3zSY6Mmbp1gEoAJUOkfvpcif0pHiYVgr
+         S5BA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=2OtwjKZ1o9BlPFo9MmqlnhkpjgLbY+pfS9lNNjoKCmc=;
-        b=fG9BViyoY3aNGI5A2QG16XqgKyKNc6UOkSeuD25UcnnoHoKzuAt4m8emIHuhZi6aNQ
-         7goXUvmwVXxqKZ1fN2/dwDvoMehl2iZdtcf7wZ6mnO84idAN2tkoAgIAt9c+pk9XLbkc
-         Z6pjCUVQYtUMdDfbkyYn/I39Jh5qnEyGpJrPQ+sc/RFzOHsb7Mo92hxlwFzTEqjhwcUz
-         PEnr71k22qQhDLzBTl3mM2Zl4AsUGkprHCxuD//A9fCvSdXfkPjxldSQmKqvExf0twBG
-         cSMEKNdNUw1Lf9gJKbrnrAa98gsJrowLc5YSc5hxoda9xCo6cMMyvQ4qmIlN++TgEfHv
-         FGDw==
-X-Gm-Message-State: APjAAAWu8Hqsw3bmfoh4XiF7m2Euc3pkufWaeTij5ESfTVdOaq9zA0DR
-        oLzLjYGzpzvHLaEzjrPh05XUDp2v
-X-Google-Smtp-Source: APXvYqweKAOvqr9QdiEMGxa1aKPl9xbFKqkAQoidoD1IYf0AjKuuICSneWHAk66sEBNGKRmOMZadIw==
-X-Received: by 2002:a63:6cb:: with SMTP id 194mr1871805pgg.327.1572848890353;
-        Sun, 03 Nov 2019 22:28:10 -0800 (PST)
-Received: from localhost.localdomain ([203.205.141.123])
-        by smtp.googlemail.com with ESMTPSA id z7sm7810505pgk.10.2019.11.03.22.28.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 03 Nov 2019 22:28:09 -0800 (PST)
-From:   Wanpeng Li <kernellwp@gmail.com>
-X-Google-Original-From: Wanpeng Li <wanpengli@tencent.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Subject: [PATCH 2/2] KVM: Fix rcu splat if vm creation fails
-Date:   Mon,  4 Nov 2019 14:27:59 +0800
-Message-Id: <1572848879-21011-2-git-send-email-wanpengli@tencent.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
-References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0Ass+24tFlqpReyltDSt47RFVZA2qHTtO7ep5Q7UfMI=;
+        b=cIZEY2PC7XtApKG41Tz9Kts1JUXakdlzU5JiFVs8FGhtnJhx8lvENZ9nQOQKhPLxxy
+         fbF9i5McusKNbWMl1mWDBjl2Z9EF9C4zUTWjVhYtDiiTZqpyqNv1m2KKs9P4SG4vOHcK
+         VGRg0l4FSBCraUgd6RafjI6+0YiFHl0KmhbGOnaul6C3pa3kgY0+uArX4jfV6392VZ/S
+         VpFPqGhNdFx30rAgokL4G0FaxHnKooK3q3ACpAfXOAfuY1++fE9mi/7a6b3nh0efUSC4
+         4JzKVd6fQYBvN+mRiv6FqhROrn2c997uS6Id8eCTZZRHAkMdR4IaP3P2z8fuGLY+Y/6T
+         Jbtg==
+X-Gm-Message-State: APjAAAXQt14JeUm5tqVY1LAWaIycKoqdpOEg9koAqFwI3IWod+KENzx7
+        /2JX1CtuMBOLKahhlolwArkkLQ==
+X-Google-Smtp-Source: APXvYqwnjPAdlM2I7PhZLkjX2zkNcYt4bFQoZaT9Oqa5uNq88dNgTRo6qncVEj1olQQW+5Ccb6RlFw==
+X-Received: by 2002:a17:902:a58c:: with SMTP id az12mr25199923plb.140.1572849231607;
+        Sun, 03 Nov 2019 22:33:51 -0800 (PST)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id 71sm3788185pfx.107.2019.11.03.22.33.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Nov 2019 22:33:50 -0800 (PST)
+Date:   Sun, 3 Nov 2019 22:33:48 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     Matthias Kaehlcke <mka@chromium.org>,
+        Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Maulik Shah <mkshah@codeaurora.org>
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
+ controller
+Message-ID: <20191104063348.GA2464@tuxbook-pro>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-12-rnayak@codeaurora.org>
+ <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
+ <20191030195021.GC27773@google.com>
+ <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Wanpeng Li <wanpengli@tencent.com>
+On Sun 03 Nov 22:17 PST 2019, Rajendra Nayak wrote:
 
-Reported by syzkaller:
+> 
+> 
+> On 10/31/2019 1:20 AM, Matthias Kaehlcke wrote:
+> > On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
+> > > Quoting Rajendra Nayak (2019-10-23 02:02:19)
+> > > > From: Maulik Shah <mkshah@codeaurora.org>
+> > > > 
+> > > > Add pdc interrupt controller for sc7180
+> > > > 
+> > > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+> > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> > > > ---
+> > > > v3:
+> > > > Used the qcom,sdm845-pdc compatible for pdc node
+> > > 
+> > > Everything else isn't doing the weird old compatible thing. Why not just
+> > > add the new compatible and update the driver? I guess I'll have to go
+> > > read the history.
+> > 
+> > Marc Zyngier complained  on v2 about the churn from adding compatible
+> > strings for identical components, and I kinda see his point.
+> > 
+> > I agree that using the 'sdm845' compatible string for sc7180 is odd too.
+> > Maybe we should introduce SoC independent compatible strings for IP blocks
+> > that are shared across multiple SoCs? If differentiation is needed SoC
+> > specific strings can be added.
+> 
+> Sure, I will perhaps add a qcom,pdc SoC independent compatible to avoid
+> confusion.
+> 
 
-   =============================
-   WARNING: suspicious RCU usage
-   -----------------------------
-   ./include/linux/kvm_host.h:536 suspicious rcu_dereference_check() usage!
-   
-   other info that might help us debug this:
+I agree,
 
-   rcu_scheduler_active = 2, debug_locks = 1
-   no locks held by repro_11/12688.
-    
-   stack backtrace:
-   Call Trace:
-    dump_stack+0x7d/0xc5
-    lockdep_rcu_suspicious+0x123/0x170
-    kvm_dev_ioctl+0x9a9/0x1260 [kvm]
-    do_vfs_ioctl+0x1a1/0xfb0
-    ksys_ioctl+0x6d/0x80
-    __x64_sys_ioctl+0x73/0xb0
-    do_syscall_64+0x108/0xaa0
-    entry_SYSCALL_64_after_hwframe+0x49/0xbe
+compatible = "qcom,sc7180-pdc", "qcom,pdc";
 
-Commit a97b0e773e4 (kvm: call kvm_arch_destroy_vm if vm creation fails)
-sets users_count to 1 before kvm_arch_init_vm(), however, if kvm_arch_init_vm()
-fails, we need to dec this count. Or, we can move the sets refcount after 
-kvm_arch_init_vm().
+is the way to go.
 
-syzkaller source: https://syzkaller.appspot.com/x/repro.c?x=15209b84e00000
+Reusing qcom,sdm845-pdc would prevent us from tackling any unforeseen
+issues/variations/erratas with one or the other platform in the future.
 
-Reported-by: syzbot+75475908cd0910f141ee@syzkaller.appspotmail.com
-Fixes: a97b0e773e49 ("kvm: call kvm_arch_destroy_vm if vm creation fails")
-Cc: Jim Mattson <jmattson@google.com>
-Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
----
- virt/kvm/kvm_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Regards,
+Bjorn
 
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index d6f0696..62ae0c9 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -662,11 +662,11 @@ static struct kvm *kvm_create_vm(unsigned long type)
- 			goto out_err_no_arch_destroy_vm;
- 	}
- 
--	refcount_set(&kvm->users_count, 1);
- 	r = kvm_arch_init_vm(kvm, type);
- 	if (r)
- 		goto out_err_no_arch_destroy_vm;
- 
-+	refcount_set(&kvm->users_count, 1);
- 	r = hardware_enable_all();
- 	if (r)
- 		goto out_err_no_disable;
--- 
-2.7.4
-
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
