@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7980BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ECCBCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A401217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 22564214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YDYzQa8F"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AdCjSD8T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390033AbfKDWTD (ORCPT
+        id S2390265AbfKDWTH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:03 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35906 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388992AbfKDWBP (ORCPT
+        Mon, 4 Nov 2019 17:19:07 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:33804 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388427AbfKDWBO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:15 -0500
-Received: by mail-lf1-f66.google.com with SMTP id a6so10055788lfo.3;
-        Mon, 04 Nov 2019 14:01:13 -0800 (PST)
+        Mon, 4 Nov 2019 17:01:14 -0500
+Received: by mail-lj1-f196.google.com with SMTP id 139so19447487ljf.1;
+        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=vussPT96FtSPVjSwb6+813KWc5582WBbmxbN3o4f6zQ=;
-        b=YDYzQa8Fq+Cprh60WDBen1OPYtQavoJAh2WTKty0HKuU+Ya/dVRr1LhNdALp/lNEtp
-         IvnLJvDnFeUYwEteM2JNxtogCvz8YfbW6I1oys7heTjlvG2SBcnC0ndVH3uF1B2bXw6s
-         VZk5qpWkTTHzSKMdU4ONGbK/s+OxOh0JaUvnDtcutpmpABKeJQlg/6ybYeRWsdEiLxxJ
-         C3iQLrq4cBZBqxm54Q/D7NltmXQITGUSSp550MSjTdqwfwdf59j7jRIWiqkCNjVJVakK
-         +YaJpae6QZ6FzDBcH2DlvyCvtMwIv4ulHCVCKF3bWcl3/VFmvcJ64741t0cWKi9nFE+r
-         hxvQ==
+        bh=1R8aUcZkIlTPITklCBswnMHd9GSu3KTIu0/oTyANNB4=;
+        b=AdCjSD8TnsTPwI4dFdR0KQGG86VvivC4CHxoQEHZFgXtYxIe04LMlVEyzMMVo+k35I
+         r5xzm06wZt/7uwOCNPpnvyeYCxEX8xU6mq3qB3emhUUfD3rll39D2PXzd5CRYNRdYDuG
+         q99yY6GWGcIlUeCGAizEeyjhpFLGfFifdVRFwPtZdpY27kIRbPxWGMg1my64B4HBre8u
+         jMCVZM17pJLLlWrmxD1hOMVQwvziKJDVqoiBU14PoeM+nhdasvkwzTNuBPjqEv6KQ/c7
+         q8CpVCuhoOmzQ6tf/MyPQt2DbZ49L+PWc6gRvbE1/MWrexx1rPUT5d8kRLh15Esz0mbD
+         cIYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=vussPT96FtSPVjSwb6+813KWc5582WBbmxbN3o4f6zQ=;
-        b=ADXW5UBgLArlXPVmjsUKXcUdX3i+c+zIIOMppJ625z4fQcrPlghm3RvgMHvoha4awQ
-         53ep+XzIa6YiWQRPl0VDUAe5i7aBekEg6ua45H2+DH787f87dr9CcW6H2xm03Zle2iQQ
-         5fpiW3UnyZvTVl46vyzbmiOR7aMdfB67cCcfhig3baGzZzYbFajAh5Ul67HXvHHEp0kI
-         oNSSxgxdtrvh8JSV9NUQ/F7xSq7GdCyPfne+7PIqLrVQxMJjFAXmqxXvE1BKHGG0ZBmu
-         ydN/ZEwaNdBuosrg89tJ5Z8b2mLiEP0luRaUto86B0JnVpEDtx3/Rh6FUpD1Bm4nRnR1
-         1whg==
-X-Gm-Message-State: APjAAAWr4AGNUtFXlrMItXQj/ixWKHhxmg3dSYveVlNdZlBHmZHuEVHi
-        Z1ddNQxrYgBJm3Hq1+975tE=
-X-Google-Smtp-Source: APXvYqzszaal34wn8DMXeS1z/UAh6z+OO3f2A2KgXGOoTN1Lezkr4LrIPvW4BdwQzPzUoLshT4Qurw==
-X-Received: by 2002:ac2:4357:: with SMTP id o23mr5831872lfl.51.1572904872931;
+        bh=1R8aUcZkIlTPITklCBswnMHd9GSu3KTIu0/oTyANNB4=;
+        b=V95CFftRt0Pu84xDAEpgGqzUwbnzqcVRihqIMH8XFH0txANl166q3e80o2JgAjupdc
+         D13OjoJoSxnaffE/KwnapsHviFjpKSVsSqQH2o9MWhwe4sQhU6LpFM5UaCc8+20p2zf2
+         F7D5u1XesIu1JbcKMaTO0WneHi6lp4UMPKVHmUYKFelzxmCNGafiTM8emICMJIDFwbD+
+         +DQtQZNpcbZInrvheYsj5JA55Ry+8JkY3cmpxCqrSLlmeF926O5fLi3EsqejUwDLemde
+         VJd4YrLvSkQfKn6T15uRcQRax2xUuErQw4CsQR9EORwbINwEKp8wDmdkPjCv4A1BkgRq
+         QLvA==
+X-Gm-Message-State: APjAAAU4N0KkpYRNF5EhDqih77CzWG1P1sOoCNsjPVfC4yFGXolnIl7H
+        sOZ6BOOTq1qLuRTeb1m7TLM=
+X-Google-Smtp-Source: APXvYqwoC5tiuhzzXdz5nXIupEbKytBtgYU2M8i1VDswQwmIJLCpT4jGS7xdYXsy77a+5/0pthzofg==
+X-Received: by 2002:a2e:b5c4:: with SMTP id g4mr20568516ljn.169.1572904872002;
         Mon, 04 Nov 2019 14:01:12 -0800 (PST)
 Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.12
+        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.11
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:12 -0800 (PST)
+        Mon, 04 Nov 2019 14:01:11 -0800 (PST)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         MyungJoo Ham <myungjoo.ham@samsung.com>,
@@ -68,9 +68,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
 Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v9 14/19] PM / devfreq: tegra30: Disable consecutive interrupts when appropriate
-Date:   Tue,  5 Nov 2019 00:56:12 +0300
-Message-Id: <20191104215617.25544-15-digetx@gmail.com>
+Subject: [PATCH v9 13/19] PM / devfreq: tegra30: Don't enable already enabled consecutive interrupts
+Date:   Tue,  5 Nov 2019 00:56:11 +0300
+Message-Id: <20191104215617.25544-14-digetx@gmail.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
 References: <20191104215617.25544-1-digetx@gmail.com>
@@ -81,59 +81,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Consecutive interrupts should be disabled when boosting is completed.
-
-Currently the disabling of "lower" interrupt happens only for MCCPU
-monitor that uses dependency threshold, but even in a case of MCCPU the
-interrupt isn't getting disabled if CPU's activity is above the threshold.
-This results in a lot of dummy interrupt requests. The boosting feature is
-used by both MCCPU and MCALL, boosting should be stopped once it reaches 0
-for both of the monitors and regardless of the activity level.
-
-The boosting stops to grow once the maximum limit is hit and thus the
-"upper" interrupt needs to be disabled when the limit is reached.
+Consecutive up/down interrupt-bit is set in the interrupt status register
+only if that interrupt was previously enabled. Thus enabling the already
+enabled interrupt doesn't do much for us.
 
 Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra30-devfreq.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ drivers/devfreq/tegra30-devfreq.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
 diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 4a5d513904a2..852bde6249c7 100644
+index 7c8126e74750..4a5d513904a2 100644
 --- a/drivers/devfreq/tegra30-devfreq.c
 +++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -259,8 +259,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+@@ -261,8 +261,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
  
- 		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
- 
--		if (dev->boost_freq >= tegra->max_freq)
-+		if (dev->boost_freq >= tegra->max_freq) {
-+			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
+ 		if (dev->boost_freq >= tegra->max_freq)
  			dev->boost_freq = tegra->max_freq;
-+		}
+-		else
+-			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
  	} else if (intr_status & ACTMON_DEV_INTR_CONSECUTIVE_LOWER) {
  		/*
  		 * new_boost = old_boost * down_coef
-@@ -271,15 +273,10 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+@@ -275,8 +273,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
  
- 		dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_ABOVE_WMARK_EN;
- 
--		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
--			dev->boost_freq = 0;
--	}
--
--	if (dev->config->avg_dependency_threshold) {
--		if (dev->avg_count >= dev->config->avg_dependency_threshold)
+ 		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1))
+ 			dev->boost_freq = 0;
+-		else
 -			dev_ctrl |= ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
--		else if (dev->boost_freq == 0)
-+		if (dev->boost_freq < (ACTMON_BOOST_FREQ_STEP >> 1)) {
- 			dev_ctrl &= ~ACTMON_DEV_CTRL_CONSECUTIVE_BELOW_WMARK_EN;
-+			dev->boost_freq = 0;
-+		}
  	}
  
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
+ 	if (dev->config->avg_dependency_threshold) {
 -- 
 2.23.0
 
