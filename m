@@ -2,101 +2,121 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8E0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C806FCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:31:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 079502080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906558;
-	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AFb6NwrQ8cUI+6Ta3D0AXpyLc7syxhIhCoM9i8pOngFhpmxazKTcTBZXbLhX5fz7m
-	 +xggGj5bc00b5ewzMQ+TI3xZjJagIY28rkS9a7WzSKP+3j2tG4qFyxZXrcB6JoRHCs
-	 yBjpyi8xk3n/yyZmZxWMbgil0Llf6sK+HKAPzhnM=
+	by mail.kernel.org (Postfix) with ESMTP id 93D6E20717
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:31:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=googlemail.com header.i=@googlemail.com header.b="a+MdlyvE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389362AbfKDW3R (ORCPT
+        id S1729814AbfKDWbp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:29:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729846AbfKDVr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:47:58 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4B1AD21655;
-        Mon,  4 Nov 2019 21:47:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904077;
-        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eCdgP2ft/qDLy4WH5/4x07HmEbskmrqd8c2NGm0tIa5+8haHP2SlqnrHr0ZQZ6CS3
-         ERk3ejQdkb2U7jSHljPRSA4+Zzh8sVTfymik9K3e0Vd+zz8s4BL2mK9Cb6/gjhVYPS
-         xKsLdI/e2IkO4B/04TNKcdAFPy56/QW+mh053+cM=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
-        Steve French <stfrench@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 13/46] fs: cifs: mute -Wunused-const-variable message
-Date:   Mon,  4 Nov 2019 22:44:44 +0100
-Message-Id: <20191104211842.614962923@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
-References: <20191104211830.912265604@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 Nov 2019 17:31:45 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43186 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729122AbfKDWbo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:31:44 -0500
+Received: by mail-oi1-f196.google.com with SMTP id l20so3610890oie.10;
+        Mon, 04 Nov 2019 14:31:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=googlemail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=/geFBMEqf7twdLKHSVdVT6FyWVKwx2NVIgtA+twsQkE=;
+        b=a+MdlyvEiOU8aVaiBQk7eZ1yzA7XLzs5bUKhswBKAOj829P1WsrId1fjxcmSMHq8gj
+         NspcXXwicor7YnC+bnT8Xxk+tmbIiLz10bUdTlShG1kpID8r4HDiZQGeEbDUGE6LwMaU
+         dj9FsHVklDGCuQGMM3cJWuIeRBzXzY1LdoKQk6RtWq6FAoGwHuCDXcXU083BhStrehgo
+         44ejbg2Ezjdd82Ei9VCASuj382uI5TGCAnogkliUyv97kHZWOfQcNHDgXk8w4uGUQFi+
+         10StfI7b/HKvJ2jmqQjin2gdn4ehUBykG4EMkTjlhV+U9jrXVqeKQoCUsKuuXQXDcRIK
+         ZTpw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=/geFBMEqf7twdLKHSVdVT6FyWVKwx2NVIgtA+twsQkE=;
+        b=StVs7HG1dMoc8IM3MZ5tPLR6GX2mSOSCawAszsLN6X4zorBpQZEU6FTqOSZGD7i512
+         7q7x7UppOZkoctR3yMvE68vVM3BQp7FN4SgR2uxa2Ii9Xq3+JtsiV5HTiQN+0aHiFnSX
+         y4lceymmce4o6M3kfDXBRXoYQIoCVVIm0EG/mBKuJOfT/T7MbGyYYaAieMFzg8UCfiIq
+         sHrDVWIG2Rllr98xV7ddEuAk15B8eBzZ+pNjjQv75pjWUMsUo3+Wlm0evtaT5/GHWfpw
+         Z9Enn0O9pH1G5UMR8fmXkGwd70S1V8TogKSyGFEZhIKnXOAd9u0CRSc+zbLMPmE2SyjY
+         UTpw==
+X-Gm-Message-State: APjAAAUF+YWc0f0hujR6oy3wX56WyoHHN2UaVcRSAw/jSkwh356xbFqZ
+        c7bXqdERDCG52s9Rc90uYEjN1d+HUqEEWt5ZwQ4=
+X-Google-Smtp-Source: APXvYqybWUfbZG4teeG01ZGKiXx9fDn+U4FWS4zJB69jNiVVHd20K3CuTz1NkqytBEFVmmei8TQlnR7feaE38XUb+tk=
+X-Received: by 2002:aca:504d:: with SMTP id e74mr1229364oib.140.1572906703760;
+ Mon, 04 Nov 2019 14:31:43 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+References: <20191027161805.1176321-1-martin.blumenstingl@googlemail.com>
+ <20191027161805.1176321-4-martin.blumenstingl@googlemail.com> <1jd0e83vyp.fsf@starbuckisacylon.baylibre.com>
+In-Reply-To: <1jd0e83vyp.fsf@starbuckisacylon.baylibre.com>
+From:   Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Date:   Mon, 4 Nov 2019 23:31:32 +0100
+Message-ID: <CAFBinCC5RSkK_8Ww3LjAxG9tLL6Jik1uy3Y8CkEBqXRRKUsa4Q@mail.gmail.com>
+Subject: Re: [PATCH v2 3/5] clk: meson: meson8b: change references to the XTAL
+ clock to use the name
+To:     Jerome Brunet <jbrunet@baylibre.com>
+Cc:     Neil Armstrong <narmstrong@baylibre.com>,
+        linux-amlogic@lists.infradead.org, khilman@baylibre.com,
+        robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Austin Kim <austindh.kim@gmail.com>
+Hi Jerome,
 
-[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
+On Mon, Nov 4, 2019 at 9:08 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>
+>
+> On Sun 27 Oct 2019 at 17:18, Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
+>
+> > The XTAL clock is an actual crystal which is mounted on the PCB. Thus
+> > the meson8b clock controller driver should not provide the XTAL clock.
+> >
+> > The meson8b clock controller driver must not use references to
+> > the meson8b_xtal clock anymore before we can provide the XTAL clock
+> > via OF. Replace the references to the meson8b_xtal.hw by using
+> > clk_parent_data.name = "xtal" (along with index = -1) because this works
+> > regardless how the XTAL clock is registered (either as fixed-clock in
+> > the .dtb or - if missing - when registered in the meson8b clock
+> > controller driver).
+> >
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  drivers/clk/meson/meson8b.c | 73 ++++++++++++++++++++-----------------
+> >  1 file changed, 39 insertions(+), 34 deletions(-)
+> >
+> > diff --git a/drivers/clk/meson/meson8b.c b/drivers/clk/meson/meson8b.c
+> > index d376f80e806d..b785b67baf2b 100644
+> > --- a/drivers/clk/meson/meson8b.c
+> > +++ b/drivers/clk/meson/meson8b.c
+> > @@ -97,8 +97,9 @@ static struct clk_regmap meson8b_fixed_pll_dco = {
+> >       .hw.init = &(struct clk_init_data){
+> >               .name = "fixed_pll_dco",
+> >               .ops = &meson_clk_pll_ro_ops,
+> > -             .parent_hws = (const struct clk_hw *[]) {
+> > -                     &meson8b_xtal.hw
+> > +             .parent_data = &(const struct clk_parent_data) {
+> > +                     .name = "xtal",
+> > +                     .index = -1,
+>
+> if I got correctly, when transitioning to DT, you can specify both
+> "fw_name" and "name". CCF should try to get the clock through DT and
+> fallback to global name matching if not available
+thank you for the hint - I may even get away with just setting fw_name
+if I understand clk_core_get() correctly.
+I'll try that during the weekend and report back
 
-After 'Initial git repository build' commit,
-'mapping_table_ERRHRD' variable has not been used.
 
-So 'mapping_table_ERRHRD' const variable could be removed
-to mute below warning message:
-
-   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
-   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
-                                           ^
-Signed-off-by: Austin Kim <austindh.kim@gmail.com>
-Signed-off-by: Steve French <stfrench@microsoft.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- fs/cifs/netmisc.c | 4 ----
- 1 file changed, 4 deletions(-)
-
-diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
-index cc88f4f0325ef..bed9733302279 100644
---- a/fs/cifs/netmisc.c
-+++ b/fs/cifs/netmisc.c
-@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
- 	{0, 0}
- };
- 
--static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
--	{0, 0}
--};
--
- /*
-  * Convert a string containing text IPv4 or IPv6 address to binary form.
-  *
--- 
-2.20.1
-
-
-
+Martin
