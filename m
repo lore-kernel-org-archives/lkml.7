@@ -2,89 +2,92 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85DBACA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:49:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1F9ACA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A4621744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:49:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mR0JTOqQ"
+	by mail.kernel.org (Postfix) with ESMTP id BDA8E21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:51:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729043AbfKDNtS (ORCPT
+        id S1728989AbfKDNvR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:49:18 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:39534 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727838AbfKDNtR (ORCPT
+        Mon, 4 Nov 2019 08:51:17 -0500
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:46229 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727663AbfKDNvR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:49:17 -0500
-Received: by mail-oi1-f194.google.com with SMTP id v138so14105681oif.6;
-        Mon, 04 Nov 2019 05:49:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=L9pLbrcH5xPS7t/mTdpMAUamEXFTVD8IYcBPmnVLKYE=;
-        b=mR0JTOqQ+EX6cinqMdndnGS5xir9X70YCKIUsPPCWHV0W0xj8j9EkHRJnzDYhyLne/
-         CUk3eKKu618aI4Z3ChZ2xRVbzhShjGUQkrknIz2JNcQidld2FozMSPM38A3J46Xr6nfu
-         nH8fiW3+lSXiUgJjx1rzY7tAWlrMt7P3OZY9TlCSpN7kzCO/oCCXEn/uszkgKYe6vViD
-         Q/52a9Y0A5pTjl3dZ6yPVKp0RxR7RkynGz5Mu3trxlnJjuY6uUgHybI2pfEk86TtKAVx
-         Ke1iUW4TpGtdsT/IEjRelqasG0zX+ze+WVkglQw2dPoV3yydWepONCSzEHDyJAKuzNPB
-         pJHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L9pLbrcH5xPS7t/mTdpMAUamEXFTVD8IYcBPmnVLKYE=;
-        b=cQw4Mrmi0xnbqxHEkMQIRy/Fw1M0fau5+gauxMHbUK4pn/Kcgd/+Mvo5DJB99pOREd
-         YGJ6QOONTjorp9zhpDYG3tV8DaWZzgxLWNHYE9u5cZ17ZOe3ri03Fit7AUxPVkn2s7RJ
-         0dyrzNgcQfuaGVi3b0OHwDN1xE7BWyK90DRftANnGJvgbJRQUd3LYboRjGUU9A+Ryb6k
-         ErmnYD4Jm4K2JcHcCoICpXfGLmVKcJMZMN9jSYsaLZ7p7DzGGSPSEK34+3b0L3fWPj7G
-         3sFSFNfmh3bkJm+7+RU3bmo9sQJ+QYIzVJ82r60eINcsy1FYdy4ArTu39zw3zDMT1JzQ
-         1QvQ==
-X-Gm-Message-State: APjAAAVPHkoFn0Mgs0VYYTDMnkl2R/6gq4Pa1hHU3VU6/uhRDiTf2rzf
-        +efCfhXrwXZ85s6tC2u29NQrDYt7ake8q7OF2o8YZrUp
-X-Google-Smtp-Source: APXvYqyT2ywHY2Cz5zjsm19s/5bAREbcH+gKOQNOGQigpSMCFD66QPld2caEfOIb+cykSNl95jyMPHsY+SpjuBj1dIQ=
-X-Received: by 2002:a05:6808:7d0:: with SMTP id f16mr9859823oij.86.1572875355125;
- Mon, 04 Nov 2019 05:49:15 -0800 (PST)
+        Mon, 4 Nov 2019 08:51:17 -0500
+Received: from callcc.thunk.org (ip-12-2-52-196.nyc.us.northamericancoax.com [196.52.2.12])
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id xA4DpDoC017133
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 4 Nov 2019 08:51:14 -0500
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 6E649420311; Mon,  4 Nov 2019 08:51:11 -0500 (EST)
+Date:   Mon, 4 Nov 2019 08:51:11 -0500
+From:   "Theodore Y. Ts'o" <tytso@mit.edu>
+To:     Tom Cook <tom.k.cook@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Power management - HP 15-ds0502na
+Message-ID: <20191104135111.GF28764@mit.edu>
+References: <CAFSh4UxSx7SYT=Ja6TbwFwCJm_yn6VtMapXGv3B=+g2rQcALSA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20190302141704.32547-1-marex@denx.de> <20191101204801.16328-1-TheSven73@gmail.com>
- <20191104070116.GM57214@dtor-ws>
-In-Reply-To: <20191104070116.GM57214@dtor-ws>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Mon, 4 Nov 2019 08:49:04 -0500
-Message-ID: <CAGngYiV_eP0M48Ei8K+uNWb_yW1Yi7C_E5M6O9HpJmrnxkmvyw@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>, Adam Ford <aford173@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAFSh4UxSx7SYT=Ja6TbwFwCJm_yn6VtMapXGv3B=+g2rQcALSA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 2:01 AM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> Can you please tell me what device you have? Do the patches work for
-> you?
+On Mon, Nov 04, 2019 at 11:21:24AM +0000, Tom Cook wrote:
+> * Power management doesn't work very well.  The most obvious symptom
+> of this is that /sys/power/mem_sleep contains only "[s2idle]" and so
+> there is no suspend-to-RAM available.  Setting
+> "mem_sleep_default=deep" on the command line doesn't change this.
 
-I have an ILI2117A/ILI2118A.
+This is actually the laptop's ACPI and/or EC not supporting
+suspend-to-ram at all.  Suspend to idle is the new hotness, because it
+gives the OS much more control (but also gives the OS much more
+opportunity to screw up).  The Dell XPS 13 (models 9370 and 9380)
+supports both s2idle and s2ram, but s2idle doesn't work well at all on
+Linux.  (Well, at least not the upstream kernels; the official Dell
+Ubuntu kernel and userspace apparently has enough tweaks that it works
+well.)
 
-I'll try out the patches today. I'm stuck with a 4.1 vendor kernel, so
-I'll need to backport the (patched) mainline driver to 4.1 before
-I'm able to test.
+I tried for a bit to see if I could get s2idle working well on the
+upstream Dell XPS 13, but bits of hardware would randomly fail to come
+back from a s2idle resume --- or in some cases, the laptop wouldn't
+come back at all, that I decided, "life's too short", and gave up on
+it.  Hopefully Dell or other folks will get s2idle working well on the
+XPS 13... at least before suspend2ram gets dropped entirely.  :-/
 
-I wil try Marek's patch, and Dmitry's rebased patch from
-https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=ili2xxx-touchscreen
-and let you know the results.
 
-If the problem with Dmitry's patch is located in ili251x_read_touch_data,
-then using a ILI2117A should work fine.
+> * There are a few devices that appear to be on I2C buses and declared
+> in the ACPI tables (eg the fingerprint sensor) which don't show up
+> under Linux.  They did under Windows, until I blew the Windows
+> installation away to install Linux, and I'm assuming that Windows
+> found them through the ACPI DSDT.  Now thinking it may have been handy
+> to keep Windows around for debugging, but that's regrets for you.
+
+Even if they showed up, it's unclear the device driver would exist for
+Linux.  Most fingerprint readers have proprietary interfaces and
+aren't well supported by Linux in general.
+
+> Is this the right place to raise this?  If there's some other place
+> that Linux ACPI issues are dealt with, please point me there as I've
+> not had any luck googling.
+
+There is the linux-acpi@vger.kernel.org mailing list and the
+linux-pm@vger.kernel.org (pm --> "power management") where you might
+try asking about the s2idle.  A lot of the issues with s2idle appear
+to be very device driver specific, and not about the power management
+core, so it's unclear folks on those lists will be able to help.  But
+it's worth a try...
+
+					- Ted
