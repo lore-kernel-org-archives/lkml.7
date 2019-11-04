@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AF2DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1691ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6059F204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:17:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA6DF204FD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905879;
-	bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
+	s=default; t=1572905881;
+	bh=+Y9I/xKZF4NhCZQjieOGVWzHKoWzM6aburW0P4Ayg5A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=EBAXlCHI8eHLV1eWtEumGnRzMJVWak42sYN9hdzPaouvSraIEimHOvtByQwmdX2CP
-	 UN/05JZ22oDoNmPNzhTjPVpXNjg9uy5BYw1b93tckPblxxtNFpS44pabFSo5ZGPjQX
-	 dG4l0foirA1FyAycSqLVID3jWxl+1FC/2m2sUY+Y=
+	b=Y75/+EhKjdjrcnLTdSOw7cdtwp9EGXap2Z3zZCaB91U26dTdHJ+seXJyXk9zBe//o
+	 EbSFLRYduCyl9mu7hMylA7CqFhXZZEJYB4fcGejSyltT5aFcbWDIyb8NYOOUFgP6vX
+	 zzWaegAeCBxwbYOxT6S8VEa+6tW5/7XVSCV9RCHY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389236AbfKDWCQ (ORCPT
+        id S2389226AbfKDWCO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59614 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389055AbfKDWB3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:29 -0500
+        id S2389048AbfKDWB0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:26 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 904ED20650;
-        Mon,  4 Nov 2019 22:01:28 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 91B00217F4;
+        Mon,  4 Nov 2019 22:01:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904889;
-        bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
+        s=default; t=1572904886;
+        bh=+Y9I/xKZF4NhCZQjieOGVWzHKoWzM6aburW0P4Ayg5A=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TuzNLaIhYVIrJLhKPXgySqpeDiMHWuDvgZJp+t6iXh/4JQfO4MGs1Mz2u3AJ3Mwbs
-         li+53gkCJ6wzhktLpUpQegUVEvtSP12OsJiwA3/fbdzK4jIZLo8O6uU7CffjV3Acfi
-         qNPws35eDLDTp52r9yRiRA0FVceTqIp3NPiPu0e0=
+        b=Spvo7//yEzyToWPk5MtmxWUlL/NAjbHXLRLOdh3/cKoGV5WWIK+9Srtr0DProjNTn
+         0lHteHZOXblaXIQsZYQO9EJIv7jxllbPRRlDt/czcit6Y8PeEzzXPehAMNC5mGLEZg
+         UJGQEGDGVQ4PUGwZ8SntgjArihuwF9NMX8KBaBE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 106/149] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Mon,  4 Nov 2019 22:44:59 +0100
-Message-Id: <20191104212143.879043482@linuxfoundation.org>
+        stable@vger.kernel.org,
+        syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com,
+        "Richard W.M. Jones" <rjones@redhat.com>,
+        Mike Christie <mchristi@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 105/149] nbd: verify socket is supported during setup
+Date:   Mon,  4 Nov 2019 22:44:58 +0100
+Message-Id: <20191104212143.819122372@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,37 +62,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Mike Christie <mchristi@redhat.com>
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+[ Upstream commit cf1b2326b734896734c6e167e41766f9cee7686a ]
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+nbd requires socket families to support the shutdown method so the nbd
+recv workqueue can be woken up from its sock_recvmsg call. If the socket
+does not support the callout we will leave recv works running or get hangs
+later when the device or module is removed.
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+This adds a check during socket connection/reconnection to make sure the
+socket being passed in supports the needed callout.
+
+Reported-by: syzbot+24c12fa8d218ed26011a@syzkaller.appspotmail.com
+Fixes: e9e006f5fcf2 ("nbd: fix max number of supported devs")
+Tested-by: Richard W.M. Jones <rjones@redhat.com>
+Signed-off-by: Mike Christie <mchristi@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/nbd.c | 23 +++++++++++++++++++++--
+ 1 file changed, 21 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 62dab2441ec4f..23061f1526b4e 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -878,7 +878,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
+diff --git a/drivers/block/nbd.c b/drivers/block/nbd.c
+index d445195945618..bd9aafe86c2fc 100644
+--- a/drivers/block/nbd.c
++++ b/drivers/block/nbd.c
+@@ -924,6 +924,25 @@ static blk_status_t nbd_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	return ret;
+ }
+ 
++static struct socket *nbd_get_socket(struct nbd_device *nbd, unsigned long fd,
++				     int *err)
++{
++	struct socket *sock;
++
++	*err = 0;
++	sock = sockfd_lookup(fd, err);
++	if (!sock)
++		return NULL;
++
++	if (sock->ops->shutdown == sock_no_shutdown) {
++		dev_err(disk_to_dev(nbd->disk), "Unsupported socket: shutdown callout must be supported.\n");
++		*err = -EINVAL;
++		return NULL;
++	}
++
++	return sock;
++}
++
+ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 			  bool netlink)
+ {
+@@ -933,7 +952,7 @@ static int nbd_add_socket(struct nbd_device *nbd, unsigned long arg,
+ 	struct nbd_sock *nsock;
+ 	int err;
+ 
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
+ 
+@@ -985,7 +1004,7 @@ static int nbd_reconnect_socket(struct nbd_device *nbd, unsigned long arg)
+ 	int i;
+ 	int err;
+ 
+-	sock = sockfd_lookup(arg, &err);
++	sock = nbd_get_socket(nbd, arg, &err);
+ 	if (!sock)
+ 		return err;
+ 
 -- 
 2.20.1
 
