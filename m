@@ -2,107 +2,204 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 607AECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2152BCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:37:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA3920869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 03:57:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD9721D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 04:37:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h/ngSt/0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727574AbfKDD5f (ORCPT
+        id S1727503AbfKDEgr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 22:57:35 -0500
-Received: from foss.arm.com ([217.140.110.172]:35146 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727430AbfKDD5e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 22:57:34 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id B3CF531F;
-        Sun,  3 Nov 2019 19:57:33 -0800 (PST)
-Received: from [10.163.1.23] (unknown [10.163.1.23])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5C2B33F6C4;
-        Sun,  3 Nov 2019 19:57:24 -0800 (PST)
-Subject: Re: [PATCH V9 2/2] arm64/mm: Enable memory hot remove
-To:     James Morse <james.morse@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, akpm@linux-foundation.org,
-        will@kernel.org, mark.rutland@arm.com, david@redhat.com,
-        cai@lca.pw, logang@deltatee.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com,
-        mgorman@techsingularity.net, osalvador@suse.de,
-        ard.biesheuvel@arm.com, steve.capper@arm.com, broonie@kernel.org,
-        valentin.schneider@arm.com, Robin.Murphy@arm.com,
-        steven.price@arm.com, suzuki.poulose@arm.com, ira.weiny@intel.com
-References: <1570609308-15697-1-git-send-email-anshuman.khandual@arm.com>
- <1570609308-15697-3-git-send-email-anshuman.khandual@arm.com>
- <20191010113433.GI28269@mbp> <f51cdb20-ddc4-4fb7-6c45-791d2e1e690c@arm.com>
- <20191018094825.GD19734@arrakis.emea.arm.com>
- <f5581644-42b7-097e-6a86-ba7db9d0b544@arm.com>
- <5db2aab1-1dde-4545-a03d-e7ae2d86aec7@arm.com>
- <87ef9d38-a9ab-24b3-cc2e-93fedb4c0383@arm.com>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <c121abbe-ba63-48f3-d732-3af41b8503e5@arm.com>
-Date:   Mon, 4 Nov 2019 09:27:58 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Sun, 3 Nov 2019 23:36:47 -0500
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:39973 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726502AbfKDEgq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 23:36:46 -0500
+Received: by mail-qk1-f196.google.com with SMTP id y81so16356046qkb.7;
+        Sun, 03 Nov 2019 20:36:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZLgZcvhJjOGhGgB5eDSXNRDxozk3YfD0qt93J2vZH8Q=;
+        b=h/ngSt/0LguupexOPjOpR1IsHkLhqh/uhz7IJ7kkP69D0Ry4IbALAnIZy93ZlbN7Ir
+         8N/3Ntc3RVStDGwyKm27ruyMqfzDWOt1PcOdu9KEo1I9h9AbnHIYAJFGiNZY9wpmjkDV
+         I8LKjdGllvdxbwFKUpR+w0qfp6LOorKmG8vTY0zg8rLhYd3e54nkAAKyDsn8Yff4oLpW
+         uSzNSAVrSRT3qWnFAKl5pdY6FDt0UkMVvrXywTG3jQNbYKY7xep2LuM36LtPVAKgsevS
+         4LZr8ecfgjn3m37mbcF1XUIk2W82UzViMzpAh+9KLLmC6wR1dCQmxo9NuJRpxdzcmNC1
+         5Pyw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZLgZcvhJjOGhGgB5eDSXNRDxozk3YfD0qt93J2vZH8Q=;
+        b=ZTq9Hj0GLlPOO4F00u2u58gsWR0YdvM0LeVhFOvRtwlgSJFgzM8jWUh6j7OoV5jCeD
+         jOV1jU0QHdslhKOS9J4T99K+QsI3h0qjJGB6A+zsO5A2oIOSnJKc7VC1etObz9pvvAx/
+         8jFP5P3t5PQ9awd96bzqOz10RLacb3S7Oq7lEA7h8oNHk6kRN6CNtL3Akbp+dLzAXKh7
+         uvL6GKh/CyxSjjtGqmu3GZIx7U2EsLHlLCLZvXYgyPa14QsgFdxirA4W2q8U3ZGxSzAt
+         Omqe6naHm3XCPT/yF7opf7G3y0zDQjdAD/u+fIs5dBeTKcV7uzFnk9ilItIGzMvf4FOP
+         ZCEA==
+X-Gm-Message-State: APjAAAVaosJ9JfLZVjZtHsG45wRBZhfj0OM5RRht48t/goyjA5XZfjhg
+        jYBk7YeK9ga0CpbEVmgWZsM=
+X-Google-Smtp-Source: APXvYqw62+FgpfqqLbgeJmlLh9WhBZMHM6GXrpIjwHJQU6NAC1YX55ZF7qvIig8Pz+13znFnzFNZgA==
+X-Received: by 2002:ae9:d60f:: with SMTP id r15mr20937232qkk.207.1572842205086;
+        Sun, 03 Nov 2019 20:36:45 -0800 (PST)
+Received: from auth2-smtp.messagingengine.com (auth2-smtp.messagingengine.com. [66.111.4.228])
+        by smtp.gmail.com with ESMTPSA id t20sm2275746qtq.55.2019.11.03.20.36.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Sun, 03 Nov 2019 20:36:44 -0800 (PST)
+Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
+        by mailauth.nyi.internal (Postfix) with ESMTP id 4E47721903;
+        Sun,  3 Nov 2019 23:36:43 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute6.internal (MEProxy); Sun, 03 Nov 2019 23:36:43 -0500
+X-ME-Sender: <xms:2aq_Xa9yFKGdUA5zRabXV2-8wVSTaGzKdUQFa_MEvNrnbcEHQM7WDg>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudduvddgjedtucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhepfffhvffukfhfgggtuggjfgesthdtredttdervdenucfhrhhomhepuehoqhhu
+    nhcuhfgvnhhguceosghoqhhunhdrfhgvnhhgsehgmhgrihhlrdgtohhmqeenucfkphepud
+    eijedrvddvtddrvdehhedrvdeknecurfgrrhgrmhepmhgrihhlfhhrohhmpegsohhquhhn
+    odhmvghsmhhtphgruhhthhhpvghrshhonhgrlhhithihqdeiledvgeehtdeigedqudejje
+    ekheehhedvqdgsohhquhhnrdhfvghngheppehgmhgrihhlrdgtohhmsehfihigmhgvrdhn
+    rghmvgenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:2aq_XSVq7OPhkzzt9dsP_OrhV1cZDcmc0EC82s8iLbn1hX51Ai6dQw>
+    <xmx:2aq_Xdpqi_GI_vch_O4HyO8Wr4hBKXMjgre8gTDpxh3PFqAsQPExgQ>
+    <xmx:2aq_XckY4TpXzl9iRM-V8EA9BIN9qc78w8bRBqZ9WqzUVnLP3M7D7w>
+    <xmx:26q_XV_T1Rzff5BsIYIdOt0V2A0YOJsXGxlaqXZzbgsKyL3Z06QJVWuYi0Y>
+Received: from localhost (unknown [167.220.255.28])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 2F92D3060057;
+        Sun,  3 Nov 2019 23:36:40 -0500 (EST)
+Date:   Mon, 4 Nov 2019 12:36:32 +0800
+From:   Boqun Feng <boqun.feng@gmail.com>
+To:     Michael Kelley <mikelley@microsoft.com>
+Cc:     "will@kernel.org" <will@kernel.org>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "maz@kernel.org" <maz@kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>,
+        "devel@linuxdriverproject.org" <devel@linuxdriverproject.org>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "apw@canonical.com" <apw@canonical.com>,
+        vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        Sunil Muthuswamy <sunilmut@microsoft.com>
+Subject: Re: [PATCH v5 2/8] arm64: hyperv: Add hypercall and register access
+ functions
+Message-ID: <20191104043632.GB182@boqun-laptop.fareast.corp.microsoft.com>
+References: <1570129355-16005-1-git-send-email-mikelley@microsoft.com>
+ <1570129355-16005-3-git-send-email-mikelley@microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <87ef9d38-a9ab-24b3-cc2e-93fedb4c0383@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1570129355-16005-3-git-send-email-mikelley@microsoft.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Michael,
 
+On Thu, Oct 03, 2019 at 07:03:19PM +0000, Michael Kelley wrote:
+> Add ARM64-specific code to make Hyper-V hypercalls and to
+> access virtual processor synthetic registers via hypercalls.
+> Hypercalls use a Hyper-V specific calling sequence with a non-zero
+> immediate value per Section 2.9 of the SMC Calling Convention
+> spec.
+> 
+> This code is architecture dependent and is mostly driven by
+> architecture independent code in the VMbus driver and the
+> Hyper-V timer clocksource driver.
+> 
+> This code is built only when CONFIG_HYPERV is enabled.
+> 
+> Signed-off-by: Michael Kelley <mikelley@microsoft.com>
+> ---
+>  MAINTAINERS                 |   1 +
+>  arch/arm64/Kbuild           |   1 +
+>  arch/arm64/hyperv/Makefile  |   2 +
+>  arch/arm64/hyperv/hv_hvc.S  |  44 +++++++++++++++
+>  arch/arm64/hyperv/hv_init.c | 133 ++++++++++++++++++++++++++++++++++++++++++++
+>  5 files changed, 181 insertions(+)
+>  create mode 100644 arch/arm64/hyperv/Makefile
+>  create mode 100644 arch/arm64/hyperv/hv_hvc.S
+>  create mode 100644 arch/arm64/hyperv/hv_init.c
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index d464067..84f76f9 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -7566,6 +7566,7 @@ F:	arch/x86/kernel/cpu/mshyperv.c
+>  F:	arch/x86/hyperv
+>  F:	arch/arm64/include/asm/hyperv-tlfs.h
+>  F:	arch/arm64/include/asm/mshyperv.h
+> +F:	arch/arm64/hyperv
+>  F:	drivers/clocksource/hyperv_timer.c
+>  F:	drivers/hid/hid-hyperv.c
+>  F:	drivers/hv/
+> diff --git a/arch/arm64/Kbuild b/arch/arm64/Kbuild
+> index d646582..2469421 100644
+> --- a/arch/arm64/Kbuild
+> +++ b/arch/arm64/Kbuild
+> @@ -3,4 +3,5 @@ obj-y			+= kernel/ mm/
+>  obj-$(CONFIG_NET)	+= net/
+>  obj-$(CONFIG_KVM)	+= kvm/
+>  obj-$(CONFIG_XEN)	+= xen/
+> +obj-$(CONFIG_HYPERV)	+= hyperv/
 
-On 10/28/2019 01:55 PM, Anshuman Khandual wrote:
-> There is a mechanism in ACPI for this i.e ACPI_SRAT_MEM_HOT_PLUGGABLE.
-> 
-> Lets re-evaluate the situation here from scratch. Memory can be classified as
-> boot and runtime because it impacts the way in which kernel allocations, zone
-> initializations are treated. Boot memory deals with kernel allocation before
-> zone init happens where as runtime memory might choose which zone to get into
-> right away.
-> 
-> (1) Boot memory
-> 
-> 	- Non-movable
-> 
-> 		- Normal memblocks
-> 		- All kernel allocations come here
-> 		- Become ZONE_NORMAL/DMA/DMA32 at runtime
-> 
-> 			- Never removable because isolation and hence migration impossible
-> 			- Removal protection because of the zone classification
-> 
-> 	- Movable	(ACPI_SRAT_MEM_HOT_PLUGGABLE)
-> 
-> 		- Memblock will be marked with MEMBLOCK_HOTPLUG
-> 		- Memblock allocations tried to be avoided (reversing the memblock order etc)
-> 		- Become ZONE_MOVABLE at runtime
-> 
-> 			- Removable  [1]
+I did a kernel built with CONFIG_HYPERV=m today, and found out this line
+should be (similar to x86):
 
-There is another way in which boot memory can be created as ZONE_MOVABLE
-irrespective of whether the firmware (ACPI/OF) had asked for it or not.
-This is achieved with "kernelcore" or "movablecore" kernel command line
-options where the administrator exclusively asks for sections of memory
-to be converted as ZONE_MOVABLE. This creates some of the memory block
-devices in /sys/devices/system/memory as removable (ZONE_MOVABLE). IIUC
-this is mutually exclusive with respect to removable boot memory creation
-with "movable_node" kernel command line option with firmware tagged hot
-pluggable memory sections (ACPI_SRAT_MEM_HOT_PLUGGABLE).
+	+obj-$(subst m,y,$(CONFIG_HYPERV))      += hyperv/
 
-Details here: mm/page_alloc.c find_zone_movable_pfns_for_nodes()
+, otherwise, when CONFIG_HYPERV=m, files in arch/arm64/hyperv/ will be
+compiled as obj-m, and symbols defined in those files cannot be
+used by kernel builtin, e.g. hyperv_timer (since CONFIG_HYPERV_TIMER=y
+in this case).
 
-Now, this boils down to the fact whether firmware will ever request for
-removal of boot memory sections which was never tagged as hotpluggable
-by the firmware during boot. Wondering if tagging portions of boot memory
-as ZONE_MOVABLE might have any other use case if they are never to be hot
-removed. Will continue looking into ACPI/OF memory hotplug scenarios.
+A compile/link error I hit today is:
+
+| /home/boqun/linux-arm64/drivers/clocksource/hyperv_timer.c:98: undefined reference to `hv_set_vpreg'
+| aarch64-linux-gnu-ld: /home/boqun/linux-arm64/drivers/clocksource/hyperv_timer.c:98: undefined reference to `hv_set_vpreg'
+
+[...]
+
+Besides, another problem I hit when compiled with CONFIG_HYPERV=m is:
+
+| ERROR: "screen_info" [drivers/hv/hv_vmbus.ko] undefined!
+
+, which can be fixed by the following change.
+
+Regards,
+Boqun
+
+---------------->8
+diff --git a/arch/arm64/kernel/efi.c b/arch/arm64/kernel/efi.c
+index d0cf596db82c..8ff557ae5cc6 100644
+--- a/arch/arm64/kernel/efi.c
++++ b/arch/arm64/kernel/efi.c
+
+@@ -55,6 +55,7 @@ static __init pteval_t create_mapping_protection(efi_memory_desc_t *md)
+
+ /* we will fill this structure from the stub, so don't put it in .bss */
+ struct screen_info screen_info __section(.data);
++EXPORT_SYMBOL(screen_info);
+
+ int __init efi_create_mapping(struct mm_struct *mm, efi_memory_desc_t *md)
+ {
