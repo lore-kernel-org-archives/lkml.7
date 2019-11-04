@@ -5,52 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51BFACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9721E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523DC21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904642;
-	bh=0K1mygL3oJRRaNMfeI7bjrL+a8KoQGX3ZDU9u0jJ3dg=;
+	s=default; t=1572904648;
+	bh=2K3Nhn17oyQlttcoEwq3Au9rsNdUXZ/WhlXS/lb70BA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cbPjcjrG2AwPFSxhLlgcaj8WhBSWMb/+4HA/qgFsWg94r9PAPZhjxSV4/tcDyJtyq
-	 iLUUioghtQzL2tj5LX4lsTo01zCOg842YtqbcGwbr5zMs6P6Jd/1PmeUN36uhSHPjC
-	 6An73C35v91eXO2E8JLNWisi68qg0caKncSeWMUQ=
+	b=m7DNaDzMtK0uWqd32y0ZbZhurMElEf+wV+25QmrQ9/RfRaKKNpl2nHX7MlGdMoB3c
+	 gYtwSi9qG3RJubYKJJ5JNO+KvAN7GM43liu4QrR4XVI/T3WP4kSfiUtH5rhyQMdYAs
+	 hFW4tSZdM1WPNJjFIt1vkZgyr9TbeXyad3rG14as=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388566AbfKDV5V (ORCPT
+        id S2388587AbfKDV51 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53272 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388530AbfKDV5O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:14 -0500
+        id S2388568AbfKDV5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:23 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4672A2184C;
-        Mon,  4 Nov 2019 21:57:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 46990214D8;
+        Mon,  4 Nov 2019 21:57:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904632;
-        bh=0K1mygL3oJRRaNMfeI7bjrL+a8KoQGX3ZDU9u0jJ3dg=;
+        s=default; t=1572904641;
+        bh=2K3Nhn17oyQlttcoEwq3Au9rsNdUXZ/WhlXS/lb70BA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y/CK2bNCA5ibsNwtJHhqPzW7PnwK6VP2iM5FrgVsU4M2AdFFIXUZlOc/5s/erJrlo
-         J0xPc2JurvRE56rgOFT+JKC6EBG0G7SMEE4Mzwmq/dej7kJpT+u5dR/nfyHzUbhK7p
-         6KhLi/mBJsFC+L6HIWPIu27g8PlMcWkbes+wm/go=
+        b=JmEiOEMR4EPmST5Pnylvv3fW6hzK2XJ30TADNB7n0MR7pSVOyxZXeSbTa0OW3djKA
+         QZiEYENmtN8T0Q23KeyssihVVnq6Ez6shDNdPLFor5tGTt0I72Y11pfmqecx+I6CbF
+         KoAZK0wMcMhwGSrXReUQT7kV7MtpuTrTFT6eaA64=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artur Petrosyan <arturp@synopsys.com>,
-        Minas Harutyunyan <hminas@synopsys.com>,
-        Fabrice Gasnier <fabrice.gasnier@st.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>,
-        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        stable@vger.kernel.org, Jeykumar Sankaran <jsanka@codeaurora.org>,
+        Sean Paul <seanpaul@chromium.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 016/149] usb: dwc2: fix unbalanced use of external vbus-supply
-Date:   Mon,  4 Nov 2019 22:43:29 +0100
-Message-Id: <20191104212135.455154039@linuxfoundation.org>
+Subject: [PATCH 4.19 019/149] drm/msm/dpu: handle failures while initializing displays
+Date:   Mon,  4 Nov 2019 22:43:32 +0100
+Message-Id: <20191104212136.271271541@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -63,139 +60,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Fabrice Gasnier <fabrice.gasnier@st.com>
+From: Jeykumar Sankaran <jsanka@codeaurora.org>
 
-[ Upstream commit cd7cd0e6cedfda8da6668a4af6748f96bbb6fed4 ]
+[ Upstream commit a802ee99c448ca0496fa307f3e46b834ae2a46a3 ]
 
-When using external vbus supply regulator, it should be enabled
-synchronously with PWR bit in HPRT register. This also fixes
-unbalanced use of this optional regulator (This can be reproduced
-easily when unbinding the driver).
+Bail out KMS hw init on display initialization failures with
+proper error logging.
 
-Fixes: 531ef5ebea96 ("usb: dwc2: add support for host mode external
-vbus supply")
+changes in v3:
+    - introduced in the series
+changes in v4:
+    - avoid duplicate return on errors (Sean Paul)
+    - avoid spamming errors on failures (Jordon Crouse)
 
-Tested-by: Artur Petrosyan <arturp@synopsys.com>
-Acked-by: Minas Harutyunyan <hminas@synopsys.com>
-Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
-Signed-off-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
+Signed-off-by: Sean Paul <seanpaul@chromium.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/dwc2/hcd.c | 33 ++++++++++++++++++++++++++-------
- 1 file changed, 26 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 31 ++++++++++++++-----------
+ 1 file changed, 18 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/usb/dwc2/hcd.c b/drivers/usb/dwc2/hcd.c
-index aad7edc29bddd..a5c8329fd4625 100644
---- a/drivers/usb/dwc2/hcd.c
-+++ b/drivers/usb/dwc2/hcd.c
-@@ -3568,6 +3568,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 	u32 port_status;
- 	u32 speed;
- 	u32 pcgctl;
-+	u32 pwr;
- 
- 	switch (typereq) {
- 	case ClearHubFeature:
-@@ -3616,8 +3617,11 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dev_dbg(hsotg->dev,
- 				"ClearPortFeature USB_PORT_FEAT_POWER\n");
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			hprt0 &= ~HPRT0_PWR;
- 			dwc2_writel(hsotg, hprt0, HPRT0);
-+			if (pwr)
-+				dwc2_vbus_supply_exit(hsotg);
- 			break;
- 
- 		case USB_PORT_FEAT_INDICATOR:
-@@ -3827,8 +3831,11 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dev_dbg(hsotg->dev,
- 				"SetPortFeature - USB_PORT_FEAT_POWER\n");
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			hprt0 |= HPRT0_PWR;
- 			dwc2_writel(hsotg, hprt0, HPRT0);
-+			if (!pwr)
-+				dwc2_vbus_supply_init(hsotg);
- 			break;
- 
- 		case USB_PORT_FEAT_RESET:
-@@ -3845,6 +3852,7 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 			dwc2_writel(hsotg, 0, PCGCTL);
- 
- 			hprt0 = dwc2_read_hprt0(hsotg);
-+			pwr = hprt0 & HPRT0_PWR;
- 			/* Clear suspend bit if resetting from suspend state */
- 			hprt0 &= ~HPRT0_SUSP;
- 
-@@ -3858,6 +3866,8 @@ static int dwc2_hcd_hub_control(struct dwc2_hsotg *hsotg, u16 typereq,
- 				dev_dbg(hsotg->dev,
- 					"In host mode, hprt0=%08x\n", hprt0);
- 				dwc2_writel(hsotg, hprt0, HPRT0);
-+				if (!pwr)
-+					dwc2_vbus_supply_init(hsotg);
- 			}
- 
- 			/* Clear reset bit in 10ms (FS/LS) or 50ms (HS) */
-@@ -4400,6 +4410,7 @@ static int _dwc2_hcd_start(struct usb_hcd *hcd)
- 	struct dwc2_hsotg *hsotg = dwc2_hcd_to_hsotg(hcd);
- 	struct usb_bus *bus = hcd_to_bus(hcd);
- 	unsigned long flags;
-+	u32 hprt0;
- 	int ret;
- 
- 	dev_dbg(hsotg->dev, "DWC OTG HCD START\n");
-@@ -4416,12 +4427,16 @@ static int _dwc2_hcd_start(struct usb_hcd *hcd)
- 
- 	dwc2_hcd_reinit(hsotg);
- 
--	/* enable external vbus supply before resuming root hub */
--	spin_unlock_irqrestore(&hsotg->lock, flags);
--	ret = dwc2_vbus_supply_init(hsotg);
--	if (ret)
--		return ret;
--	spin_lock_irqsave(&hsotg->lock, flags);
-+	hprt0 = dwc2_read_hprt0(hsotg);
-+	/* Has vbus power been turned on in dwc2_core_host_init ? */
-+	if (hprt0 & HPRT0_PWR) {
-+		/* Enable external vbus supply before resuming root hub */
-+		spin_unlock_irqrestore(&hsotg->lock, flags);
-+		ret = dwc2_vbus_supply_init(hsotg);
-+		if (ret)
-+			return ret;
-+		spin_lock_irqsave(&hsotg->lock, flags);
-+	}
- 
- 	/* Initialize and connect root hub if one is not already attached */
- 	if (bus->root_hub) {
-@@ -4443,6 +4458,7 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- {
- 	struct dwc2_hsotg *hsotg = dwc2_hcd_to_hsotg(hcd);
- 	unsigned long flags;
-+	u32 hprt0;
- 
- 	/* Turn off all host-specific interrupts */
- 	dwc2_disable_host_interrupts(hsotg);
-@@ -4451,6 +4467,7 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- 	synchronize_irq(hcd->irq);
- 
- 	spin_lock_irqsave(&hsotg->lock, flags);
-+	hprt0 = dwc2_read_hprt0(hsotg);
- 	/* Ensure hcd is disconnected */
- 	dwc2_hcd_disconnect(hsotg, true);
- 	dwc2_hcd_stop(hsotg);
-@@ -4459,7 +4476,9 @@ static void _dwc2_hcd_stop(struct usb_hcd *hcd)
- 	clear_bit(HCD_FLAG_HW_ACCESSIBLE, &hcd->flags);
- 	spin_unlock_irqrestore(&hsotg->lock, flags);
- 
--	dwc2_vbus_supply_exit(hsotg);
-+	/* keep balanced supply init/exit by checking HPRT0_PWR */
-+	if (hprt0 & HPRT0_PWR)
-+		dwc2_vbus_supply_exit(hsotg);
- 
- 	usleep_range(1000, 3000);
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+index 74cc204b07e80..2d9b7b5fb49c8 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
+@@ -442,35 +442,38 @@ static void dpu_kms_wait_for_commit_done(struct msm_kms *kms,
+ 	}
  }
+ 
+-static void _dpu_kms_initialize_dsi(struct drm_device *dev,
++static int _dpu_kms_initialize_dsi(struct drm_device *dev,
+ 				    struct msm_drm_private *priv,
+ 				    struct dpu_kms *dpu_kms)
+ {
+ 	struct drm_encoder *encoder = NULL;
+-	int i, rc;
++	int i, rc = 0;
++
++	if (!(priv->dsi[0] || priv->dsi[1]))
++		return rc;
+ 
+ 	/*TODO: Support two independent DSI connectors */
+ 	encoder = dpu_encoder_init(dev, DRM_MODE_ENCODER_DSI);
+-	if (IS_ERR_OR_NULL(encoder)) {
++	if (IS_ERR(encoder)) {
+ 		DPU_ERROR("encoder init failed for dsi display\n");
+-		return;
++		return PTR_ERR(encoder);
+ 	}
+ 
+ 	priv->encoders[priv->num_encoders++] = encoder;
+ 
+ 	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
+-		if (!priv->dsi[i]) {
+-			DPU_DEBUG("invalid msm_dsi for ctrl %d\n", i);
+-			return;
+-		}
++		if (!priv->dsi[i])
++			continue;
+ 
+ 		rc = msm_dsi_modeset_init(priv->dsi[i], dev, encoder);
+ 		if (rc) {
+ 			DPU_ERROR("modeset_init failed for dsi[%d], rc = %d\n",
+ 				i, rc);
+-			continue;
++			break;
+ 		}
+ 	}
++
++	return rc;
+ }
+ 
+ /**
+@@ -481,16 +484,16 @@ static void _dpu_kms_initialize_dsi(struct drm_device *dev,
+  * @dpu_kms:    Pointer to dpu kms structure
+  * Returns:     Zero on success
+  */
+-static void _dpu_kms_setup_displays(struct drm_device *dev,
++static int _dpu_kms_setup_displays(struct drm_device *dev,
+ 				    struct msm_drm_private *priv,
+ 				    struct dpu_kms *dpu_kms)
+ {
+-	_dpu_kms_initialize_dsi(dev, priv, dpu_kms);
+-
+ 	/**
+ 	 * Extend this function to initialize other
+ 	 * types of displays
+ 	 */
++
++	return _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
+ }
+ 
+ static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
+@@ -552,7 +555,9 @@ static int _dpu_kms_drm_obj_init(struct dpu_kms *dpu_kms)
+ 	 * Create encoder and query display drivers to create
+ 	 * bridges and connectors
+ 	 */
+-	_dpu_kms_setup_displays(dev, priv, dpu_kms);
++	ret = _dpu_kms_setup_displays(dev, priv, dpu_kms);
++	if (ret)
++		goto fail;
+ 
+ 	max_crtc_count = min(catalog->mixer_count, priv->num_encoders);
+ 
 -- 
 2.20.1
 
