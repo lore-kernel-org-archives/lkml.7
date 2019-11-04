@@ -2,51 +2,50 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F46CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FADCA9ED5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AABC204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07DA1204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:23:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906171;
-	bh=D7ch8p+h+Uaqo4c4tvM//MiDBa7jPRc5GR4vOLR19sk=;
+	s=default; t=1572906180;
+	bh=DNPIpdozo26dNOXOnXgTOxy4GC8/wcGQjQLHdUo94HQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uT1COjp6nsAdj4PFynh/HbrCFs/TjUGK6unRr/bsEEe+6d/mIwQrCIsdrEj8Pwhdp
-	 +pMpxo61qis6zWOxSON3PtKp4Hl0FsHi4o0AjZucOaWnu+c8lJ/qYVcvDKY6xtrb6t
-	 Sa6FHERIuxzYQcCDKKCFTSrfY6Wnmv8sinVJ2cL0=
+	b=iqyzn1nar2LW/jQwNCvRZcLf2XN+AjH8LZfhp6ZqDc51Kgi/2Dfq4n+4P6+3wfclN
+	 qpSDE/jI97eLAZlNYL6wg52YbFdX5Esg03eUqA/ipGvGQ8zFQWz119ceRJzI7Sti33
+	 S/gSNQU7x/mOXEFApAZF5fWVS9CEjJAYeSRNrMtQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388804AbfKDWWu (ORCPT
+        id S2388139AbfKDVzT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:22:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:19 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50496 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387727AbfKDVzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:43 -0500
+        id S2387661AbfKDVzR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:17 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9E5C22053B;
-        Mon,  4 Nov 2019 21:55:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4FD1F2053B;
+        Mon,  4 Nov 2019 21:55:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904542;
-        bh=D7ch8p+h+Uaqo4c4tvM//MiDBa7jPRc5GR4vOLR19sk=;
+        s=default; t=1572904516;
+        bh=DNPIpdozo26dNOXOnXgTOxy4GC8/wcGQjQLHdUo94HQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DwvxYOrDHkqAg7ifomO5LfDlfHJ0oBxw1y68KofSb1uiu4VHVu67wm51Oy2PNhZNh
-         wekwpy0/mUdBivYu6foO2zZNX/GBVjweKMIC/RC2ZE3l8cNiaid++sAnmk8bYvXtqf
-         xgpvB27FhTON7NIWnfZXUAv7kgecqGkmkikcG3sI=
+        b=Jc/ewYQHrMZN30s1tXyX1NyiKR7Ld7XkzSsrApSWcrRH4sU7TAOzafbzwQwR9R1jh
+         1o7gyfqNAcpASpky6/UelhuEJbFGmPGc1WrBqvm6RTBW+Q/9UEMQKnlVSH+/Q6Uner
+         Bk0E0xgLVKMZPRLFFVdX+vNqde338D0PverH+j0c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Subject: [PATCH 4.14 81/95] arm64: Ensure VM_WRITE|VM_SHARED ptes are clean by default
-Date:   Mon,  4 Nov 2019 22:45:19 +0100
-Message-Id: <20191104212121.092531216@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.14 73/95] USB: serial: whiteheat: fix line-speed endianness
+Date:   Mon,  4 Nov 2019 22:45:11 +0100
+Message-Id: <20191104212116.160620318@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -59,71 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Catalin Marinas <catalin.marinas@arm.com>
+From: Johan Hovold <johan@kernel.org>
 
-commit aa57157be69fb599bd4c38a4b75c5aad74a60ec0 upstream.
+commit 84968291d7924261c6a0624b9a72f952398e258b upstream.
 
-Shared and writable mappings (__S.1.) should be clean (!dirty) initially
-and made dirty on a subsequent write either through the hardware DBM
-(dirty bit management) mechanism or through a write page fault. A clean
-pte for the arm64 kernel is one that has PTE_RDONLY set and PTE_DIRTY
-clear.
+Add missing endianness conversion when setting the line speed so that
+this driver might work also on big-endian machines.
 
-The PAGE_SHARED{,_EXEC} attributes have PTE_WRITE set (PTE_DBM) and
-PTE_DIRTY clear. Prior to commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY
-bit handling out of set_pte_at()"), it was the responsibility of
-set_pte_at() to set the PTE_RDONLY bit and mark the pte clean if the
-software PTE_DIRTY bit was not set. However, the above commit removed
-the pte_sw_dirty() check and the subsequent setting of PTE_RDONLY in
-set_pte_at() while leaving the PAGE_SHARED{,_EXEC} definitions
-unchanged. The result is that shared+writable mappings are now dirty by
-default
+Also use an unsigned format specifier in the corresponding debug
+message.
 
-Fix the above by explicitly setting PTE_RDONLY in PAGE_SHARED{,_EXEC}.
-In addition, remove the superfluous PTE_DIRTY bit from the kernel PROT_*
-attributes.
-
-Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Will Deacon <will@kernel.org>
-Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Cc: stable <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/20191029102354.2733-3-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/include/asm/pgtable-prot.h |   15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ drivers/usb/serial/whiteheat.c |    9 ++++++---
+ drivers/usb/serial/whiteheat.h |    2 +-
+ 2 files changed, 7 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/include/asm/pgtable-prot.h
-+++ b/arch/arm64/include/asm/pgtable-prot.h
-@@ -43,11 +43,11 @@
- #define PROT_DEFAULT		(_PROT_DEFAULT | PTE_MAYBE_NG)
- #define PROT_SECT_DEFAULT	(_PROT_SECT_DEFAULT | PMD_MAYBE_NG)
+--- a/drivers/usb/serial/whiteheat.c
++++ b/drivers/usb/serial/whiteheat.c
+@@ -652,6 +652,7 @@ static void firm_setup_port(struct tty_s
+ 	struct device *dev = &port->dev;
+ 	struct whiteheat_port_settings port_settings;
+ 	unsigned int cflag = tty->termios.c_cflag;
++	speed_t baud;
  
--#define PROT_DEVICE_nGnRnE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRnE))
--#define PROT_DEVICE_nGnRE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRE))
--#define PROT_NORMAL_NC		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC))
--#define PROT_NORMAL_WT		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT))
--#define PROT_NORMAL		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL))
-+#define PROT_DEVICE_nGnRnE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRnE))
-+#define PROT_DEVICE_nGnRE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRE))
-+#define PROT_NORMAL_NC		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC))
-+#define PROT_NORMAL_WT		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT))
-+#define PROT_NORMAL		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL))
+ 	port_settings.port = port->port_number + 1;
  
- #define PROT_SECT_DEVICE_nGnRE	(PROT_SECT_DEFAULT | PMD_SECT_PXN | PMD_SECT_UXN | PMD_ATTRINDX(MT_DEVICE_nGnRE))
- #define PROT_SECT_NORMAL	(PROT_SECT_DEFAULT | PMD_SECT_PXN | PMD_SECT_UXN | PMD_ATTRINDX(MT_NORMAL))
-@@ -71,8 +71,9 @@
- #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_UXN)
+@@ -712,11 +713,13 @@ static void firm_setup_port(struct tty_s
+ 	dev_dbg(dev, "%s - XON = %2x, XOFF = %2x\n", __func__, port_settings.xon, port_settings.xoff);
  
- #define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
--#define PAGE_SHARED		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN | PTE_UXN | PTE_WRITE)
--#define PAGE_SHARED_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN | PTE_WRITE)
-+/* shared+writable pages are clean by default, hence PTE_RDONLY|PTE_WRITE */
-+#define PAGE_SHARED		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN | PTE_WRITE)
-+#define PAGE_SHARED_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_WRITE)
- #define PAGE_READONLY		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
- #define PAGE_READONLY_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN)
- #define PAGE_EXECONLY		__pgprot(_PAGE_DEFAULT | PTE_RDONLY | PTE_NG | PTE_PXN)
+ 	/* get the baud rate wanted */
+-	port_settings.baud = tty_get_baud_rate(tty);
+-	dev_dbg(dev, "%s - baud rate = %d\n", __func__, port_settings.baud);
++	baud = tty_get_baud_rate(tty);
++	port_settings.baud = cpu_to_le32(baud);
++	dev_dbg(dev, "%s - baud rate = %u\n", __func__, baud);
+ 
+ 	/* fixme: should set validated settings */
+-	tty_encode_baud_rate(tty, port_settings.baud, port_settings.baud);
++	tty_encode_baud_rate(tty, baud, baud);
++
+ 	/* handle any settings that aren't specified in the tty structure */
+ 	port_settings.lloop = 0;
+ 
+--- a/drivers/usb/serial/whiteheat.h
++++ b/drivers/usb/serial/whiteheat.h
+@@ -91,7 +91,7 @@ struct whiteheat_simple {
+ 
+ struct whiteheat_port_settings {
+ 	__u8	port;		/* port number (1 to N) */
+-	__u32	baud;		/* any value 7 - 460800, firmware calculates
++	__le32	baud;		/* any value 7 - 460800, firmware calculates
+ 				   best fit; arrives little endian */
+ 	__u8	bits;		/* 5, 6, 7, or 8 */
+ 	__u8	stop;		/* 1 or 2, default 1 (2 = 1.5 if bits = 5) */
 
 
