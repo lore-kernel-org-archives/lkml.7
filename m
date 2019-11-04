@@ -2,130 +2,108 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46980CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E12ECA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24A9E2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 645F32190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:11:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="SuBz/A2Z";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="I9GjlYjc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728042AbfKDGLQ (ORCPT
+        id S1728101AbfKDGLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:11:16 -0500
-Received: from mga02.intel.com ([134.134.136.20]:10074 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726018AbfKDGLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:11:15 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 03 Nov 2019 22:11:14 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,266,1569308400"; 
-   d="scan'208";a="204511187"
-Received: from yhuang-dev.sh.intel.com (HELO yhuang-dev) ([10.239.159.29])
-  by orsmga003.jf.intel.com with ESMTP; 03 Nov 2019 22:11:11 -0800
-From:   "Huang\, Ying" <ying.huang@intel.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [RFC 10/10] autonuma, memory tiering: Adjust hot threshold automatically
-References: <20191101075727.26683-1-ying.huang@intel.com>
-        <20191101075727.26683-11-ying.huang@intel.com>
-        <20191101093145.GT4131@hirez.programming.kicks-ass.net>
-Date:   Mon, 04 Nov 2019 14:11:11 +0800
-In-Reply-To: <20191101093145.GT4131@hirez.programming.kicks-ass.net> (Peter
-        Zijlstra's message of "Fri, 1 Nov 2019 10:31:45 +0100")
-Message-ID: <877e4gcgsg.fsf@yhuang-dev.intel.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Mon, 4 Nov 2019 01:11:22 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:39712 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDGLV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:11:21 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 06FC360DA6; Mon,  4 Nov 2019 06:11:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847881;
+        bh=Q6sNuBc7E5i7G0ni731o8Sdbe8pkK1pnQ5JaOmyxR04=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=SuBz/A2ZXpzYpeEBGSlYcD+wihSzFVurAp67almR8tfBjAnGz0anS/u8WpgAmWnmS
+         Xvqem4lyXr5nX5MB/w+Qfba1JH/trUY0i40wy79vUJR2dxHmg6ELv7k9oKDc1j8igw
+         MbvlDZNULI3zmJ/W5uYhL5LHMaXvkuSVeTiEJH9w=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id C616260BEB;
+        Mon,  4 Nov 2019 06:11:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847879;
+        bh=Q6sNuBc7E5i7G0ni731o8Sdbe8pkK1pnQ5JaOmyxR04=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=I9GjlYjcjnCGdrLHYtABLnQ3j4WYnREyc4gkwM6CBDA5CsAvGzq3Acs6Tf18GBJST
+         MXsQIeH7ZVuoZc7cHrhWi6AEz1uWT1yQesR2K5bGBfXyGjcX3fHwJYecw/85e1LeaR
+         D8J35VKaNpKL/zfR7B0T4F+Zt8AIWiX1n7/zJnK0=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C616260BEB
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 03/11] dt-bindings: arm-smmu: update binding for qcom
+ sc7180 SoC
+To:     Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
+        bjorn.andersson@linaro.org, robh+dt@kernel.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        Joerg Roedel <joro@8bytes.org>,
+        Mark Rutland <mark.rutland@arm.com>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-4-rnayak@codeaurora.org>
+ <5db86c09.1c69fb81.3981b.b748@mx.google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <6c3e1461-ddcf-9914-d416-7ef42f6971b2@codeaurora.org>
+Date:   Mon, 4 Nov 2019 11:41:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ascii
+In-Reply-To: <5db86c09.1c69fb81.3981b.b748@mx.google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
 
-> On Fri, Nov 01, 2019 at 03:57:27PM +0800, Huang, Ying wrote:
->
->> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
->> index 0a83e9cf6685..22bdbb7afac2 100644
->> --- a/kernel/sched/fair.c
->> +++ b/kernel/sched/fair.c
->> @@ -1486,6 +1486,41 @@ static bool numa_migration_check_rate_limit(struct pglist_data *pgdat,
->>  	return true;
->>  }
->>  
->> +#define NUMA_MIGRATION_ADJUST_STEPS	16
->> +
->> +static void numa_migration_adjust_threshold(struct pglist_data *pgdat,
->> +					    unsigned long rate_limit,
->> +					    unsigned long ref_threshold)
->> +{
->> +	unsigned long now = jiffies, last_threshold_jiffies;
->> +	unsigned long unit_threshold, threshold;
->> +	unsigned long try_migrate, ref_try_migrate, mdiff;
->> +
->> +	last_threshold_jiffies = pgdat->autonuma_threshold_jiffies;
->> +	if (now > last_threshold_jiffies +
->> +	    msecs_to_jiffies(sysctl_numa_balancing_scan_period_max) &&
->> +	    cmpxchg(&pgdat->autonuma_threshold_jiffies,
->> +		    last_threshold_jiffies, now) == last_threshold_jiffies) {
->
-> That is seriously unreadable gunk.
 
-The basic idea here is to adjust hot threshold every
-sysctl_numa_balancing_scan_period_max.  Because the application
-accessing pattern may have spatial locality, and autonuma scans address
-space linearly.  In general, the statistics of NUMA hint page fault
-latency isn't stable in arbitrary internal (such as 1 s, or 200 ms,
-etc).  But the scanning of the whole address space of the application is
-expected to be finished within sysctl_numa_balancing_scan_period_max.
-The statistics of NUMA hint page fault latency is expected to be much
-more stable for the whole application.  So we choose to adjust hot
-threshold every sysctl_numa_balancing_scan_period_max.
+On 10/29/2019 10:12 PM, Stephen Boyd wrote:
+> Quoting Rajendra Nayak (2019-10-23 02:02:11)
+>> Add the soc specific compatible for sc7180 smmu-500
+>>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> Cc: Joerg Roedel <joro@8bytes.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> ---
+>>   Documentation/devicetree/bindings/iommu/arm,smmu.txt | 1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/iommu/arm,smmu.txt b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> index 3133f3ba7567..347869807cf2 100644
+>> --- a/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> +++ b/Documentation/devicetree/bindings/iommu/arm,smmu.txt
+>> @@ -30,6 +30,7 @@ conditions.
+>>                     Qcom SoCs implementing "arm,mmu-500" must also include,
+>>                     as below, SoC-specific compatibles:
+>>                     "qcom,sdm845-smmu-500", "arm,mmu-500"
+>> +                  "qcom,sc7180-smmu-500", "arm,mmu-500"
+> 
+> Please sort.
 
-I will add comments for this in the next version.
+thanks, will do.
 
->> +
->> +		ref_try_migrate = rate_limit *
->> +			sysctl_numa_balancing_scan_period_max / 1000;
->> +		try_migrate = node_page_state(pgdat, NUMA_TRY_MIGRATE);
->> +		mdiff = try_migrate - pgdat->autonuma_threshold_try_migrate;
->> +		unit_threshold = ref_threshold / NUMA_MIGRATION_ADJUST_STEPS;
->> +		threshold = pgdat->autonuma_threshold;
->> +		if (!threshold)
->> +			threshold = ref_threshold;
->> +		if (mdiff > ref_try_migrate * 11 / 10)
->> +			threshold = max(threshold - unit_threshold,
->> +					unit_threshold);
->> +		else if (mdiff < ref_try_migrate * 9 / 10)
->> +			threshold = min(threshold + unit_threshold,
->> +					ref_threshold);
->
-> And that is violating codingstyle.
+> 
 
-You mean I need to use braces here?
-
->> +		pgdat->autonuma_threshold_try_migrate = try_migrate;
->> +		pgdat->autonuma_threshold = threshold;
->> +	}
->> +}
->
->
-> Maybe if you use variable names that are slightly shorter than half your
-> line length?
-
-Sure.  I will use shorter variable name in the next version.
-
-Best Regards,
-Huang, Ying
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
