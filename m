@@ -6,44 +6,41 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FA84CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:09:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6735CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:09:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F9B82245B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:09:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B514A2245C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:09:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728248AbfKDJJj (ORCPT
+        id S1728307AbfKDJJu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:09:39 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:33244 "EHLO
+        Mon, 4 Nov 2019 04:09:50 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:33300 "EHLO
         jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726526AbfKDJJj (ORCPT
+        with ESMTP id S1726526AbfKDJJu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:09:39 -0500
+        Mon, 4 Nov 2019 04:09:50 -0500
 Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 94D8D1C06CD; Mon,  4 Nov 2019 10:09:36 +0100 (CET)
-Date:   Mon, 4 Nov 2019 10:09:36 +0100
+        id 9DB8E1C06CF; Mon,  4 Nov 2019 10:09:48 +0100 (CET)
+Date:   Mon, 4 Nov 2019 10:09:48 +0100
 From:   Pavel Machek <pavel@ucw.cz>
-To:     Lee Jones <lee.jones@linaro.org>
-Cc:     Kiran Gunda <kgunda@codeaurora.org>, bjorn.andersson@linaro.org,
-        jingoohan1@gmail.com, b.zolnierkie@samsung.com,
-        dri-devel@lists.freedesktop.org, daniel.thompson@linaro.org,
-        jacek.anaszewski@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-leds@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Dan Murphy <dmurphy@ti.com>, linux-arm-msm@vger.kernel.org
-Subject: Re: [PATCH V6 2/8] backlight: qcom-wled: restructure the qcom-wled
- bindings
-Message-ID: <20191104090936.GF12355@duo.ucw.cz>
-References: <1569825553-26039-1-git-send-email-kgunda@codeaurora.org>
- <1569825553-26039-3-git-send-email-kgunda@codeaurora.org>
- <20191013121045.GN5653@amd>
- <20191014063553.GA4545@dell>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Riku Voipio <riku.voipio@iki.fi>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
+Subject: Re: [PATCH 01/10] leds: pca953x: Use of_device_get_match_data()
+Message-ID: <20191104090948.GH12355@duo.ucw.cz>
+References: <20191004214334.149976-1-swboyd@chromium.org>
+ <20191004214334.149976-2-swboyd@chromium.org>
 MIME-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="rMWmSaSbD7nr+du9"
+        protocol="application/pgp-signature"; boundary="tT3UgwmDxwvOMqfu"
 Content-Disposition: inline
-In-Reply-To: <20191014063553.GA4545@dell>
+In-Reply-To: <20191004214334.149976-2-swboyd@chromium.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -51,18 +48,28 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---rMWmSaSbD7nr+du9
+--tT3UgwmDxwvOMqfu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hi!
 
-> If you're going to apply them, you need to send out an immutable
-> branch for me to pull from.
+> This driver can use the of_device_get_match_data() API to simplify the
+> code. Replace calls to of_match_device() with this newer API under the
+> assumption that where it is called will be when we know the device is
+> backed by a DT node. This nicely avoids referencing the match table when
+> it is undefined with configurations where CONFIG_OF=3Dn.
 
-Aha, its backlight, not LED. I really should not be taking
-those. Sorry for the noise, I dropped them from my tree.
+
+> Please ack or pick for immediate merge so the last patch can be
+  merged.
+
+I see nothing obviously wrong, so...
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+=2E.. but it did not apply on top of leds-next tree.
 
 Best regards,
 									Pavel
@@ -71,14 +78,14 @@ Best regards,
 (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
 g.html
 
---rMWmSaSbD7nr+du9
+--tT3UgwmDxwvOMqfu
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXb/q0AAKCRAw5/Bqldv6
-8l1BAJ0bmVIcrnqsr2KzWzQTahM9WLj1hQCggLSSYOsNGZ9BiVClLoA4Mc1XKgU=
-=rRKG
+iF0EABECAB0WIQRPfPO7r0eAhk010v0w5/Bqldv68gUCXb/q3AAKCRAw5/Bqldv6
+8s7OAJ9ckVxuB03nzIBp5YGyOjKGWbJUbwCbBI3dtPnhr0M5qongHi/gtWVsHX0=
+=+nqt
 -----END PGP SIGNATURE-----
 
---rMWmSaSbD7nr+du9--
+--tT3UgwmDxwvOMqfu--
