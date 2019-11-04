@@ -2,149 +2,94 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23D2ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:34:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EB3ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:34:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECA2D20663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:34:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E3220663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:34:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="qKL2SABn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IzBzn7rT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729702AbfKDVeL (ORCPT
+        id S1729719AbfKDVen (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:34:11 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10442 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728602AbfKDVeK (ORCPT
+        Mon, 4 Nov 2019 16:34:43 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:37848 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728602AbfKDVem (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:34:10 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc099520001>; Mon, 04 Nov 2019 13:34:10 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Mon, 04 Nov 2019 13:34:05 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Mon, 04 Nov 2019 13:34:05 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
- 2019 21:34:05 +0000
-Subject: Re: [PATCH v2 05/18] mm/gup: introduce pin_user_pages*() and FOLL_PIN
-To:     Jason Gunthorpe <jgg@ziepe.ca>
-CC:     Jerome Glisse <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191103211813.213227-6-jhubbard@nvidia.com>
- <20191104173325.GD5134@redhat.com>
- <be9de35c-57e9-75c3-2e86-eae50904bbdf@nvidia.com>
- <20191104191811.GI5134@redhat.com>
- <e9656d47-b4a1-da8a-e8cc-ebcfb8cc06d6@nvidia.com>
- <20191104195248.GA7731@redhat.com>
- <25ec4bc0-caaa-2a01-2ae7-2d79663a40e1@nvidia.com>
- <20191104203153.GB7731@redhat.com> <20191104203702.GG30938@ziepe.ca>
- <d0890a8b-c349-0515-2570-10e83979836b@nvidia.com>
- <20191104211525.GJ30938@ziepe.ca>
-From:   John Hubbard <jhubbard@nvidia.com>
-X-Nvconfidentiality: public
-Message-ID: <caaaaf52-490b-6ce1-81d8-675013354c73@nvidia.com>
-Date:   Mon, 4 Nov 2019 13:34:04 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 16:34:42 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l20so664928lje.4;
+        Mon, 04 Nov 2019 13:34:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4G0b4Obygl/9es40ye6c4vJu0dcrHqI1qZPAhJWA5g=;
+        b=IzBzn7rTgFdSNP2vz4FylyK7hZALct7piKMK0UT2Pwegcd2Et0rC7PORBtE7fcmEIq
+         DJ3SUCU3+Qh5TjrbEoMfWLggWQ082IOgHRRd1mR0eY8IJI3LOqOJyDyodXPvp1tqI8kZ
+         s02hbJqpMhNxRiOdSyRg/AUTD73YbfZZBaSAJuWsEv4MdHn6GdMPOhtjcd77C1wsO7uw
+         eLNJtK78IRJLwRWox0MQDNORFD6fdcaLkK3gbmKwIU9UOEqNIDdyDexVgrKZcJtMhp4L
+         7B80K2fyhdd3rwMVKALkzopgkGbDX/52Rwk1QsFiTibw031A5WjJMlAYs7naA6rnkZql
+         5XpA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=f4G0b4Obygl/9es40ye6c4vJu0dcrHqI1qZPAhJWA5g=;
+        b=XBxoi9SEyLkQDQk7YGm5f4lwHfklOg9hkHhqs1wdSNaQJMLXaUvOBHpPhy6Vz09C5m
+         NyZYScdMsM0xm3+hwVNE6AZtMf5EmVcRlBwPNtXabKZuuGhjdJQPe5m7/BMzpQ6al1pS
+         GYMuIMKanb4urwalzhgtfIBhaFhUfnBnOJH2GIKDQDszddx1aHpNda9jXXrM1z+xoTf3
+         hvi0iHltSjbKtazUARoI1ujR6+h9rEjgoeoHP4F1906421Ly5xxZDcLc0bh09MKqhOTW
+         3Az1YAFPOVZVijEUdvzdSzHGdOhF/ZFR/5Kka3ncezzvv4JM0Crrlqrj+O9L85lhl3ub
+         CccQ==
+X-Gm-Message-State: APjAAAUy603SXd1XhV1j2sijGsl7eVJqxPQYLQPIwNuiokhNrJRWAZUH
+        6MjLWvRnwbr5FltDNoCr+d3rU3IjfZI=
+X-Google-Smtp-Source: APXvYqxz3M6HCJRMuwHMqLXb/F2TzfwgO25hHvvLiCniwY27OH8x778qvS1tvbysXkc6Lm5xzEQcuA==
+X-Received: by 2002:a2e:7c12:: with SMTP id x18mr11183266ljc.130.1572903280493;
+        Mon, 04 Nov 2019 13:34:40 -0800 (PST)
+Received: from localhost.localdomain ([91.237.107.85])
+        by smtp.googlemail.com with ESMTPSA id m62sm85114lfa.10.2019.11.04.13.34.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 13:34:39 -0800 (PST)
+From:   Leonid Maksymchuk <leonmaxx@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, chiu@endlessm.com,
+        yurii.pavlovskyi@gmail.com, kristian@klausen.dk,
+        andy@infradead.org, dvhart@infradead.org, corentin.chary@gmail.com,
+        Leonid Maksymchuk <leonmaxx@gmail.com>
+Subject: [PATCH v2 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+Date:   Mon,  4 Nov 2019 23:34:17 +0200
+Message-Id: <20191104213417.18036-1-leonmaxx@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191104211525.GJ30938@ziepe.ca>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL111.nvidia.com (172.20.187.18) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572903250; bh=vbo/OzrYq7woOdeOQXzDRocZ8qkmDZ2GrWck8Ge0GIw=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=qKL2SABndBuE0IlTwGECBEmaXKNt9+NUVq+WFlqtOQFVTiU7nDI02BQTOx0obKarz
-         gpxOM5Y6JautiKfOu0FtwOKOgDIpCUi5YMn9VF5RbTl9cVhlQsO6c44+kqa1Gmkh8J
-         VEKyKNOG6Vqk5nkQbEsBguPgBI2Ja3iUp52oe4dwNevVkVV3ApvpTePgu21U23nzfu
-         yfLLAmDkD5PCoZMaxqbgr1s6DM7hOxhvmTI1aiChbyJF4tpKtWS0fJG0BnHlBMS2gJ
-         uFSIwTdydwTYYvW23EYrvHjEOYVqNSM3f00rEJ3//HPrJcaJAle1+bmyry6JSVv/h0
-         e3DYAyiBVB40w==
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 1:15 PM, Jason Gunthorpe wrote:
-...
->> Right, and I thought about this when converting, and realized that the above 
->> code is working around the current gup.c limitations, which are "cannot support
->> gup remote with FOLL_LONGTERM".
-> 
-> But AFAICT it doesn't have a problem, the protection test is just too
-> strict, and I guess the control flow needs a bit of fixing..
-> 
-> The issue is this:
-> 
-> static __always_inline long __get_user_pages_locked():
-> {
->         if (locked) {
->                 /* if VM_FAULT_RETRY can be returned, vmas become invalid */
->                 BUG_ON(vmas);
->                 /* check caller initialized locked */
->                 BUG_ON(*locked != 1);
->         }
-> 
-> 
-> so remote could be written as:
-> 
-> if (gup_flags & FOLL_LONGTERM) {
->    if (WARN_ON_ONCE(locked))
->         return -EINVAL;
->    return __gup_longterm_locked(...)
-> }
-> 
-> return __get_user_pages_locked(...)
-> 
-> ??
+Hi,
 
-Yes, that loosens it up just enough for the vfio case (which doesn't set 
-"locked") to get through, great! OK, I'll put that (the above plus 
-corresponding vfio fix) in a separate patch first. 
+this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
+asus_wmi platform driver and also fixes minor bug.
 
-This should clear things up nicely.
+v2: fixed indentation.
 
+Leonid Maksymchuk (3):
+  asus_wmi: Fix return value of fan_boost_mode_store
+  asus_wmi: Add support for fan boost mode on FX505DY/FX705DY
+  asus_wmi: Set default fan boost mode to normal
 
-thanks,
+ drivers/platform/x86/asus-wmi.c            | 57 ++++++++++++++++++++++--------
+ include/linux/platform_data/x86/asus-wmi.h |  1 +
+ 2 files changed, 43 insertions(+), 15 deletions(-)
+
 -- 
-John Hubbard
-NVIDIA
+1.8.3.1
+
