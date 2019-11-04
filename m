@@ -2,295 +2,796 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD8FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:29:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7876DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:29:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F78A218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:29:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="RwMp4ufZ"
+	by mail.kernel.org (Postfix) with ESMTP id 3AA5A21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:29:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729207AbfKDO30 (ORCPT
+        id S1729225AbfKDO3n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:29:26 -0500
-Received: from mail-wr1-f73.google.com ([209.85.221.73]:52268 "EHLO
-        mail-wr1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729156AbfKDO3W (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:29:22 -0500
-Received: by mail-wr1-f73.google.com with SMTP id 4so10466766wrf.19
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 06:29:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
-         :cc;
-        bh=v/fBCawgbNr9z8sHoDyBwn+JenP5278dLuCFcze5nO4=;
-        b=RwMp4ufZMoAcy8AGYLyDxOiK52Y41IM5Omu5uyT1UQikQpowYCEdcb8GrcK71T8g5n
-         C72pggEFwJnmMPerjWv2sTnaV6/S5Yd6Y6O00gERNelbkaBI9N2T1+v4C2nXgYBwo5Rj
-         QaDlbklupShqTrgcnZ2WP6nCfyuM5+zjFaSApzBrMx6qoIMrnUFWntuH2puHKq0HJJhx
-         ofz5Vh2ubSbi72M1x6K6RQiUV4mBMZQYHRvQ7sYWm7ATdo4nulInqcTv+r6ITZ0cQblc
-         IS7EkLHNU3eGauKI/Rostf6g8IXwbewQSkxEDH52jftz5DpxyD+oojQLDNB7m8TR3EAK
-         A/EA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
-         :references:subject:from:to:cc;
-        bh=v/fBCawgbNr9z8sHoDyBwn+JenP5278dLuCFcze5nO4=;
-        b=S+7xo6qZzGyE8HzqX1UNohVwFYn7vpgMCjPbmPqiplAVdLr5YxkRDegOp/q73BZjnv
-         OFhyQ9QUH69YEiHbcHkEDl0GMwYxQENHW2UOJkIeQN+Tu+NUlJiBKzvQ1QX169sCihvZ
-         kRmxy8faxFN8wFxc3P4fSj9I3OZ0npnO+4I4EMA7LFId+q3NFgOOiY7TVwJKHdbaG744
-         iTDKrorQA6dABZ57iutrsM4DMxD5oXnVWryv4waRZ/Lj8e1yl0jFMhdPmwU9RCRJQAMt
-         COtNwF5STpYna3HAIrbU6kYQo+l/UDhFFhR1fOnaZ4pM+sxUKCxh5TLmctRmea0SH8IM
-         fr3w==
-X-Gm-Message-State: APjAAAWQ66XwQcm4RtVd7r+QBk0Mt84u9CIPUgMhLEJswFzaM/YY6VWK
-        3lJzhXKY8W5klkk6df8fIRxcjbbkpA==
-X-Google-Smtp-Source: APXvYqztjJN/esR+L3OUI4QZ+K5dhvl1Dd08UL4fO1/9xBiWuMOU3zCx1yGn64DkSaz9eoQ3fDi32RAqJw==
-X-Received: by 2002:a5d:4808:: with SMTP id l8mr23085087wrq.118.1572877758478;
- Mon, 04 Nov 2019 06:29:18 -0800 (PST)
-Date:   Mon,  4 Nov 2019 15:27:45 +0100
-In-Reply-To: <20191104142745.14722-1-elver@google.com>
-Message-Id: <20191104142745.14722-10-elver@google.com>
-Mime-Version: 1.0
-References: <20191104142745.14722-1-elver@google.com>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v3 9/9] x86, kcsan: Enable KCSAN for x86
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, paulmck@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 Nov 2019 09:29:43 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6143 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729216AbfKDO3m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 09:29:42 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id CD3087D2471086623238;
+        Mon,  4 Nov 2019 22:29:30 +0800 (CST)
+Received: from localhost (10.133.213.239) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
+ 22:29:23 +0800
+From:   YueHaibing <yuehaibing@huawei.com>
+To:     <linus.walleij@linaro.org>
+CC:     <linux-kernel@vger.kernel.org>, <linux-gpio@vger.kernel.org>,
+        <treding@nvidia.com>, <narmstrong@baylibre.com>,
+        <manivannan.sadhasivam@linaro.org>, <jesper.nilsson@axis.com>,
+        <bjorn.andersson@linaro.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH v2] pinctrl: use devm_platform_ioremap_resource() to simplify code
+Date:   Mon, 4 Nov 2019 22:26:54 +0800
+Message-ID: <20191104142654.39256-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+In-Reply-To: <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
+References: <CACRpkdb8D_zxHfzY=+ramnNjXVsN9MMO8Q-3=iZFLS2A_ZDQuw@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch enables KCSAN for x86, with updates to build rules to not use
-KCSAN for several incompatible compilation units.
+devm_platform_ioremap_resource() internally have platform_get_resource()
+and devm_ioremap_resource() in it. So instead of calling them separately
+use devm_platform_ioremap_resource() directly.
 
-Signed-off-by: Marco Elver <elver@google.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Acked-by: Thierry Reding <treding@nvidia.com>
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Acked-by: Jesper Nilsson <jesper.nilsson@axis.com>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
-v3:
-* Moved EFI stub build exception hunk to generic build exception patch,
-  since it's not x86-specific.
-
-v2:
-* Document build exceptions where no previous above comment explained
-  why we cannot instrument.
+v2: squash all into one patch
 ---
- arch/x86/Kconfig                  | 1 +
- arch/x86/boot/Makefile            | 2 ++
- arch/x86/boot/compressed/Makefile | 2 ++
- arch/x86/entry/vdso/Makefile      | 3 +++
- arch/x86/include/asm/bitops.h     | 6 +++++-
- arch/x86/kernel/Makefile          | 7 +++++++
- arch/x86/kernel/cpu/Makefile      | 3 +++
- arch/x86/lib/Makefile             | 4 ++++
- arch/x86/mm/Makefile              | 3 +++
- arch/x86/purgatory/Makefile       | 2 ++
- arch/x86/realmode/Makefile        | 3 +++
- arch/x86/realmode/rm/Makefile     | 3 +++
- 12 files changed, 38 insertions(+), 1 deletion(-)
+ drivers/pinctrl/actions/pinctrl-owl.c      |  4 +---
+ drivers/pinctrl/bcm/pinctrl-bcm281xx.c     |  4 +---
+ drivers/pinctrl/bcm/pinctrl-cygnus-mux.c   |  7 ++-----
+ drivers/pinctrl/bcm/pinctrl-iproc-gpio.c   |  3 +--
+ drivers/pinctrl/bcm/pinctrl-ns2-mux.c      |  6 ++----
+ drivers/pinctrl/bcm/pinctrl-nsp-gpio.c     |  7 ++-----
+ drivers/pinctrl/bcm/pinctrl-nsp-mux.c      |  6 ++----
+ drivers/pinctrl/pinctrl-artpec6.c          |  4 +---
+ drivers/pinctrl/pinctrl-at91-pio4.c        |  3 +--
+ drivers/pinctrl/pinctrl-at91.c             |  4 +---
+ drivers/pinctrl/pinctrl-bm1880.c           |  4 +---
+ drivers/pinctrl/pinctrl-coh901.c           |  4 +---
+ drivers/pinctrl/pinctrl-da850-pupd.c       |  4 +---
+ drivers/pinctrl/pinctrl-digicolor.c        |  4 +---
+ drivers/pinctrl/pinctrl-lpc18xx.c          |  4 +---
+ drivers/pinctrl/pinctrl-oxnas.c            |  4 +---
+ drivers/pinctrl/pinctrl-pic32.c            |  4 +---
+ drivers/pinctrl/pinctrl-pistachio.c        |  4 +---
+ drivers/pinctrl/pinctrl-rza2.c             |  4 +---
+ drivers/pinctrl/pinctrl-tb10x.c            |  4 +---
+ drivers/pinctrl/pinctrl-u300.c             |  4 +---
+ drivers/pinctrl/pinctrl-xway.c             |  4 +---
+ drivers/pinctrl/pxa/pinctrl-pxa25x.c       | 13 ++++---------
+ drivers/pinctrl/pxa/pinctrl-pxa27x.c       | 13 ++++---------
+ drivers/pinctrl/qcom/pinctrl-msm.c         |  3 +--
+ drivers/pinctrl/spear/pinctrl-plgpio.c     |  4 +---
+ drivers/pinctrl/spear/pinctrl-spear.c      |  4 +---
+ drivers/pinctrl/sunxi/pinctrl-sunxi.c      |  4 +---
+ drivers/pinctrl/tegra/pinctrl-tegra-xusb.c |  4 +---
+ drivers/pinctrl/tegra/pinctrl-tegra.c      |  3 +--
+ drivers/pinctrl/vt8500/pinctrl-wmt.c       |  4 +---
+ drivers/pinctrl/zte/pinctrl-zx.c           |  4 +---
+ 32 files changed, 42 insertions(+), 110 deletions(-)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index d6e1faa28c58..81859be4a005 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -226,6 +226,7 @@ config X86
- 	select VIRT_TO_BUS
- 	select X86_FEATURE_NAMES		if PROC_FS
- 	select PROC_PID_ARCH_STATUS		if PROC_FS
-+	select HAVE_ARCH_KCSAN if X86_64
- 
- config INSTRUCTION_DECODER
- 	def_bool y
-diff --git a/arch/x86/boot/Makefile b/arch/x86/boot/Makefile
-index e2839b5c246c..9c7942794164 100644
---- a/arch/x86/boot/Makefile
-+++ b/arch/x86/boot/Makefile
-@@ -9,7 +9,9 @@
- # Changed by many, many contributors over the years.
- #
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Kernel does not boot with kcov instrumentation here.
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index 6b84afdd7538..a1c248b8439f 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -17,7 +17,9 @@
- #	(see scripts/Makefile.lib size_append)
- #	compressed vmlinux.bin.all + u32 size of vmlinux.bin.all
- 
-+# Sanitizer runtimes are unavailable and cannot be linked for early boot code.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index 0f2154106d01..a23debaad5b9 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -10,8 +10,11 @@ ARCH_REL_TYPE_ABS += R_386_GLOB_DAT|R_386_JMP_SLOT|R_386_RELATIVE
- include $(srctree)/lib/vdso/Makefile
- 
- KBUILD_CFLAGS += $(DISABLE_LTO)
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
- UBSAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
- 
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
-diff --git a/arch/x86/include/asm/bitops.h b/arch/x86/include/asm/bitops.h
-index 7d1f6a49bfae..ee08917d3d92 100644
---- a/arch/x86/include/asm/bitops.h
-+++ b/arch/x86/include/asm/bitops.h
-@@ -201,8 +201,12 @@ arch_test_and_change_bit(long nr, volatile unsigned long *addr)
- 	return GEN_BINARY_RMWcc(LOCK_PREFIX __ASM_SIZE(btc), *addr, c, "Ir", nr);
- }
- 
--static __always_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
-+static __no_kcsan_or_inline bool constant_test_bit(long nr, const volatile unsigned long *addr)
+diff --git a/drivers/pinctrl/actions/pinctrl-owl.c b/drivers/pinctrl/actions/pinctrl-owl.c
+index 5dfe7188a5f8..5a0c8e87aa7c 100644
+--- a/drivers/pinctrl/actions/pinctrl-owl.c
++++ b/drivers/pinctrl/actions/pinctrl-owl.c
+@@ -915,7 +915,6 @@ static int owl_gpio_init(struct owl_pinctrl *pctrl)
+ int owl_pinctrl_probe(struct platform_device *pdev,
+ 				struct owl_pinctrl_soc_data *soc_data)
  {
-+	/*
-+	 * Because this is a plain access, we need to disable KCSAN here to
-+	 * avoid double instrumentation via bitops-instrumented.h.
-+	 */
- 	return ((1UL << (nr & (BITS_PER_LONG-1))) &
- 		(addr[nr >> _BITOPS_LONG_SHIFT])) != 0;
- }
-diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
-index 3578ad248bc9..2aa122d94956 100644
---- a/arch/x86/kernel/Makefile
-+++ b/arch/x86/kernel/Makefile
-@@ -28,6 +28,13 @@ KASAN_SANITIZE_dumpstack_$(BITS).o			:= n
- KASAN_SANITIZE_stacktrace.o				:= n
- KASAN_SANITIZE_paravirt.o				:= n
+-	struct resource *res;
+ 	struct owl_pinctrl *pctrl;
+ 	int ret, i;
  
-+# Do not instrument early boot code.
-+KCSAN_SANITIZE_head$(BITS).o				:= n
-+# Do not instrument debug code to avoid corrupting bug reporting.
-+KCSAN_SANITIZE_dumpstack.o				:= n
-+KCSAN_SANITIZE_dumpstack_$(BITS).o			:= n
-+KCSAN_SANITIZE_stacktrace.o				:= n
-+
- OBJECT_FILES_NON_STANDARD_relocate_kernel_$(BITS).o	:= y
- OBJECT_FILES_NON_STANDARD_test_nx.o			:= y
- OBJECT_FILES_NON_STANDARD_paravirt_patch.o		:= y
-diff --git a/arch/x86/kernel/cpu/Makefile b/arch/x86/kernel/cpu/Makefile
-index d7a1e5a9331c..1f1b0edc0187 100644
---- a/arch/x86/kernel/cpu/Makefile
-+++ b/arch/x86/kernel/cpu/Makefile
-@@ -13,6 +13,9 @@ endif
- KCOV_INSTRUMENT_common.o := n
- KCOV_INSTRUMENT_perf_event.o := n
+@@ -923,8 +922,7 @@ int owl_pinctrl_probe(struct platform_device *pdev,
+ 	if (!pctrl)
+ 		return -ENOMEM;
  
-+# As above, instrumenting secondary CPU boot code causes boot hangs.
-+KCSAN_SANITIZE_common.o := n
-+
- # Make sure load_percpu_segment has no stackprotector
- nostackp := $(call cc-option, -fno-stack-protector)
- CFLAGS_common.o		:= $(nostackp)
-diff --git a/arch/x86/lib/Makefile b/arch/x86/lib/Makefile
-index 5246db42de45..432a07705677 100644
---- a/arch/x86/lib/Makefile
-+++ b/arch/x86/lib/Makefile
-@@ -6,10 +6,14 @@
- # Produces uninteresting flaky coverage.
- KCOV_INSTRUMENT_delay.o	:= n
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
++	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctrl->base))
+ 		return PTR_ERR(pctrl->base);
  
-+# KCSAN uses udelay for introducing watchpoint delay; avoid recursion.
-+KCSAN_SANITIZE_delay.o := n
-+
- # Early boot use of cmdline; don't instrument it
- ifdef CONFIG_AMD_MEM_ENCRYPT
- KCOV_INSTRUMENT_cmdline.o := n
- KASAN_SANITIZE_cmdline.o  := n
-+KCSAN_SANITIZE_cmdline.o  := n
+diff --git a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+index bc3b232a727a..f690fc5cd688 100644
+--- a/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
++++ b/drivers/pinctrl/bcm/pinctrl-bcm281xx.c
+@@ -1400,12 +1400,10 @@ static struct pinctrl_desc bcm281xx_pinctrl_desc = {
+ static int __init bcm281xx_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct bcm281xx_pinctrl_data *pdata = &bcm281xx_pinctrl;
+-	struct resource *res;
+ 	struct pinctrl_dev *pctl;
  
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_cmdline.o = -pg
-diff --git a/arch/x86/mm/Makefile b/arch/x86/mm/Makefile
-index 84373dc9b341..ee871602f96a 100644
---- a/arch/x86/mm/Makefile
-+++ b/arch/x86/mm/Makefile
-@@ -7,6 +7,9 @@ KCOV_INSTRUMENT_mem_encrypt_identity.o	:= n
- KASAN_SANITIZE_mem_encrypt.o		:= n
- KASAN_SANITIZE_mem_encrypt_identity.o	:= n
+ 	/* So far We can assume there is only 1 bank of registers */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pdata->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	pdata->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pdata->reg_base)) {
+ 		dev_err(&pdev->dev, "Failed to ioremap MEM resource\n");
+ 		return -ENODEV;
+diff --git a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+index dcab2204c60c..4344c5732400 100644
+--- a/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-cygnus-mux.c
+@@ -940,7 +940,6 @@ static int cygnus_mux_log_init(struct cygnus_pinctrl *pinctrl)
+ static int cygnus_pinmux_probe(struct platform_device *pdev)
+ {
+ 	struct cygnus_pinctrl *pinctrl;
+-	struct resource *res;
+ 	int i, ret;
+ 	struct pinctrl_pin_desc *pins;
+ 	unsigned num_pins = ARRAY_SIZE(cygnus_pins);
+@@ -953,15 +952,13 @@ static int cygnus_pinmux_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pinctrl);
+ 	spin_lock_init(&pinctrl->lock);
  
-+KCSAN_SANITIZE_mem_encrypt.o		:= n
-+KCSAN_SANITIZE_mem_encrypt_identity.o	:= n
-+
- ifdef CONFIG_FUNCTION_TRACER
- CFLAGS_REMOVE_mem_encrypt.o		= -pg
- CFLAGS_REMOVE_mem_encrypt_identity.o	= -pg
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index fb4ee5444379..69379bce9574 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -17,7 +17,9 @@ CFLAGS_sha256.o := -D__DISABLE_EXPORTS
- LDFLAGS_purgatory.ro := -e purgatory_start -r --no-undefined -nostdlib -z nodefaultlib
- targets += purgatory.ro
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pinctrl->base0 = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->base0 = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pinctrl->base0)) {
+ 		dev_err(&pdev->dev, "unable to map I/O space\n");
+ 		return PTR_ERR(pinctrl->base0);
+ 	}
  
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE	:= n
-+KCSAN_SANITIZE	:= n
- KCOV_INSTRUMENT := n
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	pinctrl->base1 = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->base1 = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(pinctrl->base1)) {
+ 		dev_err(&pdev->dev, "unable to map I/O space\n");
+ 		return PTR_ERR(pinctrl->base1);
+diff --git a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+index 42f7ab383ad9..3326dba86a11 100644
+--- a/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-iproc-gpio.c
+@@ -795,8 +795,7 @@ static int iproc_gpio_probe(struct platform_device *pdev)
+ 	chip->dev = dev;
+ 	platform_set_drvdata(pdev, chip);
  
- # These are adjustments to the compiler flags used for objects that
-diff --git a/arch/x86/realmode/Makefile b/arch/x86/realmode/Makefile
-index 682c895753d9..6b1f3a4eeb44 100644
---- a/arch/x86/realmode/Makefile
-+++ b/arch/x86/realmode/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->base = devm_ioremap_resource(dev, res);
++	chip->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->base)) {
+ 		dev_err(dev, "unable to map I/O memory\n");
+ 		return PTR_ERR(chip->base);
+diff --git a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+index 9fabc451550e..32f268f173d1 100644
+--- a/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-ns2-mux.c
+@@ -1042,8 +1042,7 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pinctrl);
+ 	spin_lock_init(&pinctrl->lock);
  
- subdir- := rm
-diff --git a/arch/x86/realmode/rm/Makefile b/arch/x86/realmode/rm/Makefile
-index f60501a384f9..fdbbb945c216 100644
---- a/arch/x86/realmode/rm/Makefile
-+++ b/arch/x86/realmode/rm/Makefile
-@@ -6,7 +6,10 @@
- # for more details.
- #
- #
-+
-+# Sanitizer runtimes are unavailable and cannot be linked here.
- KASAN_SANITIZE			:= n
-+KCSAN_SANITIZE			:= n
- OBJECT_FILES_NON_STANDARD	:= y
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pinctrl->base0 = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->base0 = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pinctrl->base0))
+ 		return PTR_ERR(pinctrl->base0);
  
- # Prevents link failures: __sanitizer_cov_trace_pc() is not linked in.
+@@ -1057,8 +1056,7 @@ static int ns2_pinmux_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	pinctrl->pinconf_base = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->pinconf_base = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(pinctrl->pinconf_base))
+ 		return PTR_ERR(pinctrl->pinconf_base);
+ 
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
+index e67ae52023ad..8db87e531082 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-gpio.c
+@@ -613,7 +613,6 @@ static const struct of_device_id nsp_gpio_of_match[] = {
+ static int nsp_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+-	struct resource *res;
+ 	struct nsp_gpio *chip;
+ 	struct gpio_chip *gc;
+ 	u32 val, count;
+@@ -631,15 +630,13 @@ static int nsp_gpio_probe(struct platform_device *pdev)
+ 	chip->dev = dev;
+ 	platform_set_drvdata(pdev, chip);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	chip->base = devm_ioremap_resource(dev, res);
++	chip->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(chip->base)) {
+ 		dev_err(dev, "unable to map I/O memory\n");
+ 		return PTR_ERR(chip->base);
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	chip->io_ctrl = devm_ioremap_resource(dev, res);
++	chip->io_ctrl = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(chip->io_ctrl)) {
+ 		dev_err(dev, "unable to map I/O memory\n");
+ 		return PTR_ERR(chip->io_ctrl);
+diff --git a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+index 87618a4e90e4..3756fc9d5826 100644
+--- a/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
++++ b/drivers/pinctrl/bcm/pinctrl-nsp-mux.c
+@@ -571,8 +571,7 @@ static int nsp_pinmux_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, pinctrl);
+ 	spin_lock_init(&pinctrl->lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pinctrl->base0 = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->base0 = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pinctrl->base0))
+ 		return PTR_ERR(pinctrl->base0);
+ 
+@@ -586,8 +585,7 @@ static int nsp_pinmux_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	pinctrl->base2 = devm_ioremap_resource(&pdev->dev, res);
++	pinctrl->base2 = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(pinctrl->base2))
+ 		return PTR_ERR(pinctrl->base2);
+ 
+diff --git a/drivers/pinctrl/pinctrl-artpec6.c b/drivers/pinctrl/pinctrl-artpec6.c
+index e3239cf926f9..986e04ac6b5b 100644
+--- a/drivers/pinctrl/pinctrl-artpec6.c
++++ b/drivers/pinctrl/pinctrl-artpec6.c
+@@ -936,7 +936,6 @@ static void artpec6_pmx_reset(struct artpec6_pmx *pmx)
+ static int artpec6_pmx_probe(struct platform_device *pdev)
+ {
+ 	struct artpec6_pmx *pmx;
+-	struct resource *res;
+ 
+ 	pmx = devm_kzalloc(&pdev->dev, sizeof(*pmx), GFP_KERNEL);
+ 	if (!pmx)
+@@ -944,8 +943,7 @@ static int artpec6_pmx_probe(struct platform_device *pdev)
+ 
+ 	pmx->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pmx->base = devm_ioremap_resource(&pdev->dev, res);
++	pmx->base = devm_platform_ioremap_resource(pdev, 0);
+ 
+ 	if (IS_ERR(pmx->base))
+ 		return PTR_ERR(pmx->base);
+diff --git a/drivers/pinctrl/pinctrl-at91-pio4.c b/drivers/pinctrl/pinctrl-at91-pio4.c
+index e380202eb86a..694912409fd9 100644
+--- a/drivers/pinctrl/pinctrl-at91-pio4.c
++++ b/drivers/pinctrl/pinctrl-at91-pio4.c
+@@ -1017,8 +1017,7 @@ static int atmel_pinctrl_probe(struct platform_device *pdev)
+ 	atmel_pioctrl->nbanks = atmel_pioctrl_data->nbanks;
+ 	atmel_pioctrl->npins = atmel_pioctrl->nbanks * ATMEL_PIO_NPINS_PER_BANK;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	atmel_pioctrl->reg_base = devm_ioremap_resource(dev, res);
++	atmel_pioctrl->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(atmel_pioctrl->reg_base))
+ 		return -EINVAL;
+ 
+diff --git a/drivers/pinctrl/pinctrl-at91.c b/drivers/pinctrl/pinctrl-at91.c
+index 117075b5798f..0472f3d3992d 100644
+--- a/drivers/pinctrl/pinctrl-at91.c
++++ b/drivers/pinctrl/pinctrl-at91.c
+@@ -1811,7 +1811,6 @@ static const struct of_device_id at91_gpio_of_match[] = {
+ static int at91_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct resource *res;
+ 	struct at91_gpio_chip *at91_chip = NULL;
+ 	struct gpio_chip *chip;
+ 	struct pinctrl_gpio_range *range;
+@@ -1839,8 +1838,7 @@ static int at91_gpio_probe(struct platform_device *pdev)
+ 		goto err;
+ 	}
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	at91_chip->regbase = devm_ioremap_resource(&pdev->dev, res);
++	at91_chip->regbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(at91_chip->regbase)) {
+ 		ret = PTR_ERR(at91_chip->regbase);
+ 		goto err;
+diff --git a/drivers/pinctrl/pinctrl-bm1880.c b/drivers/pinctrl/pinctrl-bm1880.c
+index 63b130cb1ffb..f7dff4f14101 100644
+--- a/drivers/pinctrl/pinctrl-bm1880.c
++++ b/drivers/pinctrl/pinctrl-bm1880.c
+@@ -1308,15 +1308,13 @@ static struct pinctrl_desc bm1880_desc = {
+ static int bm1880_pinctrl_probe(struct platform_device *pdev)
+ 
+ {
+-	struct resource *res;
+ 	struct bm1880_pinctrl *pctrl;
+ 
+ 	pctrl = devm_kzalloc(&pdev->dev, sizeof(*pctrl), GFP_KERNEL);
+ 	if (!pctrl)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pctrl->base = devm_ioremap_resource(&pdev->dev, res);
++	pctrl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctrl->base))
+ 		return PTR_ERR(pctrl->base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-coh901.c b/drivers/pinctrl/pinctrl-coh901.c
+index 063a629be9b2..2905348ff430 100644
+--- a/drivers/pinctrl/pinctrl-coh901.c
++++ b/drivers/pinctrl/pinctrl-coh901.c
+@@ -615,7 +615,6 @@ static struct coh901_pinpair coh901_pintable[] = {
+ static int __init u300_gpio_probe(struct platform_device *pdev)
+ {
+ 	struct u300_gpio *gpio;
+-	struct resource *memres;
+ 	struct gpio_irq_chip *girq;
+ 	int err = 0;
+ 	int portno;
+@@ -633,8 +632,7 @@ static int __init u300_gpio_probe(struct platform_device *pdev)
+ 	gpio->chip.base = 0;
+ 	gpio->dev = &pdev->dev;
+ 
+-	memres = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	gpio->base = devm_ioremap_resource(&pdev->dev, memres);
++	gpio->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(gpio->base))
+ 		return PTR_ERR(gpio->base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-da850-pupd.c b/drivers/pinctrl/pinctrl-da850-pupd.c
+index d06f13a79740..5a0a1f20c843 100644
+--- a/drivers/pinctrl/pinctrl-da850-pupd.c
++++ b/drivers/pinctrl/pinctrl-da850-pupd.c
+@@ -146,14 +146,12 @@ static int da850_pupd_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+ 	struct da850_pupd_data *data;
+-	struct resource *res;
+ 
+ 	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
+ 	if (!data)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	data->base = devm_ioremap_resource(dev, res);
++	data->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(data->base)) {
+ 		dev_err(dev, "Could not map resource\n");
+ 		return PTR_ERR(data->base);
+diff --git a/drivers/pinctrl/pinctrl-digicolor.c b/drivers/pinctrl/pinctrl-digicolor.c
+index 7e1ceee5895b..ff702cfbaa28 100644
+--- a/drivers/pinctrl/pinctrl-digicolor.c
++++ b/drivers/pinctrl/pinctrl-digicolor.c
+@@ -270,7 +270,6 @@ static int dc_gpiochip_add(struct dc_pinmap *pmap, struct device_node *np)
+ static int dc_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct dc_pinmap *pmap;
+-	struct resource *r;
+ 	struct pinctrl_pin_desc *pins;
+ 	struct pinctrl_desc *pctl_desc;
+ 	char *pin_names;
+@@ -281,8 +280,7 @@ static int dc_pinctrl_probe(struct platform_device *pdev)
+ 	if (!pmap)
+ 		return -ENOMEM;
+ 
+-	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pmap->regs = devm_ioremap_resource(&pdev->dev, r);
++	pmap->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pmap->regs))
+ 		return PTR_ERR(pmap->regs);
+ 
+diff --git a/drivers/pinctrl/pinctrl-lpc18xx.c b/drivers/pinctrl/pinctrl-lpc18xx.c
+index 06be55dab341..e4677546aec4 100644
+--- a/drivers/pinctrl/pinctrl-lpc18xx.c
++++ b/drivers/pinctrl/pinctrl-lpc18xx.c
+@@ -1324,15 +1324,13 @@ static int lpc18xx_create_group_func_map(struct device *dev,
+ static int lpc18xx_scu_probe(struct platform_device *pdev)
+ {
+ 	struct lpc18xx_scu_data *scu;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	scu = devm_kzalloc(&pdev->dev, sizeof(*scu), GFP_KERNEL);
+ 	if (!scu)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	scu->base = devm_ioremap_resource(&pdev->dev, res);
++	scu->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(scu->base))
+ 		return PTR_ERR(scu->base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-oxnas.c b/drivers/pinctrl/pinctrl-oxnas.c
+index 40dc1251432a..674b7b5919df 100644
+--- a/drivers/pinctrl/pinctrl-oxnas.c
++++ b/drivers/pinctrl/pinctrl-oxnas.c
+@@ -1196,7 +1196,6 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 	struct oxnas_gpio_bank *bank;
+ 	unsigned int id, ngpios;
+ 	int irq, ret;
+-	struct resource *res;
+ 	struct gpio_irq_chip *girq;
+ 
+ 	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges",
+@@ -1220,8 +1219,7 @@ static int oxnas_gpio_probe(struct platform_device *pdev)
+ 
+ 	bank = &oxnas_gpio_banks[id];
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	bank->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(bank->reg_base))
+ 		return PTR_ERR(bank->reg_base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-pic32.c b/drivers/pinctrl/pinctrl-pic32.c
+index 7e4c5a08a932..e5d6d3f9753e 100644
+--- a/drivers/pinctrl/pinctrl-pic32.c
++++ b/drivers/pinctrl/pinctrl-pic32.c
+@@ -2202,7 +2202,6 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 	struct pic32_gpio_bank *bank;
+ 	u32 id;
+ 	int irq, ret;
+-	struct resource *res;
+ 	struct gpio_irq_chip *girq;
+ 
+ 	if (of_property_read_u32(np, "microchip,gpio-bank", &id)) {
+@@ -2217,8 +2216,7 @@ static int pic32_gpio_probe(struct platform_device *pdev)
+ 
+ 	bank = &pic32_gpio_banks[id];
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	bank->reg_base = devm_ioremap_resource(&pdev->dev, res);
++	bank->reg_base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(bank->reg_base))
+ 		return PTR_ERR(bank->reg_base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-pistachio.c b/drivers/pinctrl/pinctrl-pistachio.c
+index eb40ae9f8639..fa370c171cad 100644
+--- a/drivers/pinctrl/pinctrl-pistachio.c
++++ b/drivers/pinctrl/pinctrl-pistachio.c
+@@ -1435,7 +1435,6 @@ static const struct of_device_id pistachio_pinctrl_of_match[] = {
+ static int pistachio_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct pistachio_pinctrl *pctl;
+-	struct resource *res;
+ 
+ 	pctl = devm_kzalloc(&pdev->dev, sizeof(*pctl), GFP_KERNEL);
+ 	if (!pctl)
+@@ -1443,8 +1442,7 @@ static int pistachio_pinctrl_probe(struct platform_device *pdev)
+ 	pctl->dev = &pdev->dev;
+ 	dev_set_drvdata(&pdev->dev, pctl);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pctl->base = devm_ioremap_resource(&pdev->dev, res);
++	pctl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctl->base))
+ 		return PTR_ERR(pctl->base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-rza2.c b/drivers/pinctrl/pinctrl-rza2.c
+index 3be1d833bf25..e27ed2f34cbe 100644
+--- a/drivers/pinctrl/pinctrl-rza2.c
++++ b/drivers/pinctrl/pinctrl-rza2.c
+@@ -462,7 +462,6 @@ static const struct pinmux_ops rza2_pinmux_ops = {
+ static int rza2_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	struct rza2_pinctrl_priv *priv;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
+@@ -471,8 +470,7 @@ static int rza2_pinctrl_probe(struct platform_device *pdev)
+ 
+ 	priv->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	priv->base = devm_ioremap_resource(&pdev->dev, res);
++	priv->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(priv->base))
+ 		return PTR_ERR(priv->base);
+ 
+diff --git a/drivers/pinctrl/pinctrl-tb10x.c b/drivers/pinctrl/pinctrl-tb10x.c
+index 1f64e2e7efd9..ab49bd708969 100644
+--- a/drivers/pinctrl/pinctrl-tb10x.c
++++ b/drivers/pinctrl/pinctrl-tb10x.c
+@@ -747,7 +747,6 @@ static struct pinctrl_desc tb10x_pindesc = {
+ static int tb10x_pinctrl_probe(struct platform_device *pdev)
+ {
+ 	int ret = -EINVAL;
+-	struct resource *mem;
+ 	struct device *dev = &pdev->dev;
+ 	struct device_node *of_node = dev->of_node;
+ 	struct device_node *child;
+@@ -768,8 +767,7 @@ static int tb10x_pinctrl_probe(struct platform_device *pdev)
+ 	platform_set_drvdata(pdev, state);
+ 	mutex_init(&state->mutex);
+ 
+-	mem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	state->base = devm_ioremap_resource(dev, mem);
++	state->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(state->base)) {
+ 		ret = PTR_ERR(state->base);
+ 		goto fail;
+diff --git a/drivers/pinctrl/pinctrl-u300.c b/drivers/pinctrl/pinctrl-u300.c
+index 348423bb39dd..cc306448259e 100644
+--- a/drivers/pinctrl/pinctrl-u300.c
++++ b/drivers/pinctrl/pinctrl-u300.c
+@@ -1055,7 +1055,6 @@ static struct pinctrl_desc u300_pmx_desc = {
+ static int u300_pmx_probe(struct platform_device *pdev)
+ {
+ 	struct u300_pmx *upmx;
+-	struct resource *res;
+ 
+ 	/* Create state holders etc for this driver */
+ 	upmx = devm_kzalloc(&pdev->dev, sizeof(*upmx), GFP_KERNEL);
+@@ -1064,8 +1063,7 @@ static int u300_pmx_probe(struct platform_device *pdev)
+ 
+ 	upmx->dev = &pdev->dev;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	upmx->virtbase = devm_ioremap_resource(&pdev->dev, res);
++	upmx->virtbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(upmx->virtbase))
+ 		return PTR_ERR(upmx->virtbase);
+ 
+diff --git a/drivers/pinctrl/pinctrl-xway.c b/drivers/pinctrl/pinctrl-xway.c
+index 913d38f29b73..5e3f31b55eb7 100644
+--- a/drivers/pinctrl/pinctrl-xway.c
++++ b/drivers/pinctrl/pinctrl-xway.c
+@@ -1705,12 +1705,10 @@ static int pinmux_xway_probe(struct platform_device *pdev)
+ {
+ 	const struct of_device_id *match;
+ 	const struct pinctrl_xway_soc *xway_soc;
+-	struct resource *res;
+ 	int ret, i;
+ 
+ 	/* get and remap our register range */
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	xway_info.membase[0] = devm_ioremap_resource(&pdev->dev, res);
++	xway_info.membase[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(xway_info.membase[0]))
+ 		return PTR_ERR(xway_info.membase[0]);
+ 
+diff --git a/drivers/pinctrl/pxa/pinctrl-pxa25x.c b/drivers/pinctrl/pxa/pinctrl-pxa25x.c
+index 8d1247078ae5..95640698422f 100644
+--- a/drivers/pinctrl/pxa/pinctrl-pxa25x.c
++++ b/drivers/pinctrl/pxa/pinctrl-pxa25x.c
+@@ -216,25 +216,20 @@ static int pxa25x_pinctrl_probe(struct platform_device *pdev)
+ 	void __iomem *base_af[8];
+ 	void __iomem *base_dir[4];
+ 	void __iomem *base_sleep[4];
+-	struct resource *res;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base_af[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_af[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base_af[0]))
+ 		return PTR_ERR(base_af[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	base_dir[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[0] = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(base_dir[0]))
+ 		return PTR_ERR(base_dir[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	base_dir[3] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[3] = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(base_dir[3]))
+ 		return PTR_ERR(base_dir[3]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+-	base_sleep[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_sleep[0] = devm_platform_ioremap_resource(pdev, 3);
+ 	if (IS_ERR(base_sleep[0]))
+ 		return PTR_ERR(base_sleep[0]);
+ 
+diff --git a/drivers/pinctrl/pxa/pinctrl-pxa27x.c b/drivers/pinctrl/pxa/pinctrl-pxa27x.c
+index 64943e819af6..48ccfb50b23e 100644
+--- a/drivers/pinctrl/pxa/pinctrl-pxa27x.c
++++ b/drivers/pinctrl/pxa/pinctrl-pxa27x.c
+@@ -508,25 +508,20 @@ static int pxa27x_pinctrl_probe(struct platform_device *pdev)
+ 	void __iomem *base_af[8];
+ 	void __iomem *base_dir[4];
+ 	void __iomem *base_sleep[4];
+-	struct resource *res;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	base_af[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_af[0] = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(base_af[0]))
+ 		return PTR_ERR(base_af[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+-	base_dir[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[0] = devm_platform_ioremap_resource(pdev, 1);
+ 	if (IS_ERR(base_dir[0]))
+ 		return PTR_ERR(base_dir[0]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 2);
+-	base_dir[3] = devm_ioremap_resource(&pdev->dev, res);
++	base_dir[3] = devm_platform_ioremap_resource(pdev, 2);
+ 	if (IS_ERR(base_dir[3]))
+ 		return PTR_ERR(base_dir[3]);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 3);
+-	base_sleep[0] = devm_ioremap_resource(&pdev->dev, res);
++	base_sleep[0] = devm_platform_ioremap_resource(pdev, 3);
+ 	if (IS_ERR(base_sleep[0]))
+ 		return PTR_ERR(base_sleep[0]);
+ 
+diff --git a/drivers/pinctrl/qcom/pinctrl-msm.c b/drivers/pinctrl/qcom/pinctrl-msm.c
+index 763da0be10d6..62fcae9f05ae 100644
+--- a/drivers/pinctrl/qcom/pinctrl-msm.c
++++ b/drivers/pinctrl/qcom/pinctrl-msm.c
+@@ -1150,8 +1150,7 @@ int msm_pinctrl_probe(struct platform_device *pdev,
+ 				return PTR_ERR(pctrl->regs[i]);
+ 		}
+ 	} else {
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-		pctrl->regs[0] = devm_ioremap_resource(&pdev->dev, res);
++		pctrl->regs[0] = devm_platform_ioremap_resource(pdev, 0);
+ 		if (IS_ERR(pctrl->regs[0]))
+ 			return PTR_ERR(pctrl->regs[0]);
+ 	}
+diff --git a/drivers/pinctrl/spear/pinctrl-plgpio.c b/drivers/pinctrl/spear/pinctrl-plgpio.c
+index c4c9a2971445..1ebbc49b16f1 100644
+--- a/drivers/pinctrl/spear/pinctrl-plgpio.c
++++ b/drivers/pinctrl/spear/pinctrl-plgpio.c
+@@ -515,15 +515,13 @@ static int plgpio_probe_dt(struct platform_device *pdev, struct plgpio *plgpio)
+ static int plgpio_probe(struct platform_device *pdev)
+ {
+ 	struct plgpio *plgpio;
+-	struct resource *res;
+ 	int ret, irq;
+ 
+ 	plgpio = devm_kzalloc(&pdev->dev, sizeof(*plgpio), GFP_KERNEL);
+ 	if (!plgpio)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	plgpio->base = devm_ioremap_resource(&pdev->dev, res);
++	plgpio->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(plgpio->base))
+ 		return PTR_ERR(plgpio->base);
+ 
+diff --git a/drivers/pinctrl/spear/pinctrl-spear.c b/drivers/pinctrl/spear/pinctrl-spear.c
+index 7ec19c73f870..948f56abb9ae 100644
+--- a/drivers/pinctrl/spear/pinctrl-spear.c
++++ b/drivers/pinctrl/spear/pinctrl-spear.c
+@@ -358,7 +358,6 @@ int spear_pinctrl_probe(struct platform_device *pdev,
+ 			struct spear_pinctrl_machdata *machdata)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+-	struct resource *res;
+ 	struct spear_pmx *pmx;
+ 
+ 	if (!machdata)
+@@ -368,8 +367,7 @@ int spear_pinctrl_probe(struct platform_device *pdev,
+ 	if (!pmx)
+ 		return -ENOMEM;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pmx->vbase = devm_ioremap_resource(&pdev->dev, res);
++	pmx->vbase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pmx->vbase))
+ 		return PTR_ERR(pmx->vbase);
+ 
+diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+index 0cbca30b75dc..b35c3245ab3f 100644
+--- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
++++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+@@ -1385,7 +1385,6 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+ 	struct pinctrl_pin_desc *pins;
+ 	struct sunxi_pinctrl *pctl;
+ 	struct pinmux_ops *pmxops;
+-	struct resource *res;
+ 	int i, ret, last_pin, pin_idx;
+ 	struct clk *clk;
+ 
+@@ -1396,8 +1395,7 @@ int sunxi_pinctrl_init_with_variant(struct platform_device *pdev,
+ 
+ 	raw_spin_lock_init(&pctl->lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	pctl->membase = devm_ioremap_resource(&pdev->dev, res);
++	pctl->membase = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(pctl->membase))
+ 		return PTR_ERR(pctl->membase);
+ 
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+index f2fa1f76ebb7..6f7b3767f453 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra-xusb.c
+@@ -873,7 +873,6 @@ int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev)
+ {
+ 	struct tegra_xusb_padctl *padctl;
+ 	const struct of_device_id *match;
+-	struct resource *res;
+ 	struct phy *phy;
+ 	int err;
+ 
+@@ -894,8 +893,7 @@ int tegra_xusb_padctl_legacy_probe(struct platform_device *pdev)
+ 	match = of_match_node(tegra_xusb_padctl_of_match, pdev->dev.of_node);
+ 	padctl->soc = match->data;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	padctl->regs = devm_ioremap_resource(&pdev->dev, res);
++	padctl->regs = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(padctl->regs))
+ 		return PTR_ERR(padctl->regs);
+ 
+diff --git a/drivers/pinctrl/tegra/pinctrl-tegra.c b/drivers/pinctrl/tegra/pinctrl-tegra.c
+index e9a7cbb9aa33..692d8b3e2a20 100644
+--- a/drivers/pinctrl/tegra/pinctrl-tegra.c
++++ b/drivers/pinctrl/tegra/pinctrl-tegra.c
+@@ -781,8 +781,7 @@ int tegra_pinctrl_probe(struct platform_device *pdev,
+ 		return -ENOMEM;
+ 
+ 	for (i = 0; i < pmx->nbanks; i++) {
+-		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+-		pmx->regs[i] = devm_ioremap_resource(&pdev->dev, res);
++		pmx->regs[i] = devm_platform_ioremap_resource(pdev, i);
+ 		if (IS_ERR(pmx->regs[i]))
+ 			return PTR_ERR(pmx->regs[i]);
+ 	}
+diff --git a/drivers/pinctrl/vt8500/pinctrl-wmt.c b/drivers/pinctrl/vt8500/pinctrl-wmt.c
+index 4d5cd7d8c760..ea910a18b4d7 100644
+--- a/drivers/pinctrl/vt8500/pinctrl-wmt.c
++++ b/drivers/pinctrl/vt8500/pinctrl-wmt.c
+@@ -553,10 +553,8 @@ int wmt_pinctrl_probe(struct platform_device *pdev,
+ 		      struct wmt_pinctrl_data *data)
+ {
+ 	int err;
+-	struct resource *res;
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	data->base = devm_ioremap_resource(&pdev->dev, res);
++	data->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(data->base))
+ 		return PTR_ERR(data->base);
+ 
+diff --git a/drivers/pinctrl/zte/pinctrl-zx.c b/drivers/pinctrl/zte/pinctrl-zx.c
+index 9512045420ec..786bf89487d6 100644
+--- a/drivers/pinctrl/zte/pinctrl-zx.c
++++ b/drivers/pinctrl/zte/pinctrl-zx.c
+@@ -387,7 +387,6 @@ int zx_pinctrl_init(struct platform_device *pdev,
+ 	struct pinctrl_desc *pctldesc;
+ 	struct zx_pinctrl *zpctl;
+ 	struct device_node *np;
+-	struct resource *res;
+ 	int ret;
+ 
+ 	zpctl = devm_kzalloc(&pdev->dev, sizeof(*zpctl), GFP_KERNEL);
+@@ -396,8 +395,7 @@ int zx_pinctrl_init(struct platform_device *pdev,
+ 
+ 	spin_lock_init(&zpctl->lock);
+ 
+-	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+-	zpctl->base = devm_ioremap_resource(&pdev->dev, res);
++	zpctl->base = devm_platform_ioremap_resource(pdev, 0);
+ 	if (IS_ERR(zpctl->base))
+ 		return PTR_ERR(zpctl->base);
+ 
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+2.20.1
+
 
