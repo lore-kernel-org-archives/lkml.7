@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8794CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 039B8CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B48BC222C4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB634214E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905273;
-	bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
+	s=default; t=1572905284;
+	bh=GzKKrQi05r8rJU/BL3AzUsyM+vQgG8U/4raDE/E8vNw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GzlJSyUpCc/X/KFikEHiBxabG73wka67RIPruF61zP3RdqSe6CgZKPS2NDNuku9TI
-	 PI4Rktjcm/f6nMBl4MVNCPjrsD781s3aGPj9YJPYGOACfMPc30q62IZLSKAelepGEt
-	 Fh26A9pLM/TE8e0V7Ewf5I1NOJLMf7mSrBieopy0=
+	b=oL2RJE5n6f+Anx8agoOD1eGCnvgkpLNveZx65+WZgVHO1w/GMlKT/8rJdlBrSYsPN
+	 2M+9FBoqijbjaXkNz0piKZSVYm851aR11r9QNEg7xv9mTNXF9xNcsi2Hm2CFvFbawE
+	 AxUaVM4OlFCyv9hz9qHaAy/STNtLaAG102ft/UCY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390034AbfKDWHw (ORCPT
+        id S2390180AbfKDWID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:07:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40470 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:03 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40740 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390030AbfKDWHs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:07:48 -0500
+        id S2390170AbfKDWIB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:01 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C5D5221D7D;
-        Mon,  4 Nov 2019 22:07:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42363205C9;
+        Mon,  4 Nov 2019 22:08:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905266;
-        bh=5VyfATjDRZ/d61SscXopb+AgGGmd7/YaQZLg5GFAo3w=;
+        s=default; t=1572905280;
+        bh=GzKKrQi05r8rJU/BL3AzUsyM+vQgG8U/4raDE/E8vNw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=rYg9TqzQYjeZzq1WycnALZxQj6zqVkj2jt3NITVSpBdgHF6WLnwl/s0Z5t+s2+vRC
-         zGj//kv88koNMDSJN4QgMYgSyiaJwABsEZhpdOXZxEeaNhAjMAn8UYsv/apizdUB7d
-         XXZgjhynKXxXGujlnivCCZttCcDMmScatsivbarY=
+        b=f40hKZ/XS6KUHWu8YDZtBFdBT8Z/absn8wrvTZttKkTYOpBFOG86j1wrbGsHrIG44
+         fpxKkAq8j5FUC4YE6GUwLdic3okzcrxmYlbzpWhDauXw3u3xZeNq72YJDqg8OUYJZ/
+         PQVuZN1OZeVyE3+I0nnIl9eNpqZCZxnwBMPd+9Yw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Jeffrey Hugo <jeffrey.l.hugo@gmail.com>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 085/163] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Mon,  4 Nov 2019 22:44:35 +0100
-Message-Id: <20191104212146.412986855@linuxfoundation.org>
+Subject: [PATCH 5.3 089/163] arm64: dts: qcom: Add Asus NovaGo TP370QL
+Date:   Mon,  4 Nov 2019 22:44:39 +0100
+Message-Id: <20191104212146.656585449@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,37 +60,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+[ Upstream commit 722eb2f65acc4cebeb710fc7cc98f51513e90f1f ]
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+This adds the initial DT for the Asus NovaGo TP370QL laptop.  Supported
+functionality includes USB (host), microSD-card, keyboard, and trackpad.
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/Makefile             |  1 +
+ .../dts/qcom/msm8998-asus-novago-tp370ql.dts  | 47 +++++++++++++++++++
+ 2 files changed, 48 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
 
-diff --git a/drivers/usb/misc/legousbtower.c b/drivers/usb/misc/legousbtower.c
-index 62dab2441ec4f..23061f1526b4e 100644
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -878,7 +878,7 @@ static int tower_probe (struct usb_interface *interface, const struct usb_device
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
+diff --git a/arch/arm64/boot/dts/qcom/Makefile b/arch/arm64/boot/dts/qcom/Makefile
+index 28695e7c0cc3d..954d75de617ba 100644
+--- a/arch/arm64/boot/dts/qcom/Makefile
++++ b/arch/arm64/boot/dts/qcom/Makefile
+@@ -6,6 +6,7 @@ dtb-$(CONFIG_ARCH_QCOM)	+= msm8916-mtp.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8992-bullhead-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8994-angler-rev-101.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8996-mtp.dtb
++dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-asus-novago-tp370ql.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-hp-envy-x2.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-lenovo-miix-630.dtb
+ dtb-$(CONFIG_ARCH_QCOM)	+= msm8998-mtp.dtb
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+new file mode 100644
+index 0000000000000..db5821be1e2fe
+--- /dev/null
++++ b/arch/arm64/boot/dts/qcom/msm8998-asus-novago-tp370ql.dts
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2019, Jeffrey Hugo. All rights reserved. */
++
++/dts-v1/;
++
++#include "msm8998-clamshell.dtsi"
++
++/ {
++	model = "Asus NovaGo TP370QL";
++	compatible = "asus,novago-tp370ql", "qcom,msm8998";
++};
++
++&blsp1_i2c6 {
++	status = "okay";
++
++	touchpad@15 {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x7b IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x15>;
++		hid-descr-addr = <0x0001>;
++
++		pinctrl-names = "default";
++		pinctrl-0 = <&touchpad>;
++	};
++
++	keyboard@3a {
++		compatible = "hid-over-i2c";
++		interrupt-parent = <&tlmm>;
++		interrupts = <0x25 IRQ_TYPE_LEVEL_LOW>;
++		reg = <0x3a>;
++		hid-descr-addr = <0x0001>;
++	};
++};
++
++&sdhc2 {
++	cd-gpios = <&tlmm 95 GPIO_ACTIVE_HIGH>;
++};
++
++&tlmm {
++	touchpad: touchpad {
++		config {
++			pins = "gpio123";
++			bias-pull-up;
++		};
++	};
++};
 -- 
 2.20.1
 
