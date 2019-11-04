@@ -2,113 +2,110 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2D33CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:44:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6743BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:46:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0CF920848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:44:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3974920659
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:46:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="pHQfGMcF"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="aUeePDR4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729689AbfKDVon (ORCPT
+        id S1729731AbfKDVq3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:44:43 -0500
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:38627 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728634AbfKDVon (ORCPT
+        Mon, 4 Nov 2019 16:46:29 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:33544 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729692AbfKDVq2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:44:43 -0500
-Received: by mail-ua1-f65.google.com with SMTP id u99so5470700uau.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:44:42 -0800 (PST)
+        Mon, 4 Nov 2019 16:46:28 -0500
+Received: by mail-pg1-f196.google.com with SMTP id u23so12404048pgo.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 13:46:26 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kaXvf9wE3k9UaecG65PnRrmHU9a0z9eeJYq+CJlozEg=;
-        b=pHQfGMcFvDs8Sz/sj2D9FDXz3MnOQRQu+N4CdnI6FNzotw2uFLAsGlw2AfCslqt5i1
-         NhuT8B5Ezfwhp9svCCthVzKrqQzSaREP2/BOyA4VdDO3mOGFMeEnNqjZV9EKKb5BwgAH
-         bM/dxgbkeGBwpw6v8NjWHN7WfR5TQqN/xXvS5kz11espcMoT6/ho31I/XOxv81JBcV1z
-         GeqbggJuYjxj2QeyalY3/MCFCfCDWJn8/AxC+ZFPpCHvzX/Cpnxf1nw4yPeZBVh+ScLp
-         O8nGwga8BiVRzIj9L+z7DaZgwmXUgoNZyiEQqIULFC5kXaLbkCP27rPqGbTAVSPqhK1Q
-         tN3Q==
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=to:cc:from:subject:message-id:date:user-agent:mime-version
+         :content-language:content-transfer-encoding;
+        bh=RKxr/z5Z+XCc3j/WLz6LF458INM7dnLvQiGuRgdea6I=;
+        b=aUeePDR4M3K0hR7Q/iY4hBk2QT31NbRREwi99q6z/u/H7pYqS80kMgv8cfnvtshvAv
+         VkJMotphwEiRP9kA7IZ4WieHSR5kijvuyO7V0Wq4QIfiPjshpuOvK8o2ZrydNAwfQdfE
+         OinYsra052NUoIMic9pUp++YgcScLmujdziWX1C+Al6yNoWfEZ4SKAmpuwGIyP95/E2O
+         vsMq9BacQ3oZyG9cCe2xyk2VvnpF/cqSuIZydpVueZTsqCkDC0jVqWq/MNxmHWgtxQ1x
+         oXk0ys7HrLlD+ZF3R3qe3p7Bsdyvw+gNuuzAEUdV+2SGbShHAqHGkM/vkCF6XzCa+mlL
+         Ndkg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kaXvf9wE3k9UaecG65PnRrmHU9a0z9eeJYq+CJlozEg=;
-        b=pw85w+UJJW7EwfDR36rUuhDvNoBqU5654RZC08wpQ9HN/WIG4jq87LZVM2gG6gWZ7E
-         4+7hTnY2T4k2MNWyNDrjiBddoRvs+kA9hVAHm3vonYZ52ejb0RGIPHbgGStGclq6dkUJ
-         TLoezRK0uSfjw+henWgWAoUqknWUtsagGye0RqDNDwMKQ4ZXw6et2UB/oO3DPVXaK2qy
-         h5iuhSYRakpfFAHwxp/jELtp5m2E7vyVCaGyjqRsyEppNjN+xRTM5bvnIphsFPcCEmMr
-         HkeDbpnIF9BM/xtD2rqKJ4lGqXfRM1aSdUoFHREz99hJYYkZWTirj/nOUWzE9OGt8qSD
-         f1ZA==
-X-Gm-Message-State: APjAAAXFELOFzea8TmKoRoaAgy1ttYmEvI5HSgafW8zPT7kuR31biVWU
-        /dKrt+/GEC0pm67Lr1bHTlc6AWzppYTXfrKyi3mprQ==
-X-Google-Smtp-Source: APXvYqyozZ81Thh7mlXHgf1QUiqKh64ERV1FrTZSir+nNNiHAQ72oavyDPOWqxJDAI6llfn+2fNkSSVjyIyFG0syB7k=
-X-Received: by 2002:ab0:5981:: with SMTP id g1mr1829842uad.98.1572903881724;
- Mon, 04 Nov 2019 13:44:41 -0800 (PST)
+        h=x-gm-message-state:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-language:content-transfer-encoding;
+        bh=RKxr/z5Z+XCc3j/WLz6LF458INM7dnLvQiGuRgdea6I=;
+        b=G1bASubdytdtHuOdjuc4ifw0c3uOZbZ6yQU7Cum0dfmInYU7tNaFXqCa6lY5h7lno3
+         YY3NKHJ6+O+0LFJLqhD1507++CifGhZu43zOwSSsuzSG1id8kZ4/RSzZU4eWXdCk9Au9
+         M732gmuo00R6mN81G/UIe+7GZb2aceala755o2UPoa/xL61S7NM4GfHzSnXS3KdbPKhY
+         tasNzVD8AK04vbm2am/Rfmy+k0Emo0yT1DTAF96vUaCTtcnG9F2WelHQ2XEGq0ztguYC
+         ZIi3yq3n2QZgG7Biq50RascJd0w+EIuHVbaduvij7HwRQRu4ABXvCX69wHKWG3pB97x7
+         Z+0g==
+X-Gm-Message-State: APjAAAU10XUC8oQdRs9yXdF1KCT72/TXvI5XBR5TQlUCm9Wd5trpuyxA
+        GV/+AJ5HXaELLbYwPbzpPIDLwV6boCwEpQ==
+X-Google-Smtp-Source: APXvYqwuRMT5lNvuPuITVIvesrzmLt7bbeQv2zTddIBYVppkD8brZ4Ux1AopMTxEtLhaeVJ3FtMRQQ==
+X-Received: by 2002:aa7:980c:: with SMTP id e12mr33717564pfl.165.1572903985750;
+        Mon, 04 Nov 2019 13:46:25 -0800 (PST)
+Received: from [192.168.1.188] ([66.219.217.79])
+        by smtp.gmail.com with ESMTPSA id i126sm18547901pfc.29.2019.11.04.13.46.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 13:46:25 -0800 (PST)
+To:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>
+Cc:     io-uring@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From:   Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH] MAINTAINERS: update io_uring entry
+Message-ID: <efa17e7d-b33a-c032-1a90-c150d1632ab8@kernel.dk>
+Date:   Mon, 4 Nov 2019 14:46:22 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-4-samitolvanen@google.com>
- <20191104115138.GB45140@lakrids.cambridge.arm.com>
-In-Reply-To: <20191104115138.GB45140@lakrids.cambridge.arm.com>
-From:   Sami Tolvanen <samitolvanen@google.com>
-Date:   Mon, 4 Nov 2019 13:44:30 -0800
-Message-ID: <CABCJKuf4wi6oUkJ68Z49UkK5q4WYYmSPt1X0pyw34ueNMkGC5Q@mail.gmail.com>
-Subject: Re: [PATCH v4 03/17] arm64: kvm: stop treating register x18 as caller save
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 3:51 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > --- a/arch/arm64/kvm/hyp/entry.S
-> > +++ b/arch/arm64/kvm/hyp/entry.S
-> > @@ -23,6 +23,7 @@
-> >       .pushsection    .hyp.text, "ax"
-> >
->
-> Could we please add a note here, e.g.
->
-> /*
->  * We treat x18 as callee-saved as the host may use it as a platform
->  * register (e.g. for shadow call stack).
->  */
->
-> ... as that will avoid anyone trying to optimize this away in future
-> after reading the AAPCS.
+We now have a list that's appropriate for both kernel and userspace
+discussions on io_uring usage and development, add that to the
+MAINTAINERS entry.
 
-Sure, that's a good idea.
+Also add the io-wq files.
 
-> >  .macro restore_callee_saved_regs ctxt
-> > +     // We assume \ctxt is not x18-x28
->
-> Probably worth s/assume/require/ here.
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
-Agreed, I'll change this in v5.
+---
 
-Sami
+diff --git a/MAINTAINERS b/MAINTAINERS
+index c6c34d04ce95..7afb25707098 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -8562,12 +8562,13 @@ F:	include/linux/iova.h
+ 
+ IO_URING
+ M:	Jens Axboe <axboe@kernel.dk>
+-L:	linux-block@vger.kernel.org
+-L:	linux-fsdevel@vger.kernel.org
++L:	io-uring@vger.kernel.org
+ T:	git git://git.kernel.dk/linux-block
+ T:	git git://git.kernel.dk/liburing
+ S:	Maintained
+ F:	fs/io_uring.c
++F:	fs/io-wq.c
++F:	fs/io-wq.h
+ F:	include/uapi/linux/io_uring.h
+ 
+ IPMI SUBSYSTEM
+
+-- 
+Jens Axboe
+
