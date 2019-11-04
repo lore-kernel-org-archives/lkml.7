@@ -2,104 +2,145 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02380CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:05:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023A1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C80542080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:05:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEC4A2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:05:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="geeqURtu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728641AbfKDRFD (ORCPT
+        id S1729136AbfKDRFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:05:03 -0500
-Received: from foss.arm.com ([217.140.110.172]:47476 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfKDRFD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:05:03 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9992D1F1;
-        Mon,  4 Nov 2019 09:05:02 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 605073F71A;
-        Mon,  4 Nov 2019 09:05:00 -0800 (PST)
-Date:   Mon, 4 Nov 2019 17:04:54 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux@googlegroups.com,
-        kernel-hardening@lists.openwall.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4 10/17] arm64: disable kretprobes with SCS
-Message-ID: <20191104170454.GA2024@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-11-samitolvanen@google.com>
+        Mon, 4 Nov 2019 12:05:35 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:41749 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728216AbfKDRFf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:05:35 -0500
+Received: by mail-lj1-f196.google.com with SMTP id m9so18445792ljh.8
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:05:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=4qJiFRAU1ANgQBEoCGJorJXFwWND9KhJu4ptLqqShZY=;
+        b=geeqURtuQ0iMZyZU2JHAx0IIgyNxihwJ/tz8LlMhNGKscQrPvXfVI8M1H/YMxQWlFT
+         qF16TQZ6/ZmOk8D9ptBrhEfRY5oamsNqOKOni0Gs51K/BAbboo/7TXPH9ivalonLHLUf
+         DUEm+AD37BwvxAT03Aa2Po2MXd0Rerh4qM+7/4IYIv/6zP/OrZsfVnmUuWTwTeD/MgGu
+         siSUtozk/md7BLOwWuE1gpANrNX2/T6ZV5bYQC7F04frd7IH/HozwBNqMkfvhYfYBANf
+         ckkDHSv+dNqQAFmUDUIq9zbRBZFTjTtBWOtVzV/XQe5btPcwmCDS2RIL9zeX8C2Rg6Wl
+         q3Rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=4qJiFRAU1ANgQBEoCGJorJXFwWND9KhJu4ptLqqShZY=;
+        b=BDmN4mt0dHNke7UjHBYbqPq7fuyds+gche2/8x4/3Ubf6+mob8SREFdMSKbr+ziWkg
+         mvjAY8BkyIhLSbH035fVMwBzhhONwoPisVnFpLQYexAzoTasZzOZpc7PV4+Vb4wA4xgG
+         1RbVldCo4T606g2sjzBGjMSUacEct9V0U5n0QBio0fxJ2omEtuitsiY5BGZL13qQZVih
+         owdY8B2iNoabp7xIRAGn+agu05BjkaKimkXifA+rQ8bNqAb2xoQ3lOwiareR3O8VbL5Q
+         jCMaEknB7h28ULC3A+wRDTLjlP/HpqF9i4yFy3zqo8kiqBG+s75W4Z6UJVC2fYCmyXyt
+         8qnQ==
+X-Gm-Message-State: APjAAAVS0RGmlIsm40vkFUxeUAYxOCgIeGxugf410klDTZ68nIeoumxy
+        1xks3DSk4cFuU3dnXeEwaz+m6tDl70ckdFyLDoQ=
+X-Google-Smtp-Source: APXvYqwJDCfSR1r8hM4MJdBNSycomr3d/Yl4nSIe1J1+qFv3cbMoiF0nRwJfSkMA4D4BnhqwxP5Me1aU8/u2x0tDkVQ=
+X-Received: by 2002:a2e:9e45:: with SMTP id g5mr2776409ljk.58.1572887131574;
+ Mon, 04 Nov 2019 09:05:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191101221150.116536-11-samitolvanen@google.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+References: <20191016123342.19119-1-patrik.r.jakobsson@gmail.com>
+ <87lftdfb4c.fsf@intel.com> <20191022084423.GB1531961@ulmo>
+ <87imohf6rf.fsf@intel.com> <CAMeQTsYbY+2=w1m_zMo95vrR008otQESYQJ5K1PfyYOi_Ff2BQ@mail.gmail.com>
+In-Reply-To: <CAMeQTsYbY+2=w1m_zMo95vrR008otQESYQJ5K1PfyYOi_Ff2BQ@mail.gmail.com>
+From:   Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+Date:   Mon, 4 Nov 2019 18:05:20 +0100
+Message-ID: <CAMeQTsZ5eXSS3OTG_uHUZpPj_=A4Uj_z5x0ZH-CwHRB2L5-YBg@mail.gmail.com>
+Subject: Re: [PATCH] drm/scdc: Fix typo in bit definition of SCDC_STATUS_FLAGS
+To:     Jani Nikula <jani.nikula@linux.intel.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        Thierry Reding <treding@nvidia.com>,
+        David Airlie <airlied@linux.ie>, Sean Paul <sean@poorly.run>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 03:11:43PM -0700, Sami Tolvanen wrote:
-> With CONFIG_KRETPROBES, function return addresses are modified to
-> redirect control flow to kretprobe_trampoline. This is incompatible
-> with SCS.
+On Tue, Oct 22, 2019 at 5:53 PM Patrik Jakobsson
+<patrik.r.jakobsson@gmail.com> wrote:
+>
+> On Tue, Oct 22, 2019 at 11:51 AM Jani Nikula
+> <jani.nikula@linux.intel.com> wrote:
+> >
+> > On Tue, 22 Oct 2019, Thierry Reding <thierry.reding@gmail.com> wrote:
+> > > On Tue, Oct 22, 2019 at 11:16:51AM +0300, Jani Nikula wrote:
+> > >> On Wed, 16 Oct 2019, Patrik Jakobsson <patrik.r.jakobsson@gmail.com> wrote:
+> > >> > Fix typo where bits got compared (x < y) instead of shifted (x << y).
+> > >>
+> > >> Fixes: 3ad33ae2bc80 ("drm: Add SCDC helpers")
+> > >> Cc: Thierry Reding <treding@nvidia.com>
+> > >
+> > > I'm not sure we really need the Fixes: tag here. These defines aren't
+> > > used anywhere, so technically there's no bug.
+> >
+> > Yeah well, I just logged it here as I happened to do the drive-by git
+> > blame.
+>
+> I think we can skip the fixes tag here. Thanks for review!
+>
+> Did anyone apply this or can I take it through drm-misc-next?
+>
+> -Patrik
 
-I'm a bit confused as to why that's the case -- could you please
-elaborate on how this is incompatible?
+Applied to drm-misc-next
 
-IIUC kretrobes works by patching the function entry point with a BRK, so
-that it can modify the LR _before_ it is saved to the stack. I don't see
-how SCS affects that.
-
-When the instrumented function returns, it'll balance its SCS state,
-then "return" to kretprobe_trampoline. Since kretprobe_trampoline is
-plain assembly, it doesn't have SCS, and can modify the LR live, as it
-does.
-
-So functionally, that appears to work. What am I missing? 
-
-Thanks,
-Mark.
-
-> Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> ---
->  arch/arm64/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 3f047afb982c..e7b57a8a5531 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -165,7 +165,7 @@ config ARM64
->  	select HAVE_STACKPROTECTOR
->  	select HAVE_SYSCALL_TRACEPOINTS
->  	select HAVE_KPROBES
-> -	select HAVE_KRETPROBES
-> +	select HAVE_KRETPROBES if !SHADOW_CALL_STACK
->  	select HAVE_GENERIC_VDSO
->  	select IOMMU_DMA if IOMMU_SUPPORT
->  	select IRQ_DOMAIN
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
-> 
+>
+> >
+> > BR,
+> > Jani.
+> >
+> >
+> >
+> > >
+> > > Thierry
+> > >
+> > >>
+> > >> > Signed-off-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+> > >> > ---
+> > >> >  include/drm/drm_scdc_helper.h | 6 +++---
+> > >> >  1 file changed, 3 insertions(+), 3 deletions(-)
+> > >> >
+> > >> > diff --git a/include/drm/drm_scdc_helper.h b/include/drm/drm_scdc_helper.h
+> > >> > index f92eb2094d6b..6a483533aae4 100644
+> > >> > --- a/include/drm/drm_scdc_helper.h
+> > >> > +++ b/include/drm/drm_scdc_helper.h
+> > >> > @@ -50,9 +50,9 @@
+> > >> >  #define  SCDC_READ_REQUEST_ENABLE (1 << 0)
+> > >> >
+> > >> >  #define SCDC_STATUS_FLAGS_0 0x40
+> > >> > -#define  SCDC_CH2_LOCK (1 < 3)
+> > >> > -#define  SCDC_CH1_LOCK (1 < 2)
+> > >> > -#define  SCDC_CH0_LOCK (1 < 1)
+> > >> > +#define  SCDC_CH2_LOCK (1 << 3)
+> > >> > +#define  SCDC_CH1_LOCK (1 << 2)
+> > >> > +#define  SCDC_CH0_LOCK (1 << 1)
+> > >> >  #define  SCDC_CH_LOCK_MASK (SCDC_CH2_LOCK | SCDC_CH1_LOCK | SCDC_CH0_LOCK)
+> > >> >  #define  SCDC_CLOCK_DETECT (1 << 0)
+> > >>
+> > >> --
+> > >> Jani Nikula, Intel Open Source Graphics Center
+> > >> _______________________________________________
+> > >> dri-devel mailing list
+> > >> dri-devel@lists.freedesktop.org
+> > >> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> >
+> > --
+> > Jani Nikula, Intel Open Source Graphics Center
