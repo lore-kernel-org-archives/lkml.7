@@ -2,126 +2,117 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D39C8CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24562CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:56:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AAA68217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEBBF217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:55:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="oTuhypX7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dXKI99Yz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728802AbfKDKzu (ORCPT
+        id S1727500AbfKDKz7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:55:50 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:27716 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727500AbfKDKzs (ORCPT
+        Mon, 4 Nov 2019 05:55:59 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44784 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728663AbfKDKz5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:55:48 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4Asmnt023844;
-        Mon, 4 Nov 2019 11:55:37 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=Ceu5Duw6hF7vdL1evLyVczyJdrbrZgbra9bYDT3Z5D4=;
- b=oTuhypX7XdxIMlREiK1/GaTKk1TqA6KNl0C6TsU+yWTTXOGvwa982axTSFnE3h4PvCOR
- oy54loDCqtMyZlvuD8e1eZS9T1oHuJzQmbDVURzD67XFKsUy3syZbB+zahHfRT2ZYhdD
- ouvsdCVxhwJNNukSrLDRCEJOqIFJ4Wb33n8ovYGLVP1MF5Fcj4keSechTCOx7P2t+KZc
- MuL5bpivJj8pzP5e6/w+go8w1hGr4HLRJxE8FtrTEEE64PdXh+yc967j0yPmei8w2Yzp
- Mu326zDJ02MF3Sn8VgjT+IqvznAZN+aC+a7gKF7unuOb+GwXcIdQxCRvIPK76LDmux1x Iw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054h1xv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:55:36 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 8E92A10002A;
-        Mon,  4 Nov 2019 11:55:36 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 7C3B02BDA95;
-        Mon,  4 Nov 2019 11:55:36 +0100 (CET)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by SAFEX1HUBCAS23.st.com
- (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 11:55:36 +0100
-Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:55:35
- +0100
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-CC:     <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH v2 1/2] ARM: dts: stm32: remove OV5640 pinctrl definition on stm32mp157c-ev1
-Date:   Mon, 4 Nov 2019 11:55:28 +0100
-Message-ID: <20191104105529.8049-2-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191104105529.8049-1-amelie.delaunay@st.com>
-References: <20191104105529.8049-1-amelie.delaunay@st.com>
+        Mon, 4 Nov 2019 05:55:57 -0500
+Received: by mail-qt1-f194.google.com with SMTP id o11so18150681qtr.11;
+        Mon, 04 Nov 2019 02:55:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=rvo1SHxB9nVYQAjRXc27dF5Hg8RmRrQzx7MdaM7VmNk=;
+        b=dXKI99YzHJ7cWkZ1hQUuEdTfaXZk3kat6uEDvhwPD2N/VlwI2UQ3sKAOIdf9qiBcMg
+         k9VB6gsJ6VAE3AytNwdOQsiWAMB5DdQLECd+WxBntCp+DgW/Cfe7y85m0/RG7DwYGym8
+         r+FSwc1ame1Yi5RWV+mHOyrv0cie3RRmdR1YEoC4qOHQSdKlIhmgpPsFg8fRpC/F40Sx
+         5lNnEn9I37pYzOKr+Sicerj7F2oWnK1nQLMbNNTQ7MVcz+52fb2wKt8BJ4yf7arot2GO
+         Ptqombc87PyDNOZkDRGRXwh1w6CZb3yLl9MfK883ERE+aX6atclJVojBr6MgPEP18EY6
+         5yUw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=rvo1SHxB9nVYQAjRXc27dF5Hg8RmRrQzx7MdaM7VmNk=;
+        b=oZAGDphXl8JdFfy82aEODNcPbcHM5YUItowCOu40czoLPcTjWcEmkEmzXxlu0tjS6X
+         q3UiAgGSbUC9sraFsIbTkF9ROthclxrNCsRqnfsGJQUfJ9kX1WTYFh1NLhz5xfCcc4kY
+         Z4HGFDF/j7NahSnVPHYLwsNt5yw7mJPKtAgsw0JQBRLTY9VIrei2rbvYApDj7/jBieTi
+         IEqdfQjGkpBr7c48fvLr0bIHHfpT8azKJzmRaaqqXuTB68RdiCNYLY62VVDjcgTbFe8I
+         Zzlwrx9tKOJxxHHSyj41QjdENlKUn2SFSBYsi9uuNiU6aSYJFnRtaDqHja59i0cCz2S5
+         Nyeg==
+X-Gm-Message-State: APjAAAXz40v/oHFsaeBFmaoRSKBScBujw6HKkzrnbtzfR7Qb6BhT/hxb
+        L9V7Z+pexSosnTwnPB/9cTnrRAAh0MaYKWwyN+lF9Fg885I=
+X-Google-Smtp-Source: APXvYqygXMl4HsPWL+b5uxs86pmRyBHmjRYiwkZDhTm8Pg+KmODCvvi3F+xSQaJ5/4Ihk1T7mz8m3DcVaUj1jA5EIX0=
+X-Received: by 2002:ac8:23d3:: with SMTP id r19mr12004769qtr.297.1572864955304;
+ Mon, 04 Nov 2019 02:55:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.141]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
+References: <CAPW-Pu0KuxqbKSQ2JQaxh5AHbdZdNQZJfOgxoe_XZSxow+9e3A@mail.gmail.com>
+In-Reply-To: <CAPW-Pu0KuxqbKSQ2JQaxh5AHbdZdNQZJfOgxoe_XZSxow+9e3A@mail.gmail.com>
+From:   Leon Maxx <leonmaxx@gmail.com>
+Date:   Mon, 4 Nov 2019 12:55:44 +0200
+Message-ID: <CAPW-Pu3a7UjhW3wZ7jMLMEwj5goabqgHp2Vf7tQyzT3XwZr8cg@mail.gmail.com>
+Subject: [RFC PATCH 3/3] platform/x86: asus_wmi: Set default fan boost mode to normal
+To:     linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org,
+        acpi4asus-user@lists.sourceforge.net, andy@infradead.org,
+        dvhart@infradead.org, corentin.chary@gmail.com,
+        Daniel Drake <drake@endlessm.com>, yurii.pavlovskyi@gmail.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"push-pull" configuration is now fully handled by the gpiolib and the
-STMFX pinctrl driver. There is no longer need to declare a pinctrl group
-to only configure "push-pull" setting for the line. It is done directly by
-the gpiolib.
+Set default fan boost mode to normal for multiple reasons:
 
-Fixes: a502b343ebd0 ("pinctrl: stmfx: update pinconf settings")
-Signed-off-by: Alexandre Torgue <alexandre.torgue@st.com>
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
+1) existing code assumes that laptop started in normal mode and that is
+not always true.
+2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
+overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
+normal avoids overheating.
+
+[1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+
+Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
 ---
- arch/arm/boot/dts/stm32mp157c-ev1.dts | 12 ++----------
- 1 file changed, 2 insertions(+), 10 deletions(-)
+ drivers/platform/x86/asus-wmi.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c-ev1.dts b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-index 2baae5f25e2c..3f7fcba3a516 100644
---- a/arch/arm/boot/dts/stm32mp157c-ev1.dts
-+++ b/arch/arm/boot/dts/stm32mp157c-ev1.dts
-@@ -182,14 +182,12 @@
- 
- 	ov5640: camera@3c {
- 		compatible = "ovti,ov5640";
--		pinctrl-names = "default";
--		pinctrl-0 = <&ov5640_pins>;
- 		reg = <0x3c>;
- 		clocks = <&clk_ext_camera>;
- 		clock-names = "xclk";
- 		DOVDD-supply = <&v2v8>;
--		powerdown-gpios = <&stmfx_pinctrl 18 GPIO_ACTIVE_HIGH>;
--		reset-gpios = <&stmfx_pinctrl 19 GPIO_ACTIVE_LOW>;
-+		powerdown-gpios = <&stmfx_pinctrl 18 (GPIO_ACTIVE_HIGH | GPIO_PUSH_PULL)>;
-+		reset-gpios = <&stmfx_pinctrl 19 (GPIO_ACTIVE_LOW | GPIO_PUSH_PULL)>;
- 		rotation = <180>;
- 		status = "okay";
- 
-@@ -225,12 +223,6 @@
- 				drive-push-pull;
- 				bias-pull-down;
- 			};
--
--			ov5640_pins: camera {
--				pins = "agpio2", "agpio3"; /* stmfx pins 18 & 19 */
--				drive-push-pull;
--				output-low;
--			};
- 		};
- 	};
- };
+diff --git a/drivers/platform/x86/asus-wmi.c b/drivers/platform/x86/asus-wmi.c
+index f4e5840..70c5fbb 100644
+--- a/drivers/platform/x86/asus-wmi.c
++++ b/drivers/platform/x86/asus-wmi.c
+@@ -1674,6 +1674,18 @@ static int fan_boost_mode_write(struct asus_wmi *asus)
+  return 0;
+ }
+
++static int fan_boost_mode_set_default(struct asus_wmi *asus)
++{
++ int result = 0;
++
++ if (asus->fan_boost_mode_available) {
++ asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
++ result = fan_boost_mode_write(asus);
++ }
++
++ return result;
++}
++
+ static int fan_boost_mode_switch_next(struct asus_wmi *asus)
+ {
+  u8 mask = asus->fan_boost_mode_mask;
+@@ -2450,6 +2462,7 @@ static int asus_wmi_add(struct platform_device *pdev)
+  err = fan_boost_mode_check_present(asus);
+  if (err)
+  goto fail_fan_boost_mode;
++ fan_boost_mode_set_default(asus);
+
+  err = asus_wmi_sysfs_init(asus->platform_device);
+  if (err)
 -- 
-2.17.1
-
+1.8.3.1
