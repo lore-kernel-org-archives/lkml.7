@@ -4,49 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB3B2CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEA9CCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0EDD214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B215E20650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905668;
-	bh=BlP8IYozOevQrxXlH5TJfSbvPd0H39Pymk/5eaQJdRo=;
+	s=default; t=1572905677;
+	bh=ILWaVFAbM7pu+olaK2zDZOwCaPUffqfJMirgEEEL1/U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gf8ud136GIPpdm6rsApva/3IdFUKDivXpqWvdRm/Sap6WQ8hkFjTwSl4vEbslFFo5
-	 dybx6K4KXW/7RNEJKy6QZB2wRZirZcqO4+EbiJ35r+p2r92097zkrjAsB3No417K9L
-	 jR1+/FKtYTyczm7C6zNtdg7t5CacAQEpqhzDeVYU=
+	b=uHzhNky/HVZqu8Z7VMcDhCDQIucAFA3cn2oMOEvEZR6gTjjPZTov02M+ouLwMi87F
+	 2C/2YAyAdTP+zxuQiwVSNoa6P08CUJNssCP3f1JOKF8ohQ+FYYgtjaY3SdhhB0vv8W
+	 NvU5MY+7zkYcWPiji2FpGOSjzj/ECA7n6RLoT2IY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389551AbfKDWH4 (ORCPT
+        id S2390107AbfKDWHY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:07:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40554 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:07:24 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39814 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390036AbfKDWHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:07:49 -0500
+        id S2389454AbfKDWHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:07:21 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DE4921929;
-        Mon,  4 Nov 2019 22:07:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 265392084D;
+        Mon,  4 Nov 2019 22:07:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905268;
-        bh=BlP8IYozOevQrxXlH5TJfSbvPd0H39Pymk/5eaQJdRo=;
+        s=default; t=1572905240;
+        bh=ILWaVFAbM7pu+olaK2zDZOwCaPUffqfJMirgEEEL1/U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=HT1HHbKHjAeC2pj7qU71OhokKDPEZcrr3qnTZyxMuIZFbtfi35UqaZuwD79HS8H5v
-         6KUwDPsIFIwBh6Y1iDkdfxFqG80vFmTxtG451AECGuErrYphzcrdz++jD72ZG7+JdQ
-         rUzcjU8xySYCffLBC+pdy2GRwBlVOhvcT/cnUpRY=
+        b=ckM8W2+7SteDDjgBu4QH6CYTPEpSxknOcrRZDv3Xe6IXIrkyfjbWwwmLHtUx+IWRc
+         AdtGm9ENiZZyhccS98DjLAGTfVqFj/RrOY+2mGPPBMpkuM0G3QmRyVWooNVt0uwR1h
+         89Jk8UN8/YSw90r33pDeyjgq1CNRDEJE5P9GgoUU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 050/163] arm64: vdso32: Dont use KBUILD_CPPFLAGS unconditionally
-Date:   Mon,  4 Nov 2019 22:44:00 +0100
-Message-Id: <20191104212143.810507927@linuxfoundation.org>
+        stable@vger.kernel.org, Halil Pasic <pasic@linux.ibm.com>,
+        Marc Hartmayer <mhartmay@linux.ibm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Cornelia Huck <cohuck@redhat.com>,
+        Christian Borntraeger <borntraeger@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 076/163] s390/cio: fix virtio-ccw DMA without PV
+Date:   Mon,  4 Nov 2019 22:44:26 +0100
+Message-Id: <20191104212145.658884661@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,46 +65,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Halil Pasic <pasic@linux.ibm.com>
 
-[ Upstream commit c71e88c437962c1ec43d4d23a0ebf4c9cf9bee0d ]
+[ Upstream commit 05668e1d74b84c53fbe0f28565e4c9502a6b8a67 ]
 
-KBUILD_CPPFLAGS is defined differently depending on whether the main
-compiler is clang or not. This means that it is not possible to build
-the compat vDSO with GCC if the rest of the kernel is built with clang.
+Commit 37db8985b211 ("s390/cio: add basic protected virtualization
+support") breaks virtio-ccw devices with VIRTIO_F_IOMMU_PLATFORM for non
+Protected Virtualization (PV) guests. The problem is that the dma_mask
+of the ccw device, which is used by virtio core, gets changed from 64 to
+31 bit, because some of the DMA allocations do require 31 bit
+addressable memory. For PV the only drawback is that some of the virtio
+structures must end up in ZONE_DMA because we have the bounce the
+buffers mapped via DMA API anyway.
 
-Define VDSO_CPPFLAGS directly to break this dependency and allow a clang
-kernel to build a compat vDSO with GCC:
+But for non PV guests we have a problem: because of the 31 bit mask
+guests bigger than 2G are likely to try bouncing buffers. The swiotlb
+however is only initialized for PV guests, because we don't want to
+bounce anything for non PV guests. The first such map kills the guest.
 
-  $ make ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu- \
-    CROSS_COMPILE_COMPAT=arm-linux-gnueabihf- CC=clang \
-    COMPATCC=arm-linux-gnueabihf-gcc
+Since the DMA API won't allow us to specify for each allocation whether
+we need memory from ZONE_DMA (31 bit addressable) or any DMA capable
+memory will do, let us use coherent_dma_mask (which is used for
+allocations) to force allocating form ZONE_DMA while changing dma_mask
+to DMA_BIT_MASK(64) so that at least the streaming API will regard
+the whole memory DMA capable.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Halil Pasic <pasic@linux.ibm.com>
+Reported-by: Marc Hartmayer <mhartmay@linux.ibm.com>
+Suggested-by: Robin Murphy <robin.murphy@arm.com>
+Fixes: 37db8985b211 ("s390/cio: add basic protected virtualization support")
+Link: https://lore.kernel.org/lkml/20190930153803.7958-1-pasic@linux.ibm.com
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Christian Borntraeger <borntraeger@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/kernel/vdso32/Makefile | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ drivers/s390/cio/cio.h    | 1 +
+ drivers/s390/cio/css.c    | 7 ++++++-
+ drivers/s390/cio/device.c | 2 +-
+ 3 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 77aa613403747..aa171b043287b 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -25,11 +25,9 @@ cc32-as-instr = $(call try-run,\
- # arm64 one.
- # As a result we set our own flags here.
+diff --git a/drivers/s390/cio/cio.h b/drivers/s390/cio/cio.h
+index ba7d2480613b9..dcdaba689b20c 100644
+--- a/drivers/s390/cio/cio.h
++++ b/drivers/s390/cio/cio.h
+@@ -113,6 +113,7 @@ struct subchannel {
+ 	enum sch_todo todo;
+ 	struct work_struct todo_work;
+ 	struct schib_config config;
++	u64 dma_mask;
+ 	char *driver_override; /* Driver name to force a match */
+ } __attribute__ ((aligned(8)));
  
--# From top-level Makefile
--# NOSTDINC_FLAGS
--VDSO_CPPFLAGS := -nostdinc -isystem $(shell $(COMPATCC) -print-file-name=include)
-+# KBUILD_CPPFLAGS and NOSTDINC_FLAGS from top-level Makefile
-+VDSO_CPPFLAGS := -D__KERNEL__ -nostdinc -isystem $(shell $(COMPATCC) -print-file-name=include)
- VDSO_CPPFLAGS += $(LINUXINCLUDE)
--VDSO_CPPFLAGS += $(KBUILD_CPPFLAGS)
+diff --git a/drivers/s390/cio/css.c b/drivers/s390/cio/css.c
+index 1fbfb0a93f5f1..831850435c23b 100644
+--- a/drivers/s390/cio/css.c
++++ b/drivers/s390/cio/css.c
+@@ -232,7 +232,12 @@ struct subchannel *css_alloc_subchannel(struct subchannel_id schid,
+ 	 * belong to a subchannel need to fit 31 bit width (e.g. ccw).
+ 	 */
+ 	sch->dev.coherent_dma_mask = DMA_BIT_MASK(31);
+-	sch->dev.dma_mask = &sch->dev.coherent_dma_mask;
++	/*
++	 * But we don't have such restrictions imposed on the stuff that
++	 * is handled by the streaming API.
++	 */
++	sch->dma_mask = DMA_BIT_MASK(64);
++	sch->dev.dma_mask = &sch->dma_mask;
+ 	return sch;
  
- # Common C and assembly flags
- # From top-level Makefile
+ err:
+diff --git a/drivers/s390/cio/device.c b/drivers/s390/cio/device.c
+index c421899be20f2..027ef1dde5a7a 100644
+--- a/drivers/s390/cio/device.c
++++ b/drivers/s390/cio/device.c
+@@ -710,7 +710,7 @@ static struct ccw_device * io_subchannel_allocate_dev(struct subchannel *sch)
+ 	if (!cdev->private)
+ 		goto err_priv;
+ 	cdev->dev.coherent_dma_mask = sch->dev.coherent_dma_mask;
+-	cdev->dev.dma_mask = &cdev->dev.coherent_dma_mask;
++	cdev->dev.dma_mask = sch->dev.dma_mask;
+ 	dma_pool = cio_gp_dma_create(&cdev->dev, 1);
+ 	if (!dma_pool)
+ 		goto err_dma_pool;
 -- 
 2.20.1
 
