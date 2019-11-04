@@ -2,221 +2,115 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D694CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BEF2CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A49B2190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 726F6222C6
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:03:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="F3LvIJsL";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nyFLK0xc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727940AbfKDGDB (ORCPT
+        id S1727991AbfKDGDU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:03:01 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:5697 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726018AbfKDGDA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:03:00 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 1E3CFAD45C0D4A48A932;
-        Mon,  4 Nov 2019 14:02:57 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
- 14:02:47 +0800
-Subject: Re: [PATCH] lib: optimize cpumask_local_spread()
-To:     Andrew Morton <akpm@linux-foundation.org>
-References: <1572501813-2125-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191031173721.e2a40b037799a149433a4867@linux-foundation.org>
-CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
-        "Mike Rapoport" <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        "Michal Hocko" <mhocko@suse.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Anshuman Khandual" <anshuman.khandual@arm.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <cc3640e1-0e29-f196-97e4-ebf0bc8be78b@hisilicon.com>
-Date:   Mon, 4 Nov 2019 14:02:47 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Mon, 4 Nov 2019 01:03:20 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:37912 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDGDU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:03:20 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 98BCF60931; Mon,  4 Nov 2019 06:03:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847399;
+        bh=6qpLotxB72KIT+flkVzVeUM51hBOy5wrXmPAI/7+OOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=F3LvIJsL1SNzPUmEBqB23s4Lf1Lm1LziS3wKOtGHNqkFPwVCPKs6bLvj5H2DTOEFK
+         E1ejiENwCrsqCN6+qcMT3Nfk3oHrRNNKS9wWwRSR31FJb6Ca8P50LuGxcrCJ5hfOC7
+         5rPCx/x+3W90Bh8N8j2B129OpqUZIaJ1I97DEDoY=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id CE1D360931;
+        Mon,  4 Nov 2019 06:03:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572847398;
+        bh=6qpLotxB72KIT+flkVzVeUM51hBOy5wrXmPAI/7+OOY=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=nyFLK0xcoKMok6XVbxJG567R+nFNWV9oBTj48igpubc4A0LBYaGmWC6hUEsl3qZWF
+         +5pvzZ/hwj7v9AAcHsz0j5wc26ygzJND/F9DUeqaQs3GrYDV3tbn+fWxSLzi3GEg4H
+         /MWRSZP+ybqkLvA2WGwQIMSryUKlho2a3bq/SN1g=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org CE1D360931
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
+ controller
+To:     Matthias Kaehlcke <mka@chromium.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Maulik Shah <mkshah@codeaurora.org>
+References: <20191023090219.15603-1-rnayak@codeaurora.org>
+ <20191023090219.15603-12-rnayak@codeaurora.org>
+ <20191025194730.GM20212@google.com>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <cb7c4ce2-2ea6-0e71-36a6-7b0a489f06c3@codeaurora.org>
+Date:   Mon, 4 Nov 2019 11:33:13 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191031173721.e2a40b037799a149433a4867@linux-foundation.org>
-Content-Type: text/plain; charset="windows-1252"
+In-Reply-To: <20191025194730.GM20212@google.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andrew,
 
-On 2019/11/1 8:37, Andrew Morton wrote:
-> On Thu, 31 Oct 2019 14:03:33 +0800 Shaokun Zhang <zhangshaokun@hisilicon.com> wrote:
+
+On 10/26/2019 1:17 AM, Matthias Kaehlcke wrote:
+> Hi Rajendra/Maulik,
 > 
->> From: yuqi jin <jinyuqi@huawei.com>
+> On Wed, Oct 23, 2019 at 02:32:19PM +0530, Rajendra Nayak wrote:
+>> From: Maulik Shah <mkshah@codeaurora.org>
 >>
->> In the multi-processor and NUMA system, A device may have many numa
->> nodes belonging to multiple cpus. When we get a local numa, it is better
->> to find the node closest to the local numa node to return instead of
->> going to the online cpu immediately.
+>> Add pdc interrupt controller for sc7180
 >>
->> For example, In Huawei Kunpeng 920 system, there are 4 NUMA node(0 -3)
->> in the 2-socket system(0 - 1). If the I/O device is in socket1
->> and the local NUMA node is 2, we shall choose the non-local node3 in
->> the same socket when cpu core in NUMA node2 is less that I/O requirements.
->> If we directly pick one cpu core from all online ones, it may be in
->> the another socket and it is not friendly for performance.
+>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
+>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>> ---
+>> v3:
+>> Used the qcom,sdm845-pdc compatible for pdc node
 >>
->> ...
+>>   arch/arm64/boot/dts/qcom/sc7180.dtsi | 10 ++++++++++
+>>   1 file changed, 10 insertions(+)
 >>
->> Changes from RFC:
->>      Address Michal Hocko's comment: Use GFP_ATOMIC instead of GFP_KERNEL
+>> diff --git a/arch/arm64/boot/dts/qcom/sc7180.dtsi b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> index f2981ada578f..07ea393c2b5f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sc7180.dtsi
+>> @@ -184,6 +184,16 @@
+>>   			#power-domain-cells = <1>;
+>>   		};
+>>   
+>> +		pdc: interrupt-controller@b220000 {
 > 
-> Are you sure this is necessary?  cpumask_local_spread() is typically
-> called when a device driver is initializing irq affinities, and
-> sleeping allocations are usually OK at driver initialization time.  If
+> Aren't the nodes supposed to be ordered by address as for SDM845?
+> If so this node should be added after 'qupv3_id_1: geniqup@ac0000',
+> not before.
 
-Got it and my limited realization, thanks for more explanations about it.
-
-> there is some driver which is calling cpumask_local_spread() from
-> atomic context, I bet it's pretty easy to fix.
-> 
->> --- a/lib/cpumask.c
->> +++ b/lib/cpumask.c
->> @@ -192,6 +192,33 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->>  }
->>  #endif
->>  
->> +static void calc_node_distance(int *node_dist, int node)
->> +{
->> +	int i;
->> +
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		node_dist[i] = node_distance(node, i);
->> +}
->> +
->> +static int find_nearest_node(int *node_dist, bool *used_flag)
-> 
-> The name "used_flag" is rather redundant for a thing of type bool - we
-> know it's a flag!  "used" would suffice.
-> 
-
-Ok
-
->> +{
->> +	int i, min_dist = node_dist[0], node_id = -1;
->> +
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		if (used_flag[i] == 0) {
->> +			min_dist = node_dist[i];
->> +			node_id = i;
->> +			break;
->> +		}
->> +	for (i = 0; i < nr_node_ids; i++)
->> +		if (node_dist[i] < min_dist && used_flag[i] == 0) {
->> +			min_dist = node_dist[i];
->> +			node_id = i;
->> +		}
->> +
->> +	return node_id;
->> +}
->> +
->>  /**
->>   * cpumask_local_spread - select the i'th cpu with local numa cpu's first
->>   * @i: index number
->> @@ -205,7 +232,8 @@ void __init free_bootmem_cpumask_var(cpumask_var_t mask)
->>   */
->>  unsigned int cpumask_local_spread(unsigned int i, int node)
-> 
-> Yes, this has become quite an expensive function.  That seems harmless
-> given the typical callsites.
-> 
->>  {
->> -	int cpu;
->> +	int cpu, j, id, *node_dist;
->> +	bool *used_flag;
->>  
->>  	/* Wrap: we always want a cpu. */
->>  	i %= num_online_cpus();
->> @@ -215,19 +243,45 @@ unsigned int cpumask_local_spread(unsigned int i, int node)
->>  			if (i-- == 0)
->>  				return cpu;
->>  	} else {
->> -		/* NUMA first. */
->> -		for_each_cpu_and(cpu, cpumask_of_node(node), cpu_online_mask)
->> -			if (i-- == 0)
->> -				return cpu;
->> +		node_dist = kmalloc_array(nr_node_ids, sizeof(int), GFP_ATOMIC);
->> +		if (!node_dist)
->> +			for_each_cpu(cpu, cpu_online_mask)
->> +				if (i-- == 0)
->> +					return cpu;
->>  
->> -		for_each_cpu(cpu, cpu_online_mask) {
->> -			/* Skip NUMA nodes, done above. */
->> -			if (cpumask_test_cpu(cpu, cpumask_of_node(node)))
->> -				continue;
->> +		used_flag = kmalloc_array(nr_node_ids, sizeof(bool), GFP_ATOMIC);
-> 
-> This could actually be an array of bits (include/linux/bitmap.h), but
-> it hardly seems important.
-> 
-
-Ok,
-
-> In fact with CONFIG_NODES_SHIFT <= 10, such a bitmap would have max
-> size of 128 bytes and could be a local.  But again, this is unimportant
-> as long as the other kmalloc is in there.
-> 
-
-Got it and I will follow it in next version.
-
-Thanks,
-Shaokun
+yes, indeed. my sorting seems to have gone wrong. Will fix and repost.
+thanks
 
 > 
->> +		if (!used_flag)
->> +			for_each_cpu(cpu, cpu_online_mask)
->> +				if (i-- == 0) {
->> +					kfree(node_dist);
->> +					return cpu;
->> +				}
->> +		memset(used_flag, 0, nr_node_ids * sizeof(bool));
->>  
->> -			if (i-- == 0)
->> -				return cpu;
->> +		calc_node_distance(node_dist, node);
->> +		for (j = 0; j < nr_node_ids; j++) {
->> +			id = find_nearest_node(node_dist, used_flag);
->> +			if (id < 0)
->> +				break;
->> +			for_each_cpu_and(cpu,
->> +				cpumask_of_node(id), cpu_online_mask)
->> +				if (i-- == 0) {
->> +					kfree(node_dist);
->> +					kfree(used_flag);
->> +					return cpu;
->> +				}
->> +			used_flag[id] = 1;
->>  		}
->> +
->> +		for_each_cpu(cpu, cpu_online_mask)
->> +			if (i-- == 0) {
->> +				kfree(node_dist);
->> +				kfree(used_flag);
->> +				return cpu;
->> +			}
->> +
->> +		kfree(node_dist);
->> +		kfree(used_flag);
->>  	}
->>  	BUG();
->>  }
-> 
-> 
-> .
-> 
 
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
