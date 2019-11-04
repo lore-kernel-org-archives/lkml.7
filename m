@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C457CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8642BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F118021744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5146F217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904170;
-	bh=mOzjGy2Q9cTEq/lLvfPWhDSPbJebbl1LtvQpkbyCVFM=;
+	s=default; t=1572904174;
+	bh=A/tP7fn3uXUKYltJg5iZEN3dR2cwHntAg7zHoHujsT8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Uldq2GJIWnDxkfa1TpJUvDBkEWUDZ4LMKoGba/bIVi+Fmg3/KKoO3gaInRZcQK+f2
-	 ZNKW7krNnzfEJMtySjgkv6A1ja2kA+DSLcFDVq0Fewhor4z5/Y59dqH3pHxti6tC8e
-	 5yZwAYui4sZebV5LH67DeeGlNtwiXbzhc6Ea0+pw=
+	b=qDN0LlfCpt0lwcbwuo0iephFJ8cdDat/oqD1ZSvqwryJACLWz/wunbm7fPUeAGGBS
+	 ElS+K1XJUjrzT4+m3A3hSQ/0v/3DTVF26sWXxcz+krV9ZXApjqkWTmw15a3TdkRPBM
+	 EMOFDk+MAjQavpjAZNobKMUFbOGFjccZbHpU35L4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387419AbfKDVt2 (ORCPT
+        id S2387451AbfKDVtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:49:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40752 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:49:33 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730365AbfKDVt0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:26 -0500
+        id S2387420AbfKDVt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:49:28 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A79E220B7C;
-        Mon,  4 Nov 2019 21:49:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0BBFE214D8;
+        Mon,  4 Nov 2019 21:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904166;
-        bh=mOzjGy2Q9cTEq/lLvfPWhDSPbJebbl1LtvQpkbyCVFM=;
+        s=default; t=1572904168;
+        bh=A/tP7fn3uXUKYltJg5iZEN3dR2cwHntAg7zHoHujsT8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=X7HmCIXd9RcsfrWmLV6mJQhsF+EpkBjKeOnSEGQhZyTbwnPWThsPAGd7kA8Se6h3V
-         SspKVqe0VHOlOnilAMF2Fgtc3Rn9etT8jmw8HEfZXZgnQsyDhlefNflrcJkPUA0Iej
-         BPPHin2POhigsNEnjNTRWnLvhFhOM++vKAp17cSY=
+        b=iLY9HQliyEev/3QW8+HJGgf9d982ltL8mCmAPBHtXnRruEDreYJHTr6oTOrwcfVvn
+         bYUkycsAnOLENFGfz5iHBCrasK9yHiA9gZv3Q4gKMJSrP8oEaaDVU9QLLNy14jX5UV
+         AWCvlzQHIv0zveaHbRoXLIDECRAXZRV1n1NtGU5k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>,
-        Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH 4.4 35/46] HID: fix error message in hid_open_report()
-Date:   Mon,  4 Nov 2019 22:45:06 +0100
-Message-Id: <20191104211908.747212493@linuxfoundation.org>
+        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
+        Johannes Berg <johannes.berg@intel.com>
+Subject: [PATCH 4.4 36/46] nl80211: fix validation of mesh path nexthop
+Date:   Mon,  4 Nov 2019 22:45:07 +0100
+Message-Id: <20191104211909.532938772@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -60,57 +59,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michał Mirosław <mirq-linux@rere.qmqm.pl>
+From: Markus Theil <markus.theil@tu-ilmenau.de>
 
-commit b3a81c777dcb093020680490ab970d85e2f6f04f upstream.
+commit 1fab1b89e2e8f01204a9c05a39fd0b6411a48593 upstream.
 
-On HID report descriptor parsing error the code displays bogus
-pointer instead of error offset (subtracts start=NULL from end).
-Make the message more useful by displaying correct error offset
-and include total buffer size for reference.
-
-This was carried over from ancient times - "Fixed" commit just
-promoted the message from DEBUG to ERROR.
+Mesh path nexthop should be a ethernet address, but current validation
+checks against 4 byte integers.
 
 Cc: stable@vger.kernel.org
-Fixes: 8c3d52fc393b ("HID: make parser more verbose about parsing errors by default")
-Signed-off-by: Michał Mirosław <mirq-linux@rere.qmqm.pl>
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
+Fixes: 2ec600d672e74 ("nl80211/cfg80211: support for mesh, sta dumping")
+Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
+Link: https://lore.kernel.org/r/20191029093003.10355-1-markus.theil@tu-ilmenau.de
+Signed-off-by: Johannes Berg <johannes.berg@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hid/hid-core.c |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ net/wireless/nl80211.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -959,6 +959,7 @@ int hid_open_report(struct hid_device *d
- 	__u8 *start;
- 	__u8 *buf;
- 	__u8 *end;
-+	__u8 *next;
- 	int ret;
- 	static int (*dispatch_type[])(struct hid_parser *parser,
- 				      struct hid_item *item) = {
-@@ -1012,7 +1013,8 @@ int hid_open_report(struct hid_device *d
- 	device->collection_size = HID_DEFAULT_NUM_COLLECTIONS;
+--- a/net/wireless/nl80211.c
++++ b/net/wireless/nl80211.c
+@@ -292,7 +292,8 @@ static const struct nla_policy nl80211_p
+ 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
+ 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
+ 				   .len = IEEE80211_MAX_MESH_ID_LEN },
+-	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
++	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_BINARY,
++					  .len = ETH_ALEN },
  
- 	ret = -EINVAL;
--	while ((start = fetch_item(start, end, &item)) != NULL) {
-+	while ((next = fetch_item(start, end, &item)) != NULL) {
-+		start = next;
- 
- 		if (item.format != HID_ITEM_FORMAT_SHORT) {
- 			hid_err(device, "unexpected long global item\n");
-@@ -1041,7 +1043,8 @@ int hid_open_report(struct hid_device *d
- 		}
- 	}
- 
--	hid_err(device, "item fetching failed at offset %d\n", (int)(end - start));
-+	hid_err(device, "item fetching failed at offset %u/%u\n",
-+		size - (unsigned int)(end - start), size);
- err:
- 	vfree(parser);
- 	hid_close_report(device);
+ 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
+ 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
 
 
