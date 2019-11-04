@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EB2FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C0BDCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 523DC21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9B7214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904648;
-	bh=2K3Nhn17oyQlttcoEwq3Au9rsNdUXZ/WhlXS/lb70BA=;
+	s=default; t=1572904650;
+	bh=Wnu7Z2OKcnzbqlOid24zXeShG/t1Wp8CuboYXR7f6/g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=m7DNaDzMtK0uWqd32y0ZbZhurMElEf+wV+25QmrQ9/RfRaKKNpl2nHX7MlGdMoB3c
-	 gYtwSi9qG3RJubYKJJ5JNO+KvAN7GM43liu4QrR4XVI/T3WP4kSfiUtH5rhyQMdYAs
-	 hFW4tSZdM1WPNJjFIt1vkZgyr9TbeXyad3rG14as=
+	b=DxCAAS6/iY1odQeENlyuEU7KErbdI1dqxeQMvk7PEwRHcZL+a1VLrMAg8/o6uLs2R
+	 EPYDdMCASpVB5wnahnAtoBKaFNnCGh+etqmCiGXqwNZWrupr5WLnFpiSwKuLSSv9UD
+	 5fDcg835NgDchXTQVNAH5YtKzOl8AOGDxbJQOfgk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388587AbfKDV51 (ORCPT
+        id S2388600AbfKDV52 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53560 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53660 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388568AbfKDV5X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:23 -0500
+        id S2388576AbfKDV5Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:25 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 46990214D8;
-        Mon,  4 Nov 2019 21:57:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0D378214D8;
+        Mon,  4 Nov 2019 21:57:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904641;
-        bh=2K3Nhn17oyQlttcoEwq3Au9rsNdUXZ/WhlXS/lb70BA=;
+        s=default; t=1572904644;
+        bh=Wnu7Z2OKcnzbqlOid24zXeShG/t1Wp8CuboYXR7f6/g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JmEiOEMR4EPmST5Pnylvv3fW6hzK2XJ30TADNB7n0MR7pSVOyxZXeSbTa0OW3djKA
-         QZiEYENmtN8T0Q23KeyssihVVnq6Ez6shDNdPLFor5tGTt0I72Y11pfmqecx+I6CbF
-         KoAZK0wMcMhwGSrXReUQT7kV7MtpuTrTFT6eaA64=
+        b=QFf6rGZ5k/WAM4crPwFqZYA6fDeoMnNnMSsaTx9AHOuFfe7I4AjGkK5E2w+F2xcCM
+         5uH6bbBlOqY+NzBnoiBK8r9f1n70TKrVZYxwZjDc+iWyzgrbiMDeSLXXIu5RzSXoPO
+         MjtjBgde3USz7NUX0YdeFuuTmhtqjF3Mr7I1plY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jeykumar Sankaran <jsanka@codeaurora.org>,
-        Sean Paul <seanpaul@chromium.org>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Nikos Tsironis <ntsironis@arrikto.com>,
+        Mike Snitzer <snitzer@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 019/149] drm/msm/dpu: handle failures while initializing displays
-Date:   Mon,  4 Nov 2019 22:43:32 +0100
-Message-Id: <20191104212136.271271541@linuxfoundation.org>
+Subject: [PATCH 4.19 002/149] dm snapshot: introduce account_start_copy() and account_end_copy()
+Date:   Mon,  4 Nov 2019 22:43:15 +0100
+Message-Id: <20191104212126.900348411@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,108 +61,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jeykumar Sankaran <jsanka@codeaurora.org>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-[ Upstream commit a802ee99c448ca0496fa307f3e46b834ae2a46a3 ]
+[ Upstream commit a2f83e8b0c82c9500421a26c49eb198b25fcdea3 ]
 
-Bail out KMS hw init on display initialization failures with
-proper error logging.
+This simple refactoring moves code for modifying the semaphore cow_count
+into separate functions to prepare for changes that will extend these
+methods to provide for a more sophisticated mechanism for COW
+throttling.
 
-changes in v3:
-    - introduced in the series
-changes in v4:
-    - avoid duplicate return on errors (Sean Paul)
-    - avoid spamming errors on failures (Jordon Crouse)
-
-Signed-off-by: Jeykumar Sankaran <jsanka@codeaurora.org>
-Signed-off-by: Sean Paul <seanpaul@chromium.org>
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Reviewed-by: Nikos Tsironis <ntsironis@arrikto.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c | 31 ++++++++++++++-----------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+ drivers/md/dm-snap.c | 16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-index 74cc204b07e80..2d9b7b5fb49c8 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_kms.c
-@@ -442,35 +442,38 @@ static void dpu_kms_wait_for_commit_done(struct msm_kms *kms,
- 	}
+diff --git a/drivers/md/dm-snap.c b/drivers/md/dm-snap.c
+index 36805b12661e1..d9216afbd490f 100644
+--- a/drivers/md/dm-snap.c
++++ b/drivers/md/dm-snap.c
+@@ -1399,6 +1399,16 @@ static void snapshot_dtr(struct dm_target *ti)
+ 	kfree(s);
  }
  
--static void _dpu_kms_initialize_dsi(struct drm_device *dev,
-+static int _dpu_kms_initialize_dsi(struct drm_device *dev,
- 				    struct msm_drm_private *priv,
- 				    struct dpu_kms *dpu_kms)
- {
- 	struct drm_encoder *encoder = NULL;
--	int i, rc;
-+	int i, rc = 0;
++static void account_start_copy(struct dm_snapshot *s)
++{
++	down(&s->cow_count);
++}
 +
-+	if (!(priv->dsi[0] || priv->dsi[1]))
-+		return rc;
- 
- 	/*TODO: Support two independent DSI connectors */
- 	encoder = dpu_encoder_init(dev, DRM_MODE_ENCODER_DSI);
--	if (IS_ERR_OR_NULL(encoder)) {
-+	if (IS_ERR(encoder)) {
- 		DPU_ERROR("encoder init failed for dsi display\n");
--		return;
-+		return PTR_ERR(encoder);
- 	}
- 
- 	priv->encoders[priv->num_encoders++] = encoder;
- 
- 	for (i = 0; i < ARRAY_SIZE(priv->dsi); i++) {
--		if (!priv->dsi[i]) {
--			DPU_DEBUG("invalid msm_dsi for ctrl %d\n", i);
--			return;
--		}
-+		if (!priv->dsi[i])
-+			continue;
- 
- 		rc = msm_dsi_modeset_init(priv->dsi[i], dev, encoder);
- 		if (rc) {
- 			DPU_ERROR("modeset_init failed for dsi[%d], rc = %d\n",
- 				i, rc);
--			continue;
-+			break;
- 		}
- 	}
++static void account_end_copy(struct dm_snapshot *s)
++{
++	up(&s->cow_count);
++}
 +
-+	return rc;
- }
- 
- /**
-@@ -481,16 +484,16 @@ static void _dpu_kms_initialize_dsi(struct drm_device *dev,
-  * @dpu_kms:    Pointer to dpu kms structure
-  * Returns:     Zero on success
+ /*
+  * Flush a list of buffers.
   */
--static void _dpu_kms_setup_displays(struct drm_device *dev,
-+static int _dpu_kms_setup_displays(struct drm_device *dev,
- 				    struct msm_drm_private *priv,
- 				    struct dpu_kms *dpu_kms)
- {
--	_dpu_kms_initialize_dsi(dev, priv, dpu_kms);
--
- 	/**
- 	 * Extend this function to initialize other
- 	 * types of displays
- 	 */
-+
-+	return _dpu_kms_initialize_dsi(dev, priv, dpu_kms);
+@@ -1594,7 +1604,7 @@ static void copy_callback(int read_err, unsigned long write_err, void *context)
+ 		rb_link_node(&pe->out_of_order_node, parent, p);
+ 		rb_insert_color(&pe->out_of_order_node, &s->out_of_order_tree);
+ 	}
+-	up(&s->cow_count);
++	account_end_copy(s);
  }
  
- static void _dpu_kms_drm_obj_destroy(struct dpu_kms *dpu_kms)
-@@ -552,7 +555,9 @@ static int _dpu_kms_drm_obj_init(struct dpu_kms *dpu_kms)
- 	 * Create encoder and query display drivers to create
- 	 * bridges and connectors
- 	 */
--	_dpu_kms_setup_displays(dev, priv, dpu_kms);
-+	ret = _dpu_kms_setup_displays(dev, priv, dpu_kms);
-+	if (ret)
-+		goto fail;
+ /*
+@@ -1618,7 +1628,7 @@ static void start_copy(struct dm_snap_pending_exception *pe)
+ 	dest.count = src.count;
  
- 	max_crtc_count = min(catalog->mixer_count, priv->num_encoders);
+ 	/* Hand over to kcopyd */
+-	down(&s->cow_count);
++	account_start_copy(s);
+ 	dm_kcopyd_copy(s->kcopyd_client, &src, 1, &dest, 0, copy_callback, pe);
+ }
+ 
+@@ -1638,7 +1648,7 @@ static void start_full_bio(struct dm_snap_pending_exception *pe,
+ 	pe->full_bio = bio;
+ 	pe->full_bio_end_io = bio->bi_end_io;
+ 
+-	down(&s->cow_count);
++	account_start_copy(s);
+ 	callback_data = dm_kcopyd_prepare_callback(s->kcopyd_client,
+ 						   copy_callback, pe);
  
 -- 
 2.20.1
