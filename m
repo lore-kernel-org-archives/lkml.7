@@ -2,124 +2,325 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE95CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:09:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F4D2CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:10:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E4DC217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:09:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dOYmOnFA"
+	by mail.kernel.org (Postfix) with ESMTP id 02716217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:10:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727954AbfKDKJW (ORCPT
+        id S1728245AbfKDKKQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:09:22 -0500
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:40668 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726526AbfKDKJW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:09:22 -0500
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA49v3Rs000518;
-        Mon, 4 Nov 2019 11:09:10 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=U9KCydVK6sJdJRHNSjl7mEURKAb4YJru4EdsVNMkITQ=;
- b=dOYmOnFANYCPUzeQaGiW+FvY8wehFx+hNgUF+fUTevgw9/BnWaZL8tOJD7gr1UtjVPqA
- Bh9kp/YVV9AKIZpRLpv/nZ2EWTsYuwMGeRwZz2kgFUGBJ27G7bpJfwjE+DtO9ID7SoLl
- 5t6VPD7wHC4oWVvW3QBfpipTDgKiiqWAv1J1VelefuUczOLVmx+Xued0h30O06P7mokI
- DMgN4sNPoQ26GRNUxh5eB1NKHuHm3yT2RO2PNIQAy9B98qAW24TSqp0qdlBtkxnLMJKj
- kvyM7Un/rysfr/BQ7tRzFh0vnQGnAtLbcmtt4w4PTG/zWgJwac4G9HWMYqvaty8HxZH9 aA== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2w11jn12g1-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Mon, 04 Nov 2019 11:09:10 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D547010002A;
-        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id C65EA2BB05D;
-        Mon,  4 Nov 2019 11:09:09 +0100 (CET)
-Received: from SAFEX1HUBCAS24.st.com (10.75.90.95) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
- 11:09:09 +0100
-Received: from localhost (10.201.22.141) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 11:09:09
- +0100
-From:   Amelie Delaunay <amelie.delaunay@st.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>
-CC:     <linux-gpio@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        Amelie Delaunay <amelie.delaunay@st.com>
-Subject: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
-Date:   Mon, 4 Nov 2019 11:09:08 +0100
-Message-ID: <20191104100908.10880-1-amelie.delaunay@st.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 05:10:16 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:48548 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727607AbfKDKKQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:10:16 -0500
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7C87E3DD47
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 10:10:15 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id s9so10151863wrw.23
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 02:10:15 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=g+8Oj0bCYOu+EhlP3wibB9YhJUghmgDH8FSiQZ7/iSA=;
+        b=jWPUYgK1eXKksWchCpYwvTJ6i1vs/sp29jL5H8KdSW9NVyTV9u1YCpCiF+zKuaitLS
+         UzccBT2ak6qoFL1SGPwXSQ1GCzsym7P3fhGYneSzL2miYCxOQmkL4S+s/7O7zs8Rg84L
+         wOKBj2FLS5unlkRRLLhY8svCYaovtFGNOGEXRFdH0Er0OsudO3xuv7NAKLbbS7yam8Im
+         6Kw03z5rAzYwFVzOueL6N7Bqzur15rUkfh2EMRzQZP4TQxVZIb4u1aRz2bXdrkIdvksY
+         rz6F7px9OICM2SHQ0iuY241lwUntYXD4oIHpNC6891ty29ByEznq+TRayX1ttZ5qsRvE
+         1f6A==
+X-Gm-Message-State: APjAAAWQVOCQDH54mtB7RMvU3EPTz6+kXg0MF9kUnRD2NJ9H/nKQ6nR1
+        w3QwkRJTTLI/iLBb7ejeg6PVUMxgvdc9rF89uJhPbiqegt8cEUbcCjvV7/97lAT5HJDHhbpNfak
+        +YDGt2KBEuC4K8SBIrB1Qxjbl
+X-Received: by 2002:a5d:5391:: with SMTP id d17mr185666wrv.382.1572862213944;
+        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxH1lap2B0a/ZOQA/meVQma9lyYnliFOKbdX4X0tlkJRdHzNLtyTsr3l9TCUV9K4c/wzZBv0w==
+X-Received: by 2002:a5d:5391:: with SMTP id d17mr185643wrv.382.1572862213586;
+        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
+Received: from steredhat.homenet.telecomitalia.it (a-nu5-32.tin.it. [212.216.181.31])
+        by smtp.gmail.com with ESMTPSA id z9sm20176624wrv.1.2019.11.04.02.10.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 02:10:13 -0800 (PST)
+Date:   Mon, 4 Nov 2019 11:10:10 +0100
+From:   Stefano Garzarella <sgarzare@redhat.com>
+To:     Jorgen Hansen <jhansen@vmware.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, kvm@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jason Wang <jasowang@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Dexuan Cui <decui@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Stefan Hajnoczi <stefanha@redhat.com>,
+        linux-hyperv@vger.kernel.org,
+        "K. Y. Srinivasan" <kys@microsoft.com>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org
+Subject: Re: [PATCH net-next 12/14] vsock/vmci: register vmci_transport only
+ when VMCI guest/host are active
+Message-ID: <20191104101010.we3nsgh4gxiu4vh5@steredhat.homenet.telecomitalia.it>
+References: <20191023095554.11340-1-sgarzare@redhat.com>
+ <20191023095554.11340-13-sgarzare@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.22.141]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-04_06:2019-11-01,2019-11-04 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191023095554.11340-13-sgarzare@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
-to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
-yet initialized. gpio_valid_mask required gpio-ranges to be registered,
-this is the case after gpiochip_add_data call. But init_valid_mask
-callback is also called under gpiochip_add_data. gpio_valid_mask
-initialization cannot be moved before gpiochip_add_data because
-gpio-ranges are not registered.
-So, it is not possible to use init_valid_mask callback.
-To avoid this issue, get rid of valid_mask and rely on ranges.
+Hi Jorgen,
+I'm preparing the v2, but first, if you have time, I'd like to have
+a comment from you on this patch that modifies a bit vmci.
 
-Fixes: da9b142ab2c5 ("pinctrl: stmfx: Use the callback to populate valid_mask")
-Signed-off-by: Amelie Delaunay <amelie.delaunay@st.com>
----
- drivers/pinctrl/pinctrl-stmfx.c | 14 --------------
- 1 file changed, 14 deletions(-)
+Thank you very much,
+Stefano
 
-diff --git a/drivers/pinctrl/pinctrl-stmfx.c b/drivers/pinctrl/pinctrl-stmfx.c
-index 564660028fcc..ccdf0bb21414 100644
---- a/drivers/pinctrl/pinctrl-stmfx.c
-+++ b/drivers/pinctrl/pinctrl-stmfx.c
-@@ -585,19 +585,6 @@ static int stmfx_pinctrl_gpio_function_enable(struct stmfx_pinctrl *pctl)
- 	return stmfx_function_enable(pctl->stmfx, func);
- }
- 
--static int stmfx_pinctrl_gpio_init_valid_mask(struct gpio_chip *gc,
--					      unsigned long *valid_mask,
--					      unsigned int ngpios)
--{
--	struct stmfx_pinctrl *pctl = gpiochip_get_data(gc);
--	u32 n;
--
--	for_each_clear_bit(n, &pctl->gpio_valid_mask, ngpios)
--		clear_bit(n, valid_mask);
--
--	return 0;
--}
--
- static int stmfx_pinctrl_probe(struct platform_device *pdev)
- {
- 	struct stmfx *stmfx = dev_get_drvdata(pdev->dev.parent);
-@@ -660,7 +647,6 @@ static int stmfx_pinctrl_probe(struct platform_device *pdev)
- 	pctl->gpio_chip.ngpio = pctl->pctl_desc.npins;
- 	pctl->gpio_chip.can_sleep = true;
- 	pctl->gpio_chip.of_node = np;
--	pctl->gpio_chip.init_valid_mask = stmfx_pinctrl_gpio_init_valid_mask;
- 
- 	ret = devm_gpiochip_add_data(pctl->dev, &pctl->gpio_chip, pctl);
- 	if (ret) {
+On Wed, Oct 23, 2019 at 11:55:52AM +0200, Stefano Garzarella wrote:
+> To allow other transports to be loaded with vmci_transport,
+> we register the vmci_transport as G2H or H2G only when a VMCI guest
+> or host is active.
+> 
+> To do that, this patch adds a callback registered in the vmci driver
+> that will be called when a new host or guest become active.
+> This callback will register the vmci_transport in the VSOCK core.
+> If the transport is already registered, we ignore the error coming
+> from vsock_core_register().
+> 
+> Cc: Jorgen Hansen <jhansen@vmware.com>
+> Signed-off-by: Stefano Garzarella <sgarzare@redhat.com>
+> ---
+>  drivers/misc/vmw_vmci/vmci_driver.c | 50 +++++++++++++++++++++++++++++
+>  drivers/misc/vmw_vmci/vmci_driver.h |  2 ++
+>  drivers/misc/vmw_vmci/vmci_guest.c  |  2 ++
+>  drivers/misc/vmw_vmci/vmci_host.c   |  7 ++++
+>  include/linux/vmw_vmci_api.h        |  2 ++
+>  net/vmw_vsock/vmci_transport.c      | 29 +++++++++++------
+>  6 files changed, 82 insertions(+), 10 deletions(-)
+> 
+> diff --git a/drivers/misc/vmw_vmci/vmci_driver.c b/drivers/misc/vmw_vmci/vmci_driver.c
+> index 819e35995d32..195afbd7edc1 100644
+> --- a/drivers/misc/vmw_vmci/vmci_driver.c
+> +++ b/drivers/misc/vmw_vmci/vmci_driver.c
+> @@ -28,6 +28,9 @@ MODULE_PARM_DESC(disable_guest,
+>  static bool vmci_guest_personality_initialized;
+>  static bool vmci_host_personality_initialized;
+>  
+> +static DEFINE_MUTEX(vmci_vsock_mutex); /* protects vmci_vsock_transport_cb */
+> +static vmci_vsock_cb vmci_vsock_transport_cb;
+> +
+>  /*
+>   * vmci_get_context_id() - Gets the current context ID.
+>   *
+> @@ -45,6 +48,53 @@ u32 vmci_get_context_id(void)
+>  }
+>  EXPORT_SYMBOL_GPL(vmci_get_context_id);
+>  
+> +/*
+> + * vmci_register_vsock_callback() - Register the VSOCK vmci_transport callback.
+> + *
+> + * The callback will be called every time a new host or guest become active,
+> + * or if they are already active when this function is called.
+> + * To unregister the callback, call this function with NULL parameter.
+> + *
+> + * Returns 0 on success. -EBUSY if a callback is already registered.
+> + */
+> +int vmci_register_vsock_callback(vmci_vsock_cb callback)
+> +{
+> +	int err = 0;
+> +
+> +	mutex_lock(&vmci_vsock_mutex);
+> +
+> +	if (vmci_vsock_transport_cb && callback) {
+> +		err = -EBUSY;
+> +		goto out;
+> +	}
+> +
+> +	vmci_vsock_transport_cb = callback;
+> +
+> +	if (!vmci_vsock_transport_cb)
+> +		goto out;
+> +
+> +	if (vmci_guest_code_active())
+> +		vmci_vsock_transport_cb(false);
+> +
+> +	if (vmci_host_users() > 0)
+> +		vmci_vsock_transport_cb(true);
+> +
+> +out:
+> +	mutex_unlock(&vmci_vsock_mutex);
+> +	return err;
+> +}
+> +EXPORT_SYMBOL_GPL(vmci_register_vsock_callback);
+> +
+> +void vmci_call_vsock_callback(bool is_host)
+> +{
+> +	mutex_lock(&vmci_vsock_mutex);
+> +
+> +	if (vmci_vsock_transport_cb)
+> +		vmci_vsock_transport_cb(is_host);
+> +
+> +	mutex_unlock(&vmci_vsock_mutex);
+> +}
+> +
+>  static int __init vmci_drv_init(void)
+>  {
+>  	int vmci_err;
+> diff --git a/drivers/misc/vmw_vmci/vmci_driver.h b/drivers/misc/vmw_vmci/vmci_driver.h
+> index aab81b67670c..990682480bf6 100644
+> --- a/drivers/misc/vmw_vmci/vmci_driver.h
+> +++ b/drivers/misc/vmw_vmci/vmci_driver.h
+> @@ -36,10 +36,12 @@ extern struct pci_dev *vmci_pdev;
+>  
+>  u32 vmci_get_context_id(void);
+>  int vmci_send_datagram(struct vmci_datagram *dg);
+> +void vmci_call_vsock_callback(bool is_host);
+>  
+>  int vmci_host_init(void);
+>  void vmci_host_exit(void);
+>  bool vmci_host_code_active(void);
+> +int vmci_host_users(void);
+>  
+>  int vmci_guest_init(void);
+>  void vmci_guest_exit(void);
+> diff --git a/drivers/misc/vmw_vmci/vmci_guest.c b/drivers/misc/vmw_vmci/vmci_guest.c
+> index 7a84a48c75da..cc8eeb361fcd 100644
+> --- a/drivers/misc/vmw_vmci/vmci_guest.c
+> +++ b/drivers/misc/vmw_vmci/vmci_guest.c
+> @@ -637,6 +637,8 @@ static int vmci_guest_probe_device(struct pci_dev *pdev,
+>  		  vmci_dev->iobase + VMCI_CONTROL_ADDR);
+>  
+>  	pci_set_drvdata(pdev, vmci_dev);
+> +
+> +	vmci_call_vsock_callback(false);
+>  	return 0;
+>  
+>  err_free_irq:
+> diff --git a/drivers/misc/vmw_vmci/vmci_host.c b/drivers/misc/vmw_vmci/vmci_host.c
+> index 833e2bd248a5..ff3c396146ff 100644
+> --- a/drivers/misc/vmw_vmci/vmci_host.c
+> +++ b/drivers/misc/vmw_vmci/vmci_host.c
+> @@ -108,6 +108,11 @@ bool vmci_host_code_active(void)
+>  	     atomic_read(&vmci_host_active_users) > 0);
+>  }
+>  
+> +int vmci_host_users(void)
+> +{
+> +	return atomic_read(&vmci_host_active_users);
+> +}
+> +
+>  /*
+>   * Called on open of /dev/vmci.
+>   */
+> @@ -338,6 +343,8 @@ static int vmci_host_do_init_context(struct vmci_host_dev *vmci_host_dev,
+>  	vmci_host_dev->ct_type = VMCIOBJ_CONTEXT;
+>  	atomic_inc(&vmci_host_active_users);
+>  
+> +	vmci_call_vsock_callback(true);
+> +
+>  	retval = 0;
+>  
+>  out:
+> diff --git a/include/linux/vmw_vmci_api.h b/include/linux/vmw_vmci_api.h
+> index acd9fafe4fc6..f28907345c80 100644
+> --- a/include/linux/vmw_vmci_api.h
+> +++ b/include/linux/vmw_vmci_api.h
+> @@ -19,6 +19,7 @@
+>  struct msghdr;
+>  typedef void (vmci_device_shutdown_fn) (void *device_registration,
+>  					void *user_data);
+> +typedef void (*vmci_vsock_cb) (bool is_host);
+>  
+>  int vmci_datagram_create_handle(u32 resource_id, u32 flags,
+>  				vmci_datagram_recv_cb recv_cb,
+> @@ -37,6 +38,7 @@ int vmci_doorbell_destroy(struct vmci_handle handle);
+>  int vmci_doorbell_notify(struct vmci_handle handle, u32 priv_flags);
+>  u32 vmci_get_context_id(void);
+>  bool vmci_is_context_owner(u32 context_id, kuid_t uid);
+> +int vmci_register_vsock_callback(vmci_vsock_cb callback);
+>  
+>  int vmci_event_subscribe(u32 event,
+>  			 vmci_event_cb callback, void *callback_data,
+> diff --git a/net/vmw_vsock/vmci_transport.c b/net/vmw_vsock/vmci_transport.c
+> index 2eb3f16d53e7..04437f822d82 100644
+> --- a/net/vmw_vsock/vmci_transport.c
+> +++ b/net/vmw_vsock/vmci_transport.c
+> @@ -2053,19 +2053,22 @@ static bool vmci_check_transport(struct vsock_sock *vsk)
+>  	return vsk->transport == &vmci_transport;
+>  }
+>  
+> -static int __init vmci_transport_init(void)
+> +void vmci_vsock_transport_cb(bool is_host)
+>  {
+> -	int features = VSOCK_TRANSPORT_F_DGRAM | VSOCK_TRANSPORT_F_H2G;
+> -	int cid;
+> -	int err;
+> +	int features;
+>  
+> -	cid = vmci_get_context_id();
+> +	if (is_host)
+> +		features = VSOCK_TRANSPORT_F_H2G;
+> +	else
+> +		features = VSOCK_TRANSPORT_F_G2H;
+>  
+> -	if (cid == VMCI_INVALID_ID)
+> -		return -EINVAL;
+> +	vsock_core_register(&vmci_transport, features);
+> +}
+>  
+> -	if (cid != VMCI_HOST_CONTEXT_ID)
+> -		features |= VSOCK_TRANSPORT_F_G2H;
+> +static int __init vmci_transport_init(void)
+> +{
+> +	int features = VSOCK_TRANSPORT_F_DGRAM;
+> +	int err;
+>  
+>  	/* Create the datagram handle that we will use to send and receive all
+>  	 * VSocket control messages for this context.
+> @@ -2079,7 +2082,6 @@ static int __init vmci_transport_init(void)
+>  		pr_err("Unable to create datagram handle. (%d)\n", err);
+>  		return vmci_transport_error_to_vsock_error(err);
+>  	}
+> -
+>  	err = vmci_event_subscribe(VMCI_EVENT_QP_RESUMED,
+>  				   vmci_transport_qp_resumed_cb,
+>  				   NULL, &vmci_transport_qp_resumed_sub_id);
+> @@ -2094,8 +2096,14 @@ static int __init vmci_transport_init(void)
+>  	if (err < 0)
+>  		goto err_unsubscribe;
+>  
+> +	err = vmci_register_vsock_callback(vmci_vsock_transport_cb);
+> +	if (err < 0)
+> +		goto err_unregister;
+> +
+>  	return 0;
+>  
+> +err_unregister:
+> +	vsock_core_unregister(&vmci_transport);
+>  err_unsubscribe:
+>  	vmci_event_unsubscribe(vmci_transport_qp_resumed_sub_id);
+>  err_destroy_stream_handle:
+> @@ -2121,6 +2129,7 @@ static void __exit vmci_transport_exit(void)
+>  		vmci_transport_qp_resumed_sub_id = VMCI_INVALID_ID;
+>  	}
+>  
+> +	vmci_register_vsock_callback(NULL);
+>  	vsock_core_unregister(&vmci_transport);
+>  }
+>  module_exit(vmci_transport_exit);
+> -- 
+> 2.21.0
+> 
+
 -- 
-2.17.1
-
