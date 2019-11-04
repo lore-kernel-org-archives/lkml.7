@@ -2,189 +2,93 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F585CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11260CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:40:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FE60222CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9913218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:40:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CURR3Lfs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727955AbfKDIiq (ORCPT
+        id S1727974AbfKDIka (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:38:46 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:55251 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726891AbfKDIiq (ORCPT
+        Mon, 4 Nov 2019 03:40:30 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:56662 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfKDIka (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:38:46 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXsi-0002GD-OC; Mon, 04 Nov 2019 09:38:36 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRXsh-0008RT-V9; Mon, 04 Nov 2019 09:38:35 +0100
-Date:   Mon, 4 Nov 2019 09:38:35 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock
- directly
-Message-ID: <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-5-peron.clem@gmail.com>
+        Mon, 4 Nov 2019 03:40:30 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pHINdxeRrniqD93Z7XY51rAt/Snx+07p0RIhPThEcG4=; b=CURR3LfsSdDaQIKfySpmU+W4E
+        PfYsBIWAwk5+63EqxsMJEo7bqLk/SWV1cafXHaBAIopZ67DILlcTrceULlM8HRbwkg7sSUrGiNwcH
+        if/l9JZ+UY7YbnkQJgjIPb8SlvUhWAHAehQzPe7ITWpsoMpxnsxj+utqzGy5XgRpJbCIc919xZzY4
+        iupd1Fi5M8xCVeFTq66RnS1hMQaM56ASHaCeohl0wpHk8KuclPaHT5uIRRr1jsLJfeut6N8PQjC93
+        u6GKoZ0TM6bds7hvNy8lNQ8IEdpVq185Az01OSGgNtEgcpSOWizGfayNgn+8zWJokpst5Pm64VRb0
+        TFQ+a5JEw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRXuU-0000SR-Uu; Mon, 04 Nov 2019 08:40:27 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2715B305FC2;
+        Mon,  4 Nov 2019 09:39:20 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 240B123CEFE81; Mon,  4 Nov 2019 09:40:24 +0100 (CET)
+Date:   Mon, 4 Nov 2019 09:40:24 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, adrian.hunter@intel.com,
+        mathieu.poirier@linaro.org, mark.rutland@arm.com
+Subject: Re: [PATCH v3 1/3] perf: Allow using AUX data in perf samples
+Message-ID: <20191104084024.GZ4131@hirez.programming.kicks-ass.net>
+References: <20191025140835.53665-1-alexander.shishkin@linux.intel.com>
+ <20191025140835.53665-2-alexander.shishkin@linux.intel.com>
+ <20191028162712.GH4097@hirez.programming.kicks-ass.net>
+ <87tv7sg5ml.fsf@ashishki-desk.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191103203334.10539-5-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <87tv7sg5ml.fsf@ashishki-desk.ger.corp.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 09:33:31PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+On Mon, Oct 28, 2019 at 07:08:18PM +0200, Alexander Shishkin wrote:
+
+> > @@ -6318,11 +6318,12 @@ static void perf_aux_sample_output(struc
+> >  
+> >  	/*
+> >  	 * Guard against NMI hits inside the critical section;
+> > -	 * see also perf_aux_sample_size().
+> > +	 * see also perf_prepare_sample_aux().
+> >  	 */
+> >  	WRITE_ONCE(rb->aux_in_sampling, 1);
+> > +	barrier();
 > 
-> PWM core has an option to bypass whole logic and output unchanged source
-> clock as PWM output. This is achieved by enabling bypass bit.
-> 
-> Note that when bypass is enabled, no other setting has any meaning, not
-> even enable bit.
-> 
-> This mode of operation is needed to achieve high enough frequency to
-> serve as clock source for AC200 chip, which is integrated into same
-> package as H6 SoC.
+> Isn't WRITE_ONCE() barrier enough on its own? My thinking was that we
+> only need a compiler barrier here, hence the WRITE_ONCE.
 
-I think the , should be dropped.
+WRITE_ONCE() is a volatile store and (IIRC) the compiler ensures order
+against other volatile things, but not in general.
 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> ---
->  drivers/pwm/pwm-sun4i.c | 39 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index b5e7ac364f59..2441574674d9 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-> @@ -3,6 +3,10 @@
->   * Driver for Allwinner sun4i Pulse Width Modulation Controller
->   *
->   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
-> + *
-> + * Limitations:
-> + * - When outputing the source clock directly, the PWM logic will be bypassed
-> + *   and the currently running period is not guaranted to be completed
+barrier() OTOH clobbers all of memory and thereby ensures nothing can
+get hoised over it.
 
-Typo: guaranted  -> guaranteed
-
->   */
->  
->  #include <linux/bitops.h>
-> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
->  
->  struct sun4i_pwm_data {
->  	bool has_prescaler_bypass;
-> +	bool has_direct_mod_clk_output;
->  	unsigned int npwm;
->  };
->  
-> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
->  
->  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-> +	/*
-> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
-> +	 * bit is set, no other setting has any meaning. Even more, experiment
-> +	 * proved that also enable bit is ignored in this case.
-> +	 */
-> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
-> +	    data->has_direct_mod_clk_output) {
-> +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
-> +		state->duty_cycle = state->period / 2;
-> +		state->polarity = PWM_POLARITY_NORMAL;
-> +		state->enabled = true;
-> +		return;
-> +	}
-
-Not sure how the rest of sun4i_pwm_get_state behaves, but I would prefer
-to let .get_state() round up which together with .apply_state() rounding
-down yields sound behaviour.
-
-> +
->  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
->  	    sun4i_pwm->data->has_prescaler_bypass)
->  		prescaler = 1;
-> @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  {
->  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
->  	struct pwm_state cstate;
-> -	u32 ctrl;
-> +	u32 ctrl, clk_rate;
-> +	bool bypass;
->  	int ret;
->  	unsigned int delay_us;
->  	unsigned long now;
-> @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  		}
->  	}
->  
-> +	/*
-> +	 * Although it would make much more sense to check for bypass in
-> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
-> +	 * Period is allowed to be rounded up or down.
-> +	 */
-> +	clk_rate = clk_get_rate(sun4i_pwm->clk);
-> +	bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
-> +		   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
-> +		  state->enabled);
-
-I guess the compiler is smart enough here, but checking for
-state->enabled is cheaper than the other checks, so putting this at the
-start of the expression seems sensible.
-
-The comment doesn't match the code. You don't round up state->period.
-(This is good, please fix the comment.) I think dropping the check
-
-	state->period * clk_rate < NSEC_PER_SEC + clk_rate
-
-would be fine, too.
-
-I'd like to have a check for
-
-	state->duty_cycle * clk_rate >= NSEC_PER_SEC / 2 &&
-	state->duty_cycle * clk_rate < NSEC_PER_SEC
-
-here. If this isn't true rather disable the PWM or output a 100% duty
-cycle with a larger period.
-
-> +
->  	spin_lock(&sun4i_pwm->ctrl_lock);
->  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
->  
-
-Best regards
-Uwe
-
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Now, the only thing we do inside this region is an indirect call, which
+on its own already implies a sync point for as long as the compiler
+cannot inline it, so it might be a bit paranoid on my end (I don't think
+even LTO can reduce this indirection and cause inlining).
