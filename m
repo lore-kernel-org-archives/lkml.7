@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5C17CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5C2CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 858A6217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9FA8821D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904316;
-	bh=3jd1QXiIJq7pwdxdFPxZxL35hTozreZSrHTnwM13H/Y=;
+	s=default; t=1572904320;
+	bh=QDtYiaW8pMVAcjR4z3UvlNtLXCVqNgx0gLg082M8GG4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=OHvLNuHw3BQZcAp8i4EZKXrqdUTQiY7kN0D0/rMRYrwASIPbLXE/5cqxw+gTLfLLQ
-	 bgxzUrIHJxuWX6J5F3QA4Sj16q5g47gxPUvBFaeV0dOiCGheRdTqDfqt41Rz9koDuH
-	 6LVq/owQ2nHwfMVPzhScAtuC3HnUEGlNMee7BdXM=
+	b=ZqxDS24doqe0lTZz7XXAPsA2SnQwqwrDfzYRiY0D0em3cWrTx9rYLq4PC2WzVkF0Y
+	 NhDyaTj2eag8otyVC+yU2vj7zl6yFSandPafaWEarBCGFKak1pHsDTCa08eNCQizQr
+	 XcDWuZuYYYU/CrBId4Ji+rA+pXaKZH5nk3wmUfjE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbfKDVvy (ORCPT
+        id S1730646AbfKDVv7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:51:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44906 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:51:59 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730616AbfKDVvt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:51:49 -0500
+        id S1730629AbfKDVvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:51:54 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E6166217F5;
-        Mon,  4 Nov 2019 21:51:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CAC77217F5;
+        Mon,  4 Nov 2019 21:51:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904308;
-        bh=3jd1QXiIJq7pwdxdFPxZxL35hTozreZSrHTnwM13H/Y=;
+        s=default; t=1572904313;
+        bh=QDtYiaW8pMVAcjR4z3UvlNtLXCVqNgx0gLg082M8GG4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pjtlbtxU9YfMjUoYoq4d91Xn5oByg13R4vssd7cmbYehFSbfauwWJ39DTAHXSLu8K
-         RziDHMsKHFxtyzDXxE1dWkaFyOEMU4eQAZpyJD0U86hZ0xKEeBYDyrmdcUGQ5tnTTM
-         shC7YWU5jtFHAh6DYjEfeCdPcrHVNp/DIns85GSU=
+        b=LtKmPmHRHIuQnyeykdwFcESVD7OnoMCJNFoafIz/aRVVxd4D4MHn4QKPBOasozn10
+         kJVctfFwdA2IBZS//waQLNbOkj0XbWZAP7zfU1X1y5v9qgnRTR5zAMnXCX8qBfJz8Z
+         Dkk3lNVvv2nOXRKbBSuO6Tq9XGrHagBTjMb7yNSY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Takashi Iwai <tiwai@suse.de>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 59/62] ALSA: timer: Follow standard EXPORT_SYMBOL() declarations
-Date:   Mon,  4 Nov 2019 22:45:21 +0100
-Message-Id: <20191104211959.358824279@linuxfoundation.org>
+Subject: [PATCH 4.9 61/62] ALSA: timer: Simplify error path in snd_timer_open()
+Date:   Mon,  4 Nov 2019 22:45:23 +0100
+Message-Id: <20191104212000.884979037@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -61,143 +61,126 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Takashi Iwai <tiwai@suse.de>
 
-[ Upstream commit 988563929d5b65c021439880ac6bd1b207722f26 ]
+[ Upstream commit 41672c0c24a62699d20aab53b98d843b16483053 ]
 
-Just a tidy up to follow the standard EXPORT_SYMBOL*() declarations
-in order to improve grep-ability.
-
-- Move EXPORT_SYMBOL*() to the position right after its definition
+Just a minor refactoring to use the standard goto for error paths in
+snd_timer_open() instead of open code.  The first mutex_lock() is
+moved to the beginning of the function to make the code clearer.
 
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/core/timer.c | 27 +++++++++++++--------------
- 1 file changed, 13 insertions(+), 14 deletions(-)
+ sound/core/timer.c | 39 ++++++++++++++++++++-------------------
+ 1 file changed, 20 insertions(+), 19 deletions(-)
 
 diff --git a/sound/core/timer.c b/sound/core/timer.c
-index 152254193c697..cfcc6718aafce 100644
+index 95c5838747754..6eb4e97662d9c 100644
 --- a/sound/core/timer.c
 +++ b/sound/core/timer.c
-@@ -318,6 +318,7 @@ int snd_timer_open(struct snd_timer_instance **ti,
- 	*ti = timeri;
- 	return 0;
- }
-+EXPORT_SYMBOL(snd_timer_open);
+@@ -253,19 +253,20 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	struct snd_timer_instance *timeri = NULL;
+ 	int err;
  
- /*
-  * close a timer instance
-@@ -383,6 +384,7 @@ int snd_timer_close(struct snd_timer_instance *timeri)
++	mutex_lock(&register_mutex);
+ 	if (tid->dev_class == SNDRV_TIMER_CLASS_SLAVE) {
+ 		/* open a slave instance */
+ 		if (tid->dev_sclass <= SNDRV_TIMER_SCLASS_NONE ||
+ 		    tid->dev_sclass > SNDRV_TIMER_SCLASS_OSS_SEQUENCER) {
+ 			pr_debug("ALSA: timer: invalid slave class %i\n",
+ 				 tid->dev_sclass);
+-			return -EINVAL;
++			err = -EINVAL;
++			goto unlock;
+ 		}
+-		mutex_lock(&register_mutex);
+ 		timeri = snd_timer_instance_new(owner, NULL);
+ 		if (!timeri) {
+-			mutex_unlock(&register_mutex);
+-			return -ENOMEM;
++			err = -ENOMEM;
++			goto unlock;
+ 		}
+ 		timeri->slave_class = tid->dev_sclass;
+ 		timeri->slave_id = tid->device;
+@@ -276,13 +277,10 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 			snd_timer_close_locked(timeri);
+ 			timeri = NULL;
+ 		}
+-		mutex_unlock(&register_mutex);
+-		*ti = timeri;
+-		return err;
++		goto unlock;
+ 	}
+ 
+ 	/* open a master instance */
+-	mutex_lock(&register_mutex);
+ 	timer = snd_timer_find(tid);
+ #ifdef CONFIG_MODULES
+ 	if (!timer) {
+@@ -293,25 +291,26 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	}
+ #endif
+ 	if (!timer) {
+-		mutex_unlock(&register_mutex);
+-		return -ENODEV;
++		err = -ENODEV;
++		goto unlock;
+ 	}
+ 	if (!list_empty(&timer->open_list_head)) {
+ 		timeri = list_entry(timer->open_list_head.next,
+ 				    struct snd_timer_instance, open_list);
+ 		if (timeri->flags & SNDRV_TIMER_IFLG_EXCLUSIVE) {
+-			mutex_unlock(&register_mutex);
+-			return -EBUSY;
++			err = -EBUSY;
++			timeri = NULL;
++			goto unlock;
+ 		}
+ 	}
+ 	if (timer->num_instances >= timer->max_instances) {
+-		mutex_unlock(&register_mutex);
+-		return -EBUSY;
++		err = -EBUSY;
++		goto unlock;
+ 	}
+ 	timeri = snd_timer_instance_new(owner, timer);
+ 	if (!timeri) {
+-		mutex_unlock(&register_mutex);
+-		return -ENOMEM;
++		err = -ENOMEM;
++		goto unlock;
+ 	}
+ 	/* take a card refcount for safe disconnection */
+ 	if (timer->card)
+@@ -320,16 +319,16 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 	timeri->slave_id = slave_id;
+ 
+ 	if (list_empty(&timer->open_list_head) && timer->hw.open) {
+-		int err = timer->hw.open(timer);
++		err = timer->hw.open(timer);
+ 		if (err) {
+ 			kfree(timeri->owner);
+ 			kfree(timeri);
++			timeri = NULL;
+ 
+ 			if (timer->card)
+ 				put_device(&timer->card->card_dev);
+ 			module_put(timer->module);
+-			mutex_unlock(&register_mutex);
+-			return err;
++			goto unlock;
+ 		}
+ 	}
+ 
+@@ -340,6 +339,8 @@ int snd_timer_open(struct snd_timer_instance **ti,
+ 		snd_timer_close_locked(timeri);
+ 		timeri = NULL;
+ 	}
++
++ unlock:
  	mutex_unlock(&register_mutex);
- 	return 0;
- }
-+EXPORT_SYMBOL(snd_timer_close);
- 
- unsigned long snd_timer_resolution(struct snd_timer_instance *timeri)
- {
-@@ -397,6 +399,7 @@ unsigned long snd_timer_resolution(struct snd_timer_instance *timeri)
- 	}
- 	return 0;
- }
-+EXPORT_SYMBOL(snd_timer_resolution);
- 
- static void snd_timer_notify1(struct snd_timer_instance *ti, int event)
- {
-@@ -588,6 +591,7 @@ int snd_timer_start(struct snd_timer_instance *timeri, unsigned int ticks)
- 	else
- 		return snd_timer_start1(timeri, true, ticks);
- }
-+EXPORT_SYMBOL(snd_timer_start);
- 
- /*
-  * stop the timer instance.
-@@ -601,6 +605,7 @@ int snd_timer_stop(struct snd_timer_instance *timeri)
- 	else
- 		return snd_timer_stop1(timeri, true);
- }
-+EXPORT_SYMBOL(snd_timer_stop);
- 
- /*
-  * start again..  the tick is kept.
-@@ -616,6 +621,7 @@ int snd_timer_continue(struct snd_timer_instance *timeri)
- 	else
- 		return snd_timer_start1(timeri, false, 0);
- }
-+EXPORT_SYMBOL(snd_timer_continue);
- 
- /*
-  * pause.. remember the ticks left
-@@ -627,6 +633,7 @@ int snd_timer_pause(struct snd_timer_instance * timeri)
- 	else
- 		return snd_timer_stop1(timeri, false);
- }
-+EXPORT_SYMBOL(snd_timer_pause);
- 
- /*
-  * reschedule the timer
-@@ -808,6 +815,7 @@ void snd_timer_interrupt(struct snd_timer * timer, unsigned long ticks_left)
- 	if (use_tasklet)
- 		tasklet_schedule(&timer->task_queue);
- }
-+EXPORT_SYMBOL(snd_timer_interrupt);
- 
- /*
- 
-@@ -858,6 +866,7 @@ int snd_timer_new(struct snd_card *card, char *id, struct snd_timer_id *tid,
- 		*rtimer = timer;
- 	return 0;
- }
-+EXPORT_SYMBOL(snd_timer_new);
- 
- static int snd_timer_free(struct snd_timer *timer)
- {
-@@ -977,6 +986,7 @@ void snd_timer_notify(struct snd_timer *timer, int event, struct timespec *tstam
- 	}
- 	spin_unlock_irqrestore(&timer->lock, flags);
- }
-+EXPORT_SYMBOL(snd_timer_notify);
- 
- /*
-  * exported functions for global timers
-@@ -992,11 +1002,13 @@ int snd_timer_global_new(char *id, int device, struct snd_timer **rtimer)
- 	tid.subdevice = 0;
- 	return snd_timer_new(NULL, id, &tid, rtimer);
- }
-+EXPORT_SYMBOL(snd_timer_global_new);
- 
- int snd_timer_global_free(struct snd_timer *timer)
- {
- 	return snd_timer_free(timer);
- }
-+EXPORT_SYMBOL(snd_timer_global_free);
- 
- int snd_timer_global_register(struct snd_timer *timer)
- {
-@@ -1006,6 +1018,7 @@ int snd_timer_global_register(struct snd_timer *timer)
- 	dev.device_data = timer;
- 	return snd_timer_dev_register(&dev);
- }
-+EXPORT_SYMBOL(snd_timer_global_register);
- 
- /*
-  *  System timer
-@@ -2121,17 +2134,3 @@ static void __exit alsa_timer_exit(void)
- 
- module_init(alsa_timer_init)
- module_exit(alsa_timer_exit)
--
--EXPORT_SYMBOL(snd_timer_open);
--EXPORT_SYMBOL(snd_timer_close);
--EXPORT_SYMBOL(snd_timer_resolution);
--EXPORT_SYMBOL(snd_timer_start);
--EXPORT_SYMBOL(snd_timer_stop);
--EXPORT_SYMBOL(snd_timer_continue);
--EXPORT_SYMBOL(snd_timer_pause);
--EXPORT_SYMBOL(snd_timer_new);
--EXPORT_SYMBOL(snd_timer_notify);
--EXPORT_SYMBOL(snd_timer_global_new);
--EXPORT_SYMBOL(snd_timer_global_free);
--EXPORT_SYMBOL(snd_timer_global_register);
--EXPORT_SYMBOL(snd_timer_interrupt);
+ 	*ti = timeri;
+ 	return err;
 -- 
 2.20.1
 
