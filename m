@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 726FFCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D023CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4605D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50E4E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905991;
-	bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+	s=default; t=1572905999;
+	bh=IlBkFwGUgAC2Wa9c3vMk16ObPVRv9tfoUaey65R1+pA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=YZ+N9/d1YE0cldb48R+wGLguvHFtTkP8WGZyuxzuePdHBeH0Tzy+M5dwFlghwO+Jx
-	 N/8PoT/N6blwcyyIQFM3U8a2hsVHcWbbUqN98ofqQAC0RkO908jVeCq3Be/WMJRbJF
-	 rOV1yeaRTvHVvMaOMQPHz692KRi2g2SqO9YfobhM=
+	b=CSupjf9DGp38HzXs1yUTlwZGNvjY7QBwpgBwxSO0eqwKXZ/0AaoiYHz+CporAR7H5
+	 dvtZbsnpttT894zgiVtsFd0qlDB41jFhlbPh0o0vuIB9p6d4jexQKtbwnabhhadxCy
+	 6A0OecChzM4EUCepP7lNeUIJHitHt1cmKuqco5+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389354AbfKDWTt (ORCPT
+        id S2388242AbfKDWAV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:00:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:57916 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388141AbfKDWAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:48 -0500
+        id S2388060AbfKDWAS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:18 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9962A20659;
-        Mon,  4 Nov 2019 22:00:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C48420650;
+        Mon,  4 Nov 2019 22:00:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904848;
-        bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+        s=default; t=1572904818;
+        bh=IlBkFwGUgAC2Wa9c3vMk16ObPVRv9tfoUaey65R1+pA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xHnFmuwcXpW7tjodnpo2CGV3Jq3PfpMgPfA+3mD9EY8QMWRsV8drAHgzJc65cA++I
-         wUopS8kJ947gNcSFO2hPldoS+dLuxbCIdBRomLqZz2xWvzbdEN6qhr5ZHRBqYtuPbc
-         i4VSOUcXlO2qrLzAblBa7iYMYQATMtG+ZNb6Rusw=
+        b=JoGZVreAtlr/U8f8Lxl9Ptc6GDarsz1AXDRFXY+saoJoNWMEqSjc8OA13aVu4cDk0
+         NRN3zti2R+9WxTYZ5mlvEOqhCm91y66Kmxh85Rn6U2758TvTBTqCpnkr5Pe/mQ5CfZ
+         rwTU2XdgFvOYljWV0raYwvyxiE5eNzLib8zVOm38=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nirmoy Das <nirmoy.das@amd.com>,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
+        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 093/149] drm/amdgpu: fix memory leak
-Date:   Mon,  4 Nov 2019 22:44:46 +0100
-Message-Id: <20191104212143.005061860@linuxfoundation.org>
+Subject: [PATCH 4.19 079/149] fs: cifs: mute -Wunused-const-variable message
+Date:   Mon,  4 Nov 2019 22:44:32 +0100
+Message-Id: <20191104212142.146886735@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,69 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nirmoy Das <nirmoy.das@amd.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 083164dbdb17c5ea4ad92c1782b59c9d75567790 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-cleanup error handling code and make sure temporary info array
-with the handles are freed by amdgpu_bo_list_put() on
-idr_replace()'s failure.
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
-Reviewed-by: Christian König <christian.koenig@amd.com>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
+
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-index b80243d3972e4..ce7f18c5ccb26 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
-@@ -264,7 +264,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index fdd908e4a26b3..66c10121a6eae 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
  
- 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
- 	if (r)
--		goto error_free;
-+		return r;
- 
- 	switch (args->in.operation) {
- 	case AMDGPU_BO_LIST_OP_CREATE:
-@@ -277,8 +277,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
- 		mutex_unlock(&fpriv->bo_list_lock);
- 		if (r < 0) {
--			amdgpu_bo_list_put(list);
--			return r;
-+			goto error_put_list;
- 		}
- 
- 		handle = r;
-@@ -300,9 +299,8 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 		mutex_unlock(&fpriv->bo_list_lock);
- 
- 		if (IS_ERR(old)) {
--			amdgpu_bo_list_put(list);
- 			r = PTR_ERR(old);
--			goto error_free;
-+			goto error_put_list;
- 		}
- 
- 		amdgpu_bo_list_put(old);
-@@ -319,8 +317,10 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
- 
- 	return 0;
- 
-+error_put_list:
-+	amdgpu_bo_list_put(list);
-+
- error_free:
--	if (info)
--		kvfree(info);
-+	kvfree(info);
- 	return r;
- }
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
