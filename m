@@ -2,160 +2,96 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C7AECA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8571BCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:06:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34B5520848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:59:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59BD42084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:06:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EtU3IfLA"
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="hvDu86LF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729467AbfKDT7C (ORCPT
+        id S1729091AbfKDUGs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:59:02 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:28888 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729403AbfKDT7B (ORCPT
+        Mon, 4 Nov 2019 15:06:48 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44459 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfKDUGs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:59:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572897540;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=+pnAnOiSISyBRjKpYkfJOeRgEbJYhiafx0UfFa6VVec=;
-        b=EtU3IfLA4oFbe+pTDqx8rEau2UMxxxKOSqqHuG3cqzN4VRlL1FxFfajCP5M2xC51J9eltb
-        0oAdtkv7Gag4WLoc/y7pdHi2LeTW9z1HG6CC95LyutFDFj+VFqjQBqyElwiNkZmMhOb/Ph
-        PZdNx6Vm2JUdTot92oVsbtHnftIxAr8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-235-XtrCkztJO8OTl5evsKXb9w-1; Mon, 04 Nov 2019 14:58:56 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 58B7D477;
-        Mon,  4 Nov 2019 19:58:55 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id B68EC19C58;
-        Mon,  4 Nov 2019 19:58:54 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 14:58:53 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 16/28] mm: kswapd backoff for shrinkers
-Message-ID: <20191104195853.GG10665@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-17-david@fromorbit.com>
+        Mon, 4 Nov 2019 15:06:48 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 9209B8365A;
+        Tue,  5 Nov 2019 09:06:43 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572898003;
+        bh=QjHD60cXYGA5rwMrtKgTa0FglpM0ZLFA0lhaMxRCaA0=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=hvDu86LFPoy8xj/nPMCjWh3hLLJi9h8IsOfWCaoDVTzeB9pO2ok01VlECOdYIn/Om
+         RB6BTNTNDbN5GkVnGwKl+C2V0ox0bRsQKEeH1k8pgNtsuwbsq9Z2S/XpYWpZ2sfN37
+         YvlIuWoCC4Om3Em9L6FpDVNC4scfUdKg1LKMKZFoo7PvdeQHdeZ21AIanJCmDOsQvF
+         4Wjlk/MEkkirsKgXzIy/QBWg41XsEUzNoFMxNpjIIK69loPzXr3cFouQViLT9R7bv/
+         OsMqjNysZSArxrvctcb7pQJ1gwcAtRJ0IMXcsuZ0min32EckNqM6MEFzOeOR/SYDH6
+         rUJ3GeGJAqBQg==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc084d40000>; Tue, 05 Nov 2019 09:06:44 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 5 Nov 2019 09:06:43 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 5 Nov 2019 09:06:43 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: spi-mem and gpio chipselects
+Thread-Topic: spi-mem and gpio chipselects
+Thread-Index: AQHVkqe/99KPV78Qa0mRy221SIO+EKd6HAYAgAB7fAA=
+Date:   Mon, 4 Nov 2019 20:06:42 +0000
+Message-ID: <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
+References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
+         <20191104124444.GB5238@sirena.co.uk>
+In-Reply-To: <20191104124444.GB5238@sirena.co.uk>
+Accept-Language: en-NZ, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d0c9:dea8:da1e:f79e]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <CBD24C53A2CF2E449E990610426137AD@atlnz.lc>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <20191031234618.15403-17-david@fromorbit.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: XtrCkztJO8OTl5evsKXb9w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:46:06AM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
->=20
-> When kswapd reaches the end of the page LRU and starts hitting dirty
-> pages, the logic in shrink_node() allows it to back off and wait for
-> IO to complete, thereby preventing kswapd from scanning excessively
-> and driving the system into swap thrashing and OOM conditions.
->=20
-> When we have inode cache heavy workloads on XFS, we have exactly the
-> same problem with reclaim inodes. The non-blocking kswapd reclaim
-> will keep putting pressure onto the inode cache which is unable to
-> make progress. When the system gets to the point where there is no
-> pages in the LRU to free, there is no swap left and there are no
-> clean inodes that can be freed, it will OOM. This has a specific
-> signature in OOM:
->=20
-> [  110.841987] Mem-Info:
-> [  110.842816] active_anon:241 inactive_anon:82 isolated_anon:1
->                 active_file:168 inactive_file:143 isolated_file:0
->                 unevictable:2621523 dirty:1 writeback:8 unstable:0
->                 slab_reclaimable:564445 slab_unreclaimable:420046
->                 mapped:1042 shmem:11 pagetables:6509 bounce:0
->                 free:77626 free_pcp:2 free_cma:0
->=20
-> In this case, we have about 500-600 pages left in teh LRUs, but we
-> have ~565000 reclaimable slab pages still available for reclaim.
-> Unfortunately, they are mostly dirty inodes, and so we really need
-> to be able to throttle kswapd when shrinker progress is limited due
-> to reaching the dirty end of the LRU...
->=20
-> So, add a flag into the reclaim_state so if the shrinker decides it
-> needs kswapd to back off and wait for a while (for whatever reason)
-> it can do so.
->=20
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  include/linux/swap.h |  1 +
->  mm/vmscan.c          | 10 +++++++++-
->  2 files changed, 10 insertions(+), 1 deletion(-)
->=20
-> diff --git a/include/linux/swap.h b/include/linux/swap.h
-> index da0913e14bb9..76fc28f0e483 100644
-> --- a/include/linux/swap.h
-> +++ b/include/linux/swap.h
-> @@ -133,6 +133,7 @@ struct reclaim_state {
->  =09unsigned long=09reclaimed_pages;=09/* pages freed by shrinkers */
->  =09unsigned long=09scanned_objects;=09/* quantity of work done */=20
->  =09unsigned long=09deferred_objects;=09/* work that wasn't done */
-> +=09bool=09=09need_backoff;=09=09/* tell kswapd to slow down */
->  };
-> =20
->  /*
-> diff --git a/mm/vmscan.c b/mm/vmscan.c
-> index 13c11e10c9c5..0f7d35820057 100644
-> --- a/mm/vmscan.c
-> +++ b/mm/vmscan.c
-> @@ -2949,8 +2949,16 @@ static bool shrink_node(pg_data_t *pgdat, struct s=
-can_control *sc)
->  =09=09=09 * implies that pages are cycling through the LRU
->  =09=09=09 * faster than they are written so also forcibly stall.
->  =09=09=09 */
-> -=09=09=09if (sc->nr.immediate)
-> +=09=09=09if (sc->nr.immediate) {
->  =09=09=09=09congestion_wait(BLK_RW_ASYNC, HZ/10);
-> +=09=09=09} else if (reclaim_state && reclaim_state->need_backoff) {
-> +=09=09=09=09/*
-> +=09=09=09=09 * Ditto, but it's a slab cache that is cycling
-> +=09=09=09=09 * through the LRU faster than they are written
-> +=09=09=09=09 */
-> +=09=09=09=09congestion_wait(BLK_RW_ASYNC, HZ/10);
-> +=09=09=09=09reclaim_state->need_backoff =3D false;
-> +=09=09=09}
-
-Seems reasonable from a functional standpoint, but why not plug in to
-the existing stall instead of duplicate it? E.g., add a corresponding
-->nr_immediate field to reclaim_state rather than a bool, then transfer
-that to the scan_control earlier in the function where we already check
-for reclaim_state and handle transferring fields (or alternatively just
-leave the bool and use it to bump the scan_control field). That seems a
-bit more consistent with the page processing code, keeps the
-reclaim_state resets in one place and also wouldn't leave us with an
-if/else here for the same stall. Hm?
-
-Brian
-
->  =09=09}
-> =20
->  =09=09/*
-> --=20
-> 2.24.0.rc0
->=20
-
+T24gTW9uLCAyMDE5LTExLTA0IGF0IDEyOjQ0ICswMDAwLCBNYXJrIEJyb3duIHdyb3RlOg0KPiBP
+biBNb24sIE5vdiAwNCwgMjAxOSBhdCAxMjozNToyNEFNICswMDAwLCBDaHJpcyBQYWNraGFtIHdy
+b3RlOg0KPiANCj4gPiBJJ20gd29ya2luZyBvbiBhIHBsYXRmb3JtIHRoYXQgaGFzIGEgc2xpZ2h0
+bHkgY29tcGxpY2F0ZWQgc2NoZW1lIGZvcg0KPiA+IFNQSSBjaGlwLXNlbGVjdHMgdXNpbmcgZ3Bp
+b3NbMV0uIFRoZSBzcGkgY29udHJvbGxlciBkcml2ZXIgaW4gdGhpcyBjYXNlDQo+ID4gc3VwcG9y
+dHMgdGhlIHNwaS1tZW0gb3BlcmF0aW9ucyB3aGljaCBhcHBlYXIgdG8gYnlwYXNzIHRoZSBnZW5l
+cmljDQo+ID4gc3BpX3NldF9jcygpLg0KPiA+IFdvdWxkIHRoZXJlIGJlIGFueSBoYXJtIGluIGFk
+ZGluZyBjYWxscyB0byBzcGlfc2V0X2NzKCkgdG8gc3BpLW1lbS5jPw0KPiA+IE5haXZlbHkgc3Bp
+X21lbV9hY2Nlc3Nfc3RhcnQoKSBhbmQgc3BpX21lbV9hY2Nlc3NfZW5kKCkgc2VlbSBsaWtlDQo+
+ID4gY29udmVuaWVudCBwbGFjZXMgdG8gc3RhcnQuDQo+IA0KPiBUaGF0J3Mgb25seSBnb2luZyB0
+byB3b3JrIGluIGNhc2VzIHdoZXJlIHRoZSBjb250cm9sbGVyIHRyYW5zbGF0ZXMNCj4gdGhpbmdz
+IGludG8gYSBzaW5nbGUgU1BJIG9wZXJhdGlvbiBvbiB0aGUgZmxhc2ggd2hpY2ggSSdtIG5vdCBz
+dXJlIGlzDQo+IGFsd2F5cyBnb2luZyB0byBiZSB0aGUgY2FzZS4gIFdlJ2QgbmVlZCBhIHdheSB0
+byBndWFyYW50ZWUgdGhhdCB0aGUNCj4gY29udHJvbGxlciBpcyBnb2luZyB0byBkbyB0aGF0IGlu
+IG9yZGVyIHRvIGF2b2lkIGRhdGEgY29ycnVwdGlvbiBpc3N1ZXMuDQoNCkluIG15IHBhcnRpY3Vs
+YXIgY2FzZSAoc3BpLWJjbS1xc3BpLmMpIGJjbV9xc3BpX2JzcGlfZXhlY19tZW1fb3AoKSBkb2Vz
+DQpzZWVtIHRvIGFzc2VydCB0aGUgbmF0aXZlIGNoaXAtc2VsZWN0IHRoZW4gZG8gaXQncyBvcGVy
+YXRpb24uIEFzIEkNCnVuZGVyc3RhbmQgdGhlIHdhaXRfZm9yX2NvbXBsZXRpb25fdGltZW91dCgp
+IHdpbGwgc2NoZWR1bGUgc28gb3RoZXINCnRhc2tzIG1heSBydW4gYnV0IHNwaV9tZW1fYWNjZXNz
+X3N0YXJ0KCkgaGFzIHRha2VuIGFuIGlvX211dGV4IHNvDQphbnl0aGluZyB0aGF0IGFjY2Vzc2Vz
+IHRoYXQgc3BpIGJ1cyB3aWxsIGJsb2NrLg0K
