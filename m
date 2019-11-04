@@ -5,50 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A3FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E0DCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54D9D21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40196217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:58:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904717;
-	bh=atw4UZaQccT3eKFCQyThccWL3IxyuknKXsMHVAawv3s=;
+	s=default; t=1572904725;
+	bh=dNn/LIJ/CoShNtr+baPOMrLT5mYlfNxfN/Toz60p2fQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=t86lsQLB4G5fXFdbX9pZ6KdsDjZunYDy1zG9l+yZ3B+VFTCTZDDjDZDITkuw+kBxK
-	 5mAxhlcRuKr5zCd5+bdoCWxFKXFVuvyW4DdJBRja8iMSfdeKuAMrt2kltsAIPX6Q+Z
-	 ppGPpChrGvEFugq9yt6qadWylbK1uXG0gqFS7+m4=
+	b=tmChodwB2aV+Vos8i9apVOrp08r8Ui06Tv2mfA7d27QILaavYaXWyqXdqENqbFDcC
+	 08fDqU5pmeVcYDcL6FtYSArrhcOZAtDozo9B1VJYl1UsheEYI0fBIvt88mLeOA3axv
+	 Dz8jBjM6SJnzZoshEwLwNCl/46VN/auQg1wov8JM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388088AbfKDV6g (ORCPT
+        id S1730728AbfKDV6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:58:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55430 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55640 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730613AbfKDV63 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:58:29 -0500
+        id S2388089AbfKDV6g (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:58:36 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD68F214D8;
-        Mon,  4 Nov 2019 21:58:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B04920650;
+        Mon,  4 Nov 2019 21:58:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904708;
-        bh=atw4UZaQccT3eKFCQyThccWL3IxyuknKXsMHVAawv3s=;
+        s=default; t=1572904716;
+        bh=dNn/LIJ/CoShNtr+baPOMrLT5mYlfNxfN/Toz60p2fQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Ix2cOJhqqFH9NgYxOqyfek6LSv8Q/pB0N4D+ph2yyZ4zPyl4NaDRpMKN4+flje6iR
-         zEM25nOXwIDfj6nWc8u7izGng5TlFgaXIw+loGq9dbtdRXjJ4ME1A8p4tvdlmmmOty
-         /zCZzD/JuKMnDn5fU8R9A63hsBBtg1YX9v/ArrOE=
+        b=hoxlMktaeHSWRA3kupu4Rnk3YMoFDC28FWCaXlqBYBxLzNDCzPTfCNmkEsGvrAv2D
+         UAp87iAf42e2xlgUK3cNvCPK0VD36Li7v7oDp3bPfLpu2uHpxtaJjfvF9tyWOcK8b6
+         b4xkU3+H+bzGm7U1z8+iXXcbP1+dp5mUw8nQWMr4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ahmad Masri <amasri@codeaurora.org>,
-        Maya Erez <merez@codeaurora.org>,
-        Kalle Valo <kvalo@codeaurora.org>,
+        stable@vger.kernel.org, "Daniel T. Lee" <danieltimlee@gmail.com>,
+        Song Liu <songliubraving@fb.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 008/149] wil6210: fix freeing of rx buffers in EDMA mode
-Date:   Mon,  4 Nov 2019 22:43:21 +0100
-Message-Id: <20191104212130.291278374@linuxfoundation.org>
+Subject: [PATCH 4.19 037/149] samples: bpf: fix: seg fault with NULL pointer arg
+Date:   Mon,  4 Nov 2019 22:43:50 +0100
+Message-Id: <20191104212138.357301251@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -61,95 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ahmad Masri <amasri@codeaurora.org>
+From: Daniel T. Lee <danieltimlee@gmail.com>
 
-[ Upstream commit 6470f31927b46846d957628b719dcfda05446664 ]
+[ Upstream commit d59dd69d5576d699d7d3f5da0b4738c3a36d0133 ]
 
-After being associated with some EDMA rx traffic, upon "down" driver
-doesn't free all skbs in the rx ring.
-Modify wil_move_all_rx_buff_to_free_list to loop on active list of rx
-buffers, unmap the physical memory and free the skb.
+When NULL pointer accidentally passed to write_kprobe_events,
+due to strlen(NULL), segmentation fault happens.
+Changed code returns -1 to deal with this situation.
 
-Signed-off-by: Ahmad Masri <amasri@codeaurora.org>
-Signed-off-by: Maya Erez <merez@codeaurora.org>
-Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Bug issued with Smatch, static analysis.
+
+Signed-off-by: Daniel T. Lee <danieltimlee@gmail.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Signed-off-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/wireless/ath/wil6210/txrx_edma.c | 44 +++++++-------------
- 1 file changed, 14 insertions(+), 30 deletions(-)
+ samples/bpf/bpf_load.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/wireless/ath/wil6210/txrx_edma.c b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-index 3e7fc2983cbb3..409a6fa8b6c8f 100644
---- a/drivers/net/wireless/ath/wil6210/txrx_edma.c
-+++ b/drivers/net/wireless/ath/wil6210/txrx_edma.c
-@@ -234,9 +234,10 @@ static int wil_rx_refill_edma(struct wil6210_priv *wil)
- 	struct wil_ring *ring = &wil->ring_rx;
- 	u32 next_head;
- 	int rc = 0;
--	u32 swtail = *ring->edma_rx_swtail.va;
-+	ring->swtail = *ring->edma_rx_swtail.va;
- 
--	for (; next_head = wil_ring_next_head(ring), (next_head != swtail);
-+	for (; next_head = wil_ring_next_head(ring),
-+	     (next_head != ring->swtail);
- 	     ring->swhead = next_head) {
- 		rc = wil_ring_alloc_skb_edma(wil, ring, ring->swhead);
- 		if (unlikely(rc)) {
-@@ -264,43 +265,26 @@ static void wil_move_all_rx_buff_to_free_list(struct wil6210_priv *wil,
- 					      struct wil_ring *ring)
+diff --git a/samples/bpf/bpf_load.c b/samples/bpf/bpf_load.c
+index 5061a2ec45646..176c04a454dc9 100644
+--- a/samples/bpf/bpf_load.c
++++ b/samples/bpf/bpf_load.c
+@@ -59,7 +59,9 @@ static int write_kprobe_events(const char *val)
  {
- 	struct device *dev = wil_to_dev(wil);
--	u32 next_tail;
--	u32 swhead = (ring->swhead + 1) % ring->size;
-+	struct list_head *active = &wil->rx_buff_mgmt.active;
- 	dma_addr_t pa;
--	u16 dmalen;
+ 	int fd, ret, flags;
  
--	for (; next_tail = wil_ring_next_tail(ring), (next_tail != swhead);
--	     ring->swtail = next_tail) {
--		struct wil_rx_enhanced_desc dd, *d = &dd;
--		struct wil_rx_enhanced_desc *_d =
--			(struct wil_rx_enhanced_desc *)
--			&ring->va[ring->swtail].rx.enhanced;
--		struct sk_buff *skb;
--		u16 buff_id;
-+	while (!list_empty(active)) {
-+		struct wil_rx_buff *rx_buff =
-+			list_first_entry(active, struct wil_rx_buff, list);
-+		struct sk_buff *skb = rx_buff->skb;
- 
--		*d = *_d;
--
--		/* Extract the SKB from the rx_buff management array */
--		buff_id = __le16_to_cpu(d->mac.buff_id);
--		if (buff_id >= wil->rx_buff_mgmt.size) {
--			wil_err(wil, "invalid buff_id %d\n", buff_id);
--			continue;
--		}
--		skb = wil->rx_buff_mgmt.buff_arr[buff_id].skb;
--		wil->rx_buff_mgmt.buff_arr[buff_id].skb = NULL;
- 		if (unlikely(!skb)) {
--			wil_err(wil, "No Rx skb at buff_id %d\n", buff_id);
-+			wil_err(wil, "No Rx skb at buff_id %d\n", rx_buff->id);
- 		} else {
--			pa = wil_rx_desc_get_addr_edma(&d->dma);
--			dmalen = le16_to_cpu(d->dma.length);
--			dma_unmap_single(dev, pa, dmalen, DMA_FROM_DEVICE);
--
-+			rx_buff->skb = NULL;
-+			memcpy(&pa, skb->cb, sizeof(pa));
-+			dma_unmap_single(dev, pa, wil->rx_buf_len,
-+					 DMA_FROM_DEVICE);
- 			kfree_skb(skb);
- 		}
- 
- 		/* Move the buffer from the active to the free list */
--		list_move(&wil->rx_buff_mgmt.buff_arr[buff_id].list,
--			  &wil->rx_buff_mgmt.free);
-+		list_move(&rx_buff->list, &wil->rx_buff_mgmt.free);
- 	}
- }
- 
+-	if ((val != NULL) && (val[0] == '\0'))
++	if (val == NULL)
++		return -1;
++	else if (val[0] == '\0')
+ 		flags = O_WRONLY | O_TRUNC;
+ 	else
+ 		flags = O_WRONLY | O_APPEND;
 -- 
 2.20.1
 
