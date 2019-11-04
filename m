@@ -2,216 +2,101 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D526CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:19:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABDFECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:20:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 746B920848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:19:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8332620848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:20:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728796AbfKDUTh convert rfc822-to-8bit (ORCPT
+        id S1729337AbfKDUUA convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:19:37 -0500
-Received: from mailoutvs13.siol.net ([185.57.226.204]:39823 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728332AbfKDUTh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:19:37 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id A7EC9525541;
-        Mon,  4 Nov 2019 21:19:32 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id tO4CuHS1HBRB; Mon,  4 Nov 2019 21:19:32 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 1D1B552554F;
-        Mon,  4 Nov 2019 21:19:32 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Zimbra) with ESMTPA id 9425D52552D;
-        Mon,  4 Nov 2019 21:19:31 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Uwe =?ISO-8859-1?Q?Kleine=2DK=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Mon, 04 Nov 2019 21:19:31 +0100
-Message-ID: <524459750.Kvg9uK5Sr7@jernej-laptop>
-In-Reply-To: <20191104201052.bxzdues2y4aqkukd@pengutronix.de>
-References: <20191103203334.10539-1-peron.clem@gmail.com> <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com> <20191104201052.bxzdues2y4aqkukd@pengutronix.de>
-MIME-Version: 1.0
+        Mon, 4 Nov 2019 15:20:00 -0500
+Received: from mga17.intel.com ([192.55.52.151]:49942 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728332AbfKDUUA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 15:20:00 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 12:19:59 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
+   d="scan'208";a="401737625"
+Received: from fmsmsx104.amr.corp.intel.com ([10.18.124.202])
+  by fmsmga005.fm.intel.com with ESMTP; 04 Nov 2019 12:19:59 -0800
+Received: from fmsmsx603.amr.corp.intel.com (10.18.126.83) by
+ fmsmsx104.amr.corp.intel.com (10.18.124.202) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Mon, 4 Nov 2019 12:19:59 -0800
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx603.amr.corp.intel.com (10.18.126.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Mon, 4 Nov 2019 12:19:58 -0800
+Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82]) by
+ fmsmsx602.amr.corp.intel.com ([10.18.126.82]) with mapi id 15.01.1713.004;
+ Mon, 4 Nov 2019 12:19:58 -0800
+From:   "Bowers, AndrewX" <andrewx.bowers@intel.com>
+To:     "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [Intel-wired-lan] [PATCH] ice: fix potential infinite loop
+ because loop counter being too small
+Thread-Topic: [Intel-wired-lan] [PATCH] ice: fix potential infinite loop
+ because loop counter being too small
+Thread-Index: AQHVkLzKP0Wlq1BZlUGR147KUW8J6Kd7eMkA
+Date:   Mon, 4 Nov 2019 20:19:58 +0000
+Message-ID: <19998571b6704752955e3c951b50eb92@intel.com>
+References: <20191101140017.16646-1-colin.king@canonical.com>
+In-Reply-To: <20191101140017.16646-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+dlp-product: dlpe-windows
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZTI1NTNjZjUtMTRmMy00OTc2LTk0MjctMTFlZDFiN2VlMTcwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiZVFYU1JZeGh2OXJqZktQOHV6aFlLUzFiZmZzd3lKdHJDUDZoOG1QVmtqMkZQQVV1cjNlQU1JVG5GYThtazlqTCJ9
+dlp-reaction: no-action
+dlp-version: 11.0.400.15
+x-originating-ip: [10.22.254.132]
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="iso-8859-1"
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-König 
-napisal(a):
-> Hello Clément,
+> -----Original Message-----
+> From: Intel-wired-lan [mailto:intel-wired-lan-bounces@osuosl.org] On
+> Behalf Of Colin King
+> Sent: Friday, November 1, 2019 7:00 AM
+> To: Kirsher, Jeffrey T <jeffrey.t.kirsher@intel.com>; David S . Miller
+> <davem@davemloft.net>; Venkataramanan, Anirudh
+> <anirudh.venkataramanan@intel.com>; intel-wired-lan@lists.osuosl.org;
+> netdev@vger.kernel.org
+> Cc: kernel-janitors@vger.kernel.org; linux-kernel@vger.kernel.org
+> Subject: [Intel-wired-lan] [PATCH] ice: fix potential infinite loop because loop
+> counter being too small
 > 
-> On Mon, Nov 04, 2019 at 07:07:00PM +0100, Clément Péron wrote:
-> > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-König
-> > 
-> > <u.kleine-koenig@pengutronix.de> wrote:
-> > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Clément Péron wrote:
-> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > 
-> > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > > 
-> > > > Add an optional probe for it and a fallback for previous
-> > > > bindings without name on module clock.
-> > > > 
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
-> > > > ---
-> > > > 
-> > > >  drivers/pwm/pwm-sun4i.c | 36 ++++++++++++++++++++++++++++++++++++
-> > > >  1 file changed, 36 insertions(+)
-> > > > 
-> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > > > 
-> > > >  struct sun4i_pwm_chip {
-> > > >  
-> > > >       struct pwm_chip chip;
-> > > > 
-> > > > +     struct clk *bus_clk;
-> > > > 
-> > > >       struct clk *clk;
-> > > >       struct reset_control *rst;
-> > > >       void __iomem *base;
-> > > > 
-> > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_device
-> > > > *pdev)> > 
-> > > Adding more context here:
-> > > |       pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > |       
-> > > >       if (IS_ERR(pwm->clk))
-> > > >       
-> > > >               return PTR_ERR(pwm->clk);
-> > > > 
-> > > > +     /* Get all clocks and reset line */
-> > > > +     pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-> > > > +     if (IS_ERR(pwm->clk)) {
-> > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > +                     PTR_ERR(pwm->clk));
-> > > > +             return PTR_ERR(pwm->clk);
-> > > > +     }
-> > > 
-> > > I guess you want to drop the first assignment to pwm->clk.
-> > 
-> > devm_clk_get_optional will return NULL if there is no entry, I don't
-> > get where I need to drop it assignment.
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> With your patch the code looks as follows:
+> Currently the for-loop counter i is a u8 however it is being checked against a
+> maximum value hw->num_tx_sched_layers which is a u16. Hence there is a
+> potential wrap-around of counter i back to zero if
+> hw->num_tx_sched_layers is greater than 255.  Fix this by making i
+> a u16.
 > 
-> 	pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> 	if (IS_ERR(pwm->clk))
-> 		return PTR_ERR(pwm->clk);
-> 
-> 	/* Get all clocks and reset line */
-> 	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-
-Actually, it's the other way around, e.g. "mod" clock is checked first.
-
-> 	...
-> 
-> The assignment to pwm->clk above the comment is the one I suggested to
-> drop.
-
-Neither can be dropped. DT files for other SoCs don't have clock-names 
-property, so search for "mod" clock will fail and then fallback option without 
-name is used.
-
-Best regards,
-Jernej
-
-> 
-> > > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > > +     if (!pwm->clk) {
-> > > > +             pwm->clk = devm_clk_get(&pdev->dev, NULL);
-> > > > +             if (IS_ERR(pwm->clk)) {
-> > > > +                     dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > +                             PTR_ERR(pwm->clk));
-> > > > +                     return PTR_ERR(pwm->clk);
-> > > > +             }
-> > > > +     }
-> > > 
-> > > There is a slight change of behaviour if I'm not mistaken. If you have
-> > > 
-> > > this:
-> > >         clocks = <&clk1>;
-> > >         clock-names = "mod";
-> > >         
-> > >         pwm {
-> > >         
-> > >                 compatible = "allwinner,sun4i-a10-pwm"
-> > >                 clocks = <&clk2>;
-> > >         
-> > >         }
-> > > 
-> > > you now use clk1 instead of clk2 before.
-> > > 
-> > > Assuming this is only a theoretical problem, at least pointing this out
-> > > in the commit log would be good I think.
-> > 
-> > Yes it's correct and as you said the driver don't check for a correct
-> > device tree, that why it's now optional probe.
-> > Let's assume that's the device-tree is correct, I will add a comment
-> > in the commit log.
-> 
-> If the mod clock was shared by all peripherals on the bus this would be
-> IMHO quite elegant. Probably it depends on what you mean by saying
-> "incorrect" if this snippet is incorrect. (It can be part of a valid dtb
-> that even complies to the binding documentation. However that's not how
-> any existing allwinner hardware looks like.) But let's stop arguing as
-> we agree it's a corner case and if you mention it in the commit log
-> we're both happy.
-> 
-> > > What is that clock used for? Is it required to access the hardware
-> > > registers? Or is it only required while the PWM is enabled? If so you
-> > > could enable the clock more finegrainded.
-> > 
-> > Regarding the datasheet it's required to access the hardware.
-> > page 261 :
-> > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-> So enabling the bus clock is called "open APB1 Bus gating" in that
-> manual? If I understand that correctly the bus clock then only need to
-> be on while accessing the registers and could be disabled once the
-> hardware is programmed and running.
-> 
-> Can you please describe that in a comment. Something like:
-> 
-> 	/*
-> 	 * We're keeping the bus clock on for the sake of simplicity.
-> 	 * Actually it only needs to be on for hardware register
-> 	 * accesses.
-> 	 */
-> 
-> should be fine. This way it's at least obvious that the handling could
-> be improved.
-> 
-> Best regards
-> Uwe
+> Addresses-Coverity: ("Infinite loop")
+> Fixes: b36c598c999c ("ice: Updates to Tx scheduler code")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> ---
+>  drivers/net/ethernet/intel/ice/ice_sched.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
 
-
+Tested-by: Andrew Bowers <andrewx.bowers@intel.com>
 
