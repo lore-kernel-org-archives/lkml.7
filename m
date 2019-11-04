@@ -2,195 +2,163 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61262CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:26:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9128FCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:27:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2F2F02089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572884817;
-	bh=MshzMafx5VwEdNco/FGXmCeMS4xBcQBIMeFuOpIoVzs=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=wgaG/SG3nr2Ob1JbE9y6WWSe1M8R5nK2vN0yalcAVDpn2cFeXfZjGt67yTTntgU9r
-	 RdCiuDBuyHSQr4wClFyQmKoYNzHXFGFOciJaoigGMq3ZCVLwpRZ7W77Jb9ouqt5jfx
-	 5BEYc48/eJAl2eFnvIMOA4NDyJWg4HYYWpigVyNs=
+	by mail.kernel.org (Postfix) with ESMTP id 5B1A0214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:27:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="edyirGAk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729058AbfKDQ04 (ORCPT
+        id S1729231AbfKDQ1X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:26:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:57736 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfKDQ0z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:26:55 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.216.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 35E8A20848;
-        Mon,  4 Nov 2019 16:26:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572884814;
-        bh=MshzMafx5VwEdNco/FGXmCeMS4xBcQBIMeFuOpIoVzs=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=CRPllfj6p3zqTqnO2r6rgB38J2ZjVNa8FvHi5QuWD5QgkBZ+zcZgbcQptDjOhOLr7
-         sj4WRBDKKy7C13ddvWKP1/IMR4GQbG6YQyJ7jtYjDKO2xsNpRwB5BL7u4n8dLZmUDC
-         JEatdtLv3ZEm6TkMZD2/x7Q+HKeqHDsYkl1ww6/4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 37DF53520B56; Mon,  4 Nov 2019 08:26:52 -0800 (PST)
-Date:   Mon, 4 Nov 2019 08:26:52 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot <syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Josh Triplett <josh@joshtriplett.org>, rcu@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>, amir73il@gmail.com,
-        darrick.wong@oracle.com, Johannes Weiner <hannes@cmpxchg.org>,
-        jack@suse.cz, josef@toxicpanda.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        songliubraving@fb.com, syzkaller-bugs@googlegroups.com,
-        willy@infradead.org
-Subject: Re: KCSAN: data-race in __rcu_read_unlock / sync_rcu_exp_select_cpus
-Message-ID: <20191104162652.GC20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <000000000000411e4b059683a39c@google.com>
- <CANpmjNMegMA6d5n1cV5JLmMbbe-3TkH5q3sNt9+E+wb8esjvoA@mail.gmail.com>
+        Mon, 4 Nov 2019 11:27:23 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:38489 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727838AbfKDQ1X (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:27:23 -0500
+Received: by mail-qk1-f193.google.com with SMTP id e2so18186786qkn.5;
+        Mon, 04 Nov 2019 08:27:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i66A6pPwTuTMjG+BVvr5dEhi3nTPOcjA9Wo5ZsbJLGM=;
+        b=edyirGAknSCqx5G4/iS96ij1SqLsJ0hUWva5SoYDegi94n9vAlQGl6WeDQsMsqLmdR
+         Hdyv9IHi3ioK/LAziTLpIkEUEdNLNkFJ+JDUyKuDELyaneQ0mZYSIPOe2agJTXhYHXpr
+         49CVNgvsHr6kVqrlSMzvm6Fevr2YrSDwx3zemhUAKWDTbkB4+D2YFlBBr+pAv+6BZzAN
+         njyOJpnDKFKP9yWSU9MHsO3xa9fvadxcp0wYDvF+vigu8oRuxRhiwKXhS7ZdkoaVxMHo
+         kz3wUH372tIDoWR4c3EnywJXVFhzWydTwCz6mHvhyuKNpudVws+R5x04xfujAbaf5tHa
+         2LFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=i66A6pPwTuTMjG+BVvr5dEhi3nTPOcjA9Wo5ZsbJLGM=;
+        b=sOAc1hqWW596uqkkO4pWKlvBdP2GFvj4tcrDdOUFZP2lNMKnsGDsQ06oXvDe3LzjTC
+         cGLFD2Cwx743LqDe6QIf23pDj+p2GG66OW5STqb44mvHWuhUBlYqTUkbmEsJ8063nWBj
+         /C97iTe86FZZALfdBBJA2RolTVIlFP/BIaCqRg+wcYvV8EAdyMca/wlVj1a7NBWrKpt6
+         4AI6s3RmQK//dlW8PxNIkKaxGrIR39utpmfOluw4VxlgsY1FbYtHUpSng8HfQH9/aa96
+         U/DHqrn0LiC1RXMwlJY1S99eYIPIqr6bX0YsIJ0y5FUolB3iU6fPsZPfINQIa2sHqzak
+         I1Sw==
+X-Gm-Message-State: APjAAAXbFf78QaDdvNOAW3jQW8g25FzAlh6iXBMOLeN+O9+Uv0EbAH8G
+        0KAnVPo0GcnjIV73lx39EWE=
+X-Google-Smtp-Source: APXvYqxrJvftoKqL0O6y4FTfX/xET+DHn8QnlmX1K0Zw72my2+nr0x1RCsvGOrIJKDXM6DyDtmS8yQ==
+X-Received: by 2002:a37:9c52:: with SMTP id f79mr5479121qke.163.1572884841910;
+        Mon, 04 Nov 2019 08:27:21 -0800 (PST)
+Received: from localhost.localdomain ([187.106.44.83])
+        by smtp.gmail.com with ESMTPSA id i14sm8876562qke.102.2019.11.04.08.27.17
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:27:21 -0800 (PST)
+From:   Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+To:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        rodrigosiqueiramelo@gmail.com, hamohammed.sa@gmail.com,
+        daniel@ffwll.ch, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Cc:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Subject: [PATCH VKMS v3] drm/doc: Add VKMS module description and use to "Testing and Validation"
+Date:   Mon,  4 Nov 2019 13:27:05 -0300
+Message-Id: <20191104162705.19735-1-gabrielabittencourt00@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CANpmjNMegMA6d5n1cV5JLmMbbe-3TkH5q3sNt9+E+wb8esjvoA@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 12:32:57PM +0100, Marco Elver wrote:
-> +RCU folks
-> 
-> On Mon, 4 Nov 2019 at 12:30, syzbot
-> <syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com> wrote:
-> >
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-> > git tree:       https://github.com/google/ktsan.git kcsan
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=1296ff50e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=99f4ddade3c22ab0cf23
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+99f4ddade3c22ab0cf23@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in __rcu_read_unlock / sync_rcu_exp_select_cpus
-> >
-> > read to 0xffffffff85a7d440 of 8 bytes by task 7624 on cpu 0:
-> >   rcu_read_unlock_special kernel/rcu/tree_plugin.h:615 [inline]
-> >   __rcu_read_unlock+0x381/0x3c0 kernel/rcu/tree_plugin.h:383
-> >   rcu_read_unlock include/linux/rcupdate.h:652 [inline]
-> >   filemap_map_pages+0x5b3/0x990 mm/filemap.c:2687
-> >   do_fault_around mm/memory.c:3450 [inline]
-> >   do_read_fault mm/memory.c:3484 [inline]
-> >   do_fault mm/memory.c:3618 [inline]
-> >   handle_pte_fault mm/memory.c:3849 [inline]
-> >   __handle_mm_fault+0x2554/0x2cb0 mm/memory.c:3973
-> >   handle_mm_fault+0x21b/0x530 mm/memory.c:4010
-> >   do_user_addr_fault arch/x86/mm/fault.c:1441 [inline]
-> >   __do_page_fault+0x3fb/0x9e0 arch/x86/mm/fault.c:1506
-> >   do_page_fault+0x54/0x233 arch/x86/mm/fault.c:1530
-> >   page_fault+0x34/0x40 arch/x86/entry/entry_64.S:1202
-> >
-> > write to 0xffffffff85a7d440 of 8 bytes by task 7353 on cpu 1:
-> >   sync_exp_reset_tree kernel/rcu/tree_exp.h:137 [inline]
-> >   sync_rcu_exp_select_cpus+0xd5/0x590 kernel/rcu/tree_exp.h:427
-> >   rcu_exp_sel_wait_wake kernel/rcu/tree_exp.h:575 [inline]
-> >   wait_rcu_exp_gp+0x25/0x40 kernel/rcu/tree_exp.h:589
-> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > Reported by Kernel Concurrency Sanitizer on:
-> > CPU: 1 PID: 7353 Comm: kworker/1:0 Not tainted 5.4.0-rc3+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: rcu_gp wait_rcu_exp_gp
-> > ==================================================================
-> > Kernel panic - not syncing: panic_on_warn set ...
-> > CPU: 1 PID: 7353 Comm: kworker/1:0 Not tainted 5.4.0-rc3+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: rcu_gp wait_rcu_exp_gp
-> > Call Trace:
-> >   __dump_stack lib/dump_stack.c:77 [inline]
-> >   dump_stack+0xf5/0x159 lib/dump_stack.c:113
-> >   panic+0x210/0x640 kernel/panic.c:221
-> >   kcsan_report.cold+0xc/0x10 kernel/kcsan/report.c:302
-> >   __kcsan_setup_watchpoint+0x32e/0x4a0 kernel/kcsan/core.c:411
-> >   __tsan_write8 kernel/kcsan/kcsan.c:36 [inline]
-> >   __tsan_write8+0x32/0x40 kernel/kcsan/kcsan.c:36
-> >   sync_exp_reset_tree kernel/rcu/tree_exp.h:137 [inline]
-> >   sync_rcu_exp_select_cpus+0xd5/0x590 kernel/rcu/tree_exp.h:427
-> >   rcu_exp_sel_wait_wake kernel/rcu/tree_exp.h:575 [inline]
-> >   wait_rcu_exp_gp+0x25/0x40 kernel/rcu/tree_exp.h:589
-> >   process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> >   worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> >   kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> >   ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> > Shutting down cpus with NMI
-> > Kernel Offset: disabled
-> > Rebooting in 86400 seconds..
-> >
-> >
-> > ---
-> > This bug is generated by a bot. It may contain errors.
-> > See https://goo.gl/tpsmEJ for more information about syzbot.
-> > syzbot engineers can be reached at syzkaller@googlegroups.com.
-> >
-> > syzbot will keep track of this bug report. See:
-> > https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Add a description on VKMS module and the cases in which it should be used.
+There's a brief explanation on how to set it and use it in a VM, along with
+an example of running an igt-test.
 
-Again, good catch!  Does the patch shown below fix this?
+Changes since V3:
+ Rodrigo:
+ - Change the log message to imperative
+ - Fix some bad spelling/writing
+ - Add a blank line before enumeration
 
-							Thanx, Paul
+Changes since V2:
+ Andre:
+ - Avoid repetition of words in the same sentence;
+ - Make the explanation on 'setting the kernel' shorter, eliminate the
+   'make menuconfig' command;
+ - Add tab on enumeration to have one line per item;
+ - Clarify from each machine igt-tests commands should be ran on.
 
-------------------------------------------------------------------------
+Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+---
 
-commit c3c182aa501c13faccf5f2c168004a5c98a89d74
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Mon Nov 4 08:22:45 2019 -0800
+Tested the patch using 'make htmldocs' to make sure the output .html is
+correct.
 
-    rcu: Use READ_ONCE() for ->expmask in rcu_read_unlock_special()
-    
-    The rcu_node structure's ->expmask field is updated only when holding the
-    ->lock, but is also accessed locklessly.  This means that all ->expmask
-    updates must use WRITE_ONCE() and all reads carried out without holding
-    ->lock must use READ_ONCE().  This commit therefore changes the lockless
-    ->expmask read in rcu_read_unlock_special() to use READ_ONCE().
-    
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+Hi DRM-community,
+this is my first (of many, I hope)  patch in this subsystem. I hope to have
+a lot of learning (and fun :)) working with you guys.
+I'm starting by documenting the VKMS driver in "Userland interfaces", if I
+have been inaccurate in my description or if I misunderstood some concept,
+please let me know.
+---
+ Documentation/gpu/drm-uapi.rst | 37 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
 
-diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
-index 6d54fd4..9a1b4b2 100644
---- a/kernel/rcu/tree_plugin.h
-+++ b/kernel/rcu/tree_plugin.h
-@@ -601,7 +601,7 @@ static void rcu_read_unlock_special(struct task_struct *t)
- 		struct rcu_node *rnp = rdp->mynode;
+diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.rst
+index 94f90521f58c..8271c1e240b7 100644
+--- a/Documentation/gpu/drm-uapi.rst
++++ b/Documentation/gpu/drm-uapi.rst
+@@ -285,6 +285,43 @@ run-tests.sh is a wrapper around piglit that will execute the tests matching
+ the -t options. A report in HTML format will be available in
+ ./results/html/index.html. Results can be compared with piglit.
  
- 		exp = (t->rcu_blocked_node && t->rcu_blocked_node->exp_tasks) ||
--		      (rdp->grpmask & rnp->expmask) ||
-+		      (rdp->grpmask & READ_ONCE(rnp->expmask)) ||
- 		      tick_nohz_full_cpu(rdp->cpu);
- 		// Need to defer quiescent state until everything is enabled.
- 		if (irqs_were_disabled && use_softirq &&
++Using VKMS to test DRM API
++--------------------------
++
++VKMS is a software-only model of a KMS driver that is useful for testing
++and for running compositors. VKMS aims to enable a virtual display without
++the need for a hardware display capability. These characteristics made VKMS
++a perfect tool for validating the DRM core behavior and also support the
++compositor developer. VKMS makes it possible to test DRM functions in a
++virtual machine without display, simplifying the validation of some of the
++core changes.
++
++To Validate changes in DRM API with VKMS, start setting the kernel: make
++sure to enable VKMS module; compile the kernel with the VKMS enabled and
++install it in the target machine. VKMS can be run in a Virtual Machine
++(QEMU, virtme or similar). It's recommended the use of KVM with the minimum
++of 1GB of RAM and four cores.
++
++It's possible to run the IGT-tests in a VM in two ways:
++
++	1. Use IGT inside a VM
++	2. Use IGT from the host machine and write the results in a shared directory.
++
++As follow, there is an example of using a VM with a shared directory with
++the host machine to run igt-tests. As an example it's used virtme::
++
++	$ virtme-run --rwdir /path/for/shared_dir --kdir=path/for/kernel/directory --mods=auto
++
++Run the igt-tests in the guest machine, as example it's ran the 'kms_flip'
++tests::
++
++	$ /path/for/igt-gpu-tools/scripts/run-tests.sh -p -s -t "kms_flip.*" -v
++
++In this example, instead of build the igt_runner, Piglit is used
++(-p option); it's created html summary of the tests results and it's saved
++in the folder "igt-gpu-tools/results"; it's executed only the igt-tests
++matching the -t option.
++
+ Display CRC Support
+ -------------------
+ 
+-- 
+2.20.1
+
