@@ -2,54 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=BAD_ENC_HEADER,DKIMWL_WL_HIGH,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B96CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6D3CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60F34204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:20:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F274204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906057;
-	bh=5lwm5aHSV+vFhzsKNzTGTuGddmHkxCu6wDISBI82sz4=;
+	s=default; t=1572906063;
+	bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Wh34Ut4fcRR3jqeGdPdpJV2hnYisk6Skm6F3KgRke6nd/gBAzpDLJ9s3a/bEuzmnV
-	 Lm4lPgNh4ti/gFuHeVFsUamLqxrnWvdxnwVJTkb2nBKV7YyfWUf4Kd0kQnSQvKUDp+
-	 GNLCatd2FwGs9fX/iasqVsRlhznj+dCO/HfKMqzo=
+	b=dh+p2ua/ZjUKebThcafVREPYpKEb3DVYtt31ZNbOxGUCfSAFZhcNB9nXIQ99RdiXK
+	 JZzuvr6vz6ku2aCCIDgVPOcOuPY1x7SkLEPDhjKpvC1qsyne2XHNLjGOV5hQJDdUXe
+	 aenyvfP/a1Zxifid4ktJfZ1MpTFyBZONrcNvWP5U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730964AbfKDV7D (ORCPT
+        id S1730792AbfKDV6v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55974 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:58:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55744 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729804AbfKDV6x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:58:53 -0500
+        id S1730089AbfKDV6m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:58:42 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1EE4D214E0;
-        Mon,  4 Nov 2019 21:58:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E27E7214D9;
+        Mon,  4 Nov 2019 21:58:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904732;
-        bh=5lwm5aHSV+vFhzsKNzTGTuGddmHkxCu6wDISBI82sz4=;
+        s=default; t=1572904721;
+        bh=YL/GOslPbKzWPVIGCvbmtekbS/5Pr6SFRznL14kivv0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RaLjA9LgM17A9MDJ7alr52p3Q0AtU0LMWZWv6w98r9RKGvvtVGvs7UDakH4WE5Qs6
-         nR9l/8QvPqSDVhWBf7U9DSCf2klq9Vvj+lPpV5cQjI+wGshJnp4+sej6DYGWYpQluT
-         74mUsi1fnmPSmpc2+J+B6hCmMUIJm/HRChVinGHo=
+        b=rsulxHnkFFlYmDJ7n1cXjjkwULqpzC6MD3WqIh6V60BA+0tajkQVk+KA4/Idjc8Fi
+         i4Jyi81qbyohamRM++kUN/bdNNIgUtO7nxUloKRy68wNj3fPM86mxhTHfkOC7P314q
+         sepN6FJOrGzZ0v/R7UmVAu4TWgPgGnThPmDa3kys=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "=?UTF-8?q?Lucas=20A . =20M . =20Magalh=C3=A3es?=" 
-        <lucmaga@gmail.com>, Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
+        James Smart <jsmart2021@gmail.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 051/149] media: vimc: Remove unused but set variables
-Date:   Mon,  4 Nov 2019 22:44:04 +0100
-Message-Id: <20191104212139.695013724@linuxfoundation.org>
+Subject: [PATCH 4.19 047/149] scsi: lpfc: Correct localport timeout duration error
+Date:   Mon,  4 Nov 2019 22:44:00 +0100
+Message-Id: <20191104212139.389997986@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -62,39 +61,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lucas A. M. Magalhães <lucmaga@gmail.com>
+From: James Smart <jsmart2021@gmail.com>
 
-[ Upstream commit 5515e414f42bf2769caae15b634004d456658284 ]
+[ Upstream commit 2a0fb340fcc816975b8b0f2fef913d11999c39cf ]
 
-Remove unused but set variables to clean up the code and avoid
-warning.
+Current code incorrectly specifies a completion wait timeout duration in 5
+jiffies, when it should have been 5 seconds.
 
-Signed-off-by: Lucas A. M. Magalhães <lucmaga@gmail.com>
-Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Fix the adjust for units for the completion timeout call.
+
+[mkp: manual merge]
+
+Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
+Signed-off-by: James Smart <jsmart2021@gmail.com>
+Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/media/platform/vimc/vimc-sensor.c | 7 -------
- 1 file changed, 7 deletions(-)
+ drivers/scsi/lpfc/lpfc_nvmet.c | 6 +++++-
+ drivers/scsi/lpfc/lpfc_nvmet.h | 2 ++
+ 2 files changed, 7 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/vimc/vimc-sensor.c b/drivers/media/platform/vimc/vimc-sensor.c
-index 9e0d70e9f119c..3f0ffd4915cd2 100644
---- a/drivers/media/platform/vimc/vimc-sensor.c
-+++ b/drivers/media/platform/vimc/vimc-sensor.c
-@@ -204,13 +204,6 @@ static void *vimc_sen_process_frame(struct vimc_ent_device *ved,
- {
- 	struct vimc_sen_device *vsen = container_of(ved, struct vimc_sen_device,
- 						    ved);
--	const struct vimc_pix_map *vpix;
--	unsigned int frame_size;
--
--	/* Calculate the frame size */
--	vpix = vimc_pix_map_by_code(vsen->mbus_format.code);
--	frame_size = vsen->mbus_format.width * vpix->bpp *
--		     vsen->mbus_format.height;
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.c b/drivers/scsi/lpfc/lpfc_nvmet.c
+index e2575c8ec93e8..22efefcc6cd84 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.c
++++ b/drivers/scsi/lpfc/lpfc_nvmet.c
+@@ -1713,7 +1713,11 @@ lpfc_nvmet_destroy_targetport(struct lpfc_hba *phba)
+ 		}
+ 		tgtp->tport_unreg_cmp = &tport_unreg_cmp;
+ 		nvmet_fc_unregister_targetport(phba->targetport);
+-		wait_for_completion_timeout(&tport_unreg_cmp, 5);
++		if (!wait_for_completion_timeout(tgtp->tport_unreg_cmp,
++					msecs_to_jiffies(LPFC_NVMET_WAIT_TMO)))
++			lpfc_printf_log(phba, KERN_ERR, LOG_NVME,
++					"6179 Unreg targetport %p timeout "
++					"reached.\n", phba->targetport);
+ 		lpfc_nvmet_cleanup_io_context(phba);
+ 	}
+ 	phba->targetport = NULL;
+diff --git a/drivers/scsi/lpfc/lpfc_nvmet.h b/drivers/scsi/lpfc/lpfc_nvmet.h
+index 0ec1082ce7ef6..3b170284a0e59 100644
+--- a/drivers/scsi/lpfc/lpfc_nvmet.h
++++ b/drivers/scsi/lpfc/lpfc_nvmet.h
+@@ -31,6 +31,8 @@
+ #define LPFC_NVMET_MRQ_AUTO		0
+ #define LPFC_NVMET_MRQ_MAX		16
  
- 	tpg_fill_plane_buffer(&vsen->tpg, 0, 0, vsen->frame);
- 	return vsen->frame;
++#define LPFC_NVMET_WAIT_TMO		(5 * MSEC_PER_SEC)
++
+ /* Used for NVME Target */
+ struct lpfc_nvmet_tgtport {
+ 	struct lpfc_hba *phba;
 -- 
 2.20.1
 
