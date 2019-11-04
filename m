@@ -2,53 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE44ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D403ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83F762084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9CCF1214E0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905308;
-	bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
+	s=default; t=1572905312;
+	bh=o9zWjotG85ira+gny4NLKdvv6viLLW0sHqAeRx+kY0o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WHHm0w/FXj+xyP2VoHAEA9UA/4navSouJ7J2Q5aH+c02/v21aq0FVmWs7o8g73+so
-	 ayv+Po83uweLhT1YP02JmxYoUsAO3pcGJupcz4UqU8PBd1Es7rkkmB/h90ZWl5EGul
-	 3J6CfZ+k5l5kgtVpDZoudtDmaR/2djykBHdQBRrY=
+	b=vLSJNRmqhZZtdBTtSsotGFuLKocdwjmbFdENlUqQo6ju3CM34SOAEZmF0gqKI2OKW
+	 6jVYd2c+YXyHZAshEr+o5Tgmwq1u/w1yzLSiBzG7b8uaO7Zsl6494PyfwU2B3yOzkT
+	 ZAx40Adu1HGbpJBE+mZ51YkbubfQEDJ0wF+k+gH4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390224AbfKDWI0 (ORCPT
+        id S2390235AbfKDWIb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:26 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41210 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41360 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390219AbfKDWIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:22 -0500
+        id S2390219AbfKDWI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:28 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5F5E82084D;
-        Mon,  4 Nov 2019 22:08:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 45BC220650;
+        Mon,  4 Nov 2019 22:08:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905300;
-        bh=/g46P0TulW0h/dwsxG3+s4Jb4S23l9pXlIPSTXCiciA=;
+        s=default; t=1572905306;
+        bh=o9zWjotG85ira+gny4NLKdvv6viLLW0sHqAeRx+kY0o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WByDid6dcBIMGtJ2fBkyt7D8C1bpJoZ6a0j3ctdsBSYBeAM3B0pVJi20ggAGt8Wlw
-         KZMdgMxhuYgQIiuyObYa1gHyvcL3xnh6Pn+YgUnzXUjCFc84mkjsBF2H8TYFOzll5t
-         JNRrgGlLePfW2lRKwiJUxFhjx0CExxquT8Rj6RKU=
+        b=Kym6v6IDUaDOaRlfuH/tPxE/M8Xe/HJr42DKNs1xKzXjpjzl9rX8DIw65Xszgw/aC
+         KeVu1Ea9h8X6Y2s8ZxEhBchdh4tVDVCeVN3132Eo9yah87ZNuFfumvXICR0AEpG0CM
+         I0zfesOthd8KERins5rzbftPLY8jkRJIy/YFxdVo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 046/163] arm64: vdso32: Detect binutils support for dmb ishld
-Date:   Mon,  4 Nov 2019 22:43:56 +0100
-Message-Id: <20191104212143.556017848@linuxfoundation.org>
+        stable@vger.kernel.org, Miaoqing Pan <miaoqing@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 5.3 101/163] ath10k: fix latency issue for QCA988x
+Date:   Mon,  4 Nov 2019 22:44:51 +0100
+Message-Id: <20191104212147.383576170@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,79 +59,54 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincenzo Frascino <vincenzo.frascino@arm.com>
+From: Miaoqing Pan <miaoqing@codeaurora.org>
 
-[ Upstream commit 0df2c90eba60791148cee1823c0bf5fc66e3465c ]
+commit d79749f7716d9dc32fa2d5075f6ec29aac63c76d upstream.
 
-Older versions of binutils (prior to 2.24) do not support the "ISHLD"
-option for memory barrier instructions, which leads to a build failure
-when assembling the vdso32 library.
+(kvalo: cherry picked from commit 1340cc631bd00431e2f174525c971f119df9efa1 in
+wireless-drivers-next to wireless-drivers as this a frequently reported
+regression)
 
-Add a compilation time mechanism that detects if binutils supports those
-instructions and configure the kernel accordingly.
+Bad latency is found on QCA988x, the issue was introduced by
+commit 4504f0e5b571 ("ath10k: sdio: workaround firmware UART
+pin configuration bug"). If uart_pin_workaround is false, this
+change will set uart pin even if uart_print is false.
 
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Reported-by: Will Deacon <will@kernel.org>
-Signed-off-by: Vincenzo Frascino <vincenzo.frascino@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Tested HW: QCA9880
+Tested FW: 10.2.4-1.0-00037
+
+Fixes: 4504f0e5b571 ("ath10k: sdio: workaround firmware UART pin configuration bug")
+Signed-off-by: Miaoqing Pan <miaoqing@codeaurora.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/arm64/include/asm/vdso/compat_barrier.h | 2 +-
- arch/arm64/kernel/vdso32/Makefile            | 9 +++++++++
- 2 files changed, 10 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/core.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/include/asm/vdso/compat_barrier.h b/arch/arm64/include/asm/vdso/compat_barrier.h
-index fb60a88b5ed41..3fd8fd6d8fc25 100644
---- a/arch/arm64/include/asm/vdso/compat_barrier.h
-+++ b/arch/arm64/include/asm/vdso/compat_barrier.h
-@@ -20,7 +20,7 @@
+--- a/drivers/net/wireless/ath/ath10k/core.c
++++ b/drivers/net/wireless/ath/ath10k/core.c
+@@ -2118,12 +2118,15 @@ static int ath10k_init_uart(struct ath10
+ 		return ret;
+ 	}
  
- #define dmb(option) __asm__ __volatile__ ("dmb " #option : : : "memory")
+-	if (!uart_print && ar->hw_params.uart_pin_workaround) {
+-		ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
+-					 ar->hw_params.uart_pin);
+-		if (ret) {
+-			ath10k_warn(ar, "failed to set UART TX pin: %d", ret);
+-			return ret;
++	if (!uart_print) {
++		if (ar->hw_params.uart_pin_workaround) {
++			ret = ath10k_bmi_write32(ar, hi_dbg_uart_txpin,
++						 ar->hw_params.uart_pin);
++			if (ret) {
++				ath10k_warn(ar, "failed to set UART TX pin: %d",
++					    ret);
++				return ret;
++			}
+ 		}
  
--#if __LINUX_ARM_ARCH__ >= 8
-+#if __LINUX_ARM_ARCH__ >= 8 && defined(CONFIG_AS_DMB_ISHLD)
- #define aarch32_smp_mb()	dmb(ish)
- #define aarch32_smp_rmb()	dmb(ishld)
- #define aarch32_smp_wmb()	dmb(ishst)
-diff --git a/arch/arm64/kernel/vdso32/Makefile b/arch/arm64/kernel/vdso32/Makefile
-index 19e0d3115ffe0..77aa613403747 100644
---- a/arch/arm64/kernel/vdso32/Makefile
-+++ b/arch/arm64/kernel/vdso32/Makefile
-@@ -15,6 +15,8 @@ cc32-disable-warning = $(call try-run,\
- 	$(COMPATCC) -W$(strip $(1)) -c -x c /dev/null -o "$$TMP",-Wno-$(strip $(1)))
- cc32-ldoption = $(call try-run,\
-         $(COMPATCC) $(1) -nostdlib -x c /dev/null -o "$$TMP",$(1),$(2))
-+cc32-as-instr = $(call try-run,\
-+	printf "%b\n" "$(1)" | $(COMPATCC) $(VDSO_AFLAGS) -c -x assembler -o "$$TMP" -,$(2),$(3))
- 
- # We cannot use the global flags to compile the vDSO files, the main reason
- # being that the 32-bit compiler may be older than the main (64-bit) compiler
-@@ -53,6 +55,7 @@ endif
- VDSO_CAFLAGS += -fPIC -fno-builtin -fno-stack-protector
- VDSO_CAFLAGS += -DDISABLE_BRANCH_PROFILING
- 
-+
- # Try to compile for ARMv8. If the compiler is too old and doesn't support it,
- # fall back to v7. There is no easy way to check for what architecture the code
- # is being compiled, so define a macro specifying that (see arch/arm/Makefile).
-@@ -89,6 +92,12 @@ VDSO_CFLAGS += -Wno-int-to-pointer-cast
- VDSO_AFLAGS := $(VDSO_CAFLAGS)
- VDSO_AFLAGS += -D__ASSEMBLY__
- 
-+# Check for binutils support for dmb ishld
-+dmbinstr := $(call cc32-as-instr,dmb ishld,-DCONFIG_AS_DMB_ISHLD=1)
-+
-+VDSO_CFLAGS += $(dmbinstr)
-+VDSO_AFLAGS += $(dmbinstr)
-+
- VDSO_LDFLAGS := $(VDSO_CPPFLAGS)
- # From arm vDSO Makefile
- VDSO_LDFLAGS += -Wl,-Bsymbolic -Wl,--no-undefined -Wl,-soname=linux-vdso.so.1
--- 
-2.20.1
-
+ 		return 0;
 
 
