@@ -2,114 +2,159 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6DF1CA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5550BCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9732A21744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:35:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cbz46ZF4"
+	by mail.kernel.org (Postfix) with ESMTP id 3635021744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:41:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728276AbfKDJfi (ORCPT
+        id S1727880AbfKDJld (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:35:38 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:42540 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727236AbfKDJfi (ORCPT
+        Mon, 4 Nov 2019 04:41:33 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:60129 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727499AbfKDJlc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:35:38 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a15so16154420wrf.9
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 01:35:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
-        b=cbz46ZF4/8Y+P96GJfJgqFSAzXtlzcvpN6rYWoHc+Bc8gxO/OHCXy9vBcfZbht65VU
-         cfjEYKbmRFxx8c4gfyYUwt5aF45wDHFz4Me5jgojTPUDHsJar6DdJRq1Tb5wvK89nWCx
-         mJw8dvIDh0chO6vIDUmC2KucxY+vz8LaxmwiPaqqK+yw6RXFVnJzYYQAov7GqelcbGm0
-         snLp2xSC+qkU8IQ4Jc3t1h87nvBIDMCQCt4RxtWiPdRSa8ibUa4AzoFq0ddXg47PRpL/
-         mkHd/qFeSuq4B1l1WrRgn9gfigdbvZmzt0P5bdt2KC2q1mQ9O+nQekY19UFuTT0firaM
-         U+ug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=/q/Jy46HAl5qDXGb5pMNUar0Ktcd+mxfRNJZDPc+0iA=;
-        b=fP94HeABjwowEDAqQ7kW0jiJflwBnk7Vgi4XoGM2itBwc7+okxxZh3bkpVtHD4OqJC
-         9o/BbTrrkOvxut4wG2IIKRAZbA7H6kdydIzOc+4gC05G0lTMPMX0NTl8q9RI6bbKgZ0+
-         TzG2GlmXkMAV2zX/cjqu5LqtSJBHmRcFp6X3ojvdO79qKmw3dy5QCClniPWzTdPmVpjx
-         G9vILIWX+PrNQMrqBCPXtfvBkoSir5MtEKZoQCvRSbCPkRTLkH3+SvNFfJ6NcdfxSlC+
-         CKYWNP6h27shS3AqD3g+G231SbScqnGawAjBDI1aVOOGP553+E/upx2wvxFOvxoGAlAV
-         8p+w==
-X-Gm-Message-State: APjAAAUvj2KH/zLaKc4vCF257RcQxenaaDLLO7gyAbxJB5UQGWA3SEB4
-        WU4wDzio5xemE9UwEI7hzLLnKA==
-X-Google-Smtp-Source: APXvYqxElW8oVQU4a1AD6VV1NNkiEHVf6/MACgp9Py33Zz2M9a29Io3XDGtIDAPS4xVT66PYeZxpHQ==
-X-Received: by 2002:adf:e28f:: with SMTP id v15mr21444957wri.130.1572860135741;
-        Mon, 04 Nov 2019 01:35:35 -0800 (PST)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id b8sm9771016wrt.39.2019.11.04.01.35.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 01:35:34 -0800 (PST)
-Subject: Re: [PATCH v3 08/11] dt-bindings: pinctrl: qcom-wcd934x: Add bindings
- for gpio
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>,
-        Lee Jones <lee.jones@linaro.org>, vinod.koul@linaro.org,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-9-srinivas.kandagatla@linaro.org>
- <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <4f0e22ab-6aa1-2ed1-a85b-fb66531e0b2a@linaro.org>
-Date:   Mon, 4 Nov 2019 09:35:34 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 04:41:32 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iRYrU-0001Jf-Ra; Mon, 04 Nov 2019 10:41:24 +0100
+Message-ID: <776ec4265217cc83e9e847ff3c80a52a86390b1b.camel@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] PCI: qcom: Add support for SDM845 PCIe controller
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Stanimir Varbanov <svarbanov@mm-sol.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Date:   Mon, 04 Nov 2019 10:41:23 +0100
+In-Reply-To: <20191102002721.4091180-3-bjorn.andersson@linaro.org>
+References: <20191102002721.4091180-1-bjorn.andersson@linaro.org>
+         <20191102002721.4091180-3-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdYc-3Nk7VGj8mAjaM4C0dc_X7ZOK0cptW2Sr+kKwvyFVg@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thanks for reviewing this!
+Hi Bjorn,
 
-On 03/11/2019 23:19, Linus Walleij wrote:
-> On Tue, Oct 29, 2019 at 12:29 PM Srinivas Kandagatla
-> <srinivas.kandagatla@linaro.org> wrote:
+On Fri, 2019-11-01 at 17:27 -0700, Bjorn Andersson wrote:
+> The SDM845 has one Gen2 and one Gen3 controller, add support for these.
 > 
->> Qualcomm Technologies Inc WCD9340/WCD9341 Audio Codec has integrated
->> gpio controller to control 5 gpios on the chip. This patch adds
->> required device tree bindings for it.
->>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../pinctrl/qcom,wcd934x-pinctrl.yaml         | 52 +++++++++++++++++++
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
 > 
-> The bindings look OK, but remind me if I have asked before (sorry then)
-> does these GPIOs expose some pin control properties and that is why
-> the driver is placed under pin control rather than the GPIO namespace?
+> Changes since v1:
+> - Style changes requested by Stan
+> - Tested with second PCIe controller as well
 > 
-I don't remember you asking about this before :-),
+>  drivers/pci/controller/dwc/pcie-qcom.c | 152 +++++++++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 7e581748ee9f..35f4980480bb 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -54,6 +54,7 @@
+[...]
+> +static int qcom_pcie_init_2_7_0(struct qcom_pcie *pcie)
+> +{
+> +	struct qcom_pcie_resources_2_7_0 *res = &pcie->res.v2_7_0;
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	u32 val;
+> +	int ret;
+> +
+> +	ret = regulator_bulk_enable(ARRAY_SIZE(res->supplies), res->supplies);
+> +	if (ret < 0) {
+> +		dev_err(dev, "cannot enable regulators\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_bulk_prepare_enable(ARRAY_SIZE(res->clks), res->clks);
+> +	if (ret < 0)
+> +		goto err_disable_regulators;
+> +
+> +	ret = reset_control_assert(res->pci_reset);
+> +	if (ret < 0) {
+> +		dev_err(dev, "cannot deassert pci reset\n");
+> +		goto err_disable_clocks;
+> +	}
 
-This controller just has Output enable bits, No pin control properties.
+If for any of the above fails, the reset line is left in its default
+state, presumably unasserted. Is there a reason to assert and keep it
+asserted if enabling the clocks fails below?
 
-As you suggested I can move this to drivers/gpio in next version.
+> +	msleep(20);
+> +
+> +	ret = reset_control_deassert(res->pci_reset);
+> +	if (ret < 0) {
+> +		dev_err(dev, "cannot deassert pci reset\n");
+> +		goto err_assert_resets;
 
-Thanks,
-srini
+Nitpick: this seems superfluous since the reset line was just asserted
+20 ms before. Maybe just:
+
+		goto err_disable_clocks;
+
+> +	}
+> +
+> +	ret = clk_prepare_enable(res->pipe_clk);
+> +	if (ret) {
+> +		dev_err(dev, "cannot prepare/enable pipe clock\n");
+> +		goto err_assert_resets;
+> +	}
+> +
+> +	/* configure PCIe to RC mode */
+> +	writel(DEVICE_TYPE_RC, pcie->parf + PCIE20_PARF_DEVICE_TYPE);
+> +
+> +	/* enable PCIe clocks and resets */
+> +	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +	val &= ~BIT(0);
+> +	writel(val, pcie->parf + PCIE20_PARF_PHY_CTRL);
+> +
+> +	/* change DBI base address */
+> +	writel(0, pcie->parf + PCIE20_PARF_DBI_BASE_ADDR);
+> +
+> +	/* MAC PHY_POWERDOWN MUX DISABLE  */
+> +	val = readl(pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +	val &= ~BIT(29);
+> +	writel(val, pcie->parf + PCIE20_PARF_SYS_CTRL);
+> +
+> +	val = readl(pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +	val |= BIT(4);
+> +	writel(val, pcie->parf + PCIE20_PARF_MHI_CLOCK_RESET_CTRL);
+> +
+> +	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> +		val = readl(pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> +		val |= BIT(31);
+> +		writel(val, pcie->parf + PCIE20_PARF_AXI_MSTR_WR_ADDR_HALT);
+> +	}
+> +
+> +	return 0;
+> +err_assert_resets:
+> +	reset_control_assert(res->pci_reset);
+
+So maybe this can just be removed. The reset isn't asserted in deinit
+either.
+
+regards
+Philipp
+
