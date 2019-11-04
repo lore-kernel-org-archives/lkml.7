@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3597CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5E4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A491D2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 33BC5205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904963;
-	bh=w406F0HmU4jhcRSyeci8vZ/7K4lSmXJWWg2uxt+sgdM=;
+	s=default; t=1572904967;
+	bh=BQp0w++lhY9GEWaiGtER2AyNgxNAU5C9XBcP8uy2qBw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nVhIX05sXVHSlYE8ws7qg3WO4Ki5UzqnuJEHAy0IwysUrG6oW5zJ4uBgUBaBsL676
-	 S0b07fkam8MJcluYbaddmgPdMW1OcvRPIIK81kwM7uRvWIdI1W+EbYrnzMx7v5mqPv
-	 CKp9OuZ8YU/KA6CpBVwgyp9CGE/uD3yegS8wvU8Q=
+	b=ChnnXTOFIG8686ozFbCbclDhm49lDgWnjRlznaPTAhchg06r+6r+sx32OyYZsUPIt
+	 SmPrPuME19qGdmcaUrtlMP2D48qvrnivTUMFyNb0juuYldnZJYDAzMNOpXGTcRzT2X
+	 x8JymjLOjVAK/Z8AYE8evqTSE7maJ0IOYZ7OWVtI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389381AbfKDWCm (ORCPT
+        id S2389385AbfKDWCq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32796 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388532AbfKDWCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:39 -0500
+        id S2388099AbfKDWCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:44 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B3486205C9;
-        Mon,  4 Nov 2019 22:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931872190F;
+        Mon,  4 Nov 2019 22:02:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904959;
-        bh=w406F0HmU4jhcRSyeci8vZ/7K4lSmXJWWg2uxt+sgdM=;
+        s=default; t=1572904962;
+        bh=BQp0w++lhY9GEWaiGtER2AyNgxNAU5C9XBcP8uy2qBw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O4k9U5cVQp3hWs9bsvRth7ONsyYVpuQfQvGKW/brs6Il7Tc6v2eL2+kDTCyJGPNdW
-         WPWHP3CFyG3lqoYx1UUkZOCrg/mkCPPVnJFptbTXcMsJzIJVEiHtXYlzMnM3GfKdLZ
-         h8ky9RtZiBQoYdemRnZHQ6Pyb7Jttp9q7WUzwW+k=
+        b=yOpUVnUI1uXiifS7DjK2oI/5Gn8DQ8XuNycsl4FnINljgoPEiitCOmUo5pmCGrUbp
+         sjIe4bJbq5HCneO2ugXG1QLAbGnwjAS74wa4OyhV1659AK6R+GM7Er9VAYpAnFarLD
+         5Mctm/cRe6VbSSQymWORF8sgPZV4AQ+3JFxkx2WA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -52,9 +52,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 087/149] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end_nolock()
-Date:   Mon,  4 Nov 2019 22:44:40 +0100
-Message-Id: <20191104212142.628260397@linuxfoundation.org>
+Subject: [PATCH 4.19 088/149] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
+Date:   Mon,  4 Nov 2019 22:44:41 +0100
+Message-Id: <20191104212142.683306051@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -69,26 +69,26 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jia-Ju Bai <baijiaju1990@gmail.com>
 
-[ Upstream commit 583fee3e12df0e6f1f66f063b989d8e7fed0e65a ]
+[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
 
-In ocfs2_write_end_nolock(), there are an if statement on lines 1976,
-2047 and 2058, to check whether handle is NULL:
+In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
+to check whether inode_alloc is NULL:
 
-    if (handle)
+    if (inode_alloc)
 
-When handle is NULL, it is used on line 2045:
+When inode_alloc is NULL, it is used on line 287:
 
-	ocfs2_update_inode_fsync_trans(handle, inode, 1);
-        oi->i_sync_tid = handle->h_transaction->t_tid;
+    ocfs2_inode_lock(inode_alloc, &bh, 0);
+        ocfs2_inode_lock_full_nested(inode, ...)
+            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
 
 Thus, a possible null-pointer dereference may occur.
 
-To fix this bug, handle is checked before calling
-ocfs2_update_inode_fsync_trans().
+To fix this bug, inode_alloc is checked on line 286.
 
 This bug is found by a static analysis tool STCheck written by us.
 
-Link: http://lkml.kernel.org/r/20190726033705.32307-1-baijiaju1990@gmail.com
+Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
 Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
 Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
 Cc: Mark Fasheh <mark@fasheh.com>
@@ -101,23 +101,22 @@ Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/aops.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ fs/ocfs2/ioctl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/fs/ocfs2/aops.c b/fs/ocfs2/aops.c
-index dc773e163132c..543efa3e5655f 100644
---- a/fs/ocfs2/aops.c
-+++ b/fs/ocfs2/aops.c
-@@ -2056,7 +2056,8 @@ out_write_size:
- 		inode->i_mtime = inode->i_ctime = current_time(inode);
- 		di->i_mtime = di->i_ctime = cpu_to_le64(inode->i_mtime.tv_sec);
- 		di->i_mtime_nsec = di->i_ctime_nsec = cpu_to_le32(inode->i_mtime.tv_nsec);
--		ocfs2_update_inode_fsync_trans(handle, inode, 1);
-+		if (handle)
-+			ocfs2_update_inode_fsync_trans(handle, inode, 1);
- 	}
- 	if (handle)
- 		ocfs2_journal_dirty(handle, wc->w_di_bh);
+diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
+index 994726ada857c..a6c328211dccd 100644
+--- a/fs/ocfs2/ioctl.c
++++ b/fs/ocfs2/ioctl.c
+@@ -290,7 +290,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
+ 	if (inode_alloc)
+ 		inode_lock(inode_alloc);
+ 
+-	if (o2info_coherent(&fi->ifi_req)) {
++	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
+ 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
+ 		if (status < 0) {
+ 			mlog_errno(status);
 -- 
 2.20.1
 
