@@ -4,55 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D85F3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C05AECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE81320659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96C2721D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904619;
-	bh=xJzzJtZXbRm1xh6ZE8XImO/6+f842hylKe/AxX4lWSQ=;
+	s=default; t=1572904622;
+	bh=0XaNi99y3doEYG2GicGwzZb0mPdixaYTtVNcuoy/0kQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PLdmhI1nflP8g57tl85LuOW8gvn9NiHe6gK+qntNwENS+zMyHJZJKwEJkpLIHvUKC
-	 JUHW8Q5QK45oeWgP2RKMFbbaXK72nAYiUfISdi5s+tHPkN8r7CLe5FL8Bids7I42dy
-	 5RPMoMraoMp56Lppb3DcIa5IfgkvzXoXqOWQpvN8=
+	b=lGL3wvTf5ipNHs1p6FkOswvAqDnKmypkEkHCu/tguoSMsWXG0Ff1oYyn1lVUPzhBf
+	 cjS2xzauIZHVerMXnKmbx4bCs6WlbIgX1xFcQsEtkqeiJCpY58Ma2KksJUOSuqsItK
+	 abmXZEbOIa4xDxzIhiUr4mFaSC3qlaGmI8VbvWfE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388498AbfKDV46 (ORCPT
+        id S2388510AbfKDV5B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:56:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52724 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52646 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388485AbfKDV4z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:56:55 -0500
+        id S2388477AbfKDV4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:56:52 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 25FCB20659;
-        Mon,  4 Nov 2019 21:56:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EF74C20650;
+        Mon,  4 Nov 2019 21:56:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904614;
-        bh=xJzzJtZXbRm1xh6ZE8XImO/6+f842hylKe/AxX4lWSQ=;
+        s=default; t=1572904611;
+        bh=0XaNi99y3doEYG2GicGwzZb0mPdixaYTtVNcuoy/0kQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WxBlo6V/sacU5oJALa4fBQ33vm0FlMFqc/bVs4a3kw2B6VvK5/iRc9Yzolb/koEDm
-         R9Lg1GD4V9yTqXku7rAoNYseWVwpB1efwPEH3UR2PBhFCZPCQjpKpAXG5Y2MZTw3qE
-         Frd8p1HfOL5d8atz3K0HDIKXFXJyfoFAUAaLTFMQ=
+        b=LA95n5hVLFfkuKISbb5iAdozVM+qa0zBtMLoI8nHjdcsOP/p0hM5y0gwcGeRayV4O
+         7X0n43JwpkXCNbqSkkpQHskwjwgWmZtU5aPJesQT3NMeCxvkj0vhKKJIORXJ8r9Tsz
+         8xCJ4aDS46u4S98Sd/zOR4zPXqbkp6BAUlGhynqY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dick Kennedy <dick.kennedy@broadcom.com>,
-        James Smart <jsmart2021@gmail.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        stable@vger.kernel.org, Chenwandun <chenwandun@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 010/149] scsi: lpfc: Fix a duplicate 0711 log message number.
-Date:   Mon,  4 Nov 2019 22:43:23 +0100
-Message-Id: <20191104212131.689111772@linuxfoundation.org>
+Subject: [PATCH 4.19 001/149] zram: fix race between backing_dev_show and backing_dev_store
+Date:   Mon,  4 Nov 2019 22:43:14 +0100
+Message-Id: <20191104212126.523252383@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -61,33 +66,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: James Smart <jsmart2021@gmail.com>
+[ Upstream commit f7daefe4231e57381d92c2e2ad905a899c28e402 ]
 
-[ Upstream commit 2c4c91415a05677acc5c8131a5eb472d4aa96ae1 ]
+CPU0:				       CPU1:
+backing_dev_show		       backing_dev_store
+    ......				   ......
+    file = zram->backing_dev;
+    down_read(&zram->init_lock);	   down_read(&zram->init_init_lock)
+    file_path(file, ...);		   zram->backing_dev = backing_dev;
+    up_read(&zram->init_lock);		   up_read(&zram->init_lock);
 
-Renumber one of the 0711 log messages so there isn't a duplication.
+gets the value of zram->backing_dev too early in backing_dev_show, which
+resultin the value being NULL at the beginning, and not NULL later.
 
-Signed-off-by: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: James Smart <jsmart2021@gmail.com>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+backtrace:
+  d_path+0xcc/0x174
+  file_path+0x10/0x18
+  backing_dev_show+0x40/0xb4
+  dev_attr_show+0x20/0x54
+  sysfs_kf_seq_show+0x9c/0x10c
+  kernfs_seq_show+0x28/0x30
+  seq_read+0x184/0x488
+  kernfs_fop_read+0x5c/0x1a4
+  __vfs_read+0x44/0x128
+  vfs_read+0xa0/0x138
+  SyS_read+0x54/0xb4
+
+Link: http://lkml.kernel.org/r/1571046839-16814-1-git-send-email-chenwandun@huawei.com
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>	[4.14+]
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/scsi/lpfc/lpfc_scsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/zram/zram_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/scsi/lpfc/lpfc_scsi.c b/drivers/scsi/lpfc/lpfc_scsi.c
-index 200b5bca1f5f4..666495f21c246 100644
---- a/drivers/scsi/lpfc/lpfc_scsi.c
-+++ b/drivers/scsi/lpfc/lpfc_scsi.c
-@@ -4161,7 +4161,7 @@ lpfc_scsi_cmd_iocb_cmpl(struct lpfc_hba *phba, struct lpfc_iocbq *pIocbIn,
- 	/* If pCmd was set to NULL from abort path, do not call scsi_done */
- 	if (xchg(&lpfc_cmd->pCmd, NULL) == NULL) {
- 		lpfc_printf_vlog(vport, KERN_INFO, LOG_FCP,
--				 "0711 FCP cmd already NULL, sid: 0x%06x, "
-+				 "5688 FCP cmd already NULL, sid: 0x%06x, "
- 				 "did: 0x%06x, oxid: 0x%04x\n",
- 				 vport->fc_myDID,
- 				 (pnode) ? pnode->nlp_DID : 0,
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 70cbd0ee1b076..76abe40bfa83b 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -312,13 +312,14 @@ static void reset_bdev(struct zram *zram)
+ static ssize_t backing_dev_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
++	struct file *file;
+ 	struct zram *zram = dev_to_zram(dev);
+-	struct file *file = zram->backing_dev;
+ 	char *p;
+ 	ssize_t ret;
+ 
+ 	down_read(&zram->init_lock);
+-	if (!zram_wb_enabled(zram)) {
++	file = zram->backing_dev;
++	if (!file) {
+ 		memcpy(buf, "none\n", 5);
+ 		up_read(&zram->init_lock);
+ 		return 5;
 -- 
 2.20.1
 
