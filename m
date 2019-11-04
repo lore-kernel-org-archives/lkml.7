@@ -2,51 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9910BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27582CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BBA9214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F05A7205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:03:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905020;
-	bh=NwuLJVx/kg0lq7+2WchIbuQPlPNyXtL83vEvZVMiZ5M=;
+	s=default; t=1572905023;
+	bh=LN3pOAGIxZ66jPntdrpnUowIsKY7cW+l7CP/2kwr/hY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inRBG7Y+3qXHzSv5jsZN22K45SYng5F6znj54OWvtXfkifZgaeALWzUnuMi1VsJXj
-	 4qITglhipFnFMacdwmguwzrRyojiy1rArVYmHF0JFCOXEJLuU5Uoa9OaX3dZjiMJfO
-	 f+3tp5Hyc8OiLv3v7usxDD+HyVubcFkyKw+u+QpY=
+	b=0njAKntuTKl3SzXSP5QohHXd9C5w9/aApmyIly5+uqQy/3IACX79BVZZQxsLYPDSe
+	 HscHIQawV+yIByWofqjF73gxHkq0jkZuEWfh5Zt8Wjr7OfNYO6sOHFTuyDXDs0rKNe
+	 i1y+gvv8sSkgTnXN/vMQLMTsmVGg+zQI0jRdkx6w=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389545AbfKDWDi (ORCPT
+        id S2387603AbfKDWDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:03:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33962 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:03:42 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59802 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389532AbfKDWDf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:03:35 -0500
+        id S2389087AbfKDWBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:38 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E8E66205C9;
-        Mon,  4 Nov 2019 22:03:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2E42420650;
+        Mon,  4 Nov 2019 22:01:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905015;
-        bh=NwuLJVx/kg0lq7+2WchIbuQPlPNyXtL83vEvZVMiZ5M=;
+        s=default; t=1572904897;
+        bh=LN3pOAGIxZ66jPntdrpnUowIsKY7cW+l7CP/2kwr/hY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=uQPUY/HfvN5mFd/51YUp35aPsNeWXLogh2TWk+YsG9JkNJopG6OPsrcNseGIG6nb5
-         aVmDpGDwv+A/KFKVCpmUGRWtb1cVW5xnvLEE0571boVy+ol4sBnLaiFo2wQjXF/pmS
-         cUmx+3d1aBaI7o0oey1zM9bsgZVyillZvuIIYYIU=
+        b=oziGq8xa0FCcm7NJEiiPIpOrI1FsPhSiZKv0K+ns1UFuldzv4vmWayurmGUUq20d9
+         o5HeVCJS8Ro+yMZewMEw96O0/r1Zl9QdKvBpdO8IG4KevFGV78DTe+U2uc7x/t1699
+         FfoFKqblZlswZIxoiLQ64p3rigEoWLVD5ocPsoGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Justin Song <flyingecar@gmail.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 149/149] ALSA: usb-audio: Add DSD support for Gustard U16/X26 USB Interface
-Date:   Mon,  4 Nov 2019 22:45:42 +0100
-Message-Id: <20191104212147.114659457@linuxfoundation.org>
+        stable@vger.kernel.org, Giuseppe Scrivano <gscrivan@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.19 109/149] fuse: flush dirty data/metadata before non-truncate setattr
+Date:   Mon,  4 Nov 2019 22:45:02 +0100
+Message-Id: <20191104212144.059394803@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,36 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Justin Song <flyingecar@gmail.com>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-[ Upstream commit e2995b95a914bbc6b5352be27d5d5f33ec802d2c ]
+commit b24e7598db62386a95a3c8b9c75630c5d56fe077 upstream.
 
-This patch adds native DSD support for Gustard U16/X26 USB Interface.
-Tested using VID and fp->dsd_raw method.
+If writeback cache is enabled, then writes might get reordered with
+chmod/chown/utimes.  The problem with this is that performing the write in
+the fuse daemon might itself change some of these attributes.  In such case
+the following sequence of operations will result in file ending up with the
+wrong mode, for example:
 
-Signed-off-by: Justin Song <flyingecar@gmail.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/CA+9XP1ipsFn+r3bCBKRinQv-JrJ+EHOGBdZWZoMwxFv0R8Y1MQ@mail.gmail.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+  int fd = open ("suid", O_WRONLY|O_CREAT|O_EXCL);
+  write (fd, "1", 1);
+  fchown (fd, 0, 0);
+  fchmod (fd, 04755);
+  close (fd);
+
+This patch fixes this by flushing pending writes before performing
+chown/chmod/utimes.
+
+Reported-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
+Cc: <stable@vger.kernel.org> # v3.15+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- sound/usb/quirks.c | 1 +
- 1 file changed, 1 insertion(+)
+ fs/fuse/dir.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
-index 28035c59cb37c..c102c0377ad91 100644
---- a/sound/usb/quirks.c
-+++ b/sound/usb/quirks.c
-@@ -1434,6 +1434,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
- 	case 0x23ba:  /* Playback Designs */
- 	case 0x25ce:  /* Mytek devices */
- 	case 0x278b:  /* Rotel? */
-+	case 0x292b:  /* Gustard/Ess based devices */
- 	case 0x2ab6:  /* T+A devices */
- 	case 0x3842:  /* EVGA */
- 	case 0xc502:  /* HiBy devices */
--- 
-2.20.1
-
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -1665,6 +1665,19 @@ int fuse_do_setattr(struct dentry *dentr
+ 	if (attr->ia_valid & ATTR_SIZE)
+ 		is_truncate = true;
+ 
++	/* Flush dirty data/metadata before non-truncate SETATTR */
++	if (is_wb && S_ISREG(inode->i_mode) &&
++	    attr->ia_valid &
++			(ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_MTIME_SET |
++			 ATTR_TIMES_SET)) {
++		err = write_inode_now(inode, true);
++		if (err)
++			return err;
++
++		fuse_set_nowrite(inode);
++		fuse_release_nowrite(inode);
++	}
++
+ 	if (is_truncate) {
+ 		fuse_set_nowrite(inode);
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 
 
