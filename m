@@ -7,55 +7,48 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE71CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51180CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A047D20659
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23C00214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904858;
-	bh=hPBs8wEL15WhpBtdpduXLOmv9HsrP8W5sGpi4Xp2Jtc=;
+	s=default; t=1572904863;
+	bh=UVWN1IQsnHONNGn6shfGmJKv7yWKE5L+vnchf3/8s1I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gupr0bOwMwW+gFIVfa4dPcupEAOvB7DHI1RQEy4TNIG7d9ZQdA7F4b/4A1p52KZEY
-	 CcIgrNWCwHC2zx1TjjGSBpOFuwowO5tYr0EpsC4uoczIeETj23IqXDI6gOFiBVYKxT
-	 QJUWzdt+2nb/66z2XSJ/8x34G/whtX5Tm/QSXCCQ=
+	b=e32HYE1xTDneNy1Nj9/P8xvGq/a7nbX6q2+4DwupO7tnMlttW5N79qeYW0asanALI
+	 Der1IzLzYvRDco2kUOQOilTIPuHT96B20NllCFuERDSxfKBpQZTiHq4nIFM6I1voU3
+	 TNsvgzN2M2WIOcxBqxT8nanycnGg0HPvJeyr/4II=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388616AbfKDWA5 (ORCPT
+        id S2388939AbfKDWBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:00:57 -0500
-Received: from mail.kernel.org ([198.145.29.99]:58584 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:01:01 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388908AbfKDWAr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:00:47 -0500
+        id S2388890AbfKDWAi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:38 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ECFB0214D8;
-        Mon,  4 Nov 2019 22:00:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D5E01222C6;
+        Mon,  4 Nov 2019 22:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904845;
-        bh=hPBs8wEL15WhpBtdpduXLOmv9HsrP8W5sGpi4Xp2Jtc=;
+        s=default; t=1572904837;
+        bh=UVWN1IQsnHONNGn6shfGmJKv7yWKE5L+vnchf3/8s1I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=f1U6lODMeQh2GrA/1r+W3ks3kL5BpuZl5ALNlIcOtulGk+oZGxCq9fMecQmfZ7egD
-         PBqIula/Rbtpz5ym+1vp47QcuLT0iEK8U2qGmIJMVgWLCOhSENkisyUYjCllz4VklJ
-         CHHziGCM/8lXa+29vDCdXvlauTwRGUB30EefFTHo=
+        b=MJxlGlEmVjrDSFV8cysDcqMaGwRTyn8b+WX2P0LSG7fvH0bNDcAKggKfrgMw9fsMT
+         fsmjiAs4JIpQLH7bmy1NcUXWwiZvVrPRSfliTDb3KdNUczzt/csb044Q287bLJNh0E
+         xf+iT2Db17b+NJ1oyBwig03W463/SPZveYWAjzoU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 092/149] perf/x86/amd: Change/fix NMI latency mitigation to use a timestamp
-Date:   Mon,  4 Nov 2019 22:44:45 +0100
-Message-Id: <20191104212142.909085491@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Simon Gene Gottlieb <simon@gottliebtfreitag.de>,
+        Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 036/149] HID: steam: fix deadlock with input devices.
+Date:   Mon,  4 Nov 2019 22:43:49 +0100
+Message-Id: <20191104212138.296974518@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -68,129 +61,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
 
-[ Upstream commit df4d29732fdad43a51284f826bec3e6ded177540 ]
+[ Upstream commit 6b538cc21334b83f09b25dec4aa2d2726bf07ed0 ]
 
-It turns out that the NMI latency workaround from commit:
+When using this driver with the wireless dongle and some usermode
+program that monitors every input device (acpid, for example), while
+another usermode client opens and closes the low-level device
+repeadedly, the system eventually deadlocks.
 
-  6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
+The reason is that steam_input_register_device() must not be called with
+the mutex held, because the input subsystem has its own synchronization
+that clashes with this one: it is possible that steam_input_open() is
+called before input_register_device() returns, and since
+steam_input_open() needs to lock the mutex, it deadlocks.
 
-ends up being too conservative and results in the perf NMI handler claiming
-NMIs too easily on AMD hardware when the NMI watchdog is active.
+However we must hold the mutex when calling any function that sends
+commands to the controller. If not, random commands end up falling fail.
 
-This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
-This module can produce an NMI that is used to reset the system. It
-registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
-that nothing has claimed an NMI so that its handler will be invoked when
-the watchdog device produces an NMI. After the referenced commit, the
-hpwdt module is unable to process its generated NMI if the NMI watchdog is
-active, because the current NMI latency mitigation results in the NMI
-being claimed by the perf NMI handler.
-
-Update the AMD perf NMI latency mitigation workaround to, instead, use a
-window of time. Whenever a PMC is handled in the perf NMI handler, set a
-timestamp which will act as a perf NMI window. Any NMIs arriving within
-that window will be claimed by perf. Anything outside that window will
-not be claimed by perf. The value for the NMI window is set to 100 msecs.
-This is a conservative value that easily covers any NMI latency in the
-hardware. While this still results in a window in which the hpwdt module
-will not receive its NMI, the window is now much, much smaller.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
-Link: https://lkml.kernel.org/r/Message-ID:
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Reported-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
+Signed-off-by: Rodrigo Rivas Costa <rodrigorivascosta@gmail.com>
+Tested-by: Simon Gene Gottlieb <simon@gottliebtfreitag.de>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/core.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ drivers/hid/hid-steam.c | 26 +++++++++++++++++++-------
+ 1 file changed, 19 insertions(+), 7 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index 27ade3cb6482c..defb536aebce2 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -4,12 +4,14 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
- 
- #include "../perf_event.h"
- 
--static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
-+static DEFINE_PER_CPU(unsigned long, perf_nmi_tstamp);
-+static unsigned long perf_nmi_window;
- 
- static __initconst const u64 amd_hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
-@@ -640,11 +642,12 @@ static void amd_pmu_disable_event(struct perf_event *event)
-  * handler when multiple PMCs are active or PMC overflow while handling some
-  * other source of an NMI.
-  *
-- * Attempt to mitigate this by using the number of active PMCs to determine
-- * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
-- * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
-- * number of active PMCs or 2. The value of 2 is used in case an NMI does not
-- * arrive at the LAPIC in time to be collapsed into an already pending NMI.
-+ * Attempt to mitigate this by creating an NMI window in which un-handled NMIs
-+ * received during this window will be claimed. This prevents extending the
-+ * window past when it is possible that latent NMIs should be received. The
-+ * per-CPU perf_nmi_tstamp will be set to the window end time whenever perf has
-+ * handled a counter. When an un-handled NMI is received, it will be claimed
-+ * only if arriving within that window.
-  */
- static int amd_pmu_handle_irq(struct pt_regs *regs)
+diff --git a/drivers/hid/hid-steam.c b/drivers/hid/hid-steam.c
+index 8141cadfca0e3..8dae0f9b819e0 100644
+--- a/drivers/hid/hid-steam.c
++++ b/drivers/hid/hid-steam.c
+@@ -499,6 +499,7 @@ static void steam_battery_unregister(struct steam_device *steam)
+ static int steam_register(struct steam_device *steam)
  {
-@@ -662,21 +665,19 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
- 	handled = x86_pmu_handle_irq(regs);
+ 	int ret;
++	bool client_opened;
  
  	/*
--	 * If a counter was handled, record the number of possible remaining
--	 * NMIs that can occur.
-+	 * If a counter was handled, record a timestamp such that un-handled
-+	 * NMIs will be claimed if arriving within that window.
- 	 */
- 	if (handled) {
--		this_cpu_write(perf_nmi_counter,
--			       min_t(unsigned int, 2, active));
-+		this_cpu_write(perf_nmi_tstamp,
-+			       jiffies + perf_nmi_window);
+ 	 * This function can be called several times in a row with the
+@@ -511,9 +512,11 @@ static int steam_register(struct steam_device *steam)
+ 		 * Unlikely, but getting the serial could fail, and it is not so
+ 		 * important, so make up a serial number and go on.
+ 		 */
++		mutex_lock(&steam->mutex);
+ 		if (steam_get_serial(steam) < 0)
+ 			strlcpy(steam->serial_no, "XXXXXXXXXX",
+ 					sizeof(steam->serial_no));
++		mutex_unlock(&steam->mutex);
  
- 		return handled;
+ 		hid_info(steam->hdev, "Steam Controller '%s' connected",
+ 				steam->serial_no);
+@@ -528,13 +531,15 @@ static int steam_register(struct steam_device *steam)
  	}
  
--	if (!this_cpu_read(perf_nmi_counter))
-+	if (time_after(jiffies, this_cpu_read(perf_nmi_tstamp)))
- 		return NMI_DONE;
+ 	mutex_lock(&steam->mutex);
+-	if (!steam->client_opened) {
++	client_opened = steam->client_opened;
++	if (!client_opened)
+ 		steam_set_lizard_mode(steam, lizard_mode);
++	mutex_unlock(&steam->mutex);
++
++	if (!client_opened)
+ 		ret = steam_input_register(steam);
+-	} else {
++	else
+ 		ret = 0;
+-	}
+-	mutex_unlock(&steam->mutex);
  
--	this_cpu_dec(perf_nmi_counter);
--
- 	return NMI_HANDLED;
+ 	return ret;
+ }
+@@ -630,14 +635,21 @@ static void steam_client_ll_close(struct hid_device *hdev)
+ {
+ 	struct steam_device *steam = hdev->driver_data;
+ 
++	unsigned long flags;
++	bool connected;
++
++	spin_lock_irqsave(&steam->lock, flags);
++	connected = steam->connected;
++	spin_unlock_irqrestore(&steam->lock, flags);
++
+ 	mutex_lock(&steam->mutex);
+ 	steam->client_opened = false;
++	if (connected)
++		steam_set_lizard_mode(steam, lizard_mode);
+ 	mutex_unlock(&steam->mutex);
+ 
+-	if (steam->connected) {
+-		steam_set_lizard_mode(steam, lizard_mode);
++	if (connected)
+ 		steam_input_register(steam);
+-	}
  }
  
-@@ -908,6 +909,9 @@ static int __init amd_core_pmu_init(void)
- 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
- 		return 0;
- 
-+	/* Avoid calulating the value each time in the NMI handler */
-+	perf_nmi_window = msecs_to_jiffies(100);
-+
- 	switch (boot_cpu_data.x86) {
- 	case 0x15:
- 		pr_cont("Fam15h ");
+ static int steam_client_ll_raw_request(struct hid_device *hdev,
 -- 
 2.20.1
 
