@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3AA49CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF76CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1A2214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E355821D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:57:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904669;
-	bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
+	s=default; t=1572904674;
+	bh=A+nXIhWOh/hn+hSxK3tP54icEmodpvMjam53PuBkrA4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ij5LM+BaVpmPLucIXZWXQZO2iJEXK6TTMCGykDAhyEpg1MhDvEska0GhLqEaIZW5Q
-	 XIOpipxVUNSTPjGCrPA8O4okXvNk66MdlNNL3arZRy1IllXJmIl4dyhDaoVKM2JGix
-	 vDRx0ls1zyOYaWAR+krOc4Kf+2B+sqiINvbZC3A8=
+	b=L9RFoyJv4QmgKsMtp+P2tTxibeetwmBVN4DAWCgvTIyEQb9RAQ/StjFXuMIQkmlSZ
+	 y5N5sc3Hq9vR+3BNhIM+xTEsZHc4zvy7iiEg+TeCBbHLGZhdC6xoAv9zFS+MF7UEto
+	 wgZAEMboUzlk3eWdvL6Z7cHMlDazWjDx46+LKUvQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388651AbfKDV5s (ORCPT
+        id S2388671AbfKDV5w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53978 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:57:52 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54248 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387909AbfKDV5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:37 -0500
+        id S2388639AbfKDV5p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:57:45 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CAF31214D8;
-        Mon,  4 Nov 2019 21:57:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3767720659;
+        Mon,  4 Nov 2019 21:57:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904656;
-        bh=b/VTm9YJ1NJyWJzB9JlmSk2ByMW0IN3eqaHT/MLyop0=;
+        s=default; t=1572904664;
+        bh=A+nXIhWOh/hn+hSxK3tP54icEmodpvMjam53PuBkrA4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e3tRkK1yVV/kpIKoAoGwvCphKQelH8yWqpELwsMca8j4bgBgSfCcLFnWokVUXxwxW
-         C+o1mGUEAYcZfc2cnyn0fJIKIVtRZRyqm2l4/a6h+ihr3UvX0PvG6m8zAMjZnvxokT
-         EZ8r6qpADFJ44TZKmuXNPVjhDS5HC5EUG0eWYpug=
+        b=wgVu1/Yldh13+mQ7+2F+7mysSOvAUFyoIp4xqy10N/SOmEZwi9xz2mjyeylJMX44J
+         3dkgEboH8I4phKhhD37vVSVsdUJUj7GRpgiBgWd+SANAeAmpw7rQhpHi195cD+YDai
+         BBI4yWCMAklFmBwRZiW+a9wJvt7ZMoj6A2k9JQZs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stefano Brivio <sbrivio@redhat.com>,
-        Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 023/149] netfilter: ipset: Make invalid MAC address checks consistent
-Date:   Mon,  4 Nov 2019 22:43:36 +0100
-Message-Id: <20191104212137.327372294@linuxfoundation.org>
+        stable@vger.kernel.org, Rene Wagner <redhatbugzilla@callerid.de>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Jiri Kosina <jkosina@suse.cz>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 026/149] HID: i2c-hid: Add Odys Winbook 13 to descriptor override
+Date:   Mon,  4 Nov 2019 22:43:39 +0100
+Message-Id: <20191104212137.613930080@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,93 +60,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stefano Brivio <sbrivio@redhat.com>
+From: Hans de Goede <hdegoede@redhat.com>
 
-[ Upstream commit 29edbc3ebdb0faa934114f14bf12fc0b784d4f1b ]
+[ Upstream commit f8f807441eefddc3c6d8a378421f0ede6361d565 ]
 
-Set types bitmap:ipmac and hash:ipmac check that MAC addresses
-are not all zeroes.
+The Odys Winbook 13 uses a SIPODEV SP1064 touchpad, which does not
+supply descriptors, add this to the DMI descriptor override list, fixing
+the touchpad not working.
 
-Introduce one missing check, and make the remaining ones
-consistent, using is_zero_ether_addr() instead of comparing
-against an array containing zeroes.
-
-This was already done for hash:mac sets in commit 26c97c5d8dac
-("netfilter: ipset: Use is_zero_ether_addr instead of static and
-memcmp").
-
-Signed-off-by: Stefano Brivio <sbrivio@redhat.com>
-Signed-off-by: Jozsef Kadlecsik <kadlec@blackhole.kfki.hu>
+BugLink: https://bugzilla.redhat.com/show_bug.cgi?id=1526312
+Reported-by: Rene Wagner <redhatbugzilla@callerid.de>
+Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Jiri Kosina <jkosina@suse.cz>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/netfilter/ipset/ip_set_bitmap_ipmac.c |  3 +++
- net/netfilter/ipset/ip_set_hash_ipmac.c   | 11 ++++-------
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/net/netfilter/ipset/ip_set_bitmap_ipmac.c b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-index 4f01321e793ce..794e0335a8648 100644
---- a/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_bitmap_ipmac.c
-@@ -235,6 +235,9 @@ bitmap_ipmac_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
+diff --git a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+index 89f2976f9c534..fd1b6eea6d2fd 100644
+--- a/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
++++ b/drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c
+@@ -346,6 +346,14 @@ static const struct dmi_system_id i2c_hid_dmi_desc_override_table[] = {
+ 		},
+ 		.driver_data = (void *)&sipodev_desc
+ 	},
++	{
++		.ident = "Odys Winbook 13",
++		.matches = {
++			DMI_EXACT_MATCH(DMI_SYS_VENDOR, "AXDIA International GmbH"),
++			DMI_EXACT_MATCH(DMI_PRODUCT_NAME, "WINBOOK 13"),
++		},
++		.driver_data = (void *)&sipodev_desc
++	},
+ 	{ }	/* Terminate list */
+ };
  
-+	if (is_zero_ether_addr(e.ether))
-+		return -EINVAL;
-+
- 	return adtfn(set, &e, &ext, &opt->ext, opt->cmdflags);
- }
- 
-diff --git a/net/netfilter/ipset/ip_set_hash_ipmac.c b/net/netfilter/ipset/ip_set_hash_ipmac.c
-index 16ec822e40447..25560ea742d66 100644
---- a/net/netfilter/ipset/ip_set_hash_ipmac.c
-+++ b/net/netfilter/ipset/ip_set_hash_ipmac.c
-@@ -36,9 +36,6 @@ MODULE_ALIAS("ip_set_hash:ip,mac");
- /* Type specific function prefix */
- #define HTYPE		hash_ipmac
- 
--/* Zero valued element is not supported */
--static const unsigned char invalid_ether[ETH_ALEN] = { 0 };
--
- /* IPv4 variant */
- 
- /* Member elements */
-@@ -104,7 +101,7 @@ hash_ipmac4_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
- 
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -EINVAL;
- 
- 	ip4addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip);
-@@ -140,7 +137,7 @@ hash_ipmac4_uadt(struct ip_set *set, struct nlattr *tb[],
- 	if (ret)
- 		return ret;
- 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -IPSET_ERR_HASH_ELEM;
- 
- 	return adtfn(set, &e, &ext, &ext, flags);
-@@ -220,7 +217,7 @@ hash_ipmac6_kadt(struct ip_set *set, const struct sk_buff *skb,
- 	else
- 		ether_addr_copy(e.ether, eth_hdr(skb)->h_dest);
- 
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -EINVAL;
- 
- 	ip6addrptr(skb, opt->flags & IPSET_DIM_ONE_SRC, &e.ip.in6);
-@@ -260,7 +257,7 @@ hash_ipmac6_uadt(struct ip_set *set, struct nlattr *tb[],
- 		return ret;
- 
- 	memcpy(e.ether, nla_data(tb[IPSET_ATTR_ETHER]), ETH_ALEN);
--	if (ether_addr_equal(e.ether, invalid_ether))
-+	if (is_zero_ether_addr(e.ether))
- 		return -IPSET_ERR_HASH_ELEM;
- 
- 	return adtfn(set, &e, &ext, &ext, flags);
 -- 
 2.20.1
 
