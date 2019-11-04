@@ -4,57 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1994CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B8E0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 707A22080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 079502080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906549;
-	bh=1FToogkIY8Hsa4SVq/KUItZyuhUtpk68aHUfQPLdhjM=;
+	s=default; t=1572906558;
+	bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=oosqMxjQCY0/HbV80KoVb25f1bqNkM1NszH1eL3ID9B/XuKRCpwMOzZ4dM1Eh2HAJ
-	 seK/HaizOA5ANcOFWPRDB50/XBcq075qXvNW2wzpm4PSrsYLPSO+wAM/NE8BsImCA6
-	 MJbOhvDRGn8jwey4NOOmko72qCA/ufWmdzkRWQ9A=
+	b=AFb6NwrQ8cUI+6Ta3D0AXpyLc7syxhIhCoM9i8pOngFhpmxazKTcTBZXbLhX5fz7m
+	 +xggGj5bc00b5ewzMQ+TI3xZjJagIY28rkS9a7WzSKP+3j2tG4qFyxZXrcB6JoRHCs
+	 yBjpyi8xk3n/yyZmZxWMbgil0Llf6sK+HKAPzhnM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389242AbfKDW3I (ORCPT
+        id S2389362AbfKDW3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:29:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38140 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:29:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37738 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729899AbfKDVsJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:09 -0500
+        id S1729846AbfKDVr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:47:58 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B347B21850;
-        Mon,  4 Nov 2019 21:48:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B1AD21655;
+        Mon,  4 Nov 2019 21:47:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904089;
-        bh=1FToogkIY8Hsa4SVq/KUItZyuhUtpk68aHUfQPLdhjM=;
+        s=default; t=1572904077;
+        bh=uhc6qrmgYf8tNuiZPGZcsbbrTbtSfMBBHflqUUXRHqw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=DRaLP6Z5wV4Ddo0yxax2Ib3PlmP6+sy7TyqLD1YPP8afeiWSDLmWU2SywUiYr53b5
-         evyExS05SU8jO9VTJYCNN6HKASq3xnJfhMMLCmcdYkfH1pZmCtBWiAEDOdqVYHaETA
-         h/jSYR4Tg9lN/SFCGvJpdBTs2dUn8jTlNzJ5o6Kw=
+        b=eCdgP2ft/qDLy4WH5/4x07HmEbskmrqd8c2NGm0tIa5+8haHP2SlqnrHr0ZQZ6CS3
+         ERk3ejQdkb2U7jSHljPRSA4+Zzh8sVTfymik9K3e0Vd+zz8s4BL2mK9Cb6/gjhVYPS
+         xKsLdI/e2IkO4B/04TNKcdAFPy56/QW+mh053+cM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Austin Kim <austindh.kim@gmail.com>,
+        Steve French <stfrench@microsoft.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 18/46] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Mon,  4 Nov 2019 22:44:49 +0100
-Message-Id: <20191104211848.170365924@linuxfoundation.org>
+Subject: [PATCH 4.4 13/46] fs: cifs: mute -Wunused-const-variable message
+Date:   Mon,  4 Nov 2019 22:44:44 +0100
+Message-Id: <20191104211842.614962923@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -67,56 +60,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Austin Kim <austindh.kim@gmail.com>
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+[ Upstream commit dd19c106a36690b47bb1acc68372f2b472b495b8 ]
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+After 'Initial git repository build' commit,
+'mapping_table_ERRHRD' variable has not been used.
 
-    if (inode_alloc)
+So 'mapping_table_ERRHRD' const variable could be removed
+to mute below warning message:
 
-When inode_alloc is NULL, it is used on line 287:
-
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+   fs/cifs/netmisc.c:120:40: warning: unused variable 'mapping_table_ERRHRD' [-Wunused-const-variable]
+   static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+                                           ^
+Signed-off-by: Austin Kim <austindh.kim@gmail.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ fs/cifs/netmisc.c | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index 3cb097ccce607..79232296b7d2b 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -289,7 +289,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		mutex_lock(&inode_alloc->i_mutex);
+diff --git a/fs/cifs/netmisc.c b/fs/cifs/netmisc.c
+index cc88f4f0325ef..bed9733302279 100644
+--- a/fs/cifs/netmisc.c
++++ b/fs/cifs/netmisc.c
+@@ -130,10 +130,6 @@ static const struct smb_to_posix_error mapping_table_ERRSRV[] = {
+ 	{0, 0}
+ };
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
+-static const struct smb_to_posix_error mapping_table_ERRHRD[] = {
+-	{0, 0}
+-};
+-
+ /*
+  * Convert a string containing text IPv4 or IPv6 address to binary form.
+  *
 -- 
 2.20.1
 
