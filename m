@@ -2,37 +2,37 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	UNPARSEABLE_RELAY,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E9A3CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48277C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49CF4222C5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24F96222C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfKDLxI (ORCPT
+        id S1728980AbfKDLxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:53:08 -0500
-Received: from mailgw02.mediatek.com ([210.61.82.184]:17023 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728416AbfKDLxD (ORCPT
+        Mon, 4 Nov 2019 06:53:15 -0500
+Received: from mailgw01.mediatek.com ([210.61.82.183]:15986 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728416AbfKDLxM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:53:03 -0500
-X-UUID: 42a4009e2207450cbb59ebf4ff4dbb3e-20191104
-X-UUID: 42a4009e2207450cbb59ebf4ff4dbb3e-20191104
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw02.mediatek.com
+        Mon, 4 Nov 2019 06:53:12 -0500
+X-UUID: d818780647af4f0daedad6ec97be10e8-20191104
+X-UUID: d818780647af4f0daedad6ec97be10e8-20191104
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw01.mediatek.com
         (envelope-from <chao.hao@mediatek.com>)
         (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1206833269; Mon, 04 Nov 2019 19:52:57 +0800
+        with ESMTP id 1463167620; Mon, 04 Nov 2019 19:53:07 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs06n1.mediatek.inc (172.21.101.129) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 4 Nov 2019 19:52:55 +0800
+ 15.0.1395.4; Mon, 4 Nov 2019 19:53:06 +0800
 Received: from localhost.localdomain (10.15.20.246) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 4 Nov 2019 19:52:51 +0800
+ Transport; Mon, 4 Nov 2019 19:53:02 +0800
 From:   Chao Hao <chao.hao@mediatek.com>
 To:     Joerg Roedel <joro@8bytes.org>, Rob Herring <robh+dt@kernel.org>,
         Matthias Brugger <matthias.bgg@gmail.com>
@@ -47,9 +47,9 @@ CC:     <iommu@lists.linux-foundation.org>, <devicetree@vger.kernel.org>,
         Anan Sun <anan.sun@mediatek.com>,
         Miles Chen <miles.chen@mediatek.com>,
         Chao Hao <chao.hao@mediatek.com>
-Subject: [RESEND,PATCH 06/13] iommu/mediatek: Change get the way of m4u_group
-Date:   Mon, 4 Nov 2019 19:52:31 +0800
-Message-ID: <20191104115238.2394-7-chao.hao@mediatek.com>
+Subject: [RESEND,PATCH 09/13] iommu/mediatek: Remove the usage of m4u_dom variable
+Date:   Mon, 4 Nov 2019 19:52:34 +0800
+Message-ID: <20191104115238.2394-10-chao.hao@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20191104115238.2394-1-chao.hao@mediatek.com>
 References: <20191104115238.2394-1-chao.hao@mediatek.com>
@@ -61,123 +61,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-1. Redefine mtk_iommu_domain structure, it will include iommu_group
-and iommu_domain. Different mtk_iommu_domains can be distinguished by
-ID. When we realize multiple mtk_iommu_domains, every mtk_iommu_domain
-can describe one iova region.
-2. In theory, every device has one iommu_group, so this patch will
-get iommu_group by checking device. All the devices belong to the same
-m4u_group currently, so they also use the same mtk_iommu_domain(id=0).
+This patch will remove the usage of the m4u_dom variable.
+
+We have already redefined mtk_iommu_domain structure and it
+includes iommu_domain, so m4u_dom variable will not be used.
 
 Signed-off-by: Chao Hao <chao.hao@mediatek.com>
 ---
- drivers/iommu/mtk_iommu.c | 46 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ drivers/iommu/mtk_iommu.c | 27 ++++++++++++++++++++-------
+ 1 file changed, 20 insertions(+), 7 deletions(-)
 
 diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-index f264fa8c16a0..27995b2b29a6 100644
+index 8d68a1af8ed5..42fad1cf73f3 100644
 --- a/drivers/iommu/mtk_iommu.c
 +++ b/drivers/iommu/mtk_iommu.c
-@@ -117,12 +117,16 @@
+@@ -113,6 +113,7 @@
+  * Get the local arbiter ID and the portid within the larb arbiter
+  * from mtk_m4u_id which is defined by MTK_M4U_ID.
+  */
++#define MTK_M4U_ID(larb, port)		(((larb) << 5) | (port))
+ #define MTK_M4U_TO_LARB(id)		(((id) >> 5) & 0xf)
  #define MTK_M4U_TO_PORT(id)		((id) & 0x1f)
  
- struct mtk_iommu_domain {
-+	u32				id;
- 	struct iommu_domain		domain;
-+	struct iommu_group		*group;
-+	struct list_head		list;
- };
- 
- struct mtk_iommu_pgtable {
- 	struct io_pgtable_cfg	cfg;
- 	struct io_pgtable_ops	*iop;
-+	struct list_head	m4u_dom_v2;
- };
- 
- static struct mtk_iommu_pgtable *share_pgtable;
-@@ -173,6 +177,41 @@ static struct mtk_iommu_data *mtk_iommu_get_m4u_data(void)
- 	return NULL;
+@@ -205,6 +206,22 @@ static u32 mtk_iommu_get_domain_id(struct device *dev)
+ 	return get_domain_id(data, portid);
  }
  
-+static u32 get_domain_id(void)
++static struct iommu_domain *_get_mtk_domain(struct mtk_iommu_data *data,
++					    u32 larbid, u32 portid)
 +{
-+	/* only support one mtk_iommu_domain currently */
-+	return 0;
-+}
-+
-+static u32 mtk_iommu_get_domain_id(void)
-+{
-+	return get_domain_id();
-+}
-+
-+static struct mtk_iommu_domain *get_mtk_domain(struct device *dev)
-+{
-+	struct mtk_iommu_data *data = dev->iommu_fwspec->iommu_priv;
++	u32 domain_id;
++	u32 port_mask = MTK_M4U_ID(larbid, portid);
 +	struct mtk_iommu_domain *dom;
-+	u32 domain_id = mtk_iommu_get_domain_id();
++
++	domain_id = get_domain_id(data, port_mask);
 +
 +	list_for_each_entry(dom, &data->pgtable->m4u_dom_v2, list) {
 +		if (dom->id == domain_id)
-+			return dom;
++			return &dom->domain;
 +	}
 +	return NULL;
 +}
 +
-+static struct iommu_group *mtk_iommu_get_group(struct device *dev)
-+{
-+	struct mtk_iommu_domain *dom;
-+
-+	dom = get_mtk_domain(dev);
-+	if (dom)
-+		return dom->group;
-+
-+	return NULL;
-+}
-+
- static struct mtk_iommu_pgtable *mtk_iommu_get_pgtable(void)
+ static struct mtk_iommu_domain *get_mtk_domain(struct device *dev)
  {
- 	return share_pgtable;
-@@ -334,6 +373,8 @@ static struct mtk_iommu_pgtable *create_pgtable(struct mtk_iommu_data *data)
- 	if (!pgtable)
- 		return ERR_PTR(-ENOMEM);
- 
-+	INIT_LIST_HEAD(&pgtable->m4u_dom_v2);
-+
- 	pgtable->cfg = (struct io_pgtable_cfg) {
- 		.quirks = IO_PGTABLE_QUIRK_ARM_NS |
- 			IO_PGTABLE_QUIRK_NO_PERMS |
-@@ -388,6 +429,7 @@ static int mtk_iommu_attach_pgtable(struct mtk_iommu_data *data,
- static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
+ 	struct mtk_iommu_data *data = dev->iommu_fwspec->iommu_priv;
+@@ -307,7 +324,7 @@ static const struct iommu_flush_ops mtk_iommu_flush_ops = {
+ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
  {
- 	struct mtk_iommu_pgtable *pgtable = mtk_iommu_get_pgtable();
-+	struct mtk_iommu_data *data = mtk_iommu_get_m4u_data();
- 	struct mtk_iommu_domain *dom;
+ 	struct mtk_iommu_data *data = dev_id;
+-	struct mtk_iommu_domain *dom = data->m4u_dom;
++	struct iommu_domain *domain;
+ 	u32 int_state, regval, fault_iova, fault_pa;
+ 	unsigned int fault_larb, fault_port, sub_comm = 0;
+ 	bool layer, write;
+@@ -342,7 +359,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
  
- 	if (type != IOMMU_DOMAIN_DMA)
-@@ -405,12 +447,15 @@ static struct iommu_domain *mtk_iommu_domain_alloc(unsigned type)
- 	if (iommu_get_dma_cookie(&dom->domain))
- 		goto  free_dom;
+ 	fault_larb = data->plat_data->larbid_remap[data->m4u_id][fault_larb];
  
-+	dom->group = data->m4u_group;
-+	dom->id = mtk_iommu_get_domain_id();
- 	/* Update our support page sizes bitmap */
- 	dom->domain.pgsize_bitmap = pgtable->cfg.pgsize_bitmap;
+-	if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
++	domain = _get_mtk_domain(data, fault_larb, fault_port);
++	if (report_iommu_fault(domain, data->dev, fault_iova,
+ 			       write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
+ 		dev_err_ratelimited(
+ 			data->dev,
+@@ -512,16 +530,11 @@ static void mtk_iommu_domain_free(struct iommu_domain *domain)
+ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+ 				   struct device *dev)
+ {
+-	struct mtk_iommu_domain *dom = to_mtk_domain(domain);
+ 	struct mtk_iommu_data *data = dev_iommu_fwspec_get(dev)->iommu_priv;
  
- 	dom->domain.geometry.aperture_start = 0;
- 	dom->domain.geometry.aperture_end = DMA_BIT_MASK(32);
- 	dom->domain.geometry.force_aperture = true;
-+	list_add_tail(&dom->list, &pgtable->m4u_dom_v2);
+ 	if (!data)
+ 		return -ENODEV;
  
- 	return &dom->domain;
- 
-@@ -566,6 +611,7 @@ static struct iommu_group *mtk_iommu_device_group(struct device *dev)
- 	}
- 
- 	/* All the client devices are in the same m4u iommu-group */
-+	data->m4u_group = mtk_iommu_get_group(dev);
- 	if (!data->m4u_group) {
- 		data->m4u_group = iommu_group_alloc();
- 		if (IS_ERR(data->m4u_group))
+-	/* Update the pgtable base address register of the M4U HW */
+-	if (!data->m4u_dom)
+-		data->m4u_dom = dom;
+-
+ 	mtk_iommu_config(data, dev, true);
+ 	return 0;
+ }
 -- 
 2.18.0
 
