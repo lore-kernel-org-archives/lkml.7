@@ -2,547 +2,387 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A15F4CA9EBB
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:47:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9FCCA9EBB
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:47:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5343921744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:47:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D130D21744
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 02:47:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="ppstoFT9"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="C0adjasr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729107AbfKDCrr (ORCPT
+        id S1729132AbfKDCry (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 21:47:47 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:36864 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729045AbfKDCrq (ORCPT
+        Sun, 3 Nov 2019 21:47:54 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:10440 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728251AbfKDCrx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 21:47:46 -0500
-Received: by mail-wm1-f67.google.com with SMTP id q130so14413798wme.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 18:47:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:subject:to
-         :from:cc;
-        bh=9cGr+26SuuP7VEqqq+GDz6d2bR5jxl9oMBAlWYPVZps=;
-        b=ppstoFT91rOslY1m9gVim95v5fAi6rqhPJqPWF8OXarce/jvFEerfVH8vdUbY42GaC
-         XAtMpecI/wW0qp9jheosmCdTZl7FeU0d3l++qJdHpLN7G0GEG7Uu+MxmHVyCIva9mOjD
-         a0EgLKPBwEVpuxrBhzR9WcGsKbvZOVjoRW5SH+nj+jnRTxWbr8nHTxaRaDG+0xMW46+m
-         dKlx4bK+WIeY1zH0Bm4l/2+XFHV4EXSAGzqmvk5uM4qNiqJq9PG2I5YLFy6DgYnHdsJf
-         jbMWN8oD8vPZrftwkDmy3cfXvcl6svYpcAj3jgRDiyfVk0AGA6L8koIv6YzKx1ueoADg
-         6RvA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:subject:to:from:cc;
-        bh=9cGr+26SuuP7VEqqq+GDz6d2bR5jxl9oMBAlWYPVZps=;
-        b=rDNPHnBxX1cmVjp9bVN2yQ4JLv/iOi2rqfpMdG8NvRZwic4//rFkWouGLHrh7wEpWE
-         B3PrJ4HqY0zfcUiLXNTa0+qYtJ7ZeY0BzvkOr1H4ns/4QhhrpVc3sJMtHAv2UZRfMSpA
-         wasrzyEqIa7MNhx5atdB63MhkpHRiHTgtm8PMn7nyKHOiRBX8jA4V2VI6xEqQb77o465
-         M1top0MbLxNmph0Qb4QGuT4M1WB1mY1431NwF1upiuxI7sPedpSTxl6i0s6Yyl7vKX+N
-         tMUD5C53U6BqLW9iGLMXxwlbOlJGkMFmSXfS7FqkcxTeY7KPGLg7zhy9KOgvabQCDppC
-         LX9Q==
-X-Gm-Message-State: APjAAAU5k3S0IheFuDz3qqJj3UOrMAw3eoEJXnfyaMFz5Vf9LoOUMNjx
-        bfxMoOGWvNio3zRIiNq7aPB92Q==
-X-Google-Smtp-Source: APXvYqxo9IMxlb2DCJrk8NvdCBGdiSHkpMnWQekD07eER7eNSJ9jL8Z0dYuzXDXb9untToakOCehGA==
-X-Received: by 2002:a7b:c748:: with SMTP id w8mr17748710wmk.114.1572835661547;
-        Sun, 03 Nov 2019 18:47:41 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id j11sm11125108wrq.26.2019.11.03.18.47.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 18:47:40 -0800 (PST)
-Message-ID: <5dbf914c.1c69fb81.2e378.d927@mx.google.com>
-Date:   Sun, 03 Nov 2019 18:47:40 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Sun, 3 Nov 2019 21:47:53 -0500
+Received: from epcas1p3.samsung.com (unknown [182.195.41.47])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191104024749epoutp03f8fcc39a7c26c7fc9f510503e0a6ee28~T1bU5Qvd00804108041epoutp03i
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 02:47:49 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191104024749epoutp03f8fcc39a7c26c7fc9f510503e0a6ee28~T1bU5Qvd00804108041epoutp03i
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572835669;
+        bh=fYWSpwZlP/iNujNTQaMLhVz9/NfQQW5rG5wTrPipJ4Q=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=C0adjasr1yRDTZy8PDr7lEfhQ1Pj5Oy89jrY6hXYvCv8V0SXhq0wD7dbXQtMpJaUl
+         McUCHSZh/KvMAZSjNBg6+frcDy7K7diG7+3D/HwrZQprxG3A/qvTJ4davSM3CTrV3F
+         vY4IlK5N9Ubbh7D+EQP2MlR0BsNPC4Eo90JmUc9w=
+Received: from epsnrtp3.localdomain (unknown [182.195.42.164]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20191104024748epcas1p414476f13b7f75e36d7a2f8812b3b8cbe~T1bUZ-omn1426114261epcas1p4k;
+        Mon,  4 Nov 2019 02:47:48 +0000 (GMT)
+Received: from epsmges1p1.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp3.localdomain (Postfix) with ESMTP id 475xzk2TQWzMqYkd; Mon,  4 Nov
+        2019 02:47:46 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p1.samsung.com (Symantec Messaging Gateway) with SMTP id
+        FF.86.04144.1519FBD5; Mon,  4 Nov 2019 11:47:45 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191104024744epcas1p2c15fcfdbe0e55acba5052756a70f36bc~T1bQw-6Sw0527505275epcas1p2n;
+        Mon,  4 Nov 2019 02:47:44 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191104024744epsmtrp194a130b2de9da90128fe44c272a9f2b7~T1bQwL7i92402124021epsmtrp13;
+        Mon,  4 Nov 2019 02:47:44 +0000 (GMT)
+X-AuditID: b6c32a35-2dfff70000001030-22-5dbf9151c023
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        88.10.24756.0519FBD5; Mon,  4 Nov 2019 11:47:44 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191104024744epsmtip2095fbd7ecfc64cce8757cc1d9f0f8254~T1bQhonhl0046000460epsmtip2b;
+        Mon,  4 Nov 2019 02:47:44 +0000 (GMT)
+Subject: Re: [PATCH v8 16/18] PM / devfreq: tegra30: Support variable
+ polling interval
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Peter Geis <pgwipeout@gmail.com>,
+        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <e3967b07-b53f-0d9c-8f1b-bad238c4ef68@samsung.com>
+Date:   Mon, 4 Nov 2019 11:53:23 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: for-next
-X-Kernelci-Lab-Name: lab-baylibre
-X-Kernelci-Tree: linusw
-X-Kernelci-Report-Type: bisect
-X-Kernelci-Kernel: v5.4-rc4-34-gb0983a8bbfb4
-Subject: linusw/for-next boot bisection: v5.4-rc4-34-gb0983a8bbfb4 on
- r8a7795-salvator-x
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        tomeu.vizoso@collabora.com, guillaume.tucker@collabora.com,
-        mgalka@collabora.com, broonie@kernel.org, matthew.hart@linaro.org,
-        Scott Branden <scott.branden@broadcom.com>,
-        khilman@baylibre.com, enric.balletbo@collabora.com,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Scott Branden <sbranden@broadcom.com>,
-        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Ray Jui <rjui@broadcom.com>,
-        linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20191103204130.2172-17-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02TeUiTcRjH+W2vv71Ws7fZ8Tio1msUGebe5uy1NDosRmkZUZRk9uJe3HAX
+        e6dlp6VYSnaghK2ysEYeRFRLVLLVFEw7MMWIYp1idtBl647a9hb53+e5n+/vIKWKK1hJGi0O
+        3m7hTDQeQTS2zYiNXXXYk6n+1kiyDR+eI7bYWUOwt/e8kbG9LccxO1TejtjST07Mfn7RhdiH
+        u2sxe3tgOfutpZpgD5zrwQtG6pp8Z5Cu2emT6cqL3mKds+Qq1h1w1yPd0MVJ6TgjN8nAc3re
+        ruIt2Va90ZKTTC9fnbU4S5ugZmKZRHYOrbJwZj6ZTklNj11qNAXWo1X5nCkv4ErnBIGOm59k
+        t+Y5eJXBKjiSad6mN9kSbbMEzizkWXJmZVvNcxm1erY2kLgp1/Coo1dq6162paFwkChEHUll
+        KJwEKh6u/3yGy9AIUkE1IegqvSYTjY8IbtZXhYnGZwSXrhYRZYgMlXR5p4n+VgS/Oo5IReMd
+        gt+1r4lg30hqHRz/0RYKjKX6JdDaXhwKSKn10NbcIAkypmLAM3gfB3k0NQX6vj5HQZZT86HO
+        /R4HpxHUVHh/Li2I4wI9b/o5MWMMdB7tD3UMpxKg4lWjROw+AR70n/zLk6Ho8rHQCkBVyODF
+        QDUWNaeA5/4lJHIkvOpwy0RWwsuDJX95G9R1tmOxeB8Ct6c7TAxowOOqkAQXklIz4HxLnOie
+        As0/TiBxcAS89e8PEw9LDvtKFGJKNPQ+8UlEjoLTe0vxIUQ7h8lxDpPgHCbB+X/YKUTUo/G8
+        TTDn8AJjY4Zf9kUUerkx2iZUeSfViygS0aPkg+GeTEUYly8UmL0ISCk9Vn63qjVTIddzBVt5
+        uzXLnmfiBS/SBs76sFQ5Ltsa+AcWRxajna3RaNh4JkHLMPQE+cKzrkwFlcM5+Fyet/H2f3US
+        MlxZiKqMqP5ob9rQvDFRhwxxS4TWtSuMGv9AoiHme93Ogh3lrv33bnm8GYuwa8FApTFq58GF
+        q0f/SnNVdONa/RrltE0RS/Nf1vw+pZ94w1Lkd6tnYv/jlNQvG+NxwgUw9Gzd7tpQ0+Wb2zdq
+        l7ozomQlL3nKGanNF4pV0dPjlvgmfVlFE4KBY2KkdoH7A+bym3TPAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrGIsWRmVeSWpSXmKPExsWy7bCSvG7AxP2xBl8Palis/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFt+en2K0uN24gs3i7DNvi5+75rFY9K29xObA7bHj7hJG
+        j52z7rJ79Da/Y/OY1baPzaNvyypGj8+b5ALYorhsUlJzMstSi/TtErgy7h2/zFxwwatidcML
+        lgbG4zZdjBwcEgImEqcOqXUxcnIICexmlDjV4QNiSwhISky7eJQZokRY4vDh4i5GLqCSt4wS
+        feuusILUCAtESCy+f5cVJCEi8IxJYuHenUwgCWaBSImeuVvYIDq2MEo0HHvJDpJgE9CS2P/i
+        BhuIzS+gKHH1x2NGEJtXwE5i5ZYPbCDbWARUJD6s9QUJiwIteL79BlSJoMTJmU9YQGxOATOJ
+        ya+2Qe1Sl/gz7xIzhC0ucevJfKi4vETz1tnMExiFZyFpn4WkZRaSlllIWhYwsqxilEwtKM5N
+        zy02LDDMSy3XK07MLS7NS9dLzs/dxAiOPS3NHYyXl8QfYhTgYFTi4X3BuT9WiDWxrLgy9xCj
+        BAezkgjvxRl7Y4V4UxIrq1KL8uOLSnNSiw8xSnOwKInzPs07FikkkJ5YkpqdmlqQWgSTZeLg
+        lGpgtM3aIrht04fJU3UKp3gcDZsXHKmkLmV9+DNjwoVkCQ81s5j0N4c/aOtffu0TWyjLdjS3
+        9uZse9aJOkcnn3Flqc5RDp9YMCG+Nzahx99P9Nnz8Cmfunj5c7P3O5y4tIJvznyuO7/j13Db
+        /nq0nvtX777Xn/9tEN3zS2Bz0MbfbD7JehYz+o57KbEUZyQaajEXFScCAHJDtJG5AgAA
+X-CMS-MailID: 20191104024744epcas1p2c15fcfdbe0e55acba5052756a70f36bc
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191103204245epcas4p48f5ab2a36b3728439799adb41fed6a24
+References: <20191103204130.2172-1-digetx@gmail.com>
+        <CGME20191103204245epcas4p48f5ab2a36b3728439799adb41fed6a24@epcas4p4.samsung.com>
+        <20191103204130.2172-17-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-* This automated bisection report was sent to you on the basis  *
-* that you may be involved with the breaking commit it has      *
-* found.  No manual investigation has been done to verify it,   *
-* and the root cause of the problem may be somewhere else.      *
-*                                                               *
-* If you do send a fix, please include this trailer:            *
-*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
-*                                                               *
-* Hope this helps!                                              *
-* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+On 19. 11. 4. 오전 5:41, Dmitry Osipenko wrote:
+> The ACTMON governor is interrupt-driven and currently hardware's polling
+> interval is fixed to 16ms in the driver. Devfreq supports variable polling
+> interval by the generic governors, let's re-use the generic interface for
+> changing of the polling interval. Now the polling interval can be changed
+> dynamically via /sys/class/devfreq/devfreq0/polling_interval.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra30-devfreq.c | 83 +++++++++++++++++++++++--------
+>  1 file changed, 61 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
+> index 852bde6249c7..9c645e83ef8b 100644
+> --- a/drivers/devfreq/tegra30-devfreq.c
+> +++ b/drivers/devfreq/tegra30-devfreq.c
+> @@ -96,9 +96,10 @@ struct tegra_devfreq_device_config {
+>  	unsigned int	boost_down_threshold;
+>  
+>  	/*
+> -	 * Threshold of activity (cycles) below which the CPU frequency isn't
+> -	 * to be taken into account. This is to avoid increasing the EMC
+> -	 * frequency when the CPU is very busy but not accessing the bus often.
+> +	 * Threshold of activity (cycles translated to kHz) below which the
+> +	 * CPU frequency isn't to be taken into account. This is to avoid
+> +	 * increasing the EMC frequency when the CPU is very busy but not
+> +	 * accessing the bus often.
+>  	 */
+>  	u32		avg_dependency_threshold;
+>  };
+> @@ -126,7 +127,7 @@ static const struct tegra_devfreq_device_config actmon_device_configs[] = {
+>  		.boost_down_coeff = 90,
+>  		.boost_up_threshold = 27,
+>  		.boost_down_threshold = 10,
+> -		.avg_dependency_threshold = 50000,
+> +		.avg_dependency_threshold = 5 * KHZ,
 
-linusw/for-next boot bisection: v5.4-rc4-34-gb0983a8bbfb4 on r8a7795-salvat=
-or-x
+nitpick.
+Actually, this change is not related to this patch.
+Even if it is trivial, it is not proper.
 
-Summary:
-  Start:      b0983a8bbfb4 Merge branch 'devel' into for-next
-  Details:    https://kernelci.org/boot/id/5dbf677159b514c28c138dfe
-  Plain log:  https://storage.kernelci.org//linusw/for-next/v5.4-rc4-34-gb0=
-983a8bbfb4/arm64/defconfig/gcc-8/lab-baylibre/boot-r8a7795-salvator-x.txt
-  HTML log:   https://storage.kernelci.org//linusw/for-next/v5.4-rc4-34-gb0=
-983a8bbfb4/arm64/defconfig/gcc-8/lab-baylibre/boot-r8a7795-salvator-x.html
-  Result:     6a41b6c5fc20 gpio: Add xgs-iproc driver
+>  	},
+>  };
+>  
+> @@ -208,9 +209,16 @@ static void device_writel(struct tegra_devfreq_device *dev, u32 val,
+>  	writel_relaxed(val, dev->regs + offset);
+>  }
+>  
+> -static unsigned long do_percent(unsigned long val, unsigned int pct)
+> +static unsigned long do_percent(unsigned long long val, unsigned int pct)
+>  {
+> -	return val * pct / 100;
+> +	val = val * pct;
+> +	do_div(val, 100);
+> +
+> +	/*
+> +	 * High freq + high boosting percent + large polling interval are
+> +	 * resulting in integer overflow when watermarks are calculated.
+> +	 */
+> +	return min_t(u64, val, U32_MAX);
+>  }
+>  
+>  static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+> @@ -218,8 +226,9 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+>  {
+>  	u32 avg = dev->avg_count;
+>  	u32 avg_band_freq = tegra->max_freq * ACTMON_DEFAULT_AVG_BAND / KHZ;
+> -	u32 band = avg_band_freq * ACTMON_SAMPLING_PERIOD;
+> +	u32 band = avg_band_freq * tegra->devfreq->profile->polling_ms;
+>  
+> +	avg = min(dev->avg_count, U32_MAX - band);
+>  	device_writel(dev, avg + band, ACTMON_DEV_AVG_UPPER_WMARK);
+>  
+>  	avg = max(dev->avg_count, band);
+> @@ -229,7 +238,7 @@ static void tegra_devfreq_update_avg_wmark(struct tegra_devfreq *tegra,
+>  static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
+>  				       struct tegra_devfreq_device *dev)
+>  {
+> -	u32 val = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
+> +	u32 val = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
+>  
+>  	device_writel(dev, do_percent(val, dev->config->boost_up_threshold),
+>  		      ACTMON_DEV_UPPER_WMARK);
+> @@ -308,10 +317,9 @@ static unsigned long actmon_device_target_freq(struct tegra_devfreq *tegra,
+>  	unsigned int avg_sustain_coef;
+>  	unsigned long target_freq;
+>  
+> -	target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
+> +	target_freq = dev->avg_count / tegra->devfreq->profile->polling_ms;
+>  	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
+>  	target_freq = do_percent(target_freq, avg_sustain_coef);
+> -	target_freq += dev->boost_freq;
+>  
+>  	return target_freq;
+>  }
+> @@ -322,15 +330,18 @@ static void actmon_update_target(struct tegra_devfreq *tegra,
+>  	unsigned long cpu_freq = 0;
+>  	unsigned long static_cpu_emc_freq = 0;
+>  
+> -	if (dev->config->avg_dependency_threshold) {
+> +	dev->target_freq = actmon_device_target_freq(tegra, dev);
+> +
+> +	if (dev->config->avg_dependency_threshold &&
+> +	    dev->config->avg_dependency_threshold <= dev->target_freq) {
 
-Checks:
-  revert:     PASS
-  verify:     PASS
+This changes are related to polling interval change at the run time?
+This patch touched the 'avg_dependency_threshold'. It is related to the 
+dynamic change of polling interval?
 
-Parameters:
-  Tree:       linusw
-  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-=
-gpio.git/
-  Branch:     for-next
-  Target:     r8a7795-salvator-x
-  CPU arch:   arm64
-  Lab:        lab-baylibre
-  Compiler:   gcc-8
-  Config:     defconfig
-  Test suite: boot
+>  		cpu_freq = cpufreq_quick_get(0);
+>  		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+> -	}
+>  
+> -	dev->target_freq = actmon_device_target_freq(tegra, dev);
+> -
+> -	if (dev->avg_count >= dev->config->avg_dependency_threshold)
+> +		dev->target_freq += dev->boost_freq;
+>  		dev->target_freq = max(dev->target_freq, static_cpu_emc_freq);
+> +	} else {
+> +		dev->target_freq += dev->boost_freq;
+> +	}
 
-Breaking commit found:
+ditto. This changes are related to polling interval change at the run time?
 
----------------------------------------------------------------------------=
-----
-commit 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
-Author: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date:   Fri Oct 25 09:27:03 2019 +1300
+>  }
+>  
+>  static irqreturn_t actmon_thread_isr(int irq, void *data)
+> @@ -396,15 +407,16 @@ static unsigned long
+>  tegra_actmon_cpufreq_contribution(struct tegra_devfreq *tegra,
+>  				  unsigned int cpu_freq)
+>  {
+> +	struct tegra_devfreq_device *dev = &tegra->devices[MCCPU];
+>  	unsigned long static_cpu_emc_freq, dev_freq;
+>  
+> +	dev_freq = actmon_device_target_freq(tegra, dev);
+> +
+>  	/* check whether CPU's freq is taken into account at all */
+> -	if (tegra->devices[MCCPU].avg_count <
+> -	    tegra->devices[MCCPU].config->avg_dependency_threshold)
+> +	if (dev_freq < dev->config->avg_dependency_threshold)
 
-    gpio: Add xgs-iproc driver
-    =
+ditto.
 
-    This driver supports the Chip Common A GPIO controller present on a
-    number of Broadcom switch ASICs with integrated SoCs. The controller is
-    similar to the pinctrl-nsp-gpio and pinctrl-iproc-gpio blocks but
-    different enough that a separate driver is required.
-    =
-
-    This has been ported from Broadcom's XLDK 5.0.3 retaining only the CCA
-    support (pinctrl-iproc-gpio covers CCB).
-    =
-
-    Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-    Link: https://lore.kernel.org/r/20191024202703.8017-3-chris.packham@all=
-iedtelesis.co.nz
-    Acked-by: Scott Branden <scott.branden@broadcom.com>
-    Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-
-diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
-index 8ec1f041c98d..e9516393c971 100644
---- a/drivers/gpio/Kconfig
-+++ b/drivers/gpio/Kconfig
-@@ -155,6 +155,15 @@ config GPIO_BCM_KONA
- 	help
- 	  Turn on GPIO support for Broadcom "Kona" chips.
- =
-
-+config GPIO_BCM_XGS_IPROC
-+	tristate "BRCM XGS iProc GPIO support"
-+	depends on OF_GPIO && (ARCH_BCM_IPROC || COMPILE_TEST)
-+	select GPIO_GENERIC
-+	select GPIOLIB_IRQCHIP
-+	default ARCH_BCM_IPROC
-+	help
-+	  Say yes here to enable GPIO support for Broadcom XGS iProc SoCs.
-+
- config GPIO_BRCMSTB
- 	tristate "BRCMSTB GPIO support"
- 	default y if (ARCH_BRCMSTB || BMIPS_GENERIC)
-diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
-index 84e05701f500..34eb8b2b12dd 100644
---- a/drivers/gpio/Makefile
-+++ b/drivers/gpio/Makefile
-@@ -35,6 +35,7 @@ obj-$(CONFIG_GPIO_ASPEED)		+=3D gpio-aspeed.o
- obj-$(CONFIG_GPIO_ASPEED_SGPIO)		+=3D gpio-aspeed-sgpio.o
- obj-$(CONFIG_GPIO_ATH79)		+=3D gpio-ath79.o
- obj-$(CONFIG_GPIO_BCM_KONA)		+=3D gpio-bcm-kona.o
-+obj-$(CONFIG_GPIO_BCM_XGS_IPROC)	+=3D gpio-xgs-iproc.o
- obj-$(CONFIG_GPIO_BD70528)		+=3D gpio-bd70528.o
- obj-$(CONFIG_GPIO_BD9571MWV)		+=3D gpio-bd9571mwv.o
- obj-$(CONFIG_GPIO_BRCMSTB)		+=3D gpio-brcmstb.o
-diff --git a/drivers/gpio/gpio-xgs-iproc.c b/drivers/gpio/gpio-xgs-iproc.c
-new file mode 100644
-index 000000000000..a3fdd95cc9e6
---- /dev/null
-+++ b/drivers/gpio/gpio-xgs-iproc.c
-@@ -0,0 +1,321 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 Broadcom
-+ */
-+
-+#include <linux/gpio/driver.h>
-+#include <linux/init.h>
-+#include <linux/interrupt.h>
-+#include <linux/io.h>
-+#include <linux/irq.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#define IPROC_CCA_INT_F_GPIOINT		BIT(0)
-+#define IPROC_CCA_INT_STS		0x20
-+#define IPROC_CCA_INT_MASK		0x24
-+
-+#define IPROC_GPIO_CCA_DIN		0x0
-+#define IPROC_GPIO_CCA_DOUT		0x4
-+#define IPROC_GPIO_CCA_OUT_EN		0x8
-+#define IPROC_GPIO_CCA_INT_LEVEL	0x10
-+#define IPROC_GPIO_CCA_INT_LEVEL_MASK	0x14
-+#define IPROC_GPIO_CCA_INT_EVENT	0x18
-+#define IPROC_GPIO_CCA_INT_EVENT_MASK	0x1C
-+#define IPROC_GPIO_CCA_INT_EDGE		0x24
-+
-+struct iproc_gpio_chip {
-+	struct irq_chip irqchip;
-+	struct gpio_chip gc;
-+	spinlock_t lock;
-+	struct device *dev;
-+	void __iomem *base;
-+	void __iomem *intr;
-+};
-+
-+static inline struct iproc_gpio_chip *
-+to_iproc_gpio(struct gpio_chip *gc)
-+{
-+	return container_of(gc, struct iproc_gpio_chip, gc);
-+}
-+
-+static void iproc_gpio_irq_ack(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, event_status =3D 0;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_status |=3D BIT(pin);
-+		writel_relaxed(event_status,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static void iproc_gpio_irq_unmask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 int_mask, irq_type, event_mask;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask |=3D 1 << pin;
-+		writel_relaxed(event_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask |=3D 1 << pin;
-+		writel_relaxed(int_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static void iproc_gpio_irq_mask(struct irq_data *d)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 irq_type, int_mask, event_mask;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	irq_type =3D irq_get_trigger_type(irq);
-+	event_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	int_mask =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+
-+	if (irq_type & IRQ_TYPE_EDGE_BOTH) {
-+		event_mask &=3D ~BIT(pin);
-+		writel_relaxed(event_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+	} else {
-+		int_mask &=3D ~BIT(pin);
-+		writel_relaxed(int_mask,
-+			       chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+	}
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+}
-+
-+static int iproc_gpio_irq_set_type(struct irq_data *d, u32 type)
-+{
-+	struct gpio_chip *gc =3D irq_data_get_irq_chip_data(d);
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int pin =3D d->hwirq;
-+	unsigned long flags;
-+	u32 irq =3D d->irq;
-+	u32 event_pol, int_pol;
-+	int ret =3D 0;
-+
-+	spin_lock_irqsave(&chip->lock, flags);
-+	switch (type & IRQ_TYPE_SENSE_MASK) {
-+	case IRQ_TYPE_EDGE_RISING:
-+		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		event_pol &=3D ~BIT(pin);
-+		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		event_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		event_pol |=3D BIT(pin);
-+		writel_relaxed(event_pol, chip->base + IPROC_GPIO_CCA_INT_EDGE);
-+		break;
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		int_pol &=3D ~BIT(pin);
-+		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		int_pol =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		int_pol |=3D BIT(pin);
-+		writel_relaxed(int_pol, chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		break;
-+	default:
-+		/* should not come here */
-+		ret =3D -EINVAL;
-+		goto out_unlock;
-+	}
-+
-+	if (type & IRQ_TYPE_LEVEL_MASK)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_level_irq);
-+	else if (type & IRQ_TYPE_EDGE_BOTH)
-+		irq_set_handler_locked(irq_get_irq_data(irq), handle_edge_irq);
-+
-+out_unlock:
-+	spin_unlock_irqrestore(&chip->lock, flags);
-+
-+	return ret;
-+}
-+
-+static irqreturn_t iproc_gpio_irq_handler(int irq, void *data)
-+{
-+	struct gpio_chip *gc =3D (struct gpio_chip *)data;
-+	struct iproc_gpio_chip *chip =3D to_iproc_gpio(gc);
-+	int bit;
-+	unsigned long int_bits =3D 0;
-+	u32 int_status;
-+
-+	/* go through the entire GPIOs and handle all interrupts */
-+	int_status =3D readl_relaxed(chip->intr + IPROC_CCA_INT_STS);
-+	if (int_status & IPROC_CCA_INT_F_GPIOINT) {
-+		u32 event, level;
-+
-+		/* Get level and edge interrupts */
-+		event =3D
-+		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT_MASK);
-+		event &=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_EVENT);
-+		level =3D readl_relaxed(chip->base + IPROC_GPIO_CCA_DIN);
-+		level ^=3D readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL);
-+		level &=3D
-+		    readl_relaxed(chip->base + IPROC_GPIO_CCA_INT_LEVEL_MASK);
-+		int_bits =3D level | event;
-+
-+		for_each_set_bit(bit, &int_bits, gc->ngpio)
-+			generic_handle_irq(irq_linear_revmap(gc->irq.domain, bit));
-+	}
-+
-+	return int_bits ? IRQ_HANDLED : IRQ_NONE;
-+}
-+
-+static int iproc_gpio_probe(struct platform_device *pdev)
-+{
-+	struct device *dev =3D &pdev->dev;
-+	struct device_node *dn =3D pdev->dev.of_node;
-+	struct iproc_gpio_chip *chip;
-+	u32 num_gpios;
-+	int irq, ret;
-+
-+	chip =3D devm_kzalloc(dev, sizeof(*chip), GFP_KERNEL);
-+	if (!chip)
-+		return -ENOMEM;
-+
-+	chip->dev =3D dev;
-+	platform_set_drvdata(pdev, chip);
-+	spin_lock_init(&chip->lock);
-+
-+	chip->base =3D devm_platform_ioremap_resource(pdev, 0);
-+	if (IS_ERR(chip->base))
-+		return PTR_ERR(chip->base);
-+
-+	ret =3D bgpio_init(&chip->gc, dev, 4,
-+			 chip->base + IPROC_GPIO_CCA_DIN,
-+			 chip->base + IPROC_GPIO_CCA_DOUT,
-+			 NULL,
-+			 chip->base + IPROC_GPIO_CCA_OUT_EN,
-+			 NULL,
-+			 0);
-+	if (ret) {
-+		dev_err(dev, "unable to init GPIO chip\n");
-+		return ret;
-+	}
-+
-+	chip->gc.label =3D dev_name(dev);
-+	if (of_property_read_u32(dn, "ngpios", &num_gpios))
-+		chip->gc.ngpio =3D num_gpios;
-+
-+	irq =3D platform_get_irq(pdev, 0);
-+	if (irq > 0) {
-+		struct gpio_irq_chip *girq;
-+		struct irq_chip *irqc;
-+		u32 val;
-+
-+		irqc =3D &chip->irqchip;
-+		irqc->name =3D dev_name(dev);
-+		irqc->irq_ack =3D iproc_gpio_irq_ack;
-+		irqc->irq_mask =3D iproc_gpio_irq_mask;
-+		irqc->irq_unmask =3D iproc_gpio_irq_unmask;
-+		irqc->irq_set_type =3D iproc_gpio_irq_set_type;
-+
-+		chip->intr =3D devm_platform_ioremap_resource(pdev, 1);
-+		if (IS_ERR(chip->intr))
-+			return PTR_ERR(chip->intr);
-+
-+		/* Enable GPIO interrupts for CCA GPIO */
-+		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-+		val |=3D IPROC_CCA_INT_F_GPIOINT;
-+		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-+
-+		/*
-+		 * Directly request the irq here instead of passing
-+		 * a flow-handler to gpiochip_set_chained_irqchip,
-+		 * because the irq is shared.
-+		 */
-+		ret =3D devm_request_irq(dev, irq, iproc_gpio_irq_handler,
-+				       IRQF_SHARED, chip->gc.label, &chip->gc);
-+		if (ret) {
-+			dev_err(dev, "Fail to request IRQ%d: %d\n", irq, ret);
-+			return ret;
-+		}
-+
-+		girq =3D &chip->gc.irq;
-+		girq->chip =3D irqc;
-+		/* This will let us handle the parent IRQ in the driver */
-+		girq->parent_handler =3D NULL;
-+		girq->num_parents =3D 0;
-+		girq->parents =3D NULL;
-+		girq->default_type =3D IRQ_TYPE_NONE;
-+		girq->handler =3D handle_simple_irq;
-+	}
-+
-+	ret =3D devm_gpiochip_add_data(dev, &chip->gc, chip);
-+	if (ret) {
-+		dev_err(dev, "unable to add GPIO chip\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __exit iproc_gpio_remove(struct platform_device *pdev)
-+{
-+	struct iproc_gpio_chip *chip;
-+
-+	chip =3D platform_get_drvdata(pdev);
-+	if (!chip)
-+		return -ENODEV;
-+
-+	if (chip->intr) {
-+		u32 val;
-+
-+		val =3D readl_relaxed(chip->intr + IPROC_CCA_INT_MASK);
-+		val &=3D ~IPROC_CCA_INT_F_GPIOINT;
-+		writel_relaxed(val, chip->intr + IPROC_CCA_INT_MASK);
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst =3D=
- {
-+	{ .compatible =3D "brcm,iproc-gpio-cca" },
-+	{}
-+};
-+MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
-+
-+static struct platform_driver bcm_iproc_gpio_driver =3D {
-+	.driver =3D {
-+		.name =3D "iproc-xgs-gpio",
-+		.owner =3D THIS_MODULE,
-+		.of_match_table =3D bcm_iproc_gpio_of_match,
-+	},
-+	.probe =3D iproc_gpio_probe,
-+	.remove =3D iproc_gpio_remove,
-+};
-+
-+module_platform_driver(bcm_iproc_gpio_driver);
-+
-+MODULE_DESCRIPTION("XGS IPROC GPIO driver");
-+MODULE_LICENSE("GPL v2");
----------------------------------------------------------------------------=
-----
+>  		return 0;
+>  
+>  	static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+> -	dev_freq = actmon_device_target_freq(tegra, &tegra->devices[MCCPU]);
+>  
+>  	if (dev_freq >= static_cpu_emc_freq)
+>  		return 0;
+> @@ -465,7 +477,7 @@ static void tegra_actmon_configure_device(struct tegra_devfreq *tegra,
+>  
+>  	dev->target_freq = tegra->cur_freq;
+>  
+> -	dev->avg_count = tegra->cur_freq * ACTMON_SAMPLING_PERIOD;
+> +	dev->avg_count = tegra->cur_freq * tegra->devfreq->profile->polling_ms;
+>  	device_writel(dev, dev->avg_count, ACTMON_DEV_INIT_AVG);
+>  
+>  	tegra_devfreq_update_avg_wmark(tegra, dev);
+> @@ -506,7 +518,10 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
+>  	unsigned int i;
+>  	int err;
+>  
+> -	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
+> +	if (!tegra->devfreq->profile->polling_ms || tegra->cur_freq)
+> +		return 0;
+> +
+> +	actmon_writel(tegra, tegra->devfreq->profile->polling_ms - 1,
+>  		      ACTMON_GLB_PERIOD_CTRL);
+>  
+>  	/*
+> @@ -551,11 +566,16 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
+>  
+>  	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
+>  
+> +	tegra->cur_freq = 0;
+> +
+>  	return err;
+>  }
+>  
+>  static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+>  {
+> +	if (!tegra->devfreq->profile->polling_ms || !tegra->cur_freq)
+> +		return;
+> +
+>  	disable_irq(tegra->irq);
+>  
+>  	cpufreq_unregister_notifier(&tegra->cpu_rate_change_nb,
+> @@ -566,6 +586,8 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
+>  	tegra_actmon_stop_devices(tegra);
+>  
+>  	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
+> +
+> +	tegra->cur_freq = 0;
+>  }
+>  
+>  static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+> @@ -625,7 +647,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+>  	stat->busy_time *= 100 / BUS_SATURATION_RATIO;
+>  
+>  	/* Number of cycles in a sampling period */
+> -	stat->total_time = ACTMON_SAMPLING_PERIOD * cur_freq;
+> +	stat->total_time = tegra->devfreq->profile->polling_ms * cur_freq;
+>  
+>  	stat->busy_time = min(stat->busy_time, stat->total_time);
+>  
+> @@ -633,7 +655,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+>  }
+>  
+>  static struct devfreq_dev_profile tegra_devfreq_profile = {
+> -	.polling_ms	= 0,
+> +	.polling_ms	= ACTMON_SAMPLING_PERIOD,
+>  	.target		= tegra_devfreq_target,
+>  	.get_dev_status	= tegra_devfreq_get_dev_status,
+>  };
+> @@ -673,6 +695,7 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+>  					unsigned int event, void *data)
+>  {
+>  	struct tegra_devfreq *tegra = dev_get_drvdata(devfreq->dev.parent);
+> +	unsigned int *new_delay = data;
+>  	int ret = 0;
+>  
+>  	/*
+> @@ -692,6 +715,21 @@ static int tegra_governor_event_handler(struct devfreq *devfreq,
+>  		devfreq_monitor_stop(devfreq);
+>  		break;
+>  
+> +	case DEVFREQ_GOV_INTERVAL:
+> +		/*
+> +		 * ACTMON hardware supports up to 256 milliseconds for the
+> +		 * sampling period.
+> +		 */
+> +		if (*new_delay > 256) {
+> +			ret = -EINVAL;
+> +			break;
+> +		}
+> +
+> +		tegra_actmon_stop(tegra);
+> +		devfreq_interval_update(devfreq, new_delay);
+> +		ret = tegra_actmon_start(tegra);
+> +		break;
+> +
+>  	case DEVFREQ_GOV_SUSPEND:
+>  		tegra_actmon_stop(tegra);
+>  		devfreq_monitor_suspend(devfreq);
+> @@ -711,6 +749,7 @@ static struct devfreq_governor tegra_devfreq_governor = {
+>  	.get_target_freq = tegra_governor_get_target,
+>  	.event_handler = tegra_governor_event_handler,
+>  	.immutable = true,
+> +	.interrupt_driven = true,
+>  };
+>  
+>  static int tegra_devfreq_probe(struct platform_device *pdev)
+> 
 
 
-Git bisection log:
-
----------------------------------------------------------------------------=
-----
-git bisect start
-# good: [7d194c2100ad2a6dded545887d02754948ca5241] Linux 5.4-rc4
-git bisect good 7d194c2100ad2a6dded545887d02754948ca5241
-# bad: [b0983a8bbfb45d16760b34c23436a3d9b5834dbf] Merge branch 'devel' into=
- for-next
-git bisect bad b0983a8bbfb45d16760b34c23436a3d9b5834dbf
-# good: [698b8eeaed7287970fc2b6d322618850fd1b1e6c] gpio/mpc8xxx: change irq=
- handler from chained to normal
-git bisect good 698b8eeaed7287970fc2b6d322618850fd1b1e6c
-# good: [ac4062aa6c811db89ee3bbfd3101af931a50c1ba] gpio: 104-idi-48e: make =
-array register_offset static, makes object smaller
-git bisect good ac4062aa6c811db89ee3bbfd3101af931a50c1ba
-# good: [d57eb825e0dc6f0b5be78251d69cbf1bdd1db622] gpio: Add RDA Micro GPIO=
- controller support
-git bisect good d57eb825e0dc6f0b5be78251d69cbf1bdd1db622
-# bad: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xgs-iproc driver
-git bisect bad 6a41b6c5fc20abced88fa0eed42ae5e5cb70b280
-# good: [1dfc462a54386d8467ff427ef900f553e2e470e3] dt-bindings: gpio: brcm:=
- Add bindings for xgs-iproc
-git bisect good 1dfc462a54386d8467ff427ef900f553e2e470e3
-# first bad commit: [6a41b6c5fc20abced88fa0eed42ae5e5cb70b280] gpio: Add xg=
-s-iproc driver
----------------------------------------------------------------------------=
-----
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
