@@ -2,113 +2,102 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C01D1CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:21:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4671CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:23:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B9BD20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:21:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572898875;
-	bh=/YukPhSH7HqflWK5cwwwvDNV+VAirsmpAmR47CbNn2M=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=f7HP7NtYCfh67oac2aqR4DYb8ycIzlKQOpQlFEhsVtelUr7Y86EZ0v38fZXy5dXz4
-	 Q2T5OmzfOlXexTCgEblAkJ+NQaVaPm/hIAM+ZefYPXmLrEZarR9opLlfsQqP3mdvsX
-	 If4VVqlPhtJ1Q4wxwsT9qOWecXZKgq/0pxjXbxyU=
+	by mail.kernel.org (Postfix) with ESMTP id 7552520848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="fIkrS1D3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729403AbfKDUVO (ORCPT
+        id S1728876AbfKDUX3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:21:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53530 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726417AbfKDUVN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:21:13 -0500
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2CAE32089C;
-        Mon,  4 Nov 2019 20:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572898872;
-        bh=/YukPhSH7HqflWK5cwwwvDNV+VAirsmpAmR47CbNn2M=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RsSTXrm2hL2cdo5DFD5o3RshGmWojC9jUtrcCbRCOR9znnfPXQvKlcSOgqgGkDm29
-         xYhG4oaB8YEdM5MyAKYspm0WS2WWrV7E43uD+9x1yMdbY1kBIcVfkET48VQdk4CBEM
-         55P9wZcPZXBw+pspEgQHARRAVwY5ZmI0s4NzTEgs=
-Subject: Re: [PATCHv2 0/3] Update cpupower and make it more accurate
-To:     Thomas Renninger <trenn@suse.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>,
-        Borislav Petkov <bp@suse.de>
-Cc:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>, shuah <shuah@kernel.org>
-References: <cover.1570819652.git.Janakarajan.Natarajan@amd.com>
- <ab5d732b-f322-0aeb-3970-99167afc177c@amd.com>
- <14300539.3gDY5kWNTU@skinner.arch.suse.de>
- <4a095339-82ab-54c7-4957-63d0338d122f@kernel.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <5c6eb321-7462-7458-a069-aa4919b39063@kernel.org>
-Date:   Mon, 4 Nov 2019 13:21:11 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <4a095339-82ab-54c7-4957-63d0338d122f@kernel.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Mon, 4 Nov 2019 15:23:29 -0500
+Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:44480 "EHLO
+        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728510AbfKDUX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 15:23:29 -0500
+Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 907CE8365A;
+        Tue,  5 Nov 2019 09:23:24 +1300 (NZDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
+        s=mail181024; t=1572899004;
+        bh=LbFnKvc7CLUlS0furVCad1JHIwSt1C8lJgyb2pYnGXQ=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To;
+        b=fIkrS1D3gFfOdM4LUfxkrIp4KHIPaGBIf1on2HkaAzddlN7BmnYjU5MWgtCyr6mhT
+         y0w6pM/jHN210FbIZb2BlhSOoqC9s85ToxQbVbo1NAtlGhkDe9zVqdvXiEm5o1s+tR
+         6YhJBXbPRZThsLjr9jtFDh+Jny7oH/8SXopiJXZbpdTVBX2WTnAJ1XvWrv7Sqgl6No
+         7wdgdJoFXBt7mVklG8681BM78AxBpmw/zSwfKf4Jk+ykHw2ThrHkDEKz2oJqsZJlUP
+         TnEJ5Wq8vGIhZYxY4Mzaq2EvW0zKcVkWiA860EDYZ1Y8M8iC/imNGf3Aa/pXGK5mav
+         N06SVAXzNLo6A==
+Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
+        id <B5dc088b90000>; Tue, 05 Nov 2019 09:23:25 +1300
+Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
+ by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
+ Microsoft SMTP Server (TLS) id 15.0.1156.6; Tue, 5 Nov 2019 09:23:20 +1300
+Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
+ svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
+ 15.00.1156.000; Tue, 5 Nov 2019 09:23:20 +1300
+From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+To:     "broonie@kernel.org" <broonie@kernel.org>
+CC:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: spi-mem and gpio chipselects
+Thread-Topic: spi-mem and gpio chipselects
+Thread-Index: AQHVkqe/99KPV78Qa0mRy221SIO+EKd6HAYAgAB7fACAAASmAA==
+Date:   Mon, 4 Nov 2019 20:23:20 +0000
+Message-ID: <52aaa7364a0b40caf5f74817932de9e32d148772.camel@alliedtelesis.co.nz>
+References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
+         <20191104124444.GB5238@sirena.co.uk>
+         <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
+In-Reply-To: <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
+Accept-Language: en-NZ, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [2001:df5:b000:22:d0c9:dea8:da1e:f79e]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9A84ED40793E494085BDB02FBCBEA280@atlnz.lc>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/19 9:18 AM, shuah wrote:
-> On 10/25/19 4:47 AM, Thomas Renninger wrote:
->> Hi,
->>
->> Removed: Pu Wen <puwen@hygon.com>
->>
->> On Tuesday, October 22, 2019 6:39:11 PM CEST Natarajan, Janakarajan 
->> wrote:
->>> On 10/11/2019 2:37 PM, Natarajan, Janakarajan wrote:
->>>
->>>> This patchset updates cpupower to make it more accurate by removing
->>>> the userspace to kernel transitions and read_msr initiated IPI delays.
->>
->> Acked-by: Thomas Renninger <trenn@suse.de>
->>
->> Shuan: If you do not object, it would be great if you can schedule these
->> to be included into Rafael's pm tree.
->>
-> 
-> I have no objections.
-> 
->> It's a nice enhancement for these CPUs.
->> Doing it even nicer and more generic (per cpu measures) needs further
->> restructuring, but should not delay this any further.
->>
-> 
-> Thanks. I was waiting for you to Ack these before I pulled them in.
-> I will get them in for 5.5-rc1
-> 
-
-Hi Janak,
-
-All your patches fail Signed-off-by check.
-
-WARNING: Missing Signed-off-by: line by nominal patch author 'Natarajan, 
-Janakarajan <Janakarajan.Natarajan@amd.com>'
-
-There is a mismatch between your From: and Signed-off-by names? Can you
-fix these and resend all 4 patches.
-
-thanks,
--- Shuah
-
+T24gVHVlLCAyMDE5LTExLTA1IGF0IDA5OjA2ICsxMzAwLCBDaHJpcyBQYWNraGFtIHdyb3RlOg0K
+PiBPbiBNb24sIDIwMTktMTEtMDQgYXQgMTI6NDQgKzAwMDAsIE1hcmsgQnJvd24gd3JvdGU6DQo+
+ID4gT24gTW9uLCBOb3YgMDQsIDIwMTkgYXQgMTI6MzU6MjRBTSArMDAwMCwgQ2hyaXMgUGFja2hh
+bSB3cm90ZToNCj4gPiANCj4gPiA+IEknbSB3b3JraW5nIG9uIGEgcGxhdGZvcm0gdGhhdCBoYXMg
+YSBzbGlnaHRseSBjb21wbGljYXRlZCBzY2hlbWUgZm9yDQo+ID4gPiBTUEkgY2hpcC1zZWxlY3Rz
+IHVzaW5nIGdwaW9zWzFdLiBUaGUgc3BpIGNvbnRyb2xsZXIgZHJpdmVyIGluIHRoaXMgY2FzZQ0K
+PiA+ID4gc3VwcG9ydHMgdGhlIHNwaS1tZW0gb3BlcmF0aW9ucyB3aGljaCBhcHBlYXIgdG8gYnlw
+YXNzIHRoZSBnZW5lcmljDQo+ID4gPiBzcGlfc2V0X2NzKCkuDQo+ID4gPiBXb3VsZCB0aGVyZSBi
+ZSBhbnkgaGFybSBpbiBhZGRpbmcgY2FsbHMgdG8gc3BpX3NldF9jcygpIHRvIHNwaS1tZW0uYz8N
+Cj4gPiA+IE5haXZlbHkgc3BpX21lbV9hY2Nlc3Nfc3RhcnQoKSBhbmQgc3BpX21lbV9hY2Nlc3Nf
+ZW5kKCkgc2VlbSBsaWtlDQo+ID4gPiBjb252ZW5pZW50IHBsYWNlcyB0byBzdGFydC4NCj4gPiAN
+Cj4gPiBUaGF0J3Mgb25seSBnb2luZyB0byB3b3JrIGluIGNhc2VzIHdoZXJlIHRoZSBjb250cm9s
+bGVyIHRyYW5zbGF0ZXMNCj4gPiB0aGluZ3MgaW50byBhIHNpbmdsZSBTUEkgb3BlcmF0aW9uIG9u
+IHRoZSBmbGFzaCB3aGljaCBJJ20gbm90IHN1cmUgaXMNCj4gPiBhbHdheXMgZ29pbmcgdG8gYmUg
+dGhlIGNhc2UuICBXZSdkIG5lZWQgYSB3YXkgdG8gZ3VhcmFudGVlIHRoYXQgdGhlDQo+ID4gY29u
+dHJvbGxlciBpcyBnb2luZyB0byBkbyB0aGF0IGluIG9yZGVyIHRvIGF2b2lkIGRhdGEgY29ycnVw
+dGlvbiBpc3N1ZXMuDQo+IA0KPiBJbiBteSBwYXJ0aWN1bGFyIGNhc2UgKHNwaS1iY20tcXNwaS5j
+KSBiY21fcXNwaV9ic3BpX2V4ZWNfbWVtX29wKCkgZG9lcw0KPiBzZWVtIHRvIGFzc2VydCB0aGUg
+bmF0aXZlIGNoaXAtc2VsZWN0IHRoZW4gZG8gaXQncyBvcGVyYXRpb24uIEFzIEkNCj4gdW5kZXJz
+dGFuZCB0aGUgd2FpdF9mb3JfY29tcGxldGlvbl90aW1lb3V0KCkgd2lsbCBzY2hlZHVsZSBzbyBv
+dGhlcg0KPiB0YXNrcyBtYXkgcnVuIGJ1dCBzcGlfbWVtX2FjY2Vzc19zdGFydCgpIGhhcyB0YWtl
+biBhbiBpb19tdXRleCBzbw0KPiBhbnl0aGluZyB0aGF0IGFjY2Vzc2VzIHRoYXQgc3BpIGJ1cyB3
+aWxsIGJsb2NrLg0KDQpJZiB3ZSBkbyBkZWNpZGUgdGhhdCBzcGktbWVtIG9wcyBhbmQgY3NfZ3Bp
+b3MgYXJlIGluY29tcGF0aWJsZSB3ZSBjb3VsZA0KcHJvYmFibHkgZG8gc29tZXRoaW5nIHRoYXQg
+ZGlzYWJsZXMgdGhlIG9wcyBzbyB0aGF0IHRoZSBzcGkgY29kZSBmYWxscw0KYmFjayB0byB1c2lu
+ZyBzcGlfdHJhbnNmZXIuDQo=
