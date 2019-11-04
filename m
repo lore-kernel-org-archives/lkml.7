@@ -2,255 +2,128 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C05A2CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:27:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5606CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:31:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84F1D204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:27:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D2D2206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 20:31:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EMQErTP5"
+	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="i7XYQ1ZH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728918AbfKDU1T (ORCPT
+        id S1729314AbfKDUbW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 15:27:19 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:53940 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726417AbfKDU1T (ORCPT
+        Mon, 4 Nov 2019 15:31:22 -0500
+Received: from mail-qk1-f195.google.com ([209.85.222.195]:39538 "EHLO
+        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbfKDUbV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 15:27:19 -0500
-Received: by mail-wm1-f67.google.com with SMTP id x4so7043826wmi.3;
-        Mon, 04 Nov 2019 12:27:16 -0800 (PST)
+        Mon, 4 Nov 2019 15:31:21 -0500
+Received: by mail-qk1-f195.google.com with SMTP id 15so18967622qkh.6
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 12:31:19 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=eJjvkA6yQtTeToMH+yY3H7r37OYyno8T+dCsD7mJkTU=;
-        b=EMQErTP5d17itNFyu7PdbWPHp5cK5cAgkGaCMaQn40UGPEaMM5vMNV5+resGySYHgK
-         472qO460HJpl2i0elMfXUaWmN60cMbH8uqzRe+/ikjz+2lBb+5zye4B639vJbbKQJsm1
-         6RaIQ0Oke2Eiejz1MR+MkLoqNQWJsD/ZKT1WQGAtobEFDhsmLNo/vhFrEfw00p6XHEpW
-         yH2fHc2SKp15EXElFkLM+saatYaCma/k4bPIYvntGIq89qGt29fa7rfV2UqfY5HSMKds
-         BKVZoCGC+sMsHl+8lOZLFq1gmRl2rD4WqjYmm2ysVaMx+jRwPTV2bX3LG37lnRN8G6ie
-         M1kg==
+        d=ziepe.ca; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=aYX4F5OJlshBJ+QLO90C7o41djzLcZaOuQTAXbn39ZY=;
+        b=i7XYQ1ZHnaY5oxYezVkAZAHGtsh9bOxhHHH3Sn5BIbI+VqJGCPCEvJJaUK5id2Lxjo
+         QZy6D5PvoaQcuBVLCBsiP73L6feFkqb9tVyMSKRQoFapdLhYlh11jHUlLfPVcbmAdyn1
+         qgfQIJll3BI0DBDvZGBzvIVtKJCbp1OnuM2aeiBnkmmVUjaX5fsGUiMUJQeUjXWcxDWM
+         sAgWZWBan6hPzPaW8EaeJ7isi+vnjjn+QWBP0lAA7PgqU29xvVlAbi4989CKgrofdhsL
+         SLPnsPkcXFsQUt+67vnjQSIXC5MpAEuJFrM68zNna9vYOt+4Hz7I+EIeX0dmXrL/tCRN
+         VzQg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=eJjvkA6yQtTeToMH+yY3H7r37OYyno8T+dCsD7mJkTU=;
-        b=XNrYMPS/2uo1/GedvwKRsFjyw7EiWyCAyvCJuR3qa+fEujOZZgPBCydDnEYA/R1+O9
-         wSjJnsDH7IsVh/RDh2TOFSt0cHWwMJRvKvk5X4HxgKGBIuYA++ZGZUelw62RKu8FzElX
-         wfnRgSZWgS954vMgpEAHD24DzabHYW2A/PxRzM03Rp2XamGkFZei1NyVE/ToOEinGOf5
-         pE7/2BBb1jfaB/Cr2lpH/OQSvfN0p0hkTZ0d4v79KLUnFO8S3FfMIQep42CmlIFxrrtG
-         2TcQmyA21T8rVqaQkIlIgkhBB1pldhs6nWIcT2lTyccXkzh3wUSeZFrRoKKLGhXN+I/l
-         U7ZA==
-X-Gm-Message-State: APjAAAUZ5cycogOHtfQ+VHGhgtCM6/mlQt9ydBm5nGiOP34+tW2QFnAC
-        y/0jJCsnJglYwq7sg1br9syP68dn08N5WFcKUlM=
-X-Google-Smtp-Source: APXvYqxjf+inmW1al3DpwnzHpMgXt++cFW9P4wSUXNazxLr52mi3+w60kogzNGZ8yDGlRlLJ3xXXb3OJFfLdA9g0azQ=
-X-Received: by 2002:a1c:6405:: with SMTP id y5mr831127wmb.175.1572899235350;
- Mon, 04 Nov 2019 12:27:15 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aYX4F5OJlshBJ+QLO90C7o41djzLcZaOuQTAXbn39ZY=;
+        b=N0U5b91nVNgxhlM0bDblSXqBwHx5aKWoFEqM9hliKsD0WeffPRDTHa5P11/5eRxGLH
+         IhnFnNh0hCYEc/1Sla8hYKUvRPf87xur6p4eChfC5ORn6S7bI7KInTCbLqWMKEiSo7+u
+         v6zRpjHq+UPG0dek3QchFV2V1+M5SDI7MhLwC/eB82SPGM5jHRyM5vHS1uCiOslzEGcM
+         +Wl0y/+JGLrPl1oWANu40zW3jWYmW+6KKoULWrHqBVWI5jKDzJFZig4X/NvXCH9afBd7
+         BlCgsa3gj5eC+7+OujEZXqZ01k/wYNFRnk0p9/k56RmW9PWyIQiOiPSFu7ekJIFjg4Bi
+         2VqA==
+X-Gm-Message-State: APjAAAWZO+BRvAOJr4SZp/6uxB/ORUuYb3hUFgdOiJGuvwdYePFSmBCh
+        xUjlJleoM8G2iAV0QRYEIycdPQ==
+X-Google-Smtp-Source: APXvYqzTj81BtQYcnQbs3rWnwUMY938CFsks7F1nt4LFfYHLDO23qLLbnBWdB3geEbkRzW5fLjS+gw==
+X-Received: by 2002:a37:7d03:: with SMTP id y3mr6497602qkc.385.1572899478562;
+        Mon, 04 Nov 2019 12:31:18 -0800 (PST)
+Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
+        by smtp.gmail.com with ESMTPSA id g20sm636338qke.129.2019.11.04.12.31.17
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 04 Nov 2019 12:31:17 -0800 (PST)
+Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
+        (envelope-from <jgg@ziepe.ca>)
+        id 1iRj0P-0005GE-Di; Mon, 04 Nov 2019 16:31:17 -0400
+Date:   Mon, 4 Nov 2019 16:31:17 -0400
+From:   Jason Gunthorpe <jgg@ziepe.ca>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Jerome Glisse <jglisse@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/18] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+Message-ID: <20191104203117.GE30938@ziepe.ca>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-6-jhubbard@nvidia.com>
+ <20191104173325.GD5134@redhat.com>
+ <be9de35c-57e9-75c3-2e86-eae50904bbdf@nvidia.com>
+ <20191104191811.GI5134@redhat.com>
+ <e9656d47-b4a1-da8a-e8cc-ebcfb8cc06d6@nvidia.com>
+ <20191104195248.GA7731@redhat.com>
+ <25ec4bc0-caaa-2a01-2ae7-2d79663a40e1@nvidia.com>
 MIME-Version: 1.0
-References: <20191103203334.10539-1-peron.clem@gmail.com> <CAJiuCcdxHDwoQYBsrjK5dcOtMDie62DzJ84NH+bZzYHHv49fEQ@mail.gmail.com>
- <20191104201052.bxzdues2y4aqkukd@pengutronix.de> <524459750.Kvg9uK5Sr7@jernej-laptop>
-In-Reply-To: <524459750.Kvg9uK5Sr7@jernej-laptop>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 4 Nov 2019 21:27:04 +0100
-Message-ID: <CAJiuCcfCo2QiKEvaRphcBkdTtFui3ympU9aikJTmXDa4OoiXZQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/7] pwm: sun4i: Add an optional probe for bus clock
-To:     =?UTF-8?Q?Jernej_=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <25ec4bc0-caaa-2a01-2ae7-2d79663a40e1@nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Nov 04, 2019 at 12:09:05PM -0800, John Hubbard wrote:
 
-On Mon, 4 Nov 2019 at 21:19, Jernej =C5=A0krabec <jernej.skrabec@siol.net> =
-wrote:
->
-> Dne ponedeljek, 04. november 2019 ob 21:10:52 CET je Uwe Kleine-K=C3=B6ni=
-g
-> napisal(a):
-> > Hello Cl=C3=A9ment,
-> >
-> > On Mon, Nov 04, 2019 at 07:07:00PM +0100, Cl=C3=A9ment P=C3=A9ron wrote=
-:
-> > > On Mon, 4 Nov 2019 at 09:24, Uwe Kleine-K=C3=B6nig
-> > >
-> > > <u.kleine-koenig@pengutronix.de> wrote:
-> > > > On Sun, Nov 03, 2019 at 09:33:30PM +0100, Cl=C3=A9ment P=C3=A9ron w=
-rote:
-> > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > >
-> > > > > H6 PWM core needs bus clock to be enabled in order to work.
-> > > > >
-> > > > > Add an optional probe for it and a fallback for previous
-> > > > > bindings without name on module clock.
-> > > > >
-> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > > > > ---
-> > > > >
-> > > > >  drivers/pwm/pwm-sun4i.c | 36 +++++++++++++++++++++++++++++++++++=
-+
-> > > > >  1 file changed, 36 insertions(+)
-> > > > >
-> > > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > > > > index d194b8ebdb00..b5e7ac364f59 100644
-> > > > > --- a/drivers/pwm/pwm-sun4i.c
-> > > > > +++ b/drivers/pwm/pwm-sun4i.c
-> > > > > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> > > > >
-> > > > >  struct sun4i_pwm_chip {
-> > > > >
-> > > > >       struct pwm_chip chip;
-> > > > >
-> > > > > +     struct clk *bus_clk;
-> > > > >
-> > > > >       struct clk *clk;
-> > > > >       struct reset_control *rst;
-> > > > >       void __iomem *base;
-> > > > >
-> > > > > @@ -367,6 +368,31 @@ static int sun4i_pwm_probe(struct platform_d=
-evice
-> > > > > *pdev)> >
-> > > > Adding more context here:
-> > > > |       pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > > > |
-> > > > >       if (IS_ERR(pwm->clk))
-> > > > >
-> > > > >               return PTR_ERR(pwm->clk);
-> > > > >
-> > > > > +     /* Get all clocks and reset line */
-> > > > > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
-> > > > > +     if (IS_ERR(pwm->clk)) {
-> > > > > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > > > > +                     PTR_ERR(pwm->clk));
-> > > > > +             return PTR_ERR(pwm->clk);
-> > > > > +     }
-> > > >
-> > > > I guess you want to drop the first assignment to pwm->clk.
-> > >
-> > > devm_clk_get_optional will return NULL if there is no entry, I don't
-> > > get where I need to drop it assignment.
-> >
-> > With your patch the code looks as follows:
-> >
-> >       pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> >       if (IS_ERR(pwm->clk))
-> >               return PTR_ERR(pwm->clk);
-> >
-> >       /* Get all clocks and reset line */
-> >       pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
->
-> Actually, it's the other way around, e.g. "mod" clock is checked first.
+> Note for Jason: the (a) or (b) items are talking about the vfio case, which is
+> one of the two call sites that now use pin_longterm_pages_remote(), and the
+> other one is infiniband:
+> 
+> drivers/infiniband/core/umem_odp.c:646:         npages = pin_longterm_pages_remote(owning_process, owning_mm,
 
-The first devm_clk_get is indeed wrong, I will remove it!
+This is a mistake, it is not a longterm pin and does not need FOLL_PIN
+semantics
 
->
-> >       ...
-> >
-> > The assignment to pwm->clk above the comment is the one I suggested to
-> > drop.
->
-> Neither can be dropped. DT files for other SoCs don't have clock-names
-> property, so search for "mod" clock will fail and then fallback option wi=
-thout
-> name is used.
->
-> Best regards,
-> Jernej
->
-> >
-> > > > > +     /* Fallback for old dtbs with a single clock and no name */
-> > > > > +     if (!pwm->clk) {
-> > > > > +             pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > > > > +             if (IS_ERR(pwm->clk)) {
-> > > > > +                     dev_err(&pdev->dev, "get clock failed %ld\n=
-",
-> > > > > +                             PTR_ERR(pwm->clk));
-> > > > > +                     return PTR_ERR(pwm->clk);
-> > > > > +             }
-> > > > > +     }
-> > > >
-> > > > There is a slight change of behaviour if I'm not mistaken. If you h=
-ave
-> > > >
-> > > > this:
-> > > >         clocks =3D <&clk1>;
-> > > >         clock-names =3D "mod";
-> > > >
-> > > >         pwm {
-> > > >
-> > > >                 compatible =3D "allwinner,sun4i-a10-pwm"
-> > > >                 clocks =3D <&clk2>;
-> > > >
-> > > >         }
-> > > >
-> > > > you now use clk1 instead of clk2 before.
-> > > >
-> > > > Assuming this is only a theoretical problem, at least pointing this=
- out
-> > > > in the commit log would be good I think.
-> > >
-> > > Yes it's correct and as you said the driver don't check for a correct
-> > > device tree, that why it's now optional probe.
-> > > Let's assume that's the device-tree is correct, I will add a comment
-> > > in the commit log.
-> >
-> > If the mod clock was shared by all peripherals on the bus this would be
-> > IMHO quite elegant. Probably it depends on what you mean by saying
-> > "incorrect" if this snippet is incorrect. (It can be part of a valid dt=
-b
-> > that even complies to the binding documentation. However that's not how
-> > any existing allwinner hardware looks like.) But let's stop arguing as
-> > we agree it's a corner case and if you mention it in the commit log
-> > we're both happy.
-> >
-> > > > What is that clock used for? Is it required to access the hardware
-> > > > registers? Or is it only required while the PWM is enabled? If so y=
-ou
-> > > > could enable the clock more finegrainded.
-> > >
-> > > Regarding the datasheet it's required to access the hardware.
-> > > page 261 :
-> > > https://linux-sunxi.org/File:Allwinner_H6_V200_User_Manual_V1.1.pdf
-> > So enabling the bus clock is called "open APB1 Bus gating" in that
-> > manual? If I understand that correctly the bus clock then only need to
-> > be on while accessing the registers and could be disabled once the
-> > hardware is programmed and running.
-> >
-> > Can you please describe that in a comment. Something like:
-> >
-> >       /*
-> >        * We're keeping the bus clock on for the sake of simplicity.
-> >        * Actually it only needs to be on for hardware register
-> >        * accesses.
-> >        */
-> >
-> > should be fine. This way it's at least obvious that the handling could
-> > be improved.
-> >
-> > Best regards
-> > Uwe
->
->
->
->
+> Jason should weigh in on how he wants this to go, with respect to branching
+> and merging, since it sounds like that will conflict with the hmm branch 
+
+I think since you don't need to change this site things should be
+fine?
+
+Jason
