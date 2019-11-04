@@ -2,91 +2,66 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AF0ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 303FBCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D65D620842
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F188E20663
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:25:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s1TIVkFr"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YFUIsu2r"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729153AbfKDPZF (ORCPT
+        id S1729292AbfKDPZS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:25:05 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:45949 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728336AbfKDPZF (ORCPT
+        Mon, 4 Nov 2019 10:25:18 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:43140 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfKDPZR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:25:05 -0500
-Received: by mail-lj1-f193.google.com with SMTP id n21so4444089ljg.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 07:25:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=vaEPIoS2t8hUZV5j+rbrQAWA68wAJcFqrHD13iQZNVQ=;
-        b=s1TIVkFrUgUqgiD/eCRPacD4FbkSkrQplNYQ/fhkXZtJHcKc0SOQG/Uqx1uWBOWTIk
-         wGjwq+fupT6LcupwghxWtbONfk4yQpKCtZexO2I/4c1nESvOL6MUcxGXqA20Y9hZjAsj
-         yKavZOz+rt+j7ocQUbzsnqU9SoPZb/b0kojChjUxJ1nJaOfzn+9ssmC9a8WlEP9L6c/u
-         ossTO6WbRm6o4ZbJSRi+E+g+Q2oh4wyvy2uzYOMCmT2xcIhm9Nft9IAUjWzNRpXTtI7Z
-         NGguI0b+9fDPYA8DPF17kXRvQG3BfLAT9xYJnRA+IAdq+pfwkg9FE0tmVObk8z98ptkd
-         NfiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=vaEPIoS2t8hUZV5j+rbrQAWA68wAJcFqrHD13iQZNVQ=;
-        b=t3uZ0LAuHGxzxn54HjRmDIUMQcDin4Wt8uDMxnJyt/bLgc25iRsYTq5jg0yFnYyBPl
-         dWSBNhkJ9dcMqj+F8A/K8EhTeIuWPJbCgRKpM7j/BkxlY41yXggJ02Ug1dUwFQ7hNdEq
-         QO00NO0zCYFPWKG994yT6+IUDFW77etTZ6/gRB1igI/K3b8heqNTXPSF4g1vTofhiO9r
-         Byg32Ugzn/knOH/Z2ZPjgIzkewWmQaAC2xCIkbzbGtQztvTLMzdzXAHthzZrvw2pvs7V
-         XrqLtI3gB6H/SLeAzQRwOmrRJGW7A0m7Mg0nCVWl+np6NGdGTz6yRwaiv9ga09QDudcD
-         EnQA==
-X-Gm-Message-State: APjAAAXvw1cVc9neeLfiNBr2P5SVaKfwQ+R3rJ2mfo6d5s8ajfzijaGP
-        jd8FAxuMiLIyDgjI9jVd9B0GAWG1JIXaRozaDR6Sfw==
-X-Google-Smtp-Source: APXvYqxzvhxQEC2lVXS9XLU/+X6UlgEVhaZM82+Iw9teO/FERLxOvAN0X//SI7N3tlH1MqOFaHplMyQGcIb96hV7Nrw=
-X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr19270245lja.218.1572881103566;
- Mon, 04 Nov 2019 07:25:03 -0800 (PST)
+        Mon, 4 Nov 2019 10:25:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=6RJcO60dMsiGxsPGdyjVOQPZBFgaMzgTygSbxJ4e+CU=; b=YFUIsu2rIwYhtf0YQrTNvlcjJ
+        SO0I4oSS3QynWHt7Sazsyq1IOUCgun/k4vJiIXjPKOSrykbptDYDNBUa3tIVDiH6tXElNKPd+xpYX
+        cHagNUwalzMj4LTnTbdW7KsQxPxrALcRMaxYc5q2M4omVPBnfOKzp/YFOPYixHVoPYHBJ6xDphfgk
+        WEqggglMx1L0p5wZd+tQ6FxibmvYjxRBQLicMrJj44MXc6GAKXU58cXXt1BNM//WiPHcWS3hgc3k5
+        c091YmFnkMl+tpSJcZWD2lAqemywdW1aTCLGq+ywBcILCaW/lysqqxUz6E4dx1ipzHrWgoq5g5QkG
+        I/vaNzUAg==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iReEH-0001io-FZ; Mon, 04 Nov 2019 15:25:17 +0000
+Date:   Mon, 4 Nov 2019 07:25:17 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Guo <guoyang2@huawei.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
+Message-ID: <20191104152517.GD10485@infradead.org>
+References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
 MIME-Version: 1.0
-References: <20191104001819.2300-1-chris.packham@alliedtelesis.co.nz> <20191104001819.2300-3-chris.packham@alliedtelesis.co.nz>
-In-Reply-To: <20191104001819.2300-3-chris.packham@alliedtelesis.co.nz>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Mon, 4 Nov 2019 16:24:52 +0100
-Message-ID: <CACRpkdb530Do3BnVBA6Q7TWOQ0_QfytqaPHPXCPoZP_742Rvzw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/2] pinctrl: bcm: nsp: implement get_direction
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>,
-        bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 1:18 AM Chris Packham
-<chris.packham@alliedtelesis.co.nz> wrote:
+On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
+> From: Yang Guo <guoyang2@huawei.com>
+> 
+> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
+> whether the counter less than 0 and it is a expensive function.
+> let's check it only when delta < 0, it will be good for xfs's performance.
 
-> The get_direction api is strongly recommended to be implemented. In fact
-> if it is not implemented gpio-hogs will not get the correct direction.
-> Add an implementation of get_direction for the nsp-gpio driver.
->
-> Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-
-BTW I think it looks like this the GPIO part of this driver can be
-converted to use GPIO_GENERIC. Compare to other
-drivers such as drivers/gpio/gpio-ftgpio010.c.
-
-It's a fun way to cut down lines if you have time to check
-and test!
-
-Yours,
-Linus Walleij
+How much overhead do you see?  In the end the compare is just a debug
+check, so if it actually shows up we should remove it entirely.
