@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26C4BCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7CC9CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFE30204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:26:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 932B6204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:27:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906418;
-	bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
+	s=default; t=1572906423;
+	bh=LfTO+FHeZ6M9Pa2Fk/8x9G7IzL6obf8rE6hsYroN2dY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JTrV4qHb1byYR6YdKtHQKapwmBgC1KSEpOpaquRHZSvg56i+HHRp/HMQbq/zTIspC
-	 +xmA7Exe/UavhbyDW7/iHtjM6MHzFqVcd1h7Gi2n8HS1rdFJCT4pxEf+9r0rb3qLgx
-	 RZozAx5xI5b7gLZU4CKMI0PUX28w+F+WRUj6oRCU=
+	b=2OpFiaOzNAPv8wGFhG8SwuDd45m+RYa3HP7XSF7q57jnKXUZ+YwQReLH6hyhOAwiP
+	 OLbgoZxetbLd1tOR2FsiVvYRGRMUC3vIcoWYFrZm7ntg8KaXu4TjOYoaHe8JdEZCch
+	 QFyRhLd3epVkq7tzGQog+pvDccMZGbawr1f5Vfto=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730372AbfKDVu6 (ORCPT
+        id S2387790AbfKDVuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:50:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43396 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:50:44 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43078 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729753AbfKDVuu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:50:50 -0500
+        id S2387777AbfKDVul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:50:41 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A922E2184C;
-        Mon,  4 Nov 2019 21:50:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13FBC214D8;
+        Mon,  4 Nov 2019 21:50:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904250;
-        bh=jMAEKlxyC3ermhSxITfVSGgBVe4mb/AT5OiGWW7wYCw=;
+        s=default; t=1572904240;
+        bh=LfTO+FHeZ6M9Pa2Fk/8x9G7IzL6obf8rE6hsYroN2dY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Pq43ueZq1POdMnwHcggZsjFOwxakEWASY6lch9ju1txMKbE5nGau1YCpAe0vIXSDq
-         vxCdSLEwW/RDwnPlTFy6J9iUH4BhpYaa2YJHh6zCmQOPdoDHbCuOyD5Rx5C0AEWbg7
-         9mRoUHTzD7vlNiy8/ILDciDZB7ivV6YLDcc3YURk=
+        b=s1S8ccrM6yMfiJSJgfmFicxe/pjrmRYul82g+9J09etFHZFgnI90dZq8IQKV4AHZ+
+         1WIUz5qHHTH/vX1jxOOrS3Ggjmn6kz57OVYQ4Bck172mQjAHlmVClzMHjk8bYUXmjW
+         1LpUYtc4fY3incVuulzEN2AJ8C5jHET+N6vYIz4s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Oliver Neukum <oneukum@suse.com>,
-        Christoph Hellwig <hch@lst.de>
-Subject: [PATCH 4.9 37/62] UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
-Date:   Mon,  4 Nov 2019 22:44:59 +0100
-Message-Id: <20191104211940.713506931@linuxfoundation.org>
+        stable@vger.kernel.org, Giuseppe Scrivano <gscrivan@redhat.com>,
+        Miklos Szeredi <mszeredi@redhat.com>
+Subject: [PATCH 4.9 34/62] fuse: flush dirty data/metadata before non-truncate setattr
+Date:   Mon,  4 Nov 2019 22:44:56 +0100
+Message-Id: <20191104211937.303094666@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
 References: <20191104211901.387893698@linuxfoundation.org>
@@ -60,92 +59,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alan Stern <stern@rowland.harvard.edu>
+From: Miklos Szeredi <mszeredi@redhat.com>
 
-commit 1186f86a71130a7635a20843e355bb880c7349b2 upstream.
+commit b24e7598db62386a95a3c8b9c75630c5d56fe077 upstream.
 
-Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments"),
-copying a similar commit for usb-storage, attempted to solve a problem
-involving scatter-gather I/O and USB/IP by setting the
-virt_boundary_mask for mass-storage devices.
+If writeback cache is enabled, then writes might get reordered with
+chmod/chown/utimes.  The problem with this is that performing the write in
+the fuse daemon might itself change some of these attributes.  In such case
+the following sequence of operations will result in file ending up with the
+wrong mode, for example:
 
-However, it now turns out that the analogous change in usb-storage
-interacted badly with commit 09324d32d2a0 ("block: force an unlimited
-segment size on queues with a virt boundary"), which was added later.
-A typical error message is:
+  int fd = open ("suid", O_WRONLY|O_CREAT|O_EXCL);
+  write (fd, "1", 1);
+  fchown (fd, 0, 0);
+  fchmod (fd, 04755);
+  close (fd);
 
-	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
-	total 32768 (slots), used 97 (slots)
+This patch fixes this by flushing pending writes before performing
+chown/chmod/utimes.
 
-There is no longer any reason to keep the virt_boundary_mask setting
-in the uas driver.  It was needed in the first place only for
-handling devices with a block size smaller than the maxpacket size and
-where the host controller was not capable of fully general
-scatter-gather operation (that is, able to merge two SG segments into
-a single USB packet).  But:
-
-	High-speed or slower connections never use a bulk maxpacket
-	value larger than 512;
-
-	The SCSI layer does not handle block devices with a block size
-	smaller than 512 bytes;
-
-	All the host controllers capable of SuperSpeed operation can
-	handle fully general SG;
-
-	Since commit ea44d190764b ("usbip: Implement SG support to
-	vhci-hcd and stub driver") was merged, the USB/IP driver can
-	also handle SG.
-
-Therefore all supported device/controller combinations should be okay
-with no need for any special virt_boundary_mask.  So in order to head
-off potential problems similar to those affecting usb-storage, this
-patch reverts commit 3ae62a42090f.
-
-Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-CC: Oliver Neukum <oneukum@suse.com>
-CC: <stable@vger.kernel.org>
-Acked-by: Christoph Hellwig <hch@lst.de>
-Fixes: 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910231132470.1878-100000@iolanthe.rowland.org
+Reported-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Tested-by: Giuseppe Scrivano <gscrivan@redhat.com>
+Fixes: 4d99ff8f12eb ("fuse: Turn writeback cache on")
+Cc: <stable@vger.kernel.org> # v3.15+
+Signed-off-by: Miklos Szeredi <mszeredi@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/storage/uas.c |   20 --------------------
- 1 file changed, 20 deletions(-)
+ fs/fuse/dir.c |   13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
---- a/drivers/usb/storage/uas.c
-+++ b/drivers/usb/storage/uas.c
-@@ -796,30 +796,10 @@ static int uas_slave_alloc(struct scsi_d
- {
- 	struct uas_dev_info *devinfo =
- 		(struct uas_dev_info *)sdev->host->hostdata;
--	int maxp;
+--- a/fs/fuse/dir.c
++++ b/fs/fuse/dir.c
+@@ -1654,6 +1654,19 @@ int fuse_do_setattr(struct dentry *dentr
+ 	if (attr->ia_valid & ATTR_SIZE)
+ 		is_truncate = true;
  
- 	sdev->hostdata = devinfo;
- 
- 	/*
--	 * We have two requirements here. We must satisfy the requirements
--	 * of the physical HC and the demands of the protocol, as we
--	 * definitely want no additional memory allocation in this path
--	 * ruling out using bounce buffers.
--	 *
--	 * For a transmission on USB to continue we must never send
--	 * a package that is smaller than maxpacket. Hence the length of each
--         * scatterlist element except the last must be divisible by the
--         * Bulk maxpacket value.
--	 * If the HC does not ensure that through SG,
--	 * the upper layer must do that. We must assume nothing
--	 * about the capabilities off the HC, so we use the most
--	 * pessimistic requirement.
--	 */
--
--	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
--	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
--
--	/*
- 	 * The protocol has no requirements on alignment in the strict sense.
- 	 * Controllers may or may not have alignment restrictions.
- 	 * As this is not exported, we use an extremely conservative guess.
++	/* Flush dirty data/metadata before non-truncate SETATTR */
++	if (is_wb && S_ISREG(inode->i_mode) &&
++	    attr->ia_valid &
++			(ATTR_MODE | ATTR_UID | ATTR_GID | ATTR_MTIME_SET |
++			 ATTR_TIMES_SET)) {
++		err = write_inode_now(inode, true);
++		if (err)
++			return err;
++
++		fuse_set_nowrite(inode);
++		fuse_release_nowrite(inode);
++	}
++
+ 	if (is_truncate) {
+ 		fuse_set_nowrite(inode);
+ 		set_bit(FUSE_I_SIZE_UNSTABLE, &fi->state);
 
 
