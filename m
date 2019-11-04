@@ -5,57 +5,49 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE99CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A104CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81CC72084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D572F214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905696;
-	bh=ya2/v1F9e7IBR+AORpHDSRdqid85XSliECmCR3JLtHU=;
+	s=default; t=1572905705;
+	bh=vOxgA07gZhgreIxvC378VR7YjrXYnrjkGDXa/aPtFWM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=u+7V8Nm4zS5NjbjJ68hiFqVZZaU5Xbp20DodJX1xSc+OjG0bzOVYp24sPLMBnXGXt
-	 fc7lrl01Vpmq42M+cFtQB5Wq/PW+i5rRG7TSERyrdG5Av3wlCrcddVON5Z5va5wmQ4
-	 MJHzUQyYEqCwbYHpKEPhFdtmoM25li79rTgxZTHs=
+	b=etptWFIWNKhBPUpOvbpOvKab59PXqO8flArXRHgN6b/M432pLlZtEob2C6/dE4Q+U
+	 TA1sd83aCLIbDfuoPNCxc3un9AaRypr/Hz6grDCPwtvec/p/M67gXjsQpftIEFDOTv
+	 1ejH72/wyYKErCK76zQKJTtGPzs+c7ahf4tCE62Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390195AbfKDWOz (ORCPT
+        id S2390364AbfKDWPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:14:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39176 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:15:04 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38890 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389606AbfKDWG6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:58 -0500
+        id S2390057AbfKDWGr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:47 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F1345214D9;
-        Mon,  4 Nov 2019 22:06:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0782A21D71;
+        Mon,  4 Nov 2019 22:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905217;
-        bh=ya2/v1F9e7IBR+AORpHDSRdqid85XSliECmCR3JLtHU=;
+        s=default; t=1572905206;
+        bh=vOxgA07gZhgreIxvC378VR7YjrXYnrjkGDXa/aPtFWM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=u1Vs5LpR87uBfoqLVvdMIlN7r9z7CyqnlteaERENeD8/FpR64V6BJRWQ+9Cw6LJu5
-         b4mBmpIFJ5ggqfzDmhnk3nVMNt0GttVJTh6oDBrtk2ht9jwQh0u9kqUKjVEYIy+5RV
-         IkUtZtBtnzHTRLFsCHKJdQgiqdI3sz8U4n1Lxs3I=
+        b=r9vTWxXQESaEp6/sZdUIMf90wPGVWRUDqeqF7SvtDRrXxJbF2T7YmYMO1ERYmHljA
+         cc4PDiGNKFY4psvUb4cjXOp4jvXHekG4NIo9bh7nkpIoBt9IlV3hjnUW8e7/LnNded
+         epLRZk0gRaXzu+4gYNQtIamB+GbpF9Gk7JY1VJH4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Jerry Hoemann <jerry.hoemann@hpe.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 069/163] perf/x86/amd: Change/fix NMI latency mitigation to use a timestamp
-Date:   Mon,  4 Nov 2019 22:44:19 +0100
-Message-Id: <20191104212144.927000128@linuxfoundation.org>
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 048/163] serial: 8250_omap: Fix gpio check for auto RTS/CTS
+Date:   Mon,  4 Nov 2019 22:43:58 +0100
+Message-Id: <20191104212143.674151433@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -68,129 +60,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tom Lendacky <thomas.lendacky@amd.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit df4d29732fdad43a51284f826bec3e6ded177540 ]
+[ Upstream commit fc64f7abbef2dae7ee4c94702fb3cf9a2be5431a ]
 
-It turns out that the NMI latency workaround from commit:
+There are two checks to see if the manual gpio is configured, but
+these the check is seeing if the structure is NULL instead it
+should check to see if there are CTS and/or RTS pins defined.
 
-  6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
+This patch uses checks for those individual pins instead of
+checking for the structure itself to restore auto RTS/CTS.
 
-ends up being too conservative and results in the perf NMI handler claiming
-NMIs too easily on AMD hardware when the NMI watchdog is active.
-
-This has an impact, for example, on the hpwdt (HPE watchdog timer) module.
-This module can produce an NMI that is used to reset the system. It
-registers an NMI handler for the NMI_UNKNOWN type and relies on the fact
-that nothing has claimed an NMI so that its handler will be invoked when
-the watchdog device produces an NMI. After the referenced commit, the
-hpwdt module is unable to process its generated NMI if the NMI watchdog is
-active, because the current NMI latency mitigation results in the NMI
-being claimed by the perf NMI handler.
-
-Update the AMD perf NMI latency mitigation workaround to, instead, use a
-window of time. Whenever a PMC is handled in the perf NMI handler, set a
-timestamp which will act as a perf NMI window. Any NMIs arriving within
-that window will be claimed by perf. Anything outside that window will
-not be claimed by perf. The value for the NMI window is set to 100 msecs.
-This is a conservative value that easily covers any NMI latency in the
-hardware. While this still results in a window in which the hpwdt module
-will not receive its NMI, the window is now much, much smaller.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Fixes: 6d3edaae16c6 ("x86/perf/amd: Resolve NMI latency issues for active PMCs")
-Link: https://lkml.kernel.org/r/Message-ID:
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-2-aford173@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/events/amd/core.c | 30 +++++++++++++++++-------------
- 1 file changed, 17 insertions(+), 13 deletions(-)
+ drivers/tty/serial/8250/8250_omap.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
-index e7d35f60d53fc..64c3e70b0556b 100644
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -5,12 +5,14 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
-+#include <linux/jiffies.h>
- #include <asm/apicdef.h>
- #include <asm/nmi.h>
+diff --git a/drivers/tty/serial/8250/8250_omap.c b/drivers/tty/serial/8250/8250_omap.c
+index 3ef65cbd2478a..e4b08077f8757 100644
+--- a/drivers/tty/serial/8250/8250_omap.c
++++ b/drivers/tty/serial/8250/8250_omap.c
+@@ -141,7 +141,7 @@ static void omap8250_set_mctrl(struct uart_port *port, unsigned int mctrl)
  
- #include "../perf_event.h"
+ 	serial8250_do_set_mctrl(port, mctrl);
  
--static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
-+static DEFINE_PER_CPU(unsigned long, perf_nmi_tstamp);
-+static unsigned long perf_nmi_window;
+-	if (!up->gpios) {
++	if (!mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS)) {
+ 		/*
+ 		 * Turn off autoRTS if RTS is lowered and restore autoRTS
+ 		 * setting if RTS is raised
+@@ -456,7 +456,8 @@ static void omap_8250_set_termios(struct uart_port *port,
+ 	up->port.status &= ~(UPSTAT_AUTOCTS | UPSTAT_AUTORTS | UPSTAT_AUTOXOFF);
  
- static __initconst const u64 amd_hw_cache_event_ids
- 				[PERF_COUNT_HW_CACHE_MAX]
-@@ -641,11 +643,12 @@ static void amd_pmu_disable_event(struct perf_event *event)
-  * handler when multiple PMCs are active or PMC overflow while handling some
-  * other source of an NMI.
-  *
-- * Attempt to mitigate this by using the number of active PMCs to determine
-- * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
-- * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
-- * number of active PMCs or 2. The value of 2 is used in case an NMI does not
-- * arrive at the LAPIC in time to be collapsed into an already pending NMI.
-+ * Attempt to mitigate this by creating an NMI window in which un-handled NMIs
-+ * received during this window will be claimed. This prevents extending the
-+ * window past when it is possible that latent NMIs should be received. The
-+ * per-CPU perf_nmi_tstamp will be set to the window end time whenever perf has
-+ * handled a counter. When an un-handled NMI is received, it will be claimed
-+ * only if arriving within that window.
-  */
- static int amd_pmu_handle_irq(struct pt_regs *regs)
- {
-@@ -663,21 +666,19 @@ static int amd_pmu_handle_irq(struct pt_regs *regs)
- 	handled = x86_pmu_handle_irq(regs);
- 
- 	/*
--	 * If a counter was handled, record the number of possible remaining
--	 * NMIs that can occur.
-+	 * If a counter was handled, record a timestamp such that un-handled
-+	 * NMIs will be claimed if arriving within that window.
- 	 */
- 	if (handled) {
--		this_cpu_write(perf_nmi_counter,
--			       min_t(unsigned int, 2, active));
-+		this_cpu_write(perf_nmi_tstamp,
-+			       jiffies + perf_nmi_window);
- 
- 		return handled;
- 	}
- 
--	if (!this_cpu_read(perf_nmi_counter))
-+	if (time_after(jiffies, this_cpu_read(perf_nmi_tstamp)))
- 		return NMI_DONE;
- 
--	this_cpu_dec(perf_nmi_counter);
--
- 	return NMI_HANDLED;
- }
- 
-@@ -909,6 +910,9 @@ static int __init amd_core_pmu_init(void)
- 	if (!boot_cpu_has(X86_FEATURE_PERFCTR_CORE))
- 		return 0;
- 
-+	/* Avoid calulating the value each time in the NMI handler */
-+	perf_nmi_window = msecs_to_jiffies(100);
-+
- 	switch (boot_cpu_data.x86) {
- 	case 0x15:
- 		pr_cont("Fam15h ");
+ 	if (termios->c_cflag & CRTSCTS && up->port.flags & UPF_HARD_FLOW &&
+-	    !up->gpios) {
++	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_RTS) &&
++	    !mctrl_gpio_to_gpiod(up->gpios, UART_GPIO_CTS)) {
+ 		/* Enable AUTOCTS (autoRTS is enabled when RTS is raised) */
+ 		up->port.status |= UPSTAT_AUTOCTS | UPSTAT_AUTORTS;
+ 		priv->efr |= UART_EFR_CTS;
 -- 
 2.20.1
 
