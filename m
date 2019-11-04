@@ -2,80 +2,121 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01B7CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07389CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2EE120578
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCE32217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728631AbfKDKpq (ORCPT
+        id S1728590AbfKDKrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:45:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45088 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727607AbfKDKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:45:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C3D4BB1D5;
-        Mon,  4 Nov 2019 10:45:22 +0000 (UTC)
-From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
-To:     Ralf Baechle <ralf@linux-mips.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        linux-mips@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Christoph Hellwig <hch@lst.de>
-Subject: [net v3 4/5] net: sgi: ioc3-eth: fix setting NETIF_F_HIGHDMA
-Date:   Mon,  4 Nov 2019 11:45:14 +0100
-Message-Id: <20191104104515.7066-4-tbogendoerfer@suse.de>
-X-Mailer: git-send-email 2.16.4
-In-Reply-To: <20191104104515.7066-1-tbogendoerfer@suse.de>
-References: <20191104104515.7066-1-tbogendoerfer@suse.de>
+        Mon, 4 Nov 2019 05:47:22 -0500
+Received: from foss.arm.com ([217.140.110.172]:39554 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727500AbfKDKrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 05:47:22 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8EDEC31F;
+        Mon,  4 Nov 2019 02:47:21 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E82E33F71A;
+        Mon,  4 Nov 2019 02:47:20 -0800 (PST)
+Date:   Mon, 4 Nov 2019 10:47:19 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Dilip Kota <eswara.kota@linux.intel.com>
+Cc:     jingoohan1@gmail.com, gustavo.pimentel@synopsys.com,
+        lorenzo.pieralisi@arm.com, robh@kernel.org,
+        martin.blumenstingl@googlemail.com, linux-pci@vger.kernel.org,
+        hch@infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, andriy.shevchenko@intel.com,
+        cheol.yong.kim@intel.com, chuanhua.lei@linux.intel.com,
+        qi-ming.wu@intel.com
+Subject: Re: [PATCH v4 2/3] dwc: PCI: intel: PCIe RC controller driver
+Message-ID: <20191104104718.GK9723@e119886-lin.cambridge.arm.com>
+References: <cover.1571638827.git.eswara.kota@linux.intel.com>
+ <c46ba3f4187fe53807948b4f10996b89a75c492c.1571638827.git.eswara.kota@linux.intel.com>
+ <20191021130339.GP47056@e119886-lin.cambridge.arm.com>
+ <661f7e9c-a79f-bea6-08d8-4df54f500019@linux.intel.com>
+ <20191025090926.GX47056@e119886-lin.cambridge.arm.com>
+ <6f8b2e72-caa3-30b8-4c76-8ad7bb321ce2@linux.intel.com>
+ <20191101105902.GB9723@e119886-lin.cambridge.arm.com>
+ <ecab7cc2-f4c2-ecc0-7f97-92686db1fd1b@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ecab7cc2-f4c2-ecc0-7f97-92686db1fd1b@linux.intel.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Christoph Hellwig <hch@lst.de>
+On Mon, Nov 04, 2019 at 05:34:54PM +0800, Dilip Kota wrote:
+> 
+> On 11/1/2019 6:59 PM, Andrew Murray wrote:
+> > On Tue, Oct 29, 2019 at 04:59:17PM +0800, Dilip Kota wrote:
+> > > On 10/25/2019 5:09 PM, Andrew Murray wrote:
+> > > > On Tue, Oct 22, 2019 at 05:04:21PM +0800, Dilip Kota wrote:
+> > > > > Hi Andrew Murray,
+> > > > > 
+> > > > > On 10/21/2019 9:03 PM, Andrew Murray wrote:
+> > > > > > On Mon, Oct 21, 2019 at 02:39:19PM +0800, Dilip Kota wrote:
+> > > > > > > +
+> > > > > > > +void dw_pcie_link_set_n_fts(struct dw_pcie *pci, u32 n_fts)
+> > > > > > > +{
+> > > > > > > +	u32 val;
+> > > > > > > +
+> > > > > > > +	val = dw_pcie_readl_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL);
+> > > > > > > +	val &= ~PORT_LOGIC_N_FTS;
+> > > > > > > +	val |= n_fts;
+> > > > > > > +	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+> > > > > > > +}
+> > > > > > I notice that pcie-artpec6.c (artpec6_pcie_set_nfts) also writes the FTS
+> > > > > > and defines a bunch of macros to support this. It doesn't make sense to
+> > > > > > duplicate this there. Therefore I think we need to update pcie-artpec6.c
+> > > > > > to use this new function.
+> > > > > I think we can do in a separate patch after these changes get merged and
+> > > > > keep this patch series for intel PCIe driver and required changes in PCIe
+> > > > > DesignWare framework.
+> > > > The pcie-artpec6.c is a DWC driver as well. So I think we can do all this
+> > > > together. This helps reduce the technical debt that will otherwise build up
+> > > > in duplicated code.
+> > > I agree with you to remove duplicated code, but at this point not sure what
+> > > all drivers has defined FTS configuration.
+> > > Reviewing all other DWC drivers and removing them can be done in one single
+> > > separate patch.
+> > I'm not asking to set up an FTS configuration for all DWC drivers, but instead
+> > to move this helper function you've created to somewhere like pcie-designware.c
+> > and call it from this driver and pcie-artpec6.c.
+> What i mean is, we need to check how many of the current DWC drivers are
+> configuring the FTS
+> and call the helper function.
+> Today i have grep all the DWC based drivers and i see pcie-artpec6.c is the
+> only driver doing FTS configuration.
+> 
+> I will add the helper function call in pcie-artpec6.c in the next patch
+> version.
 
-Set NETIF_F_HIGHDMA together with the NETIF_F_IP_CSUM flag instead of
-letting the second assignment overwrite it.  Probably doesn't matter
-in practice as none of the systems an IOC3 is usually found in has
-highmem to start with.
+Thanks that's very much appreciated.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
----
- drivers/net/ethernet/sgi/ioc3-eth.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Thanks,
 
-diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index dc2e22652b55..1af68826810a 100644
---- a/drivers/net/ethernet/sgi/ioc3-eth.c
-+++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -1192,8 +1192,6 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 		goto out_disable;
- 	}
- 
--	dev->features |= NETIF_F_HIGHDMA;
--
- 	err = pci_request_regions(pdev, "ioc3");
- 	if (err)
- 		goto out_free;
-@@ -1274,7 +1272,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	dev->netdev_ops		= &ioc3_netdev_ops;
- 	dev->ethtool_ops	= &ioc3_ethtool_ops;
- 	dev->hw_features	= NETIF_F_IP_CSUM | NETIF_F_RXCSUM;
--	dev->features		= NETIF_F_IP_CSUM;
-+	dev->features		= NETIF_F_IP_CSUM | NETIF_F_HIGHDMA;
- 
- 	sw_physid1 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID1);
- 	sw_physid2 = ioc3_mdio_read(dev, ip->mii.phy_id, MII_PHYSID2);
--- 
-2.16.4
+Andrew Murray
 
+> 
+> 
+> Regards,
+> Dilip
+> 
+> 
+> > 
+> > Thanks,
+> > 
+> > Andrew Murray
+> > 
+> > > Regards,
+> > > Dilip
