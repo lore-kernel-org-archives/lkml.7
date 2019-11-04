@@ -2,143 +2,190 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5C6ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:34:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6402CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:34:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A3F62080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:34:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA63B2080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:34:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="lpaySFHt";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Duiop+10"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="UQwKNKSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfKDTeJ (ORCPT
+        id S1729635AbfKDTed (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:34:09 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:43880 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbfKDTeJ (ORCPT
+        Mon, 4 Nov 2019 14:34:33 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35360 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729010AbfKDTed (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:34:09 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 34F7360F6D; Mon,  4 Nov 2019 19:34:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572896048;
-        bh=vamSyPnFneWtEfh6IHcJYcXOtMnwFfjQxxj+OCkfymU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lpaySFHthd6UwHbVLaIMwy1dV9eel4wQEgeR1OUxsXRdaSb3h9L4Q0twYg0Zy8iJZ
-         b86hohj2MGpdZYVVm4nGWyZJVGEcqsunWipRByr/QHyt+o0URdu0to04kLwQkSRxYL
-         XHDKJd/6oDD1EjMoF9iSa+ZksRw9nXxL6rV8w8TY=
-Received: from codeaurora.org (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: isaacm@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 3EBD960DA6;
-        Mon,  4 Nov 2019 19:34:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572896046;
-        bh=vamSyPnFneWtEfh6IHcJYcXOtMnwFfjQxxj+OCkfymU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Duiop+10dl9a7uFzxcbbqLq46Z+rvAq2Hf6vpbbFBRimQkBG8t331QBq5IYZj8RTI
-         6hcKhjx+zVGXUAy2DVt0ulZU45h4flw7IH7d1kFS3IeYdoePVyavbVVMMdji7FFdnm
-         BXq/n5MLk4MDgQJAmGmGBNK+KrVLY3jaZtgoQfeI=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 3EBD960DA6
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=isaacm@codeaurora.org
-Date:   Mon, 4 Nov 2019 11:34:00 -0800
-From:   "Isaac J. Manjarres" <isaacm@codeaurora.org>
-To:     Will Deacon <will@kernel.org>
-Cc:     iommu@lists.linux-foundation.org, linux-kernel@vger.kernel.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 7/7] iommu/arm-smmu: Allow building as a module
-Message-ID: <20191104193400.GA24983@codeaurora.org>
-References: <20191030145112.19738-1-will@kernel.org>
- <20191030145112.19738-8-will@kernel.org>
+        Mon, 4 Nov 2019 14:34:33 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z6so15475330otb.2
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:34:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dJyiWygwO7PaAAF+lCbsOZbNEjf6c5RFpg3e51aDY1s=;
+        b=UQwKNKSETHUfngej3ca5qu8vH/tpViAxu1vSuRQ4v7yKRXVLeRKNmUp6a40oLzMEDJ
+         QwOF4aDftrFrZok2yMaCbey3j8gBRBNqhwmK0HpI0nf359KY672zbyQoIaEq6RH71WbF
+         4j+wHs2mBB5TibJ8MMPiP1UB4x9Wwfh3W73sqxRH9RdSMe47rTW4AHLdXoptHFqGeM9+
+         0dK9PrEw+RB0oCgrfZ6QXlZCF70J+UFWAxUXOg7qVO6OjL5Wkc52P4HWHLBPoWOIV+yf
+         V46+kY6zDBZ3+iYGHS+/t1Fo5JQDCbBUh5LHuaNchwWvIJQwkFcD9mRIn97og8H1Qqzc
+         0Ljw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dJyiWygwO7PaAAF+lCbsOZbNEjf6c5RFpg3e51aDY1s=;
+        b=la7I8U4FNfUVZq0EFY7xAUdjJ0QM7EOJWbH6kk3IqdNhNHACAA3L11Lo42hbNgMnkn
+         5OFUgMDrBW7Xr5APdu/nxhBlBucaJZfdZygIftGe9uM8XNfGMvtKmpX1GpZ9iT7JR4uD
+         U6DpuxX7/NP1VIykVd7ZN8E1yxfXQSwvfBF1sbfTLWtJ/XMJpO2Xy2D5cfxU7P+sTGzj
+         1EHgJtn5WOgqRzBVokY5JL6f8dhIOj53iVHqJrLr/B5DUUPBwjG0tYUGgmTpmZxbDBxo
+         +rQvYHhviSFaZ0ff8MbfoYLlcs0e5QYOH7mh8OdmCb+/pQsXcqqF83DFz7cOrib1ZmRd
+         Eb/w==
+X-Gm-Message-State: APjAAAWU6Z2t8iPaAMf00hvf0c7jAY9BAD2XzRYR7TeTjdJugk47/bed
+        3hw2KLyvGUEfwCVuaKbZoNUS2cSus9KNNvYiXWLyDA==
+X-Google-Smtp-Source: APXvYqzfnECunuKfDdkHs+0QNkb1qYFbp5i53fy0YUvT+zOgW8n8eC1JtM8AMZPH6xlICGllfqpfi/D1V5dznq0tzEk=
+X-Received: by 2002:a05:6830:ca:: with SMTP id x10mr18721750oto.221.1572896071138;
+ Mon, 04 Nov 2019 11:34:31 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030145112.19738-8-will@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+References: <20191101214238.78015-1-john.stultz@linaro.org>
+ <20191101214238.78015-3-john.stultz@linaro.org> <20191103161348.GB13344@google.com>
+In-Reply-To: <20191103161348.GB13344@google.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 4 Nov 2019 11:34:19 -0800
+Message-ID: <CALAqxLUhot_nceaw5zpJ7QXcsfHNL8bOV-3MOeKu9c76Tfzx=g@mail.gmail.com>
+Subject: Re: [PATCH v14 2/5] dma-buf: heaps: Add heap helpers
+To:     Sandeep Patil <sspatil@google.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        sspatil+mutt@google.com, "Andrew F . Davis" <afd@ti.com>,
+        Alistair Strachan <astrachan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:51:12PM +0000, Will Deacon wrote:
-> By conditionally dropping support for the legacy binding and exporting
-> the newly introduced 'arm_smmu_impl_init()' function we can allow the
-> ARM SMMU driver to be built as a module.
-> 
-> Signed-off-by: Will Deacon <will@kernel.org>
-> ---
->  drivers/iommu/Kconfig         | 14 ++++++++-
->  drivers/iommu/arm-smmu-impl.c |  6 ++++
->  drivers/iommu/arm-smmu.c      | 54 +++++++++++++++++++++--------------
->  3 files changed, 51 insertions(+), 23 deletions(-)
-> 
-> diff --git a/drivers/iommu/Kconfig b/drivers/iommu/Kconfig
-> index 7583d47fc4d5..02703f51e533 100644
-> --- a/drivers/iommu/Kconfig
-> +++ b/drivers/iommu/Kconfig
-> @@ -350,7 +350,7 @@ config SPAPR_TCE_IOMMU
->  
->  # ARM IOMMU support
->  config ARM_SMMU
-> -	bool "ARM Ltd. System MMU (SMMU) Support"
-> +	tristate "ARM Ltd. System MMU (SMMU) Support"
->  	depends on (ARM64 || ARM) && MMU
->  	select IOMMU_API
->  	select IOMMU_IO_PGTABLE_LPAE
-> @@ -362,6 +362,18 @@ config ARM_SMMU
->  	  Say Y here if your SoC includes an IOMMU device implementing
->  	  the ARM SMMU architecture.
->  
-> +config ARM_SMMU_LEGACY_DT_BINDINGS
-> +	bool "Support the legacy \"mmu-masters\" devicetree bindings"
-> +	depends on ARM_SMMU=y && OF
-> +	help
-> +	  Support for the badly designed and deprecated \"mmu-masters\"
-> +	  devicetree bindings. This allows some DMA masters to attach
-> +	  to the SMMU but does not provide any support via the DMA API.
-> +	  If you're lucky, you might be able to get VFIO up and running.
-> +
-> +	  If you say Y here then you'll make me very sad. Instead, say N
-> +	  and move your firmware to the utopian future that was 2016.
-> +
->  config ARM_SMMU_DISABLE_BYPASS_BY_DEFAULT
->  	bool "Default to disabling bypass on ARM SMMU v1 and v2"
->  	depends on ARM_SMMU
-> diff --git a/drivers/iommu/arm-smmu-impl.c b/drivers/iommu/arm-smmu-impl.c
-> index 5c87a38620c4..2f82d40317d6 100644
-> --- a/drivers/iommu/arm-smmu-impl.c
-> +++ b/drivers/iommu/arm-smmu-impl.c
-> @@ -5,6 +5,7 @@
->  #define pr_fmt(fmt) "arm-smmu: " fmt
->  
->  #include <linux/bitfield.h>
-> +#include <linux/module.h>
->  #include <linux/of.h>
->  
->  #include "arm-smmu.h"
-> @@ -172,3 +173,8 @@ struct arm_smmu_device *arm_smmu_impl_init(struct arm_smmu_device *smmu)
->  
->  	return smmu;
->  }
-> +EXPORT_SYMBOL_GPL(arm_smmu_impl_init);
-> +
-> +MODULE_DESCRIPTION("IOMMU quirks for ARM architected SMMU implementations");
-> +MODULE_AUTHOR("Robin Murphy <robin.murphy@arm.com>");
-> +MODULE_LICENSE("GPL v2");
-Hi Will,
+On Sun, Nov 3, 2019 at 8:13 AM <sspatil@google.com> wrote:
+> On Fri, Nov 01, 2019 at 09:42:35PM +0000, John Stultz wrote:
+> > Add generic helper dmabuf ops for dma heaps, so we can reduce
+> > the amount of duplicative code for the exported dmabufs.
+> >
+> > This code is an evolution of the Android ION implementation, so
+> > thanks to its original authors and maintainters:
+> >   Rebecca Schultz Zavin, Colin Cross, Laura Abbott, and others!
+> >
+> > Cc: Laura Abbott <labbott@redhat.com>
+> > Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > Cc: Sumit Semwal <sumit.semwal@linaro.org>
+> > Cc: Liam Mark <lmark@codeaurora.org>
+> > Cc: Pratik Patel <pratikp@codeaurora.org>
+> > Cc: Brian Starkey <Brian.Starkey@arm.com>
+> > Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
+> > Cc: Sudipto Paul <Sudipto.Paul@arm.com>
+> > Cc: Andrew F. Davis <afd@ti.com>
+> > Cc: Christoph Hellwig <hch@infradead.org>
+> > Cc: Chenbo Feng <fengc@google.com>
+> > Cc: Alistair Strachan <astrachan@google.com>
+> > Cc: Hridya Valsaraju <hridya@google.com>
+> > Cc: Sandeep Patil <sspatil@google.com>
+> > Cc: Hillf Danton <hdanton@sina.com>
+> > Cc: Dave Airlie <airlied@gmail.com>
+> > Cc: dri-devel@lists.freedesktop.org
+> > Reviewed-by: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+> > Reviewed-by: Brian Starkey <brian.starkey@arm.com>
+> > Acked-by: Laura Abbott <labbott@redhat.com>
+> > Tested-by: Ayan Kumar Halder <ayan.halder@arm.com>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+>
+> I have one question and a naming suggestin below (sorry).
+>
+> Acked-by: Sandeep Patil <sspatil@android.com>
 
-A minor comment: I was curious about why arm-smmu.c and arm-smmu-impl.c
-were being compiled as two separate modules, as opposed to combining
-them into one module? The latter approach seemed more appropriate, given
-that arm-smmu-impl doesn't offer much as a module on its own. Thoughts?
+> > +
+> > +static void dma_heap_buffer_vmap_put(struct heap_helper_buffer *buffer)
+> > +{
+> > +     if (!--buffer->vmap_cnt) {
+>
+> nit: just checking here cause I don't know the order in which vmap_get() and
+> vmap_put() is expected to be called from dmabuf, the manual refcounting
+> based map/unmap is ok?
+>
+> I know ion had this for a while and it worked fine over the years, but I
+> don't know if anybody saw any issues with it.
+> > +             vunmap(buffer->vaddr);
+> > +             buffer->vaddr = NULL;
+> > +     }
+> > +}
+> > +
 
---Isaac
+
+
+
+> > +#ifndef _HEAP_HELPERS_H
+> > +#define _HEAP_HELPERS_H
+> > +
+> > +#include <linux/dma-heap.h>
+> > +#include <linux/list.h>
+> > +
+> > +/**
+> > + * struct heap_helper_buffer - helper buffer metadata
+> > + * @heap:            back pointer to the heap the buffer came from
+> > + * @dmabuf:          backing dma-buf for this buffer
+> > + * @size:            size of the buffer
+> > + * @flags:           buffer specific flags
+> nit: Are thee dmabuf flags, or dmabuf_heap specific / allocation related flags?
+
+Good point. They were going to be for the generic flags but as there's
+no supported flags yet, there's no reason to track that in the helper
+code.
+
+I'll drop it
+
+> > + * @priv_virt                pointer to heap specific private value
+> nit: text looks misaligned (or is it my editor?)
+
+Looks ok to me in vim.
+
+
+> > + * @lock             mutext to protect the data in this structure
+> > + * @vmap_cnt         count of vmap references on the buffer
+> > + * @vaddr            vmap'ed virtual address
+> > + * @pagecount                number of pages in the buffer
+> > + * @pages            list of page pointers
+> > + * @attachments              list of device attachments
+> ditto
+> > + *
+> > + * @free             heap callback to free the buffer
+> > + */
+> > +struct heap_helper_buffer {
+> /bikeshed/
+> s/heap_helper_buffer/dma_heap_buffer ?
+>
+> The "heap helper buffer" doesn't really convey what it is.
+
+So its the helper structure that is used with all the helper
+functions. Since other dmabuf heaps don't have to use the helper
+infrastructure, they wouldn't need this structure, so I don't want to
+name it too generically to confuse folks.
+
+thanks
+-john
