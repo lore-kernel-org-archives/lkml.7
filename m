@@ -2,62 +2,56 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 740C6CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23090CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD1C204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E59AA204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:16:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905776;
-	bh=T0CouP6WpoDSSLflItbBgJHRt3Dc+ee9mKxmKruvkOY=;
+	s=default; t=1572905789;
+	bh=FcvIkPlZoo1KYgkGZrbwj5COfkWLmbCCRLPv1vLgQsg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=JVCHrR3ui2Q3WZ/ydFzmq/K6OULuxFNj4rX/z/yDiE7xRNxI67l2m5YCoTte/hAUM
-	 ng2vwbOEI3F6dEHI+n2PrDThfoodgm6P8bL2DhMZeksIaslICw7jiPNo/aTJ2Jr7K6
-	 2Zfb6BGr/ZLdBTaRXzUS8/MqJxjW/xowal/Hd0V4=
+	b=GEYL0GfjM/VJmo0s1W1/4VzanY5Wol6vcZxmwAatBVWpRcqQpOtmAmI/zP5XcaXyL
+	 adrNXPpcZwNO1VzAiwVDAMrPOHCR9y7xap5QxskgDjrdR5lHC+4zMKfHg7i/TWLJpm
+	 VWwCxQSl/490f8rTJknKcXUqylyIQdM0TR9pmiWQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389676AbfKDWE3 (ORCPT
+        id S2390317AbfKDWQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:04:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35012 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:16:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34554 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389655AbfKDWEW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:04:22 -0500
+        id S2388147AbfKDWD7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:03:59 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D9E7205C9;
-        Mon,  4 Nov 2019 22:04:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42760205C9;
+        Mon,  4 Nov 2019 22:03:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905062;
-        bh=T0CouP6WpoDSSLflItbBgJHRt3Dc+ee9mKxmKruvkOY=;
+        s=default; t=1572905038;
+        bh=FcvIkPlZoo1KYgkGZrbwj5COfkWLmbCCRLPv1vLgQsg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7auxa1SrurV5PmmljmNO9HXPy9xNJGK+l1ILFWICsotCd5cSfwcTsTrhTBY/+Whd
-         cgZgFO6FbY4rXWYIRGiiPLRWEXKKCBSFWKZtJcfBRaS2tMtwi4GBa/2Qlz7pTnliQC
-         +D+oFTtHLTg6u+VTs4GJ8c+xpihVDfSKpCbiMHU8=
+        b=U21hsfY+7/ObiK5OyBSpzY7PTTe7MFstq5s5WiL203p6DhXgN5FeulPqKuOZWF0E5
+         rXnabYficoMny9PaLdcDXvwm/Qo65BhknKWbKakTmcO+7B7U4msKfun7X65NrMwuKM
+         2fUAlscjqeFsSim/uXaL4oVwTwDHplVFr422v9j4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: [PATCH 5.3 016/163] perf annotate: Propagate the symbol__annotate() error return
-Date:   Mon,  4 Nov 2019 22:43:26 +0100
-Message-Id: <20191104212141.605663467@linuxfoundation.org>
+        stable@vger.kernel.org, Yihui Zeng <yzeng56@asu.edu>,
+        Dan Carpenter <dan.carpenter@oracle.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>
+Subject: [PATCH 4.19 127/149] s390/cmm: fix information leak in cmm_timeout_handler()
+Date:   Mon,  4 Nov 2019 22:45:20 +0100
+Message-Id: <20191104212145.131774179@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
-References: <20191104212140.046021995@linuxfoundation.org>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
 User-Agent: quilt/0.66
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -67,48 +61,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnaldo Carvalho de Melo <acme@redhat.com>
+From: Yihui ZENG <yzeng56@asu.edu>
 
-[ Upstream commit 211f493b611eef012841f795166c38ec7528738d ]
+commit b8e51a6a9db94bc1fb18ae831b3dab106b5a4b5f upstream.
 
-We were just returning -1 in symbol__annotate() when symbol__annotate()
-failed, propagate its error as it is used later to pass to
-symbol__strerror_disassemble() to present a error message to the user,
-that in some cases were getting:
+The problem is that we were putting the NUL terminator too far:
 
-  "Invalid -1 error code"
+	buf[sizeof(buf) - 1] = '\0';
 
-Fix it to propagate the error.
+If the user input isn't NUL terminated and they haven't initialized the
+whole buffer then it leads to an info leak.  The NUL terminator should
+be:
 
-Reported-by: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: Adrian Hunter <adrian.hunter@intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>,
-Cc: Will Deacon <will@kernel.org>
-Link: https://lkml.kernel.org/n/tip-0tj89rs9g7nbcyd5skadlvuu@git.kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+	buf[len - 1] = '\0';
+
+Signed-off-by: Yihui Zeng <yzeng56@asu.edu>
+Cc: stable@vger.kernel.org
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+[heiko.carstens@de.ibm.com: keep semantics of how *lenp and *ppos are handled]
+Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- tools/perf/util/annotate.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/s390/mm/cmm.c |   12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/perf/util/annotate.c b/tools/perf/util/annotate.c
-index 2dac51e9e4180..ca8b517e38fa8 100644
---- a/tools/perf/util/annotate.c
-+++ b/tools/perf/util/annotate.c
-@@ -2991,7 +2991,7 @@ int symbol__annotate2(struct symbol *sym, struct map *map, struct perf_evsel *ev
+--- a/arch/s390/mm/cmm.c
++++ b/arch/s390/mm/cmm.c
+@@ -298,16 +298,16 @@ static int cmm_timeout_handler(struct ct
+ 	}
  
- out_free_offsets:
- 	zfree(&notes->offsets);
--	return -1;
-+	return err;
+ 	if (write) {
+-		len = *lenp;
+-		if (copy_from_user(buf, buffer,
+-				   len > sizeof(buf) ? sizeof(buf) : len))
++		len = min(*lenp, sizeof(buf));
++		if (copy_from_user(buf, buffer, len))
+ 			return -EFAULT;
+-		buf[sizeof(buf) - 1] = '\0';
++		buf[len - 1] = '\0';
+ 		cmm_skip_blanks(buf, &p);
+ 		nr = simple_strtoul(p, &p, 0);
+ 		cmm_skip_blanks(p, &p);
+ 		seconds = simple_strtoul(p, &p, 0);
+ 		cmm_set_timeout(nr, seconds);
++		*ppos += *lenp;
+ 	} else {
+ 		len = sprintf(buf, "%ld %ld\n",
+ 			      cmm_timeout_pages, cmm_timeout_seconds);
+@@ -315,9 +315,9 @@ static int cmm_timeout_handler(struct ct
+ 			len = *lenp;
+ 		if (copy_to_user(buffer, buf, len))
+ 			return -EFAULT;
++		*lenp = len;
++		*ppos += len;
+ 	}
+-	*lenp = len;
+-	*ppos += len;
+ 	return 0;
  }
  
- #define ANNOTATION__CFG(n) \
--- 
-2.20.1
-
 
 
