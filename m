@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E009DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A3B0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6367214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C31021655
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:48:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904106;
-	bh=jyF5xvHleVqHoDq1jqSXHLNhomG/nNLLQWgXo2emWoQ=;
+	s=default; t=1572904110;
+	bh=5YfsL84lW/rNJVkUOyhps8l0wKXGrBYJqxZNQ+RK7Qw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=RTzP3leU/SrJ8H46E05MJCtsOE0WdGwXwkL15FLgWVXIae6EFqwOaC0w61diUnQoY
-	 TpMlVfjrgMt+iGutnUSTto8Cb5avpVV8x00oBGT68pTCMLSsslIPdC47DWveb0t9ew
-	 +JYJeAxaiYT+et7QLTt1GsyTEDtMRN64Y8IMC7B8=
+	b=NBOHhyyIbyPf/ICgB8+uyprjLAilzp2V7EILiuK/ou0q5WSYVsBjp3ugRpmv5VyFp
+	 JwEP2XP5juTuq+vMQkQpxItBm7YVK31MRL0Qi6AvuhoDMVayV/S2DUxioP3Gp3zaI+
+	 2Vh+kDWx3dM+L7KxrSjUJHXhpHsXmkg8M4r7b99Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730020AbfKDVsZ (ORCPT
+        id S1730036AbfKDVs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:48:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38644 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:48:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38856 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729968AbfKDVsV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:48:21 -0500
+        id S1729968AbfKDVs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:48:26 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D1FB7214E0;
-        Mon,  4 Nov 2019 21:48:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B2DE520B7C;
+        Mon,  4 Nov 2019 21:48:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904101;
-        bh=jyF5xvHleVqHoDq1jqSXHLNhomG/nNLLQWgXo2emWoQ=;
+        s=default; t=1572904106;
+        bh=5YfsL84lW/rNJVkUOyhps8l0wKXGrBYJqxZNQ+RK7Qw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EkLHJhvSQDZOLDj9fC5vtFsRgMKL8ZP7Xw3O9xY26XT8bgUv46M7qKKkCZsZ8AUw0
-         y6U5SEoZSrufppK2l8Raz2ywXze9VwckeGPdydUgLkiWRE9ExvKRC34eBFmRNPpetB
-         p6M43hUslHV4RaKj2MiwhtRCXXDAEPdFVB+h7uZQ=
+        b=ObRKM8K8ql9X8RhzfGvcsoMdJhWnsNugbsbZYyQkPoilyqhK5gIZwevDZ7gZyGoZS
+         YEQzZcVyX62XAgVvUZ7yQ3pzCRiEmlmEBL4nfjawRGrc781xmUNwWEEhaxpembh9nb
+         kYPAVEgkS58hwPpgyOdc+2Ogy21bybSTOGBGKN2Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
-        Johan Hovold <johan@kernel.org>,
+        stable@vger.kernel.org, Hui Peng <benquike@gmail.com>,
+        Mathias Payer <mathias.payer@nebelwelt.net>,
+        Kalle Valo <kvalo@codeaurora.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.4 22/46] USB: legousbtower: fix a signedness bug in tower_probe()
-Date:   Mon,  4 Nov 2019 22:44:53 +0100
-Message-Id: <20191104211851.842474634@linuxfoundation.org>
+Subject: [PATCH 4.4 24/46] ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
+Date:   Mon,  4 Nov 2019 22:44:55 +0100
+Message-Id: <20191104211855.943825731@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -60,34 +61,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dan Carpenter <dan.carpenter@oracle.com>
+From: Hui Peng <benquike@gmail.com>
 
-[ Upstream commit fd47a417e75e2506eb3672ae569b1c87e3774155 ]
+[ Upstream commit 39d170b3cb62ba98567f5c4f40c27b5864b304e5 ]
 
-The problem is that sizeof() is unsigned long so negative error codes
-are type promoted to high positive values and the condition becomes
-false.
+The `ar_usb` field of `ath6kl_usb_pipe_usb_pipe` objects
+are initialized to point to the containing `ath6kl_usb` object
+according to endpoint descriptors read from the device side, as shown
+below in `ath6kl_usb_setup_pipe_resources`:
 
-Fixes: 1d427be4a39d ("USB: legousbtower: fix slab info leak at probe")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
-Acked-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191011141115.GA4521@mwanda
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+for (i = 0; i < iface_desc->desc.bNumEndpoints; ++i) {
+	endpoint = &iface_desc->endpoint[i].desc;
+
+	// get the address from endpoint descriptor
+	pipe_num = ath6kl_usb_get_logical_pipe_num(ar_usb,
+						endpoint->bEndpointAddress,
+						&urbcount);
+	......
+	// select the pipe object
+	pipe = &ar_usb->pipes[pipe_num];
+
+	// initialize the ar_usb field
+	pipe->ar_usb = ar_usb;
+}
+
+The driver assumes that the addresses reported in endpoint
+descriptors from device side  to be complete. If a device is
+malicious and does not report complete addresses, it may trigger
+NULL-ptr-deref `ath6kl_usb_alloc_urb_from_pipe` and
+`ath6kl_usb_free_urb_to_pipe`.
+
+This patch fixes the bug by preventing potential NULL-ptr-deref
+(CVE-2019-15098).
+
+Signed-off-by: Hui Peng <benquike@gmail.com>
+Reported-by: Hui Peng <benquike@gmail.com>
+Reported-by: Mathias Payer <mathias.payer@nebelwelt.net>
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/usb/misc/legousbtower.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath6kl/usb.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/drivers/usb/misc/legousbtower.c
-+++ b/drivers/usb/misc/legousbtower.c
-@@ -910,7 +910,7 @@ static int tower_probe (struct usb_inter
- 				  get_version_reply,
- 				  sizeof(*get_version_reply),
- 				  1000);
--	if (result < sizeof(*get_version_reply)) {
-+	if (result != sizeof(*get_version_reply)) {
- 		if (result >= 0)
- 			result = -EIO;
- 		dev_err(idev, "get version request failed: %d\n", result);
+--- a/drivers/net/wireless/ath/ath6kl/usb.c
++++ b/drivers/net/wireless/ath/ath6kl/usb.c
+@@ -132,6 +132,10 @@ ath6kl_usb_alloc_urb_from_pipe(struct at
+ 	struct ath6kl_urb_context *urb_context = NULL;
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return NULL;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	if (!list_empty(&pipe->urb_list_head)) {
+ 		urb_context =
+@@ -150,6 +154,10 @@ static void ath6kl_usb_free_urb_to_pipe(
+ {
+ 	unsigned long flags;
+ 
++	/* bail if this pipe is not initialized */
++	if (!pipe->ar_usb)
++		return;
++
+ 	spin_lock_irqsave(&pipe->ar_usb->cs_lock, flags);
+ 	pipe->urb_cnt++;
+ 
 
 
