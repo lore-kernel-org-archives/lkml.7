@@ -2,340 +2,117 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3316CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C57CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:18:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7018821E6F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17BB021D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:18:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728526AbfKDLQW (ORCPT
+        id S1728537AbfKDLSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:16:22 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:61339 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727766AbfKDLQW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:16:22 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 65487ec2fdf1466b; Mon, 4 Nov 2019 12:16:17 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: [PATCH] cpuidle: Consolidate disabled state checks
-Date:   Mon, 04 Nov 2019 12:16:17 +0100
-Message-ID: <2717750.dCEzHT3DVQ@kreacher>
+        Mon, 4 Nov 2019 06:18:14 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:51002 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726526AbfKDLSO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:18:14 -0500
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B5112C057EC0
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 11:18:13 +0000 (UTC)
+Received: by mail-wr1-f70.google.com with SMTP id e25so10296893wra.9
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 03:18:13 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tjh9olQgahzwzj0M0Iuuf9b2PFhQNU5RKbl2/F2MSnE=;
+        b=pqiJYEkFKFd4ksLHNSKJ3oBZOstJ083YSaJCCaydlKXxCtixQ8szE8J8XGL6wg49M2
+         D31ZS/2iVFyGwXrW81/01DfbL5mPrdrPshesT+ICR34dnr57RNw1vfDiwVjbddFZyJ5S
+         nciBKi2+zH4TRLQpwV+aG60uxBz0RiJMYTQ4eFVOgboWz8QXm/6rzIF+1+4PFRgMxeU2
+         BdF6pPhXWwe3nkQC4wXPrM5Fry8yVEfxrwq5Up33+3NrUkN4GJLSGv7JYj3eRJITjUZP
+         H8LiSylgbiRP2PftUSDBQWCIEjSixIQ+hDruwWPc+h+V/lRonec1aA5QgoHaxScTzAEO
+         5wxw==
+X-Gm-Message-State: APjAAAXXuF2/nNk3BZl7S13v+e1pQy6Efm4/J3bp6S145+SPLNZtYKmw
+        qFS5UzZIERHHoFNm7sU0E3m5YYpzOH5JHVy9ZKr5HZf8h7gCGffcP0wPDKgx/iIQMbiacZ7Q9H8
+        zXB9pG1TQXwnSVqVis6PvjWwC
+X-Received: by 2002:a1c:9a81:: with SMTP id c123mr21333532wme.118.1572866292237;
+        Mon, 04 Nov 2019 03:18:12 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy7tIFTFPZwnaW75wp0LpGbyQrIIz5Dg2nZLh2pakGkHJ7adbfMTbGN+0kwlhpqk4p3mdOSdA==
+X-Received: by 2002:a1c:9a81:: with SMTP id c123mr21333495wme.118.1572866291895;
+        Mon, 04 Nov 2019 03:18:11 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
+        by smtp.gmail.com with ESMTPSA id q9sm9962059wru.83.2019.11.04.03.18.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2019 03:18:11 -0800 (PST)
+Subject: Re: [PATCH 2/2] KVM: Fix rcu splat if vm creation fails
+To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
+ <1572848879-21011-2-git-send-email-wanpengli@tencent.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <c32d632b-8fb0-f7c6-4937-07c30769b924@redhat.com>
+Date:   Mon, 4 Nov 2019 12:18:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1572848879-21011-2-git-send-email-wanpengli@tencent.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 04/11/19 07:27, Wanpeng Li wrote:
+> From: Wanpeng Li <wanpengli@tencent.com>
+> 
+> Reported by syzkaller:
+> 
+>    =============================
+>    WARNING: suspicious RCU usage
+>    -----------------------------
+>    ./include/linux/kvm_host.h:536 suspicious rcu_dereference_check() usage!
+>    
+>    other info that might help us debug this:
+> 
+>    rcu_scheduler_active = 2, debug_locks = 1
+>    no locks held by repro_11/12688.
+>     
+>    stack backtrace:
+>    Call Trace:
+>     dump_stack+0x7d/0xc5
+>     lockdep_rcu_suspicious+0x123/0x170
+>     kvm_dev_ioctl+0x9a9/0x1260 [kvm]
+>     do_vfs_ioctl+0x1a1/0xfb0
+>     ksys_ioctl+0x6d/0x80
+>     __x64_sys_ioctl+0x73/0xb0
+>     do_syscall_64+0x108/0xaa0
+>     entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> 
+> Commit a97b0e773e4 (kvm: call kvm_arch_destroy_vm if vm creation fails)
+> sets users_count to 1 before kvm_arch_init_vm(), however, if kvm_arch_init_vm()
+> fails, we need to dec this count. Or, we can move the sets refcount after 
+> kvm_arch_init_vm().
 
-There are two reasons why CPU idle states may be disabled: either
-because the driver has disabled them or because they have been
-disabled by user space via sysfs.
+I don't understand this one, hasn't
 
-In the former case, the state's "disabled" flag is set once during
-the initialization of the driver and it is never cleared later (it
-is read-only effectively).  In the latter case, the "disable" field
-of the given state's cpuidle_state_usage struct is set and it may be
-changed via sysfs.  Thus checking whether or not an idle state has
-been disabled involves reading these two flags every time.
+        WARN_ON_ONCE(!refcount_dec_and_test(&kvm->users_count));
 
-In order to avoid the additional check of the state's "disabled" flag
-(which is effectively read-only anyway), use the value of it at the
-init time to set a (new) flag in the "disable" field of that state's
-cpuidle_state_usage structure and use the sysfs interface to
-manipulate another (new) flag in it.  This way the state is disabled
-whenever the "disable" field of its cpuidle_state_usage structure is
-nonzero, whatever the reason, and it is the only place to look into
-to check whether or not the state has been disabled.
+decreased the conut already?  With your patch the refcount would then
+underflow.
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
-
-Changes since RFC:
- - Make show_disable_state() only show the "user" bit (for compatibility with
-   the existing behavior).
- - Add a tag from Daniel.
-
----
- drivers/cpuidle/cpuidle-powernv.c  |    7 +----
- drivers/cpuidle/cpuidle.c          |   24 +++++++++--------
- drivers/cpuidle/governors/ladder.c |    4 --
- drivers/cpuidle/governors/menu.c   |    8 ++---
- drivers/cpuidle/governors/teo.c    |    5 +--
- drivers/cpuidle/sysfs.c            |   51 +++++++++++++++++++++----------------
- include/linux/cpuidle.h            |    3 ++
- 7 files changed, 54 insertions(+), 48 deletions(-)
-
-Index: linux-pm/drivers/cpuidle/cpuidle.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/cpuidle.c
-+++ linux-pm/drivers/cpuidle/cpuidle.c
-@@ -84,12 +84,12 @@ static int find_deepest_state(struct cpu
- 
- 	for (i = 1; i < drv->state_count; i++) {
- 		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
- 
--		if (s->disabled || su->disable || s->exit_latency <= latency_req
--		    || s->exit_latency > max_latency
--		    || (s->flags & forbidden_flags)
--		    || (s2idle && !s->enter_s2idle))
-+		if (dev->states_usage[i].disable ||
-+		    s->exit_latency <= latency_req ||
-+		    s->exit_latency > max_latency ||
-+		    (s->flags & forbidden_flags) ||
-+		    (s2idle && !s->enter_s2idle))
- 			continue;
- 
- 		latency_req = s->exit_latency;
-@@ -265,8 +265,7 @@ int cpuidle_enter_state(struct cpuidle_d
- 
- 		if (diff < drv->states[entered_state].target_residency) {
- 			for (i = entered_state - 1; i >= 0; i--) {
--				if (drv->states[i].disabled ||
--				    dev->states_usage[i].disable)
-+				if (dev->states_usage[i].disable)
- 					continue;
- 
- 				/* Shallower states are enabled, so update. */
-@@ -275,8 +274,7 @@ int cpuidle_enter_state(struct cpuidle_d
- 			}
- 		} else if (diff > delay) {
- 			for (i = entered_state + 1; i < drv->state_count; i++) {
--				if (drv->states[i].disabled ||
--				    dev->states_usage[i].disable)
-+				if (dev->states_usage[i].disable)
- 					continue;
- 
- 				/*
-@@ -380,7 +378,7 @@ u64 cpuidle_poll_time(struct cpuidle_dri
- 
- 	limit_ns = TICK_NSEC;
- 	for (i = 1; i < drv->state_count; i++) {
--		if (drv->states[i].disabled || dev->states_usage[i].disable)
-+		if (dev->states_usage[i].disable)
- 			continue;
- 
- 		limit_ns = (u64)drv->states[i].target_residency * NSEC_PER_USEC;
-@@ -567,12 +565,16 @@ static void __cpuidle_device_init(struct
-  */
- static int __cpuidle_register_device(struct cpuidle_device *dev)
- {
--	int ret;
- 	struct cpuidle_driver *drv = cpuidle_get_cpu_driver(dev);
-+	int i, ret;
- 
- 	if (!try_module_get(drv->owner))
- 		return -EINVAL;
- 
-+	for (i = 0; i < drv->state_count; i++)
-+		if (drv->states[i].disabled)
-+			dev->states_usage[i].disable |= CPUIDLE_STATE_DISABLED_BY_DRIVER;
-+
- 	per_cpu(cpuidle_devices, dev->cpu) = dev;
- 	list_add(&dev->device_list, &cpuidle_detected_devices);
- 
-Index: linux-pm/drivers/cpuidle/sysfs.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/sysfs.c
-+++ linux-pm/drivers/cpuidle/sysfs.c
-@@ -255,25 +255,6 @@ static ssize_t show_state_##_name(struct
- 	return sprintf(buf, "%u\n", state->_name);\
- }
- 
--#define define_store_state_ull_function(_name) \
--static ssize_t store_state_##_name(struct cpuidle_state *state, \
--				   struct cpuidle_state_usage *state_usage, \
--				   const char *buf, size_t size)	\
--{ \
--	unsigned long long value; \
--	int err; \
--	if (!capable(CAP_SYS_ADMIN)) \
--		return -EPERM; \
--	err = kstrtoull(buf, 0, &value); \
--	if (err) \
--		return err; \
--	if (value) \
--		state_usage->_name = 1; \
--	else \
--		state_usage->_name = 0; \
--	return size; \
--}
--
- #define define_show_state_ull_function(_name) \
- static ssize_t show_state_##_name(struct cpuidle_state *state, \
- 				  struct cpuidle_state_usage *state_usage, \
-@@ -299,11 +280,39 @@ define_show_state_ull_function(usage)
- define_show_state_ull_function(time)
- define_show_state_str_function(name)
- define_show_state_str_function(desc)
--define_show_state_ull_function(disable)
--define_store_state_ull_function(disable)
- define_show_state_ull_function(above)
- define_show_state_ull_function(below)
- 
-+static ssize_t show_state_disable(struct cpuidle_state *state,
-+				  struct cpuidle_state_usage *state_usage,
-+				  char *buf)
-+{
-+	return sprintf(buf, "%llu\n",
-+		       state_usage->disable & CPUIDLE_STATE_DISABLED_BY_USER);
-+}
-+
-+static ssize_t store_state_disable(struct cpuidle_state *state,
-+				   struct cpuidle_state_usage *state_usage,
-+				   const char *buf, size_t size)
-+{
-+	unsigned int value;
-+	int err;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EPERM;
-+
-+	err = kstrtouint(buf, 0, &value);
-+	if (err)
-+		return err;
-+
-+	if (value)
-+		state_usage->disable |= CPUIDLE_STATE_DISABLED_BY_USER;
-+	else
-+		state_usage->disable &= ~CPUIDLE_STATE_DISABLED_BY_USER;
-+
-+	return size;
-+}
-+
- define_one_state_ro(name, show_state_name);
- define_one_state_ro(desc, show_state_desc);
- define_one_state_ro(latency, show_state_exit_latency);
-Index: linux-pm/include/linux/cpuidle.h
-===================================================================
---- linux-pm.orig/include/linux/cpuidle.h
-+++ linux-pm/include/linux/cpuidle.h
-@@ -29,6 +29,9 @@ struct cpuidle_driver;
-  * CPUIDLE DEVICE INTERFACE *
-  ****************************/
- 
-+#define CPUIDLE_STATE_DISABLED_BY_USER		BIT(0)
-+#define CPUIDLE_STATE_DISABLED_BY_DRIVER	BIT(1)
-+
- struct cpuidle_state_usage {
- 	unsigned long long	disable;
- 	unsigned long long	usage;
-Index: linux-pm/drivers/cpuidle/governors/menu.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/menu.c
-+++ linux-pm/drivers/cpuidle/governors/menu.c
-@@ -298,7 +298,7 @@ static int menu_select(struct cpuidle_dr
- 	if (unlikely(drv->state_count <= 1 || latency_req == 0) ||
- 	    ((data->next_timer_us < drv->states[1].target_residency ||
- 	      latency_req < drv->states[1].exit_latency) &&
--	     !drv->states[0].disabled && !dev->states_usage[0].disable)) {
-+	     !dev->states_usage[0].disable)) {
- 		/*
- 		 * In this case state[0] will be used no matter what, so return
- 		 * it right away and keep the tick running if state[0] is a
-@@ -349,9 +349,8 @@ static int menu_select(struct cpuidle_dr
- 	idx = -1;
- 	for (i = 0; i < drv->state_count; i++) {
- 		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
- 
--		if (s->disabled || su->disable)
-+		if (dev->states_usage[i].disable)
- 			continue;
- 
- 		if (idx == -1)
-@@ -422,8 +421,7 @@ static int menu_select(struct cpuidle_dr
- 			 * tick, so try to correct that.
- 			 */
- 			for (i = idx - 1; i >= 0; i--) {
--				if (drv->states[i].disabled ||
--				    dev->states_usage[i].disable)
-+				if (dev->states_usage[i].disable)
- 					continue;
- 
- 				idx = i;
-Index: linux-pm/drivers/cpuidle/governors/teo.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/teo.c
-+++ linux-pm/drivers/cpuidle/governors/teo.c
-@@ -212,7 +212,7 @@ static int teo_find_shallower_state(stru
- 	int i;
- 
- 	for (i = state_idx - 1; i >= 0; i--) {
--		if (drv->states[i].disabled || dev->states_usage[i].disable)
-+		if (dev->states_usage[i].disable)
- 			continue;
- 
- 		state_idx = i;
-@@ -254,9 +254,8 @@ static int teo_select(struct cpuidle_dri
- 
- 	for (i = 0; i < drv->state_count; i++) {
- 		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
- 
--		if (s->disabled || su->disable) {
-+		if (dev->states_usage[i].disable) {
- 			/*
- 			 * If the "early hits" metric of a disabled state is
- 			 * greater than the current maximum, it should be taken
-Index: linux-pm/drivers/cpuidle/governors/ladder.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/ladder.c
-+++ linux-pm/drivers/cpuidle/governors/ladder.c
-@@ -84,7 +84,6 @@ static int ladder_select_state(struct cp
- 
- 	/* consider promotion */
- 	if (last_idx < drv->state_count - 1 &&
--	    !drv->states[last_idx + 1].disabled &&
- 	    !dev->states_usage[last_idx + 1].disable &&
- 	    last_residency > last_state->threshold.promotion_time &&
- 	    drv->states[last_idx + 1].exit_latency <= latency_req) {
-@@ -98,8 +97,7 @@ static int ladder_select_state(struct cp
- 
- 	/* consider demotion */
- 	if (last_idx > first_idx &&
--	    (drv->states[last_idx].disabled ||
--	    dev->states_usage[last_idx].disable ||
-+	    (dev->states_usage[last_idx].disable ||
- 	    drv->states[last_idx].exit_latency > latency_req)) {
- 		int i;
- 
-Index: linux-pm/drivers/cpuidle/cpuidle-powernv.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/cpuidle-powernv.c
-+++ linux-pm/drivers/cpuidle/cpuidle-powernv.c
-@@ -56,13 +56,10 @@ static u64 get_snooze_timeout(struct cpu
- 		return default_snooze_timeout;
- 
- 	for (i = index + 1; i < drv->state_count; i++) {
--		struct cpuidle_state *s = &drv->states[i];
--		struct cpuidle_state_usage *su = &dev->states_usage[i];
--
--		if (s->disabled || su->disable)
-+		if (dev->states_usage[i].disable)
- 			continue;
- 
--		return s->target_residency * tb_ticks_per_usec;
-+		return drv->states[i].target_residency * tb_ticks_per_usec;
- 	}
- 
- 	return default_snooze_timeout;
-
-
-
+Paolo
