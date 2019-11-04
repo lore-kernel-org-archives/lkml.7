@@ -2,199 +2,100 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7FA3CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2CF0CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41C220650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lzdhgMls"
+	by mail.kernel.org (Postfix) with ESMTP id 8B64320650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572905968;
+	bh=Ehrg5XgGuNFqkKHJPJTzn6hfByC9BDvQYGD1d5MwaD4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=WrleUxAR7Z/avP93P7D7TYPApendJUuKW0olZmV2PgJoWHReNWKj1Bqzb0Rwi0nuF
+	 I+KSFhSwkkV3Ud4XkKPA3J3D5W0KJpMltq+F+mOFw4nEDjoScdrkDLcSaz+3VpmVmY
+	 NmoiUH1gIrgytcmgG7vZ6J/feefVgzHjQkjLmuf8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389390AbfKDWTY (ORCPT
+        id S2388953AbfKDWBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:24 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:39562 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388964AbfKDWBK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:10 -0500
-Received: by mail-lj1-f196.google.com with SMTP id y3so19415472ljj.6;
-        Mon, 04 Nov 2019 14:01:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=z9+CHMZoGGQ0kyLUVsXDA/Tuh9oFzpRRT79bF9HX1WM=;
-        b=lzdhgMlslFq88r285yeohrSBNwz0mZz4md7IYZEAyWOfJc+0BOETETJaNikVjB8roy
-         IMOPf+0ygt/ubO3DjmC+apNhJMrpi5kXCbJ56BNAdSvKD3UWkx2Bvql/58JjEgvudsBY
-         wQ1lUQlrPXMlS21gcygP1DDkIk6ZL/n3jT8Q/ZHCQ9WKJDCRyj5RG0MnAvv+yram/SNi
-         QhY4xhwjl/7ebsXnAOC9QLlgKyaNXuqh2c/fsZzvQ8ifWjjiY1MIVymSBeWdQ98rJXmr
-         spIJTz82MyD9ce+ntGG5cOyuwQPnv5/27LRuZ/YcZNOkgUy4fNffgD6eLdB5c2JERwQW
-         5G+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=z9+CHMZoGGQ0kyLUVsXDA/Tuh9oFzpRRT79bF9HX1WM=;
-        b=GLXOHh9K9O1Ff5Htp3954efiaslMnJehTrGL2nkucm0tqPl9GXoSP5sxJ193giucAF
-         8rzgS2zraEbn0t5JRjChZvMIc+m8pfmaJKR6aAtL3ve+418gUuT9Ac+nMVSr9Wg4ftcn
-         mbxtepWEScBg0h6IzBK68KcJYjeQhu+DiyJ3FVGqHK+t14aiAGZQk65U0FDxLZUlJiO7
-         yeMCmFEm79lWQ227eqe8newJAo7pmcmqe+/MwfjKGnsG4Tl9osjRya2ewwPW7MuaO7L5
-         OgOZOQ1RsTApjlCCS80yoDP4pEw4q08b4QqoclctEf8VfmRlbJ7R7ulHfEJnQUk7Gjch
-         +pUA==
-X-Gm-Message-State: APjAAAVNXInm7bGs6ii+1QWrZ94ksM2r41gRBWQ4ILsy3wrgJb3mFLxp
-        k+mAc4IcETDft1kAYN+hyYc=
-X-Google-Smtp-Source: APXvYqzY6mre08rYa4mbbMCq9jRRTThhJNVYu3dpnIW9ndgbbH9qrwSEqU3nSH70Yx3Ge3a2W+RIVw==
-X-Received: by 2002:a05:651c:87:: with SMTP id 7mr192095ljq.20.1572904867264;
-        Mon, 04 Nov 2019 14:01:07 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:06 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 08/19] PM / devfreq: tegra30: Move clk-notifier's registration to governor's start
-Date:   Tue,  5 Nov 2019 00:56:06 +0300
-Message-Id: <20191104215617.25544-9-digetx@gmail.com>
+        Mon, 4 Nov 2019 17:01:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58754 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388596AbfKDWAv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:51 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 974132084D;
+        Mon,  4 Nov 2019 22:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904851;
+        bh=Ehrg5XgGuNFqkKHJPJTzn6hfByC9BDvQYGD1d5MwaD4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=JQ0xkyK+tCDAwBwuS7qz5GwktxycUtfbnpeVRikRX3oQ9AgbPCjCpfITj+VLo4esC
+         ivzx97KmriZLNJWAJnfv7K+gYDRMpXiNTJRjQQMxoHRKMt/DDXHPwVIMa++pV9Qwrc
+         Om9vSQcxOnu3MjLJbBfCqanh4cbraLQQU45dLJhs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Navid Emamdoost <navid.emamdoost@gmail.com>,
+        Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 094/149] iio: imu: adis16400: release allocated memory on failure
+Date:   Mon,  4 Nov 2019 22:44:47 +0100
+Message-Id: <20191104212143.142234086@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no point in receiving of the notifications while governor is
-stopped, let's keep them disabled like we do for the CPU freq-change
-notifications. This also fixes a potential use-after-free bug if
-notification happens after device's removal.
+From: Navid Emamdoost <navid.emamdoost@gmail.com>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit ab612b1daf415b62c58e130cb3d0f30b255a14d0 ]
+
+In adis_update_scan_mode, if allocation for adis->buffer fails,
+previously allocated adis->xfer needs to be released.
+
+Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
+Reviewed-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 39 ++++++++++++++++++-------------
- 1 file changed, 23 insertions(+), 16 deletions(-)
+ drivers/iio/imu/adis_buffer.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 2d720e7e2236..6960d8ba0577 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -514,6 +514,21 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
- 	actmon_writel(tegra, ACTMON_SAMPLING_PERIOD - 1,
- 		      ACTMON_GLB_PERIOD_CTRL);
+diff --git a/drivers/iio/imu/adis_buffer.c b/drivers/iio/imu/adis_buffer.c
+index 76643c5571aa8..e59d0438de732 100644
+--- a/drivers/iio/imu/adis_buffer.c
++++ b/drivers/iio/imu/adis_buffer.c
+@@ -39,8 +39,11 @@ int adis_update_scan_mode(struct iio_dev *indio_dev,
+ 		return -ENOMEM;
  
-+	/*
-+	 * CLK notifications are needed in order to reconfigure the upper
-+	 * consecutive watermark in accordance to the actual clock rate
-+	 * to avoid unnecessary upper interrupts.
-+	 */
-+	err = clk_notifier_register(tegra->emc_clock,
-+				    &tegra->clk_rate_change_nb);
-+	if (err) {
-+		dev_err(tegra->devfreq->dev.parent,
-+			"Failed to register rate change notifier\n");
-+		return err;
+ 	adis->buffer = kcalloc(indio_dev->scan_bytes, 2, GFP_KERNEL);
+-	if (!adis->buffer)
++	if (!adis->buffer) {
++		kfree(adis->xfer);
++		adis->xfer = NULL;
+ 		return -ENOMEM;
 +	}
-+
-+	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
-+
- 	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
- 		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
  
-@@ -539,6 +554,8 @@ static int tegra_actmon_start(struct tegra_devfreq *tegra)
- err_stop:
- 	tegra_actmon_stop_devices(tegra);
- 
-+	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
-+
- 	return err;
- }
- 
-@@ -552,6 +569,8 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
- 	cancel_delayed_work_sync(&tegra->cpufreq_update_work);
- 
- 	tegra_actmon_stop_devices(tegra);
-+
-+	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
- }
- 
- static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
-@@ -768,7 +787,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return rate;
- 	}
- 
--	tegra->cur_freq = clk_get_rate(tegra->emc_clock) / KHZ;
- 	tegra->max_freq = rate / KHZ;
- 
- 	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
-@@ -796,27 +814,20 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, tegra);
- 
-+	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
- 	tegra->cpu_rate_change_nb.notifier_call = tegra_actmon_cpu_notify_cb;
- 
- 	INIT_DELAYED_WORK(&tegra->cpufreq_update_work,
- 			  tegra_actmon_delayed_update);
- 
--	tegra->clk_rate_change_nb.notifier_call = tegra_actmon_clk_notify_cb;
--	err = clk_notifier_register(tegra->emc_clock,
--				    &tegra->clk_rate_change_nb);
--	if (err) {
--		dev_err(&pdev->dev,
--			"Failed to register rate change notifier\n");
--		goto remove_opps;
--	}
--
- 	err = devfreq_add_governor(&tegra_devfreq_governor);
- 	if (err) {
- 		dev_err(&pdev->dev, "Failed to add governor: %d\n", err);
--		goto unreg_notifier;
-+		goto remove_opps;
- 	}
- 
--	tegra_devfreq_profile.initial_freq = tegra->cur_freq;
-+	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-+	tegra_devfreq_profile.initial_freq /= KHZ;
- 
- 	devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
- 				     "tegra_actmon", NULL);
-@@ -830,9 +841,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- remove_governor:
- 	devfreq_remove_governor(&tegra_devfreq_governor);
- 
--unreg_notifier:
--	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
--
- remove_opps:
- 	dev_pm_opp_remove_all_dynamic(&pdev->dev);
- 
-@@ -849,7 +857,6 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
- 	devfreq_remove_device(tegra->devfreq);
- 	devfreq_remove_governor(&tegra_devfreq_governor);
- 
--	clk_notifier_unregister(tegra->emc_clock, &tegra->clk_rate_change_nb);
- 	dev_pm_opp_remove_all_dynamic(&pdev->dev);
- 
- 	reset_control_reset(tegra->reset);
+ 	rx = adis->buffer;
+ 	tx = rx + scan_count;
 -- 
-2.23.0
+2.20.1
+
+
 
