@@ -2,127 +2,130 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66584CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 726FFCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36D6F204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WlvVqbk/"
+	by mail.kernel.org (Postfix) with ESMTP id 4605D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:19:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572905991;
+	bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=YZ+N9/d1YE0cldb48R+wGLguvHFtTkP8WGZyuxzuePdHBeH0Tzy+M5dwFlghwO+Jx
+	 N/8PoT/N6blwcyyIQFM3U8a2hsVHcWbbUqN98ofqQAC0RkO908jVeCq3Be/WMJRbJF
+	 rOV1yeaRTvHVvMaOMQPHz692KRi2g2SqO9YfobhM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390374AbfKDWTj (ORCPT
+        id S2389354AbfKDWTt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:19:39 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:34811 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388612AbfKDWBC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:02 -0500
-Received: by mail-lj1-f196.google.com with SMTP id 139so19446965ljf.1;
-        Mon, 04 Nov 2019 14:01:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=ppdzoc/V97ChcXO7v2Rn6eiJN21LngJ2PFR09uQ6kL0=;
-        b=WlvVqbk/liqG+K0UazXBD82hDz7hN4WqmsdFdZrNXEqvEEqYJQBRhIPdnXeBM1bgas
-         kGInSmGqK/nzGxfsyHmJ1SE0m5t+xOCcaORqijgtWAVPx9f9AqLqoXY5K0rqPN/QrS69
-         ScLGhO9Xs6XMldR0q9HYnUnIjQQYNWSyt+qfWC33su0WeNtcW9SXx03TdgPEoQhKSTa5
-         AmTqTcLdP+hphVixw3WcX+XAqBqBbYUuao3Jc+sBPvGBudULEdcVlAdERoybkGmlhl4F
-         SmVBMjP5cvoc6io0dLsEmXRNYmdEW9sQLUsr46CkHAmLT3sLDr4kLEwU9yXIrM9r7AUo
-         mGQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=ppdzoc/V97ChcXO7v2Rn6eiJN21LngJ2PFR09uQ6kL0=;
-        b=lvWASNYL9iM59Ce9LFBF768udf0g8x5g5VLMQMdcdQleBsNTSSlllj0Hc/hedu5jVd
-         9cRcSQvstjasDwM7zzc+/xe5vWGc1FZGbd0EHyCr552dQ+KJqhQO7fFDFHGSZMtEqbOX
-         akAKFou/5KeJ3Pd41YQo22RQnsc3EvenDfbdHlpWpwQJg0kDXHRz0EdPL8UtKnZ52tCP
-         3WCdVOPLcqt0TwdBsfYmg5xM9xHikQL0Wj8GPtDVIGGIYAxkSyPjQUizwcytRdKomJ2V
-         DL01cV2Ki0sm9mNj6hnVfK1ToatiGwFr8fwB35UC9pvIKAx2Cj+dFMdwVszRPuB/5dYX
-         BAlQ==
-X-Gm-Message-State: APjAAAVlVU4pSM8JdDMLTdNHf3S3REvXlcIwj+f3CEpinrnTw/qLkv6f
-        gWT1+Gj3yrALR4NPc2F5X9g=
-X-Google-Smtp-Source: APXvYqw2UgPu4ftgWC6oZd3FfT5EoMsGb1gPhZoPlY9vWUQao96k5UnzkdIvGn459OLOyUQ5LxBgmw==
-X-Received: by 2002:a2e:85c3:: with SMTP id h3mr7393258ljj.122.1572904860068;
-        Mon, 04 Nov 2019 14:01:00 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.00.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:00:59 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 01/19] PM / devfreq: tegra30: Change irq type to unsigned int
-Date:   Tue,  5 Nov 2019 00:55:59 +0300
-Message-Id: <20191104215617.25544-2-digetx@gmail.com>
+        Mon, 4 Nov 2019 17:19:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58692 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388141AbfKDWAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:00:48 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9962A20659;
+        Mon,  4 Nov 2019 22:00:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904848;
+        bh=Dr07u1IWmJ4xY9s/UFzSO3UPZDv9wy6lz4GnA0jH21c=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=xHnFmuwcXpW7tjodnpo2CGV3Jq3PfpMgPfA+3mD9EY8QMWRsV8drAHgzJc65cA++I
+         wUopS8kJ947gNcSFO2hPldoS+dLuxbCIdBRomLqZz2xWvzbdEN6qhr5ZHRBqYtuPbc
+         i4VSOUcXlO2qrLzAblBa7iYMYQATMtG+ZNb6Rusw=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Nirmoy Das <nirmoy.das@amd.com>,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 093/149] drm/amdgpu: fix memory leak
+Date:   Mon,  4 Nov 2019 22:44:46 +0100
+Message-Id: <20191104212143.005061860@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-IRQ numbers are always positive, hence the corresponding variable should
-be unsigned to keep types consistent. This is a minor change that cleans
-up code a tad more.
+From: Nirmoy Das <nirmoy.das@amd.com>
 
-Suggested-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit 083164dbdb17c5ea4ad92c1782b59c9d75567790 ]
+
+cleanup error handling code and make sure temporary info array
+with the handles are freed by amdgpu_bo_list_put() on
+idr_replace()'s failure.
+
+Signed-off-by: Nirmoy Das <nirmoy.das@amd.com>
+Reviewed-by: Christian König <christian.koenig@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index a6ba75f4106d..a27300f40b0b 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -160,7 +160,7 @@ struct tegra_devfreq {
+diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+index b80243d3972e4..ce7f18c5ccb26 100644
+--- a/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
++++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_bo_list.c
+@@ -264,7 +264,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
  
- 	struct tegra_devfreq_device devices[ARRAY_SIZE(actmon_device_configs)];
+ 	r = amdgpu_bo_create_list_entry_array(&args->in, &info);
+ 	if (r)
+-		goto error_free;
++		return r;
  
--	int irq;
-+	unsigned int		irq;
- };
+ 	switch (args->in.operation) {
+ 	case AMDGPU_BO_LIST_OP_CREATE:
+@@ -277,8 +277,7 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 		r = idr_alloc(&fpriv->bo_list_handles, list, 1, 0, GFP_KERNEL);
+ 		mutex_unlock(&fpriv->bo_list_lock);
+ 		if (r < 0) {
+-			amdgpu_bo_list_put(list);
+-			return r;
++			goto error_put_list;
+ 		}
  
- struct tegra_actmon_emc_ratio {
-@@ -618,12 +618,12 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return PTR_ERR(tegra->emc_clock);
- 	}
+ 		handle = r;
+@@ -300,9 +299,8 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
+ 		mutex_unlock(&fpriv->bo_list_lock);
  
--	tegra->irq = platform_get_irq(pdev, 0);
--	if (tegra->irq < 0) {
--		err = tegra->irq;
-+	err = platform_get_irq(pdev, 0);
-+	if (err < 0) {
- 		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
- 		return err;
- 	}
-+	tegra->irq = err;
+ 		if (IS_ERR(old)) {
+-			amdgpu_bo_list_put(list);
+ 			r = PTR_ERR(old);
+-			goto error_free;
++			goto error_put_list;
+ 		}
  
- 	reset_control_assert(tegra->reset);
+ 		amdgpu_bo_list_put(old);
+@@ -319,8 +317,10 @@ int amdgpu_bo_list_ioctl(struct drm_device *dev, void *data,
  
+ 	return 0;
+ 
++error_put_list:
++	amdgpu_bo_list_put(list);
++
+ error_free:
+-	if (info)
+-		kvfree(info);
++	kvfree(info);
+ 	return r;
+ }
 -- 
-2.23.0
+2.20.1
+
+
 
