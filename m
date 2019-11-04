@@ -7,47 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEFADCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BABD9CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835D2217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9128C2053B
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904506;
-	bh=TCD15nTPiNtVzoGzFyyq+5AJZ5kZN2CFBw3fYkMHemc=;
+	s=default; t=1572904509;
+	bh=LnGi7vpMOb2KTMoHwxwbdgrQYvKnyn69x6Zgufgo/bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pM4ONebIg6LtagnAJDvSEntZwOkAH1ijquokW4UzzJpbLbJB+aIkZBQThfUxE1Qct
-	 ha8Qk/mGLT1nUj87xfZqmErNiQdASh/Ifd3iXjvoaiWuKeu/BHpwwk8kxE4njXf1WB
-	 WAsv05Xm6yL4TWBCEdZysyv0vgl4mte9lpV2Koi8=
+	b=SIi6jnWXBHyt48mOwDhvn2AMMR1mdiwtWguNdbT2Xggc3QI4H0+QUi3PAb24ZEwT4
+	 VPWJFCaoPPFqbNy0BIqerUy2c9/WOfBdmYcOQhPlNSnPQS9swILunZgseY/LOCkuGJ
+	 2HfIVqg90TJW0ytulBunw8B9wx2Wr8F5B2QOJRy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388094AbfKDVzF (ORCPT
+        id S2388105AbfKDVzI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50138 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50236 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388075AbfKDVzD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:03 -0500
+        id S2388075AbfKDVzH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:07 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D375521929;
-        Mon,  4 Nov 2019 21:55:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF1202053B;
+        Mon,  4 Nov 2019 21:55:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904503;
-        bh=TCD15nTPiNtVzoGzFyyq+5AJZ5kZN2CFBw3fYkMHemc=;
+        s=default; t=1572904506;
+        bh=LnGi7vpMOb2KTMoHwxwbdgrQYvKnyn69x6Zgufgo/bc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kfrLZ5Xj8QQpu264sp0VlPrXu0Ryw3GFq/psusKpAVr1+J3WPWcbe89hoj1ci+C4c
-         XbtT8kpAHf4XZv5wBF4od6Sv6s6OgJJLnGwS/0ufLvSl+ijdfB1MIsbHXdPh/2Gy4o
-         VqQNryfXHrzKSKbV6UuR4zy79HAH0ALhqwoSwUCc=
+        b=Yiq/1jteNcD5Dw60VzUqOX0Ql/700E94z7I6Ncqr82UEMQ9sFAg/nrHErF7eSXXR2
+         rhQ30Bv4XoxFI3AjNQgFY5eqJ73KgEUeBtfvdq7uFajNEJhMWJlHzgq+MYXmhy4R9F
+         E+D3lbt1FfFHwyrsuQz7r5ukGqwvxFZ7QHJxMFaU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Felipe Balbi <balbi@kernel.org>,
-        syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
-Subject: [PATCH 4.14 68/95] USB: gadget: Reject endpoints with 0 maxpacket value
-Date:   Mon,  4 Nov 2019 22:45:06 +0100
-Message-Id: <20191104212112.161133115@linuxfoundation.org>
+        Seth Bollinger <Seth.Bollinger@digi.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Subject: [PATCH 4.14 69/95] usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Date:   Mon,  4 Nov 2019 22:45:07 +0100
+Message-Id: <20191104212112.714673656@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -62,54 +63,82 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 54f83b8c8ea9b22082a496deadf90447a326954e upstream.
+commit 9a976949613132977098fc49510b46fa8678d864 upstream.
 
-Endpoints with a maxpacket length of 0 are probably useless.  They
-can't transfer any data, and it's not at all unlikely that a UDC will
-crash or hang when trying to handle a non-zero-length usb_request for
-such an endpoint.  Indeed, dummy-hcd gets a divide error when trying
-to calculate the remainder of a transfer length by the maxpacket
-value, as discovered by the syzbot fuzzer.
+Commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG
+overflows") attempted to solve a problem involving scatter-gather I/O
+and USB/IP by setting the virt_boundary_mask for mass-storage devices.
 
-Currently the gadget core does not check for endpoints having a
-maxpacket value of 0.  This patch adds a check to usb_ep_enable(),
-preventing such endpoints from being used.
+However, it now turns out that this interacts badly with commit
+09324d32d2a0 ("block: force an unlimited segment size on queues with a
+virt boundary"), which was added later.  A typical error message is:
 
-As far as I know, none of the gadget drivers in the kernel tries to
-create an endpoint with maxpacket = 0, but until now there has been
-nothing to prevent userspace programs under gadgetfs or configfs from
-doing it.
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
 
+There is no longer any reason to keep the virt_boundary_mask setting
+for usb-storage.  It was needed in the first place only for handling
+devices with a block size smaller than the maxpacket size and where
+the host controller was not capable of fully general scatter-gather
+operation (that is, able to merge two SG segments into a single USB
+packet).  But:
+
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
+
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
+
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to fix
+the swiotlb problem, this patch reverts commit 747668dbc061.
+
+Reported-and-tested-by: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Link: https://marc.info/?l=linux-usb&m=157134199501202&w=2
 Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
-Reported-and-tested-by: syzbot+8ab8bf161038a8768553@syzkaller.appspotmail.com
+CC: Seth Bollinger <Seth.Bollinger@digi.com>
 CC: <stable@vger.kernel.org>
-Acked-by: Felipe Balbi <balbi@kernel.org>
-Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910281052370.1485-100000@iolanthe.rowland.org
+Fixes: 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Acked-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910211145520.1673-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/gadget/udc/core.c |   11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/usb/storage/scsiglue.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
---- a/drivers/usb/gadget/udc/core.c
-+++ b/drivers/usb/gadget/udc/core.c
-@@ -107,6 +107,17 @@ int usb_ep_enable(struct usb_ep *ep)
- 	if (ep->enabled)
- 		goto out;
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -81,7 +81,6 @@ static const char* host_info(struct Scsi
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
  
-+	/* UDC drivers can't handle endpoints with maxpacket size 0 */
-+	if (usb_endpoint_maxp(ep->desc) == 0) {
-+		/*
-+		 * We should log an error message here, but we can't call
-+		 * dev_err() because there's no way to find the gadget
-+		 * given only ep.
-+		 */
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
- 	ret = ep->ops->enable(ep, ep->desc);
- 	if (ret)
- 		goto out;
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -91,15 +90,6 @@ static int slave_alloc (struct scsi_devi
+ 	sdev->inquiry_len = 36;
+ 
+ 	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+ 	 */
 
 
