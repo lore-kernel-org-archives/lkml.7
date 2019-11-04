@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4772CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C21E3CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A985F20650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926062084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905641;
-	bh=ITA9eyjmsNMdA9lMb0N9KIK3rZjZ5YpCHXQjnFcG/Us=;
+	s=default; t=1572905645;
+	bh=4TiYdvVxUzCNJ4QExnV8+tw17p0jkR3fYFgZLjCIeBE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=hUCweLvcIlMRmb/aqRjnaK6DJg6bqc2QC7rj2xPR04sXDWgn2GbTlE1VJ5DPkPTzp
-	 hcKQGWPdBqQdj+picrQPZd8M2UGe2tDxXY1ZBUzRTzVcIYLYutowGYYgWfOyRno9tH
-	 J1AKVStAaHsoDTXbb4KdMkRSk4r/TlI0RhTOhTBc=
+	b=thKg+O83uuLJF9HDHTCe4+6tlx53EviHZYhapCNp23Sas5YcFL8qZxzy9j5/J1W2A
+	 YUfs6W0/fvtD2NTEdx1+WTW3Wj/tsous053KERJsoORf9G5VwaoFHxvIgLNUYPmQGe
+	 vyV1lxlOWyXt+05a7g8oHnNEJ+lPV7U/JgetYCeo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390261AbfKDWIh (ORCPT
+        id S2390250AbfKDWIh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 4 Nov 2019 17:08:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41462 "EHLO mail.kernel.org"
+Received: from mail.kernel.org ([198.145.29.99]:41412 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389853AbfKDWId (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:33 -0500
+        id S2390229AbfKDWIa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:30 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DD90820650;
-        Mon,  4 Nov 2019 22:08:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24D3E2084D;
+        Mon,  4 Nov 2019 22:08:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905312;
-        bh=ITA9eyjmsNMdA9lMb0N9KIK3rZjZ5YpCHXQjnFcG/Us=;
+        s=default; t=1572905309;
+        bh=4TiYdvVxUzCNJ4QExnV8+tw17p0jkR3fYFgZLjCIeBE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Lfh9zA/8Hk1o7w2i5COXLMZjgjP0YkIKOUPPo3Icdf/tQzBLuqv9fxTev/SmAWOSY
-         cAL/FKfj1kvK1+rlnegj4kcO26m8KG7boYo+Ota9t/anjT6Y/jD2Z1XeMtcTRXWixE
-         jdsFjyn0qS3zPe0lK9kGo93o539MKfEbCpYiSXtE=
+        b=UeSCYyJaT8x1sCIHbFnGbdeQr8BhOHHSE6/SIAGcLl1pf3xUs35TOkldNY4TLLO+M
+         10KpRkfzgPCm+BLnfsnIeFsQ3BjJPXGwz5noTl7q7hn5ysgDPhTXtUaZJtVpql9yGr
+         fopllGgeGLnaGYTonUy7vFnaA59Jp9/RelXG0Ru0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 5.3 103/163] nl80211: fix validation of mesh path nexthop
-Date:   Mon,  4 Nov 2019 22:44:53 +0100
-Message-Id: <20191104212147.527158596@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Oliver Neukum <oneukum@suse.com>,
+        Christoph Hellwig <hch@lst.de>
+Subject: [PATCH 5.3 102/163] UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Date:   Mon,  4 Nov 2019 22:44:52 +0100
+Message-Id: <20191104212147.452249094@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,34 +60,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit 1fab1b89e2e8f01204a9c05a39fd0b6411a48593 upstream.
+commit 1186f86a71130a7635a20843e355bb880c7349b2 upstream.
 
-Mesh path nexthop should be a ethernet address, but current validation
-checks against 4 byte integers.
+Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments"),
+copying a similar commit for usb-storage, attempted to solve a problem
+involving scatter-gather I/O and USB/IP by setting the
+virt_boundary_mask for mass-storage devices.
 
-Cc: stable@vger.kernel.org
-Fixes: 2ec600d672e74 ("nl80211/cfg80211: support for mesh, sta dumping")
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191029093003.10355-1-markus.theil@tu-ilmenau.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+However, it now turns out that the analogous change in usb-storage
+interacted badly with commit 09324d32d2a0 ("block: force an unlimited
+segment size on queues with a virt boundary"), which was added later.
+A typical error message is:
+
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
+
+There is no longer any reason to keep the virt_boundary_mask setting
+in the uas driver.  It was needed in the first place only for
+handling devices with a block size smaller than the maxpacket size and
+where the host controller was not capable of fully general
+scatter-gather operation (that is, able to merge two SG segments into
+a single USB packet).  But:
+
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
+
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
+
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to head
+off potential problems similar to those affecting usb-storage, this
+patch reverts commit 3ae62a42090f.
+
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Oliver Neukum <oneukum@suse.com>
+CC: <stable@vger.kernel.org>
+Acked-by: Christoph Hellwig <hch@lst.de>
+Fixes: 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910231132470.1878-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/storage/uas.c |   20 --------------------
+ 1 file changed, 20 deletions(-)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -377,7 +377,7 @@ const struct nla_policy nl80211_policy[N
- 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
- 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
- 				   .len = IEEE80211_MAX_MESH_ID_LEN },
--	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
-+	[NL80211_ATTR_MPATH_NEXT_HOP] = NLA_POLICY_ETH_ADDR_COMPAT,
+--- a/drivers/usb/storage/uas.c
++++ b/drivers/usb/storage/uas.c
+@@ -789,30 +789,10 @@ static int uas_slave_alloc(struct scsi_d
+ {
+ 	struct uas_dev_info *devinfo =
+ 		(struct uas_dev_info *)sdev->host->hostdata;
+-	int maxp;
  
- 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
- 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
+ 	sdev->hostdata = devinfo;
+ 
+ 	/*
+-	 * We have two requirements here. We must satisfy the requirements
+-	 * of the physical HC and the demands of the protocol, as we
+-	 * definitely want no additional memory allocation in this path
+-	 * ruling out using bounce buffers.
+-	 *
+-	 * For a transmission on USB to continue we must never send
+-	 * a package that is smaller than maxpacket. Hence the length of each
+-         * scatterlist element except the last must be divisible by the
+-         * Bulk maxpacket value.
+-	 * If the HC does not ensure that through SG,
+-	 * the upper layer must do that. We must assume nothing
+-	 * about the capabilities off the HC, so we use the most
+-	 * pessimistic requirement.
+-	 */
+-
+-	maxp = usb_maxpacket(devinfo->udev, devinfo->data_in_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * The protocol has no requirements on alignment in the strict sense.
+ 	 * Controllers may or may not have alignment restrictions.
+ 	 * As this is not exported, we use an extremely conservative guess.
 
 
