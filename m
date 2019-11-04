@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C643CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24D77CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BBE52084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA3D2084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905467;
-	bh=3UyrjROa8dKiqGzQWBC6Sa2sDAiek2NFkOOZiV+KuY8=;
+	s=default; t=1572905471;
+	bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q3z8RMZM0W9sIBqKSLZFWzZ1BGfAjfjQFZKR5PtFBiGArqiDieIZ7ByVKByFE9SKP
-	 KYg3+N3fDWTlKKU5GFdTj+RE8meLTFlpzCHcOBUqt3Jjf7sj+8xgTYMSIivSW1VUpx
-	 9eC9uFapq2RZkajm9KvIpNSoLTQOQA/bVBkuoJx4=
+	b=zRZYicA6fkbMuBaxXTuGWPFPFuEzobldgA6jQtJA1tmsWS9VDQntXxG3t9wVSHDo7
+	 gJL2n075CPY2Kv9/XPpFciqWf5yrKIq4apSZMj5jgz2xxASE3CA6OVmP34pI/zHcGq
+	 VMGoqr0AspCb1e+dTQ/JJt+1SH56MEC7IEH9uol8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390631AbfKDWLG (ORCPT
+        id S2390619AbfKDWLF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44352 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390609AbfKDWLD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:03 -0500
+        id S2390268AbfKDWLA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:00 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2D9742084D;
-        Mon,  4 Nov 2019 22:11:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2A150214E0;
+        Mon,  4 Nov 2019 22:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905462;
-        bh=3UyrjROa8dKiqGzQWBC6Sa2sDAiek2NFkOOZiV+KuY8=;
+        s=default; t=1572905459;
+        bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Wz+OTELjPd+uxBR0g9NJfxoux1A8KOY7q0UXOYCup4w6+Qq81vmqvgrXkMXoQtd9S
-         Dt7qBbvK4XNUvx86aoTxcBL7qOM27wBnMgZfip9Y6HICIAEKZTm7EC8y1WtNZP1QAP
-         +4DWrFixHDWlKpUJoB4UbzWsMbzEDa5po5XvwvSI=
+        b=tajJnuEIdNycc1mhfT+maVfr71o/iP/PLvqNliwS9J+tCt7t+B+nwKQapvUP8LTMI
+         HexSrpZXIDJRiRGdaB0Tp+tvZttWwTjzLxP2HHxqCddIfHo5f/+IUu2kZ7q6qoKMLm
+         J33AtmsmAEgSx8Zba6W9vwZbDcN9fZmQa8kMyHP8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>,
-        syzbot <syzkaller@googlegroups.com>,
+        stable@vger.kernel.org,
+        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
+        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 5.3 155/163] sch_netem: fix rcu splat in netem_enqueue()
-Date:   Mon,  4 Nov 2019 22:45:45 +0100
-Message-Id: <20191104212151.499318288@linuxfoundation.org>
+Subject: [PATCH 5.3 154/163] net: usb: sr9800: fix uninitialized local variable
+Date:   Mon,  4 Nov 2019 22:45:44 +0100
+Message-Id: <20191104212151.434122569@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,102 +61,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Dumazet <edumazet@google.com>
+From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 
-commit 159d2c7d8106177bd9a986fd005a311fe0d11285 upstream.
+commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 upstream.
 
-qdisc_root() use from netem_enqueue() triggers a lockdep warning.
+Make sure res does not contain random value if the call to
+sr_read_cmd fails for some reason.
 
-__dev_queue_xmit() uses rcu_read_lock_bh() which is
-not equivalent to rcu_read_lock() + local_bh_disable_bh as far
-as lockdep is concerned.
-
-WARNING: suspicious RCU usage
-5.3.0-rc7+ #0 Not tainted
------------------------------
-include/net/sch_generic.h:492 suspicious rcu_dereference_check() usage!
-
-other info that might help us debug this:
-
-rcu_scheduler_active = 2, debug_locks = 1
-3 locks held by syz-executor427/8855:
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: lwtunnel_xmit_redirect include/net/lwtunnel.h:92 [inline]
- #0: 00000000b5525c01 (rcu_read_lock_bh){....}, at: ip_finish_output2+0x2dc/0x2570 net/ipv4/ip_output.c:214
- #1: 00000000b5525c01 (rcu_read_lock_bh){....}, at: __dev_queue_xmit+0x20a/0x3650 net/core/dev.c:3804
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: spin_lock include/linux/spinlock.h:338 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_xmit_skb net/core/dev.c:3502 [inline]
- #2: 00000000364bae92 (&(&sch->q.lock)->rlock){+.-.}, at: __dev_queue_xmit+0x14b8/0x3650 net/core/dev.c:3838
-
-stack backtrace:
-CPU: 0 PID: 8855 Comm: syz-executor427 Not tainted 5.3.0-rc7+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x172/0x1f0 lib/dump_stack.c:113
- lockdep_rcu_suspicious+0x153/0x15d kernel/locking/lockdep.c:5357
- qdisc_root include/net/sch_generic.h:492 [inline]
- netem_enqueue+0x1cfb/0x2d80 net/sched/sch_netem.c:479
- __dev_xmit_skb net/core/dev.c:3527 [inline]
- __dev_queue_xmit+0x15d2/0x3650 net/core/dev.c:3838
- dev_queue_xmit+0x18/0x20 net/core/dev.c:3902
- neigh_hh_output include/net/neighbour.h:500 [inline]
- neigh_output include/net/neighbour.h:509 [inline]
- ip_finish_output2+0x1726/0x2570 net/ipv4/ip_output.c:228
- __ip_finish_output net/ipv4/ip_output.c:308 [inline]
- __ip_finish_output+0x5fc/0xb90 net/ipv4/ip_output.c:290
- ip_finish_output+0x38/0x1f0 net/ipv4/ip_output.c:318
- NF_HOOK_COND include/linux/netfilter.h:294 [inline]
- ip_mc_output+0x292/0xf40 net/ipv4/ip_output.c:417
- dst_output include/net/dst.h:436 [inline]
- ip_local_out+0xbb/0x190 net/ipv4/ip_output.c:125
- ip_send_skb+0x42/0xf0 net/ipv4/ip_output.c:1555
- udp_send_skb.isra.0+0x6b2/0x1160 net/ipv4/udp.c:887
- udp_sendmsg+0x1e96/0x2820 net/ipv4/udp.c:1174
- inet_sendmsg+0x9e/0xe0 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0xd7/0x130 net/socket.c:657
- ___sys_sendmsg+0x3e2/0x920 net/socket.c:2311
- __sys_sendmmsg+0x1bf/0x4d0 net/socket.c:2413
- __do_sys_sendmmsg net/socket.c:2442 [inline]
- __se_sys_sendmmsg net/socket.c:2439 [inline]
- __x64_sys_sendmmsg+0x9d/0x100 net/socket.c:2439
- do_syscall_64+0xfd/0x6a0 arch/x86/entry/common.c:296
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Reported-by: syzbot <syzkaller@googlegroups.com>
+Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
+Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/net/sch_generic.h |    5 +++++
- net/sched/sch_netem.c     |    2 +-
- 2 files changed, 6 insertions(+), 1 deletion(-)
+ drivers/net/usb/sr9800.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/include/net/sch_generic.h
-+++ b/include/net/sch_generic.h
-@@ -520,6 +520,11 @@ static inline struct Qdisc *qdisc_root(c
- 	return q;
- }
- 
-+static inline struct Qdisc *qdisc_root_bh(const struct Qdisc *qdisc)
-+{
-+	return rcu_dereference_bh(qdisc->dev_queue->qdisc);
-+}
-+
- static inline struct Qdisc *qdisc_root_sleeping(const struct Qdisc *qdisc)
+--- a/drivers/net/usb/sr9800.c
++++ b/drivers/net/usb/sr9800.c
+@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_
+ static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
  {
- 	return qdisc->dev_queue->qdisc_sleeping;
---- a/net/sched/sch_netem.c
-+++ b/net/sched/sch_netem.c
-@@ -476,7 +476,7 @@ static int netem_enqueue(struct sk_buff
- 	 * skb will be queued.
- 	 */
- 	if (count > 1 && (skb2 = skb_clone(skb, GFP_ATOMIC)) != NULL) {
--		struct Qdisc *rootq = qdisc_root(sch);
-+		struct Qdisc *rootq = qdisc_root_bh(sch);
- 		u32 dupsave = q->duplicate; /* prevent duplicating a dup... */
+ 	struct usbnet *dev = netdev_priv(net);
+-	__le16 res;
++	__le16 res = 0;
  
- 		q->duplicate = 0;
+ 	mutex_lock(&dev->phy_mutex);
+ 	sr_set_sw_mii(dev);
 
 
