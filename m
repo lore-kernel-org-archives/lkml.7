@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EDECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9E2DCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 801EB21D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B76FB222C2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729125AbfKDLyG convert rfc822-to-8bit (ORCPT
+        id S1729165AbfKDLyK convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:54:06 -0500
-Received: from skedge04.snt-world.com ([91.208.41.69]:51692 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729089AbfKDLyF (ORCPT
+        Mon, 4 Nov 2019 06:54:10 -0500
+Received: from skedge03.snt-world.com ([91.208.41.68]:47240 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbfKDLyH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:54:05 -0500
-Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        Mon, 4 Nov 2019 06:54:07 -0500
+Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 17F9560039D;
-        Mon,  4 Nov 2019 12:54:03 +0100 (CET)
-Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
- (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 6A81C60CAE4;
+        Mon,  4 Nov 2019 12:54:05 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
+ (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
- 12:54:02 +0100
+ 12:54:05 +0100
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Mon, 4 Nov 2019 12:54:02 +0100
+ 15.01.1713.004; Mon, 4 Nov 2019 12:54:04 +0100
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     Krzysztof Kozlowski <krzk@kernel.org>,
         Fabio Estevam <festevam@gmail.com>,
@@ -46,13 +46,13 @@ CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
         "linux-arm-kernel@lists.infradead.org" 
         <linux-arm-kernel@lists.infradead.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs N6311
- and N6411
-Thread-Topic: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs
- N6311 and N6411
-Thread-Index: AQHVkwaMgDUA/1D6C0q01Gb6m+Vg6Q==
-Date:   Mon, 4 Nov 2019 11:54:02 +0000
-Message-ID: <20191104115352.8728-3-frieder.schrempf@kontron.de>
+Subject: [PATCH v4 3/9] ARM: dts: imx6ul-kontron-n6310-s: Disable the
+ snvs-poweroff driver
+Thread-Topic: [PATCH v4 3/9] ARM: dts: imx6ul-kontron-n6310-s: Disable the
+ snvs-poweroff driver
+Thread-Index: AQHVkwaOvyDXmZ4jYUO0AcU0XbojRA==
+Date:   Mon, 4 Nov 2019 11:54:04 +0000
+Message-ID: <20191104115352.8728-4-frieder.schrempf@kontron.de>
 References: <20191104115352.8728-1-frieder.schrempf@kontron.de>
 In-Reply-To: <20191104115352.8728-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
@@ -66,7 +66,7 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 17F9560039D.A23F8
+X-SnT-MailScanner-ID: 6A81C60CAE4.A0587
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
@@ -82,111 +82,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-The N6311 and the N6411 SoM are similar to the Kontron N6310 SoM.
-They are pin-compatible, but feature a larger RAM and NAND flash
-(512MiB instead of 256MiB). Further, the N6411 has an i.MX6ULL SoC,
-instead of an i.MX6UL.
+The snvs-poweroff driver can power off the system by pulling the
+PMIC_ON_REQ signal low, to let the PMIC disable the power.
+The Kontron SoMs do not have this signal connected, so let's remove
+the node.
+
+This fixes a real issue when the signal is asserted at poweroff,
+but not actually causing the power to turn off. It was observed,
+that in this case the system would not shut down properly.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
 ---
- .../boot/dts/imx6ul-kontron-n6311-som.dtsi    | 40 +++++++++++++++++++
- .../boot/dts/imx6ull-kontron-n6411-som.dtsi   | 40 +++++++++++++++++++
- 2 files changed, 80 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
- create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+ arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts | 4 ----
+ 1 file changed, 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
-new file mode 100644
-index 000000000000..a095a7654ac6
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ */
-+
-+#include "imx6ul.dtsi"
-+#include "imx6ul-kontron-n6x1x-som-common.dtsi"
-+
-+/ {
-+	model = "Kontron N6311 SOM";
-+	compatible = "kontron,imx6ul-n6311-som", "fsl,imx6ul";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&qspi {
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		spi-max-frequency = <104000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "ubi1";
-+			reg = <0x00000000 0x08000000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "ubi2";
-+			reg = <0x08000000 0x18000000>;
-+		};
-+	};
-+};
-diff --git a/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-new file mode 100644
-index 000000000000..b7e984284e1a
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
-@@ -0,0 +1,40 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017 exceet electronics GmbH
-+ * Copyright (C) 2018 Kontron Electronics GmbH
-+ */
-+
-+#include "imx6ull.dtsi"
-+#include "imx6ul-kontron-n6x1x-som-common.dtsi"
-+
-+/ {
-+	model = "Kontron N6411 SOM";
-+	compatible = "kontron,imx6ull-n6311-som", "fsl,imx6ull";
-+
-+	memory@80000000 {
-+		reg = <0x80000000 0x20000000>;
-+		device_type = "memory";
-+	};
-+};
-+
-+&qspi {
-+	spi-flash@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spi-nand";
-+		spi-max-frequency = <104000000>;
-+		spi-tx-bus-width = <4>;
-+		spi-rx-bus-width = <4>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "ubi1";
-+			reg = <0x00000000 0x08000000>;
-+		};
-+
-+		partition@8000000 {
-+			label = "ubi2";
-+			reg = <0x08000000 0x18000000>;
-+		};
-+	};
-+};
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
+index 0205fd56d975..4e99e6c79a68 100644
+--- a/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6310-s.dts
+@@ -157,10 +157,6 @@
+ 	status = "okay";
+ };
+ 
+-&snvs_poweroff {
+-	status = "okay";
+-};
+-
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&pinctrl_uart1>;
 -- 
 2.17.1
