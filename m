@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2973DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C4DCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59F3204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D1B6D204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906158;
-	bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
+	s=default; t=1572906164;
+	bh=xxDDr/zM+xU3ky0bYYZKmJYCAwy45XockdaIYNTjliU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZH7sYwzw11TDvRKfi83KI/aZc2wiAqpjlEv7Ihyy80+GjpS2zZ0EgCWMYgZW1HO/X
-	 ABW0vA+SA95+5u4Jb7M+EAZSyb4X6tKvgQFwHxUE/ORsHsnwX3GuGv8B35DioxfOpt
-	 BGYt9Pzsj+7GPKoQcTttNFcUqUCGvoX2boH91cU0=
+	b=s0jnizTFeQnmltmsvkoTOCGANDi3QVpDFlACaw7VWBlX4N9GB8/UDtdcF8lYadi51
+	 qJfrClHcXxtRwsYSCxKu39y/JCzd/2sSpHP6uds75x7p5Juwka4CWvIps7tKoLSC5t
+	 C064d4WAklBV2YtOfKnK5KNztl6hYJmJJ5h8AdGU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388330AbfKDWWg (ORCPT
+        id S2388748AbfKDWWn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:22:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51698 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:22:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388296AbfKDV4J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:56:09 -0500
+        id S2388268AbfKDV4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:56:02 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BD56221929;
-        Mon,  4 Nov 2019 21:56:08 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A19D021929;
+        Mon,  4 Nov 2019 21:56:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904569;
-        bh=AEX36XsO5lXsy2UodCcGI6ADsqU81+EXoRM9bAA0rL0=;
+        s=default; t=1572904562;
+        bh=xxDDr/zM+xU3ky0bYYZKmJYCAwy45XockdaIYNTjliU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0Zj5JGlxsVrRz7bZ9vA2ySbutcsi3r3rQKqn0w1z3qjYBx920ZciiJswKu5ui9KwL
-         cQNRlGB8+LpT9ErkIDGkqcuNEPlFVkb1MHK/jS68po76RBi4253d2YA2NKNTk7QAKi
-         x+V10rsKNdaCeenaKx33Kp0GikaB8gkStBHWOaLk=
+        b=WZzHWqMkcrmVNp/lUbftWpHG5X16g0XQ2uqe2giXSWbBKIEFHQ2Bc6mqeUT15LGhF
+         IjQbkbdl961pwt2MFrac2jTdhEYYvKktuUB3mTawIODb1ulmXh/eXTiwqjtm4KOD4A
+         1M6tdepD+ZX+sVmUCJCguPmPtXh98WNN9Qd9pSA8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com,
-        Valentin Vidic <vvidic@valentin-vidic.from.hr>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 89/95] net: usb: sr9800: fix uninitialized local variable
-Date:   Mon,  4 Nov 2019 22:45:27 +0100
-Message-Id: <20191104212123.803874685@linuxfoundation.org>
+        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
+        Johan Hovold <johan@kernel.org>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 4.14 87/95] NFC: pn533: fix use-after-free and memleaks
+Date:   Mon,  4 Nov 2019 22:45:25 +0100
+Message-Id: <20191104212123.415352543@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -61,32 +61,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Valentin Vidic <vvidic@valentin-vidic.from.hr>
+From: Johan Hovold <johan@kernel.org>
 
-commit 77b6d09f4ae66d42cd63b121af67780ae3d1a5e9 upstream.
+commit 6af3aa57a0984e061f61308fe181a9a12359fecc upstream.
 
-Make sure res does not contain random value if the call to
-sr_read_cmd fails for some reason.
+The driver would fail to deregister and its class device and free
+related resources on late probe errors.
 
-Reported-by: syzbot+f1842130bbcfb335bac1@syzkaller.appspotmail.com
-Signed-off-by: Valentin Vidic <vvidic@valentin-vidic.from.hr>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
+Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/net/usb/sr9800.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/nfc/pn533/usb.c |    9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
---- a/drivers/net/usb/sr9800.c
-+++ b/drivers/net/usb/sr9800.c
-@@ -336,7 +336,7 @@ static void sr_set_multicast(struct net_
- static int sr_mdio_read(struct net_device *net, int phy_id, int loc)
- {
- 	struct usbnet *dev = netdev_priv(net);
--	__le16 res;
-+	__le16 res = 0;
+--- a/drivers/nfc/pn533/usb.c
++++ b/drivers/nfc/pn533/usb.c
+@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_in
  
- 	mutex_lock(&dev->phy_mutex);
- 	sr_set_sw_mii(dev);
+ 	rc = pn533_finalize_setup(priv);
+ 	if (rc)
+-		goto error;
++		goto err_deregister;
+ 
+ 	usb_set_intfdata(interface, phy);
+ 
+ 	return 0;
+ 
++err_deregister:
++	pn533_unregister_device(phy->priv);
+ error:
++	usb_kill_urb(phy->in_urb);
++	usb_kill_urb(phy->out_urb);
++	usb_kill_urb(phy->ack_urb);
++
+ 	usb_free_urb(phy->in_urb);
+ 	usb_free_urb(phy->out_urb);
+ 	usb_free_urb(phy->ack_urb);
+ 	usb_put_dev(phy->udev);
+ 	kfree(in_buf);
++	kfree(phy->ack_buffer);
+ 
+ 	return rc;
+ }
 
 
