@@ -2,95 +2,102 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4D33CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FB83CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E86222C2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YjUYLUPT"
+	by mail.kernel.org (Postfix) with ESMTP id E690621D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:52:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728397AbfKDLwH (ORCPT
+        id S1728731AbfKDLwo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:52:07 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43930 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726100AbfKDLwH (ORCPT
+        Mon, 4 Nov 2019 06:52:44 -0500
+Received: from lb3-smtp-cloud8.xs4all.net ([194.109.24.29]:34911 "EHLO
+        lb3-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727782AbfKDLwn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:52:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Z45EwIm/nVJd7d8qmHSBF95/M8CehBnDBQi1wTICEOU=; b=YjUYLUPTB/RXa6Ktkoz1wCjTz
-        4MwPhuteCIwgB1TZ1JwEvX+IhXAVoZOOKoeDptaDYKIShVe3JtHyY9YqCAHH4MobpRws9984uz2HU
-        fPYfKCYTgBC2e3J+JYA0hVDhGrTeaQQDCJu2vaGesZmbUynrnhEV6dpeanDQnGpZTERFZSE/o3k5+
-        i3Xw3FU7OLMpZMBewKCYOWRs7sAGVEQMTPs0DomKXKGT8GoOSj+oiwjFfIoFRDabIzMHLMSDrvogH
-        iquYwc7lBREVKR1QYHI0yG5nY5ms2KRZq0WiQvynjqPxu/FYvWX8c25lxNyOESynm3P8KVPY+h2u4
-        YABuW4BZA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRatv-0006On-RA; Mon, 04 Nov 2019 11:52:04 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 3F052305FC2;
-        Mon,  4 Nov 2019 12:50:58 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 51D022B4220F7; Mon,  4 Nov 2019 12:52:01 +0100 (CET)
-Date:   Mon, 4 Nov 2019 12:52:01 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Linux PM <linux-pm@vger.kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>,
+        Mon, 4 Nov 2019 06:52:43 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id RauUi817QTzKrRauXiltg7; Mon, 04 Nov 2019 12:52:41 +0100
+Subject: Re: [PATCH 4/4] v4l2-ctl: Support setting V4L2_CTRL_TYPE_AREA
+ controls
+To:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Cc:     linux-media <linux-media@vger.kernel.org>,
         LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] cpuidle: Consolidate disabled state checks
-Message-ID: <20191104115201.GG4131@hirez.programming.kicks-ass.net>
-References: <2717750.dCEzHT3DVQ@kreacher>
+References: <20191101112509.29723-1-ribalda@kernel.org>
+ <20191101112509.29723-4-ribalda@kernel.org>
+ <31815641-550c-88ab-c037-2e743cea59b3@xs4all.nl>
+ <CAPybu_3DQbmuamHmTXWnF15B1tzPzf1Sh_YJe6VS-Uk8z81q1Q@mail.gmail.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <82bd9ce8-bf1e-7071-914e-f321a8467476@xs4all.nl>
+Date:   Mon, 4 Nov 2019 12:52:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <2717750.dCEzHT3DVQ@kreacher>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAPybu_3DQbmuamHmTXWnF15B1tzPzf1Sh_YJe6VS-Uk8z81q1Q@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGrkqGV2Xg+2z6dntFkrabUjC190MQDxXDgUm2QiUL25QOkDz+O+drfg7ijgBwJ/kqmPHcMNcrPTa+qrQNppMdOFVKDygZ5vLzEejArpVXgj9tcM4Q01
+ pGnuMHaceaLStm7LfKKjmjVD7Ug6y2y1kSpNgoUFTN3BeYynavXX2b+WL+Qlb46Cs048riFWIBkfshlhnUJHgiPG2LnffOTAgeLfNchb+yP4ne0FE5dR91ac
+ O+TfZthAKVIOzMbjG80/LQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 12:16:17PM +0100, Rafael J. Wysocki wrote:
-> From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On 11/4/19 12:21 PM, Ricardo Ribalda Delgado wrote:
+> Hi Hans
 > 
-> There are two reasons why CPU idle states may be disabled: either
-> because the driver has disabled them or because they have been
-> disabled by user space via sysfs.
-> 
-> In the former case, the state's "disabled" flag is set once during
-> the initialization of the driver and it is never cleared later (it
-> is read-only effectively).  In the latter case, the "disable" field
-> of the given state's cpuidle_state_usage struct is set and it may be
-> changed via sysfs.  Thus checking whether or not an idle state has
-> been disabled involves reading these two flags every time.
-> 
-> In order to avoid the additional check of the state's "disabled" flag
-> (which is effectively read-only anyway), use the value of it at the
-> init time to set a (new) flag in the "disable" field of that state's
-> cpuidle_state_usage structure and use the sysfs interface to
-> manipulate another (new) flag in it.  This way the state is disabled
-> whenever the "disable" field of its cpuidle_state_usage structure is
-> nonzero, whatever the reason, and it is the only place to look into
-> to check whether or not the state has been disabled.
-> 
-> Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
-> Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Sure I will fix this. Shall I resend it once you have updated the
+> headers on v4l-utils?
 
-Much thanks, that always bugged me.
+Don't wait for that, just resend. I can merge this as soon as the new
+headers are in.
 
-Acked-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Regards,
+
+	Hans
+
+> 
+> Best regards
+> 
+> On Mon, Nov 4, 2019 at 10:41 AM Hans Verkuil <hverkuil-cisco@xs4all.nl> wrote:
+>>
+>> On 11/1/19 12:25 PM, Ricardo Ribalda Delgado wrote:
+>>> $ v4l2-ctl  -d /dev/video1  -c area=123123x233
+>>>
+>>> Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+>>> ---
+>>>  utils/v4l2-ctl/v4l2-ctl-common.cpp | 4 ++++
+>>>  1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/utils/v4l2-ctl/v4l2-ctl-common.cpp b/utils/v4l2-ctl/v4l2-ctl-common.cpp
+>>> index 95339561..676b05e0 100644
+>>> --- a/utils/v4l2-ctl/v4l2-ctl-common.cpp
+>>> +++ b/utils/v4l2-ctl/v4l2-ctl-common.cpp
+>>> @@ -973,6 +973,10 @@ void common_set(cv4l_fd &_fd)
+>>>                                       strncpy(ctrl.string, iter->second.c_str(), qc.maximum);
+>>>                                       ctrl.string[qc.maximum] = 0;
+>>>                                       break;
+>>> +                             case V4L2_CTRL_TYPE_AREA:
+>>> +                                     sscanf(iter->second.c_str(), "%dx%d",
+>>
+>> Use %ux%u since these are unsigned values.
+>>
+>> Regards,
+>>
+>>         Hans
+>>
+>>> +                                            &ctrl.p_area->width, &ctrl.p_area->height);
+>>> +                                     break;
+>>>                               default:
+>>>                                       fprintf(stderr, "%s: unsupported payload type\n",
+>>>                                                       qc.name);
+>>>
+>>
+
