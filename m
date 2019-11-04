@@ -2,101 +2,87 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AF8CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FDA9CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BE0D214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3533B20869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Yw9n7Twi"
+	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="dkvDCEkI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="ZfFZsayh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729414AbfKDPuf (ORCPT
+        id S1729421AbfKDPuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:50:35 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41270 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbfKDPud (ORCPT
+        Mon, 4 Nov 2019 10:50:52 -0500
+Received: from pb-smtp21.pobox.com ([173.228.157.53]:51419 "EHLO
+        pb-smtp21.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDPuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:50:33 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p4so17649314wrm.8;
-        Mon, 04 Nov 2019 07:50:32 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=clU1bKHT6brcxpybdIWScjXO4jR8ML9CYkdJSkfKRuE=;
-        b=Yw9n7TwiEYa9fp+A5e/RLb4byJXfyYLBxxAel9gksuFgNn5rPRTZQAALS6u8CTiY3p
-         CNxhKo/8GnZzIJawDAPcgoiBSmqrksuYcM27uS5yGZiTDFT2BzpK1LutVBMfLvLA1+s6
-         npojTeyELwkekqwg2YHynh7GiuNCKh9TL+Po8U5XLY/7hTORMzvGkFNXIAto1u698GeJ
-         vDt/YgSG8zbIF1Cx5iIXusAfukLzSl8L/2i1QmIBWXyjIFRA5pMc81b9YgfJ3q0c1OyL
-         N1011f0bgmrFW5HLSyfi8tfvczCcS6Od+ruyvM85nEUNOI8wL0+T/iomvnF48Oqq8xav
-         qevQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=clU1bKHT6brcxpybdIWScjXO4jR8ML9CYkdJSkfKRuE=;
-        b=F27gpUw1QtU6xjS54t+lLyx0rbrqIzmnzRWH5tXs1rfVgSHym+CQLaE8gkKLLyYhs1
-         y+J6g9XmXNIVZiP8Lnm7GbHbAF8LUJXZvHWPz38SPJF6SCGjS9oXbI53ESrBV9apmSsc
-         ZI1UqUDOlBQ4VA7MBnhwPB+KYqeVaENoFSPo6J0FJL0uIn7RaTIVxbPd9SmBuABkZDpH
-         N8M7IQ7hUvIBGcgAQpAXZQWV9ULrT0yaKZL2fZEWa+IExpA0hsFwnD5cGxmgDtLBTdA/
-         mzsT/XCBxiQP3n30wQ35f1fz44mssd5mvNXALXDRn8k4tLkh6mWcQQJ521XJ5IU1B3N7
-         b3eA==
-X-Gm-Message-State: APjAAAXrAl/qUfPwVGO6dICWlvDYiqlid4SROXBRa/+GIrOBsU5AK3S9
-        XbTqKf+hbnGPl2+m8P6IADw=
-X-Google-Smtp-Source: APXvYqwBJhMarOb9DuoSeD9Eo8Lc26NxpepeppxQG4OIxoUZW28lf16IvA+EqxulYRqvcR8eaU6MUw==
-X-Received: by 2002:adf:ab4c:: with SMTP id r12mr20114632wrc.3.1572882631918;
-        Mon, 04 Nov 2019 07:50:31 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id k4sm19569710wmk.26.2019.11.04.07.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 07:50:31 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] rtc: brcmstb-waketimer: add missed clk_disable_unprepare
-Date:   Mon,  4 Nov 2019 23:50:19 +0800
-Message-Id: <20191104155019.9053-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 4 Nov 2019 10:50:51 -0500
+Received: from pb-smtp21.pobox.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id BB9F5914C8;
+        Mon,  4 Nov 2019 10:50:50 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
+        :cc:subject:in-reply-to:message-id:references:mime-version
+        :content-type; s=sasl; bh=F8nu3+GauF9ZNKZ8YUrP8d5BXVA=; b=dkvDCE
+        kIhvM6teO4LooGOU8Gw487g1RnJBa2qwXSxJY9dONHk+gmbPMJfAEHBWMr/0FFg0
+        HOInSSCp0Z4IXVxCJbaQyAk119dXuE92MLXBEMfzbdxlUMbvndtYZUEH9q1OV0TO
+        Dn9wC0pg9rZW/9d3apGUA1+LBCsrhRWIzHhi8=
+Received: from pb-smtp21.sea.icgroup.com (unknown [127.0.0.1])
+        by pb-smtp21.pobox.com (Postfix) with ESMTP id B4441914C7;
+        Mon,  4 Nov 2019 10:50:50 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
+ h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=MJwUa+Ds+yurBeM2+T2kV09aJg64fgUV1kGHAEhjw7s=; b=ZfFZsayhry+H2xoJHw+It7ZnDY10Q8+4inzZ8Wgpdlq61eXnbcT8ElbOy59cbfF9+96q4fHfJ0NLY0LAmQZDRTPvdNVpFU/Twvne8sNjgwgqzy2hZJsnxrNJZbtt00B2FgZy2QlOITnNKmOzGE9sPuQ3rDKrP2zd/svqQf268Jo=
+Received: from yoda.home (unknown [24.203.50.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by pb-smtp21.pobox.com (Postfix) with ESMTPSA id B0918914C5;
+        Mon,  4 Nov 2019 10:50:47 -0500 (EST)
+        (envelope-from nico@fluxnic.net)
+Received: from xanadu.home (xanadu.home [192.168.2.2])
+        by yoda.home (Postfix) with ESMTPSA id B25A32DA01A9;
+        Mon,  4 Nov 2019 10:50:45 -0500 (EST)
+Date:   Mon, 4 Nov 2019 16:50:45 +0100 (CET)
+From:   Nicolas Pitre <nico@fluxnic.net>
+To:     Greg KH <gregkh@linuxfoundation.org>
+cc:     Or Cohen <orcohen@paloaltonetworks.com>, jslaby@suse.com,
+        textshell@uchuujin.de, daniel.vetter@ffwll.ch, sam@ravnborg.org,
+        mpatocka@redhat.com, ghalat@redhat.com,
+        linux-kernel@vger.kernel.org, jwilk@jwilk.net,
+        Nadav Markus <nmarkus@paloaltonetworks.com>,
+        syzkaller@googlegroups.com
+Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
+In-Reply-To: <20191104152428.GA2252441@kroah.com>
+Message-ID: <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr>
+References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com> <20191104152428.GA2252441@kroah.com>
+User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: text/plain; charset=US-ASCII
+X-Pobox-Relay-ID: DE6C8584-FF1A-11E9-8FA9-8D86F504CC47-78420484!pb-smtp21.pobox.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to disable and unprepare clock when remove.
-Add a call to clk_disable_unprepare to fix it.
+On Mon, 4 Nov 2019, Greg KH wrote:
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/rtc/rtc-brcmstb-waketimer.c | 2 ++
- 1 file changed, 2 insertions(+)
+> On Mon, Nov 04, 2019 at 04:39:55AM -0800, Or Cohen wrote:
+> > Hi,
+> > I discovered a OOB access bug using Syzkaller and decided to report it,
+> > as I could not find a similar report in syzkaller mailing list,
+> > syzkaller-bugs mailing list
+[...]
+> 
+> I am at another conference at the moment and can't look at this much
+> now, will try to later this week...
 
-diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
-index 3e9800f9878a..06b2bdde584a 100644
---- a/drivers/rtc/rtc-brcmstb-waketimer.c
-+++ b/drivers/rtc/rtc-brcmstb-waketimer.c
-@@ -277,6 +277,8 @@ static int brcmstb_waketmr_remove(struct platform_device *pdev)
- 	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
- 
- 	unregister_reboot_notifier(&timer->reboot_notifier);
-+	if (timer->clk)
-+		clk_disable_unprepare(timer->clk);
- 
- 	return 0;
- }
--- 
-2.23.0
+I'll looking into it now.
 
+
+Nicolas
