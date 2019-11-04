@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2137CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AF56CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6F5B214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFBEC217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905328;
-	bh=5OK+09pmuILU+2bDs11edp42TY7UT0xvLUG+Qff8SaI=;
+	s=default; t=1572905330;
+	bh=RF2KtCpXRQbrdWVBcadjdD4hBHy/4SVnpEHOGBeKPEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=NtFIfAJAUAvfIUMqTcIcrFaAwb6Tnf1A3pv6BPNoxyL2AmbHLFRPp98YyFrTCI9kK
-	 vZHtPawz03nCTAoZNZRZr9ASPr1ycyJI4Jj2r1Fbn11bt4hvPR3ybu11ptqhjAfDR5
-	 ji66ewQIuEM0rfSsweUgDgWOXVPK0udUDvKh3DjM=
+	b=i26iqUhLNZtyWDRpXmRLbneifiyJno70yFLrHrCnt3FR/SRxkWVS0rXmelgBe4B2t
+	 FX83GibxonT0iGO8rWFOucjAS5EFiDq6ZrwBDw0zwxDHgQMciUhxa9wBKQiBpkFOvh
+	 B4F8KhjR5Bt9UhYvmoKY9Ffx14edh5RH+ECbzRKg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390291AbfKDWIq (ORCPT
+        id S2390300AbfKDWIt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41660 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfKDWIp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:45 -0500
+        id S2388158AbfKDWIr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:47 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 76B21214D8;
-        Mon,  4 Nov 2019 22:08:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 561ED214E0;
+        Mon,  4 Nov 2019 22:08:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905324;
-        bh=5OK+09pmuILU+2bDs11edp42TY7UT0xvLUG+Qff8SaI=;
+        s=default; t=1572905326;
+        bh=RF2KtCpXRQbrdWVBcadjdD4hBHy/4SVnpEHOGBeKPEw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dXSVEcldQGp60PuXoOt0H9fa1eD/DYQ3U+lI9TA/K+5awi/yy2F1gVcOP2JV13DAz
-         KD1b+7aHzCL3QLJl117VTKU3rgvxjdFxPiGW9pwCsbRDobH6XC8Z+q8meeoEb203Ft
-         WljqUwyEAlo+i/CZte0Ru2Va7ScpCaf4Ljc7dbwk=
+        b=IN8Pq889BrSRKl+a6IhNf2QGZdRL/NmxpmAdpAnK2RfgSA336LUk65QBP7NO5c2XW
+         tSFYT33m+9MBCB3QZvNAX3n3X27+CfW5rEyGntzZhQqQ0R44nBD6vND/mPpWbJJTQj
+         eTPl79+TKIRYqUaC1LPelnBpweXPWYaKg0DiRcwk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>
-Subject: [PATCH 5.3 107/163] USB: ldusb: fix control-message timeout
-Date:   Mon,  4 Nov 2019 22:44:57 +0100
-Message-Id: <20191104212147.907150008@linuxfoundation.org>
+        stable@vger.kernel.org, Samuel Holland <samuel@sholland.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 5.3 108/163] usb: xhci: fix Immediate Data Transfer endianness
+Date:   Mon,  4 Nov 2019 22:44:58 +0100
+Message-Id: <20191104212147.993138919@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,34 +59,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Samuel Holland <samuel@sholland.org>
 
-commit 52403cfbc635d28195167618690595013776ebde upstream.
+commit bfa3dbb343f664573292afb9e44f9abeb81a19de upstream.
 
-USB control-message timeouts are specified in milliseconds, not jiffies.
-Waiting 83 minutes for a transfer to complete is a bit excessive.
+The arguments to queue_trb are always byteswapped to LE for placement in
+the ring, but this should not happen in the case of immediate data; the
+bytes copied out of transfer_buffer are already in the correct order.
+Add a complementary byteswap so the bytes end up in the ring correctly.
 
-Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
-Cc: stable <stable@vger.kernel.org>     # 2.6.13
-Reported-by: syzbot+a4fbb3bb76cda0ea4e58@syzkaller.appspotmail.com
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Link: https://lore.kernel.org/r/20191022153127.22295-1-johan@kernel.org
+This was observed on BE ppc64 with a "Texas Instruments TUSB73x0
+SuperSpeed USB 3.0 xHCI Host Controller [104c:8241]" as a ch341
+usb-serial adapter ("1a86:7523 QinHeng Electronics HL-340 USB-Serial
+adapter") always transmitting the same character (generally NUL) over
+the serial link regardless of the key pressed.
+
+Cc: <stable@vger.kernel.org> # 5.2+
+Fixes: 33e39350ebd2 ("usb: xhci: add Immediate Data Transfer support")
+Signed-off-by: Samuel Holland <samuel@sholland.org>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1572013829-14044-3-git-send-email-mathias.nyman@linux.intel.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/misc/ldusb.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/usb/host/xhci-ring.c |    2 ++
+ 1 file changed, 2 insertions(+)
 
---- a/drivers/usb/misc/ldusb.c
-+++ b/drivers/usb/misc/ldusb.c
-@@ -580,7 +580,7 @@ static ssize_t ld_usb_write(struct file
- 					 1 << 8, 0,
- 					 dev->interrupt_out_buffer,
- 					 bytes_to_write,
--					 USB_CTRL_SET_TIMEOUT * HZ);
-+					 USB_CTRL_SET_TIMEOUT);
- 		if (retval < 0)
- 			dev_err(&dev->intf->dev,
- 				"Couldn't submit HID_REQ_SET_REPORT %d\n",
+--- a/drivers/usb/host/xhci-ring.c
++++ b/drivers/usb/host/xhci-ring.c
+@@ -3330,6 +3330,7 @@ int xhci_queue_bulk_tx(struct xhci_hcd *
+ 			if (xhci_urb_suitable_for_idt(urb)) {
+ 				memcpy(&send_addr, urb->transfer_buffer,
+ 				       trb_buff_len);
++				le64_to_cpus(&send_addr);
+ 				field |= TRB_IDT;
+ 			}
+ 		}
+@@ -3475,6 +3476,7 @@ int xhci_queue_ctrl_tx(struct xhci_hcd *
+ 		if (xhci_urb_suitable_for_idt(urb)) {
+ 			memcpy(&addr, urb->transfer_buffer,
+ 			       urb->transfer_buffer_length);
++			le64_to_cpus(&addr);
+ 			field |= TRB_IDT;
+ 		} else {
+ 			addr = (u64) urb->transfer_dma;
 
 
