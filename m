@@ -2,143 +2,231 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3A48CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9C3BCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C83A1204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XyxBdQ1N";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RL01cePn"
+	by mail.kernel.org (Postfix) with ESMTP id 9973F222CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572850615;
+	bh=7M6lCVb2ncno6ELpErw9X3BH6KNLAI04t4hzOFAV4Z0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=kWxQ0dXlV7PZt8BY8Tk9p2Sd+ItlT7jdeVumMX/kqnDdWa0Brbt4U0vbwK3Uo744J
+	 UX8Uh5f01UMYNZNf/mfhZ7ONF6T2rvkQO/mEYNzMReBKiYFWy8dzCiPl5Td2pbOfRq
+	 NArN4fp4UHjjMlIrI2ZwpCRl8GudQEbyhg46D5LA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727999AbfKDG4r (ORCPT
+        id S1728114AbfKDG4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:56:47 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:51482 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727567AbfKDG4p (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:56:45 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 2881E60DAF; Mon,  4 Nov 2019 06:56:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572850604;
-        bh=AhKc5wWa30wa/WEEpKjo85dpiL/PXLkjhkK4VBEnxWg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=XyxBdQ1NLS+LAGi1NKtYYmihmAhNvIVUX+82A3BNEQEq3VNoUE0SG0nK24twwwzVx
-         mb7X7wQ1lExFdySDfXNzSh8KNy8Mnq1wX0/GrBfE1/prwMobWA3tP4YKmdBhpGRPWo
-         Ghp3S75HF+58K1EV95vjxS+36EUMyShDIsOuNuaw=
-Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        Mon, 4 Nov 2019 01:56:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60434 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727567AbfKDG4x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:56:53 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
-        (Authenticated sender: rnayak@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8E3A160DAF;
-        Mon,  4 Nov 2019 06:56:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572850603;
-        bh=AhKc5wWa30wa/WEEpKjo85dpiL/PXLkjhkK4VBEnxWg=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RL01cePnSeK1p8UZDWKH1KsinywU/JXZjQI9c0w23nvtKGyN0MMcWtLxpcoSvu+R5
-         XJWpLQmNKoW5I0z8IDdLZU2EE3QsskYyry3JVxLPLpDxlPHtBjbqn76XtjCv++wJ9/
-         IdcBHFudOnJdz0gALRcyrvxhnD1yV/T/ar2zpbAk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8E3A160DAF
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
- controller
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maulik Shah <mkshah@codeaurora.org>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-12-rnayak@codeaurora.org>
- <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
- <20191030195021.GC27773@google.com>
- <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
- <20191104063348.GA2464@tuxbook-pro>
-From:   Rajendra Nayak <rnayak@codeaurora.org>
-Message-ID: <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
-Date:   Mon, 4 Nov 2019 12:26:38 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191104063348.GA2464@tuxbook-pro>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+        by mail.kernel.org (Postfix) with ESMTPSA id 0033F2190F;
+        Mon,  4 Nov 2019 06:56:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572850612;
+        bh=7M6lCVb2ncno6ELpErw9X3BH6KNLAI04t4hzOFAV4Z0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=o9Mly5T6wKGBjTCzzJXieGD4mxHse1IuAs/xcT/NoO5Gj5e/h9VagT4Y3Cbu6S/F1
+         E6I912CGaUiuK/Of81dC3DitnRBQuh+ilMXNRkwIOWzekwRRdA20wm9TRnEjK0VRMH
+         JLADqi+BRwANMrUk/TQlUaSvxTYJXzvT4ocoSwbU=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3 01/13] alpha: use pgtable-nopud instead of 4level-fixup
+Date:   Mon,  4 Nov 2019 08:56:15 +0200
+Message-Id: <1572850587-20314-2-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1572850587-20314-1-git-send-email-rppt@kernel.org>
+References: <1572850587-20314-1-git-send-email-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: Mike Rapoport <rppt@linux.ibm.com>
 
+It is not likely alpha will have 5-level page tables.
 
-On 11/4/2019 12:03 PM, Bjorn Andersson wrote:
-> On Sun 03 Nov 22:17 PST 2019, Rajendra Nayak wrote:
-> 
->>
->>
->> On 10/31/2019 1:20 AM, Matthias Kaehlcke wrote:
->>> On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
->>>> Quoting Rajendra Nayak (2019-10-23 02:02:19)
->>>>> From: Maulik Shah <mkshah@codeaurora.org>
->>>>>
->>>>> Add pdc interrupt controller for sc7180
->>>>>
->>>>> Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
->>>>> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
->>>>> ---
->>>>> v3:
->>>>> Used the qcom,sdm845-pdc compatible for pdc node
->>>>
->>>> Everything else isn't doing the weird old compatible thing. Why not just
->>>> add the new compatible and update the driver? I guess I'll have to go
->>>> read the history.
->>>
->>> Marc Zyngier complained  on v2 about the churn from adding compatible
->>> strings for identical components, and I kinda see his point.
->>>
->>> I agree that using the 'sdm845' compatible string for sc7180 is odd too.
->>> Maybe we should introduce SoC independent compatible strings for IP blocks
->>> that are shared across multiple SoCs? If differentiation is needed SoC
->>> specific strings can be added.
->>
->> Sure, I will perhaps add a qcom,pdc SoC independent compatible to avoid
->> confusion.
->>
-> 
-> I agree,
-> 
-> compatible = "qcom,sc7180-pdc", "qcom,pdc";
-> 
-> is the way to go.
+Replace usage of include/asm-generic/4level-fixup.h and implied
+__ARCH_HAS_4LEVEL_HACK with include/asm-generic/pgtable-nopud.h and adjust
+page table manipulation macros and functions accordingly.
 
-I wasn't planning on adding a qcom,sc7180-pdc, but instead just use the
-qcom,pdc one for sc7180.
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ arch/alpha/include/asm/mmzone.h  |  1 -
+ arch/alpha/include/asm/pgalloc.h |  4 ++--
+ arch/alpha/include/asm/pgtable.h | 24 ++++++++++++------------
+ arch/alpha/mm/init.c             | 12 ++++++++----
+ 4 files changed, 22 insertions(+), 19 deletions(-)
 
-> 
-> Reusing qcom,sdm845-pdc would prevent us from tackling any unforeseen
-> issues/variations/erratas with one or the other platform in the future.
-
-That was the intention of adding qcom,sc7180-pdc in the first place,
-but Marc Zyngier was not happy with the churn, given there aren't really
-any variations or erratas that we know of.
-
-> 
-> Regards,
-> Bjorn
-> 
->>
->> -- 
->> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
->> of Code Aurora Forum, hosted by The Linux Foundation
-
+diff --git a/arch/alpha/include/asm/mmzone.h b/arch/alpha/include/asm/mmzone.h
+index 889b5d3..7ee144f 100644
+--- a/arch/alpha/include/asm/mmzone.h
++++ b/arch/alpha/include/asm/mmzone.h
+@@ -73,7 +73,6 @@ PLAT_NODE_DATA_LOCALNR(unsigned long p, int n)
+ #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+ 
+ #define pmd_page(pmd)		(pfn_to_page(pmd_val(pmd) >> 32))
+-#define pgd_page(pgd)		(pfn_to_page(pgd_val(pgd) >> 32))
+ #define pte_pfn(pte)		(pte_val(pte) >> 32)
+ 
+ #define mk_pte(page, pgprot)						     \
+diff --git a/arch/alpha/include/asm/pgalloc.h b/arch/alpha/include/asm/pgalloc.h
+index eb91f1e..a1a29f6 100644
+--- a/arch/alpha/include/asm/pgalloc.h
++++ b/arch/alpha/include/asm/pgalloc.h
+@@ -27,9 +27,9 @@ pmd_populate_kernel(struct mm_struct *mm, pmd_t *pmd, pte_t *pte)
+ }
+ 
+ static inline void
+-pgd_populate(struct mm_struct *mm, pgd_t *pgd, pmd_t *pmd)
++pud_populate(struct mm_struct *mm, pud_t *pud, pmd_t *pmd)
+ {
+-	pgd_set(pgd, pmd);
++	pud_set(pud, pmd);
+ }
+ 
+ extern pgd_t *pgd_alloc(struct mm_struct *mm);
+diff --git a/arch/alpha/include/asm/pgtable.h b/arch/alpha/include/asm/pgtable.h
+index 065b57f..299791c 100644
+--- a/arch/alpha/include/asm/pgtable.h
++++ b/arch/alpha/include/asm/pgtable.h
+@@ -2,7 +2,7 @@
+ #ifndef _ALPHA_PGTABLE_H
+ #define _ALPHA_PGTABLE_H
+ 
+-#include <asm-generic/4level-fixup.h>
++#include <asm-generic/pgtable-nopud.h>
+ 
+ /*
+  * This file contains the functions and defines necessary to modify and use
+@@ -226,8 +226,8 @@ extern inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+ extern inline void pmd_set(pmd_t * pmdp, pte_t * ptep)
+ { pmd_val(*pmdp) = _PAGE_TABLE | ((((unsigned long) ptep) - PAGE_OFFSET) << (32-PAGE_SHIFT)); }
+ 
+-extern inline void pgd_set(pgd_t * pgdp, pmd_t * pmdp)
+-{ pgd_val(*pgdp) = _PAGE_TABLE | ((((unsigned long) pmdp) - PAGE_OFFSET) << (32-PAGE_SHIFT)); }
++extern inline void pud_set(pud_t * pudp, pmd_t * pmdp)
++{ pud_val(*pudp) = _PAGE_TABLE | ((((unsigned long) pmdp) - PAGE_OFFSET) << (32-PAGE_SHIFT)); }
+ 
+ 
+ extern inline unsigned long
+@@ -238,11 +238,11 @@ pmd_page_vaddr(pmd_t pmd)
+ 
+ #ifndef CONFIG_DISCONTIGMEM
+ #define pmd_page(pmd)	(mem_map + ((pmd_val(pmd) & _PFN_MASK) >> 32))
+-#define pgd_page(pgd)	(mem_map + ((pgd_val(pgd) & _PFN_MASK) >> 32))
++#define pud_page(pud)	(mem_map + ((pud_val(pud) & _PFN_MASK) >> 32))
+ #endif
+ 
+-extern inline unsigned long pgd_page_vaddr(pgd_t pgd)
+-{ return PAGE_OFFSET + ((pgd_val(pgd) & _PFN_MASK) >> (32-PAGE_SHIFT)); }
++extern inline unsigned long pud_page_vaddr(pud_t pgd)
++{ return PAGE_OFFSET + ((pud_val(pgd) & _PFN_MASK) >> (32-PAGE_SHIFT)); }
+ 
+ extern inline int pte_none(pte_t pte)		{ return !pte_val(pte); }
+ extern inline int pte_present(pte_t pte)	{ return pte_val(pte) & _PAGE_VALID; }
+@@ -256,10 +256,10 @@ extern inline int pmd_bad(pmd_t pmd)		{ return (pmd_val(pmd) & ~_PFN_MASK) != _P
+ extern inline int pmd_present(pmd_t pmd)	{ return pmd_val(pmd) & _PAGE_VALID; }
+ extern inline void pmd_clear(pmd_t * pmdp)	{ pmd_val(*pmdp) = 0; }
+ 
+-extern inline int pgd_none(pgd_t pgd)		{ return !pgd_val(pgd); }
+-extern inline int pgd_bad(pgd_t pgd)		{ return (pgd_val(pgd) & ~_PFN_MASK) != _PAGE_TABLE; }
+-extern inline int pgd_present(pgd_t pgd)	{ return pgd_val(pgd) & _PAGE_VALID; }
+-extern inline void pgd_clear(pgd_t * pgdp)	{ pgd_val(*pgdp) = 0; }
++extern inline int pud_none(pud_t pud)		{ return !pud_val(pud); }
++extern inline int pud_bad(pud_t pud)		{ return (pud_val(pud) & ~_PFN_MASK) != _PAGE_TABLE; }
++extern inline int pud_present(pud_t pud)	{ return pud_val(pud) & _PAGE_VALID; }
++extern inline void pud_clear(pud_t * pudp)	{ pud_val(*pudp) = 0; }
+ 
+ /*
+  * The following only work if pte_present() is true.
+@@ -301,9 +301,9 @@ extern inline pte_t pte_mkspecial(pte_t pte)	{ return pte; }
+  */
+ 
+ /* Find an entry in the second-level page table.. */
+-extern inline pmd_t * pmd_offset(pgd_t * dir, unsigned long address)
++extern inline pmd_t * pmd_offset(pud_t * dir, unsigned long address)
+ {
+-	pmd_t *ret = (pmd_t *) pgd_page_vaddr(*dir) + ((address >> PMD_SHIFT) & (PTRS_PER_PAGE - 1));
++	pmd_t *ret = (pmd_t *) pud_page_vaddr(*dir) + ((address >> PMD_SHIFT) & (PTRS_PER_PAGE - 1));
+ 	smp_read_barrier_depends(); /* see above */
+ 	return ret;
+ }
+diff --git a/arch/alpha/mm/init.c b/arch/alpha/mm/init.c
+index e2cbec3..12e218d 100644
+--- a/arch/alpha/mm/init.c
++++ b/arch/alpha/mm/init.c
+@@ -146,6 +146,8 @@ callback_init(void * kernel_end)
+ {
+ 	struct crb_struct * crb;
+ 	pgd_t *pgd;
++	p4d_t *p4d;
++	pud_t *pud;
+ 	pmd_t *pmd;
+ 	void *two_pages;
+ 
+@@ -184,8 +186,10 @@ callback_init(void * kernel_end)
+ 	memset(two_pages, 0, 2*PAGE_SIZE);
+ 
+ 	pgd = pgd_offset_k(VMALLOC_START);
+-	pgd_set(pgd, (pmd_t *)two_pages);
+-	pmd = pmd_offset(pgd, VMALLOC_START);
++	p4d = p4d_offset(pgd, VMALLOC_START);
++	pud = pud_offset(p4d, VMALLOC_START);
++	pud_set(pud, (pmd_t *)two_pages);
++	pmd = pmd_offset(pud, VMALLOC_START);
+ 	pmd_set(pmd, (pte_t *)(two_pages + PAGE_SIZE));
+ 
+ 	if (alpha_using_srm) {
+@@ -214,9 +218,9 @@ callback_init(void * kernel_end)
+ 				/* Newer consoles (especially on larger
+ 				   systems) may require more pages of
+ 				   PTEs. Grab additional pages as needed. */
+-				if (pmd != pmd_offset(pgd, vaddr)) {
++				if (pmd != pmd_offset(pud, vaddr)) {
+ 					memset(kernel_end, 0, PAGE_SIZE);
+-					pmd = pmd_offset(pgd, vaddr);
++					pmd = pmd_offset(pud, vaddr);
+ 					pmd_set(pmd, (pte_t *)kernel_end);
+ 					kernel_end += PAGE_SIZE;
+ 				}
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
+
