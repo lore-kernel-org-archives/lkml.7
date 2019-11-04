@@ -2,127 +2,113 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC3CDCA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:04:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AA19ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:07:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEF5221D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:04:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 806F121D81
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:07:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="B5FY1/Xb"
+	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="mEF8S8HH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728902AbfKDNEb (ORCPT
+        id S1728921AbfKDNHf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:04:31 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:35193 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727454AbfKDNEa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:04:30 -0500
-Received: by mail-lj1-f196.google.com with SMTP id r7so8820181ljg.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 05:04:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=JhQ7HFlU2UjuPowmnwPGHmD+EdJPReNvJPv4o/73DLw=;
-        b=B5FY1/XbL+HcLM8uSIu6+xWTIFQMhgGR0ZPc+1TqFaYNb1YQ36cPU6LCYvBlUYusqP
-         avFe3K1dEA5OAwuz0iPyfvQUmKLIDhsKl0k4ZLnULf/uordbSoPvhYCHckvMW/hTlUSS
-         yZI/RBp4yvR1rCdMD7t5ddJBuTgMn8WFIijWmaY8qSTlDu2WR+Sd8gkxHDkISxD5UEhj
-         QJl9FclTkuIOpCIAag+MkYWG97kQcyZiHNoweOVHDhYSTSf7PnynXwYEDbUTTXGLXiGN
-         qtP4vYFmNw0OHaTrGlgmMTjFc5DC8u70AsjW1rVABrOR9EUNFL8XRPd7z1Ch00QT6eo9
-         EAnw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=JhQ7HFlU2UjuPowmnwPGHmD+EdJPReNvJPv4o/73DLw=;
-        b=QuWMaDu7jKGdZ6OTlVF/D7XvF5Da8pum1b7S4M6A2ka3zcGxcu6s3gnbQyqGFlkL4M
-         KH9a0/umYrTCbjunMjl7+Y0flwCtDHdf8u1ocYNcUDMl6+hXpc0y0ptuImdF4iTJ9Iff
-         e03Q0fAvCxYE2RwRFxoCLKnsbf51HhDB1RSojkUxoOnT7BFDzJKEpn0wxrVYrlxP5Yct
-         q0s/4xFbZAB3xoJA2aybYzXTOz9HH+Z/D1cdK9TH9ExBwDsQEKBfhxiM7EshNqBSf5ZX
-         vdmP7H4GueR/C6vY+hDrcoPWiZNtq2lATFMJePQbfQ7AoitXLKTUNn2QX+dRUiGVFgAr
-         ODmA==
-X-Gm-Message-State: APjAAAXtizGeTttuV49dvtGKi2SLUXgrlULil/+09vu5aM3AfOqR0veV
-        d2ncba3EP7JzQPqpf/Bp3+R4WE0PUVbKTl/A7N8jpQ==
-X-Google-Smtp-Source: APXvYqz5yHtYXhLt1jqsbom3DmiNCD/Pl9JJmdKaVL59tf08VLPMTBtZfDVWp2YoogUmAUPkOXxwQTAYiXXb4t82d+U=
-X-Received: by 2002:a2e:9a5a:: with SMTP id k26mr8959112ljj.46.1572872665261;
- Mon, 04 Nov 2019 05:04:25 -0800 (PST)
+        Mon, 4 Nov 2019 08:07:35 -0500
+Received: from ns.mm-sol.com ([37.157.136.199]:49179 "EHLO extserv.mm-sol.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727663AbfKDNHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:07:35 -0500
+X-Greylist: delayed 443 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 08:07:33 EST
+Received: from [192.168.27.209] (unknown [37.157.136.206])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by extserv.mm-sol.com (Postfix) with ESMTPSA id EF598CF18;
+        Mon,  4 Nov 2019 15:00:08 +0200 (EET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
+        t=1572872408; bh=oVopT+MD93ZbAJmCMweF+pEr53zTDaEbQfDd0ZNB/VY=;
+        h=Subject:To:Cc:From:Date:From;
+        b=mEF8S8HHPDZ4Yz8rH6fPfjO+5QXGkvNenzKvUBrtzVnGYxll8RDR8RLs1sEE/RgI+
+         8y6tEHwCkxYX/a2xdLiUTNfs34XxncrjdWtHcv6MIzv6DXmbQXOu4PCsNNxusIovHP
+         mEAZVpGaV2f+GnqYBXFTEUABHbtuL+ixIASObQp/WTdaFSP6uaOdrJ2gT60iRELVH6
+         JuNjXKNBhECAgGOLBkrp6nEqvduwYBxDvBP4HwU9EgITLnJv5xzCp1B0unta7V4dnU
+         lLPbASTID05k2P4U+F72ic3OurussykFH3KXzC6biVaUIcvMYBsWNWSX1+qGhZKzMm
+         25ikT+RZgT+Iw==
+Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+From:   Stanimir Varbanov <svarbanov@mm-sol.com>
+Message-ID: <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
+Date:   Mon, 4 Nov 2019 15:00:06 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <0100016e3654527a-82a12a13-1ed1-448a-8c6d-58f7e85bc85c-000000@email.amazonses.com>
- <20191104122138.GA2127297@kroah.com>
-In-Reply-To: <20191104122138.GA2127297@kroah.com>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Mon, 4 Nov 2019 18:34:14 +0530
-Message-ID: <CA+G9fYshX87tu3FWjVH3-hga4SdwbwcXeBFTgmBbH_6tHDdpXQ@mail.gmail.com>
-Subject: stable-rc 4.19: net/ipv6/addrconf.c:6747:22: error:
- 'blackhole_netdev' undeclared
-To:     Greg KH <gregkh@linuxfoundation.org>,
-        linux- stable <stable@vger.kernel.org>,
-        Netdev <netdev@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Cc:     lkft-triage@lists.linaro.org,
-        "David S. Miller" <davem@davemloft.net>,
-        "Guohanjun (Hanjun Guo)" <guohanjun@huawei.com>,
-        kuznet@ms2.inr.ac.ru, yoshfuji@linux-ipv6.org,
-        Sasha Levin <sashal@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two reasons for build failure on arm64, arm, x86_64 and i386.
+Hi Bjorn,
 
-For arm64 we have identified missing patch,
-Patch "efd00c7 arm64: Add MIDR encoding for HiSilicon Taishan CPUs" needs to
-be bacported as well,
+Thanks for the fix!
 
-for arm, x86_64 and i386 build error log,
-------------------------------------
+On 11/2/19 2:24 AM, Bjorn Andersson wrote:
+> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
+> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
+> bridges.
 
-net/ipv6/addrconf.c: In function 'addrconf_init':
-net/ipv6/addrconf.c:6747:22: error: 'blackhole_netdev' undeclared
-(first use in this function); did you mean 'alloc_netdev'?
-  bdev = ipv6_add_dev(blackhole_netdev);
-                      ^~~~~~~~~~~~~~~~
-                      alloc_netdev
-net/ipv6/addrconf.c:6747:22: note: each undeclared identifier is
-reported only once for each function it appears in
-net/ipv6/addrconf.c: In function 'addrconf_cleanup':
-net/ipv6/addrconf.c:6839:18: error: 'blackhole_netdev' undeclared
-(first use in this function); did you mean 'alloc_netdev'?
-  addrconf_ifdown(blackhole_netdev, 2);
-                  ^~~~~~~~~~~~~~~~
-                  alloc_netdev
+Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
+Synopsys IP rev.: 4.11a) i.e. apq8084 ?
 
+> 
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
+>  include/linux/pci_ids.h                | 2 ++
+>  2 files changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
+> index 35f4980480bb..b91abf4d4905 100644
+> --- a/drivers/pci/controller/dwc/pcie-qcom.c
+> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
+> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
+>  {
+>  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
+>  }
+> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
+> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
+>  
+>  static struct platform_driver qcom_pcie_driver = {
+>  	.probe = qcom_pcie_probe,
+> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
+> index 21a572469a4e..3d0724ee4d2f 100644
+> --- a/include/linux/pci_ids.h
+> +++ b/include/linux/pci_ids.h
+> @@ -2413,6 +2413,8 @@
+>  #define PCI_VENDOR_ID_LENOVO		0x17aa
+>  
+>  #define PCI_VENDOR_ID_QCOM		0x17cb
+> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
+> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
+>  
+>  #define PCI_VENDOR_ID_CDNS		0x17cd
+>  
+> 
 
-For arm64 build error log,
----------------------------------------
-arch/arm64/kernel/cpufeature.c: In function 'unmap_kernel_at_el0':
-arch/arm64/kernel/cpufeature.c:909:21: error: 'MIDR_HISI_TSV110'
-undeclared (first use in this function); did you mean
-'GICR_ISACTIVER0'?
-   MIDR_ALL_VERSIONS(MIDR_HISI_TSV110),
-                     ^
-arch/arm64/include/asm/cputype.h:141:12: note: in definition of macro
-'MIDR_RANGE'
-   .model = m,     \
-            ^
-
-
-Meta data:
-------------------------------------------------------------------------
-kernel: 4.19.82-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-git branch: linux-4.19.y
-git commit: 7d816e1d91b01911392b7f8f93a4a153b9af60d3
-git describe: v4.19.81-145-g7d816e1d91b0
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe-sanity/build/v4.19.81-145-g7d816e1d91b0
-
-
-- Naresh
+-- 
+regards,
+Stan
