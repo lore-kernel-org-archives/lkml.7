@@ -4,51 +4,52 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D082ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D0DECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98CA8214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A6BD214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905523;
-	bh=7aOkVIN45PX3kSATFqSRdJ5cPnl8QAM5jLALRtF4yqs=;
+	s=default; t=1572905528;
+	bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Ni/yj5HGKwPK8vPO3VvW7wKgUa4++JS/A4AcWlGVJ4xTsd+JK7Q7rHT6EKyJ3xBJG
-	 jqevjyRJrhDuwwoWtmY66ahtLarXfD+Sczj1EddGpTVWyYYevAsKI7mBQDfvhawHmQ
-	 IjOT8YcLtcHLfo2HaLd5/3HLik/hMPYzm7zBqKKI=
+	b=NnU9xFpilgcHZAnPn5IVPuSaIWi5CrNn/esZ9tv2wcrkgY+n+jHXJ9AEPVV7/8rEb
+	 GVs6DPfE35Mn1F7LjDqBLRQqTGRCE566c1OcWvyVPwxqxqdMuUg5DvV/zeGKufSb2K
+	 T8c09sp32pZyHjJyRkWSo4DMd/cSL68wMRxMbb0Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388104AbfKDWLy (ORCPT
+        id S2390139AbfKDWMH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45204 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:12:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45280 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389604AbfKDWLr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:47 -0500
+        id S2390407AbfKDWLv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:51 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE302204EC;
-        Mon,  4 Nov 2019 22:11:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9EAD3204EC;
+        Mon,  4 Nov 2019 22:11:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905506;
-        bh=7aOkVIN45PX3kSATFqSRdJ5cPnl8QAM5jLALRtF4yqs=;
+        s=default; t=1572905510;
+        bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=SsO88f967stsoL1iVZHdHmL5e+3IoZXgvqGhewMBxP1k4lUukzkZ+qPyVT4PSfsbu
-         FkXQL1Q9OmiVO9EuRvZ0YTbwPpyTq5wE8/wM4Kp0zJXztcBheWnh4szQrdjMh0rxPW
-         TF952IpNx26pvRLhxhOEtPc90EMWbX4OE5KJq1HQ=
+        b=ROYUJvDwLROvtJQ0wrBobciHPRUuKeeYWvH+4/UzPNDt/4rp5Vogw3rzCq5d7ocMl
+         XMNIAIy0Wo975NrD6ncDtpKWZc1porTBlF0ZycZ34tXWATjsutfyWdtM7NqY4MvQNU
+         EVpiuva0/de/wAuf3aQF2hcVd4lOQ5aCSZ/uE6+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com,
-        Sven Eckelmann <sven@narfation.org>,
-        Simon Wunderlich <sw@simonwunderlich.de>
-Subject: [PATCH 5.3 145/163] batman-adv: Avoid free/alloc race when handling OGM buffer
-Date:   Mon,  4 Nov 2019 22:45:35 +0100
-Message-Id: <20191104212150.821252893@linuxfoundation.org>
+        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
+        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
+        Eric Biggers <ebiggers@google.com>,
+        Jakub Kicinski <jakub.kicinski@netronome.com>
+Subject: [PATCH 5.3 146/163] llc: fix sk_buff leak in llc_sap_state_process()
+Date:   Mon,  4 Nov 2019 22:45:36 +0100
+Message-Id: <20191104212150.890725209@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,200 +62,131 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sven Eckelmann <sven@narfation.org>
+From: Eric Biggers <ebiggers@google.com>
 
-commit 40e220b4218bb3d278e5e8cc04ccdfd1c7ff8307 upstream.
+commit c6ee11c39fcc1fb55130748990a8f199e76263b4 upstream.
 
-Each slave interface of an B.A.T.M.A.N. IV virtual interface has an OGM
-packet buffer which is initialized using data from netdevice notifier and
-other rtnetlink related hooks. It is sent regularly via various slave
-interfaces of the batadv virtual interface and in this process also
-modified (realloced) to integrate additional state information via TVLV
-containers.
+syzbot reported:
 
-It must be avoided that the worker item is executed without a common lock
-with the netdevice notifier/rtnetlink helpers. Otherwise it can either
-happen that half modified/freed data is sent out or functions modifying the
-OGM buffer try to access already freed memory regions.
+    BUG: memory leak
+    unreferenced object 0xffff888116270800 (size 224):
+       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
+       hex dump (first 32 bytes):
+         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
+       backtrace:
+         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
+         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
+         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
+         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
+         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
+         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
+         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
+         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
+         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
+         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
+         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
+         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
+         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
+	 [...]
 
-Reported-by: syzbot+0cc629f19ccb8534935b@syzkaller.appspotmail.com
-Fixes: c6c8fea29769 ("net: Add batman-adv meshing protocol")
-Signed-off-by: Sven Eckelmann <sven@narfation.org>
-Signed-off-by: Simon Wunderlich <sw@simonwunderlich.de>
+The bug is that llc_sap_state_process() always takes an extra reference
+to the skb, but sometimes neither llc_sap_next_state() nor
+llc_sap_state_process() itself drops this reference.
+
+Fix it by changing llc_sap_next_state() to never consume a reference to
+the skb, rather than sometimes do so and sometimes not.  Then remove the
+extra skb_get() and kfree_skb() from llc_sap_state_process().
+
+Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
+Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Signed-off-by: Eric Biggers <ebiggers@google.com>
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/batman-adv/bat_iv_ogm.c     |   61 ++++++++++++++++++++++++++++++++++------
- net/batman-adv/hard-interface.c |    2 +
- net/batman-adv/types.h          |    3 +
- 3 files changed, 57 insertions(+), 9 deletions(-)
+ net/llc/llc_s_ac.c |   12 +++++++++---
+ net/llc/llc_sap.c  |   23 ++++++++---------------
+ 2 files changed, 17 insertions(+), 18 deletions(-)
 
---- a/net/batman-adv/bat_iv_ogm.c
-+++ b/net/batman-adv/bat_iv_ogm.c
-@@ -22,6 +22,8 @@
- #include <linux/kernel.h>
- #include <linux/kref.h>
- #include <linux/list.h>
-+#include <linux/lockdep.h>
-+#include <linux/mutex.h>
- #include <linux/netdevice.h>
- #include <linux/netlink.h>
- #include <linux/pkt_sched.h>
-@@ -193,14 +195,18 @@ static int batadv_iv_ogm_iface_enable(st
- 	unsigned char *ogm_buff;
- 	u32 random_seqno;
- 
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	/* randomize initial seqno to avoid collision */
- 	get_random_bytes(&random_seqno, sizeof(random_seqno));
- 	atomic_set(&hard_iface->bat_iv.ogm_seqno, random_seqno);
- 
- 	hard_iface->bat_iv.ogm_buff_len = BATADV_OGM_HLEN;
- 	ogm_buff = kmalloc(hard_iface->bat_iv.ogm_buff_len, GFP_ATOMIC);
--	if (!ogm_buff)
-+	if (!ogm_buff) {
-+		mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- 		return -ENOMEM;
+--- a/net/llc/llc_s_ac.c
++++ b/net/llc/llc_s_ac.c
+@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sa
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_ui_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
 +	}
- 
- 	hard_iface->bat_iv.ogm_buff = ogm_buff;
- 
-@@ -212,35 +218,59 @@ static int batadv_iv_ogm_iface_enable(st
- 	batadv_ogm_packet->reserved = 0;
- 	batadv_ogm_packet->tq = BATADV_TQ_MAX_VALUE;
- 
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	return 0;
+ 	return rc;
  }
  
- static void batadv_iv_ogm_iface_disable(struct batadv_hard_iface *hard_iface)
+@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct ll
+ 			    ev->daddr.lsap, LLC_PDU_CMD);
+ 	llc_pdu_init_as_test_cmd(skb);
+ 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
+-	if (likely(!rc))
++	if (likely(!rc)) {
++		skb_get(skb);
+ 		rc = dev_queue_xmit(skb);
++	}
+ 	return rc;
+ }
+ 
+--- a/net/llc/llc_sap.c
++++ b/net/llc/llc_sap.c
+@@ -197,29 +197,22 @@ out:
+  *	After executing actions of the event, upper layer will be indicated
+  *	if needed(on receiving an UI frame). sk can be null for the
+  *	datalink_proto case.
++ *
++ *	This function always consumes a reference to the skb.
+  */
+ static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
  {
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
- 	kfree(hard_iface->bat_iv.ogm_buff);
- 	hard_iface->bat_iv.ogm_buff = NULL;
-+
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
+ 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
  
- static void batadv_iv_ogm_iface_update_mac(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_ogm_packet *batadv_ogm_packet;
--	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	void *ogm_buff;
+-	/*
+-	 * We have to hold the skb, because llc_sap_next_state
+-	 * will kfree it in the sending path and we need to
+-	 * look at the skb->cb, where we encode llc_sap_state_ev.
+-	 */
+-	skb_get(skb);
+ 	ev->ind_cfm_flag = 0;
+ 	llc_sap_next_state(sap, skb);
+-	if (ev->ind_cfm_flag == LLC_IND) {
+-		if (skb->sk->sk_state == TCP_LISTEN)
+-			kfree_skb(skb);
+-		else {
+-			llc_save_primitive(skb->sk, skb, ev->prim);
  
--	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
+-			/* queue skb to the user. */
+-			if (sock_queue_rcv_skb(skb->sk, skb))
+-				kfree_skb(skb);
+-		}
++	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
++		llc_save_primitive(skb->sk, skb, ev->prim);
 +
-+	ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	if (!ogm_buff)
-+		goto unlock;
-+
-+	batadv_ogm_packet = ogm_buff;
- 	ether_addr_copy(batadv_ogm_packet->orig,
- 			hard_iface->net_dev->dev_addr);
- 	ether_addr_copy(batadv_ogm_packet->prev_sender,
- 			hard_iface->net_dev->dev_addr);
-+
-+unlock:
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
- 
- static void
- batadv_iv_ogm_primary_iface_set(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_ogm_packet *batadv_ogm_packet;
--	unsigned char *ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	void *ogm_buff;
- 
--	batadv_ogm_packet = (struct batadv_ogm_packet *)ogm_buff;
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+
-+	ogm_buff = hard_iface->bat_iv.ogm_buff;
-+	if (!ogm_buff)
-+		goto unlock;
-+
-+	batadv_ogm_packet = ogm_buff;
- 	batadv_ogm_packet->ttl = BATADV_TTL;
-+
-+unlock:
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
- }
- 
- /* when do we schedule our own ogm to be sent */
-@@ -742,7 +772,11 @@ batadv_iv_ogm_slide_own_bcast_window(str
++		/* queue skb to the user. */
++		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
++			return;
  	}
+ 	kfree_skb(skb);
  }
- 
--static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
-+/**
-+ * batadv_iv_ogm_schedule_buff() - schedule submission of hardif ogm buffer
-+ * @hard_iface: interface whose ogm buffer should be transmitted
-+ */
-+static void batadv_iv_ogm_schedule_buff(struct batadv_hard_iface *hard_iface)
- {
- 	struct batadv_priv *bat_priv = netdev_priv(hard_iface->soft_iface);
- 	unsigned char **ogm_buff = &hard_iface->bat_iv.ogm_buff;
-@@ -753,9 +787,7 @@ static void batadv_iv_ogm_schedule(struc
- 	u16 tvlv_len = 0;
- 	unsigned long send_time;
- 
--	if (hard_iface->if_status == BATADV_IF_NOT_IN_USE ||
--	    hard_iface->if_status == BATADV_IF_TO_BE_REMOVED)
--		return;
-+	lockdep_assert_held(&hard_iface->bat_iv.ogm_buff_mutex);
- 
- 	/* the interface gets activated here to avoid race conditions between
- 	 * the moment of activating the interface in
-@@ -823,6 +855,17 @@ out:
- 		batadv_hardif_put(primary_if);
- }
- 
-+static void batadv_iv_ogm_schedule(struct batadv_hard_iface *hard_iface)
-+{
-+	if (hard_iface->if_status == BATADV_IF_NOT_IN_USE ||
-+	    hard_iface->if_status == BATADV_IF_TO_BE_REMOVED)
-+		return;
-+
-+	mutex_lock(&hard_iface->bat_iv.ogm_buff_mutex);
-+	batadv_iv_ogm_schedule_buff(hard_iface);
-+	mutex_unlock(&hard_iface->bat_iv.ogm_buff_mutex);
-+}
-+
- /**
-  * batadv_iv_orig_ifinfo_sum() - Get bcast_own sum for originator over iterface
-  * @orig_node: originator which reproadcasted the OGMs directly
---- a/net/batman-adv/hard-interface.c
-+++ b/net/batman-adv/hard-interface.c
-@@ -18,6 +18,7 @@
- #include <linux/kref.h>
- #include <linux/limits.h>
- #include <linux/list.h>
-+#include <linux/mutex.h>
- #include <linux/netdevice.h>
- #include <linux/printk.h>
- #include <linux/rculist.h>
-@@ -929,6 +930,7 @@ batadv_hardif_add_interface(struct net_d
- 	INIT_LIST_HEAD(&hard_iface->list);
- 	INIT_HLIST_HEAD(&hard_iface->neigh_list);
- 
-+	mutex_init(&hard_iface->bat_iv.ogm_buff_mutex);
- 	spin_lock_init(&hard_iface->neigh_list_lock);
- 	kref_init(&hard_iface->refcount);
- 
---- a/net/batman-adv/types.h
-+++ b/net/batman-adv/types.h
-@@ -81,6 +81,9 @@ struct batadv_hard_iface_bat_iv {
- 
- 	/** @ogm_seqno: OGM sequence number - used to identify each OGM */
- 	atomic_t ogm_seqno;
-+
-+	/** @ogm_buff_mutex: lock protecting ogm_buff and ogm_buff_len */
-+	struct mutex ogm_buff_mutex;
- };
- 
- /**
 
 
