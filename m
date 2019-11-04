@@ -2,113 +2,85 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA19ACA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 806F121D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:07:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=mm-sol.com header.i=@mm-sol.com header.b="mEF8S8HH"
+	by mail.kernel.org (Postfix) with ESMTP id 2FFE721D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728921AbfKDNHf (ORCPT
+        id S1728975AbfKDNJJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:07:35 -0500
-Received: from ns.mm-sol.com ([37.157.136.199]:49179 "EHLO extserv.mm-sol.com"
+        Mon, 4 Nov 2019 08:09:09 -0500
+Received: from mga01.intel.com ([192.55.52.88]:6802 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727663AbfKDNHf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:07:35 -0500
-X-Greylist: delayed 443 seconds by postgrey-1.27 at vger.kernel.org; Mon, 04 Nov 2019 08:07:33 EST
-Received: from [192.168.27.209] (unknown [37.157.136.206])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by extserv.mm-sol.com (Postfix) with ESMTPSA id EF598CF18;
-        Mon,  4 Nov 2019 15:00:08 +0200 (EET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mm-sol.com; s=201706;
-        t=1572872408; bh=oVopT+MD93ZbAJmCMweF+pEr53zTDaEbQfDd0ZNB/VY=;
-        h=Subject:To:Cc:From:Date:From;
-        b=mEF8S8HHPDZ4Yz8rH6fPfjO+5QXGkvNenzKvUBrtzVnGYxll8RDR8RLs1sEE/RgI+
-         8y6tEHwCkxYX/a2xdLiUTNfs34XxncrjdWtHcv6MIzv6DXmbQXOu4PCsNNxusIovHP
-         mEAZVpGaV2f+GnqYBXFTEUABHbtuL+ixIASObQp/WTdaFSP6uaOdrJ2gT60iRELVH6
-         JuNjXKNBhECAgGOLBkrp6nEqvduwYBxDvBP4HwU9EgITLnJv5xzCp1B0unta7V4dnU
-         lLPbASTID05k2P4U+F72ic3OurussykFH3KXzC6biVaUIcvMYBsWNWSX1+qGhZKzMm
-         25ikT+RZgT+Iw==
-Subject: Re: [PATCH] PCI: qcom: Fix the fixup of PCI_VENDOR_ID_QCOM
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     linux-arm-msm@vger.kernel.org, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
-From:   Stanimir Varbanov <svarbanov@mm-sol.com>
-Message-ID: <f1e89dcc-4d5f-cc1f-8036-dcb062645cb0@mm-sol.com>
-Date:   Mon, 4 Nov 2019 15:00:06 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1728847AbfKDNJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:09:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 05:09:08 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
+   d="scan'208";a="212311895"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 05:09:05 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 04 Nov 2019 15:09:04 +0200
+Date:   Mon, 4 Nov 2019 15:09:04 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v2 0/2] extcon: axp288: Move to swnodes
+Message-ID: <20191104130904.GC29493@kuha.fi.intel.com>
+References: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
+ <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191102002420.4091061-1-bjorn.andersson@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bjorn,
+Hi Greg,
 
-Thanks for the fix!
-
-On 11/2/19 2:24 AM, Bjorn Andersson wrote:
-> There exists non-bridge PCIe devices with PCI_VENDOR_ID_QCOM, so limit
-> the fixup to only affect the PCIe 2.0 (0x106) and PCIe 3.0 (0x107)
-> bridges.
-
-Are you sure that this will not break ops_1_0_0 (Qcom IP rev.: 1.0.0
-Synopsys IP rev.: 4.11a) i.e. apq8084 ?
-
+On Tue, Oct 08, 2019 at 03:59:23PM +0200, Hans de Goede wrote:
+> Hi,
 > 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  drivers/pci/controller/dwc/pcie-qcom.c | 3 ++-
->  include/linux/pci_ids.h                | 2 ++
->  2 files changed, 4 insertions(+), 1 deletion(-)
+> On 08-10-2019 14:25, Heikki Krogerus wrote:
+> > Hi Hans,
+> > 
+> > Fixed the compiler warning in this version. No other changes.
+> > 
+> > The original cover letter:
+> > 
+> > That AXP288 extcon driver is the last that uses build-in connection
+> > description. I'm replacing it with a code that finds the role mux
+> > software node instead.
+> > 
+> > I'm proposing also here a little helper
+> > usb_role_switch_find_by_fwnode() that uses
+> > class_find_device_by_fwnode() to find the role switches.
 > 
-> diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-> index 35f4980480bb..b91abf4d4905 100644
-> --- a/drivers/pci/controller/dwc/pcie-qcom.c
-> +++ b/drivers/pci/controller/dwc/pcie-qcom.c
-> @@ -1441,7 +1441,8 @@ static void qcom_fixup_class(struct pci_dev *dev)
->  {
->  	dev->class = PCI_CLASS_BRIDGE_PCI << 8;
->  }
-> -DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCI_ANY_ID, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE20, qcom_fixup_class);
-> +DECLARE_PCI_FIXUP_EARLY(PCI_VENDOR_ID_QCOM, PCIE_DEVICE_ID_QCOM_PCIE30, qcom_fixup_class);
->  
->  static struct platform_driver qcom_pcie_driver = {
->  	.probe = qcom_pcie_probe,
-> diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> index 21a572469a4e..3d0724ee4d2f 100644
-> --- a/include/linux/pci_ids.h
-> +++ b/include/linux/pci_ids.h
-> @@ -2413,6 +2413,8 @@
->  #define PCI_VENDOR_ID_LENOVO		0x17aa
->  
->  #define PCI_VENDOR_ID_QCOM		0x17cb
-> +#define PCIE_DEVICE_ID_QCOM_PCIE20	0x0106
-> +#define PCIE_DEVICE_ID_QCOM_PCIE30	0x0107
->  
->  #define PCI_VENDOR_ID_CDNS		0x17cd
->  
+> Both patches look good to me and I can confirm that things still
+> work as they should on a CHT device with an AXP288 PMIC, so for both:
 > 
+> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
+> Tested-by: Hans de Goede <hdegoede@redhat.com>
+
+These two patches in this series are basically about the usb role API,
+so can you take them?
+
+thanks,
 
 -- 
-regards,
-Stan
+heikki
