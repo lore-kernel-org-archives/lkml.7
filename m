@@ -2,93 +2,137 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11260CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:40:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7156ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9913218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:40:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CURR3Lfs"
+	by mail.kernel.org (Postfix) with ESMTP id 4E50121929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727974AbfKDIka (ORCPT
+        id S1727682AbfKDIoC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:40:30 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56662 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfKDIka (ORCPT
+        Mon, 4 Nov 2019 03:44:02 -0500
+Received: from 60-251-196-230.HINET-IP.hinet.net ([60.251.196.230]:61672 "EHLO
+        ironport.ite.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726441AbfKDIoC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:40:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pHINdxeRrniqD93Z7XY51rAt/Snx+07p0RIhPThEcG4=; b=CURR3LfsSdDaQIKfySpmU+W4E
-        PfYsBIWAwk5+63EqxsMJEo7bqLk/SWV1cafXHaBAIopZ67DILlcTrceULlM8HRbwkg7sSUrGiNwcH
-        if/l9JZ+UY7YbnkQJgjIPb8SlvUhWAHAehQzPe7ITWpsoMpxnsxj+utqzGy5XgRpJbCIc919xZzY4
-        iupd1Fi5M8xCVeFTq66RnS1hMQaM56ASHaCeohl0wpHk8KuclPaHT5uIRRr1jsLJfeut6N8PQjC93
-        u6GKoZ0TM6bds7hvNy8lNQ8IEdpVq185Az01OSGgNtEgcpSOWizGfayNgn+8zWJokpst5Pm64VRb0
-        TFQ+a5JEw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRXuU-0000SR-Uu; Mon, 04 Nov 2019 08:40:27 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 2715B305FC2;
-        Mon,  4 Nov 2019 09:39:20 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 240B123CEFE81; Mon,  4 Nov 2019 09:40:24 +0100 (CET)
-Date:   Mon, 4 Nov 2019 09:40:24 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        jolsa@redhat.com, adrian.hunter@intel.com,
-        mathieu.poirier@linaro.org, mark.rutland@arm.com
-Subject: Re: [PATCH v3 1/3] perf: Allow using AUX data in perf samples
-Message-ID: <20191104084024.GZ4131@hirez.programming.kicks-ass.net>
-References: <20191025140835.53665-1-alexander.shishkin@linux.intel.com>
- <20191025140835.53665-2-alexander.shishkin@linux.intel.com>
- <20191028162712.GH4097@hirez.programming.kicks-ass.net>
- <87tv7sg5ml.fsf@ashishki-desk.ger.corp.intel.com>
+        Mon, 4 Nov 2019 03:44:02 -0500
+Received: from unknown (HELO mse.ite.com.tw) ([192.168.35.30])
+  by ironport.ite.com.tw with ESMTP; 04 Nov 2019 16:43:58 +0800
+Received: from csbcas.internal.ite.com.tw (csbcas1.internal.ite.com.tw [192.168.65.46])
+        by mse.ite.com.tw with ESMTP id xA48hpip026781;
+        Mon, 4 Nov 2019 16:43:51 +0800 (GMT-8)
+        (envelope-from allen.chen@ite.com.tw)
+Received: from allen-VirtualBox.internal.ite.com.tw (192.168.70.14) by
+ csbcas1.internal.ite.com.tw (192.168.65.45) with Microsoft SMTP Server (TLS)
+ id 14.3.352.0; Mon, 4 Nov 2019 16:43:52 +0800
+From:   allen <allen.chen@ite.com.tw>
+CC:     Allen Chen <allen.chen@ite.com.tw>,
+        Pi-Hsun Shih <pihsun@chromium.org>,
+        Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking timings logic
+Date:   Mon, 4 Nov 2019 16:42:49 +0800
+Message-ID: <1572856969-12115-1-git-send-email-allen.chen@ite.com.tw>
+X-Mailer: git-send-email 1.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87tv7sg5ml.fsf@ashishki-desk.ger.corp.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [192.168.70.14]
+X-MAIL: mse.ite.com.tw xA48hpip026781
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Oct 28, 2019 at 07:08:18PM +0200, Alexander Shishkin wrote:
+According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
+(Defines EDID Structure Version 1, Revision 4) page: 39
+How to determine whether the monitor support RB timing or not?
+EDID 1.4
+First:  read detailed timing descriptor and make sure byte0 = 0,
+	byte1 = 0, byte2 = 0 and byte3 = 0xFD
+Second: read detailed timing descriptor byte10 = 0x04 and
+	EDID byte18h bit0 = 1
+Third:  if EDID byte18h bit0 == 1 && byte10 == 0x04,
+	then we can check byte15, if byte15 bit4 =1 is support RB
+        if EDID byte18h bit0 != 1 || byte10 != 0x04,
+	then byte15 can not be used
 
-> > @@ -6318,11 +6318,12 @@ static void perf_aux_sample_output(struc
-> >  
-> >  	/*
-> >  	 * Guard against NMI hits inside the critical section;
-> > -	 * see also perf_aux_sample_size().
-> > +	 * see also perf_prepare_sample_aux().
-> >  	 */
-> >  	WRITE_ONCE(rb->aux_in_sampling, 1);
-> > +	barrier();
-> 
-> Isn't WRITE_ONCE() barrier enough on its own? My thinking was that we
-> only need a compiler barrier here, hence the WRITE_ONCE.
+The linux code is_rb function not follow the VESA's rule
 
-WRITE_ONCE() is a volatile store and (IIRC) the compiler ensures order
-against other volatile things, but not in general.
+EDID 1.3
+LCD flat panels do not require long blanking intervals as a retrace
+period so default support reduced-blanking timings.
 
-barrier() OTOH clobbers all of memory and thereby ensures nothing can
-get hoised over it.
+Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+Reported-by: kbuild test robot <lkp@intel.com>
+---
+ drivers/gpu/drm/drm_edid.c | 28 +++++++++++++++++++++-------
+ 1 file changed, 21 insertions(+), 7 deletions(-)
 
-Now, the only thing we do inside this region is an indirect call, which
-on its own already implies a sync point for as long as the compiler
-cannot inline it, so it might be a bit paranoid on my end (I don't think
-even LTO can reduce this indirection and cause inlining).
+diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+index e5e7e65..9b67b80 100644
+--- a/drivers/gpu/drm/drm_edid.c
++++ b/drivers/gpu/drm/drm_edid.c
+@@ -93,6 +93,11 @@ struct detailed_mode_closure {
+ 	int modes;
+ };
+ 
++struct edid_support_rb_closure {
++	struct edid *edid;
++	s8 support_rb;
++};
++
+ #define LEVEL_DMT	0
+ #define LEVEL_GTF	1
+ #define LEVEL_GTF2	2
+@@ -2018,22 +2023,31 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
+ is_rb(struct detailed_timing *t, void *data)
+ {
+ 	u8 *r = (u8 *)t;
+-	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
+-		if (r[15] & 0x10)
+-			*(bool *)data = true;
++	struct edid_support_rb_closure *closure = data;
++	struct edid *edid = closure->edid;
++
++	if (!r[0] && !r[1] && !r[2] && r[3] == EDID_DETAIL_MONITOR_RANGE) {
++		if (edid->features & BIT(0) && r[10] == BIT(2))
++			closure->support_rb = (r[15] & 0x10) ? 1 : 0;
++	}
+ }
+ 
+ /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
+ static bool
+ drm_monitor_supports_rb(struct edid *edid)
+ {
++	struct edid_support_rb_closure closure = {
++		.edid = edid,
++		.support_rb = -1,
++	};
++
+ 	if (edid->revision >= 4) {
+-		bool ret = false;
+-		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+-		return ret;
++		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
++		if (closure.support_rb >= 0)
++			return closure.support_rb;
+ 	}
+ 
+-	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
++	return true;
+ }
+ 
+ static void
+-- 
+1.9.1
+
