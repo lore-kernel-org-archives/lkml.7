@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC983CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E3BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 809DC214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66D35204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905511;
-	bh=56KTKN1K9qcjQ5ztu0oRebv1++BP4QTyGSHQ943xbmc=;
+	s=default; t=1572905517;
+	bh=SQws7LQUsN35hj9MY23G6kH0kbXpCXwrL5tfbVE5b7Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Vwef26EfJ8yg1ZAnNmaYgtwkb1ZUY2NNQXNw/kgkFtznCYd5hJTRg/RBkFkAU2VyW
-	 rRzTJAeBapPlvqxcthxDkCe3i2CHkVXbgkT2fs0NX879Dh1JWV0zJEfLemFF+ART27
-	 8BiJ0bVc+7twuJPaeAR0rUqA7jySG74Jicp0zV7I=
+	b=dBvNoUue8i7/j0pJYtdCwfA5/sCK4bA5nuRUn2/VMESj7Zm5yEHQf2JHCWKORjEdR
+	 z5fiqx+PACpFt2yG7adOEz7XHcl+qjGAjyWwBTQVX7TFG1IzKMV7V4zhLcqiquzd+V
+	 YQeJk5AOWpuQORUGFHioSTea6GO83cxoHYV5V1m4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390721AbfKDWLt (ORCPT
+        id S2390470AbfKDWL4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:11:49 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45144 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390419AbfKDWLp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:45 -0500
+        id S2388028AbfKDWLx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAB03205C9;
-        Mon,  4 Nov 2019 22:11:42 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7F240214D8;
+        Mon,  4 Nov 2019 22:11:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905503;
-        bh=56KTKN1K9qcjQ5ztu0oRebv1++BP4QTyGSHQ943xbmc=;
+        s=default; t=1572905513;
+        bh=SQws7LQUsN35hj9MY23G6kH0kbXpCXwrL5tfbVE5b7Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=mymTkfnRPEstnroLPMws/T2MNK/TPmzly8MvUqbe17fM3jWFYD4TTBHcjF/M96+6y
-         Jl6na4LtAyNIK9Z1/eIzBSjhHy7ZPhdaSdPAPbf2D4XIXb8i2Gwl2es4BQ9KbS0oFv
-         6zla6DP4JBzEWJa4ZkF0BZZWXC86b9EdgG8xCnpQ=
+        b=e9DxKLOyfp8h/Niy2yNEsbqqAQjE5aG0tGBhW7u6jC4DN1Mnl+BqW7O3XOaNy8dih
+         fujpVY64nEpTBw68K+Ue/6BCQt75rtsFmZC288zbW+W73EzdIOeUvYwHZZt3Yew/lH
+         2VjeNIqzwW/gO1D2NbTePiQrlHTsVTGohLHeKGWI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, John Donnelly <john.p.donnelly@oracle.com>,
-        Lu Baolu <baolu.lu@linux.intel.com>,
-        Joerg Roedel <jroedel@suse.de>
-Subject: [PATCH 5.3 144/163] iommu/vt-d: Fix panic after kexec -p for kdump
-Date:   Mon,  4 Nov 2019 22:45:34 +0100
-Message-Id: <20191104212150.752050215@linuxfoundation.org>
+        stable@vger.kernel.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Tianci Yin <tianci.yin@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: [PATCH 5.3 137/163] drm/amdgpu/gmc10: properly set BANK_SELECT and FRAGMENT_SIZE
+Date:   Mon,  4 Nov 2019 22:45:27 +0100
+Message-Id: <20191104212150.273916176@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,104 +61,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: John Donnelly <John.P.Donnelly@Oracle.com>
+From: Alex Deucher <alexander.deucher@amd.com>
 
-commit 160c63f909ffbc797c0bbe23310ac1eaf2349d2f upstream.
+commit 30ef5c7eaba0ddafc6c23eca65ebe52169dfcc60 upstream.
 
-This cures a panic on restart after a kexec operation on 5.3 and 5.4
-kernels.
+These were not aligned for optimal performance for GPUVM.
 
-The underlying state of the iommu registers (iommu->flags &
-VTD_FLAG_TRANS_PRE_ENABLED) on a restart results in a domain being marked as
-"DEFER_DEVICE_DOMAIN_INFO" that produces an Oops in identity_mapping().
-
-[   43.654737] BUG: kernel NULL pointer dereference, address:
-0000000000000056
-[   43.655720] #PF: supervisor read access in kernel mode
-[   43.655720] #PF: error_code(0x0000) - not-present page
-[   43.655720] PGD 0 P4D 0
-[   43.655720] Oops: 0000 [#1] SMP PTI
-[   43.655720] CPU: 0 PID: 1 Comm: swapper/0 Not tainted
-5.3.2-1940.el8uek.x86_64 #1
-[   43.655720] Hardware name: Oracle Corporation ORACLE SERVER
-X5-2/ASM,MOTHERBOARD,1U, BIOS 30140300 09/20/2018
-[   43.655720] RIP: 0010:iommu_need_mapping+0x29/0xd0
-[   43.655720] Code: 00 0f 1f 44 00 00 48 8b 97 70 02 00 00 48 83 fa ff
-74 53 48 8d 4a ff b8 01 00 00 00 48 83 f9 fd 76 01 c3 48 8b 35 7f 58 e0
-01 <48> 39 72 58 75 f2 55 48 89 e5 41 54 53 48 8b 87 28 02 00 00 4c 8b
-[   43.655720] RSP: 0018:ffffc9000001b9b0 EFLAGS: 00010246
-[   43.655720] RAX: 0000000000000001 RBX: 0000000000001000 RCX:
-fffffffffffffffd
-[   43.655720] RDX: fffffffffffffffe RSI: ffff8880719b8000 RDI:
-ffff8880477460b0
-[   43.655720] RBP: ffffc9000001b9e8 R08: 0000000000000000 R09:
-ffff888047c01700
-[   43.655720] R10: 00002194036fc692 R11: 0000000000000000 R12:
-0000000000000000
-[   43.655720] R13: ffff8880477460b0 R14: 0000000000000cc0 R15:
-ffff888072d2b558
-[   43.655720] FS:  0000000000000000(0000) GS:ffff888071c00000(0000)
-knlGS:0000000000000000
-[   43.655720] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   43.655720] CR2: 0000000000000056 CR3: 000000007440a002 CR4:
-00000000001606b0
-[   43.655720] Call Trace:
-[   43.655720]  ? intel_alloc_coherent+0x2a/0x180
-[   43.655720]  ? __schedule+0x2c2/0x650
-[   43.655720]  dma_alloc_attrs+0x8c/0xd0
-[   43.655720]  dma_pool_alloc+0xdf/0x200
-[   43.655720]  ehci_qh_alloc+0x58/0x130
-[   43.655720]  ehci_setup+0x287/0x7ba
-[   43.655720]  ? _dev_info+0x6c/0x83
-[   43.655720]  ehci_pci_setup+0x91/0x436
-[   43.655720]  usb_add_hcd.cold.48+0x1d4/0x754
-[   43.655720]  usb_hcd_pci_probe+0x2bc/0x3f0
-[   43.655720]  ehci_pci_probe+0x39/0x40
-[   43.655720]  local_pci_probe+0x47/0x80
-[   43.655720]  pci_device_probe+0xff/0x1b0
-[   43.655720]  really_probe+0xf5/0x3a0
-[   43.655720]  driver_probe_device+0xbb/0x100
-[   43.655720]  device_driver_attach+0x58/0x60
-[   43.655720]  __driver_attach+0x8f/0x150
-[   43.655720]  ? device_driver_attach+0x60/0x60
-[   43.655720]  bus_for_each_dev+0x74/0xb0
-[   43.655720]  driver_attach+0x1e/0x20
-[   43.655720]  bus_add_driver+0x151/0x1f0
-[   43.655720]  ? ehci_hcd_init+0xb2/0xb2
-[   43.655720]  ? do_early_param+0x95/0x95
-[   43.655720]  driver_register+0x70/0xc0
-[   43.655720]  ? ehci_hcd_init+0xb2/0xb2
-[   43.655720]  __pci_register_driver+0x57/0x60
-[   43.655720]  ehci_pci_init+0x6a/0x6c
-[   43.655720]  do_one_initcall+0x4a/0x1fa
-[   43.655720]  ? do_early_param+0x95/0x95
-[   43.655720]  kernel_init_freeable+0x1bd/0x262
-[   43.655720]  ? rest_init+0xb0/0xb0
-[   43.655720]  kernel_init+0xe/0x110
-[   43.655720]  ret_from_fork+0x24/0x50
-
-Fixes: 8af46c784ecfe ("iommu/vt-d: Implement is_attach_deferred iommu ops entry")
-Cc: stable@vger.kernel.org # v5.3+
-
-Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-Reviewed-by: Lu Baolu <baolu.lu@linux.intel.com>
-Signed-off-by: Joerg Roedel <jroedel@suse.de>
+Acked-by: Christian König <christian.koenig@amd.com>
+Reviewed-by: Tianci Yin <tianci.yin@amd.com>
+Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
+Cc: stable@vger.kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/iommu/intel-iommu.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/amd/amdgpu/gfxhub_v2_0.c |    9 +++++++++
+ drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c  |    9 +++++++++
+ 2 files changed, 18 insertions(+)
 
---- a/drivers/iommu/intel-iommu.c
-+++ b/drivers/iommu/intel-iommu.c
-@@ -2783,7 +2783,7 @@ static int identity_mapping(struct devic
- 	struct device_domain_info *info;
+--- a/drivers/gpu/drm/amd/amdgpu/gfxhub_v2_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/gfxhub_v2_0.c
+@@ -151,6 +151,15 @@ static void gfxhub_v2_0_init_cache_regs(
+ 	WREG32_SOC15(GC, 0, mmGCVM_L2_CNTL2, tmp);
  
- 	info = dev->archdata.iommu;
--	if (info && info != DUMMY_DEVICE_DOMAIN_INFO)
-+	if (info && info != DUMMY_DEVICE_DOMAIN_INFO && info != DEFER_DEVICE_DOMAIN_INFO)
- 		return (info->domain == si_domain);
+ 	tmp = mmGCVM_L2_CNTL3_DEFAULT;
++	if (adev->gmc.translate_further) {
++		tmp = REG_SET_FIELD(tmp, GCVM_L2_CNTL3, BANK_SELECT, 12);
++		tmp = REG_SET_FIELD(tmp, GCVM_L2_CNTL3,
++				    L2_CACHE_BIGK_FRAGMENT_SIZE, 9);
++	} else {
++		tmp = REG_SET_FIELD(tmp, GCVM_L2_CNTL3, BANK_SELECT, 9);
++		tmp = REG_SET_FIELD(tmp, GCVM_L2_CNTL3,
++				    L2_CACHE_BIGK_FRAGMENT_SIZE, 6);
++	}
+ 	WREG32_SOC15(GC, 0, mmGCVM_L2_CNTL3, tmp);
  
- 	return 0;
+ 	tmp = mmGCVM_L2_CNTL4_DEFAULT;
+--- a/drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c
++++ b/drivers/gpu/drm/amd/amdgpu/mmhub_v2_0.c
+@@ -137,6 +137,15 @@ static void mmhub_v2_0_init_cache_regs(s
+ 	WREG32_SOC15(MMHUB, 0, mmMMVM_L2_CNTL2, tmp);
+ 
+ 	tmp = mmMMVM_L2_CNTL3_DEFAULT;
++	if (adev->gmc.translate_further) {
++		tmp = REG_SET_FIELD(tmp, MMVM_L2_CNTL3, BANK_SELECT, 12);
++		tmp = REG_SET_FIELD(tmp, MMVM_L2_CNTL3,
++				    L2_CACHE_BIGK_FRAGMENT_SIZE, 9);
++	} else {
++		tmp = REG_SET_FIELD(tmp, MMVM_L2_CNTL3, BANK_SELECT, 9);
++		tmp = REG_SET_FIELD(tmp, MMVM_L2_CNTL3,
++				    L2_CACHE_BIGK_FRAGMENT_SIZE, 6);
++	}
+ 	WREG32_SOC15(MMHUB, 0, mmMMVM_L2_CNTL3, tmp);
+ 
+ 	tmp = mmMMVM_L2_CNTL4_DEFAULT;
 
 
