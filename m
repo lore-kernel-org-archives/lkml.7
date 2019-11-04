@@ -5,48 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC410CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E134CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7F85E204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631BF204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:14:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905682;
-	bh=OPQh/w0HN7ptn6tENX2+5V6kRqT+2oS1MekYamXmnGo=;
+	s=default; t=1572905686;
+	bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Cs5g+BsaCo+v+hlV70UKp8wG4LHeDf2Gen4640UBYuuHxU29ZEO/tlRYL2Fva0vRF
-	 nf/CqXAvwp5cnA8IvIaivPzXThIRhwG5jiW8tosnd1qikLQF4Zz9fiIaWZibNksub8
-	 vxaoLLt9JJX+L0S1CIDNY8wrAQ42F8D/4vxevAyI=
+	b=0uiOfrAbZ+2EDEjtxeTAk4+aE/eqdRFsKOYR/h6IACvm1mIpYaBYGx5a4uHjVTQsH
+	 JW+C9E6CzZqoWEvnuI9/Mrc2CHbQGGKzReR8xgYbKAhi0OqDdCKvtVajdYUjFXTO0c
+	 2W71CK5vBYRiAbZoNs1rpeoAzSWfnVTWI1dEEj74=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390296AbfKDWOl (ORCPT
+        id S2390362AbfKDWOp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:14:41 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39732 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:14:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39644 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389164AbfKDWHS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:07:18 -0500
+        id S2389231AbfKDWHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:07:15 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 992212190F;
-        Mon,  4 Nov 2019 22:07:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 931D3214D8;
+        Mon,  4 Nov 2019 22:07:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905238;
-        bh=OPQh/w0HN7ptn6tENX2+5V6kRqT+2oS1MekYamXmnGo=;
+        s=default; t=1572905235;
+        bh=IEy/Uf64WWx5r28Ky/7zeFyYJNzL1e4yhFukKOfLYi8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tIfj/tHu0GmvdSMe86ucVbWpFlSAh5peYxJfHWze3ZxGfJTsRyEH53a+Sy70v1vwW
-         lFZJ+Hwyej+Y7/NndhPuD1mL/6UBisf1S77JFS17yYT4q64OeVmYq6TMUklglm5hQS
-         rEb+bgbrKIvtanVLKNhQsleV51YySt36apvRFu3c=
+        b=yIlz1SOZZCeKsCWwVoa3FZkE2UfLE7qFcrqGOJKxzbvFcO4zVyz4GYfTiYyRitWBH
+         0b57a1rGMw94QKl4bNk4w2O8gxOJiN7zQ5e1RtGtGeOCfAkzVLDD/LuZzUuAOIhVhe
+         ANBm/OmYOJyTtkp/cTv2cRmIZrtPhiVu4yKkhPX0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 049/163] arm64: Default to building compat vDSO with clang when CONFIG_CC_IS_CLANG
-Date:   Mon,  4 Nov 2019 22:43:59 +0100
-Message-Id: <20191104212143.742987092@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 075/163] MIPS: fw: sni: Fix out of bounds init of o32 stack
+Date:   Mon,  4 Nov 2019 22:44:25 +0100
+Message-Id: <20191104212145.593127357@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,37 +63,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will@kernel.org>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-[ Upstream commit 24ee01a927bfe56c66429ec4b1df6955a814adc8 ]
+[ Upstream commit efcb529694c3b707dc0471b312944337ba16e4dd ]
 
-Rather than force the use of GCC for the compat cross-compiler, instead
-extract the target from CROSS_COMPILE_COMPAT and pass it to clang if the
-main compiler is clang.
+Use ARRAY_SIZE to caluculate the top of the o32 stack.
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
-Signed-off-by: Will Deacon <will@kernel.org>
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm64/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/mips/fw/sni/sniprom.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 9743b50bdee7d..5858d6e449268 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -47,7 +47,11 @@ $(warning Detected assembler with broken .inst; disassembly will be unreliable)
-   endif
- endif
+diff --git a/arch/mips/fw/sni/sniprom.c b/arch/mips/fw/sni/sniprom.c
+index 8772617b64cef..80112f2298b68 100644
+--- a/arch/mips/fw/sni/sniprom.c
++++ b/arch/mips/fw/sni/sniprom.c
+@@ -43,7 +43,7 @@
  
-+ifeq ($(CONFIG_CC_IS_CLANG), y)
-+COMPATCC ?= $(CC) --target=$(notdir $(CROSS_COMPILE_COMPAT:%-=%))
-+else
- COMPATCC ?= $(CROSS_COMPILE_COMPAT)gcc
-+endif
- export COMPATCC
+ /* O32 stack has to be 8-byte aligned. */
+ static u64 o32_stk[4096];
+-#define O32_STK	  &o32_stk[sizeof(o32_stk)]
++#define O32_STK	  (&o32_stk[ARRAY_SIZE(o32_stk)])
  
- ifeq ($(CONFIG_GENERIC_COMPAT_VDSO), y)
+ #define __PROM_O32(fun, arg) fun arg __asm__(#fun); \
+ 				     __asm__(#fun " = call_o32")
 -- 
 2.20.1
 
