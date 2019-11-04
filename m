@@ -2,53 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14C4DCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F46CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1B6D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AABC204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906164;
-	bh=xxDDr/zM+xU3ky0bYYZKmJYCAwy45XockdaIYNTjliU=;
+	s=default; t=1572906171;
+	bh=D7ch8p+h+Uaqo4c4tvM//MiDBa7jPRc5GR4vOLR19sk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=s0jnizTFeQnmltmsvkoTOCGANDi3QVpDFlACaw7VWBlX4N9GB8/UDtdcF8lYadi51
-	 qJfrClHcXxtRwsYSCxKu39y/JCzd/2sSpHP6uds75x7p5Juwka4CWvIps7tKoLSC5t
-	 C064d4WAklBV2YtOfKnK5KNztl6hYJmJJ5h8AdGU=
+	b=uT1COjp6nsAdj4PFynh/HbrCFs/TjUGK6unRr/bsEEe+6d/mIwQrCIsdrEj8Pwhdp
+	 +pMpxo61qis6zWOxSON3PtKp4Hl0FsHi4o0AjZucOaWnu+c8lJ/qYVcvDKY6xtrb6t
+	 Sa6FHERIuxzYQcCDKKCFTSrfY6Wnmv8sinVJ2cL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388748AbfKDWWn (ORCPT
+        id S2388804AbfKDWWu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:22:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51522 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:22:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51086 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388268AbfKDV4C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:56:02 -0500
+        id S2387727AbfKDVzn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:43 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A19D021929;
-        Mon,  4 Nov 2019 21:56:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9E5C22053B;
+        Mon,  4 Nov 2019 21:55:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904562;
-        bh=xxDDr/zM+xU3ky0bYYZKmJYCAwy45XockdaIYNTjliU=;
+        s=default; t=1572904542;
+        bh=D7ch8p+h+Uaqo4c4tvM//MiDBa7jPRc5GR4vOLR19sk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WZzHWqMkcrmVNp/lUbftWpHG5X16g0XQ2uqe2giXSWbBKIEFHQ2Bc6mqeUT15LGhF
-         IjQbkbdl961pwt2MFrac2jTdhEYYvKktuUB3mTawIODb1ulmXh/eXTiwqjtm4KOD4A
-         1M6tdepD+ZX+sVmUCJCguPmPtXh98WNN9Qd9pSA8=
+        b=DwvxYOrDHkqAg7ifomO5LfDlfHJ0oBxw1y68KofSb1uiu4VHVu67wm51Oy2PNhZNh
+         wekwpy0/mUdBivYu6foO2zZNX/GBVjweKMIC/RC2ZE3l8cNiaid++sAnmk8bYvXtqf
+         xgpvB27FhTON7NIWnfZXUAv7kgecqGkmkikcG3sI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com,
-        Johan Hovold <johan@kernel.org>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.14 87/95] NFC: pn533: fix use-after-free and memleaks
-Date:   Mon,  4 Nov 2019 22:45:25 +0100
-Message-Id: <20191104212123.415352543@linuxfoundation.org>
+        stable@vger.kernel.org, Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>
+Subject: [PATCH 4.14 81/95] arm64: Ensure VM_WRITE|VM_SHARED ptes are clean by default
+Date:   Mon,  4 Nov 2019 22:45:19 +0100
+Message-Id: <20191104212121.092531216@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -61,51 +59,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Johan Hovold <johan@kernel.org>
+From: Catalin Marinas <catalin.marinas@arm.com>
 
-commit 6af3aa57a0984e061f61308fe181a9a12359fecc upstream.
+commit aa57157be69fb599bd4c38a4b75c5aad74a60ec0 upstream.
 
-The driver would fail to deregister and its class device and free
-related resources on late probe errors.
+Shared and writable mappings (__S.1.) should be clean (!dirty) initially
+and made dirty on a subsequent write either through the hardware DBM
+(dirty bit management) mechanism or through a write page fault. A clean
+pte for the arm64 kernel is one that has PTE_RDONLY set and PTE_DIRTY
+clear.
 
-Reported-by: syzbot+cb035c75c03dbe34b796@syzkaller.appspotmail.com
-Fixes: 32ecc75ded72 ("NFC: pn533: change order operations in dev registation")
-Signed-off-by: Johan Hovold <johan@kernel.org>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+The PAGE_SHARED{,_EXEC} attributes have PTE_WRITE set (PTE_DBM) and
+PTE_DIRTY clear. Prior to commit 73e86cb03cf2 ("arm64: Move PTE_RDONLY
+bit handling out of set_pte_at()"), it was the responsibility of
+set_pte_at() to set the PTE_RDONLY bit and mark the pte clean if the
+software PTE_DIRTY bit was not set. However, the above commit removed
+the pte_sw_dirty() check and the subsequent setting of PTE_RDONLY in
+set_pte_at() while leaving the PAGE_SHARED{,_EXEC} definitions
+unchanged. The result is that shared+writable mappings are now dirty by
+default
+
+Fix the above by explicitly setting PTE_RDONLY in PAGE_SHARED{,_EXEC}.
+In addition, remove the superfluous PTE_DIRTY bit from the kernel PROT_*
+attributes.
+
+Fixes: 73e86cb03cf2 ("arm64: Move PTE_RDONLY bit handling out of set_pte_at()")
+Cc: <stable@vger.kernel.org> # 4.14.x-
+Cc: Will Deacon <will@kernel.org>
+Signed-off-by: Catalin Marinas <catalin.marinas@arm.com>
+Signed-off-by: Will Deacon <will@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/nfc/pn533/usb.c |    9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/pgtable-prot.h |   15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
---- a/drivers/nfc/pn533/usb.c
-+++ b/drivers/nfc/pn533/usb.c
-@@ -559,18 +559,25 @@ static int pn533_usb_probe(struct usb_in
+--- a/arch/arm64/include/asm/pgtable-prot.h
++++ b/arch/arm64/include/asm/pgtable-prot.h
+@@ -43,11 +43,11 @@
+ #define PROT_DEFAULT		(_PROT_DEFAULT | PTE_MAYBE_NG)
+ #define PROT_SECT_DEFAULT	(_PROT_SECT_DEFAULT | PMD_MAYBE_NG)
  
- 	rc = pn533_finalize_setup(priv);
- 	if (rc)
--		goto error;
-+		goto err_deregister;
+-#define PROT_DEVICE_nGnRnE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRnE))
+-#define PROT_DEVICE_nGnRE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRE))
+-#define PROT_NORMAL_NC		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC))
+-#define PROT_NORMAL_WT		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT))
+-#define PROT_NORMAL		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_DIRTY | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL))
++#define PROT_DEVICE_nGnRnE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRnE))
++#define PROT_DEVICE_nGnRE	(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_DEVICE_nGnRE))
++#define PROT_NORMAL_NC		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_NC))
++#define PROT_NORMAL_WT		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL_WT))
++#define PROT_NORMAL		(PROT_DEFAULT | PTE_PXN | PTE_UXN | PTE_WRITE | PTE_ATTRINDX(MT_NORMAL))
  
- 	usb_set_intfdata(interface, phy);
+ #define PROT_SECT_DEVICE_nGnRE	(PROT_SECT_DEFAULT | PMD_SECT_PXN | PMD_SECT_UXN | PMD_ATTRINDX(MT_DEVICE_nGnRE))
+ #define PROT_SECT_NORMAL	(PROT_SECT_DEFAULT | PMD_SECT_PXN | PMD_SECT_UXN | PMD_ATTRINDX(MT_NORMAL))
+@@ -71,8 +71,9 @@
+ #define PAGE_S2_DEVICE		__pgprot(_PROT_DEFAULT | PTE_S2_MEMATTR(MT_S2_DEVICE_nGnRE) | PTE_S2_RDONLY | PTE_UXN)
  
- 	return 0;
- 
-+err_deregister:
-+	pn533_unregister_device(phy->priv);
- error:
-+	usb_kill_urb(phy->in_urb);
-+	usb_kill_urb(phy->out_urb);
-+	usb_kill_urb(phy->ack_urb);
-+
- 	usb_free_urb(phy->in_urb);
- 	usb_free_urb(phy->out_urb);
- 	usb_free_urb(phy->ack_urb);
- 	usb_put_dev(phy->udev);
- 	kfree(in_buf);
-+	kfree(phy->ack_buffer);
- 
- 	return rc;
- }
+ #define PAGE_NONE		__pgprot(((_PAGE_DEFAULT) & ~PTE_VALID) | PTE_PROT_NONE | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
+-#define PAGE_SHARED		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN | PTE_UXN | PTE_WRITE)
+-#define PAGE_SHARED_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_NG | PTE_PXN | PTE_WRITE)
++/* shared+writable pages are clean by default, hence PTE_RDONLY|PTE_WRITE */
++#define PAGE_SHARED		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN | PTE_WRITE)
++#define PAGE_SHARED_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_WRITE)
+ #define PAGE_READONLY		__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN | PTE_UXN)
+ #define PAGE_READONLY_EXEC	__pgprot(_PAGE_DEFAULT | PTE_USER | PTE_RDONLY | PTE_NG | PTE_PXN)
+ #define PAGE_EXECONLY		__pgprot(_PAGE_DEFAULT | PTE_RDONLY | PTE_NG | PTE_PXN)
 
 
