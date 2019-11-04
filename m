@@ -2,182 +2,120 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80958CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C146CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:32:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F179214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03C632084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 18:32:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="NPeUFIBj"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZwZbZIBW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729562AbfKDSaa (ORCPT
+        id S1729493AbfKDScv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 13:30:30 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:33209 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727998AbfKDSa3 (ORCPT
+        Mon, 4 Nov 2019 13:32:51 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34430 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727998AbfKDScv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 13:30:29 -0500
-Received: by mail-wr1-f66.google.com with SMTP id s1so18326928wro.0
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:30:26 -0800 (PST)
+        Mon, 4 Nov 2019 13:32:51 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so15042666oig.1
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 10:32:49 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=twaj5yyxcDdPGXd17zYXggs1yIoJjp94ssuxTdaG1b4=;
-        b=NPeUFIBj9heab4iA/fGSR6J8A6Uny8oEMQbURIVhWq0itWYWJKJyAPHxmW6c3r3wvd
-         Lh6dmGjTfnpIapb7Tf39ygHg817Nv3zsF53dY/IKU6o4F75LNrrY1+CV3VfTIn3fEOWw
-         DGFfUKYCZgcAswxwTUz0BnzXKloumDEkcTOJw=
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=CuoEqQL2KebTopf41oEH+8ZFIOF1Y0zb5FGL5THAEuM=;
+        b=ZwZbZIBWQ+1OPsCtH8o21sKLwWYTv0Kawog0LE/+kqZNZkKsrkMxmIP2M2Fb9jXc7H
+         PfBqNkyAv4wjM1gG1iSziv44ViPJDPX9/dSI9wUBBPa3fkwlAFoHnhh9qBZBvkqzlee9
+         UVbTycJm7wH3UBOVZm0jBLDmKjfKhsthLVfDpqxEnOkFamie1kQZ1YwX6Z4xjkx4PKu1
+         IAQFGY0QW6ISt3Yd7pbZg2zTQXAT6TQ1R5VemL4iN1V6uMgMOnGbP6Wq6fklFoGWEpeD
+         tzQntg3Xf6gSomNDRKzSt0EiGf+gzvgF3idrJbJPMNKYifm2EjJTUaE+2oEG5hnqaSZm
+         KTtw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=twaj5yyxcDdPGXd17zYXggs1yIoJjp94ssuxTdaG1b4=;
-        b=UM2GFbIM1hlyNwegPR5gJF3r4ZCEmV9Ce7UlAx6OQykPumA0Y2M4l0b6gyRpF6as6t
-         hy90+eD992QYUw9VD9VJcRerZZg0RuRHJgRlfWK9fm10y9FNpj2Y0TDmyA/hIuJOpxM2
-         x4HD+T8CfTH3ADEQf9MJM363u3aOepRJ1UU4N5JEv8HLizbR3nlaY6ZtdTQODX+8HJx6
-         pext7+1WCx/EkT4pJt2fWsoM6x55mIWc68x3CHuhjMWXuAlbFzINY34M2g3OCHsoYt4A
-         ab4QJmRDiYF5wMnPHysjjETQPI8yOPg8eFzwJtUY6doSg6Eo9B4+tpTiMjyoe6tvwidp
-         XmXQ==
-X-Gm-Message-State: APjAAAVO1C99KZF74C1wd8M6vphkYsOBijNC0tQTpmD4sH7AsurDKmUH
-        NDWlV5gOW6CRxKkSK2w1rlwBtAwHXxw=
-X-Google-Smtp-Source: APXvYqxk41HJP3PPJEHlHzwOpDyEm0dkOeYtuPZJYqFWRsapimpT9MoYoBDqaw8vb+XXjo5nNZB9qg==
-X-Received: by 2002:adf:fbc4:: with SMTP id d4mr26510325wrs.265.1572892226034;
-        Mon, 04 Nov 2019 10:30:26 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id l14sm19260528wrr.37.2019.11.04.10.30.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 10:30:25 -0800 (PST)
-Date:   Mon, 4 Nov 2019 19:30:23 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Brian Starkey <Brian.Starkey@arm.com>
-Cc:     Dave Airlie <airlied@gmail.com>, Hillf Danton <hdanton@sina.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        "Andrew F. Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>, nd <nd@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: [PATCH v14 1/5] dma-buf: Add dma-buf heaps framework
-Message-ID: <20191104183023.GT10326@phenom.ffwll.local>
-Mail-Followup-To: Brian Starkey <Brian.Starkey@arm.com>,
-        Dave Airlie <airlied@gmail.com>, Hillf Danton <hdanton@sina.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>, lkml <linux-kernel@vger.kernel.org>,
-        Liam Mark <lmark@codeaurora.org>, "Andrew F. Davis" <afd@ti.com>,
-        Christoph Hellwig <hch@infradead.org>, nd <nd@arm.com>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-References: <20191101214238.78015-1-john.stultz@linaro.org>
- <20191101214238.78015-2-john.stultz@linaro.org>
- <20191104102410.66wlyoln5ahlgkem@DESKTOP-E1NTVVP.localdomain>
- <CAPM=9tydXxV-6++HkkA+JX9GPWE1sN_8CGVCVn-Mwfgfzcn=hg@mail.gmail.com>
- <20191104174341.m6hjzog2vibc3ek3@DESKTOP-E1NTVVP.localdomain>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=CuoEqQL2KebTopf41oEH+8ZFIOF1Y0zb5FGL5THAEuM=;
+        b=QLzuFf0hzrKUfKra3bwiiX/wNpxGrDJix7FL5XiT00DySqsKFe8DovBPGru5FlG161
+         8bBXHrOkpnSEuEZbQ7qW/uXCWdb2v3evr2e/fhvYozJv5ExdYV8bB9ONxtiMIePkbaGW
+         WBdr/r7fqRZxDTBy7rNHf7vaahUWYZXqaAT4Iw+xGfVzXYWJJnWsHZ1J5W5P+Wi99jyv
+         iPbQZnrGp4xP8T/y+8Sc+jnFfL2I1bND9FKyI48VeEGT8dQkQHp+x4HHpn4aRSyYIX/3
+         otyyaR7GUrlqaVWt+D4nn55EuW0HmoyQAhqkD34fNgSwl1W8yo/Z8v2wIqGbKPhVmats
+         kCQw==
+X-Gm-Message-State: APjAAAVaQpqSqUlMIQEF4w1NecDRMMGudEeiuGKO07bwsSM90ZyoSwYF
+        qMsMIf2t6KkkH55I901MtXQJLZRr99wFeDVhc0U7Xw==
+X-Google-Smtp-Source: APXvYqxzL7/7wJOJVUvH16w+QAISOOtNnm2/b5W3JNn1FGUmUr3Uh54+UjraGD6AcXkBB/veySBVsA+RG1Rjuz032Rw=
+X-Received: by 2002:aca:c64c:: with SMTP id w73mr363929oif.161.1572892369118;
+ Mon, 04 Nov 2019 10:32:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104174341.m6hjzog2vibc3ek3@DESKTOP-E1NTVVP.localdomain>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191101214238.78015-1-john.stultz@linaro.org>
+ <20191101214238.78015-2-john.stultz@linaro.org> <20191103160225.GA13344@google.com>
+In-Reply-To: <20191103160225.GA13344@google.com>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Mon, 4 Nov 2019 10:32:38 -0800
+Message-ID: <CALAqxLXjRmWWTiQNZnypk+r7am9STd_UBDgK4b73icS8UfZwpA@mail.gmail.com>
+Subject: Re: [PATCH v14 1/5] dma-buf: Add dma-buf heaps framework
+To:     Sandeep Patil <sspatil@google.com>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        "Andrew F. Davis" <afd@ti.com>, Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        sspatil+mutt@google.com, Alistair Strachan <astrachan@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:43:51PM +0000, Brian Starkey wrote:
-> Hi Dave,
-> 
-> On Tue, Nov 05, 2019 at 02:58:17AM +1000, Dave Airlie wrote:
-> > On Mon, 4 Nov 2019 at 20:24, Brian Starkey <Brian.Starkey@arm.com> wrote:
-> > >
-> > > Hi John,
-> > >
-> > > On Fri, Nov 01, 2019 at 09:42:34PM +0000, John Stultz wrote:
-> > > > From: "Andrew F. Davis" <afd@ti.com>
-> > > >
-> > > > This framework allows a unified userspace interface for dma-buf
-> > > > exporters, allowing userland to allocate specific types of memory
-> > > > for use in dma-buf sharing.
-> > > >
-> > > > Each heap is given its own device node, which a user can allocate
-> > > > a dma-buf fd from using the DMA_HEAP_IOC_ALLOC.
-> > > >
-> > > > Additionally should the interface grow in the future, we have a
-> > > > DMA_HEAP_IOC_GET_FEATURES ioctl which can return future feature
-> > > > flags.
-> > >
-> > > The userspace patch doesn't use this - and there's no indication of
-> > > what it's intended to allow in the future. I missed the discussion
-> > > about it, do you have a link?
-> > >
-> > > I thought the preferred approach was to add the new ioctl only when we
-> > > need it, and new userspace on old kernels will get "ENOSYS" to know
-> > > that the kernel doesn't support it.
-> > 
-> > This works once, expand the interface 3 or 4 times with no features
-> > ioctl, and you start being hostile to userspace, which feature does
-> > ENOSYS mean isn't supported etc.
-> 
-> Sorry, perhaps I wasn't clear (or I misunderstand what you're saying
-> about working only once). I'm not against adding a get_features ioctl,
-> I just don't see why we'd add it before we have any features?
-> 
-> When we gain the first "feature", can't we add the get_features ioctl
-> then? For Future SW that knows about Future features, "ENOSYS" will
-> always mean "no features". If it doesn't get ENOSYS, then it can use
-> the ioctl to find out what features it has.
-> 
-> Otherwise we're adding an ioctl which doesn't do anything, based on
-> the assumption that in the future it _will_ do something... but we
-> don't know that that is yet... but we're pretty sure whatever it will
-> do can be described with a u64?
-> 
-> Why not wait until we know what we want it for, and then implement it
-> with an interface which we know is appropriate at that time?
+On Sun, Nov 3, 2019 at 8:02 AM <sspatil@google.com> wrote:
+> > +static long dma_heap_ioctl_get_features(struct file *file, void *data)
+> > +{
+> > +     struct dma_heap_get_features_data *heap_features = data;
+> > +
+> > +     /* nothing should be passed in */
+> > +     if (heap_features->features)
+> > +             return -EINVAL;
+>
+> curious, what are we trying to protect here? Unless I misunderstood this, you
+> are forcing userspace to 0 initialize the structure passed into the ioctl.
+> So an uninitialized stack variable passed into ioctl() will end up returning
+> -EINVAL .. I am not sure thats ok?
 
-Yeah I'm with Brian, adding the get_feature ioctl when we need it.
-Otherwise it's going to be broken somehow and we'll immediately ref to
-get_features2 :-)
--Daniel
+Yea, so the rational mostly comes from the document here:
+  https://www.kernel.org/doc/Documentation/ioctl/botching-up-ioctls.rst
 
-> > Next userspace starts to rely on kernel version, but then someone
-> > backports a feature, down the rabbit hole we go.
-> > 
-> 
-> I suppose that adding the feature ioctl later would mean that it might
-> be possible to backport a feature without also backporting the ioctl,
-> depending on how the patches are split up. I think it would be pretty
-> hard to do accidentally though.
-> 
-> Thanks,
-> -Brian
-> 
-> > Be nice to userspace give them a features ioctl they can use to figure
-> > out in advance which of the 4 uapis the kernel supports.
-> > 
-> > Dave.
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The general idea is to be very conservative in what you accept on
+IOCTLs to avoid any extensions made from breaking existing userland.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Usually this is most critical for write-ioctls, and probably isn't as
+important for read ones like get_features, but I don't see much
+downside to enforcing it.
+
+> Plus, the point is pointing into the kmalloc'ed memory or the local 'char
+> stack_data[128] from the ioctl() function, so not sure if this check was
+> intentional? If so, may be easier to 0 initialize *kdata in the ioctl
+> function below?
+
+So the bits in the kdata (be it kmalloced or on the stack) is all
+copied over from the userpointer. So we're just trying to enforce that
+userland zeros it before passing it in.
+
+Thanks again for your other feedback, I'll address them in the next revision!
+
+thanks
+-john
