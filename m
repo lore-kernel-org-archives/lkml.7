@@ -2,85 +2,111 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5439ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 579FBCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2FFE721D7F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B96321D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572872972;
+	bh=qET0go5fTgr+VAcDElsE61ngvrjcyMrCjUxKjlVEXPQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=Km+fFecKiIMwJLONkD15DJ4l1CIEmU6/tDevpzEurVxyQijsyDRkKzSvR8xVNijnV
+	 cxsEVjfkNPZlDLd7MkZqUosvXcMo/E72L58nVBIApMNWnpePEjH96v6L6f3Z+nLk16
+	 ELIZ7TB/wxZ11d4YF75FtJ8mkG4i7Ldcto9SkRlU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728975AbfKDNJJ (ORCPT
+        id S1729066AbfKDNJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:09:09 -0500
-Received: from mga01.intel.com ([192.55.52.88]:6802 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfKDNJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:09:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 05:09:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="212311895"
-Received: from kuha.fi.intel.com ([10.237.72.53])
-  by fmsmga001.fm.intel.com with SMTP; 04 Nov 2019 05:09:05 -0800
-Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Mon, 04 Nov 2019 15:09:04 +0200
-Date:   Mon, 4 Nov 2019 15:09:04 +0200
-From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
-To:     Hans de Goede <hdegoede@redhat.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
-Subject: Re: [PATCH v2 0/2] extcon: axp288: Move to swnodes
-Message-ID: <20191104130904.GC29493@kuha.fi.intel.com>
-References: <20191008122600.22340-1-heikki.krogerus@linux.intel.com>
- <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
+        Mon, 4 Nov 2019 08:09:31 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45082 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727430AbfKDNJa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 08:09:30 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n21so3890632ljg.12;
+        Mon, 04 Nov 2019 05:09:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9P8rBv8FlOAdd5Kdu3vWsUKtcKK3jMnnUl9eTBCRCiQ=;
+        b=RnTgQhOQ+YJWPEtNsSXE+8Rl3OSw/q1579PXm8Wt4uRGElZaQCa4T8fThPkXDozvau
+         e+ZGVy3jFUQXMUF5OjkfrOI5/4fIKtSdvscuhkybPuMCNeL3ezbhO1uFoVLULiWpy8DX
+         bVfE4nshiQJjp9TYhGn3rsTdiD3tNZRfIoOnvuoBB/Gouqqufat/Sm3ZejpLn7naGuoQ
+         gj50wt1XwwHD+YnfQSkGW6YJTEHQ0X7iDYO3gr3VrJzeeqsiYg9zuNdyFtLgtuXWBytT
+         sOWHqdWFIp0o0iAi+aXMRzl/5fgYhXYAIyc7VoSSsccUIBPu5H6KiAK4GpSzRT9FOEnt
+         /XEg==
+X-Gm-Message-State: APjAAAX1TpA/NoKZUohJL3UoFN0TU+at09vXAqk4FWtOSwRKU6yQ1j1O
+        BfbwzCoIjY1uNnr1Wkwbb4vtDJUn/qM=
+X-Google-Smtp-Source: APXvYqzcI44Lu+vcPgtgkIXtqYfzThKqoYRzsOByJ+efQrIZgoiFus2ESUgT0d0GIKWI+BjQT8VYbA==
+X-Received: by 2002:a2e:85c3:: with SMTP id h3mr5790400ljj.122.1572872968219;
+        Mon, 04 Nov 2019 05:09:28 -0800 (PST)
+Received: from neopili.qtec.com (cpe.xe-3-0-1-778.vbrnqe10.dk.customer.tdc.net. [80.197.57.18])
+        by smtp.gmail.com with ESMTPSA id q124sm985414ljq.93.2019.11.04.05.09.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 05:09:27 -0800 (PST)
+From:   Ricardo Ribalda Delgado <ribalda@kernel.org>
+To:     Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Ricardo Ribalda Delgado <ribalda@kernel.org>
+Subject: [PATCH v4 1/6] media: v4l2_ctrl: Add p_def to v4l2_ctrl_config
+Date:   Mon,  4 Nov 2019 14:09:18 +0100
+Message-Id: <20191104130923.22184-1-ribalda@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8120fbf2-08d3-6ee2-21bf-458a4e12b29c@redhat.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+This allows setting the default value on compound controls created via
+v4l2_ctrl_new_custom.
 
-On Tue, Oct 08, 2019 at 03:59:23PM +0200, Hans de Goede wrote:
-> Hi,
-> 
-> On 08-10-2019 14:25, Heikki Krogerus wrote:
-> > Hi Hans,
-> > 
-> > Fixed the compiler warning in this version. No other changes.
-> > 
-> > The original cover letter:
-> > 
-> > That AXP288 extcon driver is the last that uses build-in connection
-> > description. I'm replacing it with a code that finds the role mux
-> > software node instead.
-> > 
-> > I'm proposing also here a little helper
-> > usb_role_switch_find_by_fwnode() that uses
-> > class_find_device_by_fwnode() to find the role switches.
-> 
-> Both patches look good to me and I can confirm that things still
-> work as they should on a CHT device with an AXP288 PMIC, so for both:
-> 
-> Reviewed-by: Hans de Goede <hdegoede@redhat.com>
-> Tested-by: Hans de Goede <hdegoede@redhat.com>
+Signed-off-by: Ricardo Ribalda Delgado <ribalda@kernel.org>
+---
+ drivers/media/v4l2-core/v4l2-ctrls.c | 2 +-
+ include/media/v4l2-ctrls.h           | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-These two patches in this series are basically about the usb role API,
-so can you take them?
-
-thanks,
-
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index b4caf2d4d076..73d99c3561ce 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2690,7 +2690,7 @@ struct v4l2_ctrl *v4l2_ctrl_new_custom(struct v4l2_ctrl_handler *hdl,
+ 			type, min, max,
+ 			is_menu ? cfg->menu_skip_mask : step, def,
+ 			cfg->dims, cfg->elem_size,
+-			flags, qmenu, qmenu_int, ptr_null, priv);
++			flags, qmenu, qmenu_int, cfg->p_def, priv);
+ 	if (ctrl)
+ 		ctrl->is_private = cfg->is_private;
+ 	return ctrl;
+diff --git a/include/media/v4l2-ctrls.h b/include/media/v4l2-ctrls.h
+index e719d56fc024..78a97b10c89e 100644
+--- a/include/media/v4l2-ctrls.h
++++ b/include/media/v4l2-ctrls.h
+@@ -382,6 +382,7 @@ struct v4l2_ctrl_handler {
+  * @max:	The control's maximum value.
+  * @step:	The control's step value for non-menu controls.
+  * @def:	The control's default value.
++ * @p_def:	The control's default value for compound controls.
+  * @dims:	The size of each dimension.
+  * @elem_size:	The size in bytes of the control.
+  * @flags:	The control's flags.
+@@ -410,6 +411,7 @@ struct v4l2_ctrl_config {
+ 	s64 max;
+ 	u64 step;
+ 	s64 def;
++	union v4l2_ctrl_ptr p_def;
+ 	u32 dims[V4L2_CTRL_MAX_DIMS];
+ 	u32 elem_size;
+ 	u32 flags;
 -- 
-heikki
+2.24.0.rc1
+
