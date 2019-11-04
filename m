@@ -2,52 +2,56 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBD4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39B09CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A63421D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C27E21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:56:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904565;
-	bh=SywRDDhnNd4t2iydPehiDA1ExUDmgRVwIdgfgRq7/7k=;
+	s=default; t=1572904568;
+	bh=WEjXPYN/4z2tLd11WOkLYZH11e/S5V8qQlTCbEuf090=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BZmqf3cjf+ONnox87dZiCNqJIBA/oagcJ55SyqQvW/FU8hj3Zewd4o967anyoSOb2
-	 E3rrz7+4DxR/X2zOQoMRmxKqnb8Dehv3m66jPQmGROuJmF2Jcs5N8bYD4erAj+daEY
-	 5zxo/WucCWywsVQvrDfFQJrFpdBGd+wspY66UTus=
+	b=tyZBVRpTDSm3QKPyw5PLWGcKAymo+ChsDKJSAeW9hmWEvTCH1VluRa91BBuYxBpZy
+	 vb2mAnlNd0+QIPxotxNwJy1+HPwtEvWij+ieB9tefHRtupZr8yp+pUtvfeSA4lV1Cs
+	 fG1ntEa7iFCfFGVPEjBh23ZzW3VGssPLimTei7hM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388280AbfKDV4E (ORCPT
+        id S1729762AbfKDV4H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:56:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51374 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:56:07 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51432 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387794AbfKDVz4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:56 -0500
+        id S2388243AbfKDV4A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:56:00 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9FCA0217F4;
-        Mon,  4 Nov 2019 21:55:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 971B72053B;
+        Mon,  4 Nov 2019 21:55:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904556;
-        bh=SywRDDhnNd4t2iydPehiDA1ExUDmgRVwIdgfgRq7/7k=;
+        s=default; t=1572904559;
+        bh=WEjXPYN/4z2tLd11WOkLYZH11e/S5V8qQlTCbEuf090=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z1OsZQajZwbmMz4k9QO3SdNnaPjFJy9u4Mp16lURmbcqmpv9apptjhufvUortEtld
-         pehI8VbuS76gzB9yUSSDpVFpNKQhOAMPTNszkE8ah+x5HeB7dlpemnFcV55W5Ee0xc
-         Czr2lZ36YIGVWKoWimzSnstlOMNs0+FAOn5ALDoc=
+        b=opCVYteknBXJSKCnUKH+LYL9AKMJKjH2+5VbcZg0SwP+7w4JSmLP2ErQbEDLx8Yu9
+         xzNst+hu+dwYTi1Q5dsopUTw5T2ukSjqof3EpzdZoHBZQkRyjuipC5PSXy9ZWj4Y2h
+         c4VoyCwNHzUMdclOndauH368zfqSdfHGZJohY3gY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com,
-        David Howells <dhowells@redhat.com>
-Subject: [PATCH 4.14 86/95] rxrpc: Fix call ref leak
-Date:   Mon,  4 Nov 2019 22:45:24 +0100
-Message-Id: <20191104212123.283049638@linuxfoundation.org>
+        Thomas Bogendoerfer <tbogendoerfer@suse.de>,
+        =?UTF-8?q?Philippe=20Mathieu-Daud=C3=A9?= <f4bug@amsat.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>, linux-mips@vger.kernel.org,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.14 51/95] MIPS: include: Mark __xchg as __always_inline
+Date:   Mon,  4 Nov 2019 22:44:49 +0100
+Message-Id: <20191104212104.338498240@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,47 +64,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Howells <dhowells@redhat.com>
+From: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 
-commit c48fc11b69e95007109206311b0187a3090591f3 upstream.
+[ Upstream commit 46f1619500d022501a4f0389f9f4c349ab46bb86 ]
 
-When sendmsg() finds a call to continue on with, if the call is in an
-inappropriate state, it doesn't release the ref it just got on that call
-before returning an error.
+Commit ac7c3e4ff401 ("compiler: enable CONFIG_OPTIMIZE_INLINING
+forcibly") allows compiler to uninline functions marked as 'inline'.
+In cace of __xchg this would cause to reference function
+__xchg_called_with_bad_pointer, which is an error case
+for catching bugs and will not happen for correct code, if
+__xchg is inlined.
 
-This causes the following symptom to show up with kasan:
-
-	BUG: KASAN: use-after-free in rxrpc_send_keepalive+0x8a2/0x940
-	net/rxrpc/output.c:635
-	Read of size 8 at addr ffff888064219698 by task kworker/0:3/11077
-
-where line 635 is:
-
-	whdr.epoch	= htonl(peer->local->rxnet->epoch);
-
-The local endpoint (which cannot be pinned by the call) has been released,
-but not the peer (which is pinned by the call).
-
-Fix this by releasing the call in the error path.
-
-Fixes: 37411cad633f ("rxrpc: Fix potential NULL-pointer exception")
-Reported-by: syzbot+d850c266e3df14da1d31@syzkaller.appspotmail.com
-Signed-off-by: David Howells <dhowells@redhat.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+Reviewed-by: Philippe Mathieu-Daudé <f4bug@amsat.org>
+Signed-off-by: Paul Burton <paul.burton@mips.com>
+Cc: Ralf Baechle <ralf@linux-mips.org>
+Cc: James Hogan <jhogan@kernel.org>
+Cc: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rxrpc/sendmsg.c |    1 +
- 1 file changed, 1 insertion(+)
+ arch/mips/include/asm/cmpxchg.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/rxrpc/sendmsg.c
-+++ b/net/rxrpc/sendmsg.c
-@@ -586,6 +586,7 @@ int rxrpc_do_sendmsg(struct rxrpc_sock *
- 		case RXRPC_CALL_SERVER_PREALLOC:
- 		case RXRPC_CALL_SERVER_SECURING:
- 		case RXRPC_CALL_SERVER_ACCEPTING:
-+			rxrpc_put_call(call, rxrpc_call_put);
- 			ret = -EBUSY;
- 			goto error_release_sock;
- 		default:
+diff --git a/arch/mips/include/asm/cmpxchg.h b/arch/mips/include/asm/cmpxchg.h
+index 895f91b9e89c3..520ca166cbed5 100644
+--- a/arch/mips/include/asm/cmpxchg.h
++++ b/arch/mips/include/asm/cmpxchg.h
+@@ -73,8 +73,8 @@ extern unsigned long __xchg_called_with_bad_pointer(void)
+ extern unsigned long __xchg_small(volatile void *ptr, unsigned long val,
+ 				  unsigned int size);
+ 
+-static inline unsigned long __xchg(volatile void *ptr, unsigned long x,
+-				   int size)
++static __always_inline
++unsigned long __xchg(volatile void *ptr, unsigned long x, int size)
+ {
+ 	switch (size) {
+ 	case 1:
+-- 
+2.20.1
+
 
 
