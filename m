@@ -7,47 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C80CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4BD0CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90F8E214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB196204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905717;
-	bh=I2FBoCDye4dsVyowU5HepiJpF/G674+D7HmyGV02wAo=;
+	s=default; t=1572905722;
+	bh=qvZy1e6ZELCo1IUUHbk2bgjAD4hfRU/4u/aLXq5lOzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eOFDHuthiOq7qn4+fLQ8PKcIq3ipEhzZ4Cjhq41LO1C/klu7KpDAECXmavK9KA9K0
-	 ATgaPBlbTO1EMuys6uWd6s2dMW/xF/RsK+Vqyt07FS0sKe182EQXz7r13rUIqSLGck
-	 hd1XJCaP1EWQf/QHm79wYorLVhRUPEDy9wEDh+NQ=
+	b=zNWq4U3oUdY1PFIy7qz9JFPyTrIRG6oEq5l1+VIidyBRr3/Fmk2THqxisiqNN61Yo
+	 bTmEl/6Q4dtLmUD3MdSACGaHbUwJK1ofbqE/bSy7NBvGwstPbsgx05VovkH2iDvIlk
+	 E91K7fr/mdG0wFKYaMQxQTqARfnLdETXHI8h4XBQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389942AbfKDWGV (ORCPT
+        id S2389910AbfKDWGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37544 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389932AbfKDWGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:15 -0500
+        id S2389888AbfKDWF6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:05:58 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DBE1020650;
-        Mon,  4 Nov 2019 22:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1A20C2084D;
+        Mon,  4 Nov 2019 22:05:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905175;
-        bh=I2FBoCDye4dsVyowU5HepiJpF/G674+D7HmyGV02wAo=;
+        s=default; t=1572905157;
+        bh=qvZy1e6ZELCo1IUUHbk2bgjAD4hfRU/4u/aLXq5lOzM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C7xVsqmGAc/IXNAPkAy/iBNohhW0ci4EQp4LsfkZIJ/4CMIVVflERNB2HjXtv1HiC
-         f9921sSpP9THmM83QI5T3f2+x5i+5zsf2nM45SPO8qXxhk62ioyWPQj7ykBLXPOO4M
-         mHxjq8QCSzv63eF7v1WprBihMZRjrvfRozPYgSaM=
+        b=0aDuTa01wy/2abMtm6M1H9AhvfbYUVOyUkRq3iLUz69GHaJOP7vteW25RXaHkf4es
+         fgqi9/CWGPMSTSJCaADV2z/n8waEDCE5gOLlZEFJa9cTNhO52b5rtAUhWhu/kycyD5
+         jppKtw1hMtifm0R/crjAmUtWGMvM3CraPodXoaE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
-        Yegor Yefremov <yegorslists@googlemail.com>,
+        stable@vger.kernel.org,
+        Steve MacLean <Steve.MacLean@Microsoft.com>,
+        Brian Robbins <brianrob@microsoft.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Eric Saint-Etienne <eric.saint.etienne@oracle.com>,
+        John Keeping <john@metanate.com>,
+        John Salem <josalem@microsoft.com>,
+        Leo Yan <leo.yan@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        Stephane Eranian <eranian@google.com>,
+        Tom McDonald <thomas.mcdonald@microsoft.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 047/163] serial: mctrl_gpio: Check for NULL pointer
-Date:   Mon,  4 Nov 2019 22:43:57 +0100
-Message-Id: <20191104212143.619914901@linuxfoundation.org>
+Subject: [PATCH 5.3 010/163] perf map: Fix overlapped map handling
+Date:   Mon,  4 Nov 2019 22:43:20 +0100
+Message-Id: <20191104212141.249329773@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,38 +76,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Adam Ford <aford173@gmail.com>
+From: Steve MacLean <Steve.MacLean@microsoft.com>
 
-[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
+[ Upstream commit ee212d6ea20887c0ef352be8563ca13dbf965906 ]
 
-When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
-requested GPIO.  This dereferencing can break if gpios is NULL,
-so this patch adds a NULL check before dereferencing it.  If
-gpios is NULL, this function will also return NULL.
+Whenever an mmap/mmap2 event occurs, the map tree must be updated to add a new
+entry. If a new map overlaps a previous map, the overlapped section of the
+previous map is effectively unmapped, but the non-overlapping sections are
+still valid.
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
-Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
-Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+maps__fixup_overlappings() is responsible for creating any new map entries from
+the previously overlapped map. It optionally creates a before and an after map.
+
+When creating the after map the existing code failed to adjust the map.pgoff.
+This meant the new after map would incorrectly calculate the file offset
+for the ip. This results in incorrect symbol name resolution for any ip in the
+after region.
+
+Make maps__fixup_overlappings() correctly populate map.pgoff.
+
+Add an assert that new mapping matches old mapping at the beginning of
+the after map.
+
+Committer-testing:
+
+Validated correct parsing of libcoreclr.so symbols from .NET Core 3.0 preview9
+(which didn't strip symbols).
+
+Preparation:
+
+  ~/dotnet3.0-preview9/dotnet new webapi -o perfSymbol
+  cd perfSymbol
+  ~/dotnet3.0-preview9/dotnet publish
+  perf record ~/dotnet3.0-preview9/dotnet \
+      bin/Debug/netcoreapp3.0/publish/perfSymbol.dll
+  ^C
+
+Before:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.705249:     250000 cpu-clock: \
+             7fe6159a1f99 [unknown] \
+             (.../3.0.0-preview9-19423-09/libcoreclr.so)
+
+After:
+
+  perf script --show-mmap-events 2>&1 | grep -e MMAP -e unknown |\
+     grep libcoreclr.so | head -n 4
+        dotnet  1907 373352.698780: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615726000(0x768000) @ 0 08:02 5510620 765057155]: \
+            r-xp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701091: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615974000(0x1000) @ 0x24e000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+        dotnet  1907 373352.701241: PERF_RECORD_MMAP2 1907/1907: \
+            [0x7fe615c42000(0x1000) @ 0x51c000 08:02 5510620 765057155]: \
+            rwxp .../3.0.0-preview9-19423-09/libcoreclr.so
+
+All the [unknown] symbols were resolved.
+
+Signed-off-by: Steve MacLean <Steve.MacLean@Microsoft.com>
+Tested-by: Brian Robbins <brianrob@microsoft.com>
+Acked-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Eric Saint-Etienne <eric.saint.etienne@oracle.com>
+Cc: John Keeping <john@metanate.com>
+Cc: John Salem <josalem@microsoft.com>
+Cc: Leo Yan <leo.yan@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Cc: Stephane Eranian <eranian@google.com>
+Cc: Tom McDonald <thomas.mcdonald@microsoft.com>
+Link: http://lore.kernel.org/lkml/BN8PR21MB136270949F22A6A02335C238F7800@BN8PR21MB1362.namprd21.prod.outlook.com
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ tools/perf/util/map.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
-index 2b400189be911..54c43e02e3755 100644
---- a/drivers/tty/serial/serial_mctrl_gpio.c
-+++ b/drivers/tty/serial/serial_mctrl_gpio.c
-@@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
- struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
- 				      enum mctrl_gpio_idx gidx)
- {
-+	if (gpios == NULL)
-+		return NULL;
-+
- 	return gpios->gpio[gidx];
- }
- EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
+diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
+index 7666206d06fa7..f18113581cf03 100644
+--- a/tools/perf/util/map.c
++++ b/tools/perf/util/map.c
+@@ -1,5 +1,6 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include "symbol.h"
++#include <assert.h>
+ #include <errno.h>
+ #include <inttypes.h>
+ #include <limits.h>
+@@ -847,6 +848,8 @@ static int maps__fixup_overlappings(struct maps *maps, struct map *map, FILE *fp
+ 			}
+ 
+ 			after->start = map->end;
++			after->pgoff += map->end - pos->start;
++			assert(pos->map_ip(pos, map->end) == after->map_ip(after, map->end));
+ 			__map_groups__insert(pos->groups, after);
+ 			if (verbose >= 2 && !use_browser)
+ 				map__fprintf(after, fp);
 -- 
 2.20.1
 
