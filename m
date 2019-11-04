@@ -2,53 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C36CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 032D2CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 514E4205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC21120650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905439;
-	bh=XRJhMZLFukaSWSE6KfLdlTZkNQnshra3dKvIQaYoG6s=;
+	s=default; t=1572905442;
+	bh=K2pzYJ8HddRm03R078tzZkhn6KGzSIfNgPYAnIJfaKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0XkhUJrvQr/B6iPlIRWMdEjzgU2NmM2NczL2A8onAbI0Dtq9PQ5LKLw72wvWY847w
-	 aVI4gM4fd86XKsDINakgjswJPmyK3hg7cK1RkVUSn6neLjjOFgiKGfNjCenAdEluin
-	 AOB1bgveUVQhCg1nXrIdR5wa/1ebrzZj20JcqrsQ=
+	b=d4CbDh7hqcB1/084z58+1vfzpqGORII7VZAHCq22NU7HoCNRLIU5lYxrYIZ8sARQ5
+	 no5rD63UcYA3tN137swchi/VmzlLErTczxq+LhtyrQUUInTm3AdEfM50Yop5nK4ExV
+	 CqD5IikxtyJHiz808ZSSZ3Np3/AVT2LokwwZPkEE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390196AbfKDWKi (ORCPT
+        id S2390574AbfKDWKl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:10:38 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:10:41 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43828 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390552AbfKDWKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:34 -0500
+        id S2390188AbfKDWKh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:37 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B62AB20650;
-        Mon,  4 Nov 2019 22:10:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B5BB920650;
+        Mon,  4 Nov 2019 22:10:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905433;
-        bh=XRJhMZLFukaSWSE6KfLdlTZkNQnshra3dKvIQaYoG6s=;
+        s=default; t=1572905436;
+        bh=K2pzYJ8HddRm03R078tzZkhn6KGzSIfNgPYAnIJfaKw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jv4tVeTQ0KO1kVKNeYWt2LUkpzigS3dnDtAqh6j0JfpMvR0XLhLGwRQxFUW1dp8E+
-         OEqxgOPiTH6Zp+ZvNQcBrqcD74rqcRmIpc17T9PgnqafyyMy+1Wm9lGC3GEIrBZD3R
-         iEPB9ofBxBdXnw9d83g9DrGvJzgqj8iilSi/zwzU=
+        b=oI3TFQCzo5qVeRRxrh7sHCiRi2xYHzg6hwCxjoHuIt2v0NQYx4Jw8olSEOhS7en5f
+         suVHKgLsf73rKQ9/wXgpakHSFcVpcKpZjN+hT3pmme/7vnl/IF8hl54267gUmblSF+
+         HFr7ndnRFdaR+s5gbCbOVC12Bf/BhLPKH46afpoM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        Sasha Levin <sashal@kernel.org>,
-        Alexander Schmidt <alexs@linux.ibm.com>
-Subject: [PATCH 5.3 091/163] s390/pci: fix MSI message data
-Date:   Mon,  4 Nov 2019 22:44:41 +0100
-Message-Id: <20191104212146.786936467@linuxfoundation.org>
+        stable@vger.kernel.org, Andrija <akijo97@gmail.com>,
+        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
+        <ville.syrjala@linux.intel.com>, Imre Deak <imre.deak@intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>
+Subject: [PATCH 5.3 138/163] drm/i915: Fix PCH reference clock for FDI on HSW/BDW
+Date:   Mon,  4 Nov 2019 22:45:28 +0100
+Message-Id: <20191104212150.343939389@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,36 +61,115 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sebastian Ott <sebott@linux.ibm.com>
+From: Ville Syrjälä <ville.syrjala@linux.intel.com>
 
-[ Upstream commit cf2c4a3f35b75d38cebb4afbd578f1594f068d1e ]
+commit 59cd826fb5e7889515bf5771e295e0624c348571 upstream.
 
-After recent changes the MSI message data needs to specify the
-function-relative IRQ number.
+The change to skip the PCH reference initialization during fastboot
+did end up breaking FDI. To fix that let's try to do the PCH reference
+init whenever we're disabling a DPLL that was using said reference
+previously.
 
-Reported-and-tested-by: Alexander Schmidt <alexs@linux.ibm.com>
-Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org
+Tested-by: Andrija <akijo97@gmail.com>
+Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=112084
+Fixes: b16c7ed95caf ("drm/i915: Do not touch the PCH SSC reference if a PLL is using it")
+Signed-off-by: Ville Syrjälä <ville.syrjala@linux.intel.com>
+Link: https://patchwork.freedesktop.org/patch/msgid/20191022185643.1483-1-ville.syrjala@linux.intel.com
+Reviewed-by: Imre Deak <imre.deak@intel.com>
+(cherry picked from commit dd5279c71405533d4ddbb9453effc60f0f5bf211)
+Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/s390/pci/pci_irq.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/i915/display/intel_display.c  |   11 ++++++-----
+ drivers/gpu/drm/i915/display/intel_dpll_mgr.c |   15 +++++++++++++++
+ drivers/gpu/drm/i915/i915_drv.h               |    2 ++
+ 3 files changed, 23 insertions(+), 5 deletions(-)
 
-diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
-index d80616ae8dd8a..fbe97ab2e2286 100644
---- a/arch/s390/pci/pci_irq.c
-+++ b/arch/s390/pci/pci_irq.c
-@@ -284,7 +284,7 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
- 			return rc;
- 		irq_set_chip_and_handler(irq, &zpci_irq_chip,
- 					 handle_percpu_irq);
--		msg.data = hwirq;
-+		msg.data = hwirq - bit;
- 		if (irq_delivery == DIRECTED) {
- 			msg.address_lo = zdev->msi_addr & 0xff0000ff;
- 			msg.address_lo |= msi->affinity ?
--- 
-2.20.1
-
+--- a/drivers/gpu/drm/i915/display/intel_display.c
++++ b/drivers/gpu/drm/i915/display/intel_display.c
+@@ -9186,7 +9186,6 @@ static bool wrpll_uses_pch_ssc(struct dr
+ static void lpt_init_pch_refclk(struct drm_i915_private *dev_priv)
+ {
+ 	struct intel_encoder *encoder;
+-	bool pch_ssc_in_use = false;
+ 	bool has_fdi = false;
+ 
+ 	for_each_intel_encoder(&dev_priv->drm, encoder) {
+@@ -9214,22 +9213,24 @@ static void lpt_init_pch_refclk(struct d
+ 	 * clock hierarchy. That would also allow us to do
+ 	 * clock bending finally.
+ 	 */
++	dev_priv->pch_ssc_use = 0;
++
+ 	if (spll_uses_pch_ssc(dev_priv)) {
+ 		DRM_DEBUG_KMS("SPLL using PCH SSC\n");
+-		pch_ssc_in_use = true;
++		dev_priv->pch_ssc_use |= BIT(DPLL_ID_SPLL);
+ 	}
+ 
+ 	if (wrpll_uses_pch_ssc(dev_priv, DPLL_ID_WRPLL1)) {
+ 		DRM_DEBUG_KMS("WRPLL1 using PCH SSC\n");
+-		pch_ssc_in_use = true;
++		dev_priv->pch_ssc_use |= BIT(DPLL_ID_WRPLL1);
+ 	}
+ 
+ 	if (wrpll_uses_pch_ssc(dev_priv, DPLL_ID_WRPLL2)) {
+ 		DRM_DEBUG_KMS("WRPLL2 using PCH SSC\n");
+-		pch_ssc_in_use = true;
++		dev_priv->pch_ssc_use |= BIT(DPLL_ID_WRPLL2);
+ 	}
+ 
+-	if (pch_ssc_in_use)
++	if (dev_priv->pch_ssc_use)
+ 		return;
+ 
+ 	if (has_fdi) {
+--- a/drivers/gpu/drm/i915/display/intel_dpll_mgr.c
++++ b/drivers/gpu/drm/i915/display/intel_dpll_mgr.c
+@@ -498,16 +498,31 @@ static void hsw_ddi_wrpll_disable(struct
+ 	val = I915_READ(WRPLL_CTL(id));
+ 	I915_WRITE(WRPLL_CTL(id), val & ~WRPLL_PLL_ENABLE);
+ 	POSTING_READ(WRPLL_CTL(id));
++
++	/*
++	 * Try to set up the PCH reference clock once all DPLLs
++	 * that depend on it have been shut down.
++	 */
++	if (dev_priv->pch_ssc_use & BIT(id))
++		intel_init_pch_refclk(dev_priv);
+ }
+ 
+ static void hsw_ddi_spll_disable(struct drm_i915_private *dev_priv,
+ 				 struct intel_shared_dpll *pll)
+ {
++	enum intel_dpll_id id = pll->info->id;
+ 	u32 val;
+ 
+ 	val = I915_READ(SPLL_CTL);
+ 	I915_WRITE(SPLL_CTL, val & ~SPLL_PLL_ENABLE);
+ 	POSTING_READ(SPLL_CTL);
++
++	/*
++	 * Try to set up the PCH reference clock once all DPLLs
++	 * that depend on it have been shut down.
++	 */
++	if (dev_priv->pch_ssc_use & BIT(id))
++		intel_init_pch_refclk(dev_priv);
+ }
+ 
+ static bool hsw_ddi_wrpll_get_hw_state(struct drm_i915_private *dev_priv,
+--- a/drivers/gpu/drm/i915/i915_drv.h
++++ b/drivers/gpu/drm/i915/i915_drv.h
+@@ -1881,6 +1881,8 @@ struct drm_i915_private {
+ 		struct work_struct idle_work;
+ 	} gem;
+ 
++	u8 pch_ssc_use;
++
+ 	/* For i945gm vblank irq vs. C3 workaround */
+ 	struct {
+ 		struct work_struct work;
 
 
