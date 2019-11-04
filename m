@@ -2,99 +2,153 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFCF0CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:23:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D547CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:24:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFCF20B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:23:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="dRvlgiVn"
+	by mail.kernel.org (Postfix) with ESMTP id 328F92084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:24:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572895461;
+	bh=p5oxHkz+XffoiPDUx3sPXwZhyebwSjUMDL1jJ/lAveA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Nk7TGzIZwzoADrR2rOSW/epmrowLbZtFjrwO+8o2QeQa/fAK0YAklVAz/g2/kXDwl
+	 2Eh3pKiOqtepmZ6bxWYSxthC/oQT60a1VnfbIi7qAFs7YC1eenWn9ckpGLPIBWokG7
+	 75UHt+y1RUlLnwkMu1dtNPTI41Ol1hmEzp/Fvc5A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729454AbfKDTXS (ORCPT
+        id S1729455AbfKDTYT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:23:18 -0500
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:43544 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728346AbfKDTXS (ORCPT
+        Mon, 4 Nov 2019 14:24:19 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37206 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728174AbfKDTYT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:23:18 -0500
-Received: by mail-qk1-f196.google.com with SMTP id a194so18729922qkg.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 11:23:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lca.pw; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=THuFq2IBXjmPNYhpv9M/ZPB2jpu/SvDJBuqEClLTgyw=;
-        b=dRvlgiVnfY+0y5W5oZQGjAzRqKYHjf2QnKwmmLZwGlC7UZcF7946mkJ31cXCi+TiAU
-         Wmmc49xWcpfh9Zvb7USWDmt2sttlewGaY6tCnff9DndqXU/3ddyTGZuXfxXXY6qbGq8u
-         6EVk3Kdo+/3zeVYPdXnqoxEcO6vTi/NPrXUdVjpmUXJV1a61oUgb5bCaeYYWDJfdCRae
-         kxxXAuf2DpmwIZsU2iBtHhjhILkaG4plyqJUgZCx9rboWI4KqMy1DkBu13aFARnmPrzf
-         FY1o5ZFgyxPP+lz/oAeApSM00iPtrqM1LK0IH9ecp/qbslB9QHw+uR1H8sGd+ZsXYWrb
-         xVAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=THuFq2IBXjmPNYhpv9M/ZPB2jpu/SvDJBuqEClLTgyw=;
-        b=S4HQEi2BTmnFc/gCZ83Y+ds7DztiXsMVmHt8ysY8u/Fx+irL5lXj3qhpRg7Nyh5JuQ
-         FiWbub27nUzehiiiBzeUFgpnyNRvBAmZlN5iQ7z6ImrWnAxxPcjo4C5B67+Yxw7oRm3g
-         3dmpZXhKpRpkLGcLZzEhkcZlX/rUkjQ2hn3n+AJJGp67tGyMn4VCFMwU71m1+ZgvAFf6
-         jnKqK8J7A/mPcx/HejkQPkPv9amIWOXMdVSyVlmlM1cKzu9ThMiYTD4c9Xkfvfoo9lvX
-         16r94+Ov/j9o5Ov29gXqkSF2TbjkOZCWOUOFHkEXoM8/XtvKSeitDbmmA8dIvvsyyQEo
-         8LQw==
-X-Gm-Message-State: APjAAAX4QDf6drBnaNCtg3cNcTAdGKCN33vOzuhnpN6cPPjxApZLp8yE
-        krF6lpipYAvGo5Hw2WBayRX4TA==
-X-Google-Smtp-Source: APXvYqyq06OqM6mRPH11h1O8n6TfjfcqIKm5RFZmh4Ii3187F/plXd/7FRACWMCiecvf47veeuWvMg==
-X-Received: by 2002:a05:620a:149a:: with SMTP id w26mr3248212qkj.361.1572895397082;
-        Mon, 04 Nov 2019 11:23:17 -0800 (PST)
-Received: from qcai.nay.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id i189sm1334181qkc.65.2019.11.04.11.23.15
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 11:23:16 -0800 (PST)
-From:   Qian Cai <cai@lca.pw>
-To:     akpm@linux-foundation.org
-Cc:     steven.price@arm.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
-Subject: [PATCH -next] mm/ptdump: fix a -Wold-style-declaration warning
-Date:   Mon,  4 Nov 2019 14:23:05 -0500
-Message-Id: <1572895385-29194-1-git-send-email-cai@lca.pw>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 4 Nov 2019 14:24:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=14g9oyYQ5ejwP+HUIBS3ppdCvtef/yyJ/Ou2n23wvc8=; b=DaH6+BIfshQ0a09JXhFX+7+Ve
+        ocWCl5jQjr0NcdEy7TAyfTb4PkflhPzkycnSRVOxppcwKPJgCThtZXdwIC+3UW5otE5O93Wbp9uo+
+        RFJ4CMQU7IT9Tqv/kQCjkrtpLI2UgDhQhr51Zq28U63aFosnxyo8xS13oNy1rZLN2mdes=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iRhxR-00030B-2u; Mon, 04 Nov 2019 19:24:09 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6231A274301E; Mon,  4 Nov 2019 19:24:06 +0000 (GMT)
+Date:   Mon, 4 Nov 2019 19:24:06 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     John Garry <john.garry@huawei.com>
+Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
+        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
+        xuejiancheng@hisilicon.com, fengsheng5@huawei.com
+Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+Message-ID: <20191104192406.GH5238@sirena.co.uk>
+References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
+ <1572886297-45400-3-git-send-email-john.garry@huawei.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="Rn7IEEq3VEzCw+ji"
+Content-Disposition: inline
+In-Reply-To: <1572886297-45400-3-git-send-email-john.garry@huawei.com>
+X-Cookie: This page intentionally left blank.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The -next commit "mm: add generic ptdump" [1] introduced a GCC
-compilation warning,
 
-mm/ptdump.c:123:1: warning: 'static' is not at beginning of declaration
-[-Wold-style-declaration]
- const static struct mm_walk_ops ptdump_ops = {
- ^~~~~
+--Rn7IEEq3VEzCw+ji
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1] http://lkml.kernel.org/r/20191028135910.33253-20-steven.price@arm.com
+On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
 
-Signed-off-by: Qian Cai <cai@lca.pw>
----
- mm/ptdump.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Only ACPI firmware is supported.
 
-diff --git a/mm/ptdump.c b/mm/ptdump.c
-index 5d349311e77e..a30ea0cf6c5f 100644
---- a/mm/ptdump.c
-+++ b/mm/ptdump.c
-@@ -120,7 +120,7 @@ static int ptdump_hole(unsigned long addr, unsigned long next,
- 	return 0;
- }
- 
--const static struct mm_walk_ops ptdump_ops = {
-+static const struct mm_walk_ops ptdump_ops = {
- 	.pgd_entry	= ptdump_pgd_entry,
- 	.p4d_entry	= ptdump_p4d_entry,
- 	.pud_entry	= ptdump_pud_entry,
--- 
-1.8.3.1
+There's no ACPI dependency though?  If the driver only works with ACPI
+I'd expect to see one with an || COMPILE_TEST like the architecture
+dependency.
 
+> @@ -0,0 +1,287 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets
+> + *
+
+Please make the entire comment a C++ one for neatness.
+
+> + * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
+> + * Author: John Garry <john.garry@huawei.com>
+> + */
+> +//#define DEBUG 1
+
+Please remove this.
+
+> +#define GLOBAL_CFG (0x100)
+> +
+> +#define BUS_CFG1 (0x200)
+> +#define BUS_CFG2 (0x204)
+> +#define BUS_FLASH_SIZE (0x210)
+> +
+> +#define VERSION (0x1f8)
+
+These could use some namespacing, especially the last one - it seems
+quite likely there'll be some collisions at some point.
+
+> +#define HISI_SFC_V3XX_WAIT_TIMEOUT_US		1000000
+> +#define HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US	10
+
+Plus if we've got these long prefixes here it'd be good to be
+consistent.
+
+> +	if (IS_ALIGNED((uintptr_t)to, 4)) {
+> +		int words = len / 4;
+> +
+> +		__ioread32_copy(to, host->regbase + CMD_DATABUF(0), words);
+> +
+> +		len -= words * 4;
+> +		if (len) {
+> +			u32 val;
+> +
+> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
+> +
+> +			to += words * 4;
+> +			for (i = 0; i < len; i++, val >>= 8, to++)
+> +				*to = (u8)val;
+> +		}
+> +	} else {
+> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
+> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
+> +			int j;
+
+The more usual pattern for these would be to do some unaligned accesses
+for the start/end of the buffer to get to alignment and then transfer
+the rest as aligned data.
+
+--Rn7IEEq3VEzCw+ji
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3AetUACgkQJNaLcl1U
+h9AUDggAhbUOC9Q2ExVskNhuRVMVMw5Xq0UlE6+60CYcvZfy1w/TQvgxMcP5764e
++EhXHAQ8BZ+JleaTtcuIoAg7OyBF1OOTQLEsSJ5AE5UOidvK1ft1Pud5D5rIXgYK
+kUxszOb2BCfW/rZMaLiKB2ydw1o1TsUEH76COG9+J8rVnLoLC/BwcMat7DVFtnPW
+orgevaNjPRUzmWOb7HuSziDLA+okmX+nLF+buquH1LR585JXMbTJd+1cgDk0aJFx
+bojmWsK0E1Ra52pwKO7qFdJS9mIzFN6GOVUqT47XhZm3BVmUkTHiugVun+AKT7el
+YpZbCCyYdb2H27r96NdBA3Ns3o/fJg==
+=PHLm
+-----END PGP SIGNATURE-----
+
+--Rn7IEEq3VEzCw+ji--
