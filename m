@@ -2,227 +2,106 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B29EDCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CDBBCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:41:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C2212089C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:39:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EISj5KjZ"
+	by mail.kernel.org (Postfix) with ESMTP id 54C9420869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572885688;
+	bh=/Rvgp2d7W+mkkoTIM0LPd9nYN7M9Kdt2YVgFzxeEai4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KwI9Z+qlHv/enpTNaUG8/l5qBHeSqA1g8LTW9xVm1/GCOVvDCIlLfljWk33v8DrRn
+	 ootkvrit952Jjbc0lvAQitJcO3/xG7LZKtMMn/RFGTdes/sOKUG94MDxmUqq1Gy0Mf
+	 OfXKRFeZY0PJ7h7TLK/yniak/R5JnAMLK13AhjMQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfKDQji (ORCPT
+        id S1729310AbfKDQl1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:39:38 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:30851 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728336AbfKDQjh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:39:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572885575;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ZKRtyHtWqxotoMRVCD2L231GIf5CzzOu6K7yMpGCV1E=;
-        b=EISj5KjZrUl3kZNHgeVxg9gzAbcLy4Tpe15p04ZJX+1X/PP0zhFi/jqdDWYjMDEhoU+i0C
-        JuU/cWz6scDZOZMQlwE2N2QuxICFFYXRzNVTjImH796mEQWD/wjXHkzq8BvJ4gOxbXcJlq
-        N9g+v2tQVhedXU+Lsqq3rbwA789furQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-368-XcpsC-lSP4a7ehsn9d2sxg-1; Mon, 04 Nov 2019 11:39:31 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Mon, 4 Nov 2019 11:41:27 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35352 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728322AbfKDQl1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:41:27 -0500
+Received: from localhost (host6-102.lan-isdn.imaginet.fr [195.68.6.102])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1D6C88017DD;
-        Mon,  4 Nov 2019 16:39:27 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.178])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F0A6F5C240;
-        Mon,  4 Nov 2019 16:39:20 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 11:39:19 -0500
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>
-Subject: Re: [PATCH v2 01/18] mm/gup: pass flags arg to __gup_device_*
- functions
-Message-ID: <20191104163919.GA5134@redhat.com>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-2-jhubbard@nvidia.com>
+        by mail.kernel.org (Postfix) with ESMTPSA id 1ADDB20663;
+        Mon,  4 Nov 2019 16:41:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572885686;
+        bh=/Rvgp2d7W+mkkoTIM0LPd9nYN7M9Kdt2YVgFzxeEai4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=OssM3MIm+0cTRCds0C8iQVCssXHvZZ+3MscLziQ7QRPsXuv4czERjfsfy1EVKmDKV
+         k6INEG6f0eFbvqmN4AAhE1jjA58kOsJyxIN1lsw8CHFWIj4Ca0fkjYawsJG0dEkBDc
+         aTfCcvws6ejEvXDGjVhW9/lZ9m8QHChEPbR/9OII=
+Date:   Mon, 4 Nov 2019 17:41:23 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Andy Gross <agross@kernel.org>,
+        Bjorn Andersson <bjorn.andersson@linaro.org>, jslaby@suse.com,
+        MSM <linux-arm-msm@vger.kernel.org>,
+        linux-serial@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] tty: serial: msm_serial: Fix flow control
+Message-ID: <20191104164123.GA2256087@kroah.com>
+References: <20191021154616.25457-1-jeffrey.l.hugo@gmail.com>
+ <20191027055528.GJ5514@hector.lan>
+ <CAOCk7Nptm=Cz17FFKKvsgVxXRgJ-m9zK4RKysqhjb4cwPweSXg@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191103211813.213227-2-jhubbard@nvidia.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: XcpsC-lSP4a7ehsn9d2sxg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <CAOCk7Nptm=Cz17FFKKvsgVxXRgJ-m9zK4RKysqhjb4cwPweSXg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Nov 03, 2019 at 01:17:56PM -0800, John Hubbard wrote:
-> A subsequent patch requires access to gup flags, so
-> pass the flags argument through to the __gup_device_*
-> functions.
->=20
-> Also placate checkpatch.pl by shortening a nearby line.
->=20
-> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> Cc: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+On Sun, Nov 03, 2019 at 02:51:17PM -0700, Jeffrey Hugo wrote:
+> On Sat, Oct 26, 2019 at 11:55 PM Andy Gross <agross@kernel.org> wrote:
+> >
+> > On Mon, Oct 21, 2019 at 08:46:16AM -0700, Jeffrey Hugo wrote:
+> > > hci_qca interfaces to the wcn3990 via a uart_dm on the msm8998 mtp and
+> > > Lenovo Miix 630 laptop.  As part of initializing the wcn3990, hci_qca
+> > > disables flow, configures the uart baudrate, and then reenables flow - at
+> > > which point an event is expected to be received over the uart from the
+> > > wcn3990.  It is observed that this event comes after the baudrate change
+> > > but before hci_qca re-enables flow. This is unexpected, and is a result of
+> > > msm_reset() being broken.
+> > >
+> > > According to the uart_dm hardware documentation, it is recommended that
+> > > automatic hardware flow control be enabled by setting RX_RDY_CTL.  Auto
+> > > hw flow control will manage RFR based on the configured watermark.  When
+> > > there is space to receive data, the hw will assert RFR.  When the watermark
+> > > is hit, the hw will de-assert RFR.
+> > >
+> > > The hardware documentation indicates that RFR can me manually managed via
+> > > CR when RX_RDY_CTL is not set.  SET_RFR asserts RFR, and RESET_RFR
+> > > de-asserts RFR.
+> > >
+> > > msm_reset() is broken because after resetting the hardware, it
+> > > unconditionally asserts RFR via SET_RFR.  This enables flow regardless of
+> > > the current configuration, and would undo a previous flow disable
+> > > operation.  It should instead de-assert RFR via RESET_RFR to block flow
+> > > until the hardware is reconfigured.  msm_serial should rely on the client
+> > > to specify that flow should be enabled, either via mctrl() or the termios
+> > > structure, and only assert RFR in response to those triggers.
+> > >
+> > > Fixes: 04896a77a97b ("msm_serial: serial driver for MSM7K onboard serial peripheral.")
+> > > Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+> > > ---
+> >
+> > Reviewed-by: Andy Gross <agross@kernel.org>
+> >
+> > Greg, can you pick this one up?
+> >
+> > Thanks,
+> > Andy
+> 
+> Greg, will this be queued for 5.5?
 
-Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
-
-> ---
->  mm/gup.c | 28 ++++++++++++++++++----------
->  1 file changed, 18 insertions(+), 10 deletions(-)
->=20
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a335ae9..85caf76b3012 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1890,7 +1890,8 @@ static int gup_pte_range(pmd_t pmd, unsigned long a=
-ddr, unsigned long end,
-> =20
->  #if defined(CONFIG_ARCH_HAS_PTE_DEVMAP) && defined(CONFIG_TRANSPARENT_HU=
-GEPAGE)
->  static int __gup_device_huge(unsigned long pfn, unsigned long addr,
-> -=09=09unsigned long end, struct page **pages, int *nr)
-> +=09=09=09     unsigned long end, unsigned int flags,
-> +=09=09=09     struct page **pages, int *nr)
->  {
->  =09int nr_start =3D *nr;
->  =09struct dev_pagemap *pgmap =3D NULL;
-> @@ -1916,13 +1917,14 @@ static int __gup_device_huge(unsigned long pfn, u=
-nsigned long addr,
->  }
-> =20
->  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long =
-addr,
-> -=09=09unsigned long end, struct page **pages, int *nr)
-> +=09=09=09=09 unsigned long end, unsigned int flags,
-> +=09=09=09=09 struct page **pages, int *nr)
->  {
->  =09unsigned long fault_pfn;
->  =09int nr_start =3D *nr;
-> =20
->  =09fault_pfn =3D pmd_pfn(orig) + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
-> -=09if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-> +=09if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
->  =09=09return 0;
-> =20
->  =09if (unlikely(pmd_val(orig) !=3D pmd_val(*pmdp))) {
-> @@ -1933,13 +1935,14 @@ static int __gup_device_huge_pmd(pmd_t orig, pmd_=
-t *pmdp, unsigned long addr,
->  }
-> =20
->  static int __gup_device_huge_pud(pud_t orig, pud_t *pudp, unsigned long =
-addr,
-> -=09=09unsigned long end, struct page **pages, int *nr)
-> +=09=09=09=09 unsigned long end, unsigned int flags,
-> +=09=09=09=09 struct page **pages, int *nr)
->  {
->  =09unsigned long fault_pfn;
->  =09int nr_start =3D *nr;
-> =20
->  =09fault_pfn =3D pud_pfn(orig) + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
-> -=09if (!__gup_device_huge(fault_pfn, addr, end, pages, nr))
-> +=09if (!__gup_device_huge(fault_pfn, addr, end, flags, pages, nr))
->  =09=09return 0;
-> =20
->  =09if (unlikely(pud_val(orig) !=3D pud_val(*pudp))) {
-> @@ -1950,14 +1953,16 @@ static int __gup_device_huge_pud(pud_t orig, pud_=
-t *pudp, unsigned long addr,
->  }
->  #else
->  static int __gup_device_huge_pmd(pmd_t orig, pmd_t *pmdp, unsigned long =
-addr,
-> -=09=09unsigned long end, struct page **pages, int *nr)
-> +=09=09=09=09 unsigned long end, unsigned int flags,
-> +=09=09=09=09 struct page **pages, int *nr)
->  {
->  =09BUILD_BUG();
->  =09return 0;
->  }
-> =20
->  static int __gup_device_huge_pud(pud_t pud, pud_t *pudp, unsigned long a=
-ddr,
-> -=09=09unsigned long end, struct page **pages, int *nr)
-> +=09=09=09=09 unsigned long end, unsigned int flags,
-> +=09=09=09=09 struct page **pages, int *nr)
->  {
->  =09BUILD_BUG();
->  =09return 0;
-> @@ -2062,7 +2067,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, un=
-signed long addr,
->  =09if (pmd_devmap(orig)) {
->  =09=09if (unlikely(flags & FOLL_LONGTERM))
->  =09=09=09return 0;
-> -=09=09return __gup_device_huge_pmd(orig, pmdp, addr, end, pages, nr);
-> +=09=09return __gup_device_huge_pmd(orig, pmdp, addr, end, flags,
-> +=09=09=09=09=09     pages, nr);
->  =09}
-> =20
->  =09refs =3D 0;
-> @@ -2092,7 +2098,8 @@ static int gup_huge_pmd(pmd_t orig, pmd_t *pmdp, un=
-signed long addr,
->  }
-> =20
->  static int gup_huge_pud(pud_t orig, pud_t *pudp, unsigned long addr,
-> -=09=09unsigned long end, unsigned int flags, struct page **pages, int *n=
-r)
-> +=09=09=09unsigned long end, unsigned int flags,
-> +=09=09=09struct page **pages, int *nr)
->  {
->  =09struct page *head, *page;
->  =09int refs;
-> @@ -2103,7 +2110,8 @@ static int gup_huge_pud(pud_t orig, pud_t *pudp, un=
-signed long addr,
->  =09if (pud_devmap(orig)) {
->  =09=09if (unlikely(flags & FOLL_LONGTERM))
->  =09=09=09return 0;
-> -=09=09return __gup_device_huge_pud(orig, pudp, addr, end, pages, nr);
-> +=09=09return __gup_device_huge_pud(orig, pudp, addr, end, flags,
-> +=09=09=09=09=09     pages, nr);
->  =09}
-> =20
->  =09refs =3D 0;
-> --=20
-> 2.23.0
->=20
-
+Yes, catching up now...
