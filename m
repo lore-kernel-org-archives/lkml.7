@@ -2,154 +2,114 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9800ECA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DB9ACA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6FD7420B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:59:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="akptdPyr"
+	by mail.kernel.org (Postfix) with ESMTP id 2AB40214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:59:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572890353;
+	bh=LGIo8ZmiAbwfkL3OFX1XtCq8eoQUgUNanwlaQmqqLIk=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=bzrd4BYgusxjodamkTFPyCn0Kuj1bj2Bvow2bjAolWfJEVZ/ISUvFpW4e4m3xSw7V
+	 wPElqHPLiHbifYx4OVm9cEJFtr3Tpy0aXLIeYg6xCaq1WY9wK3Im2jaLO1tGEryBS+
+	 eRma8Sq84jG5NNyrQx8BCpEV4J+ESBJHccz+iioo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729522AbfKDR7C (ORCPT
+        id S1729545AbfKDR7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:59:02 -0500
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:37771 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728174AbfKDR7C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:59:02 -0500
-Received: by mail-lj1-f196.google.com with SMTP id v2so18678514lji.4;
-        Mon, 04 Nov 2019 09:58:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=Hb0vhG4XzifRsCm/AwQzk1v4P4RCPqbW8YY2naw+uGI=;
-        b=akptdPyre/H4THZPklMLGraeHXYqofVqBfHeS4RBQ6GKMVCww98KrVf2Q1zCDyFCza
-         /Mn1W7BW4k+dYBBooPbP1YSZd+MKdEvwwKCx90QqmwcpqOs6MUwkEWqMmfGNs4HSCLq3
-         aeqSlvfcRcoY7cnOaRQ8/CFyu9p62iDq43Zqe25d7HRy5Bo28ZbCCHbKmKzCuWb9Lt9+
-         TH1LmJDizsGcRslsR3A2wWz1NbRvOMm2U13ImSMs/4y5YSEZLDG1HaM9oePwa78b14sj
-         FrV4mQOHZK/QBcBKHdKbHgkgcJrsSbX2Zb/KmOma11tASgUcEJnPvprBQRZ4wNAfyBLr
-         t3dA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=Hb0vhG4XzifRsCm/AwQzk1v4P4RCPqbW8YY2naw+uGI=;
-        b=jmmGfnb6sqd3JerajE95bxWwBvcPrwu+OxZ6+aE6rvXBpfYwP5AUpn2+HJ/C5Uv9pU
-         OzkK+N/xcMrmF+DSQryUc7qjXjsaxNUwmDmFT6Nllq5rIDJSOVeVEPVk8fcyn90J473p
-         8Qw09cq9lxpnMfhcfLsFZj1qxMJCqzuLCTDwpMqHwyU8hp+qVIHhVYAFeACvG+PMf15N
-         Xt6cZ7diztlaCCZZAmmIA3eanuqxweCRY8+CI0uT+879HfGpUHsWB3V51DDGdbwoSzkC
-         wdMTVOBQBXxnoR5MaeMqXSbNB/1bc+N0lnXJtJZPEodZ1rCnaTn8cyp2QYRDhOeFCg2Q
-         lc8A==
-X-Gm-Message-State: APjAAAVPZC7ZfzNh8q0WGtUlhsn12rME150kpNvrtECUWMal5FjPCB/p
-        2PkEDuV6LE+TSFLBnLtBL01awbNq
-X-Google-Smtp-Source: APXvYqz2pGcMJfX9TtZAMtNXyj1xeoTSNo9CkQjxQlYlmzmhtCV6C94dR5JFqZHza7hGs7HpVldK4Q==
-X-Received: by 2002:a2e:3e18:: with SMTP id l24mr20047363lja.48.1572890337917;
-        Mon, 04 Nov 2019 09:58:57 -0800 (PST)
-Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
-        by smtp.gmail.com with ESMTPSA id z14sm7246566lfh.30.2019.11.04.09.58.56
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 09:58:57 -0800 (PST)
-Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
-To:     "Eric W. Biederman" <ebiederm@xmission.com>
-Cc:     Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "open list:FILESYSTEMS (VFS and infrastructure)" 
-        <linux-fsdevel@vger.kernel.org>
-References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
- <87d0e8g5f4.fsf@x220.int.ebiederm.org>
- <f272bdd3-526d-6737-c906-143d5e5fc478@gmail.com>
- <87h83jejei.fsf@x220.int.ebiederm.org>
-From:   Topi Miettinen <toiwoton@gmail.com>
-Message-ID: <eb2da7e4-23ff-597a-08e1-e0555d490f6f@gmail.com>
-Date:   Mon, 4 Nov 2019 19:58:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <87h83jejei.fsf@x220.int.ebiederm.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+        Mon, 4 Nov 2019 12:59:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36656 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728800AbfKDR7L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:59:11 -0500
+Received: from localhost.localdomain (unknown [194.230.155.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F0CC620B7C;
+        Mon,  4 Nov 2019 17:59:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572890351;
+        bh=LGIo8ZmiAbwfkL3OFX1XtCq8eoQUgUNanwlaQmqqLIk=;
+        h=From:To:Cc:Subject:Date:From;
+        b=nrxoEJpw15kTTwxCPN6JNJjPoR41rcctJ4NZpnAanKB7BK2d9kEASyceLFBzeYMi0
+         kutqZYMXKDVmMyLdVFNZoETmfEd/+8Tn+wmJomRBptRyrt5vD4YxBcE9ok9ohGFREr
+         aU5WLrGnnQy4FKIjYkDyrliLa9vR7BQYyA3/5OMo=
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        arm@kernel.org, soc@kernel.org
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [GIT PULL 1/2] soc: samsung: Drivers for v5.5
+Date:   Mon,  4 Nov 2019 18:59:01 +0100
+Message-Id: <20191104175902.12224-1-krzk@kernel.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4.11.2019 17.44, Eric W. Biederman wrote:
-> Topi Miettinen <toiwoton@gmail.com> writes:
-> 
->> On 3.11.2019 20.50, Eric W. Biederman wrote:
->>> Topi Miettinen <toiwoton@gmail.com> writes:
->>>
->>>> Several items in /proc/sys need not be accessible to unprivileged
->>>> tasks. Let the system administrator change the permissions, but only
->>>> to more restrictive modes than what the sysctl tables allow.
->>>
->>> This looks quite buggy.  You neither update table->mode nor
->>> do you ever read from table->mode to initialize the inode.
->>> I am missing something in my quick reading of your patch?
->>
->> inode->i_mode gets initialized in proc_sys_make_inode().
->>
->> I didn't want to touch the table, so that the original permissions can
->> be used to restrict the changes made. In case the restrictions are
->> removed as suggested by Theodore Ts'o, table->mode could be
->> changed. Otherwise I'd rather add a new field to store the current
->> mode and the mode field can remain for reference. As the original
->> author of the code from 2007, would you let the administrator to
->> chmod/chown the items in /proc/sys without restrictions (e.g. 0400 ->
->> 0777)?
-> 
-> At an architectural level I think we need to do this carefully and have
-> a compelling reason.  The code has survived nearly the entire life of
-> linux without this capability.
+Hi,
 
-I'd be happy with only allowing restrictions to access for now. Perhaps 
-later with more analysis, also relaxing changes and maybe UID/GID 
-changes can be allowed.
+This includes dependency from PM/OPP.
 
-> I think right now the common solution is to mount another file over the
-> file you are trying to hide/limit.  Changing the permissions might be
-> better but that is not at all clear.
-> 
-> Do you have specific examples of the cases where you would like to
-> change the permissions?
+Best regards,
+Krzysztof
 
-Unprivileged applications typically do not need to access most items in 
-/proc/sys, so I'd like to gradually find out which are needed. So far 
-I've seen no problems with 0500 mode for directories abi, crypto, debug, 
-dev, fs, user or vm.
 
-I'm also using systemd's InaccessiblePaths to limit access (which mounts 
-an inaccessible directory over the path), but that's a bit too big 
-hammer. For example there are over 100 files in /proc/sys/kernel, 
-perhaps there will be issues when creating a mount for each, and that 
-multiplied by a number of services.
+The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
 
->>> The not updating table->mode almost certainly means that as soon as the
->>> cached inode is invalidated the mode changes will disappear.  Not to
->>> mention they will fail to propogate between  different instances of
->>> proc.
->>>
->>> Loosing all of your changes at cache invalidation seems to make this a
->>> useless feature.
->>
->> At least different proc instances seem to work just fine here (they
->> show the same changes), but I suppose you are right about cache
->> invalidation.
-> 
-> It is going to take the creation of a pid namespace to see different
-> proc instances.  All mounts of the proc within the same pid_namespace
-> return the same instance.
+  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
 
-I see no problems by using Firejail (which uses PID namespacing) with 
-v2, the permissions in /proc/sys are the same as outside the namespace.
+are available in the Git repository at:
 
--Topi
+  https://git.kernel.org/pub/scm/linux/kernel/git/krzk/linux.git tags/samsung-drivers-5.5
+
+for you to fetch changes up to 89e551e83869732d5b9fd21d7cfdb1f8d62cf5d0:
+
+  soc: samsung: exynos-asv: Potential NULL dereference in exynos_asv_update_opps() (2019-10-30 19:04:32 +0100)
+
+----------------------------------------------------------------
+Samsung soc drivers changes for v5.5
+
+1. Minor fixes to Exynos Chipid driver.
+2. Add Exynos Adaptive Supply Voltage driver allowing to adjust voltages
+   used during CPU frequency scaling based on revision of SoC.  This
+   also pulls dependency from PM/OPP tree - driver uses newly added
+   dev_pm_opp_adjust_voltage() function.
+
+----------------------------------------------------------------
+Dan Carpenter (1):
+      soc: samsung: exynos-asv: Potential NULL dereference in exynos_asv_update_opps()
+
+Krzysztof Kozlowski (1):
+      Merge tag 'opp-5.4-support-adjust-voltages' of https://git.kernel.org/.../vireshk/pm into next/drivers
+
+Stephen Boyd (1):
+      PM / OPP: Support adjusting OPP voltages at runtime
+
+Sylwester Nawrocki (3):
+      soc: samsung: chipid: Make exynos_chipid_early_init() static
+      soc: samsung: Add Exynos Adaptive Supply Voltage driver
+      soc: samsung: chipid: Drop "syscon" compatible requirement
+
+ drivers/opp/core.c                   |  69 +++++
+ drivers/soc/samsung/Kconfig          |  10 +
+ drivers/soc/samsung/Makefile         |   3 +
+ drivers/soc/samsung/exynos-asv.c     | 177 ++++++++++++
+ drivers/soc/samsung/exynos-asv.h     |  71 +++++
+ drivers/soc/samsung/exynos-chipid.c  |  12 +-
+ drivers/soc/samsung/exynos5422-asv.c | 505 +++++++++++++++++++++++++++++++++++
+ drivers/soc/samsung/exynos5422-asv.h |  31 +++
+ include/linux/pm_opp.h               |  13 +
+ 9 files changed, 889 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/soc/samsung/exynos-asv.c
+ create mode 100644 drivers/soc/samsung/exynos-asv.h
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.c
+ create mode 100644 drivers/soc/samsung/exynos5422-asv.h
