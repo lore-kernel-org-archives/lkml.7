@@ -2,133 +2,189 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E52E3CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F585CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC97F218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="CRqPRRvM"
+	by mail.kernel.org (Postfix) with ESMTP id 5FE60222CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:38:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfKDIiO (ORCPT
+        id S1727955AbfKDIiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:38:14 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37901 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDIiM (ORCPT
+        Mon, 4 Nov 2019 03:38:46 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:55251 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726891AbfKDIiq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:38:12 -0500
-Received: by mail-lf1-f68.google.com with SMTP id q28so11586679lfa.5
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 00:38:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=aAvLvQnBn2etU9QWbHrMgTtrty/V9iZf2pUKjOUNug8=;
-        b=CRqPRRvMc4CiyGWwN0n+HhobnmdoLfjL+0AzezW7ETOIFz5sHfNHH5JNGG6YI+/403
-         MsQNEzWz0NSvbA0uWvsbCgqAT3tGi1qsOO0oSW4TRw1r9cIbKDUlQ9wzYhXtlrQDdRZs
-         PV5CVnB5sUcQ4tEXqmk5O+Wt9y6sGHLcWmnV4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=aAvLvQnBn2etU9QWbHrMgTtrty/V9iZf2pUKjOUNug8=;
-        b=UkkXb6DVtBDr7auT5cLOxJ2waIq128yG7W8sFvYXRgleaVJlSU1umbrpuUnMLLidUV
-         pTqdFp2vUoL52/zzEPKrZZ/z1BNh8oUdMXFkxNRg8jMILUT9QZla6FWOr7utJrzV/aL2
-         5khqTVUmsOXOwUF+hIpvdKMvr5HfiWECdpUHJs+K8ZakTgwlgtmxLaoiX3b8f5mV6RGA
-         Sq4LakQc4xpFWv7vRqNlyPTiSLuDLLAClMJtaw4BPekccdAUmY4fvjzuE0U40K4ABpbH
-         iVICfwRoTFSDIb576IsroiHjAl+a177q9I6u6/7dA1r+lK+oCDDWjPbSbjW7GK17OY+/
-         J0WA==
-X-Gm-Message-State: APjAAAV6HUcCvhH4U/d6jBjcKC6E89Jh/5eyuV+qTF3pGsHgcQZrbH9a
-        /JzrLff6sOiVjiE0kPdpX2QC7A==
-X-Google-Smtp-Source: APXvYqzGJdH19phuRzqBS1a9feyj40vilK5OuKVvLX9t8OwmcbQ9em9T2maQ71sFqH2o8LzrUCr3gg==
-X-Received: by 2002:ac2:549a:: with SMTP id t26mr15512173lfk.25.1572856688914;
-        Mon, 04 Nov 2019 00:38:08 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id u11sm8744096lfq.54.2019.11.04.00.38.07
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 00:38:08 -0800 (PST)
-Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on
- PPC32
-To:     Leo Li <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qiang Zhao <qiang.zhao@nxp.com>
-Cc:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-36-linux@rasmusvillemoes.dk>
- <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr>
- <VE1PR04MB6687D4620E32176BDC120DBA8F620@VE1PR04MB6687.eurprd04.prod.outlook.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <24ea27b6-adea-cc74-f480-b68de163f531@rasmusvillemoes.dk>
-Date:   Mon, 4 Nov 2019 09:38:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 03:38:46 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRXsi-0002GD-OC; Mon, 04 Nov 2019 09:38:36 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRXsh-0008RT-V9; Mon, 04 Nov 2019 09:38:35 +0100
+Date:   Mon, 4 Nov 2019 09:38:35 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-5-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <VE1PR04MB6687D4620E32176BDC120DBA8F620@VE1PR04MB6687.eurprd04.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191103203334.10539-5-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/11/2019 23.31, Leo Li wrote:
+On Sun, Nov 03, 2019 at 09:33:31PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
+> PWM core has an option to bypass whole logic and output unchanged source
+> clock as PWM output. This is achieved by enabling bypass bit.
 > 
->> -----Original Message-----
->> From: Christophe Leroy <christophe.leroy@c-s.fr>
->> Sent: Friday, November 1, 2019 11:30 AM
->> To: Rasmus Villemoes <linux@rasmusvillemoes.dk>; Qiang Zhao
->> <qiang.zhao@nxp.com>; Leo Li <leoyang.li@nxp.com>
->> Cc: linuxppc-dev@lists.ozlabs.org; linux-arm-kernel@lists.infradead.org;
->> linux-kernel@vger.kernel.org; Scott Wood <oss@buserror.net>;
->> netdev@vger.kernel.org
->> Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly
->> depend on PPC32
->>
->>
->>
->> Le 01/11/2019 Ã  13:42, Rasmus Villemoes a Ã©critÂ :
->>> Currently, FSL_UCC_HDLC depends on QUICC_ENGINE, which in turn
->> depends
->>> on PPC32. As preparation for removing the latter and thus allowing the
->>> core QE code to be built for other architectures, make FSL_UCC_HDLC
->>> explicitly depend on PPC32.
->>
->> Is that really powerpc specific ? Can't the ARM QE perform HDLC on UCC ?
+> Note that when bypass is enabled, no other setting has any meaning, not
+> even enable bit.
+> 
+> This mode of operation is needed to achieve high enough frequency to
+> serve as clock source for AC200 chip, which is integrated into same
+> package as H6 SoC.
 
-I think the driver would build on ARM. Whether it works I don't know. I
-know it does not build on 64 bit hosts (see kbuild report for v2,23/23).
+I think the , should be dropped.
 
-> No.  Actually the HDLC and TDM are the major reason to integrate a QE on the ARM based Layerscape SoCs.
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 39 ++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 38 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index b5e7ac364f59..2441574674d9 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -3,6 +3,10 @@
+>   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+>   *
+>   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> + *
+> + * Limitations:
+> + * - When outputing the source clock directly, the PWM logic will be bypassed
+> + *   and the currently running period is not guaranted to be completed
 
-[citation needed].
+Typo: guaranted  -> guaranteed
 
-> Since Rasmus doesn't have the hardware to test this feature Qiang Zhao probably can help verify the functionality of TDM and we can drop this patch.
+>   */
+>  
+>  #include <linux/bitops.h>
+> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
+>  
+>  struct sun4i_pwm_data {
+>  	bool has_prescaler_bypass;
+> +	bool has_direct_mod_clk_output;
+>  	unsigned int npwm;
+>  };
+>  
+> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  
+>  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  
+> +	/*
+> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> +	 * bit is set, no other setting has any meaning. Even more, experiment
+> +	 * proved that also enable bit is ignored in this case.
+> +	 */
+> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> +	    data->has_direct_mod_clk_output) {
+> +		state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
+> +		state->duty_cycle = state->period / 2;
+> +		state->polarity = PWM_POLARITY_NORMAL;
+> +		state->enabled = true;
+> +		return;
+> +	}
 
-No, this patch cannot be dropped. Please see the kbuild complaints for
-v2,23/23 about use of IS_ERR_VALUE on not-sizeof(long) entities. I see
-kbuild has complained about the same thing for v3 since apparently the
-same thing appears in ucc_slow.c. So I'll fix that.
+Not sure how the rest of sun4i_pwm_get_state behaves, but I would prefer
+to let .get_state() round up which together with .apply_state() rounding
+down yields sound behaviour.
 
-Moreover, as you say and know, I do not have the hardware to test it, so
-I'm not going to even attempt to fix up fsl_ucc_hdlc.c. If Qiang Zhao or
-somebody else can verify that it works just fine on ARM and fixes the
-allmodconfig problem(s), he/she is more than welcome to sign off on a
-patch that removes the CONFIG_PPC32 dependency or replaces it with
-something else.
+> +
+>  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+>  	    sun4i_pwm->data->has_prescaler_bypass)
+>  		prescaler = 1;
+> @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  {
+>  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+>  	struct pwm_state cstate;
+> -	u32 ctrl;
+> +	u32 ctrl, clk_rate;
+> +	bool bypass;
+>  	int ret;
+>  	unsigned int delay_us;
+>  	unsigned long now;
+> @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Although it would make much more sense to check for bypass in
+> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+> +	 * Period is allowed to be rounded up or down.
+> +	 */
+> +	clk_rate = clk_get_rate(sun4i_pwm->clk);
+> +	bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
+> +		   state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> +		  state->enabled);
 
-Rasmus
+I guess the compiler is smart enough here, but checking for
+state->enabled is cheaper than the other checks, so putting this at the
+start of the expression seems sensible.
+
+The comment doesn't match the code. You don't round up state->period.
+(This is good, please fix the comment.) I think dropping the check
+
+	state->period * clk_rate < NSEC_PER_SEC + clk_rate
+
+would be fine, too.
+
+I'd like to have a check for
+
+	state->duty_cycle * clk_rate >= NSEC_PER_SEC / 2 &&
+	state->duty_cycle * clk_rate < NSEC_PER_SEC
+
+here. If this isn't true rather disable the PWM or output a 100% duty
+cycle with a larger period.
+
+> +
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+>  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
