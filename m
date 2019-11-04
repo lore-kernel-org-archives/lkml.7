@@ -2,90 +2,137 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D55F9CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:28:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83227CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A974B2245D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:28:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572859683;
-	bh=mjpf4qHX+4LtFI3DUZH/vqduTv06o3J1bBEcBr2Htpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=RzxLlQsgzwGafVeKrYv1ZD1CG8uKnd5SOMlrQ1LoR4f5kL6DeZyz7SSooDR7T+Uap
-	 flCSRK/TvyahCficKfY+lZx7+M+O1GZrzui1PR2zFk8tg+VcRrnpaw6CF3zUf/HN2A
-	 yD05Q2CLEjJYUnhZaUR8MryXnImUMUSvS0a7Ecqc=
+	by mail.kernel.org (Postfix) with ESMTP id 5A6D6222D2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 09:29:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="pIs+r8BG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfKDJ2C (ORCPT
+        id S1728165AbfKDJ3f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 04:28:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40436 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727419AbfKDJ2C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 04:28:02 -0500
-Received: from localhost (unknown [106.201.55.174])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A0E53222D2;
-        Mon,  4 Nov 2019 09:28:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572859681;
-        bh=mjpf4qHX+4LtFI3DUZH/vqduTv06o3J1bBEcBr2Htpk=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=SqRgqM0MKkPCfeT+cjF0A3wpLlpzSvc/pOu/qJdk2In5nKHVkXPDjHShTOEyWE1Jq
-         89bVncd30CMe29c0gCKbZme5E7O21d+RLPyUXABub9M73gMta8P4HmRwvy2MMyZnEa
-         YpEkGZ44myT4Mplb0nMyq1HRPhZmOXhh3dsRs1jY=
-Date:   Mon, 4 Nov 2019 14:57:57 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/11] arm64: dts: qcom: msm8996: Introduce IFC6640
-Message-ID: <20191104092757.GT2695@vkoul-mobl.Dlink>
-References: <20191021051322.297560-1-bjorn.andersson@linaro.org>
- <20191103081311.GM2695@vkoul-mobl.Dlink>
- <20191104045507.GA28034@tuxbook-pro>
+        Mon, 4 Nov 2019 04:29:35 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:40639 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727138AbfKDJ3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 04:29:35 -0500
+Received: by mail-io1-f65.google.com with SMTP id p6so17616289iod.7
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 01:29:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
+        b=pIs+r8BGTrZcFZ6o2F9aOev8qXPFSl5BzVzuK8uXfPkmFJ5u78WHAgn7yWhZRgcRF2
+         TQ/fmRIthC7HH1oKRPL+rsIY0xayE+DEbHqMYT/+zihcmnMjln1lQzQBPFD2FkN0gO/R
+         4HhWzrpt1w/0TzsiJgb7btUET/PM7PlsdezH2ASb9obFcGp5X0gZk6uMEwODYssD9ndO
+         EYQFYyql2atk36OPSGopZnAzTs9D12s8ZFpQDSQVqqmYAE3KT9QtIxIc7PjjNvtUIn0I
+         tmEld6xM7W3U54vrFxxBUKCK7vOk3TguwljwVy7KB1EDh9+/aKgSTzCeUR8CWUSEYWZd
+         InJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=7LA3aPxO7flmHbs1Fp65T1MxGgeqEVjRl7gRB0nIklg=;
+        b=WGH8kI/hG4dNJEm7vOQANupX/jtrn3/K6sYQuffFTiyNWGpYwZoqA1cdrG9OuMkANv
+         l/JifdZ0iSdDU6mkDIUr8l/822wNXevgI4QRM33iYG6QrzpaHyKlNE6Mhx3EUClUK7AJ
+         h00Ga3F8I2qj373zWg8OuNUqNbXpKZuYR0QiUfvB1jj0JjtzrNVk783XzuQbk4uJ1wwk
+         9WPIlqsw11WvwN0m/fhXwUV86HFPuUZObMXopROusSrsmmcUX5EGYvs9qC3A02ThF9Ev
+         eapgZI4JQtWvYhP83/ZUR9XcMFdOorcFCFWTIrUhqMrURIdamC4oqoVahVjf1sLPyRRP
+         GItQ==
+X-Gm-Message-State: APjAAAVJ1Wvu6pHSrq/qKEs5Ipyma1TMgb9fWCQ+TriW3C9U+yDSLSg0
+        i7fUGHfqbrmJnG+hSnFngN5BP61j8imNUJ1qQgmXEQ==
+X-Google-Smtp-Source: APXvYqyGh8w7aoaD8Ly+KkL+MHjewrNRjU9gjfaUC4B+HarLQYhFCDkzx2C/y4W4+ApkqrVUgvpjDgWLY+BUbVoDQq4=
+X-Received: by 2002:a6b:c705:: with SMTP id x5mr199971iof.189.1572859774524;
+ Mon, 04 Nov 2019 01:29:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104045507.GA28034@tuxbook-pro>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191022084318.22256-1-brgl@bgdev.pl>
+In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
+From:   Bartosz Golaszewski <brgl@bgdev.pl>
+Date:   Mon, 4 Nov 2019 10:29:23 +0100
+Message-ID: <CAMRc=MdqDv7FYCEKoK52G5zacNfLTDErrOGZAG5KDOsKh2pfUw@mail.gmail.com>
+Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of devm_platform_ioremap_resource()
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-doc <linux-doc@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 03-11-19, 20:55, Bjorn Andersson wrote:
-> On Sun 03 Nov 01:13 PDT 2019, Vinod Koul wrote:
-> 
-> > On 20-10-19, 22:13, Bjorn Andersson wrote:
-> > > Refactor msm8996 and db820c in order to make it follow the structure of newer
-> > > platforms, move db820c specific things to db820c.dtsi and then introduce the
-> > > Informace 6640 Single Board Computer.
-> > 
-> > This has patch 9/11 missing. But rest look good to me.
-> > 
-> 
-> That's really odd, I copy pasted the recipients into all the patches.
-> But I'm unable to find it under linux-arm-msm on lore as well.
+wt., 22 pa=C5=BA 2019 o 10:43 Bartosz Golaszewski <brgl@bgdev.pl> napisa=C5=
+=82(a):
+>
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Note: resending with Arnd's review tags and rebased on top of char-misc-n=
+ext
+>
+> The new devm_platform_ioremap_resource() helper has now been widely
+> adopted and used in many drivers. Users of the write-combined ioremap()
+> variants could benefit from the same code shrinkage. This series provides
+> a write-combined version of devm_platform_ioremap_resource() and uses it =
+in a
+> relevant driver with the assumption that - just like was the case
+> previously - a coccinelle script will be developed to ease the transition
+> for others.
+>
+> There are also users of platform_get_resource_byname() who call
+> devm_ioremap_resource() next, so provide another variant that they can us=
+e
+> together with two examples.
+>
+> v1 -> v2:
+> - dropped everything related to nocache ioremap as this is going away
+>
+> v2 -> v3:
+> - don't call platform_get_resource() as an argument of devm_ioremap_resou=
+rce(),
+>   it actually decreases readability
+> - add devm_platform_ioremap_resource_byname() as another variant
+>
+> Bartosz Golaszewski (8):
+>   Documentation: devres: add missing entry for
+>     devm_platform_ioremap_resource()
+>   lib: devres: prepare devm_ioremap_resource() for more variants
+>   lib: devres: provide devm_ioremap_resource_wc()
+>   drivers: platform: provide devm_platform_ioremap_resource_wc()
+>   misc: sram: use devm_platform_ioremap_resource_wc()
+>   drivers: provide devm_platform_ioremap_resource_byname()
+>   gpio: mvebu: use devm_platform_ioremap_resource_byname()
+>   gpio: tegra186: use devm_platform_ioremap_resource_byname()
+>
+>  .../driver-api/driver-model/devres.rst        |  4 ++
+>  drivers/base/platform.c                       | 39 +++++++++++-
+>  drivers/gpio/gpio-mvebu.c                     | 19 +++---
+>  drivers/gpio/gpio-tegra186.c                  |  4 +-
+>  drivers/misc/sram.c                           | 28 +++------
+>  include/linux/device.h                        |  2 +
+>  include/linux/platform_device.h               |  6 ++
+>  lib/devres.c                                  | 62 +++++++++++++------
+>  8 files changed, 108 insertions(+), 56 deletions(-)
+>
+> --
+> 2.23.0
+>
 
-Yup I can see it there but not on arm-msm. Do you use @linaro smtp to
-send. Gmail is known to drop emails to lists on  vger..
-I use @kernel.org one, havent seen issues on that yet
+Hi Greg,
 
-> It's under LKML though, can you please have a look and let me know if I
-> can extend your ack to patch 9/11 as well?
-> 
-> https://lore.kernel.org/lkml/20191021051322.297560-10-bjorn.andersson@linaro.org/
+can you pick it up for char-misc for v5.5? This was reviewed by Arnd.
 
-Mostly looks good but the reserve memory doesnt seem sorted by node
-(please recheck) and rest looks good so you can add it to that patch as
-well :)
-
--- 
-~Vinod
+Best regards,
+Bartosz Golaszewski
