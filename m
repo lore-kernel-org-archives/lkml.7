@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F9C0CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6C80CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 640E7214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F8E214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905715;
-	bh=rRwePNsI59KK4BLYIYjRoGLaieBH2kehmZF/8DC2UNM=;
+	s=default; t=1572905717;
+	bh=I2FBoCDye4dsVyowU5HepiJpF/G674+D7HmyGV02wAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0MvDnSXAyuPZgqx80yD/SszvCgWo7cL9C6Zt5LiS2Q5mSBvwUr+qKWKwpiIlZ39sp
-	 kHQzSl8BHgpoccdSNlY90qb3NiUdiDOn5r7h5h44GGHQh1Ks8iFj4QPsNVH1Wm7DwG
-	 IbPJEYQcXHsdljsd1lhNzL86V/4BOzB+FHOJfH10=
+	b=eOFDHuthiOq7qn4+fLQ8PKcIq3ipEhzZ4Cjhq41LO1C/klu7KpDAECXmavK9KA9K0
+	 ATgaPBlbTO1EMuys6uWd6s2dMW/xF/RsK+Vqyt07FS0sKe182EQXz7r13rUIqSLGck
+	 hd1XJCaP1EWQf/QHm79wYorLVhRUPEDy9wEDh+NQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389953AbfKDWGX (ORCPT
+        id S2389942AbfKDWGV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:06:23 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38088 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:06:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:38008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389924AbfKDWGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:06:18 -0500
+        id S2389932AbfKDWGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:06:15 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BC23620650;
-        Mon,  4 Nov 2019 22:06:17 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DBE1020650;
+        Mon,  4 Nov 2019 22:06:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905178;
-        bh=rRwePNsI59KK4BLYIYjRoGLaieBH2kehmZF/8DC2UNM=;
+        s=default; t=1572905175;
+        bh=I2FBoCDye4dsVyowU5HepiJpF/G674+D7HmyGV02wAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=RwxgJ9TYiEUwjCkkmNMcCSnUkGX9BMs0WZbsvkD23qvkZAzaos4PNd+t/KsGG2BIV
-         NsgJLboC0G5AdxufLBzXXH4XpBvUm2cWXNs3/2RRhOZ7+9MF1QjzvDI87ncwQRMMPL
-         mLmsAVGZU45vLgXONiT/DsaIvRgbtFYGgQ2BxSUQ=
+        b=C7xVsqmGAc/IXNAPkAy/iBNohhW0ci4EQp4LsfkZIJ/4CMIVVflERNB2HjXtv1HiC
+         f9921sSpP9THmM83QI5T3f2+x5i+5zsf2nM45SPO8qXxhk62ioyWPQj7ykBLXPOO4M
+         mHxjq8QCSzv63eF7v1WprBihMZRjrvfRozPYgSaM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Vincent Chen <vincent.chen@sifive.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
+        stable@vger.kernel.org, Adam Ford <aford173@gmail.com>,
+        Yegor Yefremov <yegorslists@googlemail.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.3 056/163] riscv: Correct the handling of unexpected ebreak in do_trap_break()
-Date:   Mon,  4 Nov 2019 22:44:06 +0100
-Message-Id: <20191104212144.176069663@linuxfoundation.org>
+Subject: [PATCH 5.3 047/163] serial: mctrl_gpio: Check for NULL pointer
+Date:   Mon,  4 Nov 2019 22:43:57 +0100
+Message-Id: <20191104212143.619914901@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -61,55 +60,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Vincent Chen <vincent.chen@sifive.com>
+From: Adam Ford <aford173@gmail.com>
 
-[ Upstream commit 8bb0daef64e5a92db63ad1d3bbf9e280a7b3612a ]
+[ Upstream commit 37e3ab00e4734acc15d96b2926aab55c894f4d9c ]
 
-For the kernel space, all ebreak instructions are determined at compile
-time because the kernel space debugging module is currently unsupported.
-Hence, it should be treated as a bug if an ebreak instruction which does
-not belong to BUG_TRAP_TYPE_WARN or BUG_TRAP_TYPE_BUG is executed in
-kernel space. For the userspace, debugging module or user problem may
-intentionally insert an ebreak instruction to trigger a SIGTRAP signal.
-To approach the above two situations, the do_trap_break() will direct
-the BUG_TRAP_TYPE_NONE ebreak exception issued in kernel space to die()
-and will send a SIGTRAP to the trapped process only when the ebreak is
-in userspace.
+When using mctrl_gpio_to_gpiod, it dereferences gpios into a single
+requested GPIO.  This dereferencing can break if gpios is NULL,
+so this patch adds a NULL check before dereferencing it.  If
+gpios is NULL, this function will also return NULL.
 
-Signed-off-by: Vincent Chen <vincent.chen@sifive.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-[paul.walmsley@sifive.com: fixed checkpatch issue]
-Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
+Signed-off-by: Adam Ford <aford173@gmail.com>
+Reviewed-by: Yegor Yefremov <yegorslists@googlemail.com>
+Link: https://lore.kernel.org/r/20191006163314.23191-1-aford173@gmail.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/riscv/kernel/traps.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/tty/serial/serial_mctrl_gpio.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
-index 82f42a55451eb..93742df9067fb 100644
---- a/arch/riscv/kernel/traps.c
-+++ b/arch/riscv/kernel/traps.c
-@@ -130,8 +130,6 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
- 		type = report_bug(regs->sepc, regs);
- 		switch (type) {
- #ifdef CONFIG_GENERIC_BUG
--		case BUG_TRAP_TYPE_NONE:
--			break;
- 		case BUG_TRAP_TYPE_WARN:
- 			regs->sepc += get_break_insn_length(regs->sepc);
- 			return;
-@@ -140,8 +138,10 @@ asmlinkage void do_trap_break(struct pt_regs *regs)
- 		default:
- 			die(regs, "Kernel BUG");
- 		}
-+	} else {
-+		force_sig_fault(SIGTRAP, TRAP_BRKPT,
-+				(void __user *)(regs->sepc));
- 	}
--	force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)(regs->sepc));
+diff --git a/drivers/tty/serial/serial_mctrl_gpio.c b/drivers/tty/serial/serial_mctrl_gpio.c
+index 2b400189be911..54c43e02e3755 100644
+--- a/drivers/tty/serial/serial_mctrl_gpio.c
++++ b/drivers/tty/serial/serial_mctrl_gpio.c
+@@ -61,6 +61,9 @@ EXPORT_SYMBOL_GPL(mctrl_gpio_set);
+ struct gpio_desc *mctrl_gpio_to_gpiod(struct mctrl_gpios *gpios,
+ 				      enum mctrl_gpio_idx gidx)
+ {
++	if (gpios == NULL)
++		return NULL;
++
+ 	return gpios->gpio[gidx];
  }
- 
- #ifdef CONFIG_GENERIC_BUG
+ EXPORT_SYMBOL_GPL(mctrl_gpio_to_gpiod);
 -- 
 2.20.1
 
