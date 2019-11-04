@@ -7,68 +7,68 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7E23CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F96FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5877206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 18426206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572912027;
-	bh=6zYICgQQoXRbL117YIXiAx+yQq5NmZHEf8FVT4nL+v0=;
+	s=default; t=1572912030;
+	bh=5tyawiNjsNC+aoT/uuZkuiuZ6Y8+M4wkxi+hFmGejPQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BClg15PhrpCnBAiL5OVmHlWo/IUWZiTPAN3MpcppgZ9xsWN+fKHxMuf5uAyEBcXeZ
-	 I/NBCXnbpE6kQ8khccCNIfbuNwWsRcw1fVmjWWgDbqyQ4bztkVCJ5yoGfPAoRyO1f6
-	 FodJi9Yvt4MD1xMg1Za70WQO5hN5F7Hzgl/cCZgw=
+	b=DGatdvsGpM9fGY5r0pL8Upa78y3S+Fhwwh62shASyCbQNlZ6cVTW8sBr75UhSD0Sm
+	 NcQUuHMwVrIyxG+d9GB5BVHnGPbYY2Ee3zj4huGd/e71tjqlt7YyeotMqKhHQO3Ssm
+	 YOUqeJF0Pj2Da67D7PhF6X4eHuLcHQOQ31d4HNWg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730239AbfKEAAD (ORCPT
+        id S1730437AbfKEAA2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:00:03 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:42208 "EHLO
+        Mon, 4 Nov 2019 19:00:28 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:44739 "EHLO
         mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730163AbfKDX76 (ORCPT
+        with ESMTP id S1730189AbfKEAAG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:59:58 -0500
-Received: by mail-qt1-f194.google.com with SMTP id t20so11110873qtn.9;
-        Mon, 04 Nov 2019 15:59:57 -0800 (PST)
+        Mon, 4 Nov 2019 19:00:06 -0500
+Received: by mail-qt1-f194.google.com with SMTP id o11so21680981qtr.11;
+        Mon, 04 Nov 2019 16:00:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=XdS82XwKAJYAYf10xCxmrjEq7ZEr5zc2RbCuNFEXBSg=;
-        b=W5IM6QSOl7ZvVzqGEhgoW0e6Bac4W/+Jhu72ASMECsFDNyiqxQgjYKeKHpAN6z3YRd
-         Z53IOJvoECiXq6AxjGYouP+1aU+1zIQ4VEEtCPCcaOrCzEfk9qRvQZgEsih90dM5IRkS
-         bSN3zMvYleoXtt+ASxJx+21/R6kJI7wd+pxAMd+DhS1a3+PrGVzGvlYxwU9ZhqI4rfRO
-         AJ0Q/xdIOcOGarTYPzAA+JhVnn9wnzVOyLlfoRwoE40UQs79un8RObydw/yYnlW1Ux3I
-         005AGNJKIfFwHfTbIh69ymRRLwHxS3RHgWLea7GOs7nJFk2jnOAieNAltI6yqNmr6q95
-         jK6Q==
+        bh=6eyC/Pr88JMkuUtE27lkcLMpRj73Ok1FRh3V2w/GO4I=;
+        b=Q62vHfUhNt9gVSAnEvcyM8ffDXH8NhSIP3TqMk1IR19FwUBSa2gzv/2wfMDbMifc9H
+         F+qLKdXYhgWGXSHtzTNJJwJi66burHZmdJ8PcQSmyfrLXkJp1LQ4W1+yayNvceoV5g8+
+         uPW5TKW31CyyOARzDfc/1YHDXJkUQjsgSB6uf/743I3dTQXLu+3z5GTdmc0ZuNQeDuFw
+         ojaHyff3gkoH3T5F0PCF1nBR68waleyWMp332PeCJmaaY5G/NNUAkzN5cLzG7G2cXTOh
+         yyBke9TrRCMbslN7hYaNX4VbgPGetx5F/ZnhEbCWl/dhpZl17Rqwz2hnBeZamkvGtSz2
+         uxvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
          :in-reply-to:references;
-        bh=XdS82XwKAJYAYf10xCxmrjEq7ZEr5zc2RbCuNFEXBSg=;
-        b=m2x3p8ZXZjND8qGpidkxJu+QLLmAy0/iBbVI1eF95I2cuSnPO+OQLTYUapInrZBCE6
-         h1EFDRoZdAh4gc/VjbhtuftJKJ7Ru6Di9wwfuZO+1DY53jHJiQXAuYM1zAFJ61fXFPsC
-         WgTNSSymKwgoCOiUnLX2T3iKVnMiad04/4WTTbZiXhRdpCas0qR0oEOZFPrFW3NX8jY5
-         i/OmzW1G6Hcxr3JjYfYosygn/xfF53W3O4AojQFPqltE+MRUvcbVoTAuYTEzogZAgUID
-         9PE9AUBl6RYlmtX8F1ioOiEHdjjcOBn5L5TIiq3rFlE/uvvaOXGm8zm6dBezoorU9vbf
-         +JeA==
-X-Gm-Message-State: APjAAAUY4UORdpElGppxyU2rz4S6zrcGlVaTiE33dJrC+0Ph/Mj/yPk4
-        OJhVOzsgIgZfI+u2pmggmGY=
-X-Google-Smtp-Source: APXvYqxEuQg3E3Db0k2idBpbHi+8qlgkCkrUKbEx3H+nko2pBZNw6WPFnEY7mKjBy1Qvo0jehOZNvA==
-X-Received: by 2002:ac8:424d:: with SMTP id r13mr15370286qtm.111.1572911997060;
-        Mon, 04 Nov 2019 15:59:57 -0800 (PST)
+        bh=6eyC/Pr88JMkuUtE27lkcLMpRj73Ok1FRh3V2w/GO4I=;
+        b=fgiw5bdAhvdia/chUGerTmIV8yORsFgVTtEzUDNXt6Prlm//dGTeEJ6lq9CQ+MhrGH
+         tbM/iv9PRcfcVV85x0elqhwt8vlFs9EEojhaMh+oGienwz2q3bCfcLdd6tiWTshJBoAx
+         EspdoXfiyQVn1E/HsiRXOwFjkg9cNyLJKeLcaQ7NUl20V5LVAWnOlaIOlLsFVhZeUjfh
+         I/+Fr7SDrsGbrgSc/Zq9gP5xwYgd0k3r8muwYNtsYYREY5ypjtFJWpQHMjnIoKGRkiZR
+         TrySZZ7U7uO53Z/6ErG8T4rVftvWROv9oTz0MFUqEjwY22bwR2x2/wf0Z6t8NznCgGtk
+         yg6A==
+X-Gm-Message-State: APjAAAX7sAX6Y/wudC5gfkUIAt0N4K3IlvXwtaUSibC6pIfDRhFMr/Fw
+        i2oADpqUSPfUigauKr8vHes=
+X-Google-Smtp-Source: APXvYqwMOowYbfqcEt7HQhErzj+/VzZqJo2tdAfrBwTa7oxt4o0Ta1UOuIgqSHiYLnxxTC9T6CQ1/w==
+X-Received: by 2002:ac8:698d:: with SMTP id o13mr15046753qtq.68.1572912005208;
+        Mon, 04 Nov 2019 16:00:05 -0800 (PST)
 Received: from localhost ([2620:10d:c091:500::3:51f8])
-        by smtp.gmail.com with ESMTPSA id o195sm9509979qke.35.2019.11.04.15.59.56
+        by smtp.gmail.com with ESMTPSA id o76sm5236178qke.135.2019.11.04.16.00.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 15:59:56 -0800 (PST)
+        Mon, 04 Nov 2019 16:00:04 -0800 (PST)
 From:   Tejun Heo <tj@kernel.org>
 To:     gregkh@linuxfoundation.org
 Cc:     kernel-team@fb.com, linux-kernel@vger.kernel.org,
         cgroups@vger.kernel.org, lizefan@huawei.com, hannes@cmpxchg.org,
         namhyung@kernel.org, ast@kernel.org, daniel@iogearbox.net,
         Tejun Heo <tj@kernel.org>
-Subject: [PATCH 04/10] kernfs: use dumber locking for kernfs_find_and_get_node_by_ino()
-Date:   Mon,  4 Nov 2019 15:59:38 -0800
-Message-Id: <20191104235944.3470866-5-tj@kernel.org>
+Subject: [PATCH 08/10] kernfs: implement custom exportfs ops and fid type
+Date:   Mon,  4 Nov 2019 15:59:42 -0800
+Message-Id: <20191104235944.3470866-9-tj@kernel.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
 References: <20191104235944.3470866-1-tj@kernel.org>
@@ -77,126 +77,154 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kernfs_find_and_get_node_by_ino() uses RCU protection.  It's currently
-a bit buggy because it can look up a node which hasn't been activated
-yet and thus may end up exposing a node that the kernfs user is still
-prepping.
+The current kernfs exportfs implementation uses the generic_fh_*()
+helpers and FILEID_INO32_GEN[_PARENT] which limits ino to 32bits.
+Let's implement custom exportfs operations and fid type to remove the
+restriction.
 
-While it can be fixed by pushing it further in the current direction,
-it's already complicated and isn't clear whether the complexity is
-justified.  The main use of kernfs_find_and_get_node_by_ino() is for
-exportfs operations.  They aren't super hot and all the follow-up
-operations (e.g. mapping to path) use normal locking anyway.
+* FILEID_KERNFS is a single u64 value whose content is
+  kernfs_node->id.  This is the only native fid type.
 
-Let's switch to a dumber locking scheme and protect the lookup with
-kernfs_idr_lock.
+* For backward compatibility with blk_log_action() path which exposes
+  (ino,gen) pairs which userland assembles into FILEID_INO32_GEN keys,
+  combine the generic keys into 64bit IDs in the same order.
 
 Signed-off-by: Tejun Heo <tj@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
 ---
- fs/kernfs/dir.c   | 45 +++++++++------------------------------------
- fs/kernfs/mount.c | 11 +----------
- 2 files changed, 10 insertions(+), 46 deletions(-)
+ fs/kernfs/mount.c        | 77 +++++++++++++++++++++++++++++++---------
+ include/linux/exportfs.h |  5 +++
+ 2 files changed, 66 insertions(+), 16 deletions(-)
 
-diff --git a/fs/kernfs/dir.c b/fs/kernfs/dir.c
-index 7d4af6cea2a6..798f0f03b62b 100644
---- a/fs/kernfs/dir.c
-+++ b/fs/kernfs/dir.c
-@@ -508,10 +508,6 @@ void kernfs_put(struct kernfs_node *kn)
- 	struct kernfs_node *parent;
- 	struct kernfs_root *root;
- 
--	/*
--	 * kernfs_node is freed with ->count 0, kernfs_find_and_get_node_by_ino
--	 * depends on this to filter reused stale node
--	 */
- 	if (!kn || !atomic_dec_and_test(&kn->count))
- 		return;
- 	root = kernfs_root(kn);
-@@ -646,11 +642,7 @@ static struct kernfs_node *__kernfs_new_node(struct kernfs_root *root,
- 	kn->id.ino = ret;
- 	kn->id.generation = gen;
- 
--	/*
--	 * set ino first. This RELEASE is paired with atomic_inc_not_zero in
--	 * kernfs_find_and_get_node_by_ino
--	 */
--	atomic_set_release(&kn->count, 1);
-+	atomic_set(&kn->count, 1);
- 	atomic_set(&kn->active, KN_DEACTIVATED_BIAS);
- 	RB_CLEAR_NODE(&kn->rb);
- 
-@@ -716,38 +708,19 @@ struct kernfs_node *kernfs_find_and_get_node_by_ino(struct kernfs_root *root,
- {
- 	struct kernfs_node *kn;
- 
--	rcu_read_lock();
-+	spin_lock(&kernfs_idr_lock);
-+
- 	kn = idr_find(&root->ino_idr, ino);
- 	if (!kn)
--		goto out;
-+		goto err_unlock;
- 
--	/*
--	 * Since kernfs_node is freed in RCU, it's possible an old node for ino
--	 * is freed, but reused before RCU grace period. But a freed node (see
--	 * kernfs_put) or an incompletedly initialized node (see
--	 * __kernfs_new_node) should have 'count' 0. We can use this fact to
--	 * filter out such node.
--	 */
--	if (!atomic_inc_not_zero(&kn->count)) {
--		kn = NULL;
--		goto out;
--	}
--
--	/*
--	 * The node could be a new node or a reused node. If it's a new node,
--	 * we are ok. If it's reused because of RCU (because of
--	 * SLAB_TYPESAFE_BY_RCU), the __kernfs_new_node always sets its 'ino'
--	 * before 'count'. So if 'count' is uptodate, 'ino' should be uptodate,
--	 * hence we can use 'ino' to filter stale node.
--	 */
--	if (kn->id.ino != ino)
--		goto out;
--	rcu_read_unlock();
-+	if (unlikely(!atomic_inc_not_zero(&kn->count)))
-+		goto err_unlock;
- 
-+	spin_unlock(&kernfs_idr_lock);
- 	return kn;
--out:
--	rcu_read_unlock();
--	kernfs_put(kn);
-+err_unlock:
-+	spin_unlock(&kernfs_idr_lock);
- 	return NULL;
- }
- 
 diff --git a/fs/kernfs/mount.c b/fs/kernfs/mount.c
-index 6c12fac2c287..067b7c380056 100644
+index 8aed2cccd002..37a1e5df117a 100644
 --- a/fs/kernfs/mount.c
 +++ b/fs/kernfs/mount.c
-@@ -363,18 +363,9 @@ void kernfs_kill_sb(struct super_block *sb)
+@@ -53,40 +53,84 @@ const struct super_operations kernfs_sops = {
+ 	.show_path	= kernfs_sop_show_path,
+ };
  
- void __init kernfs_init(void)
+-static struct inode *kernfs_fh_get_inode(struct super_block *sb,
+-		u64 ino, u32 generation)
++static int kernfs_encode_fh(struct inode *inode, __u32 *fh, int *max_len,
++			    struct inode *parent)
++{
++	struct kernfs_node *kn = inode->i_private;
++
++	if (*max_len < 2) {
++		*max_len = 2;
++		return FILEID_INVALID;
++	}
++
++	*max_len = 2;
++	*(u64 *)fh = kn->id;
++	return FILEID_KERNFS;
++}
++
++static struct dentry *__kernfs_fh_to_dentry(struct super_block *sb,
++					    struct fid *fid, int fh_len,
++					    int fh_type, bool get_parent)
  {
--
--	/*
--	 * the slab is freed in RCU context, so kernfs_find_and_get_node_by_ino
--	 * can access the slab lock free. This could introduce stale nodes,
--	 * please see how kernfs_find_and_get_node_by_ino filters out stale
--	 * nodes.
--	 */
- 	kernfs_node_cache = kmem_cache_create("kernfs_node_cache",
- 					      sizeof(struct kernfs_node),
--					      0,
--					      SLAB_PANIC | SLAB_TYPESAFE_BY_RCU,
--					      NULL);
-+					      0, SLAB_PANIC, NULL);
+ 	struct kernfs_super_info *info = kernfs_info(sb);
+-	struct inode *inode;
+ 	struct kernfs_node *kn;
++	struct inode *inode;
++	u64 id;
  
- 	/* Creates slab cache for kernfs inode attributes */
- 	kernfs_iattrs_cache  = kmem_cache_create("kernfs_iattrs_cache",
+-	if (ino == 0)
+-		return ERR_PTR(-ESTALE);
++	if (fh_len < 2)
++		return NULL;
++
++	switch (fh_type) {
++	case FILEID_KERNFS:
++		id = *(u64 *)fid;
++		break;
++	case FILEID_INO32_GEN:
++	case FILEID_INO32_GEN_PARENT:
++		/*
++		 * blk_log_action() exposes (ino,gen) pair without type and
++		 * userland can call us with generic fid constructed from
++		 * them.  Combine it back to ID.  See blk_log_action().
++		 */
++		id = ((u64)fid->i32.gen << 32) | fid->i32.ino;
++		break;
++	default:
++		return NULL;
++	}
+ 
+-	kn = kernfs_find_and_get_node_by_id(info->root,
+-					    ino | ((u64)generation << 32));
++	kn = kernfs_find_and_get_node_by_id(info->root, id);
+ 	if (!kn)
+ 		return ERR_PTR(-ESTALE);
++
++	if (get_parent) {
++		struct kernfs_node *parent;
++
++		parent = kernfs_get_parent(kn);
++		kernfs_put(kn);
++		kn = parent;
++		if (!kn)
++			return ERR_PTR(-ESTALE);
++	}
++
+ 	inode = kernfs_get_inode(sb, kn);
+ 	kernfs_put(kn);
+ 	if (!inode)
+ 		return ERR_PTR(-ESTALE);
+ 
+-	return inode;
++	return d_obtain_alias(inode);
+ }
+ 
+-static struct dentry *kernfs_fh_to_dentry(struct super_block *sb, struct fid *fid,
+-		int fh_len, int fh_type)
++static struct dentry *kernfs_fh_to_dentry(struct super_block *sb,
++					  struct fid *fid, int fh_len,
++					  int fh_type)
+ {
+-	return generic_fh_to_dentry(sb, fid, fh_len, fh_type,
+-				    kernfs_fh_get_inode);
++	return __kernfs_fh_to_dentry(sb, fid, fh_len, fh_type, false);
+ }
+ 
+-static struct dentry *kernfs_fh_to_parent(struct super_block *sb, struct fid *fid,
+-		int fh_len, int fh_type)
++static struct dentry *kernfs_fh_to_parent(struct super_block *sb,
++					  struct fid *fid, int fh_len,
++					  int fh_type)
+ {
+-	return generic_fh_to_parent(sb, fid, fh_len, fh_type,
+-				    kernfs_fh_get_inode);
++	return __kernfs_fh_to_dentry(sb, fid, fh_len, fh_type, true);
+ }
+ 
+ static struct dentry *kernfs_get_parent_dentry(struct dentry *child)
+@@ -97,6 +141,7 @@ static struct dentry *kernfs_get_parent_dentry(struct dentry *child)
+ }
+ 
+ static const struct export_operations kernfs_export_ops = {
++	.encode_fh	= kernfs_encode_fh,
+ 	.fh_to_dentry	= kernfs_fh_to_dentry,
+ 	.fh_to_parent	= kernfs_fh_to_parent,
+ 	.get_parent	= kernfs_get_parent_dentry,
+diff --git a/include/linux/exportfs.h b/include/linux/exportfs.h
+index cf6571fc9c01..d896b8657085 100644
+--- a/include/linux/exportfs.h
++++ b/include/linux/exportfs.h
+@@ -104,6 +104,11 @@ enum fid_type {
+ 	 */
+ 	FILEID_LUSTRE = 0x97,
+ 
++	/*
++	 * 64 bit unique kernfs id
++	 */
++	FILEID_KERNFS = 0xfe,
++
+ 	/*
+ 	 * Filesystems must not use 0xff file ID.
+ 	 */
 -- 
 2.17.1
 
