@@ -2,90 +2,171 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3A08CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A74B0CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 850CB222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C4F721D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:25:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TXm7YF9n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729099AbfKDNZr (ORCPT
+        id S1729241AbfKDNZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:25:47 -0500
-Received: from smtprelay0064.hostedemail.com ([216.40.44.64]:48142 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727332AbfKDNZr (ORCPT
+        Mon, 4 Nov 2019 08:25:58 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:16686 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727913AbfKDNZz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:25:47 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay01.hostedemail.com (Postfix) with ESMTP id 8F764100E7B4D;
-        Mon,  4 Nov 2019 13:25:45 +0000 (UTC)
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-HE-Tag: crush17_8910377eab214
-X-Filterd-Recvd-Size: 2742
-Received: from grimm.local.home (unknown [146.247.46.6])
-        (Authenticated sender: rostedt@goodmis.org)
-        by omf10.hostedemail.com (Postfix) with ESMTPA;
-        Mon,  4 Nov 2019 13:25:41 +0000 (UTC)
-Date:   Mon, 4 Nov 2019 08:25:38 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, Jessica Yu <jeyu@kernel.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        linux-kernel@vger.kernel.org, amit.kachhap@arm.com,
-        catalin.marinas@arm.com, duwe@suse.de, james.morse@arm.com,
-        jpoimboe@redhat.com, jthierry@redhat.com,
-        linux-parisc@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-Subject: Re: [PATCHv2 2/8] module/ftrace: handle patchable-function-entry
-Message-ID: <20191104082538.292b501a@grimm.local.home>
-In-Reply-To: <20191029165832.33606-3-mark.rutland@arm.com>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
-        <20191029165832.33606-3-mark.rutland@arm.com>
-X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Nov 2019 08:25:55 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA4DNiJk019951;
+        Mon, 4 Nov 2019 14:25:37 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=vyF/QISSJCb/iu6rS6wjZkpjt1WcfYY+i4OiL+tne44=;
+ b=TXm7YF9nbypHpbtIjAfORECTULtHrMNLcgWoxeywyiOoaIpIiwjz/81l5hf1hyHNQBQh
+ opnNLpfqcwA4UDVTz7aFsvhgDFtJpiA0bPWXjb60TE5CiNdI5HYOM0vVpwU/AI6aMRKJ
+ USKDXrLDmjMWSKZ9sGH21nE48IyVOVSred+LklbTGB26rBMivM/KRuP57YRvJi/J+qrN
+ +mAuqmg7E7A+hjptYCVH0dv7IflwyjBa/O+GU7wYszKM3xao/cTwn9MCvTvY5QdJDg0h
+ 1Sf7NRj0ZqKHuKWP1jkMT7HqJ+lwH6tt8aQ5RIW1vlCJjvedoOx7LRPkyYCwDspsVaLF BQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w10f19jxw-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Mon, 04 Nov 2019 14:25:37 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 69A0D10002A;
+        Mon,  4 Nov 2019 14:25:37 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas23.st.com [10.75.90.46])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 542D92BFC79;
+        Mon,  4 Nov 2019 14:25:37 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by SAFEX1HUBCAS23.st.com
+ (10.75.90.46) with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019
+ 14:25:37 +0100
+Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Mon, 4 Nov 2019 14:25:36
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <andrew@lunn.ch>
+Subject: [PATCH net-next 1/4] net: ethernet: stmmac: Add support for syscfg clock
+Date:   Mon, 4 Nov 2019 14:25:30 +0100
+Message-ID: <20191104132533.5153-2-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191104132533.5153-1-christophe.roullier@st.com>
+References: <20191104132533.5153-1-christophe.roullier@st.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.222]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-04_08:2019-11-04,2019-11-04 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 29 Oct 2019 16:58:26 +0000
-Mark Rutland <mark.rutland@arm.com> wrote:
+Add optional support for syscfg clock in dwmac-stm32.c
+Now Syscfg clock is activated automatically when syscfg
+registers are used
 
-> When using patchable-function-entry, the compiler will record the
-> callsites into a section named "__patchable_function_entries" rather
-> than "__mcount_loc". Let's abstract this difference behind a new
-> FTRACE_CALLSITE_SECTION, so that architectures don't have to handle this
-> explicitly (e.g. with custom module linker scripts).
-> 
-> As parisc currently handles this explicitly, it is fixed up accordingly,
-> with its custom linker script removed. Since FTRACE_CALLSITE_SECTION is
-> only defined when DYNAMIC_FTRACE is selected, the parisc module loading
-> code is updated to only use the definition in that case. When
-> DYNAMIC_FTRACE is not selected, modules shouldn't have this section, so
-> this removes some redundant work in that case.
-> 
-> I built parisc generic-{32,64}bit_defconfig with DYNAMIC_FTRACE enabled,
-> and verified that the section made it into the .ko files for modules.
-> 
-> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
-> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: James E.J. Bottomley <James.Bottomley@HansenPartnership.com>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Steven Rostedt <rostedt@goodmis.org>
-> Cc: Sven Schnelle <svens@stackframe.org>
-> Cc: linux-parisc@vger.kernel.org
-> 
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 36 +++++++++++++------
+ 1 file changed, 25 insertions(+), 11 deletions(-)
 
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..7e6619868cc1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -152,23 +152,32 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+ 	int ret = 0;
+ 
+ 	if (prepare) {
+-		ret = clk_prepare_enable(dwmac->syscfg_clk);
+-		if (ret)
+-			return ret;
+-
++		if (dwmac->syscfg_clk) {
++			ret = clk_prepare_enable(dwmac->syscfg_clk);
++			if (ret)
++				return ret;
++		}
+ 		if (dwmac->clk_eth_ck) {
+ 			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+ 			if (ret) {
+-				clk_disable_unprepare(dwmac->syscfg_clk);
++				if (dwmac->syscfg_clk)
++					goto unprepare_syscfg;
+ 				return ret;
+ 			}
+ 		}
+ 	} else {
+-		clk_disable_unprepare(dwmac->syscfg_clk);
++		if (dwmac->syscfg_clk)
++			clk_disable_unprepare(dwmac->syscfg_clk);
++
+ 		if (dwmac->clk_eth_ck)
+ 			clk_disable_unprepare(dwmac->clk_eth_ck);
+ 	}
+ 	return ret;
++
++unprepare_syscfg:
++	clk_disable_unprepare(dwmac->syscfg_clk);
++
++	return ret;
+ }
+ 
+ static int stm32mp1_set_mode(struct plat_stmmacenet_data *plat_dat)
+@@ -296,7 +305,7 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ {
+ 	struct platform_device *pdev = to_platform_device(dev);
+ 	struct device_node *np = dev->of_node;
+-	int err = 0;
++	int err;
+ 
+ 	/* Gigabit Ethernet 125MHz clock selection. */
+ 	dwmac->eth_clk_sel_reg = of_property_read_bool(np, "st,eth-clk-sel");
+@@ -320,13 +329,17 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 		return PTR_ERR(dwmac->clk_ethstp);
+ 	}
+ 
+-	/*  Clock for sysconfig */
++	/*  Optional Clock for sysconfig */
+ 	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
+ 	if (IS_ERR(dwmac->syscfg_clk)) {
+-		dev_err(dev, "No syscfg clock provided...\n");
+-		return PTR_ERR(dwmac->syscfg_clk);
++		err = PTR_ERR(dwmac->syscfg_clk);
++		if (err != -ENOENT)
++			return err;
++		dwmac->syscfg_clk = NULL;
+ 	}
+ 
++	err = 0;
++
+ 	/* Get IRQ information early to have an ability to ask for deferred
+ 	 * probe if needed before we went too far with resource allocation.
+ 	 */
+@@ -436,7 +449,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+ 		return ret;
+ 
+ 	clk_disable_unprepare(dwmac->clk_tx);
+-	clk_disable_unprepare(dwmac->syscfg_clk);
++	if (dwmac->syscfg_clk)
++		clk_disable_unprepare(dwmac->syscfg_clk);
+ 	if (dwmac->clk_eth_ck)
+ 		clk_disable_unprepare(dwmac->clk_eth_ck);
+ 
+-- 
+2.17.1
 
--- Steve
