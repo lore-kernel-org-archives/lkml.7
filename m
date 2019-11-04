@@ -2,110 +2,117 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54C5FCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CAF1CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C33420663
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:18:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Y4QNrQVs"
+	by mail.kernel.org (Postfix) with ESMTP id 632AB20842
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 15:18:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572880734;
+	bh=/ilrDL5VFaGpvPXs/d5mauxhkJ0VKGY7RHd5Pe6j8b0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=LQYp4FZN+W6RIxGQuPChCoFQ++YjR9JbJQa0wvqNZ/ckmZ+oYFozmj/wmqsXZC/90
+	 cH/cVopUk6XlrgRde4NK5bvZJuoeTM7ly1qNUAlrotyiAkx2KIaEPZ0a8IFz3f2Jrh
+	 VnmYU0Ds5R1cQNqClyrt41L+sZbz03a8eXmfST/A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729333AbfKDPSs (ORCPT
+        id S1729342AbfKDPSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 10:18:48 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:58018 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728646AbfKDPSr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 10:18:47 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FCPlL032257;
-        Mon, 4 Nov 2019 15:18:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=wI+MlQfXsMx0uWokWMoST+s/IjPegRzzQjCD9nh+Q+o=;
- b=Y4QNrQVsbZ/BnO04dhmq9gO+33O7WD7A0vrMN69D194HaDfvhyveJxdhBvQRhwKLcNib
- c4NM8JddRmjoeLcyY2S0nAW+ZLf70RNi1rhwnvCH4v8HByMiPEEuc/Iv6XefpjpcCgsM
- HrU4gex/gSamGEpCKjgQtxGqaORbunYDONOCxp8fiPky4MlihpexRRQTnTa+A5rJd8m4
- xcCdhAY8xazJR/xQlraufK2Gfk49rbwdnckKLu3/VX3xg8bBGfVGBLk5GIqCHzE6LU8G
- M6wKMs1Lyf1ZZRcwP4Ao/BB1NdVlXuywgl9WzbfJdO7gY2NPAX3FZz41XpKnKryFvHM9 Ew== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by aserp2120.oracle.com with ESMTP id 2w11rpr20x-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:18:19 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4FAASi019949;
-        Mon, 4 Nov 2019 15:16:19 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3030.oracle.com with ESMTP id 2w1kxmhnd4-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 15:16:19 +0000
-Received: from abhmp0010.oracle.com (abhmp0010.oracle.com [141.146.116.16])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4FGGZo019676;
-        Mon, 4 Nov 2019 15:16:16 GMT
-Received: from tomti.i.net-space.pl (/10.175.168.29)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 07:16:15 -0800
-Date:   Mon, 4 Nov 2019 16:16:09 +0100
-From:   Daniel Kiper <daniel.kiper@oracle.com>
-To:     "H. Peter Anvin" <hpa@zytor.com>
-Cc:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org,
-        ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
-        luto@kernel.org, peterz@infradead.org, eric.snowberg@oracle.com,
-        jgross@suse.com, kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v4 2/3] x86/boot: Introduce the kernel_info.setup_type_max
-Message-ID: <20191104151609.k4qxlw4sbqvld357@tomti.i.net-space.pl>
-References: <20191024114814.6488-1-daniel.kiper@oracle.com>
- <20191024114814.6488-3-daniel.kiper@oracle.com>
- <e094a1cf-6bf2-1e8a-94c7-47767d66138e@zytor.com>
+        Mon, 4 Nov 2019 10:18:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37206 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728701AbfKDPSw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 10:18:52 -0500
+Received: from mail-qt1-f177.google.com (mail-qt1-f177.google.com [209.85.160.177])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EB5521850;
+        Mon,  4 Nov 2019 15:18:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572880732;
+        bh=/ilrDL5VFaGpvPXs/d5mauxhkJ0VKGY7RHd5Pe6j8b0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=wTywLaNuB1HoB+eHGZmmElU4pQpLJ/PV5mF36CJuy/1bQfcipZr84T1PqmiUIArU5
+         ftG3HQxRIspAdhGGux+9pRkRszRercjMzWg7Mvc2qjLl6LUTu+M5u63eWY+9Ngmmt8
+         pHfzfEv5zhebUS6m4ity8kDROsNzhpnJln/zzRKM=
+Received: by mail-qt1-f177.google.com with SMTP id r22so14367995qtt.2;
+        Mon, 04 Nov 2019 07:18:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVquLknXXRDybn1jwG9xNDYI+E4KCEnfhOkhaqTRY6Zai/m8vuH
+        ftEfSknEPkom2mr3j34sf/8yX+PH79Vt8Ji5Wg==
+X-Google-Smtp-Source: APXvYqz6VOGe10++SnT2O1uuLn6+9WTHPod7Ohdefkb2HVUrRipukxsh2BWWbxVhlbAuqfj5fPwaTiEMADzf53iiCnc=
+X-Received: by 2002:a05:6214:8e5:: with SMTP id dr5mr21902677qvb.79.1572880731365;
+ Mon, 04 Nov 2019 07:18:51 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e094a1cf-6bf2-1e8a-94c7-47767d66138e@zytor.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=925
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040151
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040151
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-6-saravanak@google.com>
+In-Reply-To: <20191028220027.251605-6-saravanak@google.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Mon, 4 Nov 2019 09:18:39 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+obCEeaNjpvJ6VvO6b2F6A5oHcRD8PYAifUvBQHbQ_Og@mail.gmail.com>
+Message-ID: <CAL_Jsq+obCEeaNjpvJ6VvO6b2F6A5oHcRD8PYAifUvBQHbQ_Og@mail.gmail.com>
+Subject: Re: [PATCH v1 5/5] of: property: Skip adding device links to
+ suppliers that aren't devices
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-acpi@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 01:55:57PM -0700, H. Peter Anvin wrote:
-> On 2019-10-24 04:48, Daniel Kiper wrote:
-> > This field contains maximal allowed type for setup_data.
-> >
-> > Now bump the setup_header version in arch/x86/boot/header.S.
+On Mon, Oct 28, 2019 at 5:00 PM Saravana Kannan <saravanak@google.com> wrote:
 >
-> Please don't bump the protocol revision here, otherwise we would create
-> a very odd pseudo-revision of the protocol: 2.15 without SETUP_INDIRECT
-> support, should patch 3/3 end up getting reverted.
+> Some devices need to be initialized really early and can't wait for
+> driver core or drivers to be functional.  These devices are typically
+> initialized without creating a struct device for their device nodes.
 >
-> (It is possible to detect, of course, but I feel pretty sure in saying
-> that bootloaders won't get it right.)
+> If a supplier ends up being one of these devices, skip trying to add
+> device links to them.
 >
-> Other than that:
+> Signed-off-by: Saravana Kannan <saravanak@google.com>
+> ---
+>  drivers/of/property.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
 >
-> Reviewed-by: H. Peter Anvin (Intel) <hpa@zytor.com>
+> diff --git a/drivers/of/property.c b/drivers/of/property.c
+> index f16f85597ccc..21c9d251318a 100644
+> --- a/drivers/of/property.c
+> +++ b/drivers/of/property.c
+> @@ -1038,6 +1038,7 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>         struct device *sup_dev;
+>         int ret = 0;
+>         struct device_node *tmp_np = sup_np;
+> +       int is_populated;
+>
+>         of_node_get(sup_np);
+>         /*
+> @@ -1062,9 +1063,10 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+>                 return -EINVAL;
+>         }
+>         sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+> +       is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+>         of_node_put(sup_np);
+>         if (!sup_dev)
+> -               return -EAGAIN;
+> +               return is_populated ? 0 : -EAGAIN;
 
-I have just sent v5. Please take a look.
+You're only using the flag in one spot and a comment would be good
+here, so I'd just do:
 
-Daniel
+if (of_node_check_flag(sup_np, OF_POPULATED))
+        return 0; /* Early device without a struct device */
+
+>         if (!device_link_add(dev, sup_dev, dl_flags))
+>                 ret = -EAGAIN;
+>         put_device(sup_dev);
+> --
+> 2.24.0.rc0.303.g954a862665-goog
+>
