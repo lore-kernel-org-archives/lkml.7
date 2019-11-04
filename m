@@ -2,274 +2,142 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43C1DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:18:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26910CA9ED2
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:19:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01D1A222D4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:18:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB8DE222CD
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:19:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bllq8uZQ"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="KdoI2/vv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727791AbfKDISR (ORCPT
+        id S1727870AbfKDITk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:18:17 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:40900 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726633AbfKDISR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:18:17 -0500
-Received: by mail-lf1-f66.google.com with SMTP id f4so11511777lfk.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 00:18:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :mime-version;
-        bh=3Fna44DJBr3L3fSk0TA7aVGOJ8OciaIjrKygxibmpbk=;
-        b=Bllq8uZQ+wXjp21caCMWm2nncX4I0Av2dxUcTcDkpRNranTo1A59CQOFagVa2S8Zjd
-         +eXk/84v7hTGMyop4IhGjrz2/G0hh5TthC58H0QqNoK/U5dhfnkzmRKvQzDCZvAlVXsZ
-         K6x6Y+ziNsNhUX1AXbCH82JFC2uLwiir6xB+pCQVUztxRwEDZOQWUJJlLRfxGtSveVMJ
-         OZudsZc3s1QZ+bNK/66H9HVRB8CJZko8sgPOAWGf9P1hzj9FfXdKkiJ3m3xbpVpb5U6z
-         rzVps1uswrNlY+rZKBKWA15qp5ZXFbwks6sHB2fgRu7u5G6P4WAJMJ6QZ4keOs7OoSt2
-         JpQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:mime-version;
-        bh=3Fna44DJBr3L3fSk0TA7aVGOJ8OciaIjrKygxibmpbk=;
-        b=G1nnPMNv8xrwjMJjERNkqsLZcWBZ7CwSW6eLVsl6a22EexaNC30IKXQhX6q1xFRseA
-         PvZ4hcuGscoMr536IsgXk2lhOaqifCDBGLCmH94xgM3JvtC/rI4YemslCilnkFHk13Nj
-         tNkSJaZA18IeDTLEQhjnl67CJSUP/iVI19KTi/gr4wFGx1lNA3+7pk6go1wZRQ8hIhQt
-         mOpwfktrFEMYwibNjznFl7X1gqGBPQCbIXyRn+IP0PlP8fEpOMleFLhxjA2nrCbC5hRD
-         OxfJnckZUAqzy07ni9tQVo4+s94KtHUtvWv2Rhk6SZOJU4rhwYy42PeiMjIZe88GOGqR
-         Lxqw==
-X-Gm-Message-State: APjAAAUNxJID+8kBBSRLk/tb0DxYxQdJQBHF96h/0VF6qfLlO8SLE6fY
-        QF9sYhWAGyUQoi/EvcpL4L0=
-X-Google-Smtp-Source: APXvYqw2SiJP5yRkYlL6bFgDdy2rUvcGVoeof5lrC8G435MxWzQY1L+EDEJyIXFvM9PK5hf/i2i7cA==
-X-Received: by 2002:a05:6512:21e:: with SMTP id a30mr15606927lfo.175.1572855493083;
-        Mon, 04 Nov 2019 00:18:13 -0800 (PST)
-Received: from eldfell.localdomain ([194.136.85.206])
-        by smtp.gmail.com with ESMTPSA id a26sm8101559lfg.50.2019.11.04.00.18.12
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 00:18:12 -0800 (PST)
-Date:   Mon, 4 Nov 2019 10:18:07 +0200
-From:   Pekka Paalanen <ppaalanen@gmail.com>
-To:     John Stultz <john.stultz@linaro.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Hillf Danton <hdanton@sina.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>,
-        Christoph Hellwig <hch@infradead.org>,
-        dri-devel@lists.freedesktop.org, "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Pratik Patel <pratikp@codeaurora.org>
-Subject: Re: [PATCH v14 0/5] DMA-BUF Heaps (destaging ION)
-Message-ID: <20191104101807.79503286@eldfell.localdomain>
-In-Reply-To: <20191101214238.78015-1-john.stultz@linaro.org>
-References: <20191101214238.78015-1-john.stultz@linaro.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 4 Nov 2019 03:19:40 -0500
+Received: from mail-eopbgr10065.outbound.protection.outlook.com ([40.107.1.65]:21895
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726441AbfKDITk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 03:19:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=WBIFOptkWEk2amk+Ss5fJG34/X5+bgfY5zIA+KV4/Ep4ZStUvusbENrtmPrp/XYUQC2ZmF7+nJkb6ctx3LFlESRTAXEH8UcEiJjQ87Uep1TWUnU1ymLJpoB1ELKCzgUPyScROsFJGZRJDKMW3ndVFlgRhxt60VoUwo4eSozQRRFQW5BteNSQ8RTwA5MF/rqle9NF7c8LnOlnxrkwsysAyJjnb53zW5rekbdYP5ZIERQUMOkgj4dNbnmFDhSSf3Q3bsPD1EdcU5Cfhg74TUrxvb4P9D/ziai2bP7gYm933yDG60cdOIbTlPXKEx15R+ySvrssOnGf8QmtavN5qFmlAw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=woOEwPZT9X/FUZEnx3QG6yv093CcOEuSuT8J51eubZA=;
+ b=YEtOjZwcEANp021oH4biBdjOtFYUMUd9u5bvrPFjp20sg1qqS8oIn2ryv474TJ7kaA6SakzRBO8VI117zh9E8k3jv0q0X+8CxLVzfpEuRJ6RlJM84ogVUf5PqedVU1aZkmYylMAEipZgEtxeBCFx3+GTH6+9sGRbPbIjoK6UdAefJ6IWOGjvMdsHO8LngzqYpqO4vgRJ5qCp4AxH4WpueXcmZv4WQ8RNDkyOx1NV7hCaSTjUNhFc5SZxmynSZcMOVyFF98awySBGCQiE8+6nhZnR7mm9cj8hnGU7wP/Pioew4T4+Q0EHTEeUNHkNnoQjK2tea9Q3kuAHipK+vts1Fw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=woOEwPZT9X/FUZEnx3QG6yv093CcOEuSuT8J51eubZA=;
+ b=KdoI2/vv4EBiY/JSWxsybNicRHnIrto1znyhyp9dSPyDYUY404K7CEeq/ZJq3+cpQnMuLAYKHXR0l8fEiJOseDuX+WEXw32vfOtLJCandXBEQbkdUdaIX179/TZG+/R8xzOOumojh61c9j04u/38xjX+AobxxBoPCHhNQUNHc9k=
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com (52.135.147.15) by
+ AM0PR04MB6212.eurprd04.prod.outlook.com (20.179.36.86) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Mon, 4 Nov 2019 08:19:33 +0000
+Received: from AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c]) by AM0PR04MB4481.eurprd04.prod.outlook.com
+ ([fe80::f16d:a26a:840:f97c%4]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
+ 08:19:33 +0000
+From:   Peng Fan <peng.fan@nxp.com>
+To:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        Abel Vesa <abel.vesa@nxp.com>
+CC:     "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>
+Subject: [PATCH] clk: imx: imx8mn: add IMX8MN_CLK_SAI7_IPG clk
+Thread-Topic: [PATCH] clk: imx: imx8mn: add IMX8MN_CLK_SAI7_IPG clk
+Thread-Index: AQHVkuiWYOV+kg2wl0yC3cmY9ucIdQ==
+Date:   Mon, 4 Nov 2019 08:19:33 +0000
+Message-ID: <1572855483-10624-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.7.4
+x-clientproxiedby: HK0PR01CA0036.apcprd01.prod.exchangelabs.com
+ (2603:1096:203:3e::24) To AM0PR04MB4481.eurprd04.prod.outlook.com
+ (2603:10a6:208:70::15)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=peng.fan@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: cc3181e7-fcc3-478e-3d9d-08d760ffb8ff
+x-ms-traffictypediagnostic: AM0PR04MB6212:|AM0PR04MB6212:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB62120C95DE6C68860D63ED83887F0@AM0PR04MB6212.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:2803;
+x-forefront-prvs: 0211965D06
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(346002)(366004)(136003)(376002)(199004)(189003)(2906002)(305945005)(7736002)(66066001)(256004)(25786009)(3846002)(6116002)(81166006)(2616005)(186003)(476003)(26005)(2201001)(52116002)(6486002)(316002)(81156014)(86362001)(54906003)(44832011)(50226002)(99286004)(8936002)(110136005)(66556008)(66476007)(6636002)(5660300002)(102836004)(4326008)(8676002)(486006)(6512007)(6436002)(14454004)(36756003)(478600001)(71200400001)(6506007)(71190400001)(386003)(64756008)(66446008)(2501003)(66946007)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6212;H:AM0PR04MB4481.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SoUjoZNrZYSM42Oh0Xgca1xIFLRn1+dfQGHYpCaGXtN2EYMuILbAPgvMlLDUQlBr6i/ars2fkgXJSGzqSTp2ZbcT7f13vb/KP7j/74EERpdLo4sSOrEXOUeUq+H4t821mYOA/8/HRhzi5WQJyLil6fOdmDlLQOg27gAJMxFk/MBkACYY3QMjW7A95hahXOwAk+E2U7/u1DTX+1EUefORF82fyJ32UqwER1F+BhRiG2GzKpcqVEUPrxd/L9Vbv95xo3JR/2B1KKnDh6wBh7sBIegAxwHbU4ZCWY4xVNJIL+dBroN/7Zal9TT2bv6oRkJ1augMrb3/4/ZMkpdfsqP6sfdDOFC0fTU8BuZo31PqvFaPDyzdd0xSlKxxX0dyX7yRJMbYORssjB+gE7t9Ki3YlxDTNsBHjjGvPFaJ2j5fgwMU+5yQoCMjarBWgTf2OkeD
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/MnMKK_kK0nBvDPQ_LbvOkmR"; protocol="application/pgp-signature"
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc3181e7-fcc3-478e-3d9d-08d760ffb8ff
+X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 08:19:33.6954
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: zokdg3ow+NFgmQrVm2x/+1tu95CPVUI6pme2n9ADzPyJdRLa6PUZftLoCDJ5GOCV49xtL9jPulqbC+jVujx0sg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MnMKK_kK0nBvDPQ_LbvOkmR
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+From: Peng Fan <peng.fan@nxp.com>
 
-On Fri,  1 Nov 2019 21:42:33 +0000
-John Stultz <john.stultz@linaro.org> wrote:
+It does not make sense to use shared count for IMX8MN_CLK_SAI7_ROOT
+without ipg clk. Actually there are ipg clks for other sai clks,
+let's add IMX8MN_CLK_SAI7_IPG clk.
 
-> This again? I know!
->=20
-> Apologies to all who hoped I'd stop bothering them with this
-> patch set, but I ran afoul of the DRM tree rules by not
-> getting the userland patches properly reviewed prior to the
-> patches landing (I mistakenly was waiting for the patches to
-> land upstream before pushing the userland patches). Thus,
-> these were correctly reverted from the drm-misc-next tree.
+Signed-off-by: Peng Fan <peng.fan@nxp.com>
+---
+ drivers/clk/imx/clk-imx8mn.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Hi John,
+diff --git a/drivers/clk/imx/clk-imx8mn.c b/drivers/clk/imx/clk-imx8mn.c
+index 838f6e2347f1..5e801892c631 100644
+--- a/drivers/clk/imx/clk-imx8mn.c
++++ b/drivers/clk/imx/clk-imx8mn.c
+@@ -556,6 +556,7 @@ static int imx8mn_clocks_probe(struct platform_device *=
+pdev)
+ 	clks[IMX8MN_CLK_SDMA2_ROOT] =3D imx_clk_hw_gate4("sdma2_clk", "ipg_audio_=
+root", base + 0x43b0, 0);
+ 	clks[IMX8MN_CLK_SDMA3_ROOT] =3D imx_clk_hw_gate4("sdma3_clk", "ipg_audio_=
+root", base + 0x45f0, 0);
+ 	clks[IMX8MN_CLK_SAI7_ROOT] =3D imx_clk_hw_gate2_shared2("sai7_root_clk", =
+"sai7", base + 0x4650, 0, &share_count_sai7);
++	clks[IMX8MN_CLK_SAI7_IPG] =3D imx_clk_hw_gate2_shared2("sai7_ipg_clk", "i=
+pg_audio_root", base + 0x4650, 0, &share_count_sai7);
+=20
+ 	clks[IMX8MN_CLK_DRAM_ALT_ROOT] =3D imx_clk_hw_fixed_factor("dram_alt_root=
+", "dram_alt", 1, 4);
+=20
+--=20
+2.16.4
 
-mind, you have to get userland patches reviewed and accepted but *not
-pushed*.
-
-You cannot push/merge userland patches before the kernel patches have
-properly landed, that bit you got right. But the supposedly confusing
-bit is that for kernel patches to land, the userspace patches must be
-reviewed and accepted first.
-
-I just wanted to clarify this since you wrote "before pushing the
-userland patches" above.
-
-
-Thanks,
-pq
-
->=20
-> My attempts to quickly fix the userland review issue didn't get
-> very far, as the revert brought additional eyes to the patchset,
-> and further interface changes were requested (comically, which
-> is the exact reason I was waiting to push the userland changes
-> :)
->=20
-> So like groundhog day, here we are again, with v14:
->=20
-> This patchset implements per-heap devices which can be opened
-> directly and then an ioctl is used to allocate a dmabuf from the
-> heap.
->=20
-> The interface is similar, but much simpler then IONs, only
-> providing an ALLOC ioctl (and a GET_FEATURES interface to help
-> with any future changes to the interface).
->=20
-> Also, I've provided relatively simple system and cma heaps.
->=20
-> I've booted and tested these patches with AOSP on the HiKey960
-> using the kernel tree here:
->   https://git.linaro.org/people/john.stultz/android-dev.git/log/?h=3Ddev/=
-dma-buf-heap
->=20
-> And the userspace changes here:
->   https://android-review.googlesource.com/c/device/linaro/hikey/+/909436
->=20
-> Compared to ION, this patchset is missing the system-contig,
-> carveout and chunk heaps, as I don't have a device that uses
-> those, so I'm unable to do much useful validation there.
-> Additionally we have no upstream users of chunk or carveout,
-> and the system-contig has been deprecated in the common/andoid-*
-> kernels, so this should be ok.
->=20
-> I've also removed the stats accounting, since any such
-> accounting should be implemented by dma-buf core or the heaps
-> themselves.
->=20
-> New in v14:
-> * Reworked ioctl handler to zero fill any difference in
->   structure size, similar to what the DRM core does, as
->   suggested by Dave Airlie
-> * Removed now unnecessary reserved bits in allocate_data
-> * Added get_features ioctl as suggested by Dave Airlie
-> * Removed pr_warn_once messages as requested by Dave
->   Airlie
-> * Fix missing argment to WARN() in dma_heap_buffer_destroy()
->   found and fixed by Dan Carpenter <dan.carpenter@oracle.com>
-> * Add check in fault hanlder that pgoff isn't larger then
->   pagecount, reported by Dan Carpenter
-> * Fix "redundant assignment to variable ret" issue reported
->   by Colin King and fixed by Andrew Davis
-> * Fix a missing return value in kselftest
-> * Add calls to test the GET_FEATURES ioctl in ksefltest
-> * Build fix reported by kernel test robot <lkp@intel.com>
->   and fixed by Xiao Yang <ice_yangxiao@163.com> for kselftest
-> * Minor kselftest Makefile cleanups
->=20
-> Many thanks again to the folks above who found and submitted
-> fixes to small issues while the patches were in -next! I've
-> folded them in to the patch set here.
->=20
-> The ioctl rework to avoid reserved fields, was mostly duplicated
-> from the DRM core, but it does add some complexity to the ioctl
-> handler so I'd appreciate extra review.
->=20
-> It felt substantial enough that I've removed the previous reviewed
-> by and acked-by tags, but please let me know if you'd like me to
-> re-add yours back.
->=20
-> Apologies again for my flub and the extra noise here!
-> I really appreciate everyone's patience with with me.
->=20
-> thanks
-> -john
->=20
->=20
-> Cc: Laura Abbott <labbott@redhat.com>
-> Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>
-> Cc: Sumit Semwal <sumit.semwal@linaro.org>
-> Cc: Liam Mark <lmark@codeaurora.org>
-> Cc: Pratik Patel <pratikp@codeaurora.org>
-> Cc: Brian Starkey <Brian.Starkey@arm.com>
-> Cc: Vincent Donnefort <Vincent.Donnefort@arm.com>
-> Cc: Sudipto Paul <Sudipto.Paul@arm.com>
-> Cc: Andrew F. Davis <afd@ti.com>
-> Cc: Christoph Hellwig <hch@infradead.org>
-> Cc: Chenbo Feng <fengc@google.com>
-> Cc: Alistair Strachan <astrachan@google.com>
-> Cc: Hridya Valsaraju <hridya@google.com>
-> Cc: Sandeep Patil <sspatil@google.com>
-> Cc: Hillf Danton <hdanton@sina.com>
-> Cc: Dave Airlie <airlied@gmail.com>
-> Cc: dri-devel@lists.freedesktop.org
->=20
-> Andrew F. Davis (1):
->   dma-buf: Add dma-buf heaps framework
->=20
-> John Stultz (4):
->   dma-buf: heaps: Add heap helpers
->   dma-buf: heaps: Add system heap to dmabuf heaps
->   dma-buf: heaps: Add CMA heap to dmabuf heaps
->   kselftests: Add dma-heap test
->=20
->  MAINTAINERS                                   |  18 +
->  drivers/dma-buf/Kconfig                       |  11 +
->  drivers/dma-buf/Makefile                      |   2 +
->  drivers/dma-buf/dma-heap.c                    | 313 ++++++++++++++++++
->  drivers/dma-buf/heaps/Kconfig                 |  14 +
->  drivers/dma-buf/heaps/Makefile                |   4 +
->  drivers/dma-buf/heaps/cma_heap.c              | 178 ++++++++++
->  drivers/dma-buf/heaps/heap-helpers.c          | 271 +++++++++++++++
->  drivers/dma-buf/heaps/heap-helpers.h          |  55 +++
->  drivers/dma-buf/heaps/system_heap.c           | 124 +++++++
->  include/linux/dma-heap.h                      |  59 ++++
->  include/uapi/linux/dma-heap.h                 |  77 +++++
->  tools/testing/selftests/dmabuf-heaps/Makefile |   6 +
->  .../selftests/dmabuf-heaps/dmabuf-heap.c      | 255 ++++++++++++++
->  14 files changed, 1387 insertions(+)
->  create mode 100644 drivers/dma-buf/dma-heap.c
->  create mode 100644 drivers/dma-buf/heaps/Kconfig
->  create mode 100644 drivers/dma-buf/heaps/Makefile
->  create mode 100644 drivers/dma-buf/heaps/cma_heap.c
->  create mode 100644 drivers/dma-buf/heaps/heap-helpers.c
->  create mode 100644 drivers/dma-buf/heaps/heap-helpers.h
->  create mode 100644 drivers/dma-buf/heaps/system_heap.c
->  create mode 100644 include/linux/dma-heap.h
->  create mode 100644 include/uapi/linux/dma-heap.h
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/Makefile
->  create mode 100644 tools/testing/selftests/dmabuf-heaps/dmabuf-heap.c
->=20
-
-
---Sig_/MnMKK_kK0nBvDPQ_LbvOkmR
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEJQjwWQChkWOYOIONI1/ltBGqqqcFAl2/3sAACgkQI1/ltBGq
-qqelRBAAp4/ktwV0caLVLYyNYnErMo8XfMZhO/iqxQDI7cott661fCeRAQ99xZ80
-zPDRmhkrKd4DnYRXBQvs/IF+Xm0xp+wvGVvaIjTkNRz3RQm7tIRNHljF3fZEYLBY
-kEH8mqKOn2d3jvnhSLhLkFZwWBKjt5OE789ns500zeSf3ny/yw+EyNa0guH/t5lg
-8QAPzPAwkW5p8KZGYmsB0GZ8VXN1JKIOMTc/mLaCf66dYx3Ml8BYh3GkWeLsSks2
-QZ7yvI6wPbGjrTbxjAvAXUIoVbhWloDCRpz95fZWTw5xIMifL5q2DNmw58aSYQdq
-X7KH9WWTGXoJJ3/rajq4Nte9mvjmm0rwDb4cm7yygZ6158tj9CvLWy/6FqSJDOzr
-d9gTNTcQpflecI/xQneQ1I04wW7nm3u4qYgnejDqmHD9ezLR23nQHECCwMWL+obt
-SXb0Ng6EVW5Ci3EUB03YLxQzBep6Du+8a0uFdjFVn/EI+D3NZRMVafYl6U8m8JO8
-5/wWGKgvOwJZr8oLUtV84cZ0xjwEeukyRKHQ5eQ/gPoYZBrO9gviFVvpBqXaWHH4
-3JhPLpyrgufMUM0CDUBsaRCxfXXOYdmTOfmOM9VD8hdHvJYflPxCT51jyuHXHB1u
-DL2Xqm5bc5TIyU2gN96feN3NKTPU2DuHDscwEXVBz0hvMUhxGbg=
-=8BeV
------END PGP SIGNATURE-----
-
---Sig_/MnMKK_kK0nBvDPQ_LbvOkmR--
