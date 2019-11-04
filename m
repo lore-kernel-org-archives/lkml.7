@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE48ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14A33CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99BCB217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1E0217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:55:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904546;
-	bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
+	s=default; t=1572904548;
+	bh=kA6BO1EKfl6dicUBYCpnoQR1aIMmK9MS3U1Mi82EM9s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AVRel+22dVgRtrdYdBpgyAOSitAZ1TfLc6XldwGsvoqp6Vi7qSiDE/226XVxJN0IQ
-	 jqEKcSTmScioVikeYqyD6Tgc8cThwep0qwk6RCpipEnmvDGFFdd8F8zcGkD77pSS9n
-	 juy1Fn7XkDRt47R74n1Gba2I5NQj7ckVZE1ZTn6w=
+	b=ahK2YYwrEi1X08LTNudoR4xgsCuc1CejbYTOPLRepWRz6yHNvhv3oQkC6aYpm/BiH
+	 q0X4Sms8iQVh1emgn6/jmPnBkmdOiHl1jieLcJudjpOigq4sqlkqphyAR2kxK0LxV3
+	 dTcIbFmk3NiK2UPTHv1daYOTDENjOxYE8DsEuq3A=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388214AbfKDVzp (ORCPT
+        id S2388226AbfKDVzr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:55:45 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51034 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:55:47 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51146 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388202AbfKDVzk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:55:40 -0500
+        id S2388215AbfKDVzq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:55:46 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D0F9217F5;
-        Mon,  4 Nov 2019 21:55:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 97E2D2053B;
+        Mon,  4 Nov 2019 21:55:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904539;
-        bh=WUYtsEowu6tUKxR++J7FijFndFCjk6G0o2q2sXvWxvY=;
+        s=default; t=1572904545;
+        bh=kA6BO1EKfl6dicUBYCpnoQR1aIMmK9MS3U1Mi82EM9s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Sst/v2ziAGZEcvAgJlqqHangmNkAj+pkz/w1odtcFcMgoCEB2TK6Nnop3OrRXEzD7
-         Gb3yvhEUbyZ1Gi/OweObmVVz2hvv1n7qFOJKnn6StTCwWwUJcRnL1p8LaOaPh8p0jE
-         qwdNLtccM8OM6HNvaSv2PRtSEa/QaL8T3/8GtcCo=
+        b=v/2Vz3nkCxn2IBO6A2beDQzk+g7NPPRoJ4vbJh0U0hFDdTjG60+Syd4R2b43u6SHl
+         b26e1oWmpikVb2F5uRrL9ZK1rJqrR4YfmyF4Eo6Ee6tFVcLGyL6frnAqyZaem19kll
+         us4pz2ErWwMa+ylRpNriQMdKC3YNpEqcrvjf324k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>
-Subject: [PATCH 4.14 80/95] s390/idle: fix cpu idle time calculation
-Date:   Mon,  4 Nov 2019 22:45:18 +0100
-Message-Id: <20191104212120.984670840@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.14 82/95] rtlwifi: Fix potential overflow on P2P code
+Date:   Mon,  4 Nov 2019 22:45:20 +0100
+Message-Id: <20191104212121.977131412@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -59,98 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
+From: Laura Abbott <labbott@redhat.com>
 
-commit 3d7efa4edd07be5c5c3ffa95ba63e97e070e1f3f upstream.
+commit 8c55dedb795be8ec0cf488f98c03a1c2176f7fb1 upstream.
 
-The idle time reported in /proc/stat sometimes incorrectly contains
-huge values on s390. This is caused by a bug in arch_cpu_idle_time().
+Nicolas Waisman noticed that even though noa_len is checked for
+a compatible length it's still possible to overrun the buffers
+of p2pinfo since there's no check on the upper bound of noa_num.
+Bound noa_num against P2P_MAX_NOA_NUM.
 
-The kernel tries to figure out when a different cpu entered idle by
-accessing its per-cpu data structure. There is an ordering problem: if
-the remote cpu has an idle_enter value which is not zero, and an
-idle_exit value which is zero, it is assumed it is idle since
-"now". The "now" timestamp however is taken before the idle_enter
-value is read.
-
-Which in turn means that "now" can be smaller than idle_enter of the
-remote cpu. Unconditionally subtracting idle_enter from "now" can thus
-lead to a negative value (aka large unsigned value).
-
-Fix this by moving the get_tod_clock() invocation out of the
-loop. While at it also make the code a bit more readable.
-
-A similar bug also exists for show_idle_time(). Fix this is as well.
-
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Heiko Carstens <heiko.carstens@de.ibm.com>
-Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/s390/kernel/idle.c |   29 ++++++++++++++++++++++-------
- 1 file changed, 22 insertions(+), 7 deletions(-)
+ drivers/net/wireless/realtek/rtlwifi/ps.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/arch/s390/kernel/idle.c
-+++ b/arch/s390/kernel/idle.c
-@@ -69,18 +69,26 @@ DEVICE_ATTR(idle_count, 0444, show_idle_
- static ssize_t show_idle_time(struct device *dev,
- 				struct device_attribute *attr, char *buf)
- {
-+	unsigned long long now, idle_time, idle_enter, idle_exit, in_idle;
- 	struct s390_idle_data *idle = &per_cpu(s390_idle, dev->id);
--	unsigned long long now, idle_time, idle_enter, idle_exit;
- 	unsigned int seq;
- 
- 	do {
--		now = get_tod_clock();
- 		seq = read_seqcount_begin(&idle->seqcount);
- 		idle_time = READ_ONCE(idle->idle_time);
- 		idle_enter = READ_ONCE(idle->clock_idle_enter);
- 		idle_exit = READ_ONCE(idle->clock_idle_exit);
- 	} while (read_seqcount_retry(&idle->seqcount, seq));
--	idle_time += idle_enter ? ((idle_exit ? : now) - idle_enter) : 0;
-+	in_idle = 0;
-+	now = get_tod_clock();
-+	if (idle_enter) {
-+		if (idle_exit) {
-+			in_idle = idle_exit - idle_enter;
-+		} else if (now > idle_enter) {
-+			in_idle = now - idle_enter;
-+		}
-+	}
-+	idle_time += in_idle;
- 	return sprintf(buf, "%llu\n", idle_time >> 12);
- }
- DEVICE_ATTR(idle_time_us, 0444, show_idle_time, NULL);
-@@ -88,17 +96,24 @@ DEVICE_ATTR(idle_time_us, 0444, show_idl
- u64 arch_cpu_idle_time(int cpu)
- {
- 	struct s390_idle_data *idle = &per_cpu(s390_idle, cpu);
--	unsigned long long now, idle_enter, idle_exit;
-+	unsigned long long now, idle_enter, idle_exit, in_idle;
- 	unsigned int seq;
- 
- 	do {
--		now = get_tod_clock();
- 		seq = read_seqcount_begin(&idle->seqcount);
- 		idle_enter = READ_ONCE(idle->clock_idle_enter);
- 		idle_exit = READ_ONCE(idle->clock_idle_exit);
- 	} while (read_seqcount_retry(&idle->seqcount, seq));
--
--	return cputime_to_nsecs(idle_enter ? ((idle_exit ?: now) - idle_enter) : 0);
-+	in_idle = 0;
-+	now = get_tod_clock();
-+	if (idle_enter) {
-+		if (idle_exit) {
-+			in_idle = idle_exit - idle_enter;
-+		} else if (now > idle_enter) {
-+			in_idle = now - idle_enter;
-+		}
-+	}
-+	return cputime_to_nsecs(in_idle);
- }
- 
- void arch_cpu_idle_enter(void)
+--- a/drivers/net/wireless/realtek/rtlwifi/ps.c
++++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+@@ -774,6 +774,9 @@ static void rtl_p2p_noa_ie(struct ieee80
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+@@ -868,6 +871,9 @@ static void rtl_p2p_action_ie(struct iee
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
 
 
