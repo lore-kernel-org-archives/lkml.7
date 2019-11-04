@@ -2,160 +2,163 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ACF0CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:26:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10170CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1123921D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:26:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Q3zy5URT"
+	by mail.kernel.org (Postfix) with ESMTP id DA12B21D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 13:27:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572874046;
+	bh=x90pO9sDZKGVYVtFYlfDsBpi+uRFBDhylDDNB8dLWSk=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=x2Hm7wlC4C086B3AhBRje8kp69Auh3sEUdoGJQ60UrdH/JC4sGp2C/YF3w00YKb3k
+	 y6nqkWsUZ7wLABYNtJpPSC9QcelnWDNbA+hctwEivFCCvCtReYh/zavlcA7uuUin9C
+	 +rk2H8uume0sv4SxYbuxNyiwsXA7EHUbY5OXoapo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729270AbfKDN0W (ORCPT
+        id S1729363AbfKDN10 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 08:26:22 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:41487 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727430AbfKDN0S (ORCPT
+        Mon, 4 Nov 2019 08:27:26 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58064 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727236AbfKDN1Z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 08:26:18 -0500
-Received: by mail-oi1-f193.google.com with SMTP id e9so10144808oif.8
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 05:26:17 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zu3cItEhhjzP4PpVvjjoEfIOJMPodKK4NOwxxjxVsmQ=;
-        b=Q3zy5URTK0IGfOd/Wquujs5+H3PxKerKVaqGYBflrXtjvYmTR5uFUZxmB/qeDFGn4j
-         AVng0V1Yc3fOrLyRRU/JPQFLCWk+7c711G9Yq27TP3DfMCCn1d2rSa+W6t2fgahChlWv
-         ALdkaRxS77m184QhZy5YteGy6Ze0fXuf9HyQqa2s3ZhaAP/25OJFHGcJ4IGIj4Ve7G4v
-         HOV2V0mK1THew6ITjJFjwtkhmhqY8Dzn6o9aObSM8Irk21gB6/aiUU0HZkEV8tYiPUqB
-         UzZtytvWOn+ICwgtNe9U8xoy95W/LwnTQQ5aYJtt+HB8ttZJ6PKrOx6O+eBInYbj1bHE
-         ONmQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zu3cItEhhjzP4PpVvjjoEfIOJMPodKK4NOwxxjxVsmQ=;
-        b=bZ3NSwLQfyR4AwFMxNaKP3QIEq/lm4mNly2PxxlLUTTKrkd0iPXNmPkHeM0blg/MUd
-         gxWkUlq1hDTVPvdk/oCadz87stV8Ih1837+mjTgcq9rqeD/mDTfEJ5S66xwxUWoa2ql8
-         9FPY2g5zuiu4n/B9DGKhZOZJmVmEvvhZoP4/J1LFieWNDiBYw3RV+slKR1cFJmPR6pt/
-         YaHN+ZLGNmjmro91lPVeT/a1I5QohCvjIV8kau1O3lsgJJHUA9TVHnTESf/lMTYqLoxF
-         2+a/vl0DRzCmCOEPGWO4sPDDfeihm3B3muC2wctKHwChM94ypD76qWci7gQ2GzPDu97X
-         b0TQ==
-X-Gm-Message-State: APjAAAVz07HoKAQezZqakq3dJkBrNkh1/d2nKzyymmgc39mNuHwrTfSh
-        yONFQo2PRjW9qkOVx2AgImcrXtBSvowFTVeTMI+mzg==
-X-Google-Smtp-Source: APXvYqyOsBDL3cd+XvCfKx1hcKpgvu3j5+7SalQMpcqjV58BX954vDf2msdjkkpNSoD+R7BitQTDf9JouOVPAB3wGdQ=
-X-Received: by 2002:aca:fc0d:: with SMTP id a13mr1437695oii.83.1572873976476;
- Mon, 04 Nov 2019 05:26:16 -0800 (PST)
-MIME-Version: 1.0
-References: <0000000000006881cf059683d5fb@google.com> <a00b37e3-86f8-db3f-2a39-f9603021676e@suse.com>
-In-Reply-To: <a00b37e3-86f8-db3f-2a39-f9603021676e@suse.com>
-From:   Marco Elver <elver@google.com>
-Date:   Mon, 4 Nov 2019 14:26:04 +0100
-Message-ID: <CANpmjNP3TukFx_oJD7pwJ1aTZr-G3cjP4TUET08PWzvG+81YLw@mail.gmail.com>
-Subject: Re: KCSAN: data-race in echo_char / n_tty_receive_buf_common
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     syzbot <syzbot+e518b0df8f4e19495d3e@syzkaller.appspotmail.com>,
-        gregkh@linuxfoundation.org, LKML <linux-kernel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 Nov 2019 08:27:25 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=qRAzUev+rMHvML7RdvPeQ9Nk4I6D/EvxELQHAmiFmI0=; b=t6QsbpYGmCRe
+        LXO45YwBKtOg9YypR8KqnxjFnpRA6VQ1yZZLwujiyc2I9B7rb8qmwqYn1lm/mtqr8fuQSvfOQzTXk
+        WnwhKiW2+4lUJXlZcJao0yOsY4hbqPJcphbp3mGjsxnaOIM88DpcTRdhuFkq1W9OqmSFTHCRNqa4j
+        zMQ5g=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iRcO8-0002g1-94; Mon, 04 Nov 2019 13:27:20 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id C2681274301E; Mon,  4 Nov 2019 13:27:19 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Chuhong Yuan <hslester96@gmail.com>
+Cc:     "Cc:"@sirena.co.uk, "Cc:"@sirena.co.uk,
+        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: Applied "spi: sifive: disable clk when probe fails and remove" to the spi tree
+In-Reply-To: <20191101121745.13413-1-hslester96@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191104132719.C2681274301E@ypsilon.sirena.org.uk>
+Date:   Mon,  4 Nov 2019 13:27:19 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019 at 13:08, Jiri Slaby <jslaby@suse.com> wrote:
->
-> On 04. 11. 19, 12:44, syzbot wrote:
-> > Hello,
-> >
-> > syzbot found the following crash on:
-> >
-> > HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-> > git tree:       https://github.com/google/ktsan.git kcsan
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=106bdb60e00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-> > dashboard link:
-> > https://syzkaller.appspot.com/bug?extid=e518b0df8f4e19495d3e
-> > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> >
-> > Unfortunately, I don't have any reproducer for this crash yet.
-> >
-> > IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> > Reported-by: syzbot+e518b0df8f4e19495d3e@syzkaller.appspotmail.com
-> >
-> > ==================================================================
-> > BUG: KCSAN: data-race in echo_char / n_tty_receive_buf_common
-> >
-> > write to 0xffffc9000c433018 of 8 bytes by task 18008 on cpu 0:
-> >  add_echo_byte drivers/tty/n_tty.c:845 [inline]
->
-> IMO it's expected add_echo_byte is called without output_lock. That's
-> exactly what the barrier there is for. See:
+The patch
 
-Agree it should remain lock-free. It's still a data race because we
-have 2 racing concurrent *plain* accesses that are subject to compiler
-optimizations such as load/store tearing etc (avoided with
-READ_ONCE/WRITE_ONCE).
+   spi: sifive: disable clk when probe fails and remove
 
-This data race also highlights the increment, although preceded by a
-barrier may still be problematic. I think the increment actually needs
-to be atomic (e.g. atomic_inc). If the compiler or the arch turns the
-ldata->echo_data++ into a non-atomic increment (something like
-"ldata->echo_data = ldata->echo_data + 1"), then concurrent
-add_echo_byte can overwrite and loose bytes.
+has been applied to the spi tree at
 
-> commit ebec3f8f5271139df618ebdf8427e24ba102ba94
-> Author: Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>
-> Date:   Sat May 26 09:53:14 2018 +0900
->
->     n_tty: Access echo_* variables carefully.
->
-> >  echo_char+0x14e/0x1c0 drivers/tty/n_tty.c:948
-> >  n_tty_receive_char_special+0xb5f/0x1c10 drivers/tty/n_tty.c:1339
-> >  n_tty_receive_buf_fast drivers/tty/n_tty.c:1610 [inline]
-> >  __receive_buf drivers/tty/n_tty.c:1644 [inline]
-> >  n_tty_receive_buf_common+0x1844/0x1b00 drivers/tty/n_tty.c:1742
-> >  n_tty_receive_buf+0x3a/0x50 drivers/tty/n_tty.c:1771
-> >  tiocsti drivers/tty/tty_io.c:2197 [inline]
-> >  tty_ioctl+0xb75/0xe10 drivers/tty/tty_io.c:2573
-> >  vfs_ioctl fs/ioctl.c:46 [inline]
-> >  file_ioctl fs/ioctl.c:509 [inline]
-> >  do_vfs_ioctl+0x991/0xc60 fs/ioctl.c:696
-> >  ksys_ioctl+0xbd/0xe0 fs/ioctl.c:713
-> >  __do_sys_ioctl fs/ioctl.c:720 [inline]
-> >  __se_sys_ioctl fs/ioctl.c:718 [inline]
-> >  __x64_sys_ioctl+0x4c/0x60 fs/ioctl.c:718
-> >  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> >
-> > read to 0xffffc9000c433018 of 8 bytes by task 7 on cpu 1:
-> >  flush_echoes drivers/tty/n_tty.c:828 [inline]
-> >  __receive_buf drivers/tty/n_tty.c:1648 [inline]
-> >  n_tty_receive_buf_common+0xe3f/0x1b00 drivers/tty/n_tty.c:1742
-> >  n_tty_receive_buf2+0x3d/0x60 drivers/tty/n_tty.c:1777
-> >  tty_ldisc_receive_buf+0x71/0xf0 drivers/tty/tty_buffer.c:461
-> >  tty_port_default_receive_buf+0x87/0xd0 drivers/tty/tty_port.c:38
-> >  receive_buf drivers/tty/tty_buffer.c:481 [inline]
-> >  flush_to_ldisc+0x1d5/0x260 drivers/tty/tty_buffer.c:533
-> >  process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-> >  worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-> >  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-> >  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-> >
-> > Reported by Kernel Concurrency Sanitizer on:
-> > CPU: 1 PID: 7 Comm: kworker/u4:0 Not tainted 5.4.0-rc3+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > Workqueue: events_unbound flush_to_ldisc
-> > ==================================================================
->
-> thanks,
-> --
-> js
-> suse labs
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From a725272bda77e61c1b4de85c7b0c875b2ea639b6 Mon Sep 17 00:00:00 2001
+From: Chuhong Yuan <hslester96@gmail.com>
+Date: Fri, 1 Nov 2019 20:17:45 +0800
+Subject: [PATCH] spi: sifive: disable clk when probe fails and remove
+
+The driver forgets to disable and unprepare clk when probe fails and
+remove.
+Add the calls to fix the problem.
+
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
+Link: https://lore.kernel.org/r/20191101121745.13413-1-hslester96@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-sifive.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/spi/spi-sifive.c b/drivers/spi/spi-sifive.c
+index 35254bdc42c4..f7c1e20432e0 100644
+--- a/drivers/spi/spi-sifive.c
++++ b/drivers/spi/spi-sifive.c
+@@ -357,14 +357,14 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	if (!cs_bits) {
+ 		dev_err(&pdev->dev, "Could not auto probe CS lines\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	num_cs = ilog2(cs_bits) + 1;
+ 	if (num_cs > SIFIVE_SPI_MAX_CS) {
+ 		dev_err(&pdev->dev, "Invalid number of spi slaves\n");
+ 		ret = -EINVAL;
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	/* Define our master */
+@@ -393,7 +393,7 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 			       dev_name(&pdev->dev), spi);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "Unable to bind to interrupt\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	dev_info(&pdev->dev, "mapped; irq=%d, cs=%d\n",
+@@ -402,11 +402,13 @@ static int sifive_spi_probe(struct platform_device *pdev)
+ 	ret = devm_spi_register_master(&pdev->dev, master);
+ 	if (ret < 0) {
+ 		dev_err(&pdev->dev, "spi_register_master failed\n");
+-		goto put_master;
++		goto disable_clk;
+ 	}
+ 
+ 	return 0;
+ 
++disable_clk:
++	clk_disable_unprepare(spi->clk);
+ put_master:
+ 	spi_master_put(master);
+ 
+@@ -420,6 +422,7 @@ static int sifive_spi_remove(struct platform_device *pdev)
+ 
+ 	/* Disable all the interrupts just in case */
+ 	sifive_spi_write(spi, SIFIVE_SPI_REG_IE, 0);
++	clk_disable_unprepare(spi->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.20.1
+
