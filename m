@@ -2,242 +2,338 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7CD7C47E49
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:47:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C690ECA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:53:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7647020848
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572896824;
-	bh=Cees/POn5MlyzydqMKd4xa2gXZtL1xZ4p3lpv82o7UE=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=0l/H/poi0UdiLnm40ekZudNRsnoyGESGS74+qlzKeh+85LHtpOc5i6QFy+JAS7s2Y
-	 jfUOG0tDrRvsW4mN8bfuQCQtCEhhbfhe0vTNF+kmvMHnxlpfZ5KQIWlqY3y10GKh/S
-	 gQegILGbA1c9uPYZIEOp2ofJ+g8NfEQUCiozcaSk=
+	by mail.kernel.org (Postfix) with ESMTP id 94F8A206BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 19:53:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h7mbt8Qf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729497AbfKDTrD (ORCPT
+        id S1729347AbfKDTxK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 14:47:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34776 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728346AbfKDTrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 14:47:02 -0500
-Received: from paulmck-ThinkPad-P72.home (28.234-255-62.static.virginmediabusiness.co.uk [62.255.234.28])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Mon, 4 Nov 2019 14:53:10 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59238 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728634AbfKDTxI (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 14:53:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572897186;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=5YqXY05LcZm45Xoi2n7UBvKIcNMM7euzmr8OM5rBxks=;
+        b=h7mbt8Qf6MfxBGX7EepWQ0FVQUf9WO9sNbsB6pRtLGeVtPF3DJ0Uqn+X5BAheanx/TzY6v
+        FTMWPuDQfCOZ+4asJLcjY2aqxihbLcCYbkndNhy9aEgVMyJVlGRXp5aiFTFpG+Kz9/Ey00
+        64vj0Y5khi/vDXfazj/do4qP0HdUKOw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-92-ZQL91USHOcmTk___p7nkiA-1; Mon, 04 Nov 2019 14:53:03 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3417206BA;
-        Mon,  4 Nov 2019 19:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572896821;
-        bh=Cees/POn5MlyzydqMKd4xa2gXZtL1xZ4p3lpv82o7UE=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=ONuLiO7M72Xq9WTOtOpwh4CPn9KV8D3Ij1qMMv9Uw2eqNFtVm+xp0ghv5a2594s0i
-         1fW3kxYMQRB0FVuOp489XqUlCg129glcwj31kvhSy0t7MudTmBOFN30246qyIEAQGJ
-         QXAzhzODLGidol275sTx/p6VeE4+RewrO9+iR8M4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 1FD783520B56; Mon,  4 Nov 2019 11:46:58 -0800 (PST)
-Date:   Mon, 4 Nov 2019 11:46:58 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 760D1107ACC2;
+        Mon,  4 Nov 2019 19:52:58 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.178])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E8A5B1FC;
+        Mon,  4 Nov 2019 19:52:49 +0000 (UTC)
+Date:   Mon, 4 Nov 2019 14:52:48 -0500
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
         Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 0/9] Add Kernel Concurrency Sanitizer (KCSAN)
-Message-ID: <20191104194658.GK20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191104142745.14722-1-elver@google.com>
- <20191104164717.GE20975@paulmck-ThinkPad-P72>
- <CANpmjNOtR6NEsXGo=M1o26d8vUyF7gwj=gew+LAeE_D+qfbEmQ@mail.gmail.com>
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2 05/18] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+Message-ID: <20191104195248.GA7731@redhat.com>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-6-jhubbard@nvidia.com>
+ <20191104173325.GD5134@redhat.com>
+ <be9de35c-57e9-75c3-2e86-eae50904bbdf@nvidia.com>
+ <20191104191811.GI5134@redhat.com>
+ <e9656d47-b4a1-da8a-e8cc-ebcfb8cc06d6@nvidia.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <e9656d47-b4a1-da8a-e8cc-ebcfb8cc06d6@nvidia.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: ZQL91USHOcmTk___p7nkiA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <CANpmjNOtR6NEsXGo=M1o26d8vUyF7gwj=gew+LAeE_D+qfbEmQ@mail.gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 07:41:30PM +0100, Marco Elver wrote:
-> On Mon, 4 Nov 2019 at 17:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> >
-> > On Mon, Nov 04, 2019 at 03:27:36PM +0100, Marco Elver wrote:
-> > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-> > > KCSAN is a sampling watchpoint-based data-race detector. More details
-> > > are included in Documentation/dev-tools/kcsan.rst. This patch-series
-> > > only enables KCSAN for x86, but we expect adding support for other
-> > > architectures is relatively straightforward (we are aware of
-> > > experimental ARM64 and POWER support).
-> > >
-> > > To gather early feedback, we announced KCSAN back in September, and
-> > > have integrated the feedback where possible:
-> > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
-> > >
-> > > We want to point out and acknowledge the work surrounding the LKMM,
-> > > including several articles that motivate why data-races are dangerous
-> > > [1, 2], justifying a data-race detector such as KCSAN.
-> > > [1] https://lwn.net/Articles/793253/
-> > > [2] https://lwn.net/Articles/799218/
-> > >
-> > > The current list of known upstream fixes for data-races found by KCSAN
-> > > can be found here:
-> > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
-> >
-> > Making this more accessible to more people seems like a good thing.
-> > So, for the series:
-> >
-> > Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> 
-> Much appreciated. Thanks, Paul!
-> 
-> Any suggestions which tree this could eventually land in?
+On Mon, Nov 04, 2019 at 11:30:32AM -0800, John Hubbard wrote:
+> On 11/4/19 11:18 AM, Jerome Glisse wrote:
+> > On Mon, Nov 04, 2019 at 11:04:38AM -0800, John Hubbard wrote:
+> >> On 11/4/19 9:33 AM, Jerome Glisse wrote:
+> >> ...
+> >>>
+> >>> Few nitpick belows, nonetheless:
+> >>>
+> >>> Reviewed-by: J=E9r=F4me Glisse <jglisse@redhat.com>
+> >>> [...]
+> >>>> +
+> >>>> +CASE 3: ODP
+> >>>> +-----------
+> >>>> +(Mellanox/Infiniband On Demand Paging: the hardware supports
+> >>>> +replayable page faulting). There are GUP references to pages servin=
+g as DMA
+> >>>> +buffers. For ODP, MMU notifiers are used to synchronize with page_m=
+kclean()
+> >>>> +and munmap(). Therefore, normal GUP calls are sufficient, so neithe=
+r flag
+> >>>> +needs to be set.
+> >>>
+> >>> I would not include ODP or anything like it here, they do not use
+> >>> GUP anymore and i believe it is more confusing here. I would how-
+> >>> ever include some text in this documentation explaining that hard-
+> >>> ware that support page fault is superior as it does not incur any
+> >>> of the issues described here.
+> >>
+> >> OK, agreed, here's a new write up that I'll put in v3:
+> >>
+> >>
+> >> CASE 3: ODP
+> >> -----------
+> >=20
+> > ODP is RDMA, maybe Hardware with page fault support instead
+> >=20
+> >> Advanced, but non-CPU (DMA) hardware that supports replayable page fau=
+lts.
+>=20
+> OK, so:
+>=20
+>     "RDMA hardware with page faulting support."
+>=20
+> for the first sentence.
 
-I would guess that Dmitry might have some suggestions.
+I would drop RDMA completely, RDMA is just one example, they are GPU, FPGA =
+and
+others that are in that category. See below
 
-							Thanx, Paul
+>=20
+>=20
+> >> Here, a well-written driver doesn't normally need to pin pages at all.=
+ However,
+> >> if the driver does choose to do so, it can register MMU notifiers for =
+the range,
+> >> and will be called back upon invalidation. Either way (avoiding page p=
+inning, or
+> >> using MMU notifiers to unpin upon request), there is proper synchroniz=
+ation with=20
+> >> both filesystem and mm (page_mkclean(), munmap(), etc).
+> >>
+> >> Therefore, neither flag needs to be set.
+> >=20
+> > In fact GUP should never be use with those.
+>=20
+>=20
+> Yes. The next paragraph says that, but maybe not strong enough.
+>=20
+>=20
+> >>
+> >> It's worth mentioning here that pinning pages should not be the first =
+design
+> >> choice. If page fault capable hardware is available, then the software=
+ should
+> >> be written so that it does not pin pages. This allows mm and filesyste=
+ms to
+> >> operate more efficiently and reliably.
+>=20
+> Here's what we have after the above changes:
+>=20
+> CASE 3: ODP
+> -----------
+> RDMA hardware with page faulting support. Here, a well-written driver doe=
+sn't
 
-> Thanks,
-> -- Marco
-> 
-> > > Changelog
-> > > ---------
-> > > v3:
-> > > * Major changes:
-> > >  - Add microbenchmark.
-> > >  - Add instruction watchpoint skip randomization.
-> > >  - Refactor API and core runtime fast-path and slow-path. Compared to
-> > >    the previous version, with a default config and benchmarked using the
-> > >    added microbenchmark, this version is 3.8x faster.
-> > >  - Make __tsan_unaligned __alias of generic accesses.
-> > >  - Rename kcsan_{begin,end}_atomic ->
-> > >    kcsan_{nestable,flat}_atomic_{begin,end}
-> > >  - For filter list in debugfs.c use kmalloc+krealloc instead of
-> > >    kvmalloc.
-> > >  - Split Documentation into separate patch.
-> > >
-> > > v2: http://lkml.kernel.org/r/20191017141305.146193-1-elver@google.com
-> > > * Major changes:
-> > >  - Replace kcsan_check_access(.., {true, false}) with
-> > >    kcsan_check_{read,write}.
-> > >  - Change atomic-instrumented.h to use __atomic_check_{read,write}.
-> > >  - Use common struct kcsan_ctx in task_struct and for per-CPU interrupt
-> > >    contexts.
-> > >
-> > > v1: http://lkml.kernel.org/r/20191016083959.186860-1-elver@google.com
-> > >
-> > > Marco Elver (9):
-> > >   kcsan: Add Kernel Concurrency Sanitizer infrastructure
-> > >   kcsan: Add Documentation entry in dev-tools
-> > >   objtool, kcsan: Add KCSAN runtime functions to whitelist
-> > >   build, kcsan: Add KCSAN build exceptions
-> > >   seqlock, kcsan: Add annotations for KCSAN
-> > >   seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
-> > >   asm-generic, kcsan: Add KCSAN instrumentation for bitops
-> > >   locking/atomics, kcsan: Add KCSAN instrumentation
-> > >   x86, kcsan: Enable KCSAN for x86
-> > >
-> > >  Documentation/dev-tools/index.rst         |   1 +
-> > >  Documentation/dev-tools/kcsan.rst         | 217 +++++++++
-> > >  MAINTAINERS                               |  11 +
-> > >  Makefile                                  |   3 +-
-> > >  arch/x86/Kconfig                          |   1 +
-> > >  arch/x86/boot/Makefile                    |   2 +
-> > >  arch/x86/boot/compressed/Makefile         |   2 +
-> > >  arch/x86/entry/vdso/Makefile              |   3 +
-> > >  arch/x86/include/asm/bitops.h             |   6 +-
-> > >  arch/x86/kernel/Makefile                  |   7 +
-> > >  arch/x86/kernel/cpu/Makefile              |   3 +
-> > >  arch/x86/lib/Makefile                     |   4 +
-> > >  arch/x86/mm/Makefile                      |   3 +
-> > >  arch/x86/purgatory/Makefile               |   2 +
-> > >  arch/x86/realmode/Makefile                |   3 +
-> > >  arch/x86/realmode/rm/Makefile             |   3 +
-> > >  drivers/firmware/efi/libstub/Makefile     |   2 +
-> > >  include/asm-generic/atomic-instrumented.h | 393 +++++++--------
-> > >  include/asm-generic/bitops-instrumented.h |  18 +
-> > >  include/linux/compiler-clang.h            |   9 +
-> > >  include/linux/compiler-gcc.h              |   7 +
-> > >  include/linux/compiler.h                  |  35 +-
-> > >  include/linux/kcsan-checks.h              |  97 ++++
-> > >  include/linux/kcsan.h                     | 115 +++++
-> > >  include/linux/sched.h                     |   4 +
-> > >  include/linux/seqlock.h                   |  51 +-
-> > >  init/init_task.c                          |   8 +
-> > >  init/main.c                               |   2 +
-> > >  kernel/Makefile                           |   6 +
-> > >  kernel/kcsan/Makefile                     |  11 +
-> > >  kernel/kcsan/atomic.h                     |  27 ++
-> > >  kernel/kcsan/core.c                       | 560 ++++++++++++++++++++++
-> > >  kernel/kcsan/debugfs.c                    | 275 +++++++++++
-> > >  kernel/kcsan/encoding.h                   |  94 ++++
-> > >  kernel/kcsan/kcsan.h                      | 131 +++++
-> > >  kernel/kcsan/report.c                     | 306 ++++++++++++
-> > >  kernel/kcsan/test.c                       | 121 +++++
-> > >  kernel/sched/Makefile                     |   6 +
-> > >  lib/Kconfig.debug                         |   2 +
-> > >  lib/Kconfig.kcsan                         | 119 +++++
-> > >  lib/Makefile                              |   3 +
-> > >  mm/Makefile                               |   8 +
-> > >  scripts/Makefile.kcsan                    |   6 +
-> > >  scripts/Makefile.lib                      |  10 +
-> > >  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
-> > >  tools/objtool/check.c                     |  18 +
-> > >  46 files changed, 2526 insertions(+), 206 deletions(-)
-> > >  create mode 100644 Documentation/dev-tools/kcsan.rst
-> > >  create mode 100644 include/linux/kcsan-checks.h
-> > >  create mode 100644 include/linux/kcsan.h
-> > >  create mode 100644 kernel/kcsan/Makefile
-> > >  create mode 100644 kernel/kcsan/atomic.h
-> > >  create mode 100644 kernel/kcsan/core.c
-> > >  create mode 100644 kernel/kcsan/debugfs.c
-> > >  create mode 100644 kernel/kcsan/encoding.h
-> > >  create mode 100644 kernel/kcsan/kcsan.h
-> > >  create mode 100644 kernel/kcsan/report.c
-> > >  create mode 100644 kernel/kcsan/test.c
-> > >  create mode 100644 lib/Kconfig.kcsan
-> > >  create mode 100644 scripts/Makefile.kcsan
-> > >
-> > > --
-> > > 2.24.0.rc1.363.gb1bccd3e3d-goog
-> > >
-> >
-> > --
-> > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191104164717.GE20975%40paulmck-ThinkPad-P72.
+CASE3: Hardware with page fault support
+---------------------------------------
+
+Here, a well-written ....
+
+
+> normally need to pin pages at all. However, if the driver does choose to =
+do so,
+> it can register MMU notifiers for the range, and will be called back upon
+> invalidation. Either way (avoiding page pinning, or using MMU notifiers t=
+o unpin
+> upon request), there is proper synchronization with both filesystem and m=
+m
+> (page_mkclean(), munmap(), etc).
+>=20
+> Therefore, neither flag needs to be set.
+>=20
+> In this case, ideally, neither get_user_pages() nor pin_user_pages() shou=
+ld be=20
+> called. Instead, the software should be written so that it does not pin p=
+ages.=20
+> This allows mm and filesystems to operate more efficiently and reliably.
+>=20
+> >>> [...]
+> >>>
+> >>>> @@ -1014,7 +1018,16 @@ static __always_inline long __get_user_pages_=
+locked(struct task_struct *tsk,
+> >>>>  =09=09BUG_ON(*locked !=3D 1);
+> >>>>  =09}
+> >>>> =20
+> >>>> -=09if (pages)
+> >>>> +=09/*
+> >>>> +=09 * FOLL_PIN and FOLL_GET are mutually exclusive. Traditional beh=
+avior
+> >>>> +=09 * is to set FOLL_GET if the caller wants pages[] filled in (but=
+ has
+> >>>> +=09 * carelessly failed to specify FOLL_GET), so keep doing that, b=
+ut only
+> >>>> +=09 * for FOLL_GET, not for the newer FOLL_PIN.
+> >>>> +=09 *
+> >>>> +=09 * FOLL_PIN always expects pages to be non-null, but no need to =
+assert
+> >>>> +=09 * that here, as any failures will be obvious enough.
+> >>>> +=09 */
+> >>>> +=09if (pages && !(flags & FOLL_PIN))
+> >>>>  =09=09flags |=3D FOLL_GET;
+> >>>
+> >>> Did you look at user that have pages and not FOLL_GET set ?
+> >>> I believe it would be better to first fix them to end up
+> >>> with FOLL_GET set and then error out if pages is !=3D NULL but
+> >>> nor FOLL_GET or FOLL_PIN is set.
+> >>>
+> >>
+> >> I was perhaps overly cautious, and didn't go there. However, it's prob=
+ably
+> >> doable, given that there was already the following in __get_user_pages=
+():
+> >>
+> >>     VM_BUG_ON(!!pages !=3D !!(gup_flags & FOLL_GET));
+> >>
+> >> ...which will have conditioned people and code to set FOLL_GET togethe=
+r with
+> >> pages. So I agree that the time is right.
+> >>
+> >> In order to make bisecting future failures simpler, I can insert a pat=
+ch right=20
+> >> before this one, that changes the FOLL_GET setting into an assert, lik=
+e this:
+> >>
+> >> diff --git a/mm/gup.c b/mm/gup.c
+> >> index 8f236a335ae9..be338961e80d 100644
+> >> --- a/mm/gup.c
+> >> +++ b/mm/gup.c
+> >> @@ -1014,8 +1014,8 @@ static __always_inline long __get_user_pages_loc=
+ked(struct task_struct *tsk,
+> >>                 BUG_ON(*locked !=3D 1);
+> >>         }
+> >> =20
+> >> -       if (pages)
+> >> -               flags |=3D FOLL_GET;
+> >> +       if (pages && WARN_ON_ONCE(!(gup_flags & FOLL_GET)))
+> >> +               return -EINVAL;
+> >> =20
+> >>         pages_done =3D 0;
+> >>         lock_dropped =3D false;
+> >>
+> >>
+> >> ...and then add in FOLL_PIN, with this patch.
+> >=20
+> > looks good but double check that it should not happens, i will try
+> > to check on my side too.
+>=20
+> Yes, I'll look.
+>=20
+> ...
+> >>>> +=09 */
+> >>>> +=09gup_flags |=3D FOLL_REMOTE | FOLL_PIN;
+> >>>
+> >>> Wouldn't it be better to not add pin_longterm_pages_remote() until
+> >>> it can be properly implemented ?
+> >>>
+> >>
+> >> Well, the problem is that I need each call site that requires FOLL_PIN
+> >> to use a proper wrapper. It's the FOLL_PIN that is the focus here, bec=
+ause
+> >> there is a hard, bright rule, which is: if and only if a caller sets
+> >> FOLL_PIN, then the dma-page tracking happens, and put_user_page() must
+> >> be called.
+> >>
+> >> So this leaves me with only two reasonable choices:
+> >>
+> >> a) Convert the call site as above: pin_longterm_pages_remote(), which =
+sets
+> >> FOLL_PIN (the key point!), and leaves the FOLL_LONGTERM situation exac=
+tly
+> >> as it has been so far. When the FOLL_LONGTERM situation is fixed, the =
+call
+> >> site *might* not need any changes to adopt the working gup.c code.
+> >>
+> >> b) Convert the call site to pin_user_pages_remote(), which also sets
+> >> FOLL_PIN, and also leaves the FOLL_LONGTERM situation exactly as befor=
+e.
+> >> There would also be a comment at the call site, to the effect of, "thi=
+s
+> >> is the wrong call to make: it really requires FOLL_LONGTERM behavior".
+> >>
+> >> When the FOLL_LONGTERM situation is fixed, the call site will need to =
+be
+> >> changed to pin_longterm_pages_remote().
+> >>
+> >> So you can probably see why I picked (a).
+> >=20
+> > But right now nobody has FOLL_LONGTERM and FOLL_REMOTE. So you should
+> > never have the need for pin_longterm_pages_remote(). My fear is that
+> > longterm has implication and it would be better to not drop this implic=
+ation
+> > by adding a wrapper that does not do what the name says.
+> >=20
+> > So do not introduce pin_longterm_pages_remote() until its first user
+> > happens. This is option c)
+> >=20
+>=20
+> Almost forgot, though: there is already another user: Infiniband:
+>=20
+> drivers/infiniband/core/umem_odp.c:646:         npages =3D pin_longterm_p=
+ages_remote(owning_process, owning_mm,
+
+odp do not need that, i thought the HMM convertion was already upstream
+but seems not, in any case odp do not need the longterm case it only
+so best is to revert that user to gup_fast or something until it get
+converted to HMM.
+
+Cheers,
+J=E9r=F4me
+
