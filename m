@@ -2,158 +2,281 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04354CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94AA3CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:05:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCDD9222C1
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:04:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="ZkSFcjBe"
+	by mail.kernel.org (Postfix) with ESMTP id 553D821D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:05:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572865504;
+	bh=FyZuc7dJZfocOqpxPVuDlFz8ZNpPGWXvZcxvB+dXEps=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=j9OvXbsXKpPar4MlsJF4bAzfp13uS7Y8fT/Ems8kuaAo4fOdAHyENdMBW7/jGQpgk
+	 OyFGmsQcDT4SPyfrDe/xtyHqpdacO0z4pMqL/LnSt7Ac+Rx1CdkEhYhX4IAqKKhADk
+	 BMrtAtQ7fsgzwTLAjtVUQnlof+d2xzPOcTZ8r8YU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728860AbfKDLEP (ORCPT
+        id S1728890AbfKDLFD convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:04:15 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:33212 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727663AbfKDLEP (ORCPT
+        Mon, 4 Nov 2019 06:05:03 -0500
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:45085 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728064AbfKDLFC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:04:15 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4Aspen009835;
-        Mon, 4 Nov 2019 11:04:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=oh9GH8wwoClSgQg02TQwxOW2wUym3I4ltRRW2QDdUmI=;
- b=ZkSFcjBepb5Cn8ydb20IE6DxCgFEHeYhfzbFj/jMRNHUcFgYEUF73K+u9IG1Z72TOpom
- gy+jXwfwhuMpJPZMZQe0lKHzHVobAHu9SwQXXqH9URNO/lfE2Es+ANEhZx6MOYUf6aKn
- McjbcHPdnLiBEIixhSGg2MkM9yOfoBsf39C02zisi8bfD/9gwDiNq0YLzqGGYY3KTXQK
- tznzvi1TxfRU+kiNETpRIBbKnijsgFm+PUfn/mcfNC+/U46xnCd4wn4fJEmfvqYS9gQl
- 4CC4u5Klhd5JhKh3W8IjPZ8Z3kzjGSP+n/bEj6+g3aKBgI66G6dvgtwgu+LClLuoDN3w tg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w11rppg8m-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 11:04:01 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4Asstb142626;
-        Mon, 4 Nov 2019 11:04:00 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3020.oracle.com with ESMTP id 2w1kxd2503-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 04 Nov 2019 11:04:00 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4B3xwR006069;
-        Mon, 4 Nov 2019 11:03:59 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 04 Nov 2019 03:03:58 -0800
-Date:   Mon, 4 Nov 2019 14:03:52 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Jerome Pouiller <Jerome.Pouiller@silabs.com>
-Cc:     Christophe JAILLET <christophe.jaillet@wanadoo.fr>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2] staging: wfx: Fix a memory leak in 'wfx_upload_beacon'
-Message-ID: <20191104110352.GD10409@kadam>
-References: <20191102155945.20205-1-christophe.jaillet@wanadoo.fr>
- <4126113.6ZGdBP45BV@pc-42>
+        Mon, 4 Nov 2019 06:05:02 -0500
+Received: by mail-ed1-f67.google.com with SMTP id b5so1938024eds.12;
+        Mon, 04 Nov 2019 03:05:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=82Y+8lvkmODTXZfIxvOLUD6KLkdYBYM4N45xnXT7cGM=;
+        b=cnfZOjLhGxkogFnx6z24sA/R4WPzBkpW7+jaIJDyPmjuGuews94elHo6+LYw4JFPIZ
+         7VWGDHcsaDOSzbC6XQujcpv1v6s4/3v7Sr+VLuzu+3rSFEjX54vDonVo74ZLUgd3HhiH
+         uVWgEg298mSfq8f1WKfPAp/ELtRipQak7ZDzTLn8dNK7tXk7vCOOvZsEp0Xu+IffSDuk
+         Abu0b2m30sUJ0RSRsfZgW5sX/PXhjaWzKHjMDl3kL0BXIPmUmTebNncYSmDuV2XeA4EP
+         AGId447DL3McLGnnjEDKIj4yox92g4SqqHE+hvVTk58W2+W6t7qC7Oh7UtzwzQGqyOdC
+         HbJg==
+X-Gm-Message-State: APjAAAWanRhGS68tsT8wETx0orLtkGeQR3jgAKc/giihz64zfr9EQRVz
+        oAGj6zBX3Z9RUdqorzWflDo=
+X-Google-Smtp-Source: APXvYqzRu3QjLIaQW+1GGHUm1InQweyS031HWvyusQQe0eog2OzqeXH/r8xEukjNzVGEbdWu6V6T9Q==
+X-Received: by 2002:aa7:d40b:: with SMTP id z11mr594423edq.142.1572865499955;
+        Mon, 04 Nov 2019 03:04:59 -0800 (PST)
+Received: from pi3 ([194.230.155.180])
+        by smtp.googlemail.com with ESMTPSA id a102sm869102edf.46.2019.11.04.03.04.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 03:04:59 -0800 (PST)
+Date:   Mon, 4 Nov 2019 12:04:57 +0100
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+Message-ID: <20191104110457.GB30857@pi3>
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
+ <20191031184134.30621-4-matheus@castello.eng.br>
+ <20191101152755.GC28931@pi3>
+ <c18ab487-6242-4ac2-b2c2-ef78c899521a@castello.eng.br>
+ <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <4126113.6ZGdBP45BV@pc-42>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911040109
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911040109
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <4acd4bcf-4488-01f2-cacc-0170c33e20c2@castello.eng.br>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:42:43AM +0000, Jerome Pouiller wrote:
-> On Saturday 2 November 2019 16:59:45 CET Christophe JAILLET wrote:
-> > The current code is a no-op, because all it can do is 'dev_kfree_skb(NULL)'
-> > Remove the test before 'dev_kfree_skb()'
-> > 
-> > Signed-off-by: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-> > ---
-> > V2: remove the 'if(...)', 'dev_kfree_skb()' can handle NULL.
-> > ---
-> >  drivers/staging/wfx/sta.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/staging/wfx/sta.c b/drivers/staging/wfx/sta.c
-> > index 688586e823c0..93f3739b5f3a 100644
-> > --- a/drivers/staging/wfx/sta.c
-> > +++ b/drivers/staging/wfx/sta.c
-> > @@ -906,8 +906,7 @@ static int wfx_upload_beacon(struct wfx_vif *wvif)
-> >         wfx_fwd_probe_req(wvif, false);
-> > 
-> >  done:
-> > -       if (!skb)
-> > -               dev_kfree_skb(skb);
-> > +       dev_kfree_skb(skb);
-> >         return ret;
-> >  }
-> > 
-> > --
-> > 2.20.1
-> > 
+On Sat, Nov 02, 2019 at 03:12:44PM -0300, Matheus Castello wrote:
 > 
-> In add, value of skb is tested earlier in function. So, it is guaranteed to be 
-> never NULL.
+> 
+> Em 11/1/19 1:52 PM, Matheus Castello escreveu:
+> > 
+> > 
+> > Em 11/1/19 12:27 PM, Krzysztof Kozlowski escreveu:
+> > > On Thu, Oct 31, 2019 at 03:41:33PM -0300, Matheus Castello wrote:
+> > > > For configuration of fuel gauge alert for a low level state of charge
+> > > > interrupt we add a function to config level threshold and a device tree
+> > > > binding property to set it in flatned device tree node.
+> > > > 
+> > > > Now we can use "maxim,alert-low-soc-level" property with the values from
+> > > > 1% up to 32% to configure alert interrupt threshold.
+> > > > 
+> > > > Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> > > > ---
+> > > >   drivers/power/supply/max17040_battery.c | 88 +++++++++++++++++++++----
+> > > >   1 file changed, 74 insertions(+), 14 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/power/supply/max17040_battery.c
+> > > > b/drivers/power/supply/max17040_battery.c
+> > > > index 75459f76d02c..802575342c72 100644
+> > > > --- a/drivers/power/supply/max17040_battery.c
+> > > > +++ b/drivers/power/supply/max17040_battery.c
+> > > > @@ -29,6 +29,9 @@
+> > > >   #define MAX17040_DELAY        1000
+> > > >   #define MAX17040_BATTERY_FULL    95
+> > > > 
+> > > > +#define MAX17040_ATHD_MASK        0xFFC0
+> > > > +#define MAX17040_ATHD_DEFAULT_POWER_UP    4
+> > > > +
+> > > >   struct max17040_chip {
+> > > >       struct i2c_client        *client;
+> > > >       struct delayed_work        work;
+> > > > @@ -43,6 +46,8 @@ struct max17040_chip {
+> > > >       int soc;
+> > > >       /* State Of Charge */
+> > > >       int status;
+> > > > +    /* Low alert threshold from 32% to 1% of the State of Charge */
+> > > > +    u32 low_soc_alert_threshold;
+> > > >   };
+> > > > 
+> > > >   static int max17040_get_property(struct power_supply *psy,
+> > > > @@ -99,6 +104,22 @@ static void max17040_reset(struct i2c_client
+> > > > *client)
+> > > >       max17040_write_reg(client, MAX17040_CMD, 0x0054);
+> > > >   }
+> > > > 
+> > > > +static int max17040_set_low_soc_threshold_alert(struct
+> > > > i2c_client *client,
+> > > > +    u32 level)
+> > > > +{
+> > > > +    int ret;
+> > > > +    u16 data;
+> > > > +
+> > > > +    level = 32 - level;
+> > > > +    data = max17040_read_reg(client, MAX17040_RCOMP);
+> > > > +    /* clear the alrt bit and set LSb 5 bits */
+> > > > +    data &= MAX17040_ATHD_MASK;
+> > > > +    data |= level;
+> > > > +    ret = max17040_write_reg(client, MAX17040_RCOMP, data);
+> > > > +
+> > > > +    return ret;
+> > > > +}
+> > > > +
+> > > >   static void max17040_get_vcell(struct i2c_client *client)
+> > > >   {
+> > > >       struct max17040_chip *chip = i2c_get_clientdata(client);
+> > > > @@ -115,7 +136,6 @@ static void max17040_get_soc(struct
+> > > > i2c_client *client)
+> > > >       u16 soc;
+> > > > 
+> > > >       soc = max17040_read_reg(client, MAX17040_SOC);
+> > > > -
+> > > >       chip->soc = (soc >> 8);
+> > > >   }
+> > > > 
+> > > > @@ -161,6 +181,24 @@ static void max17040_get_status(struct
+> > > > i2c_client *client)
+> > > >           chip->status = POWER_SUPPLY_STATUS_FULL;
+> > > >   }
+> > > > 
+> > > > +static int max17040_get_of_data(struct max17040_chip *chip)
+> > > > +{
+> > > > +    struct device *dev = &chip->client->dev;
+> > > > +    struct device_node *np = dev->of_node;
+> > > > +    int ret = 0;
+> > > > +
+> > > > +    if (of_property_read_u32(np, "maxim,alert-low-soc-level",
+> > > > +            &chip->low_soc_alert_threshold)) {
+> > > 
+> > > Please align the line break with line above. checkpatch --strict might
+> > > give you hints about this.
+> > > >> +        chip->low_soc_alert_threshold =
+> > > MAX17040_ATHD_DEFAULT_POWER_UP;
+> > > > +    /* check if low_soc_alert_threshold is between 1% and 32% */
+> > > 
+> > > The comment looks misleading here, like it belongs to previous block.
+> > > Maybe put it inside else if {} block?
+> > > 
+> > > > +    } else if (chip->low_soc_alert_threshold <= 0 ||
+> > > > +            chip->low_soc_alert_threshold >= 33){
+> > > 
+> > > Missing space before {.
+> > > 
+> > > > +        ret = -EINVAL;
+> > > > +    }
+> > > > +
+> > > > +    return ret;
+> > > > +}
+> > > > +
+> > > >   static void max17040_check_changes(struct i2c_client *client)
+> > > >   {
+> > > >       max17040_get_vcell(client);
+> > > > @@ -192,6 +230,10 @@ static irqreturn_t
+> > > > max17040_thread_handler(int id, void *dev)
+> > > >       /* send uevent */
+> > > >       power_supply_changed(chip->battery);
+> > > > 
+> > > > +    /* reset alert bit */
+> > > > +    max17040_set_low_soc_threshold_alert(client,
+> > > > +        chip->low_soc_alert_threshold);
+> > > 
+> > > Unless the continuation exceeds 80 character limit, please align it with
+> > > previous line.
+> > > 
+> > > > +
+> > > >       return IRQ_HANDLED;
+> > > >   }
+> > > > 
+> > > > @@ -216,6 +258,7 @@ static int max17040_probe(struct i2c_client *client,
+> > > >       struct i2c_adapter *adapter = client->adapter;
+> > > >       struct power_supply_config psy_cfg = {};
+> > > >       struct max17040_chip *chip;
+> > > > +    int ret;
+> > > > 
+> > > >       if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+> > > >           return -EIO;
+> > > > @@ -226,6 +269,12 @@ static int max17040_probe(struct i2c_client
+> > > > *client,
+> > > > 
+> > > >       chip->client = client;
+> > > >       chip->pdata = client->dev.platform_data;
+> > > > +    ret = max17040_get_of_data(chip);
+> > > > +    if (ret) {
+> > > > +        dev_err(&client->dev,
+> > > > +            "failed: low SOC alert OF data out of bounds\n");
+> > > > +        return ret;
+> > > > +    }
+> > > > 
+> > > >       i2c_set_clientdata(client, chip);
+> > > >       psy_cfg.drv_data = chip;
+> > > > @@ -242,20 +291,31 @@ static int max17040_probe(struct
+> > > > i2c_client *client,
+> > > > 
+> > > >       /* check interrupt */
+> > > >       if (client->irq) {
+> > > > -        int ret;
+> > > > -        unsigned int flags;
+> > > > -
+> > > > -        dev_info(&client->dev, "IRQ: enabled\n");
+> > > > -        flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+> > > > -        ret = devm_request_threaded_irq(&client->dev,
+> > > > client->irq, NULL,
+> > > > -                        max17040_thread_handler, flags,
+> > > > -                        chip->battery->desc->name,
+> > > > -                        chip);
+> > > > -
+> > > > -        if (ret) {
+> > > > -            client->irq = 0;
+> > > > +        if (of_device_is_compatible(client->dev.of_node,
+> > > > +            "maxim,max77836-battery")) {
+> > > 
+> > > Alignment.
+> > > 
+> > > > +            ret = max17040_set_low_soc_threshold_alert(client,
+> > > > +                chip->low_soc_alert_threshold);
+> > > 
+> > > Ditto.
+> > > 
+> 
+> I am working to fix the alignments issues using the checkpath strict and I
+> have a doubt. Here for example if I fix the check "Alignment should match
+> open parenthesis" it will pass the 80 characters limit and will show me a
+> warning.
 
-See the start of the function:
+Indeed which is a hint that the code readabiltiy is affected by long
+function name + two indentations + long variable name. You can split it
+to different function (covering the IRQ case) which will reduce one
+indentation.
 
-   868  static int wfx_upload_beacon(struct wfx_vif *wvif)
-   869  {
-   870          int ret = 0;
-   871          struct sk_buff *skb = NULL;
-   872          struct ieee80211_mgmt *mgmt;
-   873          struct hif_mib_template_frame *p;
-   874  
-   875          if (wvif->vif->type == NL80211_IFTYPE_STATION ||
-   876              wvif->vif->type == NL80211_IFTYPE_MONITOR ||
-   877              wvif->vif->type == NL80211_IFTYPE_UNSPECIFIED)
-   878                  goto done;
-                        ^^^^^^^^^
-This why I argue that goto done is monkey poop.  You see this and you
-wonder "what on earth does goto done do?"  We haven't allocated anything
-so what are we going to free?  The name doesn't give any hints at all.
-So you have to scroll down.  Now you have lost your place and cleared
-out your short term memory about the code that you were reading.  But
-then you get to goto done and you see it is a complicated no op, and it
-return ret.  So you have to scroll back up to the very start of the
-function to see what ret is.
+Alternatively do not align it but add few more tabs before chip->:
+		ret = max17040_set_low_soc_threshold_alert(client,
+						chip->low_soc_alert_threshold);
+Renaming low_soc_alert_threshold to something shorter can help as well
+(soc_alert seems enough descriptive).
 
-And the you wonder, is this really a success path?  It could be
-deliberate or it could be accidental.  Who knows!  The "goto done;" is
-ambiguous and take a long time to understand but "return 0;" is
-instantly clear.
 
-   879  
-   880          skb = ieee80211_beacon_get(wvif->wdev->hw, wvif->vif);
-   881  
-   882          if (!skb)
-   883                  return -ENOMEM;
-   884  
-   885          p = (struct hif_mib_template_frame *) skb_push(skb, 4);
-
-regards,
-dan carpenter
+Best regards,
+Krzysztof
 
