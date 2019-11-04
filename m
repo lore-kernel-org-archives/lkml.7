@@ -2,151 +2,118 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8765ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 46FCCCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C71221744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Lk22YzHx"
+	by mail.kernel.org (Postfix) with ESMTP id 19F3120650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:01:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572904887;
+	bh=MZuGYQScevivPMbmdAXU2hcwXP6wafbv8lQFbJkSQsc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=EY5CmX3BwSzm3QktCPKIDUWQOn6AfJaYU+LzNJAgQB/a21nOiEA6JnyPyQmX+iFTh
+	 OIhTgrc1rxteCWldFCQ9b61rXUX6NbxaQlLGymXsZwdmjwYGcAkF5Fw78sPtwM9y66
+	 tl95J0/b4ExrktwB32TdvkfspZUJkxSV0oAx5KEg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389037AbfKDWBW (ORCPT
+        id S2389046AbfKDWBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:01:22 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:42651 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388949AbfKDWBF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:05 -0500
-Received: by mail-lj1-f195.google.com with SMTP id n5so8386053ljc.9;
-        Mon, 04 Nov 2019 14:01:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=6TJlQkVC15YK1Mmhxs/rkGDrxgdE3q8G1rLTH1Ltzd0=;
-        b=Lk22YzHxOA6nZMYEhNYYDGLVMMEMhzir8xS5idni7f5IYzZjCZaj9Q+YYENzfL3p8u
-         /2x4vO7g6qfU9AKhXo3a6xsK4ILwpqI8ZNXpQqbhMHDMxOJBkO8QA3FKfY6EkFFKXaUa
-         9jY1Pccw7Lt/+YlxE1jxTXtSkQv8IrFX4g7UJUnBX0iD8NfdRfTWHkMJg30WjyohxBhA
-         5Wvam17LnlDk9ofTk3gN/hh1HBQeBMXksrzqUqF8uaycRGuplTTvh+MQhl41hYjMtXAV
-         mkj1pcUwWHqiS/I72/mpSuZXeAT2lowh/fmrr4PLF9bp1TofO8MPBc9Cj3A7XV7Fnwah
-         Cewg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=6TJlQkVC15YK1Mmhxs/rkGDrxgdE3q8G1rLTH1Ltzd0=;
-        b=HJgRhDN3ORM1ermy/0i78s2G9gHqNREXsqnICV7tK7Ps1Dk1RSmNheF2Y2XbTVzLpU
-         D1JF+UUu97EE/HKvdojshQ1NaUiTrKGcVU8mhD+6s7aN+iGAZE1l0UY+i6RELEl3gliD
-         tCa9gANANnxSZN8mnc6YgVsLYCd0M8UldYVPyW/V6IU4utBxLGfyzlkvLm2eNy2Mti/7
-         cA/PAtbt0lERZKDjiTAIKnargO1b5pVBXzGi6GcQulAKNAMgoutVIIAm9OvbPAnENog/
-         T/hwd6es1PbHSci46Lb7ARW/9J/4KJh3uMVf7UXuvD9c9FuIArumYUBSqaFp8X3UKXpd
-         OzNA==
-X-Gm-Message-State: APjAAAX97n8rdl3ITVLtfCWgKpxMUhDoK9TP0uJw+SjTZNGyM1DT/u/m
-        TotowGEQLjQ+8B1LyY/En9M=
-X-Google-Smtp-Source: APXvYqznNX5QtPgSIWUNQdtXRtK+09ntEdga9YULTtdrABGJbd7AMffoE6v9Xpm/JZ5MjpMFW7hlOA==
-X-Received: by 2002:a05:651c:313:: with SMTP id a19mr20494836ljp.199.1572904862997;
-        Mon, 04 Nov 2019 14:01:02 -0800 (PST)
-Received: from localhost.localdomain (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
-        by smtp.gmail.com with ESMTPSA id g3sm7454669ljj.59.2019.11.04.14.01.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 14:01:02 -0800 (PST)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?q?Micha=C5=82=20Miros=C5=82aw?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v9 04/19] PM / devfreq: tegra30: Drop write-barrier
-Date:   Tue,  5 Nov 2019 00:56:02 +0300
-Message-Id: <20191104215617.25544-5-digetx@gmail.com>
+        Mon, 4 Nov 2019 17:01:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59106 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388956AbfKDWBG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:01:06 -0500
+Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01BE620650;
+        Mon,  4 Nov 2019 22:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572904865;
+        bh=MZuGYQScevivPMbmdAXU2hcwXP6wafbv8lQFbJkSQsc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=CGgUF9w5naSiIwQ78iLEw4mbVIs+HSujFiD6w9Qls3JcT06NGHJBLdcZ3cfqBKBtB
+         /YRnsjfSVZxD5FbCP/Ke6vdqsChf/gyIxMSZ/ZyEAgfRfLfcGEVP4SioEPgDzbczR2
+         PZNNw8I9oa/qj0Z9MGvDzR/7y15ALy7vU5RH1uYM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Chuck Lever <chuck.lever@oracle.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
+        Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 099/149] NFSv4: Fix leak of clp->cl_acceptor string
+Date:   Mon,  4 Nov 2019 22:44:52 +0100
+Message-Id: <20191104212143.449300680@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104215617.25544-1-digetx@gmail.com>
-References: <20191104215617.25544-1-digetx@gmail.com>
+In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
+References: <20191104212126.090054740@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need in a write-barrier now, given that interrupt masking is
-handled by CPU's GIC now. Hence we know exactly that interrupt won't fire
-after stopping the devfreq's governor. In other cases we don't care about
-potential buffering of the writes to hardware and thus there is no need to
-stall CPU.
+From: Chuck Lever <chuck.lever@oracle.com>
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Tested-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+[ Upstream commit 1047ec868332034d1fbcb2fae19fe6d4cb869ff2 ]
+
+Our client can issue multiple SETCLIENTID operations to the same
+server in some circumstances. Ensure that calls to
+nfs4_proc_setclientid() after the first one do not overwrite the
+previously allocated cl_acceptor string.
+
+unreferenced object 0xffff888461031800 (size 32):
+  comm "mount.nfs", pid 2227, jiffies 4294822467 (age 1407.749s)
+  hex dump (first 32 bytes):
+    6e 66 73 40 6b 6c 69 6d 74 2e 69 62 2e 31 30 31  nfs@klimt.ib.101
+    35 67 72 61 6e 67 65 72 2e 6e 65 74 00 00 00 00  5granger.net....
+  backtrace:
+    [<00000000ab820188>] __kmalloc+0x128/0x176
+    [<00000000eeaf4ec8>] gss_stringify_acceptor+0xbd/0x1a7 [auth_rpcgss]
+    [<00000000e85e3382>] nfs4_proc_setclientid+0x34e/0x46c [nfsv4]
+    [<000000003d9cf1fa>] nfs40_discover_server_trunking+0x7a/0xed [nfsv4]
+    [<00000000b81c3787>] nfs4_discover_server_trunking+0x81/0x244 [nfsv4]
+    [<000000000801b55f>] nfs4_init_client+0x1b0/0x238 [nfsv4]
+    [<00000000977daf7f>] nfs4_set_client+0xfe/0x14d [nfsv4]
+    [<0000000053a68a2a>] nfs4_create_server+0x107/0x1db [nfsv4]
+    [<0000000088262019>] nfs4_remote_mount+0x2c/0x59 [nfsv4]
+    [<00000000e84a2fd0>] legacy_get_tree+0x2d/0x4c
+    [<00000000797e947c>] vfs_get_tree+0x20/0xc7
+    [<00000000ecabaaa8>] fc_mount+0xe/0x36
+    [<00000000f15fafc2>] vfs_kern_mount+0x74/0x8d
+    [<00000000a3ff4e26>] nfs_do_root_mount+0x8a/0xa3 [nfsv4]
+    [<00000000d1c2b337>] nfs4_try_mount+0x58/0xad [nfsv4]
+    [<000000004c9bddee>] nfs_fs_mount+0x820/0x869 [nfs]
+
+Fixes: f11b2a1cfbf5 ("nfs4: copy acceptor name from context ... ")
+Signed-off-by: Chuck Lever <chuck.lever@oracle.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/devfreq/tegra30-devfreq.c | 14 --------------
- 1 file changed, 14 deletions(-)
+ fs/nfs/nfs4proc.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/devfreq/tegra30-devfreq.c b/drivers/devfreq/tegra30-devfreq.c
-index 66dfa98d8c6b..b50bd1615010 100644
---- a/drivers/devfreq/tegra30-devfreq.c
-+++ b/drivers/devfreq/tegra30-devfreq.c
-@@ -230,12 +230,6 @@ static void tegra_devfreq_update_wmark(struct tegra_devfreq *tegra,
- 		      ACTMON_DEV_LOWER_WMARK);
- }
- 
--static void actmon_write_barrier(struct tegra_devfreq *tegra)
--{
--	/* ensure the update has reached the ACTMON */
--	readl(tegra->regs + ACTMON_GLB_STATUS);
--}
--
- static void actmon_isr_device(struct tegra_devfreq *tegra,
- 			      struct tegra_devfreq_device *dev)
- {
-@@ -287,8 +281,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
- 	device_writel(dev, dev_ctrl, ACTMON_DEV_CTRL);
- 
- 	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
--
--	actmon_write_barrier(tegra);
- }
- 
- static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
-@@ -376,8 +368,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
- 		tegra_devfreq_update_wmark(tegra, dev);
+diff --git a/fs/nfs/nfs4proc.c b/fs/nfs/nfs4proc.c
+index 621e3cf90f4eb..75faef7af22d3 100644
+--- a/fs/nfs/nfs4proc.c
++++ b/fs/nfs/nfs4proc.c
+@@ -5943,6 +5943,7 @@ int nfs4_proc_setclientid(struct nfs_client *clp, u32 program,
  	}
- 
--	actmon_write_barrier(tegra);
--
- 	return NOTIFY_OK;
- }
- 
-@@ -423,8 +413,6 @@ static void tegra_actmon_start(struct tegra_devfreq *tegra)
- 	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++)
- 		tegra_actmon_configure_device(tegra, &tegra->devices[i]);
- 
--	actmon_write_barrier(tegra);
--
- 	enable_irq(tegra->irq);
- }
- 
-@@ -439,8 +427,6 @@ static void tegra_actmon_stop(struct tegra_devfreq *tegra)
- 		device_writel(&tegra->devices[i], ACTMON_INTR_STATUS_CLEAR,
- 			      ACTMON_DEV_INTR_STATUS);
+ 	status = task->tk_status;
+ 	if (setclientid.sc_cred) {
++		kfree(clp->cl_acceptor);
+ 		clp->cl_acceptor = rpcauth_stringify_acceptor(setclientid.sc_cred);
+ 		put_rpccred(setclientid.sc_cred);
  	}
--
--	actmon_write_barrier(tegra);
- }
- 
- static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
 -- 
-2.23.0
+2.20.1
+
+
 
