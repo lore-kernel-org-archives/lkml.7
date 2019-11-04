@@ -2,400 +2,164 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAA9CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE17C47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:57:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2913622459
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572850669;
-	bh=E0BDuoRZQeTjF4nz9E/q7biOG/ySIjksDw4YyyLV0BQ=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Nvz8IPsPpRBUWfOOW37kkzRU2kxM20J3qYkFLNhvYYSvTNyie1d5NWoURjUoQ7oT9
-	 fVK0YP3K/bbSC0IDWUg8oWy8czTfvOnOwoZJ9EolAagGUOGROYJzrL2jiEsZt8p5YM
-	 U7qvoCGfaNW5A2/2dxdW+3sA9KMmAxgc23skJ2Lg=
+	by mail.kernel.org (Postfix) with ESMTP id 60C882245A
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:57:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LNARHNUH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728531AbfKDG5s (ORCPT
+        id S1728548AbfKDG54 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:57:48 -0500
-Received: from mail.kernel.org ([198.145.29.99]:33474 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728372AbfKDG5r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:57:47 -0500
-Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C2054222CD;
-        Mon,  4 Nov 2019 06:57:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572850666;
-        bh=E0BDuoRZQeTjF4nz9E/q7biOG/ySIjksDw4YyyLV0BQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=zJC/qnubU4zXDqJZJdUm26ZcIg02c89bLtAP+kAVu6r/n9zv9sBjMSjaZjHf+Tjdh
-         jusJBEbB21Oxoub4rWy+1qoVjzpSDfGu6aabctmFZ/vkBuG5WfSUL+M2S16yVfchAb
-         PlNQyOv/YnyYgn7t7vL1GPDbVbC63X8WGeX874zU=
-From:   Mike Rapoport <rppt@kernel.org>
-To:     linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        Greentime Hu <green.hu@gmail.com>,
-        Greg Ungerer <gerg@linux-m68k.org>,
-        Helge Deller <deller@gmx.de>,
-        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Mark Salter <msalter@redhat.com>,
-        Matt Turner <mattst88@gmail.com>,
-        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
-        Richard Weinberger <richard@nod.at>,
-        Rolf Eike Beer <eike-kernel@sf-tec.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Sam Creasey <sammy@sammy.net>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
-        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
-        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
-        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
-        Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v3 07/13] nds32: use pgtable-nopmd instead of 4level-fixup
-Date:   Mon,  4 Nov 2019 08:56:21 +0200
-Message-Id: <1572850587-20314-8-git-send-email-rppt@kernel.org>
+        Mon, 4 Nov 2019 01:57:56 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46472 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726018AbfKDG54 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:57:56 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 193so10221199pfc.13;
+        Sun, 03 Nov 2019 22:57:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=5e303ed1MF4p7zVkraxYDUxrGD23hQsLGv9jCmd4szc=;
+        b=LNARHNUHLOP+RJTqasVXtMjn6XIvB9yyy445v5o5VpGuhGCOIxrcDD9oHRF4vQbWD5
+         OS6d0rgPERnaAK30Pd4WTdTu3J7qWtxHfFeosfzLSOyJP8FhWl9U7oI8HqTzvt0x6Bax
+         oJXeNi6gzv7uhY5k68AYKsjNmky3jiBmhk3FcffSHIoRLi9TWkOE3gGD7NDqupA3/3fe
+         WU/QCdn4qB5oFC3uu5UMXojl08lWKuVxVXP+6X/xjO/GzVWt4v1DTf6zVqDvTRcSYAWf
+         Hy3QOC609QswdAlhQ9w2LkEHv0Lca9q8qzeU+VOzgEplB/ZekO8h/OqWgka2kqculkMB
+         YzVw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=5e303ed1MF4p7zVkraxYDUxrGD23hQsLGv9jCmd4szc=;
+        b=gk2R7NEpgFDAVUp0Bu9lTCDjf604N4fdlanfJY0yhmZ12u4ia975b175MS3QVobyns
+         Ikz3mBLVTMfTri4vyicZqZBo702UxKCVSnUCOd63zH0yGjRhm/HejIYCN8JxxjCNhCkw
+         pz5BtjU9i6VRa0wnJArAECE1HXlei4NndqVJMkqShhugawVPb6AzbbF6sXVS37mKmzbs
+         +FskVl18+EiiTLKDYuTwgYhheoG3fmZ2+397lFRhBoEnTkG93LIVilGHzY4tb4IyI/fs
+         YPh8eFZN/ixstBhchYMxlDCE64zmy6T9b8CVOTA9/2584ALgUHDd7/me+ectArmBN5mE
+         2o+w==
+X-Gm-Message-State: APjAAAV68YDqZFBsn8zaUO4xb/ZNv6AruF3lUcgm1CQ3KjGuIfRuMkyl
+        bGu8vbQQH/tCXwrUydZHv4a5+/b0
+X-Google-Smtp-Source: APXvYqxKyigsdF6rPBjZQuLRna36jaAVhqAT5919gQ7ng0TPscOhYbvhrnxCplXPxVgsS6CkiJckow==
+X-Received: by 2002:a62:18d8:: with SMTP id 207mr19844761pfy.15.1572850675242;
+        Sun, 03 Nov 2019 22:57:55 -0800 (PST)
+Received: from hyd1358.marvell.com ([115.113.156.2])
+        by smtp.googlemail.com with ESMTPSA id x9sm19154497pje.27.2019.11.03.22.57.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Sun, 03 Nov 2019 22:57:54 -0800 (PST)
+From:   sundeep.lkml@gmail.com
+To:     helgaas@kernel.org, bhelgaas@google.com, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     stable@vger.kernel.org, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: [v2 PATCH] PCI: Do not use bus number zero from EA capability
+Date:   Mon,  4 Nov 2019 12:27:44 +0530
+Message-Id: <1572850664-9861-1-git-send-email-sundeep.lkml@gmail.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572850587-20314-1-git-send-email-rppt@kernel.org>
-References: <1572850587-20314-1-git-send-email-rppt@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Rapoport <rppt@linux.ibm.com>
+From: Subbaraya Sundeep <sbhatta@marvell.com>
 
-nds32 has only two-level page tables and can use pgtable-nopmd and folding
-of the upper layers.
+As per the spec, "Enhanced Allocation (EA) for Memory
+and I/O Resources" ECN, approved 23 October 2014,
+sec 6.9.1.2, fixed bus numbers of a bridge must be zero
+when no function that uses EA is located behind it.
+Hence assign bus numbers normally instead of assigning
+zeroes from EA capability. Failing to do this and using
+zeroes from EA would make the bridges non-functional.
 
-Replace usage of include/asm-generic/4level-fixup.h and explicit definition
-of __PAGETABLE_PMD_FOLDED in nds32 with include/asm-generic/pgtable-nopmd.h
-and adjust page table manipulation macros and functions accordingly.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Fixes: '2dbce5901179 ("PCI: Assign bus numbers present in
+EA capability for bridges")'
+Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+Cc: stable@vger.kernel.org	# v5.2+
 ---
- arch/nds32/include/asm/page.h    |  3 ---
- arch/nds32/include/asm/pgalloc.h |  3 ---
- arch/nds32/include/asm/pgtable.h | 12 +-----------
- arch/nds32/include/asm/tlb.h     |  1 -
- arch/nds32/kernel/pm.c           |  4 +++-
- arch/nds32/mm/fault.c            | 16 +++++++++++++---
- arch/nds32/mm/init.c             | 11 ++++++++---
- arch/nds32/mm/mm-nds32.c         |  6 +++++-
- arch/nds32/mm/proc.c             | 26 +++++++++++++++++---------
- 9 files changed, 47 insertions(+), 35 deletions(-)
+ drivers/pci/probe.c | 25 +++++++++++++------------
+ 1 file changed, 13 insertions(+), 12 deletions(-)
 
-diff --git a/arch/nds32/include/asm/page.h b/arch/nds32/include/asm/page.h
-index 8feb1fa..86b3201 100644
---- a/arch/nds32/include/asm/page.h
-+++ b/arch/nds32/include/asm/page.h
-@@ -41,17 +41,14 @@ void clear_page(void *page);
- void copy_page(void *to, void *from);
- 
- typedef unsigned long pte_t;
--typedef unsigned long pmd_t;
- typedef unsigned long pgd_t;
- typedef unsigned long pgprot_t;
- 
- #define pte_val(x)      (x)
--#define pmd_val(x)      (x)
- #define pgd_val(x)	(x)
- #define pgprot_val(x)   (x)
- 
- #define __pte(x)        (x)
--#define __pmd(x)        (x)
- #define __pgd(x)        (x)
- #define __pgprot(x)     (x)
- 
-diff --git a/arch/nds32/include/asm/pgalloc.h b/arch/nds32/include/asm/pgalloc.h
-index 37125e6..85c1173 100644
---- a/arch/nds32/include/asm/pgalloc.h
-+++ b/arch/nds32/include/asm/pgalloc.h
-@@ -15,9 +15,6 @@
- /*
-  * Since we have only two-level page tables, these are trivial
+diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
+index 3d5271a..116b276 100644
+--- a/drivers/pci/probe.c
++++ b/drivers/pci/probe.c
+@@ -1090,27 +1090,28 @@ static unsigned int pci_scan_child_bus_extend(struct pci_bus *bus,
+  * @sub: updated with subordinate bus number from EA
+  *
+  * If @dev is a bridge with EA capability, update @sec and @sub with
+- * fixed bus numbers from the capability and return true.  Otherwise,
+- * return false.
++ * fixed bus numbers from the capability. Otherwise @sec and @sub
++ * will be zeroed.
   */
--#define pmd_alloc_one(mm, addr)		({ BUG(); ((pmd_t *)2); })
--#define pmd_free(mm, pmd)			do { } while (0)
--#define pgd_populate(mm, pmd, pte)	BUG()
- #define pmd_pgtable(pmd) pmd_page(pmd)
- 
- extern pgd_t *pgd_alloc(struct mm_struct *mm);
-diff --git a/arch/nds32/include/asm/pgtable.h b/arch/nds32/include/asm/pgtable.h
-index 0588ec9..a80b9c6 100644
---- a/arch/nds32/include/asm/pgtable.h
-+++ b/arch/nds32/include/asm/pgtable.h
-@@ -4,8 +4,7 @@
- #ifndef _ASMNDS32_PGTABLE_H
- #define _ASMNDS32_PGTABLE_H
- 
--#define __PAGETABLE_PMD_FOLDED 1
--#include <asm-generic/4level-fixup.h>
-+#include <asm-generic/pgtable-nopmd.h>
- #include <linux/sizes.h>
- 
- #include <asm/memory.h>
-@@ -19,26 +18,20 @@
- #ifdef CONFIG_ANDES_PAGE_SIZE_4KB
- #define PGDIR_SHIFT      22
- #define PTRS_PER_PGD     1024
--#define PMD_SHIFT        22
--#define PTRS_PER_PMD     1
- #define PTRS_PER_PTE     1024
- #endif
- 
- #ifdef CONFIG_ANDES_PAGE_SIZE_8KB
- #define PGDIR_SHIFT      24
- #define PTRS_PER_PGD     256
--#define PMD_SHIFT        24
--#define PTRS_PER_PMD     1
- #define PTRS_PER_PTE     2048
- #endif
- 
- #ifndef __ASSEMBLY__
- extern void __pte_error(const char *file, int line, unsigned long val);
--extern void __pmd_error(const char *file, int line, unsigned long val);
- extern void __pgd_error(const char *file, int line, unsigned long val);
- 
- #define pte_ERROR(pte)		__pte_error(__FILE__, __LINE__, pte_val(pte))
--#define pmd_ERROR(pmd)		__pmd_error(__FILE__, __LINE__, pmd_val(pmd))
- #define pgd_ERROR(pgd)		__pgd_error(__FILE__, __LINE__, pgd_val(pgd))
- #endif /* !__ASSEMBLY__ */
- 
-@@ -366,9 +359,6 @@ static inline pmd_t __mk_pmd(pte_t * ptep, unsigned long prot)
- /* to find an entry in a kernel page-table-directory */
- #define pgd_offset_k(addr)      pgd_offset(&init_mm, addr)
- 
--/* Find an entry in the second-level page table.. */
--#define pmd_offset(dir, addr)	((pmd_t *)(dir))
--
- static inline pte_t pte_modify(pte_t pte, pgprot_t newprot)
+-static bool pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
++static void pci_ea_fixed_busnrs(struct pci_dev *dev, u8 *sec, u8 *sub)
  {
- 	const unsigned long mask = 0xfff;
-diff --git a/arch/nds32/include/asm/tlb.h b/arch/nds32/include/asm/tlb.h
-index a8aff1c..6726038 100644
---- a/arch/nds32/include/asm/tlb.h
-+++ b/arch/nds32/include/asm/tlb.h
-@@ -7,6 +7,5 @@
- #include <asm-generic/tlb.h>
+ 	int ea, offset;
+ 	u32 dw;
  
- #define __pte_free_tlb(tlb, pte, addr)	pte_free((tlb)->mm, pte)
--#define __pmd_free_tlb(tlb, pmd, addr)	pmd_free((tln)->mm, pmd)
- 
- #endif
-diff --git a/arch/nds32/kernel/pm.c b/arch/nds32/kernel/pm.c
-index ffa8040..e25700e 100644
---- a/arch/nds32/kernel/pm.c
-+++ b/arch/nds32/kernel/pm.c
-@@ -14,6 +14,7 @@ unsigned int *phy_addr_sp_tmp;
- static void nds32_suspend2ram(void)
- {
- 	pgd_t *pgdv;
-+	p4d_t *p4dv;
- 	pud_t *pudv;
- 	pmd_t *pmdv;
- 	pte_t *ptev;
-@@ -21,7 +22,8 @@ static void nds32_suspend2ram(void)
- 	pgdv = (pgd_t *)__va((__nds32__mfsr(NDS32_SR_L1_PPTB) &
- 		L1_PPTB_mskBASE)) + pgd_index((unsigned int)cpu_resume);
- 
--	pudv = pud_offset(pgdv, (unsigned int)cpu_resume);
-+	p4dv = p4d_offset(pgdv, (unsigned int)cpu_resume);
-+	pudv = pud_offset(p4dv, (unsigned int)cpu_resume);
- 	pmdv = pmd_offset(pudv, (unsigned int)cpu_resume);
- 	ptev = pte_offset_map(pmdv, (unsigned int)cpu_resume);
- 
-diff --git a/arch/nds32/mm/fault.c b/arch/nds32/mm/fault.c
-index 064ae5d..906dfb2 100644
---- a/arch/nds32/mm/fault.c
-+++ b/arch/nds32/mm/fault.c
-@@ -31,6 +31,8 @@ void show_pte(struct mm_struct *mm, unsigned long addr)
- 	pr_alert("[%08lx] *pgd=%08lx", addr, pgd_val(*pgd));
- 
- 	do {
-+		p4d_t *p4d;
-+		pud_t *pud;
- 		pmd_t *pmd;
- 
- 		if (pgd_none(*pgd))
-@@ -41,7 +43,9 @@ void show_pte(struct mm_struct *mm, unsigned long addr)
- 			break;
- 		}
- 
--		pmd = pmd_offset(pgd, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		pud = pud_offset(p4d, addr);
-+		pmd = pmd_offset(pud, addr);
- #if PTRS_PER_PMD != 1
- 		pr_alert(", *pmd=%08lx", pmd_val(*pmd));
- #endif
-@@ -359,6 +363,7 @@ void do_page_fault(unsigned long entry, unsigned long addr,
- 
- 		unsigned int index = pgd_index(addr);
- 		pgd_t *pgd, *pgd_k;
-+		p4d_t *p4d, *p4d_k;
- 		pud_t *pud, *pud_k;
- 		pmd_t *pmd, *pmd_k;
- 		pte_t *pte_k;
-@@ -369,8 +374,13 @@ void do_page_fault(unsigned long entry, unsigned long addr,
- 		if (!pgd_present(*pgd_k))
- 			goto no_context;
- 
--		pud = pud_offset(pgd, addr);
--		pud_k = pud_offset(pgd_k, addr);
-+		p4d = p4d_offset(pgd, addr);
-+		p4d_k = p4d_offset(pgd_k, addr);
-+		if (!p4d_present(*p4d_k))
-+			goto no_context;
++	*sec = *sub = 0;
 +
-+		pud = pud_offset(p4d, addr);
-+		pud_k = pud_offset(p4d_k, addr);
- 		if (!pud_present(*pud_k))
- 			goto no_context;
+ 	if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE)
+-		return false;
++		return;
  
-diff --git a/arch/nds32/mm/init.c b/arch/nds32/mm/init.c
-index 55703b0..0be3833f 100644
---- a/arch/nds32/mm/init.c
-+++ b/arch/nds32/mm/init.c
-@@ -54,6 +54,7 @@ static void __init map_ram(void)
- {
- 	unsigned long v, p, e;
- 	pgd_t *pge;
-+	p4d_t *p4e;
- 	pud_t *pue;
- 	pmd_t *pme;
- 	pte_t *pte;
-@@ -69,7 +70,8 @@ static void __init map_ram(void)
+ 	/* find PCI EA capability in list */
+ 	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+ 	if (!ea)
+-		return false;
++		return;
  
- 	while (p < e) {
- 		int j;
--		pue = pud_offset(pge, v);
-+		p4e = p4d_offset(pge, v);
-+		pue = pud_offset(p4e, v);
- 		pme = pmd_offset(pue, v);
- 
- 		if ((u32) pue != (u32) pge || (u32) pme != (u32) pge) {
-@@ -100,6 +102,7 @@ static void __init fixedrange_init(void)
- {
- 	unsigned long vaddr;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- #ifdef CONFIG_HIGHMEM
-@@ -111,7 +114,8 @@ static void __init fixedrange_init(void)
- 	 */
- 	vaddr = __fix_to_virt(__end_of_fixed_addresses - 1);
- 	pgd = swapper_pg_dir + pgd_index(vaddr);
--	pud = pud_offset(pgd, vaddr);
-+	p4d = p4d_offset(pgd, vaddr);
-+	pud = pud_offset(p4d, vaddr);
- 	pmd = pmd_offset(pud, vaddr);
- 	fixmap_pmd_p = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 	if (!fixmap_pmd_p)
-@@ -126,7 +130,8 @@ static void __init fixedrange_init(void)
- 	vaddr = PKMAP_BASE;
- 
- 	pgd = swapper_pg_dir + pgd_index(vaddr);
--	pud = pud_offset(pgd, vaddr);
-+	p4d = p4d_offset(pgd, vaddr);
-+	pud = pud_offset(p4d, vaddr);
- 	pmd = pmd_offset(pud, vaddr);
- 	pte = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 	if (!pte)
-diff --git a/arch/nds32/mm/mm-nds32.c b/arch/nds32/mm/mm-nds32.c
-index 3b43798..8503bee 100644
---- a/arch/nds32/mm/mm-nds32.c
-+++ b/arch/nds32/mm/mm-nds32.c
-@@ -74,6 +74,8 @@ void setup_mm_for_reboot(char mode)
- {
- 	unsigned long pmdval;
- 	pgd_t *pgd;
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	int i;
- 
-@@ -84,7 +86,9 @@ void setup_mm_for_reboot(char mode)
- 
- 	for (i = 0; i < USER_PTRS_PER_PGD; i++) {
- 		pmdval = (i << PGDIR_SHIFT);
--		pmd = pmd_offset(pgd + i, i << PGDIR_SHIFT);
-+		p4d = p4d_offset(pgd, i << PGDIR_SHIFT);
-+		pud = pud_offset(p4d, i << PGDIR_SHIFT);
-+		pmd = pmd_offset(pud + i, i << PGDIR_SHIFT);
- 		set_pmd(pmd, __pmd(pmdval));
- 	}
+ 	offset = ea + PCI_EA_FIRST_ENT;
+ 	pci_read_config_dword(dev, offset, &dw);
+ 	*sec =  dw & PCI_EA_SEC_BUS_MASK;
+ 	*sub = (dw & PCI_EA_SUB_BUS_MASK) >> PCI_EA_SUB_BUS_SHIFT;
+-	return true;
  }
-diff --git a/arch/nds32/mm/proc.c b/arch/nds32/mm/proc.c
-index ba80992..837ae77 100644
---- a/arch/nds32/mm/proc.c
-+++ b/arch/nds32/mm/proc.c
-@@ -16,10 +16,14 @@ extern struct cache_info L1_cache_info[2];
  
- int va_kernel_present(unsigned long addr)
- {
-+	p4d_t *p4d;
-+	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *ptep, pte;
+ /*
+@@ -1146,7 +1147,6 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 	u16 bctl;
+ 	u8 primary, secondary, subordinate;
+ 	int broken = 0;
+-	bool fixed_buses;
+ 	u8 fixed_sec, fixed_sub;
+ 	int next_busnr;
  
--	pmd = pmd_offset(pgd_offset_k(addr), addr);
-+	p4d = p4d_offset(pgd_offset_k(addr), addr);
-+	pud = pud_offset(p4d, addr);
-+	pmd = pmd_offset(pud, addr);
- 	if (!pmd_none(*pmd)) {
- 		ptep = pte_offset_map(pmd, addr);
- 		pte = *ptep;
-@@ -32,20 +36,24 @@ int va_kernel_present(unsigned long addr)
- pte_t va_present(struct mm_struct * mm, unsigned long addr)
- {
- 	pgd_t *pgd;
-+	p4d_t *p4d;
- 	pud_t *pud;
- 	pmd_t *pmd;
- 	pte_t *ptep, pte;
+@@ -1249,11 +1249,12 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		pci_write_config_word(dev, PCI_STATUS, 0xffff);
  
- 	pgd = pgd_offset(mm, addr);
- 	if (!pgd_none(*pgd)) {
--		pud = pud_offset(pgd, addr);
--		if (!pud_none(*pud)) {
--			pmd = pmd_offset(pud, addr);
--			if (!pmd_none(*pmd)) {
--				ptep = pte_offset_map(pmd, addr);
--				pte = *ptep;
--				if (pte_present(pte))
--					return pte;
-+		p4d = p4d_offset(pgd, addr);
-+		if (!p4d_none(*p4d)) {
-+			pud = pud_offset(p4d, addr);
-+			if (!pud_none(*pud)) {
-+				pmd = pmd_offset(pud, addr);
-+				if (!pmd_none(*pmd)) {
-+					ptep = pte_offset_map(pmd, addr);
-+					pte = *ptep;
-+					if (pte_present(pte))
-+						return pte;
-+				}
- 			}
- 		}
- 	}
+ 		/* Read bus numbers from EA Capability (if present) */
+-		fixed_buses = pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
+-		if (fixed_buses)
++		pci_ea_fixed_busnrs(dev, &fixed_sec, &fixed_sub);
++
++		next_busnr = max + 1;
++		/* Use secondary bus number in EA */
++		if (fixed_sec)
+ 			next_busnr = fixed_sec;
+-		else
+-			next_busnr = max + 1;
+ 
+ 		/*
+ 		 * Prevent assigning a bus number that already exists.
+@@ -1331,7 +1332,7 @@ static int pci_scan_bridge_extend(struct pci_bus *bus, struct pci_dev *dev,
+ 		 * If fixed subordinate bus number exists from EA
+ 		 * capability then use it.
+ 		 */
+-		if (fixed_buses)
++		if (fixed_sub)
+ 			max = fixed_sub;
+ 		pci_bus_update_busn_res_end(child, max);
+ 		pci_write_config_byte(dev, PCI_SUBORDINATE_BUS, max);
 -- 
 2.7.4
 
