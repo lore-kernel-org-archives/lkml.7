@@ -2,90 +2,130 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9058BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C06CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:45:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6478B222CA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:44:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="QT+iriO4"
+	by mail.kernel.org (Postfix) with ESMTP id 0BBA620679
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 08:45:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572857135;
+	bh=RFjomeMkgFmPXh6rCxPSKfHkWPoWdvOHzmbL2ZHWboE=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=xuOXTP08xTMzcuRh0gGeGobXllb+F7jDgkLETRyRrkxzEfJwQ46k+17NnFpjeGlmd
+	 EH3x6xML8q7mNGlYguqkAvZ1tae0yZKpbwEpAVXbonfzFhv37s286naqAC/HFrdMgN
+	 ZVtQPpyILcDXRyrLZsmKDvD8VKIHnwB14W5IY+08=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727907AbfKDIoO (ORCPT
+        id S1727965AbfKDIpe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 03:44:14 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:56746 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727553AbfKDIoN (ORCPT
+        Mon, 4 Nov 2019 03:45:34 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:47098 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727444AbfKDIpd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 03:44:13 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=lnIuRdr4CYsrlQgJxc+GH9Enm/uWxg114yr6D6OF8ic=; b=QT+iriO4E/1wFUY4RwRYBB4Tw
-        OdaMGxiHmM2NCSCiewk4iESvBle369Lj7ru7q69JoMWgR32C8a3bmeHxx49KVYKFKzqOeF3G0b4N/
-        G+OYnywEroYsP69gMOd/n0+iVc0X57r0P9NGjFomM6WUgjYxzbX3jly/93JjmvyEGsM56NYLQQaHx
-        0bCrCZCbDXVH41Rhn12ISQEwYsCjI9K+hAyXjkGmgkvPtIPh9imMdfkXUYSDthrwoIpAXsVeK0ZKK
-        uV5nZpdRPE6/bDcDlGDIDYc5y2AYC6KPcZ6YQpHKz25rDLk2pOJv6V1hIiMfY2tOGPCkMwNyGgFiW
-        mIBNQiQhQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRXy3-0000nv-16; Mon, 04 Nov 2019 08:44:07 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id B0C0C305EF2;
-        Mon,  4 Nov 2019 09:43:01 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D9AEC23CEFEAF; Mon,  4 Nov 2019 09:44:04 +0100 (CET)
-Date:   Mon, 4 Nov 2019 09:44:04 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     "Huang, Ying" <ying.huang@intel.com>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>, Rik van Riel <riel@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Ingo Molnar <mingo@kernel.org>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Fengguang Wu <fengguang.wu@intel.com>
-Subject: Re: [RFC 08/10] autonuma, memory tiering: Select hotter pages to
- promote to fast memory node
-Message-ID: <20191104084404.GA4131@hirez.programming.kicks-ass.net>
-References: <20191101075727.26683-1-ying.huang@intel.com>
- <20191101075727.26683-9-ying.huang@intel.com>
- <20191101092404.GS4131@hirez.programming.kicks-ass.net>
- <87k18gcqih.fsf@yhuang-dev.intel.com>
+        Mon, 4 Nov 2019 03:45:33 -0500
+Received: by mail-pf1-f193.google.com with SMTP id 193so10399733pfc.13;
+        Mon, 04 Nov 2019 00:45:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=AVaAlCmATHFlK0dvHAUG3sEgiLEXR+TZQcbKSHfoP5E=;
+        b=pk7TC0AuOrnyj0hssYvxFezLODw9dYB7tlcSqN78c+2bGPNGjIm4a1xAZOvqz8ydCI
+         A4oH+d8e9TMEgiNbl8fjHysdrbKu7WCM+KnvVUoagwf+kR/S31oOQMstUfY38oYzLAr2
+         hab8x5YKREAW5cdrJiXjekOxZaDP6K45crQiGUeDvcPtVErX2KxxHTvNry3Cu6dB684n
+         3yayEw5+Mhn7JpXl36K6T30x2GckJLTGmlxvD5ocRrIKGU1SIGNc6mGdO9RnHgDg9TgD
+         OIOW4Q14mhR8lboh+AM4PGS4j3AvAJ92ETsfIVWLILR6dSYtxQICKviCW6ekwpOJ4vvT
+         oteg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=AVaAlCmATHFlK0dvHAUG3sEgiLEXR+TZQcbKSHfoP5E=;
+        b=hImJg8HD7fKbx/AVl0TEx9DeQ2lf4D9dxMx/xL3CGCFq39YaTDasDtimSoWlzuXkMJ
+         YxT+iK7zboWujOLdnpqx4KqEX7P5A0VgUuHxgzhTrloW2yTvUw4TBBw39NlFWPYE7Kza
+         oc6iGTMnE7f4hF8f5HIwcflPmI4s4sHzX636hk8rIjzZeeeMFgCqUVhRtFzvfBlrix1S
+         0X+K5QqyzJ0UJXwxsW87d3miPurS9lakg+jRK05341sBgyQj/6P1b9o4gx1Il5KVFpsJ
+         wJ8m6y3eIcbpfu9rmod++8QegxfJsKscwYt4VLg8bkd4FFxUlX5WNr3kPtGItUSZYT2B
+         kBOQ==
+X-Gm-Message-State: APjAAAVxL2Vc17JwB6g9SS9GTVFByXGsCizlNaXiBWme3hmbzMSAsY8d
+        dNoKRDjp1mzUMypnG6zTM7g=
+X-Google-Smtp-Source: APXvYqxklXsn3Jaaifte/7luVaajnzSm/9Xli33KVu++DNBncPNxL+zmJ+alBTYZtCRrtU446qSgPw==
+X-Received: by 2002:a17:90a:178e:: with SMTP id q14mr18178334pja.134.1572857131057;
+        Mon, 04 Nov 2019 00:45:31 -0800 (PST)
+Received: from gaurie.seo.corp.google.com ([2401:fa00:d:0:1034:ec6b:8056:9e93])
+        by smtp.gmail.com with ESMTPSA id z16sm17010221pge.55.2019.11.04.00.45.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 00:45:30 -0800 (PST)
+From:   Namhyung Kim <namhyung@kernel.org>
+To:     Tejun Heo <tj@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>,
+        Li Zefan <lizefan@huawei.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Song Liu <liu.song.a23@gmail.com>, cgroups@vger.kernel.org
+Subject: [PATCH v2 0/2] cgroup: Sync cgroup id and inode number
+Date:   Mon,  4 Nov 2019 17:45:18 +0900
+Message-Id: <20191104084520.398584-1-namhyung@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87k18gcqih.fsf@yhuang-dev.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:41:10AM +0800, Huang, Ying wrote:
+Hello,
 
-> >> +#define NUMA_SCAN_NR_HIST	16
-> >> +		int numa_scan_idx;
-> >> +		unsigned long numa_scan_jiffies[NUMA_SCAN_NR_HIST];
-> >> +		unsigned long numa_scan_starts[NUMA_SCAN_NR_HIST];
-> >
-> > Why 16? This is 4 cachelines.
-> 
-> We want to keep the NUMA scanning history reasonably long.  From
-> task_scan_min(), the minimal interval between task_numa_work() running
-> is about 100 ms by default.  So we can keep 1600 ms history by default
-> if NUMA_SCAN_NR_HIST is 16.  If user choose to use smaller
-> sysctl_numa_balancing_scan_size, then we can only keep shorter history.
-> In general, we want to keep no less than 1000 ms history.  So 16 appears
-> like a reasonable choice for us.  Any other suggestion?
+This patchset changes cgroup inode number and id management to be in
+sync with kernfs.  The cgroup inode number is managed by kernfs but
+cgroup id is allocated by a separate idr.  The idea is to have a
+single id for internal usage, inode number and file handle which can
+be accessed from userspace.  Actually this work is from Tejun who also
+provided the idea.  I just took over the work and fixed some errors
+and finally was able to run perf for testing.
 
-This is very good information for Changelogs and comments :-)
+The background of this work is that I want to add cgroup sampling
+feature in the perf event subsystem.  As Tejun mentioned that using
+cgroup id is not enough and it'd better using file handle instead.
+But getting file handle in perf NMI handler is not possible so I want
+to get the info from a cgroup node.
+
+The first patch converted kernfs id into a single 64bit number and in
+the second patch cgroup uses the kernfs id as cgroup id.
+
+The patches are based on the for-next branch in Tejun's cgroup tree.
+Tested with tools/testing/selftests/cgroup/test_stress.sh.
+
+Thanks
+Namhyung
+
+
+Tejun Heo (2):
+      kernfs: Convert to u64 id
+      cgroup: Use 64bit id from kernfs
+
+ fs/kernfs/dir.c                  | 36 +++++++++++++++++++------------
+ fs/kernfs/file.c                 |  4 ++--
+ fs/kernfs/inode.c                |  4 ++--
+ fs/kernfs/kernfs-internal.h      |  2 --
+ fs/kernfs/mount.c                | 92 +++++++++++++++++++++++++++++++++++++++++++++++++-------------------------------
+ include/linux/cgroup-defs.h      | 18 ++++------------
+ include/linux/cgroup.h           | 17 +++++++--------
+ include/linux/exportfs.h         |  5 +++++
+ include/linux/kernfs.h           | 47 +++++++++++++++++++++++++----------------
+ include/net/netprio_cgroup.h     |  8 +++----
+ include/trace/events/writeback.h | 92 ++++++++++++++++++++++++++++++++++++++++----------------------------------------
+ kernel/bpf/helpers.c             |  2 +-
+ kernel/cgroup/cgroup.c           | 68 +++++++++++++++++++----------------------------------------
+ kernel/trace/blktrace.c          | 66 +++++++++++++++++++++++++++------------------------------
+ net/core/filter.c                |  4 ++--
+ net/core/netprio_cgroup.c        |  4 ++--
+ 16 files changed, 236 insertions(+), 233 deletions(-)
+
+-- 
+2.23.0.700.g56cf767bdb-goog
+
