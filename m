@@ -1,202 +1,222 @@
 Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: **
+X-Spam-Status: No, score=2.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE9BECA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:47:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E930CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:49:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCA9E214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:47:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572886042;
-	bh=P8jnNo+i4H38L/cwZHxznFW/uN8TNkWtycod/9FL4LI=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=XoFLpXKcm3saZ6vQotzxGvhcgtfRIwmyeAWGMevDazLbo6RChhq7pBqKRYI4xvv21
-	 YPaqWwQDP9C0FcPKDX0HTNLfQ1zU/EKFagx6ixYrYNbH2DEXaeLEnGjuoCFtyOn26K
-	 D9+IQJSIvGgOsJClAknREegl7EZR+IrBlZBOnAwE=
+	by mail.kernel.org (Postfix) with ESMTP id 1BFD220869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:49:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="uU7Krz5F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729094AbfKDQrV (ORCPT
+        id S1728474AbfKDQtG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:47:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728322AbfKDQrV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:47:21 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.216.141])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 205412084D;
-        Mon,  4 Nov 2019 16:47:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572886039;
-        bh=P8jnNo+i4H38L/cwZHxznFW/uN8TNkWtycod/9FL4LI=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=RBlzKtfO650PQaV+Dl6ECp9IKh1IPdCfolPKAv19KzdV3bb/uJaz8PWgrWIohjr/q
-         4EV12HcH2BYB5knlovAayLHV9pEqRjAUwcHH4V0pT5x6pA0oMiTc7KhcIbw434otHQ
-         +PFkDAIZPT8tn23yeK+yqSfJw4vRucQvKIurCBNg=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 3F5003520B56; Mon,  4 Nov 2019 08:47:17 -0800 (PST)
-Date:   Mon, 4 Nov 2019 08:47:17 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Marco Elver <elver@google.com>
-Cc:     akiyks@gmail.com, stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, peterz@infradead.org, tglx@linutronix.de,
-        will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v3 0/9] Add Kernel Concurrency Sanitizer (KCSAN)
-Message-ID: <20191104164717.GE20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191104142745.14722-1-elver@google.com>
+        Mon, 4 Nov 2019 11:49:06 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:53764 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727861AbfKDQtG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:49:06 -0500
+Received: by mail-wm1-f67.google.com with SMTP id x4so6301233wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 08:49:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=2GCXse3i8dZWY3iqcdbG+HD0y8Pc0P0D/i6paZcwU8A=;
+        b=uU7Krz5FyeHVlvMbtIzCRn0+S2fQ4+7O8QJiCjuVTYJQPBx2WQGcY2NLBUeM9wn25R
+         ROpekZAVJdynYiLoqnmy6yth/tVdTozzYI4O4kTuodyCLkwBH9rPqN91EyaJ8P2FjEB6
+         vTrulmhp2Lv5osMWzTLwC8qhEylr5fJ4Q/07FsjB64uDW4p4XsD76qDv3gUYh0THoJu4
+         lzIebTQu7vHAsZYYIOFukkOEqsGynlPelbBzIPg7q4kh9EW5trD2FL5HHV28FBzaLLyq
+         puDlYKiOT9yIxGVaAhZ+MmOApLMavJgW7KoyQrdoqfE9LJtu3YuNqKaPug9LBt2XYaFj
+         SBvw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=2GCXse3i8dZWY3iqcdbG+HD0y8Pc0P0D/i6paZcwU8A=;
+        b=LCpZcQ5z7wtCjRJ/PQSKFL7vpad3tvw1uUtxLZS6Dv/cbcaKOF6uQcPkKqAukYqCBO
+         fp5K1Oplt0ZZHa7Ng3zvc7PeDPoszGXH4TWJLBSA+eUd5BLvptyqKOHyELhisxpURP0M
+         AgOrnLOhci5QkhqajcPyZYWHyKGW1kt4htfFyoUOWtRBcKDM+REWFbUJSqnt2xlPCnQh
+         Nz1b8BZRbHpW6QuRByuaGJu3cxaqNr/hpiCGMZYJvQ9RR2F7hWbIlXFx/C20h82t3bIp
+         zzHxZ6aXOI6uZxSwAMi5ZGL2AlaXzwuW7urmhGQ2px8/RbLZB6o6Eg+E8PKVoU1ILqjS
+         ffKg==
+X-Gm-Message-State: APjAAAWnqOZjz84aUHsqEb04tcPVQ9Z0ZnXby5+VYSJJFCWtpUTHuh+u
+        kzHveDMZSxbPQXo8bAoXJc5jEg==
+X-Google-Smtp-Source: APXvYqzS3PC9EJyw/esjee1y5JXKX5z6exdfXWx7Y3WpW46Yp/B/ETCxm60YFm9UwlSt0+elBZDFaA==
+X-Received: by 2002:a1c:60d7:: with SMTP id u206mr15589wmb.101.1572886143360;
+        Mon, 04 Nov 2019 08:49:03 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e751:37a0:1e95:e65d])
+        by smtp.gmail.com with ESMTPSA id x205sm23003638wmb.5.2019.11.04.08.49.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 08:49:02 -0800 (PST)
+Date:   Mon, 4 Nov 2019 16:49:00 +0000
+From:   Alessio Balsini <balsini@android.com>
+To:     Mikulas Patocka <mpatocka@redhat.com>
+Cc:     Jens Axboe <axboe@kernel.dk>, Alasdair G Kergon <agk@redhat.com>,
+        elsk@google.com, dvander@google.com, dm-devel@redhat.com,
+        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-team@android.com
+Subject: Re: dm-snapshot for system updates in Android
+Message-ID: <20191104164900.GA10934@google.com>
+References: <20191025101624.GA61225@google.com>
+ <alpine.LRH.2.02.1910290957220.25731@file01.intranet.prod.int.rdu2.redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191104142745.14722-1-elver@google.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <alpine.LRH.2.02.1910290957220.25731@file01.intranet.prod.int.rdu2.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 03:27:36PM +0100, Marco Elver wrote:
-> This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-> KCSAN is a sampling watchpoint-based data-race detector. More details
-> are included in Documentation/dev-tools/kcsan.rst. This patch-series
-> only enables KCSAN for x86, but we expect adding support for other
-> architectures is relatively straightforward (we are aware of
-> experimental ARM64 and POWER support).
-> 
-> To gather early feedback, we announced KCSAN back in September, and
-> have integrated the feedback where possible:
-> http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
-> 
-> We want to point out and acknowledge the work surrounding the LKMM,
-> including several articles that motivate why data-races are dangerous
-> [1, 2], justifying a data-race detector such as KCSAN.
-> [1] https://lwn.net/Articles/793253/
-> [2] https://lwn.net/Articles/799218/
-> 
-> The current list of known upstream fixes for data-races found by KCSAN
-> can be found here:
-> https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
+Hi Mikulas,
 
-Making this more accessible to more people seems like a good thing.
-So, for the series:
+Thank you for your answer and suggestions.
 
-Acked-by: Paul E. McKenney <paulmck@kernel.org>
+On Tue, Oct 29, 2019 at 10:21:14AM -0400, Mikulas Patocka wrote:
+> Hi
+> 
+> On Fri, 25 Oct 2019, Alessio Balsini wrote:
+> 
+> > Hello everyone!
+> > 
+> > I hope you will appreciate knowing that we are currently evaluating the use of
+> > dm-snapshot to implement a mechanism to obtain revertible, space-efficient
+> > system upgrades in Android.  More specifically, we are using
+> > dm-snapshot-persistent to test the updated device after reboot, then issue a
+> > merge in case of success, otherwise, destroy the snapshot.
+> > This new update mechanism is still under evaluation, but its development is
+> > openly done in AOSP.
+> > 
+> > At the current stage, we have a prototype we are happy with, both in terms of
+> > space consumption overhead (for the COW device) and benchmarking results for
+> > read-write and merge operations.
+> > 
+> > I would be glad if you could provide some feedback on a few points that I don't
+> > have completely clear.
+> > 
+> > 
+> > -- Interface stability
+> > 
+> > To obtain an initial, empty COW device as quick as possible, we force to 0 only
+> > its first 32 bit (magic field). This solution looks clear from the kernel code,
+> > but can we rely on that for all the kernels with SNAPSHOT_DISK_VERSION == 1?
+> 
+> It will work, but, to be consistent with lvm, I suggest to overwrite the 
+> first 4k with zeroes.
+> 
+> > Would you appreciate it if a similar statement is added as part of
+> > /Documentation, making this solution more stable? Or maybe I can think of
+> > adding an initialization flag to the dm-snapshot table to explicitly request
+> > the COW initialization within the kernel?
+> > 
+> > Another issue we are facing is to be able to know in advance what the minimum
+> > COW device size would be for a given update to be able to allocate the right
+> 
+> This is hard to say, it depends on what the user is doing with the phone. 
+> When dm-snapshot runs out of space, it invalidates the whole snapshot. 
+> You'll have to monitor the snapshot space very carefully and take action 
+> before it fills up.
 
-> Changelog
-> ---------
-> v3:
-> * Major changes:
->  - Add microbenchmark.
->  - Add instruction watchpoint skip randomization.
->  - Refactor API and core runtime fast-path and slow-path. Compared to
->    the previous version, with a default config and benchmarked using the
->    added microbenchmark, this version is 3.8x faster.
->  - Make __tsan_unaligned __alias of generic accesses.
->  - Rename kcsan_{begin,end}_atomic ->
->    kcsan_{nestable,flat}_atomic_{begin,end}
->  - For filter list in debugfs.c use kmalloc+krealloc instead of
->    kvmalloc.
->  - Split Documentation into separate patch.
+I forgot to mention that all the partitions we are updating are
+read-only, and can only be modified by snapshot-merge. This allows us to
+establish a direct relation between the required COW device size and the
+operations performed by the update (i.e. the number of chunks that are
+going to be modified).
+
 > 
-> v2: http://lkml.kernel.org/r/20191017141305.146193-1-elver@google.com
-> * Major changes:
->  - Replace kcsan_check_access(.., {true, false}) with
->    kcsan_check_{read,write}.
->  - Change atomic-instrumented.h to use __atomic_check_{read,write}.
->  - Use common struct kcsan_ctx in task_struct and for per-CPU interrupt
->    contexts.
+> I suggest - run main system on the origin target and attach a snapshot 
+> that will be used for backup of the data overwritten in the origin. If the 
+> updated system fails, merge the snapshot back into the origin; if the 
+> update succeeds, drop the snapshot. If the user writes too much data to 
+> the device, it would invalidate the only the snapshot (so he can't revert 
+> anymore), but it would not invalidate the origin and the data would not be 
+> lost.
+
+This is an approach we evaluated, but the main reason why we decided for
+the solution of updating the snapshot and then merging it to the base
+device is that we want to be sure that the update was successful before
+permanently change to the base device. For example, if for some reason
+the update is interrupted, it would be more difficult to roll-back or
+restore the update. Additionally, if the update wants to resize the
+partitions, this operation could not be done until reboot.
+
 > 
-> v1: http://lkml.kernel.org/r/20191016083959.186860-1-elver@google.com
+> > size for the COW device in advance.  To do so, we rely on the current COW
+> > structure that seems to have kept the same stable shape in the last decade, and
+> > compute the total COW size by knowing the number of modified chunks. The
+> > formula would be something like that:
+> > 
+> >   table_line_bytes      = 64 * 2 / 8;
+> >   exceptions_per_chunk  = chunk_size_bytes / table_line_bytes;
+> >   total_cow_size_chunks = 1 + 1 + modified_chunks
+> >                         + modified_chunks / exceptions_per_chunk;
+> > 
+> > This formula seems to be valid for all the recent kernels we checked. Again,
+> > can we assume it to be valid for all the kernels for which
+> > SNAPSHOT_DISK_VERSION == 1?
 > 
-> Marco Elver (9):
->   kcsan: Add Kernel Concurrency Sanitizer infrastructure
->   kcsan: Add Documentation entry in dev-tools
->   objtool, kcsan: Add KCSAN runtime functions to whitelist
->   build, kcsan: Add KCSAN build exceptions
->   seqlock, kcsan: Add annotations for KCSAN
->   seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
->   asm-generic, kcsan: Add KCSAN instrumentation for bitops
->   locking/atomics, kcsan: Add KCSAN instrumentation
->   x86, kcsan: Enable KCSAN for x86
+> Yes, we don't plan to change it.
 > 
->  Documentation/dev-tools/index.rst         |   1 +
->  Documentation/dev-tools/kcsan.rst         | 217 +++++++++
->  MAINTAINERS                               |  11 +
->  Makefile                                  |   3 +-
->  arch/x86/Kconfig                          |   1 +
->  arch/x86/boot/Makefile                    |   2 +
->  arch/x86/boot/compressed/Makefile         |   2 +
->  arch/x86/entry/vdso/Makefile              |   3 +
->  arch/x86/include/asm/bitops.h             |   6 +-
->  arch/x86/kernel/Makefile                  |   7 +
->  arch/x86/kernel/cpu/Makefile              |   3 +
->  arch/x86/lib/Makefile                     |   4 +
->  arch/x86/mm/Makefile                      |   3 +
->  arch/x86/purgatory/Makefile               |   2 +
->  arch/x86/realmode/Makefile                |   3 +
->  arch/x86/realmode/rm/Makefile             |   3 +
->  drivers/firmware/efi/libstub/Makefile     |   2 +
->  include/asm-generic/atomic-instrumented.h | 393 +++++++--------
->  include/asm-generic/bitops-instrumented.h |  18 +
->  include/linux/compiler-clang.h            |   9 +
->  include/linux/compiler-gcc.h              |   7 +
->  include/linux/compiler.h                  |  35 +-
->  include/linux/kcsan-checks.h              |  97 ++++
->  include/linux/kcsan.h                     | 115 +++++
->  include/linux/sched.h                     |   4 +
->  include/linux/seqlock.h                   |  51 +-
->  init/init_task.c                          |   8 +
->  init/main.c                               |   2 +
->  kernel/Makefile                           |   6 +
->  kernel/kcsan/Makefile                     |  11 +
->  kernel/kcsan/atomic.h                     |  27 ++
->  kernel/kcsan/core.c                       | 560 ++++++++++++++++++++++
->  kernel/kcsan/debugfs.c                    | 275 +++++++++++
->  kernel/kcsan/encoding.h                   |  94 ++++
->  kernel/kcsan/kcsan.h                      | 131 +++++
->  kernel/kcsan/report.c                     | 306 ++++++++++++
->  kernel/kcsan/test.c                       | 121 +++++
->  kernel/sched/Makefile                     |   6 +
->  lib/Kconfig.debug                         |   2 +
->  lib/Kconfig.kcsan                         | 119 +++++
->  lib/Makefile                              |   3 +
->  mm/Makefile                               |   8 +
->  scripts/Makefile.kcsan                    |   6 +
->  scripts/Makefile.lib                      |  10 +
->  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
->  tools/objtool/check.c                     |  18 +
->  46 files changed, 2526 insertions(+), 206 deletions(-)
->  create mode 100644 Documentation/dev-tools/kcsan.rst
->  create mode 100644 include/linux/kcsan-checks.h
->  create mode 100644 include/linux/kcsan.h
->  create mode 100644 kernel/kcsan/Makefile
->  create mode 100644 kernel/kcsan/atomic.h
->  create mode 100644 kernel/kcsan/core.c
->  create mode 100644 kernel/kcsan/debugfs.c
->  create mode 100644 kernel/kcsan/encoding.h
->  create mode 100644 kernel/kcsan/kcsan.h
->  create mode 100644 kernel/kcsan/report.c
->  create mode 100644 kernel/kcsan/test.c
->  create mode 100644 lib/Kconfig.kcsan
->  create mode 100644 scripts/Makefile.kcsan
+> > -- Alignment
+> > 
+> > Our approach follows the solution proposed by Mikulas [1].
+> > Being the block alignment of file extents automatically managed by the
+> > filesystem, using FIEMAP should have no alignment-related performance issue.
+> > But in our implementation we hit a misalignment [2] branch which leads to
+> > dmwarning messages [3, 4].
+> > 
+> > I have a limited experience with the block layer and dm, so I'm still
+> > struggling in finding the root cause for this, either in user space or kernel
+> > space.
 > 
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
+> I don't know. What is the block size of the filesystem? Are all mappings 
+> aligned to this block size?
+
+Here follows a just generated warning coming from a Pixel 4 kernel (4.14):
+
+[ 3093.443808] device-mapper: table: 253:16: adding target device dm-15
+caused an alignment inconsistency: physical_block_size=4096,
+logical_block_size=4096, alignment_offset=61440, start=0
+
+Does this contain all the info you asked for?
+
+I started investigating this issue, but since we didn't notice any
+performance degradation, I prioritized other things. I'll be hopefully
+able to get back to this warning in the next months.
+Please let me know if I can help you with that or if you need additional
+information.
+
 > 
+> > But our benchmarks seems to be good, so we were thinking as last option to
+> > rate-limit or directly remove that warning from our kernels as a temporary
+> > solution, but we prefer to avoid diverging from mainline. Rate-limiting is a
+> > solution that would make sense also to be proposed in the list, but completely
+> > removing the warning doesn't seem the right thing to do. Maybe we are
+> > benchmarking something else? What do you think?
+> > 
+> > Many thanks for taking the time to read this, feedbacks would be highly
+> > appreciated.
+> > 
+> > Regards.
+> > Alessio
+> > 
+> > [1] https://www.redhat.com/archives/dm-devel/2018-October/msg00363.html
+> > [2] https://elixir.bootlin.com/linux/v5.3/source/block/blk-settings.c#L540
+> > [3] https://elixir.bootlin.com/linux/v5.3/source/drivers/md/dm-table.c#L484
+> > [4] https://elixir.bootlin.com/linux/v5.3/source/drivers/md/dm-table.c#L1558
+> 
+> Mikulas
+> 
+
+Thanks again,
+Alessio
+
