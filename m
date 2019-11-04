@@ -2,152 +2,305 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E32ECA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3B9BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:18:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065722080F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:17:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F67E214D9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:18:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=virtuozzo.com header.i=@virtuozzo.com header.b="Bl4vgOyF"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Bqsl+xk3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730058AbfKDXRf (ORCPT
+        id S1730106AbfKDXSl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:17:35 -0500
-Received: from mail-eopbgr80121.outbound.protection.outlook.com ([40.107.8.121]:59462
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729710AbfKDXRe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 18:17:34 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=XG1byXH+lDN5trBCN4vALuNuuCtqxQ9XiZ6fIWAL10HtapJsPMSYtqBFueXNPXe5J3M66qyKRRf2BqXo7JqbwiwGTztmgrdDaRGOWpYpWDurscI09W8zarRpx62AY1Rko+AuzrMHwDJZKQ0HFCRo27gufg+jp8V6/9ijtwcWgP7u/6jm+SIASQQqmDIldrlBSVHNKCIdyYftFaw5bzhhb7+/cQ90OX37Z60Xz3JyF3lH8MxKtYjSfeyA6K0M2eBCFiaIqYimGsjOrcYZyP+3HgrKky8++j0pEv+8eV+hQPjnSF4q7Y22YHecS0WpqQXytN3VQgLELy/jbJ0tX1zJLg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1whj7e02fhEqgHVElKkVl3BPxEh3KGr8rZ5/CMwNuHM=;
- b=ImaN0JxkUy3fB4rwqJkGr+rK7q8HfYOPqOeSczQmXwyN9Zv3BeF9eavNGpbdmbIfk454XxagbX5mBuB3OEu6kT5CclqMsO/MRBmNNdMeiVRA/5rCzvTB35sC/9PhFSBvywutfVNQZRxzm5U2spuWIoXtePwfuKF9ETVnRAecZstqkRSCwwj1WbJQ8lBtck2U2LMOHJgRRLhIw6GvT7+LguHZdMXImA6xs35Qu3kZhPl9zBd4FyEhsuY35qv48gAznIQPOyMPBh+q4ZO+PoixD+6t305tAwKAbpMcaixcccC9M/0/5xZuzLtnP7Q3rj905kAwT5Py8KGv/NpMolheaw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=virtuozzo.com; dmarc=pass action=none
- header.from=virtuozzo.com; dkim=pass header.d=virtuozzo.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=virtuozzo.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1whj7e02fhEqgHVElKkVl3BPxEh3KGr8rZ5/CMwNuHM=;
- b=Bl4vgOyFmVkxQyuOyP7MXSdaYgB2Dqf3xEp4kpnVxwzRuC9u6gWzA50PXan1ciyWCuTuGeegheBzjjCzneJGJho8CYwHlaUNFIR/14dVBAaG2GBJ6W5qnwRTGSLGrqvgX8pIasQDD5jFchzGEcIQc9OUUferzSg6Z6puAcTqIKk=
-Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com (10.172.218.15) by
- AM4PR0802MB2148.eurprd08.prod.outlook.com (10.172.216.137) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Mon, 4 Nov 2019 23:17:16 +0000
-Received: from AM4PR0802MB2242.eurprd08.prod.outlook.com
- ([fe80::9c3e:dc5:e056:9f89]) by AM4PR0802MB2242.eurprd08.prod.outlook.com
- ([fe80::9c3e:dc5:e056:9f89%12]) with mapi id 15.20.2408.024; Mon, 4 Nov 2019
- 23:17:16 +0000
-From:   Roman Kagan <rkagan@virtuozzo.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Index: AQHVkQWIuGEgJ7JXrk6/VQ6c7w+tYad3peqAgAQEBAA=
-Date:   Mon, 4 Nov 2019 23:17:16 +0000
-Message-ID: <20191104231712.GD23545@rkaganb.lan>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
- <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
-In-Reply-To: <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
-Accept-Language: en-US, ru-RU
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mutt/1.12.1 (2019-06-15)
-mail-followup-to: "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,        Paolo Bonzini
- <pbonzini@redhat.com>, "Suthikulpanit, Suravee"
- <Suravee.Suthikulpanit@amd.com>,       "linux-kernel@vger.kernel.org"
- <linux-kernel@vger.kernel.org>,        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,      "joro@8bytes.org"
- <joro@8bytes.org>,     "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,    "jschoenh@amazon.de"
- <jschoenh@amazon.de>,  "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,    "Grimm, Jon" <Jon.Grimm@amd.com>
-x-originating-ip: [2a02:2168:9049:de00::659]
-x-clientproxiedby: HE1PR05CA0129.eurprd05.prod.outlook.com
- (2603:10a6:7:28::16) To AM4PR0802MB2242.eurprd08.prod.outlook.com
- (2603:10a6:200:5f::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=rkagan@virtuozzo.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cef5ef4e-5a42-4567-4ef5-08d7617d21d7
-x-ms-traffictypediagnostic: AM4PR0802MB2148:
-x-microsoft-antispam-prvs: <AM4PR0802MB2148AC42DC5948DD37EA0E43C97F0@AM4PR0802MB2148.eurprd08.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 0211965D06
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(346002)(376002)(39840400004)(366004)(136003)(199004)(189003)(58126008)(2906002)(186003)(99286004)(54906003)(6246003)(1076003)(81166006)(6916009)(7416002)(386003)(316002)(6506007)(53546011)(66556008)(46003)(7736002)(52116002)(14444005)(102836004)(25786009)(71200400001)(66446008)(8936002)(66946007)(76176011)(305945005)(71190400001)(66476007)(64756008)(6116002)(8676002)(81156014)(4326008)(446003)(86362001)(11346002)(256004)(6436002)(14454004)(476003)(486006)(5660300002)(33656002)(36756003)(6512007)(229853002)(9686003)(6486002)(478600001);DIR:OUT;SFP:1102;SCL:1;SRVR:AM4PR0802MB2148;H:AM4PR0802MB2242.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: virtuozzo.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: VZynJ4uSo9AoohH9nSUCZlKGhFELpJ5SEUQ6ekirOIghSH7ldfcy6ouK3baJ/VgTzbzPD/OrlFVrVRtsWLCbxfpMi8YL+k+bN2g1xRnJZcha/UjrSef7lBxRKCmbo009p7y7J7uYrixHLuv/in1ZmPSPgSw9WEUigugVkhUSYg72SL9nkNssen6UXv7q2KgklbQ4KADpii35VzZQqE8pMXlvwt1M25Fxw/ZWVFBVIakWi9EI/e7iGwmbtuKwZOhTrcZTh28xAx54GIbYpxFqAryDXlFtWH+leZ5+f7l6IFB7hsLF8NCPfmC8XGPAqwpBMw6udVwEGkpppQ+TPTKbxU6n9HBVTwH1p+SFS7r8PposKrNEAdyIid7AlJV6g+JKYQzAYz6OY+N5sKqXxiB1N+E6RsbvOW2IGMKIEAQrvXFd1/Mew5TuFoCNcFOdIuV1
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <1E9E02A7B00175419990AB4044E8DEC7@eurprd08.prod.outlook.com>
+        Mon, 4 Nov 2019 18:18:41 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:32770 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729701AbfKDXSl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 18:18:41 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4N9M80054729;
+        Mon, 4 Nov 2019 23:18:37 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=cKJhMj+gq9QdNUuxuk8z+c3FWsMcVVj7p9zKcO3kt/s=;
+ b=Bqsl+xk39fYNE4o+pWxoFDvYjxiJw5JS9aYk0Sc6Ue3lWt/6O3+v/4Dlk3yTCEuJDnjT
+ QUqEkyiu6B1zHkXEduDPFWW4Km29Swmf2qlwEL37UdiRTNWdr/24fLrQS2g+oLc5zRX4
+ f2ffsF7nPNxGsmsuKNiIKobqsaw4bIRdfnVukhDX/8Iz35DyOa99qbMri4wUEHoeDRKH
+ IPcr2W5HoYTRdUHNb4OpauobXQuvTVd0kOBEhuUvdnkoc+swhR5csjPRoKuLtgsvsbZz
+ BfEyA91IZnp0xRXDfSJdKjHAJTGz6adVL6Pp8KcmVY07RrM8NwKEMJSGVaV9m2aZU6z9 9g== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by aserp2120.oracle.com with ESMTP id 2w11rptn6b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 23:18:37 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4NIOgN145032;
+        Mon, 4 Nov 2019 23:18:36 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3020.oracle.com with ESMTP id 2w1kxe5222-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 23:18:36 +0000
+Received: from abhmp0007.oracle.com (abhmp0007.oracle.com [141.146.116.13])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA4NIZNr019066;
+        Mon, 4 Nov 2019 23:18:35 GMT
+Received: from localhost (/67.169.218.210)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 15:18:35 -0800
+Date:   Mon, 4 Nov 2019 15:18:34 -0800
+From:   "Darrick J. Wong" <darrick.wong@oracle.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 07/28] xfs: tail updates only need to occur when LSN
+ changes
+Message-ID: <20191104231834.GQ4153244@magnolia>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-8-david@fromorbit.com>
 MIME-Version: 1.0
-X-OriginatorOrg: virtuozzo.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: cef5ef4e-5a42-4567-4ef5-08d7617d21d7
-X-MS-Exchange-CrossTenant-originalarrivaltime: 04 Nov 2019 23:17:16.5038
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 0bc7f26d-0264-416e-a6fc-8352af79c58f
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 9O30jMnqwZKSXlrWh0FtHrw+kcFWNeclq+kC0rEJ6geBLnZEIJrJsFoP2EnTk/i0rLFcA4ABgonn1k1LjmaGkQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM4PR0802MB2148
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031234618.15403-8-david@fromorbit.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040221
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040220
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Nov 02, 2019 at 10:57:47AM +0100, Paolo Bonzini wrote:
-> On 01/11/19 23:41, Suthikulpanit, Suravee wrote:
-> > +	/*
-> > +	 * AMD SVM AVIC accelerates EOI write and does not trap.
-> > +	 * This cause in-kernel PIT re-inject mode to fail
-> > +	 * since it checks ps->irq_ack before kvm_set_irq()
-> > +	 * and relies on the ack notifier to timely queue
-> > +	 * the pt->worker work iterm and reinject the missed tick.
-> > +	 * So, deactivate APICv when PIT is in reinject mode.
-> > +	 */
-> >  	if (reinject) {
-> > +		kvm_request_apicv_update(kvm, false, APICV_DEACT_BIT_PIT_REINJ);
-> >  		/* The initial state is preserved while ps->reinject == 0. */
-> >  		kvm_pit_reset_reinject(pit);
-> >  		kvm_register_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
-> >  		kvm_register_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
-> >  	} else {
-> > +		kvm_request_apicv_update(kvm, true, APICV_DEACT_BIT_PIT_REINJ);
-> >  		kvm_unregister_irq_ack_notifier(kvm, &ps->irq_ack_notifier);
-> >  		kvm_unregister_irq_mask_notifier(kvm, 0, &pit->mask_notifier);
+On Fri, Nov 01, 2019 at 10:45:57AM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
 > 
-> This is not too nice for Intel which does support (through the EOI exit
-> mask) APICv even if PIT reinjection active.
+> We currently wake anything waiting on the log tail to move whenever
+> the log item at the tail of the log is removed. Historically this
+> was fine behaviour because there were very few items at any given
+> LSN. But with delayed logging, there may be thousands of items at
+> any given LSN, and we can't move the tail until they are all gone.
+> 
+> Hence if we are removing them in near tail-first order, we might be
+> waking up processes waiting on the tail LSN to change (e.g. log
+> space waiters) repeatedly without them being able to make progress.
+> This also occurs with the new sync push waiters, and can result in
+> thousands of spurious wakeups every second when under heavy direct
+> reclaim pressure.
+> 
+> To fix this, check that the tail LSN has actually changed on the
+> AIL before triggering wakeups. This will reduce the number of
+> spurious wakeups when doing bulk AIL removal and make this code much
+> more efficient.
+> 
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> Reviewed-by: Christoph Hellwig <hch@lst.de>
+> Reviewed-by: Brian Foster <bfoster@redhat.com>
 
-Hmm, it's tempting to just make svm_load_eoi_exitmap() disable AVIC when
-given a non-empty eoi_exit_bitmap, and enable it back on a clear
-eoi_exit_bitmap.  This may remove the need to add special treatment to
-PIT etc.
+Looks ok,
+Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
 
-Thanks,
-Roman.
+--D
+
+> ---
+>  fs/xfs/xfs_inode_item.c | 18 ++++++++++----
+>  fs/xfs/xfs_trans_ail.c  | 52 ++++++++++++++++++++++++++++-------------
+>  fs/xfs/xfs_trans_priv.h |  4 ++--
+>  3 files changed, 51 insertions(+), 23 deletions(-)
+> 
+> diff --git a/fs/xfs/xfs_inode_item.c b/fs/xfs/xfs_inode_item.c
+> index ab12e526540a..79ffe6dff115 100644
+> --- a/fs/xfs/xfs_inode_item.c
+> +++ b/fs/xfs/xfs_inode_item.c
+> @@ -731,19 +731,27 @@ xfs_iflush_done(
+>  	 * holding the lock before removing the inode from the AIL.
+>  	 */
+>  	if (need_ail) {
+> -		bool			mlip_changed = false;
+> +		xfs_lsn_t	tail_lsn = 0;
+>  
+>  		/* this is an opencoded batch version of xfs_trans_ail_delete */
+>  		spin_lock(&ailp->ail_lock);
+>  		list_for_each_entry(blip, &tmp, li_bio_list) {
+>  			if (INODE_ITEM(blip)->ili_logged &&
+> -			    blip->li_lsn == INODE_ITEM(blip)->ili_flush_lsn)
+> -				mlip_changed |= xfs_ail_delete_one(ailp, blip);
+> -			else {
+> +			    blip->li_lsn == INODE_ITEM(blip)->ili_flush_lsn) {
+> +				/*
+> +				 * xfs_ail_update_finish() only cares about the
+> +				 * lsn of the first tail item removed, any
+> +				 * others will be at the same or higher lsn so
+> +				 * we just ignore them.
+> +				 */
+> +				xfs_lsn_t lsn = xfs_ail_delete_one(ailp, blip);
+> +				if (!tail_lsn && lsn)
+> +					tail_lsn = lsn;
+> +			} else {
+>  				xfs_clear_li_failed(blip);
+>  			}
+>  		}
+> -		xfs_ail_update_finish(ailp, mlip_changed);
+> +		xfs_ail_update_finish(ailp, tail_lsn);
+>  	}
+>  
+>  	/*
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 656819523bbd..685a21cd24c0 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -108,17 +108,25 @@ xfs_ail_next(
+>   * We need the AIL lock in order to get a coherent read of the lsn of the last
+>   * item in the AIL.
+>   */
+> +static xfs_lsn_t
+> +__xfs_ail_min_lsn(
+> +	struct xfs_ail		*ailp)
+> +{
+> +	struct xfs_log_item	*lip = xfs_ail_min(ailp);
+> +
+> +	if (lip)
+> +		return lip->li_lsn;
+> +	return 0;
+> +}
+> +
+>  xfs_lsn_t
+>  xfs_ail_min_lsn(
+>  	struct xfs_ail		*ailp)
+>  {
+> -	xfs_lsn_t		lsn = 0;
+> -	struct xfs_log_item	*lip;
+> +	xfs_lsn_t		lsn;
+>  
+>  	spin_lock(&ailp->ail_lock);
+> -	lip = xfs_ail_min(ailp);
+> -	if (lip)
+> -		lsn = lip->li_lsn;
+> +	lsn = __xfs_ail_min_lsn(ailp);
+>  	spin_unlock(&ailp->ail_lock);
+>  
+>  	return lsn;
+> @@ -681,11 +689,12 @@ xfs_ail_push_all_sync(
+>  void
+>  xfs_ail_update_finish(
+>  	struct xfs_ail		*ailp,
+> -	bool			do_tail_update) __releases(ailp->ail_lock)
+> +	xfs_lsn_t		old_lsn) __releases(ailp->ail_lock)
+>  {
+>  	struct xfs_mount	*mp = ailp->ail_mount;
+>  
+> -	if (!do_tail_update) {
+> +	/* if the tail lsn hasn't changed, don't do updates or wakeups. */
+> +	if (!old_lsn || old_lsn == __xfs_ail_min_lsn(ailp)) {
+>  		spin_unlock(&ailp->ail_lock);
+>  		return;
+>  	}
+> @@ -730,7 +739,7 @@ xfs_trans_ail_update_bulk(
+>  	xfs_lsn_t		lsn) __releases(ailp->ail_lock)
+>  {
+>  	struct xfs_log_item	*mlip;
+> -	int			mlip_changed = 0;
+> +	xfs_lsn_t		tail_lsn = 0;
+>  	int			i;
+>  	LIST_HEAD(tmp);
+>  
+> @@ -745,9 +754,10 @@ xfs_trans_ail_update_bulk(
+>  				continue;
+>  
+>  			trace_xfs_ail_move(lip, lip->li_lsn, lsn);
+> +			if (mlip == lip && !tail_lsn)
+> +				tail_lsn = lip->li_lsn;
+> +
+>  			xfs_ail_delete(ailp, lip);
+> -			if (mlip == lip)
+> -				mlip_changed = 1;
+>  		} else {
+>  			trace_xfs_ail_insert(lip, 0, lsn);
+>  		}
+> @@ -758,15 +768,23 @@ xfs_trans_ail_update_bulk(
+>  	if (!list_empty(&tmp))
+>  		xfs_ail_splice(ailp, cur, &tmp, lsn);
+>  
+> -	xfs_ail_update_finish(ailp, mlip_changed);
+> +	xfs_ail_update_finish(ailp, tail_lsn);
+>  }
+>  
+> -bool
+> +/*
+> + * Delete one log item from the AIL.
+> + *
+> + * If this item was at the tail of the AIL, return the LSN of the log item so
+> + * that we can use it to check if the LSN of the tail of the log has moved
+> + * when finishing up the AIL delete process in xfs_ail_update_finish().
+> + */
+> +xfs_lsn_t
+>  xfs_ail_delete_one(
+>  	struct xfs_ail		*ailp,
+>  	struct xfs_log_item	*lip)
+>  {
+>  	struct xfs_log_item	*mlip = xfs_ail_min(ailp);
+> +	xfs_lsn_t		lsn = lip->li_lsn;
+>  
+>  	trace_xfs_ail_delete(lip, mlip->li_lsn, lip->li_lsn);
+>  	xfs_ail_delete(ailp, lip);
+> @@ -774,7 +792,9 @@ xfs_ail_delete_one(
+>  	clear_bit(XFS_LI_IN_AIL, &lip->li_flags);
+>  	lip->li_lsn = 0;
+>  
+> -	return mlip == lip;
+> +	if (mlip == lip)
+> +		return lsn;
+> +	return 0;
+>  }
+>  
+>  /**
+> @@ -805,7 +825,7 @@ xfs_trans_ail_delete(
+>  	int			shutdown_type)
+>  {
+>  	struct xfs_mount	*mp = ailp->ail_mount;
+> -	bool			need_update;
+> +	xfs_lsn_t		tail_lsn;
+>  
+>  	if (!test_bit(XFS_LI_IN_AIL, &lip->li_flags)) {
+>  		spin_unlock(&ailp->ail_lock);
+> @@ -818,8 +838,8 @@ xfs_trans_ail_delete(
+>  		return;
+>  	}
+>  
+> -	need_update = xfs_ail_delete_one(ailp, lip);
+> -	xfs_ail_update_finish(ailp, need_update);
+> +	tail_lsn = xfs_ail_delete_one(ailp, lip);
+> +	xfs_ail_update_finish(ailp, tail_lsn);
+>  }
+>  
+>  int
+> diff --git a/fs/xfs/xfs_trans_priv.h b/fs/xfs/xfs_trans_priv.h
+> index 64ffa746730e..35655eac01a6 100644
+> --- a/fs/xfs/xfs_trans_priv.h
+> +++ b/fs/xfs/xfs_trans_priv.h
+> @@ -91,8 +91,8 @@ xfs_trans_ail_update(
+>  	xfs_trans_ail_update_bulk(ailp, NULL, &lip, 1, lsn);
+>  }
+>  
+> -bool xfs_ail_delete_one(struct xfs_ail *ailp, struct xfs_log_item *lip);
+> -void xfs_ail_update_finish(struct xfs_ail *ailp, bool do_tail_update)
+> +xfs_lsn_t xfs_ail_delete_one(struct xfs_ail *ailp, struct xfs_log_item *lip);
+> +void xfs_ail_update_finish(struct xfs_ail *ailp, xfs_lsn_t old_lsn)
+>  			__releases(ailp->ail_lock);
+>  void xfs_trans_ail_delete(struct xfs_ail *ailp, struct xfs_log_item *lip,
+>  		int shutdown_type);
+> -- 
+> 2.24.0.rc0
+> 
