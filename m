@@ -2,125 +2,111 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07C2FCA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:57:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A95BCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:58:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C928A21D71
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:57:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3211421D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:58:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Us4rdO0E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728281AbfKDK5x convert rfc822-to-8bit (ORCPT
+        id S1728560AbfKDK62 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 05:57:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38172 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727320AbfKDK5x (ORCPT
+        Mon, 4 Nov 2019 05:58:28 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:36732 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727985AbfKDK61 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 05:57:53 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA4AtCOC089296
-        for <linux-kernel@vger.kernel.org>; Mon, 4 Nov 2019 05:57:52 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w2hubsq8r-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 05:57:51 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <vaibhav@linux.ibm.com>;
-        Mon, 4 Nov 2019 10:57:50 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 4 Nov 2019 10:57:46 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA4AvjSh39845932
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 4 Nov 2019 10:57:45 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1C2F711C05E;
-        Mon,  4 Nov 2019 10:57:45 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9FD5811C050;
-        Mon,  4 Nov 2019 10:57:41 +0000 (GMT)
-Received: from vajain21.in.ibm.com (unknown [9.109.195.239])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with SMTP;
-        Mon,  4 Nov 2019 10:57:41 +0000 (GMT)
-Received: by vajain21.in.ibm.com (sSMTP sendmail emulation); Mon, 04 Nov 2019 16:27:40 +0530
-From:   Vaibhav Jain <vaibhav@linux.ibm.com>
-To:     Markus Elfring <Markus.Elfring@web.de>,
-        linuxppc-dev@lists.ozlabs.org,
-        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        "Oliver O'Halloran" <oohall@gmail.com>,
-        Paul Mackerras <paulus@samba.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH] powerpc/papr_scm: Delete unnecessary assignment for the
- field =?utf-8?B?4oCcb3duZXLigJ0=?=
-In-Reply-To: <389022fc-71b0-7952-3404-1da136dbdfd9@web.de>
-References: <389022fc-71b0-7952-3404-1da136dbdfd9@web.de>
-Date:   Mon, 04 Nov 2019 16:27:40 +0530
+        Mon, 4 Nov 2019 05:58:27 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4AtrM6192477;
+        Mon, 4 Nov 2019 10:58:21 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ content-transfer-encoding : in-reply-to; s=corp-2019-08-05;
+ bh=4Huoh6wIugbFZjm22QuBBMKrcUJPLMn8KTchxHNOYUs=;
+ b=Us4rdO0EZAqnQE6q0ebNjGiLk/WCjwlneykewTNpgc7fSmdinOhKH/ZQeXpBmQOxxi7J
+ 51gnEg3dU75yEIGmH5ni4BnLMp5p2dNq0oyY6eqSyLUrBL7gc4XXdT3eKg65IQqgiNsl
+ 98ahwAuAyY8CqGaT4c+ITllsOKkqByJrJNr0yMTFTW4vGIBM+ezl/9Jl+ss9SwIIv7Ca
+ 30D6y0HsjcePt7sGVfu1Sv+TMS7GTmGSXFsqNW2ZfZDJQQFZx4Gu7/HX6tXyl7g6lIwZ
+ H1GmnuusRDTQa4uRFSAiWkAzNBYYVClL7XOv2VD8KodLu/ZSPyWg3smrrldWf8AKcdiU uQ== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w12eqxa8e-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 10:58:21 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA4AssUd142627;
+        Mon, 4 Nov 2019 10:56:20 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3020.oracle.com with ESMTP id 2w1kxd1qcm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 04 Nov 2019 10:56:20 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA4AuJ7s000754;
+        Mon, 4 Nov 2019 10:56:19 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 02:56:19 -0800
+Date:   Mon, 4 Nov 2019 13:56:12 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Valdis =?utf-8?Q?Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
+Cc:     linux-fsdevel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 07/10] staging: exfat: Clean up return codes -
+ FFS_SUCCESS
+Message-ID: <20191104105612.GG21796@kadam>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+ <20191104014510.102356-8-Valdis.Kletnieks@vt.edu>
+ <20191104100413.GC10409@kadam>
+ <128761.1572864835@turing-police>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-X-TM-AS-GCONF: 00
-x-cbid: 19110410-0020-0000-0000-00000382562B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110410-0021-0000-0000-000021D87950
-Message-Id: <87k18fewnv.fsf@vajain21.in.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-04_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=997 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911040109
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <128761.1572864835@turing-police>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911040109
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9430 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911040109
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Markus Elfring <Markus.Elfring@web.de> writes:
+On Mon, Nov 04, 2019 at 05:53:55AM -0500, Valdis Klētnieks wrote:
+> On Mon, 04 Nov 2019 13:04:14 +0300, Dan Carpenter said:
+> > On Sun, Nov 03, 2019 at 08:45:03PM -0500, Valdis Kletnieks wrote:
+> > > -	if (sector_read(sb, sec, &bp->buf_bh, 1) != FFS_SUCCESS) {
+> > > +	if (sector_read(sb, sec, &bp->buf_bh, 1) != 0) {
+> >
+> > It's better to just remove the "!= 0" double negative.  != 0 should be
+> > used when we are talking about the number zero as in "cnt != 0" and for
+> > "strcmp(foo, bar) != 0" where it means that "foo != bar".
+> 
+> "Fix up ==0 and !=0" is indeed on the to-do list.
+> 
+> This patch converted 82 uses of FFS_SUCCESS, of which 33 had the != idiom in
+> use.  Meanwhile, overall there's 53 '!= 0' and 95 '== 0' uses.
+> 
+> In other words, even if I fixed all of those that were involved in this patch,
+> there would *still* be more patching to do.
 
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Sun, 3 Nov 2019 13:23:13 +0100
->
-> The field “owner” is set by the core.
-> Thus delete an unneeded initialisation.
->
-> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> ---
->  arch/powerpc/platforms/pseries/papr_scm.c | 1 -
->  1 file changed, 1 deletion(-)
->
-> diff --git a/arch/powerpc/platforms/pseries/papr_scm.c b/arch/powerpc/platforms/pseries/papr_scm.c
-> index ee07d0718bf1..f87b474d25a7 100644
-> --- a/arch/powerpc/platforms/pseries/papr_scm.c
-> +++ b/arch/powerpc/platforms/pseries/papr_scm.c
-> @@ -513,7 +513,6 @@ static struct platform_driver papr_scm_driver = {
->  	.remove = papr_scm_remove,
->  	.driver = {
->  		.name = "papr_scm",
-> -		.owner = THIS_MODULE,
->  		.of_match_table = papr_scm_match,
->  	},
->  };
-> --
-> 2.23.0
->
-LGTM
+Very good.  Sounds like the plan.
 
-Acked-by: Vaibhav Jain <vaibhav@linux.ibm.com>
-
-Thanks,
--- 
-Vaibhav Jain <vaibhav@linux.ibm.com>
-Linux Technology Center, IBM India Pvt. Ltd.
+regards,
+dan carpenter
 
