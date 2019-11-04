@@ -2,103 +2,92 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 477F1CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:19:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C0ACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:19:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1778A21655
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:19:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tp4VYwNT"
+	by mail.kernel.org (Postfix) with ESMTP id 4189A218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 14:19:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfKDOTl (ORCPT
+        id S1728421AbfKDOTx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 09:19:41 -0500
-Received: from mail-il1-f196.google.com ([209.85.166.196]:35241 "EHLO
-        mail-il1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727861AbfKDOTk (ORCPT
+        Mon, 4 Nov 2019 09:19:53 -0500
+Received: from coyote.holtmann.net ([212.227.132.17]:40716 "EHLO
+        mail.holtmann.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727788AbfKDOTw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 09:19:40 -0500
-Received: by mail-il1-f196.google.com with SMTP id z12so2959363ilp.2;
-        Mon, 04 Nov 2019 06:19:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lF1WE1isaBjDr+TMSOi18bgjGXsXpz2MAkSlnPFM5BM=;
-        b=tp4VYwNTyrIbMsMDKBZMr0U1v1tpkzNfA6hg8iB3X4E+qmlzTt7ygvAGhuuifV84lr
-         nfMseSsvQQAnAr5vgX6pUnRZz0PBQEoNcNZfYZlQDdznGJKUwoBlmcDNev/OzWnjfgoe
-         Fm/zQ7VEucGrqD0wO//NWdSc+Zg6Ff+J6XfLqXnEmQD0NcJAw2rqhJ+RCNtWniSIXdhV
-         OI8iJcY2x3UFci7Lgd+zT3TBTZS6OaGlaDQgAR1g7CznZksADbGM+OdrbpOsjiDZaJGd
-         tXNzxQn+qVLxDQQA5k47VOji8Ih8fkPKg07AdHNITnrvjhrjJYUqgrR+sv3HLRJVX6NR
-         zXEw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lF1WE1isaBjDr+TMSOi18bgjGXsXpz2MAkSlnPFM5BM=;
-        b=JJ1PnlkacMFV5dtv6MrKxRNDEcggpQWc6obg0OtZCL/cZkpof78wlAwGyKOQuY69ZN
-         z85LdcHIC+rmYJpoi0wN7BVxU/fIQdtVHtr2acWcPaM8s5ISz7i8f6Cqn1fxXgenWyWi
-         q26jFqz0tz+rbGtG7NPcsC1JS64tGqHKTNkbdoLYPOmoMYnz0Chn30vHlnpnP3vl3PpL
-         /iUYvWqcg/zx3MdJ4/KQAH066M6ZZQ7QOQ5SGbQPPrl6lBHhtPqzgu/a7FCPZhVUDDVc
-         U9J7vxHDzOfwhnV2r/EQbAWWrH8D7TphEN5wPGXmXCQdhK2tSgnaGcNde76kPYeV+z6a
-         EOSA==
-X-Gm-Message-State: APjAAAUSrDmJ/VhKhwjhlkSEyL8u4Z/cHjxpJXKhO2okN+QKYmhylvWP
-        DoT56FXXMnT8ZHTNaKtnaVw4oImmNE2ZQqgvEVU=
-X-Google-Smtp-Source: APXvYqyrBchjwhSoha+V5PjVcj9qJMDkIexcW0zjXh+uZ5qirAamQ4EPo2ARC6NJ77ISTRwnIbbz398vQcaAwYQMY/s=
-X-Received: by 2002:a05:6e02:c2c:: with SMTP id q12mr29091298ilg.205.1572877179288;
- Mon, 04 Nov 2019 06:19:39 -0800 (PST)
-MIME-Version: 1.0
-References: <20190302141704.32547-1-marex@denx.de> <20191101204801.16328-1-TheSven73@gmail.com>
- <20191104070116.GM57214@dtor-ws> <CAGngYiV_eP0M48Ei8K+uNWb_yW1Yi7C_E5M6O9HpJmrnxkmvyw@mail.gmail.com>
-In-Reply-To: <CAGngYiV_eP0M48Ei8K+uNWb_yW1Yi7C_E5M6O9HpJmrnxkmvyw@mail.gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 4 Nov 2019 08:19:28 -0600
-Message-ID: <CAHCN7xJmJH1gqnE1TBi7hEYnhg0aV8TOW8==QxXV3CEOOk560g@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Marek Vasut <marex@denx.de>, linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 4 Nov 2019 09:19:52 -0500
+Received: from marcel-macbook.fritz.box (p4FEFC197.dip0.t-ipconnect.de [79.239.193.151])
+        by mail.holtmann.org (Postfix) with ESMTPSA id EEC21CECD6;
+        Mon,  4 Nov 2019 15:28:53 +0100 (CET)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH] Bluetooth: hci_qca: add PM support
+From:   Marcel Holtmann <marcel@holtmann.org>
+In-Reply-To: <20191031104614.165120-1-tientzu@chromium.org>
+Date:   Mon, 4 Nov 2019 15:19:50 +0100
+Cc:     Johan Hedberg <johan.hedberg@gmail.com>,
+        Balakrishna Godavarthi <bgodavar@codeaurora.org>,
+        Rocky Liao <rjliao@codeaurora.org>,
+        Bluez mailing list <linux-bluetooth@vger.kernel.org>,
+        linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Message-Id: <A80987FF-C9E1-4790-91F1-F86E405B9691@holtmann.org>
+References: <20191031104614.165120-1-tientzu@chromium.org>
+To:     Claire Chang <tientzu@chromium.org>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 7:49 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> On Mon, Nov 4, 2019 at 2:01 AM Dmitry Torokhov
-> <dmitry.torokhov@gmail.com> wrote:
-> >
-> > Can you please tell me what device you have? Do the patches work for
-> > you?
->
-> I have an ILI2117A/ILI2118A.
->
-> I'll try out the patches today. I'm stuck with a 4.1 vendor kernel, so
-> I'll need to backport the (patched) mainline driver to 4.1 before
-> I'm able to test.
->
-> I wil try Marek's patch, and Dmitry's rebased patch from
-> https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=ili2xxx-touchscreen
-> and let you know the results.
+Hi Claire,
 
-For what it's worth, I tried the 3-patch series from that branch on
-5.4-RC5, but the ts_calibrate and ts_test_mt do not appear to receive
-touch info.  They execute when I 'export
-TSLIB_TSDEVICE=/dev/input/event0' but I don't get touch data.
+> Add PM suspend/resume callbacks for hci_qca driver.
+> 
+> BT host will make sure both Rx and Tx go into sleep state in
+> qca_suspend. Without this, Tx may still remain in awake state, which
+> prevents BTSOC from entering deep sleep. For example, BlueZ will send
+> Set Event Mask to device when suspending and this will wake the device
+> Rx up. However, the Tx idle timeout on the host side is 2000 ms. If the
+> host is suspended before its Tx idle times out, it won't send
+> HCI_IBS_SLEEP_IND to the device and the device Rx will remain awake.
+> 
+> We implement this by canceling relevant work in workqueue, sending
+> HCI_IBS_SLEEP_IND to the device and then waiting HCI_IBS_SLEEP_IND sent
+> by the device.
+> 
+> In order to prevent the device from being awaken again after qca_suspend
+> is called, we introduce QCA_SUSPEND flag. QCA_SUSPEND is set in the
+> beginning of qca_suspend to indicate system is suspending and that we'd
+> like to ignore any further wake events.
+> 
+> With QCA_SUSPEND and spinlock, we can avoid race condition, e.g. if
+> qca_enqueue acquires qca->hci_ibs_lock before qca_suspend calls
+> cancel_work_sync and then qca_enqueue adds a new qca->ws_awake_device
+> work after the previous one is cancelled.
+> 
+> If BTSOC wants to wake the whole system up after qca_suspend is called,
+> it will keep sending HCI_IBS_WAKE_IND and uart driver will take care of
+> waking the system. For example, uart driver will reconfigure its Rx pin
+> to a normal GPIO pin and enable irq wake on that pin when suspending.
+> Once host detects Rx falling, the system will begin resuming. Then, the
+> BT host clears QCA_SUSPEND flag in qca_resume and begins dealing with
+> normal HCI packets. By doing so, only a few HCI_IBS_WAKE_IND packets are
+> lost and there is no data packet loss.
+> 
+> Signed-off-by: Claire Chang <tientzu@chromium.org>
+> ---
+> drivers/bluetooth/hci_qca.c | 127 +++++++++++++++++++++++++++++++++++-
+> 1 file changed, 124 insertions(+), 3 deletions(-)
 
-If I do a hex-dump of /dev/event0 and it dumps data if and only if I
-hold my finger on the touch screen for a while.
+patch has been applied to bluetooth-next tree.
 
-I'll try just doing the 1st patch to see if it it's any better.
+Regards
 
-adam
->
-> If the problem with Dmitry's patch is located in ili251x_read_touch_data,
-> then using a ILI2117A should work fine.
+Marcel
+
