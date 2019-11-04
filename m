@@ -2,111 +2,112 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBB6BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A2FECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98B9F21D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAF3B218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 12:12:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728739AbfKDMK4 (ORCPT
+        id S1728881AbfKDMMz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 07:10:56 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:37212 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfKDMKz (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 07:10:55 -0500
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1iRbAx-0005Ym-MN; Mon, 04 Nov 2019 13:09:39 +0100
-Date:   Mon, 4 Nov 2019 13:09:39 +0100
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Lai Jiangshan <laijs@linux.alibaba.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
-        "Paul E. McKenney" <paulmck@kernel.org>,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Andi Kleen <ak@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Kees Cook <keescook@chromium.org>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Babu Moger <Babu.Moger@amd.com>,
-        Rik van Riel <riel@surriel.com>,
-        "Chang S. Bae" <chang.seok.bae@intel.com>,
-        Jann Horn <jannh@google.com>,
-        David Windsor <dwindsor@gmail.com>,
-        Elena Reshetova <elena.reshetova@intel.com>,
-        Yuyang Du <duyuyang@gmail.com>,
-        Anshuman Khandual <anshuman.khandual@arm.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Christian Brauner <christian.brauner@ubuntu.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Dmitry V. Levin" <ldv@altlinux.org>, rcu@vger.kernel.org
-Subject: Re: [PATCH V2 7/7] x86,rcu: use percpu rcu_preempt_depth
-Message-ID: <20191104120939.5e4hdcoat2v4jxov@linutronix.de>
-References: <20191102124559.1135-1-laijs@linux.alibaba.com>
- <20191102124559.1135-8-laijs@linux.alibaba.com>
- <20191104092519.nukaz5qmgiskzafi@linutronix.de>
- <4878ccfd-7a4e-4f84-9bc3-1d477e077587@linux.alibaba.com>
+        Mon, 4 Nov 2019 07:12:55 -0500
+Received: from gloria.sntech.de ([185.11.138.130]:47048 "EHLO gloria.sntech.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728188AbfKDMMy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 07:12:54 -0500
+Received: from ip5f5a6266.dynamic.kabel-deutschland.de ([95.90.98.102] helo=diego.localnet)
+        by gloria.sntech.de with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <heiko@sntech.de>)
+        id 1iRbDx-0000l0-SX; Mon, 04 Nov 2019 13:12:45 +0100
+From:   Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+To:     Markus Reichl <m.reichl@fivetechno.de>,
+        Jagan Teki <jagan@amarulasolutions.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: dts: rockchip: Split rk3399-roc-pc for with and without mezzanine board.
+Date:   Mon, 04 Nov 2019 13:12:45 +0100
+Message-ID: <2226540.xovL9aYQn6@diego>
+In-Reply-To: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
+References: <075b3fa6-dab7-5fec-df68-b53f32bf061b@fivetechno.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <4878ccfd-7a4e-4f84-9bc3-1d477e077587@linux.alibaba.com>
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-04 19:41:20 [+0800], Lai Jiangshan wrote:
-> > Is there a benchmark saying how much we gain from this?
+Hi Markus,
+
+Am Freitag, 1. November 2019, 17:54:23 CET schrieb Markus Reichl:
+> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
+> POE interfaces. Use it with a separate dts.
 > 
-> Hello
+> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
+> ---
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-roc-pc-mezz.dts  |  52 ++
+>  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
+>  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 767 ++++++++++++++++++
+>  4 files changed, 821 insertions(+), 756 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
 > 
-> Maybe I can write a tight loop for testing, but I don't
-> think anyone will be interesting in it.
-> 
-> I'm also trying to find some good real tests. I need
-> some suggestions here.
+> diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+> index a959434ad46e..80ee9f1fc5f5 100644
+> --- a/arch/arm64/boot/dts/rockchip/Makefile
+> +++ b/arch/arm64/boot/dts/rockchip/Makefile
+> @@ -28,6 +28,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-neo4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-orangepi.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+> +dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc-mezz.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock-pi-4.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+>  dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rockpro64.dtb
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> new file mode 100644
+> index 000000000000..ee77677d2cf2
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezz.dts
+> @@ -0,0 +1,52 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Copyright (c) 2017 T-Chip Intelligent Technology Co., Ltd
+> + * Copyright (c) 2019 Markus Reichl <m.reichl@fivetechno.de>
+> + */
+> +
+> +/dts-v1/;
+> +#include "rk3399-roc-pc.dtsi"
+> +
+> +/ {
+> +	model = "Firefly ROC-RK3399-PC Mezzanine Board";
+> +	compatible = "firefly,roc-rk3399-pc", "rockchip,rk3399";
 
-There is rcutorture but I don't know how much of performance test this
-is, Paul would know.
+different board with same compatible isn't possible, so
+you'll need a new compatible for it and add a new line to
+the roc-pc entry in
+	Documentation/devicetree/bindings/arm/rockchip.yaml
 
-A micro benchmark is one thing. Any visible changes in userland to
-workloads like building a kernel or hackbench? 
+Either you see it as
+- a board + hat, using dt overlay and same compatible
+- a completely separate board, which needs a separate
+  compatible as well
 
-I don't argue that incrementing a per-CPU variable is more efficient
-than reading a per-CPU variable, adding an offset and then incrementing
-it. I was just curious to see if there are any numbers on it.
+And as discussed in the previous thread
+http://lists.infradead.org/pipermail/linux-rockchip/2019-November/027592.html
+but also in Jagan's response that really is somehow a grey area
+for something relatively static as the M.2 extension.
 
-> > > No function call when using rcu_read_[un]lock().
-> > > Single instruction for rcu_read_lock().
-> > > 2 instructions for fast path of rcu_read_unlock().
-> > 
-> > I think these were not inlined due to the header requirements.
-> 
-> objdump -D -S kernel/workqueue.o shows (selected fractions):
 
-That was not what I meant. To inline current rcu_read_lock() would mean
-to include definition for struct task_struct (and everything down the
-road) in the rcu headers which isn't working.
+Heiko
 
-> Best regards
-> Lai
 
-Sebastian
