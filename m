@@ -2,204 +2,229 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD4D2CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC60CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1D620B7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8D9A20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 16:11:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728874AbfKDQLC (ORCPT
+        id S1729078AbfKDQLQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 11:11:02 -0500
-Received: from mga14.intel.com ([192.55.52.115]:36385 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727838AbfKDQLC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 11:11:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 08:11:00 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,267,1569308400"; 
-   d="scan'208";a="195496809"
-Received: from marshy.an.intel.com ([10.122.105.159])
-  by orsmga008.jf.intel.com with ESMTP; 04 Nov 2019 08:10:59 -0800
-From:   richard.gong@linux.intel.com
-To:     gregkh@linuxfoundation.org
-Cc:     linux-kernel@vger.kernel.org, dinguyen@kernel.org,
-        richard.gong@intel.com
-Subject: [PATCHv3] firmware: Fix incompatible function behavior for RSU driver
-Date:   Mon,  4 Nov 2019 10:24:36 -0600
-Message-Id: <1572884676-1385-1-git-send-email-richard.gong@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 4 Nov 2019 11:11:16 -0500
+Received: from mx3.molgen.mpg.de ([141.14.17.11]:44431 "EHLO mx1.molgen.mpg.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727838AbfKDQLQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 11:11:16 -0500
+Received: from rabammel.molgen.mpg.de (rabammel.molgen.mpg.de [141.14.30.220])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: pmenzel)
+        by mx.molgen.mpg.de (Postfix) with ESMTPSA id 8C69020225AE2;
+        Mon,  4 Nov 2019 17:11:11 +0100 (CET)
+Subject: Re: USB devices on Dell TB16 dock stop working after resuming
+To:     Mario Limonciello <mario.limonciello@dell.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     Andreas Noever <andreas.noever@gmail.com>,
+        Michael Jamet <michael.jamet@intel.com>,
+        Yehezkel Bernat <YehezkelShB@gmail.com>,
+        Christian Kellner <ck@xatom.net>, linux-kernel@vger.kernel.org,
+        Anthony Wong <anthony.wong@canonical.com>
+References: <5d2b39bc-5952-c2b6-63b3-bce28122ffd5@molgen.mpg.de>
+ <20191104142459.GC2552@lahna.fi.intel.com>
+ <20191104144436.GD2552@lahna.fi.intel.com>
+ <20191104154446.GH2552@lahna.fi.intel.com>
+ <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+From:   Paul Menzel <pmenzel@molgen.mpg.de>
+Message-ID: <d8cb6bc6-8145-eaed-5ba4-d7291478bdd7@molgen.mpg.de>
+Date:   Mon, 4 Nov 2019 17:11:10 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.0
+MIME-Version: 1.0
+In-Reply-To: <ea829adedf0445c0845e25d6e4b47905@AUSX13MPC105.AMER.DELL.COM>
+Content-Type: multipart/signed; protocol="application/pkcs7-signature"; micalg=sha-256; boundary="------------ms000701090708010009000403"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Gong <richard.gong@intel.com>
+This is a cryptographically signed message in MIME format.
 
-The older versions of remote system update (RSU) firmware don't support
-retry and notify features then the kernel module dies when it queries
-the RSU retry counter or performs notify operation.
+--------------ms000701090708010009000403
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: quoted-printable
 
-Update the Intel service layer and RSU drivers to be compatible with
-all versions of RSU firmware.
+Dear Mika, dear Mario,
 
-Reported-by: Radu Barcau <radu.bacrau@intel.com>
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Richard Gong <richard.gong@intel.com>
----
-v2: update commit messages
-v3: fix 2 build warnings reported by test robot
----
- drivers/firmware/stratix10-rsu.c                   | 42 ++++++++++------------
- drivers/firmware/stratix10-svc.c                   | 18 +++++++++-
- .../linux/firmware/intel/stratix10-svc-client.h    |  8 +++++
- 3 files changed, 43 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/firmware/stratix10-rsu.c b/drivers/firmware/stratix10-rsu.c
-index bb008c0..f853333 100644
---- a/drivers/firmware/stratix10-rsu.c
-+++ b/drivers/firmware/stratix10-rsu.c
-@@ -20,7 +20,6 @@
- #define RSU_VERSION_MASK		GENMASK_ULL(63, 32)
- #define RSU_ERROR_LOCATION_MASK		GENMASK_ULL(31, 0)
- #define RSU_ERROR_DETAIL_MASK		GENMASK_ULL(63, 32)
--#define RSU_FW_VERSION_MASK		GENMASK_ULL(15, 0)
- 
- #define RSU_TIMEOUT	(msecs_to_jiffies(SVC_RSU_REQUEST_TIMEOUT_MS))
- 
-@@ -109,9 +108,12 @@ static void rsu_command_callback(struct stratix10_svc_client *client,
- {
- 	struct stratix10_rsu_priv *priv = client->priv;
- 
--	if (data->status != BIT(SVC_STATUS_RSU_OK))
--		dev_err(client->dev, "RSU returned status is %i\n",
--			data->status);
-+	if (data->status == BIT(SVC_STATUS_RSU_NO_SUPPORT))
-+		dev_warn(client->dev, "Secure FW doesn't support notify\n");
-+	else if (data->status == BIT(SVC_STATUS_RSU_ERROR))
-+		dev_err(client->dev, "Failure, returned status is %lu\n",
-+			BIT(data->status));
-+
- 	complete(&priv->completion);
- }
- 
-@@ -133,9 +135,11 @@ static void rsu_retry_callback(struct stratix10_svc_client *client,
- 
- 	if (data->status == BIT(SVC_STATUS_RSU_OK))
- 		priv->retry_counter = *counter;
-+	else if (data->status == BIT(SVC_STATUS_RSU_NO_SUPPORT))
-+		dev_warn(client->dev, "Secure FW doesn't support retry\n");
- 	else
--		dev_err(client->dev, "Failed to get retry counter %i\n",
--			data->status);
-+		dev_err(client->dev, "Failed to get retry counter %lu\n",
-+			BIT(data->status));
- 
- 	complete(&priv->completion);
- }
-@@ -333,15 +337,10 @@ static ssize_t notify_store(struct device *dev,
- 		return ret;
- 	}
- 
--	/* only 19.3 or late version FW supports retry counter feature */
--	if (FIELD_GET(RSU_FW_VERSION_MASK, priv->status.version)) {
--		ret = rsu_send_msg(priv, COMMAND_RSU_RETRY,
--				   0, rsu_retry_callback);
--		if (ret) {
--			dev_err(dev,
--				"Error, getting RSU retry %i\n", ret);
--			return ret;
--		}
-+	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting RSU retry %i\n", ret);
-+		return ret;
- 	}
- 
- 	return count;
-@@ -413,15 +412,10 @@ static int stratix10_rsu_probe(struct platform_device *pdev)
- 		stratix10_svc_free_channel(priv->chan);
- 	}
- 
--	/* only 19.3 or late version FW supports retry counter feature */
--	if (FIELD_GET(RSU_FW_VERSION_MASK, priv->status.version)) {
--		ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0,
--				   rsu_retry_callback);
--		if (ret) {
--			dev_err(dev,
--				"Error, getting RSU retry %i\n", ret);
--			stratix10_svc_free_channel(priv->chan);
--		}
-+	ret = rsu_send_msg(priv, COMMAND_RSU_RETRY, 0, rsu_retry_callback);
-+	if (ret) {
-+		dev_err(dev, "Error, getting RSU retry %i\n", ret);
-+		stratix10_svc_free_channel(priv->chan);
- 	}
- 
- 	return ret;
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index b4853211..c6c3140 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -493,8 +493,24 @@ static int svc_normal_to_secure_thread(void *data)
- 			pdata->chan->scl->receive_cb(pdata->chan->scl, cbdata);
- 			break;
- 		default:
--			pr_warn("it shouldn't happen\n");
-+			pr_warn("Secure firmware doesn't support...\n");
-+
-+			/*
-+			 * be compatible with older version firmware which
-+			 * doesn't support RSU notify or retry
-+			 */
-+			if ((pdata->command == COMMAND_RSU_RETRY) ||
-+				(pdata->command == COMMAND_RSU_NOTIFY)) {
-+				cbdata->status =
-+					BIT(SVC_STATUS_RSU_NO_SUPPORT);
-+				cbdata->kaddr1 = NULL;
-+				cbdata->kaddr2 = NULL;
-+				cbdata->kaddr3 = NULL;
-+				pdata->chan->scl->receive_cb(
-+					pdata->chan->scl, cbdata);
-+			}
- 			break;
-+
- 		}
- 	};
- 
-diff --git a/include/linux/firmware/intel/stratix10-svc-client.h b/include/linux/firmware/intel/stratix10-svc-client.h
-index b6c4302..59bc6e2 100644
---- a/include/linux/firmware/intel/stratix10-svc-client.h
-+++ b/include/linux/firmware/intel/stratix10-svc-client.h
-@@ -41,6 +41,12 @@
-  *
-  * SVC_STATUS_RSU_OK:
-  * Secure firmware accepts the request of remote status update (RSU).
-+ *
-+ * SVC_STATUS_RSU_ERROR:
-+ * Error encountered during remote system update.
-+ *
-+ * SVC_STATUS_RSU_NO_SUPPORT:
-+ * Secure firmware doesn't support RSU retry or notify feature.
-  */
- #define SVC_STATUS_RECONFIG_REQUEST_OK		0
- #define SVC_STATUS_RECONFIG_BUFFER_SUBMITTED	1
-@@ -50,6 +56,8 @@
- #define SVC_STATUS_RECONFIG_ERROR		5
- #define SVC_STATUS_RSU_OK			6
- #define SVC_STATUS_RSU_ERROR			7
-+#define SVC_STATUS_RSU_NO_SUPPORT		8
-+
- /**
-  * Flag bit for COMMAND_RECONFIG
-  *
--- 
-2.7.4
+On 2019-11-04 16:49, Mario.Limonciello@dell.com wrote:
 
+>> From: Mika Westerberg <mika.westerberg@linux.intel.com>
+>> Sent: Monday, November 4, 2019 9:45 AM
+
+>> On Mon, Nov 04, 2019 at 04:44:40PM +0200, Mika Westerberg wrote:
+>>> On Mon, Nov 04, 2019 at 04:25:03PM +0200, Mika Westerberg wrote:
+
+>>>> On Mon, Nov 04, 2019 at 02:13:13PM +0100, Paul Menzel wrote:
+
+>>>>> On the Dell XPS 13 9380 with Debian Sid/unstable with Linux 5.3.7
+>>>>> suspending the system, and resuming with Dell=E2=80=99s Thunderbolt=
+ TB16
+>>>>> dock connected, the USB input devices, keyboard and mouse,
+>>>>> connected to the TB16 stop working. They work for a few seconds
+>>>>> (mouse cursor can be moved), but then stop working. The laptop
+>>>>> keyboard and touchpad still works fine. All firmware is up-to-date
+>>>>> according to `fwupdmgr`.
+>>>>
+>>>> What are the exact steps to reproduce? Just "echo mem >
+>>>> /sys/power/state" and then resume by pressing power button?
+
+GNOME Shell 3.34.1+git20191024-1 is used, and the user just closes the
+display. So more than `echo mem > /sys/power/state` is done. What
+distribution do you use?
+
+>>> I tried v5.4-rc6 on my 9380 with TB16 dock connected and did a couple=
+ of
+>>> suspend/resume cycles (to s2idle) but I don't see any issues.
+>>>
+>>> I may have older/different firmware than you, though.
+>>
+>> Upgraded BIOS to 1.8.0 and TBT NVM to v44 but still can't reproduce th=
+is
+>> on my system :/
+
+The user reported the issue with the previous firmwares 1.x and TBT NVM v=
+40.
+Updating to the recent version (I got the logs with) did not fix the issu=
+e.
+
+> Loop Anthony.  Anthony can you see if you guys repro this at all too?
+>=20
+> As a potential point of comparison and sometimes pain area, I'm wonderi=
+ng if
+> something in userland is poking power states for Paul leading to this.
+>=20
+> Paul what sort of power management policies are you using on your machi=
+ne?=20
+> Anything like:
+> * powertop  --auto-tune,=20
+> * TLP
+> * systemd > 243 (contains some stuff for automatic suspend)
+
+I=E2=80=99ll check with the user again, but to my knowledge nothing from =
+the list is
+used on the device.
+
+
+Kind regards,
+
+Paul
+
+
+--------------ms000701090708010009000403
+Content-Type: application/pkcs7-signature; name="smime.p7s"
+Content-Transfer-Encoding: base64
+Content-Disposition: attachment; filename="smime.p7s"
+Content-Description: S/MIME Cryptographic Signature
+
+MIAGCSqGSIb3DQEHAqCAMIACAQExDzANBglghkgBZQMEAgEFADCABgkqhkiG9w0BBwEAAKCC
+EFowggUSMIID+qADAgECAgkA4wvV+K8l2YEwDQYJKoZIhvcNAQELBQAwgYIxCzAJBgNVBAYT
+AkRFMSswKQYDVQQKDCJULVN5c3RlbXMgRW50ZXJwcmlzZSBTZXJ2aWNlcyBHbWJIMR8wHQYD
+VQQLDBZULVN5c3RlbXMgVHJ1c3QgQ2VudGVyMSUwIwYDVQQDDBxULVRlbGVTZWMgR2xvYmFs
+Um9vdCBDbGFzcyAyMB4XDTE2MDIyMjEzMzgyMloXDTMxMDIyMjIzNTk1OVowgZUxCzAJBgNV
+BAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1dHNjaGVu
+IEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNVBAMTJERG
+Ti1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjCCASIwDQYJKoZIhvcNAQEBBQAD
+ggEPADCCAQoCggEBAMtg1/9moUHN0vqHl4pzq5lN6mc5WqFggEcVToyVsuXPztNXS43O+FZs
+FVV2B+pG/cgDRWM+cNSrVICxI5y+NyipCf8FXRgPxJiZN7Mg9mZ4F4fCnQ7MSjLnFp2uDo0p
+eQcAIFTcFV9Kltd4tjTTwXS1nem/wHdN6r1ZB+BaL2w8pQDcNb1lDY9/Mm3yWmpLYgHurDg0
+WUU2SQXaeMpqbVvAgWsRzNI8qIv4cRrKO+KA3Ra0Z3qLNupOkSk9s1FcragMvp0049ENF4N1
+xDkesJQLEvHVaY4l9Lg9K7/AjsMeO6W/VRCrKq4Xl14zzsjz9AkH4wKGMUZrAcUQDBHHWekC
+AwEAAaOCAXQwggFwMA4GA1UdDwEB/wQEAwIBBjAdBgNVHQ4EFgQUk+PYMiba1fFKpZFK4OpL
+4qIMz+EwHwYDVR0jBBgwFoAUv1kgNgB5oKAia4zV8mHSuCzLgkowEgYDVR0TAQH/BAgwBgEB
+/wIBAjAzBgNVHSAELDAqMA8GDSsGAQQBga0hgiwBAQQwDQYLKwYBBAGBrSGCLB4wCAYGZ4EM
+AQICMEwGA1UdHwRFMEMwQaA/oD2GO2h0dHA6Ly9wa2kwMzM2LnRlbGVzZWMuZGUvcmwvVGVs
+ZVNlY19HbG9iYWxSb290X0NsYXNzXzIuY3JsMIGGBggrBgEFBQcBAQR6MHgwLAYIKwYBBQUH
+MAGGIGh0dHA6Ly9vY3NwMDMzNi50ZWxlc2VjLmRlL29jc3ByMEgGCCsGAQUFBzAChjxodHRw
+Oi8vcGtpMDMzNi50ZWxlc2VjLmRlL2NydC9UZWxlU2VjX0dsb2JhbFJvb3RfQ2xhc3NfMi5j
+ZXIwDQYJKoZIhvcNAQELBQADggEBAIcL/z4Cm2XIVi3WO5qYi3FP2ropqiH5Ri71sqQPrhE4
+eTizDnS6dl2e6BiClmLbTDPo3flq3zK9LExHYFV/53RrtCyD2HlrtrdNUAtmB7Xts5et6u5/
+MOaZ/SLick0+hFvu+c+Z6n/XUjkurJgARH5pO7917tALOxrN5fcPImxHhPalR6D90Bo0fa3S
+PXez7vTXTf/D6OWST1k+kEcQSrCFWMBvf/iu7QhCnh7U3xQuTY+8npTD5+32GPg8SecmqKc2
+2CzeIs2LgtjZeOJVEqM7h0S2EQvVDFKvaYwPBt/QolOLV5h7z/0HJPT8vcP9SpIClxvyt7bP
+ZYoaorVyGTkwggWNMIIEdaADAgECAgwcOtRQhH7u81j4jncwDQYJKoZIhvcNAQELBQAwgZUx
+CzAJBgNVBAYTAkRFMUUwQwYDVQQKEzxWZXJlaW4genVyIEZvZXJkZXJ1bmcgZWluZXMgRGV1
+dHNjaGVuIEZvcnNjaHVuZ3NuZXR6ZXMgZS4gVi4xEDAOBgNVBAsTB0RGTi1QS0kxLTArBgNV
+BAMTJERGTi1WZXJlaW4gQ2VydGlmaWNhdGlvbiBBdXRob3JpdHkgMjAeFw0xNjExMDMxNTI0
+NDhaFw0zMTAyMjIyMzU5NTlaMGoxCzAJBgNVBAYTAkRFMQ8wDQYDVQQIDAZCYXllcm4xETAP
+BgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxhbmNrLUdlc2VsbHNjaGFmdDEVMBMG
+A1UEAwwMTVBHIENBIC0gRzAyMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnhx4
+59Lh4WqgOs/Md04XxU2yFtfM15ZuJV0PZP7BmqSJKLLPyqmOrADfNdJ5PIGBto2JBhtRRBHd
+G0GROOvTRHjzOga95WOTeura79T21FWwwAwa29OFnD3ZplQs6HgdwQrZWNi1WHNJxn/4mA19
+rNEBUc5urSIpZPvZi5XmlF3v3JHOlx3KWV7mUteB4pwEEfGTg4npPAJbp2o7arxQdoIq+Pu2
+OsvqhD7Rk4QeaX+EM1QS4lqd1otW4hE70h/ODPy1xffgbZiuotWQLC6nIwa65Qv6byqlIX0q
+Zuu99Vsu+r3sWYsL5SBkgecNI7fMJ5tfHrjoxfrKl/ErTAt8GQIDAQABo4ICBTCCAgEwEgYD
+VR0TAQH/BAgwBgEB/wIBATAOBgNVHQ8BAf8EBAMCAQYwKQYDVR0gBCIwIDANBgsrBgEEAYGt
+IYIsHjAPBg0rBgEEAYGtIYIsAQEEMB0GA1UdDgQWBBTEiKUH7rh7qgwTv9opdGNSG0lwFjAf
+BgNVHSMEGDAWgBST49gyJtrV8UqlkUrg6kviogzP4TCBjwYDVR0fBIGHMIGEMECgPqA8hjpo
+dHRwOi8vY2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jcmwvY2Fjcmwu
+Y3JsMECgPqA8hjpodHRwOi8vY2RwMi5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1
+Yi9jcmwvY2FjcmwuY3JsMIHdBggrBgEFBQcBAQSB0DCBzTAzBggrBgEFBQcwAYYnaHR0cDov
+L29jc3AucGNhLmRmbi5kZS9PQ1NQLVNlcnZlci9PQ1NQMEoGCCsGAQUFBzAChj5odHRwOi8v
+Y2RwMS5wY2EuZGZuLmRlL2dsb2JhbC1yb290LWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNy
+dDBKBggrBgEFBQcwAoY+aHR0cDovL2NkcDIucGNhLmRmbi5kZS9nbG9iYWwtcm9vdC1nMi1j
+YS9wdWIvY2FjZXJ0L2NhY2VydC5jcnQwDQYJKoZIhvcNAQELBQADggEBABLpeD5FygzqOjj+
+/lAOy20UQOGWlx0RMuPcI4nuyFT8SGmK9lD7QCg/HoaJlfU/r78ex+SEide326evlFAoJXIF
+jVyzNltDhpMKrPIDuh2N12zyn1EtagqPL6hu4pVRzcBpl/F2HCvtmMx5K4WN1L1fmHWLcSap
+dhXLvAZ9RG/B3rqyULLSNN8xHXYXpmtvG0VGJAndZ+lj+BH7uvd3nHWnXEHC2q7iQlDUqg0a
+wIqWJgdLlx1Q8Dg/sodv0m+LN0kOzGvVDRCmowBdWGhhusD+duKV66pBl+qhC+4LipariWaM
+qK5ppMQROATjYeNRvwI+nDcEXr2vDaKmdbxgDVwwggWvMIIEl6ADAgECAgweKlJIhfynPMVG
+/KIwDQYJKoZIhvcNAQELBQAwajELMAkGA1UEBhMCREUxDzANBgNVBAgMBkJheWVybjERMA8G
+A1UEBwwITXVlbmNoZW4xIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MRUwEwYD
+VQQDDAxNUEcgQ0EgLSBHMDIwHhcNMTcxMTE0MTEzNDE2WhcNMjAxMTEzMTEzNDE2WjCBizEL
+MAkGA1UEBhMCREUxIDAeBgNVBAoMF01heC1QbGFuY2stR2VzZWxsc2NoYWZ0MTQwMgYDVQQL
+DCtNYXgtUGxhbmNrLUluc3RpdHV0IGZ1ZXIgbW9sZWt1bGFyZSBHZW5ldGlrMQ4wDAYDVQQL
+DAVNUElNRzEUMBIGA1UEAwwLUGF1bCBNZW56ZWwwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAw
+ggEKAoIBAQDIh/UR/AX/YQ48VWWDMLTYtXjYJyhRHMc81ZHMMoaoG66lWB9MtKRTnB5lovLZ
+enTIUyPsCrMhTqV9CWzDf6v9gOTWVxHEYqrUwK5H1gx4XoK81nfV8oGV4EKuVmmikTXiztGz
+peyDmOY8o/EFNWP7YuRkY/lPQJQBeBHYq9AYIgX4StuXu83nusq4MDydygVOeZC15ts0tv3/
+6WmibmZd1OZRqxDOkoBbY3Djx6lERohs3IKS6RKiI7e90rCSy9rtidJBOvaQS9wvtOSKPx0a
++2pAgJEVzZFjOAfBcXydXtqXhcpOi2VCyl+7+LnnTz016JJLsCBuWEcB3kP9nJYNAgMBAAGj
+ggIxMIICLTAJBgNVHRMEAjAAMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcD
+AgYIKwYBBQUHAwQwHQYDVR0OBBYEFHM0Mc3XjMLlhWpp4JufRELL4A/qMB8GA1UdIwQYMBaA
+FMSIpQfuuHuqDBO/2il0Y1IbSXAWMCAGA1UdEQQZMBeBFXBtZW56ZWxAbW9sZ2VuLm1wZy5k
+ZTB9BgNVHR8EdjB0MDigNqA0hjJodHRwOi8vY2RwMS5wY2EuZGZuLmRlL21wZy1nMi1jYS9w
+dWIvY3JsL2NhY3JsLmNybDA4oDagNIYyaHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzIt
+Y2EvcHViL2NybC9jYWNybC5jcmwwgc0GCCsGAQUFBwEBBIHAMIG9MDMGCCsGAQUFBzABhido
+dHRwOi8vb2NzcC5wY2EuZGZuLmRlL09DU1AtU2VydmVyL09DU1AwQgYIKwYBBQUHMAKGNmh0
+dHA6Ly9jZHAxLnBjYS5kZm4uZGUvbXBnLWcyLWNhL3B1Yi9jYWNlcnQvY2FjZXJ0LmNydDBC
+BggrBgEFBQcwAoY2aHR0cDovL2NkcDIucGNhLmRmbi5kZS9tcGctZzItY2EvcHViL2NhY2Vy
+dC9jYWNlcnQuY3J0MEAGA1UdIAQ5MDcwDwYNKwYBBAGBrSGCLAEBBDARBg8rBgEEAYGtIYIs
+AQEEAwYwEQYPKwYBBAGBrSGCLAIBBAMGMA0GCSqGSIb3DQEBCwUAA4IBAQCQs6bUDROpFO2F
+Qz2FMgrdb39VEo8P3DhmpqkaIMC5ZurGbbAL/tAR6lpe4af682nEOJ7VW86ilsIJgm1j0ueY
+aOuL8jrN4X7IF/8KdZnnNnImW3QVni6TCcc+7+ggci9JHtt0IDCj5vPJBpP/dKXLCN4M+exl
+GXYpfHgxh8gclJPY1rquhQrihCzHfKB01w9h9tWZDVMtSoy9EUJFhCXw7mYUsvBeJwZesN2B
+fndPkrXx6XWDdU3S1LyKgHlLIFtarLFm2Hb5zAUR33h+26cN6ohcGqGEEzgIG8tXS8gztEaj
+1s2RyzmKd4SXTkKR3GhkZNVWy+gM68J7jP6zzN+cMYIDmjCCA5YCAQEwejBqMQswCQYDVQQG
+EwJERTEPMA0GA1UECAwGQmF5ZXJuMREwDwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4
+LVBsYW5jay1HZXNlbGxzY2hhZnQxFTATBgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzF
+RvyiMA0GCWCGSAFlAwQCAQUAoIIB8TAYBgkqhkiG9w0BCQMxCwYJKoZIhvcNAQcBMBwGCSqG
+SIb3DQEJBTEPFw0xOTExMDQxNjExMTFaMC8GCSqGSIb3DQEJBDEiBCCX4hYxo0bzFFXXmQAF
+BMq63N7SRbKi2Enuss0PzLYRzjBsBgkqhkiG9w0BCQ8xXzBdMAsGCWCGSAFlAwQBKjALBglg
+hkgBZQMEAQIwCgYIKoZIhvcNAwcwDgYIKoZIhvcNAwICAgCAMA0GCCqGSIb3DQMCAgFAMAcG
+BSsOAwIHMA0GCCqGSIb3DQMCAgEoMIGJBgkrBgEEAYI3EAQxfDB6MGoxCzAJBgNVBAYTAkRF
+MQ8wDQYDVQQIDAZCYXllcm4xETAPBgNVBAcMCE11ZW5jaGVuMSAwHgYDVQQKDBdNYXgtUGxh
+bmNrLUdlc2VsbHNjaGFmdDEVMBMGA1UEAwwMTVBHIENBIC0gRzAyAgweKlJIhfynPMVG/KIw
+gYsGCyqGSIb3DQEJEAILMXygejBqMQswCQYDVQQGEwJERTEPMA0GA1UECAwGQmF5ZXJuMREw
+DwYDVQQHDAhNdWVuY2hlbjEgMB4GA1UECgwXTWF4LVBsYW5jay1HZXNlbGxzY2hhZnQxFTAT
+BgNVBAMMDE1QRyBDQSAtIEcwMgIMHipSSIX8pzzFRvyiMA0GCSqGSIb3DQEBAQUABIIBABpW
+DaiQHOAByGe715rx+mKm0by/Nq4hPWEym8jSjtvzl1A7Uy9iQhBjec6jeOaBngKMdd7WjbG4
+pRXrViy+MuD+rI21ZPXcdoyMCkDTXrSKHo72STv4KT8Tz70qtVsoyhvDj10yPi08ZYHiEmDP
+Cmvf5WtahQWyNdQrDGGcawQo1UfS4yC0XWmrBfSERFj2elX0EULwqZ1yEXgIX76YuND+TDyl
+itJLAeLO879kMIxrdjmx6YtxbLmgRxoIlcrHEwse/Ygw0/t2Q2r3nf2afDQHd+J1oHfos47S
+JYIM8Jjkwm2mZ4rlmNWZ1iEJSqNFMB1MsKV2heVBhZU15uikAqYAAAAAAAA=
+--------------ms000701090708010009000403--
