@@ -2,51 +2,53 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0858CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80C36CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0C2B2084D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 514E4205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:10:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905436;
-	bh=+bOn5BpQyjay3VhCnIJDG7dAzmW2EedPioKRNMyG1gI=;
+	s=default; t=1572905439;
+	bh=XRJhMZLFukaSWSE6KfLdlTZkNQnshra3dKvIQaYoG6s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Y42QtIFoXq6XdCzDpAorbF+nOG11k8FDhvWRRKuVr4mJAanaqeDzOsWfKYWKBvCuU
-	 OnMNlzU6rNFEpSlzDOvDXJUae7wG2ijau2ri5ZdTd0IplCTunEIl1Ku+3JibUjsCgB
-	 ZalIipWf+FUQB0VszYaqN2POsPKqyqfzKMiIvDhE=
+	b=0XkhUJrvQr/B6iPlIRWMdEjzgU2NmM2NczL2A8onAbI0Dtq9PQ5LKLw72wvWY847w
+	 aVI4gM4fd86XKsDINakgjswJPmyK3hg7cK1RkVUSn6neLjjOFgiKGfNjCenAdEluin
+	 AOB1bgveUVQhCg1nXrIdR5wa/1ebrzZj20JcqrsQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390563AbfKDWKf (ORCPT
+        id S2390196AbfKDWKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:10:35 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43724 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:10:38 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43782 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390535AbfKDWKb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:10:31 -0500
+        id S2390552AbfKDWKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:10:34 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C8BC620650;
-        Mon,  4 Nov 2019 22:10:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B62AB20650;
+        Mon,  4 Nov 2019 22:10:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905430;
-        bh=+bOn5BpQyjay3VhCnIJDG7dAzmW2EedPioKRNMyG1gI=;
+        s=default; t=1572905433;
+        bh=XRJhMZLFukaSWSE6KfLdlTZkNQnshra3dKvIQaYoG6s=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=K7uVJcJDq9ZiiIfcOnLV5uD3XugaJSRKTsNfuFc0L1DWezgOjwOcRoPQwBgaBMfpN
-         Slmbes+3A8gAkgDmzFzeT3GtSZyrJMp1uD1RK7+W6sXOGH0uDCN1ImRe097W/JRwZ0
-         VUElVZxu2NJCZJg4GWGa2x3+gDf/6DW+sCpd1RcY=
+        b=Jv4tVeTQ0KO1kVKNeYWt2LUkpzigS3dnDtAqh6j0JfpMvR0XLhLGwRQxFUW1dp8E+
+         OEqxgOPiTH6Zp+ZvNQcBrqcD74rqcRmIpc17T9PgnqafyyMy+1Wm9lGC3GEIrBZD3R
+         iEPB9ofBxBdXnw9d83g9DrGvJzgqj8iilSi/zwzU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kailang Yang <kailang@realtek.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.3 100/163] ALSA: hda/realtek - Add support for ALC623
-Date:   Mon,  4 Nov 2019 22:44:50 +0100
-Message-Id: <20191104212147.314982865@linuxfoundation.org>
+        stable@vger.kernel.org, Sebastian Ott <sebott@linux.ibm.com>,
+        Vasily Gorbik <gor@linux.ibm.com>,
+        Sasha Levin <sashal@kernel.org>,
+        Alexander Schmidt <alexs@linux.ibm.com>
+Subject: [PATCH 5.3 091/163] s390/pci: fix MSI message data
+Date:   Mon,  4 Nov 2019 22:44:41 +0100
+Message-Id: <20191104212146.786936467@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,67 +61,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kailang Yang <kailang@realtek.com>
+From: Sebastian Ott <sebott@linux.ibm.com>
 
-commit f0778871a13889b86a65d4ad34bef8340af9d082 upstream.
+[ Upstream commit cf2c4a3f35b75d38cebb4afbd578f1594f068d1e ]
 
-Support new codec ALC623.
+After recent changes the MSI message data needs to specify the
+function-relative IRQ number.
 
-Signed-off-by: Kailang Yang <kailang@realtek.com>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/ed97b6a8bd9445ecb48bc763d9aaba7a@realtek.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Reported-and-tested-by: Alexander Schmidt <alexs@linux.ibm.com>
+Signed-off-by: Sebastian Ott <sebott@linux.ibm.com>
+Signed-off-by: Vasily Gorbik <gor@linux.ibm.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c |    9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/s390/pci/pci_irq.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -409,6 +409,9 @@ static void alc_fill_eapd_coef(struct hd
- 	case 0x10ec0672:
- 		alc_update_coef_idx(codec, 0xd, 0, 1<<14); /* EAPD Ctrl */
- 		break;
-+	case 0x10ec0623:
-+		alc_update_coef_idx(codec, 0x19, 1<<13, 0);
-+		break;
- 	case 0x10ec0668:
- 		alc_update_coef_idx(codec, 0x7, 3<<13, 0);
- 		break;
-@@ -2919,6 +2922,7 @@ enum {
- 	ALC269_TYPE_ALC225,
- 	ALC269_TYPE_ALC294,
- 	ALC269_TYPE_ALC300,
-+	ALC269_TYPE_ALC623,
- 	ALC269_TYPE_ALC700,
- };
- 
-@@ -2954,6 +2958,7 @@ static int alc269_parse_auto_config(stru
- 	case ALC269_TYPE_ALC225:
- 	case ALC269_TYPE_ALC294:
- 	case ALC269_TYPE_ALC300:
-+	case ALC269_TYPE_ALC623:
- 	case ALC269_TYPE_ALC700:
- 		ssids = alc269_ssids;
- 		break;
-@@ -7976,6 +7981,9 @@ static int patch_alc269(struct hda_codec
- 		spec->codec_variant = ALC269_TYPE_ALC300;
- 		spec->gen.mixer_nid = 0; /* no loopback on ALC300 */
- 		break;
-+	case 0x10ec0623:
-+		spec->codec_variant = ALC269_TYPE_ALC623;
-+		break;
- 	case 0x10ec0700:
- 	case 0x10ec0701:
- 	case 0x10ec0703:
-@@ -9103,6 +9111,7 @@ static const struct hda_device_id snd_hd
- 	HDA_CODEC_ENTRY(0x10ec0298, "ALC298", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0299, "ALC299", patch_alc269),
- 	HDA_CODEC_ENTRY(0x10ec0300, "ALC300", patch_alc269),
-+	HDA_CODEC_ENTRY(0x10ec0623, "ALC623", patch_alc269),
- 	HDA_CODEC_REV_ENTRY(0x10ec0861, 0x100340, "ALC660", patch_alc861),
- 	HDA_CODEC_ENTRY(0x10ec0660, "ALC660-VD", patch_alc861vd),
- 	HDA_CODEC_ENTRY(0x10ec0861, "ALC861", patch_alc861),
+diff --git a/arch/s390/pci/pci_irq.c b/arch/s390/pci/pci_irq.c
+index d80616ae8dd8a..fbe97ab2e2286 100644
+--- a/arch/s390/pci/pci_irq.c
++++ b/arch/s390/pci/pci_irq.c
+@@ -284,7 +284,7 @@ int arch_setup_msi_irqs(struct pci_dev *pdev, int nvec, int type)
+ 			return rc;
+ 		irq_set_chip_and_handler(irq, &zpci_irq_chip,
+ 					 handle_percpu_irq);
+-		msg.data = hwirq;
++		msg.data = hwirq - bit;
+ 		if (irq_delivery == DIRECTED) {
+ 			msg.address_lo = zdev->msi_addr & 0xff0000ff;
+ 			msg.address_lo |= msi->affinity ?
+-- 
+2.20.1
+
 
 
