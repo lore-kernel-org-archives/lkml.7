@@ -4,24 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94E06CA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B2F3CA9EA0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 719B121D7D
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E3121D7D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 10:45:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728566AbfKDKpZ (ORCPT
+        id S1728552AbfKDKpZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 4 Nov 2019 05:45:25 -0500
-Received: from mx2.suse.de ([195.135.220.15]:45080 "EHLO mx1.suse.de"
+Received: from mx2.suse.de ([195.135.220.15]:45082 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727320AbfKDKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727553AbfKDKpY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 05:45:24 -0500
 X-Virus-Scanned: by amavisd-new at test-mx.suse.de
 Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8EF1FB1CC;
+        by mx1.suse.de (Postfix) with ESMTP id A0E75B1D2;
         Mon,  4 Nov 2019 10:45:22 +0000 (UTC)
 From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
 To:     Ralf Baechle <ralf@linux-mips.org>,
@@ -29,10 +30,12 @@ To:     Ralf Baechle <ralf@linux-mips.org>,
         linux-mips@vger.kernel.org, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Cc:     Christoph Hellwig <hch@lst.de>
-Subject: [net v3 1/5] net: sgi: ioc3-eth: don't abuse dma_direct_* calls
-Date:   Mon,  4 Nov 2019 11:45:11 +0100
-Message-Id: <20191104104515.7066-1-tbogendoerfer@suse.de>
+Subject: [net v3 3/5] net: sgi: ioc3-eth: simplify setting the DMA mask
+Date:   Mon,  4 Nov 2019 11:45:13 +0100
+Message-Id: <20191104104515.7066-3-tbogendoerfer@suse.de>
 X-Mailer: git-send-email 2.16.4
+In-Reply-To: <20191104104515.7066-1-tbogendoerfer@suse.de>
+References: <20191104104515.7066-1-tbogendoerfer@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -40,81 +43,62 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Christoph Hellwig <hch@lst.de>
 
-dma_direct_ is a low-level API that must never be used by drivers
-directly.  Switch to use the proper DMA API instead.
+There is no need to fall back to a lower mask these days, the DMA mask
+just communicates the hardware supported features.
 
-Fixes: ed870f6a7aa2 ("net: sgi: ioc3-eth: use dma-direct for dma allocations")
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
 ---
- drivers/net/ethernet/sgi/ioc3-eth.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+ drivers/net/ethernet/sgi/ioc3-eth.c | 27 +++++++--------------------
+ 1 file changed, 7 insertions(+), 20 deletions(-)
 
 diff --git a/drivers/net/ethernet/sgi/ioc3-eth.c b/drivers/net/ethernet/sgi/ioc3-eth.c
-index deb636d653f3..477af82bf8a9 100644
+index 8a684d882e63..dc2e22652b55 100644
 --- a/drivers/net/ethernet/sgi/ioc3-eth.c
 +++ b/drivers/net/ethernet/sgi/ioc3-eth.c
-@@ -48,7 +48,7 @@
- #include <linux/etherdevice.h>
- #include <linux/ethtool.h>
- #include <linux/skbuff.h>
--#include <linux/dma-direct.h>
-+#include <linux/dma-mapping.h>
+@@ -1173,26 +1173,14 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	struct ioc3 *ioc3;
+ 	unsigned long ioc3_base, ioc3_size;
+ 	u32 vendor, model, rev;
+-	int err, pci_using_dac;
++	int err;
  
- #include <net/ip.h>
- 
-@@ -1242,8 +1242,8 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- 	ioc3_stop(ip);
- 
- 	/* Allocate rx ring.  4kb = 512 entries, must be 4kb aligned */
--	ip->rxr = dma_direct_alloc_pages(ip->dma_dev, RX_RING_SIZE,
--					 &ip->rxr_dma, GFP_ATOMIC, 0);
-+	ip->rxr = dma_alloc_coherent(ip->dma_dev, RX_RING_SIZE, &ip->rxr_dma,
-+				     GFP_ATOMIC);
- 	if (!ip->rxr) {
- 		pr_err("ioc3-eth: rx ring allocation failed\n");
- 		err = -ENOMEM;
-@@ -1251,9 +1251,8 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	/* Configure DMA attributes. */
+-	err = pci_set_dma_mask(pdev, DMA_BIT_MASK(64));
+-	if (!err) {
+-		pci_using_dac = 1;
+-		err = pci_set_consistent_dma_mask(pdev, DMA_BIT_MASK(64));
+-		if (err < 0) {
+-			pr_err("%s: Unable to obtain 64 bit DMA for consistent allocations\n",
+-			       pci_name(pdev));
+-			goto out;
+-		}
+-	} else {
+-		err = pci_set_dma_mask(pdev, DMA_BIT_MASK(32));
+-		if (err) {
+-			pr_err("%s: No usable DMA configuration, aborting.\n",
+-			       pci_name(pdev));
+-			goto out;
+-		}
+-		pci_using_dac = 0;
++	err = dma_set_mask_and_coherent(&pdev->dev, DMA_BIT_MASK(64));
++	if (err) {
++		pr_err("%s: No usable DMA configuration, aborting.\n",
++		       pci_name(pdev));
++		goto out;
  	}
  
- 	/* Allocate tx rings.  16kb = 128 bufs, must be 16kb aligned  */
--	ip->txr = dma_direct_alloc_pages(ip->dma_dev, TX_RING_SIZE,
--					 &ip->txr_dma,
--					 GFP_KERNEL | __GFP_ZERO, 0);
-+	ip->txr = dma_alloc_coherent(ip->dma_dev, TX_RING_SIZE, &ip->txr_dma,
-+				     GFP_KERNEL | __GFP_ZERO);
- 	if (!ip->txr) {
- 		pr_err("ioc3-eth: tx ring allocation failed\n");
- 		err = -ENOMEM;
-@@ -1313,11 +1312,11 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
- out_stop:
- 	del_timer_sync(&ip->ioc3_timer);
- 	if (ip->rxr)
--		dma_direct_free_pages(ip->dma_dev, RX_RING_SIZE, ip->rxr,
--				      ip->rxr_dma, 0);
-+		dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr,
-+				  ip->rxr_dma);
- 	if (ip->txr)
--		dma_direct_free_pages(ip->dma_dev, TX_RING_SIZE, ip->txr,
--				      ip->txr_dma, 0);
-+		dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->txr,
-+				  ip->txr_dma);
- out_res:
- 	pci_release_regions(pdev);
- out_free:
-@@ -1335,10 +1334,8 @@ static void ioc3_remove_one(struct pci_dev *pdev)
- 	struct net_device *dev = pci_get_drvdata(pdev);
- 	struct ioc3_private *ip = netdev_priv(dev);
+ 	if (pci_enable_device(pdev))
+@@ -1204,8 +1192,7 @@ static int ioc3_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 		goto out_disable;
+ 	}
  
--	dma_direct_free_pages(ip->dma_dev, RX_RING_SIZE, ip->rxr,
--			      ip->rxr_dma, 0);
--	dma_direct_free_pages(ip->dma_dev, TX_RING_SIZE, ip->txr,
--			      ip->txr_dma, 0);
-+	dma_free_coherent(ip->dma_dev, RX_RING_SIZE, ip->rxr, ip->rxr_dma);
-+	dma_free_coherent(ip->dma_dev, TX_RING_SIZE, ip->txr, ip->txr_dma);
+-	if (pci_using_dac)
+-		dev->features |= NETIF_F_HIGHDMA;
++	dev->features |= NETIF_F_HIGHDMA;
  
- 	unregister_netdev(dev);
- 	del_timer_sync(&ip->ioc3_timer);
+ 	err = pci_request_regions(pdev, "ioc3");
+ 	if (err)
 -- 
 2.16.4
 
