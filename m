@@ -2,51 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C14ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60C1CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4660D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D6732084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:12:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905536;
-	bh=gKENhKeD9LP9ddX25aSN1kM+omzQ76odB0+93gRqV/g=;
+	s=default; t=1572905539;
+	bh=5CkpwojjhTwEDyI8NVV/IL9HiyICuaYp/pscYD4YIXI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i3D89AJNSz4ocNm8jHmG1rD2SD8dzSimEzp9zKcWqbdtom3C3R2BkvxsRfuKuggLw
-	 wpkFl+HHJJeSVq1I63ZN+5tZRsIyCD5f37E91iwigv6IhK7KC2XUVy+OCJwLLfsor5
-	 04qdu4ejzPR/r1AcCDZK0h47R2DMJFJMmFf5V0/0=
+	b=e3xLdUc6YM5L9PKWtC93ugc9oaoGC3zsd3SRKRIVXQ5LHNddDUEsMuAbtFxcIBITK
+	 ucLVeW/J2ZKnYvMvFJn7HVBnOAP3o0pU+glQYSsj46lpDdInzIvicnTe6DrNeO/4Tg
+	 hhIy6DNgO2rDYGpbVo18CuJDhHCw6WqzMYWLPSm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390740AbfKDWMP (ORCPT
+        id S2390127AbfKDWL3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:12:15 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44926 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:11:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390690AbfKDWLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:11:32 -0500
+        id S2390319AbfKDWLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:11:23 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 360C420650;
-        Mon,  4 Nov 2019 22:11:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7E0C120650;
+        Mon,  4 Nov 2019 22:11:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905491;
-        bh=gKENhKeD9LP9ddX25aSN1kM+omzQ76odB0+93gRqV/g=;
+        s=default; t=1572905483;
+        bh=5CkpwojjhTwEDyI8NVV/IL9HiyICuaYp/pscYD4YIXI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AchjqNPS6YDkAzx/J57uljlHXa4P9OPjsC9jlbKAGHnU92AMIVmRe7jIafB0WLMMz
-         nUPyJsVRRiAMltR+JpFv/+7QxjUOBEjeYGJnqhjFVmTKcJJIgeXJNlq2mT8NYuMX4+
-         HbfG2gIvXi2RuAic4PhEr9Iu4Vgva/ve8sDDvYVg=
+        b=e/6HFSoR/IxOc7lTUyuUfgBOxZOoiZZgTq9MgbJLrjmqI7YS1vv82gRIaeb9YpjH8
+         J502Pxvdbeff8bu+S3z137tRxr5dCtHe9ctLx+njmKnR9el4d7O1cX6DbIydN3XClQ
+         IbbQKBUV8HTeN7uN0/HK/l05o4gx0y7Qewo58ggI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Pelle van Gils <pelle@vangils.xyz>,
-        Alex Deucher <alexander.deucher@amd.com>
-Subject: [PATCH 5.3 140/163] drm/amdgpu/powerplay/vega10: allow undervolting in p7
-Date:   Mon,  4 Nov 2019 22:45:30 +0100
-Message-Id: <20191104212150.477728899@linuxfoundation.org>
+        stable@vger.kernel.org, Justin Song <flyingecar@gmail.com>,
+        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 161/163] ALSA: usb-audio: Add DSD support for Gustard U16/X26 USB Interface
+Date:   Mon,  4 Nov 2019 22:45:51 +0100
+Message-Id: <20191104212151.960927150@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,37 +59,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Pelle van Gils <pelle@vangils.xyz>
+From: Justin Song <flyingecar@gmail.com>
 
-commit e6f4e274c1e52d1f0bfe293fb44ddf59de6c0374 upstream.
+[ Upstream commit e2995b95a914bbc6b5352be27d5d5f33ec802d2c ]
 
-The vega10_odn_update_soc_table() function does not allow the SCLK
-dependent voltage to be set for power-state 7 to a value below the default
-in pptable. Change the for-loop condition to allow undervolting in the
-highest state.
+This patch adds native DSD support for Gustard U16/X26 USB Interface.
+Tested using VID and fp->dsd_raw method.
 
-Bug: https://bugzilla.kernel.org/show_bug.cgi?id=205277
-Signed-off-by: Pelle van Gils <pelle@vangils.xyz>
-Signed-off-by: Alex Deucher <alexander.deucher@amd.com>
-Cc: stable@vger.kernel.org
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Signed-off-by: Justin Song <flyingecar@gmail.com>
+Cc: <stable@vger.kernel.org>
+Link: https://lore.kernel.org/r/CA+9XP1ipsFn+r3bCBKRinQv-JrJ+EHOGBdZWZoMwxFv0R8Y1MQ@mail.gmail.com
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c |    4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+ sound/usb/quirks.c | 1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c
-+++ b/drivers/gpu/drm/amd/powerplay/hwmgr/vega10_hwmgr.c
-@@ -5097,9 +5097,7 @@ static void vega10_odn_update_soc_table(
- 
- 	if (type == PP_OD_EDIT_SCLK_VDDC_TABLE) {
- 		podn_vdd_dep = &data->odn_dpm_table.vdd_dep_on_sclk;
--		for (i = 0; i < podn_vdd_dep->count - 1; i++)
--			od_vddc_lookup_table->entries[i].us_vdd = podn_vdd_dep->entries[i].vddc;
--		if (od_vddc_lookup_table->entries[i].us_vdd < podn_vdd_dep->entries[i].vddc)
-+		for (i = 0; i < podn_vdd_dep->count; i++)
- 			od_vddc_lookup_table->entries[i].us_vdd = podn_vdd_dep->entries[i].vddc;
- 	} else if (type == PP_OD_EDIT_MCLK_VDDC_TABLE) {
- 		podn_vdd_dep = &data->odn_dpm_table.vdd_dep_on_mclk;
+diff --git a/sound/usb/quirks.c b/sound/usb/quirks.c
+index 33d52ab6ebad0..059b70313f352 100644
+--- a/sound/usb/quirks.c
++++ b/sound/usb/quirks.c
+@@ -1654,6 +1654,7 @@ u64 snd_usb_interface_dsd_format_quirks(struct snd_usb_audio *chip,
+ 	case 0x23ba:  /* Playback Designs */
+ 	case 0x25ce:  /* Mytek devices */
+ 	case 0x278b:  /* Rotel? */
++	case 0x292b:  /* Gustard/Ess based devices */
+ 	case 0x2ab6:  /* T+A devices */
+ 	case 0x3842:  /* EVGA */
+ 	case 0xc502:  /* HiBy devices */
+-- 
+2.20.1
+
 
 
