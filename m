@@ -2,58 +2,57 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F39CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83BDCCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 16AB220650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5806E217F4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:59:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904769;
-	bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+	s=default; t=1572904772;
+	bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zzo5OOunYRVGXgkdCeUMkARBZ88VJHHwno35hPRMBmuOUVtmwOl/ZqVTnOasCVvnp
-	 zqLQMkJ1eFpL69RvyPD0Zu7Gf4wxNbjtxppUqe6NaD8uMVnmE3nAM1q6aJeZTFfASv
-	 Q5N/aZL5tVAUBd3W7k6Q+dTpKoGzO9/6NqWtN2Vc=
+	b=grPI5ojVITrgqhqy2g4QvXXRmDM+kvSeHIIPFTKO4EUewcSqAvwHeOfLmAw7ow9qG
+	 AsBhye76lmfRj+UowU9ZNpkANox59RHqZfIyaBVKbdSZZL7Oc0LIkcByD5mHoTOnpW
+	 jLVr9+4VmKGr7+SLij/1ezkT8SjI89seFQGfP6ms=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388165AbfKDV71 (ORCPT
+        id S2388218AbfKDV7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:59:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56484 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:59:31 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56516 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731089AbfKDV7U (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:59:20 -0500
+        id S2387847AbfKDV7W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:59:22 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2BB2520659;
-        Mon,  4 Nov 2019 21:59:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8742920650;
+        Mon,  4 Nov 2019 21:59:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904759;
-        bh=zR7PEpWo1SHxfPoogzU2Cy0kOuipPdgvp9JuFhSZZqo=;
+        s=default; t=1572904762;
+        bh=sn9PuHWrsSWJy+qnRz1rl2QGZbrjTOyXUksthEqa3vc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Jy9uumJgMAbiQfa7pafR54nnsFJUaOM9LJ6jMGuxxMbCzqco4hpAJ4tGDNP0vUVBU
-         /UiV/Vmm74NI6mNXqR2owEEPh7F3Nmfq5mi+jX/l/m2NYjk8jfhlufVu8ALlGUO3Pq
-         OmE8+htznrs/z2dzl7GQJXYLAQQKO866t7H2WrRQ=
+        b=OmNmHspbpceKtlJniIKP2k/9wHh7JkcVnft+t09rRysK6u1fGzQWZuefAQ1X0UCYw
+         7lpl5QECHeNAUi+RGPgDMYZa0e3enbURdHWHQsvCDNGgK41pbFlrNyvclefbsxpXbb
+         t/cpGmwjGdGbImgIrQo3ZiWcd4ZbfBEGVb0ESA5Q=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Ian Rogers <irogers@google.com>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Andi Kleen <ak@linux.intel.com>, Jiri Olsa <jolsa@redhat.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Stephane Eranian <eranian@google.com>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 060/149] libsubcmd: Make _FORTIFY_SOURCE defines dependent on the feature
-Date:   Mon,  4 Nov 2019 22:44:13 +0100
-Message-Id: <20191104212140.899265038@linuxfoundation.org>
+        Wang Nan <wangnan0@huawei.com>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 4.19 061/149] perf tests: Avoid raising SEGV using an obvious NULL dereference
+Date:   Mon,  4 Nov 2019 22:44:14 +0100
+Message-Id: <20191104212141.041151631@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -68,48 +67,86 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Ian Rogers <irogers@google.com>
 
-[ Upstream commit 4b0b2b096da9d296e0e5668cdfba8613bd6f5bc8 ]
+[ Upstream commit e3e2cf3d5b1fe800b032e14c0fdcd9a6fb20cf3b ]
 
-Unconditionally defining _FORTIFY_SOURCE can break tools that don't work
-with it, such as memory sanitizers:
+An optimized build such as:
 
-  https://github.com/google/sanitizers/wiki/AddressSanitizer#faq
+  make -C tools/perf CLANG=1 CC=clang EXTRA_CFLAGS="-O3
 
-Fixes: 4b6ab94eabe4 ("perf subcmd: Create subcmd library")
+will turn the dereference operation into a ud2 instruction, raising a
+SIGILL rather than a SIGSEGV. Use raise(..) for correctness and clarity.
+
+Similar issues were addressed in Numfor Mbiziwo-Tiapo's patch:
+
+  https://lkml.org/lkml/2019/7/8/1234
+
+Committer testing:
+
+Before:
+
+  [root@quaco ~]# perf test hooks
+  55: perf hooks                                            : Ok
+  [root@quaco ~]# perf test -v hooks
+  55: perf hooks                                            :
+  --- start ---
+  test child forked, pid 17092
+  SIGSEGV is observed as expected, try to recover.
+  Fatal error (SEGFAULT) in perf hook 'test'
+  test child finished with 0
+  ---- end ----
+  perf hooks: Ok
+  [root@quaco ~]#
+
+After:
+
+  [root@quaco ~]# perf test hooks
+  55: perf hooks                                            : Ok
+  [root@quaco ~]# perf test -v hooks
+  55: perf hooks                                            :
+  --- start ---
+  test child forked, pid 17909
+  SIGSEGV is observed as expected, try to recover.
+  Fatal error (SEGFAULT) in perf hook 'test'
+  test child finished with 0
+  ---- end ----
+  perf hooks: Ok
+  [root@quaco ~]#
+
+Fixes: a074865e60ed ("perf tools: Introduce perf hooks")
 Signed-off-by: Ian Rogers <irogers@google.com>
+Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Stephane Eranian <eranian@google.com>
-Link: http://lore.kernel.org/lkml/20190925195924.152834-1-irogers@google.com
+Cc: Wang Nan <wangnan0@huawei.com>
+Link: http://lore.kernel.org/lkml/20190925195924.152834-2-irogers@google.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/lib/subcmd/Makefile | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/perf/tests/perf-hooks.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/lib/subcmd/Makefile b/tools/lib/subcmd/Makefile
-index ed61fb3a46c08..5b2cd5e58df09 100644
---- a/tools/lib/subcmd/Makefile
-+++ b/tools/lib/subcmd/Makefile
-@@ -20,7 +20,13 @@ MAKEFLAGS += --no-print-directory
- LIBFILE = $(OUTPUT)libsubcmd.a
+diff --git a/tools/perf/tests/perf-hooks.c b/tools/perf/tests/perf-hooks.c
+index a693bcf017ea2..44c16fd11bf6e 100644
+--- a/tools/perf/tests/perf-hooks.c
++++ b/tools/perf/tests/perf-hooks.c
+@@ -20,12 +20,11 @@ static void sigsegv_handler(int sig __maybe_unused)
+ static void the_hook(void *_hook_flags)
+ {
+ 	int *hook_flags = _hook_flags;
+-	int *p = NULL;
  
- CFLAGS := $(EXTRA_WARNINGS) $(EXTRA_CFLAGS)
--CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2 -fPIC
-+CFLAGS += -ggdb3 -Wall -Wextra -std=gnu99 -fPIC
-+
-+ifeq ($(DEBUG),0)
-+  ifeq ($(feature-fortify-source), 1)
-+    CFLAGS += -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2
-+  endif
-+endif
+ 	*hook_flags = 1234;
  
- ifeq ($(CC_NO_CLANG), 0)
-   CFLAGS += -O3
+ 	/* Generate a segfault, test perf_hooks__recover */
+-	*p = 0;
++	raise(SIGSEGV);
+ }
+ 
+ int test__perf_hooks(struct test *test __maybe_unused, int subtest __maybe_unused)
 -- 
 2.20.1
 
