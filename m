@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29FCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1E98CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0D5214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E0FB204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905890;
-	bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
+	s=default; t=1572905895;
+	bh=DCUP1rMU0M3Y1yX9lQVOzFNO32AQS16GN6flBTYc580=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=a2sgY3XiKkvCGc5KGSt5RSGTXdzBhKd95zb96ypduaiJfjI3x6efWxQfNfAw/FjmV
-	 CppWkSOGitRR5Ng4WatuOWCdFqSja8LCSiBXbWFCxgSFoksdutNZ2jqbyPbj2x5BL1
-	 pJHUaCh75C5ESe/gKN5fIwkJiZ0+MURcECYRciDg=
+	b=qtmigyITdCpJ/y3JhpP+fyi1KwERRwc+dXOSXUds3lWl6lD/OoJEB6+BNcwUouNj2
+	 TPTm8GsRHosgvlzK+zUoZPuusVZzF88N9qnO4oLq+VwSHfXXE64mIwCEpSOH1y4iE5
+	 oMepgf4q8bYe2kkHS8bHq2cfJL/Y5EBEM3BvKiUg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390008AbfKDWSI (ORCPT
+        id S2390072AbfKDWSO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:18:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60530 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:18:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389212AbfKDWCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:11 -0500
+        id S2389197AbfKDWCE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:04 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7326920650;
-        Mon,  4 Nov 2019 22:02:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 68A1E20659;
+        Mon,  4 Nov 2019 22:02:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904930;
-        bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
+        s=default; t=1572904923;
+        bh=DCUP1rMU0M3Y1yX9lQVOzFNO32AQS16GN6flBTYc580=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G0uUfCJS9Wa0z0/tmpg16O+XbK3IAw1+EwwN2A7nCrQ2se898xel49dDfEntWcnzX
-         glavUFd7ZJmOj/20rig0gwaWB7roT1LzQekuqNS9PVRy+lGbJMmU6DvbpuWXUW9Am2
-         0dRrC8YB7LTXbjLRN+MPGikDAV2R750FEOVtuRQI=
+        b=jze5VVGXcmhEvW2vXZX6nTZ5beiw+UzRyMhIHmNE3TS0fO51TM3nx4w0gj5Txq6ab
+         26eq35/ey/IROJMC3gW4Zkf+cV2SbH/IBOetuAeo0SSYZrrGTeKio9Oh3Ng6kFfplU
+         BWBpV4QNxt5OL1I4auXKe/SlWjY+1+puSnUeobjA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 4.19 119/149] usb: xhci: fix __le32/__le64 accessors in debugfs code
-Date:   Mon,  4 Nov 2019 22:45:12 +0100
-Message-Id: <20191104212144.661697720@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 4.19 117/149] USB: ldusb: fix ring-buffer locking
+Date:   Mon,  4 Nov 2019 22:45:10 +0100
+Message-Id: <20191104212144.528426176@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -59,80 +58,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+From: Johan Hovold <johan@kernel.org>
 
-commit d5501d5c29a2e684640507cfee428178d6fd82ca upstream.
+commit d98ee2a19c3334e9343df3ce254b496f1fc428eb upstream.
 
-It looks like some of the xhci debug code is passing u32 to functions
-directly from __le32/__le64 fields.
-Fix this by using le{32,64}_to_cpu() on these to fix the following
-sparse warnings;
+The custom ring-buffer implementation was merged without any locking or
+explicit memory barriers, but a spinlock was later added by commit
+9d33efd9a791 ("USB: ldusb bugfix").
 
-xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
-xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
-xhci-debugfs.c:205:62:    got restricted __le32
-xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
-xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
-xhci-debugfs.c:206:62:    got restricted __le32
-...
+The lock did not cover the update of the tail index once the entry had
+been processed, something which could lead to memory corruption on
+weakly ordered architectures or due to compiler optimisations.
 
-[Trim down commit message, sparse warnings were similar -Mathias]
-Cc: <stable@vger.kernel.org> # 4.15+
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1572013829-14044-4-git-send-email-mathias.nyman@linux.intel.com
+Specifically, a completion handler running on another CPU might observe
+the incremented tail index and update the entry before ld_usb_read() is
+done with it.
+
+Fixes: 2824bd250f0b ("[PATCH] USB: add ldusb driver")
+Fixes: 9d33efd9a791 ("USB: ldusb bugfix")
+Cc: stable <stable@vger.kernel.org>     # 2.6.13
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191022143203.5260-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-debugfs.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/usb/misc/ldusb.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struc
- 		trb = &seg->trbs[i];
- 		dma = seg->dma + i * sizeof(*trb);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_trb(trb->generic.field[0],
--					   trb->generic.field[1],
--					   trb->generic.field[2],
--					   trb->generic.field[3]));
-+			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
-+					   le32_to_cpu(trb->generic.field[1]),
-+					   le32_to_cpu(trb->generic.field[2]),
-+					   le32_to_cpu(trb->generic.field[3])));
+--- a/drivers/usb/misc/ldusb.c
++++ b/drivers/usb/misc/ldusb.c
+@@ -495,11 +495,11 @@ static ssize_t ld_usb_read(struct file *
+ 		retval = -EFAULT;
+ 		goto unlock_exit;
  	}
- }
+-	dev->ring_tail = (dev->ring_tail+1) % ring_buffer_size;
+-
+ 	retval = bytes_to_read;
  
-@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct
- 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
- 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
- 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
--		   xhci_decode_slot_context(slot_ctx->dev_info,
--					    slot_ctx->dev_info2,
--					    slot_ctx->tt_info,
--					    slot_ctx->dev_state));
-+		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
-+					    le32_to_cpu(slot_ctx->dev_info2),
-+					    le32_to_cpu(slot_ctx->tt_info),
-+					    le32_to_cpu(slot_ctx->dev_state)));
- 
- 	return 0;
- }
-@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(st
- 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
- 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_ep_context(ep_ctx->ep_info,
--						  ep_ctx->ep_info2,
--						  ep_ctx->deq,
--						  ep_ctx->tx_info));
-+			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
-+						  le32_to_cpu(ep_ctx->ep_info2),
-+						  le64_to_cpu(ep_ctx->deq),
-+						  le32_to_cpu(ep_ctx->tx_info)));
- 	}
- 
- 	return 0;
+ 	spin_lock_irq(&dev->rbsl);
++	dev->ring_tail = (dev->ring_tail + 1) % ring_buffer_size;
++
+ 	if (dev->buffer_overflow) {
+ 		dev->buffer_overflow = 0;
+ 		spin_unlock_irq(&dev->rbsl);
 
 
