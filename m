@@ -2,155 +2,191 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDCECA9EA0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4EDECA9ECF
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 474C421D81
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 801EB21D7F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 11:54:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729106AbfKDLyE (ORCPT
+        id S1729125AbfKDLyG convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 06:54:04 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:43440 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726441AbfKDLyD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 06:54:03 -0500
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        Mon, 4 Nov 2019 06:54:06 -0500
+Received: from skedge04.snt-world.com ([91.208.41.69]:51692 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729089AbfKDLyF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 06:54:05 -0500
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 750FE83F40
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 11:54:03 +0000 (UTC)
-Received: by mail-wr1-f69.google.com with SMTP id y3so3416729wrm.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 03:54:03 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=K9ShbQwUl3JT1wY9fwM0LVfIdQxr/5VaXCx33ZJ5yec=;
-        b=WW9xjnd02e0P02Gpbgb3sDcq6+RK6x3fMBJKWlT7mR00NNub6hndt+d+6Cu+v5mVuk
-         bb5IYlzww1s8IiKAmTx/32mhi1z4zS4w75Skeg9oQXwElT9xT5InWqU7wZupZ/AC7DNd
-         Hvv4pekuUqvI1DgkS8PqPFGr6GwZ+BBH8p89v3Y66n1ZIj0TGo18kWlHX7gLT3TvAq/x
-         /gnwTscS8p9wbw946Ba7WCZg1SKd+3gLwq3H2lwIDCCZBrrF47EghRHpBlSFAGV+1C5L
-         4r6FD2O+6A3oN1PVDXZyYq/WAWQgd1bW6RWJIr0RGCb/tqoAOQhFHQN6HZ+nxK+OTXd0
-         GMrA==
-X-Gm-Message-State: APjAAAU2qgRai9IYV3IDmm3wzUgF9CDRpask/sbiueHT8Nshc+avN+Fp
-        0tNTNflJE2fgQSJwyrcAuPC9tA68L7fK74FXFJsBEzEhWDyOvIMwEhCTsKB92FlcGmyV7ElK9lH
-        hx9F8sB9RrOo5NUufnLElfXEB
-X-Received: by 2002:adf:e5cf:: with SMTP id a15mr24119467wrn.143.1572868442060;
-        Mon, 04 Nov 2019 03:54:02 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxFiK0uysITL0qyqhqzQe9IaQU3kN4T5tUMeyIETkHAy9fg1Ec1DQbcA/YXPxCfHYIp7okHUA==
-X-Received: by 2002:adf:e5cf:: with SMTP id a15mr24119450wrn.143.1572868441791;
-        Mon, 04 Nov 2019 03:54:01 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
-        by smtp.gmail.com with ESMTPSA id i71sm22623611wri.68.2019.11.04.03.54.00
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 04 Nov 2019 03:54:01 -0800 (PST)
-Subject: Re: [PATCH 2/4] kvm: svm: Enable UMIP feature on AMD
-To:     "Moger, Babu" <Babu.Moger@amd.com>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>
-Cc:     "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>
-References: <157262960837.2838.17520432516398899751.stgit@naples-babu.amd.com>
- <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <37c61050-e315-fc84-9699-bb92e5afacda@redhat.com>
-Date:   Mon, 4 Nov 2019 12:54:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <157262962352.2838.15656190309312238595.stgit@naples-babu.amd.com>
-Content-Type: text/plain; charset=utf-8
+        by skedge04.snt-world.com (Postfix) with ESMTPS id 17F9560039D;
+        Mon,  4 Nov 2019 12:54:03 +0100 (CET)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Mon, 4 Nov 2019
+ 12:54:02 +0100
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Mon, 4 Nov 2019 12:54:02 +0100
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+CC:     Schrempf Frieder <frieder.schrempf@kontron.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs N6311
+ and N6411
+Thread-Topic: [PATCH v4 2/9] ARM: dts: Add support for two more Kontron SoMs
+ N6311 and N6411
+Thread-Index: AQHVkwaMgDUA/1D6C0q01Gb6m+Vg6Q==
+Date:   Mon, 4 Nov 2019 11:54:02 +0000
+Message-ID: <20191104115352.8728-3-frieder.schrempf@kontron.de>
+References: <20191104115352.8728-1-frieder.schrempf@kontron.de>
+In-Reply-To: <20191104115352.8728-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: 17F9560039D.A23F8
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: devicetree@vger.kernel.org, festevam@gmail.com,
+        kernel@pengutronix.de, krzk@kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
+        robh+dt@kernel.org, s.hauer@pengutronix.de, shawnguo@kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 01/11/19 18:33, Moger, Babu wrote:
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 4153ca8cddb7..79abbdeca148 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -2533,6 +2533,11 @@ static void svm_decache_cr4_guest_bits(struct kvm_vcpu *vcpu)
->  {
->  }
->  
-> +static bool svm_umip_emulated(void)
-> +{
-> +	return boot_cpu_has(X86_FEATURE_UMIP);
-> +}
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-For hardware that supports UMIP, this is only needed because of your
-patch 1.  Without it, X86_FEATURE_UMIP should already be enabled on
-processors that natively support UMIP.
+The N6311 and the N6411 SoM are similar to the Kontron N6310 SoM.
+They are pin-compatible, but feature a larger RAM and NAND flash
+(512MiB instead of 256MiB). Further, the N6411 has an i.MX6ULL SoC,
+instead of an i.MX6UL.
 
-If you want UMIP *emulation* instead, this should become "return true".
+Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+---
+ .../boot/dts/imx6ul-kontron-n6311-som.dtsi    | 40 +++++++++++++++++++
+ .../boot/dts/imx6ull-kontron-n6411-som.dtsi   | 40 +++++++++++++++++++
+ 2 files changed, 80 insertions(+)
+ create mode 100644 arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
+ create mode 100644 arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
 
->  static void update_cr0_intercept(struct vcpu_svm *svm)
->  {
->  	ulong gcr0 = svm->vcpu.arch.cr0;
-> @@ -4438,6 +4443,13 @@ static int interrupt_window_interception(struct vcpu_svm *svm)
->  	return 1;
->  }
->  
-> +static int umip_interception(struct vcpu_svm *svm)
-> +{
-> +	struct kvm_vcpu *vcpu = &svm->vcpu;
-> +
-> +	return kvm_emulate_instruction(vcpu, 0);
-> +}
-> +
->  static int pause_interception(struct vcpu_svm *svm)
->  {
->  	struct kvm_vcpu *vcpu = &svm->vcpu;
-> @@ -4775,6 +4787,10 @@ static int (*const svm_exit_handlers[])(struct vcpu_svm *svm) = {
->  	[SVM_EXIT_SMI]				= nop_on_interception,
->  	[SVM_EXIT_INIT]				= nop_on_interception,
->  	[SVM_EXIT_VINTR]			= interrupt_window_interception,
-> +	[SVM_EXIT_IDTR_READ]			= umip_interception,
-> +	[SVM_EXIT_GDTR_READ]			= umip_interception,
-> +	[SVM_EXIT_LDTR_READ]			= umip_interception,
-> +	[SVM_EXIT_TR_READ]			= umip_interception,
-
-This is missing enabling the intercepts.  Also, this can be just
-emulate_on_interception instead of a new function.
-
-Paolo
-
->  	[SVM_EXIT_RDPMC]			= rdpmc_interception,
->  	[SVM_EXIT_CPUID]			= cpuid_interception,
->  	[SVM_EXIT_IRET]                         = iret_interception,
-> @@ -5976,11 +5992,6 @@ static bool svm_xsaves_supported(void)
->  	return boot_cpu_has(X86_FEATURE_XSAVES);
->  }
->  
-> -static bool svm_umip_emulated(void)
-> -{
-> -	return false;
-> -}
-> -
->  static bool svm_pt_supported(void)
->  {
->  	return false;
-> 
-
+diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
+new file mode 100644
+index 000000000000..a095a7654ac6
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ul-kontron-n6311-som.dtsi
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2017 exceet electronics GmbH
++ * Copyright (C) 2018 Kontron Electronics GmbH
++ */
++
++#include "imx6ul.dtsi"
++#include "imx6ul-kontron-n6x1x-som-common.dtsi"
++
++/ {
++	model = "Kontron N6311 SOM";
++	compatible = "kontron,imx6ul-n6311-som", "fsl,imx6ul";
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++		device_type = "memory";
++	};
++};
++
++&qspi {
++	spi-flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spi-nand";
++		spi-max-frequency = <104000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++		reg = <0>;
++
++		partition@0 {
++			label = "ubi1";
++			reg = <0x00000000 0x08000000>;
++		};
++
++		partition@8000000 {
++			label = "ubi2";
++			reg = <0x08000000 0x18000000>;
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+new file mode 100644
+index 000000000000..b7e984284e1a
+--- /dev/null
++++ b/arch/arm/boot/dts/imx6ull-kontron-n6411-som.dtsi
+@@ -0,0 +1,40 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2017 exceet electronics GmbH
++ * Copyright (C) 2018 Kontron Electronics GmbH
++ */
++
++#include "imx6ull.dtsi"
++#include "imx6ul-kontron-n6x1x-som-common.dtsi"
++
++/ {
++	model = "Kontron N6411 SOM";
++	compatible = "kontron,imx6ull-n6311-som", "fsl,imx6ull";
++
++	memory@80000000 {
++		reg = <0x80000000 0x20000000>;
++		device_type = "memory";
++	};
++};
++
++&qspi {
++	spi-flash@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spi-nand";
++		spi-max-frequency = <104000000>;
++		spi-tx-bus-width = <4>;
++		spi-rx-bus-width = <4>;
++		reg = <0>;
++
++		partition@0 {
++			label = "ubi1";
++			reg = <0x00000000 0x08000000>;
++		};
++
++		partition@8000000 {
++			label = "ubi2";
++			reg = <0x08000000 0x18000000>;
++		};
++	};
++};
+-- 
+2.17.1
