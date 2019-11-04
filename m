@@ -7,46 +7,48 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8642BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FFB1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5146F217F5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2185E20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:49:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904174;
-	bh=A/tP7fn3uXUKYltJg5iZEN3dR2cwHntAg7zHoHujsT8=;
+	s=default; t=1572904177;
+	bh=pg9I1HNkHc+Ox9DH4bnOTqHT5B+4AkbZy06aP3YKRHo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qDN0LlfCpt0lwcbwuo0iephFJ8cdDat/oqD1ZSvqwryJACLWz/wunbm7fPUeAGGBS
-	 ElS+K1XJUjrzT4+m3A3hSQ/0v/3DTVF26sWXxcz+krV9ZXApjqkWTmw15a3TdkRPBM
-	 EMOFDk+MAjQavpjAZNobKMUFbOGFjccZbHpU35L4=
+	b=pwNBnW/K+cIHQg2/PCtV6zXNw4hjz+f0QXmtbr0UfKRTTLYB5eknU2p5TWNKG5rpt
+	 apcnxx/I+3F+hSptdkotY3rlCy+AI30azvVBbcAJnuiofh+8vjkx0igXl4pYlGnr+c
+	 S2HxQS8A4HbzoILi8BJpaNirl2gZUUNLQfyroMfo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387451AbfKDVtd (ORCPT
+        id S2387462AbfKDVtg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:49:33 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40786 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:49:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40940 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387420AbfKDVt2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:49:28 -0500
+        id S2387420AbfKDVte (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:49:34 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0BBFE214D8;
-        Mon,  4 Nov 2019 21:49:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id DCEDA20B7C;
+        Mon,  4 Nov 2019 21:49:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904168;
-        bh=A/tP7fn3uXUKYltJg5iZEN3dR2cwHntAg7zHoHujsT8=;
+        s=default; t=1572904173;
+        bh=pg9I1HNkHc+Ox9DH4bnOTqHT5B+4AkbZy06aP3YKRHo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iLY9HQliyEev/3QW8+HJGgf9d982ltL8mCmAPBHtXnRruEDreYJHTr6oTOrwcfVvn
-         bYUkycsAnOLENFGfz5iHBCrasK9yHiA9gZv3Q4gKMJSrP8oEaaDVU9QLLNy14jX5UV
-         AWCvlzQHIv0zveaHbRoXLIDECRAXZRV1n1NtGU5k=
+        b=Wnv0jktGXPaJWqF+r2clrEWH88t8Zyt+xhmCQpwrfFwTcstJ6UrFQwYS1+37j/nkb
+         Ea24I846LemLf/ASFWKZCxJtjGCNIPu/VRa2Oy9EtRkrkkZ6+Zy+RX8soS0LxIakqu
+         VJpUAMNSbpo8UvwfEnrbXzvzjYWZRjtIlpkWYgE0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Markus Theil <markus.theil@tu-ilmenau.de>,
-        Johannes Berg <johannes.berg@intel.com>
-Subject: [PATCH 4.4 36/46] nl80211: fix validation of mesh path nexthop
-Date:   Mon,  4 Nov 2019 22:45:07 +0100
-Message-Id: <20191104211909.532938772@linuxfoundation.org>
+        stable@vger.kernel.org, Nicolas Waisman <nico@semmle.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Ping-Ke Shih <pkshih@realtek.com>,
+        Kalle Valo <kvalo@codeaurora.org>
+Subject: [PATCH 4.4 38/46] rtlwifi: Fix potential overflow on P2P code
+Date:   Mon,  4 Nov 2019 22:45:09 +0100
+Message-Id: <20191104211911.242011465@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
 References: <20191104211830.912265604@linuxfoundation.org>
@@ -59,35 +61,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Theil <markus.theil@tu-ilmenau.de>
+From: Laura Abbott <labbott@redhat.com>
 
-commit 1fab1b89e2e8f01204a9c05a39fd0b6411a48593 upstream.
+commit 8c55dedb795be8ec0cf488f98c03a1c2176f7fb1 upstream.
 
-Mesh path nexthop should be a ethernet address, but current validation
-checks against 4 byte integers.
+Nicolas Waisman noticed that even though noa_len is checked for
+a compatible length it's still possible to overrun the buffers
+of p2pinfo since there's no check on the upper bound of noa_num.
+Bound noa_num against P2P_MAX_NOA_NUM.
 
-Cc: stable@vger.kernel.org
-Fixes: 2ec600d672e74 ("nl80211/cfg80211: support for mesh, sta dumping")
-Signed-off-by: Markus Theil <markus.theil@tu-ilmenau.de>
-Link: https://lore.kernel.org/r/20191029093003.10355-1-markus.theil@tu-ilmenau.de
-Signed-off-by: Johannes Berg <johannes.berg@intel.com>
+Reported-by: Nicolas Waisman <nico@semmle.com>
+Signed-off-by: Laura Abbott <labbott@redhat.com>
+Acked-by: Ping-Ke Shih <pkshih@realtek.com>
+Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- net/wireless/nl80211.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/net/wireless/realtek/rtlwifi/ps.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
---- a/net/wireless/nl80211.c
-+++ b/net/wireless/nl80211.c
-@@ -292,7 +292,8 @@ static const struct nla_policy nl80211_p
- 	[NL80211_ATTR_MNTR_FLAGS] = { /* NLA_NESTED can't be empty */ },
- 	[NL80211_ATTR_MESH_ID] = { .type = NLA_BINARY,
- 				   .len = IEEE80211_MAX_MESH_ID_LEN },
--	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_U32 },
-+	[NL80211_ATTR_MPATH_NEXT_HOP] = { .type = NLA_BINARY,
-+					  .len = ETH_ALEN },
- 
- 	[NL80211_ATTR_REG_ALPHA2] = { .type = NLA_STRING, .len = 2 },
- 	[NL80211_ATTR_REG_RULES] = { .type = NLA_NESTED },
+--- a/drivers/net/wireless/realtek/rtlwifi/ps.c
++++ b/drivers/net/wireless/realtek/rtlwifi/ps.c
+@@ -781,6 +781,9 @@ static void rtl_p2p_noa_ie(struct ieee80
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
+@@ -875,6 +878,9 @@ static void rtl_p2p_action_ie(struct iee
+ 				return;
+ 			} else {
+ 				noa_num = (noa_len - 2) / 13;
++				if (noa_num > P2P_MAX_NOA_NUM)
++					noa_num = P2P_MAX_NOA_NUM;
++
+ 			}
+ 			noa_index = ie[3];
+ 			if (rtlpriv->psc.p2p_ps_info.p2p_ps_mode ==
 
 
