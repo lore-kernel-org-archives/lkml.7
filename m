@@ -2,52 +2,51 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0728CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A29FCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7239204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E0D5214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:18:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905886;
-	bh=Y4Jjm+UFuSPpecmTbok0TTBZHuoAbBl57twrWhu9J6I=;
+	s=default; t=1572905890;
+	bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=x9lXx19Kz8MTEegGqycCZgIPL/5UxY8LCowJ9LsGhwTVUFuqaWvPPxRzxjMvm2c9j
-	 nmfq7mnXKxvksm5BQrJJF8li4JbUNLfvRLxntKX4q+GQ+yruz+WJscYuDaNX2+Y7b+
-	 TlAN0ylcffRWgCDGegJn1cM/6kAgxiN8zasSOiFk=
+	b=a2sgY3XiKkvCGc5KGSt5RSGTXdzBhKd95zb96ypduaiJfjI3x6efWxQfNfAw/FjmV
+	 CppWkSOGitRR5Ng4WatuOWCdFqSja8LCSiBXbWFCxgSFoksdutNZ2jqbyPbj2x5BL1
+	 pJHUaCh75C5ESe/gKN5fIwkJiZ0+MURcECYRciDg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389216AbfKDWCL (ORCPT
+        id S2390008AbfKDWSI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:11 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59394 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:18:08 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60530 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388235AbfKDWBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:01:21 -0500
+        id S2389212AbfKDWCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:11 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F0A4420650;
-        Mon,  4 Nov 2019 22:01:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7326920650;
+        Mon,  4 Nov 2019 22:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904880;
-        bh=Y4Jjm+UFuSPpecmTbok0TTBZHuoAbBl57twrWhu9J6I=;
+        s=default; t=1572904930;
+        bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=D1qkVOX6HCEUduVw6qaDsINBkFCKgEgP/jOWM4cFpLGTMMld6Wzp/rLyblJoL24gY
-         mporMfClwIbbEKhqIvNFLYz8yNdvoMWU+tfCxO7M+J8eFtHXbc5+XxqsuTDTpGNBN+
-         ddU0yaLdcpiFSAp/zSORMT2aLQOPOebUhhPOpm5c=
+        b=G0uUfCJS9Wa0z0/tmpg16O+XbK3IAw1+EwwN2A7nCrQ2se898xel49dDfEntWcnzX
+         glavUFd7ZJmOj/20rig0gwaWB7roT1LzQekuqNS9PVRy+lGbJMmU6DvbpuWXUW9Am2
+         0dRrC8YB7LTXbjLRN+MPGikDAV2R750FEOVtuRQI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>, Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 103/149] ALSA: hda/realtek: Reduce the Headphone static noise on XPS 9350/9360
-Date:   Mon,  4 Nov 2019 22:44:56 +0100
-Message-Id: <20191104212143.696357128@linuxfoundation.org>
+        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: [PATCH 4.19 119/149] usb: xhci: fix __le32/__le64 accessors in debugfs code
+Date:   Mon,  4 Nov 2019 22:45:12 +0100
+Message-Id: <20191104212144.661697720@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -60,100 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
 
-[ Upstream commit 1099f48457d06b816359fb43ac32a4a07e33219b ]
+commit d5501d5c29a2e684640507cfee428178d6fd82ca upstream.
 
-Headphone on XPS 9350/9360 produces a background white noise. The The
-noise level somehow correlates with "Headphone Mic Boost", when it sets
-to 1 the noise disappears. However, doing this has a side effect, which
-also decreases the overall headphone volume so I didn't send the patch
-upstream.
+It looks like some of the xhci debug code is passing u32 to functions
+directly from __le32/__le64 fields.
+Fix this by using le{32,64}_to_cpu() on these to fix the following
+sparse warnings;
 
-The noise was bearable back then, but after commit 717f43d81afc ("ALSA:
-hda/realtek - Update headset mode for ALC256") the noise exacerbates to
-a point it starts hurting ears.
+xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
+xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
+xhci-debugfs.c:205:62:    got restricted __le32
+xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
+xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
+xhci-debugfs.c:206:62:    got restricted __le32
+...
 
-So let's use the workaround to set "Headphone Mic Boost" to 1 and lock
-it so it's not touchable by userspace.
+[Trim down commit message, sparse warnings were similar -Mathias]
+Cc: <stable@vger.kernel.org> # 4.15+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
+Link: https://lore.kernel.org/r/1572013829-14044-4-git-send-email-mathias.nyman@linux.intel.com
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Fixes: 717f43d81afc ("ALSA: hda/realtek - Update headset mode for ALC256")
-BugLink: https://bugs.launchpad.net/bugs/1654448
-BugLink: https://bugs.launchpad.net/bugs/1845810
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Link: https://lore.kernel.org/r/20191003043919.10960-1-kai.heng.feng@canonical.com
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- sound/pci/hda/patch_realtek.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
+ drivers/usb/host/xhci-debugfs.c |   24 ++++++++++++------------
+ 1 file changed, 12 insertions(+), 12 deletions(-)
 
-diff --git a/sound/pci/hda/patch_realtek.c b/sound/pci/hda/patch_realtek.c
-index 7480218f32ba7..45eebfea1d883 100644
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -5253,6 +5253,17 @@ static void alc271_hp_gate_mic_jack(struct hda_codec *codec,
+--- a/drivers/usb/host/xhci-debugfs.c
++++ b/drivers/usb/host/xhci-debugfs.c
+@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struc
+ 		trb = &seg->trbs[i];
+ 		dma = seg->dma + i * sizeof(*trb);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_trb(trb->generic.field[0],
+-					   trb->generic.field[1],
+-					   trb->generic.field[2],
+-					   trb->generic.field[3]));
++			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
++					   le32_to_cpu(trb->generic.field[1]),
++					   le32_to_cpu(trb->generic.field[2]),
++					   le32_to_cpu(trb->generic.field[3])));
  	}
  }
  
-+static void alc256_fixup_dell_xps_13_headphone_noise2(struct hda_codec *codec,
-+						      const struct hda_fixup *fix,
-+						      int action)
-+{
-+	if (action != HDA_FIXUP_ACT_PRE_PROBE)
-+		return;
-+
-+	snd_hda_codec_amp_stereo(codec, 0x1a, HDA_INPUT, 0, HDA_AMP_VOLMASK, 1);
-+	snd_hda_override_wcaps(codec, 0x1a, get_wcaps(codec, 0x1a) & ~AC_WCAP_IN_AMP);
-+}
-+
- static void alc269_fixup_limit_int_mic_boost(struct hda_codec *codec,
- 					     const struct hda_fixup *fix,
- 					     int action)
-@@ -5635,6 +5646,7 @@ enum {
- 	ALC298_FIXUP_DELL_AIO_MIC_NO_PRESENCE,
- 	ALC275_FIXUP_DELL_XPS,
- 	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE,
-+	ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2,
- 	ALC293_FIXUP_LENOVO_SPK_NOISE,
- 	ALC233_FIXUP_LENOVO_LINE2_MIC_HOTKEY,
- 	ALC255_FIXUP_DELL_SPK_NOISE,
-@@ -6352,6 +6364,12 @@ static const struct hda_fixup alc269_fixups[] = {
- 		.chained = true,
- 		.chain_id = ALC255_FIXUP_DELL1_MIC_NO_PRESENCE
- 	},
-+	[ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2] = {
-+		.type = HDA_FIXUP_FUNC,
-+		.v.func = alc256_fixup_dell_xps_13_headphone_noise2,
-+		.chained = true,
-+		.chain_id = ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE
-+	},
- 	[ALC293_FIXUP_LENOVO_SPK_NOISE] = {
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc_fixup_disable_aamix,
-@@ -6794,17 +6812,17 @@ static const struct snd_pci_quirk alc269_fixup_tbl[] = {
- 	SND_PCI_QUIRK(0x1028, 0x06de, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06df, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
- 	SND_PCI_QUIRK(0x1028, 0x06e0, "Dell", ALC293_FIXUP_DISABLE_AAMIX_MULTIJACK),
--	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x0704, "Dell XPS 13 9350", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x0706, "Dell Inspiron 7559", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x0725, "Dell Inspiron 3162", ALC255_FIXUP_DELL_SPK_NOISE),
- 	SND_PCI_QUIRK(0x1028, 0x0738, "Dell Precision 5820", ALC269_FIXUP_NO_SHUTUP),
--	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x075b, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x075c, "Dell XPS 27 7760", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x075d, "Dell AIO", ALC298_FIXUP_SPK_VOLUME),
- 	SND_PCI_QUIRK(0x1028, 0x07b0, "Dell Precision 7520", ALC295_FIXUP_DISABLE_DAC3),
- 	SND_PCI_QUIRK(0x1028, 0x0798, "Dell Inspiron 17 7000 Gaming", ALC256_FIXUP_DELL_INSPIRON_7559_SUBWOOFER),
- 	SND_PCI_QUIRK(0x1028, 0x080c, "Dell WYSE", ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE),
--	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE),
-+	SND_PCI_QUIRK(0x1028, 0x082a, "Dell XPS 13 9360", ALC256_FIXUP_DELL_XPS_13_HEADPHONE_NOISE2),
- 	SND_PCI_QUIRK(0x1028, 0x084b, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x084e, "Dell", ALC274_FIXUP_DELL_AIO_LINEOUT_VERB),
- 	SND_PCI_QUIRK(0x1028, 0x0871, "Dell Precision 3630", ALC255_FIXUP_DELL_HEADSET_MIC),
--- 
-2.20.1
-
+@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct
+ 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
+ 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
+ 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
+-		   xhci_decode_slot_context(slot_ctx->dev_info,
+-					    slot_ctx->dev_info2,
+-					    slot_ctx->tt_info,
+-					    slot_ctx->dev_state));
++		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
++					    le32_to_cpu(slot_ctx->dev_info2),
++					    le32_to_cpu(slot_ctx->tt_info),
++					    le32_to_cpu(slot_ctx->dev_state)));
+ 
+ 	return 0;
+ }
+@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(st
+ 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
+ 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
+ 		seq_printf(s, "%pad: %s\n", &dma,
+-			   xhci_decode_ep_context(ep_ctx->ep_info,
+-						  ep_ctx->ep_info2,
+-						  ep_ctx->deq,
+-						  ep_ctx->tx_info));
++			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
++						  le32_to_cpu(ep_ctx->ep_info2),
++						  le64_to_cpu(ep_ctx->deq),
++						  le32_to_cpu(ep_ctx->tx_info)));
+ 	}
+ 
+ 	return 0;
 
 
