@@ -2,163 +2,235 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F406DCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12E60CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB2862246B
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:10:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3CA218BA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:27:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rvIq103d"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YmewoW4x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfKDHKd (ORCPT
+        id S1727756AbfKDH1Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:10:33 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:35736 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727138AbfKDHKd (ORCPT
+        Mon, 4 Nov 2019 02:27:16 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37224 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726248AbfKDH1P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 02:10:33 -0500
-Received: by mail-pg1-f193.google.com with SMTP id q22so3058882pgk.2
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 23:10:31 -0800 (PST)
+        Mon, 4 Nov 2019 02:27:15 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p24so5068135pfn.4;
+        Sun, 03 Nov 2019 23:27:13 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
-        b=rvIq103d5QvkQPhePPHFLq0nK/ACbSKZY7eteyZPRm6ZQLdn2P9/L9r/QTnrN6rUNP
-         jm/ua7SGVaxRhSR5Nl9cOL5W9VLF8VkSl68eghceC1CCxqeyfDFNFUNDf85yimIPPvY0
-         o1yfdXK5tO1vLx1FxzcPkmng+u9IkRYuIwq5EzIIzZ68U8SNrPlIZsU7d0qY1AO6zsuI
-         pS1eCuVH8jlep136XfWsjFnO9FVNrx6OLJT5MeeAZHVVLtbzerSB2XgwPwUxJ+miWDfv
-         02MGnva9fIZ+K8PsBCyhgUeisAMN55iFNb1AzWrJ037fxdbVJklLbH3Lgnji2xW2YZRp
-         2V9g==
+        d=gmail.com; s=20161025;
+        h=in-reply-to:to:cc:from:subject:message-id:date:user-agent
+         :mime-version:content-transfer-encoding:content-language;
+        bh=9lUG+HgyrxxP1bPMLu6biXo7ZKcS5tFln1/2jZCldLw=;
+        b=YmewoW4xYNJBW+4+Z4J1JD+M6ymPFDiAXtKDvtBVqr/ZxBf2aWRrQ6xjeOnvV37kd1
+         VOrs0ZJmZCrXvD/m6bQPjnHvqMxokm53u7h1a2vAcY7Wb4Ulp0uf4vV3ybzHFo2oV9uX
+         TlmDhRNH4jGyBbihY+uLTVf5queXhSNKIrT2XzfdIP0EV9f4ygt2/JFFvV5G1tDWTJIc
+         e05a20eKhmVwK/0m6MK77GVCfo3Nd853R29ByE45AcTNvXSDj7qfMKbqZDR0Z33mXLAP
+         WOVfRLdoA5V22faxLN6+7eAhMoRhkWdgFwNAXCe5Fc/ezakUFfvghPwdynQ6K65KBYZ+
+         3A5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=t4TV25A1uMzOUpxnPE9T6D69bjxp+CQFn1rWNaSp17E=;
-        b=Y8FbCfNzALjbLMFVTPJfUa5mdt8o2zhoeVXO1s1uK98uevl80zz0kGN81u6agt33TF
-         Ct6pcLbKqjWcCY3OszwKbYaSGRS224S/uoELX/DpDHIYJdx8VZ0Msv8aPerrH2N2H2k+
-         KW5pS7WXeHdxj8dfDJk20ph5ATrppGBAa2pJ9v8pMzpkP38aIp0F4IHQbMmp3ehHeP8F
-         /fPuXrkQKdHU9aw/+agf0YVkCyyIY/MNDg+fZsyD6DZ4WDehCZo7pJkgnbkuUSU2Hsq2
-         yly+hD1dDoH8tY5JG1Nps7lgS8Z3fO+hwbgQfaiWSaxb7df5ZWx9oGjvEd/Yv9AHSFXL
-         HUsQ==
-X-Gm-Message-State: APjAAAXqWpaSjn8WcfOTEKZSopsM1S+u0jmUqdX82MQWqTOK0ooSRXCI
-        cPF1yiCcVJ5gsmYfVPBtD79kcQ==
-X-Google-Smtp-Source: APXvYqxHOP7JBpbRrN/9vm7qE7CKnT+oDstfysttIvzcmp2Ai7mrtOlTLr+klYFNg71UF1Ve/+0Xhg==
-X-Received: by 2002:a63:b62:: with SMTP id a34mr8305598pgl.123.1572851430833;
-        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
-Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
-        by smtp.gmail.com with ESMTPSA id l11sm16775340pgr.77.2019.11.03.23.10.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 03 Nov 2019 23:10:30 -0800 (PST)
-Date:   Sun, 3 Nov 2019 23:10:27 -0800
-From:   Bjorn Andersson <bjorn.andersson@linaro.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     Matthias Kaehlcke <mka@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>, agross@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt
- controller
-Message-ID: <20191104071027.GD585@tuxbook-pro>
-References: <20191023090219.15603-1-rnayak@codeaurora.org>
- <20191023090219.15603-12-rnayak@codeaurora.org>
- <5db86de0.1c69fb81.9e27d.0f47@mx.google.com>
- <20191030195021.GC27773@google.com>
- <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org>
- <20191104063348.GA2464@tuxbook-pro>
- <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
+        h=x-gm-message-state:in-reply-to:to:cc:from:subject:message-id:date
+         :user-agent:mime-version:content-transfer-encoding:content-language;
+        bh=9lUG+HgyrxxP1bPMLu6biXo7ZKcS5tFln1/2jZCldLw=;
+        b=bu2nwOxqAq7UgtjEqI3RXwT6uyPQviA+vxEHsCdVKNvfCz7AR2eOh0ZGoOFI0XSr8D
+         UFAMt4aM7Q9M4XcrmHkjqzmEZCEqTDhWch0m4D+r0EESKqaLHprLs5zKvhZmYc1QHqx1
+         y5qiUiPz+NlnOELX6SIA5GK61joUdkbqIRsqYn49TwIb39VLEo8smYmqkvZVkj72Rq6c
+         tyt4z95rbkKTH322TxltNLjnqWskjN8jfVbCVSWUNj7FEzgNFdoq/JdV28vTIRfHbJ86
+         UkXVHw67cNPG184DsXn6jw9wC8mXGoYOb0KOLnJFLx5MhwzUe50g8bQGWdmMU2JQvHC0
+         Akvg==
+X-Gm-Message-State: APjAAAVuiuyOnsnFwAgfcvo7pkdxn4p9Au939BlSTZaILKQCWOhcr18e
+        9wpG35uhwpN/BzkzKtRlFiY=
+X-Google-Smtp-Source: APXvYqwtUDlbYEwX08qyumOD83NMG+jN8pHXVMtOyasFYdr0MXZwnj2HF2EtdN61Pr9lvqZphtiXpg==
+X-Received: by 2002:a62:53:: with SMTP id 80mr30403822pfa.192.1572852433157;
+        Sun, 03 Nov 2019 23:27:13 -0800 (PST)
+Received: from ?IPv6:2408:821b:3c17:2d0:8c54:276:fb3e:9667? ([2408:821b:3c17:2d0:8c54:276:fb3e:9667])
+        by smtp.gmail.com with ESMTPSA id v16sm6157644pje.1.2019.11.03.23.27.02
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Sun, 03 Nov 2019 23:27:12 -0800 (PST)
+In-Reply-To: <20190808160005.10325-6-hch@lst.de>
+To:     hch@lst.de
+Cc:     linux-xtensa@linux-xtensa.org, monstr@monstr.eu,
+        vladimir.murzin@arm.com, linux-parisc@vger.kernel.org,
+        linux-sh@vger.kernel.org, tiwai@suse.de,
+        linuxppc-dev@lists.ozlabs.org, deller@gmx.de, x86@kernel.org,
+        linux-kernel@vger.kernel.org, gregkh@google.com
+From:   youling257 <youling257@gmail.com>
+Subject: Re: ALSA: pcm: use dma_can_mmap() to check if a device supports
+ dma_mmap_*
+Message-ID: <9e41aba3-c8ba-1d54-d693-fb822c58925f@gmail.com>
+Date:   Mon, 4 Nov 2019 15:26:53 +0800
+User-Agent: Mozilla/5.0 (X11; Linux i686; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 03 Nov 22:56 PST 2019, Rajendra Nayak wrote:
+This patch cause oops on android mainline kernel about gadget audio_source.
 
-> 
-> 
-> On 11/4/2019 12:03 PM, Bjorn Andersson wrote:
-> > On Sun 03 Nov 22:17 PST 2019, Rajendra Nayak wrote:
-> > 
-> > > 
-> > > 
-> > > On 10/31/2019 1:20 AM, Matthias Kaehlcke wrote:
-> > > > On Tue, Oct 29, 2019 at 09:50:40AM -0700, Stephen Boyd wrote:
-> > > > > Quoting Rajendra Nayak (2019-10-23 02:02:19)
-> > > > > > From: Maulik Shah <mkshah@codeaurora.org>
-> > > > > > 
-> > > > > > Add pdc interrupt controller for sc7180
-> > > > > > 
-> > > > > > Signed-off-by: Maulik Shah <mkshah@codeaurora.org>
-> > > > > > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> > > > > > ---
-> > > > > > v3:
-> > > > > > Used the qcom,sdm845-pdc compatible for pdc node
-> > > > > 
-> > > > > Everything else isn't doing the weird old compatible thing. Why not just
-> > > > > add the new compatible and update the driver? I guess I'll have to go
-> > > > > read the history.
-> > > > 
-> > > > Marc Zyngier complained  on v2 about the churn from adding compatible
-> > > > strings for identical components, and I kinda see his point.
-> > > > 
-> > > > I agree that using the 'sdm845' compatible string for sc7180 is odd too.
-> > > > Maybe we should introduce SoC independent compatible strings for IP blocks
-> > > > that are shared across multiple SoCs? If differentiation is needed SoC
-> > > > specific strings can be added.
-> > > 
-> > > Sure, I will perhaps add a qcom,pdc SoC independent compatible to avoid
-> > > confusion.
-> > > 
-> > 
-> > I agree,
-> > 
-> > compatible = "qcom,sc7180-pdc", "qcom,pdc";
-> > 
-> > is the way to go.
-> 
-> I wasn't planning on adding a qcom,sc7180-pdc, but instead just use the
-> qcom,pdc one for sc7180.
-> 
-> > 
-> > Reusing qcom,sdm845-pdc would prevent us from tackling any unforeseen
-> > issues/variations/erratas with one or the other platform in the future.
-> 
-> That was the intention of adding qcom,sc7180-pdc in the first place,
-> but Marc Zyngier was not happy with the churn, given there aren't really
-> any variations or erratas that we know of.
-> 
+Androidx86 run on android mainline kernel.
 
-Right, but by putting both compatibles in the dts and the generic one in
-the driver we avoid the driver churn and we're future compatible.
 
-And given that we haven't yet added the qcom,sdm845-pdc node to the
-sdm845.dtsi we don't need to maintain the qcom,sdm845-pdc in the driver.
-So switch qcom,sdm845-pdc to qcom,pdc in qcom-pdc.c.
+[ 385.104963] android_work: sent uevent USB_STATE=CONNECTED
 
-Regards,
-Bjorn
+[ 385.109006] android_work: sent uevent USB_STATE=DISCONNECTED
 
-> > 
-> > Regards,
-> > Bjorn
-> > 
-> > > 
-> > > -- 
-> > > QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> > > of Code Aurora Forum, hosted by The Linux Foundation
-> 
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+[ 385.182024] android_work: sent uevent USB_STATE=CONNECTED
+
+[ 385.184737] configfs-gadget gadget: high-speed config #1: b
+
+[ 385.184921] android_work: sent uevent USB_STATE=CONFIGURED
+
+[ 385.285268] BUG: kernel NULL pointer dereference, address: 
+0000000000000220
+
+[ 385.285339] #PF: supervisor read access in kernel mode
+
+[ 385.285374] #PF: error_code(0x0000) - not-present page
+
+[ 385.285436] PGD 80000000791e6067 P4D 80000000791e6067 PUD 0
+
+[ 385.285473] Oops: 0000 [#1] PREEMPT SMP PTI
+
+[ 385.285509] CPU: 0 PID: 5780 Comm: Binder:1383_5 Tainted: G O
+
+5.4.0-rc6-android-x86_64+ #1
+
+[ 385.285571] Hardware name: Insyde ONDA Tablet/ONDA Tablet, BIOS
+
+ONDA.D890HBBNR0A 03/11/2015
+
+[ 385.285639] RIP: 0010:dma_can_mmap+0x5/0x30
+
+[ 385.285675] Code: 74 11 e9 ae 98 b2 00 48 8b 05 9f 40 94 01 48 85 c0
+
+75 e3 31 c0 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44
+
+00 00 <48> 8b 87 20 02 00 00 48 85 c0 74 09 48 83 78 10 00 0f 95 c0 c3
+
+48
+
+[ 385.285762] RSP: 0018:ffffb39443b63b78 EFLAGS: 00010246
+
+[ 385.285797] RAX: 0000000000000001 RBX: ffffa28b91756600 RCX: 
+0000000000000040
+
+[ 385.285857] RDX: ffffffffb62b2a00 RSI: 0000000000000000 RDI: 
+0000000000000000
+
+[ 385.285917] RBP: ffffa28bac69f800 R08: ffffffffb63141b0 R09: 
+ffffa28bf9a34a88
+
+[ 385.285952] R10: ffffffffb62b2be0 R11: ffffffffb62b2bd0 R12: 
+0000000000000008
+
+[ 385.286013] R13: 0000000000000000 R14: ffffa28bacd736a8 R15: 
+ffffa28bacd736c8
+
+[ 385.286076] FS: 0000000000000000(0000) GS:ffffa28bfb600000(0063)
+
+knlGS:00000000f5d81970
+
+[ 385.286110] CS: 0010 DS: 002b ES: 002b CR0: 0000000080050033
+
+[ 385.286171] CR2: 0000000000000220 CR3: 000000007b2f6000 CR4: 
+00000000001006f0
+
+[ 385.286232] Call Trace:
+
+[ 385.286275] snd_pcm_hw_constraints_complete+0x3e/0x1f0
+
+[ 385.286314] snd_pcm_open_substream+0x94/0x140
+
+[ 385.286377] snd_pcm_open+0xf0/0x240
+
+[ 385.286416] ? wake_up_q+0x60/0x60
+
+[ 385.286460] snd_pcm_playback_open+0x3d/0x60
+
+[ 385.286533] chrdev_open+0xa2/0x1c0
+
+[ 385.286574] ? cdev_put.part.0+0x20/0x20
+
+[ 385.286615] do_dentry_open+0x13a/0x380
+
+[ 385.286686] path_openat+0x588/0x15d0
+
+[ 385.286728] do_filp_open+0x91/0x100
+
+[ 385.286769] ? __check_object_size+0x136/0x147
+
+[ 385.286840] do_sys_open+0x184/0x280
+
+[ 385.286880] ? handle_mm_fault+0xd7/0x1c0
+
+[ 385.286920] do_fast_syscall_32+0x8e/0x250
+
+[ 385.286992] entry_SYSENTER_compat+0x7c/0x8e
+
+
+[ 385.287302] CR2: 0000000000000220
+
+[ 385.287391] ---[ end trace 73ffcefcbbe2b9a0 ]---
+
+[ 385.296269] RIP: 0010:dma_can_mmap+0x5/0x30
+
+[ 385.296337] Code: 74 11 e9 ae 98 b2 00 48 8b 05 9f 40 94 01 48 85 c0
+
+75 e3 31 c0 c3 66 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 0f 1f 44
+
+00 00 <48> 8b 87 20 02 00 00 48 85 c0 74 09 48 83 78 10 00 0f 95 c0 c3
+
+48
+
+[ 385.296407] RSP: 0018:ffffb39443b63b78 EFLAGS: 00010246
+
+[ 385.296477] RAX: 0000000000000001 RBX: ffffa28b91756600 RCX: 
+0000000000000040
+
+[ 385.296516] RDX: ffffffffb62b2a00 RSI: 0000000000000000 RDI: 
+0000000000000000
+
+[ 385.296584] RBP: ffffa28bac69f800 R08: ffffffffb63141b0 R09: 
+ffffa28bf9a34a88
+
+[ 385.296654] R10: ffffffffb62b2be0 R11: ffffffffb62b2bd0 R12: 
+0000000000000008
+
+[ 385.296693] R13: 0000000000000000 R14: ffffa28bacd736a8 R15: 
+ffffa28bacd736c8
+
+[ 385.296761] FS: 0000000000000000(0000) GS:ffffa28bfb600000(0063)
+
+knlGS:00000000f5d81970
+
+[ 385.296830] CS: 0010 DS: 002b ES: 002b CR0: 0000000080050033
+
+[ 385.296867] CR2: 0000000000000220 CR3: 000000007b2f6000 CR4: 
+00000000001006f0
+
+[ 385.296936] Kernel panic - not syncing: Fatal exception
+
+[ 385.296985] Kernel Offset: 0x33e00000 from 0xffffffff81000000
+
+(relocation range: 0xffffffff80000000-0xffffffffbfffffff)
+
+[ 385.305185] Rebooting in 5 seconds..
+
+
+Revert it no the oops.
+
+
