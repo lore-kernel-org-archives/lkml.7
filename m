@@ -7,58 +7,57 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5721CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78A12CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A7585217F4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EC6B217F5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904335;
-	bh=LtgV19MgtfFX69rc+LOivsTvlCGFkpIRKuEDQjfkHRQ=;
+	s=default; t=1572904338;
+	bh=Ew1uxJTVJthNfzNREG7gYLsWwvyHdnXZixxGGJqsyBc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GsoU6brIte8I/+OpHFOQfndnILSun9W2cfsviZgkj8gNMu36Sm3JAqh6OyAbMqWfx
-	 ia/TomO+BM4Luw/NnPJlEqvHOha1OcTzAm/8B/3nlkrZ9q5DJs9HGxo2UxUPgHfGNu
-	 Xm7FRX10B2l0vPGpxNSYHmZlgnDmG+cN8GuuQLM4=
+	b=V3hW44GzZY2UjNY3M4/GTyIKz404HSIR5kcXuCOM6LmvtyNypaI+ua9UcjqNLVgqa
+	 VaWGseh8AMFp93euyVc3YX2BVvshkkaaEsQF+Hp6MjX8pDlmjMp+J90qRChzhuGa+n
+	 FocgGP0YLyXWCViITsGT5SBy1J10Y1Dgpyi8qRuE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfKDVwO (ORCPT
+        id S1730717AbfKDVwR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:52:14 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45392 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:17 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45552 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730675AbfKDVwH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:52:07 -0500
+        id S1730690AbfKDVwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:12 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 860DB21E6F;
-        Mon,  4 Nov 2019 21:52:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E2E8217F5;
+        Mon,  4 Nov 2019 21:52:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904327;
-        bh=LtgV19MgtfFX69rc+LOivsTvlCGFkpIRKuEDQjfkHRQ=;
+        s=default; t=1572904331;
+        bh=Ew1uxJTVJthNfzNREG7gYLsWwvyHdnXZixxGGJqsyBc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fp0fgOUHP7k62LPhFqmxXIVvJO89biLRItFf8jD/uGyrhKj6lRFEMHTe/3ltH3xtH
-         qNMngdCADD2dCHABqx9GqJLqOU47+AoWH8pakKfDKHgmZ020O1jNOBnQJ2YQ+vJyE3
-         kKQSE+FM9G20HbBO17zDLqt6wBQW1CYKJB+oyCK4=
+        b=UkcK20AvDSgUvxLkTjh+zLb+TvyollYHzaHN7vzsqFvoD2BRUXdT6N5bOAH6QBqmj
+         GczXFe4FH3TlhPgr1hyakHl3jBKmiXNOUoyn6lgKhKC45aiDwYN7ek6KerryfwdiFw
+         FAu1WXcc3ivSTWbAO8piLuHSdU/sTZaSwCuHLa30=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
+        stable@vger.kernel.org, Chenwandun <chenwandun@huawei.com>,
+        Minchan Kim <minchan@kernel.org>,
+        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 26/62] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Mon,  4 Nov 2019 22:44:48 +0100
-Message-Id: <20191104211925.266199704@linuxfoundation.org>
+Subject: [PATCH 4.14 01/95] zram: fix race between backing_dev_show and backing_dev_store
+Date:   Mon,  4 Nov 2019 22:43:59 +0100
+Message-Id: <20191104212038.811379835@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
-References: <20191104211901.387893698@linuxfoundation.org>
+In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
+References: <20191104212038.056365853@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -67,56 +66,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+[ Upstream commit f7daefe4231e57381d92c2e2ad905a899c28e402 ]
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+CPU0:				       CPU1:
+backing_dev_show		       backing_dev_store
+    ......				   ......
+    file = zram->backing_dev;
+    down_read(&zram->init_lock);	   down_read(&zram->init_init_lock)
+    file_path(file, ...);		   zram->backing_dev = backing_dev;
+    up_read(&zram->init_lock);		   up_read(&zram->init_lock);
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+gets the value of zram->backing_dev too early in backing_dev_show, which
+resultin the value being NULL at the beginning, and not NULL later.
 
-    if (inode_alloc)
+backtrace:
+  d_path+0xcc/0x174
+  file_path+0x10/0x18
+  backing_dev_show+0x40/0xb4
+  dev_attr_show+0x20/0x54
+  sysfs_kf_seq_show+0x9c/0x10c
+  kernfs_seq_show+0x28/0x30
+  seq_read+0x184/0x488
+  kernfs_fop_read+0x5c/0x1a4
+  __vfs_read+0x44/0x128
+  vfs_read+0xa0/0x138
+  SyS_read+0x54/0xb4
 
-When inode_alloc is NULL, it is used on line 287:
-
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
+Link: http://lkml.kernel.org/r/1571046839-16814-1-git-send-email-chenwandun@huawei.com
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+Acked-by: Minchan Kim <minchan@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+Cc: Jens Axboe <axboe@kernel.dk>
+Cc: <stable@vger.kernel.org>	[4.14+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/block/zram/zram_drv.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index 4506ec5ec2ea6..bfc44644301ca 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -289,7 +289,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
+diff --git a/drivers/block/zram/zram_drv.c b/drivers/block/zram/zram_drv.c
+index 133178c9b2cf3..1b4e195c0d3c9 100644
+--- a/drivers/block/zram/zram_drv.c
++++ b/drivers/block/zram/zram_drv.c
+@@ -291,13 +291,14 @@ static void reset_bdev(struct zram *zram)
+ static ssize_t backing_dev_show(struct device *dev,
+ 		struct device_attribute *attr, char *buf)
+ {
++	struct file *file;
+ 	struct zram *zram = dev_to_zram(dev);
+-	struct file *file = zram->backing_dev;
+ 	char *p;
+ 	ssize_t ret;
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
+ 	down_read(&zram->init_lock);
+-	if (!zram_wb_enabled(zram)) {
++	file = zram->backing_dev;
++	if (!file) {
+ 		memcpy(buf, "none\n", 5);
+ 		up_read(&zram->init_lock);
+ 		return 5;
 -- 
 2.20.1
 
