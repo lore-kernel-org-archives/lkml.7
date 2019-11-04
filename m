@@ -2,125 +2,176 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 873F6CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:48:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54AC9CA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:49:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60DC3214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:48:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BF3220848
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:49:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1XZp68j"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hDuEqnDh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729464AbfKDRsr (ORCPT
+        id S1729374AbfKDRtO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:48:47 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45228 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728012AbfKDRsq (ORCPT
+        Mon, 4 Nov 2019 12:49:14 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54720 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728188AbfKDRtN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:48:46 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v8so12878434lfa.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:48:45 -0800 (PST)
+        Mon, 4 Nov 2019 12:49:13 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z26so4499951wmi.4;
+        Mon, 04 Nov 2019 09:49:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CerRZqVW5KD7h9g62jmCWoCx6bdHOPRVAdr0IAwl3q4=;
-        b=S1XZp68j+Ms0VaWxxXY2vQrcslic0wHP2t2PK+Wp3XqXu8dKiItgWxUNh9UYCWgJHW
-         WmHMEpApUaFgvTAr5rh35Ofvs4kqzS55jCAhlPCmb+rrceUlL3Dzj54dDH41fdA2uQrf
-         yGTHyWv5QlxJBnXQji5LhihyLNWQclUizI+8A9Zuu4XS15bFaYxMZC1FMYMCnwcZ3n7Q
-         iPZVo/dahHCXQK1OEz6H1ERxppSBbGh6e1kxNz0hEKnWOE42P24kXk4nbk1JE97iWPkY
-         v2bai5G9Y+MIrOzTOv7KVQYikbOUCJ3tOcism5JK/OekL8C6fnG2Q5Udo4ID9imcClin
-         8JIA==
+         :cc:content-transfer-encoding;
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=hDuEqnDhVk7kPLTfGLMq/WeOZAhbhSMAJJbCeOf+BLERB82koHBkKphxwkbknhDs3J
+         Obr+dHWwQWzWiEy1P9TZaAGqTwD9QQLPDKlpSq2UeZQ72RKbsbQW2kmOjIH3jjybyQar
+         jiapj0psw8heQmPX0/1XhGmakh5EQEDo03gownZn2neuCbngAF1WMIJ2w4VvaB7zLmNR
+         smmZAcW1rzVodKEX6DURemUVuZhKbcuxtcg+h7b7+J/bdYiMga1q9epRQj6i+BVp/fOi
+         AMd5GIZyPG55XP9KQuaqH6yfrfUaKokf2Rzc+DBfmeurrUhAuhXpu3805K50ix2tLlgm
+         W4HA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CerRZqVW5KD7h9g62jmCWoCx6bdHOPRVAdr0IAwl3q4=;
-        b=IlNzhnCGQDJNrzHdSWxCvnKwokJTNSko42OdHIO9vdI/dDaSLE00YiqBe/6KK7Kk13
-         PSJdY4eL08WcE3ggOZpyLQ/xBFeeT6ve41EHEde9CaF4j0ITrXG+nG44L+08xhomqfaE
-         8la0mtKMFcRpI9QCz4d+1saA2jwK00H3uXm9Skx07ZtYEKW3EgjX8lTGuUTKovqi8CUO
-         nAsvlQ5eX0wnP0yVEW2I4g9CMDEIqzbvdKlx3JikKTmm2FzTd96PvyTdnU7Y2p5Xv1yd
-         6wK6V6UN6wrTKeJPJPqwrYWcGT/YuIXmm0KeYQBgx28WeW7TABLAH6kyiZn9QDZLwaWf
-         pVfA==
-X-Gm-Message-State: APjAAAXDmaDsBcbhPByiEz23YP52A7cPaIf/fQkz86kdrT3WOs9PP3tS
-        ss9VsImZmIt2T13l93Vy9f6n5lAyimMPK/UbneUi1w==
-X-Google-Smtp-Source: APXvYqwRT7xzZik+9WmXSwJ+LXqDAPfWrYHgtQVcA4NrPPlvJ0uY0GQDNdpubQws9aQunlKscwmfGYN38gKmc5l5C14=
-X-Received: by 2002:ac2:48af:: with SMTP id u15mr17204731lfg.151.1572889724743;
- Mon, 04 Nov 2019 09:48:44 -0800 (PST)
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=p2xKl9sk3AGAtQ4LlnI3zNkpScq7gYHsvOfvGfAQyL4=;
+        b=CVtqKNjqgd6vP6HKuofmGdQw0DDIUql6nM5ezs4/gFv4WQSLES8Tc2pGYhsTzpAOis
+         zMb+w9/+pxGjM36pE+2fJwl74kr9+B0cJeyA8gKt78f9IPSiywRHJsu6lKwVTAhzY+3L
+         L5lVB7aeFH9g3nV0w/h8QvuaqNR6TdjRj2b99RKJ6EYIP1n361yJrCa41wX3jPfhpaTS
+         CzzCGPqAUt35L/8Rk+ukdgWRldJNE4JO3l3ELiF2PdTb/nDGu0QFuyYnFmJ8UkMlhfyq
+         1W/7wEorUjKs4lP/Nm0stgoAOkxn/Yv4tZ481Ad92geZkPZEjgXvMJqLYHLS7TnEjcXn
+         uDSg==
+X-Gm-Message-State: APjAAAVwusJ7Pc5gXPwCF4CvXaYXvbjEmOVqLVAKx5QBusBpHX9h3SRU
+        TSt3LCkkVoXi1fVfWkrWmPLaCZZJ75mXPN43J14=
+X-Google-Smtp-Source: APXvYqwOHtKxgzOFlIXHimPJ2owhRc/to3TzER1kse9EqS8W/w1eEg9DUEJJUI1U5VQmdGnU3C50BansJnwSlPsMMA0=
+X-Received: by 2002:a05:600c:228e:: with SMTP id 14mr241937wmf.119.1572889751662;
+ Mon, 04 Nov 2019 09:49:11 -0800 (PST)
 MIME-Version: 1.0
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <1571776465-29763-3-git-send-email-thara.gopinath@linaro.org>
- <379d23e5-79a5-9d90-0fb6-125d9be85e99@arm.com> <5DBC9C57.3040504@linaro.org>
- <dc30ed89-6581-d99d-03bb-58ea40b74a3d@arm.com> <CAKfTPtBQ1_7ApBkAQrEBy7twohSiM3WcYa-JiHekbedR8C3EKg@mail.gmail.com>
- <d7c590b5-f415-ecad-0e81-def9f9bc1296@arm.com>
-In-Reply-To: <d7c590b5-f415-ecad-0e81-def9f9bc1296@arm.com>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Mon, 4 Nov 2019 18:48:32 +0100
-Message-ID: <CAKfTPtBAsiVemcmB6VeS9MVrO4z0qY9H6+3mh5DS-7WOOy-fdw@mail.gmail.com>
-Subject: Re: [Patch v4 2/6] sched: Add infrastructure to store and update
- instantaneous thermal pressure
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 4 Nov 2019 18:49:00 +0100
+Message-ID: <CAJiuCccf3=McRfJ85SiudDHZ4nDOT+d7hh+nKDgC1u6nTpphPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019 at 18:42, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
+On Mon, 4 Nov 2019 at 09:04, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
 >
-> On 04/11/2019 18:34, Vincent Guittot wrote:
-> > On Mon, 4 Nov 2019 at 18:29, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
-> >>
-> >> On 01/11/2019 21:57, Thara Gopinath wrote:
-> >>> On 11/01/2019 08:17 AM, Dietmar Eggemann wrote:
-> >>>> On 22.10.19 22:34, Thara Gopinath wrote:
->
-> [...]
->
-> >>> You still need now.All the update_*_avg apis take now as a parameter.
-> >>
-> >> You do need it for the ___update_load_sum() call inside the
-> >> foo_load_avg() functions. But that doesn't mean you have to pass it into
-> >> foo_load_avg(). Look at update_irq_load_avg() for example. We don't pass
-> >> rq->clock as now in there.
+> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
 > >
-> > update_irq_load_avg is the exception but having now as a parameter is
-> > the default behavior that update_thermal_load_avg have to follow
+> > H6 PWM block is basically the same as A20 PWM, except that it also has
+> > bus clock and reset line which needs to be handled accordingly.
+> >
+> > Expand Allwinner PWM binding with H6 PWM specifics.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
+ml
+> > index 0ac52f83a58c..bf36ea509f31 100644
+> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yam=
+l
+> > @@ -30,13 +30,46 @@ properties:
+> >        - items:
+> >            - const: allwinner,sun50i-h5-pwm
+> >            - const: allwinner,sun5i-a13-pwm
+> > +      - const: allwinner,sun50i-h6-pwm
+> >
+> >    reg:
+> >      maxItems: 1
+> >
+> > -  clocks:
+> > +  # Even though it only applies to subschemas under the conditionals,
+> > +  # not listing them here will trigger a warning because of the
+> > +  # additionalsProperties set to false.
+> > +  clocks: true
+> > +  clock-names: true
+> > +  resets:
+> >      maxItems: 1
+> >
+> > +  if:
+> > +    properties:
+> > +      compatible:
+> > +        contains:
+> > +          const: allwinner,sun50i-h6-pwm
+> > +
+> > +  then:
+> > +    properties:
+> > +      clocks:
+> > +        items:
+> > +          - description: Module Clock
+> > +          - description: Bus Clock
+> > +
+> > +      clock-names:
+> > +        items:
+> > +          - const: mod
+> > +          - const: bus
+> > +
+> > +    required:
+> > +      - clock-names
+> > +      - resets
+> > +
+> > +  else:
+> > +    properties:
+> > +      clocks:
+> > +        maxItems: 1
+> > +
 >
-> Why would this be? Just so the functions have the the same parameters?
+> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
+> bus clock is required.", right?
 
-That's the default behavior to keep all pelt function to behave
-similarly and keep outside what is not strictly related to pelt so it
-will ease any further modification
-sched_thermal_decay_coeff is not a pelt parameter but a thermal one
-irq_avg is an exception not the default behavior to follow
+Correct.
+>
+>
+> I wonder if it is sensible to require a clock-names property in the else
+> branch, too. This would make it obvious if the clock there corresponds
+> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+
+This will also require to change example and all the current allwinner
+device-tree that have a PWM declared.
+
+Regards,
+Cl=C3=A9ment
 
 >
-> In this case you could argue that update_irq_load_avg() has to pass in
-> rq->clock as now.
+> Best regards
+> Uwe
 >
-> >> -int update_thermal_load_avg(u64 now, struct rq *rq, u64 capacity)
-> >> +extern int sched_thermal_decay_coeff;
-> >> +
-> >> +int update_thermal_load_avg(struct rq *rq, u64 capacity)
-> >>  {
-> >> +       u64 now = rq_clock_task(rq) >> sched_thermal_decay_coeff;
-> >> +
-> >>         if (___update_load_sum(now, &rq->avg_thermal,
-> >>                                capacity,
-> >>                                capacity,
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
