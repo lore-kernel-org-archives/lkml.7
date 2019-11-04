@@ -2,297 +2,300 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FD3CA9EB5
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:23:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0291FCA9EB5
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:24:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435A2214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:23:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C83282080F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:24:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="aI/PNRQn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729473AbfKDRX6 (ORCPT
+        id S1729476AbfKDRYn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:23:58 -0500
-Received: from smtp-sh.infomaniak.ch ([128.65.195.4]:41968 "EHLO
-        smtp-sh.infomaniak.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728322AbfKDRX6 (ORCPT
+        Mon, 4 Nov 2019 12:24:43 -0500
+Received: from mail-wr1-f44.google.com ([209.85.221.44]:36031 "EHLO
+        mail-wr1-f44.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727989AbfKDRYn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:23:58 -0500
-Received: from smtp-2-0000.mail.infomaniak.ch ([10.5.36.107])
-        by smtp-sh.infomaniak.ch (8.14.5/8.14.5) with ESMTP id xA4HLvDM005071
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 4 Nov 2019 18:21:57 +0100
-Received: from localhost (unknown [94.23.54.103])
-        by smtp-2-0000.mail.infomaniak.ch (Postfix) with ESMTPA id E7541100D31A6;
-        Mon,  4 Nov 2019 18:21:53 +0100 (CET)
-From:   =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mic@digikod.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?q?Micka=C3=ABl=20Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH bpf-next v13 0/7] Landlock LSM
-Date:   Mon,  4 Nov 2019 18:21:39 +0100
-Message-Id: <20191104172146.30797-1-mic@digikod.net>
-X-Mailer: git-send-email 2.24.0.rc1
+        Mon, 4 Nov 2019 12:24:43 -0500
+Received: by mail-wr1-f44.google.com with SMTP id w18so18077408wrt.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 09:24:39 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9pszL8eDm49mTZV2/1Bqz/fRAti6r/IlBtJ/fxhua+I=;
+        b=aI/PNRQnk9qdxM4nIrcmViqV8A8LrEFyRdARCppACjh3URDxCaRHnfonKFogswweFY
+         B/0JbhI/OtES2PNVgNgyjORBrq5f1PShbFF/Ib5pjgd56dhGC/Xv2oKxVBGj5UQTIR43
+         OiA8GtDi87/zOrsPqTOkHtKtRZyZtHUjpLG/E=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=9pszL8eDm49mTZV2/1Bqz/fRAti6r/IlBtJ/fxhua+I=;
+        b=fDnWt1Bhn2HLbugUj28kdzCgJyNyGm7fF6cEWbGNLDR+QgEWfdv21m51CJNOCerq0z
+         dDfFTnbb9t9PHRYLjJqObQWDgjXUoBmp3YJ8v7m78Ngc4WMmt+S/Kw9mMmfbleYFSrcT
+         yTVi1wcdJELSsD0cAh1JU2FFAtW7ybwNmo2sIh844HwDrE5heiGtz/JSeGLPhDFNtz23
+         9CyYirzcYTc5AhIw+UM269TsK2XFLcn2C3diX6IqN507mpxboTHVRemlomcnfi0oQcAw
+         olTxOKs6XeGYC6s8Nz2XjyWt/ShStjGBPq/KTDno3VM+iz/37HQoUCg+vBI9FoaBjVLI
+         AlRg==
+X-Gm-Message-State: APjAAAVGbb92cDZXwqTAnBkoUO2pRl0zBwr+koIRy3FsArF1jGAzLpag
+        RreZzOyJp945KK/9k9+N+3WQU4y4h5Q=
+X-Google-Smtp-Source: APXvYqxa/Ivqn5KKJR4deEms/Pcfzim4xEaRh74HizYoK7WTZ1bGTKUfP+QphJfwPghFqr0EumAsrw==
+X-Received: by 2002:adf:eb87:: with SMTP id t7mr22285079wrn.294.1572888278607;
+        Mon, 04 Nov 2019 09:24:38 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id f143sm18906127wme.40.2019.11.04.09.24.36
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 09:24:36 -0800 (PST)
+Date:   Mon, 4 Nov 2019 18:24:34 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Alex Deucher <alexdeucher@gmail.com>
+Cc:     Daniel Vetter <daniel@ffwll.ch>, Harry Wentland <hwentlan@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
+Message-ID: <20191104172434.GJ10326@phenom.ffwll.local>
+Mail-Followup-To: Alex Deucher <alexdeucher@gmail.com>,
+        Harry Wentland <hwentlan@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
+        "Wentland, Harry" <Harry.Wentland@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>
+References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
+ <20191009163235.GT16989@phenom.ffwll.local>
+ <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
+ <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com>
+ <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com>
+ <CAKMK7uHr3aeJRqJAscDDfsuBBnVXCeN9SS36-1UGuK84NyOD5Q@mail.gmail.com>
+ <CAKMK7uH6EoY9MkzjSjU+Fe=E-XB4Tf9d2VsW=Tr=tFy1J-dJgg@mail.gmail.com>
+ <53bf910b-5f9c-946b-17ee-602c24c0fa96@amd.com>
+ <20191104165457.GH10326@phenom.ffwll.local>
+ <CADnq5_PxMQ_AkBCHXU_YUAMWaPcH-nkOJNGNKnUOJWSTYV6X+A@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-X-Antivirus: Dr.Web (R) for Unix mail servers drweb plugin ver.6.0.2.8
-X-Antivirus-Code: 0x100000
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CADnq5_PxMQ_AkBCHXU_YUAMWaPcH-nkOJNGNKnUOJWSTYV6X+A@mail.gmail.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Mon, Nov 04, 2019 at 12:05:40PM -0500, Alex Deucher wrote:
+> On Mon, Nov 4, 2019 at 11:55 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Mon, Nov 04, 2019 at 03:23:09PM +0000, Harry Wentland wrote:
+> > > On 2019-11-04 5:53 a.m., Daniel Vetter wrote:
+> > > > On Wed, Oct 9, 2019 at 10:58 PM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > >> On Wed, Oct 9, 2019 at 10:46 PM Lakha, Bhawanpreet
+> > > >> <Bhawanpreet.Lakha@amd.com> wrote:
+> > > >>>
+> > > >>> I misunderstood and was talking about the ksv validation specifically
+> > > >>> (usage of drm_hdcp_check_ksvs_revoked()).
+> > > >>
+> > > >> Hm for that specifically I think you want to do both, i.e. both
+> > > >> consult your psp, but also check for revoked ksvs with the core
+> > > >> helper. At least on some platforms only the core helper might have the
+> > > >> updated revoke list.
+> > > >>
+> > >
+> > > I think it's an either/or. Either we use an HDCP implementation that's
+> > > fully running in x86 kernel space (still not sure how that's compliant)
+> > > or we fully rely on our PSP FW to do what it's designed to do. I don't
+> > > think it makes sense to mix and match here.
+> >
+> > Then you need to somehow tie the revoke list that's in the psp to the
+> > revoke list update logic we have. That's what we've done for hdcp2 (which
+> > is similarly to yours implemented in hw). The point is that on linux we
+> > now have a standard way to get these revoke lists updated/handled.
+> >
+> > I guess it wasn't clear how exactly I think you're supposed to combine
+> > them?
+> 
+> There's no driver sw required at all for our implementation and as far
+> as I know, HDCP 2.x requires that all of the key revoke handling be
+> handled in a secure processor rather than than on the host processor,
+> so I'm not sure how we make use if it.  All the driver sw is
+> responsible for doing is saving/restoring the potentially updated srm
+> at suspend/resume/etc.
 
-Following the previous series [1], this thirteenth series mainly clean
-up and add safeguards to the domain management.  This series also
-improves the documentation, add comments, and fixes some latent bugs.
+Uh, you don't have a permanent store on the chip? I thought another
+requirement is that you can't downgrade.
 
-This is the first step of the roadmap discussed at LPC [2].  While the
-intended final goal is to allow unprivileged (or non-root) users to use
-Landlock, this series allows only a process with global CAP_SYS_ADMIN to
-load and enforce a rule.  This may help to get feedback and avoid
-unexpected behaviors.
+And for hw solutions all you do with the updated revoke cert is stuff it
+into the hw, it's purely for updating it. And those updates need to come
+from somewhere else (usually in the media you play), the kernel can't
+fetch them over the internet itself. I thought we already had the function
+to give you the srm directly so you can stuff it into the hw, but looks
+like that part isn't there (yet).
+-Daniel
 
-This series can be applied on top of bpf-next, commit e93d99180abd
-("selftests/bpf: Restore $(OUTPUT)/test_stub.o rule").  This can be
-tested with CONFIG_BPF_SYSCALL, CONFIG_SECCOMP_FILTER and
-CONFIG_SECURITY_LANDLOCK.  This patch series can be found in a Git
-repository here:
-https://github.com/landlock-lsm/linux/commits/landlock-v13
-I would really appreciate constructive comments on the design and the
-code.
-
-
-# Landlock LSM
-
-Landlock is a stackable LSM [3] intended to be used as a low-level
-framework to build custom access-control/audit systems or safe endpoint
-security agents.  There is currently one Landlock hook dedicated to
-check ptrace(2).  This hook accepts a dedicated eBPF program, called a
-Landlock program, which can currently compare its position in the
-hierarchy of similar programs tied to other processes.  This enables to
-enforce programmatic scoped ptrace restrictions.
-
-The final goal of this new Linux Security Module (LSM) called Landlock
-is to allow any process, including unprivileged ones, to create powerful
-security sandboxes comparable to XNU Sandbox, FreeBSD Capsicum or
-OpenBSD Pledge (which could be implemented with Landlock).  This kind of
-sandbox is expected to help mitigate the security impact of bugs or
-unexpected/malicious behaviors in user-space applications.
-
-The use of seccomp and Landlock is more suitable with the help of a
-user-space library (e.g.  libseccomp) that could help to specify a
-high-level language to express a security policy instead of raw eBPF
-programs.  Moreover, thanks to the LLVM front-end, it is quite easy to
-write an eBPF program with a subset of the C language.
-
-The documentation patch contains some kernel documentation, explanations
-on how to use Landlock and a FAQ.  The compiled documentation and some
-talks can be found here: https://landlock.io
-
-
-# Frequently asked questions
-
-## Why is seccomp-bpf not enough?
-
-A seccomp filter can access only raw syscall arguments (i.e. the
-register values) which means that it is not possible to filter according
-to the value pointed to by an argument, such as a file pathname. As an
-embryonic Landlock version demonstrated (i.e. seccomp-object), filtering
-at the syscall level is complicated (e.g. need to take care of race
-conditions). This is mainly because the access control checkpoints of
-the kernel are not at this high-level but more underneath, at the
-LSM-hook level. The LSM hooks are designed to handle this kind of
-checks.  Landlock abstracts this approach to leverage the ability of
-unprivileged users to limit themselves.
-
-Cf. section "What it isn't?" in
-Documentation/userspace-api/seccomp_filter.rst
-
-
-## Why use the seccomp(2) syscall?
-
-Landlock use the same semantic as seccomp to apply access rule
-restrictions. It add a new layer of security for the current process
-which is inherited by its children. It makes sense to use an unique
-access-restricting syscall (that should be allowed by seccomp filters)
-which can only drop privileges. Moreover, a Landlock rule could come
-from outside a process (e.g.  passed through a UNIX socket). It is then
-useful to differentiate the creation/load of Landlock eBPF programs via
-bpf(2), from rule enforcement via seccomp(2).
-
-
-## Why a new LSM? Are SELinux, AppArmor, Smack and Tomoyo not good
-   enough?
-
-The current access control LSMs are fine for their purpose which is to
-give the *root* the ability to enforce a security policy for the
-*system*. What is missing is a way to enforce a security policy for any
-application by its developer and *unprivileged user* as seccomp can do
-for raw syscall filtering.
-
-Differences from other (access control) LSMs:
-* not only dedicated to administrators (i.e. no_new_priv);
-* limited kernel attack surface (e.g. policy parsing);
-* constrained policy rules (no DoS: deterministic execution time);
-* do not leak more information than the loader process can legitimately
-  have access to (minimize metadata inference).
-
-
-# Changes since v12
-
-* make landlock_prepend_prog() more consistant by putting its caller in
-  charge of the lifetime of the Landlock domain being updated
-* always copy a domain being updated, which garantee its immutability,
-  and behave as a copy-on-write thanks to commit_creds()
-* fix preemption
-* improve documentation and comments
-
-
-# Changes since v11
-
-* rework domain management
-* minor fixes
-
-
-# Changes since v10
-
-* remove all the file system related features: program types, inode
-  map and expected_attach_triggers
-* replace the static ptrace security policy with a new and simpler
-  ptrace program (attached) type and a task_landlock_ptrace_ancestor()
-  eBPF helper
-* do not rely on seccomp internal structure but use stacked credentials
-  insdead
-* extend ptrace tests
-* add more documentation
-* split and rename files/patches
-* miscellaneous fixes
-
-
-Previous changes can be found in a previous cover-letter [4].
-
-
-[1] https://lore.kernel.org/lkml/20191031164445.29426-1-mic@digikod.net/
-[2] https://lore.kernel.org/lkml/5828776A.1010104@digikod.net/
-[3] https://lore.kernel.org/lkml/50db058a-7dde-441b-a7f9-f6837fe8b69f@schaufler-ca.com/
-[4] https://lore.kernel.org/lkml/20190721213116.23476-1-mic@digikod.net/
-
-Regards,
-
-Mickaël Salaün (7):
-  bpf,landlock: Define an eBPF program type for Landlock hooks
-  landlock: Add the management of domains
-  landlock,seccomp: Apply Landlock programs to process hierarchy
-  landlock: Add ptrace LSM hooks
-  bpf,landlock: Add task_landlock_ptrace_ancestor() helper
-  bpf,landlock: Add tests for the Landlock ptrace program type
-  landlock: Add user and kernel documentation for Landlock
-
- Documentation/security/index.rst              |   1 +
- Documentation/security/landlock/index.rst     |  22 ++
- Documentation/security/landlock/kernel.rst    | 166 ++++++++++
- Documentation/security/landlock/user.rst      | 153 ++++++++++
- MAINTAINERS                                   |   9 +
- include/linux/bpf.h                           |   3 +
- include/linux/bpf_types.h                     |   3 +
- include/linux/landlock.h                      |  25 ++
- include/linux/lsm_hooks.h                     |   1 +
- include/uapi/linux/bpf.h                      |  23 +-
- include/uapi/linux/landlock.h                 |  39 +++
- include/uapi/linux/seccomp.h                  |   1 +
- kernel/bpf/syscall.c                          |   9 +
- kernel/bpf/verifier.c                         |  11 +
- kernel/seccomp.c                              |   4 +
- scripts/bpf_helpers_doc.py                    |   1 +
- security/Kconfig                              |   1 +
- security/Makefile                             |   2 +
- security/landlock/Kconfig                     |  19 ++
- security/landlock/Makefile                    |   6 +
- security/landlock/bpf_ptrace.c                |  98 ++++++
- security/landlock/bpf_ptrace.h                |  17 ++
- security/landlock/bpf_run.c                   |  65 ++++
- security/landlock/bpf_run.h                   |  25 ++
- security/landlock/bpf_verify.c                |  87 ++++++
- security/landlock/common.h                    |  84 +++++
- security/landlock/domain_manage.c             | 152 +++++++++
- security/landlock/domain_manage.h             |  22 ++
- security/landlock/domain_syscall.c            |  93 ++++++
- security/landlock/hooks_cred.c                |  47 +++
- security/landlock/hooks_cred.h                |  14 +
- security/landlock/hooks_ptrace.c              | 114 +++++++
- security/landlock/hooks_ptrace.h              |  19 ++
- security/landlock/init.c                      |  32 ++
- security/security.c                           |  15 +
- tools/include/uapi/linux/bpf.h                |  23 +-
- tools/include/uapi/linux/landlock.h           |  22 ++
- tools/lib/bpf/libbpf_probes.c                 |   3 +
- tools/testing/selftests/bpf/config            |   3 +
- tools/testing/selftests/bpf/test_verifier.c   |   1 +
- .../testing/selftests/bpf/verifier/landlock.c |  56 ++++
- tools/testing/selftests/landlock/.gitignore   |   5 +
- tools/testing/selftests/landlock/Makefile     |  27 ++
- tools/testing/selftests/landlock/config       |   5 +
- tools/testing/selftests/landlock/test.h       |  48 +++
- tools/testing/selftests/landlock/test_base.c  |  24 ++
- .../testing/selftests/landlock/test_ptrace.c  | 289 ++++++++++++++++++
- 47 files changed, 1887 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/security/landlock/index.rst
- create mode 100644 Documentation/security/landlock/kernel.rst
- create mode 100644 Documentation/security/landlock/user.rst
- create mode 100644 include/linux/landlock.h
- create mode 100644 include/uapi/linux/landlock.h
- create mode 100644 security/landlock/Kconfig
- create mode 100644 security/landlock/Makefile
- create mode 100644 security/landlock/bpf_ptrace.c
- create mode 100644 security/landlock/bpf_ptrace.h
- create mode 100644 security/landlock/bpf_run.c
- create mode 100644 security/landlock/bpf_run.h
- create mode 100644 security/landlock/bpf_verify.c
- create mode 100644 security/landlock/common.h
- create mode 100644 security/landlock/domain_manage.c
- create mode 100644 security/landlock/domain_manage.h
- create mode 100644 security/landlock/domain_syscall.c
- create mode 100644 security/landlock/hooks_cred.c
- create mode 100644 security/landlock/hooks_cred.h
- create mode 100644 security/landlock/hooks_ptrace.c
- create mode 100644 security/landlock/hooks_ptrace.h
- create mode 100644 security/landlock/init.c
- create mode 100644 tools/include/uapi/linux/landlock.h
- create mode 100644 tools/testing/selftests/bpf/verifier/landlock.c
- create mode 100644 tools/testing/selftests/landlock/.gitignore
- create mode 100644 tools/testing/selftests/landlock/Makefile
- create mode 100644 tools/testing/selftests/landlock/config
- create mode 100644 tools/testing/selftests/landlock/test.h
- create mode 100644 tools/testing/selftests/landlock/test_base.c
- create mode 100644 tools/testing/selftests/landlock/test_ptrace.c
+> 
+> Alex
+> 
+> > -Daniel
+> >
+> >
+> > >
+> > > >>> For the defines I will create patches to use drm_hdcp where it is usable.
+> > > >>
+> > > >> Thanks a lot. Ime once we have shared definitions it's much easier to
+> > > >> also share some helpers, where it makes sense.
+> > > >>
+> > > >> Aside I think the hdcp code could also use a bit of demidlayering. At
+> > > >> least I'm not understanding why you add a 2nd abstraction layer for
+> > > >> i2c/dpcd, dm_helper already has that. That seems like one abstraction
+> > > >> layer too much.
+> > > >
+> > > > I haven't seen anything fly by or in the latest pull request ... you
+> > > > folks still working on this or more put on the "maybe, probably never"
+> > > > pile?
+> > > >
+> > >
+> > > Following up with Bhawan.
+> > >
+> > > Harry
+> > >
+> > > > -Daniel
+> > > >
+> > > >
+> > > >> -Daniel
+> > > >>
+> > > >>>
+> > > >>>
+> > > >>> Bhawan
+> > > >>>
+> > > >>> On 2019-10-09 2:43 p.m., Daniel Vetter wrote:
+> > > >>>> On Wed, Oct 9, 2019 at 8:23 PM Lakha, Bhawanpreet
+> > > >>>> <Bhawanpreet.Lakha@amd.com> wrote:
+> > > >>>>> Hi,
+> > > >>>>>
+> > > >>>>> The reason we don't use drm_hdcp is because our policy is to do hdcp
+> > > >>>>> verification using PSP/HW (onboard secure processor).
+> > > >>>> i915 also uses hw to auth, we still use the parts from drm_hdcp ...
+> > > >>>> Did you actually look at what's in there? It's essentially just shared
+> > > >>>> defines and data structures from the standard, plus a few minimal
+> > > >>>> helpers to en/decode some bits. Just from a quick read the entire
+> > > >>>> patch very much looks like midlayer everywhere design that we
+> > > >>>> discussed back when DC landed ...
+> > > >>>> -Daniel
+> > > >>>>
+> > > >>>>> Bhawan
+> > > >>>>>
+> > > >>>>> On 2019-10-09 12:32 p.m., Daniel Vetter wrote:
+> > > >>>>>> On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
+> > > >>>>>>> Hi,
+> > > >>>>>>>
+> > > >>>>>>> Static analysis with Coverity has detected a potential issue with
+> > > >>>>>>> function validate_bksv in
+> > > >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
+> > > >>>>>>> commit:
+> > > >>>>>>>
+> > > >>>>>>> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
+> > > >>>>>>> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
+> > > >>>>>>> Date:   Tue Aug 6 17:52:01 2019 -0400
+> > > >>>>>>>
+> > > >>>>>>>       drm/amd/display: Add HDCP module
+> > > >>>>>> I think the real question here is ... why is this not using drm_hdcp?
+> > > >>>>>> -Daniel
+> > > >>>>>>
+> > > >>>>>>> The analysis is as follows:
+> > > >>>>>>>
+> > > >>>>>>>    28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
+> > > >>>>>>>    29 {
+> > > >>>>>>>
+> > > >>>>>>> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
+> > > >>>>>>>
+> > > >>>>>>> 1. overrun-local:
+> > > >>>>>>> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
+> > > >>>>>>> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
+> > > >>>>>>>
+> > > >>>>>>>    30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
+> > > >>>>>>>    31        uint8_t count = 0;
+> > > >>>>>>>    32
+> > > >>>>>>>    33        while (n) {
+> > > >>>>>>>    34                count++;
+> > > >>>>>>>    35                n &= (n - 1);
+> > > >>>>>>>    36        }
+> > > >>>>>>>
+> > > >>>>>>> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
+> > > >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
+> > > >>>>>>>
+> > > >>>>>>> struct mod_hdcp_message_hdcp1 {
+> > > >>>>>>>           uint8_t         an[8];
+> > > >>>>>>>           uint8_t         aksv[5];
+> > > >>>>>>>           uint8_t         ainfo;
+> > > >>>>>>>           uint8_t         bksv[5];
+> > > >>>>>>>           uint16_t        r0p;
+> > > >>>>>>>           uint8_t         bcaps;
+> > > >>>>>>>           uint16_t        bstatus;
+> > > >>>>>>>           uint8_t         ksvlist[635];
+> > > >>>>>>>           uint16_t        ksvlist_size;
+> > > >>>>>>>           uint8_t         vp[20];
+> > > >>>>>>>
+> > > >>>>>>>           uint16_t        binfo_dp;
+> > > >>>>>>> };
+> > > >>>>>>>
+> > > >>>>>>> variable n is going to contain the contains of r0p and bcaps. I'm not
+> > > >>>>>>> sure if that is intentional. If not, then the count is going to be
+> > > >>>>>>> incorrect if these are non-zero.
+> > > >>>>>>>
+> > > >>>>>>> Colin
+> > > >>>>> _______________________________________________
+> > > >>>>> dri-devel mailing list
+> > > >>>>> dri-devel@lists.freedesktop.org
+> > > >>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > > >>>>
+> > > >>>>
+> > > >>
+> > > >>
+> > > >>
+> > > >> --
+> > > >> Daniel Vetter
+> > > >> Software Engineer, Intel Corporation
+> > > >> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > > >
+> > > >
+> > > >
+> > > > --
+> > > > Daniel Vetter
+> > > > Software Engineer, Intel Corporation
+> > > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
+> > > >
+> >
+> > --
+> > Daniel Vetter
+> > Software Engineer, Intel Corporation
+> > http://blog.ffwll.ch
+> > _______________________________________________
+> > amd-gfx mailing list
+> > amd-gfx@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/amd-gfx
 
 -- 
-2.23.0
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
