@@ -2,90 +2,133 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8F18CA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:57:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8961BC47E49
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:58:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83DA4214D9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572890274;
-	bh=IjSEu9sfsdTQLLr2k3rmKdHTN5zkOVDlK7n/cmmSx0E=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=zodQxjPI5gyaCguGcIka3liXn3IX5nwnf6m94xRZ2brzuk2LaEKstYC68a3k6v2eE
-	 y17kWK/jh5iPESvwQ+m9XrNWy2Gzd1rBKV30pnZ4AxIkKy/yusK7Dq9h49BLmA8ePb
-	 axrgvUDAauFYDea3u+uUqcWhceSYag3wDHydBYYk=
+	by mail.kernel.org (Postfix) with ESMTP id 6605C20B7C
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 17:58:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="hSr2MplL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729468AbfKDR5x (ORCPT
+        id S1729488AbfKDR6U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 12:57:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36284 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727469AbfKDR5x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 12:57:53 -0500
-Received: from localhost.localdomain (unknown [194.230.155.180])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 063EA20B7C;
-        Mon,  4 Nov 2019 17:57:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572890272;
-        bh=IjSEu9sfsdTQLLr2k3rmKdHTN5zkOVDlK7n/cmmSx0E=;
-        h=From:To:Cc:Subject:Date:From;
-        b=IsOkeKkQg0RNjneVRSm0lUjDXjGoAbtLABF61Spn/HW4acXLFURvr3+WxuY+6OTws
-         cET84CYoXKPs3Lsdl9SwDsTganuIbSSWKTmEx5eQ4EgMFtEpDnBdHAS+k8NDIAW92V
-         g2aWXBzNdQu+biZ/1k1Lg1IwhTjIoxjaA4DxxNYk=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        Sylwester Nawrocki <snawrocki@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org
-Subject: [GIT PULL] pinctrl: samsung: Pull for v5.5
-Date:   Mon,  4 Nov 2019 18:57:44 +0100
-Message-Id: <20191104175744.12041-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        Mon, 4 Nov 2019 12:58:20 -0500
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29]:42183 "EHLO
+        smtp-fw-9102.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728392AbfKDR6U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 12:58:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1572890299; x=1604426299;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=eeEgY2XyY+cwKokmYY5siq2JKyesQ6KOP0bPbVLL74Q=;
+  b=hSr2MplLI9vb2yCShGafCOAosEffYKYnvmShRjJs306mFVmtoK7oPE9P
+   S2GUtmTZs/8+AKM3cb9W1qDxQmUjNOUR6+xLpQbA8Ch59i57cSyeQXhqj
+   1bPWNbCrbZ3bw171V8HuKcEfUrL6riPz+CYuUQdIuPX/kLAFglukdKt7e
+   Q=;
+IronPort-SDR: LmUUgvdrhiYVjkM5q71KiXWQrIiPmMd6NW0MuoVYzOQboYPmQvY1mfLOzmFGEwEOG7CQAhg+0p
+ tsCceCoXdLOw==
+X-IronPort-AV: E=Sophos;i="5.68,267,1569283200"; 
+   d="scan'208";a="3645688"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-9102.sea19.amazon.com with ESMTP; 04 Nov 2019 17:58:17 +0000
+Received: from EX13MTAUWB001.ant.amazon.com (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+        by email-inbound-relay-2b-c7131dcf.us-west-2.amazon.com (Postfix) with ESMTPS id E4E6BA2414;
+        Mon,  4 Nov 2019 17:58:16 +0000 (UTC)
+Received: from EX13D07UWB003.ant.amazon.com (10.43.161.66) by
+ EX13MTAUWB001.ant.amazon.com (10.43.161.207) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 4 Nov 2019 17:58:16 +0000
+Received: from EX13D07UWB001.ant.amazon.com (10.43.161.238) by
+ EX13D07UWB003.ant.amazon.com (10.43.161.66) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 4 Nov 2019 17:58:16 +0000
+Received: from EX13D07UWB001.ant.amazon.com ([10.43.161.238]) by
+ EX13D07UWB001.ant.amazon.com ([10.43.161.238]) with mapi id 15.00.1367.000;
+ Mon, 4 Nov 2019 17:58:16 +0000
+From:   "Agarwal, Anchal" <anchalag@amazon.com>
+To:     "Schmauss, Erik" <erik.schmauss@intel.com>
+CC:     "Moore, Robert" <robert.moore@intel.com>,
+        "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>,
+        "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "lenb@kernel.org" <lenb@kernel.org>,
+        "devel@acpica.org" <devel@acpica.org>
+Subject: Re: [PATCH] ACPICA: Enable sleep button on ACPI legacy wake
+Thread-Topic: [PATCH] ACPICA: Enable sleep button on ACPI legacy wake
+Thread-Index: AQHVkPqVm6n+MpBEcEmxJhBMWECi4Kd23XsA//+SDwCABFtCAA==
+Date:   Mon, 4 Nov 2019 17:58:16 +0000
+Message-ID: <CEC4A132-0FBC-4DC0-8C8F-84608AD8A91A@amazon.com>
+References: <20191101212319.1FFC440EB1@dev-dsk-anchalag-2a-9c2d1d96.us-west-2.amazon.com>
+ <CF6A88132359CE47947DB4C6E1709ED53C66675F@ORSMSX122.amr.corp.intel.com>
+ <E31BA312-7B9D-4AA9-8BD5-F60E28069979@amazon.com>
+In-Reply-To: <E31BA312-7B9D-4AA9-8BD5-F60E28069979@amazon.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.96]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <173942D46B6C22499E5049AFF490C638@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following changes since commit 54ecb8f7028c5eb3d740bb82b0f1d90f2df63c5c:
-
-  Linux 5.4-rc1 (2019-09-30 10:35:40 -0700)
-
-are available in the Git repository at:
-
-  https://git.kernel.org/pub/scm/linux/kernel/git/pinctrl/samsung.git tags/samsung-pinctrl-5.5
-
-for you to fetch changes up to a322b3377f4bac32aa25fb1acb9e7afbbbbd0137:
-
-  pinctrl: samsung: Fix device node refcount leaks in init code (2019-10-01 20:22:04 +0200)
-
-----------------------------------------------------------------
-Samsung pinctrl drivers changes for v5.5
-
-Fix several device node refcnt leaks (missing of_node_put()) in several
-drivers.
-
-----------------------------------------------------------------
-Krzysztof Kozlowski (4):
-      pinctrl: samsung: Fix device node refcount leaks in Exynos wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in S3C24xx wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in S3C64xx wakeup controller init
-      pinctrl: samsung: Fix device node refcount leaks in init code
-
-Nishka Dasgupta (1):
-      pinctrl: samsung: Add of_node_put() before return in error path
-
- drivers/pinctrl/samsung/pinctrl-exynos.c  | 14 +++++++++++---
- drivers/pinctrl/samsung/pinctrl-s3c24xx.c |  6 +++++-
- drivers/pinctrl/samsung/pinctrl-s3c64xx.c |  6 +++++-
- drivers/pinctrl/samsung/pinctrl-samsung.c | 10 ++++++++--
- 4 files changed, 29 insertions(+), 7 deletions(-)
+QXBvbG9naWVzIGZvciByZXNlbmRpbmcgaXQuIExvb2tzIGxpa2UgaXQgZG9lcyBub3Qgc2hvdyBp
+biBjYyBsaXN0IGl0IHdlbnQgdG8gYWxsIG1haWxpbmcgbGlzdCBob3dldmVyIHRoZSB0aHJlYWQg
+ZG8gYXBwZWFyIG9uIGxrbWwuIA0KVGhhbmtzLA0KQW5jaGFsDQrvu78gICAgDQogICAgICAgICsg
+UmFmYWVsLCBCb2INCiAgICAgICAgDQogICAgICAgIEFsc28sIGlzIHRoZXJlIGEgcmVhc29uIHdo
+eSB0aGlzIHdhc24ndCBDQy1lZCB0byBsaW51eC1hY3BpIG1haWxpbmcgbGlzdD8gSXQgd291bGQg
+YmUgZ29vZCB0byBnZXQgZmVlZGJhY2sgZnJvbSB0aGVyZSB0b28uLg0KICAgIEkgdGhpbmsgSSBk
+aWQgdG8gYWxsIHRoZSBlbWFpbCBpZCdzIGdlbmVyYXRlZCBmcm9tIGdldF9tYWludGFpbmVyLnBs
+LiBDY2luZyBhZ2FpbiANCiAgICArIGxpbnV4LWFjcGkNCiAgICANCiAgICAgICAgVGhhbmtzLA0K
+ICAgICAgICBFcmlrDQogICAgICAgIA0KICAgICAgICA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0t
+LS0tDQogICAgICAgID4gRnJvbTogQW5jaGFsIEFnYXJ3YWwgPGFuY2hhbGFnQGFtYXpvbi5jb20+
+DQogICAgICAgID4gU2VudDogTW9uZGF5LCBPY3RvYmVyIDI5LCAyMDE4IDEwOjUyIEFNDQogICAg
+ICAgID4gU3ViamVjdDogW1BBVENIXSBBQ1BJQ0E6IEVuYWJsZSBzbGVlcCBidXR0b24gb24gQUNQ
+SSBsZWdhY3kgd2FrZQ0KICAgICAgICA+IA0KICAgICAgICA+IEN1cnJlbnRseSB3ZSBkbyBub3Qg
+c2VlIHNsZWVwX2VuYWJsZSBiaXQgc2V0IGFmdGVyIGd1ZXN0IHJlc3VtZXMgZnJvbQ0KICAgICAg
+ICA+IGhpYmVybmF0aW9uLiBIaWJlcm5hdGlvbiBpcyB0cmlnZ2VyZWQgaW4gZ3Vlc3Qgb24gcmVj
+ZWl2aW5nIGEgc2xlZXAgdHJpZ2dlcg0KICAgICAgICA+IGZyb20gdGhlIGh5cGVydmlzb3IoUzQg
+c3RhdGUpLiBXZSBzZWUgdGhhdCBwb3dlciBidXR0b24gaXMgZW5hYmxlZCBvbiB3YWtlDQogICAg
+ICAgID4gdXAgZnJvbSBTNCBzdGF0ZSBob3dldmVyIHNsZWVwIGJ1dHRvbiBpc24ndC4gVGhpcyBj
+YXVzZXMgc3Vic2VxdWVudA0KICAgICAgICA+IGludm9jYXRpb24gb2Ygc2xlZXAgc3RhdGUgdG8g
+ZmFpbCBpbiB0aGUgZ3Vlc3QuIEFueSBlbnZpcm9ubWVudCAgZ29pbmcgdGhyb3VnaA0KICAgICAg
+ICA+IGFjcGlfaHdfbGVnYWN5X3dha2UoKSB3b24ndCBoYXZlIHNsZWVwIGJ1dHRvbiBlbmFibGVk
+Lg0KICAgICAgICA+IA0KICAgICAgICA+IFNpZ25lZC1vZmYtYnk6IEFuY2hhbCBBZ2Fyd2FsIDxh
+bmNoYWxhZ0BhbWF6b24uY29tPg0KICAgICAgICA+IFJldmlld2VkLWJ5OiBCYWxiaXIgU2luZ2gg
+PHNibGJpckBhbWF6b24uY29tPg0KICAgICAgICA+IFJldmlld2VkLWJ5OiBGcmFuayB2YW4gZGVy
+IExpbmRlbiA8ZmxsaW5kZW5AYW1hem9uLmNvbT4NCiAgICAgICAgPiAtLS0NCiAgICAgICAgPiAg
+ZHJpdmVycy9hY3BpL2FjcGljYS9od3NsZWVwLmMgfCAxMSArKysrKysrKysrKw0KICAgICAgICA+
+ICAxIGZpbGUgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQ0KICAgICAgICA+IA0KICAgICAgICA+
+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2FjcGkvYWNwaWNhL2h3c2xlZXAuYyBiL2RyaXZlcnMvYWNw
+aS9hY3BpY2EvaHdzbGVlcC5jDQogICAgICAgID4gaW5kZXggYjYyZGI4ZWM0NDZmLi5hMTc2Yzc4
+MDI3NjAgMTAwNjQ0DQogICAgICAgID4gLS0tIGEvZHJpdmVycy9hY3BpL2FjcGljYS9od3NsZWVw
+LmMNCiAgICAgICAgPiArKysgYi9kcml2ZXJzL2FjcGkvYWNwaWNhL2h3c2xlZXAuYw0KICAgICAg
+ICA+IEBAIC0zMDAsNiArMzAwLDE3IEBAIGFjcGlfc3RhdHVzIGFjcGlfaHdfbGVnYWN5X3dha2Uo
+dTggc2xlZXBfc3RhdGUpDQogICAgICAgID4gIAkJCQkgICAgW0FDUElfRVZFTlRfUE9XRVJfQlVU
+VE9OXS4NCiAgICAgICAgPiAgCQkJCSAgICBzdGF0dXNfcmVnaXN0ZXJfaWQsIEFDUElfQ0xFQVJf
+U1RBVFVTKTsNCiAgICAgICAgPiANCiAgICAgICAgPiArCS8qIEVuYWJsZSBzbGVlcCBidXR0b24g
+Ki8NCiAgICAgICAgPiArCSh2b2lkKQ0KICAgICAgICA+ICsJICAgICAgYWNwaV93cml0ZV9iaXRf
+cmVnaXN0ZXIoYWNwaV9nYmxfZml4ZWRfZXZlbnRfaW5mbw0KICAgICAgICA+ICsJCQkJICAgICAg
+W0FDUElfRVZFTlRfU0xFRVBfQlVUVE9OXS4NCiAgICAgICAgPiArCQkJCSAgICAgIGVuYWJsZV9y
+ZWdpc3Rlcl9pZCwNCiAgICAgICAgPiBBQ1BJX0VOQUJMRV9FVkVOVCk7DQogICAgICAgID4gKw0K
+ICAgICAgICA+ICsJKHZvaWQpDQogICAgICAgID4gKwkgICAgICBhY3BpX3dyaXRlX2JpdF9yZWdp
+c3RlcihhY3BpX2dibF9maXhlZF9ldmVudF9pbmZvDQogICAgICAgID4gKwkJCQkgICAgICBbQUNQ
+SV9FVkVOVF9TTEVFUF9CVVRUT05dLg0KICAgICAgICA+ICsJCQkJICAgICAgc3RhdHVzX3JlZ2lz
+dGVyX2lkLCBBQ1BJX0NMRUFSX1NUQVRVUyk7DQogICAgICAgID4gKw0KICAgICAgICA+ICAJYWNw
+aV9od19leGVjdXRlX3NsZWVwX21ldGhvZChNRVRIT0RfUEFUSE5BTUVfX1NTVCwNCiAgICAgICAg
+PiBBQ1BJX1NTVF9XT1JLSU5HKTsNCiAgICAgICAgPiAgCXJldHVybl9BQ1BJX1NUQVRVUyhzdGF0
+dXMpOw0KICAgICAgICA+ICB9DQogICAgICAgID4gLS0NCiAgICAgICAgPiAyLjE1LjMuQU1aTg0K
+ICAgICAgICANCiAgICAgICAgDQogICAgDQogICAgDQoNCg==
