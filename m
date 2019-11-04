@@ -2,146 +2,198 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5217BCA9ECF
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:55:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E97F8CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25ABD218BA
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:55:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZS7APdfi"
+	by mail.kernel.org (Postfix) with ESMTP id B5B5F222CA
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 06:56:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572850606;
+	bh=UZnL6W7fzoNmw/OhMkvyyycP1QZb12IQhJVsWVGz/RM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=CpttrvP09qhSnuRtJ0P2OvThTLzGP4HjKcV140QyqcdfZVSHJRzuB1t2wK8LSjeeU
+	 e4Ouo8TVYYxOPO8O02CL+8TmJIqOMxgMfSEYESocS+aplwJuzOiEaxnmday20ySoel
+	 U3nIrfMaomD/zmHr/I5q8SAeq41e5QH2nnRpzjps=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727743AbfKDGzp (ORCPT
+        id S1727951AbfKDG4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 01:55:45 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:38487 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726248AbfKDGzo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 01:55:44 -0500
-Received: by mail-wr1-f68.google.com with SMTP id v9so15670452wrq.5
-        for <linux-kernel@vger.kernel.org>; Sun, 03 Nov 2019 22:55:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=efTsrgum6xJE7MRvVJBRK/zmwVe4c8WJ2kKIMnNW8Ps=;
-        b=ZS7APdfirJFEeeWRieuYZxjTYo9DlEALo+JfcE0VB6A2bSmE0xq8e7lEn2LFs8bzxu
-         ZQ0OjuqTqgY6VOaacTG1EqRkLnd2SRbWat6wLEdTuZgNvrcMZ+1bfa8gVsSbRJ1Yd/Nh
-         bj8p+niD42iKCFX0pKGd659xJmFDKPbLG4p67nwtx9YJY0mMrhtArgNX2pOlxpjLIXIA
-         QKyRgP3ulGzaen3kpD7HFDXpwZ7INdxT8NBmKmpvGH0H+dlOhXtqUrTZCCcS2LUiD40E
-         9RaPT0ZycgVBlMOL6GJJKMVKgQQBkAagSQouQ+eflMrIgvseOzrkV+HrFRlWeV//emlE
-         DrNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=efTsrgum6xJE7MRvVJBRK/zmwVe4c8WJ2kKIMnNW8Ps=;
-        b=CzEfuwJ3uKhNIIoO98FFClkN7rZ94/l8aeu3L8p0zKbTFHYv5DBZDVsKDQPe2a5Kim
-         lBJhxQCn6ripBE5BjjFrmUsG0BAf7JkVyjHR2MhVqlE4Jk4rjF+kDNbnjuBfksKsNO8Q
-         8oPabJI20BbRwNj6nCT2/e5N0YjVnCMR9zpWbyvSLaX6qWcGXc9Bg7vDnwdKXREKak2B
-         hfs/sgup58Z7/+Jq7Ntl0GsZN1fd/rX0vqMpbl9yGXwnPxQZljKXXZnUGAesOZlBXiVE
-         ne+EMwb7ItdAwiOOYGiV9qwB2KKFJbDxt+qk8vAwSD8FB2aZiOPHwUHx258hmjH9Zn+j
-         L8yw==
-X-Gm-Message-State: APjAAAXugebtWYku/pDQVxsoN2oaXF6KPz9uzNK6LtkYMMfPMWmRVbzX
-        5oqj0+Qa+NnjZKDKvLKGu03fhg==
-X-Google-Smtp-Source: APXvYqzGKSC761RMlZIeKUUjqiTGqkddA4ouhOe2U+yzjUj6O1Iug1epfzJTGyPXBIZn7B0YaoZADg==
-X-Received: by 2002:adf:c409:: with SMTP id v9mr21691604wrf.41.1572850542065;
-        Sun, 03 Nov 2019 22:55:42 -0800 (PST)
-Received: from [192.168.0.102] (88-147-74-230.dyn.eolo.it. [88.147.74.230])
-        by smtp.gmail.com with ESMTPSA id s10sm16055564wrr.5.2019.11.03.22.55.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Sun, 03 Nov 2019 22:55:41 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH 0/2] block, bfq: make bfq disable iocost and present a
- double interface
-From:   Paolo Valente <paolo.valente@linaro.org>
-In-Reply-To: <94E51269-62DC-427A-A81C-3851ABC818BC@linaro.org>
-Date:   Mon, 4 Nov 2019 07:55:39 +0100
-Cc:     linux-block <linux-block@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        noreply-spamdigest via bfq-iosched 
-        <bfq-iosched@googlegroups.com>,
-        Oleksandr Natalenko <oleksandr@natalenko.name>,
-        Tejun Heo <tj@kernel.org>, cgroups@vger.kernel.org
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <DE7EFCFA-D8A6-48EB-AE46-0C7D813A2095@linaro.org>
-References: <20191001193316.3330-1-paolo.valente@linaro.org>
- <19BC0425-559E-433A-ACAD-B12FA02E20E4@linaro.org>
- <94E51269-62DC-427A-A81C-3851ABC818BC@linaro.org>
-To:     Jens Axboe <axboe@kernel.dk>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Mon, 4 Nov 2019 01:56:45 -0500
+Received: from mail.kernel.org ([198.145.29.99]:60116 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726018AbfKDG4o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 01:56:44 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1839C218BA;
+        Mon,  4 Nov 2019 06:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572850603;
+        bh=UZnL6W7fzoNmw/OhMkvyyycP1QZb12IQhJVsWVGz/RM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=ufvujDJ1qgAhIW3qe+bdVZEO5E0rHqYZjnBUzokF/oP9AoBsEdc+R3+3P8/YoTj4a
+         tJ3bOXhmsQlaHy6LkAxQ8wDo6IehWpMyU7ldbTRMOqA6u6CDlfEl7g7nsljw27SjWB
+         Kb/0cibANxe63PHtc/MRt9uonFlMuQIjaA1hEmh4=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v3 00/13] mm: remove __ARCH_HAS_4LEVEL_HACK
+Date:   Mon,  4 Nov 2019 08:56:14 +0200
+Message-Id: <1572850587-20314-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
-no issue has been raised in more than a month, and this version was
-requested by Tejun and is backed by you. So can it be queued for 5.5?
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Thanks,
-Paolo
+Hi,
 
-> Il giorno 23 ott 2019, alle ore 07:44, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->=20
-> ping
->=20
->> Il giorno 9 ott 2019, alle ore 16:25, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>=20
->> Jens, Tejun,
->> can we proceed with this double-interface solution?
->>=20
->> Thanks,
->> Paolo
->>=20
->>> Il giorno 1 ott 2019, alle ore 21:33, Paolo Valente =
-<paolo.valente@linaro.org> ha scritto:
->>>=20
->>> Hi Jens,
->>>=20
->>> the first patch in this series is Tejun's patch for making BFQ =
-disable
->>> io.cost. The second patch makes BFQ present both the bfq-prefixes
->>> parameters and non-prefixed parameters, as suggested by Tejun [1].
->>>=20
->>> In the first patch I've tried to use macros not to repeat code
->>> twice. checkpatch complains that these macros should be enclosed in
->>> parentheses. I don't see how to do it. I'm willing to switch to any
->>> better solution.
->>>=20
->>> Thanks,
->>> Paolo
->>>=20
->>> [1] https://lkml.org/lkml/2019/9/18/736
->>>=20
->>> Paolo Valente (1):
->>> block, bfq: present a double cgroups interface
->>>=20
->>> Tejun Heo (1):
->>> blkcg: Make bfq disable iocost when enabled
->>>=20
->>> Documentation/admin-guide/cgroup-v2.rst |   8 +-
->>> Documentation/block/bfq-iosched.rst     |  40 ++--
->>> block/bfq-cgroup.c                      | 260 =
-++++++++++++------------
->>> block/bfq-iosched.c                     |  32 +++
->>> block/blk-iocost.c                      |   5 +-
->>> include/linux/blk-cgroup.h              |   5 +
->>> kernel/cgroup/cgroup.c                  |   2 +
->>> 7 files changed, 201 insertions(+), 151 deletions(-)
->>>=20
->>> --
->>> 2.20.1
->>=20
->=20
+These patches convert several architectures to use page table folding and
+remove __ARCH_HAS_4LEVEL_HACK along with include/asm-generic/4level-fixup.h.
+
+For the nommu configurations the folding is already implemented by the
+generic code so the only change was to use the appropriate header file.
+
+As for the rest, the changes are mostly about mechanical replacement of
+pgd accessors with pud/pmd ones and the addition of higher levels to page
+table traversals.
+
+With Vineet's patches from "elide extraneous generated code for folded
+p4d/pud/pmd" series [1] there is a small shrink of the kernel size of about
+-0.01% for the defconfig builds. 
+
+The set is boot-tested on UML, qemu-{alpha,sparc} and aranym.
+
+v3 changes:
+* alpha: fix changelog to use pgtable-nopud.h rather than pgtable-nop4d.h
+* um: remove dead-code that was intended as provisioning for 4-level page
+  tables
+
+v2 changes:
+* m68k: fixed ifdefs around pmd_t defintion to work with nommu
+* parisc: added conversion of hugetlb (thanks, Helge!); lexical fixups in
+  comments and changelog
+* collected acks
+
+[1] https://lore.kernel.org/lkml/20191016162400.14796-1-vgupta@synopsys.com
+
+
+Helge Deller (1):
+  parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
+
+Mike Rapoport (12):
+  alpha: use pgtable-nopud instead of 4level-fixup
+  arm: nommu: use pgtable-nopud instead of 4level-fixup
+  c6x: use pgtable-nopud instead of 4level-fixup
+  m68k: nommu: use pgtable-nopud instead of 4level-fixup
+  m68k: mm: use pgtable-nopXd instead of 4level-fixup
+  microblaze: use pgtable-nopmd instead of 4level-fixup
+  nds32: use pgtable-nopmd instead of 4level-fixup
+  parisc: use pgtable-nopXd instead of 4level-fixup
+  sparc32: use pgtable-nopud instead of 4level-fixup
+  um: remove unused pxx_offset_proc() and addr_pte() functions
+  um: add support for folded p4d page tables
+  mm: remove __ARCH_HAS_4LEVEL_HACK and
+    include/asm-generic/4level-fixup.h
+
+ arch/alpha/include/asm/mmzone.h          |  1 -
+ arch/alpha/include/asm/pgalloc.h         |  4 +-
+ arch/alpha/include/asm/pgtable.h         | 24 ++++-----
+ arch/alpha/mm/init.c                     | 12 +++--
+ arch/arm/include/asm/pgtable.h           |  2 +-
+ arch/c6x/include/asm/pgtable.h           |  2 +-
+ arch/m68k/include/asm/mcf_pgalloc.h      |  7 ---
+ arch/m68k/include/asm/mcf_pgtable.h      | 28 ++++-------
+ arch/m68k/include/asm/mmu_context.h      | 12 ++++-
+ arch/m68k/include/asm/motorola_pgalloc.h |  4 +-
+ arch/m68k/include/asm/motorola_pgtable.h | 32 +++++++-----
+ arch/m68k/include/asm/page.h             |  9 ++--
+ arch/m68k/include/asm/pgtable_mm.h       | 11 +++--
+ arch/m68k/include/asm/pgtable_no.h       |  2 +-
+ arch/m68k/include/asm/sun3_pgalloc.h     |  5 --
+ arch/m68k/include/asm/sun3_pgtable.h     | 18 -------
+ arch/m68k/kernel/sys_m68k.c              | 10 +++-
+ arch/m68k/mm/init.c                      |  6 ++-
+ arch/m68k/mm/kmap.c                      | 36 ++++++++++----
+ arch/m68k/mm/mcfmmu.c                    | 16 +++++-
+ arch/m68k/mm/motorola.c                  | 17 ++++---
+ arch/microblaze/include/asm/page.h       |  3 --
+ arch/microblaze/include/asm/pgalloc.h    | 16 ------
+ arch/microblaze/include/asm/pgtable.h    | 32 +-----------
+ arch/microblaze/kernel/signal.c          | 10 ++--
+ arch/microblaze/mm/init.c                |  7 ++-
+ arch/microblaze/mm/pgtable.c             | 13 ++++-
+ arch/nds32/include/asm/page.h            |  3 --
+ arch/nds32/include/asm/pgalloc.h         |  3 --
+ arch/nds32/include/asm/pgtable.h         | 12 +----
+ arch/nds32/include/asm/tlb.h             |  1 -
+ arch/nds32/kernel/pm.c                   |  4 +-
+ arch/nds32/mm/fault.c                    | 16 ++++--
+ arch/nds32/mm/init.c                     | 11 +++--
+ arch/nds32/mm/mm-nds32.c                 |  6 ++-
+ arch/nds32/mm/proc.c                     | 26 ++++++----
+ arch/parisc/include/asm/page.h           | 30 ++++++-----
+ arch/parisc/include/asm/pgalloc.h        | 41 ++++++---------
+ arch/parisc/include/asm/pgtable.h        | 52 ++++++++++---------
+ arch/parisc/include/asm/tlb.h            |  2 +
+ arch/parisc/kernel/cache.c               | 13 +++--
+ arch/parisc/kernel/pci-dma.c             |  9 +++-
+ arch/parisc/mm/fixmap.c                  | 10 ++--
+ arch/parisc/mm/hugetlbpage.c             | 18 ++++---
+ arch/sparc/include/asm/pgalloc_32.h      |  6 +--
+ arch/sparc/include/asm/pgtable_32.h      | 28 +++++------
+ arch/sparc/mm/fault_32.c                 | 11 ++++-
+ arch/sparc/mm/highmem.c                  |  6 ++-
+ arch/sparc/mm/io-unit.c                  |  6 ++-
+ arch/sparc/mm/iommu.c                    |  6 ++-
+ arch/sparc/mm/srmmu.c                    | 51 ++++++++++++++-----
+ arch/um/include/asm/pgtable-2level.h     |  1 -
+ arch/um/include/asm/pgtable-3level.h     |  1 -
+ arch/um/include/asm/pgtable.h            |  3 ++
+ arch/um/kernel/mem.c                     |  8 ++-
+ arch/um/kernel/skas/mmu.c                | 12 ++++-
+ arch/um/kernel/skas/uaccess.c            |  7 ++-
+ arch/um/kernel/tlb.c                     | 85 +++++++++++++++++++-------------
+ arch/um/kernel/trap.c                    |  4 +-
+ include/asm-generic/4level-fixup.h       | 40 ---------------
+ include/asm-generic/tlb.h                |  2 -
+ include/linux/mm.h                       | 10 ++--
+ mm/memory.c                              |  8 ---
+ 63 files changed, 476 insertions(+), 415 deletions(-)
+ delete mode 100644 include/asm-generic/4level-fixup.h
+
+-- 
+2.7.4
 
