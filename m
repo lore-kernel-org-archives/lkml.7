@@ -5,49 +5,50 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55256CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 318A1CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2838821850
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044AF21929
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904406;
-	bh=g+wi91HW9+cZs9M5/NkuPzE5YUQtA1qquDKeM0/R1KA=;
+	s=default; t=1572904412;
+	bh=Xcw/RNR9EXgHEbuvdCsh/HVA7ipQvPjNV0sKMexd29I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VNhcoSsScTCGhHRo7GNmiHJcdPtugnrCeKOQ1jFUfCHO+l79hTalR1+l4fZJsdTCB
-	 CpoQuvwCNCtBVwwHnFCSAYfI4w97iAbLdq/yk2LKGZapP7yu2pGeVFt/luC6+lTqQ0
-	 6Wse9wpXzOBo5oN/aGOQV4M0IAvCDz0qVC6GZhVw=
+	b=jlyE+Nx1soPebX8tAD7nbx6s0D3Id4fD7Ow9EMI1kdDxm3SIOZsu7D/JQgVTCPWbh
+	 oPZiwQzdO820PoudpUJUXRuoIUqz4SvpkF6LYjZvT0xXdGlMvP3xRL7SMFpBkxsSOu
+	 2XGUeg2yOzJFzRnmWIvcqsyqb/bh4fs7u5Nfnuww=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730970AbfKDVxY (ORCPT
+        id S1730998AbfKDVxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47244 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47380 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730951AbfKDVxU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:20 -0500
+        id S1730973AbfKDVx0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:53:26 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 06E0A2053B;
-        Mon,  4 Nov 2019 21:53:18 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E7B7A21929;
+        Mon,  4 Nov 2019 21:53:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904399;
-        bh=g+wi91HW9+cZs9M5/NkuPzE5YUQtA1qquDKeM0/R1KA=;
+        s=default; t=1572904405;
+        bh=Xcw/RNR9EXgHEbuvdCsh/HVA7ipQvPjNV0sKMexd29I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kyJCpkgtACcte+yUHHQSWJkI7giNr5GvNGiDU7ErAYzNUA9LQdNnLFqP4zWO8C4gP
-         6q8YjpKkSLw3uHxbjOcfRX14ofx8bRd6xFF0YGR/W7N6jNDDzduhtDCcksL5TM1IBh
-         01IZUox1GKuKZzvzA75LIN/ZR982mOsUXN6ojgw0=
+        b=Lz/l83yR/9+lReNvH76yglmndTa0zcYC1lVs5pupRPnsfu6/WKh63B8o3q7knBRCF
+         DAqh/6QtGAzmyrQS7RYgdbppFG4d1BDW/WeVbdlTiWPHVF97Xm6nQ3coEOalIsDqi9
+         sshKUs7HBNjA8Azem5V+s4+KE6GK+5u+ZDyIgjUo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>,
+        stable@vger.kernel.org, Hulk Robot <hulkci@huawei.com>,
+        ZhangXiaoxu <zhangxiaoxu5@huawei.com>,
+        Anna Schumaker <Anna.Schumaker@Netapp.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 06/95] f2fs: flush quota blocks after turnning it off
-Date:   Mon,  4 Nov 2019 22:44:04 +0100
-Message-Id: <20191104212040.828524358@linuxfoundation.org>
+Subject: [PATCH 4.14 34/95] nfs: Fix nfsi->nrequests count error on nfs_inode_remove_request
+Date:   Mon,  4 Nov 2019 22:44:32 +0100
+Message-Id: <20191104212059.355168342@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -60,38 +61,89 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jaegeuk Kim <jaegeuk@kernel.org>
+From: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
 
-[ Upstream commit 0e0667b625cf64243df83171bff61f9d350b9ca5 ]
+[ Upstream commit 33ea5aaa87cdae0f9af4d6b7ee4f650a1a36fd1d ]
 
-After quota_off, we'll get some dirty blocks. If put_super don't have a chance
-to flush them by checkpoint, it causes NULL pointer exception in end_io after
-iput(node_inode). (e.g., by checkpoint=disable)
+When xfstests testing, there are some WARNING as below:
 
-Reviewed-by: Chao Yu <yuchao0@huawei.com>
-Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+WARNING: CPU: 0 PID: 6235 at fs/nfs/inode.c:122 nfs_clear_inode+0x9c/0xd8
+Modules linked in:
+CPU: 0 PID: 6235 Comm: umount.nfs
+Hardware name: linux,dummy-virt (DT)
+pstate: 60000005 (nZCv daif -PAN -UAO)
+pc : nfs_clear_inode+0x9c/0xd8
+lr : nfs_evict_inode+0x60/0x78
+sp : fffffc000f68fc00
+x29: fffffc000f68fc00 x28: fffffe00c53155c0
+x27: fffffe00c5315000 x26: fffffc0009a63748
+x25: fffffc000f68fd18 x24: fffffc000bfaaf40
+x23: fffffc000936d3c0 x22: fffffe00c4ff5e20
+x21: fffffc000bfaaf40 x20: fffffe00c4ff5d10
+x19: fffffc000c056000 x18: 000000000000003c
+x17: 0000000000000000 x16: 0000000000000000
+x15: 0000000000000040 x14: 0000000000000228
+x13: fffffc000c3a2000 x12: 0000000000000045
+x11: 0000000000000000 x10: 0000000000000000
+x9 : 0000000000000000 x8 : 0000000000000000
+x7 : 0000000000000000 x6 : fffffc00084b027c
+x5 : fffffc0009a64000 x4 : fffffe00c0e77400
+x3 : fffffc000c0563a8 x2 : fffffffffffffffb
+x1 : 000000000000764e x0 : 0000000000000001
+Call trace:
+ nfs_clear_inode+0x9c/0xd8
+ nfs_evict_inode+0x60/0x78
+ evict+0x108/0x380
+ dispose_list+0x70/0xa0
+ evict_inodes+0x194/0x210
+ generic_shutdown_super+0xb0/0x220
+ nfs_kill_super+0x40/0x88
+ deactivate_locked_super+0xb4/0x120
+ deactivate_super+0x144/0x160
+ cleanup_mnt+0x98/0x148
+ __cleanup_mnt+0x38/0x50
+ task_work_run+0x114/0x160
+ do_notify_resume+0x2f8/0x308
+ work_pending+0x8/0x14
+
+The nrequest should be increased/decreased only if PG_INODE_REF flag
+was setted.
+
+But in the nfs_inode_remove_request function, it maybe decrease when
+no PG_INODE_REF flag, this maybe lead nrequests count error.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: ZhangXiaoxu <zhangxiaoxu5@huawei.com>
+Signed-off-by: Anna Schumaker <Anna.Schumaker@Netapp.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/f2fs/super.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ fs/nfs/write.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
-index e70975ca723b7..0f3209b23c940 100644
---- a/fs/f2fs/super.c
-+++ b/fs/f2fs/super.c
-@@ -1523,6 +1523,12 @@ void f2fs_quota_off_umount(struct super_block *sb)
- 			set_sbi_flag(F2FS_SB(sb), SBI_NEED_FSCK);
- 		}
+diff --git a/fs/nfs/write.c b/fs/nfs/write.c
+index 3c1e46f4bce32..01b9d9341b541 100644
+--- a/fs/nfs/write.c
++++ b/fs/nfs/write.c
+@@ -783,7 +783,6 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 	struct nfs_inode *nfsi = NFS_I(inode);
+ 	struct nfs_page *head;
+ 
+-	atomic_long_dec(&nfsi->nrequests);
+ 	if (nfs_page_group_sync_on_bit(req, PG_REMOVE)) {
+ 		head = req->wb_head;
+ 
+@@ -796,8 +795,10 @@ static void nfs_inode_remove_request(struct nfs_page *req)
+ 		spin_unlock(&mapping->private_lock);
  	}
-+	/*
-+	 * In case of checkpoint=disable, we must flush quota blocks.
-+	 * This can cause NULL exception for node_inode in end_io, since
-+	 * put_super already dropped it.
-+	 */
-+	sync_filesystem(sb);
+ 
+-	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags))
++	if (test_and_clear_bit(PG_INODE_REF, &req->wb_flags)) {
+ 		nfs_release_request(req);
++		atomic_long_dec(&nfsi->nrequests);
++	}
  }
  
- int f2fs_get_projid(struct inode *inode, kprojid_t *projid)
+ static void
 -- 
 2.20.1
 
