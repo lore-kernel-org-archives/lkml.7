@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00491CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A2E4CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C393F214E0
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19077205C9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:09:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905393;
-	bh=VNfeyMzplEuxQPRW8tw5bkZPMbiA4pSi0LQH7t0iQ2M=;
+	s=default; t=1572905398;
+	bh=pUXAuHhbZFgiGOo8c2/CTCXAlpeJgcFS7eJ7UugIV0c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=PnV4vsEoLZPGnr2+91U5dw/sG36ozwD47lpUGiNnV3pRhy9UnZej3ECilQ9o1AD0n
-	 g+Hl56/JK2bLcEBLHUGPN8TTNtRfAaF39jKecSlksbuex2irTWkPbdfksjMR+rnBfh
-	 3YYyfdo34K9RrTXa2/jUjOqJm+xcbChdDg7W96NA=
+	b=OmM/EwRDPqwS1K/WvPNm+c3c9SqsFZ0qW+DkOcz7TQRHyYCcCyfe8a+sGmn0K+GF7
+	 sxCJGBO4JLDuNfx8NWA1xhpRD2tjBYVS0iYL4fYtg0jMvOMMkNeJUmeUU1n+5Fni27
+	 YcZx6NN4YebHzon3eZOjGw13FxSPjNZWRPAHa4jU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390473AbfKDWJw (ORCPT
+        id S2390480AbfKDWJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:52 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43002 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:09:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43028 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390101AbfKDWJu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:50 -0500
+        id S2389452AbfKDWJx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:09:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1E0E6214E0;
-        Mon,  4 Nov 2019 22:09:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 23672205C9;
+        Mon,  4 Nov 2019 22:09:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905389;
-        bh=VNfeyMzplEuxQPRW8tw5bkZPMbiA4pSi0LQH7t0iQ2M=;
+        s=default; t=1572905392;
+        bh=pUXAuHhbZFgiGOo8c2/CTCXAlpeJgcFS7eJ7UugIV0c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Qv+GaBUa4yesYKfIOyh8X++HSdw252n6v86firMPfR9xckb53It981sKXqvJjNf/A
-         vSNAyjg2DOan1uH2Z8ocbQfJQnzNQk70T8h8qWCA3cVYVbiAMglLctEe2wc9TEQu3w
-         VshYHvis5UAKwokr+HSxstcN04tL3edhLQrS8VDQ=
+        b=g/UmEb3m2QNHjd21jiomwTBGIVL/s6W/f1+XRUX7LagZaGyB/lxHf74R76pOGx2qo
+         SxbemCS5q2432vmmFpAtT00dg/WkIdUK2T9HU3WuOPIht/6IVsvXAab9g32T16sRYc
+         77VHtG6Ex8ZB9onWQWO8O0Wbbmim9cC+zIzEi3gk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 5.3 128/163] arm64: cpufeature: Enable Qualcomm Falkor/Kryo errata 1003
-Date:   Mon,  4 Nov 2019 22:45:18 +0100
-Message-Id: <20191104212149.553069085@linuxfoundation.org>
+        stable@vger.kernel.org, Jason Wang <jasowang@redhat.com>,
+        Marvin Liu <yong.liu@intel.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>
+Subject: [PATCH 5.3 129/163] virtio_ring: fix stalls for packed rings
+Date:   Mon,  4 Nov 2019 22:45:19 +0100
+Message-Id: <20191104212149.645712072@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -60,41 +60,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+From: Marvin Liu <yong.liu@intel.com>
 
-commit d4af3c4b81f4cd5662baa6f1492f998d89783318 upstream.
+commit 40ce7919d8730f5936da2bc8a21b46bd07db6411 upstream.
 
-With the introduction of 'cce360b54ce6 ("arm64: capabilities: Filter the
-entries based on a given mask")' the Qualcomm Falkor/Kryo errata 1003 is
-no long applied.
+When VIRTIO_F_RING_EVENT_IDX is negotiated, virtio devices can
+use virtqueue_enable_cb_delayed_packed to reduce the number of device
+interrupts.  At the moment, this is the case for virtio-net when the
+napi_tx module parameter is set to false.
 
-The result of not applying errata 1003 is that MSM8996 runs into various
-RCU stalls and fails to boot most of the times.
+In this case, the virtio driver selects an event offset and expects that
+the device will send a notification when rolling over the event offset
+in the ring.  However, if this roll-over happens before the event
+suppression structure update, the notification won't be sent. To address
+this race condition the driver needs to check wether the device rolled
+over the offset after updating the event suppression structure.
 
-Give 1003 a "type" to ensure they are not filtered out in
-update_cpu_capabilities().
+With VIRTIO_F_RING_PACKED, the virtio driver did this by reading the
+flags field of the descriptor at the specified offset.
 
-Fixes: cce360b54ce6 ("arm64: capabilities: Filter the entries based on a given mask")
+Unfortunately, checking at the event offset isn't reliable: if
+descriptors are chained (e.g. when INDIRECT is off) not all descriptors
+are overwritten by the device, so it's possible that the device skipped
+the specific descriptor driver is checking when writing out used
+descriptors. If this happens, the driver won't detect the race condition
+and will incorrectly expect the device to send a notification.
+
+For virtio-net, the result will be a TX queue stall, with the
+transmission getting blocked forever.
+
+With the packed ring, it isn't easy to find a location which is
+guaranteed to change upon the roll-over, except the next device
+descriptor, as described in the spec:
+
+        Writes of device and driver descriptors can generally be
+        reordered, but each side (driver and device) are only required to
+        poll (or test) a single location in memory: the next device descriptor after
+        the one they processed previously, in circular order.
+
+while this might be sub-optimal, let's do exactly this for now.
+
 Cc: stable@vger.kernel.org
-Reported-by: Mark Brown <broonie@kernel.org>
-Suggested-by: Will Deacon <will@kernel.org>
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-Signed-off-by: Will Deacon <will@kernel.org>
+Cc: Jason Wang <jasowang@redhat.com>
+Fixes: f51f982682e2a ("virtio_ring: leverage event idx in packed ring")
+Signed-off-by: Marvin Liu <yong.liu@intel.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/cpu_errata.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/virtio/virtio_ring.c |    7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -816,6 +816,7 @@ const struct arm64_cpu_capabilities arm6
- 	{
- 		.desc = "Qualcomm Technologies Falkor/Kryo erratum 1003",
- 		.capability = ARM64_WORKAROUND_QCOM_FALKOR_E1003,
-+		.type = ARM64_CPUCAP_LOCAL_CPU_ERRATUM,
- 		.matches = cpucap_multi_entry_cap_matches,
- 		.match_list = qcom_erratum_1003_list,
- 	},
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1499,9 +1499,6 @@ static bool virtqueue_enable_cb_delayed_
+ 		 * counter first before updating event flags.
+ 		 */
+ 		virtio_wmb(vq->weak_barriers);
+-	} else {
+-		used_idx = vq->last_used_idx;
+-		wrap_counter = vq->packed.used_wrap_counter;
+ 	}
+ 
+ 	if (vq->packed.event_flags_shadow == VRING_PACKED_EVENT_FLAG_DISABLE) {
+@@ -1518,7 +1515,9 @@ static bool virtqueue_enable_cb_delayed_
+ 	 */
+ 	virtio_mb(vq->weak_barriers);
+ 
+-	if (is_used_desc_packed(vq, used_idx, wrap_counter)) {
++	if (is_used_desc_packed(vq,
++				vq->last_used_idx,
++				vq->packed.used_wrap_counter)) {
+ 		END_USE(vq);
+ 		return false;
+ 	}
 
 
