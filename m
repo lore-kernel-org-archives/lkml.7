@@ -2,122 +2,136 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88C1ACA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C224BCA9ED4
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55419204FD
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906100;
-	bh=pSHZH/4w3nOlLE17v+y+HwO+fJvTz+CXttg0x1Q+dhE=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUdpzg6NdotplJI+eAvUe3TVj/WsgwWSlCU9+MmRLNTPSAilW3jdimldld0+1m9Yl
-	 yMwqI9hEmll5tqIfvB+CStQrxqDCrvLZEyBDOa0zayTnmBUaNOJo/m5EyFs1RBoCl0
-	 gstXnaNnD8AeUARkooGRrM5wuIUua5R081E9TNac=
+	by mail.kernel.org (Postfix) with ESMTP id 9538E204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:21:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="ROUZwCJb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388660AbfKDV5u (ORCPT
+        id S2389460AbfKDWVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:57:50 -0500
-Received: from mail.kernel.org ([198.145.29.99]:54154 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388568AbfKDV5m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:57:42 -0500
-Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 57DA821744;
-        Mon,  4 Nov 2019 21:57:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904661;
-        bh=pSHZH/4w3nOlLE17v+y+HwO+fJvTz+CXttg0x1Q+dhE=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qRQNMlEJZBhsc7sh97DdkwpBozT93sfnGv3k12wpkkHVA4tUMtrJf8WZze7zhWf8L
-         IWPdg9E6UwZrvu/F2siB2lmRoGX0uk0OpVcFzg+nN2v5H47WCkoQfaSHe21YJmPrah
-         GpdTN9QOVYI9r3yWU+9uDxMycXHBn/vvT/T43YBs=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 025/149] HID: i2c-hid: Ignore input report if theres no data present on Elan touchpanels
-Date:   Mon,  4 Nov 2019 22:43:38 +0100
-Message-Id: <20191104212137.534015856@linuxfoundation.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-User-Agent: quilt/0.66
+        Mon, 4 Nov 2019 17:21:48 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:8454 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388679AbfKDWVq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:21:46 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc0a4800002>; Mon, 04 Nov 2019 14:21:52 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Nov 2019 14:21:46 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Nov 2019 14:21:46 -0800
+Received: from HQMAIL109.nvidia.com (172.20.187.15) by HQMAIL105.nvidia.com
+ (172.20.187.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 4 Nov
+ 2019 22:21:43 +0000
+Received: from hqnvemgw03.nvidia.com (10.124.88.68) by HQMAIL109.nvidia.com
+ (172.20.187.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 4 Nov 2019 22:21:43 +0000
+Received: from rcampbell-dev.nvidia.com (Not Verified[10.110.48.66]) by hqnvemgw03.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5dc0a4770001>; Mon, 04 Nov 2019 14:21:43 -0800
+From:   Ralph Campbell <rcampbell@nvidia.com>
+To:     Jerome Glisse <jglisse@redhat.com>,
+        John Hubbard <jhubbard@nvidia.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        "Shuah Khan" <shuah@kernel.org>
+CC:     <linux-rdma@vger.kernel.org>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        "Ralph Campbell" <rcampbell@nvidia.com>
+Subject: [PATCH v4 0/2] HMM tests and minor fixes
+Date:   Mon, 4 Nov 2019 14:21:39 -0800
+Message-ID: <20191104222141.5173-1-rcampbell@nvidia.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+X-NVConfidentiality: public
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572906112; bh=G+Ekoe8mXGHR3C2DvduazW+151IOXJUz9ALxPQbuuy4=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         MIME-Version:X-NVConfidentiality:Content-Type:
+         Content-Transfer-Encoding;
+        b=ROUZwCJbG6A0ph9k3PlpXG9qReSnA5cIEuRxCBfJsG+4ChPC0pYQUinR2OyIf8Hf0
+         Sard2c0b6cv1sGm1WoSiAxvK8McW27/SPh8gSo8N2CkyA6EfUmqcm1MfgwJe4ORABp
+         pt3DFmQey6vGCVVvam9l11rU/a5c5koyjFyK1Oyhu4uKrsaV83zelb0MSLmAb3wy9r
+         5X0Yvc61FG/kfnq7J7RzSKp6zhQ3UkbenfVb5YzkdgFX2slVvL5wY7yztihULyZ/v9
+         cV6GBOsr9FmnP7YJLBlLgIUfYdNDw8cl6GKCn8u++ZvMrkrpI+movNiN54LWQNug6M
+         /NUnPxKnm5e+w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kai-Heng Feng <kai.heng.feng@canonical.com>
+These changes are based on Jason's rdma/hmm branch (5.4.0-rc5).
+Patch 1 was previously posted here [1] but was dropped from that orginal
+series. Hopefully, the tests will reduce concerns about edge conditions.
+I'm sure more tests could be usefully added but I thought this was a good
+starting point.
 
-[ Upstream commit 1475af255e18f35dc46f8a7acc18354c73d45149 ]
+Changes since v3:
+patch 1:
+Unchanged except rebased on Jason's latest hmm (bbe3329e354d3ab5dc18).
+patch 2:
+Is now part of Jason's tree.
+patch 3 (now 2):
+Major changes to incorporate Jason's review feedback.
+  * drivers/char/hmm_dmirror.c driver moved to lib/test_hmm.c
+  * XArray used instead of "page tables".
+  * platform device driver removed.
+  * remove redundant copyright.
 
-While using Elan touchpads, the message floods:
-[  136.138487] i2c_hid i2c-DELL08D6:00: i2c_hid_get_input: incomplete report (14/65535)
+Changes since v2:
+patch 1:
+Removed hmm_range_needs_fault() and just use hmm_range_need_fault().
+Updated the change log to include that it fixes a bug where
+hmm_range_fault() incorrectly returned an error when no fault is requested.
+patch 2:
+Removed the confusing change log wording about DMA.
+Changed hmm_range_fault() to return the PFN of the zero page like any other
+page.
+patch 3:
+Adjusted the test code to match the new zero page behavior.
 
-Though the message flood is annoying, the device it self works without
-any issue. I suspect that the device in question takes too much time to
-pull the IRQ back to high after I2C host has done reading its data.
+Changes since v1:
+Rebased to Jason's rdma/hmm branch (5.4.0-rc1).
+Cleaned up locking for the test driver's page tables.
+Incorporated Christoph Hellwig's comments.
 
-Since the host receives all useful data, let's ignore the input report
-when there's no data.
+[1] https://lore.kernel.org/linux-mm/20190726005650.2566-6-rcampbell@nvidia=
+.com/
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
-Signed-off-by: Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/hid/i2c-hid/i2c-hid-core.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
 
-diff --git a/drivers/hid/i2c-hid/i2c-hid-core.c b/drivers/hid/i2c-hid/i2c-hid-core.c
-index 8555ce7e737b3..2f940c1de6169 100644
---- a/drivers/hid/i2c-hid/i2c-hid-core.c
-+++ b/drivers/hid/i2c-hid/i2c-hid-core.c
-@@ -50,6 +50,7 @@
- #define I2C_HID_QUIRK_NO_IRQ_AFTER_RESET	BIT(1)
- #define I2C_HID_QUIRK_NO_RUNTIME_PM		BIT(2)
- #define I2C_HID_QUIRK_DELAY_AFTER_SLEEP		BIT(3)
-+#define I2C_HID_QUIRK_BOGUS_IRQ			BIT(4)
- 
- /* flags */
- #define I2C_HID_STARTED		0
-@@ -179,6 +180,8 @@ static const struct i2c_hid_quirks {
- 		I2C_HID_QUIRK_DELAY_AFTER_SLEEP },
- 	{ USB_VENDOR_ID_LG, I2C_DEVICE_ID_LG_8001,
- 		I2C_HID_QUIRK_NO_RUNTIME_PM },
-+	{ USB_VENDOR_ID_ELAN, HID_ANY_ID,
-+		 I2C_HID_QUIRK_BOGUS_IRQ },
- 	{ 0, 0 }
- };
- 
-@@ -503,6 +506,12 @@ static void i2c_hid_get_input(struct i2c_hid *ihid)
- 		return;
- 	}
- 
-+	if (ihid->quirks & I2C_HID_QUIRK_BOGUS_IRQ && ret_size == 0xffff) {
-+		dev_warn_once(&ihid->client->dev, "%s: IRQ triggered but "
-+			      "there's no data\n", __func__);
-+		return;
-+	}
-+
- 	if ((ret_size > size) || (ret_size < 2)) {
- 		dev_err(&ihid->client->dev, "%s: incomplete report (%d/%d)\n",
- 			__func__, size, ret_size);
--- 
+Ralph Campbell (2):
+  mm/hmm: make full use of walk_page_range()
+  mm/hmm/test: add self tests for HMM
+
+ MAINTAINERS                            |    3 +
+ include/uapi/linux/test_hmm.h          |   59 ++
+ lib/Kconfig.debug                      |   11 +
+ lib/Makefile                           |    1 +
+ lib/test_hmm.c                         | 1306 ++++++++++++++++++++++++
+ mm/hmm.c                               |  121 ++-
+ tools/testing/selftests/vm/.gitignore  |    1 +
+ tools/testing/selftests/vm/Makefile    |    3 +
+ tools/testing/selftests/vm/config      |    2 +
+ tools/testing/selftests/vm/hmm-tests.c | 1295 +++++++++++++++++++++++
+ tools/testing/selftests/vm/run_vmtests |   16 +
+ tools/testing/selftests/vm/test_hmm.sh |   97 ++
+ 12 files changed, 2852 insertions(+), 63 deletions(-)
+ create mode 100644 include/uapi/linux/test_hmm.h
+ create mode 100644 lib/test_hmm.c
+ create mode 100644 tools/testing/selftests/vm/hmm-tests.c
+ create mode 100755 tools/testing/selftests/vm/test_hmm.sh
+
+--=20
 2.20.1
-
-
 
