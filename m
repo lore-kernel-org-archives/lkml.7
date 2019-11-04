@@ -2,58 +2,57 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 743D8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F39D7CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B19421744
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9A792084D
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:04:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905042;
-	bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
+	s=default; t=1572905046;
+	bh=F7lxjdgHNmqKQvRAMhqCeeOLuyDz2AM61iEAzcXRGc0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2YFzofu3XnyQBBbL1Iz5ook8kLew/ZYFDg5Ok3FGlXimdn3jFV+xidfPIcQu3rX13
-	 tj1mV+GgMmENdhO/DdZiSVC00QZhkZ4vNX3FEFnsB7xvdscWXrG+IPKHsn4ZL1LlJM
-	 wO6AZ0C4dCQyJWJWDnGiFO2+ED33vkkwhj1RoCxk=
+	b=bEIOsnJBdbYniajX/drDtKsrzWFzgQ9YmC41Ng+4z7Foje1Y0P/ayywu4LKEDBvHL
+	 dWfREHD43fxUAJWhv4cVv4sE0oe04zPdr6YZUloumKuDUhb9YHcBdU3Vrwj4/SatbA
+	 eVKQIqeXkHpONolIFw2S913M2KKGFvAcopPmTvY4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387819AbfKDWEB (ORCPT
+        id S2389600AbfKDWEF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:04:01 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34482 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:04:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34586 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389160AbfKDWD4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:03:56 -0500
+        id S2389160AbfKDWED (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:04:03 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 48FA821929;
-        Mon,  4 Nov 2019 22:03:55 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41E212084D;
+        Mon,  4 Nov 2019 22:04:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905035;
-        bh=3bV3DEaz/uJkFBictvzAfD7nh/T5TXDGZpPRx0Nw44g=;
+        s=default; t=1572905041;
+        bh=F7lxjdgHNmqKQvRAMhqCeeOLuyDz2AM61iEAzcXRGc0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=GatQXSWUboAXxBAnYO8v2S4wrimLg7bitthBPWNpseX2z2StT6oqWiAFYikSdhs9w
-         pHMiuA0OlVgYOEGIJjIFlYaWoLL0JrE71udLUXIxQvzM7a/+3irW1OvPqces33D7gc
-         vOdqiiLnGug/+eShOO9tn6xzPq3kwWX/dSL1tDFw=
+        b=MryXNlEMSOZuBDj4xaTH+d8BNetup0GLtnIrjNsP1XvOTCM8KxrQ/L+3+mgiL2a8D
+         /qvD+qCRpyrETG/4v817kdiYgwmHN6UA840cS6DlCTS2YD8OEvs171QGUnyQhIIM8u
+         Dp/lOwVeikziHOWuxvC0WEu2B0Ehv9Vlaz3aHTWU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com,
-        syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com,
-        Eric Biggers <ebiggers@google.com>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>
-Subject: [PATCH 4.19 136/149] llc: fix sk_buff leak in llc_sap_state_process()
-Date:   Mon,  4 Nov 2019 22:45:29 +0100
-Message-Id: <20191104212146.294879890@linuxfoundation.org>
+        stable@vger.kernel.org, Hrvoje Zeba <zeba.hrvoje@gmail.com>,
+        Jens Axboe <axboe@kernel.dk>, Sasha Levin <sashal@kernel.org>
+Subject: [PATCH 5.3 001/163] io_uring: fix up O_NONBLOCK handling for sockets
+Date:   Mon,  4 Nov 2019 22:43:11 +0100
+Message-Id: <20191104212140.177676730@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
+In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
+References: <20191104212140.046021995@linuxfoundation.org>
 User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
@@ -62,131 +61,160 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Eric Biggers <ebiggers@google.com>
+From: Jens Axboe <axboe@kernel.dk>
 
-commit c6ee11c39fcc1fb55130748990a8f199e76263b4 upstream.
+[ Upstream commit 491381ce07ca57f68c49c79a8a43da5b60749e32 ]
 
-syzbot reported:
+We've got two issues with the non-regular file handling for non-blocking
+IO:
 
-    BUG: memory leak
-    unreferenced object 0xffff888116270800 (size 224):
-       comm "syz-executor641", pid 7047, jiffies 4294947360 (age 13.860s)
-       hex dump (first 32 bytes):
-         00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
-         00 20 e1 2a 81 88 ff ff 00 40 3d 2a 81 88 ff ff  . .*.....@=*....
-       backtrace:
-         [<000000004d41b4cc>] kmemleak_alloc_recursive  include/linux/kmemleak.h:55 [inline]
-         [<000000004d41b4cc>] slab_post_alloc_hook mm/slab.h:439 [inline]
-         [<000000004d41b4cc>] slab_alloc_node mm/slab.c:3269 [inline]
-         [<000000004d41b4cc>] kmem_cache_alloc_node+0x153/0x2a0 mm/slab.c:3579
-         [<00000000506a5965>] __alloc_skb+0x6e/0x210 net/core/skbuff.c:198
-         [<000000001ba5a161>] alloc_skb include/linux/skbuff.h:1058 [inline]
-         [<000000001ba5a161>] alloc_skb_with_frags+0x5f/0x250  net/core/skbuff.c:5327
-         [<0000000047d9c78b>] sock_alloc_send_pskb+0x269/0x2a0  net/core/sock.c:2225
-         [<000000003828fe54>] sock_alloc_send_skb+0x32/0x40 net/core/sock.c:2242
-         [<00000000e34d94f9>] llc_ui_sendmsg+0x10a/0x540 net/llc/af_llc.c:933
-         [<00000000de2de3fb>] sock_sendmsg_nosec net/socket.c:652 [inline]
-         [<00000000de2de3fb>] sock_sendmsg+0x54/0x70 net/socket.c:671
-         [<000000008fe16e7a>] __sys_sendto+0x148/0x1f0 net/socket.c:1964
-	 [...]
+1) We don't want to re-do a short read in full for a non-regular file,
+   as we can't just read the data again.
+2) For non-regular files that don't support non-blocking IO attempts,
+   we need to punt to async context even if the file is opened as
+   non-blocking. Otherwise the caller always gets -EAGAIN.
 
-The bug is that llc_sap_state_process() always takes an extra reference
-to the skb, but sometimes neither llc_sap_next_state() nor
-llc_sap_state_process() itself drops this reference.
+Add two new request flags to handle these cases. One is just a cache
+of the inode S_ISREG() status, the other tells io_uring that we always
+need to punt this request to async context, even if REQ_F_NOWAIT is set.
 
-Fix it by changing llc_sap_next_state() to never consume a reference to
-the skb, rather than sometimes do so and sometimes not.  Then remove the
-extra skb_get() and kfree_skb() from llc_sap_state_process().
-
-Reported-by: syzbot+6bf095f9becf5efef645@syzkaller.appspotmail.com
-Reported-by: syzbot+31c16aa4202dace3812e@syzkaller.appspotmail.com
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
-Signed-off-by: Eric Biggers <ebiggers@google.com>
-Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
+Cc: stable@vger.kernel.org
+Reported-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
+Tested-by: Hrvoje Zeba <zeba.hrvoje@gmail.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/llc/llc_s_ac.c |   12 +++++++++---
- net/llc/llc_sap.c  |   23 ++++++++---------------
- 2 files changed, 17 insertions(+), 18 deletions(-)
+ fs/io_uring.c | 57 +++++++++++++++++++++++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 18 deletions(-)
 
---- a/net/llc/llc_s_ac.c
-+++ b/net/llc/llc_s_ac.c
-@@ -58,8 +58,10 @@ int llc_sap_action_send_ui(struct llc_sa
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_ui_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index ed223c33dd898..59925b6583ba0 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -338,6 +338,8 @@ struct io_kiocb {
+ #define REQ_F_LINK		64	/* linked sqes */
+ #define REQ_F_LINK_DONE		128	/* linked sqes done */
+ #define REQ_F_FAIL_LINK		256	/* fail rest of links */
++#define REQ_F_ISREG		2048	/* regular file */
++#define REQ_F_MUST_PUNT		4096	/* must be punted even for NONBLOCK */
+ 	u64			user_data;
+ 	u32			result;
+ 	u32			sequence;
+@@ -885,26 +887,26 @@ static int io_iopoll_check(struct io_ring_ctx *ctx, unsigned *nr_events,
+ 	return ret;
  }
  
-@@ -81,8 +83,10 @@ int llc_sap_action_send_xid_c(struct llc
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_xid_cmd(skb, LLC_XID_NULL_CLASS_2, 0);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
-@@ -135,8 +139,10 @@ int llc_sap_action_send_test_c(struct ll
- 			    ev->daddr.lsap, LLC_PDU_CMD);
- 	llc_pdu_init_as_test_cmd(skb);
- 	rc = llc_mac_hdr_init(skb, ev->saddr.mac, ev->daddr.mac);
--	if (likely(!rc))
-+	if (likely(!rc)) {
-+		skb_get(skb);
- 		rc = dev_queue_xmit(skb);
-+	}
- 	return rc;
- }
- 
---- a/net/llc/llc_sap.c
-+++ b/net/llc/llc_sap.c
-@@ -197,29 +197,22 @@ out:
-  *	After executing actions of the event, upper layer will be indicated
-  *	if needed(on receiving an UI frame). sk can be null for the
-  *	datalink_proto case.
-+ *
-+ *	This function always consumes a reference to the skb.
-  */
- static void llc_sap_state_process(struct llc_sap *sap, struct sk_buff *skb)
+-static void kiocb_end_write(struct kiocb *kiocb)
++static void kiocb_end_write(struct io_kiocb *req)
  {
- 	struct llc_sap_state_ev *ev = llc_sap_ev(skb);
+-	if (kiocb->ki_flags & IOCB_WRITE) {
+-		struct inode *inode = file_inode(kiocb->ki_filp);
++	/*
++	 * Tell lockdep we inherited freeze protection from submission
++	 * thread.
++	 */
++	if (req->flags & REQ_F_ISREG) {
++		struct inode *inode = file_inode(req->file);
  
--	/*
--	 * We have to hold the skb, because llc_sap_next_state
--	 * will kfree it in the sending path and we need to
--	 * look at the skb->cb, where we encode llc_sap_state_ev.
--	 */
--	skb_get(skb);
- 	ev->ind_cfm_flag = 0;
- 	llc_sap_next_state(sap, skb);
--	if (ev->ind_cfm_flag == LLC_IND) {
--		if (skb->sk->sk_state == TCP_LISTEN)
--			kfree_skb(skb);
--		else {
--			llc_save_primitive(skb->sk, skb, ev->prim);
- 
--			/* queue skb to the user. */
--			if (sock_queue_rcv_skb(skb->sk, skb))
--				kfree_skb(skb);
--		}
-+	if (ev->ind_cfm_flag == LLC_IND && skb->sk->sk_state != TCP_LISTEN) {
-+		llc_save_primitive(skb->sk, skb, ev->prim);
-+
-+		/* queue skb to the user. */
-+		if (sock_queue_rcv_skb(skb->sk, skb) == 0)
-+			return;
+-		/*
+-		 * Tell lockdep we inherited freeze protection from submission
+-		 * thread.
+-		 */
+-		if (S_ISREG(inode->i_mode))
+-			__sb_writers_acquired(inode->i_sb, SB_FREEZE_WRITE);
+-		file_end_write(kiocb->ki_filp);
++		__sb_writers_acquired(inode->i_sb, SB_FREEZE_WRITE);
  	}
- 	kfree_skb(skb);
++	file_end_write(req->file);
  }
+ 
+ static void io_complete_rw(struct kiocb *kiocb, long res, long res2)
+ {
+ 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
+ 
+-	kiocb_end_write(kiocb);
++	if (kiocb->ki_flags & IOCB_WRITE)
++		kiocb_end_write(req);
+ 
+ 	if ((req->flags & REQ_F_LINK) && res != req->result)
+ 		req->flags |= REQ_F_FAIL_LINK;
+@@ -916,7 +918,8 @@ static void io_complete_rw_iopoll(struct kiocb *kiocb, long res, long res2)
+ {
+ 	struct io_kiocb *req = container_of(kiocb, struct io_kiocb, rw);
+ 
+-	kiocb_end_write(kiocb);
++	if (kiocb->ki_flags & IOCB_WRITE)
++		kiocb_end_write(req);
+ 
+ 	if ((req->flags & REQ_F_LINK) && res != req->result)
+ 		req->flags |= REQ_F_FAIL_LINK;
+@@ -1030,8 +1033,17 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
+ 	if (!req->file)
+ 		return -EBADF;
+ 
+-	if (force_nonblock && !io_file_supports_async(req->file))
+-		force_nonblock = false;
++	if (S_ISREG(file_inode(req->file)->i_mode))
++		req->flags |= REQ_F_ISREG;
++
++	/*
++	 * If the file doesn't support async, mark it as REQ_F_MUST_PUNT so
++	 * we know to async punt it even if it was opened O_NONBLOCK
++	 */
++	if (force_nonblock && !io_file_supports_async(req->file)) {
++		req->flags |= REQ_F_MUST_PUNT;
++		return -EAGAIN;
++	}
+ 
+ 	kiocb->ki_pos = READ_ONCE(sqe->off);
+ 	kiocb->ki_flags = iocb_flags(kiocb->ki_filp);
+@@ -1052,7 +1064,8 @@ static int io_prep_rw(struct io_kiocb *req, const struct sqe_submit *s,
+ 		return ret;
+ 
+ 	/* don't allow async punt if RWF_NOWAIT was requested */
+-	if (kiocb->ki_flags & IOCB_NOWAIT)
++	if ((kiocb->ki_flags & IOCB_NOWAIT) ||
++	    (req->file->f_flags & O_NONBLOCK))
+ 		req->flags |= REQ_F_NOWAIT;
+ 
+ 	if (force_nonblock)
+@@ -1286,7 +1299,9 @@ static int io_read(struct io_kiocb *req, const struct sqe_submit *s,
+ 		 * need async punt anyway, so it's more efficient to do it
+ 		 * here.
+ 		 */
+-		if (force_nonblock && ret2 > 0 && ret2 < read_size)
++		if (force_nonblock && !(req->flags & REQ_F_NOWAIT) &&
++		    (req->flags & REQ_F_ISREG) &&
++		    ret2 > 0 && ret2 < read_size)
+ 			ret2 = -EAGAIN;
+ 		/* Catch -EAGAIN return for forced non-blocking submission */
+ 		if (!force_nonblock || ret2 != -EAGAIN) {
+@@ -1353,7 +1368,7 @@ static int io_write(struct io_kiocb *req, const struct sqe_submit *s,
+ 		 * released so that it doesn't complain about the held lock when
+ 		 * we return to userspace.
+ 		 */
+-		if (S_ISREG(file_inode(file)->i_mode)) {
++		if (req->flags & REQ_F_ISREG) {
+ 			__sb_start_write(file_inode(file)->i_sb,
+ 						SB_FREEZE_WRITE, true);
+ 			__sb_writers_release(file_inode(file)->i_sb,
+@@ -2096,7 +2111,13 @@ static int io_queue_sqe(struct io_ring_ctx *ctx, struct io_kiocb *req,
+ 	}
+ 
+ 	ret = __io_submit_sqe(ctx, req, s, true);
+-	if (ret == -EAGAIN && !(req->flags & REQ_F_NOWAIT)) {
++
++	/*
++	 * We async punt it if the file wasn't marked NOWAIT, or if the file
++	 * doesn't support non-blocking read/write attempts
++	 */
++	if (ret == -EAGAIN && (!(req->flags & REQ_F_NOWAIT) ||
++	    (req->flags & REQ_F_MUST_PUNT))) {
+ 		struct io_uring_sqe *sqe_copy;
+ 
+ 		sqe_copy = kmalloc(sizeof(*sqe_copy), GFP_KERNEL);
+-- 
+2.20.1
+
 
 
