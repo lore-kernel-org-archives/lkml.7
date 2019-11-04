@@ -2,58 +2,61 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCE0BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA9BCA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:01:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E981204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:00:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74068204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 23:01:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aJqeYRN9"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gjyX61lJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730201AbfKDXA5 (ORCPT
+        id S1730489AbfKDXBB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 18:00:57 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:37676 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730068AbfKDXAO (ORCPT
+        Mon, 4 Nov 2019 18:01:01 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24592 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730066AbfKDXAO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 4 Nov 2019 18:00:14 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572908414;
+        s=mimecast20190719; t=1572908413;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=ccbFpKYBf8rSYhwgpOa9EKqIFsGHUnTReWBLwR3XiZo=;
-        b=aJqeYRN9cxbnqk6+OQGF3sZDcukDHsGsGqeuggmeEVERvmyEGJBj3Xnyt+KUIMmqgdIhP0
-        zIPPRCArvnW/LA8yVIGLC8dXCdEpKjdVkUz+uWHRkoGGi8d1gCfo7utaksrmxraxgIyQ3f
-        A4s3kq6DZz9bCdUJQMse+iFsJM9itSc=
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+tPxnHSoO16n5+Sy5wmIEDxZvcTP3JroTMdKGRpMAx0=;
+        b=gjyX61lJNumeljPbOfLGR8NRsUqkI+vmOvEWPKNGu3HUJRAnEXwlxeaHCjga20N2IMQE4a
+        GkiWj8R6RS4G1hPA5u7fO7xB+ZeTanukIFMqmh8Z/OeSWk649enSHwLfrtkRCiTCQ2+E5J
+        karcGuajqsIn2f234O+AaaZkWHCr7Qs=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-225-PDryOjlMOumflRoIWuy8mg-1; Mon, 04 Nov 2019 18:00:09 -0500
+ us-mta-367-6X7J1Ko-PnGdXzYrSSTdYA-1; Mon, 04 Nov 2019 18:00:10 -0500
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8543C1800DFD;
-        Mon,  4 Nov 2019 23:00:08 +0000 (UTC)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8CD52800C73;
+        Mon,  4 Nov 2019 23:00:09 +0000 (UTC)
 Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id BC0175D6D4;
-        Mon,  4 Nov 2019 23:00:02 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 606AF5D6D0;
+        Mon,  4 Nov 2019 23:00:09 +0000 (UTC)
 From:   Andrea Arcangeli <aarcange@redhat.com>
 To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Paolo Bonzini <pbonzini@redhat.com>,
         Vitaly Kuznetsov <vkuznets@redhat.com>,
         Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH 00/13] KVM monolithic v3
-Date:   Mon,  4 Nov 2019 17:59:48 -0500
-Message-Id: <20191104230001.27774-1-aarcange@redhat.com>
+Subject: [PATCH 13/13] x86: retpolines: eliminate retpoline from msr event handlers
+Date:   Mon,  4 Nov 2019 18:00:01 -0500
+Message-Id: <20191104230001.27774-14-aarcange@redhat.com>
+In-Reply-To: <20191104230001.27774-1-aarcange@redhat.com>
+References: <20191104230001.27774-1-aarcange@redhat.com>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: PDryOjlMOumflRoIWuy8mg-1
+X-MC-Unique: 6X7J1Ko-PnGdXzYrSSTdYA-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -62,70 +65,70 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+It's enough to check the value and issue the direct call.
 
-Here's the rebase of KVM monolithic on 5.4-rc6 after improving the
-Kbuild as suggested in the v2 review.
+After this commit is applied, here the most common retpolines executed
+under a high resolution timer workload in the guest on a VMX host:
 
-This should have corrected also the non-x86 KVM builds (not verified
-so it may not have full coverage yet, but I should have fixed all
-issues reported by kbot so far).
+[..]
+@[
+    trace_retpoline+1
+    __trace_retpoline+30
+    __x86_indirect_thunk_rax+33
+    do_syscall_64+89
+    entry_SYSCALL_64_after_hwframe+68
+]: 267
+@[]: 2256
+@[
+    trace_retpoline+1
+    __trace_retpoline+30
+    __x86_indirect_thunk_rax+33
+    __kvm_wait_lapic_expire+284
+    vmx_vcpu_run.part.97+1091
+    vcpu_enter_guest+377
+    kvm_arch_vcpu_ioctl_run+261
+    kvm_vcpu_ioctl+559
+    do_vfs_ioctl+164
+    ksys_ioctl+96
+    __x64_sys_ioctl+22
+    do_syscall_64+89
+    entry_SYSCALL_64_after_hwframe+68
+]: 2390
+@[]: 33410
 
-The effect of the patchset is visible at the end of the below pdf. I
-dropped CPUID so the results are still an exact match only for the
-last two bench slides which are the only important ones in real life.
+@total: 315707
 
-https://people.redhat.com/~aarcange/slides/2019-KVM-monolithic.pdf
+Note the highest hit above is __delay so probably not worth optimizing
+even if it would be more frequent than 2k hits per sec.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/andrea/aa.git/log/?h=3Dkvm-=
-mono3
+Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+---
+ arch/x86/events/intel/core.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Andrea Arcangeli (13):
-  KVM: monolithic: x86: remove kvm.ko
-  KVM: monolithic: x86: convert the kvm_x86_ops and kvm_pmu_ops methods
-    to external functions
-  kvm: monolithic: fixup x86-32 build
-  KVM: monolithic: x86: handle the request_immediate_exit variation
-  KVM: monolithic: add more section prefixes
-  KVM: monolithic: x86: remove __exit section prefix from
-    machine_unsetup
-  KVM: monolithic: x86: remove __init section prefix from
-    kvm_x86_cpu_has_kvm_support
-  KVM: monolithic: remove exports
-  KVM: monolithic: x86: drop the kvm_pmu_ops structure
-  KVM: x86: optimize more exit handlers in vmx.c
-  KVM: retpolines: x86: eliminate retpoline from vmx.c exit handlers
-  KVM: retpolines: x86: eliminate retpoline from svm.c exit handlers
-  x86: retpolines: eliminate retpoline from msr event handlers
-
- arch/powerpc/kvm/book3s.c       |   2 +-
- arch/x86/events/intel/core.c    |  11 +
- arch/x86/include/asm/kvm_host.h | 210 ++++++++-
- arch/x86/kvm/Kconfig            |  30 +-
- arch/x86/kvm/Makefile           |   5 +-
- arch/x86/kvm/cpuid.c            |  27 +-
- arch/x86/kvm/hyperv.c           |   8 +-
- arch/x86/kvm/irq.c              |   4 -
- arch/x86/kvm/irq_comm.c         |   2 -
- arch/x86/kvm/kvm_cache_regs.h   |  10 +-
- arch/x86/kvm/lapic.c            |  46 +-
- arch/x86/kvm/mmu.c              |  50 +-
- arch/x86/kvm/mmu.h              |   4 +-
- arch/x86/kvm/mtrr.c             |   2 -
- arch/x86/kvm/pmu.c              |  27 +-
- arch/x86/kvm/pmu.h              |  37 +-
- arch/x86/kvm/pmu_amd.c          |  43 +-
- arch/x86/kvm/svm.c              | 683 ++++++++++++++++-----------
- arch/x86/kvm/trace.h            |   4 +-
- arch/x86/kvm/vmx/nested.c       |  84 ++--
- arch/x86/kvm/vmx/pmu_intel.c    |  46 +-
- arch/x86/kvm/vmx/vmx.c          | 807 ++++++++++++++++++--------------
- arch/x86/kvm/vmx/vmx.h          |  39 +-
- arch/x86/kvm/x86.c              | 418 ++++++-----------
- arch/x86/kvm/x86.h              |   2 +-
- include/linux/kvm_host.h        |   8 +-
- virt/kvm/arm/arm.c              |   2 +-
- virt/kvm/eventfd.c              |   1 -
- virt/kvm/kvm_main.c             |  70 +--
- 29 files changed, 1440 insertions(+), 1242 deletions(-)
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index fcef678c3423..937363b803c1 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -3323,8 +3323,19 @@ static int intel_pmu_hw_config(struct perf_event *ev=
+ent)
+ =09return 0;
+ }
+=20
++#ifdef CONFIG_RETPOLINE
++static struct perf_guest_switch_msr *core_guest_get_msrs(int *nr);
++static struct perf_guest_switch_msr *intel_guest_get_msrs(int *nr);
++#endif
++
+ struct perf_guest_switch_msr *perf_guest_get_msrs(int *nr)
+ {
++#ifdef CONFIG_RETPOLINE
++=09if (x86_pmu.guest_get_msrs =3D=3D intel_guest_get_msrs)
++=09=09return intel_guest_get_msrs(nr);
++=09else if (x86_pmu.guest_get_msrs =3D=3D core_guest_get_msrs)
++=09=09return core_guest_get_msrs(nr);
++#endif
+ =09if (x86_pmu.guest_get_msrs)
+ =09=09return x86_pmu.guest_get_msrs(nr);
+ =09*nr =3D 0;
 
