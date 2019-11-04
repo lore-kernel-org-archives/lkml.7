@@ -2,79 +2,159 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 886B9CA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:27:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DC3CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:29:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F46821D7C
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:27:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572830824;
-	bh=Hw+hwKVQUsNdBF/kcpsFusDQL/5LzDx1ZI16h1Gs/0c=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=IQxfX+blpCOyoKDwpmhMoNxPx4STn2eOK/A/7UkhtRSLvm9Kdz4W6q+VIml/QOgsd
-	 nnDpYuePGv1TPJe4GdAvysqvrtcqs0JIIQacqnev2D4r5MJjCFMRophC9DjqT/yEdk
-	 nAhiH0T11TeR74hrFQ3/nCRXWhG/ptGq12+5UQFA=
+	by mail.kernel.org (Postfix) with ESMTP id 664A42190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 01:29:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728770AbfKDB1D (ORCPT
+        id S1728799AbfKDB31 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 3 Nov 2019 20:27:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59738 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728111AbfKDB1C (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 3 Nov 2019 20:27:02 -0500
-Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77A0E214D9;
-        Mon,  4 Nov 2019 01:26:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572830822;
-        bh=Hw+hwKVQUsNdBF/kcpsFusDQL/5LzDx1ZI16h1Gs/0c=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=cEnEO8WQAZ1Ps68a5ITLLen2o72C1yvGJTn2nnSHDdSqGyRpmbx0Kd/MGtqLtVEFF
-         NerVOI+g+07CxlCqdxnpy5kwi7bZQKx1Le/MS0w+DBqvf34zxDwB/acsG/F3NPhmMx
-         Qz7WCHXnfy7hdoTh31OY4TnBgYFlQUyevEme3DE8=
-Date:   Mon, 4 Nov 2019 09:26:37 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Marcel Ziswiler <marcel@ziswiler.com>
-Cc:     devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        linux-kernel@vger.kernel.org,
-        Philippe Schenker <philippe.schenker@toradex.com>,
-        Rob Herring <robh+dt@kernel.org>, linux-imx@nxp.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 5/5] dt-bindings: arm: fsl: add nxp based toradex
- colibri-imx8x binding docu
-Message-ID: <20191104012635.GH24620@dragon>
-References: <20191026090403.3057-1-marcel@ziswiler.com>
- <20191026090403.3057-5-marcel@ziswiler.com>
+        Sun, 3 Nov 2019 20:29:27 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:5694 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728290AbfKDB31 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 3 Nov 2019 20:29:27 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 6AF5A30D7CA97B35385F;
+        Mon,  4 Nov 2019 09:29:25 +0800 (CST)
+Received: from [127.0.0.1] (10.133.213.239) by DGGEMS408-HUB.china.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server id 14.3.439.0; Mon, 4 Nov 2019
+ 09:29:23 +0800
+Subject: Re: [PATCH -next] iio: st_accel: Fix unused variable warning
+To:     Ladislav Michl <ladis@linux-mips.org>,
+        Jonathan Cameron <jic23@kernel.org>
+References: <20191101134741.25108-1-yuehaibing@huawei.com>
+ <20191102104125.GA22015@lenoch> <20191102140810.3d756294@archlinux>
+ <20191102201535.GA30346@lenoch>
+CC:     <knaack.h@gmx.de>, <lars@metafoo.de>, <pmeerw@pmeerw.net>,
+        <denis.ciocca@st.com>, <rfontana@redhat.com>, <tglx@linutronix.de>,
+        <heiko.stuebner@bq.com>, <rjones@gateworks.com>,
+        <drake@endlessm.com>, <colin.king@canonical.com>,
+        <linux-iio@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+From:   Yuehaibing <yuehaibing@huawei.com>
+Message-ID: <4a6c8c31-360b-1cf2-7d6c-8426199637f0@huawei.com>
+Date:   Mon, 4 Nov 2019 09:29:21 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191026090403.3057-5-marcel@ziswiler.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191102201535.GA30346@lenoch>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.133.213.239]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Oct 26, 2019 at 11:04:03AM +0200, Marcel Ziswiler wrote:
-> From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+On 2019/11/3 4:15, Ladislav Michl wrote:
+> On Sat, Nov 02, 2019 at 02:08:10PM +0000, Jonathan Cameron wrote:
+>> On Sat, 2 Nov 2019 11:41:25 +0100
+>> Ladislav Michl <ladis@linux-mips.org> wrote:
+>>
+>>> On Fri, Nov 01, 2019 at 09:47:41PM +0800, YueHaibing wrote:
+>>>> drivers/iio/accel/st_accel_core.c:1005:44: warning:
+>>>>  mount_matrix_ext_info defined but not used [-Wunused-const-variable=]
+>>>>
+>>>> Move it to ifdef to mute this warning.
+>>>>
+>>>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>>>> ---
+>>>>  drivers/iio/accel/st_accel_core.c | 2 ++
+>>>>  1 file changed, 2 insertions(+)
+>>>>
+>>>> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+>>>> index 2e37f8a..bba0717 100644
+>>>> --- a/drivers/iio/accel/st_accel_core.c
+>>>> +++ b/drivers/iio/accel/st_accel_core.c
+>>>> @@ -1002,10 +1002,12 @@ get_mount_matrix(const struct iio_dev *indio_dev,
+>>>>  	return adata->mount_matrix;
+>>>>  }
+>>>>  
+>>>> +#ifdef CONFIG_ACPI
+>>>>  static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
+>>>>  	IIO_MOUNT_MATRIX(IIO_SHARED_BY_ALL, get_mount_matrix),  
+>>>
+>>> So now you do not get any warning for unused get_mount_matrix?
+>>> (Then it would make more sense to put all that stuff under one ifdef
+>>> and provide empty apply_acpi_orientation for non ACPI case)
+>>
+>> Does the __maybe_unused marking make this go away?
+>>
+>> I'd assume that the compiler will manage to drop this either way
+>> but I guess we should check that.
+>>
+>> ifdef magic is always harder to read and potentially fragile in the
+>> long run.  Here we simply want to indicate that in some build
+>> configurations we might not use this.
 > 
-> Document the NXP SoC based Toradex Colibri iMX8X module and carrier
-> board devicetree bindings previously added.
+> This suggestion implies we'll get rid of CONFIG_ACPI completely, which
+> seems inapproriate looking at size of apply_acpi_orientation function.
+> And having both CONFIG_ACPI and __maybe_unused does not make much
+> sense. I had something like that in mind (+COMPILE_TEST perhaps):
 > 
-> Signed-off-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+> diff --git a/drivers/iio/accel/st_accel_core.c b/drivers/iio/accel/st_accel_core.c
+> index 2e37f8a6d8cf..0e7eac62d618 100644
+> --- a/drivers/iio/accel/st_accel_core.c
+> +++ b/drivers/iio/accel/st_accel_core.c
+> @@ -993,6 +993,7 @@ static const struct iio_trigger_ops st_accel_trigger_ops = {
+>  #define ST_ACCEL_TRIGGER_OPS NULL
+>  #endif
+>  
+> +#ifdef CONFIG_ACPI
+>  static const struct iio_mount_matrix *
+>  get_mount_matrix(const struct iio_dev *indio_dev,
+>  		 const struct iio_chan_spec *chan)
+> @@ -1013,7 +1014,6 @@ static const struct iio_chan_spec_ext_info mount_matrix_ext_info[] = {
+>  static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  				  struct iio_chan_spec *channels)
+>  {
+> -#ifdef CONFIG_ACPI
+>  	struct st_sensor_data *adata = iio_priv(indio_dev);
+>  	struct acpi_buffer buffer = {ACPI_ALLOCATE_BUFFER, NULL};
+>  	struct acpi_device *adev;
+> @@ -1141,10 +1141,14 @@ static int apply_acpi_orientation(struct iio_dev *indio_dev,
+>  out:
+>  	kfree(buffer.pointer);
+>  	return ret;
+> -#else /* !CONFIG_ACPI */
+> +}
+> +#else
+> +static int apply_acpi_orientation(struct iio_dev *indio_dev,
 
-I changed subject a little bit as below.
+Does this need inline?
 
-  dt-bindings: arm: fsl: add nxp based toradex colibri-imx8x bindings
+> +				  struct iio_chan_spec *channels)
+> +{
+>  	return 0;
+> -#endif
+>  }
+> +#endif
+>  
+>  /*
+>   * st_accel_get_settings() - get sensor settings from device name
+>> Thanks,
+>>
+>> Jonathan
+>>
+>>
+>>>
+>>>>  	{ },
+>>>>  };
+>>>> +#endif
+>>>>  
+>>>>  /* Read ST-specific _ONT orientation data from ACPI and generate an
+>>>>   * appropriate mount matrix.
+>>>> -- 
+>>>> 2.7.4
+>>>>   
+> 
+> .
+> 
 
-Shawn
