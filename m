@@ -5,56 +5,53 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5E4CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B203ECA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33BC5205C9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D6392190F
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572904967;
-	bh=BQp0w++lhY9GEWaiGtER2AyNgxNAU5C9XBcP8uy2qBw=;
+	s=default; t=1572904973;
+	bh=2MwhBruz8QdI3sEGgqpLqqGmZkYq661yl/ZJ1kyxMhE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ChnnXTOFIG8686ozFbCbclDhm49lDgWnjRlznaPTAhchg06r+6r+sx32OyYZsUPIt
-	 SmPrPuME19qGdmcaUrtlMP2D48qvrnivTUMFyNb0juuYldnZJYDAzMNOpXGTcRzT2X
-	 x8JymjLOjVAK/Z8AYE8evqTSE7maJ0IOYZ7OWVtI=
+	b=wWjnhmD/1GVJAQGEEJqPcKRRFMuUDvgX/KRAkI23DJlB9TNM/orgDZKk2C6tInIZR
+	 rRvAipcqtgRrMlEA/dG0tcL0uuzo/A8T0r3Ebz0TkrtMhFkfTFe7fePYOYuqL58LQS
+	 1+ob2sWhjIebwmzZ9paPkOvb6JOxhCuUtfx5upmw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389385AbfKDWCq (ORCPT
+        id S2389407AbfKDWCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:02:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:32872 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:02:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33008 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388099AbfKDWCo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:02:44 -0500
+        id S2389389AbfKDWCs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:02:48 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 931872190F;
-        Mon,  4 Nov 2019 22:02:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 522D4214D8;
+        Mon,  4 Nov 2019 22:02:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904962;
-        bh=BQp0w++lhY9GEWaiGtER2AyNgxNAU5C9XBcP8uy2qBw=;
+        s=default; t=1572904967;
+        bh=2MwhBruz8QdI3sEGgqpLqqGmZkYq661yl/ZJ1kyxMhE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yOpUVnUI1uXiifS7DjK2oI/5Gn8DQ8XuNycsl4FnINljgoPEiitCOmUo5pmCGrUbp
-         sjIe4bJbq5HCneO2ugXG1QLAbGnwjAS74wa4OyhV1659AK6R+GM7Er9VAYpAnFarLD
-         5Mctm/cRe6VbSSQymWORF8sgPZV4AQ+3JFxkx2WA=
+        b=ywzjpTn6R+R1YV+PWyP1+ZmlaS7XikTfawHgk/hNxn4LkuK6c6hSvyszVAIln8Cfy
+         38f23fWN0K388/PWMVrew9SZYxKtth7tqjrFLlJ+B2Ny85k0WZ6ytWEUjYfUZadavu
+         6hrwUy8grFBNZl5pG8Ai+Ul6Z9MR3U6+uQ1tqs/I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jia-Ju Bai <baijiaju1990@gmail.com>,
-        Joseph Qi <joseph.qi@linux.alibaba.com>,
-        Mark Fasheh <mark@fasheh.com>,
-        Joel Becker <jlbec@evilplan.org>,
-        Junxiao Bi <junxiao.bi@oracle.com>,
-        Changwei Ge <gechangwei@live.cn>, Gang He <ghe@suse.com>,
-        Jun Piao <piaojun@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Kan Liang <kan.liang@linux.intel.com>,
+        Borislav Petkov <bp@suse.de>, Tony Luck <tony.luck@intel.com>,
+        ak@linux.intel.com, "H. Peter Anvin" <hpa@zytor.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>, x86-ml <x86@kernel.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 088/149] fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-Date:   Mon,  4 Nov 2019 22:44:41 +0100
-Message-Id: <20191104212142.683306051@linuxfoundation.org>
+Subject: [PATCH 4.19 090/149] x86/cpu: Add Comet Lake to the Intel CPU models header
+Date:   Mon,  4 Nov 2019 22:44:43 +0100
+Message-Id: <20191104212142.789041111@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
 References: <20191104212126.090054740@linuxfoundation.org>
@@ -67,56 +64,47 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jia-Ju Bai <baijiaju1990@gmail.com>
+From: Kan Liang <kan.liang@linux.intel.com>
 
-[ Upstream commit 2abb7d3b12d007c30193f48bebed781009bebdd2 ]
+[ Upstream commit 8d7c6ac3b2371eb1cbc9925a88f4d10efff374de ]
 
-In ocfs2_info_scan_inode_alloc(), there is an if statement on line 283
-to check whether inode_alloc is NULL:
+Comet Lake is the new 10th Gen Intel processor. Add two new CPU model
+numbers to the Intel family list.
 
-    if (inode_alloc)
+The CPU model numbers are not published in the SDM yet but they come
+from an authoritative internal source.
 
-When inode_alloc is NULL, it is used on line 287:
+ [ bp: Touch up commit message. ]
 
-    ocfs2_inode_lock(inode_alloc, &bh, 0);
-        ocfs2_inode_lock_full_nested(inode, ...)
-            struct ocfs2_super *osb = OCFS2_SB(inode->i_sb);
-
-Thus, a possible null-pointer dereference may occur.
-
-To fix this bug, inode_alloc is checked on line 286.
-
-This bug is found by a static analysis tool STCheck written by us.
-
-Link: http://lkml.kernel.org/r/20190726033717.32359-1-baijiaju1990@gmail.com
-Signed-off-by: Jia-Ju Bai <baijiaju1990@gmail.com>
-Reviewed-by: Joseph Qi <joseph.qi@linux.alibaba.com>
-Cc: Mark Fasheh <mark@fasheh.com>
-Cc: Joel Becker <jlbec@evilplan.org>
-Cc: Junxiao Bi <junxiao.bi@oracle.com>
-Cc: Changwei Ge <gechangwei@live.cn>
-Cc: Gang He <ghe@suse.com>
-Cc: Jun Piao <piaojun@huawei.com>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Reviewed-by: Tony Luck <tony.luck@intel.com>
+Cc: ak@linux.intel.com
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1570549810-25049-2-git-send-email-kan.liang@linux.intel.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- fs/ocfs2/ioctl.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/include/asm/intel-family.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/fs/ocfs2/ioctl.c b/fs/ocfs2/ioctl.c
-index 994726ada857c..a6c328211dccd 100644
---- a/fs/ocfs2/ioctl.c
-+++ b/fs/ocfs2/ioctl.c
-@@ -290,7 +290,7 @@ static int ocfs2_info_scan_inode_alloc(struct ocfs2_super *osb,
- 	if (inode_alloc)
- 		inode_lock(inode_alloc);
+diff --git a/arch/x86/include/asm/intel-family.h b/arch/x86/include/asm/intel-family.h
+index 82a57d344b9bc..2a8e5f78e23c4 100644
+--- a/arch/x86/include/asm/intel-family.h
++++ b/arch/x86/include/asm/intel-family.h
+@@ -61,6 +61,9 @@
+ #define INTEL_FAM6_TIGERLAKE_L		0x8C
+ #define INTEL_FAM6_TIGERLAKE		0x8D
  
--	if (o2info_coherent(&fi->ifi_req)) {
-+	if (inode_alloc && o2info_coherent(&fi->ifi_req)) {
- 		status = ocfs2_inode_lock(inode_alloc, &bh, 0);
- 		if (status < 0) {
- 			mlog_errno(status);
++#define INTEL_FAM6_COMETLAKE		0xA5
++#define INTEL_FAM6_COMETLAKE_L		0xA6
++
+ /* "Small Core" Processors (Atom) */
+ 
+ #define INTEL_FAM6_ATOM_BONNELL		0x1C /* Diamondville, Pineview */
 -- 
 2.20.1
 
