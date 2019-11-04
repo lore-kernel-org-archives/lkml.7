@@ -5,50 +5,52 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2DA1CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 023B1CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A876D204EC
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8E2B204EC
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572906257;
-	bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
+	s=default; t=1572906264;
+	bh=HDsv24RpewDnlRB22Fo8IdX8RsS0btuV9oTMySaKPco=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXHfldIql7k+XJYmu/SA0ZAdRmAUZStiWpVGcEgqIE0nPJLMMPYESb43PncS7j6am
-	 ZQA4EDRyVFSezHwg4K5yVOq7lqDMYYNlm3qmhMbslzoutg93x3tX3Uak5O7uvCKJRp
-	 TZOz3wBwa2XT29+PR7C4EvcYR1l+yTazFebcHxRA=
+	b=Sh80easU+Qdd4ysld63wlai+8lNOVOHWJZwHVQhJwu6iUR23kfb+TSbfQnTv0Qkx3
+	 chqAVM8UERCAI1WZWlp7MrVkLIROOT24qQHNf6lblX/H4biY1Gu6sDcROe0YprXWs3
+	 cFYbJ/JZQyji3VYTtVQz3aGpLQmAz12qiTbHPQFE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730917AbfKDVxK (ORCPT
+        id S1730853AbfKDVw4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:53:10 -0500
-Received: from mail.kernel.org ([198.145.29.99]:46984 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 16:52:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:46584 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730881AbfKDVxH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:53:07 -0500
+        id S1730135AbfKDVwx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 16:52:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 962B621D7D;
-        Mon,  4 Nov 2019 21:53:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 360D32184C;
+        Mon,  4 Nov 2019 21:52:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572904387;
-        bh=Kov+8kMB59hOV7LwB2j8HIHtBltTnISJ1UT9ZfpCrrg=;
+        s=default; t=1572904372;
+        bh=HDsv24RpewDnlRB22Fo8IdX8RsS0btuV9oTMySaKPco=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=yv8HGX1vHy6sAK/2bifY9yBoOn/OC5q3SkDbaT0l+3YJEdJpYZYFEaNlXNHOIEtD7
-         6Qezrd7Rn7H/MYtP4VJcwYn6HBdO5nppCcY2WmgriT1fdSsZOw9+ERyTurFASVe8jJ
-         8nk4Dlzx6eQsXLKk4mHCVEYXdLj5/TUaIh07nzDU=
+        b=N8E3SYfPVjihTY8uydQQi4cBsxxcePgZv9KYQDbTbcAB7Y4rkSioQHIa1Akf2N33v
+         Kmsoonw3TNlMbslACtPGahFKGeRwiKrnUm5azXInt+2LGEOHqD4LG2QwyG7thKKokd
+         NxzhFPKbgCABJOT0mfJiXYx1BcJ4xgketv1QAsDI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        stable@vger.kernel.org, Elie Roudninski <xademax@gmail.com>,
+        Remi Pommarel <repk@triplefau.lt>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.14 29/95] perf jevents: Fix period for Intel fixed counters
-Date:   Mon,  4 Nov 2019 22:44:27 +0100
-Message-Id: <20191104212056.647068717@linuxfoundation.org>
+Subject: [PATCH 4.14 24/95] iio: adc: meson_saradc: Fix memory allocation order
+Date:   Mon,  4 Nov 2019 22:44:22 +0100
+Message-Id: <20191104212054.266245809@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212038.056365853@linuxfoundation.org>
 References: <20191104212038.056365853@linuxfoundation.org>
@@ -61,51 +63,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
+From: Remi Pommarel <repk@triplefau.lt>
 
-[ Upstream commit 6bdfd9f118bd59cf0f85d3bf4b72b586adea17c1 ]
+[ Upstream commit de10ac47597e7a3596b27631d0d5ce5f48d2c099 ]
 
-The Intel fixed counters use a special table to override the JSON
-information.
+meson_saradc's irq handler uses priv->regmap so make sure that it is
+allocated before the irq get enabled.
 
-During this override the period information from the JSON file got
-dropped, which results in inst_retired.any and similar running with
-frequency mode instead of a period.
+This also fixes crash when CONFIG_DEBUG_SHIRQ is enabled, as device
+managed resources are freed in the inverted order they had been
+allocated, priv->regmap was freed before the spurious fake irq that
+CONFIG_DEBUG_SHIRQ adds called the handler.
 
-Just specify the expected period in the table.
-
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Cc: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20190927233546.11533-2-andi@firstfloor.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Fixes: 3af109131b7eb8 ("iio: adc: meson-saradc: switch from polling to interrupt mode")
+Reported-by: Elie Roudninski <xademax@gmail.com>
+Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Elie ROUDNINSKI <xademax@gmail.com>
+Reviewed-by: Kevin Hilman <khilman@baylibre.com>
+Signed-off-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- tools/perf/pmu-events/jevents.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/iio/adc/meson_saradc.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-diff --git a/tools/perf/pmu-events/jevents.c b/tools/perf/pmu-events/jevents.c
-index 94a7cabe9b824..6f9f247b45162 100644
---- a/tools/perf/pmu-events/jevents.c
-+++ b/tools/perf/pmu-events/jevents.c
-@@ -342,12 +342,12 @@ static struct fixed {
- 	const char *name;
- 	const char *event;
- } fixed[] = {
--	{ "inst_retired.any", "event=0xc0" },
--	{ "inst_retired.any_p", "event=0xc0" },
--	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03" },
--	{ "cpu_clk_unhalted.thread", "event=0x3c" },
--	{ "cpu_clk_unhalted.core", "event=0x3c" },
--	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1" },
-+	{ "inst_retired.any", "event=0xc0,period=2000003" },
-+	{ "inst_retired.any_p", "event=0xc0,period=2000003" },
-+	{ "cpu_clk_unhalted.ref", "event=0x0,umask=0x03,period=2000003" },
-+	{ "cpu_clk_unhalted.thread", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.core", "event=0x3c,period=2000003" },
-+	{ "cpu_clk_unhalted.thread_any", "event=0x3c,any=1,period=2000003" },
- 	{ NULL, NULL},
- };
+diff --git a/drivers/iio/adc/meson_saradc.c b/drivers/iio/adc/meson_saradc.c
+index 2515badf8b280..9b2121f249263 100644
+--- a/drivers/iio/adc/meson_saradc.c
++++ b/drivers/iio/adc/meson_saradc.c
+@@ -976,6 +976,11 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (IS_ERR(base))
+ 		return PTR_ERR(base);
  
++	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
++					     priv->data->regmap_config);
++	if (IS_ERR(priv->regmap))
++		return PTR_ERR(priv->regmap);
++
+ 	irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+ 	if (!irq)
+ 		return -EINVAL;
+@@ -985,11 +990,6 @@ static int meson_sar_adc_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
+-	priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+-					     priv->data->regmap_config);
+-	if (IS_ERR(priv->regmap))
+-		return PTR_ERR(priv->regmap);
+-
+ 	priv->clkin = devm_clk_get(&pdev->dev, "clkin");
+ 	if (IS_ERR(priv->clkin)) {
+ 		dev_err(&pdev->dev, "failed to get clkin\n");
 -- 
 2.20.1
 
