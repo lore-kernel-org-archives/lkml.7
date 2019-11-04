@@ -7,46 +7,45 @@ X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A535BCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDFA9CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 794D7214D8
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF2C4214D8
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905334;
-	bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
+	s=default; t=1572905336;
+	bh=HhEdyHXPyQomiK5smnYHE2hSZwsoR1/PnK7r2SFJUMY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=W422QjKSaQj5Jtj+VnqrJTVaaw73Qug6UgXWJ3uJuMkBdjHexKxNNZfABDtte+eWv
-	 x6GyWqaIe5rXsP73YiYRIdbA9zxCSSe92Lfk+/UXLswluVE+j6+mLsTPu13sMBoMF7
-	 pTbVf9uE/mf3izI7C+2bXIwpllNtYY0B7z7EdfJw=
+	b=zKN6PnKEN09Fwze/c4SM8U8salLrUY6CS9hzsa0j+VLnhbeYJlgT/at5diDBeWbii
+	 MOLreodBNU4usVTN/d62oeWjVbl6rswWU9ucgSXCGCMR5wcCvxXNWbMV3/lpge+f99
+	 ObJ1bzsAeq0SJxhpvIC76uZD1mB1X3Sux0hcsTdo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390315AbfKDWIx (ORCPT
+        id S2389891AbfKDWIz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:08:53 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41786 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:55 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41846 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388158AbfKDWIv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:08:51 -0500
+        id S2388158AbfKDWIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:53 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 859C6214D8;
-        Mon,  4 Nov 2019 22:08:49 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 791BD214E0;
+        Mon,  4 Nov 2019 22:08:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905330;
-        bh=o/Ex+1vv7SaDW4yyZ1WvsYR1s5YLNJ0IQxV7tuCOcYM=;
+        s=default; t=1572905333;
+        bh=HhEdyHXPyQomiK5smnYHE2hSZwsoR1/PnK7r2SFJUMY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dOL8jtqOXh3fbS0aUJX/6997+RzEVbdwZCSlCCedwizYQbqLLpExIHi9oDM9hrX5+
-         4pp7jFaOR0EieAdUc/WKESKePKi5fAIG3OuMX1KWdffw3Olb/IJpvT0XJ+v1qhOD37
-         j/TpjRuq5XFhSNN+iRP1oFMfI1gxPceOx59UaSGk=
+        b=AGSunWCPBbpq0XZnj3tL0oepdu1YaaJuJCVV0iBap0FDdRPL2OthzEJ2lkg2GXTDJ
+         Wts9RsGARsUR1htzyZkFUQga64Z56QfFBfgDL6nDwuaQcsNdCSySewAvxRx6Fwq76l
+         GJ02lL1oZEw4gsaSbxgz+J6dlSip1OgFOxS3qQMw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ben Dooks <ben.dooks@codethink.co.uk>,
-        Mathias Nyman <mathias.nyman@linux.intel.com>
-Subject: [PATCH 5.3 109/163] usb: xhci: fix __le32/__le64 accessors in debugfs code
-Date:   Mon,  4 Nov 2019 22:44:59 +0100
-Message-Id: <20191104212148.146334499@linuxfoundation.org>
+        stable@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Subject: [PATCH 5.3 110/163] USB: serial: whiteheat: fix potential slab corruption
+Date:   Mon,  4 Nov 2019 22:45:00 +0100
+Message-Id: <20191104212148.223831241@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -59,80 +58,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+From: Johan Hovold <johan@kernel.org>
 
-commit d5501d5c29a2e684640507cfee428178d6fd82ca upstream.
+commit 1251dab9e0a2c4d0d2d48370ba5baa095a5e8774 upstream.
 
-It looks like some of the xhci debug code is passing u32 to functions
-directly from __le32/__le64 fields.
-Fix this by using le{32,64}_to_cpu() on these to fix the following
-sparse warnings;
+Fix a user-controlled slab buffer overflow due to a missing sanity check
+on the bulk-out transfer buffer used for control requests.
 
-xhci-debugfs.c:205:62: warning: incorrect type in argument 1 (different base types)
-xhci-debugfs.c:205:62:    expected unsigned int [usertype] field0
-xhci-debugfs.c:205:62:    got restricted __le32
-xhci-debugfs.c:206:62: warning: incorrect type in argument 2 (different base types)
-xhci-debugfs.c:206:62:    expected unsigned int [usertype] field1
-xhci-debugfs.c:206:62:    got restricted __le32
-...
-
-[Trim down commit message, sparse warnings were similar -Mathias]
-Cc: <stable@vger.kernel.org> # 4.15+
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Signed-off-by: Mathias Nyman <mathias.nyman@linux.intel.com>
-Link: https://lore.kernel.org/r/1572013829-14044-4-git-send-email-mathias.nyman@linux.intel.com
+Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Cc: stable <stable@vger.kernel.org>
+Signed-off-by: Johan Hovold <johan@kernel.org>
+Link: https://lore.kernel.org/r/20191029102354.2733-2-johan@kernel.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/usb/host/xhci-debugfs.c |   24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ drivers/usb/serial/whiteheat.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/usb/host/xhci-debugfs.c
-+++ b/drivers/usb/host/xhci-debugfs.c
-@@ -202,10 +202,10 @@ static void xhci_ring_dump_segment(struc
- 		trb = &seg->trbs[i];
- 		dma = seg->dma + i * sizeof(*trb);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_trb(trb->generic.field[0],
--					   trb->generic.field[1],
--					   trb->generic.field[2],
--					   trb->generic.field[3]));
-+			   xhci_decode_trb(le32_to_cpu(trb->generic.field[0]),
-+					   le32_to_cpu(trb->generic.field[1]),
-+					   le32_to_cpu(trb->generic.field[2]),
-+					   le32_to_cpu(trb->generic.field[3])));
- 	}
- }
+--- a/drivers/usb/serial/whiteheat.c
++++ b/drivers/usb/serial/whiteheat.c
+@@ -559,6 +559,10 @@ static int firm_send_command(struct usb_
  
-@@ -263,10 +263,10 @@ static int xhci_slot_context_show(struct
- 	xhci = hcd_to_xhci(bus_to_hcd(dev->udev->bus));
- 	slot_ctx = xhci_get_slot_ctx(xhci, dev->out_ctx);
- 	seq_printf(s, "%pad: %s\n", &dev->out_ctx->dma,
--		   xhci_decode_slot_context(slot_ctx->dev_info,
--					    slot_ctx->dev_info2,
--					    slot_ctx->tt_info,
--					    slot_ctx->dev_state));
-+		   xhci_decode_slot_context(le32_to_cpu(slot_ctx->dev_info),
-+					    le32_to_cpu(slot_ctx->dev_info2),
-+					    le32_to_cpu(slot_ctx->tt_info),
-+					    le32_to_cpu(slot_ctx->dev_state)));
+ 	command_port = port->serial->port[COMMAND_PORT];
+ 	command_info = usb_get_serial_port_data(command_port);
++
++	if (command_port->bulk_out_size < datasize + 1)
++		return -EIO;
++
+ 	mutex_lock(&command_info->mutex);
+ 	command_info->command_finished = false;
  
- 	return 0;
- }
-@@ -286,10 +286,10 @@ static int xhci_endpoint_context_show(st
- 		ep_ctx = xhci_get_ep_ctx(xhci, dev->out_ctx, dci);
- 		dma = dev->out_ctx->dma + dci * CTX_SIZE(xhci->hcc_params);
- 		seq_printf(s, "%pad: %s\n", &dma,
--			   xhci_decode_ep_context(ep_ctx->ep_info,
--						  ep_ctx->ep_info2,
--						  ep_ctx->deq,
--						  ep_ctx->tx_info));
-+			   xhci_decode_ep_context(le32_to_cpu(ep_ctx->ep_info),
-+						  le32_to_cpu(ep_ctx->ep_info2),
-+						  le64_to_cpu(ep_ctx->deq),
-+						  le32_to_cpu(ep_ctx->tx_info)));
- 	}
- 
- 	return 0;
 
 
