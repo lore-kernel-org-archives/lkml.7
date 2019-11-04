@@ -2,106 +2,116 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7881DCA9ED2
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:43:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFE0ACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 592752190F
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:43:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8607921D71
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 07:44:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572853455;
+	bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=S2qG4fBDOHjSr5hzRYXNASUsOUrBtlSjOCqt3/W7nHk99pTGgNulAS2v6q5Jnp2hM
+	 JnbvnnM70BVH/NV/UJI9m5bX3LAXCmRAO2AJPH4Z4IDivzf4OzDES2c/x9lDkk5Dz3
+	 kFRpnmeSzVDo00UgOQr7NEumXAKpRjd0jwf1chm0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727975AbfKDHnW (ORCPT
+        id S1728068AbfKDHoO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 02:43:22 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:43730 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726441AbfKDHnV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 02:43:21 -0500
-Received: by mail-ot1-f66.google.com with SMTP id u4so2628654otq.10;
-        Sun, 03 Nov 2019 23:43:19 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=KnN2X+Z56m8inPVIEyg78tY9xFg8wm5xX3rrWjSXm00=;
-        b=Zs+asvGapBjCMN1e7WYqb7tZs1Ov7yAqLSp32wMWodWJ2u3LV8jwfW2hGfUxzqHpJa
-         Jt2f9qv0hHfUPuQLUr7B5KEzNKlaSQc47e/Cz5TLKYRpwnvE2PQKOx15ka9x9D71fgjp
-         Qj7/W5gbvtRie9BlwvJDsU2rrpqbQR0y/Sx88qLi9YxdStjqSnYIr4GAWGjTGXdOtaEB
-         oFJZ4Hgw1y6b7jOYIINC4Mb4RhW0ih6Se3p3vsOvmZ86bedY1mLSI22CHkMxJS1IsTJQ
-         M0c6NENOOazhR41B8MnwMtWbHD1CK2bMm1OlKxQ0lTgA32oiPdCYUFH+ulE4FIYwWkPk
-         +wKA==
-X-Gm-Message-State: APjAAAV41P5CRZvgjNjnucG5FBq4f62ppA/3GsFCggZr1Xt+mYyy4wZm
-        EhNHnAcDGo/5aZqF34onCOUzTFOLT8xfn4tOHqc=
-X-Google-Smtp-Source: APXvYqym9VCu2o7HdGZJ4onW/M0U57nIZAzdSu2nWmiH9jlxJelFjPY7QurfIWeAM7vQ6DoHtaIviAs1Q+0ScdiDkkI=
-X-Received: by 2002:a05:6830:210e:: with SMTP id i14mr3502735otc.250.1572853399036;
- Sun, 03 Nov 2019 23:43:19 -0800 (PST)
+        Mon, 4 Nov 2019 02:44:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55296 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726441AbfKDHoO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 02:44:14 -0500
+Received: from dragon (li1038-30.members.linode.com [45.33.96.30])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF09B2190F;
+        Mon,  4 Nov 2019 07:44:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572853453;
+        bh=rqP4SSpNvx234d+AvWoRHCFkLgHT+IVU/z6pCg63G3U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zGPC6D60oP3iEGoEXdXdIB+wDXS1YRB7VcZuICeBUVX6uvWfBcT/JUarHJPTXoqTv
+         HKUtalEQ/hfW/KuJVqlgkgCwHWWi1Rdk8KAiuRgGYmctRDU2x51kvQUEqYZocdHqb+
+         mTcNAAhkUsObuVD5Bn0YX3fHDw1jx8WntyHmfStI=
+Date:   Mon, 4 Nov 2019 15:43:47 +0800
+From:   Shawn Guo <shawnguo@kernel.org>
+To:     Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc:     Krzysztof Kozlowski <krzk@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Rob Herring <robh+dt@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 09/11] ARM: dts: imx6ul-kontron-n6x1x-s: Disable the
+ snvs-poweroff driver
+Message-ID: <20191104074346.GT24620@dragon>
+References: <20191031142112.12431-1-frieder.schrempf@kontron.de>
+ <20191031142112.12431-10-frieder.schrempf@kontron.de>
 MIME-Version: 1.0
-References: <20190927094708.11563-1-geert@linux-m68k.org>
-In-Reply-To: <20190927094708.11563-1-geert@linux-m68k.org>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Mon, 4 Nov 2019 08:43:07 +0100
-Message-ID: <CAMuHMdW7fkPjqppQYESDf4ZLKcCrxhMUyCn0=tm6kxPSxf5mGA@mail.gmail.com>
-Subject: Re: [PATCH v2] fbdev: c2p: Fix link failure on non-inlining
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Fbdev development list <linux-fbdev@vger.kernel.org>,
-        "Linux/m68k" <linux-m68k@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031142112.12431-10-frieder.schrempf@kontron.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej, Andrew,
+On Thu, Oct 31, 2019 at 02:24:27PM +0000, Schrempf Frieder wrote:
+> From: Frieder Schrempf <frieder.schrempf@kontron.de>
+> 
+> The snvs-poweroff driver can power off the system by pulling the
+> PMIC_ON_REQ signal low, to let the PMIC disable the power.
+> The Kontron SoMs do not have this signal connected, so let's remove
+> the node.
+> 
+> This seems to fix a real issue when the signal is asserted at
+> poweroff, but not actually causing the power to turn off. It was
+> observed, that in this case the system would not shut down properly.
 
-On Fri, Sep 27, 2019 at 11:47 AM Geert Uytterhoeven
-<geert@linux-m68k.org> wrote:
-> When the compiler decides not to inline the Chunky-to-Planar core
-> functions, the build fails with:
->
->     c2p_planar.c:(.text+0xd6): undefined reference to `c2p_unsupported'
->     c2p_planar.c:(.text+0x1dc): undefined reference to `c2p_unsupported'
->     c2p_iplan2.c:(.text+0xc4): undefined reference to `c2p_unsupported'
->     c2p_iplan2.c:(.text+0x150): undefined reference to `c2p_unsupported'
->
-> Fix this by marking the functions __always_inline.
->
-> While this could be triggered before by manually enabling both
-> CONFIG_OPTIMIZE_INLINING and CONFIG_CC_OPTIMIZE_FOR_SIZE, it was exposed
-> in the m68k defconfig by commit ac7c3e4ff401b304 ("compiler: enable
-> CONFIG_OPTIMIZE_INLINING forcibly").
->
-> Fixes: 9012d011660ea5cf ("compiler: allow all arches to enable CONFIG_OPTIMIZE_INLINING")
-> Reported-by: noreply@ellerman.id.au
-> Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+I do not quite follow on this.  How does disabling snvs_poweroff fix the
+issue?  The root cause of system not shut down properly seems to be that
+PMIC doesn't shut down power.  This looks like a clean-up rather than
+bug fix.
+
+> 
+> Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+> Fixes: 1ea4b76cdfde ("ARM: dts: imx6ul-kontron-n6310: Add Kontron i.MX6UL N6310 SoM and boards")
+
+If you think this is really a bug fix, it should be applied to the file
+before renaming rather than the one after renaming.
+
+Shawn
+
 > ---
-> This is a fix for v5.4-rc1.
-
-Can you please apply this for v5.4?
-This is one of the 4 remaining build regressions, compared to v5.3.
-
-Thanks!
-
-> v2:
->   - Add Reviewed-by,
->   - Fix Fixes,
->   - Add more explanation.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+>  arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi | 4 ----
+>  1 file changed, 4 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> index e18a8bd239be..4682a79f5b23 100644
+> --- a/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> +++ b/arch/arm/boot/dts/imx6ul-kontron-n6x1x-s.dtsi
+> @@ -158,10 +158,6 @@
+>  	status = "okay";
+>  };
+>  
+> -&snvs_poweroff {
+> -	status = "okay";
+> -};
+> -
+>  &uart1 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&pinctrl_uart1>;
+> -- 
+> 2.17.1
