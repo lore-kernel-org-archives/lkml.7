@@ -2,214 +2,88 @@ Return-Path: <SRS0=xa+R=Y4=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC12CCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDCEACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:28:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A37F620869
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:28:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V6Cth1nI"
+	by mail.kernel.org (Postfix) with ESMTP id AA90520869
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 21:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572902927;
+	bh=WgAzKrT4FqDGHxBKd6wcQs/dkJO0vjP/JmteoL1/9nI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0Da0CVzAVNT02Lp4/htk6Bk7kn2GVf2KbRxIeVW8kN1tHGswZBc49LPVJB3FOne+S
+	 y0VNmFXVk6K5Z7nXe46up7juPPmJmnqvi6KtbOcoxjMtuPDX+JO9ajA22N+et/oagT
+	 lO8QRZRpIM6w8Rs8ToVpysIDc5zKiMm1+BopZBxU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729305AbfKDV2U (ORCPT
+        id S1729567AbfKDV2q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 16:28:20 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:34692 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728409AbfKDV2U (ORCPT
+        Mon, 4 Nov 2019 16:28:46 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:44596 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728409AbfKDV2q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 16:28:20 -0500
-Received: by mail-il1-f193.google.com with SMTP id p6so3525217ilp.1;
-        Mon, 04 Nov 2019 13:28:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=TxeQ1vsFAcSyarb6ISmxJP52S96I9PR9sQsErWuntHg=;
-        b=V6Cth1nIhMWWjExi9FXYNM21C/LEg6mfc1oHE6pdfBmr7lEg8cJWKSh/S8qVIx166B
-         251YnbGMm8OUcZlA0sKJPzWmryqetFcJ8QNk8si/Kofuv/lQO/B8EVotknngrSVCxq+q
-         ZLOsA4Mlyv45uMC/B3BPVqr1TwRIE9uNYA6TZiU8GZdSrGXk5X6WcC15XakDbQo2xTMc
-         tKzQUNRGDeOm4kYzmFQQnrqVwd9vipegkkcqtuC5wQ2Ou5TxnI4DFMu8hiWUWnGamhgE
-         tPYAibBxyY7kNvha2nbrYd3KTAjmXOCUc6Ltt9i5WUOYzd47aggfuZ+uw6jxaqbhC6IO
-         bErQ==
+        Mon, 4 Nov 2019 16:28:46 -0500
+Received: by mail-oi1-f193.google.com with SMTP id s71so15518710oih.11;
+        Mon, 04 Nov 2019 13:28:45 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TxeQ1vsFAcSyarb6ISmxJP52S96I9PR9sQsErWuntHg=;
-        b=mKPEqh6QGhsxUS3z+tOMBSTBG0hkMF7ZRjTda9NbFB3HwQyl2dcR9uvQslBBg16aap
-         aQfWJGFz7zYOqsFz6UVIWaluo0KKZ7HWyQh5+87M0P9xdaQPzhIazkK4DJHjauo8xOso
-         a9Xl6nRVtekYP521bBTbHEdmCyJaZAilgOrdlyP30JLYt1yaTwbK9TUH/z2bZ5fTUdoT
-         b1yKuAr2w7Ca47HeASOkuz+m1gEdTusjTmhu50Pnt/CdGkLTb8sShas9T8fVwJBfeJP7
-         ybgKF36mpUCGAziCiH58lDdFjPkUKSZv0zx0OjSv85qSxB6R4YPvDGpRsJ4xjD2WNFbC
-         vqFw==
-X-Gm-Message-State: APjAAAUqrcpINMF2QwCab3SA+/nHCXSJrRJKLl7lXR50+PTUP8xNKShg
-        65GZo/SaLNawkvVcfGt27WbI9qMQMxyKskpD9+U=
-X-Google-Smtp-Source: APXvYqx0LBa9HKGA3I4v9sMP2fQBtUFY3Ly8WahWqexcVeZoeeh3ZZKjoJ47fRqaBJAV6z899mRH7vRcUBQ6JTrdT24=
-X-Received: by 2002:a05:6e02:c2c:: with SMTP id q12mr31257556ilg.205.1572902898606;
- Mon, 04 Nov 2019 13:28:18 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9acXWsdEFrkPA1Lgl9MMn5B4FiSOAYHswfR+JTN/Dic=;
+        b=i+azHwooPjktf+h/FiC2NVQc2v1Hs24+bXIDCnWUq7id+0x5nLpBfN+w8Vhdsmv+e4
+         j55vIaISx7xIgn4carqCzHwRZFfmZG5HiG5mxpxInx5wiU2VM8r3ftMbZOW34vr1YKbP
+         cN3LonrrI7sHDRDgz8PyejufT64qUfb9PsRnKWgDSujXUh7FYKjAXU+plb90BvL5I3Gg
+         rkPnHmCC1j3ECus+5NRXKb/6EbXQKiRQsbPuxH8qEbGKBC5H0+YgOaNm3XkNo4pcXenj
+         PmJ+nzo9+SOWNPfhnHV29VciUvm8WTpRZBa8fi1ve9G9oXbE/nf1OX0noqxPGAnLLAoj
+         EgwA==
+X-Gm-Message-State: APjAAAVRkUtDqCoAEznegmZpsa/aVEgJHqZ/hIFsZm0TJI2KaJEOzbHo
+        8WkpHxoo/oIplo8JrLYF6A==
+X-Google-Smtp-Source: APXvYqyaTn81E9AP4eQnyMQSgJxivr7c/dErrETeT11+u2IPdaQ5TAf8rw4iL5Ra03TJ+aegp2oFoQ==
+X-Received: by 2002:aca:578e:: with SMTP id l136mr1009252oib.132.1572902925405;
+        Mon, 04 Nov 2019 13:28:45 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m14sm5112256otl.26.2019.11.04.13.28.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 13:28:44 -0800 (PST)
+Date:   Mon, 4 Nov 2019 15:28:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, linux-pm@vger.kernel.org, agross@kernel.org,
+        bjorn.andersson@linaro.org, evgreen@chromium.org,
+        daidavid1@codeaurora.org, vincent.guittot@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, georgi.djakov@linaro.org
+Subject: Re: [PATCH v10 1/3] dt-bindings: interconnect: Add Qualcomm MSM8916
+ DT bindings
+Message-ID: <20191104212844.GA6884@bogus>
+References: <20191030153904.8715-1-georgi.djakov@linaro.org>
+ <20191030153904.8715-2-georgi.djakov@linaro.org>
 MIME-Version: 1.0
-References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
-In-Reply-To: <20191104183702.8894-1-TheSven73@gmail.com>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 4 Nov 2019 15:28:07 -0600
-Message-ID: <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Marek Vasut <marex@denx.de>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030153904.8715-2-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 12:37 PM Sven Van Asbroeck <thesven73@gmail.com> wrote:
->
-> Ok, so here are my test results on an ili211x :
->
-> Using Marek's patch:
-> https://patchwork.kernel.org/patch/10836651/#22811657
-> It works fine.
+On Wed, 30 Oct 2019 17:39:02 +0200, Georgi Djakov wrote:
+> The Qualcomm MSM8916 platform has several bus fabrics that could be
+> controlled and tuned dynamically according to the bandwidth demand.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  .../bindings/interconnect/qcom,msm8916.yaml   |  77 ++++++++++++++
+>  .../dt-bindings/interconnect/qcom,msm8916.h   | 100 ++++++++++++++++++
+>  2 files changed, 177 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,msm8916.yaml
+>  create mode 100644 include/dt-bindings/interconnect/qcom,msm8916.h
+> 
 
-I am using IRQ_TYPE_EDGE_RISING for the 2117A.  Is that correct?  For
-my touchscreen, the IRQ line is low until a touch is detected, so I
-assume we want to capure on the rising edge.
-
-I noticed the example uses IRQ_TYPE_EDGE_FALLING.  If rising is
-correct, we should probably update the binding to show an example for
-the 2117.
-
->
-> Using Dmitry's patch:
-> https://git.kernel.org/pub/scm/linux/kernel/git/dtor/input.git/log/?h=ili2xxx-touchscreen
-> Does not work at all - the driver even enters an infinite loop.
->
-
-Regarding Dmitry's patch,
-Is it a good idea to use msleep in an IRQ?  It seems like using the
-schedule_delayed_work() call seems like it will get in and get out of
-the ISR faster.
-
-If we use msleep and scan again, isn't it possible to starve other processes?
-
-
-
-> I tracked this down to two separate issues:
-> 1. the ili211x does not have a touchdata register; but the driver tries to
->         read from one.
-> 2. the ili211x should never poll - otherwise it will read all zeros, which
->         passes the crc check (!), then results in ten finger touches all
->         at (x=0, y=0).
->
-> The patch at the end of this e-mail addresses these two issues. When it is
-> applied, the ili211x works fine.
->
-> Of course, this does not address the issue Marek saw with Dmitry's patch
->         on the ili251x.
->
-
-Sven's patches appear to work for me when manually applied on top of
-Dmity' and Marek's patches.
-
-
-> Sven
->
-> diff --git a/drivers/input/touchscreen/ili210x.c b/drivers/input/touchscreen/ili210x.c
-> index 7a9c46b8a079..f51a3a19075f 100644
-> --- a/drivers/input/touchscreen/ili210x.c
-> +++ b/drivers/input/touchscreen/ili210x.c
-> @@ -36,7 +36,7 @@ struct ili2xxx_chip {
->         int (*get_touch_data)(struct i2c_client *client, u8 *data);
->         bool (*parse_touch_data)(const u8 *data, unsigned int finger,
->                                  unsigned int *x, unsigned int *y);
-> -       bool (*continue_polling)(const u8 *data);
-> +       bool (*continue_polling)(const u8 *data, bool has_touch);
->         unsigned int max_touches;
->  };
->
-> @@ -96,7 +96,7 @@ static bool ili210x_touchdata_to_coords(const u8 *touchdata,
->         return true;
->  }
->
-> -static bool ili210x_check_continue_polling(const u8 *data)
-> +static bool ili210x_check_continue_polling(const u8 *data, bool has_touch)
->  {
->         return data[0] & 0xf3;
->  }
-> @@ -111,14 +111,19 @@ static const struct ili2xxx_chip ili210x_chip = {
->
->  static int ili211x_read_touch_data(struct i2c_client *client, u8 *data)
->  {
-> +       struct i2c_msg msg = {
-> +               .addr   = client->addr,
-> +               .flags  = I2C_M_RD,
-> +               .len    = ILI211X_DATA_SIZE,
-> +               .buf    = data,
-> +       };
->         s16 sum = 0;
->         int i;
-> -       int error;
->
-> -       error = ili210x_read_reg(client, REG_TOUCHDATA,
-> -                                data, ILI211X_DATA_SIZE);
-> -       if (error)
-> -               return error;
-> +       if (i2c_transfer(client->adapter, &msg, 1) != 1) {
-> +               dev_err(&client->dev, "i2c transfer failed\n");
-> +               return -EIO;
-> +       }
->
->         /* This chip uses custom checksum at the end of data */
->         for (i = 0; i <= ILI211X_DATA_SIZE - 2; i++)
-> @@ -152,7 +157,7 @@ static bool ili211x_touchdata_to_coords(const u8 *touchdata,
->         return true;
->  }
->
-> -static bool ili2xxx_decline_polling(const u8 *data)
-> +static bool ili2xxx_decline_polling(const u8 *data, bool has_touch)
->  {
->         return false;
->  }
-> @@ -216,11 +221,16 @@ static bool ili251x_touchdata_to_coords(const u8 *touchdata,
->         return true;
->  }
->
-> +static bool ili251x_check_continue_polling(const u8 *data, bool has_touch)
-> +{
-> +       return has_touch;
-> +}
-> +
->  static const struct ili2xxx_chip ili251x_chip = {
->         .read_reg               = ili251x_read_reg,
->         .get_touch_data         = ili251x_read_touch_data,
->         .parse_touch_data       = ili251x_touchdata_to_coords,
-> -       .continue_polling       = ili2xxx_decline_polling,
-> +       .continue_polling       = ili251x_check_continue_polling,
->         .max_touches            = 10,
->  };
->
-> @@ -268,7 +278,7 @@ static irqreturn_t ili210x_irq(int irq, void *irq_data)
->                 }
->
->                 touch = ili210x_report_events(priv, touchdata);
-> -               keep_polling = touch || chip->continue_polling(touchdata);
-> +               keep_polling = chip->continue_polling(touchdata, touch);
->                 if (keep_polling)
-
-Why not just check the value of touch instead of invoking the function
-pointer which takes the value of touch in as a parameter?
-
->                         msleep(ILI2XXX_POLL_PERIOD);
->         } while (!priv->stop && keep_polling);
-> --
-> 2.17.1
-
-adam
+Reviewed-by: Rob Herring <robh@kernel.org>
