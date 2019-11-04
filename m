@@ -4,52 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F1BBCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F33CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A28620650
-	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8581420650
+	for <linux-kernel@archiver.kernel.org>; Mon,  4 Nov 2019 22:13:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572905627;
-	bh=5yHE+GyYRcaWxFCAaeV4qiDkp7QVDSIGHk1tz3OWcW8=;
+	s=default; t=1572905638;
+	bh=lW4LCjKE30TWvQxPbJ+rchvYligfqkR3FDNxQC9o2W4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mV/wU1O6H8LhdVnYYlNoMZTMeHy8CWFL3ZqqL18oObNce+kIrl6PHx0FGH7EFoQYE
-	 ikLT6MEwc+VgNCPKgR2m15CpjWV4L4+coUnEK8jfoxV/Pw2wCl9BRrRVh9MiAZhOjy
-	 aAcXgOC4bSUhnM6o3Ud4aUW5mtGoUxQl1TMnUkHA=
+	b=V3j8/m35EVQxBpoTdyKJYhIqt/9hIIPTRq++PEaud5g3BBvbDoWvc8WBBhmaGjN2a
+	 dSEN0Rag7/GSIEieCasZLbRms6NzwV4N3Nqknzq33yzEoK0reRpPgtxXHo39IIyUvN
+	 z+bcV3t66O9az+pJ2mh+NxyQIFNYqhPt46Lb/mTE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389605AbfKDWJM (ORCPT
+        id S2390276AbfKDWIn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 17:09:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42146 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 17:08:43 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41540 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389830AbfKDWJI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 17:09:08 -0500
+        id S2388621AbfKDWIj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 17:08:39 -0500
 Received: from localhost (6.204-14-84.ripe.coltfrance.com [84.14.204.6])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E67202084D;
-        Mon,  4 Nov 2019 22:09:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9090020650;
+        Mon,  4 Nov 2019 22:08:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572905347;
-        bh=5yHE+GyYRcaWxFCAaeV4qiDkp7QVDSIGHk1tz3OWcW8=;
+        s=default; t=1572905318;
+        bh=lW4LCjKE30TWvQxPbJ+rchvYligfqkR3FDNxQC9o2W4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=gXgEaeT+ZovX13ZGzFKAKPYySD35uS8cY5QqKSYIEY5qAX9GEi42VCAHwOXLMwu6q
-         OZ3U1xFYW4Bq3ANdHRTpQG9o7TvSr9Ufv0zvNwcLMhx6D3ChmZmUT5amAvvVLuhobU
-         mXPxh3NpV86Q+tLf/tY4hMQnZwUaOngboW07WdxI=
+        b=ODm0FTzOZe7EWR4VyHJfDpz2D95rCqDpECpYprgQfEUkA5uXiPbqAiEDTs3jaPSCp
+         jWd//oy8lCymxBc8sah73IQy3aXh5JbMXlOVJiXzOu96cZNiLKfDOqW1DiQoWAadog
+         T+E9+0J+6QFDfGT9RPY3SiyKX5d4q6Vq0ELpgTnI=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Varun Prakash <varun@chelsio.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Dan Carpenter <dan.carpenter@oracle.com>,
-        Bart Van Assche <bvanassche@acm.org>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Subject: [PATCH 5.3 114/163] scsi: target: cxgbit: Fix cxgbit_fw4_ack()
-Date:   Mon,  4 Nov 2019 22:45:04 +0100
-Message-Id: <20191104212148.495684749@linuxfoundation.org>
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Seth Bollinger <Seth.Bollinger@digi.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Subject: [PATCH 5.3 105/163] usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Date:   Mon,  4 Nov 2019 22:44:55 +0100
+Message-Id: <20191104212147.688803646@linuxfoundation.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
 References: <20191104212140.046021995@linuxfoundation.org>
@@ -62,44 +61,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bart Van Assche <bvanassche@acm.org>
+From: Alan Stern <stern@rowland.harvard.edu>
 
-commit fc5b220b2dcf8b512d9bd46fd17f82257e49bf89 upstream.
+commit 9a976949613132977098fc49510b46fa8678d864 upstream.
 
-Use the pointer 'p' after having tested that pointer instead of before.
+Commit 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG
+overflows") attempted to solve a problem involving scatter-gather I/O
+and USB/IP by setting the virt_boundary_mask for mass-storage devices.
 
-Fixes: 5cadafb236df ("target/cxgbit: Fix endianness annotations")
-Cc: Varun Prakash <varun@chelsio.com>
-Cc: Nicholas Bellinger <nab@linux-iscsi.org>
-Cc: <stable@vger.kernel.org>
-Link: https://lore.kernel.org/r/20191023202150.22173-1-bvanassche@acm.org
-Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-Signed-off-by: Bart Van Assche <bvanassche@acm.org>
-Signed-off-by: Martin K. Petersen <martin.petersen@oracle.com>
+However, it now turns out that this interacts badly with commit
+09324d32d2a0 ("block: force an unlimited segment size on queues with a
+virt boundary"), which was added later.  A typical error message is:
+
+	ehci-pci 0000:00:13.2: swiotlb buffer is full (sz: 327680 bytes),
+	total 32768 (slots), used 97 (slots)
+
+There is no longer any reason to keep the virt_boundary_mask setting
+for usb-storage.  It was needed in the first place only for handling
+devices with a block size smaller than the maxpacket size and where
+the host controller was not capable of fully general scatter-gather
+operation (that is, able to merge two SG segments into a single USB
+packet).  But:
+
+	High-speed or slower connections never use a bulk maxpacket
+	value larger than 512;
+
+	The SCSI layer does not handle block devices with a block size
+	smaller than 512 bytes;
+
+	All the host controllers capable of SuperSpeed operation can
+	handle fully general SG;
+
+	Since commit ea44d190764b ("usbip: Implement SG support to
+	vhci-hcd and stub driver") was merged, the USB/IP driver can
+	also handle SG.
+
+Therefore all supported device/controller combinations should be okay
+with no need for any special virt_boundary_mask.  So in order to fix
+the swiotlb problem, this patch reverts commit 747668dbc061.
+
+Reported-and-tested-by: Piergiorgio Sartor <piergiorgio.sartor@nexgo.de>
+Link: https://marc.info/?l=linux-usb&m=157134199501202&w=2
+Signed-off-by: Alan Stern <stern@rowland.harvard.edu>
+CC: Seth Bollinger <Seth.Bollinger@digi.com>
+CC: <stable@vger.kernel.org>
+Fixes: 747668dbc061 ("usb-storage: Set virt_boundary_mask to avoid SG overflows")
+Acked-by: Christoph Hellwig <hch@lst.de>
+Link: https://lore.kernel.org/r/Pine.LNX.4.44L0.1910211145520.1673-100000@iolanthe.rowland.org
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/target/iscsi/cxgbit/cxgbit_cm.c |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/usb/storage/scsiglue.c |   10 ----------
+ 1 file changed, 10 deletions(-)
 
---- a/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-+++ b/drivers/target/iscsi/cxgbit/cxgbit_cm.c
-@@ -1831,7 +1831,7 @@ static void cxgbit_fw4_ack(struct cxgbit
+--- a/drivers/usb/storage/scsiglue.c
++++ b/drivers/usb/storage/scsiglue.c
+@@ -67,7 +67,6 @@ static const char* host_info(struct Scsi
+ static int slave_alloc (struct scsi_device *sdev)
+ {
+ 	struct us_data *us = host_to_us(sdev->host);
+-	int maxp;
  
- 	while (credits) {
- 		struct sk_buff *p = cxgbit_sock_peek_wr(csk);
--		const u32 csum = (__force u32)p->csum;
-+		u32 csum;
+ 	/*
+ 	 * Set the INQUIRY transfer length to 36.  We don't use any of
+@@ -77,15 +76,6 @@ static int slave_alloc (struct scsi_devi
+ 	sdev->inquiry_len = 36;
  
- 		if (unlikely(!p)) {
- 			pr_err("csk 0x%p,%u, cr %u,%u+%u, empty.\n",
-@@ -1840,6 +1840,7 @@ static void cxgbit_fw4_ack(struct cxgbit
- 			break;
- 		}
- 
-+		csum = (__force u32)p->csum;
- 		if (unlikely(credits < csum)) {
- 			pr_warn("csk 0x%p,%u, cr %u,%u+%u, < %u.\n",
- 				csk,  csk->tid,
+ 	/*
+-	 * USB has unusual scatter-gather requirements: the length of each
+-	 * scatterlist element except the last must be divisible by the
+-	 * Bulk maxpacket value.  Fortunately this value is always a
+-	 * power of 2.  Inform the block layer about this requirement.
+-	 */
+-	maxp = usb_maxpacket(us->pusb_dev, us->recv_bulk_pipe, 0);
+-	blk_queue_virt_boundary(sdev->request_queue, maxp - 1);
+-
+-	/*
+ 	 * Some host controllers may have alignment requirements.
+ 	 * We'll play it safe by requiring 512-byte alignment always.
+ 	 */
 
 
