@@ -2,214 +2,1122 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13B7AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:55:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A66C5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:56:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9666217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:55:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5CCA22190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:56:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="Awr0eoJX"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PY395sIJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390621AbfKERzx (ORCPT
+        id S2390635AbfKER4I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:55:53 -0500
-Received: from sonic313-15.consmr.mail.ne1.yahoo.com ([66.163.185.38]:44531
-        "EHLO sonic313-15.consmr.mail.ne1.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390579AbfKERzv (ORCPT
+        Tue, 5 Nov 2019 12:56:08 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44169 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390579AbfKER4H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:55:51 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1572976550; bh=m0eV6RivZxxrTplc4CbRCm5zHYpJb9DOad4uWb+vhCw=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=Awr0eoJXkEd6QFwtUmXAJLwk8faDsqvpCf6E1mB+saZtVMb/7XBVJryNEFgh3BjN6Lw4lt24cQr3WYYYhoSouuIf6JbLkaYMV83ZGYxWxulXuSml83FJpS6dXqgPTOP7wTwMGYH0qIfVC2ZpEk3JybJO2COa8ICbqDJIM5J+T4pys5GKUdNW+U965CENDk9V4kelhJT3u1pu+NjaWXhf1EIOWonrQh07C4POQ+M6SwnyXdWUrOtOeoqWrFIxMR5wiraj7Nz6QPp36qTbpySbZWCi1/zoYKklB4rHWW+XPdaT8P+9hVdMJUDBk3I+kLyco73svOwveayrt1quw3pWvw==
-X-YMail-OSG: boHysvYVM1kRFUHZ9YTgzEiGUrRD6LpeCX19W6dQvnFb0N.qjuLyuhD2lbsN8jF
- fPdLfD7ggr39lSRLiDxP_yFwaBWBpJLYqg9erNHrYN_m0FJUyWHuuVzEkgRHI2uqY4Fgc4h_BRQ8
- 6Lo.pcQwigpKCJw0cKXUqfnWLbHaFgO4plSkhmd45SFrp3Xt0rRlE7ABomaEMIOjgkPTaufiLkg.
- YPc04pkayBlVs8a1G9CeFR7M._Yli.e.AuV7eY_AFtej2LNgoVwHETyFd7nuzo7SxpFZ6LXzLvtJ
- l0xjIVGMz4h5nXUKeOvAAJGwNQJBQu.HMl6CkcTHr8g0AzAqcU4ZQZikzF6P61u4rOHxCSHsGYcT
- 7SI2qwyD1t0abVxFiT9n9REV4sZvVK635Qz1LAibkInxQqPWEampAPNtvPggKgRU3R0KjVkDhbSv
- JS3OxlhcTHyrmg.zcLqC1ZHuK4OSmJkChKC1GeTETSqTf9lsFufLxB0BqIl1LrDHwXFY.l1mxhmT
- ICWa.6T9EKsvbNafEZE3Wgju72P5ry8A4dmBGJ7WSaZi06VWvQj57nE_5a3Frir.m5yn_lbfgsEC
- rsvqUP6ru8U8NtlJyNpZsO_g4qv9iAqtJkm5fFWT1_hZXXinHHzNAdGsVlBF8lkToU.SyiJCvXJT
- FsPjtIvQkmtyELvZRe76xiUjP9HqPwXm_CkZtJQNKwocd7wddoqmfeD3wz4iWrnYGGmPfef8rWoC
- qh6tPz1MFZAjuLw67fUTdX4njlv8G1NDJsJ5gR_om3nsabt1JuDtox6oh7rD8CYhoHYPv7ug0qli
- GIZYyEWK.mp87g2UeeKFcZ1aKgPPUaGvQKqvMQvJuT5KjMXrOH0gyxaRXpof82dnkC7RpxqMvMH7
- PKmCCdf8Z1Sy6RoumlNFzx3518Obbe67X0nofTBtYzdZah8xjBKQcQDulFZvAbO0ZEjut.31lfZB
- 2DDB.1PnQ3sSYfYsOY3mfabxlkfe86P00LyOl0eWnr1gKl.0m1jdOsNQkS1OX2ZslQFv5WbQ1SRv
- W7yQayEY44VC7dDsBhENoEMu_FQED643KGs1noeIq3.y4p6CJz8bR6pi4T4e8kakQayt4q_PSTcE
- nXG0vspLjCzv7iVbE8b6qG0cPHcPRCdEjpxVEVqxGdrUG33835cqhP_7YYhYd.cFqRlEYFkSx52z
- .X4Ny1Gt0cEW6C29y5XKfBRN4SFO8xXBCvSzE2.Aazp1Pb.DHnhwzMSRz50dJxGuayhY3BfHQLd0
- zYnFbm3IwEL8Sl8hgPitNzpkrjm5LEFo1XA43ARkEG7KsIQi.syJjOb1KzEcgtphGCHLwwm1Ph37
- .ieYf7EbJ11CHoeza9qlz4rJX3UlREqiIWpMh5CAQa3lXrX6vJtQIytmsKmiG.RuWtk1GlMkJFbX
- Bn3aQrWUehRXIdYGdLjksvtK0DpsHqUjzGjdFyg--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.ne1.yahoo.com with HTTP; Tue, 5 Nov 2019 17:55:50 +0000
-Received: by smtp430.mail.ne1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 55c0493ae714ce5556e2fc4f9f498925;
-          Tue, 05 Nov 2019 17:55:44 +0000 (UTC)
-Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>
-Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        David Drysdale <drysdale@google.com>,
-        Florent Revest <revest@chromium.org>,
-        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
-        John Johansen <john.johansen@canonical.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        KP Singh <kpsingh@chromium.org>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>,
-        Paul Moore <paul@paul-moore.com>,
-        Sargun Dhillon <sargun@sargun.me>,
-        "Serge E . Hallyn" <serge@hallyn.com>,
-        Shuah Khan <shuah@kernel.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Tycho Andersen <tycho@tycho.ws>,
-        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
-        casey@schaufler-ca.com
-References: <20191104172146.30797-1-mic@digikod.net>
- <20191104172146.30797-5-mic@digikod.net>
- <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=casey@schaufler-ca.com; keydata=
- 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
- abzjfg==
-Message-ID: <c5c6b433-7e6a-c8f8-f063-e704c3df4cc6@schaufler-ca.com>
-Date:   Tue, 5 Nov 2019 09:55:42 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 12:56:07 -0500
+Received: by mail-pg1-f196.google.com with SMTP id f19so5680014pgk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 09:56:05 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:from:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=gEtDP14dN6Aopp+R4qBmWYNaj39NX6WXZoaeemngS3Y=;
+        b=PY395sIJIeAvoOi6WRPmLSQFj814XdRslNX2nsBoIxS92tUK4URsIpYMwW8m9776cd
+         sfzc52RQMUaZXMvTIjmjI8YB2eWwbKzuVGcAGkBEDruqEuaflYTU40WUSngDmcpkAA9w
+         G0NM15wjdHgH1mkwzJpEOFqNydQeogFgoTKcaEc1Aq7EXkKRmcSkhUlAOBsdBSX0jHPS
+         1Ha5rwiu4aP1k55U1oIw6sALV2rXAAlQrTshfd05MpXJ0RgQEpSJeT3n5qNkRnMAM7eo
+         H4FpTp9gHydm/zRtPjZIrsUl7Spd8ZNfQsrteth0AOvlQ5nxpcj5l1b/pB019EzzbBfo
+         gh/A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=gEtDP14dN6Aopp+R4qBmWYNaj39NX6WXZoaeemngS3Y=;
+        b=Y2825Zm1njWdayQxr4LHsfxv+dNv3xPONxXBycr1gkG5PGaTZesCZQpM6REETaT+qQ
+         IsSE7d6mRELDNtAgDYQwDEQiGx9he82LVjx77zMEiiQAV30jcM5LYRhghVuAUjSaJErp
+         6y2nCmOMbRwy89cdgyEmGf2LFxeJkvsNgBy9UoM5pQE58XmdpJG0FRJn43SARzIqreWc
+         Y+mw78o4cfwdhQNLsTDH1pbhZZTDwKUvT+nCD4MNY73zHWh3KwrAhm46UNd3Y+7WrIfg
+         6naL8CHiDfBs8eyB5UN4liqkOepLd02Rw3tUXqeNmukI96i8I7XPRAlCbm6vKr2kevdn
+         98zQ==
+X-Gm-Message-State: APjAAAUlw4qeGbRG6NkfPxpoGGjpT+2sOlmtbC8A1Ejew+2ujos4x5n1
+        mP97lK/zdqdB54N5YvItTxXRFHfMYAw=
+X-Google-Smtp-Source: APXvYqxIzbwt1VQ4GnAd4cRx9QszC95A4+wdzauFhSwvV93mlD1EH3Sh83aS41Sk17giA8vmhwk7oA==
+X-Received: by 2002:a17:90a:5895:: with SMTP id j21mr300320pji.129.1572976564735;
+        Tue, 05 Nov 2019 09:56:04 -0800 (PST)
+Received: from localhost ([64.62.168.194])
+        by smtp.gmail.com with ESMTPSA id v19sm75366pjr.14.2019.11.05.09.56.03
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 09:56:04 -0800 (PST)
+Date:   Tue, 5 Nov 2019 09:56:03 -0800 (PST)
+From:   Paul Walmsley <paul.walmsley@sifive.com>
+X-X-Sender: paulw@viisi.sifive.com
+To:     daniel.lezcano@linaro.org, tglx@linutronix.de
+cc:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 01/12] riscv: abstract out CSR names for supervisor vs
+ machine mode
+In-Reply-To: <20191028121043.22934-2-hch@lst.de>
+Message-ID: <alpine.DEB.2.21.9999.1911050955040.20606@viisi.sifive.com>
+References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-2-hch@lst.de>
+User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
-In-Reply-To: <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Content-Language: en-US
-X-Mailer: WebService/1.1.14638 hermes Apache-HttpAsyncClient/4.1.4 (Java/1.8.0_181)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/2019 9:18 AM, Alexei Starovoitov wrote:
-> On Mon, Nov 04, 2019 at 06:21:43PM +0100, Micka=C3=ABl Sala=C3=BCn wrot=
-e:
->> Add a first Landlock hook that can be used to enforce a security polic=
-y
->> or to audit some process activities.  For a sandboxing use-case, it is=
+Daniel, Thomas,
 
->> needed to inform the kernel if a task can legitimately debug another.
->> ptrace(2) can also be used by an attacker to impersonate another task
->> and remain undetected while performing malicious activities.
->>
->> Using ptrace(2) and related features on a target process can lead to a=
+On Mon, 28 Oct 2019, Christoph Hellwig wrote:
 
->> privilege escalation.  A sandboxed task must then be able to tell the
->> kernel if another task is more privileged, via ptrace_may_access().
->>
->> Signed-off-by: Micka=C3=ABl Sala=C3=BCn <mic@digikod.net>
-> ...
->> +static int check_ptrace(struct landlock_domain *domain,
->> +		struct task_struct *tracer, struct task_struct *tracee)
->> +{
->> +	struct landlock_hook_ctx_ptrace ctx_ptrace =3D {
->> +		.prog_ctx =3D {
->> +			.tracer =3D (uintptr_t)tracer,
->> +			.tracee =3D (uintptr_t)tracee,
->> +		},
->> +	};
-> So you're passing two kernel pointers obfuscated as u64 into bpf progra=
-m
-> yet claiming that the end goal is to make landlock unprivileged?!
-> The most basic security hole in the tool that is aiming to provide secu=
-rity.
->
-> I think the only way bpf-based LSM can land is both landlock and KRSI
-> developers work together on a design that solves all use cases. BPF is =
-capable
-> to be a superset of all existing LSMs
+> Many of the privileged CSRs exist in a supervisor and machine version
+> that are used very similarly.  Provide versions of the CSR names and
+> fields that map to either the S-mode or M-mode variant depending on
+> a new CONFIG_RISCV_M_MODE kconfig symbol.
+> 
+> Contains contributions from Damien Le Moal <Damien.LeMoal@wdc.com>
+> and Paul Walmsley <paul.walmsley@sifive.com>.
 
-I can't agree with this. Nope. There are many security models
-for which BPF introduces excessive complexity. You don't need
-or want the generality of a general purpose programming language
-to implement Smack or TOMOYO. Or a simple Bell & LaPadula for
-that matter. SELinux? I can't imagine anyone trying to do that
-in eBPF, although I'm willing to be surprised. Being able to
-enforce a policy isn't the only criteria for an LSM. It's got
-to perform well and integrate with the rest of the system. I
-see many issues with a BPF <-> vfs interface.
-
-> whereas landlock and KRSI propsals today
-> are custom solutions to specific security concerns.
-
-Yes. As they should be. No one has every solved the entire
-security problem, and no one ever will. The only hope we have
-to address security issues is to have the flexibility to add
-the mechanisms needed for the concerns of the day. Ideally,
-we should be able to drop mechanisms when we decide that they
-no longer add value.
-
-> BPF subsystem was extended
-> with custom things in the past. In networking we have lwt, skb, tc, xdp=
-, sk
-> program types with a lot of overlapping functionality. We couldn't figu=
-re out
-> how to generalize them into single 'networking' program. Now we can and=
- we
-> should. Accepting two partially overlapping bpf-based LSMs would be rep=
-eating
-> the same mistake again.
-
-I don't get your analogy at all. You have a variety of programs because
-you have a variety of protocols and administrative interfaces. Of course
-you don't have a single 'networking" program. Security has a variety of
-issues and policies. A single 'security' program makes no sense whatever.=
+Care to give a quick ack to the drivers/clocksource/timer-riscv.c changes?
 
 
+thanks,
 
+- Paul
+
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
+> ---
+>  arch/riscv/Kconfig                 |  4 ++
+>  arch/riscv/include/asm/csr.h       | 72 +++++++++++++++++++++++++----
+>  arch/riscv/include/asm/irqflags.h  | 12 ++---
+>  arch/riscv/include/asm/processor.h |  2 +-
+>  arch/riscv/include/asm/ptrace.h    | 16 +++----
+>  arch/riscv/include/asm/switch_to.h | 10 ++--
+>  arch/riscv/kernel/asm-offsets.c    |  8 ++--
+>  arch/riscv/kernel/entry.S          | 74 +++++++++++++++++-------------
+>  arch/riscv/kernel/fpu.S            |  8 ++--
+>  arch/riscv/kernel/head.S           | 12 ++---
+>  arch/riscv/kernel/irq.c            | 17 ++-----
+>  arch/riscv/kernel/perf_callchain.c |  2 +-
+>  arch/riscv/kernel/process.c        | 17 +++----
+>  arch/riscv/kernel/signal.c         | 21 ++++-----
+>  arch/riscv/kernel/smp.c            |  2 +-
+>  arch/riscv/kernel/traps.c          | 16 +++----
+>  arch/riscv/lib/uaccess.S           | 12 ++---
+>  arch/riscv/mm/extable.c            |  4 +-
+>  arch/riscv/mm/fault.c              |  6 +--
+>  drivers/clocksource/timer-riscv.c  |  8 ++--
+>  drivers/irqchip/irq-sifive-plic.c  | 11 +++--
+>  21 files changed, 199 insertions(+), 135 deletions(-)
+> 
+> diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+> index 8eebbc8860bb..86b7e8b0471c 100644
+> --- a/arch/riscv/Kconfig
+> +++ b/arch/riscv/Kconfig
+> @@ -72,6 +72,10 @@ config ARCH_MMAP_RND_BITS_MAX
+>  	default 24 if 64BIT # SV39 based
+>  	default 17
+>  
+> +# set if we run in machine mode, cleared if we run in supervisor mode
+> +config RISCV_M_MODE
+> +	bool
+> +
+>  config MMU
+>  	def_bool y
+>  
+> diff --git a/arch/riscv/include/asm/csr.h b/arch/riscv/include/asm/csr.h
+> index a18923fa23c8..0ab642811028 100644
+> --- a/arch/riscv/include/asm/csr.h
+> +++ b/arch/riscv/include/asm/csr.h
+> @@ -11,8 +11,11 @@
+>  
+>  /* Status register flags */
+>  #define SR_SIE		_AC(0x00000002, UL) /* Supervisor Interrupt Enable */
+> +#define SR_MIE		_AC(0x00000008, UL) /* Machine Interrupt Enable */
+>  #define SR_SPIE		_AC(0x00000020, UL) /* Previous Supervisor IE */
+> +#define SR_MPIE		_AC(0x00000080, UL) /* Previous Machine IE */
+>  #define SR_SPP		_AC(0x00000100, UL) /* Previously Supervisor */
+> +#define SR_MPP		_AC(0x00001800, UL) /* Previously Machine */
+>  #define SR_SUM		_AC(0x00040000, UL) /* Supervisor User Memory Access */
+>  
+>  #define SR_FS		_AC(0x00006000, UL) /* Floating-point Status */
+> @@ -44,9 +47,10 @@
+>  #define SATP_MODE	SATP_MODE_39
+>  #endif
+>  
+> -/* SCAUSE */
+> -#define SCAUSE_IRQ_FLAG		(_AC(1, UL) << (__riscv_xlen - 1))
+> +/* Exception cause high bit - is an interrupt if set */
+> +#define CAUSE_IRQ_FLAG		(_AC(1, UL) << (__riscv_xlen - 1))
+>  
+> +/* Interrupt causes (minus the high bit) */
+>  #define IRQ_U_SOFT		0
+>  #define IRQ_S_SOFT		1
+>  #define IRQ_M_SOFT		3
+> @@ -57,6 +61,7 @@
+>  #define IRQ_S_EXT		9
+>  #define IRQ_M_EXT		11
+>  
+> +/* Exception causes */
+>  #define EXC_INST_MISALIGNED	0
+>  #define EXC_INST_ACCESS		1
+>  #define EXC_BREAKPOINT		3
+> @@ -67,14 +72,14 @@
+>  #define EXC_LOAD_PAGE_FAULT	13
+>  #define EXC_STORE_PAGE_FAULT	15
+>  
+> -/* SIE (Interrupt Enable) and SIP (Interrupt Pending) flags */
+> -#define SIE_SSIE		(_AC(0x1, UL) << IRQ_S_SOFT)
+> -#define SIE_STIE		(_AC(0x1, UL) << IRQ_S_TIMER)
+> -#define SIE_SEIE		(_AC(0x1, UL) << IRQ_S_EXT)
+> -
+> +/* symbolic CSR names: */
+>  #define CSR_CYCLE		0xc00
+>  #define CSR_TIME		0xc01
+>  #define CSR_INSTRET		0xc02
+> +#define CSR_CYCLEH		0xc80
+> +#define CSR_TIMEH		0xc81
+> +#define CSR_INSTRETH		0xc82
+> +
+>  #define CSR_SSTATUS		0x100
+>  #define CSR_SIE			0x104
+>  #define CSR_STVEC		0x105
+> @@ -85,9 +90,56 @@
+>  #define CSR_STVAL		0x143
+>  #define CSR_SIP			0x144
+>  #define CSR_SATP		0x180
+> -#define CSR_CYCLEH		0xc80
+> -#define CSR_TIMEH		0xc81
+> -#define CSR_INSTRETH		0xc82
+> +
+> +#define CSR_MSTATUS		0x300
+> +#define CSR_MIE			0x304
+> +#define CSR_MTVEC		0x305
+> +#define CSR_MSCRATCH		0x340
+> +#define CSR_MEPC		0x341
+> +#define CSR_MCAUSE		0x342
+> +#define CSR_MTVAL		0x343
+> +#define CSR_MIP			0x344
+> +
+> +#ifdef CONFIG_RISCV_M_MODE
+> +# define CSR_STATUS	CSR_MSTATUS
+> +# define CSR_IE		CSR_MIE
+> +# define CSR_TVEC	CSR_MTVEC
+> +# define CSR_SCRATCH	CSR_MSCRATCH
+> +# define CSR_EPC	CSR_MEPC
+> +# define CSR_CAUSE	CSR_MCAUSE
+> +# define CSR_TVAL	CSR_MTVAL
+> +# define CSR_IP		CSR_MIP
+> +
+> +# define SR_IE		SR_MIE
+> +# define SR_PIE		SR_MPIE
+> +# define SR_PP		SR_MPP
+> +
+> +# define IRQ_SOFT	IRQ_M_SOFT
+> +# define IRQ_TIMER	IRQ_M_TIMER
+> +# define IRQ_EXT	IRQ_M_EXT
+> +#else /* CONFIG_RISCV_M_MODE */
+> +# define CSR_STATUS	CSR_SSTATUS
+> +# define CSR_IE		CSR_SIE
+> +# define CSR_TVEC	CSR_STVEC
+> +# define CSR_SCRATCH	CSR_SSCRATCH
+> +# define CSR_EPC	CSR_SEPC
+> +# define CSR_CAUSE	CSR_SCAUSE
+> +# define CSR_TVAL	CSR_STVAL
+> +# define CSR_IP		CSR_SIP
+> +
+> +# define SR_IE		SR_SIE
+> +# define SR_PIE		SR_SPIE
+> +# define SR_PP		SR_SPP
+> +
+> +# define IRQ_SOFT	IRQ_S_SOFT
+> +# define IRQ_TIMER	IRQ_S_TIMER
+> +# define IRQ_EXT	IRQ_S_EXT
+> +#endif /* CONFIG_RISCV_M_MODE */
+> +
+> +/* IE/IP (Supervisor/Machine Interrupt Enable/Pending) flags */
+> +#define IE_SIE		(_AC(0x1, UL) << IRQ_SOFT)
+> +#define IE_TIE		(_AC(0x1, UL) << IRQ_TIMER)
+> +#define IE_EIE		(_AC(0x1, UL) << IRQ_EXT)
+>  
+>  #ifndef __ASSEMBLY__
+>  
+> diff --git a/arch/riscv/include/asm/irqflags.h b/arch/riscv/include/asm/irqflags.h
+> index e70f647ce3b7..08d4d6a5b7e9 100644
+> --- a/arch/riscv/include/asm/irqflags.h
+> +++ b/arch/riscv/include/asm/irqflags.h
+> @@ -13,31 +13,31 @@
+>  /* read interrupt enabled status */
+>  static inline unsigned long arch_local_save_flags(void)
+>  {
+> -	return csr_read(CSR_SSTATUS);
+> +	return csr_read(CSR_STATUS);
+>  }
+>  
+>  /* unconditionally enable interrupts */
+>  static inline void arch_local_irq_enable(void)
+>  {
+> -	csr_set(CSR_SSTATUS, SR_SIE);
+> +	csr_set(CSR_STATUS, SR_IE);
+>  }
+>  
+>  /* unconditionally disable interrupts */
+>  static inline void arch_local_irq_disable(void)
+>  {
+> -	csr_clear(CSR_SSTATUS, SR_SIE);
+> +	csr_clear(CSR_STATUS, SR_IE);
+>  }
+>  
+>  /* get status and disable interrupts */
+>  static inline unsigned long arch_local_irq_save(void)
+>  {
+> -	return csr_read_clear(CSR_SSTATUS, SR_SIE);
+> +	return csr_read_clear(CSR_STATUS, SR_IE);
+>  }
+>  
+>  /* test flags */
+>  static inline int arch_irqs_disabled_flags(unsigned long flags)
+>  {
+> -	return !(flags & SR_SIE);
+> +	return !(flags & SR_IE);
+>  }
+>  
+>  /* test hardware interrupt enable bit */
+> @@ -49,7 +49,7 @@ static inline int arch_irqs_disabled(void)
+>  /* set interrupt enabled status */
+>  static inline void arch_local_irq_restore(unsigned long flags)
+>  {
+> -	csr_set(CSR_SSTATUS, flags & SR_SIE);
+> +	csr_set(CSR_STATUS, flags & SR_IE);
+>  }
+>  
+>  #endif /* _ASM_RISCV_IRQFLAGS_H */
+> diff --git a/arch/riscv/include/asm/processor.h b/arch/riscv/include/asm/processor.h
+> index f539149d04c2..3ddb798264f1 100644
+> --- a/arch/riscv/include/asm/processor.h
+> +++ b/arch/riscv/include/asm/processor.h
+> @@ -42,7 +42,7 @@ struct thread_struct {
+>  	((struct pt_regs *)(task_stack_page(tsk) + THREAD_SIZE		\
+>  			    - ALIGN(sizeof(struct pt_regs), STACK_ALIGN)))
+>  
+> -#define KSTK_EIP(tsk)		(task_pt_regs(tsk)->sepc)
+> +#define KSTK_EIP(tsk)		(task_pt_regs(tsk)->epc)
+>  #define KSTK_ESP(tsk)		(task_pt_regs(tsk)->sp)
+>  
+>  
+> diff --git a/arch/riscv/include/asm/ptrace.h b/arch/riscv/include/asm/ptrace.h
+> index d48d1e13973c..ee49f80c9533 100644
+> --- a/arch/riscv/include/asm/ptrace.h
+> +++ b/arch/riscv/include/asm/ptrace.h
+> @@ -12,7 +12,7 @@
+>  #ifndef __ASSEMBLY__
+>  
+>  struct pt_regs {
+> -	unsigned long sepc;
+> +	unsigned long epc;
+>  	unsigned long ra;
+>  	unsigned long sp;
+>  	unsigned long gp;
+> @@ -44,10 +44,10 @@ struct pt_regs {
+>  	unsigned long t4;
+>  	unsigned long t5;
+>  	unsigned long t6;
+> -	/* Supervisor CSRs */
+> -	unsigned long sstatus;
+> -	unsigned long sbadaddr;
+> -	unsigned long scause;
+> +	/* Supervisor/Machine CSRs */
+> +	unsigned long status;
+> +	unsigned long badaddr;
+> +	unsigned long cause;
+>  	/* a0 value before the syscall */
+>  	unsigned long orig_a0;
+>  };
+> @@ -58,18 +58,18 @@ struct pt_regs {
+>  #define REG_FMT "%08lx"
+>  #endif
+>  
+> -#define user_mode(regs) (((regs)->sstatus & SR_SPP) == 0)
+> +#define user_mode(regs) (((regs)->status & SR_PP) == 0)
+>  
+>  
+>  /* Helpers for working with the instruction pointer */
+>  static inline unsigned long instruction_pointer(struct pt_regs *regs)
+>  {
+> -	return regs->sepc;
+> +	return regs->epc;
+>  }
+>  static inline void instruction_pointer_set(struct pt_regs *regs,
+>  					   unsigned long val)
+>  {
+> -	regs->sepc = val;
+> +	regs->epc = val;
+>  }
+>  
+>  #define profile_pc(regs) instruction_pointer(regs)
+> diff --git a/arch/riscv/include/asm/switch_to.h b/arch/riscv/include/asm/switch_to.h
+> index f0227bdce0f0..8b5c5c8c36fa 100644
+> --- a/arch/riscv/include/asm/switch_to.h
+> +++ b/arch/riscv/include/asm/switch_to.h
+> @@ -16,19 +16,19 @@ extern void __fstate_restore(struct task_struct *restore_from);
+>  
+>  static inline void __fstate_clean(struct pt_regs *regs)
+>  {
+> -	regs->sstatus = (regs->sstatus & ~SR_FS) | SR_FS_CLEAN;
+> +	regs->status = (regs->status & ~SR_FS) | SR_FS_CLEAN;
+>  }
+>  
+>  static inline void fstate_off(struct task_struct *task,
+>  			      struct pt_regs *regs)
+>  {
+> -	regs->sstatus = (regs->sstatus & ~SR_FS) | SR_FS_OFF;
+> +	regs->status = (regs->status & ~SR_FS) | SR_FS_OFF;
+>  }
+>  
+>  static inline void fstate_save(struct task_struct *task,
+>  			       struct pt_regs *regs)
+>  {
+> -	if ((regs->sstatus & SR_FS) == SR_FS_DIRTY) {
+> +	if ((regs->status & SR_FS) == SR_FS_DIRTY) {
+>  		__fstate_save(task);
+>  		__fstate_clean(regs);
+>  	}
+> @@ -37,7 +37,7 @@ static inline void fstate_save(struct task_struct *task,
+>  static inline void fstate_restore(struct task_struct *task,
+>  				  struct pt_regs *regs)
+>  {
+> -	if ((regs->sstatus & SR_FS) != SR_FS_OFF) {
+> +	if ((regs->status & SR_FS) != SR_FS_OFF) {
+>  		__fstate_restore(task);
+>  		__fstate_clean(regs);
+>  	}
+> @@ -49,7 +49,7 @@ static inline void __switch_to_aux(struct task_struct *prev,
+>  	struct pt_regs *regs;
+>  
+>  	regs = task_pt_regs(prev);
+> -	if (unlikely(regs->sstatus & SR_SD))
+> +	if (unlikely(regs->status & SR_SD))
+>  		fstate_save(prev, regs);
+>  	fstate_restore(next, task_pt_regs(next));
+>  }
+> diff --git a/arch/riscv/kernel/asm-offsets.c b/arch/riscv/kernel/asm-offsets.c
+> index 9f5628c38ac9..07cb9c10de4e 100644
+> --- a/arch/riscv/kernel/asm-offsets.c
+> +++ b/arch/riscv/kernel/asm-offsets.c
+> @@ -71,7 +71,7 @@ void asm_offsets(void)
+>  	OFFSET(TASK_THREAD_FCSR, task_struct, thread.fstate.fcsr);
+>  
+>  	DEFINE(PT_SIZE, sizeof(struct pt_regs));
+> -	OFFSET(PT_SEPC, pt_regs, sepc);
+> +	OFFSET(PT_EPC, pt_regs, epc);
+>  	OFFSET(PT_RA, pt_regs, ra);
+>  	OFFSET(PT_FP, pt_regs, s0);
+>  	OFFSET(PT_S0, pt_regs, s0);
+> @@ -105,9 +105,9 @@ void asm_offsets(void)
+>  	OFFSET(PT_T6, pt_regs, t6);
+>  	OFFSET(PT_GP, pt_regs, gp);
+>  	OFFSET(PT_ORIG_A0, pt_regs, orig_a0);
+> -	OFFSET(PT_SSTATUS, pt_regs, sstatus);
+> -	OFFSET(PT_SBADADDR, pt_regs, sbadaddr);
+> -	OFFSET(PT_SCAUSE, pt_regs, scause);
+> +	OFFSET(PT_STATUS, pt_regs, status);
+> +	OFFSET(PT_BADADDR, pt_regs, badaddr);
+> +	OFFSET(PT_CAUSE, pt_regs, cause);
+>  
+>  	/*
+>  	 * THREAD_{F,X}* might be larger than a S-type offset can handle, but
+> diff --git a/arch/riscv/kernel/entry.S b/arch/riscv/kernel/entry.S
+> index 8ca479831142..b84f8d7f4911 100644
+> --- a/arch/riscv/kernel/entry.S
+> +++ b/arch/riscv/kernel/entry.S
+> @@ -26,14 +26,14 @@
+>  
+>  	/*
+>  	 * If coming from userspace, preserve the user thread pointer and load
+> -	 * the kernel thread pointer.  If we came from the kernel, sscratch
+> -	 * will contain 0, and we should continue on the current TP.
+> +	 * the kernel thread pointer.  If we came from the kernel, the scratch
+> +	 * register will contain 0, and we should continue on the current TP.
+>  	 */
+> -	csrrw tp, CSR_SSCRATCH, tp
+> +	csrrw tp, CSR_SCRATCH, tp
+>  	bnez tp, _save_context
+>  
+>  _restore_kernel_tpsp:
+> -	csrr tp, CSR_SSCRATCH
+> +	csrr tp, CSR_SCRATCH
+>  	REG_S sp, TASK_TI_KERNEL_SP(tp)
+>  _save_context:
+>  	REG_S sp, TASK_TI_USER_SP(tp)
+> @@ -79,16 +79,16 @@ _save_context:
+>  	li t0, SR_SUM | SR_FS
+>  
+>  	REG_L s0, TASK_TI_USER_SP(tp)
+> -	csrrc s1, CSR_SSTATUS, t0
+> -	csrr s2, CSR_SEPC
+> -	csrr s3, CSR_STVAL
+> -	csrr s4, CSR_SCAUSE
+> -	csrr s5, CSR_SSCRATCH
+> +	csrrc s1, CSR_STATUS, t0
+> +	csrr s2, CSR_EPC
+> +	csrr s3, CSR_TVAL
+> +	csrr s4, CSR_CAUSE
+> +	csrr s5, CSR_SCRATCH
+>  	REG_S s0, PT_SP(sp)
+> -	REG_S s1, PT_SSTATUS(sp)
+> -	REG_S s2, PT_SEPC(sp)
+> -	REG_S s3, PT_SBADADDR(sp)
+> -	REG_S s4, PT_SCAUSE(sp)
+> +	REG_S s1, PT_STATUS(sp)
+> +	REG_S s2, PT_EPC(sp)
+> +	REG_S s3, PT_BADADDR(sp)
+> +	REG_S s4, PT_CAUSE(sp)
+>  	REG_S s5, PT_TP(sp)
+>  	.endm
+>  
+> @@ -97,7 +97,7 @@ _save_context:
+>   * registers from the stack.
+>   */
+>  	.macro RESTORE_ALL
+> -	REG_L a0, PT_SSTATUS(sp)
+> +	REG_L a0, PT_STATUS(sp)
+>  	/*
+>  	 * The current load reservation is effectively part of the processor's
+>  	 * state, in the sense that load reservations cannot be shared between
+> @@ -115,11 +115,11 @@ _save_context:
+>  	 * completes, implementations are allowed to expand reservations to be
+>  	 * arbitrarily large.
+>  	 */
+> -	REG_L  a2, PT_SEPC(sp)
+> -	REG_SC x0, a2, PT_SEPC(sp)
+> +	REG_L  a2, PT_EPC(sp)
+> +	REG_SC x0, a2, PT_EPC(sp)
+>  
+> -	csrw CSR_SSTATUS, a0
+> -	csrw CSR_SEPC, a2
+> +	csrw CSR_STATUS, a0
+> +	csrw CSR_EPC, a2
+>  
+>  	REG_L x1,  PT_RA(sp)
+>  	REG_L x3,  PT_GP(sp)
+> @@ -163,10 +163,10 @@ ENTRY(handle_exception)
+>  	SAVE_ALL
+>  
+>  	/*
+> -	 * Set sscratch register to 0, so that if a recursive exception
+> +	 * Set the scratch register to 0, so that if a recursive exception
+>  	 * occurs, the exception vector knows it came from the kernel
+>  	 */
+> -	csrw CSR_SSCRATCH, x0
+> +	csrw CSR_SCRATCH, x0
+>  
+>  	/* Load the global pointer */
+>  .option push
+> @@ -185,11 +185,13 @@ ENTRY(handle_exception)
+>  	move a0, sp /* pt_regs */
+>  	tail do_IRQ
+>  1:
+> -	/* Exceptions run with interrupts enabled or disabled
+> -	   depending on the state of sstatus.SR_SPIE */
+> -	andi t0, s1, SR_SPIE
+> +	/*
+> +	 * Exceptions run with interrupts enabled or disabled depending on the
+> +	 * state of SR_PIE in m/sstatus.
+> +	 */
+> +	andi t0, s1, SR_PIE
+>  	beqz t0, 1f
+> -	csrs CSR_SSTATUS, SR_SIE
+> +	csrs CSR_STATUS, SR_IE
+>  
+>  1:
+>  	/* Handle syscalls */
+> @@ -217,7 +219,7 @@ handle_syscall:
+>  	 * scall instruction on sret
+>  	 */
+>  	addi s2, s2, 0x4
+> -	REG_S s2, PT_SEPC(sp)
+> +	REG_S s2, PT_EPC(sp)
+>  	/* Trace syscalls, but only if requested by the user. */
+>  	REG_L t0, TASK_TI_FLAGS(tp)
+>  	andi t0, t0, _TIF_SYSCALL_WORK
+> @@ -244,9 +246,15 @@ ret_from_syscall:
+>  	bnez t0, handle_syscall_trace_exit
+>  
+>  ret_from_exception:
+> -	REG_L s0, PT_SSTATUS(sp)
+> -	csrc CSR_SSTATUS, SR_SIE
+> +	REG_L s0, PT_STATUS(sp)
+> +	csrc CSR_STATUS, SR_IE
+> +#ifdef CONFIG_RISCV_M_MODE
+> +	/* the MPP value is too large to be used as an immediate arg for addi */
+> +	li t0, SR_MPP
+> +	and s0, s0, t0
+> +#else
+>  	andi s0, s0, SR_SPP
+> +#endif
+>  	bnez s0, resume_kernel
+>  
+>  resume_userspace:
+> @@ -260,14 +268,18 @@ resume_userspace:
+>  	REG_S s0, TASK_TI_KERNEL_SP(tp)
+>  
+>  	/*
+> -	 * Save TP into sscratch, so we can find the kernel data structures
+> -	 * again.
+> +	 * Save TP into the scratch register , so we can find the kernel data
+> +	 * structures again.
+>  	 */
+> -	csrw CSR_SSCRATCH, tp
+> +	csrw CSR_SCRATCH, tp
+>  
+>  restore_all:
+>  	RESTORE_ALL
+> +#ifdef CONFIG_RISCV_M_MODE
+> +	mret
+> +#else
+>  	sret
+> +#endif
+>  
+>  #if IS_ENABLED(CONFIG_PREEMPT)
+>  resume_kernel:
+> @@ -287,7 +299,7 @@ work_pending:
+>  	bnez s1, work_resched
+>  work_notifysig:
+>  	/* Handle pending signals and notify-resume requests */
+> -	csrs CSR_SSTATUS, SR_SIE /* Enable interrupts for do_notify_resume() */
+> +	csrs CSR_STATUS, SR_IE /* Enable interrupts for do_notify_resume() */
+>  	move a0, sp /* pt_regs */
+>  	move a1, s0 /* current_thread_info->flags */
+>  	tail do_notify_resume
+> diff --git a/arch/riscv/kernel/fpu.S b/arch/riscv/kernel/fpu.S
+> index 631d31540660..dd2205473de7 100644
+> --- a/arch/riscv/kernel/fpu.S
+> +++ b/arch/riscv/kernel/fpu.S
+> @@ -23,7 +23,7 @@ ENTRY(__fstate_save)
+>  	li  a2,  TASK_THREAD_F0
+>  	add a0, a0, a2
+>  	li t1, SR_FS
+> -	csrs CSR_SSTATUS, t1
+> +	csrs CSR_STATUS, t1
+>  	frcsr t0
+>  	fsd f0,  TASK_THREAD_F0_F0(a0)
+>  	fsd f1,  TASK_THREAD_F1_F0(a0)
+> @@ -58,7 +58,7 @@ ENTRY(__fstate_save)
+>  	fsd f30, TASK_THREAD_F30_F0(a0)
+>  	fsd f31, TASK_THREAD_F31_F0(a0)
+>  	sw t0, TASK_THREAD_FCSR_F0(a0)
+> -	csrc CSR_SSTATUS, t1
+> +	csrc CSR_STATUS, t1
+>  	ret
+>  ENDPROC(__fstate_save)
+>  
+> @@ -67,7 +67,7 @@ ENTRY(__fstate_restore)
+>  	add a0, a0, a2
+>  	li t1, SR_FS
+>  	lw t0, TASK_THREAD_FCSR_F0(a0)
+> -	csrs CSR_SSTATUS, t1
+> +	csrs CSR_STATUS, t1
+>  	fld f0,  TASK_THREAD_F0_F0(a0)
+>  	fld f1,  TASK_THREAD_F1_F0(a0)
+>  	fld f2,  TASK_THREAD_F2_F0(a0)
+> @@ -101,6 +101,6 @@ ENTRY(__fstate_restore)
+>  	fld f30, TASK_THREAD_F30_F0(a0)
+>  	fld f31, TASK_THREAD_F31_F0(a0)
+>  	fscsr t0
+> -	csrc CSR_SSTATUS, t1
+> +	csrc CSR_STATUS, t1
+>  	ret
+>  ENDPROC(__fstate_restore)
+> diff --git a/arch/riscv/kernel/head.S b/arch/riscv/kernel/head.S
+> index 72f89b7590dd..5cfd2c582945 100644
+> --- a/arch/riscv/kernel/head.S
+> +++ b/arch/riscv/kernel/head.S
+> @@ -47,8 +47,8 @@ ENTRY(_start)
+>  .global _start_kernel
+>  _start_kernel:
+>  	/* Mask all interrupts */
+> -	csrw CSR_SIE, zero
+> -	csrw CSR_SIP, zero
+> +	csrw CSR_IE, zero
+> +	csrw CSR_IP, zero
+>  
+>  	/* Load the global pointer */
+>  .option push
+> @@ -61,7 +61,7 @@ _start_kernel:
+>  	 * floating point in kernel space
+>  	 */
+>  	li t0, SR_FS
+> -	csrc CSR_SSTATUS, t0
+> +	csrc CSR_STATUS, t0
+>  
+>  #ifdef CONFIG_SMP
+>  	li t0, CONFIG_NR_CPUS
+> @@ -116,7 +116,7 @@ relocate:
+>  	/* Point stvec to virtual address of intruction after satp write */
+>  	la a2, 1f
+>  	add a2, a2, a1
+> -	csrw CSR_STVEC, a2
+> +	csrw CSR_TVEC, a2
+>  
+>  	/* Compute satp for kernel page tables, but don't load it yet */
+>  	srl a2, a0, PAGE_SHIFT
+> @@ -138,7 +138,7 @@ relocate:
+>  1:
+>  	/* Set trap vector to spin forever to help debug */
+>  	la a0, .Lsecondary_park
+> -	csrw CSR_STVEC, a0
+> +	csrw CSR_TVEC, a0
+>  
+>  	/* Reload the global pointer */
+>  .option push
+> @@ -161,7 +161,7 @@ relocate:
+>  #ifdef CONFIG_SMP
+>  	/* Set trap vector to spin forever to help debug */
+>  	la a3, .Lsecondary_park
+> -	csrw CSR_STVEC, a3
+> +	csrw CSR_TVEC, a3
+>  
+>  	slli a3, a0, LGREG
+>  	la a1, __cpu_up_stack_pointer
+> diff --git a/arch/riscv/kernel/irq.c b/arch/riscv/kernel/irq.c
+> index 6d8659388c49..7446b96f8575 100644
+> --- a/arch/riscv/kernel/irq.c
+> +++ b/arch/riscv/kernel/irq.c
+> @@ -11,13 +11,6 @@
+>  #include <linux/seq_file.h>
+>  #include <asm/smp.h>
+>  
+> -/*
+> - * Possible interrupt causes:
+> - */
+> -#define INTERRUPT_CAUSE_SOFTWARE	IRQ_S_SOFT
+> -#define INTERRUPT_CAUSE_TIMER		IRQ_S_TIMER
+> -#define INTERRUPT_CAUSE_EXTERNAL	IRQ_S_EXT
+> -
+>  int arch_show_interrupts(struct seq_file *p, int prec)
+>  {
+>  	show_ipi_stats(p, prec);
+> @@ -29,12 +22,12 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs)
+>  	struct pt_regs *old_regs = set_irq_regs(regs);
+>  
+>  	irq_enter();
+> -	switch (regs->scause & ~SCAUSE_IRQ_FLAG) {
+> -	case INTERRUPT_CAUSE_TIMER:
+> +	switch (regs->cause & ~CAUSE_IRQ_FLAG) {
+> +	case IRQ_TIMER:
+>  		riscv_timer_interrupt();
+>  		break;
+>  #ifdef CONFIG_SMP
+> -	case INTERRUPT_CAUSE_SOFTWARE:
+> +	case IRQ_SOFT:
+>  		/*
+>  		 * We only use software interrupts to pass IPIs, so if a non-SMP
+>  		 * system gets one, then we don't know what to do.
+> @@ -42,11 +35,11 @@ asmlinkage void __irq_entry do_IRQ(struct pt_regs *regs)
+>  		riscv_software_interrupt();
+>  		break;
+>  #endif
+> -	case INTERRUPT_CAUSE_EXTERNAL:
+> +	case IRQ_EXT:
+>  		handle_arch_irq(regs);
+>  		break;
+>  	default:
+> -		pr_alert("unexpected interrupt cause 0x%lx", regs->scause);
+> +		pr_alert("unexpected interrupt cause 0x%lx", regs->cause);
+>  		BUG();
+>  	}
+>  	irq_exit();
+> diff --git a/arch/riscv/kernel/perf_callchain.c b/arch/riscv/kernel/perf_callchain.c
+> index 8d2804f05cf9..cf190197a22f 100644
+> --- a/arch/riscv/kernel/perf_callchain.c
+> +++ b/arch/riscv/kernel/perf_callchain.c
+> @@ -67,7 +67,7 @@ void perf_callchain_user(struct perf_callchain_entry_ctx *entry,
+>  		return;
+>  
+>  	fp = regs->s0;
+> -	perf_callchain_store(entry, regs->sepc);
+> +	perf_callchain_store(entry, regs->epc);
+>  
+>  	fp = user_backtrace(entry, fp, regs->ra);
+>  	while (fp && !(fp & 0x3) && entry->nr < entry->max_stack)
+> diff --git a/arch/riscv/kernel/process.c b/arch/riscv/kernel/process.c
+> index fb3a082362eb..d8149d8c0207 100644
+> --- a/arch/riscv/kernel/process.c
+> +++ b/arch/riscv/kernel/process.c
+> @@ -33,8 +33,8 @@ void show_regs(struct pt_regs *regs)
+>  {
+>  	show_regs_print_info(KERN_DEFAULT);
+>  
+> -	pr_cont("sepc: " REG_FMT " ra : " REG_FMT " sp : " REG_FMT "\n",
+> -		regs->sepc, regs->ra, regs->sp);
+> +	pr_cont("epc: " REG_FMT " ra : " REG_FMT " sp : " REG_FMT "\n",
+> +		regs->epc, regs->ra, regs->sp);
+>  	pr_cont(" gp : " REG_FMT " tp : " REG_FMT " t0 : " REG_FMT "\n",
+>  		regs->gp, regs->tp, regs->t0);
+>  	pr_cont(" t1 : " REG_FMT " t2 : " REG_FMT " s0 : " REG_FMT "\n",
+> @@ -56,23 +56,23 @@ void show_regs(struct pt_regs *regs)
+>  	pr_cont(" t5 : " REG_FMT " t6 : " REG_FMT "\n",
+>  		regs->t5, regs->t6);
+>  
+> -	pr_cont("sstatus: " REG_FMT " sbadaddr: " REG_FMT " scause: " REG_FMT "\n",
+> -		regs->sstatus, regs->sbadaddr, regs->scause);
+> +	pr_cont("status: " REG_FMT " badaddr: " REG_FMT " cause: " REG_FMT "\n",
+> +		regs->status, regs->badaddr, regs->cause);
+>  }
+>  
+>  void start_thread(struct pt_regs *regs, unsigned long pc,
+>  	unsigned long sp)
+>  {
+> -	regs->sstatus = SR_SPIE;
+> +	regs->status = SR_PIE;
+>  	if (has_fpu) {
+> -		regs->sstatus |= SR_FS_INITIAL;
+> +		regs->status |= SR_FS_INITIAL;
+>  		/*
+>  		 * Restore the initial value to the FP register
+>  		 * before starting the user program.
+>  		 */
+>  		fstate_restore(current, regs);
+>  	}
+> -	regs->sepc = pc;
+> +	regs->epc = pc;
+>  	regs->sp = sp;
+>  	set_fs(USER_DS);
+>  }
+> @@ -108,7 +108,8 @@ int copy_thread(unsigned long clone_flags, unsigned long usp,
+>  		const register unsigned long gp __asm__ ("gp");
+>  		memset(childregs, 0, sizeof(struct pt_regs));
+>  		childregs->gp = gp;
+> -		childregs->sstatus = SR_SPP | SR_SPIE; /* Supervisor, irqs on */
+> +		/* Supervisor/Machine, irqs on: */
+> +		childregs->status = SR_PP | SR_PIE;
+>  
+>  		p->thread.ra = (unsigned long)ret_from_kernel_thread;
+>  		p->thread.s[0] = usp; /* fn */
+> diff --git a/arch/riscv/kernel/signal.c b/arch/riscv/kernel/signal.c
+> index b14d7647d800..c639d517bc03 100644
+> --- a/arch/riscv/kernel/signal.c
+> +++ b/arch/riscv/kernel/signal.c
+> @@ -124,7 +124,7 @@ SYSCALL_DEFINE0(rt_sigreturn)
+>  		pr_info_ratelimited(
+>  			"%s[%d]: bad frame in %s: frame=%p pc=%p sp=%p\n",
+>  			task->comm, task_pid_nr(task), __func__,
+> -			frame, (void *)regs->sepc, (void *)regs->sp);
+> +			frame, (void *)regs->epc, (void *)regs->sp);
+>  	}
+>  	force_sig(SIGSEGV);
+>  	return 0;
+> @@ -199,7 +199,7 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
+>  	 * We always pass siginfo and mcontext, regardless of SA_SIGINFO,
+>  	 * since some things rely on this (e.g. glibc's debug/segfault.c).
+>  	 */
+> -	regs->sepc = (unsigned long)ksig->ka.sa.sa_handler;
+> +	regs->epc = (unsigned long)ksig->ka.sa.sa_handler;
+>  	regs->sp = (unsigned long)frame;
+>  	regs->a0 = ksig->sig;                     /* a0: signal number */
+>  	regs->a1 = (unsigned long)(&frame->info); /* a1: siginfo pointer */
+> @@ -208,7 +208,7 @@ static int setup_rt_frame(struct ksignal *ksig, sigset_t *set,
+>  #if DEBUG_SIG
+>  	pr_info("SIG deliver (%s:%d): sig=%d pc=%p ra=%p sp=%p\n",
+>  		current->comm, task_pid_nr(current), ksig->sig,
+> -		(void *)regs->sepc, (void *)regs->ra, frame);
+> +		(void *)regs->epc, (void *)regs->ra, frame);
+>  #endif
+>  
+>  	return 0;
+> @@ -220,10 +220,9 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+>  	int ret;
+>  
+>  	/* Are we from a system call? */
+> -	if (regs->scause == EXC_SYSCALL) {
+> +	if (regs->cause == EXC_SYSCALL) {
+>  		/* Avoid additional syscall restarting via ret_from_exception */
+> -		regs->scause = -1UL;
+> -
+> +		regs->cause = -1UL;
+>  		/* If so, check system call restarting.. */
+>  		switch (regs->a0) {
+>  		case -ERESTART_RESTARTBLOCK:
+> @@ -239,7 +238,7 @@ static void handle_signal(struct ksignal *ksig, struct pt_regs *regs)
+>  			/* fallthrough */
+>  		case -ERESTARTNOINTR:
+>                          regs->a0 = regs->orig_a0;
+> -			regs->sepc -= 0x4;
+> +			regs->epc -= 0x4;
+>  			break;
+>  		}
+>  	}
+> @@ -261,9 +260,9 @@ static void do_signal(struct pt_regs *regs)
+>  	}
+>  
+>  	/* Did we come from a system call? */
+> -	if (regs->scause == EXC_SYSCALL) {
+> +	if (regs->cause == EXC_SYSCALL) {
+>  		/* Avoid additional syscall restarting via ret_from_exception */
+> -		regs->scause = -1UL;
+> +		regs->cause = -1UL;
+>  
+>  		/* Restart the system call - no handlers present */
+>  		switch (regs->a0) {
+> @@ -271,12 +270,12 @@ static void do_signal(struct pt_regs *regs)
+>  		case -ERESTARTSYS:
+>  		case -ERESTARTNOINTR:
+>                          regs->a0 = regs->orig_a0;
+> -			regs->sepc -= 0x4;
+> +			regs->epc -= 0x4;
+>  			break;
+>  		case -ERESTART_RESTARTBLOCK:
+>                          regs->a0 = regs->orig_a0;
+>  			regs->a7 = __NR_restart_syscall;
+> -			regs->sepc -= 0x4;
+> +			regs->epc -= 0x4;
+>  			break;
+>  		}
+>  	}
+> diff --git a/arch/riscv/kernel/smp.c b/arch/riscv/kernel/smp.c
+> index b18cd6c8e8fb..51627c3aa4b8 100644
+> --- a/arch/riscv/kernel/smp.c
+> +++ b/arch/riscv/kernel/smp.c
+> @@ -106,7 +106,7 @@ static void send_ipi_single(int cpu, enum ipi_message_type op)
+>  
+>  static inline void clear_ipi(void)
+>  {
+> -	csr_clear(CSR_SIP, SIE_SSIE);
+> +	csr_clear(CSR_IP, IE_SIE);
+>  }
+>  
+>  void riscv_software_interrupt(void)
+> diff --git a/arch/riscv/kernel/traps.c b/arch/riscv/kernel/traps.c
+> index 10a17e545f43..f218cf0c4f60 100644
+> --- a/arch/riscv/kernel/traps.c
+> +++ b/arch/riscv/kernel/traps.c
+> @@ -40,7 +40,7 @@ void die(struct pt_regs *regs, const char *str)
+>  	print_modules();
+>  	show_regs(regs);
+>  
+> -	ret = notify_die(DIE_OOPS, str, regs, 0, regs->scause, SIGSEGV);
+> +	ret = notify_die(DIE_OOPS, str, regs, 0, regs->cause, SIGSEGV);
+>  
+>  	bust_spinlocks(0);
+>  	add_taint(TAINT_DIE, LOCKDEP_NOW_UNRELIABLE);
+> @@ -85,7 +85,7 @@ static void do_trap_error(struct pt_regs *regs, int signo, int code,
+>  #define DO_ERROR_INFO(name, signo, code, str)				\
+>  asmlinkage void name(struct pt_regs *regs)				\
+>  {									\
+> -	do_trap_error(regs, signo, code, regs->sepc, "Oops - " str);	\
+> +	do_trap_error(regs, signo, code, regs->epc, "Oops - " str);	\
+>  }
+>  
+>  DO_ERROR_INFO(do_trap_unknown,
+> @@ -123,9 +123,9 @@ static inline unsigned long get_break_insn_length(unsigned long pc)
+>  asmlinkage void do_trap_break(struct pt_regs *regs)
+>  {
+>  	if (user_mode(regs))
+> -		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->sepc);
+> -	else if (report_bug(regs->sepc, regs) == BUG_TRAP_TYPE_WARN)
+> -		regs->sepc += get_break_insn_length(regs->sepc);
+> +		force_sig_fault(SIGTRAP, TRAP_BRKPT, (void __user *)regs->epc);
+> +	else if (report_bug(regs->epc, regs) == BUG_TRAP_TYPE_WARN)
+> +		regs->epc += get_break_insn_length(regs->epc);
+>  	else
+>  		die(regs, "Kernel BUG");
+>  }
+> @@ -152,9 +152,9 @@ void __init trap_init(void)
+>  	 * Set sup0 scratch register to 0, indicating to exception vector
+>  	 * that we are presently executing in the kernel
+>  	 */
+> -	csr_write(CSR_SSCRATCH, 0);
+> +	csr_write(CSR_SCRATCH, 0);
+>  	/* Set the exception vector address */
+> -	csr_write(CSR_STVEC, &handle_exception);
+> +	csr_write(CSR_TVEC, &handle_exception);
+>  	/* Enable all interrupts */
+> -	csr_write(CSR_SIE, -1);
+> +	csr_write(CSR_IE, -1);
+>  }
+> diff --git a/arch/riscv/lib/uaccess.S b/arch/riscv/lib/uaccess.S
+> index ed2696c0143d..fecd65657a6f 100644
+> --- a/arch/riscv/lib/uaccess.S
+> +++ b/arch/riscv/lib/uaccess.S
+> @@ -18,7 +18,7 @@ ENTRY(__asm_copy_from_user)
+>  
+>  	/* Enable access to user memory */
+>  	li t6, SR_SUM
+> -	csrs CSR_SSTATUS, t6
+> +	csrs CSR_STATUS, t6
+>  
+>  	add a3, a1, a2
+>  	/* Use word-oriented copy only if low-order bits match */
+> @@ -47,7 +47,7 @@ ENTRY(__asm_copy_from_user)
+>  
+>  3:
+>  	/* Disable access to user memory */
+> -	csrc CSR_SSTATUS, t6
+> +	csrc CSR_STATUS, t6
+>  	li a0, 0
+>  	ret
+>  4: /* Edge case: unalignment */
+> @@ -72,7 +72,7 @@ ENTRY(__clear_user)
+>  
+>  	/* Enable access to user memory */
+>  	li t6, SR_SUM
+> -	csrs CSR_SSTATUS, t6
+> +	csrs CSR_STATUS, t6
+>  
+>  	add a3, a0, a1
+>  	addi t0, a0, SZREG-1
+> @@ -94,7 +94,7 @@ ENTRY(__clear_user)
+>  
+>  3:
+>  	/* Disable access to user memory */
+> -	csrc CSR_SSTATUS, t6
+> +	csrc CSR_STATUS, t6
+>  	li a0, 0
+>  	ret
+>  4: /* Edge case: unalignment */
+> @@ -114,11 +114,11 @@ ENDPROC(__clear_user)
+>  	/* Fixup code for __copy_user(10) and __clear_user(11) */
+>  10:
+>  	/* Disable access to user memory */
+> -	csrs CSR_SSTATUS, t6
+> +	csrs CSR_STATUS, t6
+>  	mv a0, a2
+>  	ret
+>  11:
+> -	csrs CSR_SSTATUS, t6
+> +	csrs CSR_STATUS, t6
+>  	mv a0, a1
+>  	ret
+>  	.previous
+> diff --git a/arch/riscv/mm/extable.c b/arch/riscv/mm/extable.c
+> index 7aed9178d365..2fc729422151 100644
+> --- a/arch/riscv/mm/extable.c
+> +++ b/arch/riscv/mm/extable.c
+> @@ -15,9 +15,9 @@ int fixup_exception(struct pt_regs *regs)
+>  {
+>  	const struct exception_table_entry *fixup;
+>  
+> -	fixup = search_exception_tables(regs->sepc);
+> +	fixup = search_exception_tables(regs->epc);
+>  	if (fixup) {
+> -		regs->sepc = fixup->fixup;
+> +		regs->epc = fixup->fixup;
+>  		return 1;
+>  	}
+>  	return 0;
+> diff --git a/arch/riscv/mm/fault.c b/arch/riscv/mm/fault.c
+> index 96add1427a75..081fab3fbda9 100644
+> --- a/arch/riscv/mm/fault.c
+> +++ b/arch/riscv/mm/fault.c
+> @@ -32,8 +32,8 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  	int code = SEGV_MAPERR;
+>  	vm_fault_t fault;
+>  
+> -	cause = regs->scause;
+> -	addr = regs->sbadaddr;
+> +	cause = regs->cause;
+> +	addr = regs->badaddr;
+>  
+>  	tsk = current;
+>  	mm = tsk->mm;
+> @@ -51,7 +51,7 @@ asmlinkage void do_page_fault(struct pt_regs *regs)
+>  		goto vmalloc_fault;
+>  
+>  	/* Enable interrupts if they were enabled in the parent context. */
+> -	if (likely(regs->sstatus & SR_SPIE))
+> +	if (likely(regs->status & SR_PIE))
+>  		local_irq_enable();
+>  
+>  	/*
+> diff --git a/drivers/clocksource/timer-riscv.c b/drivers/clocksource/timer-riscv.c
+> index 470c7ef02ea4..d083bfb535f6 100644
+> --- a/drivers/clocksource/timer-riscv.c
+> +++ b/drivers/clocksource/timer-riscv.c
+> @@ -19,7 +19,7 @@
+>  static int riscv_clock_next_event(unsigned long delta,
+>  		struct clock_event_device *ce)
+>  {
+> -	csr_set(sie, SIE_STIE);
+> +	csr_set(CSR_IE, IE_TIE);
+>  	sbi_set_timer(get_cycles64() + delta);
+>  	return 0;
+>  }
+> @@ -61,13 +61,13 @@ static int riscv_timer_starting_cpu(unsigned int cpu)
+>  	ce->cpumask = cpumask_of(cpu);
+>  	clockevents_config_and_register(ce, riscv_timebase, 100, 0x7fffffff);
+>  
+> -	csr_set(sie, SIE_STIE);
+> +	csr_set(CSR_IE, IE_TIE);
+>  	return 0;
+>  }
+>  
+>  static int riscv_timer_dying_cpu(unsigned int cpu)
+>  {
+> -	csr_clear(sie, SIE_STIE);
+> +	csr_clear(CSR_IE, IE_TIE);
+>  	return 0;
+>  }
+>  
+> @@ -76,7 +76,7 @@ void riscv_timer_interrupt(void)
+>  {
+>  	struct clock_event_device *evdev = this_cpu_ptr(&riscv_clock_event);
+>  
+> -	csr_clear(sie, SIE_STIE);
+> +	csr_clear(CSR_IE, IE_TIE);
+>  	evdev->event_handler(evdev);
+>  }
+>  
+> diff --git a/drivers/irqchip/irq-sifive-plic.c b/drivers/irqchip/irq-sifive-plic.c
+> index 7d0a12fe2714..8df547d2d935 100644
+> --- a/drivers/irqchip/irq-sifive-plic.c
+> +++ b/drivers/irqchip/irq-sifive-plic.c
+> @@ -181,7 +181,7 @@ static void plic_handle_irq(struct pt_regs *regs)
+>  
+>  	WARN_ON_ONCE(!handler->present);
+>  
+> -	csr_clear(sie, SIE_SEIE);
+> +	csr_clear(CSR_IE, IE_EIE);
+>  	while ((hwirq = readl(claim))) {
+>  		int irq = irq_find_mapping(plic_irqdomain, hwirq);
+>  
+> @@ -191,7 +191,7 @@ static void plic_handle_irq(struct pt_regs *regs)
+>  		else
+>  			generic_handle_irq(irq);
+>  	}
+> -	csr_set(sie, SIE_SEIE);
+> +	csr_set(CSR_IE, IE_EIE);
+>  }
+>  
+>  /*
+> @@ -252,8 +252,11 @@ static int __init plic_init(struct device_node *node,
+>  			continue;
+>  		}
+>  
+> -		/* skip contexts other than supervisor external interrupt */
+> -		if (parent.args[0] != IRQ_S_EXT)
+> +		/*
+> +		 * Skip contexts other than external interrupts for our
+> +		 * privilege level.
+> +		 */
+> +		if (parent.args[0] != IRQ_EXT)
+>  			continue;
+>  
+>  		hartid = plic_find_hart_id(parent.np);
+> -- 
+> 2.20.1
+> 
+> 
+
+
+- Paul
