@@ -2,114 +2,113 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6DEC5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9415C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1351921A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572966017;
-	bh=FOHqMxJfsqatCaBk5cjmzjcWwDv6YlqidixM8TSm1sw=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
-	b=YHnb63A/DZ7TIYCOuopS8PQ3TQfhJatk5w3UYzKRxsm2SROFHcJwdzWJcF0HhMt9G
-	 sF6YCi7WmYbIMEN/clQHpZs0jFMk7LOuwDMjWdxbsX0GfKDgQx+2bX31kZgG6/4/V5
-	 GTL96uZ/BTpE9ZVKW9z+VjjEzOArAvblLpowHdUs=
+	by mail.kernel.org (Postfix) with ESMTP id C019221929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="czjbF4bJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731050AbfKEPAQ (ORCPT
+        id S2389488AbfKEPAS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:00:16 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730833AbfKEPAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:00:15 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DAC0521929;
-        Tue,  5 Nov 2019 15:00:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572966015;
-        bh=FOHqMxJfsqatCaBk5cjmzjcWwDv6YlqidixM8TSm1sw=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:From;
-        b=rPr4oAtsDMazf4gNUTAq7OoXfOY7x5pgPzLVoEBrlo6KTlcZDdQP6qJZa/1OyIVG4
-         7sjzCJzxTGjE4mX3MYmjDU2jAMT0KNjoknSMVJ8xoQHxvZ4GvxdVrJtYUumiFz+DB9
-         OF9qiA537sHjVxU7daZKQuqhIYnvpr5ix4gNdRVU=
-Date:   Tue, 5 Nov 2019 09:00:13 -0600
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191105150013.GA202873@google.com>
+        Tue, 5 Nov 2019 10:00:18 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:35837 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731052AbfKEPAS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:00:18 -0500
+Received: by mail-lj1-f193.google.com with SMTP id r7so13519195ljg.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:00:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=A0J47mNfB1CiTTqNvlw8OxSTbzzjakprFmeLRLsA40w=;
+        b=czjbF4bJIIpFdymzD0VYzoU8AvD2Naal63ivkUKSbvvLHhAX+NeBKxzo5cWnvP/leH
+         RFJDMJuhX1zKthhaX8prQFTqFCvGtg/1dGGbdlj2jNtfJW8a1+Ku26xHltYt5ZkoUuTw
+         JwnZIPr/h51tqKwvNsodT1lTezIP6vShjugsoz4qSE33VssZ2qdHzfQliR1t28vOOaYZ
+         W3uoaSdPHACmYDfHzxF99LacPWGQkza713OiEA8IoRUZUvBbaqvzx53VK3Y0qHeVa6lm
+         Lm31UNSb3MtccHlbVl1y+zdI8iDPsGL3c6/NFRgW7KG7ePRQQCOtuBghu3e9znZVvtfB
+         yisQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=A0J47mNfB1CiTTqNvlw8OxSTbzzjakprFmeLRLsA40w=;
+        b=NDvRtMZnuEWQkpVqUBN2Z+Hf1fb8ItQlzo/su9LBBOE/aHenq5FhLyaNBBOz8nogTE
+         r/mHr/32Xx1q9J970Dk4QZO+obI9vlT/LPTl7GF7RD96vQikzCtGuwS62lE+GbBrT6Wm
+         d0cdAwyJGspUe42cRwSWB8qFRZJkRBcXG6pNn7sAyjQ5T50dzQYULUeaYCC4v2CNXk+D
+         55x/ZtyoCYxN9Y53dvCF+flj1M0/emvC9gklCJYrjqWdvmFci9QX+DyfR2LvxdUaWFuX
+         uyCA2G8EsEoB2QR5scO9IAn4UeiCBDZsvXJ/4ehAU1kdobh3EmNWQQxLqWeJmx1sGfWt
+         DY9g==
+X-Gm-Message-State: APjAAAWugnwTBki9/Ins2ew1kzDOCyWaaHQi1eg+2Aq6z8qO5xnUpxw/
+        tFnHxLt/EfyzVvSX8G/ujz6nlQXDMvGxGwjR6tuATg==
+X-Google-Smtp-Source: APXvYqx2hH3qqZvjxmbSbjmVEkQ3AniK+8AaU1txtZBR2GshkriQsIRZP0d8VSk4GI/32mLIvEISfSEYMnFQfciwvNg=
+X-Received: by 2002:a2e:161b:: with SMTP id w27mr23621673ljd.183.1572966015403;
+ Tue, 05 Nov 2019 07:00:15 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105095428.GR2552@lahna.fi.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 16:00:04 +0100
+Message-ID: <CACRpkdZrum7MrNCMS9jaLb0OEMEjHu+xZaL9AbsqyLEz+m97YA@mail.gmail.com>
+Subject: [GIT PULL] GPIO fixes for v5.4
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 11:54:28AM +0200, Mika Westerberg wrote:
-> On Mon, Nov 04, 2019 at 06:00:00PM -0600, Bjorn Helgaas wrote:
+Hi Linus,
 
-> > > If you think it is fine to do the delay before we have restored
-> > > everything I can move it inside pci_power_up() or call it after
-> > > pci_pm_default_resume_early() as above. I think at least we should make
-> > > sure all the saved registers are restored before so that the link
-> > > activation check actually works.
-> > 
-> > What needs to be restored to make pcie_wait_for_link_delay() work?
-> 
-> I'm not entirely sure. I think that pci_restore_state() at least should
-> be called so that the PCIe capability gets restored. Maybe not even
-> that because Data Link Layer Layer Active always reflects the DL_Active
-> or not and it does not need to be enabled separately.
-> 
-> > And what event does the restore need to be ordered with?
-> 
-> Not sure I follow you here.
+more GPIO fixes! We found a late regression in the Intel
+Merrifield driver. Oh well. We fixed it up.
 
-You're suggesting that we should restore saved registers first so
-pcie_wait_for_link_delay() works.  If the link activation depends on
-something being restored and we don't enforce an ordering, the
-activation might succeed or fail depending on whether it happens
-before or after the restore.  So if there is a dependency, we should
-make it explicit to avoid a race like that.
+More details in the signed tag.
 
-But I'm not saying we *shouldn't* do the restore before the wait; only
-that any dependency should be explicit.  Even if there is no actual
-dependency it probably makes sense to do the restore first so it can
-overlap with the hardware link training, which may reduce the time
-pcie_wait_for_link_delay() has to wait when we do call it, e.g.,
+Please pull it in!
 
-  |-----------------|          link activation
-     |-----|                   restore state
-           |--------|          pcie_wait_for_link_delay()
+Yours,
+Linus Walleij
 
-whereas if we do the restore after waiting for the link to come up, it
-probably takes longer:
+The following changes since commit 7d194c2100ad2a6dded545887d02754948ca5241:
 
-  |-----------------|          link activation
-     |--------------|          pcie_wait_for_link_delay()
-                    |-----|    restore state
+  Linux 5.4-rc4 (2019-10-20 15:56:22 -0400)
 
-I actually suspect there *is* a dependency -- we should respect the
-Target Link Speed and and width so the link resumes in the same
-configuration it was before suspend.  And I suspect that may require
-an explicit retrain after restoring PCI_EXP_LNKCTL2.
+are available in the Git repository at:
 
-Bjorn
+  git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git
+tags/gpio-v5.4-4
+
+for you to fetch changes up to 1173c3c28abfc3d7b7665db502280ba9322320e6:
+
+  Revert "gpio: merrifield: Pass irqchip when adding gpiochip"
+(2019-11-03 23:41:11 +0100)
+
+----------------------------------------------------------------
+GPIO fixes for the v5.4 series:
+
+- Fix a build error in the tools used for kselftest.
+- A series of reverts to bring the Intel Merrifield back to
+  working. We will likely unrevert the reverts for v5.5
+  but we can't have v5.4 broken.
+
+----------------------------------------------------------------
+Linus Walleij (4):
+      Merge tag 'gpio-v5.4-rc5-fixes-for-linus' of
+git://git.kernel.org/.../brgl/linux into fixes
+      Revert "gpio: merrifield: Move hardware initialization to callback"
+      Revert "gpio: merrifield: Restore use of irq_base"
+      Revert "gpio: merrifield: Pass irqchip when adding gpiochip"
+
+Shuah Khan (1):
+      tools: gpio: Use !building_out_of_srctree to determine srctree
+
+ drivers/gpio/gpio-merrifield.c | 33 +++++++++++++--------------------
+ tools/gpio/Makefile            |  6 +++++-
+ 2 files changed, 18 insertions(+), 21 deletions(-)
