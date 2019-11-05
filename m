@@ -2,223 +2,130 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07582CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6902CCA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:16:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D104D20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3EB6820659
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:16:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="f3DLqOFr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfKEFOh (ORCPT
+        id S1730318AbfKEFQp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:14:37 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59040 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725385AbfKEFOh (ORCPT
+        Tue, 5 Nov 2019 00:16:45 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54091 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725973AbfKEFQp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:14:37 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA557BKZ175297
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 00:14:35 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w14m4109v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 00:14:34 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <erichte@linux.ibm.com>;
-        Tue, 5 Nov 2019 05:14:32 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 05:14:29 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA55ERdR50397194
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 05:14:27 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B24004C046;
-        Tue,  5 Nov 2019 05:14:27 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EBC1D4C040;
-        Tue,  5 Nov 2019 05:14:25 +0000 (GMT)
-Received: from [9.80.237.45] (unknown [9.80.237.45])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Nov 2019 05:14:25 +0000 (GMT)
-Subject: Re: [PATCH v10 1/9] powerpc: detect the secure boot mode of the
- system
-To:     Mimi Zohar <zohar@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        "Oliver O'Halloran" <oohall@gmail.com>
-References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
- <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
-From:   Eric Richter <erichte@linux.ibm.com>
-Date:   Mon, 4 Nov 2019 23:14:25 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.0
+        Tue, 5 Nov 2019 00:16:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id x4so8138929wmi.3
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 21:16:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:to:from:cc;
+        bh=D60qdc1NRvgwenO+TXiB5E0z4E0k/lieVI8azX+EcZc=;
+        b=f3DLqOFrjpgzmPUXH4bpPpGlH3o5Lc+NLEIH4yBsrQaPvqhZekoFfQAE4vpH5b2qy8
+         SYd5UFhisDkT6mq7L3uR/s75is0+O5kWvsmIBVQ7P4aw44LQF8nFipkwM+aHcNTqmIeG
+         Zhw4SyW80iAVMs2TTyAD26Q5+8rxwGpyKSVHrUkgVWgIJ4lAAxc4LoLe7WIaPozldyqL
+         96KR3CXtDdxXQwhzGWGtqEhsA1O2xY3uOcHJAcY/9klI5SBXqWMJmHxoB5BxRE5MNJnZ
+         a+yPMKKWwqeu6m91/DLUQDpQb0Ub1nDDfz8a84UGVEQr5DKvG/gS9uujVedrp6i5PluO
+         HTFg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
+        bh=D60qdc1NRvgwenO+TXiB5E0z4E0k/lieVI8azX+EcZc=;
+        b=G03dPp22ai837fZNllruvVPiLGb+6SY7tk8XtsxO9SFGOOzGhfsL6S+4rYk6gOfLmt
+         gk2mqztBhJDS62xTOqf5O1Q56NVfbJjkYK1GE1Rg/n8Cj3lXVIoz9vIIRhsFQ6yPRV+C
+         bfHuuv9br8IJdhnNMlMX4UawuzFXCPJntBzYAIajQDgyyg1px8eFCLpQzBCZqqf2lAXj
+         1AYGbL69xGiBwSP/GCfx/Zi0AMoSgFQ4lQIKuaU93FlLn6n5XAhV7oZBNyBVNIc/T0ja
+         WCFoMbnlcb6GM4+i//MjJT6SBQVHLDFy0kz/JuKvI8/sT01ZJXPSO9vRqDOVB27UclGt
+         5UUA==
+X-Gm-Message-State: APjAAAW/2/j4WfUviiVgbge8YjWukqnysXUWir0o7kK9k/dPh8UtHscE
+        k0NyPBXL1aAVPcpkkkergV2JKg==
+X-Google-Smtp-Source: APXvYqzfzfdJb9tGDYwRo863AgM99Kaz6mN4+R1YpWqwU774e2cj27yCvcpXpS71io4NSQ2ZK8sWKg==
+X-Received: by 2002:a1c:6885:: with SMTP id d127mr2234172wmc.64.1572931002647;
+        Mon, 04 Nov 2019 21:16:42 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id p1sm760413wmc.30.2019.11.04.21.16.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 21:16:42 -0800 (PST)
+Message-ID: <5dc105ba.1c69fb81.4d466.4f55@mx.google.com>
+Date:   Mon, 04 Nov 2019 21:16:42 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110505-4275-0000-0000-0000037AD8D9
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110505-4276-0000-0000-0000388E21BD
-Message-Id: <09a57ae4-c7b1-aaf4-0f89-a0d7ed16f6cf@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911050040
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: linux-5.3.y
+X-Kernelci-Tree: stable-rc
+X-Kernelci-Report-Type: boot
+X-Kernelci-Kernel: v5.3.8-164-g75c9913bbf6e
+In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
+References: <20191104212140.046021995@linuxfoundation.org>
+Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/30/19 10:31 PM, Mimi Zohar wrote:
-> From: Nayna Jain <nayna@linux.ibm.com>
-> 
-> This patch defines a function to detect the secure boot state of a
-> PowerNV system.
-> 
-> The PPC_SECURE_BOOT config represents the base enablement of secure boot
-> for powerpc.
-> 
-> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-> ---
->  arch/powerpc/Kconfig                   | 10 ++++++++++
->  arch/powerpc/include/asm/secure_boot.h | 23 +++++++++++++++++++++++
->  arch/powerpc/kernel/Makefile           |  2 ++
->  arch/powerpc/kernel/secure_boot.c      | 32 ++++++++++++++++++++++++++++++++
->  4 files changed, 67 insertions(+)
->  create mode 100644 arch/powerpc/include/asm/secure_boot.h
->  create mode 100644 arch/powerpc/kernel/secure_boot.c
-> 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index 3e56c9c2f16e..56ea0019b616 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -934,6 +934,16 @@ config PPC_MEM_KEYS
->  
->  	  If unsure, say y.
->  
-> +config PPC_SECURE_BOOT
-> +	prompt "Enable secure boot support"
-> +	bool
-> +	depends on PPC_POWERNV
-> +	help
-> +	  Systems with firmware secure boot enabled need to define security
-> +	  policies to extend secure boot to the OS. This config allows a user
-> +	  to enable OS secure boot on systems that have firmware support for
-> +	  it. If in doubt say N.
-> +
->  endmenu
->  
->  config ISA_DMA_API
-> diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
-> new file mode 100644
-> index 000000000000..07d0fe0ca81f
-> --- /dev/null
-> +++ b/arch/powerpc/include/asm/secure_boot.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Secure boot definitions
-> + *
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain
-> + */
-> +#ifndef _ASM_POWER_SECURE_BOOT_H
-> +#define _ASM_POWER_SECURE_BOOT_H
-> +
-> +#ifdef CONFIG_PPC_SECURE_BOOT
-> +
-> +bool is_ppc_secureboot_enabled(void);
-> +
-> +#else
-> +
-> +static inline bool is_ppc_secureboot_enabled(void)
-> +{
-> +	return false;
-> +}
-> +
-> +#endif
-> +#endif
-> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
-> index a7ca8fe62368..e2a54fa240ac 100644
-> --- a/arch/powerpc/kernel/Makefile
-> +++ b/arch/powerpc/kernel/Makefile
-> @@ -161,6 +161,8 @@ ifneq ($(CONFIG_PPC_POWERNV)$(CONFIG_PPC_SVM),)
->  obj-y				+= ucall.o
->  endif
->  
-> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
-> +
->  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
->  GCOV_PROFILE_prom_init.o := n
->  KCOV_INSTRUMENT_prom_init.o := n
-> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
-> new file mode 100644
-> index 000000000000..63dc82c50862
-> --- /dev/null
-> +++ b/arch/powerpc/kernel/secure_boot.c
-> @@ -0,0 +1,32 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2019 IBM Corporation
-> + * Author: Nayna Jain
-> + */
-> +#include <linux/types.h>
-> +#include <linux/of.h>
-> +#include <asm/secure_boot.h>
-> +
-> +bool is_ppc_secureboot_enabled(void)
-> +{
-> +	struct device_node *node;
-> +	bool enabled = false;
-> +
-> +	node = of_find_compatible_node(NULL, NULL, "ibm,secvar-v1");
+stable-rc/linux-5.3.y boot: 128 boots: 1 failed, 120 passed with 7 offline =
+(v5.3.8-164-g75c9913bbf6e)
 
-Per skiboot changes, should instead look for "ibm,secureboot".
+Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
+-5.3.y/kernel/v5.3.8-164-g75c9913bbf6e/
+Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-5.3.y=
+/kernel/v5.3.8-164-g75c9913bbf6e/
 
-Updated set can be found here:
-https://patchwork.ozlabs.org/project/skiboot/list/?series=140626
+Tree: stable-rc
+Branch: linux-5.3.y
+Git Describe: v5.3.8-164-g75c9913bbf6e
+Git Commit: 75c9913bbf6e9e64cb669236571e6af45cddfd68
+Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
+e-rc.git
+Tested: 77 unique boards, 25 SoC families, 16 builds out of 208
 
-> +	if (!of_device_is_available(node)) {
-> +		pr_err("Cannot find secure variable node in device tree; failing to secure state\n");
+Boot Failure Detected:
 
-The default value for "enabled" is false, so it's actually failing insecure. Although, the print is
-probably unnecessary.
+arm64:
+    defconfig:
+        gcc-8:
+            meson-gxl-s805x-libretech-ac: 1 failed lab
 
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * secureboot is enabled if os-secure-enforcing property exists,
-> +	 * else disabled.
-> +	 */
-> +	enabled = of_property_read_bool(node, "os-secure-enforcing");
+Offline Platforms:
 
-Property has been renamed to "os-secureboot-enforcing".
+arm:
 
-> +> +out:
-> +	of_node_put(node);
-> +
-> +	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
-> +	return enabled;
-> +}
-> 
+    sunxi_defconfig:
+        gcc-8
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
 
+    multi_v7_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+            sun5i-r8-chip: 1 offline lab
+            sun7i-a20-bananapi: 1 offline lab
+
+    davinci_all_defconfig:
+        gcc-8
+            dm365evm,legacy: 1 offline lab
+
+    qcom_defconfig:
+        gcc-8
+            qcom-apq8064-cm-qs600: 1 offline lab
+
+---
+For more info write to <info@kernelci.org>
