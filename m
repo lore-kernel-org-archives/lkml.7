@@ -2,79 +2,99 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 690BAC5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE701C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3459F214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E35D214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729809AbfKEUt6 (ORCPT
+        id S1729893AbfKEUuJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:49:58 -0500
-Received: from foss.arm.com ([217.140.110.172]:32788 "EHLO foss.arm.com"
+        Tue, 5 Nov 2019 15:50:09 -0500
+Received: from foss.arm.com ([217.140.110.172]:32816 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727888AbfKEUt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1729760AbfKEUt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Nov 2019 15:49:57 -0500
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DEAD111B3;
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF31412FC;
         Tue,  5 Nov 2019 12:49:56 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9AD203FB7F;
-        Tue,  5 Nov 2019 01:04:38 -0800 (PST)
-Date:   Tue, 5 Nov 2019 09:04:26 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 10/17] arm64: disable kretprobes with SCS
-Message-ID: <20191105090426.GA4743@lakrids.cambridge.arm.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-11-samitolvanen@google.com>
- <20191104170454.GA2024@lakrids.cambridge.arm.com>
- <CABCJKue=yZqe23DYg3_WyiSKhxXS+GXe+3skhvYon4ytkfH+XA@mail.gmail.com>
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96B3340139;
+        Tue,  5 Nov 2019 04:32:50 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:32:40 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        roy.zang@nxp.com, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Message-ID: <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CABCJKue=yZqe23DYg3_WyiSKhxXS+GXe+3skhvYon4ytkfH+XA@mail.gmail.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 03:42:09PM -0800, Sami Tolvanen wrote:
-> On Mon, Nov 4, 2019 at 9:05 AM Mark Rutland <mark.rutland@arm.com> wrote:
-> > I'm a bit confused as to why that's the case -- could you please
-> > elaborate on how this is incompatible?
-> >
-> > IIUC kretrobes works by patching the function entry point with a BRK, so
-> > that it can modify the LR _before_ it is saved to the stack. I don't see
-> > how SCS affects that.
+On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
+> Add support for the LS1028a PCIe controller.
 > 
-> You're correct. While this may not be optimal for reducing attack
-> surface, I just tested this to confirm that there's no functional
-> conflict. I'll drop this and related patches from v5.
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> ---
+> v2:
+>  - No change.
+> v3:
+>  - Reuse the ls2088 driver data structurt.
+> v4:
+>  - No change.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
+>  1 file changed, 1 insertion(+)
 
-Great; thanks for confirming!
+I have not seen any comment on any layerscape driver patches
+coming from the maintainers as listed in the MAINTAINERS
+file (and CCed in this series).
 
-Mark.
+I request maintainers ACK on these patches and I expect them
+to start reviewing your code if they want to be still considered
+maintainers for this driver.
+
+The changes look OK minus Shawn's remark on compatible string
+that was ignored.
+
+Thanks,
+Lorenzo
+
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
+> index 3a5fa26..f24f79a 100644
+> --- a/drivers/pci/controller/dwc/pci-layerscape.c
+> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
+> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
+>  static const struct of_device_id ls_pcie_of_match[] = {
+>  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
+> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
+>  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
+>  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
+>  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
+> -- 
+> 2.9.5
+> 
