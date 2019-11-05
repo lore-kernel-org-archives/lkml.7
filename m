@@ -2,111 +2,105 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 676A7CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93A64CA9ED0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:08:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A02E20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A19720869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:08:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="ShdaYUK+"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ErOLakDQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730436AbfKEGGe (ORCPT
+        id S2387521AbfKEGIV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:06:34 -0500
-Received: from gateway24.websitewelcome.com ([192.185.50.45]:25179 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727063AbfKEGGd (ORCPT
+        Tue, 5 Nov 2019 01:08:21 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:36242 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725800AbfKEGIV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:06:33 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id C788D378
-        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 23:42:33 -0600 (CST)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id Rrbtihw2yBnGaRrbtiKdsz; Mon, 04 Nov 2019 23:42:33 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
-        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
-        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0e1qX27Ap8ajDLmuZXwZOfgehLgO/33J03C0zj3Kqnk=; b=ShdaYUK+4tFBVA/UwyB2NUaYwa
-        9K0Hr9Vt9i9qFwvqRrsYMSTeu2kpsP87ztp8xoEE6JWiRbKunU9FyjV8Y5W9AiNv40SnbOByMcZqM
-        veoNKzz6qgq8q7bwGcnJRrhpof+H9PM77m/WmlY6HDCKmko1ZMsS/70R3mZDTCLtFoTpCtloMUq2R
-        9dTWC69fw4JC5sAfhn+ezZbPuHk8P+GkQfIMCUYLQec4Q2Qc0cqrE633vjMVFJP/DxwQkZCAx24ve
-        5ok+zLy7azXnqufh1k646xFH9iiPJ/orn7l8EStfeIkHwfjH6BCQCmrhzG5IS2aAzCq5dVn+O15HK
-        g8javk7g==;
-Received: from [191.31.196.28] (port=37450 helo=castello.castello)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.92)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1iRrbt-002sjK-0w; Tue, 05 Nov 2019 02:42:33 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v5 3/5] devicetree: mfd: max14577: Add reference to max14040_battery.txt descriptions
-Date:   Tue,  5 Nov 2019 02:42:16 -0300
-Message-Id: <20191105054218.29826-4-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.24.0.rc2
-In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
+        Tue, 5 Nov 2019 01:08:21 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA568ADZ075972;
+        Tue, 5 Nov 2019 00:08:10 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572934090;
+        bh=Lj8BuL9H7FwKRGUfF3Cm96AZFzlChHbAeMHo+XORVoY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=ErOLakDQbiDbOLj3bzCsc+GL6gKpscJhlH5/6IAu5lSYNGJbdQJ72jRR8cXMkX8Np
+         /zLi02UkEswhjGZxWaeFYeieseEHoPmWXr+9WKXBjPOaUZySYrxrkD93RsCEHfuM/1
+         JZ/KYzCCocAosFZyuySaxAHiaHuhJwY6pCScF14I=
+Received: from DFLE110.ent.ti.com (dfle110.ent.ti.com [10.64.6.31])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA568A60059425;
+        Tue, 5 Nov 2019 00:08:10 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
+ 2019 00:07:55 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 5 Nov 2019 00:07:55 -0600
+Received: from [172.24.191.45] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5686kK089087;
+        Tue, 5 Nov 2019 00:08:07 -0600
+Subject: Re: [PATCH -next] thermal: ti-soc-thermal: Remove dev_err() on
+ platform_get_irq() failure
+To:     YueHaibing <yuehaibing@huawei.com>, <edubezval@gmail.com>,
+        <rui.zhang@intel.com>, <daniel.lezcano@linaro.org>,
+        <amit.kucheria@verdurent.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-omap@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+References: <20191102075654.36700-1-yuehaibing@huawei.com>
+From:   Keerthy <j-keerthy@ti.com>
+Message-ID: <655d95c2-20d2-e03f-539e-32fbe69da9fc@ti.com>
+Date:   Tue, 5 Nov 2019 11:38:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.31.196.28
-X-Source-L: No
-X-Exim-ID: 1iRrbt-002sjK-0w
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (castello.castello) [191.31.196.28]:37450
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 49
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+In-Reply-To: <20191102075654.36700-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-max77836 MFD has a fuel gauge that has a low SOC alert feature that is
-described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
-Adding the reference to de documentation here.
-
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-index fc6f0f4e8beb..04d790b1513c 100644
---- a/Documentation/devicetree/bindings/mfd/max14577.txt
-+++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-@@ -5,6 +5,8 @@ Battery Charger and SFOUT LDO output for powering USB devices. It is
- interfaced to host controller using I2C.
-
- MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-+For the description of Fuel Gauge low SOC alert interrupt see:
-+Documentation/devicetree/bindings/power/supply/max17040_battery.txt
 
 
- Required properties:
---
-2.24.0.rc2
+On 02/11/19 1:26 PM, YueHaibing wrote:
+> platform_get_irq() will call dev_err() itself on failure,
+> so there is no need for the driver to also do this.
+> This is detected by coccinelle.
 
+Acked-by: Keerthy <j-keerthy@ti.com>
+
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   drivers/thermal/ti-soc-thermal/ti-bandgap.c | 5 ++---
+>   1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> index 2fa78f7..89c3ba7 100644
+> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+> @@ -787,10 +787,9 @@ static int ti_bandgap_talert_init(struct ti_bandgap *bgp,
+>   	int ret;
+>   
+>   	bgp->irq = platform_get_irq(pdev, 0);
+> -	if (bgp->irq < 0) {
+> -		dev_err(&pdev->dev, "get_irq failed\n");
+> +	if (bgp->irq < 0)
+>   		return bgp->irq;
+> -	}
+> +
+>   	ret = request_threaded_irq(bgp->irq, NULL,
+>   				   ti_bandgap_talert_irq_handler,
+>   				   IRQF_TRIGGER_HIGH | IRQF_ONESHOT,
+> 
