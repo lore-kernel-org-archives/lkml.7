@@ -2,202 +2,114 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3456C010A5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66507C010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:26:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82BA2206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="JZQwP52V"
+	by mail.kernel.org (Postfix) with ESMTP id 42DCF217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:26:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388508AbfKEK0Y (ORCPT
+        id S2388556AbfKEK0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:26:24 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:46706 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388022AbfKEK0X (ORCPT
+        Tue, 5 Nov 2019 05:26:38 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:36528 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388518AbfKEK0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:26:23 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5AQD21017658;
-        Tue, 5 Nov 2019 04:26:13 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572949573;
-        bh=IFucLBCBxa8OwPq1KzmlD9yZTlwYiToruI+3JUHGiQA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=JZQwP52V5JvRwsFemlFb4p/8+JMAqv3MOJbXlLvUW7XqUngO12OIY4uusDE1XUxBI
-         rufN6hEUhznbr3LM/g92kJyl36QIqtUor2VAtee+WvlubWR2++JINDIXgPegygdgGS
-         jpWuX5X5wz28a589KmQ1wWiVZQmBH5uz8tKcASO0=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5AQCW0111739
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 04:26:13 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 04:25:56 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 5 Nov 2019 04:25:56 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5AQ62u097059;
-        Tue, 5 Nov 2019 04:26:07 -0600
-Subject: Re: [PATCH v4 07/15] dmaengine: ti: k3 PSI-L remote endpoint
- configuration
-To:     Grygorii Strashko <grygorii.strashko@ti.com>, <vkoul@kernel.org>,
-        <robh+dt@kernel.org>, <nm@ti.com>, <ssantosh@kernel.org>
-CC:     <dan.j.williams@intel.com>, <dmaengine@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <lokeshvutla@ti.com>, <t-kristo@ti.com>, <tony@atomide.com>,
-        <j-keerthy@ti.com>
-References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
- <20191101084135.14811-8-peter.ujfalusi@ti.com>
- <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <aca16f7e-1807-188e-8beb-8a086af2869b@ti.com>
-Date:   Tue, 5 Nov 2019 12:27:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 05:26:37 -0500
+Received: by mail-lj1-f193.google.com with SMTP id k15so9054105lja.3;
+        Tue, 05 Nov 2019 02:26:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=IFjUGuI3ulVgt4ueQzweecNMeh52xwxpjnMtYpKO30k=;
+        b=hxOc+w6zIYwCav103Eji3b7wV8rGPtAR4GZ6S89V6xhfQqMB/5wpcxjOEtd03aFyjF
+         My6aTeMjRufTi55uqonU/VCjLBs6uA87ZPrTvsxvvE9ddvfMtODkdmCSOhHjxb9nF+Qo
+         cUR0fVpCkYY61UNlyR8esyRRddFwpXchXZDug7b/9WYI3r6CpeRqUaQarhbgtOiN/VbW
+         OQkpPjfwOFnFIV4PbibWV615LlNcT5grVZNam6dMrheoTZ2NO8eHOJpypE72+1kSw6ef
+         5J/VAnDgAV6ll005syCHEgZ5272UO0GFBrwT9NtqhETAietMAswdK1sQSQDf5EwNi2XR
+         +sSQ==
+X-Gm-Message-State: APjAAAWxp+31RzGCLG36/kG4GbvnUrecEEavQJRJHDROY/37m2i5j//I
+        wWJxvWasp3OEXyAVXZXlmbw=
+X-Google-Smtp-Source: APXvYqy8beBRgRqwBS8w8DAGqAgb3XZDbjvNI0FnIKwapbeGVtCNnUPErWGV8yj+8sR4iVURMT5xNA==
+X-Received: by 2002:a2e:6a19:: with SMTP id f25mr804262ljc.147.1572949595505;
+        Tue, 05 Nov 2019 02:26:35 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id f3sm2801192lfp.0.2019.11.05.02.26.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:26:34 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:26:26 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 30/62] gpio: gpio-pcie-idio-24: Use new GPIO_LINE_DIRECTION
+Message-ID: <b0d91ce784f3587c0b99655a1400652f9514c312.1572945859.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945859.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <bbe8e13f-b865-a352-7960-31b2865e5421@ti.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945859.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-pcie-idio-24.c | 9 ++++++---
+ 1 file changed, 6 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-pcie-idio-24.c b/drivers/gpio/gpio-pcie-idio-24.c
+index 52f1647a46fd..44c1e4fc489f 100644
+--- a/drivers/gpio/gpio-pcie-idio-24.c
++++ b/drivers/gpio/gpio-pcie-idio-24.c
+@@ -104,15 +104,18 @@ static int idio_24_gpio_get_direction(struct gpio_chip *chip,
+ 
+ 	/* FET Outputs */
+ 	if (offset < 24)
+-		return 0;
++		return GPIO_LINE_DIRECTION_OUT;
+ 
+ 	/* Isolated Inputs */
+ 	if (offset < 48)
+-		return 1;
++		return GPIO_LINE_DIRECTION_IN;
+ 
+ 	/* TTL/CMOS I/O */
+ 	/* OUT MODE = 1 when TTL/CMOS Output Mode is set */
+-	return !(ioread8(&idio24gpio->reg->ctl) & out_mode_mask);
++	if (ioread8(&idio24gpio->reg->ctl) & out_mode_mask)
++		return GPIO_LINE_DIRECTION_OUT;
++
++	return GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static int idio_24_gpio_direction_input(struct gpio_chip *chip,
+-- 
+2.21.0
 
 
-On 05/11/2019 12.00, Grygorii Strashko wrote:
-> Hi Peter,
-> 
-> On 01/11/2019 10:41, Peter Ujfalusi wrote:
->> In K3 architecture the DMA operates within threads. One end of the thread
->> is UDMAP, the other is on the peripheral side.
->>
->> The UDMAP channel configuration depends on the needs of the remote
->> endpoint and it can be differ from peripheral to peripheral.
->>
->> This patch adds database for am654 and j721e and small API to fetch the
->> PSI-L endpoint configuration from the database which should only used by
->> the DMA driver(s).
->>
->> Another API is added for native peripherals to give possibility to
->> pass new
->> configuration for the threads they are using, which is needed to be
->> able to
->> handle changes caused by different firmware loaded for the peripheral for
->> example.
-> 
-> I have no objection to this approach, but ...
-> 
->>
->> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> ---
->>   drivers/dma/ti/Kconfig         |   3 +
->>   drivers/dma/ti/Makefile        |   1 +
->>   drivers/dma/ti/k3-psil-am654.c | 172 ++++++++++++++++++++++++++
->>   drivers/dma/ti/k3-psil-j721e.c | 219 +++++++++++++++++++++++++++++++++
->>   drivers/dma/ti/k3-psil-priv.h  |  39 ++++++
->>   drivers/dma/ti/k3-psil.c       |  97 +++++++++++++++
->>   include/linux/dma/k3-psil.h    |  47 +++++++
->>   7 files changed, 578 insertions(+)
->>   create mode 100644 drivers/dma/ti/k3-psil-am654.c
->>   create mode 100644 drivers/dma/ti/k3-psil-j721e.c
->>   create mode 100644 drivers/dma/ti/k3-psil-priv.h
->>   create mode 100644 drivers/dma/ti/k3-psil.c
->>   create mode 100644 include/linux/dma/k3-psil.h
->>
-> 
-> [...]
-> 
->> diff --git a/include/linux/dma/k3-psil.h b/include/linux/dma/k3-psil.h
->> new file mode 100644
->> index 000000000000..16e9c8c6f839
->> --- /dev/null
->> +++ b/include/linux/dma/k3-psil.h
->> @@ -0,0 +1,47 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +/*
->> + *  Copyright (C) 2019 Texas Instruments Incorporated -
->> http://www.ti.com
->> + */
->> +
->> +#ifndef K3_PSIL_H_
->> +#define K3_PSIL_H_
->> +
->> +#include <linux/types.h>
->> +
->> +#define K3_PSIL_DST_THREAD_ID_OFFSET 0x8000
->> +
->> +struct device;
->> +
->> +/* Channel Throughput Levels */
->> +enum udma_tp_level {
->> +    UDMA_TP_NORMAL = 0,
->> +    UDMA_TP_HIGH = 1,
->> +    UDMA_TP_ULTRAHIGH = 2,
->> +    UDMA_TP_LAST,
->> +};
->> +
->> +enum psil_endpoint_type {
->> +    PSIL_EP_NATIVE = 0,
->> +    PSIL_EP_PDMA_XY,
->> +    PSIL_EP_PDMA_MCAN,
->> +    PSIL_EP_PDMA_AASRC,
->> +};
->> +
->> +struct psil_endpoint_config {
->> +    enum psil_endpoint_type ep_type;
->> +
->> +    unsigned pkt_mode:1;
->> +    unsigned notdpkt:1;
->> +    unsigned needs_epib:1;
->> +    u32 psd_size;
->> +    enum udma_tp_level channel_tpl;
->> +
->> +    /* PDMA properties, valid for PSIL_EP_PDMA_* */
->> +    unsigned pdma_acc32:1;
->> +    unsigned pdma_burst:1;
->> +};
->> +
->> +int psil_set_new_ep_config(struct device *dev, const char *name,
->> +               struct psil_endpoint_config *ep_config);
->> +
->> +#endif /* K3_PSIL_H_ */
->>
-> 
-> I see no user now of this public interface, so I think it better to drop
-> it until
-> there will be real user of it.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-The same argument is valid for the glue layer ;)
-
-This is only going to be used by native PSI-L devices and the
-psil_endpoint_config is going to be extended to facilitate their needs
-to give information to the DMA driver on how to set things up.
-
-I would rather avoid churn later on than adding the support from the start.
-
-The point is that the PSI-L endpoint configuration is part of the PSI-L
-peripheral and based on factors these configurations might differ from
-the default one. For example if we want to merge the two physical rx
-channel for sa2ul (so they use the same rflow) or other things we (I)
-can not foresee yet.
-Or if different firmware is loaded for them and it affects their PSI-L
-configuration.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
