@@ -2,95 +2,130 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 901C1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9033C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A53D21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 65FBA21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxuB9COv"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gr3DvwnN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390908AbfKETZE (ORCPT
+        id S2390939AbfKETZ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:25:04 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40994 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389691AbfKETZD (ORCPT
+        Tue, 5 Nov 2019 14:25:58 -0500
+Received: from mail-yb1-f194.google.com ([209.85.219.194]:46561 "EHLO
+        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390314AbfKETZ6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:25:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572981903;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Mi8zXsV9StAkuNLQQmkOxXSCb86Evhad3cvP8SJ678M=;
-        b=QxuB9COv6B42fsiN+c+zUNcDG4Tc8ec60ZQwLx+1ct2pQ0pQ5SlHPVzujA8rs7Z1T7rL74
-        4ZAxpcW4OQONyyjgBz6OXSzdkoB43pj8GZy9irFY2w81PnE1pwn+Hv1n1rI/wapHafEayp
-        Us9XrRMnfxZzNwwH+n1ccvpJlCaaqNU=
-Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
- [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-114-aXesGiuDOku4UfmizacjQA-1; Tue, 05 Nov 2019 14:25:01 -0500
-Received: by mail-lj1-f197.google.com with SMTP id p14so4545132ljh.22
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:25:01 -0800 (PST)
+        Tue, 5 Nov 2019 14:25:58 -0500
+Received: by mail-yb1-f194.google.com with SMTP id g17so421185ybd.13;
+        Tue, 05 Nov 2019 11:25:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KChVl98RtUbkgrTOQAVv+rIQgGh7eAxBXODW2CW7diU=;
+        b=gr3DvwnNJUf3Y48Dj/m1is18b4uN/Ngwj7G0hU5nh705p48wIU/R6fdiQDM2RyKmS5
+         B4+tCC7gc0ICBXMdqQWvzmJ/ccdkGS4Km7CVRUycrScH451IQUia3g+sE/5gaXZddvvY
+         I2pDqQgPoVRbB+yNOiwgSxIWfFL1lb9JXhQoryEYHCs1nzLLtvoVwwUW9CvEZnMwR3m/
+         52DfEtsh/HX0a2fbBDrsFjV7uE9QVwgXfOs95DxVHZzqUhS04ytJ96mXTyCh105y/HUS
+         BjhzqqiChzRRcqdkexMbU3yMO8CqYb82E8llWTzjWYpzTlSKCxf65d3FE9VmBhPne6+j
+         bqsA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=nNaeMHw3xwJlxet/C7/GFJpDlb6Lnx4FzVDVS6q4vwU=;
-        b=kWSob+CEYHurbLtwyrwIkbCF2mk6DoHDK/ORqDcUBfivgKQDbtjkMNbdDRmfSxGC0r
-         BB+0xkKHfPmWi9kFTyeQOaoZ2TGbsY38IVW0udrp+vLbirzjqWMxhvgd8CcVJI6hq/zk
-         5FXWij9r4wG/Mbd1WyDsiLeiarZo90IkSmlp+ugxR+VA6Alq6Ab+Zjq6jDxqQfHkWAOm
-         zlAuyHMaHP+bBvKbu63PzMe2mAnsvN/VEZb1dRGrLmJWZu2a7VorHGFm57P9xfyePGFV
-         ARCsQQRYxL7jnrNfmmHKharSrBkmceQ4uMc458ZqK2Vg7e35bki3zTo8jga3/AukQ1pW
-         ORow==
-X-Gm-Message-State: APjAAAVE8g5DVyeEmri0jL6gCo2DfzZY1aSvIjJjfInuby6Ft5L8kq7K
-        o0on27TwqJ9A1pBKjIRlW6g9k2XuJ2WYGh9V6aMwlp3PjH7W8BeRwgFwh6k31QT+SuTqCGociTJ
-        Rej34yXL07hcCb9QbFQIFwKoVodSxsC7p3P/+Kf1I
-X-Received: by 2002:ac2:4d17:: with SMTP id r23mr22698843lfi.56.1572981900022;
-        Tue, 05 Nov 2019 11:25:00 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyvnBnmUfM/A06b2ws2N6XHrGUXAwSMAUposRLRjOC1OLL4xYZtEaEt8N5wfgTcfWSj7mF+lj+UNwyRj5bee9U=
-X-Received: by 2002:ac2:4d17:: with SMTP id r23mr22698839lfi.56.1572981899851;
- Tue, 05 Nov 2019 11:24:59 -0800 (PST)
+        bh=KChVl98RtUbkgrTOQAVv+rIQgGh7eAxBXODW2CW7diU=;
+        b=bvy0uSTGcsUCj1g6EGeSu+9PcQMzbs5O7Dutdfuc34ULCVwNFSLorFL/6KtvhMQiJg
+         6nQIkmptAfk4Y+8GDkIBRJaDeeRsdPAfVSZcPhTe/qS8a1r3W92PqZqhszAYKAJ/Q1EO
+         nrJPUYo/CLLxy6Xlz66IBk56MHYFwDkKzKryDpZi7gh4qDCQDSbM6yheZV7wWZBXkavw
+         /BAEx6nVeu+/kDPUFCjxmStkA5T2xxwfAfZCEghWBnBxvJUFd6JDhtCWoM/qpJs9v755
+         4CCKNr7JzkS0uAk89froiXMKbuKdvyM25hIB53rS0OFFWJjchgEJ9wzQiR3P0AoQocOm
+         zfng==
+X-Gm-Message-State: APjAAAVf1j8MXsVljadlXxARs4/+VoWQKglRHuj5HiTeFRzWvFH5M19p
+        WWciCw76Fo3w9J4S175VZb5A77lAmBZRQ7PNLTQ=
+X-Google-Smtp-Source: APXvYqx6aFWSGHN0fNloB89+dY7LDFF8+dPoO/5MWUfPSHQSvaN/hiXzcFRfW+Ck3Kgv5gJ2I+zUDkQwtgzJ4cufWWU=
+X-Received: by 2002:a25:3744:: with SMTP id e65mr28077525yba.126.1572981956875;
+ Tue, 05 Nov 2019 11:25:56 -0800 (PST)
 MIME-Version: 1.0
-References: <20191104131144.14333-1-mcroce@redhat.com>
-In-Reply-To: <20191104131144.14333-1-mcroce@redhat.com>
-From:   Matteo Croce <mcroce@redhat.com>
-Date:   Tue, 5 Nov 2019 20:24:23 +0100
-Message-ID: <CAGnkfhzdHWS8-FLPpAsma8ZeszkAujKAtfDcqLvNY7n__fz=4Q@mail.gmail.com>
-Subject: Re: [PATCH v2] kbuild: Add make dir-pkg build option
-To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        LKML <linux-kernel@vger.kernel.org>
-X-MC-Unique: aXesGiuDOku4UfmizacjQA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+References: <20191104215253.141818-1-salyzyn@android.com> <CAOQ4uxhoozGgxYmucFpFx8N=b4x9H3sfp60TNzf0dmU9eQi2UQ@mail.gmail.com>
+ <97c4108f-3a9b-e58b-56e0-dfe2642cc1f5@android.com>
+In-Reply-To: <97c4108f-3a9b-e58b-56e0-dfe2642cc1f5@android.com>
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 5 Nov 2019 21:25:44 +0200
+Message-ID: <CAOQ4uxindmuTdfW6NNM2=Bt=y7KDMQsfN=zA_Z7dgkrHfptoHA@mail.gmail.com>
+Subject: Re: [PATCH v15 0/4] overlayfs override_creds=off & nested get xattr fix
+To:     Mark Salyzyn <salyzyn@android.com>
+Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
+        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        "Eric W . Biederman" <ebiederm@xmission.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>,
+        overlayfs <linux-unionfs@vger.kernel.org>,
+        linux-doc@vger.kernel.org,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 2:11 PM Matteo Croce <mcroce@redhat.com> wrote:
+On Tue, Nov 5, 2019 at 5:20 PM Mark Salyzyn <salyzyn@android.com> wrote:
 >
-> Add a 'dir-pkg' target which just creates the same directory structures
-> as in tar-pkg, but doesn't package anything.
-> Useful when the user wants to copy the kernel tree on a machine using
-> ssh, rsync or whatever.
+> On 11/4/19 11:56 PM, Amir Goldstein wrote:
+> > On Mon, Nov 4, 2019 at 11:53 PM Mark Salyzyn <salyzyn@android.com> wrote:
+> >> Patch series:
+> >>
+> >> Mark Salyzyn (4):
+> >>    Add flags option to get xattr method paired to __vfs_getxattr
+> > Sigh.. did not get to fsdevel (again...) I already told you several times
+> > that you need to use a shorter CC list.
 >
-> Signed-off-by: Matteo Croce <mcroce@redhat.com>
+> This is a direct result of the _required_ scripts/get_maintainer.pl
+> logic, I am not going to override it for first send. I was going to
+> forward to fsdevel after the messages settled, I am still waiting for
+> 1/4 to land on lore before continuing.
 
-Hi Masahiro,
+How do you expect it to land in lore if the mailing list server rejects it?
+If I were you, I would *first* post the patch to the small crowd of the
+patch set, which includes fsdevel and *then* forward patch 1 to all
+maintainers with a link to lore for the series.
 
-here there is the v2 with that nit addressed :)
+The result as is was in your last 15 posting is much worst.
+There is a ghost patch in the series that nobody knows where to find.
 
-Regards,
---=20
-Matteo Croce
-per aspera ad upstream
+>
+> The first patch in the series needs to get in before the others. I was
+> told to send the first one individually because the series has so many
+> recipients and stakeholders, and <crickets> because no on could see the
+> reason for the patch once it was all by itself. So I rejoined the set so
+> they could see the reason for the first patch.
+>
+> If only the first patch in the series that added the flag argument got
+> in (somewhere), then the overlayfs portion would be much easier to handle.
+>
+> >>    overlayfs: handle XATTR_NOSECURITY flag for get xattr method
+> >>    overlayfs: internal getxattr operations without sepolicy checking
+> >>    overlayfs: override_creds=off option bypass creator_cred
+> > It would be better for review IMO if you rebase your series on top of
+> > git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git ovl-unpriv
+> Will do, send it only to fsdevel, other recipients? What do I do with
+> get_maintainer.pl? The first patch in the series is noisy, I am getting
+> more and more uncomfortable sending it to the list as it looks more and
+> more like spam.
 
+get_maintainer.pl is a suggestion. common sense should be applied.
+Sending the entire series to the crowd of this message seems fine to
+me (I also added fsdevel). LKML is quite an overkill IMO and
+linux-doc also seems out of context if you ask me.
+
+Thanks,
+Amir.
