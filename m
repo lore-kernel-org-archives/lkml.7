@@ -2,89 +2,78 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4FB9C1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:51:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A584BC17483
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B331321D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:51:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CD2F21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389360AbfKENvW (ORCPT
+        id S2389280AbfKENxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:51:22 -0500
-Received: from mx2.suse.de ([195.135.220.15]:38298 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389227AbfKENvW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:51:22 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 5C698B1BD;
-        Tue,  5 Nov 2019 13:51:20 +0000 (UTC)
-Message-ID: <1572961879.2921.13.camel@suse.com>
-Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
-From:   Oliver Neukum <oneukum@suse.com>
-To:     =?ISO-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>
-Cc:     syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Date:   Tue, 05 Nov 2019 14:51:19 +0100
-In-Reply-To: <875zjy33z2.fsf@miraculix.mork.no>
-References: <00000000000013c4c1059625a655@google.com>
-         <87ftj32v6y.fsf@miraculix.mork.no> <1572952516.2921.6.camel@suse.com>
-         <875zjy33z2.fsf@miraculix.mork.no>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Tue, 5 Nov 2019 08:53:24 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:38147 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388000AbfKENxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:53:24 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzGm-0001vT-7A; Tue, 05 Nov 2019 14:53:16 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzGk-0007sU-H8; Tue, 05 Nov 2019 14:53:14 +0100
+Date:   Tue, 5 Nov 2019 14:53:14 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
+Message-ID: <20191105135314.f7clp7itzcioxtbw@pengutronix.de>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
+ <20191105131456.32400-3-peron.clem@gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105131456.32400-3-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 05.11.2019, 13:25 +0100 schrieb BjÃ¸rn Mork:
-> Oliver Neukum <oneukum@suse.com> writes:
-> > Am Montag, den 04.11.2019, 22:22 +0100 schrieb BjÃ¸rn Mork:
-
-> Ah, OK. So that could be fixed with e.g.
+On Tue, Nov 05, 2019 at 02:14:51PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
->   if (err < 2)
->        goto out;
+> H6 PWM core needs deasserted reset line in order to work.
 > 
+> Add an optional probe for it.
 > 
-> Or would it be better to add a strict length checking variant of this
-> API?  There are probably lots of similar cases where we expect a
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
 
-We would lose flexibilty and the check needs to be there anyway.
+Thanks
+Uwe
 
-> Right.  And probably all 16 or 32 bit integer reads...
-> 
-> Looking at the NCM spec, I see that the wording is annoyingly flexible
-> wrt length - both ways.  E.g for GetNetAddress:
-> 
->   To get the entire network address, the host should set wLength to at
->   least 6. The function shall never return more than 6 bytes in response
->   to this command.
-> 
-> Maybe the correct fix is simply to let usbnet_read_cmd() initialize the
-> full buffer regardless of what the device returns?  I.e.
-
-This issue has never been observed in the wild. We are defending
-against a possible attack. It is better to react drastically.
-
-> at do you think?
-> 
-> Personally, I don't think it makes sense for a device to return a 1-byte
-> mtu or 3-byte mac address. But the spec allows it and this would at
-> least make it safe.
-
-Hence we should ignore such a reply. The support is optional anyway.
-For usbnet as such, however, we cannot really hardcode the size of
-a MAC.
-
-	Regards
-		Oliver
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
