@@ -2,343 +2,89 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21589C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:35:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE91C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:39:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9B202190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:35:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="m8HMah4O"
+	by mail.kernel.org (Postfix) with ESMTP id 5A8412087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:39:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572975597;
+	bh=y2opLO7+HSMdSjVhYh/qVkiMvhFsEgpR1zbUKDSf3Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=GXC2s85jIlrHU+izNgvN8q8+RO5NzP0fGRAhOkpv7ui7r4w3RFu7ASyd3OLZ9iYg3
+	 nRwhNcpVbfHRNgLPWF6kSC1GpUHowvLB7jE4idCQKoPlnl7jNFPFX0iDK2vMMk3OPf
+	 JPbreDx9/2pmbJT740Wp6CnoNW08aaGIp1wM+Clo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390491AbfKERfZ (ORCPT
+        id S2390380AbfKERj4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:35:25 -0500
-Received: from mail-io1-f65.google.com ([209.85.166.65]:32949 "EHLO
-        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390248AbfKERfY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:35:24 -0500
-Received: by mail-io1-f65.google.com with SMTP id j13so7138677ioe.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 09:35:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YXVxqwM20iATtuLm+TaFp/C5wa802sVG3d1I3LYHhRM=;
-        b=m8HMah4OwpyMZMr/iHC4UZpo2eScdFCidT45VTc/NzEJXQXAhJahEu0j6hQJSzRjr2
-         AviCD8hMd1bRDJuFTAX2d+bFQY099a0am8Ly4DIZN8ObUoXJeCu4AicSDfEVnvEl6nqZ
-         Qm9dU6uhB4Pxf+//+HvKWw/ogv4bHFFPIgO4iQI88vhbKB/HrfRoyf8/R8BU9D8rCgOe
-         LQeI7T2FFVR+5o751QtVXZKfuRodkRXY5pL7YpJZqdBcE3h7/slo3WBUKPSM0sOrjkhO
-         719YL0x2Z2J1/N23jcSD3CCCyO+DdmZhvqHSRloIyvYFh7AfMvMnlhJ96KQUmMU4OMMP
-         L/JQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YXVxqwM20iATtuLm+TaFp/C5wa802sVG3d1I3LYHhRM=;
-        b=QmZKCRFq0A0Mb0qCSlsAsh/gqZrRPlTLiFivdCQuyYaZDkPm1qakrwpukCTWyAhE3H
-         vKhFJ9e0tfKxoCoF1tXh0Il/U2RNxJ5l9kqmSx/HxI9LBLi2732AoDJSxn6ltxpiuMv/
-         N2huC/oU1I7CgZr/6QKnfeFZ9ztfB9PpB6388Z7VJrGhFXCKq6N2RwtmLGz+Oq6gHd3q
-         IyKyajYFkmmlJh2UP7ntar9mnUL+oC8xIKmG/84nn4wBeXwFixPFcmPERpmOEjCj6zNA
-         YNelBMSw+IPACSkvCYp09V65Epmum5uQG2nUT1TSBYrvwf2YCwsZx/cexSIDfHuw2VGw
-         zyQg==
-X-Gm-Message-State: APjAAAVYgv5nMdG0pQ4ZqYz5wvW3aag9CkoRW43tJsbsH5ptrLLLd36z
-        fl2UriflkZp0yQqH5zfKBGfTsqN3YL8xxlU4cixrjA==
-X-Google-Smtp-Source: APXvYqyIQoEKcl1p2lGy+dC1Gp27DPA+E3Vv00Lxy94zOJFoA8/nH2RM/TmoFOnJjcTp8P/PzNsRUjzmQdfwk88olwM=
-X-Received: by 2002:a5d:8146:: with SMTP id f6mr30651144ioo.108.1572975322845;
- Tue, 05 Nov 2019 09:35:22 -0800 (PST)
+        Tue, 5 Nov 2019 12:39:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387776AbfKERj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:39:56 -0500
+Received: from localhost (unknown [62.119.166.9])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0A3B52087E;
+        Tue,  5 Nov 2019 17:39:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572975594;
+        bh=y2opLO7+HSMdSjVhYh/qVkiMvhFsEgpR1zbUKDSf3Po=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XTa4wDimisYBqz8aF7I1lGHjb8jutSs34fju9pKAYwPMva15JxywK6ltHJb/UVVJb
+         ObxHekeCseV2L5njEMMgtlrsDltq+EEY/CYfSP96c9Oxyp2jVvkK3DulaDCi2bzYYV
+         NLrHucRF/mAZlwSTgkqBCky7bja5uN5D2kieWzu0=
+Date:   Tue, 5 Nov 2019 18:33:58 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J . Wysocki" <rafael@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-gpio@vger.kernel.org,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of
+ devm_platform_ioremap_resource()
+Message-ID: <20191105173358.GA2876364@kroah.com>
+References: <20191022084318.22256-1-brgl@bgdev.pl>
 MIME-Version: 1.0
-References: <20191105161737.21395-1-vkuznets@redhat.com> <83B55424-13A9-4395-98E8-466FFF4C698E@oracle.com>
- <D00B364F-BB9D-40A2-9092-D79EBD0B4135@oracle.com>
-In-Reply-To: <D00B364F-BB9D-40A2-9092-D79EBD0B4135@oracle.com>
-From:   Jim Mattson <jmattson@google.com>
-Date:   Tue, 5 Nov 2019 09:35:11 -0800
-Message-ID: <CALMp9eSqMoFxmxXsCoXu1rqCzLca5GyhHf6RV0MUq6SKZsjzWw@mail.gmail.com>
-Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is trustworthy
-To:     Liran Alon <liran.alon@oracle.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        kvm list <kvm@vger.kernel.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 9:32 AM Liran Alon <liran.alon@oracle.com> wrote:
->
->
->
-> > On 5 Nov 2019, at 19:17, Liran Alon <liran.alon@oracle.com> wrote:
-> >
-> >
-> >
-> >> On 5 Nov 2019, at 18:17, Vitaly Kuznetsov <vkuznets@redhat.com> wrote:
-> >>
-> >> Virtualized guests may pick a different strategy to mitigate hardware
-> >> vulnerabilities when it comes to hyper-threading: disable SMT complete=
-ly,
-> >> use core scheduling, or, for example, opt in for STIBP. Making the
-> >> decision, however, requires an extra bit of information which is curre=
-ntly
-> >> missing: does the topology the guest see match hardware or if it is 'f=
-ake'
-> >> and two vCPUs which look like different cores from guest's perspective=
- can
-> >> actually be scheduled on the same physical core. Disabling SMT or doin=
-g
-> >> core scheduling only makes sense when the topology is trustworthy.
-> >
-> > This is not only related to vulnerability mitigations.
-> > It=E2=80=99s also important for guest to know if it=E2=80=99s SMT topol=
-ogy is trustworthy for various optimisation algorithms.
-> > E.g. Should it attempt to run tasks that share memory on same NUMA node=
-?
-> >
-> >>
-> >> Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the mean=
-ing
-> >> that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed=
- SMT
-> >> topology is actually trustworthy. It would, of course, be possible to =
-get
-> >> away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose back=
-wards
-> >> compatibility but the current approach looks more straightforward.
-> >
-> > Agree.
-> >
-> >>
-> >> There were some offline discussions on whether this new feature bit sh=
-ould
-> >> be complemented with a 're-enlightenment' mechanism for live migration=
- (so
-> >> it can change in guest's lifetime) but it doesn't seem to be very
-> >> practical: what a sane guest is supposed to do if it's told that SMT
-> >> topology is about to become fake other than kill itself? Also, it seem=
-s to
-> >> make little sense to do e.g. CPU pinning on the source but not on the
-> >> destination.
-> >
-> > Agree.
-> >
-> >>
-> >> There is also one additional piece of the information missing. A VM ca=
-n be
-> >> sharing physical cores with other VMs (or other userspace tasks on the
-> >> host) so does KVM_FEATURE_TRUSTWORTHY_SMT imply that it's not the case=
- or
-> >> not? It is unclear if this changes anything and can probably be left o=
-ut
-> >> of scope (just don't do that).
-> >
-> > I don=E2=80=99t think KVM_FEATURE_TRUSTWORTHY_SMT should indicate to gu=
-est whether it=E2=80=99s vCPU shares a CPU core with another guest.
-> > It should only expose to guest the fact that he can rely on it=E2=80=99=
-s virtual SMT topology. i.e. That there is a relation between virtual SMT t=
-opology
-> > to which physical logical processors run which vCPUs.
-> >
-> > Guest have nothing to do with the fact that he is now aware host doesn=
-=E2=80=99t guarantee to him that one of it=E2=80=99s vCPU shares a CPU core=
- with another guest vCPU.
-> > I don=E2=80=99t think we should have a CPUID bit that expose this infor=
-mation to guest.
-> >
-> >>
-> >> Similar to the already existent 'NoNonArchitecturalCoreSharing' Hyper-=
-V
-> >> enlightenment, the default value of KVM_HINTS_TRUSTWORTHY_SMT is set t=
-o
-> >> !cpu_smt_possible(). KVM userspace is thus supposed to pass it to gues=
-t's
-> >> CPUIDs in case it is '1' (meaning no SMT on the host at all) or do som=
-e
-> >> extra work (like CPU pinning and exposing the correct topology) before
-> >> passing '1' to the guest.
-> >
-> > Hmm=E2=80=A6 I=E2=80=99m not sure this is correct.
-> > For example, it is possible to expose in virtual SMT topology that gues=
-t have 2 vCPUs running on single NUMA node,
-> > while in reality each vCPU task can be scheduled to run on different NU=
-MA nodes. Therefore, making virtual SMT topology not trustworthy.
-> > i.e. Disabling SMT on host doesn=E2=80=99t mean that virtual SMT topolo=
-gy is reliable.
-> >
-> > I think this CPUID bit should just be set from userspace when admin hav=
-e guaranteed to guest that it have set vCPU task affinity properly.
-> > Without KVM attempting to set this bit by itself.
-> >
-> > Note that we defined above KVM_HINTS_TRUSTWORTHY_SMT bit differently th=
-an =E2=80=9CNoNonArchitecturalCoreSharing=E2=80=9D.
-> > =E2=80=9CNoNonArchitecturalCoreSharing=E2=80=9D guarantees to guest tha=
-t vCPUs of guest won=E2=80=99t share a physical CPU core unless they are de=
-fined as virtual SMT siblings.
-> > In contrast, KVM_HINTS_TRUSTWORTHY_SMT bit attempts to state that virtu=
-al SMT topology is a subset of how vCPUs are scheduled on physical SMT topo=
-logy.
-> > i.e. It seems that Hyper-V bit is indeed only attempting to provide gue=
-st information related to security mitigations. While newly proposed KVM bi=
-t attempts to also
-> > assist guest to determine how to perform it=E2=80=99s internal scheduli=
-ng decisions.
-> >
-> > -Liran
->
-> Oh I later saw below that you defined KVM_HINTS_TRUSTWORTHY_SMT indeed as=
- Microsoft defined =E2=80=9CNoNonArchitecturalCoreSharing=E2=80=9D.
-> If you plan to go with this direction, than I suggest renaming to similar=
- name as Hyper-V.
-> But I think having a general vSMT topology is trustworthy is also useful.
-> Maybe we should have separate bits for each.
+On Tue, Oct 22, 2019 at 10:43:10AM +0200, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> 
+> Note: resending with Arnd's review tags and rebased on top of char-misc-next
+> 
+> The new devm_platform_ioremap_resource() helper has now been widely
+> adopted and used in many drivers. Users of the write-combined ioremap()
+> variants could benefit from the same code shrinkage. This series provides
+> a write-combined version of devm_platform_ioremap_resource() and uses it in a
+> relevant driver with the assumption that - just like was the case
+> previously - a coccinelle script will be developed to ease the transition
+> for others.
+> 
+> There are also users of platform_get_resource_byname() who call
+> devm_ioremap_resource() next, so provide another variant that they can use
+> together with two examples.
 
-And perhaps a bit each for "vCCX topology is trustworthy" and "vNUMA
-topology is trustworthy"?
+I've queued these up in my driver-core tree as there were some conflicts
+with other work that happened in platform.h and device.h that I figured
+would be good to get out of the way now and not have to wait until the
+merge window to resolve.
 
-> -Liran
->
-> >
-> >>
-> >> Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
-> >> ---
-> >> Documentation/virt/kvm/cpuid.rst     | 27 +++++++++++++++++++--------
-> >> arch/x86/include/uapi/asm/kvm_para.h |  2 ++
-> >> arch/x86/kvm/cpuid.c                 |  7 ++++++-
-> >> 3 files changed, 27 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/Documentation/virt/kvm/cpuid.rst b/Documentation/virt/kvm=
-/cpuid.rst
-> >> index 01b081f6e7ea..64b94103fc90 100644
-> >> --- a/Documentation/virt/kvm/cpuid.rst
-> >> +++ b/Documentation/virt/kvm/cpuid.rst
-> >> @@ -86,6 +86,10 @@ KVM_FEATURE_PV_SCHED_YIELD        13          guest=
- checks this feature bit
-> >>                                              before using paravirtuali=
-zed
-> >>                                              sched yield.
-> >>
-> >> +KVM_FEATURE_TRUSTWORTHY_SMT       14          set when host supports =
-'SMT
-> >> +                                              topology is trustworthy=
-' hint
-> >> +                                              (KVM_HINTS_TRUSTWORTHY_=
-SMT).
-> >> +
-> >> KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          host will warn if no gue=
-st-side
-> >>                                              per-cpu warps are expeced=
- in
-> >>                                              kvmclock
-> >> @@ -97,11 +101,18 @@ KVM_FEATURE_CLOCSOURCE_STABLE_BIT 24          hos=
-t will warn if no guest-side
-> >>
-> >> Where ``flag`` here is defined as below:
-> >>
-> >> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> -flag               value        meaning
-> >> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> -KVM_HINTS_REALTIME 0            guest checks this feature bit to
-> >> -                                determine that vCPUs are never
-> >> -                                preempted for an unlimited time
-> >> -                                allowing optimizations
-> >> -=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +flag                              value       meaning
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> +KVM_HINTS_REALTIME                0           guest checks this featu=
-re bit to
-> >> +                                              determine that vCPUs ar=
-e never
-> >> +                                              preempted for an unlimi=
-ted time
-> >> +                                              allowing optimizations
-> >> +
-> >> +KVM_HINTS_TRUSTWORTHY_SMT         1           the bit is set when the=
- exposed
-> >> +                                              SMT topology is trustwo=
-rthy, this
-> >> +                                              means that two guest vC=
-PUs will
-> >> +                                              never share a physical =
-core
-> >> +                                              unless they are exposed=
- as SMT
-> >> +                                              threads.
-> >> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D =3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-> >> diff --git a/arch/x86/include/uapi/asm/kvm_para.h b/arch/x86/include/u=
-api/asm/kvm_para.h
-> >> index 2a8e0b6b9805..183239d5dfad 100644
-> >> --- a/arch/x86/include/uapi/asm/kvm_para.h
-> >> +++ b/arch/x86/include/uapi/asm/kvm_para.h
-> >> @@ -31,8 +31,10 @@
-> >> #define KVM_FEATURE_PV_SEND_IPI      11
-> >> #define KVM_FEATURE_POLL_CONTROL     12
-> >> #define KVM_FEATURE_PV_SCHED_YIELD   13
-> >> +#define KVM_FEATURE_TRUSTWORTHY_SMT 14
-> >>
-> >> #define KVM_HINTS_REALTIME      0
-> >> +#define KVM_HINTS_TRUSTWORTHY_SMT   1
-> >>
-> >> /* The last 8 bits are used to indicate how to interpret the flags fie=
-ld
-> >> * in pvclock structure. If no bits are set, all flags are ignored.
-> >> diff --git a/arch/x86/kvm/cpuid.c b/arch/x86/kvm/cpuid.c
-> >> index f68c0c753c38..dab527a7081f 100644
-> >> --- a/arch/x86/kvm/cpuid.c
-> >> +++ b/arch/x86/kvm/cpuid.c
-> >> @@ -712,7 +712,8 @@ static inline int __do_cpuid_func(struct kvm_cpuid=
-_entry2 *entry, u32 function,
-> >>                           (1 << KVM_FEATURE_ASYNC_PF_VMEXIT) |
-> >>                           (1 << KVM_FEATURE_PV_SEND_IPI) |
-> >>                           (1 << KVM_FEATURE_POLL_CONTROL) |
-> >> -                         (1 << KVM_FEATURE_PV_SCHED_YIELD);
-> >> +                         (1 << KVM_FEATURE_PV_SCHED_YIELD) |
-> >> +                         (1 << KVM_FEATURE_TRUSTWORTHY_SMT);
-> >>
-> >>              if (sched_info_on())
-> >>                      entry->eax |=3D (1 << KVM_FEATURE_STEAL_TIME);
-> >> @@ -720,6 +721,10 @@ static inline int __do_cpuid_func(struct kvm_cpui=
-d_entry2 *entry, u32 function,
-> >>              entry->ebx =3D 0;
-> >>              entry->ecx =3D 0;
-> >>              entry->edx =3D 0;
-> >> +
-> >> +            if (!cpu_smt_possible())
-> >> +                    entry->edx |=3D (1 << KVM_HINTS_TRUSTWORTHY_SMT);
-> >> +
-> >>              break;
-> >>      case 0x80000000:
-> >>              entry->eax =3D min(entry->eax, 0x8000001f);
-> >> --
-> >> 2.20.1
-> >>
-> >
->
+thanks,
+
+greg k-h
