@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D18CC17471
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A60DBC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1F521928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79B6321D7D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czvQULze"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fFmrMG6z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389082AbfKENPG (ORCPT
+        id S2389102AbfKENPI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:15:06 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:52338 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388710AbfKENPG (ORCPT
+        Tue, 5 Nov 2019 08:15:08 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:56312 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389058AbfKENPG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Nov 2019 08:15:06 -0500
-Received: by mail-wm1-f65.google.com with SMTP id c17so13507806wmk.2;
-        Tue, 05 Nov 2019 05:15:04 -0800 (PST)
+Received: by mail-wm1-f68.google.com with SMTP id m17so11588830wmi.5;
+        Tue, 05 Nov 2019 05:15:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=rylm49vbwAP0jTLqPJTMvxfUjjjnX0b1bndG2Prv3MM=;
-        b=czvQULzeZnU/hHelxIDEbrHjoHdaiPYQD8gnbGsKhOEh19ZBw8jd8B0nls9dBjk0SH
-         Tb6wvy6h9Nkzy5j/9X8SLNn166nTOTPmABsrBk0ocCLCrF+510qtKrT++c2NbY4RRtLo
-         mNH5VaXaXyU5Yjdic9cvMEqDR4x8pUvL92nVY9+oGXcDYx9Du1LePiojZOnup3C5/LpZ
-         s7yf7fp4OG0BqmTFjkJZ6UOrhb0LQ8W4KZ3GIiZQ5SWe8pHvaTP8aZh4ren+mwRLy2lb
-         lRLVpRh92D7yC1H8DLTUShi6GLwke4L37aSDDeMQrxLwvdFhgXuefoaU/+5sYoP2znqG
-         G05w==
+        bh=/Vnt9sMCBMLu8w8+z/tM0UPoRwgCIImfZjdha8S2Hvo=;
+        b=fFmrMG6z+heryOiIoZe22e7Ay6QaIMDoQ0lyGyLwxhXc2kC2+1LNe9PDmqLmvWhL38
+         DImcPUDlCRtykfFdC7ZOrE4liyy2pa8B8Zs6gg/W2bPebCmf9hgzKKbScLOKbC/umovX
+         ItceCkYzR5FHLb8XFoMdOb5kcUbARO0Wd04P9JPQ7JLTGeYg6H4VBWdYpA9m95DupPVn
+         Dgt8QMRqQfADfjUxcZu+HjCw4zCl0aBRBeGIcKx1uJ/K6jSj7RayNOXCqFAy7U8SjsgE
+         qmHffAidfGrypuhcF2qK0dut6UyFyrwDX6ekEBIH9pg0D/PLFSssRbtWvtHH7Juy2ROT
+         ypIg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=rylm49vbwAP0jTLqPJTMvxfUjjjnX0b1bndG2Prv3MM=;
-        b=GZGL/k0fNb7zWzlJjcsN2F95B220PudK4uHpnwjw+YOfeabFZZY3C2eWCaAetaxBIW
-         XaHWofBej+zu5cimFgmNipzqaqPNa6KQsXs8y/Gb1J6d8+i1/1ibyOWH2611coY3xCbo
-         WaVUO2+8u2J2hkk18TcNT7I1wEH4kLkKXhUCfd16WhQfCfJ6YvJkziWKZOddytiQ1n7m
-         yqjH2medrhUCIQCKK9WZljCM6/vu0iLi5JRJv8d5c8/KTRvgIfZeQLDxTA59ZGJxISQ4
-         sTd9G949wDpyF4kglRCkmurpsUHzIwaqela479aAB4wK6+mjcXmo1UHg+r+HJ2WuIdmr
-         It5g==
-X-Gm-Message-State: APjAAAXQUAOd2Ea4HdGifF73Dh/24chmWZGsgATu6pQ8mK7byT43LODl
-        ZxaiB5KUxDZbMbr25/MvisY=
-X-Google-Smtp-Source: APXvYqznbNCR4gLMX1epuZh7z03kgXnDOQWlHW6f0JH8v91E8iiEzK9mKwb3zm4PfWZeD9g5ak73aw==
-X-Received: by 2002:a1c:2706:: with SMTP id n6mr4432965wmn.154.1572959703335;
-        Tue, 05 Nov 2019 05:15:03 -0800 (PST)
+        bh=/Vnt9sMCBMLu8w8+z/tM0UPoRwgCIImfZjdha8S2Hvo=;
+        b=KC30Ew2ux0Huoavj976/+UZ2KHMqK5vXTaYYksYduvUuxKDia2YXmu8//gg1L3IvxQ
+         WbqbNob3aZjKnTS1chonYf2LLr7CTFuYONRuYnN3E3iBwvRQAUdxHYfTDCm+R53DDjMt
+         zopjXdBgh08GmbJPtYMJmosvuqlze/bg++0Ik4pFUwwcrx0Iyt3uFZHNSbOkkmgOrtZY
+         i/3r+Ml0UlVIg/6MMtFzFg0uoKBb/gVD69zHyXJItF6WxN8vMH7G6AWiNXxJuGY0K4HA
+         rCKtTRRq3pu42mOAx3o4tTnt4P7krZGskzr6litmaZeVkbZ6ragYDBlnFhfHXAIoKMUb
+         Dk2A==
+X-Gm-Message-State: APjAAAWrJKhq62jB7TohahhwPug0mDN0vXHbGMx//e39fIZocpGNB01l
+        gvkRqefSk1AN9HkMVfX99kc=
+X-Google-Smtp-Source: APXvYqy7cIzX7d3Z3MnPrxaP5dgDyUpjHytLsGWwqekG/5Gcc7AIElqdEyNi7FWNrf9kuBGftMxF7A==
+X-Received: by 2002:a1c:453:: with SMTP id 80mr4274482wme.5.1572959704769;
+        Tue, 05 Nov 2019 05:15:04 -0800 (PST)
 Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
-        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.02
+        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.04
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
+        Tue, 05 Nov 2019 05:15:04 -0800 (PST)
 From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         =?UTF-8?q?=27Uwe=20Kleine-K=C3=B6nig=27?= 
@@ -69,9 +69,9 @@ Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Jernej Skrabec <jernej.skrabec@siol.net>,
         =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
-Subject: [PATCH v3 3/7] pwm: sun4i: Add an optional probe for bus clock
-Date:   Tue,  5 Nov 2019 14:14:52 +0100
-Message-Id: <20191105131456.32400-4-peron.clem@gmail.com>
+Subject: [PATCH v3 5/7] pwm: sun4i: Add support for H6 PWM
+Date:   Tue,  5 Nov 2019 14:14:54 +0100
+Message-Id: <20191105131456.32400-6-peron.clem@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191105131456.32400-1-peron.clem@gmail.com>
 References: <20191105131456.32400-1-peron.clem@gmail.com>
@@ -85,102 +85,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Jernej Skrabec <jernej.skrabec@siol.net>
 
-H6 PWM core needs bus clock to be enabled in order to work.
+Now that sun4i PWM driver supports deasserting reset line and enabling
+bus clock, support for H6 PWM can be added.
 
-Add an optional probe for it and a fallback for previous
-bindings without name on module clock.
+Note that while H6 PWM has two channels, only first one is wired to
+output pin. Second channel is used as a clock source to companion AC200
+chip which is bundled into same package.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
 Signed-off-by: Clément Péron <peron.clem@gmail.com>
 ---
- drivers/pwm/pwm-sun4i.c | 45 +++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 43 insertions(+), 2 deletions(-)
+ drivers/pwm/pwm-sun4i.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
 diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-index 9ba83769a478..54e19fa56a4e 100644
+index 810abf47c261..e257c1b1fc67 100644
 --- a/drivers/pwm/pwm-sun4i.c
 +++ b/drivers/pwm/pwm-sun4i.c
-@@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+@@ -359,6 +359,12 @@ static const struct sun4i_pwm_data sun4i_pwm_single_bypass = {
+ 	.npwm = 1,
+ };
  
- struct sun4i_pwm_chip {
- 	struct pwm_chip chip;
-+	struct clk *bus_clk;
- 	struct clk *clk;
- 	struct reset_control *rst;
- 	void __iomem *base;
-@@ -363,9 +364,35 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	if (IS_ERR(pwm->base))
- 		return PTR_ERR(pwm->base);
- 
--	pwm->clk = devm_clk_get(&pdev->dev, NULL);
--	if (IS_ERR(pwm->clk))
-+	/* Get all clocks and reset line */
-+	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
-+	if (IS_ERR(pwm->clk)) {
-+		dev_err(&pdev->dev, "get clock failed %ld\n",
-+			PTR_ERR(pwm->clk));
- 		return PTR_ERR(pwm->clk);
-+	}
++static const struct sun4i_pwm_data sun50i_h6_pwm_data = {
++	.has_prescaler_bypass = true,
++	.has_direct_mod_clk_output = true,
++	.npwm = 2,
++};
 +
-+	/*
-+	 * Fallback for old dtbs with a single clock and no name.
-+	 * If a parent has a clock-name called "mod" whereas the
-+	 * current node is unnamed the clock reference will be
-+	 * incorrectly obtained and will not go into this fallback.
-+	 */
-+	if (!pwm->clk) {
-+		pwm->clk = devm_clk_get(&pdev->dev, NULL);
-+		if (IS_ERR(pwm->clk)) {
-+			dev_err(&pdev->dev, "get clock failed %ld\n",
-+				PTR_ERR(pwm->clk));
-+			return PTR_ERR(pwm->clk);
-+		}
-+	}
-+
-+	pwm->bus_clk = devm_clk_get_optional(&pdev->dev, "bus");
-+	if (IS_ERR(pwm->bus_clk)) {
-+		dev_err(&pdev->dev, "get bus_clock failed %ld\n",
-+			PTR_ERR(pwm->bus_clk));
-+		return PTR_ERR(pwm->bus_clk);
-+	}
- 
- 	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
- 	if (IS_ERR(pwm->rst)) {
-@@ -382,6 +409,17 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
-+	/*
-+	 * We're keeping the bus clock on for the sake of simplicity.
-+	 * Actually it only needs to be on for hardware register
-+	 * accesses.
-+	 */
-+	ret = clk_prepare_enable(pwm->bus_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Cannot prepare and enable bus_clk\n");
-+		goto err_bus;
-+	}
-+
- 	pwm->chip.dev = &pdev->dev;
- 	pwm->chip.ops = &sun4i_pwm_ops;
- 	pwm->chip.base = -1;
-@@ -402,6 +440,8 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
- 	return 0;
- 
- err_pwm_add:
-+	clk_disable_unprepare(pwm->bus_clk);
-+err_bus:
- 	reset_control_assert(pwm->rst);
- 
- 	return ret;
-@@ -416,6 +456,7 @@ static int sun4i_pwm_remove(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	clk_disable_unprepare(pwm->bus_clk);
- 	reset_control_assert(pwm->rst);
- 
- 	return 0;
+ static const struct of_device_id sun4i_pwm_dt_ids[] = {
+ 	{
+ 		.compatible = "allwinner,sun4i-a10-pwm",
+@@ -375,6 +381,9 @@ static const struct of_device_id sun4i_pwm_dt_ids[] = {
+ 	}, {
+ 		.compatible = "allwinner,sun8i-h3-pwm",
+ 		.data = &sun4i_pwm_single_bypass,
++	}, {
++		.compatible = "allwinner,sun50i-h6-pwm",
++		.data = &sun50i_h6_pwm_data,
+ 	}, {
+ 		/* sentinel */
+ 	},
 -- 
 2.20.1
 
