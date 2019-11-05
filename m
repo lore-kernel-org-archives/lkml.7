@@ -2,166 +2,155 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DEB0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4921C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:24:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05D8E21D7F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995BE2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:24:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ADZ8m3Wu"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="CqI1ZXbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390321AbfKEQXo (ORCPT
+        id S2390331AbfKEQYc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:23:44 -0500
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35569 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390163AbfKEQXk (ORCPT
+        Tue, 5 Nov 2019 11:24:32 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53612 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389934AbfKEQYc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:23:40 -0500
-Received: by mail-ed1-f65.google.com with SMTP id r16so1879944edq.2;
-        Tue, 05 Nov 2019 08:23:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=iBa+KNl3xfEoQ3x091yW97I1pFeckDAp+HE7IN9AsKI=;
-        b=ADZ8m3Wuu05byt5FiXJhBT03hcjcIPcfov3vj/h4AVSisEIHZv9YfyIkUT2yDdd4dx
-         B0WixpljI53ZSMmyqljoOzIpkP2LuXY8q1vsJVhIMk/imCrzuPLrJzMyLbBzQhTHJcQ3
-         R4bwlQ771m5PoPm1m9/UDGcBbh5qNQ6wl/QR2DsanVV1tJzcm7ppsmlvpQh4HjfNbG5t
-         63hV9BAt6JFSGsTOVQemjsGCjUeCkNqKjkqY/D7rG5gPA76/kjtkk8ORD20jUVmfhzho
-         8FiJ2Q40mtGYzMsduyUFwURe02dZkTSI3PLMEjzjKAQyod30gBQVCzquG/kQuAr4bEA1
-         HtTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iBa+KNl3xfEoQ3x091yW97I1pFeckDAp+HE7IN9AsKI=;
-        b=bSc93u1iKmt8RKJHZwplrhOL22GmfXy24kCg8iY6N0og23zD9vXR9J3GP+go5OObNO
-         90x3mt3818uarDPDCvOwck1zWnhJpAhz+VrjXWGYNuPn9OAD+axfT3C48NA26/RHy6cD
-         3ti5pGlEHuRYLIrP9hoQ/uauB7yDw4sLbIPBSZZvPAd1OnLVFit+DRGmbXW1iNjsMNCD
-         fVRmr5D6Ld5451js6bLcPi5rjPv4rJ5mXriwO0Lp4sN5g4OIrVumabs4gqQaJTLSVJ3P
-         YV4wIGQgtJF1PnPG1glFCBY3njqS+pK74sY6wNxKbGRaCftFb2GV3XNlLqlfkkFVr/JA
-         Vy7g==
-X-Gm-Message-State: APjAAAWRItUOyWv2p0AEO7yzlzoorGZ/rB0kwlXTyHgQsjgLxAAooukH
-        mvKMJ3ELgGMzC8myFCCsWj6zPgNUqRdWuU6he2s=
-X-Google-Smtp-Source: APXvYqw6DHiWy5Jq5QER0vWdT0e+O38XHNiZfNfrlZo7CtFTenpQYQGBiQkm25QU55awefud20PSxaXykIphCpiisVU=
-X-Received: by 2002:a17:906:73d5:: with SMTP id n21mr30279787ejl.228.1572971018138;
- Tue, 05 Nov 2019 08:23:38 -0800 (PST)
+        Tue, 5 Nov 2019 11:24:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572971071;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Al/+c8KHyhxPJlQUXk+cOOY+ajrIwqI170evHk6gx8A=;
+        b=CqI1ZXblgRzb+q9/pIvdG6gk6abBEDrZxCTpZSpMA55FPzDfKXcF0WO+A6CofiSowW8Cc1
+        Xjdlw8uUiDt7+Tzu+bw58v0TEAlcPBSUgQUINuDLj6j6YdhCENeDOU+geeHZIKXWoIrDxV
+        OL8h5ZWKIcy1Xp/+ouIuFYK3kcc4Wkw=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-93-4kcvJejoNyy-KkwYcL7N0g-1; Tue, 05 Nov 2019 11:24:28 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DD2C9107ACC3;
+        Tue,  5 Nov 2019 16:24:25 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 65A90393B;
+        Tue,  5 Nov 2019 16:24:25 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 11:24:24 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Daniel Colascione <dancol@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191105162424.GH30717@redhat.com>
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
+ <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191105000129.GA6536@onstation.org> <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
- <20191105100804.GA9492@onstation.org>
-In-Reply-To: <20191105100804.GA9492@onstation.org>
-From:   Rob Clark <robdclark@gmail.com>
-Date:   Tue, 5 Nov 2019 08:23:27 -0800
-Message-ID: <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
-Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
-To:     Brian Masney <masneyb@onstation.org>
-Cc:     Rob Clark <robdclark@chromium.org>,
-        freedreno <freedreno@lists.freedesktop.org>,
-        Sean Paul <sean@poorly.run>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 4kcvJejoNyy-KkwYcL7N0g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
->
-> On Mon, Nov 04, 2019 at 04:19:07PM -0800, Rob Clark wrote:
-> > On Mon, Nov 4, 2019 at 4:01 PM Brian Masney <masneyb@onstation.org> wrote:
-> > >
-> > > Hey Rob,
-> > >
-> > > Since commit 2d99ced787e3 ("drm/msm: async commit support"), the frame
-> > > buffer console on my Nexus 5 began throwing these errors:
-> > >
-> > > msm fd900000.mdss: pp done time out, lm=0
-> > >
-> > > The display still works.
-> > >
-> > > I see that mdp5_flush_commit() was introduced in commit 9f6b65642bd2
-> > > ("drm/msm: add kms->flush_commit()") with a TODO comment and the commit
-> > > description mentions flushing registers. I assume that this is the
-> > > proper fix. If so, can you point me to where these registers are
-> > > defined and I can work on the mdp5 implementation.
+On Tue, Nov 05, 2019 at 08:00:26AM -0800, Andy Lutomirski wrote:
+> On Tue, Nov 5, 2019 at 7:55 AM Daniel Colascione <dancol@google.com> wrot=
+e:
 > >
-> > See mdp5_ctl_commit(), which writes the CTL_FLUSH registers.. the idea
-> > would be to defer writing CTL_FLUSH[ctl_id] = flush_mask until
-> > kms->flush() (which happens from a timer shortly before vblank).
+> > On Tue, Nov 5, 2019 at 7:29 AM Mike Rapoport <rppt@linux.ibm.com> wrote=
+:
+> > >
+> > > Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
+> > > descriptor table from the read() implementation of uffd, which may ha=
+ve
+> > > security implications for unprivileged use of the userfaultfd.
+> > >
+> > > Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that h=
+ave
+> > > CAP_SYS_PTRACE.
 > >
-> > But I think the async flush case should not come up with fbcon?  It
-> > was really added to cope with hwcursor updates (and userspace that
-> > assumes it can do an unlimited # of cursor updates per frame).. the
-> > intention was that nothing should change in the sequence for mdp5 (but
-> > I guess that was not the case).
->
-> The 'pp done time out' errors go away if I revert the following three
-> commits:
->
-> cd6d923167b1 ("drm/msm/dpu: async commit support")
-> d934a712c5e6 ("drm/msm: add atomic traces")
-> 2d99ced787e3 ("drm/msm: async commit support")
->
-> I reverted the first one to fix a compiler error, and the second one so
-> that the last patch can be reverted without any merge conflicts.
->
-> I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
-> crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
-> buffer dance around the screen like its out of sync. I renamed
-> crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
-> declaration. Here's the relevant part of what I tried:
->
-> --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
-> @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
->
->  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
->  {
-> -       /* TODO */
-> +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
-> +       struct drm_crtc *crtc;
-> +
-> +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
-> +               if (!crtc->state->active)
-> +                       continue;
-> +
-> +               mdp5_crtc_flush_all(crtc);
-> +       }
->  }
->
-> Any tips would be appreciated.
+> > Thanks. But shouldn't we be doing the capability check at
+> > userfaultfd(2) time (when we do the other permission checks), not
+> > later, in the API ioctl?
+>=20
+> The ioctl seems reasonable to me.  In particular, if there is anyone
+> who creates a userfaultfd as root and then drop permissions, a later
+> ioctl could unexpectedly enable FORK.
+>=20
+> This assumes that the code in question is only reachable through
+> ioctl() and not write().
 
+write isn't implemented. Until UFFDIO_API runs, all other implemented
+syscalls are disabled (i.e. all other ioctls, poll and read). You can
+quickly verify all the 3 blocks by searching for UFFD_STATE_WAIT_API,
 
-I think this is along the lines of what we need to enable async commit
-for mdp5 (but also removing the flush from the atomic-commit path)..
-the principle behind the async commit is to do all the atomic state
-commit normally, but defer writing the flush bits.  This way, if you
-get another async update before the next vblank, you just apply it
-immediately instead of waiting for vblank.
+UFFDIO_API is the place where the handshake with userland
+happens. userland asks for certain features and the kernel
+implementation of userlands answers yes or no.
 
-But I guess you are on a command mode panel, if I remember?  Which is
-a case I didn't have a way to test.  And I'm not entirely about how
-kms_funcs->vsync_time() should be implemented for cmd mode panels.
+Normally we would only ever return -EINVAL on a request of a feature
+that isn't available in the running kernel (equivalent to -ENOSYS if
+the syscall is entirely missing on an even older kernel), -EPERM is
+more informative as it tells userland the feature is actually in the
+kernel just it requires more permissions.
 
-That all said, I think we should first fix what is broken, before
-worrying about extending async commit support to mdp5.. which
-shouldn't hit the async==true path, due to not implementing
-kms_funcs->vsync_time().
+We could have returned -EINVAL too, but it wouldn't have made a
+difference to non-privileged CRIU and we're not aware of other users
+that could benefit from -EINVAL instead of -EPERM. This the relevant
+CRIU userland:
 
-What I think is going on is that, in the cmd mode case,
-mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
-which waits for a pp-done irq regardless of whether there is a flush
-in progress.  Since there is no flush pending, the irq never comes.
-But the expectation is that kms_funcs->wait_flush() returns
-immediately if there is nothing to wait for.
+        if (ioctl(uffd, UFFDIO_API, &uffdio_api)) {
+                pr_perror("Failed to get uffd API");
+                goto err;
+=09}
 
-BR,
--R
+Unfortunately this is an ABI break, preferred than the clean removal
+of the feature, because it's at least not going to break CRIU
+deployments running with the PTRACE privilege. The clean removal while
+non-ABI breaking, would have prevented all CRIU users to keep running
+after a kernel upgrade.
+
+The long term plan is to introduce UFFD_FEATURE_EVENT_FORK2 feature
+flag that uses the ioctl to receive the child uffd, it'll consume more
+CPU, but it wouldn't require the PTRACE privilege anymore.
+
+Overall any suid or SCM_RIGHTS fd-receiving app, that isn't checking
+the retval of open/socket or whatever fd "installing" syscall, is non
+robust and is prone to break over time as more people edit the code or
+as any library call internally change behavior, so if there's any
+practical issue caused by this, it should be fixed in userland
+too for higher robustness.
+
+If you stick your userland to std::fs and std::net robustness against
+issues like this is enforced by the language.
+
+Thanks,
+Andrea
+
