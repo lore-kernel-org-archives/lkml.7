@@ -2,109 +2,150 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8679FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86C52C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:05:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 62710214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59CC921882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:05:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="t4XqoUa1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390133AbfKEQER (ORCPT
+        id S2390071AbfKEQFy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:04:17 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2072 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390116AbfKEQEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:04:16 -0500
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
-        by Forcepoint Email with ESMTP id B003DAE6B949189B4146;
-        Tue,  5 Nov 2019 16:04:10 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 5 Nov 2019 16:04:10 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 5 Nov 2019
- 16:04:09 +0000
-Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-To:     Mark Brown <broonie@kernel.org>
-CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>
-References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
- <1572886297-45400-3-git-send-email-john.garry@huawei.com>
- <20191104192406.GH5238@sirena.co.uk>
- <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
- <20191105110504.GA4500@sirena.co.uk>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <da389dda-ab38-1e68-557e-ac8c83f4ecd8@huawei.com>
-Date:   Tue, 5 Nov 2019 16:04:09 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 5 Nov 2019 11:05:54 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:60646 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390011AbfKEQFy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:05:54 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5G5ZO6077804;
+        Tue, 5 Nov 2019 10:05:35 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572969935;
+        bh=ifqGbh2iK7gCjM34CfaUPg5dKbqv4hsuWqKdYPnSGWk=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=t4XqoUa1Q9IdKhWKcc6jvYqDlwYyx4v5DZ3z0peERQoohVdGZV5Ufg0o9wY0WMC4c
+         dOoGP67ABI4bj8rK4RvJM74wEg60Ot0kYz16J94+YBY1QXgiJsSFg+ONC7c59sJmcX
+         TNoZKvFnqWk3Xc1ydxGkAUYem8z1NzM0T6/rHuok=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5G5Z4T110661
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 10:05:35 -0600
+Received: from DFLE109.ent.ti.com (10.64.6.30) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
+ 2019 10:05:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 5 Nov 2019 10:05:20 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5G5W4W081978;
+        Tue, 5 Nov 2019 10:05:33 -0600
+Subject: Re: [PATCH v4 15/20] mtd: spi-nor: Extend the QE Read Back test to
+ both SR1 and SR2
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
+ <20191102112316.20715-16-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <b9a4e491-d081-1325-1532-b392f55fcaf9@ti.com>
+Date:   Tue, 5 Nov 2019 21:36:08 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191105110504.GA4500@sirena.co.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+In-Reply-To: <20191102112316.20715-16-tudor.ambarus@microchip.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/2019 11:05, Mark Brown wrote:
-> On Tue, Nov 05, 2019 at 10:58:39AM +0000, John Garry wrote:
->> On 04/11/2019 19:24, Mark Brown wrote:
->>> On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
+
+
+On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
 > 
->>>> +		if (len) {
->>>> +			u32 val;
->>>> +
->>>> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
->>>> +
->>>> +			to += words * 4;
->>>> +			for (i = 0; i < len; i++, val >>= 8, to++)
->>>> +				*to = (u8)val;
->>>> +		}
->>>> +	} else {
->>>> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
->>>> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
->>>> +			int j;
+> In case of 16-bit Write Status Register, check that both SR1 and
+> SR2 were written correctly.
 > 
->>> The more usual pattern for these would be to do some unaligned accesses
->>> for the start/end of the buffer to get to alignment and then transfer
->>> the rest as aligned data.
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+> ---
+
+This can be merged with previous patch as changes are quite similar
+
+Regards
+Vignesh
+
+>  drivers/mtd/spi-nor/spi-nor.c | 29 ++++++++++++++++++++++++++++-
+>  1 file changed, 28 insertions(+), 1 deletion(-)
 > 
->> Yeah, I understand you, but for that I would need to generate multiple
->> transactions in the driver, and I wanted to keep 1x transaction per
->> spi_controller_mem_ops.exec_op call.
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 08fd2c97897d..8f11c00e8ae5 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2067,6 +2067,7 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
+>  {
+>  	u8 *sr_cr = nor->bouncebuf;
+>  	int ret;
+> +	u8 sr_written;
+>  
+>  	/* Keep the current value of the Status Register. */
+>  	ret = spi_nor_read_sr(nor, sr_cr);
+> @@ -2075,7 +2076,22 @@ static int spansion_no_read_cr_quad_enable(struct spi_nor *nor)
+>  
+>  	sr_cr[1] = CR_QUAD_EN_SPAN;
+>  
+> -	return spi_nor_write_sr(nor, sr_cr, 2);
+> +	ret = spi_nor_write_sr(nor, sr_cr, 2);
+> +	if (ret)
+> +		return ret;
+> +
+> +	sr_written = sr_cr[0];
+> +
+> +	ret = spi_nor_read_sr(nor, sr_cr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (sr_cr[0] != sr_written) {
+> +		dev_err(nor->dev, "SR: Read back test failed\n");
+> +		return -EIO;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  /**
+> @@ -2116,6 +2132,17 @@ static int spansion_read_cr_quad_enable(struct spi_nor *nor)
+>  	if (ret)
+>  		return ret;
+>  
+> +	sr_written = sr_cr[0];
+> +
+> +	ret = spi_nor_read_sr(nor, sr_cr);
+> +	if (ret)
+> +		return ret;
+> +
+> +	if (sr_written != sr_cr[0]) {
+> +		dev_err(nor->dev, "SR: Read back test failed\n");
+> +		return -EIO;
+> +	}
+> +
+>  	sr_written = sr_cr[1];
+>  
+>  	/* Read back and check it. */
 > 
 
-Hi Mark,
-
->> So maybe I can do some trickery in my adjust_op_size method to generate
->> these multiple transactions: a. any unaligned start data b. the 32b-aligned
->> data b. unaligned end. I think that the HW should be able to handle that.
-> 
-> Right, that's what I was expecting.
-> 
-
-So that should work for xfer data commands, but generally the read/write 
-reg commands in the SPI NOR layer would not use 
-spi_mem_adjust_op_size(), like spi-nor.c:spi_nor_read_id(), as an example.
-
-For these, I should be able to guarantee start alignment (since the 
-buffer is kmalloc'ed), but not end alignment, so would still require 
-4-byte + single byte copies for these.
-
-Thanks,
-John
-
+-- 
+Regards
+Vignesh
