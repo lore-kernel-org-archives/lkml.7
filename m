@@ -2,103 +2,76 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48ABEC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:22:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8FC1C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:27:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B58C214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:22:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB9D3214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:27:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390751AbfKESWT (ORCPT
+        id S2390684AbfKES1p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:22:19 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55168 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390482AbfKESWS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:22:18 -0500
-Received: from arrakis.emea.arm.com (unknown [46.69.195.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DE68721A4A;
-        Tue,  5 Nov 2019 18:22:15 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 18:22:13 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: 5.4-rc1 boot regression with kmemleak enabled
-Message-ID: <20191105182212.GF22987@arrakis.emea.arm.com>
-References: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
- <20191105115431.GD26580@mbp>
- <CAOQ4uxjm=tWsQpfLkY9O_3qWK86X=kCD19P8zJAQjs5ms_RfZw@mail.gmail.com>
- <20191105153055.GC22987@arrakis.emea.arm.com>
- <CAOQ4uxjDnu-1eUwAkYW+dRPYAeQsc07on1kk+_emBhZBvj+bAg@mail.gmail.com>
+        Tue, 5 Nov 2019 13:27:45 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:55332 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389724AbfKES1p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 13:27:45 -0500
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <colin.king@canonical.com>)
+        id 1iS3YK-00017y-Tg; Tue, 05 Nov 2019 18:27:41 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     Saeed Mahameed <saeedm@mellanox.com>,
+        Leon Romanovsky <leon@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Parav Pandit <parav@mellanox.com>, netdev@vger.kernel.org,
+        linux-rdma@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH][next] net/mlx5: fix kvfree of uninitialized pointer spec
+Date:   Tue,  5 Nov 2019 18:27:40 +0000
+Message-Id: <20191105182740.87146-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjDnu-1eUwAkYW+dRPYAeQsc07on1kk+_emBhZBvj+bAg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:17:11PM +0200, Amir Goldstein wrote:
-> On Tue, Nov 5, 2019 at 5:31 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >
-> > On Tue, Nov 05, 2019 at 02:33:48PM +0200, Amir Goldstein wrote:
-> > > On Tue, Nov 5, 2019 at 1:54 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > (sorry if you got this message twice; our SMTP server went bust)
-> > > >
-> > > > On Tue, Nov 05, 2019 at 09:14:06AM +0200, Amir Goldstein wrote:
-> > > > > My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
-> > > > > c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
-> > > > >
-> > > > > There is no console output when running:
-> > > > >
-> > > > > $ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
-> > > > >     -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
-> > > > >     -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
-> > > > >     --append 'root=/dev/vda console=ttyS0,115200'
-> > > >
-> > > > This was fixed in 5.4-rc4, see commit 2abd839aa7e6 ("kmemleak: Do not
-> > > > corrupt the object_list during clean-up").
-> > >
-> > > Did not fix my issue.
-> > > Still not booting with 5.4-rc6.
-> > > Any other suggestions?
-> >
-> > Can you pass an earlyprintk=ttyS0,115200 (if that's the correct x86
-> > syntax) on the kernel command line? It may print some early messages
-> > that would help with debugging.
-[...]
-> [    0.022796] BUG: unable to handle page fault for address: 0000000000001ff0
-> [    0.023682] #PF: supervisor read access in kernel mode
-> [    0.024341] #PF: error_code(0x0000) - not-present page
-> [    0.025000] PGD 0 P4D 0 
-> [    0.025326] Oops: 0000 [#1] SMP PTI
-> [    0.025775] CPU: 0 PID: 0 Comm: swapper Not tainted 5.4.0-rc6-xfstests #4302
-> [    0.026683] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-> [    0.027836] RIP: 0010:get_stack_info+0xa7/0x146
+From: Colin Ian King <colin.king@canonical.com>
 
-Ah, it looks very similar to this report:
+Currently when a call to  esw_vport_create_legacy_ingress_acl_group
+fails the error exit path to label 'out' will cause a kvfree on the
+uninitialized pointer spec.  Fix this by ensuring pointer spec is
+initialized to NULL to avoid this issue.
 
-http://lkml.kernel.org/r/20191019114421.GK9698@uranus.lan
+Addresses-Coverity: ("Uninitialized pointer read")
+Fixes: 10652f39943e ("net/mlx5: Refactor ingress acl configuration")
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
+---
+ drivers/net/ethernet/mellanox/mlx5/core/eswitch.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thomas had a patch here:
-
-https://lore.kernel.org/linux-mm/alpine.DEB.2.21.1910231950590.1852@nanos.tec.linutronix.de/
-
-but not sure whether it has hit mainline yet.
-
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+index 7baade9e62b7..f2e400a23a59 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/eswitch.c
+@@ -1253,7 +1253,7 @@ static int esw_vport_ingress_config(struct mlx5_eswitch *esw,
+ 	struct mlx5_flow_destination drop_ctr_dst = {0};
+ 	struct mlx5_flow_destination *dst = NULL;
+ 	struct mlx5_flow_act flow_act = {0};
+-	struct mlx5_flow_spec *spec;
++	struct mlx5_flow_spec *spec = NULL;
+ 	int dest_num = 0;
+ 	int err = 0;
+ 	u8 *smac_v;
 -- 
-Catalin
+2.20.1
+
