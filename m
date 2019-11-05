@@ -2,116 +2,109 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D431C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8679FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E30EF21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULrqNgwa"
+	by mail.kernel.org (Postfix) with ESMTP id 62710214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:04:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390112AbfKEQD7 (ORCPT
+        id S2390133AbfKEQER (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:03:59 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:37237 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389934AbfKEQD7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:03:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572969838;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5jHzTufVqj3xcUhXgZf6+U7zit20vAMAvRvtB9TGvhg=;
-        b=ULrqNgwaU08zGOywl7PsUcqfDb2ZL1jSpK29377NNRGTym4TjfROiqoaV2VNG2fB4l1GbO
-        UuLwq8yrTYO7byen908xk94jQBdvVEicFftMD/jmNrDr9/Nv6KESjE4jdX9abl1dXdoHrO
-        gPJW9TNGctVIuZ/meTVz4pjT+ZB14L8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-egJn3EFrO8Wf6MWJEVzIeg-1; Tue, 05 Nov 2019 11:03:55 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B132C1800D4A;
-        Tue,  5 Nov 2019 16:03:50 +0000 (UTC)
-Received: from gondolin (unknown [10.36.118.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D823B608AC;
-        Tue,  5 Nov 2019 16:03:23 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 17:03:19 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V8 1/6] mdev: class id support
-Message-ID: <20191105170319.41fe7d2c.cohuck@redhat.com>
-In-Reply-To: <20191105093240.5135-2-jasowang@redhat.com>
-References: <20191105093240.5135-1-jasowang@redhat.com>
-        <20191105093240.5135-2-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Tue, 5 Nov 2019 11:04:17 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2072 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2390116AbfKEQEQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:04:16 -0500
+Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.107])
+        by Forcepoint Email with ESMTP id B003DAE6B949189B4146;
+        Tue,  5 Nov 2019 16:04:10 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ LHREML711-CAH.china.huawei.com (10.201.108.34) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 5 Nov 2019 16:04:10 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 5 Nov 2019
+ 16:04:09 +0000
+Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Mark Brown <broonie@kernel.org>
+CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>
+References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
+ <1572886297-45400-3-git-send-email-john.garry@huawei.com>
+ <20191104192406.GH5238@sirena.co.uk>
+ <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
+ <20191105110504.GA4500@sirena.co.uk>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <da389dda-ab38-1e68-557e-ac8c83f4ecd8@huawei.com>
+Date:   Tue, 5 Nov 2019 16:04:09 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: egJn3EFrO8Wf6MWJEVzIeg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191105110504.GA4500@sirena.co.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  5 Nov 2019 17:32:35 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+On 05/11/2019 11:05, Mark Brown wrote:
+> On Tue, Nov 05, 2019 at 10:58:39AM +0000, John Garry wrote:
+>> On 04/11/2019 19:24, Mark Brown wrote:
+>>> On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
+> 
+>>>> +		if (len) {
+>>>> +			u32 val;
+>>>> +
+>>>> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
+>>>> +
+>>>> +			to += words * 4;
+>>>> +			for (i = 0; i < len; i++, val >>= 8, to++)
+>>>> +				*to = (u8)val;
+>>>> +		}
+>>>> +	} else {
+>>>> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
+>>>> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
+>>>> +			int j;
+> 
+>>> The more usual pattern for these would be to do some unaligned accesses
+>>> for the start/end of the buffer to get to alignment and then transfer
+>>> the rest as aligned data.
+> 
+>> Yeah, I understand you, but for that I would need to generate multiple
+>> transactions in the driver, and I wanted to keep 1x transaction per
+>> spi_controller_mem_ops.exec_op call.
+> 
 
-> Mdev bus only supports vfio driver right now, so it doesn't implement
-> match method. But in the future, we may add drivers other than vfio,
-> the first driver could be virtio-mdev. This means we need to add
-> device class id support in bus match method to pair the mdev device
-> and mdev driver correctly.
->=20
-> So this patch adds id_table to mdev_driver and class_id for mdev
-> device with the match method for mdev bus.
->=20
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  .../driver-api/vfio-mediated-device.rst       |  5 ++++
->  drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
->  drivers/s390/cio/vfio_ccw_ops.c               |  1 +
->  drivers/s390/crypto/vfio_ap_ops.c             |  1 +
->  drivers/vfio/mdev/mdev_core.c                 | 17 +++++++++++++
->  drivers/vfio/mdev/mdev_driver.c               | 25 +++++++++++++++++++
->  drivers/vfio/mdev/mdev_private.h              |  1 +
->  drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
->  include/linux/mdev.h                          |  8 ++++++
->  include/linux/mod_devicetable.h               |  8 ++++++
->  samples/vfio-mdev/mbochs.c                    |  1 +
->  samples/vfio-mdev/mdpy.c                      |  1 +
->  samples/vfio-mdev/mtty.c                      |  1 +
->  13 files changed, 76 insertions(+)
+Hi Mark,
 
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+>> So maybe I can do some trickery in my adjust_op_size method to generate
+>> these multiple transactions: a. any unaligned start data b. the 32b-aligned
+>> data b. unaligned end. I think that the HW should be able to handle that.
+> 
+> Right, that's what I was expecting.
+> 
+
+So that should work for xfer data commands, but generally the read/write 
+reg commands in the SPI NOR layer would not use 
+spi_mem_adjust_op_size(), like spi-nor.c:spi_nor_read_id(), as an example.
+
+For these, I should be able to guarantee start alignment (since the 
+buffer is kmalloc'ed), but not end alignment, so would still require 
+4-byte + single byte copies for these.
+
+Thanks,
+John
 
