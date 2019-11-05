@@ -2,94 +2,158 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FAB3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:16:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A856DC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:19:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BEBC521929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:16:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Lte/JsUd"
+	by mail.kernel.org (Postfix) with ESMTP id 69DE321D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:19:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572985177;
+	bh=GyelMJW25YnnMBPhUYz/eAXNyRrneJFGG4HtJzJDBBw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NRlrK1vTcvhbhF6SMv3N9DoSbeDPoYM2DKNI5RjcwTu5YlICoet7PvE2I6uF7Fg1h
+	 z9VxIe/KAMdEs1Jakc85RVOMUSQABYK/rNBgdqLc7yvyn5/0NGWI/oZWtmDwA7l01B
+	 4btsVpoJaaKFZu6dMT+kR1wxnojviJo9VcYW45cg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729312AbfKEUQ2 (ORCPT
+        id S1729428AbfKEUTg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:16:28 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:46826 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726608AbfKEUQ2 (ORCPT
+        Tue, 5 Nov 2019 15:19:36 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:43531 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKEUTg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:16:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=VeD7M+kok91AM62yaKIfmwagN54YDmvxDwDCuPkuOns=; b=Lte/JsUdR5b+7q9J0O2hiuAUn
-        DXXScohGAz1tglK9ZBdLGrkuOqN0SvsoD5VeQ2qer//ZQ1scH49kjPPw7Kf3V009ScK3zwXR0W6e6
-        eHD9jAgXFwbiZR3qC8evovqEQc4Nd2ixcysE9+GS9ewW04C3aHXrR5azB3R1xT02x79XrmWoBZ76C
-        nkr14Af93PMGc4IvNeL7mtc2b73nIUC2fHjsvumozbYkO2IDx3qpvxiUtOpqtPLt4eN5rYTNfpdPV
-        jOGSyHjJvvUWBpRgYS6754+DWebnczMv4wB83WR+hhMufJX9PawjfbORjAeUSKeS+1HHiPHPJCxJT
-        BMhhTUw4g==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iS5FZ-0003PY-BT; Tue, 05 Nov 2019 20:16:25 +0000
-Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 585F9980D26; Tue,  5 Nov 2019 21:16:23 +0100 (CET)
-Date:   Tue, 5 Nov 2019 21:16:23 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v6] perf: Sharing PMU counters across compatible events
-Message-ID: <20191105201623.GG3079@worktop.programming.kicks-ass.net>
-References: <20190919052314.2925604-1-songliubraving@fb.com>
- <20191031124332.GQ4131@hirez.programming.kicks-ass.net>
- <19AE6C78-C54C-4C37-BBD2-0396BB97A474@fb.com>
- <98A6264C-B833-4930-95A0-2A3186519D87@fb.com>
+        Tue, 5 Nov 2019 15:19:36 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l20so6701223oie.10;
+        Tue, 05 Nov 2019 12:19:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Nx7kJTn3OdCopAIR7Uif4GRlSRK0moBADISBNdcfrTs=;
+        b=CfErN2/fXneyoKLva9QaXEWV9InFtjqfbLUF4t/NjrhOI69gK5iCHtRaHP31DywgYl
+         VL5lrVQYAkIejBB36NkBTJ0fm3YrGyBjB0bH0Okjw+Wkxaa4vah32sKoanlNABehmpQv
+         ol+xK9XIHDTwMR8Wo7CSYCr81LRgQCKpyFCwbQgInUrlRCiij3USuzKX7TWqbkqMMU54
+         UIObKILHW/NKnsE1Ct2MD7FFkBJHbsIemKEjm6kWPfs15WovkDAqFK5GwZXVJASNm/1c
+         9awtmKjWCYWcp8YDU2eYE6Ep99eR7OnuY0ZzJTYGYcD2jBK9Y7QKXGP0Obs5KYUYndYy
+         C/7g==
+X-Gm-Message-State: APjAAAVBypSyKfNEr4Ap9aCecBk5ayKrFI4sPJtf64GqAbBb+10mwZ/R
+        pXrVjvm+9DmMAhZhWhoLTg==
+X-Google-Smtp-Source: APXvYqzcwQTTuh/ucjVOm77Dw2qQBBOp4x78YLgbH+mDcvDa5vMIG9/s7Mrn5jjgeZmF/Hy7tj1Clw==
+X-Received: by 2002:aca:dd0a:: with SMTP id u10mr766731oig.130.1572985173589;
+        Tue, 05 Nov 2019 12:19:33 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id v26sm2778262oic.5.2019.11.05.12.19.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 12:19:32 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:19:32 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Rodrigo Carvalho <rodrigorsdc@gmail.com>
+Cc:     Lars-Peter Clausen <lars@metafoo.de>,
+        Michael Hennerich <Michael.Hennerich@analog.com>,
+        Stefan Popa <stefan.popa@analog.com>,
+        Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-iio@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v3] dt-bindings: iio: accel: add binding documentation
+ for ADIS16240
+Message-ID: <20191105201932.GA24515@bogus>
+References: <20191101000301.12901-1-rodrigorsdc@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <98A6264C-B833-4930-95A0-2A3186519D87@fb.com>
+In-Reply-To: <20191101000301.12901-1-rodrigorsdc@gmail.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 05:11:08PM +0000, Song Liu wrote:
-
-> > I think we can use one of the event as master. We need to be careful when
-> > the master event is removed, but it should be doable. Let me try. 
+On Thu, Oct 31, 2019 at 09:03:01PM -0300, Rodrigo Carvalho wrote:
+> This patch add device tree binding documentation for ADIS16240.
 > 
-> Actually, there is a bigger issue when we use one event as the master: what
-> shall we do if the master event is not running? Say it is an cgroup event, 
-> and the cgroup is not running on this cpu. An extra master (and all these
-> array hacks) help us get O(1) complexity in such scenario. 
+> Signed-off-by: Rodrigo Ribeiro Carvalho <rodrigorsdc@gmail.com>
+> ---
+> V3:
+>    - Remove spi-cpol and spi-cpha field. They don't seem necessary
+
+Not necessary to document or use? The latter requires the former.
+
+If your device only supports one timing mode, then you don't need them 
+because it should be implied and the driver can just tell the SPI 
+subsystem what mode it requires. If the device can support multiple 
+timing modes, then you should document that you are using the 
+properties.
+
+>  .../bindings/iio/accel/adi,adis16240.yaml     | 51 +++++++++++++++++++
+>  1 file changed, 51 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
 > 
-> Do you have suggestions on how to solve this problem? Maybe we can keep the 
-> extra master, and try get rid of the double alloc? 
-
-Right, you have to consider scope when sharing. The master should be the
-largest scope event and any slaves should be complete subsets.
-
-Without much thought this seems a fairly straight forward constraint;
-that is, given cgroups I'm not immediately seeing how we can violate
-that.
-
-Basically, pick the cgroup event nearest to the root as the master.
-We have to have logic to re-elect the master anyway for deletion, so
-changing it on add shouldn't be different.
-
-(obviously the root-cgroup is cpu-wide and always on, and if you have
-two events from disjoint subtrees they have no overlap, so it doesn't
-make sense to share anyway)
-
+> diff --git a/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> new file mode 100644
+> index 000000000000..9a4cd12c4818
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/accel/adi,adis16240.yaml
+> @@ -0,0 +1,51 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/accel/adi,adis16240.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ADIS16240 Programmable Impact Sensor and Recorder driver
+> +
+> +maintainers:
+> +  - Alexandru Ardelean <alexandru.ardelean@analog.com>
+> +
+> +description: |
+> +  ADIS16240 Programmable Impact Sensor and Recorder driver that supports
+> +  SPI interface.
+> +    https://www.analog.com/en/products/adis16240.html
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,adis16240
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +
+> +examples:
+> +  - |
+> +    #include <dt-bindings/gpio/gpio.h>
+> +    #include <dt-bindings/interrupt-controller/irq.h>
+> +    spi0 {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        /* Example for a SPI device node */
+> +        accelerometer@0 {
+> +            compatible = "adi,adis16240";
+> +            reg = <0>;
+> +            spi-max-frequency = <2500000>;
+> +            spi-cpol;
+> +            spi-cpha;
+> +            interrupt-parent = <&gpio0>;
+> +            interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
+> +        };
+> +    };
+> -- 
+> 2.23.0
+> 
