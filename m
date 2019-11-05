@@ -2,103 +2,68 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2651C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F88C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A945121D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ARteMhcU"
+	by mail.kernel.org (Postfix) with ESMTP id 927D321A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388710AbfKEQ5I (ORCPT
+        id S2388992AbfKEQ50 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:57:08 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53865 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727830AbfKEQ5I (ORCPT
+        Tue, 5 Nov 2019 11:57:26 -0500
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33771 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388831AbfKEQ50 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:57:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572973027;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6/CYal2Ht1Wk+CkyE9G0+kWfB1JTDB8P2q0I4iMUmUk=;
-        b=ARteMhcUalj62/0PtHhYUU+Jz5mzk9A/Rocx7HNKUukVeEL9D60O6jX68JUWScMYpVUNtD
-        kvnRUQjrQ3Dz9Am1jkdf6YCdbW8eJRGnDYXoA34KqaoD8x5766jAz5u/Z3sqdKR5T3+EDe
-        mD0rBeI12liJIqwEN/44Jj79iAcghW8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-264-fND83D8KND2PRYRlMZm3mw-1; Tue, 05 Nov 2019 11:55:59 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4106107ACC3;
-        Tue,  5 Nov 2019 16:55:57 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AAD827065;
-        Tue,  5 Nov 2019 16:55:57 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 11:55:56 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
- UFFD_FEATURE_EVENT_FORK
-Message-ID: <20191105165556.GK30717@redhat.com>
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
- <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
- <20191105163316.GI30717@redhat.com>
- <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
+        Tue, 5 Nov 2019 11:57:26 -0500
+X-Originating-IP: 92.137.17.54
+Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
+        (Authenticated sender: alexandre.belloni@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CE4AB60005;
+        Tue,  5 Nov 2019 16:57:23 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 17:57:23 +0100
+From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/2] rtc: bd70528: Fix hour register mask
+Message-ID: <20191105165723.GD8309@piout.net>
+References: <20191023114751.GA14100@localhost.localdomain>
+ <20191105165317.GC8309@piout.net>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: fND83D8KND2PRYRlMZm3mw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191105165317.GC8309@piout.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:39:26AM -0800, Daniel Colascione wrote:
-> I'm not suggesting that we fail userfaultfd(2) without CAP_SYS_PTRACE.
-> That would, as you point out, break things. I'm talking about
-> recording *whether* we had CAP_SYS_PTRACE in an internal flag in the
-> uffd context when we create the thing --- and then, at ioctl time,
-> checking that flag, not the caller's CAP_SYS_PTRACE, to see whether
-> UFFD_FEATURE_EVENT_FORK should be made available. This way, the
-> security check hinges on whether the caller *at create time* was
-> privileged.
+On 05/11/2019 17:53:18+0100, Alexandre Belloni wrote:
+> On 23/10/2019 14:47:51+0300, Matti Vaittinen wrote:
+> > When RTC is used in 24H mode (and it is by this driver) the maximum
+> > hour value is 24 in BCD. This occupies bits [5:0] - which means
+> > correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
+> > 
+> > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> >  include/linux/mfd/rohm-bd70528.h | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> Applied, thanks.
+> 
 
-Until now it wasn't clear to me you still wanted to do the permission
-check in UFFDIO_API time, and you only intended to move the
-"measurement" of the capability to the syscall.
+Actually, is there any point in doing that since "rtc: bd70528 add
+BD71828 support" will conflict with it and correct the issue anyway?
 
-So you're suggesting to add more kernel complexity to code pending for
-removal to achieve a theoretically more pure solution in the band-aid
-required to defer the removal of the posix-breaking read
-implementation of the uffd fork feature?
-
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
