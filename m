@@ -2,96 +2,111 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BADAC49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F76CC49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DAFED222CD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:14:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eFhRCRqW"
+	by mail.kernel.org (Postfix) with ESMTP id 4E1D321928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388348AbfKEKO6 (ORCPT
+        id S2388370AbfKEKPF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:14:58 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:34063 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2387945AbfKEKO6 (ORCPT
+        Tue, 5 Nov 2019 05:15:05 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41881 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387945AbfKEKPF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:14:58 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572948897;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=LjKU1u6KcaZgX4NYjUsHfYNS+cOdjDOwyw+V7fvfunk=;
-        b=eFhRCRqWhhnEJIEAJfqARGT4SfnYdiS2mnNtvMRYAK+z9ooWVj3hW86yGf0jv7GxVnJ6rC
-        gxOaWVvcf1BbmVN4h/14g/SMtlsJTCwZPaPMgmMpSomZ8VzSXEUmzmzQaBsokO0KsH52m4
-        TrUrM7pjC1UyrJje0eIXJ+oCTZIyAGo=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-332-TI7KHRKBPAa8P93Eoj7deg-1; Tue, 05 Nov 2019 05:14:53 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D82C4107ACC2;
-        Tue,  5 Nov 2019 10:14:51 +0000 (UTC)
-Received: from [10.36.117.253] (ovpn-117-253.ams2.redhat.com [10.36.117.253])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7C67A608C8;
-        Tue,  5 Nov 2019 10:14:48 +0000 (UTC)
-Subject: Re: [PATCH] MAINTAINERS: update information for "MEMORY MANAGEMENT"
-To:     Michal Hocko <mhocko@kernel.org>, Vlastimil Babka <vbabka@suse.cz>
-Cc:     Song Liu <songliubraving@fb.com>, linux-kernel@vger.kernel.org,
-        linux-mm@kvack.org, kernel-team@fb.com,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-References: <20191030202217.3498133-1-songliubraving@fb.com>
- <4e4ff9c9-064c-7515-41ea-9f20b9889e51@suse.cz>
- <20191105094518.GA25980@dhcp22.suse.cz>
-From:   David Hildenbrand <david@redhat.com>
-Organization: Red Hat GmbH
-Message-ID: <70dedc65-6668-bce9-f42d-f99ea71e9a26@redhat.com>
-Date:   Tue, 5 Nov 2019 11:14:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 5 Nov 2019 05:15:05 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m9so21091990ljh.8;
+        Tue, 05 Nov 2019 02:15:03 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tw+wdPHgodKyjQmZqWJROQdwHuE4kDseErXxhJDpGpg=;
+        b=Vv0B9Je3T8g7H79rCiFfwJcOYRtE5FCivVP06MQOXwzKp+t+LErHrGmtZsEuyIj989
+         ly3H8nYEsppXMa61TBQhN43d2E1CJDMMD1HKupidkGRX5fFGlXbkPb+g7Yisa/cKc5Q9
+         cDTbDOILNg3B3J5vjxqhYPeD1zR21IvQ597O2L/Y92H4Ijjig/36xYYbrsnxPyH8yWty
+         8RO3PVe73AKZCfyAq7hrLp9QE7rZfULHjLAKRxxSuFUSnSyMDs9K2xn5VhjoOS9eRnos
+         Eg6MFe9MXYS8PkxpoTUzWMxjBZct2UDwAP3dN7ceLY8zCncNqqgwGGgOvz4CtW3uMCaM
+         8pUQ==
+X-Gm-Message-State: APjAAAVWP9esim4nYb1yqRbB5GPv5US/tHCGB3qeuyWWAtgHAC1qkP82
+        jf9q6KKAJv4KRFma6eX0e08=
+X-Google-Smtp-Source: APXvYqxm5jFPRWAPDhlK95/Fz6BeQgQNzN6l8o6QNsvAGoEUPPbAR1BFRAC1Dqa/B1h9CuDFStXDtw==
+X-Received: by 2002:a2e:8508:: with SMTP id j8mr6150112lji.136.1572948902581;
+        Tue, 05 Nov 2019 02:15:02 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id p4sm9223926ljp.103.2019.11.05.02.15.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:15:02 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:14:53 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 11/62] gpio: gpio-dln2: Use new GPIO_LINE_DIRECTION
+Message-ID: <9e53174ad7796c26507f7e11d03ed011a507af80.1572945741.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945741.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105094518.GA25980@dhcp22.suse.cz>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: TI7KHRKBPAa8P93Eoj7deg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945741.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05.11.19 10:45, Michal Hocko wrote:
-> On Mon 04-11-19 15:53:18, Vlastimil Babka wrote:
-> [...]
->> (And obviously, could we finally get a real git? :)
->=20
-> I would love to see that happen! While I do appreciate existance of
-> Johannes' mirror that is not something that is suitable for a long term
-> development IMHO because the tree rebases constantly.
->=20
-> And while we are talking about a better information on the MM
-> maintainership, should we also be explicit about maintainers of MM parts
-> which have a primary go to person? At least compaction, allocator, OOM,
-> memory hotplug, THP, shmem, memory hwpoisoning, early allocators come to
-> mind.
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-Yes please. This is valuable information.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-dln2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/gpio/gpio-dln2.c b/drivers/gpio/gpio-dln2.c
+index 8a33c2fc174d..26b40c8b8a12 100644
+--- a/drivers/gpio/gpio-dln2.c
++++ b/drivers/gpio/gpio-dln2.c
+@@ -200,9 +200,9 @@ static int dln2_gpio_get_direction(struct gpio_chip *chip, unsigned offset)
+ 	struct dln2_gpio *dln2 = gpiochip_get_data(chip);
+ 
+ 	if (test_bit(offset, dln2->output_enabled))
+-		return 0;
++		return GPIO_LINE_DIRECTION_OUT;
+ 
+-	return 1;
++	return GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static int dln2_gpio_get(struct gpio_chip *chip, unsigned int offset)
+@@ -214,7 +214,7 @@ static int dln2_gpio_get(struct gpio_chip *chip, unsigned int offset)
+ 	if (dir < 0)
+ 		return dir;
+ 
+-	if (dir == 1)
++	if (dir == GPIO_LINE_DIRECTION_IN)
+ 		return dln2_gpio_pin_get_in_val(dln2, offset);
+ 
+ 	return dln2_gpio_pin_get_out_val(dln2, offset);
+-- 
+2.21.0
 
 
---=20
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Thanks,
-
-David / dhildenb
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
