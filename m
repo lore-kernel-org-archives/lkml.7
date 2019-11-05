@@ -2,194 +2,86 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF1AC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D9C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FA9D2084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZODWxeoM"
+	by mail.kernel.org (Postfix) with ESMTP id 2DE5C2084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572993389;
+	bh=gjH+ZYotJRmYe2FcsXdY4/Sv6Qh2DPmqjFve/uDW4Ds=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
+	b=stv9h1jQMIsfq2KysVij3afp8HXAy0DF+dstx49cRz1isn4HMtZr4LCSpsquhFZeV
+	 +/bF4JlBTrfEvJyXN/P+cxVyiSzqPGNrATuG4J95UBo5mB1LahHY+Q5s2OExY/8guh
+	 wWJD3ua+BS3TisMR8QizQxPUdhy3v9TZ8e96Uwts=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730396AbfKEWgG (ORCPT
+        id S1730480AbfKEWg2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:36:06 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46289 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730192AbfKEWgG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:36:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id n23so8867164otr.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:36:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=sI67ya690BTFzgQFAyEbbbi8Nt1gAKdEUwsmNFmIXdc=;
-        b=ZODWxeoMRTwEvAD65PgEfzPAUnDmSFK4brlri5jweoy7Vi+WgtjrshGTfCoZLdLlmE
-         OxudRyI4pmvp87d3vuAk/pMDHJzZl5Al1b36eh9f9DSrvm60ek6rspFnti0c8O4Ev4uk
-         z1qhp+xiMln01gOwVNShh2+KNYFk2Y/pLgcF5FTn5/Xtf2qFyCSb0FoRY8l7WfkpepGF
-         oAy/GlU+tNs3vQHqFKsJxibWdE6Rt5t2LmGpQq1hzGlAT9GojrTabUQw4Jw0xefov4Tw
-         iYlDOldEuXej4F2xabetKwN2uUdatrbgmhOfgs1QE4zlqslyTvdW0roW/t8G01FlgEoF
-         Q3Tw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=sI67ya690BTFzgQFAyEbbbi8Nt1gAKdEUwsmNFmIXdc=;
-        b=sX5Prj6H1D48EGTHLEw4JRJkQHhwuEzkUN342P26pUJ0kFEV6jVjFOGWvmgFHWwiof
-         BU06TbbhULpoDBt94/KM7MX0x6K4ETk6soD5e9ko2p1zynVFA/h5Ap6wuoq3It+ggHgl
-         r98N/HCtkKs/90UFtOfKoptu5fWYAdT5xSrWACOCZQW05bap+P0YVwfzeTOV7Vs0HrUK
-         EyyqIZ2ZoG3+YxTMjBBKbzSVMTgcjUDGfm4mSOtgM+CGznkn6kcPLa/HRmn22AlUmyZl
-         qy2pw2GkaKdvoZWQjLMkedSxMWsWtM4lYKsZtpFmN7O9DJxzkSussIJE6OK1A5WCDi1m
-         3MWQ==
-X-Gm-Message-State: APjAAAWLtLy5aocPyKwlVNwzCYubpgybWW+50FsJ6tp1AipBlxM7Txmx
-        DFrI3Lwpy2nOCBx4vNEY5BgfvaqxRpO8DHV/F5JyTg==
-X-Google-Smtp-Source: APXvYqy6bhBsSUtfDyKnL4fDDnI//oKt21X9dsAUShv32i3I5Z2T55VMpauhoALDUST3AJ69I0rUnsVwNGgegKQRHKY=
-X-Received: by 2002:a9d:648f:: with SMTP id g15mr7370526otl.195.1572993364486;
- Tue, 05 Nov 2019 14:36:04 -0800 (PST)
+        Tue, 5 Nov 2019 17:36:28 -0500
+Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728515AbfKEWg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:36:28 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 332852084D;
+        Tue,  5 Nov 2019 22:36:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572993387;
+        bh=gjH+ZYotJRmYe2FcsXdY4/Sv6Qh2DPmqjFve/uDW4Ds=;
+        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+        b=eLFHAdsLf3RlWD18ADrZ40vl5+EbKbpBBYYh2FzVZ+rtPY/6l2woPXYdRhfwphjsF
+         qrGFNV9A9yoPtWbFr05zcbjitDIy+gLpCNsaaM3jlDxsBvpOatOYkVQC790MgI7HI/
+         RNrrRsEg8kBnbSzBmPh08ze7aZEfxvbvbcgdneEc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-3-saravanak@google.com>
- <1593797.btdyhENphq@kreacher>
-In-Reply-To: <1593797.btdyhENphq@kreacher>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Nov 2019 14:35:28 -0800
-Message-ID: <CAGETcx9KSwXgrc0PaWQtBuiET-0ts9HNgjzRcioewjqzjuQGSg@mail.gmail.com>
-Subject: Re: [PATCH v1 2/5] driver core: Allow a device to wait on optional suppliers
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
+References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org> <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: clock: Introduce RPMHCC bindings for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 05 Nov 2019 14:36:26 -0800
+Message-Id: <20191105223627.332852084D@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Looks like I squashed/rebased a bit incorrectly. It's fixed in the
-next patch in the series.
+Quoting Taniya Das (2019-10-29 10:48:18)
+> Add compatible for SC7180 RPMHCC.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Acked-by: Rob Herring <robh@kernel.org>
+> ---
+>  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/D=
+ocumentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> index f25d76f..feed637 100644
+> --- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
+> @@ -19,6 +19,7 @@ properties:
+>      enum:
+>        - qcom,sdm845-rpmh-clk
+>        - qcom,sm8150-rpmh-clk
+> +      - qcom,sc7180-rpmh-clk
+>=20
 
--Saravana
+Sort?
 
-On Tue, Nov 5, 2019 at 2:29 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Monday, October 28, 2019 11:00:23 PM CET Saravana Kannan wrote:
-> > Before this change, if a device is waiting on suppliers, it's assumed
-> > that all those suppliers are needed for the device to probe
-> > successfully. This change allows marking a devices as waiting only on
-> > optional suppliers. This allows a device to wait on suppliers (and link
-> > to them as soon as they are available) without preventing the device
-> > from being probed.
-> >
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/base/core.c    | 28 +++++++++++++++++++++++++---
-> >  include/linux/device.h |  3 +++
-> >  2 files changed, 28 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 17ed054c4132..48cd43a91ce6 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -480,13 +480,25 @@ EXPORT_SYMBOL_GPL(device_link_add);
-> >   * This function is NOT meant to be called from the probe function of the
-> >   * consumer but rather from code that creates/adds the consumer device.
-> >   */
-> > -static void device_link_wait_for_supplier(struct device *consumer)
-> > +static void device_link_wait_for_supplier(struct device *consumer,
-> > +                                       bool need_for_probe)
-> >  {
-> >       mutex_lock(&wfs_lock);
-> >       list_add_tail(&consumer->links.needs_suppliers, &wait_for_suppliers);
-> > +     consumer->links.need_for_probe = need_for_probe;
-> >       mutex_unlock(&wfs_lock);
-> >  }
-> >
-> > +static void device_link_wait_for_mandatory_supplier(struct device *consumer)
-> > +{
-> > +     device_link_wait_for_supplier(consumer, true);
-> > +}
-> > +
-> > +static void device_link_wait_for_optional_supplier(struct device *consumer)
-> > +{
-> > +     device_link_wait_for_supplier(consumer, false);
-> > +}
-> > +
-> >  /**
-> >   * device_link_add_missing_supplier_links - Add links from consumer devices to
-> >   *                                       supplier devices, leaving any
-> > @@ -656,7 +668,8 @@ int device_links_check_suppliers(struct device *dev)
-> >        * probe.
-> >        */
-> >       mutex_lock(&wfs_lock);
-> > -     if (!list_empty(&dev->links.needs_suppliers)) {
-> > +     if (!list_empty(&dev->links.needs_suppliers) &&
-> > +         dev->links.need_for_probe) {
-> >               mutex_unlock(&wfs_lock);
-> >               return -EPROBE_DEFER;
-> >       }
-> > @@ -760,6 +773,15 @@ void device_links_driver_bound(struct device *dev)
-> >  {
-> >       struct device_link *link;
-> >
-> > +     /*
-> > +      * If a device probes successfully, it's expected to have created all
-> > +      * the device links it needs to or make new device links as it needs
-> > +      * them. So, it no longer needs to wait on any suppliers.
-> > +      */
-> > +     mutex_lock(&wfs_lock);
-> > +     list_del_init(&dev->links.needs_suppliers);
-> > +     mutex_unlock(&wfs_lock);
-> > +
-> >       device_links_write_lock();
-> >
-> >       list_for_each_entry(link, &dev->links.consumers, s_node) {
-> > @@ -2393,7 +2415,7 @@ int device_add(struct device *dev)
-> >
-> >       if (fwnode_has_op(dev->fwnode, add_links)
-> >           && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > -             device_link_wait_for_supplier(dev);
-> > +             device_link_wait_for_mandatory_supplier(dev, true);
->
-> Does this compile even?
->
-> The function takes one argument according to the definition above ...
->
-> >       bus_probe_device(dev);
-> >       if (parent)
-> > diff --git a/include/linux/device.h b/include/linux/device.h
-> > index f1f2aa0b19da..4fd33da9a848 100644
-> > --- a/include/linux/device.h
-> > +++ b/include/linux/device.h
-> > @@ -1156,6 +1156,8 @@ enum dl_dev_state {
-> >   * @consumers: List of links to consumer devices.
-> >   * @needs_suppliers: Hook to global list of devices waiting for suppliers.
-> >   * @defer_sync: Hook to global list of devices that have deferred sync_state.
-> > + * @need_for_probe: If needs_suppliers is on a list, this indicates if the
-> > + *               suppliers are needed for probe or not.
-> >   * @status: Driver status information.
-> >   */
-> >  struct dev_links_info {
-> > @@ -1163,6 +1165,7 @@ struct dev_links_info {
-> >       struct list_head consumers;
-> >       struct list_head needs_suppliers;
-> >       struct list_head defer_sync;
-> > +     bool need_for_probe;
-> >       enum dl_dev_state status;
-> >  };
-> >
-> >
->
->
->
->
