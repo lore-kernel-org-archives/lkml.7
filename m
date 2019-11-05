@@ -2,112 +2,108 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74D53C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:37:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 192F7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:37:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 132B1217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:37:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B567220663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:37:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="T7otIGjN"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="jjh02ztP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730157AbfKEXhE (ORCPT
+        id S1730252AbfKEXhJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:37:04 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39972 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729549AbfKEXhD (ORCPT
+        Tue, 5 Nov 2019 18:37:09 -0500
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:14904 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfKEXhI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:37:03 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 15so15744839pgt.7;
-        Tue, 05 Nov 2019 15:37:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=jbOa8JF4MBQR2lZ6+xvcROFm9Impr2oKxSGxSOq96pg=;
-        b=T7otIGjNM+rxJdQzdyBGLkV3wlSlK0ERKVBdMp3P/gK3s8k6YB+I9PX7WzR8GXVgPY
-         FsORAyvugQ6ORE7htS3hSbnu6mVPwgJ5be3ZCjHR7OYWjOlp9F1CX23SX7pjXwoluPMh
-         WEctsoRPF2XL7IV3Dnt249ls5LKiykIvFKx8LsdSwsfwXg4Hwi6AuBTpWNSWoGHBTwl6
-         sbLonNw5C5GbYtxU8DGyl93/qHK/zUp+qP3cr6lpPzXNHR51cXMHYniT0Tt0AuBcnuoC
-         vDTD3T5tfU4Ryc5DIDSAfRwjVavmYUq1TFL7QbVKwuu7WujskeUg5vOzIjOQNpTmzs5p
-         gsBA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=jbOa8JF4MBQR2lZ6+xvcROFm9Impr2oKxSGxSOq96pg=;
-        b=ICHwwKcWwVhwEMEt7VkLaNf0aHOLS5Lu8AyDPMpRL2sUBu7WEZHmF+FKs3uOe6wFOs
-         8sdDh2jumUupoG4ojpawUvjUUmJIQtb0lI5rtFbLdg09r3l+9gr+BkAfoayVGw9sAdPZ
-         cHRRCZTGbluP93tJKI4zV1ULnBBd22LCDkshHrkn3qLHwDWCguZxVG/M1qy85UV4ji1U
-         fSDhARonZuEkK7LtADCYzXrh+gnCnKiiRRNMhd7EYwL24WtiV9FXFQOGfUthwMcLUbPX
-         RzIu6QEN0OOOquzky+E3QaEbmnlo/d8TYT0mNuG5nMeAiSVKvCRAq1/SFSibfKRSzm5H
-         yUfw==
-X-Gm-Message-State: APjAAAWWSuMKcGij5u7eCw+3Ja1VhOlyRZ3pSALu7/jPquI4no+Ivs94
-        9mseGOG/RrFHvbLdSBK4CE8=
-X-Google-Smtp-Source: APXvYqy6TnDZoAcLevkCQceDlWjiDNaPRoDljt1Fyg09m4mm28L5Wnv+mQ2DQxrQ9qKmM8wKNTktYg==
-X-Received: by 2002:a17:90a:25e1:: with SMTP id k88mr2298501pje.14.1572997022758;
-        Tue, 05 Nov 2019 15:37:02 -0800 (PST)
-Received: from debian.net.fpt ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
-        by smtp.gmail.com with ESMTPSA id y22sm13641688pfn.6.2019.11.05.15.36.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 15:37:01 -0800 (PST)
-From:   Phong Tran <tranmanphong@gmail.com>
-To:     syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Cc:     2pi@mok.nu, alex.theissen@me.com, andreyknvl@google.com,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        Phong Tran <tranmanphong@gmail.com>
-Subject: [PATCH] usb: appledisplay: fix use-after-free in bl_get_brightness
-Date:   Wed,  6 Nov 2019 06:36:52 +0700
-Message-Id: <20191105233652.21033-1-tranmanphong@gmail.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <00000000000042d60805933945b5@google.com>
-References: <00000000000042d60805933945b5@google.com>
+        Tue, 5 Nov 2019 18:37:08 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc2076b0000>; Tue, 05 Nov 2019 15:36:11 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 05 Nov 2019 15:37:08 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 05 Nov 2019 15:37:08 -0800
+Received: from [10.26.11.93] (172.20.13.39) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
+ 2019 23:37:05 +0000
+Subject: Re: [PATCH 4.9 00/62] 4.9.199-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>
+CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
+        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
+        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
+        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
+References: <20191104211901.387893698@linuxfoundation.org>
+From:   Jon Hunter <jonathanh@nvidia.com>
+Message-ID: <a6e1d805-9fa1-d91e-a926-b622ce9522d7@nvidia.com>
+Date:   Tue, 5 Nov 2019 23:37:03 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
+X-Originating-IP: [172.20.13.39]
+X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572996971; bh=l8Oc9pKpZdVoadwDGCTi1UoHamNMAHw9yUehG7ff5+M=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
+         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=jjh02ztPqzKSpU6wnko2/qR3WK79eSBD9+dbuHLdRpx8Aej88UpHUy7Pu0a0U2DGn
+         FG6ngRBapGdhn/xzRUWY/EXA4GKrkz63GJ/NzmTF/favPmW8rKzZkUUu0xuQnTWad+
+         ElFkiwbhmULjS+M8TLDKT+VwPmur6SCzhUO9pFS9rLk5uZ772aeuTvhGJGfO1Tbwnx
+         HPCRijT9UcD73T48hFRPNW4IG9304cbfmSHZcQLxgPAkvkRadiDiC2SgIxSTSKcIM3
+         NvPbsX6aj0STLihpQ9JO2havxAq0yAbReZYiD8MCEbahqKmpgHkzUnV2kXMphbK6g7
+         5rOdEJfj4UUuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In context of USB disconnect, the delaywork trigger and calling
-appledisplay_bl_get_brightness() and the msgdata was freed.
 
-add the checking return value of usb_control_msg() and only update the
-data while the retval is valid.
+On 04/11/2019 21:44, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.199 release.
+> There are 62 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.199-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
 
-Reported-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-Reported-and-tested-by:
-syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+All tests for Tegra are passing ...
 
-https://groups.google.com/d/msg/syzkaller-bugs/dRmkh2UYusY/l2a6Mg3FAQAJ
+Test results for stable-v4.9:
+    8 builds:	8 pass, 0 fail
+    16 boots:	16 pass, 0 fail
+    24 tests:	24 pass, 0 fail
 
-Signed-off-by: Phong Tran <tranmanphong@gmail.com>
----
- drivers/usb/misc/appledisplay.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Linux version:	4.9.199-rc1-g4e59c9878a95
+Boards tested:	tegra124-jetson-tk1, tegra20-ventana,
+                tegra210-p2371-2180, tegra30-cardhu-a04
 
-diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
-index ac92725458b5..3e3dfa5a3954 100644
---- a/drivers/usb/misc/appledisplay.c
-+++ b/drivers/usb/misc/appledisplay.c
-@@ -164,7 +164,8 @@ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
- 		0,
- 		pdata->msgdata, 2,
- 		ACD_USB_TIMEOUT);
--	brightness = pdata->msgdata[1];
-+	if (retval >= 0)
-+		brightness = pdata->msgdata[1];
- 	mutex_unlock(&pdata->sysfslock);
- 
- 	if (retval < 0)
+Cheers
+Jon
+
 -- 
-2.20.1
-
+nvpublic
