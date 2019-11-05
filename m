@@ -2,136 +2,190 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25966C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:57:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E595C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:00:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22D020869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:57:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4225D20869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:00:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="bjbAQX6K"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BS0Skgz5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390872AbfKES5Q (ORCPT
+        id S2390825AbfKETAM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:57:16 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:45132 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390651AbfKES5P (ORCPT
+        Tue, 5 Nov 2019 14:00:12 -0500
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13342 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390404AbfKETAL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:57:15 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5Ie0N5004984;
-        Tue, 5 Nov 2019 18:57:03 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=B6MKKzfbNgjx/kFsRlq8otjS+qYaBD7mQ/iKB+gBQeA=;
- b=bjbAQX6KZmJ8MdCiw4YdUoTZ3UFdpaej6XWrZWm2ae26k9xkS1inIXz4LOcZfDc4h2kJ
- elzMbMDTy20WLYHEO07GW2tk523SMvtjhoMgayYeeWmdzOXs+saFAtwt9Li3gWMx22C0
- Cdu5i9W9WozjafXptMUR3kGoz/H7dj6VXfHR7JydGqGY3trsLVW2nJ1l1hv7rhqPmWXu
- t0utcZUvEo3aRv2/cL03lyc0Wp1Q3rLkaK5ADsKg4Z9K1UX/a1bUfJtVRx6kZFeGaR/M
- 7dUuSZqZhGfeBRbFZgP+BH0XZNGGYocPUVHjF/uk0Cousjv9jC4Qk7fNechaveQAzGU6 pg== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w12er8hj5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 18:57:03 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5IdLkn032481;
-        Tue, 5 Nov 2019 18:57:02 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by aserp3030.oracle.com with ESMTP id 2w35ppea0d-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 18:57:02 +0000
-Received: from abhmp0002.oracle.com (abhmp0002.oracle.com [141.146.116.8])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA5Iv06t026257;
-        Tue, 5 Nov 2019 18:57:00 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Nov 2019 10:57:00 -0800
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-To:     Stephen Rothwell <sfr@canb.auug.org.au>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <20191105211920.787df2ab@canb.auug.org.au>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <dfffdd41-611c-e9c3-d059-6339c3bc0c47@oracle.com>
-Date:   Tue, 5 Nov 2019 10:56:59 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 5 Nov 2019 14:00:11 -0500
+Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc1c6bc0000>; Tue, 05 Nov 2019 11:00:12 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate102.nvidia.com (PGP Universal service);
+  Tue, 05 Nov 2019 11:00:07 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate102.nvidia.com on Tue, 05 Nov 2019 11:00:07 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
+ 2019 19:00:07 +0000
+Subject: Re: [PATCH v2 05/18] mm/gup: introduce pin_user_pages*() and FOLL_PIN
+To:     Mike Rapoport <rppt@kernel.org>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-6-jhubbard@nvidia.com>
+ <20191105131032.GG25005@rapoport-lnx>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <9ac948a4-59bf-2427-2007-e460aad2848a@nvidia.com>
+Date:   Tue, 5 Nov 2019 11:00:06 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191105211920.787df2ab@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20191105131032.GG25005@rapoport-lnx>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911050155
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911050155
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572980412; bh=ojXJL7Jf2vtMqYP0b7gLz2fp+ItJt4NPdkhylbujo04=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=BS0Skgz5RbNv7FRT3SjRhdwpwr0ecQ8AOgMazMsduNtoC93TjDB3sb+UV4BVm8kS1
+         e2YIxx2R9GvEAZtEOkrlW3cAbcdFl/wyRSANMj//120w5PZgTkX7MC1O13jzRSXm0k
+         KFRmKs+Z0OYFmlbRMapMiylU4RVjtXOt6K/rgWvnwLDQgPciqV1nCOSRX3qgMUJrsh
+         MPxa2/es4pKZhwzhaTFebsG3i4fLxzYnNXRQBChEYKYp2xONV3pwMnS3x1UJtQUm9p
+         dbWIIJyjFTTd1aKcwIBzPf2GKUh34tHy3QJ9j5720Clm3FqPmta2g3ZZa8fKcxJoAO
+         rGK6L5pnX3YOQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 2:19 AM, Stephen Rothwell wrote:
-> Hi all,
+On 11/5/19 5:10 AM, Mike Rapoport wrote:
+...
+>> ---
+>>  Documentation/vm/index.rst          |   1 +
+>>  Documentation/vm/pin_user_pages.rst | 212 ++++++++++++++++++++++
 > 
-> After merging the akpm-current tree, today's linux-next build (powerpc64
-> allnoconfig) failed like this:
-> 
-> In file included from arch/powerpc/mm/mem.c:30:
-> include/linux/hugetlb.h:233:19: error: redefinition of 'pmd_huge'
->   233 | static inline int pmd_huge(pmd_t pmd)
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
->                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
->                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
->                  from arch/powerpc/include/asm/mmu.h:356,
->                  from arch/powerpc/include/asm/lppaca.h:47,
->                  from arch/powerpc/include/asm/paca.h:17,
->                  from arch/powerpc/include/asm/current.h:13,
->                  from include/linux/sched.h:12,
->                  from arch/powerpc/mm/mem.c:16:
-> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:74:19: note: previous definition of 'pmd_huge' was here
->    74 | static inline int pmd_huge(pmd_t pmd) { return 0; }
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/mm/mem.c:30:
-> include/linux/hugetlb.h:238:19: error: redefinition of 'pud_huge'
->   238 | static inline int pud_huge(pud_t pud)
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
->                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
->                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
->                  from arch/powerpc/include/asm/mmu.h:356,
->                  from arch/powerpc/include/asm/lppaca.h:47,
->                  from arch/powerpc/include/asm/paca.h:17,
->                  from arch/powerpc/include/asm/current.h:13,
->                  from include/linux/sched.h:12,
->                  from arch/powerpc/mm/mem.c:16:
-> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:75:19: note: previous definition of 'pud_huge' was here
->    75 | static inline int pud_huge(pud_t pud) { return 0; }
->       |                   ^~~~~~~~
-> 
-> Caused by commit
-> 
->   9823e12e021f ("hugetlbfs: convert macros to static inline, fix sparse warning")
-> 
-> I have reverted that commit for today.
+> I think it belongs to Documentation/core-api.
 
-Thanks Stephen,
+Done:
 
-I will fix up and send another version via Andrew's tree.
+diff --git a/Documentation/core-api/index.rst b/Documentation/core-api/index.rst
+index ab0eae1c153a..413f7d7c8642 100644
+--- a/Documentation/core-api/index.rst
++++ b/Documentation/core-api/index.rst
+@@ -31,6 +31,7 @@ Core utilities
+    generic-radix-tree
+    memory-allocation
+    mm-api
++   pin_user_pages
+    gfp_mask-from-fs-io
+    timekeeping
+    boot-time-mm
 
--- 
-Mike Kravetz
+
+...
+>> diff --git a/Documentation/vm/pin_user_pages.rst b/Documentation/vm/pin_user_pages.rst
+>> new file mode 100644
+>> index 000000000000..3910f49ca98c
+>> --- /dev/null
+>> +++ b/Documentation/vm/pin_user_pages.rst
+>> @@ -0,0 +1,212 @@
+>> +.. SPDX-License-Identifier: GPL-2.0
+>> +
+>> +====================================================
+>> +pin_user_pages() and related calls
+>> +====================================================
+> 
+> I know this is too much to ask, but having pin_user_pages() a part of more
+> general GUP description would be really great :)
+> 
+
+Yes, definitely. But until I saw the reaction to the pin_user_pages() API
+family, I didn't want to write too much--it could have all been tossed out
+in favor of a whole different API. But now that we've had some initial
+reviews, I'm much more confident in being able to write about the larger 
+API set.
+
+So yes, I'll put that on my pending list.
+
+
+...
+>> +This document describes the following functions: ::
+>> +
+>> + pin_user_pages
+>> + pin_user_pages_fast
+>> + pin_user_pages_remote
+>> +
+>> + pin_longterm_pages
+>> + pin_longterm_pages_fast
+>> + pin_longterm_pages_remote
+>> +
+>> +Basic description of FOLL_PIN
+>> +=============================
+>> +
+>> +A new flag for get_user_pages ("gup") has been added: FOLL_PIN. FOLL_PIN has
+> 
+> Consider reading this after, say, half a year ;-)
+> 
+
+OK, OK. I knew when I wrote that that it was not going to stay new forever, but
+somehow failed to write the right thing anyway. :) 
+
+Here's a revised set of paragraphs:
+
+Basic description of FOLL_PIN
+=============================
+
+FOLL_PIN and FOLL_LONGTERM are flags that can be passed to the get_user_pages*()
+("gup") family of functions. FOLL_PIN has significant interactions and
+interdependencies with FOLL_LONGTERM, so both are covered here.
+
+Both FOLL_PIN and FOLL_LONGTERM are internal to gup, meaning that neither
+FOLL_PIN nor FOLL_LONGTERM should not appear at the gup call sites. This allows
+the associated wrapper functions  (pin_user_pages() and others) to set the
+correct combination of these flags, and to check for problems as well.
+
+
+thanks,
+
+John Hubbard
+NVIDIA
