@@ -2,211 +2,102 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87569CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:18:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 298E0CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:19:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 53F71204FD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:18:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F24B8204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:19:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nx62lGrP"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gXZl+zKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfKEASi (ORCPT
+        id S2387680AbfKEATU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:18:38 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:17961 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387415AbfKEASh (ORCPT
+        Mon, 4 Nov 2019 19:19:20 -0500
+Received: from mail-ed1-f49.google.com ([209.85.208.49]:46655 "EHLO
+        mail-ed1-f49.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387435AbfKEATT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:18:37 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc0bfe10001>; Mon, 04 Nov 2019 16:18:41 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Mon, 04 Nov 2019 16:18:35 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Mon, 04 Nov 2019 16:18:35 -0800
-Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
- 2019 00:18:34 +0000
-Subject: Re: [PATCH v2 12/18] mm/gup: track FOLL_PIN pages
-To:     Jerome Glisse <jglisse@redhat.com>
-CC:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
-        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
-        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-13-jhubbard@nvidia.com>
- <20191104185238.GG5134@redhat.com>
- <7821cf87-75a8-45e2-cf28-f85b62192416@nvidia.com>
- <20191104234920.GA18515@redhat.com>
-X-Nvconfidentiality: public
-From:   John Hubbard <jhubbard@nvidia.com>
-Message-ID: <f587647d-83dc-5bde-d244-f522ec5bda60@nvidia.com>
-Date:   Mon, 4 Nov 2019 16:18:33 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 19:19:19 -0500
+Received: by mail-ed1-f49.google.com with SMTP id x11so4576734eds.13;
+        Mon, 04 Nov 2019 16:19:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=bPI3xRQSihbuAop68QULfROzLi2EqQlmJiEdDSx7yKE=;
+        b=gXZl+zKzALBpq+fDhPXT21QE8iwzlELC/ZV+jVycXbP2eTy3Uwu9Cl3W7EKqz9kL72
+         YUWbOyXIruonjwN/tA2FbXO4O4iTbnWLeeyj+9/WVfHDaQkkoLOadJFaLuRnHSxQXFaR
+         jLG6VbxTh7Uc5dbQA9qs2YcOtqg1h4fPLHgg+5uAHe+t2WNBW6cyaEzvneiH5mqw+pmp
+         ditee/TqiVtr16jPDzKVLW+eQEFv9i3j1ukyHUKu/w8hW3R9ygtcLrLM1gm9aps7Nbg/
+         Xju7iGRjtuXhln40aqbLE71aZBeZYkQ4+h2IxGaqHYzSUfbpUJieafDv/Tcg7EJcdcRO
+         GKKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bPI3xRQSihbuAop68QULfROzLi2EqQlmJiEdDSx7yKE=;
+        b=g/4dMemtYDXax5JeAzhk3L1P62uBNML2hhUX2Nx/x9lsg7ecC0Vsvgkzamwe+L9UFD
+         gdz7Z0c++wDjx9HJMT5Zz2v2sHFflfJPQlXzcllwm4gCEP0fMf5aOcFmuWkY+xYQ9wKn
+         KqFM54mD16mYxH6wqOiHpYwNz1dpoiFRncnJbVraAtlVjDBNhMBSHvW8/KJhX5/PQFsc
+         x3nCF+A6Gb4anR8N4JLJ6O0NWEU+pfbeLWmK8o2Efkqy1YkolrhkxQO9R12VyBPty2ZG
+         FwBXFHN5ZTm9seyI3PzpRci1z3imE/W1TBRsctiy7HufYv/8UP/4ai6gtk4Tz2vsx6MW
+         xv2A==
+X-Gm-Message-State: APjAAAULMwoaieUEK4PMakbPpTI/h5Wp2p85prsna18VG2uHnPN97oHr
+        CPA2R0pXdFJgYap+9a6AwsUaSuVMohxWoDlekbU=
+X-Google-Smtp-Source: APXvYqy0DLKlSOyi6a3ePnMUiv4rqcXhQw7mqHXXcfvNI578kX1CkWDeon4zEoAY8/o1xG3l5IN+7seHEEwOZvA/oFA=
+X-Received: by 2002:a17:906:594f:: with SMTP id g15mr11991768ejr.197.1572913157903;
+ Mon, 04 Nov 2019 16:19:17 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191104234920.GA18515@redhat.com>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572913121; bh=it/avAzbdjbPt9c7ZhR3SugLAHDAeo7qSUQnTa8Gd0Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=nx62lGrPMlwQBcqF9vYxqUTNBIlMwnY3v4vXnUqcAbCO2/xdO7aUYp8qclkmts9z7
-         gtH9Ov6maSgTLFms+gOL/dE2dCoQ1xMQpdGQy9Akbo7N7NyETXXQXZTJZqjI7N8kF+
-         n3RQEPIGAaiZBh6nvWW7FoLz32nqtlJ71DClIb0EMAf4xWjkAmpFYtedbKPVLxdf/b
-         tlQKPTEISDGthKQTi64XGZlvQXC4V843TbV9Pv5FMwu9POX8T7Ox5OlQOI/t1RVVuU
-         ehgOt7zOUTQcQRd6bK+4WI3VER1yK/cV2GljR29nekSSEXFENv8o9uy5i0m+683Ub0
-         piAG/LY3Z7DNw==
+References: <20191105000129.GA6536@onstation.org>
+In-Reply-To: <20191105000129.GA6536@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Mon, 4 Nov 2019 16:19:07 -0800
+Message-ID: <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
+Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dan, there is a question for you further down:
+On Mon, Nov 4, 2019 at 4:01 PM Brian Masney <masneyb@onstation.org> wrote:
+>
+> Hey Rob,
+>
+> Since commit 2d99ced787e3 ("drm/msm: async commit support"), the frame
+> buffer console on my Nexus 5 began throwing these errors:
+>
+> msm fd900000.mdss: pp done time out, lm=0
+>
+> The display still works.
+>
+> I see that mdp5_flush_commit() was introduced in commit 9f6b65642bd2
+> ("drm/msm: add kms->flush_commit()") with a TODO comment and the commit
+> description mentions flushing registers. I assume that this is the
+> proper fix. If so, can you point me to where these registers are
+> defined and I can work on the mdp5 implementation.
 
+See mdp5_ctl_commit(), which writes the CTL_FLUSH registers.. the idea
+would be to defer writing CTL_FLUSH[ctl_id] = flush_mask until
+kms->flush() (which happens from a timer shortly before vblank).
 
-On 11/4/19 3:49 PM, Jerome Glisse wrote:
-> On Mon, Nov 04, 2019 at 02:49:18PM -0800, John Hubbard wrote:
-...
->>> Maybe add a small comment about wrap around :)
->>
->>
->> I don't *think* the count can wrap around, due to the checks in user_page_ref_inc().
->>
->> But it's true that the documentation is a little light here...What did you have 
->> in mind?
-> 
-> About false positive case (and how unlikely they are) and that wrap
-> around is properly handle. Maybe just a pointer to the documentation
-> so that people know they can go look there for details. I know my
-> brain tend to forget where to look for things so i like to be constantly
-> reminded hey the doc is Documentations/foobar :)
-> 
+But I think the async flush case should not come up with fbcon?  It
+was really added to cope with hwcursor updates (and userspace that
+assumes it can do an unlimited # of cursor updates per frame).. the
+intention was that nothing should change in the sequence for mdp5 (but
+I guess that was not the case).
 
-I see. OK, here's a version with a thoroughly overhauled comment header:
-
-/**
- * page_dma_pinned() - report if a page is pinned for DMA.
- *
- * This function checks if a page has been pinned via a call to
- * pin_user_pages*() or pin_longterm_pages*().
- *
- * The return value is partially fuzzy: false is not fuzzy, because it means
- * "definitely not pinned for DMA", but true means "probably pinned for DMA, but
- * possibly a false positive due to having at least GUP_PIN_COUNTING_BIAS worth
- * of normal page references".
- *
- * False positives are OK, because: a) it's unlikely for a page to get that many
- * refcounts, and b) all the callers of this routine are expected to be able to
- * deal gracefully with a false positive.
- *
- * For more information, please see Documentation/vm/pin_user_pages.rst.
- *
- * @page:	pointer to page to be queried.
- * @Return:	True, if it is likely that the page has been "dma-pinned".
- *		False, if the page is definitely not dma-pinned.
- */
-static inline bool page_dma_pinned(struct page *page)
-
-
->>> [...]
->>>
->>>> @@ -1930,12 +2028,20 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
->>>>  
->>>>  		pgmap = get_dev_pagemap(pfn, pgmap);
->>>>  		if (unlikely(!pgmap)) {
->>>> -			undo_dev_pagemap(nr, nr_start, pages);
->>>> +			undo_dev_pagemap(nr, nr_start, flags, pages);
->>>>  			return 0;
->>>>  		}
->>>>  		SetPageReferenced(page);
->>>>  		pages[*nr] = page;
->>>> -		get_page(page);
->>>> +
->>>> +		if (flags & FOLL_PIN) {
->>>> +			if (unlikely(!user_page_ref_inc(page))) {
->>>> +				undo_dev_pagemap(nr, nr_start, flags, pages);
->>>> +				return 0;
->>>> +			}
->>>
->>> Maybe add a comment about a case that should never happens ie
->>> user_page_ref_inc() fails after the second iteration of the
->>> loop as it would be broken and a bug to call undo_dev_pagemap()
->>> after the first iteration of that loop.
->>>
->>> Also i believe that this should never happens as if first
->>> iteration succeed than __page_cache_add_speculative() will
->>> succeed for all the iterations.
->>>
->>> Note that the pgmap case above follows that too ie the call to
->>> get_dev_pagemap() can only fail on first iteration of the loop,
->>> well i assume you can never have a huge device page that span
->>> different pgmap ie different devices (which is a reasonable
->>> assumption). So maybe this code needs fixing ie :
->>>
->>> 		pgmap = get_dev_pagemap(pfn, pgmap);
->>> 		if (unlikely(!pgmap))
->>> 			return 0;
->>>
->>>
->>
->> OK, yes that does make sense. And I think a comment is adequate,
->> no need to check for bugs during every tail page iteration. So how 
->> about this, as a preliminary patch:
-> 
-> Actualy i thought about it and i think that there is pgmap
-> per section and thus maybe one device can have multiple pgmap
-> and that would be an issue for page bigger than section size
-> (ie bigger than 128MB iirc). I will go double check that, but
-> maybe Dan can chime in.
-> 
-> In any case my comment above is correct for the page ref
-> increment, if the first one succeed than others will too
-> or otherwise it means someone is doing too many put_page()/
-> put_user_page() which is _bad_ :)
-> 
-
-I'll wait to hear from Dan before doing anything rash. :)
-
-
-thanks,
-
-John Hubbard
-NVIDIA
+BR,
+-R
