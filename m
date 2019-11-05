@@ -2,83 +2,184 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EBE1C1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:03:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47B38C17488
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:04:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E445221882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:03:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="cmLn01hJ"
+	by mail.kernel.org (Postfix) with ESMTP id 13E2C21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:04:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572962657;
+	bh=3WEttzmA8XOWzd5E6e3WKrEMBQ1XLTdcF31ISU61/JM=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=W4/a+fppSx4q/UE0eZP/suf2zbW/c0bv66exmfSTY8cY0BmcxtThBIOD4j3V+3Ssj
+	 uUNwVbL1kCIifSKo/1lBPcT1GxULW9tnaPnJP/tBu8BwCszgWF5Y7cnu0Nf0drDuk/
+	 7RY0kp759+E8nOaEk1R8Si8MOXFlDiJB1KNoQMDA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389474AbfKEODA (ORCPT
+        id S2389481AbfKEOEQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:03:00 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:49802 "EHLO vps0.lunn.ch"
+        Tue, 5 Nov 2019 09:04:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40320 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388428AbfKEODA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:03:00 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=myH3nUXs8MY5+0kwyDTaLgY2LdTUc8u0DBEGTyOkRck=; b=cmLn01hJB1tmlu8+9Dv8zd14YR
-        xwgAptI6XaZx+qwB9VBO4q99qWgvMNGM+xZb/wEoamTNgm4c/i9/eUReJvHt6QRQMu+Asnz5RPNMn
-        RjsVNScEmHqAlbFwYJi/t7bw2lqUZ0ojc3VpjYzQdmPtU3qNokx1X9qm7zBcsKnPgzAo=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iRzQ8-0002AK-Ij; Tue, 05 Nov 2019 15:02:56 +0100
-Date:   Tue, 5 Nov 2019 15:02:56 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Greg KH <gregkh@linuxfoundation.org>
-Cc:     Ioana Ciornei <ioana.ciornei@nxp.com>,
-        linux-kernel@vger.kernel.org, f.fainelli@gmail.com
-Subject: Re: [PATCH 00/12] staging: dpaa2-ethsw: add support for control
- interface traffic
-Message-ID: <20191105140256.GB7189@lunn.ch>
-References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
- <20191105132435.GA2616182@kroah.com>
+        id S2388428AbfKEOEP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:04:15 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [109.144.209.237])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B3A6421882;
+        Tue,  5 Nov 2019 14:04:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572962654;
+        bh=3WEttzmA8XOWzd5E6e3WKrEMBQ1XLTdcF31ISU61/JM=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=PPSZeZJ11MNhsY+fYnPe/dgBM+Jom6e95c75Rmzdo0WUq/kovOtRU+iZUZpzK79ML
+         0KzU3wV2QC0IBRI729Bpi75lo22KjQT0FfDmtozZSSGI4v8yLuCPyLiL67YYbJocVP
+         3tLL4lnIIDyiEGjF+gLmsr5SE3itU17Mzuz/jHOI=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id BEB2E35227C0; Tue,  5 Nov 2019 06:04:11 -0800 (PST)
+Date:   Tue, 5 Nov 2019 06:04:11 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     madhuparnabhowmik04@gmail.com, joel@joelfernandes.org,
+        corbet@lwn.net, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: RCU: arrayRCU:
+ Converted arrayRCU.txt to arrayRCU.rst
+Message-ID: <20191105140411.GO20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191028202417.13095-1-madhuparnabhowmik04@gmail.com>
+ <ac8da2f5-4cda-8985-ff90-061478a4e2c9@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105132435.GA2616182@kroah.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <ac8da2f5-4cda-8985-ff90-061478a4e2c9@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:24:35PM +0100, Greg KH wrote:
-> On Tue, Nov 05, 2019 at 02:34:23PM +0200, Ioana Ciornei wrote:
-> > This patch set adds support for Rx/Tx capabilities on switch port interfaces.
-> > Also, control traffic is redirected through ACLs to the CPU in order to
-> > enable proper STP protocol handling.
- 
-> I thought I asked for no new features until this code gets out of
-> staging?  Only then can you add new stuff.  Please work to make that
-> happen first.
+On Tue, Nov 05, 2019 at 08:49:47PM +0700, Phong Tran wrote:
+> On 10/29/19 3:24 AM, madhuparnabhowmik04@gmail.com wrote:
+> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > 
+> > This patch converts arrayRCU from txt to rst format.
+> > arrayRCU.rst is also added in the index.rst file.
+> > 
+> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> > ---
+> >   .../RCU/{arrayRCU.txt => arrayRCU.rst}         | 18 +++++++++++++-----
+> >   Documentation/RCU/index.rst                    |  1 +
+> >   2 files changed, 14 insertions(+), 5 deletions(-)
+> >   rename Documentation/RCU/{arrayRCU.txt => arrayRCU.rst} (91%)
+> > 
+> > diff --git a/Documentation/RCU/arrayRCU.txt b/Documentation/RCU/arrayRCU.rst
+> > similarity index 91%
+> > rename from Documentation/RCU/arrayRCU.txt
+> > rename to Documentation/RCU/arrayRCU.rst
+> > index f05a9afb2c39..ed5ae24b196e 100644
+> > --- a/Documentation/RCU/arrayRCU.txt
+> > +++ b/Documentation/RCU/arrayRCU.rst
+> > @@ -1,5 +1,7 @@
+> > -Using RCU to Protect Read-Mostly Arrays
+> > +.. _array_rcu_doc:
+> > +Using RCU to Protect Read-Mostly Arrays
+> > +=======================================
+> >   Although RCU is more commonly used to protect linked lists, it can
+> >   also be used to protect arrays.  Three situations are as follows:
+> > @@ -26,6 +28,7 @@ described in the following sections.
+> 
+> It will be better to have the cross reference for each situation.
+> 
+> Hash Tables
+> Static Arrays
+> Resizeable Arrays
 
-Hi Greg
+Madhuparna, could you please put a patch together creating these
+cross-references and handling Phong's comments below (probably
+by getting rid of the "." so that the resulting ":" doesn't look
+strange)?
 
-This is in response to my review of the code in staging. The current
-code is missing a core feature for an Ethernet switch driver, being
-able to send/receive frames from the host. At the moment it can only
-control the hardware for how it switches Ethernet frames coming
-into/going out of external ports.
+Then I will fold that patch into your original commit in -rcu and
+add Phong's Tested-by.
 
-One of the core ideas behind how linux handles Ethernet switches is
-that they are just a bunch of network interfaces. And currently, these
-network interfaces cannot send/receive. We would never move an
-Ethernet driver out of staging which cannot send/receive, so i don't
-see why we should move an Ethernet switch driver out of staging which
-also cannot send/receive.
+							Thanx, Paul
 
-Maybe this patchset could be minimised. The STP handling is just nice
-to have, and could wait until the driver has moved into the main tree.
-
-   Andrew
+> >   Situation 1: Hash Tables
+> > +------------------------
+> >   Hash tables are often implemented as an array, where each array entry
+> >   has a linked-list hash chain.  Each hash chain can be protected by RCU
+> > @@ -34,6 +37,7 @@ to other array-of-list situations, such as radix trees.
+> >   Situation 2: Static Arrays
+> > +--------------------------
+> >   Static arrays, where the data (rather than a pointer to the data) is
+> >   located in each array element, and where the array is never resized,
+> > @@ -41,11 +45,13 @@ have not been used with RCU.  Rik van Riel recommends using seqlock in
+> >   this situation, which would also have minimal read-side overhead as long
+> >   as updates are rare.
+> > -Quick Quiz:  Why is it so important that updates be rare when
+> > -	     using seqlock?
+> > +Quick Quiz:
+> > +		Why is it so important that updates be rare when using seqlock?
+> > +:ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
+> >   Situation 3: Resizeable Arrays
+> > +------------------------------
+> >   Use of RCU for resizeable arrays is demonstrated by the grow_ary()
+> >   function formerly used by the System V IPC code.  The array is used
+> > @@ -60,7 +66,7 @@ the remainder of the new, updates the ids->entries pointer to point to
+> >   the new array, and invokes ipc_rcu_putref() to free up the old array.
+> >   Note that rcu_assign_pointer() is used to update the ids->entries pointer,
+> >   which includes any memory barriers required on whatever architecture
+> > -you are running on.
+> > +you are running on.::
+> 
+> a redundant ":" in here with html page.
+> 
+> 
+> 
+> 
+> >   	static int grow_ary(struct ipc_ids* ids, int newsize)
+> >   	{
+> > @@ -112,7 +118,7 @@ a simple check suffices.  The pointer to the structure corresponding
+> >   to the desired IPC object is placed in "out", with NULL indicating
+> >   a non-existent entry.  After acquiring "out->lock", the "out->deleted"
+> >   flag indicates whether the IPC object is in the process of being
+> > -deleted, and, if not, the pointer is returned.
+> > +deleted, and, if not, the pointer is returned.::
+> 
+> same as above
+> 
+> 
+> Tested-by: Phong Tran <tranmanphong@gmail.com>
+> 
+> Regards,
+> Phong.
+> 
+> >   	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
+> >   	{
+> > @@ -144,8 +150,10 @@ deleted, and, if not, the pointer is returned.
+> >   		return out;
+> >   	}
+> > +.. _answer_quick_quiz_seqlock:
+> >   Answer to Quick Quiz:
+> > +	Why is it so important that updates be rare when using seqlock?
+> >   	The reason that it is important that updates be rare when
+> >   	using seqlock is that frequent updates can livelock readers.
+> > diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> > index 5c99185710fa..8d20d44f8fd4 100644
+> > --- a/Documentation/RCU/index.rst
+> > +++ b/Documentation/RCU/index.rst
+> > @@ -7,6 +7,7 @@ RCU concepts
+> >   .. toctree::
+> >      :maxdepth: 3
+> > +   arrayRCU
+> >      rcu
+> >      listRCU
+> >      UP
+> > 
