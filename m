@@ -2,170 +2,123 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A6D17C5DF63
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4A3BEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67AEB21A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572987442;
-	bh=EnA5xZWNuusgfSEDFFPNayeFPVfAM0WtLBN1DOG7mkQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=zh4zLrM2pQyZ7UBZVOrGN1/F1XHxsaKcM/lMKzFxw/kY62Z4Bu+oRSDsqB0FRwpld
-	 RMwJZNHzGWhjWb7i9LcbTuauqDOgWp6HpVwyEQigpBwrIQRBWRQOcEsDESJYvUJyzP
-	 d1gne1CNvgvgLnPNRY7K+Nw4frm5kQ9s0fxgTjxI=
+	by mail.kernel.org (Postfix) with ESMTP id 13D4721A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:57:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfKEU5V (ORCPT
+        id S1729947AbfKEU5Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:57:21 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:35109 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbfKEU5U (ORCPT
+        Tue, 5 Nov 2019 15:57:25 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:51712 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729909AbfKEU5X (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:57:20 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n16so18903672oig.2;
-        Tue, 05 Nov 2019 12:57:20 -0800 (PST)
+        Tue, 5 Nov 2019 15:57:23 -0500
+Received: from mr4.cc.vt.edu (mr4.cc.vt.edu [IPv6:2607:b400:92:8300:0:7b:e2b1:6a29])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA5KvMEH027731
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:57:22 -0500
+Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com [209.85.160.200])
+        by mr4.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA5KvHXK018929
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:57:22 -0500
+Received: by mail-qt1-f200.google.com with SMTP id c32so23793002qtb.14
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:57:22 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YH8No3YE+SfIIhr1pRJYlkmraO4srBIJPhAWx/BUo7o=;
-        b=LtJCMP9BEuJo7AoGc9whEW4mnbuPZPsc+twyDY6qbUHYR6y48eKt9sSOr024qIZMpC
-         +vBPT3LwkjdhPd8/zomVZvQJYCTFUTe3Na+3wWdneNNiuZy0hk4pTjTYjw8Z4aojRiGN
-         1dMAu7b2yoLyaCXjMxGJOtwYumKQVUkkSp9CNNB2m8j1qDWIk6gM9k6V83Q+U3nx5pEq
-         0XkkGLCXoN6OSU63kzVaLamiCLKMlunMLgpmHv3PJG1W0p26OWQfJDGc0Wc05EBv5HTK
-         V9kabL72vZ/VYqQXAKuMVkp51jG3O1tN28DXCyTqLfAm7ZxD43kfT3cEbOoVglm+SV56
-         AISA==
-X-Gm-Message-State: APjAAAV1sf4kuI/iLEkWfM8e5uV/g4ZlAASe7p8y/PImIdU9nCZ+pf3Z
-        uWfjp2gcTFKOqN1PnI6mJQ==
-X-Google-Smtp-Source: APXvYqz4PTn4LH3MKQJeJhit6JeqNJpYt06BezFqeq80P3WV6oQcYKUwj76O8XCo+mV0pvazH22q3A==
-X-Received: by 2002:aca:ecd0:: with SMTP id k199mr873786oih.166.1572987439487;
-        Tue, 05 Nov 2019 12:57:19 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id o18sm6597103otj.38.2019.11.05.12.57.18
+        h=x-gm-message-state:sender:from:to:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=MBXhOxNin9mvpJEf+EL+olFVquhzYl5dF3xWGaJhuMU=;
+        b=iGtXrPsMFNMDJmIU05zX3iMr+iuaiSNPbQ8EJe6n/4zdOYpFswWn31x/K+QQoJA2GL
+         V2QomDdKF6cNRCoYt9jQ+SJlRye9Ute2jZpFS6ThuI4r098A5QgPSzlsA1ifQAR1h2Ax
+         n+vs80VUlBBiQR7zrI2ELTJk3KD3bPOXyUvAHK57n8d8s7zn7WQ8URwqpYY+jd0XRqRC
+         9bQ7/unTdplc09Il1Qi25PwpvjCGu+jSwknZeAtPxXvaGNyvOWXHJ+QoQTkki13Jd3Gl
+         EgHJOzpZu3+iyYWPfBfxnEFj9e6Tot0S03PRUXTNNUwvpFrlHEBPcar4jVTZEoxYok10
+         5Few==
+X-Gm-Message-State: APjAAAWh0vZztqqSwPPbj2tKBbO57yufgyIZOhP2BzxKGhK86cCLJOZ7
+        61QnRRzrILw4Zijo93TAtX1S5dn61nH5Um/abh8jAz6Kbb4bG1RpyCJn2ksPSpFW6HMOGaiva6I
+        LwMnLK9GVMQB695NgZtpiNauYQq4CQhqmmDA=
+X-Received: by 2002:a37:b403:: with SMTP id d3mr22864313qkf.415.1572987436646;
+        Tue, 05 Nov 2019 12:57:16 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxDNTKWJZSa0xMopygThw6VT3DdT7WC8At6HBen1ZT58IvMEY+XYz6wkkA8lFAhsp9RuyzHJw==
+X-Received: by 2002:a37:b403:: with SMTP id d3mr22864288qkf.415.1572987436234;
+        Tue, 05 Nov 2019 12:57:16 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id m5sm8676126qtp.97.2019.11.05.12.57.14
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:57:18 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:57:18 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
- driver
-Message-ID: <20191105205718.GC629@bogus>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 05 Nov 2019 12:57:14 -0800 (PST)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Rasmus Villemoes <rasmus.villemoes@prevas.dk>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/1] errno.h: Provide EFSBADCRC for everybody
+In-Reply-To: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
+References: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1572987433_14215P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 15:57:13 -0500
+Message-ID: <249994.1572987433@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 01:32:33PM +0200, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC LED driver device tree bindings.
-> 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
-> 
-> Changes from v2 - new patch
-> 
->  .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
->  1 file changed, 46 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> new file mode 100644
-> index 000000000000..d8aeac9911ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
-> +
-> +maintainers:
-> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> +  - Pavel Machek <pavel@ucw.cz>
-> +  - Dan Murphy <dmurphy@ti.com>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
-> +
-> +description: |
-> +  This module is part of the ROHM BD71828 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
-> +
-> +  The LED controller is represented as a sub-node of the PMIC node on the device
-> +  tree.
-> +
-> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd71828-led
-> +
-> +patternProperties:
-> +  "^led-[1-2]$":
-> +    type: object
-> +    description:
-> +      Properties for a single LED. Nodes must be named as led-1 and led-2.
-> +    properties:
-> +      #$ref: "common.yaml#"
-> +      function:
-> +        description:
-> +          Purpose of LED as defined in dt-bindings/leds/common.h
-> +        $ref: "/schemas/types.yaml#/definitions/string"
-> +      color:
-> +        description:
-> +          LED colour as defined in dt-bindings/leds/common.h
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+--==_Exmh_1572987433_14215P
+Content-Type: text/plain; charset=us-ascii
 
-You can assume that we will have a common schema for these. So the only 
-thing needed is whether you use the properties ("true" is enough for 
-that), any additional constraints (not likely here), and whether 
-required or not.
+On Mon, 04 Nov 2019 21:46:14 -0500, Valdis Kletnieks said:
+> Four filesystems have their own defines for this. Move it
+> into errno.h so it's defined in just one place.
+>
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 
-> +
-> +required:
-> +  - compatible
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+Going to have to retract this. and the other patch for EFSCORRUPTED.
+
+On Tue, 05 Nov 2019 10:17:52 +0000, Rasmus Villemoes <rasmus.villemoes@prevas.dk> said:
+
+> Does that work? Six architectures (alpha ia64 mips parisc powerpc sparc)
+> have their own asm/errno.h. ia64 and powerpc include asm-generic/errno.h
+> from their asm/errno.h, but the remaining four will no longer have a
+> definition of EFSBADCRC.
+
+I knew some architectures had their own syscall values.  I admit it comes as
+a surprise to me (and probably a number of others) that errno.h is that way too....
+
+Thanks for spotting this, Rasmus...
+
+--==_Exmh_1572987433_14215P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXcHiKQdmEQWDXROgAQILDg/+IpFcal1QlvbuIHm2Skf6HofxtKqb0d6M
+tK77zP5Q+nv9p4o41Nh3lYk5p3an6xlcd3157L9fmOjQFy8dZJbY8i07oVCO/gtS
+oV8xesp6X7uYEgSARDK6lO/1/9bAuCt4ghd5lKcsyBKDv1MQ80x3+mWx++oV1SG4
+EYqkIglqmnZ2ZrielunCbKqSqs0tUY50ayaogkISJzMDliTsYfTMpWF+MkrYiuEU
+kSQ8ifkclZ6rRQgeQzYRe/7Q4x02sudSWPkWHCOw5Gtg4vd0H7O4OhCadSt44uHv
+Za+sDJ3TZ5bUlROV5SKj3Jfrp2EuuW3jbFHEVEvjrP5rZbOC6sPKy4N81oDCYQ5X
+SbNfryx8h3CwOtGM6hgtLj1U3BFNESqkc6TnAarC8015rEbOoZn9vivgrtZ1xB6n
+K9XXs1guqWZ2xBPdFbOTmv6T3Heg8Y4c/GhV/PcRTV+XZzUs77SmAKtaH9qH9bkf
+efM4xNwEyBJsFn3ycYeP1lAjxlhJPsyEQVKfGNcyzGq4jP4EHNpWclncbZ9Wf/mw
+QzHYeoP5jtmf2Mppe6/nTGm5Mdra1IptAZKdBRehe4XJc78exI3mfAi/2LoqHuzy
+6EiVhn2WrtzPJ+s4SzNud9tOQz5tRhvh2wjiY0pDWYXMX8xg2DvdWpj03bM5ojHA
+ePHUo1dE0Xs=
+=2I65
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1572987433_14215P--
