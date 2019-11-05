@@ -2,127 +2,146 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72A23C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:44:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A75B9C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:49:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D088217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:44:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60D6A214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:49:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SJi0bd5e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729728AbfKEUo5 (ORCPT
+        id S1729754AbfKEUtB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:44:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:60796 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfKEUo4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:44:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 37749A64;
-        Tue,  5 Nov 2019 12:44:56 -0800 (PST)
-Received: from [10.162.40.121] (a075563-lin.blr.arm.com [10.162.40.121])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 73F753FB4E;
-        Mon,  4 Nov 2019 23:09:33 -0800 (PST)
-Subject: Re: [PATCHv2 0/8] arm64: ftrace cleanup + FTRACE_WITH_REGS
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Will Deacon <will@kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Catalin Marinas <Catalin.Marinas@arm.com>,
-        "deller@gmx.de" <deller@gmx.de>, "duwe@suse.de" <duwe@suse.de>,
-        "James.Bottomley@HansenPartnership.com" 
-        <James.Bottomley@HansenPartnership.com>,
-        James Morse <James.Morse@arm.com>,
-        "jeyu@kernel.org" <jeyu@kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "jthierry@redhat.com" <jthierry@redhat.com>,
-        "linux-parisc@vger.kernel.org" <linux-parisc@vger.kernel.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "rostedt@goodmis.org" <rostedt@goodmis.org>,
-        "svens@stackframe.org" <svens@stackframe.org>,
-        "takahiro.akashi@linaro.org" <takahiro.akashi@linaro.org>
-References: <20191029165832.33606-1-mark.rutland@arm.com>
- <42c113ee-e7fc-3e94-cca0-f05f1c89fdb8@arm.com>
- <20191104125637.GB24108@willie-the-truck>
- <d9b738fa-b7c5-f1b2-3878-d7afa4ba7ba5@arm.com>
- <20191104140440.GJ45140@lakrids.cambridge.arm.com>
-From:   Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <3a0dd498-ffd0-3e47-c1b4-3e9dbfe935d8@arm.com>
-Date:   Tue, 5 Nov 2019 12:36:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 5 Nov 2019 15:49:01 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:39578 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727401AbfKEUtB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:49:01 -0500
+Received: by mail-wr1-f65.google.com with SMTP id a11so23097747wra.6;
+        Tue, 05 Nov 2019 12:48:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=hYSd/3njTuRQYW+MbQwSCa/QBWDUOU5HAkx5FhnJaxQ=;
+        b=SJi0bd5eZKeDma6tKVX5tx5Y4/nqRMP5L8Pk0IqeZD7fyFmlOqlfgeSYs3HwmL1reG
+         ZhMAD1lxKulx24PY9hoMnqSpJinCmLPs+vf2UbGiA0/R4Izkti5z9CobAeZJO8VSKp1B
+         xAgDUwXzMhbchGqsLPQKhq28CUrriSyDGMdFJB7Qz21qAMMxuPbxug5sJPhPKceXcoaR
+         JJUVqQXTs5PdQ+i5H4TrTFpWfqtwIMNKc9GFmM3qdm+FdLS+d4AnT+zuZT1F61wyx+j0
+         WHR31XpUKVdUTG5PdPs0lsVZm0oykFjZvXr/NuT1eniwuNVVPkz85R3lD8g5IYFzuYYn
+         Ob0g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=hYSd/3njTuRQYW+MbQwSCa/QBWDUOU5HAkx5FhnJaxQ=;
+        b=hx1/OR3njjJNjnTotqwLHN/g6lVEWyXHWjg3P12WZ7twp7aUw8FATdIALpAUIshsOS
+         UOAJPvC5RykRmpmN7hlKpQLajq5FJx4aqv61cZsNmPvIVJDtXNV0KhfE5zCpjB/rj08U
+         9YUx46Ev9tL8Yra1VXcGwrds+v33UKEXEsA1rHD0IqS9pH4CIAIUyfPyIg15RArl4c7X
+         mBDc9KPnijiHnhIEaSALV0Uq0ntMAknmK4HdUOOp7+7Iz5jrca3jE8t044yEXvsZiKz3
+         YuIhLPfwiTZ8WXTSHOkDZsQfZ+DZXfMih4o9rqXTkQXTZnd1Uz7hjJBqEKg25ldhSv4l
+         88/g==
+X-Gm-Message-State: APjAAAWLGbG0jrvwyFyxm+GUoXWFS6BFI0dfdRTtKafHmHn7tYs02In6
+        dDjW0CbiGkiJlXKdWlXbgOt0l3LW
+X-Google-Smtp-Source: APXvYqySnnEKyJwbTzo0v50ES/1OR5Mrp2AyU38W23B8j9lg6q78wc1WUJZ4o4jz43cdC6i2YAyHRQ==
+X-Received: by 2002:adf:e387:: with SMTP id e7mr13795359wrm.180.1572986937915;
+        Tue, 05 Nov 2019 12:48:57 -0800 (PST)
+Received: from ?IPv6:2003:ea:8f17:6e00:e905:33d7:3b10:e04b? (p200300EA8F176E00E90533D73B10E04B.dip0.t-ipconnect.de. [2003:ea:8f17:6e00:e905:33d7:3b10:e04b])
+        by smtp.googlemail.com with ESMTPSA id a8sm549480wme.11.2019.11.05.12.48.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 12:48:57 -0800 (PST)
+Subject: Re: [PATCH 2/2] net: phy: dp83869: Add TI dp83869 phy
+To:     Dan Murphy <dmurphy@ti.com>, andrew@lunn.ch, f.fainelli@gmail.com,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191105181826.25114-1-dmurphy@ti.com>
+ <20191105181826.25114-2-dmurphy@ti.com>
+ <68b9c003-4fb3-b854-695a-fa1c6e08f518@gmail.com>
+ <4ffebfad-87d2-0e19-5b54-7e550c540d03@ti.com>
+ <1f64ae30-bbf3-525a-4fab-556924b18122@gmail.com>
+ <3c4696b4-32ac-8529-ef97-1a2ae6bbfa32@ti.com>
+From:   Heiner Kallweit <hkallweit1@gmail.com>
+Message-ID: <b0727f9f-2837-51bb-a8b7-d11bdc9af110@gmail.com>
+Date:   Tue, 5 Nov 2019 21:48:49 +0100
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191104140440.GJ45140@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <3c4696b4-32ac-8529-ef97-1a2ae6bbfa32@ti.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 11/4/19 7:34 PM, Mark Rutland wrote:
-> On Mon, Nov 04, 2019 at 01:03:51PM +0000, Amit Kachhap wrote:
+On 05.11.2019 21:26, Dan Murphy wrote:
+> Heiner
+> 
+> On 11/5/19 2:20 PM, Heiner Kallweit wrote:
+>> On 05.11.2019 21:02, Dan Murphy wrote:
+>>> Heiner
+>>>
+>>> On 11/5/19 1:55 PM, Heiner Kallweit wrote:
+>>>> On 05.11.2019 19:18, Dan Murphy wrote:
+>>>>> Add support for the TI DP83869 Gigabit ethernet phy
+>>>>> device.
+>>>>>
+>>>>> The DP83869 is a robust, low power, fully featured
+>>>>> Physical Layer transceiver with integrated PMD
+>>>>> sublayers to support 10BASE-T, 100BASE-TX and
+>>>>> 1000BASE-T Ethernet protocols.
+>>>>>
+>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>> ---
+>>>>>    drivers/net/phy/Kconfig              |   6 +
+>>>>>    drivers/net/phy/Makefile             |   1 +
+>>>>>    drivers/net/phy/dp83869.c            | 439 +++++++++++++++++++++++++++
+>>>>>    include/dt-bindings/net/ti-dp83869.h |  43 +++
+>>>>>    4 files changed, 489 insertions(+)
+>>>>>    create mode 100644 drivers/net/phy/dp83869.c
+>>>>>    create mode 100644 include/dt-bindings/net/ti-dp83869.h
+>> [...]
 >>
->>
->> On 11/4/19 6:26 PM, Will Deacon wrote:
->>> On Sat, Nov 02, 2019 at 05:42:25PM +0530, Amit Daniel Kachhap wrote:
->>>> On 10/29/19 10:28 PM, Mark Rutland wrote:
->>>>> This series is a reworked version of Torsten's FTRACE_WITH_REGS series
->>>>> [1]. I've tried to rework the existing code in preparatory patches so
->>>>> that the patchable-function-entry bits slot in with fewer surprises.
->>>>> This version is based on v5.4-rc3, and can be found in my
->>>>> arm64/ftrace-with-regs branch [2].
->>>>>
->>>>> Patch 1 adds an (optional) ftrace_init_nop(), which the core code uses
->>>>> to initialize callsites. This allows us to avoid a synthetic MCOUNT_ADDR
->>>>> symbol, and more cleanly separates the one-time initialization of the
->>>>> callsite from dynamic NOP<->CALL modification. Architectures which don't
->>>>> implement this get the existing ftrace_make_nop() with MCOUNT_ADDR.
->>>>>
->>>>> Recently parisc gained ftrace support using patchable-function-entry.
->>>>> Patch 2 makes the handling of module callsite locations common in
->>>>> kernel/module.c with a new FTRACE_CALLSITE_SECTION definition, and
->>>>> removed the newly redundant bits from arch/parisc.
->>>>>
->>>>> Patches 3 and 4 move the module PLT initialization to module load time,
->>>>> which simplifies runtime callsite modification. This also means that we
->>>>> don't transitently mark the module text RW, and will allow for the
->>>>> removal of module_disable_ro().
->>>>>
->>>>> Patches 5 and 6 add some trivial infrastructure, with patch 7 finally
->>>>> adding FTRACE_WITH_REGS support. Additional work will be required for
->>>>> livepatching (e.g. implementing reliable stack trace), which is
->>>>> commented as part of patch 7.
->>>>>
->>>>> Patch 8 is a trivial cleanup atop of the rest of the series, making the
->>>>> code easier to read and less susceptible to config-specific breakage.
->>>> I tested the whole series with my latest in-kernel ptrauth patches [1]
->>>> and graph_tracer/function_graph_tracer works fine, So for the whole series,
->>>> Tested-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>>>> +static int op_mode;
+>>>>> +
+>>>>> +module_param(op_mode, int, 0644);
+>>>>> +MODULE_PARM_DESC(op_mode, "The operational mode of the PHY");
+>>>>> +
+>>>> A module parameter isn't the preferred option here.
+>>>> You could have more than one such PHY in different configurations.
+>>>> Other drivers like the Marvell one use the interface mode to
+>>>> check for the desired mode. Or you could read it from DT.
 >>>>
->>>> Also I gave few minor comments in the individual patches. With those
->>>> comments,
->>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Oops sorry I meant,
->> Reviewed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>> We do read the initial mode from the DT but there was a request to be able to change the mode during runtime.
+>> Maybe we need to understand the use case better to be able to advise.
+>> Will this be needed in production? Or was it requested as debug feature?
+>> There's the option to set PHY registers from userspace, e.g. with phytool.
+>> This could be used for reconfiguring the PHY.
 > 
-> Thanks!
+> This was a customer request that they be able to modify the op_mode from user space.
 > 
-> I've added the Tested-by for the whole series, and the Reviewed-by for
-> patches 4 and 7. I haven't added it for patch 1 just yet; please reply
-> to my comment there if you'd still like to add a Reviewed-by.
+> This was all I was given for a requirement.  The customers use case was proprietary.
+> 
+If the module parameter serves just a (unknown) proprietary use case,
+then it should not be in mainline. You could provide a patch with this
+parameter separately to the client.
 
-Those were minor comments. Please go ahead and add the Reviewed-by's.
-Thanks,
-Amit
+> Dan
+> 
+> 
+>> Heiner
+>>
+>>
+>>
+>> [...]
+> 
 
-> 
-> Mark.
-> 
