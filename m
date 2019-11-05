@@ -2,122 +2,268 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D326CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:36:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C082ECA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 613CF206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:36:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B5E820869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:42:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="bBEoRg66"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="rDqV+kXj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728665AbfKEFgq (ORCPT
+        id S2387493AbfKEFmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:36:46 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:43401 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725800AbfKEFgp (ORCPT
+        Tue, 5 Nov 2019 00:42:38 -0500
+Received: from gateway31.websitewelcome.com ([192.185.143.31]:20261 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387399AbfKEFmi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:36:45 -0500
-Received: by mail-wr1-f66.google.com with SMTP id n1so19783806wra.10
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 21:36:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
-        h=message-id:date:mime-version:content-transfer-encoding:in-reply-to
-         :references:subject:to:from:cc;
-        bh=Rwpy/hz+Y6vHPNiMzwH2wgQ/mze4+tUWqXAlT+MyOKw=;
-        b=bBEoRg66YeF5eKw0P1uVJKumoLTohQUCQ519mcJa9j9LS70EGYohaDWnSVvwE1qqsx
-         PEbEvjUZD7VHnSDFzfRJaf1EmpiE7XNjCd7dmDRaHjD7ali8mavIwNI9qxvTBUJkjFmx
-         5aNXirXa1lP8+iS15u9DnCpk4vRwhe55V6ZKz6bVYhTNTAT1iHlyjT4ZsgcekwM9S1LA
-         E3M1MWQt4q6IF8D4uutxisbFJKXjmKTO9nazTlarfqs2NkSDps/bkeBrL1SvGEg61aul
-         K9/P97lS9cP7UDyhtlqMS5WynKHnhwhGIdlwvnMQLRZ+cW/R4khm/mh/rfJMB89p9V0p
-         RfCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:date:mime-version
-         :content-transfer-encoding:in-reply-to:references:subject:to:from:cc;
-        bh=Rwpy/hz+Y6vHPNiMzwH2wgQ/mze4+tUWqXAlT+MyOKw=;
-        b=Ciyo3ErClOfS0ck/sB+TD370P/TcFKuzJd7N3IuTELASI9U46p2cvKWI2wKDfiVdMk
-         Se7+mc2WJxlG1mpo6Y8kJDWMs39UUhqtDtl3j4Ul3iilnKGErnD/iT08QUTw5jtVsL+w
-         lUMjxTsJrw30xaJJTvcWzMkjSGvfQLNhjgbKUDXCrXZBjBvZAsOjfNpRlJxv5aon2lXE
-         aCtn0/wD6UzsFn7qhc+F+bRlCe4rJ3n9Eupoj3S/ztRIiZM1cmiLPpZxkXbq3RHbS8BG
-         ufUQ7VrhU9PmjuGKmJzfnUR1Y7M1SfHA08Eb9NIr0TxT2V8tOaHXka5PPD82BwPONun/
-         brGA==
-X-Gm-Message-State: APjAAAWoKSgzfnSVT0muFpG/pzbWFc/1f6netY/tcEjF7IvIceo8SrbG
-        nQJrsCYvq8SO6XV+9TvZiQuj2Q==
-X-Google-Smtp-Source: APXvYqxDmXErNUyk1flr5Hj6eM2YP4Xm3fp+Ce+trMm/2fx0YQ8ESNA8ynxDlubl6F3SyqCOj7dcmA==
-X-Received: by 2002:a5d:678f:: with SMTP id v15mr7738360wru.242.1572932203584;
-        Mon, 04 Nov 2019 21:36:43 -0800 (PST)
-Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
-        by smtp.gmail.com with ESMTPSA id n17sm8711154wrp.40.2019.11.04.21.36.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 21:36:43 -0800 (PST)
-Message-ID: <5dc10a6b.1c69fb81.398d5.32e5@mx.google.com>
-Date:   Mon, 04 Nov 2019 21:36:43 -0800 (PST)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 Nov 2019 00:42:38 -0500
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id C6AB9D5137
+        for <linux-kernel@vger.kernel.org>; Mon,  4 Nov 2019 23:42:36 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id RrbwijZv1PUvSRrbwiAZY8; Mon, 04 Nov 2019 23:42:36 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=lizOfj4n1A6GoFXXwE/W8Ky+XvCip5rrvcCbBwrCoBA=; b=rDqV+kXjbn94eip2zIJ1XvfaTp
+        ehdMTbbbBXnapXd3AsL6od4lpkWgZqu2MuUVdiJcI1RZ47Q3IHNu35RvlYL1JE3GuHw+28jKoIEOL
+        IiMf1T3/4obcWY3Snaf1N+o9/o27uvlz+d/twDTsVGN4YirucF3vMtt8P8Dt/X/tg1WYTOqxpxj6q
+        JwRan1UeoXD/K4BJDKLpFvoDtI/eO+NwXeweEAgYUOb3P46JO1syU/Bg5sjUNQeV5aj4Ta0IOdhJo
+        Hqxy92PQwldKD/mPxMB3kxENwb0d/53F6KJrf2nrHRwQywok3J0UmEovADRz+Adm+n3G9UxtmV8rb
+        HROocdcA==;
+Received: from [191.31.196.28] (port=37450 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iRrbv-002sjK-Ur; Tue, 05 Nov 2019 02:42:36 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v5 4/5] power: supply: max17040: Config alert SOC low level threshold from FDT
+Date:   Tue,  5 Nov 2019 02:42:17 -0300
+Message-Id: <20191105054218.29826-5-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191105054218.29826-1-matheus@castello.eng.br>
+References: <20191105015827.GA332@bogus>
+ <20191105054218.29826-1-matheus@castello.eng.br>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Kernelci-Branch: linux-4.19.y
-X-Kernelci-Tree: stable-rc
-X-Kernelci-Report-Type: boot
-X-Kernelci-Kernel: v4.19.81-150-g3d3728a67bfc
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-Subject: Re: [PATCH 4.19 000/149] 4.19.82-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-From:   "kernelci.org bot" <bot@kernelci.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.196.28
+X-Source-L: No
+X-Exim-ID: 1iRrbv-002sjK-Ur
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.196.28]:37450
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 60
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-stable-rc/linux-4.19.y boot: 118 boots: 0 failed, 111 passed with 7 offline=
- (v4.19.81-150-g3d3728a67bfc)
+For configuration of fuel gauge alert for a low level state of charge
+interrupt we add a function to config level threshold and a device tree
+binding property to set it in flatned device tree node.
 
-Full Boot Summary: https://kernelci.org/boot/all/job/stable-rc/branch/linux=
--4.19.y/kernel/v4.19.81-150-g3d3728a67bfc/
-Full Build Summary: https://kernelci.org/build/stable-rc/branch/linux-4.19.=
-y/kernel/v4.19.81-150-g3d3728a67bfc/
+Now we can use "maxim,alert-low-soc-level" property with the values from
+1% up to 32% to configure alert interrupt threshold.
 
-Tree: stable-rc
-Branch: linux-4.19.y
-Git Describe: v4.19.81-150-g3d3728a67bfc
-Git Commit: 3d3728a67bfcb7460a6f7c5417a2d9a4ff180c58
-Git URL: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stabl=
-e-rc.git
-Tested: 69 unique boards, 23 SoC families, 14 builds out of 206
-
-Offline Platforms:
-
-arm:
-
-    sunxi_defconfig:
-        gcc-8
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    multi_v7_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-            sun5i-r8-chip: 1 offline lab
-            sun7i-a20-bananapi: 1 offline lab
-
-    davinci_all_defconfig:
-        gcc-8
-            dm365evm,legacy: 1 offline lab
-
-    qcom_defconfig:
-        gcc-8
-            qcom-apq8064-cm-qs600: 1 offline lab
-
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
-For more info write to <info@kernelci.org>
+ drivers/power/supply/max17040_battery.c | 96 +++++++++++++++++++++----
+ 1 file changed, 82 insertions(+), 14 deletions(-)
+
+diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+index 75459f76d02c..c48a691cbd7b 100644
+--- a/drivers/power/supply/max17040_battery.c
++++ b/drivers/power/supply/max17040_battery.c
+@@ -29,6 +29,9 @@
+ #define MAX17040_DELAY		1000
+ #define MAX17040_BATTERY_FULL	95
+
++#define MAX17040_ATHD_MASK		0xFFC0
++#define MAX17040_ATHD_DEFAULT_POWER_UP	4
++
+ struct max17040_chip {
+ 	struct i2c_client		*client;
+ 	struct delayed_work		work;
+@@ -43,6 +46,8 @@ struct max17040_chip {
+ 	int soc;
+ 	/* State Of Charge */
+ 	int status;
++	/* Low alert threshold from 32% to 1% of the State of Charge */
++	u32 low_soc_alert;
+ };
+
+ static int max17040_get_property(struct power_supply *psy,
+@@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
+ 	max17040_write_reg(client, MAX17040_CMD, 0x0054);
+ }
+
++static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
++{
++	int ret;
++	u16 data;
++
++	level = 32 - level;
++	data = max17040_read_reg(client, MAX17040_RCOMP);
++	/* clear the alrt bit and set LSb 5 bits */
++	data &= MAX17040_ATHD_MASK;
++	data |= level;
++	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
++
++	return ret;
++}
++
+ static void max17040_get_vcell(struct i2c_client *client)
+ {
+ 	struct max17040_chip *chip = i2c_get_clientdata(client);
+@@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
+ 	u16 soc;
+
+ 	soc = max17040_read_reg(client, MAX17040_SOC);
+-
+ 	chip->soc = (soc >> 8);
+ }
+
+@@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
+ 		chip->status = POWER_SUPPLY_STATUS_FULL;
+ }
+
++static int max17040_get_of_data(struct max17040_chip *chip)
++{
++	struct device *dev = &chip->client->dev;
++	struct device_node *np = dev->of_node;
++	int ret = 0;
++
++	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
++				 &chip->low_soc_alert)) {
++		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
++	} else if (chip->low_soc_alert <= 0 ||
++			chip->low_soc_alert >= 33) {
++		/* low_soc_alert is not between 1% and 32% */
++		ret = -EINVAL;
++	}
++
++	return ret;
++}
++
+ static void max17040_check_changes(struct i2c_client *client)
+ {
+ 	max17040_get_vcell(client);
+@@ -192,9 +229,27 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
+ 	/* send uevent */
+ 	power_supply_changed(chip->battery);
+
++	/* reset alert bit */
++	max17040_set_low_soc_alert(client, chip->low_soc_alert);
++
+ 	return IRQ_HANDLED;
+ }
+
++static int max17040_enable_alert_irq(struct max17040_chip *chip)
++{
++	struct i2c_client *client = chip->client;
++	unsigned int flags;
++	int ret;
++
++	dev_info(&client->dev, "IRQ: enabled\n");
++	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
++	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
++					max17040_thread_handler, flags,
++					chip->battery->desc->name, chip);
++
++	return ret;
++}
++
+ static enum power_supply_property max17040_battery_props[] = {
+ 	POWER_SUPPLY_PROP_STATUS,
+ 	POWER_SUPPLY_PROP_ONLINE,
+@@ -216,6 +271,7 @@ static int max17040_probe(struct i2c_client *client,
+ 	struct i2c_adapter *adapter = client->adapter;
+ 	struct power_supply_config psy_cfg = {};
+ 	struct max17040_chip *chip;
++	int ret;
+
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
+ 		return -EIO;
+@@ -226,6 +282,12 @@ static int max17040_probe(struct i2c_client *client,
+
+ 	chip->client = client;
+ 	chip->pdata = client->dev.platform_data;
++	ret = max17040_get_of_data(chip);
++	if (ret) {
++		dev_err(&client->dev,
++			"failed: low SOC alert OF data out of bounds\n");
++		return ret;
++	}
+
+ 	i2c_set_clientdata(client, chip);
+ 	psy_cfg.drv_data = chip;
+@@ -242,20 +304,26 @@ static int max17040_probe(struct i2c_client *client,
+
+ 	/* check interrupt */
+ 	if (client->irq) {
+-		int ret;
+-		unsigned int flags;
+-
+-		dev_info(&client->dev, "IRQ: enabled\n");
+-		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+-		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+-						max17040_thread_handler, flags,
+-						chip->battery->desc->name,
+-						chip);
+-
+-		if (ret) {
+-			client->irq = 0;
++		if (of_device_is_compatible(client->dev.of_node,
++					    "maxim,max77836-battery")) {
++			ret = max17040_set_low_soc_alert(client,
++							 chip->low_soc_alert);
++			if (ret) {
++				dev_err(&client->dev,
++					"Failed to set low SOC alert: err %d\n",
++					ret);
++				return ret;
++			}
++
++			ret = max17040_enable_alert_irq(chip);
++			if (ret) {
++				client->irq = 0;
++				dev_warn(&client->dev,
++					 "Failed to get IRQ err %d\n", ret);
++			}
++		} else {
+ 			dev_warn(&client->dev,
+-				"Failed to get IRQ err %d\n", ret);
++				 "Device not compatible for IRQ");
+ 		}
+ 	}
+
+--
+2.24.0.rc2
+
