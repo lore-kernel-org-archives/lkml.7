@@ -2,86 +2,91 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 922D9C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4B42C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:37:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DE5C2084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:36:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 802AE2084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:37:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572993389;
-	bh=gjH+ZYotJRmYe2FcsXdY4/Sv6Qh2DPmqjFve/uDW4Ds=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
-	b=stv9h1jQMIsfq2KysVij3afp8HXAy0DF+dstx49cRz1isn4HMtZr4LCSpsquhFZeV
-	 +/bF4JlBTrfEvJyXN/P+cxVyiSzqPGNrATuG4J95UBo5mB1LahHY+Q5s2OExY/8guh
-	 wWJD3ua+BS3TisMR8QizQxPUdhy3v9TZ8e96Uwts=
+	s=default; t=1572993460;
+	bh=aqMWKuUMbKxmlczBJs2/ISSLxJehkwUH8H6s6AWot+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ZgvxifGESCfDizMHE7Tshjb2oJFyTCeGufocVoHkKB7me/jvQ0sMN4oR4LQEbk14s
+	 GxVuI0Zvnusel3tPd0AWw01OlmGK3wKRDbUu7QWPjhzQP7/+A57ROgonT4ZWNop4Cf
+	 KDe5K+nw5PxWMpgVdNRzMOEcuCyt14ORtwjdXph0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730480AbfKEWg2 (ORCPT
+        id S1730502AbfKEWhj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:36:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39036 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728515AbfKEWg2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:36:28 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 332852084D;
-        Tue,  5 Nov 2019 22:36:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572993387;
-        bh=gjH+ZYotJRmYe2FcsXdY4/Sv6Qh2DPmqjFve/uDW4Ds=;
-        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-        b=eLFHAdsLf3RlWD18ADrZ40vl5+EbKbpBBYYh2FzVZ+rtPY/6l2woPXYdRhfwphjsF
-         qrGFNV9A9yoPtWbFr05zcbjitDIy+gLpCNsaaM3jlDxsBvpOatOYkVQC790MgI7HI/
-         RNrrRsEg8kBnbSzBmPh08ze7aZEfxvbvbcgdneEc=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 Nov 2019 17:37:39 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40225 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbfKEWhj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:37:39 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 22so1028465oip.7;
+        Tue, 05 Nov 2019 14:37:38 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nbKHG86LzZlxwoKnR97qbypsL1NkCZGHjQPZhUanUA4=;
+        b=uSQEAKj2aqIgG0HJbna1e4YmKLyGevOCDJM4mqVvGzdL+tCeZCZU/xkIj2+X+8jboX
+         BDf42FWbyBB4+sc1UAJb5V5lxBT1B9yt2wmQC4sHSX7lnX2dOcQjOU6JEGxEoPt4CD49
+         KOIyZdb9yRP2rFODfI/ebec4agPPuaa8noKblNXd/afKMKRwQ0rVUwiYXtuYsnIwJGlW
+         3tJcx6ZCLRYkGq0S1qD+f2jHB2dh8gd11kqSUg5R1WYpM0kbYZ4PT+Yzq1q1paM40q5I
+         gWKdZhB7Wck0Gb2Jba2/Q/f69SySQVhFoiCarjAoPJgk4jaqMqPbpMvoct5+7cQMB8hH
+         IhkA==
+X-Gm-Message-State: APjAAAXoQCSL9JOk8+Nu8l+qI7ZQSrTzIhMfC/TOl2JkZyn2ucsY5K1p
+        R1rbaPxe0Qozwsx6pzwpwQ==
+X-Google-Smtp-Source: APXvYqz/0u5EkETPDQJCSuiCrk2ylp+eiSvWOJ21L3fbwB2gfnoPnR4+1XbwIlYB4aFF60Tshnhbhw==
+X-Received: by 2002:a05:6808:4cf:: with SMTP id a15mr1179064oie.132.1572993458395;
+        Tue, 05 Nov 2019 14:37:38 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 38sm7022139otr.7.2019.11.05.14.37.37
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 14:37:37 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:37:36 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc:     kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v2] dt-bindings: phy: renesas: usb3-phy: convert bindings
+ to json-schema
+Message-ID: <20191105223736.GA20526@bogus>
+References: <1572592771-12444-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
-References: <1572371299-16774-1-git-send-email-tdas@codeaurora.org> <1572371299-16774-3-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: clock: Introduce RPMHCC bindings for SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 05 Nov 2019 14:36:26 -0800
-Message-Id: <20191105223627.332852084D@mail.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572592771-12444-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-10-29 10:48:18)
-> Add compatible for SC7180 RPMHCC.
->=20
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> Acked-by: Rob Herring <robh@kernel.org>
+On Fri,  1 Nov 2019 16:19:31 +0900, Yoshihiro Shimoda wrote:
+> Convert Renesas R-Car generation 3 USB 3.0 PHY bindings documentation
+> to json-schema.
+> 
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 > ---
->  Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml b/D=
-ocumentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> index f25d76f..feed637 100644
-> --- a/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> +++ b/Documentation/devicetree/bindings/clock/qcom,rpmhcc.yaml
-> @@ -19,6 +19,7 @@ properties:
->      enum:
->        - qcom,sdm845-rpmh-clk
->        - qcom,sm8150-rpmh-clk
-> +      - qcom,sc7180-rpmh-clk
->=20
+>  Changes from v1:
+>  - Remove oneOf from compatible.
+>  - Make renesas,ssc-range values a schema.
+>  https://patchwork.kernel.org/patch/11197807/
+> 
+>  .../devicetree/bindings/phy/rcar-gen3-phy-usb3.txt | 52 ---------------
+>  .../devicetree/bindings/phy/renesas,usb3-phy.yaml  | 78 ++++++++++++++++++++++
+>  2 files changed, 78 insertions(+), 52 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/phy/rcar-gen3-phy-usb3.txt
+>  create mode 100644 Documentation/devicetree/bindings/phy/renesas,usb3-phy.yaml
+> 
 
-Sort?
-
+Reviewed-by: Rob Herring <robh@kernel.org>
