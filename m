@@ -2,607 +2,244 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2EDCCA9EDA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA063CA9EDC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:14:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9798520663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D1D920663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:14:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GMRXPOaV"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXL6mpoa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387614AbfKEHNU (ORCPT
+        id S2387681AbfKEHOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:13:20 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46868 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387442AbfKEHNU (ORCPT
+        Tue, 5 Nov 2019 02:14:19 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:46865 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387442AbfKEHOT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:13:20 -0500
-Received: by mail-pl1-f193.google.com with SMTP id l4so3666369plt.13;
-        Mon, 04 Nov 2019 23:13:19 -0800 (PST)
+        Tue, 5 Nov 2019 02:14:19 -0500
+Received: by mail-yb1-f196.google.com with SMTP id h202so8972409ybg.13;
+        Mon, 04 Nov 2019 23:14:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=C3V4q8Hphd3d9zZDUmVOsx50l1MD7niZTtsL+eJD5Xk=;
-        b=GMRXPOaV/cScc5bIi2rVhUTqtbqLX4F1wEVunTUoNXt1ZiqUT04szIir06nk4AeyXd
-         vf3gnf5ntFv6KjSE7TLmWtCRiPhCBvwrek0c2AxtmtZMk2+InVoLX37g4ecKYeBgMfX/
-         4qpYj5vyWLCioOgo886c51bQCu7AvxAbdgpYPTsUG8HM8VgIlEGDha+ngJ2g8gFQ1lys
-         ygCtEwCD73COluK1unePJic7addR8Pg/gEoh3CRqyX+Iq1kWmCOp11FspIGJYSmnoYz2
-         ZpnlZB5/LnD7g36vZcGVFuwyYvZAYrUBgkzUvffm0DmKBSYGioEN9QX43Lua8V6ahUg/
-         lvfg==
+        h=mime-version:from:date:message-id:subject:to:cc;
+        bh=yO7XkjwWZ+6rGu3b+EVCbVS058nDrAyEXQjVMuzyu+s=;
+        b=BXL6mpoa8kMoOs7f1e7psmYFX/jXEvIhfJ/F6zoV3k3zZKHOAC7yp+Sb7WJz3Lgf40
+         I4Ps5+wxLRH2TpnR/8JhSTsSBkmuf2pfm1/pVAKEf6u1kCYwJrlAU0fUJJ7+85OgqmcJ
+         DNDrkFjCFhKIElTr0Spbxr0QAXE8W+uZ/jbiPTVS3Rrw+ZWR7X9wdsNVD+6E3INxuVWk
+         EMUqJ2bp7Fbh/pP7bkZ8MwFRqdHgnG7+zpPQwd4hKL/iTjw2eL+0OyhDzbqqijxsRjH8
+         YQOucg/ay+4kD/FyD7ID6MtDAOrXoz3Iq3GrTQgnOJJKUowoguKK0rnx7Rhi56x+SLua
+         CWMg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=C3V4q8Hphd3d9zZDUmVOsx50l1MD7niZTtsL+eJD5Xk=;
-        b=icaqkaZNsjkdoRjbHQF63DmzkhGSF05+FD7QEC8VM36Mci6JpD0WmoBM692A+BxGd3
-         /15iXu41HLPH2TWUl/j8oKPILhj2vsEpvypxGK48WVMy/vRDskihY1MUWojnm3Q62cQx
-         qMyMCG0uIn6rWh7hy4kIDiO2JYNR4VpQNQKW9K1Pnr9gCTVqhANgUk0WFA9bqO32urRD
-         nXgW0qxxY6hXamxt+I3ULBmTh58ScT2ij4cWCkg4k+pkxIsJAU0f90yui6epHdbJWsO6
-         frQ+/UiDnADDsEAJK8NGACXbof2160TTPWHqrXX9EnhUjeeCMFCi13UXgsgjPkfFl0I3
-         vidw==
-X-Gm-Message-State: APjAAAX+ik+Nu+S3xch28dRJStsP4uks0wuqi7t8BAj3aWxcx5Qriy5t
-        X/snqNVBl50C+KUu42mYDPSDAcPFXNi0rA==
-X-Google-Smtp-Source: APXvYqyTSE6Md7GIuJBxY2sMV6AI5eYamLhQuBjCgwZIIKOy8mA4RjcO44thWIyu0VziK1bM71VRZA==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr31962348plq.27.1572937998685;
-        Mon, 04 Nov 2019 23:13:18 -0800 (PST)
-Received: from localhost ([2402:3a80:680:8b3a:2a4c:218c:b0b3:eada])
-        by smtp.gmail.com with ESMTPSA id i126sm19838563pfc.29.2019.11.04.23.13.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 23:13:18 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:43:09 +0530
-From:   Jaskaran Singh <jaskaransingh7654321@gmail.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     corbet@lwn.net, mchehab+samsung@kernel.org, christian@brauner.io,
-        neilb@suse.com, willy@infradead.org,
-        jaskaransingh7654321@gmail.com, tobin@kernel.org,
-        stefanha@redhat.com, hofrat@osadl.org, gregkh@linuxfoundation.org,
-        jeffrey.t.kirsher@intel.com, linux-doc@vger.kernel.org,
-        skhan@linuxfoundation.org, linux-kernel-mentees@vger.kernel.org
-Subject: [PATCH] docs: filesystems: sysfs: convert sysfs.txt to reST
-Message-ID: <20191105071309.GA28093@localhost.localdomain>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=yO7XkjwWZ+6rGu3b+EVCbVS058nDrAyEXQjVMuzyu+s=;
+        b=lpVgf73MgiJME/vGHqxPN9pDBnMSgzvL3N09Q6gsdR3OwyquiGDlXM58gxpiZUv0IQ
+         ITcZP5eO+dYOSHNRozEnDlYVYQkie9y0DL1bUXhcGNL9Dycqp2C8nYPg0C2bAsMysnnI
+         c1QdLLBGQ0otxG5cB5M+8rC2KZVCaH9mo7aQhMhlxVEISkjOmON1yk6ez7fEtkeWzbTh
+         pqSl9sBeY9GGKOiL68gFCWOYRk4lNhiNKwH0pagu+Yq+hRRr+RDTkBeAzVqvu1tpmybW
+         GT8krPs+ZoUYupZ2PNPijHUNrWzZV+uugoXMaVXrcDRlJOKDyTCBctxUvE99eT3gDiH2
+         NfwQ==
+X-Gm-Message-State: APjAAAXIv1JAkoLbnJ1IHYU2GLdBaysw1d2YchPrC1V/K8hFrGb5XFQ5
+        QEB2ktb/ha1htxIcDQeSrV4dZ1isUNCj7vg8Cns=
+X-Google-Smtp-Source: APXvYqyit+EoPzBumJ0cPcnF638Uws20EgL51fw6kEe5dPrwmHL6s2MYJHQOj1/qo7vkU9iMlrOYOmuG36jrOlAEnK0=
+X-Received: by 2002:a25:e909:: with SMTP id n9mr26304193ybd.428.1572938058047;
+ Mon, 04 Nov 2019 23:14:18 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.12.1 (2019-06-15)
+From:   Amir Goldstein <amir73il@gmail.com>
+Date:   Tue, 5 Nov 2019 09:14:06 +0200
+Message-ID: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
+Subject: 5.4-rc1 boot regression with kmemleak enabled
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/mixed; boundary="0000000000003445c50596942e76"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch converts sysfs.txt to sysfs.rst, and adds a corresponding
-entry in index.rst.
+--0000000000003445c50596942e76
+Content-Type: text/plain; charset="UTF-8"
 
-Most of the whitespacing and indentation is kept similar to the
-original document.
+Hi Catalin,
 
-Changes to the original document include:
+My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
+c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
 
- - Adding an authors statement in the header.
- - Replacing the underscores in the title with asterisks. This is so
-   that the "The" in the title appears in italics in HTML.
- - Replacing the tilde (~) headings with equal signs, for reST section
-   headings.
- - List out the helper macros with backquotes and corresponding description
-   on the next line.
- - Placing C code and shell code in reST code blocks, with an indentation
-   of an 8 length tab.
+There is no console output when running:
 
-Signed-off-by: Jaskaran Singh <jaskaransingh7654321@gmail.com>
----
- Documentation/filesystems/index.rst           |   1 +
- .../filesystems/{sysfs.txt => sysfs.rst}      | 323 ++++++++++--------
- 2 files changed, 189 insertions(+), 135 deletions(-)
- rename Documentation/filesystems/{sysfs.txt => sysfs.rst} (60%)
+$ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
+    -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
+    -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
+    --append 'root=/dev/vda console=ttyS0,115200'
 
-diff --git a/Documentation/filesystems/index.rst b/Documentation/filesystems/index.rst
-index 2c3a9f761205..18b5ea780b9b 100644
---- a/Documentation/filesystems/index.rst
-+++ b/Documentation/filesystems/index.rst
-@@ -46,4 +46,5 @@ Documentation for filesystem implementations.
- .. toctree::
-    :maxdepth: 2
- 
-+   sysfs
-    virtiofs
-diff --git a/Documentation/filesystems/sysfs.txt b/Documentation/filesystems/sysfs.rst
-similarity index 60%
-rename from Documentation/filesystems/sysfs.txt
-rename to Documentation/filesystems/sysfs.rst
-index ddf15b1b0d5a..de0de5869323 100644
---- a/Documentation/filesystems/sysfs.txt
-+++ b/Documentation/filesystems/sysfs.rst
-@@ -1,15 +1,18 @@
-+======================================================
-+sysfs - *The* filesystem for exporting kernel objects.
-+======================================================
- 
--sysfs - _The_ filesystem for exporting kernel objects. 
-+Authors:
- 
--Patrick Mochel	<mochel@osdl.org>
--Mike Murphy <mamurph@cs.clemson.edu>
-+- Patrick Mochel	<mochel@osdl.org>
-+- Mike Murphy   	<mamurph@cs.clemson.edu>
- 
--Revised:    16 August 2011
--Original:   10 January 2003
-+| Revised:    16 August 2011
-+| Original:   10 January 2003
- 
- 
- What it is:
--~~~~~~~~~~~
-+===========
- 
- sysfs is a ram-based filesystem initially based on ramfs. It provides
- a means to export kernel data structures, their attributes, and the 
-@@ -21,16 +24,18 @@ interface.
- 
- 
- Using sysfs
--~~~~~~~~~~~
-+===========
- 
- sysfs is always compiled in if CONFIG_SYSFS is defined. You can access
- it by doing:
- 
--    mount -t sysfs sysfs /sys 
-+.. code-block:: sh
-+
-+	mount -t sysfs sysfs /sys
- 
- 
- Directory Creation
--~~~~~~~~~~~~~~~~~~
-+==================
- 
- For every kobject that is registered with the system, a directory is
- created for it in sysfs. That directory is created as a subdirectory
-@@ -48,7 +53,7 @@ only modified directly by the function sysfs_schedule_callback().
- 
- 
- Attributes
--~~~~~~~~~~
-+==========
- 
- Attributes can be exported for kobjects in the form of regular files in
- the filesystem. Sysfs forwards file I/O operations to methods defined
-@@ -67,15 +72,16 @@ you publicly humiliated and your code rewritten without notice.
- 
- An attribute definition is simply:
- 
--struct attribute {
--        char                    * name;
--        struct module		*owner;
--        umode_t                 mode;
--};
-+.. code-block:: c
- 
-+	struct attribute {
-+		char                    * name;
-+		struct module		*owner;
-+		umode_t                 mode;
-+	};
- 
--int sysfs_create_file(struct kobject * kobj, const struct attribute * attr);
--void sysfs_remove_file(struct kobject * kobj, const struct attribute * attr);
-+	int sysfs_create_file(struct kobject * kobj, const struct attribute * attr);
-+	void sysfs_remove_file(struct kobject * kobj, const struct attribute * attr);
- 
- 
- A bare attribute contains no means to read or write the value of the
-@@ -85,36 +91,44 @@ a specific object type.
- 
- For example, the driver model defines struct device_attribute like:
- 
--struct device_attribute {
--	struct attribute	attr;
--	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
--			char *buf);
--	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
--			 const char *buf, size_t count);
--};
-+.. code-block:: c
-+
-+	struct device_attribute {
-+		struct attribute	attr;
-+		ssize_t (*show)(struct device *dev, struct device_attribute *attr,
-+				char *buf);
-+		ssize_t (*store)(struct device *dev, struct device_attribute *attr,
-+				 const char *buf, size_t count);
-+	};
- 
--int device_create_file(struct device *, const struct device_attribute *);
--void device_remove_file(struct device *, const struct device_attribute *);
-+	int device_create_file(struct device *, const struct device_attribute *);
-+	void device_remove_file(struct device *, const struct device_attribute *);
- 
- It also defines this helper for defining device attributes: 
- 
--#define DEVICE_ATTR(_name, _mode, _show, _store) \
--struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
-+.. code-block:: c
-+
-+	#define DEVICE_ATTR(_name, _mode, _show, _store) \
-+	struct device_attribute dev_attr_##_name = __ATTR(_name, _mode, _show, _store)
- 
- For example, declaring
- 
--static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo);
-+.. code-block:: c
-+
-+	static DEVICE_ATTR(foo, S_IWUSR | S_IRUGO, show_foo, store_foo);
- 
- is equivalent to doing:
- 
--static struct device_attribute dev_attr_foo = {
--	.attr = {
--		.name = "foo",
--		.mode = S_IWUSR | S_IRUGO,
--	},
--	.show = show_foo,
--	.store = store_foo,
--};
-+.. code-block:: c
-+
-+	static struct device_attribute dev_attr_foo = {
-+		.attr = {
-+			.name = "foo",
-+			.mode = S_IWUSR | S_IRUGO,
-+		},
-+		.show = show_foo,
-+		.store = store_foo,
-+	};
- 
- Note as stated in include/linux/kernel.h "OTHER_WRITABLE?  Generally
- considered a bad idea." so trying to set a sysfs file writable for
-@@ -124,31 +138,45 @@ For the common cases sysfs.h provides convenience macros to make
- defining attributes easier as well as making code more concise and
- readable. The above case could be shortened to:
- 
--static struct device_attribute dev_attr_foo = __ATTR_RW(foo);
-+.. code-block:: c
-+
-+	static struct device_attribute dev_attr_foo = __ATTR_RW(foo);
- 
- the list of helpers available to define your wrapper function is:
--__ATTR_RO(name): assumes default name_show and mode 0444
--__ATTR_WO(name): assumes a name_store only and is restricted to mode
--                 0200 that is root write access only.
--__ATTR_RO_MODE(name, mode): fore more restrictive RO access currently
--                 only use case is the EFI System Resource Table
--                 (see drivers/firmware/efi/esrt.c)
--__ATTR_RW(name): assumes default name_show, name_store and setting
--                 mode to 0644.
--__ATTR_NULL: which sets the name to NULL and is used as end of list
--                 indicator (see: kernel/workqueue.c)
-+
-+``__ATTR_RO(name)``
-+	assumes default name_show and mode 0444
-+
-+``__ATTR_WO(name)``
-+	assumes a name_store only and is restricted to mode
-+	0200 that is root write access only.
-+
-+``__ATTR_RO_MODE(name, mode)``
-+	for more restrictive RO access currently
-+	only use case is the EFI System Resource Table
-+	(see drivers/firmware/efi/esrt.c)
-+
-+``__ATTR_RW(name)``
-+	assumes default name_show, name_store and setting
-+	mode to 0644.
-+
-+``__ATTR_NULL``
-+	which sets the name to NULL and is used as end of list
-+	indicator (see: kernel/workqueue.c)
- 
- Subsystem-Specific Callbacks
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+============================
- 
- When a subsystem defines a new attribute type, it must implement a
- set of sysfs operations for forwarding read and write calls to the
- show and store methods of the attribute owners. 
- 
--struct sysfs_ops {
--        ssize_t (*show)(struct kobject *, struct attribute *, char *);
--        ssize_t (*store)(struct kobject *, struct attribute *, const char *, size_t);
--};
-+.. code-block:: c
-+
-+	struct sysfs_ops {
-+		ssize_t (*show)(struct kobject *, struct attribute *, char *);
-+		ssize_t (*store)(struct kobject *, struct attribute *, const char *, size_t);
-+	};
- 
- [ Subsystems should have already defined a struct kobj_type as a
- descriptor for this type, which is where the sysfs_ops pointer is
-@@ -162,37 +190,41 @@ calls the associated methods.
- 
- To illustrate:
- 
--#define to_dev(obj) container_of(obj, struct device, kobj)
--#define to_dev_attr(_attr) container_of(_attr, struct device_attribute, attr)
-+.. code-block:: c
- 
--static ssize_t dev_attr_show(struct kobject *kobj, struct attribute *attr,
--                             char *buf)
--{
--        struct device_attribute *dev_attr = to_dev_attr(attr);
--        struct device *dev = to_dev(kobj);
--        ssize_t ret = -EIO;
-+	#define to_dev(obj) container_of(obj, struct device, kobj)
-+	#define to_dev_attr(_attr) container_of(_attr, struct device_attribute, attr)
- 
--        if (dev_attr->show)
--                ret = dev_attr->show(dev, dev_attr, buf);
--        if (ret >= (ssize_t)PAGE_SIZE) {
--                printk("dev_attr_show: %pS returned bad count\n",
--                                dev_attr->show);
--        }
--        return ret;
--}
-+	static ssize_t dev_attr_show(struct kobject *kobj, struct attribute *attr,
-+	                             char *buf)
-+	{
-+		struct device_attribute *dev_attr = to_dev_attr(attr);
-+		struct device *dev = to_dev(kobj);
-+		ssize_t ret = -EIO;
-+
-+		if (dev_attr->show)
-+			ret = dev_attr->show(dev, dev_attr, buf);
-+		if (ret >= (ssize_t)PAGE_SIZE) {
-+			printk("dev_attr_show: %pS returned bad count\n",
-+	                                dev_attr->show);
-+	        }
-+	        return ret;
-+	}
- 
- 
- 
- Reading/Writing Attribute Data
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+==============================
- 
- To read or write attributes, show() or store() methods must be
- specified when declaring the attribute. The method types should be as
- simple as those defined for device attributes:
- 
--ssize_t (*show)(struct device *dev, struct device_attribute *attr, char *buf);
--ssize_t (*store)(struct device *dev, struct device_attribute *attr,
--                 const char *buf, size_t count);
-+.. code-block:: c
-+
-+	ssize_t (*show)(struct device *dev, struct device_attribute *attr, char *buf);
-+	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
-+			 const char *buf, size_t count);
- 
- IOW, they should take only an object, an attribute, and a buffer as parameters.
- 
-@@ -253,21 +285,23 @@ Other notes:
- 
- A very simple (and naive) implementation of a device attribute is:
- 
--static ssize_t show_name(struct device *dev, struct device_attribute *attr,
--                         char *buf)
--{
--	return scnprintf(buf, PAGE_SIZE, "%s\n", dev->name);
--}
-+.. code-block:: c
- 
--static ssize_t store_name(struct device *dev, struct device_attribute *attr,
--                          const char *buf, size_t count)
--{
--        snprintf(dev->name, sizeof(dev->name), "%.*s",
--                 (int)min(count, sizeof(dev->name) - 1), buf);
--	return count;
--}
-+	static ssize_t show_name(struct device *dev, struct device_attribute *attr,
-+				 char *buf)
-+	{
-+		return scnprintf(buf, PAGE_SIZE, "%s\n", dev->name);
-+	}
- 
--static DEVICE_ATTR(name, S_IRUGO, show_name, store_name);
-+	static ssize_t store_name(struct device *dev, struct device_attribute *attr,
-+				  const char *buf, size_t count)
-+	{
-+	        snprintf(dev->name, sizeof(dev->name), "%.*s",
-+	                 (int)min(count, sizeof(dev->name) - 1), buf);
-+		return count;
-+	}
-+
-+	static DEVICE_ATTR(name, S_IRUGO, show_name, store_name);
- 
- 
- (Note that the real implementation doesn't allow userspace to set the 
-@@ -275,28 +309,28 @@ name for a device.)
- 
- 
- Top Level Directory Layout
--~~~~~~~~~~~~~~~~~~~~~~~~~~
-+==========================
- 
- The sysfs directory arrangement exposes the relationship of kernel
- data structures. 
- 
--The top level sysfs directory looks like:
-+The top level sysfs directory looks like: ::
- 
--block/
--bus/
--class/
--dev/
--devices/
--firmware/
--net/
--fs/
-+  block/
-+  bus/
-+  class/
-+  dev/
-+  devices/
-+  firmware/
-+  net/
-+  fs/
- 
- devices/ contains a filesystem representation of the device tree. It maps
- directly to the internal kernel device tree, which is a hierarchy of
- struct device. 
- 
- bus/ contains flat directory layout of the various bus types in the
--kernel. Each bus's directory contains two subdirectories:
-+kernel. Each bus's directory contains two subdirectories: ::
- 
- 	devices/
- 	drivers/
-@@ -326,80 +360,99 @@ TODO: Finish this section.
- 
- 
- Current Interfaces
--~~~~~~~~~~~~~~~~~~
-+==================
- 
- The following interface layers currently exist in sysfs:
- 
- 
--- devices (include/linux/device.h)
------------------------------------
-+devices (include/linux/device.h)
-+--------------------------------
- Structure:
- 
--struct device_attribute {
--	struct attribute	attr;
--	ssize_t (*show)(struct device *dev, struct device_attribute *attr,
--			char *buf);
--	ssize_t (*store)(struct device *dev, struct device_attribute *attr,
--			 const char *buf, size_t count);
--};
-+.. code-block:: c
-+
-+	struct device_attribute {
-+		struct attribute	attr;
-+		ssize_t (*show)(struct device *dev, struct device_attribute *attr,
-+	                   	char *buf);
-+		ssize_t (*store)(struct device *dev, struct device_attribute *attr,
-+				 const char *buf, size_t count);
-+	};
- 
- Declaring:
- 
--DEVICE_ATTR(_name, _mode, _show, _store);
-+.. code-block:: c
-+
-+	DEVICE_ATTR(_name, _mode, _show, _store);
- 
- Creation/Removal:
- 
--int device_create_file(struct device *dev, const struct device_attribute * attr);
--void device_remove_file(struct device *dev, const struct device_attribute * attr);
-+.. code-block:: c
-+
-+	int device_create_file(struct device *dev, const struct device_attribute * attr);
-+	void device_remove_file(struct device *dev, const struct device_attribute * attr);
- 
- 
--- bus drivers (include/linux/device.h)
----------------------------------------
-+bus drivers (include/linux/device.h)
-+------------------------------------
-+
- Structure:
- 
--struct bus_attribute {
--        struct attribute        attr;
--        ssize_t (*show)(struct bus_type *, char * buf);
--        ssize_t (*store)(struct bus_type *, const char * buf, size_t count);
--};
-+.. code-block:: c
-+
-+	struct bus_attribute {
-+	        struct attribute        attr;
-+	        ssize_t (*show)(struct bus_type *, char * buf);
-+	        ssize_t (*store)(struct bus_type *, const char * buf, size_t count);
-+	};
- 
- Declaring:
- 
--static BUS_ATTR_RW(name);
--static BUS_ATTR_RO(name);
--static BUS_ATTR_WO(name);
-+.. code-block:: c
-+
-+	static BUS_ATTR_RW(name);
-+	static BUS_ATTR_RO(name);
-+	static BUS_ATTR_WO(name);
- 
- Creation/Removal:
- 
--int bus_create_file(struct bus_type *, struct bus_attribute *);
--void bus_remove_file(struct bus_type *, struct bus_attribute *);
-+.. code-block:: c
-+
-+	int bus_create_file(struct bus_type *, struct bus_attribute *);
-+	void bus_remove_file(struct bus_type *, struct bus_attribute *);
- 
- 
--- device drivers (include/linux/device.h)
-------------------------------------------
-+device drivers (include/linux/device.h)
-+---------------------------------------
- 
- Structure:
- 
--struct driver_attribute {
--        struct attribute        attr;
--        ssize_t (*show)(struct device_driver *, char * buf);
--        ssize_t (*store)(struct device_driver *, const char * buf,
--                         size_t count);
--};
-+.. code-block:: c
-+
-+	struct driver_attribute {
-+	        struct attribute        attr;
-+	        ssize_t (*show)(struct device_driver *, char * buf);
-+	        ssize_t (*store)(struct device_driver *, const char * buf,
-+	                         size_t count);
-+	};
- 
- Declaring:
- 
--DRIVER_ATTR_RO(_name)
--DRIVER_ATTR_RW(_name)
-+.. code-block:: c
-+
-+	DRIVER_ATTR_RO(_name)
-+	DRIVER_ATTR_RW(_name)
- 
- Creation/Removal:
- 
--int driver_create_file(struct device_driver *, const struct driver_attribute *);
--void driver_remove_file(struct device_driver *, const struct driver_attribute *);
-+.. code-block:: c
-+
-+	int driver_create_file(struct device_driver *, const struct driver_attribute *);
-+	void driver_remove_file(struct device_driver *, const struct driver_attribute *);
- 
- 
- Documentation
--~~~~~~~~~~~~~
-+=============
- 
- The sysfs directory structure and the attributes in each directory define an
- ABI between the kernel and user space. As for any ABI, it is important that
--- 
-2.21.0
+$ kvm --version
+QEMU emulator version 2.11.1(Debian 1:2.11+dfsg-1ubuntu7.19)
+Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers
 
+Attached defconfig saved by 'make savedefconfig'.
+
+I tried increasing DEBUG_KMEMLEAK_MEM_POOL_SIZE, which did not help.
+I also tried moving kmemleak_init() back to its old location, since this
+changes seemed unrelated to the commit. Didn't help either.
+
+Let me know if you have any suggestion how to debug this.
+
+Thanks,
+Amir.
+
+
+[1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-xfstests.md
+
+--0000000000003445c50596942e76
+Content-Type: application/octet-stream; name=defconfig
+Content-Disposition: attachment; filename=defconfig
+Content-Transfer-Encoding: base64
+Content-ID: <f_k2lin2zj0>
+X-Attachment-Id: f_k2lin2zj0
+
+Q09ORklHX0xPQ0FMVkVSU0lPTj0iLXhmc3Rlc3RzIgpDT05GSUdfU1lTVklQQz15CkNPTkZJR19Q
+T1NJWF9NUVVFVUU9eQpDT05GSUdfQVVESVQ9eQpDT05GSUdfTk9fSFo9eQpDT05GSUdfSElHSF9S
+RVNfVElNRVJTPXkKQ09ORklHX0JTRF9QUk9DRVNTX0FDQ1Q9eQpDT05GSUdfVEFTS1NUQVRTPXkK
+Q09ORklHX1RBU0tfREVMQVlfQUNDVD15CkNPTkZJR19UQVNLX1hBQ0NUPXkKQ09ORklHX1RBU0tf
+SU9fQUNDT1VOVElORz15CiMgQ09ORklHX0NQVV9JU09MQVRJT04gaXMgbm90IHNldApDT05GSUdf
+SUtDT05GSUc9eQpDT05GSUdfSUtDT05GSUdfUFJPQz15CkNPTkZJR19DR1JPVVBTPXkKQ09ORklH
+X0NHUk9VUF9TQ0hFRD15CkNPTkZJR19VU0VSX05TPXkKQ09ORklHX1NZU0ZTX0RFUFJFQ0FURUQ9
+eQpDT05GSUdfQkxLX0RFVl9JTklUUkQ9eQpDT05GSUdfQ0NfT1BUSU1JWkVfRk9SX1NJWkU9eQpD
+T05GSUdfQlBGX1NZU0NBTEw9eQpDT05GSUdfVVNFUkZBVUxURkQ9eQojIENPTkZJR19DT01QQVRf
+QlJLIGlzIG5vdCBzZXQKQ09ORklHX1NMQUI9eQpDT05GSUdfUFJPRklMSU5HPXkKQ09ORklHX1NN
+UD15CkNPTkZJR19YODZfWDJBUElDPXkKIyBDT05GSUdfWDg2X0VYVEVOREVEX1BMQVRGT1JNIGlz
+IG5vdCBzZXQKQ09ORklHX0hZUEVSVklTT1JfR1VFU1Q9eQpDT05GSUdfUEFSQVZJUlQ9eQpDT05G
+SUdfUEFSQVZJUlRfU1BJTkxPQ0tTPXkKQ09ORklHX1BBUkFWSVJUX1RJTUVfQUNDT1VOVElORz15
+CkNPTkZJR19NQ09SRTI9eQpDT05GSUdfTlJfQ1BVUz00OAojIENPTkZJR19YODZfTUNFX0FNRCBp
+cyBub3Qgc2V0CiMgQ09ORklHX01JQ1JPQ09ERSBpcyBub3Qgc2V0CkNPTkZJR19YODZfTVNSPXkK
+Q09ORklHX1g4Nl9DUFVJRD15CkNPTkZJR19OVU1BPXkKIyBDT05GSUdfQU1EX05VTUEgaXMgbm90
+IHNldApDT05GSUdfWDg2X1BNRU1fTEVHQUNZPXkKQ09ORklHX1g4Nl9DSEVDS19CSU9TX0NPUlJV
+UFRJT049eQpDT05GSUdfSFpfMzAwPXkKQ09ORklHX0tFWEVDPXkKQ09ORklHX0tFWEVDX0ZJTEU9
+eQpDT05GSUdfQ1JBU0hfRFVNUD15CiMgQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5vdCBzZXQK
+Q09ORklHX1BIWVNJQ0FMX0FMSUdOPTB4MTAwMDAwMApDT05GSUdfTEVHQUNZX1ZTWVNDQUxMX0VN
+VUxBVEU9eQojIENPTkZJR19TVVNQRU5EIGlzIG5vdCBzZXQKIyBDT05GSUdfQUNQSV9SRVZfT1ZF
+UlJJREVfUE9TU0lCTEUgaXMgbm90IHNldApDT05GSUdfQ1BVX0ZSRVFfREVGQVVMVF9HT1ZfVVNF
+UlNQQUNFPXkKQ09ORklHX0NQVV9GUkVRX0dPVl9QRVJGT1JNQU5DRT15CkNPTkZJR19DUFVfRlJF
+UV9HT1ZfT05ERU1BTkQ9eQpDT05GSUdfQ1BVX0lETEVfR09WX0xBRERFUj15CiMgQ09ORklHX1BD
+SV9NTUNPTkZJRyBpcyBub3Qgc2V0CkNPTkZJR19JQTMyX0VNVUxBVElPTj15CkNPTkZJR19ETUlf
+U1lTRlM9eQpDT05GSUdfSlVNUF9MQUJFTD15CkNPTkZJR19CTEtfREVWX0lOVEVHUklUWT15CkNP
+TkZJR19QQVJUSVRJT05fQURWQU5DRUQ9eQpDT05GSUdfQlNEX0RJU0tMQUJFTD15CiMgQ09ORklH
+X01RX0lPU0NIRURfREVBRExJTkUgaXMgbm90IHNldApDT05GSUdfQklORk1UX01JU0M9eQpDT05G
+SUdfTkVUPXkKQ09ORklHX1BBQ0tFVD15CkNPTkZJR19QQUNLRVRfRElBRz15CkNPTkZJR19VTklY
+PXkKQ09ORklHX1VOSVhfRElBRz15CkNPTkZJR19YRlJNX1VTRVI9eQpDT05GSUdfTkVUX0tFWT15
+CkNPTkZJR19JTkVUPXkKQ09ORklHX0lQX01VTFRJQ0FTVD15CkNPTkZJR19JUF9BRFZBTkNFRF9S
+T1VURVI9eQpDT05GSUdfSVBfRklCX1RSSUVfU1RBVFM9eQpDT05GSUdfSVBfTVVMVElQTEVfVEFC
+TEVTPXkKQ09ORklHX0lQX1JPVVRFX01VTFRJUEFUSD15CkNPTkZJR19JUF9ST1VURV9WRVJCT1NF
+PXkKQ09ORklHX05FVF9JUElQPXkKQ09ORklHX05FVF9JUEdSRV9ERU1VWD15CkNPTkZJR19ORVRf
+SVBHUkU9eQpDT05GSUdfTkVUX0lQR1JFX0JST0FEQ0FTVD15CkNPTkZJR19TWU5fQ09PS0lFUz15
+CkNPTkZJR19ORVRfRk9VPXkKQ09ORklHX0lORVRfSVBDT01QPXkKQ09ORklHX0lORVRfVURQX0RJ
+QUc9eQpDT05GSUdfSVBWNl9ST1VURVJfUFJFRj15CkNPTkZJR19JUFY2X1RVTk5FTD15CkNPTkZJ
+R19JUFY2X01VTFRJUExFX1RBQkxFUz15CkNPTkZJR19JUFY2X1NVQlRSRUVTPXkKQ09ORklHX05F
+VFdPUktfU0VDTUFSSz15CkNPTkZJR19WTEFOXzgwMjFRPXkKQ09ORklHX0ROU19SRVNPTFZFUj15
+CkNPTkZJR19ORVRMSU5LX0RJQUc9eQpDT05GSUdfQ0dST1VQX05FVF9QUklPPXkKQ09ORklHX0NH
+Uk9VUF9ORVRfQ0xBU1NJRD15CiMgQ09ORklHX1dJUkVMRVNTIGlzIG5vdCBzZXQKQ09ORklHX05F
+VF85UD15CkNPTkZJR19ORVRfOVBfVklSVElPPXkKQ09ORklHX0NFUEhfTElCPXkKQ09ORklHX1BD
+ST15CkNPTkZJR19QQ0lfTVNJPXkKQ09ORklHX1VFVkVOVF9IRUxQRVI9eQpDT05GSUdfVUVWRU5U
+X0hFTFBFUl9QQVRIPSIvc2Jpbi9ob3RwbHVnIgpDT05GSUdfREVWVE1QRlM9eQpDT05GSUdfRldf
+TE9BREVSX1VTRVJfSEVMUEVSPXkKQ09ORklHX0ZXX0xPQURFUl9VU0VSX0hFTFBFUl9GQUxMQkFD
+Sz15CkNPTkZJR19DT05ORUNUT1I9eQpDT05GSUdfQkxLX0RFVl9MT09QPXkKQ09ORklHX0JMS19E
+RVZfUkFNPXkKQ09ORklHX0JMS19ERVZfUkFNX1NJWkU9NjU1MzYKQ09ORklHX1ZJUlRJT19CTEs9
+eQojIENPTkZJR19TQ1NJX1BST0NfRlMgaXMgbm90IHNldApDT05GSUdfQkxLX0RFVl9TRD15CkNP
+TkZJR19TQ1NJX1ZJUlRJTz15CkNPTkZJR19BVEE9eQojIENPTkZJR19TQVRBX1BNUCBpcyBub3Qg
+c2V0CiMgQ09ORklHX0FUQV9TRkYgaXMgbm90IHNldApDT05GSUdfTUQ9eQpDT05GSUdfTURfTElO
+RUFSPXkKQ09ORklHX01EX01VTFRJUEFUSD15CkNPTkZJR19NRF9GQVVMVFk9eQpDT05GSUdfQkxL
+X0RFVl9ETT15CkNPTkZJR19ETV9DUllQVD15CkNPTkZJR19ETV9TTkFQU0hPVD15CkNPTkZJR19E
+TV9USElOX1BST1ZJU0lPTklORz15CkNPTkZJR19ETV9NSVJST1I9eQpDT05GSUdfRE1fUkFJRD15
+CkNPTkZJR19ETV9aRVJPPXkKQ09ORklHX0RNX0RFTEFZPXkKQ09ORklHX0RNX0ZMQUtFWT15CkNP
+TkZJR19ETV9MT0dfV1JJVEVTPXkKQ09ORklHX05FVERFVklDRVM9eQpDT05GSUdfRFVNTVk9eQpD
+T05GSUdfTkVUQ09OU09MRT15CkNPTkZJR19ORVRDT05TT0xFX0RZTkFNSUM9eQpDT05GSUdfVFVO
+PXkKQ09ORklHX1ZFVEg9eQpDT05GSUdfVklSVElPX05FVD15CiMgQ09ORklHX0VUSEVSTkVUIGlz
+IG5vdCBzZXQKIyBDT05GSUdfV0xBTiBpcyBub3Qgc2V0CiMgQ09ORklHX0lOUFVUX01PVVNFIGlz
+IG5vdCBzZXQKIyBDT05GSUdfU0VSSU9fU0VSUE9SVCBpcyBub3Qgc2V0CkNPTkZJR19WVF9IV19D
+T05TT0xFX0JJTkRJTkc9eQojIENPTkZJR19MRUdBQ1lfUFRZUyBpcyBub3Qgc2V0CkNPTkZJR19E
+RVZLTUVNPXkKQ09ORklHX1NFUklBTF84MjUwPXkKIyBDT05GSUdfU0VSSUFMXzgyNTBfREVQUkVD
+QVRFRF9PUFRJT05TIGlzIG5vdCBzZXQKQ09ORklHX1NFUklBTF84MjUwX0NPTlNPTEU9eQojIENP
+TkZJR19TRVJJQUxfODI1MF9FWEFSIGlzIG5vdCBzZXQKQ09ORklHX1NFUklBTF84MjUwX05SX1VB
+UlRTPTMyCkNPTkZJR19TRVJJQUxfODI1MF9SVU5USU1FX1VBUlRTPTMyCkNPTkZJR19WSVJUSU9f
+Q09OU09MRT15CiMgQ09ORklHX0hXX1JBTkRPTV9JTlRFTCBpcyBub3Qgc2V0CiMgQ09ORklHX0hX
+X1JBTkRPTV9BTUQgaXMgbm90IHNldAojIENPTkZJR19IV19SQU5ET01fVklBIGlzIG5vdCBzZXQK
+Q09ORklHX0hXX1JBTkRPTV9WSVJUSU89eQojIENPTkZJR19IV01PTiBpcyBub3Qgc2V0CiMgQ09O
+RklHX1g4Nl9QS0dfVEVNUF9USEVSTUFMIGlzIG5vdCBzZXQKQ09ORklHX1JDX0NPUkU9eQpDT05G
+SUdfUkNfREVDT0RFUlM9eQpDT05GSUdfSVJfTkVDX0RFQ09ERVI9eQpDT05GSUdfSVJfUkM1X0RF
+Q09ERVI9eQpDT05GSUdfSVJfUkM2X0RFQ09ERVI9eQpDT05GSUdfSVJfSlZDX0RFQ09ERVI9eQpD
+T05GSUdfSVJfU09OWV9ERUNPREVSPXkKQ09ORklHX0lSX1NBTllPX0RFQ09ERVI9eQpDT05GSUdf
+SVJfU0hBUlBfREVDT0RFUj15CkNPTkZJR19JUl9NQ0VfS0JEX0RFQ09ERVI9eQpDT05GSUdfSVJf
+WE1QX0RFQ09ERVI9eQpDT05GSUdfSElEX0JBVFRFUllfU1RSRU5HVEg9eQpDT05GSUdfSElEUkFX
+PXkKQ09ORklHX1VISUQ9eQojIENPTkZJR19ISURfQTRURUNIIGlzIG5vdCBzZXQKIyBDT05GSUdf
+SElEX0FQUExFIGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0JFTEtJTiBpcyBub3Qgc2V0CiMgQ09O
+RklHX0hJRF9DSEVSUlkgaXMgbm90IHNldAojIENPTkZJR19ISURfQ0hJQ09OWSBpcyBub3Qgc2V0
+CiMgQ09ORklHX0hJRF9DWVBSRVNTIGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0VaS0VZIGlzIG5v
+dCBzZXQKIyBDT05GSUdfSElEX0lURSBpcyBub3Qgc2V0CiMgQ09ORklHX0hJRF9LRU5TSU5HVE9O
+IGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0xPR0lURUNIIGlzIG5vdCBzZXQKIyBDT05GSUdfSElE
+X01JQ1JPU09GVCBpcyBub3Qgc2V0CiMgQ09ORklHX0hJRF9NT05URVJFWSBpcyBub3Qgc2V0CiMg
+Q09ORklHX1VTQl9TVVBQT1JUIGlzIG5vdCBzZXQKQ09ORklHX1JUQ19DTEFTUz15CiMgQ09ORklH
+X1JUQ19EUlZfQ01PUyBpcyBub3Qgc2V0CkNPTkZJR19WSVJUX0RSSVZFUlM9eQpDT05GSUdfVklS
+VElPX1BDST15CkNPTkZJR19WSVJUSU9fQkFMTE9PTj15CiMgQ09ORklHX1g4Nl9QTEFURk9STV9E
+RVZJQ0VTIGlzIG5vdCBzZXQKIyBDT05GSUdfSU9NTVVfU1VQUE9SVCBpcyBub3Qgc2V0CkNPTkZJ
+R19WQUxJREFURV9GU19QQVJTRVI9eQpDT05GSUdfRVhUMl9GUz15CkNPTkZJR19FWFQyX0ZTX1hB
+VFRSPXkKQ09ORklHX0VYVDJfRlNfUE9TSVhfQUNMPXkKQ09ORklHX0VYVDJfRlNfU0VDVVJJVFk9
+eQpDT05GSUdfRVhUNF9GUz15CkNPTkZJR19FWFQ0X0ZTX1BPU0lYX0FDTD15CkNPTkZJR19FWFQ0
+X0ZTX1NFQ1VSSVRZPXkKQ09ORklHX0VYVDRfREVCVUc9eQpDT05GSUdfSkJEMl9ERUJVRz15CkNP
+TkZJR19YRlNfRlM9eQpDT05GSUdfWEZTX1FVT1RBPXkKQ09ORklHX1hGU19QT1NJWF9BQ0w9eQpD
+T05GSUdfWEZTX1JUPXkKQ09ORklHX1hGU19ERUJVRz15CiMgQ09ORklHX1hGU19BU1NFUlRfRkFU
+QUwgaXMgbm90IHNldApDT05GSUdfT0NGUzJfRlM9eQojIENPTkZJR19PQ0ZTMl9ERUJVR19NQVNL
+TE9HIGlzIG5vdCBzZXQKQ09ORklHX0JUUkZTX0ZTPXkKQ09ORklHX0JUUkZTX0ZTX1BPU0lYX0FD
+TD15CkNPTkZJR19CVFJGU19ERUJVRz15CkNPTkZJR19CVFJGU19BU1NFUlQ9eQpDT05GSUdfRjJG
+U19GUz15CkNPTkZJR19GMkZTX0ZTX1NFQ1VSSVRZPXkKQ09ORklHX0YyRlNfQ0hFQ0tfRlM9eQpD
+T05GSUdfRlNfREFYPXkKQ09ORklHX0ZTX0VOQ1JZUFRJT049eQpDT05GSUdfRkFOT1RJRlk9eQpD
+T05GSUdfRkFOT1RJRllfQUNDRVNTX1BFUk1JU1NJT05TPXkKQ09ORklHX1FVT1RBX05FVExJTktf
+SU5URVJGQUNFPXkKIyBDT05GSUdfUFJJTlRfUVVPVEFfV0FSTklORyBpcyBub3Qgc2V0CkNPTkZJ
+R19RRk1UX1YyPXkKQ09ORklHX0FVVE9GUzRfRlM9eQpDT05GSUdfRlVTRV9GUz15CkNPTkZJR19D
+VVNFPXkKQ09ORklHX09WRVJMQVlfRlM9eQpDT05GSUdfRlNDQUNIRT15CkNPTkZJR19GU0NBQ0hF
+X1NUQVRTPXkKQ09ORklHX0NBQ0hFRklMRVM9eQpDT05GSUdfVkZBVF9GUz15CkNPTkZJR19QUk9D
+X0tDT1JFPXkKQ09ORklHX1BST0NfQ0hJTERSRU49eQpDT05GSUdfVE1QRlM9eQpDT05GSUdfVE1Q
+RlNfUE9TSVhfQUNMPXkKQ09ORklHX0NPTkZJR0ZTX0ZTPXkKQ09ORklHX0VDUllQVF9GUz15CkNP
+TkZJR19FQ1JZUFRfRlNfTUVTU0FHSU5HPXkKQ09ORklHX0hGU1BMVVNfRlM9eQpDT05GSUdfQ1JB
+TUZTPXkKQ09ORklHX1NRVUFTSEZTPXkKQ09ORklHX1NRVUFTSEZTX1hBVFRSPXkKQ09ORklHX1NR
+VUFTSEZTX0xaTz15CkNPTkZJR19TUVVBU0hGU19YWj15CkNPTkZJR19ST01GU19GUz15CkNPTkZJ
+R19VRlNfRlM9eQpDT05GSUdfTkZTX0ZTPXkKQ09ORklHX05GU0Q9eQojIENPTkZJR19SUENTRUNf
+R1NTX0tSQjUgaXMgbm90IHNldApDT05GSUdfQ0lGUz15CiMgQ09ORklHX0NJRlNfREVCVUcgaXMg
+bm90IHNldApDT05GSUdfQ09EQV9GUz15CkNPTkZJR185UF9GUz15CkNPTkZJR19OTFNfREVGQVVM
+VD0idXRmOCIKQ09ORklHX05MU19DT0RFUEFHRV80Mzc9eQpDT05GSUdfTkxTX0NPREVQQUdFXzg1
+MD15CkNPTkZJR19OTFNfQVNDSUk9eQpDT05GSUdfTkxTX0lTTzg4NTlfMT15CkNPTkZJR19ETE09
+eQpDT05GSUdfU0VDVVJJVFk9eQojIENPTkZJR19JTlRFR1JJVFkgaXMgbm90IHNldApDT05GSUdf
+TFNNPSJ5YW1hLGxvYWRwaW4sc2FmZXNldGlkLGludGVncml0eSxzZWxpbnV4LHNtYWNrLHRvbW95
+byxhcHBhcm1vciIKIyBDT05GSUdfQ1JZUFRPX01BTkFHRVJfRElTQUJMRV9URVNUUyBpcyBub3Qg
+c2V0CkNPTkZJR19DUllQVE9fRUNIQUlOSVY9eQpDT05GSUdfQ1JZUFRPX0NSQzMyQ19JTlRFTD15
+CkNPTkZJR19DUllQVE9fQ1JDMzJfUENMTVVMPXkKQ09ORklHX0NSWVBUT19BRVNfTklfSU5URUw9
+eQpDT05GSUdfQ1JZUFRPX0FSQzQ9eQpDT05GSUdfQ1JZUFRPX0RFUz15CiMgQ09ORklHX0NSWVBU
+T19IVyBpcyBub3Qgc2V0CkNPTkZJR19QUklOVEtfVElNRT15CkNPTkZJR19NRVNTQUdFX0xPR0xF
+VkVMX0RFRkFVTFQ9NwpDT05GSUdfRFlOQU1JQ19ERUJVRz15CkNPTkZJR19ERUJVR19JTkZPPXkK
+Q09ORklHX0RFQlVHX0lORk9fUkVEVUNFRD15CiMgQ09ORklHX0VOQUJMRV9NVVNUX0NIRUNLIGlz
+IG5vdCBzZXQKQ09ORklHX0RFQlVHX1NFQ1RJT05fTUlTTUFUQ0g9eQpDT05GSUdfTUFHSUNfU1lT
+UlE9eQpDT05GSUdfREVCVUdfS0VSTkVMPXkKQ09ORklHX1BBR0VfRVhURU5TSU9OPXkKQ09ORklH
+X0RFQlVHX1BBR0VBTExPQz15CkNPTkZJR19ERUJVR19PQkpFQ1RTPXkKQ09ORklHX0RFQlVHX1NM
+QUI9eQpDT05GSUdfREVCVUdfS01FTUxFQUs9eQpDT05GSUdfSEFSRExPQ0tVUF9ERVRFQ1RPUj15
+CkNPTkZJR19CT09UUEFSQU1fSFVOR19UQVNLX1BBTklDPXkKQ09ORklHX1dRX1dBVENIRE9HPXkK
+Q09ORklHX1BBTklDX1RJTUVPVVQ9NQpDT05GSUdfU0NIRURTVEFUUz15CkNPTkZJR19TQ0hFRF9T
+VEFDS19FTkRfQ0hFQ0s9eQpDT05GSUdfUFJPVkVfTE9DS0lORz15CkNPTkZJR19MT0NLX1NUQVQ9
+eQpDT05GSUdfREVCVUdfQVRPTUlDX1NMRUVQPXkKQ09ORklHX0RFQlVHX0xJU1Q9eQpDT05GSUdf
+UkNVX0NQVV9TVEFMTF9USU1FT1VUPTYwCiMgQ09ORklHX1JDVV9UUkFDRSBpcyBub3Qgc2V0CkNP
+TkZJR19SQ1VfRVFTX0RFQlVHPXkKQ09ORklHX0ZBVUxUX0lOSkVDVElPTj15CkNPTkZJR19GQUlM
+X01BS0VfUkVRVUVTVD15CkNPTkZJR19GQVVMVF9JTkpFQ1RJT05fREVCVUdfRlM9eQpDT05GSUdf
+RlRSQUNFX1NZU0NBTExTPXkKQ09ORklHX1RSQUNFUl9TTkFQU0hPVD15CkNPTkZJR19TVEFDS19U
+UkFDRVI9eQpDT05GSUdfQkxLX0RFVl9JT19UUkFDRT15CkNPTkZJR19GVU5DVElPTl9QUk9GSUxF
+Uj15CkNPTkZJR19ERUJVR19XWD15CiMgQ09ORklHX1g4Nl9ERUJVR19GUFUgaXMgbm90IHNldAo=
+--0000000000003445c50596942e76--
