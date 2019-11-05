@@ -2,154 +2,90 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3101C2BAEF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F373C2BAEF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EE4B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDE48214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:56:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572944195;
+	bh=HLIr/WBriOy2Gkw0WCFXEClvRwKI77QU/sr2QCvzKhU=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fd/KYcb2wSuFhIeK/iTIqMB7J+eVfzPu20zmePmZT/uxVDO/DueS4PaQ2MbW5121g
+	 HfSFYtV1QCGFVw3hI0CYsCu66ZmvH6q6GChwJ2Ba4PFnkcTqdTL1sCc/bafe1iaGLE
+	 l+mUGAmQ9yUD/6t39ysSYlGMmFSM+OkYI/Omb3AI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730612AbfKEI4P convert rfc822-to-8bit (ORCPT
+        id S1730628AbfKEI4e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:56:15 -0500
-Received: from rtits2.realtek.com ([211.75.126.72]:38547 "EHLO
-        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729765AbfKEI4P (ORCPT
+        Tue, 5 Nov 2019 03:56:34 -0500
+Received: from mail-lj1-f173.google.com ([209.85.208.173]:37311 "EHLO
+        mail-lj1-f173.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729765AbfKEI4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:56:15 -0500
-Authenticated-By: 
-X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xA58tnut001916, This message is accepted by code: ctloc85258
-Received: from mail.realtek.com (RTITCASV01.realtek.com.tw[172.21.6.18])
-        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xA58tnut001916
-        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 5 Nov 2019 16:55:50 +0800
-Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
- RTITCASV01.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Tue, 5 Nov
- 2019 16:55:49 +0800
-From:   Hayes Wang <hayeswang@realtek.com>
-To:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "oliver@neukum.org" <oliver@neukum.org>
-CC:     "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
-Thread-Topic: [PATCH v2] r8152: Add macpassthru support for ThinkPad
- Thunderbolt 3 Dock Gen 2
-Thread-Index: AQHVk7E2UAb+vVEL20O/iFfFubpdn6d8PDnA
-Date:   Tue, 5 Nov 2019 08:55:49 +0000
-Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
-References: <20191105081526.4206-1-kai.heng.feng@canonical.com>
-In-Reply-To: <20191105081526.4206-1-kai.heng.feng@canonical.com>
-Accept-Language: zh-TW, en-US
-Content-Language: zh-TW
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [172.21.177.214]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Tue, 5 Nov 2019 03:56:33 -0500
+Received: by mail-lj1-f173.google.com with SMTP id l20so2178348lje.4;
+        Tue, 05 Nov 2019 00:56:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=iwXTCihe08fT2qb1oY0hZ3FiCBKTyxRiFtyESLVzA0Q=;
+        b=mEww4Fnoms7SN9KKmx1gYmtt2nkrUneluMn3ITDZ33D0oQdMYqyka4j7pKmLj8BHyr
+         JKTtBfiVyQ7dRoUxcC+2EfNFWzuXxdqEb6nIV4E+GmfXK7nIw7c+aI0Trge9X04vDu9F
+         4xiR+0L30kxWuPKAtIU7Pgh5/pMCkgQDVzQvYAsLGyf2FKsM6CQE7WuYDwpEyKUg1KVC
+         rS7e25O/XCOHHHpF42i5qOKw9dtXknlOu6dk9GjdmvDNdy4hCH3ux0Xj1wMk3qheJ+1M
+         /xPLRB0MMRKldE94jd68d2BfYQuwvztx3RNSqxb83LIxOwyVh7tNf/eqF2gh9iLOXoAn
+         zPZw==
+X-Gm-Message-State: APjAAAVEvN3hLuzTFjGO76tonDx64T7k6ENTTLbOZnjfr7S+qUx243eE
+        vPjqWl1cGRxCZRB5EHhxR6s=
+X-Google-Smtp-Source: APXvYqyUI9lrtaQ/WfC01q/AYKK0eHEDc6+uZ/JfjUk0ddRnWNCSul25+GyeKWPgLjxHtg/bFqR61A==
+X-Received: by 2002:a2e:894b:: with SMTP id b11mr2240500ljk.118.1572944191582;
+        Tue, 05 Nov 2019 00:56:31 -0800 (PST)
+Received: from xi.terra (c-51f1e055.07-184-6d6c6d4.bbcust.telenor.se. [85.224.241.81])
+        by smtp.gmail.com with ESMTPSA id v21sm6435046ljh.53.2019.11.05.00.56.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 00:56:30 -0800 (PST)
+Received: from johan by xi.terra with local (Exim 4.92.3)
+        (envelope-from <johan@xi.terra>)
+        id 1iRuda-0000ci-Cg; Tue, 05 Nov 2019 09:56:30 +0100
+From:   Johan Hovold <johan@kernel.org>
+To:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>
+Cc:     YOKOTA Hiroshi <yokota@netlab.is.tsukuba.ac.jp>,
+        linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johan Hovold <johan@kernel.org>
+Subject: [PATCH 0/2] scsi: nsp_cs: MODULE_LICENSE clean up and compile test
+Date:   Tue,  5 Nov 2019 09:56:07 +0100
+Message-Id: <20191105085609.2338-1-johan@kernel.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
-> Sent: Tuesday, November 05, 2019 4:15 PM
-> To: davem@davemloft.net; oliver@neukum.org
-[...]
-> +	if (test_bit(LENOVO_MACPASSTHRU, &tp->flags)) {
-> +		bypass_test = true;
-> +		mac_obj_name = "\\MACA";
-> +		mac_obj_type = ACPI_TYPE_STRING;
-> +		mac_strlen = 0x16;
->  	} else {
-> -		/* test for RTL8153-BND and RTL8153-BD */
-> -		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
-> -		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
-> -			netif_dbg(tp, probe, tp->netdev,
-> -				  "Invalid variant for MAC pass through\n");
-> -			return -ENODEV;
-> +		bypass_test = false;
-> +		mac_obj_name = "\\_SB.AMAC";
-> +		mac_obj_type = ACPI_TYPE_BUFFER;
-> +		mac_strlen = 0x17;
-> +	}
-> +
-> +	if (!bypass_test) {
+We had two drivers in the tree needlessly checking whether
+MODULE_LICENSE was defined, this fixes the second one.
 
-Maybe you could combine this with the "else" above.
-Then, the variable "bypass_test" could be removed.
-And the declaration of "ocp_data" could be moved after the "else".
+In order to compile test this on a 64-bit machine I added COMPILE_TEST
+to the current !64BIT dependency.
 
-> +		/* test for -AD variant of RTL8153 */
-> +		ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
-> +		if ((ocp_data & AD_MASK) == 0x1000) {
-> +			/* test for MAC address pass-through bit */
-> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
-> +			if ((ocp_data & PASS_THRU_MASK) != 1) {
-> +				netif_dbg(tp, probe, tp->netdev,
-> +						"No efuse for RTL8153-AD MAC pass
-> through\n");
-> +				return -ENODEV;
-> +			}
-> +		} else {
-> +			/* test for RTL8153-BND and RTL8153-BD */
-> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
-> +			if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK)
-> == 0) {
-> +				netif_dbg(tp, probe, tp->netdev,
-> +						"Invalid variant for MAC pass through\n");
-> +				return -ENODEV;
-> +			}
->  		}
->  	}
-> 
->  	/* returns _AUXMAC_#AABBCCDDEEFF# */
-> -	status = acpi_evaluate_object(NULL, "\\_SB.AMAC", NULL, &buffer);
-> +	status = acpi_evaluate_object(NULL, mac_obj_name, NULL, &buffer);
->  	obj = (union acpi_object *)buffer.pointer;
->  	if (!ACPI_SUCCESS(status))
->  		return -ENODEV;
-> -	if (obj->type != ACPI_TYPE_BUFFER || obj->string.length != 0x17) {
-> +	if (obj->type != mac_obj_type || obj->string.length != mac_strlen) {
->  		netif_warn(tp, probe, tp->netdev,
->  			   "Invalid buffer for pass-thru MAC addr: (%d, %d)\n",
->  			   obj->type, obj->string.length);
->  		goto amacout;
->  	}
-> +
->  	if (strncmp(obj->string.pointer, "_AUXMAC_#", 9) != 0 ||
->  	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
->  		netif_warn(tp, probe, tp->netdev,
-> @@ -6629,6 +6649,10 @@ static int rtl8152_probe(struct usb_interface *intf,
->  		netdev->hw_features &= ~NETIF_F_RXCSUM;
->  	}
-> 
-> +	if (le16_to_cpu(udev->descriptor.idVendor) == VENDOR_ID_LENOVO &&
-> +	    le16_to_cpu(udev->descriptor.idProduct) == 0x3082)
-> +		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
-> +
->  	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
-> &&
->  	    (!strcmp(udev->serial, "000001000000") ||
->  	     !strcmp(udev->serial, "000002000000"))) {
-> @@ -6755,6 +6779,7 @@ static const struct usb_device_id rtl8152_table[] = {
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069)},
-> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082)},
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205)},
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c)},
->  	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214)},
-> --
-> 2.17.1
+Johan
 
 
-Best Regards,
-Hayes
+Johan Hovold (2):
+  scsi: nsp_cs: drop redundant MODULE_LICENSE ifdef
+  scsi: nsp_cs: enable compile-testing on 64-bit
 
+ drivers/scsi/pcmcia/Kconfig  | 2 +-
+ drivers/scsi/pcmcia/nsp_cs.c | 2 --
+ 2 files changed, 1 insertion(+), 3 deletions(-)
+
+-- 
+2.23.0
 
