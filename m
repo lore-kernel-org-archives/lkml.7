@@ -2,108 +2,108 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A9FCC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD36EC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43CD5214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="gb9J721U"
+	by mail.kernel.org (Postfix) with ESMTP id 6E69621A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730434AbfKEXqL (ORCPT
+        id S1730544AbfKEXqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:46:11 -0500
-Received: from hqemgate14.nvidia.com ([216.228.121.143]:10495 "EHLO
-        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729688AbfKEXqL (ORCPT
+        Tue, 5 Nov 2019 18:46:54 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:46318 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729688AbfKEXqy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:46:11 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc209c40000>; Tue, 05 Nov 2019 15:46:12 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 05 Nov 2019 15:46:10 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 05 Nov 2019 15:46:10 -0800
-Received: from [10.26.11.93] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
- 2019 23:46:07 +0000
-Subject: Re: [PATCH 4.19 000/149] 4.19.82-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191104212126.090054740@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <6e8b6e19-0d66-beb0-8e16-7975aa1d462a@nvidia.com>
-Date:   Tue, 5 Nov 2019 23:46:05 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 18:46:54 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n14so3555057oie.13;
+        Tue, 05 Nov 2019 15:46:53 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iUouFbp90DaJNrdZUlRPbAF1tArrEhWp17DotmP+0tk=;
+        b=GloMFkSFVv49fXIslmM52FiD0h/B9XkMpjoHj1MXvgheY65bTWwWSk6p/4aK+I9TVe
+         1EfViQDuMqXCpnQVMGQMBJFdv0yU0UOi5H5WlgREzNddxnkKwMDNW59Rqd2PmFU8Eeiv
+         QIXvJF3+eHdm1AmoY7I5yXW6lWj2t7a4F6OzbyP35B3VQ4MkBNJ/1plVR6NpuY2m1eaB
+         ztSd4cen/NHFOjphDxRhXfQiH7pYtCTHYCLqqE9fVy0YM7Ir943PtSUKNIcOpVVp5A8T
+         /7CPV5YTXByaku4yaZVAdJRcXF+33VIamlX4OLFzuR9ABxYgxpC4aC9ZpvR1b5PmluyQ
+         ZHIQ==
+X-Gm-Message-State: APjAAAUVrHE/eVsUUIU6udNo7CsA77HKTu3oWVvrpB/pIm0z34l2O1p4
+        EAXBBwB93BhbcX5iJrerNs8Rusqh
+X-Google-Smtp-Source: APXvYqx2sB/nZShS59xQ2K7VoozaocRKTiLFPqFuZhBFsy52EfV9aJW59ycbQL6dmg/bn7uuUYnxTQ==
+X-Received: by 2002:aca:5a08:: with SMTP id o8mr444760oib.104.1572997611993;
+        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
+Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com. [209.85.167.179])
+        by smtp.gmail.com with ESMTPSA id 94sm4841519otg.70.2019.11.05.15.46.51
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
+Received: by mail-oi1-f179.google.com with SMTP id s71so19279921oih.11;
+        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
+X-Received: by 2002:aca:4891:: with SMTP id v139mr1318447oia.175.1572997610943;
+ Tue, 05 Nov 2019 15:46:50 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191104212126.090054740@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572997572; bh=y5momF3FRqvQu3YdtXVfqb2uV8PVwzSANyREhnaeY6Y=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=gb9J721UcvRwiRbQzUuigqTtLITubocaWUK3OgRaVXLjeGirmZV7tvoI361ASUWwY
-         Jkx4pMNnwTX0kOsfv13npNT7P3XpQ4bpoNTOozFpvNbQCEO59kOc7hhG9Q+6yhs2KZ
-         05VV9+wARKvpNCrwKWj52sSrhhy2xI2C0LXJVFgx6NdqgvUkjwFX5eWmJ3R4veS4bL
-         EqeBqXxykS1KiguhoVUnm9WEDaFWmjP6ibqMAwLXbhEiyrfrKzA7zHzDrd8xnDltyE
-         7o7ZL2u8CrbF1CxFXL5/pemOxnkWXDRpd4O3HfCEk2t7SUcWF6DnFETFtMslrA5MpL
-         ddYPPtepXcR+Q==
+References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
+ <20191101124210.14510-1-linux@rasmusvillemoes.dk> <20191101124210.14510-36-linux@rasmusvillemoes.dk>
+ <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr> <VE1PR04MB6687D4620E32176BDC120DBA8F620@VE1PR04MB6687.eurprd04.prod.outlook.com>
+ <24ea27b6-adea-cc74-f480-b68de163f531@rasmusvillemoes.dk> <CADRPPNQ4dq1pnvNU71vNEgk1V5ovrT9O2=UMJxG45=ZSRdJ4ig@mail.gmail.com>
+ <f48df0c7-77f1-268f-8588-7eff5e9fd7c5@rasmusvillemoes.dk>
+In-Reply-To: <f48df0c7-77f1-268f-8588-7eff5e9fd7c5@rasmusvillemoes.dk>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 5 Nov 2019 17:46:39 -0600
+X-Gmail-Original-Message-ID: <CADRPPNQ0dR4GkGNmi2dEepJFpULD8DW7_FiYzJZ-er2=UtZ8nA@mail.gmail.com>
+Message-ID: <CADRPPNQ0dR4GkGNmi2dEepJFpULD8DW7_FiYzJZ-er2=UtZ8nA@mail.gmail.com>
+Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on PPC32
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
+        Qiang Zhao <qiang.zhao@nxp.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Scott Wood <oss@buserror.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 5, 2019 at 4:47 PM Rasmus Villemoes
+<linux@rasmusvillemoes.dk> wrote:
+>
+> On 04/11/2019 21.56, Li Yang wrote:
+>
+> >> No, this patch cannot be dropped. Please see the kbuild complaints for
+> >> v2,23/23 about use of IS_ERR_VALUE on not-sizeof(long) entities. I see
+> >> kbuild has complained about the same thing for v3 since apparently the
+> >> same thing appears in ucc_slow.c. So I'll fix that.
+> >
+> > When I made this comment I didn't notice you have removed all the
+> > architectural dependencies for CONFIG_QUICC_ENGINE.  If the
+> > QUICC_ENGINE is only buidable on powerpc, arm and arm64, this change
+> > will not be needed.
+> >
+> > BTW, I'm not sure if it is a good idea to make it selectable on these
+> > unrelavent architectures.  Real architectural dependencies and
+> > COMPILE_TEST dependency will be better if we really want to test the
+> > buildability on other platforms.
+>
+> Well, making QUICC_ENGINE depend on PPC32 || ARM would certainly make
+> things easier for me. Once you include ARM64 or any other 64 bit
+> architecture the buildbot complaints start rolling in from the
+> IS_ERR_VALUEs. And ARM64 should be supported as well, so there really
+> isn't much difference between dropping all arch restrictions and listing
+> the relevant archs in the Kconfig dependencies.
 
-On 04/11/2019 21:43, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.19.82 release.
-> There are 149 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> Anything received after that time might be too late.
-> 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.19.82-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.19.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
-> -------------
-> Pseudo-Shortlog of commits:
-
-...
-
-> Jose Abreu <jose.abreu@synopsys.com>
->     net: stmmac: Fix NAPI poll in TX path when in multi-queue
-
-The above commit is causing a boot regression on Tegra186. Bisect points
-to this commit and reverting fixes the issue.
+I agree that it will be good to have the driver compile for all
+architectures for compile test.  But list all the relevant
+architectures and CONFIG_COMPILE_TEST as dependencies will make it not
+really selected for these irrelevant architectures in real system.
 
 Regards,
-Jon
-
--- 
-nvpublic
+Leo
