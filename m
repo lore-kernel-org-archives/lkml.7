@@ -2,66 +2,142 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9EEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C9FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:27:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0AF9206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572967619;
-	bh=Y49i5hhOPhJugkrF4npAozYxT0zBE624ImjMcDKVD1U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=uEL9jbUcTKh7+OkXZ8GMiwPFDJGQvbT95cnbbqPw56MUvtjKG8PE47V9swW1LtVrk
-	 sn8s/J3wkkgfIJ06TgycmdLyv+WJihkuBRSPK5vj7jBsI1S/lrwLmE0HcVRHOHqzA4
-	 KBdARWRVpePXFoz7mk4TP7PTOuxlcS9BALCTmqNc=
+	by mail.kernel.org (Postfix) with ESMTP id 57C29214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:27:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="dCgHDm4I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731085AbfKEP06 (ORCPT
+        id S2389804AbfKEP1m (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:26:58 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727889AbfKEP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:26:58 -0500
-Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Tue, 5 Nov 2019 10:27:42 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21752 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2389721AbfKEP1m (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:27:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572967660;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=gvUBd68QYOf4zjMI6uQSjQ5CMU0M3270wf5ewDe4CGw=;
+        b=dCgHDm4IOxe7/9fsweCZ52menWoXSlKP02PxcXvwAdEo84VTm/CJG3hMuUZS9RWmpe2nRH
+        sgrce0oQdm5QBa5CKepfRNpexUR3GITvw6khgLCVuM9Euxtdfz64RnjMg2IrOdH71X3BTz
+        G7wYMKJnfm0hYWKcQQsJw8XnDXAwVVA=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-14-dCJ-gZydN4yeQdyHHg-p0Q-1; Tue, 05 Nov 2019 10:27:33 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F06D92053B;
-        Tue,  5 Nov 2019 15:26:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572967617;
-        bh=Y49i5hhOPhJugkrF4npAozYxT0zBE624ImjMcDKVD1U=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S2w0B03Z3nwij7CLRx7gMlKWgGttnNnXAzBn1oUwsVRmqRs4TQg78leSvtraaFWD2
-         tfFJNBhLGpVenI/rE1J15IbdDe8S4SSbb+DL3dOa2WEStmckDBW0d8C40qhfyecyr5
-         fp0jHKRLU61DXfZykkUwrwJebdWs8Lk7ULCmM3cE=
-Date:   Wed, 6 Nov 2019 00:26:54 +0900
-From:   Keith Busch <kbusch@kernel.org>
-To:     Charles Machalow <csm10495@gmail.com>
-Cc:     linux-nvme@lists.infradead.org, marta.rybczynska@kalray.eu,
-        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64 to explicitly mark rsvd
-Message-ID: <20191105152654.GC22559@redsun51.ssa.fujisawa.hgst.com>
-References: <20191105061510.22233-1-csm10495@gmail.com>
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 124781005502;
+        Tue,  5 Nov 2019 15:27:32 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 7B6543C1D;
+        Tue,  5 Nov 2019 15:27:29 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Tue,  5 Nov 2019 16:27:31 +0100 (CET)
+Date:   Tue, 5 Nov 2019 16:27:28 +0100
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: handle_exit_race && PF_EXITING
+Message-ID: <20191105152728.GA5666@redhat.com>
+References: <20191104002909.25783-1-shawn@git.icu>
+ <87woceslfs.fsf@oldenburg2.str.redhat.com>
+ <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: dCJ-gZydN4yeQdyHHg-p0Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191105061510.22233-1-csm10495@gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 10:15:10PM -0800, Charles Machalow wrote:
-> Changing nvme_passthru_cmd64 to add a field: rsvd2. This field is an explicit
-> marker for the padding space added on certain platforms as a result of the
-> enlargement of the result field from 32 bit to 64 bits in size.
+On 11/05, Thomas Gleixner wrote:
+>
+> Out of curiosity, what's the race issue vs. robust list which you are
+> trying to solve?
 
-Charles,
-Could you reply with your "Signed-off-by" so I can apply this patch?
-Thanks.
+Off-topic, but this reminds me...
+
+=09#include <sched.h>
+=09#include <assert.h>
+=09#include <unistd.h>
+=09#include <syscall.h>
+
+=09#define FUTEX_LOCK_PI=09=096
+
+=09int main(void)
+=09{
+=09=09struct sched_param sp =3D {};
+
+=09=09sp.sched_priority =3D 2;
+=09=09assert(sched_setscheduler(0, SCHED_FIFO, &sp) =3D=3D 0);
+
+=09=09int lock =3D vfork();
+=09=09if (!lock) {
+=09=09=09sp.sched_priority =3D 1;
+=09=09=09assert(sched_setscheduler(0, SCHED_FIFO, &sp) =3D=3D 0);
+=09=09=09_exit(0);
+=09=09}
+
+=09=09syscall(__NR_futex, &lock, FUTEX_LOCK_PI, 0,0,0);
+=09=09return 0;
+=09}
+
+this creates the unkillable RT process spinning in futex_lock_pi() on
+a single CPU machine (or you can use taskset).
+
+Probably the patch below makes sense anyway, but of course it doesn't
+solve the real problem: futex_lock_pi() should not spin in this case.
+
+It seems to me I even sent the fix a long ago, but I can't recall what
+exactly it did. Probably the PF_EXITING check in attach_to_pi_owner()
+must simply die, I'll try to recall...
+
+Oleg.
+
+--- x/kernel/futex.c
++++ x/kernel/futex.c
+@@ -2842,10 +2842,12 @@ static int futex_lock_pi(u32 __user *uaddr, unsigne=
+d int flags,
+ =09=09=09 *   exit to complete.
+ =09=09=09 * - The user space value changed.
+ =09=09=09 */
+-=09=09=09queue_unlock(hb);
+-=09=09=09put_futex_key(&q.key);
+-=09=09=09cond_resched();
+-=09=09=09goto retry;
++=09=09=09if (!fatal_signal_pending(current)) {
++=09=09=09=09queue_unlock(hb);
++=09=09=09=09put_futex_key(&q.key);
++=09=09=09=09cond_resched();
++=09=09=09=09goto retry;
++=09=09=09}
+ =09=09default:
+ =09=09=09goto out_unlock_put_key;
+ =09=09}
+
