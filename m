@@ -2,671 +2,187 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6DE2FA3749
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:40:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00ADFC49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:40:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92A3B21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:40:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C24A0217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:40:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cadence.com header.i=@cadence.com header.b="iSsiuzSZ";
+	dkim=pass (1024-bit key) header.d=cadence.com header.i=@cadence.com header.b="0hASMguK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731001AbfKEJj7 (ORCPT
+        id S1731011AbfKEJkh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:39:59 -0500
-Received: from mga02.intel.com ([134.134.136.20]:24242 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730856AbfKEJj5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:39:57 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:39:57 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="200323066"
-Received: from unknown (HELO localhost.localdomain.bj.intel.com) ([10.240.193.79])
-  by fmsmga008.fm.intel.com with ESMTP; 05 Nov 2019 01:39:54 -0800
-From:   Zhu Lingshan <lingshan.zhu@intel.com>
-To:     mst@redhat.com, jasowang@redhat.com, alex.williamson@redhat.com
-Cc:     linux-kernel@vger.kernel.org,
-        virtualization@lists.linux-foundation.org, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, dan.daly@intel.com,
-        cunming.liang@intel.com, tiwei.bie@intel.com, jason.zeng@intel.com,
-        Zhu Lingshan <lingshan.zhu@intel.com>
-Subject: [PATCH 2/2] IFC VDPA layer
-Date:   Tue,  5 Nov 2019 17:37:40 +0800
-Message-Id: <1572946660-26265-3-git-send-email-lingshan.zhu@intel.com>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1572946660-26265-1-git-send-email-lingshan.zhu@intel.com>
-References: <1572946660-26265-1-git-send-email-lingshan.zhu@intel.com>
+        Tue, 5 Nov 2019 04:40:37 -0500
+Received: from mx0b-0014ca01.pphosted.com ([208.86.201.193]:16232 "EHLO
+        mx0a-0014ca01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730537AbfKEJkg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:40:36 -0500
+Received: from pps.filterd (m0042333.ppops.net [127.0.0.1])
+        by mx0b-0014ca01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA59cst3026560;
+        Tue, 5 Nov 2019 01:40:30 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=proofpoint;
+ bh=DZCbH7aD6+rAhHyYtj2r01NThLRZdjHznpC8NWnvhRU=;
+ b=iSsiuzSZlA9IiBS/1v91ZvcMGoGVhgJWjIrSdAjwcUS1WeoEL+87/un38ZiflGHqFEEw
+ 0pkUxYw5Zw0tQqD4brHD3Y3xcZyNQ+fvp+7/9Mf/DiJc0sYR5POSSQm5vbYpktYNKq1w
+ hQjRIJx+HQtsdkfnc+Y+XWzCRJOdFLnzSRZQZB9Oqd2/hzHthqwWBdLP+6bunvsAwaJ1
+ gLgIyF5nz7ovTsYv+pSjftKF6q+BejuIqQ2430IZxjIkDATAh5At1FWwEvfLJGlpQMgu
+ 3KbpYD1ZqGoIQzxo/zVoJjkZCMvv1vI85G2NTrjh94XlDV6NQ4L9yl1k7Qa5iykzF9de zA== 
+Received: from nam02-bl2-obe.outbound.protection.outlook.com (mail-bl2nam02lp2057.outbound.protection.outlook.com [104.47.38.57])
+        by mx0b-0014ca01.pphosted.com with ESMTP id 2w2t0q3fau-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 05 Nov 2019 01:40:30 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Rir7yLdO7/Wm4rTnpko+w7NZepVYJBoneFRFgLPDKp2fWxgAyNsM9RaKddMOlxEundFlsQrjK/PE3M1Bxe8QL/vadOERtEwvZT/JZnYQswkPl78wC7QQSMabjzWX4phqNpobywLnI6ux+Pf7z/Bp10JuXyZIV2go3qY2IkCP78NO6XmRKreRItgNcItDOLQE7Xplfnj4cjGaF+cY1lkgQpvLp05Xh4FPyFMJpwd06hL4hJO2yqmkLos26EdTaAhi9MG2kGLmc7La6Ru52ybTPT02EEEAYyoB2v04v6SvOSDfJAoDrhQi/AH78zq9HhjeWKfWuYE4YvTX6GaMc/6n4Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DZCbH7aD6+rAhHyYtj2r01NThLRZdjHznpC8NWnvhRU=;
+ b=H8pA57qhHDgjjB7PP5p4JkFu3pXcvZOGEAY4US+wfKWXfwbOhjt/BLg5iOb57QWsh2I2qj2aDpplHLgQzycQ9J/KYl0Y4Bzs8vaVxGZ2H4tCGi2Byz1+tjch/amB9ZPmFKrsHgbS8X6oiQhHq0c2QJJPUYgoKdc2vjHBobZojcU23nC8ioB1sk9/E1Vx+ZKIPEWHaipsJPlZYHIY+Ebw9Rbvzl6P6ziNEU4sCe9rQ8BwQyJWENOa1DNthPlmZIfLB8/7nEPGr1fwD/DBcI9Wge4WLztaeW5zVTPBqRq6KDtMis1j+NBxnQTp3BYdSn3lbAWk/M/JJbKQBtqNp608Uw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=cadence.com; dmarc=pass action=none header.from=cadence.com;
+ dkim=pass header.d=cadence.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=cadence.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DZCbH7aD6+rAhHyYtj2r01NThLRZdjHznpC8NWnvhRU=;
+ b=0hASMguK+uRB7eQClrlgqS7eGm0bDmyK+rEvzmOARbhpdfv6bmhbBhQwumcl2VpVA5j5Ddz6ypStJZ8Z/qBQWyj7pp2NSzzvPrkVdGusX3lm1SQI142nTFlfVESduV9ltsuK9CLupepydHIU7P5z9WrLY+3C4p6pY2b7Jf6Bxes=
+Received: from BY5PR07MB6419.namprd07.prod.outlook.com (10.255.136.12) by
+ BY5PR07MB6983.namprd07.prod.outlook.com (52.133.250.206) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Tue, 5 Nov 2019 09:40:28 +0000
+Received: from BY5PR07MB6419.namprd07.prod.outlook.com
+ ([fe80::25a9:21ee:a52f:7844]) by BY5PR07MB6419.namprd07.prod.outlook.com
+ ([fe80::25a9:21ee:a52f:7844%7]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
+ 09:40:28 +0000
+From:   Anil Joy Varughese <aniljoy@cadence.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>,
+        Rob Herring <robh@kernel.org>
+CC:     Roger Quadros <rogerq@ti.com>, Jyri Sarha <jsarha@ti.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Subject: RE: [PATCH v2 01/14] dt-bindings: phy: Sierra: Add bindings for
+ Sierra in TI's J721E
+Thread-Topic: [PATCH v2 01/14] dt-bindings: phy: Sierra: Add bindings for
+ Sierra in TI's J721E
+Thread-Index: AQHViaGJO6awF8G6i0KYtDRBBMF/BKdyAqmAgACx+wCACaJF8A==
+Date:   Tue, 5 Nov 2019 09:40:27 +0000
+Message-ID: <BY5PR07MB641954D31EA7C8149FB2073EA87E0@BY5PR07MB6419.namprd07.prod.outlook.com>
+References: <20191023125735.4713-1-kishon@ti.com>
+ <20191023125735.4713-2-kishon@ti.com> <20191029185916.GA19313@bogus>
+ <8ec5a9bd-4283-04bf-af4c-c5b7b912a342@ti.com>
+In-Reply-To: <8ec5a9bd-4283-04bf-af4c-c5b7b912a342@ti.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [14.143.9.161]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a3bc38f0-d566-4d64-3548-08d761d43119
+x-ms-traffictypediagnostic: BY5PR07MB6983:
+x-microsoft-antispam-prvs: <BY5PR07MB698333ED6F8DACD8719F8F2AA87E0@BY5PR07MB6983.namprd07.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0212BDE3BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(39860400002)(346002)(376002)(366004)(136003)(189003)(199004)(13464003)(36092001)(99286004)(186003)(2906002)(54906003)(55016002)(81166006)(55236004)(316002)(53546011)(6506007)(66556008)(7696005)(7736002)(25786009)(6246003)(110136005)(102836004)(71190400001)(8936002)(66946007)(66476007)(64756008)(71200400001)(66446008)(76116006)(305945005)(76176011)(3846002)(6116002)(81156014)(8676002)(4326008)(86362001)(11346002)(446003)(6436002)(14454004)(256004)(476003)(486006)(52536014)(33656002)(5660300002)(229853002)(9686003)(478600001)(66066001)(74316002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:BY5PR07MB6983;H:BY5PR07MB6419.namprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: cadence.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s8yWrSa24TNT0YZN8XCsZl/2xiva9g7q3n3eZpdGYWSoAfdtUQOM2h9LS4CbqdAQNtMNjmHcFINBZOPjzHc1FvUVn7eksG7xvmH9GI7wZdWDtSU1j2RfaRDMdMV45W7IcWu5IFhlwUUtL0mncMD2qo8B0YLMTXy/G63aA+lzKB+wLmJYC374xCp8jluc3pCsYwXXBu1lTpR5pXmoEEl7pTUhpNHKxViuVSu1pxfXFpQI7FDwx08aoVL9iGZ0F0KKrxLOSgaJtHwusIbY93o+JHcF8+2lwRS3zDiG9eYpayhC2uXemt4q8b/ezBALnJ9Ug7uP9EnOS/TytpQF4mG1GiiwTEZMvMYbjqDWFad+8Rxg2wohsnv9KXFdkRIejMAJ79CsGP0TyHirYG+WkanhaEHcqQ29spYqOSTwv0qb2bkCvaIFatgXWa1ZpuoKeCeuBYnffhb69ux0aYfmwk0vPA==
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: cadence.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a3bc38f0-d566-4d64-3548-08d761d43119
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 09:40:27.9551
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d36035c5-6ce6-4662-a3dc-e762e61ae4c9
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: NESN8z83FGoMTDnQ88nxdns5PE6MB0vZgg1wH1JqmHNPvXLAur7SGNaWabZ7wl5WFGCJ4Sg5Qmy+q3A6CAjsL9GGsrzflBhIgyfihZhzz2o=
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY5PR07MB6983
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-05_03:2019-11-04,2019-11-05 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_check_notspam policy=outbound_check score=0
+ lowpriorityscore=0 malwarescore=0 clxscore=1011 phishscore=0 spamscore=0
+ adultscore=0 suspectscore=0 mlxscore=0 priorityscore=1501 mlxlogscore=999
+ bulkscore=0 impostorscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1911050083
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This commit introduced IFC operations for vdpa, which complys to
-virtio_mdev and vhost_mdev interfaces, handles IFC VF
-initialization, configuration and removal.
-
-Signed-off-by: Zhu Lingshan <lingshan.zhu@intel.com>
----
- drivers/vhost/ifcvf/ifcvf_main.c | 605 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 605 insertions(+)
- create mode 100644 drivers/vhost/ifcvf/ifcvf_main.c
-
-diff --git a/drivers/vhost/ifcvf/ifcvf_main.c b/drivers/vhost/ifcvf/ifcvf_main.c
-new file mode 100644
-index 0000000..7165457
---- /dev/null
-+++ b/drivers/vhost/ifcvf/ifcvf_main.c
-@@ -0,0 +1,605 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Copyright (C) 2019 Intel Corporation.
-+ */
-+
-+#include <linux/interrupt.h>
-+#include <linux/module.h>
-+#include <linux/mdev.h>
-+#include <linux/pci.h>
-+#include <linux/sysfs.h>
-+#include "ifcvf_base.h"
-+
-+#define VERSION_STRING	"0.1"
-+#define DRIVER_AUTHOR	"Intel Corporation"
-+#define IFCVF_DRIVER_NAME	"ifcvf"
-+
-+static struct ifcvf_hw *mdev_to_vf(struct mdev_device *mdev)
-+{
-+	struct ifcvf_asapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+
-+	return vf;
-+}
-+
-+static irqreturn_t ifcvf_intr_handler(int irq, void *arg)
-+{
-+	struct vring_info *vring = arg;
-+
-+	if (vring->cb.callback)
-+		return vring->cb.callback(vring->cb.private);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static u64 ifcvf_mdev_get_features(struct mdev_device *mdev)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	return ifcvf_get_features(vf);
-+}
-+
-+static int ifcvf_mdev_set_features(struct mdev_device *mdev, u64 features)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->req_features = features;
-+
-+	return 0;
-+}
-+
-+static u64 ifcvf_mdev_get_vq_state(struct mdev_device *mdev, u16 qid)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+	u16 last_avail_idx;
-+
-+	last_avail_idx = *(u16 *)(vf->lm_cfg + IFCVF_LM_RING_STATE_OFFSET +
-+			 (qid / 2) * IFCVF_LM_CFG_SIZE + (qid % 2) * 4);
-+
-+	return last_avail_idx;
-+}
-+
-+static int ifcvf_mdev_set_vq_state(struct mdev_device *mdev, u16 qid, u64 num)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->vring[qid].last_avail_idx = num;
-+
-+	return 0;
-+}
-+
-+static int ifcvf_mdev_set_vq_address(struct mdev_device *mdev, u16 idx,
-+				     u64 desc_area, u64 driver_area,
-+				     u64 device_area)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->vring[idx].desc = desc_area;
-+	vf->vring[idx].avail = driver_area;
-+	vf->vring[idx].used = device_area;
-+
-+	return 0;
-+}
-+
-+static void ifcvf_mdev_set_vq_num(struct mdev_device *mdev, u16 qid, u32 num)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->vring[qid].size = num;
-+}
-+
-+static void ifcvf_mdev_set_vq_ready(struct mdev_device *mdev,
-+				    u16 qid, bool ready)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->vring[qid].ready = ready;
-+}
-+
-+static bool ifcvf_mdev_get_vq_ready(struct mdev_device *mdev, u16 qid)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	return vf->vring[qid].ready;
-+}
-+
-+static void ifcvf_mdev_set_vq_cb(struct mdev_device *mdev, u16 idx,
-+				 struct virtio_mdev_callback *cb)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	vf->vring[idx].cb = *cb;
-+}
-+
-+static void ifcvf_mdev_kick_vq(struct mdev_device *mdev, u16 idx)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	ifcvf_notify_queue(vf, idx);
-+}
-+
-+static u8 ifcvf_mdev_get_status(struct mdev_device *mdev)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	return ifcvf_get_status(vf);
-+}
-+
-+static u32 ifcvf_mdev_get_generation(struct mdev_device *mdev)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	return ioread8(&vf->common_cfg->config_generation);
-+}
-+
-+static u32 ifcvf_mdev_get_device_id(struct mdev_device *mdev)
-+{
-+	return VIRTIO_ID_NET;
-+}
-+
-+static u32 ifcvf_mdev_get_vendor_id(struct mdev_device *mdev)
-+{
-+	return IFCVF_VENDOR_ID;
-+}
-+
-+static u16 ifcvf_mdev_get_vq_align(struct mdev_device *mdev)
-+{
-+	return IFCVF_QUEUE_ALIGNMENT;
-+}
-+
-+static u64 ifcvf_mdev_get_mdev_features(struct mdev_device *mdev)
-+{
-+	return VIRTIO_MDEV_F_VERSION_1;
-+}
-+
-+static int ifcvf_start_datapath(void *private)
-+{
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
-+	struct ifcvf_adapter *ifcvf;
-+	int i, ret = 0;
-+
-+	ifcvf = container_of(vf, struct ifcvf_adapter, vf);
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		if (!vf->vring[i].ready) {
-+			IFC_ERR(ifcvf->dev,
-+				"Failed to start datapath, vring %d not ready.\n", i);
-+			return -EINVAL;
-+		}
-+
-+		if (!vf->vring[i].size) {
-+			IFC_ERR(ifcvf->dev,
-+				"Failed to start datapath, vring %d size is zero.\n", i);
-+			return -EINVAL;
-+		}
-+
-+		if (!vf->vring[i].desc || !vf->vring[i].avail ||
-+			!vf->vring[i].used) {
-+			IFC_ERR(ifcvf->dev,
-+				"Failed to start datapath, "
-+				"invaild value for vring %d desc,"
-+				"avail_idx or usex_idx.\n", i);
-+			return -EINVAL;
-+		}
-+	}
-+
-+	vf->nr_vring = i;
-+	ret = ifcvf_start_hw(vf);
-+
-+	return ret;
-+}
-+
-+static int ifcvf_stop_datapath(void *private)
-+{
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(private);
-+	int i;
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUES; i++)
-+		vf->vring[i].cb.callback = NULL;
-+
-+	ifcvf_stop_hw(vf);
-+
-+	return 0;
-+}
-+
-+static void ifcvf_reset_vring(struct ifcvf_adapter *adapter)
-+{
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+	struct virtio_pci_common_cfg *cfg;
-+	u8 *lm_cfg;
-+	int i;
-+
-+	cfg = vf->common_cfg;
-+	lm_cfg = vf->lm_cfg;
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vf->vring[i].last_used_idx = 0;
-+		vf->vring[i].last_avail_idx = 0;
-+		vf->vring[i].desc = 0;
-+		vf->vring[i].avail = 0;
-+		vf->vring[i].used = 0;
-+		vf->vring[i].ready = 0;
-+		vf->vring->cb.callback = NULL;
-+		vf->vring->cb.private = NULL;
-+
-+	}
-+
-+	ifcvf_reset(vf);
-+}
-+
-+static void ifcvf_mdev_set_status(struct mdev_device *mdev, u8 status)
-+{
-+	struct ifcvf_adapter *adapter = mdev_get_drvdata(mdev);
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+	int ret = 0;
-+
-+	if (status == 0) {
-+		ifcvf_stop_datapath(adapter);
-+		ifcvf_reset_vring(adapter);
-+		return;
-+	}
-+
-+	if (status & VIRTIO_CONFIG_S_DRIVER_OK) {
-+		ret = ifcvf_start_datapath(adapter);
-+
-+		if (ret)
-+			IFC_ERR(adapter->dev, "Failed to set mdev status %u.\n",
-+				status);
-+	}
-+
-+	ifcvf_set_status(vf, status);
-+}
-+
-+static u16 ifcvf_mdev_get_vq_num_max(struct mdev_device *mdev)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	return vf->vring[0].size;
-+}
-+static void ifcvf_mdev_get_config(struct mdev_device *mdev, unsigned int offset,
-+			     void *buf, unsigned int len)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	WARN_ON(offset + len > sizeof(struct ifcvf_net_config));
-+	ifcvf_read_net_config(vf, offset, buf, len);
-+}
-+
-+static void ifcvf_mdev_set_config(struct mdev_device *mdev, unsigned int offset,
-+			     const void *buf, unsigned int len)
-+{
-+	struct ifcvf_hw *vf = mdev_to_vf(mdev);
-+
-+	WARN_ON(offset + len > sizeof(struct ifcvf_net_config));
-+	ifcvf_write_net_config(vf, offset, buf, len);
-+}
-+
-+static struct virtio_mdev_device_ops ifc_mdev_ops = {
-+	.get_features  = ifcvf_mdev_get_features,
-+	.set_features  = ifcvf_mdev_set_features,
-+	.get_status    = ifcvf_mdev_get_status,
-+	.set_status    = ifcvf_mdev_set_status,
-+	.get_vq_num_max = ifcvf_mdev_get_vq_num_max,
-+	.get_vq_state   = ifcvf_mdev_get_vq_state,
-+	.set_vq_state   = ifcvf_mdev_set_vq_state,
-+	.set_vq_cb      = ifcvf_mdev_set_vq_cb,
-+	.set_vq_ready   = ifcvf_mdev_set_vq_ready,
-+	.get_vq_ready	= ifcvf_mdev_get_vq_ready,
-+	.set_vq_num     = ifcvf_mdev_set_vq_num,
-+	.set_vq_address = ifcvf_mdev_set_vq_address,
-+	.kick_vq        = ifcvf_mdev_kick_vq,
-+	.get_generation	= ifcvf_mdev_get_generation,
-+	.get_device_id	= ifcvf_mdev_get_device_id,
-+	.get_vendor_id	= ifcvf_mdev_get_vendor_id,
-+	.get_vq_align	= ifcvf_mdev_get_vq_align,
-+	.get_config	= ifcvf_mdev_get_config,
-+	.set_config	= ifcvf_mdev_set_config,
-+	.get_mdev_features = ifcvf_mdev_get_mdev_features,
-+};
-+
-+static int ifcvf_init_msix(struct ifcvf_adapter *adapter)
-+{
-+	struct pci_dev *pdev = to_pci_dev(adapter->dev);
-+	struct ifcvf_hw *vf = &adapter->vf;
-+	int vector, i, ret, irq;
-+
-+	ret = pci_alloc_irq_vectors(pdev, IFCVF_MAX_INTR,
-+				    IFCVF_MAX_INTR, PCI_IRQ_MSIX);
-+	if (ret < 0) {
-+		IFC_ERR(adapter->dev, "Failed to alloc irq vectors.\n");
-+		return ret;
-+	}
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vector = i + IFCVF_MSI_QUEUE_OFF;
-+		irq = pci_irq_vector(pdev, vector);
-+		ret = request_irq(irq, ifcvf_intr_handler, 0,
-+				pci_name(pdev), &vf->vring[i]);
-+		if (ret) {
-+			IFC_ERR(adapter->dev,
-+				"Failed to request irq for vq %d.\n", i);
-+			return ret;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static void ifcvf_destroy_adapter(struct ifcvf_adapter *adapter)
-+{
-+	struct ifcvf_hw *vf = IFC_PRIVATE_TO_VF(adapter);
-+	struct pci_dev *pdev = to_pci_dev(adapter->dev);
-+	int i, vector, irq;
-+
-+	for (i = 0; i < IFCVF_MAX_QUEUE_PAIRS * 2; i++) {
-+		vector = i + IFCVF_MSI_QUEUE_OFF;
-+		irq = pci_irq_vector(pdev, vector);
-+		free_irq(irq, &vf->vring[i]);
-+	}
-+}
-+
-+static ssize_t name_show(struct kobject *kobj, struct device *dev, char *buf)
-+{
-+	const char *name = "vhost accelerator (virtio ring compatible)";
-+
-+	return sprintf(buf, "%s\n", name);
-+}
-+MDEV_TYPE_ATTR_RO(name);
-+
-+static ssize_t device_api_show(struct kobject *kobj, struct device *dev,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%s\n", VIRTIO_MDEV_DEVICE_API_STRING);
-+}
-+MDEV_TYPE_ATTR_RO(device_api);
-+
-+static ssize_t available_instances_show(struct kobject *kobj,
-+					struct device *dev, char *buf)
-+{
-+	struct pci_dev *pdev;
-+	struct ifcvf_adapter *adapter;
-+
-+	pdev = to_pci_dev(dev);
-+	adapter = pci_get_drvdata(pdev);
-+
-+	return sprintf(buf, "%d\n", adapter->mdev_count);
-+}
-+
-+MDEV_TYPE_ATTR_RO(available_instances);
-+
-+static ssize_t type_show(struct kobject *kobj,
-+			struct device *dev, char *buf)
-+{
-+	return sprintf(buf, "%s\n", "net");
-+}
-+
-+MDEV_TYPE_ATTR_RO(type);
-+
-+
-+static struct attribute *mdev_types_attrs[] = {
-+	&mdev_type_attr_name.attr,
-+	&mdev_type_attr_device_api.attr,
-+	&mdev_type_attr_available_instances.attr,
-+	&mdev_type_attr_type.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group mdev_type_group_virtio = {
-+	.name  = "virtio_mdev",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+static struct attribute_group mdev_type_group_vhost = {
-+	.name  = "vhost_mdev",
-+	.attrs = mdev_types_attrs,
-+};
-+
-+static struct attribute_group *mdev_type_groups[] = {
-+	&mdev_type_group_virtio,
-+	&mdev_type_group_vhost,
-+	NULL,
-+};
-+
-+const struct attribute_group *mdev_dev_groups[] = {
-+	NULL,
-+};
-+
-+static int ifcvf_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
-+{
-+	struct device *dev = mdev_parent_dev(mdev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
-+	int ret = 0;
-+
-+	mutex_lock(&adapter->mdev_lock);
-+
-+	if (adapter->mdev_count < IFCVF_MDEV_LIMIT) {
-+		IFC_ERR(&pdev->dev,
-+			"Can not create mdev, reached limitation %d.\n",
-+			IFCVF_MDEV_LIMIT);
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	if (!strcmp(kobj->name, "ifcvf-virtio_mdev"))
-+		mdev_set_virtio_ops(mdev, &ifc_mdev_ops);
-+
-+	if (!strcmp(kobj->name, "ifcvf-vhost_mdev"))
-+		mdev_set_vhost_ops(mdev, &ifc_mdev_ops);
-+
-+	mdev_set_drvdata(mdev, adapter);
-+	mdev_set_iommu_device(mdev_dev(mdev), dev);
-+	adapter->mdev_count--;
-+
-+out:
-+	mutex_unlock(&adapter->mdev_lock);
-+	return ret;
-+}
-+
-+static int ifcvf_mdev_remove(struct mdev_device *mdev)
-+{
-+	struct device *dev = mdev_parent_dev(mdev);
-+	struct pci_dev *pdev = to_pci_dev(dev);
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
-+
-+	mutex_lock(&adapter->mdev_lock);
-+	adapter->mdev_count++;
-+	mutex_unlock(&adapter->mdev_lock);
-+
-+	return 0;
-+}
-+
-+static struct mdev_parent_ops ifcvf_mdev_fops = {
-+	.owner			= THIS_MODULE,
-+	.supported_type_groups	= mdev_type_groups,
-+	.mdev_attr_groups	= mdev_dev_groups,
-+	.create			= ifcvf_mdev_create,
-+	.remove			= ifcvf_mdev_remove,
-+};
-+
-+static int ifcvf_probe(struct pci_dev *pdev, const struct pci_device_id *id)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct ifcvf_adapter *adapter;
-+	struct ifcvf_hw *vf;
-+	int ret, i;
-+
-+	adapter = kzalloc(sizeof(struct ifcvf_adapter), GFP_KERNEL);
-+
-+	if (adapter == NULL) {
-+		ret = -ENOMEM;
-+		goto fail;
-+	}
-+
-+	mutex_init(&adapter->mdev_lock);
-+	adapter->mdev_count = IFCVF_MDEV_LIMIT;
-+	adapter->dev = dev;
-+	pci_set_drvdata(pdev, adapter);
-+	ret = pci_enable_device(pdev);
-+
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to enable device.\n");
-+		goto free_adapter;
-+	}
-+
-+	ret = pci_request_regions(pdev, IFCVF_DRIVER_NAME);
-+
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to request MMIO region.\n");
-+		goto disable_device;
-+	}
-+
-+	pci_set_master(pdev);
-+	ret = ifcvf_init_msix(adapter);
-+
-+	if (ret) {
-+		IFC_ERR(adapter->dev, "Failed to initialize MSIX.\n");
-+		goto free_msix;
-+	}
-+
-+	vf = &adapter->vf;
-+	
-+	for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
-+		vf->mem_resource[i].phys_addr = pci_resource_start(pdev, i);
-+		vf->mem_resource[i].len = pci_resource_len(pdev, i);
-+		if (!vf->mem_resource[i].len) {
-+			vf->mem_resource[i].addr = NULL;
-+			continue;
-+		}
-+
-+		vf->mem_resource[i].addr = pci_iomap_range(pdev, i, 0,
-+				vf->mem_resource[i].len);
-+		if (!vf->mem_resource[i].addr) {
-+			IFC_ERR(adapter->dev, "Failed to map IO resource %d\n",
-+				i);
-+			ret = -1;
-+			goto free_msix;
-+		}
-+	}
-+
-+	if (ifcvf_init_hw(vf, pdev) < 0) {
-+		ret = -1;
-+		goto destroy_adapter;
-+	}
-+
-+	ret = mdev_register_device(dev, &ifcvf_mdev_fops);
-+
-+	if (ret) {
-+		IFC_ERR(adapter->dev,  "Failed to register mdev device\n");
-+		goto destroy_adapter;
-+	}
-+
-+	return 0;
-+
-+destroy_adapter:
-+	ifcvf_destroy_adapter(adapter);
-+free_msix:
-+	pci_free_irq_vectors(pdev);
-+	pci_release_regions(pdev);
-+disable_device:
-+	pci_disable_device(pdev);
-+free_adapter:
-+	kfree(adapter);
-+fail:
-+	return ret;
-+}
-+
-+static void ifcvf_remove(struct pci_dev *pdev)
-+{
-+	struct ifcvf_adapter *adapter = pci_get_drvdata(pdev);
-+	struct device *dev = &pdev->dev;
-+	struct ifcvf_hw *vf;
-+	int i;
-+
-+	mdev_unregister_device(dev);
-+
-+	vf = &adapter->vf;
-+	for (i = 0; i < IFCVF_PCI_MAX_RESOURCE; i++) {
-+		if (vf->mem_resource[i].addr) {
-+			pci_iounmap(pdev, vf->mem_resource[i].addr);
-+			vf->mem_resource[i].addr = NULL;
-+		}
-+	}
-+
-+	ifcvf_destroy_adapter(adapter);
-+	pci_free_irq_vectors(pdev);
-+	pci_release_regions(pdev);
-+	pci_disable_device(pdev);
-+	kfree(adapter);
-+}
-+
-+static struct pci_device_id ifcvf_pci_ids[] = {
-+	{ PCI_DEVICE_SUB(IFCVF_VENDOR_ID,
-+			IFCVF_DEVICE_ID,
-+			IFCVF_SUBSYS_VENDOR_ID,
-+			IFCVF_SUBSYS_DEVICE_ID) },
-+	{ 0 },
-+};
-+MODULE_DEVICE_TABLE(pci, ifcvf_pci_ids);
-+
-+static struct pci_driver ifcvf_driver = {
-+	.name     = IFCVF_DRIVER_NAME,
-+	.id_table = ifcvf_pci_ids,
-+	.probe    = ifcvf_probe,
-+	.remove   = ifcvf_remove,
-+};
-+
-+static int __init ifcvf_init_module(void)
-+{
-+	int ret;
-+
-+	ret = pci_register_driver(&ifcvf_driver);
-+	return ret;
-+}
-+
-+static void __exit ifcvf_exit_module(void)
-+{
-+	pci_unregister_driver(&ifcvf_driver);
-+}
-+
-+module_init(ifcvf_init_module);
-+module_exit(ifcvf_exit_module);
-+
-+MODULE_LICENSE("GPL v2");
-+MODULE_VERSION(VERSION_STRING);
-+MODULE_AUTHOR(DRIVER_AUTHOR);
--- 
-1.8.3.1
-
+SGkgS2lzaG9uL1JvYg0KDQpNeSBjb21tZW50cyBhcmUgYmVsb3cuDQoNCj4gLS0tLS1PcmlnaW5h
+bCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRp
+LmNvbT4NCj4gU2VudDogV2VkbmVzZGF5LCBPY3RvYmVyIDMwLCAyMDE5IDExOjA2IEFNDQo+IFRv
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjsgQW5pbCBKb3kgVmFydWdoZXNlDQo+IDxh
+bmlsam95QGNhZGVuY2UuY29tPg0KPiBDYzogUm9nZXIgUXVhZHJvcyA8cm9nZXJxQHRpLmNvbT47
+IEp5cmkgU2FyaGEgPGpzYXJoYUB0aS5jb20+OyBsaW51eC0NCj4ga2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2
+MiAwMS8xNF0gZHQtYmluZGluZ3M6IHBoeTogU2llcnJhOiBBZGQgYmluZGluZ3MgZm9yIFNpZXJy
+YQ0KPiBpbiBUSSdzIEo3MjFFDQo+IA0KPiBFWFRFUk5BTCBNQUlMDQo+IA0KPiANCj4gSGkgUm9i
+LA0KPiANCj4gT24gMzAvMTAvMTkgMTI6MjkgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiA+IE9u
+IFdlZCwgT2N0IDIzLCAyMDE5IGF0IDA2OjI3OjIyUE0gKzA1MzAsIEtpc2hvbiBWaWpheSBBYnJh
+aGFtIEkgd3JvdGU6DQo+ID4+IEFkZCBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIFNpZXJy
+YSBQSFkgSVAgdXNlZCBpbiBUSSdzIEo3MjFFDQo+ID4+IFNvQy4NCj4gPj4NCj4gPj4gU2lnbmVk
+LW9mZi1ieTogS2lzaG9uIFZpamF5IEFicmFoYW0gSSA8a2lzaG9uQHRpLmNvbT4NCj4gPj4gLS0t
+DQo+ID4+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LWNhZGVuY2Utc2llcnJhLnR4
+dCAgfCAxMw0KPiA+PiArKysrKysrKy0tLS0tDQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNl
+cnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiA+Pg0KPiA+PiBkaWZmIC0tZ2l0DQo+ID4+IGEv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktY2FkZW5jZS1zaWVycmEu
+dHh0DQo+ID4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3BoeS9waHktY2Fk
+ZW5jZS1zaWVycmEudHh0DQo+ID4+IGluZGV4IDZlMWI0N2JmY2U0My4uYmY5MGVmN2UwMDVlIDEw
+MDY0NA0KPiA+PiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3Bo
+eS1jYWRlbmNlLXNpZXJyYS50eHQNCj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL3BoeS9waHktY2FkZW5jZS1zaWVycmEudHh0DQo+ID4+IEBAIC0yLDIxICsyLDI0
+IEBAIENhZGVuY2UgU2llcnJhIFBIWQ0KPiA+PiAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4g
+Pj4NCj4gPj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+ID4+IC0tIGNvbXBhdGlibGU6CWNkbnMs
+c2llcnJhLXBoeS10MA0KPiA+PiAtLSBjbG9ja3M6CU11c3QgY29udGFpbiBhbiBlbnRyeSBpbiBj
+bG9jay1uYW1lcy4NCj4gPj4gLQkJU2VlIC4uL2Nsb2Nrcy9jbG9jay1iaW5kaW5ncy50eHQgZm9y
+IGRldGFpbHMuDQo+ID4+IC0tIGNsb2NrLW5hbWVzOglNdXN0IGJlICJwaHlfY2xrIg0KPiA+PiAr
+LSBjb21wYXRpYmxlOglNdXN0IGJlICJjZG5zLHNpZXJyYS1waHktdDAiIGZvciBTaWVycmEgaW4g
+Q2FkZW5jZQ0KPiBwbGF0Zm9ybQ0KPiA+PiArCQlNdXN0IGJlICJ0aSxzaWVycmEtcGh5LXQwIiBm
+b3IgU2llcnJhIGluIFRJJ3MgSjcyMUUgU29DLg0KPiA+PiAgLSByZXNldHM6CU11c3QgY29udGFp
+biBhbiBlbnRyeSBmb3IgZWFjaCBpbiByZXNldC1uYW1lcy4NCj4gPj4gIAkJU2VlIC4uL3Jlc2V0
+L3Jlc2V0LnR4dCBmb3IgZGV0YWlscy4NCj4gPj4gIC0gcmVzZXQtbmFtZXM6CU11c3QgaW5jbHVk
+ZSAic2llcnJhX3Jlc2V0IiBhbmQgInNpZXJyYV9hcGIiLg0KPiA+PiAgCQkic2llcnJhX3Jlc2V0
+IiBtdXN0IGNvbnRyb2wgdGhlIHJlc2V0IGxpbmUgdG8gdGhlIFBIWS4NCj4gPj4gIAkJInNpZXJy
+YV9hcGIiIG11c3QgY29udHJvbCB0aGUgcmVzZXQgbGluZSB0byB0aGUgQVBCIFBIWQ0KPiA+PiAt
+CQlpbnRlcmZhY2UuDQo+ID4+ICsJCWludGVyZmFjZSAoInNpZXJyYV9hcGIiIGlzIG9wdGlvbmFs
+KS4NCj4gPj4gIC0gcmVnOgkJcmVnaXN0ZXIgcmFuZ2UgZm9yIHRoZSBQSFkuDQo+ID4+ICAtICNh
+ZGRyZXNzLWNlbGxzOiBNdXN0IGJlIDENCj4gPj4gIC0gI3NpemUtY2VsbHM6CU11c3QgYmUgMA0K
+PiA+Pg0KPiA+PiAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPj4gKy0gY2xvY2tzOgkJTXVzdCBj
+b250YWluIGFuIGVudHJ5IGluIGNsb2NrLW5hbWVzLg0KPiA+PiArCQkJU2VlIC4uL2Nsb2Nrcy9j
+bG9jay1iaW5kaW5ncy50eHQgZm9yIGRldGFpbHMuDQo+ID4+ICstIGNsb2NrLW5hbWVzOgkJTXVz
+dCBiZSAicGh5X2NsayIuIE11c3QgY29udGFpbiAiY21uX3JlZmNsayINCj4gYW5kDQo+ID4+ICsJ
+CQkiY21uX3JlZmNsazEiIGZvciBjb25maWd1cmluZyB0aGUgZnJlcXVlbmN5IG9mIHRoZQ0KPiA+
+PiArCQkJY2xvY2sgdG8gdGhlIGxhbmVzLg0KPiA+DQo+ID4gSSBkb24ndCB1bmRlcnN0YW5kIGhv
+dyB0aGUgc2FtZSBibG9jayBjYW4gaGF2ZSBjb21wbGV0ZWx5IGRpZmZlcmVudA0KPiA+IGNsb2Nr
+cy4gRGlkIHRoZSBvcmlnaW5hbCBiaW5kaW5nIGZvcmdldCBzb21lPw0KPiA+DQo+ID4gVEkgbmVl
+ZHMgMCwgMSBvciAzIGNsb2Nrcz8gUmVhZHMgbGlrZSBpdCBjb3VsZCBiZSBhbnkuDQo+IA0KPiBG
+b3IgVEksIHBoeV9jbGsgaXMgbm90IG5lZWRlZC4gQW5pbCwgY2FuIHlvdSBjbGFyaWZ5IHdoYXQg
+dGhpcyBjbG9jayBhY3R1YWxseQ0KPiBjb3JyZXNwb25kcyB0bz8gSXMgaXQgYSBmdW5jdGlvbmFs
+IGNsb2NrIG9mIFBIWT8NCg0KV2hlbiB3ZSBoYWQgZGVzaWduZWQgdGhlIERUIGJpbmRpbmcgZm9y
+IFNpZXJyYSB3ZSB0aG91Z2h0IG9mIHVzaW5nIHBoeV9jbGsgYXMgYSBjb21tb24gaW50ZXJmYWNl
+IGZvciB0aGUgY2xvY2sgaW5wdXRzIGFuZCB0aGVyZSB3YXMgbm8gc3BlY2lmaWMgcmVxdWlyZW1l
+bnQgZm9yIHNwbGl0dGluZyBpdCBpbnRvIG11bHRpcGxlIGNsb2NrcyB0aGVuIGFuZCBhbHNvIHdl
+IGhhZCB1c2VkIGEgc2ltdWxhdGlvbiBlbnZpcm9ubWVudCBmb3IgdGVzdGluZyBvdXIgSVAuIFdl
+IGNhbiBkZXByZWNhdGUgdGhlIHBoeV9jbGsgcHJvcGVydHkuIA0KDQpUaGFua3MsDQpBbmlsDQoN
+Cj4gU2llcnJhIFNFUkRFUyBhY3R1YWxseSBoYXMgYSBudW1iZXIgb2YgY2xvY2tzIHdoaWNoIGNh
+biBiZSBjb25maWd1cmVkLiBUaGUNCj4gaW5pdGlhbCBkdC1iaW5kaW5nIGRpZG4ndCBtb2RlbCBh
+bGwgdGhlc2UgY2xvY2tzLiBUaGUgImNtbl9yZWZjbGsiIGFuZA0KPiAiY21uX3JlZmNsazEiIGFy
+ZSB1c2VkIHRvIHByb2dyYW0gdGhlIGRpdmlkZXJzIHdpdGhpbmcgdGhlIFNpZXJyYS4gVGhlIGFj
+dHVhbA0KPiByZWdpc3RlcnMgZm9yIHByb2dyYW1taW5nIHRoZSBkaXZpZGVycyBhcmUgaW4gdGhl
+IFNpZXJyYSB3cmFwcGVyIHRob3VnaC4gVGhlDQo+IG9yaWdpbmFsIFNpZXJyYSBkcml2ZXIgYW5k
+IGR0LWJpbmRpbmcgZGlkbid0IHRyeSB0byBjaGFuZ2UgdGhlIGRlZmF1bHQgZGl2aWRlcg0KPiB2
+YWx1ZXMuDQo+IA0KPiBUaGFua3MNCj4gS2lzaG9uDQo+ID4NCj4gPiBSb2INCj4gPg0K
