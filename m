@@ -2,90 +2,161 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9DDBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:41:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FB00C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:43:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0FF420656
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:41:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="CbGKKPGg"
+	by mail.kernel.org (Postfix) with ESMTP id 142C02190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:43:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390245AbfKEQl5 (ORCPT
+        id S2390298AbfKEQnX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:41:57 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41238 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390123AbfKEQl5 (ORCPT
+        Tue, 5 Nov 2019 11:43:23 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:52527 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390060AbfKEQnW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:41:57 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m9so22590279ljh.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:41:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CPAWoJPOWFI9tZt+Z9WZhKGPSIvelnJJqs8XUy+V46k=;
-        b=CbGKKPGgaC64y9p1BQq2+o8j3eZeZ9xzHn8JM0uVa/q2Dp+fcmnbfaSGvPUxtlWjOS
-         ynZSdksFstX3dfMBSBg9tio5MZWnxRY6E7meZbkdx/z1h07ghzvK3IuvI1rXj14LMx+A
-         3PsnudVi44KqkoSJSpfg66RMkDWNbjEBwkW8KDptiEdJzM5ryLb72MooGxElnni7OIKe
-         zx9XJ0wui53vXA58fv5HWJnIk+ltmjQZ8JsgFM6ipJSqo7wifvmA4eEw1JObeYBkkXSH
-         Ffb7hexTfsnPXuxAufhBpC0ii8o0VzIJ7yjyvhHtQ1CwosO8muSP1sgfcpjtqOgt3GeT
-         8FuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CPAWoJPOWFI9tZt+Z9WZhKGPSIvelnJJqs8XUy+V46k=;
-        b=ECh7Rp48axmaiJuR0LKCgunu+dhFf4qTmVqmDbshuIthoZvY95Q6aldmV9deRcEOu8
-         jK9dXbJ68T/MEjMj6r2f+RHkw6yhA97nZI/+7awUrv2jC+YOOEXrrlFtBvkJhTfVtGOs
-         CwVFjd9KjmSb1zXZtz/MMXr3qY9/UzHiVqkDZ/neZzj6bHWGeMLeAXH/GguWsxysiDoy
-         Lexde4VcaTagrQqjfQLK+wNwu5ptB4Uy8xrX4qFGBxPQ0U5oF2KgTKt/u8MvDtyCmK9G
-         PkYZ9ukjTkXmeR5XZncCNQQQUYV21LStagp4POf6URtB/IQ8ZIXcdnZO/rPKY8O88Rkn
-         Knpg==
-X-Gm-Message-State: APjAAAWAWeVtyt4sdlTZEqSRmaAXRME40jWUChT34gg9aY4QaIlKFN9j
-        Dn98QpLVbK67XIIMiOlk4z4sT/u2kD79MLXWt5VBiA==
-X-Google-Smtp-Source: APXvYqzJhVMjwxTvLIsbgfPh/CEzKCXdjh4ZL0tYyqLClkvm34sCnU8o9OP8Jjv4YmS1doxJFXVAsqkHWRlEyPnswzU=
-X-Received: by 2002:a2e:3111:: with SMTP id x17mr23711544ljx.146.1572972114631;
- Tue, 05 Nov 2019 08:41:54 -0800 (PST)
+        Tue, 5 Nov 2019 11:43:22 -0500
+Received: from c-73-130-187-69.hsd1.pa.comcast.net ([73.130.187.69] helo=[172.25.50.30])
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <mike.salvatore@canonical.com>)
+        id 1iS1vL-00023X-4x; Tue, 05 Nov 2019 16:43:19 +0000
+Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
+ tests for policy unpack
+To:     Brendan Higgins <brendanhiggins@google.com>,
+        Iurii Zaikin <yzaikin@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Alan Maguire <alan.maguire@oracle.com>,
+        Matthias Maennich <maennich@google.com>,
+        shuah <shuah@kernel.org>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, David Gow <davidgow@google.com>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>
+References: <20191018001816.94460-1-brendanhiggins@google.com>
+ <20191018122949.GD11244@42.do-not-panic.com>
+ <alpine.LRH.2.20.1910191348280.11804@dhcp-10-175-221-34.vpn.oracle.com>
+ <CAFd5g46aO4jwyo32DSz4L8GdhP6t38+Qb9NB+3fev3u4G6sg4w@mail.gmail.com>
+ <20191024101529.GK11244@42.do-not-panic.com>
+ <201910301205.74EC2A226D@keescook>
+ <CAAXuY3o31iCJwZ+WGHMaK1MgpC0qv=JkJWnzv8Lhym9TnZQvcQ@mail.gmail.com>
+ <CAFd5g446cyijzgap9r8nm_202zkUsfdZXrn5E1_Mfe-R+eFb_g@mail.gmail.com>
+From:   Mike Salvatore <mike.salvatore@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mike.salvatore@canonical.com; keydata=
+ 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
+Message-ID: <205525ba-dc2f-34a9-b7dc-4421285535d7@canonical.com>
+Date:   Tue, 5 Nov 2019 11:43:16 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com> <20191105162424.GH30717@redhat.com>
-In-Reply-To: <20191105162424.GH30717@redhat.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 5 Nov 2019 08:41:18 -0800
-Message-ID: <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-To:     Andrea Arcangeli <aarcange@redhat.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAFd5g446cyijzgap9r8nm_202zkUsfdZXrn5E1_Mfe-R+eFb_g@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 8:24 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
-> The long term plan is to introduce UFFD_FEATURE_EVENT_FORK2 feature
-> flag that uses the ioctl to receive the child uffd, it'll consume more
-> CPU, but it wouldn't require the PTRACE privilege anymore.
+>> but such approach is not mainstream.
+>> I personally like the idea of testing the lowest level bits in isolation even if
+>> they are not a part of any interface. I think that specifying the
+>> interface using
+>> unit tests and ensuring implementation correctness are complementary but
+>> I haven't had much luck arguing this with our esteemed colleagues.
 
-Why not just have callers retrieve FDs using recvmsg? This way, you
-retrieve the message packet and the file descriptor at the same time
-and you don't need any appreciable extra CPU use.
+In general, testing public interfaces is preferable, however, I think it's
+important to avoid becoming dogmatic. IMHO, it's more important to have tests
+that are clear in what they test than to not write tests (or write confusing
+tests) in order to adhere to a generalized principle.
+
+> So I think this is a very subtle point which is very widely
+> misunderstood. Most people write code and then write their tests,
+> following this practice along with only testing public interfaces
+> often causes people to just not test all of their code, which is
+> wrong.
+
+The very nature of this situation is that the code was written before the tests.
+
+> The idea of only testing public interfaces is supposed to make people
+> think more carefully about what the composite layers of the program
+> is. If you are having difficulty getting decent coverage by only
+> testing your public interfaces, then it likely tells you that you have
+> one of two problems:
+> 
+> 1) You have code that you don't need, and you should remove it.
+> 
+> 2) One of the layers in your program is too think, and you should
+> introduce a new layer with a new public interface that you can test
+> through.
+> 
+> I think the second point here is problematic with how C is written in
+> the kernel. We don't really have any concept of public vs. private
+> inside the kernel outside of static vs. not static, which is much more
+> restricted.
+
+I don't think we can expect developers to refactor large portions of complex
+kernel code in order to improve its testability. I imagine this will happen
+naturally over time, but I think we need to allow for developers to test
+"private" code in the meanwhile.
+
+My opinion is that it's more important to have tests than not. As evidence, I
+submit the following commit:
+https://github.com/torvalds/linux/commit/156e42996bd84eccb6acf319f19ce0cb140d00e3.
+
+While not a major bug, this bug was discovered as a direct result of writing
+these unit tests. So, in summary, I see value in "testing the lowest level bits
+in isolation", even if it doesn't necessarily represent the Gold Standard in
+Unit Testing.
+
