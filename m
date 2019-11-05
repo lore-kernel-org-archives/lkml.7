@@ -2,134 +2,138 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91BB8C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1A9AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A263214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EE93214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="LCPyYI+i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390903AbfKETTX (ORCPT
+        id S2403771AbfKETTn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:19:23 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:42404 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390856AbfKETTW (ORCPT
+        Tue, 5 Nov 2019 14:19:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:40443 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2403757AbfKETTn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:19:22 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iS4MH-0002Zo-5d; Tue, 05 Nov 2019 20:19:17 +0100
-Date:   Tue, 5 Nov 2019 20:19:15 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Oleg Nesterov <oleg@redhat.com>
-cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: handle_exit_race && PF_EXITING
-In-Reply-To: <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de>
-References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <20191105152728.GA5666@redhat.com> <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de> <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 5 Nov 2019 14:19:43 -0500
+Received: by mail-pl1-f193.google.com with SMTP id e3so7871884plt.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:19:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:cc:subject:from:to:user-agent:date;
+        bh=hbU+lnz3PoPpDd5LQBdnFKQTsx0QptkCCfC4Iao/bDw=;
+        b=LCPyYI+iiiAIz7UBJ5PzgsIyD7zIA1uqeTHw3tC+72i8g7Cd0+VH7cG+XhA2/7lcB+
+         zzQN2EXWfjp3gN86AMcii+zGOnj7ouaZ3RwHLkptQH4xa3Jw8ev6FXa/zKE+0NOh5SK1
+         yY+s6T06b17ToJZleH5KhQo/aE/+4rsCtvI94=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
+         :user-agent:date;
+        bh=hbU+lnz3PoPpDd5LQBdnFKQTsx0QptkCCfC4Iao/bDw=;
+        b=ujke4x8KyYNYqvWA1X1LxEae4Foouit44VSlMUD2YNiJBxvXfXdXyG6il+q3Lb48N0
+         Sp9OKEWxJnNsqfYRSklgnXPvgtK10aX7wtIOYq3LhvebAg3tfVlK5UCGJoG0SYOW+HRV
+         RAlOcxOKL4qKSfV70kAd1Eo+PHUWpuZjM76Wr5stRdSVurkd3cQNoAjKh4cyG+4JyYGI
+         E+w0yZ5iv0jI8hnOovdgCq9b/zPe8Ic1dG0aSApUTnFDFP6b34C2XjEEEeopByQMgS22
+         5v8UALxgH1ANjfKvmCR0cjQ23RKspSBzmURNwfNAzf5j672K1Yhjdw10/t4AaCXwI5DD
+         Iybg==
+X-Gm-Message-State: APjAAAWM09HLDTce/EaSXAw2zuC+ejI2MqSKdquUXg4G8VdHiDH5mOoJ
+        7pUbtD5JGbcvf7/yF0Dzo1+lkQ==
+X-Google-Smtp-Source: APXvYqxKzQO2ljg2ThUedxjlJI/pyjirxn7/sziOiQy2u+ZZNeDvVJNw560Tzryh1Ox/hYTy/FAEow==
+X-Received: by 2002:a17:902:102:: with SMTP id 2mr35224735plb.156.1572981581248;
+        Tue, 05 Nov 2019 11:19:41 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id 39sm198792pjo.7.2019.11.05.11.19.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 11:19:40 -0800 (PST)
+Message-ID: <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
+Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+User-Agent: alot/0.8.1
+Date:   Tue, 05 Nov 2019 11:19:39 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Thomas Gleixner wrote:
-> 
-> I'm a moron. It's vfork() not fork() so the behaviour is expected.
-> 
-> Staring more at the trace which shows me where this goes down the drain.
+Quoting Kiran Gunda (2019-11-04 21:21:49)
+> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
+> found on SC7180 based platforms.
+>=20
+> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
+> ---
+>  - Changes from V1:
+>    Sorted the macros and compatibles.
 
- parent	    	    	child
- 
-  set FIFO prio 2
- 
-  vfork()			->	set FIFO prio 1
-   implies wait_for_child()	 	sched_setscheduler(...)
- 			   		exit()
-					do_exit()
-					tsk->flags |= PF_EXITING;
- 					....
-					mm_release()
-					  exit_futex(); (NOOP in this case)
-					  complete() --> wakes parent
- sys_futex()
-    loop infinite because
-    	 PF_EXITING is set,
-	 but PF_EXITPIDONE not
+I don't see anything sorted though.
 
-So the obvious question is why PF_EXITPIDONE is set way after the futex
-exit cleanup has run, but moving this right after exit_futex() would not
-solve the exit race completely because the code after setting PF_EXITING is
-preemptible. So the same crap could happen just by preemption:
+>=20
+>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
+>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
+>  2 files changed, 6 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> index 1437062..b5fc64e 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> @@ -32,6 +32,8 @@ Required properties:
+>                     "qcom,pm8998",
+>                     "qcom,pmi8998",
+>                     "qcom,pm8005",
+> +                  "qcom,pm6150",
+> +                  "qcom,pm6150l",
 
-  task holds futex
-  ...
-  do_exit()
-    tsk->flags |= PF_EXITING;
+And this looks badly tabbed or something?
 
-preemption (unrelated wakeup of some other higher prio task, e.g. timer)
-
-  switch_to(other_task)
-
-  return to user
-  sys_futex()
-	loop infinite as above
-
-And just for the fun of it the futex exit cleanup could trigger the wakeup
-itself before PF_EXITPIDONE is set.
-
-There is some other issue which I need to lookup again. That's a slightly
-different problem but related to futex exit race conditions.
-
-The way we can deal with that is:
-
-    do_exit()
-    tsk->flags |= PF_EXITING;
-    ...
-    mutex_lock(&tsk->futex_exit_mutex);
-    futex_exit();
-    tsk->flags |= PF_EXITPIDONE;
-    mutex_unlock(&tsk->futex_exit_mutex);
-    
-and on the futex lock_pi side:
-
-    if (!(tsk->flags & PF_EXITING))
-    	return 0;		<- All good
-
-    if (tsk->flags & PF_EXITPIDONE)
-        return -EOWNERDEAD;	<- Locker can take over
-
-    mutex_lock(&tsk->futex_exit_mutex);
-    if (tsk->flags & PF_EXITPIDONE) {
-        mutex_unlock(&tsk->futex_exit_mutex);
-        return -EOWNERDEAD;	<- Locker can take over
-    }
-
-    queue_futex();
-    mutex_unlock(&tsk->futex_exit_mutex);
-
-Not that I think it's pretty, but it plugs all holes AFAICT.
-
-Thanks,
-
-	tglx
+>                     or generalized "qcom,spmi-pmic".
+>  - reg:             Specifies the SPMI USID slave address for this device.
+>                     For more information see:
+> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+> index e8fe705..74b7980 100644
+> --- a/drivers/mfd/qcom-spmi-pmic.c
+> +++ b/drivers/mfd/qcom-spmi-pmic.c
+> @@ -34,6 +34,8 @@
+>  #define PM8998_SUBTYPE         0x14
+>  #define PMI8998_SUBTYPE                0x15
+>  #define PM8005_SUBTYPE         0x18
+> +#define PM6150_SUBTYPE         0x28
+> +#define PM6150L_SUBTYPE                0x27
+> =20
+>  static const struct of_device_id pmic_spmi_id_table[] =3D {
+>         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
+YPE },
+> @@ -53,6 +55,8 @@
+>         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
+YPE },
+>         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
+TYPE },
+>         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
+TYPE },
+>         { }
+>  };
+> =20
