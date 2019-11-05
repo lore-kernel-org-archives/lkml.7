@@ -2,147 +2,86 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B9A3C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:21:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2826CCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:23:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2273B214E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:21:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6099214E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:23:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="JMcWTqwd"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ffDI3R2T"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387434AbfKECVV (ORCPT
+        id S1730061AbfKECX1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:21:21 -0500
-Received: from mail-eopbgr10077.outbound.protection.outlook.com ([40.107.1.77]:1300
-        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729428AbfKECVV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:21:21 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=kjVUQuoXy9Egi2GnQDllvfLEfIuEZY3yL5MTF8GfxaV0GvO95llIgTv0mm7VRpttY1+IfnpPVJOYAikQjddkdVKHURCiyOxQNUCII6AVtMBwP2g+vZ2cnttvAvatJRdIwSzR2rmVUelsG8HA16DRxp2de5D46eLF0ainyM9NV+GzE8gwS4JC493Ze1x5mxydsb5fUqMI3f55q5MHhF/hpTkEz4v3CVAQw0zIYMdzEZ+r53LW6UtdiZmIN1zjkBacFsff/1BwMPmpoBXWJijTMQz/A5l8gTb1YcoZ3H9hqbLfaQqCxdNIFIfGvWswLykutjQqiV1ngi7kiKMphuYUyA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vs831X2HFeKUSUWsQjdHn3Aiew9eaPWKf8b8NGtcXbk=;
- b=WC3QLGnIEVd42bmqJIS9uWLlxqUcNxzECe6TCGID2GjIis0STxA0S4Jf5Zjp+5mG8j/rUShlIHm0qZgsR27mMOoZpoDYecyfEpttxWUi/1Pfjl3FTXk+h2+4i5fobKTA2bKnJwUB3tR4X6BGuY1ScvOm59wBjGc7cRfN+N89917KTVg2WbXR07N7aiQ8FOVyPMTFX1qBmqYoOFGFiWS3AgQ0xLr34JGctipUMAr7hsmI9hGpW4RFwsOn0smmglTHj4pUwwVx9Z/hPfyCKAPvcm1mPRU/zGHpL7f7GN4ZNuIN7X0xUlSgaLO0ofsp4At+AMcxxXQWsyjAbjSX0f7aPQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Vs831X2HFeKUSUWsQjdHn3Aiew9eaPWKf8b8NGtcXbk=;
- b=JMcWTqwdM0OAvw1XaS5GAgK5OWrAQMy8Zr5cLtJEyVFBR14na7tD0Wa5z4zPAB8Xt4PsX7WZIDLAPMEZMuTEVGGTbwpBvUcuy2hM+GybjOllWQuUPa/jqdGDE0lJ0vaq5mgRzcSXnK6YumCsoWk3rj4FDBQTPdRLLW/w7tKFjeY=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB5198.eurprd05.prod.outlook.com (20.178.10.139) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 02:21:13 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 02:21:13 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rdma tree with Linus' tree
-Thread-Topic: linux-next: manual merge of the rdma tree with Linus' tree
-Thread-Index: AQHVk3bCA7/YT9S5FkKoZgZ7zcMK4ad72HGA
-Date:   Tue, 5 Nov 2019 02:21:13 +0000
-Message-ID: <20191105022109.GL22766@mellanox.com>
-References: <20191105121704.72edfc76@canb.auug.org.au>
-In-Reply-To: <20191105121704.72edfc76@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: BL0PR03CA0014.namprd03.prod.outlook.com
- (2603:10b6:208:2d::27) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 0f583bf1-1078-40df-3007-08d76196d451
-x-ms-traffictypediagnostic: VI1PR05MB5198:
-x-microsoft-antispam-prvs: <VI1PR05MB5198B3C6550EA3372280AAB2CF7E0@VI1PR05MB5198.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8882;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(346002)(39860400002)(396003)(136003)(199004)(189003)(53754006)(81166006)(486006)(6916009)(229853002)(305945005)(76176011)(81156014)(316002)(99286004)(14454004)(71200400001)(8676002)(6116002)(54906003)(3846002)(6436002)(8936002)(25786009)(476003)(66446008)(36756003)(86362001)(66066001)(33656002)(4326008)(6246003)(1076003)(6512007)(2906002)(5660300002)(26005)(6506007)(102836004)(478600001)(386003)(186003)(64756008)(66556008)(256004)(7736002)(11346002)(446003)(66946007)(2616005)(66476007)(71190400001)(6486002)(52116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB5198;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: M+elqiHxBoRyg7H1SPoXxaaG7lILfsWIjPMLId5PqPcyUWOVvgqfQr2TC1td7DJdtJ24xmRh1icoZRo4pbVvc/JpMJezbOev9/8aUyFrjEuaS8WIyUb/K7AbmBRXcX7Nl6bCJIQljAgHai9fIN1Sy5vyM9M0Xl0UyT9q5SW2X0HdmHwS613ispR2wGN6yeZxUaK73WYWsgo9YgXJaeCMQcIeuFLwGwJwxhuFTn7cGBTYMhgIJWjs5mKRCekIuIq3BH0bGfaZFzxJT2dXFbOH7WR08jUdG7fvQYXMsmq8soaY3qyLkpSGI1RrhowUi/JwhqrNKOUWwEl42p1J7EwlbWk/3+OWjBB/H3ZAorE/Wyhh1GSJGnXeWvdX9EkrMjySkAEhNIoC3qjLCkz+izDJMKXPHSfNeuiVtwHJbgmmakCe13f8pWz50/pBp2DV6R7N
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F541015C365E0C48BAD4BCA6B384A6D4@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 0f583bf1-1078-40df-3007-08d76196d451
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 02:21:13.5281
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: LiOfT9cIw+Sn2bhvesyaxLdQDslU2VGnNREuwACbP/La4n1ZVE5Jg9quYHU9R1+5BI511DA/XgCCyRSf3GkBIg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB5198
+        Mon, 4 Nov 2019 21:23:27 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42134 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbfKECX0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:23:26 -0500
+Received: by mail-pf1-f193.google.com with SMTP id s5so5734975pfh.9;
+        Mon, 04 Nov 2019 18:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=LsXcsm2GHHqu1Vt0Snl+ykY6IrvFVgDaD/4d0g8GINY=;
+        b=ffDI3R2T1dHvht2x5jtqWsQFPVQsa8dQxv0de3i0FqfFCz9qe722OVOayADpggb0zp
+         cRcKLc3irCZdLVoVDFEmdcNxyw4waGj+55YVeG67+KOdIMOhh4bhzdxDHTcoQOjwfP0V
+         YnrCZu8mtIy3zPDBHIgvEilMjHmF4OSLwa5d7ScG+3jPOiEyTpgj/5Vv1Jsue9YY1F8s
+         BQqnovAb2IzvEnfV5BKKR/+rbu4F2D+RJQ6DgWQ6lcAC3+4R1L0hy6qkrQxuQu5bVq/R
+         m0pf3MYwuHf03Ix8nOZnH2Pd1wswSjXT2vbSMKBbbMMLL0HHaPS+7haIAuV5ox2UE7Ye
+         s/Dg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=LsXcsm2GHHqu1Vt0Snl+ykY6IrvFVgDaD/4d0g8GINY=;
+        b=QkDlEHel/wRIhDLDodYbu1rOGWgE5tlTpE+PKrH5v+Id7DyjqncRrjeUk3TZN/DZSk
+         RUftLKqyoBr0qJvRILFclAEvIKQq+HB1SLeNLSctfn/VEiXGjAW3jSbMR4phz91I6tBF
+         DTKnm7J/zmw2YW7PHjsgUgi7p2gQjD4byiDXNttDyT9VsBPFbLJWWdVuVNo90S6n+WUu
+         A6g8apTWV6MAYfLeLge55yoS9X6I3BIV+2FACIOtUqSVcg1a2rigCeb105IjXQ9sxV8a
+         P4CWC8sZXi5kRHz30UTkxsfITSnDNhmY9nd/i0m9IptqUoFQESDZVgHbXWRYpzOkWbkx
+         Vkvw==
+X-Gm-Message-State: APjAAAXIpAszWPvLlitFNsIm7sY5K1EzS8XY0mF1JeiOtN2yP/4xrRtp
+        cubw/w0q0JIdO+EfW+Qh5j8=
+X-Google-Smtp-Source: APXvYqweZZE4NYDUt6+1uB6wHOE5HaTdK/3N36YwRyrmUabnLKxDDxU8a6uzOAi5vimdNvr33VNVOg==
+X-Received: by 2002:a65:5a06:: with SMTP id y6mr34196253pgs.9.1572920605692;
+        Mon, 04 Nov 2019 18:23:25 -0800 (PST)
+Received: from jamal-desktop (97-126-66-56.tukw.qwest.net. [97.126.66.56])
+        by smtp.gmail.com with ESMTPSA id w10sm16031382pjq.3.2019.11.04.18.23.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 18:23:25 -0800 (PST)
+From:   Jamal Shareef <jamal.k.shareef@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     thierry.reding@gmail.com, airlied@linux.ie, daniel@ffwll.ch,
+        jonathanh@nvidia.com, dri-devel@lists.freedesktop.org,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jamal Shareef <jamal.k.shareef@gmail.com>
+Subject: [PATCH 0/3] drm/tegra: Remove space after parenthesis
+Date:   Mon,  4 Nov 2019 18:23:19 -0800
+Message-Id: <cover.1572920482.git.jamal.k.shareef@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 12:17:04PM +1100, Stephen Rothwell wrote:
-> Hi all,
->=20
-> Today's linux-next merge of the rdma tree got a conflict in:
->=20
->   drivers/infiniband/hw/mlx5/mr.c
->=20
-> between commit:
->=20
->   1524b12a6e02 ("RDMA/mlx5: Use irq xarray locking for mkey_table")
->=20
-> from Linus' tree and commit:
->=20
->   806b101b2bfa ("RDMA/mlx5: Use a dedicated mkey xarray for ODP")
->=20
-> from the rdma tree.
->=20
-> I fixed it up (see below) and can carry the fix as necessary. This
-> is now fixed as far as linux-next is concerned, but any non trivial
-> conflicts should be mentioned to your upstream maintainer when your tree
-> is submitted for merging.  You may also want to consider cooperating
-> with the maintainer of the conflicting tree to minimise any particularly
-> complex conflicts.
->=20
-> --=20
-> Cheers,
-> Stephen Rothwell
->=20
-> diff --cc drivers/infiniband/hw/mlx5/mr.c
-> index 7019c12005f4,077ca10d9ed9..000000000000
-> --- a/drivers/infiniband/hw/mlx5/mr.c
-> +++ b/drivers/infiniband/hw/mlx5/mr.c
-> @@@ -1967,8 -1945,7 +1945,7 @@@ int mlx5_ib_dealloc_mw(struct ib_mw *mw
->   	int err;
->  =20
->   	if (IS_ENABLED(CONFIG_INFINIBAND_ON_DEMAND_PAGING)) {
-> - 		xa_erase_irq(&dev->mdev->priv.mkey_table,
-> - 			     mlx5_base_mkey(mmw->mmkey.key));
->  -		xa_erase(&dev->odp_mkeys, mlx5_base_mkey(mmw->mmkey.key));
-> ++		xa_erase_irq(&dev->odp_mkeys, mlx5_base_mkey(mmw->mmkey.key));
+This patchset removes spaces after left open parenthesis.
+Issue found by checkpatch.
 
-The rdma for-next tree is right as is, the xa_erase does not need to
-be the irq varient here.
+Jamal Shareef (3):
+  drm/tegra: dc: Remove space after parenthesis
+  drm/tegra: dsi: Remove space in open parenthesis
+  drm/tegra: gr3d: Remove space after parenthesis
 
-Thanks,
-Jason
+ drivers/gpu/drm/tegra/dc.h   |  40 ++++++------
+ drivers/gpu/drm/tegra/dsi.c  |  60 +++++++++---------
+ drivers/gpu/drm/tegra/gr3d.c | 120 +++++++++++++++++------------------
+ 3 files changed, 110 insertions(+), 110 deletions(-)
+
+-- 
+2.17.1
+
