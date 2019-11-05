@@ -2,118 +2,153 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E5BC5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEA4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE89E214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67CCE21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kuNZZTJc"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NeNQEYXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389653AbfKEPOA (ORCPT
+        id S2389912AbfKEPOc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:14:00 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39364 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389081AbfKEPOA (ORCPT
+        Tue, 5 Nov 2019 10:14:32 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55752 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2389766AbfKEPOb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:14:00 -0500
-Received: by mail-pl1-f193.google.com with SMTP id o9so2897419plk.6;
-        Tue, 05 Nov 2019 07:13:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ueZjgo8+zOkBauD4syvKmnkDBEqPzkBVA/a+VdiSjDw=;
-        b=kuNZZTJcNLgaWQTve3cK09G/lqOeyYrYJtHRrQ3800fNtTWOiIdaz0idiGPul69EUO
-         RuFDZY5FDw4Di7RLTDQR1u6ZYOpIJAwDcoQfy9VlX9Ll1ODjmnF5gCVA0aoPw7t/Km1q
-         w88PKwQc9PBNT+NGEtALv58QjefQFFX+TMwnkXzuC4zpVeGOOvfFkQYQeA1iQYJRvCau
-         vjo2Vvq96GG5Q92xEAb9dIZFX0ngDwL3yMP5NwqZmf1AhFZ0iFIzhFXB09X5gYfGr9Vz
-         X5eO45OzF/XFte/FZq5ZILN6hA/S3ef/VKQGmulQH5rt9H8i3PyzFUOpikGrUC641uZD
-         GrYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=ueZjgo8+zOkBauD4syvKmnkDBEqPzkBVA/a+VdiSjDw=;
-        b=gR1tDLtBW5MOo6JImDLHiKa3VmZcL9NhSMPvlvI6m5D8oWERos9OGzCMWRdt0Q+CgM
-         HpvxpCRbmw6ge6kHgNWl4Vlbtj/W+rhkTQZxonhu1hlmrCn1K9WQxVxlfgszVj7pd5YS
-         Om4jB9MrZbA0sh84ll1/wef7SebjYvBIraWoL34OKC5k+GDqidTzgfvYgLP9F3irPxrd
-         SiJ4oytuiVU/uBtrEWs25z2vCZCFxjcl5XnvuEkNRrEpvMYiyyOPpO8o5rYVWMo650FY
-         LeI6r1CrtmueTi03xZ524md70ZwKpUWrCfkbxxkiPz+W9BQXDD7iquHcMpjEpb8DshGB
-         l2jw==
-X-Gm-Message-State: APjAAAXra/3gMH7og+db6z9BUjQ4isc3iGOAx4FSsPTAhi+Idw6oHqXg
-        NjlcabBJW//zBQqHD6FMKT3WMKOd
-X-Google-Smtp-Source: APXvYqwcpniO4fZCapUOY4bl/qECba5DWb8wN8JNSRCjGZBIixg3iI1rt8hvWkEkQ0vXDcwnJNUjqg==
-X-Received: by 2002:a17:902:a584:: with SMTP id az4mr32907766plb.74.1572966837627;
-        Tue, 05 Nov 2019 07:13:57 -0800 (PST)
-Received: from localhost.lan (c-67-185-54-80.hsd1.wa.comcast.net. [67.185.54.80])
-        by smtp.gmail.com with ESMTPSA id f7sm23120691pfa.150.2019.11.05.07.13.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 07:13:56 -0800 (PST)
-From:   Andrey Smirnov <andrew.smirnov@gmail.com>
-To:     linux-crypto@vger.kernel.org
-Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        =?UTF-8?q?Horia=20Geant=C4=83?= <horia.geanta@nxp.com>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Iuliana Prodan <iuliana.prodan@nxp.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 0/5] CAAM JR lifecycle
-Date:   Tue,  5 Nov 2019 07:13:48 -0800
-Message-Id: <20191105151353.6522-1-andrew.smirnov@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Tue, 5 Nov 2019 10:14:31 -0500
+Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA5F2XXW016060;
+        Tue, 5 Nov 2019 16:14:21 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=sGcJotaSzAOF4wGBo2lc42IY7N+BpinNhWjk4Wx5zlY=;
+ b=NeNQEYXPLvC3WCliUp9foYV7DboksxXg5AylZVZxb3SgTkByJKTqjh4al8hpgwgwC+kw
+ KDq8KB+bY+m/l/sPplfQ1h3g2R4FboTw2eX3sStxXNQmYMx+wUSbd+e+qkOFnTbuvB16
+ oh2QlH5a05G3/CRmytr5aW7l1TZx8MyIXOG84pD9gAzqPuJlKPipM3xI+E4phHECsjdV
+ dGuU7sYCxIuxgh0SuDcunzdaQ6QdFBSIQ/ht29GmniLT0SCWXAatRqmm3duk5wX6ODZJ
+ yY+NDtcAk+1n62SgZTGjDI0rmzcKvhblqXCWvBlPCLGo2W6PRYs7pdQs4H3Qi6W0rrE0 7A== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w1054r40k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 05 Nov 2019 16:14:21 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9294C10002A;
+        Tue,  5 Nov 2019 16:14:19 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 82FD92D3768;
+        Tue,  5 Nov 2019 16:14:19 +0100 (CET)
+Received: from lmecxl0995.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
+ (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 Nov
+ 2019 16:14:18 +0100
+Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
+To:     Linus Walleij <linus.walleij@linaro.org>
+CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+References: <20191104100908.10880-1-amelie.delaunay@st.com>
+ <CACRpkdb1c-NHXDQXYS78VTcGPnJApmxjzZbF_cM8SUknhDiQ4Q@mail.gmail.com>
+From:   Amelie DELAUNAY <amelie.delaunay@st.com>
+Message-ID: <64f8096f-cec6-fef1-5a4e-ddca3bf8c73d@st.com>
+Date:   Tue, 5 Nov 2019 16:14:18 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <CACRpkdb1c-NHXDQXYS78VTcGPnJApmxjzZbF_cM8SUknhDiQ4Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.75.127.44]
+X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
+ (10.75.127.8)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-05_05:2019-11-05,2019-11-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Everyone:
 
-This series is a different approach to addressing the issues brought
-up in [discussion]. This time the proposition is to get away from
-creating per-JR platfrom device, move all of the underlying code into
-caam.ko and disable manual binding/unbinding of the CAAM device via
-sysfs. Note that this series is a rough cut intented to gauge if this
-approach could be acceptable for upstreaming.
 
-Thanks,
-Andrey Smirnov
+On 11/5/19 3:32 PM, Linus Walleij wrote:
+> On Mon, Nov 4, 2019 at 11:09 AM Amelie Delaunay <amelie.delaunay@st.com> 
+> wrote:
+> 
+>> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
+>> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
+>> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
+>> this is the case after gpiochip_add_data call. But init_valid_mask
+>> callback is also called under gpiochip_add_data. gpio_valid_mask
+>> initialization cannot be moved before gpiochip_add_data because
+>> gpio-ranges are not registered.
+> 
+> Sorry but this doesn't add up, look at this call graph:
+> 
+> gpiochip_add_data()
+>    gpiochip_add_data_with_key()
+>      gpiochip_alloc_valid_mask()
+>      of_gpiochip_add()
+>      of_gpiochip_add_pin_range()
+>      gpiochip_init_valid_mask()
+> 
+> So the .initi_valid_mask() is clearly called *after*
+> of_gpiochip_add_pin_range() so this cannot be the real reason,
+> provided that the ranges come from the device tree. AFAICT that
+> is the case with the stmfx.
+> 
+> Can you check and see if the problem is something else?
+>
 
-[discussion] lore.kernel.org/lkml/20190904023515.7107-13-andrew.smirnov@gmail.com
+stmfx_pinctrl_gpio_init_valid_mask uses pctl->gpio_valid_mask to 
+initialize gpiochip valid_mask.
 
-Andrey Smirnov (5):
-  crypto: caam - use static initialization
-  crypto: caam - introduce caam_jr_cbk
-  crypto: caam - convert JR API to use struct caam_drv_private_jr
-  crypto: caam - do not create a platform devices for JRs
-  crypto: caam - disable CAAM's bind/unbind attributes
+pctl->gpio_valid_mask is initialized in 
+stmfx_pinctrl_gpio_function_enable depending on gpio ranges.
 
- drivers/crypto/caam/Kconfig      |   5 +-
- drivers/crypto/caam/Makefile     |  15 +--
- drivers/crypto/caam/caamalg.c    | 114 ++++++++++----------
- drivers/crypto/caam/caamalg_qi.c |  12 +--
- drivers/crypto/caam/caamhash.c   | 117 +++++++++++----------
- drivers/crypto/caam/caampkc.c    |  67 ++++++------
- drivers/crypto/caam/caampkc.h    |   2 +-
- drivers/crypto/caam/caamrng.c    |  41 ++++----
- drivers/crypto/caam/ctrl.c       |  16 ++-
- drivers/crypto/caam/intern.h     |   3 +-
- drivers/crypto/caam/jr.c         | 173 ++++++++-----------------------
- drivers/crypto/caam/jr.h         |  14 ++-
- drivers/crypto/caam/key_gen.c    |  11 +-
- drivers/crypto/caam/key_gen.h    |   5 +-
- 14 files changed, 275 insertions(+), 320 deletions(-)
+stmfx_pinctrl_gpio_function_enable is called after gpiochip_add_data 
+because it requires gpio ranges to be registered.
 
--- 
-2.21.0
+So, in stmfx driver the call graph is
 
+stmfx_pinctrl_probe
+   gpiochip_add_data()
+     gpiochip_add_data_with_key()
+       gpiochip_alloc_valid_mask()
+       of_gpiochip_add()
+       of_gpiochip_add_pin_range()
+       gpiochip_init_valid_mask()
+         stmfx_pinctrl_gpio_init_valid_mask (but pctl->gpio_valid_mask 
+is not yet initialized so gpiochip valid_mask is wrong)
+   stmfx_pinctrl_gpio_function_enable (pctl->gpio_valid_mask is going to 
+be initialized thanks to gpio ranges)
+
+When consumer tries to take a pin (it is the case for the joystick on 
+stm32mp157c-ev1), it gets the following issue:
+[    3.347391] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
+didn't like hwirq-0x0 to VIRQ92 mapping (rc=-6)
+[    3.356418] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
+didn't like hwirq-0x1 to VIRQ92 mapping (rc=-6)
+[    3.366512] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
+didn't like hwirq-0x2 to VIRQ92 mapping (rc=-6)
+[    3.376671] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
+didn't like hwirq-0x3 to VIRQ92 mapping (rc=-6)
+[    3.387169] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
+didn't like hwirq-0x4 to VIRQ92 mapping (rc=-6)
+[    3.397065] gpio-keys joystick: Found button without gpio or irq
+[    3.403041] gpio-keys: probe of joystick failed with error -22
+
+I can reword the commit message to make it clearer.
+
+Regards,
+Amelie
