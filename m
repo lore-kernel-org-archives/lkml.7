@@ -2,213 +2,118 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD543C010AB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00E19C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4E5B20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572950163;
-	bh=nstXPo8G52k07aEg3yqMaPNpC2OTHZIvzCHLgYaB/Ws=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=eH5jjxByh8GcHgRko7vUtJnQ54JL0OjdvY0JeQmrS0OMjWpcO4RlXXq0Ewdvzq5eX
-	 T+Wxg88abbMPYLKn+to5je6uhUzzh/f/5MBg+n3Iwe87QyG2KPRBg/KpD1s6Lod/lF
-	 BVB2W8JaD9PhgfiA4sS+cJ0cjA572renAcdnovSc=
+	by mail.kernel.org (Postfix) with ESMTP id D5843206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388779AbfKEKgC (ORCPT
+        id S2388813AbfKEKgQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:36:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388203AbfKEKgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:36:02 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 475A8206BA;
-        Tue,  5 Nov 2019 10:36:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572950160;
-        bh=nstXPo8G52k07aEg3yqMaPNpC2OTHZIvzCHLgYaB/Ws=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=PivRBpyd5UxzWxCMwhGfASafRUVti9G9+sNI32XsswNWfDn+kAQtGWUTXkDZxG2hJ
-         9xhg74nlw0mpOkjKRVJwvWMCXUR9KgiHnmZjdWYgiqgxCBarN6LX+u7+8hhAsX6ZVe
-         vPZKy+8/YF/WvZRIcmHS8x4YBAJdM/4Lh8iH9Zs0=
-Date:   Tue, 5 Nov 2019 11:35:58 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Jernej Skrabec <jernej.skrabec@siol.net>
-Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
-Subject: Re: [PATCH v5 0/6] media: Introduce Allwinner H3 deinterlace driver
-Message-ID: <20191105103558.GB3876@gilmour.lan>
-References: <20191023221332.3674175-1-jernej.skrabec@siol.net>
+        Tue, 5 Nov 2019 05:36:16 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:36682 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388203AbfKEKgQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:36:16 -0500
+Received: by mail-lf1-f67.google.com with SMTP id a6so11312547lfo.3;
+        Tue, 05 Nov 2019 02:36:14 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=aDe93T/tJJZZs2/qCglAtr+mZfMdAJ0EoRe6S3iAKh0=;
+        b=kxjDDJ6tUdzfvReroAcsKt2gKp09B8fTvCbUTZ7Ga/mTq32tailmB9/4RcT2HVgQLS
+         cPwnvRjkIBmZqErPAhwbv2AGKDqUrRv95D9xJtyCBaaySNsrUUA5XCoA+z2mkSXuEe2G
+         PHoOkddroTrxkBPx3CQg3ZhzKrM2TnA6IuZ1r2cFkvqvyFCbQuSoCNvWWfyMX/vsVX84
+         CqYL7MUwMZFjk0xqXDa8NHBrkLfji6q3U22RVUihqA87/ElVW9zJ60QLUGcMK4+AWMKg
+         kGW1CAYoJpceqrXxBlHIY4AMiURwbPM4oWuntw1lSIWGDqxOMd45nXVPKLjphvAxwo8J
+         Qdig==
+X-Gm-Message-State: APjAAAWltdkqkBzQL9Y55uQLgSnWLOAjrKjuZGklhV0YCQtlr2Y2apMw
+        V+b+ol6L4Eh7hqXYadlj2+Y=
+X-Google-Smtp-Source: APXvYqzB+9niy3lA3hCm8wIN9/qUKqYmeLZYKZ4/42Zhj8qOL0zBwFRasMt9b8iiOAqAbjL82gWitw==
+X-Received: by 2002:a19:ad49:: with SMTP id s9mr1101208lfd.1.1572950174046;
+        Tue, 05 Nov 2019 02:36:14 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id v203sm9382876lfa.25.2019.11.05.02.36.13
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:36:13 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:36:04 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 52/62] gpio: gpio-twl4030: Use new GPIO_LINE_DIRECTION
+Message-ID: <9b56a109e4ff847dda74d13405bdc69635435c24.1572945993.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945993.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191023221332.3674175-1-jernej.skrabec@siol.net>
+In-Reply-To: <cover.1572945993.git.matti.vaittinen@fi.rohmeurope.com>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
---fdj2RfSjLxBAspz7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-twl4030.c | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-On Thu, Oct 24, 2019 at 12:13:26AM +0200, Jernej Skrabec wrote:
-> Starting with H3, Allwinner began to include standalone deinterlace
-> core in multimedia oriented SoCs. This patch series introduces support
-> for it. Note that new SoCs, like H6, have radically different (updated)
-> deinterlace core, which will need a new driver.
->
-> v4l2-compliance report:
-> v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
->
-> Compliance test for sun8i-di device /dev/video0:
->
-> Driver Info:
->         Driver name      : sun8i-di
->         Card type        : sun8i-di
->         Bus info         : platform:sun8i-di
->         Driver version   : 5.3.0
->         Capabilities     : 0x84208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
->                 Device Capabilities
->         Device Caps      : 0x04208000
->                 Video Memory-to-Memory
->                 Streaming
->                 Extended Pix Format
->
-> Required ioctls:
->         test VIDIOC_QUERYCAP: OK
->
-> Allow for multiple opens:
->         test second /dev/video0 open: OK
->         test VIDIOC_QUERYCAP: OK
->         test VIDIOC_G/S_PRIORITY: OK
->         test for unlimited opens: OK
->
-> Debug ioctls:
->         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
->         test VIDIOC_LOG_STATUS: OK (Not Supported)
->
-> Input ioctls:
->         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
->         test VIDIOC_ENUMAUDIO: OK (Not Supported)
->         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDIO: OK (Not Supported)
->         Inputs: 0 Audio Inputs: 0 Tuners: 0
->
-> Output ioctls:
->         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
->         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
->         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
->         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
->         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
->         Outputs: 0 Audio Outputs: 0 Modulators: 0
->
-> Input/Output configuration ioctls:
->         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
->         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
->         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
->         test VIDIOC_G/S_EDID: OK (Not Supported)
->
-> Control ioctls:
->         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
->         test VIDIOC_QUERYCTRL: OK (Not Supported)
->         test VIDIOC_G/S_CTRL: OK (Not Supported)
->         test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
->         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
->         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
->         Standard Controls: 0 Private Controls: 0
->
-> Format ioctls:
->         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
->         test VIDIOC_G/S_PARM: OK (Not Supported)
->         test VIDIOC_G_FBUF: OK (Not Supported)
->         test VIDIOC_G_FMT: OK
->         test VIDIOC_TRY_FMT: OK
->         test VIDIOC_S_FMT: OK
->         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
->         test Cropping: OK (Not Supported)
->         test Composing: OK (Not Supported)
->         test Scaling: OK
->
-> Codec ioctls:
->         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
->         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
->         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
->
-> Buffer ioctls:
->         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
->         test VIDIOC_EXPBUF: OK
->         test Requests: OK (Not Supported)
->
-> Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
->
-> Please take a look.
->
-> Best regards,
-> Jernej
->
-> Changes from v4:
-> - Added me as maintaner of the binding
-> - Noted that scaling is supported in Kconfig entry and driver code
->
-> Changes from v3:
-> - added Maxime's a-b tag
-> - moved and fixed Kconfig entry
-> - put clk_set_rate_exclusive() and it's counterpart in PM callbacks
->
-> Changes from v2:
-> - added acked-by and review-by tags
-> - fixed schema path in H3 deinterlace binding
-> - moved busy check after format args check
->
-> Changes from v1:
-> - updated Maxime's e-mail in DT binding
-> - removed "items" for single item in DT binding
-> - implemented power management
-> - replaced regmap with direct io access
-> - set exclusive clock rate
-> - renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACCESS
->
-> Jernej Skrabec (6):
->   dt-bindings: bus: sunxi: Add H3 MBUS compatible
->   clk: sunxi-ng: h3: Export MBUS clock
->   ARM: dts: sunxi: h3/h5: Add MBUS controller node
->   dt-bindings: media: Add Allwinner H3 Deinterlace binding
->   media: sun4i: Add H3 deinterlace driver
->   dts: arm: sun8i: h3: Enable deinterlace unit
+diff --git a/drivers/gpio/gpio-twl4030.c b/drivers/gpio/gpio-twl4030.c
+index fbfb648d3502..de249726230e 100644
+--- a/drivers/gpio/gpio-twl4030.c
++++ b/drivers/gpio/gpio-twl4030.c
+@@ -165,10 +165,10 @@ static int twl4030_get_gpio_direction(int gpio)
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	/* 1 = output, but gpiolib semantics are inverse so invert */
+-	ret = !(ret & d_msk);
++	if (ret & d_msk)
++		return GPIO_LINE_DIRECTION_OUT;
+ 
+-	return ret;
++	return GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static int twl4030_set_gpio_dataout(int gpio, int enable)
+@@ -380,10 +380,10 @@ static int twl_get_direction(struct gpio_chip *chip, unsigned offset)
+ {
+ 	struct gpio_twl4030_priv *priv = gpiochip_get_data(chip);
+ 	/*
+-	 * Default 0 = output
++	 * Default GPIO_LINE_DIRECTION_OUT
+ 	 * LED GPIOs >= TWL4030_GPIO_MAX are always output
+ 	 */
+-	int ret = 0;
++	int ret = GPIO_LINE_DIRECTION_OUT;
+ 
+ 	mutex_lock(&priv->mutex);
+ 	if (offset < TWL4030_GPIO_MAX) {
+-- 
+2.21.0
 
 
-Applied 1,2,3 and 4.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Thanks!
-Maxime
-
---fdj2RfSjLxBAspz7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFQjgAKCRDj7w1vZxhR
-xRIXAQDHP/Hg6AfmpRB//ohpotffxkwfsYdRznZJxeNP6toOOgEAv5KgidXO2Xcg
-dBuAvEmmUu74937yUfrJPlUms53Yug8=
-=gWCT
------END PGP SIGNATURE-----
-
---fdj2RfSjLxBAspz7--
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
