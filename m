@@ -2,144 +2,276 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2021C1746A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:58:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36636C17461
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:58:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A253921D81
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:58:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBDC721D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:58:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VZEcu9xz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388751AbfKEM6Y (ORCPT
+        id S2388816AbfKEM6r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:58:24 -0500
-Received: from mga01.intel.com ([192.55.52.88]:58347 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388008AbfKEM6Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:58:24 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 04:58:23 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
-   d="scan'208";a="212536444"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 05 Nov 2019 04:58:18 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 05 Nov 2019 14:58:18 +0200
-Date:   Tue, 5 Nov 2019 14:58:18 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191105125818.GW2552@lahna.fi.intel.com>
-References: <20191101111918.GL2593@lahna.fi.intel.com>
- <20191105000000.GA126282@google.com>
- <20191105095428.GR2552@lahna.fi.intel.com>
+        Tue, 5 Nov 2019 07:58:47 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:42185 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388678AbfKEM6q (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:58:46 -0500
+Received: by mail-wr1-f67.google.com with SMTP id a15so21234346wrf.9;
+        Tue, 05 Nov 2019 04:58:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=EbBVKTp3TAv641EyIKDqjqojRLx2ND1gdrPY2el5f7g=;
+        b=VZEcu9xz9shvIsdGNSkSlsc2gfEgSSDku4HPpaR2nVZkeVS653tgcsFFeM+1PwScLP
+         uFIfYRckoWBrGJj/vWEjitpWe1bSL/OrJuw3+IyUnQDUgQbv/Y2sSrm0SgHZMPoZhhGm
+         t7L5sg80wT4jnLt3T3v0zzSvJqTYMq6YyTkr5ricx/VwzvdHFQ8cSyBmXRsrwGMR1O9q
+         by6C/ug3oECowAguTc27m1SuyN9noC0lEEnQ99DqN+i/81ztkaXjcpGXGj7YAw6/8MeU
+         +DxuWdodANOT+5MbUrtYDb6Tepg1inwTLNxSgy+5OBhXGRK1TrUpTW1gsM5f86B7+Tf9
+         1SdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=EbBVKTp3TAv641EyIKDqjqojRLx2ND1gdrPY2el5f7g=;
+        b=dINNP0GVLmIypH2qi+A7/DeZasE0Msz0cNOr/AtWewZI3KdaOiKqQU72KJgF7pkUwi
+         UUm4fJkeK0E11LI9hXdX7Vqn+CJMKDRvMI3W1WFz42l7CcfYJILWNzzK0j8Z2fuyxPo8
+         GoJMl37h1O3SkwEb1uBoLPtVYhhBHzNzBMHhXLVYFQ0UZdWKkasv2e4BOPP7cer7iSIZ
+         mYQuxcK86yLicXrBl4PM2ET4lguApwYOgTzoqDDHyl1bmyvlFbx3i3raSjVj3ylRqoVo
+         mB/p/tneYYQgNdOtMKTD3zE6zvDfIq8E++gcyvQLy2HBxzsnxqE7TCiL9RRgFU8vTTL6
+         qdlw==
+X-Gm-Message-State: APjAAAXD1Ca26wOyEIW3Zn7Wx4eiOuQvB6veqI+FB4KcqeywKUnDNcWX
+        ct/h79NKvZcfdSeFa3ECLnaEb0YWDnAEACxfbV8=
+X-Google-Smtp-Source: APXvYqzXcIldjXyqcQeNIUogKwZf4MmDYxHvGPy9t8BV0gGj8v8HgjgDjpF+P0vtdFNp+pJ5lsj4oW7eNcIaJp/y7q0=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr28130527wrw.167.1572958722979;
+ Tue, 05 Nov 2019 04:58:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105095428.GR2552@lahna.fi.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-5-peron.clem@gmail.com>
+ <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de> <CAJiuCccjgtMcJa-pZCB_DGN6L8m9bDTgQRoV6WUKPSjv8kn8vA@mail.gmail.com>
+ <20191105072922.rku2of3cfphpfirq@pengutronix.de>
+In-Reply-To: <20191105072922.rku2of3cfphpfirq@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 5 Nov 2019 13:58:31 +0100
+Message-ID: <CAJiuCcdxvhra7L927UXMHHt3JZmWf8BCoWH4Jijyam2aEHfTPg@mail.gmail.com>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 11:54:33AM +0200, Mika Westerberg wrote:
-> > For understandability, I think the wait needs to go in some function
-> > that contains "PCI_D0", e.g., platform_pci_set_power_state() or
-> > pci_power_up(), so it's connected with the transition from D3cold to
-> > D0.
-> > 
-> > Since pci_pm_default_resume_early() is the only caller of
-> > pci_power_up(), maybe we should just inline pci_power_up(), e.g.,
-> > something like this:
-> > 
-> >   static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
-> >   {
-> >     pci_power_state_t prev_state = pci_dev->current_state;
-> > 
-> >     if (platform_pci_power_manageable(pci_dev))
-> >       platform_pci_set_power_state(pci_dev, PCI_D0);
-> > 
-> >     pci_raw_set_power_state(pci_dev, PCI_D0);
-> >     pci_update_current_state(pci_dev, PCI_D0);
-> > 
-> >     pci_restore_state(pci_dev);
-> >     pci_pme_restore(pci_dev);
-> > 
-> >     if (prev_state == PCI_D3cold)
-> >       pci_bridge_wait_for_secondary_bus(dev);
-> >   }
-> 
-> OK, I'll see if this works.
+Hi Uwe,
 
-Well, I think we want to execute pci_fixup_resume_early before we delay
-for the downstream component (same for runtime resume path). Currently
-nobody is using that for root/downstream ports but in theory at least
-some port may need it before it works properly. Also probably good idea
-to disable wake as soon as possible to avoid possible extra PME messages
-coming from the port.
+On Tue, 5 Nov 2019 at 08:29, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hi Cl=C3=A9ment,
+>
+> On Mon, Nov 04, 2019 at 10:28:54PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Mon, 4 Nov 2019 at 09:38, Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Sun, Nov 03, 2019 at 09:33:31PM +0100, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > PWM core has an option to bypass whole logic and output unchanged s=
+ource
+> > > > clock as PWM output. This is achieved by enabling bypass bit.
+> > > >
+> > > > Note that when bypass is enabled, no other setting has any meaning,=
+ not
+> > > > even enable bit.
+> > > >
+> > > > This mode of operation is needed to achieve high enough frequency t=
+o
+> > > > serve as clock source for AC200 chip, which is integrated into same
+> > > > package as H6 SoC.
+> > >
+> > > I think the , should be dropped.
+> > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  drivers/pwm/pwm-sun4i.c | 39 +++++++++++++++++++++++++++++++++++++=
++-
+> > > >  1 file changed, 38 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > > index b5e7ac364f59..2441574674d9 100644
+> > > > --- a/drivers/pwm/pwm-sun4i.c
+> > > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > > @@ -3,6 +3,10 @@
+> > > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> > > >   *
+> > > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-el=
+ectrons.com>
+> > > > + *
+> > > > + * Limitations:
+> > > > + * - When outputing the source clock directly, the PWM logic will =
+be bypassed
+> > > > + *   and the currently running period is not guaranted to be compl=
+eted
+> > >
+> > > Typo: guaranted  -> guaranteed
+> > >
+> > > >   */
+> > > >
+> > > >  #include <linux/bitops.h>
+> > > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> > > >
+> > > >  struct sun4i_pwm_data {
+> > > >       bool has_prescaler_bypass;
+> > > > +     bool has_direct_mod_clk_output;
+> > > >       unsigned int npwm;
+> > > >  };
+> > > >
+> > > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chi=
+p *chip,
+> > > >
+> > > >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > > >
+> > > > +     /*
+> > > > +      * PWM chapter in H6 manual has a diagram which explains that=
+ if bypass
+> > > > +      * bit is set, no other setting has any meaning. Even more, e=
+xperiment
+> > > > +      * proved that also enable bit is ignored in this case.
+> > > > +      */
+> > > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > > > +         data->has_direct_mod_clk_output) {
+> > > > +             state->period =3D DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC,=
+ clk_rate);
+> > > > +             state->duty_cycle =3D state->period / 2;
+> > > > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > > > +             state->enabled =3D true;
+> > > > +             return;
+> > > > +     }
+> > >
+> > > Not sure how the rest of sun4i_pwm_get_state behaves, but I would pre=
+fer
+> > > to let .get_state() round up which together with .apply_state() round=
+ing
+> > > down yields sound behaviour.
+> > Ok
+> > >
+> > > > +
+> > > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK=
+) &&
+> > > >           sun4i_pwm->data->has_prescaler_bypass)
+> > > >               prescaler =3D 1;
+> > > > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chi=
+p, struct pwm_device *pwm,
+> > > >  {
+> > > >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> > > >       struct pwm_state cstate;
+> > > > -     u32 ctrl;
+> > > > +     u32 ctrl, clk_rate;
+> > > > +     bool bypass;
+> > > >       int ret;
+> > > >       unsigned int delay_us;
+> > > >       unsigned long now;
+> > > > @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *ch=
+ip, struct pwm_device *pwm,
+> > > >               }
+> > > >       }
+> > > >
+> > > > +     /*
+> > > > +      * Although it would make much more sense to check for bypass=
+ in
+> > > > +      * sun4i_pwm_calculate(), value of bypass bit also depends on=
+ "enabled".
+> > > > +      * Period is allowed to be rounded up or down.
+> > > > +      */
+> > > > +     clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+> > > > +     bypass =3D ((state->period * clk_rate >=3D NSEC_PER_SEC &&
+> > > > +                state->period * clk_rate < NSEC_PER_SEC + clk_rate=
+) &&
+> > > > +               state->enabled);
+> > >
+> > > I guess the compiler is smart enough here, but checking for
+> > > state->enabled is cheaper than the other checks, so putting this at t=
+he
+> > > start of the expression seems sensible.
+> > >
+> > > The comment doesn't match the code. You don't round up state->period.
+> > > (This is good, please fix the comment.) I think dropping the check
+> > >
+> > >         state->period * clk_rate < NSEC_PER_SEC + clk_rate
+> > >
+> > > would be fine, too.
+> > Ok
+> >
+> > >
+> > > I'd like to have a check for
+> > >
+> > >         state->duty_cycle * clk_rate >=3D NSEC_PER_SEC / 2 &&
+> > >         state->duty_cycle * clk_rate < NSEC_PER_SEC
+> > >
+> > > here. If this isn't true rather disable the PWM or output a 100% duty
+> > > cycle with a larger period.
+> >
+> > Why not just having the duty_cycle is 50% only ?
+> > state->duty_cycle * 2 =3D=3D state->period;
+>
+> Yeah, for the bypass case you can only provide a 50% duty cycle. The
+> problem you have to address is that you cannot rely on your consumer to
+> request only 50% duty cycles. So you have to implement some behaviour if
+> your consumer requests period =3D 1 / clk_rate and 20% duty cycle.
 
-I feel that the following is the right place to perform the delay but if
-you think we can ignore the above, I will just do what you say and do it
-in pci_pm_default_resume_early() (and pci_restore_standard_config() for
-runtime path).
+So you request to add a new patch in this series for fixing the actual
+PWM behavior at corner case?
 
-[The below diff does not have check for pci_dev->skip_bus_pm because I
- was planning to move it inside pci_bridge_wait_for_secondary_bus() itself.]
+This series just want to add a new device and a new bypass
+functionality and I can't measure the output of PWM and testing it
+properly.
+Can this be done in another patch/series ?
 
-diff --git a/drivers/pci/pci-driver.c b/drivers/pci/pci-driver.c
-index 08d3bdbc8c04..3c0e52aaef79 100644
---- a/drivers/pci/pci-driver.c
-+++ b/drivers/pci/pci-driver.c
-@@ -890,6 +890,7 @@ static int pci_pm_resume_noirq(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-+	pci_power_t prev_state = pci_dev->current_state;
- 
- 	if (dev_pm_may_skip_resume(dev))
- 		return 0;
-@@ -914,6 +915,9 @@ static int pci_pm_resume_noirq(struct device *dev)
- 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 	pcie_pme_root_status_cleanup(pci_dev);
- 
-+	if (prev_state == PCI_D3cold)
-+		pci_bridge_wait_for_secondary_bus(pci_dev);
-+
- 	if (pci_has_legacy_pm_support(pci_dev))
- 		return 0;
- 
-@@ -1299,6 +1303,7 @@ static int pci_pm_runtime_resume(struct device *dev)
- {
- 	struct pci_dev *pci_dev = to_pci_dev(dev);
- 	const struct dev_pm_ops *pm = dev->driver ? dev->driver->pm : NULL;
-+	pci_power_t prev_state = pci_dev->current_state;
- 	int error = 0;
- 
- 	/*
-@@ -1314,6 +1319,9 @@ static int pci_pm_runtime_resume(struct device *dev)
- 	pci_fixup_device(pci_fixup_resume_early, pci_dev);
- 	pci_pm_default_resume(pci_dev);
- 
-+	if (prev_state == PCI_D3cold)
-+		pci_bridge_wait_for_secondary_bus(pci_dev);
-+
- 	if (pm && pm->runtime_resume)
- 		error = pm->runtime_resume(dev);
- 
+Regards,
+Cl=C3=A9ment
+
+>
+> Where I want to get the pwm framework as a whole is to let lowlevel
+> drivers round down both duty_cycle and period to the next possible values
+> in their .apply callback to be able to provide a more uniform behaviour
+> for consumers. So here this would mean:
+>
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    0 <=3D state->duty_cycle < state->period / 2
+>         =3D> provide a constant 0
+>
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    state->period / 2 <=3D state->duty_cycle < state->period
+>         =3D> use bypass mode providing 50% duty cycle
+>
+>  - 1 / clk_rate <=3D state->period < smallest value without bypass &&
+>    state->period =3D=3D state->duty_cycle
+>         =3D> provide a constant 1
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
