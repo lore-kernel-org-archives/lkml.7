@@ -2,130 +2,99 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A9FCC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE38C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EFE221929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:04:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572991452;
-	bh=T0mCTUnJUfW33I9Vx9HxXhSgMlT8hfNbw93cJZfw/Ok=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wDYXAXry7vgcW5x/GWis1TuhT8IlOoVwBvzPwG+3lhhk2t3wydcalr20CzyrwMIaJ
-	 7nk0DilYv1X6/pDShQBmsCCNuw06PJPcQ6kG3BOVm/5rrFTJKhgtSqyXbCS5sXR3Z7
-	 XITd7tz0OqRBVZAkVCOhvYQsN/poktJrjNtBMNPU=
+	by mail.kernel.org (Postfix) with ESMTP id A1A0421929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SvBetFNE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730404AbfKEWEL (ORCPT
+        id S1730236AbfKEWFS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:04:11 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37843 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728178AbfKEWEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:04:11 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d5so7004644otp.4;
-        Tue, 05 Nov 2019 14:04:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CZ2D2tQY2XYxt9UiuyFFNh/aMpMyVl8ybiw5lOJ9UsM=;
-        b=AsQZRW+v8UESLkRB7WNYmZ+KDTTb9o0EFhfxEUlvkjst2OlDLN6hmEhtWI81caYFbR
-         ea7yNzCCIUGY9zw9yhEdyhx6JvijPkp5G5a8dYO4ebUz55JXH14GCPRbCQtC09Bw80lG
-         6WRes0AqeK9C5sc71KX5VJUZCCvU6fcKhOrPSxThGwsjEV9I/9r6aJGPRa5/goU5Hz92
-         pI6x4hY+jBmax444WW3Z9e69ON3CHkICxRYz7HlyQBpmvIB8JsdRNlaqgOMljDzZABc6
-         xlv9VrhCjImK+lCTUeHPsOtsXGLN07zmQ2eYkUECBWKtzwOb6v/jMfBF6xGKE6+emm0a
-         25nQ==
-X-Gm-Message-State: APjAAAXVzYvGb9szmeSZ40DygC2G68LpjM0VNGE78cBd5G78zyIqfIdv
-        j11NiYRpXJ2fE6/XK247CA==
-X-Google-Smtp-Source: APXvYqxl9rK6tAOrYlktMp70iCJFHEU0MCT4jSTOGFY9S41OUYWigXQsydbUcc92xUHHvcx/LC/+vQ==
-X-Received: by 2002:a9d:634d:: with SMTP id y13mr24705915otk.202.1572991449843;
-        Tue, 05 Nov 2019 14:04:09 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id e93sm6812630otb.60.2019.11.05.14.04.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 14:04:09 -0800 (PST)
-Date:   Tue, 5 Nov 2019 16:04:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc:     shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de,
-        festevam@gmail.com, linux-imx@nxp.com,
-        darshak.patel@einfochips.com, prajose.john@einfochips.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        linux-leds@vger.kernel.org
-Subject: Re: [PATCH v2 1/4] dt-bindings: leds: Document commonly used LED
- triggers
-Message-ID: <20191105220408.GA555@bogus>
-References: <20191030090124.24900-1-manivannan.sadhasivam@linaro.org>
- <20191030090124.24900-2-manivannan.sadhasivam@linaro.org>
+        Tue, 5 Nov 2019 17:05:18 -0500
+Received: from mout.gmx.net ([212.227.15.15]:58745 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728178AbfKEWFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:05:18 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1572991500;
+        bh=2CVqbSurqJVVjA0OYR8gXO8OdEa3ms5r9NaHFZv7Two=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=SvBetFNEn2/uts/8FWFpDfPuxC2yvwcCERvRfkFHv4JkgywrjydFUewcx0OtQgv2Y
+         m/o4PrOv/beKOPW4Fa5mBbP8hx3T/OZKT8ETKla/RNrOl4lvzlcmsGk9QzYdUwy0R4
+         VhHISApJS+5d8aIw6s1DsI7l281IKGPi4W+bhPkE=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBDnI-1iejje0Ies-00CipI; Tue, 05
+ Nov 2019 23:05:00 +0100
+Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org
+References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
+ <20191104135412.32118-2-nsaenzjulienne@suse.de>
+ <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
+ <20191105145150.GB22987@arrakis.emea.arm.com>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <7b9dd4a8-bd6a-b543-4e6b-12c663161a90@gmx.net>
+Date:   Tue, 5 Nov 2019 23:04:58 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191030090124.24900-2-manivannan.sadhasivam@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191105145150.GB22987@arrakis.emea.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Provags-ID: V03:K1:9JNq8g+rvhYmh230bjn2+Yl6kiptEJhMkbSOVyzXw+78zlOvEBb
+ NShJh9pEnzi22cql5YAcjZeNmcdOZtFaIQqXTL/TMUI9FNncrr/rfC+5YbKKekKQtrCeQC1
+ XAEKA5oEwAFKmkUDDJMuh6u5RebmodbozGhcyShJLBkWSXqF3DjaBXB+lcDw64fwVirE/si
+ Vc5Ani6HqFdTzWo6cJQkQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2Mi9pCPaGV8=:VIn2in6bEWFlYe1xcDPNFE
+ NQ69+raB8AJ16d0jipH56fBsw2mtewDsCgCPBX7X2Au8PuWhQ8PAVzDrbbQNWEI+6tkwb3gui
+ EdqupHfNz6anGuXDlacv6kj84ziUvmDT9FViCKtm9PQ15lg17u4dvZXChCnny6WI93zVxVBVn
+ 011rnpSpjkbajDlGQaq8cLvtlwZv+NZAb4YsmAd9ZwtJPla+dj7631FtFoS0GJCzcqvUvxOk/
+ 7FQarQNKfEvjhJZI7nOCIWOZ1iKee2lYzVVOjEuHQWpVxUVN1/MGHFErU9rRA7h82NEvKT3eT
+ //2/Tf4W955mJIu07u3Om99t8aA39SCMjWcSXVdcXNMoWhUMzZd3LEncuOsxQemDFxume4Gi2
+ caASusANbX18bh3PXrTc1CHeOul4sFNvxpI4bQXi1YKaxy17Qof5qWYKxGtUwHDkSRsJdbyuS
+ 9I34I+PMDozfEg/r4Xaly0RWyGUorGQa3w3iw2y9H79HAGC/e3oxBtTwzIHXpUzSPpNTfu7Hc
+ F+I7qrNWOB9eYYukwIEZ4PTyzHLtr+3OS1bG7Kibk7oe4JNiS/nwpb+xNAlKzfN9H/TsR0QFk
+ N6eI4iGha+dt75htaS+Y1KOrFm3Kba+QQHj13sKqH0KQT+ln7stf2sDAqvOuLABxAidIM4r0G
+ N18WafaVXkgguGMF7M413+iW96lvdNmIzISeRmt7Hfvjy3IAiHVF9/BFm1GAIpZLr0uC+TG6w
+ PM1j3JiQ5U9wCCvLxLFG+wB9qEhkR7azzsypkCbPDXrXm7Fqo06wGgBXYEnaMq3SERpMR/z8u
+ 2zWOksqzrJqsFiEYvR6sc4PJaHKcorrRIPGBeR+0VdJ9GODJZSaKUfpBYd0aj83m3AiPhTvYK
+ X6POccmrhwwnxirPlHjRKkXt7wCcvV2rY/Gs2JT9tC/sCG5I82lW1JeoetUEK9XG08cN+GN1w
+ bUvH0i4QmkPHoab7X/tls7YbQGlqSe+wiNi93/+L0R0O6oOAopQsltsU9LrTvTDZ2BOsFk8ME
+ 8wFVWiAn5I8LLhMl6TvCV8mICEIN29MLnvwPKF3qM8o3uIeMYvxwxQpGXMG3sDj5NZ6vrtlU1
+ jILRS65UGv8+cM7qsYAhWE1qJOalb43awpGlQr2q4iPvC216h/eHWQcu6QLejxQXtK0ckBC9M
+ ob2ztcsjzVPcGDFyqCNpe9cnRBq0ZpDPQTylRMVAqwm0Z2JZveirzHO/0vww2TAV3HT3RJgFR
+ MR6CvhSL3bjIU3z3lTezZr+/akGV4qN9QZqpfnaCnWd35KwDV0dxyngmGva8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 02:31:21PM +0530, Manivannan Sadhasivam wrote:
-> This commit documents the LED triggers used commonly in the SoCs. Not
-> all triggers are documented as some of them are very application specific.
-> Most of the triggers documented here are currently used in devicetrees
-> of many SoCs.
+Am 05.11.19 um 15:51 schrieb Catalin Marinas:
+> Otherwise this will be queued for Linux 5.6.
+> I'm happy to queue them together with your ack for 5.5, otherwise I'll
+> only pick the second patch in this series.
 
-I guess it's worth documenting these, but you plan to use 'function' 
-instead, right?
+I had a comment for this patch which should be addressed in V2. After
+that i'm happy to gave my Ack.
 
-> 
-> Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> Cc: Pavel Machek <pavel@ucw.cz>
-> Cc: Dan Murphy <dmurphy@ti.com>
-> Cc: linux-leds@vger.kernel.org
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  .../devicetree/bindings/leds/common.txt         | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
+Thanks
+Stefan
 
-Acked-by: Rob Herring <robh@kernel.org>
-
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> index 9fa6f9795d50..2a6806161590 100644
-> --- a/Documentation/devicetree/bindings/leds/common.txt
-> +++ b/Documentation/devicetree/bindings/leds/common.txt
-> @@ -55,6 +55,23 @@ Optional properties for child nodes:
->       "timer" - LED flashes at a fixed, configurable rate
->       "pattern" - LED alters the brightness for the specified duration with one
->                   software timer (requires "led-pattern" property)
-> +     "mmc[N]" - LED indicates [N]th MMC storage activity
-> +     "flash" - LED indicates camera flash state
-> +     "torch" - LED indicates camera torch state
-> +     "audio-mute" - LED indicates audio mute state
-> +     "audio-micmute" - LED indicates mic mute state
-> +     "bluetooth-power" - LED indicates bluetooth power state
-> +     "usb-gadget" - LED indicates USB gadget activity
-> +     "usb-host" - LED indicates USB host activity
-> +     "mtd" - LED indicates MTD memory activity
-> +     "nand-disk" - LED indicates NAND memory activity (deprecated),
-> +                  in new implementations use "mtd"
-> +     "disk-read" - LED indicates disk read activity
-> +     "disk-write" - LED indicates disk write activity
-> +     "none" - No trigger assigned to the LED. This is the default mode
-> +              if trigger is absent
-> +     "cpu" - LED indicates activity of all CPUs
-> +     "cpu[N]" - LED indicates activity of [N]th CPU
->  
->  - led-pattern : Array of integers with default pattern for certain triggers.
->                  Each trigger may parse this property differently:
-> -- 
-> 2.17.1
-> 
+>
+> Thanks.
+>
