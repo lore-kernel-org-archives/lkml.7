@@ -2,128 +2,143 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FEB1CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E0AE1CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:01:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA17B2080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0FE220869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:01:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YFEhjgdr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IqjfQO/m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726240AbfKEFAZ (ORCPT
+        id S1727011AbfKEFBS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:00:25 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:37473 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfKEFAY (ORCPT
+        Tue, 5 Nov 2019 00:01:18 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:36982 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725385AbfKEFBS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:00:24 -0500
-Received: by mail-oi1-f193.google.com with SMTP id y194so16396037oie.4;
-        Mon, 04 Nov 2019 21:00:24 -0800 (PST)
+        Tue, 5 Nov 2019 00:01:18 -0500
+Received: by mail-lf1-f66.google.com with SMTP id b20so14032909lfp.4;
+        Mon, 04 Nov 2019 21:01:15 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=QGgGQaFEZRAOWraIxNIv4g2Bv5QWueLj5WXSnd8kx80=;
-        b=YFEhjgdrxfiUQ2PaME5EbHYYDODaj5R38CaCkiE0eD8jxAAI/MYB/Rcz28Cqbn+PCH
-         OQ2VDSeBd5h5qVoSTOro0x+fQoOVFp4opgn8p72LxFcRQGcHEoaxFEFn4rVJMrbzJ4rF
-         TmR5fusHPVATGNR9k5sqIhHO0EX+0F0nvmN3n5hqKgX8ulmhx50tdjJv2q5AD9tDPNC7
-         scKpkT19XeJKVkIlz+f0NqTZu88R8+g370FSQDklwYNwxIAFoC3K2GymlJtljV6QZx70
-         koZ4SQy+Reci+5hehBdgr10ZNMKOavMlg5CKZhcE4E/iloaPCwUVadelD6XS7bxA3dSF
-         EtlQ==
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zRQ+APr+2BBidMkLxayR8l9LQ01WBemoj2ukfHvIjL8=;
+        b=IqjfQO/mMe2vXCuo40urAboeStsULJOKb+ZdYswa4HTnHP5JlbIxM6biRCpuJQOz0F
+         Tf2D/2oXagnqvOk5wJfTiFJS1qu9x/rWuOAN7nWGKIHVzXb6ABqj9u74N2tnXEbGQ1wK
+         NZtfwW5em0/1Fh0rBuxEtSID6A16JA8wwHKM++BTJzy3xXTpORZakLUwXD59yeTMHfXf
+         wjxVZaYl3RXwOuk9mTY12tCx5GUKI7PjwrflrEidfGfOlQwRhHqScrXi7o33DTQlEph8
+         xny83u7Qz/93niJuK8wMOO/+gZIsdoYFU01e22d5FQV5SGd0o0p5R0YwVXIm+CVKe6An
+         f5bg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=QGgGQaFEZRAOWraIxNIv4g2Bv5QWueLj5WXSnd8kx80=;
-        b=jrZlUqaahjqQDXYQ3bxJcsWMGVpUsbSfPRGy0v/EN8Cb/yMfvts/WfvNhIyxD7n1Xo
-         ZtEbe0BwCEc1aPTbC+bArTygtvXzI80KknwBxrKfqXMTosnNAJCN21XAb1ixgGVQE0rg
-         CMHAIz7NjE/NBoTsMwhKMDXlt6UaxTYergHm7NDQgyuRglXefAHxmL61RkQfut65sxLg
-         VsYZThXwA9+4Qbpx9D1T7FonWi4kcSRvjBKstsH600h2UBi5fioMUca1qOc3Lrwam7t6
-         QFmTbSQBl+CHhBhUFwPMUvp0rO2vpcxjtMrVCjsKQaSRNVNsX9te+DTYLmnxFGkN7MMj
-         +PZg==
-X-Gm-Message-State: APjAAAXWCm5ISDBu8x+Dxl2sqcEfv/WNqOWlsL7sOCanfRD0sm4bjGPd
-        uGRv0knL7YYa3DO3YU2XKdU=
-X-Google-Smtp-Source: APXvYqyxXtL3mEV0v4w+KpEl31fxktM6xe6xt5qmYDqWX2Zq+EQAay7XmZRQXj6vm8ZfyPhCAb9CtA==
-X-Received: by 2002:aca:1e14:: with SMTP id m20mr2381639oic.20.1572930023573;
-        Mon, 04 Nov 2019 21:00:23 -0800 (PST)
-Received: from localhost.localdomain ([2604:1380:4111:8b00::1])
-        by smtp.gmail.com with ESMTPSA id e93sm6089553otb.60.2019.11.04.21.00.22
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 21:00:22 -0800 (PST)
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        clang-built-linux@googlegroups.com,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>
-Subject: [PATCH v2] media: v4l2-device.h: Explicitly compare grpmask to zero in v4l2_device_mask_call_all
-Date:   Mon,  4 Nov 2019 21:59:08 -0700
-Message-Id: <20191105045907.26123-1-natechancellor@gmail.com>
-X-Mailer: git-send-email 2.24.0
-In-Reply-To: <20191024201240.49063-1-natechancellor@gmail.com>
-References: <20191024201240.49063-1-natechancellor@gmail.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zRQ+APr+2BBidMkLxayR8l9LQ01WBemoj2ukfHvIjL8=;
+        b=C64NikDAV92gZnVG/oKVftynUB0fgKUqdz3scxmSksRvc5Srs+/cUe24BTzXobF4Dz
+         fcFN+DwrkHEJuVP+c2kPSYJ9yaWkkegwcVq3f2C0BgkgDwIYfHdM0SZG8TjcJbZpAC13
+         nIGux7qdIpe1BVwk7XJHxcEqonkXcu4fk0WrzeCskni17uPkJN1+M2r0UfK0C2WK6Fu3
+         6wmj3Z64qkQAKXCMbVAwNMIgYAnIfuKN/NAyaRjdXykDqEem0b3fem1V6ROo+5HwFm86
+         mUJfqj0x6agopZq2+WKDT6ES/3yZAbHo+OYLbAX7/Tlw/JEipyZJ0Uw90JTpWGdsB7RL
+         JBoQ==
+X-Gm-Message-State: APjAAAVL5KlHFd0JJSdpPwPxGytwQ8UImNV+LZsgar/y0EP/pIpUKxkD
+        nw7SnwwQ0rkKqfKJTr3Vuv5sTsqCsNsaCIuUflk=
+X-Google-Smtp-Source: APXvYqw3r1fkLqJzcpyzi8/JbHru+GRioUk+tCGgqRYhfbxQUonRWEKzjcn72rroZv0uKUGMFI59ssfmyYXCG47duhA=
+X-Received: by 2002:a19:c514:: with SMTP id w20mr19248000lfe.143.1572930074541;
+ Mon, 04 Nov 2019 21:01:14 -0800 (PST)
 MIME-Version: 1.0
-X-Patchwork-Bot: notify
-Content-Transfer-Encoding: 8bit
+References: <20190816083246.169312-1-arul.jeniston@gmail.com>
+ <CACAVd4jfoSUK4xgLByKeMY5ZPHZ40exY+74e4fOcBDPeoLpqQg@mail.gmail.com>
+ <alpine.DEB.2.21.1908190947290.1923@nanos.tec.linutronix.de>
+ <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
+ <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
+ <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
+ <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de>
+ <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
+ <alpine.DEB.2.21.1908191943280.1796@nanos.tec.linutronix.de>
+ <CACAVd4jAJ5QcOH=q=Q9kAz20X4_nAc7=vVU_gPWTS1UuiGK-fg@mail.gmail.com>
+ <alpine.DEB.2.21.1908201036200.2223@nanos.tec.linutronix.de>
+ <CACAVd4jT4Ke7giPmKSzt+Wo3Ro-g9zWDRz_GHaRcs0Nb3_rkBw@mail.gmail.com>
+ <CACAVd4gRoQih6f_K7kMzr=AwA_DvP0OksxBKj1bGPsP2F_9sFg@mail.gmail.com>
+ <alpine.DEB.2.21.1909051707150.1902@nanos.tec.linutronix.de>
+ <CACAVd4hS1i--fxWaarXP2psagW-JmBoLAJRrfu9gkRc49Ja4pg@mail.gmail.com> <alpine.DEB.2.21.1909071630000.1902@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1909071630000.1902@nanos.tec.linutronix.de>
+From:   Arul Jeniston <arul.jeniston@gmail.com>
+Date:   Tue, 5 Nov 2019 10:31:03 +0530
+Message-ID: <CACAVd4grhGVVSYpwjof5YiS1duZ2_SFjvXtctP+cmR5Actkjyg@mail.gmail.com>
+Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, arul_mc@dell.com
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When building with Clang + -Wtautological-constant-compare, several of
-the ivtv drivers warn along the lines of:
+hi Tglx,
 
- drivers/media/pci/cx18/cx18-driver.c:1005:21: warning: converting the
- result of '<<' to a boolean always evaluates to true
- [-Wtautological-constant-compare]
-                         cx18_call_hw(cx, CX18_HW_GPIO_RESET_CTRL,
-                                         ^
- drivers/media/pci/cx18/cx18-cards.h:18:37: note: expanded from macro
- 'CX18_HW_GPIO_RESET_CTRL'
- #define CX18_HW_GPIO_RESET_CTRL         (1 << 6)
-                                           ^
- 1 warning generated.
+>  So I'm going to send a patch to document that in the manpage.
 
-This is because the shift operation is implicitly converted to a boolean
-in v4l2_device_mask_call_all before being negated. This can be solved by
-just comparing the mask result to 0 explicitly so that there is no
-boolean conversion.
+Did you get a chance to make the manpage patch? if yes, please help us
+by sharing the link where we can find the patch.
 
-Link: https://github.com/ClangBuiltLinux/linux/issues/752
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
----
+Regards,
+Arul
 
-v1 -> v2: https://lore.kernel.org/lkml/20191024201240.49063-1-natechancellor@gmail.com/
-
-* Fix typo in commit message
-* Add Nick's Reviewed-by.
-
- include/media/v4l2-device.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/include/media/v4l2-device.h b/include/media/v4l2-device.h
-index e0b8f2602670..8564b3227887 100644
---- a/include/media/v4l2-device.h
-+++ b/include/media/v4l2-device.h
-@@ -431,8 +431,8 @@ static inline bool v4l2_device_supports_requests(struct v4l2_device *v4l2_dev)
- 		struct v4l2_subdev *__sd;				\
- 									\
- 		__v4l2_device_call_subdevs_p(v4l2_dev, __sd,		\
--			!(grpmsk) || (__sd->grp_id & (grpmsk)), o, f ,	\
--			##args);					\
-+			(grpmsk) == 0 || (__sd->grp_id & (grpmsk)), o,	\
-+			f , ##args);					\
- 	} while (0)
- 
- /**
--- 
-2.24.0
-
+On Sat, Sep 7, 2019 at 8:08 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> Arul,
+>
+> On Fri, 6 Sep 2019, Arul Jeniston wrote:
+> > >Changing the return value to 1 would be just a cosmetic workaround.
+> >
+> > Agreed. Returning 1 is incorrect as It causes the next read() to
+> > return before the interval time passed.
+> >
+> > >So I rather change the documentation (this applies only to CLOCK_REALTIME
+> > >and CLOCK_REALTIME_ALARM) and explain the rationale.
+> >
+> > When timerfd_read() returns 0, hrtimer_forward() doesn't change expiry
+> > time, So, instead of modifying the man page, can we call
+> > timerfd_read() functionality once again from kernel.
+> >
+> > For example:-
+> > timerfd_read_wrapper()
+> > {
+> >    do {
+> >      ret = timerfd_read(...);
+> >    } while (ret == 0);
+> > }
+> >
+> > Let us know whether you see any problem in handling this race in kernel.
+>
+> There is no race. It's defined behaviour and I explained it to you in great
+> length why it is correct to return 0 and document that in the man page.
+>
+> Any CLOCK_REALTIME ABSTIME based interface of the kernel is affected by
+> this and no, we are not papering over it in one particular place just
+> because.
+>
+> If clock REALTIME gets set then all bets are off. The syscalls can return
+> either early or userspace cam observe that the return value is bogus when
+> it actually reads the time. You cannot handle this by any means.
+>
+> The only way to handle this gracefully is by using the
+> TFD_TIMER_CANCEL_ON_SET flag and reevaluate the situation in user space.
+>
+> So I'm going to send a patch to document that in the manpage.
+>
+> Thanks,
+>
+>         tglx
+>
+>
+>
+>
