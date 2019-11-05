@@ -2,88 +2,117 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B774DCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:52:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CF6CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3AB120717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:52:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="Rqs10Urj"
+	by mail.kernel.org (Postfix) with ESMTP id 70A4120717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729890AbfKEAws (ORCPT
+        id S1730096AbfKEAzA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:52:48 -0500
-Received: from mx1.cock.li ([185.10.68.5]:52937 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728987AbfKEAws (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:52:48 -0500
-MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1572915165; bh=qggQgCOD4EpuVBj+qhxvINlVqf0S7IUaE6VwAZLYdyk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Rqs10Urj3dys7UJiXdg3p19aTow45Ti0qcBSmJFF0xmzC6l428Tl0Yi42rbO/lB2u
-         cT+0Rc7FQ9trejCWKbl1COZe9tlcF593NfBIooHZO7n2+sLrFf4DbcgQkAq3SSFNPY
-         5bTba34gORx6mw2D2qA5wpJysA4oPABaWvZQVjG9UzDQiw0h1WumOISqdMk/SC56Vq
-         sGtFrI8h3f6HH2PDo66GiQmN+1nFpUiU2T/aeAcRAcShHoCDNVTh2WbsYHLEKaetUN
-         m1K2mDKhhtADcHOUKugft61X33DPNnjPZ9bG3YoX4tC2xyPs9vPsA3YMrVncw6hEr/
-         g28pqi7sViFBg==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+        Mon, 4 Nov 2019 19:55:00 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:50880 "EHLO
+        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729035AbfKEAzA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:55:00 -0500
+Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
+        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA50swEu017143
+        for <linux-kernel@vger.kernel.org>; Mon, 4 Nov 2019 19:54:58 -0500
+Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
+        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA50sr0R029167
+        for <linux-kernel@vger.kernel.org>; Mon, 4 Nov 2019 19:54:58 -0500
+Received: by mail-qk1-f199.google.com with SMTP id a186so17319096qkb.18
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 16:54:58 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=f2xKui4jCV1oC4mz8c3C4oOoH3JHAT+nc4LWmlpw1MY=;
+        b=OBMg2F1OXvSlXchx8JVDuH74ukC0kcgAwcL+AJjDq4FtVf2SvgaNRLplBpUS00uHO5
+         K7XIF5oZKgbAA2t1ui3YPF81cJlGQB17t5QmM+49LQMvVbyjRPcoSGTYvZ5K/tu6YWPe
+         7QmboqCVVF/kH1bOk57X4nVyjcN/q/zP4HCDxPrwhVmK45O/SCpB4/Izny3HUVPsqPx+
+         YVd+G0GHQPzTSI2hqSeOpO4YzIOwId4+2HkyYZsp+UnWjJ/KCpoA/kPNrQ1uap4QlbxC
+         vPOXK8NhLfISpbVPsAy8phCkabhpmOtdluRMwQ8fXR91Catey8Jtvp1b7nlYtHNgJVaH
+         oAbw==
+X-Gm-Message-State: APjAAAUurQxVgk3QaXUfJsm5ysQ3alVHWzmY5Anb2GOGGrNR1YShbO6R
+        IPoMkALb3HrnUdpNJ7U0Ow4IU2I9ZcASxXy5YvdSef8byvG1UCE1JximRnuhcSS9cbd4pmak84X
+        EgkfvoIuDupt7KdsTr8QxUC/bwZ3EiPD3hFk=
+X-Received: by 2002:a37:a7c6:: with SMTP id q189mr18281728qke.469.1572915293240;
+        Mon, 04 Nov 2019 16:54:53 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyrX9VI+c8WOT6M7oWIp4pyDtJDt5bkVm4lsJ+Pto7z9dB2TfD2fE/LTt42veVX3e6Xy+Pgiw==
+X-Received: by 2002:a37:a7c6:: with SMTP id q189mr18281700qke.469.1572915292941;
+        Mon, 04 Nov 2019 16:54:52 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id q17sm14389538qtq.58.2019.11.04.16.54.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 16:54:51 -0800 (PST)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, "Theodore Ts'o" <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-xfs@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
+In-Reply-To: <20191105003306.GA22791@infradead.org>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu> <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+ <20191105003306.GA22791@infradead.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1572915290_14215P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 00:52:44 +0000
-From:   gameonlinux@redchan.it
-To:     Ruben Safir <ruben@mrbrklyn.com>
-Cc:     =?UTF-8?Q?Alexandre_Fran=C3=A7ois_Garreau?= 
-        <galex-713@galex-713.eu>, Jean Louis <bugs@gnu.support>,
-        gnu-misc-discuss@gnu.org,
-        gnu-misc-discuss 
-        <gnu-misc-discuss-bounces+gameonlinux=redchan.it@gnu.org>,
-        rms@gnu.org, mrbrklyn@panix.com, linux-kernel@vger.kernel.org
-Subject: Re: Support for RMS and criticism of the bottom-up/social contract
- power grab attempt. - Why fewer contributors?
-In-Reply-To: <f1f4f8a4-bb9f-b6d9-9877-2b4eeef544e3@mrbrklyn.com>
-References: <5ec38bda-be9c-337e-ec18-a3b983a68b73@runbox.com>
- <6191342.WJX1yqFeDY@pc-713> <20191104111140.GU21905@protected.rcdrun.com>
- <3597943.aDa7FIykWb@pc-713> <adb26c6a71ea3b38018a99dca22cf200@redchan.it>
- <f1f4f8a4-bb9f-b6d9-9877-2b4eeef544e3@mrbrklyn.com>
-Message-ID: <4c26ceb504d0af028b355ad12b65261b@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+Date:   Mon, 04 Nov 2019 19:54:50 -0500
+Message-ID: <183873.1572915290@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm sorry Ruben, it's just how it has to be.
-Your guys tried hard to realize liberation, but failed.
+--==_Exmh_1572915290_14215P
+Content-Type: text/plain; charset=us-ascii
 
-So it has to be done the other way.
-I want a young girl bride no matter what, so do the European and other 
-Politicians.
+On Mon, 04 Nov 2019 16:33:06 -0800, Christoph Hellwig said:
+> On Sun, Nov 03, 2019 at 08:45:06PM -0500, Valdis Kletnieks wrote:
+> > There's currently 6 filesystems that have the same #define. Move it
+> > into errno.h so it's defined in just one place.
+>
+> And 4 out of 6 also define EFSBADCRC, so please lift that as well.
 
-The _sunni_ muslims do not bend on this: they're all for it.
-Every single other group that was tried has bent.
+Will do so in a separate patch shortly.
 
-You guys tried hard though, and almost made it happen, but you were 
-beaten back.
-Thank you for your service. Even RMS has bent the knee now though.
-Oh, and I notice you played Crossfire-RPG (photo on your website); I 
-used to be on the dev team there: made tons of maps for them (also did 
-pixel art, and did scripting etc later, the latter mostly for my own 
-extended fork). Small world.
 
-On 2019-11-04 22:02, Ruben Safir wrote:
-> On 11/4/19 6:55 AM, gameonlinux@redchan.it wrote:
->> 
->> The Muslims will solve it all, I'm glad the politicians brought them 
->> in.
->> They also don't rip you off when you get your car fixed: very honest 
->> in
->> business from my view.
-> 
-> 
-> uggg
+--==_Exmh_1572915290_14215P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXcDIWQdmEQWDXROgAQLCeRAAuaK/m71WLPW3IHgW8r5L9+3+x+9uaM3q
+1xF50a4RrgesQOcgCjLxlCHEj7RzckAn1cAh8KCEfckr5crfRHSqOkSop9jE5A4X
+BG71oLoyeYpSB1euVq/wxyUk7pk23uB3YfoPY3GD/zNUUxinrXRcc5AIBake1wfX
+1tuIjSwBgO6HILMF7PKK+ETFDGBDXKUfzep/1ooWpKYzqbMyLkrd5iYQy5a9Fy3r
+wbIOv0vg1dyMa3rcpFO6XKieD3yZkPO42lYIu6Te1wFnykmkCpgkMaOGP9/HWIPP
+vkm2vDMS7gbWWYgbs2k0IsKKKTjhO+sapW3QbYNnxYEBgwYaIfaKhJGpqWQ6qoqR
+Lr2OQWp/xv+g6bKr23kdXM+Iz8i6m38gl0LPwCa0K5I1WHSbelWoRniJ41jRcVeW
+GPr6Hu+CZxD0nYigQV7AXFnlk2E8X525kiTffPz+KtMpUS8VzaSCMkc7GQMMdPbI
+bZD328DLengZVicm271CUIiVhHvRD8tzw/6Z3UyM9lxCCjtkpFQI+ERMPATGTT/D
+hwZmJzEj5esJYzs+PyEDt/d7pA0kzpW0XObEjX7apDgMWXWk7WmczJPPJENH6lVw
+ULNeg4s+MlG6qt3eiC8+DPM6MxQtyen9NaE90UtCHunhRxt6tZSzbGSuHRYVWCdQ
+9OgZEz7s3DI=
+=W6JA
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1572915290_14215P--
