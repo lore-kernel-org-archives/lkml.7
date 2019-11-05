@@ -2,131 +2,188 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 417A5C17486
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58D36C17488
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1965821882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3077D21D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:02:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuGsP7Sa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pPYSp2Nb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389408AbfKEOBp (ORCPT
+        id S2389458AbfKEOCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:01:45 -0500
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:43909 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389377AbfKEOBo (ORCPT
+        Tue, 5 Nov 2019 09:02:52 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40564 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388428AbfKEOCv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:01:44 -0500
-Received: by mail-wr1-f65.google.com with SMTP id n1so21498058wra.10;
-        Tue, 05 Nov 2019 06:01:43 -0800 (PST)
+        Tue, 5 Nov 2019 09:02:51 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e3so7353491plt.7;
+        Tue, 05 Nov 2019 06:02:51 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
-        b=JuGsP7SaJj6polj8WOmJL+wp8KAuIHmo+o9netEjHZUnkfMZlpJrU5Jm+LWMA3UbQE
-         iBvCJywvjXy6BYuWreZ9X+UIjDqjTId8lLv4aJjHAxtQxr8RZUTsxAHzztkUXuu506Ty
-         6F4HI1awQ+O9jKKZxIJ1S0pujnzRSJAafQus3efQA1FUv5vt+kmWLEv5xQlUPr4OjGPE
-         zNQZcnceOyLUnqj2qYpJiUPKgOyIQ5rxG7gBXoosxQZWOSJ3nHCDARXlwZrRxqqOHz9S
-         23irGP3IQhh+AuczCRM/sS3LgaVNvLApVUWBkkRDwvNjAo4NyFva12WxB7pBuKjpOLuF
-         606w==
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YQL6SU2a3KKoxlnyLuTfZyxJaKZQZOJt+fGwiLwFJ9U=;
+        b=pPYSp2NbeXLKWAE9KkeK2vm7vB0gKz42Hn9YwazC1o3qnOC94f4orQrSZIShFbN7sK
+         68v1nDDjgBVBgqTAG0A1KG+y0ZI0d82qmwb/n538ktvyL5qs58ckPeAPJF8pOi3wm0pf
+         Pvv9RgbyMbDr5+/+xX5QTcblS2FfzYtnDB95acI88zTExYefcIeiBsOzMpbP3qU6GSf2
+         GuosVwY307GC7Owz/fwcJV9ybRADP6HN19es9Re8uljIhTacybA2nSXmoKAQ7FyqxuWs
+         fa8F2uy2dAJDp3xAUY/FL3VI9KT/qpWg9uHfDJhWGmQUis8iNI/ArhXTI2368BG6U7Mz
+         4b9A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
-        b=RD2Fdg8y0Z/GNSC9OH3YRWFVKUAHti+joUaaPHYln9k0nPphOTE3bEpKyjJ2NMl5tr
-         LuD0UBrc2fmw5NjGnZdPNbdQb0VIbGmZCZcdYpnS/jawGu2YBkfdKmv3Eu9f1Aa+79kA
-         kmm4NjVhVUzpZoWWUDxfrSfg2jPxupyncoURmXKOMejcZCJDQIa9TCGWzvsEcmHis1mQ
-         Z2aO6vgSzDqkbYJuF/5ezqTz6HshEeUWMzK3UZHuibDCsJE1TtYFfOGAyJrXyokrgjlI
-         NBrakWMd/GkU7nK6XpadTqe2p6Dz2O3lAwY5nL5U3feJ+Ku7+fELCbq8/h/XVN12jQuc
-         ZpLA==
-X-Gm-Message-State: APjAAAWiTBFPuC1nUg9MQzqFB8BVyKMMMmMLtxMFKWpfLxOog5SihG2r
-        pzqDsG44hIV60wSn/Th7DUXMJyxX9uYQMwZpHOs=
-X-Google-Smtp-Source: APXvYqxRcCROBvE45IqEtn6OaqJk7IITVlNsi8UujVDIcnVf36fGS6gEz5kfeljJQVq3rkoKIyrIDQkO5S6JVNP7UKw=
-X-Received: by 2002:a5d:4b42:: with SMTP id w2mr27600001wrs.360.1572962502646;
- Tue, 05 Nov 2019 06:01:42 -0800 (PST)
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YQL6SU2a3KKoxlnyLuTfZyxJaKZQZOJt+fGwiLwFJ9U=;
+        b=C20Lo+qcUxHI8XW/w53ZosmyZVGIP2CZatB5pcuiPj9t4ynb4DuLEzsAGnOkGqu+OC
+         M4mUYpUO/YC0SqSg9o7863GKCSyz2dwR0AUFpU5z8uTanyjC1DONF1JKRIfjzAXCPr5g
+         8oYEFYy5keh67o9TG6IAb1ZFLsaA0klH7uJc6K5XBl1yOZKt867LUi4qta13nVxqrxE2
+         W0JKHPNg/1ZnTR5GX/AGd9BkRAKWAyMFf0KBIJhMybZfamy2CQM4iz8KKI06xPP9PRm0
+         ghkve1fsi6HPrqdUtc31SzXcQS4suPpjiVJlOFvvsYbRoAvhV/uiwk1fu/G/yLwiIgxk
+         vgjQ==
+X-Gm-Message-State: APjAAAUq1AYvL+gncae8n735BvSerYTFqWO8oJGxUyTC0qYR4YWs4EDj
+        WFSzjFPWhYaZJYuxDtbvOt7Yjhxn5+8=
+X-Google-Smtp-Source: APXvYqzWvTeN5jzIYdnusiSIYJblVUpaFWxzfXQyB0OKxJ/r//EY/3c+H7crSzSveOLdOGuPma9KQA==
+X-Received: by 2002:a17:902:9343:: with SMTP id g3mr13093886plp.278.1572962570199;
+        Tue, 05 Nov 2019 06:02:50 -0800 (PST)
+Received: from ?IPv6:2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb? ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
+        by smtp.gmail.com with ESMTPSA id v17sm25646727pfc.41.2019.11.05.06.02.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 06:02:49 -0800 (PST)
+Cc:     tranmanphong@gmail.com, madhuparnabhowmik04@gmail.com,
+        joel@joelfernandes.org, corbet@lwn.net, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: RCU: NMI-RCU:
+ Converted NMI-RCU.txt to NMI-RCU.rst.
+To:     paulmck@kernel.org
+References: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
+ <5bab8828-76e4-c67f-5855-ea4e4f43eaa5@gmail.com>
+ <20191105135524.GN20975@paulmck-ThinkPad-P72>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <7b9f5499-bd03-8405-52f5-1fb94e9d85dc@gmail.com>
+Date:   Tue, 5 Nov 2019 21:02:46 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-3-peron.clem@gmail.com>
- <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
-In-Reply-To: <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 5 Nov 2019 15:01:31 +0100
-Message-ID: <CAJiuCcesD8kh_BpVLxyhk5UYYwGhp_tQkcsaY-LzxRTT5kO3Qw@mail.gmail.com>
-Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
-To:     Philipp Zabel <p.zabel@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191105135524.GN20975@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Philipp,
+On 11/5/19 8:55 PM, Paul E. McKenney wrote:
+> On Tue, Nov 05, 2019 at 08:40:05PM +0700, Phong Tran wrote:
+>> On 10/29/19 4:42 AM, madhuparnabhowmik04@gmail.com wrote:
+>>> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>>>
+>>> This patch converts NMI-RCU from txt to rst format.
+>>> Also adds NMI-RCU in the index.rst file.
+>>>
+>>> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+>>> -- >   .../RCU/{NMI-RCU.txt => NMI-RCU.rst}          | 53 ++++++++++---------
+>>>    Documentation/RCU/index.rst                   |  1 +
+>>>    2 files changed, 29 insertions(+), 25 deletions(-)
+>>>    rename Documentation/RCU/{NMI-RCU.txt => NMI-RCU.rst} (73%)
+>>>
+>>> diff --git a/Documentation/RCU/NMI-RCU.txt b/Documentation/RCU/NMI-RCU.rst
+>>> similarity index 73%
+>>> rename from Documentation/RCU/NMI-RCU.txt
+>>> rename to Documentation/RCU/NMI-RCU.rst
+>>> index 881353fd5bff..da5861f6a433 100644
+>>> --- a/Documentation/RCU/NMI-RCU.txt
+>>> +++ b/Documentation/RCU/NMI-RCU.rst
+>>> @@ -1,4 +1,7 @@
+>>> +.. _NMI_rcu_doc:
+>>> +
+>>>    Using RCU to Protect Dynamic NMI Handlers
+>>> +=========================================
+>>>    Although RCU is usually used to protect read-mostly data structures,
+>>> @@ -9,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
+>>>    "arch/x86/kernel/traps.c".
+>>>    The relevant pieces of code are listed below, each followed by a
+>>> -brief explanation.
+>>> +brief explanation.::
+>> there is just a minor ":" redundant in html page.There are some same in this
+>> patch.
+>> eg:
+>>   brief explanation.:
+>>
+>> Other things look good to me.
+>>
+>> Tested-by: Phong Tran <tranmanphong@gmail.com>
+> 
+> Thank you, Phong!
+> 
+> I queued a commit to be squashed into Madhuparna's original as shown below
+> which adds your Tested-by and attempts a fix.  Does this work for you?
+> 
 
-On Tue, 5 Nov 2019 at 14:36, Philipp Zabel <p.zabel@pengutronix.de> wrote:
->
-> On Tue, 2019-11-05 at 14:14 +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM core needs deasserted reset line in order to work.
-> >
-> > Add an optional probe for it.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
->
-> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
->
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
-> >  1 file changed, 31 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index 6f5840a1a82d..9ba83769a478 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> [...]
-> > @@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
-> >       if (IS_ERR(pwm->clk))
-> >               return PTR_ERR(pwm->clk);
-> >
-> > +     pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
-ULL);
-> > +     if (IS_ERR(pwm->rst)) {
-> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
-> > +                     dev_err(&pdev->dev, "get reset failed %ld\n",
-> > +                             PTR_ERR(pwm->rst));
-> > +             return PTR_ERR(pwm->rst);
-> > +     }
-> > +
-> > +     /* Deassert reset */
->
-> Nitpick: isn't the API function name explanatory enough?
+Yes, Paul.
 
-Yes I can remove this comment,
+Regards,
+Phong.
 
-Cl=C3=A9ment
->
-> regards
-> Philipp
->
+> 							Thanx, Paul
+> 
+> ------------------------------------------------------------------------
+> 
+> commit 2c29f1c481f74f5e5aaaab195042f4df6a0b8119
+> Author: Paul E. McKenney <paulmck@kernel.org>
+> Date:   Tue Nov 5 05:51:12 2019 -0800
+> 
+>      squash! Documentation: RCU: NMI-RCU: Converted NMI-RCU.txt to NMI-RCU.rst.
+>      
+>      [ paulmck: Apply feedback from Phong Tran. ]
+>      Tested-by: Phong Tran <tranmanphong@gmail.com>
+>      Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
+> 
+> diff --git a/Documentation/RCU/NMI-RCU.rst b/Documentation/RCU/NMI-RCU.rst
+> index da5861f..1809583 100644
+> --- a/Documentation/RCU/NMI-RCU.rst
+> +++ b/Documentation/RCU/NMI-RCU.rst
+> @@ -12,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
+>   "arch/x86/kernel/traps.c".
+>   
+>   The relevant pieces of code are listed below, each followed by a
+> -brief explanation.::
+> +brief explanation::
+>   
+>   	static int dummy_nmi_callback(struct pt_regs *regs, int cpu)
+>   	{
+> @@ -21,12 +21,12 @@ brief explanation.::
+>   
+>   The dummy_nmi_callback() function is a "dummy" NMI handler that does
+>   nothing, but returns zero, thus saying that it did nothing, allowing
+> -the NMI handler to take the default machine-specific action.::
+> +the NMI handler to take the default machine-specific action::
+>   
+>   	static nmi_callback_t nmi_callback = dummy_nmi_callback;
+>   
+>   This nmi_callback variable is a global function pointer to the current
+> -NMI handler.::
+> +NMI handler::
+>   
+>   	void do_nmi(struct pt_regs * regs, long error_code)
+>   	{
+> @@ -61,7 +61,7 @@ Quick Quiz:
+>   
+>   :ref:`Answer to Quick Quiz <answer_quick_quiz_NMI>`
+>   
+> -Back to the discussion of NMI and RCU...::
+> +Back to the discussion of NMI and RCU::
+>   
+>   	void set_nmi_callback(nmi_callback_t callback)
+>   	{
+> 
