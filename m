@@ -2,123 +2,220 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB464C010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25A4AC010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:05:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DBCB20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572951922;
-	bh=QD9PsiTqG6zFn/fc57nf7eeXkeXIezYX6KKP63PPEIc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ZsNYlhAekYIAehQHwArswttwXr8pfyxL3sqch4W/p3DPPjImoBtYEI/7VuK/C8560
-	 8RvdrTIOuk3dK/AAWafiQ6tdBpl5lb0BhVMwEpP29Fe8wGA3RrTyqsAREcHRkkgkIQ
-	 VklDOKjKHvogPab/sRu2MY626DF1fsgzXM3wZoBc=
+	by mail.kernel.org (Postfix) with ESMTP id E85C520869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:05:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="emA+I4lr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730787AbfKELFV (ORCPT
+        id S1730825AbfKELFY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:05:21 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36926 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfKELFU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:05:20 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=2eO07dXroFiq8sB6b0J/jgAEKIzUzmLjBTejnzmX9T0=; b=ozXkH0JPOhx0viZ0l6KaKifyv
-        kzh0+OLvHPX5brnQfaeUpyJh8bw+wr/M5frXCJbajZMkRwqimILKGmXTc5a452eDrB2cve8DE4VSs
-        TciJFOnooDYMwV0OHa3T4uz/D0k3tX6ekootqqfcwTstryJvnBSzFVYnD/z6wQPnbwqyQ=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iRwe2-0006Kf-Ds; Tue, 05 Nov 2019 11:05:06 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 2711827431C3; Tue,  5 Nov 2019 11:05:05 +0000 (GMT)
-Date:   Tue, 5 Nov 2019 11:05:05 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     John Garry <john.garry@huawei.com>
-Cc:     marek.vasut@gmail.com, tudor.ambarus@microchip.com,
-        linuxarm@huawei.com, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, linux-spi@vger.kernel.org,
-        xuejiancheng@hisilicon.com, fengsheng5@huawei.com
-Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-Message-ID: <20191105110504.GA4500@sirena.co.uk>
-References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
- <1572886297-45400-3-git-send-email-john.garry@huawei.com>
- <20191104192406.GH5238@sirena.co.uk>
- <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
+        Tue, 5 Nov 2019 06:05:24 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:48468 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726867AbfKELFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:05:24 -0500
+Received: from zn.tnic (p200300EC2F0EF00040535B901ABC1006.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:f000:4053:5b90:1abc:1006])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id CDFAD1EC095C;
+        Tue,  5 Nov 2019 12:05:17 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1572951918;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=DzLmbHnGnVNGSpU/+IxMmFssZJiIE/Z5fsxo5hTr6ZE=;
+        b=emA+I4lrVnxwIM15AsbRqLJVAMDtGdYuahaYblX3S2hzSXT0/7RHnQ6qDUn+wKjRdj77of
+        InZ27L4mDj7ZM/GDc66+Zxz1MY+rMzuwSX7IdAMKRpa7rrYzd3bCYmgWreKgNSerZe/ryw
+        sarQ7C44E/9ElgEuHtukqj7D6CAuV6s=
+Date:   Tue, 5 Nov 2019 12:05:11 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     Robert Richter <rrichter@marvell.com>
+Cc:     James Morse <james.morse@arm.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Borislav Petkov <bp@suse.de>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] EDAC, ghes: Fix locking and memory barrier issues
+Message-ID: <20191105110511.GA28418@zn.tnic>
+References: <20191025211226.2444-1-rrichter@marvell.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yrj/dFKFPuw6o+aM"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
-X-Cookie: Genius is pain.
+In-Reply-To: <20191025211226.2444-1-rrichter@marvell.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Oct 25, 2019 at 09:13:14PM +0000, Robert Richter wrote:
+> The ghes registration and refcount is broken in several ways:
+> 
+>  * ghes_edac_register() returns with success for a 2nd instance even
+>    if a first instance is still running.
 
---yrj/dFKFPuw6o+aM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+How?
 
-On Tue, Nov 05, 2019 at 10:58:39AM +0000, John Garry wrote:
-> On 04/11/2019 19:24, Mark Brown wrote:
-> > On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
+There's
 
-> > > +		if (len) {
-> > > +			u32 val;
-> > > +
-> > > +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
-> > > +
-> > > +			to += words * 4;
-> > > +			for (i = 0; i < len; i++, val >>= 8, to++)
-> > > +				*to = (u8)val;
-> > > +		}
-> > > +	} else {
-> > > +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
-> > > +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
-> > > +			int j;
+        if (atomic_inc_return(&ghes_init) > 1)
+                return 0;
 
-> > The more usual pattern for these would be to do some unaligned accesses
-> > for the start/end of the buffer to get to alignment and then transfer
-> > the rest as aligned data.
+there. How would a second instance bypass this?
 
-> Yeah, I understand you, but for that I would need to generate multiple
-> transactions in the driver, and I wanted to keep 1x transaction per
-> spi_controller_mem_ops.exec_op call.
+>  * The refcount was increased even if a registration failed. This
+>    leads to stale counters preventing the device from being released.
 
-> So maybe I can do some trickery in my adjust_op_size method to generate
-> these multiple transactions: a. any unaligned start data b. the 32b-aligned
-> data b. unaligned end. I think that the HW should be able to handle that.
+That I see - the return path should dec ghes_init.
 
-Right, that's what I was expecting.
+>  * The ghes refcount may not be decremented properly on
+>    unregistration. Always decrement the refcount once
+>    ghes_edac_unregister() is called to keep the refcount sane.
 
---yrj/dFKFPuw6o+aM
-Content-Type: application/pgp-signature; name="signature.asc"
+Right.
 
------BEGIN PGP SIGNATURE-----
+>  * The ghes_pvt pointer is handed to the irq handler before
+>    registration finished.
+> 
+>  * The mci structure could be freed while the irq handler is running.
+> 
+> Fix this by adding a mutex to ghes_edac_register(). This mutex
+> serializes instances to register and unregister. The refcount is only
+> increased if the registration succeeded. This makes sure the refcount
+> is in a consistent state after registering or unregistering a device.
+> Note: A spinlock cannot be used here as the code section may sleep.
+> 
+> The ghes_pvt is protected by ghes_lock now.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3BV14ACgkQJNaLcl1U
-h9BKZAf6Ash1CMprp9CmtoZgXDlZGjI+I84fZ7x4ZvMSHOMZ20e7KMwVEKBJ4UH8
-onKbrC/sLhV9dOTh4KdW9H7QnPp7NQPru6ZartbDCKHDT2wT7SJCXlQWapZrg5Gh
-E/xH29aG6yQrIxTvYtsqNjBw7cheRBDQUTAvMH+rqNMLtOQVnWgh+Tf09izlS1ve
-6vJrCROj/xO319Oc2iAhRGRbXgr++392iYarO3qdad6SSGFZFVKCs9lU/U+9I8Dz
-KG2nKTMal8tnwJw4GRJ5PqPVsrs3+UYJwey6mbPVeIXfp1Oe2H8igZmXdmd4o9F2
-OHTRDQDXOG8K/Opk2MV79xBmKG+pKw==
-=S6Z7
------END PGP SIGNATURE-----
+This better be documented in the driver with a comment above the
+ghes_pvt thing.
 
---yrj/dFKFPuw6o+aM--
+I'm assuming the support for multiple instances is going ontop of this?
+If so, ghes_pvt needs to be an array or so. Also, if you do that, I
+think you should use mc_devices - see edac_mc_find() et al - instead of
+growing a special one just for this driver.
+
+> This ensures the pointer
+> is not updated before registration was finished or while the irq
+> handler is running. It is unset before unregistering the device
+> including necessary (implicit) memory barriers making the changes
+> visible to other cpus. Thus, the device can not be used anymore by an
+> interrupt.
+> 
+> A refcount is needed. There can be multiple GHES structures being
+> defined (see ACPI 6.3 specification, 18.3.2.7 Generic Hardware Error
+> Source, "Some platforms may describe multiple Generic Hardware Error
+> Source structures with different notification types, ...").
+> 
+> Another approach to use the mci's device refcount (get_device()) and
+> have a release function does not work here. A release function will be
+> called only for device_release() with the last put_device() call. The
+> device must be deleted *before* that with device_del(). This is only
+> possible by maintaining an own refcount.
+> 
+> Fixes: 0fe5f281f749 ("EDAC, ghes: Model a single, logical memory controller")
+> Fixes: 1e72e673b9d1 ("EDAC/ghes: Fix Use after free in ghes_edac remove path")
+> Signed-off-by: Borislav Petkov <bp@suse.de>
+> Signed-off-by: James Morse <james.morse@arm.com>
+> Signed-off-by: Robert Richter <rrichter@marvell.com>
+> ---
+>  drivers/edac/ghes_edac.c | 78 ++++++++++++++++++++++++++++------------
+>  1 file changed, 56 insertions(+), 22 deletions(-)
+
+...
+
+> @@ -457,10 +461,12 @@ static struct acpi_platform_list plat_list[] = {
+>  int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  {
+>  	bool fake = false;
+> -	int rc, num_dimm = 0;
+> +	int rc = 0, num_dimm = 0;
+>  	struct mem_ctl_info *mci;
+> +	struct ghes_edac_pvt *pvt;
+>  	struct edac_mc_layer layers[1];
+>  	struct ghes_edac_dimm_fill dimm_fill;
+> +	unsigned long flags;
+>  	int idx = -1;
+>  
+>  	if (IS_ENABLED(CONFIG_X86)) {
+> @@ -472,11 +478,14 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  		idx = 0;
+>  	}
+>  
+> +	/* finish another registration/unregistration instance first */
+> +	mutex_lock(&ghes_reg_mutex);
+> +
+>  	/*
+>  	 * We have only one logical memory controller to which all DIMMs belong.
+>  	 */
+> -	if (atomic_inc_return(&ghes_init) > 1)
+> -		return 0;
+> +	if (atomic_inc_not_zero(&ghes_init))
+
+That should probably be called ghes_instances now to make it obvious
+what it is.
+
+Also, you can make it a normal variable now since it is being modified
+under the mutex only.
+
+> +		goto unlock;
+>  
+>  	/* Get the number of DIMMs */
+>  	dmi_walk(ghes_edac_count_dimms, &num_dimm);
+> @@ -494,12 +503,13 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  	mci = edac_mc_alloc(0, ARRAY_SIZE(layers), layers, sizeof(struct ghes_edac_pvt));
+>  	if (!mci) {
+>  		pr_info("Can't allocate memory for EDAC data\n");
+> -		return -ENOMEM;
+> +		rc = -ENOMEM;
+> +		goto unlock;
+>  	}
+>  
+> -	ghes_pvt	= mci->pvt_info;
+> -	ghes_pvt->ghes	= ghes;
+> -	ghes_pvt->mci	= mci;
+> +	pvt		= mci->pvt_info;
+> +	pvt->ghes	= ghes;
+> +	pvt->mci	= mci;
+>  
+>  	mci->pdev = dev;
+>  	mci->mtype_cap = MEM_FLAG_EMPTY;
+> @@ -541,23 +551,47 @@ int ghes_edac_register(struct ghes *ghes, struct device *dev)
+>  	if (rc < 0) {
+>  		pr_info("Can't register at EDAC core\n");
+>  		edac_mc_free(mci);
+> -		return -ENODEV;
+> +		rc = -ENODEV;
+
+This needs to "goto unlock".
+
+>  	}
+> -	return 0;
+> +
+> +	spin_lock_irqsave(&ghes_lock, flags);
+> +	ghes_pvt = pvt;
+> +	spin_unlock_irqrestore(&ghes_lock, flags);
+> +
+> +	/* only increment on success */
+> +	atomic_inc(&ghes_init);
+> +
+> +unlock:
+> +	mutex_unlock(&ghes_reg_mutex);
+> +
+> +	return rc;
+>  }
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
