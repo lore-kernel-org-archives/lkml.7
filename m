@@ -2,108 +2,179 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FBD5CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:54:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4654CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:57:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8C9A20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:54:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC16120717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:57:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="TRTl6yC+"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EGNHG3Gf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730028AbfKEBy3 (ORCPT
+        id S1729978AbfKEB5z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:54:29 -0500
-Received: from mx1.cock.li ([185.10.68.5]:57395 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729597AbfKEBy3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:54:29 -0500
+        Mon, 4 Nov 2019 20:57:55 -0500
+Received: from conssluserg-05.nifty.com ([210.131.2.90]:25816 "EHLO
+        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbfKEB5z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 20:57:55 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-05.nifty.com with ESMTP id xA51ve2p032734;
+        Tue, 5 Nov 2019 10:57:41 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xA51ve2p032734
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1572919061;
+        bh=wnNLKDcLbY3/yKFW6RfxoG2eNTucv+kYwn7VETE2Ss4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=EGNHG3Gf56RamlIbWHuLeOWObCMMRhDJbFCPltyeSCQ/fp+jBIyW3Xg51a8GBioJZ
+         g25/G6GhcdmEtPCM6HCU12tEGZsN2umDShfxqwkY736okcSEXatODaIJdZhMyBgKbC
+         Q8Ybjy0U+nJUSnzkUebOZtlBXMQzDmOQgBi6uSRWk8xQMpjaVE76zinEzUox7rGa5/
+         Zepr/Ao266Co8YxuqDdssK9rByY9cenRyhQdK5ySrztrK9YjPt3ieoiwKcmsjAyt/L
+         tSaIqgMHmLY36NOASFPaFv6NIKpxpNvE1AiZa0NGsdv2S0SevI1sZAlU+B47x8UMmB
+         eJ4tklhr2l5zQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id k15so12395176vsp.2;
+        Mon, 04 Nov 2019 17:57:41 -0800 (PST)
+X-Gm-Message-State: APjAAAU/k64xMlPmMAVWUr7NVaz+38TsfaLt33IPhcOL23VelnntkwaL
+        f13WelwN8Qt30Zl+CG7X205vHAHOXfo0usaQgNY=
+X-Google-Smtp-Source: APXvYqzFNajTAhIs/fw26OaE2g+A5ZLDCiX8mkE1P9UMTg1Ch/QNPc3yAz63Ebx/DZ4nOX6a4pcbQNdTpnUu7q5CLMU=
+X-Received: by 2002:a67:2d08:: with SMTP id t8mr14547734vst.155.1572919059960;
+ Mon, 04 Nov 2019 17:57:39 -0800 (PST)
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
-        t=1572918866; bh=VW0SR1FixrnNDWGg3GTp/hDhl6DtRG2SzEyy0n4IIwM=;
-        h=Date:From:To:Subject:From;
-        b=TRTl6yC+oXXkYXh6Jm6lprm0iJaKAY4DB2NAfH/+fMbHS5XHop+mqM30vTvRJmMZr
-         LIyYRPUDeplmhgI661aM4pXItbdmOeLBwFihqM+kVqWMJN9jikhT0f8guZcw5peHEM
-         YbRzICX2RiNjU7yPwxBajSDyoF50RzJ8bxNp9B2kOXt2GyJmC0UPF7j0xKpZl+P2zC
-         1YxSPyQpEHK2Qvx2CrSvTdJGhLl+4CoIYzgmP07AF0gQ7Bt3/wwEFcoOm7dR1KCuws
-         aLF053mXNf7ya7k9plgtdgcRwvz6w7DrQ2FHcpZl5uuWEiclKx91QuoFPR6XAlplIO
-         Ghd1v047EUsAg==
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 01:54:25 +0000
-From:   nipponmail@firemail.cc
-To:     linux-kernel@vger.kernel.org
-Subject: Ruben Safir: Could you help RMS out?
-Message-ID: <b0fcc937c43383f8436b0d9197a86ca2@firemail.cc>
-X-Sender: nipponmail@firemail.cc
-User-Agent: Roundcube Webmail/1.3.6
+References: <20191101081148.23274-1-yamada.masahiro@socionext.com>
+ <20191101081148.23274-3-yamada.masahiro@socionext.com> <CAL_Jsq+_vKmhVacTnt7fXJFsFGkg0AopdiZ4XaQ3V4M=zhn_CA@mail.gmail.com>
+In-Reply-To: <CAL_Jsq+_vKmhVacTnt7fXJFsFGkg0AopdiZ4XaQ3V4M=zhn_CA@mail.gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Tue, 5 Nov 2019 10:57:04 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQ-rd6FsBY4CUk3yFzRgEE4mZyytQG6OCBb9Ww2f7bwcg@mail.gmail.com>
+Message-ID: <CAK7LNAQ-rd6FsBY4CUk3yFzRgEE4mZyytQG6OCBb9Ww2f7bwcg@mail.gmail.com>
+Subject: Re: [PATCH v2 2/3] ARM: decompressor: simplify libfdt builds
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     DTML <devicetree@vger.kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
+        Russell King <linux@armlinux.org.uk>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear Ruben Safir;
+On Tue, Nov 5, 2019 at 10:04 AM Rob Herring <robh+dt@kernel.org> wrote:
+>
+> On Fri, Nov 1, 2019 at 3:12 AM Masahiro Yamada
+> <yamada.masahiro@socionext.com> wrote:
+> >
+> > Copying source files during the build time may not end up with
+> > as clean code as you expect.
+> >
+> > lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
+> > nicely. Let's follow that approach for the arm decompressor, too.
+> >
+> > Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove the
+> > Makefile messes.
+> >
+> > Another nice thing is we no longer need to maintain the separate
+> > libfdt_env.h since we can include <linux/libfdt_env.h>, and the
+> > diff stat also looks nice.
+> >
+> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> > ---
+> >
+> > Changes in v2: None
+> >
+> >  arch/arm/boot/compressed/.gitignore     |  9 -------
+> >  arch/arm/boot/compressed/Makefile       | 33 +++++++------------------
+> >  arch/arm/boot/compressed/atags_to_fdt.c |  1 +
+> >  arch/arm/boot/compressed/fdt.c          |  2 ++
+> >  arch/arm/boot/compressed/fdt_ro.c       |  2 ++
+> >  arch/arm/boot/compressed/fdt_rw.c       |  2 ++
+> >  arch/arm/boot/compressed/fdt_wip.c      |  2 ++
+> >  arch/arm/boot/compressed/libfdt_env.h   | 22 -----------------
+> >  8 files changed, 18 insertions(+), 55 deletions(-)
+> >  create mode 100644 arch/arm/boot/compressed/fdt.c
+> >  create mode 100644 arch/arm/boot/compressed/fdt_ro.c
+> >  create mode 100644 arch/arm/boot/compressed/fdt_rw.c
+> >  create mode 100644 arch/arm/boot/compressed/fdt_wip.c
+> >  delete mode 100644 arch/arm/boot/compressed/libfdt_env.h
+>
+> Looks fine to me other than my question on licensing on patch 1.
+>
+> Who did you want to take the series? I can take it with Russell's ack.
 
-	I would like to ask you if you could do your friend a favor. Your man 
-Richard Matthew Stallman. From my observation you and he are from the 
-same community, if you understand my meaning. What RMS probably needs is 
-very simple; something all men need: a young bride.
+Rob,
+I'd like you to take the whole of this patch set
+if there is no objection.
 
-	Now, the reform/liberal synagogue known as the FSF hasn't helped him 
-out in this needed way, infact some of their number have behaved, how 
-shall we say, as a congregation that is adversarial to RMS: a 
-congregation of adversary, (you can translate that to another language 
-or two and understand that meaning in a more coloured way (translate it 
-to hebrew, the word adversary))
-
-	You seem like an orthodox man, a mensch perhaps. Is not RMS a mensch in 
-the way he has helped so many? So could you help him out, 
-community-member to community-member? (Wrj gb Wrj). You could get a nice 
-girl from Israel, in an orthodox economically challenged living space; 
-who's humble, cute, young, and nice: and have RMS say "sayonorah" to the 
-country that hates him: America (and the people that hate him (whites.))
-
-	Look: words are nice, sometimes they hurt, but they aren't nothing: but 
-they are very little. You know what your friend needs, your fellow. 
-Please just make it happen. Does RMS have to be tortured till his dying 
-day never feeling wanted? Comon, help your guy out.
-
-Sincerely;
-Some guy.
-
-----------
-
-(Notes:	I will say I was hurt by RMS's reversal regarding his stance in 
-question recently: it was sorta like a stab in the gut: but I kinda had 
-heard he had changed his mind on that through a leak on a wiki page 
-months earlier. The thing is his enemies aren't going to accept this 
-reversal; even if he comes out and says all paedos should be jailed 
-forever (I kinda expect this next): RMS you were right the first second 
-and third time)
-
-(Also that woman you're accusing of libel, and saying should be sued and 
-shunned: quoting RMS on paedophillia is not libel. The only way you 
-would win that suit is if you used a Jewish Lawyer, and had a Jewish 
-Judge, to rule against the goyish woman based on pure nepotism (which is 
-fine: you help eachother out: Please ACTUALLY help RMS gain HAPPINESS in 
-his life: how long does he have left? Get a move on please Ruben: HELP 
-YOUR MAN GET A YOUNG JEWISH BRIDE AND BE HAPPY (Perhaps like Agatha 
-(fourchan's favorite young jewish girl))). And your ruling would 
-basically be saying "RMS's staunch rejection of paedophilla is absolutly 
-correct, and his previous ideas were wrong; how dare you bring them up)
-
-I agree with RMS's opinions that were deemed "disgusting" by the woman 
-you were fighting with.
-I do not agree with his reversal. But I guess I am "libel"ing him too by 
-supporting his TRUE opinions over the INDUCED opinions he has been 
-forced to adopt (which, sadly, will now be his TRUE opinions forever :( 
-)
+Russell,
+Is this patch OK with you?
 
 
-[I just want what's best for him: and what is good comes from within us: 
-it's programmed in, can't be changed, help him out Rueben. Don't be an 
-American. Be You.]
+
+> >
+> > -$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
+> > -       $(addprefix $(obj)/,$(libfdt_hdrs))
+> > +OBJS   += $(libfdt_objs)
+>
+> Seems like this file could benefit from doing 'OBJS-$(CONFIG_*)' style
+> variables.
+
+I agree, but this kind of refactoring is
+not the main interest of this series.
+
+It should be done by a separate patch if it is desired.
+
+
+
+> > diff --git a/arch/arm/boot/compressed/fdt.c b/arch/arm/boot/compressed/fdt.c
+> > new file mode 100644
+> > index 000000000000..f8ea7a201ab1
+> > --- /dev/null
+> > +++ b/arch/arm/boot/compressed/fdt.c
+> > @@ -0,0 +1,2 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include "../../../../lib/fdt.c"
+> > diff --git a/arch/arm/boot/compressed/fdt_ro.c b/arch/arm/boot/compressed/fdt_ro.c
+> > new file mode 100644
+> > index 000000000000..93970a4ad5ae
+> > --- /dev/null
+> > +++ b/arch/arm/boot/compressed/fdt_ro.c
+> > @@ -0,0 +1,2 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include "../../../../lib/fdt_ro.c"
+> > diff --git a/arch/arm/boot/compressed/fdt_rw.c b/arch/arm/boot/compressed/fdt_rw.c
+> > new file mode 100644
+> > index 000000000000..f7c6b8b7e01c
+> > --- /dev/null
+> > +++ b/arch/arm/boot/compressed/fdt_rw.c
+> > @@ -0,0 +1,2 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include "../../../../lib/fdt_rw.c"
+> > diff --git a/arch/arm/boot/compressed/fdt_wip.c b/arch/arm/boot/compressed/fdt_wip.c
+> > new file mode 100644
+> > index 000000000000..048d2c7a088d
+> > --- /dev/null
+> > +++ b/arch/arm/boot/compressed/fdt_wip.c
+> > @@ -0,0 +1,2 @@
+> > +// SPDX-License-Identifier: GPL-2.0-only
+> > +#include "../../../../lib/fdt_wip.c"
+
+
+I gave GPL-2.0-only to this,
+but it should be the same as lib/fdt*.c,
+which is now being discussed in 1/3.
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
