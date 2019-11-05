@@ -2,99 +2,63 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32B84C010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50D19C010C1
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:28:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C6EF21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 310A121929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:28:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387888AbfKEL17 (ORCPT
+        id S2388087AbfKEL2u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:27:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35292 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730624AbfKEL16 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:27:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id AE44FB3D1;
-        Tue,  5 Nov 2019 11:27:56 +0000 (UTC)
-Message-ID: <1572952316.2921.3.camel@suse.com>
-Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Date:   Tue, 05 Nov 2019 12:11:56 +0100
-In-Reply-To: <00000000000013c4c1059625a655@google.com>
-References: <00000000000013c4c1059625a655@google.com>
-Content-Type: multipart/mixed; boundary="=-tHZcmQBfFGLiVVm2/Dfe"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
+        Tue, 5 Nov 2019 06:28:50 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:61890 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730701AbfKEL2t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:28:49 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 38ee2767fad8bdf3; Tue, 5 Nov 2019 12:28:47 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
+Date:   Tue, 05 Nov 2019 12:28:47 +0100
+Message-ID: <3568330.mzdaIbGaoM@kreacher>
+In-Reply-To: <2771503.n70vfTtcVb@kreacher>
+References: <2771503.n70vfTtcVb@kreacher>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-tHZcmQBfFGLiVVm2/Dfe
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-
-Am Mittwoch, den 30.10.2019, 12:22 -0700 schrieb syzbot:
-> Hello,
+On Tuesday, November 5, 2019 11:11:57 AM CET Rafael J. Wysocki wrote:
+> Hi,
 > 
-> syzbot found the following crash on:
+> This series rearranges some PCI power management code to make it somewhat
+> easier to follow and explicitly consolidate the power-up (transitions to
+> D0) code path.
 > 
-> HEAD commit:    96c6c319 net: kasan: kmsan: support CONFIG_GENERIC_CSUM on..
-> git tree:       https://github.com/google/kmsan.git master
-> console output: https://syzkaller.appspot.com/x/log.txt?x=11f103bce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=9e324dfe9c7b0360
-> dashboard link: https://syzkaller.appspot.com/bug?extid=0631d878823ce2411636
-> compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-> 80fee25776c2fb61e74c1ecb1a523375c2500b69)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10dd9774e00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=13651a24e00000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+0631d878823ce2411636@syzkaller.appspotmail.com
-#syz test: https://github.com/google/kmsan.git 96c6c319
+> It is not intended to change the functionality of the code.
 
---=-tHZcmQBfFGLiVVm2/Dfe
-Content-Disposition: attachment;
-	filename="0001-CDC-NCM-handle-incomplete-transfer-of-MTU.patch"
-Content-Type: text/x-patch; name="0001-CDC-NCM-handle-incomplete-transfer-of-MTU.patch";
-	charset="UTF-8"
-Content-Transfer-Encoding: base64
+This series applies on top of 5.4-rc6 with your pci/pm-2 branch from today
+merged on top of it.
 
-RnJvbSAwOTBhYzAzMDViYjQ3ZGE5MzM2YzAxODhlMGU1OWU1MGZmMjI0M2MzIE1vbiBTZXAgMTcg
-MDA6MDA6MDAgMjAwMQpGcm9tOiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgpEYXRl
-OiBUdWUsIDUgTm92IDIwMTkgMTI6MDQ6NDQgKzAxMDAKU3ViamVjdDogW1BBVENIXSBDREMtTkNN
-OiBoYW5kbGUgaW5jb21wbGV0ZSB0cmFuc2ZlciBvZiBNVFUKCkEgbWFsaWNpb3VzIGRldmljZSBt
-YXkgZ2l2ZSBoYWxmIGFuIGFuc3dlciB3aGVuIGFza2VkCmZvciBpdHMgTVRVLiBUaGUgZHJpdmVy
-IHdpbGwgcHJvY2VlZCBhZnRlciB0aGlzIHdpdGgKYSBnYXJiYWdlIE1UVS4gQW55dGhpbmcgYnV0
-IGEgY29tcGxldGUgYW5zd2VyIG11c3QgYmUgdHJlYXRlZAphcyBhbiBlcnJvci4KClJlcG9ydGVk
-LWJ5OiBzeXpib3QrMDYzMWQ4Nzg4MjNjZTI0MTE2MzZAc3l6a2FsbGVyLmFwcHNwb3RtYWlsLmNv
-bQpTaWduZWQtb2ZmLWJ5OiBPbGl2ZXIgTmV1a3VtIDxvbmV1a3VtQHN1c2UuY29tPgotLS0KIGRy
-aXZlcnMvbmV0L3VzYi9jZGNfbmNtLmMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRp
-b24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC91c2IvY2RjX25j
-bS5jIGIvZHJpdmVycy9uZXQvdXNiL2NkY19uY20uYwppbmRleCAwMGNhYjNmNDNhNGMuLjkzOTQ4
-N2E1ZjRiYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvdXNiL2NkY19uY20uYworKysgYi9kcml2
-ZXJzL25ldC91c2IvY2RjX25jbS5jCkBAIC01NzksNyArNTc5LDcgQEAgc3RhdGljIHZvaWQgY2Rj
-X25jbV9zZXRfZGdyYW1fc2l6ZShzdHJ1Y3QgdXNibmV0ICpkZXYsIGludCBuZXdfc2l6ZSkKIAll
-cnIgPSB1c2JuZXRfcmVhZF9jbWQoZGV2LCBVU0JfQ0RDX0dFVF9NQVhfREFUQUdSQU1fU0laRSwK
-IAkJCSAgICAgIFVTQl9UWVBFX0NMQVNTIHwgVVNCX0RJUl9JTiB8IFVTQl9SRUNJUF9JTlRFUkZB
-Q0UsCiAJCQkgICAgICAwLCBpZmFjZV9ubywgJm1heF9kYXRhZ3JhbV9zaXplLCAyKTsKLQlpZiAo
-ZXJyIDwgMCkgeworCWlmIChlcnIgPCAyKSB7CiAJCWRldl9kYmcoJmRldi0+aW50Zi0+ZGV2LCAi
-R0VUX01BWF9EQVRBR1JBTV9TSVpFIGZhaWxlZFxuIik7CiAJCWdvdG8gb3V0OwogCX0KLS0gCjIu
-MTYuNAoK
+I guess I can make it apply on top of pci/pm-2, but there were some PCI PM
+changes in 5.4-rc later than -rc1 in that area and they need to be taken
+into account anyway.
+
+Cheers!
 
 
---=-tHZcmQBfFGLiVVm2/Dfe--
 
