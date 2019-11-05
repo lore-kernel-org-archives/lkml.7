@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36508C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E04EC5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06EF021882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7437E21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:23:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572970997;
-	bh=vllf+1IrH5+skWLne5ES4rsafXv7Km/CQYBU8lBKx14=;
+	s=default; t=1572970999;
+	bh=12e4qL6ftVehsKpuSSeZuHLcddVERrtAHBjLyEEFY7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gFg+i+29NXo0YpjAB5M9uxSiU2RuKo+e+0KhMJ4sxf3TkH7++d/0saTs17B7/yi5F
-	 K3UqBprH0foodYuW56NAXqlVHM5uYDFkA6oiaJWgG2iTxtFels50bkimSWRrHcdtG0
-	 Qy9Pt/YS8GRpK5CB7PQ21NsNU66a/BKQiny5f0V4=
+	b=QhEJ3e2VgyOdtfVpHvqUfy5a3z8eXeniJL7eiv/8Y2GXoX7r7fkFkJr8rt61F8XeN
+	 mhBJd6cPNeLkrjzY8rP7xwZny5TCHSsVBVcSKdd5jKGo4Su9+qsh1b86BXRQK5bOWw
+	 e6mWnhdOIXyVbfvSO3EtMXUsgWhX/E9E6s0cLhZs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390208AbfKEQXQ (ORCPT
+        id S2390238AbfKEQXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:23:16 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:46819 "EHLO
+        Tue, 5 Nov 2019 11:23:18 -0500
+Received: from inca-roads.misterjones.org ([213.251.177.50]:51960 "EHLO
         inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2390084AbfKEQXN (ORCPT
+        by vger.kernel.org with ESMTP id S2390083AbfKEQXO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:23:13 -0500
+        Tue, 5 Nov 2019 11:23:14 -0500
 Received: from 78.163-31-62.static.virginmediabusiness.co.uk ([62.31.163.78] helo=why.lan)
         by cheepnis.misterjones.org with esmtpsa (TLSv1.2:DHE-RSA-AES128-GCM-SHA256:128)
         (Exim 4.80)
         (envelope-from <maz@kernel.org>)
-        id 1iS1br-0001q9-OA; Tue, 05 Nov 2019 17:23:11 +0100
+        id 1iS1bs-0001q9-68; Tue, 05 Nov 2019 17:23:12 +0100
 From:   Marc Zyngier <maz@kernel.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Jason Cooper <jason@lakedaemon.net>, lorenzo.pieralisi@arm.com,
         Andrew.Murray@arm.com, yuzenghui@huawei.com,
         Heyi Guo <guoheyi@huawei.com>
-Subject: [PATCH 03/11] irqchip/gic-v3-its: Allow LPI invalidation via the DirectLPI interface
-Date:   Tue,  5 Nov 2019 16:22:50 +0000
-Message-Id: <20191105162258.22214-4-maz@kernel.org>
+Subject: [PATCH 04/11] irqchip/gic-v3-its: Make is_v4 use a TYPER copy
+Date:   Tue,  5 Nov 2019 16:22:51 +0000
+Message-Id: <20191105162258.22214-5-maz@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191105162258.22214-1-maz@kernel.org>
 References: <20191105162258.22214-1-maz@kernel.org>
@@ -56,100 +56,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We currently don't make much use of the DirectLPI feature, and it would
-be beneficial to do this more, if only because it becomes a mandatory
-feature for GICv4.1.
+Instead of caching the GICv4 compatibility in a discrete way, cache the
+TYPER register instead, which can then be used to implement the same
+functionnality. This will get used more extensively in subsequent patches.
 
 Signed-off-by: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Zenghui Yu <yuzenghui@huawei.com>
 ---
- drivers/irqchip/irq-gic-v3-its.c | 40 +++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 8 deletions(-)
+ drivers/irqchip/irq-gic-v3-its.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/irqchip/irq-gic-v3-its.c b/drivers/irqchip/irq-gic-v3-its.c
-index d71741d302b4..b9e9314ed702 100644
+index b9e9314ed702..a5d947b243f2 100644
 --- a/drivers/irqchip/irq-gic-v3-its.c
 +++ b/drivers/irqchip/irq-gic-v3-its.c
-@@ -191,6 +191,12 @@ static u16 get_its_list(struct its_vm *vm)
- 	return (u16)its_list;
- }
+@@ -102,6 +102,7 @@ struct its_node {
+ 	struct its_collection	*collections;
+ 	struct fwnode_handle	*fwnode_handle;
+ 	u64			(*get_msi_base)(struct its_device *its_dev);
++	u64			typer;
+ 	u64			cbaser_save;
+ 	u32			ctlr_save;
+ 	struct list_head	its_device_list;
+@@ -112,10 +113,11 @@ struct its_node {
+ 	int			numa_node;
+ 	unsigned int		msi_domain_flags;
+ 	u32			pre_its_base; /* for Socionext Synquacer */
+-	bool			is_v4;
+ 	int			vlpi_redist_offset;
+ };
  
-+static inline u32 its_get_event_id(struct irq_data *d)
-+{
-+	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+	return d->hwirq - its_dev->event_map.lpi_base;
-+}
++#define is_v4(its)		(!!((its)->typer & GITS_TYPER_VLPIS))
 +
- static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 					       u32 event)
- {
-@@ -199,6 +205,13 @@ static struct its_collection *dev_event_to_col(struct its_device *its_dev,
- 	return its->collections + its_dev->event_map.col_map[event];
- }
+ #define ITS_ITT_ALIGN		SZ_256
  
-+static struct its_collection *irq_to_col(struct irq_data *d)
-+{
-+	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
-+
-+	return dev_event_to_col(its_dev, its_get_event_id(d));
-+}
-+
- static struct its_collection *valid_col(struct its_collection *col)
- {
- 	if (WARN_ON_ONCE(col->target_address & GENMASK_ULL(15, 0)))
-@@ -1046,12 +1059,6 @@ static void its_send_vinvall(struct its_node *its, struct its_vpe *vpe)
-  * irqchip functions - assumes MSI, mostly.
-  */
+ /* The maximum number of VPEID bits supported by VLPI commands */
+@@ -181,7 +183,7 @@ static u16 get_its_list(struct its_vm *vm)
+ 	unsigned long its_list = 0;
  
--static inline u32 its_get_event_id(struct irq_data *d)
--{
--	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
--	return d->hwirq - its_dev->event_map.lpi_base;
--}
--
- static void lpi_write_config(struct irq_data *d, u8 clr, u8 set)
- {
- 	irq_hw_number_t hwirq;
-@@ -1096,12 +1103,28 @@ static void wait_for_syncr(void __iomem *rdbase)
- 		cpu_relax();
- }
+ 	list_for_each_entry(its, &its_nodes, entry) {
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
  
-+static void direct_lpi_inv(struct irq_data *d)
-+{
-+	struct its_collection *col;
-+	void __iomem *rdbase;
-+
-+	/* Target the redistributor this LPI is currently routed to */
-+	col = irq_to_col(d);
-+	rdbase = per_cpu_ptr(gic_rdists->rdist, col->col_id)->rd_base;
-+	gic_write_lpir(d->hwirq, rdbase + GICR_INVLPIR);
-+
-+	wait_for_syncr(rdbase);
-+}
-+
- static void lpi_update_config(struct irq_data *d, u8 clr, u8 set)
- {
- 	struct its_device *its_dev = irq_data_get_irq_chip_data(d);
+ 		if (vm->vlpi_count[its->list_nr])
+@@ -1034,7 +1036,7 @@ static void its_send_vmovp(struct its_vpe *vpe)
  
- 	lpi_write_config(d, clr, set);
--	its_send_inv(its_dev, its_get_event_id(d));
-+	if (gic_rdists->has_direct_lpi && !irqd_is_forwarded_to_vcpu(d))
-+		direct_lpi_inv(d);
-+	else
-+		its_send_inv(its_dev, its_get_event_id(d));
- }
+ 	/* Emit VMOVPs */
+ 	list_for_each_entry(its, &its_nodes, entry) {
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
  
- static void its_vlpi_set_doorbell(struct irq_data *d, bool enable)
-@@ -2933,8 +2956,9 @@ static void its_vpe_send_inv(struct irq_data *d)
- 	if (gic_rdists->has_direct_lpi) {
- 		void __iomem *rdbase;
+ 		if (!vpe->its_vm->vlpi_count[its->list_nr])
+@@ -1445,7 +1447,7 @@ static int its_irq_set_vcpu_affinity(struct irq_data *d, void *vcpu_info)
+ 	struct its_cmd_info *info = vcpu_info;
  
-+		/* Target the redistributor this VPE is currently known on */
- 		rdbase = per_cpu_ptr(gic_rdists->rdist, vpe->col_idx)->rd_base;
--		gic_write_lpir(vpe->vpe_db_lpi, rdbase + GICR_INVLPIR);
-+		gic_write_lpir(d->parent_data->hwirq, rdbase + GICR_INVLPIR);
- 		wait_for_syncr(rdbase);
- 	} else {
- 		its_vpe_send_cmd(vpe, its_send_inv);
+ 	/* Need a v4 ITS */
+-	if (!its_dev->its->is_v4)
++	if (!is_v4(its_dev->its))
+ 		return -EINVAL;
+ 
+ 	/* Unmap request? */
+@@ -2409,7 +2411,7 @@ static bool its_alloc_vpe_table(u32 vpe_id)
+ 	list_for_each_entry(its, &its_nodes, entry) {
+ 		struct its_baser *baser;
+ 
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
+ 
+ 		baser = its_get_baser(its, GITS_BASER_TYPE_VCPU);
+@@ -2898,7 +2900,7 @@ static void its_vpe_invall(struct its_vpe *vpe)
+ 	struct its_node *its;
+ 
+ 	list_for_each_entry(its, &its_nodes, entry) {
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
+ 
+ 		if (its_list_map && !vpe->its_vm->vlpi_count[its->list_nr])
+@@ -3166,7 +3168,7 @@ static int its_vpe_irq_domain_activate(struct irq_domain *domain,
+ 	vpe->col_idx = cpumask_first(cpu_online_mask);
+ 
+ 	list_for_each_entry(its, &its_nodes, entry) {
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
+ 
+ 		its_send_vmapp(its, vpe, true);
+@@ -3192,7 +3194,7 @@ static void its_vpe_irq_domain_deactivate(struct irq_domain *domain,
+ 		return;
+ 
+ 	list_for_each_entry(its, &its_nodes, entry) {
+-		if (!its->is_v4)
++		if (!is_v4(its))
+ 			continue;
+ 
+ 		its_send_vmapp(its, vpe, false);
+@@ -3630,12 +3632,12 @@ static int __init its_probe_one(struct resource *res,
+ 	INIT_LIST_HEAD(&its->entry);
+ 	INIT_LIST_HEAD(&its->its_device_list);
+ 	typer = gic_read_typer(its_base + GITS_TYPER);
++	its->typer = typer;
+ 	its->base = its_base;
+ 	its->phys_base = res->start;
+ 	its->ite_size = GITS_TYPER_ITT_ENTRY_SIZE(typer);
+ 	its->device_ids = GITS_TYPER_DEVBITS(typer);
+-	its->is_v4 = !!(typer & GITS_TYPER_VLPIS);
+-	if (its->is_v4) {
++	if (is_v4(its)) {
+ 		if (!(typer & GITS_TYPER_VMOVP)) {
+ 			err = its_compute_its_list_map(res, its_base);
+ 			if (err < 0)
+@@ -3702,7 +3704,7 @@ static int __init its_probe_one(struct resource *res,
+ 	gits_write_cwriter(0, its->base + GITS_CWRITER);
+ 	ctlr = readl_relaxed(its->base + GITS_CTLR);
+ 	ctlr |= GITS_CTLR_ENABLE;
+-	if (its->is_v4)
++	if (is_v4(its))
+ 		ctlr |= GITS_CTLR_ImDe;
+ 	writel_relaxed(ctlr, its->base + GITS_CTLR);
+ 
+@@ -4027,7 +4029,7 @@ int __init its_init(struct fwnode_handle *handle, struct rdists *rdists,
+ 		return err;
+ 
+ 	list_for_each_entry(its, &its_nodes, entry)
+-		has_v4 |= its->is_v4;
++		has_v4 |= is_v4(its);
+ 
+ 	if (has_v4 & rdists->has_vlpis) {
+ 		if (its_init_vpe_domain() ||
 -- 
 2.20.1
 
