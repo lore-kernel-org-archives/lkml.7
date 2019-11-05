@@ -2,78 +2,213 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C532AC010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:35:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD543C010AB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A64DE206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:35:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4E5B20869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:36:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572950163;
+	bh=nstXPo8G52k07aEg3yqMaPNpC2OTHZIvzCHLgYaB/Ws=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=eH5jjxByh8GcHgRko7vUtJnQ54JL0OjdvY0JeQmrS0OMjWpcO4RlXXq0Ewdvzq5eX
+	 T+Wxg88abbMPYLKn+to5je6uhUzzh/f/5MBg+n3Iwe87QyG2KPRBg/KpD1s6Lod/lF
+	 BVB2W8JaD9PhgfiA4sS+cJ0cjA572renAcdnovSc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388758AbfKEKff (ORCPT
+        id S2388779AbfKEKgC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:35:35 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:40339 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387905AbfKEKff (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:35:35 -0500
-Received: by mail-oi1-f194.google.com with SMTP id r27so17038280oij.7;
-        Tue, 05 Nov 2019 02:35:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iyU7I3+wA8xz3yY7wIVDgPQ0SwWRU8/JQIMa0TOkIFM=;
-        b=A7KxlgqiLTNJsdSBCIEeTc7PB9BF8WSNt0RxR7uldZ8qFC5JArD33EHT4mYjluY+9Z
-         VTPmDzJKLA12PEAwWCTBULbzXlKQJ8q2Gh5/n5VWljHx4BML3JuFCX2f+NfYobUwbyqP
-         5c6ewCWeQw+lcggZJtFcIbCvL2FrpJbqBKuiUe2Lo6A8wkidjtiRaiQqUuK9mrugjDGa
-         z1rnyfvVhLRLqqNETixXXoQAHBRz+iQdXl/gHn0ZMoxMwGZopGbxIHzYVL6EDPljRGuR
-         e9sgfeMCMCQxxfpWtkuJUR0UDmsVWeGTrcvsCHYAJIS8N27a5RHG/nqlPY7bCgwVtC4z
-         knnw==
-X-Gm-Message-State: APjAAAU5se8JXPiin/hv0zDOTlHlm3pl7PK8TTLPVVmtjDgPGO38oa5M
-        ManHRVJPFKeq7UgTMOoP8AjjzwyPvyt5EIUeqmU=
-X-Google-Smtp-Source: APXvYqwyERHWrdOBjvkBSN45thPVbHDDZEOyeN1melsUinK0lcf2ZdeESdND4aZeiIPObbAnBKZrODfZQQO3knl8Ttg=
-X-Received: by 2002:aca:3a86:: with SMTP id h128mr3213259oia.131.1572950134371;
- Tue, 05 Nov 2019 02:35:34 -0800 (PST)
+        Tue, 5 Nov 2019 05:36:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53362 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388203AbfKEKgC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:36:02 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 475A8206BA;
+        Tue,  5 Nov 2019 10:36:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572950160;
+        bh=nstXPo8G52k07aEg3yqMaPNpC2OTHZIvzCHLgYaB/Ws=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PivRBpyd5UxzWxCMwhGfASafRUVti9G9+sNI32XsswNWfDn+kAQtGWUTXkDZxG2hJ
+         9xhg74nlw0mpOkjKRVJwvWMCXUR9KgiHnmZjdWYgiqgxCBarN6LX+u7+8hhAsX6ZVe
+         vPZKy+8/YF/WvZRIcmHS8x4YBAJdM/4Lh8iH9Zs0=
+Date:   Tue, 5 Nov 2019 11:35:58 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Jernej Skrabec <jernej.skrabec@siol.net>
+Cc:     wens@csie.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        mchehab@kernel.org, hverkuil@xs4all.nl, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH v5 0/6] media: Introduce Allwinner H3 deinterlace driver
+Message-ID: <20191105103558.GB3876@gilmour.lan>
+References: <20191023221332.3674175-1-jernej.skrabec@siol.net>
 MIME-Version: 1.0
-References: <cover.1572945872.git.matti.vaittinen@fi.rohmeurope.com> <7217327d1ea69f886a2cdb8abf201a2cc7bb02d3.1572945872.git.matti.vaittinen@fi.rohmeurope.com>
-In-Reply-To: <7217327d1ea69f886a2cdb8abf201a2cc7bb02d3.1572945872.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 5 Nov 2019 11:35:23 +0100
-Message-ID: <CAMuHMdU2Y-yyXpRLz1RK_veqoEiOEPPhzg91Vw1UWf2BhFwguw@mail.gmail.com>
-Subject: Re: [PATCH 33/62] gpio: gpio-pl061: Use new GPIO_LINE_DIRECTION
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="fdj2RfSjLxBAspz7"
+Content-Disposition: inline
+In-Reply-To: <20191023221332.3674175-1-jernej.skrabec@siol.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:29 AM Matti Vaittinen
-<matti.vaittinen@fi.rohmeurope.com> wrote:
-> It's hard for occasional GPIO code reader/writer to know if values 0/1
-> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-> GPIO_LINE_DIRECTION_OUT to help them out.
+
+--fdj2RfSjLxBAspz7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Oct 24, 2019 at 12:13:26AM +0200, Jernej Skrabec wrote:
+> Starting with H3, Allwinner began to include standalone deinterlace
+> core in multimedia oriented SoCs. This patch series introduces support
+> for it. Note that new SoCs, like H6, have radically different (updated)
+> deinterlace core, which will need a new driver.
 >
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> v4l2-compliance report:
+> v4l2-compliance SHA: dece02f862f38d8f866230ca9f1015cb93ddfac4, 32 bits
+>
+> Compliance test for sun8i-di device /dev/video0:
+>
+> Driver Info:
+>         Driver name      : sun8i-di
+>         Card type        : sun8i-di
+>         Bus info         : platform:sun8i-di
+>         Driver version   : 5.3.0
+>         Capabilities     : 0x84208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+>                 Device Capabilities
+>         Device Caps      : 0x04208000
+>                 Video Memory-to-Memory
+>                 Streaming
+>                 Extended Pix Format
+>
+> Required ioctls:
+>         test VIDIOC_QUERYCAP: OK
+>
+> Allow for multiple opens:
+>         test second /dev/video0 open: OK
+>         test VIDIOC_QUERYCAP: OK
+>         test VIDIOC_G/S_PRIORITY: OK
+>         test for unlimited opens: OK
+>
+> Debug ioctls:
+>         test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+>         test VIDIOC_LOG_STATUS: OK (Not Supported)
+>
+> Input ioctls:
+>         test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+>         test VIDIOC_ENUMAUDIO: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDIO: OK (Not Supported)
+>         Inputs: 0 Audio Inputs: 0 Tuners: 0
+>
+> Output ioctls:
+>         test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+>         test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+>         test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+>         test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+>         test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+>         Outputs: 0 Audio Outputs: 0 Modulators: 0
+>
+> Input/Output configuration ioctls:
+>         test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+>         test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+>         test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+>         test VIDIOC_G/S_EDID: OK (Not Supported)
+>
+> Control ioctls:
+>         test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+>         test VIDIOC_QUERYCTRL: OK (Not Supported)
+>         test VIDIOC_G/S_CTRL: OK (Not Supported)
+>         test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+>         test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+>         test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+>         Standard Controls: 0 Private Controls: 0
+>
+> Format ioctls:
+>         test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+>         test VIDIOC_G/S_PARM: OK (Not Supported)
+>         test VIDIOC_G_FBUF: OK (Not Supported)
+>         test VIDIOC_G_FMT: OK
+>         test VIDIOC_TRY_FMT: OK
+>         test VIDIOC_S_FMT: OK
+>         test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+>         test Cropping: OK (Not Supported)
+>         test Composing: OK (Not Supported)
+>         test Scaling: OK
+>
+> Codec ioctls:
+>         test VIDIOC_(TRY_)ENCODER_CMD: OK (Not Supported)
+>         test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+>         test VIDIOC_(TRY_)DECODER_CMD: OK (Not Supported)
+>
+> Buffer ioctls:
+>         test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+>         test VIDIOC_EXPBUF: OK
+>         test Requests: OK (Not Supported)
+>
+> Total for sun8i-di device /dev/video0: 44, Succeeded: 44, Failed: 0, Warnings: 0
+>
+> Please take a look.
+>
+> Best regards,
+> Jernej
+>
+> Changes from v4:
+> - Added me as maintaner of the binding
+> - Noted that scaling is supported in Kconfig entry and driver code
+>
+> Changes from v3:
+> - added Maxime's a-b tag
+> - moved and fixed Kconfig entry
+> - put clk_set_rate_exclusive() and it's counterpart in PM callbacks
+>
+> Changes from v2:
+> - added acked-by and review-by tags
+> - fixed schema path in H3 deinterlace binding
+> - moved busy check after format args check
+>
+> Changes from v1:
+> - updated Maxime's e-mail in DT binding
+> - removed "items" for single item in DT binding
+> - implemented power management
+> - replaced regmap with direct io access
+> - set exclusive clock rate
+> - renamed DEINTERLACE_FRM_CTRL_COEF_CTRL to DEINTERLACE_FRM_CTRL_COEF_ACCESS
+>
+> Jernej Skrabec (6):
+>   dt-bindings: bus: sunxi: Add H3 MBUS compatible
+>   clk: sunxi-ng: h3: Export MBUS clock
+>   ARM: dts: sunxi: h3/h5: Add MBUS controller node
+>   dt-bindings: media: Add Allwinner H3 Deinterlace binding
+>   media: sun4i: Add H3 deinterlace driver
+>   dts: arm: sun8i: h3: Enable deinterlace unit
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Gr{oetje,eeting}s,
+Applied 1,2,3 and 4.
 
-                        Geert
+Thanks!
+Maxime
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+--fdj2RfSjLxBAspz7
+Content-Type: application/pgp-signature; name="signature.asc"
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFQjgAKCRDj7w1vZxhR
+xRIXAQDHP/Hg6AfmpRB//ohpotffxkwfsYdRznZJxeNP6toOOgEAv5KgidXO2Xcg
+dBuAvEmmUu74937yUfrJPlUms53Yug8=
+=gWCT
+-----END PGP SIGNATURE-----
+
+--fdj2RfSjLxBAspz7--
