@@ -2,109 +2,104 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF5BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:58:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0399C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38B4F206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:58:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 74B2B2084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d07BWnCD"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTke/Ek/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730433AbfKEW6M (ORCPT
+        id S2387431AbfKEXAP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:58:12 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40662 "EHLO
+        Tue, 5 Nov 2019 18:00:15 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:35500 "EHLO
         mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfKEW6M (ORCPT
+        with ESMTP id S1729895AbfKEXAP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:58:12 -0500
-Received: by mail-io1-f68.google.com with SMTP id p6so24684676iod.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:58:11 -0800 (PST)
+        Tue, 5 Nov 2019 18:00:15 -0500
+Received: by mail-io1-f68.google.com with SMTP id x21so9042313iol.2;
+        Tue, 05 Nov 2019 15:00:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wbzRqvc8FvWk5sR5KGdavxWwldxvQh4qHgl2mJoTxrs=;
-        b=d07BWnCDYPq9AbOnFZh2cQnq7+WxNalVgk1NTA6PdAf0WHN3tNd9j7t7pDoGQ+hGhu
-         LaAnphcRnalev4XUEeyJhexhL9HhsSJ9+mrPtIw4cYe2l/QTd8wotEDPQpAXy4WC/C1E
-         S57U277pgztnLd2YvzPT08RDIr+xTsZMDxepI=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=yoWC56++M3uoXU+oelt/CMWG4cbTRPSJURz59kUPoBM=;
+        b=BTke/Ek/zLnhDSfeNuipm+/POYtDfp0HKri7zNJmRTzwXXipSLLmLhnkoOckfDN6nO
+         8TTiEw3HGDSUKqcTm45ypk1+kJ8UuNAJX/CezHPd7OJw93mc4BKm+wbFEYtIOZQgmTBH
+         o2KpPpA2rdVqMWMM4+5O9T7/VLFM0ymlptrGwB5vSex6Q1XQVMxopHPH9fmmxHtRFihV
+         OuQ/lYpc9OnqT3W3PEIX+ghL8KKLxw1l4gOJDqSEwJUIAkF+S12VaEckCDZm/bptd4ns
+         0UqHhFK7k8EXe1UQazdsR1SIQts/AurUGvu+lWlSNzbqiDCwmynlZ2mkx+fuTU7bKeQQ
+         btaw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=wbzRqvc8FvWk5sR5KGdavxWwldxvQh4qHgl2mJoTxrs=;
-        b=JAOl+YlXn/wJBv6qZjpp7WzVa9m3+KNYklVlMtSYvO2fVYLwlS4VUD6QpT34d77pXQ
-         6oxmWsxYvxUuREBZxJlJ44qsozjKgw+uJFO3YEKeS861MD6MzXAUFQI+1uVPynkA4h7w
-         +ySYNDvqS0oB9sLh1oIZg0NqHBMluesVoprMpl6jCgNHbVnXDue5oO+Scl8pVJALmDtu
-         P8Y8575Agf3z8i/N3gYc+ffGoXydl5EnBsumOP5LVTS0C2SwmQaDLblx4ac/4hqdjy5t
-         urLYKHkemQVl9+AYziEEoZkgOFwfUgdEcv8xf0USezX5a8I12adywk/JwxuM0PyVzt6K
-         I9xg==
-X-Gm-Message-State: APjAAAWxrlhviUZTEAw0HrraDEVGQJj1iANLxvYqjLib0usxIdR3Ywen
-        CX/U28AdqplVyMdv6g5YwL5iaQ==
-X-Google-Smtp-Source: APXvYqx6XmtvqfERYm4mk+w5mZ3zxi4aVxOq3gZEKoAHqSgi4r3FR4hhxOQ8lCOIGxmzgBNdCQ7Gog==
-X-Received: by 2002:a5e:9e49:: with SMTP id j9mr31748458ioq.170.1572994691162;
-        Tue, 05 Nov 2019 14:58:11 -0800 (PST)
-Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
-        by smtp.gmail.com with ESMTPSA id w75sm3229673ill.78.2019.11.05.14.58.10
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 14:58:10 -0800 (PST)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     alexander.deucher@amd.com
-Cc:     Raul E Rangel <rrangel@chromium.org>,
-        David Airlie <airlied@linux.ie>,
-        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
-        Rex Zhu <rex.zhu@amd.com>, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
-        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
-        Evan Quan <evan.quan@amd.com>, Daniel Vetter <daniel@ffwll.ch>
-Subject: [PATCH] drm/amd/powerplay: fix struct init in renoir_print_clk_levels
-Date:   Tue,  5 Nov 2019 15:58:02 -0700
-Message-Id: <20191105155734.1.If8740b4a5095031f2c00746fbc3224be9849d76b@changeid>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yoWC56++M3uoXU+oelt/CMWG4cbTRPSJURz59kUPoBM=;
+        b=MT0Q7r63AX5ct5PefG82Ar6fgIiN/wNkQz370crssUU8+V2bYIlw54AuT3wa5f4ku4
+         u2PYSIMCoGXMOsyS2oGWo/KJfGlMaADWn8HWjHwrnFUneIk1Kj8jfl/USKnzIfKlyzjI
+         PetmHXWQ6MhtqX796dL6ORJPtIkbduaUThEzEsAfD9tKd7VMGBgIv6VInoogUzWhzdLU
+         /DgzTxAdgnPVKkkuETt+gqHLzC/bXI1t8xcbqg8cfXy6g7QXKQsBxuC4J5Y7TVPEnjiZ
+         n1uSQtxhtqDx4RrsMZhpcMbxYrSZm4pa386th1kq8JznJYLZ7bZr2bTDKPQijnKaytwb
+         TfSQ==
+X-Gm-Message-State: APjAAAWXDmCIgpW/3GFodjjk7fJicqAOwNpKE18VvjFCAZT6WH2NZ9dM
+        0xt4X7tXN6RF71yBKaeaRCvFYEdhxB1i9Tp9mrA=
+X-Google-Smtp-Source: APXvYqzZ6TB+/QC8CW+9Q+EgSJexTwDdd/GYLyU/P7veuUPS+oIhgF0WwBMlhoBMAUS8bZWv6xwB5kIhrqIFrG+wCBI=
+X-Received: by 2002:a5d:848c:: with SMTP id t12mr2960373iom.5.1572994814380;
+ Tue, 05 Nov 2019 15:00:14 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <201911041524.o7kWSYSC%lkp@intel.com> <20191104075911.23rhzcbztbhlbjk5@4978f4969bb8>
+In-Reply-To: <20191104075911.23rhzcbztbhlbjk5@4978f4969bb8>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 5 Nov 2019 17:00:03 -0600
+Message-ID: <CAH2r5mv43iPuAgvM699A5TstZGzHj=WOsYd8ffmk1DSUsQXdrA@mail.gmail.com>
+Subject: Re: [RFC PATCH cifs] cifs: smb3_crypto_shash_allocate can be static
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Aurelien Aptel <aaptel@suse.com>, kbuild-all@lists.01.org,
+        CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Steve French <stfrench@microsoft.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers/gpu/drm/amd/powerplay/renoir_ppt.c:186:2: error: missing braces
-around initializer [-Werror=missing-braces]
-  SmuMetrics_t metrics = {0};
-    ^
+FYI - I updated cifs-2.6.for-next with the equivalent change (fixing a
+line change to one of Aurelien's patches in the multichannel series)
 
-Fixes: 8b8031703bd7 ("drm/amd/powerplay: implement sysfs for getting dpm clock")
+On Mon, Nov 4, 2019 at 1:59 AM kbuild test robot <lkp@intel.com> wrote:
+>
+>
+> Fixes: 4d1cc0309f7e ("cifs: try opening channels after mounting")
+> Signed-off-by: kbuild test robot <lkp@intel.com>
+> ---
+>  smb2transport.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/fs/cifs/smb2transport.c b/fs/cifs/smb2transport.c
+> index 1af789871ec2e..86501239cef55 100644
+> --- a/fs/cifs/smb2transport.c
+> +++ b/fs/cifs/smb2transport.c
+> @@ -48,7 +48,7 @@ smb2_crypto_shash_allocate(struct TCP_Server_Info *server)
+>                                &server->secmech.sdeschmacsha256);
+>  }
+>
+> -int
+> +static int
+>  smb3_crypto_shash_allocate(struct TCP_Server_Info *server)
+>  {
+>         struct cifs_secmech *p = &server->secmech;
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
 
- drivers/gpu/drm/amd/powerplay/renoir_ppt.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-index e62bfba51562..e5283dafc414 100644
---- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-+++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
-@@ -183,11 +183,13 @@ static int renoir_print_clk_levels(struct smu_context *smu,
- 	int i, size = 0, ret = 0;
- 	uint32_t cur_value = 0, value = 0, count = 0, min = 0, max = 0;
- 	DpmClocks_t *clk_table = smu->smu_table.clocks_table;
--	SmuMetrics_t metrics = {0};
-+	SmuMetrics_t metrics;
- 
- 	if (!clk_table || clk_type >= SMU_CLK_COUNT)
- 		return -EINVAL;
- 
-+	memset(&metrics, 0, sizeof(metrics));
-+
- 	ret = smu_update_table(smu, SMU_TABLE_SMU_METRICS, 0,
- 			       (void *)&metrics, false);
- 	if (ret)
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+Thanks,
 
+Steve
