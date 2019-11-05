@@ -2,107 +2,186 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82A59C010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:20:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 505FAC010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63EB6206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:20:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C5DD21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730661AbfKELUl (ORCPT
+        id S1730740AbfKELZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:20:41 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:13490 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730599AbfKELUl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:20:41 -0500
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com [209.85.221.72])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A0F2D81F0F
-        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 11:20:40 +0000 (UTC)
-Received: by mail-wr1-f72.google.com with SMTP id p6so12153676wrs.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:20:40 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=5janaQiAy9etIrtoTKNZEMcekAz7aNQTX2gwL6KQh/I=;
-        b=OJhujwKZjUgf4n0kfZuQdM8oFYj5yeSm48y9P0KHZ/KyhUnZ8SUew1q2Y8kBtc3abK
-         JRL64NRbqb4zEXH2gF2Tw+uXBr1geI++cuakxnxCLSoUsV/LzuQxoQD+cb7NDJsn9fgM
-         9trfGVh8nQA8swVI+pvBgEOWUsr2+tIQIAvIyfPsR9q5eilupOyZdANNtEpcgN5pYNqp
-         kk8NvPG9ZWPAfSVhCRtcpIccjku8DQSuxvkiF2CmvoxBfsdXLSBKmo6YDzE93SPPB104
-         fTrIvL0JmJ3or/kyQ6SvGv0v3vcV1jgiKWnlfubt+CJZBxWTnOWtQjqIV3ALMawqysBx
-         1klg==
-X-Gm-Message-State: APjAAAX5RO0ByXwFw6+emp4isrTR0mqqdEGNNYVWwWkzK4xQB+Xq8ISG
-        eZuTHIIAd5dNDafh4traNYkAEaCXU9Qmd1vZYa1lNL7tzuS9IUriW2ul4rzkByFabrMEsxXDJjG
-        5QqU9nu/GC40FpbLtqzjA5fdU
-X-Received: by 2002:a1c:9dd3:: with SMTP id g202mr3873317wme.43.1572952838952;
-        Tue, 05 Nov 2019 03:20:38 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxsuia9tBKGpWgRmg+Z8P0Q9Irh3IwgwLmy64+8eNcq2e+aQvZmXii8Lt/Qm9y1etzxctpS9A==
-X-Received: by 2002:a1c:9dd3:: with SMTP id g202mr3873296wme.43.1572952838688;
-        Tue, 05 Nov 2019 03:20:38 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
-        by smtp.gmail.com with ESMTPSA id s9sm2146939wmj.22.2019.11.05.03.20.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 03:20:38 -0800 (PST)
-Subject: Re: [PATCH] KVM: X86: Dynamically allocating MSR number
- lists(msrs_to_save[], emulated_msrs[], msr_based_features[])
-To:     Xiaoyao Li <xiaoyao.li@intel.com>,
-        Chenyi Qiang <chenyi.qiang@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20191105092031.8064-1-chenyi.qiang@intel.com>
- <8ab7565c-df06-b5a5-d02d-899ba976414b@redhat.com>
- <6ed393eb-6402-ffe2-a652-c4fe51c9d301@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <75a63a8d-6d80-7749-a5c7-da7a43c2f53c@redhat.com>
-Date:   Tue, 5 Nov 2019 12:20:37 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
-MIME-Version: 1.0
-In-Reply-To: <6ed393eb-6402-ffe2-a652-c4fe51c9d301@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+        Tue, 5 Nov 2019 06:25:02 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44491 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfKELZB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:25:01 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iRwxE-0001m3-Ft; Tue, 05 Nov 2019 11:24:57 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     davem@davemloft.net, oliver@neukum.org
+Cc:     hayeswang@realtek.com, linux-usb@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v3] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
+Date:   Tue,  5 Nov 2019 19:24:52 +0800
+Message-Id: <20191105112452.13905-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/19 12:11, Xiaoyao Li wrote:
-> On 11/5/2019 6:41 PM, Paolo Bonzini wrote:
->> On 05/11/19 10:20, Chenyi Qiang wrote:
->>> The three msr number lists(msrs_to_save[], emulated_msrs[] and
->>> msr_based_features[]) are global arrays of kvm.ko, which are
->>> initialized/adjusted (copy supported MSRs forward to override the
->>> unsupported MSRs) when installing kvm-{intel,amd}.ko, but it doesn't
->>> reset these three arrays to their initial value when uninstalling
->>> kvm-{intel,amd}.ko. Thus, at the next installation, kvm-{intel,amd}.ko
->>> will initialize the modified arrays with some MSRs lost and some MSRs
->>> duplicated.
->>>
->>> So allocate and initialize these three MSR number lists dynamically when
->>> installing kvm-{intel,amd}.ko and free them when uninstalling.
->>
->> I don't understand.  Do you mean insmod/rmmod when you say
->> installing/uninstalling? Global data must be reloaded from the ELF file
->> when insmod is executed.
-> 
-> Yes, we mean insmod/rmmod.
-> The problem is that these three MSR arrays belong to kvm.ko but not
-> kvm-{intel,amd}.ko. When we rmmod kvm_intel.ko, it does nothing to them.
+ThinkPad Thunderbolt 3 Dock Gen 2 is another docking station that uses
+RTL8153 based USB ethernet.
 
-Ok, thanks for the explanation.
+The device supports macpassthru, but it failed to pass the test of -AD,
+-BND and -BD. Simply bypass these tests since the device supports this
+feature just fine.
 
-Paolo
+Also the ACPI objects have some differences between Dell's and Lenovo's,
+so make those ACPI infos no longer hardcoded.
+
+BugLink: https://bugs.launchpad.net/bugs/1827961
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v3:
+- Simplify the logic of bypassing macpassthru test.
+v2:
+- Use idVendor and idProduct directly.
+
+ drivers/net/usb/cdc_ether.c |  7 +++++
+ drivers/net/usb/r8152.c     | 58 +++++++++++++++++++++++++------------
+ 2 files changed, 46 insertions(+), 19 deletions(-)
+
+diff --git a/drivers/net/usb/cdc_ether.c b/drivers/net/usb/cdc_ether.c
+index fe630438f67b..0cdb2ce47645 100644
+--- a/drivers/net/usb/cdc_ether.c
++++ b/drivers/net/usb/cdc_ether.c
+@@ -766,6 +766,13 @@ static const struct usb_device_id	products[] = {
+ 	.driver_info = 0,
+ },
+ 
++/* ThinkPad Thunderbolt 3 Dock Gen 2 (based on Realtek RTL8153) */
++{
++	USB_DEVICE_AND_INTERFACE_INFO(LENOVO_VENDOR_ID, 0x3082, USB_CLASS_COMM,
++			USB_CDC_SUBCLASS_ETHERNET, USB_CDC_PROTO_NONE),
++	.driver_info = 0,
++},
++
+ /* Lenovo Thinkpad USB 3.0 Ethernet Adapters (based on Realtek RTL8153) */
+ {
+ 	USB_DEVICE_AND_INTERFACE_INFO(LENOVO_VENDOR_ID, 0x7205, USB_CLASS_COMM,
+diff --git a/drivers/net/usb/r8152.c b/drivers/net/usb/r8152.c
+index b9f526ed0d30..ac079395c8d4 100644
+--- a/drivers/net/usb/r8152.c
++++ b/drivers/net/usb/r8152.c
+@@ -670,6 +670,7 @@ enum rtl8152_flags {
+ 	SCHEDULE_TASKLET,
+ 	GREEN_ETHERNET,
+ 	DELL_TB_RX_AGG_BUG,
++	LENOVO_MACPASSTHRU,
+ };
+ 
+ /* Define these values to match your device */
+@@ -1408,38 +1409,52 @@ static int vendor_mac_passthru_addr_read(struct r8152 *tp, struct sockaddr *sa)
+ 	int ret = -EINVAL;
+ 	u32 ocp_data;
+ 	unsigned char buf[6];
+-
+-	/* test for -AD variant of RTL8153 */
+-	ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
+-	if ((ocp_data & AD_MASK) == 0x1000) {
+-		/* test for MAC address pass-through bit */
+-		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
+-		if ((ocp_data & PASS_THRU_MASK) != 1) {
+-			netif_dbg(tp, probe, tp->netdev,
+-				  "No efuse for RTL8153-AD MAC pass through\n");
+-			return -ENODEV;
+-		}
++	char *mac_obj_name;
++	acpi_object_type mac_obj_type;
++	int mac_strlen;
++
++	if (test_bit(LENOVO_MACPASSTHRU, &tp->flags)) {
++		mac_obj_name = "\\MACA";
++		mac_obj_type = ACPI_TYPE_STRING;
++		mac_strlen = 0x16;
+ 	} else {
+-		/* test for RTL8153-BND and RTL8153-BD */
+-		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
+-		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
+-			netif_dbg(tp, probe, tp->netdev,
+-				  "Invalid variant for MAC pass through\n");
+-			return -ENODEV;
++		/* test for -AD variant of RTL8153 */
++		ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
++		if ((ocp_data & AD_MASK) == 0x1000) {
++			/* test for MAC address pass-through bit */
++			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
++			if ((ocp_data & PASS_THRU_MASK) != 1) {
++				netif_dbg(tp, probe, tp->netdev,
++						"No efuse for RTL8153-AD MAC pass through\n");
++				return -ENODEV;
++			}
++		} else {
++			/* test for RTL8153-BND and RTL8153-BD */
++			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
++			if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
++				netif_dbg(tp, probe, tp->netdev,
++						"Invalid variant for MAC pass through\n");
++				return -ENODEV;
++			}
+ 		}
++
++		mac_obj_name = "\\_SB.AMAC";
++		mac_obj_type = ACPI_TYPE_BUFFER;
++		mac_strlen = 0x17;
+ 	}
+ 
+ 	/* returns _AUXMAC_#AABBCCDDEEFF# */
+-	status = acpi_evaluate_object(NULL, "\\_SB.AMAC", NULL, &buffer);
++	status = acpi_evaluate_object(NULL, mac_obj_name, NULL, &buffer);
+ 	obj = (union acpi_object *)buffer.pointer;
+ 	if (!ACPI_SUCCESS(status))
+ 		return -ENODEV;
+-	if (obj->type != ACPI_TYPE_BUFFER || obj->string.length != 0x17) {
++	if (obj->type != mac_obj_type || obj->string.length != mac_strlen) {
+ 		netif_warn(tp, probe, tp->netdev,
+ 			   "Invalid buffer for pass-thru MAC addr: (%d, %d)\n",
+ 			   obj->type, obj->string.length);
+ 		goto amacout;
+ 	}
++
+ 	if (strncmp(obj->string.pointer, "_AUXMAC_#", 9) != 0 ||
+ 	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
+ 		netif_warn(tp, probe, tp->netdev,
+@@ -6629,6 +6644,10 @@ static int rtl8152_probe(struct usb_interface *intf,
+ 		netdev->hw_features &= ~NETIF_F_RXCSUM;
+ 	}
+ 
++	if (le16_to_cpu(udev->descriptor.idVendor) == VENDOR_ID_LENOVO &&
++	    le16_to_cpu(udev->descriptor.idProduct) == 0x3082)
++		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
++
+ 	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial &&
+ 	    (!strcmp(udev->serial, "000001000000") ||
+ 	     !strcmp(udev->serial, "000002000000"))) {
+@@ -6755,6 +6774,7 @@ static const struct usb_device_id rtl8152_table[] = {
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069)},
++	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c)},
+ 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214)},
+-- 
+2.17.1
+
