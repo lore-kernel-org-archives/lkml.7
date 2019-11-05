@@ -4,101 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBFBC010A1
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:18:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3D2C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DB9E217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:18:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1478121929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388458AbfKEKSv (ORCPT
+        id S2388522AbfKEKTL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:18:51 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41871 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387773AbfKEKSv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:18:51 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j14so14664273lfb.8;
-        Tue, 05 Nov 2019 02:18:49 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5gus+KR3sBpb4vknCv+W8pubEEE/OvcGK9FKgThRyFQ=;
-        b=G82si8kNgBB3A358by++fNrfXOeLaTwGKJLJ2+OjIfZ9nJqT0cMejLVowFHgnfuN6u
-         9tPh1dwQ5FlK7V570lDylOX59Ukl6QisfNc7D+qd40mLjO2Vv9IOgTwxwGBfMG65Jg9t
-         nx2AQ2KhNlwC+jB7h+f4ZSRg3Cz/ygjGkN7TAQZk0UwVAYm/WEQTQR2nWytXWo9lXp4V
-         APDJelwbtr8ftbZa9UuksjRLI6FP6BbIZhDgrMdEoDQkrTWlOAyWMOL76T8gWFBL/EeH
-         GCVvhbOh8u/XGWiAK76T7y7Pupt2PlarOm69WQirccI4/zoeOpRjxOLXhh63kflRBRt4
-         nS+A==
-X-Gm-Message-State: APjAAAVVuMx50bjOyJf0FjCWgYsmXTtpgwccd9SuvWoPnOdze8E5pElY
-        x2AjD+zzlWcQ8K1UNLG0GXo=
-X-Google-Smtp-Source: APXvYqz98bIXlxkvqrYIgZWuwwgoMvfsHuz+u/5RBNqRE+TjdtCEJaJLGSMwa3UOkYYIU5aQMaZSNw==
-X-Received: by 2002:ac2:5f0a:: with SMTP id 10mr19898888lfq.57.1572949129155;
-        Tue, 05 Nov 2019 02:18:49 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id 27sm9248601ljv.82.2019.11.05.02.18.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:18:48 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:18:44 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 19/62] gpio: gpio-lp87565: Use new GPIO_LINE_DIRECTION
-Message-ID: <554305b9329d5ada25361156432b8c2cb8930390.1572945778.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945778.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 5 Nov 2019 05:19:11 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5706 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388283AbfKEKTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:19:11 -0500
+Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 7C982204E6E447042405;
+        Tue,  5 Nov 2019 18:19:09 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS402-HUB.china.huawei.com
+ (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
+ 18:19:01 +0800
+Subject: Re: [PATCH v2] mm/memory-failure.c: replace with page_shift() in
+ add_to_kill()
+To:     David Hildenbrand <david@redhat.com>, <n-horiguchi@ah.jp.nec.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <543d8bc9-f2e7-3023-7c35-2e7ed67c0e82@huawei.com>
+ <ff090004-2cf7-9c77-9c9e-7fc5aff90d35@redhat.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Message-ID: <0220b5ff-bc47-9616-3897-52fa1c674487@huawei.com>
+Date:   Tue, 5 Nov 2019 18:18:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572945778.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <ff090004-2cf7-9c77-9c9e-7fc5aff90d35@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
-equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-GPIO_LINE_DIRECTION_OUT to help them out.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/gpio-lp87565.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpio/gpio-lp87565.c b/drivers/gpio/gpio-lp87565.c
-index a121c8f10610..e1244520cf7d 100644
---- a/drivers/gpio/gpio-lp87565.c
-+++ b/drivers/gpio/gpio-lp87565.c
-@@ -57,7 +57,10 @@ static int lp87565_gpio_get_direction(struct gpio_chip *chip,
- 	if (ret < 0)
- 		return ret;
- 
--	return !(val & BIT(offset));
-+	if (val & BIT(offset))
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
- }
- 
- static int lp87565_gpio_direction_input(struct gpio_chip *chip,
--- 
-2.21.0
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+On 2019/11/5 17:50, David Hildenbrand wrote:
+> On 05.11.19 10:38, Yunfeng Ye wrote:
+>> The function page_shift() is supported after the commit 94ad9338109f
+>> ("mm: introduce page_shift()").
+>>
+>> So replace with page_shift() in add_to_kill() for readability.
+>>
+>> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+>> Reviewed-by: David Hildenbrand <david@redhat.com>
+>> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+>> ---
+>> v1 -> v2:
+>>   - add Reviewed-by and Acked-by
+> 
+> Note for the future: No need to resend if there were no code/documentation changes. Andrew will apply the tags when picking up the patch.
+> 
+ok, thanks.
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+>>
+>>   mm/memory-failure.c | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+>> index 3151c87dff73..e48c50cac889 100644
+>> --- a/mm/memory-failure.c
+>> +++ b/mm/memory-failure.c
+>> @@ -326,7 +326,7 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+>>       if (is_zone_device_page(p))
+>>           tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+>>       else
+>> -        tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
+>> +        tk->size_shift = page_shift(compound_head(p));
+>>
+>>       /*
+>>        * Send SIGKILL if "tk->addr == -EFAULT". Also, as
+>>
+> 
+> 
+
