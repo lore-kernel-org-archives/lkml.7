@@ -2,131 +2,58 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90BA7CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:22:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1236CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:26:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 669B82080F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:22:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="jA9eFPvp"
+	by mail.kernel.org (Postfix) with ESMTP id BCC5E2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:26:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729326AbfKEBWE (ORCPT
+        id S1729843AbfKEB0X (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:22:04 -0500
-Received: from ozlabs.org ([203.11.71.1]:47239 "EHLO ozlabs.org"
+        Mon, 4 Nov 2019 20:26:23 -0500
+Received: from verein.lst.de ([213.95.11.211]:42414 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728602AbfKEBWE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:22:04 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476X2K1Sz6z9s4Y;
-        Tue,  5 Nov 2019 12:22:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572916921;
-        bh=1vKvH8dq3Din2iU9Kt0PmrHKb5TX/e5tlrWzgG30Xpc=;
-        h=Date:From:To:Cc:Subject:From;
-        b=jA9eFPvpKOSX8v7RyBEp/yLxXG5LKGSE1vfEp5H+EW0BB1y3silGPmWIeGtRZjeYa
-         OqipzPwKsVWpVk/NdUaER/lWT7Af3Leh5aLsGdhCzVvH//y+a/dQfmFcf3lvnc+1GW
-         FPtoDkK/s1dGKFgrv92xPDas1K2fMCPsdvxaoi8ccUYHmDpnhrLchPym/D3woD7LxJ
-         OWaNTN9uMtzKeEAWKWb4I1/u5bOto3GB+hdFmVF0kayGHjVkLoOv1NpK3VX1u7iRyl
-         n6oTrbu55/+4KnI2wyFPrnMau1Oj9DE3QYEtXHW7s/ljZUTBUI3kZmOCrBK6H3h4yE
-         /iRmj7Zrf+2TA==
-Date:   Tue, 5 Nov 2019 12:21:59 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>, Greg KH <greg@kroah.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Joe Perches <joe@perches.com>
-Subject: linux-next: manual merge of the net-next tree with the
- staging.current tree
-Message-ID: <20191105122159.6a285c9c@canb.auug.org.au>
+        id S1728761AbfKEB0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 20:26:23 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 33FE268BE1; Tue,  5 Nov 2019 02:26:18 +0100 (CET)
+Date:   Tue, 5 Nov 2019 02:26:17 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Guo Ren <guoren@kernel.org>
+Cc:     Christoph Hellwig <hch@lst.de>, Arnd Bergmann <arnd@arndb.de>,
+        Michal Simek <monstr@monstr.eu>,
+        Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Guan Xuetao <gxt@pku.edu.cn>, x86@kernel.org,
+        linux-alpha@vger.kernel.org, linux-snps-arc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
+        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
+        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
+        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
+        linux-mtd@lists.infradead.org,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 20/21] csky: remove ioremap_cache
+Message-ID: <20191105012617.GA31847@lst.de>
+References: <20191017174554.29840-1-hch@lst.de> <20191017174554.29840-21-hch@lst.de> <CAJF2gTQ_VeBfi1uaafgtp+uA2skq-w2px12ig=5QD1O9J+PgbA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/Mwec77+brgoTx7Au1mAl=A3";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJF2gTQ_VeBfi1uaafgtp+uA2skq-w2px12ig=5QD1O9J+PgbA@mail.gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/Mwec77+brgoTx7Au1mAl=A3
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Mon, Oct 21, 2019 at 03:58:28PM +0800, Guo Ren wrote:
+> Acked-by: Guo Ren <guoren@kernel.org>
 
-Hi all,
-
-Today's linux-next merge of the net-next tree got conflicts in:
-
-  drivers/staging/Kconfig
-  drivers/staging/Makefile
-
-between commit:
-
-  df4028658f9d ("staging: Add VirtualBox guest shared folder (vboxsf) suppo=
-rt")
-
-from the staging.current tree and commit:
-
-  52340b82cf1a ("hp100: Move 100BaseVG AnyLAN driver to staging")
-
-from the net-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/staging/Kconfig
-index 927d29eb92c6,333308fe807e..000000000000
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@@ -125,6 -125,6 +125,8 @@@ source "drivers/staging/exfat/Kconfig
- =20
-  source "drivers/staging/qlge/Kconfig"
- =20
- +source "drivers/staging/vboxsf/Kconfig"
- +
-+ source "drivers/staging/hp/Kconfig"
-+=20
-  endif # STAGING
-diff --cc drivers/staging/Makefile
-index f01f04199073,e4943cd63e98..000000000000
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@@ -53,4 -53,4 +53,5 @@@ obj-$(CONFIG_UWB)		+=3D uwb
-  obj-$(CONFIG_USB_WUSB)		+=3D wusbcore/
-  obj-$(CONFIG_EXFAT_FS)		+=3D exfat/
-  obj-$(CONFIG_QLGE)		+=3D qlge/
- +obj-$(CONFIG_VBOXSF_FS)		+=3D vboxsf/
-+ obj-$(CONFIG_NET_VENDOR_HP)	+=3D hp/
-
---Sig_/Mwec77+brgoTx7Au1mAl=A3
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3AzrcACgkQAVBC80lX
-0GyWlQf/WnGTYpkNA/4DSckC2g4ZEuEpjr85BY/AZGLAcn2l7U6roAhxYkj3G4ck
-D+mqWbTu+nSbTJTqC4viIghsUV3aRXZq3PuTQ6wqopOjxWwGdfKI/gDAKbY2lgWP
-dZfkh9Bc5GHgyrq344kIAIGzfe+/NDKEpiKyfH5Ghen1iedb4bRa3br5/B+WIHgx
-NAXvU1//9nzCspn2QUQ6LYygMwqBkx0Bkh6j78iYs945gKjGtebdiib5lbPVReQm
-GZN0vS1AO3F3/q6X0Ar5ILezfoZWf8KRuFpBwIk8UvQ7GPIwQEYX/i3hZKm4G/0C
-6qGDW5LV5VwoaHZPGrGBwH9rk4YJBg==
-=TbGM
------END PGP SIGNATURE-----
-
---Sig_/Mwec77+brgoTx7Au1mAl=A3--
+Can you also take a look at the next patch and give me a review?
