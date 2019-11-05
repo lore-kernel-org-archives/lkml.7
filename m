@@ -2,154 +2,87 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B7AC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:16:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53321C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:25:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7326E2084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:16:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="tKXqfuTr"
+	by mail.kernel.org (Postfix) with ESMTP id 053E921929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:25:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729576AbfKEXQ0 (ORCPT
+        id S1729670AbfKEXZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:16:26 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:33224 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727046AbfKEXQZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:16:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572995783; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=eDsiJOXarrFhke1fkCycy1O3NiGTme3bfHAiHJkXB/8=;
-        b=tKXqfuTr2nlPjgFFl0fNG+qcFIc/NLt830kfPzztWEd44nARkG01pVjsPw1FGfhHOg1D9y
-        AQBEjji+3O7H2S9vFSCBXnAnpz7G6kCNxKGYzDRIH0nNoTfSLL+6P6bYRH3blL6xzG3Y5f
-        30XL3GuyitI6hQmD6SJ2+Wu3zgX7QZM=
-Date:   Wed, 06 Nov 2019 00:16:17 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB
- charger
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me
-Message-Id: <1572995777.3.4@crapouillou.net>
-In-Reply-To: <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
-References: <20191103220801.10666-1-paul@crapouillou.net>
-        <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
-        <1572945391.3.1@crapouillou.net>
-        <CAL_JsqJDT71eThy43kaN3RsU03Ew7aZ_abJg0zhaFxyDH9RhhA@mail.gmail.com>
+        Tue, 5 Nov 2019 18:25:02 -0500
+Received: from mga04.intel.com ([192.55.52.120]:54702 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727046AbfKEXZB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 18:25:01 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 15:25:00 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="226251719"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Nov 2019 15:25:00 -0800
+Date:   Tue, 5 Nov 2019 15:25:00 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>
+Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
+ trustworthy
+Message-ID: <20191105232500.GA25887@linux.intel.com>
+References: <20191105161737.21395-1-vkuznets@redhat.com>
+ <20191105193749.GA20225@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105193749.GA20225@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 05, 2019 at 11:37:50AM -0800, Sean Christopherson wrote:
+> On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
+> > Virtualized guests may pick a different strategy to mitigate hardware
+> > vulnerabilities when it comes to hyper-threading: disable SMT completely,
+> > use core scheduling, or, for example, opt in for STIBP. Making the
+> > decision, however, requires an extra bit of information which is currently
+> > missing: does the topology the guest see match hardware or if it is 'fake'
+> > and two vCPUs which look like different cores from guest's perspective can
+> > actually be scheduled on the same physical core. Disabling SMT or doing
+> > core scheduling only makes sense when the topology is trustworthy.
+> > 
+> > Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the meaning
+> > that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed SMT
+> > topology is actually trustworthy. It would, of course, be possible to get
+> > away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose backwards
+> > compatibility but the current approach looks more straightforward.
+> 
+> I'd stay away from "trustworthy", especially if this is controlled by
+> userspace.  Whether or not the hint is trustworthy is purely up to the
+> guest.  Right now it doesn't really matter, but that will change as we
+> start moving pieces of the host out of the guest's TCB.
+> 
+> It may make sense to split the two (or even three?) cases, e.g.
+> KVM_FEATURE_NO_SMT and KVM_FEATURE_ACCURATE_TOPOLOGY.  KVM can easily
+> enforce NO_SMT _today_, i.e. allow it to be set if and only if SMT is
+> truly disabled.  Verifying that the topology exposed to the guest is legit
+> is a completely different beast.
 
-
-Le mar., nov. 5, 2019 at 07:48, Rob Herring <robh+dt@kernel.org> a=20
-=E9crit :
-> On Tue, Nov 5, 2019 at 3:16 AM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>  Hi Rob,
->>=20
->>=20
->>  Le lun., nov. 4, 2019 at 07:52, Rob Herring <robh+dt@kernel.org> a
->>  =E9crit :
->>  > On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > wrote:
->>  >>
->>  >>  Add documentation about the devicetree bindings for the generic=20
->> USB
->>  >>  charger.
->>  >
->>  > What makes it generic?
->>=20
->>  It only uses the USB PHY subsystem, which already has some=20
->> half-baked
->>  support for chargers but not bound to the power-supply subsystem.
->>=20
->>=20
->>  >>
->>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  >>  ---
->>  >>   .../bindings/power/supply/usb-charger.txt     | 24
->>  >> +++++++++++++++++++
->>  >>   1 file changed, 24 insertions(+)
->>  >>   create mode 100644
->>  >> Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  >>
->>  >>  diff --git
->>  >> a/Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  >> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  >>  new file mode 100644
->>  >>  index 000000000000..fd46734cb0e5
->>  >>  --- /dev/null
->>  >>  +++=20
->> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  >>  @@ -0,0 +1,24 @@
->>  >>  +Generic USB charger bindings
->>  >>  +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>  >>  +
->>  >>  +Required properties :
->>  >>  + - compatible : should be "usb-charger"
->>  >>  + - phys: phandle to the USB PHY
->>  >>  +
->>  >>  +Example:
->>  >>  +
->>  >>  +usb_con: extcon {
->>  >>  +       compatible =3D "linux,extcon-usb-gpio";
->>  >>  +       vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
->>  >>  +};
->>  >>  +
->>  >>  +usb_phy: usb-phy@0 {
->>  >>  +       compatible =3D "usb-nop-xceiv";
->>  >>  +       #phy-cells =3D <0>;
->>  >>  +       extcon =3D <&usb_con>;
->>  >
->>  > extcon is deprecated in favor of usb-connector binding. See
->>  > .../bindings/connector/usb-connector.txt. There's also some=20
->> pending
->>  > patches for adding GPIO based connector controls including Vbus=20
->> sense
->>  > (GPIO input) and control (regulator via a GPIO).
->>  >
->>  > Rob
->>=20
->>  I understand that the usb-connector binding is better, but the=20
->> current
->>  code doesn't integrate at all with the USB PHY subsystem, which has=20
->> its
->>  own code to handle ID and VBUS GPIOs and supports notifiers. Is that
->>  deprecated then?
->>=20
->>  What's the big picture here?
->=20
-> Does this series work for you?:
->=20
-> https://patchwork.kernel.org/cover/11120707/
-
-I had to do some changes to my musb and PHY drivers but it works, yes.
-
-The good thing is that I didn't have to change this driver, so I'll=20
-wait for feedback on patch 2/2 then post a v2 with a fixed devicetree=20
-example.
-
-Thanks,
--Paul
-
-=
-
+Scratch the ACCURATE_TOPOLOGY idea, I doubt there's a real use case for
+setting ACCURATE_TOPOLOGY and not KVM_HINTS_REALTIME.  A feature flag to
+state that SMT is disabled seems simple and useful.
