@@ -7,52 +7,55 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E06B1C49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:29:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56C51C49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3D4021D7D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:29:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2197521D7D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:29:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387747AbfKEJ2H (ORCPT
+        id S2388580AbfKEJ3U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:28:07 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40602 "EHLO
+        Tue, 5 Nov 2019 04:29:20 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40613 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730711AbfKEJ2F (ORCPT
+        with ESMTP id S1729996AbfKEJ2G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:28:05 -0500
+        Tue, 5 Nov 2019 04:28:06 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRv7m-0007iJ-UR; Tue, 05 Nov 2019 10:27:43 +0100
+        id 1iRv7e-0007Ik-Cv; Tue, 05 Nov 2019 10:27:34 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id BBAEA1C0324;
-        Tue,  5 Nov 2019 10:27:36 +0100 (CET)
-Date:   Tue, 05 Nov 2019 09:27:36 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 08EE61C0178;
+        Tue,  5 Nov 2019 10:27:29 +0100 (CET)
+Date:   Tue, 05 Nov 2019 09:27:28 -0000
 From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] powerpc: Rename "notes" PT_NOTE to "note"
+Subject: [tip: x86/build] ia64: Move EXCEPTION_TABLE to RO_DATA segment
 Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
+        Fenghua Yu <fenghua.yu@intel.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, Michal Simek <monstr@monstr.eu>,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Segher Boessenkool <segher@kernel.crashing.org>,
-        Will Deacon <will@kernel.org>, "x86-ml" <x86@kernel.org>,
+        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
+        "x86-ml" <x86@kernel.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191029211351.13243-2-keescook@chromium.org>
-References: <20191029211351.13243-2-keescook@chromium.org>
+In-Reply-To: <20191029211351.13243-22-keescook@chromium.org>
+References: <20191029211351.13243-22-keescook@chromium.org>
 MIME-Version: 1.0
-Message-ID: <157294605645.29376.12542710971074801429.tip-bot2@tip-bot2>
+Message-ID: <157294604876.29376.5921428303294914196.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -68,73 +71,61 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/build branch of tip:
 
-Commit-ID:     ec556271bbb33809b73cdb238f8cb357345908e8
-Gitweb:        https://git.kernel.org/tip/ec556271bbb33809b73cdb238f8cb357345908e8
+Commit-ID:     9b30e704dd0d9ef9d99c7f88712318840cc8a338
+Gitweb:        https://git.kernel.org/tip/9b30e704dd0d9ef9d99c7f88712318840cc8a338
 Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Tue, 29 Oct 2019 14:13:23 -07:00
+AuthorDate:    Tue, 29 Oct 2019 14:13:43 -07:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 04 Nov 2019 15:33:28 +01:00
+CommitterDate: Mon, 04 Nov 2019 18:14:41 +01:00
 
-powerpc: Rename "notes" PT_NOTE to "note"
+ia64: Move EXCEPTION_TABLE to RO_DATA segment
 
-The Program Header identifiers are internal to the linker scripts. In
-preparation for moving the NOTES segment declaration into RO_DATA,
-standardize the identifier for the PT_NOTE entry to "note" as used by
-all other architectures that emit PT_NOTE.
-
-Note that there was discussion about changing all architectures to use
-"notes" instead, but I prefer to avoid that at this time. Changing only
-powerpc is the smallest change to standardize the entire kernel. And
-while this standardization does use singular "note" for a section that
-has more than one note in it, this is just an internal identifier. It
-matches the ELF "PT_NOTE", and is 4 characters (like "text", and "data")
-for pretty alignment. The more exposed macro, "NOTES", use the more
-sensible plural wording.
+Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc: linux-alpha@vger.kernel.org
 Cc: linux-arch@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-c6x-dev@linux-c6x.org
 Cc: linux-ia64@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
 Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Michal Simek <monstr@monstr.eu>
 Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Tony Luck <tony.luck@intel.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: x86-ml <x86@kernel.org>
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Link: https://lkml.kernel.org/r/20191029211351.13243-2-keescook@chromium.org
+Link: https://lkml.kernel.org/r/20191029211351.13243-22-keescook@chromium.org
 ---
- arch/powerpc/kernel/vmlinux.lds.S | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/ia64/kernel/vmlinux.lds.S | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 060a1ac..81e6726 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -19,7 +19,7 @@ ENTRY(_stext)
+diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
+index 11d5115..1ec6b70 100644
+--- a/arch/ia64/kernel/vmlinux.lds.S
++++ b/arch/ia64/kernel/vmlinux.lds.S
+@@ -6,6 +6,7 @@
+ #include <asm/thread_info.h>
  
- PHDRS {
- 	kernel PT_LOAD FLAGS(7); /* RWX */
--	notes PT_NOTE FLAGS(0);
-+	note PT_NOTE FLAGS(0);
- 	dummy PT_NOTE FLAGS(0);
+ #define EMITS_PT_NOTE
++#define RO_EXCEPTION_TABLE_ALIGN	16
  
- 	/* binutils < 2.18 has a bug that makes it misbehave when taking an
-@@ -177,7 +177,7 @@ SECTIONS
- #endif
- 	EXCEPTION_TABLE(0)
+ #include <asm-generic/vmlinux.lds.h>
  
--	NOTES :kernel :notes
-+	NOTES :kernel :note
+@@ -70,7 +71,6 @@ SECTIONS {
+ 	/*
+ 	 * Read-only data
+ 	 */
+-	EXCEPTION_TABLE(16)
  
- 	/* The dummy segment contents for the bug workaround mentioned above
- 	   near PHDRS.  */
+ 	/* MCA table */
+ 	. = ALIGN(16);
