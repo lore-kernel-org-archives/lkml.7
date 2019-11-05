@@ -2,56 +2,196 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D794CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D92EC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A677721D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF81721A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sfmsKGds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387430AbfKEWGU (ORCPT
+        id S2387469AbfKEWGm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:06:20 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:39372 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730237AbfKEWGS (ORCPT
+        Tue, 5 Nov 2019 17:06:42 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36402 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730083AbfKEWGm (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:06:18 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 020DF1506A9A5;
-        Tue,  5 Nov 2019 14:06:16 -0800 (PST)
-Date:   Tue, 05 Nov 2019 14:06:16 -0800 (PST)
-Message-Id: <20191105.140616.1174888253359674234.davem@davemloft.net>
-To:     michael@walle.cc
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com,
-        lgirdwood@gmail.com, broonie@kernel.org, simon.horman@netronome.com
-Subject: Re: [PATCH 0/5] net: phy: at803x device tree binding
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191102011351.6467-1-michael@walle.cc>
-References: <20191102011351.6467-1-michael@walle.cc>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+        Tue, 5 Nov 2019 17:06:42 -0500
+Received: by mail-pf1-f195.google.com with SMTP id v19so17032992pfm.3;
+        Tue, 05 Nov 2019 14:06:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:cc:date:message-id:in-reply-to:references
+         :user-agent:mime-version:content-transfer-encoding;
+        bh=yOvpSx16yNanZpbvFfAUMxFv0SM7m3MFplEES/wscuI=;
+        b=sfmsKGdscqK5HXDJ59tIoAlNoKkUGgfkWw8NJcFwhgLwRt4OQzjym85o3l1YVjC+pi
+         +HdA/Ay4ZTsLeMytL4cofohhUFIioyauyxCOOSG921zFJmaZ94vdkhv7YsvN2jUPXydu
+         LttVuCUSeu7RxTmsjo0B0nEe8yiv6CMqrnnrlJQA1XKA6zwITpRcoDBtGLKhKne+Se5W
+         GDUcCKHMb9YNYX9vyGo0tFvCAi7NcZPOSjK19otr6sP82rlNodmd7HDiEq4DpFXccKNx
+         q+VqfK1+VCnUi+eT5PeJsW47nhoEX+C/NlwAI/Qk6H0Iqhr/JNkT8gG+Ndht53ikBWSn
+         ek+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
+         :references:user-agent:mime-version:content-transfer-encoding;
+        bh=yOvpSx16yNanZpbvFfAUMxFv0SM7m3MFplEES/wscuI=;
+        b=uO1l7YxEO/KOWp/Vyskta31LAlx7GFuKWWwhFP6QbXeVzBb+xot+RaGtgu9G0FYL6p
+         2Uhl+aeY83t5Wi3jgExrNjde5KnCEIicjSfBMhQjw7wE+7wbhnwvJ3P4ZNlmNkJTDXo6
+         Xh3J9EL1zlfmEyb/bbhhwwxvEXZk8PEPJHxl2090DqIVX+wSXanscd5yakA+jJpml97L
+         x3N58MbKu8UfKH65QsKDdoj8t0WdUJ0k5HNouXeKDaxMWL6abDA+66sSR89DP7FdnPYo
+         OWuoAiUKMb/wZ3fantdjCRZUuEO6mkQZNWosUu8UesPbZ3I9IbB0FpX70Jd38hvAACnz
+         1DUQ==
+X-Gm-Message-State: APjAAAWWpuXhcBjjXgVwanNfuIyo4dRyAeFROut8TCaAscoTClWDW8/w
+        LJ8P8TXIZYhxKWrQu/sR664=
+X-Google-Smtp-Source: APXvYqzgwwFFrTh7Adpv3K30O16A20Hes3LHqWFEB/7MNKNyZDMR7Y0zF8YN8nTa3John2C3+nLP+A==
+X-Received: by 2002:a62:14d0:: with SMTP id 199mr11836005pfu.147.1572991601497;
+        Tue, 05 Nov 2019 14:06:41 -0800 (PST)
+Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
+        by smtp.gmail.com with ESMTPSA id o1sm19677459pgm.1.2019.11.05.14.06.40
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 14:06:41 -0800 (PST)
+Subject: [PATCH v13 QEMU 1/3] virtio-ballon: Implement support for page
+ poison tracking feature
+From:   Alexander Duyck <alexander.duyck@gmail.com>
+To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        akpm@linux-foundation.org, mgorman@techsingularity.net,
+        vbabka@suse.cz
+Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Date:   Tue, 05 Nov 2019 14:06:40 -0800
+Message-ID: <20191105220640.15373.82064.stgit@localhost.localdomain>
+In-Reply-To: <20191105215940.15144.65968.stgit@localhost.localdomain>
+References: <20191105215940.15144.65968.stgit@localhost.localdomain>
+User-Agent: StGit/0.17.1-dirty
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 Nov 2019 14:06:17 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Michael Walle <michael@walle.cc>
-Date: Sat,  2 Nov 2019 02:13:46 +0100
+From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
 
-> Adds a device tree binding to configure the clock and the RGMII voltage.
+We need to make certain to advertise support for page poison tracking if
+we want to actually get data on if the guest will be poisoning pages. So
+if free page hinting is active we should add page poisoning support and
+let the guest disable it if it isn't using it.
 
-This does not apply cleanly to net-next, please respin.
+Page poisoning will result in a page being dirtied on free. As such we
+cannot really avoid having to copy the page at least one more time since
+we will need to write the poison value to the destination. As such we can
+just ignore free page hinting if page poisoning is enabled as it will
+actually reduce the work we have to do.
 
-Thank you.
+Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+---
+ hw/virtio/virtio-balloon.c         |   25 +++++++++++++++++++++----
+ include/hw/virtio/virtio-balloon.h |    1 +
+ 2 files changed, 22 insertions(+), 4 deletions(-)
+
+diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
+index 40b04f518028..6ecfec422309 100644
+--- a/hw/virtio/virtio-balloon.c
++++ b/hw/virtio/virtio-balloon.c
+@@ -531,6 +531,15 @@ static void virtio_balloon_free_page_start(VirtIOBalloon *s)
+         return;
+     }
+ 
++    /*
++     * If page poisoning is enabled then we probably shouldn't bother with
++     * the hinting since the poisoning will dirty the page and invalidate
++     * the work we are doing anyway.
++     */
++    if (virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON)) {
++        return;
++    }
++
+     if (s->free_page_report_cmd_id == UINT_MAX) {
+         s->free_page_report_cmd_id =
+                        VIRTIO_BALLOON_FREE_PAGE_REPORT_CMD_ID_MIN;
+@@ -618,12 +627,10 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
+     if (s->qemu_4_0_config_size) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON)) {
++    if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
++        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+         return sizeof(struct virtio_balloon_config);
+     }
+-    if (virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
+-        return offsetof(struct virtio_balloon_config, poison_val);
+-    }
+     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
+ }
+ 
+@@ -634,6 +641,7 @@ static void virtio_balloon_get_config(VirtIODevice *vdev, uint8_t *config_data)
+ 
+     config.num_pages = cpu_to_le32(dev->num_pages);
+     config.actual = cpu_to_le32(dev->actual);
++    config.poison_val = cpu_to_le32(dev->poison_val);
+ 
+     if (dev->free_page_report_status == FREE_PAGE_REPORT_S_REQUESTED) {
+         config.free_page_report_cmd_id =
+@@ -697,6 +705,8 @@ static void virtio_balloon_set_config(VirtIODevice *vdev,
+         qapi_event_send_balloon_change(vm_ram_size -
+                         ((ram_addr_t) dev->actual << VIRTIO_BALLOON_PFN_SHIFT));
+     }
++    dev->poison_val = virtio_vdev_has_feature(vdev, VIRTIO_BALLOON_F_PAGE_POISON) ? 
++                      le32_to_cpu(config.poison_val) : 0;
+     trace_virtio_balloon_set_config(dev->actual, oldactual);
+ }
+ 
+@@ -706,6 +716,9 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
+     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
+     f |= dev->host_features;
+     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
++    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
++        virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
++    }
+ 
+     return f;
+ }
+@@ -847,6 +860,8 @@ static void virtio_balloon_device_reset(VirtIODevice *vdev)
+         g_free(s->stats_vq_elem);
+         s->stats_vq_elem = NULL;
+     }
++
++    s->poison_val = 0;
+ }
+ 
+ static void virtio_balloon_set_status(VirtIODevice *vdev, uint8_t status)
+@@ -909,6 +924,8 @@ static Property virtio_balloon_properties[] = {
+                     VIRTIO_BALLOON_F_DEFLATE_ON_OOM, false),
+     DEFINE_PROP_BIT("free-page-hint", VirtIOBalloon, host_features,
+                     VIRTIO_BALLOON_F_FREE_PAGE_HINT, false),
++    DEFINE_PROP_BIT("x-page-poison", VirtIOBalloon, host_features,
++                    VIRTIO_BALLOON_F_PAGE_POISON, false),
+     /* QEMU 4.0 accidentally changed the config size even when free-page-hint
+      * is disabled, resulting in QEMU 3.1 migration incompatibility.  This
+      * property retains this quirk for QEMU 4.1 machine types.
+diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
+index d1c968d2376e..7fe78e5c14d7 100644
+--- a/include/hw/virtio/virtio-balloon.h
++++ b/include/hw/virtio/virtio-balloon.h
+@@ -70,6 +70,7 @@ typedef struct VirtIOBalloon {
+     uint32_t host_features;
+ 
+     bool qemu_4_0_config_size;
++    uint32_t poison_val;
+ } VirtIOBalloon;
+ 
+ #endif
+
