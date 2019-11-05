@@ -2,68 +2,95 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F88C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD26CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 927D321A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3FAB21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388992AbfKEQ50 (ORCPT
+        id S2390007AbfKEQ5f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:57:26 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:33771 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388831AbfKEQ50 (ORCPT
+        Tue, 5 Nov 2019 11:57:35 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:43699 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388836AbfKEQ5f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:57:26 -0500
-X-Originating-IP: 92.137.17.54
-Received: from localhost (alyon-657-1-975-54.w92-137.abo.wanadoo.fr [92.137.17.54])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id CE4AB60005;
-        Tue,  5 Nov 2019 16:57:23 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 17:57:23 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com, Lee Jones <lee.jones@linaro.org>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] rtc: bd70528: Fix hour register mask
-Message-ID: <20191105165723.GD8309@piout.net>
-References: <20191023114751.GA14100@localhost.localdomain>
- <20191105165317.GC8309@piout.net>
+        Tue, 5 Nov 2019 11:57:35 -0500
+Received: by mail-lj1-f194.google.com with SMTP id y23so11776033ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:57:34 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=bOVYf2vdaSL/RWJvi5inztDYzFK8sbHwNSUro0lwIhE=;
+        b=PQWB0gIenrxlWs5CFGBWd7ncUTKs8I4dyKPEg49ElKr1vXkPwGFxm2samw7xAZmhTx
+         u5pLIEDKovzQHcajKutmt3/RueRa3zGqFsIdjwHU1UIoJ/WakaQPkbGXP33s+sPLsSoT
+         tYAsSySDWq2jxVYB7ZEIuhHaAVO+jt643fetdyKNk/98KWEsgCSONOoQwV7AoaBUrgoh
+         Vdn5tIbv4SFy9LbUxogGstrQkqP225Rh0TQUOuZ57cModb6ffr6dL9cFQVfCbesC9qW4
+         S4LishWfAiD/n0gFb6Q1mhQ/2GM3OfSyKyYbqrqLINHmhnYyjuVAdbFQvCueMBu18uTH
+         vZVw==
+X-Gm-Message-State: APjAAAWFXYlus9Vt3Lyv/cKDpQ2yfZ2joILrKddH/CE5dzGj3qns/ENY
+        2RrqEc5wDkAfZhO51P8nS9g3xquVFOvNYcABrbvvCxS+cQg=
+X-Google-Smtp-Source: APXvYqx1q5h25O1Avl1/rNRBA2TpfZ8vpThwQmiaeaIk1Z4Qvm+oVdx2IoV+LaUJUqn8XFTKqkgazKObjHqA+PE3MKU=
+X-Received: by 2002:a05:651c:20f:: with SMTP id y15mr8682641ljn.31.1572973052825;
+ Tue, 05 Nov 2019 08:57:32 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105165317.GC8309@piout.net>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191018163047.1284736-1-arnd@arndb.de> <20191104151310.GA1872@bogus>
+ <CAK8P3a1B5v_3p0XhddoeWu7wChr6BndfqVVjPUvWYC6=aRfLXg@mail.gmail.com>
+In-Reply-To: <CAK8P3a1B5v_3p0XhddoeWu7wChr6BndfqVVjPUvWYC6=aRfLXg@mail.gmail.com>
+From:   Sudeep Holla <sudeep.holla@arm.com>
+Date:   Tue, 5 Nov 2019 16:57:21 +0000
+Message-ID: <CAPKp9uZ8OMhsXvF4m8=M+5QKHFGPK4ZmM_+eHt_perRQng9J8g@mail.gmail.com>
+Subject: Re: [PATCH 1/6] ARM: versatile: move integrator/realview/vexpress to versatile
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Liviu Dudau <liviu.dudau@arm.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Russell King <linux@armlinux.org.uk>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/2019 17:53:18+0100, Alexandre Belloni wrote:
-> On 23/10/2019 14:47:51+0300, Matti Vaittinen wrote:
-> > When RTC is used in 24H mode (and it is by this driver) the maximum
-> > hour value is 24 in BCD. This occupies bits [5:0] - which means
-> > correct mask for HOUR register is 0x3f not 0x1f. Fix the mask
-> > 
-> > Fixes: 32a4a4ebf768 ("rtc: bd70528: Initial support for ROHM bd70528 RTC")
-> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > ---
-> >  include/linux/mfd/rohm-bd70528.h | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> Applied, thanks.
-> 
+On Mon, Nov 4, 2019 at 3:26 PM Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On Mon, Nov 4, 2019 at 4:13 PM Sudeep Holla <sudeep.holla@arm.com> wrote:
+> >
+> > On Fri, Oct 18, 2019 at 06:29:14PM +0200, Arnd Bergmann wrote:
+> > > These are all fairly small platforms by now, and they are
+> > > closely related. Just move them all into a single directory.
+> > >
+> > > Cc: Linus Walleij <linus.walleij@linaro.org>
+> > > Cc: Liviu Dudau <liviu.dudau@arm.com>
+> > > Cc: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > Looks good to me, so for vexpress part:
+> > Acked-by: Sudeep Holla <sudeep.holla@arm.com>
+> >
+> > As Linus W requested, if you share a branch, I can give it a go on
+> > Vexpress TC2.
+>
+> You are of course both right, I should have split this out into a separate
+> branch, rather than sticking it on the end of the completely unrelated
+> pxa-multiplatform branch.
+>
+> For testing the changes, this should be fine in the meantime:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/arnd/playground.git/log/?h=pxa-multiplatform
 
-Actually, is there any point in doing that since "rtc: bd70528 add
-BD71828 support" will conflict with it and correct the issue anyway?
+Thanks, tested this branch and found no issues.
+So in addition to ack:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Tested-by: Sudeep Holla <sudeep.holla@arm.com>
+
+--
+Regards,
+Sudeep
