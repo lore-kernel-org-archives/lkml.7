@@ -2,123 +2,99 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCB6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85A73C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 063412053B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299F72053B
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="oeAsvNex"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lRV9knZq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730782AbfKEW2E (ORCPT
+        id S1730809AbfKEW2I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:28:04 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:40507 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730503AbfKEW1K (ORCPT
+        Tue, 5 Nov 2019 17:28:08 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:40100 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730451AbfKEW1H (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:27:10 -0500
-Received: by mail-pl1-f193.google.com with SMTP id e3so8253092plt.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:27:10 -0800 (PST)
+        Tue, 5 Nov 2019 17:27:07 -0500
+Received: by mail-il1-f193.google.com with SMTP id d83so19842690ilk.7;
+        Tue, 05 Nov 2019 14:27:06 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=RsnI3SikgfVj/jlXxDFzF5p8kBoEYs8xVT3Ywimc1KQ=;
-        b=oeAsvNexD3P1DqYm9KEBBhKIxOJYF5CEjxS25Ze6MXYdp20a+m4kVyP3zMzQcqxQRw
-         jRaHDxyBpBcIJgNlpvsxkfj0spIuhqu0yQoRu+7zlGnBqmGgxrVK/7f8lByBXmxc4HiE
-         StfjOBL3j100JudvtSU/D8XUeA8WHSQaFyKZE=
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U5wxPbwQtKBHc/N9ZJcuYcLTQ68b1CJSxGQDhLrTlZk=;
+        b=lRV9knZqxPJQFL4Ti+/r2J+lfX5hyCNcm3ToQnFf2BqgLtYPNLjaNPMZ6CDF1qZan0
+         +rU5CC+rsbVnaex+nnzCwz4k87pq9EYrRadMnhIMon/at2fQYkkoSeHARAYhG1/1oKR7
+         LzXbRezlkUVvInWpcuhOCBo4tYpG1oERLBNPCaSIucbSOa7YR7ozvFHvxa9MFNDw1eT8
+         Gt/bo0edmR2outPXZfxqHlI5DQACH1g36tE9Lg51qrxVj3Z2gB5Ro9sOwLbt1bpudFQN
+         wFMRYUM9xg1ig4hCJSeu5y7ogR5Avd+zvXNezzxiCNLQqAj7UfTF7LZh2DS7BAH2gdHj
+         pY0Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=RsnI3SikgfVj/jlXxDFzF5p8kBoEYs8xVT3Ywimc1KQ=;
-        b=gVXvQEd63X28TKcXeW2wv/UjiFUHUwUV4fWuing5exz6cpikDNeIdf8naGbvQqGjMD
-         Bfycn6PfIZRf8PQXpz6srgw7FkaPeIO/MAmpoDNU3M9P3H6Fx/CcxPLojU6X/Z5J3QhJ
-         OV8zWS0gR7qs3BoxXg8B07KptQQKyMi5KA3OSefRUw/FzYhW0TfK5DRFpaLLDmB/sRG6
-         VGa2u3dGA8AfykCj6qIZn1S7o1N/p02AIGm0ifVqx8lvl3B09cXgeiNGNFPdBoZJ90nC
-         bHHou+BbeO7rkabHNOmDfbTfPp/GWz9DSpBLtYyByYuJoELxHLlAXriQje3bL467Ahf9
-         J+EQ==
-X-Gm-Message-State: APjAAAV0Jy7PuvefvLro8VZpbJW7EgVX6N58tbpz8uSv/QRV0asHFSlo
-        apMXeLvWO6g8cfp1efiu50ldiQ==
-X-Google-Smtp-Source: APXvYqwgaY4hEu6T+BNKfyf+BBEQPcfGgeh6aKYH9b4ddptYMz5lhKpCeNThjWU2px7VqD5ba/146w==
-X-Received: by 2002:a17:902:a98c:: with SMTP id bh12mr35208852plb.289.1572992829761;
-        Tue, 05 Nov 2019 14:27:09 -0800 (PST)
-Received: from localhost ([2620:15c:202:1:3c8f:512b:3522:dfaf])
-        by smtp.gmail.com with ESMTPSA id z11sm26385299pfg.117.2019.11.05.14.27.08
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 14:27:08 -0800 (PST)
-From:   Gwendal Grignou <gwendal@chromium.org>
-To:     briannorris@chromium.org, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        bleung@chromium.org, enric.balletbo@collabora.com,
-        dianders@chromium.org, groeck@chromium.org,
-        fabien.lahoudere@collabora.com
-Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
-        Gwendal Grignou <gwendal@chromium.org>
-Subject: [PATCH v4 07/17] Revert "Input: cros_ec_keyb - add back missing mask for event_type"
-Date:   Tue,  5 Nov 2019 14:26:42 -0800
-Message-Id: <20191105222652.70226-8-gwendal@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191105222652.70226-1-gwendal@chromium.org>
-References: <20191105222652.70226-1-gwendal@chromium.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U5wxPbwQtKBHc/N9ZJcuYcLTQ68b1CJSxGQDhLrTlZk=;
+        b=Jrr+hBAtq2Yt12bDpCeTIZSGmysaEU46Mm0H4Wy08WH9N4ZGWzankINP45DhLOWkTc
+         +b+vstjsxsw9F6x6C4TLnln8XINm9AGYS0Nwr6ICVrKW+EaDspDKdO0HUD1/LU1/KbkS
+         IXIedp8f3MiwQ18C5psnp00Nerx6oQ/Kvy0JL9XhPhOuW37gR2YYJeHJ0eB3eaQn5iih
+         UHBF4KjIV7shNyDG0E5AyrahNhVp3LQ/AGqFBMD8ZSqBFRI2N8q/rBF2+rBpxIFQndJy
+         5QXj93M4eqGVASFJZrMHklhZfS9Nor50YS4BWd71DQo6o9nSqdSxTw6HsAqWguNVCpC/
+         bF1w==
+X-Gm-Message-State: APjAAAV7HOrrQdXU97HuUcsC4+2k13yEw+OfpyXdQt59yR+i59gWOGuH
+        8H1EAM2CpIdqpt/dWNNA+nSUt0XJMgDWLx5xc1zyelY9
+X-Google-Smtp-Source: APXvYqzkhGY3lG38QqON8vahg2p/76hRxxnZPDZI/F/hixTAIJPZ3liDt4dCT0+DDf01yPjFZ8wktNFYnfxxlN1GIBc=
+X-Received: by 2002:a92:8b4e:: with SMTP id i75mr4984503ild.5.1572992826228;
+ Tue, 05 Nov 2019 14:27:06 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <b797b2fc-1a33-7311-70d7-dd258d721a03@web.de>
+In-Reply-To: <b797b2fc-1a33-7311-70d7-dd258d721a03@web.de>
+From:   Steve French <smfrench@gmail.com>
+Date:   Tue, 5 Nov 2019 16:26:55 -0600
+Message-ID: <CAH2r5mvWXtSdKb3RcSR_Z6LwsGhDmR0wBeKekwkS-VG4YnFNpQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] CIFS: Adjustments for smb2_ioctl_query_info()
+To:     Markus Elfring <Markus.Elfring@web.de>
+Cc:     CIFS <linux-cifs@vger.kernel.org>,
+        samba-technical <samba-technical@lists.samba.org>,
+        Ronnie Sahlberg <lsahlber@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        kernel-janitors <kernel-janitors@vger.kernel.org>,
+        Aurelien Aptel <aaptel@suse.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 62c3801619e16b68a37ea899b76572145dfe41c9.
+merged into cifs-2.6.git for-next
 
-This patch is not needed anymore since we clear EC_MKBP_HAS_MORE_EVENTS
-flag before calling the notifiers in patch
-"9d9518f5b52a (platform: chrome: cros_ec: handle MKBP more events flag)"
+On Tue, Nov 5, 2019 at 3:38 PM Markus Elfring <Markus.Elfring@web.de> wrote:
+>
+> From: Markus Elfring <elfring@users.sourceforge.net>
+> Date: Tue, 5 Nov 2019 22:32:23 +0100
+>
+> Two update suggestions were taken into account
+> from static source code analysis.
+>
+> Markus Elfring (2):
+>   Use memdup_user() rather than duplicating its implementation
+>   Use common error handling code in smb2_ioctl_query_info()
+>
+>  fs/cifs/smb2ops.c | 58 ++++++++++++++++++++++-------------------------
+>  1 file changed, 27 insertions(+), 31 deletions(-)
+>
+> --
+> 2.24.0
+>
 
-Signed-off-by: Gwendal Grignou <gwendal@chromium.org>
----
-No changes in v4, v3.
-New to v2.
 
- drivers/input/keyboard/cros_ec_keyb.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/input/keyboard/cros_ec_keyb.c b/drivers/input/keyboard/cros_ec_keyb.c
-index 8d4d9786cc74..a29e81fdf186 100644
---- a/drivers/input/keyboard/cros_ec_keyb.c
-+++ b/drivers/input/keyboard/cros_ec_keyb.c
-@@ -226,8 +226,6 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
- {
- 	struct cros_ec_keyb *ckdev = container_of(nb, struct cros_ec_keyb,
- 						  notifier);
--	uint8_t mkbp_event_type = ckdev->ec->event_data.event_type &
--				  EC_MKBP_EVENT_TYPE_MASK;
- 	u32 val;
- 	unsigned int ev_type;
- 
-@@ -239,7 +237,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
- 	if (queued_during_suspend && !device_may_wakeup(ckdev->dev))
- 		return NOTIFY_OK;
- 
--	switch (mkbp_event_type) {
-+	switch (ckdev->ec->event_data.event_type & EC_MKBP_EVENT_TYPE_MASK) {
- 	case EC_MKBP_EVENT_KEY_MATRIX:
- 		pm_wakeup_event(ckdev->dev, 0);
- 
-@@ -266,7 +264,7 @@ static int cros_ec_keyb_work(struct notifier_block *nb,
- 	case EC_MKBP_EVENT_SWITCH:
- 		pm_wakeup_event(ckdev->dev, 0);
- 
--		if (mkbp_event_type == EC_MKBP_EVENT_BUTTON) {
-+		if (ckdev->ec->event_data.event_type == EC_MKBP_EVENT_BUTTON) {
- 			val = get_unaligned_le32(
- 					&ckdev->ec->event_data.data.buttons);
- 			ev_type = EV_KEY;
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+Thanks,
 
+Steve
