@@ -2,108 +2,156 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22CC3C010B4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 32054C010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043732190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E9C721928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730805AbfKEK6N (ORCPT
+        id S1730820AbfKEK6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:58:13 -0500
-Received: from verein.lst.de ([213.95.11.211]:44725 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726867AbfKEK6M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:58:12 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 820FA68B05; Tue,  5 Nov 2019 11:58:08 +0100 (CET)
-Date:   Tue, 5 Nov 2019 11:58:08 +0100
-From:   Torsten Duwe <duwe@lst.de>
-To:     Maxime Ripard <mripard@kernel.org>
-Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 6/7] dt-bindings: Add ANX6345 DP/eDP transmitter
- binding
-Message-ID: <20191105105808.GA27999@lst.de>
-References: <20191104110400.F319F68BE1@verein.lst.de> <20191104110613.C3BA468C4E@verein.lst.de> <20191105104342.GD3876@gilmour.lan>
+        Tue, 5 Nov 2019 05:58:43 -0500
+Received: from lhrrgout.huawei.com ([185.176.76.210]:2071 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfKEK6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:58:43 -0500
+Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
+        by Forcepoint Email with ESMTP id 62D9AC260B20A0E14590;
+        Tue,  5 Nov 2019 10:58:41 +0000 (GMT)
+Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
+ lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Tue, 5 Nov 2019 10:58:40 +0000
+Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
+ (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 5 Nov 2019
+ 10:58:40 +0000
+Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
+ driver
+To:     Mark Brown <broonie@kernel.org>
+CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
+        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
+        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>
+References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
+ <1572886297-45400-3-git-send-email-john.garry@huawei.com>
+ <20191104192406.GH5238@sirena.co.uk>
+From:   John Garry <john.garry@huawei.com>
+Message-ID: <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
+Date:   Tue, 5 Nov 2019 10:58:39 +0000
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105104342.GD3876@gilmour.lan>
-User-Agent: Mutt/1.5.17 (2007-11-01)
+In-Reply-To: <20191104192406.GH5238@sirena.co.uk>
+Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.202.226.46]
+X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
+ lhreml724-chm.china.huawei.com (10.201.108.75)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 11:43:42AM +0100, Maxime Ripard wrote:
+On 04/11/2019 19:24, Mark Brown wrote:
+> On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
 > 
-> On Tue, Oct 29, 2019 at 01:16:57PM +0100, Torsten Duwe wrote:
-> > The anx6345 is an ultra-low power DisplayPort/eDP transmitter designed
-> > for portable devices.
-> >
-> > Add a binding document for it.
-> >
-> > Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-> > Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > Signed-off-by: Torsten Duwe <duwe@suse.de>
-> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-> 
-> Applied, thanks
 
-Re-thanks!
+Hi Mark,
 
-> (still, there's one comment below that can be addressed in a
-> subsequent patch).
+>> Only ACPI firmware is supported.
 > 
-> > +
-> > +  ports:
-> > +    type: object
-> > +
-> > +    properties:
-> > +      port@0:
-> > +        type: object
-> > +        description: |
-> > +          Video port for LVTTL input
-> > +
-> > +      port@1:
-> > +        type: object
-> > +        description: |
-> > +          Video port for eDP output (panel or connector).
-> > +          May be omitted if EDID works reliably.
-> > +
-> > +    required:
-> > +      - port@0
-> 
-> You should have something like:
-> 
-> ports:
->   type: object
->   additionalProperties: false
-> 
-> as well...
+> There's no ACPI dependency though?  If the driver only works with ACPI
+> I'd expect to see one with an || COMPILE_TEST like the architecture
+> dependency.
 
-Yes, and it also struck me that I forgot at least about the hotplug-gpio.
-It's unused on the Teres and the Pinebook, but in theory it's a valid
-property, which can't be added any more now.
+Yeah, you're right. So the driver can build for !ACPI and !COMPILE_TEST, 
+but there's no point really. I'll update.
 
-	Torsten
+> 
+>> @@ -0,0 +1,287 @@
+>> +// SPDX-License-Identifier: GPL-2.0-only
+>> +/*
+>> + * HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets
+>> + *
+> 
+> Please make the entire comment a C++ one for neatness.
+
+ok
+
+> 
+>> + * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
+>> + * Author: John Garry <john.garry@huawei.com>
+>> + */
+>> +//#define DEBUG 1
+> 
+> Please remove this.
+
+ok
+
+> 
+>> +#define GLOBAL_CFG (0x100)
+>> +
+>> +#define BUS_CFG1 (0x200)
+>> +#define BUS_CFG2 (0x204)
+>> +#define BUS_FLASH_SIZE (0x210)
+>> +
+>> +#define VERSION (0x1f8)
+> 
+> These could use some namespacing, especially the last one - it seems
+> quite likely there'll be some collisions at some point.
+
+ok
+
+> 
+>> +#define HISI_SFC_V3XX_WAIT_TIMEOUT_US		1000000
+>> +#define HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US	10
+> 
+> Plus if we've got these long prefixes here it'd be good to be
+> consistent.
+
+sure
+
+> 
+>> +	if (IS_ALIGNED((uintptr_t)to, 4)) {
+>> +		int words = len / 4;
+>> +
+>> +		__ioread32_copy(to, host->regbase + CMD_DATABUF(0), words);
+>> +
+>> +		len -= words * 4;
+>> +		if (len) {
+>> +			u32 val;
+>> +
+>> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
+>> +
+>> +			to += words * 4;
+>> +			for (i = 0; i < len; i++, val >>= 8, to++)
+>> +				*to = (u8)val;
+>> +		}
+>> +	} else {
+>> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
+>> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
+>> +			int j;
+> 
+> The more usual pattern for these would be to do some unaligned accesses
+> for the start/end of the buffer to get to alignment and then transfer
+> the rest as aligned data.
+> 
+
+Yeah, I understand you, but for that I would need to generate multiple 
+transactions in the driver, and I wanted to keep 1x transaction per 
+spi_controller_mem_ops.exec_op call.
+
+So maybe I can do some trickery in my adjust_op_size method to generate 
+these multiple transactions: a. any unaligned start data b. the 
+32b-aligned data b. unaligned end. I think that the HW should be able to 
+handle that.
+
+Thanks,
+John
 
