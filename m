@@ -2,94 +2,175 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E2D4CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:01:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D78CA9ED8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:05:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11FF3206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:01:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572937307;
-	bh=oNCY9lIPtGRThezvUsIa2kyjNXmrNF/FDour8uEFiiI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hEqr5ngPLN+qmfihB3LWn9zjj7m8pXEvuBRAKESqhPgtxTSOeDOLwyYsoPHFeC2IJ
-	 2a+KO7qvJT0nLqazg8QcZJUdVCzDtf0mj/qDk4YJ7AOknS199cgiuIqBhPTWhWKuMt
-	 7kaVSFu6wQt9IQNpapWVqBDmroiD1CmPzd1i5RJI=
+	by mail.kernel.org (Postfix) with ESMTP id 3EEE0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:05:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqaqXJC2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387676AbfKEHBp (ORCPT
+        id S2387623AbfKEHF4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:01:45 -0500
-Received: from mx2.suse.de ([195.135.220.15]:49548 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387517AbfKEHBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:01:45 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 88710AD35;
-        Tue,  5 Nov 2019 07:01:43 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 08:01:41 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v2] lib: optimize cpumask_local_spread()
-Message-ID: <20191105070141.GF22672@dhcp22.suse.cz>
-References: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
+        Tue, 5 Nov 2019 02:05:56 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:44891 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387517AbfKEHF4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 02:05:56 -0500
+Received: by mail-lf1-f68.google.com with SMTP id v4so14231378lfd.11
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 23:05:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=GIrprW1y0qd6DHcWgNZe4YGetGU2O9nSygDm9m3KcNY=;
+        b=fqaqXJC2EY0H4UW683zTh+oZauSq+H2bUiqit1GjGpUEkFj2MsaTDwDRsWJj7CUnjA
+         ge8bUfXf4RuntZc1/S055AjybL55dzSYsbpRrHENDCabiTiog9XGEmcRAgLA+gzzkbub
+         wSibvXDaSAZbOZwgQ9aPQTrMDg+OlzsPIv5HjVuURiMS+lS40cfAA6zmg8amK3+e6oPs
+         C9fMtj/1MR7cA/+Om9wN5aHIEU8OPmQMetpe3l1J/M5LBSxsKz+gLKD83uvHwOjH20i+
+         Rt65i0VBvz6RCFOyibpMeHbdOCMlrNZzu5yUCodEWYu85On9fAA0SkPW1E/IC2LSihVK
+         Wgtw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=GIrprW1y0qd6DHcWgNZe4YGetGU2O9nSygDm9m3KcNY=;
+        b=Wty9PuMZIlxMXWv5kYpq9OJOKkPN+f/Zl95RGf06M3w6V0wTBnmyFForRcgMDIcUeV
+         djJrEvi8tMU9QmnzzwwgUSZMkkTcveYYuYgI3k8Cw/cys65m5yd6HmTo4OrIQOyrRd1N
+         +RBsLk32e6M1LJ2U1EwUFhS7hJh6hqzkG19qIpRLJBXpRArZdo65fGu6cKUmPAJGxYCt
+         tbAutkvR8KGTLOnxtOMUDw6RW+nuaqtU7dbfrvm7XtM3N5Gq+/sULFS2NPxk/Nn6O1Bj
+         5E1YldvXCZxEhdXLm3QaqcqiMuWY70Nl9MZuKu26AcsXfrcajEbFueDU9MChTk1qHo3R
+         wxrg==
+X-Gm-Message-State: APjAAAXzfHquQDCbZak6cbL2R4qwWQ2YyOhj0nEsxaQtaIMoVQc+hmQi
+        UpnOVwNSbagkqZ2AxY8PMcIophALhKafDSQUlPUOXQ==
+X-Google-Smtp-Source: APXvYqzQWeI8PVGEmJUXw3Vq3vMvLm/Ci0aI5voCCnbpz7glQokamUg6scHv//dMHLvGen+y6oBcJEj412qy13nbE94=
+X-Received: by 2002:a19:f811:: with SMTP id a17mr19027925lff.132.1572937554336;
+ Mon, 04 Nov 2019 23:05:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191104211901.387893698@linuxfoundation.org>
+In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 5 Nov 2019 12:35:43 +0530
+Message-ID: <CA+G9fYtGfv8PF4q+fo8QfNc72XrqswcFvHE2XD3=M4EyJRT7hQ@mail.gmail.com>
+Subject: Re: [PATCH 4.9 00/62] 4.9.199-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 04-11-19 18:27:48, Shaokun Zhang wrote:
-> From: yuqi jin <jinyuqi@huawei.com>
-> 
-> In the multi-processor and NUMA system, I/O device may have many numa
-> nodes belonging to multiple cpus. When we get a local numa, it is
-> better to find the node closest to the local numa node, instead
-> of choosing any online cpu immediately.
-> 
-> For the current code, it only considers the local NUMA node and it
-> doesn't compute the distances between different NUMA nodes for the
-> non-local NUMA nodes. Let's optimize it and find the nearest node
-> through NUMA distance. The performance will be better if it return
-> the nearest node than the random node.
+On Tue, 5 Nov 2019 at 03:20, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.9.199 release.
+> There are 62 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.9.199-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.9.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-Numbers please
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-[...]
-> +/**
-> + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-> + * @i: index number
-> + * @node: local numa_node
-> + *
-> + * This function selects an online CPU according to a numa aware policy;
-> + * local cpus are returned first, followed by the nearest non-local ones,
-> + * then it wraps around.
-> + *
-> + * It's not very efficient, but useful for setup.
-> + */
-> +unsigned int cpumask_local_spread(unsigned int i, int node)
-> +{
-> +	int node_dist[MAX_NUMNODES] = {0};
-> +	bool used[MAX_NUMNODES] = {0};
+Summary
+------------------------------------------------------------------------
 
-Ugh. This might be a lot of stack space. Some distro kernels use large
-NODE_SHIFT (e.g 10 so this would be 4kB of stack space just for the
-node_dist).
+kernel: 4.9.199-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.9.y
+git commit: 1787d5fb47ee9c16fabc1473a713bfe3f3af7df7
+git describe: v4.9.198-63-g1787d5fb47ee
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
+ld/v4.9.198-63-g1787d5fb47ee
 
-> +	int cpu, j, id;
--- 
-Michal Hocko
-SUSE Labs
+No regressions (compared to build v4.9.198)
+
+No fixes (compared to build v4.9.198)
+
+Ran 23491 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* network-basic-tests
+* ltp-open-posix-tests
+* kvm-unit-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+* prep-tmp-disk
+* ssuite
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
