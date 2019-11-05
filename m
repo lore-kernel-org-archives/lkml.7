@@ -2,97 +2,98 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01069C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:47:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3270CC5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E03206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:47:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3E71206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:48:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572994107;
+	bh=e1zDeItANpkU5aMHH3CBq3r2RpezJeQI7Bnf2sQsRP8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OoG8s5SkV//CKFcTo0xAOo8h9dGgvsM8bYfr8Hf7o9VvxEdfZux16pyH6geDk0iXO
+	 TROwPECjGabj3DUkiBXVvgxivjsY5RpWjWYjrR+/5JYOtdfe2FR+SKzuJsTGjEm074
+	 YA7DFegOJqKWyyM+2koiJz99EhHp4jEJfN035Giw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730521AbfKEWrw (ORCPT
+        id S1730546AbfKEWs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:47:52 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:45368 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730370AbfKEWrv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:47:51 -0500
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1625C85539
-        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 22:47:51 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id g5so96420wrb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:47:51 -0800 (PST)
+        Tue, 5 Nov 2019 17:48:27 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:35930 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730192AbfKEWs0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:48:26 -0500
+Received: by mail-oi1-f193.google.com with SMTP id j7so19197547oib.3;
+        Tue, 05 Nov 2019 14:48:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=wcmDWg9yuhKKv0L3oJXn41fVzC0MNDFjqyIzi0LiKTI=;
-        b=rQ5aEpt+uzNezeFNw4x1+4K+X3kgHhUO1bpK1hhyazjop8MYFzkzQ2pta4ZmZbxovB
-         cX70+WJ5pScyYqTEmxBkcOdRTQsjBvv0sqBjuANidFBWije663j6MG89IVS2kzKZEPuT
-         eHY9GIcTkup6Kg08WMCCqaUvvQk0xHIbw3X0o6XsPSusxyt912uCn7P8H5tTtNV9LvW2
-         hOLwCbVtKoBjoahZvgYQDkzqP9zHKo46CmVrllR/5IPDE1pWgqsZFPGtyFU/49sGOBft
-         XHLEOSMx+44LdsLp8azWOuOjNGja0tYTNls7/FXzKZgIGWgvbC9krwWqrHbSdEMwuR5w
-         syqA==
-X-Gm-Message-State: APjAAAXCPZhvmAi2Q2UwTZlOeOXrejRUCl/zpnTi40xSaTMX2b4K7r8X
-        u5kYZWTDnbSMewa1q8S9oMEcH2XG8zckVU56JS3h6aVcQqn7vKGairfCXCldThphQkWqDz9Hf4G
-        Km3+0zJnkmPxQ+DOOB9MuKA1o
-X-Received: by 2002:adf:d18b:: with SMTP id v11mr31907200wrc.308.1572994069737;
-        Tue, 05 Nov 2019 14:47:49 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyCgB3DCEZvdikreQIv1Te0UDqxG/X/MG7Mu4voWCvEas+t6FebQMWQ6I3oq4eEicA/ORE4xA==
-X-Received: by 2002:adf:d18b:: with SMTP id v11mr31907185wrc.308.1572994069442;
-        Tue, 05 Nov 2019 14:47:49 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id 205sm1175250wmb.3.2019.11.05.14.47.48
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 14:47:48 -0800 (PST)
-Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-To:     "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
-        "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "graf@amazon.com" <graf@amazon.com>,
-        "jschoenh@amazon.de" <jschoenh@amazon.de>,
-        "karahmed@amazon.de" <karahmed@amazon.de>,
-        "rimasluk@amazon.com" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-References: <1572648072-84536-1-git-send-email-suravee.suthikulpanit@amd.com>
- <1572648072-84536-14-git-send-email-suravee.suthikulpanit@amd.com>
- <70fb2b49-2198-bde4-a38b-f37bc8bc9847@redhat.com>
- <20191104231712.GD23545@rkaganb.lan>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <ac4313a6-df96-2223-bed3-33c3a8555c98@redhat.com>
-Date:   Tue, 5 Nov 2019 23:47:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=a6RSlGUG/d/8KzpTd4sRswnPYzvmhaAeGKhO7ae8r/I=;
+        b=JPA5QQNYfVJfc9zVzSLqM+xaphkQSbzOEcA/RYMwxFXRYXsbbCk5waOqQhkoKcbaUg
+         6Ci45roKUFgGg7IjhbylXjasiu6c02whq2Bj+Ph7a+LzErYMcnHYXUhcMk6OuGnP3RuO
+         9vC38WgNmgVar+y8gTMDWBmuD/rhQkyTS+fIXJS60GjGh7uwG5DZ6/Ioc6zQvxXvbIyA
+         6NT7oVB8pcyZWQZLKj+CYSj99qNnf1pX2r/YiI6Xj6Qdc+5vn7fuTmuZfZZIiadrSUBY
+         NEDqaMrNe4FkUvNEdso8dhQ4FTzCwLde7RM6ywSQzPcYuvs8KebT+Pmj2EWAav5l+Vss
+         nH0Q==
+X-Gm-Message-State: APjAAAU8ay2hvclbfV1IbE6n/WoEfvMNCadE8JRkRDNJnUFWS7i9DTYe
+        2EoG1MUi6WC2aYy3C1TKEZIaxes=
+X-Google-Smtp-Source: APXvYqzcMPSnJ3OYS20YBUOnhtN5LeFqqMXUqA8iDmlBcXVY/2pwmyIQcwIu/ev22CTSndlo/euKwQ==
+X-Received: by 2002:aca:c489:: with SMTP id u131mr1274106oif.21.1572994105412;
+        Tue, 05 Nov 2019 14:48:25 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id n9sm6779413otn.4.2019.11.05.14.48.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 14:48:24 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:48:24 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Lee Jones <lee.jones@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-serial@vger.kernel.org
+Subject: Re: [PATCH v2] dt-bindings: serial: Convert Samsung UART bindings to
+ json-schema
+Message-ID: <20191105224824.GA8073@bogus>
+References: <20191103160112.10764-1-krzk@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20191104231712.GD23545@rkaganb.lan>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191103160112.10764-1-krzk@kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/19 00:17, Roman Kagan wrote:
->> This is not too nice for Intel which does support (through the EOI exit
->> mask) APICv even if PIT reinjection active.
-> Hmm, it's tempting to just make svm_load_eoi_exitmap() disable AVIC when
-> given a non-empty eoi_exit_bitmap, and enable it back on a clear
-> eoi_exit_bitmap.  This may remove the need to add special treatment to
-> PIT etc.
+On Sun,  3 Nov 2019 17:01:12 +0100, Krzysztof Kozlowski wrote:
+> Convert Samsung S3C/S5P/Exynos Serial/UART bindings to DT schema format
+> using json-schema.
+> 
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> 
+> ---
+> 
+> Changes since v1:
+> 1. Simplify 'clock-names' patters after Rob's suggestions,
+> 2. Add description to 'interrupts',
+> 3. Remove 'uniqueItems' where not needed,
+> 4. Remove aliases from example.
+> ---
+>  .../bindings/mfd/samsung,exynos5433-lpass.txt |   2 +-
+>  .../bindings/serial/samsung_uart.txt          |  58 ---------
+>  .../bindings/serial/samsung_uart.yaml         | 118 ++++++++++++++++++
+>  3 files changed, 119 insertions(+), 59 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.txt
+>  create mode 100644 Documentation/devicetree/bindings/serial/samsung_uart.yaml
+> 
 
-That is a very nice idea---we can make that a single disable reason,
-like APICV_DEACTIVATE_REASON_EOI, and Intel can simply never use it.
+Applied, thanks.
 
-Paolo
+Rob
