@@ -2,148 +2,183 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AC56C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:04:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9617C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27BCF2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:04:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2722087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:05:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="b03Ga5kL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fJCeHWWv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389342AbfKERET (ORCPT
+        id S2389166AbfKERFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:04:19 -0500
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36206 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387776AbfKERES (ORCPT
+        Tue, 5 Nov 2019 12:05:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:38621 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1730884AbfKERFL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:04:18 -0500
-Received: by mail-ed1-f68.google.com with SMTP id f7so13669471edq.3;
-        Tue, 05 Nov 2019 09:04:16 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=y64SjsIfQ/9yIi9jLut9emU3CIqXKBLjebItaPR8MI4=;
-        b=b03Ga5kLo8H6LwyRbdEm6JlWBhwvfkcloWhPBLvcL83ZRdFe/DPnCIWTbWuGBHCKIy
-         CwQAEXofncC90t51q3mgYYkIoKAygpgBhZ3In2PD0ZGbVvJinE2OFATIawoeqFq2k5hX
-         w+5tJBJhN88yvx/aTn8btb9HrMUjwnqIn2ZwGNgS5ykAd3QvbHpkO2yXpvJrMF2pmdcg
-         IY2TMyo4gT8gHrnecO2ioWMfNpc96zFQmIsQveS1tW9iNumqtitbmoBYX6HKtWlBr9u3
-         lLIlY/oltilH4HNUQCYJN0GUpdCiGd7kQZg602vEl3J+pZUJTRGoVA5qKUkFTRncOrl2
-         Pxww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=y64SjsIfQ/9yIi9jLut9emU3CIqXKBLjebItaPR8MI4=;
-        b=Kyw+UAUmzeIKnWLVgSly/2P7Bb8P7mafWn6VHaR011IWAGRZ8AwSXyzyh0vtoRNL24
-         GzP7M099U0/dEuyMEgj+UiqhFzxLjVeNJ6y095sEt4R0S2WQtgPI6BPHnkkf4x/yZlJB
-         SUVa/QNSUimzKF9lvSBLec+0PjOoM+T051YnrkiQ0wnyOTccwMHm1tL7pzHOLwrcT+mD
-         COad/cXv4d3vZQTnEho5rhQ7NrwZBn3r94fpz3UOS+aaG7aWqK3vZSl90cBtOvagZGfe
-         HsnNMP+8UpWOkGXl+hn1wEXYvBK+Nmkmwmh2hpGQsuUrFuA5G+K1W2UNJuf/fZisGKp4
-         BHuQ==
-X-Gm-Message-State: APjAAAWkc960QsdfUZx1XgT5d6IhfXhEsQyR7DtcOqzVeAgf1QsDRyW6
-        GHEmEgOo5C/+mRtWNcqD35oB3uV8
-X-Google-Smtp-Source: APXvYqyXgl/ezWaiT8hmLHQu3EWDiKlqP4WnFFo1R9NrjFW8KcTaPFAZXSn15DcCFMYf1Qoe9KxLcw==
-X-Received: by 2002:a17:906:80d1:: with SMTP id a17mr29236480ejx.77.1572973455848;
-        Tue, 05 Nov 2019 09:04:15 -0800 (PST)
-Received: from [10.67.50.53] ([192.19.223.252])
-        by smtp.googlemail.com with ESMTPSA id x6sm1071484edc.50.2019.11.05.09.04.13
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 09:04:15 -0800 (PST)
-Subject: Re: [PATCH v2] rtc: brcmstb-waketimer: add missed
- clk_disable_unprepare
-To:     Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <20191105160043.20018-1-hslester96@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
- 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
- M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
-Message-ID: <34008ef4-9078-fb6d-048b-2060fb16f418@gmail.com>
-Date:   Tue, 5 Nov 2019 09:04:11 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 12:05:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572973510;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GsUIs0PxyvJkU8tBUrC1vdu5JXZuWTORoAJ8kG/FaUE=;
+        b=fJCeHWWv42m/hsR7LD6Sds+1tMk2n0y2L6pHp6QXNodUHfMxNIANf9M8d0JA5IPVtQsaqh
+        NckknLV0kHt5BI6jJJ96W8Z/Q7wgvW5OwPedDulTBBip2pPzWoxHCnWEmALo6ovOsCaqpg
+        7ja8fxnSgSQYqCjaXVQCtwY4ZA6lFVE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-61-hv2alWZENk2-tTEzd97Tug-1; Tue, 05 Nov 2019 12:05:05 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3CCDE800C73;
+        Tue,  5 Nov 2019 17:05:04 +0000 (UTC)
+Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9E2EE608AC;
+        Tue,  5 Nov 2019 17:05:03 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 12:05:01 -0500
+From:   Brian Foster <bfoster@redhat.com>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 17/28] xfs: synchronous AIL pushing
+Message-ID: <20191105170501.GB28493@bfoster>
+References: <20191031234618.15403-1-david@fromorbit.com>
+ <20191031234618.15403-18-david@fromorbit.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105160043.20018-1-hslester96@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20191031234618.15403-18-david@fromorbit.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: hv2alWZENk2-tTEzd97Tug-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 8:00 AM, Chuhong Yuan wrote:
-> This driver forgets to disable and unprepare clock when remove.
-> Add a call to clk_disable_unprepare to fix it.
-> 
-> Fixes: c4f07ecee22e ("rtc: brcmstb-waketimer: Add Broadcom STB wake-timer")
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+On Fri, Nov 01, 2019 at 10:46:07AM +1100, Dave Chinner wrote:
+> From: Dave Chinner <dchinner@redhat.com>
+>=20
+> Provide an interface to push the AIL to a target LSN and wait for
+> the tail of the log to move past that LSN. This is used to wait for
+> all items older than a specific LSN to either be cleaned (written
+> back) or relogged to a higher LSN in the AIL. The primary use for
+> this is to allow IO free inode reclaim throttling.
+>=20
+> Factor the common AIL deletion code that does all the wakeups into a
+> helper so we only have one copy of this somewhat tricky code to
+> interface with all the wakeups necessary when the LSN of the log
+> tail changes.
+>=20
 
-Acked-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+The above paragraph doesn't seem applicable to this patch. With that
+fixed:
+
+Reviewed-by: Brian Foster <bfoster@redhat.com>
+
+> xfs_ail_push_sync() is temporary infrastructure to facilitate
+> non-blocking, IO-less inode reclaim throttling that allows further
+> structural changes to be made. Once those structural changes are
+> made, the need for this function goes away and it is removed. In
+> essence, it is only provided to ensure git bisects don't break while
+> the changes to the reclaim algorithms are in progress.
+>=20
+> Signed-off-by: Dave Chinner <dchinner@redhat.com>
+> ---
+>  fs/xfs/xfs_trans_ail.c  | 32 ++++++++++++++++++++++++++++++++
+>  fs/xfs/xfs_trans_priv.h |  2 ++
+>  2 files changed, 34 insertions(+)
+>=20
+> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
+> index 685a21cd24c0..3e1d0e1439e2 100644
+> --- a/fs/xfs/xfs_trans_ail.c
+> +++ b/fs/xfs/xfs_trans_ail.c
+> @@ -662,6 +662,36 @@ xfs_ail_push_all(
+>  =09=09xfs_ail_push(ailp, threshold_lsn);
+>  }
+> =20
+> +/*
+> + * Push the AIL to a specific lsn and wait for it to complete.
+> + */
+> +void
+> +xfs_ail_push_sync(
+> +=09struct xfs_ail=09=09*ailp,
+> +=09xfs_lsn_t=09=09threshold_lsn)
+> +{
+> +=09struct xfs_log_item=09*lip;
+> +=09DEFINE_WAIT(wait);
+> +
+> +=09spin_lock(&ailp->ail_lock);
+> +=09while ((lip =3D xfs_ail_min(ailp)) !=3D NULL) {
+> +=09=09prepare_to_wait(&ailp->ail_push, &wait, TASK_UNINTERRUPTIBLE);
+> +=09=09if (XFS_FORCED_SHUTDOWN(ailp->ail_mount) ||
+> +=09=09    XFS_LSN_CMP(threshold_lsn, lip->li_lsn) < 0)
+> +=09=09=09break;
+> +=09=09if (XFS_LSN_CMP(threshold_lsn, ailp->ail_target) > 0)
+> +=09=09=09ailp->ail_target =3D threshold_lsn;
+> +=09=09wake_up_process(ailp->ail_task);
+> +=09=09spin_unlock(&ailp->ail_lock);
+> +=09=09schedule();
+> +=09=09spin_lock(&ailp->ail_lock);
+> +=09}
+> +=09spin_unlock(&ailp->ail_lock);
+> +
+> +=09finish_wait(&ailp->ail_push, &wait);
+> +}
+> +
+> +
+>  /*
+>   * Push out all items in the AIL immediately and wait until the AIL is e=
+mpty.
+>   */
+> @@ -702,6 +732,7 @@ xfs_ail_update_finish(
+>  =09if (!XFS_FORCED_SHUTDOWN(mp))
+>  =09=09xlog_assign_tail_lsn_locked(mp);
+> =20
+> +=09wake_up_all(&ailp->ail_push);
+>  =09if (list_empty(&ailp->ail_head))
+>  =09=09wake_up_all(&ailp->ail_empty);
+>  =09spin_unlock(&ailp->ail_lock);
+> @@ -858,6 +889,7 @@ xfs_trans_ail_init(
+>  =09spin_lock_init(&ailp->ail_lock);
+>  =09INIT_LIST_HEAD(&ailp->ail_buf_list);
+>  =09init_waitqueue_head(&ailp->ail_empty);
+> +=09init_waitqueue_head(&ailp->ail_push);
+> =20
+>  =09ailp->ail_task =3D kthread_run(xfsaild, ailp, "xfsaild/%s",
+>  =09=09=09ailp->ail_mount->m_fsname);
+> diff --git a/fs/xfs/xfs_trans_priv.h b/fs/xfs/xfs_trans_priv.h
+> index 35655eac01a6..1b6f4bbd47c0 100644
+> --- a/fs/xfs/xfs_trans_priv.h
+> +++ b/fs/xfs/xfs_trans_priv.h
+> @@ -61,6 +61,7 @@ struct xfs_ail {
+>  =09int=09=09=09ail_log_flush;
+>  =09struct list_head=09ail_buf_list;
+>  =09wait_queue_head_t=09ail_empty;
+> +=09wait_queue_head_t=09ail_push;
+>  };
+> =20
+>  /*
+> @@ -113,6 +114,7 @@ xfs_trans_ail_remove(
+>  }
+> =20
+>  void=09=09=09xfs_ail_push(struct xfs_ail *, xfs_lsn_t);
+> +void=09=09=09xfs_ail_push_sync(struct xfs_ail *, xfs_lsn_t);
+>  void=09=09=09xfs_ail_push_all(struct xfs_ail *);
+>  void=09=09=09xfs_ail_push_all_sync(struct xfs_ail *);
+>  struct xfs_log_item=09*xfs_ail_min(struct xfs_ail  *ailp);
+> --=20
+> 2.24.0.rc0
+>=20
+
