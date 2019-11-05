@@ -2,123 +2,95 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9426C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:24:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901C1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 666DE21882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:24:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A53D21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:25:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B9NTx3zx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QxuB9COv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390880AbfKETYs (ORCPT
+        id S2390908AbfKETZE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:24:48 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:46050 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389691AbfKETYs (ORCPT
+        Tue, 5 Nov 2019 14:25:04 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40994 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389691AbfKETZD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:24:48 -0500
+        Tue, 5 Nov 2019 14:25:03 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572981886;
+        s=mimecast20190719; t=1572981903;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=fDuBnBaNcz8J1ZA9jKrH09ICdJTi+Igu4uXAX/Exyik=;
-        b=B9NTx3zxYULbGnh3qRje8uzzpXcaNKfBru+NwvlFOV7KwTs2LKCjIF7g8LEO8mGviVfRVC
-        7vevuG9/bCowhQ7DAWUBJHO3Ue8JoFLisz34BqZYHSPz+mWCjIGpbC1zo+srEmqO8HVjZy
-        1kGLNrrbWSUvlDy8QRpzaenOpWy6D5U=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-87-6BnFi5GPOCeK7zC2FOeztA-1; Tue, 05 Nov 2019 14:24:43 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4DEE62A3;
-        Tue,  5 Nov 2019 19:24:41 +0000 (UTC)
-Received: from x1.home (ovpn-116-110.phx2.redhat.com [10.3.116.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 88F5A5C1BB;
-        Tue,  5 Nov 2019 19:24:37 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 12:24:36 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     linmiaohe <linmiaohe@huawei.com>
-Cc:     <cohuck@redhat.com>, <eric.auger@redhat.com>, <aik@ozlabs.ru>,
-        <mpe@ellerman.id.au>, <bhelgaas@google.com>, <tglx@linutronix.de>,
-        <hexin.op@gmail.com>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] VFIO: PCI: eliminate unnecessary overhead in
- vfio_pci_reflck_find
-Message-ID: <20191105122436.5bd5282f@x1.home>
-In-Reply-To: <1572433030-6267-1-git-send-email-linmiaohe@huawei.com>
-References: <1572433030-6267-1-git-send-email-linmiaohe@huawei.com>
-Organization: Red Hat
+        bh=Mi8zXsV9StAkuNLQQmkOxXSCb86Evhad3cvP8SJ678M=;
+        b=QxuB9COv6B42fsiN+c+zUNcDG4Tc8ec60ZQwLx+1ct2pQ0pQ5SlHPVzujA8rs7Z1T7rL74
+        4ZAxpcW4OQONyyjgBz6OXSzdkoB43pj8GZy9irFY2w81PnE1pwn+Hv1n1rI/wapHafEayp
+        Us9XrRMnfxZzNwwH+n1ccvpJlCaaqNU=
+Received: from mail-lj1-f197.google.com (mail-lj1-f197.google.com
+ [209.85.208.197]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-114-aXesGiuDOku4UfmizacjQA-1; Tue, 05 Nov 2019 14:25:01 -0500
+Received: by mail-lj1-f197.google.com with SMTP id p14so4545132ljh.22
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:25:01 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nNaeMHw3xwJlxet/C7/GFJpDlb6Lnx4FzVDVS6q4vwU=;
+        b=kWSob+CEYHurbLtwyrwIkbCF2mk6DoHDK/ORqDcUBfivgKQDbtjkMNbdDRmfSxGC0r
+         BB+0xkKHfPmWi9kFTyeQOaoZ2TGbsY38IVW0udrp+vLbirzjqWMxhvgd8CcVJI6hq/zk
+         5FXWij9r4wG/Mbd1WyDsiLeiarZo90IkSmlp+ugxR+VA6Alq6Ab+Zjq6jDxqQfHkWAOm
+         zlAuyHMaHP+bBvKbu63PzMe2mAnsvN/VEZb1dRGrLmJWZu2a7VorHGFm57P9xfyePGFV
+         ARCsQQRYxL7jnrNfmmHKharSrBkmceQ4uMc458ZqK2Vg7e35bki3zTo8jga3/AukQ1pW
+         ORow==
+X-Gm-Message-State: APjAAAVE8g5DVyeEmri0jL6gCo2DfzZY1aSvIjJjfInuby6Ft5L8kq7K
+        o0on27TwqJ9A1pBKjIRlW6g9k2XuJ2WYGh9V6aMwlp3PjH7W8BeRwgFwh6k31QT+SuTqCGociTJ
+        Rej34yXL07hcCb9QbFQIFwKoVodSxsC7p3P/+Kf1I
+X-Received: by 2002:ac2:4d17:: with SMTP id r23mr22698843lfi.56.1572981900022;
+        Tue, 05 Nov 2019 11:25:00 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyvnBnmUfM/A06b2ws2N6XHrGUXAwSMAUposRLRjOC1OLL4xYZtEaEt8N5wfgTcfWSj7mF+lj+UNwyRj5bee9U=
+X-Received: by 2002:ac2:4d17:: with SMTP id r23mr22698839lfi.56.1572981899851;
+ Tue, 05 Nov 2019 11:24:59 -0800 (PST)
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 6BnFi5GPOCeK7zC2FOeztA-1
+References: <20191104131144.14333-1-mcroce@redhat.com>
+In-Reply-To: <20191104131144.14333-1-mcroce@redhat.com>
+From:   Matteo Croce <mcroce@redhat.com>
+Date:   Tue, 5 Nov 2019 20:24:23 +0100
+Message-ID: <CAGnkfhzdHWS8-FLPpAsma8ZeszkAujKAtfDcqLvNY7n__fz=4Q@mail.gmail.com>
+Subject: Re: [PATCH v2] kbuild: Add make dir-pkg build option
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        LKML <linux-kernel@vger.kernel.org>
+X-MC-Unique: aXesGiuDOku4UfmizacjQA-1
 X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 30 Oct 2019 18:57:10 +0800
-linmiaohe <linmiaohe@huawei.com> wrote:
+On Mon, Nov 4, 2019 at 2:11 PM Matteo Croce <mcroce@redhat.com> wrote:
+>
+> Add a 'dir-pkg' target which just creates the same directory structures
+> as in tar-pkg, but doesn't package anything.
+> Useful when the user wants to copy the kernel tree on a machine using
+> ssh, rsync or whatever.
+>
+> Signed-off-by: Matteo Croce <mcroce@redhat.com>
 
-> From: Miaohe Lin <linmiaohe@huawei.com>
->=20
-> The driver of the pci device may not equal to vfio_pci_driver,
-> but we fetch vfio_device from pci_dev unconditionally in func
-> vfio_pci_reflck_find. This overhead, such as the competition
-> of vfio.group_lock, can be eliminated by check pci_dev_driver
-> with vfio_pci_driver first.
->=20
-> Signed-off-by: Miaohe Lin <linmiaohe@huawei.com>
-> ---
->  drivers/vfio/pci/vfio_pci.c | 9 ++++-----
->  1 file changed, 4 insertions(+), 5 deletions(-)
->=20
-> diff --git a/drivers/vfio/pci/vfio_pci.c b/drivers/vfio/pci/vfio_pci.c
-> index 379a02c36e37..1e21970543a6 100644
-> --- a/drivers/vfio/pci/vfio_pci.c
-> +++ b/drivers/vfio/pci/vfio_pci.c
-> @@ -1466,15 +1466,14 @@ static int vfio_pci_reflck_find(struct pci_dev *p=
-dev, void *data)
->  =09struct vfio_device *device;
->  =09struct vfio_pci_device *vdev;
-> =20
-> -=09device =3D vfio_device_get_from_dev(&pdev->dev);
-> -=09if (!device)
-> -=09=09return 0;
-> -
->  =09if (pci_dev_driver(pdev) !=3D &vfio_pci_driver) {
-> -=09=09vfio_device_put(device);
->  =09=09return 0;
->  =09}
-> =20
-> +=09device =3D vfio_device_get_from_dev(&pdev->dev);
-> +=09if (!device)
-> +=09=09return 0;
-> +
->  =09vdev =3D vfio_device_data(device);
-> =20
->  =09if (vdev->reflck) {
+Hi Masahiro,
 
-I believe this introduces a race.  When we hold a reference to the vfio
-device, an unbind from a vfio bus driver will be blocked in
-vfio_del_group_dev().  Therefore if we test the driver is vfio-pci
-while holding this reference, we know that it cannot be released and
-the device_data is a valid vfio_pci_device.  Testing the driver prior
-to acquiring a vfio device reference is meaningless as we have no
-guarantee that the driver has not changed by the time we acquire a
-reference.  Are you actually seeing contention here or was this a code
-inspection optimization?  Thanks,
+here there is the v2 with that nit addressed :)
 
-Alex
+Regards,
+--=20
+Matteo Croce
+per aspera ad upstream
 
