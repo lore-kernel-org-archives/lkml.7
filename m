@@ -2,133 +2,118 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A9E9CA9EDC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:41:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4990FCA9EDD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:43:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C65A20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:41:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19CC720869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:43:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572943437;
+	bh=HkBwVBiujM3hA6tyF0KkurvliglT+UAU6/V+HW7VbCg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=NygyU2sAA4XoGle0Qoyizts08wKYIK9s1sZNCU9/U/mpHJxwzI37Cjg5R/ZMevTiC
+	 vvBv/moXwfZK1v0qavMmSPJSKU+/+xJknwNuK5EdK6Pa9x07zEkUImP53Hq4fSVOAl
+	 C3NRyno9Dcb9qL90bDStTOWMaAo2ycW7ewVJQx3U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730587AbfKEIlO (ORCPT
+        id S1730541AbfKEIn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:41:14 -0500
-Received: from spam01.hygon.cn ([110.188.70.11]:55541 "EHLO spam1.hygon.cn"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725806AbfKEIlO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:41:14 -0500
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id xA58e3Cc096750;
-        Tue, 5 Nov 2019 16:40:03 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from cncheex01.Hygon.cn ([172.23.18.10])
-        by MK-DB.hygon.cn with ESMTP id xA58e0ur006406;
-        Tue, 5 Nov 2019 16:40:00 +0800 (GMT-8)
-        (envelope-from fanjinke@hygon.cn)
-Received: from bogon.higon.com (172.23.18.44) by cncheex01.Hygon.cn
- (172.23.18.10) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 5 Nov 2019
- 16:40:00 +0800
-From:   Jinke Fan <fanjinke@hygon.cn>
-To:     <alexandre.belloni@bootlin.com>, <a.zummo@towertech.it>,
-        <puwen@hygon.cn>, <thomas.lendacky@amd.com>, <kim.phillips@amd.com>
-CC:     <linux-rtc@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Jinke Fan <fanjinke@hygon.cn>
-Subject: [RESEND PATCH v4] rtc: Fix the AltCentury value on AMD/Hygon platform
-Date:   Tue, 5 Nov 2019 16:39:43 +0800
-Message-ID: <20191105083943.115320-1-fanjinke@hygon.cn>
-X-Mailer: git-send-email 2.17.1
+        Tue, 5 Nov 2019 03:43:56 -0500
+Received: from mx2.suse.de ([195.135.220.15]:51110 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727401AbfKEInz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 03:43:55 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 20CBDAC9A;
+        Tue,  5 Nov 2019 08:43:54 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 09:43:52 +0100
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Vincent Whitchurch <vincent.whitchurch@axis.com>
+Cc:     Pavel Tatashin <pasha.tatashin@soleen.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "osalvador@suse.de" <osalvador@suse.de>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] mm/sparse: Consistently do not zero memmap
+Message-ID: <20191105084352.GJ22672@dhcp22.suse.cz>
+References: <20191030131122.8256-1-vincent.whitchurch@axis.com>
+ <20191030132958.GD31513@dhcp22.suse.cz>
+ <20191030140216.i26n22asgafckfxy@axis.com>
+ <20191030141259.GE31513@dhcp22.suse.cz>
+ <CA+CK2bDObV=N1Y+LhDX=tYsTX3HZ+mbB=8aXT=fPX254hKEUBQ@mail.gmail.com>
+ <20191030153150.GI31513@dhcp22.suse.cz>
+ <CA+CK2bA3gM4pMSj-wDWgAPNoPtcjwd59_6VivKA2Uf2GriASsw@mail.gmail.com>
+ <20191030173123.GK31513@dhcp22.suse.cz>
+ <20191031072555.GA13102@dhcp22.suse.cz>
+ <20191104155126.y2fcjwrx5mhdoqi7@axis.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex01.Hygon.cn
- (172.23.18.10)
-X-MAIL: spam1.hygon.cn xA58e3Cc096750
-X-DNSRBL: 
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104155126.y2fcjwrx5mhdoqi7@axis.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using following operations:
-date -s "21190910 19:20:00"
-hwclock -w
-to change date from 2019 to 2119 for test, it will fail on Hygon
-Dhyana and AMD Zen CPUs, while the same operations run ok on Intel i7
-platform.
+On Mon 04-11-19 16:51:26, Vincent Whitchurch wrote:
+> On Thu, Oct 31, 2019 at 08:25:55AM +0100, Michal Hocko wrote:
+> > On Wed 30-10-19 18:31:23, Michal Hocko wrote:
+> > [...]
+> > > What about this? It still aligns to the size but that should be
+> > > correctly done to the section size level.
+> > > 
+> > > diff --git a/mm/sparse.c b/mm/sparse.c
+> > > index 72f010d9bff5..ab1e6175ac9a 100644
+> > > --- a/mm/sparse.c
+> > > +++ b/mm/sparse.c
+> > > @@ -456,8 +456,7 @@ struct page __init *__populate_section_memmap(unsigned long pfn,
+> > >  	if (map)
+> > >  		return map;
+> > >  
+> > > -	map = memblock_alloc_try_nid(size,
+> > > -					  PAGE_SIZE, addr,
+> > > +	map = memblock_alloc_try_nid(size, size, addr,
+> > >  					  MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+> > >  	if (!map)
+> > >  		panic("%s: Failed to allocate %lu bytes align=0x%lx nid=%d from=%pa\n",
+> > > @@ -474,8 +473,13 @@ static void __init sparse_buffer_init(unsigned long size, int nid)
+> > >  {
+> > >  	phys_addr_t addr = __pa(MAX_DMA_ADDRESS);
+> > >  	WARN_ON(sparsemap_buf);	/* forgot to call sparse_buffer_fini()? */
+> > > +	/*
+> > > +	 * Pre-allocated buffer is mainly used by __populate_section_memmap
+> > > +	 * and we want it to be properly aligned to the section size - this is
+> > > +	 * especially the case for VMEMMAP which maps memmap to PMDs
+> > > +	 */
+> > >  	sparsemap_buf =
+> > > -		memblock_alloc_try_nid_raw(size, PAGE_SIZE,
+> > > +		memblock_alloc_try_nid_raw(size, section_map_size(),
+> > >  						addr,
+> > >  						MEMBLOCK_ALLOC_ACCESSIBLE, nid);
+> > >  	sparsemap_buf_end = sparsemap_buf + size;
+> >
+> > Vincent, could you give this a try please? It would be even better if
+> > you could add some debugging to measure the overhead. Let me know if you
+> > need any help with a debugging patch.
+> 
+> I've tested this patch and it works on my platform:  The allocations
+> from sparse_buffer_alloc() now succeed and the fallback path is not
+> taken.
 
-MC146818 driver use function mc146818_set_time() to set register
-RTC_FREQ_SELECT(RTC_REG_A)'s bit4-bit6 field which means divider stage
-reset value on Intel platform to 0x7.
+Thanks a lot. I will try to prepare the full patch with a proper
+changelog sometimes this week.
 
-While AMD/Hygon RTC_REG_A(0Ah)'s bit4 is defined as DV0 [Reference]:
-DV0 = 0 selects Bank 0, DV0 = 1 selects Bank 1. Bit5-bit6 is defined
-as reserved.
+> I'm not sure what kind of overhead you're interested in.
 
-DV0 is set to 1, it will select Bank 1, which will disable AltCentury
-register(0x32) access. As UEFI pass acpi_gbl_FADT.century 0x32
-(AltCentury), the CMOS write will be failed on code:
-CMOS_WRITE(century, acpi_gbl_FADT.century).
+The memory overhead when the sparsemap_buf PAGE_SIZE alignment is in
+place. In other words (ptr - sparsemap_buf) in sparse_buffer_alloc. If
+the sparsemap_buf was properly aligned then the diff should be 0.
 
-Correct RTC_REG_A bank select bit(DV0) to 0 on AMD/Hygon CPUs, it will
-enable AltCentury(0x32) register writing and finally setup century as
-expected.
-
-Test results on Intel i7, AMD EPYC(17h) and Hygon machine show that it
-works as expected.
-Compiling for sparc64 and alpha architectures are passed.
-
-Reference:
-https://www.amd.com/system/files/TechDocs/51192_Bolton_FCH_RRG.pdf
-section: 3.13 Real Time Clock (RTC)
-
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Jinke Fan <fanjinke@hygon.cn>
----
-
-v3->v4:
-  - Limited modification to AMD EPYC(17h).
-  - Change the macro RTC_DV0 to RTC_DIV_RESET2.
-  - Make sure save_freq_select's bit4 is cleared.
-
-v2->v3:
-  - Make the changes only relevant to AMD/Hygon.
-
-v1->v2:
-  - Fix the compile errors on sparc64/alpha platform.
-
- drivers/rtc/rtc-mc146818-lib.c | 15 ++++++++++++++-
- 1 file changed, 14 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/rtc/rtc-mc146818-lib.c b/drivers/rtc/rtc-mc146818-lib.c
-index 2ecd875..df2829d 100644
---- a/drivers/rtc/rtc-mc146818-lib.c
-+++ b/drivers/rtc/rtc-mc146818-lib.c
-@@ -172,7 +172,20 @@ int mc146818_set_time(struct rtc_time *time)
- 	save_control = CMOS_READ(RTC_CONTROL);
- 	CMOS_WRITE((save_control|RTC_SET), RTC_CONTROL);
- 	save_freq_select = CMOS_READ(RTC_FREQ_SELECT);
--	CMOS_WRITE((save_freq_select|RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+
-+#ifdef CONFIG_X86
-+	if ((boot_cpu_data.x86_vendor == X86_VENDOR_AMD &&
-+	     boot_cpu_data.x86 == 0x17) ||
-+	     boot_cpu_data.x86_vendor == X86_VENDOR_HYGON) {
-+		CMOS_WRITE((save_freq_select & (~RTC_DIV_RESET2)),
-+			RTC_FREQ_SELECT);
-+		save_freq_select &= ~RTC_DIV_RESET2;
-+	} else
-+		CMOS_WRITE((save_freq_select | RTC_DIV_RESET2),
-+			RTC_FREQ_SELECT);
-+#else
-+	CMOS_WRITE((save_freq_select | RTC_DIV_RESET2), RTC_FREQ_SELECT);
-+#endif
- 
- #ifdef CONFIG_MACH_DECSTATION
- 	CMOS_WRITE(real_yrs, RTC_DEC_YEAR);
 -- 
-2.7.4
-
+Michal Hocko
+SUSE Labs
