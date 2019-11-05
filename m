@@ -4,56 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04D53C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D436AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D24A021D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD20E21D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572977920;
-	bh=0zExdJqDp/VzHJKCc8MvHYs8Q9aEJBX1cFgElJrKlW4=;
+	s=default; t=1572977927;
+	bh=QqPFE194ZJaaFvk5H6asJVIqrWzLHI3+MZdoRYh0BYs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tuF7qN7z7Qm9Aa8dz0y6hF77TbQBwbweNihldxRHkFj1JGRLR2XviG452aj8tEXJJ
-	 iPRdj2KWQp4EdQm3FZQT6Hxb6D3l3C68Oc0G//Yll9jL9K0Nxugz5iYKUot3SgqKbl
-	 WoOjK6uyMSPIfLfK5LJIuvzwNHAwoe5U9PQoXtIo=
+	b=d2bCHcW66KaiW29T5PsLfv0LNdHOkIDSwLdmJ1xZM2IASYOlIu0I+yRVUP99EKBcI
+	 FyJVOReehKn5Z9zMwDRgcgcevmBVtUe/9XRSUhwWkEbsjexyOegx6HXBute2S6Jwnu
+	 HswDehmieC8ac7BgkKDOL0Wcc63fU7QaHMe1ryM4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390745AbfKESSj (ORCPT
+        id S2390757AbfKESSq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:18:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50740 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 13:18:46 -0500
+Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390520AbfKESSj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:18:39 -0500
+        id S2390672AbfKESSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 13:18:46 -0500
 Received: from quaco.ghostprotocols.net (unknown [177.195.215.116])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C698521929;
-        Tue,  5 Nov 2019 18:18:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09608214D8;
+        Tue,  5 Nov 2019 18:18:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572977918;
-        bh=0zExdJqDp/VzHJKCc8MvHYs8Q9aEJBX1cFgElJrKlW4=;
+        s=default; t=1572977925;
+        bh=QqPFE194ZJaaFvk5H6asJVIqrWzLHI3+MZdoRYh0BYs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=vUjHSL2YC0npT72YmZWL/ISgKX3PKq5xoS1s5SVXziMQ2C9xFlyunbr78/fE6QLSr
-         nWxMSKirZVCciYB+MTmBhjX8AxAocr6RUdlDeyYXANO9xKyOwElnbLjwxdj61OO33+
-         7pbUMVduCzSzPalcXHpdxybE38FPeclcu+612LDo=
+        b=i5CPskWpW0ovJSRoxRFzG85gshdkDieKT1ULcbk3kVxWlJ6FBSZtWA/6izYkon4jr
+         H6BZ8TtuO3Gw/hQIJ/3Fmja1FmGzlTpnYcv8DHIG9P1U8zEugHDaKtIt8HlbhzfQ0S
+         bH5XuQIToawEhp2cpExqLvpyMbfunyiDGX8QAmxw=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 2/3] perf tools: Remove unused trace_find_next_event()
-Date:   Tue,  5 Nov 2019 15:18:17 -0300
-Message-Id: <20191105181818.26748-3-acme@kernel.org>
+Subject: [PATCH 3/3] perf tools: Fix time sorting
+Date:   Tue,  5 Nov 2019 15:18:18 -0300
+Message-Id: <20191105181818.26748-4-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191105181818.26748-1-acme@kernel.org>
 References: <20191105181818.26748-1-acme@kernel.org>
@@ -64,79 +63,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+From: Jiri Olsa <jolsa@kernel.org>
 
-trace_find_next_event() was buggy and pretty much a useless helper. As
-there are no more users, just remove it.
+The final sort might get confused when the comparison is done over
+bigger numbers than int like for -s time.
 
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
+Check the following report for longer workloads:
+
+  $ perf report -s time -F time,overhead --stdio
+
+Fix hist_entry__sort() to properly return int64_t and not possible cut
+int.
+
+Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Reviewed-by: Andi Kleen <ak@linux.intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Michael Petlan <mpetlan@redhat.com>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lore.kernel.org/lkml/20191017210636.224045576@goodmis.org
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: stable@vger.kernel.org # v3.16+
+Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/trace-event-parse.c | 31 -----------------------------
- tools/perf/util/trace-event.h       |  2 --
- 2 files changed, 33 deletions(-)
+ tools/perf/util/hist.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/trace-event-parse.c b/tools/perf/util/trace-event-parse.c
-index 5d6bfc70b210..9634f0ae57be 100644
---- a/tools/perf/util/trace-event-parse.c
-+++ b/tools/perf/util/trace-event-parse.c
-@@ -173,37 +173,6 @@ int parse_event_file(struct tep_handle *pevent,
- 	return tep_parse_event(pevent, buf, size, sys);
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 679a1d75090c..7b6eaf5e0bda 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -1625,7 +1625,7 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
+ 	return 0;
  }
  
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event)
--{
--	static int idx;
--	int events_count;
--	struct tep_event *all_events;
--
--	all_events = tep_get_first_event(pevent);
--	events_count = tep_get_events_count(pevent);
--	if (!pevent || !all_events || events_count < 1)
--		return NULL;
--
--	if (!event) {
--		idx = 0;
--		return all_events;
--	}
--
--	if (idx < events_count && event == (all_events + idx)) {
--		idx++;
--		if (idx == events_count)
--			return NULL;
--		return (all_events + idx);
--	}
--
--	for (idx = 1; idx < events_count; idx++) {
--		if (event == (all_events + (idx - 1)))
--			return (all_events + idx);
--	}
--	return NULL;
--}
--
- struct flag {
- 	const char *name;
- 	unsigned long long value;
-diff --git a/tools/perf/util/trace-event.h b/tools/perf/util/trace-event.h
-index 2e158387b3d7..72fdf2a3577c 100644
---- a/tools/perf/util/trace-event.h
-+++ b/tools/perf/util/trace-event.h
-@@ -47,8 +47,6 @@ void parse_saved_cmdline(struct tep_handle *pevent, char *file, unsigned int siz
- 
- ssize_t trace_report(int fd, struct trace_event *tevent, bool repipe);
- 
--struct tep_event *trace_find_next_event(struct tep_handle *pevent,
--					struct tep_event *event);
- unsigned long long read_size(struct tep_event *event, void *ptr, int size);
- unsigned long long eval_flag(const char *flag);
- 
+-static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
++static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
+ {
+ 	struct hists *hists = a->hists;
+ 	struct perf_hpp_fmt *fmt;
 -- 
 2.21.0
 
