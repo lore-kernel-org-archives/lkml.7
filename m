@@ -2,165 +2,153 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004CCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:09:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE100CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C08217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:09:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B5591214D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:14:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ndPLVpqw";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GOiVsOwt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730076AbfKECJU (ORCPT
+        id S1729879AbfKECOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:09:20 -0500
-Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35101 "EHLO
-        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728987AbfKECJU (ORCPT
+        Mon, 4 Nov 2019 21:14:49 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:57628 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728987AbfKECOt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:09:20 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0ThE8SMa_1572919755;
-Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0ThE8SMa_1572919755)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 05 Nov 2019 10:09:16 +0800
-Subject: Re: [PATCH V2 2/7] rcu: cleanup rcu_preempt_deferred_qs()
-To:     paulmck@kernel.org
-Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
-        Josh Triplett <josh@joshtriplett.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
-References: <20191102124559.1135-1-laijs@linux.alibaba.com>
- <20191102124559.1135-3-laijs@linux.alibaba.com>
- <20191103020150.GA23770@tardis>
- <7489f817-adaf-275b-b19d-18ad248b071f@linux.alibaba.com>
- <20191104145539.GY20975@paulmck-ThinkPad-P72>
-From:   Lai Jiangshan <laijs@linux.alibaba.com>
-Message-ID: <e820852f-87ca-f974-2245-99833205e270@linux.alibaba.com>
-Date:   Tue, 5 Nov 2019 10:09:15 +0800
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
- Gecko/20100101 Thunderbird/60.8.0
+        Mon, 4 Nov 2019 21:14:49 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id AA64960D85; Tue,  5 Nov 2019 02:14:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572920087;
+        bh=0uidgkLkU8pB/hQcd5eELhl2vlQ93A/xAt8T1/nz1HM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ndPLVpqwIejr4mWK+39aBDHCZ+ckhTJ9vPysEZEfjNuRQ6j07dP7Kf6Ci5XP+YmZD
+         owiFjDzzxe1/ZeUqKM/m0+kEGfiCRo0rrDdZk0UOZxVexiTbuyGgX/ApZ7zNTn6chG
+         brSPHOk/VbeZbCz8le4EtVR01dft5qi/uJI6w/Fw=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 7903C60D61;
+        Tue,  5 Nov 2019 02:14:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572920082;
+        bh=0uidgkLkU8pB/hQcd5eELhl2vlQ93A/xAt8T1/nz1HM=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=GOiVsOwt7S/mDZ4dtWHF+KL+Myp7znhfio9X8xMqyWxxcgjkhEK8cT4E8/aSJbuWf
+         Lg7bC4s1PEFfIfHg7LV/A68oFRJgveBqEQpnTievgA7TCnU6ILn4wi/67nUiNjIAGA
+         bdq/kZ5O0+8kyCu8YAxM0r2bm1JiHZwKJsTVuGvs=
 MIME-Version: 1.0
-In-Reply-To: <20191104145539.GY20975@paulmck-ThinkPad-P72>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 07:44:42 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Elliot Berman <eberman@codeaurora.org>, swboyd@chromium.org
+Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
+        tsoni@codeaurora.org, sidgup@codeaurora.org,
+        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 00/17] Restructure, improve target support for qcom_scm
+ driver
+In-Reply-To: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
+References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
+Message-ID: <c608454385b38703be0888b60aa915a8@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/11/4 10:55 下午, Paul E. McKenney wrote:
-> On Sun, Nov 03, 2019 at 01:01:21PM +0800, Lai Jiangshan wrote:
->>
->>
->> On 2019/11/3 10:01 上午, Boqun Feng wrote:
->>> Hi Jiangshan,
->>>
->>>
->>> I haven't checked the correctness of this patch carefully, but..
->>>
->>>
->>> On Sat, Nov 02, 2019 at 12:45:54PM +0000, Lai Jiangshan wrote:
->>>> Don't need to set ->rcu_read_lock_nesting negative, irq-protected
->>>> rcu_preempt_deferred_qs_irqrestore() doesn't expect
->>>> ->rcu_read_lock_nesting to be negative to work, it even
->>>> doesn't access to ->rcu_read_lock_nesting any more.
->>>
->>> rcu_preempt_deferred_qs_irqrestore() will report RCU qs, and may
->>> eventually call swake_up() or its friends to wake up, say, the gp
->>> kthread, and the wake up functions could go into the scheduler code
->>> path which might have RCU read-side critical section in it, IOW,
->>> accessing ->rcu_read_lock_nesting.
->>
->> Sure, thank you for pointing it out.
->>
->> I should rewrite the changelog in next round. Like this:
->>
->> rcu: cleanup rcu_preempt_deferred_qs()
->>
->> IRQ-protected rcu_preempt_deferred_qs_irqrestore() itself doesn't
->> expect ->rcu_read_lock_nesting to be negative to work.
->>
->> There might be RCU read-side critical section in it (from wakeup()
->> or so), 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
->> will ensure that ->rcu_read_unlock_special is zero and these RCU
->> read-side critical sections will not call rcu_read_unlock_special().
->>
->> Thanks
->> Lai
->>
->> ===
->> PS: Were 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
->> not applied earlier, it will be protected by previous patch (patch1)
->> in this series
->> "rcu: use preempt_count to test whether scheduler locks is held"
->> when rcu_read_unlock_special() is called.
+On 2019-11-05 06:57, Elliot Berman wrote:
+> This series improves support for 32-bit Qualcomm targets on qcom_scm 
+> driver.
 > 
-> This one in -rcu, you mean?
+> Currently, the qcom_scm driver supports only 64-bit Qualcomm targets 
+> and very
+> old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
+> Convention to communicate with secure world. Older 32-bit targets use a
+> "buffer-based" legacy approach for communicating with secure world (as
+> implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM 
+> SMCCC.
+> Currently, SMCCC-based communication is enabled only on ARM64 config 
+> and
+> buffer-based communication only on ARM config. This patch-series 
+> combines SMCCC
+> and legacy conventions and selects the correct convention by querying 
+> the secure
+> world [1].
 > 
-> 5c5d9065e4eb ("rcu: Clear ->rcu_read_unlock_special only once")
-
-
-Yes, but the commit ID is floating in the tree.
-
+> We decided to take the opportunity as well to clean up the driver 
+> rather than
+> try to patch together qcom_scm-32 and qcom_scm-64.
 > 
-> Some adjustment was needed due to my not applying the earlier patches
-> that assumed nested interrupts.  Please let me know if further adjustments
-> are needed.
-
-I don't think the earlier patches are needed. If the possible? nested
-interrupts described in my previous emails is an issue, the patch
-"rcu: don't use negative ->rcu_read_lock_nesting" in this
-series is enough to fixed it. If any adjustments needed for
-this series, I will just put the adjustments the series.
-
-Thanks
-Lai
-
+> Patches 1-4 improve macro names, reorder macros/functions, and prune 
+> unused
+>             macros/functions. No functional changes were introduced.
+> Patches 5-9 clears up the SCM abstraction in qcom_scm-64.
+> Patches 10-14 clears up the SCM abstraction in qcom_scm-32.
+> Patches 9 and 15-16 enable dynamically using the different calling 
+> conventions.
 > 
-> 							Thanx, Paul
+> This series is based on 
+> https://lore.kernel.org/patchwork/cover/1129991/
 > 
->>> Again, haven't checked closely, but this argument in the commit log
->>> seems untrue.
->>>
->>> Regards,
->>> Boqun
->>>
->>>>
->>>> It is true that NMI over rcu_preempt_deferred_qs_irqrestore()
->>>> may access to ->rcu_read_lock_nesting, but it is still safe
->>>> since rcu_read_unlock_special() can protect itself from NMI.
->>>>
->>>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
->>>> ---
->>>>    kernel/rcu/tree_plugin.h | 5 -----
->>>>    1 file changed, 5 deletions(-)
->>>>
->>>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
->>>> index aba5896d67e3..2fab8be2061f 100644
->>>> --- a/kernel/rcu/tree_plugin.h
->>>> +++ b/kernel/rcu/tree_plugin.h
->>>> @@ -552,16 +552,11 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
->>>>    static void rcu_preempt_deferred_qs(struct task_struct *t)
->>>>    {
->>>>    	unsigned long flags;
->>>> -	bool couldrecurse = t->rcu_read_lock_nesting >= 0;
->>>>    	if (!rcu_preempt_need_deferred_qs(t))
->>>>    		return;
->>>> -	if (couldrecurse)
->>>> -		t->rcu_read_lock_nesting -= RCU_NEST_BIAS;
->>>>    	local_irq_save(flags);
->>>>    	rcu_preempt_deferred_qs_irqrestore(t, flags);
->>>> -	if (couldrecurse)
->>>> -		t->rcu_read_lock_nesting += RCU_NEST_BIAS;
->>>>    }
->>>>    /*
->>>> -- 
->>>> 2.20.1
->>>>
+> [1]:
+> https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/soc/qcom/scm.c?h=kernel.lnx.4.9.r28-rel#n555
+> 
+> Changes since RFC:
+>  - Fixed missing return values in qcom_scm_call_smccc
+>  - Fixed order of arguments in qcom_scm_set_warm_boot_addr
+>  - Adjusted logic of SMC convention to properly support older QCOM 
+> secure worlds
+>  - Boot tested on IFC6410 based on linaro kernel tag:
+>    debian-qcom-dragonboard410c-18.01 (which does basic verification of 
+> legacy
+>    SCM calls: at least warm_boot_addr, cold_boot_addr, and power_down)
+> 
+> Elliot Berman (17):
+>   firmware: qcom_scm: Rename macros and structures
+>   firmware: qcom_scm: Apply consistent naming scheme to command IDs
+>   firmware: qcom_scm: Order functions, definitions by service/command
+>   firmware: qcom_scm: Remove unused qcom_scm_get_version
+>   firmware: qcom_scm-64: Move svc/cmd/owner into qcom_scm_desc
+>   firmware: qcom_scm-64: Add SCM results to descriptor
+>   firmware: qcom_scm-64: Remove qcom_scm_call_do_smccc
+>   firmware: qcom_scm-64: Move SMC register filling to
+>     qcom_scm_call_smccc
+>   firmware: qcom_scm-64: Improve SMC convention detection
+>   firmware: qcom_scm-32: Use SMC arch wrappers
+>   firmware: qcom_scm-32: Use qcom_scm_desc in non-atomic calls
+>   firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
+>   firmware: qcom_scm-32: Create common legacy atomic call
+>   firmware: qcom_scm-32: Add device argument to atomic calls
+>   firmware: qcom_scm: Merge legacy and SMCCC conventions
+>   firmware: qcom_scm: Enable legacy calling convention in qcom_scm-64.c
+>   firmware: qcom_scm: Rename -64 -> -smc, remove -32
+> 
+>  drivers/firmware/Kconfig        |  18 +-
+>  drivers/firmware/Makefile       |   4 +-
+>  drivers/firmware/qcom_scm-32.c  | 621 --------------------------
+>  drivers/firmware/qcom_scm-64.c  | 567 ------------------------
+>  drivers/firmware/qcom_scm-smc.c | 949 
+> ++++++++++++++++++++++++++++++++++++++++
+>  drivers/firmware/qcom_scm.c     | 235 +++++-----
+>  drivers/firmware/qcom_scm.h     | 115 +++--
+>  include/linux/qcom_scm.h        |  72 +--
+>  8 files changed, 1169 insertions(+), 1412 deletions(-)
+>  delete mode 100644 drivers/firmware/qcom_scm-32.c
+>  delete mode 100644 drivers/firmware/qcom_scm-64.c
+>  create mode 100644 drivers/firmware/qcom_scm-smc.c
+
+++Stephen
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
