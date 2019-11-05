@@ -2,106 +2,170 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D436AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 227E1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:19:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD20E21D71
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:18:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572977927;
-	bh=QqPFE194ZJaaFvk5H6asJVIqrWzLHI3+MZdoRYh0BYs=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d2bCHcW66KaiW29T5PsLfv0LNdHOkIDSwLdmJ1xZM2IASYOlIu0I+yRVUP99EKBcI
-	 FyJVOReehKn5Z9zMwDRgcgcevmBVtUe/9XRSUhwWkEbsjexyOegx6HXBute2S6Jwnu
-	 HswDehmieC8ac7BgkKDOL0Wcc63fU7QaHMe1ryM4=
+	by mail.kernel.org (Postfix) with ESMTP id ED8CB214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:19:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="OGC1Hi5B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390757AbfKESSq (ORCPT
+        id S2390764AbfKESTd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:18:46 -0500
-Received: from mail.kernel.org ([198.145.29.99]:50922 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390672AbfKESSq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:18:46 -0500
-Received: from quaco.ghostprotocols.net (unknown [177.195.215.116])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09608214D8;
-        Tue,  5 Nov 2019 18:18:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572977925;
-        bh=QqPFE194ZJaaFvk5H6asJVIqrWzLHI3+MZdoRYh0BYs=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i5CPskWpW0ovJSRoxRFzG85gshdkDieKT1ULcbk3kVxWlJ6FBSZtWA/6izYkon4jr
-         H6BZ8TtuO3Gw/hQIJ/3Fmja1FmGzlTpnYcv8DHIG9P1U8zEugHDaKtIt8HlbhzfQ0S
-         bH5XuQIToawEhp2cpExqLvpyMbfunyiDGX8QAmxw=
-From:   Arnaldo Carvalho de Melo <acme@kernel.org>
-To:     Ingo Molnar <mingo@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
-        Clark Williams <williams@redhat.com>,
-        linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Michael Petlan <mpetlan@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>, stable@vger.kernel.org,
-        Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 3/3] perf tools: Fix time sorting
-Date:   Tue,  5 Nov 2019 15:18:18 -0300
-Message-Id: <20191105181818.26748-4-acme@kernel.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191105181818.26748-1-acme@kernel.org>
-References: <20191105181818.26748-1-acme@kernel.org>
+        Tue, 5 Nov 2019 13:19:33 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:51708 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390233AbfKESTc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 13:19:32 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5IJPP1114769;
+        Tue, 5 Nov 2019 12:19:25 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572977965;
+        bh=PiZyUujy+SgYthoNgklnlF7ATFYTXAxEvu3VLNm0Dl4=;
+        h=From:To:CC:Subject:Date;
+        b=OGC1Hi5Bz9T3D01WhhBl3G8Jyj2ECnt96cMSUActjR026sqQUx2T3vaLpy26WBZUL
+         x/OQ9YNKUN4uoK3673or4qQmwWo4RjLf+/PqsleqWq+YPwSAKtDd//r0nnk09Mu6n/
+         YN6/WgfqkppADMJQrD68PLlET/9MxRBV0IzVG9HU=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5IJPxg037931
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 12:19:25 -0600
+Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
+ 2019 12:19:25 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE113.ent.ti.com
+ (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Tue, 5 Nov 2019 12:19:10 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5IJP4s061468;
+        Tue, 5 Nov 2019 12:19:25 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH 1/2] dt-bindings: net: dp83869: Add TI dp83869 phy
+Date:   Tue, 5 Nov 2019 12:18:25 -0600
+Message-ID: <20191105181826.25114-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jiri Olsa <jolsa@kernel.org>
+Add dt bindings for the TI dp83869 Gigabit ethernet phy
+device.
 
-The final sort might get confused when the comparison is done over
-bigger numbers than int like for -s time.
-
-Check the following report for longer workloads:
-
-  $ perf report -s time -F time,overhead --stdio
-
-Fix hist_entry__sort() to properly return int64_t and not possible cut
-int.
-
-Fixes: 043ca389a318 ("perf tools: Use hpp formats to sort final output")
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-Reviewed-by: Andi Kleen <ak@linux.intel.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Michael Petlan <mpetlan@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: stable@vger.kernel.org # v3.16+
-Link: http://lore.kernel.org/lkml/20191104232711.16055-1-jolsa@kernel.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Rob Herring <robh+dt@kernel.org>
 ---
- tools/perf/util/hist.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,dp83869.yaml
 
-diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
-index 679a1d75090c..7b6eaf5e0bda 100644
---- a/tools/perf/util/hist.c
-+++ b/tools/perf/util/hist.c
-@@ -1625,7 +1625,7 @@ int hists__collapse_resort(struct hists *hists, struct ui_progress *prog)
- 	return 0;
- }
- 
--static int hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
-+static int64_t hist_entry__sort(struct hist_entry *a, struct hist_entry *b)
- {
- 	struct hists *hists = a->hists;
- 	struct perf_hpp_fmt *fmt;
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+new file mode 100644
+index 000000000000..6fe3e451da8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/net/ti,dp83869.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TI DP83869 ethernet PHY
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The DP83869HM device is a robust, fully-featured Gigabit (PHY) transceiver
++  with integrated PMD sublayers that supports 10BASE-Te, 100BASE-TX and
++  1000BASE-T Ethernet protocols. The DP83869 also supports 1000BASE-X and
++  100BASE-FX Fiber protocols.
++  This device interfaces to the MAC layer through Reduced GMII (RGMII) and
++  SGMII The DP83869HM supports Media Conversion in Managed mode. In this mode,
++  the DP83869HM can run 1000BASE-X-to-1000BASE-T and 100BASE-FX-to-100BASE-TX
++  conversions.  The DP83869HM can also support Bridge Conversion from RGMII to
++  SGMII and SGMII to RGMII.
++
++  Specifications about the charger can be found at:
++    http://www.ti.com/lit/ds/symlink/dp83869hm.pdf
++
++properties:
++  reg:
++    maxItems: 1
++
++  ti,min-output-impedance:
++    type: boolean
++    description: |
++       MAC Interface Impedance control to set the programmable output impedance
++       to a minimum value (35 ohms).
++
++  ti,max-output-impedance:
++    type: boolean
++    description: |
++       MAC Interface Impedance control to set the programmable output impedance
++       to a maximum value (70 ohms).
++
++  tx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Transmitt FIFO depth see dt-bindings/net/ti-dp83869.h for values
++
++  rx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Receive FIFO depth see dt-bindings/net/ti-dp83869.h for values
++
++  ti,clk-output-sel:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Muxing option for CLK_OUT pin see dt-bindings/net/ti-dp83869.h for values.
++
++  ti,op-mode:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Operational mode for the PHY.  If this is not set then the operational
++       mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
++
++required:
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/net/ti-dp83869.h>
++    mdio0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      ethphy0: ethernet-phy@0 {
++        reg = <0>;
++        tx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
++        rx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
++        ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
++        ti,max-output-impedance = "true";
++        ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++      };
++    };
 -- 
-2.21.0
+2.22.0.214.g8dca754b1e
 
