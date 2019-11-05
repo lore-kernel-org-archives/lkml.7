@@ -2,104 +2,111 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBD9C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:01:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E742C5DF63
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:03:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21B4821882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:01:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 506372190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:03:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvEC2H29"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="huQ4BTTF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390086AbfKEQBD (ORCPT
+        id S2390098AbfKEQDL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:01:03 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52751 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389571AbfKEQBC (ORCPT
+        Tue, 5 Nov 2019 11:03:11 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:23276 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389571AbfKEQDK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:01:02 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c17so14234360wmk.2;
-        Tue, 05 Nov 2019 08:00:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2rC8ggX+aC8YuG4dw8OqC3Cq4cY6/6sYtuLebkBYV4k=;
-        b=DvEC2H29tCL+5FSH3h12iT9678mGG5PYHCknN/4DD/qmkbY0zsnvhF6cxSvNZJJaPE
-         Fl9dfbN+IA0bbrWN9aTeyBXbqI2E9Xvs32sfb8+unxxZXeZjR6++wQv3Wda8TEqymh0r
-         tOeHIIRA9YmwNw7zH0hzB5/qDwSgYNqgnNbzWGS/XFTDp+f3/nBf+b5CUZUNsQIS8Ihc
-         F8HHsZHjKlOBkvZDsDB0K7cLtDdFzJdQsMlgrGcse6TuLYRIEj6UKo5SI4HKZMmAWqo2
-         O5V3v3eNXvGY2oPub3QLVw4Ui9GxOAkVThPOO65KCuLrOCuQJq8DGyi+VwrwjPUgpjJd
-         0oJQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=2rC8ggX+aC8YuG4dw8OqC3Cq4cY6/6sYtuLebkBYV4k=;
-        b=ulA36M3xfFOWRdWeVOIlST3sxS/ewpAoEkU6dnK0epBembRcACRSv0A9TF1YS8g0C0
-         pFayvIoU5BV8keQSKVC1fTAknZzgZFNi7VqyBqj/U+LRYKlu6mTUKZ+4DBrvcKdgi2z3
-         dGxNw3N+hd3/Nl47ckYslQlKn5ATYZQNhjUh0I5IcSQcKNb907lQlDXZBb3QwffpCwwO
-         bQWkvLwBhlOLgPXCPEcVLb6YaeXO+IlMkzoYuB4rJZh+ntIT0g17kpcpKaK/0tnqeEG6
-         Gqu6nKZm5WZ10KRGUi/JkpNIS60KWdu4KoM7HJ9MzuCsEphElQeaNsRgI4SeH+lw07il
-         zoCQ==
-X-Gm-Message-State: APjAAAW34PqImE3T6LTvLJ8LYlh32s9x7uSTm4KN62RknDX8QRFo2CmK
-        42V2g+ZkqU6vb1JVhXfGCEdhsfHccP8=
-X-Google-Smtp-Source: APXvYqwRw/XYWeN4DeCUQgpwYfCK8xy2IpSeVe+Wf+k/ptFsKWKpXASzQ8Y1D3NSGWO9vJ5BJML98A==
-X-Received: by 2002:a7b:c4c8:: with SMTP id g8mr4549883wmk.36.1572969658656;
-        Tue, 05 Nov 2019 08:00:58 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id w8sm26805133wrr.44.2019.11.05.08.00.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 08:00:57 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, linux-rtc@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH v2] rtc: brcmstb-waketimer: add missed clk_disable_unprepare
-Date:   Wed,  6 Nov 2019 00:00:43 +0800
-Message-Id: <20191105160043.20018-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Tue, 5 Nov 2019 11:03:10 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572969790;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pLj9LlV805f/L7J5FbyPXxXB07oTibsiCCSGb45ogQg=;
+        b=huQ4BTTFXb/XWqlHIg+jIBYH/TofOixBnwy/w6FOiDn1tHhJcjkMvAVpjAJrqCgR2biCBJ
+        92dXr8Mt+SfDSoFnCIbwg+ZXFXJIR20f3crBNAYii+nbEvnyi0EjMKROCY8jEOy40eXBfO
+        o7xuC058695mOChgSfCc/emlTedocko=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-350-9SUU8LceOXeOLaVGd4SGTA-1; Tue, 05 Nov 2019 11:03:06 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B43698017DD;
+        Tue,  5 Nov 2019 16:03:03 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-120-254.rdu2.redhat.com [10.10.120.254])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 980C81FA;
+        Tue,  5 Nov 2019 16:03:00 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
+References: <157262963995.13142.5568934007158044624.stgit@warthog.procyon.org.uk>
+To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk
+Cc:     dhowells@redhat.com, Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        nicolas.dichtel@6wind.com, raven@themaw.net,
+        Christian Brauner <christian@brauner.io>,
+        keyrings@vger.kernel.org, linux-usb@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-security-module@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Details on the UAPI of implementing notifications on pipes
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+Content-ID: <18579.1572969779.1@warthog.procyon.org.uk>
+Date:   Tue, 05 Nov 2019 16:02:59 +0000
+Message-ID: <18580.1572969779@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 9SUU8LceOXeOLaVGd4SGTA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This driver forgets to disable and unprepare clock when remove.
-Add a call to clk_disable_unprepare to fix it.
+So to implement notifications on top of pipes, I've hacked it together a bi=
+t
+in the following ways:
 
-Fixes: c4f07ecee22e ("rtc: brcmstb-waketimer: Add Broadcom STB wake-timer")
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
-Changes in v2:
-  - Remove the check for timer->clk and add fixes tag.
+ (1) I'm passing O_TMPFILE to the pipe2() system call to indicate that you
+     want a notifications pipe.  This prohibits splice and co. from being
+     called on it as I don't want to have to try to fix iov_iter_revert() t=
+o
+     handle kernel notifications being intermixed with splices.
 
- drivers/rtc/rtc-brcmstb-waketimer.c | 1 +
- 1 file changed, 1 insertion(+)
+     The choice of O_TMPFILE was just for convenience, but it needs to be
+     something different.  I could, for instance, add a constant,
+     O_NOTIFICATION_PIPE with the same *value* as O_TMPFILE.  I don't think
+     it's likely that it will make sense to use O_TMPFILE with a pipe, but =
+I
+     also don't want to eat up another O_* constant just for this.
 
-diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
-index 3e9800f9878a..82d2ab0b3e9c 100644
---- a/drivers/rtc/rtc-brcmstb-waketimer.c
-+++ b/drivers/rtc/rtc-brcmstb-waketimer.c
-@@ -277,6 +277,7 @@ static int brcmstb_waketmr_remove(struct platform_device *pdev)
- 	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
- 
- 	unregister_reboot_notifier(&timer->reboot_notifier);
-+	clk_disable_unprepare(timer->clk);
- 
- 	return 0;
- }
--- 
-2.23.0
+     Unfortunately, pipe2() doesn't have any other arguments into from whic=
+h I
+     can steal a bit.
+
+ (2) I've added a pair of ioctls to configure the notifications bits.  They=
+'re
+     ioctls as I just reused the ioctl code from my devmisc driver.  Should=
+ I
+     use fcntl() instead, such as is done for F_SETPIPE_SZ?
+
+     The ioctls do two things: set the ring size to a number of slots (so
+     similarish to F_SETPIPE_SZ) and set filters.
+
+Any thoughts on how better to represent these bits?
+
+Thanks,
+David
 
