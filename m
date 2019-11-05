@@ -2,111 +2,121 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4034C010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:20:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56D41C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90DBE217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:20:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bzTtTwtg"
+	by mail.kernel.org (Postfix) with ESMTP id 362D0206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:22:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388461AbfKEKUj (ORCPT
+        id S2388256AbfKEKWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:20:39 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41810 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388022AbfKEKUj (ORCPT
+        Tue, 5 Nov 2019 05:22:13 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39990 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730633AbfKEKWM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:20:39 -0500
-Received: by mail-wr1-f67.google.com with SMTP id p4so20629940wrm.8;
-        Tue, 05 Nov 2019 02:20:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=U7rVx6gqyBAf8/Ix0rAHegGvn59AhNGRQobMkf7SosQ=;
-        b=bzTtTwtgX5SNoprXTuL3uJvNqg+rVVN6QiEEl3vLtO2OA5ja3rtlJxNhH8T45Q55Hk
-         v3XWKTYxeFDxyegsUAXHU5jMvZNHU02o6JtDh0nkGMOGFkL0FRS3hhkvzP3Vqsnpd0Bt
-         NpGNCvSx9LMmH07fWqN5CCbQfk7twqlTQhgnHm5Rbt4KwE/DjRYQgKe0vTe4DinmBTs5
-         uIiQ/LTogvZuw3fJW7T188+zOFtN9V5fJddUzMhh9WQPk132HJLyNq7JwvY0iiaPFaUB
-         N+oxqVBG8nv94B3vvOFg8Hv68TIQh4LSdAkfWtGFEGU3w77gqtwIcJ+bnJpRe+WDmv2C
-         Nn1A==
+        Tue, 5 Nov 2019 05:22:12 -0500
+Received: by mail-lf1-f65.google.com with SMTP id f4so14676478lfk.7;
+        Tue, 05 Nov 2019 02:22:11 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=U7rVx6gqyBAf8/Ix0rAHegGvn59AhNGRQobMkf7SosQ=;
-        b=ECgofoW7RxA3L0b3JScq2fbNXcFFWAtukl6l+Nj3usgyVbhUojrNBHXuinnPY17nZb
-         fj/ELSCRPPHemgQ7HoYhoch4TxnJyioz8va0qUkO+Z32vD5gLlZrk2olJkQcybP5EyeU
-         s3yOLBzMdMi1HTEKgGKi9uwZYeX7382SgaT4sijVAgfd/ff4hdDErNHeNX4pZTyvaB1s
-         EZdMsMe2qdUjMdVBYJuk4MQP8PBSG89zbyiCrkxJ6yt1qylG42dV5vLXVIkdY9WUa4En
-         DQG0/fGnXdqjW9+5/NwUJSsQk7vutjvmi1JYDMAG8z97THV+tp0m8GoEXa/AQqmLG+Ww
-         werQ==
-X-Gm-Message-State: APjAAAX4G+kaZODNfD+LfL7Q4UfIqzwTGF3h1bvsldnlDpfHwTZ0KvjO
-        jnrk6PDlr+97AR5pVHvMj5cR/Mu4Ue+ohFidWGQ=
-X-Google-Smtp-Source: APXvYqyWKbdqV5y+fX/GlmvSFNbw7CIaOg7O75M1f/C35mhY/KY/3EDtUrS9+Q26Hy7PZ3+eHf9KeSFGTCo8vlnS3Ig=
-X-Received: by 2002:a5d:490c:: with SMTP id x12mr25443865wrq.301.1572949236565;
- Tue, 05 Nov 2019 02:20:36 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=9L58EzSLKcE9GwGbak6npuCDvAm3eZwiaRLQzP4rKQQ=;
+        b=JtXtX2SE3ok6jO/+qKEMvLToLZJVvHH7in+EBgEoo90KTuFQ1m4Ao1m7JLFdxvJ/TL
+         mcysL9MIiXxyOMbhiZ9+Urv7sG5OFXxMqjdjbD0gnr43OXQLL6Z0WIUqvYp5c1tcL3wO
+         0KHkPaHPrpwWpeHQtM+XCOIFClE0SkY82sSisxUsQqhMF0RmEmhzMJUkvF6U15fM4sE7
+         hMRPlRqtSeimPIfr2ErZxE5T67RW66NnsOpbxeJQJwV89Oy533pVGrxy7c8kg4Py4aOQ
+         EGCRTi0UfiNeMSiFVMcOAOCYG+Ii7g3jIu/DOeEF1A762jmBKnO9WKb8qwZdgh+ai7Jo
+         mLkA==
+X-Gm-Message-State: APjAAAXBSGHOTmnqcFbaDa4bS43gN1u65O+fo/voNTY5BZ1Nbv7q1u7h
+        XyyFiPjMGjVPvLbWAhuaCOw=
+X-Google-Smtp-Source: APXvYqz2ZgcNJ4MCoGF8keVV4rB112hF71Xe9R9O8z7TzTWd6Yo0BErmrgMLUFAHk9Twa8zkPhyYiw==
+X-Received: by 2002:ac2:44af:: with SMTP id c15mr20247815lfm.39.1572949330293;
+        Tue, 05 Nov 2019 02:22:10 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id u67sm11689034lja.78.2019.11.05.02.22.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:22:09 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:21:58 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 22/62] gpio: gpio-mmio: Use new GPIO_LINE_DIRECTION
+Message-ID: <196d96a4cf8bee0189269e4df86965a0ec1a7daf.1572945799.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945799.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-References: <d5c12f05-5a07-b698-ae60-2728330dd378@web.de> <CAL2rwxrdOVeO3RT_Y3mk3p-076eMMWm6VVF0C4yiYEWJ0TO5DQ@mail.gmail.com>
- <20191105093641.GE10409@kadam>
-In-Reply-To: <20191105093641.GE10409@kadam>
-From:   Julian Calaby <julian.calaby@gmail.com>
-Date:   Tue, 5 Nov 2019 21:20:25 +1100
-Message-ID: <CAGRGNgU9=Ng60QE_-f8fs5HzDTFQ_8R3taidERAocBc1nQwbXg@mail.gmail.com>
-Subject: Re: [PATCH] scsi: megaraid_sas: Use common error handling code in megasas_mgmt_ioctl_fw()
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Sumit Saxena <sumit.saxena@broadcom.com>,
-        Markus Elfring <Markus.Elfring@web.de>,
-        Linux SCSI List <linux-scsi@vger.kernel.org>,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors <kernel-janitors@vger.kernel.org>,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945799.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-On Tue, Nov 5, 2019 at 8:41 PM Dan Carpenter <dan.carpenter@oracle.com> wrote:
->
-> On Tue, Nov 05, 2019 at 02:58:35PM +0530, Sumit Saxena wrote:
-> > On Fri, Nov 1, 2019 at 3:06 AM Markus Elfring <Markus.Elfring@web.de> wrote:
-> > >
-> > > From: Markus Elfring <elfring@users.sourceforge.net>
-> > > Date: Thu, 31 Oct 2019 22:23:02 +0100
-> > >
-> > > Move the same error code assignments so that such exception handling
-> > > can be better reused at the end of this function.
-> > >
-> > > This issue was detected by using the Coccinelle software.
-> > >
-> > > Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-> >
-> > Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
-> >
->
-> The code was a lot better originally...  :(
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-mmio.c | 21 +++++++++++++++------
+ 1 file changed, 15 insertions(+), 6 deletions(-)
 
-Agreed, this is a lot of stuffing around to save 3 lines.
+diff --git a/drivers/gpio/gpio-mmio.c b/drivers/gpio/gpio-mmio.c
+index 6f904c874678..cd07c948649f 100644
+--- a/drivers/gpio/gpio-mmio.c
++++ b/drivers/gpio/gpio-mmio.c
+@@ -370,15 +370,24 @@ static int bgpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+ static int bgpio_get_dir(struct gpio_chip *gc, unsigned int gpio)
+ {
+ 	/* Return 0 if output, 1 if input */
+-	if (gc->bgpio_dir_unreadable)
+-		return !(gc->bgpio_dir & bgpio_line2mask(gc, gpio));
+-	if (gc->reg_dir_out)
+-		return !(gc->read_reg(gc->reg_dir_out) & bgpio_line2mask(gc, gpio));
++	if (gc->bgpio_dir_unreadable) {
++		if (gc->bgpio_dir & bgpio_line2mask(gc, gpio))
++			return GPIO_LINE_DIRECTION_OUT;
++		return GPIO_LINE_DIRECTION_IN;
++	}
++
++	if (gc->reg_dir_out) {
++		if (gc->read_reg(gc->reg_dir_out) & bgpio_line2mask(gc, gpio))
++			return GPIO_LINE_DIRECTION_OUT;
++		return GPIO_LINE_DIRECTION_IN;
++	}
++
+ 	if (gc->reg_dir_in)
+-		return !!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, gpio));
++		if (!(gc->read_reg(gc->reg_dir_in) & bgpio_line2mask(gc, gpio)))
++			return GPIO_LINE_DIRECTION_OUT;
+ 
+ 	/* This should not happen */
+-	return 1;
++	return GPIO_LINE_DIRECTION_IN;
+ }
+ 
+ static int bgpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+-- 
+2.21.0
 
-Thanks,
 
 -- 
-Julian Calaby
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
-Email: julian.calaby@gmail.com
-Profile: http://www.google.com/profiles/julian.calaby/
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
