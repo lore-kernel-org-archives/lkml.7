@@ -2,131 +2,110 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC074C010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:42:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C75CC010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:42:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A1AA2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:42:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F7522190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:42:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572954155;
+	bh=UC970EH0buZpss2jdc4psI/a7m50NC1sr2EkzbxhGEE=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=1rmARF3kaQfONmGgG727cTQsJ8Ixm/KEpegirMmOcXQsRKzyx9jIRIgZGChq142Nu
+	 OMhmU4XgGBuGR8x6jPsdWPuNbIYKiWeFle+pTqKWFmgJivYvme3CnKLEOBZ87KNafU
+	 Q+Gofqx2kr+9nxR62akep9VzcvNBMs6p3sn2hivU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbfKELmK (ORCPT
+        id S1730954AbfKELme (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:42:10 -0500
-Received: from mail-il1-f200.google.com ([209.85.166.200]:55644 "EHLO
-        mail-il1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730627AbfKELmK (ORCPT
+        Tue, 5 Nov 2019 06:42:34 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:43078 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730797AbfKELmd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:42:10 -0500
-Received: by mail-il1-f200.google.com with SMTP id n81so18259805ili.22
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:42:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=P2JalRCzbuTnz7zbGMtCjjdpNiV9T9DN4NL3TjWGrGM=;
-        b=jBZmIKz4c3OoPwKmEw8bSMDVZoZ/qJqWMsOJQEyWNF42Niqjs8wSS9+4SvW1yIvGtF
-         rfAPJ5G7NAC8LDF1t7b82ONF99E3OxuRr9uEvGTU++dGyt+LFsxRgQv1bg6JgquwbqQo
-         LxPfzrAG118NNs9svi61IetBSHeUirgS95ULujb/oU4DxfDGKlThJPrP2n72w+G0FiM2
-         KxeTSAdxfrqFch6Q0iHO5yhdfS8rheHaLd4U80ZI0NMQfAnDYcoDfVYMnF/fSRJHxBPs
-         Fi98jfh2in15G9+SYbviM82XYEqm1XSE8EDKERYMD44E+fzQInG0n+YvJM2VfYYwIXrt
-         OcQg==
-X-Gm-Message-State: APjAAAXbFhEipO4U63zmlDB/tnLEWBoLx8rDdhqlE6FRlmUMdrXKdYU7
-        O5Oig0e5o1BKst27Vgrxsx2TpgNzH8Ijkbavy0AYTnVOJhDn
-X-Google-Smtp-Source: APXvYqzV0ZbhlU+W8da14/m/I2tCfQgtzi3aU0RAvBeifKHjxtejylfwRZ3agYiW/L+ZVw5cgBDTEq1VIrnFCsvbZONu197m3u4H
+        Tue, 5 Nov 2019 06:42:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=1VvOv5GWuCii/3i1LPuPX+IHlPj4QKMT48lK4e/IvbA=; b=CsyG9LqWuyOGheijEzh5KOYzq
+        h2E+lYVLyOM1RpoSP0ShYu+aHVKj2frXlIG0NntIohBtKlroxadRFHQsdJ1IGOIhwyvRm0M9nvnnW
+        tWDr+PwxzM7TUFxu5LbBvs1yi1fqG9gkL1EXWUbemjJSiO+l7kHuDFhiTQbClGnkcS8HE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iRxEC-0006PG-BU; Tue, 05 Nov 2019 11:42:28 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 6FD6C274301E; Tue,  5 Nov 2019 11:42:27 +0000 (GMT)
+Date:   Tue, 5 Nov 2019 11:42:27 +0000
+From:   Mark Brown <broonie@kernel.org>
+To:     Chris Packham <Chris.Packham@alliedtelesis.co.nz>
+Cc:     "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: spi-mem and gpio chipselects
+Message-ID: <20191105114227.GB4500@sirena.co.uk>
+References: <cbe69f5457c4dd1c2cc96a247c6c6fca61c0d43c.camel@alliedtelesis.co.nz>
+ <20191104124444.GB5238@sirena.co.uk>
+ <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
 MIME-Version: 1.0
-X-Received: by 2002:a6b:fb0c:: with SMTP id h12mr19050300iog.239.1572954129411;
- Tue, 05 Nov 2019 03:42:09 -0800 (PST)
-Date:   Tue, 05 Nov 2019 03:42:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000021be64059697ec8c@google.com>
-Subject: KCSAN: data-race in perf_event_update_userpage / perf_event_update_userpage
-From:   syzbot <syzbot+3d30a087bef7b887dd14@syzkaller.appspotmail.com>
-To:     acme@kernel.org, alexander.shishkin@linux.intel.com,
-        ast@kernel.org, bpf@vger.kernel.org, daniel@iogearbox.net,
-        elver@google.com, jolsa@redhat.com, kafai@fb.com,
-        linux-kernel@vger.kernel.org, mark.rutland@arm.com,
-        mingo@redhat.com, namhyung@kernel.org, netdev@vger.kernel.org,
-        peterz@infradead.org, songliubraving@fb.com,
-        syzkaller-bugs@googlegroups.com, yhs@fb.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="oLBj+sq0vYjzfsbl"
+Content-Disposition: inline
+In-Reply-To: <039edb7cdd9114ad7a14e27f869db6c85d756418.camel@alliedtelesis.co.nz>
+X-Cookie: Genius is pain.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
 
-syzbot found the following crash on:
+--oLBj+sq0vYjzfsbl
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=157a35f8e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=3d30a087bef7b887dd14
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+On Mon, Nov 04, 2019 at 08:06:42PM +0000, Chris Packham wrote:
+> On Mon, 2019-11-04 at 12:44 +0000, Mark Brown wrote:
 
-Unfortunately, I don't have any reproducer for this crash yet.
+> > That's only going to work in cases where the controller translates
+> > things into a single SPI operation on the flash which I'm not sure is
+> > always going to be the case.  We'd need a way to guarantee that the
+> > controller is going to do that in order to avoid data corruption issues.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+3d30a087bef7b887dd14@syzkaller.appspotmail.com
+> In my particular case (spi-bcm-qspi.c) bcm_qspi_bspi_exec_mem_op() does
+> seem to assert the native chip-select then do it's operation. As I
+> understand the wait_for_completion_timeout() will schedule so other
 
-==================================================================
-BUG: KCSAN: data-race in perf_event_update_userpage /  
-perf_event_update_userpage
+The issue is what happens if the hardware translates the operations it's
+being asked to do into multiple physical operations on the bus for some
+reason.  It sounds like yours won't but we can't just unconditionally
+push the chip select control out to software even if the normal SPI
+modes support it.
 
-write to 0xffff88812403c00c of 4 bytes by task 12674 on cpu 1:
-  perf_event_update_userpage+0x157/0x340 kernel/events/core.c:5405
-  cpu_clock_event_add+0x3d/0x60 kernel/events/core.c:9672
-  event_sched_in.isra.0.part.0+0x1d5/0x560 kernel/events/core.c:2367
-  event_sched_in kernel/events/core.c:2339 [inline]
-  group_sched_in+0xd1/0x2c0 kernel/events/core.c:2403
-  flexible_sched_in kernel/events/core.c:3418 [inline]
-  flexible_sched_in+0x399/0x540 kernel/events/core.c:3407
-  visit_groups_merge+0x1d9/0x320 kernel/events/core.c:3366
-  ctx_flexible_sched_in kernel/events/core.c:3455 [inline]
-  ctx_sched_in+0x1b4/0x360 kernel/events/core.c:3500
-  perf_event_sched_in+0x77/0xb0 kernel/events/core.c:2512
-  perf_event_context_sched_in kernel/events/core.c:3540 [inline]
-  __perf_event_task_sched_in+0x354/0x390 kernel/events/core.c:3579
-  perf_event_task_sched_in include/linux/perf_event.h:1150 [inline]
-  finish_task_switch+0x108/0x260 kernel/sched/core.c:3221
-  context_switch kernel/sched/core.c:3387 [inline]
-  __schedule+0x319/0x640 kernel/sched/core.c:4069
-  schedule+0x47/0xd0 kernel/sched/core.c:4136
-  freezable_schedule include/linux/freezer.h:172 [inline]
-  futex_wait_queue_me+0x18d/0x290 kernel/futex.c:2627
-  futex_wait+0x19b/0x3f0 kernel/futex.c:2733
+> tasks may run but spi_mem_access_start() has taken an io_mutex so
+> anything that accesses that spi bus will block.
 
-write to 0xffff88812403c00c of 4 bytes by task 12673 on cpu 0:
-  perf_event_update_userpage+0x157/0x340 kernel/events/core.c:5405
-  perf_mmap+0xe00/0xeb0 kernel/events/core.c:5875
-  call_mmap include/linux/fs.h:1900 [inline]
-  mmap_region+0x83c/0xd50 mm/mmap.c:1806
-  do_mmap+0x6d4/0xba0 mm/mmap.c:1577
-  do_mmap_pgoff include/linux/mm.h:2353 [inline]
-  vm_mmap_pgoff+0x12d/0x190 mm/util.c:496
-  ksys_mmap_pgoff+0x2d8/0x420 mm/mmap.c:1629
-  __do_sys_mmap arch/x86/kernel/sys_x86_64.c:100 [inline]
-  __se_sys_mmap arch/x86/kernel/sys_x86_64.c:91 [inline]
-  __x64_sys_mmap+0x91/0xc0 arch/x86/kernel/sys_x86_64.c:91
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+That's guaranteed.
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 12673 Comm: syz-executor.0 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-==================================================================
+--oLBj+sq0vYjzfsbl
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3BYCIACgkQJNaLcl1U
+h9DUGAf6AgYGHHtC8fjKSGW1POmrYB0mCJNdi6rKRYZinsVOIroYP0LIhjZUqUNP
+ZxMkM9qsd0D6LWIJSsBjInHzKMP1JnD/Wv8eKsfkmU/vXQ4zpGWtnJ7fKEgGUZOE
+MMLj5vfAHtvwKMBdAHzAZn4/iRw8U0EgDnXA0KtlmACpxKUgPxJ4RAuxeDIDygc8
+OSmebFYqYVOvJeCI+mokjyv6MNQqUuZW6u7WDAQp4vHp8JbHFULXuGOtLFNwXdv9
+6JD7FcEXG1Q5QP3CkrrnPs7a3wTVCZllbNvZLQM7xI8+vVjwQFxqOyELnAmc/+uX
+JdHNYU7Wd+KlbLB9SpXBPCpufwIi5Q==
+=MtHO
+-----END PGP SIGNATURE-----
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--oLBj+sq0vYjzfsbl--
