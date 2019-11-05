@@ -2,74 +2,114 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CF42CCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:22:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C16E1CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:25:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACC15214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:22:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9856E20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:25:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E4swKQdx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387941AbfKEIV7 (ORCPT
+        id S2387966AbfKEIZM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:21:59 -0500
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6153 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387484AbfKEIV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:21:59 -0500
-Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1660419F54FEFA14DB0E;
-        Tue,  5 Nov 2019 16:21:57 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
- (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
- 16:21:46 +0800
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-To:     <n-horiguchi@ah.jp.nec.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-Subject: [PATCH] mm/memory-failure.c: replace with page_shift() in
- add_to_kill()
-Message-ID: <7bc9d610-728c-37b0-d175-dba21dc0dfff@huawei.com>
-Date:   Tue, 5 Nov 2019 16:21:44 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 5 Nov 2019 03:25:12 -0500
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:43310 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387843AbfKEIZM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 03:25:12 -0500
+Received: by mail-lj1-f193.google.com with SMTP id y23so9831637ljh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 00:25:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+yZGl0XTUJFnBIncZkbSNKc2+2vqsiJzQfis6dIemDY=;
+        b=E4swKQdxg99a6Sr3wL+9BfqZTNESaOvMmfCCssXkVyQCJx+FO04pH01TclCxthRcTk
+         MrMCbLBEbEBUEQshEn4IgR78+mENEd5E3jaUM2Yais/4AGqwDEqHeK3Vn+l9g4FgVOul
+         I6+OJZz+WEt6v6E+7jyEvyzuD2nCjEPHF5FGtJhSbYtIeRGYhylvSC2A2s41X6wSQGFE
+         BhRQd4bv4arYeAWAhRc+G8br1yVfFxzs+O42tHDsQsUQXcbG1DwQ4/e2r56b9luV8wAP
+         7K8i0BQ21fQAgaLKCZhWj/0yrRUtJCCSZ+uSO+gotww5G8dnHXLqeC/dy5CNuv5pliTf
+         An+A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+yZGl0XTUJFnBIncZkbSNKc2+2vqsiJzQfis6dIemDY=;
+        b=QgidJMIiS0qURM+oQdG3r70rjJIweyF2Lt9TnahjPDRzbqwY5BzfwZkWfQ1rxsdOF5
+         JX7PhzF+rRbWjxTTAvkCnqB8A7DIPmrKn6FDqbiqA9X1L8ICk1CxkHXvDAsAmQ4GZriW
+         36B/ZwUNEGfijvIbV80LublaqHY0/1egYMA0aSFw9I89yfmig2vyIjugl4wJA/36i0+t
+         3r1I9JmnNLLqjLJ0rw4LFNmk7X7lAG3bxKtIt9pf7WeeQcq4exTS8dvIHbTeu05BZBTl
+         rIjaS0UfUIzKoPJ9z2OL0DP2naysxHy7iiAgo7hUDSM5ibHTiiCgIwFOFx6AIuYvY2ys
+         f+KQ==
+X-Gm-Message-State: APjAAAXBNRUZoj9016KcQ2QI1G0ObnfFinhW9y34Lrm5ezM8mTssm4Ly
+        Ah+rSrMSkmJnTHU8pHN6HewEwSPEYDO/L8MWUtrz3A==
+X-Google-Smtp-Source: APXvYqwrkAaSHmqsR1vTyMbihda+HLCHxLkwmQyBbdZYLtm+isUlafOZhJqKte2zL4X7UpXIBjLNmhYePPPyQUkLGlM=
+X-Received: by 2002:a2e:96cb:: with SMTP id d11mr15334688ljj.82.1572942310596;
+ Tue, 05 Nov 2019 00:25:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+References: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
+In-Reply-To: <1995139bee5248ff3e9d46dc715968f212cfc4cc.1570520268.git.baolin.wang@linaro.org>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Tue, 5 Nov 2019 16:24:58 +0800
+Message-ID: <CAMz4kuJcqs5pSyEqZ1v0Eb9-zaRrqoGvPMCEjfpgAmWkDcvrxA@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] clk: sprd: Use IS_ERR() to validate the return
+ value of syscon_regmap_lookup_by_phandle()
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        linux-clk@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function page_shift() is supported after the commit 94ad9338109f
-("mm: introduce page_shift()").
+Hi Stephen,
 
-So replace with page_shift() in add_to_kill() for readability.
+On Tue, 8 Oct 2019 at 15:41, Baolin Wang <baolin.wang@linaro.org> wrote:
+>
+> The syscon_regmap_lookup_by_phandle() will never return NULL, thus use
+> IS_ERR() to validate the return value instead of IS_ERR_OR_NULL().
+>
+> Fixes: d41f59fd92f2 ("clk: sprd: Add common infrastructure")
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> ---
+> Changes from v1:
+>  - Add fixes tag.
+> ---
 
-Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
----
- mm/memory-failure.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I did not see this patch in your clk tree (you only applied patch 2 in
+this patch set), could you apply this patch if no other issues?
+Thanks.
 
-diff --git a/mm/memory-failure.c b/mm/memory-failure.c
-index 3151c87dff73..e48c50cac889 100644
---- a/mm/memory-failure.c
-+++ b/mm/memory-failure.c
-@@ -326,7 +326,7 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
- 	if (is_zone_device_page(p))
- 		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
- 	else
--		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
-+		tk->size_shift = page_shift(compound_head(p));
+>  drivers/clk/sprd/common.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sprd/common.c b/drivers/clk/sprd/common.c
+> index 9d56eac..7ad5ba2 100644
+> --- a/drivers/clk/sprd/common.c
+> +++ b/drivers/clk/sprd/common.c
+> @@ -46,7 +46,7 @@ int sprd_clk_regmap_init(struct platform_device *pdev,
+>
+>         if (of_find_property(node, "sprd,syscon", NULL)) {
+>                 regmap = syscon_regmap_lookup_by_phandle(node, "sprd,syscon");
+> -               if (IS_ERR_OR_NULL(regmap)) {
+> +               if (IS_ERR(regmap)) {
+>                         pr_err("%s: failed to get syscon regmap\n", __func__);
+>                         return PTR_ERR(regmap);
+>                 }
+> --
+> 1.7.9.5
+>
 
- 	/*
- 	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
+
 -- 
-2.7.4
-
+Baolin Wang
+Best Regards
