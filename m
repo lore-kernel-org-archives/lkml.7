@@ -2,119 +2,184 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 877DFC5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FF25C5DF63
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:59:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4727021A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2123D21D81
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:59:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572987578;
+	bh=KcDO9UZkDJxFEZUne3TwxOgf42unEMHXr1LSeQxM9bQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=2s9xVj5R7HCwlULAmuicvMdoiLCrOZvUjeuroA7+DN+AembFB+kUmA68c7LrwbK2W
+	 wXJJPKc0EHwBo4Wtc2M+T3KA0PuA/rnUHhgbesvPR9uMuwSGjz0QC8IVsUSTFkEOcr
+	 w2vmC/QB+IInjBoz5jjLtFGijlWw3XUfS4XmA3xc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387425AbfKEU6t (ORCPT
+        id S1729901AbfKEU7h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:58:49 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:52000 "EHLO
-        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729399AbfKEU6s (ORCPT
+        Tue, 5 Nov 2019 15:59:37 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45558 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728515AbfKEU7g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:58:48 -0500
-Received: from mr2.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
-        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA5Kwlfj028120
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:58:47 -0500
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA5KwgbR011916
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:58:47 -0500
-Received: by mail-qk1-f198.google.com with SMTP id r2so22610519qkb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:58:47 -0800 (PST)
+        Tue, 5 Nov 2019 15:59:36 -0500
+Received: by mail-oi1-f194.google.com with SMTP id k2so18866504oij.12;
+        Tue, 05 Nov 2019 12:59:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=S50K21onMwLaHq3dPT4Qwhc6hjGO5VfOOOJ5JGwTxQE=;
-        b=Sdf/VCxONSFzC7Ao2djQ3lUVqWrty9VQwjDzEODqxsCbU0qZS0HFieshC9JwRtwG74
-         Xq7u315YbULSWPFF+cTb93esAM4c4Ox5S0FIriMiEHTZX4QMYfWEoVfSwGad+Afioabd
-         1zRTLFsPNKQ46a2bt2z3djb6rHyDw6Zx6pRQAgmceO/7UAEEb/dngzs4k4hAhlVkfojh
-         ikRHtAAaghTCReZVGZMLeuufuzPa97fSYIH2Z9nOEis/PUSKSRY+nIUXuGGzjCrkorgZ
-         OjMVMUfnAxeBzkFabur2SqRNvB22lrp4gurlOrQ423qbaiRnp2gsNiRbmFif/nDzABQk
-         bWdg==
-X-Gm-Message-State: APjAAAUXCwD4pjc0IAi4CibWntlm9XsBOArPAKviB2FmQrXq/NhZSP4U
-        lrNb9nCenGpfoKk9VdHli8I5JwqDM1fumMVDQS6qfsv0ItF0LiXnFPFyVXy7YthR6z0Mk0gUWjr
-        Feh3rN8TofsE6k7hbk9j5qyV+TTyKsDqiC3M=
-X-Received: by 2002:ac8:524a:: with SMTP id y10mr18951007qtn.325.1572987522075;
-        Tue, 05 Nov 2019 12:58:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqx24doZC2vszjGyzN8ksjbbXYHRswolJBukeRP8MxDNjSGnmrve+cRRNS5kWu9wK6cSyWOUJw==
-X-Received: by 2002:ac8:524a:: with SMTP id y10mr18950991qtn.325.1572987521831;
-        Tue, 05 Nov 2019 12:58:41 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id k17sm9903799qkg.63.2019.11.05.12.58.40
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=GTdZcSlaCj6B0DkM9Lw5qj2TAkpu7tNssud6DV2YzpE=;
+        b=BFtYrSbJmAbz9M+hSjxg81pt0y/7FjdQnZxy5eRdMY3TWwvGTdG2X3kUmEPa464A6O
+         CV5a2bMAFnoODAFvVFYs8I+JYzyKVVrTaSoXONTUJ1oBMpPxHTNSZ0toUCTjPmTX2dxn
+         XT51LxXBTT/gIAd4czhCJm9uNfEh7g23R/eCoesRacasOqAbbR3uamgT0jqYjOf53RXU
+         8pBC+llf3XMFWjyt6W7IuB9OKrKHVJ+yFt7Cqxxf4uAk/ZlnEf7FuqjaQqsatmV0QEiy
+         whwPQJLeXObgtqoO1O7b6+UTO7clHAOilCjRGunshvQ5v+k5ypxZSctYOI5ihp4uawLe
+         /UwA==
+X-Gm-Message-State: APjAAAXRe6HctQ0FdS7Lvn1fJPxrtKcu8EuRF4jReHb2ABj2I/4FvvVM
+        iJ/igI9CIuHKY5BWh8h7xw==
+X-Google-Smtp-Source: APXvYqxfoZQYXzrqWbqrf5YESnzLMdDJ74I9O0OJcWuzBYYa9Qz/tEUJ92oPye+EYoq65rZtqp2VDA==
+X-Received: by 2002:aca:b6c3:: with SMTP id g186mr860975oif.173.1572987575575;
+        Tue, 05 Nov 2019 12:59:35 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id l7sm6413475otf.39.2019.11.05.12.59.34
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:58:40 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     "Theodore Ts'o" <tytso@mit.edu>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
-        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
-        Arnd Bergmann <arnd@arndb.de>, linux-ext4@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
-Subject: Re: [PATCH 1/1] errno.h: Provide EFSBADCRC for everybody
-In-Reply-To: <20191105151736.GB4153244@magnolia>
-References: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
- <20191105151736.GB4153244@magnolia>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1572987519_14215P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 15:58:39 -0500
-Message-ID: <250143.1572987519@turing-police>
+        Tue, 05 Nov 2019 12:59:35 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:59:34 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Dan Murphy <dmurphy@ti.com>
+Cc:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
+ driver
+Message-ID: <20191105205934.GD629@bogus>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1572987519_14215P
-Content-Type: text/plain; charset=us-ascii
+On Tue, Nov 05, 2019 at 01:14:33PM -0600, Dan Murphy wrote:
+> Matti
+> 
+> On 11/1/19 6:32 AM, Matti Vaittinen wrote:
+> > Document ROHM BD71828 PMIC LED driver device tree bindings.
+> > 
+> > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > ---
+> > 
+> > Changes from v2 - new patch
+> > 
+> >   .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
+> >   1 file changed, 46 insertions(+)
+> >   create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> > 
+> > diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> > new file mode 100644
+> > index 000000000000..d8aeac9911ef
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> > @@ -0,0 +1,46 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: ROHM BD71828 Power Management Integrated Circuit LED driver
+> > +
+> > +maintainers:
+> > +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
+> > +  - Pavel Machek <pavel@ucw.cz>
+> > +  - Dan Murphy <dmurphy@ti.com>
+> > +  - Rob Herring <robh+dt@kernel.org>
+> > +  - Mark Rutland <mark.rutland@arm.com>
+> I believe you are the maintainer of this driver not the maintainers
 
-On Tue, 05 Nov 2019 07:17:36 -0800, "Darrick J. Wong" said:
-> On Mon, Nov 04, 2019 at 09:46:14PM -0500, Valdis Kletnieks wrote:
-> > Four filesystems have their own defines for this. Move it
-> > into errno.h so it's defined in just one place.
-> >
-> > Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
->
-> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
->
-> You can build all six filesystems with both this and the EFSCORRUPTED
-> patch applied, correct?
+Right, should have been clearer in my other response. Put 
+owner/maintainer of the device binding, not subsystem.
 
-I can.  But it was pointed out to me that it blows up on some architectures..
+> > +
+> > +description: |
+> > +  This module is part of the ROHM BD71828 MFD device. For more details
+> > +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
+> > +
+> > +  The LED controller is represented as a sub-node of the PMIC node on the device
+> > +  tree.
+> > +
+> > +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: rohm,bd71828-led
+> > +
+> > +patternProperties:
+> > +  "^led-[1-2]$":
+> > +    type: object
+> > +    description:
+> > +      Properties for a single LED. Nodes must be named as led-1 and led-2.
+> 
+> Why is this required?  Can't we use the reg as the number and then we can
+> use standard node labels
+> 
+> like led@<reg value>.  Then we can check in the code to make sure that the
+> output is not out of bounds.
+> 
+> > +    properties:
+> > +      #$ref: "common.yaml#"
+> > +      function:
+> > +        description:
+> > +          Purpose of LED as defined in dt-bindings/leds/common.h
+> > +        $ref: "/schemas/types.yaml#/definitions/string"
+> > +      color:
+> > +        description:
+> > +          LED colour as defined in dt-bindings/leds/common.h
+> 
+> s/colour/color
+> 
+> But again I believe it is indicated above that the LEDs are either going to
+> be green or amber.  Unless they can be any color.
+> 
+> Are there plans to make sure that the color is either green or amber in the
+> code?  I don't see a patch for the code in this series
+> 
+> > +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> > +
+> > +required:
+> > +  - compatible
+> 
+> Is there an example of the node and properties?
 
+For MFDs, I prefer a complete example in the MFD binding doc. We need it 
+complete to validate the example.
 
-
---==_Exmh_1572987519_14215P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXcHifwdmEQWDXROgAQLj5RAApcBiDjlLyeNreRjX2DmNwO+Ua9G5e5Sp
-eXKK/n2L2aQzyRQz7vGUMquNdBYorbtXuzT13bysejTkkkISSGz9lABhFZibT3n5
-EUxZmFM8LKoRYx+sAkw3sHfwj4pmLhuz3O5GXA3IkEn57++QiOoi+QR01H7B6KIU
-2W2NoauIR6t5hiO83EIpioJq07WOm1QP46diNozGGCskSwgEeJVXnWMNoIS23Xc7
-OK1FlYHnJ0wxDtnuzCEb9rOoi7u1Fr3FXTwpLo5V2krxLdW+jYhIRSoK+UPM0yky
-HIKCcTErRDckrbcT4+T6uszVrt+tXLdZE/mWgHLqbWnfB3g3Hh4C1ccX7TWqAG5S
-63ok39pe6rDa5sTRwHhEhIfBKOWXhGA1XNay3cWCgBroEwPpz0Zhy8xBP397bwZA
-7RubcSMY6Ct4tTUsS/8Ocmo/U0Kuo6k3El246di3UILbLQ1hvUXBeHtBbNKD0u4u
-nHhCqndqK0JAluIzlkpqVkcFXSWBlzlxfpNNNpgrr3aIGkwFWjJnsgkhB9T0cT4L
-8gK8W3Ly4V8A+oYoI4MgZ1LJ+jN/y7aDpDMHL3mjBECucfSmvaZLbRTOiAN7OHdz
-J7lkyAPaFi9NCVNYzS4tKLPOQcgJIA+GMCfSGmEAWiW07o2qb62I1kJz2vSkiTQC
-j0Tlv0TH9BI=
-=1Y8S
------END PGP SIGNATURE-----
-
---==_Exmh_1572987519_14215P--
+Rob
