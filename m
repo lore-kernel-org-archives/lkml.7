@@ -2,82 +2,103 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC6B5FC619B
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D70FCA9ECF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C180221929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D23F21928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:15:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388383AbfKEKPR (ORCPT
+        id S2388385AbfKEKPj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:15:17 -0500
-Received: from mail.cn.fujitsu.com ([183.91.158.132]:43173 "EHLO
-        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387945AbfKEKPQ (ORCPT
+        Tue, 5 Nov 2019 05:15:39 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:34878 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387905AbfKEKPj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:15:16 -0500
-X-IronPort-AV: E=Sophos;i="5.68,270,1569254400"; 
-   d="scan'208";a="20242"
-Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
-  by heian.cn.fujitsu.com with ESMTP; 05 Nov 2019 18:15:14 +0800
-Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
-        by cn.fujitsu.com (Postfix) with ESMTP id DD15B4CE151A;
-        Tue,  5 Nov 2019 18:07:09 +0800 (CST)
-Received: from localhost.localdomain (10.167.225.140) by
- G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
- (TLS) id 14.3.439.0; Tue, 5 Nov 2019 18:15:25 +0800
-From:   Shiyang Ruan <ruansy.fnst@cn.fujitsu.com>
-To:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <rjw@rjwysocki.net>, <lenb@kernel.org>,
-        Cao jin <caoj.fnst@cn.fujitsu.com>
-Subject: [PATCH] ACPI: OSI: Shoot duplicate word
-Date:   Tue, 5 Nov 2019 18:15:01 +0800
-Message-ID: <20191105101501.3291-1-ruansy.fnst@cn.fujitsu.com>
-X-Mailer: git-send-email 2.17.0
+        Tue, 5 Nov 2019 05:15:39 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y6so14678638lfj.2;
+        Tue, 05 Nov 2019 02:15:37 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=walC2Enl01HKrXEGzHnnixoZYsP8+S2rbh+ZU/Vs3mg=;
+        b=ejAOWQDgs3YeXLWANSztHjP2ESTnWBQ7hQMtfdUxuKWb/IZRnf4Q0PfLWw0SMj9EMw
+         nAzD3uSf0pynA7B1q6E26OVo670ZiUjWYGBGWya3jfLLB4qFHEvtvhRq/jq1tB7HHsu4
+         tgLYkG5ni3PJ2joOnfy+HsEtRc0ffy4PifHUXSwYEh1OnUU2YZDSV0W+oehThwogoQmx
+         2bjIwylioN5qykf8SKlFiebXUzYGBDQ86ad/ofPiFKzfocllfad0ldJJdJ/INO8X5Kvz
+         InNS4ZHVtvU8XHfrabLdiBM/2bC2zuXlbUEMkyxFrcWUc56hqhDno75aBx2k9HwVFxGf
+         q0vA==
+X-Gm-Message-State: APjAAAU1L6H8JKRGYdSCuvBvF4ziCdc5RWR1vmykCHQ2lMtphwKQocx7
+        019CdO3Stux9kPdnXQgzLPo=
+X-Google-Smtp-Source: APXvYqyXM8acSR/tShaeFs4N8qp3yrTd/qVQVvDV/xZ018yJxCU0p0BQzLkEXzCSxWk+svsCsw7RwA==
+X-Received: by 2002:ac2:4898:: with SMTP id x24mr5781603lfc.63.1572948936753;
+        Tue, 05 Nov 2019 02:15:36 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id j23sm7821917lji.41.2019.11.05.02.15.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:15:36 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:15:27 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 12/62] gpio: gpio-exar: Use new GPIO_LINE_DIRECTION
+Message-ID: <5fc91797e7eeeb018bd65574063538abb5f4c8be.1572945749.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945749.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.167.225.140]
-X-yoursite-MailScanner-ID: DD15B4CE151A.A6788
-X-yoursite-MailScanner: Found to be clean
-X-yoursite-MailScanner-From: ruansy.fnst@cn.fujitsu.com
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945749.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cao jin <caoj.fnst@cn.fujitsu.com>
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-"this" is duplicated.
-
-Signed-off-by: Cao jin <caoj.fnst@cn.fujitsu.com>
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 ---
- drivers/acpi/osi.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-exar.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/acpi/osi.c b/drivers/acpi/osi.c
-index bec0bebc7f52..9f6853809138 100644
---- a/drivers/acpi/osi.c
-+++ b/drivers/acpi/osi.c
-@@ -473,9 +473,9 @@ static const struct dmi_system_id acpi_osi_dmi_table[] __initconst = {
- 	 */
+diff --git a/drivers/gpio/gpio-exar.c b/drivers/gpio/gpio-exar.c
+index fae327d5b06e..da1ef0b1c291 100644
+--- a/drivers/gpio/gpio-exar.c
++++ b/drivers/gpio/gpio-exar.c
+@@ -77,7 +77,10 @@ static int exar_get_direction(struct gpio_chip *chip, unsigned int offset)
+ 		EXAR_OFFSET_MPIOSEL_HI : EXAR_OFFSET_MPIOSEL_LO;
+ 	unsigned int bit  = (offset + exar_gpio->first_pin) % 8;
  
- 	/*
--	 * Without this this EEEpc exports a non working WMI interface, with
--	 * this it exports a working "good old" eeepc_laptop interface, fixing
--	 * both brightness control, and rfkill not working.
-+	 * Without this EEEpc exports a non working WMI interface, with
-+	 * this it exports a working "good old" eeepc_laptop interface,
-+	 * fixing both brightness control, and rfkill not working.
- 	 */
- 	{
- 	.callback = dmi_enable_osi_linux,
+-	return !!(exar_get(chip, addr) & BIT(bit));
++	if (exar_get(chip, addr) & BIT(bit))
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int exar_get_value(struct gpio_chip *chip, unsigned int offset)
 -- 
 2.21.0
 
 
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
