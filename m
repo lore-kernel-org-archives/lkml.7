@@ -2,97 +2,75 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83A1C49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:02:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 213EEC49EAA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:02:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 970FB20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:02:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F3FCE217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:02:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730665AbfKEJCC convert rfc822-to-8bit (ORCPT
+        id S1730619AbfKEJCe convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:02:02 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:55211 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727925AbfKEJCC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:02:02 -0500
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 5CE50200012;
-        Tue,  5 Nov 2019 09:01:58 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 10:01:57 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191105100157.2b6eb22b@xps13>
-In-Reply-To: <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
-        <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
-        <20191015163055.0d8f44e5@xps13>
-        <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
-        <20191104161103.64995b8a@xps13>
-        <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
-        <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
-        <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 5 Nov 2019 04:02:34 -0500
+Received: from mga09.intel.com ([134.134.136.24]:52152 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727925AbfKEJCe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:02:34 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:02:34 -0800
+X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
+   d="scan'208";a="192038022"
+Received: from jlahtine-desk.ger.corp.intel.com (HELO localhost) ([10.252.31.180])
+  by orsmga007-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:02:31 -0800
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
+To:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Intel Graphics Development <intel-gfx@lists.freedesktop.org>
+From:   Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+In-Reply-To: <20191104173720.2696-3-daniel.vetter@ffwll.ch>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        Will Deacon <will@kernel.org>
+References: <20191104173720.2696-1-daniel.vetter@ffwll.ch>
+ <20191104173720.2696-3-daniel.vetter@ffwll.ch>
+Message-ID: <157294454858.9970.12268694142857953676@jlahtine-desk.ger.corp.intel.com>
+User-Agent: alot/0.7
+Subject: Re: [Intel-gfx] [PATCH 3/3] drm/i915: use might_lock_nested in get_pages
+ annotation
+Date:   Tue, 05 Nov 2019 11:02:28 +0200
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
-
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 5 Nov 2019
-09:06:37 +0200:
-
-> On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:  
-> > > pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napisał(a):  
-> > > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
-> > > > 17:55:33 +0300:
-> > > >  
-> > > > > Or other way around. PWM registers GPIO (which actually I prefer since
-> > > > > we have PCA9685 case where PWM provides GPIO functionality, though via
-> > > > > different means)  
+Quoting Daniel Vetter (2019-11-04 19:37:20)
+> So strictly speaking the existing annotation is also ok, because we
+> have a chain of
 > 
-> > While it's not nice to have a driver that provides two different devices
-> > (here: gpio controller and pwm controller) similar things are not
-> > unseen. And for example the splitting of watchdog
-> > (drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
-> > (drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
-> > than worth.
-> >
-> > So I'd vote for putting it in a single file that lives where the
-> > bigger/more complex part fits to. So assuming that's the GPIO part (as
-> > the driver supports several variants and not all of them have a PWM
-> > function if I'm not mistaken) having it in drivers/gpio is fine for me.  
+> obj->mm.lock#I915_MM_GET_PAGES -> fs_reclaim -> obj->mm.lock
 > 
-> For me it sounds more likely that PWM is a *pin function* of a pin
-> controller and actually this GPIO driver should be a pin controller
-> with corresponding function(s).
+> (the shrinker cannot get at an object while we're in get_pages, hence
+> this is safe). But it's confusing, so try to take the right subclass
+> of the lock.
 > 
+> This does a bit reduce our lockdep based checking, but then it's also
+> less fragile, in case we ever change the nesting around.
+> 
+> Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
 
-Ok, thanks for the input, I will address Thierry's comments and
-re-submit as a single file (same shape as in v1).
+Reviewed-by: Joonas Lahtinen <joonas.lahtinen@linux.intel.com>
 
-Kind regards,
-Miquèl
+Regards, Joonas
