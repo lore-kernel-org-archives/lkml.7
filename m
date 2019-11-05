@@ -6,67 +6,62 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B762C010C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECD7C010C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:54:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E24121D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D985721D7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:54:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731007AbfKELxC (ORCPT
+        id S1730993AbfKELyh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:53:02 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:41004 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730667AbfKELxB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:53:01 -0500
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iRxOE-00030G-Vz; Tue, 05 Nov 2019 12:52:51 +0100
-Date:   Tue, 5 Nov 2019 12:52:50 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-cc:     Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jan Beulich <jbeulich@suse.com>,
-        Fabien Parent <fparent@baylibre.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: linux-next: Fixes tags need some work in the tip tree
-In-Reply-To: <20191105221830.69ec8bcc@canb.auug.org.au>
-Message-ID: <alpine.DEB.2.21.1911051250510.17054@nanos.tec.linutronix.de>
-References: <20191105221830.69ec8bcc@canb.auug.org.au>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 5 Nov 2019 06:54:37 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726594AbfKELyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:54:37 -0500
+Received: from mbp (unknown [46.69.195.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 006B621D6C;
+        Tue,  5 Nov 2019 11:54:34 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 11:54:31 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Amir Goldstein <amir73il@gmail.com>
+Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Linux MM <linux-mm@kvack.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Subject: Re: 5.4-rc1 boot regression with kmemleak enabled
+Message-ID: <20191105115431.GD26580@mbp>
+References: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Stephen Rothwell wrote:
-> In commit
-> 
->   fe6f85ca121e ("x86/apic/32: Avoid bogus LDR warnings")
-> 
-> Fixes tag
-> 
->   Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
-> 
-> has these problem(s):
-> 
->   - SHA1 should be at least 12 digits long
->     Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
->     or later) just making sure it is not set (or set to "auto").
+(sorry if you got this message twice; our SMTP server went bust)
 
-Yes. I missed that one when applying the patch which had the fixes tag
-already inside. Will add a check for that to catch future ones.
+On Tue, Nov 05, 2019 at 09:14:06AM +0200, Amir Goldstein wrote:
+> My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
+> c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
+> 
+> There is no console output when running:
+> 
+> $ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
+>     -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
+>     -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
+>     --append 'root=/dev/vda console=ttyS0,115200'
 
-Jan, please adjust your git settings.
+This was fixed in 5.4-rc4, see commit 2abd839aa7e6 ("kmemleak: Do not
+corrupt the object_list during clean-up").
 
-Thanks,
-
-	tglx
+-- 
+Catalin
