@@ -2,203 +2,100 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00478C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7484BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:09:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB71D21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:06:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VH6IuWxq"
+	by mail.kernel.org (Postfix) with ESMTP id 35DB8217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:09:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572991788;
+	bh=OkAzPBWAjAe+diVtWjb/mYuOGJLL+Yx2Cib7q7L6uYw=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=hQzNDikLuS5Rh/V/CWK7TbWUes3nnlllCFmIfHa1PHUe8uqqh1hsDIzCyJslth5VU
+	 xDyFOQDBEFXYxuD8pf0p0BAkMo+5TjrAnd68l4w2E6bdcaw1FM7zhz1vtvqk3nylaj
+	 0u+uxPB5B0DbUij9Mf+Fe64RQJn2DREfhsFT0SNI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387568AbfKEWG4 (ORCPT
+        id S1730138AbfKEWJr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:06:56 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:39988 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387428AbfKEWGz (ORCPT
+        Tue, 5 Nov 2019 17:09:47 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44677 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729989AbfKEWJq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:06:55 -0500
-Received: by mail-pl1-f194.google.com with SMTP id e3so8217139plt.7;
-        Tue, 05 Nov 2019 14:06:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:from:to:cc:date:message-id:in-reply-to:references
-         :user-agent:mime-version:content-transfer-encoding;
-        bh=IYnIZF3ya8GRMyw0Z8v44wRFjachYcZ/Qaw0Oz7Yqys=;
-        b=VH6IuWxq+4/4s0yCVQGds5R1YSjZbjgGZYqMH/43ZaOyXpgNeOZHnwNWid+sB52+iD
-         KWKjlv6SwAxWit1DFmlNIeCB4I+vRHFK4C8033BExeRp/KKOC+rz9poYIGwNbCvOXZVS
-         o/IDbLmMsaaCOxlOYb5HVEeD8MYNh/PjERx2BKvCme1iV64K3xyTsxNJY8ru5CXua6wB
-         aO/pp2PZJDebPreHlWp4VUDI0BbOd5YaWHSEA1bjy4J0fdjvOuwDGbf+WOzZ65Gq3lAr
-         5xqAQ3nsmmX1twja7wEvT+mg6WOq3VYgK2jwmoJ4jR13ubqjEwczrYRy5YkACvGhuaNp
-         1XQA==
+        Tue, 5 Nov 2019 17:09:46 -0500
+Received: by mail-oi1-f196.google.com with SMTP id s71so19065960oih.11;
+        Tue, 05 Nov 2019 14:09:46 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:from:to:cc:date:message-id:in-reply-to
-         :references:user-agent:mime-version:content-transfer-encoding;
-        bh=IYnIZF3ya8GRMyw0Z8v44wRFjachYcZ/Qaw0Oz7Yqys=;
-        b=ij9v5xo1A87yhtBlzwy1euBIlqMHU90vn404fIJlASLY97dfG+t+UNz+eoFaZoTa55
-         xFezWCUI79zgQku+BVr4fAW+mrWcHfbZeFmPj/KD+4jhaGjnOZ0oeCr5qiCy9fQYPUbT
-         rQb+KZeQxNDphF9EfqwZUGjHUN+umrIVS8xa7I0plIHNZRxMDmjotFQduFWxuC5AV/Gh
-         swpxPoqEBWwbZJPBAfjumoGR7YLSIDm4+OXu3imUvrVwfKbxV/mo/i8ZgyJ6465FiAmd
-         ihFpfgzVLpMwzGbtDMGx8bVwBKQNk0cuZdPh9znMzEx6Xwb5HtdcCB8V6dNgg4VAmkSb
-         SQkg==
-X-Gm-Message-State: APjAAAWc3fdyf8Ez6ZHJ2ICTWPa6C2IekN1zOhgjv6S9dI4u4jPlWqTx
-        40De1nFm4wnWVou0Pu7+6Yg=
-X-Google-Smtp-Source: APXvYqwZYsPGacbb5rgtO0Qje5s17EoKhvENCkQzsutsaB418YulXgadq2A3Ag4BrWWKA7Vre67pOA==
-X-Received: by 2002:a17:902:ab82:: with SMTP id f2mr3383748plr.39.1572991613795;
-        Tue, 05 Nov 2019 14:06:53 -0800 (PST)
-Received: from localhost.localdomain ([2001:470:b:9c3:9e5c:8eff:fe4f:f2d0])
-        by smtp.gmail.com with ESMTPSA id 12sm16042503pfp.79.2019.11.05.14.06.53
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 14:06:53 -0800 (PST)
-Subject: [PATCH v13 QEMU 3/3] virtio-balloon: Provide a interface for unused
- page reporting
-From:   Alexander Duyck <alexander.duyck@gmail.com>
-To:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        akpm@linux-foundation.org, mgorman@techsingularity.net,
-        vbabka@suse.cz
-Cc:     yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Date:   Tue, 05 Nov 2019 14:06:52 -0800
-Message-ID: <20191105220652.15373.45960.stgit@localhost.localdomain>
-In-Reply-To: <20191105215940.15144.65968.stgit@localhost.localdomain>
-References: <20191105215940.15144.65968.stgit@localhost.localdomain>
-User-Agent: StGit/0.17.1-dirty
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=OkAzPBWAjAe+diVtWjb/mYuOGJLL+Yx2Cib7q7L6uYw=;
+        b=qk0zMj4SybdQcDCRbZ4o93JfvlHr0TNkAqypFEY5xRUaI9kDk48T5dmIDaGlNt0Bpv
+         Hz9fFzO6Wzof8y0yBR94D9m773qicjKHyzkgC8NbyuvY7YOdSVuIA1hkSg+KIsz2Sjr4
+         KgeanYhl5hm22DlN5ATuG0sPOlg3H+/S8IWXhRGlrddfoEVIcplWZ3Afr9IW9rnnkAWr
+         9kcyAvQUgkAONGNAjDnRwUjEmhhUiOeB3FIY185H6x0O7KHZLqrq/SlZ46Ifqzavznvk
+         hvcUycYvRG+WqOAgPF2rd9AkbTW5aNZK3i7QJcOFQhBQ4A5tyKToG9TsNEHbgKV6awpk
+         VFmw==
+X-Gm-Message-State: APjAAAUWV0oEEk6qxecdQWCZ5QXJKY2QECAzB2A4nF2ecUqx7aO25tAG
+        tCcWGOEZh1L30o95hemw6tc5K+7dxCUGNqTfYMw=
+X-Google-Smtp-Source: APXvYqwuPh7ZhgfFBcsX7RC7HKVF4j3RKFOljgvBfkmpSwFWsVOKP3TQOWZ1doIiK2FwcQKSUOOEe2aEzQOvaWhDplM=
+X-Received: by 2002:aca:c753:: with SMTP id x80mr1029051oif.115.1572991785760;
+ Tue, 05 Nov 2019 14:09:45 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com> <20191030224304.GH57214@dtor-ws>
+In-Reply-To: <20191030224304.GH57214@dtor-ws>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Nov 2019 23:09:34 +0100
+Message-ID: <CAJZ5v0iihCMCc9xozdafrxjwH7cXYDMu_Vfx1snYfOEYTYRJVQ@mail.gmail.com>
+Subject: Re: [PATCH v6 00/15] software node: add support for reference properties
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alexander Duyck <alexander.h.duyck@linux.intel.com>
+On Wed, Oct 30, 2019 at 11:43 PM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+>
+> Hi Rafael,
+>
+> On Wed, Oct 23, 2019 at 01:02:18PM -0700, Dmitry Torokhov wrote:
+> > These series implement "references" properties for software nodes as true
+> > properties, instead of managing them completely separately.
+> >
+> > The first 10 patches are generic cleanups and consolidation and
+> > unification of the existing code; patch #11 implements moving of small
+> > properties inline when copying property entries; patch #12 implements
+> > PROPERTY_ENTRY_REF() and friends; patch #13 converts the user of
+> > references to the property syntax, and patch #14 removes the remains of
+> > references as entities that are managed separately.
+> >
+> > Patch #15 adds unit tests to verify that the handling of property
+> > entries is correct.
+>
+> Do you have any concerns with the series? I think Andy did all the
+> reviewing that he could...
 
-Add support for what I am referring to as "unused page reporting".
-Basically the idea is to function very similar to how the balloon works
-in that we basically end up madvising the page as not being used. However
-we don't really need to bother with any deflate type logic since the page
-will be faulted back into the guest when it is read or written to.
+Yes, he did, and he is unconvinced.
 
-This is meant to be a simplification of the existing balloon interface
-to use for providing hints to what memory needs to be freed. I am assuming
-this is safe to do as the deflate logic does not actually appear to do very
-much other than tracking what subpages have been released and which ones
-haven't.
+I basically have no problems with patches [1-9/15], so I'm going to
+queue them up for 5.5.
 
-Signed-off-by: Alexander Duyck <alexander.h.duyck@linux.intel.com>
----
- hw/virtio/virtio-balloon.c         |   46 ++++++++++++++++++++++++++++++++++--
- include/hw/virtio/virtio-balloon.h |    2 +-
- 2 files changed, 45 insertions(+), 3 deletions(-)
+Patch [10/15] by itself is kind of pointless IMO, so it'll depend on
+what happens to the rest.
 
-diff --git a/hw/virtio/virtio-balloon.c b/hw/virtio/virtio-balloon.c
-index 6ecfec422309..47f253d016db 100644
---- a/hw/virtio/virtio-balloon.c
-+++ b/hw/virtio/virtio-balloon.c
-@@ -321,6 +321,40 @@ static void balloon_stats_set_poll_interval(Object *obj, Visitor *v,
-     balloon_stats_change_timer(s, 0);
- }
- 
-+static void virtio_balloon_handle_report(VirtIODevice *vdev, VirtQueue *vq)
-+{
-+    VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-+    VirtQueueElement *elem;
-+
-+    while ((elem = virtqueue_pop(vq, sizeof(VirtQueueElement)))) {
-+    	unsigned int i;
-+
-+        for (i = 0; i < elem->in_num; i++) {
-+            void *addr = elem->in_sg[i].iov_base;
-+            size_t size = elem->in_sg[i].iov_len;
-+            ram_addr_t ram_offset;
-+            size_t rb_page_size;
-+            RAMBlock *rb;
-+
-+            if (qemu_balloon_is_inhibited() || dev->poison_val)
-+                continue;
-+
-+            rb = qemu_ram_block_from_host(addr, false, &ram_offset);
-+            rb_page_size = qemu_ram_pagesize(rb);
-+
-+            /* For now we will simply ignore unaligned memory regions */
-+            if ((ram_offset | size) & (rb_page_size - 1))
-+                continue;
-+
-+            ram_block_discard_range(rb, ram_offset, size);
-+        }
-+
-+        virtqueue_push(vq, elem, 0);
-+        virtio_notify(vdev, vq);
-+        g_free(elem);
-+    }
-+}
-+
- static void virtio_balloon_handle_output(VirtIODevice *vdev, VirtQueue *vq)
- {
-     VirtIOBalloon *s = VIRTIO_BALLOON(vdev);
-@@ -628,7 +662,8 @@ static size_t virtio_balloon_config_size(VirtIOBalloon *s)
-         return sizeof(struct virtio_balloon_config);
-     }
-     if (virtio_has_feature(features, VIRTIO_BALLOON_F_PAGE_POISON) ||
--        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(features, VIRTIO_BALLOON_F_REPORTING)) {
-         return sizeof(struct virtio_balloon_config);
-     }
-     return offsetof(struct virtio_balloon_config, free_page_report_cmd_id);
-@@ -716,7 +751,8 @@ static uint64_t virtio_balloon_get_features(VirtIODevice *vdev, uint64_t f,
-     VirtIOBalloon *dev = VIRTIO_BALLOON(vdev);
-     f |= dev->host_features;
-     virtio_add_feature(&f, VIRTIO_BALLOON_F_STATS_VQ);
--    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-+    if (virtio_has_feature(f, VIRTIO_BALLOON_F_FREE_PAGE_HINT) ||
-+        virtio_has_feature(f, VIRTIO_BALLOON_F_REPORTING)) {
-         virtio_add_feature(&f, VIRTIO_BALLOON_F_PAGE_POISON);
-     }
- 
-@@ -806,6 +842,10 @@ static void virtio_balloon_device_realize(DeviceState *dev, Error **errp)
-     s->dvq = virtio_add_queue(vdev, 128, virtio_balloon_handle_output);
-     s->svq = virtio_add_queue(vdev, 128, virtio_balloon_receive_stats);
- 
-+    if (virtio_has_feature(s->host_features, VIRTIO_BALLOON_F_REPORTING)) {
-+        s->rvq = virtio_add_queue(vdev, 32, virtio_balloon_handle_report);
-+    }
-+
-     if (virtio_has_feature(s->host_features,
-                            VIRTIO_BALLOON_F_FREE_PAGE_HINT)) {
-         s->free_page_vq = virtio_add_queue(vdev, VIRTQUEUE_MAX_SIZE,
-@@ -932,6 +972,8 @@ static Property virtio_balloon_properties[] = {
-      */
-     DEFINE_PROP_BOOL("qemu-4-0-config-size", VirtIOBalloon,
-                      qemu_4_0_config_size, false),
-+    DEFINE_PROP_BIT("unused-page-reporting", VirtIOBalloon, host_features,
-+                    VIRTIO_BALLOON_F_REPORTING, true),
-     DEFINE_PROP_LINK("iothread", VirtIOBalloon, iothread, TYPE_IOTHREAD,
-                      IOThread *),
-     DEFINE_PROP_END_OF_LIST(),
-diff --git a/include/hw/virtio/virtio-balloon.h b/include/hw/virtio/virtio-balloon.h
-index 7fe78e5c14d7..db5bf7127112 100644
---- a/include/hw/virtio/virtio-balloon.h
-+++ b/include/hw/virtio/virtio-balloon.h
-@@ -42,7 +42,7 @@ enum virtio_balloon_free_page_report_status {
- 
- typedef struct VirtIOBalloon {
-     VirtIODevice parent_obj;
--    VirtQueue *ivq, *dvq, *svq, *free_page_vq;
-+    VirtQueue *ivq, *dvq, *svq, *free_page_vq, *rvq;
-     uint32_t free_page_report_status;
-     uint32_t num_pages;
-     uint32_t actual;
-
+Patch [11/15] kind of causes brows to rise, so let me reply to it directly.
