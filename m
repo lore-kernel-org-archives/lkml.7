@@ -2,151 +2,110 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CDF7C1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CDF6C1748A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4236921D81
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:06:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGrWivna"
+	by mail.kernel.org (Postfix) with ESMTP id 6DBF421882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:07:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389456AbfKEOGd (ORCPT
+        id S2389494AbfKEOHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:06:33 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:34364 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388428AbfKEOGc (ORCPT
+        Tue, 5 Nov 2019 09:07:41 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:45124 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389405AbfKEOHk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:06:32 -0500
-Received: by mail-wm1-f68.google.com with SMTP id v3so16590958wmh.1;
-        Tue, 05 Nov 2019 06:06:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=B1Y/RM2Mz7kHjeXIz94GZRfB4ieyu+FKgqSY/1H3X9U=;
-        b=kGrWivnaI6V9lkGpzTZ0OvRK5tGWrMKuxcql5NqByB8JizVWkPrpiZ0A9jJnaYPUhD
-         +WaiDkhPUS25qGmGgZ+z7hKwuPcDZ3slW4w8ftU7dKCLrjRTyLiifXYEt7MR1dBxOGOc
-         U1ZmE7mKt7LOLFhMEVdAxaw018otafaQbXIQbK114P+SkVno+hRipvoDUfkVGNMIabQf
-         aZmXFuFaTchhjnY+FQgFhM2NHvYLGnPLVDWaQMzI5Y06UpYmFKmj4HkQzDyZPWr6lr8F
-         tEiVQwX8DNNFxc37XSyfEKoxgkAS5wcV1siJBrsrHEKm9NVm3RGrI5PPjnZLKn/RsWGD
-         uWIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=B1Y/RM2Mz7kHjeXIz94GZRfB4ieyu+FKgqSY/1H3X9U=;
-        b=YtuPL0QI/aWQn1lSuhjQMpEdrmTgE4XtYUx886E8HqSNa/fVfMpXjAtwyD5Oud4u5w
-         cjB2Yfcd8Qm+kmaI03U88aKZoZvt9jfeASJc63WPV0G2ubAfZtdTv804eZGPR9N+9ohw
-         hC4F+KTs45WJeLRZHZOYZWS0Qea+FIQTKh7P7OSWuQ40G0bOEpHWbw8SJLaLNjexglTO
-         sxFoUl/e8tJsUSLXDDSjvBGio7qFq14ls1ZCw0kRM+gI6bXXeUoG2gGhXXuWSsMI9xrh
-         xYYW6FnilUlRIkF3WFTnMrmL5qIptN7jVgMtC6MsUNyLS8n0cNiFpiFeL1y8gwFSwDG3
-         yqhw==
-X-Gm-Message-State: APjAAAXoMB4aORFeeUrqTqy35GQS2rUrVxsMWc+wP3wIzS8FVz8sFj18
-        tj6xoBpW9J2lGnUeV2xlB9hi2vKMkd8vX291Se4=
-X-Google-Smtp-Source: APXvYqxddcZh8iQRhjIgQrK0b9aLG19Xi2F8TSSTEuWMQxK7GJf3TbgIpTv/4hQg8PsgXtuLD7Bf0bZBo9A9To3U1ug=
-X-Received: by 2002:a1c:2342:: with SMTP id j63mr4214667wmj.56.1572962788801;
- Tue, 05 Nov 2019 06:06:28 -0800 (PST)
+        Tue, 5 Nov 2019 09:07:40 -0500
+X-AuditID: c0a8fbf4-199ff70000001fa6-50-5dc1822ae9e4
+Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 79.A6.08102.A2281CD5; Tue,  5 Nov 2019 15:07:38 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
+ 14.03.0439.000; Tue, 5 Nov 2019 15:07:32 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
+ run-level control for regulators
+Thread-Topic: [RFC PATCH v3 10/15] regulator: bd71828: Add GPIO based
+ run-level control for regulators
+Thread-Index: AQHVkKmUb1A5TsbkA0WleApZHP5SaKd5+YkAgACQyoCAAfw5gIAADBgA
+Date:   Tue, 5 Nov 2019 14:07:32 +0000
+Message-ID: <ff6085af2b949d43571b61c7d4d69743cb175850.camel@fi.rohmeurope.com>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <2a8fa03308b08b2a15019d9b457d9bff7aafce94.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <CACRpkdZYw3QQcQ4h5y_C0UD6+4Wz9AdmQ0qSrrjfUweuJj8hyQ@mail.gmail.com>
+         <1550472ac1e105bd38da25803358cfbc0404bf38.camel@fi.rohmeurope.com>
+         <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
+In-Reply-To: <CACRpkdYkgEg=4H9tQQrVcvx1xtETYD_cHxhqd-BW6g67jpEeEg@mail.gmail.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <000865F25A7D6443B4A44E4BF0D5C8D9@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-4-peron.clem@gmail.com>
- <20191105135745.mf63pelpbekmitgm@pengutronix.de>
-In-Reply-To: <20191105135745.mf63pelpbekmitgm@pengutronix.de>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Tue, 5 Nov 2019 15:06:17 +0100
-Message-ID: <CAJiuCceg4CeHf-ZtK0A=SzQGGQD5D7CK2Zcy5dzDshmY=yP9sg@mail.gmail.com>
-Subject: Re: [PATCH v3 3/7] pwm: sun4i: Add an optional probe for bus clock
-To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFrrHJsWRmVeSWpSXmKPExsVyYMXvjbpaTQdjDQ7PV7VYcvEqu0X7u2Xs
+        Fl/mnmKxmPrwCZvF/CPnWC26T29htbi9dQOLxf2vRxktvl3pYLKY8mc5k8XHnnusFpvn/2G0
+        uLxrDpvF1jfrGC2Orb7CZrH0+kUmizlLT7BYXDzlanH31FE2i9a9R9gt/l3byOIg6rFm3hpG
+        j/c3Wtk95q2p9tg56y67x6ZVnWwed67tYfM4fmM7k8f0eT+ZPFas/s7u8XmTXABXFLdNUmJJ
+        WXBmep6+XQJ3Rsua64wF/zgrTrzsZ2xgvMPZxcjJISFgIvFzyh/mLkYuDiGBq4wSLQ9fsoEk
+        hASOM0o8m2bRxcjBwSZgI9F1kx0kLCJgKXH4xBwWEJtZYA6HROONSBBbWCBdYlrLRDaImgyJ
+        r8d7oerdJI5t+8kMYrMIqEisbZwGZvMK+En0L/vLBLH3J5PE6xdNYM2cAoESL/6eYAKxGQVk
+        JTob3jFBLBOX2PTsOyvE0QISS/acZ4awRSVePv4HFVeS2PvzIQvIzcwCmhLrd+lDmA4Saz5V
+        Q0xRlJjS/ZAd4gRBiZMzn7BMYBSbhWTBLITmWQjNs5A0z0LSvICRdRWjRG5iZk56YkmqoV5R
+        aqleUX5GLpBKzs/dxAhJL192MP4/5HmIkYmD8RCjJAeTkiivV+bBWCG+pPyUyozE4oz4otKc
+        1OJDjBIczEoivBdn7I0V4k1JrKxKLcqHSUlzsCiJ86o/nBgrJACyKzs1tSC1CCYrw8GhJMEb
+        3gA0VLAoNT21Ii0zpwQhzcTBCTKcS0qkODUvJbUosbQkIx6UOOKLgakDJMUDtPcYSDtvcUFi
+        LlAUovUUozbHhJdzFzFzHJm7dBGzEEtefl6qlDjvP5BSAZDSjNI8uEWvGMU5GJWEeYMbgbI8
+        wEwDN+cV0AomoBU+j/eBrChJREhJNTDqmX4yM6n/71sactti7xl5hzDZcKl0DSGLxix355YJ
+        H0/FqQaFSlkkH7uffd9rkuPZN8mn4gxefpufmMqd4hipsud79ZICrn9Syy8kWxz82pq35Ke1
+        jPD0NwzLw36ukLb3Cn1fes6hX/VbySrW9ws0V9m+373g/53VZ/fk2hYI9h9OKbi1yESJpTgj
+        0VCLuag4EQAAOyb/8QMAAA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Uwe,
-
-On Tue, 5 Nov 2019 at 14:57, Uwe Kleine-K=C3=B6nig
-<u.kleine-koenig@pengutronix.de> wrote:
->
-> On Tue, Nov 05, 2019 at 02:14:52PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM core needs bus clock to be enabled in order to work.
-> >
-> > Add an optional probe for it and a fallback for previous
-> > bindings without name on module clock.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
-> > ---
-> >  drivers/pwm/pwm-sun4i.c | 45 +++++++++++++++++++++++++++++++++++++++--
-> >  1 file changed, 43 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> > index 9ba83769a478..54e19fa56a4e 100644
-> > --- a/drivers/pwm/pwm-sun4i.c
-> > +++ b/drivers/pwm/pwm-sun4i.c
-> > @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
-> >
-> >  struct sun4i_pwm_chip {
-> >       struct pwm_chip chip;
-> > +     struct clk *bus_clk;
-> >       struct clk *clk;
-> >       struct reset_control *rst;
-> >       void __iomem *base;
-> > @@ -363,9 +364,35 @@ static int sun4i_pwm_probe(struct platform_device =
-*pdev)
-> >       if (IS_ERR(pwm->base))
-> >               return PTR_ERR(pwm->base);
-> >
-> > -     pwm->clk =3D devm_clk_get(&pdev->dev, NULL);
-> > -     if (IS_ERR(pwm->clk))
-> > +     /* Get all clocks and reset line */
-> > +     pwm->clk =3D devm_clk_get_optional(&pdev->dev, "mod");
-> > +     if (IS_ERR(pwm->clk)) {
-> > +             dev_err(&pdev->dev, "get clock failed %ld\n",
-> > +                     PTR_ERR(pwm->clk));
->
-> Please only print this message if PTR_ERR(pwm->clk) !=3D -EPROBE_DEFER.
-
-I didn't do it because the sunxi clock can't be compiled as module but
-indeed i can change it so it's more generic.
-
-> You might also want to make use of commit 57f5677e535b ("printf: add
-> support for printing symbolic error names") and use
->
->         dev_err(&pdev->dev, "get clock failed: %pe\n", pwm->clk);
-
-Thanks I will change it,
-
-Regards,
-Cl=C3=A9ment
-
->
-> Other than that the patch is fine for me.
->
-> Best regards
-> Uwe
->
-> --
-> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
-     |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
-|
+DQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMTQ6MjQgKzAxMDAsIExpbnVzIFdhbGxlaWogd3JvdGU6
+DQo+IE9uIE1vbiwgTm92IDQsIDIwMTkgYXQgODowNSBBTSBWYWl0dGluZW4sIE1hdHRpDQo+IDxN
+YXR0aS5WYWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IHdyb3RlOg0KPiA+IE9uIFN1biwgMjAx
+OS0xMS0wMyBhdCAyMzoyNyArMDEwMCwgTGludXMgV2FsbGVpaiB3cm90ZToNCj4gPiA+IEkgZG8g
+bm90IHVuZGVyc3RhbmQgdGhlIHJlZ3VsYXRvciBwYXJ0cyBvZiB0aGUgcGF0Y2guDQo+ID4gDQo+
+ID4gSSdtIHNvcnJ5LiBUaGUgcGF0Y2ggaXMgbm90IGNsZWFyZXN0IG9uZSB3aGF0IGNvbWVzIHRv
+IHRoZQ0KPiA+IHJlZ3VsYXRvcg0KPiA+IHN0dWZmLiBJIGNhbiB0cnkgc3BsaXR0aW5nIGl0IHRv
+IHNtYWxsZXIgYW5kIG1vcmUgbG9naWNhbCBjaGFuZ2VzDQo+ID4gaWYNCj4gPiB5b3UsIE1hcmsg
+b3Igb3RoZXIgaW50ZXJlc3RlZCBwZW9wbGUgaG9wZSB0byBnZXQgaXQgc3BsaXR0ZWQuIE9yDQo+
+ID4gcGVyaGFwcyBpdCB3b3VsZCBiZSBzaW1wbGVzdCB0byByZXZpZXcgaWYgaXQgd2FzIGFsbCBp
+biBvbmUgcGF0Y2g/DQo+IA0KPiBBcyBsb25nIGFzIHRoZSByZWd1bGF0b3IgZXhwZXJ0cyBhcmUg
+aGFwcHkgd2l0aCB0aGUgZm9ybWF0LA0KPiBzdGF5IHdpdGggdGhhdC4gSSBhbSBqdXN0IGEgZHJp
+dmUtYnkgY29kZXIgd2hlbiBpdCBjb21lcyB0bw0KPiByZWd1bGF0b3JzLg0KDQoiRHJpdmUtYnkg
+Y29kZXIiIC0gSSBkbyBkZWZpbml0ZWx5IGxpa2UgaG93IHRoYXQgc291bmRzIDpdIE1heWJlIEkg
+Y2FuDQpib3Jyb3cgdGhhdC4gQnV0IGV2ZW4gdGhlICJkcml2ZS1ieSIgcmV2aWV3aW5nIGlzIGhh
+cmQuIEFuZCBJIGd1ZXNzIGl0DQpzaG91bGQgYmUgbWFkZSBhcyBlYXN5IGFzIGl0IGNhbi4uLg0K
+DQpCciwNCglNYXR0aQ0KDQoNCg==
