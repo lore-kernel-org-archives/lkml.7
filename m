@@ -2,339 +2,96 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7257C49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD09C49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE2FA217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E6F320869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388061AbfKEJtY (ORCPT
+        id S2388140AbfKEJtd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:49:24 -0500
-Received: from mga14.intel.com ([192.55.52.115]:51083 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387867AbfKEJtX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:49:23 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:49:20 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="403294797"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.68.40])
-  by fmsmga006.fm.intel.com with ESMTP; 05 Nov 2019 01:49:18 -0800
-Received: from andy by smile with local (Exim 4.93-RC1)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1iRvSf-0007At-CI; Tue, 05 Nov 2019 11:49:17 +0200
-Date:   Tue, 5 Nov 2019 11:49:17 +0200
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-Subject: Re: [PATCH v3 1/2] pinctrl: Add pinmux & GPIO controller driver for
- a new SoC
-Message-ID: <20191105094917.GK32742@smile.fi.intel.com>
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
- <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
+        Tue, 5 Nov 2019 04:49:33 -0500
+Received: from mout.kundenserver.de ([212.227.126.133]:57571 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388093AbfKEJtc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:49:32 -0500
+Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
+ mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
+ id 1MIdW9-1ifzot1d2b-00EZnF; Tue, 05 Nov 2019 10:49:30 +0100
+Received: by mail-qt1-f178.google.com with SMTP id y10so21686113qto.3;
+        Tue, 05 Nov 2019 01:49:30 -0800 (PST)
+X-Gm-Message-State: APjAAAX5p8P40NOt8QqDGEKe3E6nJDegIQ+l1SsF0Rr4Ive1Abp4HpYc
+        GdBo1YEnNaQoqQPdn/zER2dTNe+TD3IfRAuBEIk=
+X-Google-Smtp-Source: APXvYqytk+YB723AlNICh0uVf4aP5i8XhgFrqWRnmq2L7GwuzVAxLKqOc22bK/LZTeykspfSzf0ix8jfskNYoVoVBiQ=
+X-Received: by 2002:a0c:c70a:: with SMTP id w10mr26382158qvi.222.1572947369108;
+ Tue, 05 Nov 2019 01:49:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191105022928.517526-1-farnasirim@gmail.com> <alpine.DEB.2.21.1911051033050.17054@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1911051033050.17054@nanos.tec.linutronix.de>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 5 Nov 2019 10:49:12 +0100
+X-Gmail-Original-Message-ID: <CAK8P3a0wyw=CwhiU34t1zBiSesf+HGBLeaV+=JVko_TjnvATHQ@mail.gmail.com>
+Message-ID: <CAK8P3a0wyw=CwhiU34t1zBiSesf+HGBLeaV+=JVko_TjnvATHQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] syscalls: Fix references to filenames containing
+ syscall defs
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Mohammad Nasirifar <far.nasiri.m@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Mohammad Nasirifar <farnasirim@gmail.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Content-Type: text/plain; charset="UTF-8"
+X-Provags-ID: V03:K1:QOfOLv/wLwxEQEaF/X9MWNmB1DyCznud2OQ3THP6bAu6BBa60/c
+ cDd750ixWXDTXPTtRdTyufI2s0MpRHzJEOvlvIfWC4/dycKY4WzLF7YDXYVrxv8M2TWlzSc
+ 74HCr0aciyCS4p8x5dOEVKwybwO2Wy5TiL853dDTu01xtOnPK42+kAwZtg3s/JXN3nv5aFl
+ 6/5WMJ/6STqxkTsT5fmpQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:dIZOkZD2JWU=:WidfBCXffH/su35/Y5hSA8
+ npF/Nh9OupAcaij6tos8lEpr12kT1le+68SSTY5bHz2Xc6V7Wwe/08swyoBXzwn0C/5a9942+
+ LZMmeQKRjy5R0sd1BTSzQ4zvfq6E+X+TaFV2HgaKuV07FdcLoUPR0J/zk6pjerNyo+IIrkvKK
+ SaR50GA5EHotsDqEbNrX7/MfGEOjqWEVSgjuW3MF/WebGAu8qSnEbmbuMZ8cRpK2fjl+KmIE0
+ N+k55qMsiJeL/cPD5PPZsMj6rgUwZHeYxmSZcWrX2JtcAAHT7FUpYXwknArbe8unZoe7PTA5E
+ cmtXYa4B4Q+ZeAY6NBUWoBvTJMv4Ijvy9e42nEwu+CT8an5YLvzXFn8WyO8Oc48HtNUETRgOU
+ UXl/MSnf4DzOJuG0Fr29ZFOyjQsxiS1ennfDnVosvJWvkfcjnte4KfCNbORWN/Ond4s4kkWFs
+ 2x+HpPkPUk9k5Rs5B9gFOnhA659oMlwZ3+zG7fG/XpMdfbJS/GDkzOknFL+OLAbAayFwnqelT
+ RsbwmMjhajD4se/wjIRZkBd6I/mzBb7MRwjmZ1JUklZyUNzYmijJJH2uMG/reTXVja1bzW71i
+ IMT2nfED5yL7HLQwHO7zRZLBgrBgB7KzkE8I3MBvnnmlHzEJcH5uT6YP4xURK/g8LQcRNcCN5
+ KIauWswKQP5RJUYD7GpNTap0UE0H4eTLT4/yuuPXDUpORh9tdzMZaTcC06ywjuliKqEANenEd
+ 0X0F/1BahJO/QVKJX+nFX6x6F0HPNg1bUArm8XOxhvsw4Gst079Y1M7znbC53i0ElR4yR6Mri
+ tIYATTsc6LjuGc5i5259zYExsA5EB/+962804CxM+asLmzX2i0QMDDrFh3Zj5vMPOBMJM99Mn
+ jBuXUjKbgIYs6ht3v+zA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:49:42PM +0800, Rahul Tanwar wrote:
-> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
-> controls pin multiplexing & configuration including GPIO functions selection &
-> GPIO attributes configuration.
-> 
-> This IP is not based on & does not have anything in common with Chassis
-> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
-> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
-> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
-> 
-> Add a new GPIO & pin control framework based driver for this IP.
-
-> +static void eqbr_set_val(void __iomem *addr, u32 offset,
-
-> +			 u32 mask, u32 set, raw_spinlock_t *lock)
-
-This lock parameter is quite unusual. Can't you supply a pointer to a data
-structure which has lock along with MMIO address?
-
-> +{
-> +	u32 val;
-> +	unsigned long flags;
-> +
-> +	raw_spin_lock_irqsave(lock, flags);
-
-> +	mask = mask << offset;
-
-Same Q. Why do you need these...
-
-> +	val = readl(addr);
-
-> +	val = (val & ~mask) | ((set << offset) & mask);
-
-...offset shifts? It's unusual.
-
-> +	writel(val, addr);
-> +	raw_spin_unlock_irqrestore(lock, flags);
-> +}
-
-> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
-> +{
-> +	struct gpio_irq_chip *girq;
-> +	struct gpio_chip *gc;
-
-> +#if defined(CONFIG_OF_GPIO)
-> +	gc->of_node = desc->node;
-> +#endif
-
-Isn't it what GPIO library does for everybody?
-
-> +
-> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
-
-> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
-> +			 desc->name);
-
-Is it fatal or non-fatal?
-
-> +		return 0;
-
-Ditto.
-
-> +	}
-
-> +}
-
-> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device_node *np;
-
-> +	struct eqbr_gpio_desc *desc;
-
-desc is very confusing here, since GPIO library uses this term for GPIO
-descriptors.
-
-> +	struct device *dev;
-> +	int i, ret;
-> +	struct resource res;
-> +
-
-> +		ret = bgpio_init(&desc->chip, dev, desc->bank->nr_pins/8,
-
-'nr_pins / 8,'
-
-> +				 desc->membase + GPIO_IN,
-> +				 desc->membase + GPIO_OUTSET,
-> +				 desc->membase + GPIO_OUTCLR,
-> +				 desc->membase + GPIO_DIR,
-> +				 NULL,
-> +				 0);
-> +		if (ret) {
-> +			dev_err(dev, "unable to init generic GPIO\n");
-> +			return ret;
-> +		}
-
-> +	return 0;
-> +}
-
-> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
-> +			       unsigned int selector, unsigned int group)
-> +{
-> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
-> +	struct function_desc *func;
-> +	struct group_desc *grp;
-> +	unsigned int *pinmux;
-> +	int i;
-
-
-> +	pinmux = grp->data;
-> +	for (i = 0; i < grp->num_pins; i++)
-> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
-
-Shouldn't be this part serialized?
-
-Same Q to all similar places. I guess I already mentioned this in previous
-review.
-
-> +	return 0;
-> +}
-
-> +static int is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
-
-Looks like it better to be boolean.
-
-> +			 unsigned int nr_funcs, unsigned int *idx)
-> +{
-> +	int i;
-> +
-> +	if (!funcs || !nr_funcs)
-> +		return 0;
-> +
-> +	for (i = 0; i < nr_funcs; i++) {
-
-> +
-
-Redundant blank line.
-
-> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
-> +			*idx = i;
-> +			return 1;
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
-> +		       unsigned int *nr_funcs, funcs_util_ops op)
-> +{
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *np;
-> +	struct property *prop;
-> +	unsigned int fid;
-> +	const char *fn_name;
-> +	int i, j;
-> +
-> +	i = 0;
-> +	for_each_child_of_node(node, np) {
-> +		prop = of_find_property(np, "groups", NULL);
-
-> +		if (prop) {
-
-Why not
-		if (!prop)
-			continue;
-?
-
-> +			if (of_property_read_string(np, "function",
-> +						    &fn_name)) {
-
-It's perfectly one line. Perhaps you may need to configure your text editor.
-
-> +			}
-
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +	for (i=0; i < nr_funcs; i++) {
-
-The better style is 'i = 0' and so on.
-Simple be consistent. Or do everywhere 'i=0; i<nr_func; i++', etc. But remember
-that this is for sure will be declined by most of the maintainers.
-
-> +	}
-
-> +static int eqbr_build_groups(struct eqbr_pinctrl_drv_data *drvdata)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct device_node *node = dev->of_node;
-> +	struct device_node *np;
-> +	struct property *prop;
-> +	int j, err;
-> +	unsigned int *pinmux, pin_id, pinmux_id;
-> +	struct group_desc group;
-> +
-> +	for_each_child_of_node(node, np) {
-> +		prop = of_find_property(np, "groups", NULL);
-
-> +		if (prop) {
-
-	if (!prop)
-		continue;
-
-	?
-
-> +		}
-> +		memset(&group, 0, sizeof(group));
-> +		pinmux = NULL;
-> +	}
-> +
-> +	return 0;
-> +}
-
-> +static int pinbank_init(struct device_node *np,
-> +			struct eqbr_pinctrl_drv_data *drvdata,
-> +			struct eqbr_pin_bank *bank, unsigned int id)
-> +{
-> +	struct device *dev = drvdata->dev;
-> +	struct of_phandle_args spec;
-> +
-> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
-> +
-
-> +	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec)) {
-> +		dev_err(dev, "gpio-range not available!\n");
-
-> +		return -EFAULT;
-
-Shadowing error code with actually unsuitable one.
-
-> +	}
-
-> +	return 0;
-> +}
-
-> +	int i=0, nr_gpio=0;
-
-Style.
-Besides the fact that better to put assignments closer to their usage.
-
-> +static int eqbr_pinctrl_probe(struct platform_device *pdev)
-> +{
-> +	struct eqbr_pinctrl_drv_data *drvdata;
-> +	struct device *dev = &pdev->dev;
-> +	int ret;
-> +
-> +	drvdata = devm_kzalloc(dev, sizeof(*drvdata), GFP_KERNEL);
-> +	if (!drvdata)
-> +		return -ENOMEM;
-> +
-> +	drvdata->dev = dev;
-
-> +	platform_set_drvdata(pdev, drvdata);
-
-I think this makes sense to do as last call in the function.
-
-> +	drvdata->membase = devm_platform_ioremap_resource(pdev, 0);
-> +	if (IS_ERR(drvdata->membase))
-> +		return PTR_ERR(drvdata->membase);
-> +
-> +	ret = pinbank_probe(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = pinctrl_reg(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = gpiolib_reg(drvdata);
-> +	if (ret)
-> +		return ret;
-> +
-> +	return 0;
-> +}
-
--- 
-With Best Regards,
-Andy Shevchenko
-
-
+On Tue, Nov 5, 2019 at 10:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Mon, 4 Nov 2019, Mohammad Nasirifar wrote:
+> > Fix stale references to files containing syscall definitions in
+> > 'include/linux/syscalls.h' and 'include/uapi/asm-generic/unistd.h',
+> > pointing to 'kernel/itimer.c', 'kernel/hrtimer.c', and 'kernel/time.c'.
+> > They are now under 'kernel/time'.
+> >
+> > Also definitions of 'getpid', 'getppid', 'getuid', 'geteuid', 'getgid',
+> > 'getegid', 'gettid', and 'sysinfo' are now in 'kernel/sys.c'.
+>
+> Can we please remove these file references completely. They are going to be
+> stale sooner than later again and they really do not provide any value.
+
++1
+
+Good idea!
+
+In the long run, I'd prefer to have a parsable format that can be used to
+generate both the header file and the stubs that we currently provide
+using SYSCALL_DEFINEx(), but before that I'd like the remaining two
+unistd.h files to be converted to syscall.tbl format (Nitesh is still working
+on that).
+
+      Arnd
