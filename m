@@ -2,80 +2,89 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEBEFC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 529B5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:35:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77BBD222C1
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1EAF3217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:34:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729709AbfKEU20 (ORCPT
+        id S1729720AbfKEUe6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:28:26 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:59350 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEU2Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:28:25 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iS5R4-0001rU-ED; Tue, 05 Nov 2019 20:28:18 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     =?UTF-8?q?Nuno=20S=C3=A1?= <nuno.sa@analog.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        linux-iio@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iio: temperature: ltc2983: fix u32 read into a unsigned long long
-Date:   Tue,  5 Nov 2019 20:28:18 +0000
-Message-Id: <20191105202818.90065-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 Nov 2019 15:34:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:60276 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727095AbfKEUe5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:34:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8A6DCC1D;
+        Tue,  5 Nov 2019 12:34:56 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 426873FEFC;
+        Tue,  5 Nov 2019 03:05:36 -0800 (PST)
+Date:   Tue, 5 Nov 2019 11:05:34 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
+        roy.zang@nxp.com, lorenzo.pieralisi@arm.com,
+        linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
+ strings "fsl,ls1028a-pcie"
+Message-ID: <20191105110533.GM9723@e119886-lin.cambridge.arm.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Mon, Sep 02, 2019 at 11:43:17AM +0800, Xiaowei Bao wrote:
+> Add the PCIe compatible string for LS1028A
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
 
-Currently the read of temp using of_property_read_u32_index is reading
-a u32 value into a unsigned long long.  This relies on machine endianness
-to work correctly, so fix this by reading a u32 value and setting temp
-to this value.
+Reviewed-by: Andrew Murray <andrew.murray@arm.com>
 
-Addresses-Coverity: ("Reliance on integer endianness")
-Fixes: f110f3188e56 ("iio: temperature: Add support for LTC2983")
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/iio/temperature/ltc2983.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iio/temperature/ltc2983.c b/drivers/iio/temperature/ltc2983.c
-index ddf47023364b..d39c0d6b77f1 100644
---- a/drivers/iio/temperature/ltc2983.c
-+++ b/drivers/iio/temperature/ltc2983.c
-@@ -444,8 +444,10 @@ static struct ltc2983_custom_sensor *__ltc2983_custom_sensor_new(
- 			else
- 				temp = __convert_to_raw(temp, resolution);
- 		} else {
--			of_property_read_u32_index(np, propname, index,
--						   (u32 *)&temp);
-+			u32 t32;
-+
-+			of_property_read_u32_index(np, propname, index, &t32);
-+			temp = t32;
- 		}
- 
- 		for (j = 0; j < n_size; j++)
--- 
-2.20.1
-
+> v2:
+>  - No change.
+> v3:
+>  - No change.
+> v4:
+>  - No change.
+> v5:
+>  - No change.
+> v6:
+>  - No change.
+> 
+>  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> index e20ceaa..99a386e 100644
+> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+> @@ -21,6 +21,7 @@ Required properties:
+>          "fsl,ls1046a-pcie"
+>          "fsl,ls1043a-pcie"
+>          "fsl,ls1012a-pcie"
+> +        "fsl,ls1028a-pcie"
+>    EP mode:
+>  	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+>  - reg: base addresses and lengths of the PCIe controller register blocks.
+> -- 
+> 2.9.5
+> 
