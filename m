@@ -2,91 +2,352 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24DDBCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:38:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEA7CA9ED4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:38:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA2FA217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:38:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572921519;
-	bh=AO5GUw4uAQW7SjlfIGhGgEAuiI6q1O8trlvLX3b/MnE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=We59o0tPC6jnOCHNg3JYDCLLlFAHzR/iZLZh4gft6iFEe/R1UDp+/5OhbTItgrS38
-	 jIqWmYIqa4AJcgPuYXaI8yeomBuJeSF4wSuIEwaXTxqTwLoyJ9gERfWxzuwUUHX9Vf
-	 XlQfgShUGAOG8xI+QRgd4OPiRtMzIHBsfrUkZtiM=
+	by mail.kernel.org (Postfix) with ESMTP id 2E1AB214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:38:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730033AbfKECih (ORCPT
+        id S1730214AbfKECiu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:38:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56144 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729717AbfKECih (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:38:37 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A3C33214D8;
-        Tue,  5 Nov 2019 02:38:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572921516;
-        bh=AO5GUw4uAQW7SjlfIGhGgEAuiI6q1O8trlvLX3b/MnE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=DhOIaSgg4PyeAcIv/11SHw83YohNkY+3PEl9C++E070AEg22bhyJOvAFZbG46GpDK
-         Uz5ET1GLWnqSqOuiYrmnlCqUp6q+Bw40PITQWHqOjqYNWAMJ9sWU/4r07RWwIv8W0m
-         0LIkohafg+2shuXJOSTN+UAjbuzhYtQFj6tBOxg8=
-Date:   Mon, 4 Nov 2019 18:38:35 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [PATCH 3/3] Revert "f2fs: use kvmalloc, if kmalloc is failed"
-Message-ID: <20191105023835.GD692@sol.localdomain>
-Mail-Followup-To: Chao Yu <yuchao0@huawei.com>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20191101095324.9902-1-yuchao0@huawei.com>
- <20191101095324.9902-3-yuchao0@huawei.com>
- <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
- <40d0df3f-cc55-d31a-474b-76f57d96bd89@huawei.com>
+        Mon, 4 Nov 2019 21:38:50 -0500
+Received: from mail-sz.amlogic.com ([211.162.65.117]:10466 "EHLO
+        mail-sz.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729897AbfKECit (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:38:49 -0500
+Received: from [10.28.18.45] (10.28.18.45) by mail-sz.amlogic.com (10.28.11.5)
+ with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 5 Nov
+ 2019 10:39:04 +0800
+Subject: Re: [PATCH v4 2/4] pinctrl: meson: add a new callback for SoCs fixup
+To:     Jerome Brunet <jbrunet@baylibre.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        <linux-gpio@vger.kernel.org>
+CC:     Neil Armstrong <narmstrong@baylibre.com>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Carlo Caione <carlo@caione.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Xingyu Chen <xingyu.chen@amlogic.com>,
+        Jianxin Pan <jianxin.pan@amlogic.com>,
+        Hanjie Lin <hanjie.lin@amlogic.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-amlogic@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <1572004167-24150-1-git-send-email-qianggui.song@amlogic.com>
+ <1572004167-24150-3-git-send-email-qianggui.song@amlogic.com>
+ <1jeeyo3wdg.fsf@starbuckisacylon.baylibre.com>
+From:   Qianggui Song <qianggui.song@amlogic.com>
+Message-ID: <25885aef-1ea6-600e-c022-6f0385d78559@amlogic.com>
+Date:   Tue, 5 Nov 2019 10:39:04 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <40d0df3f-cc55-d31a-474b-76f57d96bd89@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1jeeyo3wdg.fsf@starbuckisacylon.baylibre.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.28.18.45]
+X-ClientProxiedBy: mail-sz.amlogic.com (10.28.11.5) To mail-sz.amlogic.com
+ (10.28.11.5)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:17:41AM +0800, Chao Yu wrote:
-> On 2019/11/5 8:02, Jaegeuk Kim wrote:
-> > On 11/01, Chao Yu wrote:
-> >> This reverts commit 5222595d093ebe80329d38d255d14316257afb3e.
-> >>
-> >> As discussed with Eric, as kvmalloc() will try kmalloc() first, so
-> >> when we need allocate large size memory, it'd better to use
-> >> f2fs_kvmalloc() directly rather than adding additional fallback
-> >> logic to call kvmalloc() after we failed in f2fs_kmalloc().
-> >>
-> >> In order to avoid allocation failure described in original commit,
-> >> I change to use f2fs_kvmalloc() for .free_nid_bitmap bitmap memory.
-> > 
-> > Is there any problem in the previous flow?
-> 
-> No existing problem, however, it's redundant to introduce fallback flow in
-> f2fs_kmalloc() like vmalloc() did, since we can call f2fs_vmalloc() directly in
-> places where we need large memory.
-> 
-> Thanks,
-> 
 
-f2fs_kmalloc() also violated the naming convention used everywhere else in the
-kernel since it could return both kmalloc and vmalloc memory, not just kmalloc
-memory.  That's really error-prone since people would naturally assume it's safe
-to free the *_kmalloc()-ed memory with kfree().
 
-- Eric
+On 2019/11/4 15:59, Jerome Brunet wrote:
+> 
+> On Fri 25 Oct 2019 at 13:49, Qianggui Song <qianggui.song@amlogic.com> wrote:
+> 
+>> In meson_pinctrl_parse_dt, it contains two parts: reg parsing and
+>> SoC relative fixup for AO. Several fixups in the same code make it hard
+>> to maintain, so move all fixups to each SoC's callback and make
+>> meson_pinctrl_parse_dt just do the reg parsing, separate these two
+>> parts.Overview of all current Meson SoCs fixup is as below:
+>>
+>> +------+--------------------------------------+--------------------------+
+>> |      |                                      |                          |
+>> | SoC  |                EE domain             |        AO domain         |
+>> +------+--------------------------------------+--------------------------+
+>> |m8    | parse regs:                          | parse regs:              |
+>> |m8b   |   gpio,mux,pull,pull-enable(skip ds) |    gpio,mux,pull(skip ds)|
+>> |gxl   | fixup:                               | fixup:                   |
+>> |gxbb  |   no                                 |     pull-enable = pull   |
+>> |axg   |                                      |                          |
+>> +------+--------------------------------------+--------------------------+
+>> |g12a  | parse regs:                          | parse regs:              |
+>> |sm1   |   gpio,mux,pull,pull-enable,ds       |   gpio,mux,ds            |
+>> |      | fixup:                               | fixup:                   |
+>> |      |   no                                 |   pull = gpio            |
+>> |      |                                      |   pull-enable = gpio     |
+>> +------+--------------------------------------+--------------------------+
+>> |a1 or | parse regs:                                                     |
+>> |later |  gpio/mux (without ao domain)                                   |
+>> |SoCs  | fixup:                                                          |
+>> |      |  pull=gpio; pull-enable=gpio; ds=gpio                           |
+>> +------+-----------------------------------------------------------------+
+>>
+>> Signed-off-by: Qianggui Song <qianggui.song@amlogic.com>
+>> ---
+>>  drivers/pinctrl/meson/pinctrl-meson-axg.c  | 11 +++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson-g12a.c |  9 +++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson-gxbb.c | 11 +++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson-gxl.c  | 11 +++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson.c      |  9 +++++----
+>>  drivers/pinctrl/meson/pinctrl-meson.h      |  3 +++
+>>  drivers/pinctrl/meson/pinctrl-meson8.c     | 11 +++++++++++
+>>  drivers/pinctrl/meson/pinctrl-meson8b.c    | 11 +++++++++++
+>>  8 files changed, 72 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-axg.c b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> index ad502eda4afa..9c07f4423c37 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-axg.c
+>> @@ -1040,6 +1040,16 @@
+>>  	.num_pmx_banks = ARRAY_SIZE(meson_axg_aobus_pmx_banks),
+>>  };
+>>  
+>> +static int meson_axg_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
+>> +
+>> +	pc->reg_pullen = pc->reg_pull;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct meson_pinctrl_data meson_axg_periphs_pinctrl_data = {
+>>  	.name		= "periphs-banks",
+>>  	.pins		= meson_axg_periphs_pins,
+>> @@ -1066,6 +1076,7 @@
+>>  	.num_banks	= ARRAY_SIZE(meson_axg_aobus_banks),
+>>  	.pmx_ops	= &meson_axg_pmx_ops,
+>>  	.pmx_data	= &meson_axg_aobus_pmx_banks_data,
+>> +	.parse_dt	= meson_axg_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_axg_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-g12a.c b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> index 582665fd362a..41850e3c0091 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-g12a.c
+>> @@ -1362,6 +1362,14 @@
+>>  	.num_pmx_banks	= ARRAY_SIZE(meson_g12a_aobus_pmx_banks),
+>>  };
+>>  
+>> +static int meson_g12a_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	pc->reg_pull = pc->reg_gpio;
+>> +	pc->reg_pullen = pc->reg_gpio;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct meson_pinctrl_data meson_g12a_periphs_pinctrl_data = {
+>>  	.name		= "periphs-banks",
+>>  	.pins		= meson_g12a_periphs_pins,
+>> @@ -1388,6 +1396,7 @@
+>>  	.num_banks	= ARRAY_SIZE(meson_g12a_aobus_banks),
+>>  	.pmx_ops	= &meson_axg_pmx_ops,
+>>  	.pmx_data	= &meson_g12a_aobus_pmx_banks_data,
+>> +	.parse_dt	= meson_g12a_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_g12a_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> index 5bfa56f3847e..f5494a948200 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxbb.c
+>> @@ -827,6 +827,16 @@
+>>  	BANK("AO",   GPIOAO_0,  GPIOAO_13, 0, 13, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
+>>  };
+>>  
+>> +static int meson_gxbb_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
+>> +
+>> +	pc->reg_pullen = pc->reg_pull;
+>> +
+>> +	return 0;
+>> +}
+> 
+> Can you share the definition of this function instead of repeating it ?
+> 
+Seems like this common function can only be placed in pinctrl-meson.c, I
+will try to write a meson_aobus_parse_dt_extra in pinctrl-meson.c and
+assign it to each SoCs  driver before g12a.
+>> +
+>>  static struct meson_pinctrl_data meson_gxbb_periphs_pinctrl_data = {
+>>  	.name		= "periphs-banks",
+>>  	.pins		= meson_gxbb_periphs_pins,
+>> @@ -851,6 +861,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson_gxbb_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson_gxbb_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= meson_gxbb_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_gxbb_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson-gxl.c b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> index 72c5373c8dc1..943fb27dab08 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson-gxl.c
+>> @@ -796,6 +796,16 @@
+>>  	BANK("AO",   GPIOAO_0,  GPIOAO_9, 0, 9, 0,  16, 0, 0,   0,  0,  0, 16,  1,  0),
+>>  };
+>>  
+>> +static int meson_gxl_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
+>> +
+>> +	pc->reg_pullen = pc->reg_pull;
+>> +
+>> +	return 0;
+>> +}
+> 
+> Same
+will do it for above and below other platform.
+> 
+>> +
+>>  static struct meson_pinctrl_data meson_gxl_periphs_pinctrl_data = {
+>>  	.name		= "periphs-banks",
+>>  	.pins		= meson_gxl_periphs_pins,
+>> @@ -820,6 +830,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson_gxl_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson_gxl_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt 	= meson_gxl_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson_gxl_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+>> index 8bba9d053d9f..e182583422a4 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.c
+>> @@ -677,14 +677,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  	}
+>>  
+>>  	pc->reg_pull = meson_map_resource(pc, gpio_np, "pull");
+>> -	/* Use gpio region if pull one is not present */
+>>  	if (IS_ERR(pc->reg_pull))
+>> -		pc->reg_pull = pc->reg_gpio;
+>> +		pc->reg_pull = NULL;
+> 
+> Instead of doing this fixup, could modifhy meson_map_ressourse() to
+> return NULL instead of -ENOENT ?
+> 
+> Then you should IS_ERR_OR_NULL() for "mux" and "gpio" and just IS_ERR()
+> for the rest
+> 
+Ok, will modify this in the next patch set
+>>  
+>>  	pc->reg_pullen = meson_map_resource(pc, gpio_np, "pull-enable");
+>> -	/* Use pull region if pull-enable one is not present */
+>>  	if (IS_ERR(pc->reg_pullen))
+>> -		pc->reg_pullen = pc->reg_pull;
+>> +		pc->reg_pullen = NULL;
+>>  
+>>  	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
+>>  	if (IS_ERR(pc->reg_ds)) {
+>> @@ -692,6 +690,9 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+>>  		pc->reg_ds = NULL;
+>>  	}
+>>  
+>> +	if (pc->data->parse_dt)
+>> +		return pc->data->parse_dt(pc);
+>> +
+>>  	return 0;
+>>  }
+>>  
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+>> index c696f3241a36..d570f7c53045 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson.h
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson.h
+>> @@ -11,6 +11,8 @@
+>>  #include <linux/regmap.h>
+>>  #include <linux/types.h>
+>>  
+>> +struct meson_pinctrl;
+>> +
+>>  /**
+>>   * struct meson_pmx_group - a pinmux group
+>>   *
+>> @@ -114,6 +116,7 @@ struct meson_pinctrl_data {
+>>  	unsigned int num_banks;
+>>  	const struct pinmux_ops *pmx_ops;
+>>  	void *pmx_data;
+>> +	int (*parse_dt)(struct meson_pinctrl *pc);
+>>  };
+>>  
+>>  struct meson_pinctrl {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson8.c b/drivers/pinctrl/meson/pinctrl-meson8.c
+>> index 0b97befa6335..65c70c9b7070 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson8.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson8.c
+>> @@ -1079,6 +1079,16 @@
+>>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0, 16,  0,  0,  0,  0,  0, 16,  1,  0),
+>>  };
+>>  
+>> +static int meson8_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
+>> +
+>> +	pc->reg_pullen = pc->reg_pull;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct meson_pinctrl_data meson8_cbus_pinctrl_data = {
+>>  	.name		= "cbus-banks",
+>>  	.pins		= meson8_cbus_pins,
+>> @@ -1103,6 +1113,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson8_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson8_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= &meson8_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson8_pinctrl_dt_match[] = {
+>> diff --git a/drivers/pinctrl/meson/pinctrl-meson8b.c b/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> index a7de388388e6..85dc12e0c839 100644
+>> --- a/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> +++ b/drivers/pinctrl/meson/pinctrl-meson8b.c
+>> @@ -938,6 +938,16 @@
+>>  	BANK("AO",   GPIOAO_0, GPIO_TEST_N, 0, 13, 0,  16, 0, 0,  0,  0,  0, 16,  1,  0),
+>>  };
+>>  
+>> +static int meson8b_aobus_parse_dt_extra(struct meson_pinctrl *pc)
+>> +{
+>> +	if (!pc->reg_pull)
+>> +		return -EINVAL;
+>> +
+>> +	pc->reg_pullen = pc->reg_pull;
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  static struct meson_pinctrl_data meson8b_cbus_pinctrl_data = {
+>>  	.name		= "cbus-banks",
+>>  	.pins		= meson8b_cbus_pins,
+>> @@ -962,6 +972,7 @@
+>>  	.num_funcs	= ARRAY_SIZE(meson8b_aobus_functions),
+>>  	.num_banks	= ARRAY_SIZE(meson8b_aobus_banks),
+>>  	.pmx_ops	= &meson8_pmx_ops,
+>> +	.parse_dt	= &meson8b_aobus_parse_dt_extra,
+>>  };
+>>  
+>>  static const struct of_device_id meson8b_pinctrl_dt_match[] = {
+> 
+> .
+> 
