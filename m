@@ -2,130 +2,190 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09DF6C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:30:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90742C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D77AC214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:30:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RzvGG4JR"
+	by mail.kernel.org (Postfix) with ESMTP id 5A2F321A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:32:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572975135;
+	bh=yDuxotFXs1FYNXnjjemxUjVnTa7mhmweVIbX2xUY4Po=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XexKGLsWcR4BZv9Fa09d9myT+Lk93cJXboa1eNDakMaN3xoVfauZpItyG2pJbp8WD
+	 ct1iCNwLbpzCM5+VJpAEA++XNmuzh1qr+UeDAHCXiPq298cG0nC219hUCIfvsVCySw
+	 b/oBVfNsYz03GRgzXX3Bss8Bubr9s6XPRSdoECIk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389901AbfKERaa (ORCPT
+        id S2390394AbfKERcO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:30:30 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:40873 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731043AbfKERaa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:30:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572975029;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=R4CAvK29IQ9BTMooH1oXZfErhOK7uWCBlP8KR7GiQus=;
-        b=RzvGG4JRu8vgkLcsxwo8Ax3RWQ0bgvRYomH4cjX4HKOmmwyvj9VS+pvB+qXL0Hp9jac4Lw
-        7PHFylyeKzYt8j8ZEHk1YJ3E65mkR30Ikw+7QjvSSsgRRu+kBtnmAfb5sxmjfxkNOdnmSt
-        8U1gIUTq8IIuo9L9Lrc1gz6iX9kCofI=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-354-jGWJEnvkP0WG-IUuzHi1ZA-1; Tue, 05 Nov 2019 12:30:26 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Tue, 5 Nov 2019 12:32:14 -0500
+Received: from mail.kernel.org ([198.145.29.99]:53816 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387776AbfKERcN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:32:13 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2C945107ACC3;
-        Tue,  5 Nov 2019 17:30:24 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id D666619C6A;
-        Tue,  5 Nov 2019 17:30:23 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 12:30:23 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Mike Rapoport <rppt@linux.ibm.com>,
+        by mail.kernel.org (Postfix) with ESMTPSA id 8BD482087E;
+        Tue,  5 Nov 2019 17:32:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572975132;
+        bh=yDuxotFXs1FYNXnjjemxUjVnTa7mhmweVIbX2xUY4Po=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=lH2+6849jtmlQEYhuHDm8T1wfQtFGbiPiMYzlJSBFroTT5+hom11G9nS1EGuMRwMB
+         yKDuyuZNPw9UsMin8XJ6oo61kMPcr0DMDg+C7trMcMc7GECpzZSOJr82RoQpmLhV54
+         4Ohb/xjlD1HtNDGL0Iq9v8AIRXB5RMpepFdOqzsU=
+Date:   Tue, 5 Nov 2019 18:32:08 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
         linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
- UFFD_FEATURE_EVENT_FORK
-Message-ID: <20191105173023.GN30717@redhat.com>
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
- <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
- <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
- <20191105163316.GI30717@redhat.com>
- <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
- <20191105165556.GK30717@redhat.com>
- <CAKOZuet+fgaJR72YwYrHFdFVSOo6EWpcT8jUoh7se4cZb0V2aw@mail.gmail.com>
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
+ description
+Message-ID: <20191105173208.GA46143@gilmour.lan>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+ <20191105111134.GG3876@gilmour.lan>
+ <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAKOZuet+fgaJR72YwYrHFdFVSOo6EWpcT8jUoh7se4cZb0V2aw@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: jGWJEnvkP0WG-IUuzHi1ZA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:02:09AM -0800, Daniel Colascione wrote:
-> And you're suggesting making a security check work weirdly unlike most
-> other security checks because you hope it'll get removed one day?
+On Tue, Nov 05, 2019 at 01:34:37PM +0100, Cl=E9ment P=E9ron wrote:
+> On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+> >
+> > Hi Clement, Uwe,
+> >
+> > On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
+> > > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
+> > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > >
+> > > > H6 PWM block is basically the same as A20 PWM, except that it also =
+has
+> > > > bus clock and reset line which needs to be handled accordingly.
+> > > >
+> > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > >
+> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
+> > > > ---
+> > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++++=
++++-
+> > > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > >
+> > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-=
+a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pw=
+m.yaml
+> > > > index 0ac52f83a58c..bf36ea509f31 100644
+> > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm=
+=2Eyaml
+> > > > @@ -30,13 +30,46 @@ properties:
+> > > >        - items:
+> > > >            - const: allwinner,sun50i-h5-pwm
+> > > >            - const: allwinner,sun5i-a13-pwm
+> > > > +      - const: allwinner,sun50i-h6-pwm
+> > > >
+> > > >    reg:
+> > > >      maxItems: 1
+> > > >
+> > > > -  clocks:
+> > > > +  # Even though it only applies to subschemas under the conditiona=
+ls,
+> > > > +  # not listing them here will trigger a warning because of the
+> > > > +  # additionalsProperties set to false.
+> > > > +  clocks: true
+> > > > +  clock-names: true
+> > > > +  resets:
+> > > >      maxItems: 1
+> > > >
+> > > > +  if:
+> > > > +    properties:
+> > > > +      compatible:
+> > > > +        contains:
+> > > > +          const: allwinner,sun50i-h6-pwm
+> > > > +
+> > > > +  then:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        items:
+> > > > +          - description: Module Clock
+> > > > +          - description: Bus Clock
+> > > > +
+> > > > +      clock-names:
+> > > > +        items:
+> > > > +          - const: mod
+> > > > +          - const: bus
+> > > > +
+> > > > +    required:
+> > > > +      - clock-names
+> > > > +      - resets
+> > > > +
+> > > > +  else:
+> > > > +    properties:
+> > > > +      clocks:
+> > > > +        maxItems: 1
+> > > > +
+> > >
+> > > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod a=
+nd
+> > > bus clock is required.", right?
+> > >
+> > > I wonder if it is sensible to require a clock-names property in the e=
+lse
+> > > branch, too. This would make it obvious if the clock there corresponds
+> > > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> >
+> > This can be done a bit differently and could address your concerns
+> >
+> > Something like
+> >
+> > properties:
+> >   ...
+> >
+> >   clocks:
+> >     minItems: 1
+> >     maxItems: 2
+> >     items:
+> >       - description: Bus Clock
+> >       - description: Module Clock
+> >
+> > required:
+> >   - clocks
+> >
+> > if:
+> >   ...
+> >
+> > then:
+> >   properties:
+> >     clocks:
+> >       maxItems: 2
+>
+> Here we should set minItems to 2 right ?
+> so Max =3D Min =3D 2
 
-I didn't actually suggest that, I was only asking clarifications that
-I understood correctly because up until that point you didn't seem to
-say that the "permission check" needs to remain in UFFDIO_API.
+It's done automatically by the tooling when the other is missing.
 
-> Temporary solutions aren't, and if something goes into the kernel at
-> all, it's worth getting right. The general rule is that access checks
-> happen at open time. The kernel has already been bitten by UFFD
-> exempting itself from the normal rules (e.g., the
-> read(2)-makes-a-file-descriptor thing) in the name of expediency.
-> There shouldn't be any more exceptions.
-
-It didn't occur to me that not doing the measurement in the syscall
-that opens an fd is weird.
-
-The posted patch doesn't work any different than fscrypt_ioctl_add_key
-in FS_IOC_ADD_ENCRYPTION_KEY of ext4 and others, or
-btrfs_ioctl_fssetxattr or a ton of other examples where permissions
-are checked directly the in ioctl of the files and the measurement is
-also done in the ioctl and not in the open() as you suggest as the
-only non-weird solution that should exist in the kernel.
-
-I can surely provide a lot more examples of the exact same paradigm
-where the measurement of the capability is done in the ioctl, those
-are the first two examples that show up so it's unlikely they're the
-only ones.
-
-So overall I didn't think this was something wrong to do, or weird or
-something particularly new and I didn't look like we were bitting
-anything with it. And more than in the name of expediency this simply
-looks preferable to keep the complexity of the kernel low which in
-turns it means it's going to be more secure and simpler to
-maintain. Especially considering this code is likely to be modified
-later.
-
-Said that I've nothing contrary to do the more complex solution if
-that's the correct thing to do despite more complex and despite the
-code is pending for removal anyway, just I don't see any difference
-between the current simple patch to what ext4_ioctl does in
-FS_IOC_ADD_ENCRYPTION_KEY + FSCRYPT_KEY_SPEC_TYPE_DESCRIPTOR.
-
+Maxime
