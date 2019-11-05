@@ -2,133 +2,57 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C745FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B0D2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:13:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9832D217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572980935;
-	bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=exJELm7nS/a+obE8WLg3jTOqdvljDHS2j3kR3vWRQiBBIA7UbkU/AuhkAF5Iy4W8Q
-	 LBsNWpfdJ+OyUNcf5PXY8LpPHemSghZdnViZ9BcIDJE1LueBBNCvDL2qxD8yoG0z6b
-	 xWR+p2FQNfpCp6nEN/eDihtzlkw3vc6oCJ+NJmqY=
+	by mail.kernel.org (Postfix) with ESMTP id 55DE7217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:13:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390941AbfKETIy (ORCPT
+        id S2390822AbfKETNr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:08:54 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 14:13:47 -0500
+Received: from ms.lwn.net ([45.79.88.28]:44004 "EHLO ms.lwn.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390709AbfKETIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:08:54 -0500
-Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S2390526AbfKETNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 14:13:46 -0500
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF3EC21929;
-        Tue,  5 Nov 2019 19:08:52 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572980933;
-        bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=A4Pyc+titsh2MV21obxyJRFvEjTVhzZVdWlofZbm9ErJqczl1aSdsxzH2xh1K5BrT
-         RQi8cmmYa3bBydJXKkGV83IkSwxjUqGwYyAs11LfD/Y4+MXMyC2wo0/rIObZ9L+ZMd
-         64yEhJSyMdmn41WGoUwlTmPIbBRE864pCWHECsig=
-Received: by mail-qv1-f51.google.com with SMTP id w11so366527qvu.13;
-        Tue, 05 Nov 2019 11:08:52 -0800 (PST)
-X-Gm-Message-State: APjAAAVrpJ1quM72a6Siy0L9B1jQla1F1470E+9A20OrTnKHjkeWPmzI
-        jkrlQJtPCEuN4/yuLoRaa13wjhgl/VeIAvUzlg==
-X-Google-Smtp-Source: APXvYqxZiO3lZWJ0HQfv3215/wlPFfLAmRacWVsijd7Otyaf6TcDjfY8XMoGW2mVkceqmWdXru0Tw3AymFwc3LoYKik=
-X-Received: by 2002:a0c:ca06:: with SMTP id c6mr10688316qvk.136.1572980931880;
- Tue, 05 Nov 2019 11:08:51 -0800 (PST)
+        by ms.lwn.net (Postfix) with ESMTPSA id 368496EC;
+        Tue,  5 Nov 2019 19:13:46 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 12:13:45 -0700
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Will Deacon <will@kernel.org>
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Zerella <adam.zerella@gmail.com>,
+        Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: Re: linux-next: manual merge of the jc_docs tree with the arm-perf
+ tree
+Message-ID: <20191105121345.445a3438@lwn.net>
+In-Reply-To: <20191105181137.GB32767@willie-the-truck>
+References: <20191105113726.2a6e3317@canb.auug.org.au>
+        <20191105181137.GB32767@willie-the-truck>
+Organization: LWN.net
 MIME-Version: 1.0
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com> <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
-In-Reply-To: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 5 Nov 2019 13:08:40 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
-Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 29/10/2019 20:47, Rob Herring wrote:
-> > On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >>
-> >>
-> >> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
-> >>> Its Phandle.
-> >>>
-> >>> something like this is okay?
-> >>>
-> >>> slim-ifc-dev:
-> >>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >>
-> >> Sorry this should not be an array, so something like this:
-> >>
-> >>     slim-ifc-dev:
-> >>       description: SLIMBus Interface device phandle
-> >
-> > You're just spelling out the abbreviated name. I can do that much.
-> > What is 'SLIMBus Interface device'?
->
-> Each SLIMBus Component contains one Interface Device. Which is
-> responsible for Monitoring and reporting the status of component, Data
-> line to Data pin connection setup for SLIMBus streaming. Interface
-> device is enumerated just like any other slim device.
+On Tue, 5 Nov 2019 18:11:38 +0000
+Will Deacon <will@kernel.org> wrote:
 
-So a standard set of registers every slimbus device has? In hindsight,
-I would have made reg have 2 entries with both addresses. I guess that
-ship has sailed.
+> Looks fine to me, thanks. Jon -- are you ok living with this conflict?
 
-It seems strange you would need both "devices" described as separate
-nodes in DT.
+Just another day in the life of the docs tree...:)  No worries here.
+Thanks, Stephen.
 
->
-> We already have exactly same bindings for WCD9335 in upstream at:
->
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
->
-> >
-> > Is it a standard SLIMBus property? If so, document it in the right
-> > place. If not, then needs a vendor prefix.
->
-> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
->
-> If I remember it correctly You suggested me to move to "slim-ifc-dev"
-> as this is part of SLIMBus Specification.
-
-Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
-
-Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
-convert bus.txt to schema (or feel free to do that :) ).
-
-Rob
+jon
