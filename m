@@ -2,183 +2,113 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC71C010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 481F6C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71919206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 164C121928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="M0oMaQdT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730850AbfKELSM convert rfc822-to-8bit (ORCPT
+        id S1730891AbfKELSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:18:12 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44324 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730759AbfKELSL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:18:11 -0500
-Received: from mail-pf1-f199.google.com ([209.85.210.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iRwqf-0001Om-V1
-        for linux-kernel@vger.kernel.org; Tue, 05 Nov 2019 11:18:10 +0000
-Received: by mail-pf1-f199.google.com with SMTP id s24so5147572pfd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:18:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=Km3R3s47dSFWdMC4Cz64HHioZnQfD68q08sgp8NIQSc=;
-        b=kibzW9z6VP5MnRYaLZdXlVjHmNB4hitQa5HhdhAHp8n41/3TZjneWeyLwy8oEy0R0o
-         ZIl4BRy/1RoBDLosgU0s4U9VbEoC+kOcXe9xjdcJYeAbh/YIxeOJsE0Ie+pZePxy2zd1
-         GMuBrRvMWGMqPadu0LjGHWpNg04SPCvYIE9IKNVT5UqrRdmRYACGpgk0LCRVnTpBYtUq
-         ESbbZ3fPt00kub1tZCOPCCFnwlTxrzBabyYtwzo3dgpQ1HR2q8bTGoncIFwMuL3hRI/z
-         BckUpZOqtsybyo/RaDbEUIaNP40/hAn8/mH9kMFQ3tpnuSt8qBxH4jz2SVv8VDdQblS8
-         Vlpg==
-X-Gm-Message-State: APjAAAWFRMxIUbyJWsrC3MIE7qdG4b2u6ZphIBWeoOTehheX3gh+RwPO
-        ckOvBpXSOlOv4DBnljaW1fUiUpYV99p+tvrKtahy5VYOL+nW/v3Z6GH6iR6MBey5UYQl0njRN+w
-        2vVpwUuvmk0b9vv3L1RJswbu/2zQoA9AIeU7NzQXmpQ==
-X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1274713pjr.138.1572952688473;
-        Tue, 05 Nov 2019 03:18:08 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxO8n1Go9j0jLNj1favhse9HIXjVbJcZl0TBphaEAK8FkPrBbBvrBdxyfggSCBMeP2Jidt7Sg==
-X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1274669pjr.138.1572952688057;
-        Tue, 05 Nov 2019 03:18:08 -0800 (PST)
-Received: from 2001-b011-380f-3c42-8c9f-6944-7206-b2a2.dynamic-ip6.hinet.net (2001-b011-380f-3c42-8c9f-6944-7206-b2a2.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:8c9f:6944:7206:b2a2])
-        by smtp.gmail.com with ESMTPSA id i11sm18202076pgd.7.2019.11.05.03.18.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 03:18:07 -0800 (PST)
-Content-Type: text/plain;
-        charset=us-ascii
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
-Subject: Re: [PATCH v2] r8152: Add macpassthru support for ThinkPad
- Thunderbolt 3 Dock Gen 2
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
-Date:   Tue, 5 Nov 2019 19:18:04 +0800
-Cc:     "davem@davemloft.net" <davem@davemloft.net>,
-        "oliver@neukum.org" <oliver@neukum.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8BIT
-Message-Id: <193EF03A-1EF7-4604-BF3A-61201A78D724@canonical.com>
-References: <20191105081526.4206-1-kai.heng.feng@canonical.com>
- <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
-To:     Hayes Wang <hayeswang@realtek.com>
-X-Mailer: Apple Mail (2.3601.0.10)
+        Tue, 5 Nov 2019 06:18:39 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52599 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730763AbfKELSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:18:38 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 476nGf2mq8z9sNT;
+        Tue,  5 Nov 2019 22:18:34 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572952715;
+        bh=wlyVMHv+nfsspNnGPZQJO0GkNQj83K92ZcLTdou7qgg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=M0oMaQdTXgJKIeSGpvAxx7cfZJmUPAqVmwbZ4i+hZnuPLjxQ2xgT46jUHOGt3McHJ
+         gYC2wYeRwgJdol6PR7OEIUdzJeS3YYVdyI56AD/PesqX+sR9SoLcbG8fcodvF+SaXp
+         7rSmoZI35lNWzp3usrfDodLlpfSKmw/MgNse9vPcNSOkpGFx3d/61OivhN3TGCngTx
+         Hd3dEPcRejK2oyysCzupeRyt3HZAam2tA2UZ3V0pVSUhTRlSe3kFrju0X7LWL3YUy+
+         ubi3YlBDDgN+R/IxrfuHoF9+/qTt7FJtfRKwMefB/aGMDjC5hwo1BqZ3A94RrXf8sq
+         2OENc4eGE2Vkw==
+Date:   Tue, 5 Nov 2019 22:18:30 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jan Beulich <jbeulich@suse.com>,
+        Fabien Parent <fparent@baylibre.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: linux-next: Fixes tags need some work in the tip tree
+Message-ID: <20191105221830.69ec8bcc@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_/uLXmy0Ix51/Pb0+ksntgiRo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+--Sig_/uLXmy0Ix51/Pb0+ksntgiRo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
+Hi all,
 
-> On Nov 5, 2019, at 16:55, Hayes Wang <hayeswang@realtek.com> wrote:
-> 
-> Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
->> Sent: Tuesday, November 05, 2019 4:15 PM
->> To: davem@davemloft.net; oliver@neukum.org
-> [...]
->> +	if (test_bit(LENOVO_MACPASSTHRU, &tp->flags)) {
->> +		bypass_test = true;
->> +		mac_obj_name = "\\MACA";
->> +		mac_obj_type = ACPI_TYPE_STRING;
->> +		mac_strlen = 0x16;
->> 	} else {
->> -		/* test for RTL8153-BND and RTL8153-BD */
->> -		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
->> -		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
->> -			netif_dbg(tp, probe, tp->netdev,
->> -				  "Invalid variant for MAC pass through\n");
->> -			return -ENODEV;
->> +		bypass_test = false;
->> +		mac_obj_name = "\\_SB.AMAC";
->> +		mac_obj_type = ACPI_TYPE_BUFFER;
->> +		mac_strlen = 0x17;
->> +	}
->> +
->> +	if (!bypass_test) {
-> 
-> Maybe you could combine this with the "else" above.
-> Then, the variable "bypass_test" could be removed.
+In commit
 
-Ok, will do in V3.
+  fe6f85ca121e ("x86/apic/32: Avoid bogus LDR warnings")
 
-> And the declaration of "ocp_data" could be moved after the "else".
+Fixes tag
 
-Isn't putting declarations at the top of the function the preferred way?
+  Fixes: bae3a8d3308 ("x86/apic: Do not initialize LDR and DFR for bigsmp")
 
-Kai-Heng
+has these problem(s):
 
-> 
->> +		/* test for -AD variant of RTL8153 */
->> +		ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
->> +		if ((ocp_data & AD_MASK) == 0x1000) {
->> +			/* test for MAC address pass-through bit */
->> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
->> +			if ((ocp_data & PASS_THRU_MASK) != 1) {
->> +				netif_dbg(tp, probe, tp->netdev,
->> +						"No efuse for RTL8153-AD MAC pass
->> through\n");
->> +				return -ENODEV;
->> +			}
->> +		} else {
->> +			/* test for RTL8153-BND and RTL8153-BD */
->> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
->> +			if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK)
->> == 0) {
->> +				netif_dbg(tp, probe, tp->netdev,
->> +						"Invalid variant for MAC pass through\n");
->> +				return -ENODEV;
->> +			}
->> 		}
->> 	}
->> 
->> 	/* returns _AUXMAC_#AABBCCDDEEFF# */
->> -	status = acpi_evaluate_object(NULL, "\\_SB.AMAC", NULL, &buffer);
->> +	status = acpi_evaluate_object(NULL, mac_obj_name, NULL, &buffer);
->> 	obj = (union acpi_object *)buffer.pointer;
->> 	if (!ACPI_SUCCESS(status))
->> 		return -ENODEV;
->> -	if (obj->type != ACPI_TYPE_BUFFER || obj->string.length != 0x17) {
->> +	if (obj->type != mac_obj_type || obj->string.length != mac_strlen) {
->> 		netif_warn(tp, probe, tp->netdev,
->> 			   "Invalid buffer for pass-thru MAC addr: (%d, %d)\n",
->> 			   obj->type, obj->string.length);
->> 		goto amacout;
->> 	}
->> +
->> 	if (strncmp(obj->string.pointer, "_AUXMAC_#", 9) != 0 ||
->> 	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
->> 		netif_warn(tp, probe, tp->netdev,
->> @@ -6629,6 +6649,10 @@ static int rtl8152_probe(struct usb_interface *intf,
->> 		netdev->hw_features &= ~NETIF_F_RXCSUM;
->> 	}
->> 
->> +	if (le16_to_cpu(udev->descriptor.idVendor) == VENDOR_ID_LENOVO &&
->> +	    le16_to_cpu(udev->descriptor.idProduct) == 0x3082)
->> +		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
->> +
->> 	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
->> &&
->> 	    (!strcmp(udev->serial, "000001000000") ||
->> 	     !strcmp(udev->serial, "000002000000"))) {
->> @@ -6755,6 +6779,7 @@ static const struct usb_device_id rtl8152_table[] = {
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069)},
->> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c)},
->> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214)},
->> --
->> 2.17.1
-> 
-> 
-> Best Regards,
-> Hayes
+  - SHA1 should be at least 12 digits long
+    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
+    or later) just making sure it is not set (or set to "auto").
 
+In commit
+
+  41d49e7939de ("clocksource/drivers/mediatek: Fix error handling")
+
+Fixes tag
+
+  Fixes: a0858f937960 ("mediatek: Convert the driver to timer-of")
+
+has these problem(s):
+
+  - Subject does not match target commit subject
+    Just use
+	git log -1 --format=3D'Fixes: %h ("%s")'
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/uLXmy0Ix51/Pb0+ksntgiRo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3BWoYACgkQAVBC80lX
+0GzBfAgAk6DodycR3m5kO95k6g929xVfVCPhl3+5daDbBcWeJsiWYxxE9dRoHjgT
+sks9wZF7s2XWcgM84SsM+6njnEc1PkTwJCjtl6GZdRFbIyWCMbOj2E1iTmC/up7W
+lrYfjwVrHPGN2sgxgLLa14b3qTw6MBiIGnAFLz1unSzHitr2zXkEUm9xga5/qvOZ
+oCmQ3zap1HPY3pC7KOJtiblUJytHfgNlX211PEfg/xJSNO/X2ZjTjefvQjaYu42j
+l0bR7PaYsG+LI5xcmTFoo4bQKMqWLMy96aq/54DYhxYsECPMBKi93N+b2U/HHK2Z
+TWjFzth0Fa5m3WRjeJBclf0g9t70lw==
+=JDLR
+-----END PGP SIGNATURE-----
+
+--Sig_/uLXmy0Ix51/Pb0+ksntgiRo--
