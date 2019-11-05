@@ -2,115 +2,101 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1648C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4270C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B7B217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 991E9217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:33:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aaXIS5cP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390257AbfKEQcM (ORCPT
+        id S2390564AbfKEQd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:32:12 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:63686 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390116AbfKEQcL (ORCPT
+        Tue, 5 Nov 2019 11:33:26 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:34191 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390543AbfKEQdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:32:11 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 69623c2a3a0f6c70; Tue, 5 Nov 2019 17:32:08 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH update 5/5] PCI: PM: Fold __pci_complete_power_transition() into its caller
-Date:   Tue, 05 Nov 2019 17:32:08 +0100
-Message-ID: <15576968.k611qn3UU0@kreacher>
-In-Reply-To: <2771503.n70vfTtcVb@kreacher>
-References: <2771503.n70vfTtcVb@kreacher>
+        Tue, 5 Nov 2019 11:33:24 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572971603;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Skg5arqhiojkrhAvFDjH124AuiwjgoDeP66mJMAYWGM=;
+        b=aaXIS5cPcR2h6HOzCu9vY7K8DyPeKuUiqBvl2dLkBE606kNXn41QqKVJ7JRyQ7Urxl6ibN
+        /Ev9pQwmxgq6n2UXyDtNhtxYrOacNndFukWxFKnpFMs0XDY1OC3/6TodRFDORdz5PuYU1T
+        Mv/UHRFnrMFGBGZuPGyhDI2a51Ku6Cs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-351-fdhOjGE1OwGmEEn4AJbycQ-1; Tue, 05 Nov 2019 11:33:20 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D34D01800D4A;
+        Tue,  5 Nov 2019 16:33:17 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9CC2160C88;
+        Tue,  5 Nov 2019 16:33:17 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 11:33:16 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191105163316.GI30717@redhat.com>
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
+ <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: fdhOjGE1OwGmEEn4AJbycQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Nov 05, 2019 at 08:06:49AM -0800, Daniel Colascione wrote:
+> Sure, but the same argument applies to all the other permission checks
+> that we do at open time, not at ioctl time. For better or for worse,
+> the DAC-ish model used in most places is that access checks happen at
+> file object creation time and anyone who has the FD can perform those
+> operations later. Confusing the model by doing *some* permission
+> checks at open time and *some* permission checks at usage time makes
+> the system harder to understand.
 
-Because pci_set_power_state() has become the only caller of
-__pci_complete_power_transition(), there is no need for the latter to
-be a separate function any more, so fold it into the former, drop a
-redundant check and reduce the number of lines of code somewhat.
+The only case that requires change is if userland requested the
+UFFD_FEATURE_EVENT_FORK feature (which AFIK only CRIU does) and that
+request is done in the UFFDIO_API call not during the syscall.
 
-Code rearrangement, no intentional functional impact.
-
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
-
-Changes from the original:
- - Avoid using the extra local var in pci_set_power_state() (Christoph).
-
----
- drivers/pci/pci.c |   30 +++++++-----------------------
- 1 file changed, 7 insertions(+), 23 deletions(-)
-
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -1056,26 +1056,6 @@ void pci_bus_set_current_state(struct pc
- }
- 
- /**
-- * __pci_complete_power_transition - Complete power transition of a PCI device
-- * @dev: PCI device to handle.
-- * @state: State to put the device into.
-- *
-- * This function should not be called directly by device drivers.
-- */
--static int __pci_complete_power_transition(struct pci_dev *dev, pci_power_t state)
--{
--	int ret;
--
--	if (state <= PCI_D0)
--		return -EINVAL;
--	ret = pci_platform_power_transition(dev, state);
--	/* Power off the bridge may power off the whole hierarchy */
--	if (!ret && state == PCI_D3cold)
--		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
--	return ret;
--}
--
--/**
-  * pci_set_power_state - Set the power state of a PCI device
-  * @dev: PCI device to handle.
-  * @state: PCI power state (D0, D1, D2, D3hot) to put the device into.
-@@ -1132,10 +1112,14 @@ int pci_set_power_state(struct pci_dev *
- 	error = pci_raw_set_power_state(dev, state > PCI_D3hot ?
- 					PCI_D3hot : state);
- 
--	if (!__pci_complete_power_transition(dev, state))
--		error = 0;
-+	if (pci_platform_power_transition(dev, state))
-+		return error;
-+
-+	/* Powering off a bridge may power off the whole hierarchy */
-+	if (state == PCI_D3cold)
-+		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
- 
--	return error;
-+	return 0;
- }
- EXPORT_SYMBOL(pci_set_power_state);
- 
-
-
+Doing the check in the syscall would then break all non privileged
+users like if we'd set /proc/sys/vm/unprivileged_userfaultfd to
+zero. Qemu for example rightfully never runs with privilege (with a
+few exceptions like Kata which should be fixed in fact) and it never
+asks for the UFFD_FEATURE_EVENT_FORK feature either.
 
