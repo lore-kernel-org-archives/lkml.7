@@ -2,120 +2,88 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3786DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BE7C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12FF921D7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C8B8521D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:01:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572973291;
+	bh=iK3jjbUTTiyBlr35WTgbMKzVOI3PrZ7iul/+3YpY8tU=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=aYOY3gzQtMpnNgJJMRLvmUs2ETR6hNdFcgG6XK56GCV1tWuYZC1akTlS6s9cq9ugc
+	 32QePR1pPaj99K9fK7MCdazYacAH91ll6H4gLr+SfyagLfSlATFx+TsS3YlNFpE/t7
+	 ULc4foxp/AJj+Fj/kGWoBn81C7nCtOck6/A5dO1Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390275AbfKERBX (ORCPT
+        id S2390356AbfKERBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:01:23 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:63328 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2388488AbfKERBW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:01:22 -0500
-Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5GwgPf049840
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 12:01:21 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3afaew6y-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:01:20 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <hbathini@linux.ibm.com>;
-        Tue, 5 Nov 2019 17:01:15 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 17:01:12 -0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5H0b2a15139156
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 17:00:37 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id E4E2D11C04C;
-        Tue,  5 Nov 2019 17:01:11 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 390C011C054;
-        Tue,  5 Nov 2019 17:01:10 +0000 (GMT)
-Received: from [9.199.51.136] (unknown [9.199.51.136])
-        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue,  5 Nov 2019 17:01:09 +0000 (GMT)
-Subject: Re: [PATCH v2 3/4] Documentation/ABI: mark /sys/kernel/fadump_* sysfs
- files deprecated
-To:     Sourabh Jain <sourabhjain@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org
-References: <20191018130557.2217-1-sourabhjain@linux.ibm.com>
- <20191018130557.2217-4-sourabhjain@linux.ibm.com>
- <f69daa7b-ddb3-8190-c409-28a22c504fed@linux.ibm.com>
- <b1bc42cc-8d80-d104-b1b3-684c08531c78@linux.ibm.com>
-From:   Hari Bathini <hbathini@linux.ibm.com>
-Date:   Tue, 5 Nov 2019 22:31:09 +0530
+        Tue, 5 Nov 2019 12:01:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41858 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389267AbfKERB1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:01:27 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id E4ADA21D6C;
+        Tue,  5 Nov 2019 17:01:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572973287;
+        bh=iK3jjbUTTiyBlr35WTgbMKzVOI3PrZ7iul/+3YpY8tU=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=dVnGltsxpUh1HQ374CncBp3Jab/eUH+zJ0B23kYETFA+BxDda2Kdnp4c6LyU5OZY/
+         waI2fBV7KP8FXx5GUVqdAdlXrq/Z7ghXbrmmTdPidVfYPGIpcT2o99u9sx2NiGnWhS
+         wEZy7s4ooXAIZb7rjQW+tvQ1BvYrEDLzHQNAYQkc=
+Subject: Re: [PATCH 4.9 00/62] 4.9.199-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191104211901.387893698@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <ac7672a2-33a8-191d-006e-33613d511d18@kernel.org>
+Date:   Tue, 5 Nov 2019 10:01:26 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <b1bc42cc-8d80-d104-b1b3-684c08531c78@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110517-0012-0000-0000-00000360F5A5
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110517-0013-0000-0000-0000219C4FB8
-Message-Id: <d0a34f71-1b78-e387-c3a5-d771995a91f6@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911050140
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 11/4/19 2:44 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 4.9.199 release.
+> There are 62 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+> 
+> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+> Anything received after that time might be too late.
+> 
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.199-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
+> and the diffstat can be found below.
+> 
+> thanks,
+> 
+> greg k-h
+> 
 
+Compiled and booted on my test system. No dmesg regressions.
 
-On 05/11/19 2:24 PM, Sourabh Jain wrote:
-> 
-> 
-> On 10/21/19 1:11 PM, Hari Bathini wrote:
->>
->>
->> On 18/10/19 6:35 PM, Sourabh Jain wrote:
->>> The /sys/kernel/fadump_* sysfs files are replicated under
->>
->> [...]
->>
->>> +Note: The following FADump sysfs files are deprecated.
->>> +
->>> +    Deprecated                       Alternative
->>> +    -------------------------------------------------------------------------------
->>> +    /sys/kernel/fadump_enabled           /sys/kernel/fadump/fadump_enabled
->>> +    /sys/kernel/fadump_registered        /sys/kernel/fadump/fadump_registered
->>> +    /sys/kernel/fadump_release_mem       /sys/kernel/fadump/fadump_release_mem
->>
->> /sys/kernel/fadump/* looks tidy instead of /sys/kernel/fadump/fadump_* 
->> I mean, /sys/kernel/fadump/fadump_enabled => /sys/kernel/fadump/enabled and such..
-> 
-> 
-> 
-> Could you please confirm whether you want to address the sysfs file path differently or
-> actually changing the sysfs file name from fadump_enabled to enabled.
-
-I meant, given the path "/sys/kernel/fadump/", the prefix fadump_ is redundant.
-If there are no conventions that we should retain the same file name, I suggest
-to drop the fadump_ prefix and just call them enabled, registered, etc..
-
-- Hari
+thanks,
+-- Shuah
 
