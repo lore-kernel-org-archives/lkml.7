@@ -2,161 +2,115 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2ECC49EAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 596FFC49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:50:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 942C721D7F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 284FD20869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:50:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KE3dP9Kv"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RSx8KjZD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730808AbfKEJtm (ORCPT
+        id S2388186AbfKEJuP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:49:42 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:54946 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730722AbfKEJtl (ORCPT
+        Tue, 5 Nov 2019 04:50:15 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:31186 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730571AbfKEJuO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:49:41 -0500
-Received: by mail-wm1-f67.google.com with SMTP id z26so6899874wmi.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:49:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=oRi35sDRRYSuldGaopElz5IjGs2HKuOAcqpcVoq2wdY=;
-        b=KE3dP9KvcLUq0hJbOhSYMXJr4Z1Cuc2Vc3sYtj3A588K1AxiPBhNRv2jLPVvg3HpiB
-         asO9jGRsCrrAGrGXQuynbnaqIOtPdku/48txDbkC3jyEv0zbAYA99l9MmTsEF4lXmu4c
-         UlGTi/e9P81uVhAoSbMh6OU7HFW5tO869wbeU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=oRi35sDRRYSuldGaopElz5IjGs2HKuOAcqpcVoq2wdY=;
-        b=hTgCYSpxRsLrsqpO1O5rYiWpKlpzWS1+bn6dVGuSF5sPgS1SQjyEWHBxBqExpx0h0f
-         0UAxz7wgKYDYc0jIG21vHFa0dOgTTd3h/IP2mjnC4fFaVxAMSmwole8vwlxPXcNwX49e
-         fRZHZNMlnPdSOaXNxTYA+W5m4EehNH1nC1CW/ndhPe5Zo5NPL5X6XiFlVpxH6BMowwBK
-         1Cp5JTd28eghbzFoiM2goVlVzJUiEmlW1VXVHHZYUvpR2kSuVMCAFtK1T+scRHI9nOpw
-         UKI+QwuJzhvtlLAB+c4LFdj+2JPlubuXYLOPQbYoBF+kyxVexb20A1m3vzrNhWNUfufa
-         SedQ==
-X-Gm-Message-State: APjAAAXxJ0Vj8Bnk6PO4ZyYhKPRf8B0ufER/y3oNicaYa4R5rUL6tq9S
-        qVRRal4iXspYCBYuS9FtbWM4iw==
-X-Google-Smtp-Source: APXvYqy+m+ZJ5zxOn/Dji3l65qB+TEfMmH5EiR/oP/iFPjGmYGokusjpTK+YoOlM7MNeuKLe8vHIRQ==
-X-Received: by 2002:a7b:c925:: with SMTP id h5mr3591415wml.115.1572947379914;
-        Tue, 05 Nov 2019 01:49:39 -0800 (PST)
-Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id j19sm25704277wre.0.2019.11.05.01.49.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 01:49:39 -0800 (PST)
-Date:   Tue, 5 Nov 2019 10:49:36 +0100
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 09/19] drm/via: set FOLL_PIN via pin_user_pages_fast()
-Message-ID: <20191105094936.GZ10326@phenom.ffwll.local>
-Mail-Followup-To: John Hubbard <jhubbard@nvidia.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Chinner <david@fromorbit.com>, David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
-        Jonathan Corbet <corbet@lwn.net>,
-        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-References: <20191030224930.3990755-1-jhubbard@nvidia.com>
- <20191030224930.3990755-10-jhubbard@nvidia.com>
- <20191031233628.GI14771@iweiny-DESK2.sc.intel.com>
- <20191104181055.GP10326@phenom.ffwll.local>
- <48d22c77-c313-59ff-4847-bc9a9813b8a7@nvidia.com>
+        Tue, 5 Nov 2019 04:50:14 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572947413;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=BGggv342lFx1tfwwl12Nk/iZ58G5iqriqTxQgLV8zo8=;
+        b=RSx8KjZD9qbSpR/+JE5qNDBrcu+zkk5Gg3CwxGUhx3aKFvVTTYZQiTzpZw0kmH320VnJwj
+        b65Z8Pwuo07SJ2YJoVeEuAl/tsgQ3aJnocQ+QynGIjeniT/C1q9p00yjdg0pDT3ecVEKjQ
+        TDTT1ibtGPS+n+AImWA+q1Clq797hh0=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-340-SL926ai3PRGUG_s0dpBfZA-1; Tue, 05 Nov 2019 04:50:11 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 261A0800C73;
+        Tue,  5 Nov 2019 09:50:10 +0000 (UTC)
+Received: from [10.36.117.253] (ovpn-117-253.ams2.redhat.com [10.36.117.253])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B83D060CDA;
+        Tue,  5 Nov 2019 09:50:08 +0000 (UTC)
+Subject: Re: [PATCH v2] mm/memory-failure.c: replace with page_shift() in
+ add_to_kill()
+To:     Yunfeng Ye <yeyunfeng@huawei.com>, n-horiguchi@ah.jp.nec.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+References: <543d8bc9-f2e7-3023-7c35-2e7ed67c0e82@huawei.com>
+From:   David Hildenbrand <david@redhat.com>
+Organization: Red Hat GmbH
+Message-ID: <ff090004-2cf7-9c77-9c9e-7fc5aff90d35@redhat.com>
+Date:   Tue, 5 Nov 2019 10:50:07 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <48d22c77-c313-59ff-4847-bc9a9813b8a7@nvidia.com>
-X-Operating-System: Linux phenom 5.2.0-3-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <543d8bc9-f2e7-3023-7c35-2e7ed67c0e82@huawei.com>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: SL926ai3PRGUG_s0dpBfZA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 11:20:38AM -0800, John Hubbard wrote:
-> On 11/4/19 10:10 AM, Daniel Vetter wrote:
-> > On Thu, Oct 31, 2019 at 04:36:28PM -0700, Ira Weiny wrote:
-> >> On Wed, Oct 30, 2019 at 03:49:20PM -0700, John Hubbard wrote:
-> >>> Convert drm/via to use the new pin_user_pages_fast() call, which sets
-> >>> FOLL_PIN. Setting FOLL_PIN is now required for code that requires
-> >>> tracking of pinned pages, and therefore for any code that calls
-> >>> put_user_page().
-> >>>
-> >>
-> >> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
-> > 
-> > No one's touching the via driver anymore, so feel free to merge this
-> > through whatever tree suits best (aka I'll drop this on the floor and
-> > forget about it now).
-> > 
-> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> > 
-> 
-> OK, great. Yes, in fact, I'm hoping Andrew can just push the whole series
-> in through the mm tree, because that would allow it to be done in one 
-> shot, in 5.5
+On 05.11.19 10:38, Yunfeng Ye wrote:
+> The function page_shift() is supported after the commit 94ad9338109f
+> ("mm: introduce page_shift()").
+>=20
+> So replace with page_shift() in add_to_kill() for readability.
+>=20
+> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+> Reviewed-by: David Hildenbrand <david@redhat.com>
+> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
+> ---
+> v1 -> v2:
+>   - add Reviewed-by and Acked-by
 
-btw is there more? We should have a bunch more userptr stuff in various
-drivers, so was really surprised that drm/via is the only thing in your
-series.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Note for the future: No need to resend if there were no=20
+code/documentation changes. Andrew will apply the tags when picking up=20
+the patch.
+
+>=20
+>   mm/memory-failure.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+> index 3151c87dff73..e48c50cac889 100644
+> --- a/mm/memory-failure.c
+> +++ b/mm/memory-failure.c
+> @@ -326,7 +326,7 @@ static void add_to_kill(struct task_struct *tsk, stru=
+ct page *p,
+>   =09if (is_zone_device_page(p))
+>   =09=09tk->size_shift =3D dev_pagemap_mapping_shift(p, vma);
+>   =09else
+> -=09=09tk->size_shift =3D compound_order(compound_head(p)) + PAGE_SHIFT;
+> +=09=09tk->size_shift =3D page_shift(compound_head(p));
+>=20
+>   =09/*
+>   =09 * Send SIGKILL if "tk->addr =3D=3D -EFAULT". Also, as
+>=20
+
+
+--=20
+
+Thanks,
+
+David / dhildenb
+
