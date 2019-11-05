@@ -2,179 +2,119 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB12C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 877DFC5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7535B21A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="hGOq8i8f";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="V7ZlSpdQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4727021A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:58:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387413AbfKEU6h (ORCPT
+        id S2387425AbfKEU6t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:58:37 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:40386 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729399AbfKEU6g (ORCPT
+        Tue, 5 Nov 2019 15:58:49 -0500
+Received: from outbound.smtp.vt.edu ([198.82.183.121]:52000 "EHLO
+        omr2.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729399AbfKEU6s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:58:36 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id D8E47611AD; Tue,  5 Nov 2019 20:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572987514;
-        bh=DFwG6pf/4V77m0uRPCOyhwzD8vIsAi111b7qu4IFdAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=hGOq8i8f9KkAOWni1cquk2A46wVf3m/irDn5vQsfhj+5QcTbnD6lo8vdJFUOVE8yc
-         8UeISFb7wAHtSEcDZrpS1XgDSR2lDvkwtZodC35bPmjLe5MMBR3ALq3beD9pkYmucG
-         o8qFz7t6tT5JKMcLuhw/l1EL0ClC2lLezNqpVLew=
-Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: ilina@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AC99961153;
-        Tue,  5 Nov 2019 20:58:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572987513;
-        bh=DFwG6pf/4V77m0uRPCOyhwzD8vIsAi111b7qu4IFdAc=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=V7ZlSpdQdfVTY6VUfOwssIq8RuxzjhscpFXwJuzZbRTAOIpTvPYnr69IQLEm1mTsC
-         J7dnLYYRBM9eO5KPlVe49eCyNwETPu7jtPoQQ9irHf6XACHGg48gFeYK9PenV5uz8f
-         LgXySD/mAlzVgswi/BK1FrtbJn6lmGjfY+d6gmy4=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AC99961153
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
-Date:   Tue, 5 Nov 2019 13:58:32 -0700
-From:   Lina Iyer <ilina@codeaurora.org>
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     evgreen@chromium.org, linus.walleij@linaro.org, maz@kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        bjorn.andersson@linaro.org, mkshah@codeaurora.org,
-        linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Subject: Re: [PATCH RFC v2 06/14] dt-bindings/interrupt-controller: pdc: add
- SPI config register
-Message-ID: <20191105205832.GE16900@codeaurora.org>
-References: <1568411962-1022-1-git-send-email-ilina@codeaurora.org>
- <1568411962-1022-7-git-send-email-ilina@codeaurora.org>
- <5d92829e.1c69fb81.d860a.9096@mx.google.com>
- <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <5da6b849.1c69fb81.a9b04.1b9f@mx.google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Tue, 5 Nov 2019 15:58:48 -0500
+Received: from mr2.cc.vt.edu (inbound.smtp.ipv6.vt.edu [IPv6:2607:b400:92:9:0:9d:8fcb:4116])
+        by omr2.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA5Kwlfj028120
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:58:47 -0500
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        by mr2.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA5KwgbR011916
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 15:58:47 -0500
+Received: by mail-qk1-f198.google.com with SMTP id r2so22610519qkb.2
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:58:47 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
+         :mime-version:content-transfer-encoding:date:message-id;
+        bh=S50K21onMwLaHq3dPT4Qwhc6hjGO5VfOOOJ5JGwTxQE=;
+        b=Sdf/VCxONSFzC7Ao2djQ3lUVqWrty9VQwjDzEODqxsCbU0qZS0HFieshC9JwRtwG74
+         Xq7u315YbULSWPFF+cTb93esAM4c4Ox5S0FIriMiEHTZX4QMYfWEoVfSwGad+Afioabd
+         1zRTLFsPNKQ46a2bt2z3djb6rHyDw6Zx6pRQAgmceO/7UAEEb/dngzs4k4hAhlVkfojh
+         ikRHtAAaghTCReZVGZMLeuufuzPa97fSYIH2Z9nOEis/PUSKSRY+nIUXuGGzjCrkorgZ
+         OjMVMUfnAxeBzkFabur2SqRNvB22lrp4gurlOrQ423qbaiRnp2gsNiRbmFif/nDzABQk
+         bWdg==
+X-Gm-Message-State: APjAAAUXCwD4pjc0IAi4CibWntlm9XsBOArPAKviB2FmQrXq/NhZSP4U
+        lrNb9nCenGpfoKk9VdHli8I5JwqDM1fumMVDQS6qfsv0ItF0LiXnFPFyVXy7YthR6z0Mk0gUWjr
+        Feh3rN8TofsE6k7hbk9j5qyV+TTyKsDqiC3M=
+X-Received: by 2002:ac8:524a:: with SMTP id y10mr18951007qtn.325.1572987522075;
+        Tue, 05 Nov 2019 12:58:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqx24doZC2vszjGyzN8ksjbbXYHRswolJBukeRP8MxDNjSGnmrve+cRRNS5kWu9wK6cSyWOUJw==
+X-Received: by 2002:ac8:524a:: with SMTP id y10mr18950991qtn.325.1572987521831;
+        Tue, 05 Nov 2019 12:58:41 -0800 (PST)
+Received: from turing-police ([2601:5c0:c001:c9e1::359])
+        by smtp.gmail.com with ESMTPSA id k17sm9903799qkg.63.2019.11.05.12.58.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 12:58:40 -0800 (PST)
+From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
+X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
+X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
+To:     "Darrick J. Wong" <darrick.wong@oracle.com>
+Cc:     "Theodore Ts'o" <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/1] errno.h: Provide EFSBADCRC for everybody
+In-Reply-To: <20191105151736.GB4153244@magnolia>
+References: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
+ <20191105151736.GB4153244@magnolia>
+Mime-Version: 1.0
+Content-Type: multipart/signed; boundary="==_Exmh_1572987519_14215P";
+         micalg=pgp-sha1; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 15:58:39 -0500
+Message-ID: <250143.1572987519@turing-police>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry for the late reply.
+--==_Exmh_1572987519_14215P
+Content-Type: text/plain; charset=us-ascii
 
-On Tue, Oct 15 2019 at 00:27 -0600, Stephen Boyd wrote:
->Quoting Stephen Boyd (2019-09-30 15:33:01)
->> Quoting Lina Iyer (2019-09-13 14:59:14)
->> > In addition to configuring the PDC, additional registers that interface
->> > the GIC have to be configured to match the GPIO type. The registers on
->> > some QCOM SoCs are access restricted, while on other SoCs are not. They
->> > SoCs with access restriction to these SPI registers need to be written
->> > from the firmware using the SCM interface. Add a flag to indicate if the
->> > register is to be written using SCM interface.
->> >
->> > Cc: devicetree@vger.kernel.org
->> > Signed-off-by: Lina Iyer <ilina@codeaurora.org>
->> > ---
->> >  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt   | 13 ++++++++++++-
->> >  1 file changed, 12 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> > index 8e0797c..e329f8d 100644
->> > --- a/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> > +++ b/Documentation/devicetree/bindings/interrupt-controller/qcom,pdc.txt
->> > @@ -24,6 +24,9 @@ Properties:
->> >         Usage: required
->> >         Value type: <prop-encoded-array>
->> >         Definition: Specifies the base physical address for PDC hardware.
->> > +                   Optionally, specify the PDC's GIC interface registers that
->> > +                   need to be configured for wakeup capable GPIOs routed to
->> > +                   the PDC.
->> >
->> >  - interrupt-cells:
->> >         Usage: required
->> > @@ -50,15 +53,23 @@ Properties:
->> >                     The second element is the GIC hwirq number for the PDC port.
->> >                     The third element is the number of interrupts in sequence.
->> >
->> > +- qcom,scm-spi-cfg:
->> > +       Usage: optional
->> > +       Value type: <bool>
->> > +       Definition: Specifies if the SPI configuration registers have to be
->> > +                   written from the firmware. Sometimes the PDC interface
->> > +                   register to the GIC can only be written from the firmware.
->> > +
->> >  Example:
->> >
->> >         pdc: interrupt-controller@b220000 {
->> >                 compatible = "qcom,sdm845-pdc";
->> > -               reg = <0xb220000 0x30000>;
->> > +               reg = <0 0x0b220000 0 0x30000>, <0 0x179900f0 0 0x60>;
->> >                 qcom,pdc-ranges = <0 512 94>, <94 641 15>, <115 662 7>;
->> >                 #interrupt-cells = <2>;
->> >                 interrupt-parent = <&intc>;
->> >                 interrupt-controller;
->> > +               qcom,scm-spi-cfg;
->> >         };
->>
->> This overlaps register region with the mailbox node. That node is
->> actually a pile of random "CPU" registers used to ping remote processors
->> and apparently control how the PDC interacts with the GIC. Maybe this
->> can be changed to a phandle and then the driver can interogate the
->> phandle to determine if it's the SCM firmware or if it's the shared
->> mailbox register? If it's a shared mailbox then it can write to it at
->> the offset it knows about (because it's sdm845 compatible specific) and
->> if it's SCM then it can use the hardcoded address as well?
->>
->> Basically I'm saying that it just needs a phandle.
->>
->>         qcom,spi-cfg = <&scm>;
->>
->> or
->>
->>         qcom,spi-cfg = <&mailbox>;
->>
->> and then driver knows how to use that to write into random registers.
->> Maybe we can have an API in regmap that finds the regmap for a given
->> device node? That way we don't have to funnel everything through syscon
->> for this.
->>
->>         of_get_regmap(struct device_node *np, const char *name);
->>
->> Where NULL name means "first available" and then do the devres search
->> otherwise for a device that has the matching node pointer.
->>
+On Tue, 05 Nov 2019 07:17:36 -0800, "Darrick J. Wong" said:
+> On Mon, Nov 04, 2019 at 09:46:14PM -0500, Valdis Kletnieks wrote:
+> > Four filesystems have their own defines for this. Move it
+> > into errno.h so it's defined in just one place.
+> >
+> > Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
 >
->I had another idea the other day. Maybe a better approach would be to
->make the mailbox or SCM code an interrupt controller with the
->appropriate functions to poke the bits necessary to make the interrupts
->work. Then we can make it a chip in the hierarchy between the GIC and
->PDC and make the interrupts call through from PDC to GIC. The locking
->could be handled in each respective driver if necessary, and otherwise
->we don't have to use a regmap or remap the same registers (except we may
->need to describe if the parent is the mailbox node or the scm fimware
->node).
+> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
 >
-Wouldn't that be a stretch to image the SCM register write  or a random
-register write as an interrupt controller? But I agree that it solves
-the issue of determining whether we want to use SCM or regmap.
+> You can build all six filesystems with both this and the EFSCORRUPTED
+> patch applied, correct?
 
-But, we would still need to add syscon to the mailbox and then regmap
-the registers for the interrupt contoller.
-
-Thanks,
-Lina
+I can.  But it was pointed out to me that it blows up on some architectures..
 
 
+
+--==_Exmh_1572987519_14215P
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Comment: Exmh version 2.9.0 11/07/2018
+
+iQIVAwUBXcHifwdmEQWDXROgAQLj5RAApcBiDjlLyeNreRjX2DmNwO+Ua9G5e5Sp
+eXKK/n2L2aQzyRQz7vGUMquNdBYorbtXuzT13bysejTkkkISSGz9lABhFZibT3n5
+EUxZmFM8LKoRYx+sAkw3sHfwj4pmLhuz3O5GXA3IkEn57++QiOoi+QR01H7B6KIU
+2W2NoauIR6t5hiO83EIpioJq07WOm1QP46diNozGGCskSwgEeJVXnWMNoIS23Xc7
+OK1FlYHnJ0wxDtnuzCEb9rOoi7u1Fr3FXTwpLo5V2krxLdW+jYhIRSoK+UPM0yky
+HIKCcTErRDckrbcT4+T6uszVrt+tXLdZE/mWgHLqbWnfB3g3Hh4C1ccX7TWqAG5S
+63ok39pe6rDa5sTRwHhEhIfBKOWXhGA1XNay3cWCgBroEwPpz0Zhy8xBP397bwZA
+7RubcSMY6Ct4tTUsS/8Ocmo/U0Kuo6k3El246di3UILbLQ1hvUXBeHtBbNKD0u4u
+nHhCqndqK0JAluIzlkpqVkcFXSWBlzlxfpNNNpgrr3aIGkwFWjJnsgkhB9T0cT4L
+8gK8W3Ly4V8A+oYoI4MgZ1LJ+jN/y7aDpDMHL3mjBECucfSmvaZLbRTOiAN7OHdz
+J7lkyAPaFi9NCVNYzS4tKLPOQcgJIA+GMCfSGmEAWiW07o2qb62I1kJz2vSkiTQC
+j0Tlv0TH9BI=
+=1Y8S
+-----END PGP SIGNATURE-----
+
+--==_Exmh_1572987519_14215P--
