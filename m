@@ -2,74 +2,103 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D95C5DF63
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D2651C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A307721928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A945121D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:57:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ARteMhcU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390479AbfKEQzS (ORCPT
+        id S2388710AbfKEQ5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:55:18 -0500
-Received: from mga04.intel.com ([192.55.52.120]:22346 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390060AbfKEQzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:55:18 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 08:55:17 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
-   d="scan'208";a="225073629"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Nov 2019 08:55:17 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 197DB300884; Tue,  5 Nov 2019 08:55:17 -0800 (PST)
-Date:   Tue, 5 Nov 2019 08:55:17 -0800
-From:   Andi Kleen <ak@linux.intel.com>
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Andi Kleen <andi@firstfloor.org>, kbuild-all@lists.01.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] x86: Add trace points to (nearly) all vectors
-Message-ID: <20191105165517.GA373029@tassilo.jf.intel.com>
-References: <20191030195619.22244-1-andi@firstfloor.org>
- <201911020947.N041g9eA%lkp@intel.com>
- <20191105014439.GB25308@tassilo.jf.intel.com>
+        Tue, 5 Nov 2019 11:57:08 -0500
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]:53865 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727830AbfKEQ5I (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:57:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572973027;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=6/CYal2Ht1Wk+CkyE9G0+kWfB1JTDB8P2q0I4iMUmUk=;
+        b=ARteMhcUalj62/0PtHhYUU+Jz5mzk9A/Rocx7HNKUukVeEL9D60O6jX68JUWScMYpVUNtD
+        kvnRUQjrQ3Dz9Am1jkdf6YCdbW8eJRGnDYXoA34KqaoD8x5766jAz5u/Z3sqdKR5T3+EDe
+        mD0rBeI12liJIqwEN/44Jj79iAcghW8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-264-fND83D8KND2PRYRlMZm3mw-1; Tue, 05 Nov 2019 11:55:59 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4106107ACC3;
+        Tue,  5 Nov 2019 16:55:57 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 9AAD827065;
+        Tue,  5 Nov 2019 16:55:57 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 11:55:56 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191105165556.GK30717@redhat.com>
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
+ <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
+ <20191105163316.GI30717@redhat.com>
+ <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: fND83D8KND2PRYRlMZm3mw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191105014439.GB25308@tassilo.jf.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 05:44:39PM -0800, Andi Kleen wrote:
-> On Sat, Nov 02, 2019 at 09:24:50AM +0800, kbuild test robot wrote:
-> > Hi Andi,
-> > 
-> > Thank you for the patch! Yet something to improve:
-> 
-> I cannot reproduce this.
-> 
-> And the file clearly has an include for the trace file, so I can't see what
-> could be wrong.
-> 
-> > 
-> > [auto build test ERROR on tip/auto-latest]
-> > [also build test ERROR on v5.4-rc5 next-20191031]
-> 
-> Also the config the bot sent doesn't even match next-20191031 nor tip/auto-latest
+On Tue, Nov 05, 2019 at 08:39:26AM -0800, Daniel Colascione wrote:
+> I'm not suggesting that we fail userfaultfd(2) without CAP_SYS_PTRACE.
+> That would, as you point out, break things. I'm talking about
+> recording *whether* we had CAP_SYS_PTRACE in an internal flag in the
+> uffd context when we create the thing --- and then, at ioctl time,
+> checking that flag, not the caller's CAP_SYS_PTRACE, to see whether
+> UFFD_FEATURE_EVENT_FORK should be made available. This way, the
+> security check hinges on whether the caller *at create time* was
+> privileged.
 
-Never mind -- the config works with make ARCH=i386
+Until now it wasn't clear to me you still wanted to do the permission
+check in UFFDIO_API time, and you only intended to move the
+"measurement" of the capability to the syscall.
 
-Helps when you read the message completely :-)
+So you're suggesting to add more kernel complexity to code pending for
+removal to achieve a theoretically more pure solution in the band-aid
+required to defer the removal of the posix-breaking read
+implementation of the uffd fork feature?
 
--Andi
