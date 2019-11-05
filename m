@@ -2,211 +2,138 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F1E1C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:17:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25B4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:18:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EA54214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:17:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BB20214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:18:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fKPu7I6Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XX5HI5fd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390405AbfKERRO (ORCPT
+        id S2390460AbfKERSa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:17:14 -0500
-Received: from mail-eopbgr700080.outbound.protection.outlook.com ([40.107.70.80]:56513
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389901AbfKERRE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:17:04 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hLAho5RXQGsxLilJ+6WxlbxmNQam1SV0zlw/7Tn/bWgVf75jjO8i7Ua5vqmhETYnVwEFxphX+H+2KbgnhUQdlfs++G/Y59kxNQx+29UcoPvnzm0mz4vk0OTr1cqVhrH0GRk+++49PXYefkY5uBVSzx6mV46KsJiB52mflxpZqaDPhld1vCzg4EdxnNBcsAHezb1MVK9v6r+m8ak6LHVcggKBvzZl+XDhE/kKqFmq5t4JUY0WvXRSQL8eeocu/bSWULadSeAIy3jprXXpMg0utsOYlBUiXNakc7vUiI1S6+JTZn9XFY1TDbKwWkp98iHUTwmMvf+UoQ5Z4soDJQZO0g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mK1do0UMvZg1l4rp6NXADndfvRnIZug9mRlyJZXTBv8=;
- b=I2B+RZykzUD7DF8MPnLh/yfJGJfk8kvYVHAgvZn+LrQadMRw2Z+cjU8Cw4tVVpwaiP/bKYwBclJfRpbmKKY3w+AZbfqb1H0I/us3ivfay/eBYiUiH5gaa0lA27Fk7y3VJV63FwmaanjAJha51q4e3DLRp2srZLNrNlJjrN0xtqu9VoBzinBR3YABmdlA051TiYoy7xYvkDPlcg60OsCNzrr/sYKMbi7wJ6irAs3p8Zyqa+/RxlCCIVU8oYWO9ck57tvwveAJvGMQ4ne8g0/vwzAsaJ4rNz+uDW0zm2LJcYZ/fQTAjVywVGeY+hi0U7inppmIfBkwoB1Ykn4qQNxxvw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 5 Nov 2019 12:18:30 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35700 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389659AbfKERSa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:18:30 -0500
+Received: by mail-pf1-f195.google.com with SMTP id d13so16042938pfq.2;
+        Tue, 05 Nov 2019 09:18:29 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=mK1do0UMvZg1l4rp6NXADndfvRnIZug9mRlyJZXTBv8=;
- b=fKPu7I6QKVr/bouN1Es5I9PPEtCmOKdFUjjYkHReHQD7DH1pR61Z2QytmiO01QhLFb2iFgl0imalk/4qPtK4hFoxt2EFhs2gmVsDO4RWjh6NprfU6jetTLgivG+nGs8nhxAjNFAaHpTCAE7rzWHU4ZPuaRZLU4SwHX143Io7zsg=
-Received: from BN7PR12MB2723.namprd12.prod.outlook.com (20.176.177.94) by
- BN7PR12MB2786.namprd12.prod.outlook.com (20.176.178.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 17:16:55 +0000
-Received: from BN7PR12MB2723.namprd12.prod.outlook.com
- ([fe80::20d2:c1ff:3fa9:4df2]) by BN7PR12MB2723.namprd12.prod.outlook.com
- ([fe80::20d2:c1ff:3fa9:4df2%4]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 17:16:55 +0000
-From:   "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-To:     "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     Thomas Renninger <trenn@suse.com>, Shuah Khan <shuah@kernel.org>,
-        Pu Wen <puwen@hygon.com>, Borislav Petkov <bp@suse.de>,
-        Allison Randal <allison@lohutok.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Richard Fontana <rfontana@redhat.com>,
-        "Natarajan, Janakarajan" <Janakarajan.Natarajan@amd.com>
-Subject: [PATCHv3 3/4] cpupower: mperf_monitor: Update cpupower to use the
- RDPRU instruction
-Thread-Topic: [PATCHv3 3/4] cpupower: mperf_monitor: Update cpupower to use
- the RDPRU instruction
-Thread-Index: AQHVk/zSL+q9KumTBEmBzP52ALZGsw==
-Date:   Tue, 5 Nov 2019 17:16:55 +0000
-Message-ID: <4d3fa3e39dfee029715f1f787c880485943594c9.1572972259.git.Janakarajan.Natarajan@amd.com>
-References: <cover.1572972259.git.Janakarajan.Natarajan@amd.com>
-In-Reply-To: <cover.1572972259.git.Janakarajan.Natarajan@amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: DM6PR18CA0019.namprd18.prod.outlook.com
- (2603:10b6:5:15b::32) To BN7PR12MB2723.namprd12.prod.outlook.com
- (2603:10b6:408:2d::30)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Janakarajan.Natarajan@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 79e58b12-d534-48b3-0c12-08d76213f533
-x-ms-traffictypediagnostic: BN7PR12MB2786:|BN7PR12MB2786:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <BN7PR12MB27862B76E27B08C143E3AB25E77E0@BN7PR12MB2786.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(136003)(376002)(396003)(366004)(346002)(199004)(189003)(305945005)(66476007)(8676002)(486006)(186003)(64756008)(110136005)(8936002)(2616005)(4326008)(2501003)(76176011)(102836004)(14454004)(52116002)(25786009)(6506007)(66446008)(256004)(86362001)(14444005)(5660300002)(386003)(99286004)(36756003)(316002)(50226002)(54906003)(26005)(81156014)(81166006)(11346002)(446003)(476003)(478600001)(6436002)(71200400001)(71190400001)(6486002)(118296001)(6512007)(66946007)(66066001)(7736002)(3846002)(2906002)(66556008)(6116002)(7416002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR12MB2786;H:BN7PR12MB2723.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SCRX/WDOzpwltN8Z3hmwCN6iTwWfRpEfipReJ/wwjcS4sQtfsW2idedbbgJO86DhGHXfLFr6xocd2jANBWo/Pst48JOhcdnh7EBYOQTaZta44unL4ib017gq70LdoTZiiNYNEkDQyClo9NhqgYbXx42knfdrvNdElZWOq9ieamm8ch0LsP8PO4q0ArV8xKm9bLhPsKIGiremhZ+OTXXikbgZVS3mH02ncAda9+lPluxqE8KdiJZTThqYKttqiu+Rmi15ydlNwPor1QMINDnQolvlYIztcsYLgTFij6JinrLC3T3JjqVogGyQ8I6y7ufMJzgl376K/dtbhh2gerDyoOSpspqgndYcab2yUpvs3C6pF9/yjPupK7HZ4G2o4YBDV624C/kftKLoY67sPHQS97Zx7QQychD/+npAs7gT+qHytqFdSVNI+o/3ks5nUUu1
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=acyehhZ1kInQCOam4ex9rg1irdVyYdAedYo4L8HuhBE=;
+        b=XX5HI5fdLsOtra8e6FRnylQV3POlGoUKjN0QnYgWdYOJbhoq4GfEwzEeXeNk2KlNeR
+         cVlbwQ56h482SqsmeiyycLjPl/5cQaqbvnnxnAM834DFR1QuK+5nydBQhFrpZjok32Gs
+         AR+xXuUBvANEvmAOUphy2n4Zx7YW461y5VxLfF/EtosJl8SnhT+Zr/CsDH5S4y/MHx2S
+         ZjxeqFC22NsB4jP94cfp65T/GYZYybPc8LC7uxKNS7jlfkNEFav/I592UcGT0BwJ8FfK
+         uA6ngmKqqv2JvvgOcXk+TtukS5gONMHHX01ywSEFKn0OVOWk9FKzUUGoSgwBXWeGoNNH
+         I2XQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=acyehhZ1kInQCOam4ex9rg1irdVyYdAedYo4L8HuhBE=;
+        b=n133OZv6dcpjgoC+09kN1c0SCJkvabFSbSJOqZjn8L1Q3J/RjzxpoXyu1DMYKj8ywp
+         Dyvu04jiaRifsR97ZAOkSpfmqDCtk0/9OilwLXAmNJqsRT45YgjBAmnejZ9iskEYNhi4
+         wOula1OaXbBl+pLlQZbVJK/vGoKDX7Tiw9CVF+QA27iIF0mRFGUmDVv3iRrkwZL94pkR
+         kF91hIki6FjkBwKvDGsTRIt4RqNheoilqUHEVSjjyDhcaxxKBbJiKdGYnDj9i6sH2m8b
+         AF000BTNXDVevPGw5upOZ6hUJ3QpEEdbrkxx4OdSUzUpQJzHRYcwiaphVHp6FqsqVY58
+         FT5A==
+X-Gm-Message-State: APjAAAUndn/FGRd3vu/HAW2/xpK2R2PQLRFIXKuPdO60Ye8gXd74bOpT
+        YQ5ZiqqO1bswpANoWSQvII8=
+X-Google-Smtp-Source: APXvYqxfGfRVQ8tyN+3W2wPHBfjDO9cnkSVobGLtqqzKW+U2w79oK6iebqGh0WK8FAFAk8uwenlUKg==
+X-Received: by 2002:a17:90a:2326:: with SMTP id f35mr126860pje.134.1572974309032;
+        Tue, 05 Nov 2019 09:18:29 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:47d0])
+        by smtp.gmail.com with ESMTPSA id a66sm9765299pfb.166.2019.11.05.09.18.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 09:18:27 -0800 (PST)
+Date:   Tue, 5 Nov 2019 09:18:26 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+Cc:     linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Casey Schaufler <casey@schaufler-ca.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        Florent Revest <revest@chromium.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
+Message-ID: <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
+References: <20191104172146.30797-1-mic@digikod.net>
+ <20191104172146.30797-5-mic@digikod.net>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 79e58b12-d534-48b3-0c12-08d76213f533
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 17:16:55.6139
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: NFtT7JVG8wSHWyEcDlSvFmN+TLBJAQ7Q5bJOo/Jzn4lRsy3mSHx+AzYqJgSsl/wMH4ZP7smVaGtLLM4me8eSjg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR12MB2786
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104172146.30797-5-mic@digikod.net>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
+On Mon, Nov 04, 2019 at 06:21:43PM +0100, Mickaël Salaün wrote:
+> Add a first Landlock hook that can be used to enforce a security policy
+> or to audit some process activities.  For a sandboxing use-case, it is
+> needed to inform the kernel if a task can legitimately debug another.
+> ptrace(2) can also be used by an attacker to impersonate another task
+> and remain undetected while performing malicious activities.
+> 
+> Using ptrace(2) and related features on a target process can lead to a
+> privilege escalation.  A sandboxed task must then be able to tell the
+> kernel if another task is more privileged, via ptrace_may_access().
+> 
+> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+...
+> +static int check_ptrace(struct landlock_domain *domain,
+> +		struct task_struct *tracer, struct task_struct *tracee)
+> +{
+> +	struct landlock_hook_ctx_ptrace ctx_ptrace = {
+> +		.prog_ctx = {
+> +			.tracer = (uintptr_t)tracer,
+> +			.tracee = (uintptr_t)tracee,
+> +		},
+> +	};
 
-AMD Zen 2 introduces the RDPRU instruction which can be used to access some
-processor registers which are typically only accessible in privilege level
-0. ECX specifies the register to read and EDX:EAX will contain the value re=
-ad.
+So you're passing two kernel pointers obfuscated as u64 into bpf program
+yet claiming that the end goal is to make landlock unprivileged?!
+The most basic security hole in the tool that is aiming to provide security.
 
-ECX: 0 - Register MPERF
-     1 - Register APERF
-
-This has the added advantage of not having to use the msr module, since the
-userspace to kernel transitions which occur during each read_msr() might
-cause APERF and MPERF to go out of sync.
-
-Signed-off-by: Janakarajan Natarajan <Janakarajan.Natarajan@amd.com>
----
- tools/power/cpupower/utils/helpers/cpuid.c    |  4 ++++
- tools/power/cpupower/utils/helpers/helpers.h  |  1 +
- .../utils/idle_monitor/mperf_monitor.c        | 20 +++++++++++++++++++
- 3 files changed, 25 insertions(+)
-
-diff --git a/tools/power/cpupower/utils/helpers/cpuid.c b/tools/power/cpupo=
-wer/utils/helpers/cpuid.c
-index 5cc39d4e23ed..73bfafc60e9b 100644
---- a/tools/power/cpupower/utils/helpers/cpuid.c
-+++ b/tools/power/cpupower/utils/helpers/cpuid.c
-@@ -131,6 +131,10 @@ int get_cpu_info(struct cpupower_cpu_info *cpu_info)
- 		if (ext_cpuid_level >=3D 0x80000007 &&
- 		    (cpuid_edx(0x80000007) & (1 << 9)))
- 			cpu_info->caps |=3D CPUPOWER_CAP_AMD_CBP;
-+
-+		if (ext_cpuid_level >=3D 0x80000008 &&
-+		    cpuid_ebx(0x80000008) & (1 << 4))
-+			cpu_info->caps |=3D CPUPOWER_CAP_AMD_RDPRU;
- 	}
-=20
- 	if (cpu_info->vendor =3D=3D X86_VENDOR_INTEL) {
-diff --git a/tools/power/cpupower/utils/helpers/helpers.h b/tools/power/cpu=
-power/utils/helpers/helpers.h
-index 357b19bb136e..c258eeccd05f 100644
---- a/tools/power/cpupower/utils/helpers/helpers.h
-+++ b/tools/power/cpupower/utils/helpers/helpers.h
-@@ -69,6 +69,7 @@ enum cpupower_cpu_vendor {X86_VENDOR_UNKNOWN =3D 0, X86_V=
-ENDOR_INTEL,
- #define CPUPOWER_CAP_HAS_TURBO_RATIO	0x00000010
- #define CPUPOWER_CAP_IS_SNB		0x00000020
- #define CPUPOWER_CAP_INTEL_IDA		0x00000040
-+#define CPUPOWER_CAP_AMD_RDPRU		0x00000080
-=20
- #define CPUPOWER_AMD_CPBDIS		0x02000000
-=20
-diff --git a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c b/tool=
-s/power/cpupower/utils/idle_monitor/mperf_monitor.c
-index afb2e6f8edd3..e7d48cb563c0 100644
---- a/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-+++ b/tools/power/cpupower/utils/idle_monitor/mperf_monitor.c
-@@ -19,6 +19,10 @@
- #define MSR_APERF	0xE8
- #define MSR_MPERF	0xE7
-=20
-+#define RDPRU ".byte 0x0f, 0x01, 0xfd"
-+#define RDPRU_ECX_MPERF	0
-+#define RDPRU_ECX_APERF	1
-+
- #define MSR_TSC	0x10
-=20
- #define MSR_AMD_HWCR 0xc0010015
-@@ -89,6 +93,8 @@ static int mperf_get_tsc(unsigned long long *tsc)
- static int get_aperf_mperf(int cpu, unsigned long long *aval,
- 				    unsigned long long *mval)
- {
-+	unsigned long low_a, high_a;
-+	unsigned long low_m, high_m;
- 	int ret;
-=20
- 	/*
-@@ -101,6 +107,20 @@ static int get_aperf_mperf(int cpu, unsigned long long=
- *aval,
- 			return 1;
- 	}
-=20
-+	if (cpupower_cpu_info.caps & CPUPOWER_CAP_AMD_RDPRU) {
-+		asm volatile(RDPRU
-+			     : "=3Da" (low_a), "=3Dd" (high_a)
-+			     : "c" (RDPRU_ECX_APERF));
-+		asm volatile(RDPRU
-+			     : "=3Da" (low_m), "=3Dd" (high_m)
-+			     : "c" (RDPRU_ECX_MPERF));
-+
-+		*aval =3D ((low_a) | (high_a) << 32);
-+		*mval =3D ((low_m) | (high_m) << 32);
-+
-+		return 0;
-+	}
-+
- 	ret  =3D read_msr(cpu, MSR_APERF, aval);
- 	ret |=3D read_msr(cpu, MSR_MPERF, mval);
-=20
---=20
-2.17.1
+I think the only way bpf-based LSM can land is both landlock and KRSI
+developers work together on a design that solves all use cases. BPF is capable
+to be a superset of all existing LSMs whereas landlock and KRSI propsals today
+are custom solutions to specific security concerns. BPF subsystem was extended
+with custom things in the past. In networking we have lwt, skb, tc, xdp, sk
+program types with a lot of overlapping functionality. We couldn't figure out
+how to generalize them into single 'networking' program. Now we can and we
+should. Accepting two partially overlapping bpf-based LSMs would be repeating
+the same mistake again.
 
