@@ -2,289 +2,97 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E12CA9ED9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:10:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127AFCA9ED9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:11:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 63AB420869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:10:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA13820869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:11:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="wlQlXCYO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388103AbfKEIKk (ORCPT
+        id S2388158AbfKEILV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:10:40 -0500
-Received: from relay10.mail.gandi.net ([217.70.178.230]:36271 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388008AbfKEIKk (ORCPT
+        Tue, 5 Nov 2019 03:11:21 -0500
+Received: from mail-lf1-f45.google.com ([209.85.167.45]:46025 "EHLO
+        mail-lf1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388074AbfKEILU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:10:40 -0500
-Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3745624000E;
-        Tue,  5 Nov 2019 08:10:35 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 09:10:34 +0100
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/3] media: cedrus: Properly signal size in mode register
-Message-ID: <20191105081034.GC584930@aptenodytes>
-References: <20191026074959.1073512-1-jernej.skrabec@siol.net>
- <20191026074959.1073512-2-jernej.skrabec@siol.net>
- <20191104100228.GD502900@aptenodytes>
- <7309638.L6IRxaGt1L@jernej-laptop>
+        Tue, 5 Nov 2019 03:11:20 -0500
+Received: by mail-lf1-f45.google.com with SMTP id v8so14336175lfa.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 00:11:18 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xSFE4g0gY9czO8TwiEEGqsWaa81e8Ul+cCq6vuH+IA=;
+        b=wlQlXCYO+/9EbApNjgMhjYp9wpSy75ZPuYAWB8VKQKBX7ARXR1OVtM58CSWg0CoQU5
+         zxlf1du+2ubetE4QzVTTqJ7rA/hEW3tfRgbKNqUUphn7sxwvWKN+FW0yjcoW/ci4YsmL
+         y3c7LU5tFYjt4UjzxyjTIJ+W2aWft+eBoQDUHYtlLeT1RppLXPiK/61eaI1IglOOh/IN
+         KJefgymntKFYJZbccwXqXePOjo9Rh1XXv11BDb9QKGDMTFeaG/cbIjVnh3A7O152LqcG
+         Abgha4kFeUQPqGC9aT6lKJyAw82Op9hjBwJbHV4D51QkLnjJLpyCFPykLSAfGupH7fZT
+         v5ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6xSFE4g0gY9czO8TwiEEGqsWaa81e8Ul+cCq6vuH+IA=;
+        b=LS+WvZ2hjCC+C4f3t4EOE1TnwIHF9/nxQdRJvdrYVhqY7LR/xDbHkLie5sEfX5SN2l
+         k/D/Bd2n4ePKYPQYHbhbDF+K8dNTrKHmbtvxRX4tBBGr18JfuHH2BMD6wp4qbSY24sc4
+         9M8BzWr+OWvLIT4zdRy7oCi1XDTjCwP+yQ/pQepnHHibp7kwasZTMU6GfnQJ8LWmIsK1
+         60d5T3GV/ttrUriOcbQi8mGOhCaeOIKamfHKdbIsd2fluwz6fkLJ3R0luq1oJe7GLPhv
+         0J3QU0Ff70kpYSdBGY8mkunCw9CUIpaEd6f7FmfxtEQ9PCCPdaDvtFJXdHEsgsVMqxuj
+         E/1g==
+X-Gm-Message-State: APjAAAWPnsgLTPk0Rlk9ye4ozws/t2SX7ihASeABoMBWmCRXkVZA7dHd
+        edn4OvYG2TjckBqRlpQjdrJHUji5LwM=
+X-Google-Smtp-Source: APXvYqy0cgx16CNi5YxZgqZqXkti4pby1AXyKJj0oZxklimaDslnxqWQgKMKxBaqMNz/fUaPppPd2Q==
+X-Received: by 2002:a19:6a03:: with SMTP id u3mr17885682lfu.190.1572941478028;
+        Tue, 05 Nov 2019 00:11:18 -0800 (PST)
+Received: from mimer.lulea.netrounds.lan ([195.22.87.57])
+        by smtp.gmail.com with ESMTPSA id m7sm7275986lfp.22.2019.11.05.00.11.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 00:11:17 -0800 (PST)
+From:   Jonas Bonn <jonas@norrbonn.se>
+To:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, Jonas Bonn <jonas@norrbonn.se>
+Subject: [PATCH 0/5] Add namespace awareness to Netlink methods
+Date:   Tue,  5 Nov 2019 09:11:07 +0100
+Message-Id: <20191105081112.16656-1-jonas@norrbonn.se>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
-Content-Disposition: inline
-In-Reply-To: <7309638.L6IRxaGt1L@jernej-laptop>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Currently, Netlink has partial support for acting outside of the current
+namespace.  It appears that the intention was to extend this to all the
+methods eventually, but it hasn't been done to date.
 
---Fig2xvG2VGoz8o/s
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+With this series RTM_SETLINK, RTM_NEWLINK, RTM_NEWADDR, and RTM_NEWNSID
+are extended to respect the selection of the namespace to work in.
 
-Hi,
+/Jonas
 
-On Mon 04 Nov 19, 17:33, Jernej =C5=A0krabec wrote:
-> Dne ponedeljek, 04. november 2019 ob 11:02:28 CET je Paul Kocialkowski=20
-> napisal(a):
-> > Hi Jernej,
-> >=20
-> > On Sat 26 Oct 19, 09:49, Jernej Skrabec wrote:
-> > > Mode register also holds information if video width is bigger than 20=
-48
-> > > and if it is equal to 4096.
-> > >=20
-> > > Rework cedrus_engine_enable() to properly signal this properties.
-> >=20
-> > Thanks for the patch, looks good to me!
-> >=20
-> > Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> >=20
-> > One minor thing: maybe we should have a way to set the maximum dimensio=
-ns
-> > depending on the generation of the engine in use and the actual maximum
-> > supported by the hardware.
-> >=20
-> > Maybe either as dedicated new fields in struct cedrus_variant or as
-> > capability flags.
->=20
-> I was thinking about first solution, but after going trough manuals, it w=
-as=20
-> unclear what are real limitations. For example, H3 manual states that it =
-is=20
-> capable of decoding H264 1080p@60Hz. However, I know for a fact that it i=
-s=20
-> also capable of decoding 4k videos, but probably not at 60 Hz. I don't ow=
-n=20
-> anything older that A83T, so I don't know what are capabilities of those =
-SoCs.=20
+Jonas Bonn (5):
+  rtnetlink: allow RTM_SETLINK to reference other namespaces
+  rtnetlink: skip namespace change if already effect
+  rtnetlink: allow RTM_NEWLINK to act upon interfaces in arbitrary
+    namespaces
+  net: ipv4: allow setting address on interface outside current
+    namespace
+  net: namespace: allow setting NSIDs outside current namespace
 
-So I guess in this case we should try and see. I could try to look into it =
-at
-some point in the future too if you're not particulary interested.
+ net/core/net_namespace.c | 19 ++++++++++
+ net/core/rtnetlink.c     | 79 ++++++++++++++++++++++++++++++++++------
+ net/ipv4/devinet.c       | 56 ++++++++++++++++++++--------
+ 3 files changed, 127 insertions(+), 27 deletions(-)
 
-> Anyway, being slow is still ok for some tasks, like transcoding, so we ca=
-n't=20
-> limit decoding to 1080p just because it's slow. It is probably still fast=
-er=20
-> than doing it in SW. Not to mention that it's still ok for some videos, a=
- lot=20
-> of them uses 24 fps.
+-- 
+2.20.1
 
-I agree, it's best to expose the maximum supported resolution by the hardwa=
-re,
-even if it means running at a lower fps.
-
-Do you know if we have a way to report some estimation of the maximum suppo=
-rted
-fps to userspace? It would be useful to let userspace decide whether it's a
-better fit than software decoding.
-
-Cheers,
-
-Paul
-
-> Best regards,
-> Jernej
->=20
-> >=20
-> > Anyway that can be done later since we were already hardcoding this.
-> >=20
-> > Cheers,
-> >=20
-> > Paul
-> >=20
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > ---
-> > >=20
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 2 +-
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_h265.c  | 2 +-
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 9 +++++++--
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.h    | 2 +-
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c | 2 +-
-> > >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h  | 2 ++
-> > >  6 files changed, 13 insertions(+), 6 deletions(-)
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > > 7487f6ab7576..d2c854ecdf15 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > @@ -485,7 +485,7 @@ static void cedrus_h264_setup(struct cedrus_ctx *=
-ctx,
-> > >=20
-> > >  {
-> > > =20
-> > >  	struct cedrus_dev *dev =3D ctx->dev;
-> > >=20
-> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
-> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H264);
-> > >=20
-> > >  	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
-> > >  	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
-> > > 9bc921866f70..6945dc74e1d7 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > @@ -276,7 +276,7 @@ static void cedrus_h265_setup(struct cedrus_ctx *=
-ctx,
-> > >=20
-> > >  	}
-> > >  =09
-> > >  	/* Activate H265 engine. */
-> > >=20
-> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
-> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H265);
-> > >=20
-> > >  	/* Source offset and length in bits. */
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
-> > > 570a9165dd5d..3acfa21bc124 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > @@ -30,7 +30,7 @@
-> > >=20
-> > >  #include "cedrus_hw.h"
-> > >  #include "cedrus_regs.h"
-> > >=20
-> > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec c=
-odec)
-> > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec c=
-odec)
-> > >=20
-> > >  {
-> > > =20
-> > >  	u32 reg =3D 0;
-> > >=20
-> > > @@ -58,7 +58,12 @@ int cedrus_engine_enable(struct cedrus_dev *dev, e=
-num
-> > > cedrus_codec codec)>=20
-> > >  		return -EINVAL;
-> > >  =09
-> > >  	}
-> > >=20
-> > > -	cedrus_write(dev, VE_MODE, reg);
-> > > +	if (ctx->src_fmt.width =3D=3D 4096)
-> > > +		reg |=3D VE_MODE_PIC_WIDTH_IS_4096;
-> > > +	if (ctx->src_fmt.width > 2048)
-> > > +		reg |=3D VE_MODE_PIC_WIDTH_MORE_2048;
-> > > +
-> > > +	cedrus_write(ctx->dev, VE_MODE, reg);
-> > >=20
-> > >  	return 0;
-> > > =20
-> > >  }
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h index
-> > > 27d0882397aa..604ff932fbf5 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > @@ -16,7 +16,7 @@
-> > >=20
-> > >  #ifndef _CEDRUS_HW_H_
-> > >  #define _CEDRUS_HW_H_
-> > >=20
-> > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec
-> > > codec);
-> > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec
-> > > codec);
-> > >=20
-> > >  void cedrus_engine_disable(struct cedrus_dev *dev);
-> > > =20
-> > >  void cedrus_dst_format_set(struct cedrus_dev *dev,
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c index
-> > > 13c34927bad5..8bcd6b8f9e2d 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > @@ -96,7 +96,7 @@ static void cedrus_mpeg2_setup(struct cedrus_ctx *c=
-tx,
-> > > struct cedrus_run *run)>=20
-> > >  	quantization =3D run->mpeg2.quantization;
-> > >  =09
-> > >  	/* Activate MPEG engine. */
-> > >=20
-> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_MPEG2);
-> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_MPEG2);
-> > >=20
-> > >  	/* Set intra quantization matrix. */
-> > >=20
-> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
-> > > 4275a307d282..ace3d49fcd82 100644
-> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > @@ -35,6 +35,8 @@
-> > >=20
-> > >  #define VE_MODE					0x00
-> > >=20
-> > > +#define VE_MODE_PIC_WIDTH_IS_4096		BIT(22)
-> > > +#define VE_MODE_PIC_WIDTH_MORE_2048		BIT(21)
-> > >=20
-> > >  #define VE_MODE_REC_WR_MODE_2MB			(0x01 << 20)
-> > >  #define VE_MODE_REC_WR_MODE_1MB			(0x00 << 20)
-> > >  #define VE_MODE_DDR_MODE_BW_128			(0x03 << 16)
->=20
->=20
->=20
->=20
-
---=20
-Paul Kocialkowski, Bootlin
-Embedded Linux and kernel engineering
-https://bootlin.com
-
---Fig2xvG2VGoz8o/s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3BLnoACgkQ3cLmz3+f
-v9EjhwgAgeGyEQpAO6eVGrr8/1wd8Zn4Clb1Bmee41zx2U1LqhhWf0nr2ZSOR6/T
-qXztV6Y6ZZ5PcvRRiHXT7mVVzxpareDEuQvuyI1q53W2CBAmlXdLEp4JNOKjUDJ6
-iGPh8zvQDqaza6/88oK35uSSNreHY6RUFP0MIBT3nHsMFHKndpBgYo3kGjU46LKz
-xr3PV4NX9+8/+3m5Ol6mY5w+YTl0xJ/z3rbIXp6E0HFFFCL+pqdShu2osjHboPF1
-qTLMUK8zdHG3UYGdanhHS5jMpkZS4Qab06JYsuGKiJ/4WU4PgvAO9CEuIM0nslI1
-W6+I3tmt6J4p13N/VFoTJ+10EAooUA==
-=RajT
------END PGP SIGNATURE-----
-
---Fig2xvG2VGoz8o/s--
