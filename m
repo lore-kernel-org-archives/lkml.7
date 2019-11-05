@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D85AC010CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 403E1C010CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20A0B222D1
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 21D2B2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388752AbfKEMfF (ORCPT
+        id S2388692AbfKEMfB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:35:05 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:41962 "EHLO inva021.nxp.com"
+        Tue, 5 Nov 2019 07:35:01 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:41884 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388654AbfKEMfA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:35:00 -0500
+        id S2388532AbfKEMe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:34:58 -0500
 Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5CB2F2004FE;
-        Tue,  5 Nov 2019 13:34:59 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id BA58D200500;
+        Tue,  5 Nov 2019 13:34:56 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 4F8E02004F1;
-        Tue,  5 Nov 2019 13:34:59 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id ABD7C2004F1;
+        Tue,  5 Nov 2019 13:34:56 +0100 (CET)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 129C3205ED;
-        Tue,  5 Nov 2019 13:34:59 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 765A4205ED;
+        Tue,  5 Nov 2019 13:34:56 +0100 (CET)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 12/12] staging: dpaa2-ethsw: remove control traffic from TODO file
-Date:   Tue,  5 Nov 2019 14:34:35 +0200
-Message-Id: <1572957275-23383-13-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH 03/12] staging: dpaa2-ethsw: setup RX path rings
+Date:   Tue,  5 Nov 2019 14:34:26 +0200
+Message-Id: <1572957275-23383-4-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
@@ -45,33 +45,111 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The dpaa2-ethsw driver just gained support for redirecting control
-traffic to the CPU and and for Rx/Tx processing.
-Remove the associated TODO items.
+On the Rx path, when a pull-dequeue operation is performed on a
+software portal, available frame descriptors are put in a ring - a DMA
+memory storage - for further usage. Create the needed rings for both
+frame queues used on the control interface.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/TODO | 8 --------
- 1 file changed, 8 deletions(-)
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c | 37 +++++++++++++++++++++++++++++++++
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.h |  6 ++++++
+ 2 files changed, 43 insertions(+)
 
-diff --git a/drivers/staging/fsl-dpaa2/ethsw/TODO b/drivers/staging/fsl-dpaa2/ethsw/TODO
-index 4d46857b0b2b..21cac669de45 100644
---- a/drivers/staging/fsl-dpaa2/ethsw/TODO
-+++ b/drivers/staging/fsl-dpaa2/ethsw/TODO
-@@ -1,13 +1,5 @@
--* Add I/O capabilities on switch port netdevices. This will allow control
--traffic to reach the CPU.
--* Add ACL to redirect control traffic to CPU.
- * Add support for multiple FDBs and switch port partitioning
- * MC firmware uprev; the DPAA2 objects used by the Ethernet Switch driver
- need to be kept in sync with binary interface changes in MC
- * refine README file
- * cleanup
--
--NOTE: At least first three of the above are required before getting the
--DPAA2 Ethernet Switch driver out of staging. Another requirement is that
--dpio driver is moved to drivers/soc (this is required for I/O).
--
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+index 4ed335af2cc8..7b68eb22a951 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
+@@ -1459,6 +1459,33 @@ static void ethsw_free_dpbp(struct ethsw_core *ethsw)
+ 	fsl_mc_object_free(ethsw->dpbp_dev);
+ }
+ 
++static int ethsw_alloc_rings(struct ethsw_core *ethsw)
++{
++	int i;
++
++	for (i = 0; i < ETHSW_RX_NUM_FQS; i++) {
++		ethsw->fq[i].store =
++			dpaa2_io_store_create(DPAA2_ETHSW_STORE_SIZE,
++					      ethsw->dev);
++		if (!ethsw->fq[i].store) {
++			dev_err(ethsw->dev, "dpaa2_io_store_create failed\n");
++			while (--i >= 0)
++				dpaa2_io_store_destroy(ethsw->fq[i].store);
++			return -ENOMEM;
++		}
++	}
++
++	return 0;
++}
++
++static void ethsw_destroy_rings(struct ethsw_core *ethsw)
++{
++	int i;
++
++	for (i = 0; i < ETHSW_RX_NUM_FQS; i++)
++		dpaa2_io_store_destroy(ethsw->fq[i].store);
++}
++
+ static int ethsw_ctrl_if_setup(struct ethsw_core *ethsw)
+ {
+ 	int err;
+@@ -1473,7 +1500,16 @@ static int ethsw_ctrl_if_setup(struct ethsw_core *ethsw)
+ 	if (err)
+ 		return err;
+ 
++	err = ethsw_alloc_rings(ethsw);
++	if (err)
++		goto err_free_dpbp;
++
+ 	return 0;
++
++err_free_dpbp:
++	ethsw_free_dpbp(ethsw);
++
++	return err;
+ }
+ 
+ static int ethsw_init(struct fsl_mc_device *sw_dev)
+@@ -1651,6 +1687,7 @@ static void ethsw_takedown(struct fsl_mc_device *sw_dev)
+ 
+ static void ethsw_ctrl_if_teardown(struct ethsw_core *ethsw)
+ {
++	ethsw_destroy_rings(ethsw);
+ 	ethsw_free_dpbp(ethsw);
+ }
+ 
+diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
+index c3cfd08c21c7..a1ca30c615d5 100644
+--- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
++++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
+@@ -19,6 +19,8 @@
+ #include <linux/if_bridge.h>
+ #include <linux/fsl/mc.h>
+ 
++#include <soc/fsl/dpaa2-io.h>
++
+ #include "dpsw.h"
+ 
+ /* Number of IRQs supported */
+@@ -48,6 +50,9 @@
+ #define DPAA2_ETHSW_RX_BUF_SIZE \
+ 	(DPAA2_ETHSW_RX_BUF_RAW_SIZE - DPAA2_ETHSW_RX_BUF_TAILROOM)
+ 
++/* Dequeue store size */
++#define DPAA2_ETHSW_STORE_SIZE		16
++
+ extern const struct ethtool_ops ethsw_port_ethtool_ops;
+ 
+ struct ethsw_core;
+@@ -55,6 +60,7 @@
+ struct ethsw_fq {
+ 	struct ethsw_core *ethsw;
+ 	enum dpsw_queue_type type;
++	struct dpaa2_io_store *store;
+ 	u32 fqid;
+ };
+ 
 -- 
 1.9.1
 
