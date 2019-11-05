@@ -2,170 +2,188 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC6C17498
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F477C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97378217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJo/Lmae"
+	by mail.kernel.org (Postfix) with ESMTP id F3DC921929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389667AbfKEO5I (ORCPT
+        id S2389704AbfKEO5M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:57:08 -0500
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42085 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389632AbfKEO5I (ORCPT
+        Tue, 5 Nov 2019 09:57:12 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:54801 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389665AbfKEO5J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:57:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572965827;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lEZHakZ/d1soyr+G6fFBZtfVSOtoyc+a/+kprjYqw1o=;
-        b=LJo/Lmae5ueVpRtxTUbvdXG0TUMEPkKTNFj8qC3x6jAy+F2zgKexO69Btge1f2egoFm/Ax
-        ho28aIM/MtVxc2aLEnVsU06nYuZ6q8murgoVHTJPVv059RX3k4j0YvC28lRu3n8OhPOyRT
-        vZGILjlQsq7tJEzJdYhd8yyg4QhZZKU=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-74-pODoF3CRNrSfU86NQQcmKg-1; Tue, 05 Nov 2019 09:57:03 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A272C477;
-        Tue,  5 Nov 2019 14:57:01 +0000 (UTC)
-Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CE891001DC0;
-        Tue,  5 Nov 2019 14:56:52 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 09:56:51 -0500
-From:   Andrea Arcangeli <aarcange@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Jessica Yu <jeyu@kernel.org>,
-        Matthias Maennich <maennich@google.com>
-Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
-Message-ID: <20191105145651.GD30717@redhat.com>
-References: <20191104230001.27774-1-aarcange@redhat.com>
- <20191104230001.27774-4-aarcange@redhat.com>
- <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
- <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
- <20191105135414.GA30717@redhat.com>
- <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+        Tue, 5 Nov 2019 09:57:09 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iS0GS-0000O7-JN; Tue, 05 Nov 2019 15:57:00 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iS0GR-0001YE-Ba; Tue, 05 Nov 2019 15:56:59 +0100
+Date:   Tue, 5 Nov 2019 15:56:59 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20191105145659.ffezqntodsys4phn@pengutronix.de>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
+ <20191105131456.32400-5-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: pODoF3CRNrSfU86NQQcmKg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105131456.32400-5-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:09:37PM +0100, Paolo Bonzini wrote:
-> You can reorder patches so that kvm_x86_ops assignments never happen.
-> That way, 4/13 for example would be moved to the very beginning.
+On Tue, Nov 05, 2019 at 02:14:53PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> PWM core has an option to bypass whole logic and output unchanged source
+> clock as PWM output. This is achieved by enabling bypass bit.
+> 
+> Note that when bypass is enabled, no other setting has any meaning, not
+> even enable bit.
+> 
+> This mode of operation is needed to achieve high enough frequency to
+> serve as clock source for AC200 chip which is integrated into same
+> package as H6 SoC.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 38 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 37 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 54e19fa56a4e..810abf47c261 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -3,6 +3,10 @@
+>   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+>   *
+>   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> + *
+> + * Limitations:
+> + * - When outputing the source clock directly, the PWM logic will be bypassed
+> + *   and the currently running period is not guaranteed to be completed
+>   */
+>  
+>  #include <linux/bitops.h>
+> @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
+>  
+>  struct sun4i_pwm_data {
+>  	bool has_prescaler_bypass;
+> +	bool has_direct_mod_clk_output;
+>  	unsigned int npwm;
+>  };
+>  
+> @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+>  
+>  	val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  
+> +	/*
+> +	 * PWM chapter in H6 manual has a diagram which explains that if bypass
+> +	 * bit is set, no other setting has any meaning. Even more, experiment
+> +	 * proved that also enable bit is ignored in this case.
+> +	 */
+> +	if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> +	    sun4i_pwm->data->has_direct_mod_clk_output) {
+> +		state->period = DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate);
+> +		state->duty_cycle = state->period / 2;
 
-Ok 3/13 and 4/14 can both go before 2/13, I reordered them fine, the
-end result at least is the same and the intermediate result should
-improve. Hopefully this is the best solution for those two outliers.
+Please round up here.
 
-Once this is committed I expect Sean to take over 4/14 with a more
-optimal version to get rid of that branch like he proposed initially.
+> +		state->polarity = PWM_POLARITY_NORMAL;
+> +		state->enabled = true;
+> +		return;
+> +	}
+> +
+>  	if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+>  	    sun4i_pwm->data->has_prescaler_bypass)
+>  		prescaler = 1;
+> @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  {
+>  	struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+>  	struct pwm_state cstate;
+> -	u32 ctrl;
+> +	u32 ctrl, clk_rate;
+> +	bool bypass;
+>  	int ret;
+>  	unsigned int delay_us;
+>  	unsigned long now;
+> @@ -218,6 +238,15 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		}
+>  	}
+>  
+> +	/*
+> +	 * Although it would make much more sense to check for bypass in
+> +	 * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+> +	 */
+> +	clk_rate = clk_get_rate(sun4i_pwm->clk);
 
-> >> - look into how to remove the modpost warnings.  A simple (though
-> >> somewhat ugly) way is to keep a kvm.ko module that includes common
-> >> virt/kvm/ code as well as, for x86 only, page_track.o.  A few function=
-s,
-> >> such as kvm_mmu_gfn_disallow_lpage and kvm_mmu_gfn_allow_lpage, would
-> >> have to be moved into mmu.h, but that's not a big deal.
-> >=20
-> > I think we should:
-> >=20
-> > 1) whitelist to shut off the warnings on demand
->=20
-> Do you mean adding a whitelist to modpost?  That would work, though I am
-> not sure if the module maintainer (Jessica Yu) would accept that.
+clk_get_rate must not be called if the clk might be off.
 
-Yes that's exactly what I meant.
+> +	bypass = state->enabled &&
+> +		 (state->period * clk_rate >= NSEC_PER_SEC) &&
 
-> > 2) verify that if two modules are registering the same export symbol
-> >    the second one fails to load and the module code is robust about
-> >    that, this hopefully should already be the case
-> >=20
-> > Provided verification of 2), the whitelist is more efficient than
-> > losing 4k of ram in all KVM hypervisors out there.
->=20
-> I agree.
+This is too coarse. With state->period = 1000000 this is fulfilled
+(unless the multiplication overflows).
 
-Ok, so I enlarged the CC list accordingly to check how the whitelist
-can be done in modpost.
+> +		 (state->duty_cycle * 2 == state->period);
 
-> >> - provide at least some examples of replacing the NULL kvm_x86_ops
-> >> checks with error codes in the function (or just early "return"s).  I
-> >> can help with the others, but remember that for the patch to be merged=
-,
-> >> kvm_x86_ops must be removed completely.
-> >=20
-> > Even if kvm_x86_ops wouldn't be guaranteed to go away, this would
-> > already provide all the performance benefit to the KVM users, so I
-> > wouldn't see a reason not to apply it even if kvm_x86_ops cannot go
-> > away.
->=20
-> The answer is maintainability.  My suggestion is that we start looking
-> into removing all assignments and tests of kvm_x86_ops, one step at a
-> time.  Until this is done, unfortunately we won't be able to reap the
-> performance benefit.  But the advantage is that this can be done in many
+This is too strict. See my previous mail about how this should be done.
 
-There's not much performance benefit left from the removal
-kvm_x86_ops. It'll only remove a few branches at best (and only if we
-don't have to replace the branches on the pointer check with other
-branches on a static variable to disambiguate the different cases).
+If bypass is true (and the hardware support it) you can skip the
+calculation of the other parameters.
 
-> separate submissions; it doesn't have to be one huge patch.
->=20
-> Once this is done, removing kvm_x86_ops is trivial in the end.  It's
-> okay if the intermediate step has minimal performance regressions, we
-> know what it will look like.  I have to order patches with maintenance
-> first and performance second, if possible.
+> +
+>  	spin_lock(&sun4i_pwm->ctrl_lock);
+>  	ctrl = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+>  
+> @@ -265,6 +294,13 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+>  		ctrl &= ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+>  	}
+>  
+> +	if (sun4i_pwm->data->has_direct_mod_clk_output) {
+> +		if (bypass)
+> +			ctrl |= BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> +		else
+> +			ctrl &= ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> +	}
+> +
+>  	sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+>  
+>  	spin_unlock(&sun4i_pwm->ctrl_lock);
 
-The removal of kvm_x86_ops is just a badly needed code cleanup and of
-course I agree it must happen sooner than later. I'm just trying to
-avoid running into rejects on those further commit cleanups too.
+Best regards
+Uwe
 
-> By the way, we are already planning to make some module parameters
-> per-VM instead of global, so this refactoring would also help that effort=
-.
->
-> > Said that it will go away and there's no concern about it. It's
-> > just that the patchset seems large enough already and it rejects
-> > heavily already at every port. I simply stopped at the first self
-> > contained step that provides all performance benefits.
->=20
-> That is good enough to prove the feasibility of the idea, so I agree
-> that was a good plan.
-
-All right, so I'm not exactly sure what's the plan and if it's ok to
-do it over time or if I should go ahead doing all logic changes while
-the big patch remains out of tree.
-
-If you apply it and reorder 4/13 and 3/13 before 2/13 in a rebase like
-I did locally, it should already be good starting point in my view and
-the modpost also can be fixed over time too, the warnings appears
-harmless so far.
-
-Thanks,
-Andrea
-
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
