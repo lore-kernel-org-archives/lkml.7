@@ -2,99 +2,190 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ACE2DCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:59:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F94CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:03:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7135520717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:59:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572919180;
-	bh=dWaY5SQUWq41rGukZgzbwhsTaulbW71IutjO2p3j70M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=NwutalUr2qCui968dTyvDiIiYvotxierPV8bShHAJxMXmC4zGKZxF5oJ/yYKhC6q8
-	 krub0ibpRXf5fUQSi7KEOqjdGbBVI0pAXZsxb6sAqUeIRpAh5zg/onGjLeATcsXkcO
-	 xonNND0u1j7CYc+jU8oErzixnfMOnix5g67OKuUw=
+	by mail.kernel.org (Postfix) with ESMTP id 94073214E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:03:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u1sa6//R"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730329AbfKEB7j (ORCPT
+        id S1730228AbfKECDP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:59:39 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:33030 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729967AbfKEB7j (ORCPT
+        Mon, 4 Nov 2019 21:03:15 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:36334 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbfKECDP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:59:39 -0500
-Received: by mail-ot1-f67.google.com with SMTP id u13so16306924ote.0;
-        Mon, 04 Nov 2019 17:59:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=cp6fhNM7KdYvvK5b7iPPVRi7PA69F5kheAydJPVgeXA=;
-        b=Uobnl6ebnQ6gW/4p37qXPuc/33JqWqz0lm0T2+phnzUiwTOI2ZzL1XG0Ttq+DVzmyp
-         rwfEWTLx5880bhn9Us2HPM8YmDbKcLHM/2fswjWsr5I1UlPPfx3rXn4Aa7OZdGf8IofP
-         SNUtY4F15vHoJrrfyWARvL9fe5Pw9jBUP8Aa0EKF5lKsj2IBqOWDSYDFpkDDuUWM1Yvq
-         r1vNltlbmygmINUB8DRsi1/guk0n+8USgwMIr1ZryjrRA2A8FefxyT9OD6Z6rJE3QqlC
-         ds8nLJd4Z4nbUeurTpvhCl5whaXahTIkNjIsMNOQCR8JFwefowHQCWiV0j5gDQ7fAdSW
-         qBKw==
-X-Gm-Message-State: APjAAAWs5pA0QSHfuLvMvpJSji645kmV1FouexBmxR7oO36f0281PhvB
-        QKquqFduU1zixklS1OPtioNNpwA=
-X-Google-Smtp-Source: APXvYqyAqEZxKaDBS7/K7JVSPoKNZ/QDCcAAP8gainROJM3u3UZb6yb2XdytdU+zur7E59YO27Bvpg==
-X-Received: by 2002:a9d:5e06:: with SMTP id d6mr20196663oti.242.1572919178130;
-        Mon, 04 Nov 2019 17:59:38 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k24sm5217744oic.29.2019.11.04.17.59.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 17:59:37 -0800 (PST)
-Date:   Mon, 4 Nov 2019 19:59:36 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     vincent.cheng.xh@renesas.com
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, richardcochran@gmail.com,
-        devicetree@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Vincent Cheng <vincent.cheng.xh@renesas.com>
-Subject: Re: [PATCH v4 1/2] dt-bindings: ptp: Add device tree binding for IDT
- ClockMatrix based PTP clock
-Message-ID: <20191105015936.GA17377@bogus>
-References: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
+        Mon, 4 Nov 2019 21:03:15 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Lv6yerxMciLJWR+oLBIAbVir7+PH5W017iQgkhnlSeQ=; b=u1sa6//REVpmLHZyonlnyJGe7
+        BFdrc1DF4ovjJuCw0A63kSuWFbhfPRdEAayLHltGUf58HCXWJhcGiwuGkTEwScSJu6hOHTZIOplJx
+        O/VQ9WX7MBF2mIVG5TCoBoCrK3fcazky+IvFeCk4hBQi41UEtX1lESdTNCiVY+A6lr1arLfsCrPix
+        9n5ZMm+LWPdedFd/Q/zD9gGoaplSeQdjlJipmqcSdCebhTAa1svM9pHP9CVDrsPB4Lu1QDE4zNwBt
+        qYXBQq5dkqh1RcntoZ7b2cnxxEieYdrHb6sO7zQYLQhyJX4z4dtPMkaTDM4dFslVFp+G0xl2Njok0
+        O5K07EqtA==;
+Received: from [2601:1c0:6280:3f0::4ba1]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRoBe-00036U-Bf; Tue, 05 Nov 2019 02:03:14 +0000
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+Date:   Mon, 4 Nov 2019 18:03:13 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572578407-32532-1-git-send-email-vincent.cheng.xh@renesas.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191102063036.28601-1-unixbhaskar@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 23:20:06 -0400, vincent.cheng.xh@renesas.com wrote:
-> From: Vincent Cheng <vincent.cheng.xh@renesas.com>
+On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
+> This patch allow you to remove old kernels and associated modules
+> directory from the system.You can do it at once with the -r flag
+> and interactively with the -i flag.
 > 
-> Add device tree binding doc for the IDT ClockMatrix PTP clock.
-> 
-> Signed-off-by: Vincent Cheng <vincent.cheng.xh@renesas.com>
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
 > ---
-> Changes since v3:
->  - Reported-by: Rob Herring:
->    1. Fix dtbs_check error: Warning (reg_format):
->           /example-0/phc@5b:reg: property has invalid length
+>  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+>  1 file changed, 65 insertions(+), 17 deletions(-)
+
+Hi,
+I believe that this script now does what the patch author intends it to do.
+It does have a few whitespace issues, but no big deals.  (see below)
+
+Tested-by: Randy Dunlap <rdunlap@infradead.org>
+
+
+> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> index e8aa940bc0a9..01d0778db71f 100755
+> --- a/scripts/prune-kernel
+> +++ b/scripts/prune-kernel
+> @@ -1,21 +1,69 @@
+>  #!/bin/bash
+>  # SPDX-License-Identifier: GPL-2.0
+> +#This script will remove old kernels and modules directory related to it.
+> +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
+> +# "-h" or "--help" show how to use this script or show without parameter.
+> +#"-i" or "--interactive" show how to remove interactively.
+> +
+> +flag=$1
+> +kernel_version=$2
+> +modules_version=$3
+> +boot_dir=/boot
+> +modules_dir=/lib/modules
+> +
+> +remove_old_kernel() {
+> +	cd $boot_dir
+> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
+> +	return 0
+> +}
+> +
+> +remove_old_modules_dir() {
+> +	cd $modules_dir
+> +	rm -rf $modules_version
+> +	return 0
+> +}
+> +
+> +usage() {
+> +	printf "Usage: $(basename $0) [-ri]\n"
+> +	printf "\n -r or --remove  kernel_version modules_version\n"
+> +	printf "\n -i or --interactive do as interactive way\n"
+> +	return 0
+> +}
+> +
+> +case "$flag" in
+> +	-i | --interactive)
+> +		printf "\nEnter kernel version to remove or blank/empty to exit:"
+> +		read kernel_version
+> +		if [[ $kernel_version != "" ]]; then
+> +			remove_old_kernel
+> +			printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
+
+space after ':'
+
+drop one \n above.
+
+> +			printf "Please give the full modules directory name to remove:"
+> +			read modules_version
+> +			if [[ $modules_version != "" ]]; then
+> +				remove_old_modules_dir
+> +				printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
+
+space after ':'
+
+drop one \n above.
+
+> +			else
+> +				exit 1
+> +			fi
+> +		fi
+> +		;;
+> +	-h | --help)
+> +		usage
+> +		exit 0
+> +		;;
+> +	-r | --remove)
+> +		if [[ $# -ne 3 ]]; then
+> +			 printf "You need to provide kernel version and modules directory name.\n"
+> +			 exit 1
+> +		 else
+> +			 remove_old_kernel
+> +			 remove_old_modules_dir
+> +		fi
+> +		;;
+> +	*)
+> +		usage
+> +		exit 1
+> +		;;
+> +esac
 > 
-> Changes since v2:
->  - As suggested by Rob Herring:
->  - Replace with DT schema
->  - Remove '-ptp' from compatible string
->  - Replace wildcard 'x' with the part numbers.
-> 
-> Changes since v1:
->  - No changes
-> ---
->  .../devicetree/bindings/ptp/ptp-idtcm.yaml         | 69 ++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/ptp/ptp-idtcm.yaml
+> -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+> -# again, /boot and /lib/modules/ eventually fill up.
+> -# Dumb script to purge that stuff:
 > 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+OK, the former script's loop is removed.. good.
+But the 2 preceding blank lines are not removed, so the script
+now ends with 2 unnecessary blank lines.
+
+> -for f in "$@"
+> -do
+> -        if rpm -qf "/lib/modules/$f" >/dev/null; then
+> -                echo "keeping $f (installed from rpm)"
+> -        elif [ $(uname -r) = "$f" ]; then
+> -                echo "keeping $f (running kernel) "
+> -        else
+> -                echo "removing $f"
+> -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+> -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+> -                rm -rf "/lib/modules/$f"
+> -                new-kernel-pkg --remove $f
+> -        fi
+> -done
+> --
+
+
+-- 
+~Randy
+
