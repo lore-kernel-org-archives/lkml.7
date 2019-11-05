@@ -2,115 +2,103 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4F29CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:54:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A4A6CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:04:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBABD2067D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:54:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="dG4gqwEb"
+	by mail.kernel.org (Postfix) with ESMTP id D1E2B214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:04:54 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572923094;
+	bh=ayQqU8Qbemc32/HIUooa1m/XuTOUikPJAAUvS/qaxjU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=tRQHf2tKdF+U9THIyjD0ck8GUJgZbq790KXZFV+fVZj0ib3AQzl8+8yEsCHNDSNZB
+	 xVaO0ytzXPuHGengB0LMWhc2GbvTsVA/ljoPwpDWrlKRwN0IvzZptSrZkqcNzalgEp
+	 hYLMofIGSBNiw3QWTP0FeIujc5EEkI7qnhDcYnk8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfKECy1 (ORCPT
+        id S1729717AbfKEDEx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:54:27 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:56793 "EHLO ozlabs.org"
+        Mon, 4 Nov 2019 22:04:53 -0500
+Received: from mail.kernel.org ([198.145.29.99]:35292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727861AbfKECy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:54:27 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1727861AbfKEDEx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 22:04:53 -0500
+Received: from localhost (unknown [104.132.0.81])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476Z4v1Hcyz9sP6;
-        Tue,  5 Nov 2019 13:54:22 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572922464;
-        bh=apINLqpoL1ArxoY3YZHvUGKkHEENAmWBBm7q4I02XPk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=dG4gqwEbrYIzKUaSuOWEOec9y7I4BlEU8L9bPSJ8+u1QzLH8XRQev3z5oN1UY8Jfu
-         EefPqlNqvGcuCvrYdECsjCh10evJ2PPKX0E302e0RL0eQc3Bp7ZyKQmleEIZJFetel
-         4ZPM/JO0MilitNX7dsmO1IAalwJ1+Yqxw+0fEhoZgB1SZNWYhrlLVyhClhWriKRE/Y
-         aQoKWe28Colf2llGrByWG8ElZ46IwNdP1kf5nt42gdk/xOK9vU8hxFsW/vX4TbUL1Q
-         QQFJYvkkf1DFzyGhBOYMXPnZAK2JFD6LqpIo+ltyBm92anqYmUzc5qvyABKuSZB2Ih
-         JxK2ehx9UcQpw==
-Date:   Tue, 5 Nov 2019 13:54:22 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>
-Subject: linux-next: build failure after merge of the drm tree
-Message-ID: <20191105135422.46ddc865@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id BF300206B8;
+        Tue,  5 Nov 2019 03:04:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572923092;
+        bh=ayQqU8Qbemc32/HIUooa1m/XuTOUikPJAAUvS/qaxjU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=M4fbfC66Tih/uZITmA1N9W/HcX5rt9+ugMU/5Z3rcTE3omxFQXy4jw67GFv8tbBg9
+         tACLhT3w+YOkMDSBb9ubrP70uZKwt5Wva5IeHIprFRpTdoXop48AZfklA245kBm7C6
+         3XQ8sPBdy+FZrB11Cbde8HdqVp896Z/3h0f9SFKg=
+Date:   Mon, 4 Nov 2019 19:04:51 -0800
+From:   Jaegeuk Kim <jaegeuk@kernel.org>
+To:     Chao Yu <yuchao0@huawei.com>
+Cc:     linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net
+Subject: Re: [PATCH 3/3] Revert "f2fs: use kvmalloc, if kmalloc is failed"
+Message-ID: <20191105030451.GA55090@jaegeuk-macbookpro.roam.corp.google.com>
+References: <20191101095324.9902-1-yuchao0@huawei.com>
+ <20191101095324.9902-3-yuchao0@huawei.com>
+ <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
+ <40d0df3f-cc55-d31a-474b-76f57d96bd89@huawei.com>
+ <20191105023835.GD692@sol.localdomain>
+ <00ade77c-5451-4953-0232-89342a029f33@huawei.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/hQb8xY0vB02FYJL95wqmqq2";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <00ade77c-5451-4953-0232-89342a029f33@huawei.com>
+User-Agent: Mutt/1.8.2 (2017-04-18)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/hQb8xY0vB02FYJL95wqmqq2
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 11/05, Chao Yu wrote:
+> On 2019/11/5 10:38, Eric Biggers wrote:
+> > On Tue, Nov 05, 2019 at 10:17:41AM +0800, Chao Yu wrote:
+> >> On 2019/11/5 8:02, Jaegeuk Kim wrote:
+> >>> On 11/01, Chao Yu wrote:
+> >>>> This reverts commit 5222595d093ebe80329d38d255d14316257afb3e.
+> >>>>
+> >>>> As discussed with Eric, as kvmalloc() will try kmalloc() first, so
+> >>>> when we need allocate large size memory, it'd better to use
+> >>>> f2fs_kvmalloc() directly rather than adding additional fallback
+> >>>> logic to call kvmalloc() after we failed in f2fs_kmalloc().
+> >>>>
+> >>>> In order to avoid allocation failure described in original commit,
+> >>>> I change to use f2fs_kvmalloc() for .free_nid_bitmap bitmap memory.
+> >>>
+> >>> Is there any problem in the previous flow?
+> >>
+> >> No existing problem, however, it's redundant to introduce fallback flow in
+> >> f2fs_kmalloc() like vmalloc() did, since we can call f2fs_vmalloc() directly in
+> >> places where we need large memory.
+> >>
+> >> Thanks,
+> >>
+> > 
+> > f2fs_kmalloc() also violated the naming convention used everywhere else in the
+> > kernel since it could return both kmalloc and vmalloc memory, not just kmalloc
+> > memory.  That's really error-prone since people would naturally assume it's safe
+> > to free the *_kmalloc()-ed memory with kfree().
+> 
+> Agreed.
 
-Hi all,
+Then, why not just keeping f2fs_kvmalloc() and replace all f2fs_kmalloc() with
+f2fs_kvmalloc()?
 
-After merging the drm tree, today's linux-next build (powerpc
-ppc64_defconfig) failed like this:
+f2fs_kvmalloc()
+- call kmalloc()
+- vmalloc(), if failed
 
-arch/powerpc/platforms/embedded6xx/Kconfig:2:error: recursive dependency de=
-tected!
-arch/powerpc/platforms/embedded6xx/Kconfig:2:   symbol EMBEDDED6xx depends =
-on BROKEN_ON_SMP
-init/Kconfig:79:        symbol BROKEN_ON_SMP depends on BROKEN
-init/Kconfig:76:        symbol BROKEN is selected by DRM_I915_DEBUG
-drivers/gpu/drm/i915/Kconfig.debug:20:  symbol DRM_I915_DEBUG depends on DR=
-M_I915
-drivers/gpu/drm/i915/Kconfig:2: symbol DRM_I915 depends on DRM
-drivers/gpu/drm/Kconfig:8:      symbol DRM depends on AGP
-drivers/char/agp/Kconfig:2:     symbol AGP depends on PCI
-drivers/pci/Kconfig:16: symbol PCI depends on HAVE_PCI
-drivers/pci/Kconfig:7:  symbol HAVE_PCI is selected by FORCE_PCI
-drivers/pci/Kconfig:11: symbol FORCE_PCI is selected by MVME5100
-arch/powerpc/platforms/embedded6xx/Kconfig:51:  symbol MVME5100 depends on =
-EMBEDDED6xx
-For a resolution refer to Documentation/kbuild/kconfig-language.rst
-subsection "Kconfig recursive dependency limitations"
+I'd like to keep the allocation behavior first.
 
-Caused by commit
-
-  d9d54a530a70 ("drm/i915: Put future HW and their uAPIs under STAGING & BR=
-OKEN")
-
-You really should not select BROKEN.  It is assumed to always be false
-so we can make actually broken code depend on it (and therefore not
-be built).
-
-I have used the drm tree from next-20191031 for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/hQb8xY0vB02FYJL95wqmqq2
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3A5F4ACgkQAVBC80lX
-0GzuyAf+KXyUifG6em3g9mg+29qjxDCg0ln6ZOoslj73LdJMhIKwUTs+qVkNJW7w
-s4y+XIRwROwSLgGFKZKGCycb4XQJLNk/IaxI5NyPj5s+zQ2s+P8Q38rNy/i+hcnJ
-yqp/uW8iF7rW0IPm+yRWPDtYWMZ+h4SoQrPanTPRoq3N6o1OSqCNryZpFRRlFzQU
-mu/2mCTWCVlD9ukx8RdVeebFtwdOtOIOmR/WmTUm9nzncbNPJqxL/xE+lBdjC6O8
-M/UFMizFYOyBQXarGQjubPOhImzReqJiOHhBqgdQeoBy2knzST0IFundpmIKe1cG
-FHDwjXsTPmaG6EgQF+llaOT78sIC9Q==
-=imT/
------END PGP SIGNATURE-----
-
---Sig_/hQb8xY0vB02FYJL95wqmqq2--
+Thanks,
