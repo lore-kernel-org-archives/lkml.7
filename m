@@ -2,168 +2,220 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCFB9CA9ED9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:27:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B205CA9ED9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:29:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5DE1206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:27:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="xyWsMnxY"
+	by mail.kernel.org (Postfix) with ESMTP id 21D01206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:29:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387743AbfKEH1j (ORCPT
+        id S2387788AbfKEH3e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:27:39 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:29712 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2387484AbfKEH1i (ORCPT
+        Tue, 5 Nov 2019 02:29:34 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:51081 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387619AbfKEH3d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:27:38 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA57NLuh017742;
-        Tue, 5 Nov 2019 02:27:35 -0500
-Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1nam02lp2059.outbound.protection.outlook.com [104.47.36.59])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2w2a5rkeyx-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Nov 2019 02:27:35 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ADbwQTmQbwp4q+9fG5dG171dKyvsjXpAwU0zefIkY1sVJs5na/T14kIyvhj0zzyZxD35kBBF4oxFv6gOdZVXo5ecdnjvCELFecn5RUSTzsl42jnfl3GGYEB9r3EAxWR1V+N4DDRa5nbKhrzSvz9t48HufKewlIfWIEiM9ZExYrSsoDGw+yYyoYnP9q0+YlMubgP2b4iHORnKHUA0cxQFNE7GhS/K208OQoFCQrRWvyVLLTz6QX7TgyaScxam2nb8CnVn7/p/ss1HoHRa1q+iBKiExx9S2s24Vod7xBuvNSEfHhDL54cZqE5K7o5/cAy6BFSyqXNZcv1qbqtzbu4Ckw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C7XYp80oO+alYsh7K2B7NrU9jEhmeCALfu78V945Rr8=;
- b=Le9HFeDBhNtVJxwhb0J4jJ8Sj8Tnd1Kx/GcawfkelDMtGoqgzQqzmyTxQ1ASMVqJTCwQZ1jQ1Xxm7OGBRHBsnTyWjcTK6vJ0Y5Dgl6u7ScCt3fWDbKaVRvGkBcVuyT6YObARzpRUcgyXNRdzg25XsN+1/z6aDsBZY/gC01EPe+3+oGl/yt5SRbe8DJxhNTByIN307yj67qjznumGpuhIP3Clotp8nBiaaNv5O3XLgJ7uxSFoGxzTbp6yircyR+RbYQxnaZnimjiY8caJUu8LF6SpVXl7lUUgYHZ5My+izmpEhg0nTGFz9wvDuyyJuwkl6f3BpTcmk2Vm9YAf7ldjKg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.55) smtp.rcpttodomain=linuxfoundation.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=C7XYp80oO+alYsh7K2B7NrU9jEhmeCALfu78V945Rr8=;
- b=xyWsMnxYShRWf3mAWnsMKReLMUltYBIIZRxU2Q/DgeUrOANkVzt7hj2FiFhmWz0zmdGX+bL4akbFQA3tjSrlij8m+rf4YS8EZwMpH0Ul1pepAeAnuyjOmoHcxrmiQ8huA3RfChCrFqYGIhcm+vBbcKe7HXt5ilSrC8/ttHJYTbQ=
-Received: from BN6PR03CA0001.namprd03.prod.outlook.com (2603:10b6:404:23::11)
- by CY4PR03MB2581.namprd03.prod.outlook.com (2603:10b6:903:70::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.24; Tue, 5 Nov
- 2019 07:27:32 +0000
-Received: from CY1NAM02FT024.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::207) by BN6PR03CA0001.outlook.office365.com
- (2603:10b6:404:23::11) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2430.20 via Frontend
- Transport; Tue, 5 Nov 2019 07:27:31 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.55 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.55; helo=nwd2mta1.analog.com;
-Received: from nwd2mta1.analog.com (137.71.25.55) by
- CY1NAM02FT024.mail.protection.outlook.com (10.152.74.210) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Tue, 5 Nov 2019 07:27:31 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta1.analog.com (8.13.8/8.13.8) with ESMTP id xA57RUmr000511
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Mon, 4 Nov 2019 23:27:30 -0800
-Received: from saturn.ad.analog.com (10.48.65.117) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 5 Nov 2019 02:27:29 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-kernel@vger.kernel.org>
-CC:     <gregkh@linuxfoundation.org>, <dhobsong@igel.co.jp>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        Dragos Bogdan <dragos.bogdan@analog.com>
-Subject: [PATCH] uio: fix irq init with dt support & irq not defined
-Date:   Tue, 5 Nov 2019 09:28:07 +0200
-Message-ID: <20191105072807.14420-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 Nov 2019 02:29:33 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRtHI-0008J1-7L; Tue, 05 Nov 2019 08:29:24 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRtHG-0003gn-8F; Tue, 05 Nov 2019 08:29:22 +0100
+Date:   Tue, 5 Nov 2019 08:29:22 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v2 4/7] pwm: sun4i: Add support to output source clock
+ directly
+Message-ID: <20191105072922.rku2of3cfphpfirq@pengutronix.de>
+References: <20191103203334.10539-1-peron.clem@gmail.com>
+ <20191103203334.10539-5-peron.clem@gmail.com>
+ <20191104083835.m2pd4fvhn2ze6bjt@pengutronix.de>
+ <CAJiuCccjgtMcJa-pZCB_DGN6L8m9bDTgQRoV6WUKPSjv8kn8vA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.55;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(39860400002)(346002)(396003)(376002)(136003)(199004)(189003)(2906002)(126002)(5660300002)(476003)(47776003)(50226002)(356004)(6666004)(246002)(8676002)(8936002)(14444005)(70206006)(70586007)(6916009)(4326008)(426003)(50466002)(305945005)(7636002)(36756003)(51416003)(86362001)(7696005)(2870700001)(44832011)(486006)(106002)(2616005)(336012)(478600001)(107886003)(48376002)(186003)(1076003)(316002)(54906003)(26005)(2351001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR03MB2581;H:nwd2mta1.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail10.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 7d891421-5fe1-43b2-941b-08d761c19ea6
-X-MS-TrafficTypeDiagnostic: CY4PR03MB2581:
-X-Microsoft-Antispam-PRVS: <CY4PR03MB258135F1C50D37ECFCE5C058F97E0@CY4PR03MB2581.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:7691;
-X-Forefront-PRVS: 0212BDE3BE
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: BAXBWiJWgpMjtkYBSn8KMa1fBEirTpf2MeMf855iEXkBVApNKL2pCBXjAYmCZSJmnaBTvxy3pIdqR9m5r6yENgfWl0jvXmy+8yl/igMxik3t9ne3m2p4PkXZzezHoeT6r3XchyD9xwnykXFGUF+khjxrTTsyGJ76iICQ7G1y4aZ4ikak9vD3xnJXw8DbhPvT1U9S+7mAl7p7LrOwT6AR6Z3bKhgkhVUnOMTRbc7hEPaEh1TF+X/wo58FQDHZVojvGcOroHVvM1yJRrnYe7puFw6f0+C3EbgbcCH9OX2BJTQYjYpFvNiCtzLMQMC6oUxoNOmOi4JUTuNrCacI3eXb2JN4SSPlBk0Scbot88NMz6at5r5el+gVUyb/wOPDe6pkEgo+EwWmcHc0uC2R3JzMZt6mym8/kVwFWq1f/Y9MQgCRWJTObwQrYMew15jeBT6v
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2019 07:27:31.3343
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7d891421-5fe1-43b2-941b-08d761c19ea6
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.55];Helo=[nwd2mta1.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR03MB2581
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-05_02:2019-11-04,2019-11-05 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1011
- mlxlogscore=999 priorityscore=1501 bulkscore=0 impostorscore=0
- suspectscore=1 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1911050061
+In-Reply-To: <CAJiuCccjgtMcJa-pZCB_DGN6L8m9bDTgQRoV6WUKPSjv8kn8vA@mail.gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This change also does a bit of a unification for the IRQ init code.
+Hi Clément,
 
-But the actual problem is that UIO_IRQ_NONE == 0, so for the DT case where
-UIO_IRQ_NONE gets assigned to `uioinfo->irq`, a 2nd initialization will get
-triggered (for the IRQ) and this one will exit via `goto bad1`.
+On Mon, Nov 04, 2019 at 10:28:54PM +0100, Clément Péron wrote:
+> On Mon, 4 Nov 2019 at 09:38, Uwe Kleine-König
+> <u.kleine-koenig@pengutronix.de> wrote:
+> > On Sun, Nov 03, 2019 at 09:33:31PM +0100, Clément Péron wrote:
+> > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > >
+> > > PWM core has an option to bypass whole logic and output unchanged source
+> > > clock as PWM output. This is achieved by enabling bypass bit.
+> > >
+> > > Note that when bypass is enabled, no other setting has any meaning, not
+> > > even enable bit.
+> > >
+> > > This mode of operation is needed to achieve high enough frequency to
+> > > serve as clock source for AC200 chip, which is integrated into same
+> > > package as H6 SoC.
+> >
+> > I think the , should be dropped.
+> >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> > > ---
+> > >  drivers/pwm/pwm-sun4i.c | 39 ++++++++++++++++++++++++++++++++++++++-
+> > >  1 file changed, 38 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > > index b5e7ac364f59..2441574674d9 100644
+> > > --- a/drivers/pwm/pwm-sun4i.c
+> > > +++ b/drivers/pwm/pwm-sun4i.c
+> > > @@ -3,6 +3,10 @@
+> > >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> > >   *
+> > >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electrons.com>
+> > > + *
+> > > + * Limitations:
+> > > + * - When outputing the source clock directly, the PWM logic will be bypassed
+> > > + *   and the currently running period is not guaranted to be completed
+> >
+> > Typo: guaranted  -> guaranteed
+> >
+> > >   */
+> > >
+> > >  #include <linux/bitops.h>
+> > > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] = {
+> > >
+> > >  struct sun4i_pwm_data {
+> > >       bool has_prescaler_bypass;
+> > > +     bool has_direct_mod_clk_output;
+> > >       unsigned int npwm;
+> > >  };
+> > >
+> > > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *chip,
+> > >
+> > >       val = sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> > >
+> > > +     /*
+> > > +      * PWM chapter in H6 manual has a diagram which explains that if bypass
+> > > +      * bit is set, no other setting has any meaning. Even more, experiment
+> > > +      * proved that also enable bit is ignored in this case.
+> > > +      */
+> > > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > > +         data->has_direct_mod_clk_output) {
+> > > +             state->period = DIV_ROUND_CLOSEST_ULL(NSEC_PER_SEC, clk_rate);
+> > > +             state->duty_cycle = state->period / 2;
+> > > +             state->polarity = PWM_POLARITY_NORMAL;
+> > > +             state->enabled = true;
+> > > +             return;
+> > > +     }
+> >
+> > Not sure how the rest of sun4i_pwm_get_state behaves, but I would prefer
+> > to let .get_state() round up which together with .apply_state() rounding
+> > down yields sound behaviour.
+> Ok
+> >
+> > > +
+> > >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) == PWM_PRESCAL_MASK) &&
+> > >           sun4i_pwm->data->has_prescaler_bypass)
+> > >               prescaler = 1;
+> > > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >  {
+> > >       struct sun4i_pwm_chip *sun4i_pwm = to_sun4i_pwm_chip(chip);
+> > >       struct pwm_state cstate;
+> > > -     u32 ctrl;
+> > > +     u32 ctrl, clk_rate;
+> > > +     bool bypass;
+> > >       int ret;
+> > >       unsigned int delay_us;
+> > >       unsigned long now;
+> > > @@ -218,6 +238,16 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
+> > >               }
+> > >       }
+> > >
+> > > +     /*
+> > > +      * Although it would make much more sense to check for bypass in
+> > > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "enabled".
+> > > +      * Period is allowed to be rounded up or down.
+> > > +      */
+> > > +     clk_rate = clk_get_rate(sun4i_pwm->clk);
+> > > +     bypass = ((state->period * clk_rate >= NSEC_PER_SEC &&
+> > > +                state->period * clk_rate < NSEC_PER_SEC + clk_rate) &&
+> > > +               state->enabled);
+> >
+> > I guess the compiler is smart enough here, but checking for
+> > state->enabled is cheaper than the other checks, so putting this at the
+> > start of the expression seems sensible.
+> >
+> > The comment doesn't match the code. You don't round up state->period.
+> > (This is good, please fix the comment.) I think dropping the check
+> >
+> >         state->period * clk_rate < NSEC_PER_SEC + clk_rate
+> >
+> > would be fine, too.
+> Ok
+> 
+> >
+> > I'd like to have a check for
+> >
+> >         state->duty_cycle * clk_rate >= NSEC_PER_SEC / 2 &&
+> >         state->duty_cycle * clk_rate < NSEC_PER_SEC
+> >
+> > here. If this isn't true rather disable the PWM or output a 100% duty
+> > cycle with a larger period.
+> 
+> Why not just having the duty_cycle is 50% only ?
+> state->duty_cycle * 2 == state->period;
 
-As far as things seem to go, the only case where UIO_IRQ_NONE seems valid,
-is when using a device-tree. The driver has some legacy support for old
-platform_data structures. It looks like, for platform_data a non-existent
-IRQ is an invalid case (or was considered an invalid case).
-Which is why -ENXIO is treated only when a DT is used.
+Yeah, for the bypass case you can only provide a 50% duty cycle. The
+problem you have to address is that you cannot rely on your consumer to
+request only 50% duty cycles. So you have to implement some behaviour if
+your consumer requests period = 1 / clk_rate and 20% duty cycle.
 
-Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/uio/uio_dmem_genirq.c | 12 ++++--------
- 1 file changed, 4 insertions(+), 8 deletions(-)
+Where I want to get the pwm framework as a whole is to let lowlevel
+drivers round down both duty_cycle and period to the next possible values
+in their .apply callback to be able to provide a more uniform behaviour
+for consumers. So here this would mean:
 
-diff --git a/drivers/uio/uio_dmem_genirq.c b/drivers/uio/uio_dmem_genirq.c
-index ebcf1434e296..0a7d71d4a4f0 100644
---- a/drivers/uio/uio_dmem_genirq.c
-+++ b/drivers/uio/uio_dmem_genirq.c
-@@ -163,13 +163,6 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
- 		uioinfo->name = devm_kasprintf(&pdev->dev, GFP_KERNEL, "%pOFn",
- 					       pdev->dev.of_node);
- 		uioinfo->version = "devicetree";
--
--		/* Multiple IRQs are not supported */
--		irq = platform_get_irq(pdev, 0);
--		if (irq == -ENXIO)
--			uioinfo->irq = UIO_IRQ_NONE;
--		else
--			uioinfo->irq = irq;
- 	}
- 
- 	if (!uioinfo || !uioinfo->name || !uioinfo->version) {
-@@ -199,8 +192,11 @@ static int uio_dmem_genirq_probe(struct platform_device *pdev)
- 	mutex_init(&priv->alloc_lock);
- 
- 	if (!uioinfo->irq) {
-+		/* Multiple IRQs are not supported */
- 		ret = platform_get_irq(pdev, 0);
--		if (ret < 0)
-+		if (ret == -ENXIO && pdev->dev.of_node)
-+			ret = UIO_IRQ_NONE;
-+		else if (ret < 0)
- 			goto bad1;
- 		uioinfo->irq = ret;
- 	}
+ - 1 / clk_rate <= state->period < smallest value without bypass &&
+   0 <= state->duty_cycle < state->period / 2
+   	=> provide a constant 0
+
+ - 1 / clk_rate <= state->period < smallest value without bypass &&
+   state->period / 2 <= state->duty_cycle < state->period
+   	=> use bypass mode providing 50% duty cycle
+
+ - 1 / clk_rate <= state->period < smallest value without bypass &&
+   state->period == state->duty_cycle
+   	=> provide a constant 1
+
+Best regards
+Uwe
+
 -- 
-2.20.1
-
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
