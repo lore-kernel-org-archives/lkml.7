@@ -2,151 +2,80 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF5DC49EAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8CC49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:57:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AC2720869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A1C321929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:57:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388123AbfKEJye (ORCPT
+        id S2387867AbfKEJ5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:54:34 -0500
-Received: from mga11.intel.com ([192.55.52.93]:3948 "EHLO mga11.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730571AbfKEJyd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:54:33 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:54:32 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="212507068"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 05 Nov 2019 01:54:29 -0800
-Received: by lahna (sSMTP sendmail emulation); Tue, 05 Nov 2019 11:54:28 +0200
-Date:   Tue, 5 Nov 2019 11:54:28 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191105095428.GR2552@lahna.fi.intel.com>
-References: <20191101111918.GL2593@lahna.fi.intel.com>
- <20191105000000.GA126282@google.com>
+        Tue, 5 Nov 2019 04:57:21 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:33679 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730454AbfKEJ5U (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:57:20 -0500
+Received: from [IPv6:2001:420:44c1:2577:b458:c82c:799d:e7d8]
+ ([IPv6:2001:420:44c1:2577:b458:c82c:799d:e7d8])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id RvaMiG4eLTzKrRvaQirPzi; Tue, 05 Nov 2019 10:57:19 +0100
+Subject: Re: [PATCH] media: v4l2-mem2mem: Fix hold buf flag check
+To:     Jernej Skrabec <jernej.skrabec@siol.net>,
+        mchehab+samsung@kernel.org
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191028185700.3634267-1-jernej.skrabec@siol.net>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <4fe0c972-cfd7-e04b-17dc-e739e4c8fc00@xs4all.nl>
+Date:   Tue, 5 Nov 2019 10:57:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105000000.GA126282@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191028185700.3634267-1-jernej.skrabec@siol.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDNGXV+jojFOdl+vTll97CdnD3VKmC3VMWxlZqVv6bgLx1VamliGCMPMqpR4H209ff7D7Kc/rBrmZ08UPrluBLJf7kD3qsSV179mTzinDlnTUnbPyuKf
+ YK8dwTrAALFDTASt6kW+bMzp9xkaIVMQOc/iUR0vlDkbpuyjb5+vZJc/DqIUg65qtIasnm5rNb9myvEEMWGciIlpSc/vxGcwjViwsP5FkAhZb6eIPXCSggqt
+ uzC9CT5vNtQHxuUydwY+wh43nWEadaa+mDCo12xt70Q0MwFYISbIz9dV9sQCboMT7Jjuq1B0hVJjhj92JhniOOc8IMo3Q5FLZM1Ac/GJGD3b3lxt5z1SJvFM
+ pt6j06aptHKNoId0AlvM9vXS59d+N6UxRW7TQ3gyq0LYbxafaHcFG9l5ZBRwI7cyC9KkNKuJ
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 06:00:00PM -0600, Bjorn Helgaas wrote:
-> > > > > The outline of the pci_pm_resume_noirq() part of this patch is:
-> > > > > 
-> > > > >   pci_pm_resume_noirq
-> > > > >     if (!dev->skip_bus_pm ...)   # <-- condition 1
-> > > > >       pci_pm_default_resume_early
-> > > > >         pci_power_up
-> > > > >           if (platform_pci_power_manageable())   # _PS0 or _PR0 exist?
-> > > > >             platform_pci_set_power_state
-> > > > >               pci_platform_pm->set_state
-> > > > >                 acpi_pci_set_power_state(PCI_D0) # acpi_pci_platform_pm.set_state
-> > > > >                   acpi_device_set_power(ACPI_STATE_D0) # <-- eval _PS0
-> > > > > +   if (d3cold)                  # <-- condition 2
-> > > > > +     pci_bridge_wait_for_secondary_bus
+On 10/28/19 7:57 PM, Jernej Skrabec wrote:
+> Hold buf flag is set on output queue, not capture. Fix that.
 > 
-> > The reason why pci_bridge_wait_for_secondary_bus() is called almost the
-> > last is that I figured we want to resume the root/downstream port
-> > completely first before we start delaying for the device downstream.
+> Fixes: f07602ac3887 ("media: v4l2-mem2mem: add new_frame detection")
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> ---
+>  drivers/media/v4l2-core/v4l2-mem2mem.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> For understandability, I think the wait needs to go in some function
-> that contains "PCI_D0", e.g., platform_pci_set_power_state() or
-> pci_power_up(), so it's connected with the transition from D3cold to
-> D0.
+> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> index db07ef3bf3d0..0d2d547a84a5 100644
+> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
+> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
+> @@ -335,7 +335,7 @@ static void __v4l2_m2m_try_queue(struct v4l2_m2m_dev *m2m_dev,
+>  		}
+>  	}
+>  
+> -	if (src && dst && (m2m_ctx->cap_q_ctx.q.subsystem_flags &
+> +	if (src && dst && (m2m_ctx->out_q_ctx.q.subsystem_flags &
+>  			   VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF))
+>  		m2m_ctx->new_frame = !dst->vb2_buf.copied_timestamp ||
+>  			dst->vb2_buf.timestamp != src->vb2_buf.timestamp;
 > 
-> Since pci_pm_default_resume_early() is the only caller of
-> pci_power_up(), maybe we should just inline pci_power_up(), e.g.,
-> something like this:
-> 
->   static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
->   {
->     pci_power_state_t prev_state = pci_dev->current_state;
-> 
->     if (platform_pci_power_manageable(pci_dev))
->       platform_pci_set_power_state(pci_dev, PCI_D0);
-> 
->     pci_raw_set_power_state(pci_dev, PCI_D0);
->     pci_update_current_state(pci_dev, PCI_D0);
-> 
->     pci_restore_state(pci_dev);
->     pci_pme_restore(pci_dev);
-> 
->     if (prev_state == PCI_D3cold)
->       pci_bridge_wait_for_secondary_bus(dev);
->   }
 
-OK, I'll see if this works.
+You are right, this should be the output queue. But there is a second
+use of VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF in this source in a
+WARN_ON. Can you fix that as well?
 
-> I don't understand why we call both platform_pci_set_power_state() and
-> pci_raw_set_power_state().
+Thanks!
 
-platform_pci_set_power_state() deals with the ACPI methods such as
-calling _PS0 after D3hot. To transition the device from D3hot to D0 you
-need the PMCSR write which is done in pci_raw_set_power_state().
-
-> I thought platform_pci_set_power_state()
-> should put the device in D0, so we shouldn't need the PCI_PM_CTRL
-> update in pci_raw_set_power_state(), although we probably do need
-> things like pci_restore_bars() and pcie_aspm_pm_state_change().
-> 
-> And in fact, it seems wrong that if platform_pci_set_power_state()
-> puts the device in D0 and the device lacks a PM capability, we bail
-> out of pci_raw_set_power_state() before calling pci_restore_bars().
-> 
-> Tangent: I think "pci_pm_default_resume_early" is the wrong name for
-> this because "default" suggests that this is what we fall back to if a
-> driver or arch doesn't supply a more specific method.  But here we're
-> doing mandatory things that cannot be overridden, so I think something
-> like "pci_pm_core_resume_early()" would be more accurate.
-> 
-> > Need to call it before port services (pciehp) is resumed, though.
-> 
-> I guess this is because pciehp_resume() looks at PCI_EXP_LNKSTA and
-> will be confused if the link isn't up yet?
-
-Yes.
-
-> > If you think it is fine to do the delay before we have restored
-> > everything I can move it inside pci_power_up() or call it after
-> > pci_pm_default_resume_early() as above. I think at least we should make
-> > sure all the saved registers are restored before so that the link
-> > activation check actually works.
-> 
-> What needs to be restored to make pcie_wait_for_link_delay() work?
-
-I'm not entirely sure. I think that pci_restore_state() at least should
-be called so that the PCIe capability gets restored. Maybe not event
-that because Data Link Layer Layer Active always reflects the DL_Active
-or not and it does not need to be enabled separately.
-
-> And what event does the restore need to be ordered with?
-
-Not sure I follow you here.
+	Hans
