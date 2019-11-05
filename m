@@ -2,179 +2,134 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4654CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B740EC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC16120717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="EGNHG3Gf"
+	by mail.kernel.org (Postfix) with ESMTP id 8F83E21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:58:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572919111;
+	bh=1/dwl0HMZv0HXnINUPRcw2ppA3ERAUnWy/O87vieVCs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kq+o3ZfUhthPlvJgxao+678oDBwKE9t/Yb/gspS1gfjhmRl+o36fpdZo0MI2i0rV2
+	 J6vbVQzcWcSPuKmvLzflAyJgblx97IkqSDFPX5kQ5UEdLdSEiM8uAF7UPEBZGisTzP
+	 eqiY7ak5CQijtrfE3aw0B0KDe1gnfZMOhaTeAYEw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfKEB5z (ORCPT
+        id S1730199AbfKEB6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:57:55 -0500
-Received: from conssluserg-05.nifty.com ([210.131.2.90]:25816 "EHLO
-        conssluserg-05.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729597AbfKEB5z (ORCPT
+        Mon, 4 Nov 2019 20:58:30 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:45505 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbfKEB6a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:57:55 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-05.nifty.com with ESMTP id xA51ve2p032734;
-        Tue, 5 Nov 2019 10:57:41 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-05.nifty.com xA51ve2p032734
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572919061;
-        bh=wnNLKDcLbY3/yKFW6RfxoG2eNTucv+kYwn7VETE2Ss4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EGNHG3Gf56RamlIbWHuLeOWObCMMRhDJbFCPltyeSCQ/fp+jBIyW3Xg51a8GBioJZ
-         g25/G6GhcdmEtPCM6HCU12tEGZsN2umDShfxqwkY736okcSEXatODaIJdZhMyBgKbC
-         Q8Ybjy0U+nJUSnzkUebOZtlBXMQzDmOQgBi6uSRWk8xQMpjaVE76zinEzUox7rGa5/
-         Zepr/Ao266Co8YxuqDdssK9rByY9cenRyhQdK5ySrztrK9YjPt3ieoiwKcmsjAyt/L
-         tSaIqgMHmLY36NOASFPaFv6NIKpxpNvE1AiZa0NGsdv2S0SevI1sZAlU+B47x8UMmB
-         eJ4tklhr2l5zQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id k15so12395176vsp.2;
-        Mon, 04 Nov 2019 17:57:41 -0800 (PST)
-X-Gm-Message-State: APjAAAU/k64xMlPmMAVWUr7NVaz+38TsfaLt33IPhcOL23VelnntkwaL
-        f13WelwN8Qt30Zl+CG7X205vHAHOXfo0usaQgNY=
-X-Google-Smtp-Source: APXvYqzFNajTAhIs/fw26OaE2g+A5ZLDCiX8mkE1P9UMTg1Ch/QNPc3yAz63Ebx/DZ4nOX6a4pcbQNdTpnUu7q5CLMU=
-X-Received: by 2002:a67:2d08:: with SMTP id t8mr14547734vst.155.1572919059960;
- Mon, 04 Nov 2019 17:57:39 -0800 (PST)
+        Mon, 4 Nov 2019 20:58:30 -0500
+Received: by mail-ot1-f65.google.com with SMTP id 77so11838125oti.12;
+        Mon, 04 Nov 2019 17:58:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gmYraXUwBZGb7SjnYfb7LVvYyu+EbS6Dq6WsiW6ugLQ=;
+        b=W+gLolNegV0kBHweDucIh4cXTdNJN24nGK2Doc2xWFKEPfP4O9lJ36H32wPa+s7qne
+         QOCzejraKrhq4LspATp6iB/6J3GNw+yCu6xGF0QMsdy7xaPYO1zn/nDEorGUG9cBMmlN
+         NyvG1JxsKEjqlVW4tUVBTdXFKyb+LiEA27d8HGog2vpQrf4f8pki788HcTaRQ1lExfJu
+         JQnemhX2RnECz0giB7nvT2YoYHBVU2XPiFvJ3aw4smzdhPFl5QglhFtzgfl3OAIbDP94
+         P2mJPKNuzcnYSox2exJHoSoi6kSogRsXpn1RxB7TUlXbRQcXHNdsqnmyouka71mVzXje
+         aRzw==
+X-Gm-Message-State: APjAAAVjSeGhkDs0nuLNRfapBmvF3krFBSAf+TKqpKkctPIgCKG+aecb
+        J4JaohYmxqjMUIS/ipQblw==
+X-Google-Smtp-Source: APXvYqx9fT0D63eHAknVkyowX+0cfZhjqiWWNlSNjVlzbGr8k08aYwX9ohraNUzyt9RHvzcqojdddQ==
+X-Received: by 2002:a9d:1c8f:: with SMTP id l15mr16727710ota.313.1572919109034;
+        Mon, 04 Nov 2019 17:58:29 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id q82sm513021oif.11.2019.11.04.17.58.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 17:58:28 -0800 (PST)
+Date:   Mon, 4 Nov 2019 19:58:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, krzk@kernel.org, mark.rutland@arm.com,
+        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
+        lee.jones@linaro.org, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v4 2/4] dt-bindings: power: supply: Max17040: Add low
+ level SOC alert threshold
+Message-ID: <20191105015827.GA332@bogus>
+References: <CAJKOXPdCtbsPaAgYp5iVBhkAsjXzOYWwttQBptgiUgzhbKi09w@mail.gmail.com>
+ <20191031184134.30621-1-matheus@castello.eng.br>
+ <20191031184134.30621-3-matheus@castello.eng.br>
 MIME-Version: 1.0
-References: <20191101081148.23274-1-yamada.masahiro@socionext.com>
- <20191101081148.23274-3-yamada.masahiro@socionext.com> <CAL_Jsq+_vKmhVacTnt7fXJFsFGkg0AopdiZ4XaQ3V4M=zhn_CA@mail.gmail.com>
-In-Reply-To: <CAL_Jsq+_vKmhVacTnt7fXJFsFGkg0AopdiZ4XaQ3V4M=zhn_CA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 5 Nov 2019 10:57:04 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQ-rd6FsBY4CUk3yFzRgEE4mZyytQG6OCBb9Ww2f7bwcg@mail.gmail.com>
-Message-ID: <CAK7LNAQ-rd6FsBY4CUk3yFzRgEE4mZyytQG6OCBb9Ww2f7bwcg@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] ARM: decompressor: simplify libfdt builds
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        Russell King <linux@armlinux.org.uk>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191031184134.30621-3-matheus@castello.eng.br>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 10:04 AM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Nov 1, 2019 at 3:12 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > Copying source files during the build time may not end up with
-> > as clean code as you expect.
-> >
-> > lib/fdt*.c simply wrap scripts/dtc/libfdt/fdt*.c, and it works
-> > nicely. Let's follow that approach for the arm decompressor, too.
-> >
-> > Add four wrappers, arch/arm/boot/compressed/fdt*.c and remove the
-> > Makefile messes.
-> >
-> > Another nice thing is we no longer need to maintain the separate
-> > libfdt_env.h since we can include <linux/libfdt_env.h>, and the
-> > diff stat also looks nice.
-> >
-> > Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> > ---
-> >
-> > Changes in v2: None
-> >
-> >  arch/arm/boot/compressed/.gitignore     |  9 -------
-> >  arch/arm/boot/compressed/Makefile       | 33 +++++++------------------
-> >  arch/arm/boot/compressed/atags_to_fdt.c |  1 +
-> >  arch/arm/boot/compressed/fdt.c          |  2 ++
-> >  arch/arm/boot/compressed/fdt_ro.c       |  2 ++
-> >  arch/arm/boot/compressed/fdt_rw.c       |  2 ++
-> >  arch/arm/boot/compressed/fdt_wip.c      |  2 ++
-> >  arch/arm/boot/compressed/libfdt_env.h   | 22 -----------------
-> >  8 files changed, 18 insertions(+), 55 deletions(-)
-> >  create mode 100644 arch/arm/boot/compressed/fdt.c
-> >  create mode 100644 arch/arm/boot/compressed/fdt_ro.c
-> >  create mode 100644 arch/arm/boot/compressed/fdt_rw.c
-> >  create mode 100644 arch/arm/boot/compressed/fdt_wip.c
-> >  delete mode 100644 arch/arm/boot/compressed/libfdt_env.h
->
-> Looks fine to me other than my question on licensing on patch 1.
->
-> Who did you want to take the series? I can take it with Russell's ack.
+On Thu, Oct 31, 2019 at 03:41:32PM -0300, Matheus Castello wrote:
+> For configure low level state of charge threshold alert signaled from
+> max17040 we add "maxim,alert-low-soc-level" property.
 
-Rob,
-I'd like you to take the whole of this patch set
-if there is no objection.
+This doesn't match the change. You're adding a whole new device binding.
 
-Russell,
-Is this patch OK with you?
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  .../power/supply/max17040_battery.txt         | 33 +++++++++++++++++++
 
+Part of an MFD? The MFD binding should reference this file then.
 
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/power/supply/max17040_battery.txt b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> new file mode 100644
+> index 000000000000..f2d0b22b5f79
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+> @@ -0,0 +1,33 @@
+> +max17040_battery
+> +~~~~~~~~~~~~~~~~
+> +
+> +Required properties :
+> + - compatible : "maxim,max17040" or "maxim,max77836-battery"
+> + - reg: i2c slave address
+> +
+> +Optional properties :
+> +- maxim,alert-low-soc-level :	The alert threshold that sets the state of
+> + 				charge level (%) where an interrupt is
+> +				generated. Can be configured from 1 up to 32
+> +				(%). If skipped the power up default value of
+> +				4 (%) will be used.
 
-> >
-> > -$(addprefix $(obj)/,$(libfdt_objs) atags_to_fdt.o): \
-> > -       $(addprefix $(obj)/,$(libfdt_hdrs))
-> > +OBJS   += $(libfdt_objs)
->
-> Seems like this file could benefit from doing 'OBJS-$(CONFIG_*)' style
-> variables.
+Seems like something that should be a common battery property.
 
-I agree, but this kind of refactoring is
-not the main interest of this series.
-
-It should be done by a separate patch if it is desired.
-
-
-
-> > diff --git a/arch/arm/boot/compressed/fdt.c b/arch/arm/boot/compressed/fdt.c
-> > new file mode 100644
-> > index 000000000000..f8ea7a201ab1
-> > --- /dev/null
-> > +++ b/arch/arm/boot/compressed/fdt.c
-> > @@ -0,0 +1,2 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include "../../../../lib/fdt.c"
-> > diff --git a/arch/arm/boot/compressed/fdt_ro.c b/arch/arm/boot/compressed/fdt_ro.c
-> > new file mode 100644
-> > index 000000000000..93970a4ad5ae
-> > --- /dev/null
-> > +++ b/arch/arm/boot/compressed/fdt_ro.c
-> > @@ -0,0 +1,2 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include "../../../../lib/fdt_ro.c"
-> > diff --git a/arch/arm/boot/compressed/fdt_rw.c b/arch/arm/boot/compressed/fdt_rw.c
-> > new file mode 100644
-> > index 000000000000..f7c6b8b7e01c
-> > --- /dev/null
-> > +++ b/arch/arm/boot/compressed/fdt_rw.c
-> > @@ -0,0 +1,2 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include "../../../../lib/fdt_rw.c"
-> > diff --git a/arch/arm/boot/compressed/fdt_wip.c b/arch/arm/boot/compressed/fdt_wip.c
-> > new file mode 100644
-> > index 000000000000..048d2c7a088d
-> > --- /dev/null
-> > +++ b/arch/arm/boot/compressed/fdt_wip.c
-> > @@ -0,0 +1,2 @@
-> > +// SPDX-License-Identifier: GPL-2.0-only
-> > +#include "../../../../lib/fdt_wip.c"
-
-
-I gave GPL-2.0-only to this,
-but it should be the same as lib/fdt*.c,
-which is now being discussed in 1/3.
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+> +- interrupts : 			Interrupt line see Documentation/devicetree/
+> +				bindings/interrupt-controller/interrupts.txt
+> +- wakeup-source :		This device has wakeup capabilities. Use this
+> +				property to use alert low SOC level interrupt
+> +				as wake up source.
+> +
+> +Optional properties support interrupt functionality for alert low state of
+> +charge level, present in some ICs in the same family, and should be used with
+> +compatible "maxim,max77836-battery".
+> +
+> +Example:
+> +
+> +	battery-fuel-gauge@36 {
+> +		compatible = "maxim,max77836-battery";
+> +		reg = <0x36>;
+> +		maxim,alert-low-soc-level = <10>;
+> +		interrupt-parent = <&gpio7>;
+> +		interrupts = <2 IRQ_TYPE_EDGE_FALLING>;
+> +		wakeup-source;
+> +	};
+> --
+> 2.24.0.rc2
+> 
