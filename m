@@ -2,158 +2,117 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D19FFC17490
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:22:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B28C3C17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:23:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A010321A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:22:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868D0214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:23:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fNtTA1h+"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="UxD6NHXg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389153AbfKEOWa (ORCPT
+        id S2389395AbfKEOW7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:22:30 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36098 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727830AbfKEOWa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:22:30 -0500
-Received: by mail-pf1-f196.google.com with SMTP id v19so15539187pfm.3;
-        Tue, 05 Nov 2019 06:22:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=kh0GkoV1ypwo9WTausthrxVTVhqGQ7PRqBLhScWrd34=;
-        b=fNtTA1h+w0VcsBDMFdUmA77KT7OR2xINASAtTFv5/uxA2BGp4Ct+oe5VLIFKz5qMz9
-         Bl4ds80b1dxZFQoESNkDg9JCq7R0pIfBoXiIABZJVNHKxF2UR6krNg0kWjCxJ/dIbJwE
-         YgalM3C4KcB7ffshart6XmN1kZzKEF05ZmqhONsucmEd5ZNSmDGwfmP9NV5jgRaedYku
-         SJtvvsD5NEK01jbdGAFu4REyEm2GD/4zwLifkHqmrR0NaGx+4qvvRwEU3m1q7t86LLYa
-         6xeiBRx4erGqv/pzQIV6Yzx3yhW2oL9ddGyhG0R7JxTYc0XaexiTF7ZppKNOJo2DCyi1
-         Lmdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=kh0GkoV1ypwo9WTausthrxVTVhqGQ7PRqBLhScWrd34=;
-        b=BBBIgoIuLD/kgJNWd1H2W6DXZ5U+mIgBipsoeq3l+kEXefMOnkQC9bjG3bd4KwUZ9J
-         YEVPdADFMlHPOlbBoSb659u9bCl4w1Tgj704kQbPGtCCxb3da6jSliYhRNqUQ9J022pf
-         gVrjtFokiQGyBwpM0lGw+jZRdHsWiFMS+/DAGqSWE4JPonM2vcJ2/wTCYX05BGHFXfCh
-         hq9hJG+EP8ozBSEKJK1h33m5UPsptYYqPlY0d6stk26GYv5gibwAacKGVK74Hlqw2PuQ
-         aM4nwpeVIa/RSKszoGLr2tVZd7pfn39h0GdGpoMjhbxXWhLz75xUeu2yhVFERZYvBYT7
-         Xntg==
-X-Gm-Message-State: APjAAAUvAlv5yv54KAkwisxHUJnmGh/C7Zhh/mKUnnWpA3+AxT+fdW70
-        20ZoxnTdxz5AxuSQ0lqnmwkrMKn6
-X-Google-Smtp-Source: APXvYqxpiQCi2hyOgVZjsR6lTai9Q8fbectmhR81wMA6vyPaB9NcSfzGMHTGnejeJGiMPkR3UW9n3w==
-X-Received: by 2002:a63:e156:: with SMTP id h22mr36201170pgk.266.1572963748724;
-        Tue, 05 Nov 2019 06:22:28 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id e59sm22997998pjk.28.2019.11.05.06.22.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 06:22:27 -0800 (PST)
-Subject: Re: [PATCH] watchdog: make nowayout sysfs file writable
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>
-Cc:     linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <63003ae2-a789-066d-6bb5-1136ff17acbe@roeck-us.net>
-Date:   Tue, 5 Nov 2019 06:22:26 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 09:22:59 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52223 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389238AbfKEOW7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:22:59 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 476sML30Mcz9sNx;
+        Wed,  6 Nov 2019 01:22:54 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572963775;
+        bh=tKE0unT97Mgi0G6lcUeqkq6Frke/9A5fPrYnSHBwf2o=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=UxD6NHXgO4Btb/r6S9VisX/YD2A1lOK2IuGyh9N/fjGktkTAWS4w5muojbcCGdIlK
+         7yfa2E0TcWbKZ/wQtxX5VKb+DP82nhdaYwLcUHJbY5dKQMztVQF86JGwKsSI8TrodU
+         W4SkjgFwtNtX5uvmN4O4+awUgmXaMTZaDF/JPh8m6xXnUHHrNazuSk2Q3dClBHlvbr
+         yqoRVNx8wehZep3hKm5apGeCO0YCr2pXvus5gWcRms2kPCbCAqPlg7r2uc+07+75zS
+         Dh/SB7nxzSKQT4jgHIANwGkY4s5TibFDv/BeZHqnClMW3QNcsMlObjsATMlJ/HCQ2h
+         x4/a6A6E/vqHg==
+Date:   Wed, 6 Nov 2019 01:22:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Lunn <andrew@lunn.ch>
+Cc:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: linux-next: build failure after merge of the net-next tree
+Message-ID: <20191106012251.5bfc5e92@canb.auug.org.au>
+In-Reply-To: <20191105135054.GA7189@lunn.ch>
+References: <20191105195341.666c4a3a@canb.auug.org.au>
+        <20191105135054.GA7189@lunn.ch>
 MIME-Version: 1.0
-In-Reply-To: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="Sig_/fD6AAWwQM+5dF0afKAc.40g";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 4:31 AM, Rasmus Villemoes wrote:
-> It can be useful to delay setting the nowayout feature for a watchdog
-> device. Moreover, not every driver (notably gpio_wdt) implements a
-> nowayout module parameter/otherwise respects CONFIG_WATCHDOG_NOWAYOUT,
-> and modifying those drivers carries a risk of causing a regression for
-> someone who has two watchdog devices, sets CONFIG_WATCHDOG_NOWAYOUT
-> and somehow relies on the gpio_wdt driver being ignorant of
-> that (i.e., allowing one to gracefully close a gpio_wdt but not the
-> other watchdog in the system).
-> 
-> So instead, simply make the nowayout sysfs file writable. Obviously,
-> setting nowayout is a one-way street.
-> 
-> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-> ---
->   .../ABI/testing/sysfs-class-watchdog          |  9 ++++++--
->   drivers/watchdog/watchdog_dev.c               | 22 ++++++++++++++++++-
->   2 files changed, 28 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-> index 675f9b537661..9860a8b2ba75 100644
-> --- a/Documentation/ABI/testing/sysfs-class-watchdog
-> +++ b/Documentation/ABI/testing/sysfs-class-watchdog
-> @@ -17,8 +17,13 @@ What:		/sys/class/watchdog/watchdogn/nowayout
->   Date:		August 2015
->   Contact:	Wim Van Sebroeck <wim@iguana.be>
->   Description:
-> -		It is a read only file. While reading, it gives '1' if that
-> -		device supports nowayout feature else, it gives '0'.
-> +		It is a read/write file. While reading, it gives '1'
-> +		if the device has the nowayout feature set, otherwise
-> +		it gives '0'. Writing a '1' to the file enables the
-> +		nowayout feature. Once set, the nowayout feature
-> +		cannot be disabled, so writing a '0' either has no
-> +		effect (if the feature was already disabled) or
-> +		results in a permission error.
->    >   What:		/sys/class/watchdog/watchdogn/state
->   Date:		August 2015
-> diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-> index dbd2ad4c9294..0c478b8f8d5a 100644
-> --- a/drivers/watchdog/watchdog_dev.c
-> +++ b/drivers/watchdog/watchdog_dev.c
-> @@ -452,7 +452,27 @@ static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
->   
->   	return sprintf(buf, "%d\n", !!test_bit(WDOG_NO_WAY_OUT, &wdd->status));
->   }
-> -static DEVICE_ATTR_RO(nowayout);
-> +
-> +static ssize_t nowayout_store(struct device *dev, struct device_attribute *attr,
-> +				const char *buf, size_t len)
-> +{
-> +	struct watchdog_device *wdd = dev_get_drvdata(dev);
-> +	unsigned int value, current;
-> +	int ret;
-> +
-> +	ret = kstrtouint(buf, 0, &value);
-> +	if (ret)
-> +		return ret;
-> +	if (value > 1)
-> +		return -EINVAL;
-> +	current = !!test_bit(WDOG_NO_WAY_OUT, &wdd->status);
+--Sig_/fD6AAWwQM+5dF0afKAc.40g
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-"!!" on test_bit is unnecessary, and assigning the result to an unsigned int
-doesn't really make sense. Might as well drop the variable and use test_bit
-in the expression below directly.
+Hi Andrew,
 
-Guenter
+On Tue, 5 Nov 2019 14:50:54 +0100 Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Nov 05, 2019 at 07:53:41PM +1100, Stephen Rothwell wrote:
+> >=20
+> > After merging the net-next tree, today's linux-next build (powepc
+> > ppc44x_defconfig) failed like this:
+> >=20
+> >=20
 
-> +	/* nowayout cannot be disabled once set */
-> +	if (current && !value)
-> +		return -EPERM;
-> +	watchdog_set_nowayout(wdd, value);
-> +	return len;
-> +}
-> +static DEVICE_ATTR_RW(nowayout);
->   
->   static ssize_t status_show(struct device *dev, struct device_attribute *attr,
->   				char *buf)
-> 
+Sorry about leaving the error out :-(
 
+> > Caused by commit
+> >=20
+> >   0c65b2b90d13 ("net: of_get_phy_mode: Change API to solve int/unit war=
+nings")
+> >=20
+> > I applied the following patch, but there is probably a nicer and more
+> > complete way to fix this. =20
+>=20
+> I just received the 0-day about this. I did not know David had merged
+> it!
+>=20
+> What you have works. So:
+>=20
+> Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+>=20
+> The nicer way is a bit bigger. Is this too big to go in via you?
+> Should i submit it via netdev, and you can drop your fix once this
+> arrives?
+
+via Dave, thanks.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/fD6AAWwQM+5dF0afKAc.40g
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3BhbsACgkQAVBC80lX
+0GwF7wf+NyXeqLnnor8kxF9m3WHuOzQzyTVxUgi8CrgYF+WYmt9rbuCzG6HyfM0P
+/T/xTaTigKc+j9d6Nv9KoXF03Mvm7/zmEnhi5c1SsCbecmozveeoxdbPNuNkq7yt
+nFKsIdR3rd6xaj0YfJQgDpYzYmG/wfjwWwXGq5EVg/2CJxrMpyjMuppBcSVxLSQx
+P6JTkfPEH2pD5fuibkexox40ubqiX0U6ugUL+7MUXWvbCxy9swtkhbTGJucNZuwD
+rs9mo7l/BdZnupEpLnydyjiQPcGXuD7btBzNTKOpEdELuOp2/gmdAQSVweYGpP90
+esvYwCjoIaOjXoEPtSfENYWOhHIqvQ==
+=63Z1
+-----END PGP SIGNATURE-----
+
+--Sig_/fD6AAWwQM+5dF0afKAc.40g--
