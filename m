@@ -2,137 +2,120 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40A79C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 256F3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:37:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15085217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572968125;
-	bh=Cbfu3/n7gIxvq4upIXJWRu4k+r0dK46FEC6wlFd+xTQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dBjlS03TvGSLyaiXbptBpQmfqaWi+gkgYL7L3JpGqdwTXWjoGg3BdalaE+LaHRjZb
-	 xQbhAdNyHDzN5Bh78Z2Bo7gE86EFMy1DW0Alx0vKUrnohdPGe58waj0vAjFbTMO+v6
-	 s9/xQASFY1rXQFRxCeyuPJaPXJEQY4iHSPCi0P+E=
+	by mail.kernel.org (Postfix) with ESMTP id EBA302087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:37:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pJ6QMDVG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389870AbfKEPfY (ORCPT
+        id S2389786AbfKEPhR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:35:24 -0500
-Received: from mail.kernel.org ([198.145.29.99]:45910 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389359AbfKEPfX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:35:23 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73B4B2087E;
-        Tue,  5 Nov 2019 15:35:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572968122;
-        bh=Cbfu3/n7gIxvq4upIXJWRu4k+r0dK46FEC6wlFd+xTQ=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uDGbHOJtbbPko/WrESWxDR7Kk2ZYDJyp8QDmRxfcw7JYrte92PPXyiRCURS9oOoAs
-         UD2slh/B6oZatxV50V538Z2qOi1YsHIjESlcOSY5or2DIPEXmiRy04irh/RLAnykpF
-         PuGMJ27rcsBKo+4amwx4pUlKieFQMdbBYfQUXnGE=
-Date:   Tue, 5 Nov 2019 16:35:16 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Alexander Potapenko <glider@google.com>
-Cc:     =?iso-8859-1?Q?Bj=F8rn?= Mork <bjorn@mork.no>,
-        Oliver Neukum <oneukum@suse.com>,
-        syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>,
-        David Miller <davem@davemloft.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        USB list <linux-usb@vger.kernel.org>,
-        Networking <netdev@vger.kernel.org>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
-Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
-Message-ID: <20191105153516.GA2617867@kroah.com>
-References: <00000000000013c4c1059625a655@google.com>
- <87ftj32v6y.fsf@miraculix.mork.no>
- <1572952516.2921.6.camel@suse.com>
- <875zjy33z2.fsf@miraculix.mork.no>
- <CAG_fn=XXGX5U9oJ2bJDHCwVcp8M+rGDvFDTt4kWFiyWoqL8vAA@mail.gmail.com>
+        Tue, 5 Nov 2019 10:37:17 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:46359 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfKEPhR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:37:17 -0500
+Received: by mail-qt1-f193.google.com with SMTP id u22so29906654qtq.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:37:16 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Aa04Qw0VXYDK6FtYWg/olB/CrPBzG1i0OxKRqVmlQBk=;
+        b=pJ6QMDVG+oeVr6f2YHkDXCHX2KwLgyAE7pfxX/B3jY9qUepayFAcNzIgeN9UrhEbDg
+         S3N4UW5Dgkz2CodOWMtsm0JREkge1fDN3ZHCcNID+1pIxqmt8XGq2efBfX5CbJlMEUpN
+         zmSgF5Yiv10jUr9VfNvZLeiziJ0fDuzgOCHbiZCbcBEJuqd6lAWwco5w8OKU3AbbqpY9
+         F+rL0u6E2drtCdXYkY19YvMMOopLR3UyGMnd7CvO6kALuAGASkIm3FwbkdjJ9MK23Cdt
+         TV/BUPHSxFxUNOI2s3jOngTlBfWB/VyO0Psu7hv8yhDBnhuZudTbh6J7AfWQbmqGos5S
+         84BQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Aa04Qw0VXYDK6FtYWg/olB/CrPBzG1i0OxKRqVmlQBk=;
+        b=NHna2djpIIOAne8rdPXZjjy1oFfMQW+vD+vKhtTjrKaERnf06aTCjt2o6Sx4TNN8KM
+         z5+CqZkIC9ZF9iI0jWPOxPJonRYQMFGo//rdngT2veNxw1hPnnZAj0h32PlZxfLGdkDU
+         Pe85F0YaawD1EQZMk4/vVmilwHlRONfo3+8myVnb7rUfj8/P35vNje6ImF1cs9xkS/AF
+         t1plbblnt9iV6JLejjVJxeDzDbCZymb7ccuiOMVsHTQcn7rImnCDYzNcWeYlAwIlWhB5
+         re5PRrLTKcnRQ5/hLmGUhTHRjHXFPYekF7PqspwE2kXz0ycI+HNaQFUGOiMtrma5KZdw
+         +SEw==
+X-Gm-Message-State: APjAAAVG2V6obuDz8gXhKcpOZASaVq2LGu2zqUR6FnxgqvFGcSCqazqU
+        mYpztE8I/21jgNoFht5iBy4=
+X-Google-Smtp-Source: APXvYqzr3jAxOeV5J4ky5mzPGwAnKgMhHmYKp3uSDFVFFAUB1IbPxIUKObCUNI5m10gv6OHurJN00A==
+X-Received: by 2002:a0c:c392:: with SMTP id o18mr27031115qvi.75.1572968236127;
+        Tue, 05 Nov 2019 07:37:16 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id q8sm14263890qta.31.2019.11.05.07.37.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 07:37:14 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 3084C40B1D; Tue,  5 Nov 2019 12:37:12 -0300 (-03)
+Date:   Tue, 5 Nov 2019 12:37:12 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCHv2 0/3] perf stat: Add --per-node option
+Message-ID: <20191105153712.GE4218@kernel.org>
+References: <20190904073415.723-1-jolsa@kernel.org>
+ <20191105130354.GE29390@krava>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <CAG_fn=XXGX5U9oJ2bJDHCwVcp8M+rGDvFDTt4kWFiyWoqL8vAA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191105130354.GE29390@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:55:09PM +0100, Alexander Potapenko wrote:
-> + Greg K-H
-> On Tue, Nov 5, 2019 at 1:25 PM Bjørn Mork <bjorn@mork.no> wrote:
-> >
-> > Oliver Neukum <oneukum@suse.com> writes:
-> > > Am Montag, den 04.11.2019, 22:22 +0100 schrieb Bjørn Mork:
-> > >> This looks like a false positive to me. max_datagram_size is two bytes
-> > >> declared as
-> > >>
-> > >>         __le16 max_datagram_size;
-> > >>
-> > >> and the code leading up to the access on drivers/net/usb/cdc_ncm.c:587
-> > >> is:
-> > >>
-> > >>         /* read current mtu value from device */
-> > >>         err = usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
-> > >>                               USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_INTERFACE,
-> > >>                               0, iface_no, &max_datagram_size, 2);
-> > >
-> > > At this point err can be 1.
-> > >
-> > >>         if (err < 0) {
-> > >>                 dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n");
-> > >>                 goto out;
-> > >>         }
-> > >>
-> > >>         if (le16_to_cpu(max_datagram_size) == ctx->max_datagram_size)
-> > >>
-> > >>
-> > >>
-> > >> AFAICS, there is no way max_datagram_size can be uninitialized here.
-> > >> usbnet_read_cmd() either read 2 bytes into it or returned an error,
-> > >
-> > > No. usbnet_read_cmd() will return the number of bytes transfered up
-> > > to the number requested or an error.
-> >
-> > Ah, OK. So that could be fixed with e.g.
-> >
-> >   if (err < 2)
-> >        goto out;
-> It'd better be (err < sizeof(max_datagram_size)), and probably in the
-> call to usbnet_read_cmd() as well.
-> >
-> > Or would it be better to add a strict length checking variant of this
-> > API?  There are probably lots of similar cases where we expect a
-> > multibyte value and a short read is (or should be) considered an error.
-> > I can't imagine any situation where we want a 2, 4, 6 or 8 byte value
-> > and expect a flexible length returned.
-> This is really a widespread problem on syzbot: a lot of USB devices
-> use similar code calling usb_control_msg() to read from the device and
-> not checking that the buffer is fully initialized.
+Em Tue, Nov 05, 2019 at 02:03:54PM +0100, Jiri Olsa escreveu:
+> On Wed, Sep 04, 2019 at 09:34:12AM +0200, Jiri Olsa wrote:
+> > hi,
+> > adding --per-node option to aggregate stats per NUMA nodes,
+> > you can get now use stat command like:
+> >     
+> >   # perf stat  -a -I 1000 -e cycles --per-node
+> >   #           time node   cpus             counts unit events
+> >        1.000542550 N0       20          6,202,097      cycles
+> >        1.000542550 N1       20            639,559      cycles
+> >        2.002040063 N0       20          7,412,495      cycles
+> >        2.002040063 N1       20          2,185,577      cycles
+> >        3.003451699 N0       20          6,508,917      cycles
+> >        3.003451699 N1       20            765,607      cycles
+> >   ...
+> > 
+> > v2 changes:
+> >   - use mallox instead of zalloc plus adding comment [Arnaldo]
+> >   - rename --per-numa to --per-node [Alexey]
+> >   - rename function names to have node instead of numa
+> > 
+> > Available also in:
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+> >   perf/fixes
 > 
-> Greg, do you know how often usb_control_msg() is expected to read less
-> than |size| bytes? Is it viable to make it return an error if this
-> happens?
-> Almost nobody is using this function correctly (i.e. checking that it
-> has read the whole buffer before accessing it).
+> I forgot about this one ;-) rebased the latest perf/core
+> and pushed out..
 
-It could return less than size if the endpoint size isn't the same as
-the message.  I think.  It's been a long time since I've read the USB
-spec in that area, but usually if the size is "short" then status should
-also be set saying something went wrong, right?  Ah wait, you are
-playing the "malicious device" card, I think we always just need to
-check the thing :(
+Thanks, applied.
 
-sorry,
-
-greg k-h
+- Arnaldo
