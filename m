@@ -6,80 +6,74 @@ X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BAD1C010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBBAC010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFDAA21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9001E21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388755AbfKEKce (ORCPT
+        id S2388786AbfKEKcl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:32:34 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:44576 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388703AbfKEKca (ORCPT
+        Tue, 5 Nov 2019 05:32:41 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35804 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388583AbfKEKcg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:32:30 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id 0ec36c7f3c6dcade; Tue, 5 Nov 2019 11:32:28 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: [PATCH 1/5] PCI: PM: Move power state update away from pci_power_up()
-Date:   Tue, 05 Nov 2019 11:13:43 +0100
-Message-ID: <37482337.udjOGdOKNb@kreacher>
-In-Reply-To: <2771503.n70vfTtcVb@kreacher>
-References: <2771503.n70vfTtcVb@kreacher>
+        Tue, 5 Nov 2019 05:32:36 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so17062281oig.2;
+        Tue, 05 Nov 2019 02:32:36 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=iyU7I3+wA8xz3yY7wIVDgPQ0SwWRU8/JQIMa0TOkIFM=;
+        b=iKkwpo8arvHoUNwenfLDirmdxnKJ0k4OTRYemjGcU71Y0s7SDmamgi9FFOrU/8sp8V
+         1MPiUMUQuz+Bg8PjHwVzAsPNxoGhLwl8IKcDkVQG4daCPrFwH0gETy8kj+tK4GztwzPY
+         CdoYsyb2PNZcc/ZWQPEZcLP4HGGllOZkKQ08+VXDUt/WlhxuJmt0wbpOz6gANy0+n7LK
+         OgBwpX+VUF+MHi4HZCQmF/2z1QbH/nBBqvrHRkI3c/GTMqFrfCLJPHHdD6R3tL5ylm9y
+         bnQ5l5aoH8wWj8IOJ49jKApDI8wo3UDuwghdhbgPq12vqwhfpY4dEJ5NyXMjtRXq2xIS
+         FnhA==
+X-Gm-Message-State: APjAAAUs4oOwr4vSbCb9v10w48r8WYz10uYXAf/8frTKyG5VTiPk5HYg
+        qa69DB10WxjJvOeuLJDr4dr5+iSrod836AXkdN0=
+X-Google-Smtp-Source: APXvYqzN8ejo/GmJx/Kagnb4mlYhDh6f20ux9hLD3rH2NISGRcux1+Go5dGCA5J/NiD1U86kKHKDxhdky26vJiekznM=
+X-Received: by 2002:aca:3a86:: with SMTP id h128mr3202765oia.131.1572949955929;
+ Tue, 05 Nov 2019 02:32:35 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+References: <cover.1572945879.git.matti.vaittinen@fi.rohmeurope.com> <05e85f2812eb4e6b92cdd9054ecba675d206db66.1572945879.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <05e85f2812eb4e6b92cdd9054ecba675d206db66.1572945879.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Geert Uytterhoeven <geert@linux-m68k.org>
+Date:   Tue, 5 Nov 2019 11:32:25 +0100
+Message-ID: <CAMuHMdU6Ws8exqQx9mL0RUAUzeMni7GHccaBo75JTKBqyqQCHA@mail.gmail.com>
+Subject: Re: [PATCH 35/62] gpio: gpio-rcar: Use new GPIO_LINE_DIRECTION
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     Matti Vaittinen <mazziesaccount@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+On Tue, Nov 5, 2019 at 11:29 AM Matti Vaittinen
+<matti.vaittinen@fi.rohmeurope.com> wrote:
+> It's hard for occasional GPIO code reader/writer to know if values 0/1
+> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> GPIO_LINE_DIRECTION_OUT to help them out.
+>
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
 
-Move the invocation of pci_update_current_state() from pci_power_up()
-to pci_pm_default_resume_early(), which is the only caller of that
-function.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Preparatory change, no functional impact.
+Gr{oetje,eeting}s,
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
- drivers/pci/pci-driver.c |    1 +
- drivers/pci/pci.c        |    1 -
- 2 files changed, 1 insertion(+), 1 deletion(-)
+                        Geert
 
-Index: linux-pm/drivers/pci/pci-driver.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci-driver.c
-+++ linux-pm/drivers/pci/pci-driver.c
-@@ -524,6 +524,7 @@ static int pci_restore_standard_config(s
- static void pci_pm_default_resume_early(struct pci_dev *pci_dev)
- {
- 	pci_power_up(pci_dev);
-+	pci_update_current_state(pci_dev, PCI_D0);
- 	pci_restore_state(pci_dev);
- 	pci_pme_restore(pci_dev);
- }
-Index: linux-pm/drivers/pci/pci.c
-===================================================================
---- linux-pm.orig/drivers/pci/pci.c
-+++ linux-pm/drivers/pci/pci.c
-@@ -1148,7 +1148,6 @@ void pci_power_up(struct pci_dev *dev)
- {
- 	__pci_start_power_transition(dev, PCI_D0);
- 	pci_raw_set_power_state(dev, PCI_D0);
--	pci_update_current_state(dev, PCI_D0);
- }
- 
- /**
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-
-
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
