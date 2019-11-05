@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47D7C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 22689C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1D421882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE89621882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:49:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="umHITE8R"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fy5bE7t9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390817AbfKESty (ORCPT
+        id S2390829AbfKESt4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:49:54 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:39611 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390804AbfKEStx (ORCPT
+        Tue, 5 Nov 2019 13:49:56 -0500
+Received: from mail-qk1-f194.google.com ([209.85.222.194]:38411 "EHLO
+        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390813AbfKESty (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:49:53 -0500
-Received: by mail-qk1-f195.google.com with SMTP id 15so22135530qkh.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 10:49:52 -0800 (PST)
+        Tue, 5 Nov 2019 13:49:54 -0500
+Received: by mail-qk1-f194.google.com with SMTP id e2so22138244qkn.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 10:49:53 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=006+GihIsoSJvx8BvSuuRbmJ7qmM9mq/EsT1uZpB9E8=;
-        b=umHITE8Rim3P3C0vmPd1bi4DZRx1zdTbqjCJvqS24wBoTsh8ON4lbclj7QoYR/LAXt
-         v81irwxh0cnz10y3uLwQ1f59uei8i1cknodeK+rMgBjswpicXC3nz77LMLSB14C0iObr
-         q7NBo8rxaVDqt3gi9FAeWlL8mZu2A1c19m9C3yDhNftBac5oeJNUf0Skpfg9Y0MO5iP1
-         f/NkI59MrPdaqfE193YlsGkC9NXaF0e7zO7YGBzhEI1UI3HqErcbcca8k2TjS9WkJRNp
-         Osy4rOGNuTSa8CqqR0cF1OkuCJfbgYtDwS6rdcp24yQjN6W+Lx29FHqqDNJcg4Xe/crU
-         MkhQ==
+        bh=CdRdyYtCwsA++AMEix7betRB8SrDMfU5EHHNK7KWNOQ=;
+        b=fy5bE7t9ATgU8+i9GK9xokBHTF6uuDjJlM/lV6EfNTFyMxa3Uq2ybhKNeWFBvr+Wah
+         7FDsjBEMqE2RhsL08x7wrmIeAVYlhp9MBctEW93FbdU2hPIvL27CMWE6Q5tjq1uwUPF+
+         REzgCZ1kmRLRxjB/z2Bn9HHYThkP5adqWMYfnakhGXSnzfl40swpthivf3y3cp+X6jIq
+         ffbMdRSUzIsLm0IYqCAr9aoa36mBtr9p+/lWWiLX6DjMCw6eRHcj+5dpnuDSONP2Lyhy
+         g6aICWCCkW1otiiQ4H4DyhnCaaHsDNOwND3HfFj/gLfymWcSBrt+BYfIwmSDdzkabY8H
+         AoNw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=006+GihIsoSJvx8BvSuuRbmJ7qmM9mq/EsT1uZpB9E8=;
-        b=scZ8O3heyI0TvstdZh+b8rLESMaG5m6YJxkZNJJalbmPnQih4XJawKt386PHU/HVNW
-         4ka9kBCEdOKzj7Vhz3skO4CvTegFegwf8O+oABUXuxvWGn/UmsMq476NziLUqv6n/aIL
-         bZr08/4NuFQrZGN2263BHlIp3ueiUystTI8W+qV3BIhCFi2I8/8sKIP2fh9DTtJnVgXd
-         MSgMR4cUGxeeiOQVsJ93Cq3fS+PWvTATd3Gs2FSqZCs8W1P9RwjFGG0dcPL9/mwjcWEQ
-         04nvnpLtfkM4WpwfyWnw//rWq6iSRjV3ysr1STUZ6hkEx8n9yB7Yy+DDEBhiym90GXGQ
-         snKQ==
-X-Gm-Message-State: APjAAAWoWDsCb9PkjYJNSUjTbqfqa6b1W7Nt5I8x3FJT8Eor1IqPUajq
-        I6MmNN8fJmN3ziUvH+549cVZ/g==
-X-Google-Smtp-Source: APXvYqzy7tSL4rE/XGvucih6zgnW//zxAm/Rm85JT3+KbCerAvlztDB2kJZAlHSjLhhBbdfE4XDumg==
-X-Received: by 2002:ae9:e109:: with SMTP id g9mr6485852qkm.50.1572979792141;
-        Tue, 05 Nov 2019 10:49:52 -0800 (PST)
+        bh=CdRdyYtCwsA++AMEix7betRB8SrDMfU5EHHNK7KWNOQ=;
+        b=DBBJCY78qYhUEDzd+4iTt9QMZc9re4Q42r/CJW5ppKnwKv1eEiIknI1Hl5gJAtP7lF
+         jxHgAcJfLqg1PwFtWqsKb0Mp1+3xOnlcHl4gHlVA2ec/avqpsDF9vTQJIfi5yqrBO0sF
+         296U+iRL9CfhKy3D+fM36Cv1zLgpEx3vK5pPZ0qdh7AglKheZWX6dW1+absg1tdU0YgQ
+         UJTMP6Kxi1vybxQVJb/bRo5WNCTQZPtZlsxMqKBxk8VCdTIGA9q+EH7v+YsDcnkMV2cV
+         vBUZIG21SwxCAaTXbsz2JhxnA8jFa3qXn2vJK/x6toW7XwawKbIl95S+NZuH4V0uKonM
+         eutw==
+X-Gm-Message-State: APjAAAU7SeRPmfowV2U94OQYeJ/RqhpFf52SFBdOdo0IFZgxzm5sOQxY
+        xI+O8RD00DV4cAt5iw1TcD3tPQ==
+X-Google-Smtp-Source: APXvYqwru4wXDG62DF3qjZ0KdLIchP3NC6xSP20Tev4TIEbgWuZCo9IiUwCNoULUKCCrHtug44uwBw==
+X-Received: by 2002:a37:6704:: with SMTP id b4mr22831264qkc.23.1572979793405;
+        Tue, 05 Nov 2019 10:49:53 -0800 (PST)
 Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id j7sm6832565qkd.46.2019.11.05.10.49.51
+        by smtp.googlemail.com with ESMTPSA id j7sm6832565qkd.46.2019.11.05.10.49.52
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 05 Nov 2019 10:49:51 -0800 (PST)
+        Tue, 05 Nov 2019 10:49:52 -0800 (PST)
 From:   Thara Gopinath <thara.gopinath@linaro.org>
 To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
         vincent.guittot@linaro.org, rui.zhang@intel.com,
         edubezval@gmail.com, qperret@google.com
 Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: [Patch v5 3/6] sched/fair: Enable periodic update of average thermal pressure
-Date:   Tue,  5 Nov 2019 13:49:43 -0500
-Message-Id: <1572979786-20361-4-git-send-email-thara.gopinath@linaro.org>
+Subject: [Patch v5 4/6] sched/fair: update cpu_capcity to reflect thermal pressure
+Date:   Tue,  5 Nov 2019 13:49:44 -0500
+Message-Id: <1572979786-20361-5-git-send-email-thara.gopinath@linaro.org>
 X-Mailer: git-send-email 2.1.4
 In-Reply-To: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
 References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
@@ -72,71 +72,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce support in CFS periodic tick and other bookkeeping apis
-to trigger the process of computing average thermal pressure for a
-cpu. Also consider avg_thermal.load_avg in others_have_blocked
-which allows for decay of pelt signals.
+cpu_capacity relflects the maximum available capacity of a cpu. Thermal
+pressure on a cpu means this maximum available capacity is reduced. This
+patch reduces the average thermal pressure for a cpu from its maximum
+available capacity so that cpu_capacity reflects the actual
+available capacity.
+
+Other signals that are deducted from cpu_capacity to reflect the actual
+capacity available are rt and dl util_avg. util_avg tracks a binary signal
+and uses the weights 1024 and 0. Whereas thermal pressure is tracked
+using load_avg. load_avg uses the actual "delta" capacity as the weight.
 
 Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 ---
-
-v4->v5:
-	- Updated both versions of update_blocked_averages to trigger the
-	  process of computing average thermal pressure.
-	- Updated others_have_blocked to considerd avg_thermal.load_avg.
-
- kernel/sched/fair.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ kernel/sched/fair.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 2e907cc..9fb0494 100644
+index 9fb0494..5f6c371 100644
 --- a/kernel/sched/fair.c
 +++ b/kernel/sched/fair.c
-@@ -92,6 +92,8 @@ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
-  */
- static DEFINE_PER_CPU(unsigned long, thermal_pressure);
+@@ -7738,6 +7738,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
  
-+static void trigger_thermal_pressure_average(struct rq *rq);
-+
- #ifdef CONFIG_SMP
- /*
-  * For asym packing, by default the lower numbered CPU has higher priority.
-@@ -7493,6 +7495,9 @@ static inline bool others_have_blocked(struct rq *rq)
- 	if (READ_ONCE(rq->avg_dl.util_avg))
- 		return true;
+ 	used = READ_ONCE(rq->avg_rt.util_avg);
+ 	used += READ_ONCE(rq->avg_dl.util_avg);
++	used += READ_ONCE(rq->avg_thermal.load_avg);
  
-+	if (READ_ONCE(rq->avg_thermal.load_avg))
-+		return true;
-+
- #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
- 	if (READ_ONCE(rq->avg_irq.util_avg))
- 		return true;
-@@ -7580,6 +7585,8 @@ static void update_blocked_averages(int cpu)
- 		done = false;
- 
- 	update_blocked_load_status(rq, !done);
-+
-+	trigger_thermal_pressure_average(rq);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
-@@ -7646,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
- 	update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
- 	update_irq_load_avg(rq, 0);
- 	update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-+	trigger_thermal_pressure_average(rq);
- 	rq_unlock_irqrestore(rq, &rf);
- }
- 
-@@ -9939,6 +9947,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
- 
- 	update_misfit_status(curr, rq);
- 	update_overutilized_status(task_rq(curr));
-+
-+	trigger_thermal_pressure_average(rq);
- }
- 
- /*
+ 	if (unlikely(used >= max))
+ 		return 1;
 -- 
 2.1.4
 
