@@ -2,147 +2,261 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 036AAC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:51:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C4C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:52:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B91E621A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:51:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="VsXcQfps"
+	by mail.kernel.org (Postfix) with ESMTP id 9840121A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:52:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572987153;
+	bh=Yh+Y7Ijqh/erqhoKp2ejRASB2j9+otCY3+pNbZl6n4Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=0YwiXzxgRFG/mNqVUUioRbooF60ZeA05Q8h3ajEcK2CaW6iw8eKC3yfxn7yKoEUi+
+	 7kr3l8aKnsWJ58WDAxi3hnySCL1tnDgf0LxWypjUbWOXD/cTfx95n2aeBVl6O8Asln
+	 8y97jxgqjcK0dE/6DqU8x8AJhWjxHBxVdMOPgTSo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbfKEUvZ (ORCPT
+        id S1729822AbfKEUwc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:51:25 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51502 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEUvZ (ORCPT
+        Tue, 5 Nov 2019 15:52:32 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33417 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEUwb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:51:25 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q70so908872wme.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:51:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=86+b3nLS9bc8VDStO93HdimlizslTYlGrlQhHJTbrT4=;
-        b=VsXcQfpstDMDBiO/7BvB/yl0oN780/GG/FJehxFtBv77wAHaYRFX8xW5lDSq2WHLlS
-         8RF/ARYHZfN5KAqvNgA91kSpzufz7c/zI/5GhNR34FdUiNTmFDlOvRAxt/jEz7Xc18fQ
-         F3+4wE6qJOQtYYHS6cz5on9mOT+NI+HGGhjDI=
+        Tue, 5 Nov 2019 15:52:31 -0500
+Received: by mail-oi1-f193.google.com with SMTP id m193so18901615oig.0;
+        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=86+b3nLS9bc8VDStO93HdimlizslTYlGrlQhHJTbrT4=;
-        b=Psc6cwvBehT6QCh96zkjX/UgqVsiYHWL72vfH0uuuK71yOFDZgOQ2e6kX6EQMQY0tj
-         Vv0NkXYvx8o3qTXUz9iCfW+Rd7rvS7AIMQSuYZnH4ClyPLX89t6TQB0PFvvZvuBOqFOK
-         Cxo60Y/t4J25d4OkoAvGYaclLNPZxdJOIdTnRuUxbx9G57mqQQwsxrKpZ8hbYZt3Hpup
-         tE/3DqxxXZOtFCJG18PnUN289i1cp7U9uQUNBVqg9VWRkh1BxxbiRR+5IRGjyupY+knw
-         HrE7CmvjWQymM8sZBv3tS8pkwSyICmLPX2pFiPt+dxZoi3R68Hu6VbxaBm8M3SHJF6Y0
-         vqPQ==
-X-Gm-Message-State: APjAAAUnVyruqAO5XvmqYxUg/iJrfZXssKHiWsmLIPIvdaxaf3+ly7Ij
-        QlATeWfqNVnK2nWhwoRZITCGFA==
-X-Google-Smtp-Source: APXvYqygaILxJIOrGAvvSOaxQJT6uuJyMfYoMplcREbHs8U18/qyRi5rEm0JQSsunlDySZ4b2tLKTQ==
-X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr797441wmg.93.1572987082645;
-        Tue, 05 Nov 2019 12:51:22 -0800 (PST)
-Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
-        by smtp.gmail.com with ESMTPSA id 4sm690226wmd.33.2019.11.05.12.51.21
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=/XIB9kBX8rgCqucb9RY+pGi1vrT74BwyH3QkaAjqeZI=;
+        b=sU8J6WEKTeOUi/7uzPBqqod/e15bObVKBzjM3DmmbRt2DSDY8DWUycW+z0japOkKVM
+         o8WBDCuDOjBwzHYC/Jh7KXTdDU8uGnvlNEo23t1OERv/D2rGbenWj+NAavqAobfJcAzB
+         BuJYJqcb0R52C2LaFfTuoiJsm9/Oikovv2WHHZ71WQHBkk07G7hJVuWXx6rllf+g4YU9
+         upAbO7F/ky84yBE2QnFiCzpiS0Nq9rI4DPcyH4ncKy2VQRK5N3A7U5+ezuDQFPdHICj5
+         LCaULAyPWzGG8pscO4+btjiaAjsnoNPLVktrU0WXWomfs02XrdqTPtf6QrDeXTcYFZP9
+         mDHA==
+X-Gm-Message-State: APjAAAWUPG5ply+1qvbBq3+pfvXpENKWT8Xwe/lwLRze7GfxRHAqaodE
+        Qt+IDnvRyHFTomOe6b2FGg==
+X-Google-Smtp-Source: APXvYqziVaKnSp1xfCY+f3pe1zGb9MsRO7KRl9lFwrGYmuJyVtsFZKoZqvFpq4JGdrLoT+WF5ro1Sw==
+X-Received: by 2002:aca:4d8d:: with SMTP id a135mr895431oib.1.1572987150187;
+        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id z6sm6504247otb.66.2019.11.05.12.52.29
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:51:21 -0800 (PST)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH v2] watchdog: make nowayout sysfs file writable
-Date:   Tue,  5 Nov 2019 21:51:18 +0100
-Message-Id: <20191105205118.11359-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
-References: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
+        Tue, 05 Nov 2019 12:52:29 -0800 (PST)
+Date:   Tue, 5 Nov 2019 14:52:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
+Subject: Re: [RFC PATCH v3 03/15] dt-bindings: regulator: Document ROHM
+ BD71282 regulator bindings
+Message-ID: <20191105205228.GB629@bogus>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+ <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be useful to delay setting the nowayout feature for a watchdog
-device. Moreover, not every driver (notably gpio_wdt) implements a
-nowayout module parameter/otherwise respects CONFIG_WATCHDOG_NOWAYOUT,
-and modifying those drivers carries a risk of causing a regression for
-someone who has two watchdog devices, sets CONFIG_WATCHDOG_NOWAYOUT
-and somehow relies on the gpio_wdt driver being ignorant of
-that (i.e., allowing one to gracefully close a gpio_wdt but not the
-other watchdog in the system).
+On Fri, Nov 01, 2019 at 01:31:46PM +0200, Matti Vaittinen wrote:
+> Document ROHM BD71828 PMIC regulator device tree bindings.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+> 
+> Changes from v2 - my first encounter with yaml :/
+> 
+>  .../regulator/rohm,bd71828-regulator.yaml     | 123 ++++++++++++++++++
+>  1 file changed, 123 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+> new file mode 100644
+> index 000000000000..60715d8b92df
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
+> @@ -0,0 +1,123 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: ROHM BD71828 Power Management Integrated Circuit regulators
+> +
+> +maintainers:
+> +  - Liam Girdwood <lgirdwood@gmail.com>
+> +  - Mark Brown <broonie@kernel.org>
+> +  - Rob Herring <robh+dt@kernel.org>
+> +  - Mark Rutland <mark.rutland@arm.com>
+> +
+> +description: |
+> +  This module is part of the ROHM BD71828 MFD device. For more details
+> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
+> +
+> +  The regulator controller is represented as a sub-node of the PMIC node
+> +  on the device tree.
+> +
+> +  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
+> +  The valid names for BD71828 regulator nodes are
+> +  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
+> +  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
+> +
+> +patternProperties:
+> +  "^LDO[1-7]$":
+> +    type: object
+> +    allOf:
+> +      - $ref: regulator.yaml#
+> +    description:
+> +      Properties for single LDO regulator.
+> +
+> +    properties:
+> +      #Is there a nice way to check the name is same as node name but lower case
 
-So instead, simply make the nowayout sysfs file writable. Obviously,
-setting nowayout is a one-way street.
+Well, lowercase nodenames are preferred... But still, no, there's not.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
-v2: drop redundant "current" variable and !!.
+And I think you could just drop this and the nodename is used instead.
 
- .../ABI/testing/sysfs-class-watchdog          |  9 ++++++--
- drivers/watchdog/watchdog_dev.c               | 21 ++++++++++++++++++-
- 2 files changed, 27 insertions(+), 3 deletions(-)
+> +      regulator-name:
+> +        description:
+> +          should be "ldo1", ..., "ldo7"
 
-diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-index 675f9b537661..9860a8b2ba75 100644
---- a/Documentation/ABI/testing/sysfs-class-watchdog
-+++ b/Documentation/ABI/testing/sysfs-class-watchdog
-@@ -17,8 +17,13 @@ What:		/sys/class/watchdog/watchdogn/nowayout
- Date:		August 2015
- Contact:	Wim Van Sebroeck <wim@iguana.be>
- Description:
--		It is a read only file. While reading, it gives '1' if that
--		device supports nowayout feature else, it gives '0'.
-+		It is a read/write file. While reading, it gives '1'
-+		if the device has the nowayout feature set, otherwise
-+		it gives '0'. Writing a '1' to the file enables the
-+		nowayout feature. Once set, the nowayout feature
-+		cannot be disabled, so writing a '0' either has no
-+		effect (if the feature was already disabled) or
-+		results in a permission error.
- 
- What:		/sys/class/watchdog/watchdogn/state
- Date:		August 2015
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index dbd2ad4c9294..d3bdcb144657 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -452,7 +452,26 @@ static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
- 
- 	return sprintf(buf, "%d\n", !!test_bit(WDOG_NO_WAY_OUT, &wdd->status));
- }
--static DEVICE_ATTR_RO(nowayout);
-+
-+static ssize_t nowayout_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	struct watchdog_device *wdd = dev_get_drvdata(dev);
-+	unsigned int value;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &value);
-+	if (ret)
-+		return ret;
-+	if (value > 1)
-+		return -EINVAL;
-+	/* nowayout cannot be disabled once set */
-+	if (test_bit(WDOG_NO_WAY_OUT, &wdd->status) && !value)
-+		return -EPERM;
-+	watchdog_set_nowayout(wdd, value);
-+	return len;
-+}
-+static DEVICE_ATTR_RW(nowayout);
- 
- static ssize_t status_show(struct device *dev, struct device_attribute *attr,
- 				char *buf)
--- 
-2.23.0
+You can at least do:
 
+pattern: "^ldo[1-7]$"
+
+
+> +
+> +  "^BUCK[1-7]$":
+> +    type: object
+> +    allOf:
+> +      - $ref: regulator.yaml#
+> +    description:
+> +      Properties for single BUCK regulator.
+> +
+> +    properties:
+> +      #Is there a nice way to check the name is same as node name but lower case
+> +      regulator-name:
+> +        description:
+> +          should be "buck1", ..., "buck7"
+> +
+> +      rohm,dvs-run-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          PMIC default "RUN" state voltage in uV. See below table for
+> +          bucks which support this.
+
+Use standard unit-suffixes on all these (-microvolt). And then drop the 
+$ref.
+
+Any constraints on the range?
+
+> +
+> +      rohm,dvs-idle-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          PMIC default "IDLE" state voltage in uV. See below table for
+> +          bucks which support this.
+> +
+> +      rohm,dvs-suspend-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          PMIC default "SUSPEND" state voltage in uV. See below table for
+> +          bucks which support this.
+> +
+> +      rohm,dvs-lpsr-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          PMIC default "LPSR" state voltage in uV. See below table for
+> +          bucks which support this.
+> +
+> +#Supported default DVS states:
+> +#buck		| run		| idle		| suspend	| lpsr
+> +#----------------------------------------------------------------------------
+> +#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
+> +#----------------------------------------------------------------------------
+> +#3, 4, and 5	| 			supported (**)
+> +#----------------------------------------------------------------------------
+> +#(*)  LPSR and SUSPEND states use same voltage but both states have own enable /
+> +#     disable settings. Voltage 0 can be specified for a state to make regulator
+> +#     disabled on that state.
+> +#(**) All states use same voltage but have own enable / disable settings.
+> +#     Voltage 0 can be specified for a state to make regulator disabled on that
+> +#     state.
+> +
+> +      rohm,dvs-runlvl-ctrl:
+> +        description: |
+> +          buck control is done based on run-level. Regulator is not
+> +          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml for
+> +          how to specify run-level control mechanism. Only bucks 1, 2, 6
+> +          and 7 support this.
+> +        type: boolean
+> +
+> +      rohm,dvs-runlevel0-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          voltage for run-level 0. Microvolts.
+> +
+> +      rohm,dvs-runlevel1-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          voltage for run-level 1. Microvolts.
+> +
+> +      rohm,dvs-runlevel2-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          voltage for run-level 2. Microvolts.
+> +
+> +      rohm,dvs-runlevel3-voltage:
+> +        $ref: "/schemas/types.yaml#/definitions/uint32"
+> +        description:
+> +          voltage for run-level 3. Microvolts.
+
+Perhaps an array of 4 values for runlevel?
+
+> +
+> +    required:
+> +      - regulator-name
+> +  additionalProperties: false
+> +additionalProperties: false
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+> 
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =] 
