@@ -2,164 +2,183 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45080CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E8DCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:32:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07D6921928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:32:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ziepe.ca header.i=@ziepe.ca header.b="RrEUUprS"
+	by mail.kernel.org (Postfix) with ESMTP id 456C720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:32:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730446AbfKECcj (ORCPT
+        id S1730469AbfKECcp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:32:39 -0500
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:39103 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbfKECci (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:32:38 -0500
-Received: by mail-qt1-f195.google.com with SMTP id t8so27235309qtc.6
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 18:32:37 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ziepe.ca; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=4urm9i82HUz7ctZoqeaJ+eDwbY+Le9I8/NmP0pY1rnA=;
-        b=RrEUUprScGGCs1P3lOuGj4a5RoiWbVbfDZ4+HpgRvyTXCYVlJAXQB+MYamRZtedVHY
-         f5+sxNxk2K5wkp7PjMMeD8HJWFAJHo3RtLYXlCrUl00LuH1GNIO+43+qB9VoRPGoMtd2
-         MhxxJSrVmcyNdw2dcAOft+ieDHmjkqcbx3xo51HlgztpG3sVxpkHZVlG9m+fgORfqdhb
-         XySrfwIPRDIjnSUQNZ9F7DSfvHrKSEQZxN/D+pZKoiFoN1H+0mMnDQ/zYc1NegbKO5Qw
-         fR/889wgnwS9AagFL4h4X1w9N0H+8w+Cg8HTo2zBy3ABWuxHxMoo0KJgJWvcNzShW5B1
-         QLlQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=4urm9i82HUz7ctZoqeaJ+eDwbY+Le9I8/NmP0pY1rnA=;
-        b=qfMkUSNuamIBNl5egcsazeXOb4to5KUr4uHZ+KEJcCgX7U2LiJAOWmPwNyd+BnYvtA
-         0K4KFYgsHhWA1oJZm3ICYusNcJ/99DR2JEcCaYtfR+K3KUecb36aEn/P0vMNMl4j2Aeh
-         j8HHETymdI5fcnFRPoYxHhzuZDuTeMpcTL99RUhbGKQ7Is6wTtP5huzvmmND9EbjBC9j
-         voSHSu/cy1m25zCXjJVaDW+WUbqM4AKpF2R+oGKQqtxnb1INRc4kMuZzZI2YvJfRc4In
-         zSg7GNvDKLsHnGsyb0e0r+of/2LxFe/wb5E71tW7nEoBxjjloUB0CyBr7lhtrN8rnTlk
-         +ijA==
-X-Gm-Message-State: APjAAAWLrRKE3/HBMD/0TAx7nRy0bhjjnnnwdBkFV68Q3c2nM4zCAOxX
-        nNNJoDYKfZtAkLhW5VDQbrsNlA==
-X-Google-Smtp-Source: APXvYqzymmufBg1PiSWGxkk4f7LXgsvyOrzTuuRBB+uFmwh9UO+iQP682ubsI0h94l7eDVroneUqZg==
-X-Received: by 2002:a0c:9838:: with SMTP id c53mr25556531qvd.250.1572921156814;
-        Mon, 04 Nov 2019 18:32:36 -0800 (PST)
-Received: from ziepe.ca (hlfxns017vw-142-162-113-180.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.162.113.180])
-        by smtp.gmail.com with ESMTPSA id t65sm8907102qkh.23.2019.11.04.18.32.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 04 Nov 2019 18:32:36 -0800 (PST)
-Received: from jgg by mlx.ziepe.ca with local (Exim 4.90_1)
-        (envelope-from <jgg@ziepe.ca>)
-        id 1iRoe3-0002uH-K9; Mon, 04 Nov 2019 22:32:35 -0400
-Date:   Mon, 4 Nov 2019 22:32:35 -0400
-From:   Jason Gunthorpe <jgg@ziepe.ca>
-To:     John Hubbard <jhubbard@nvidia.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        =?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Dave Chinner <david@fromorbit.com>,
-        David Airlie <airlied@linux.ie>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
-        Jens Axboe <axboe@kernel.dk>, Jonathan Corbet <corbet@lwn.net>,
-        =?utf-8?B?SsOpcsO0bWU=?= Glisse <jglisse@redhat.com>,
-        Magnus Karlsson <magnus.karlsson@intel.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Michal Hocko <mhocko@suse.com>,
-        Mike Kravetz <mike.kravetz@oracle.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Shuah Khan <shuah@kernel.org>,
-        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
-        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v2 07/18] infiniband: set FOLL_PIN, FOLL_LONGTERM via
- pin_longterm_pages*()
-Message-ID: <20191105023235.GA11093@ziepe.ca>
-References: <20191103211813.213227-1-jhubbard@nvidia.com>
- <20191103211813.213227-8-jhubbard@nvidia.com>
- <20191104203346.GF30938@ziepe.ca>
- <578c1760-7221-4961-9f7d-c07c22e5c259@nvidia.com>
- <20191104205738.GH30938@ziepe.ca>
- <1560fa00-0c2b-0f3b-091c-d628f021ce09@nvidia.com>
+        Mon, 4 Nov 2019 21:32:45 -0500
+Received: from fieldses.org ([173.255.197.46]:60368 "EHLO fieldses.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729830AbfKECco (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:32:44 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 993A81C19; Mon,  4 Nov 2019 21:32:43 -0500 (EST)
+Date:   Mon, 4 Nov 2019 21:32:43 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     Bhaskar Chowdhury <unixbhaskar@gmail.com>,
+        yamada.masahiro@socionext.com, michal.lkml@markovi.net,
+        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191105023243.GA16635@fieldses.org>
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+ <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1560fa00-0c2b-0f3b-091c-d628f021ce09@nvidia.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 02:03:43PM -0800, John Hubbard wrote:
-> On 11/4/19 12:57 PM, Jason Gunthorpe wrote:
-> > On Mon, Nov 04, 2019 at 12:48:13PM -0800, John Hubbard wrote:
-> >> On 11/4/19 12:33 PM, Jason Gunthorpe wrote:
-> >> ...
-> >>>> diff --git a/drivers/infiniband/core/umem.c b/drivers/infiniband/core/umem.c
-> >>>> index 24244a2f68cc..c5a78d3e674b 100644
-> >>>> +++ b/drivers/infiniband/core/umem.c
-> >>>> @@ -272,11 +272,10 @@ struct ib_umem *ib_umem_get(struct ib_udata *udata, unsigned long addr,
-> >>>>  
-> >>>>  	while (npages) {
-> >>>>  		down_read(&mm->mmap_sem);
-> >>>> -		ret = get_user_pages(cur_base,
-> >>>> +		ret = pin_longterm_pages(cur_base,
-> >>>>  				     min_t(unsigned long, npages,
-> >>>>  					   PAGE_SIZE / sizeof (struct page *)),
-> >>>> -				     gup_flags | FOLL_LONGTERM,
-> >>>> -				     page_list, NULL);
-> >>>> +				     gup_flags, page_list, NULL);
-> >>>
-> >>> FWIW, this one should be converted to fast as well, I think we finally
-> >>> got rid of all the blockers for that?
-> >>>
-> >>
-> >> I'm not aware of any blockers on the gup.c end, anyway. The only broken thing we
-> >> have there is "gup remote + FOLL_LONGTERM". But we can do "gup fast + LONGTERM". 
+On Mon, Nov 04, 2019 at 06:03:13PM -0800, Randy Dunlap wrote:
+> On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
+> > This patch allow you to remove old kernels and associated modules
+> > directory from the system.You can do it at once with the -r flag
+> > and interactively with the -i flag.
 > > 
-> > I mean the use of the mmap_sem here is finally in a way where we can
-> > just delete the mmap_sem and use _fast
-> >  
-> > ie, AFAIK there is no need for the mmap_sem to be held during
-> > ib_umem_add_sg_table()
-> > 
-> > This should probably be a standalone patch however
-> > 
+> > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> > ---
+> >  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+> >  1 file changed, 65 insertions(+), 17 deletions(-)
 > 
-> Yes. Oh, actually I guess the patch flow should be: change to 
-> get_user_pages_fast() and remove the mmap_sem calls, as one patch. And then change 
-> to pin_longterm_pages_fast() as the next patch. Otherwise, the internal fallback
-> from _fast to slow gup would attempt to take the mmap_sem (again) in the same
-> thread, which is not good. :)
-> 
-> Or just defer the change until after this series. Either way is fine, let me
-> know if you prefer one over the other.
-> 
-> The patch itself is trivial, but runtime testing to gain confidence that
-> it's solid is much harder. Is there a stress test you would recommend for that?
-> (I'm not promising I can quickly run it yet--my local IB setup is still nascent 
-> at best.)
+> Hi,
+> I believe that this script now does what the patch author intends it to do.
+> It does have a few whitespace issues, but no big deals.  (see below)
 
-If you make a patch we can probably get it tested, it is something
-we should do I keep forgetting about.
+My original comment stands: looks like it prompts for full module path
+and kernel versions which means it's no more convenient than just doing
+an "ls" and then removing the ones you want to.  (In fact, with "rm"
+you'd also get the benefit of tab completion....)
 
-Jason
+It's quite different from the original script and I don't really see the
+advantage.
+
+--b.
+
+> 
+> Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> 
+> 
+> > diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> > index e8aa940bc0a9..01d0778db71f 100755
+> > --- a/scripts/prune-kernel
+> > +++ b/scripts/prune-kernel
+> > @@ -1,21 +1,69 @@
+> >  #!/bin/bash
+> >  # SPDX-License-Identifier: GPL-2.0
+> > +#This script will remove old kernels and modules directory related to it.
+> > +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
+> > +# "-h" or "--help" show how to use this script or show without parameter.
+> > +#"-i" or "--interactive" show how to remove interactively.
+> > +
+> > +flag=$1
+> > +kernel_version=$2
+> > +modules_version=$3
+> > +boot_dir=/boot
+> > +modules_dir=/lib/modules
+> > +
+> > +remove_old_kernel() {
+> > +	cd $boot_dir
+> > +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
+> > +	return 0
+> > +}
+> > +
+> > +remove_old_modules_dir() {
+> > +	cd $modules_dir
+> > +	rm -rf $modules_version
+> > +	return 0
+> > +}
+> > +
+> > +usage() {
+> > +	printf "Usage: $(basename $0) [-ri]\n"
+> > +	printf "\n -r or --remove  kernel_version modules_version\n"
+> > +	printf "\n -i or --interactive do as interactive way\n"
+> > +	return 0
+> > +}
+> > +
+> > +case "$flag" in
+> > +	-i | --interactive)
+> > +		printf "\nEnter kernel version to remove or blank/empty to exit:"
+> > +		read kernel_version
+> > +		if [[ $kernel_version != "" ]]; then
+> > +			remove_old_kernel
+> > +			printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
+> 
+> space after ':'
+> 
+> drop one \n above.
+> 
+> > +			printf "Please give the full modules directory name to remove:"
+> > +			read modules_version
+> > +			if [[ $modules_version != "" ]]; then
+> > +				remove_old_modules_dir
+> > +				printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
+> 
+> space after ':'
+> 
+> drop one \n above.
+> 
+> > +			else
+> > +				exit 1
+> > +			fi
+> > +		fi
+> > +		;;
+> > +	-h | --help)
+> > +		usage
+> > +		exit 0
+> > +		;;
+> > +	-r | --remove)
+> > +		if [[ $# -ne 3 ]]; then
+> > +			 printf "You need to provide kernel version and modules directory name.\n"
+> > +			 exit 1
+> > +		 else
+> > +			 remove_old_kernel
+> > +			 remove_old_modules_dir
+> > +		fi
+> > +		;;
+> > +	*)
+> > +		usage
+> > +		exit 1
+> > +		;;
+> > +esac
+> > 
+> > -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+> > -# again, /boot and /lib/modules/ eventually fill up.
+> > -# Dumb script to purge that stuff:
+> > 
+> 
+> OK, the former script's loop is removed.. good.
+> But the 2 preceding blank lines are not removed, so the script
+> now ends with 2 unnecessary blank lines.
+> 
+> > -for f in "$@"
+> > -do
+> > -        if rpm -qf "/lib/modules/$f" >/dev/null; then
+> > -                echo "keeping $f (installed from rpm)"
+> > -        elif [ $(uname -r) = "$f" ]; then
+> > -                echo "keeping $f (running kernel) "
+> > -        else
+> > -                echo "removing $f"
+> > -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+> > -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+> > -                rm -rf "/lib/modules/$f"
+> > -                new-kernel-pkg --remove $f
+> > -        fi
+> > -done
+> > --
+> 
+> 
+> -- 
+> ~Randy
