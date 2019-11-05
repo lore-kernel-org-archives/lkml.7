@@ -2,244 +2,201 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA063CA9EDC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:14:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C84D8CA9EDB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D1D920663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:14:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BXL6mpoa"
+	by mail.kernel.org (Postfix) with ESMTP id 951D921928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:15:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572938152;
+	bh=kjNCQHuIO20IAKAWjmpzSoXh0rbx0a5UW2oa2LBkQmM=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=fzwir7PYeKcOuAcQRfJhNdzatdV6v1oyfzRxiZq2BrrgOtrIfy5QSIGT1aOaLSSWF
+	 9Coky3tjHUuqyHr9FD1rzLWtyud1zd1QLHD80L2YQpKcTW/rcm39CZOtokh5OfXjTR
+	 kfLktP7fxVYxXTHZjvP9+eMshYpxSm5MUB1qYMnc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387681AbfKEHOT (ORCPT
+        id S2387708AbfKEHPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:14:19 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:46865 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387442AbfKEHOT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:14:19 -0500
-Received: by mail-yb1-f196.google.com with SMTP id h202so8972409ybg.13;
-        Mon, 04 Nov 2019 23:14:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:from:date:message-id:subject:to:cc;
-        bh=yO7XkjwWZ+6rGu3b+EVCbVS058nDrAyEXQjVMuzyu+s=;
-        b=BXL6mpoa8kMoOs7f1e7psmYFX/jXEvIhfJ/F6zoV3k3zZKHOAC7yp+Sb7WJz3Lgf40
-         I4Ps5+wxLRH2TpnR/8JhSTsSBkmuf2pfm1/pVAKEf6u1kCYwJrlAU0fUJJ7+85OgqmcJ
-         DNDrkFjCFhKIElTr0Spbxr0QAXE8W+uZ/jbiPTVS3Rrw+ZWR7X9wdsNVD+6E3INxuVWk
-         EMUqJ2bp7Fbh/pP7bkZ8MwFRqdHgnG7+zpPQwd4hKL/iTjw2eL+0OyhDzbqqijxsRjH8
-         YQOucg/ay+4kD/FyD7ID6MtDAOrXoz3Iq3GrTQgnOJJKUowoguKK0rnx7Rhi56x+SLua
-         CWMg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
-        bh=yO7XkjwWZ+6rGu3b+EVCbVS058nDrAyEXQjVMuzyu+s=;
-        b=lpVgf73MgiJME/vGHqxPN9pDBnMSgzvL3N09Q6gsdR3OwyquiGDlXM58gxpiZUv0IQ
-         ITcZP5eO+dYOSHNRozEnDlYVYQkie9y0DL1bUXhcGNL9Dycqp2C8nYPg0C2bAsMysnnI
-         c1QdLLBGQ0otxG5cB5M+8rC2KZVCaH9mo7aQhMhlxVEISkjOmON1yk6ez7fEtkeWzbTh
-         pqSl9sBeY9GGKOiL68gFCWOYRk4lNhiNKwH0pagu+Yq+hRRr+RDTkBeAzVqvu1tpmybW
-         GT8krPs+ZoUYupZ2PNPijHUNrWzZV+uugoXMaVXrcDRlJOKDyTCBctxUvE99eT3gDiH2
-         NfwQ==
-X-Gm-Message-State: APjAAAXIv1JAkoLbnJ1IHYU2GLdBaysw1d2YchPrC1V/K8hFrGb5XFQ5
-        QEB2ktb/ha1htxIcDQeSrV4dZ1isUNCj7vg8Cns=
-X-Google-Smtp-Source: APXvYqyit+EoPzBumJ0cPcnF638Uws20EgL51fw6kEe5dPrwmHL6s2MYJHQOj1/qo7vkU9iMlrOYOmuG36jrOlAEnK0=
-X-Received: by 2002:a25:e909:: with SMTP id n9mr26304193ybd.428.1572938058047;
- Mon, 04 Nov 2019 23:14:18 -0800 (PST)
-MIME-Version: 1.0
-From:   Amir Goldstein <amir73il@gmail.com>
-Date:   Tue, 5 Nov 2019 09:14:06 +0200
-Message-ID: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
-Subject: 5.4-rc1 boot regression with kmemleak enabled
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
+        Tue, 5 Nov 2019 02:15:51 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387442AbfKEHPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 02:15:51 -0500
+Received: from aquarius.haifa.ibm.com (nesher1.haifa.il.ibm.com [195.110.40.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 376E820663;
+        Tue,  5 Nov 2019 07:15:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572938149;
+        bh=kjNCQHuIO20IAKAWjmpzSoXh0rbx0a5UW2oa2LBkQmM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=e8CnLOFFAk03scBwXT2glhNQqZljnzKpdDdV9ssLH4vgZwUfT7sZlsQa0jZMc56FG
+         hU/h/q0Zcr6pcZ40FngsJHQtvgJijqR5HEkxJc+40V8Vuj3up2Q03COp7V+pPOallg
+         fILpyL0bn+D110+yGHv3uHDLybDa4PupJWXc/fN8=
+From:   Mike Rapoport <rppt@kernel.org>
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Greentime Hu <green.hu@gmail.com>,
+        Greg Ungerer <gerg@linux-m68k.org>,
+        Helge Deller <deller@gmx.de>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Jeff Dike <jdike@addtoit.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
         Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: multipart/mixed; boundary="0000000000003445c50596942e76"
+        Mark Salter <msalter@redhat.com>,
+        Matt Turner <mattst88@gmail.com>,
+        Michal Simek <monstr@monstr.eu>, Peter Rosin <peda@axentia.se>,
+        Richard Weinberger <richard@nod.at>,
+        Rolf Eike Beer <eike-kernel@sf-tec.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Sam Creasey <sammy@sammy.net>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vineet Gupta <Vineet.Gupta1@synopsys.com>,
+        Mike Rapoport <rppt@kernel.org>, linux-alpha@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-c6x-dev@linux-c6x.org, linux-kernel@vger.kernel.org,
+        linux-m68k@lists.linux-m68k.org, linux-parisc@vger.kernel.org,
+        linux-um@lists.infradead.org, sparclinux@vger.kernel.org,
+        Mike Rapoport <rppt@linux.ibm.com>
+Subject: [PATCH v4 00/13] mm: remove __ARCH_HAS_4LEVEL_HACK
+Date:   Tue,  5 Nov 2019 09:15:22 +0200
+Message-Id: <1572938135-31886-1-git-send-email-rppt@kernel.org>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---0000000000003445c50596942e76
-Content-Type: text/plain; charset="UTF-8"
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-Hi Catalin,
+Hi,
 
-My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
-c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
+These patches convert several architectures to use page table folding and
+remove __ARCH_HAS_4LEVEL_HACK along with include/asm-generic/4level-fixup.h.
 
-There is no console output when running:
+For the nommu configurations the folding is already implemented by the
+generic code so the only change was to use the appropriate header file.
 
-$ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
-    -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
-    -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
-    --append 'root=/dev/vda console=ttyS0,115200'
+As for the rest, the changes are mostly about mechanical replacement of
+pgd accessors with pud/pmd ones and the addition of higher levels to page
+table traversals.
 
-$ kvm --version
-QEMU emulator version 2.11.1(Debian 1:2.11+dfsg-1ubuntu7.19)
-Copyright (c) 2003-2017 Fabrice Bellard and the QEMU Project developers
+With Vineet's patches from "elide extraneous generated code for folded
+p4d/pud/pmd" series [1] there is a small shrink of the kernel size of about
+-0.01% for the defconfig builds. 
 
-Attached defconfig saved by 'make savedefconfig'.
+The set is boot-tested on UML, qemu-{alpha,sparc} and aranym.
 
-I tried increasing DEBUG_KMEMLEAK_MEM_POOL_SIZE, which did not help.
-I also tried moving kmemleak_init() back to its old location, since this
-changes seemed unrelated to the commit. Didn't help either.
+v4 changes:
+* m68k: fix sun3x_defconfig build and reorder ifdefs as per Geert's
+  suggestion
 
-Let me know if you have any suggestion how to debug this.
+v3 changes:
+* alpha: fix changelog to use pgtable-nopud.h rather than pgtable-nop4d.h
+* um: remove dead-code that was intended as provisioning for 4-level page
+  tables
 
-Thanks,
-Amir.
+v2 changes:
+* m68k: fixed ifdefs around pmd_t defintion to work with nommu
+* parisc: added conversion of hugetlb (thanks, Helge!); lexical fixups in
+  comments and changelog
+* collected acks
 
+[1] https://lore.kernel.org/lkml/20191016162400.14796-1-vgupta@synopsys.com
 
-[1] https://github.com/tytso/xfstests-bld/blob/master/Documentation/kvm-xfstests.md
+Helge Deller (1):
+  parisc/hugetlb: use pgtable-nopXd instead of 4level-fixup
 
---0000000000003445c50596942e76
-Content-Type: application/octet-stream; name=defconfig
-Content-Disposition: attachment; filename=defconfig
-Content-Transfer-Encoding: base64
-Content-ID: <f_k2lin2zj0>
-X-Attachment-Id: f_k2lin2zj0
+Mike Rapoport (12):
+  alpha: use pgtable-nopud instead of 4level-fixup
+  arm: nommu: use pgtable-nopud instead of 4level-fixup
+  c6x: use pgtable-nopud instead of 4level-fixup
+  m68k: nommu: use pgtable-nopud instead of 4level-fixup
+  m68k: mm: use pgtable-nopXd instead of 4level-fixup
+  microblaze: use pgtable-nopmd instead of 4level-fixup
+  nds32: use pgtable-nopmd instead of 4level-fixup
+  parisc: use pgtable-nopXd instead of 4level-fixup
+  sparc32: use pgtable-nopud instead of 4level-fixup
+  um: remove unused pxx_offset_proc() and addr_pte() functions
+  um: add support for folded p4d page tables
+  mm: remove __ARCH_HAS_4LEVEL_HACK and include/asm-generic/4level-fixup.h
 
-Q09ORklHX0xPQ0FMVkVSU0lPTj0iLXhmc3Rlc3RzIgpDT05GSUdfU1lTVklQQz15CkNPTkZJR19Q
-T1NJWF9NUVVFVUU9eQpDT05GSUdfQVVESVQ9eQpDT05GSUdfTk9fSFo9eQpDT05GSUdfSElHSF9S
-RVNfVElNRVJTPXkKQ09ORklHX0JTRF9QUk9DRVNTX0FDQ1Q9eQpDT05GSUdfVEFTS1NUQVRTPXkK
-Q09ORklHX1RBU0tfREVMQVlfQUNDVD15CkNPTkZJR19UQVNLX1hBQ0NUPXkKQ09ORklHX1RBU0tf
-SU9fQUNDT1VOVElORz15CiMgQ09ORklHX0NQVV9JU09MQVRJT04gaXMgbm90IHNldApDT05GSUdf
-SUtDT05GSUc9eQpDT05GSUdfSUtDT05GSUdfUFJPQz15CkNPTkZJR19DR1JPVVBTPXkKQ09ORklH
-X0NHUk9VUF9TQ0hFRD15CkNPTkZJR19VU0VSX05TPXkKQ09ORklHX1NZU0ZTX0RFUFJFQ0FURUQ9
-eQpDT05GSUdfQkxLX0RFVl9JTklUUkQ9eQpDT05GSUdfQ0NfT1BUSU1JWkVfRk9SX1NJWkU9eQpD
-T05GSUdfQlBGX1NZU0NBTEw9eQpDT05GSUdfVVNFUkZBVUxURkQ9eQojIENPTkZJR19DT01QQVRf
-QlJLIGlzIG5vdCBzZXQKQ09ORklHX1NMQUI9eQpDT05GSUdfUFJPRklMSU5HPXkKQ09ORklHX1NN
-UD15CkNPTkZJR19YODZfWDJBUElDPXkKIyBDT05GSUdfWDg2X0VYVEVOREVEX1BMQVRGT1JNIGlz
-IG5vdCBzZXQKQ09ORklHX0hZUEVSVklTT1JfR1VFU1Q9eQpDT05GSUdfUEFSQVZJUlQ9eQpDT05G
-SUdfUEFSQVZJUlRfU1BJTkxPQ0tTPXkKQ09ORklHX1BBUkFWSVJUX1RJTUVfQUNDT1VOVElORz15
-CkNPTkZJR19NQ09SRTI9eQpDT05GSUdfTlJfQ1BVUz00OAojIENPTkZJR19YODZfTUNFX0FNRCBp
-cyBub3Qgc2V0CiMgQ09ORklHX01JQ1JPQ09ERSBpcyBub3Qgc2V0CkNPTkZJR19YODZfTVNSPXkK
-Q09ORklHX1g4Nl9DUFVJRD15CkNPTkZJR19OVU1BPXkKIyBDT05GSUdfQU1EX05VTUEgaXMgbm90
-IHNldApDT05GSUdfWDg2X1BNRU1fTEVHQUNZPXkKQ09ORklHX1g4Nl9DSEVDS19CSU9TX0NPUlJV
-UFRJT049eQpDT05GSUdfSFpfMzAwPXkKQ09ORklHX0tFWEVDPXkKQ09ORklHX0tFWEVDX0ZJTEU9
-eQpDT05GSUdfQ1JBU0hfRFVNUD15CiMgQ09ORklHX1JBTkRPTUlaRV9CQVNFIGlzIG5vdCBzZXQK
-Q09ORklHX1BIWVNJQ0FMX0FMSUdOPTB4MTAwMDAwMApDT05GSUdfTEVHQUNZX1ZTWVNDQUxMX0VN
-VUxBVEU9eQojIENPTkZJR19TVVNQRU5EIGlzIG5vdCBzZXQKIyBDT05GSUdfQUNQSV9SRVZfT1ZF
-UlJJREVfUE9TU0lCTEUgaXMgbm90IHNldApDT05GSUdfQ1BVX0ZSRVFfREVGQVVMVF9HT1ZfVVNF
-UlNQQUNFPXkKQ09ORklHX0NQVV9GUkVRX0dPVl9QRVJGT1JNQU5DRT15CkNPTkZJR19DUFVfRlJF
-UV9HT1ZfT05ERU1BTkQ9eQpDT05GSUdfQ1BVX0lETEVfR09WX0xBRERFUj15CiMgQ09ORklHX1BD
-SV9NTUNPTkZJRyBpcyBub3Qgc2V0CkNPTkZJR19JQTMyX0VNVUxBVElPTj15CkNPTkZJR19ETUlf
-U1lTRlM9eQpDT05GSUdfSlVNUF9MQUJFTD15CkNPTkZJR19CTEtfREVWX0lOVEVHUklUWT15CkNP
-TkZJR19QQVJUSVRJT05fQURWQU5DRUQ9eQpDT05GSUdfQlNEX0RJU0tMQUJFTD15CiMgQ09ORklH
-X01RX0lPU0NIRURfREVBRExJTkUgaXMgbm90IHNldApDT05GSUdfQklORk1UX01JU0M9eQpDT05G
-SUdfTkVUPXkKQ09ORklHX1BBQ0tFVD15CkNPTkZJR19QQUNLRVRfRElBRz15CkNPTkZJR19VTklY
-PXkKQ09ORklHX1VOSVhfRElBRz15CkNPTkZJR19YRlJNX1VTRVI9eQpDT05GSUdfTkVUX0tFWT15
-CkNPTkZJR19JTkVUPXkKQ09ORklHX0lQX01VTFRJQ0FTVD15CkNPTkZJR19JUF9BRFZBTkNFRF9S
-T1VURVI9eQpDT05GSUdfSVBfRklCX1RSSUVfU1RBVFM9eQpDT05GSUdfSVBfTVVMVElQTEVfVEFC
-TEVTPXkKQ09ORklHX0lQX1JPVVRFX01VTFRJUEFUSD15CkNPTkZJR19JUF9ST1VURV9WRVJCT1NF
-PXkKQ09ORklHX05FVF9JUElQPXkKQ09ORklHX05FVF9JUEdSRV9ERU1VWD15CkNPTkZJR19ORVRf
-SVBHUkU9eQpDT05GSUdfTkVUX0lQR1JFX0JST0FEQ0FTVD15CkNPTkZJR19TWU5fQ09PS0lFUz15
-CkNPTkZJR19ORVRfRk9VPXkKQ09ORklHX0lORVRfSVBDT01QPXkKQ09ORklHX0lORVRfVURQX0RJ
-QUc9eQpDT05GSUdfSVBWNl9ST1VURVJfUFJFRj15CkNPTkZJR19JUFY2X1RVTk5FTD15CkNPTkZJ
-R19JUFY2X01VTFRJUExFX1RBQkxFUz15CkNPTkZJR19JUFY2X1NVQlRSRUVTPXkKQ09ORklHX05F
-VFdPUktfU0VDTUFSSz15CkNPTkZJR19WTEFOXzgwMjFRPXkKQ09ORklHX0ROU19SRVNPTFZFUj15
-CkNPTkZJR19ORVRMSU5LX0RJQUc9eQpDT05GSUdfQ0dST1VQX05FVF9QUklPPXkKQ09ORklHX0NH
-Uk9VUF9ORVRfQ0xBU1NJRD15CiMgQ09ORklHX1dJUkVMRVNTIGlzIG5vdCBzZXQKQ09ORklHX05F
-VF85UD15CkNPTkZJR19ORVRfOVBfVklSVElPPXkKQ09ORklHX0NFUEhfTElCPXkKQ09ORklHX1BD
-ST15CkNPTkZJR19QQ0lfTVNJPXkKQ09ORklHX1VFVkVOVF9IRUxQRVI9eQpDT05GSUdfVUVWRU5U
-X0hFTFBFUl9QQVRIPSIvc2Jpbi9ob3RwbHVnIgpDT05GSUdfREVWVE1QRlM9eQpDT05GSUdfRldf
-TE9BREVSX1VTRVJfSEVMUEVSPXkKQ09ORklHX0ZXX0xPQURFUl9VU0VSX0hFTFBFUl9GQUxMQkFD
-Sz15CkNPTkZJR19DT05ORUNUT1I9eQpDT05GSUdfQkxLX0RFVl9MT09QPXkKQ09ORklHX0JMS19E
-RVZfUkFNPXkKQ09ORklHX0JMS19ERVZfUkFNX1NJWkU9NjU1MzYKQ09ORklHX1ZJUlRJT19CTEs9
-eQojIENPTkZJR19TQ1NJX1BST0NfRlMgaXMgbm90IHNldApDT05GSUdfQkxLX0RFVl9TRD15CkNP
-TkZJR19TQ1NJX1ZJUlRJTz15CkNPTkZJR19BVEE9eQojIENPTkZJR19TQVRBX1BNUCBpcyBub3Qg
-c2V0CiMgQ09ORklHX0FUQV9TRkYgaXMgbm90IHNldApDT05GSUdfTUQ9eQpDT05GSUdfTURfTElO
-RUFSPXkKQ09ORklHX01EX01VTFRJUEFUSD15CkNPTkZJR19NRF9GQVVMVFk9eQpDT05GSUdfQkxL
-X0RFVl9ETT15CkNPTkZJR19ETV9DUllQVD15CkNPTkZJR19ETV9TTkFQU0hPVD15CkNPTkZJR19E
-TV9USElOX1BST1ZJU0lPTklORz15CkNPTkZJR19ETV9NSVJST1I9eQpDT05GSUdfRE1fUkFJRD15
-CkNPTkZJR19ETV9aRVJPPXkKQ09ORklHX0RNX0RFTEFZPXkKQ09ORklHX0RNX0ZMQUtFWT15CkNP
-TkZJR19ETV9MT0dfV1JJVEVTPXkKQ09ORklHX05FVERFVklDRVM9eQpDT05GSUdfRFVNTVk9eQpD
-T05GSUdfTkVUQ09OU09MRT15CkNPTkZJR19ORVRDT05TT0xFX0RZTkFNSUM9eQpDT05GSUdfVFVO
-PXkKQ09ORklHX1ZFVEg9eQpDT05GSUdfVklSVElPX05FVD15CiMgQ09ORklHX0VUSEVSTkVUIGlz
-IG5vdCBzZXQKIyBDT05GSUdfV0xBTiBpcyBub3Qgc2V0CiMgQ09ORklHX0lOUFVUX01PVVNFIGlz
-IG5vdCBzZXQKIyBDT05GSUdfU0VSSU9fU0VSUE9SVCBpcyBub3Qgc2V0CkNPTkZJR19WVF9IV19D
-T05TT0xFX0JJTkRJTkc9eQojIENPTkZJR19MRUdBQ1lfUFRZUyBpcyBub3Qgc2V0CkNPTkZJR19E
-RVZLTUVNPXkKQ09ORklHX1NFUklBTF84MjUwPXkKIyBDT05GSUdfU0VSSUFMXzgyNTBfREVQUkVD
-QVRFRF9PUFRJT05TIGlzIG5vdCBzZXQKQ09ORklHX1NFUklBTF84MjUwX0NPTlNPTEU9eQojIENP
-TkZJR19TRVJJQUxfODI1MF9FWEFSIGlzIG5vdCBzZXQKQ09ORklHX1NFUklBTF84MjUwX05SX1VB
-UlRTPTMyCkNPTkZJR19TRVJJQUxfODI1MF9SVU5USU1FX1VBUlRTPTMyCkNPTkZJR19WSVJUSU9f
-Q09OU09MRT15CiMgQ09ORklHX0hXX1JBTkRPTV9JTlRFTCBpcyBub3Qgc2V0CiMgQ09ORklHX0hX
-X1JBTkRPTV9BTUQgaXMgbm90IHNldAojIENPTkZJR19IV19SQU5ET01fVklBIGlzIG5vdCBzZXQK
-Q09ORklHX0hXX1JBTkRPTV9WSVJUSU89eQojIENPTkZJR19IV01PTiBpcyBub3Qgc2V0CiMgQ09O
-RklHX1g4Nl9QS0dfVEVNUF9USEVSTUFMIGlzIG5vdCBzZXQKQ09ORklHX1JDX0NPUkU9eQpDT05G
-SUdfUkNfREVDT0RFUlM9eQpDT05GSUdfSVJfTkVDX0RFQ09ERVI9eQpDT05GSUdfSVJfUkM1X0RF
-Q09ERVI9eQpDT05GSUdfSVJfUkM2X0RFQ09ERVI9eQpDT05GSUdfSVJfSlZDX0RFQ09ERVI9eQpD
-T05GSUdfSVJfU09OWV9ERUNPREVSPXkKQ09ORklHX0lSX1NBTllPX0RFQ09ERVI9eQpDT05GSUdf
-SVJfU0hBUlBfREVDT0RFUj15CkNPTkZJR19JUl9NQ0VfS0JEX0RFQ09ERVI9eQpDT05GSUdfSVJf
-WE1QX0RFQ09ERVI9eQpDT05GSUdfSElEX0JBVFRFUllfU1RSRU5HVEg9eQpDT05GSUdfSElEUkFX
-PXkKQ09ORklHX1VISUQ9eQojIENPTkZJR19ISURfQTRURUNIIGlzIG5vdCBzZXQKIyBDT05GSUdf
-SElEX0FQUExFIGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0JFTEtJTiBpcyBub3Qgc2V0CiMgQ09O
-RklHX0hJRF9DSEVSUlkgaXMgbm90IHNldAojIENPTkZJR19ISURfQ0hJQ09OWSBpcyBub3Qgc2V0
-CiMgQ09ORklHX0hJRF9DWVBSRVNTIGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0VaS0VZIGlzIG5v
-dCBzZXQKIyBDT05GSUdfSElEX0lURSBpcyBub3Qgc2V0CiMgQ09ORklHX0hJRF9LRU5TSU5HVE9O
-IGlzIG5vdCBzZXQKIyBDT05GSUdfSElEX0xPR0lURUNIIGlzIG5vdCBzZXQKIyBDT05GSUdfSElE
-X01JQ1JPU09GVCBpcyBub3Qgc2V0CiMgQ09ORklHX0hJRF9NT05URVJFWSBpcyBub3Qgc2V0CiMg
-Q09ORklHX1VTQl9TVVBQT1JUIGlzIG5vdCBzZXQKQ09ORklHX1JUQ19DTEFTUz15CiMgQ09ORklH
-X1JUQ19EUlZfQ01PUyBpcyBub3Qgc2V0CkNPTkZJR19WSVJUX0RSSVZFUlM9eQpDT05GSUdfVklS
-VElPX1BDST15CkNPTkZJR19WSVJUSU9fQkFMTE9PTj15CiMgQ09ORklHX1g4Nl9QTEFURk9STV9E
-RVZJQ0VTIGlzIG5vdCBzZXQKIyBDT05GSUdfSU9NTVVfU1VQUE9SVCBpcyBub3Qgc2V0CkNPTkZJ
-R19WQUxJREFURV9GU19QQVJTRVI9eQpDT05GSUdfRVhUMl9GUz15CkNPTkZJR19FWFQyX0ZTX1hB
-VFRSPXkKQ09ORklHX0VYVDJfRlNfUE9TSVhfQUNMPXkKQ09ORklHX0VYVDJfRlNfU0VDVVJJVFk9
-eQpDT05GSUdfRVhUNF9GUz15CkNPTkZJR19FWFQ0X0ZTX1BPU0lYX0FDTD15CkNPTkZJR19FWFQ0
-X0ZTX1NFQ1VSSVRZPXkKQ09ORklHX0VYVDRfREVCVUc9eQpDT05GSUdfSkJEMl9ERUJVRz15CkNP
-TkZJR19YRlNfRlM9eQpDT05GSUdfWEZTX1FVT1RBPXkKQ09ORklHX1hGU19QT1NJWF9BQ0w9eQpD
-T05GSUdfWEZTX1JUPXkKQ09ORklHX1hGU19ERUJVRz15CiMgQ09ORklHX1hGU19BU1NFUlRfRkFU
-QUwgaXMgbm90IHNldApDT05GSUdfT0NGUzJfRlM9eQojIENPTkZJR19PQ0ZTMl9ERUJVR19NQVNL
-TE9HIGlzIG5vdCBzZXQKQ09ORklHX0JUUkZTX0ZTPXkKQ09ORklHX0JUUkZTX0ZTX1BPU0lYX0FD
-TD15CkNPTkZJR19CVFJGU19ERUJVRz15CkNPTkZJR19CVFJGU19BU1NFUlQ9eQpDT05GSUdfRjJG
-U19GUz15CkNPTkZJR19GMkZTX0ZTX1NFQ1VSSVRZPXkKQ09ORklHX0YyRlNfQ0hFQ0tfRlM9eQpD
-T05GSUdfRlNfREFYPXkKQ09ORklHX0ZTX0VOQ1JZUFRJT049eQpDT05GSUdfRkFOT1RJRlk9eQpD
-T05GSUdfRkFOT1RJRllfQUNDRVNTX1BFUk1JU1NJT05TPXkKQ09ORklHX1FVT1RBX05FVExJTktf
-SU5URVJGQUNFPXkKIyBDT05GSUdfUFJJTlRfUVVPVEFfV0FSTklORyBpcyBub3Qgc2V0CkNPTkZJ
-R19RRk1UX1YyPXkKQ09ORklHX0FVVE9GUzRfRlM9eQpDT05GSUdfRlVTRV9GUz15CkNPTkZJR19D
-VVNFPXkKQ09ORklHX09WRVJMQVlfRlM9eQpDT05GSUdfRlNDQUNIRT15CkNPTkZJR19GU0NBQ0hF
-X1NUQVRTPXkKQ09ORklHX0NBQ0hFRklMRVM9eQpDT05GSUdfVkZBVF9GUz15CkNPTkZJR19QUk9D
-X0tDT1JFPXkKQ09ORklHX1BST0NfQ0hJTERSRU49eQpDT05GSUdfVE1QRlM9eQpDT05GSUdfVE1Q
-RlNfUE9TSVhfQUNMPXkKQ09ORklHX0NPTkZJR0ZTX0ZTPXkKQ09ORklHX0VDUllQVF9GUz15CkNP
-TkZJR19FQ1JZUFRfRlNfTUVTU0FHSU5HPXkKQ09ORklHX0hGU1BMVVNfRlM9eQpDT05GSUdfQ1JB
-TUZTPXkKQ09ORklHX1NRVUFTSEZTPXkKQ09ORklHX1NRVUFTSEZTX1hBVFRSPXkKQ09ORklHX1NR
-VUFTSEZTX0xaTz15CkNPTkZJR19TUVVBU0hGU19YWj15CkNPTkZJR19ST01GU19GUz15CkNPTkZJ
-R19VRlNfRlM9eQpDT05GSUdfTkZTX0ZTPXkKQ09ORklHX05GU0Q9eQojIENPTkZJR19SUENTRUNf
-R1NTX0tSQjUgaXMgbm90IHNldApDT05GSUdfQ0lGUz15CiMgQ09ORklHX0NJRlNfREVCVUcgaXMg
-bm90IHNldApDT05GSUdfQ09EQV9GUz15CkNPTkZJR185UF9GUz15CkNPTkZJR19OTFNfREVGQVVM
-VD0idXRmOCIKQ09ORklHX05MU19DT0RFUEFHRV80Mzc9eQpDT05GSUdfTkxTX0NPREVQQUdFXzg1
-MD15CkNPTkZJR19OTFNfQVNDSUk9eQpDT05GSUdfTkxTX0lTTzg4NTlfMT15CkNPTkZJR19ETE09
-eQpDT05GSUdfU0VDVVJJVFk9eQojIENPTkZJR19JTlRFR1JJVFkgaXMgbm90IHNldApDT05GSUdf
-TFNNPSJ5YW1hLGxvYWRwaW4sc2FmZXNldGlkLGludGVncml0eSxzZWxpbnV4LHNtYWNrLHRvbW95
-byxhcHBhcm1vciIKIyBDT05GSUdfQ1JZUFRPX01BTkFHRVJfRElTQUJMRV9URVNUUyBpcyBub3Qg
-c2V0CkNPTkZJR19DUllQVE9fRUNIQUlOSVY9eQpDT05GSUdfQ1JZUFRPX0NSQzMyQ19JTlRFTD15
-CkNPTkZJR19DUllQVE9fQ1JDMzJfUENMTVVMPXkKQ09ORklHX0NSWVBUT19BRVNfTklfSU5URUw9
-eQpDT05GSUdfQ1JZUFRPX0FSQzQ9eQpDT05GSUdfQ1JZUFRPX0RFUz15CiMgQ09ORklHX0NSWVBU
-T19IVyBpcyBub3Qgc2V0CkNPTkZJR19QUklOVEtfVElNRT15CkNPTkZJR19NRVNTQUdFX0xPR0xF
-VkVMX0RFRkFVTFQ9NwpDT05GSUdfRFlOQU1JQ19ERUJVRz15CkNPTkZJR19ERUJVR19JTkZPPXkK
-Q09ORklHX0RFQlVHX0lORk9fUkVEVUNFRD15CiMgQ09ORklHX0VOQUJMRV9NVVNUX0NIRUNLIGlz
-IG5vdCBzZXQKQ09ORklHX0RFQlVHX1NFQ1RJT05fTUlTTUFUQ0g9eQpDT05GSUdfTUFHSUNfU1lT
-UlE9eQpDT05GSUdfREVCVUdfS0VSTkVMPXkKQ09ORklHX1BBR0VfRVhURU5TSU9OPXkKQ09ORklH
-X0RFQlVHX1BBR0VBTExPQz15CkNPTkZJR19ERUJVR19PQkpFQ1RTPXkKQ09ORklHX0RFQlVHX1NM
-QUI9eQpDT05GSUdfREVCVUdfS01FTUxFQUs9eQpDT05GSUdfSEFSRExPQ0tVUF9ERVRFQ1RPUj15
-CkNPTkZJR19CT09UUEFSQU1fSFVOR19UQVNLX1BBTklDPXkKQ09ORklHX1dRX1dBVENIRE9HPXkK
-Q09ORklHX1BBTklDX1RJTUVPVVQ9NQpDT05GSUdfU0NIRURTVEFUUz15CkNPTkZJR19TQ0hFRF9T
-VEFDS19FTkRfQ0hFQ0s9eQpDT05GSUdfUFJPVkVfTE9DS0lORz15CkNPTkZJR19MT0NLX1NUQVQ9
-eQpDT05GSUdfREVCVUdfQVRPTUlDX1NMRUVQPXkKQ09ORklHX0RFQlVHX0xJU1Q9eQpDT05GSUdf
-UkNVX0NQVV9TVEFMTF9USU1FT1VUPTYwCiMgQ09ORklHX1JDVV9UUkFDRSBpcyBub3Qgc2V0CkNP
-TkZJR19SQ1VfRVFTX0RFQlVHPXkKQ09ORklHX0ZBVUxUX0lOSkVDVElPTj15CkNPTkZJR19GQUlM
-X01BS0VfUkVRVUVTVD15CkNPTkZJR19GQVVMVF9JTkpFQ1RJT05fREVCVUdfRlM9eQpDT05GSUdf
-RlRSQUNFX1NZU0NBTExTPXkKQ09ORklHX1RSQUNFUl9TTkFQU0hPVD15CkNPTkZJR19TVEFDS19U
-UkFDRVI9eQpDT05GSUdfQkxLX0RFVl9JT19UUkFDRT15CkNPTkZJR19GVU5DVElPTl9QUk9GSUxF
-Uj15CkNPTkZJR19ERUJVR19XWD15CiMgQ09ORklHX1g4Nl9ERUJVR19GUFUgaXMgbm90IHNldAo=
---0000000000003445c50596942e76--
+ arch/alpha/include/asm/mmzone.h          |  1 -
+ arch/alpha/include/asm/pgalloc.h         |  4 +-
+ arch/alpha/include/asm/pgtable.h         | 24 ++++-----
+ arch/alpha/mm/init.c                     | 12 +++--
+ arch/arm/include/asm/pgtable.h           |  2 +-
+ arch/c6x/include/asm/pgtable.h           |  2 +-
+ arch/m68k/include/asm/mcf_pgalloc.h      |  7 ---
+ arch/m68k/include/asm/mcf_pgtable.h      | 28 ++++-------
+ arch/m68k/include/asm/mmu_context.h      | 12 ++++-
+ arch/m68k/include/asm/motorola_pgalloc.h |  4 +-
+ arch/m68k/include/asm/motorola_pgtable.h | 32 +++++++-----
+ arch/m68k/include/asm/page.h             |  9 ++--
+ arch/m68k/include/asm/pgtable_mm.h       | 11 +++--
+ arch/m68k/include/asm/pgtable_no.h       |  2 +-
+ arch/m68k/include/asm/sun3_pgalloc.h     |  5 --
+ arch/m68k/include/asm/sun3_pgtable.h     | 18 -------
+ arch/m68k/kernel/sys_m68k.c              | 10 +++-
+ arch/m68k/mm/init.c                      |  6 ++-
+ arch/m68k/mm/kmap.c                      | 39 +++++++++++----
+ arch/m68k/mm/mcfmmu.c                    | 16 +++++-
+ arch/m68k/mm/motorola.c                  | 17 ++++---
+ arch/m68k/sun3x/dvma.c                   |  7 ++-
+ arch/microblaze/include/asm/page.h       |  3 --
+ arch/microblaze/include/asm/pgalloc.h    | 16 ------
+ arch/microblaze/include/asm/pgtable.h    | 32 +-----------
+ arch/microblaze/kernel/signal.c          | 10 ++--
+ arch/microblaze/mm/init.c                |  7 ++-
+ arch/microblaze/mm/pgtable.c             | 13 ++++-
+ arch/nds32/include/asm/page.h            |  3 --
+ arch/nds32/include/asm/pgalloc.h         |  3 --
+ arch/nds32/include/asm/pgtable.h         | 12 +----
+ arch/nds32/include/asm/tlb.h             |  1 -
+ arch/nds32/kernel/pm.c                   |  4 +-
+ arch/nds32/mm/fault.c                    | 16 ++++--
+ arch/nds32/mm/init.c                     | 11 +++--
+ arch/nds32/mm/mm-nds32.c                 |  6 ++-
+ arch/nds32/mm/proc.c                     | 26 ++++++----
+ arch/parisc/include/asm/page.h           | 30 ++++++-----
+ arch/parisc/include/asm/pgalloc.h        | 41 ++++++---------
+ arch/parisc/include/asm/pgtable.h        | 52 ++++++++++---------
+ arch/parisc/include/asm/tlb.h            |  2 +
+ arch/parisc/kernel/cache.c               | 13 +++--
+ arch/parisc/kernel/pci-dma.c             |  9 +++-
+ arch/parisc/mm/fixmap.c                  | 10 ++--
+ arch/parisc/mm/hugetlbpage.c             | 18 ++++---
+ arch/sparc/include/asm/pgalloc_32.h      |  6 +--
+ arch/sparc/include/asm/pgtable_32.h      | 28 +++++------
+ arch/sparc/mm/fault_32.c                 | 11 ++++-
+ arch/sparc/mm/highmem.c                  |  6 ++-
+ arch/sparc/mm/io-unit.c                  |  6 ++-
+ arch/sparc/mm/iommu.c                    |  6 ++-
+ arch/sparc/mm/srmmu.c                    | 51 ++++++++++++++-----
+ arch/um/include/asm/pgtable-2level.h     |  1 -
+ arch/um/include/asm/pgtable-3level.h     |  1 -
+ arch/um/include/asm/pgtable.h            |  3 ++
+ arch/um/kernel/mem.c                     |  8 ++-
+ arch/um/kernel/skas/mmu.c                | 12 ++++-
+ arch/um/kernel/skas/uaccess.c            |  7 ++-
+ arch/um/kernel/tlb.c                     | 85 +++++++++++++++++++-------------
+ arch/um/kernel/trap.c                    |  4 +-
+ include/asm-generic/4level-fixup.h       | 40 ---------------
+ include/asm-generic/tlb.h                |  2 -
+ include/linux/mm.h                       | 10 ++--
+ mm/memory.c                              |  8 ---
+ 64 files changed, 483 insertions(+), 418 deletions(-)
+ delete mode 100644 include/asm-generic/4level-fixup.h
+
+-- 
+2.7.4
+
