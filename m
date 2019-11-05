@@ -2,205 +2,86 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28FFC010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF661C010B9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4FAB21928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572952300;
-	bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=QJNR0XM2ql5KN8amqOOGUItIUlidUEVJgrxwZHJU/NWQSCzaImnI2bcMobNJ9WM+0
-	 BNBerohQuW68xax9Rg/mcDOTKKVLlxp1lkrQ5cVwJNmAQTUU7ykNDM8sxUsG9kVG8n
-	 pBNqBJN4c60xuDkH5nQ+YIR58fhjFeaS/Sw0YT3s=
+	by mail.kernel.org (Postfix) with ESMTP id B6D3420869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:11:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388620AbfKELLj (ORCPT
+        id S2388709AbfKELLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:11:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:60224 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 06:11:44 -0500
+Received: from mga18.intel.com ([134.134.136.126]:18842 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388494AbfKELLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:11:39 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E4BA820869;
-        Tue,  5 Nov 2019 11:11:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572952297;
-        bh=L0MQuT4XYxAFwm79QAhiL05f/SdnH/s1jkfSPz113BE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=yl1o9f4oD62go+SoZTI/xdBt6WJXvvuOwVzpe7vPn+ctS79K7B1/M8YvcKQlgyXiJ
-         BE2CNaKz1BaPD3A6kklxIl+zEHlVAvYshsIDdrpTGwnP16AI0jIK7jzvyj0RyhME5g
-         DlR6EqbQDkkEYmG8eIj2b92ZyKXifryUwNnjalY8=
-Date:   Tue, 5 Nov 2019 12:11:34 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Cc:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>, kernel@pengutronix.de
-Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM
- description
-Message-ID: <20191105111134.GG3876@gilmour.lan>
-References: <20191103203334.10539-1-peron.clem@gmail.com>
- <20191103203334.10539-2-peron.clem@gmail.com>
- <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
+        id S2388494AbfKELLn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:11:43 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 03:11:43 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="403317098"
+Received: from zpanjkov-mobl1.ger.corp.intel.com (HELO localhost) ([10.252.3.163])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Nov 2019 03:11:29 -0800
+Date:   Tue, 5 Nov 2019 13:11:22 +0200
+From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+To:     Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        linux-sgx@vger.kernel.org, akpm@linux-foundation.org,
+        dave.hansen@intel.com, nhorman@redhat.com, npmccallum@redhat.com,
+        serge.ayoun@intel.com, shay.katz-zamir@intel.com,
+        haitao.huang@intel.com, andriy.shevchenko@linux.intel.com,
+        tglx@linutronix.de, kai.svahn@intel.com, bp@alien8.de,
+        josh@joshtriplett.org, luto@kernel.org, kai.huang@intel.com,
+        rientjes@google.com, cedric.xing@intel.com, puiterwijk@redhat.com,
+        linux-security-module@vger.kernel.org,
+        Suresh Siddha <suresh.b.siddha@intel.com>
+Subject: Re: [PATCH v23 12/24] x86/sgx: Linux Enclave Driver
+Message-ID: <20191105111057.GA20879@linux.intel.com>
+References: <20191028210324.12475-1-jarkko.sakkinen@linux.intel.com>
+ <20191028210324.12475-13-jarkko.sakkinen@linux.intel.com>
+ <20191029092920.GA14494@linux.intel.com>
+ <20191030093045.GB12481@linux.intel.com>
+ <20191031211252.GC10507@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="+jhVVhN62yS6hEJ8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191104080359.6kjugbt3yi63ywhb@pengutronix.de>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191031211252.GC10507@linux.intel.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Oct 31, 2019 at 11:12:52PM +0200, Jarkko Sakkinen wrote:
+> On Wed, Oct 30, 2019 at 02:30:45AM -0700, Sean Christopherson wrote:
+> > Why?  The number of pages processed is effectively returned via the params
+> > on any error, e.g. wouldn't it be more appropriate to return -ERESTARTSYS?
+> > And I don't see any reason to add an arbitrary cap on the number of pages,
+> > e.g. SGX plays nice with the scheduler and signals, and restricting the
+> > number of EPC pages available to a process via cgroups (returning -ENOMEM)
+> > is a better solution for managing EPC.
+> 
+> Returning -ENOMEM does not tell you from which page to retry.
 
---+jhVVhN62yS6hEJ8
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+API should be robust enough to be able to cap the amount of data
+processed with or without cgroups like send(), recv(), read() and
+write() are and the call pattern for it must be a loop not a single shot
+call for any megalomaniac length.
 
-Hi Clement, Uwe,
+I'll add @count to address this. This output field will contain the
+number of bytes actually written instead of overwriting input
+parameters, which is a bad practice in anyway.
 
-On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=F6nig wrote:
-> On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=E9ment P=E9ron wrote:
-> > From: Jernej Skrabec <jernej.skrabec@siol.net>
-> >
-> > H6 PWM block is basically the same as A20 PWM, except that it also has
-> > bus clock and reset line which needs to be handled accordingly.
-> >
-> > Expand Allwinner PWM binding with H6 PWM specifics.
-> >
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > Signed-off-by: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> > ---
-> >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 ++++++++++++++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.ya=
-ml
-> > index 0ac52f83a58c..bf36ea509f31 100644
-> > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-pwm.yaml
-> > @@ -30,13 +30,46 @@ properties:
-> >        - items:
-> >            - const: allwinner,sun50i-h5-pwm
-> >            - const: allwinner,sun5i-a13-pwm
-> > +      - const: allwinner,sun50i-h6-pwm
-> >
-> >    reg:
-> >      maxItems: 1
-> >
-> > -  clocks:
-> > +  # Even though it only applies to subschemas under the conditionals,
-> > +  # not listing them here will trigger a warning because of the
-> > +  # additionalsProperties set to false.
-> > +  clocks: true
-> > +  clock-names: true
-> > +  resets:
-> >      maxItems: 1
-> >
-> > +  if:
-> > +    properties:
-> > +      compatible:
-> > +        contains:
-> > +          const: allwinner,sun50i-h6-pwm
-> > +
-> > +  then:
-> > +    properties:
-> > +      clocks:
-> > +        items:
-> > +          - description: Module Clock
-> > +          - description: Bus Clock
-> > +
-> > +      clock-names:
-> > +        items:
-> > +          - const: mod
-> > +          - const: bus
-> > +
-> > +    required:
-> > +      - clock-names
-> > +      - resets
-> > +
-> > +  else:
-> > +    properties:
-> > +      clocks:
-> > +        maxItems: 1
-> > +
->
-> I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod and
-> bus clock is required.", right?
->
-> I wonder if it is sensible to require a clock-names property in the else
-> branch, too. This would make it obvious if the clock there corresponds
-> to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+We don't need to actually cap to anything but API must be able to
+support such scenario. Caller must be prepared to deal with the
+situation where the return value is zero but @count < @length.
 
-This can be done a bit differently and could address your concerns
-
-Something like
-
-properties:
-  ...
-
-  clocks:
-    minItems: 1
-    maxItems: 2
-    items:
-      - description: Bus Clock
-      - description: Module Clock
-
-required:
-  - clocks
-
-if:
-  ...
-
-then:
-  properties:
-    clocks:
-      maxItems: 2
-
-    clocks-names:
-      items:
-        - const: mod
-        - const: bus
-
-    required:
-      - clock-names
-
-else:
-  properties:
-    clocks:
-      maxItems: 1
-
-That way, the definition of the order and which clock is which is
-pretty obvious in both cases, and we don't get any weird warnings.
-
-Maxime
---+jhVVhN62yS6hEJ8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFY5gAKCRDj7w1vZxhR
-xbV/AQCe7CHt/mkieAm/L+E98h/loKt0hEB6kyNqdnXH0QKxZAEA3BWTeLZyVpFc
-GGWBi+MvM8vrJsH5MAMILsm76CTF6QE=
-=GzAC
------END PGP SIGNATURE-----
-
---+jhVVhN62yS6hEJ8--
+/Jarkko
