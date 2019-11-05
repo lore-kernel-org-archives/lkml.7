@@ -3,77 +3,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C30BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:31:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63E99C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DAAE21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:31:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44C1F20650
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:31:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731071AbfKEPbC (ORCPT
+        id S1731098AbfKEPbs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:31:02 -0500
-Received: from mail.kernel.org ([198.145.29.99]:44956 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 10:31:48 -0500
+Received: from verein.lst.de ([213.95.11.211]:46095 "EHLO verein.lst.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727830AbfKEPbB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:31:01 -0500
-Received: from arrakis.emea.arm.com (unknown [46.69.195.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4F879217F5;
-        Tue,  5 Nov 2019 15:30:59 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 15:30:56 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: 5.4-rc1 boot regression with kmemleak enabled
-Message-ID: <20191105153055.GC22987@arrakis.emea.arm.com>
-References: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
- <20191105115431.GD26580@mbp>
- <CAOQ4uxjm=tWsQpfLkY9O_3qWK86X=kCD19P8zJAQjs5ms_RfZw@mail.gmail.com>
+        id S1731039AbfKEPbs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:31:48 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id 27F7468AFE; Tue,  5 Nov 2019 16:31:45 +0100 (CET)
+Date:   Tue, 5 Nov 2019 16:31:44 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Marta Rybczynska <mrybczyn@kalray.eu>
+Cc:     Charles Machalow <csm10495@gmail.com>,
+        linux-nvme <linux-nvme@lists.infradead.org>,
+        kbusch <kbusch@kernel.org>, axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64 to explicitly mark
+ rsvd
+Message-ID: <20191105153144.GA12437@lst.de>
+References: <20191105061510.22233-1-csm10495@gmail.com> <442718702.90376810.1572939552776.JavaMail.zimbra@kalray.eu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAOQ4uxjm=tWsQpfLkY9O_3qWK86X=kCD19P8zJAQjs5ms_RfZw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <442718702.90376810.1572939552776.JavaMail.zimbra@kalray.eu>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:33:48PM +0200, Amir Goldstein wrote:
-> On Tue, Nov 5, 2019 at 1:54 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > (sorry if you got this message twice; our SMTP server went bust)
-> >
-> > On Tue, Nov 05, 2019 at 09:14:06AM +0200, Amir Goldstein wrote:
-> > > My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
-> > > c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
-> > >
-> > > There is no console output when running:
-> > >
-> > > $ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
-> > >     -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
-> > >     -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
-> > >     --append 'root=/dev/vda console=ttyS0,115200'
-> >
-> > This was fixed in 5.4-rc4, see commit 2abd839aa7e6 ("kmemleak: Do not
-> > corrupt the object_list during clean-up").
-> 
-> Did not fix my issue.
-> Still not booting with 5.4-rc6.
-> Any other suggestions?
+On Tue, Nov 05, 2019 at 08:39:12AM +0100, Marta Rybczynska wrote:
+> Looks good to me. However, please note that the new ioctl made it already to 5.3.8.
 
-Can you pass an earlyprintk=ttyS0,115200 (if that's the correct x86
-syntax) on the kernel command line? It may print some early messages
-that would help with debugging.
+It wasn't in 5.3, but it seems like you are right and it somehow got
+picked for the stable releases.
 
--- 
-Catalin
+Sasha, can you please revert 76d609da9ed1cc0dc780e2b539d7b827ce28f182
+in 5.3-stable ASAP and make sure crap like backporting new ABIs that
+haven't seen a release yet is never ever going to happen again?
