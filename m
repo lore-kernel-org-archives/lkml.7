@@ -2,125 +2,134 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 715B5C17461
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03343C17461
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:04:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ED78206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB44D21D7F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:04:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="CaOAWXhP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="TftV8xrU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389016AbfKEND6 (ORCPT
+        id S2389035AbfKENED (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:03:58 -0500
-Received: from mail-eopbgr150083.outbound.protection.outlook.com ([40.107.15.83]:25316
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388738AbfKEND5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:03:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GG/skRnJo9nTyP7rmikkgRwco8zWBmHUDogjFluoSDwFOFja2Q050wSESHuB/c8xao1pgICATjn8x7LsNn6B0ANanQlo5GGstZE5EaSY6+zFW7fwqsV2ur8bn8IQBGahbyz5HPC6BqE2TmC/h9aKe9EhngcIzeye1K1pXIaJ8ZGtxp4SUEKXbnGuZlkjdYwlNaMbAO4HqsGvv1CxMPUKjpEZsBtUYvVB+gV7mGa3J5cZ5roFAbFUtQgeqAD60g7H66mm7dF/WQPHIbl8hMwTG6K/4L0aORU/TF5ZKfnQt9LvQoDa91rnjZfMEacJrXXgXVLL9MeOChhWqSMLdOXcYg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgYtdfxbabvhIn+k/7XfcxqjyXQYEnIwwWUCrpVr6lY=;
- b=QkxWSpy52A4vwI1cAqFwQ4i22M6p2Rt8wqvQ6ufCfEwv/U+xr2J+TPii/DQUwPIvCuMuzNf5Ah10E6o4lX1WaWaFuSFG4E4aOKYOkaXKSvomayq0oOyDbYfAIMXawnSjd+1B8/HJuAITx+xyvCQn2mb+H2LFy+S5rabHMKyqmzlFeQ/0TOp67vrGr4NmUiQp06d3ol9EAnVh6KTaQHa8BJgpUVz+lSu51mwzJdNcNIP2AEAHV7FsmyUauDoVo3/sDqrQhsJcdo731QKyrQPA6RspyUA7pkXnIJaIzxvwTZULSxsjDo9w1RX+3NIaOzF/thhxTFdhnP+bGC5/LQLpLg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lgYtdfxbabvhIn+k/7XfcxqjyXQYEnIwwWUCrpVr6lY=;
- b=CaOAWXhP/5m+vfjjegtEtgdoFDYPYpfqwYct1/AoeTfREdoQf7wHakAcl3HhALuI+mNwN733jJF1/KhBLT+/OQSI/jsg1WfmG3bA7mIPib6rpF7+4PVqcZdkx3BchuM/B5qrcbVv9AJxgUpSo/d663dkbpbQiI9hAZRtIkAoGc8=
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com (52.133.14.15) by
- VI1PR05MB4781.eurprd05.prod.outlook.com (20.176.4.30) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 13:03:53 +0000
-Received: from VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d]) by VI1PR05MB4141.eurprd05.prod.outlook.com
- ([fe80::b179:e8bf:22d4:bf8d%5]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 13:03:53 +0000
-From:   Jason Gunthorpe <jgg@mellanox.com>
-To:     Stephen Rothwell <sfr@canb.auug.org.au>
-CC:     Chuck Lever <chuck.lever@oracle.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>
-Subject: Re: linux-next: manual merge of the cel tree with the rdma tree
-Thread-Topic: linux-next: manual merge of the cel tree with the rdma tree
-Thread-Index: AQHVk7IUyWK+Us4/I0KM4NtHCttd2qd8i4eA
-Date:   Tue, 5 Nov 2019 13:03:53 +0000
-Message-ID: <20191105130347.GO22766@mellanox.com>
-References: <20191105192144.7af9704b@canb.auug.org.au>
-In-Reply-To: <20191105192144.7af9704b@canb.auug.org.au>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR2101CA0015.namprd21.prod.outlook.com
- (2603:10b6:805:106::25) To VI1PR05MB4141.eurprd05.prod.outlook.com
- (2603:10a6:803:44::15)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=jgg@mellanox.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [142.162.113.180]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 48affda4-03f2-45cd-8345-08d761f09bfa
-x-ms-traffictypediagnostic: VI1PR05MB4781:
-x-microsoft-antispam-prvs: <VI1PR05MB47812A3BBAB77B395BF4D33ECF7E0@VI1PR05MB4781.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:989;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(366004)(396003)(136003)(39860400002)(189003)(199004)(53754006)(8936002)(8676002)(33656002)(99286004)(14454004)(478600001)(66066001)(71190400001)(86362001)(52116002)(26005)(7736002)(6916009)(71200400001)(256004)(81156014)(81166006)(316002)(305945005)(6506007)(386003)(476003)(186003)(6486002)(6246003)(2906002)(1076003)(5660300002)(3846002)(6116002)(6512007)(76176011)(4744005)(446003)(66556008)(66476007)(102836004)(66446008)(66946007)(229853002)(64756008)(4326008)(11346002)(2616005)(54906003)(486006)(25786009)(36756003)(6436002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB4781;H:VI1PR05MB4141.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: nMQ3MXWxch/sHFb3lmsjL2npsSO2QmgA9mcfHFFUsGG3a4Hu6loJNjIEfQ0sNYNpHMf9hAc6XBBFRITPp0+HgYx7amZYSyTN741MGwYRN3XB0TsPsFVohaelXOpoT45PleQIjtl3WgDX4yJrojAQ40aZeDyZ4v/VVGuoi35iSs94XnEDXt9eUqOfFr28P2xc10lsqACUYbuXiERmtM6pd7c+01G/HNd6RfTTWMnIUoEYMQ4YFw7YCNnMRAZj44l25R0dMa9ZOHJvGrZz4/G06n0+vggjpKO3gHEMKAt4Om26sny3DBW70h1c8MiTFM0NfHoL4AyBpAUy/rZYGN2D3GDoMu+mWbQI2oyrI+rp3sT2do0I7mEv9L/eWH/zcD46uXS1XSFoh5qGRgd8pB3H14XoVdElT1xv1U8kHRigI/SucJzI/a6b9+OkU2ZtZCpL
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <22BA4109C2612F448EC349C67E102073@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 08:04:03 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:54999 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388738AbfKENEC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:04:02 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572959041;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=YEDP+P6pRhLlcaoDzbSfhi4FuXteM9+sDOQkk5aS3IQ=;
+        b=TftV8xrUzb4iXoFjLDpkz6c82PdWLLiKG8FrN8siAWk9RUh4c4ZUHMUyBFbCcD75Apmzaz
+        d5jLHgsOkiQZ4geJDoX2fIr3jaWVVURP08SqDxFaX2stg+R/pKF/WaAtDYpm9Mme5t0d4s
+        AkL7o+x/I/624dKDy/rzS51t0tO9ItU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-171-Kedje49YOyiXxCsMh4gcWw-1; Tue, 05 Nov 2019 08:03:59 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B94BC477;
+        Tue,  5 Nov 2019 13:03:57 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 426025C1B2;
+        Tue,  5 Nov 2019 13:03:55 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 14:03:54 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Michael Petlan <mpetlan@redhat.com>,
+        Joe Mario <jmario@redhat.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>
+Subject: Re: [PATCHv2 0/3] perf stat: Add --per-node option
+Message-ID: <20191105130354.GE29390@krava>
+References: <20190904073415.723-1-jolsa@kernel.org>
 MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 48affda4-03f2-45cd-8345-08d761f09bfa
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 13:03:53.5894
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: lax6GQ4CzD8yQftSilPVBFY+zz3wPMWBgRi6QZelB9iWzuWI1WmoI6PUQzzhhJI+2jqv1dajHxNyNI3ZWi0c1w==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB4781
+In-Reply-To: <20190904073415.723-1-jolsa@kernel.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: Kedje49YOyiXxCsMh4gcWw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 07:21:44PM +1100, Stephen Rothwell wrote:
-> Hi all,
+On Wed, Sep 04, 2019 at 09:34:12AM +0200, Jiri Olsa wrote:
+> hi,
+> adding --per-node option to aggregate stats per NUMA nodes,
+> you can get now use stat command like:
+>    =20
+>   # perf stat  -a -I 1000 -e cycles --per-node
+>   #           time node   cpus             counts unit events
+>        1.000542550 N0       20          6,202,097      cycles
+>        1.000542550 N1       20            639,559      cycles
+>        2.002040063 N0       20          7,412,495      cycles
+>        2.002040063 N1       20          2,185,577      cycles
+>        3.003451699 N0       20          6,508,917      cycles
+>        3.003451699 N1       20            765,607      cycles
+>   ...
 >=20
-> Today's linux-next merge of the cel tree got a conflict in:
+> v2 changes:
+>   - use mallox instead of zalloc plus adding comment [Arnaldo]
+>   - rename --per-numa to --per-node [Alexey]
+>   - rename function names to have node instead of numa
 >=20
->   drivers/infiniband/core/Makefile
->=20
-> between commit:
->=20
->   771b46a8d15a ("RDMA/core: Move core content from ib_uverbs to ib_core")
->=20
-> from the rdma tree and commit:
->=20
->   b0a70ca7e39e ("IB/core: Trace points for diagnosing completion queue is=
-sues")
->=20
-> from the cel tree.
+> Available also in:
+>   git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+>   perf/fixes
 
-What is a 'cel' tree and why is it taking RDMA patches?
+I forgot about this one ;-) rebased the latest perf/core
+and pushed out..
 
-Jason
+thanks,
+jirka
+
+
+>=20
+> thanks,
+> jirka
+>=20
+>=20
+> ---
+> Jiri Olsa (3):
+>       libperf: Add perf_cpu_map__max function
+>       perf tools: Add perf_env__numa_node function
+>       perf stat: Add --per-node agregation support
+>=20
+>  tools/perf/Documentation/perf-stat.txt |  5 +++++
+>  tools/perf/builtin-stat.c              | 60 ++++++++++++++++++++++++++++=
+++++++++++++++++++++++----------
+>  tools/perf/lib/cpumap.c                | 12 ++++++++++++
+>  tools/perf/lib/include/perf/cpumap.h   |  1 +
+>  tools/perf/lib/libperf.map             |  1 +
+>  tools/perf/util/cpumap.c               | 18 ++++++++++++++++++
+>  tools/perf/util/cpumap.h               |  3 +++
+>  tools/perf/util/env.c                  | 40 ++++++++++++++++++++++++++++=
+++++++++++++
+>  tools/perf/util/env.h                  |  6 ++++++
+>  tools/perf/util/stat-display.c         | 15 +++++++++++++++
+>  tools/perf/util/stat.c                 |  1 +
+>  tools/perf/util/stat.h                 |  1 +
+>  12 files changed, 153 insertions(+), 10 deletions(-)
+
