@@ -2,116 +2,133 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC76AC49EAA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:04:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9916C49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C30BF20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:04:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="endRY/Rl"
+	by mail.kernel.org (Postfix) with ESMTP id A60C220869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:05:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730603AbfKEJEc (ORCPT
+        id S1730607AbfKEJFi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:04:32 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35344 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730525AbfKEJEc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:04:32 -0500
-Received: by mail-pl1-f193.google.com with SMTP id x6so9052198pln.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:04:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X1aa+RRLCGC9my2m6kd83snLA2qyRmty2v6y1d5R9P0=;
-        b=endRY/Rltnfhp07fO3ptST2djGJsP4DdqdYX5XkzofqOnX0ENzldtbpHu3ndfGNcRC
-         WhzHSKVymDgWvFSuGgBDAcZNiaAQrJYFYWb6zhrouxvKjKspy7ST+c28KInjRb7c6HH6
-         1bk0NKQLwE9OCUPkuIqVkw8JncayJ8YYWwxkLfPPSOosU91aQqmZHGGHX1+L6vCwWz7b
-         q/IoI67ej+buHog5IwRC22tzfHy8P5grReGhijAXvOPweJ5VAJZzBtUISBRBgsi+uXW0
-         9okhfeWC3Qnr7wPFDHtC5VtqVGxGQjbYgoBHoiBMzuWTGO6Q6fQk2w2BTOgX5FP9uWmV
-         vMHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X1aa+RRLCGC9my2m6kd83snLA2qyRmty2v6y1d5R9P0=;
-        b=LWAmRx/Y+Du9qLaEZlxgYOHNuQ6Dc4iK7fBbPVC3xGSi76Gfcdx7srH9DKUTS/nydT
-         ALtuFirvQbTnbNTGVif+yJ5zle58X7buO5oTzEnkC2OcvoJ6bA5boy+Gnzz6138TfTIf
-         QwCzvg36QIx4ufOi1tkwz4uQ2NkhM8CUW4HP2OHZoC7yDa4ZtGCDobYg3RWWpf01Wkel
-         miE0//58Z8BvvH9N2ht9w9YaoA9VOwo48Xz3XdrsFfvVArv+8ogYkuh3Ge7krAGG8yEg
-         Mkgs8v+741Byhu8lFz07MrZ/r4eh1jqR0TnluYx1S10Z5kLWCTpXrd+Bhp8d6ONclcL3
-         vHQQ==
-X-Gm-Message-State: APjAAAVHgjKfnNHu+vMLcq/WBCc+MKbOTrNxy9R4yi4mpDFJeBGbYsa+
-        yyJuRwDy54GxD26PocCxIYQjoQ==
-X-Google-Smtp-Source: APXvYqxpCk6VYogCmBRUaj33ltVVU8V3qzwuVeHtSMuP604mRn5mA22dm6U3ZPTDJtZl24ulfM7MIg==
-X-Received: by 2002:a17:902:9a0a:: with SMTP id v10mr459102plp.190.1572944669845;
-        Tue, 05 Nov 2019 01:04:29 -0800 (PST)
-Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id a29sm26327469pfr.49.2019.11.05.01.04.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 01:04:28 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:34:22 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
-        Len Brown <lenb@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] cpufreq: fix integer/pointer warnings in
- acpi_platform_list
-Message-ID: <20191105090422.vehycbs7eubwq7xq@vireshk-i7>
-References: <20191105075225.9083-1-ben.dooks@codethink.co.uk>
+        Tue, 5 Nov 2019 04:05:38 -0500
+Received: from mx2.suse.de ([195.135.220.15]:57408 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727095AbfKEJFi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:05:38 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B056DAC71;
+        Tue,  5 Nov 2019 09:05:35 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 220971E4407; Tue,  5 Nov 2019 10:05:35 +0100 (CET)
+Date:   Tue, 5 Nov 2019 10:05:35 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, Chao Yu <chao@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>, linux-ext4@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-f2fs-devel@lists.sourceforge.net, linux-arch@vger.kernel.org
+Subject: Re: [PATCH 1/1] errno.h: Provide EFSBADCRC for everybody
+Message-ID: <20191105090535.GI22379@quack2.suse.cz>
+References: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105075225.9083-1-ben.dooks@codethink.co.uk>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191105024618.194134-1-Valdis.Kletnieks@vt.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05-11-19, 07:52, Ben Dooks (Codethink) wrote:
-> The fourth field in this table is a pointer, not an integer so replace
-> the 0 with a NULL to avoid the following sparse warnings:
+On Mon 04-11-19 21:46:14, Valdis Kletnieks wrote:
+> Four filesystems have their own defines for this. Move it
+> into errno.h so it's defined in just one place.
 > 
-> drivers/cpufreq/intel_pstate.c:2667:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2668:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2669:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2670:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2671:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2672:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2673:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2674:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2675:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2676:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2677:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2678:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2679:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2680:64: sparse: sparse: Using plain integer as NULL pointer
-> drivers/cpufreq/intel_pstate.c:2681:64: sparse: sparse: Using plain integer as NULL pointer
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+
+Thanks for the patch! It looks good to me. You can add:
+
+Reviewed-by: Jan Kara <jack@suse.cz>
+
+								Honza
+
 > ---
-> Cc: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
-> Cc: Len Brown <lenb@kernel.org>
-> Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-> Cc: Viresh Kumar <viresh.kumar@linaro.org>
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-
-Someone else posted this before you :)
-
-https://lore.kernel.org/lkml/20191105055427.11943-1-jamal.k.shareef@gmail.com/
-
-Will be good if you can review that. Thanks.
-
+>  fs/ext4/ext4.h                   | 2 --
+>  fs/f2fs/f2fs.h                   | 2 --
+>  fs/xfs/xfs_linux.h               | 1 -
+>  include/linux/jbd2.h             | 2 --
+>  include/uapi/asm-generic/errno.h | 1 +
+>  5 files changed, 1 insertion(+), 7 deletions(-)
+> 
+> diff --git a/fs/ext4/ext4.h b/fs/ext4/ext4.h
+> index a86c2585457d..79b3fd8291ab 100644
+> --- a/fs/ext4/ext4.h
+> +++ b/fs/ext4/ext4.h
+> @@ -3395,6 +3395,4 @@ static inline int ext4_buffer_uptodate(struct buffer_head *bh)
+>  
+>  #endif	/* __KERNEL__ */
+>  
+> -#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -
+>  #endif	/* _EXT4_H */
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index 04ebe77569a3..ba23fd18d44a 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -3751,6 +3751,4 @@ static inline bool is_journalled_quota(struct f2fs_sb_info *sbi)
+>  	return false;
+>  }
+>  
+> -#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -
+>  #endif /* _LINUX_F2FS_H */
+> diff --git a/fs/xfs/xfs_linux.h b/fs/xfs/xfs_linux.h
+> index 3409d02a7d21..abdfc506618d 100644
+> --- a/fs/xfs/xfs_linux.h
+> +++ b/fs/xfs/xfs_linux.h
+> @@ -123,7 +123,6 @@ typedef __u32			xfs_nlink_t;
+>  
+>  #define ENOATTR		ENODATA		/* Attribute not found */
+>  #define EWRONGFS	EINVAL		/* Mount with wrong filesystem type */
+> -#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+>  
+>  #define SYNCHRONIZE()	barrier()
+>  #define __return_address __builtin_return_address(0)
+> diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
+> index 69411d7e0431..e07692fe6f20 100644
+> --- a/include/linux/jbd2.h
+> +++ b/include/linux/jbd2.h
+> @@ -1656,6 +1656,4 @@ static inline tid_t  jbd2_get_latest_transaction(journal_t *journal)
+>  
+>  #endif	/* __KERNEL__ */
+>  
+> -#define EFSBADCRC	EBADMSG		/* Bad CRC detected */
+> -
+>  #endif	/* _LINUX_JBD2_H */
+> diff --git a/include/uapi/asm-generic/errno.h b/include/uapi/asm-generic/errno.h
+> index 1d5ffdf54cb0..e4cae9a9ae79 100644
+> --- a/include/uapi/asm-generic/errno.h
+> +++ b/include/uapi/asm-generic/errno.h
+> @@ -55,6 +55,7 @@
+>  #define	EMULTIHOP	72	/* Multihop attempted */
+>  #define	EDOTDOT		73	/* RFS specific error */
+>  #define	EBADMSG		74	/* Not a data message */
+> +#define EFSBADCRC	EBADMSG	/* Bad CRC detected */
+>  #define	EOVERFLOW	75	/* Value too large for defined data type */
+>  #define	ENOTUNIQ	76	/* Name not unique on network */
+>  #define	EBADFD		77	/* File descriptor in bad state */
+> -- 
+> 2.24.0.rc1
+> 
 -- 
-viresh
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
