@@ -2,126 +2,148 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90A54C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:20:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D445C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:20:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6684A2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:20:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="byLiDtY/"
+	by mail.kernel.org (Postfix) with ESMTP id EED5B214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:20:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390786AbfKESU1 (ORCPT
+        id S2390796AbfKESUi convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:20:27 -0500
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:38048 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389356AbfKESU0 (ORCPT
+        Tue, 5 Nov 2019 13:20:38 -0500
+Received: from relay12.mail.gandi.net ([217.70.178.232]:40383 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389356AbfKESUi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:20:26 -0500
-Received: by mail-pl1-f196.google.com with SMTP id w8so9868279plq.5;
-        Tue, 05 Nov 2019 10:20:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=G798+rxIu2QN6FqJb04h4OJuDPvHyjobYVKJMNxneU0=;
-        b=byLiDtY/ShuYkCBK+KozCIGb5mSqybKvVaqF/xhjYX0dKDwHWxvgfaJgFEEFq7b3E5
-         PbGqJTQDLzFtakvz1+hT+jAiMMPDfBq34yKeQNWO5vKz0r1f1v0lCRuVZit8xx7h77Rb
-         D6HXDtShVl00CcUxzYkmUqsHYwwcOYxGKi5BbYrsw6zkhmjzRp8cZFZMNl8uTscw7Z+9
-         VugOKWRHobuf551d0yV8sH3tJJeO/+r0S6ApYEAz1hUQuT6qoCpgu6zX8t3wdBNkr9W8
-         HlyxQuopfjyeBzjzXO0kFPRhrzMPb77W4Pmal49qAd+g495FHhx9C9eyT/sC82gAHeuk
-         XoqA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=G798+rxIu2QN6FqJb04h4OJuDPvHyjobYVKJMNxneU0=;
-        b=p4BQFvXIr28i43yZjqC1RSrHAUV7f4s0qEvkaF+zGS9hKFH1v0jOyPQinMViNo/xdJ
-         koGfPh1+zhOm/OijGv+OaXW2WEnpxH26iUZUBcXmAOIu17XZHtdysjpn7/JUFZJ5S00L
-         xaO+IiSltbZWQtt99xhOmVX2rDFdb9rTgC8w3XMjXMvbSkI79XtNKnGdi4xjMpJVeuNf
-         raAm35ecERkxpDvdBBxzV+0Q61s7WmFxxtTKUXiqUzTYoEQ5d/YkHThJ5JVlsJD3cKy3
-         MaFqCr/YAdNozFZw/FwOanKjdOBaZUPwghsrtJYs7i1FzpfiTBpNBIMwBE4io4XvOPEt
-         I6ww==
-X-Gm-Message-State: APjAAAVd8FYEqyNps+gcpB2B1cTm2ALUDarGrsJ6FfMXi3gYM/XGfOFX
-        Grx5gdJtp4VIRCfVFAn+sek=
-X-Google-Smtp-Source: APXvYqwG7dzg8rslRt9a1tXpf6S0ZGUAB2tdjIng7nus6Drl9e32e2Mn+EJwtwgMZpFajuPLR0P1Gg==
-X-Received: by 2002:a17:902:6b8a:: with SMTP id p10mr35105330plk.192.1572978025810;
-        Tue, 05 Nov 2019 10:20:25 -0800 (PST)
-Received: from dtor-ws ([2620:15c:202:201:3adc:b08c:7acc:b325])
-        by smtp.gmail.com with ESMTPSA id a16sm1453729pfc.56.2019.11.05.10.20.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 10:20:25 -0800 (PST)
-Date:   Tue, 5 Nov 2019 10:20:22 -0800
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-To:     David Miller <davem@davemloft.net>
-Cc:     linux@armlinux.org.uk, linus.walleij@linaro.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com
-Subject: Re: [PATCH v2 0/3] net: phy: switch to using fwnode_gpiod_get_index
-Message-ID: <20191105182022.GV57214@dtor-ws>
-References: <20191105004016.GT57214@dtor-ws>
- <20191105005541.GP25745@shell.armlinux.org.uk>
- <CAKdAkRQNWXjMdJ9F1Lu=8+rHWFJwoyWu6Lcc+LFesaSTz3wspg@mail.gmail.com>
- <20191105.100423.1742603284030008698.davem@davemloft.net>
+        Tue, 5 Nov 2019 13:20:38 -0500
+Received: from xps13 (unknown [91.224.148.103])
+        (Authenticated sender: miquel.raynal@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id B6C1820000A;
+        Tue,  5 Nov 2019 18:20:32 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 19:20:31 +0100
+From:   Miquel Raynal <miquel.raynal@bootlin.com>
+To:     Boris Brezillon <boris.brezillon@collabora.com>
+Cc:     Chuanhong Guo <gch981213@gmail.com>, linux-mtd@lists.infradead.org,
+        Jeff Kletsky <git-commits@allycomm.com>,
+        Richard Weinberger <richard@nod.at>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Frieder Schrempf <frieder.schrempf@kontron.de>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Stefan Roese <sr@denx.de>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH][RFC] mtd: spinand: fix detection of GD5FxGQ4xA flash
+Message-ID: <20191105192031.2847438c@xps13>
+In-Reply-To: <20191103142741.7b2a2bf0@collabora.com>
+References: <20191016013845.23508-1-gch981213@gmail.com>
+        <20191028174131.65c3d580@xps13>
+        <CAJsYDVJgwRfg2kfmuG4P-NCEAZ4box+=Yb53d0J+rAjLRpc3Ww@mail.gmail.com>
+        <20191103142741.7b2a2bf0@collabora.com>
+Organization: Bootlin
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105.100423.1742603284030008698.davem@davemloft.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:04:23AM -0800, David Miller wrote:
-> From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Date: Tue, 5 Nov 2019 09:27:51 -0800
+Hi Boris,
+
+Boris Brezillon <boris.brezillon@collabora.com> wrote on Sun, 3 Nov
+2019 14:27:41 +0100:
+
+> On Sun, 3 Nov 2019 20:03:21 +0800
+> Chuanhong Guo <gch981213@gmail.com> wrote:
 > 
-> > On Mon, Nov 4, 2019 at 4:55 PM Russell King - ARM Linux admin
-> > <linux@armlinux.org.uk> wrote:
-> >>
-> >> On Mon, Nov 04, 2019 at 04:40:16PM -0800, Dmitry Torokhov wrote:
-> >> > Hi Linus,
-> >> >
-> >> > On Mon, Oct 14, 2019 at 10:40:19AM -0700, Dmitry Torokhov wrote:
-> >> > > This series switches phy drivers form using fwnode_get_named_gpiod() and
-> >> > > gpiod_get_from_of_node() that are scheduled to be removed in favor
-> >> > > of fwnode_gpiod_get_index() that behaves more like standard
-> >> > > gpiod_get_index() and will potentially handle secondary software
-> >> > > nodes in cases we need to augment platform firmware.
-> >> > >
-> >> > > Linus, as David would prefer not to pull in the immutable branch but
-> >> > > rather route the patches through the tree that has the new API, could
-> >> > > you please take them with his ACKs?
-> >> >
-> >> > Gentle ping on the series...
-> >>
-> >> Given that kbuild found a build issue with patch 1, aren't we waiting
-> >> for you to produce an updated patch 1?
+> > Hi!
 > > 
-> > No: kbuild is unable to parse instructions such as "please pull an
-> > immutable branch" before applying the series. Linus' tree already has
-> > needed changes.
+> > On Tue, Oct 29, 2019 at 12:41 AM Miquel Raynal
+> > <miquel.raynal@bootlin.com> wrote:  
+> > >
+> > > Hello,
+> > >
+> > > Chuanhong Guo <gch981213@gmail.com> wrote on Wed, 16 Oct 2019 09:38:24
+> > > +0800:
+> > >    
+> > > > GD5FxGQ4xA didn't follow the SPI spec to keep MISO low while slave is
+> > > > reading, and instead MISO is kept high. As a result, the first byte
+> > > > of id becomes 0xFF.
+> > > > Since the first byte isn't supposed to be checked at all, this patch
+> > > > just removed that check.
+> > > >
+> > > > While at it, redo the comment above to better explain what's happening.
+> > > >
+> > > > Fixes: cfd93d7c908e ("mtd: spinand: Add support for GigaDevice GD5F1GQ4UFxxG")
+> > > > Signed-off-by: Chuanhong Guo <gch981213@gmail.com>
+> > > > CC: Jeff Kletsky <git-commits@allycomm.com>
+> > > > ---
+> > > > RFC:
+> > > > I doubt whether this patch is a proper fix for the underlying problem:
+> > > > The actual problem is that we have two different implementation of read id
+> > > > command: One replies immediately after master sending 0x9f and the other
+> > > > need to send 0x9f and an offset byte (found in winbond and early GD flashes.)    
+> > 
+> > Correction: Only early GigaDevice nand chips uses this implementation.
+> > Winbond chips uses a dummy byte instead of an address byte so there's
+> > no problem for Winbond chips.
+> >   
+> > > > Current code only works if SPI master is properly implemented (i.e. keep MOSI
+> > > > low while reading.)    
+> > >
+> > > I am not entirely against the fix, but this is a SPI host controller
+> > > issue, right? Can you try to fix the controller driver instead?    
+> > 
+> > I think this is a spi nand framework issue. GigaDevice uses an unusual
+> > READ ID implementation, and as a result, both host controller and chip
+> > are reading during the first byte after 0x9f command: chip is reading
+> > the address/offset byte and host is expecting the first ID byte.
+> > Here lies two problems:
+> > 1. According to the sequence diagram in their datasheet, MISO pin is
+> > in High-Z state during the 0x9f command and the offset byte, and host
+> > could read anything during this time instead of a fixed 0x0 or 0xff
+> > byte, so the check of first byte should be removed. This is what this
+> > patch is doing.
+> > 2. If there's a buggy SPI host controller that didn't keep MOSI low
+> > during reading operation, the chip will get 0xff as ID offset, causing
+> > the read vendor/device ID to be swapped. I never met such a controller
+> > so far, but if there is one, it will be a silicon bug that can't be
+> > fixed by software. To fix this one, we'll have to make a second
+> > read-id implementation in spi nand framework.  
 > 
-> This is targetting the networking tree so it doesn't matter what is in
-> Linus's tree, it has to build against MY tree and that's what Kbuild
-> tests against.
+> I realize how fragile this ID-based detection is when manufacturers
+> decide to not follow the standard READID semantic (one 0x9f command byte
+> followed by 1 or more input cycles encoding the ID). Let's imagine you
+> have a valid manuf ID byte in ID[0], and the device ID (ID[1]) matches
+> the Winbond or Gigadevice manufacturer ID, and ID[3] (extended Device ID
+> byte?) matches a valid Winbond/Gigadevice device ID. If you skip the
+> check on ID[0] you might erroneously detect a Winbond or Gigadevice
+> NAND, while it's actually something else.
 > 
-> Resubmit if it builds against my tree, and no sooner.
+> Note that I don't really have a solution to make this detection more
+> robust.
+> 
+> > 
+> > The second problem only exist in theory, so my preference is to apply
+> > this patch and fix only the first problem for now.  
+> 
+> I think we should fix that problem now. Maybe by doing a 3 steps
+> detection:
+> 
+> 1/ READID + ID[]
+> 2/ READID + DUMMY + ID[]
+> 3/ READID + ADDR + ID[]
+> 
+> At each step we would check if the returned ID matches a valid NAND,
+> and if it does, stop there.
 
-I am confused. You were OK with merging through Linus' Walleij tree, and
-you acked all 3 patches earlier...
+I like the idea. That will be way more robust.
 
-https://lore.kernel.org/netdev/20191011.140540.2027562826793118009.davem@davemloft.net/
-
-"So submit this into the tree that will have the dependencies."
-
-Thanks.
-
--- 
-Dmitry
+Thanks,
+Miquèl
