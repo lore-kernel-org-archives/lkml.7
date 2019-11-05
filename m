@@ -2,129 +2,305 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D97AAC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:20:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07591C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:21:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A587E21928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:20:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="DjIPeMXW"
+	by mail.kernel.org (Postfix) with ESMTP id D945E21928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389825AbfKEPUO (ORCPT
+        id S2389866AbfKEPVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:20:14 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:41788 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389386AbfKEPUO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:20:14 -0500
-Received: by mail-pg1-f193.google.com with SMTP id l3so14430205pgr.8
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:20:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding:content-language;
-        bh=4knTl1jsJDuMainkSHY+5ZG6p+2SnQH1xWJ5/mQLZcc=;
-        b=DjIPeMXW32l5fRqhcF/hEw9KGRzv0na04clJGjRNUHPMDnhcD3TsmsKSwyjh+w/6sQ
-         PTAqM9sTWDUSi6tZrUkRd13QgbMTNVRPQlqdW+1hhLVpk9FmJHl8J6cSMn/Mway2kCWz
-         MJm6ZtryFrevQ+LCFRayk+JyZnFlnyxIgQZD2+1CxTk2zLzkpHX0WenqGSA5OAR0vNLJ
-         vGJ8Nob1RDlf/duriZT/QO02e/vLPDCDiLWW63O8ik1SD8GufmRrU1jjAolUO1dJiToY
-         jI2ZBWJGQxv6FDn+WE71NE1f+THhy/OGWe2P+plmcPg7d6M/DmrAToeVoM6Dzo/qyyJR
-         LmVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding
-         :content-language;
-        bh=4knTl1jsJDuMainkSHY+5ZG6p+2SnQH1xWJ5/mQLZcc=;
-        b=CyiEJ/s+rNVL+Xg9jV8qDvvQwesYWW8nDzn1U2l0e+IcRxARz6ANy1wtlZAmtG4rYt
-         5eJK/Gqy0056wIkmnPMxyJLXc46+5EhSabq/nzefKC+YiJaRZP6JRASt80Uc1ThtHzqz
-         PuGVMReG8Fx6Ev251r/An8yIMJVyS24wyhALhA1WGJDixrYrY7K5kk62j5vek9jOcYWA
-         0g6IduC5I58yv8luWCmRrnfjvuxi+6VvjjsmKJudyNJownjuuco7s1Pwn+z1Q3mUNbG3
-         TJa44PXVZEJfNoRXHUNrU+uz3N2OcfLztO9JnJ936sYufkjyOsG9lgZiFxdbrJkyEnb4
-         xvMg==
-X-Gm-Message-State: APjAAAWHdALI6i87YfKFqhlHhJkYjtzlJyfjIqU/bQQM2yHkV2wEeOYk
-        2vk4PVbF+Ugp4P+ydNzhIaihrw==
-X-Google-Smtp-Source: APXvYqwngaEbIGV2C3ll19WybcLW+UHBVqY0ruQKQmcGOlj8LAdvhzyLZLrbbYkv25c+m4rL0C7yWw==
-X-Received: by 2002:a62:1dc6:: with SMTP id d189mr20322264pfd.100.1572967212046;
-        Tue, 05 Nov 2019 07:20:12 -0800 (PST)
-Received: from nebulus.mtv.corp.google.com ([2620:15c:211:200:5404:91ba:59dc:9400])
-        by smtp.googlemail.com with ESMTPSA id h8sm149633pjp.1.2019.11.05.07.20.11
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 07:20:11 -0800 (PST)
-Subject: Re: [PATCH v15 0/4] overlayfs override_creds=off & nested get xattr
- fix
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        kernel-team@android.com, Miklos Szeredi <miklos@szeredi.hu>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Vivek Goyal <vgoyal@redhat.com>,
-        "Eric W . Biederman" <ebiederm@xmission.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        overlayfs <linux-unionfs@vger.kernel.org>,
-        linux-doc@vger.kernel.org
-References: <20191104215253.141818-1-salyzyn@android.com>
- <CAOQ4uxhoozGgxYmucFpFx8N=b4x9H3sfp60TNzf0dmU9eQi2UQ@mail.gmail.com>
-From:   Mark Salyzyn <salyzyn@android.com>
-Message-ID: <97c4108f-3a9b-e58b-56e0-dfe2642cc1f5@android.com>
-Date:   Tue, 5 Nov 2019 07:20:10 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 10:21:52 -0500
+Received: from verein.lst.de ([213.95.11.211]:46056 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389577AbfKEPVw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:21:52 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id DB77368AFE; Tue,  5 Nov 2019 16:21:49 +0100 (CET)
+Date:   Tue, 5 Nov 2019 16:21:49 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Philippe Liard <pliard@google.com>
+Cc:     phillip@squashfs.org.uk, hch@lst.de, linux-kernel@vger.kernel.org,
+        groeck@chromium.org
+Subject: Re: [PATCH v2] squashfs: Migrate from ll_rw_block usage to BIO
+Message-ID: <20191105152149.GA10104@lst.de>
+References: <20191105075339.15280-1-pliard@google.com>
 MIME-Version: 1.0
-In-Reply-To: <CAOQ4uxhoozGgxYmucFpFx8N=b4x9H3sfp60TNzf0dmU9eQi2UQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-GB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105075339.15280-1-pliard@google.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 11:56 PM, Amir Goldstein wrote:
-> On Mon, Nov 4, 2019 at 11:53 PM Mark Salyzyn <salyzyn@android.com> wrote:
->> Patch series:
->>
->> Mark Salyzyn (4):
->>    Add flags option to get xattr method paired to __vfs_getxattr
-> Sigh.. did not get to fsdevel (again...) I already told you several times
-> that you need to use a shorter CC list.
+I don't think you need the read context.  The bio tracks how many pages
+have been added, and there actually is a block layer helper to free them.
+Also this patch has some direct access to the bvec array, which is
+forbidden.  Take a look at the completely untested patch below to
+switch to using the bio iterators and kill off the read context.
 
-This is a direct result of the _required_ scripts/get_maintainer.pl 
-logic, I am not going to override it for first send. I was going to 
-forward to fsdevel after the messages settled, I am still waiting for 
-1/4 to land on lore before continuing.
+Also note that you should generally not update defconfigs, especially
+ones that don't exist in patches to file systems or drivers.
 
-The first patch in the series needs to get in before the others. I was 
-told to send the first one individually because the series has so many 
-recipients and stakeholders, and <crickets> because no on could see the 
-reason for the patch once it was all by itself. So I rejoined the set so 
-they could see the reason for the first patch.
-
-If only the first patch in the series that added the flag argument got 
-in (somewhere), then the overlayfs portion would be much easier to handle.
-
->>    overlayfs: handle XATTR_NOSECURITY flag for get xattr method
->>    overlayfs: internal getxattr operations without sepolicy checking
->>    overlayfs: override_creds=off option bypass creator_cred
-> It would be better for review IMO if you rebase your series on top of
-> git://git.kernel.org/pub/scm/linux/kernel/git/mszeredi/vfs.git ovl-unpriv
-Will do, send it only to fsdevel, other recipients? What do I do with 
-get_maintainer.pl? The first patch in the series is noisy, I am getting 
-more and more uncomfortable sending it to the list as it looks more and 
-more like spam.
-> 1. internal getxattr patch would be a one liner change to ovl_own_getxattr()
-> 2. The documentation of override_creds would be much more
-> meaningful if it used the overlay permission model terminology
-> that Miklos added in his patch set and extend it
->
-> Thanks,
-> Amir.
-
--- Mark
-
+diff --git a/fs/squashfs/block.c b/fs/squashfs/block.c
+index 358afb676e66..5ee501d611dd 100644
+--- a/fs/squashfs/block.c
++++ b/fs/squashfs/block.c
+@@ -35,20 +35,19 @@ static int copy_bio_to_actor(struct bio *bio,
+ 			     int offset, int req_length)
+ {
+ 	void *actor_addr = squashfs_first_page(actor);
+-	struct bio_vec bvec = bio->bi_io_vec[0];
++	struct bvec_iter_all iter_all = { };
++	struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+ 	int copied_bytes = 0;
+ 	int actor_offset = 0;
+-	int bvec_index = 0;
+ 
+-	while (actor_addr && bvec_index < bio->bi_vcnt &&
+-	       copied_bytes < req_length) {
+-		int bytes_to_copy = min_t(int, bvec.bv_len - offset,
++	while (copied_bytes < req_length) {
++		int bytes_to_copy = min_t(int, bvec->bv_len - offset,
+ 					  PAGE_SIZE - actor_offset);
+ 
+ 		bytes_to_copy = min_t(int, bytes_to_copy,
+ 				      req_length - copied_bytes);
+ 		memcpy(actor_addr + actor_offset,
+-		       page_address(bvec.bv_page) + bvec.bv_offset + offset,
++		       page_address(bvec->bv_page) + bvec->bv_offset + offset,
+ 		       bytes_to_copy);
+ 
+ 		actor_offset += bytes_to_copy;
+@@ -56,103 +55,73 @@ static int copy_bio_to_actor(struct bio *bio,
+ 		offset += bytes_to_copy;
+ 
+ 		if (actor_offset >= PAGE_SIZE) {
+-			actor_offset = 0;
+ 			actor_addr = squashfs_next_page(actor);
++			if (!actor_addr)
++				break;
++			actor_offset = 0;
+ 		}
+-		if (offset >= bvec.bv_len) {
++
++		if (offset >= bvec->bv_len) {
++			if (!bio_next_segment(bio, &iter_all))
++				break;
+ 			offset = 0;
+-			++bvec_index;
+-			if (bvec_index < bio->bi_vcnt)
+-				bvec = bio->bi_io_vec[bvec_index];
+ 		}
+ 	}
+ 	squashfs_finish_page(actor);
+ 	return copied_bytes;
+ }
+ 
+-struct bio_read_context {
+-	struct bio *bio;
+-	struct page **pages;
+-	int page_count;
+-};
+-
+-static void free_bio_read_context(struct bio_read_context *bio_ctx)
+-{
+-	if (bio_ctx->bio)
+-		bio_put(bio_ctx->bio);
+-
+-	if (bio_ctx->pages) {
+-		int i;
+-
+-		for (i = 0; i < bio_ctx->page_count; ++i)
+-			if (bio_ctx->pages[i])
+-				__free_page(bio_ctx->pages[i]);
+-		kfree(bio_ctx->pages);
+-	}
+-}
+-
+ static int squashfs_bio_read(struct super_block *sb, u64 index, int length,
+-			     struct bio_read_context *bio_ctx,
+-			     int *block_offset)
++			     struct bio **biop, int *block_offset)
+ {
+ 	struct squashfs_sb_info *msblk = sb->s_fs_info;
+ 	const u64 read_start = round_down(index, msblk->devblksize);
+ 	const sector_t block = read_start >> msblk->devblksize_log2;
+ 	const u64 read_end = round_up(index + length, msblk->devblksize);
+ 	const sector_t block_end = read_end >> msblk->devblksize_log2;
++	unsigned int offset = read_start - round_down(index, PAGE_SIZE);
++	unsigned int total_len = (block_end - block) << msblk->devblksize_log2;
++	unsigned int page_count = DIV_ROUND_UP(total_len + offset, PAGE_SIZE);
++	int error = -ENOMEM, i;
++	struct bio *bio;
+ 
+-	const int blksz = msblk->devblksize;
+-	const int block_count = block_end - block;
+-	const int bio_max_pages = min_t(int, block_count, BIO_MAX_PAGES);
+-	int offset = read_start - round_down(index, PAGE_SIZE);
+-	int res = 0;
+-	int i, page_index;
+-
+-	memset(bio_ctx, 0, sizeof(*bio_ctx));
+ 	*block_offset = index & ((1 << msblk->devblksize_log2) - 1);
+-	bio_ctx->page_count =
+-		DIV_ROUND_UP(block_count * blksz + offset, PAGE_SIZE);
+-	bio_ctx->pages =
+-		kcalloc(bio_ctx->page_count, sizeof(struct page *), GFP_NOIO);
+-	if (!bio_ctx->pages)
+-		return -ENOMEM;
+-
+-	for (i = 0; i < bio_ctx->page_count; ++i) {
+-		bio_ctx->pages[i] = alloc_page(GFP_NOIO);
+-		if (!bio_ctx->pages[i]) {
+-			res = -ENOMEM;
+-			goto out;
+-		}
+-	}
+ 
+-	bio_ctx->bio = bio_alloc(GFP_NOIO, bio_max_pages);
+-	if (!bio_ctx->bio) {
+-		res = -ENOMEM;
+-		goto out;
+-	}
+-	bio_set_dev(bio_ctx->bio, sb->s_bdev);
+-	bio_ctx->bio->bi_opf = READ;
+-	bio_ctx->bio->bi_iter.bi_sector =
+-		block * (msblk->devblksize >> SECTOR_SHIFT);
+-
+-	for (i = 0, page_index = 0; i < block_count; ++i) {
+-		if (!bio_add_page(bio_ctx->bio, bio_ctx->pages[page_index],
+-				  blksz, offset)) {
+-			res = -EIO;
+-			goto out;
+-		}
+-		offset += blksz;
+-		if (offset >= PAGE_SIZE) {
+-			offset = 0;
+-			++page_index;
++	bio = bio_alloc(GFP_NOIO, page_count);
++	if (!bio)
++		goto out_free_bio;
++
++	bio_set_dev(bio, sb->s_bdev);
++	bio->bi_opf = READ;
++	bio->bi_iter.bi_sector = block * (msblk->devblksize >> SECTOR_SHIFT);
++
++	for (i = 0; i < page_count; ++i) {
++		struct page *page = alloc_page(GFP_NOIO);
++		unsigned int len =
++			min_t(unsigned int, PAGE_SIZE - offset, total_len);
++
++		if (!page)
++			goto out_free_bio;
++
++		if (!bio_add_page(bio, page, len, offset)) {
++			error = -EIO;
++			goto out_free_bio;
+ 		}
++
++		offset = 0;
++		total_len -= len;
+ 	}
+-	res = submit_bio_wait(bio_ctx->bio);
+-out:
+-	if (res)
+-		free_bio_read_context(bio_ctx);
+ 
+-	return res;
++	error = submit_bio_wait(bio);
++	if (error)
++		goto out_free_bio;
++
++	*biop = bio;
++	return 0;
++
++out_free_bio:
++	bio_free_pages(bio);
++	return error;
+ }
+ 
+ /*
+@@ -168,8 +137,7 @@ int squashfs_read_data(struct super_block *sb, u64 index, int length,
+ 		       u64 *next_index, struct squashfs_page_actor *output)
+ {
+ 	struct squashfs_sb_info *msblk = sb->s_fs_info;
+-	struct bio_read_context bio_ctx;
+-	struct bio_vec bvec;
++	struct bio *bio = NULL;
+ 	int compressed;
+ 	int res;
+ 	int offset;
+@@ -186,28 +154,31 @@ int squashfs_read_data(struct super_block *sb, u64 index, int length,
+ 		/*
+ 		 * Metadata block.
+ 		 */
++		struct bvec_iter_all iter_all = { };
++		struct bio_vec *bvec = bvec_init_iter_all(&iter_all);
+ 		const u8 *data;
+ 
+ 		if (index + 2 > msblk->bytes_used) {
+ 			res = -EIO;
+ 			goto out;
+ 		}
+-		res = squashfs_bio_read(sb, index, 2, &bio_ctx, &offset);
++		res = squashfs_bio_read(sb, index, 2, &bio, &offset);
+ 		if (res)
+ 			goto out;
+ 
+ 		/* Extract the length of the metadata block */
+-		bvec = bio_ctx.bio->bi_io_vec[0];
+-		data = page_address(bvec.bv_page) + bvec.bv_offset;
++		data = page_address(bvec->bv_page) + bvec->bv_offset;
+ 		length = data[offset];
+-		if (offset == bvec.bv_len - 1) {
+-			bvec = bio_ctx.bio->bi_io_vec[1];
+-			data = page_address(bvec.bv_page) + bvec.bv_offset;
+-			length |= data[0] << 8;
+-		} else {
++		if (offset <= bvec->bv_len - 1) {
+ 			length |= data[offset + 1] << 8;
++		} else {
++			if (WARN_ON_ONCE(!bio_next_segment(bio, &iter_all))) {
++				res = -EIO;
++				goto out;
++			}
++			data = page_address(bvec->bv_page) + bvec->bv_offset;
+ 		}
+-		free_bio_read_context(&bio_ctx);
++		bio_free_pages(bio);
+ 
+ 		compressed = SQUASHFS_COMPRESSED(length);
+ 		length = SQUASHFS_COMPRESSED_SIZE(length);
+@@ -219,21 +190,21 @@ int squashfs_read_data(struct super_block *sb, u64 index, int length,
+ 	if (next_index)
+ 		*next_index = index + length;
+ 
+-	res = squashfs_bio_read(sb, index, length, &bio_ctx, &offset);
++	res = squashfs_bio_read(sb, index, length, &bio, &offset);
+ 	if (res)
+ 		goto out;
+ 
+ 	if (compressed) {
+ 		if (msblk->stream) {
+-			res = squashfs_decompress(msblk, bio_ctx.bio, offset,
++			res = squashfs_decompress(msblk, bio, offset,
+ 						  length, output);
+ 		} else {
+ 			res = -EIO;
+ 		}
+ 	} else {
+-		res = copy_bio_to_actor(bio_ctx.bio, output, offset, length);
++		res = copy_bio_to_actor(bio, output, offset, length);
+ 	}
+-	free_bio_read_context(&bio_ctx);
++	bio_free_pages(bio);
+ out:
+ 	if (res < 0)
+ 		ERROR("Failed to read block 0x%llx: %d\n", index, res);
