@@ -2,96 +2,77 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95A1BC17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:26:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA78CC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:28:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BCE2214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:26:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CXZwYak3"
+	by mail.kernel.org (Postfix) with ESMTP id BB955214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:28:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389477AbfKEO0c (ORCPT
+        id S2389561AbfKEO2A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:26:32 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:43669 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727849AbfKEO0c (ORCPT
+        Tue, 5 Nov 2019 09:28:00 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41505 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727857AbfKEO2A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:26:32 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 3so15537097pfb.10;
-        Tue, 05 Nov 2019 06:26:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PK+HHV1/IFV7ZYeQjogsIwGVKZHVoLQkuXcsiphZtd0=;
-        b=CXZwYak3xedQX4/e63TeUH/7kgSArHLOR7ucp/4vFiEmrRCb7V2w7ARdXLwpX0s7AQ
-         PkvB0OsaNGBZw/zkyOT643saTTZntuEd1ArgZ8sGfJU4A2GPmbnGHeXBiD2rVJtn7eEt
-         gHPxN229cxG/lnhIOFe+FtKqJux80nNkFegC60BFXaRGFBA3ILYrMvIsuVJrYCVWrbWC
-         ffGCK76W1LQpxGcHzQJ6n3cN316IV5aFX6bYdnh4spVioIpvScPRJ0/0JLNX7FwQsEC9
-         uM9ffN/ChNC04sTtl49rBgQtmBbprwXKEQtR6e6J2kZDBfGcpLWywXrD8ovFtIiKLbZ0
-         Py+g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PK+HHV1/IFV7ZYeQjogsIwGVKZHVoLQkuXcsiphZtd0=;
-        b=BQ2dyqdP3vi5rJ8zsNLleHbt/DYtbKBog044S5NXgH4l9DOIXPSSRxbFN6kwllkti7
-         E8689Q51zFS5PV15SWtUXkikxfwrhOXlM3X9Gkh8HARQeZCN4B6nV2YOPoiZ85ZUv5NZ
-         Bk5CJJknLxJpuITlD7NeKmiHRcpuekXr6YJaK5yf60rIwir5YTf9MqpcS5qE1TCp5zzU
-         F3zO7Etelwcd2eQSqMru9tygTfm3r3Asq+E+dS9hACnHPuZIKUrj4Zblf94e1s0nRxVR
-         Sl8PQXI4/OehrBQAJTWbiCvZSZ1wgBMeAkuldkJtSClHZazVMx7XvEW88TFoNxUi0QfZ
-         R8Cw==
-X-Gm-Message-State: APjAAAXrEdK7aapKyKwNA/l02ZiDkShM4Yy4mwCkwcbB3kkgWpH8lITd
-        nIGizcUKHBq8uH1d6dDmWwbSwD4a
-X-Google-Smtp-Source: APXvYqz+Xn38K1Eq5zudDxVnCfJqlKsIjiOv0HrcDmOm8N2jm5wZ2EXSrv//ssjLwTnHHfLGgw6r6w==
-X-Received: by 2002:aa7:9ad0:: with SMTP id x16mr38531421pfp.51.1572963989837;
-        Tue, 05 Nov 2019 06:26:29 -0800 (PST)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id a21sm17528858pjq.1.2019.11.05.06.26.28
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 06:26:29 -0800 (PST)
-Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20191104212140.046021995@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <22e9066f-b2e9-552e-70d8-b6aaf3a01cd4@roeck-us.net>
-Date:   Tue, 5 Nov 2019 06:26:27 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 09:28:00 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iRzoJ-0005W7-92; Tue, 05 Nov 2019 15:27:55 +0100
+Date:   Tue, 5 Nov 2019 15:27:54 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Carlos O'Donell <carlos@redhat.com>
+cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking
+ ABIs at the same time.
+In-Reply-To: <f11d82f1-1e81-e344-3ad2-76e4cb488a3d@redhat.com>
+Message-ID: <alpine.DEB.2.21.1911051520090.17054@nanos.tec.linutronix.de>
+References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <87sgn2skm6.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051253430.17054@nanos.tec.linutronix.de>
+ <f11d82f1-1e81-e344-3ad2-76e4cb488a3d@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/4/19 1:43 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.9 release.
-> There are 163 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, 5 Nov 2019, Carlos O'Donell wrote:
+> On 11/5/19 6:56 AM, Thomas Gleixner wrote:
+> The other issue is this:
 > 
-> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> Anything received after that time might be too late.
-> 
+> "Robust mutexes do not take ROBUST_LIST_LIMIT into account"
+> https://sourceware.org/bugzilla/show_bug.cgi?id=19089
 
-Build results:
-	total: 158 pass: 158 fail: 0
-Qemu test results:
-	total: 391 pass: 391 fail: 0
+  "The kernel limits the length of the robust mutex list to 2048 entries.
+   This constant does not seem to be exported to user space."
 
-Guenter
+FWIW, the constant is defined in the UAPI futex header.
+
+The main concern here is not the actual number of futexes held by a task.
+
+The real issue is that the robust list could be circular by incident or
+malice and there is no way for the kernel to figure that out. That would
+prevent the task from exiting and make it iterate over the list until
+doomsday, i.e. a nice unpriviledged DoS.
+
+So I fear the kernel cannot really help with this one.
+
+Thanks,
+
+	tglx
