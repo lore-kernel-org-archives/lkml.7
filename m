@@ -2,270 +2,71 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A412C49EAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1D29C49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 260BE20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572947954;
-	bh=a//9Ivf1W2D94KgA+uVahfTNaNKk12rHld2i20WRf08=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=AkuJTz5OZqamPq9+Uc8vFLfgs9APwqlKG5pgGBNhrUu7tEoV+wjEbjpQ6bazmWQhe
-	 gt9kO3yZGgfCy9QaoBWy3BarI73MyBiTy34JCg/u+s2DU1IlNG53IxqkahGjWPtIBi
-	 R2Qj9TJ4kAHOR9RgjnBNVw6gJrJnJnI1MYvcwlzA=
+	by mail.kernel.org (Postfix) with ESMTP id 7006A217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:59:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388132AbfKEJ7N (ORCPT
+        id S2388160AbfKEJ7b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:59:13 -0500
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42279 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730454AbfKEJ7M (ORCPT
+        Tue, 5 Nov 2019 04:59:31 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40761 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730454AbfKEJ7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:59:12 -0500
-Received: by mail-ed1-f67.google.com with SMTP id m13so9300313edv.9;
-        Tue, 05 Nov 2019 01:59:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EsQY1+FYq6hmp/aV3ZQ9R7RWQ2nr+29an3C9DMBubgw=;
-        b=NDbAMQDjrOTGJwtB6zZnPgPim1KpxpAi7BcYVeLuvLXcasuoVPNn4+hq6hDydtPa61
-         RcI5Pi6prEN8WbXO+x1Rd3bZunRN7My/NIoC3Hz331/vUKKSShCvaNATD7yDjVHjgLyC
-         kjNWPMjcyKIY4e3+wY+I04dmrwjgER0ADJphPKSDnvaToBYfTPhevraOHwPx+dS5+dny
-         hQB71hwABZnt68osbaggMbFLEkYBHp529kkZc7DI/a3RKa+8LRFbulM+DZdTdcS8li6W
-         hb6NnTiWe0tOruuIMg+nMP+o3VmJf7mMlGGRwrF889Oag/cwtFaRl8t+v5NO1Oha/RWY
-         rr4Q==
-X-Gm-Message-State: APjAAAVak+K8YPFSi88XlUmlIIpsGlEs00q1EF8MetC2KMJa1DCM/A9P
-        A8g6V4AiY0JQWojKqzT2zRk=
-X-Google-Smtp-Source: APXvYqym7iMcRcDXO9zIYTv1DLgDk242F6B4BEeeidEiTic9E35TdFMtHO5+wzp+4GPeyP9g0jbpsg==
-X-Received: by 2002:a17:906:3285:: with SMTP id 5mr27628244ejw.143.1572947948275;
-        Tue, 05 Nov 2019 01:59:08 -0800 (PST)
-Received: from pi3 ([194.230.155.180])
-        by smtp.googlemail.com with ESMTPSA id j19sm252942ejs.88.2019.11.05.01.59.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 01:59:07 -0800 (PST)
-Date:   Tue, 5 Nov 2019 10:59:05 +0100
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        cw00.choi@samsung.com, b.zolnierkie@samsung.com,
-        lee.jones@linaro.org, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 4/5] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-Message-ID: <20191105095905.GA31721@pi3>
-References: <20191105015827.GA332@bogus>
- <20191105054218.29826-1-matheus@castello.eng.br>
- <20191105054218.29826-5-matheus@castello.eng.br>
+        Tue, 5 Nov 2019 04:59:31 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iRvcS-0000Cb-W3; Tue, 05 Nov 2019 10:59:25 +0100
+Date:   Tue, 5 Nov 2019 10:59:24 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Florian Weimer <fweimer@redhat.com>
+cc:     Shawn Landden <shawn@git.icu>, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking
+ ABIs at the same time.
+In-Reply-To: <87woceslfs.fsf@oldenburg2.str.redhat.com>
+Message-ID: <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
+References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191105054218.29826-5-matheus@castello.eng.br>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:42:17AM -0300, Matheus Castello wrote:
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
+On Tue, 5 Nov 2019, Florian Weimer wrote:
+> * Shawn Landden:
+> > If this new ABI is used, then bit 1 of the *next pointer of the
+> > user-space robust_list indicates that the futex_offset2 value should
+> > be used in place of the existing futex_offset.
 > 
-> Now we can use "maxim,alert-low-soc-level" property with the values from
-> 1% up to 32% to configure alert interrupt threshold.
-> 
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 96 +++++++++++++++++++++----
->  1 file changed, 82 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 75459f76d02c..c48a691cbd7b 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -29,6 +29,9 @@
->  #define MAX17040_DELAY		1000
->  #define MAX17040_BATTERY_FULL	95
-> 
-> +#define MAX17040_ATHD_MASK		0xFFC0
-> +#define MAX17040_ATHD_DEFAULT_POWER_UP	4
-> +
->  struct max17040_chip {
->  	struct i2c_client		*client;
->  	struct delayed_work		work;
-> @@ -43,6 +46,8 @@ struct max17040_chip {
->  	int soc;
->  	/* State Of Charge */
->  	int status;
-> +	/* Low alert threshold from 32% to 1% of the State of Charge */
-> +	u32 low_soc_alert;
->  };
-> 
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -99,6 +104,21 @@ static void max17040_reset(struct i2c_client *client)
->  	max17040_write_reg(client, MAX17040_CMD, 0x0054);
->  }
-> 
-> +static int max17040_set_low_soc_alert(struct i2c_client *client, u32 level)
-> +{
-> +	int ret;
-> +	u16 data;
-> +
-> +	level = 32 - level;
-> +	data = max17040_read_reg(client, MAX17040_RCOMP);
-> +	/* clear the alrt bit and set LSb 5 bits */
-> +	data &= MAX17040_ATHD_MASK;
-> +	data |= level;
-> +	ret = max17040_write_reg(client, MAX17040_RCOMP, data);
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_get_vcell(struct i2c_client *client)
->  {
->  	struct max17040_chip *chip = i2c_get_clientdata(client);
-> @@ -115,7 +135,6 @@ static void max17040_get_soc(struct i2c_client *client)
->  	u16 soc;
-> 
->  	soc = max17040_read_reg(client, MAX17040_SOC);
-> -
->  	chip->soc = (soc >> 8);
->  }
-> 
-> @@ -161,6 +180,24 @@ static void max17040_get_status(struct i2c_client *client)
->  		chip->status = POWER_SUPPLY_STATUS_FULL;
->  }
-> 
-> +static int max17040_get_of_data(struct max17040_chip *chip)
-> +{
-> +	struct device *dev = &chip->client->dev;
-> +	struct device_node *np = dev->of_node;
-> +	int ret = 0;
-> +
-> +	if (of_property_read_u32(np, "maxim,alert-low-soc-level",
-> +				 &chip->low_soc_alert)) {
-> +		chip->low_soc_alert = MAX17040_ATHD_DEFAULT_POWER_UP;
-> +	} else if (chip->low_soc_alert <= 0 ||
-> +			chip->low_soc_alert >= 33) {
-> +		/* low_soc_alert is not between 1% and 32% */
-> +		ret = -EINVAL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static void max17040_check_changes(struct i2c_client *client)
->  {
->  	max17040_get_vcell(client);
-> @@ -192,9 +229,27 @@ static irqreturn_t max17040_thread_handler(int id, void *dev)
->  	/* send uevent */
->  	power_supply_changed(chip->battery);
-> 
-> +	/* reset alert bit */
-> +	max17040_set_low_soc_alert(client, chip->low_soc_alert);
-> +
->  	return IRQ_HANDLED;
->  }
-> 
-> +static int max17040_enable_alert_irq(struct max17040_chip *chip)
-> +{
+> The futex interface currently has some races which can only be fixed by
+> API changes.  I'm concerned that we sacrifice the last bit for some
+> rather obscure feature.  What if we need that bit for fixing the
+> correctness issues?
 
-It does not make really sense to move this code to separate function in
-this patch. This should be done in patch 1/5. Otherwise you add a code
-in patch 1 and later in patch 4 you immediately rearrange it. This
-raises eybrows and gives a hint that patchset is not well structured.
+That current approach is going nowhere and if we change the ABI ever then
+this needs to happen with all *libc folks involved and agreeing.
 
-> +	struct i2c_client *client = chip->client;
-> +	unsigned int flags;
-> +	int ret;
-> +
-> +	dev_info(&client->dev, "IRQ: enabled\n");
+Out of curiosity, what's the race issue vs. robust list which you are
+trying to solve?
 
-While at it, get rid of dev_info here. It does not bring any useful
-information. All this is available in /proc/interrupts.
+Thanks,
 
-Best regards,
-Krzysztof
-
-> +	flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-> +	ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> +					max17040_thread_handler, flags,
-> +					chip->battery->desc->name, chip);
-> +
-> +	return ret;
-> +}
-> +
->  static enum power_supply_property max17040_battery_props[] = {
->  	POWER_SUPPLY_PROP_STATUS,
->  	POWER_SUPPLY_PROP_ONLINE,
-> @@ -216,6 +271,7 @@ static int max17040_probe(struct i2c_client *client,
->  	struct i2c_adapter *adapter = client->adapter;
->  	struct power_supply_config psy_cfg = {};
->  	struct max17040_chip *chip;
-> +	int ret;
-> 
->  	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_BYTE))
->  		return -EIO;
-> @@ -226,6 +282,12 @@ static int max17040_probe(struct i2c_client *client,
-> 
->  	chip->client = client;
->  	chip->pdata = client->dev.platform_data;
-> +	ret = max17040_get_of_data(chip);
-> +	if (ret) {
-> +		dev_err(&client->dev,
-> +			"failed: low SOC alert OF data out of bounds\n");
-> +		return ret;
-> +	}
-> 
->  	i2c_set_clientdata(client, chip);
->  	psy_cfg.drv_data = chip;
-> @@ -242,20 +304,26 @@ static int max17040_probe(struct i2c_client *client,
-> 
->  	/* check interrupt */
->  	if (client->irq) {
-> -		int ret;
-> -		unsigned int flags;
-> -
-> -		dev_info(&client->dev, "IRQ: enabled\n");
-> -		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-> -		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> -						max17040_thread_handler, flags,
-> -						chip->battery->desc->name,
-> -						chip);
-> -
-> -		if (ret) {
-> -			client->irq = 0;
-> +		if (of_device_is_compatible(client->dev.of_node,
-> +					    "maxim,max77836-battery")) {
-> +			ret = max17040_set_low_soc_alert(client,
-> +							 chip->low_soc_alert);
-> +			if (ret) {
-> +				dev_err(&client->dev,
-> +					"Failed to set low SOC alert: err %d\n",
-> +					ret);
-> +				return ret;
-> +			}
-> +
-> +			ret = max17040_enable_alert_irq(chip);
-> +			if (ret) {
-> +				client->irq = 0;
-> +				dev_warn(&client->dev,
-> +					 "Failed to get IRQ err %d\n", ret);
-> +			}
-> +		} else {
->  			dev_warn(&client->dev,
-> -				"Failed to get IRQ err %d\n", ret);
-> +				 "Device not compatible for IRQ");
->  		}
->  	}
-> 
-> --
-> 2.24.0.rc2
-> 
+	tglx
