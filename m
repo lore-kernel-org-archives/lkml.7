@@ -2,96 +2,161 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4FD09C49EAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC2ECC49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E6F320869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 942C721D7F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:49:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="KE3dP9Kv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388140AbfKEJtd (ORCPT
+        id S1730808AbfKEJtm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:49:33 -0500
-Received: from mout.kundenserver.de ([212.227.126.133]:57571 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388093AbfKEJtc (ORCPT
+        Tue, 5 Nov 2019 04:49:42 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:54946 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730722AbfKEJtl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:49:32 -0500
-Received: from mail-qt1-f178.google.com ([209.85.160.178]) by
- mrelayeu.kundenserver.de (mreue009 [212.227.15.129]) with ESMTPSA (Nemesis)
- id 1MIdW9-1ifzot1d2b-00EZnF; Tue, 05 Nov 2019 10:49:30 +0100
-Received: by mail-qt1-f178.google.com with SMTP id y10so21686113qto.3;
-        Tue, 05 Nov 2019 01:49:30 -0800 (PST)
-X-Gm-Message-State: APjAAAX5p8P40NOt8QqDGEKe3E6nJDegIQ+l1SsF0Rr4Ive1Abp4HpYc
-        GdBo1YEnNaQoqQPdn/zER2dTNe+TD3IfRAuBEIk=
-X-Google-Smtp-Source: APXvYqytk+YB723AlNICh0uVf4aP5i8XhgFrqWRnmq2L7GwuzVAxLKqOc22bK/LZTeykspfSzf0ix8jfskNYoVoVBiQ=
-X-Received: by 2002:a0c:c70a:: with SMTP id w10mr26382158qvi.222.1572947369108;
- Tue, 05 Nov 2019 01:49:29 -0800 (PST)
-MIME-Version: 1.0
-References: <20191105022928.517526-1-farnasirim@gmail.com> <alpine.DEB.2.21.1911051033050.17054@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911051033050.17054@nanos.tec.linutronix.de>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Tue, 5 Nov 2019 10:49:12 +0100
-X-Gmail-Original-Message-ID: <CAK8P3a0wyw=CwhiU34t1zBiSesf+HGBLeaV+=JVko_TjnvATHQ@mail.gmail.com>
-Message-ID: <CAK8P3a0wyw=CwhiU34t1zBiSesf+HGBLeaV+=JVko_TjnvATHQ@mail.gmail.com>
-Subject: Re: [PATCH 1/1] syscalls: Fix references to filenames containing
- syscall defs
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Mohammad Nasirifar <far.nasiri.m@gmail.com>,
+        Tue, 5 Nov 2019 04:49:41 -0500
+Received: by mail-wm1-f67.google.com with SMTP id z26so6899874wmi.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:49:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=oRi35sDRRYSuldGaopElz5IjGs2HKuOAcqpcVoq2wdY=;
+        b=KE3dP9KvcLUq0hJbOhSYMXJr4Z1Cuc2Vc3sYtj3A588K1AxiPBhNRv2jLPVvg3HpiB
+         asO9jGRsCrrAGrGXQuynbnaqIOtPdku/48txDbkC3jyEv0zbAYA99l9MmTsEF4lXmu4c
+         UlGTi/e9P81uVhAoSbMh6OU7HFW5tO869wbeU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=oRi35sDRRYSuldGaopElz5IjGs2HKuOAcqpcVoq2wdY=;
+        b=hTgCYSpxRsLrsqpO1O5rYiWpKlpzWS1+bn6dVGuSF5sPgS1SQjyEWHBxBqExpx0h0f
+         0UAxz7wgKYDYc0jIG21vHFa0dOgTTd3h/IP2mjnC4fFaVxAMSmwole8vwlxPXcNwX49e
+         fRZHZNMlnPdSOaXNxTYA+W5m4EehNH1nC1CW/ndhPe5Zo5NPL5X6XiFlVpxH6BMowwBK
+         1Cp5JTd28eghbzFoiM2goVlVzJUiEmlW1VXVHHZYUvpR2kSuVMCAFtK1T+scRHI9nOpw
+         UKI+QwuJzhvtlLAB+c4LFdj+2JPlubuXYLOPQbYoBF+kyxVexb20A1m3vzrNhWNUfufa
+         SedQ==
+X-Gm-Message-State: APjAAAXxJ0Vj8Bnk6PO4ZyYhKPRf8B0ufER/y3oNicaYa4R5rUL6tq9S
+        qVRRal4iXspYCBYuS9FtbWM4iw==
+X-Google-Smtp-Source: APXvYqy+m+ZJ5zxOn/Dji3l65qB+TEfMmH5EiR/oP/iFPjGmYGokusjpTK+YoOlM7MNeuKLe8vHIRQ==
+X-Received: by 2002:a7b:c925:: with SMTP id h5mr3591415wml.115.1572947379914;
+        Tue, 05 Nov 2019 01:49:39 -0800 (PST)
+Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
+        by smtp.gmail.com with ESMTPSA id j19sm25704277wre.0.2019.11.05.01.49.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 01:49:39 -0800 (PST)
+Date:   Tue, 5 Nov 2019 10:49:36 +0100
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     John Hubbard <jhubbard@nvidia.com>
+Cc:     Ira Weiny <ira.weiny@intel.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Mohammad Nasirifar <farnasirim@gmail.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Content-Type: text/plain; charset="UTF-8"
-X-Provags-ID: V03:K1:QOfOLv/wLwxEQEaF/X9MWNmB1DyCznud2OQ3THP6bAu6BBa60/c
- cDd750ixWXDTXPTtRdTyufI2s0MpRHzJEOvlvIfWC4/dycKY4WzLF7YDXYVrxv8M2TWlzSc
- 74HCr0aciyCS4p8x5dOEVKwybwO2Wy5TiL853dDTu01xtOnPK42+kAwZtg3s/JXN3nv5aFl
- 6/5WMJ/6STqxkTsT5fmpQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dIZOkZD2JWU=:WidfBCXffH/su35/Y5hSA8
- npF/Nh9OupAcaij6tos8lEpr12kT1le+68SSTY5bHz2Xc6V7Wwe/08swyoBXzwn0C/5a9942+
- LZMmeQKRjy5R0sd1BTSzQ4zvfq6E+X+TaFV2HgaKuV07FdcLoUPR0J/zk6pjerNyo+IIrkvKK
- SaR50GA5EHotsDqEbNrX7/MfGEOjqWEVSgjuW3MF/WebGAu8qSnEbmbuMZ8cRpK2fjl+KmIE0
- N+k55qMsiJeL/cPD5PPZsMj6rgUwZHeYxmSZcWrX2JtcAAHT7FUpYXwknArbe8unZoe7PTA5E
- cmtXYa4B4Q+ZeAY6NBUWoBvTJMv4Ijvy9e42nEwu+CT8an5YLvzXFn8WyO8Oc48HtNUETRgOU
- UXl/MSnf4DzOJuG0Fr29ZFOyjQsxiS1ennfDnVosvJWvkfcjnte4KfCNbORWN/Ond4s4kkWFs
- 2x+HpPkPUk9k5Rs5B9gFOnhA659oMlwZ3+zG7fG/XpMdfbJS/GDkzOknFL+OLAbAayFwnqelT
- RsbwmMjhajD4se/wjIRZkBd6I/mzBb7MRwjmZ1JUklZyUNzYmijJJH2uMG/reTXVja1bzW71i
- IMT2nfED5yL7HLQwHO7zRZLBgrBgB7KzkE8I3MBvnnmlHzEJcH5uT6YP4xURK/g8LQcRNcCN5
- KIauWswKQP5RJUYD7GpNTap0UE0H4eTLT4/yuuPXDUpORh9tdzMZaTcC06ywjuliKqEANenEd
- 0X0F/1BahJO/QVKJX+nFX6x6F0HPNg1bUArm8XOxhvsw4Gst079Y1M7znbC53i0ElR4yR6Mri
- tIYATTsc6LjuGc5i5259zYExsA5EB/+962804CxM+asLmzX2i0QMDDrFh3Zj5vMPOBMJM99Mn
- jBuXUjKbgIYs6ht3v+zA==
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 09/19] drm/via: set FOLL_PIN via pin_user_pages_fast()
+Message-ID: <20191105094936.GZ10326@phenom.ffwll.local>
+Mail-Followup-To: John Hubbard <jhubbard@nvidia.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?iso-8859-1?Q?Bj=F6rn_T=F6pel?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Chinner <david@fromorbit.com>, David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        =?iso-8859-1?B?Suly9G1l?= Glisse <jglisse@redhat.com>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>, Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, bpf@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, kvm@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+        linux-media@vger.kernel.org, linux-rdma@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org,
+        linux-mm@kvack.org, LKML <linux-kernel@vger.kernel.org>
+References: <20191030224930.3990755-1-jhubbard@nvidia.com>
+ <20191030224930.3990755-10-jhubbard@nvidia.com>
+ <20191031233628.GI14771@iweiny-DESK2.sc.intel.com>
+ <20191104181055.GP10326@phenom.ffwll.local>
+ <48d22c77-c313-59ff-4847-bc9a9813b8a7@nvidia.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <48d22c77-c313-59ff-4847-bc9a9813b8a7@nvidia.com>
+X-Operating-System: Linux phenom 5.2.0-3-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 10:34 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Mon, 4 Nov 2019, Mohammad Nasirifar wrote:
-> > Fix stale references to files containing syscall definitions in
-> > 'include/linux/syscalls.h' and 'include/uapi/asm-generic/unistd.h',
-> > pointing to 'kernel/itimer.c', 'kernel/hrtimer.c', and 'kernel/time.c'.
-> > They are now under 'kernel/time'.
-> >
-> > Also definitions of 'getpid', 'getppid', 'getuid', 'geteuid', 'getgid',
-> > 'getegid', 'gettid', and 'sysinfo' are now in 'kernel/sys.c'.
->
-> Can we please remove these file references completely. They are going to be
-> stale sooner than later again and they really do not provide any value.
+On Mon, Nov 04, 2019 at 11:20:38AM -0800, John Hubbard wrote:
+> On 11/4/19 10:10 AM, Daniel Vetter wrote:
+> > On Thu, Oct 31, 2019 at 04:36:28PM -0700, Ira Weiny wrote:
+> >> On Wed, Oct 30, 2019 at 03:49:20PM -0700, John Hubbard wrote:
+> >>> Convert drm/via to use the new pin_user_pages_fast() call, which sets
+> >>> FOLL_PIN. Setting FOLL_PIN is now required for code that requires
+> >>> tracking of pinned pages, and therefore for any code that calls
+> >>> put_user_page().
+> >>>
+> >>
+> >> Reviewed-by: Ira Weiny <ira.weiny@intel.com>
+> > 
+> > No one's touching the via driver anymore, so feel free to merge this
+> > through whatever tree suits best (aka I'll drop this on the floor and
+> > forget about it now).
+> > 
+> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> > 
+> 
+> OK, great. Yes, in fact, I'm hoping Andrew can just push the whole series
+> in through the mm tree, because that would allow it to be done in one 
+> shot, in 5.5
 
-+1
-
-Good idea!
-
-In the long run, I'd prefer to have a parsable format that can be used to
-generate both the header file and the stubs that we currently provide
-using SYSCALL_DEFINEx(), but before that I'd like the remaining two
-unistd.h files to be converted to syscall.tbl format (Nitesh is still working
-on that).
-
-      Arnd
+btw is there more? We should have a bunch more userptr stuff in various
+drivers, so was really surprised that drm/via is the only thing in your
+series.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
