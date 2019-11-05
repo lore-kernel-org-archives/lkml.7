@@ -2,102 +2,116 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF5AC010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AB7C010AE
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:41:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98AA9206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1FED20869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:41:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572950491;
+	bh=tYgfDNUiKF9OG4ZAZHs1pUURXP/0w4N53wTEREG05Pk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=fbfvXyauu7TgyaOP8jQKfa00AJQy9qLh2AsX0AW3S7QqQ5D/z3VbNMUL/8C/ieOP2
+	 n9CApTSVEQeWXmumyCkb5g5Cj6YIAN8EZ9hlWeWzNkI24rpou39k22J40mm+ysdj+V
+	 glydMnCg2jqEpb9c60cHfF7W81tr4rkYJX7ov+8o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388741AbfKEKlI (ORCPT
+        id S2388793AbfKEKla (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:41:08 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:42291 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388098AbfKEKlI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:41:08 -0500
-Received: by mail-lf1-f65.google.com with SMTP id z12so14719808lfj.9;
-        Tue, 05 Nov 2019 02:41:07 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ab8TgE96NXL7wNNnxX7ASO1X5IKhAsP6Q26bpn2VZYY=;
-        b=AQLHBY5nV3T7qF4yECjhV2phBZt//J5R7ab4xvBKY22Seck8w29lOJ2RiaqHIgDH2b
-         P6vykzwFT/Fcl+Xq2sJie3gLh9SwwOQVUtmhkkjkzUxkwS86Ni34xZI5rMKLalIYAqgt
-         oo+WdlzJj5vEXlbnLT2hBBqycJqgfSWRMIvYh0D2sZjCuSj/XqFXU4a+/JAAke2KXOMJ
-         d33w6zoCzoU9B4NdlmL66h8LiQAnQqdCfGo7wTI117067iy3ExpeZ/Bjp84l3ru87GJy
-         oSOrJiWeVS+dyUjnK5HFgUJ3L53+Xmm/jzH0wkLsXP1AgRHtWzD7TLKTDlNMm3ZDI68E
-         T5SQ==
-X-Gm-Message-State: APjAAAW1ifKmRCeWUO1IBR+2QN0EtKQVi/W18IvNjblHDdUYXqe97JAh
-        gyYzLUU1XEv0WLwM+dLH8Xc=
-X-Google-Smtp-Source: APXvYqyd7BPLVlXltvwQx3q/6/93eoazHHJAhFGgTMBf28mtqzAfCdmqA/1SC1YAlBltoIfJMpVCgA==
-X-Received: by 2002:a19:40cf:: with SMTP id n198mr20334435lfa.189.1572950466340;
-        Tue, 05 Nov 2019 02:41:06 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id b67sm18399134ljf.5.2019.11.05.02.41.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:41:05 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:40:56 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 61/62] gpio: gpio-sa1100: Use new GPIO_LINE_DIRECTION
-Message-ID: <95cc1f0c0925da53696fe8b69109cfc6c2d35794.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 5 Nov 2019 05:41:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55196 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388098AbfKEKla (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:41:30 -0500
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130B3206BA;
+        Tue,  5 Nov 2019 10:41:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572950489;
+        bh=tYgfDNUiKF9OG4ZAZHs1pUURXP/0w4N53wTEREG05Pk=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=YltowqDGvnMBn/nVPnvQGpxkN/kl/KLHSWZ4Iz4UwBznH7w+V0gcqDNuSq2yAsfbo
+         oJpi2x/ApcGc+grS9NYykkB2iWQz7g1j//dPIq/0KGRZ6Kjbpcmz6+O4L0Hy/Uyb8X
+         dnxCjRrctg0qduKr+uh0C4chDMp3nKA/S+k/EVUc=
+Date:   Tue, 5 Nov 2019 11:41:26 +0100
+From:   Maxime Ripard <mripard@kernel.org>
+To:     Torsten Duwe <duwe@lst.de>
+Cc:     Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Sean Paul <seanpaul@chromium.org>,
+        Vasily Khoruzhick <anarsoul@gmail.com>,
+        Harald Geyer <harald@ccbib.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/7] drm/bridge: split some definitions of ANX78xx to
+ dedicated headers
+Message-ID: <20191105104126.GC3876@gilmour.lan>
+References: <20191104110400.F319F68BE1@verein.lst.de>
+ <20191104110605.F012268BFE@verein.lst.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
 Content-Disposition: inline
-In-Reply-To: <cover.1572946026.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20191104110605.F012268BFE@verein.lst.de>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
-equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-GPIO_LINE_DIRECTION_OUT to help them out.
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/gpio/gpio-sa1100.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+--0eh6TmSyL6TZE2Uz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/drivers/gpio/gpio-sa1100.c b/drivers/gpio/gpio-sa1100.c
-index 46b7cf23fb0f..edff5e81489f 100644
---- a/drivers/gpio/gpio-sa1100.c
-+++ b/drivers/gpio/gpio-sa1100.c
-@@ -53,7 +53,10 @@ static int sa1100_get_direction(struct gpio_chip *chip, unsigned offset)
- {
- 	void __iomem *gpdr = sa1100_gpio_chip(chip)->membase + R_GPDR;
- 
--	return !(readl_relaxed(gpdr) & BIT(offset));
-+	if (readl_relaxed(gpdr) & BIT(offset))
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
- }
- 
- static int sa1100_direction_input(struct gpio_chip *chip, unsigned offset)
--- 
-2.21.0
+Hi,
 
+On Tue, Oct 29, 2019 at 01:16:57PM +0100, Torsten Duwe wrote:
+> From: Icenowy Zheng <icenowy@aosc.io>
+>
+> Some definitions currently in analogix-anx78xx.h are not restricted to
+> the ANX78xx series, but also applicable to other DisplayPort
+> transmitters by Analogix.
+>
+> Split out them to dedicated headers, and make analogix-anx78xx.h include
+> them.
+>
+> Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+> Signed-off-by: Torsten Duwe <duwe@suse.de>
+> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
+This one doesn't apply on drm-misc-next. The fix doesn't look really
+obvious to me, can you rebase and resend it?
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
+I'll apply the DT bindings and the DT tree so that it's part of the
+next PR I'm going to send.
+
+Maxime
+
+--0eh6TmSyL6TZE2Uz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcFR1gAKCRDj7w1vZxhR
+xV5aAQCXBnZlOkkH5HkRZaHAhmNuaFBDCCHJUlXqxSbXJL/X4QEA5kQpIKafNuiU
+aw+xjEUvCpBo0PvmsdjNFuoA8dwovAI=
+=FuMM
+-----END PGP SIGNATURE-----
+
+--0eh6TmSyL6TZE2Uz--
