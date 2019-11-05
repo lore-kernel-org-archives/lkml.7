@@ -2,144 +2,188 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BC3C010CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7032FC010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A1F4217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3E77C20663
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TLkHehXC"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="iFm/jmPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388346AbfKEMbd (ORCPT
+        id S2388474AbfKEMbq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:31:33 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:39758 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387744AbfKEMbd (ORCPT
+        Tue, 5 Nov 2019 07:31:46 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:60950 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387744AbfKEMbp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:31:33 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 195so14959086lfj.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 04:31:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kMRRzBdYGAmjCi84Oik+o1hEPde0vMlLbqwfzhBep3Y=;
-        b=TLkHehXCoUaUGstiwdj8fjVlz9gpUtcPChFOwjxmUtGkFfOi0uQ7WwBFH9q99o2YaS
-         RyO+Ddp4ujrXZoIKDYOx4TOi+TqY9Mu5qkwdw83/3cvXoJW63WcWkgO+D01XxbKUhkNa
-         HyqFjL7lLvZ6HfbuTZdSE0DCCBUUTUCRDluvU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kMRRzBdYGAmjCi84Oik+o1hEPde0vMlLbqwfzhBep3Y=;
-        b=hXPSU3LtrB+G/XL2fO9x8jOHxIv0zDGCqcyC+IJFneZ1QozcbMnUAvCnmhvmazrao/
-         gTrfE24RvGlRapcw9N1KWrtkzMG0zxUs/Ikgzkqv1HSkERjaF9paFLHnBfiqsPrY8Owt
-         AibFewGPpNgySnM7yVb6oYdjYI5bHB86LEsB6VXN6DLl0GAXrMsp6SyAbmgZkVVfB/8d
-         2acBfqi7q3nBndhMc098iO6s14ugE0OJLMZTBuGGemJ9JhC4/+utlQHh5DF36sQu7Kbl
-         bphIMr/+gMJQB7myXV57QZU/EmsDYm6Rngxs/c4JJwyMNtzBVUApjkEu4MMyNt5N7o1i
-         LCuQ==
-X-Gm-Message-State: APjAAAWrSL0m9jQWPsxsfM1WnoSF4wGNTggIgITf6FDD/yxW9iB+Fizo
-        4Er/2womloNAPg6i7sbfBHQDAN8C4AkYcg==
-X-Google-Smtp-Source: APXvYqz7pTQrY6+PNDzgbHOOx5ljSHLg2gy/5/9BxlS/JkI4le74b5m9Xs7646wgzBUgM1YLYIcswA==
-X-Received: by 2002:ac2:4856:: with SMTP id 22mr19654061lfy.131.1572957089421;
-        Tue, 05 Nov 2019 04:31:29 -0800 (PST)
-Received: from prevas-ravi.prevas.se ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id i128sm10953245lfd.6.2019.11.05.04.31.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 04:31:28 -0800 (PST)
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-Subject: [PATCH] watchdog: make nowayout sysfs file writable
-Date:   Tue,  5 Nov 2019 13:31:25 +0100
-Message-Id: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
-X-Mailer: git-send-email 2.23.0
+        Tue, 5 Nov 2019 07:31:45 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVZZo047725;
+        Tue, 5 Nov 2019 06:31:36 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1572957096;
+        bh=AsxrQckfPatpgdXRQ/zXSSwH2VQIm6gqK/OKDHYLkXU=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=iFm/jmPaNGC/yLH5UF0oufH/eeGZYSkq55Y0PmYIuxjqGXceUzv5U3cs2iRykwXVQ
+         Ze+oGlsL8Sdrgaj9Tw+IQwj2CP1d9jgpyR/p6cfjBeeUMQFg3ZVrnaOWq92Orqhc0h
+         meV3owl5qa2Cesv+fYrnGceHoSaphMMcn7ZPkBUg=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVZIh086961;
+        Tue, 5 Nov 2019 06:31:35 -0600
+Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
+ 2019 06:31:20 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE108.ent.ti.com
+ (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 5 Nov 2019 06:31:20 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CVVML087123;
+        Tue, 5 Nov 2019 06:31:32 -0600
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+ <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+ <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
+ <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
+ <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
+ <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+ <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+ <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
+Date:   Tue, 5 Nov 2019 14:32:43 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It can be useful to delay setting the nowayout feature for a watchdog
-device. Moreover, not every driver (notably gpio_wdt) implements a
-nowayout module parameter/otherwise respects CONFIG_WATCHDOG_NOWAYOUT,
-and modifying those drivers carries a risk of causing a regression for
-someone who has two watchdog devices, sets CONFIG_WATCHDOG_NOWAYOUT
-and somehow relies on the gpio_wdt driver being ignorant of
-that (i.e., allowing one to gracefully close a gpio_wdt but not the
-other watchdog in the system).
 
-So instead, simply make the nowayout sysfs file writable. Obviously,
-setting nowayout is a one-way street.
 
-Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
----
- .../ABI/testing/sysfs-class-watchdog          |  9 ++++++--
- drivers/watchdog/watchdog_dev.c               | 22 ++++++++++++++++++-
- 2 files changed, 28 insertions(+), 3 deletions(-)
+On 05/11/2019 14.15, Grygorii Strashko wrote:
+> 
+> 
+> On 05/11/2019 11:58, Linus Walleij wrote:
+>> On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
+>>> [Peter]
+>>>> The device needs the RST line to be high, otherwise it is not
+>>>> accessible. If it does not have reset control how can we make sure that
+>>>> the GPIO line is in correct state?
+>>>
+>>> Just like the reset code, drivers register their use of the reset and
+>>> the core tracks users and prevents resetting when not safe. Maybe the
+>>> reset subsystem needs to learn about GPIO resets. (...)
+>>
+>> I agree. Certainly the reset subsystem can do what the regulator
+>> subsystem is already doing: request the GPIO line nonexclusive
+>> and handle any reference counting and/or quirks that are needed
+>> in a hypothetical drivers/reset/reset-gpio.c driver.
+>>
+>> There is no such driver today, just a "reset" driver in
+>> drivers/power/reset that resets the whole system.
+>>
+>> But I see no problem in creating a proper reset driver in drivers/reset
+>> to handle a few peripherals with a shared GPIO reset line.
+> 
+> Personally, I agree with Mark's comment here:
+> 
+>> [Mark]
+>> The theory with that was that any usage of this would need the
+>> higher level code using the GPIO to cooperate so they didn't step
+>> on each other's toes so the GPIO code should just punt to it.
+>>
+>>> But let's say that a board design will pick two components (C1 and C2)
+>>> and use the same GPIO line to enable them. We already have the drivers
+>>> for them and they are used in boards already.
+>>
+>> This is basically an attempt to make a generic implementation of
+>> that cooperation for simple cases.
+>>
+> 
+> This looks like unsolvable problem in generic way.
+> Lets assume there are some generic shared reset controller invented, but
+> then
+> - What if some driver is loaded/unloaded and corresponding device uses
+> shared
+>   reset which is de-asserted already?
+>   In this case, driver should never ever expect that target device has all
+>   registers in default state.
+> - What if reset is required as part of error recovery procedure? The
+> error recovery
+>   will not be supported by such design.
+> - PM: Device reset could be part of suspend/resume sequence. if one of
+> the devices
+>   is wake-up source, but other are not, those devices might be in very
+> unexpected state during resume.
+> - There could be dependencies on reset timings, shared reset might work for
+>   similar devices (like set of net phys) and does not work if connected
+> devices are different.
 
-diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
-index 675f9b537661..9860a8b2ba75 100644
---- a/Documentation/ABI/testing/sysfs-class-watchdog
-+++ b/Documentation/ABI/testing/sysfs-class-watchdog
-@@ -17,8 +17,13 @@ What:		/sys/class/watchdog/watchdogn/nowayout
- Date:		August 2015
- Contact:	Wim Van Sebroeck <wim@iguana.be>
- Description:
--		It is a read only file. While reading, it gives '1' if that
--		device supports nowayout feature else, it gives '0'.
-+		It is a read/write file. While reading, it gives '1'
-+		if the device has the nowayout feature set, otherwise
-+		it gives '0'. Writing a '1' to the file enables the
-+		nowayout feature. Once set, the nowayout feature
-+		cannot be disabled, so writing a '0' either has no
-+		effect (if the feature was already disabled) or
-+		results in a permission error.
- 
- What:		/sys/class/watchdog/watchdogn/state
- Date:		August 2015
-diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
-index dbd2ad4c9294..0c478b8f8d5a 100644
---- a/drivers/watchdog/watchdog_dev.c
-+++ b/drivers/watchdog/watchdog_dev.c
-@@ -452,7 +452,27 @@ static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
- 
- 	return sprintf(buf, "%d\n", !!test_bit(WDOG_NO_WAY_OUT, &wdd->status));
- }
--static DEVICE_ATTR_RO(nowayout);
-+
-+static ssize_t nowayout_store(struct device *dev, struct device_attribute *attr,
-+				const char *buf, size_t len)
-+{
-+	struct watchdog_device *wdd = dev_get_drvdata(dev);
-+	unsigned int value, current;
-+	int ret;
-+
-+	ret = kstrtouint(buf, 0, &value);
-+	if (ret)
-+		return ret;
-+	if (value > 1)
-+		return -EINVAL;
-+	current = !!test_bit(WDOG_NO_WAY_OUT, &wdd->status);
-+	/* nowayout cannot be disabled once set */
-+	if (current && !value)
-+		return -EPERM;
-+	watchdog_set_nowayout(wdd, value);
-+	return len;
-+}
-+static DEVICE_ATTR_RW(nowayout);
- 
- static ssize_t status_show(struct device *dev, struct device_attribute *attr,
- 				char *buf)
--- 
-2.23.0
+and some driver shamelessly implements runtime power/reset control while
+other driver does not (they were never used on board where they had
+shared GPIO, probably power at most)
 
+> 
+> It seems, the only one case when it might help is system boot when:
+>  - similar devices are connected to the reset line
+>  - drivers are not expected to be re-loaded
+>  - device reset is not part of any recovery procedure
+>  - safe reset timings can be defined for all connected devices
+> (but hey - if this is boot only then gpio-hogs should work. Are they?)
+
+That is another thing which almost works ;)
+w/o gpio binding deferred probing is not possible if the GPIO controller
+is probed later.
+In some cases it might be even impossible to make sure that the GPIO
+controller would probe first (GPIO extender on different i2c bus than
+the user(s) of the gpio line)
+In some cases moving around nodes in DT might artificially make things
+work, but then someone compiles the expander as module, or some 'small'
+change in kernel and the probe order on the bus changes.
+I don't think it is a valid thing to have commits on the DT files
+saying: move the expander front/after the hog affected user since since
+Monday the probe order has changed. Then move it back two weeks later ;)
+
+> 
+> Actually, MDIO bus is one such example where reset line can be toggled by
+> as by MDIO bus controller as by PHY drivers.
+> 
+> So, even thing will move forward with this - it'll be good to have noted
+> above restrictions in documentation.
+> 
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
