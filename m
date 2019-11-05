@@ -2,73 +2,121 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F310C17498
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A352EC17498
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E319121928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RmwVhv2z"
+	by mail.kernel.org (Postfix) with ESMTP id 7716C21D81
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:45:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572965105;
+	bh=O4MtmAdcO3FzgH6mOzo36io3Kk2jOXQ1C2kSxx9qcII=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=2tcTevhKsEU11NGZIf6/JX88G8hcuj1PlJQBJHLXoL6x2LiVmz1dqm3i5nhd02dZp
+	 XhqSR9DUFym7bemlwVyOapd6eNH4YVxHclIJgslePP2hfJ5TH54M0dtmLSwIIkk2e2
+	 2npA2TYt3/UT00o/kjMuJ7HyyGT5SwQ6tLocm2gc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389409AbfKEOoe (ORCPT
+        id S2389535AbfKEOpE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:44:34 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:49874 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388976AbfKEOoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:44:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=+c1h6MksoHw7Izy6bCwEqip1xk2piM3NtthsfyLl14g=; b=RmwVhv2z+DuJJiuh5Yn6jqqgW+
-        XQbdvE/gYPkYrAxjJHAlErO+w0r1idD1Vx6ovyIE3vcJh9Pmu2uPyN/JWNCVhtpBpFMBnKjoNSEH8
-        A08dLlhi7m11Kd1wEasUDEm8jCBUU+SWHv1QNFY1OXhWbT+3vkiB20tj0qVK8AO4+tZQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iS04M-0002OO-Pd; Tue, 05 Nov 2019 15:44:30 +0100
-Date:   Tue, 5 Nov 2019 15:44:30 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Subject: Re: [PATCH 00/12] staging: dpaa2-ethsw: add support for control
- interface traffic
-Message-ID: <20191105144430.GE7189@lunn.ch>
-References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
- <20191105132435.GA2616182@kroah.com>
- <20191105140256.GB7189@lunn.ch>
- <39cf7504-7599-83bb-4b53-5a25ff9240a8@nxp.com>
+        Tue, 5 Nov 2019 09:45:04 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42985 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730833AbfKEOpE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:45:04 -0500
+Received: by mail-oi1-f195.google.com with SMTP id i185so17712841oif.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 06:45:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linuxfoundation.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=VWnis//m4WNFnlxLyNlHl8kK3/QSGA3JjJ79aEU0to4=;
+        b=DaoxlrH9q8f7VCHjGeu+EM52lhWRyNzsdKcNSLlVI919X2J79nOoQI7JIhlywaQa9h
+         ensrTq2YlUuY5oQpH5MWwsmyNmG+r9fngp6ZLi0YkCSGvxm4wDDY6vqiNizXtM4TfuiI
+         Lr12OXEqSF6yK38Ln94IdqzBCXpOXNDZlVqEs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VWnis//m4WNFnlxLyNlHl8kK3/QSGA3JjJ79aEU0to4=;
+        b=t2bO4ZGJLsnquwO9Nin+8r/z3S/gF3Br5keCXNmJzmPenDE2C+xAoMey4htIxXYoyL
+         2ze5sozDmjL+6JT/FCkyQ/NiQzRuvRBzVu893TZN4Do2krslFQeuafTqAN1xfpXWeSn7
+         dvoS2n5cRATyKPH7bz+8mx/HZ7NpvDRhxkHucSWI4aPNBKRuIk/z5bJt+ZtjFtDXHNwF
+         FPvz36YGvL3e6VDXNtt/rRhWryWVPhCMfy2CYYVksSXlxhy0tnguCL4lPXSh19IzfJT1
+         Zi0ALdpN0eg9VdjxHzvydbQkVhpcpq0NSaMBW8mXc+1VX5njoL89Hvcm3vr/MBe/u8I6
+         KLIw==
+X-Gm-Message-State: APjAAAWyvEKkHG5YCzOT07rccrtX3hbJ82cef1p/9pXwgVrRzJv9zoXY
+        O7zNK4XBJ252Gqs7a2BNJA904A==
+X-Google-Smtp-Source: APXvYqwaQf3DBxvRDNzusDulEDuG9xrAmBVp2JvYuo/mCUCbGA+vq0YIswqjp7l2c7F5rwTAG08+JQ==
+X-Received: by 2002:aca:f4c6:: with SMTP id s189mr1961325oih.63.1572965103115;
+        Tue, 05 Nov 2019 06:45:03 -0800 (PST)
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net. [24.9.64.241])
+        by smtp.gmail.com with ESMTPSA id x16sm5732293oic.40.2019.11.05.06.45.01
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 06:45:02 -0800 (PST)
+Subject: Re: linux-next: manual merge of the akpm tree with the kunit tree
+To:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Brendan Higgins <brendanhiggins@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        David Gow <davidgow@google.com>,
+        Shuah Khan <skhan@linuxfoundation.org>
+References: <20191105204526.32f19975@canb.auug.org.au>
+From:   Shuah Khan <skhan@linuxfoundation.org>
+Message-ID: <4dcb9885-3094-88eb-9998-5edb87a3b4bf@linuxfoundation.org>
+Date:   Tue, 5 Nov 2019 07:45:01 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <39cf7504-7599-83bb-4b53-5a25ff9240a8@nxp.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191105204526.32f19975@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Hi Andrew,
+On 11/5/19 2:45 AM, Stephen Rothwell wrote:
+> Hi all,
 > 
-> Just to clarify...if the STP handling is removed, then we'll have a 
-> receive code path but no frame will reach it.
-> This is because, the only way we could direct traffic to the CPU is by 
-> adding an ACL rule.
+> Today's linux-next merge of the akpm tree got conflicts in:
+> 
+>    MAINTAINERS
+>    lib/Kconfig.debug
+>    lib/Makefile
+>    lib/list-test.c
+> 
+> between commit:
+> 
+>    ea2dd7c0875e ("lib/list-test: add a test for the 'list' doubly linked list")
+> 
+> from the kunit tree and patch:
+> 
+>    "lib/list-test.c: add a test for the 'list' doubly linked list"
+> 
+> from the akpm tree.
+> 
+> I fixed it up (I just assume that these are different versions of the
+> same patch, so I just dropped the version in the akpm tree) and can
+> carry the fix as necessary. This is now fixed as far as linux-next is
+> concerned, but any non trivial conflicts should be mentioned to your
+> upstream maintainer when your tree is submitted for merging.  You may
+> also want to consider cooperating with the maintainer of the conflicting
+> tree to minimise any particularly complex conflicts.
+> 
 
-Ah, that is not good.
+Right. Andrew and I discussed this patch and he is in the loop that
+there is a new version of this patch and that it will be combined
+with the Kunit patches in kselftest tree.
 
-As i said in one of my reviews, you need to receive all multicast and
-broadcast traffic by default. Without that, ARP will not work.  Does
-the switch perform learning on frames sent from the CPU? Does the
-switch learn the CPUs MAC address and forward frames to it?  Can i add
-an IP address to the interface and use ping?
+Please drop the patch from akpm and carry the fix if necessary.
 
-   Andrew
+thanks,
+-- Shuah
