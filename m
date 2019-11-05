@@ -2,88 +2,96 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A30C17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:35:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C32C17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:36:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C7FA2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:35:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6B152190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:36:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389050AbfKENfw (ORCPT
+        id S2389111AbfKENgc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:35:52 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:55870 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388313AbfKENfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:35:52 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id ACF784E9D9F9149A606F;
-        Tue,  5 Nov 2019 21:35:42 +0800 (CST)
-Received: from localhost.localdomain (10.90.53.225) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 5 Nov 2019 21:35:36 +0800
-From:   Chen Wandun <chenwandun@huawei.com>
-To:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <perex@perex.cz>, <gregkh@linuxfoundation.org>,
-        <davem@davemloft.net>, <rfontana@redhat.com>,
-        <kstewart@linuxfoundation.org>, <joe@perches.com>,
-        <tglx@linutronix.d>
-CC:     Chenwandun <chenwandun@huawei.com>
-Subject: [PATCH] hp100: remove set but not used variable val
-Date:   Tue, 5 Nov 2019 21:42:40 +0800
-Message-ID: <1572961360-67523-1-git-send-email-chenwandun@huawei.com>
-X-Mailer: git-send-email 2.7.4
+        Tue, 5 Nov 2019 08:36:32 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:45207 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388313AbfKENgc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:36:32 -0500
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1iRz0S-0008DC-Vu; Tue, 05 Nov 2019 14:36:24 +0100
+Message-ID: <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
+Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        'Uwe =?ISO-8859-1?Q?Kleine-K=F6nig=27?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Date:   Tue, 05 Nov 2019 14:36:23 +0100
+In-Reply-To: <20191105131456.32400-3-peron.clem@gmail.com>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
+         <20191105131456.32400-3-peron.clem@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1.1 
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.90.53.225]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chenwandun <chenwandun@huawei.com>
+On Tue, 2019-11-05 at 14:14 +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
+> 
+> H6 PWM core needs deasserted reset line in order to work.
+> 
+> Add an optional probe for it.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
 
-Fixes gcc '-Wunused-but-set-variable' warning:
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-drivers/staging/hp/hp100.c: In function hp100_start_xmit:
-drivers/staging/hp/hp100.c:1629:10: warning: variable val set but not used [-Wunused-but-set-variable]
+> ---
+>  drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
+>  1 file changed, 31 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 6f5840a1a82d..9ba83769a478 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+[...]
+> @@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pwm->clk))
+>  		return PTR_ERR(pwm->clk);
+>  
+> +	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
+> +	if (IS_ERR(pwm->rst)) {
+> +		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
+> +			dev_err(&pdev->dev, "get reset failed %ld\n",
+> +				PTR_ERR(pwm->rst));
+> +		return PTR_ERR(pwm->rst);
+> +	}
+> +
+> +	/* Deassert reset */
 
-Signed-off-by: Chenwandun <chenwandun@huawei.com>
----
- drivers/staging/hp/hp100.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Nitpick: isn't the API function name explanatory enough?
 
-diff --git a/drivers/staging/hp/hp100.c b/drivers/staging/hp/hp100.c
-index 6ec78f5..7e91737 100644
---- a/drivers/staging/hp/hp100.c
-+++ b/drivers/staging/hp/hp100.c
-@@ -1626,7 +1626,6 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
- 	unsigned long flags;
- 	int i, ok_flag;
- 	int ioaddr = dev->base_addr;
--	u_short val;
- 	struct hp100_private *lp = netdev_priv(dev);
- 
- #ifdef HP100_DEBUG_B
-@@ -1695,13 +1694,12 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
- 
- 	spin_lock_irqsave(&lp->lock, flags);
- 	hp100_ints_off();
--	val = hp100_inw(IRQ_STATUS);
- 	/* Ack / clear the interrupt TX_COMPLETE interrupt - this interrupt is set
- 	 * when the current packet being transmitted on the wire is completed. */
- 	hp100_outw(HP100_TX_COMPLETE, IRQ_STATUS);
- #ifdef HP100_DEBUG_TX
- 	printk("hp100: %s: start_xmit: irq_status=0x%.4x, irqmask=0x%.4x, len=%d\n",
--			dev->name, val, hp100_inw(IRQ_MASK), (int) skb->len);
-+			dev->name, hp100_inw(IRQ_STATUS), hp100_inw(IRQ_MASK), (int) skb->len);
- #endif
- 
- 	ok_flag = skb->len >= HP100_MIN_PACKET_SIZE;
--- 
-2.7.4
+regards
+Philipp
 
