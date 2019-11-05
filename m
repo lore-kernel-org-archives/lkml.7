@@ -2,169 +2,105 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 907CACA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:44:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F116BCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:45:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 605B42190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:44:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C27572084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:45:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="vI7sjVF0"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ZPWuvUj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387488AbfKEGo3 (ORCPT
+        id S2387579AbfKEGpG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:44:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34489 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEGo2 (ORCPT
+        Tue, 5 Nov 2019 01:45:06 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:57288 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387517AbfKEGpF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:44:28 -0500
-Received: by mail-lj1-f194.google.com with SMTP id 139so20489478ljf.1
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 22:44:27 -0800 (PST)
+        Tue, 5 Nov 2019 01:45:05 -0500
+Received: by mail-pf1-f202.google.com with SMTP id v11so15438847pfm.23
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 22:45:03 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=ay1Ixq6cBI3gofXGdK3vO7GoRuVXJrG/NFv3pprP5dY=;
-        b=vI7sjVF0tlXBMi9wFmmvp5jnbgV3s3+rlj1FKrSklCwVdBQLtS4zdWwRuCR1W8jxw6
-         iakRD2RSwsIHs0/h3XGlwMlHYcQx8vvKYPT7AQqX7PsCqpI5Uf85uNsT8EBn1nhNXr5y
-         ji3p7eK3lyib14HVww8nQfG+hsoPnVf6bWyZMEAj9B9Wh83QNrJHHp01bjsYkmeSrxDh
-         UwDlKglGkAK2dUDVs+Ej5IKrfl5fUpB/4tKHWeLqWEX6V8D4QBoZDHkduAA7CDD9/8Ng
-         CxgXB8ejQVyEnFMUaTlgZtrnKE8ljlv00pex3TMSVYk3O1vEYV4LKlLVvNyCjVD8COVo
-         eN0A==
+        d=google.com; s=20161025;
+        h=date:in-reply-to:message-id:mime-version:references:subject:from:to
+         :cc;
+        bh=5TtiPZ8JG3IZB9IHfZXJzJVA9bfv9F4xuxgcwBO6hmE=;
+        b=ZPWuvUj8a8q4uvpmzT22mQ2WR3WURPKcIka9HvFedRwDHQ6oPEfbSPy6PGxIeLvgo7
+         vvZObZOobmyPhjgae6FPfXxT6DT5vClY/Qx1jWMpqThB2ysxdJy8/MBVFnxfdGcPqh4U
+         JTRw8tqJeWcQ2feNXCqOQJc8JF7O4CJsxk30Ds0hq43s7+rDGHOWI/+uzBz/GRgSOqro
+         EQqij06eWMv8TmLRWdyWAIyjIAH/qA5yhhcP3F4RTq9eyZU7XMHlnCa0qYD+2ATKoOiV
+         X+R/VMxvu3Lgj9zdIxSiwlllYFxcmEPc2gxduqYBioPipNZ5hXKiy9tOkf52u0RQjhf9
+         Vegg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=ay1Ixq6cBI3gofXGdK3vO7GoRuVXJrG/NFv3pprP5dY=;
-        b=lLBST6sXXDPZ5SCVGFnAN3NyR0X2fCYs3f/7FIGA2crLVNruZiSc6yPpX7l8yO4MpY
-         G9LiVPOhgL7uAg6XpsLkhX9TVoChf6yFvku7qW30JDZ6g3Hh9FNKSBz7w8VytdV0nVfG
-         KeK9FTqI29zFAXtvys2YJFL2VXdX8ckYon6hjkl6l7yLJIpJH6eMOHaPv8q4R1+AaZhg
-         uQTHcQ2h6VLiajA5vTOCSQMI2L7I9/hYguz/tL1mGRhWBQwtJCPx2iAxemmlB2NP0QF8
-         pK+TfYsXbx6+/Vf3s3W/2mfnQDmqyo8unwsVoMbgjyM7B4JwysEVsNZZxqKPy7x09uOh
-         Ttog==
-X-Gm-Message-State: APjAAAUcKL/EXDRI+0DvKckohOm0kDkAgK0ydATYrxQBecbdcpWA0cFY
-        oZrvTUt2/oTvrYwWRx6JCUExBhjUcdvgqi5HNXp0BA==
-X-Google-Smtp-Source: APXvYqyFVApwX5OvBrSu/2aPO3qVvjflJUgzMfUvgSM0MHuLQvf0xNwpsrlKLH9dBEjYAntXuviZrViRrV2wRgMuUAg=
-X-Received: by 2002:a05:651c:87:: with SMTP id 7mr1499687ljq.20.1572936266619;
- Mon, 04 Nov 2019 22:44:26 -0800 (PST)
-MIME-Version: 1.0
-References: <20191104211830.912265604@linuxfoundation.org>
-In-Reply-To: <20191104211830.912265604@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 Nov 2019 12:14:14 +0530
-Message-ID: <CA+G9fYv5K7S6VgKO8vjmKUeb3RwHi56deGfqzoJMUJEvkPvfGA@mail.gmail.com>
-Subject: Re: [PATCH 4.4 00/46] 4.4.199-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+        h=x-gm-message-state:date:in-reply-to:message-id:mime-version
+         :references:subject:from:to:cc;
+        bh=5TtiPZ8JG3IZB9IHfZXJzJVA9bfv9F4xuxgcwBO6hmE=;
+        b=D1oKANcavodMoqIt7RozO61LjWWIfmwxyr55oe5EuafFK8RddwhH0Rd2hF/Nqs0emd
+         O1zf+FYx7uanX5X0+Xkr0lJSBLmLXfD2oWMtDSNLC0srqz1q17gvFEH7v1pZXt010lV3
+         dA/cFpY/cS0kk55WZwFeZHSQQkRf3qcLdoyBR8J1J/uzmlOhHE4gq51lWidehwgBnM8V
+         uG8eItdVHKQmh4VO14iPvX+sh38QqbVSKbrxsb8ziaxqSL+rkMWHWkH7LLQsKtGwDsM5
+         Hf8c3MwriM7FGY0jyEMFOkVpbGfxTC29Ln1WONSX3+JuSbJ9CMgWgDgMaoIJGAGrimb5
+         O0dA==
+X-Gm-Message-State: APjAAAWzlSIWd40GQ1AwocMHZpLu4MIVlRzV+sspzsNA2zWBz/bw6MTe
+        QOZfhv7tD3qH8ZUHeZZd+1Xu4hZ0l1Xjf6w=
+X-Google-Smtp-Source: APXvYqwyJ5qlDC7E2bSBigwa1PnPbCXw2M+VjtdsoAnhMgSgk+aTV3CEUrBXZIL2rOI0mC0p+IIFQU/0XtNicqo=
+X-Received: by 2002:a63:4104:: with SMTP id o4mr34057739pga.169.1572936303079;
+ Mon, 04 Nov 2019 22:45:03 -0800 (PST)
+Date:   Mon,  4 Nov 2019 22:44:53 -0800
+In-Reply-To: <20191105064456.36906-1-saravanak@google.com>
+Message-Id: <20191105064456.36906-2-saravanak@google.com>
+Mime-Version: 1.0
+References: <20191105064456.36906-1-saravanak@google.com>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH v1 1/3] of: property: Minor style clean up of of_link_to_phandle()
+From:   Saravana Kannan <saravanak@google.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>
+Cc:     Saravana Kannan <saravanak@google.com>, kernel-team@android.com,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 at 03:19, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.4.199 release.
-> There are 46 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.4.199-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.4.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+Adding a debug log instead of silently ignoring a phandle for an early
+device. Also, return the right error code instead of 0 even though the
+actual execution flow won't change.
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Signed-off-by: Saravana Kannan <saravanak@google.com>
+---
+ drivers/of/property.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-Summary
-------------------------------------------------------------------------
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index e225ab17f598..fbc201330ba0 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -1051,8 +1051,14 @@ static int of_link_to_phandle(struct device *dev, struct device_node *sup_np,
+ 	sup_dev = get_dev_from_fwnode(&sup_np->fwnode);
+ 	is_populated = of_node_check_flag(sup_np, OF_POPULATED);
+ 	of_node_put(sup_np);
+-	if (!sup_dev)
+-		return is_populated ? 0 : -EAGAIN;
++	if (!sup_dev && is_populated) {
++		/* Early device without struct device. */
++		dev_dbg(dev, "Not linking to %pOFP - No struct device\n",
++			sup_np);
++		return -ENODEV;
++	} else if (!sup_dev) {
++		return -EAGAIN;
++	}
+ 	if (!device_link_add(dev, sup_dev, dl_flags))
+ 		ret = -EAGAIN;
+ 	put_device(sup_dev);
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
-kernel: 4.4.199-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.4.y
-git commit: 1e0d280e1f8dbd21a713507c208e2ed524c18257
-git describe: v4.4.198-47-g1e0d280e1f8d
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.4-oe/bui=
-ld/v4.4.198-47-g1e0d280e1f8d
-
-No regressions (compared to build v4.4.198)
-
-No fixes (compared to build v4.4.198)
-
-Ran 14764 total tests in the following environments and test suites.
-
-Environments
---------------
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* network-basic-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kselftest
-* kvm-unit-tests
-* ltp-open-posix-tests
-* install-android-platform-tools-r2600
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
