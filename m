@@ -2,261 +2,160 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36FE9C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 837CCC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E18D220869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572982265;
-	bh=DANwge0pl0jxO6NsvwyOA5Ucz9xwOOV6M82LPSfakpM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PYVvDxzSq544dfWmhGf0xZLx1WS46ZZpl294KFo9p8QUXz9/OlsoDTPrO9eGRTtyT
-	 6lNw0fBsLG/621/dCYFs0pRa5Qk8LRa2a38+5rnsKYt00DJ7+mRyMAmAfHLCDwyDwq
-	 uh1NeX/1UrfhGPczwSfSvEAiHME11e8YUcxUuoII=
+	by mail.kernel.org (Postfix) with ESMTP id 43EF020869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:31:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bG3YzgHY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390844AbfKETbD (ORCPT
+        id S2390925AbfKETbg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:31:03 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:33997 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389691AbfKETbD (ORCPT
+        Tue, 5 Nov 2019 14:31:36 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:38959 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389691AbfKETbg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:31:03 -0500
-Received: by mail-ot1-f65.google.com with SMTP id t4so7190903otr.1;
-        Tue, 05 Nov 2019 11:31:02 -0800 (PST)
+        Tue, 5 Nov 2019 14:31:36 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 29so3745019pgm.6;
+        Tue, 05 Nov 2019 11:31:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=1SeagsDbeuKXlh/lZkZD0AtJ+ZGsb8zVUjbHRp2z3fk=;
+        b=bG3YzgHY/KABC6APZVuTRck1R3V3hiIEonbR4Y6UPz+3BbG8+IUrTEUBpY9wx4cLKU
+         WvBehL3A5X9T9a4/MuQkX6lGV1mUzk/M1UAZwNbbvjcCQ+BAEHcUN6NxOb/AwuB1eYuz
+         JPwltdrZJbOOFMZWqocUM75vGTaHdfq2YeKxFcLsY4+IV1t4WxTicEXPXg6gA0lJCgMN
+         Zg0UeDb9sdgfp0s4VwhDafzWQE6UI3QTlWWZUYuLxLv77dGWb2ON8usVq7+K6cnMAi6j
+         f+7cChq65Br+qn9tL8e9tjke7GwNCdD/2L5f6mlggr82Vb0pkvSgaoprE3BxmhoXkHxq
+         IZQQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eXCrqaM2ReNAR8xM9spgb2Ee5zhCWir3DnZ51DYqUs0=;
-        b=YWsfZJwEFvAcw0YM7AT9gmKK9ZA6rxygwrCRQX1GOiZ+W4ujfnLD6T6Lyiw9/0zJwE
-         TG4+R2ZQVqdO8Cm5nVBlIS/45Rz2X1Lm7wxo82nB7yuhba42V66f6HhF38SudfU8rFDb
-         iSKgt83IvsYeMYCAWPNVCFcNHZP6KVV44QI5kAJ/8i8fsBQbflAfRazFwVM7s9MFuyHO
-         ZXm3UYbEbbEDyCtHXyWFl1aeKUclFtnW6QK+g4MfIfRZ4s1uH6nAh22GSC1KaAHj1v1X
-         Gv0P3zSncTCq4y1zXLwGz6FTmnXgtJAFGZ6BUeng2ZDBl0MjrA275Zswks65KEgA27LN
-         R53A==
-X-Gm-Message-State: APjAAAVdATyFE3gOW1tBgI8affRsWa0F1B9QbZx9QROeJJEqdRjMDyzV
-        SMoaOC0TmQ0Pw41kM8wu4A==
-X-Google-Smtp-Source: APXvYqzre2W/9ZqnBFFrz/aj+RCDtEBQysbqFeG7AzSN3ieOnpHrDpu7BFOp+KDwAVrQMDlaLseVCw==
-X-Received: by 2002:a05:6830:46:: with SMTP id d6mr13605649otp.7.1572982261489;
-        Tue, 05 Nov 2019 11:31:01 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id y7sm6891792ote.81.2019.11.05.11.31.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 11:31:00 -0800 (PST)
-Date:   Tue, 5 Nov 2019 13:31:00 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org,
-        vinod.koul@linaro.org, alsa-devel@alsa-project.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        spapothi@codeaurora.org, bgoswami@codeaurora.org,
-        linux-gpio@vger.kernel.org
-Subject: Re: [PATCH v3 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-Message-ID: <20191105193100.GB4709@bogus>
-References: <20191029112700.14548-1-srinivas.kandagatla@linaro.org>
- <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=1SeagsDbeuKXlh/lZkZD0AtJ+ZGsb8zVUjbHRp2z3fk=;
+        b=FR1ZrTDeY6AoCbENusD3Mor8vm8PZ1NOrZ3Uk58uA3kXmd/pW1mq9DeBd2l882LIYR
+         vVhJrnKSIKgVO302EyC34GKUtcbnTU3Xb63of2l9fRqGqc03QeKleRHwCJRRCes1Ztzq
+         L6H1FRLQKFkwmAO1Xuvv1yJ0MbCrqROZr4mAW4qbUJzU7O371MJokZw6f9G55KMvK4tb
+         +wlE+wgpKK6CvTmlrTRZ/PNEHdHAvVBeNXe1ej9/bAfUc3ZXpQo0FCLLGd5YCY22w3pL
+         pyFIjUrrk8HwfD6mHok+YfsIN/1SpFZl+n3/IMY4mCQ510j7Nk+bb7D75XXmQnrr2/KS
+         IFdg==
+X-Gm-Message-State: APjAAAUvgQymxkGXgBKFKCfwmOvCznkwdw3ykEErW1uYRDwEjOSwjD/C
+        wd0VROX/N6z2yPvJYvSzo1U=
+X-Google-Smtp-Source: APXvYqy/IJZanoWg94nn+q8E66Sh0NTLVCbwR9j2nk1uXc92V5rp3fg98PT8TE2KB5Ylf7r6SRzC+w==
+X-Received: by 2002:a17:90a:6283:: with SMTP id d3mr895052pjj.27.1572982295051;
+        Tue, 05 Nov 2019 11:31:35 -0800 (PST)
+Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:47d0])
+        by smtp.gmail.com with ESMTPSA id 21sm22270996pfa.170.2019.11.05.11.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 11:31:34 -0800 (PST)
+Date:   Tue, 5 Nov 2019 11:31:32 -0800
+From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
+        linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        David Drysdale <drysdale@google.com>,
+        Florent Revest <revest@chromium.org>,
+        James Morris <jmorris@namei.org>, Jann Horn <jann@thejh.net>,
+        John Johansen <john.johansen@canonical.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Kees Cook <keescook@chromium.org>,
+        KP Singh <kpsingh@chromium.org>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
+        Paul Moore <paul@paul-moore.com>,
+        Sargun Dhillon <sargun@sargun.me>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        Shuah Khan <shuah@kernel.org>,
+        Stephen Smalley <sds@tycho.nsa.gov>, Tejun Heo <tj@kernel.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Tycho Andersen <tycho@tycho.ws>,
+        Will Drewry <wad@chromium.org>, bpf@vger.kernel.org,
+        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
+        linux-security-module@vger.kernel.org, netdev@vger.kernel.org
+Subject: Re: [PATCH bpf-next v13 4/7] landlock: Add ptrace LSM hooks
+Message-ID: <20191105193130.qam2eafnmgvrvjwk@ast-mbp.dhcp.thefacebook.com>
+References: <20191104172146.30797-1-mic@digikod.net>
+ <20191104172146.30797-5-mic@digikod.net>
+ <20191105171824.dfve44gjiftpnvy7@ast-mbp.dhcp.thefacebook.com>
+ <c5c6b433-7e6a-c8f8-f063-e704c3df4cc6@schaufler-ca.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191029112700.14548-2-srinivas.kandagatla@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <c5c6b433-7e6a-c8f8-f063-e704c3df4cc6@schaufler-ca.com>
+User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 29, 2019 at 11:26:50AM +0000, Srinivas Kandagatla wrote:
-> This patch adds bindings for wcd9340/wcd9341 audio codec which can
-> support both SLIMbus and I2S/I2C interface.
+On Tue, Nov 05, 2019 at 09:55:42AM -0800, Casey Schaufler wrote:
+> On 11/5/2019 9:18 AM, Alexei Starovoitov wrote:
+> > On Mon, Nov 04, 2019 at 06:21:43PM +0100, Mickaël Salaün wrote:
+> >> Add a first Landlock hook that can be used to enforce a security policy
+> >> or to audit some process activities.  For a sandboxing use-case, it is
+> >> needed to inform the kernel if a task can legitimately debug another.
+> >> ptrace(2) can also be used by an attacker to impersonate another task
+> >> and remain undetected while performing malicious activities.
+> >>
+> >> Using ptrace(2) and related features on a target process can lead to a
+> >> privilege escalation.  A sandboxed task must then be able to tell the
+> >> kernel if another task is more privileged, via ptrace_may_access().
+> >>
+> >> Signed-off-by: Mickaël Salaün <mic@digikod.net>
+> > ...
+> >> +static int check_ptrace(struct landlock_domain *domain,
+> >> +		struct task_struct *tracer, struct task_struct *tracee)
+> >> +{
+> >> +	struct landlock_hook_ctx_ptrace ctx_ptrace = {
+> >> +		.prog_ctx = {
+> >> +			.tracer = (uintptr_t)tracer,
+> >> +			.tracee = (uintptr_t)tracee,
+> >> +		},
+> >> +	};
+> > So you're passing two kernel pointers obfuscated as u64 into bpf program
+> > yet claiming that the end goal is to make landlock unprivileged?!
+> > The most basic security hole in the tool that is aiming to provide security.
+> >
+> > I think the only way bpf-based LSM can land is both landlock and KRSI
+> > developers work together on a design that solves all use cases. BPF is capable
+> > to be a superset of all existing LSMs
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->  .../bindings/sound/qcom,wcd934x.yaml          | 162 ++++++++++++++++++
->  1 file changed, 162 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> new file mode 100644
-> index 000000000000..d6cfde6597db
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/qcom,wcd934x.yaml
-> @@ -0,0 +1,162 @@
-> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/sound/qcom,wcd934x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Bindings for Qualcomm WCD9340/WCD9341 Audio Codec
-> +
-> +maintainers:
-> +  - Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> +
-> +description: |
-> +  Qualcomm WCD9340/WCD9341 Codec is a standalone Hi-Fi audio codec IC.
-> +  It has in-built Soundwire controller, pin controller, interrupt mux and
-> +  supports both I2S/I2C and SLIMbus audio interfaces.
-> +
-> +properties:
-> +  compatible:
-> +    const: slim217,250
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  reset-gpios:
-> +    description: GPIO spec for reset line to use
-> +    maxItems: 1
-> +
-> +  slim-ifc-dev:
-> +    description: SLIMBus Interface device phandle
-> +    $ref: '/schemas/types.yaml#/definitions/phandle'
-> +    maxItems: 1
+> I can't agree with this. Nope. There are many security models
+> for which BPF introduces excessive complexity. You don't need
+> or want the generality of a general purpose programming language
+> to implement Smack or TOMOYO. Or a simple Bell & LaPadula for
+> that matter. SELinux? I can't imagine anyone trying to do that
+> in eBPF, although I'm willing to be surprised. Being able to
+> enforce a policy isn't the only criteria for an LSM. 
 
-Replied on previous version.
+what are the other criteria?
 
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    const: extclk
-> +
-> +  vdd-buck-supply:
-> +    description: A reference to the 1.8V buck supply
-> +
-> +  vdd-buck-sido-supply:
-> +    description: A reference to the 1.8V SIDO buck supply
-> +
-> +  vdd-rx-supply:
-> +    description: A reference to the 1.8V rx supply
-> +
-> +  vdd-tx-supply:
-> +    description: A reference to the 1.8V tx supply
-> +
-> +  vdd-vbat-supply:
-> +    description: A reference to the vbat supply
-> +
-> +  vdd-io-supply:
-> +    description: A reference to the 1.8V I/O supply
-> +
-> +  vdd-micbias-supply:
-> +    description: A reference to the micbias supply
-> +
-> +  qcom,micbias1-microvolts:
+> It's got
+> to perform well and integrate with the rest of the system. 
 
-The standard unit is 'microvolt', not 'microvolts'.
+what do you mean by that?
 
-> +    description: micbias1 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias2-microvolts:
-> +    description: micbias2 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias3-microvolts:
-> +    description: micbias3 voltage between 1800000 - 2850000 microvolts
-> +
-> +  qcom,micbias4-microvolts:
-> +    description: micbias4 voltage between 1800000 - 2850000 microvolts
-> +
-> +  clock-output-names:
-> +    const: mclk
-> +
-> +  clock-frequency:
-> +    description: Clock frequency of output clk in Hz
-> +
-> +  interrupt-controller: true
-> +
-> +  '#interrupt-cells':
-> +    const: 1
-> +
-> +  '#clock-cells':
-> +    const: 0
-> +
-> +  '#sound-dai-cells':
-> +    const: 1
-> +
-> +  "#address-cells":
-> +    const: 1
-> +
-> +  "#size-cells":
-> +    const: 1
-> +
-> +patternProperties:
-> +  "^.*@[0-9a-f]+$":
-> +    type: object
-> +    description: |
-> +      WCD934x subnode for each slave devices. Bindings of each subnodes
-> +      depends on the specific driver providing the functionality and
-> +      documented in their respective bindings.
-> +
-> +    properties:
-> +      reg:
-> +        maxItems: 1
-> +
-> +    required:
-> +      - reg
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - slim-ifc-dev
-> +  - interrupts
-> +  - interrupt-controller
-> +  - clock-frequency
-> +  - clock-output-names
-> +  - qcom,micbias1-microvolts
-> +  - qcom,micbias2-microvolts
-> +  - qcom,micbias3-microvolts
-> +  - qcom,micbias4-microvolts
-> +  - "#interrupt-cells"
-> +  - "#clock-cells"
-> +  - "#sound-dai-cells"
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +
-> +examples:
-> +  - |
-> +    codec@1,0{
-> +        compatible = "slim217,250";
-> +        reg  = <1 0>;
-> +        reset-gpios = <&tlmm 64 0>;
-> +        slim-ifc-dev  = <&wcd9340_ifd>;
-> +        #sound-dai-cells = <1>;
-> +        interrupt-parent = <&tlmm>;
-> +        interrupts = <54 4>;
-> +        interrupt-controller;
-> +        #interrupt-cells = <1>;
-> +        #clock-cells = <0>;
-> +        clock-frequency = <9600000>;
-> +        clock-output-names = "mclk";
-> +        qcom,micbias1-microvolts = <1800000>;
-> +        qcom,micbias2-microvolts = <1800000>;
-> +        qcom,micbias3-microvolts = <1800000>;
-> +        qcom,micbias4-microvolts = <1800000>;
-> +        clock-names = "extclk";
-> +        clocks = <&rpmhcc 2>;
-> +
-> +        #address-cells = <1>;
-> +        #size-cells = <1>;
-> +
-> +        pinctrl@42 {
-> +            reg = <0x42 0x2>;
-> +        };
-> +    };
-> +
-> +...
-> -- 
-> 2.21.0
-> 
+> I see many issues with a BPF <-> vfs interface.
+
+There is no such interface today. What do you have in mind?
+
+> the mechanisms needed for the concerns of the day. Ideally,
+> we should be able to drop mechanisms when we decide that they
+> no longer add value.
+
+Exactly. bpf-based lsm must not add to kernel abi.
+
