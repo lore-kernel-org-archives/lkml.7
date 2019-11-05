@@ -2,137 +2,153 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C47C8C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CE34FC47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88AAC217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8528F2084D
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:05:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mhM33QnP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728709AbfKEUE5 (ORCPT
+        id S1729577AbfKEUFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:04:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:58682 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfKEUE5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:04:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 47F387AD;
-        Tue,  5 Nov 2019 12:04:56 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C3D0B3FBD2;
-        Tue,  5 Nov 2019 01:27:03 -0800 (PST)
-Date:   Tue, 5 Nov 2019 09:27:01 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
-        James Morse <james.morse@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH] arm64: mm: Remove MAX_USER_VA_BITS definition
-Message-ID: <20191105092701.GD4743@lakrids.cambridge.arm.com>
-References: <1572904606-27961-1-git-send-email-bhsharma@redhat.com>
+        Tue, 5 Nov 2019 15:05:32 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:39124 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726853AbfKEUFc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:05:32 -0500
+Received: by mail-ed1-f68.google.com with SMTP id l25so17339027edt.6;
+        Tue, 05 Nov 2019 12:05:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=iVHnT7F/L7p2m70w+YxJR8E5ZiPKIgyO7tntutnVWrM=;
+        b=mhM33QnPrgbY2H1prh6tqY/Cxsram3VbWVw7H+1WHZXjOcZTU5Umq5/zvC1HPNlFXJ
+         P98Vtgo2oi6YPbgbICbs/s7JQBfbnkceT/hRhQd9fnqUeEzTvyjpQ/HNY9kLPYPPsOtT
+         lHMfaXaizDPZZTagTCNhsEj2IbxnVWqax4Day7MnUnu7h6JTqv5VSxgOgHgXedlGBswm
+         qA1KvQUrroJpkyzU6UBizsX4p1X+OK60wWHQhTEfUNR9oQFEm158zVAcq/aqX8xmrvql
+         wOIImJWMOcvP/NRilC0Qx+x45z1+V15OucE/JQALZie73dEGMEd2A04xs57+Y+Y3v+ol
+         JgFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=iVHnT7F/L7p2m70w+YxJR8E5ZiPKIgyO7tntutnVWrM=;
+        b=D8Q9sJVhpPPB6ywBFGOlW/wzSvAWGD7jmExSbGjzioE9KA5tdNluFF3PwY05xLnDoK
+         8+EmYf4vQDCWWLWNavwTbVhd9/yrPT8HCI1T7xRZztWxLxlS8CO2MHqFOwjjDQOcsd4C
+         yC5UxTL5PQK6svBcoWz9cGYCmOVVuZZ42ZGL+lc3+LzmOVWU4/v59kExxdH7IirCHdpj
+         L/xUIQA/TtQcp6Sl6uaE1ec6g1zWt/xELBBLthohZhcWT8qjASreh6hvVrgG33jnVXOz
+         WkqpJeaKtmvcY+YSaxUWSohsOaoBC6H7oFg7ObNgyb+4bXfquj1PrUJHupZSlypSsX7M
+         wnAQ==
+X-Gm-Message-State: APjAAAXJ+08ao84cuJ0VrffMpS03KI+Tf2mVXXbhcMcyX930Uo9yUyX3
+        i7ZtqTvIXIAHsr9i3SHzieu2OdxV
+X-Google-Smtp-Source: APXvYqytlXmESmsOHx+eIIQYc3YDpV0CDkLorVrpbYZFOoab53qPYZu4YIiokMfFZgkx8y61/3l3og==
+X-Received: by 2002:a50:f747:: with SMTP id j7mr27947886edn.247.1572984329432;
+        Tue, 05 Nov 2019 12:05:29 -0800 (PST)
+Received: from [10.67.50.53] ([192.19.223.252])
+        by smtp.googlemail.com with ESMTPSA id g43sm1091781edb.14.2019.11.05.12.05.26
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 12:05:28 -0800 (PST)
+Subject: Re: [PATCH 2/2] net: phy: dp83869: Add TI dp83869 phy
+To:     Dan Murphy <dmurphy@ti.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>, andrew@lunn.ch,
+        davem@davemloft.net
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191105181826.25114-1-dmurphy@ti.com>
+ <20191105181826.25114-2-dmurphy@ti.com>
+ <68b9c003-4fb3-b854-695a-fa1c6e08f518@gmail.com>
+ <4ffebfad-87d2-0e19-5b54-7e550c540d03@ti.com>
+From:   Florian Fainelli <f.fainelli@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=f.fainelli@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ M5kY0ACeNhCZJvZ5g4C2Lc9fcTHu8jxmEkI=
+Message-ID: <5d5cb879-b3a2-545f-7f74-0f1f1e6380bb@gmail.com>
+Date:   Tue, 5 Nov 2019 12:05:25 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572904606-27961-1-git-send-email-bhsharma@redhat.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <4ffebfad-87d2-0e19-5b54-7e550c540d03@ti.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:26:46AM +0530, Bhupesh Sharma wrote:
-> commit 9b31cf493ffa ("arm64: mm: Introduce MAX_USER_VA_BITS definition")
-> introduced the MAX_USER_VA_BITS definition, which was used to support
-> the arm64 mm use-cases where the user-space could use 52-bit virtual
-> addresses whereas the kernel-space would still could a maximum of 48-bit
-> virtual addressing.
-> 
-> But, now with commit b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel
-> VAs"), we removed the 52-bit user/48-bit kernel kconfig option and hence
-> there is no longer any scenario where user VA != kernel VA size
-> (even with CONFIG_ARM64_FORCE_52BIT enabled, the same is true).
-> 
-> Hence we can do away with the MAX_USER_VA_BITS macro as it is equal to
-> VA_BITS (maximum VA space size) in all possible use-cases. Note that
-> even though the 'vabits_actual' value would be 48 for arm64 hardware
-> which don't support LVA-8.2 extension (even when CONFIG_ARM64_VA_BITS_52
-> is enabled), VA_BITS would still be set to a value 52. Hence this change
-> would be safe in all possible VA address space combinations.
-> 
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+On 11/5/19 12:02 PM, Dan Murphy wrote:
+int ret, val;
+>>> +
+>>> +    if (!phydev->priv) {
+>>> +        dp83869 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83869),
+>>> +                       GFP_KERNEL);
+>> This belongs into the probe callback.
+> probe callback?  Why do I need a probe function?
 
-As the commit message says, there should be no functional change as a
-result of this patch, and it looks like a nice cleanup to me:
-
-Reviewed-by: Mark Rutland <mark.rutland@arm.com>
-
-Mark.
-
-> ---
->  arch/arm64/include/asm/memory.h        | 6 ------
->  arch/arm64/include/asm/pgtable-hwdef.h | 2 +-
->  arch/arm64/include/asm/processor.h     | 2 +-
->  3 files changed, 2 insertions(+), 8 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
-> index c23c47360664..a4f9ca5479b0 100644
-> --- a/arch/arm64/include/asm/memory.h
-> +++ b/arch/arm64/include/asm/memory.h
-> @@ -69,12 +69,6 @@
->  #define KERNEL_START		_text
->  #define KERNEL_END		_end
->  
-> -#ifdef CONFIG_ARM64_VA_BITS_52
-> -#define MAX_USER_VA_BITS	52
-> -#else
-> -#define MAX_USER_VA_BITS	VA_BITS
-> -#endif
-> -
->  /*
->   * Generic and tag-based KASAN require 1/8th and 1/16th of the kernel virtual
->   * address space for the shadow region respectively. They can bloat the stack
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index 3df60f97da1f..d9fbd433cc17 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -69,7 +69,7 @@
->  #define PGDIR_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(4 - CONFIG_PGTABLE_LEVELS)
->  #define PGDIR_SIZE		(_AC(1, UL) << PGDIR_SHIFT)
->  #define PGDIR_MASK		(~(PGDIR_SIZE-1))
-> -#define PTRS_PER_PGD		(1 << (MAX_USER_VA_BITS - PGDIR_SHIFT))
-> +#define PTRS_PER_PGD		(1 << (VA_BITS - PGDIR_SHIFT))
->  
->  /*
->   * Section address mask and size definitions.
-> diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-> index 5623685c7d13..586fcd4b1965 100644
-> --- a/arch/arm64/include/asm/processor.h
-> +++ b/arch/arm64/include/asm/processor.h
-> @@ -9,7 +9,7 @@
->  #define __ASM_PROCESSOR_H
->  
->  #define KERNEL_DS		UL(-1)
-> -#define USER_DS			((UL(1) << MAX_USER_VA_BITS) - 1)
-> +#define USER_DS			((UL(1) << VA_BITS) - 1)
->  
->  /*
->   * On arm64 systems, unaligned accesses by the CPU are cheap, and so there is
-> -- 
-> 2.7.4
-> 
+To allocate your driver private memory and do that just once,
+config_init() can be called multiple times through the lifetime of your
+PHY device driver, including but not limited to: phy_connect(),
+phy_init_hw(), phy_resume() etc. etc.
+-- 
+Florian
