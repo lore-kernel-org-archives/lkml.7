@@ -2,99 +2,191 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FB78C5DF63
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:49:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE737C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A0D4206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:49:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572994141;
-	bh=G1ACn2ptpgGeVfl/U59mpFFJs8lztM+KR8W5mF/1k+k=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=svwyPPWj9ybFuTy+u86F1HCINauAW/nGvTSbqTaRMxCjFuIAMAHNenfCWhEYU74e4
-	 1PgZHQE7DB23QajwzMNoiL+MgVYM8A6O+c/SEPEvk9ZNxHUrtzETg5DieQhd7T88wf
-	 95ESnFE7z0iCtMa9WcQAdXLzI+1TAs1e7XjflROk=
+	by mail.kernel.org (Postfix) with ESMTP id 952D5206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHLJvOrK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730582AbfKEWtA (ORCPT
+        id S1730536AbfKEWxA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:49:00 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:37235 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730192AbfKEWtA (ORCPT
+        Tue, 5 Nov 2019 17:53:00 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:34097 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730292AbfKEWw7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:49:00 -0500
-Received: by mail-oi1-f194.google.com with SMTP id y194so19198723oie.4;
-        Tue, 05 Nov 2019 14:48:59 -0800 (PST)
+        Tue, 5 Nov 2019 17:52:59 -0500
+Received: by mail-oi1-f195.google.com with SMTP id l202so19188730oig.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:52:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
+        b=iHLJvOrKMmGplCdoVyX0r+Vex/KiHX7/2gzEkqUGtS9y1kL5yKWQyCpQLbuDDjC9Is
+         5TTkBC0jgHz5YkvBoVLZNIH7IYS1FN/nj0Ri77yYoHW0RUq6VDBbgb860xuZ2D566gHO
+         jRvW49c1h4UyvoTIeITBnbXm1wQ3Mm8r0o2DNuoBShnqCcNpFhej58iGH3HAx+Eog3Ql
+         xiFj5N3CuW7VIh48JxSTvl30/ZCtzh10Y5GKZu7VKZvehv1luDEh0MfJe0gMx7PTzcZy
+         ZXAoO63WuczkBq1yJB+WPezvFII9eB/rDNWPzS3RklXRdMP30mo+PQRRWpMbyt72LoYA
+         NDCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GM1jm2cNcrjl3y3RDdX2JWn1WUw2Dw4x55GxoNuL9wc=;
-        b=sveWCiwPZvi8fImz/79HgSKZSsfoaqHTI1lZK2ep1XY+O76T1+H0w4AnohKkJHZ9Hh
-         t2TimBj9D/zTvhIKQRiCOoe0pgtVRreEvZDGU7EUWCVYVXwrMJ9t10kjR2sqR0Qqvu/R
-         shRgi9yYqWeuUdNmfIcq9K1/oFX/ewcCUsxys8Y+t9aTBKGzLJuynmNj22ViG/NArtFH
-         eNz9ea9R1i5itsMl0OTYDRhaimLJljGBcMG83vFZPqnZxHX3mLaT835T52A79OWeyHFN
-         8Br/oK/V3LNluWN4thQHCozRrXhDEy92LRrU7Kr+/uuHtGPsoma+jZbvrwLePmGD86JF
-         wedQ==
-X-Gm-Message-State: APjAAAUnBVXDroJsVhhjP1N4JR4hOxIdV6dnTZyqJfDkUsmUgV0Xd/9U
-        eHFOP9Ty2AGoPpAcaBFDtPmDDozwrNT0ny7sGRB2zA==
-X-Google-Smtp-Source: APXvYqw2yN1NleQ/hjDjqay4Ch1kFxl+QWttqGc7nxbJAJb982dnpQnHy/lxA1YrI0mD7AhubtukYf7lRTzJV4IzqWE=
-X-Received: by 2002:aca:fdd8:: with SMTP id b207mr1293430oii.57.1572994138853;
- Tue, 05 Nov 2019 14:48:58 -0800 (PST)
+        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
+        b=fXFyLiP9WDHnwEoRFzkx0kq1AakF/LgKeZFWcEVoMSzoNggRX8qJkJSZXVrT6MB1Iy
+         Zh1Kc7fkqG9WpO1BuOZj1U5WDHgXT9T695XpYA4X9K0uy8ZGRrffCrGh+2aVkPHpQuRy
+         yIFyy5XNtPj1cPueVuMverkHW3s85EDwO0ojFR03Pong0R70PZ0WVewfYwK/7xcpzFdC
+         MpaXy7CkR71SGYKlNMtjSoTbzwfaL6AUVFK9AtZ2MbXI7rXT027PZHW0cYcvtGgVYTf4
+         8zX+2gZKqrt+hKYyK5TA17IC1hAuhwp7IWXyqCeqosHyggzmW2dzjlLCJ3fsPXou2ZaU
+         /mPw==
+X-Gm-Message-State: APjAAAVZO7S572RRWGhrgCuGwMSXYxq7rvuyPBaJWOXcg34XeeuVSsxS
+        uaXsHzXU5eBzqGrgKGy4CAb8AIRnF2yht5RBro39Sw==
+X-Google-Smtp-Source: APXvYqzIAUzPDmogTITDbFUcA/ihvKRGXKPJD4mBnp8pOOy8bZMrACShUDrVG+Osz9+7P9TgEvDK1SPeZMDgR0ab2QY=
+X-Received: by 2002:aca:d558:: with SMTP id m85mr1203360oig.43.1572994377809;
+ Tue, 05 Nov 2019 14:52:57 -0800 (PST)
 MIME-Version: 1.0
-References: <3568330.mzdaIbGaoM@kreacher> <20191105223521.GA42216@google.com>
-In-Reply-To: <20191105223521.GA42216@google.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 5 Nov 2019 23:48:47 +0100
-Message-ID: <CAJZ5v0hdHsP-sWB4ZAXOqwq7cwduZi2yanxPBoZm75G7gcWkdQ@mail.gmail.com>
-Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
+ <7640808.4Pc6YCm0Y9@kreacher>
+In-Reply-To: <7640808.4Pc6YCm0Y9@kreacher>
+From:   Saravana Kannan <saravanak@google.com>
+Date:   Tue, 5 Nov 2019 14:52:21 -0800
+Message-ID: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
+ differentiate errors
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
         LKML <linux-kernel@vger.kernel.org>,
-        Linux PCI <linux-pci@vger.kernel.org>,
-        Linux PM <linux-pm@vger.kernel.org>,
-        Mika Westerberg <mika.westerberg@linux.intel.com>
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:35 PM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Tue, Nov 05, 2019 at 12:28:47PM +0100, Rafael J. Wysocki wrote:
-> > On Tuesday, November 5, 2019 11:11:57 AM CET Rafael J. Wysocki wrote:
-> > > Hi,
-> > >
-> > > This series rearranges some PCI power management code to make it somewhat
-> > > easier to follow and explicitly consolidate the power-up (transitions to
-> > > D0) code path.
-> > >
-> > > It is not intended to change the functionality of the code.
-> >
-> > This series applies on top of 5.4-rc6 with your pci/pm-2 branch from today
-> > merged on top of it.
-> >
-> > I guess I can make it apply on top of pci/pm-2, but there were some PCI PM
-> > changes in 5.4-rc later than -rc1 in that area and they need to be taken
-> > into account anyway.
->
-> I applied the commits from pci/pm-2 to pci/pm (pci/pm-2 was really
-> just to get the 0-day robot to build test it).
->
-> pci/pm is based on v5.4-rc1, which doesn't have 45144d42f299 ("PCI:
-> PM: Fix pci_power_up()"), which appeared in -rc4.
->
-> All my branches are based on -rc1.  I *could* rebase them all to -rc4,
-> but that's quite a bit of work and affects Lorenzo as well, so I'd
-> rather not.  What's the git expert's way of doing this?
+Hi Rafael,
 
-It is not necessary to rebase.
+Thanks for the review.
 
-I would just merge the current pci/pm on top of v5.4-rc4 (or any later
--rc), commit my patches on top of that and push the result as the new
-pci/pm.  That should be a fast-forward update.
+On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+>
+> On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
+> > When add_links() still has suppliers that it needs to link to in the
+> > future, this patch allows it to differentiate between suppliers that are
+> > needed for probing vs suppliers that are needed for sync_state()
+> > correctness.
+>
+> I guess you mean that it will return different error codes in the different
+> cases.
+
+Yes.
+
+>
+> > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > ---
+> >  drivers/base/core.c    | 12 ++++++++----
+> >  include/linux/fwnode.h | 13 +++++++++----
+> >  2 files changed, 17 insertions(+), 8 deletions(-)
+> >
+> > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > index 48cd43a91ce6..e6d3e6d485da 100644
+> > --- a/drivers/base/core.c
+> > +++ b/drivers/base/core.c
+> > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
+> >       struct device *parent;
+> >       struct kobject *kobj;
+> >       struct class_interface *class_intf;
+> > -     int error = -EINVAL;
+> > +     int error = -EINVAL, fw_ret;
+> >       struct kobject *glue_dir = NULL;
+> >
+> >       dev = get_device(dev);
+> > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
+> >        */
+> >       device_link_add_missing_supplier_links();
+> >
+> > -     if (fwnode_has_op(dev->fwnode, add_links)
+> > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > -             device_link_wait_for_mandatory_supplier(dev, true);
+> > +     if (fwnode_has_op(dev->fwnode, add_links)) {
+>
+> fw_ret can be defined here and I'd just call it "ret".
+
+I thought that style of variable declaration is frowned up in the
+kernel coding style.
+
+>
+> > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+> > +             if (fw_ret == -ENODEV)
+> > +                     device_link_wait_for_mandatory_supplier(dev);
+> > +             else if (fw_ret)
+> > +                     device_link_wait_for_optional_supplier(dev);
+> > +     }
+> >
+> >       bus_probe_device(dev);
+> >       if (parent)
+> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> > index 25bb81f8ded8..a19134eae5a5 100644
+> > --- a/include/linux/fwnode.h
+> > +++ b/include/linux/fwnode.h
+> > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
+> >   *           available suppliers.
+> >   *
+> >   *           Return 0 if device links have been successfully created to all
+> > - *           the suppliers of this device or if the supplier information is
+> > - *           not known. Return an error if and only if the supplier
+> > - *           information is known but some of the suppliers are not yet
+> > - *           available to create device links to.
+> > + *           the suppliers this device needs to create device links to or if
+> > + *           the supplier information is not known.
+>
+> "the known suppliers of this device or if the supplier information is not known."
+
+"suppliers it needs to create device links to" is a subset of known
+suppliers. There's no requirement that fw needs to create links to ALL
+known suppliers. Just a minor distinction.
+
+> > + *
+> > + *           Return -ENODEV if and only if the suppliers needed for probing
+> > + *           the device are not yet available to create device links to.
+>
+> It would be more precise to say something like this:
+>
+> "Return -ENODEV if an attempt to create a device link to one of the device's
+> suppliers needed for probing it fails."
+
+"attempt to create a device link to one of the device's suppliers
+needed for probing it fails" to me means device_link_add() fails.
+But I'm trying to say that it should return an error if the struct
+device isn't even there yet.
+
+> > + *
+> > + *           Return -EAGAIN if there are suppliers that need to be linked to
+> > + *           that are not yet available but none of those suppliers are
+> > + *           necessary for probing this device.
+>
+> "Return -EAGAIN if attempts to create device links to some of the device's
+> suppliers have failed, but those suppliers are not necessary for probing the
+> device."
+
+Same comment as before. The distinction I'm making here is that
+-EAGAIN is needed when the struct device itself isn't there.
+
+Btw, Greg already pulled these into driver-core-next. Let me know if
+you want me to send a delta patch to fix any of these comments.
+
+Thanks,
+Saravana
