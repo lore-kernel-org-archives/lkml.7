@@ -2,129 +2,92 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C21CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3CD3CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 681C820717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q6/KyacK"
+	by mail.kernel.org (Postfix) with ESMTP id 8879820717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:46:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730390AbfKEBpo (ORCPT
+        id S1730225AbfKEBqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:45:44 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:47361 "EHLO ozlabs.org"
+        Mon, 4 Nov 2019 20:46:08 -0500
+Received: from mga09.intel.com ([134.134.136.24]:16828 "EHLO mga09.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730037AbfKEBpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:45:44 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476XYc0bVqz9sP6;
-        Tue,  5 Nov 2019 12:45:39 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572918340;
-        bh=8XWY64SJKqZIyzn9EFs+RU2Chz3MCXPcnBcxJoBUTjk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=Q6/KyacKQpBRHV8jj5Jw5hgo3C1+HrIIAJ8sDBq5IoA5utI8IFEpe470MH/rPNA11
-         TrUTSAIc36ZbxC/xq4HoHZOxfygmlC/cDCF1jlfIw+eh6Vdz/y0htXqQQeObU+YMKQ
-         F7ZzVD/JKgbaZagdNsX05ohUSMmG7h9zJsmMPhR9MsSMYVo2oCqyWUonAV71EVTK1o
-         BhL477oZuWG/whAp54Dfy9Y83WpjipUrQMl90kqsE8+g0bKtw8oqDotg3kWWteYeLr
-         jgCyHSGWzN55nbeQ+z+kqfCjnvNe7Ksw/9+EHmUGKLJfslG2M4/SR7Zk04OY0ChXiF
-         C9/aUdxdWKhxQ==
-Date:   Tue, 5 Nov 2019 12:45:39 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
-        Michael Chan <michael.chan@broadcom.com>
-Subject: linux-next: build warnings after merge of the net-next tree
-Message-ID: <20191105124539.7566b922@canb.auug.org.au>
+        id S1728987AbfKEBqI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 20:46:08 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 17:46:07 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,269,1569308400"; 
+   d="scan'208";a="220503325"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by FMSMGA003.fm.intel.com with ESMTP; 04 Nov 2019 17:46:06 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id BF0E4300884; Mon,  4 Nov 2019 17:46:06 -0800 (PST)
+Date:   Mon, 4 Nov 2019 17:46:06 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, kbuild-all@lists.01.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] x86: Add trace points to (nearly) all vectors
+Message-ID: <20191105014606.GC25308@tassilo.jf.intel.com>
+References: <20191030195619.22244-1-andi@firstfloor.org>
+ <201911020848.LOEtnDnd%lkp@intel.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_//jQT+NOl0NGJ4he.TSA94Wo";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201911020848.LOEtnDnd%lkp@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_//jQT+NOl0NGJ4he.TSA94Wo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Sat, Nov 02, 2019 at 08:47:59AM +0800, kbuild test robot wrote:
+> Hi Andi,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on tip/auto-latest]
+> [also build test ERROR on v5.4-rc5 next-20191031]
+> [if your patch is applied to the wrong git tree, please drop us a note to help
+> improve the system. BTW, we also suggest to use '--base' option to specify the
+> base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Andi-Kleen/x86-Add-trace-points-to-nearly-all-vectors/20191102-063457
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git a5b576bfb3ba85d3e356f9900dce1428d4760582
+> config: i386-tinyconfig (attached as .config)
+> compiler: gcc-7 (Debian 7.4.0-14) 7.4.0
+> reproduce:
+>         # save the attached .config to linux build tree
+>         make ARCH=i386 
+> 
+> If you fix the issue, kindly add following tag
+> Reported-by: kbuild test robot <lkp@intel.com>
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    arch/x86/kernel/traps.c: In function 'do_error_trap':
+> >> arch/x86/kernel/traps.c:264:2: error: implicit declaration of function 'trace_other_vector_entry'; did you mean 'frame_vector_destroy'? [-Werror=implicit-function-declaration]
+>      trace_other_vector_entry(trapnr);
+>      ^~~~~~~~~~~~~~~~~~~~~~~~
 
-Hi all,
 
-After merging the net-next tree, today's linux-next build (x86_64
-allmodconfig) produced these warnings:
+Also cannot reproduce and the config file seems to be not matching the kernel.
 
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c: In function 'bnxt_tc_parse_fl=
-ow':
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
-t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
-} [-Warray-bounds]
-  532 |   if (p[i] !=3D 0)
-      |       ~^~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:293:6: note: while referencing=
- 'eth_addr'
-  293 |  u16 eth_addr[ETH_ALEN] =3D { 0 };
-      |      ^~~~~~~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
-t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
-} [-Warray-bounds]
-  532 |   if (p[i] !=3D 0)
-      |       ~^~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
- 'eth_addr_mask'
-  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
-      |      ^~~~~~~~~~~~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
-t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
-} [-Warray-bounds]
-  532 |   if (p[i] !=3D 0)
-      |       ~^~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
- 'eth_addr_mask'
-  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
-      |      ^~~~~~~~~~~~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:544:8: warning: array subscrip=
-t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
-} [-Warray-bounds]
-  544 |   if (p[i] !=3D 0xff)
-      |       ~^~~
-drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
- 'eth_addr_mask'
-  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
-      |      ^~~~~~~~~~~~~
+The file has the correct include:
 
-Introduced (I think) by commit
+vi +60 arch/x86/kernel/traps.c
 
-  90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
+...
+ 60 #include <asm/trace/irq_vectors.h>
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_//jQT+NOl0NGJ4he.TSA94Wo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3A1EMACgkQAVBC80lX
-0Gzd4wf/TsGM+bQOSLVWyrPF2ARyzpDjjPpRR90fKowk0enDFlijABIgcj8JuZfF
-ePx0Ws5wxaSFdi5ncNfqk6kzmS9ixm1HfaBO5NgtjrU+tdOJiuJDeCsl79Za4SGR
-c3aF57AuRyhIsz4h6DpLCBsaVPWHiMDekZ4nHbwF8tc/49j8T6vwTBYy89AqcS3J
-aPXLbUzPlI8Hr1hDdwYo7ke41JG5FMZ8mS4hB2w06BJyh8BU1qPosW76ip06jwl1
-3f68tU+u1EPio5yc+HddhFAhBYhVFns5VMPih/jzWyIWpQTLMSlS4kPBCXfSJvo5
-GVDADCiGTQpz35WhmdFWDWVvKvRrDw==
-=nRKU
------END PGP SIGNATURE-----
-
---Sig_//jQT+NOl0NGJ4he.TSA94Wo--
+-Andi
