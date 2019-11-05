@@ -2,91 +2,87 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5B9DC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C8DFC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1B2E214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7315021929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:51:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572972716;
-	bh=lG1xPmjx0M85Hu15xRRf0c2UDYPZiP2tf8OaC4I1OSU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nmp0Zs3eB89VNvpD3RaD6puecTl9N+ZmfsASMFK4ziG6CmPEfYt3VTtimVjBSlbH/
-	 U5ER5SdriXHfeYSOFdGGwndgeuZvorXrN1gkQsC3Dq85kfDQxL3JLYD6I+GD3vA1px
-	 /31/XYqB7k/nvzOAlMHTfR8tnJJpQIP74tbu4fJ0=
+	s=default; t=1572972718;
+	bh=qTZGep5Lv9b0TMShhRGJjX+mlz99RHwlP8ngyhOcgls=;
+	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
+	b=g3J8ngDfkgL608vWpbsYLqbH0oqkSyMAQaTWhZxyKml3CjE6ca6qjMbjndIQ9Wzi6
+	 8/pPWJrIILDUUJcR0MtKUtQGI0i1AIwi4DmxpTWShk7BwlW0db9sOZCgkBubb+qGB0
+	 pF55K+d9rpA4MbjiR8Kd28vn2pp0fB4/TW1UD4ng=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390354AbfKEQvz (ORCPT
+        id S2390382AbfKEQv5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:51:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:37890 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 11:51:57 -0500
+Received: from mail.kernel.org ([198.145.29.99]:37910 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390275AbfKEQvz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:51:55 -0500
-Received: from localhost (unknown [106.51.111.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S2390275AbfKEQv4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:51:56 -0500
+Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D74D8214B2;
-        Tue,  5 Nov 2019 16:51:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6002721928;
+        Tue,  5 Nov 2019 16:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572972714;
-        bh=lG1xPmjx0M85Hu15xRRf0c2UDYPZiP2tf8OaC4I1OSU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=jc0PolQjd2QLbTRJwYlwV7qizu9bVSyJSqZwRHyFnC8c7/osMDc+W9gmAKfJ5kDMN
-         sDJvx6DtQulk8s8/AlAW6vNqyRTke+wyJXlqvsmK+vIeETAUo+luv7bEFJA56YR7Fg
-         a3NRxb/tHNHIunYBuV1mTiSVr+07ZVP3zZszybA4=
-Date:   Tue, 5 Nov 2019 22:21:45 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc:     robh+dt@kernel.org, dmaengine@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dan.j.williams@intel.com,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to
- array
-Message-ID: <20191105165145.GB952516@vkoul-mobl>
-References: <20190930114055.29315-1-peter.ujfalusi@ti.com>
+        s=default; t=1572972715;
+        bh=qTZGep5Lv9b0TMShhRGJjX+mlz99RHwlP8ngyhOcgls=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=Vz6Lsr1kJTX9OblGJ94GPA+oIR0w/SHADTdf0X8zagRgK7kU7sk/wemWhfoBGqCd5
+         iP3MVrKiCEiRD64wVDhzu9Hw9ni+zp1wgHLQ2NdKDKP3AZ0/3eLWN+J7XlUGjwM6de
+         0v6Tyao8uY01mcWW6kpAdqPjt4s+97dllMdJTAyg=
+Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        linux@roeck-us.net, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org, shuah <shuah@kernel.org>
+References: <20191104212140.046021995@linuxfoundation.org>
+From:   shuah <shuah@kernel.org>
+Message-ID: <82ebb88b-6828-2c80-e4ac-891427e90f2a@kernel.org>
+Date:   Tue, 5 Nov 2019 09:51:43 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190930114055.29315-1-peter.ujfalusi@ti.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 30-09-19, 14:40, Peter Ujfalusi wrote:
-> Hi,
+On 11/4/19 2:43 PM, Greg Kroah-Hartman wrote:
+> This is the start of the stable review cycle for the 5.3.9 release.
+> There are 163 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
 > 
-> Changes since v3:
-> - Update the dma-common.yaml and edma binding documentation according to Rob's
->   suggestion
+> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+> Anything received after that time might be too late.
 > 
-> Changes since v2:
-> - Fix dma-common.yaml documentation patch and extend the description of the
->   dma-channel-mask array
-> - The edma documentation now includes information on the dma-channel-mask array
->   size for EDMAs with 32 or 64 channels
+> The whole patch series can be found in one patch at:
+> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.9-rc1.gz
+> or in the git tree and branch at:
+> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
+> and the diffstat can be found below.
 > 
-> Changes since v1:
-> - Extend the common dma-channel-mask to uint32-array to be usable for
->   controllers with more than 32 channels
-> - Use the dma-channel-mask instead custom property for available channels for
->   EDMA.
+> thanks,
 > 
-> The original patch was part of the EDMA multicore usage series.
+> greg k-h
 > 
-> Rob: I'm not sure if I got the dma-common.yaml update correctly...
-> 
-> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
-> needs to be an array to be usable for the driver.
 
-Applied, thanks
+Compiled and booted on my test system. No dmesg regressions.
 
-There was a conflict on patch3, I have reolved it, please check.
-
--- 
-~Vinod
+thanks,
+-- Shuah
