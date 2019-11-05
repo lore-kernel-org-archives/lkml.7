@@ -2,81 +2,98 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13843C010C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:45:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E390C010C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:48:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D681E2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:45:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 210B221D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:48:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730877AbfKELpB (ORCPT
+        id S2388122AbfKELs2 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:45:01 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:54200 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730704AbfKELpB (ORCPT
+        Tue, 5 Nov 2019 06:48:28 -0500
+Received: from rtits2.realtek.com ([211.75.126.72]:46054 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730627AbfKELs1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:45:01 -0500
-Received: by mail-il1-f199.google.com with SMTP id y17so6286680ila.20
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:45:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=QCC2Zuft5IrSbuyDgMXl4CHaLN5HBJGcl6ykToE6Ed8=;
-        b=F3Og1irYZ8xdsfQOUe6LlXT9ecEto9cpw1cOHWX3JSwDkKSjsgz3ROBkQysl7wY4yV
-         dgo9a7xNfdZ+V5paFX0qnfo5UWVLpGn0+ZYnxdLANlGlkctoycI7MMrEfV2a3okqwQ58
-         w1F9rMJXKXP+bgDi3C704QYl14Wc6LQFqogyNdEPEF3vjAMLAZUC5Q6ZZiEe+NfZMqYc
-         Rrx/3F20VqKaO99vlSaFZGprT3xuH8P1lIPkgaWW/oPIm5OeolSShvTF1/th0tLgovMn
-         kAMh3FwnFSqecmjtlDRED3jJ9gvk9KeGm/W1N2ajWTNYsBlTb0ea5RymLpO8yalhq7zY
-         3RPg==
-X-Gm-Message-State: APjAAAW8gEIdW4g6rFyWEAAqKGuYqsi77gxmqCfJ8kReQ1/M8fPV/3vq
-        n5YxEC7gsfLjYgbwtQU4BK/eQeIUfZc4TKwy3blsPihuQElf
-X-Google-Smtp-Source: APXvYqxODW9NHJW/4EGLldbad5zqA1/v64aLeXSjpLD0OrWyJ+niu+pzFgfeGWWvRMHqE1vxcY6Q2oZjQUQLXqzmYw875vDSNqU9
+        Tue, 5 Nov 2019 06:48:27 -0500
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID xA5Bm5ku025506, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (RTITCASV02.realtek.com.tw[172.21.6.19])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id xA5Bm5ku025506
+        (version=TLSv1 cipher=DHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Tue, 5 Nov 2019 19:48:05 +0800
+Received: from RTITMBSVM03.realtek.com.tw ([fe80::e1fe:b2c1:57ec:f8e1]) by
+ RTITCASV02.realtek.com.tw ([::1]) with mapi id 14.03.0468.000; Tue, 5 Nov
+ 2019 19:48:05 +0800
+From:   Hayes Wang <hayeswang@realtek.com>
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "oliver@neukum.org" <oliver@neukum.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v2] r8152: Add macpassthru support for ThinkPad Thunderbolt 3 Dock Gen 2
+Thread-Topic: [PATCH v2] r8152: Add macpassthru support for ThinkPad
+ Thunderbolt 3 Dock Gen 2
+Thread-Index: AQHVk7E2UAb+vVEL20O/iFfFubpdn6d8PDnA//+rqgCAAIxWcA==
+Date:   Tue, 5 Nov 2019 11:48:04 +0000
+Message-ID: <0835B3720019904CB8F7AA43166CEEB2F18F4F92@RTITMBSVM03.realtek.com.tw>
+References: <20191105081526.4206-1-kai.heng.feng@canonical.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
+ <193EF03A-1EF7-4604-BF3A-61201A78D724@canonical.com>
+In-Reply-To: <193EF03A-1EF7-4604-BF3A-61201A78D724@canonical.com>
+Accept-Language: zh-TW, en-US
+Content-Language: zh-TW
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [172.21.177.214]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-Received: by 2002:a92:d981:: with SMTP id r1mr15781326iln.64.1572954300760;
- Tue, 05 Nov 2019 03:45:00 -0800 (PST)
-Date:   Tue, 05 Nov 2019 03:45:00 -0800
-In-Reply-To: <000000000000de1eec059692c021@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000058481f059697f6e7@google.com>
-Subject: Re: KASAN: use-after-free Write in j1939_sock_pending_del
-From:   syzbot <syzbot+07bb74aeafc88ba7d5b4@syzkaller.appspotmail.com>
-To:     bst@pengutronix.de, davem@davemloft.net,
-        dev.kurt@vandijck-laurijssen.be, ecathinds@gmail.com,
-        kernel@pengutronix.de, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rempel-privat.de,
-        lkp@intel.com, maxime.jayat@mobile-devices.fr, mkl@pengutronix.de,
-        netdev@vger.kernel.org, o.rempel@pengutronix.de, robin@protonic.nl,
-        socketcan@hartkopp.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
+> Sent: Tuesday, November 05, 2019 7:18 PM
+[...]
+> >> 	} else {
+> >> -		/* test for RTL8153-BND and RTL8153-BD */
+> >> -		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
+> >> -		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
+> >> -			netif_dbg(tp, probe, tp->netdev,
+> >> -				  "Invalid variant for MAC pass through\n");
+> >> -			return -ENODEV;
+> >> +		bypass_test = false;
+> >> +		mac_obj_name = "\\_SB.AMAC";
+> >> +		mac_obj_type = ACPI_TYPE_BUFFER;
+> >> +		mac_strlen = 0x17;
+> >> +	}
+> >> +
+> >> +	if (!bypass_test) {
+> >
+> > Maybe you could combine this with the "else" above.
+> > Then, the variable "bypass_test" could be removed.
+> 
+> Ok, will do in V3.
+> 
+> > And the declaration of "ocp_data" could be moved after the "else".
+> 
+> Isn't putting declarations at the top of the function the preferred way?
 
-commit 9d71dd0c70099914fcd063135da3c580865e924c
-Author: The j1939 authors <linux-can@vger.kernel.org>
-Date:   Mon Oct 8 09:48:36 2018 +0000
+I mean the ocp_data wouldn't be used out of the else,
+so you could move the declaration to the inside of the else.
 
-     can: add support of SAE J1939 protocol
+However, I don't think you have to send another patch for this.
+Thanks.
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11150314e00000
-start commit:   a99d8080 Linux 5.4-rc6
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13150314e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15150314e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
-dashboard link: https://syzkaller.appspot.com/bug?extid=07bb74aeafc88ba7d5b4
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16fd7044e00000
+Best Regards,
+Hayes
 
-Reported-by: syzbot+07bb74aeafc88ba7d5b4@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
