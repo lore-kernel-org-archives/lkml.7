@@ -2,186 +2,273 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CC01C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:52:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0DE4C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5F7221A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:52:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EF14214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:52:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dwtuIqir";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="RuvazoZo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730611AbfKEXwK (ORCPT
+        id S1730631AbfKEXwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:52:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:44895 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730464AbfKEXwK (ORCPT
+        Tue, 5 Nov 2019 18:52:55 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:49848 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729583AbfKEXwz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:52:10 -0500
-Received: by mail-io1-f71.google.com with SMTP id q13so16727625iot.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 15:52:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=CjtY7g/EqHOjNQQmwYuK/rZC/ASQOgB65CkeH9oNxXI=;
-        b=UKUs4lGkti/S633txjEHKPNbItonwhLbUBFBClnWeoMwW/g4WGXwMfVGJ7eijPfbdb
-         Le+Y6GwM+Jw8YBqJGHwHou/N3vmtjpFsOcl5uTWrXoiWwnQYq0UD4UvJlKzRciDWODW3
-         lMB9HV+9G5HgJGc1/BiMD+CvMW267iaQqDsrXIHLFNLI52aOKlWDeZQ3l2jERBNDPHlo
-         0yB4j/EGJpPhzN7wKxdAQODejE2mVbmsKrNdiGPEKparOqMJyjlBnOlg/QuB6ISgiey5
-         dFv+1OqzVapz9PsJbfVo/z1fJFWpcJKbhhvk5STmaC6mvXZVSOzDTo5OV30LDCuNmsOx
-         dPcw==
-X-Gm-Message-State: APjAAAUTCPSvhz/cCW+qwhrh4wtRMNTq0XPXuFJV5u61oOMAPR9RMHRk
-        8S2GOrXFtAUZn9XgTsnnB7gvz47YkRQCdKDDUBb4qTCWbQ81
-X-Google-Smtp-Source: APXvYqwVkN0CadsC6BBfunsGllxXlvVFG9CMKQt3cdQr/eILv0c2i8nnKIT14d7Ll41X1CIxxSBCbTpLXlCKwCSnqzBZ4zSol3TI
+        Tue, 5 Nov 2019 18:52:55 -0500
+Received: from pps.filterd (m0148461.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA5NhkRm006364;
+        Tue, 5 Nov 2019 15:51:46 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=l0kuosIO2Pzlcp9CWU9EBRIg3imVKBKGPqcnGzQAuvY=;
+ b=dwtuIqirfu2+SR8MbQ5ltWuCX51+PAebqtXJugP7lw0x8s2V9GE6akgtWxTle2FpdS3F
+ RmYsj7pS1NiyrQx3PUDoHotd/cf2bk977lRFYy22eI4ajZCFLawKp+CwKDt6edde3hN6
+ Y5ISBanFDY9fIi/uPUz1XovdNjql/say0BA= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w3awcu94p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Tue, 05 Nov 2019 15:51:45 -0800
+Received: from ash-exhub102.TheFacebook.com (2620:10d:c0a8:82::f) by
+ ash-exhub201.TheFacebook.com (2620:10d:c0a8:83::7) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 5 Nov 2019 15:51:44 -0800
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.172) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 5 Nov 2019 15:51:44 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=DzbjdYm7PmhRKRTH7nrYa+CBQtrE3MIc+VwedbM9nINALLweRzOXL9kVrIgVKb01qh1qbaUD0QtE5TtEU/hPHqIQHRR6fmLucSrza8fD66YWkYdg5M2vYPTKblJLLACSHpkdEugQpJj3O+Ou9qfA7K2TCCyXRSq1WNe8eWborQqgf18gCJEKITAhMecvrGtnhwrSTX2K0kGm4vnAfgtIFev3VKsMJVC+5uHS7y8rpV5J10aDbOtP1YihAdQbUQ6PUh0GXT/Z2TVYhCj272k4r01178UZ8ND4s6ok9ZJElx7FlEQo1Q43Qc4FO2NlqotZsp8ft89uNEsSYtm5O8Xpew==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l0kuosIO2Pzlcp9CWU9EBRIg3imVKBKGPqcnGzQAuvY=;
+ b=VVbWZMCfsP25pl6zkffySTvv2Nb/Z44qMSnVSp2S7q9I6d54Rg4J6QfwrHyCS+MXSLRMR2A9V6xtbl0mzK55lyEC9Ff23+DNKpVy11R7vN95a2LcNNcC7ctfEtoe8IRYoVdezhhhPvYD7cPz3M82XrCHihum2Fjz9NtitmDErsqfyI/Qj4p9q51sWCkEVEFbU4l3X4gR0kVsxPXB08DPLjHT711Xw53YtKAa2k5dDAEEStNXVeu1ATaW3wfbX0Je/fifs9bjlb9Lbp0FU+/d6JPhxBAkQi4iXULwfgfa1O2MsjG7RcmednvxZ7ZLqHAWV7jTIiq3H88+8+kczfCwrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=l0kuosIO2Pzlcp9CWU9EBRIg3imVKBKGPqcnGzQAuvY=;
+ b=RuvazoZoajNhZHl8Xs6mV4TsPqKufdKhraAXN4yosc8xrUklMocexLeqtDk/x5hvLE3QyNWF6fpnEjvcu4uISRpe9rGrVMA+fInooGhOsmGo1NniJOEBX0mwc3XZ4xS4drldwraxy84a3PfuZc7CmxAmd+KS0o5PT8R3lV54U+E=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1437.namprd15.prod.outlook.com (10.173.234.21) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Tue, 5 Nov 2019 23:51:42 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2430.020; Tue, 5 Nov 2019
+ 23:51:42 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     open list <linux-kernel@vger.kernel.org>
+CC:     Kernel Team <Kernel-team@fb.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Arnaldo Carvalho de Melo <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, "Tejun Heo" <tj@kernel.org>
+Subject: Re: [PATCH v6] perf: Sharing PMU counters across compatible events
+Thread-Topic: [PATCH v6] perf: Sharing PMU counters across compatible events
+Thread-Index: AQHVbqpjjWjaDbp/ikSYoLFTNk8qM6d9ipyA
+Date:   Tue, 5 Nov 2019 23:51:42 +0000
+Message-ID: <FAD07921-FB10-4FDD-9A81-48300EE24F20@fb.com>
+References: <20190919052314.2925604-1-songliubraving@fb.com>
+In-Reply-To: <20190919052314.2925604-1-songliubraving@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3601.0.10)
+x-originating-ip: [2620:10d:c090:200::de21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: f911bc7e-1069-4350-ca51-08d7624b1bde
+x-ms-traffictypediagnostic: MWHPR15MB1437:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB1437B1501381067226541851B37E0@MWHPR15MB1437.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:9508;
+x-forefront-prvs: 0212BDE3BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(376002)(366004)(39860400002)(189003)(199004)(81156014)(64756008)(99286004)(486006)(66556008)(25786009)(4326008)(5024004)(5660300002)(256004)(81166006)(8936002)(50226002)(6916009)(14444005)(71200400001)(229853002)(6436002)(305945005)(7736002)(478600001)(2906002)(6512007)(2616005)(6486002)(14454004)(476003)(186003)(33656002)(71190400001)(6246003)(66946007)(8676002)(11346002)(446003)(54906003)(102836004)(53546011)(6506007)(76176011)(6116002)(36756003)(86362001)(66476007)(46003)(66446008)(76116006)(316002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1437;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: zwmIV6JTQahoWOwx+/tR8saRsSTylVQGI8cQcw540VUuUFmQF8QGsbqstSxp04qJnsU9Bx6fcylEzB16BwwEXvUKafEnN4970H3C7pHn2Vw8xoPtYBVKCgqRrQ4xHg8l6Myc6/LSF+4Z3Dlmy9aFkJr+mWt1vaD+NIPAj13ANoea4sLswBPcrrIadTjU7t2ew/DJbE33ms91jh5wDNYVWM/TLP5fL4nNcOIOCOOoHt+JNE6iYLQ8GjtPCWBJRYUQL6IKN2myZT56O/qSUVtUPOEQ4xw0X6EHYPrsiDwxF4HRfi7znFF5F4knMnTxe5ZMB+rOBb7FasvzVCo3XgQ9huymNE7w9VYJ6LLMYQ2NUo1JCGcoInAP86ZTdc7Ve/evRz1BQVSjuraD9sVm1KhkqWs2SvscQJ8SBGWabeBYZt5MPi5oMsiaSIC2EK8sSSlk
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <61ED1D3EDF299042A3918311585BEFAF@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-Received: by 2002:a92:91d3:: with SMTP id e80mr38694444ill.77.1572997928995;
- Tue, 05 Nov 2019 15:52:08 -0800 (PST)
-Date:   Tue, 05 Nov 2019 15:52:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000ca5b3f0596a21e0c@google.com>
-Subject: general protection fault in pagemap_pmd_range
-From:   syzbot <syzbot+a0fc447639c6ffa66b59@syzkaller.appspotmail.com>
-To:     aarcange@redhat.com, adobriyan@gmail.com,
-        akpm@linux-foundation.org, alex@ghiti.fr,
-        aneesh.kumar@linux.ibm.com, aou@eecs.berkeley.edu,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, aryabinin@virtuozzo.com,
-        benh@kernel.crashing.org, borntraeger@de.ibm.com, bp@alien8.de,
-        catalin.marinas@arm.com, dave.hansen@linux.intel.com,
-        dave.jiang@intel.com, davem@davemloft.net, dvyukov@google.com,
-        glider@google.com, gor@linux.ibm.com, guro@fb.com,
-        heiko.carstens@de.ibm.com, hpa@zytor.com, ira.weiny@intel.com,
-        james.morse@arm.com, jgg@ziepe.ca, jglisse@redhat.com,
-        jhogan@kernel.org, kan.liang@linux.intel.com,
-        khlebnikov@yandex-team.ru, ktkhai@virtuozzo.com,
-        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@armlinux.org.uk, luto@kernel.org, mark.rutland@arm.com,
-        mawilcox@microsoft.com, mhocko@suse.com, mingo@elte.hu,
-        mingo@redhat.com, mpe@ellerman.id.au, n-horiguchi@ah.jp.nec.com,
-        palmer@sifive.com, paul.burton@mips.com, paul.walmsley@sifive.com,
-        paulus@samba.org, peterz@infradead.org, ralf@linux-mips.org,
-        semenzato@chromium.org, sfr@canb.auug.org.au,
-        shashim@codeaurora.org
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-MS-Exchange-CrossTenant-Network-Message-Id: f911bc7e-1069-4350-ca51-08d7624b1bde
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 23:51:42.3890
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: c2p91dm49xhXASV0aAQ7hDGEHLOVyyoHJ10H3OOnC5bKhQalHADAGflaLN0yEjS0X5gO6kk6+scgZd0xQ3xZhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1437
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-05_09:2019-11-05,2019-11-05 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 impostorscore=0
+ adultscore=0 clxscore=1015 malwarescore=0 suspectscore=0
+ lowpriorityscore=0 mlxlogscore=974 phishscore=0 spamscore=0 bulkscore=0
+ mlxscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.12.0-1908290000 definitions=main-1911050193
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+More details on where I am heading...
 
-syzbot found the following crash on:
+> On Sep 18, 2019, at 10:23 PM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+> This patch tries to enable PMU sharing. To make perf event scheduling
+> fast, we use special data structures.
+>=20
+> An array of "struct perf_event_dup" is added to the perf_event_context,
+> to remember all the duplicated events under this ctx. All the events
+> under this ctx has a "dup_id" pointing to its perf_event_dup. Compatible
+> events under the same ctx share the same perf_event_dup. The following
+> figure shows a simplified version of the data structure.
+>=20
+>      ctx ->  perf_event_dup -> master
+>                     ^
+>                     |
+>         perf_event /|
+>                     |
+>         perf_event /
+>=20
+> Connection among perf_event and perf_event_dup are built when events are
+> added or removed from the ctx. So these are not on the critical path of
+> schedule or perf_rotate_context().
+>=20
+> On the critical paths (add, del read), sharing PMU counters doesn't
+> increase the complexity. Helper functions event_pmu_[add|del|read]() are
+> introduced to cover these cases. All these functions have O(1) time
+> complexity.
+>=20
+> We allocate a separate perf_event for perf_event_dup->master. This needs
+> extra attention, because perf_event_alloc() may sleep. To allocate the
+> master event properly, a new pointer, tmp_master, is added to perf_event.
+> tmp_master carries a separate perf_event into list_[add|del]_event().
+> The master event has valid ->ctx and holds ctx->refcount.
 
-HEAD commit:    51309b9d Add linux-next specific files for 20191105
-git tree:       linux-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=11ad1658e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-dashboard link: https://syzkaller.appspot.com/bug?extid=a0fc447639c6ffa66b59
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=164e5f92e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=15c65bcce00000
+If we do GFP_ATOMIC in perf_event_alloc(), maybe with an extra option, we
+don't need the tmp_master hack. So we only allocate master when we will=20
+use it.=20
 
-The bug was bisected to:
+>=20
+> Details about the handling of the master event is added to
+> include/linux/perf_event.h, before struct perf_event_dup.
+>=20
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexey Budankov <alexey.budankov@linux.intel.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: Tejun Heo <tj@kernel.org>
+> Signed-off-by: Song Liu <songliubraving@fb.com>
+> ---
+> include/linux/perf_event.h |  61 ++++++++
+> kernel/events/core.c       | 294 ++++++++++++++++++++++++++++++++++---
+> 2 files changed, 332 insertions(+), 23 deletions(-)
+>=20
+> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+> index 61448c19a132..a694e5eee80a 100644
+> --- a/include/linux/perf_event.h
+> +++ b/include/linux/perf_event.h
+> @@ -722,6 +722,12 @@ struct perf_event {
+> #endif
+>=20
+> 	struct list_head		sb_list;
+> +
+> +	/* for PMU sharing */
+> +	struct perf_event		*tmp_master;
+> +	int				dup_id;
 
-commit 181be542ef3c9ca495500143d4c23f4d58beb5ab
-Author: Steven Price <steven.price@arm.com>
-Date:   Mon Nov 4 22:57:54 2019 +0000
+I guess we can get rid of dup_id here, and just have=20
+struct perf_event *dup_master.=20
 
-     mm: pagewalk: allow walking without vma
+> +	u64				dup_base_count;
+> +	u64				dup_base_child_count;
+> #endif /* CONFIG_PERF_EVENTS */
+> };
+>=20
+> @@ -731,6 +737,58 @@ struct perf_event_groups {
+> 	u64		index;
+> };
+>=20
+> +/*
+> + * Sharing PMU across compatible events
+> + *
+> + * If two perf_events in the same perf_event_context are counting same
+> + * hardware events (instructions, cycles, etc.), they could share the
+> + * hardware PMU counter.
+> + *
+> + * When a perf_event is added to the ctx (list_add_event), it is compare=
+d
+> + * against other events in the ctx. If they can share the PMU counter,
+> + * a perf_event_dup is allocated to represent the sharing.
+> + *
+> + * Each perf_event_dup has a virtual master event, which is called by
+> + * pmu->add() and pmu->del(). We cannot call perf_event_alloc() in
+> + * list_add_event(), so it is allocated and carried by event->tmp_master
+> + * into list_add_event().
+> + *
+> + * Virtual master in different cases/paths:
+> + *
+> + * < I > perf_event_open() -> close() path:
+> + *
+> + * 1. Allocated by perf_event_alloc() in sys_perf_event_open();
+> + * 2. event->tmp_master->ctx assigned in perf_install_in_context();
+> + * 3.a. if used by ctx->dup_events, freed in perf_event_release_kernel()=
+;
+> + * 3.b. if not used by ctx->dup_events, freed in perf_event_open().
+> + *
+> + * < II > inherit_event() path:
+> + *
+> + * 1. Allocated by perf_event_alloc() in inherit_event();
+> + * 2. tmp_master->ctx assigned in inherit_event();
+> + * 3.a. if used by ctx->dup_events, freed in perf_event_release_kernel()=
+;
+> + * 3.b. if not used by ctx->dup_events, freed in inherit_event().
+> + *
+> + * < III > perf_pmu_migrate_context() path:
+> + * all dup_events removed during migration (no sharing after the move).
+> + *
+> + * < IV > perf_event_create_kernel_counter() path:
+> + * not supported yet.
+> + */
+> +struct perf_event_dup {
+> +	/*
+> +	 * master event being called by pmu->add() and pmu->del().
+> +	 * This event is allocated with perf_event_alloc(). When
+> +	 * attached to a ctx, this event should hold ctx->refcount.
+> +	 */
+> +	struct perf_event       *master;
+> +	/* number of events in the ctx that shares the master */
+> +	int			total_event_count;
+> +	/* number of active events of the master */
+> +	int			active_event_count;
+> +};
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=11341968e00000
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=13341968e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=15341968e00000
+And hopefully get rid of this.=20
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a0fc447639c6ffa66b59@syzkaller.appspotmail.com
-Fixes: 181be542ef3c ("mm: pagewalk: allow walking without vma")
+Please let me know if this doesn't work.=20
 
-kasan: CONFIG_KASAN_INLINE enabled
-kasan: GPF could be caused by NULL-ptr deref or user memory access
-general protection fault: 0000 [#1] PREEMPT SMP KASAN
-CPU: 0 PID: 8839 Comm: syz-executor009 Not tainted 5.4.0-rc6-next-20191105  
-#0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-RIP: 0010:pmd_trans_huge_lock include/linux/huge_mm.h:219 [inline]
-RIP: 0010:pagemap_pmd_range+0x83/0x1e40 fs/proc/task_mmu.c:1373
-Code: c1 ea 03 80 3c 02 00 0f 85 ef 1a 00 00 48 8b 43 18 49 8d 7f 40 48 89  
-fa 48 c1 ea 03 48 89 45 c8 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
-85 be 1a 00 00 49 8b 5f 40 be 08 00 00 00 4c 8d ab
-RSP: 0018:ffff8880a4e4f288 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a4e4f438 RCX: ffff8880a4e4f438
-RDX: 0000000000000008 RSI: ffffffff81dd1b94 RDI: 0000000000000040
-RBP: ffff8880a4e4f300 R08: ffff8880992ee040 R09: ffffed1012180ad2
-R10: ffffed1012180ad1 R11: ffff888090c0568b R12: ffff8880a53a2010
-R13: 0000000000600000 R14: 00000000005fffff R15: 0000000000000000
-FS:  000000000172c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455150 CR3: 000000009f949000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
-  walk_pmd_range mm/pagewalk.c:78 [inline]
-  walk_pud_range mm/pagewalk.c:149 [inline]
-  walk_p4d_range mm/pagewalk.c:190 [inline]
-  walk_pgd_range mm/pagewalk.c:223 [inline]
-  __walk_page_range+0x10ff/0x1b40 mm/pagewalk.c:318
-  walk_page_range+0x1c5/0x3b0 mm/pagewalk.c:406
-  pagemap_read+0x4d1/0x650 fs/proc/task_mmu.c:1596
-  do_loop_readv_writev fs/read_write.c:714 [inline]
-  do_loop_readv_writev fs/read_write.c:701 [inline]
-  do_iter_read+0x4a4/0x660 fs/read_write.c:935
-  vfs_readv+0xf0/0x160 fs/read_write.c:997
-  kernel_readv fs/splice.c:359 [inline]
-  default_file_splice_read+0x482/0x8a0 fs/splice.c:414
-  do_splice_to+0x127/0x180 fs/splice.c:877
-  splice_direct_to_actor+0x2d3/0x970 fs/splice.c:955
-  do_splice_direct+0x1da/0x2a0 fs/splice.c:1064
-  do_sendfile+0x597/0xd00 fs/read_write.c:1464
-  __do_sys_sendfile64 fs/read_write.c:1525 [inline]
-  __se_sys_sendfile64 fs/read_write.c:1511 [inline]
-  __x64_sys_sendfile64+0x1dd/0x220 fs/read_write.c:1511
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x4401e9
-Code: 18 89 d0 c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 5b 14 fc ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007ffcb2c0cd38 EFLAGS: 00000246 ORIG_RAX: 0000000000000028
-RAX: ffffffffffffffda RBX: 00000000004002c8 RCX: 00000000004401e9
-RDX: 0000000000000000 RSI: 0000000000000004 RDI: 0000000000000003
-RBP: 00000000006ca018 R08: 0000000000000012 R09: 65732f636f72702f
-R10: 0000100000206201 R11: 0000000000000246 R12: 0000000000401ad0
-R13: 0000000000401b60 R14: 0000000000000000 R15: 0000000000000000
-Modules linked in:
----[ end trace d938329fe3462ca9 ]---
-RIP: 0010:pmd_trans_huge_lock include/linux/huge_mm.h:219 [inline]
-RIP: 0010:pagemap_pmd_range+0x83/0x1e40 fs/proc/task_mmu.c:1373
-Code: c1 ea 03 80 3c 02 00 0f 85 ef 1a 00 00 48 8b 43 18 49 8d 7f 40 48 89  
-fa 48 c1 ea 03 48 89 45 c8 48 b8 00 00 00 00 00 fc ff df <80> 3c 02 00 0f  
-85 be 1a 00 00 49 8b 5f 40 be 08 00 00 00 4c 8d ab
-RSP: 0018:ffff8880a4e4f288 EFLAGS: 00010202
-RAX: dffffc0000000000 RBX: ffff8880a4e4f438 RCX: ffff8880a4e4f438
-RDX: 0000000000000008 RSI: ffffffff81dd1b94 RDI: 0000000000000040
-RBP: ffff8880a4e4f300 R08: ffff8880992ee040 R09: ffffed1012180ad2
-R10: ffffed1012180ad1 R11: ffff888090c0568b R12: ffff8880a53a2010
-R13: 0000000000600000 R14: 00000000005fffff R15: 0000000000000000
-FS:  000000000172c880(0000) GS:ffff8880ae800000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000455150 CR3: 000000009f949000 CR4: 00000000001406f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Thanks,
+Song
 
 
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
