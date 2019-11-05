@@ -2,99 +2,131 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SUBJ_OBFU_PUNCT_FEW,SUBJ_OBFU_PUNCT_MANY,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27A88C17486
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 417A5C17486
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2FAA21928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:59:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1965821882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:01:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JuGsP7Sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389364AbfKEN7g (ORCPT
+        id S2389408AbfKEOBp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:59:36 -0500
-Received: from einhorn-mail.in-berlin.de ([217.197.80.20]:36711 "EHLO
-        einhorn-mail.in-berlin.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388209AbfKEN7f (ORCPT
+        Tue, 5 Nov 2019 09:01:45 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:43909 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389377AbfKEOBo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:59:35 -0500
-X-Greylist: delayed 581 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 08:59:35 EST
-X-Envelope-From: stefanr@s5r6.in-berlin.de
-Received: from authenticated.user (localhost [127.0.0.1]) by einhorn.in-berlin.de  with ESMTPSA id xA5DneLi023521
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NOT);
-        Tue, 5 Nov 2019 14:49:40 +0100
-Date:   Tue, 5 Nov 2019 14:49:39 +0100
-From:   Stefan Richter <stefanr@s5r6.in-berlin.de>
-To:     linux1394-devel@lists.sourceforge.net
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] firewire: core: code cleanup after vm_map_pages_zero
- introduction
-Message-ID: <20191105144939.3b38ce48@kant>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 5 Nov 2019 09:01:44 -0500
+Received: by mail-wr1-f65.google.com with SMTP id n1so21498058wra.10;
+        Tue, 05 Nov 2019 06:01:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
+        b=JuGsP7SaJj6polj8WOmJL+wp8KAuIHmo+o9netEjHZUnkfMZlpJrU5Jm+LWMA3UbQE
+         iBvCJywvjXy6BYuWreZ9X+UIjDqjTId8lLv4aJjHAxtQxr8RZUTsxAHzztkUXuu506Ty
+         6F4HI1awQ+O9jKKZxIJ1S0pujnzRSJAafQus3efQA1FUv5vt+kmWLEv5xQlUPr4OjGPE
+         zNQZcnceOyLUnqj2qYpJiUPKgOyIQ5rxG7gBXoosxQZWOSJ3nHCDARXlwZrRxqqOHz9S
+         23irGP3IQhh+AuczCRM/sS3LgaVNvLApVUWBkkRDwvNjAo4NyFva12WxB7pBuKjpOLuF
+         606w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Wcd6F4hUjRzDP5lzJbcKbN83P0Izh8UopNSdrH/0wXs=;
+        b=RD2Fdg8y0Z/GNSC9OH3YRWFVKUAHti+joUaaPHYln9k0nPphOTE3bEpKyjJ2NMl5tr
+         LuD0UBrc2fmw5NjGnZdPNbdQb0VIbGmZCZcdYpnS/jawGu2YBkfdKmv3Eu9f1Aa+79kA
+         kmm4NjVhVUzpZoWWUDxfrSfg2jPxupyncoURmXKOMejcZCJDQIa9TCGWzvsEcmHis1mQ
+         Z2aO6vgSzDqkbYJuF/5ezqTz6HshEeUWMzK3UZHuibDCsJE1TtYFfOGAyJrXyokrgjlI
+         NBrakWMd/GkU7nK6XpadTqe2p6Dz2O3lAwY5nL5U3feJ+Ku7+fELCbq8/h/XVN12jQuc
+         ZpLA==
+X-Gm-Message-State: APjAAAWiTBFPuC1nUg9MQzqFB8BVyKMMMmMLtxMFKWpfLxOog5SihG2r
+        pzqDsG44hIV60wSn/Th7DUXMJyxX9uYQMwZpHOs=
+X-Google-Smtp-Source: APXvYqxRcCROBvE45IqEtn6OaqJk7IITVlNsi8UujVDIcnVf36fGS6gEz5kfeljJQVq3rkoKIyrIDQkO5S6JVNP7UKw=
+X-Received: by 2002:a5d:4b42:: with SMTP id w2mr27600001wrs.360.1572962502646;
+ Tue, 05 Nov 2019 06:01:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-3-peron.clem@gmail.com>
+ <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
+In-Reply-To: <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Tue, 5 Nov 2019 15:01:31 +0100
+Message-ID: <CAJiuCcesD8kh_BpVLxyhk5UYYwGhp_tQkcsaY-LzxRTT5kO3Qw@mail.gmail.com>
+Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
+To:     Philipp Zabel <p.zabel@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 22660db89262 turned fw_iso_buffer_map_vma into a one-liner.
-There is no need to keep this in the core-iso.c collection of buffer
-management functions; put it inline into the sole user, the character
-device file driver.
+Hi Philipp,
 
-Signed-off-by: Stefan Richter <stefanr@s5r6.in-berlin.de>
----
- drivers/firewire/core-cdev.c |    3 ++-
- drivers/firewire/core-iso.c  |    7 -------
- drivers/firewire/core.h      |    2 --
- 3 files changed, 2 insertions(+), 10 deletions(-)
+On Tue, 5 Nov 2019 at 14:36, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> On Tue, 2019-11-05 at 14:14 +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > H6 PWM core needs deasserted reset line in order to work.
+> >
+> > Add an optional probe for it.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+>
+> Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
+>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
+> >  1 file changed, 31 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 6f5840a1a82d..9ba83769a478 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> [...]
+> > @@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device =
+*pdev)
+> >       if (IS_ERR(pwm->clk))
+> >               return PTR_ERR(pwm->clk);
+> >
+> > +     pwm->rst =3D devm_reset_control_get_optional_shared(&pdev->dev, N=
+ULL);
+> > +     if (IS_ERR(pwm->rst)) {
+> > +             if (PTR_ERR(pwm->rst) !=3D -EPROBE_DEFER)
+> > +                     dev_err(&pdev->dev, "get reset failed %ld\n",
+> > +                             PTR_ERR(pwm->rst));
+> > +             return PTR_ERR(pwm->rst);
+> > +     }
+> > +
+> > +     /* Deassert reset */
+>
+> Nitpick: isn't the API function name explanatory enough?
 
---- a/drivers/firewire/core-cdev.c
-+++ b/drivers/firewire/core-cdev.c
-@@ -1694,7 +1694,8 @@ static int fw_device_op_mmap(struct file
- 	if (ret < 0)
- 		goto fail;
- 
--	ret = fw_iso_buffer_map_vma(&client->buffer, vma);
-+	ret = vm_map_pages_zero(vma, client->buffer.pages,
-+				client->buffer.page_count);
- 	if (ret < 0)
- 		goto fail;
- 
---- a/drivers/firewire/core-iso.c
-+++ b/drivers/firewire/core-iso.c
-@@ -91,13 +91,6 @@ int fw_iso_buffer_init(struct fw_iso_buf
- }
- EXPORT_SYMBOL(fw_iso_buffer_init);
- 
--int fw_iso_buffer_map_vma(struct fw_iso_buffer *buffer,
--			  struct vm_area_struct *vma)
--{
--	return vm_map_pages_zero(vma, buffer->pages,
--					buffer->page_count);
--}
--
- void fw_iso_buffer_destroy(struct fw_iso_buffer *buffer,
- 			   struct fw_card *card)
- {
---- a/drivers/firewire/core.h
-+++ b/drivers/firewire/core.h
-@@ -158,8 +158,6 @@ void fw_node_event(struct fw_card *card,
- int fw_iso_buffer_alloc(struct fw_iso_buffer *buffer, int page_count);
- int fw_iso_buffer_map_dma(struct fw_iso_buffer *buffer, struct fw_card *card,
- 			  enum dma_data_direction direction);
--int fw_iso_buffer_map_vma(struct fw_iso_buffer *buffer,
--			  struct vm_area_struct *vma);
- 
- 
- /* -topology */
+Yes I can remove this comment,
 
-
--- 
-Stefan Richter
--======---== =-== --=-=
-http://arcgraph.de/sr/
+Cl=C3=A9ment
+>
+> regards
+> Philipp
+>
