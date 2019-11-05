@@ -2,111 +2,121 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3EA9C1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2A6DC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:47:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 800B12190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C417A21928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:47:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=pobox.com header.i=@pobox.com header.b="txxpP80f";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=fluxnic.net header.i=@fluxnic.net header.b="f3NnrhSG"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WzMofGxa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389234AbfKENoY (ORCPT
+        id S2389254AbfKENrq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:44:24 -0500
-Received: from pb-smtp20.pobox.com ([173.228.157.52]:65182 "EHLO
-        pb-smtp20.pobox.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388615AbfKENoY (ORCPT
+        Tue, 5 Nov 2019 08:47:46 -0500
+Received: from mail-wm1-f68.google.com ([209.85.128.68]:38873 "EHLO
+        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388860AbfKENrq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:44:24 -0500
-Received: from pb-smtp20.pobox.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id E07E79F251;
-        Tue,  5 Nov 2019 08:44:18 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha1; c=relaxed; d=pobox.com; h=date:from:to
-        :cc:subject:in-reply-to:message-id:references:mime-version
-        :content-type; s=sasl; bh=QRL6lDJwPIhr0aPJSM491ZqazIM=; b=txxpP8
-        0fMJ5oS2tW/G2dmf3ue7aryydtOs2tcfegSnlxJv/JqNs1IWSq+RNBEA8k8bnt1z
-        QM0oWJ9zngaR4f8mup3Al+j4hjbZAQM6KFLgGtp/T/pq10kJj7Ph/bCSjEEe5KCM
-        Si0wFFRu1sK4wpyMMINCCIhZ+BDgshiGfZbNc=
-Received: from pb-smtp20.sea.icgroup.com (unknown [127.0.0.1])
-        by pb-smtp20.pobox.com (Postfix) with ESMTP id D795D9F24D;
-        Tue,  5 Nov 2019 08:44:18 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed; d=fluxnic.net;
- h=date:from:to:cc:subject:in-reply-to:message-id:references:mime-version:content-type; s=2016-12.pbsmtp; bh=q3pLhWjndSWDxdR1GJbLTbPdN+s1QCbqTauwlpf9/H4=; b=f3NnrhSGx8TT6rGOslw2Fezqyr76RvvVR4n2DlO7qDdzNf6EbHxtYeoGhDGY1csM3tNF4F1V8DgT3LtAKJziXqVUpv/Ymb9f0g/ebHrcIFutSs+w+k8uzkKuueiyqeyNy9K6IYOKbmJ7ufnmGqDXKvJQbJ3rgn8AJAnXdQo3nt8=
-Received: from yoda.home (unknown [24.203.50.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by pb-smtp20.pobox.com (Postfix) with ESMTPSA id A95689F24C;
-        Tue,  5 Nov 2019 08:44:15 -0500 (EST)
-        (envelope-from nico@fluxnic.net)
-Received: from xanadu.home (xanadu.home [192.168.2.2])
-        by yoda.home (Postfix) with ESMTPSA id 9D3812DA01C8;
-        Tue,  5 Nov 2019 08:44:13 -0500 (EST)
-Date:   Tue, 5 Nov 2019 14:44:13 +0100 (CET)
-From:   Nicolas Pitre <nico@fluxnic.net>
-To:     Jiri Slaby <jslaby@suse.com>
-cc:     Or Cohen <orcohen@paloaltonetworks.com>,
-        Greg KH <gregkh@linuxfoundation.org>, textshell@uchuujin.de,
-        Daniel Vetter <daniel.vetter@ffwll.ch>, sam@ravnborg.org,
-        mpatocka@redhat.com, ghalat@redhat.com,
-        linux-kernel@vger.kernel.org, jwilk@jwilk.net,
-        Nadav Markus <nmarkus@paloaltonetworks.com>,
-        syzkaller@googlegroups.com
-Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
-In-Reply-To: <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
-Message-ID: <nycvar.YSQ.7.76.1911051430050.30289@knanqh.ubzr>
-References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com> <20191104152428.GA2252441@kroah.com> <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr> <CAM6JnLdrzCPOYyfTdmriFo7cRaGM4p2OEPd_0MHa3_WemamffA@mail.gmail.com>
- <nycvar.YSQ.7.76.1911041928030.30289@knanqh.ubzr> <c30fc539-68a8-65d7-226c-6f8e6fd8bdfb@suse.com> <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com> <a0550a96-a7db-60d7-c4ac-86be8c8dd275@suse.com> <nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr>
- <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
-User-Agent: Alpine 2.21 (LFD 202 2017-01-01)
+        Tue, 5 Nov 2019 08:47:46 -0500
+Received: by mail-wm1-f68.google.com with SMTP id z19so16030120wmk.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 05:47:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=nZ0NtyKlN0mECHG4PVEtPii79ddIWJ/dNETUstyjSo4=;
+        b=WzMofGxaV4+waE9HFVg1hUeiDUkLmUiD8evWbx47N6a73UjVCKy5N69mB9gYIIbETC
+         yn6ZaRoNcnv/5nRk5ZWIwzrIHfjBOOyK4ILGbAlAU0yTaBdDkM7UrZpZ9oIAcdnWlidk
+         1RFYtnbxSXEpF/Nv15GC0/Sm9nCQCGI3IQaVxkmXnS7lofKPTn8Ob08efu0TyN1iGrfY
+         jbP0qjEfX8LUQH463Ox5r1OUv9aByO155IFwD7KIMCxkQe02cnZxZQQwFe7PqoVRzENi
+         bVHgEBL59zCUcGveUFQUxd2dKviPjJqW9n4E4QuogiA3f/5RkOmA03w/D2zsvEFpXM6f
+         f4pw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=nZ0NtyKlN0mECHG4PVEtPii79ddIWJ/dNETUstyjSo4=;
+        b=GFo2K5Vg+Yzpg7QAmUzTLg2FD08fmkcRQrABloGx0zA59eEZRyMDdg9LpSsSsB6jCf
+         NAq64JMK1JAB1QWYJGwFNqtEzHXN/QGEULoODBWeOciuVViaPZz3PMKYO/vAt/v04j96
+         hZ19fVyRbTbhoT446hKjaon2LdA20nMPWRDMMVl0OBgnYeQYOxnnrsTKb3oimhMTA9yj
+         7JuP56/cvDzyTz+ZLUf1eSaCfEHtv/6xwNi69h+Dz2Pe5GIltecDMUiGlUEX+LYzQs80
+         CAP5gLKnZNRNnZqJSxXSsjL+8p1jcJ3PzdhcXmc4Migaca4Vt/o78lPunWc5LCnHQfA0
+         lvJQ==
+X-Gm-Message-State: APjAAAXhQbd7OajAcUuy0CxwvgaqiXT1xGBspiNlhlfy95TWFOycvdMw
+        IT0gkT2l0ieolQKJ+hBGy7UZnw==
+X-Google-Smtp-Source: APXvYqz6TwrUtKtwRhKyTrjAPt8ruFrngSCuQfZKpEY7AkKWkRgK1SLBJ7dRQ+2weGZP3OT233hU2A==
+X-Received: by 2002:a1c:b404:: with SMTP id d4mr4598549wmf.9.1572961663785;
+        Tue, 05 Nov 2019 05:47:43 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id q25sm25737207wra.3.2019.11.05.05.47.42
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 05:47:42 -0800 (PST)
+Date:   Tue, 5 Nov 2019 13:47:42 +0000
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] mospost: remove unneeded local variable in
+ contains_namespace()
+Message-ID: <20191105134742.GC65671@google.com>
+References: <20191029123809.29301-1-yamada.masahiro@socionext.com>
+ <20191029123809.29301-5-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Pobox-Relay-ID: 5BA28726-FFD2-11E9-BA90-B0405B776F7B-78420484!pb-smtp20.pobox.com
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191029123809.29301-5-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Jiri Slaby wrote:
+Hi!
 
-> On 05. 11. 19, 10:33, Nicolas Pitre wrote:
-> > Subject: [PATCH] vcs: prevent write access to vcsu devices
-> > 
-> > Commit d21b0be246bf ("vt: introduce unicode mode for /dev/vcs") guarded
-> > against using devices containing attributes as this is not yet
-> > implemented. It however failed to guard against writes to any devices
-> > as this is also unimplemented.
-> > 
-> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> > Cc: <stable@vger.kernel.org> # v4.19+
-> > 
-> > diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-> > index fa07d79027..ef19b95b73 100644
-> > --- a/drivers/tty/vt/vc_screen.c
-> > +++ b/drivers/tty/vt/vc_screen.c
-> > @@ -456,6 +456,9 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-> >  	size_t ret;
-> >  	char *con_buf;
-> >  
-> > +	if (use_unicode(inode))
-> > +		return -EOPNOTSUPP;
-> 
-> Looks good to me. I am also thinking about a ban directly in open:
-> 
-> if (use_unicode(inode) && (filp->f_flags & O_ACCMODE) != O_RDONLY)
->   return -EOPNOTSUPP;
-> 
-> Would that break the unicode users?
+On Tue, Oct 29, 2019 at 09:38:09PM +0900, Masahiro Yamada wrote:
+>The local variable, ns_entry, is unneeded.
+>
+>While I was here, I also cleaned up the comparison with NULL or 0.
+>
+>Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>---
 
-The user I know about uses a common helper that uses O_RDWR.
-So yes, in that case that would break it.
+This was not directly sent to me, hence I missed it.
+Nevertheless, please feel free to add
 
+Reviewed-by: Matthias Maennich <maennich@google.com>
 
-Nicolas
+Cheers,
+Matthias
+>
+> scripts/mod/modpost.c | 6 ++----
+> 1 file changed, 2 insertions(+), 4 deletions(-)
+>
+>diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+>index f7425f5d4ab0..f70b924f379f 100644
+>--- a/scripts/mod/modpost.c
+>+++ b/scripts/mod/modpost.c
+>@@ -239,10 +239,8 @@ static struct symbol *find_symbol(const char *name)
+> static bool contains_namespace(struct namespace_list *list,
+> 			       const char *namespace)
+> {
+>-	struct namespace_list *ns_entry;
+>-
+>-	for (ns_entry = list; ns_entry != NULL; ns_entry = ns_entry->next)
+>-		if (strcmp(ns_entry->namespace, namespace) == 0)
+>+	for (; list; list = list->next)
+>+		if (!strcmp(list->namespace, namespace))
+> 			return true;
+>
+> 	return false;
+>-- 
+>2.17.1
+>
