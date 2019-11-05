@@ -2,89 +2,171 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CE91C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 929CCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:41:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A8412087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:39:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572975597;
-	bh=y2opLO7+HSMdSjVhYh/qVkiMvhFsEgpR1zbUKDSf3Po=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=GXC2s85jIlrHU+izNgvN8q8+RO5NzP0fGRAhOkpv7ui7r4w3RFu7ASyd3OLZ9iYg3
-	 nRwhNcpVbfHRNgLPWF6kSC1GpUHowvLB7jE4idCQKoPlnl7jNFPFX0iDK2vMMk3OPf
-	 JPbreDx9/2pmbJT740Wp6CnoNW08aaGIp1wM+Clo=
+	by mail.kernel.org (Postfix) with ESMTP id 62B4F21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:41:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ZbYI1+bG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390380AbfKERj4 (ORCPT
+        id S2390413AbfKERl6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:39:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:59378 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387776AbfKERj4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:39:56 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0A3B52087E;
-        Tue,  5 Nov 2019 17:39:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572975594;
-        bh=y2opLO7+HSMdSjVhYh/qVkiMvhFsEgpR1zbUKDSf3Po=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=XTa4wDimisYBqz8aF7I1lGHjb8jutSs34fju9pKAYwPMva15JxywK6ltHJb/UVVJb
-         ObxHekeCseV2L5njEMMgtlrsDltq+EEY/CYfSP96c9Oxyp2jVvkK3DulaDCi2bzYYV
-         NLrHucRF/mAZlwSTgkqBCky7bja5uN5D2kieWzu0=
-Date:   Tue, 5 Nov 2019 18:33:58 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J . Wysocki" <rafael@kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-gpio@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [RESEND PATCH v3 0/8] drivers: add new variants of
- devm_platform_ioremap_resource()
-Message-ID: <20191105173358.GA2876364@kroah.com>
-References: <20191022084318.22256-1-brgl@bgdev.pl>
+        Tue, 5 Nov 2019 12:41:58 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:41387 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388969AbfKERl6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:41:58 -0500
+Received: by mail-oi1-f195.google.com with SMTP id e9so14422186oif.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 09:41:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IW0B7vGBOZzh3Br4WBMe5H6F6ySlTPaNURY6MVu9ypc=;
+        b=ZbYI1+bGZXJmenbWyTwg59wx2IQa4RsXYMy5cDpjY94ZKRzvY7jXz1ZuZz7MjxE0Z1
+         0DkLswJnlqUZAxeZlQetG/AGeQ8sSr0bH3bsRJpWQizhENKoMme9H4ptr2WeIPHjsbwT
+         bhs695GuhX7/roSlyPP9tqWBYFTQpzlG8AbUf9dbDw+Q0JkDCrXka6BfBc2NHToivKcd
+         M4bs0RdXRhCXJtq3rs5X8Aa46HQco0y0ejruMU2uwY4Hpk4/sk5fSsaJmiOy/iEIB8LN
+         Ei1PHtt5WYyOUo6ml8iX8eKhtZKSni+wqyGt/Xz8ZvCq8Kh3EhWTVC9fSt9H/u3uTVTT
+         XeAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IW0B7vGBOZzh3Br4WBMe5H6F6ySlTPaNURY6MVu9ypc=;
+        b=RZ26tx80rqjOLrvhnuXL5vaykG7hwdlaJN1EE4wuRPxIbeoe8KFC/jA3hjMxK6ns4w
+         3TbWQLLsxFw2ob/2kteCif/07wSEPixtORNi3qddmAvVezR8BgoU6P8BBaXF5nYpBsZV
+         IkCuILfEhLP/6bWp8eS1LSPd7+pWqjRizuCeaVxxy6EMIrZ4agyUmh7o6VVOh/SRLygK
+         UcRveNO46hs42zoQG5NKxJ9f8Z56qX5tGzEFU3ZTZ1i8kMpiBW9mGYxXTfBupymBm8zy
+         uBMBDToKZdf+ABPK/njavRLiw+EpIiJIqozwNWUrF9DvIqL6q0TibB7jK1moqi1uoHSH
+         MqUg==
+X-Gm-Message-State: APjAAAX4l9crVlyt+y0s1/diCnq3pPuJ6pQC1JSOT9zpicDjrcKf9/nR
+        dh8E9S+hNGLwcEsYJBW0nkBXbKMP0dqDpBcbY0TQiw==
+X-Google-Smtp-Source: APXvYqyeDs/QoA5RfByjqPGNd6UTX27g8Bcyttet+PRuoxInbJsv6PD62Ia904Qn9TsvFKumOj9jCCzig32M+6/5khE=
+X-Received: by 2002:aca:c64c:: with SMTP id w73mr118205oif.161.1572975716440;
+ Tue, 05 Nov 2019 09:41:56 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191022084318.22256-1-brgl@bgdev.pl>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191025234834.28214-1-john.stultz@linaro.org>
+ <20191104095823.GD10326@phenom.ffwll.local> <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
+ <20191105094259.GX10326@phenom.ffwll.local>
+In-Reply-To: <20191105094259.GX10326@phenom.ffwll.local>
+From:   John Stultz <john.stultz@linaro.org>
+Date:   Tue, 5 Nov 2019 09:41:44 -0800
+Message-ID: <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
+To:     Daniel Vetter <daniel@ffwll.ch>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pratik Patel <pratikp@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Oct 22, 2019 at 10:43:10AM +0200, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Note: resending with Arnd's review tags and rebased on top of char-misc-next
-> 
-> The new devm_platform_ioremap_resource() helper has now been widely
-> adopted and used in many drivers. Users of the write-combined ioremap()
-> variants could benefit from the same code shrinkage. This series provides
-> a write-combined version of devm_platform_ioremap_resource() and uses it in a
-> relevant driver with the assumption that - just like was the case
-> previously - a coccinelle script will be developed to ease the transition
-> for others.
-> 
-> There are also users of platform_get_resource_byname() who call
-> devm_ioremap_resource() next, so provide another variant that they can use
-> together with two examples.
+On Tue, Nov 5, 2019 at 1:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+>
+> On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
+> > On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
+> > So even if the heaps are configured via DT (which at the moment there
+> > is no such binding, so that's not really a valid method yet), there's
+> > still the question of if the heap is necessary/makes sense on the
+> > device. And the DT would only control the availability of the heap
+> > interface, not if the heap driver is loaded or not.
+>
+> Hm I thought the cma regions are configured in DT? How does that work if
+> it's not using DT?
 
-I've queued these up in my driver-core tree as there were some conflicts
-with other work that happened in platform.h and device.h that I figured
-would be good to get out of the way now and not have to wait until the
-merge window to resolve.
+So yea, CMA regions are either configured by DT or setup at build time
+(I think there's a cmdline option to set it up as well).
 
-thanks,
+But the CMA regions and the dmabuf cma heap driver are separate
+things. The latter uses the former.
 
-greg k-h
+> > On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
+> > for the display framebuffer. So gralloc uses ION to allocate from the
+> > CMA heap. However on the db845c, it has no such restrictions, so the
+> > CMA heap isn't necessary.
+>
+> Why do you have a CMA region for the 2nd board if you don't need it?
+> _That_ sounds like some serious memory waster, not a few lines of code
+> loaded for nothing :-)
+
+??? That's not what I said above.  If the db845c doesn't need CMA it
+won't have a CMA region.
+
+The issue at hand is that we may want to avoid loading the dmabuf CMA
+heap driver on a board that doesn't use CMA.
+
+
+> > With Android's GKI effort, there needs to be one kernel that works on
+> > all the devices, and they are using modules to try to minimize the
+> > amount of memory spent on functionality that isn't universally needed.
+> > So on devices that don't need the CMA heap, they'd probably prefer not
+> > to load the CMA dmabuf heap driver, so it would be best if it could be
+> > built as a module.  If we want to build the CMA heap as a module, the
+> > symbols it uses need to be exported.
+>
+> Yeah, I guess I'm disagreeing on whether dma-buf heaps are core or not.
+
+That's fine to dispute. I'm not really in a place to assert one way or
+not, but the Android folks have made their ION system and CMA heaps
+loadable via a module, so it would seem like having the dmabuf system
+and CMA heaps be modular would be useful to properly replace that
+usage.
+
+For instance, the system heap as a module probably doesn't make much
+sense, as most boards that want to use the dmabuf heaps interface are
+likely to use that as well.  CMA is more optional as not all boards
+will use that one, so it might make sense to avoid loading it.
+
+Sandeep: Can you chime in here as to how critical having the system
+and cma heaps be modules are?
+
+
+> > > Exporting symbols for no real in-tree users feels fishy.
+> >
+> > I'm submitting an in-tree user here. So I'm not sure what you mean?  I
+> > suspect you're thinking there is some hidden/nefarious plan here, but
+> > really there isn't.
+>
+> I was working under the assumption that you're only exporting the symbols
+> for other heaps, and keep the current ones in-tree.
+
+No. I'm trying to allow the (hopefully-soon-to-be-in-tree) system and
+cma heap drivers to be loaded from a module.
+If other heaps need exports, they can submit their heaps upstream and
+argue for the exported symbols themselves.
+
+> Are there even any
+> out-of-tree dma-buf heaps still? out-of-tree and legit different use-case
+> I mean ofc, not just out-of-tree because inertia :-)
+
+So as Andrew mentioned, he has some dmabuf heaps he's working on at
+TI.  From what I've heard the qualcomm folks like the dmabuf heaps
+approach, but I'm not sure if they've taken a pass at converting their
+vendor ION heaps to it yet.
+
+The main reason I'm only submitting system and CMA is because those
+are the only two I personally have a user for (HiKey/HiKey960 boards).
+It's my hope that once we deprecate ION in Android, vendors will
+migrate and we'll be able to push them to upstream their heaps as
+well.
+
+thanks
+-john
