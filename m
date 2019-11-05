@@ -4,90 +4,104 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B3D2C010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65D89C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1478121929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4677B21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:19:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388522AbfKEKTL (ORCPT
+        id S2388533AbfKEKTS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:19:11 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5706 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2388283AbfKEKTL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:19:11 -0500
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7C982204E6E447042405;
-        Tue,  5 Nov 2019 18:19:09 +0800 (CST)
-Received: from [127.0.0.1] (10.177.251.225) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
- 18:19:01 +0800
-Subject: Re: [PATCH v2] mm/memory-failure.c: replace with page_shift() in
- add_to_kill()
-To:     David Hildenbrand <david@redhat.com>, <n-horiguchi@ah.jp.nec.com>
-CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
-        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
-        "linfeilong@huawei.com" <linfeilong@huawei.com>
-References: <543d8bc9-f2e7-3023-7c35-2e7ed67c0e82@huawei.com>
- <ff090004-2cf7-9c77-9c9e-7fc5aff90d35@redhat.com>
-From:   Yunfeng Ye <yeyunfeng@huawei.com>
-Message-ID: <0220b5ff-bc47-9616-3897-52fa1c674487@huawei.com>
-Date:   Tue, 5 Nov 2019 18:18:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 5 Nov 2019 05:19:18 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:44107 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388283AbfKEKTS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:19:18 -0500
+Received: by mail-lf1-f65.google.com with SMTP id v4so14670588lfd.11;
+        Tue, 05 Nov 2019 02:19:16 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hmymdAmmLz7/1ts3Oc63nVM1gU1OUHbrPD3E1JaeYNM=;
+        b=fFrp9MCP/g5SF/3M3SVUqV648obTuYYoXK0LBzl5NVJJw+XXRKkhr2PkZfABcXMWRm
+         RsdPBQSr1pOLIBgDHWlEPG3pwdt/OLr//W++68yJVLy4Q/ixCcWsZbhfIcy/Ybvm7uKz
+         jZcaPF8TnqfVUOm6l3Cezgl47ryBAjUq9UlrgmJ0Ma4nJzvJq26Hk7KKVi+192QpjZds
+         gsQozH9P8AfkMq1nX5C4arkro2cEbljywjrdMPF9xnD08Ms7soFgNRixGpuwawNObuZ3
+         QuRsU8LY5sofnC3KGGon0WAsJI4gF/ZVadAa69iEPNwZ22RF6d3lvQqv2KNWqCjYzbP+
+         lb4w==
+X-Gm-Message-State: APjAAAV2lTywVGpNdK1OhVYpXWdzYsZxVBbRWPSoPq+vHCJBdAB0aNMU
+        2RNSTn4g04XRQXNcRQSW/Uk=
+X-Google-Smtp-Source: APXvYqwA3ByHsXKNFTqbUXeoIjiBwAvnWHc+B8RB60mVSLtRlUkTAzBu16JIPrIeS4QzEPOsnHHLbg==
+X-Received: by 2002:a19:4314:: with SMTP id q20mr19474289lfa.146.1572949155808;
+        Tue, 05 Nov 2019 02:19:15 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id h16sm8502164ljb.10.2019.11.05.02.19.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:19:15 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:19:06 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     Charles Keepax <ckeepax@opensource.cirrus.com>,
+        Richard Fitzgerald <rf@opensource.cirrus.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        alsa-devel@alsa-project.org, patches@opensource.cirrus.com,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 20/62] gpio: gpio-madera: Use new GPIO_LINE_DIRECTION
+Message-ID: <313330e496479b15f6dbc59d95bfa08c280415f1.1572945780.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945780.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <ff090004-2cf7-9c77-9c9e-7fc5aff90d35@redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.251.225]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945780.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
+
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-madera.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-madera.c b/drivers/gpio/gpio-madera.c
+index 7086f8b5388f..8f38303fcbc4 100644
+--- a/drivers/gpio/gpio-madera.c
++++ b/drivers/gpio/gpio-madera.c
+@@ -34,7 +34,10 @@ static int madera_gpio_get_direction(struct gpio_chip *chip,
+ 	if (ret < 0)
+ 		return ret;
+ 
+-	return !!(val & MADERA_GP1_DIR_MASK);
++	if (val & MADERA_GP1_DIR_MASK)
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int madera_gpio_direction_in(struct gpio_chip *chip, unsigned int offset)
+-- 
+2.21.0
 
 
-On 2019/11/5 17:50, David Hildenbrand wrote:
-> On 05.11.19 10:38, Yunfeng Ye wrote:
->> The function page_shift() is supported after the commit 94ad9338109f
->> ("mm: introduce page_shift()").
->>
->> So replace with page_shift() in add_to_kill() for readability.
->>
->> Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
->> Reviewed-by: David Hildenbrand <david@redhat.com>
->> Acked-by: Naoya Horiguchi <n-horiguchi@ah.jp.nec.com>
->> ---
->> v1 -> v2:
->>   - add Reviewed-by and Acked-by
-> 
-> Note for the future: No need to resend if there were no code/documentation changes. Andrew will apply the tags when picking up the patch.
-> 
-ok, thanks.
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
 
->>
->>   mm/memory-failure.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/mm/memory-failure.c b/mm/memory-failure.c
->> index 3151c87dff73..e48c50cac889 100644
->> --- a/mm/memory-failure.c
->> +++ b/mm/memory-failure.c
->> @@ -326,7 +326,7 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
->>       if (is_zone_device_page(p))
->>           tk->size_shift = dev_pagemap_mapping_shift(p, vma);
->>       else
->> -        tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
->> +        tk->size_shift = page_shift(compound_head(p));
->>
->>       /*
->>        * Send SIGKILL if "tk->addr == -EFAULT". Also, as
->>
-> 
-> 
-
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
