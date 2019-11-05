@@ -2,145 +2,232 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C2C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:04:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7064C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:09:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C66621882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:04:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AC3E21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:09:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572988172;
+	bh=/+3hRLWewpYfItS5cXhDW3VbDkwX6hDBGFL2tVa+itU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=oB8GBgqlDIx+gHhj0P/wSlj3Tir5fnDQEgxE5LuSDtAcN19G5b6m+xWyV4C9O3BQ4
+	 uBCLqe8DWwhPn2jQc2qptvDwWiH+/O5wgxbPHhqnU0Xg5Nv8pxqhEiZQp/UHHItW3y
+	 m0z/BRpVB6O7+u5VRtm+HPXfEffB9n1JTq6jhyJU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729796AbfKEVEZ (ORCPT
+        id S1729781AbfKEVJb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:04:25 -0500
-Received: from foss.arm.com ([217.140.110.172]:53714 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfKEVEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:04:24 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7DD5101E;
-        Tue,  5 Nov 2019 13:04:23 -0800 (PST)
-Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 461BC3F6C4;
-        Tue,  5 Nov 2019 13:04:23 -0800 (PST)
-Date:   Tue, 5 Nov 2019 21:04:21 +0000
-From:   Ionela Voinescu <ionela.voinescu@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
-        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
-Message-ID: <20191105210301.GA23045@e108754-lin>
-References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
- <20191031094420.GA19197@e108754-lin>
- <5DBB0EB0.9050106@linaro.org>
+        Tue, 5 Nov 2019 16:09:31 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:43786 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEVJb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 16:09:31 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l20so6840494oie.10;
+        Tue, 05 Nov 2019 13:09:30 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iegq+cSSA1NXL7WTaToEDVrgyy/Hl0omiIultHGpSIY=;
+        b=dxphDh4tpngEgDeGuq7IldvTljIdcVqLYu5rFeLq/BctlaY+LUgpAlfs0zn+OyI6Hi
+         DKJsVWolsyrZhD5ch0KGsfMurlCQtykg26DYKSzpXQPInBFvINTKDUqlbH9+eaN8yIvY
+         o1zp6FBJ0AfFMpKKP4WY7pIkrkv9rhNdzx9g2EDM8JIKYMl8UNm+7hS2Ua8yEKcBNOz/
+         0Qnmd91ZWy7SbFmwdHTBkFmTVXb9lQH2SvtZ57TQtWx8oh938jRDQhri6XSV0MXFUdNb
+         +lCFIHQRjSty0Vkk+1+DHjVF9qTZiqt0x81AlCaMu+XsTWI/94VQaOsCOnZVAbom9VZc
+         0E2Q==
+X-Gm-Message-State: APjAAAUHOiR7ZHT+7n4RDQ87q5V74xo06Gq8mpCRRGDNoET/VwQEuNss
+        4cRD1cHRXS6gTy4eXQXYog==
+X-Google-Smtp-Source: APXvYqxtYE49f1zoWNTd2Yhf+wAYX6PkNmDPt0gvIEpSWoegxDimUMDmpzwvLkptmvVPSVyWYhCidQ==
+X-Received: by 2002:aca:b909:: with SMTP id j9mr833672oif.99.1572988169926;
+        Tue, 05 Nov 2019 13:09:29 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x16sm6029777oic.40.2019.11.05.13.09.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 13:09:29 -0800 (PST)
+Date:   Tue, 5 Nov 2019 15:09:28 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+Cc:     jic23@kernel.org, dragos.bogdan@analog.com,
+        alexandru.ardelean@analog.com, linux-kernel@vger.kernel.org,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        kernel-usp@googlegroups.com
+Subject: Re: [PATCH v3 1/2] dt-bindings: iio: adc: Add dt-schema for AD7292
+Message-ID: <20191105210928.GA22239@bogus>
+References: <cover.1572614297.git.marcelo.schmitt1@gmail.com>
+ <9a748c5150561dcf3e1f59b2900ae281b662c5b9.1572614297.git.marcelo.schmitt1@gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5DBB0EB0.9050106@linaro.org>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <9a748c5150561dcf3e1f59b2900ae281b662c5b9.1572614297.git.marcelo.schmitt1@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
+On Fri, Nov 01, 2019 at 01:23:59PM -0300, Marcelo Schmitt wrote:
+> Add a devicetree schema for AD7292 monitor and control system.
+> 
+> Signed-off-by: Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> ---
+> Changelog V2 -> V3:
+> - changed spi-cpha property
+> - added spi-cpha to the list of required properties
+> - renamed example device node
+> - added ';' to the final curly braces correctly closing dt-schema
+> 
+>  .../bindings/iio/adc/adi,ad7292.yaml          | 103 ++++++++++++++++++
+>  MAINTAINERS                                   |   7 ++
+>  2 files changed, 110 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> new file mode 100644
+> index 000000000000..1014eb50a263
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> @@ -0,0 +1,103 @@
+> +# SPDX-License-Identifier: GPL-2.0
 
-On Thursday 31 Oct 2019 at 12:41:20 (-0400), Thara Gopinath wrote:
-[...]
-> >> Regarding testing, basic build, boot and sanity testing have been
-> >> performed on db845c platform with debian file system.
-> >> Further, dhrystone and hackbench tests have been
-> >> run with the thermal pressure algorithm. During testing, due to
-> >> constraints of step wise governor in dealing with big little systems,
-> >> trip point 0 temperature was made assymetric between cpus in little
-> >> cluster and big cluster; the idea being that
-> >> big core will heat up and cpu cooling device will throttle the
-> >> frequency of the big cores faster, there by limiting the maximum available
-> >> capacity and the scheduler will spread out tasks to little cores as well.
-> >>
-> > 
-> > Can you please share the changes you've made to sdm845.dtsi and a kernel
-> > base on top of which to apply your patches? I would like to reproduce
-> > your results and run more tests and it would be good if our setups were
-> > as close as possible.
-> Hi Ionela
-> Thank you for the review.
-> So I tested this on 5.4-rc1 kernel. The dtsi changes is to reduce the
-> thermal trip points for the big CPUs to 60000 or 70000 from the default
-> 90000. I did this for 2 reasons
-> 1. I could never get the db845 to heat up sufficiently for my test cases
-> with the default trip.
-> 2. I was using the default step-wise governor for thermal. I did not
-> want little and big to start throttling by the same % because then the
-> task placement ratio will remain the same between little and big cores.
-> 
-> 
+For new bindings:
 
-Some early testing on this showed that when setting the trip point to
-60000 for the big CPUs and the big cluster, and running hackbench (1
-group, 30000 loops) the cooling state of the big cluster results in
-always being set to the maximum (the lowest OPP), which results in
-capacity inversion (almost) continuously.
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
 
-For 70000 the average cooling state of the bigs is around 20 so it
-will leave a few more OPPs available on the bigs more of the time,
-but probably the capacity of bigs is mostly lower than the capacity
-of little CPUs, during this test as well.
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/iio/adc/adi,ad7292.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Analog Devices AD7292 10-Bit Monitor and Control System
+> +
+> +maintainers:
+> +  - Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +
+> +description: |
+> +  Analog Devices AD7292 10-Bit Monitor and Control System with ADC, DACs,
+> +  Temperature Sensor, and GPIOs
+> +
+> +  Specifications about the part can be found at:
+> +    https://www.analog.com/media/en/technical-documentation/data-sheets/ad7292.pdf
+> +
+> +properties:
+> +  compatible:
+> +    enum:
+> +      - adi,ad7292
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +  vref-supply:
+> +    description: |
+> +      The regulator supply for ADC and DAC reference voltage.
+> +
+> +  spi-cpha: true
+> +
+> +  '#address-cells':
+> +    const: 1
+> +
+> +  '#size-cells':
+> +    const: 0
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - spi-cpha
+> +
+> +patternProperties:
+> +  "^channel@[0-7]$":
+> +    type: object
+> +    description: |
+> +      Represents the external channels which are connected to the ADC.
+> +      See Documentation/devicetree/bindings/iio/adc/adc.txt.
+> +
+> +    properties:
+> +      reg:
+> +        description: |
+> +          The channel number. It can have up to 8 channels numbered from 0 to 7.
 
-I think that explains the difference in results that you obtained
-below. This is good as it shows that thermal pressure is useful but
-it shouldn't show much difference between the different decay
-periods, as can also be observed in your results below.
+Can be a constraint:
 
-This being said, I did not obtained such significant results on my
-side by I'll try again with the kernel you've pointed me to offline.
+items:
+  - maximum: 7
 
-Thanks,
-Ionela.
+> +        maxItems: 1
 
-> > 
-> >> Test Results
-> >>
-> >> Hackbench: 1 group , 30000 loops, 10 runs       
-> >>                                                Result         SD             
-> >>                                                (Secs)     (% of mean)     
-> >>  No Thermal Pressure                            14.03       2.69%           
-> >>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
-> >>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
-> >>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
-> >>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
-> >>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
-> >>
-> >> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
-> >>                                                  Result      SD             
-> >>                                                  (Secs)    (% of mean)     
-> >>  No Thermal Pressure                              9.452      4.49%
-> >>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
-> >>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
-> >>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
-> >>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
-> >>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
-> >>
-> > 
-> > Do you happen to know by how much the CPUs were capped during these
-> > experiments?
-> 
-> I don't have any captured results here. I know that big cores were
-> capped and at times there was capacity inversion.
-> 
-> Also I will fix the nit comments above.
-> 
-> > 
-> > Thanks,
-> > Ionela.
-> > 
-> 
-> 
-> 
+And then drop this because it's implied by the above.
+
+> +
+> +      diff-channels:
+> +        description: see Documentation/devicetree/bindings/iio/adc/adc.txt
+> +        maxItems: 1
+> +
+> +    required:
+> +      - reg
+> +
+> +examples:
+> +  - |
+> +    spi {
+> +      #address-cells = <1>;
+> +      #size-cells = <0>;
+> +
+> +      ad7292: adc@0 {
+> +        compatible = "adi,ad7292";
+> +        reg = <0>;
+> +        spi-max-frequency = <25000000>;
+> +        vref-supply = <&adc_vref>;
+> +        spi-cpha;
+> +
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        channel@0 {
+> +          reg = <0>;
+> +          diff-channels = <0 1>;
+> +        };
+> +        channel@2 {
+> +          reg = <2>;
+> +        };
+> +        channel@3 {
+> +          reg = <3>;
+> +        };
+> +        channel@4 {
+> +          reg = <4>;
+> +        };
+> +        channel@5 {
+> +          reg = <5>;
+> +        };
+> +        channel@6 {
+> +          reg = <6>;
+> +        };
+> +        channel@7 {
+> +          reg = <7>;
+> +        };
+> +      };
+> +    };
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 32bf5f8116d0..5d00e871c4c6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -813,6 +813,13 @@ S:	Supported
+>  F:	drivers/iio/adc/ad7124.c
+>  F:	Documentation/devicetree/bindings/iio/adc/adi,ad7124.txt
+>  
+> +ANALOG DEVICES INC AD7292 DRIVER
+> +M:	Marcelo Schmitt <marcelo.schmitt1@gmail.com>
+> +L:	linux-iio@vger.kernel.org
+> +W:	http://ez.analog.com/community/linux-device-drivers
+> +S:	Supported
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7292.yaml
+> +
+>  ANALOG DEVICES INC AD7606 DRIVER
+>  M:	Stefan Popa <stefan.popa@analog.com>
+>  L:	linux-iio@vger.kernel.org
 > -- 
-> Warm Regards
-> Thara
+> 2.23.0
+> 
