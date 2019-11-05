@@ -2,91 +2,110 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0646DC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:38:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 948EDC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C60BE2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:38:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572971893;
-	bh=FsuIW2q/xmpl397EpGtrbS7IJKE334NMMAWrozxk8es=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=i5EmBpLqaCsME/LOzCOA3W00Wakeox5KkrQTrfxRuZRV1hi6e8HyPX3wEnBDcAHpP
-	 1lhrZSnGw7x8jI5Q4guCLS8jmhJIrelYKSxOY2CX94dqafpqzmw0+FF/qE6bgH3JOz
-	 yrYZPDGVSXbwJmrFTsWwXgcbT4fWphKOFyURM9ME=
+	by mail.kernel.org (Postfix) with ESMTP id 6A2FD21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="dpE3RFax"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390319AbfKEQiN (ORCPT
+        id S2390327AbfKEQkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:38:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36300 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390060AbfKEQiM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:38:12 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 77D1121882;
-        Tue,  5 Nov 2019 16:38:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572971892;
-        bh=FsuIW2q/xmpl397EpGtrbS7IJKE334NMMAWrozxk8es=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=f8/yvp4hsE3rcUEh5Oj64OJlncnVrOoHSVNmAS0hVnKpojN2W7HLvmebkISFOpF0Y
-         8jlcspFFdwUWoYR8Baer1L8g/PjtzByhZVa3r78E81vXBU6t8Z0lE//k7aUw4d3nRC
-         iAIaCN+qKwkd/rCNDlsSgjciFRgjkzUYDBsDGtU4=
-Date:   Tue, 5 Nov 2019 17:38:05 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Alan Stern <stern@rowland.harvard.edu>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4.19 114/149] UAS: Revert commit 3ae62a42090f ("UAS: fix
- alignment of scatter/gather segments")
-Message-ID: <20191105163805.GB2760793@kroah.com>
-References: <Pine.LNX.4.44L0.1911051007140.1678-100000@iolanthe.rowland.org>
- <1572968467.2921.27.camel@suse.com>
+        Tue, 5 Nov 2019 11:40:05 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36661 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390159AbfKEQkE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:40:04 -0500
+Received: by mail-lf1-f65.google.com with SMTP id a6so12243600lfo.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:40:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fZq9/Aaey+SN0l5GZyRu+H8Ix+9Q121u+Zli7RR28cM=;
+        b=dpE3RFaxGC2yX2g7QtFyT4MP1J4SEpPTm67DT/BUSSOJJeXrGc9iwGkOymna6/w9uD
+         lLIBtKOpUDSqsi/miR1szIUzurpCjB4jV7rVtVe4gTLBVuAbmc2srBL57cbBW5dVz5Wy
+         2LstfRmABNveD5zGcn6Rna+1QQq8xqfD8uuCctL5tkHR0yCqBdyh8gqj3OI5VWRMoXMr
+         HEju8amylItNdnUR8tZtFpc3BJ/lfi+REgf6BdEYyCYn0PRbQg+XIKPOcsoSnljyC3js
+         HbDZ3DlGcYOmBx7lu8ovKuDJjXc5E2UxG7WzJuWyWi6O8nCKdymnpgiPrYQMxKbuFhyT
+         rK4w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fZq9/Aaey+SN0l5GZyRu+H8Ix+9Q121u+Zli7RR28cM=;
+        b=RimOKO9K72JPgUjwoe5h3dzjGnQhikD40ge8Osq3yhpRIaIBI3t1atywQOanhoZaew
+         I8yrj1On4ONJNfAvXllwWWPdjD69oZcyhDjXN2GKGY7RjgOnA98fLdyruSMOMGJQR0Vj
+         /h1pXG0lL5T6WC0f5kWw6OPyOseHqKJ0MYACz3d+0SRZ/AV4DzD6jRVtFagRV+Zzh9Js
+         //+1EBOEPSef7yZvKWgv9PBASq+CGSno11dGQqD+AyFHw7iO3pWoaZYHaYPHtEZSrok8
+         dKO61za5i61sdDAgHk7WqRUz34mdxqpEJaj2tE9hQzaoERp0EnJc81EjDCtvt3C4M1Fx
+         Dx8A==
+X-Gm-Message-State: APjAAAWRYUIK7vQedyKbJFJYk/2FY66l63WSB9+CD+u+zRsTF6j9Bbqf
+        69ZQ+R5a1Sbkl0fxRZ2BgyY4GOPBAIobvteLRohrQg==
+X-Google-Smtp-Source: APXvYqxDz7vYxn0I8N6/Nm40gjJSZsMVwWDW2LlwIjWat1+S/f9QVe+9VtUJH2n2yiwqFwxoN/MW67Pff05B2iT02Mk=
+X-Received: by 2002:ac2:561b:: with SMTP id v27mr21936445lfd.186.1572972002286;
+ Tue, 05 Nov 2019 08:40:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572968467.2921.27.camel@suse.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com> <20191105163316.GI30717@redhat.com>
+In-Reply-To: <20191105163316.GI30717@redhat.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 5 Nov 2019 08:39:26 -0800
+Message-ID: <CAKOZuet1Hrdd7U4VVBmXNCkE6xwiUPERRHjP=A3bX6B9A4BQRQ@mail.gmail.com>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+To:     Andrea Arcangeli <aarcange@redhat.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 04:41:07PM +0100, Oliver Neukum wrote:
-> Am Dienstag, den 05.11.2019, 10:09 -0500 schrieb Alan Stern:
-> > On Tue, 5 Nov 2019, Oliver Neukum wrote:
-> > 
-> > > Am Montag, den 04.11.2019, 22:45 +0100 schrieb Greg Kroah-Hartman:
-> > > >         Since commit ea44d190764b ("usbip: Implement SG support to
-> > > >         vhci-hcd and stub driver") was merged, the USB/IP driver can
-> > > >         also handle SG.
-> > > 
-> > > Hi,
-> > > 
-> > > same story as 4.4.x
-> > 
-> > I'm not sure about uas, but it was reported just yesterday that the 
-> > corresponding commit for usb-storage caused a 30% speed degradation:
-> > 
-> > 	https://marc.info/?l=linux-usb&m=157293660212040&w=2
-> > 
-> > Given this information, perhaps you will decide that the revert is 
-> > worthwhile.
-> 
-> Damned if I do, damned if I do not.
-> Check for usbip and special case it?
+On Tue, Nov 5, 2019 at 8:33 AM Andrea Arcangeli <aarcange@redhat.com> wrote:
+>
+> On Tue, Nov 05, 2019 at 08:06:49AM -0800, Daniel Colascione wrote:
+> > Sure, but the same argument applies to all the other permission checks
+> > that we do at open time, not at ioctl time. For better or for worse,
+> > the DAC-ish model used in most places is that access checks happen at
+> > file object creation time and anyone who has the FD can perform those
+> > operations later. Confusing the model by doing *some* permission
+> > checks at open time and *some* permission checks at usage time makes
+> > the system harder to understand.
+>
+> The only case that requires change is if userland requested the
+> UFFD_FEATURE_EVENT_FORK feature (which AFIK only CRIU does) and that
+> request is done in the UFFDIO_API call not during the syscall.
+>
+> Doing the check in the syscall would then break all non privileged
+> users like if we'd set /proc/sys/vm/unprivileged_userfaultfd to
+> zero.
 
-We should be able to do that in the host controller driver for usbip,
-right?  What is the symptom if you use a UAS device with usbip and this
-commit?
-
-thanks,
-
-greg k-h
+I'm not suggesting that we fail userfaultfd(2) without CAP_SYS_PTRACE.
+That would, as you point out, break things. I'm talking about
+recording *whether* we had CAP_SYS_PTRACE in an internal flag in the
+uffd context when we create the thing --- and then, at ioctl time,
+checking that flag, not the caller's CAP_SYS_PTRACE, to see whether
+UFFD_FEATURE_EVENT_FORK should be made available. This way, the
+security check hinges on whether the caller *at create time* was
+privileged.
