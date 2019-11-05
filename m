@@ -2,137 +2,123 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 656C4CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:53:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD576CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:54:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A34420818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:53:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F85820869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:54:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GPVY7jb6"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6WgzEkt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387626AbfKEFxX (ORCPT
+        id S2387628AbfKEFym (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:53:23 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34153 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387555AbfKEFxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:53:23 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476f3G5hh9z9sP6;
-        Tue,  5 Nov 2019 16:53:14 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572933197;
-        bh=f9hNs4jQjbohnId4YFBy7pOqvHYnA2ugkM9qvTsebHQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GPVY7jb6FGsf8JZrV/ipYnnxNIEM7HBPaIwCw45kae9w/Q5iODqTnvsiQLpC6Ofxx
-         dJ8WhYQlGLrEh7Wg1la0Fa5ej7Aie3yacltVFawILzMPhAQ4l/l1zkbS3N7GqjrdPK
-         PT7Rk2RjsfqTmbj40SXrSWFyJMeR3T8uz0FtPzEK6KqLaQO4CnvpZzIwqpQGOsTO/B
-         +YIbyw4HV2eRbHTkPCBrHpYQa7AvSb0lDaUcYKegGQDCNIN0gIuaCs99Nd4qlKZesa
-         PFB1H7dxLkCQFg7EPMEPusINTTyM1zINwuw0WkWXn30KfnOzDlpo3TRS4vT3av90oy
-         /69Nc8RSKtaug==
-Date:   Tue, 5 Nov 2019 16:53:13 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Greg KH <greg@kroah.com>, David Miller <davem@davemloft.net>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?B?SsOpcsO0?= =?UTF-8?B?bWU=?= Pouiller 
-        <jerome.pouiller@silabs.com>
-Subject: linux-next: manual merge of the staging tree with the
- staging.current and net-next trees
-Message-ID: <20191105165313.59a5cc11@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/f83taoECjBr4uwFqhb6tiJk";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+        Tue, 5 Nov 2019 00:54:42 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:46065 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387443AbfKEFym (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 00:54:42 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y24so8807633plr.12;
+        Mon, 04 Nov 2019 21:54:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=j/zjH1WsGxqzWXQl7cWzzAx6Ls1Pf10bXD65wF5zXRA=;
+        b=Z6WgzEkt/ANlGabZkKqXN6RmV5XMrA5SiDCHoSJKDz3H5pnqawFalWJLWNuaHtsUak
+         QA8CwlkHE+KFsS36o6edkbQNBbnrnYwN6TRZOUbUevyEykq34SovXvL5feuZY/48SAbp
+         ydPoXk3w1C2mgVjRcHWk1/epIWbn2zycR33cpih3szV8nLVxkUpLATOPbXPgcdm7Fs0q
+         kkkrit31SIftidf5ckDzgE6tVJSATMAeaFGMYJ14WNCcyVKhwlIZbfTsGVloEOzWTPmV
+         wkTr7mlKBhSRCHM3ZSZrdHcT6C5lGm4m2aFyP+msECEGbFkvuCNgRFxFRpGI0MHXziuU
+         gUzg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=j/zjH1WsGxqzWXQl7cWzzAx6Ls1Pf10bXD65wF5zXRA=;
+        b=Nssp1qYgb9rDIRkHx4PLREeZkhEvbcav81qpXXn2WPChkaZ1XM7BbOdwGffTCXc4su
+         T020jnVEVfQk0z3FkHBhGIjeWjlu+tari6KenahR8ZQoWWmIIoxIAy91jQawKI9sLpRW
+         +e9lBddQQNQUQXAGG/B6w7Iw7yp8sVAJrGPFxQbb7SGy02XTbguxg9vdy7nhfaEm0f5p
+         +CSyOSNOx7l1M2Ce+GNcdOuPuAlA773XXY3LEphp4I1vIABXru2OIwJmrnjCnnLCBwvr
+         CC1L48wFqtDvJL1eMFsWYIYAOOiUPIHSKTGtZXdWOR+/5OP4QEZuNG/UPdmBfnIOAiYy
+         zgrQ==
+X-Gm-Message-State: APjAAAUII261gS7h15zGE0haYB96hkweAnEp1/14qVbIectTkOS0WE7f
+        vSLI63rQUhQfkfebGUv0lcBoeW/beTK77Q==
+X-Google-Smtp-Source: APXvYqzoh0Yyyw+RhnZSqLU7FF50fOQSb5iK2ir+hQYvcEAP7bxG99RI/nYlxb1paxMhY3MPJBV+RQ==
+X-Received: by 2002:a17:902:7e45:: with SMTP id a5mr7715143pln.315.1572933281462;
+        Mon, 04 Nov 2019 21:54:41 -0800 (PST)
+Received: from jamal-desktop (97-126-66-56.tukw.qwest.net. [97.126.66.56])
+        by smtp.gmail.com with ESMTPSA id w5sm6944900pfd.31.2019.11.04.21.54.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 21:54:40 -0800 (PST)
+From:   Jamal Shareef <jamal.k.shareef@gmail.com>
+To:     outreachy-kernel@googlegroups.com
+Cc:     Jamal Shareef <jamal.k.shareef@gmail.com>,
+        srinivas.pandruvada@linux.intel.com, lenb@kernel.org,
+        rjw@rjwysocki.net, viresh.kumar@linaro.org,
+        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] cpufreq: intel_pstate: Fix sparse plain int pointer
+Date:   Mon,  4 Nov 2019 21:54:27 -0800
+Message-Id: <20191105055427.11943-1-jamal.k.shareef@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/f83taoECjBr4uwFqhb6tiJk
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Patch fixes sparse warning: Using plain integer as NULL pointer.
+Replaces assignment of 0 to pointer with NULL assignment.
 
-Hi all,
+Signed-off-by: Jamal Shareef <jamal.k.shareef@gmail.com>
+---
+ drivers/cpufreq/intel_pstate.c | 30 +++++++++++++++---------------
+ 1 file changed, 15 insertions(+), 15 deletions(-)
 
-Today's linux-next merge of the staging tree got conflicts in:
+diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+index 53a51c169451..cfcf34e04c3d 100644
+--- a/drivers/cpufreq/intel_pstate.c
++++ b/drivers/cpufreq/intel_pstate.c
+@@ -2664,21 +2664,21 @@ enum {
+ 
+ /* Hardware vendor-specific info that has its own power management modes */
+ static struct acpi_platform_list plat_info[] __initdata = {
+-	{"HP    ", "ProLiant", 0, ACPI_SIG_FADT, all_versions, 0, PSS},
+-	{"ORACLE", "X4-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4-2L   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4-2B   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X3-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X3-2L   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X3-2B   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4470M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4270M3 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4270M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4170M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4170 M3", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X4275 M3", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "X6-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+-	{"ORACLE", "Sudbury ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
++	{"HP    ", "ProLiant", 0, ACPI_SIG_FADT, all_versions, NULL, PSS},
++	{"ORACLE", "X4-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4-2L   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4-2B   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X3-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X3-2L   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X3-2B   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4470M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4270M3 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4270M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4170M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4170 M3", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X4275 M3", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "X6-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
++	{"ORACLE", "Sudbury ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+ 	{ } /* End */
+ };
+ 
+-- 
+2.17.1
 
-  drivers/staging/Kconfig
-  drivers/staging/Makefile
-
-between commits:
-
-  df4028658f9d ("staging: Add VirtualBox guest shared folder (vboxsf) suppo=
-rt")
-  52340b82cf1a ("hp100: Move 100BaseVG AnyLAN driver to staging")
-
-from the staging.current and net-next trees and commit:
-
-  a7a91ca5a23d ("staging: wfx: add infrastructure for new driver")
-
-from the staging tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/staging/Kconfig
-index be74f91500b3,a490141a0e88..000000000000
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@@ -125,8 -125,6 +125,10 @@@ source "drivers/staging/exfat/Kconfig
- =20
-  source "drivers/staging/qlge/Kconfig"
- =20
- +source "drivers/staging/vboxsf/Kconfig"
- +
- +source "drivers/staging/hp/Kconfig"
- +
-+ source "drivers/staging/wfx/Kconfig"
-+=20
-  endif # STAGING
-diff --cc drivers/staging/Makefile
-index b8bd05091453,4cb548a0ff87..000000000000
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@@ -53,5 -53,4 +53,6 @@@ obj-$(CONFIG_UWB)		+=3D uwb
-  obj-$(CONFIG_USB_WUSB)		+=3D wusbcore/
-  obj-$(CONFIG_EXFAT_FS)		+=3D exfat/
-  obj-$(CONFIG_QLGE)		+=3D qlge/
- +obj-$(CONFIG_VBOXSF_FS)		+=3D vboxsf/
- +obj-$(CONFIG_NET_VENDOR_HP)	+=3D hp/
-+ obj-$(CONFIG_WFX)		+=3D wfx/
-
---Sig_/f83taoECjBr4uwFqhb6tiJk
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3BDkoACgkQAVBC80lX
-0GxBIwf+JkgmrQnEKVPJu7rwU8CbLhidBcV458j3OQGqiRJJw+TuaCAb0ygF9dX6
-0oRTOf9YvxFQBitjGkn7rqsMyGyy2p6Q4n4/9/fQU8BwjKfwdQJw13//VypkLj/I
-55D2Zwb+hwfmYOhFVioNHX4RsB9qpMK1uDG63oaz5IEHG/n9+prfwRy3raKa6ONX
-y/LqUs2LSURHj2y8r0fqh4O4nn+MuMvwQ9X8Z3/CRZgXrZQYGzPja7S3VTJEgkn/
-LCXjY0hoTSsutrkGwy4q5t7mZMpWIE49NX/1L5BMpctt6dn3vQpXl6t6wwLBVzKd
-4XWDm6zCf8G/zerbC1As51AEFG1h6w==
-=g9pO
------END PGP SIGNATURE-----
-
---Sig_/f83taoECjBr4uwFqhb6tiJk--
