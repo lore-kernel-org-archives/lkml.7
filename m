@@ -2,82 +2,66 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33618C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF9EEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFCA621928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HXRxd8Y4"
+	by mail.kernel.org (Postfix) with ESMTP id A0AF9206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572967619;
+	bh=Y49i5hhOPhJugkrF4npAozYxT0zBE624ImjMcDKVD1U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uEL9jbUcTKh7+OkXZ8GMiwPFDJGQvbT95cnbbqPw56MUvtjKG8PE47V9swW1LtVrk
+	 sn8s/J3wkkgfIJ06TgycmdLyv+WJihkuBRSPK5vj7jBsI1S/lrwLmE0HcVRHOHqzA4
+	 KBdARWRVpePXFoz7mk4TP7PTOuxlcS9BALCTmqNc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389620AbfKEP0d (ORCPT
+        id S1731085AbfKEP06 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:26:33 -0500
-Received: from mail-ot1-f68.google.com ([209.85.210.68]:37263 "EHLO
-        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbfKEP0c (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:26:32 -0500
-Received: by mail-ot1-f68.google.com with SMTP id d5so5900562otp.4;
-        Tue, 05 Nov 2019 07:26:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pIfCo+A8DoVqKAzDyaurbgPEk/FPat6dcPUzV2H14f8=;
-        b=HXRxd8Y4DxmZnwFJQnvJEykEcD8djlwPPFPNej70LXXHXu/qZAAVDDvl5cz/S0nWkM
-         chN0iRmyS4CmSHQTgR+5e6o0L5HLVcwxovyDVm6w/4sz0eqjd05YzpVtnOxpdUXmR7P3
-         7rKVbeAeC0ISt/QOklGjm81Y4w9EA/VMeVngJVrWFHiMJJuvsSV6MqhZFmNcZ5SGK8+C
-         LmeIghmfdU6m2/uU41I5/3GMn9pD7TBbNHaY48DOi6619iePOyfRA03MwhXAau3JO03s
-         4Yze3rurMRv3QKef5pf5qPXoOCg6JyiHXois2+PasVg5zWB7hIYqPAxxl4KJkttfc8wa
-         4lAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pIfCo+A8DoVqKAzDyaurbgPEk/FPat6dcPUzV2H14f8=;
-        b=oAupGnoobqWb/Vm2YkCoQIMVaswtNRktg0QTjHHwGvCHSghYDutr6zaPTWSnubUkZT
-         CfehuIXu+NJAmHwTrd3o/fKE/QEKFtb7ZWc1oC5TX5Qs7Fnbn450PNM6nVug9ndt9IPe
-         zuE1sEs/tQ+ODTsSnLcfpULL+Ky5OqWkz6tsvkwp/USS3Juh9Au2X8216U3MzeCzRO0x
-         TLhHLYqwf6H3remVvhuJ2OrMhP+WOuoKBRctBm2xR6WjClb7A554IBzHpAuuYLmfD3r0
-         rgwl15WLUkGR7Nr+26aZJGKnD/9ufrSAcCtkb2BIsNsq4vSYAvg9TaMdVshT628ec8EV
-         NUDA==
-X-Gm-Message-State: APjAAAULTP0nwnsIjB3w1FK/hERCrA4jgQRLe7y/QeKDucvJ1F4cpZIu
-        /FAY3/NUQ8b50OrJ+7JKlnzXCuMiraIfjRfmThc=
-X-Google-Smtp-Source: APXvYqzvtv1nwk8SbroF6M889lV6pjSj4nomDRn1kYxwrTjvHwyP3lsDRMEFK5hQftKyEKIoC2bi1QdOusgjL3X0nZQ=
-X-Received: by 2002:a9d:6a10:: with SMTP id g16mr3046391otn.224.1572967590981;
- Tue, 05 Nov 2019 07:26:30 -0800 (PST)
+        Tue, 5 Nov 2019 10:26:58 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43178 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727889AbfKEP06 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:26:58 -0500
+Received: from redsun51.ssa.fujisawa.hgst.com (unknown [199.255.47.7])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id F06D92053B;
+        Tue,  5 Nov 2019 15:26:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572967617;
+        bh=Y49i5hhOPhJugkrF4npAozYxT0zBE624ImjMcDKVD1U=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S2w0B03Z3nwij7CLRx7gMlKWgGttnNnXAzBn1oUwsVRmqRs4TQg78leSvtraaFWD2
+         tfFJNBhLGpVenI/rE1J15IbdDe8S4SSbb+DL3dOa2WEStmckDBW0d8C40qhfyecyr5
+         fp0jHKRLU61DXfZykkUwrwJebdWs8Lk7ULCmM3cE=
+Date:   Wed, 6 Nov 2019 00:26:54 +0900
+From:   Keith Busch <kbusch@kernel.org>
+To:     Charles Machalow <csm10495@gmail.com>
+Cc:     linux-nvme@lists.infradead.org, marta.rybczynska@kalray.eu,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64 to explicitly mark rsvd
+Message-ID: <20191105152654.GC22559@redsun51.ssa.fujisawa.hgst.com>
+References: <20191105061510.22233-1-csm10495@gmail.com>
 MIME-Version: 1.0
-References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
- <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
- <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
- <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com> <20191104233621.GP57214@dtor-ws>
-In-Reply-To: <20191104233621.GP57214@dtor-ws>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 5 Nov 2019 10:26:19 -0500
-Message-ID: <CAGngYiVkQsxF_v0w7YJnhMvhzz2gGV-_KcgJQYmz9biva==A1A@mail.gmail.com>
-Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc:     Adam Ford <aford173@gmail.com>, Marek Vasut <marex@denx.de>,
-        linux-input@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105061510.22233-1-csm10495@gmail.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 6:36 PM Dmitry Torokhov
-<dmitry.torokhov@gmail.com> wrote:
->
-> OK, I refreshed the branch with fixes and a couple of new patches. It is
-> on top of 5.3 now. If this works for you guys I will be merging it for
-> 5.5.
+On Mon, Nov 04, 2019 at 10:15:10PM -0800, Charles Machalow wrote:
+> Changing nvme_passthru_cmd64 to add a field: rsvd2. This field is an explicit
+> marker for the padding space added on certain platforms as a result of the
+> enlargement of the result field from 32 bit to 64 bits in size.
 
-For the series:
-Tested-by: Sven Van Asbroeck <TheSven73@gmail.com> # ILI2118A variant
+Charles,
+Could you reply with your "Signed-off-by" so I can apply this patch?
+Thanks.
