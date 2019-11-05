@@ -2,153 +2,157 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EEA4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA222C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:15:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67CCE21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:14:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="NeNQEYXP"
+	by mail.kernel.org (Postfix) with ESMTP id BE00921928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:15:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389912AbfKEPOc (ORCPT
+        id S1731073AbfKEPPv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:14:32 -0500
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:55752 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389766AbfKEPOb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:14:31 -0500
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA5F2XXW016060;
-        Tue, 5 Nov 2019 16:14:21 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=STMicroelectronics;
- bh=sGcJotaSzAOF4wGBo2lc42IY7N+BpinNhWjk4Wx5zlY=;
- b=NeNQEYXPLvC3WCliUp9foYV7DboksxXg5AylZVZxb3SgTkByJKTqjh4al8hpgwgwC+kw
- KDq8KB+bY+m/l/sPplfQ1h3g2R4FboTw2eX3sStxXNQmYMx+wUSbd+e+qkOFnTbuvB16
- oh2QlH5a05G3/CRmytr5aW7l1TZx8MyIXOG84pD9gAzqPuJlKPipM3xI+E4phHECsjdV
- dGuU7sYCxIuxgh0SuDcunzdaQ6QdFBSIQ/ht29GmniLT0SCWXAatRqmm3duk5wX6ODZJ
- yY+NDtcAk+1n62SgZTGjDI0rmzcKvhblqXCWvBlPCLGo2W6PRYs7pdQs4H3Qi6W0rrE0 7A== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2w1054r40k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 05 Nov 2019 16:14:21 +0100
-Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9294C10002A;
-        Tue,  5 Nov 2019 16:14:19 +0100 (CET)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 82FD92D3768;
-        Tue,  5 Nov 2019 16:14:19 +0100 (CET)
-Received: from lmecxl0995.lme.st.com (10.75.127.44) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 5 Nov
- 2019 16:14:18 +0100
-Subject: Re: [PATCH 1/1] pinctrl: stmfx: fix valid_mask init sequence
-To:     Linus Walleij <linus.walleij@linaro.org>
-CC:     Alexandre TORGUE <alexandre.torgue@st.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>
-References: <20191104100908.10880-1-amelie.delaunay@st.com>
- <CACRpkdb1c-NHXDQXYS78VTcGPnJApmxjzZbF_cM8SUknhDiQ4Q@mail.gmail.com>
-From:   Amelie DELAUNAY <amelie.delaunay@st.com>
-Message-ID: <64f8096f-cec6-fef1-5a4e-ddca3bf8c73d@st.com>
-Date:   Tue, 5 Nov 2019 16:14:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 10:15:51 -0500
+Received: from mx2.suse.de ([195.135.220.15]:49662 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727889AbfKEPPv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:15:51 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7B601AFB1;
+        Tue,  5 Nov 2019 15:15:47 +0000 (UTC)
+Received: by ds.suse.cz (Postfix, from userid 10065)
+        id 04675DA796; Tue,  5 Nov 2019 16:15:50 +0100 (CET)
+Date:   Tue, 5 Nov 2019 16:15:50 +0100
+From:   David Sterba <dsterba@suse.cz>
+To:     Dave Chinner <david@fromorbit.com>
+Cc:     Geert Uytterhoeven <geert@linux-m68k.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux-Arch <linux-arch@vger.kernel.org>
+Subject: Re: [RFC] errno.h: Provide EFSCORRUPTED for everybody
+Message-ID: <20191105151550.GK3001@twin.jikos.cz>
+Reply-To: dsterba@suse.cz
+Mail-Followup-To: dsterba@suse.cz, Dave Chinner <david@fromorbit.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Valdis Kletnieks <valdis.kletnieks@vt.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Theodore Ts'o <tytso@mit.edu>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        linux-xfs@vger.kernel.org, Jan Kara <jack@suse.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
+        driverdevel <devel@driverdev.osuosl.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-erofs@lists.ozlabs.org,
+        Ext4 Developers List <linux-ext4@vger.kernel.org>,
+        linux-f2fs-devel@lists.sourceforge.net,
+        Linux-Arch <linux-arch@vger.kernel.org>
+References: <20191031010736.113783-1-Valdis.Kletnieks@vt.edu>
+ <CAMuHMdXzyVBa4TZEc5eRaBzu50thgJ2TrHJLZqwhbQ=JASgWOA@mail.gmail.com>
+ <20191101213823.GW4614@dread.disaster.area>
 MIME-Version: 1.0
-In-Reply-To: <CACRpkdb1c-NHXDQXYS78VTcGPnJApmxjzZbF_cM8SUknhDiQ4Q@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.75.127.44]
-X-ClientProxiedBy: SFHDAG7NODE3.st.com (10.75.127.21) To SFHDAG3NODE2.st.com
- (10.75.127.8)
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-05_05:2019-11-05,2019-11-05 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191101213823.GW4614@dread.disaster.area>
+User-Agent: Mutt/1.5.23.1-rc1 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/5/19 3:32 PM, Linus Walleij wrote:
-> On Mon, Nov 4, 2019 at 11:09 AM Amelie Delaunay <amelie.delaunay@st.com> 
-> wrote:
+On Sat, Nov 02, 2019 at 08:38:23AM +1100, Dave Chinner wrote:
+> On Fri, Nov 01, 2019 at 09:57:31PM +0100, Geert Uytterhoeven wrote:
+> > Hi Valdis,
+> > 
+> > On Thu, Oct 31, 2019 at 2:11 AM Valdis Kletnieks
+> > <valdis.kletnieks@vt.edu> wrote:
+> > > Three questions: (a) ACK/NAK on this patch, (b) should it be all in one
+> > > patch, or one to add to errno.h and 6 patches for 6 filesystems?), and
+> > > (c) if one patch, who gets to shepherd it through?
+> > >
+> > > There's currently 6 filesystems that have the same #define. Move it
+> > > into errno.h so it's defined in just one place.
+> > >
+> > > Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+> > 
+> > Thanks for your patch!
+> > 
+> > > --- a/include/uapi/asm-generic/errno.h
+> > > +++ b/include/uapi/asm-generic/errno.h
+> > > @@ -98,6 +98,7 @@
+> > >  #define        EINPROGRESS     115     /* Operation now in progress */
+> > >  #define        ESTALE          116     /* Stale file handle */
+> > >  #define        EUCLEAN         117     /* Structure needs cleaning */
+> > > +#define        EFSCORRUPTED    EUCLEAN
+> > 
+> > I have two questions:
+> > a) Why not use EUCLEAN everywhere instead?
+> >     Having two different names for the same errno complicates grepping.
 > 
->> With stmfx_pinctrl_gpio_init_valid_mask callback, gpio_valid_mask was used
->> to initialize gpiochip valid_mask for gpiolib. But gpio_valid_mask was not
->> yet initialized. gpio_valid_mask required gpio-ranges to be registered,
->> this is the case after gpiochip_add_data call. But init_valid_mask
->> callback is also called under gpiochip_add_data. gpio_valid_mask
->> initialization cannot be moved before gpiochip_add_data because
->> gpio-ranges are not registered.
+> Because:
+> 	a) EUCLEAN is horrible for code documentation. EFSCORRUPTED
+> 	describes exactly the error being returned and/or checked for.
 > 
-> Sorry but this doesn't add up, look at this call graph:
+> 	b) we've used EFSCORRUPTED in XFS since 1993. i.e. it was an
+> 	official, published error value on Irix, and we've kept it
+> 	in the linux code for the past ~20 years because of a)
 > 
-> gpiochip_add_data()
->    gpiochip_add_data_with_key()
->      gpiochip_alloc_valid_mask()
->      of_gpiochip_add()
->      of_gpiochip_add_pin_range()
->      gpiochip_init_valid_mask()
+> 	c) Userspace programs that include filesystem specific
+> 	headers have already been exposed to and use EFSCORRUPTED,
+> 	so we can't remove/change it without breaking userspace.
 > 
-> So the .initi_valid_mask() is clearly called *after*
-> of_gpiochip_add_pin_range() so this cannot be the real reason,
-> provided that the ranges come from the device tree. AFAICT that
-> is the case with the stmfx.
+> 	d) EUCLEAN has a convenient userspace string description
+> 	that is appropriate for filesystem corruption: "Structure
+> 	needs cleaning" is precisely what needs to happen. Repair of
+> 	the filesystem (i.e. recovery to a clean state) is what is
+> 	required to fix the error....
+
+The description is very confusing to users that are also not filesystem
+developers. "Structure needs cleaning" says what needs to be done but
+not what happened. Unlike other error codes like "not enough memory",
+"IO error" etc. We don't have EBUYMEM / "Buy more memory" instead of
+ENOMEM.
+
+Fuzzing tests and crafted images produce most of the EUCLEAN errors and
+in this context "structure needs cleaning" makes even less sense.
+
+> > b) Perhaps both errors should use different values?
 > 
-> Can you check and see if the problem is something else?
->
+> That horse bolted to userspace years ago - this is just formalising
+> the practice that has spread across multiple linux filesystems from
+> XFS over the past ~10 years..
 
-stmfx_pinctrl_gpio_init_valid_mask uses pctl->gpio_valid_mask to 
-initialize gpiochip valid_mask.
+EFSCORRUPTED is a appropriate name but to share the number with EUCLEAN
+was a terrible decision and now every filesystem has to suffer and
+explain to users what the code really means and point to the the sad
+story when asked "So why don't you have a separate code?".
 
-pctl->gpio_valid_mask is initialized in 
-stmfx_pinctrl_gpio_function_enable depending on gpio ranges.
+I wonder what userspace package really depends on the value, that would
+eg. change code flow. Uncommon error values usually lead to a message
+and exit.
 
-stmfx_pinctrl_gpio_function_enable is called after gpiochip_add_data 
-because it requires gpio ranges to be registered.
+Debian code search shows only jython, e2fsprogs, xfsprogs, python2.7,
+pypy, linux, partclone using EFSCORRUPTED. So 2 of them are filesystem
+packages that can handle that, python/jython only defines the value for
+IRIX platform. The rest is linux kernel, not relevant.
 
-So, in stmfx driver the call graph is
-
-stmfx_pinctrl_probe
-   gpiochip_add_data()
-     gpiochip_add_data_with_key()
-       gpiochip_alloc_valid_mask()
-       of_gpiochip_add()
-       of_gpiochip_add_pin_range()
-       gpiochip_init_valid_mask()
-         stmfx_pinctrl_gpio_init_valid_mask (but pctl->gpio_valid_mask 
-is not yet initialized so gpiochip valid_mask is wrong)
-   stmfx_pinctrl_gpio_function_enable (pctl->gpio_valid_mask is going to 
-be initialized thanks to gpio ranges)
-
-When consumer tries to take a pin (it is the case for the joystick on 
-stm32mp157c-ev1), it gets the following issue:
-[    3.347391] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
-didn't like hwirq-0x0 to VIRQ92 mapping (rc=-6)
-[    3.356418] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
-didn't like hwirq-0x1 to VIRQ92 mapping (rc=-6)
-[    3.366512] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
-didn't like hwirq-0x2 to VIRQ92 mapping (rc=-6)
-[    3.376671] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
-didn't like hwirq-0x3 to VIRQ92 mapping (rc=-6)
-[    3.387169] irq: :soc:i2c@40013000:stmfx@42:stmfx-pin-controller 
-didn't like hwirq-0x4 to VIRQ92 mapping (rc=-6)
-[    3.397065] gpio-keys joystick: Found button without gpio or irq
-[    3.403041] gpio-keys: probe of joystick failed with error -22
-
-I can reword the commit message to make it clearer.
-
-Regards,
-Amelie
+So please give me one example where userspace will break.
