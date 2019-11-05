@@ -2,87 +2,127 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8B8DCA9ED4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:34:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EED27CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BAD820848
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:34:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B18A2080F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:37:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="fse+hifI"
+	dkim=pass (2048-bit key) header.d=firemail.cc header.i=@firemail.cc header.b="R5dfwoVX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729921AbfKEAek (ORCPT
+        id S2387427AbfKEAha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:34:40 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46987 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729481AbfKEAek (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:34:40 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 193so12504378pfc.13
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 16:34:40 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=message-id:mime-version:content-transfer-encoding:in-reply-to
-         :references:cc:subject:from:to:user-agent:date;
-        bh=ssq1+qBeE4bILOYJCaUAQccnlP0dTDy9uKGzohCrZNI=;
-        b=fse+hifIQe9+HhAVismfmdd3dbc+AxDk6h2Czk0Xv9p+AFsp3NSOljWg/6eyC+wVnV
-         JqbMAuXWtjW1iH9BTPZe9sdCW3OmoJ+48j0DdRqw3TVHjd0sTq2ieka06m9nffvEBMXx
-         J/AXJd79/oM6HArb021dRsLKI75kvUlH4MkSw=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:mime-version
-         :content-transfer-encoding:in-reply-to:references:cc:subject:from:to
-         :user-agent:date;
-        bh=ssq1+qBeE4bILOYJCaUAQccnlP0dTDy9uKGzohCrZNI=;
-        b=DBzvlupEFvzLU5jN7MtzbAXu9a0Gey+sc5p1Jmxz0O4XuciP0R721jSFeXGMmRCmiG
-         AIaah77dut9pv39V+0i6ydteQN4iCr9/RJMz+xMLBo7JewZwgFDxlNhQlvDhIilO64ix
-         yTL6irRclz9zNZkcDoDBcyihAWP+FX1PgBBu582bqAE5QoLK06irCP7C7Kcw+u6jUrPy
-         t/L/ArLk3/tdBIYzy+L4I7W5UYIl1QbWDI7LT7lJ1h8FLBGwYgYh43/NdOG825pgY8nc
-         DMYNmuSDgoNFskjsyWeaRKw/oWqg0/WKPQgBvRgCI8AG9EVwcsqVRVlcOQ3E7HpQeLYc
-         6/nA==
-X-Gm-Message-State: APjAAAWusaUvKF/mRswpqYsXe/ijKRMEB/silE+OLtCB7yJfprxglk6L
-        wDcflIgEneVaxY0/w9D93FvknA==
-X-Google-Smtp-Source: APXvYqyONkdssVcF2C2lSrS/XAzYbF22TVGGKOXcep4SCKhu3a9bGsH/qY2pM5E3sIVKM+vGi5lcqQ==
-X-Received: by 2002:a63:ee44:: with SMTP id n4mr15395228pgk.137.1572914079568;
-        Mon, 04 Nov 2019 16:34:39 -0800 (PST)
-Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
-        by smtp.gmail.com with ESMTPSA id s202sm19212727pfs.24.2019.11.04.16.34.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 16:34:38 -0800 (PST)
-Message-ID: <5dc0c39e.1c69fb81.f12ba.857f@mx.google.com>
-Content-Type: text/plain; charset="utf-8"
+        Mon, 4 Nov 2019 19:37:30 -0500
+Received: from mx1.cock.li ([185.10.68.5]:44497 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729693AbfKEAh3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:37:29 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191104071027.GD585@tuxbook-pro>
-References: <20191023090219.15603-1-rnayak@codeaurora.org> <20191023090219.15603-12-rnayak@codeaurora.org> <5db86de0.1c69fb81.9e27d.0f47@mx.google.com> <20191030195021.GC27773@google.com> <6610d7fe-5a4d-5a43-5c4f-9ae61e7e53ee@codeaurora.org> <20191104063348.GA2464@tuxbook-pro> <c214110f-7620-8771-ef83-8a4fb1f8724f@codeaurora.org> <20191104071027.GD585@tuxbook-pro>
-Cc:     Matthias Kaehlcke <mka@chromium.org>, agross@kernel.org,
-        robh+dt@kernel.org, linux-arm-msm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maulik Shah <mkshah@codeaurora.org>
-Subject: Re: [PATCH v3 11/11] arm64: dts: qcom: sc7180: Add pdc interrupt controller
-From:   Stephen Boyd <swboyd@chromium.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Mon, 04 Nov 2019 16:34:37 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=firemail.cc; s=mail;
+        t=1572914245; bh=dl8FyeCITTZvxmAsfPamVtKVF2q0zQbdpcYf8wSQRFI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=R5dfwoVX4kF2FbHHgWlBgixsUgM5nkjRizYeqPW1VaoK1CM7IiBnl50XPUMZ5AWDB
+         m5uQ1zB8oti1lhKWtQLZRczn5ixaKTznH8EoJNzqbjn1Kxw/WMSWgl7VC6dweWra0r
+         OwzpUfKRHjAj6ubZ+e9EhsMAbPC4YxuypcKKHNDjdZq742VgmeoFnYDRzvXZG/TnwW
+         nQZFjSn31rMTT3Fw5SvzKzeXF/0GkjBlA18+PIF5CS0NwWsKXxxtXKPE3titepXjNc
+         xpRQA3GwVwjotzHxTHesGz95T8GPrXkCaIscVJtLLjOJgA8noJ/m6jlMJTak89AeoD
+         XC8uOI52cpNuA==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 00:37:25 +0000
+From:   nipponmail@firemail.cc
+To:     linux-kernel@vger.kernel.org
+Cc:     ruben@mrbrklyn.com, mrbrklyn@panix.com
+Subject: Re: Will no-one sue GrSecurity for their blatant GPL violation (of
+ GCC and the linux kernel)?
+In-Reply-To: <87ftj3gx9h.fsf@mid.deneb.enyo.de>
+References: <b0668893d6fbfeca10a724e1c5846e92@firemail.cc>
+ <E1iRgHg-0007e0-Gd@fencepost.gnu.org>
+ <2fbd35b601c740b3cf88b73df7a2c123@firemail.cc>
+ <87ftj3gx9h.fsf@mid.deneb.enyo.de>
+Message-ID: <4175aec5f562fed9b7b9395016abe6de@firemail.cc>
+X-Sender: nipponmail@firemail.cc
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-11-03 23:10:27)
->=20
-> Right, but by putting both compatibles in the dts and the generic one in
-> the driver we avoid the driver churn and we're future compatible.
->=20
-> And given that we haven't yet added the qcom,sdm845-pdc node to the
-> sdm845.dtsi we don't need to maintain the qcom,sdm845-pdc in the driver.
-> So switch qcom,sdm845-pdc to qcom,pdc in qcom-pdc.c.
->=20
+It does not matter how common this way of doing buisness is.
+It is still a blatant violation of the Copyright holders terms.
 
-I like this plan!
+The Copyright holder has allowed GrSecurity to do something they, by 
+default, have no right to do (create and distribute [non-seperable] 
+derivative works), ONLY if they follow the Copyright holder's 
+directives.
 
+The Copyright holder has stipulated that each distributee has the 
+permission to FREELY create derivative works based on the work and 
+FREELY distribute said original work and said derivative works, but that 
+they ONLY have this permission IF they also extend those rights to 
+down-the-line-distributees AND they DO NOT add ANY additional 
+_RESTRICTIONS_ on that right.
+
+If GrSecurity was _NOT_ adding an additional restriction it would NOT 
+need an "access agreement" (no-redistribution agreement).
+
+They are BLATANTLY violating section 6.
+
+Please read:
+perens.com/2017/06/28/warning-grsecurity-potential-contributory-infringement-risk-for-customers/
+
+Please.
+
+The reason why this business model works is because:
+
+1)Not-any-old-lawyer can walk into Federal Court.
+You have to be accepted into the Federal Bar for that 
+district/circuit/etc (IIRC). Which means one of the 
+allready-on-federal-bar lawyers has to allow you in and vouch for you. 
+That makes for fewer high priced lawyers
+
+2) The costs will be high: half a million plus in legal fees in the end.
+
+3) You win court-costs ONLY if you have registered your copyright BEFORE 
+the violation you are suing defendant over, and also BEFORE any 
+same/similar violation. Otherwise you only get regular damages (revenue, 
+or profits, or what the defendant would have paid you for a license (0 
+dollars), whichever the court wishes). (Note: you have to register your 
+copyright at the time of the suit atleast, but if it is after the 
+violations you don't get statutory damages nor do you get attorney's 
+fees)
+
+Also read this EFF brief, page 10 etc. It has some discussion on the 
+violation: 
+perens.com/static/OSS_Spenger_v_Perens/0_2018cv15189/docs1/pdf/18.pdf
+
+On 2019-11-04 21:14, Florian Weimer wrote:
+> * nipponmail:
+> 
+>> You are incorrect. GPL version 2 section 6 states that one shall not 
+>> add
+>> additional restrictions between the agreement between the licensee and
+>> further licensees. It governs that relationship vis-a-vis the 
+>> protected
+>> Work.
+>> 
+>> GrSecurity has, indeed, stipulated an additional restrictive term.
+>>  From: You may distribute derivative works freely.
+>> GrSecurity has forced customers to agree to: We shall not distribute 
+>> the
+>> (non-separable) derivative work EXCEPT to our own customers (when
+>> required).
+>> 
+>> That is clearly an additional restrictive term.
+> 
+> I assume they did this as part of their subscription agreement.  Their
+> customers are free to terminate that agreement and exercise their
+> rights under the GPL.  They just can't have it both ways.
+> 
+> I believe this a fairly common approach to subscription and service
+> agreements for GPL software.
