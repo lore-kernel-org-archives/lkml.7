@@ -2,124 +2,80 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_SBL,URIBL_SBL_A,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A12BCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:19:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF1CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:20:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C393214D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:19:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="idBUDc/L"
+	by mail.kernel.org (Postfix) with ESMTP id 2CB10214D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:20:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730000AbfKEDTX (ORCPT
+        id S1730401AbfKEDUB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 22:19:23 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:31010 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1730118AbfKEDTX (ORCPT
+        Mon, 4 Nov 2019 22:20:01 -0500
+Received: from cynthia.allandria.com ([50.242.82.17]:50938 "EHLO
+        cynthia.allandria.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729953AbfKEDUA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 22:19:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572923962;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=j5OzLFkpAUjCP+yb4lupAMQyPwr8X3YeEPsxi0E3pqk=;
-        b=idBUDc/L0fQPyhkz+QLD4dITLCRpESWGCz02q6XA28QK7ME0kIeGrhWHKmRnB2tP7c9oRV
-        TSU6UdxMFB3cih1qi7RXBjeMonuEN9kTk0gM5SB1yfBl4ACqT4rXx/Qb2Kf9bRE9K6mLjh
-        DqFWSoebVpZCPKvKtpb2jp4POCnQ1cQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-133-QYfxRTI1PLOj3fR3gSxtGg-1; Mon, 04 Nov 2019 22:19:18 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 01604800C73;
-        Tue,  5 Nov 2019 03:19:15 +0000 (UTC)
-Received: from [10.72.12.252] (ovpn-12-252.pek2.redhat.com [10.72.12.252])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2D2105D6D4;
-        Tue,  5 Nov 2019 03:17:29 +0000 (UTC)
-Subject: Re: [PATCH V7 3/6] mdev: introduce device specific ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191104123952.17276-1-jasowang@redhat.com>
- <20191104123952.17276-4-jasowang@redhat.com>
- <20191104145008.4b6839f0@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <47ecfe09-0954-9517-3ac5-68db8522826d@redhat.com>
-Date:   Tue, 5 Nov 2019 11:17:28 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Mon, 4 Nov 2019 22:20:00 -0500
+Received: from flar by cynthia.allandria.com with local (Exim 4.84_2)
+        (envelope-from <flar@allandria.com>)
+        id 1iRpNi-0008On-J7; Mon, 04 Nov 2019 19:19:46 -0800
+Date:   Mon, 4 Nov 2019 19:19:46 -0800
+From:   Brad Boyer <flar@allandria.com>
+To:     Finn Thain <fthain@telegraphics.com.au>
+Cc:     John Paul Adrian Glaubitz <glaubitz@physik.fu-berlin.de>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Max Staudt <max@enpas.org>,
+        linux-m68k <linux-m68k@lists.linux-m68k.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-ide@vger.kernel.org
+Subject: Re: [PATCH] m68k: defconfig: Update defconfigs for v5.4-rc1
+Message-ID: <20191105031946.GA31507@allandria.com>
+References: <20191001073539.4488-1-geert@linux-m68k.org>
+ <7fa02d50-6092-5f59-5018-c5b425a30726@enpas.org>
+ <CAMuHMdX3+-JO68LGE-NuT9axRUj3=bbtpDZ8E3v5UNoj5ctLHg@mail.gmail.com>
+ <640d4fd8-b879-3cfd-e522-1acc3cbd323a@physik.fu-berlin.de>
+ <20191105005318.GA29558@allandria.com>
+ <alpine.LNX.2.21.1.1911051318590.160@nippy.intranet>
 MIME-Version: 1.0
-In-Reply-To: <20191104145008.4b6839f0@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: QYfxRTI1PLOj3fR3gSxtGg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.LNX.2.21.1.1911051318590.160@nippy.intranet>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 05, 2019 at 01:33:00PM +1100, Finn Thain wrote:
+> All the PB 190 machines that I've come across have a late revision 68LC040 
+> CPU that is free of errata. Please see,
+> http://www.mac.linux-m68k.org/docs/faq.php#sec-4.5
+> 
+> The Performa 636 is highly likely to be affected, but you can run Linux 
+> from initramfs to avoid page faults in code sections. That would allow you 
+> to test the IDE driver.
+> 
+> Or you can just replace the CPU with a full 68040, since it is socketed. 
 
-On 2019/11/5 =E4=B8=8A=E5=8D=885:50, Alex Williamson wrote:
->>   EXPORT_SYMBOL(mdev_set_drvdata);
->>  =20
->> +
-> Extra whitespace
->
->>   /* Specify the class for the mdev device, this must be called during
->> - * create() callback.
->> - */
->> + * create() callback explicitly or implicity through the helpers
-> s/implicity/implicitly/
->
->> + * provided by each class. */
->>   void mdev_set_class(struct mdev_device *mdev, u16 id)
->>   {
->>   =09WARN_ON(mdev->class_id);
->> @@ -55,6 +56,26 @@ void mdev_set_class(struct mdev_device *mdev, u16 id)
->>   }
->>   EXPORT_SYMBOL(mdev_set_class);
->>  =20
->> +/* Specify the mdev device to be a VFIO mdev device, and set VFIO
->> + * device ops for it. This must be called from the create() callback
->> + * for VFIO mdev device.
->> + */
-> Comment style.  Thanks,
+I'll try the PB190 first anyway. It should be easier due to not needing
+to setup a monitor. I'm not sure if I ever booted Linux on either of
+them, since I acquired both about the time I started getting too busy
+to spend time on such things. I just found the Performa, and it's actually
+a Performa 630CD but I don't see any obvious difference based on the specs.
 
+I just took a look at the macide driver, and it appears to do basically
+nothing other than pass a list of addresses into the core ide code. It's
+one of the smallest drivers I've ever seen.
 
-Will fix them all.
+> But watch out for leaking capacitors and batteries...
 
-Thanks
+I should pull out every machine in my collection and look for those sorts
+of issues. None of them have been checked in at least 5 or 6 years.
 
-
->
-> Alex
->
+	Brad Boyer
+	flar@allandria.com
 
