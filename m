@@ -2,118 +2,75 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E7D6CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:41:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45C3CCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:43:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6634E20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:41:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1DDA820818
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:43:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730343AbfKEDlu (ORCPT
+        id S1730393AbfKEDna (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 22:41:50 -0500
-Received: from mga09.intel.com ([134.134.136.24]:16885 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729711AbfKEDlt (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 22:41:49 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 19:41:49 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,269,1569308400"; 
-   d="scan'208";a="212450762"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.21]) ([10.239.196.21])
-  by fmsmga001.fm.intel.com with ESMTP; 04 Nov 2019 19:41:46 -0800
-Subject: Re: [PATCH v5 5/7] perf report: Sort by sampled cycles percent per
- block for stdio
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191030060430.23558-1-yao.jin@linux.intel.com>
- <20191030060430.23558-6-yao.jin@linux.intel.com>
- <20191104140438.GI8251@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <7bb97f3e-5a45-3ad0-df0f-6e72f8afa4da@linux.intel.com>
-Date:   Tue, 5 Nov 2019 11:41:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 22:43:30 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6150 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729711AbfKEDn3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 22:43:29 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 800408998B034BFB165D;
+        Tue,  5 Nov 2019 11:43:25 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.208) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019
+ 11:43:20 +0800
+Subject: Re: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+CC:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, <linux-xfs@vger.kernel.org>,
+        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        <linux-fsdevel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-kernel@vger.kernel.org>, <linux-erofs@lists.ozlabs.org>,
+        <linux-ext4@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-arch@vger.kernel.org>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+ <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <5c441427-7e65-fcae-3518-eb37cea5f875@huawei.com>
+Date:   Tue, 5 Nov 2019 11:43:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191104140438.GI8251@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+Content-Type: text/plain; charset="windows-1252"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 2019/11/4 9:45, Valdis Kletnieks wrote:
+> There's currently 6 filesystems that have the same #define. Move it
+> into errno.h so it's defined in just one place.
+> 
+> Signed-off-by: Valdis Kletnieks <Valdis.Kletnieks@vt.edu>
+> Acked-by: Darrick J. Wong <darrick.wong@oracle.com>
+> Reviewed-by: Jan Kara <jack@suse.cz>
+> Acked-by: Theodore Ts'o <tytso@mit.edu>
 
+>  fs/erofs/internal.h              | 2 --
 
-On 11/4/2019 10:04 PM, Jiri Olsa wrote:
-> On Wed, Oct 30, 2019 at 02:04:28PM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->> +static int hists__fprintf_all_blocks(struct block_hist *bh)
->> +{
->> +	symbol_conf.report_individual_block = true;
->> +	hists__fprintf(&bh->block_hists, true, 0, 0, 0,
->> +		       stdout, true);
->> +	hists__delete_entries(&bh->block_hists);
->> +	return 0;
->> +}
->> +
->>   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   					 struct report *rep,
->>   					 const char *help)
->>   {
->>   	struct evsel *pos;
->> +	int i = 0;
->>   
->>   	if (!quiet) {
->>   		fprintf(stdout, "#\n# Total Lost Samples: %" PRIu64 "\n#\n",
->> @@ -494,12 +509,20 @@ static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   	evlist__for_each_entry(evlist, pos) {
->>   		struct hists *hists = evsel__hists(pos);
->>   		const char *evname = perf_evsel__name(pos);
->> +		struct block_hist *block_hist;
->>   
->>   		if (symbol_conf.event_group &&
->>   		    !perf_evsel__is_group_leader(pos))
->>   			continue;
->>   
->>   		hists__fprintf_nr_sample_events(hists, rep, evname, stdout);
->> +
->> +		if (rep->total_cycles_mode) {
->> +			block_hist = &rep->block_reports[i++].hist;
->> +			hists__fprintf_all_blocks(block_hist);
->> +			continue;
->> +		}
-> 
-> hum, you don't need evsel in here, please make separate function like
-> perf_evlist__tty_browse_block_hists, where you will iterate directly
-> block_reports[i++]
-> 
-> IMO the best would be to have report__browse_block_hists in block-info.c
-> and handle all display modes from there
-> 
-> that's probably the last thing that would be moved to block-info.c
-> other than that I think the patchset is ok
-> 
-> thanks,
-> jirka
-> 
+>  fs/f2fs/f2fs.h                   | 1 -
 
-Thanks Jiri!
+Acked-by: Chao Yu <yuchao0@huawei.com>
 
-I just posted v6 which moved more block display codes from 
-builtin-report.c to block-info.c. That should let the code be more clear.
-
-Thanks
-Jin Yao
+Thanks,
