@@ -2,194 +2,200 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 644AEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C16AC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF09A206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:20 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="pNA4oRT1";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="B1BUvErY"
+	by mail.kernel.org (Postfix) with ESMTP id 0B175206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:07:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572995275;
+	bh=3hlfaAbF8wHnCgzl6eHP2uPiomDxegF2/QA/VPr74HQ=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=urM9k4w7iV5ltVUVbtsJBzHKxKXdvi4TEZ0UtYzVyFyKCpnmPQNGxCI0QU0hpVHlu
+	 Qr4DZt/njWaxCcm8W9O5QhF6HQmpXPXfe7mSx8SDQtIXCDw2tAymcDTydeQzibNhI3
+	 IWTYry9uUKE51DUcLMd3AjKksC9G/KfGUaPyPbnY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfKEXHU (ORCPT
+        id S1729644AbfKEXHy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:07:20 -0500
-Received: from mx0b-00082601.pphosted.com ([67.231.153.30]:40870 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726820AbfKEXHT (ORCPT
+        Tue, 5 Nov 2019 18:07:54 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:35076 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726820AbfKEXHy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:07:19 -0500
-Received: from pps.filterd (m0089730.ppops.net [127.0.0.1])
-        by m0089730.ppops.net (8.16.0.42/8.16.0.42) with SMTP id xA5MsI5V016057;
-        Tue, 5 Nov 2019 15:06:09 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=PnpEc23bysBSaux/bNdD5/WLm19CKbUZ+VZSsux6dXc=;
- b=pNA4oRT1Ym7QS7EGmh0yn+lwHCqlGsjXgoz0e/eJpGQxfgwgcnBU2ipHkWMqQUs9ulnC
- ++STUQqtCVyRPTNQJiV62Cy7/zBTF7YGlb9OSmjcIBwpDf8TWKhRzCl/xlHkYwo45xVP
- wj+FOC7F4FAd1e3YgYSdo/0Yjg7vv3hlzeU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by m0089730.ppops.net with ESMTP id 2w3ghg8pm1-5
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Tue, 05 Nov 2019 15:06:08 -0800
-Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
- prn-hub02.TheFacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 5 Nov 2019 15:06:08 -0800
-Received: from prn-hub04.TheFacebook.com (2620:10d:c081:35::128) by
- prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Tue, 5 Nov 2019 15:06:08 -0800
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.28) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Tue, 5 Nov 2019 15:06:07 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=SdjvXnNFrCuSNZcI5TpSkDHFMYCHzXOoC9ZxuwlsWjNEH/orqFknVxpMlY211bFkFDiAh7WON42zTkE5HTd+Ckpsv0cfeiW4HFNRu/APugtqCaGKChDfWEUgDWyjZzXEettcBFCpc2F5wixpBeG/UNNfnwmWXRbsvZQ8bgSI9tANzjTasOCcjW1IExr9yH2p//c7iq1B9azZrGVfbHLudpzzvY7GkMALv98t+TiFzHYRt4SKT+zpda0S8LSc0LRbArUcg9Pfg4uRoGOX1HJj+/bGE011gBJuGjUJiSPBQ1F99GYI9cQih9x/bL9Z/7QVjv+ikdwrdree3DzI4NaZtg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PnpEc23bysBSaux/bNdD5/WLm19CKbUZ+VZSsux6dXc=;
- b=LVrs50x6T+jRjoY6KdCSU2gCO8UFmBqWpWr1utxZFVMFy3omU5NVC6gCaOrCjddwfe/1yy2F+w0f5bwQs4+7eyjCgegVtiX4vW3Q9RiT2h1mH2cxHbF/+qHErunalmthNIkqcEYoXnuEwAkp1LgX8mRf+vffcf4UKipEJ8+ZbTy/9KdGuRV78WKtJ6vOgp8us9RyEKtsQzcLIstQrp0FYoze3VUgO83kWTgA0vH4F9fst8cpbbIni8Y2Jm7gKJaOflWlwmfGT3GQzarBDTorff3BS5ySDljPQO3Wlc53e7BJU49q4Am/MYjdUJwSvkWwzJcPxMAL4qc9jngJhe+lag==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
- header.d=fb.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector2-fb-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PnpEc23bysBSaux/bNdD5/WLm19CKbUZ+VZSsux6dXc=;
- b=B1BUvErY57knQ9f6KXuiL7D2xGkbXQIVDM08UXvPn1kSpNUaYGo03xSwSZlurAPYHZoyOFWYcEi6rp395kKU3N0N/oUUeFIIteQqPzjXC6OQGA5+WFMZM7zBfVbq6YEuAWCDmKehCA+dLIGYD9qTAekZqAHeIRvwqcSWQcB+ICo=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
- MWHPR15MB1872.namprd15.prod.outlook.com (10.174.101.23) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 23:06:06 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2430.020; Tue, 5 Nov 2019
- 23:06:06 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     open list <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "acme@kernel.org" <acme@kernel.org>,
-        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
-        Jiri Olsa <jolsa@kernel.org>,
-        Alexey Budankov <alexey.budankov@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>, "Tejun Heo" <tj@kernel.org>
-Subject: Re: [PATCH v6] perf: Sharing PMU counters across compatible events
-Thread-Topic: [PATCH v6] perf: Sharing PMU counters across compatible events
-Thread-Index: AQHVbqpjjWjaDbp/ikSYoLFTNk8qM6d09EYAgAA/EQCAB+dbAIAAM8KAgAAvaoA=
-Date:   Tue, 5 Nov 2019 23:06:06 +0000
-Message-ID: <23D48724-55B7-45A3-A77A-56BAD57937F9@fb.com>
-References: <20190919052314.2925604-1-songliubraving@fb.com>
- <20191031124332.GQ4131@hirez.programming.kicks-ass.net>
- <19AE6C78-C54C-4C37-BBD2-0396BB97A474@fb.com>
- <98A6264C-B833-4930-95A0-2A3186519D87@fb.com>
- <20191105201623.GG3079@worktop.programming.kicks-ass.net>
-In-Reply-To: <20191105201623.GG3079@worktop.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3601.0.10)
-x-originating-ip: [2620:10d:c090:200::de21]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 37c2526d-efba-4533-5b81-08d76244bd05
-x-ms-traffictypediagnostic: MWHPR15MB1872:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MWHPR15MB1872531B307EE7137363F606B37E0@MWHPR15MB1872.namprd15.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:10000;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(136003)(346002)(376002)(396003)(39860400002)(366004)(199004)(189003)(71190400001)(8676002)(36756003)(6916009)(2616005)(476003)(5660300002)(6512007)(229853002)(7736002)(8936002)(256004)(14444005)(71200400001)(54906003)(305945005)(6436002)(33656002)(50226002)(53546011)(4326008)(81166006)(6486002)(316002)(2906002)(81156014)(46003)(486006)(66446008)(6246003)(64756008)(186003)(25786009)(478600001)(76116006)(66946007)(99286004)(11346002)(446003)(86362001)(6506007)(76176011)(6116002)(102836004)(14454004)(66476007)(66556008);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1872;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: DobgH19okJW1N3L+RTfFRgUY/yoaqJrPZem9a2UFI0gQhp11KcdXSWAge+TzhxkNatjr0gXCRIKnppEbBCUKqKkD7FG/pnUX7zAuOMvKCGRLWqhDI5fVXUsyyvTrMdDyhT6ugxFs1I8Pp6TGUEBVH+Jel/GpeIuPUS467hbdsS+j1dLGsQzqoZUblhFs3XEPXHMhQ3QxjTPUyUrc0cbMR6KqJt8wYCxoSgAzcfEeyt7VnhfY/zNjPMcVAfop7qiDQaC1bLON5TdJ5xcb9277O0Mmkqicuk3BlU2WMY7LIaLaAUIiPb9dnpuenCM1GouGUHgvsTk4dGtCZMyTm/U2PlenKb2VOTmbNKg5zcdpz6XZ3SS+CiA+sXFHmlO+eubGtgdfsrJE55Mj/MFvSZqb3NQjoZ+uMQMb4Tu3+654MvHWzDOStbZXr0Bfadz9eBFD
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <F3DC57BA46F88C4B9AC3DF1BC2DBE85A@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 18:07:54 -0500
+Received: by mail-ot1-f66.google.com with SMTP id z6so19200842otb.2;
+        Tue, 05 Nov 2019 15:07:52 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=JIWst79Fnuh1JqkgU4BXUBUOhrSVyqifwstpKOqUp58=;
+        b=hO9AUrx6+DHUavDZlVVlr/JSPWE2Ww4r3Wa+WmBJPgBc4OOvTxMM5+znQcealtc3Sj
+         RR23/JFgL93FIKwn/B+p9w6F2IYeQAP8tzQnkX4cURp+XpZn56khHJdB7IrfZ0EY+4lL
+         plKxUan/DTRIpALeoitrwq6wEeZj9CCRaaWkENp8aPxNmZNoHUYoW6M0MU6D9H6FLgpv
+         LB8wmk8Wojd/gf+zhtVjgWGJERL1OdXS1HU2wbxs4n7FoTOTwzUxxmhFiB3RTo/OkcsY
+         wwsH5NIMHnmIW7UoLFawORlFlqVEdRxrO7Z23wxROuZMxd+TBvWyScNBjEelfG3VRfzM
+         qZGQ==
+X-Gm-Message-State: APjAAAV13G2LsZgtpMf0ivLKV03AbsR99/CvSYoCc3DytKSOOFJnAWv7
+        D9PjVL89ne0hhfS6sDOBy/ZgmU7k3Qwkqqd5rKokYA==
+X-Google-Smtp-Source: APXvYqwTM8o1vXwTJxNNonDxqHv3eeWNdHml15mkVjpzTJ3SmK1zdY9R/bxzX/EX3YHzdWBPtJde7F4iESj3SmIrNd0=
+X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr25158554oth.266.1572995271717;
+ Tue, 05 Nov 2019 15:07:51 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 37c2526d-efba-4533-5b81-08d76244bd05
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 23:06:06.3498
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: sBr0fic0SHnCkJzawxkVv6bzkWS42rArDWxMVrN7RGlt4f3m8IKraM8BiROiP0NBLR5qeALT8EZPi3Yyx9r52g==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1872
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
- definitions=2019-11-05_08:2019-11-05,2019-11-05 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 adultscore=0 bulkscore=0
- suspectscore=0 clxscore=1015 mlxscore=0 mlxlogscore=999 priorityscore=1501
- phishscore=0 malwarescore=0 spamscore=0 lowpriorityscore=0 impostorscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
- definitions=main-1911050187
-X-FB-Internal: deliver
+References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
+ <7640808.4Pc6YCm0Y9@kreacher> <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
+In-Reply-To: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Wed, 6 Nov 2019 00:07:40 +0100
+Message-ID: <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
+Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
+ differentiate errors
+To:     Saravana Kannan <saravanak@google.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Frank Rowand <frowand.list@gmail.com>,
+        Len Brown <lenb@kernel.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
+>
+> Hi Rafael,
+>
+> Thanks for the review.
+>
+> On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
+> >
+> > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
+> > > When add_links() still has suppliers that it needs to link to in the
+> > > future, this patch allows it to differentiate between suppliers that are
+> > > needed for probing vs suppliers that are needed for sync_state()
+> > > correctness.
+> >
+> > I guess you mean that it will return different error codes in the different
+> > cases.
+>
+> Yes.
+>
+> >
+> > > Signed-off-by: Saravana Kannan <saravanak@google.com>
+> > > ---
+> > >  drivers/base/core.c    | 12 ++++++++----
+> > >  include/linux/fwnode.h | 13 +++++++++----
+> > >  2 files changed, 17 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/drivers/base/core.c b/drivers/base/core.c
+> > > index 48cd43a91ce6..e6d3e6d485da 100644
+> > > --- a/drivers/base/core.c
+> > > +++ b/drivers/base/core.c
+> > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
+> > >       struct device *parent;
+> > >       struct kobject *kobj;
+> > >       struct class_interface *class_intf;
+> > > -     int error = -EINVAL;
+> > > +     int error = -EINVAL, fw_ret;
+> > >       struct kobject *glue_dir = NULL;
+> > >
+> > >       dev = get_device(dev);
+> > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
+> > >        */
+> > >       device_link_add_missing_supplier_links();
+> > >
+> > > -     if (fwnode_has_op(dev->fwnode, add_links)
+> > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
+> > > -             device_link_wait_for_mandatory_supplier(dev, true);
+> > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
+> >
+> > fw_ret can be defined here and I'd just call it "ret".
+>
+> I thought that style of variable declaration is frowned up in the
+> kernel coding style.
 
+Well, I'm not aware of that. :-)
 
-> On Nov 5, 2019, at 12:16 PM, Peter Zijlstra <peterz@infradead.org> wrote:
->=20
-> On Tue, Nov 05, 2019 at 05:11:08PM +0000, Song Liu wrote:
->=20
->>> I think we can use one of the event as master. We need to be careful wh=
-en
->>> the master event is removed, but it should be doable. Let me try.=20
->>=20
->> Actually, there is a bigger issue when we use one event as the master: w=
-hat
->> shall we do if the master event is not running? Say it is an cgroup even=
-t,=20
->> and the cgroup is not running on this cpu. An extra master (and all thes=
-e
->> array hacks) help us get O(1) complexity in such scenario.=20
->>=20
->> Do you have suggestions on how to solve this problem? Maybe we can keep =
-the=20
->> extra master, and try get rid of the double alloc?=20
->=20
-> Right, you have to consider scope when sharing. The master should be the
-> largest scope event and any slaves should be complete subsets.
->=20
-> Without much thought this seems a fairly straight forward constraint;
-> that is, given cgroups I'm not immediately seeing how we can violate
-> that.
->=20
-> Basically, pick the cgroup event nearest to the root as the master.
-> We have to have logic to re-elect the master anyway for deletion, so
-> changing it on add shouldn't be different.
->=20
-> (obviously the root-cgroup is cpu-wide and always on, and if you have
-> two events from disjoint subtrees they have no overlap, so it doesn't
-> make sense to share anyway)
+> >
+> > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
+> > > +             if (fw_ret == -ENODEV)
+> > > +                     device_link_wait_for_mandatory_supplier(dev);
+> > > +             else if (fw_ret)
+> > > +                     device_link_wait_for_optional_supplier(dev);
+> > > +     }
+> > >
+> > >       bus_probe_device(dev);
+> > >       if (parent)
+> > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
+> > > index 25bb81f8ded8..a19134eae5a5 100644
+> > > --- a/include/linux/fwnode.h
+> > > +++ b/include/linux/fwnode.h
+> > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
+> > >   *           available suppliers.
+> > >   *
+> > >   *           Return 0 if device links have been successfully created to all
+> > > - *           the suppliers of this device or if the supplier information is
+> > > - *           not known. Return an error if and only if the supplier
+> > > - *           information is known but some of the suppliers are not yet
+> > > - *           available to create device links to.
+> > > + *           the suppliers this device needs to create device links to or if
+> > > + *           the supplier information is not known.
+> >
+> > "the known suppliers of this device or if the supplier information is not known."
+>
+> "suppliers it needs to create device links to" is a subset of known
+> suppliers. There's no requirement that fw needs to create links to ALL
+> known suppliers. Just a minor distinction.
 
-Hmm... I didn't think about cgroup structure with this much detail. And=20
-this is very interesting idea.=20
+That depends on what exactly you mean by "known suppliers".  The
+suppliers that are not listed by the firmware are not known at this
+point.
 
-OTOH, non-cgroup event could also be inactive. For example, when we have=20
-to rotate events, we may schedule slave before master. And if the master
-is in an event group, it will be more complicated...
+> > > + *
+> > > + *           Return -ENODEV if and only if the suppliers needed for probing
+> > > + *           the device are not yet available to create device links to.
+> >
+> > It would be more precise to say something like this:
+> >
+> > "Return -ENODEV if an attempt to create a device link to one of the device's
+> > suppliers needed for probing it fails."
+>
+> "attempt to create a device link to one of the device's suppliers
+> needed for probing it fails" to me means device_link_add() fails.
+> But I'm trying to say that it should return an error if the struct
+> device isn't even there yet.
 
-Currently, we already have two separate scopes in sharing: one for cpu_ctx,=
-=20
-the other for task_ctx. I would like to enable as much sharing as possible
-with in each ctx.=20
+OK, so it should be something like "if the supplier device has not
+been registered yet".
 
-Let me double check whether we can make the code with extra master clearer,=
-=20
-namely, get rid of double alloc and the ugly array.=20
+My point is that "not yet available" is kind of ambiguous.
 
-Thanks,
-Song
+> > > + *
+> > > + *           Return -EAGAIN if there are suppliers that need to be linked to
+> > > + *           that are not yet available but none of those suppliers are
+> > > + *           necessary for probing this device.
+> >
+> > "Return -EAGAIN if attempts to create device links to some of the device's
+> > suppliers have failed, but those suppliers are not necessary for probing the
+> > device."
+>
+> Same comment as before. The distinction I'm making here is that
+> -EAGAIN is needed when the struct device itself isn't there.
+>
+> Btw, Greg already pulled these into driver-core-next. Let me know if
+> you want me to send a delta patch to fix any of these comments.
 
+Well, it's a Greg's call if he has taken the patches, but it also
+depends on you (if you agree with the comments, it would be prudent to
+send updates).
