@@ -2,153 +2,128 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A9CC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC75C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2962A21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IuCRYE4F"
+	by mail.kernel.org (Postfix) with ESMTP id 9B0F521928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:26:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389699AbfKEPZe (ORCPT
+        id S1731062AbfKEP02 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:25:34 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41112 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388865AbfKEPZc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:25:32 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=NgATcCLTGpEPLwWdKi14PTpZ7rURfMGSbUwiELsU3Q4=; b=IuCRYE4FycS9P2WAfst2WI/cB
-        OE99a3FeQZFP5k1rXzlUwGE+qZalTv8pYKIH96bd7jqKFmgourtzl34cq2RESZADqOTU4OG2KSuyG
-        CrVwGCgx3IwlzNjMcripYiWeh0HfiXl+5kKPMINTpAWL+qwWPxji3qlifM+/RU9pclIYNa68BahSs
-        GMABOMxeGHuHU0WdOO+sTtUkc14/hpk7LkXlPQqJyNgLpduRsgZB+XXpxaN4pPPPaE5j0qpQmZfeO
-        OX2xxAHE7z+RDLVZ2GQaVHSn/eOQaLepgnJiVaZ22p2nq/eYAzRG+oFkmutkY5IdRqXNq3ipMytr8
-        elO7VvF3A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iS0i0-0003Ji-JY; Tue, 05 Nov 2019 15:25:28 +0000
-Date:   Tue, 5 Nov 2019 07:25:28 -0800
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Marco Elver <elver@google.com>
-Cc:     syzbot <syzbot+11010f0000e50c63c2cc@syzkaller.appspotmail.com>,
-        hirofumi@mail.parknet.co.jp, linux-kernel@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com, linux-fsdevel@vger.kernel.org,
-        viro@zeniv.linux.org.uk
-Subject: Re: KCSAN: data-race in fat16_ent_put / fat_search_long
-Message-ID: <20191105152528.GD11823@bombadil.infradead.org>
-References: <00000000000016a19d0596980568@google.com>
- <20191105143923.GA87727@google.com>
+        Tue, 5 Nov 2019 10:26:28 -0500
+Received: from mga07.intel.com ([134.134.136.100]:31556 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727889AbfKEP02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:26:28 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 07:26:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="212559537"
+Received: from kuha.fi.intel.com ([10.237.72.53])
+  by fmsmga001.fm.intel.com with SMTP; 05 Nov 2019 07:26:24 -0800
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Tue, 05 Nov 2019 17:26:24 +0200
+Date:   Tue, 5 Nov 2019 17:26:24 +0200
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Dan Carpenter <dan.carpenter@oracle.com>
+Cc:     Mao Wenan <maowenan@huawei.com>, gregkh@linuxfoundation.org,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] usb: roles: Hide option USB_ROLE_SWITCH
+Message-ID: <20191105152624.GC12204@kuha.fi.intel.com>
+References: <20191104135312.GD996639@ulmo>
+ <20191104144850.91305-1-maowenan@huawei.com>
+ <20191105124218.GB12204@kuha.fi.intel.com>
+ <20191105131605.GF10409@kadam>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105143923.GA87727@google.com>
+In-Reply-To: <20191105131605.GF10409@kadam>
 User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:39:23PM +0100, Marco Elver wrote:
-> On Tue, 05 Nov 2019, syzbot wrote:
-> > ==================================================================
-> > BUG: KCSAN: data-race in fat16_ent_put / fat_search_long
-> > 
-> > write to 0xffff8880a209c96a of 2 bytes by task 11985 on cpu 0:
-> >  fat16_ent_put+0x5b/0x90 fs/fat/fatent.c:181
-> >  fat_ent_write+0x6d/0xf0 fs/fat/fatent.c:415
-> >  fat_chain_add+0x34e/0x400 fs/fat/misc.c:130
-> >  fat_add_cluster+0x92/0xd0 fs/fat/inode.c:112
-> >  __fat_get_block fs/fat/inode.c:154 [inline]
-> >  fat_get_block+0x3ae/0x4e0 fs/fat/inode.c:189
-> >  __block_write_begin_int+0x2ea/0xf20 fs/buffer.c:1968
-> >  __block_write_begin fs/buffer.c:2018 [inline]
-> >  block_write_begin+0x77/0x160 fs/buffer.c:2077
-> >  cont_write_begin+0x3d6/0x670 fs/buffer.c:2426
-> >  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
-> >  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
-> >  cont_expand_zero fs/buffer.c:2353 [inline]
-> >  cont_write_begin+0x17a/0x670 fs/buffer.c:2416
-> >  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
-> >  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
-> >  generic_cont_expand_simple+0xb0/0x120 fs/buffer.c:2317
-> > 
-> > read to 0xffff8880a209c96b of 1 bytes by task 11990 on cpu 1:
-> >  fat_search_long+0x20a/0xc60 fs/fat/dir.c:484
-> >  vfat_find+0xc1/0xd0 fs/fat/namei_vfat.c:698
-> >  vfat_lookup+0x75/0x350 fs/fat/namei_vfat.c:712
-> >  lookup_open fs/namei.c:3203 [inline]
-> >  do_last fs/namei.c:3314 [inline]
-> >  path_openat+0x15b6/0x36e0 fs/namei.c:3525
-> >  do_filp_open+0x11e/0x1b0 fs/namei.c:3555
-> >  do_sys_open+0x3b3/0x4f0 fs/open.c:1097
-> >  __do_sys_open fs/open.c:1115 [inline]
-> >  __se_sys_open fs/open.c:1110 [inline]
-> >  __x64_sys_open+0x55/0x70 fs/open.c:1110
-> >  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > 
-> > Reported by Kernel Concurrency Sanitizer on:
-> > CPU: 1 PID: 11990 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
-> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
-> > Google 01/01/2011
-> > ==================================================================
-> 
-> I was trying to understand what is happening here, but fail to see how
-> this can happen. So it'd be good if somebody who knows this code can
-> explain. We are quite positive this is not a false positive, given the
-> addresses accessed match.
+Hi Dan,
 
-Both of these accesses are into a buffer head; ie the data being accessed
-is stored in the page cache.  Is it possible the page was reused for
-different data between these two accesses?
+On Tue, Nov 05, 2019 at 04:16:05PM +0300, Dan Carpenter wrote:
+> On Tue, Nov 05, 2019 at 02:42:18PM +0200, Heikki Krogerus wrote:
+> > On Mon, Nov 04, 2019 at 10:48:50PM +0800, Mao Wenan wrote:
+> > > The USB role switch class is, after all,
+> > > not useful by itself. Hiding USB_ROLE_SWITCH
+> > > so we can avoid any of the pitfalls associated
+> > > with user-visible symbols and "select".
+> > > 
+> > > Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> > > ---
+> > >  drivers/usb/roles/Kconfig | 2 +-
+> > >  1 file changed, 1 insertion(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
+> > > index f8b31aa..1da58d4 100644
+> > > --- a/drivers/usb/roles/Kconfig
+> > > +++ b/drivers/usb/roles/Kconfig
+> > > @@ -1,7 +1,7 @@
+> > >  # SPDX-License-Identifier: GPL-2.0
+> > >  
+> > >  config USB_ROLE_SWITCH
+> > > -	tristate "USB Role Switch Support"
+> > > +	tristate
+> > >  	help
+> > >  	  USB Role Switch is a device that can select the USB role - host or
+> > >  	  device - for a USB port (connector). In most cases dual-role capable
+> > 
+> > You didn't actually convert the "depends on USB_ROLE_SWTICH" to
+> > "select USB_ROLE_SWITCH" before this. You also left the help text that
+> > is now useless.
+> > 
+> > I really think that instead of this, we should just convert all
+> > "select USB_ROLE_SWTICH" to "depends on USB_ROLE_SWITCH".
+> 
+> The you have to find USB_ROLE_SWITCH first when you want to enable your
+> hardware...  It's feels really confusing when you want to create a
+> .config file...
 
-> The two bits of code in question here are:
-> 
-> static void fat16_ent_put(struct fat_entry *fatent, int new)
-> {
-> 	if (new == FAT_ENT_EOF)
-> 		new = EOF_FAT16;
-> 
-> 	*fatent->u.ent16_p = cpu_to_le16(new);   <<== data race here
-> 	mark_buffer_dirty_inode(fatent->bhs[0], fatent->fat_inode);
-> }
-> 
-> int fat_search_long(struct inode *inode, const unsigned char *name,
-> 		    int name_len, struct fat_slot_info *sinfo)
-> {
-> 	struct super_block *sb = inode->i_sb;
-> 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
-> 	struct buffer_head *bh = NULL;
-> 	struct msdos_dir_entry *de;
-> 	unsigned char nr_slots;
-> 	wchar_t *unicode = NULL;
-> 	unsigned char bufname[FAT_MAX_SHORT_SIZE];
-> 	loff_t cpos = 0;
-> 	int err, len;
-> 
-> 	err = -ENOENT;
-> 	while (1) {
-> 		if (fat_get_entry(inode, &cpos, &bh, &de) == -1)
-> 			goto end_of_dir;
-> parse_record:
-> 		nr_slots = 0;
-> 		if (de->name[0] == DELETED_FLAG)
-> 			continue;
-> 		if (de->attr != ATTR_EXT && (de->attr & ATTR_VOLUME))  <<== data race here
-> 			continue;
-> 		if (de->attr != ATTR_EXT && IS_FREE(de->name))
-> 			continue;
-> 		<snip>
-> }
-> 
-> Thanks,
-> -- Marco
+Unfortunately selecting the class alone is not enough. The USB role
+switch on the system may be a dual-role capable USB controller, but it
+may also be a mux that has its own separate driver.
+
+It's equally or even more confusing for the user if the USB drivers
+are enabled, including the dual-role mode, but the connector still
+works only in one role, or in worst case not at all (if there is no
+mux driver and the mux is left in "safe mode" so that the pins on the
+connector are not connected to anything).
+
+I still think that we should make these drivers depend on the class
+instead of just selecting it. That way we at least give the user a
+hint that there are also separate USB role switch drivers that may be
+needed.
+
+> I sometimes think maybe I'm too stupid to configure a kernel these days
+> and that's sort of sad because how is Aunt Tillie supposed to manage?
+
+We can always use something like conditional comments in the
+Kconfig files to make sure that the user is told that in order to
+select the driver, a dependency must be satisfied:
+
+        config MY_AWESOME_DRIVER
+                tristate "My awesome driver!"
+                depends on USB_ROLE_SWITCH
+                help
+                  That's right! IT REALLY IS AWESOME!
+
+        comment "My awesome driver depends on USB_ROLE_SWITCH..."
+                depends on USB_ROLE_SWITCH=n
+
+thanks,
+
+-- 
+heikki
