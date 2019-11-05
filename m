@@ -2,80 +2,104 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41F8CC49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:57:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23F82C49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A1C321929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:57:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DD520869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:58:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Dm/LBYaN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387867AbfKEJ5V (ORCPT
+        id S2388045AbfKEJ6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:57:21 -0500
-Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:33679 "EHLO
-        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730454AbfKEJ5U (ORCPT
+        Tue, 5 Nov 2019 04:58:18 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:42426 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730699AbfKEJ6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:57:20 -0500
-Received: from [IPv6:2001:420:44c1:2577:b458:c82c:799d:e7d8]
- ([IPv6:2001:420:44c1:2577:b458:c82c:799d:e7d8])
-        by smtp-cloud8.xs4all.net with ESMTPA
-        id RvaMiG4eLTzKrRvaQirPzi; Tue, 05 Nov 2019 10:57:19 +0100
-Subject: Re: [PATCH] media: v4l2-mem2mem: Fix hold buf flag check
-To:     Jernej Skrabec <jernej.skrabec@siol.net>,
-        mchehab+samsung@kernel.org
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20191028185700.3634267-1-jernej.skrabec@siol.net>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <4fe0c972-cfd7-e04b-17dc-e739e4c8fc00@xs4all.nl>
-Date:   Tue, 5 Nov 2019 10:57:14 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 5 Nov 2019 04:58:17 -0500
+Received: by mail-lf1-f66.google.com with SMTP id z12so14616885lfj.9
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:58:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xfv3rqWrlWf5UFQQBJ1k9wZswD1YcP5UXfQc274fzwc=;
+        b=Dm/LBYaNKCC80fiSISuS3+46W1tYr96C4MW/M3Zd8TWW/ZTZ7+DbRCEcr4bUSn0wZX
+         DaubUf6Ww3Vj6sL1TVgUvp7j61hDc6biINEtPWBCLfUk6miygczsFggKBOIVsY5RIpIJ
+         x8Gj6SfhQ/yV+iMcIFz2wYs6ELGsZImOI/TeL9oZwWrCYKONa+/+hUzkXUZthexFuiGK
+         jjX2o7BRSGSMKXVpWWIn96snSUaXwUAbmNsVj1EBrPvYnfUIKcEjHFOrGdNj3DyXUgIR
+         YcZsnqm1ArwMgYMMBFUiL+IQZ6ASNX7I2YCL93BEmC1xR/IEjyuv0Tyr5EJ/MCbDDm88
+         K6yw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xfv3rqWrlWf5UFQQBJ1k9wZswD1YcP5UXfQc274fzwc=;
+        b=brQb1ZoNMB6/ki6ZZsP1BdoORY0ZsBw6x+O0pNHAXpvli8fCiWhW2bZk6xj5AN4rjX
+         PDtnFoPPeZbRn246mU6amQ/kyiNi/xWU9ABV3MXy/oLK9LaNKbpkR4KiYQk6TO3+0xTG
+         SJzizhhQ7HxDChMQkd2ggv3D44/4ZgNbNwSy1s3mf1Ctllqh74B6tYhpoQOnLLAWoLz/
+         KKCdKxPRz6ZsVcFL7cPxAdZJjpVTARORFHvzeNPb6dv9V2Umzh1ASafC8WnHA9jVFbIp
+         fBKpCc+RpMybKpmDsyZ+lx9hLsiJE83EtREua7tZz81KhXN8/UAsmXFZJo4BVPhfOn8l
+         +HdA==
+X-Gm-Message-State: APjAAAWoNs3MQG5ofojeoRcN524zb+UKKCAV1Nm3axqNBv9b/ugTxdH0
+        2DKc+NwlefPw/pj6srtsrf/7V2I91vd3/tJjSck26A==
+X-Google-Smtp-Source: APXvYqwYns8R5LfOjsV6lFnr68ZUkWZUoQdLj2KD8Drrga7JlPOGBdSLdSCdkjQCzKc3gaD6i4cTs1T7zHigAf54ymw=
+X-Received: by 2002:ac2:51dd:: with SMTP id u29mr20191666lfm.135.1572947894944;
+ Tue, 05 Nov 2019 01:58:14 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191028185700.3634267-1-jernej.skrabec@siol.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDNGXV+jojFOdl+vTll97CdnD3VKmC3VMWxlZqVv6bgLx1VamliGCMPMqpR4H209ff7D7Kc/rBrmZ08UPrluBLJf7kD3qsSV179mTzinDlnTUnbPyuKf
- YK8dwTrAALFDTASt6kW+bMzp9xkaIVMQOc/iUR0vlDkbpuyjb5+vZJc/DqIUg65qtIasnm5rNb9myvEEMWGciIlpSc/vxGcwjViwsP5FkAhZb6eIPXCSggqt
- uzC9CT5vNtQHxuUydwY+wh43nWEadaa+mDCo12xt70Q0MwFYISbIz9dV9sQCboMT7Jjuq1B0hVJjhj92JhniOOc8IMo3Q5FLZM1Ac/GJGD3b3lxt5z1SJvFM
- pt6j06aptHKNoId0AlvM9vXS59d+N6UxRW7TQ3gyq0LYbxafaHcFG9l5ZBRwI7cyC9KkNKuJ
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com> <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com> <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com> <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+ <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com> <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
+ <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com> <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+In-Reply-To: <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 10:58:03 +0100
+Message-ID: <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/28/19 7:57 PM, Jernej Skrabec wrote:
-> Hold buf flag is set on output queue, not capture. Fix that.
-> 
-> Fixes: f07602ac3887 ("media: v4l2-mem2mem: add new_frame detection")
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> ---
->  drivers/media/v4l2-core/v4l2-mem2mem.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> index db07ef3bf3d0..0d2d547a84a5 100644
-> --- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-> +++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-> @@ -335,7 +335,7 @@ static void __v4l2_m2m_try_queue(struct v4l2_m2m_dev *m2m_dev,
->  		}
->  	}
->  
-> -	if (src && dst && (m2m_ctx->cap_q_ctx.q.subsystem_flags &
-> +	if (src && dst && (m2m_ctx->out_q_ctx.q.subsystem_flags &
->  			   VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF))
->  		m2m_ctx->new_frame = !dst->vb2_buf.copied_timestamp ||
->  			dst->vb2_buf.timestamp != src->vb2_buf.timestamp;
-> 
+On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
+> [Peter]
+> > The device needs the RST line to be high, otherwise it is not
+> > accessible. If it does not have reset control how can we make sure that
+> > the GPIO line is in correct state?
+>
+> Just like the reset code, drivers register their use of the reset and
+> the core tracks users and prevents resetting when not safe. Maybe the
+> reset subsystem needs to learn about GPIO resets. (...)
 
-You are right, this should be the output queue. But there is a second
-use of VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF in this source in a
-WARN_ON. Can you fix that as well?
+I agree. Certainly the reset subsystem can do what the regulator
+subsystem is already doing: request the GPIO line nonexclusive
+and handle any reference counting and/or quirks that are needed
+in a hypothetical drivers/reset/reset-gpio.c driver.
 
-Thanks!
+There is no such driver today, just a "reset" driver in
+drivers/power/reset that resets the whole system.
 
-	Hans
+But I see no problem in creating a proper reset driver in drivers/reset
+to handle a few peripherals with a shared GPIO reset line.
+
+Yours,
+Linus Walleij
