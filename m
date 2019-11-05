@@ -2,96 +2,73 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81EB4C1749C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F310C17498
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5776321929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E319121928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:44:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="RmwVhv2z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388889AbfKEOoY convert rfc822-to-8bit (ORCPT
+        id S2389409AbfKEOoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:44:24 -0500
-Received: from relay12.mail.gandi.net ([217.70.178.232]:47597 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfKEOoY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:44:24 -0500
-Received: from xps13 (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 358F920000E;
-        Tue,  5 Nov 2019 14:44:20 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 15:44:19 +0100
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     Uwe =?UTF-8?B?S2xlaW5lLUvDtm5pZw==?= 
-        <u.kleine-koenig@pengutronix.de>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        linux-pwm@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Sascha Hauer <kernel@pengutronix.de>
-Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
-Message-ID: <20191105154419.11e7f625@xps13>
-In-Reply-To: <CAHp75Ve6_8dXJgF6c2OdZDeV=icyRondvMKwTxhom-RXDACfUA@mail.gmail.com>
-References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
-        <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
-        <20191015163055.0d8f44e5@xps13>
-        <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
-        <20191104161103.64995b8a@xps13>
-        <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
-        <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
-        <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
-        <20191105100157.2b6eb22b@xps13>
-        <CAHp75Ve6_8dXJgF6c2OdZDeV=icyRondvMKwTxhom-RXDACfUA@mail.gmail.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Tue, 5 Nov 2019 09:44:34 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:49874 "EHLO vps0.lunn.ch"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388976AbfKEOoe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:44:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=+c1h6MksoHw7Izy6bCwEqip1xk2piM3NtthsfyLl14g=; b=RmwVhv2z+DuJJiuh5Yn6jqqgW+
+        XQbdvE/gYPkYrAxjJHAlErO+w0r1idD1Vx6ovyIE3vcJh9Pmu2uPyN/JWNCVhtpBpFMBnKjoNSEH8
+        A08dLlhi7m11Kd1wEasUDEm8jCBUU+SWHv1QNFY1OXhWbT+3vkiB20tj0qVK8AO4+tZQ=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iS04M-0002OO-Pd; Tue, 05 Nov 2019 15:44:30 +0100
+Date:   Tue, 5 Nov 2019 15:44:30 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     Greg KH <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Subject: Re: [PATCH 00/12] staging: dpaa2-ethsw: add support for control
+ interface traffic
+Message-ID: <20191105144430.GE7189@lunn.ch>
+References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
+ <20191105132435.GA2616182@kroah.com>
+ <20191105140256.GB7189@lunn.ch>
+ <39cf7504-7599-83bb-4b53-5a25ff9240a8@nxp.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <39cf7504-7599-83bb-4b53-5a25ff9240a8@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Andy,
-
-Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 5 Nov 2019
-11:08:39 +0200:
-
-> On Tue, Nov 5, 2019 at 11:02 AM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-> > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 5 Nov 2019
-> > 09:06:37 +0200:  
-> > > On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-König
-> > > <u.kleine-koenig@pengutronix.de> wrote:  
+> Hi Andrew,
 > 
-> > > For me it sounds more likely that PWM is a *pin function* of a pin
-> > > controller and actually this GPIO driver should be a pin controller
-> > > with corresponding function(s).
-> > >  
-> >
-> > Ok, thanks for the input, I will address Thierry's comments and
-> > re-submit as a single file (same shape as in v1).  
-> 
-> Perhaps I have to be more clear. What I meant is that pin control
-> should support PWM pin function and PCA953x be converted to a pin
-> control + GPIO + PWM.
-> Above definitely is not what you did and it's not for immediate submission.
+> Just to clarify...if the STP handling is removed, then we'll have a 
+> receive code path but no frame will reach it.
+> This is because, the only way we could direct traffic to the CPU is by 
+> adding an ACL rule.
 
-Sorry for the misunderstanding, I was answering Uwe.
+Ah, that is not good.
 
-> I really would like to hear if it makes sense.
+As i said in one of my reviews, you need to receive all multicast and
+broadcast traffic by default. Without that, ARP will not work.  Does
+the switch perform learning on frames sent from the CPU? Does the
+switch learn the CPUs MAC address and forward frames to it?  Can i add
+an IP address to the interface and use ping?
 
-While this would probably be the nicest and cleanest solution, I don't
-think it is doable in a reasonable amount of time compared to the
-benefits.
-
-
-Thanks,
-Miquèl
+   Andrew
