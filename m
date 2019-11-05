@@ -1,201 +1,39 @@
 Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
-X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Level: *
+X-Spam-Status: No, score=1.5 required=3.0 tests=MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,TVD_SPACE_RATIO,URIBL_BLOCKED,URIBL_DBL_SPAM
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAC3C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D4CCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:50:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9CB21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572976110;
-	bh=rqSz4Ho15VHI287QiYSiRFPVKKVZZLoCGHIbRvCiBlY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rHz4mpz0ubpwAaTtVB9Hedk8+FOjBPWqIftpOFJnr2IKgDei0wvQAms6f1U7yNi+N
-	 mMnOpSKliL1lhFJ3AfZ60ep++raaWaT47dLKqjWToVV+ScIgXlR1hVwh0de6ujL6wv
-	 gSB4vQMIUGP/QkRVUbqZ3lpMjBSXwlA5m1FNd2OU=
+	by mail.kernel.org (Postfix) with ESMTP id 69B4F217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:50:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390567AbfKERs3 (ORCPT
+        id S2390568AbfKERt7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:48:29 -0500
-Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2390344AbfKERs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:48:29 -0500
-Received: from localhost (unknown [106.51.111.166])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA43217F5;
-        Tue,  5 Nov 2019 17:48:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572976107;
-        bh=rqSz4Ho15VHI287QiYSiRFPVKKVZZLoCGHIbRvCiBlY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=S41kQmvjld7nCfq9WET/5YTWrj36zgoRns3WYyXz/7XZZr00Ju4fGSAn30gpIoInN
-         MJuxjyMCiV6ZMlyx7RAgtgM45Ye/uJtmuTKSxMVKVIoGtaGQf3Kpl5c23xr6QOoC0X
-         13r6IMu7pFy06qapwaXk5Ht1OfE+xgZFyUTBO1XA=
-Date:   Tue, 5 Nov 2019 23:18:23 +0530
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Green Wan <green.wan@sifive.com>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 3/4] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-Message-ID: <20191105174823.GF952516@vkoul-mobl>
-References: <20191028075658.12143-1-green.wan@sifive.com>
- <20191028075658.12143-4-green.wan@sifive.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191028075658.12143-4-green.wan@sifive.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Tue, 5 Nov 2019 12:49:59 -0500
+Received: from [175.42.158.4] ([175.42.158.4]:41104 "EHLO
+        localhost.localdomain" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389356AbfKERt7 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:49:59 -0500
+X-Greylist: delayed 2869 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 12:49:58 EST
+Received: from 0.0.0.0 (localhost [127.0.0.1])
+        by localhost.localdomain (Postfix) with SMTP id B54081369DBB
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 00:40:47 +0800 (CST)
+From:   linux-kernel@vger.kernel.org
+To:     linux-kernel@vger.kernel.org
+Reply-To: prodawez@teleworm.us
+Subject: BAZY DANNYH! email: prodawez@teleworm.us UZNAJTE PODROBNEE
+Message-Id: <20191105164048.B54081369DBB@localhost.localdomain>
+Date:   Wed,  6 Nov 2019 00:40:47 +0800 (CST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 28-10-19, 15:56, Green Wan wrote:
-> Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
-> Rev A00 board.
-> 
->  - Implement dmaengine APIs, support MEM_TO_MEM async copy.
->  - Tested by DMA Test client
->  - Supports 4 channels DMA, each channel has 1 done and 1 err
->    interrupt connected to platform-level interrupt controller (PLIC).
->  - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
-> 
-> The datasheet is here:
-> 
->   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> 
-> Follow the DMAengine controller doc,
-> "./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
-> engine. And use the dma test client in doc,
-> "./Documentation/driver-api/dmaengine/dmatest.rst", to test.
-> 
-> Each DMA channel has separate HW regs and support done and error ISRs.
-> 4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
-> in DMA HW.
-> 
->    ------               ------
->    |    |--< done 23 >--|ch 0|
->    |    |--< err  24 >--|    |     (dma0chan0)
->    |    |               ------
->    |    |               ------
->    |    |--< done 25 >--|ch 1|
->    |    |--< err  26 >--|    |     (dma0chan1)
->    |PLIC|               ------
->    |    |               ------
->    |    |--< done 27 >--|ch 2|
->    |    |--< err  28 >--|    |     (dma0chan2)
->    |    |               ------
->    |    |               ------
->    |    |--< done 29 >--|ch 3|
->    |    |--< err  30 >--|    |     (dma0chan3)
->    ------               ------
-> 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+BAZY DANNYH! email: prodawez@teleworm.us UZNAJTE PODROBNEE
 
-when did i provide this?
-
-> Signed-off-by: Green Wan <green.wan@sifive.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-> Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
-
-Fixes what... this is not a upstream commit?
-
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
-
-Please list the changes done from prev version, here or in cover letter
-
-> +static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
-> +{
-> +	struct sf_pdma_desc *desc;
-> +	unsigned long flags;
-> +
-> +	spin_lock_irqsave(&chan->lock, flags);
-> +
-> +	if (chan->desc && !chan->desc->in_use) {
-> +		spin_unlock_irqrestore(&chan->lock, flags);
-> +		return chan->desc;
-> +	}
-> +
-> +	spin_unlock_irqrestore(&chan->lock, flags);
-> +
-> +	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-> +
-
-this empty line in not required
-
-> +static struct dma_async_tx_descriptor *
-> +	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-> +				dma_addr_t dest,
-
-please make it left justified
-
-> +static int sf_pdma_slave_config(struct dma_chan *dchan,
-> +				struct dma_slave_config *cfg)
-> +{
-> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> +
-> +	memcpy(&chan->cfg, cfg, sizeof(*cfg));
-> +	chan->dma_dir = DMA_MEM_TO_MEM;
-
-?? looking at changelog we have only memcpy support, so this should not
-be here, pls remove this.
-
-> +static enum dma_status
-> +sf_pdma_tx_status(struct dma_chan *dchan,
-> +		  dma_cookie_t cookie,
-> +		  struct dma_tx_state *txstate)
-> +{
-> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> +	enum dma_status status;
-> +
-> +	status = dma_cookie_status(dchan, cookie, txstate);
-> +
-> +	if (txstate && status != DMA_ERROR)
-> +		dma_set_residue(txstate, sf_pdma_desc_residue(chan));
-
-which residue? the query can be for a cookie which is still in pending
-list! you need to check the cookie and only read register for cookie if
-submitted
-
-> +static int sf_pdma_remove(struct platform_device *pdev)
-> +{
-> +	struct sf_pdma *pdma = platform_get_drvdata(pdev);
-> +	struct sf_pdma_chan *ch;
-> +	int i;
-> +
-> +	for (i = 0; i < PDMA_NR_CH; i++) {
-> +		ch = &pdma->chans[i];
-> +
-> +		list_del(&ch->vchan.chan.device_node);
-> +		tasklet_kill(&ch->vchan.task);
-> +		tasklet_kill(&ch->done_tasklet);
-> +		tasklet_kill(&ch->err_tasklet);
-
-you have an isr registered which can fire and schedule tasklets..
--- 
-~Vinod
