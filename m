@@ -2,115 +2,129 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77B09CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A3C21CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E76020717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 681C820717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:45:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="sqK+qum0"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Q6/KyacK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730333AbfKEBpL (ORCPT
+        id S1730390AbfKEBpo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:45:11 -0500
-Received: from conssluserg-03.nifty.com ([210.131.2.82]:48836 "EHLO
-        conssluserg-03.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbfKEBpK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:45:10 -0500
-Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54]) (authenticated)
-        by conssluserg-03.nifty.com with ESMTP id xA51io3R031758;
-        Tue, 5 Nov 2019 10:44:51 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-03.nifty.com xA51io3R031758
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1572918291;
-        bh=US7HnlfbUATMZewUXcHUmKQ8vx87uqsdcAQJeWxPmP8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=sqK+qum0s/ofCdio6VkD6ITJtwUT7fjxl1ZAhXzvq4PcS3Imp5mJO5moUHJ0njMw6
-         2cDWiWKm5mQf6pO1Y5LyzrUIscWWiO+D5JbBITc3ApVvi37LdY4t8iUkt5mC8Z6upN
-         31AmvCcO3U5b9uk7NIAtYSAtunMDnmGyM6AljC6eHyn5gCS3GESYovlu0syXuNAFHI
-         lJVhMjZ2X/mnyO7Y9clvM8f+3iKNNrJirc0Z29vM34Sp/RbkWj1ww2YzY57byMe+Yi
-         +SZFUaiqOaHHuHhtTzPXS8DVzWfDQSSMsq/0mMa5DP1/+TfoOfK9gEdqhCpMEsT1Eo
-         gvqqH3NaN3V6A==
-X-Nifty-SrcIP: [209.85.222.54]
-Received: by mail-ua1-f54.google.com with SMTP id s25so1259149uap.1;
-        Mon, 04 Nov 2019 17:44:51 -0800 (PST)
-X-Gm-Message-State: APjAAAWG2jJVZz6155TrG00fBQNZULcSgW2ZcsT1eptPmN9UXatM5URj
-        VPjSPoYiYYLWOIjmpVJIiH3+4E2S52i64jpDlCg=
-X-Google-Smtp-Source: APXvYqyAJwLfrsdrDuFC5DkDPl6kKaEgQE1dM2uxxz+hFwYzm6LlI63Y2XVEPHBoyeEM8Nncmazv6eanPEcWgTNMMWA=
-X-Received: by 2002:a9f:3e81:: with SMTP id x1mr13534695uai.121.1572918290038;
- Mon, 04 Nov 2019 17:44:50 -0800 (PST)
+        Mon, 4 Nov 2019 20:45:44 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:47361 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730037AbfKEBpo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 20:45:44 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 476XYc0bVqz9sP6;
+        Tue,  5 Nov 2019 12:45:39 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572918340;
+        bh=8XWY64SJKqZIyzn9EFs+RU2Chz3MCXPcnBcxJoBUTjk=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Q6/KyacKQpBRHV8jj5Jw5hgo3C1+HrIIAJ8sDBq5IoA5utI8IFEpe470MH/rPNA11
+         TrUTSAIc36ZbxC/xq4HoHZOxfygmlC/cDCF1jlfIw+eh6Vdz/y0htXqQQeObU+YMKQ
+         F7ZzVD/JKgbaZagdNsX05ohUSMmG7h9zJsmMPhR9MsSMYVo2oCqyWUonAV71EVTK1o
+         BhL477oZuWG/whAp54Dfy9Y83WpjipUrQMl90kqsE8+g0bKtw8oqDotg3kWWteYeLr
+         jgCyHSGWzN55nbeQ+z+kqfCjnvNe7Ksw/9+EHmUGKLJfslG2M4/SR7Zk04OY0ChXiF
+         C9/aUdxdWKhxQ==
+Date:   Tue, 5 Nov 2019 12:45:39 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Venkat Duvvuru <venkatkumar.duvvuru@broadcom.com>,
+        Michael Chan <michael.chan@broadcom.com>
+Subject: linux-next: build warnings after merge of the net-next tree
+Message-ID: <20191105124539.7566b922@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191101061411.16988-1-yamada.masahiro@socionext.com>
- <20191101061411.16988-2-yamada.masahiro@socionext.com> <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
-In-Reply-To: <CAL_JsqJbmFd5wZ0RCP2baqv-bjWwzaJ+hLqtGeYjK5LPJ54dXA@mail.gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Tue, 5 Nov 2019 10:44:13 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAThTaHpCWgGyx=qh6v7CsL6DAWfvE1g_jsNcGe-K5e_gA@mail.gmail.com>
-Message-ID: <CAK7LNAThTaHpCWgGyx=qh6v7CsL6DAWfvE1g_jsNcGe-K5e_gA@mail.gmail.com>
-Subject: Re: [PATCH 1/3] libfdt: add SPDX-License-Identifier to libfdt wrappers
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     DTML <devicetree@vger.kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        linuxppc-dev <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        David Daney <david.daney@cavium.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; boundary="Sig_//jQT+NOl0NGJ4he.TSA94Wo";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
-(+CC: David Daney)
+--Sig_//jQT+NOl0NGJ4he.TSA94Wo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, Nov 4, 2019 at 11:00 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Nov 1, 2019 at 1:19 AM Masahiro Yamada
-> <yamada.masahiro@socionext.com> wrote:
-> >
-> > These are kernel source code even though they are just two-line wrappers.
-> >
-> > Files without explicit license information fall back to GPL-2.0-only,
-> > which is the project default.
->
-> That is true and these are kernel only files, but given they are just
-> a wrapper around the .c files, maybe they should have the same
-> license?
+Hi all,
 
+After merging the net-next tree, today's linux-next build (x86_64
+allmodconfig) produced these warnings:
 
-I just thought it at first
-but this wraps two files, with different license.
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c: In function 'bnxt_tc_parse_fl=
+ow':
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
+t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
+} [-Warray-bounds]
+  532 |   if (p[i] !=3D 0)
+      |       ~^~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:293:6: note: while referencing=
+ 'eth_addr'
+  293 |  u16 eth_addr[ETH_ALEN] =3D { 0 };
+      |      ^~~~~~~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
+t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
+} [-Warray-bounds]
+  532 |   if (p[i] !=3D 0)
+      |       ~^~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
+ 'eth_addr_mask'
+  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
+      |      ^~~~~~~~~~~~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:532:8: warning: array subscrip=
+t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
+} [-Warray-bounds]
+  532 |   if (p[i] !=3D 0)
+      |       ~^~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
+ 'eth_addr_mask'
+  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
+      |      ^~~~~~~~~~~~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:544:8: warning: array subscrip=
+t [12, 17] is outside array bounds of 'u16[6]' {aka 'short unsigned int[6]'=
+} [-Warray-bounds]
+  544 |   if (p[i] !=3D 0xff)
+      |       ~^~~
+drivers/net/ethernet/broadcom/bnxt/bnxt_tc.c:288:6: note: while referencing=
+ 'eth_addr_mask'
+  288 |  u16 eth_addr_mask[ETH_ALEN] =3D { 0 };
+      |      ^~~~~~~~~~~~~
 
-include/linux/libfdt_env.h:  GPLv2 only
-scripts/dtc/libfdt/fdt*.c :  GPLv2+ or BSD-2-Clause
+Introduced (I think) by commit
 
+  90f906243bf6 ("bnxt_en: Add support for L2 rewrite")
 
-Looking at the include/linux/libfdt_env.h,
-I thought GPLv2 only would be preferred for
-the kernel-specific code.
+--=20
+Cheers,
+Stephen Rothwell
 
-If you prefer to align with scripts/dtc/libfdt/fdt*.c
-I can change it, but I would also respect
-the opinion from David Daney, the author of the
-following commit:
+--Sig_//jQT+NOl0NGJ4he.TSA94Wo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
 
+-----BEGIN PGP SIGNATURE-----
 
-commit ab25383983fb8d7786696f5371e75e79c3e9a405
-Author: David Daney <david.daney@cavium.com>
-Date:   Thu Jul 5 18:12:38 2012 +0200
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3A1EMACgkQAVBC80lX
+0Gzd4wf/TsGM+bQOSLVWyrPF2ARyzpDjjPpRR90fKowk0enDFlijABIgcj8JuZfF
+ePx0Ws5wxaSFdi5ncNfqk6kzmS9ixm1HfaBO5NgtjrU+tdOJiuJDeCsl79Za4SGR
+c3aF57AuRyhIsz4h6DpLCBsaVPWHiMDekZ4nHbwF8tc/49j8T6vwTBYy89AqcS3J
+aPXLbUzPlI8Hr1hDdwYo7ke41JG5FMZ8mS4hB2w06BJyh8BU1qPosW76ip06jwl1
+3f68tU+u1EPio5yc+HddhFAhBYhVFns5VMPih/jzWyIWpQTLMSlS4kPBCXfSJvo5
+GVDADCiGTQpz35WhmdFWDWVvKvRrDw==
+=nRKU
+-----END PGP SIGNATURE-----
 
-    of/lib: Allow scripts/dtc/libfdt to be used from kernel code
-
-
-
--- 
-Best Regards
-Masahiro Yamada
+--Sig_//jQT+NOl0NGJ4he.TSA94Wo--
