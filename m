@@ -2,270 +2,211 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C3F7CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87569CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:18:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D531820650
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572913055;
-	bh=bmdbeqiFWKCcW+zaslNO7XdXLtmXJqX+EyhUCjQNE3w=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mTya94aeQss3TiblkBocqUqu0h6RHHvhN4EeaUehZ7bq5oulp7mrcXFIRw0eSp/Jv
-	 B96aT2YS/StpKl4nqaJsc7Fugd2gKNtOabZSTBSWEOi04/G2AhbGfquxlN5jPdS6RQ
-	 1qREUdtNSZt38iP20KVpWh1i1yvpplSdTLCJUbV8=
+	by mail.kernel.org (Postfix) with ESMTP id 53F71204FD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:18:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="nx62lGrP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387645AbfKEARe (ORCPT
+        id S2387669AbfKEASi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:17:34 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41684 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387415AbfKEARe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:17:34 -0500
-Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 26BC0204FD;
-        Tue,  5 Nov 2019 00:17:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572913052;
-        bh=bmdbeqiFWKCcW+zaslNO7XdXLtmXJqX+EyhUCjQNE3w=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WWf+innNGfYXk7Diu+pKVz3nFFmVnGUR7RRTTVS2FhLheCtjHAhdUKvQ8etGyaWAK
-         AeeVLI13JaMg1qkUG9HoxiI6KGnF+B9/5xHTwrch5j0oGJDF+MiCkU2v+xBnWqE70Q
-         qQsNc1FeT0AAmDrr3bjSAAVQS3/1Z+3t7CVzy5bA=
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 5/5] perf probe: Trace a magic number if variable is not found
-Date:   Tue,  5 Nov 2019 09:17:28 +0900
-Message-Id: <157291304860.19771.9006634463376439737.stgit@devnote2>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <157291299825.19771.5190465639558208592.stgit@devnote2>
-References: <157291299825.19771.5190465639558208592.stgit@devnote2>
-User-Agent: StGit/0.17.1-dirty
+        Mon, 4 Nov 2019 19:18:38 -0500
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17961 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387415AbfKEASh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:18:37 -0500
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5dc0bfe10001>; Mon, 04 Nov 2019 16:18:41 -0800
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 04 Nov 2019 16:18:35 -0800
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 04 Nov 2019 16:18:35 -0800
+Received: from [10.110.48.28] (10.124.1.5) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
+ 2019 00:18:34 +0000
+Subject: Re: [PATCH v2 12/18] mm/gup: track FOLL_PIN pages
+To:     Jerome Glisse <jglisse@redhat.com>
+CC:     Andrew Morton <akpm@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@intel.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Dave Chinner <david@fromorbit.com>,
+        David Airlie <airlied@linux.ie>,
+        "David S . Miller" <davem@davemloft.net>,
+        Ira Weiny <ira.weiny@intel.com>, Jan Kara <jack@suse.cz>,
+        Jason Gunthorpe <jgg@ziepe.ca>, Jens Axboe <axboe@kernel.dk>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Magnus Karlsson <magnus.karlsson@intel.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Hocko <mhocko@suse.com>,
+        Mike Kravetz <mike.kravetz@oracle.com>,
+        Paul Mackerras <paulus@samba.org>,
+        Shuah Khan <shuah@kernel.org>,
+        Vlastimil Babka <vbabka@suse.cz>, <bpf@vger.kernel.org>,
+        <dri-devel@lists.freedesktop.org>, <kvm@vger.kernel.org>,
+        <linux-block@vger.kernel.org>, <linux-doc@vger.kernel.org>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
+        <linux-media@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+        <linuxppc-dev@lists.ozlabs.org>, <netdev@vger.kernel.org>,
+        <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>
+References: <20191103211813.213227-1-jhubbard@nvidia.com>
+ <20191103211813.213227-13-jhubbard@nvidia.com>
+ <20191104185238.GG5134@redhat.com>
+ <7821cf87-75a8-45e2-cf28-f85b62192416@nvidia.com>
+ <20191104234920.GA18515@redhat.com>
+X-Nvconfidentiality: public
+From:   John Hubbard <jhubbard@nvidia.com>
+Message-ID: <f587647d-83dc-5bde-d244-f522ec5bda60@nvidia.com>
+Date:   Mon, 4 Nov 2019 16:18:33 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104234920.GA18515@redhat.com>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL105.nvidia.com (172.20.187.12) To
+ HQMAIL107.nvidia.com (172.20.187.13)
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1572913121; bh=it/avAzbdjbPt9c7ZhR3SugLAHDAeo7qSUQnTa8Gd0Y=;
+        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=nx62lGrPMlwQBcqF9vYxqUTNBIlMwnY3v4vXnUqcAbCO2/xdO7aUYp8qclkmts9z7
+         gtH9Ov6maSgTLFms+gOL/dE2dCoQ1xMQpdGQy9Akbo7N7NyETXXQXZTJZqjI7N8kF+
+         n3RQEPIGAaiZBh6nvWW7FoLz32nqtlJ71DClIb0EMAf4xWjkAmpFYtedbKPVLxdf/b
+         tlQKPTEISDGthKQTi64XGZlvQXC4V843TbV9Pv5FMwu9POX8T7Ox5OlQOI/t1RVVuU
+         ehgOt7zOUTQcQRd6bK+4WI3VER1yK/cV2GljR29nekSSEXFENv8o9uy5i0m+683Ub0
+         piAG/LY3Z7DNw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Trace a magic number as immediate value if the target variable
-is not found at some probe points which is based on one probe
-event.
-
-This feature is good for the case if you trace a source code
-line with some local variables, which is compiled into several
-instructions and some of the variables are optimized out on
-some instructions. Even if so, with this feature, perf probe
-trace a magic number instead of such disappeared variables and
-fold those probes on one event.
-
-E.g. without this patch,
-# perf probe -D "pud_page_vaddr pud"
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-Failed to find 'pud' in this function.
-p:probe/pud_page_vaddr_L0 _text+23480787 pud=%ax:x64
-p:probe/pud_page_vaddr_L0 _text+23808289 pud=%bp:x64
-p:probe/pud_page_vaddr_L0 _text+23558066 pud=%ax:x64
-p:probe/pud_page_vaddr_L0 _text+327957 pud=%r8:x64
-p:probe/pud_page_vaddr_L0 _text+348032 pud=%bx:x64
-p:probe/pud_page_vaddr_L0 _text+23816654 pud=%bx:x64
-
-With this patch,
-# perf probe -D "pud_page_vaddr pud" | head -n 10
-spurious_kernel_fault is blacklisted function, skip it.
-vmalloc_fault is blacklisted function, skip it.
-p:probe/pud_page_vaddr_L0 _text+23480787 pud=%ax:x64
-p:probe/pud_page_vaddr_L0 _text+148635 pud=\deade12d:x64
-p:probe/pud_page_vaddr_L0 _text+23808289 pud=%bp:x64
-p:probe/pud_page_vaddr_L0 _text+315510 pud=\deade12d:x64
-p:probe/pud_page_vaddr_L0 _text+23807045 pud=\deade12d:x64
-p:probe/pud_page_vaddr_L0 _text+23557349 pud=%ax:x64
-p:probe/pud_page_vaddr_L0 _text+313681 pud=%di:x64
-p:probe/pud_page_vaddr_L0 _text+313599 pud=\deade12d:x64
-p:probe/pud_page_vaddr_L0 _text+313477 pud=\deade12d:x64
-p:probe/pud_page_vaddr_L0 _text+323667 pud=\deade12d:x64
+Hi Dan, there is a question for you further down:
 
 
-Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
----
- tools/perf/util/probe-event.c  |    2 +
- tools/perf/util/probe-event.h  |    3 ++
- tools/perf/util/probe-finder.c |   62 +++++++++++++++++++++++++++++++++++++---
- tools/perf/util/probe-finder.h |    1 +
- 4 files changed, 63 insertions(+), 5 deletions(-)
+On 11/4/19 3:49 PM, Jerome Glisse wrote:
+> On Mon, Nov 04, 2019 at 02:49:18PM -0800, John Hubbard wrote:
+...
+>>> Maybe add a small comment about wrap around :)
+>>
+>>
+>> I don't *think* the count can wrap around, due to the checks in user_page_ref_inc().
+>>
+>> But it's true that the documentation is a little light here...What did you have 
+>> in mind?
+> 
+> About false positive case (and how unlikely they are) and that wrap
+> around is properly handle. Maybe just a pointer to the documentation
+> so that people know they can go look there for details. I know my
+> brain tend to forget where to look for things so i like to be constantly
+> reminded hey the doc is Documentations/foobar :)
+> 
 
-diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 23db6786c3ea..ceeb75849311 100644
---- a/tools/perf/util/probe-event.c
-+++ b/tools/perf/util/probe-event.c
-@@ -46,7 +46,7 @@
- #define PERFPROBE_GROUP "probe"
- 
- bool probe_event_dry_run;	/* Dry run flag */
--struct probe_conf probe_conf;
-+struct probe_conf probe_conf = { .magic_num = DEFAULT_PROBE_MAGIC_NUM };
- 
- #define semantic_error(msg ...) pr_err("Semantic error :" msg)
- 
-diff --git a/tools/perf/util/probe-event.h b/tools/perf/util/probe-event.h
-index 96a319cd2378..4f0eb3a20c36 100644
---- a/tools/perf/util/probe-event.h
-+++ b/tools/perf/util/probe-event.h
-@@ -16,10 +16,13 @@ struct probe_conf {
- 	bool	no_inlines;
- 	bool	cache;
- 	int	max_probes;
-+	unsigned long	magic_num;
- };
- extern struct probe_conf probe_conf;
- extern bool probe_event_dry_run;
- 
-+#define DEFAULT_PROBE_MAGIC_NUM	0xdeade12d	/* u32: 3735937325 */
-+
- struct symbol;
- 
- /* kprobe-tracer and uprobe-tracer tracing point */
-diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-index 2e3a468c8350..eff6063bebe6 100644
---- a/tools/perf/util/probe-finder.c
-+++ b/tools/perf/util/probe-finder.c
-@@ -536,6 +536,14 @@ static int convert_variable_fields(Dwarf_Die *vr_die, const char *varname,
- 		return 0;
- }
- 
-+static void print_var_not_found(const char *varname)
-+{
-+	pr_err("Failed to find the location of the '%s' variable at this address.\n"
-+	       " Perhaps it has been optimized out.\n"
-+	       " Use -V with the --range option to show '%s' location range.\n",
-+		varname, varname);
-+}
-+
- /* Show a variables in kprobe event format */
- static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- {
-@@ -547,11 +555,11 @@ static int convert_variable(Dwarf_Die *vr_die, struct probe_finder *pf)
- 
- 	ret = convert_variable_location(vr_die, pf->addr, pf->fb_ops,
- 					&pf->sp_die, pf->machine, pf->tvar);
-+	if (ret == -ENOENT && pf->skip_empty_arg)
-+		/* This can be found in other place. skip it */
-+		return 0;
- 	if (ret == -ENOENT || ret == -EINVAL) {
--		pr_err("Failed to find the location of the '%s' variable at this address.\n"
--		       " Perhaps it has been optimized out.\n"
--		       " Use -V with the --range option to show '%s' location range.\n",
--		       pf->pvar->var, pf->pvar->var);
-+		print_var_not_found(pf->pvar->var);
- 	} else if (ret == -ENOTSUP)
- 		pr_err("Sorry, we don't support this variable location yet.\n");
- 	else if (ret == 0 && pf->pvar->field) {
-@@ -598,6 +606,8 @@ static int find_variable(Dwarf_Die *sc_die, struct probe_finder *pf)
- 		/* Search again in global variables */
- 		if (!die_find_variable_at(&pf->cu_die, pf->pvar->var,
- 						0, &vr_die)) {
-+			if (pf->skip_empty_arg)
-+				return 0;
- 			pr_warning("Failed to find '%s' in this function.\n",
- 				   pf->pvar->var);
- 			ret = -ENOENT;
-@@ -1348,6 +1358,44 @@ static int add_probe_trace_event(Dwarf_Die *sc_die, struct probe_finder *pf)
- 	return ret;
- }
- 
-+static int fill_empty_trace_arg(struct perf_probe_event *pev,
-+				struct probe_trace_event *tevs, int ntevs)
-+{
-+	char **valp;
-+	char *type;
-+	int i, j, ret;
-+
-+	for (i = 0; i < pev->nargs; i++) {
-+		type = NULL;
-+		for (j = 0; j < ntevs; j++) {
-+			if (tevs[j].args[i].value) {
-+				type = tevs[j].args[i].type;
-+				break;
-+			}
-+		}
-+		if (j == ntevs) {
-+			print_var_not_found(pev->args[i].var);
-+			return -ENOENT;
-+		}
-+		for (j = 0; j < ntevs; j++) {
-+			valp = &tevs[j].args[i].value;
-+			if (*valp)
-+				continue;
-+
-+			ret = asprintf(valp, "\\%lx", probe_conf.magic_num);
-+			if (ret < 0)
-+				return -ENOMEM;
-+			/* Note that type can be NULL */
-+			if (type) {
-+				tevs[j].args[i].type = strdup(type);
-+				if (!tevs[j].args[i].type)
-+					return -ENOMEM;
-+			}
-+		}
-+	}
-+	return 0;
-+}
-+
- /* Find probe_trace_events specified by perf_probe_event from debuginfo */
- int debuginfo__find_trace_events(struct debuginfo *dbg,
- 				 struct perf_probe_event *pev,
-@@ -1366,7 +1414,13 @@ int debuginfo__find_trace_events(struct debuginfo *dbg,
- 	tf.tevs = *tevs;
- 	tf.ntevs = 0;
- 
-+	if (pev->event && pev->nargs != 0 && immediate_value_is_supported())
-+		tf.pf.skip_empty_arg = true;
-+
- 	ret = debuginfo__find_probes(dbg, &tf.pf);
-+	if (ret >= 0 && tf.pf.skip_empty_arg)
-+		ret = fill_empty_trace_arg(pev, tf.tevs, tf.ntevs);
-+
- 	if (ret < 0) {
- 		for (i = 0; i < tf.ntevs; i++)
- 			clear_probe_trace_event(&tf.tevs[i]);
-diff --git a/tools/perf/util/probe-finder.h b/tools/perf/util/probe-finder.h
-index 670c477bf8cf..11be10080613 100644
---- a/tools/perf/util/probe-finder.h
-+++ b/tools/perf/util/probe-finder.h
-@@ -87,6 +87,7 @@ struct probe_finder {
- 	unsigned int		machine;	/* Target machine arch */
- 	struct perf_probe_arg	*pvar;		/* Current target variable */
- 	struct probe_trace_arg	*tvar;		/* Current result variable */
-+	bool			skip_empty_arg;	/* Skip non-exist args */
- };
- 
- struct trace_event_finder {
+I see. OK, here's a version with a thoroughly overhauled comment header:
 
+/**
+ * page_dma_pinned() - report if a page is pinned for DMA.
+ *
+ * This function checks if a page has been pinned via a call to
+ * pin_user_pages*() or pin_longterm_pages*().
+ *
+ * The return value is partially fuzzy: false is not fuzzy, because it means
+ * "definitely not pinned for DMA", but true means "probably pinned for DMA, but
+ * possibly a false positive due to having at least GUP_PIN_COUNTING_BIAS worth
+ * of normal page references".
+ *
+ * False positives are OK, because: a) it's unlikely for a page to get that many
+ * refcounts, and b) all the callers of this routine are expected to be able to
+ * deal gracefully with a false positive.
+ *
+ * For more information, please see Documentation/vm/pin_user_pages.rst.
+ *
+ * @page:	pointer to page to be queried.
+ * @Return:	True, if it is likely that the page has been "dma-pinned".
+ *		False, if the page is definitely not dma-pinned.
+ */
+static inline bool page_dma_pinned(struct page *page)
+
+
+>>> [...]
+>>>
+>>>> @@ -1930,12 +2028,20 @@ static int __gup_device_huge(unsigned long pfn, unsigned long addr,
+>>>>  
+>>>>  		pgmap = get_dev_pagemap(pfn, pgmap);
+>>>>  		if (unlikely(!pgmap)) {
+>>>> -			undo_dev_pagemap(nr, nr_start, pages);
+>>>> +			undo_dev_pagemap(nr, nr_start, flags, pages);
+>>>>  			return 0;
+>>>>  		}
+>>>>  		SetPageReferenced(page);
+>>>>  		pages[*nr] = page;
+>>>> -		get_page(page);
+>>>> +
+>>>> +		if (flags & FOLL_PIN) {
+>>>> +			if (unlikely(!user_page_ref_inc(page))) {
+>>>> +				undo_dev_pagemap(nr, nr_start, flags, pages);
+>>>> +				return 0;
+>>>> +			}
+>>>
+>>> Maybe add a comment about a case that should never happens ie
+>>> user_page_ref_inc() fails after the second iteration of the
+>>> loop as it would be broken and a bug to call undo_dev_pagemap()
+>>> after the first iteration of that loop.
+>>>
+>>> Also i believe that this should never happens as if first
+>>> iteration succeed than __page_cache_add_speculative() will
+>>> succeed for all the iterations.
+>>>
+>>> Note that the pgmap case above follows that too ie the call to
+>>> get_dev_pagemap() can only fail on first iteration of the loop,
+>>> well i assume you can never have a huge device page that span
+>>> different pgmap ie different devices (which is a reasonable
+>>> assumption). So maybe this code needs fixing ie :
+>>>
+>>> 		pgmap = get_dev_pagemap(pfn, pgmap);
+>>> 		if (unlikely(!pgmap))
+>>> 			return 0;
+>>>
+>>>
+>>
+>> OK, yes that does make sense. And I think a comment is adequate,
+>> no need to check for bugs during every tail page iteration. So how 
+>> about this, as a preliminary patch:
+> 
+> Actualy i thought about it and i think that there is pgmap
+> per section and thus maybe one device can have multiple pgmap
+> and that would be an issue for page bigger than section size
+> (ie bigger than 128MB iirc). I will go double check that, but
+> maybe Dan can chime in.
+> 
+> In any case my comment above is correct for the page ref
+> increment, if the first one succeed than others will too
+> or otherwise it means someone is doing too many put_page()/
+> put_user_page() which is _bad_ :)
+> 
+
+I'll wait to hear from Dan before doing anything rash. :)
+
+
+thanks,
+
+John Hubbard
+NVIDIA
