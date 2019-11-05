@@ -2,121 +2,145 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD63BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 440C2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E1F72087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:02:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDLv+Sbp"
+	by mail.kernel.org (Postfix) with ESMTP id 0C66621882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:04:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729817AbfKEVCD (ORCPT
+        id S1729796AbfKEVEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:02:03 -0500
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:47013 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEVCD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:02:03 -0500
-Received: by mail-qt1-f196.google.com with SMTP id u22so31167760qtq.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 13:02:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:cc:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-transfer-encoding;
-        bh=zg26McjFW7UB5WJyEo/zWeNbTyP74z4JHjOixB1u4Nc=;
-        b=SDLv+SbpuNfC0wESWQYe7govCJ9feq2KNTY/8rY2Rm0V1T9UPxEjeHedFSZ4LMqO8g
-         /o93NogmGoZ7v1pdIM67u09SuvIk/13Zyqhy9EmOAXqvbm4WxS8ZvkFcA8Xj855o0rXy
-         UvASwrlp78FuBOJeRSFWutbnFUNN3Eh43QE09rWbJtC6fl/lVuAUiYJt4Yj5e9uqvlFv
-         gHZEBVRXL2fENOXyPPy1O8N85tuWrX+F0HCvE+s3haFuKFNd8elrFt/79I4cbrrSSH/C
-         2HV/zP05NSXh4vlbMQBSUsim8HfUS2AyC9e69h8M1quit/q19+MVZaKndyaZSbsWPLvt
-         Z4Cw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:cc:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
-        bh=zg26McjFW7UB5WJyEo/zWeNbTyP74z4JHjOixB1u4Nc=;
-        b=Y+YjpTEVyWmWVaQYvWR3PFtJO/o9ZiWiCpgp7zzSzsdss0TmIe2Oabtk7Z5Dgqktrr
-         wfMrT0EceNZOGyBsx6g4fUkCU36QE1XO54M99cH9QdEzaPQhSls7HgL8VWxIRtDMQCjh
-         Es7xoWWTGDOqO/W3a1n2mIWpPIh8399JICzZmEqTuhwe8LmOInodXnpnhi/vAsZuFiDe
-         U8EADrYR4mFrY45meGvlebg34TJebcwUKhPeveeKV4ErkI29peQv2z01Xd/awlrLLti1
-         zMcSJOfn7g/TCzQ+FzVp9hechdZs/nSzmnCMlAk3lLR57bS7DMxPtqwUlpQ+kbVY5oDN
-         gykA==
-X-Gm-Message-State: APjAAAXecQ559NTj6QNrdcoGxfsIK2G/DWFf0U4oMnKajFm8TkZDBDh1
-        LEj4YRipvzrwbuddpHkh1a1ZAg==
-X-Google-Smtp-Source: APXvYqwB3NA1BvsIHt1qe0N49CIArpDuNPzHUNslcukySdIdv9CafyV39mMF/QJ8mpZxiWR6hLs3Dw==
-X-Received: by 2002:ac8:1a88:: with SMTP id x8mr20078096qtj.65.1572987721632;
-        Tue, 05 Nov 2019 13:02:01 -0800 (PST)
-Received: from [192.168.1.169] (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.gmail.com with ESMTPSA id 197sm11296742qkh.80.2019.11.05.13.02.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 13:02:00 -0800 (PST)
-Subject: Re: [Patch v5 2/6] sched/fair: Add infrastructure to store and update
- instantaneous thermal pressure
-To:     Ionela Voinescu <ionela.voinescu@arm.com>
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
- <20191105202037.GA17494@e108754-lin>
+        Tue, 5 Nov 2019 16:04:25 -0500
+Received: from foss.arm.com ([217.140.110.172]:53714 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKEVEY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 16:04:24 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A7DD5101E;
+        Tue,  5 Nov 2019 13:04:23 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 461BC3F6C4;
+        Tue,  5 Nov 2019 13:04:23 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:04:21 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
 Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
         rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
         linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
         javi.merino@kernel.org, daniel.lezcano@linaro.org
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-Message-ID: <5DC1E348.2090104@linaro.org>
-Date:   Tue, 5 Nov 2019 16:02:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+Subject: Re: [Patch v4 0/6] Introduce Thermal Pressure
+Message-ID: <20191105210301.GA23045@e108754-lin>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <20191031094420.GA19197@e108754-lin>
+ <5DBB0EB0.9050106@linaro.org>
 MIME-Version: 1.0
-In-Reply-To: <20191105202037.GA17494@e108754-lin>
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DBB0EB0.9050106@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/05/2019 03:21 PM, Ionela Voinescu wrote:
-> Hi Thara,
-> 
-> On Tuesday 05 Nov 2019 at 13:49:42 (-0500), Thara Gopinath wrote:
-> [...]
->> +static void trigger_thermal_pressure_average(struct rq *rq)
->> +{
->> +#ifdef CONFIG_SMP
->> +	update_thermal_load_avg(rq_clock_task(rq), rq,
->> +				per_cpu(thermal_pressure, cpu_of(rq)));
->> +#endif
->> +}
-> 
-> Why did you decide to keep trigger_thermal_pressure_average and not
-> call update_thermal_load_avg directly?
-> 
-> For !CONFIG_SMP you already have an update_thermal_load_avg function
-> that does nothing, in kernel/sched/pelt.h, so you don't need that
-> ifdef. 
-Hi,
+Hi Thara,
 
-Yes you are right. But later with the shift option added, I shift
-rq_clock_task(rq) by the shift. I thought it is better to contain it in
-a function that replicate it in three different places. I can remove the
-CONFIG_SMP in the next version
+On Thursday 31 Oct 2019 at 12:41:20 (-0400), Thara Gopinath wrote:
+[...]
+> >> Regarding testing, basic build, boot and sanity testing have been
+> >> performed on db845c platform with debian file system.
+> >> Further, dhrystone and hackbench tests have been
+> >> run with the thermal pressure algorithm. During testing, due to
+> >> constraints of step wise governor in dealing with big little systems,
+> >> trip point 0 temperature was made assymetric between cpus in little
+> >> cluster and big cluster; the idea being that
+> >> big core will heat up and cpu cooling device will throttle the
+> >> frequency of the big cores faster, there by limiting the maximum available
+> >> capacity and the scheduler will spread out tasks to little cores as well.
+> >>
+> > 
+> > Can you please share the changes you've made to sdm845.dtsi and a kernel
+> > base on top of which to apply your patches? I would like to reproduce
+> > your results and run more tests and it would be good if our setups were
+> > as close as possible.
+> Hi Ionela
+> Thank you for the review.
+> So I tested this on 5.4-rc1 kernel. The dtsi changes is to reduce the
+> thermal trip points for the big CPUs to 60000 or 70000 from the default
+> 90000. I did this for 2 reasons
+> 1. I could never get the db845 to heat up sufficiently for my test cases
+> with the default trip.
+> 2. I was using the default step-wise governor for thermal. I did not
+> want little and big to start throttling by the same % because then the
+> task placement ratio will remain the same between little and big cores.
 > 
-> Thanks,
-> Ionela.
 > 
->> +
->>  /*
->>   * All the scheduling class methods:
->>   */
->> -- 
->> 2.1.4
->>
 
+Some early testing on this showed that when setting the trip point to
+60000 for the big CPUs and the big cluster, and running hackbench (1
+group, 30000 loops) the cooling state of the big cluster results in
+always being set to the maximum (the lowest OPP), which results in
+capacity inversion (almost) continuously.
 
--- 
-Warm Regards
-Thara
+For 70000 the average cooling state of the bigs is around 20 so it
+will leave a few more OPPs available on the bigs more of the time,
+but probably the capacity of bigs is mostly lower than the capacity
+of little CPUs, during this test as well.
+
+I think that explains the difference in results that you obtained
+below. This is good as it shows that thermal pressure is useful but
+it shouldn't show much difference between the different decay
+periods, as can also be observed in your results below.
+
+This being said, I did not obtained such significant results on my
+side by I'll try again with the kernel you've pointed me to offline.
+
+Thanks,
+Ionela.
+
+> > 
+> >> Test Results
+> >>
+> >> Hackbench: 1 group , 30000 loops, 10 runs       
+> >>                                                Result         SD             
+> >>                                                (Secs)     (% of mean)     
+> >>  No Thermal Pressure                            14.03       2.69%           
+> >>  Thermal Pressure PELT Algo. Decay : 32 ms      13.29       0.56%         
+> >>  Thermal Pressure PELT Algo. Decay : 64 ms      12.57       1.56%           
+> >>  Thermal Pressure PELT Algo. Decay : 128 ms     12.71       1.04%         
+> >>  Thermal Pressure PELT Algo. Decay : 256 ms     12.29       1.42%           
+> >>  Thermal Pressure PELT Algo. Decay : 512 ms     12.42       1.15%  
+> >>
+> >> Dhrystone Run Time  : 20 threads, 3000 MLOOPS
+> >>                                                  Result      SD             
+> >>                                                  (Secs)    (% of mean)     
+> >>  No Thermal Pressure                              9.452      4.49%
+> >>  Thermal Pressure PELT Algo. Decay : 32 ms        8.793      5.30%
+> >>  Thermal Pressure PELT Algo. Decay : 64 ms        8.981      5.29%
+> >>  Thermal Pressure PELT Algo. Decay : 128 ms       8.647      6.62%
+> >>  Thermal Pressure PELT Algo. Decay : 256 ms       8.774      6.45%
+> >>  Thermal Pressure PELT Algo. Decay : 512 ms       8.603      5.41%  
+> >>
+> > 
+> > Do you happen to know by how much the CPUs were capped during these
+> > experiments?
+> 
+> I don't have any captured results here. I know that big cores were
+> capped and at times there was capacity inversion.
+> 
+> Also I will fix the nit comments above.
+> 
+> > 
+> > Thanks,
+> > Ionela.
+> > 
+> 
+> 
+> 
+> -- 
+> Warm Regards
+> Thara
