@@ -2,96 +2,108 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C32C17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:36:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C166EC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B152190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:36:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F4592190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389111AbfKENgc (ORCPT
+        id S2389149AbfKENha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:36:32 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:45207 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388313AbfKENgc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:36:32 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iRz0S-0008DC-Vu; Tue, 05 Nov 2019 14:36:24 +0100
-Message-ID: <a8908f1157e862164fb1bea07f8d5e1812325858.camel@pengutronix.de>
-Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     =?ISO-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        'Uwe =?ISO-8859-1?Q?Kleine-K=F6nig=27?= 
-        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>
-Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Date:   Tue, 05 Nov 2019 14:36:23 +0100
-In-Reply-To: <20191105131456.32400-3-peron.clem@gmail.com>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
-         <20191105131456.32400-3-peron.clem@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Tue, 5 Nov 2019 08:37:30 -0500
+Received: from mga09.intel.com ([134.134.136.24]:19235 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387880AbfKENha (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:37:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 05:37:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="403353670"
+Received: from nvavanes-mobl.amr.corp.intel.com (HELO [10.254.182.110]) ([10.254.182.110])
+  by fmsmga006.fm.intel.com with ESMTP; 05 Nov 2019 05:37:28 -0800
+Subject: Re: [alsa-devel] [PATCH] ASoC: bdw-rt5677: enable runtime channel
+ merge
+To:     "Lu, Brent" <brent.lu@intel.com>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc:     "Rojewski, Cezary" <cezary.rojewski@intel.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jie Yang <yang.jie@linux.intel.com>,
+        Takashi Iwai <tiwai@suse.com>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        "Zavras, Alexios" <alexios.zavras@intel.com>,
+        Mark Brown <broonie@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>
+References: <1570007072-23049-1-git-send-email-brent.lu@intel.com>
+ <CF33C36214C39B4496568E5578BE70C74031B9FD@PGSMSX108.gar.corp.intel.com>
+ <63da3995-b807-f9e6-6f09-a90e6b8e8e53@linux.intel.com>
+ <CF33C36214C39B4496568E5578BE70C74032F8BA@PGSMSX108.gar.corp.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <9abda4e6-7a85-50e3-ca09-7029fe5a0d7a@linux.intel.com>
+Date:   Tue, 5 Nov 2019 06:48:38 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+In-Reply-To: <CF33C36214C39B4496568E5578BE70C74032F8BA@PGSMSX108.gar.corp.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-11-05 at 14:14 +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
+
+
+On 11/5/19 12:03 AM, Lu, Brent wrote:
+>>>> In the DAI link "Capture PCM", the FE DAI "Capture Pin" supports
+>>>> 4-channel capture but the BE DAI supports only 2-channel capture. To
+>>>> fix the channel mismatch, we need to enable the runtime channel merge
+>> for this DAI link.
+>>>>
+>>>
+>>> Hi Pierre,
+>>>
+>>> This patch is for the same issue discussed in the following thread:
+>>> https://patchwork.kernel.org/patch/11134167/
+>>>
+>>> We enable the runtime channel merge for the DMIC DAI instead of adding
+>>> a machine driver constraint. It's working good on chrome's 3.14 branch
+>>> (which requires some backport for the runtime channel merge feature).
+>>> Please let me know if this implementation is correct for the FE/BE mismatch
+>> problem.
+>>
+>> Sorry, I don't fully understand your points, and it's the first time I see anyone
+>> use this .dpcm_merged_chan field for an Intel platform.
+>>
+>> If I look at the code I see that the core would limit the number of channels to
+>> two. But that code needs the CPU_DAI to use 2 channels, which I don't see.
+>> So is this patch self-contained or do we need an additional constraint on the
+>> FE?
+>>
+>> Thanks
+>> -Pierre
 > 
-> H6 PWM core needs deasserted reset line in order to work.
+> Hi Pierre,
 > 
-> Add an optional probe for it.
+> We don't need constraint on FE because dpcm_runtime_merge_chan() modifies
+> the channel number of snd_pcm_hardware structure directly. The structure will
+> be used to initialize the snd_pcm_hw_constraints structure later in the
+> snd_pcm_hw_constraints_complete() function. Since the channel number is already
+> modified, we don't need a constraint to install an extra rule for it.
 > 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> The result of using dpcm_merged_chan flag and machine driver constraint should
+> be the same when user space programs calling HW_REFINE ioctl call but I think the
+> flag is more elegant for machine driver code.
 
-Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
-
-> ---
->  drivers/pwm/pwm-sun4i.c | 33 +++++++++++++++++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
-> index 6f5840a1a82d..9ba83769a478 100644
-> --- a/drivers/pwm/pwm-sun4i.c
-> +++ b/drivers/pwm/pwm-sun4i.c
-[...]
-> @@ -365,6 +367,21 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
->  	if (IS_ERR(pwm->clk))
->  		return PTR_ERR(pwm->clk);
->  
-> +	pwm->rst = devm_reset_control_get_optional_shared(&pdev->dev, NULL);
-> +	if (IS_ERR(pwm->rst)) {
-> +		if (PTR_ERR(pwm->rst) != -EPROBE_DEFER)
-> +			dev_err(&pdev->dev, "get reset failed %ld\n",
-> +				PTR_ERR(pwm->rst));
-> +		return PTR_ERR(pwm->rst);
-> +	}
-> +
-> +	/* Deassert reset */
-
-Nitpick: isn't the API function name explanatory enough?
-
-regards
-Philipp
-
+I could use the opposite argument: by using a capability that no one 
+else uses, you make the solution more obscure and less intuitive. All 
+other machine drivers use constraints, so if the two solutions are 
+equivalent let's follow the more common solution.
