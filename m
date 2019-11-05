@@ -2,108 +2,120 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD36EC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42099C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E69621A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:46:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D669321A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572997895;
+	bh=4bojycx5BDgIwZi8sfx6zfyyIqLY78zT0BAEFLQoRm8=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=ExrLjUBpshcI+Zc1kUIooHW6ilyGDQqF/u/ftkCD8AGEdJ1VxqPh46hp8ML1n9m9U
+	 zvil+QEuiFMAOYDVkSLofNIJIkU3wMkHpSnUy6H+42LuvVCeJhbi5BWBSftT8hE88k
+	 gcuBTXTjgHdg8xXzzoyPhuWXqmjtD8JlwDu/Jqcc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfKEXqy (ORCPT
+        id S1730459AbfKEXve (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:46:54 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46318 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729688AbfKEXqy (ORCPT
+        Tue, 5 Nov 2019 18:51:34 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54166 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730244AbfKEXve (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:46:54 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so3555057oie.13;
-        Tue, 05 Nov 2019 15:46:53 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=iUouFbp90DaJNrdZUlRPbAF1tArrEhWp17DotmP+0tk=;
-        b=GloMFkSFVv49fXIslmM52FiD0h/B9XkMpjoHj1MXvgheY65bTWwWSk6p/4aK+I9TVe
-         1EfViQDuMqXCpnQVMGQMBJFdv0yU0UOi5H5WlgREzNddxnkKwMDNW59Rqd2PmFU8Eeiv
-         QIXvJF3+eHdm1AmoY7I5yXW6lWj2t7a4F6OzbyP35B3VQ4MkBNJ/1plVR6NpuY2m1eaB
-         ztSd4cen/NHFOjphDxRhXfQiH7pYtCTHYCLqqE9fVy0YM7Ir943PtSUKNIcOpVVp5A8T
-         /7CPV5YTXByaku4yaZVAdJRcXF+33VIamlX4OLFzuR9ABxYgxpC4aC9ZpvR1b5PmluyQ
-         ZHIQ==
-X-Gm-Message-State: APjAAAUVrHE/eVsUUIU6udNo7CsA77HKTu3oWVvrpB/pIm0z34l2O1p4
-        EAXBBwB93BhbcX5iJrerNs8Rusqh
-X-Google-Smtp-Source: APXvYqx2sB/nZShS59xQ2K7VoozaocRKTiLFPqFuZhBFsy52EfV9aJW59ycbQL6dmg/bn7uuUYnxTQ==
-X-Received: by 2002:aca:5a08:: with SMTP id o8mr444760oib.104.1572997611993;
-        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
-Received: from mail-oi1-f179.google.com (mail-oi1-f179.google.com. [209.85.167.179])
-        by smtp.gmail.com with ESMTPSA id 94sm4841519otg.70.2019.11.05.15.46.51
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
-Received: by mail-oi1-f179.google.com with SMTP id s71so19279921oih.11;
-        Tue, 05 Nov 2019 15:46:51 -0800 (PST)
-X-Received: by 2002:aca:4891:: with SMTP id v139mr1318447oia.175.1572997610943;
- Tue, 05 Nov 2019 15:46:50 -0800 (PST)
-MIME-Version: 1.0
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk> <20191101124210.14510-36-linux@rasmusvillemoes.dk>
- <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr> <VE1PR04MB6687D4620E32176BDC120DBA8F620@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <24ea27b6-adea-cc74-f480-b68de163f531@rasmusvillemoes.dk> <CADRPPNQ4dq1pnvNU71vNEgk1V5ovrT9O2=UMJxG45=ZSRdJ4ig@mail.gmail.com>
- <f48df0c7-77f1-268f-8588-7eff5e9fd7c5@rasmusvillemoes.dk>
-In-Reply-To: <f48df0c7-77f1-268f-8588-7eff5e9fd7c5@rasmusvillemoes.dk>
-From:   Li Yang <leoyang.li@nxp.com>
-Date:   Tue, 5 Nov 2019 17:46:39 -0600
-X-Gmail-Original-Message-ID: <CADRPPNQ0dR4GkGNmi2dEepJFpULD8DW7_FiYzJZ-er2=UtZ8nA@mail.gmail.com>
-Message-ID: <CADRPPNQ0dR4GkGNmi2dEepJFpULD8DW7_FiYzJZ-er2=UtZ8nA@mail.gmail.com>
-Subject: Re: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on PPC32
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     Christophe Leroy <christophe.leroy@c-s.fr>,
-        Qiang Zhao <qiang.zhao@nxp.com>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 5 Nov 2019 18:51:34 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=r6tFQqfrm0yNOWZRc+wvUJtnhu3em+Se6P8bMmjwxCw=; b=DwhLrfI0SXYp
+        12JD7mqLbOTjW226kjH5+XfHMtFlowqKUKgjzU0c4NTEAHkui9sAqVeYC5a/ksdXGTMDj0eZ/gyGC
+        Vu3I6YvqtcgP4qgJGvr7Cr1sQtfVNil7YpMYjUFrPccZpEjK5OszFt/1wPvPyBTeiahKM7oPO1HMI
+        YTUfE=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iS8bi-00083A-B3; Tue, 05 Nov 2019 23:51:30 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id CEADC274301E; Tue,  5 Nov 2019 23:51:29 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Thor Thayer <thor.thayer@linux.intel.com>
+Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "spi: dw: Fix Designware SPI loopback" to the spi tree
+In-Reply-To: <1572985330-5525-1-git-send-email-thor.thayer@linux.intel.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191105235129.CEADC274301E@ypsilon.sirena.org.uk>
+Date:   Tue,  5 Nov 2019 23:51:29 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 4:47 PM Rasmus Villemoes
-<linux@rasmusvillemoes.dk> wrote:
->
-> On 04/11/2019 21.56, Li Yang wrote:
->
-> >> No, this patch cannot be dropped. Please see the kbuild complaints for
-> >> v2,23/23 about use of IS_ERR_VALUE on not-sizeof(long) entities. I see
-> >> kbuild has complained about the same thing for v3 since apparently the
-> >> same thing appears in ucc_slow.c. So I'll fix that.
-> >
-> > When I made this comment I didn't notice you have removed all the
-> > architectural dependencies for CONFIG_QUICC_ENGINE.  If the
-> > QUICC_ENGINE is only buidable on powerpc, arm and arm64, this change
-> > will not be needed.
-> >
-> > BTW, I'm not sure if it is a good idea to make it selectable on these
-> > unrelavent architectures.  Real architectural dependencies and
-> > COMPILE_TEST dependency will be better if we really want to test the
-> > buildability on other platforms.
->
-> Well, making QUICC_ENGINE depend on PPC32 || ARM would certainly make
-> things easier for me. Once you include ARM64 or any other 64 bit
-> architecture the buildbot complaints start rolling in from the
-> IS_ERR_VALUEs. And ARM64 should be supported as well, so there really
-> isn't much difference between dropping all arch restrictions and listing
-> the relevant archs in the Kconfig dependencies.
+The patch
 
-I agree that it will be good to have the driver compile for all
-architectures for compile test.  But list all the relevant
-architectures and CONFIG_COMPILE_TEST as dependencies will make it not
-really selected for these irrelevant architectures in real system.
+   spi: dw: Fix Designware SPI loopback
 
-Regards,
-Leo
+has been applied to the spi tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 1403cfa69d310781f9548951c97725c67ffcf613 Mon Sep 17 00:00:00 2001
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Date: Tue, 5 Nov 2019 14:22:10 -0600
+Subject: [PATCH] spi: dw: Fix Designware SPI loopback
+
+The SPI_LOOP is set in spi->mode but not propagated to the register.
+A previous patch removed the bit during a cleanup.
+
+Fixes: e1bc204894ea ("spi: dw: fix potential variable assignment error")
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+Link: https://lore.kernel.org/r/1572985330-5525-1-git-send-email-thor.thayer@linux.intel.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/spi/spi-dw.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/spi/spi-dw.c b/drivers/spi/spi-dw.c
+index 9a49e073e8b7..076652d3d051 100644
+--- a/drivers/spi/spi-dw.c
++++ b/drivers/spi/spi-dw.c
+@@ -308,7 +308,8 @@ static int dw_spi_transfer_one(struct spi_controller *master,
+ 	cr0 = (transfer->bits_per_word - 1)
+ 		| (chip->type << SPI_FRF_OFFSET)
+ 		| ((((spi->mode & SPI_CPOL) ? 1 : 0) << SPI_SCOL_OFFSET) |
+-			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET))
++			(((spi->mode & SPI_CPHA) ? 1 : 0) << SPI_SCPH_OFFSET) |
++			(((spi->mode & SPI_LOOP) ? 1 : 0) << SPI_SRL_OFFSET))
+ 		| (chip->tmode << SPI_TMOD_OFFSET);
+ 
+ 	/*
+-- 
+2.20.1
+
