@@ -2,154 +2,116 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E477C17496
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:35:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AD713C1747C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:35:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E28CF21928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:35:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 893EC21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:35:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389819AbfKEOeu (ORCPT
+        id S2389587AbfKEOft (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:34:50 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:53871 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389778AbfKEOeo (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:34:44 -0500
-IronPort-SDR: rj8rzLwTwxJ1pbCyESwodYR1MGES4dwL/HqqEshRe4yjVPW44qBwANhXMYRFnpVFja8mspIjxr
- n+eNSv7iaDJVjLJvT+zeyqzOs77CahQKdN1GZ1IErs2knuaipuQr/cmxWYFeTrWAWZbBuVd4Ue
- 56K9kEYt091AcYaxATKXKH2/ER+NrkdJ4ACMpJq8M146l3b+gHj978p2mkkH/XmjhXml+aMDvN
- Mj4d2b0Ogupw3zT/BCoYl/9eTklTrhAxeJSQRWB4iShq+/ND9CtgbJdqt2lEhdwNVH1Zruq0aj
- jfU=
-X-IronPort-AV: E=Sophos;i="5.68,271,1569312000"; 
-   d="scan'208";a="42878552"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa3.mentor.iphmx.com with ESMTP; 05 Nov 2019 06:34:43 -0800
-IronPort-SDR: tcZgpC/pYlyvFflaFhrt2xaVVmdwpIyGNC28cR40IEDaNgeZcNKj4qd+wXAHt/PY/xppI+5Nxw
- vqatF4DztGGuX0IlfQuPrMLozaOGpLfHAl72b2dV9Wv0nRNpV1eae8fhSg3ttgj5laxMSA8Ljl
- FLQAmHh+iKpVa/95j2Wlqr1jSjSaFcM0awnw+T25ylv2R0lpKZJ5S+b392vB2PL4qhYgSudsQM
- w3iZulI7vbYcoiFr1KgyiE2RvW1ePzfqJoqtEdOXUvuSJQ9b5E+ddh/+ltbWYqS63Jgd2+opnU
- DGc=
-From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
-To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>,
-        Timo Wischer <twischer@de.adit-jv.com>,
-        Andrew Gabbasov <andrew_gabbasov@mentor.com>
-Subject: [PATCH v2 8/8] ALSA: aloop: Support runtime change of snd_timer via info interface
-Date:   Tue, 5 Nov 2019 08:32:18 -0600
-Message-ID: <20191105143218.5948-9-andrew_gabbasov@mentor.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20191105143218.5948-8-andrew_gabbasov@mentor.com>
-References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>
- <20191105143218.5948-2-andrew_gabbasov@mentor.com>
- <20191105143218.5948-3-andrew_gabbasov@mentor.com>
- <20191105143218.5948-4-andrew_gabbasov@mentor.com>
- <20191105143218.5948-5-andrew_gabbasov@mentor.com>
- <20191105143218.5948-6-andrew_gabbasov@mentor.com>
- <20191105143218.5948-7-andrew_gabbasov@mentor.com>
- <20191105143218.5948-8-andrew_gabbasov@mentor.com>
+        Tue, 5 Nov 2019 09:35:49 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730671AbfKEOft (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:35:49 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6651DD1F6090D5C4B9CC;
+        Tue,  5 Nov 2019 22:35:46 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
+ 22:35:39 +0800
+To:     <rjw@rjwysocki.net>, <lenb@kernel.org>
+CC:     <linux-acpi@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-doc@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+Subject: [PATCH] ACPI: sysfs: Change ACPI_MASKABLE_GPE_MAX to 0x100
+Message-ID: <8bdc7a86-e464-9c46-3d40-4f3c75111ce6@huawei.com>
+Date:   Tue, 5 Nov 2019 22:35:25 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [137.202.0.90]
-X-ClientProxiedBy: SVR-IES-MBX-07.mgc.mentorg.com (139.181.222.7) To
- svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Show and change sound card timer source with read-write info
-file in proc filesystem. Initial string can still be set as
-module parameter.
+There are two problems after commit 0f27cff8597d ("ACPI: sysfs: Make
+ACPI GPE mask kernel parameter cover all GPEs"):
 
-The timer source string value can be changed at any time,
-but it is latched by PCM substream open callback (the first one
-for a particular cable). At this point it is actually used, that
-is the string is parsed, and the timer is looked up and opened.
+1. ACPI_MASKABLE_GPE_MAX is changed from 0x80 to 0xff, so the check
+condition "gpe > ACPI_MASKABLE_GPE_MAX" is not valid because the type of
+gpe is u8.
 
-The timer source is set for a loopback card (the same as initial
-setting by module parameter), but every cable uses the value,
-current at the moment of open.
+2. The size of bitmap is ACPI_MASKABLE_GPE_MAX, so it is not support the
+num 255 for gpe.
 
-Setting the value to empty string switches the timer to jiffies.
+Update the macro ACPI_MASKABLE_GPE_MAX to 0x100, and change the type of
+gpe to u32, also modify the checking condition for gpe.
 
-Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Bye the way, update the docs for kernel parameter acpi_mask_gpe.
+
+Fixes: 0f27cff8597d ("ACPI: sysfs: Make ACPI GPE mask kernel parameter cover all GPEs")
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
 ---
- sound/drivers/aloop.c | 41 ++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 38 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 1 +
+ drivers/acpi/sysfs.c                            | 8 ++++----
+ 2 files changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/sound/drivers/aloop.c b/sound/drivers/aloop.c
-index 6db70ebd46f6..16444a34d4b9 100644
---- a/sound/drivers/aloop.c
-+++ b/sound/drivers/aloop.c
-@@ -1655,7 +1655,7 @@ static void print_cable_info(struct snd_info_entry *entry,
- 	mutex_unlock(&loopback->cable_lock);
- }
- 
--static int loopback_proc_new(struct loopback *loopback, int cidx)
-+static int loopback_cable_proc_new(struct loopback *loopback, int cidx)
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a84a83f8881e..dd878e2491e1 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -114,6 +114,7 @@
+ 			This facility can be used to prevent such uncontrolled
+ 			GPE floodings.
+ 			Format: <int>
++			Support masking of GPEs numbered from 0x00 to 0xff
+
+ 	acpi_no_auto_serialize	[HW,ACPI]
+ 			Disable auto-serialization of AML methods
+diff --git a/drivers/acpi/sysfs.c b/drivers/acpi/sysfs.c
+index 75948a3f1a20..3c3302583d78 100644
+--- a/drivers/acpi/sysfs.c
++++ b/drivers/acpi/sysfs.c
+@@ -819,14 +819,14 @@ static ssize_t counter_set(struct kobject *kobj,
+  * interface:
+  *   echo unmask > /sys/firmware/acpi/interrupts/gpe00
+  */
+-#define ACPI_MASKABLE_GPE_MAX	0xFF
++#define ACPI_MASKABLE_GPE_MAX	0x100
+ static DECLARE_BITMAP(acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) __initdata;
+
+ static int __init acpi_gpe_set_masked_gpes(char *val)
  {
- 	char name[32];
- 
-@@ -1676,6 +1676,40 @@ static void loopback_set_timer_source(struct loopback *loopback,
- 						      value, GFP_KERNEL);
- }
- 
-+static void print_timer_source_info(struct snd_info_entry *entry,
-+				    struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+
-+	snd_iprintf(buffer, "%s\n",
-+		    loopback->timer_source ? loopback->timer_source : "");
-+}
-+
-+static void change_timer_source_info(struct snd_info_entry *entry,
-+				     struct snd_info_buffer *buffer)
-+{
-+	struct loopback *loopback = entry->private_data;
-+	char line[64];
-+
-+	if (!snd_info_get_line(buffer, line, sizeof(line)))
-+		loopback_set_timer_source(loopback, strim(line));
-+}
-+
-+static int loopback_timer_source_proc_new(struct loopback *loopback)
-+{
-+	struct snd_info_entry *entry;
-+	int err;
-+
-+	err = snd_card_proc_new(loopback->card, "timer_source", &entry);
-+	if (err < 0)
-+		return err;
-+
-+	snd_info_set_text_ops(entry, loopback, print_timer_source_info);
-+	entry->mode |= S_IWUSR;
-+	entry->c.text.write = change_timer_source_info;
-+	return 0;
-+}
-+
- static int loopback_probe(struct platform_device *devptr)
+-	u8 gpe;
++	u32 gpe;
+
+-	if (kstrtou8(val, 0, &gpe) || gpe > ACPI_MASKABLE_GPE_MAX)
++	if (kstrtouint(val, 0, &gpe) || gpe >= ACPI_MASKABLE_GPE_MAX)
+ 		return -EINVAL;
+ 	set_bit(gpe, acpi_masked_gpes_map);
+
+@@ -838,7 +838,7 @@ void __init acpi_gpe_apply_masked_gpes(void)
  {
- 	struct snd_card *card;
-@@ -1708,8 +1742,9 @@ static int loopback_probe(struct platform_device *devptr)
- 	err = loopback_mixer_new(loopback, pcm_notify[dev] ? 1 : 0);
- 	if (err < 0)
- 		goto __nodev;
--	loopback_proc_new(loopback, 0);
--	loopback_proc_new(loopback, 1);
-+	loopback_cable_proc_new(loopback, 0);
-+	loopback_cable_proc_new(loopback, 1);
-+	loopback_timer_source_proc_new(loopback);
- 	strcpy(card->driver, "Loopback");
- 	strcpy(card->shortname, "Loopback");
- 	sprintf(card->longname, "Loopback %i", dev + 1);
+ 	acpi_handle handle;
+ 	acpi_status status;
+-	u8 gpe;
++	u32 gpe;
+
+ 	for_each_set_bit(gpe, acpi_masked_gpes_map, ACPI_MASKABLE_GPE_MAX) {
+ 		status = acpi_get_gpe_device(gpe, &handle);
 -- 
-2.21.0
+2.7.4
 
