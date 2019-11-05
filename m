@@ -2,99 +2,111 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDE38C47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BAF0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A1A0421929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BDB021A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:05:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="SvBetFNE"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="khVLBRWV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730236AbfKEWFS (ORCPT
+        id S1730316AbfKEWFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:05:18 -0500
-Received: from mout.gmx.net ([212.227.15.15]:58745 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728178AbfKEWFS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:05:18 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1572991500;
-        bh=2CVqbSurqJVVjA0OYR8gXO8OdEa3ms5r9NaHFZv7Two=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=SvBetFNEn2/uts/8FWFpDfPuxC2yvwcCERvRfkFHv4JkgywrjydFUewcx0OtQgv2Y
-         m/o4PrOv/beKOPW4Fa5mBbP8hx3T/OZKT8ETKla/RNrOl4lvzlcmsGk9QzYdUwy0R4
-         VhHISApJS+5d8aIw6s1DsI7l281IKGPi4W+bhPkE=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.164] ([37.4.249.112]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1MBDnI-1iejje0Ies-00CipI; Tue, 05
- Nov 2019 23:05:00 +0100
-Subject: Re: [PATCH 1/2] ARM: dts: bcm2711: force CMA into first GB of memory
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, linux-kernel@vger.kernel.org
-References: <20191104135412.32118-1-nsaenzjulienne@suse.de>
- <20191104135412.32118-2-nsaenzjulienne@suse.de>
- <588d05b4-e66c-4aa0-436e-12d244a6efd8@gmx.net>
- <20191105145150.GB22987@arrakis.emea.arm.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <7b9dd4a8-bd6a-b543-4e6b-12c663161a90@gmx.net>
-Date:   Tue, 5 Nov 2019 23:04:58 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 17:05:53 -0500
+Received: from mail-vs1-f68.google.com ([209.85.217.68]:36607 "EHLO
+        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730237AbfKEWFw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 17:05:52 -0500
+Received: by mail-vs1-f68.google.com with SMTP id q21so14567472vsg.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:05:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=BNIM3D66/Azg3YbAGxb2zW1QAG5fW9Q4vvlsSYbe2Go=;
+        b=khVLBRWVxusf3aE0M5MrKx62Oe++CuRS+KMSKCuHE7JSxqPvv2VfNvIiZ4cxk9GprW
+         abw7Gs5M44bJuTVgw8PeUbndm2GiKrPoGbtyG/1HyRFaCzIOPEvYaVpS47QGYbLxkN1k
+         EhThQrckqd60eakMb3jq5ZvCpR+VWe7Rej+ktXn0G3ta4gTbl/rrlXA8Y/44FW6JNSva
+         pXUTC0+JvRcq9/KOBxri17FvlBBWvc82WQme0i84hDJ6MCbHKa3Oj1yxPUj03p0Jrm+P
+         ZOG1XOCcRDguAkyTbMvWk3Kc/XSmYgXExORncmzkrxKjVxBgHL6PNlkGOiIRVmIy3BXP
+         G/1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=BNIM3D66/Azg3YbAGxb2zW1QAG5fW9Q4vvlsSYbe2Go=;
+        b=UyiVt3k8Hr9diSRaxOs0YYCtcQwr59cnwv6RHrN3iizGY3OwREpJhmPWzgsc6rkBFL
+         go7lNf9221rVgjm3pX+Quss4owiQr5IhmyexJ/huG+Yw9lHeamTAyReifyAOQ7Wx45ts
+         Y7JOTpMkRiRaupYtw7Eu51wxS7x2YfAk16mzy02ClCn4gaVBiur/VwGk7Om21/e2cNKT
+         +22P0Tg9Xp1tMbXKCJzhoBs9A+qe+e2aJawCJjiu8rxFhjcSjy7zE86CT0NW874EmOhz
+         nbyYkKKi1/UlHya06V7S2Rp04jUiWma1as1PAIH6Sq8EURZJ1Hthd2FArZ4pAHCHSUGM
+         vx1A==
+X-Gm-Message-State: APjAAAU9k+fD9T73w286FBSxYffRIWtoKdJ41Lqvl4mZip8D7oLvtl6x
+        WYAZ2r/SpnA5rgnIhSafvpfMr/qtaDvxbsZo2nsNOg==
+X-Google-Smtp-Source: APXvYqwEQ6fUE/r/RBzQgo3NUh3rdxSMFsh6pO692U/wnlkZClRp5BWs9eC7JOzQ6JAatKP0Y4DV4dBp0zEFlBlcc28=
+X-Received: by 2002:a05:6102:36a:: with SMTP id f10mr116554vsa.44.1572991551050;
+ Tue, 05 Nov 2019 14:05:51 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191105145150.GB22987@arrakis.emea.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:9JNq8g+rvhYmh230bjn2+Yl6kiptEJhMkbSOVyzXw+78zlOvEBb
- NShJh9pEnzi22cql5YAcjZeNmcdOZtFaIQqXTL/TMUI9FNncrr/rfC+5YbKKekKQtrCeQC1
- XAEKA5oEwAFKmkUDDJMuh6u5RebmodbozGhcyShJLBkWSXqF3DjaBXB+lcDw64fwVirE/si
- Vc5Ani6HqFdTzWo6cJQkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:2Mi9pCPaGV8=:VIn2in6bEWFlYe1xcDPNFE
- NQ69+raB8AJ16d0jipH56fBsw2mtewDsCgCPBX7X2Au8PuWhQ8PAVzDrbbQNWEI+6tkwb3gui
- EdqupHfNz6anGuXDlacv6kj84ziUvmDT9FViCKtm9PQ15lg17u4dvZXChCnny6WI93zVxVBVn
- 011rnpSpjkbajDlGQaq8cLvtlwZv+NZAb4YsmAd9ZwtJPla+dj7631FtFoS0GJCzcqvUvxOk/
- 7FQarQNKfEvjhJZI7nOCIWOZ1iKee2lYzVVOjEuHQWpVxUVN1/MGHFErU9rRA7h82NEvKT3eT
- //2/Tf4W955mJIu07u3Om99t8aA39SCMjWcSXVdcXNMoWhUMzZd3LEncuOsxQemDFxume4Gi2
- caASusANbX18bh3PXrTc1CHeOul4sFNvxpI4bQXi1YKaxy17Qof5qWYKxGtUwHDkSRsJdbyuS
- 9I34I+PMDozfEg/r4Xaly0RWyGUorGQa3w3iw2y9H79HAGC/e3oxBtTwzIHXpUzSPpNTfu7Hc
- F+I7qrNWOB9eYYukwIEZ4PTyzHLtr+3OS1bG7Kibk7oe4JNiS/nwpb+xNAlKzfN9H/TsR0QFk
- N6eI4iGha+dt75htaS+Y1KOrFm3Kba+QQHj13sKqH0KQT+ln7stf2sDAqvOuLABxAidIM4r0G
- N18WafaVXkgguGMF7M413+iW96lvdNmIzISeRmt7Hfvjy3IAiHVF9/BFm1GAIpZLr0uC+TG6w
- PM1j3JiQ5U9wCCvLxLFG+wB9qEhkR7azzsypkCbPDXrXm7Fqo06wGgBXYEnaMq3SERpMR/z8u
- 2zWOksqzrJqsFiEYvR6sc4PJaHKcorrRIPGBeR+0VdJ9GODJZSaKUfpBYd0aj83m3AiPhTvYK
- X6POccmrhwwnxirPlHjRKkXt7wCcvV2rY/Gs2JT9tC/sCG5I82lW1JeoetUEK9XG08cN+GN1w
- bUvH0i4QmkPHoab7X/tls7YbQGlqSe+wiNi93/+L0R0O6oOAopQsltsU9LrTvTDZ2BOsFk8ME
- 8wFVWiAn5I8LLhMl6TvCV8mICEIN29MLnvwPKF3qM8o3uIeMYvxwxQpGXMG3sDj5NZ6vrtlU1
- jILRS65UGv8+cM7qsYAhWE1qJOalb43awpGlQr2q4iPvC216h/eHWQcu6QLejxQXtK0ckBC9M
- ob2ztcsjzVPcGDFyqCNpe9cnRBq0ZpDPQTylRMVAqwm0Z2JZveirzHO/0vww2TAV3HT3RJgFR
- MR6CvhSL3bjIU3z3lTezZr+/akGV4qN9QZqpfnaCnWd35KwDV0dxyngmGva8=
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-12-samitolvanen@google.com>
+ <20191104171132.GB2024@lakrids.cambridge.arm.com> <CABCJKufDnLjP9vA-wSW0gSY05Cbr=NOpJ-WCh-bdj2ZNq7VNXw@mail.gmail.com>
+ <20191105091301.GB4743@lakrids.cambridge.arm.com>
+In-Reply-To: <20191105091301.GB4743@lakrids.cambridge.arm.com>
+From:   Sami Tolvanen <samitolvanen@google.com>
+Date:   Tue, 5 Nov 2019 14:05:39 -0800
+Message-ID: <CABCJKufpgoqo84GvV42bO-LVPZ4morV=OhscTNwaBpv-RSwXUw@mail.gmail.com>
+Subject: Re: [PATCH v4 11/17] arm64: disable function graph tracing with SCS
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 05.11.19 um 15:51 schrieb Catalin Marinas:
-> Otherwise this will be queued for Linux 5.6.
-> I'm happy to queue them together with your ack for 5.5, otherwise I'll
-> only pick the second patch in this series.
-
-I had a comment for this patch which should be addressed in V2. After
-that i'm happy to gave my Ack.
-
-Thanks
-Stefan
-
+On Tue, Nov 5, 2019 at 11:55 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> On Mon, Nov 04, 2019 at 03:44:39PM -0800, Sami Tolvanen wrote:
+> > Sure, I'll add a better description in v5. In this case, the return
+> > address is modified in the kernel stack, which means the changes are
+> > ignored with SCS.
 >
-> Thanks.
+> Ok, that makes sense to me. I'd suggest something like:
 >
+> | The graph tracer hooks returns by modifying frame records on the
+> | (regular) stack, but with SCS the return address is taken from the
+> | shadow stack, and the value in the frame record has no effect. As we
+> | don't currently have a mechanism to determine the corresponding slot
+> | on the shadow stack (and to pass this through the ftrace
+> | infrastructure), for now let's disable the graph tracer when SCS is
+> | enabled.
+>
+> ... as I suspect with some rework of the trampoline and common ftrace
+> code we'd be able to correctly manipulate the shadow stack for this.
+> Similarly, if clang gained -fpatchable-funciton-etnry, we'd get that for
+> free.
+
+That sounds good to me. Thanks, Mark.
+
+Sami
