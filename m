@@ -2,173 +2,170 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D4ACA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:01:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88669CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:03:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DCF6205C9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:01:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="LEjxUJjT"
+	by mail.kernel.org (Postfix) with ESMTP id 6866320659
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:03:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730558AbfKEEBr (ORCPT
+        id S2387439AbfKEEDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 23:01:47 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:63031 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730410AbfKEEBr (ORCPT
+        Mon, 4 Nov 2019 23:03:32 -0500
+Received: from mail105.syd.optusnet.com.au ([211.29.132.249]:35444 "EHLO
+        mail105.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729711AbfKEEDc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 23:01:47 -0500
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191105040144epoutp03a9ac4bf382ba5f320a1f156d0919e0a1~UKFJujRF20801708017epoutp03A
-        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 04:01:44 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191105040144epoutp03a9ac4bf382ba5f320a1f156d0919e0a1~UKFJujRF20801708017epoutp03A
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1572926504;
-        bh=JY5jq/0o4wZe7fcmVli9Yu2A+IZHz38XOTT91amiXNM=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=LEjxUJjTyrM2RyAxFfDQ0qpNNUmqOikI3sfWGWo7UUBjc9py6zh18lpwwAfKQ4WDN
-         WCk/9xK9lj2aO+mu2f+U3WWql2P+XYL7hPEG3zOcCJN5PxmNyylHfrL+I20MnUNh41
-         RamszNKh+wIBjjl8bTroKGzKB8NBQWLurOXINroc=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20191105040143epcas1p291afac085b14a57a35741dab6d02a241~UKFJSzBhO2075820758epcas1p2h;
-        Tue,  5 Nov 2019 04:01:43 +0000 (GMT)
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 476bZY4ndFzMqYkh; Tue,  5 Nov
-        2019 04:01:41 +0000 (GMT)
-Received: from epcas1p2.samsung.com ( [182.195.41.46]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        AC.9E.04068.524F0CD5; Tue,  5 Nov 2019 13:01:41 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20191105040141epcas1p120bef9e833a873195ff027352604eca0~UKFGt3iYr1947619476epcas1p1X;
-        Tue,  5 Nov 2019 04:01:41 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191105040141epsmtrp11b2c33ae40a508f67ccf14e600ff1152~UKFGtK4Dl2330223302epsmtrp1W;
-        Tue,  5 Nov 2019 04:01:41 +0000 (GMT)
-X-AuditID: b6c32a39-f47ff70000000fe4-05-5dc0f425ac37
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        15.B1.24756.424F0CD5; Tue,  5 Nov 2019 13:01:40 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191105040140epsmtip1aaf5b9ab06e935dad80a9e6a98abd638~UKFGT4cZm2507025070epsmtip1w;
-        Tue,  5 Nov 2019 04:01:40 +0000 (GMT)
-Subject: Re: [PATCH v9 19/19] PM / devfreq: tegra20/30: Add Dmitry as a
- maintainer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <0e7db72b-37ff-a36e-11fe-727ed43c26a6@samsung.com>
-Date:   Tue, 5 Nov 2019 13:07:18 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Mon, 4 Nov 2019 23:03:32 -0500
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail105.syd.optusnet.com.au (Postfix) with ESMTPS id D6E4C3A1784;
+        Tue,  5 Nov 2019 15:03:27 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iRq3x-0000dP-7q; Tue, 05 Nov 2019 15:03:25 +1100
+Date:   Tue, 5 Nov 2019 15:03:25 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Guo <guoyang2@huawei.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
+Message-ID: <20191105040325.GC4614@dread.disaster.area>
+References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191104204909.GB4614@dread.disaster.area>
+ <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104215617.25544-20-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrLJsWRmVeSWpSXmKPExsWy7bCmnq7qlwOxBg/Xq1ms/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFt+en2K0uN24gs3i7DNvi5+75rFY9K29xObA7bHj7hJG
-        j52z7rJ79Da/Y/OY1baPzaNvyypGj8+b5ALYorJtMlITU1KLFFLzkvNTMvPSbZW8g+Od403N
-        DAx1DS0tzJUU8hJzU22VXHwCdN0yc4DOU1IoS8wpBQoFJBYXK+nb2RTll5akKmTkF5fYKqUW
-        pOQUWBboFSfmFpfmpesl5+daGRoYGJkCFSZkZ9z4+IetYCJ3xaRjE1kaGJdydjFyckgImEic
-        WzuPsYuRi0NIYAejxMnF75ghnE+MEk+OfmSBcL4xSsw73MEK03J61yd2iMReRonbM1+yQTjv
-        GSWuvW1hBKkSFgiR+H7mIytIQkTgCZPE3iMtLCAJZoFIicM7VzOB2GwCWhL7X9xgA7H5BRQl
-        rv54DNTMwcErYCfR+cEdJMwioCKx4/AyZpCwqECExOmviSBhXgFBiZMzn4BN5BQwl3h58xkz
-        xHRxiVtP5jNB2PISzVtng70jITCdXWLfs1tMEB+4SDxe+4QNwhaWeHV8CzuELSXxsr8Nyq6W
-        WHnyCBtEcwejxJb9F6DeN5bYv3QyE8hBzAKaEut36UOEFSV2/p7LCLGYT+Ld1x5WkBIJAV6J
-        jjYhiBJlicsP7kKdICmxuL2TbQKj0iwk78xC8sIsJC/MQli2gJFlFaNYakFxbnpqsWGBKXJs
-        b2IEJ10tyx2Mx875HGIU4GBU4uH90H4gVog1say4MvcQowQHs5II78UZe2OFeFMSK6tSi/Lj
-        i0pzUosPMZoCA3sis5Rocj4wI+SVxBuaGhkbG1uYGJqZGhoqifM6Ll8aKySQnliSmp2aWpBa
-        BNPHxMEp1cAYcvnS7q9NhXN/ZVmv49Y89fz8rGNzrYPnZ8yY2iq6P9ykcNG2mTlKzdl2Kk6H
-        pnIFL3ZpvZjy8mrjp5oQJ0nr85N+X7b7dvDA/bcvas9KnV7C6rP86G3zHMFdK4KKKw7Pl7k2
-        U38rX+eDS5Jh7ysml/vLTeltETrG+orl0JcnPxtMw4UeuCw9psRSnJFoqMVcVJwIAClbXODQ
-        AwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSnK7KlwOxBhseW1us/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFt+en2K0uN24gs3i7DNvi5+75rFY9K29xObA7bHj7hJG
-        j52z7rJ79Da/Y/OY1baPzaNvyypGj8+b5ALYorhsUlJzMstSi/TtErgybnz8w1Ywkbti0rGJ
-        LA2MSzm7GDk5JARMJE7v+sTexcjFISSwm1Hi05sZzBAJSYlpF48C2RxAtrDE4cPFEDVvGSXW
-        TJrIAlIjLBAi8f3MR1aQhIjAMyaJhXt3MoEkmAUiJXrmbmGD6NjGKDH35Q5WkASbgJbE/hc3
-        2EBsfgFFias/HjOCbOAVsJPo/OAOEmYRUJHYcXgZ2BGiAhESz7ffYASxeQUEJU7OfAK2mFPA
-        XOLlzWfMELvUJf7MuwRli0vcejIf6gZ5ieats5knMArPQtI+C0nLLCQts5C0LGBkWcUomVpQ
-        nJueW2xYYJiXWq5XnJhbXJqXrpecn7uJERx/Wpo7GC8viT/EKMDBqMTD+6H9QKwQa2JZcWXu
-        IUYJDmYlEd6LM/bGCvGmJFZWpRblxxeV5qQWH2KU5mBREud9mncsUkggPbEkNTs1tSC1CCbL
-        xMEp1cCo4Z+wtiXxVU7v/6gZC6qbks45MShMufoi51Cou7Vz6f1H597Prix59UlmwvJX99h0
-        +rPl7+0o8VjDKRQTd05lk7zg9YZ1ZfJJ+lvntL/L2cS7P2bfkcIOae03DLujplr1Ohx6vuTX
-        PPMnHz00sgRbU7j1ug4xxBrVHa39fGC+U72OZPqatjolluKMREMt5qLiRAC36CAIuwIAAA==
-X-CMS-MailID: 20191105040141epcas1p120bef9e833a873195ff027352604eca0
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191104221855epcas4p3761ca7e09ffa66b686be8b5a840ea383
-References: <20191104215617.25544-1-digetx@gmail.com>
-        <CGME20191104221855epcas4p3761ca7e09ffa66b686be8b5a840ea383@epcas4p3.samsung.com>
-        <20191104215617.25544-20-digetx@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=D+Q3ErZj c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=i0EeH86SAAAA:8 a=7-415B0cAAAA:8 a=w1VptvuhYDPMJX4mGNAA:9
+        a=ggN-k8jfiSgHKobi:21 a=dRI7x4IBfIF0c0dP:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 11. 5. 오전 6:56, Dmitry Osipenko wrote:
-> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
-> want to help keep them working and evolving in the future.
+On Tue, Nov 05, 2019 at 11:26:32AM +0800, Shaokun Zhang wrote:
+> Hi Dave,
 > 
-> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  MAINTAINERS | 9 +++++++++
->  1 file changed, 9 insertions(+)
+> On 2019/11/5 4:49, Dave Chinner wrote:
+> > On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
+> >> From: Yang Guo <guoyang2@huawei.com>
+> >>
+> >> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
+> >> whether the counter less than 0 and it is a expensive function.
+> >> let's check it only when delta < 0, it will be good for xfs's performance.
+> > 
+> > Hmmm. I don't recall this as being expensive.
+> > 
 > 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 9f69d01da3a6..4b9679988514 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -10632,6 +10632,15 @@ F:	include/linux/memblock.h
->  F:	mm/memblock.c
->  F:	Documentation/core-api/boot-time-mm.rst
->  
-> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
-> +M:	Dmitry Osipenko <digetx@gmail.com>
-> +L:	linux-pm@vger.kernel.org
-> +L:	linux-tegra@vger.kernel.org
-> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
-> +S:	Maintained
-> +F:	drivers/devfreq/tegra20-devfreq.c
-> +F:	drivers/devfreq/tegra30-devfreq.c
-> +
->  MEMORY MANAGEMENT
->  L:	linux-mm@kvack.org
->  W:	https://protect2.fireeye.com/url?k=9d0ba644-c09508de-9d0a2d0b-0cc47a336fae-300ed90f1ba3077c&u=http://www.linux-mm.org/
+> Sorry about the misunderstanding information in commit message.
 > 
+> > How did you find this? Can you please always document how you found
+> 
+> If user creates million of files and the delete them, We found that the
+> __percpu_counter_compare costed 5.78% CPU usage, you are right that itself
+> is not expensive, but it calls __percpu_counter_sum which will use
+> spin_lock and read other cpu's count. perf record -g is used to profile it:
+> 
+> - 5.88%     0.02%  rm  [kernel.vmlinux]  [k] xfs_mod_ifree
+>    - 5.86% xfs_mod_ifree
+>       - 5.78% __percpu_counter_compare
+>            5.61% __percpu_counter_sum
 
-Looks good to me. 
+Interesting. Your workload is hitting the slow path, which I most
+certainly do no see when creating lots of files. What's your
+workload?
 
-But, the merge conflict might be occurred.
-After getting the review from Myungjoo,
-you better to send this patch separately
-based on the latest MAINTAINERS file.
+> > IOWs, we typically measure the overhead of such functions by kernel
+> > profile.  Creating ~200,000 inodes a second, so hammering the icount
+> > and ifree counters, I see:
+> > 
+> >       0.16%  [kernel]  [k] percpu_counter_add_batch
+> >       0.03%  [kernel]  [k] __percpu_counter_compare
+> > 
+> 
+> 0.03% is just __percpu_counter_compare's usage.
 
-Thanks for your all efforts.
+No, that's the total of _all_ the percpu counter functions captured
+by the profile - it was the list of all samples filtered by
+"percpu". I just re-ran the profile again, and got:
 
+
+   0.23%  [kernel]  [k] percpu_counter_add_batch
+   0.04%  [kernel]  [k] __percpu_counter_compare
+   0.00%  [kernel]  [k] collect_percpu_times
+   0.00%  [kernel]  [k] __handle_irq_event_percpu
+   0.00%  [kernel]  [k] __percpu_counter_sum
+   0.00%  [kernel]  [k] handle_irq_event_percpu
+   0.00%  [kernel]  [k] fprop_reflect_period_percpu.isra.0
+   0.00%  [kernel]  [k] percpu_ref_switch_to_atomic_rcu
+   0.00%  [kernel]  [k] free_percpu
+   0.00%  [kernel]  [k] percpu_ref_exit
+
+So you can see that this essentially no samples in
+__percpu_counter_sum at all - my tests are not hitting the slow path
+at all, despite allocating inodes continuously.
+
+IOWs, your workload is hitting the slow path repeatedly, and so the
+question that needs to be answered is "why is the slow path actually
+being exercised?". IOWs, we need to know what your workload is, what
+the filesystem config is, what hardware (cpus, storage, etc) you are
+running on, etc. There must be some reason for the slow path being
+used, and that's what we need to understand first before deciding
+what the best fix might be...
+
+I suspect that you are only running one or two threads creating
+files and you have lots of idle CPU and hence the inode allocation
+is not clearing the fast path batch threshold on the ifree counter.
+And because you have lots of CPUs, the cost of a sum is very
+expensive compared to running single threaded creates. That's my
+current hypothesis based what I see on my workloads that
+xfs_mod_ifree overhead goes down as concurrency goes up....
+
+FWIW, the profiles I took came from running this on 16 and 32p
+machines:
+
+--
+dirs=""
+for i in `seq 1 $THREADS`; do
+        dirs="$dirs -d /mnt/scratch/$i"
+done
+
+cycles=$((512 / $THREADS))
+
+time ./fs_mark $XATTR -D 10000 -S0 -n $NFILES -s 0 -L $cycles $dirs
+--
+
+With THREADS=16 or 32 and NFILES=100000 on a big sparse filesystem
+image:
+
+meta-data=/dev/vdc               isize=512    agcount=500, agsize=268435455 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1, sparse=1, rmapbt=0
+         =                       reflink=1
+data     =                       bsize=4096   blocks=134217727500, imaxpct=1
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+log      =internal log           bsize=4096   blocks=521728, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+That's allocating enough inodes to keep the free inode counter
+entirely out of the slow path...
+
+Cheers,
+
+Dave.
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Dave Chinner
+david@fromorbit.com
