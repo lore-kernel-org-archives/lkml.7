@@ -2,122 +2,74 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FDBCCA9ED6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:21:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF42CCA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:22:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560F120818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:21:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nGP9eo+m"
+	by mail.kernel.org (Postfix) with ESMTP id ACC15214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:22:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387889AbfKEIVt (ORCPT
+        id S2387941AbfKEIV7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:21:49 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:45645 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbfKEIVt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:21:49 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476jLf4NHfz9sNx;
-        Tue,  5 Nov 2019 19:21:46 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572942106;
-        bh=fbJwVAuuIhYyLwBBBRn1/c333NwZHlnThIOOZ/z2Eiw=;
-        h=Date:From:To:Cc:Subject:From;
-        b=nGP9eo+mMiGuoxxZNsqetN70u4GmmrAp1tlIqnNhbp1AQt1nUYUPjEeluwu12clsn
-         zZsgC0sbzpCxanWxo8rpFjY1KEkoR+LCQh1ReG2UVI+byfPat6GSgkA17EOaisbNqv
-         2YUxshHvM/zBXPgNEhP0jJ4C2Lc7Wm8y7UO1DwcJTokw5Cb/Ee4n/FSfWh+xSpEANb
-         bsH/yXEea5YKvydlrLrrXwVGsXO6lNhdL7kwbr6Wsg+bm7AEQE5xOa0TxsjZCYzFo5
-         XWYDfyjS9e7UvZgkj0f+3PvoIWpdVjVhkiUp90PdMQxOs24VVv2ZXN457B5TCcM7sO
-         g4pZZlFnlahUQ==
-Date:   Tue, 5 Nov 2019 19:21:44 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Chuck Lever <chuck.lever@oracle.com>,
-        Doug Ledford <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Michal Kalderon <michal.kalderon@marvell.com>,
-        Ariel Elior <ariel.elior@marvell.com>
-Subject: linux-next: manual merge of the cel tree with the rdma tree
-Message-ID: <20191105192144.7af9704b@canb.auug.org.au>
+        Tue, 5 Nov 2019 03:21:59 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6153 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2387484AbfKEIV7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 03:21:59 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1660419F54FEFA14DB0E;
+        Tue,  5 Nov 2019 16:21:57 +0800 (CST)
+Received: from [127.0.0.1] (10.177.251.225) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
+ 16:21:46 +0800
+From:   Yunfeng Ye <yeyunfeng@huawei.com>
+To:     <n-horiguchi@ah.jp.nec.com>
+CC:     <linux-mm@kvack.org>, <linux-kernel@vger.kernel.org>,
+        "hushiyuan@huawei.com" <hushiyuan@huawei.com>,
+        "linfeilong@huawei.com" <linfeilong@huawei.com>
+Subject: [PATCH] mm/memory-failure.c: replace with page_shift() in
+ add_to_kill()
+Message-ID: <7bc9d610-728c-37b0-d175-dba21dc0dfff@huawei.com>
+Date:   Tue, 5 Nov 2019 16:21:44 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+KiqqK9j4s13+RE1PbbzLcG";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.251.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+KiqqK9j4s13+RE1PbbzLcG
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+The function page_shift() is supported after the commit 94ad9338109f
+("mm: introduce page_shift()").
 
-Hi all,
+So replace with page_shift() in add_to_kill() for readability.
 
-Today's linux-next merge of the cel tree got a conflict in:
+Signed-off-by: Yunfeng Ye <yeyunfeng@huawei.com>
+---
+ mm/memory-failure.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-  drivers/infiniband/core/Makefile
+diff --git a/mm/memory-failure.c b/mm/memory-failure.c
+index 3151c87dff73..e48c50cac889 100644
+--- a/mm/memory-failure.c
++++ b/mm/memory-failure.c
+@@ -326,7 +326,7 @@ static void add_to_kill(struct task_struct *tsk, struct page *p,
+ 	if (is_zone_device_page(p))
+ 		tk->size_shift = dev_pagemap_mapping_shift(p, vma);
+ 	else
+-		tk->size_shift = compound_order(compound_head(p)) + PAGE_SHIFT;
++		tk->size_shift = page_shift(compound_head(p));
 
-between commit:
+ 	/*
+ 	 * Send SIGKILL if "tk->addr == -EFAULT". Also, as
+-- 
+2.7.4
 
-  771b46a8d15a ("RDMA/core: Move core content from ib_uverbs to ib_core")
-
-from the rdma tree and commit:
-
-  b0a70ca7e39e ("IB/core: Trace points for diagnosing completion queue issu=
-es")
-
-from the cel tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/infiniband/core/Makefile
-index 9a8871e21545,68d9e27c3c61..000000000000
---- a/drivers/infiniband/core/Makefile
-+++ b/drivers/infiniband/core/Makefile
-@@@ -11,7 -11,7 +11,8 @@@ ib_core-y :=3D			packer.o ud_header.o ver
-  				device.o fmr_pool.o cache.o netlink.o \
-  				roce_gid_mgmt.o mr_pool.o addr.o sa_query.o \
-  				multicast.o mad.o smi.o agent.o mad_rmpp.o \
-- 				nldev.o restrack.o counters.o ib_core_uverbs.o
- -				nldev.o restrack.o counters.o trace.o
-++				nldev.o restrack.o counters.o ib_core_uverbs.o \
-++				trace.o
- =20
-  ib_core-$(CONFIG_SECURITY_INFINIBAND) +=3D security.o
-  ib_core-$(CONFIG_CGROUP_RDMA) +=3D cgroup.o
-
---Sig_/+KiqqK9j4s13+RE1PbbzLcG
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3BMRgACgkQAVBC80lX
-0GwETwf7BHq30VsOLcaCtJSm0HLgvPmWSn865JFLDGpRvrNjFkdZc11CLhUSK0HS
-Ul4e4lpkkJDFN3ejBkuyEifIzEq9/febJ8ogbC3g0RnaAeWhSP+uXn1wl+JxZO5o
-GX5o50kKHfmT399B3Kcxy7SIl9iEpQvmdXZxpBnBRsZ8yvLap4wWoIlVcFP3zmmq
-ep1DSXnyC4j7KghnswoQfTgBcPqnvlftUm674H3ypsppH0o7Wgs14ke1ECNrRj4K
-Tww2j+wQucV2SeGKeVka4ysOqqu6hCZ9MGYZKoAX5KSgzoqKYKP6ropSOIXuIpHo
-tB7jigOijoF6WWce+fnf3uYo/X4tZw==
-=MYNf
------END PGP SIGNATURE-----
-
---Sig_/+KiqqK9j4s13+RE1PbbzLcG--
