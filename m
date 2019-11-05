@@ -2,78 +2,128 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A584BC17483
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E541C1747C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:54:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CD2F21D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3011A21928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:54:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UdcS96y9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389280AbfKENxY (ORCPT
+        id S2389318AbfKENyW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:53:24 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:38147 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388000AbfKENxY (ORCPT
+        Tue, 5 Nov 2019 08:54:22 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:36446 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2388000AbfKENyV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:53:24 -0500
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRzGm-0001vT-7A; Tue, 05 Nov 2019 14:53:16 +0100
-Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <ukl@pengutronix.de>)
-        id 1iRzGk-0007sU-H8; Tue, 05 Nov 2019 14:53:14 +0100
-Date:   Tue, 5 Nov 2019 14:53:14 +0100
-From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
-Cc:     Thierry Reding <thierry.reding@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Chen-Yu Tsai <wens@csie.org>,
-        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org,
-        Jernej Skrabec <jernej.skrabec@siol.net>
-Subject: Re: [PATCH v3 2/7] pwm: sun4i: Add an optional probe for reset line
-Message-ID: <20191105135314.f7clp7itzcioxtbw@pengutronix.de>
-References: <20191105131456.32400-1-peron.clem@gmail.com>
- <20191105131456.32400-3-peron.clem@gmail.com>
+        Tue, 5 Nov 2019 08:54:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572962060;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=kPzADiipN47QPgXt2IGh+jPKvV3zaficOk9JUTgI2GU=;
+        b=UdcS96y9kzV+rR5z5MlTvPnHp6LqgQwjRCGRuE5fnt2FNr8Kx3h3WtXepnuDoAkGRhH605
+        9xenEINSz2/uGoPx7lpVVXVVJ036Px8y1gyZtzLSmbp1ww4MjUDGlG8odxD+Gc5qMqYj7q
+        bJXdJRVUUxvmEdgijrHORIwchu8ldNo=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-304-eEgf_IbvNgWojIsO_UJlcQ-1; Tue, 05 Nov 2019 08:54:17 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 486708017DD;
+        Tue,  5 Nov 2019 13:54:15 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 222F85D9C9;
+        Tue,  5 Nov 2019 13:54:15 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 08:54:14 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+Message-ID: <20191105135414.GA30717@redhat.com>
+References: <20191104230001.27774-1-aarcange@redhat.com>
+ <20191104230001.27774-4-aarcange@redhat.com>
+ <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+ <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+In-Reply-To: <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: eEgf_IbvNgWojIsO_UJlcQ-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191105131456.32400-3-peron.clem@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: ukl@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:14:51PM +0100, Clément Péron wrote:
-> From: Jernej Skrabec <jernej.skrabec@siol.net>
-> 
-> H6 PWM core needs deasserted reset line in order to work.
-> 
-> Add an optional probe for it.
-> 
-> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> Signed-off-by: Clément Péron <peron.clem@gmail.com>
-Reviewed-by: Uwe Kleine-König <u.kleine-koenig@pengutronix.de>
+On Tue, Nov 05, 2019 at 11:37:47AM +0100, Paolo Bonzini wrote:
+> For the rest, please do this before posting again:
+>=20
+> - ensure that everything is bisectable
 
-Thanks
-Uwe
+x86-64 is already bisectable.
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+All other archs bisectable I didn't check them all anyway.
+
+Even 4/13 is suboptimal and needs to be re-done later in more optimal
+way. I prefer all logic changes to happen at later steps so one can at
+least bisect to something that functionally works like before. And
+4/13 also would need to be merged in the huge patch if one wants to
+guarantee bisectability on all CPUs, but it'll just be hidden there in
+the huge patch.
+
+Obviously I can squash both 3/13 and 4/13 into 2/13 but I don't feel
+like doing the right thing by squashing them just to increase
+bisectability.
+
+> - look into how to remove the modpost warnings.  A simple (though
+> somewhat ugly) way is to keep a kvm.ko module that includes common
+> virt/kvm/ code as well as, for x86 only, page_track.o.  A few functions,
+> such as kvm_mmu_gfn_disallow_lpage and kvm_mmu_gfn_allow_lpage, would
+> have to be moved into mmu.h, but that's not a big deal.
+
+I think we should:
+
+1) whitelist to shut off the warnings on demand
+
+2) verify that if two modules are registering the same export symbol
+   the second one fails to load and the module code is robust about
+   that, this hopefully should already be the case
+
+Provided verification of 2), the whitelist is more efficient than
+losing 4k of ram in all KVM hypervisors out there.
+
+> - provide at least some examples of replacing the NULL kvm_x86_ops
+> checks with error codes in the function (or just early "return"s).  I
+> can help with the others, but remember that for the patch to be merged,
+> kvm_x86_ops must be removed completely.
+
+Even if kvm_x86_ops wouldn't be guaranteed to go away, this would
+already provide all the performance benefit to the KVM users, so I
+wouldn't see a reason not to apply it even if kvm_x86_ops cannot go
+away. Said that it will go away and there's no concern about it. It's
+just that the patchset seems large enough already and it rejects
+heavily already at every port. I simply stopped at the first self
+contained step that provides all performance benefits.
+
+If I go ahead and remove kvm_x86_ops how do I know it won't reject
+heavily the next day I rebase and I've to redo it all from scratch? If
+you explain me how you're going to guarantee that I won't have to do
+that work more than once I'd be happy to go ahead.
+
+Thanks,
+Andrea
+
