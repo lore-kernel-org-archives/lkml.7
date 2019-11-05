@@ -2,172 +2,88 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E9D2C17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:30:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0A30C17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A87E2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:30:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i2X9SNHI"
+	by mail.kernel.org (Postfix) with ESMTP id 9C7FA2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:35:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389250AbfKENat (ORCPT
+        id S2389050AbfKENfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:30:49 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:59056 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388883AbfKENas (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:30:48 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5DUeZa029559;
-        Tue, 5 Nov 2019 07:30:40 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572960640;
-        bh=X2r1E+5verQirY3pPc+pLDG8R8Z0eAEU6/97FnwaeJE=;
-        h=Subject:To:References:From:Date:In-Reply-To;
-        b=i2X9SNHIaWyxje87ekrjovkH7KcKd8+Uv4zRDPgQqCS2KklVMgqThvsNrhGdccnO0
-         toL/VNiqQXNlum/mc5Loj8mvMERyzATixCxGkR+dpj1HHw40/9OFdIeuLBmrsQM+Y8
-         CPPptuc4zxsiS7Id6yM3FAGqjXt0hMah4inpCgxI=
-Received: from DLEE101.ent.ti.com (dlee101.ent.ti.com [157.170.170.31])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5DUeIA012898
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 07:30:40 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
- 2019 07:30:25 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 07:30:25 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5DUdiv055261;
-        Tue, 5 Nov 2019 07:30:39 -0600
-Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
-To:     John Stultz <john.stultz@linaro.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Hridya Valsaraju <hridya@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pratik Patel <pratikp@codeaurora.org>
-References: <20191025234834.28214-1-john.stultz@linaro.org>
- <20191104095823.GD10326@phenom.ffwll.local>
- <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
- <20191105094259.GX10326@phenom.ffwll.local>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <5b591240-43c8-495a-e9c9-881a2997c492@ti.com>
-Date:   Tue, 5 Nov 2019 08:30:38 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 08:35:52 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:55870 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388313AbfKENfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:35:52 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id ACF784E9D9F9149A606F;
+        Tue,  5 Nov 2019 21:35:42 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 5 Nov 2019 21:35:36 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <perex@perex.cz>, <gregkh@linuxfoundation.org>,
+        <davem@davemloft.net>, <rfontana@redhat.com>,
+        <kstewart@linuxfoundation.org>, <joe@perches.com>,
+        <tglx@linutronix.d>
+CC:     Chenwandun <chenwandun@huawei.com>
+Subject: [PATCH] hp100: remove set but not used variable val
+Date:   Tue, 5 Nov 2019 21:42:40 +0800
+Message-ID: <1572961360-67523-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20191105094259.GX10326@phenom.ffwll.local>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 4:42 AM, Daniel Vetter wrote:
-> On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
->> On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
->>> On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
->>>> Now that the DMA BUF heaps core code has been queued, I wanted
->>>> to send out some of the pending changes that I've been working
->>>> on.
->>>>
->>>> For use with Android and their GKI effort, it is desired that
->>>> DMA BUF heaps are able to be loaded as modules. This is required
->>>> for migrating vendors off of ION which was also recently changed
->>>> to support modules.
->>>>
->>>> So this patch series simply provides the necessary exported
->>>> symbols and allows the system and CMA drivers to be built
->>>> as modules.
->>>>
->>>> Due to the fact that dmabuf's allocated from a heap may
->>>> be in use for quite some time, there isn't a way to safely
->>>> unload the driver once it has been loaded. Thus these
->>>> drivers do no implement module_exit() functions and will
->>>> show up in lsmod as "[permanent]"
->>>>
->>>> Feedback and thoughts on this would be greatly appreciated!
->>>
->>> Do we actually want this?
->>
->> I guess that always depends on the definition of "we" :)
->>
->>> I figured if we just state that vendors should set up all the right
->>> dma-buf heaps in dt, is that not enough?
->>
->> So even if the heaps are configured via DT (which at the moment there
->> is no such binding, so that's not really a valid method yet), there's
->> still the question of if the heap is necessary/makes sense on the
->> device. And the DT would only control the availability of the heap
->> interface, not if the heap driver is loaded or not.
-> 
-> Hm I thought the cma regions are configured in DT? How does that work if
-> it's not using DT?
-> 
->> On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
->> for the display framebuffer. So gralloc uses ION to allocate from the
->> CMA heap. However on the db845c, it has no such restrictions, so the
->> CMA heap isn't necessary.
-> 
-> Why do you have a CMA region for the 2nd board if you don't need it?
-> _That_ sounds like some serious memory waster, not a few lines of code
-> loaded for nothing :-)
-> 
->> With Android's GKI effort, there needs to be one kernel that works on
->> all the devices, and they are using modules to try to minimize the
->> amount of memory spent on functionality that isn't universally needed.
->> So on devices that don't need the CMA heap, they'd probably prefer not
->> to load the CMA dmabuf heap driver, so it would be best if it could be
->> built as a module.  If we want to build the CMA heap as a module, the
->> symbols it uses need to be exported.
-> 
-> Yeah, I guess I'm disagreeing on whether dma-buf heaps are core or not.
-> 
->>> Exporting symbols for no real in-tree users feels fishy.
->>
->> I'm submitting an in-tree user here. So I'm not sure what you mean?  I
->> suspect you're thinking there is some hidden/nefarious plan here, but
->> really there isn't.
-> 
-> I was working under the assumption that you're only exporting the symbols
-> for other heaps, and keep the current ones in-tree. Are there even any
-> out-of-tree dma-buf heaps still? out-of-tree and legit different use-case
-> I mean ofc, not just out-of-tree because inertia :-)
+From: Chenwandun <chenwandun@huawei.com>
 
-Not sure what you mean here, hopefully all the heaps can be "in-tree"
-some day.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-https://patchwork.kernel.org/patch/10863957/
+drivers/staging/hp/hp100.c: In function hp100_start_xmit:
+drivers/staging/hp/hp100.c:1629:10: warning: variable val set but not used [-Wunused-but-set-variable]
 
-Plus some non-caching heaps and one that forces early allocation of our
-PAT (gart like) IP.
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+---
+ drivers/staging/hp/hp100.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-All this stuff is going into our evil vendor tree next cycle (if not
-upstream by then :)), if we want some of these "specialty" heaps to go
-into generic kernel builds at some point they will need to be modules if
-the core is.
+diff --git a/drivers/staging/hp/hp100.c b/drivers/staging/hp/hp100.c
+index 6ec78f5..7e91737 100644
+--- a/drivers/staging/hp/hp100.c
++++ b/drivers/staging/hp/hp100.c
+@@ -1626,7 +1626,6 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
+ 	unsigned long flags;
+ 	int i, ok_flag;
+ 	int ioaddr = dev->base_addr;
+-	u_short val;
+ 	struct hp100_private *lp = netdev_priv(dev);
+ 
+ #ifdef HP100_DEBUG_B
+@@ -1695,13 +1694,12 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
+ 
+ 	spin_lock_irqsave(&lp->lock, flags);
+ 	hp100_ints_off();
+-	val = hp100_inw(IRQ_STATUS);
+ 	/* Ack / clear the interrupt TX_COMPLETE interrupt - this interrupt is set
+ 	 * when the current packet being transmitted on the wire is completed. */
+ 	hp100_outw(HP100_TX_COMPLETE, IRQ_STATUS);
+ #ifdef HP100_DEBUG_TX
+ 	printk("hp100: %s: start_xmit: irq_status=0x%.4x, irqmask=0x%.4x, len=%d\n",
+-			dev->name, val, hp100_inw(IRQ_MASK), (int) skb->len);
++			dev->name, hp100_inw(IRQ_STATUS), hp100_inw(IRQ_MASK), (int) skb->len);
+ #endif
+ 
+ 	ok_flag = skb->len >= HP100_MIN_PACKET_SIZE;
+-- 
+2.7.4
 
-Although I am still thinking Heaps should be always built in + system +
-CMA heaps, then the rando heaps could be modules if needed.
-
-Andrew
-
-> -Daniel
-> 
