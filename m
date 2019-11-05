@@ -2,104 +2,219 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0399C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60CAFC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 74B2B2084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BTke/Ek/"
+	by mail.kernel.org (Postfix) with ESMTP id 0B795206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:00:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387431AbfKEXAP (ORCPT
+        id S2387483AbfKEXAe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:00:15 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35500 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729895AbfKEXAP (ORCPT
+        Tue, 5 Nov 2019 18:00:34 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:48214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2387456AbfKEXAd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:00:15 -0500
-Received: by mail-io1-f68.google.com with SMTP id x21so9042313iol.2;
-        Tue, 05 Nov 2019 15:00:14 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=yoWC56++M3uoXU+oelt/CMWG4cbTRPSJURz59kUPoBM=;
-        b=BTke/Ek/zLnhDSfeNuipm+/POYtDfp0HKri7zNJmRTzwXXipSLLmLhnkoOckfDN6nO
-         8TTiEw3HGDSUKqcTm45ypk1+kJ8UuNAJX/CezHPd7OJw93mc4BKm+wbFEYtIOZQgmTBH
-         o2KpPpA2rdVqMWMM4+5O9T7/VLFM0ymlptrGwB5vSex6Q1XQVMxopHPH9fmmxHtRFihV
-         OuQ/lYpc9OnqT3W3PEIX+ghL8KKLxw1l4gOJDqSEwJUIAkF+S12VaEckCDZm/bptd4ns
-         0UqHhFK7k8EXe1UQazdsR1SIQts/AurUGvu+lWlSNzbqiDCwmynlZ2mkx+fuTU7bKeQQ
-         btaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=yoWC56++M3uoXU+oelt/CMWG4cbTRPSJURz59kUPoBM=;
-        b=MT0Q7r63AX5ct5PefG82Ar6fgIiN/wNkQz370crssUU8+V2bYIlw54AuT3wa5f4ku4
-         u2PYSIMCoGXMOsyS2oGWo/KJfGlMaADWn8HWjHwrnFUneIk1Kj8jfl/USKnzIfKlyzjI
-         PetmHXWQ6MhtqX796dL6ORJPtIkbduaUThEzEsAfD9tKd7VMGBgIv6VInoogUzWhzdLU
-         /DgzTxAdgnPVKkkuETt+gqHLzC/bXI1t8xcbqg8cfXy6g7QXKQsBxuC4J5Y7TVPEnjiZ
-         n1uSQtxhtqDx4RrsMZhpcMbxYrSZm4pa386th1kq8JznJYLZ7bZr2bTDKPQijnKaytwb
-         TfSQ==
-X-Gm-Message-State: APjAAAWXDmCIgpW/3GFodjjk7fJicqAOwNpKE18VvjFCAZT6WH2NZ9dM
-        0xt4X7tXN6RF71yBKaeaRCvFYEdhxB1i9Tp9mrA=
-X-Google-Smtp-Source: APXvYqzZ6TB+/QC8CW+9Q+EgSJexTwDdd/GYLyU/P7veuUPS+oIhgF0WwBMlhoBMAUS8bZWv6xwB5kIhrqIFrG+wCBI=
-X-Received: by 2002:a5d:848c:: with SMTP id t12mr2960373iom.5.1572994814380;
- Tue, 05 Nov 2019 15:00:14 -0800 (PST)
+        Tue, 5 Nov 2019 18:00:33 -0500
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5MrEEa049926
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 18:00:32 -0500
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3h82hx9j-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 18:00:32 -0500
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <erichte@linux.ibm.com>;
+        Tue, 5 Nov 2019 23:00:30 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 5 Nov 2019 23:00:26 -0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5MxoHu33096076
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Nov 2019 22:59:50 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2876211C052;
+        Tue,  5 Nov 2019 23:00:25 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4423C11C054;
+        Tue,  5 Nov 2019 23:00:23 +0000 (GMT)
+Received: from [9.80.236.186] (unknown [9.80.236.186])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Nov 2019 23:00:23 +0000 (GMT)
+Subject: [PATCH v10a 1/9] powerpc: detect the secure boot mode of the system
+To:     Mimi Zohar <zohar@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+ <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
+From:   Eric Richter <erichte@linux.ibm.com>
+Date:   Tue, 5 Nov 2019 17:00:22 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
 MIME-Version: 1.0
-References: <201911041524.o7kWSYSC%lkp@intel.com> <20191104075911.23rhzcbztbhlbjk5@4978f4969bb8>
-In-Reply-To: <20191104075911.23rhzcbztbhlbjk5@4978f4969bb8>
-From:   Steve French <smfrench@gmail.com>
-Date:   Tue, 5 Nov 2019 17:00:03 -0600
-Message-ID: <CAH2r5mv43iPuAgvM699A5TstZGzHj=WOsYd8ffmk1DSUsQXdrA@mail.gmail.com>
-Subject: Re: [RFC PATCH cifs] cifs: smb3_crypto_shash_allocate can be static
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Aurelien Aptel <aaptel@suse.com>, kbuild-all@lists.01.org,
-        CIFS <linux-cifs@vger.kernel.org>,
-        samba-technical <samba-technical@lists.samba.org>,
-        Steve French <stfrench@microsoft.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110523-0016-0000-0000-000002C10CEB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110523-0017-0000-0000-00003322862E
+Message-Id: <46b003b9-3225-6bf7-9101-ed6580bb748c@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911050187
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-FYI - I updated cifs-2.6.for-next with the equivalent change (fixing a
-line change to one of Aurelien's patches in the multichannel series)
+From: Nayna Jain <nayna@linux.ibm.com>
 
-On Mon, Nov 4, 2019 at 1:59 AM kbuild test robot <lkp@intel.com> wrote:
->
->
-> Fixes: 4d1cc0309f7e ("cifs: try opening channels after mounting")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
->  smb2transport.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/cifs/smb2transport.c b/fs/cifs/smb2transport.c
-> index 1af789871ec2e..86501239cef55 100644
-> --- a/fs/cifs/smb2transport.c
-> +++ b/fs/cifs/smb2transport.c
-> @@ -48,7 +48,7 @@ smb2_crypto_shash_allocate(struct TCP_Server_Info *server)
->                                &server->secmech.sdeschmacsha256);
->  }
->
-> -int
-> +static int
->  smb3_crypto_shash_allocate(struct TCP_Server_Info *server)
->  {
->         struct cifs_secmech *p = &server->secmech;
+This patch defines a function to detect the secure boot state of a
+PowerNV system.
 
+The PPC_SECURE_BOOT config represents the base enablement of secure boot
+for powerpc.
 
+Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+Signed-off-by: Eric Richter <erichte@linux.ibm.com>
+---
+v10a:
+- moved get_ppc_fw_sb_node to this patch
+- updated based on skiboot device tree changes
+  - os-secure-enforcing was renamed os-secureboot-enforcing
+  - os-secureboot-enforcing was moved to ibm,secureboot
+- removed now unnecessary node availibility check
 
+ arch/powerpc/Kconfig                   | 10 ++++++++
+ arch/powerpc/include/asm/secure_boot.h | 23 +++++++++++++++++
+ arch/powerpc/kernel/Makefile           |  2 ++
+ arch/powerpc/kernel/secure_boot.c      | 34 ++++++++++++++++++++++++++
+ 4 files changed, 69 insertions(+)
+ create mode 100644 arch/powerpc/include/asm/secure_boot.h
+ create mode 100644 arch/powerpc/kernel/secure_boot.c
+
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index 3e56c9c2f16e..56ea0019b616 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -934,6 +934,16 @@ config PPC_MEM_KEYS
+ 
+ 	  If unsure, say y.
+ 
++config PPC_SECURE_BOOT
++	prompt "Enable secure boot support"
++	bool
++	depends on PPC_POWERNV
++	help
++	  Systems with firmware secure boot enabled need to define security
++	  policies to extend secure boot to the OS. This config allows a user
++	  to enable OS secure boot on systems that have firmware support for
++	  it. If in doubt say N.
++
+ endmenu
+ 
+ config ISA_DMA_API
+diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+new file mode 100644
+index 000000000000..07d0fe0ca81f
+--- /dev/null
++++ b/arch/powerpc/include/asm/secure_boot.h
+@@ -0,0 +1,23 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Secure boot definitions
++ *
++ * Copyright (C) 2019 IBM Corporation
++ * Author: Nayna Jain
++ */
++#ifndef _ASM_POWER_SECURE_BOOT_H
++#define _ASM_POWER_SECURE_BOOT_H
++
++#ifdef CONFIG_PPC_SECURE_BOOT
++
++bool is_ppc_secureboot_enabled(void);
++
++#else
++
++static inline bool is_ppc_secureboot_enabled(void)
++{
++	return false;
++}
++
++#endif
++#endif
+diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+index a7ca8fe62368..e2a54fa240ac 100644
+--- a/arch/powerpc/kernel/Makefile
++++ b/arch/powerpc/kernel/Makefile
+@@ -161,6 +161,8 @@ ifneq ($(CONFIG_PPC_POWERNV)$(CONFIG_PPC_SVM),)
+ obj-y				+= ucall.o
+ endif
+ 
++obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
++
+ # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+ GCOV_PROFILE_prom_init.o := n
+ KCOV_INSTRUMENT_prom_init.o := n
+diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+new file mode 100644
+index 000000000000..3f55be33f5c8
+--- /dev/null
++++ b/arch/powerpc/kernel/secure_boot.c
+@@ -0,0 +1,34 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (C) 2019 IBM Corporation
++ * Author: Nayna Jain
++ */
++#include <linux/types.h>
++#include <linux/of.h>
++#include <asm/secure_boot.h>
++
++static struct device_node *get_ppc_fw_sb_node(void)
++{
++	static const struct of_device_id ids[] = {
++		{ .compatible = "ibm,secureboot-v1", },
++		{ .compatible = "ibm,secureboot-v2", },
++		{},
++	};
++
++	return of_find_matching_node(NULL, ids);
++}
++
++bool is_ppc_secureboot_enabled(void)
++{
++	struct device_node *node;
++	bool enabled = false;
++
++	node = get_ppc_fw_sb_node();
++	enabled = of_property_read_bool(node, "os-secureboot-enforcing");
++
++	of_node_put(node);
++
++	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
++
++	return enabled;
++}
 -- 
-Thanks,
+2.20.1
 
-Steve
