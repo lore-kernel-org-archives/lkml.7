@@ -2,117 +2,88 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CF6CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91E74CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A4120717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3442C214D9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:55:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="J6HG4Fj3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730096AbfKEAzA (ORCPT
+        id S1730180AbfKEAzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:55:00 -0500
-Received: from outbound.smtp.vt.edu ([198.82.183.121]:50880 "EHLO
-        omr1.cc.vt.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729035AbfKEAzA (ORCPT
+        Mon, 4 Nov 2019 19:55:52 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:37686 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729789AbfKEAzw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:55:00 -0500
-Received: from mr3.cc.vt.edu (mr3.cc.ipv6.vt.edu [IPv6:2607:b400:92:8500:0:7f:b804:6b0a])
-        by omr1.cc.vt.edu (8.14.4/8.14.4) with ESMTP id xA50swEu017143
-        for <linux-kernel@vger.kernel.org>; Mon, 4 Nov 2019 19:54:58 -0500
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        by mr3.cc.vt.edu (8.14.7/8.14.7) with ESMTP id xA50sr0R029167
-        for <linux-kernel@vger.kernel.org>; Mon, 4 Nov 2019 19:54:58 -0500
-Received: by mail-qk1-f199.google.com with SMTP id a186so17319096qkb.18
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 16:54:58 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:in-reply-to:references
-         :mime-version:content-transfer-encoding:date:message-id;
-        bh=f2xKui4jCV1oC4mz8c3C4oOoH3JHAT+nc4LWmlpw1MY=;
-        b=OBMg2F1OXvSlXchx8JVDuH74ukC0kcgAwcL+AJjDq4FtVf2SvgaNRLplBpUS00uHO5
-         K7XIF5oZKgbAA2t1ui3YPF81cJlGQB17t5QmM+49LQMvVbyjRPcoSGTYvZ5K/tu6YWPe
-         7QmboqCVVF/kH1bOk57X4nVyjcN/q/zP4HCDxPrwhVmK45O/SCpB4/Izny3HUVPsqPx+
-         YVd+G0GHQPzTSI2hqSeOpO4YzIOwId4+2HkyYZsp+UnWjJ/KCpoA/kPNrQ1uap4QlbxC
-         vPOXK8NhLfISpbVPsAy8phCkabhpmOtdluRMwQ8fXR91Catey8Jtvp1b7nlYtHNgJVaH
-         oAbw==
-X-Gm-Message-State: APjAAAUurQxVgk3QaXUfJsm5ysQ3alVHWzmY5Anb2GOGGrNR1YShbO6R
-        IPoMkALb3HrnUdpNJ7U0Ow4IU2I9ZcASxXy5YvdSef8byvG1UCE1JximRnuhcSS9cbd4pmak84X
-        EgkfvoIuDupt7KdsTr8QxUC/bwZ3EiPD3hFk=
-X-Received: by 2002:a37:a7c6:: with SMTP id q189mr18281728qke.469.1572915293240;
-        Mon, 04 Nov 2019 16:54:53 -0800 (PST)
-X-Google-Smtp-Source: APXvYqyrX9VI+c8WOT6M7oWIp4pyDtJDt5bkVm4lsJ+Pto7z9dB2TfD2fE/LTt42veVX3e6Xy+Pgiw==
-X-Received: by 2002:a37:a7c6:: with SMTP id q189mr18281700qke.469.1572915292941;
-        Mon, 04 Nov 2019 16:54:52 -0800 (PST)
-Received: from turing-police ([2601:5c0:c001:c9e1::359])
-        by smtp.gmail.com with ESMTPSA id q17sm14389538qtq.58.2019.11.04.16.54.50
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 16:54:51 -0800 (PST)
-From:   "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <valdis.kletnieks@vt.edu>
-X-Google-Original-From: "Valdis Kl=?utf-8?Q?=c4=93?=tnieks" <Valdis.Kletnieks@vt.edu>
-X-Mailer: exmh version 2.9.0 11/07/2018 with nmh-1.7+dev
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
-        Jan Kara <jack@suse.cz>, "Theodore Ts'o" <tytso@mit.edu>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
-        Andreas Dilger <adilger.kernel@dilger.ca>,
-        Jaegeuk Kim <jaegeuk@kernel.org>, linux-xfs@vger.kernel.org,
-        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
-        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
-        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
-        linux-arch@vger.kernel.org
-Subject: Re: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
-In-Reply-To: <20191105003306.GA22791@infradead.org>
-References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu> <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
- <20191105003306.GA22791@infradead.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="==_Exmh_1572915290_14215P";
-         micalg=pgp-sha1; protocol="application/pgp-signature"
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 04 Nov 2019 19:54:50 -0500
-Message-ID: <183873.1572915290@turing-police>
+        Mon, 4 Nov 2019 19:55:52 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=cbbQzJzdRMzNX3oXlnB8mb7Ta/8x4PDQyIRKIctjS5E=; b=J6HG4Fj3wKEJmoDjcwSqLLCcK
+        WUQMHB5GhnXy3hJX2+VWqtCpMjDwz7uitUyvYxFNrXhfH7TOQ1cxMkFusxL7o0Cd1jWq3HRT2tzbk
+        r0CjylSGkdLEWwdEk+sVPmswANgeOMDpS27GEehPJN3INxo/B39MEp8MXQoEzKjD6kbsnm2RVghVY
+        iRKBGkhgwXcDOHL9KNBHVTapc9FKFqAkoZ3dAPvbJ5dRtWLX4Za1l6mzJmbncJ5IHxGLJHVF+6C/l
+        DmR14gJ1+iPi/OHPxl8H2L+LPc6SYllRxoc0du4iclpfBaVNl1PrUyLHLUPRmddxvj0dghoTr0vJI
+        CXba8yQ8w==;
+Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:35288)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iRn8K-0002WJ-Po; Tue, 05 Nov 2019 00:55:44 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iRn8H-0002XV-G2; Tue, 05 Nov 2019 00:55:41 +0000
+Date:   Tue, 5 Nov 2019 00:55:41 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linus Walleij <linus.walleij@linaro.org>, netdev@vger.kernel.org,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-kernel@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH v2 0/3] net: phy: switch to using fwnode_gpiod_get_index
+Message-ID: <20191105005541.GP25745@shell.armlinux.org.uk>
+References: <20191014174022.94605-1-dmitry.torokhov@gmail.com>
+ <20191105004016.GT57214@dtor-ws>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105004016.GT57214@dtor-ws>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---==_Exmh_1572915290_14215P
-Content-Type: text/plain; charset=us-ascii
+On Mon, Nov 04, 2019 at 04:40:16PM -0800, Dmitry Torokhov wrote:
+> Hi Linus,
+> 
+> On Mon, Oct 14, 2019 at 10:40:19AM -0700, Dmitry Torokhov wrote:
+> > This series switches phy drivers form using fwnode_get_named_gpiod() and
+> > gpiod_get_from_of_node() that are scheduled to be removed in favor
+> > of fwnode_gpiod_get_index() that behaves more like standard
+> > gpiod_get_index() and will potentially handle secondary software
+> > nodes in cases we need to augment platform firmware.
+> > 
+> > Linus, as David would prefer not to pull in the immutable branch but
+> > rather route the patches through the tree that has the new API, could
+> > you please take them with his ACKs?
+> 
+> Gentle ping on the series...
 
-On Mon, 04 Nov 2019 16:33:06 -0800, Christoph Hellwig said:
-> On Sun, Nov 03, 2019 at 08:45:06PM -0500, Valdis Kletnieks wrote:
-> > There's currently 6 filesystems that have the same #define. Move it
-> > into errno.h so it's defined in just one place.
->
-> And 4 out of 6 also define EFSBADCRC, so please lift that as well.
+Given that kbuild found a build issue with patch 1, aren't we waiting
+for you to produce an updated patch 1?
 
-Will do so in a separate patch shortly.
-
-
---==_Exmh_1572915290_14215P
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Comment: Exmh version 2.9.0 11/07/2018
-
-iQIVAwUBXcDIWQdmEQWDXROgAQLCeRAAuaK/m71WLPW3IHgW8r5L9+3+x+9uaM3q
-1xF50a4RrgesQOcgCjLxlCHEj7RzckAn1cAh8KCEfckr5crfRHSqOkSop9jE5A4X
-BG71oLoyeYpSB1euVq/wxyUk7pk23uB3YfoPY3GD/zNUUxinrXRcc5AIBake1wfX
-1tuIjSwBgO6HILMF7PKK+ETFDGBDXKUfzep/1ooWpKYzqbMyLkrd5iYQy5a9Fy3r
-wbIOv0vg1dyMa3rcpFO6XKieD3yZkPO42lYIu6Te1wFnykmkCpgkMaOGP9/HWIPP
-vkm2vDMS7gbWWYgbs2k0IsKKKTjhO+sapW3QbYNnxYEBgwYaIfaKhJGpqWQ6qoqR
-Lr2OQWp/xv+g6bKr23kdXM+Iz8i6m38gl0LPwCa0K5I1WHSbelWoRniJ41jRcVeW
-GPr6Hu+CZxD0nYigQV7AXFnlk2E8X525kiTffPz+KtMpUS8VzaSCMkc7GQMMdPbI
-bZD328DLengZVicm271CUIiVhHvRD8tzw/6Z3UyM9lxCCjtkpFQI+ERMPATGTT/D
-hwZmJzEj5esJYzs+PyEDt/d7pA0kzpW0XObEjX7apDgMWXWk7WmczJPPJENH6lVw
-ULNeg4s+MlG6qt3eiC8+DPM6MxQtyen9NaE90UtCHunhRxt6tZSzbGSuHRYVWCdQ
-9OgZEz7s3DI=
-=W6JA
------END PGP SIGNATURE-----
-
---==_Exmh_1572915290_14215P--
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
