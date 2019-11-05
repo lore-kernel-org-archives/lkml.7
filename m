@@ -2,312 +2,148 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90E37C17461
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:14:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC5BC17471
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40DD721928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:14:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1432221928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:15:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="AmLS/3Wt"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qp3ErZHJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388882AbfKENOu (ORCPT
+        id S2389039AbfKENPE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:14:50 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:36532 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388710AbfKENOu (ORCPT
+        Tue, 5 Nov 2019 08:15:04 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38329 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388710AbfKENPE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:14:50 -0500
-Received: by mail-oi1-f195.google.com with SMTP id j7so17473837oib.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 05:14:49 -0800 (PST)
+        Tue, 5 Nov 2019 08:15:04 -0500
+Received: by mail-wm1-f65.google.com with SMTP id z19so15909105wmk.3;
+        Tue, 05 Nov 2019 05:15:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=pETiI/t87zDY9LmgogcYKoUL1VEKJ7xwu6O/+dnq3ig=;
-        b=AmLS/3WtosjDDBTd8l9B3UU8X28CgaaodNu67LUuzdfyfraBCDMsoqWoXJRnsAtpbF
-         nsJdZARL0JssC2R9WstGnaJ5Gz3ervLl/LgjElodimsKifPy9UkK0ObogrnMTmO9bLbb
-         8RfFXU1Z5T5Hn3rDYZilLstMPYiMcpsZ9FF9E=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hB9idhMU92erzOjHPvAXZpJsyvC0oNhoJYwou0xdu0U=;
+        b=qp3ErZHJAeyuOjgXLsXiclttDh1bu5NEu4gH06hfC1IiApD6xVTSozILPEpnfN8wl/
+         tPL03+8UuumFL0+ztAuQefhcHjbl2w05mugCn88UOR+iv7n2gAWsvIaxnxyNWSB83Wvo
+         /q37kvvkPk85TjljzbfqLFrJQkl3+gVbUAgHldjh9mhWKnZN62oWLQ+KhUAR0Rx2FPwJ
+         k04cjIAyJBJssoAJsKYuENbrq+/HHC7ssiy+aL1YHwjWlDPReFAUtw22/X0Xu1Fzg1/g
+         bQs8hEUavRZ3cUKucaqtFU7Gfr0zWdKm0Ejt7VjDb7EJEzcGc0Tv//kJH277DeCLZ9lR
+         HzFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=pETiI/t87zDY9LmgogcYKoUL1VEKJ7xwu6O/+dnq3ig=;
-        b=rgenZe2Y4qfmQYLsDVX5mpuLuMMVWuJKZeZUvA2oQ09LHep5uutaUFxXgZja3pKMi5
-         R9Sg4tfujjHUTs9YME50jGNgGjTa17kCahB/87xBVwoFAlBn1aPBzKPLyk/vk7jdN44I
-         m7GAQXknd6rMSUCpQPIGUq6UGlMiM4IUgt6UALiB+l84hB2y2yKkuzrRi2kkLY51dkgP
-         sZ5a4BjAKqNlSpdjcGS54f2SxHj0xX9Ut6ILYBynLBfBRhrY0jMB2kpfwcurDiI93Obm
-         ibRJ3gscaSDpZzFlv2hebDbLG0uBMFuR3uaEd2eUwhY9B5LSdW/ijkXP9FUzPfTMvjB+
-         Umcg==
-X-Gm-Message-State: APjAAAXVx/4aqlE0LPZnOeaE+imD9gtuguTRbKcxa1MmXhPBhk8Fm7I0
-        NAPmDIkBBuFNpqbVsp4AFWcO2s/QLgcr5FudwBewEhBj
-X-Google-Smtp-Source: APXvYqyPST+QZ+rcsvd31WRK++L/ZNnXi2V7iJbsUYxS8sANq7UA9tzrOodGEr32dpxzos8UcEa41ICqnjl1gK2zDYY=
-X-Received: by 2002:a54:4e8a:: with SMTP id c10mr3967801oiy.14.1572959688449;
- Tue, 05 Nov 2019 05:14:48 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=hB9idhMU92erzOjHPvAXZpJsyvC0oNhoJYwou0xdu0U=;
+        b=cRNed3CMqQiEyPkhm7fhnEFUq865tksbasU8EOKKPE/kdxSpbjK8j76ugTgtfL+b9I
+         wjo0l8HHeF51ilran1GdPS1CYk9tZxqtDGS0+WfE6Ub497rw+g33MCyhmaDr6CVPeGpc
+         TezTUYqkh3WVU1s+Cxe5LBU1EFm2ZS/4EHvKqFi673Y2U3XcjhQntWDNxw0/FzMQjRT1
+         4JVKKUzsIi5kwX74kUpy1qZOkr+6fQSdcPDGzAD3pZV9xhXh9+8Ay4sIcVnNEyzECRTv
+         aat/urcqgjaJCsH+nKoJ3VZnVuykl3uY8Z15pOfbj3yF8fYcBbigOi2yKvFO4+WXOaF8
+         K4XA==
+X-Gm-Message-State: APjAAAU6UHOyZ58+iGdM65prJupzTqJBj+oUMrx8FWexMvbuwnefBr1Q
+        qZ5VAr0bLzdoFq1L3VzENkY=
+X-Google-Smtp-Source: APXvYqwhThzYPU8gc+woRw9eFxl7hLqV3HWnaePcB1PbrFUfvPY/cSrHYTH4eVBp5kVN6u0SN9ZXNg==
+X-Received: by 2002:a1c:cc16:: with SMTP id h22mr4454762wmb.51.1572959701254;
+        Tue, 05 Nov 2019 05:15:01 -0800 (PST)
+Received: from clement-Latitude-7490.outsight.local (lputeaux-656-1-11-33.w82-127.abo.wanadoo.fr. [82.127.142.33])
+        by smtp.gmail.com with ESMTPSA id a6sm13549920wmj.1.2019.11.05.05.15.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 05:15:00 -0800 (PST)
+From:   =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+To:     Thierry Reding <thierry.reding@gmail.com>,
+        =?UTF-8?q?=27Uwe=20Kleine-K=C3=B6nig=27?= 
+        <u.kleine-koenig@pengutronix.de>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>
+Cc:     linux-pwm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        =?UTF-8?q?Cl=C3=A9ment=20P=C3=A9ron?= <peron.clem@gmail.com>
+Subject: [PATCH v3 0/7] Add support for H6 PWM
+Date:   Tue,  5 Nov 2019 14:14:49 +0100
+Message-Id: <20191105131456.32400-1-peron.clem@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <951eb7dc-bebe-5049-4998-f199e18b0bf3@canonical.com>
- <20191009163235.GT16989@phenom.ffwll.local> <a0d5f3a3-a2b3-5367-42f9-bde514571e25@amd.com>
- <CAKMK7uEtJRDhibWDv2TB2WrFzFooMWPSbveDD2N-rudAwvzVFA@mail.gmail.com>
- <c8f96b46-e81e-1e41-aafc-5f6ec236d66f@amd.com> <CAKMK7uHr3aeJRqJAscDDfsuBBnVXCeN9SS36-1UGuK84NyOD5Q@mail.gmail.com>
- <CAKMK7uH6EoY9MkzjSjU+Fe=E-XB4Tf9d2VsW=Tr=tFy1J-dJgg@mail.gmail.com>
- <53bf910b-5f9c-946b-17ee-602c24c0fa96@amd.com> <20191104165457.GH10326@phenom.ffwll.local>
- <CADnq5_PxMQ_AkBCHXU_YUAMWaPcH-nkOJNGNKnUOJWSTYV6X+A@mail.gmail.com>
- <20191104172434.GJ10326@phenom.ffwll.local> <CADnq5_NUAfeWscsnj07MpReM3LNwHPSPq3pQDe0waMi4OCatUg@mail.gmail.com>
-In-Reply-To: <CADnq5_NUAfeWscsnj07MpReM3LNwHPSPq3pQDe0waMi4OCatUg@mail.gmail.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Tue, 5 Nov 2019 14:14:36 +0100
-Message-ID: <CAKMK7uGPuYcPf+e_AL1PrH8Croydg3JcBNORCNAFgj4E72EtZQ@mail.gmail.com>
-Subject: Re: drm/amd/display: Add HDCP module - static analysis bug report
-To:     Alex Deucher <alexdeucher@gmail.com>
-Cc:     Harry Wentland <hwentlan@amd.com>,
-        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
-        "Li, Sun peng (Leo)" <Sunpeng.Li@amd.com>,
-        "Wentland, Harry" <Harry.Wentland@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        amd-gfx mailing list <amd-gfx@lists.freedesktop.org>,
-        David Airlie <airlied@linux.ie>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Lakha, Bhawanpreet" <Bhawanpreet.Lakha@amd.com>,
-        "Koenig, Christian" <Christian.Koenig@amd.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 1:52 PM Alex Deucher <alexdeucher@gmail.com> wrote:
->
-> On Mon, Nov 4, 2019 at 12:24 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Mon, Nov 04, 2019 at 12:05:40PM -0500, Alex Deucher wrote:
-> > > On Mon, Nov 4, 2019 at 11:55 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > >
-> > > > On Mon, Nov 04, 2019 at 03:23:09PM +0000, Harry Wentland wrote:
-> > > > > On 2019-11-04 5:53 a.m., Daniel Vetter wrote:
-> > > > > > On Wed, Oct 9, 2019 at 10:58 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > > >> On Wed, Oct 9, 2019 at 10:46 PM Lakha, Bhawanpreet
-> > > > > >> <Bhawanpreet.Lakha@amd.com> wrote:
-> > > > > >>>
-> > > > > >>> I misunderstood and was talking about the ksv validation specifically
-> > > > > >>> (usage of drm_hdcp_check_ksvs_revoked()).
-> > > > > >>
-> > > > > >> Hm for that specifically I think you want to do both, i.e. both
-> > > > > >> consult your psp, but also check for revoked ksvs with the core
-> > > > > >> helper. At least on some platforms only the core helper might have the
-> > > > > >> updated revoke list.
-> > > > > >>
-> > > > >
-> > > > > I think it's an either/or. Either we use an HDCP implementation that's
-> > > > > fully running in x86 kernel space (still not sure how that's compliant)
-> > > > > or we fully rely on our PSP FW to do what it's designed to do. I don't
-> > > > > think it makes sense to mix and match here.
-> > > >
-> > > > Then you need to somehow tie the revoke list that's in the psp to the
-> > > > revoke list update logic we have. That's what we've done for hdcp2 (which
-> > > > is similarly to yours implemented in hw). The point is that on linux we
-> > > > now have a standard way to get these revoke lists updated/handled.
-> > > >
-> > > > I guess it wasn't clear how exactly I think you're supposed to combine
-> > > > them?
-> > >
-> > > There's no driver sw required at all for our implementation and as far
-> > > as I know, HDCP 2.x requires that all of the key revoke handling be
-> > > handled in a secure processor rather than than on the host processor,
-> > > so I'm not sure how we make use if it.  All the driver sw is
-> > > responsible for doing is saving/restoring the potentially updated srm
-> > > at suspend/resume/etc.
-> >
-> > Uh, you don't have a permanent store on the chip? I thought another
-> > requirement is that you can't downgrade.
->
-> Right.  That's why the driver has to save and restore the srm when the
-> GPU is powered down.  I guess that part can be done by the host
-> processor as long as the srm is signed properly.
->
-> >
-> > And for hw solutions all you do with the updated revoke cert is stuff it
-> > into the hw, it's purely for updating it. And those updates need to come
-> > from somewhere else (usually in the media you play), the kernel can't
-> > fetch them over the internet itself. I thought we already had the function
-> > to give you the srm directly so you can stuff it into the hw, but looks
-> > like that part isn't there (yet).
->
-> IIRC, the revoke stuff gets gleaned from the stream by the secure
-> processor somehow when you play back secure content.  I'm not entirely
-> clear on the details, but from the design, the driver doesn't have to
-> do anything in our case other than saving and restoring the srm from
-> the secure processor.
+Hi,
 
-Hm, is that implemented in open userspace somewhere? tbh I don't know
-whether the srm is in the bitstream or somewhere else in the file
-(they're all containers with lots of stuff), but the current upstream
-hdcp stuff is done under the assumption that userspace still does the
-decrypting (so only the lowest content protection level supported
-right now). Hence the explicit step to update the kernel on the latest
-srm, which the kernel can then use to either check for revokes or hand
-to the hardware.
--Daniel
+This is a rework of Jernej's previous work[1] taking account all the
+previous remarks.
 
-> Alex
->
-> > -Daniel
-> >
-> > >
-> > > Alex
-> > >
-> > > > -Daniel
-> > > >
-> > > >
-> > > > >
-> > > > > >>> For the defines I will create patches to use drm_hdcp where it is usable.
-> > > > > >>
-> > > > > >> Thanks a lot. Ime once we have shared definitions it's much easier to
-> > > > > >> also share some helpers, where it makes sense.
-> > > > > >>
-> > > > > >> Aside I think the hdcp code could also use a bit of demidlayering. At
-> > > > > >> least I'm not understanding why you add a 2nd abstraction layer for
-> > > > > >> i2c/dpcd, dm_helper already has that. That seems like one abstraction
-> > > > > >> layer too much.
-> > > > > >
-> > > > > > I haven't seen anything fly by or in the latest pull request ... you
-> > > > > > folks still working on this or more put on the "maybe, probably never"
-> > > > > > pile?
-> > > > > >
-> > > > >
-> > > > > Following up with Bhawan.
-> > > > >
-> > > > > Harry
-> > > > >
-> > > > > > -Daniel
-> > > > > >
-> > > > > >
-> > > > > >> -Daniel
-> > > > > >>
-> > > > > >>>
-> > > > > >>>
-> > > > > >>> Bhawan
-> > > > > >>>
-> > > > > >>> On 2019-10-09 2:43 p.m., Daniel Vetter wrote:
-> > > > > >>>> On Wed, Oct 9, 2019 at 8:23 PM Lakha, Bhawanpreet
-> > > > > >>>> <Bhawanpreet.Lakha@amd.com> wrote:
-> > > > > >>>>> Hi,
-> > > > > >>>>>
-> > > > > >>>>> The reason we don't use drm_hdcp is because our policy is to do hdcp
-> > > > > >>>>> verification using PSP/HW (onboard secure processor).
-> > > > > >>>> i915 also uses hw to auth, we still use the parts from drm_hdcp ...
-> > > > > >>>> Did you actually look at what's in there? It's essentially just shared
-> > > > > >>>> defines and data structures from the standard, plus a few minimal
-> > > > > >>>> helpers to en/decode some bits. Just from a quick read the entire
-> > > > > >>>> patch very much looks like midlayer everywhere design that we
-> > > > > >>>> discussed back when DC landed ...
-> > > > > >>>> -Daniel
-> > > > > >>>>
-> > > > > >>>>> Bhawan
-> > > > > >>>>>
-> > > > > >>>>> On 2019-10-09 12:32 p.m., Daniel Vetter wrote:
-> > > > > >>>>>> On Thu, Oct 03, 2019 at 11:08:03PM +0100, Colin Ian King wrote:
-> > > > > >>>>>>> Hi,
-> > > > > >>>>>>>
-> > > > > >>>>>>> Static analysis with Coverity has detected a potential issue with
-> > > > > >>>>>>> function validate_bksv in
-> > > > > >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp1_execution.c with recent
-> > > > > >>>>>>> commit:
-> > > > > >>>>>>>
-> > > > > >>>>>>> commit ed9d8e2bcb003ec94658cafe9b1bb3960e2139ec
-> > > > > >>>>>>> Author: Bhawanpreet Lakha <Bhawanpreet.Lakha@amd.com>
-> > > > > >>>>>>> Date:   Tue Aug 6 17:52:01 2019 -0400
-> > > > > >>>>>>>
-> > > > > >>>>>>>       drm/amd/display: Add HDCP module
-> > > > > >>>>>> I think the real question here is ... why is this not using drm_hdcp?
-> > > > > >>>>>> -Daniel
-> > > > > >>>>>>
-> > > > > >>>>>>> The analysis is as follows:
-> > > > > >>>>>>>
-> > > > > >>>>>>>    28 static inline enum mod_hdcp_status validate_bksv(struct mod_hdcp *hdcp)
-> > > > > >>>>>>>    29 {
-> > > > > >>>>>>>
-> > > > > >>>>>>> CID 89852 (#1 of 1): Out-of-bounds read (OVERRUN)
-> > > > > >>>>>>>
-> > > > > >>>>>>> 1. overrun-local:
-> > > > > >>>>>>> Overrunning array of 5 bytes at byte offset 7 by dereferencing pointer
-> > > > > >>>>>>> (uint64_t *)hdcp->auth.msg.hdcp1.bksv.
-> > > > > >>>>>>>
-> > > > > >>>>>>>    30        uint64_t n = *(uint64_t *)hdcp->auth.msg.hdcp1.bksv;
-> > > > > >>>>>>>    31        uint8_t count = 0;
-> > > > > >>>>>>>    32
-> > > > > >>>>>>>    33        while (n) {
-> > > > > >>>>>>>    34                count++;
-> > > > > >>>>>>>    35                n &= (n - 1);
-> > > > > >>>>>>>    36        }
-> > > > > >>>>>>>
-> > > > > >>>>>>> hdcp->auth.msg.hdcp1.bksv is an array of 5 uint8_t as defined in
-> > > > > >>>>>>> drivers/gpu/drm/amd/display/modules/hdcp/hdcp.h as follows:
-> > > > > >>>>>>>
-> > > > > >>>>>>> struct mod_hdcp_message_hdcp1 {
-> > > > > >>>>>>>           uint8_t         an[8];
-> > > > > >>>>>>>           uint8_t         aksv[5];
-> > > > > >>>>>>>           uint8_t         ainfo;
-> > > > > >>>>>>>           uint8_t         bksv[5];
-> > > > > >>>>>>>           uint16_t        r0p;
-> > > > > >>>>>>>           uint8_t         bcaps;
-> > > > > >>>>>>>           uint16_t        bstatus;
-> > > > > >>>>>>>           uint8_t         ksvlist[635];
-> > > > > >>>>>>>           uint16_t        ksvlist_size;
-> > > > > >>>>>>>           uint8_t         vp[20];
-> > > > > >>>>>>>
-> > > > > >>>>>>>           uint16_t        binfo_dp;
-> > > > > >>>>>>> };
-> > > > > >>>>>>>
-> > > > > >>>>>>> variable n is going to contain the contains of r0p and bcaps. I'm not
-> > > > > >>>>>>> sure if that is intentional. If not, then the count is going to be
-> > > > > >>>>>>> incorrect if these are non-zero.
-> > > > > >>>>>>>
-> > > > > >>>>>>> Colin
-> > > > > >>>>> _______________________________________________
-> > > > > >>>>> dri-devel mailing list
-> > > > > >>>>> dri-devel@lists.freedesktop.org
-> > > > > >>>>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
-> > > > > >>>>
-> > > > > >>>>
-> > > > > >>
-> > > > > >>
-> > > > > >>
-> > > > > >> --
-> > > > > >> Daniel Vetter
-> > > > > >> Software Engineer, Intel Corporation
-> > > > > >> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > > > > >
-> > > > > >
-> > > > > >
-> > > > > > --
-> > > > > > Daniel Vetter
-> > > > > > Software Engineer, Intel Corporation
-> > > > > > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
-> > > > > >
-> > > >
-> > > > --
-> > > > Daniel Vetter
-> > > > Software Engineer, Intel Corporation
-> > > > http://blog.ffwll.ch
-> > > > _______________________________________________
-> > > > amd-gfx mailing list
-> > > > amd-gfx@lists.freedesktop.org
-> > > > https://lists.freedesktop.org/mailman/listinfo/amd-gfx
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > http://blog.ffwll.ch
+Bindings is still strict but probe in the driver are now optionnals.
 
+If someone could confirm that the PWM is not broken, as my board
+doesn't output it.
 
+I didn't add the acked-tags as there are big changes.
+
+Thanks,
+Clément
+
+Jernej's cover:
+Allwinner H6 SoC has PWM core which is basically the same as that found
+in A20, it's just depends on additional bus clock and reset line.
+
+This series adds support for it and extends PWM driver functionality in
+a way that it's now possible to bypass whole core and output PWM source
+clock directly as a PWM signal. This functionality is needed by AC200
+chip, which is bundled in same physical package as H6 SoC, to serve as a
+clock source of 24 MHz. AC200 clock input pin is bonded internally to
+the second PWM channel.
+
+I would be grateful if anyone can test this patch series for any kind of
+regression on other SoCs.
+
+[1]: https://patchwork.kernel.org/cover/11061737/
+
+Changes in v3:
+ - Documentation update to allow one clock without name
+ - Change reset optional to shared
+ - If reset probe failed return an error
+ - Remove old clock probe
+ - Update bypass enabled formula
+
+Changes in v2:
+ - Remove allOf in Documentation
+ - Add H6 example in Documentation
+ - Change clock name from "pwm" to "mod"
+ - Change reset quirk to optional probe
+ - Change bus_clock quirk to optional probe
+ - Add limitation comment about mod_clk_output
+ - Add quirk for mod_clk_output
+ - Change bypass formula
+
+Clément Péron (1):
+  [DO NOT MERGE] arm64: allwinner: h6: enable Beelink GS1 PWM
+
+Jernej Skrabec (6):
+  dt-bindings: pwm: allwinner: Add H6 PWM description
+  pwm: sun4i: Add an optional probe for reset line
+  pwm: sun4i: Add an optional probe for bus clock
+  pwm: sun4i: Add support to output source clock directly
+  pwm: sun4i: Add support for H6 PWM
+  arm64: dts: allwinner: h6: Add PWM node
+
+ .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml |  47 +++++++
+ .../dts/allwinner/sun50i-h6-beelink-gs1.dts   |   4 +
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |  10 ++
+ drivers/pwm/pwm-sun4i.c                       | 125 +++++++++++++++++-
+ 4 files changed, 181 insertions(+), 5 deletions(-)
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+2.20.1
+
