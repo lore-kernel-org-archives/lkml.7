@@ -2,102 +2,144 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AC0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C57C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:45:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E50C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E363217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:45:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="LMu9XN7u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dywZ6FpA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389921AbfKEPnX (ORCPT
+        id S2389972AbfKEPpK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:43:23 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54012 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728399AbfKEPnW (ORCPT
+        Tue, 5 Nov 2019 10:45:10 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34121 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389571AbfKEPpK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:43:22 -0500
-Received: by mail-wm1-f66.google.com with SMTP id x4so10356551wmi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:43:20 -0800 (PST)
+        Tue, 5 Nov 2019 10:45:10 -0500
+Received: by mail-lj1-f194.google.com with SMTP id 139so22436144ljf.1;
+        Tue, 05 Nov 2019 07:45:08 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=6wind.com; s=google;
-        h=reply-to:subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Ws7Hi7hEPlrtiokvvL54ucIv+PnQC8Xef+cIaeLnl+Y=;
-        b=LMu9XN7uvY5qrZDnV8kRjWDJ537EgUXUoDl579SrxOZJaFeLE96BI6nl4KBh2eDSZO
-         nhAY+G32tR/D9wPOVWENEBxcPbtmLLiM0v4Lig3OHLZsp5loSG0l1mOIeYgVnzMoTTyA
-         9cY32QkuSX7sYyWCH9yhBl3RDeL7YBwlga7ZelJGJqLvI0cg0xc4/GNPkU5kmil8oqym
-         9UbQmpACO1EGBkDCphF4+eE+Hrut7ktbSaWtM3ZOJdChZfnJFOfjJiHC/h7nBFB4OvRl
-         j5Ns+zeLWcS8Xr5NUCO6WXh5b87zqda3+t0Aau69yevRzynlpd46D5b41KSP9P0P0dOa
-         6zOQ==
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ay+h7c6u74y0NDeAAMw4e9/VcMJ072gLoBrrzIdrw+4=;
+        b=dywZ6FpAkymA6khuADv5aozdmj+qm8Ih+0CsbdG53LZ53xAAFb6miFnpuZclfH19JD
+         4uHXVPdmZFzYVJoOHJtboVneTqLMx5U8l0+uxQANTMH1Utw/MPrSQy9wvj3EbZ7ZPFBD
+         I3Pk8IJcJCibzzyu3G+IrQQudXl0bWdcv+7oKscO3UI6zqbgU8CQZ4EFoEnJQKGbodL9
+         vOVmdFAFpiKNoP9Ks/Ivl2orsTYcuwsThyvgDkqyJefqkumjNWscHUCJxxiV/7SKP0QF
+         8h1rFJHbrRIL3bSanhznb31tea+zYasdGaxQDaC/5PwDPqzG5xJMVQuLnSOaWaPPTkZX
+         P7Yw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from
-         :organization:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=Ws7Hi7hEPlrtiokvvL54ucIv+PnQC8Xef+cIaeLnl+Y=;
-        b=D9v7iohdfL2eRVH4z5Cg7V/GGMYTPISRwcKu3R/m+H1VvxOypqMogZgour/mLqXq9c
-         P3+F/rRxdsWweNlXb7BQCrHIA/GtWo35vuX8VNsxsJmKw6wFKzuZKtt8qFSVzxlDDrS6
-         dmknI/pdq2d9/ZdusvTftb+R7k/1QtujOeM2hWWb7vu3qCe4mpqCabWu3echnNKf/CAm
-         klwuzGzXrChhnE8DGSnuGMpWdgzO2RA3qLhGNsrvEuWTGGLGouCnsBJ/I9PbBeTa00UB
-         UOqICN9ejBvWpQ4Z7+nvh8/uE9bG/mOu435isHn3q7qa9unHOdLt6KIB7FOeFJITMOJq
-         8V2w==
-X-Gm-Message-State: APjAAAX3X5qePC75K856Jz9NS21t27+8XCYTECD0BedN76jgFCOCpnH/
-        UyP/xgoSXOjPOR66GPEhUaxCUQ==
-X-Google-Smtp-Source: APXvYqwPrOKJKAkYFi5aRMX3c4L/ngOPawbJ7a9faj+zYf8ZzV9Ec/nDj5KLBClvVV5TxxkBo4YuuQ==
-X-Received: by 2002:a1c:2e8f:: with SMTP id u137mr4888123wmu.105.1572968599564;
-        Tue, 05 Nov 2019 07:43:19 -0800 (PST)
-Received: from ?IPv6:2a01:e35:8b63:dc30:f096:9925:304a:fd2a? ([2a01:e35:8b63:dc30:f096:9925:304a:fd2a])
-        by smtp.gmail.com with ESMTPSA id b3sm13269134wmj.44.2019.11.05.07.43.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 07:43:18 -0800 (PST)
-Reply-To: nicolas.dichtel@6wind.com
-Subject: Re: [PATCH 3/5] rtnetlink: allow RTM_NEWLINK to act upon interfaces
- in arbitrary namespaces
-To:     Jonas Bonn <jonas@norrbonn.se>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     davem@davemloft.net
-References: <20191105081112.16656-1-jonas@norrbonn.se>
- <20191105081112.16656-4-jonas@norrbonn.se>
-From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
-Organization: 6WIND
-Message-ID: <f479405c-9372-68fb-762e-519f3bfdd333@6wind.com>
-Date:   Tue, 5 Nov 2019 16:43:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ay+h7c6u74y0NDeAAMw4e9/VcMJ072gLoBrrzIdrw+4=;
+        b=PFsAxjrbBLJ5EtTwb6FGYCvkHqvUrsT8I5HRNn0pLSux0hpVAH3px8rcC446Vw2EBJ
+         QzhsbZZxjE46e+uCiCGAdMzJbjWZ0//BVqBni92XNdRTbrIU4ww4UQGV0k9DppvN53Un
+         M5lSSInVdTW0N2qMx0v2epK8zoqeovT6mukhNoFz9sSiudHKjTtLY/hZ1FAcMJwrGZwN
+         vmW0kFEXs+BVIqufIbrUsDyQZjoHdulHVB97mr/1dlUgmMbr0lGrS1zxlGLKJ1n0Qrp4
+         /E6LcmvIwWrb7yvtYsYK8yeQnghSCvrYXKM9LyvYCjWuaJjQDlxzCIb/2vD/lGNBUngX
+         aftw==
+X-Gm-Message-State: APjAAAVQKsmr8xFltcxrt0QvactLi4gU7CwIRdnnGEJz38ZxlII6nu3z
+        3iE/jgiI216mJ4UOi69nFlUgssnwYrAAfC7wOm8W2+Gw
+X-Google-Smtp-Source: APXvYqwgP223ysQHD0U2ApItHEUOrYRG++kDvJ8HQF8nebhnlOaxv4s/qoh1vpev3gpdrwpDFsgYxc6JjaWYO9ujXrw=
+X-Received: by 2002:a2e:9842:: with SMTP id e2mr6656552ljj.93.1572968707730;
+ Tue, 05 Nov 2019 07:45:07 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191105081112.16656-4-jonas@norrbonn.se>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+References: <20191102145530.16104-1-linux@roeck-us.net> <CAC5umyi9PuMTERNvNShfzu725bhBtkOZsD3NWtcxhKq5XGU2CQ@mail.gmail.com>
+In-Reply-To: <CAC5umyi9PuMTERNvNShfzu725bhBtkOZsD3NWtcxhKq5XGU2CQ@mail.gmail.com>
+From:   Akinobu Mita <akinobu.mita@gmail.com>
+Date:   Wed, 6 Nov 2019 00:44:56 +0900
+Message-ID: <CAC5umyiJT300+MunDi4wwwAgSxiqx7_rersbNRvybcNoo3kGDg@mail.gmail.com>
+Subject: Re: [PATCH v4] nvme: Add hardware monitoring support
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Keith Busch <kbusch@kernel.org>, Chris Healy <cphealy@gmail.com>,
+        Jens Axboe <axboe@fb.com>, Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        LKML <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org, Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Le 05/11/2019 à 09:11, Jonas Bonn a écrit :
-> RTM_NEWLINK can be used mostly interchangeably with RTM_SETLINK for
-> modifying device configuration.  As such, this method requires the same
-> logic as RTM_SETLINK for finding the device to act on.
-> 
-> With this patch, the IFLA_TARGET_NETNSID selects the namespace in which
-> to search for the interface to act upon.  This allows, for example, to
-> set the namespace of an interface outside the current namespace by
-> selecting it with the (IFLA_TARGET_NETNSID,ifi->ifi_index) pair and
-> specifying the namespace with one of IFLA_NET_NS_[PID|FD].
-> 
-> Since rtnl_newlink branches off into do_setlink, we need to provide the
-> same backwards compatibility check as we do for RTM_SETLINK:  if the
-> device is not found in the namespace given by IFLA_TARGET_NETNSID then
-> we search for it in the current namespace.  If found there, it's
-> namespace will be changed, as before.
-> 
-> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-Acked-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+2019=E5=B9=B411=E6=9C=886=E6=97=A5(=E6=B0=B4) 0:38 Akinobu Mita <akinobu.mi=
+ta@gmail.com>:
+>
+> 2019=E5=B9=B411=E6=9C=882=E6=97=A5(=E5=9C=9F) 23:55 Guenter Roeck <linux@=
+roeck-us.net>:
+> > diff --git a/drivers/nvme/host/nvme-hwmon.c b/drivers/nvme/host/nvme-hw=
+mon.c
+> > new file mode 100644
+> > index 000000000000..28b4b7f43bb0
+> > --- /dev/null
+> > +++ b/drivers/nvme/host/nvme-hwmon.c
+> > @@ -0,0 +1,181 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * NVM Express hardware monitoring support
+> > + * Copyright (c) 2019, Guenter Roeck
+> > + */
+> > +
+> > +#include <linux/hwmon.h>
+> > +#include <asm/unaligned.h>
+> > +
+> > +#include "nvme.h"
+> > +
+> > +struct nvme_hwmon_data {
+> > +       struct nvme_ctrl *ctrl;
+> > +       struct nvme_smart_log log;
+> > +       struct mutex read_lock;
+> > +};
+> > +
+> > +static int nvme_hwmon_get_smart_log(struct nvme_hwmon_data *data)
+> > +{
+> > +       int ret;
+> > +
+> > +       ret =3D nvme_get_log(data->ctrl, NVME_NSID_ALL, NVME_LOG_SMART,=
+ 0,
+> > +                          &data->log, sizeof(data->log), 0);
+> > +
+> > +       return ret <=3D 0 ? ret : -EIO;
+> > +}
+> > +
+> > +static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types=
+ type,
+> > +                          u32 attr, int channel, long *val)
+> > +{
+> > +       struct nvme_hwmon_data *data =3D dev_get_drvdata(dev);
+> > +       struct nvme_smart_log *log =3D &data->log;
+> > +       int temp;
+> > +       int err;
+> > +
+> > +       /*
+> > +        * First handle attributes which don't require us to read
+> > +        * the smart log.
+> > +        */
+> > +       switch (attr) {
+> > +       case hwmon_temp_max:
+> > +               *val =3D (data->ctrl->wctemp - 273) * 1000;
+> > +               return 0;
+> > +       case hwmon_temp_crit:
+> > +               *val =3D (data->ctrl->cctemp - 273) * 1000;
+>
+> This attribute should be 'hwmon_temp_max_alarm' rather than
+> 'hwmon_temp_crit_alarm'?
+
+Oops, I misquoted the code.
+
+This comment should be addressed to the code below:
+
++       case hwmon_temp_crit_alarm:
++               *val =3D !!(log->critical_warning & NVME_SMART_CRIT_TEMPERA=
+TURE);
++               break;
