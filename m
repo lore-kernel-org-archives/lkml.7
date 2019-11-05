@@ -2,156 +2,151 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F73CC010C4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92802C010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:35:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65A3C206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D818206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:35:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="gaSg4b5G"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730829AbfKELfx (ORCPT
+        id S1730906AbfKELf6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:35:53 -0500
-Received: from mga14.intel.com ([192.55.52.115]:58868 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730636AbfKELfw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:35:52 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 03:35:51 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
-   d="scan'208";a="227068904"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Nov 2019 03:35:42 -0800
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1iRx7b-000Fr1-O6; Tue, 05 Nov 2019 19:35:39 +0800
-Date:   Tue, 5 Nov 2019 19:35:15 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Marco Elver <elver@google.com>
-Cc:     kbuild-all@lists.01.org, elver@google.com, akiyks@gmail.com,
-        stern@rowland.harvard.edu, glider@google.com,
-        parri.andrea@gmail.com, andreyknvl@google.com, luto@kernel.org,
-        ard.biesheuvel@linaro.org, arnd@arndb.de, boqun.feng@gmail.com,
-        bp@alien8.de, dja@axtens.net, dlustig@nvidia.com,
-        dave.hansen@linux.intel.com, dhowells@redhat.com,
-        dvyukov@google.com, hpa@zytor.com, mingo@redhat.com,
-        j.alglave@ucl.ac.uk, joel@joelfernandes.org, corbet@lwn.net,
-        jpoimboe@redhat.com, luc.maranget@inria.fr, mark.rutland@arm.com,
-        npiggin@gmail.com, paulmck@kernel.org, peterz@infradead.org,
-        tglx@linutronix.de, will@kernel.org, kasan-dev@googlegroups.com,
-        linux-arch@vger.kernel.org, linux-doc@vger.kernel.org,
-        linux-efi@vger.kernel.org, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org
-Subject: Re: [PATCH v3 5/9] seqlock, kcsan: Add annotations for KCSAN
-Message-ID: <201911051950.7sv6Mqoe%lkp@intel.com>
-References: <20191104142745.14722-6-elver@google.com>
+        Tue, 5 Nov 2019 06:35:58 -0500
+Received: from mail-eopbgr140088.outbound.protection.outlook.com ([40.107.14.88]:23844
+        "EHLO EUR01-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730636AbfKELf5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:35:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fak/1X9Xoe2ShlbFSRYaoEYz0OP6BLmG6sGmBxyHdXp1rxgqqkbKL8zE7srSTZi1vyvnvpdt/JzOGrK4i2aw6enNIPGTSDbjLLNXbmvtRbwhE3vOCxUh8Ax4c45FdGq5uidZlXWuwFxpqxtGtA2DTwuHFuCR5R1CvRTz/t0Rszy2Aset0iDfCByy84UlfllDsDt81Ti6m763DdfTgpaYjxFocsq8XJj7Qe3irHTk+Rf1nr+aaN6qCLO0zdOFVe+nrS0bxr417LKW1p4cOjnqN1OJTRO9HxH64QJJIx8tbteIHtfsQGz5Zr+HZB5S8r9TvyZn1BAFBCPZInMcMR4cQw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RW13KYjicyG6unFrZ6YVKDTGO8qvRwJejdmpzC9s/zc=;
+ b=M/S/nrdft4ZAkw8gISLZq/uUa74H/XmwkINWnXShc73UIb622J8NTDxKvovisf0oZa/Qf4tKYFBMaBRTNelPvougKPnN7OTWgZKAgAwftg+DS7FLNOc3BwHhnHR7QokJXmYklH791NO/pchRhvH1n5csCap/GREwAp2sPurudZdQTgdMh0EEcbIbvP3uzsAIMNt9RqERR8Cw+YgqZiJIh6IDn2boCkEMyRV1/fWWllTsYowkvvCcnP/jjN8TdUYg1lGwfP5mc5C1fKGm8BBEdTy5YbaCMhHlssiS+C4FO3r8t+0ktFGF6PZZZ+pPTgeeW8mM321+QP4zovByRy3nyg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=RW13KYjicyG6unFrZ6YVKDTGO8qvRwJejdmpzC9s/zc=;
+ b=gaSg4b5GGGNKO1T0EE6aLWIZN4E2JMCc4c5Efv2S1+xn/6/LL3CHIOtd2/GnPlC1b9DOiBmlAXIjrdIkH1o/aOoRGiEnG4uJ5OyQrwfEnd6WOXEy1RvHAaz+qGm1J7jFguRpfOYlIDiq+MKWQviKD0B/EYiYS0AZ3YvXDX9MFWQ=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB5201.eurprd04.prod.outlook.com (20.177.42.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Tue, 5 Nov 2019 11:35:53 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2430.020; Tue, 5 Nov 2019
+ 11:35:53 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>
+CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Anson Huang <anson.huang@nxp.com>,
+        Jacky Bai <ping.bai@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH V2 0/4] clk: imx: imx8m[x]: switch to clk_hw API
+Thread-Topic: [PATCH V2 0/4] clk: imx: imx8m[x]: switch to clk_hw API
+Thread-Index: AQHVktMk8ePu9WQHCE2BNQEucqhFb6d8dLOA
+Date:   Tue, 5 Nov 2019 11:35:53 +0000
+Message-ID: <20191105113551.6agks4xzbbtf25fc@fsr-ub1664-175>
+References: <1572846270-24375-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1572846270-24375-1-git-send-email-peng.fan@nxp.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: AM0PR02CA0063.eurprd02.prod.outlook.com
+ (2603:10a6:208:d2::40) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d9b12ee7-a7ab-4e6c-6761-08d761e450b1
+x-ms-traffictypediagnostic: AM0PR04MB5201:|AM0PR04MB5201:
+x-ms-exchange-purlcount: 2
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB5201765A720E94035C048C40F67E0@AM0PR04MB5201.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1443;
+x-forefront-prvs: 0212BDE3BE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(7916004)(136003)(396003)(376002)(366004)(39860400002)(346002)(199004)(189003)(66556008)(64756008)(66066001)(54906003)(476003)(102836004)(7736002)(6636002)(76176011)(256004)(8936002)(14444005)(66476007)(478600001)(6486002)(8676002)(386003)(26005)(66446008)(6246003)(71190400001)(71200400001)(81166006)(6436002)(2906002)(6306002)(6116002)(99286004)(1076003)(3846002)(6512007)(9686003)(229853002)(966005)(6506007)(4326008)(305945005)(86362001)(5660300002)(52116002)(316002)(186003)(446003)(486006)(44832011)(81156014)(11346002)(66946007)(25786009)(53546011)(14454004)(6862004)(33716001)(32563001)(15585785002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB5201;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: dpRHkLt4T1X+CIhGPJTvwfU41AW6rBePmovys8usYnFfBz19ewRnl1KqPuyAZN0l0I7EiscCEDjIa1xDe8Gpncqpx65YUhcYqRY+nMv3aHTxeU6x2ExbMxqcsyxnnjQtAyDBEg2Noeodbp9muazFj5ytAYmJJtrJw6s1hN4pqvab0yHEwZ5cKj80UOYKBSbwMLeDr2FxETdc/DmDxA2WExl/mFuDgCoKRUcVGsjrsaMfg+tY9VGp6b7a2o7A7jIWHy0deAAD+xRNuVpBQJoxf1xufJbcqwP7uWUQYKgkr1SMr16uTiPXeALecC+l09T50To9E+N7p96oEXuPNp6jHWit5gsRMpxF4gQg40/imPUuNvr010iWGnOccpTrm2q6fJzk7XZJ9ffSIcMRWegGSPfx9K5sjfRHZDVq2LORZpfWHxse3gY9ZotxIzIXGAS+4K7MKWdWLOjAQ03i4Sr18pVkZF7qp4w+HnHEMf6axDo=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <8166DA92896F3F47B9D44C82A190727F@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104142745.14722-6-elver@google.com>
-X-Patchwork-Hint: ignore
-User-Agent: NeoMutt/20170113 (1.7.2)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d9b12ee7-a7ab-4e6c-6761-08d761e450b1
+X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 11:35:53.5233
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: b+njCTm795JtZO2RbWlYRmQYy1l78ZwwAnpRG4A4y8tsFu8apMLzqnqxfLMycYiHj2FLjcCZvY+6GHkl2M1Xkg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB5201
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marco,
+On 19-11-04 05:46:02, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
 
-I love your patch! Perhaps something to improve:
+Entire patch series looks good to me.
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.4-rc6]
-[cannot apply to next-20191031]
-[if your patch is applied to the wrong git tree, please drop us a note to help
-improve the system. BTW, we also suggest to use '--base' option to specify the
-base tree in git format-patch, please see https://stackoverflow.com/a/37406982]
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-url:    https://github.com/0day-ci/linux/commits/Marco-Elver/Add-Kernel-Concurrency-Sanitizer-KCSAN/20191105-002542
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git a99d8080aaf358d5d23581244e5da23b35e340b9
-reproduce:
-        # apt-get install sparse
-        # sparse version: v0.6.1-6-g57f8611-dirty
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
-
-If you fix the issue, kindly add following tag
-Reported-by: kbuild test robot <lkp@intel.com>
-
-
-sparse warnings: (new ones prefixed by >>)
-
->> include/linux/rcupdate.h:651:9: sparse: sparse: context imbalance in 'thread_group_cputime' - different lock contexts for basic block
-
-vim +/thread_group_cputime +651 include/linux/rcupdate.h
-
-^1da177e4c3f41 Linus Torvalds      2005-04-16  603  
-^1da177e4c3f41 Linus Torvalds      2005-04-16  604  /*
-^1da177e4c3f41 Linus Torvalds      2005-04-16  605   * So where is rcu_write_lock()?  It does not exist, as there is no
-^1da177e4c3f41 Linus Torvalds      2005-04-16  606   * way for writers to lock out RCU readers.  This is a feature, not
-^1da177e4c3f41 Linus Torvalds      2005-04-16  607   * a bug -- this property is what provides RCU's performance benefits.
-^1da177e4c3f41 Linus Torvalds      2005-04-16  608   * Of course, writers must coordinate with each other.  The normal
-^1da177e4c3f41 Linus Torvalds      2005-04-16  609   * spinlock primitives work well for this, but any other technique may be
-^1da177e4c3f41 Linus Torvalds      2005-04-16  610   * used as well.  RCU does not care how the writers keep out of each
-^1da177e4c3f41 Linus Torvalds      2005-04-16  611   * others' way, as long as they do so.
-^1da177e4c3f41 Linus Torvalds      2005-04-16  612   */
-3d76c082907e8f Paul E. McKenney    2009-09-28  613  
-3d76c082907e8f Paul E. McKenney    2009-09-28  614  /**
-ca5ecddfa8fcbd Paul E. McKenney    2010-04-28  615   * rcu_read_unlock() - marks the end of an RCU read-side critical section.
-3d76c082907e8f Paul E. McKenney    2009-09-28  616   *
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  617   * In most situations, rcu_read_unlock() is immune from deadlock.
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  618   * However, in kernels built with CONFIG_RCU_BOOST, rcu_read_unlock()
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  619   * is responsible for deboosting, which it does via rt_mutex_unlock().
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  620   * Unfortunately, this function acquires the scheduler's runqueue and
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  621   * priority-inheritance spinlocks.  This means that deadlock could result
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  622   * if the caller of rcu_read_unlock() already holds one of these locks or
-ec84b27f9b3b56 Anna-Maria Gleixner 2018-05-25  623   * any lock that is ever acquired while holding them.
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  624   *
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  625   * That said, RCU readers are never priority boosted unless they were
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  626   * preempted.  Therefore, one way to avoid deadlock is to make sure
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  627   * that preemption never happens within any RCU read-side critical
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  628   * section whose outermost rcu_read_unlock() is called with one of
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  629   * rt_mutex_unlock()'s locks held.  Such preemption can be avoided in
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  630   * a number of ways, for example, by invoking preempt_disable() before
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  631   * critical section's outermost rcu_read_lock().
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  632   *
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  633   * Given that the set of locks acquired by rt_mutex_unlock() might change
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  634   * at any time, a somewhat more future-proofed approach is to make sure
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  635   * that that preemption never happens within any RCU read-side critical
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  636   * section whose outermost rcu_read_unlock() is called with irqs disabled.
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  637   * This approach relies on the fact that rt_mutex_unlock() currently only
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  638   * acquires irq-disabled locks.
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  639   *
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  640   * The second of these two approaches is best in most situations,
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  641   * however, the first approach can also be useful, at least to those
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  642   * developers willing to keep abreast of the set of locks acquired by
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  643   * rt_mutex_unlock().
-f27bc4873fa8b7 Paul E. McKenney    2014-05-04  644   *
-3d76c082907e8f Paul E. McKenney    2009-09-28  645   * See rcu_read_lock() for more information.
-3d76c082907e8f Paul E. McKenney    2009-09-28  646   */
-bc33f24bdca8b6 Paul E. McKenney    2009-08-22  647  static inline void rcu_read_unlock(void)
-bc33f24bdca8b6 Paul E. McKenney    2009-08-22  648  {
-f78f5b90c4ffa5 Paul E. McKenney    2015-06-18  649  	RCU_LOCKDEP_WARN(!rcu_is_watching(),
-bde23c6892878e Heiko Carstens      2012-02-01  650  			 "rcu_read_unlock() used illegally while idle");
-bc33f24bdca8b6 Paul E. McKenney    2009-08-22 @651  	__release(RCU);
-bc33f24bdca8b6 Paul E. McKenney    2009-08-22  652  	__rcu_read_unlock();
-d24209bb689e2c Paul E. McKenney    2015-01-21  653  	rcu_lock_release(&rcu_lock_map); /* Keep acq info for rls diags. */
-bc33f24bdca8b6 Paul E. McKenney    2009-08-22  654  }
-^1da177e4c3f41 Linus Torvalds      2005-04-16  655  
-
-:::::: The code at line 651 was first introduced by commit
-:::::: bc33f24bdca8b6e97376e3a182ab69e6cdefa989 rcu: Consolidate sparse and lockdep declarations in include/linux/rcupdate.h
-
-:::::: TO: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
-:::::: CC: Ingo Molnar <mingo@elte.hu>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
+>=20
+> V2:
+>  Add a new patch patch 1/4 to avoid build warning for arm64
+>  clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
+>=20
+> This patchset is to Switch i.MX8MN/M/Q clk driver to clk_hw
+> based API.
+>=20
+> Based on imx/next branch, with [1][2] applied.
+>=20
+> [1]  clk: imx: switch to clk_hw based API
+>      https://patchwork.kernel.org/cover/11217881/
+> [2]  clk: imx: imx8mq: fix sys3_pll_out_sels
+>      https://patchwork.kernel.org/patch/11214551/
+>=20
+> Peng Fan (4):
+>   clk: imx: Remove __init for imx_obtain_fixed_clk_hw() API
+>   clk: imx: imx8mn: Switch to clk_hw based API
+>   clk: imx: imx8mm: Switch to clk_hw based API
+>   clk: imx: imx8mq: Switch to clk_hw based API
+>=20
+>  drivers/clk/imx/clk-imx8mm.c | 550 +++++++++++++++++++++----------------=
+----
+>  drivers/clk/imx/clk-imx8mn.c | 475 ++++++++++++++++++------------------
+>  drivers/clk/imx/clk-imx8mq.c | 569 ++++++++++++++++++++++---------------=
+------
+>  drivers/clk/imx/clk.c        |   4 +-
+>  4 files changed, 819 insertions(+), 779 deletions(-)
+>=20
+> --=20
+> 2.16.4
+>=20
