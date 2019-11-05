@@ -2,105 +2,116 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F07ECC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:28:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F892C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5384214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:28:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="K1AWEpG1"
+	by mail.kernel.org (Postfix) with ESMTP id 6005C214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390347AbfKER2E (ORCPT
+        id S2390387AbfKER2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:28:04 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:44972 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730943AbfKER2D (ORCPT
+        Tue, 5 Nov 2019 12:28:48 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42190 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388790AbfKER2r (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:28:03 -0500
-Received: by mail-il1-f195.google.com with SMTP id i6so326967ilr.11;
-        Tue, 05 Nov 2019 09:28:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GTFoXOfWJrTJukAAsyozGS2jxqQNjGUoCCDkiyXZrks=;
-        b=K1AWEpG14GpazrrnyADY6KKZpTspIcP9uY98rGEXah5YJNdRQxZtJUlKG3gbnWbDdj
-         hzlV1HXEm+ujPHU/4IV734ebSheBGFxv2rnS9zp1nmmyIwLDbJLFmuX96Mde74v6v5PK
-         xq6RQPhqI/TK7KmHB8UVozfDcZKuObclsGNGIX7B2OxN4b+DRPlYF20x/LW+nqU+R25z
-         hWPI9MXL/Lm5xaVOpGWDdeRteIQfmMur18Gjve0AvgToDTYd9f1xmigBIitsvGKMB05y
-         5aKbUnB9c+9nEhvGf/vXGeXDN0jetxr4cecdZRwNaSILS4//mTzDJuefH2b6zOt4+z47
-         tXsA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GTFoXOfWJrTJukAAsyozGS2jxqQNjGUoCCDkiyXZrks=;
-        b=DVSaQ3JQRvXDKOutFD46g1oSASeWMGVWhX6791V5G8AakCpmxZiN4PY9DgjTERJjil
-         QAZvAdy7SGPbk3X1Iwru2FlZ/kYxg6Eq0bqzLBZToCdY8Rblxaf68OHinbsmEJCObbMI
-         pZVuKNrzQkpP++S1FDpkQhKm/OfbQzhvpqu37t0xZOt/WF02lTsWe6U/UXblIkkdPl6T
-         vvy5+yT6A7NOmFubKF+gOiUC0O/6c3WdyBrhUU3lfdBaY66/Xgjn6FjKeyMZfwvsfoAZ
-         BENdps1P73hbKZGO8/kizr8Zur2/X49zNlt/shckDvKwrsHnVPjiWgoFc2IsCKIu00q/
-         0Myw==
-X-Gm-Message-State: APjAAAUdZ6WKkpX2hLlu3X4Y0060ga4tZVQPMegsPIOnrOWDdB80S7kU
-        Sk2ZkhOYWbNs1OoJpaRs5w087hRNwCAngYXHaTA=
-X-Google-Smtp-Source: APXvYqzGIwf2uAcj+jbv7ogsYQ8oo8RHYjm0AfGfROTgS6+aOn75ZQCD4Hy2jm36RyD9vSLEkaJhAICptCEdpEYMo88=
-X-Received: by 2002:a05:6e02:803:: with SMTP id u3mr36060158ilm.43.1572974882467;
- Tue, 05 Nov 2019 09:28:02 -0800 (PST)
+        Tue, 5 Nov 2019 12:28:47 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iS2d8-0000fV-Q3; Tue, 05 Nov 2019 18:28:35 +0100
+Date:   Tue, 5 Nov 2019 18:28:33 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Oleg Nesterov <oleg@redhat.com>
+cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: handle_exit_race && PF_EXITING
+In-Reply-To: <20191105152728.GA5666@redhat.com>
+Message-ID: <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
+References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <20191105152728.GA5666@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-References: <20191014174022.94605-1-dmitry.torokhov@gmail.com>
- <20191105004016.GT57214@dtor-ws> <20191105005541.GP25745@shell.armlinux.org.uk>
-In-Reply-To: <20191105005541.GP25745@shell.armlinux.org.uk>
-From:   Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Date:   Tue, 5 Nov 2019 09:27:51 -0800
-Message-ID: <CAKdAkRQNWXjMdJ9F1Lu=8+rHWFJwoyWu6Lcc+LFesaSTz3wspg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] net: phy: switch to using fwnode_gpiod_get_index
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        netdev <netdev@vger.kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 4:55 PM Russell King - ARM Linux admin
-<linux@armlinux.org.uk> wrote:
->
-> On Mon, Nov 04, 2019 at 04:40:16PM -0800, Dmitry Torokhov wrote:
-> > Hi Linus,
+On Tue, 5 Nov 2019, Oleg Nesterov wrote:
+> On 11/05, Thomas Gleixner wrote:
 > >
-> > On Mon, Oct 14, 2019 at 10:40:19AM -0700, Dmitry Torokhov wrote:
-> > > This series switches phy drivers form using fwnode_get_named_gpiod() and
-> > > gpiod_get_from_of_node() that are scheduled to be removed in favor
-> > > of fwnode_gpiod_get_index() that behaves more like standard
-> > > gpiod_get_index() and will potentially handle secondary software
-> > > nodes in cases we need to augment platform firmware.
-> > >
-> > > Linus, as David would prefer not to pull in the immutable branch but
-> > > rather route the patches through the tree that has the new API, could
-> > > you please take them with his ACKs?
-> >
-> > Gentle ping on the series...
->
-> Given that kbuild found a build issue with patch 1, aren't we waiting
-> for you to produce an updated patch 1?
+> > Out of curiosity, what's the race issue vs. robust list which you are
+> > trying to solve?
+> 
+> Off-topic, but this reminds me...
+> 
+> 	#include <sched.h>
+> 	#include <assert.h>
+> 	#include <unistd.h>
+> 	#include <syscall.h>
+> 
+> 	#define FUTEX_LOCK_PI		6
+> 
+> 	int main(void)
+> 	{
+> 		struct sched_param sp = {};
+> 
+> 		sp.sched_priority = 2;
+> 		assert(sched_setscheduler(0, SCHED_FIFO, &sp) == 0);
+> 
+> 		int lock = vfork();
+> 		if (!lock) {
+> 			sp.sched_priority = 1;
+> 			assert(sched_setscheduler(0, SCHED_FIFO, &sp) == 0);
+> 			_exit(0);
+> 		}
+> 
+> 		syscall(__NR_futex, &lock, FUTEX_LOCK_PI, 0,0,0);
+> 		return 0;
+> 	}
+> 
+> this creates the unkillable RT process spinning in futex_lock_pi() on
+> a single CPU machine (or you can use taskset).
 
-No: kbuild is unable to parse instructions such as "please pull an
-immutable branch" before applying the series. Linus' tree already has
-needed changes.
+Uuurgh.
 
-Thanks.
+> Probably the patch below makes sense anyway, but of course it doesn't
+> solve the real problem: futex_lock_pi() should not spin in this case.
 
--- 
-Dmitry
+Obviously not.
+
+> It seems to me I even sent the fix a long ago, but I can't recall what
+> exactly it did. Probably the PF_EXITING check in attach_to_pi_owner()
+> must simply die, I'll try to recall...
+
+We can't do that. The task might have released the futex already, so the
+waiter would operate on inconsistent state :(
+
+The problem with that exit race is that there is no form of serialization
+which might be used to address that. We can't abuse any of the task locks
+for this.
+
+I was working on a patch set some time ago to fix another more esoteric
+futex exit issue. Let me resurrect that.
+
+Vs. the signal pending check. That makes sense on its own, but we should
+not restrict it to fatal signals. Futexes are interruptible by definition.
+
+Thanks,
+
+	tglx
