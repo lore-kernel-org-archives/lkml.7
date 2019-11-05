@@ -2,176 +2,133 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9187DCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6EBFCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:31:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C25D214E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:29:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VWP1tAe9"
+	by mail.kernel.org (Postfix) with ESMTP id 8EDD720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:31:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730354AbfKEC36 (ORCPT
+        id S1730385AbfKECb3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:29:58 -0500
-Received: from mail-qk1-f195.google.com ([209.85.222.195]:37644 "EHLO
-        mail-qk1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbfKEC36 (ORCPT
+        Mon, 4 Nov 2019 21:31:29 -0500
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:41530 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1729760AbfKECb3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:29:58 -0500
-Received: by mail-qk1-f195.google.com with SMTP id e187so7050738qkf.4;
-        Mon, 04 Nov 2019 18:29:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7h16af0jNCFKGEIf5mIDG7Kt6FCGs2sNKPQ6KLf4+Qg=;
-        b=VWP1tAe9P76PFpAfBgjVkwMa1D4oY3N78Yt4Ea7ef5OS0o5jUBUTBT0NhUVgSzOI1M
-         1oaolSrOGXrTTLLoeLkxEKEjJ03zBgRsaIsBqAvk3x2HPllXeoYqUqM6RLgD+gINCC/4
-         pD1I3rykpGgY9eFGSOJosUN/hy5j0KWEkacRmFKEGgMHdcGdvHpfheo4CddxCKS4EBf5
-         ie6vZrnCjp+JBVdjBGlGR5OtPAWvDiigXc9WPlZzdeRNQCL3fceNr3g/h7hwr0k/n2gM
-         Bz/ZzkEyUJ0mvkWVzO7UhVAs9ZA+zvBK1XKZ+QCKxd+Yyr9dDnbRp4887AQCpCLJT+6a
-         FGew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=7h16af0jNCFKGEIf5mIDG7Kt6FCGs2sNKPQ6KLf4+Qg=;
-        b=K5mH7A9CIpiSQj5j8Rh+KGMdAFZTyW4jwDc8lR37s8oJCTm4AIj4WyUmqjhapubpkO
-         FOXvce4BT/hyepdI+hwq6RJ13erJvsz/7uiVaSYsCSvdNP4XJvwTCFsemtYfsYc1ne0/
-         +DKT43CRx9/BMEfcuRBsbnFgfhE4DtKZOAoHP6QhwHsxrwTVsfwdHBbdOm3eis/2qB5X
-         RUOMrAKW+9arNAy/OHGAs8Le1qUoohofjUdcKed0IJk3G5S2c8Xe8+xKu+ECnc9QKWtf
-         RlkFy7bF+gA4ZkJSrkWagoTDTMlHWv/ljw9b9PoKTK6q/uQgD9FhSJJO5aJvj2scNQaP
-         mG6A==
-X-Gm-Message-State: APjAAAX5owG2BX51GsuRDGNPvSoB/i9/UF2tav7+qi4qTCg0eK3MCfGh
-        b5wlS17mVpLSHtBMU9INBQE=
-X-Google-Smtp-Source: APXvYqxeIqWvnleHr9vw/ZojTKoSW30pOuidURAHeMlqsGtsUeDBdPrXah4akZEpoypQaLxy72fTjg==
-X-Received: by 2002:ae9:e8c5:: with SMTP id a188mr3035483qkg.17.1572920995179;
-        Mon, 04 Nov 2019 18:29:55 -0800 (PST)
-Received: from colonelthink.syslab.sandbox (sb-gw13.cs.toronto.edu. [128.100.3.13])
-        by smtp.gmail.com with ESMTPSA id e17sm10845817qtk.65.2019.11.04.18.29.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 04 Nov 2019 18:29:54 -0800 (PST)
-From:   Mohammad Nasirifar <far.nasiri.m@gmail.com>
-X-Google-Original-From: Mohammad Nasirifar <farnasirim@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Mohammad Nasirifar <farnasirim@gmail.com>,
-        linux-api@vger.kernel.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Subject: [PATCH 1/1] syscalls: Fix references to filenames containing syscall defs
-Date:   Mon,  4 Nov 2019 21:29:28 -0500
-Message-Id: <20191105022928.517526-1-farnasirim@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Mon, 4 Nov 2019 21:31:29 -0500
+X-UUID: 7fffc5ef7400452bb4f7ddf0176366e7-20191105
+X-UUID: 7fffc5ef7400452bb4f7ddf0176366e7-20191105
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        (envelope-from <chunfeng.yun@mediatek.com>)
+        (mailgw01.mediatek.com ESMTP with TLS)
+        with ESMTP id 1067987505; Tue, 05 Nov 2019 10:31:21 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS32DR.mediatek.inc
+ (172.27.6.104) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 5 Nov
+ 2019 10:31:16 +0800
+Received: from [10.17.3.153] (172.27.4.253) by MTKCAS36.mediatek.inc
+ (172.27.4.170) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 5 Nov 2019 10:31:16 +0800
+Message-ID: <1572921077.18464.55.camel@mhfsdcap03>
+Subject: Re: [RFC PATCH] usb: common: change usb_debug_root as static
+ variable
+From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
+        <linux-usb@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>
+Date:   Tue, 5 Nov 2019 10:31:17 +0800
+In-Reply-To: <20191101090221.GC2671695@kroah.com>
+References: <1572575349-5596-1-git-send-email-chunfeng.yun@mediatek.com>
+         <20191101090221.GC2671695@kroah.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-TM-SNTS-SMTP: 2BCAD82B0D71AB466DCD90ED35262FF773AEF73C748AB309528833C8BCB79ED62000:8
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix stale references to files containing syscall definitions in
-'include/linux/syscalls.h' and 'include/uapi/asm-generic/unistd.h',
-pointing to 'kernel/itimer.c', 'kernel/hrtimer.c', and 'kernel/time.c'.
-They are now under 'kernel/time'.
+On Fri, 2019-11-01 at 10:02 +0100, Greg Kroah-Hartman wrote:
+> On Fri, Nov 01, 2019 at 10:29:09AM +0800, Chunfeng Yun wrote:
+> > Try to avoid using extern global variable, and provide two
+> > functions for the usage cases
+> 
+> That is 3 different things all in one patch, not generally considered a
+> good thing at all.
 
-Also definitions of 'getpid', 'getppid', 'getuid', 'geteuid', 'getgid',
-'getegid', 'gettid', and 'sysinfo' are now in 'kernel/sys.c'.
+> 
+> Also, who is going to use these new functions?  Why are they needed?
+After remove global variable usb_debug_root, the drivers using
+usb_debug_root to create directory or files will use these new APIs
+instead.
 
-To: arnd@arndb.de
-To: akpm@linux-foundation.org
-Cc: linux-api@vger.kernel.org
-Cc: linux-arch@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Acked-by: Valdis Kletnieks <valdis.kletnieks@vt.edu>
-Signed-off-by: Mohammad Nasirifar <farnasirim@gmail.com>
----
- include/linux/syscalls.h          | 8 ++++----
- include/uapi/asm-generic/unistd.h | 8 ++++----
- 2 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > ---
+> > NOTE:
+> >     Prepared but not send out patches for drivers using usb_debug_root,
+> > because I'm not sure whether this patch is needed, and many drivers
+> > will be modified.
+> > ---
+> >  drivers/usb/common/common.c | 16 ++++++++++++++--
+> >  include/linux/usb.h         |  5 ++++-
+> >  2 files changed, 18 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/drivers/usb/common/common.c b/drivers/usb/common/common.c
+> > index 1433260d99b4..639ee6d243a2 100644
+> > --- a/drivers/usb/common/common.c
+> > +++ b/drivers/usb/common/common.c
+> > @@ -293,8 +293,20 @@ struct device *usb_of_get_companion_dev(struct device *dev)
+> >  EXPORT_SYMBOL_GPL(usb_of_get_companion_dev);
+> >  #endif
+> >  
+> > -struct dentry *usb_debug_root;
+> > -EXPORT_SYMBOL_GPL(usb_debug_root);
+> > +static struct dentry *usb_debug_root;
+> 
+> Doesn't this break things as-is? 
+Yes, it will, I didn't send out other patches for the drivers using
+usb_debug_root.
 
-diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
-index f7c561c4dcdd..1dbefa5e00e5 100644
---- a/include/linux/syscalls.h
-+++ b/include/linux/syscalls.h
-@@ -584,13 +584,13 @@ asmlinkage long sys_get_robust_list(int pid,
- asmlinkage long sys_set_robust_list(struct robust_list_head __user *head,
- 				    size_t len);
- 
--/* kernel/hrtimer.c */
-+/* kernel/time/hrtimer.c */
- asmlinkage long sys_nanosleep(struct __kernel_timespec __user *rqtp,
- 			      struct __kernel_timespec __user *rmtp);
- asmlinkage long sys_nanosleep_time32(struct old_timespec32 __user *rqtp,
- 				     struct old_timespec32 __user *rmtp);
- 
--/* kernel/itimer.c */
-+/* kernel/time/itimer.c */
- asmlinkage long sys_getitimer(int which, struct itimerval __user *value);
- asmlinkage long sys_setitimer(int which,
- 				struct itimerval __user *value,
-@@ -731,7 +731,7 @@ asmlinkage long sys_prctl(int option, unsigned long arg2, unsigned long arg3,
- 			unsigned long arg4, unsigned long arg5);
- asmlinkage long sys_getcpu(unsigned __user *cpu, unsigned __user *node, struct getcpu_cache __user *cache);
- 
--/* kernel/time.c */
-+/* kernel/time/time.c */
- asmlinkage long sys_gettimeofday(struct timeval __user *tv,
- 				struct timezone __user *tz);
- asmlinkage long sys_settimeofday(struct timeval __user *tv,
-@@ -739,7 +739,7 @@ asmlinkage long sys_settimeofday(struct timeval __user *tv,
- asmlinkage long sys_adjtimex(struct __kernel_timex __user *txc_p);
- asmlinkage long sys_adjtimex_time32(struct old_timex32 __user *txc_p);
- 
--/* kernel/timer.c */
-+/* kernel/sys.c */
- asmlinkage long sys_getpid(void);
- asmlinkage long sys_getppid(void);
- asmlinkage long sys_getuid(void);
-diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 1fc8faa6e973..6423f5fa4b8e 100644
---- a/include/uapi/asm-generic/unistd.h
-+++ b/include/uapi/asm-generic/unistd.h
-@@ -328,13 +328,13 @@ __SC_COMP(__NR_set_robust_list, sys_set_robust_list, \
- __SC_COMP(__NR_get_robust_list, sys_get_robust_list, \
- 	  compat_sys_get_robust_list)
- 
--/* kernel/hrtimer.c */
-+/* kernel/time/hrtimer.c */
- #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
- #define __NR_nanosleep 101
- __SC_3264(__NR_nanosleep, sys_nanosleep_time32, sys_nanosleep)
- #endif
- 
--/* kernel/itimer.c */
-+/* kernel/time/itimer.c */
- #define __NR_getitimer 102
- __SC_COMP(__NR_getitimer, sys_getitimer, compat_sys_getitimer)
- #define __NR_setitimer 103
-@@ -507,7 +507,7 @@ __SYSCALL(__NR_prctl, sys_prctl)
- #define __NR_getcpu 168
- __SYSCALL(__NR_getcpu, sys_getcpu)
- 
--/* kernel/time.c */
-+/* kernel/time/time.c */
- #if defined(__ARCH_WANT_TIME32_SYSCALLS) || __BITS_PER_LONG != 32
- #define __NR_gettimeofday 169
- __SC_COMP(__NR_gettimeofday, sys_gettimeofday, compat_sys_gettimeofday)
-@@ -517,7 +517,7 @@ __SC_COMP(__NR_settimeofday, sys_settimeofday, compat_sys_settimeofday)
- __SC_3264(__NR_adjtimex, sys_adjtimex_time32, sys_adjtimex)
- #endif
- 
--/* kernel/timer.c */
-+/* kernel/sys.c */
- #define __NR_getpid 172
- __SYSCALL(__NR_getpid, sys_getpid)
- #define __NR_getppid 173
--- 
-2.23.0
+>  You can't do that in a single patch
+> either :(
+When I make usb_debug_root as static variable, two APIs need be added
+due to other driver use it to create directory or file.
+
+> 
+> > +
+> > +struct dentry *usb_debugfs_create_dir(const char *name)
+> > +{
+> > +	return debugfs_create_dir(name, usb_debug_root);
+> > +}
+> > +EXPORT_SYMBOL_GPL(usb_debugfs_create_dir);
+> > +
+> > +struct dentry *usb_debugfs_create_file(const char *name, umode_t mode,
+> > +			void *data, const struct file_operations *fops)
+> > +{
+> > +	return debugfs_create_file(name, mode, usb_debug_root, data, fops);
+> 
+> I doubt many people want to create a file in the usb "root" debugfs
+> directory, right?  They _should_ be just creating a new subdirectory in
+> there instead.
+Currently only three .c files creates a file under usb 'root' debugfs
+directory.
+
+> 
+> thanks,
+> 
+> greg k-h
+
 
