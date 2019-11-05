@@ -2,87 +2,74 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EC266C010B9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CC71C010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B455721D7F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:15:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="n71rvcnD"
+	by mail.kernel.org (Postfix) with ESMTP id 71919206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:18:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730815AbfKELPH (ORCPT
+        id S1730850AbfKELSM convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:15:07 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:53478 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfKELPH (ORCPT
+        Tue, 5 Nov 2019 06:18:12 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44324 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730759AbfKELSL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:15:07 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5BEjOa001918;
-        Tue, 5 Nov 2019 05:14:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572952486;
-        bh=Fy91A3N2OFV5GYmqUZ6i9xvY6q3zrmU/FLigLI415zQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=n71rvcnDEP5e01oJ+V0SlbkDMMTbeLL/Q9n2wEkqCG6pDyeaNlPAjuQl3y4oXNfOc
-         63/8yTRKVGoHC6mwd+XT/6lZvOLvb6EtGjS2wyDXtZJTNIToxvsRLlNqDz87DgnZ4l
-         qqgDMbADkHqrilAsQGV9CRsRgTz88mpuKuFLmB70=
-Received: from DFLE101.ent.ti.com (dfle101.ent.ti.com [10.64.6.22])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5BEjLa095012
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 05:14:45 -0600
-Received: from DFLE108.ent.ti.com (10.64.6.29) by DFLE101.ent.ti.com
- (10.64.6.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 05:14:28 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE108.ent.ti.com
- (10.64.6.29) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 05:14:28 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5BEewB014951;
-        Tue, 5 Nov 2019 05:14:40 -0600
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
- <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
- <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
- <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <3beb4b9e-8908-42c8-ee89-369f0329b775@ti.com>
-Date:   Tue, 5 Nov 2019 13:15:51 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 5 Nov 2019 06:18:11 -0500
+Received: from mail-pf1-f199.google.com ([209.85.210.199])
+        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iRwqf-0001Om-V1
+        for linux-kernel@vger.kernel.org; Tue, 05 Nov 2019 11:18:10 +0000
+Received: by mail-pf1-f199.google.com with SMTP id s24so5147572pfd.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:18:09 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=Km3R3s47dSFWdMC4Cz64HHioZnQfD68q08sgp8NIQSc=;
+        b=kibzW9z6VP5MnRYaLZdXlVjHmNB4hitQa5HhdhAHp8n41/3TZjneWeyLwy8oEy0R0o
+         ZIl4BRy/1RoBDLosgU0s4U9VbEoC+kOcXe9xjdcJYeAbh/YIxeOJsE0Ie+pZePxy2zd1
+         GMuBrRvMWGMqPadu0LjGHWpNg04SPCvYIE9IKNVT5UqrRdmRYACGpgk0LCRVnTpBYtUq
+         ESbbZ3fPt00kub1tZCOPCCFnwlTxrzBabyYtwzo3dgpQ1HR2q8bTGoncIFwMuL3hRI/z
+         BckUpZOqtsybyo/RaDbEUIaNP40/hAn8/mH9kMFQ3tpnuSt8qBxH4jz2SVv8VDdQblS8
+         Vlpg==
+X-Gm-Message-State: APjAAAWFRMxIUbyJWsrC3MIE7qdG4b2u6ZphIBWeoOTehheX3gh+RwPO
+        ckOvBpXSOlOv4DBnljaW1fUiUpYV99p+tvrKtahy5VYOL+nW/v3Z6GH6iR6MBey5UYQl0njRN+w
+        2vVpwUuvmk0b9vv3L1RJswbu/2zQoA9AIeU7NzQXmpQ==
+X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1274713pjr.138.1572952688473;
+        Tue, 05 Nov 2019 03:18:08 -0800 (PST)
+X-Google-Smtp-Source: APXvYqxO8n1Go9j0jLNj1favhse9HIXjVbJcZl0TBphaEAK8FkPrBbBvrBdxyfggSCBMeP2Jidt7Sg==
+X-Received: by 2002:a17:90a:ba89:: with SMTP id t9mr1274669pjr.138.1572952688057;
+        Tue, 05 Nov 2019 03:18:08 -0800 (PST)
+Received: from 2001-b011-380f-3c42-8c9f-6944-7206-b2a2.dynamic-ip6.hinet.net (2001-b011-380f-3c42-8c9f-6944-7206-b2a2.dynamic-ip6.hinet.net. [2001:b011:380f:3c42:8c9f:6944:7206:b2a2])
+        by smtp.gmail.com with ESMTPSA id i11sm18202076pgd.7.2019.11.05.03.18.06
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 03:18:07 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3601.0.10\))
+Subject: Re: [PATCH v2] r8152: Add macpassthru support for ThinkPad
+ Thunderbolt 3 Dock Gen 2
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
+Date:   Tue, 5 Nov 2019 19:18:04 +0800
+Cc:     "davem@davemloft.net" <davem@davemloft.net>,
+        "oliver@neukum.org" <oliver@neukum.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8BIT
+Message-Id: <193EF03A-1EF7-4604-BF3A-61201A78D724@canonical.com>
+References: <20191105081526.4206-1-kai.heng.feng@canonical.com>
+ <0835B3720019904CB8F7AA43166CEEB2F18F4E9E@RTITMBSVM03.realtek.com.tw>
+To:     Hayes Wang <hayeswang@realtek.com>
+X-Mailer: Apple Mail (2.3601.0.10)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -90,58 +77,108 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 
-On 05/11/2019 11.58, Linus Walleij wrote:
-> On Mon, Nov 4, 2019 at 8:11 PM Rob Herring <robh+dt@kernel.org> wrote:
->> [Peter]
->>> The device needs the RST line to be high, otherwise it is not
->>> accessible. If it does not have reset control how can we make sure that
->>> the GPIO line is in correct state?
->>
->> Just like the reset code, drivers register their use of the reset and
->> the core tracks users and prevents resetting when not safe. Maybe the
->> reset subsystem needs to learn about GPIO resets. (...)
+> On Nov 5, 2019, at 16:55, Hayes Wang <hayeswang@realtek.com> wrote:
 > 
-> I agree. Certainly the reset subsystem can do what the regulator
-> subsystem is already doing: request the GPIO line nonexclusive
-> and handle any reference counting and/or quirks that are needed
-> in a hypothetical drivers/reset/reset-gpio.c driver.
+> Kai-Heng Feng [mailto:kai.heng.feng@canonical.com]
+>> Sent: Tuesday, November 05, 2019 4:15 PM
+>> To: davem@davemloft.net; oliver@neukum.org
+> [...]
+>> +	if (test_bit(LENOVO_MACPASSTHRU, &tp->flags)) {
+>> +		bypass_test = true;
+>> +		mac_obj_name = "\\MACA";
+>> +		mac_obj_type = ACPI_TYPE_STRING;
+>> +		mac_strlen = 0x16;
+>> 	} else {
+>> -		/* test for RTL8153-BND and RTL8153-BD */
+>> -		ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
+>> -		if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK) == 0) {
+>> -			netif_dbg(tp, probe, tp->netdev,
+>> -				  "Invalid variant for MAC pass through\n");
+>> -			return -ENODEV;
+>> +		bypass_test = false;
+>> +		mac_obj_name = "\\_SB.AMAC";
+>> +		mac_obj_type = ACPI_TYPE_BUFFER;
+>> +		mac_strlen = 0x17;
+>> +	}
+>> +
+>> +	if (!bypass_test) {
+> 
+> Maybe you could combine this with the "else" above.
+> Then, the variable "bypass_test" could be removed.
 
-I did wrote the reset-gpio driver first ;)
-then it failed the thought test on several levels.
+Ok, will do in V3.
 
-to get a reset control one either use the shared or exclusive API.
-Depending on which one you use, the behavior changes. With exclusive it
-works like a GPIO (no refcounting of asserts), with shared it refcounts.
+> And the declaration of "ocp_data" could be moved after the "else".
 
-It fails flat if I boot with old dtb blob which did not had the "resets"
-and "#reset-cells" (from the user's point of view). Even if the old dtb
-had rst/enable/reset-gpios defined.
+Isn't putting declarations at the top of the function the preferred way?
 
-It is kind of hard to use it for 'Output Enable' type of gpios. They are
-not reset or enable signals for the peripheral, but to open a gate to
-outside, for example allow an amplifier to drive the analog line on (one
-of) it's output for example.
+Kai-Heng
 
-> There is no such driver today, just a "reset" driver in
-> drivers/power/reset that resets the whole system.
+> 
+>> +		/* test for -AD variant of RTL8153 */
+>> +		ocp_data = ocp_read_word(tp, MCU_TYPE_USB, USB_MISC_0);
+>> +		if ((ocp_data & AD_MASK) == 0x1000) {
+>> +			/* test for MAC address pass-through bit */
+>> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, EFUSE);
+>> +			if ((ocp_data & PASS_THRU_MASK) != 1) {
+>> +				netif_dbg(tp, probe, tp->netdev,
+>> +						"No efuse for RTL8153-AD MAC pass
+>> through\n");
+>> +				return -ENODEV;
+>> +			}
+>> +		} else {
+>> +			/* test for RTL8153-BND and RTL8153-BD */
+>> +			ocp_data = ocp_read_byte(tp, MCU_TYPE_USB, USB_MISC_1);
+>> +			if ((ocp_data & BND_MASK) == 0 && (ocp_data & BD_MASK)
+>> == 0) {
+>> +				netif_dbg(tp, probe, tp->netdev,
+>> +						"Invalid variant for MAC pass through\n");
+>> +				return -ENODEV;
+>> +			}
+>> 		}
+>> 	}
+>> 
+>> 	/* returns _AUXMAC_#AABBCCDDEEFF# */
+>> -	status = acpi_evaluate_object(NULL, "\\_SB.AMAC", NULL, &buffer);
+>> +	status = acpi_evaluate_object(NULL, mac_obj_name, NULL, &buffer);
+>> 	obj = (union acpi_object *)buffer.pointer;
+>> 	if (!ACPI_SUCCESS(status))
+>> 		return -ENODEV;
+>> -	if (obj->type != ACPI_TYPE_BUFFER || obj->string.length != 0x17) {
+>> +	if (obj->type != mac_obj_type || obj->string.length != mac_strlen) {
+>> 		netif_warn(tp, probe, tp->netdev,
+>> 			   "Invalid buffer for pass-thru MAC addr: (%d, %d)\n",
+>> 			   obj->type, obj->string.length);
+>> 		goto amacout;
+>> 	}
+>> +
+>> 	if (strncmp(obj->string.pointer, "_AUXMAC_#", 9) != 0 ||
+>> 	    strncmp(obj->string.pointer + 0x15, "#", 1) != 0) {
+>> 		netif_warn(tp, probe, tp->netdev,
+>> @@ -6629,6 +6649,10 @@ static int rtl8152_probe(struct usb_interface *intf,
+>> 		netdev->hw_features &= ~NETIF_F_RXCSUM;
+>> 	}
+>> 
+>> +	if (le16_to_cpu(udev->descriptor.idVendor) == VENDOR_ID_LENOVO &&
+>> +	    le16_to_cpu(udev->descriptor.idProduct) == 0x3082)
+>> +		set_bit(LENOVO_MACPASSTHRU, &tp->flags);
+>> +
+>> 	if (le16_to_cpu(udev->descriptor.bcdDevice) == 0x3011 && udev->serial
+>> &&
+>> 	    (!strcmp(udev->serial, "000001000000") ||
+>> 	     !strcmp(udev->serial, "000002000000"))) {
+>> @@ -6755,6 +6779,7 @@ static const struct usb_device_id rtl8152_table[] = {
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x304f)},
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3062)},
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3069)},
+>> +	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x3082)},
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7205)},
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x720c)},
+>> 	{REALTEK_USB_DEVICE(VENDOR_ID_LENOVO,  0x7214)},
+>> --
+>> 2.17.1
+> 
+> 
+> Best Regards,
+> Hayes
 
-Yep, I have checked that as well before I wrote my own gpio-reset
-
-> But I see no problem in creating a proper reset driver in drivers/reset
-> to handle a few peripherals with a shared GPIO reset line.
-
-Even if we have a reset-gpio driver we will have the same issue that the
-regulator might reset things underneath the tiddly refcounted reset line
-for non regulator users, plus one extra which is using the line as
-output enable.
-
-With the gpio-shared all of these can be handled in a nice way and we
-can add the pass-through mode to it which is assumed by some setups or
-use refcounting as it is in the initial patch.
-
-And we need to modify the drivers to ask for shared/nonexclusive reset/gpio.
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
