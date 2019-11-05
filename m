@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-11.7 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2D03C49EAD
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC228FA3742
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B60021D7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B15CC21D7C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388360AbfKEJ2Y (ORCPT
+        id S2388401AbfKEJ20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:28:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:40652 "EHLO
+        Tue, 5 Nov 2019 04:28:26 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40655 "EHLO
         Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388318AbfKEJ2X (ORCPT
+        with ESMTP id S2388128AbfKEJ2Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:28:23 -0500
+        Tue, 5 Nov 2019 04:28:24 -0500
 Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
         by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
         (Exim 4.80)
         (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRv7j-0007eM-P3; Tue, 05 Nov 2019 10:27:39 +0100
+        id 1iRv7l-0007aF-Tu; Tue, 05 Nov 2019 10:27:42 +0100
 Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 4FF771C04C9;
-        Tue,  5 Nov 2019 10:27:35 +0100 (CET)
-Date:   Tue, 05 Nov 2019 09:27:35 -0000
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 2F5CB1C04E8;
+        Tue,  5 Nov 2019 10:27:34 +0100 (CET)
+Date:   Tue, 05 Nov 2019 09:27:33 -0000
 From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
 Reply-to: linux-kernel@vger.kernel.org
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/build] ia64: Rename PT_LOAD identifier "code" to "text"
+Subject: [tip: x86/build] vmlinux.lds.h: Provide EMIT_PT_NOTE to indicate
+ export of .notes
 Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
         Andy Lutomirski <luto@kernel.org>,
         Arnd Bergmann <arnd@arndb.de>,
         Dave Hansen <dave.hansen@linux.intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
         linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
-        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-s390@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
+        linux-ia64@vger.kernel.org, linux-s390@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Michal Simek <monstr@monstr.eu>,
         Rick Edgecombe <rick.p.edgecombe@intel.com>,
         Segher Boessenkool <segher@kernel.crashing.org>,
-        Tony Luck <tony.luck@intel.com>, Will Deacon <will@kernel.org>,
-        "x86-ml" <x86@kernel.org>,
+        Will Deacon <will@kernel.org>, "x86-ml" <x86@kernel.org>,
         Yoshinori Sato <ysato@users.sourceforge.jp>,
         Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191029211351.13243-6-keescook@chromium.org>
-References: <20191029211351.13243-6-keescook@chromium.org>
+In-Reply-To: <20191029211351.13243-9-keescook@chromium.org>
+References: <20191029211351.13243-9-keescook@chromium.org>
 MIME-Version: 1.0
-Message-ID: <157294605505.29376.17632217400562285462.tip-bot2@tip-bot2>
+Message-ID: <157294605387.29376.1544999913512391970.tip-bot2@tip-bot2>
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot2.linutronix.de>
 Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
@@ -71,98 +71,158 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The following commit has been merged into the x86/build branch of tip:
 
-Commit-ID:     430c6b2647e215c4129f36646ad28a725996b410
-Gitweb:        https://git.kernel.org/tip/430c6b2647e215c4129f36646ad28a725996b410
+Commit-ID:     441110a547f86a2fd0c40bf04b274853622c53cc
+Gitweb:        https://git.kernel.org/tip/441110a547f86a2fd0c40bf04b274853622c53cc
 Author:        Kees Cook <keescook@chromium.org>
-AuthorDate:    Tue, 29 Oct 2019 14:13:27 -07:00
+AuthorDate:    Tue, 29 Oct 2019 14:13:30 -07:00
 Committer:     Borislav Petkov <bp@suse.de>
-CommitterDate: Mon, 04 Nov 2019 15:34:29 +01:00
+CommitterDate: Mon, 04 Nov 2019 15:34:38 +01:00
 
-ia64: Rename PT_LOAD identifier "code" to "text"
+vmlinux.lds.h: Provide EMIT_PT_NOTE to indicate export of .notes
 
-In preparation for moving NOTES into RO_DATA, rename the linker script
-internal identifier for the PT_LOAD Program Header from "code" to "text"
-to match other architectures.
+In preparation for moving NOTES into RO_DATA, provide a mechanism for
+architectures that want to emit a PT_NOTE Program Header to do so.
 
 Signed-off-by: Kees Cook <keescook@chromium.org>
 Signed-off-by: Borislav Petkov <bp@suse.de>
+Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com> # s390
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Fenghua Yu <fenghua.yu@intel.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
 Cc: linux-alpha@vger.kernel.org
 Cc: linux-arch@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-c6x-dev@linux-c6x.org
 Cc: linux-ia64@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-s390@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Michal Simek <monstr@monstr.eu>
 Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
 Cc: Segher Boessenkool <segher@kernel.crashing.org>
-Cc: Tony Luck <tony.luck@intel.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: x86-ml <x86@kernel.org>
 Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
-Link: https://lkml.kernel.org/r/20191029211351.13243-6-keescook@chromium.org
+Link: https://lkml.kernel.org/r/20191029211351.13243-9-keescook@chromium.org
 ---
- arch/ia64/kernel/vmlinux.lds.S | 14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+ arch/alpha/kernel/vmlinux.lds.S   |  3 +++
+ arch/ia64/kernel/vmlinux.lds.S    |  2 ++
+ arch/mips/kernel/vmlinux.lds.S    | 12 ++++++------
+ arch/powerpc/kernel/vmlinux.lds.S |  1 +
+ arch/s390/kernel/vmlinux.lds.S    |  2 ++
+ arch/x86/kernel/vmlinux.lds.S     |  2 ++
+ include/asm-generic/vmlinux.lds.h |  8 ++++++++
+ 7 files changed, 24 insertions(+), 6 deletions(-)
 
+diff --git a/arch/alpha/kernel/vmlinux.lds.S b/arch/alpha/kernel/vmlinux.lds.S
+index 781090c..363a60b 100644
+--- a/arch/alpha/kernel/vmlinux.lds.S
++++ b/arch/alpha/kernel/vmlinux.lds.S
+@@ -1,4 +1,7 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
++
++#define EMITS_PT_NOTE
++
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/thread_info.h>
+ #include <asm/cache.h>
 diff --git a/arch/ia64/kernel/vmlinux.lds.S b/arch/ia64/kernel/vmlinux.lds.S
-index d9d4e21..2c4f23c 100644
+index 2c4f23c..7cf4958 100644
 --- a/arch/ia64/kernel/vmlinux.lds.S
 +++ b/arch/ia64/kernel/vmlinux.lds.S
-@@ -13,7 +13,7 @@ ENTRY(phys_start)
- jiffies = jiffies_64;
+@@ -5,6 +5,8 @@
+ #include <asm/pgtable.h>
+ #include <asm/thread_info.h>
  
- PHDRS {
--	code   PT_LOAD;
-+	text   PT_LOAD;
- 	percpu PT_LOAD;
- 	data   PT_LOAD;
- 	note   PT_NOTE;
-@@ -36,7 +36,7 @@ SECTIONS {
- 	phys_start = _start - LOAD_OFFSET;
++#define EMITS_PT_NOTE
++
+ #include <asm-generic/vmlinux.lds.h>
  
- 	code : {
--	} :code
-+	} :text
- 	. = KERNEL_START;
+ OUTPUT_FORMAT("elf64-ia64-little")
+diff --git a/arch/mips/kernel/vmlinux.lds.S b/arch/mips/kernel/vmlinux.lds.S
+index 33ee0d1..1c95612 100644
+--- a/arch/mips/kernel/vmlinux.lds.S
++++ b/arch/mips/kernel/vmlinux.lds.S
+@@ -10,6 +10,11 @@
+  */
+ #define BSS_FIRST_SECTIONS *(.bss..swapper_pg_dir)
  
- 	_text = .;
-@@ -68,9 +68,9 @@ SECTIONS {
- 	/*
- 	 * Read-only data
- 	 */
--	NOTES :code :note       /* put .notes in text and mark in PT_NOTE  */
-+	NOTES :text :note       /* put .notes in text and mark in PT_NOTE  */
- 	code_continues : {
--	} : code               /* switch back to regular program...  */
-+	} :text                /* switch back to regular program...  */
++/* Cavium Octeon should not have a separate PT_NOTE Program Header. */
++#ifndef CONFIG_CAVIUM_OCTEON_SOC
++#define EMITS_PT_NOTE
++#endif
++
+ #include <asm-generic/vmlinux.lds.h>
  
- 	EXCEPTION_TABLE(16)
+ #undef mips
+@@ -76,12 +81,7 @@ SECTIONS
+ 		__stop___dbe_table = .;
+ 	}
  
-@@ -102,9 +102,9 @@ SECTIONS {
- 		__start_unwind = .;
- 		*(.IA_64.unwind*)
- 		__end_unwind = .;
--	} :code :unwind
-+	} :text :unwind
- 	code_continues2 : {
--	} : code
-+	} :text
+-#ifdef CONFIG_CAVIUM_OCTEON_SOC
+-#define NOTES_HEADER
+-#else /* CONFIG_CAVIUM_OCTEON_SOC */
+-#define NOTES_HEADER :note
+-#endif /* CONFIG_CAVIUM_OCTEON_SOC */
+-	NOTES :text NOTES_HEADER
++	NOTES NOTES_HEADERS
+ 	.dummy : { *(.dummy) } :text
  
- 	RODATA
+ 	_sdata = .;			/* Start of data section */
+diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
+index e184a63..7e26e20 100644
+--- a/arch/powerpc/kernel/vmlinux.lds.S
++++ b/arch/powerpc/kernel/vmlinux.lds.S
+@@ -6,6 +6,7 @@
+ #endif
  
-@@ -214,7 +214,7 @@ SECTIONS {
- 	_end = .;
+ #define BSS_FIRST_SECTIONS *(.bss.prominit)
++#define EMITS_PT_NOTE
  
- 	code : {
--	} :code
-+	} :text
+ #include <asm/page.h>
+ #include <asm-generic/vmlinux.lds.h>
+diff --git a/arch/s390/kernel/vmlinux.lds.S b/arch/s390/kernel/vmlinux.lds.S
+index 13294fe..646d939 100644
+--- a/arch/s390/kernel/vmlinux.lds.S
++++ b/arch/s390/kernel/vmlinux.lds.S
+@@ -15,6 +15,8 @@
+ /* Handle ro_after_init data on our own. */
+ #define RO_AFTER_INIT_DATA
  
- 	STABS_DEBUG
- 	DWARF_DEBUG
++#define EMITS_PT_NOTE
++
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/vmlinux.lds.h>
+ 
+diff --git a/arch/x86/kernel/vmlinux.lds.S b/arch/x86/kernel/vmlinux.lds.S
+index 788e789..2e18bf5 100644
+--- a/arch/x86/kernel/vmlinux.lds.S
++++ b/arch/x86/kernel/vmlinux.lds.S
+@@ -21,6 +21,8 @@
+ #define LOAD_OFFSET __START_KERNEL_map
+ #endif
+ 
++#define EMITS_PT_NOTE
++
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/asm-offsets.h>
+ #include <asm/thread_info.h>
+diff --git a/include/asm-generic/vmlinux.lds.h b/include/asm-generic/vmlinux.lds.h
+index dae6460..f5dd45c 100644
+--- a/include/asm-generic/vmlinux.lds.h
++++ b/include/asm-generic/vmlinux.lds.h
+@@ -54,6 +54,14 @@
+ #define LOAD_OFFSET 0
+ #endif
+ 
++/*
++ * Only some architectures want to have the .notes segment visible in
++ * a separate PT_NOTE ELF Program Header.
++ */
++#ifdef EMITS_PT_NOTE
++#define NOTES_HEADERS		:text :note
++#endif
++
+ /* Align . to a 8 byte boundary equals to maximum function alignment. */
+ #define ALIGN_FUNCTION()  . = ALIGN(8)
+ 
