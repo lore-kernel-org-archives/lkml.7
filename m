@@ -2,83 +2,106 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25061C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:31:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF66DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:34:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4A3A21925
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:31:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9CE420656
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:34:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fyAhyk3O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390703AbfKESbr (ORCPT
+        id S2390726AbfKESeH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:31:47 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:45960 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S2389724AbfKESbr (ORCPT
+        Tue, 5 Nov 2019 13:34:07 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31409 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390423AbfKESeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:31:47 -0500
-Received: (qmail 6231 invoked by uid 2102); 5 Nov 2019 13:31:46 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 5 Nov 2019 13:31:46 -0500
-Date:   Tue, 5 Nov 2019 13:31:46 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Andrea Vai <andrea.vai@unipv.it>
-cc:     Jens Axboe <axboe@kernel.dk>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Slow I/O on USB media after commit f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-In-Reply-To: <0cd6ac36b7ab644576fc0f3f5bd4a880c33855d1.camel@unipv.it>
-Message-ID: <Pine.LNX.4.44L0.1911051326040.1678-100000@iolanthe.rowland.org>
+        Tue, 5 Nov 2019 13:34:07 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572978846;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=H9feM4A9AfoDIHKTuN0rynXXPyED946lrCjOtbhrTDw=;
+        b=fyAhyk3Onwb2GiEfmRvlfSVxRiWKmRCu5SE3+k7sxk9NDiZehL0/B81n0msvxmpnZ7q8Ir
+        2KxVPV2sUtZjpcTsPdHuo78MiGyI7iGlReM8VylGioh3vCTLdYU8YRDZmJb+gIfJeb7h37
+        YqACcVZumzvbczGHfq0exOAwjMRb5SU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-230-wKB1DIDFPlmgljNYjH5vkw-1; Tue, 05 Nov 2019 13:34:02 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 0F8751800D4A;
+        Tue,  5 Nov 2019 18:33:58 +0000 (UTC)
+Received: from gondolin (unknown [10.36.118.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 9D4395D9C9;
+        Tue,  5 Nov 2019 18:33:39 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 19:33:36 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V8 5/6] virtio: introduce a mdev based transport
+Message-ID: <20191105193336.570e8e3a.cohuck@redhat.com>
+In-Reply-To: <20191105093240.5135-6-jasowang@redhat.com>
+References: <20191105093240.5135-1-jasowang@redhat.com>
+        <20191105093240.5135-6-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: wKB1DIDFPlmgljNYjH5vkw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Andrea Vai wrote:
+On Tue,  5 Nov 2019 17:32:39 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-> Il giorno lun, 04/11/2019 alle 13.20 -0500, Alan Stern ha scritto:
+> This patch introduces a new mdev transport for virtio. This is used to
+> use kernel virtio driver to drive the mediated device that is capable
+> of populating virtqueue directly.
+>=20
+> A new virtio-mdev driver will be registered to the mdev bus, when a
+> new virtio-mdev device is probed, it will register the device with
+> mdev based config ops. This means it is a software transport between
+> mdev driver and mdev device. The transport was implemented through
+> device specific ops which is a part of mdev_parent_ops now.
+>=20
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/virtio/Kconfig       |   7 +
+>  drivers/virtio/Makefile      |   1 +
+>  drivers/virtio/virtio_mdev.c | 407 +++++++++++++++++++++++++++++++++++
+>  3 files changed, 415 insertions(+)
+>  create mode 100644 drivers/virtio/virtio_mdev.c
 
-> > You should be able to do something like this:
-> > 
-> >         cd linux
-> >         patch -p1 </path/to/patch2
-> > 
-> > and that should work with no errors.  You don't need to use git to 
-> > apply a patch.
-> > 
-> > In case that patch2 file was mangled somewhere along the way, I
-> > have 
-> > attached a copy to this message.
-> 
-> Ok, so the "patch" command worked, the kernel compiled and ran, but
-> the test still failed (273, 108, 104, 260, 177, 236, 179, 1123, 289,
-> 873 seconds to copy a 500MB file, vs. ~30 seconds with the "good"
-> kernel).
-> 
-> Let me know what else could I do,
-
-I'm out of suggestions.  If anyone else knows how to make a kernel with 
-no legacy queuing support -- only multiqueue -- issue I/O requests 
-sequentially, please speak up.
-
-In the absence of any responses, after a week or so I will submit a
-patch to revert the f664a3cc17b7 ("scsi: kill off the legacy IO path")  
-commit.
-
-Alan Stern
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
 
