@@ -2,99 +2,114 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D3F7C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E6DEC5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C2FC217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="W19ll0Wy"
+	by mail.kernel.org (Postfix) with ESMTP id 1351921A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:00:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572966017;
+	bh=FOHqMxJfsqatCaBk5cjmzjcWwDv6YlqidixM8TSm1sw=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=YHnb63A/DZ7TIYCOuopS8PQ3TQfhJatk5w3UYzKRxsm2SROFHcJwdzWJcF0HhMt9G
+	 sF6YCi7WmYbIMEN/clQHpZs0jFMk7LOuwDMjWdxbsX0GfKDgQx+2bX31kZgG6/4/V5
+	 GTL96uZ/BTpE9ZVKW9z+VjjEzOArAvblLpowHdUs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731023AbfKEPAB (ORCPT
+        id S1731050AbfKEPAQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:00:01 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:47298 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730833AbfKEPAB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:00:01 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5Ex3jX187535;
-        Tue, 5 Nov 2019 14:59:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=/Bsxp4S3+a3fFJuRw3QU2lGizYk8ZzHduC29p7dcUSY=;
- b=W19ll0Wyv9tHFNUcaMw0HK8Z35DB74VXx89suj7fb0b7BHFGGnBw2WhWJMfh3VbGaQdY
- +fdEWMD7EWJwNda8Wfuim+5lF0cLCtA3sE7sv44c6UA7c8tb5UwCMtxedKavuTtDCxR7
- Hk2WySFnf7iiHGf7ZociO61+WbdrYLmjbvvmFdeCvvsQ2lP2pMQmpZ+UTh5aIxmeNv0j
- jH0/wKqQQxcoXJANu/MLgpqWK3ueMS6t2p8Q5R5tzHcgpgikm7R9jAyosBBty2JC3d5R
- AyWnA9RrzLJ0ufPC2G+o78uHugYgRS19+ZVLSI+fA5MthJqVxi8BBpxM6uOMJtF9Fmu5 7w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w12er6u46-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 14:59:35 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5ExInw023976;
-        Tue, 5 Nov 2019 14:59:35 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w333vbdhd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 14:59:33 +0000
-Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA5Ex1IZ006440;
-        Tue, 5 Nov 2019 14:59:01 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Nov 2019 06:59:00 -0800
-Date:   Tue, 5 Nov 2019 17:58:51 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Himadri Pandya <himadri18.07@gmail.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] staging: rtl8192e: fix potential use after free
-Message-ID: <20191105145851.GI10409@kadam>
-References: <1572965351-6745-1-git-send-email-bianpan2016@163.com>
+        Tue, 5 Nov 2019 10:00:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:59780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730833AbfKEPAP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:00:15 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DAC0521929;
+        Tue,  5 Nov 2019 15:00:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572966015;
+        bh=FOHqMxJfsqatCaBk5cjmzjcWwDv6YlqidixM8TSm1sw=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=rPr4oAtsDMazf4gNUTAq7OoXfOY7x5pgPzLVoEBrlo6KTlcZDdQP6qJZa/1OyIVG4
+         7sjzCJzxTGjE4mX3MYmjDU2jAMT0KNjoknSMVJ8xoQHxvZ4GvxdVrJtYUumiFz+DB9
+         OF9qiA537sHjVxU7daZKQuqhIYnvpr5ix4gNdRVU=
+Date:   Tue, 5 Nov 2019 09:00:13 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191105150013.GA202873@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1572965351-6745-1-git-send-email-bianpan2016@163.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=706
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911050126
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=792 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911050126
+In-Reply-To: <20191105095428.GR2552@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:49:11PM +0800, Pan Bian wrote:
-> The variable skb is released via kfree_skb() when the return value of
-> _rtl92e_tx is not zero. However, after that, skb is accessed again to
-> read its length, which may result in a use after free bug. This patch
-> fixes the bug by moving the release operation to where skb is never
-> used later.
+On Tue, Nov 05, 2019 at 11:54:28AM +0200, Mika Westerberg wrote:
+> On Mon, Nov 04, 2019 at 06:00:00PM -0600, Bjorn Helgaas wrote:
+
+> > > If you think it is fine to do the delay before we have restored
+> > > everything I can move it inside pci_power_up() or call it after
+> > > pci_pm_default_resume_early() as above. I think at least we should make
+> > > sure all the saved registers are restored before so that the link
+> > > activation check actually works.
+> > 
+> > What needs to be restored to make pcie_wait_for_link_delay() work?
 > 
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
+> I'm not entirely sure. I think that pci_restore_state() at least should
+> be called so that the PCIe capability gets restored. Maybe not even
+> that because Data Link Layer Layer Active always reflects the DL_Active
+> or not and it does not need to be enabled separately.
+> 
+> > And what event does the restore need to be ordered with?
+> 
+> Not sure I follow you here.
 
-Reviewed-by: Dan Carpenter <dan.carpenter@oracle.com>
+You're suggesting that we should restore saved registers first so
+pcie_wait_for_link_delay() works.  If the link activation depends on
+something being restored and we don't enforce an ordering, the
+activation might succeed or fail depending on whether it happens
+before or after the restore.  So if there is a dependency, we should
+make it explicit to avoid a race like that.
 
-regards,
-dan carpenter
+But I'm not saying we *shouldn't* do the restore before the wait; only
+that any dependency should be explicit.  Even if there is no actual
+dependency it probably makes sense to do the restore first so it can
+overlap with the hardware link training, which may reduce the time
+pcie_wait_for_link_delay() has to wait when we do call it, e.g.,
 
+  |-----------------|          link activation
+     |-----|                   restore state
+           |--------|          pcie_wait_for_link_delay()
+
+whereas if we do the restore after waiting for the link to come up, it
+probably takes longer:
+
+  |-----------------|          link activation
+     |--------------|          pcie_wait_for_link_delay()
+                    |-----|    restore state
+
+I actually suspect there *is* a dependency -- we should respect the
+Target Link Speed and and width so the link resumes in the same
+configuration it was before suspend.  And I suspect that may require
+an explicit retrain after restoring PCI_EXP_LNKCTL2.
+
+Bjorn
