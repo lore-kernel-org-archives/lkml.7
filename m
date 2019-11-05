@@ -2,81 +2,82 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE38CC17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0D9EC1747C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:38:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B73D21928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:37:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f6vmZPzK"
+	by mail.kernel.org (Postfix) with ESMTP id 77B8321928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:38:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572964715;
+	bh=KlnLyT80Y+INfsk/NwmS4d5XrPD9eadBhMQpfVA9QyA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Gx4+1nJBdfdNjPKavHaGoMC93wGnpRT2gv4KoXJC4OdCD+8tKkb2y1bhIwyw+hv82
+	 L4YOJ6pvgIrgFZqbaJ141aiesdp44khlz2kdV2Mcwljyh90wwCaNT3ve1L7mhHB44E
+	 7DFanqqzH0r9TanH3zZFfdR3A+U+arh+gcfM3O7g=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729055AbfKEOh5 (ORCPT
+        id S1730657AbfKEOie (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:37:57 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:32833 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728014AbfKEOh5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:37:57 -0500
-Received: by mail-lj1-f195.google.com with SMTP id t5so22140041ljk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 06:37:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZdJE1lbb5fhgh/dT3Cyx1JGxGkZvflUF/h+AJfWcCJI=;
-        b=f6vmZPzK6wN/ZTTID0x/cd4SSt8ekXi1ir5sne5MSoH45L0UNr9omwVWP2bDNLs6Xs
-         eNZNSf45WDQweLQXXAkVAJxgDAF1UB5DXvpbZ+A7T+RaKNHR0h/apnJRB8rFRwJ8zGeJ
-         j8YWui/JXG6rGbUD0RWW3cCMx7J9Mlgmc4dVFf/Rs5mhZrL48chnIX78UTomjkWh3ECT
-         z4gvx+XYtIB2jTxCS0wRxWdqJv53t9giSuAnnkaLC0kY3HeCwns7sOLEWZkFC+wcGTJM
-         oTI0XxzVWoc4pdX38Fn8vfHJJIjMui/B7yFSxt5jur6v9QVrJvEYN0/LF0VFig22Lnxa
-         EGvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZdJE1lbb5fhgh/dT3Cyx1JGxGkZvflUF/h+AJfWcCJI=;
-        b=G/rOt7Mc0bHbBQ8Ra9FegGP1h22l2p1xvt+21LzH/nn5FNw8NSGCJMJZAjlMXOoI48
-         xZ5DtbFFM4hMvtOxl8j23SMORbJE8VvcENvNIzgnmnxCTQeHD/v0PuzKyG4Cp6beNh5x
-         77ozEuFndcxnzKGyS0pmflojumrDZ3gQF/JOrPb6HfePWNVYz01mNSrCiBxFbjqUg1uZ
-         hZb/xvSu/XHg2gLy98pNYXfM3K2C7ylwc4Tl7m3VKLEZxfWRMJWVSr3t/ElF7CHV+hfZ
-         URIjzY+pT0SL9ubaJx/IVssvq5s+2He1emvq2S2bPzDu75YCl37WuNY/kCFru3MCzNqe
-         VXZA==
-X-Gm-Message-State: APjAAAWjfvwnA8FM5jgdFvaNuZMyMrRbdc5fpo23f+ZAb30LeAapV9uX
-        tQiGmC4CDXPxNB1SlkDMH3UWK5/7blS0/VBC1Fw=
-X-Google-Smtp-Source: APXvYqxgGw17+25AHqiIoU0G2KGdv9w0Er+BSG4nwCY1ZRqHiKsXY7UGoLDPS/tewDU/kOt4Kg31eVCW3fRm6k5GTWI=
-X-Received: by 2002:a2e:3a1a:: with SMTP id h26mr23610009lja.25.1572964675138;
- Tue, 05 Nov 2019 06:37:55 -0800 (PST)
+        Tue, 5 Nov 2019 09:38:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52124 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725385AbfKEOie (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:38:34 -0500
+Received: from localhost (unknown [193.47.165.251])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13B6A21929;
+        Tue,  5 Nov 2019 14:38:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572964713;
+        bh=KlnLyT80Y+INfsk/NwmS4d5XrPD9eadBhMQpfVA9QyA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=eRYfKxBwGDA05rqttujdIacDFirkF1NPr+o800mOsO3qkB80orOMYVHkdPidH56YN
+         NgF2rn8tHVVHkN5Eux51LU/Eamd3ErDIl/Ep8jxf9NotOzJtQdPD5xpU0or+EwX1OT
+         bFyu66scCHwaHgEzVm5oAg42nIbtbtUoYC68y43M=
+Date:   Tue, 5 Nov 2019 16:38:30 +0200
+From:   Leon Romanovsky <leon@kernel.org>
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Parav Pandit <parav@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>
+Subject: Re: linux-next: build warning after merge of the mlx5-next tree
+Message-ID: <20191105143830.GE6763@unreal>
+References: <20191105130728.0dd89a42@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20191104090339.20941-1-ilie.halip@gmail.com> <CAKwvOdmSo=BWGnaVeejez6K0Tukny2niWXrr52YvOPDYnXbOsg@mail.gmail.com>
-In-Reply-To: <CAKwvOdmSo=BWGnaVeejez6K0Tukny2niWXrr52YvOPDYnXbOsg@mail.gmail.com>
-From:   Ilie Halip <ilie.halip@gmail.com>
-Date:   Tue, 5 Nov 2019 16:37:43 +0200
-Message-ID: <CAHFW8PQ0UoyM=O4Seccsze_QDKjW21jM7Wh0koGgUXfm62zEUg@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: explicitly place .eh_frame after .rodata
-To:     Nick Desaulniers <ndesaulniers@google.com>
-Cc:     "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Fangrui Song <maskray@google.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105130728.0dd89a42@canb.auug.org.au>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> The wildcard on the end can be left off; we don't need to glob
-> different sections with the prefix `.eh_frame`.
+On Tue, Nov 05, 2019 at 01:07:28PM +1100, Stephen Rothwell wrote:
+> Hi all,
+>
+> After merging the mlx5-next tree, today's linux-next build (x86_64
+> allmodconfig) produced this warning:
+>
+> drivers/net/ethernet/mellanox/mlx5/core/eswitch.c: In function 'esw_vport_ingress_config':
+> drivers/net/ethernet/mellanox/mlx5/core/eswitch.c:1356:2: warning: 'spec' may be used uninitialized in this function [-Wmaybe-uninitialized]
+>  1356 |  kvfree(spec);
+>       |  ^~~~~~~~~~~~
+>
+> Introduced by commit
+>
+>   10652f39943e ("net/mlx5: Refactor ingress acl configuration")
 
-Sounds good, it doesn't look like any .eh_frame_hdr sections are
-being created so it should be fine to remove that wildcard.
+Thanks Stephen.
 
-I.H.
+>
+> --
+> Cheers,
+> Stephen Rothwell
+
+
