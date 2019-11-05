@@ -2,80 +2,46 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E471C17460
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A72DC1747C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C8E721928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D754D21A4A
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389848AbfKEOew (ORCPT
+        id S2389863AbfKEOez (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:34:52 -0500
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57634 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389763AbfKEOek (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:34:40 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 5685F8DD25CC4EF26B11;
-        Tue,  5 Nov 2019 22:34:38 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS414-HUB.china.huawei.com (10.3.19.214) with Microsoft SMTP Server id
- 14.3.439.0; Tue, 5 Nov 2019 22:34:28 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <wangzhou1@hisilicon.com>, <herbert@gondor.apana.org.au>,
-        <davem@davemloft.net>, <tanshukun1@huawei.com>
-CC:     <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>, Mao Wenan <maowenan@huawei.com>
-Subject: [PATCH -next] crypto: hisilicon: move label err to #ifdef CONFIG_NUMA
-Date:   Tue, 5 Nov 2019 22:33:40 +0800
-Message-ID: <20191105143340.32950-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 5 Nov 2019 09:34:55 -0500
+Received: from verein.lst.de ([213.95.11.211]:45805 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389812AbfKEOet (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:34:49 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id BE7ED68AFE; Tue,  5 Nov 2019 15:34:46 +0100 (CET)
+Date:   Tue, 5 Nov 2019 15:34:46 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Charles Machalow <csm10495@gmail.com>
+Cc:     linux-nvme@lists.infradead.org, marta.rybczynska@kalray.eu,
+        Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] nvme: change nvme_passthru_cmd64 to explicitly mark
+ rsvd
+Message-ID: <20191105143446.GA9840@lst.de>
+References: <20191105061510.22233-1-csm10495@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105061510.22233-1-csm10495@gmail.com>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_NUMA is not set, there is error in function
-find_zip_device:
-drivers/crypto/hisilicon/zip/zip_main.c:154:13: error:
-head undeclared (first use in this function)
-  free_list(&head);
+Looks good,
 
-This is because CONFIG_NUMA is not defined, it should move
-label err to #ifdef CONFIG_NUMA.
-
-Fixes: 700f7d0d29c7 ("crypto: hisilicon - fix to return sub-optimal device when best device has no qps")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/crypto/hisilicon/zip/zip_main.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 255b63c..0504fb2 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -150,10 +150,12 @@ struct hisi_zip *find_zip_device(int node)
- 
- 	return ret;
- 
-+#ifdef CONFIG_NUMA
- err:
- 	free_list(&head);
- 	mutex_unlock(&hisi_zip_list_lock);
- 	return NULL;
-+#endif
- }
- 
- struct hisi_zip_hw_error {
--- 
-2.7.4
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
