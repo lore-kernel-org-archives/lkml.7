@@ -2,170 +2,219 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DFE14CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C561CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:26:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD78B20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC80220869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:26:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tG9hbrGo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387730AbfKEAZx (ORCPT
+        id S2387748AbfKEA0M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:25:53 -0500
-Received: from mga07.intel.com ([134.134.136.100]:30774 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387440AbfKEAZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:25:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 16:25:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
-   d="scan'208";a="213712864"
-Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga002.jf.intel.com with ESMTP; 04 Nov 2019 16:25:28 -0800
-Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id 0B19C300884; Mon,  4 Nov 2019 16:25:28 -0800 (PST)
-From:   Andi Kleen <andi@firstfloor.org>
-To:     acme@kernel.org
-Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 3/9] perf evlist: Maintain evlist->all_cpus
-Date:   Mon,  4 Nov 2019 16:25:16 -0800
-Message-Id: <20191105002522.83803-4-andi@firstfloor.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191105002522.83803-1-andi@firstfloor.org>
-References: <20191105002522.83803-1-andi@firstfloor.org>
+        Mon, 4 Nov 2019 19:26:12 -0500
+Received: from mail-qt1-f171.google.com ([209.85.160.171]:36077 "EHLO
+        mail-qt1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387484AbfKEA0L (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:26:11 -0500
+Received: by mail-qt1-f171.google.com with SMTP id y10so20061555qto.3;
+        Mon, 04 Nov 2019 16:26:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=vGAWpCYyQmdpG0fVWfM47K0qqxSbXPboe+puExmNy/Q=;
+        b=tG9hbrGoCba4iRI4dXjXXAQSmknmxx2F03TKI/FmsHZpeI4YtT+lJuxTmB4lduVFBf
+         8N8QqospPyimSjxvfn+PGgpJQ2ssy5lKotG5b9/skRZAXZ2geOe4s6FAKvzfxAtq1Jf1
+         cEksRyo92lCUEKBbWM6kcrVRmxf9vEfbctWP0NAcd2fYGCZPisiP/MaB8XcL5XEq5USu
+         JKP929U3BZadQ1mL8MinREFNR9atUrbnwmO6exf9hH16QT1+bnC4/KipN+afpE14jpWx
+         a7aOED4uCGBHw8Hsvl1bnbewkeL9B/5Mqt2Vy/4ba9lYIsrstdnrzu7eL78GgIgUm2UB
+         vo6g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=vGAWpCYyQmdpG0fVWfM47K0qqxSbXPboe+puExmNy/Q=;
+        b=f2ls+TYzXTWTWJyVM6XpgelJh0bJeVQCSiZyx8V0bci9Ejnxn6WGn+dUj5hDshhjs1
+         qXK2mFK3mmimt3eS0lvots8gF2SDwEbNzZ4aQCTs9o4bJXD32+EGIuRQx4gdbStdIdB9
+         ivbmVu6/4hy7A5N8cd+2WQD3kLbylISR/5mal/hHJDN1MT8SvRDUwlkayeX4A8FaOa/N
+         lVRDI3fsGcQdVKaros50L+Rw9P6H+hw3qQH9HqFBxjZozPsrV7BwvLdvT6vovGk0si2s
+         a+SvhHusyUiB4Cri6Fu2hMuhdIlGp02qcO3V8BTh0Z0rwIRxsrBVrD1ttBL23qBoSHOG
+         Sb7A==
+X-Gm-Message-State: APjAAAUOjktz0H09+m7jKicIyriXZlbYk601tyzjGIDeCUy5jUEt4oQW
+        ZHRJB15x6cQzFqdn4fpSKOA=
+X-Google-Smtp-Source: APXvYqw64/yT3HNa1mqmD5oeeGGQdIx7SWuSCSQq3pbWmU49SkUD327kCjq+LB7sdISGJVYIIDbhDQ==
+X-Received: by 2002:ac8:7655:: with SMTP id i21mr15463788qtr.53.1572913570541;
+        Mon, 04 Nov 2019 16:26:10 -0800 (PST)
+Received: from smtp.gmail.com ([165.204.55.250])
+        by smtp.gmail.com with ESMTPSA id z70sm9888034qkb.60.2019.11.04.16.26.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 16:26:09 -0800 (PST)
+Date:   Mon, 4 Nov 2019 19:26:07 -0500
+From:   Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
+To:     Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com, manasi.d.navare@intel.com,
+        hamohammed.sa@gmail.com, daniel@ffwll.ch, airlied@linux.ie,
+        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
+        sean@poorly.run, corbet@lwn.net, dri-devel@lists.freedesktop.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        lkcamp@lists.libreplanetbr.org
+Subject: Re: [PATCH VKMS v3] drm/doc: Add VKMS module description and use to
+ "Testing and Validation"
+Message-ID: <20191105002606.4h7brs4ozqwcb5zm@smtp.gmail.com>
+References: <20191104162705.19735-1-gabrielabittencourt00@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nzbdziewgyxr7kks"
+Content-Disposition: inline
+In-Reply-To: <20191104162705.19735-1-gabrielabittencourt00@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andi Kleen <ak@linux.intel.com>
 
-Maintain a cpumap in the evlist that is the union of all the cpus
-of the events.
+--nzbdziewgyxr7kks
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This needs a cpumap merge operation. To make the merge operation
-work efficiently maintain the cpumap in a sorted state.
+lgtm, I'll apply it tomorrow.
 
-The sorting is also needed for the affinity loop changes later.
+Thanks
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
----
- tools/perf/lib/cpumap.c                  | 42 ++++++++++++++++++++++++
- tools/perf/lib/evlist.c                  |  1 +
- tools/perf/lib/include/internal/evlist.h |  1 +
- tools/perf/lib/include/perf/cpumap.h     |  2 ++
- 4 files changed, 46 insertions(+)
+Reviewed-by: Rodrigo Siqueira <rodrigosiqueiramelo@gmail.com>
 
-diff --git a/tools/perf/lib/cpumap.c b/tools/perf/lib/cpumap.c
-index 2ca1fafa620d..5ca26a9d318f 100644
---- a/tools/perf/lib/cpumap.c
-+++ b/tools/perf/lib/cpumap.c
-@@ -68,6 +68,11 @@ static struct perf_cpu_map *cpu_map__default_new(void)
- 	return cpus;
- }
- 
-+static int cmp_int(const void *a, const void *b)
-+{
-+	return *(const int *)a - *(const int*)b;
-+}
-+
- static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
- {
- 	size_t payload_size = nr_cpus * sizeof(int);
-@@ -76,6 +81,7 @@ static struct perf_cpu_map *cpu_map__trim_new(int nr_cpus, int *tmp_cpus)
- 	if (cpus != NULL) {
- 		cpus->nr = nr_cpus;
- 		memcpy(cpus->map, tmp_cpus, payload_size);
-+		qsort(cpus->map, nr_cpus, sizeof(int), cmp_int);
- 		refcount_set(&cpus->refcnt, 1);
- 	}
- 
-@@ -272,3 +278,39 @@ int perf_cpu_map__max(struct perf_cpu_map *map)
- 
- 	return max;
- }
-+
-+struct perf_cpu_map *perf_cpu_map__update(struct perf_cpu_map *orig,
-+					  struct perf_cpu_map *other)
-+{
-+	int *tmp_cpus;
-+	int tmp_len;
-+	int i, j, k;
-+	struct perf_cpu_map *merged;
-+
-+	if (!orig) {
-+		perf_cpu_map__get(other);
-+		return other;
-+	}
-+	if (orig->nr == other->nr &&
-+	    !memcmp(orig->map, other->map, orig->nr * sizeof(int)))
-+		return orig;
-+	tmp_len = orig->nr + other->nr;
-+	tmp_cpus = malloc(tmp_len * sizeof(int));
-+	if (!tmp_cpus)
-+		return NULL;
-+	i = j = k = 0;
-+	while (i < orig->nr && j < other->nr) {
-+		if (orig->map[i] <= other->map[j])
-+			tmp_cpus[k++] = orig->map[i++];
-+		else
-+			tmp_cpus[k++] = other->map[j++];
-+	}
-+	while (i < orig->nr)
-+		tmp_cpus[k++] = orig->map[i++];
-+	while (j < other->nr)
-+		tmp_cpus[k++] = other->map[j++];
-+	assert(k < tmp_len);
-+	merged = cpu_map__trim_new(k, tmp_cpus);
-+	free(tmp_cpus);
-+	return merged;
-+}
-diff --git a/tools/perf/lib/evlist.c b/tools/perf/lib/evlist.c
-index 205ddbb80bc1..35a627283122 100644
---- a/tools/perf/lib/evlist.c
-+++ b/tools/perf/lib/evlist.c
-@@ -54,6 +54,7 @@ static void __perf_evlist__propagate_maps(struct perf_evlist *evlist,
- 
- 	perf_thread_map__put(evsel->threads);
- 	evsel->threads = perf_thread_map__get(evlist->threads);
-+	evlist->all_cpus = perf_cpu_map__update(evlist->all_cpus, evsel->cpus);
- }
- 
- static void perf_evlist__propagate_maps(struct perf_evlist *evlist)
-diff --git a/tools/perf/lib/include/internal/evlist.h b/tools/perf/lib/include/internal/evlist.h
-index a2fbccf1922f..74dc8c3f0b66 100644
---- a/tools/perf/lib/include/internal/evlist.h
-+++ b/tools/perf/lib/include/internal/evlist.h
-@@ -18,6 +18,7 @@ struct perf_evlist {
- 	int			 nr_entries;
- 	bool			 has_user_cpus;
- 	struct perf_cpu_map	*cpus;
-+	struct perf_cpu_map	*all_cpus;
- 	struct perf_thread_map	*threads;
- 	int			 nr_mmaps;
- 	size_t			 mmap_len;
-diff --git a/tools/perf/lib/include/perf/cpumap.h b/tools/perf/lib/include/perf/cpumap.h
-index ac9aa497f84a..dcf61da64267 100644
---- a/tools/perf/lib/include/perf/cpumap.h
-+++ b/tools/perf/lib/include/perf/cpumap.h
-@@ -12,6 +12,8 @@ LIBPERF_API struct perf_cpu_map *perf_cpu_map__dummy_new(void);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__new(const char *cpu_list);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__read(FILE *file);
- LIBPERF_API struct perf_cpu_map *perf_cpu_map__get(struct perf_cpu_map *map);
-+LIBPERF_API struct perf_cpu_map *perf_cpu_map__update(struct perf_cpu_map *orig,
-+						      struct perf_cpu_map *other);
- LIBPERF_API void perf_cpu_map__put(struct perf_cpu_map *map);
- LIBPERF_API int perf_cpu_map__cpu(const struct perf_cpu_map *cpus, int idx);
- LIBPERF_API int perf_cpu_map__nr(const struct perf_cpu_map *cpus);
--- 
-2.23.0
+On 11/04, Gabriela Bittencourt wrote:
+> Add a description on VKMS module and the cases in which it should be used.
+> There's a brief explanation on how to set it and use it in a VM, along wi=
+th
+> an example of running an igt-test.
+>=20
+> Changes since V3:
+>  Rodrigo:
+>  - Change the log message to imperative
+>  - Fix some bad spelling/writing
+>  - Add a blank line before enumeration
+>=20
+> Changes since V2:
+>  Andre:
+>  - Avoid repetition of words in the same sentence;
+>  - Make the explanation on 'setting the kernel' shorter, eliminate the
+>    'make menuconfig' command;
+>  - Add tab on enumeration to have one line per item;
+>  - Clarify from each machine igt-tests commands should be ran on.
+>=20
+> Signed-off-by: Gabriela Bittencourt <gabrielabittencourt00@gmail.com>
+> ---
+>=20
+> Tested the patch using 'make htmldocs' to make sure the output .html is
+> correct.
+>=20
+> Hi DRM-community,
+> this is my first (of many, I hope)  patch in this subsystem. I hope to ha=
+ve
+> a lot of learning (and fun :)) working with you guys.
+> I'm starting by documenting the VKMS driver in "Userland interfaces", if I
+> have been inaccurate in my description or if I misunderstood some concept,
+> please let me know.
+> ---
+>  Documentation/gpu/drm-uapi.rst | 37 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>=20
+> diff --git a/Documentation/gpu/drm-uapi.rst b/Documentation/gpu/drm-uapi.=
+rst
+> index 94f90521f58c..8271c1e240b7 100644
+> --- a/Documentation/gpu/drm-uapi.rst
+> +++ b/Documentation/gpu/drm-uapi.rst
+> @@ -285,6 +285,43 @@ run-tests.sh is a wrapper around piglit that will ex=
+ecute the tests matching
+>  the -t options. A report in HTML format will be available in
+>  ./results/html/index.html. Results can be compared with piglit.
+> =20
+> +Using VKMS to test DRM API
+> +--------------------------
+> +
+> +VKMS is a software-only model of a KMS driver that is useful for testing
+> +and for running compositors. VKMS aims to enable a virtual display witho=
+ut
+> +the need for a hardware display capability. These characteristics made V=
+KMS
+> +a perfect tool for validating the DRM core behavior and also support the
+> +compositor developer. VKMS makes it possible to test DRM functions in a
+> +virtual machine without display, simplifying the validation of some of t=
+he
+> +core changes.
+> +
+> +To Validate changes in DRM API with VKMS, start setting the kernel: make
+> +sure to enable VKMS module; compile the kernel with the VKMS enabled and
+> +install it in the target machine. VKMS can be run in a Virtual Machine
+> +(QEMU, virtme or similar). It's recommended the use of KVM with the mini=
+mum
+> +of 1GB of RAM and four cores.
+> +
+> +It's possible to run the IGT-tests in a VM in two ways:
+> +
+> +	1. Use IGT inside a VM
+> +	2. Use IGT from the host machine and write the results in a shared dire=
+ctory.
+> +
+> +As follow, there is an example of using a VM with a shared directory with
+> +the host machine to run igt-tests. As an example it's used virtme::
+> +
+> +	$ virtme-run --rwdir /path/for/shared_dir --kdir=3Dpath/for/kernel/dire=
+ctory --mods=3Dauto
+> +
+> +Run the igt-tests in the guest machine, as example it's ran the 'kms_fli=
+p'
+> +tests::
+> +
+> +	$ /path/for/igt-gpu-tools/scripts/run-tests.sh -p -s -t "kms_flip.*" -v
+> +
+> +In this example, instead of build the igt_runner, Piglit is used
+> +(-p option); it's created html summary of the tests results and it's sav=
+ed
+> +in the folder "igt-gpu-tools/results"; it's executed only the igt-tests
+> +matching the -t option.
+> +
+>  Display CRC Support
+>  -------------------
+> =20
+> --=20
+> 2.20.1
+>=20
 
+--=20
+Rodrigo Siqueira
+Software Engineer, Advanced Micro Devices (AMD)
+https://siqueira.tech
+
+--nzbdziewgyxr7kks
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE4tZ+ii1mjMCMQbfkWJzP/comvP8FAl3AwZ4ACgkQWJzP/com
+vP8WWg/9GIwArmMbTRYE9qkqkNDLclr/1TCgv/jtWAmjWNGvp9yh8uRurcT3tX9m
+utTEiQmhdHcyc1YzdL+WqJgqR25kU2Kb7roXmyP5/0Y5nrePC3j7nVAr/zoqVOaM
+J0/k8cPSO1BTs/QI35Cg7hvrbggWXtNka+IpxK3d5tjDMQ5YwMBOkKOlOBL6aZoD
+T3Q5qzTeKhA1kr9yaZw6ADr2MmEHQloRShsEemGCHuzQ44Od+vSC8D/ZItuJJxFp
+8GnRHtPg2eZbloGRZGojT6gGKrWC2roO5/WMJcYAIMVgmbBjh/RXBDiEBDk8b5yw
+5avVz7/P2+qKQzUTtlWiZS5wO1Yr6w6+ZrwWfdtNKD8WYr+O6D2yCOWLceqdJFtz
+v0N/DDLZHLxHFyS4HFgUFeKzluPSVnzht6PD6EpprzSwT3itm5/6VnPTkKm0BlVm
+CqeViy5kU708W0rcVrnDPJfZefO0vodfn2C1s1pkp+5x1Gm6eY6Ot+1PKoR1tjxY
+cQt9V6Ih1j11sQJ1tcDCOaRKH3mqlw5MDe8Di5kR7re+UGTJN579cHZuyG9LrAqA
+BN08l1Ys8BMlFL4F2FdkoFHRRh/VaDLN8FOW0zXpcb0Ypa1p8MjxrBW85ITADMOu
+oOd93McE+kcmWjUxVy3xWAWcqCMA9cg4c5dmaGxayTlN0TbAnxU=
+=8UYP
+-----END PGP SIGNATURE-----
+
+--nzbdziewgyxr7kks--
