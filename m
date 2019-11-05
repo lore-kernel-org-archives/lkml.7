@@ -2,95 +2,180 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA544C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:09:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD07C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:09:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F752084D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:09:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="QW9wn9q+"
+	by mail.kernel.org (Postfix) with ESMTP id 835B5222C9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:09:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728766AbfKEUJc (ORCPT
+        id S1729587AbfKEUJ6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:09:32 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:38796 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEUJc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:09:32 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5K9SeQ070186;
-        Tue, 5 Nov 2019 14:09:28 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572984568;
-        bh=nE6BU9hEnA6eDsPcHYOOk7C7taGSXSjOx88R6DhNv5o=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=QW9wn9q+x7sWeLsVYR+FWx4xEpBhpuae3KAKg2WkoNVs/MKWJnlZOSAAziZCFcouX
-         6jeymzoO9VCfh9m1XBiIyZqYog30zD35peP1p10PiBcgv/ym/P6LEhYh8XV+3YJlkS
-         6YZIyj35gFt0pkDpbuThxHC2U5/Q7L89XJlBurgk=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5K9Sxu059145
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 14:09:28 -0600
-Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 14:09:13 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
- (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 14:09:28 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5K9RTd119057;
-        Tue, 5 Nov 2019 14:09:28 -0600
-Subject: Re: [PATCH 2/2] net: phy: dp83869: Add TI dp83869 phy
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Heiner Kallweit <hkallweit1@gmail.com>, <andrew@lunn.ch>,
-        <davem@davemloft.net>
-CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-References: <20191105181826.25114-1-dmurphy@ti.com>
- <20191105181826.25114-2-dmurphy@ti.com>
- <68b9c003-4fb3-b854-695a-fa1c6e08f518@gmail.com>
- <4ffebfad-87d2-0e19-5b54-7e550c540d03@ti.com>
- <5d5cb879-b3a2-545f-7f74-0f1f1e6380bb@gmail.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <efe93d94-c877-779d-5df5-2c5e90dd2e8a@ti.com>
-Date:   Tue, 5 Nov 2019 14:08:35 -0600
+        Tue, 5 Nov 2019 15:09:58 -0500
+Received: from foss.arm.com ([217.140.110.172]:58970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKEUJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:09:58 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CB28C64F;
+        Tue,  5 Nov 2019 12:09:56 -0800 (PST)
+Received: from [10.162.40.121] (a075563-lin.blr.arm.com [10.162.40.121])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 02C4E3FB2A;
+        Mon,  4 Nov 2019 22:50:36 -0800 (PST)
+Subject: Re: [PATCHv2 1/8] ftrace: add ftrace_init_nop()
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Steven Rostedt <rostedt@goodmis.org>,
+        linux-kernel@vger.kernel.org, catalin.marinas@arm.com,
+        deller@gmx.de, duwe@suse.de, James.Bottomley@HansenPartnership.com,
+        james.morse@arm.com, jeyu@kernel.org, jpoimboe@redhat.com,
+        jthierry@redhat.com, linux-parisc@vger.kernel.org,
+        mingo@redhat.com, peterz@infradead.org, svens@stackframe.org,
+        takahiro.akashi@linaro.org, will@kernel.org
+References: <20191029165832.33606-1-mark.rutland@arm.com>
+ <20191029165832.33606-2-mark.rutland@arm.com>
+ <daad0785-a33f-3cfb-cf0f-657b6c677257@arm.com>
+ <20191104133657.GE45140@lakrids.cambridge.arm.com>
+From:   Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <8e68de1f-f961-752d-9c07-ce41ce624d35@arm.com>
+Date:   Tue, 5 Nov 2019 12:17:26 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5d5cb879-b3a2-545f-7f74-0f1f1e6380bb@gmail.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191104133657.GE45140@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Florian
+Hi Mark,
 
-On 11/5/19 2:05 PM, Florian Fainelli wrote:
-> On 11/5/19 12:02 PM, Dan Murphy wrote:
-> int ret, val;
->>>> +
->>>> +    if (!phydev->priv) {
->>>> +        dp83869 = devm_kzalloc(&phydev->mdio.dev, sizeof(*dp83869),
->>>> +                       GFP_KERNEL);
->>> This belongs into the probe callback.
->> probe callback?  Why do I need a probe function?
-> To allocate your driver private memory and do that just once,
-> config_init() can be called multiple times through the lifetime of your
-> PHY device driver, including but not limited to: phy_connect(),
-> phy_init_hw(), phy_resume() etc. etc.
+On 11/4/19 7:06 PM, Mark Rutland wrote:
+> On Sat, Nov 02, 2019 at 05:49:00PM +0530, Amit Daniel Kachhap wrote:
+>> Hi Mark,
+> 
+> Hi Amit,
+> 
+> Thanks for the review!
+>   
+>> On 10/29/19 10:28 PM, Mark Rutland wrote:
+>>> Architectures may need to perform special initialization of ftrace
+>>> callsites, and today they do so by special-casing ftrace_make_nop() when
+>>> the expected branch address is MCOUNT_ADDR. In some cases (e.g. for
+>>> patchable-function-entry), we don't have an mcount-like symbol and don't
+>> s/an mcount/a mcount.
+>>> want a synthetic MCOUNT_ADDR, but we may need to perform some
+>>> initialization of callsites.
+>>>
+>>> To make it possible to separate initialization from runtime
+>>> modification, and to handle cases without an mcount-like symbol, this
+>> Same as above.
+> 
+> Using 'an' in both of these cases is correct, even though 'mcount'
+> starts with a consonant, since it's pronounced as-if it were 'emcount'.
+> I will leave this as-is.
+Ok sure. It makes sense.
+> 
+>>> patch adds an optional ftrace_init_nop() function that architectures can
+>>> implement, which does not pass a branch address.
+>>>
+>>> Where an architecture does not provide ftrace_init_nop(), we will fall
+>>> back to the existing behaviour of calling ftrace_make_nop() with
+>>> MCOUNT_ADDR.
+>>>
+>>> At the same time, ftrace_code_disable() is renamed to
+>>> ftrace_nop_initialize() to make it clearer that it is intended to
+>>> intialize a callsite into a disabled state, and is not for disabling a
+>>> callsite that has been runtime enabled. The kerneldoc description of rec
+>>> arguments is updated to cover non-mcount callsites.
+>>>
+>>> Signed-off-by: Mark Rutland <mark.rutland@arm.com>
+>>> Reviewed-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+>>> Cc: Ingo Molnar <mingo@redhat.com>
+>>> Cc: Steven Rostedt <rostedt@goodmis.org>
+>>> Cc: Torsten Duwe <duwe@suse.de>
+>>> ---
+>>>    include/linux/ftrace.h | 35 ++++++++++++++++++++++++++++++++---
+>>>    kernel/trace/ftrace.c  |  6 +++---
+>>>    2 files changed, 35 insertions(+), 6 deletions(-)
+>>>
+>>> diff --git a/include/linux/ftrace.h b/include/linux/ftrace.h
+>>> index 8a8cb3c401b2..9867d90d635e 100644
+>>> --- a/include/linux/ftrace.h
+>>> +++ b/include/linux/ftrace.h
+>>> @@ -499,7 +499,7 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
+>>>    /**
+>>>     * ftrace_make_nop - convert code into nop
+>>>     * @mod: module structure if called by module load initialization
+>>> - * @rec: the mcount call site record
+>>> + * @rec: the call site record (e.g. mcount/fentry)
+>>>     * @addr: the address that the call site should be calling
+>>>     *
+>>>     * This is a very sensitive operation and great care needs
+>>> @@ -520,9 +520,38 @@ static inline int ftrace_disable_ftrace_graph_caller(void) { return 0; }
+>>>    extern int ftrace_make_nop(struct module *mod,
+>>>    			   struct dyn_ftrace *rec, unsigned long addr);
+>>> +
+>>> +/**
+>>> + * ftrace_init_nop - initialize a nop call site
+>>> + * @mod: module structure if called by module load initialization
+>>> + * @rec: the call site record (e.g. mcount/fentry)
+>>> + *
+>>> + * This is a very sensitive operation and great care needs
+>>> + * to be taken by the arch.  The operation should carefully
+>>> + * read the location, check to see if what is read is indeed
+>>> + * what we expect it to be, and then on success of the compare,
+>>> + * it should write to the location.
+>>> + *
+>>> + * The code segment at @rec->ip should contain the contents created by
+>>> + * the compiler
+>> Nit: Will it be better to write it as "@rec->ip should store the adjusted
+>> ftrace entry address of the call site" or something like that.
+> 
+> This was the specific wording requested by Steve, and it's trying to
+> describe the instructions at rec->ip, rather than the value of rec->ip,
+> so I think it's better to leave this as-is.
+ok Its fine this way too. Actually from the comment, I could not 
+understand which one of the compiler contents this points to as in this 
+case there are 2 nops.
+> 
+>>> + *
+>>> + * Return must be:
+>>> + *  0 on success
+>>> + *  -EFAULT on error reading the location
+>>> + *  -EINVAL on a failed compare of the contents
+>>> + *  -EPERM  on error writing to the location
+>>> + * Any other value will be considered a failure.
+>>> + */
+>>> +#ifndef ftrace_init_nop
+>>> +static inline int ftrace_init_nop(struct module *mod, struct dyn_ftrace *rec)
+>>> +{
+>>> +	return ftrace_make_nop(mod, rec, MCOUNT_ADDR);
+>>> +}
+>>> +#endif
+>>> +
+>> Now that ftrace_init_nop is also an arch implemented function so it may be
+>> added in Documentation/trace/ftrace-design.rst along with ftrace_make_nop.
+>> In general also, adding some description about patchable-function-entry
+>> in kernel Documentation will be useful.
+> 
+> I agree that would be a good thing, but as Steve suggests I will leave
+> this for subsequent rework, as I think that also implies more
+> rework/renaming in the core code (e.g. to more cleanly separate the
+> notion of a callsite from mcount specifically).
+ok.
 
-Ah OK.  Makes sense will fix it.
-
-Dan
-
+Thanks,
+Amit
+> 
+> Steve, if you'd like help with that (or review), I'd be happy to help.
+> 
+> Thanks,
+> Mark.
+> 
