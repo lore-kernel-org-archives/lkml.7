@@ -2,105 +2,79 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 356CCC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D52BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3CAE21882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:50:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572969034;
-	bh=0Wqzj5saWGFQPcHScriQ0P5BJ17JeJjwaDDE8C9MBUo=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=hqtntFfElKSQn1/1jEbqbtbd0M+kv9i/LWpdq47nupsDhjc8UmqMy19vqzu54tAxF
-	 jtYj+5XlrpNd/ENQyHEKt+p5hSHXabklYUIVZ5T6xQbLErwkiO63PqUMfXAZOIBcqO
-	 o5bY8yoXo2xYq0svqb2dAjJOcoXjb+DLFJHWAy8U=
+	by mail.kernel.org (Postfix) with ESMTP id EF88A217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:53:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rRVqq+4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389976AbfKEPuc (ORCPT
+        id S2389958AbfKEPx4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:50:32 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49654 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389571AbfKEPuc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:50:32 -0500
-Received: from localhost (unknown [62.119.166.9])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4423E217F5;
-        Tue,  5 Nov 2019 15:50:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572969032;
-        bh=0Wqzj5saWGFQPcHScriQ0P5BJ17JeJjwaDDE8C9MBUo=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Lw6RcLyVKDqZHREc1LJoj5D99aRFj5tS/8E3bHXUhXcKbtYJGENJOIzd5iZtYohGz
-         Dml2XWiVgjGGBUno9CecWRRK6ZlG4hkdovBT2hIWYEBPS4fY9Lrr3vWzKkY0ltWlVU
-         v3/rkQc3kviutnrDR1pINh8O9crNybecRgd7Kng4=
-Date:   Tue, 5 Nov 2019 16:50:24 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     Chen Wandun <chenwandun@huawei.com>
-Cc:     linux-kernel@vger.kernel.org, devel@driverdev.osuosl.org,
-        perex@perex.cz, kstewart@linuxfoundation.org, allison@lohutok.net,
-        tglx@linutronix.de, joe@perches.com
-Subject: Re: [PATCH v2] hp100: remove set but not used variable val
-Message-ID: <20191105155024.GA2677365@kroah.com>
-References: <20191105133554.6C01F9A06CB85816F399@huawei.com>
- <1572964619-76671-1-git-send-email-chenwandun@huawei.com>
+        Tue, 5 Nov 2019 10:53:56 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:32962 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389571AbfKEPxz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 10:53:55 -0500
+Received: by mail-ot1-f66.google.com with SMTP id u13so18067267ote.0;
+        Tue, 05 Nov 2019 07:53:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9v8a/PzkmDRsrpwdgaeR7TWkLNG0Q683Xg54I265G2w=;
+        b=rRVqq+4ZBPfA2YUAymgrz5An0lVZjIXc57k4wOmOI/wXaSqHw9pPCcV7EEgYbOKSFN
+         hfNglky91reszAIObnfYJjA9mfhKwTrG4TS4Kirj7vtakSodP0gQnD6oW+P6gsRSnTmC
+         z6Htqjss3D8D322MOUcDwAoKLJ/MVkYC4tt5RE2dT6+NQtPj6m8vBGKuvc511MZyJoaM
+         MJ4I+uV+8TVw4C8XGNiNP7/aMvz2FaMOFnEyW06PY9pw6xUIcVAHsdCXQSKhemeMjlKZ
+         d0q+XFFNoCbYYdUTvylf5R+Ivc0HcTBZxtOyWpq7323QnrgGrnz9byBJAJQlNfeszz5I
+         vbjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9v8a/PzkmDRsrpwdgaeR7TWkLNG0Q683Xg54I265G2w=;
+        b=uG28Hf2QPdErWiIhxiZmnkaiamzDnFPVloN5dhg+Fe53A8fk8qAGMxBK6qaCaCZni7
+         tDiiXA5idLHocAKSKTeHRVAX6CLK7gMGgaWJRbhEg1eu2H+eddiZyoq37QbbnPlGvEjJ
+         9JxGmxKV1M+pl3V5G730wBN6RffHRBbQDf4gIg6DcuFnD73DYJTAMJTvSTzE3eB33QmO
+         Yrj1RlptAvtPg1ZEYtAOjwdOE/ZQ2QPE3g7gXwa+/SSQnUD4jkqDO8N1XmbuBFfwTIkQ
+         iVyR4h2VKjkWH6ZBUGD5Y85SBa+7N6G4GFRyet1rAyaZ5XMuJnZIvBvVYchSXo6aAwQ6
+         o+aQ==
+X-Gm-Message-State: APjAAAVfzMljb7J4ah21x2ajCsvH5wlYqiCn7PnUIFhz0Sz7LytS9/eK
+        j3JUuQsdgQQ95fagiv2+NfsDaC9ea0HB55e6h/o=
+X-Google-Smtp-Source: APXvYqwdcet+g8k959ze849JPip/1q3+KlQJ1DtfSwEz1SjelZjOztklNuK+s2RS6z8+JP/MPquxlotV6gK/RYGYiZ8=
+X-Received: by 2002:a05:6830:11d2:: with SMTP id v18mr18387820otq.116.1572969234516;
+ Tue, 05 Nov 2019 07:53:54 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572964619-76671-1-git-send-email-chenwandun@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
+ <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
+ <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
+ <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com>
+ <20191104233621.GP57214@dtor-ws> <CAGngYiW0+QkLNmjp4yre2upqsvgEL4Or8rm09k5o7=9WHryyhg@mail.gmail.com>
+In-Reply-To: <CAGngYiW0+QkLNmjp4yre2upqsvgEL4Or8rm09k5o7=9WHryyhg@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 5 Nov 2019 10:53:43 -0500
+Message-ID: <CAGngYiXsxnnu5NkV61xWNqup_uOJxpX-UtJCGXfQ=fo0ZeAPsQ@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Adam Ford <aford173@gmail.com>, Marek Vasut <marex@denx.de>,
+        linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:36:59PM +0800, Chen Wandun wrote:
-> From: Chenwandun <chenwandun@huawei.com>
-> 
-> Fixes gcc '-Wunused-but-set-variable' warning:
-> 
-> drivers/staging/hp/hp100.c: In function hp100_start_xmit:
-> drivers/staging/hp/hp100.c:1629:10: warning: variable val set but not used [-Wunused-but-set-variable]
-> 
-> Signed-off-by: Chenwandun <chenwandun@huawei.com>
+On Tue, Nov 5, 2019 at 10:29 AM Sven Van Asbroeck <thesven73@gmail.com> wrote:
+>
+> The max position on ili2117/8 is 0xfff.
 
-I need a "full" name here, like the one on your email "From:" line.
-
-> ---
->  drivers/staging/hp/hp100.c | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/drivers/staging/hp/hp100.c b/drivers/staging/hp/hp100.c
-> index 6ec78f5..6fc7733 100644
-> --- a/drivers/staging/hp/hp100.c
-> +++ b/drivers/staging/hp/hp100.c
-> @@ -1626,7 +1626,9 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
->  	unsigned long flags;
->  	int i, ok_flag;
->  	int ioaddr = dev->base_addr;
-> +#ifdef HP100_DEBUG_TX
->  	u_short val;
-> +#endif
-
-#ifdefs are not ok in .c code, sorry.
-
->  	struct hp100_private *lp = netdev_priv(dev);
->  
->  #ifdef HP100_DEBUG_B
-> @@ -1695,7 +1697,9 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
->  
->  	spin_lock_irqsave(&lp->lock, flags);
->  	hp100_ints_off();
-> +#ifdef HP100_DEBUG_TX
->  	val = hp100_inw(IRQ_STATUS);
-
-Are you sure that this doesn't actually change the hardware in some way?
-
-thanks,
-
-greg k-h
+Sorry, it's actually 2047.
