@@ -2,266 +2,126 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCDDC010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CFEC010A2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432372190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 363AE2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICvIG+0H"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388669AbfKEKxA (ORCPT
+        id S2388691AbfKEKxc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:53:00 -0500
-Received: from mga17.intel.com ([192.55.52.151]:49486 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388221AbfKEKxA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:53:00 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 02:52:59 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="204939882"
-Received: from linux.intel.com ([10.54.29.200])
-  by orsmga003.jf.intel.com with ESMTP; 05 Nov 2019 02:52:58 -0800
-Received: from [10.226.38.65] (rtanwar-mobl.gar.corp.intel.com [10.226.38.65])
-        by linux.intel.com (Postfix) with ESMTP id 5876658045B;
-        Tue,  5 Nov 2019 02:52:56 -0800 (PST)
-Subject: Re: [PATCH v3 1/2] pinctrl: Add pinmux & GPIO controller driver for a
- new SoC
-To:     Andy Shevchenko <andriy.shevchenko@intel.com>
-Cc:     linus.walleij@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, robh@kernel.org, qi-ming.wu@intel.com,
-        yixin.zhu@linux.intel.com, cheol.yong.kim@intel.com
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
- <02558966005c0483144785ed069b144f81d209a9.1572926608.git.rahul.tanwar@linux.intel.com>
- <20191105094917.GK32742@smile.fi.intel.com>
-From:   "Tanwar, Rahul" <rahul.tanwar@linux.intel.com>
-Message-ID: <61e076de-7b24-b71d-dd79-c1c506a0f1bf@linux.intel.com>
-Date:   Tue, 5 Nov 2019 18:52:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 5 Nov 2019 05:53:32 -0500
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:32963 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfKEKxc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:53:32 -0500
+Received: by mail-qt1-f193.google.com with SMTP id y39so28743418qty.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 02:53:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=t/XhLmGtV4oGELxdQt2dJ/sVCPl5OR9PVnJcsPBnlMo=;
+        b=ICvIG+0H28QhrcijQJct7LH43SjJnbvZts6U/LC/pjtvTR3hAEmw7dlsuVdTrncHqk
+         EvKztIKEZ5A8QX+j2c0n6+QQiJGwI/lVhGReT1+TvlsEYwcq5SGU/qiC1TSw1oBtqREy
+         QuhgCnZuEx6S14Z4Hrd+aimUvax9AAfsmgUuh8fC4NeuOFQPPFIcFcM6Mi5LaUy8unnq
+         NvrDfxLp8iYwJTls/hBdJaigSDGTONt9EZU1l2+K6vp/78Q9M7TPiTfPEuSnA/g2XFX6
+         Zx/yiBFp8Ovum4fmE/C7ymog+6YKqmIeg5jc1pHmn0NVonNP/j6YC8EyOsasq29nUSqf
+         7i5A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=t/XhLmGtV4oGELxdQt2dJ/sVCPl5OR9PVnJcsPBnlMo=;
+        b=gurEX88Yh6/ZoIxEFK1ObJATc00gkZPFyIgrTnwPK/2S0jef3cfhcbwpZXFULgB2Xy
+         BNTSZcZkc9Ws3EPAdMN4BwD3F293qKzNcI5GXH2mVwaDOFFwAQKWoFgPXCNPyH4NrMTE
+         TYoqkbQeE64AHMUKep1N4uYKwfRz0ppU1Ox6d67Qq3djQXkvwCpX4OlbJ+61b/rz2M3r
+         w+/HNpypi8N8V+E8Qc/tLucyVUGB4bviu6KO9DPp9dVJaLsKF+vl0uAY4A6fOszIhRTD
+         ecUw+zdEP+Y5wDvn1+MIn1r5Mdx3VEcTkj5bkhM7gpOOdUyMQSTO64u4Lq9Qf7+2nkn7
+         FhRQ==
+X-Gm-Message-State: APjAAAX41NugCGnGZyrmOuh1fwJ3CG0ONf6dNfARVuzaVvH4XmH93D8V
+        RtA5TuTWpgvbdZ984miHZ6m6PrUcCelfwU1oLmbyRw==
+X-Google-Smtp-Source: APXvYqzsrsWAAn9HLrAYv54W6cY639CzWfk8120ROp4QYlEV3J+TeAMFsUk8W2y/rc5W3mjdNlTfFPZAfm1Glo9E1FA=
+X-Received: by 2002:ac8:5514:: with SMTP id j20mr16512390qtq.257.1572951210377;
+ Tue, 05 Nov 2019 02:53:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191105094917.GK32742@smile.fi.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com>
+ <20191104152428.GA2252441@kroah.com> <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr>
+ <CAM6JnLdrzCPOYyfTdmriFo7cRaGM4p2OEPd_0MHa3_WemamffA@mail.gmail.com>
+ <nycvar.YSQ.7.76.1911041928030.30289@knanqh.ubzr> <c30fc539-68a8-65d7-226c-6f8e6fd8bdfb@suse.com>
+ <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com>
+ <a0550a96-a7db-60d7-c4ac-86be8c8dd275@suse.com> <nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr>
+ <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
+In-Reply-To: <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Tue, 5 Nov 2019 11:53:18 +0100
+Message-ID: <CACT4Y+bw_fuhC0q2Wb0K=+z9p_E+apZr9h7_+HWOhAe6_g7KgQ@mail.gmail.com>
+Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
+To:     Jiri Slaby <jslaby@suse.com>
+Cc:     Nicolas Pitre <nico@fluxnic.net>,
+        Or Cohen <orcohen@paloaltonetworks.com>,
+        Greg KH <gregkh@linuxfoundation.org>, textshell@uchuujin.de,
+        Daniel Vetter <daniel.vetter@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>, mpatocka@redhat.com,
+        ghalat@redhat.com, LKML <linux-kernel@vger.kernel.org>,
+        jwilk@jwilk.net, Nadav Markus <nmarkus@paloaltonetworks.com>,
+        syzkaller <syzkaller@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 5/11/2019 5:49 PM, Andy Shevchenko wrote:
-> On Tue, Nov 05, 2019 at 02:49:42PM +0800, Rahul Tanwar wrote:
->> Intel Lightning Mountain SoC has a pinmux controller & GPIO controller IP which
->> controls pin multiplexing & configuration including GPIO functions selection &
->> GPIO attributes configuration.
->>
->> This IP is not based on & does not have anything in common with Chassis
->> specification. The pinctrl drivers under pinctrl/intel/* are all based upon
->> Chassis spec compliant pinctrl IPs. So this driver doesn't fit & can not use
->> pinctrl framework under pinctrl/intel/* and it requires a separate new driver.
->>
->> Add a new GPIO & pin control framework based driver for this IP.
->> +static void eqbr_set_val(void __iomem *addr, u32 offset,
->> +			 u32 mask, u32 set, raw_spinlock_t *lock)
-> This lock parameter is quite unusual. Can't you supply a pointer to a data
-> structure which has lock along with MMIO address?
-
-On second thoughts, i realize that this function can be totally avoided
-since it just has two callers which can be further reduced to one caller.
-I will remove this function and instead do reg update in the caller function
-itself.
-
-
->> +static int gpiochip_setup(struct device *dev, struct eqbr_gpio_desc *desc)
->> +{
->> +	struct gpio_irq_chip *girq;
->> +	struct gpio_chip *gc;
->> +#if defined(CONFIG_OF_GPIO)
->> +	gc->of_node = desc->node;
->> +#endif
-> Isn't it what GPIO library does for everybody?
-
-We have 4 different of_node's for 4 different gpio_chips/banks. GPIO library
-handles like below:
-
-        if (chip->parent) {
-                gdev->dev.parent = chip->parent;
-                gdev->dev.of_node = chip->parent->of_node;
-        }
-
-#ifdef CONFIG_OF_GPIO
-        /* If the gpiochip has an assigned OF node this takes precedence */
-        if (chip->of_node)
-                gdev->dev.of_node = chip->of_node;
-        else
-                chip->of_node = gdev->dev.of_node;
-#endif
-
-So i think we need to assign 4 of_node's to gpio_chip's in the driver.
-
->> +
->> +	if (!of_property_read_bool(desc->node, "interrupt-controller")) {
->> +		dev_info(dev, "gc %s: doesn't act as interrupt controller!\n",
->> +			 desc->name);
-> Is it fatal or non-fatal?
-
-It is not fatal. But i am totally missing your point. Is it about
-dev_info() ? Can you please elaborate more ?
-
-
->> +		return 0;
-> Ditto.
+On Tue, Nov 5, 2019 at 11:29 AM Jiri Slaby <jslaby@suse.com> wrote:
 >
->> +	}
->> +}
->> +static int gpiolib_reg(struct eqbr_pinctrl_drv_data *drvdata)
->> +{
->> +	struct device_node *np;
->> +	struct eqbr_gpio_desc *desc;
-> desc is very confusing here, since GPIO library uses this term for GPIO
-> descriptors.
-
-Agree, better to rename it to avoid confusion with GPIO descriptors.
-I will rename it in v4. Thanks.
-
->> +	struct device *dev;
->> +	int i, ret;
->> +	struct resource res;
->> +
->> +		ret = bgpio_init(&desc->chip, dev, desc->bank->nr_pins/8,
-> 'nr_pins / 8,'
-
-Well noted.
-
->> +				 desc->membase + GPIO_IN,
->> +				 desc->membase + GPIO_OUTSET,
->> +				 desc->membase + GPIO_OUTCLR,
->> +				 desc->membase + GPIO_DIR,
->> +				 NULL,
->> +				 0);
->> +		if (ret) {
->> +			dev_err(dev, "unable to init generic GPIO\n");
->> +			return ret;
->> +		}
->> +	return 0;
->> +}
->> +static int eqbr_pinmux_set_mux(struct pinctrl_dev *pctldev,
->> +			       unsigned int selector, unsigned int group)
->> +{
->> +	struct eqbr_pinctrl_drv_data *pctl = pinctrl_dev_get_drvdata(pctldev);
->> +	struct function_desc *func;
->> +	struct group_desc *grp;
->> +	unsigned int *pinmux;
->> +	int i;
+> On 05. 11. 19, 10:33, Nicolas Pitre wrote:
+> > Subject: [PATCH] vcs: prevent write access to vcsu devices
+> >
+> > Commit d21b0be246bf ("vt: introduce unicode mode for /dev/vcs") guarded
+> > against using devices containing attributes as this is not yet
+> > implemented. It however failed to guard against writes to any devices
+> > as this is also unimplemented.
+> >
+> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
+> > Cc: <stable@vger.kernel.org> # v4.19+
+> >
+> > diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
+> > index fa07d79027..ef19b95b73 100644
+> > --- a/drivers/tty/vt/vc_screen.c
+> > +++ b/drivers/tty/vt/vc_screen.c
+> > @@ -456,6 +456,9 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
+> >       size_t ret;
+> >       char *con_buf;
+> >
+> > +     if (use_unicode(inode))
+> > +             return -EOPNOTSUPP;
 >
->> +	pinmux = grp->data;
->> +	for (i = 0; i < grp->num_pins; i++)
->> +		eqbr_set_pin_mux(pctl, pinmux[i], grp->pins[i]);
-> Shouldn't be this part serialized?
+> Looks good to me. I am also thinking about a ban directly in open:
 >
-> Same Q to all similar places. I guess I already mentioned this in previous
-> review.
-
-From serialization, you mean locking..rt ? Yes, there is one writel()
-statement inthis flow. I will add lock for that statement. Rechecked
-the code again, i do notfind any other similar places.
+> if (use_unicode(inode) && (filp->f_flags & O_ACCMODE) != O_RDONLY)
+>   return -EOPNOTSUPP;
+>
+> Would that break the unicode users?
 
 
->> +	return 0;
->> +}
->> +static int is_func_exist(struct eqbr_pmx_func *funcs, const char *name,
-> Looks like it better to be boolean.
+On a related note, syzbot seems to get very similar bug reports on
+some downstream kernels (4.15):
+KASAN: use-after-free Read in vcs_scr_readw
+KASAN: use-after-free Write in vcs_scr_writew
 
-Well noted, will change in v4.
-
->> +			 unsigned int nr_funcs, unsigned int *idx)
->> +{
->> +	int i;
->> +
->> +	if (!funcs || !nr_funcs)
->> +		return 0;
->> +
->> +	for (i = 0; i < nr_funcs; i++) {
->> +
-> Redundant blank line.
-
-Well noted, will change in v4.
-
->> +		if (funcs[i].name && (strcmp(funcs[i].name, name) == 0) ) {
->> +			*idx = i;
->> +			return 1;
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +static int funcs_utils(struct device *dev, struct eqbr_pmx_func *funcs,
->> +		       unsigned int *nr_funcs, funcs_util_ops op)
->> +{
->> +	struct device_node *node = dev->of_node;
->> +	struct device_node *np;
->> +	struct property *prop;
->> +	unsigned int fid;
->> +	const char *fn_name;
->> +	int i, j;
->> +
->> +	i = 0;
->> +	for_each_child_of_node(node, np) {
->> +		prop = of_find_property(np, "groups", NULL);
->> +		if (prop) {
-> Why not
-> 		if (!prop)
-> 			continue;
-> ?
-
-Sure, i can change like that in v4.
-
->> +			if (of_property_read_string(np, "function",
->> +						    &fn_name)) {
-> It's perfectly one line. Perhaps you may need to configure your text editor.
-
-I am following strict 80 chars limit. This goes on to 81 chars. It's a bit
-confusing on when to adhere to 80 chars limit and when to bypass it :)
-
->> +			}
->> +		}
->> +	}
->> +
->> +	return 0;
->> +}
->> +	for (i=0; i < nr_funcs; i++) {
-> The better style is 'i = 0' and so on.
-> Simple be consistent. Or do everywhere 'i=0; i<nr_func; i++', etc. But remember
-> that this is for sure will be declined by most of the maintainers.
-
-Sure, noted.
-
->> +	}
->>
->> +static int pinbank_init(struct device_node *np,
->> +			struct eqbr_pinctrl_drv_data *drvdata,
->> +			struct eqbr_pin_bank *bank, unsigned int id)
->> +{
->> +	struct device *dev = drvdata->dev;
->> +	struct of_phandle_args spec;
->> +
->> +	bank->membase = drvdata->membase + id * PAD_REG_OFF;
->> +
->> +	if (of_parse_phandle_with_fixed_args(np, "gpio-ranges", 3, 0, &spec)) {
->> +		dev_err(dev, "gpio-range not available!\n");
->> +		return -EFAULT;
-> Shadowing error code with actually unsuitable one.
-
-Will change in v4. Thanks.
-
-Regards,
-Rahul
-
+but not on upstream. I wonder why. And if we are missing some good
+config in upstream kernel or something. This all fuzzing is somewhat
+random, so it might have just happened without particular reasons
+(maybe it will discover it later). But wanted to check if there are
+some low hanging fruits. Anything obviously missing in:
+https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config
+?
