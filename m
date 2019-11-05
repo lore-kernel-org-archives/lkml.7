@@ -2,110 +2,99 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC6BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E40CCC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95D192190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8EF4214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eri7qH+7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NLsR6jd8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390047AbfKEQH3 (ORCPT
+        id S2390155AbfKEQHd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:07:29 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:47005 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389760AbfKEQH3 (ORCPT
+        Tue, 5 Nov 2019 11:07:33 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:58461 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2390068AbfKEQHd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:07:29 -0500
-Received: by mail-lj1-f194.google.com with SMTP id e9so9183564ljp.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:07:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YLw5SYrodBEqy2waMxo41K2A0f7ArdzoSUTOLYie6s4=;
-        b=eri7qH+7uZFLsQ1nBXM7tctm6BOw+ve7hZW/6tQlf9hNm1WjWAPsqiY0Yhh6c8nJ3C
-         Xnn6dPx2b1yQNwdIRtZ0JNE5YnWD9wT4uWdQ88Alt8ix7dhCBHf1+3hKwuNpsBgC0NGc
-         ukdLhq7GYGzfbGDIUwM59OXJAAblz15nAU/hswHpLXqSIMcjqv2fwEBMUCFFkxQbTh6C
-         /Lu8vp0rEgL5fU8oJBcOT/dgw9PjRG+jLqHd2zO7jznoU26UzkHwv9gr6GQOjL28gyt7
-         uZ8vXn/mCyVxCwOnw56QpWCAoHsMV0n6qF29a/MAE/+msYFQNuy8S+uJKSCQHHYjv0EG
-         m2Xg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YLw5SYrodBEqy2waMxo41K2A0f7ArdzoSUTOLYie6s4=;
-        b=SIGfRJjk5xIXZertS3OaMGBR6Yrt6SaxCuQNkm4G/lJ0J9L6OKp/iFd3B6l1/ZvZ0E
-         5LESeqdgideqvPbLK5V+K38M/QTgLwWRg7qpgNTc5qEaSDGkshu8OBsXArkZLajmE6QM
-         HSMonvCsxCpKMCPb3v3e/9+zCMvJvjvhaFeusbDoLpnfC7B0UpQcTC5tPJ24vAwZi30R
-         JYPqyy9b6Jtc1DvIdDkCzmV4wJJE95nqOye1TAoyqsQeiyl1kSjjXMJQvcm0FvOKF7AA
-         8KGTEQjLnOa+T77424A8wDfJkMY2VBex5pzjmX3FcX25midNa5U55DmlWWLWjq92FuMr
-         RBAw==
-X-Gm-Message-State: APjAAAVuZ8NO8cHEgzfm08qZbqTE19vBUOaGyY88BXYXQvDUlXjJOqbn
-        7QJ8zkQLz3KnKml2FR4keRAT9/iALOxnaeDB2EwE0w==
-X-Google-Smtp-Source: APXvYqyfeC8M/8bOUxBWxwGOy++KCeRE1AqSp/eH8U72Cip1RCmkWIqkShJuw/Lzbce5kF+wF/uaswMUtDkVjGbpmA4=
-X-Received: by 2002:a2e:81c6:: with SMTP id s6mr1063081ljg.61.1572970045838;
- Tue, 05 Nov 2019 08:07:25 -0800 (PST)
+        Tue, 5 Nov 2019 11:07:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572970052;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Aa7iRy6FRwmbshhu8lLwnGgjDhVFpAS/o0VXITjg6sQ=;
+        b=NLsR6jd8/zLSL+COro00ZwgcVR6bPzZv4ABq9GdWfuRjVPXXAezFkWCEy1rX5KCFWBiHEt
+        RJVKqVyHp1ZnAs+G58pYzKHTI39/EuRPdVHBD3nDrs0Ov1x5bDew2Kw2MIYmIyKDFUwbkO
+        d8xpUbVlSE94nEWCcZQEb9mf2Ig8lqM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-372-xxav4DNQOUm0VqJwTE4V1w-1; Tue, 05 Nov 2019 11:07:29 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1422E107ACC3;
+        Tue,  5 Nov 2019 16:07:25 +0000 (UTC)
+Received: from gondolin (unknown [10.36.118.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id C2F601FA;
+        Tue,  5 Nov 2019 16:07:04 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 17:06:59 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V8 2/6] modpost: add support for mdev class id
+Message-ID: <20191105170659.766b84b0.cohuck@redhat.com>
+In-Reply-To: <20191105093240.5135-3-jasowang@redhat.com>
+References: <20191105093240.5135-1-jasowang@redhat.com>
+        <20191105093240.5135-3-jasowang@redhat.com>
+Organization: Red Hat GmbH
 MIME-Version: 1.0
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
- <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
-In-Reply-To: <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
-From:   Daniel Colascione <dancol@google.com>
-Date:   Tue, 5 Nov 2019 08:06:49 -0800
-Message-ID: <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: xxav4DNQOUm0VqJwTE4V1w-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 8:00 AM Andy Lutomirski <luto@kernel.org> wrote:
->
-> On Tue, Nov 5, 2019 at 7:55 AM Daniel Colascione <dancol@google.com> wrote:
-> >
-> > On Tue, Nov 5, 2019 at 7:29 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> > >
-> > > Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-> > > descriptor table from the read() implementation of uffd, which may have
-> > > security implications for unprivileged use of the userfaultfd.
-> > >
-> > > Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-> > > CAP_SYS_PTRACE.
-> >
-> > Thanks. But shouldn't we be doing the capability check at
-> > userfaultfd(2) time (when we do the other permission checks), not
-> > later, in the API ioctl?
->
-> The ioctl seems reasonable to me.  In particular, if there is anyone
-> who creates a userfaultfd as root and then drop permissions, a later
-> ioctl could unexpectedly enable FORK.
+On Tue,  5 Nov 2019 17:32:36 +0800
+Jason Wang <jasowang@redhat.com> wrote:
 
-Sure, but the same argument applies to all the other permission checks
-that we do at open time, not at ioctl time. For better or for worse,
-the DAC-ish model used in most places is that access checks happen at
-file object creation time and anyone who has the FD can perform those
-operations later. Confusing the model by doing *some* permission
-checks at open time and *some* permission checks at usage time makes
-the system harder to understand.
+> Add support to parse mdev class id table.
+>=20
+> Reviewed-by: Parav Pandit <parav@mellanox.com>
+> Signed-off-by: Jason Wang <jasowang@redhat.com>
+> ---
+>  drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+>  scripts/mod/devicetable-offsets.c |  3 +++
+>  scripts/mod/file2alias.c          | 11 +++++++++++
+>  3 files changed, 16 insertions(+)
+
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+
