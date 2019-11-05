@@ -2,130 +2,150 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0
-	tests=BUG6152_INVALID_DATE_TZ_ABSURD,DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,INVALID_DATE_TZ_ABSURD,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C8EAC17498
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EDEC17498
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638DE217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572965762;
-	bh=5hcg8ghxSHxPjlGqTjjIe+i79uK3s5zbWA5ceL1DZRI=;
-	h=To:Subject:Date:From:Cc:In-Reply-To:References:List-ID:From;
-	b=IVEkAFrGfvCmhCzrUOU73XfSmHNVyxEnh04Dm4JAoeDhCy+PbVIPu8rPYnwwillc2
-	 T5iAqcM8XPva84eNrgTmJjH1+tw2jgQkiUpejZtxOUsYytnMAG3KAxD3fD8ykyNeyn
-	 ZxibXHXTmqCw4WRO2aA4YIO1gpk55megmVAJhwVY=
+	by mail.kernel.org (Postfix) with ESMTP id A5E5B206DF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BfcBZ2ZL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389464AbfKEO4B (ORCPT
+        id S2389596AbfKEO4o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:56:01 -0500
-Received: from inca-roads.misterjones.org ([213.251.177.50]:42262 "EHLO
-        inca-roads.misterjones.org" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389138AbfKEO4A (ORCPT
+        Tue, 5 Nov 2019 09:56:44 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:37470 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727889AbfKEO4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:56:00 -0500
-Received: from www-data by cheepnis.misterjones.org with local (Exim 4.80)
-        (envelope-from <maz@kernel.org>)
-        id 1iS0Ew-0000Z9-LF; Tue, 05 Nov 2019 15:55:26 +0100
-To:     Sami Tolvanen <samitolvanen@google.com>
-Subject: Re: [PATCH v4 13/17] arm64: preserve x18 when CPU is suspended
-X-PHP-Originating-Script: 0:main.inc
+        Tue, 5 Nov 2019 09:56:44 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5EsrJb013317;
+        Tue, 5 Nov 2019 14:56:12 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
+ : subject : message-id : references : mime-version : content-type :
+ in-reply-to; s=corp-2019-08-05;
+ bh=U2XpltzPsohKEesiIoKecnv74molLoZ2j+lblcZhv1k=;
+ b=BfcBZ2ZLB4g80O07ky8PtGzjc3Ycwu1rFDTxuigdVOlL9XMD/ckaCgyvqiYfjoLibrEu
+ lGaUsb7X0a4xKYIn/3WIa2k02LUnQpsBW0n3rxtfXmzBwvz4uw8fC/v2fnjI5Rv8QpvJ
+ J9R5HwOfuR1e9gN8MWP72QFPuLJnJYwZIRY48q2tbkAN/5JyKtQXxnFytlKQm0jCUV5s
+ AJyuG5GRFK+KDKyG584x6LIanZcKNd+LdcZOShE6ZdKBMQNt3ON6K5SN75gwrtR37OQ+
+ weMRtAZxYi55mMbrLp3CctexpYQlW4PS+Ac6/MxW3aFmzHRxPuOfIDUSYYy34skkTghh Bg== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w117ty0ch-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 14:56:12 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5EsTgO008488;
+        Tue, 5 Nov 2019 14:56:12 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2w333vb7xk-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 14:56:12 +0000
+Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA5EuAFc028587;
+        Tue, 5 Nov 2019 14:56:10 GMT
+Received: from kadam (/41.57.98.10)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Nov 2019 06:56:09 -0800
+Date:   Tue, 5 Nov 2019 17:56:02 +0300
+From:   Dan Carpenter <dan.carpenter@oracle.com>
+To:     Mao Wenan <maowenan@huawei.com>
+Cc:     wangzhou1@hisilicon.com, herbert@gondor.apana.org.au,
+        davem@davemloft.net, tanshukun1@huawei.com,
+        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+Subject: Re: [PATCH -next] crypto: hisilicon: move label err to #ifdef
+ CONFIG_NUMA
+Message-ID: <20191105145602.GH10409@kadam>
+References: <20191105143340.32950-1-maowenan@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 16:04:47 +0109
-From:   Marc Zyngier <maz@kernel.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <dave.martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Jann Horn <jannh@google.com>,
-        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        LKML <linux-kernel@vger.kernel.org>
-In-Reply-To: <CABCJKueN+Op8xm+L3aSFgCL9BLC8b-WHj3oBYhf1W=OcX2aqCg@mail.gmail.com>
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191101221150.116536-1-samitolvanen@google.com>
- <20191101221150.116536-14-samitolvanen@google.com>
- <02c56a5273f94e9d832182f1b3cb5097@www.loen.fr>
- <CABCJKucVON6uUMH6hVP7RODqH8u63AP3SgTCBWirrS30yDOmdA@mail.gmail.com>
- <CAKwvOdkDbX4zLChH_DKrnOah1sJjTA-e3uZOXUP6nUs-EaJreg@mail.gmail.com>
- <CABCJKueN+Op8xm+L3aSFgCL9BLC8b-WHj3oBYhf1W=OcX2aqCg@mail.gmail.com>
-Message-ID: <5486328a221c9eaef8956983f70380f1@www.loen.fr>
-X-Sender: maz@kernel.org
-User-Agent: Roundcube Webmail/0.7.2
-X-SA-Exim-Connect-IP: <locally generated>
-X-SA-Exim-Rcpt-To: samitolvanen@google.com, ndesaulniers@google.com, will@kernel.org, catalin.marinas@arm.com, rostedt@goodmis.org, mhiramat@kernel.org, ard.biesheuvel@linaro.org, dave.martin@arm.com, keescook@chromium.org, labbott@redhat.com, mark.rutland@arm.com, jannh@google.com, miguel.ojeda.sandonis@gmail.com, yamada.masahiro@socionext.com, clang-built-linux@googlegroups.com, kernel-hardening@lists.openwall.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-X-SA-Exim-Mail-From: maz@kernel.org
-X-SA-Exim-Scanned: No (on cheepnis.misterjones.org); SAEximRunCond expanded to false
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105143340.32950-1-maowenan@huawei.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911050124
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911050125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-05 01:11, Sami Tolvanen wrote:
-> On Mon, Nov 4, 2019 at 1:59 PM Nick Desaulniers
-> <ndesaulniers@google.com> wrote:
->>
->> On Mon, Nov 4, 2019 at 1:38 PM Sami Tolvanen 
->> <samitolvanen@google.com> wrote:
->> >
->> > On Mon, Nov 4, 2019 at 5:20 AM Marc Zyngier <maz@kernel.org> 
->> wrote:
->> > > >  ENTRY(cpu_do_suspend)
->> > > >       mrs     x2, tpidr_el0
->> > > > @@ -73,6 +75,9 @@ alternative_endif
->> > > >       stp     x8, x9, [x0, #48]
->> > > >       stp     x10, x11, [x0, #64]
->> > > >       stp     x12, x13, [x0, #80]
->> > > > +#ifdef CONFIG_SHADOW_CALL_STACK
->> > > > +     str     x18, [x0, #96]
->> > > > +#endif
->> > >
->> > > Do we need the #ifdefery here? We didn't add that to the KVM 
->> path,
->> > > and I'd feel better having a single behaviour, specially when
->> > > NR_CTX_REGS is unconditionally sized to hold 13 regs.
->> >
->> > I'm fine with dropping the ifdefs here in v5 unless someone 
->> objects to this.
->>
->> Oh, yeah I guess it would be good to be consistent.  Rather than 
->> drop
->> the ifdefs, would you (Marc) be ok with conditionally setting
->> NR_CTX_REGS based on CONFIG_SHADOW_CALL_STACK, and doing so in KVM?
->> (So 3 ifdefs, rather than 0)?
->>
->> Without any conditionals or comments, it's not clear why x18 is 
->> being
->> saved and restored (unless git blame survives, or a comment is added
->> in place of the ifdefs in v6).
->
-> True. Clearing the sleep state buffer in cpu_do_resume is also
-> pointless without CONFIG_SHADOW_CALL_STACK, so if the ifdefs are
-> removed, some kind of an explanation is needed there.
+The ifdefs in this function were pretty ugly before but this makes it
+super extra ugly...  :/  There are bunch of ways to fix this nicely
+but my favourite is this:
 
-I can't imagine the overhead being noticeable, and I certainly value
-minimizing the testing space. Sticking a comment there should be
-enough for people hacking on this to understand that this isn't
-entirely dead code.
+Feel free to give me a Suggested-by tag.
 
-Thanks,
+diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
+index 255b63cfbe1d..1b22f0ead56e 100644
+--- a/drivers/crypto/hisilicon/zip/zip_main.c
++++ b/drivers/crypto/hisilicon/zip/zip_main.c
+@@ -105,20 +105,27 @@ static void free_list(struct list_head *head)
+ struct hisi_zip *find_zip_device(int node)
+ {
+ 	struct hisi_zip *ret = NULL;
+-#ifdef CONFIG_NUMA
+ 	struct hisi_zip_resource *res, *tmp;
+ 	struct hisi_zip *hisi_zip;
+ 	struct list_head *n;
+ 	struct device *dev;
+ 	LIST_HEAD(head);
+ 
++	if (!IS_ENABLED(CONFIG_NUMA)) {
++		mutex_lock(&hisi_zip_list_lock);
++		ret = list_first_entry(&hisi_zip_list, struct hisi_zip, list);
++		mutex_unlock(&hisi_zip_list_lock);
++		return ret;
++	}
++
+ 	mutex_lock(&hisi_zip_list_lock);
+ 
+ 	list_for_each_entry(hisi_zip, &hisi_zip_list, list) {
+ 		res = kzalloc(sizeof(*res), GFP_KERNEL);
+-		if (!res)
+-			goto err;
+-
++		if (!res) {
++			ret = NULL;
++			goto done;
++		}
+ 		dev = &hisi_zip->qm.pdev->dev;
+ 		res->hzip = hisi_zip;
+ 		res->distance = node_distance(dev->numa_node, node);
+@@ -140,20 +147,10 @@ struct hisi_zip *find_zip_device(int node)
+ 		}
+ 	}
+ 
++done:
+ 	free_list(&head);
+-#else
+-	mutex_lock(&hisi_zip_list_lock);
+-
+-	ret = list_first_entry(&hisi_zip_list, struct hisi_zip, list);
+-#endif
+ 	mutex_unlock(&hisi_zip_list_lock);
+-
+ 	return ret;
+-
+-err:
+-	free_list(&head);
+-	mutex_unlock(&hisi_zip_list_lock);
+-	return NULL;
+ }
+ 
+ struct hisi_zip_hw_error {
 
-         M.
--- 
-Jazz is not dead. It just smells funny...
