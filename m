@@ -2,126 +2,163 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66CFEC010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8BE0C010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:57:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363AE2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:53:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B57172190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:57:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ICvIG+0H"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="K0wpIVqM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388691AbfKEKxc (ORCPT
+        id S1730774AbfKEK5h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:53:32 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:32963 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726867AbfKEKxc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:53:32 -0500
-Received: by mail-qt1-f193.google.com with SMTP id y39so28743418qty.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 02:53:31 -0800 (PST)
+        Tue, 5 Nov 2019 05:57:37 -0500
+Received: from mail-eopbgr720051.outbound.protection.outlook.com ([40.107.72.51]:47150
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726867AbfKEK5h (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:57:37 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=HzqWflhnR6622ht0JuYbDTW5J5UpIk3mZ4yZ4E6QZf5uHzldVx/bzmiFnAVBhoT5WDvJSwv+EM3+wa0AqzSoR6gsw2aFyWYmxS4Pd1CLBappOUusUJSeoz8NGmgG2O93kk6SSqB89Sfp2ZYM+bndNSwNDRowSbmZJt5y3FNyQncoFWLq4S/AqTFMN5ktV8GAYC1p0tcoaSj09/cy3/wOvx45/75MAB5938hVUVgWzVRZ0nkpfcwtAiNqHvXLcFrli01XsF8aiKQ+VpqTK+4yqZlvlPa6dFIuXKwU03MPlDFDHYMiKlpOcA9oHUtvE/ltrmsYcxp/AtnIRCLUK8CRaQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=waplPMLv6OkWhDp9vnO7NObcDM5fXbYET/jHRHPRByc=;
+ b=V8MAsMqcTHRdPurJ03t8jd6acsl4w5Rv58BNWIjsWryjlWS/P0doeyhGFqTtnIYikjOeBNiALZcw4DRfq6wL5v+x4anGhPNpg8tcz5btxTox+xodILyppvelUBQJVEyORVJ86kVypi1jwtl82oXdWS4oRuCnvKWZNk5ocsFTa3l0e8pRcQScciTfISDP2OYdMplVfHMIjfk6P1Bwgl7iJMKRsLg1ttqeGC0iV4OwgS0RzTFPIDNFrwQ7yVLTu9/GhB4kjH+isB1AR/+3DtO3JTZxYTUyxPsKO2eXvcFdP/VPBBEdAXnzWH6teUeB8zW06jrl8DV/M3Ppz3/V73sYKg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
+ 149.199.60.83) smtp.rcpttodomain=vger.kernel.org smtp.mailfrom=xilinx.com;
+ dmarc=bestguesspass action=none header.from=xilinx.com; dkim=none (message
+ not signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=t/XhLmGtV4oGELxdQt2dJ/sVCPl5OR9PVnJcsPBnlMo=;
-        b=ICvIG+0H28QhrcijQJct7LH43SjJnbvZts6U/LC/pjtvTR3hAEmw7dlsuVdTrncHqk
-         EvKztIKEZ5A8QX+j2c0n6+QQiJGwI/lVhGReT1+TvlsEYwcq5SGU/qiC1TSw1oBtqREy
-         QuhgCnZuEx6S14Z4Hrd+aimUvax9AAfsmgUuh8fC4NeuOFQPPFIcFcM6Mi5LaUy8unnq
-         NvrDfxLp8iYwJTls/hBdJaigSDGTONt9EZU1l2+K6vp/78Q9M7TPiTfPEuSnA/g2XFX6
-         Zx/yiBFp8Ovum4fmE/C7ymog+6YKqmIeg5jc1pHmn0NVonNP/j6YC8EyOsasq29nUSqf
-         7i5A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=t/XhLmGtV4oGELxdQt2dJ/sVCPl5OR9PVnJcsPBnlMo=;
-        b=gurEX88Yh6/ZoIxEFK1ObJATc00gkZPFyIgrTnwPK/2S0jef3cfhcbwpZXFULgB2Xy
-         BNTSZcZkc9Ws3EPAdMN4BwD3F293qKzNcI5GXH2mVwaDOFFwAQKWoFgPXCNPyH4NrMTE
-         TYoqkbQeE64AHMUKep1N4uYKwfRz0ppU1Ox6d67Qq3djQXkvwCpX4OlbJ+61b/rz2M3r
-         w+/HNpypi8N8V+E8Qc/tLucyVUGB4bviu6KO9DPp9dVJaLsKF+vl0uAY4A6fOszIhRTD
-         ecUw+zdEP+Y5wDvn1+MIn1r5Mdx3VEcTkj5bkhM7gpOOdUyMQSTO64u4Lq9Qf7+2nkn7
-         FhRQ==
-X-Gm-Message-State: APjAAAX41NugCGnGZyrmOuh1fwJ3CG0ONf6dNfARVuzaVvH4XmH93D8V
-        RtA5TuTWpgvbdZ984miHZ6m6PrUcCelfwU1oLmbyRw==
-X-Google-Smtp-Source: APXvYqzsrsWAAn9HLrAYv54W6cY639CzWfk8120ROp4QYlEV3J+TeAMFsUk8W2y/rc5W3mjdNlTfFPZAfm1Glo9E1FA=
-X-Received: by 2002:ac8:5514:: with SMTP id j20mr16512390qtq.257.1572951210377;
- Tue, 05 Nov 2019 02:53:30 -0800 (PST)
+ d=xilinx.onmicrosoft.com; s=selector2-xilinx-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=waplPMLv6OkWhDp9vnO7NObcDM5fXbYET/jHRHPRByc=;
+ b=K0wpIVqMYikqBhAeVFZTKHkQc+l157PvZqkT3199d3UKCwhhhDsiboRiqkzKvXk9to3BxEJXdvMWOJUUnQ44IjBa0WmX1Fq3cHnmaIq2kxmAYKR2kLZKe1bSTXY441rC+qEAF7SkXx3JAlo9fxziLdLAMIkakeNtYSdfFUoCXGk=
+Received: from CH2PR02CA0015.namprd02.prod.outlook.com (2603:10b6:610:4e::25)
+ by DM6PR02MB5562.namprd02.prod.outlook.com (2603:10b6:5:34::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.24; Tue, 5 Nov
+ 2019 10:56:55 +0000
+Received: from SN1NAM02FT031.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::200) by CH2PR02CA0015.outlook.office365.com
+ (2603:10b6:610:4e::25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2408.24 via Frontend
+ Transport; Tue, 5 Nov 2019 10:56:54 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.83)
+ smtp.mailfrom=xilinx.com; vger.kernel.org; dkim=none (message not signed)
+ header.d=none;vger.kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.83 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.83; helo=xsj-pvapsmtpgw01;
+Received: from xsj-pvapsmtpgw01 (149.199.60.83) by
+ SN1NAM02FT031.mail.protection.outlook.com (10.152.72.116) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
+ via Frontend Transport; Tue, 5 Nov 2019 10:56:54 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66] helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw01 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iRwW6-0002WD-6b; Tue, 05 Nov 2019 02:56:54 -0800
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1iRwW1-00018v-2r; Tue, 05 Nov 2019 02:56:49 -0800
+Received: from [172.30.17.123]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1iRwVt-000188-AQ; Tue, 05 Nov 2019 02:56:41 -0800
+Subject: Re: [PATCH 60/62] gpio: gpio-zynq: Use new GPIO_LINE_DIRECTION
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
+        mazziesaccount@gmail.com
+Cc:     Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Michal Simek <michal.simek@xilinx.com>,
+        linux-gpio@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
+ <e3a74a28d9c0831fe798909d95695dc978d43030.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <2096366f-c2bc-28a2-009c-4a35f6bfc37a@xilinx.com>
+Date:   Tue, 5 Nov 2019 11:56:38 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com>
- <20191104152428.GA2252441@kroah.com> <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr>
- <CAM6JnLdrzCPOYyfTdmriFo7cRaGM4p2OEPd_0MHa3_WemamffA@mail.gmail.com>
- <nycvar.YSQ.7.76.1911041928030.30289@knanqh.ubzr> <c30fc539-68a8-65d7-226c-6f8e6fd8bdfb@suse.com>
- <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com>
- <a0550a96-a7db-60d7-c4ac-86be8c8dd275@suse.com> <nycvar.YSQ.7.76.1911051030580.30289@knanqh.ubzr>
- <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
-In-Reply-To: <fb1744cd-2680-1459-16de-8d6a4afd666d@suse.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Tue, 5 Nov 2019 11:53:18 +0100
-Message-ID: <CACT4Y+bw_fuhC0q2Wb0K=+z9p_E+apZr9h7_+HWOhAe6_g7KgQ@mail.gmail.com>
-Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
-To:     Jiri Slaby <jslaby@suse.com>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Or Cohen <orcohen@paloaltonetworks.com>,
-        Greg KH <gregkh@linuxfoundation.org>, textshell@uchuujin.de,
-        Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>, mpatocka@redhat.com,
-        ghalat@redhat.com, LKML <linux-kernel@vger.kernel.org>,
-        jwilk@jwilk.net, Nadav Markus <nmarkus@paloaltonetworks.com>,
-        syzkaller <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <e3a74a28d9c0831fe798909d95695dc978d43030.1572946015.git.matti.vaittinen@fi.rohmeurope.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.83;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(346002)(376002)(396003)(39860400002)(136003)(189003)(199004)(81166006)(9786002)(426003)(186003)(44832011)(446003)(26005)(31696002)(229853002)(54906003)(4326008)(47776003)(70206006)(70586007)(126002)(36756003)(336012)(31686004)(65806001)(476003)(6666004)(356004)(65956001)(23676004)(76176011)(2486003)(11346002)(2906002)(50466002)(8676002)(36386004)(81156014)(2616005)(230700001)(8936002)(6246003)(478600001)(106002)(305945005)(316002)(5660300002)(58126008)(486006);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR02MB5562;H:xsj-pvapsmtpgw01;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-83.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 68e6abcf-50d6-4fac-9851-08d761dedef1
+X-MS-TrafficTypeDiagnostic: DM6PR02MB5562:
+X-Microsoft-Antispam-PRVS: <DM6PR02MB55622E96CFD3E5E9D5A814B5C67E0@DM6PR02MB5562.namprd02.prod.outlook.com>
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-MS-Oob-TLC-OOBClassifiers: OLM:6790;
+X-Forefront-PRVS: 0212BDE3BE
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: WUmsSg7i47Z9nsPigRn3fNPC/k3zjrxUFE+9UMH4gRTtxjn2C9/jN30w3/Y51GlRBM3Sop0DPmo4JdsopnKCmM6jIYaEOcF7hUh8M3moLg1n4sjwelJ2A4fAdGTmYzB9XL+4+K+tY8+vYT02NwmTRtCBzSD5C/sd7kOJLh/zMf4TNT87vffdxQYLgCbm1aikpGTQorFHZoKcy9TEDK3j5WzC0crleQp7PnQ/Lcu1JxRJJeKW8dUFfGigaVximJFK6aRsNK7cof5nawnybczhaY6Dmu4F1oJGV4LkvN4NNOR3STtEF/GB04fDyZVqtC4BnnGwBbVBX2lTXhL2QsQtpRK1zoDmXUvDuyRMxboUuur4ifFIfwHrx4Fbtmgb1H7tI3MERlyVLd5fB+6TnuttWdc3dNpFVW4Qu72XDYS0DKTiNsaSdgFiKmSSkIlL7mrt
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 05 Nov 2019 10:56:54.6102
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 68e6abcf-50d6-4fac-9851-08d761dedef1
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.83];Helo=[xsj-pvapsmtpgw01]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR02MB5562
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:29 AM Jiri Slaby <jslaby@suse.com> wrote:
->
-> On 05. 11. 19, 10:33, Nicolas Pitre wrote:
-> > Subject: [PATCH] vcs: prevent write access to vcsu devices
-> >
-> > Commit d21b0be246bf ("vt: introduce unicode mode for /dev/vcs") guarded
-> > against using devices containing attributes as this is not yet
-> > implemented. It however failed to guard against writes to any devices
-> > as this is also unimplemented.
-> >
-> > Signed-off-by: Nicolas Pitre <npitre@baylibre.com>
-> > Cc: <stable@vger.kernel.org> # v4.19+
-> >
-> > diff --git a/drivers/tty/vt/vc_screen.c b/drivers/tty/vt/vc_screen.c
-> > index fa07d79027..ef19b95b73 100644
-> > --- a/drivers/tty/vt/vc_screen.c
-> > +++ b/drivers/tty/vt/vc_screen.c
-> > @@ -456,6 +456,9 @@ vcs_write(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-> >       size_t ret;
-> >       char *con_buf;
-> >
-> > +     if (use_unicode(inode))
-> > +             return -EOPNOTSUPP;
->
-> Looks good to me. I am also thinking about a ban directly in open:
->
-> if (use_unicode(inode) && (filp->f_flags & O_ACCMODE) != O_RDONLY)
->   return -EOPNOTSUPP;
->
-> Would that break the unicode users?
+On 05. 11. 19 11:40, Matti Vaittinen wrote:
+> It's hard for occasional GPIO code reader/writer to know if values 0/1
+> equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+> GPIO_LINE_DIRECTION_OUT to help them out.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  drivers/gpio/gpio-zynq.c | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/gpio/gpio-zynq.c b/drivers/gpio/gpio-zynq.c
+> index cd475ff4bcad..4c3f6370eab4 100644
+> --- a/drivers/gpio/gpio-zynq.c
+> +++ b/drivers/gpio/gpio-zynq.c
+> @@ -360,7 +360,7 @@ static int zynq_gpio_dir_out(struct gpio_chip *chip, unsigned int pin,
+>   *
+>   * This function returns the direction of the specified GPIO.
+>   *
+> - * Return: 0 for output, 1 for input
+> + * Return: GPIO_LINE_DIRECTION_OUT or GPIO_LINE_DIRECTION_IN
+>   */
+>  static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+>  {
+> @@ -372,7 +372,10 @@ static int zynq_gpio_get_direction(struct gpio_chip *chip, unsigned int pin)
+>  
+>  	reg = readl_relaxed(gpio->base_addr + ZYNQ_GPIO_DIRM_OFFSET(bank_num));
+>  
+> -	return !(reg & BIT(bank_pin_num));
+> +	if (reg & BIT(bank_pin_num))
+> +		return GPIO_LINE_DIRECTION_OUT;
+> +
+> +	return GPIO_LINE_DIRECTION_IN;
+>  }
+>  
+>  /**
+> 
 
+Reviewed-by: Michal Simek <michal.simek@xilinx.com>
 
-On a related note, syzbot seems to get very similar bug reports on
-some downstream kernels (4.15):
-KASAN: use-after-free Read in vcs_scr_readw
-KASAN: use-after-free Write in vcs_scr_writew
+Thanks,
+Michal
 
-but not on upstream. I wonder why. And if we are missing some good
-config in upstream kernel or something. This all fuzzing is somewhat
-random, so it might have just happened without particular reasons
-(maybe it will discover it later). But wanted to check if there are
-some low hanging fruits. Anything obviously missing in:
-https://github.com/google/syzkaller/blob/master/dashboard/config/upstream-kasan.config
-?
