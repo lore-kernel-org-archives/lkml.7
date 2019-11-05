@@ -2,152 +2,106 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7177BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:26:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 405CAC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:29:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2269421A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:26:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="PYifDBxB"
+	by mail.kernel.org (Postfix) with ESMTP id E717121929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:29:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730113AbfKEV0Y (ORCPT
+        id S1729977AbfKEV3E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:26:24 -0500
-Received: from mail-eopbgr680062.outbound.protection.outlook.com ([40.107.68.62]:50242
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1730043AbfKEV0X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:26:23 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=I9VPUSTXqT5SSZAdrG4Xv6H7wq5wwCgWhgQX+V7jUg2y9WAKMBu7ZW6cnnWi4+TXYoYaHBTeJ61OT2KAuMsbGAPtOiiHisxwY1gAct4KIDK5HNDllkw33cJAfTJH8reVTMzQPt3X5sMzAJYcUWtw8i/0EZPUG/MHNWcQ/Ras3bottNSogRCrChf8KWTB+sxBSvxcmoiqki44guIId8gLVnvZw6n5lYcnYQ6GXuHMoQKPpKgl/ZFJ0dJ6PFkqkKM2LO2Lic3aADVzZQRT8i7YO26VgvZaIOOl0F1V4mUwzUMnuE6xOloom6kaFdeugUT/FrKPNt8u6wmJ5JiKw9ZYfg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MCF7XV2nMLJby4hgGhIpf8CSZOgeFjSmWD8Y3Du8mQo=;
- b=k7SJxh+CcetEEnerA8fkCTJ08d9ti0LCxRqbbaSD1CzQ40K+a1E6ljGdLplc18mJTC6k1WbMqAC+DcLzPQY+vzx9pxIl4z9cf+HaeKb6Vu0aRj+1+Ky4S/RjX70p7b4C0pQbJNhVjvAuWlDuA98SwqVH3Eg7fnJjWPMQrTLK+SWXN8zBwGxt2nLrOVtE/WFzqXGr0SqHmhd9U0Y6NGwVfAipW8oOb3D8MauExn1g3MeOLl16cjUL0PWdQdUZ6Op9Pjt8BSEaToM6EoB6afZin+U6Bo1Utkit9R7xm7qcXKbbRUhsoh53ip5wG9u05y95yzarAyaUaAzYU4DmaNF3zw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=MCF7XV2nMLJby4hgGhIpf8CSZOgeFjSmWD8Y3Du8mQo=;
- b=PYifDBxBTnaYf8UYOSq4a+I6xwlOsgBjhgkSMYx87Iam9jjAnHNOOLv4LVOhbPykR4ToeoVTCNCeObjOwQpLW6SR72nZbk79cCmY3DY7scXtpIBuZv6COCQbc0ghPe5Rqm07WB52e4vE7YacUWIUr4m2druk/+3rXPmnWVYXdJk=
-Received: from DM5PR12MB2471.namprd12.prod.outlook.com (52.132.141.138) by
- DM5PR12MB1195.namprd12.prod.outlook.com (10.168.240.14) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 21:25:40 +0000
-Received: from DM5PR12MB2471.namprd12.prod.outlook.com
- ([fe80::c5a3:6a2e:8699:1999]) by DM5PR12MB2471.namprd12.prod.outlook.com
- ([fe80::c5a3:6a2e:8699:1999%6]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 21:25:40 +0000
-From:   "Moger, Babu" <Babu.Moger@amd.com>
-To:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>, "hpa@zytor.com" <hpa@zytor.com>,
-        "pbonzini@redhat.com" <pbonzini@redhat.com>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "sean.j.christopherson@intel.com" <sean.j.christopherson@intel.com>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "wanpengli@tencent.com" <wanpengli@tencent.com>,
-        "jmattson@google.com" <jmattson@google.com>
-CC:     "x86@kernel.org" <x86@kernel.org>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "Moger, Babu" <Babu.Moger@amd.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "nayna@linux.ibm.com" <nayna@linux.ibm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "zohar@linux.ibm.com" <zohar@linux.ibm.com>,
-        "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>,
-        "ebiederm@xmission.com" <ebiederm@xmission.com>,
-        "ricardo.neri-calderon@linux.intel.com" 
-        <ricardo.neri-calderon@linux.intel.com>,
-        "bshanks@codeweavers.com" <bshanks@codeweavers.com>
-Subject: [PATCH v3 2/2] x86/umip: Update the comments to cover generic x86
- processors
-Thread-Topic: [PATCH v3 2/2] x86/umip: Update the comments to cover generic
- x86 processors
-Thread-Index: AQHVlB+SCjh4NAufykaxQBgEbCDhKg==
-Date:   Tue, 5 Nov 2019 21:25:40 +0000
-Message-ID: <157298913784.17462.12654728938970637305.stgit@naples-babu.amd.com>
-References: <157298900783.17462.2778215498449243912.stgit@naples-babu.amd.com>
-In-Reply-To: <157298900783.17462.2778215498449243912.stgit@naples-babu.amd.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN4PR0401CA0011.namprd04.prod.outlook.com
- (2603:10b6:803:21::21) To DM5PR12MB2471.namprd12.prod.outlook.com
- (2603:10b6:4:b5::10)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Babu.Moger@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.78.2]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 509a3f88-56e2-475c-3961-08d76236b4db
-x-ms-traffictypediagnostic: DM5PR12MB1195:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <DM5PR12MB11953E29104009FECC1C3F3A957E0@DM5PR12MB1195.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:7691;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(396003)(376002)(366004)(136003)(346002)(199004)(189003)(2201001)(54906003)(110136005)(8676002)(7416002)(103116003)(305945005)(81156014)(81166006)(66946007)(478600001)(25786009)(66556008)(64756008)(99286004)(66476007)(7736002)(316002)(26005)(2501003)(3846002)(102836004)(52116002)(6116002)(6436002)(6506007)(386003)(86362001)(66446008)(8936002)(15650500001)(2906002)(76176011)(14454004)(71200400001)(71190400001)(446003)(256004)(6512007)(476003)(486006)(186003)(4326008)(11346002)(14444005)(5660300002)(6486002)(66066001)(41533002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1195;H:DM5PR12MB2471.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: I+u+d79jUFisN2RQFOBONPb3+T9DF/HJGCU0KUkn84+UGiI8j6nbJLT3LjsCda522JFnIggrELevJYXig61WV3vSWf7oAR6GqLr35OLoxZMzmwtrHwOcKcFOQJQBajeHaDvp+iMfqy2OC4/nzMr1eh8x8/qNDqpbcpF8leE/2O3A218gRXgnCfNTxy0XKC9RGJ+pJiozuEGFvM5o8SqAUWe7oPq2eDupLKPZIE3uvbhkImKTEKlobJom8ZC7B9+q1zzBJeSnHC624FanQg8fs/5z4lqbPFyEmfd5Xcxs3NmKOxzps/6LFLlkarPjmB5Ogaf3jcXSRGV0YHYu56NZZDT8blQu8Xbyf+OZ7+n9lbFiOvc4A1AV4GaVq01iLsaYaWBaK1WHJDBBwPRpK7VbbXJ/AUGSbn8u5eR6RUUd21k+eWJeodYdKFH98Fah76JL
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BEE9486905102C459E82A6FA5DDBC107@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Tue, 5 Nov 2019 16:29:04 -0500
+Received: from foss.arm.com ([217.140.110.172]:54224 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729680AbfKEV3D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 16:29:03 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DE9D930E;
+        Tue,  5 Nov 2019 13:29:02 -0800 (PST)
+Received: from localhost (e108754-lin.cambridge.arm.com [10.1.199.68])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 7ED5C3F6C4;
+        Tue,  5 Nov 2019 13:29:02 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:29:01 +0000
+From:   Ionela Voinescu <ionela.voinescu@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, vincent.guittot@linaro.org,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v4 6/6] sched: thermal: Enable tuning of decay period
+Message-ID: <20191105212735.GA32353@e108754-lin>
+References: <1571776465-29763-1-git-send-email-thara.gopinath@linaro.org>
+ <1571776465-29763-7-git-send-email-thara.gopinath@linaro.org>
+ <20191104161035.GA6680@e108754-lin>
+ <5DC1DADE.60603@linaro.org>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 509a3f88-56e2-475c-3961-08d76236b4db
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 21:25:40.0295
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Oo9pSPkhWyfKskTEFYlzYIpRvIPQqtAv+9AcKVJPEktNKSMRdG+y/v70S3S35o9F
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1195
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5DC1DADE.60603@linaro.org>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QU1EIDJuZCBnZW5lcmF0aW9uIEVQWUMgcHJvY2Vzc29ycyBhbHNvIHN1cHBvcnQgVU1JUCBmZWF0
-dXJlLg0KVXBkYXRlIHRoZSBjb21tZW50cyB0byBjb3ZlciBnZW5lcmljIHg4NiBwcm9jZXNzb3Jz
-Lg0KDQpTaWduZWQtb2ZmLWJ5OiBCYWJ1IE1vZ2VyIDxiYWJ1Lm1vZ2VyQGFtZC5jb20+DQotLS0N
-CiBhcmNoL3g4Ni9rZXJuZWwvdW1pcC5jIHwgICAxMiArKysrKystLS0tLS0NCiAxIGZpbGUgY2hh
-bmdlZCwgNiBpbnNlcnRpb25zKCspLCA2IGRlbGV0aW9ucygtKQ0KDQpkaWZmIC0tZ2l0IGEvYXJj
-aC94ODYva2VybmVsL3VtaXAuYyBiL2FyY2gveDg2L2tlcm5lbC91bWlwLmMNCmluZGV4IDU0OGZl
-ZmVkNzFlZS4uOGNjZWY2YzQ5NWRjIDEwMDY0NA0KLS0tIGEvYXJjaC94ODYva2VybmVsL3VtaXAu
-Yw0KKysrIGIvYXJjaC94ODYva2VybmVsL3VtaXAuYw0KQEAgLTEsNiArMSw2IEBADQogLyoNCi0g
-KiB1bWlwLmMgRW11bGF0aW9uIGZvciBpbnN0cnVjdGlvbiBwcm90ZWN0ZWQgYnkgdGhlIEludGVs
-IFVzZXItTW9kZQ0KLSAqIEluc3RydWN0aW9uIFByZXZlbnRpb24gZmVhdHVyZQ0KKyAqIHVtaXAu
-YyBFbXVsYXRpb24gZm9yIGluc3RydWN0aW9uIHByb3RlY3RlZCBieSB0aGUgVXNlci1Nb2RlIElu
-c3RydWN0aW9uDQorICogUHJldmVudGlvbiBmZWF0dXJlDQogICoNCiAgKiBDb3B5cmlnaHQgKGMp
-IDIwMTcsIEludGVsIENvcnBvcmF0aW9uLg0KICAqIFJpY2FyZG8gTmVyaSA8cmljYXJkby5uZXJp
-LWNhbGRlcm9uQGxpbnV4LmludGVsLmNvbT4NCkBAIC0xOCwxMCArMTgsMTAgQEANCiANCiAvKiog
-RE9DOiBFbXVsYXRpb24gZm9yIFVzZXItTW9kZSBJbnN0cnVjdGlvbiBQcmV2ZW50aW9uIChVTUlQ
-KQ0KICAqDQotICogVGhlIGZlYXR1cmUgVXNlci1Nb2RlIEluc3RydWN0aW9uIFByZXZlbnRpb24g
-cHJlc2VudCBpbiByZWNlbnQgSW50ZWwNCi0gKiBwcm9jZXNzb3IgcHJldmVudHMgYSBncm91cCBv
-ZiBpbnN0cnVjdGlvbnMgKFNHRFQsIFNJRFQsIFNMRFQsIFNNU1cgYW5kIFNUUikNCi0gKiBmcm9t
-IGJlaW5nIGV4ZWN1dGVkIHdpdGggQ1BMID4gMC4gT3RoZXJ3aXNlLCBhIGdlbmVyYWwgcHJvdGVj
-dGlvbiBmYXVsdCBpcw0KLSAqIGlzc3VlZC4NCisgKiBVc2VyLU1vZGUgSW5zdHJ1Y3Rpb24gUHJl
-dmVudGlvbiBpcyBhIHNlY3VyaXR5IGZlYXR1cmUgcHJlc2VudCBpbiByZWNlbnQNCisgKiB4ODYg
-cHJvY2Vzc29ycyB0aGF0LCB3aGVuIGVuYWJsZWQsIHByZXZlbnRzIGEgZ3JvdXAgb2YgaW5zdHJ1
-Y3Rpb25zIChTR0RULA0KKyAqIFNJRFQsIFNMRFQsIFNNU1cgYW5kIFNUUikgZnJvbSBiZWluZyBy
-dW4gaW4gdXNlciBtb2RlIGJ5IGlzc3VpbmcgYSBnZW5lcmFsDQorICogcHJvdGVjdGlvbiBmYXVs
-dCBpZiB0aGUgaW5zdHJ1Y3Rpb24gaXMgZXhlY3V0ZWQgd2l0aCBDUEwgPiAwLg0KICAqDQogICog
-UmF0aGVyIHRoYW4gcmVsYXlpbmcgdG8gdGhlIHVzZXIgc3BhY2UgdGhlIGdlbmVyYWwgcHJvdGVj
-dGlvbiBmYXVsdCBjYXVzZWQgYnkNCiAgKiB0aGUgVU1JUC1wcm90ZWN0ZWQgaW5zdHJ1Y3Rpb25z
-IChpbiB0aGUgZm9ybSBvZiBhIFNJR1NFR1Ygc2lnbmFsKSwgaXQgY2FuIGJlDQoNCg==
+On Tuesday 05 Nov 2019 at 15:26:06 (-0500), Thara Gopinath wrote:
+> On 11/04/2019 11:12 AM, Ionela Voinescu wrote:
+> > Hi Thara,
+> > 
+> > On Tuesday 22 Oct 2019 at 16:34:25 (-0400), Thara Gopinath wrote:
+> >> Thermal pressure follows pelt signas which means the
+> >> decay period for thermal pressure is the default pelt
+> >> decay period. Depending on soc charecteristics and thermal
+> >> activity, it might be beneficial to decay thermal pressure
+> >> slower, but still in-tune with the pelt signals.
+> > 
+> > I wonder if it can be beneficial to decay thermal pressure faster as
+> > well.
+> > 
+> > This implementation makes 32 (LOAD_AVG_PERIOD) the minimum half-life
+> > of the thermal pressure samples. This results in more than 100ms for a
+> > sample to decay significantly and therefore let's say it can take more
+> > than 100ms for capacity to return to (close to) max when the CPU is no
+> > longer capped. This value seems high to me considering that a minimum
+> > value should result in close to 'instantaneous' behaviour, when there
+> > are thermal capping mechanisms that can react in ~20ms (hikey960 has a
+> > polling delay of 25ms, if I'm remembering correctly).
+> > 
+> > I agree 32ms seems like a good default but given that you've made this
+> > configurable as to give users options, I'm wondering if it would be
+> > better to cover a wider range.
+> >
+
+[...]
+
+> 
+> Hi Ionela,
+>
+
+[...]
+
+> 
+> Regarding a slower decay, we need a strong case for it.
+> 
+>
+
+I think you mean faster decay, if you refer to my comment above.
+
+To be blunt, I'm not sure there is a strong case for either kind of
+dacay, if we look at the test results only. There is a theoretical case
+for both, in my opinion and given that the purpose of this patch is to
+give options to platform with different thermal characteristics, I do
+believe it's worth providing a good range of options for the decay
+period.
+
+Thanks,
+Ionela.
+
+> 
+> -- 
+> Warm Regards
+> Thara
