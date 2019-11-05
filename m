@@ -2,113 +2,127 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 791A0C5DF69
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C6C6C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FCA721D71
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:05:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CB5F214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:08:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Kpd/leYt"
+	dkim=pass (2048-bit key) header.d=alyssa.is header.i=@alyssa.is header.b="Q1bT5VAd";
+	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="Vx1eI0Eh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbfKEPFV (ORCPT
+        id S2389326AbfKEPI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:05:21 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:35570 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731110AbfKEPFU (ORCPT
+        Tue, 5 Nov 2019 10:08:28 -0500
+Received: from wout3-smtp.messagingengine.com ([64.147.123.19]:53077 "EHLO
+        wout3-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S2388292AbfKEPI2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:05:20 -0500
-Received: by mail-lj1-f193.google.com with SMTP id r7so13541971ljg.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:05:19 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
-        b=Kpd/leYtPpqiEDbCJj18CuAu27YXg/BuaSVf6IXKy+NrpoBVTZePZog5GdYjJO9OIi
-         lm4PNz+RaMr2Nrhy8ku0aUXAC05hBbP1JME/FecqDMlBqkYlECiTGsIez1dWe0BBadLu
-         LIVKVjgIW0dw84EB2IjEb0twsx3ASPulZkaAWUIj7h8A2FrFsvuaKTSpTx53DmZ3nq1U
-         QNl8wl6y+nYyPwwlsv+q+D2D2+kZtdPPBtrFK7uj0fyltIejYU1J9AlQptT6e9xIT+GN
-         cLdhsevHXm//qojXfBav6e4dmTJYwtN6Khfo7QLgxUZWvK7zFuFqhWgAr3N+IqYgTJYh
-         VR7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=tavTtm1Xo4MtMh/aOcywS9fElRJcgy1KkS7iJZf+I0o=;
-        b=KrMQd5sEI7LZoV4vm9C4IafValuRf6WfQWD72mnPuDMuTtU44oZToV6Bjxeq1SgIsQ
-         RZ0UQmZHytIUUdb23+Vg5g3JmYqbqU8qn90ivyS1IcfcUFH8J+yLiTHshozyOlEJFbet
-         QVdkyHDkIXMrOY4CRHedSxzOgsTQ8RwGZltXQuWDDK90pUnWdDlnHpBNwPiE/4vsGF9A
-         Wjlipp/4IuOidm6Xu6ssHGQuLqAh/dVWUGQ64IerpLMv1Sq/z9jp9j4ZsoHf1dxBZn1s
-         ZcZjxY5g9qnWTKlc4KWGisqUT7iMIt9eD0ncA19bOgeA1t2whTkXDF+eHOrju/owy/8k
-         NM/A==
-X-Gm-Message-State: APjAAAUI9O4N/5MIwFweunUIoFsiaKoM886H0EcdedtqJUVlUcttIIvA
-        HSEqzqXg4D1XbY8V/jg3f74aDcXhgvVP99LWotPIHQ==
-X-Google-Smtp-Source: APXvYqzg3Toe5ibsBNy4vSKkIj+jEh4yXX7QFUnejT5ioVLHdggVbJujZP6cuxOj2IbLJbzwc/uzWBBvO38pMmBvRbs=
-X-Received: by 2002:a05:651c:1202:: with SMTP id i2mr23543161lja.218.1572966318371;
- Tue, 05 Nov 2019 07:05:18 -0800 (PST)
+        Tue, 5 Nov 2019 10:08:28 -0500
+Received: from compute5.internal (compute5.nyi.internal [10.202.2.45])
+        by mailout.west.internal (Postfix) with ESMTP id 5272042B;
+        Tue,  5 Nov 2019 10:08:27 -0500 (EST)
+Received: from mailfrontend2 ([10.202.2.163])
+  by compute5.internal (MEProxy); Tue, 05 Nov 2019 10:08:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alyssa.is; h=
+        from:to:cc:subject:date:message-id:in-reply-to:references
+        :mime-version:content-transfer-encoding; s=fm1; bh=xzppQS9xMepOy
+        GoA8pWwoXrtkg7wapM6OGQalRg1FfA=; b=Q1bT5VAdayP9qSmsEsnJ8PC5P+SGp
+        GVHLZbV5QVHzpfZ2uF1UyQ15SwMHstaXpi0rKQcdOv2jfeqk4kqOz/4QUhUKDfho
+        CKUmbhfx/u/tbZ7ybsqVeLMXpVFSohYhzk6muCTdfSSKpzquBwj2TSqUMuUTLpEq
+        lNwO3kzpW2NfULJSq+aj7XtVBvkWmVUDBw5X07dl8DcA4mojb/okph6En3Ll0Mt9
+        /ovSdDd/T1HTgN1owxu9yE/hBf+Rz4Xvbw0rvYZ4qy4EkUJ7slBs1nwuT/u17PvN
+        B8kE4XpCx0pLy20VpESagSmmUNjmg8DVjctHdmnbqRjkw9ajk4ySDx//Q==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:date:from
+        :in-reply-to:message-id:mime-version:references:subject:to
+        :x-me-proxy:x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=
+        fm1; bh=xzppQS9xMepOyGoA8pWwoXrtkg7wapM6OGQalRg1FfA=; b=Vx1eI0Eh
+        e/3GZUFWwetM9ctlkIIp5fkmNzB8Q8z6vWMI9bGZFhdHUMZxuZKaQinRulCGCnBu
+        cdeC4Frj9nmIfILfneqk+R9BEGDEmXpnBMN6catEHUiDFbCTp34tGqGmS+/TQ8Cp
+        9SfddEKz3lOmWS7Aq8amvNuwoQ2/ac6JIFobZNMoVmfaC3+RsSSD8gc9shOLVEot
+        oqRRglLpePZsbcT2hGGoNmJ5QJxN1oezo1VOwuTSqUo72kWBUh3N/djR7I9SasoY
+        oY9CiEY9e95rWldqTyq/LU+PKMyAZYSZYYqHBNfxEx+30lOhcvO4YbDPdCGWcK2Q
+        K5gd074ak7erQA==
+X-ME-Sender: <xms:aZDBXQTIjSdA6jelVxB6PsJq6sYQbfT9VPncxXCouf-339K1_cKqug>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedrudduhedgjeefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    cujfgurhephffvufffkffojghfggfgsedtkeertdertddtnecuhfhrohhmpeetlhihshhs
+    rgcutfhoshhsuceohhhisegrlhihshhsrgdrihhsqeenucfkphepkeegrddukeegrddvfe
+    ejrdduudefnecurfgrrhgrmhepmhgrihhlfhhrohhmpehqhihlihhsshesgidvvddtrdhq
+    hihlihhsshdrnhgvthenucevlhhushhtvghrufhiiigvpedu
+X-ME-Proxy: <xmx:aZDBXU7z4IdA0huHxAF3c-SMBFxnzhDPTmKBcDCLPUoItTKp5beKgg>
+    <xmx:aZDBXQMpItWZW7qzidtzXUWdh1_XVMuaFwmT-kERRNEPpL2fgMp3zg>
+    <xmx:aZDBXdsSiJbMrSdTdIIXpxmQZC8PtJMtcA_CR3azTt6LjAnLM2Ap4Q>
+    <xmx:apDBXR6KKVUqMSx4akkVTshxMXiY5SuP0ps_yj-7msxybqcgx7TZWA>
+Received: from x220.qyliss.net (p54b8ed71.dip0.t-ipconnect.de [84.184.237.113])
+        by mail.messagingengine.com (Postfix) with ESMTPA id 66BD8306005E;
+        Tue,  5 Nov 2019 10:08:25 -0500 (EST)
+Received: by x220.qyliss.net (Postfix, from userid 1000)
+        id 535671400EF; Tue,  5 Nov 2019 15:08:24 +0000 (UTC)
+From:   Alyssa Ross <hi@alyssa.is>
+To:     linux-kbuild@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Alyssa Ross <hi@alyssa.is>
+Subject: [PATCH v3] kconfig: be more helpful if pkg-config is missing
+Date:   Tue,  5 Nov 2019 15:07:36 +0000
+Message-Id: <20191105150735.17200-1-hi@alyssa.is>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191105150415.13098-1-hi@alyssa.is>
+References: <20191105150415.13098-1-hi@alyssa.is>
 MIME-Version: 1.0
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com> <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-In-Reply-To: <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 5 Nov 2019 16:05:05 +0100
-Message-ID: <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-Cc:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 4:48 PM Vaittinen, Matti
-<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+If ncurses is installed, but at a non-default location, the previous
+error message was not helpful in resolving the situation.  Now it will
+suggest that pkg-config might need to be installed in addition to
+ncurses.
 
-> > Good initiative (and I will see a ton of janitorial patches as a
-> > result of this...)
->
-> I have somewhere near 62 patches waiting to be sent =) They're pretty
-> small but I'd appreciate thorough review as they're mostly untested...
-> Do you mind receiving them all in one go? Or do you think I should send
-> the series in smaller chuncks?
+Signed-off-by: Alyssa Ross <hi@alyssa.is>
+---
+Apologies -- was a little too hasty in sending v2, and it only
+included the updated message in one of the two files that needed to be
+changed.
 
-I would be fine with one patch introducing the defines and then
-one big patch switching everybody and their dog over to using
-these definitions.
+ scripts/kconfig/mconf-cfg.sh | 3 +++
+ scripts/kconfig/nconf-cfg.sh | 3 +++
+ 2 files changed, 6 insertions(+)
 
-I usually keep to a patch being "one technical step" and it is
-clearly (IMO) one step to introduce the defines and one step
-to make use of it in all legacy drivers.
+diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
+index c812872d7f9d..aa68ec95620d 100755
+--- a/scripts/kconfig/mconf-cfg.sh
++++ b/scripts/kconfig/mconf-cfg.sh
+@@ -44,4 +44,7 @@ echo >&2 "* Unable to find the ncurses package."
+ echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
+ echo >&2 "* depending on your distribution)."
+ echo >&2 "*"
++echo >&2 "* You may also need to install pkg-config to find the"
++echo >&2 "* ncurses installed in a non-default location."
++echo >&2 "*"
+ exit 1
+diff --git a/scripts/kconfig/nconf-cfg.sh b/scripts/kconfig/nconf-cfg.sh
+index 001559ef0a60..c212255070c0 100755
+--- a/scripts/kconfig/nconf-cfg.sh
++++ b/scripts/kconfig/nconf-cfg.sh
+@@ -44,4 +44,7 @@ echo >&2 "* Unable to find the ncurses package."
+ echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
+ echo >&2 "* depending on your distribution)."
+ echo >&2 "*"
++echo >&2 "* You may also need to install pkg-config to find the"
++echo >&2 "* ncurses installed in a non-default location."
++echo >&2 "*"
+ exit 1
+-- 
+2.23.0
 
-It's late in the kernel cycle but this particular part (the defines
-and switching over old driver to use it) I'd be happy
-to merge for v5.5.
-
-Yours,
-Linus Walleij
