@@ -2,160 +2,141 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 575D5CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:16:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC229CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:18:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 11590206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:16:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F179206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:18:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="FHdeK8l5"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="VZWxh9Ya"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730468AbfKEGQi (ORCPT
+        id S1730497AbfKEGSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:16:38 -0500
-Received: from mail-eopbgr30085.outbound.protection.outlook.com ([40.107.3.85]:30982
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725991AbfKEGQh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:16:37 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=BQnqEDD2hO4G7ak1vHFGCwccUYPn91nUNN4fwfxA5asGyW20zUwA2vfhqEkZKMJnjKst/soojz4f9pw4zFka5w0e4DB7i1eMu/yI5hJjU94s0BP91dB08UJ5QaHDr5DOd1OlBes7L/A8s6ZV8NHALwqxt2E2MLNOKU3JzpXxJT9ScoVerp9rNEV73q4kN0agUHd78TLLrJPpaihdvdkkxzvw2PT84LmZXOyYCvQV/FR5KBCdNuMvu9TO6BQfV7iL787ll1DwpDOsQaW+NjmDoCZClcOWxblyddy0AIXZOb2ONmIzOIvew/I04wnRzqaBHZC/VH0nnTLWQNKsX+8L+w==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bMVO+Cd6k3yhKH1S+W/isoRL/fnXdfRwl2bnVGNbqvg=;
- b=cPtY43sWRtKLvMao7p5i98BDL+Mah4tc7JAz/YzBmKd7RHaYISRl+6pogoOffE2DZ9eHpfcmAswWvuGReEy0g8Nom8xlBoh+PTo0CrBEata4Ri2d3s6CdA+eaeWDRn5YNwjco3PMi1IKTdswFpPvvdZ9dEu7n6ipp3rqeRyQolVoppxTOm1Zdd/7COloyhjO/TvvhklApuOVl734Qia7M5tZbBl6ROyOLWDVFkGs7jhnrENR+6fYfBUMQ9B6tNpjc7RhF9LurGcZiWIYj7k5xLLKWZ33Uf1dhBCr841qA75Fmxqg3w9MMHDxS07xM0rpWgEeR643d8S/DtZpZSaBYw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bMVO+Cd6k3yhKH1S+W/isoRL/fnXdfRwl2bnVGNbqvg=;
- b=FHdeK8l5wdkwupuRQdOlateqRvfb5ZhD4AvRZEugyiiO04lNP75pLZ0pyiw5OpJSUYp2WBfc2id4uB7aCB5dv9EjhdDDtm2shqo5fMIiBjrZbpD5Xi//RryOoUplcOEb2dAlkm25X97iTqMff2lUXeSQZNYuywUNHVpBpllno6Q=
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com (10.255.118.26) by
- VE1PR04MB6751.eurprd04.prod.outlook.com (20.179.235.216) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 06:16:32 +0000
-Received: from VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::50aa:3111:47b1:82d4]) by VE1PR04MB6768.eurprd04.prod.outlook.com
- ([fe80::50aa:3111:47b1:82d4%4]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 06:16:32 +0000
-From:   Qiang Zhao <qiang.zhao@nxp.com>
-To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Leo Li <leoyang.li@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Scott Wood <oss@buserror.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on
- PPC32
-Thread-Topic: [PATCH v3 35/36] net/wan: make FSL_UCC_HDLC explicitly depend on
- PPC32
-Thread-Index: AQHVkLHl/ovt4Kon106Gz+Xx9ElXg6d2gb8AgABlGYCAA84fAIABZ7FQ
-Date:   Tue, 5 Nov 2019 06:16:32 +0000
-Message-ID: <VE1PR04MB67686E14A4E0D33C77B43EA6917E0@VE1PR04MB6768.eurprd04.prod.outlook.com>
-References: <20191018125234.21825-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-1-linux@rasmusvillemoes.dk>
- <20191101124210.14510-36-linux@rasmusvillemoes.dk>
- <4e2ac670-2bf4-fb47-2130-c0120bcf0111@c-s.fr>
- <VE1PR04MB6687D4620E32176BDC120DBA8F620@VE1PR04MB6687.eurprd04.prod.outlook.com>
- <24ea27b6-adea-cc74-f480-b68de163f531@rasmusvillemoes.dk>
-In-Reply-To: <24ea27b6-adea-cc74-f480-b68de163f531@rasmusvillemoes.dk>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=qiang.zhao@nxp.com; 
-x-originating-ip: [119.31.174.73]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: ded1ab11-2eb0-42eb-b9b1-08d761b7b401
-x-ms-traffictypediagnostic: VE1PR04MB6751:|VE1PR04MB6751:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VE1PR04MB6751B988F165ACCE8390AE09917E0@VE1PR04MB6751.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2512;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(39860400002)(376002)(366004)(189003)(199004)(13464003)(33656002)(14454004)(66574012)(64756008)(66446008)(66946007)(6436002)(76116006)(7736002)(2906002)(5660300002)(52536014)(478600001)(66066001)(74316002)(305945005)(25786009)(54906003)(110136005)(81166006)(86362001)(316002)(186003)(8676002)(81156014)(3846002)(11346002)(486006)(6116002)(8936002)(446003)(7696005)(76176011)(102836004)(476003)(6506007)(99286004)(55016002)(9686003)(4326008)(229853002)(44832011)(71200400001)(71190400001)(256004)(66476007)(66556008)(14444005)(53546011)(26005)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6751;H:VE1PR04MB6768.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 68Ji0u1jwaoMKBF4RrQtEiHgZZmXR1Lv6Io5HbTGeqXxoRpO2qNuBVHB0y6eTjdYmmselWcMjiHUJoamGGft8IKwVf1qdgIEcg930bKis8ySMjfGoh3xgkho2uiwAMPJiD4ik55FMUmMfMcSQ9rdk2GNfQPJNIKSWtLy7B+tAwYPCse4gRbOBv/gJTPqRdZcWLq8MFB+5ClyhLVj1VBAvAFNX0mkD4zK5gFKWeCJu918paR5WfnMezQm6SuCGbYBxJeqeRvszh0mH72BprugK5lneJ05I0Qp8YiEK/+W2DREhIKWrPw5ve/Ap2sHAcaVkYoHz21oav/ryB/Hc88werWTbK466LPfWjN5L630dw6MyTgHa8wmkqYVzosqrHol99HKzjCeJqjbMkFMwprAZq7OkFjPVB+9uu+8RnheJIk7i3+7gOfUC0UDV3A/5Tjn
+        Tue, 5 Nov 2019 01:18:04 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:32710 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725991AbfKEGSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 01:18:04 -0500
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191105061801epoutp031e0085d5843d3f80fee85bdea80dac7b~UL8JbqFKX0041400414epoutp03L
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 06:18:01 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191105061801epoutp031e0085d5843d3f80fee85bdea80dac7b~UL8JbqFKX0041400414epoutp03L
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1572934681;
+        bh=zvDyle6bohL117tTJ/UWB7iQOUwEqSjQ/Ez1zyRaSUo=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=VZWxh9YaMbPlq6wRBH/gf46rbkfgWTQgAR3Oj4EDTH6OdktNk1TQW+wBej3PU1ubk
+         WHa+KdrlOyyR2aQ2PVS/DFNHhGV3lxSCSISuYvaC05CLrbTXXAxDSV7V2Q26WaMZKn
+         VIOSBvKOwGgJPZVq7EP9ILcDrV3txt1JwXWWqBYI=
+Received: from epcpadp2 (unknown [182.195.40.12]) by epcas1p1.samsung.com
+        (KnoxPortal) with ESMTP id
+        20191105061801epcas1p13ce51b09e567ec4f7caa80fe4659a18f~UL8I_dX6j3234732347epcas1p1f;
+        Tue,  5 Nov 2019 06:18:01 +0000 (GMT)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5~ULXRItVvL0066700667epcas1p2t;
+        Tue,  5 Nov 2019 05:35:47 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191105053547epsmtrp1943b7305a5721d8062454f9f08564899~ULXRHwUwu0859808598epsmtrp1Z;
+        Tue,  5 Nov 2019 05:35:47 +0000 (GMT)
+X-AuditID: b6c32a29-973ff700000060b4-89-5dc10a33c077
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        13.D8.24756.33A01CD5; Tue,  5 Nov 2019 14:35:47 +0900 (KST)
+Received: from localhost.localdomain (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20191105053546epsmtip21649b16049b13f96e965b4a83c0dc9ac~ULXQm3R1k0405604056epsmtip2B;
+        Tue,  5 Nov 2019 05:35:46 +0000 (GMT)
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+To:     linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com,
+        rjw@rjwysocki.net, gregkh@linuxfoundation.org
+Cc:     chanwoo@kernel.org, mchehab+samsung@kernel.org,
+        davem@davemloft.net, robh@kernel.org, paulmck@linux.ibm.com,
+        cpgs@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] MAINTAINERS: Update myself as maintainer for DEVFREQ
+ subsystem support
+Date:   Tue,  5 Nov 2019 14:41:19 +0900
+Message-Id: <1019298652.01572934681167.JavaMail.epsvc@epcpadp2>
+X-Mailer: git-send-email 2.17.1
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBLMWRmVeSWpSXmKPExsWy7bCSvK4x18FYg/42fouJN66wWLw8pGlx
+        /ctzVos551tYLJoXr2ezuLxrDpvF+0+dTBa3G1ewWcy4NZXJ4szpS6wW//fsYHfg9tiy8iaT
+        x6ZVnWweExYdYPTYP3cNu8eWq+0sHn1bVjF6fN4kF8AexWWTkpqTWZZapG+XwJVxbpZfQQ9/
+        xZxNK9kaGKfwdjFyckgImEgsm/efuYuRi0NIYDejxLT1R9ghEpIS0y4eBUpwANnCEocPF0PU
+        fGKUuNF/mQWkhk1AS2L/ixtsILaIQL7E8q6FLCBFzAKbGSXW3d8IlhAWCJf4tfgAWAOLgKrE
+        7cNvwWxeASuJpfM3MEEsk5dYveEA8wRGngWMDKsYJVMLinPTc4sNCwzzUsv1ihNzi0vz0vWS
+        83M3MYLDT0tzB+PlJfGHGAU4GJV4eD+0H4gVYk0sK67MPcQowcGsJMJ7ccbeWCHelMTKqtSi
+        /Pii0pzU4kOM0hwsSuK8T/OORQoJpCeWpGanphakFsFkmTg4pRoYZ6RYSO6ZzMajPa3++b1/
+        YQxm3ncM7TfOXPsn0CDIXShoq9u6ZRNcjpdfFH7f81FcoJqzYpJVug3H5Mjpix9yeuebOVRG
+        NK84H7yU3zHmfbTjLcEFJxat79YMeqnKEvjkcJn4kmu3e6fP/RRqvOJv4ZsnTqq6X+5dY13N
+        2rd+46WSvhUpqv96lFiKMxINtZiLihMBf7fP9jsCAAA=
+X-CMS-MailID: 20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5
+X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+X-Hop-Count: 3
+Content-Transfer-Encoding: 7bit
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: ded1ab11-2eb0-42eb-b9b1-08d761b7b401
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 06:16:32.1956
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: MEFOJautTtDWN7qpwRxeKzmP5P8LQMuypYlnL6C1FY1uJp4sK8Ts2fUnhNdQbCFJQBUoDLmVUXTD9qTuG9qjiQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6751
+X-CMS-RootMailID: 20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5
+References: <CGME20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5@epcas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gMDEvMTEvMjAxOSAyMzozMSwgUmFzbXVzIFZpbGxlbW9lcyB3cm90ZSA6DQoNCg0KPiAtLS0t
-LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSYXNtdXMgVmlsbGVtb2VzIDxsaW51eEBy
-YXNtdXN2aWxsZW1vZXMuZGs+DQo+IFNlbnQ6IDIwMTnlubQxMeaciDTml6UgMTY6MzgNCj4gVG86
-IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3Bo
-ZS5sZXJveUBjLXMuZnI+Ow0KPiBRaWFuZyBaaGFvIDxxaWFuZy56aGFvQG54cC5jb20+DQo+IENj
-OiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5p
-bmZyYWRlYWQub3JnOw0KPiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTY290dCBXb29k
-IDxvc3NAYnVzZXJyb3IubmV0PjsNCj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0
-OiBSZTogW1BBVENIIHYzIDM1LzM2XSBuZXQvd2FuOiBtYWtlIEZTTF9VQ0NfSERMQyBleHBsaWNp
-dGx5IGRlcGVuZA0KPiBvbiBQUEMzMg0KPiANCj4gT24gMDEvMTEvMjAxOSAyMy4zMSwgTGVvIExp
-IHdyb3RlOg0KPiA+DQo+ID4NCj4gPj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPj4g
-RnJvbTogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQo+ID4+IFNl
-bnQ6IEZyaWRheSwgTm92ZW1iZXIgMSwgMjAxOSAxMTozMCBBTQ0KPiA+PiBUbzogUmFzbXVzIFZp
-bGxlbW9lcyA8bGludXhAcmFzbXVzdmlsbGVtb2VzLmRrPjsgUWlhbmcgWmhhbw0KPiA+PiA8cWlh
-bmcuemhhb0BueHAuY29tPjsgTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+DQo+ID4+IENjOiBs
-aW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZzsNCj4gPj4gbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnOw0KPiA+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBTY290
-dCBXb29kIDxvc3NAYnVzZXJyb3IubmV0PjsNCj4gPj4gbmV0ZGV2QHZnZXIua2VybmVsLm9yZw0K
-PiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYzIDM1LzM2XSBuZXQvd2FuOiBtYWtlIEZTTF9VQ0Nf
-SERMQyBleHBsaWNpdGx5DQo+ID4+IGRlcGVuZCBvbiBQUEMzMg0KPiA+Pg0KPiA+Pg0KPiA+Pg0K
-PiA+PiBMZSAwMS8xMS8yMDE5IMOgIDEzOjQyLCBSYXNtdXMgVmlsbGVtb2VzIGEgw6ljcml0wqA6
-DQo+ID4+PiBDdXJyZW50bHksIEZTTF9VQ0NfSERMQyBkZXBlbmRzIG9uIFFVSUNDX0VOR0lORSwg
-d2hpY2ggaW4gdHVybg0KPiA+PiBkZXBlbmRzDQo+ID4+PiBvbiBQUEMzMi4gQXMgcHJlcGFyYXRp
-b24gZm9yIHJlbW92aW5nIHRoZSBsYXR0ZXIgYW5kIHRodXMgYWxsb3dpbmcNCj4gPj4+IHRoZSBj
-b3JlIFFFIGNvZGUgdG8gYmUgYnVpbHQgZm9yIG90aGVyIGFyY2hpdGVjdHVyZXMsIG1ha2UNCj4g
-Pj4+IEZTTF9VQ0NfSERMQyBleHBsaWNpdGx5IGRlcGVuZCBvbiBQUEMzMi4NCj4gPj4NCj4gPj4g
-SXMgdGhhdCByZWFsbHkgcG93ZXJwYyBzcGVjaWZpYyA/IENhbid0IHRoZSBBUk0gUUUgcGVyZm9y
-bSBIRExDIG9uIFVDQyA/DQo+IA0KPiBJIHRoaW5rIHRoZSBkcml2ZXIgd291bGQgYnVpbGQgb24g
-QVJNLiBXaGV0aGVyIGl0IHdvcmtzIEkgZG9uJ3Qga25vdy4gSSBrbm93IGl0DQo+IGRvZXMgbm90
-IGJ1aWxkIG9uIDY0IGJpdCBob3N0cyAoc2VlIGtidWlsZCByZXBvcnQgZm9yIHYyLDIzLzIzKS4N
-Cj4gDQo+ID4gTm8uICBBY3R1YWxseSB0aGUgSERMQyBhbmQgVERNIGFyZSB0aGUgbWFqb3IgcmVh
-c29uIHRvIGludGVncmF0ZSBhIFFFIG9uDQo+IHRoZSBBUk0gYmFzZWQgTGF5ZXJzY2FwZSBTb0Nz
-Lg0KPiANCj4gW2NpdGF0aW9uIG5lZWRlZF0uDQo+IA0KPiA+IFNpbmNlIFJhc211cyBkb2Vzbid0
-IGhhdmUgdGhlIGhhcmR3YXJlIHRvIHRlc3QgdGhpcyBmZWF0dXJlIFFpYW5nIFpoYW8NCj4gcHJv
-YmFibHkgY2FuIGhlbHAgdmVyaWZ5IHRoZSBmdW5jdGlvbmFsaXR5IG9mIFRETSBhbmQgd2UgY2Fu
-IGRyb3AgdGhpcyBwYXRjaC4NCj4gDQo+IE5vLCB0aGlzIHBhdGNoIGNhbm5vdCBiZSBkcm9wcGVk
-LiBQbGVhc2Ugc2VlIHRoZSBrYnVpbGQgY29tcGxhaW50cyBmb3INCj4gdjIsMjMvMjMgYWJvdXQg
-dXNlIG9mIElTX0VSUl9WQUxVRSBvbiBub3Qtc2l6ZW9mKGxvbmcpIGVudGl0aWVzLiBJIHNlZSBr
-YnVpbGQNCj4gaGFzIGNvbXBsYWluZWQgYWJvdXQgdGhlIHNhbWUgdGhpbmcgZm9yIHYzIHNpbmNl
-IGFwcGFyZW50bHkgdGhlIHNhbWUgdGhpbmcNCj4gYXBwZWFycyBpbiB1Y2Nfc2xvdy5jLiBTbyBJ
-J2xsIGZpeCB0aGF0Lg0KPiANCj4gTW9yZW92ZXIsIGFzIHlvdSBzYXkgYW5kIGtub3csIEkgZG8g
-bm90IGhhdmUgdGhlIGhhcmR3YXJlIHRvIHRlc3QgaXQsIHNvIEknbQ0KPiBub3QgZ29pbmcgdG8g
-ZXZlbiBhdHRlbXB0IHRvIGZpeCB1cCBmc2xfdWNjX2hkbGMuYy4gSWYgUWlhbmcgWmhhbyBvciBz
-b21lYm9keQ0KPiBlbHNlIGNhbiB2ZXJpZnkgdGhhdCBpdCB3b3JrcyBqdXN0IGZpbmUgb24gQVJN
-IGFuZCBmaXhlcyB0aGUgYWxsbW9kY29uZmlnDQo+IHByb2JsZW0ocyksIGhlL3NoZSBpcyBtb3Jl
-IHRoYW4gd2VsY29tZSB0byBzaWduIG9mZiBvbiBhIHBhdGNoIHRoYXQgcmVtb3Zlcw0KPiB0aGUg
-Q09ORklHX1BQQzMyIGRlcGVuZGVuY3kgb3IgcmVwbGFjZXMgaXQgd2l0aCBzb21ldGhpbmcgZWxz
-ZS4NCj4gDQoNCkkgdGVzdGVkIHlvdXIgdjMgcGF0Y2hlcyBvbiBsczEwNDNhcmRiIHdoaWNoIGlz
-IGFybTY0IGZvciBmc2xfdWNjX2hkbGMsIGl0IGNhbiB3b3JrLA0KT25seSBpdCB3aWxsIHB1dCBh
-IGNvbXBpbGUgd2FybmluZywgSSBhbHNvIG1hZGUgYSBwYXRjaCB0byBmaXggaXQuDQpJIGNhbiBz
-ZW5kIGEgcGF0Y2ggdG8gcmVtb3ZlIFBQQzMyIGRlcGVuZGVuY3kgd2hlbiBJIHNlbmQgbXkgcGF0
-Y2ggdG8gc3VwcG9ydCBBUk02NC4NCk9yIEkgYWRkIG15IHBhdGNoIGluIHlvdXIgcGF0Y2hzZXQu
-DQoNCkJlc3QgUmVnYXJkcw0KUWlhbmcgWmhhbw0K
+Update myself to the DEVFREQ entry as maintainer from reviewer and
+the git repository information to manage the devfreq patches. I've been
+reviewing and tesing the devfreq support for the couple of years as reviewer.
+From now, I'll help and reiview the devfreq as maintainer.
+
+Suggested-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+---
+ MAINTAINERS | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..ebc1078c1ecb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3532,7 +3532,7 @@ BUS FREQUENCY DRIVER FOR SAMSUNG EXYNOS
+ M:	Chanwoo Choi <cw00.choi@samsung.com>
+ L:	linux-pm@vger.kernel.org
+ L:	linux-samsung-soc@vger.kernel.org
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+ S:	Maintained
+ F:	drivers/devfreq/exynos-bus.c
+ F:	Documentation/devicetree/bindings/devfreq/exynos-bus.txt
+@@ -4762,9 +4762,9 @@ F:	include/linux/devcoredump.h
+ DEVICE FREQUENCY (DEVFREQ)
+ M:	MyungJoo Ham <myungjoo.ham@samsung.com>
+ M:	Kyungmin Park <kyungmin.park@samsung.com>
+-R:	Chanwoo Choi <cw00.choi@samsung.com>
++M:	Chanwoo Choi <cw00.choi@samsung.com>
+ L:	linux-pm@vger.kernel.org
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+ S:	Maintained
+ F:	drivers/devfreq/
+ F:	include/linux/devfreq.h
+@@ -4774,7 +4774,7 @@ F:	include/trace/events/devfreq.h
+ DEVICE FREQUENCY EVENT (DEVFREQ-EVENT)
+ M:	Chanwoo Choi <cw00.choi@samsung.com>
+ L:	linux-pm@vger.kernel.org
+-T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+ S:	Supported
+ F:	drivers/devfreq/event/
+ F:	drivers/devfreq/devfreq-event.c
+-- 
+2.17.1
+
+
