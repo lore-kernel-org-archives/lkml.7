@@ -6,35 +6,35 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35DCDC010CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 357B0C010CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D20221E6F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F35F42190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:35:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388662AbfKEMfA (ORCPT
+        id S2388817AbfKEMfU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:35:00 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:59518 "EHLO inva020.nxp.com"
+        Tue, 5 Nov 2019 07:35:20 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:41950 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388526AbfKEMe6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:34:58 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2E7EA1A051F;
-        Tue,  5 Nov 2019 13:34:56 +0100 (CET)
+        id S2388632AbfKEMfB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:35:01 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 7A124200519;
+        Tue,  5 Nov 2019 13:34:58 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 21AB51A01E9;
-        Tue,  5 Nov 2019 13:34:56 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 61BFF2004F1;
+        Tue,  5 Nov 2019 13:34:58 +0100 (CET)
 Received: from fsr-ub1464-137.ea.freescale.net (fsr-ub1464-137.ea.freescale.net [10.171.82.114])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E0378205ED;
-        Tue,  5 Nov 2019 13:34:55 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 2BB8E205ED;
+        Tue,  5 Nov 2019 13:34:58 +0100 (CET)
 From:   Ioana Ciornei <ioana.ciornei@nxp.com>
 To:     gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org
 Cc:     andrew@lunn.ch, f.fainelli@gmail.com,
         Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 01/12] staging: dpaa2-ethsw: get control interface attributes
-Date:   Tue,  5 Nov 2019 14:34:24 +0200
-Message-Id: <1572957275-23383-2-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH 09/12] staging: dpaa2-ethsw: add .ndo_start_xmit() callback
+Date:   Tue,  5 Nov 2019 14:34:32 +0200
+Message-Id: <1572957275-23383-10-git-send-email-ioana.ciornei@nxp.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
 References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
@@ -45,219 +45,393 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Introduce a new structure to hold all necessary info related to an RX
-queue for the control interface and populate the FQ IDs.
-We only have one Rx queue and one Tx confirmation queue on the control
-interface, both shared by all the switch ports.
+Implement the .ndo_start_xmit() callback for the switch port interfaces.
+For each of the switch ports, gather the corresponding queue
+destination ID (QDID) necessary for Tx enqueueing.
+
+We'll reserve 64 bytes for software annotations, where we keep a skb
+backpointer used on the Tx confirmation side for releasing the allocated
+memory. At the moment, we only support linear skbs.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h |  9 +++++++
- drivers/staging/fsl-dpaa2/ethsw/dpsw.c     | 31 +++++++++++++++++++++
- drivers/staging/fsl-dpaa2/ethsw/dpsw.h     | 21 +++++++++++++++
- drivers/staging/fsl-dpaa2/ethsw/ethsw.c    | 43 ++++++++++++++++++++++++++++++
- drivers/staging/fsl-dpaa2/ethsw/ethsw.h    | 15 +++++++++++
- 5 files changed, 119 insertions(+)
+ drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h |  24 +++++
+ drivers/staging/fsl-dpaa2/ethsw/dpsw.c     |  41 ++++++++
+ drivers/staging/fsl-dpaa2/ethsw/dpsw.h     |  27 ++++++
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.c    | 144 ++++++++++++++++++++++++++---
+ drivers/staging/fsl-dpaa2/ethsw/ethsw.h    |  14 +++
+ 5 files changed, 236 insertions(+), 14 deletions(-)
 
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h b/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
-index 5e1339daa7c7..07a8178f4b37 100644
+index 7f8ad27f8db6..4eab09fb2488 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
 +++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw-cmd.h
-@@ -69,6 +69,8 @@
- #define DPSW_CMDID_FDB_SET_LEARNING_MODE    DPSW_CMD_ID(0x088)
- #define DPSW_CMDID_FDB_DUMP                 DPSW_CMD_ID(0x08A)
+@@ -45,6 +45,8 @@
+ #define DPSW_CMDID_IF_ENABLE                DPSW_CMD_ID(0x03D)
+ #define DPSW_CMDID_IF_DISABLE               DPSW_CMD_ID(0x03E)
  
-+#define DPSW_CMDID_CTRL_IF_GET_ATTR         DPSW_CMD_ID(0x0A0)
++#define DPSW_CMDID_IF_GET_ATTR              DPSW_CMD_ID(0x042)
 +
- /* Macros for accessing command fields smaller than 1byte */
- #define DPSW_MASK(field)        \
- 	GENMASK(DPSW_##field##_SHIFT + DPSW_##field##_SIZE - 1, \
-@@ -364,6 +366,13 @@ struct dpsw_rsp_fdb_dump {
- 	__le16 num_entries;
+ #define DPSW_CMDID_IF_SET_MAX_FRAME_LENGTH  DPSW_CMD_ID(0x044)
+ 
+ #define DPSW_CMDID_IF_GET_LINK_STATE        DPSW_CMD_ID(0x046)
+@@ -260,6 +262,28 @@ struct dpsw_cmd_if {
+ 	__le16 if_id;
  };
  
-+struct dpsw_rsp_ctrl_if_get_attr {
-+	__le64 pad;
-+	__le32 rx_fqid;
-+	__le32 rx_err_fqid;
-+	__le32 tx_err_conf_fqid;
++#define DPSW_ADMIT_UNTAGGED_SHIFT	0
++#define DPSW_ADMIT_UNTAGGED_SIZE	4
++#define DPSW_ENABLED_SHIFT		5
++#define DPSW_ENABLED_SIZE		1
++#define DPSW_ACCEPT_ALL_VLAN_SHIFT	6
++#define DPSW_ACCEPT_ALL_VLAN_SIZE	1
++
++struct dpsw_rsp_if_get_attr {
++	/* cmd word 0 */
++	/* from LSB: admit_untagged:4 enabled:1 accept_all_vlan:1 */
++	u8 conf;
++	u8 pad1;
++	u8 num_tcs;
++	u8 pad2;
++	__le16 qdid;
++	/* cmd word 1 */
++	__le32 options;
++	__le32 pad3;
++	/* cmd word 2 */
++	__le32 rate;
 +};
 +
- struct dpsw_rsp_get_api_version {
- 	__le16 version_major;
- 	__le16 version_minor;
+ struct dpsw_cmd_if_set_max_frame_length {
+ 	__le16 if_id;
+ 	__le16 frame_length;
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw.c b/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
-index 56b0fa789a67..f093d622a0de 100644
+index 024da81226cd..aebf2a0f4e03 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw.c
-@@ -1183,6 +1183,37 @@ int dpsw_fdb_set_learning_mode(struct fsl_mc_io *mc_io,
+@@ -705,6 +705,47 @@ int dpsw_if_disable(struct fsl_mc_io *mc_io,
  }
  
  /**
-+ * dpsw_ctrl_if_get_attributes() - Obtain control interface attributes
++ * dpsw_if_get_attributes() - Function obtains attributes of interface
 + * @mc_io:	Pointer to MC portal's I/O object
 + * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
 + * @token:	Token of DPSW object
-+ * @attr:	Returned control interface attributes
++ * @if_id:	Interface Identifier
++ * @attr:	Returned interface attributes
 + *
-+ * Return:	'0' on Success; Error code otherwise.
++ * Return:	Completion status. '0' on Success; Error code otherwise.
 + */
-+int dpsw_ctrl_if_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				u16 token, struct dpsw_ctrl_if_attr *attr)
++int dpsw_if_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			   u16 if_id, struct dpsw_if_attr *attr)
 +{
-+	struct dpsw_rsp_ctrl_if_get_attr *rsp_params;
++	struct dpsw_rsp_if_get_attr *rsp_params;
 +	struct fsl_mc_command cmd = { 0 };
++	struct dpsw_cmd_if *cmd_params;
 +	int err;
 +
-+	cmd.header = mc_encode_cmd_header(DPSW_CMDID_CTRL_IF_GET_ATTR,
-+					  cmd_flags, token);
++	cmd.header = mc_encode_cmd_header(DPSW_CMDID_IF_GET_ATTR, cmd_flags,
++					  token);
++	cmd_params = (struct dpsw_cmd_if *)cmd.params;
++	cmd_params->if_id = cpu_to_le16(if_id);
 +
 +	err = mc_send_command(mc_io, &cmd);
 +	if (err)
 +		return err;
 +
-+	rsp_params = (struct dpsw_rsp_ctrl_if_get_attr *)cmd.params;
-+	attr->rx_fqid = le32_to_cpu(rsp_params->rx_fqid);
-+	attr->rx_err_fqid = le32_to_cpu(rsp_params->rx_err_fqid);
-+	attr->tx_err_conf_fqid = le32_to_cpu(rsp_params->tx_err_conf_fqid);
++	rsp_params = (struct dpsw_rsp_if_get_attr *)cmd.params;
++	attr->num_tcs = rsp_params->num_tcs;
++	attr->rate = le32_to_cpu(rsp_params->rate);
++	attr->options = le32_to_cpu(rsp_params->options);
++	attr->qdid = le16_to_cpu(rsp_params->qdid);
++	attr->enabled = dpsw_get_field(rsp_params->conf, ENABLED);
++	attr->accept_all_vlan = dpsw_get_field(rsp_params->conf,
++					       ACCEPT_ALL_VLAN);
++	attr->admit_untagged = dpsw_get_field(rsp_params->conf,
++					      ADMIT_UNTAGGED);
 +
 +	return 0;
 +}
 +
 +/**
-  * dpsw_get_api_version() - Get Data Path Switch API version
-  * @mc_io:	Pointer to MC portal's I/O object
-  * @cmd_flags:	Command flags; one or more of 'MC_CMD_FLAG_'
+  * dpsw_if_set_max_frame_length() - Set Maximum Receive frame length.
+  * @mc_io:		Pointer to MC portal's I/O object
+  * @cmd_flags:		Command flags; one or more of 'MC_CMD_FLAG_'
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/dpsw.h b/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
-index 25b45850925c..cae69e20490c 100644
+index beacd5a56553..f22f5ad4448a 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
 +++ b/drivers/staging/fsl-dpaa2/ethsw/dpsw.h
-@@ -176,6 +176,27 @@ int dpsw_get_attributes(struct fsl_mc_io *mc_io,
- 			struct dpsw_attr *attr);
- 
- /**
-+ * struct dpsw_ctrl_if_attr - Control interface attributes
-+ * @rx_fqid:		Receive FQID
-+ * @rx_err_fqid:	Receive error FQID
-+ * @tx_err_conf_fqid:	Transmit error and confirmation FQID
-+ */
-+struct dpsw_ctrl_if_attr {
-+	u32 rx_fqid;
-+	u32 rx_err_fqid;
-+	u32 tx_err_conf_fqid;
-+};
-+
-+int dpsw_ctrl_if_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags,
-+				u16 token, struct dpsw_ctrl_if_attr *attr);
-+
-+enum dpsw_queue_type {
-+	DPSW_QUEUE_RX,
-+	DPSW_QUEUE_TX_ERR_CONF,
-+	DPSW_QUEUE_RX_ERR,
-+};
-+
+@@ -441,6 +441,33 @@ int dpsw_if_disable(struct fsl_mc_io *mc_io,
+ 		    u32 cmd_flags,
+ 		    u16 token,
+ 		    u16 if_id);
 +/**
-  * enum dpsw_action - Action selection for special/control frames
-  * @DPSW_ACTION_DROP: Drop frame
-  * @DPSW_ACTION_REDIRECT: Redirect frame to control port
++ * struct dpsw_if_attr - Structure representing DPSW interface attributes
++ * @num_tcs: Number of traffic classes
++ * @rate: Transmit rate in bits per second
++ * @options: Interface configuration options (bitmap)
++ * @enabled: Indicates if interface is enabled
++ * @accept_all_vlan: The device discards/accepts incoming frames
++ *		for VLANs that do not include this interface
++ * @admit_untagged: When set to 'DPSW_ADMIT_ONLY_VLAN_TAGGED', the device
++ *		discards untagged frames or priority-tagged frames received on
++ *		this interface;
++ *		When set to 'DPSW_ADMIT_ALL', untagged frames or priority-
++ *		tagged frames received on this interface are accepted
++ * @qdid: control frames transmit qdid
++ */
++struct dpsw_if_attr {
++	u8 num_tcs;
++	u32 rate;
++	u32 options;
++	int enabled;
++	int accept_all_vlan;
++	enum dpsw_accepted_frames admit_untagged;
++	u16 qdid;
++};
++
++int dpsw_if_get_attributes(struct fsl_mc_io *mc_io, u32 cmd_flags, u16 token,
++			   u16 if_id, struct dpsw_if_attr *attr);
+ 
+ int dpsw_if_set_max_frame_length(struct fsl_mc_io *mc_io,
+ 				 u32 cmd_flags,
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-index 14a9eebf687e..633eff42b996 100644
+index 75e4b3b8c84c..abe920f8a665 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.c
-@@ -1357,6 +1357,43 @@ static int ethsw_register_notifier(struct device *dev)
- 	return err;
+@@ -455,6 +455,7 @@ static int port_change_mtu(struct net_device *netdev, int mtu)
+ static int port_carrier_state_sync(struct net_device *netdev)
+ {
+ 	struct ethsw_port_priv *port_priv = netdev_priv(netdev);
++	struct ethsw_core *ethsw = port_priv->ethsw_data;
+ 	struct dpsw_link_state state;
+ 	int err;
+ 
+@@ -469,10 +470,15 @@ static int port_carrier_state_sync(struct net_device *netdev)
+ 	WARN_ONCE(state.up > 1, "Garbage read into link_state");
+ 
+ 	if (state.up != port_priv->link_state) {
+-		if (state.up)
++		if (state.up) {
+ 			netif_carrier_on(netdev);
+-		else
++			if (ethsw_has_ctrl_if(ethsw))
++				netif_tx_start_all_queues(netdev);
++		} else {
+ 			netif_carrier_off(netdev);
++			if (ethsw_has_ctrl_if(ethsw))
++				netif_tx_stop_all_queues(netdev);
++		}
+ 		port_priv->link_state = state.up;
+ 	}
+ 	return 0;
+@@ -525,8 +531,10 @@ static int port_open(struct net_device *netdev)
+ 	struct ethsw_core *ethsw = port_priv->ethsw_data;
+ 	int err;
+ 
+-	/* No need to allow Tx as control interface is disabled */
+-	netif_tx_stop_all_queues(netdev);
++	if (!ethsw_has_ctrl_if(port_priv->ethsw_data)) {
++		/* No need to allow Tx as control interface is disabled */
++		netif_tx_stop_all_queues(netdev);
++	}
+ 
+ 	err = dpsw_if_enable(port_priv->ethsw_data->mc_io, 0,
+ 			     port_priv->ethsw_data->dpsw_handle,
+@@ -574,15 +582,6 @@ static int port_stop(struct net_device *netdev)
+ 	return 0;
  }
  
-+static int ethsw_setup_fqs(struct ethsw_core *ethsw)
-+{
-+	struct dpsw_ctrl_if_attr ctrl_if_attr;
-+	struct device *dev = ethsw->dev;
-+	int i = 0;
-+	int err;
-+
-+	err = dpsw_ctrl_if_get_attributes(ethsw->mc_io, 0, ethsw->dpsw_handle,
-+					  &ctrl_if_attr);
-+	if (err) {
-+		dev_err(dev, "dpsw_ctrl_if_get_attributes() = %d\n", err);
-+		return err;
-+	}
-+
-+	ethsw->fq[i].fqid = ctrl_if_attr.rx_fqid;
-+	ethsw->fq[i].ethsw = ethsw;
-+	ethsw->fq[i++].type = DPSW_QUEUE_RX;
-+
-+	ethsw->fq[i].fqid = ctrl_if_attr.tx_err_conf_fqid;
-+	ethsw->fq[i].ethsw = ethsw;
-+	ethsw->fq[i++].type = DPSW_QUEUE_TX_ERR_CONF;
-+
-+	return 0;
-+}
-+
-+static int ethsw_ctrl_if_setup(struct ethsw_core *ethsw)
-+{
-+	int err;
-+
-+	/* setup FQs for Rx and Tx Conf */
-+	err = ethsw_setup_fqs(ethsw);
-+	if (err)
-+		return err;
-+
-+	return 0;
-+}
-+
- static int ethsw_init(struct fsl_mc_device *sw_dev)
+-static netdev_tx_t port_dropframe(struct sk_buff *skb,
+-				  struct net_device *netdev)
+-{
+-	/* we don't support I/O for now, drop the frame */
+-	dev_kfree_skb_any(skb);
+-
+-	return NETDEV_TX_OK;
+-}
+-
+ static int swdev_get_port_parent_id(struct net_device *dev,
+ 				    struct netdev_phys_item_id *ppid)
  {
- 	struct device *dev = &sw_dev->dev;
-@@ -1442,6 +1479,12 @@ static int ethsw_init(struct fsl_mc_device *sw_dev)
- 		goto err_close;
- 	}
+@@ -759,6 +758,114 @@ static void ethsw_free_fd(const struct ethsw_core *ethsw,
+ 	dev_kfree_skb(skb);
+ }
  
-+	if (ethsw_has_ctrl_if(ethsw)) {
-+		err = ethsw_ctrl_if_setup(ethsw);
-+		if (err)
-+			goto err_destroy_ordered_workqueue;
++static int ethsw_build_single_fd(struct ethsw_core *ethsw,
++				 struct sk_buff *skb,
++				 struct dpaa2_fd *fd)
++{
++	struct device *dev = ethsw->dev;
++	struct sk_buff **skbh;
++	dma_addr_t addr;
++	u8 *buff_start;
++	void *hwa;
++
++	buff_start = PTR_ALIGN(skb->data - DPAA2_ETHSW_TX_DATA_OFFSET -
++			       DPAA2_ETHSW_TX_BUF_ALIGN,
++			       DPAA2_ETHSW_TX_BUF_ALIGN);
++
++	/* Clear FAS to have consistent values for TX confirmation. It is
++	 * located in the first 8 bytes of the buffer's hardware annotation
++	 * area
++	 */
++	hwa = buff_start + DPAA2_ETHSW_SWA_SIZE;
++	memset(hwa, 0, 8);
++
++	/* Store a backpointer to the skb at the beginning of the buffer
++	 * (in the private data area) such that we can release it
++	 * on Tx confirm
++	 */
++	skbh = (struct sk_buff **)buff_start;
++	*skbh = skb;
++
++	addr = dma_map_single(dev, buff_start,
++			      skb_tail_pointer(skb) - buff_start,
++			      DMA_TO_DEVICE);
++	if (unlikely(dma_mapping_error(dev, addr)))
++		return -ENOMEM;
++
++	/* Setup the FD fields */
++	memset(fd, 0, sizeof(*fd));
++
++	dpaa2_fd_set_addr(fd, addr);
++	dpaa2_fd_set_offset(fd, (u16)(skb->data - buff_start));
++	dpaa2_fd_set_len(fd, skb->len);
++	dpaa2_fd_set_format(fd, dpaa2_fd_single);
++
++	return 0;
++}
++
++static netdev_tx_t ethsw_port_tx(struct sk_buff *skb,
++				 struct net_device *net_dev)
++{
++	struct ethsw_port_priv *port_priv = netdev_priv(net_dev);
++	struct ethsw_core *ethsw = port_priv->ethsw_data;
++	int retries = DPAA2_ETHSW_SWP_BUSY_RETRIES;
++	struct dpaa2_fd fd;
++	int err;
++
++	if (!ethsw_has_ctrl_if(ethsw))
++		goto err_free_skb;
++
++	if (unlikely(skb_headroom(skb) < DPAA2_ETHSW_NEEDED_HEADROOM)) {
++		struct sk_buff *ns;
++
++		ns = skb_realloc_headroom(skb, DPAA2_ETHSW_NEEDED_HEADROOM);
++		if (unlikely(!ns)) {
++			netdev_err(net_dev, "Error reallocating skb headroom\n");
++			goto err_free_skb;
++		}
++		dev_kfree_skb(skb);
++		skb = ns;
 +	}
 +
- 	err = ethsw_register_notifier(dev);
++	/* We'll be holding a back-reference to the skb until Tx confirmation */
++	skb = skb_unshare(skb, GFP_ATOMIC);
++	if (unlikely(!skb)) {
++		/* skb_unshare() has already freed the skb */
++		netdev_err(net_dev, "Error copying the socket buffer\n");
++		goto err_exit;
++	}
++
++	if (skb_is_nonlinear(skb)) {
++		netdev_err(net_dev, "No support for non-linear SKBs!\n");
++		goto err_free_skb;
++	}
++
++	err = ethsw_build_single_fd(ethsw, skb, &fd);
++	if (unlikely(err)) {
++		netdev_err(net_dev, "ethsw_build_*_fd() %d\n", err);
++		goto err_free_skb;
++	}
++
++	do {
++		err = dpaa2_io_service_enqueue_qd(NULL,
++						  port_priv->tx_qdid,
++						  8, 0, &fd);
++		retries--;
++	} while (err == -EBUSY && retries);
++
++	if (unlikely(err < 0)) {
++		ethsw_free_fd(ethsw, &fd);
++		goto err_exit;
++	}
++
++	return NETDEV_TX_OK;
++
++err_free_skb:
++	dev_kfree_skb(skb);
++err_exit:
++	return NETDEV_TX_OK;
++}
++
+ static const struct net_device_ops ethsw_port_ops = {
+ 	.ndo_open		= port_open,
+ 	.ndo_stop		= port_stop,
+@@ -772,7 +879,7 @@ static void ethsw_free_fd(const struct ethsw_core *ethsw,
+ 	.ndo_fdb_del		= port_fdb_del,
+ 	.ndo_fdb_dump		= port_fdb_dump,
+ 
+-	.ndo_start_xmit		= port_dropframe,
++	.ndo_start_xmit		= ethsw_port_tx,
+ 	.ndo_get_port_parent_id	= swdev_get_port_parent_id,
+ 	.ndo_get_phys_port_name = port_get_phys_name,
+ };
+@@ -2185,6 +2292,7 @@ static int ethsw_port_init(struct ethsw_port_priv *port_priv, u16 port)
+ 	struct ethsw_core *ethsw = port_priv->ethsw_data;
+ 	struct net_device *netdev = port_priv->netdev;
+ 	struct dpsw_acl_if_cfg acl_if_cfg;
++	struct dpsw_if_attr dpsw_if_attr;
+ 	struct dpsw_vlan_if_cfg vcfg;
+ 	struct dpsw_acl_cfg acl_cfg;
+ 	int err;
+@@ -2234,6 +2342,14 @@ static int ethsw_port_init(struct ethsw_port_priv *port_priv, u16 port)
  	if (err)
- 		goto err_destroy_ordered_workqueue;
+ 		goto err_remove_acl_if;
+ 
++	err = dpsw_if_get_attributes(ethsw->mc_io, 0, ethsw->dpsw_handle,
++				     port_priv->idx, &dpsw_if_attr);
++	if (err) {
++		netdev_err(netdev, "dpsw_if_get_attributes err %d\n", err);
++		goto err_remove_acl_if;
++	}
++	port_priv->tx_qdid = dpsw_if_attr.qdid;
++
+ 	return 0;
+ 
+ err_remove_acl_if:
 diff --git a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-index 3ea8a0ad8c10..3ce4ac4e84fc 100644
+index b585d06be105..747a4e15d28a 100644
 --- a/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
 +++ b/drivers/staging/fsl-dpaa2/ethsw/ethsw.h
-@@ -37,10 +37,19 @@
- #define ETHSW_MAX_FRAME_LENGTH	(DPAA2_MFL - VLAN_ETH_HLEN - ETH_FCS_LEN)
- #define ETHSW_L2_MAX_FRM(mtu)	((mtu) + VLAN_ETH_HLEN + ETH_FCS_LEN)
+@@ -72,6 +72,19 @@
+  */
+ #define DPAA2_ETHSW_SWP_BUSY_RETRIES	1000
  
-+/* Number of receive queues (one RX and one TX_CONF) */
-+#define ETHSW_RX_NUM_FQS		2
++/* Hardware annotation buffer size */
++#define DPAA2_ETHSW_HWA_SIZE		64
++/* Software annotation buffer size */
++#define DPAA2_ETHSW_SWA_SIZE		64
++
++#define DPAA2_ETHSW_TX_BUF_ALIGN	64
++
++#define DPAA2_ETHSW_TX_DATA_OFFSET \
++	(DPAA2_ETHSW_HWA_SIZE + DPAA2_ETHSW_SWA_SIZE)
++
++#define DPAA2_ETHSW_NEEDED_HEADROOM \
++	(DPAA2_ETHSW_TX_DATA_OFFSET + DPAA2_ETHSW_TX_BUF_ALIGN)
 +
  extern const struct ethtool_ops ethsw_port_ethtool_ops;
  
  struct ethsw_core;
- 
-+struct ethsw_fq {
-+	struct ethsw_core *ethsw;
-+	enum dpsw_queue_type type;
-+	u32 fqid;
-+};
-+
- /* Per port private data */
- struct ethsw_port_priv {
- 	struct net_device	*netdev;
-@@ -66,6 +75,12 @@ struct ethsw_core {
- 
- 	u8				vlans[VLAN_VID_MASK + 1];
- 	bool				learning;
-+
-+	struct ethsw_fq			fq[ETHSW_RX_NUM_FQS];
+@@ -100,6 +113,7 @@ struct ethsw_port_priv {
+ 	struct net_device	*bridge_dev;
+ 	u16			acl_id;
+ 	u8			acl_cnt;
++	u16			tx_qdid;
  };
  
-+static inline bool ethsw_has_ctrl_if(struct ethsw_core *ethsw)
-+{
-+	return !(ethsw->sw_attr.options & DPSW_OPT_CTRL_IF_DIS);
-+}
- #endif	/* __ETHSW_H */
+ /* Switch data */
 -- 
 1.9.1
 
