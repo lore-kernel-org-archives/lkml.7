@@ -2,257 +2,144 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EF87C010D6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:16:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B939C010CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:17:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A38F224D2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:16:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 131F721D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:17:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="mDuRAvy1"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="P417idu8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731002AbfKEMQ3 (ORCPT
+        id S1730896AbfKEMRs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:16:29 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:60148 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726524AbfKEMQ3 (ORCPT
+        Tue, 5 Nov 2019 07:17:48 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41264 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726612AbfKEMRr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:16:29 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5CGMSt016434;
-        Tue, 5 Nov 2019 06:16:22 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572956182;
-        bh=J4BEpU/N6/Oxb2b5/LtAcYX01H5ycdx3Kno1gFw5vSA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=mDuRAvy14zR8lx8Y2JwG5vqINJJtK83X0YcGOJyz1xctRQBBZH8V4x0gjb6MBB4Rq
-         THyVWe+9qeHPj7lwQcP3UQGwcVj3I3w3vGKJNadKOxqzNeo8TXKQmaAjafiRnkBk5K
-         ewu0KC8uBZUabaAIaI08r/H3lABHcTGQ7NAlW930=
-Received: from DFLE100.ent.ti.com (dfle100.ent.ti.com [10.64.6.21])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5CGMvr125639
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 06:16:22 -0600
-Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE100.ent.ti.com
- (10.64.6.21) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 06:16:07 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 06:16:07 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5CGI88018698;
-        Tue, 5 Nov 2019 06:16:19 -0600
-Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
-To:     Rob Herring <robh+dt@kernel.org>
-CC:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Tero Kristo <t-kristo@ti.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        <devicetree@vger.kernel.org>
-References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
- <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
- <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
- <20191030141736.GN4568@sirena.org.uk>
- <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
- <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
- <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
- <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
- <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
- <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <7d60ec02-9f00-eb6f-919e-9bab1704e93e@ti.com>
-Date:   Tue, 5 Nov 2019 14:17:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Tue, 5 Nov 2019 07:17:47 -0500
+Received: by mail-wr1-f67.google.com with SMTP id p4so21079701wrm.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 04:17:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=5WjUuFi1lzsZ0jYBoaXwxIPUs2nhOsZLPkdWBs2AKLE=;
+        b=P417idu8xkSOp83bucE6v/1E1W1RvIuAVTDiRCXs18VWSccTtXfC2aJ4GJu5jds6ZH
+         uBJCgJE3ExZ52WKimdaza0yOBUaXRuh7bdWeQ2I3ynlSEB+YpwPjeRqXCVtdrmi8vAap
+         DI9GyZy5yMsGuTYmT0V+qqaQFq59NGpnVxLHW1uDAifGPTIJHyV2FFqi0Glf9/WLyDY7
+         2AHiPKVrhqw0mqhBfVmq46u5888cPcLrea00kDAAgQ5jy0GlP5wZBchsJhnQ05B7F0gv
+         NAnylj9LeqvqQqCHWMLLUu5pOWkckz9FzpzgQEcbufw1DoXqiMfamjxJHFyOPwrLEGub
+         4zQw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=5WjUuFi1lzsZ0jYBoaXwxIPUs2nhOsZLPkdWBs2AKLE=;
+        b=UcB5kqLVcaRfHTuQfHvA+0gXi6+Zn4k9LX6pPDraV6pfZ1QqUWVwlS4wEaAbMl6WZf
+         tgaXLtva8IiC7vS+udUmRRMh0SysKNaNclGNzhht7ljJ8p/d5I2VJJCrpPYywHLvv8mV
+         /8FDdVkKz3S8ZzVDwx+2BFDaNf+JSP12k1/g+myAJiJoNSYybG1AwBUvLoFtlNeEoFjn
+         /xn1v3hp/2z7UH1BR1XMsiDDPUJAcpHPWXP90llY1xfjY6/udK6UYfQKt0YsbqUcgU7b
+         vV6SmR5Su+GTSlndip0xiyTu0fW83N5UOhcWF3GXOgM7v4i4K1ocatkesFbFedBU5D5/
+         QCbw==
+X-Gm-Message-State: APjAAAWflTBb3wbeoS+DWGsdMG9mKT6cU1DNOsEp0Hjv+W8xU+B5+28J
+        GMIvzxEp2qnH31f7XZ7KudVmew==
+X-Google-Smtp-Source: APXvYqwErB67f7DBD+wdgWRB8DG4qf1Fxi2tzJbIRlf8rBiYnT674amq+eMXIK0jGQf3/caWICJLYw==
+X-Received: by 2002:adf:f452:: with SMTP id f18mr29422850wrp.264.1572956263645;
+        Tue, 05 Nov 2019 04:17:43 -0800 (PST)
+Received: from [10.83.36.220] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id b62sm18477866wmc.13.2019.11.05.04.17.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 04:17:43 -0800 (PST)
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [PATCH] Ensure pci transactions coming from PLX NTB are handled
+ when  IOMMU is turned on
+From:   James Sewart <jamessewart@arista.com>
+In-Reply-To: <A3FA9DE1-2EEF-41D8-9AC2-B1F760E7F5D5@arista.com>
+Date:   Tue, 5 Nov 2019 12:17:42 +0000
+Cc:     linux-kernel@vger.kernel.org, Dmitry Safonov <dima@arista.com>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0B8FAD0D-B598-4CEA-A614-67F4C7C5B9CA@arista.com>
+References: <A3FA9DE1-2EEF-41D8-9AC2-B1F760E7F5D5@arista.com>
+To:     iommu@lists.linux-foundation.org
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Any comments on this?
 
+Cheers,
+James.
 
-On 04/11/2019 21.11, Rob Herring wrote:
->> If one driver toggles the GPIO line directly then the GPIO line is going
->> to be toggled for all the devices the GPIO line is connected to.
-> 
-> Of course. That would be the typical case. I'd assume we would want to
-> handle that the same way as shared resets. Reset can only be asserted
-> when all clients want reset asserted. I guess when the first client
-> probes, it asserts and deasserts the reset.
+> On 24 Oct 2019, at 13:52, James Sewart <jamessewart@arista.com> wrote:
+>=20
+> The PLX PEX NTB forwards DMA transactions using Requester ID's that =
+don't exist as
+> PCI devices. The devfn for a transaction is used as an index into a =
+lookup table
+> storing the origin of a transaction on the other side of the bridge.
+>=20
+> This patch aliases all possible devfn's to the NTB device so that any =
+transaction
+> coming in is governed by the mappings for the NTB.
+>=20
+> Signed-Off-By: James Sewart <jamessewart@arista.com>
+> ---
+> drivers/pci/quirks.c | 22 ++++++++++++++++++++++
+> 1 file changed, 22 insertions(+)
+>=20
+> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> index 320255e5e8f8..647f546e427f 100644
+> --- a/drivers/pci/quirks.c
+> +++ b/drivers/pci/quirks.c
+> @@ -5315,6 +5315,28 @@ SWITCHTEC_QUIRK(0x8574);  /* PFXI 64XG3 */
+> SWITCHTEC_QUIRK(0x8575);  /* PFXI 80XG3 */
+> SWITCHTEC_QUIRK(0x8576);  /* PFXI 96XG3 */
+>=20
+> +/*
+> + * PLX NTB uses devfn proxy IDs to move TLPs between NT endpoints. =
+These IDs
+> + * are used to forward responses to the originator on the other side =
+of the
+> + * NTB. Alias all possible IDs to the NTB to permit access when the =
+IOMMU is
+> + * turned on.
+> + */
+> +static void quirk_PLX_NTB_dma_alias(struct pci_dev *pdev)
+> +{
+> +	if (!pdev->dma_alias_mask)
+> +		pdev->dma_alias_mask =3D kcalloc(BITS_TO_LONGS(U8_MAX),
+> +					      sizeof(long), GFP_KERNEL);
+> +	if (!pdev->dma_alias_mask) {
+> +		dev_warn(&pdev->dev, "Unable to allocate DMA alias =
+mask\n");
+> +		return;
+> +	}
+> +
+> +	// PLX NTB may use all 256 devfns
+> +	memset(pdev->dma_alias_mask, U8_MAX, (U8_MAX+1)/BITS_PER_BYTE);
+> +}
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b0, =
+quirk_PLX_NTB_dma_alias);
+> +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_PLX, 0x87b1, =
+quirk_PLX_NTB_dma_alias);
+> +
+> /*
+>  * On Lenovo Thinkpad P50 SKUs with a Nvidia Quadro M1000M, the BIOS =
+does
+>  * not always reset the secondary Nvidia GPU between reboots if the =
+system
+> --=20
+> 2.19.1
+>=20
+>=20
 
-The exclusive flavor of reset API acts like a GPIO, while the shared
-ones will result in refcounted behavior.
-
-With describing the hw via gpio-shared we could support different modes:
-- pass-through: like a GPIO with nonexclusive, any request will
-propagate to the root-gpio
-- refcounted low: the line is kept low as long as at least one client is
-requiring to to be low
-- refcounted high: the line is kept high as long as at least one client
-is requiring to to be high
-
->>> I don't think you can have any reset control in
->>> the drivers in that case.
->>
->> The device needs the RST line to be high, otherwise it is not
->> accessible. If it does not have reset control how can we make sure that
->> the GPIO line is in correct state?
-> 
-> Just like the reset code, drivers register their use of the reset and
-> the core tracks users and prevents resetting when not safe. Maybe the
-> reset subsystem needs to learn about GPIO resets. It could even
-> default to knowing 'reset-gpios' property as we've somewhat
-> standardized that. Then you just register your GPIO reset line with
-> the reset subsystem. When it gets the same line registered more than
-> once, then it knows to handle sharing the line. If you need to know
-> the line is shared before then, then you need something in DT. A flag
-> is enough for that.
-
-What about things where the gpio is not a reset or enable for the chip,
-but an enable for one of it's output?
-Or if a shared GPIO is connected to address select pins?
-
->>> No, drivers are written to set the state to active/inactive.
->>
->> I think the drivers are written in a way to follow what their datasheets
->> are tells. If it say that the GPIO line must be high to enable the
->> device then they gpiod_set_value(1), if the line must be low to enable
->> them then they will gpiod_set_value(0).
-> 
-> gpiod_set_value(1) sets the line to the active state defined in DT
-> GPIO flags, not the electrical level of the signal. This issue is a
-> good example of precisely why the gpiod API was defined this way. I do
-> think it is a bit confusing though. Perhaps reusing _{get,set}_value
-> API was not the best naming.
-
-Yes, it is confusing and I think most drivers are using it following
-their corresponding datasheets, iow if the datasheet say the line must
-be low then set_value(0) is used.
-
-It does look weird to use set_value(reset_gpio, 1) in the code when the
-documentation say that the reset pin must be _low_ to place the part
-into reset, even if you look up the DT documentation and dts files for
-GPIO_ACTIVE_HIGH/LOW usage among boards.
-
-Especially if you have two peripherals where both is enabled when their
-pin is LOW, but one names it RST and is high active, the other names it
-EN and it is low active. especially that lots of devices do not even
-states any active mode for the pin, just if high, it is in reset, if low
-then it is enabled.
-
-I get the notion of how it is, but it does feel a bit unnatural in times.
-
->>> The DT GPIO_ACTIVE_ flags can depend on an inverter being present (BTW, there
->>> was a recent attempt to do an inverter binding).
->>
->> Yes.
->> If the line is inverted on the board, than the DT GPIO_ACTIVE_LOW will
->> invert it to the correct level.
-> 
-> Yes, if the signal is normally GPIO_ACTIVE_HIGH.
-> 
->> We have two off the shelf components, C1 and C2. They have a driver
->> written based on the datasheets.
->> C1 needs HIGH (LOW reset/disable)
->>  uses gpiod_set_value(1) to enable the device
-> 
-> No. The active state for a 'reset-gpios' is the state in which reset
-> is active/asserted. So gpiod_set_value(1) should always mean 'assert
-> reset'.
-> 
-> If we're talking about an 'enable-gpios', then the active state is
-> when the device is active/enabled. So it's the inverse of
-> 'reset-gpios'.
-> 
->> C2 needs LOW (HIGH reset/disable)
->>  uses gpiod_set_value(0) to enable the device
-> 
-> Yes. The GPIO flag would be GPIO_ACTIVE_HIGH and gpiod_set_value(0) is
-> reset de-asserted.
-> 
->> When they are connected to a dedicated GPIO the DT binding has
->> GPIO_ACTIVE_HIGH since when the GPIO is set to 1 it goes HIGH, right?
-> 
-> No, as explained above. C2 would be GPIO_ACTIVE_HIGH, C1 would be
-> GPIO_ACTIVE_LOW normally.
-> 
->> If two device is connected to one GPIO one of them needs an inverter on
->> the GPIO line after it is split into two, let say C2 got inverted line:
->> C1 tells in DT that the line is not inverted: GPIO_ACTIVE_HOGH
->> C2 tells in DT that the line is inverted: GPIO_ACTIVE_LOW
-> 
-> C1 needs GPIO_ACTIVE_LOW here.
-
-Hrm, so the GPIO_ACTIVE_ can not be used as a means to tell that if the
-gpio line is active (set to 1) at the source then the signal at the
-component's pin is going to be high (GPIO_ACTIVE_HIGH) or low
-(GPIO_ACTIVE_LOW)?
-
-> 
->> GPIO HIGH -> D1 is enabled
->>           -> !HIGH -> LOW -> D2 is enabled
->>
->> If both would request the same physical GPIO then how would this work? A
->> single GPIO can not be handled in inverted and non inverted way at the
->> same time.
->>
->> But this is just a side effect that this would be easy to handle with
->> this DT binding and driver.
->> After all, it will describe the GPIO line split.
->>
->>>> It should be possible to add pass-through mode for gpio-shared so that
->>>> all requests would propagate to the root GPIO if that's what needed for
->>>> some setups.
->>>>
->>>> That way the gpio-shared would nicely handle the GPIO inversions, would
->>>> be able to handle cases to avoid unwanted reset/enable of components or
->>>> allow components to be ninja-reset.
->>>
->>> What does ninja-reset mean?
->>
->> Ninjas attack from ambush ;)
->> The device is reset w/o it's driver being aware that it ever happened as
->> other driver toggled the shared GPIO line.
->>
->>>> I think it would be possible to add gpiod_is_shared(struct gpio_desc
->>>> *desc) so users can check if the GPIO is shared - it would only return
->>>> true if the gpio-shared is not in pass-through mode so they can know
->>>> that the state they see on their gpio desc is not necessary matching
->>>> with reality.
->>>> Probably another gpiod_shared_get_root_value() to fetch the root's state?
->>>>
->>>> I intentionally not returning that in the driver as clients might skip a
->>>> gpio_set_value() seeing that the GPIO line is already in a state they
->>>> would want it, but that would not register their needs for the level.
->>>>
->>>> - Péter
->>>>
->>>> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->>>> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
->>
->> - Péter
->>
->> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
->> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
-
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
