@@ -2,190 +2,85 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4F94CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:03:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E48BCA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:04:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94073214E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:03:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4AC56214E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:04:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="u1sa6//R"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lh+taqpr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730228AbfKECDP (ORCPT
+        id S1730285AbfKECEZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:03:15 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:36334 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729760AbfKECDP (ORCPT
+        Mon, 4 Nov 2019 21:04:25 -0500
+Received: from mail-oi1-f170.google.com ([209.85.167.170]:44238 "EHLO
+        mail-oi1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729597AbfKECEZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:03:15 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
-        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Lv6yerxMciLJWR+oLBIAbVir7+PH5W017iQgkhnlSeQ=; b=u1sa6//REVpmLHZyonlnyJGe7
-        BFdrc1DF4ovjJuCw0A63kSuWFbhfPRdEAayLHltGUf58HCXWJhcGiwuGkTEwScSJu6hOHTZIOplJx
-        O/VQ9WX7MBF2mIVG5TCoBoCrK3fcazky+IvFeCk4hBQi41UEtX1lESdTNCiVY+A6lr1arLfsCrPix
-        9n5ZMm+LWPdedFd/Q/zD9gGoaplSeQdjlJipmqcSdCebhTAa1svM9pHP9CVDrsPB4Lu1QDE4zNwBt
-        qYXBQq5dkqh1RcntoZ7b2cnxxEieYdrHb6sO7zQYLQhyJX4z4dtPMkaTDM4dFslVFp+G0xl2Njok0
-        O5K07EqtA==;
-Received: from [2601:1c0:6280:3f0::4ba1]
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iRoBe-00036U-Bf; Tue, 05 Nov 2019 02:03:14 +0000
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
-        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191102063036.28601-1-unixbhaskar@gmail.com>
-From:   Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
-Date:   Mon, 4 Nov 2019 18:03:13 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Mon, 4 Nov 2019 21:04:25 -0500
+Received: by mail-oi1-f170.google.com with SMTP id s71so16078113oih.11;
+        Mon, 04 Nov 2019 18:04:24 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ADhHQyzzzWn62AhgjPBGjZ8RKk/lIEHw/9dcMO6+pCk=;
+        b=lh+taqpro3T1ItQODcyPB3kJNsKkTG9wg7JPqeRouX9H+IDJbvGh3xl/krrLLUGcKD
+         g6tjmweAkkVbxMWeRF6OKnvvhZ3Mps5JQcs4uGMCOgBcQbtSuLWHClnbJLki94kkiPfF
+         sBrJQdETsXyOwtXkffzRQf1bqoUfcfS604LCBI/V6rr/OK9qWj93jeks784jnZmVkFBt
+         9L51/MVqilrrvg3qaZLJG9MD67gv4CQfEgSqAW2w4Hj5b4zLwEyT7MYyJVTdH4fY35hO
+         54yklCViHM4UeTEotJ/E/RQFJ91RU+ROAFc40K5D0xtLlxj5MHeOEsSGbLnPoba4S/gW
+         nkCg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ADhHQyzzzWn62AhgjPBGjZ8RKk/lIEHw/9dcMO6+pCk=;
+        b=rCeLLLz/ehkhzirqkiyoPfIxN1ohZg8Vzjdy+VuTDdwPfsU2C3HHQZi8+xA5XTHu81
+         UoFkyDFqlhW1Eo7+p2N+fNA4jzjd0uzT/VqRayu7MatCmyuyxNlp2LJ9SHKHa/zB9lhP
+         tnHZiBiRxbOQsC+C98nZhpNYu9nyNsRSlDLSUMpNezbgsUe+dXqNdBExC3ZqEC74CTZf
+         MsAB3MU2um/jUVFKc6PYEvdzWL1IpZPEfUes8lUR/i4o7nH2RFUwxs7y9eHHKw29aH2a
+         rhVNE3z6gslzk7zy2uCFUtwGDavu0oqZGPjwxKewfoTkv3oxjSA8xXL5Wh5Qj+QW2x2h
+         DJQA==
+X-Gm-Message-State: APjAAAU2B5//5DKfqWhbCRb9Xb5hiphVb9T0Sme5EsbhajTTGseI/zHf
+        icIjBSfOWqsKnuYuMGhJ0kEew9N1DI6TSKNkUq3ajA==
+X-Google-Smtp-Source: APXvYqzQGIxisFpxPq6yZRZ1LuLxkXbVelLMLIpWXHzlIySh5ijOD0lSqbLfxkb7ZpV3CqbjgwCHs7NOUJQ48sEM7hw=
+X-Received: by 2002:a05:6808:7d0:: with SMTP id f16mr1769719oij.86.1572919463689;
+ Mon, 04 Nov 2019 18:04:23 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191102063036.28601-1-unixbhaskar@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191104070116.GM57214@dtor-ws> <20191104183702.8894-1-TheSven73@gmail.com>
+ <CAHCN7xJc6DeyQV27OVjD14a8hZT+_Fo9qo-iHgLO414t3y6hVQ@mail.gmail.com>
+ <CAGngYiXp52g7X=KLVqxTAhK0AJ9mpgGyaptbkYvhwWfRkQCaXQ@mail.gmail.com>
+ <CAHCN7xLhqHzcHro7HYUdNAi8K3ToeruOtLw=0SZNAgNqUpxvHQ@mail.gmail.com>
+ <20191104233621.GP57214@dtor-ws> <CAHCN7x+=_FM32JTEKAb=5pPJNvim88cUFuEXgdGhMG9gdr0Emg@mail.gmail.com>
+In-Reply-To: <CAHCN7x+=_FM32JTEKAb=5pPJNvim88cUFuEXgdGhMG9gdr0Emg@mail.gmail.com>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Mon, 4 Nov 2019 21:04:11 -0500
+Message-ID: <CAGngYiX1JP8NZBU+wRzdsLBMN7hhsbmfaD5o4PGPX27Q-6J4xw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] Input: ili210x - add ILI2117 support
+To:     Adam Ford <aford173@gmail.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Marek Vasut <marex@denx.de>, linux-input@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
-> This patch allow you to remove old kernels and associated modules
-> directory from the system.You can do it at once with the -r flag
-> and interactively with the -i flag.
-> 
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> ---
->  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
->  1 file changed, 65 insertions(+), 17 deletions(-)
+On Mon, Nov 4, 2019 at 6:40 PM Adam Ford <aford173@gmail.com> wrote:
+>
+> I will test it tomorrow on a 2117a and reply with results.  I am very
+> excited to see this integrated.
+>
 
-Hi,
-I believe that this script now does what the patch author intends it to do.
-It does have a few whitespace issues, but no big deals.  (see below)
+I will do the same. That should give us confidence that 211x works
+ok.
 
-Tested-by: Randy Dunlap <rdunlap@infradead.org>
-
-
-> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-> index e8aa940bc0a9..01d0778db71f 100755
-> --- a/scripts/prune-kernel
-> +++ b/scripts/prune-kernel
-> @@ -1,21 +1,69 @@
->  #!/bin/bash
->  # SPDX-License-Identifier: GPL-2.0
-> +#This script will remove old kernels and modules directory related to it.
-> +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
-> +# "-h" or "--help" show how to use this script or show without parameter.
-> +#"-i" or "--interactive" show how to remove interactively.
-> +
-> +flag=$1
-> +kernel_version=$2
-> +modules_version=$3
-> +boot_dir=/boot
-> +modules_dir=/lib/modules
-> +
-> +remove_old_kernel() {
-> +	cd $boot_dir
-> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-> +	return 0
-> +}
-> +
-> +remove_old_modules_dir() {
-> +	cd $modules_dir
-> +	rm -rf $modules_version
-> +	return 0
-> +}
-> +
-> +usage() {
-> +	printf "Usage: $(basename $0) [-ri]\n"
-> +	printf "\n -r or --remove  kernel_version modules_version\n"
-> +	printf "\n -i or --interactive do as interactive way\n"
-> +	return 0
-> +}
-> +
-> +case "$flag" in
-> +	-i | --interactive)
-> +		printf "\nEnter kernel version to remove or blank/empty to exit:"
-> +		read kernel_version
-> +		if [[ $kernel_version != "" ]]; then
-> +			remove_old_kernel
-> +			printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
-
-space after ':'
-
-drop one \n above.
-
-> +			printf "Please give the full modules directory name to remove:"
-> +			read modules_version
-> +			if [[ $modules_version != "" ]]; then
-> +				remove_old_modules_dir
-> +				printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
-
-space after ':'
-
-drop one \n above.
-
-> +			else
-> +				exit 1
-> +			fi
-> +		fi
-> +		;;
-> +	-h | --help)
-> +		usage
-> +		exit 0
-> +		;;
-> +	-r | --remove)
-> +		if [[ $# -ne 3 ]]; then
-> +			 printf "You need to provide kernel version and modules directory name.\n"
-> +			 exit 1
-> +		 else
-> +			 remove_old_kernel
-> +			 remove_old_modules_dir
-> +		fi
-> +		;;
-> +	*)
-> +		usage
-> +		exit 1
-> +		;;
-> +esac
-> 
-> -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
-> -# again, /boot and /lib/modules/ eventually fill up.
-> -# Dumb script to purge that stuff:
-> 
-
-OK, the former script's loop is removed.. good.
-But the 2 preceding blank lines are not removed, so the script
-now ends with 2 unnecessary blank lines.
-
-> -for f in "$@"
-> -do
-> -        if rpm -qf "/lib/modules/$f" >/dev/null; then
-> -                echo "keeping $f (installed from rpm)"
-> -        elif [ $(uname -r) = "$f" ]; then
-> -                echo "keeping $f (running kernel) "
-> -        else
-> -                echo "removing $f"
-> -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-> -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-> -                rm -rf "/lib/modules/$f"
-> -                new-kernel-pkg --remove $f
-> -        fi
-> -done
-> --
-
-
--- 
-~Randy
-
+Dmitry, should someone retest 251x and 210x after such a significant
+change? Unfortunately I don't have access to these chips.
