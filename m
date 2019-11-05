@@ -2,144 +2,112 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BD7BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:09:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B331C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 72AF02190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:09:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 028FB2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572970198;
-	bh=T/OKgYFDc2/Ya87q3rObzjD5Y8PLugEqs/l86EobogI=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=SY4WcRAueTGu+dBHAHkdByQ0l42FzCD8wRWhIYIf4raMwb0sMS/Ky0q4w6vAAcrTm
-	 kblNLreSdm5sWa7KOH6VLK3DUyD0EQxgQ3F+5byJHhHZ7eClnnXY8N/GPnzQbiSyWc
-	 tTRCdfdXI40SQtDdPeBUNiK/abiX5tN8S7+6zAck=
+	s=default; t=1572970222;
+	bh=3rYnlvzuKtYKdxK2uL8463vEILCkV2bc0KCoHjG4rOg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=B9uyDJAkoNb0SnQ47k+LvT7yg8vmCTUh2vn+zwwasqktskB80I7C/BYYMkNYolIs0
+	 /icAzHSBMV8H4o0cSde02Ah4KdEXwIanSdtSnDtEtiajRD04QvcpwanUIyF6v5pz6I
+	 Kjszy4KUuAIzujo3CFOMagAhTBSDwcH5/T/lhdH8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390232AbfKEQJ5 (ORCPT
+        id S2390244AbfKEQKV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:09:57 -0500
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:39448 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389907AbfKEQJ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:09:57 -0500
-Received: by mail-qk1-f193.google.com with SMTP id 15so21612942qkh.6;
-        Tue, 05 Nov 2019 08:09:56 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=me3lESL1ggtumWsSVDttQmUrbEo7485lmzzekY64N38=;
-        b=tPrZdHjJcV0IzlK9UurrMNrUsqfSlMSqpZQhPr+KB57uDynjOd2cTm7wzPG77+mtk+
-         hLy4rIuS5QDPxR2XJOLho/ugr6NpnXyf0z2qcsyEs1KXsWE9iEwSbsL5HK0pA0vxrdRX
-         RBmf7MvgZoeS34lShwgpJj4mMhwED4aY97WiHDCa09wdQQw3dEbBYj1qurBcXocQ253p
-         NOj/Fk6JB7X5eax98zJ3qHft9JtWqDZD4pM4D8np4axWPcwEM7cjLQ/Z8FzI96R6rpFz
-         2xv70RhmHogmpE1IRKYvm5C6SePm7MjU72MVcm51XYWQSpWchtuiI+mDMKCXRc9E8u76
-         4/YQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=me3lESL1ggtumWsSVDttQmUrbEo7485lmzzekY64N38=;
-        b=KpHRn3rZ/zMv16JjZdT0yR6w8hqcq/VlHKUtlX06P9UWC2zwfUIdSofBle0SGwRwOf
-         8VW0JozIrgMk4/XugmHraM6DXcS0a7V4ybpBN7zORuLWdfOrfv110fI4bS7Zw92fk5/F
-         sORYFI9INa0wxRQwTRUdQXbbXno/QLgUTMzSzYQYYPYPRI8gR+FtsQV/lPfVYsZWoy4Y
-         6d3dQKH2L6p1bxVToiWxzDTuiZmQtuilg23rZOE40+K52rzCppoojGMQGbxI2fJJ0UiZ
-         rAJHxCuwKqFXOZ3bd2z65WalJRkX3LUxUgY8b51zNcydj0mH+f3cbvnQJFmluc5Rg0MT
-         HQrA==
-X-Gm-Message-State: APjAAAVkQ9okXWt1LYTEZ51SgAYDxMF3tUByfrLans5KFH9yqAxF6Naa
-        fiNc2v6ieSjusS0rZ3eOdIkm7xmA
-X-Google-Smtp-Source: APXvYqzLB/L7Dj+A7FHR7I7t9gslk7a7ssseyWvo6BBPcRa35boS1fXIjPGUdSu+UaCEGKaUJHUgAg==
-X-Received: by 2002:a05:620a:a85:: with SMTP id v5mr11569535qkg.471.1572970195651;
-        Tue, 05 Nov 2019 08:09:55 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::2:bc42])
-        by smtp.gmail.com with ESMTPSA id o2sm10936208qkf.68.2019.11.05.08.09.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 08:09:55 -0800 (PST)
-Date:   Tue, 5 Nov 2019 08:09:51 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Roman Gushchin <guro@fb.com>, linux-block@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Josef Bacik <jbacik@fb.com>
-Subject: [PATCH block/for-5.4-fixes] blkcg: make blkcg_print_stat() print
- stats only for online blkgs
-Message-ID: <20191105160951.GS3622521@devbig004.ftw2.facebook.com>
+        Tue, 5 Nov 2019 11:10:21 -0500
+Received: from mail.kernel.org ([198.145.29.99]:55926 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2389907AbfKEQKU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:10:20 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6985E214B2;
+        Tue,  5 Nov 2019 16:10:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572970219;
+        bh=3rYnlvzuKtYKdxK2uL8463vEILCkV2bc0KCoHjG4rOg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=AUgdAJyWEH4jSZMdcNYsS+U6qdrmOkZv5GqemhXlRuuax1I6SsMFqTQoJLIV602WS
+         q/LvLBU6oP2DsikeiDPG2a57SCUF6MKz2V7pF1eM2GuTIwQw7zoYfSxDGjtsWsHhFr
+         pbXurPTMm9MQUw7tA+z0I2DgNwk3LHOKDZVC8S9I=
+Date:   Tue, 5 Nov 2019 10:10:17 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mika Westerberg <mika.westerberg@linux.intel.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
+        Keith Busch <keith.busch@intel.com>,
+        Alex Williamson <alex.williamson@redhat.com>,
+        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        Paul Menzel <pmenzel@molgen.mpg.de>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
+ spec
+Message-ID: <20191105161017.GA219591@google.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191105152832.GC2552@lahna.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-blkcg_print_stat() iterates blkgs under RCU and doesn't test whether
-the blkg is online.  This can call into pd_stat_fn() on a pd which is
-still being initialized leading to an oops.
+On Tue, Nov 05, 2019 at 05:28:32PM +0200, Mika Westerberg wrote:
+> On Tue, Nov 05, 2019 at 09:00:13AM -0600, Bjorn Helgaas wrote:
+> > On Tue, Nov 05, 2019 at 11:54:28AM +0200, Mika Westerberg wrote:
+> > > On Mon, Nov 04, 2019 at 06:00:00PM -0600, Bjorn Helgaas wrote:
+> > 
+> > > > > If you think it is fine to do the delay before we have restored
+> > > > > everything I can move it inside pci_power_up() or call it after
+> > > > > pci_pm_default_resume_early() as above. I think at least we should make
+> > > > > sure all the saved registers are restored before so that the link
+> > > > > activation check actually works.
+> > > > 
+> > > > What needs to be restored to make pcie_wait_for_link_delay() work?
+> > > 
+> > > I'm not entirely sure. I think that pci_restore_state() at least should
+> > > be called so that the PCIe capability gets restored. Maybe not even
+> > > that because Data Link Layer Layer Active always reflects the DL_Active
+> > > or not and it does not need to be enabled separately.
+> > > 
+> > > > And what event does the restore need to be ordered with?
+> > > 
+> > > Not sure I follow you here.
+> > 
+> > You're suggesting that we should restore saved registers first so
+> > pcie_wait_for_link_delay() works.  If the link activation depends on
+> > something being restored and we don't enforce an ordering, the
+> > activation might succeed or fail depending on whether it happens
+> > before or after the restore.  So if there is a dependency, we should
+> > make it explicit to avoid a race like that.
+> 
+> OK thanks. By explicit you mean document it in the code, right?
 
-The heaviest operation - recursively summing up rwstat counters - is
-already done while holding the queue_lock.  Expand queue_lock to cover
-the other operations and skip the blkg if it isn't online yet.  The
-online state is protected by both blkcg and queue locks, so this
-guarantees that only online blkgs are processed.
+So far all we have is a feeling that maybe we ought to restore before
+waiting, but I don't really know why.  If there's an actual
+dependency, we should chase down specifically what it is and add a
+comment or code (e.g., a link retrain) as appropriate.
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
-Reported-by: Roman Gushchin <guro@fb.com>
-Cc: Josef Bacik <jbacik@fb.com>
-Fixes: 903d23f0a354 ("blk-cgroup: allow controllers to output their own stats")
-Cc: stable@vger.kernel.org # v4.19+
----
- block/blk-cgroup.c |   13 ++++++++-----
- 1 file changed, 8 insertions(+), 5 deletions(-)
+> > I actually suspect there *is* a dependency -- we should respect the
+> > Target Link Speed and and width so the link resumes in the same
+> > configuration it was before suspend.  And I suspect that may require
+> > an explicit retrain after restoring PCI_EXP_LNKCTL2.
+> 
+> According the PCIe spec the PCI_EXP_LNKCTL2 Target Link Speed is marked
+> as RWS (S for sticky) so I suspect its value is retained after reset in
+> the same way as PME bits. Assuming I understood it correctly.
 
---- a/block/blk-cgroup.c
-+++ b/block/blk-cgroup.c
-@@ -934,9 +934,14 @@ static int blkcg_print_stat(struct seq_f
- 		int i;
- 		bool has_stats = false;
- 
-+		spin_lock_irq(&blkg->q->queue_lock);
-+
-+		if (!blkg->online)
-+			goto skip;
-+
- 		dname = blkg_dev_name(blkg);
- 		if (!dname)
--			continue;
-+			goto skip;
- 
- 		/*
- 		 * Hooray string manipulation, count is the size written NOT
-@@ -946,8 +951,6 @@ static int blkcg_print_stat(struct seq_f
- 		 */
- 		off += scnprintf(buf+off, size-off, "%s ", dname);
- 
--		spin_lock_irq(&blkg->q->queue_lock);
--
- 		blkg_rwstat_recursive_sum(blkg, NULL,
- 				offsetof(struct blkcg_gq, stat_bytes), &rwstat);
- 		rbytes = rwstat.cnt[BLKG_RWSTAT_READ];
-@@ -960,8 +963,6 @@ static int blkcg_print_stat(struct seq_f
- 		wios = rwstat.cnt[BLKG_RWSTAT_WRITE];
- 		dios = rwstat.cnt[BLKG_RWSTAT_DISCARD];
- 
--		spin_unlock_irq(&blkg->q->queue_lock);
--
- 		if (rbytes || wbytes || rios || wios) {
- 			has_stats = true;
- 			off += scnprintf(buf+off, size-off,
-@@ -999,6 +1000,8 @@ static int blkcg_print_stat(struct seq_f
- 				seq_commit(sf, -1);
- 			}
- 		}
-+	skip:
-+		spin_unlock_irq(&blkg->q->queue_lock);
- 	}
- 
- 	rcu_read_unlock();
+This patch is about coming from D3cold, isn't it?  I don't think we
+can assume sticky bits are preserved in D3cold (except maybe when
+auxiliary power is enabled).
