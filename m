@@ -2,109 +2,98 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 765B0C5DF63
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:14:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2792CC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52853214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:14:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E90E221882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:15:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572970515;
+	bh=xRGY58lp9PQsCKLD1X18lIko3kx92Dak6+o3gcsRNX8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bJq+yotQnu3+LEKx+vvDDeg4aJn3fECo59LCD1z7VwE+6SlHBGHnLVwpBwUvmwC4f
+	 XxSpampK8Vs/q0IpDuuRXV9TzeD89FDjtWFIRERQ7Q6XXxBV+KdoIy/UQyptU4wGgG
+	 6R5njQBlrTkLUkcBD39PK3cUwooKIb+NUsuIy4A0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390092AbfKEQOd (ORCPT
+        id S2390128AbfKEQPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:14:33 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45714 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389760AbfKEQOd (ORCPT
+        Tue, 5 Nov 2019 11:15:14 -0500
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:33317 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390096AbfKEQPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:14:33 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k2so17996382oij.12;
-        Tue, 05 Nov 2019 08:14:32 -0800 (PST)
+        Tue, 5 Nov 2019 11:15:13 -0500
+Received: by mail-ot1-f65.google.com with SMTP id u13so18135641ote.0;
+        Tue, 05 Nov 2019 08:15:13 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ds6VYusfCqeI+CxBbQC5l0BjKnCAgOPSpeG/INpDB7s=;
-        b=FBlrFgPecd6Nu8kPxi/cwjUB24zhVlI59+tBHHEmwpLDCU5HCKwaOSeozM3vhUsSJH
-         ujZXUTPGTlstysbtmTN3y+Mqmh1M0qIMQ//gJNdrGe8uLKwDa4DFZTi7qlNZIUPp05L3
-         GQU5oKbH+08397LWNkAOVq9QpjKjU7dP3uJJ9eWCdb4qdigdnS3nPJXcu+Wav7gPw+rn
-         y/XO+0r422gid4bep8TXoUrA7xAllLoSsIJH4NUa82moG60LIhZboq44NarhTy3NcYhB
-         pKWbFYLA5w59p+ygsdFFKHk+5KY2FJPCVb8eM9reFDDny7tIrrHMfzg+N/8yBpXyurgR
-         9xLQ==
-X-Gm-Message-State: APjAAAUF6Sv+6anaWx1mkGiJF5EytPmnOLJrShbsQIvfyTSOunVZWtX0
-        BcwVUMXEikQ40sE37VrAcVuSehHN4YEuYoG87Yw=
-X-Google-Smtp-Source: APXvYqweOH2gctOiMkOfsylw9IuOXcy7+Rtobt+PETLBgPWqINBQvTUx4ZjcibUTN+3TaAgCY5UmWMrEgoOR73cwrbA=
-X-Received: by 2002:aca:fc92:: with SMTP id a140mr4437471oii.153.1572970472082;
- Tue, 05 Nov 2019 08:14:32 -0800 (PST)
+        bh=ZT4en3y5QgVMI33vOLDv0psnHaObzkIn5HyOngHG/js=;
+        b=ouyYXgW0jAZ+w+GC+edAT/Y/kTMiX8B3uANXn3hmFczhKezYkKk1td11RLnBg3WK8T
+         Hueu/SPlvr/2B95A9yIGW1E3tGNg4bYoTz4zmCDTcl1oY/AVQZPQmgMWkyNwB8OfoPWV
+         IdwbJSRl9veKpgtU2EvsAikkqqPqEJtNhRu52Eof1P6D5zWj9w9WcCtnCO/ApzKRkOnD
+         NhctdXW4XI6M1tFol2sBxXaf5lnFqMpkir9TiyjX5PidpFiAysHj0v7Gzr0b2AEbjis0
+         G0WSP1LllxbIVHIkd5UtJa1RhesXM0Qg15KjATdrboEFpK7psIzIV7+aNiIULFqh9lnW
+         AgoQ==
+X-Gm-Message-State: APjAAAWoCP1nF9LNMk9UgbaQT8RBlu3hNPuIjoHNTYTyrNJ0ohOqp2EO
+        44SFqzG/P4J5NDO8Nb1x/2JEkDlaXglw314UEKc=
+X-Google-Smtp-Source: APXvYqxPByCUHFEGufCUJNmU7TyKG4nMDGVEUpuw3GX3YTjqrQQnhSLG7mBe9+fFh64RFCNxxpPec86rL+o++PouL0s=
+X-Received: by 2002:a9d:5907:: with SMTP id t7mr12462593oth.118.1572970512569;
+ Tue, 05 Nov 2019 08:15:12 -0800 (PST)
 MIME-Version: 1.0
-References: <20191016085548.105703-1-jacopo+renesas@jmondi.org> <20191017191400.GH4901@pendragon.ideasonboard.com>
-In-Reply-To: <20191017191400.GH4901@pendragon.ideasonboard.com>
-From:   Geert Uytterhoeven <geert@linux-m68k.org>
-Date:   Tue, 5 Nov 2019 17:14:20 +0100
-Message-ID: <CAMuHMdWTCF30+JpztF-p-5JqHS5ALiAs5E0Jo82DCgpu99NZ7w@mail.gmail.com>
-Subject: Re: [PATCH v6 0/8] drm: rcar-du: Add Color Management Module (CMM)
-To:     Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc:     Jacopo Mondi <jacopo+renesas@jmondi.org>,
-        Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>,
-        Simon Horman <horms@verge.net.au>,
-        Ulrich Hecht <uli+renesas@fpond.eu>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
-        DRI Development <dri-devel@lists.freedesktop.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <2771503.n70vfTtcVb@kreacher> <1769241.yKxyosiRnQ@kreacher> <20191105160943.GA19190@infradead.org>
+In-Reply-To: <20191105160943.GA19190@infradead.org>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 5 Nov 2019 17:15:01 +0100
+Message-ID: <CAJZ5v0gd84S3MBjTMJfs8NZu92QcdFAin4WEwVqWVzXrrC1vrw@mail.gmail.com>
+Subject: Re: [PATCH 5/5] PCI: PM: Fold __pci_complete_power_transition() into
+ its caller
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Laurent,
-
-On Thu, Oct 17, 2019 at 9:14 PM Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Wed, Oct 16, 2019 at 10:55:40AM +0200, Jacopo Mondi wrote:
-> > Minimal increment to the CMM series, this time should really be the last one.
-> >
-> > Just missing Rob's ack on [1/8] and Laurent's one on [5/8].
-> >
-> > Changelog is minimal:
-> > CMM
-> > - Remove the cmm_config.enable flag. The cmm_config.table field validity is
-> >   used to enable/disable the LUT operations
-> > - Expand comments as suggested by Laurent
-> >
-> > CRTC
-> > - use drm_color_lut_size() to check the LUT table size
-> > - Inline calls to rcar_cmm_enable()/disable()
-> > - Add TODO entries as suggested by Laurent
-> >
-> > For the record, the full series changelog is available at:
-> > https://paste.debian.net/1107427/
-> >
-> > v5 from yesterday with informations on testing is available at:
-> > https://lkml.org/lkml/2019/10/15/337
-> >
-> > Geert will you collect for DTS patches for the next release?
-> > I assume the DU changes go through Laurent instead ?
+On Tue, Nov 5, 2019 at 5:09 PM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> I've taken patch 1/8 to 6/8 and 8/8 in my tree. I expected Geert to take
-> 7/8.
+> On Tue, Nov 05, 2019 at 11:32:02AM +0100, Rafael J. Wysocki wrote:
+> >       if (state > PCI_D3cold)
+> > @@ -1132,10 +1112,12 @@ int pci_set_power_state(struct pci_dev *
+> >       error = pci_raw_set_power_state(dev, state > PCI_D3hot ?
+> >                                       PCI_D3hot : state);
+> >
+> > -     if (!__pci_complete_power_transition(dev, state))
+> > -             error = 0;
+> > +     ret = pci_platform_power_transition(dev, state);
+> > +     /* Powering off a bridge may power off the whole hierarchy */
+> > +     if (!ret && state == PCI_D3cold)
+> > +             pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+> >
+> > -     return error;
+> > +     return ret ? error : 0;
+>
+> Total nitpick, but why not:
+>
+>         if (pci_platform_power_transition(dev, state))
+>                 return error;
+>
+>         /* Powering off a bridge may power off the whole hierarchy */
+>         if (state == PCI_D3cold)
+>                 pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+>         return 0;
 
-And so I did. 7/8 is now in arm-soc/for-next.
+Yes, that looks better, thanks!
 
-However, your drm/du/next branch seems to contain 7/8 instead of 8/8?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I'll send an update of this patch.
