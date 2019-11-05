@@ -2,162 +2,114 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBA4BC1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:55:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58B6BC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:57:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADBA321928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:55:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572962130;
-	bh=e4hXWEE6xfVZFRBpznPIiemjVEl8fL/DHbmQ6BJl5t4=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=aKf/MY0OA5e63WPHwduhVv4MOu5z881i1/Kabiay6/a+S+4hiZHbuoiTtGEaq6nD9
-	 FLQPsK6/IkSqCWTu8H80pErTmOdq++3bR/BcraIZzetn13RvMb4DspERBX+CgKQvWv
-	 AWmRR/KquN5kgZRstb1eSIjLxoCQFTuBsIRnmPVE=
+	by mail.kernel.org (Postfix) with ESMTP id 39C9721D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:57:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389391AbfKENza (ORCPT
+        id S2389304AbfKEN5x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:55:30 -0500
-Received: from mail.kernel.org ([198.145.29.99]:35608 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388000AbfKENz2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:55:28 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.209.237])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BFABF21928;
-        Tue,  5 Nov 2019 13:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572962127;
-        bh=e4hXWEE6xfVZFRBpznPIiemjVEl8fL/DHbmQ6BJl5t4=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=HGViaySmxhzs3jSKe/40Ua3O+E+jcavAMbE9cPr1Mvr9HburDcpM3ZRb2daTYcU+Y
-         T/5GtqKtVxhX3uO9/zs3D3Y/AhITpQtugmX2aMidVnkoReboaFUMBqX3CrQ8NvBznj
-         c4yytJJZEpg1uA6APNqp4d2UtfX+39xa22CbVmMY=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id 5D4C935227C0; Tue,  5 Nov 2019 05:55:24 -0800 (PST)
-Date:   Tue, 5 Nov 2019 05:55:24 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     Phong Tran <tranmanphong@gmail.com>
-Cc:     madhuparnabhowmik04@gmail.com, joel@joelfernandes.org,
-        corbet@lwn.net, rcu@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
-Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: RCU: NMI-RCU:
- Converted NMI-RCU.txt to NMI-RCU.rst.
-Message-ID: <20191105135524.GN20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
- <5bab8828-76e4-c67f-5855-ea4e4f43eaa5@gmail.com>
+        Tue, 5 Nov 2019 08:57:53 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57061 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389113AbfKEN5x (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:57:53 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzL7-0002TD-VS; Tue, 05 Nov 2019 14:57:45 +0100
+Received: from ukl by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <ukl@pengutronix.de>)
+        id 1iRzL7-00080J-Al; Tue, 05 Nov 2019 14:57:45 +0100
+Date:   Tue, 5 Nov 2019 14:57:45 +0100
+From:   Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+To:     =?iso-8859-1?Q?Cl=E9ment_P=E9ron?= <peron.clem@gmail.com>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Subject: Re: [PATCH v3 3/7] pwm: sun4i: Add an optional probe for bus clock
+Message-ID: <20191105135745.mf63pelpbekmitgm@pengutronix.de>
+References: <20191105131456.32400-1-peron.clem@gmail.com>
+ <20191105131456.32400-4-peron.clem@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <5bab8828-76e4-c67f-5855-ea4e4f43eaa5@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105131456.32400-4-peron.clem@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: ukl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 08:40:05PM +0700, Phong Tran wrote:
-> On 10/29/19 4:42 AM, madhuparnabhowmik04@gmail.com wrote:
-> > From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > 
-> > This patch converts NMI-RCU from txt to rst format.
-> > Also adds NMI-RCU in the index.rst file.
-> > 
-> > Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
-> > -- >   .../RCU/{NMI-RCU.txt => NMI-RCU.rst}          | 53 ++++++++++---------
-> >   Documentation/RCU/index.rst                   |  1 +
-> >   2 files changed, 29 insertions(+), 25 deletions(-)
-> >   rename Documentation/RCU/{NMI-RCU.txt => NMI-RCU.rst} (73%)
-> > 
-> > diff --git a/Documentation/RCU/NMI-RCU.txt b/Documentation/RCU/NMI-RCU.rst
-> > similarity index 73%
-> > rename from Documentation/RCU/NMI-RCU.txt
-> > rename to Documentation/RCU/NMI-RCU.rst
-> > index 881353fd5bff..da5861f6a433 100644
-> > --- a/Documentation/RCU/NMI-RCU.txt
-> > +++ b/Documentation/RCU/NMI-RCU.rst
-> > @@ -1,4 +1,7 @@
-> > +.. _NMI_rcu_doc:
-> > +
-> >   Using RCU to Protect Dynamic NMI Handlers
-> > +=========================================
-> >   Although RCU is usually used to protect read-mostly data structures,
-> > @@ -9,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
-> >   "arch/x86/kernel/traps.c".
-> >   The relevant pieces of code are listed below, each followed by a
-> > -brief explanation.
-> > +brief explanation.::
-> there is just a minor ":" redundant in html page.There are some same in this
-> patch.
-> eg:
->  brief explanation.:
+On Tue, Nov 05, 2019 at 02:14:52PM +0100, Clément Péron wrote:
+> From: Jernej Skrabec <jernej.skrabec@siol.net>
 > 
-> Other things look good to me.
+> H6 PWM core needs bus clock to be enabled in order to work.
 > 
-> Tested-by: Phong Tran <tranmanphong@gmail.com>
+> Add an optional probe for it and a fallback for previous
+> bindings without name on module clock.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> Signed-off-by: Clément Péron <peron.clem@gmail.com>
+> ---
+>  drivers/pwm/pwm-sun4i.c | 45 +++++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 43 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> index 9ba83769a478..54e19fa56a4e 100644
+> --- a/drivers/pwm/pwm-sun4i.c
+> +++ b/drivers/pwm/pwm-sun4i.c
+> @@ -78,6 +78,7 @@ struct sun4i_pwm_data {
+>  
+>  struct sun4i_pwm_chip {
+>  	struct pwm_chip chip;
+> +	struct clk *bus_clk;
+>  	struct clk *clk;
+>  	struct reset_control *rst;
+>  	void __iomem *base;
+> @@ -363,9 +364,35 @@ static int sun4i_pwm_probe(struct platform_device *pdev)
+>  	if (IS_ERR(pwm->base))
+>  		return PTR_ERR(pwm->base);
+>  
+> -	pwm->clk = devm_clk_get(&pdev->dev, NULL);
+> -	if (IS_ERR(pwm->clk))
+> +	/* Get all clocks and reset line */
+> +	pwm->clk = devm_clk_get_optional(&pdev->dev, "mod");
+> +	if (IS_ERR(pwm->clk)) {
+> +		dev_err(&pdev->dev, "get clock failed %ld\n",
+> +			PTR_ERR(pwm->clk));
 
-Thank you, Phong!
+Please only print this message if PTR_ERR(pwm->clk) != -EPROBE_DEFER.
+You might also want to make use of commit 57f5677e535b ("printf: add
+support for printing symbolic error names") and use
 
-I queued a commit to be squashed into Madhuparna's original as shown below
-which adds your Tested-by and attempts a fix.  Does this work for you?
+	dev_err(&pdev->dev, "get clock failed: %pe\n", pwm->clk);
 
-							Thanx, Paul
+Other than that the patch is fine for me.
 
-------------------------------------------------------------------------
+Best regards
+Uwe
 
-commit 2c29f1c481f74f5e5aaaab195042f4df6a0b8119
-Author: Paul E. McKenney <paulmck@kernel.org>
-Date:   Tue Nov 5 05:51:12 2019 -0800
-
-    squash! Documentation: RCU: NMI-RCU: Converted NMI-RCU.txt to NMI-RCU.rst.
-    
-    [ paulmck: Apply feedback from Phong Tran. ]
-    Tested-by: Phong Tran <tranmanphong@gmail.com>
-    Signed-off-by: Paul E. McKenney <paulmck@kernel.org>
-
-diff --git a/Documentation/RCU/NMI-RCU.rst b/Documentation/RCU/NMI-RCU.rst
-index da5861f..1809583 100644
---- a/Documentation/RCU/NMI-RCU.rst
-+++ b/Documentation/RCU/NMI-RCU.rst
-@@ -12,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
- "arch/x86/kernel/traps.c".
- 
- The relevant pieces of code are listed below, each followed by a
--brief explanation.::
-+brief explanation::
- 
- 	static int dummy_nmi_callback(struct pt_regs *regs, int cpu)
- 	{
-@@ -21,12 +21,12 @@ brief explanation.::
- 
- The dummy_nmi_callback() function is a "dummy" NMI handler that does
- nothing, but returns zero, thus saying that it did nothing, allowing
--the NMI handler to take the default machine-specific action.::
-+the NMI handler to take the default machine-specific action::
- 
- 	static nmi_callback_t nmi_callback = dummy_nmi_callback;
- 
- This nmi_callback variable is a global function pointer to the current
--NMI handler.::
-+NMI handler::
- 
- 	void do_nmi(struct pt_regs * regs, long error_code)
- 	{
-@@ -61,7 +61,7 @@ Quick Quiz:
- 
- :ref:`Answer to Quick Quiz <answer_quick_quiz_NMI>`
- 
--Back to the discussion of NMI and RCU...::
-+Back to the discussion of NMI and RCU::
- 
- 	void set_nmi_callback(nmi_callback_t callback)
- 	{
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
