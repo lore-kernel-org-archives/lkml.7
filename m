@@ -2,233 +2,182 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FE3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56038C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D2BE21929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:29:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572989386;
-	bh=SHG7U1Zk/bWBLyiOUPDwjfP5TP+oFBeHUYQa57DqMi0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=cjtW3U5b3gU4aKQaRQ7OFmLnlhFl/s2Mds0mlAY4JndijZ/NUMvmUWZjKXWJPjRn/
-	 XaKoNV15FGVvQKJokKb03ySmZ7iyB4FbzFeBc7ti1tHaKgRDY/HSA2xZDVdZt7V6C6
-	 Ww/wVfErdv7bsG6fhG8+WPXLxzkYivmEWul4FwCQ=
+	by mail.kernel.org (Postfix) with ESMTP id 1A0A221929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:30:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730158AbfKEV3p (ORCPT
+        id S1730197AbfKEVaL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:29:45 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36984 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730083AbfKEV3n (ORCPT
+        Tue, 5 Nov 2019 16:30:11 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:44365 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730017AbfKEVaK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:29:43 -0500
-Received: by mail-oi1-f194.google.com with SMTP id y194so19005137oie.4;
-        Tue, 05 Nov 2019 13:29:42 -0800 (PST)
+        Tue, 5 Nov 2019 16:30:10 -0500
+Received: by mail-il1-f199.google.com with SMTP id 13so19755613iln.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 13:30:09 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3t8BCo0cxBsYxWOAFHgtpAu9n4Yvje806QUE4jm3ZCA=;
-        b=XnrscLxKIwU1u+6xd3I/uPM4qbYEM3A9EygfTWr8MEt2UnFC+T+RuZdV1CrdiTW6k+
-         Ids+6B9E6l0sNaLmtXaP5vc9bmN2NFKR4IFHHveSlG0bVOvWb3WzdeW5zaCLLm9+r6kI
-         9QorS7SHQXXhpXzG9nalDFwZ5rDEWlpNxnCO1+wFJeQn4R5pvA8YqiR+joda8/5RymqN
-         YclNXyXQ07K6CbljCwdo/yic8BE4ixEXon2Z2n4Kt7mLTUMbBVPm0F2+6MRTisW0QnMf
-         B8OXQvTRhoKmR88giaqTsENpB9aMm8ST2LIMD+TpYD62XK7Vb99DBjf7ThJMl320Qbwl
-         92yQ==
-X-Gm-Message-State: APjAAAXqtt6gowfgvZhIExbc1sL9RUehR5r7xSHqLAhPj+yMUDzGv7ZC
-        ETpkinxj9P11DDHvAWdf5TPaBgo=
-X-Google-Smtp-Source: APXvYqyH4xQFaKS6sEMXo8lV/DMAL+xOS/Oi/hTdVSFb20yYWbGQGJRv7YRrR+CMpG3q83BYaa/QYg==
-X-Received: by 2002:aca:4dcc:: with SMTP id a195mr1007256oib.172.1572989382261;
-        Tue, 05 Nov 2019 13:29:42 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g1sm5088396otr.5.2019.11.05.13.29.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 13:29:41 -0800 (PST)
-Date:   Tue, 5 Nov 2019 15:29:41 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rahul Tanwar <rahul.tanwar@linux.intel.com>
-Cc:     linus.walleij@linaro.org, mark.rutland@arm.com,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, andriy.shevchenko@intel.com,
-        qi-ming.wu@intel.com, yixin.zhu@linux.intel.com,
-        cheol.yong.kim@intel.com
-Subject: Re: [PATCH v3 2/2] dt-bindings: pinctrl: intel: Add for new SoC
-Message-ID: <20191105212941.GA8677@bogus>
-References: <cover.1572926608.git.rahul.tanwar@linux.intel.com>
- <f91001d8c5f0cb2860fda720d0cb6298a4856dd3.1572926608.git.rahul.tanwar@linux.intel.com>
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=1xkanS+/tT8hR6RPQXjHlC3jGkbXrPci9yKxX6hZLBs=;
+        b=gHdaQ5A3cFby8eAvR+93p3LZZo06kKWETCMBINm6RAupQG6BHZLYjZQFDJA4hWYw8K
+         L187nxcDcFZWfm2aRWc1bYP2RZ+lsUgSq+kpifX9A1niD2RJJvDCxaV2T/OS9vhUi9ji
+         jwfCYawxzE7dRq57WMV4ewPQSK95GlZ3ECWUMYOnww1MLVf0F9FNE3w6CYb+sU6KZSp9
+         BntondDTfB+0CxFJyILbJ0AvF9+SV4DO9KPw9xOF0vgOzt3MhWGYOQZRdLR/8UnZwpIG
+         aPArB+/8oimMAa2rjA8+MPD0sUsuIOIVtsyerWrtl7ybJ8cb5DEkdj5nVuJXO7zkwScv
+         zq2A==
+X-Gm-Message-State: APjAAAW3KiOWVc3Zx3XHBfam8CRW33jFxclqGXhAk/k8RB7T+ytgrioR
+        vJ0BgOz3rH6AkjjF1Ea4W4UHreqqaGcGpEOtdOTkoTSyviZ7
+X-Google-Smtp-Source: APXvYqxW0UxrmegVMqG77ZjE2Pn1zkX0CYaF3xrMaltdjM3HIpoHKlF/HTAbmWtXzBL0sW/Im6X5G2ADbqivW97fgwHc6xVcx3ZZ
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f91001d8c5f0cb2860fda720d0cb6298a4856dd3.1572926608.git.rahul.tanwar@linux.intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a92:99d1:: with SMTP id t78mr34831691ilk.122.1572989409341;
+ Tue, 05 Nov 2019 13:30:09 -0800 (PST)
+Date:   Tue, 05 Nov 2019 13:30:09 -0800
+In-Reply-To: <0000000000005ed7710596937e86@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fabba10596a022a4@google.com>
+Subject: Re: KASAN: use-after-free Read in j1939_xtp_rx_abort_one
+From:   syzbot <syzbot+db4869ba599c0de9b13e@syzkaller.appspotmail.com>
+To:     davem@davemloft.net, kernel@pengutronix.de,
+        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
+        robin@protonic.nl, socketcan@hartkopp.net,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:49:43PM +0800, Rahul Tanwar wrote:
-> Add dt bindings document for pinmux & GPIO controller driver of
-> Intel Lightning Mountain SoC.
-> 
-> Signed-off-by: Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> ---
->  .../bindings/pinctrl/intel,lgm-pinctrl.yaml        | 114 +++++++++++++++++++++
->  1 file changed, 114 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> new file mode 100644
-> index 000000000000..961ac877a962
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/intel,lgm-pinctrl.yaml
-> @@ -0,0 +1,114 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/pinctrl/intel,lgm-pinctrl.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Intel Lightning Mountain SoC pinmux & GPIO controller binding
-> +
-> +maintainers:
-> +  - Rahul Tanwar <rahul.tanwar@linux.intel.com>
-> +
-> +description: |
-> +  Pinmux & GPIO controller controls pin multiplexing & configuration including
-> +  GPIO function selection & GPIO attributes configuration.
-> +
-> +  Please refer to [1] for details of the common pinctrl bindings used by the
-> +  client devices.
-> +
-> +  [1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-> +
-> +properties:
-> +  compatible:
-> +    const: intel,lgm-pinctrl
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +# Client device subnode's properties
-> +patternProperties:
-> +  "^.*@[0-9a-fA-F]+$":
+syzbot has found a reproducer for the following crash on:
 
-A unit address is wrong here. Please define some pattern we can match 
-on. '-pins$' perhaps.
+HEAD commit:    a99d8080 Linux 5.4-rc6
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=15565bcce00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
+dashboard link: https://syzkaller.appspot.com/bug?extid=db4869ba599c0de9b13e
+compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
+80fee25776c2fb61e74c1ecb1a523375c2500b69)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1435c078e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=139a3542e00000
 
-> +    type: object
-> +    description:
-> +      Pinctrl node's client devices use subnodes for desired pin configuration.
-> +      Client device subnodes use below standard properties.
-> +
-> +    properties:
-> +      function:
-> +        $ref: /schemas/types.yaml#/definitions/string
-> +        description:
-> +          A string containing the name of the function to mux to the group.
-> +
-> +      groups:
-> +        $ref: /schemas/types.yaml#/definitions/string-array
-> +        description:
-> +          An array of strings identifying the list of groups.
-> +
-> +      pins:
-> +        $ref: /schemas/types.yaml#/definitions/uint32-array
-> +        description:
-> +          List of pins to select with this function.
-> +
-> +      pinmux:
-> +        description: The applicable mux group.
-> +        allOf:
-> +          - $ref: "/schemas/types.yaml#/definitions/uint32"
-> +          - enum:
-> +              - 0 #PINMUX_GPIO
-> +              - 1
-> +              - 2
-> +              - 3
-> +              - 4
-> +
-> +      bias-pull-up:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies pull-up configuration.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+db4869ba599c0de9b13e@syzkaller.appspotmail.com
 
-Isn't this boolean?
+vcan0: j1939_tp_rxtimer: 0x00000000533cdfdb: rx timeout, send abort
+vcan0: j1939_xtp_rx_abort_one: 0x00000000533cdfdb: 0x00000: (3) A timeout  
+occurred and this is the connection abort to close the session.
+==================================================================
+BUG: KASAN: use-after-free in __lock_acquire+0x96/0x1be0  
+kernel/locking/lockdep.c:3828
+Read of size 8 at addr ffff888097f09080 by task ksoftirqd/1/16
 
-> +
-> +      bias-pull-down:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies pull-down configuration.
+CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc6 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
+  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
+  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
+  kasan_report+0x26/0x50 mm/kasan/common.c:634
+  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
+  __lock_acquire+0x96/0x1be0 kernel/locking/lockdep.c:3828
+  lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
+  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
+  _raw_spin_lock_bh+0x34/0x50 kernel/locking/spinlock.c:175
+  spin_lock_bh include/linux/spinlock.h:343 [inline]
+  j1939_session_list_lock net/can/j1939/transport.c:238 [inline]
+  j1939_session_get_by_addr net/can/j1939/transport.c:530 [inline]
+  j1939_xtp_rx_abort_one+0x89/0x3f0 net/can/j1939/transport.c:1242
+  j1939_xtp_rx_abort net/can/j1939/transport.c:1270 [inline]
+  j1939_tp_cmd_recv net/can/j1939/transport.c:1940 [inline]
+  j1939_tp_recv+0x648/0xb80 net/can/j1939/transport.c:1973
+  j1939_can_recv+0x424/0x650 net/can/j1939/main.c:100
+  deliver net/can/af_can.c:568 [inline]
+  can_rcv_filter+0x3c0/0x8b0 net/can/af_can.c:602
+  can_receive+0x2ac/0x3b0 net/can/af_can.c:659
+  can_rcv+0xe4/0x220 net/can/af_can.c:685
+  __netif_receive_skb_one_core net/core/dev.c:4929 [inline]
+  __netif_receive_skb+0x136/0x370 net/core/dev.c:5043
+  process_backlog+0x4d8/0x930 net/core/dev.c:5874
+  napi_poll net/core/dev.c:6311 [inline]
+  net_rx_action+0x5ef/0x10d0 net/core/dev.c:6379
+  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:766
+  run_ksoftirqd+0x64/0xf0 kernel/softirq.c:603
+  smpboot_thread_fn+0x5b3/0x9a0 kernel/smpboot.c:165
+  kthread+0x332/0x350 kernel/kthread.c:255
+  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
 
-And this?
+Allocated by task 7892:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
+  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
+  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
+  kmalloc include/linux/slab.h:556 [inline]
+  kzalloc include/linux/slab.h:690 [inline]
+  j1939_priv_create net/can/j1939/main.c:122 [inline]
+  j1939_netdev_start+0x177/0x730 net/can/j1939/main.c:251
+  j1939_sk_bind+0x2c0/0xac0 net/can/j1939/socket.c:438
+  __sys_bind+0x2c2/0x3a0 net/socket.c:1647
+  __do_sys_bind net/socket.c:1658 [inline]
+  __se_sys_bind net/socket.c:1656 [inline]
+  __x64_sys_bind+0x7a/0x90 net/socket.c:1656
+  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-Though looks like sometimes it has a value? Pull strength I guess.
+Freed by task 7891:
+  save_stack mm/kasan/common.c:69 [inline]
+  set_track mm/kasan/common.c:77 [inline]
+  kasan_set_free_info mm/kasan/common.c:332 [inline]
+  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
+  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
+  __cache_free mm/slab.c:3425 [inline]
+  kfree+0x115/0x200 mm/slab.c:3756
+  __j1939_priv_release net/can/j1939/main.c:154 [inline]
+  kref_put include/linux/kref.h:65 [inline]
+  j1939_priv_put net/can/j1939/main.c:159 [inline]
+  j1939_netdev_stop+0x20c/0x230 net/can/j1939/main.c:291
+  j1939_sk_release+0x61f/0x7e0 net/can/j1939/socket.c:580
+  __sock_release net/socket.c:590 [inline]
+  sock_close+0xe1/0x260 net/socket.c:1268
+  __fput+0x2e4/0x740 fs/file_table.c:280
+  ____fput+0x15/0x20 fs/file_table.c:313
+  task_work_run+0x17e/0x1b0 kernel/task_work.c:113
+  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
+  exit_to_usermode_loop arch/x86/entry/common.c:163 [inline]
+  prepare_exit_to_usermode+0x459/0x580 arch/x86/entry/common.c:194
+  syscall_return_slowpath+0x113/0x4a0 arch/x86/entry/common.c:274
+  do_syscall_64+0x11f/0x1c0 arch/x86/entry/common.c:300
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-> +
-> +      drive-strength:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Enables driver-current.
-> +
-> +      slew-rate:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Enables slew-rate.
-> +
-> +      drive-open-drain:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies open-drain configuration.
+The buggy address belongs to the object at ffff888097f08000
+  which belongs to the cache kmalloc-8k of size 8192
+The buggy address is located 4224 bytes inside of
+  8192-byte region [ffff888097f08000, ffff888097f0a000)
+The buggy address belongs to the page:
+page:ffffea00025fc200 refcount:1 mapcount:0 mapping:ffff8880aa4021c0  
+index:0x0 compound_mapcount: 0
+flags: 0x1fffc0000010200(slab|head)
+raw: 01fffc0000010200 ffffea000251a608 ffffea0002500e08 ffff8880aa4021c0
+raw: 0000000000000000 ffff888097f08000 0000000100000001 0000000000000000
+page dumped because: kasan: bad access detected
 
-boolean?
+Memory state around the buggy address:
+  ffff888097f08f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888097f09000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+> ffff888097f09080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                    ^
+  ffff888097f09100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+  ffff888097f09180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
 
-> +
-> +      output-enable:
-> +        $ref: /schemas/types.yaml#/definitions/uint32
-> +        description: Specifies if the pin is to be configured as output.
-
-boolean?
-
-But really, all of these should have a common schema defining the types 
-and only put any additional constraints here.
-
-> +
-> +
-> +    required:
-> +      - function
-> +      - groups
-> +
-> +required:
-> +  - compatible
-> +  - reg
-
-additionalProperties: false
-
-> +
-> +examples:
-> +  # Pinmux controller node
-> +  - |
-> +    pinctrl: pinctrl@e2880000 {
-> +          compatible = "intel,lgm-pinctrl";
-> +          reg = <0xe2880000 0x100000>;
-> +
-> +          # Client device subnode
-> +          uart0:uart0 {
-
-space              ^
-
-> +                pins = <64>, /* UART_RX0 */
-> +                             <65>; /* UART_TX0 */
-> +                function = "CONSOLE_UART0";
-> +                pinmux = <1>,
-> +                         <1>;
-> +                groups = "CONSOLE_UART0";
-> +          };
-> +    };
-> +
-> +...
-> -- 
-> 2.11.0
-> 
