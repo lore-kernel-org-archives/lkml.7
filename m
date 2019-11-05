@@ -2,98 +2,264 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08276C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:13:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF67BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:14:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B1AB121882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:13:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572988412;
-	bh=KMDEbo9BzS1BKO+4mnPuhOiHRDOPVu6VDc4pIhsYFow=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=W8McEW2DDYetP8WpJbHtai3Gn4wiZ17cu6v5l3lTpqTy27fptoHaHWwPj62lem3CL
-	 6Sy+5pgO3AVc3gL0M+B+ZY+wFKjJH07gbHgRfXGs1XjKmliUHtQe0BV2J0jGk4wh4b
-	 FYzDgUOnjJ4Gooj95XAVQtaGUnOEFaEdHwdwEbCY=
+	by mail.kernel.org (Postfix) with ESMTP id 85DBD2087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:14:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="MAPMHQPe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729887AbfKEVNb (ORCPT
+        id S1729943AbfKEVOl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 16:13:31 -0500
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:38353 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729747AbfKEVNb (ORCPT
+        Tue, 5 Nov 2019 16:14:41 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:34374 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729656AbfKEVOl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:13:31 -0500
-Received: by mail-ot1-f67.google.com with SMTP id v24so13645815otp.5;
-        Tue, 05 Nov 2019 13:13:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:content-language
-         :user-agent;
-        bh=xQpq10Ks8XLSF1aJ2J82yaLZle4uyS06RKMfH207b18=;
-        b=Sd+ncQsFGbUTlwJbqQEVpQuhglbvoIL6bg4gqVJHuaHd9hHM4mkg3vMYK+yaZp/Iii
-         iqe5I4Kn98Z5IY2xxcQpKu792S0UWBH45JbzqM3voB/BpUHjxadNgDPB0V4P+ABEq5T2
-         szVSCAL/4oBf7ku9Yi3QX3oQCLS4U4eBv/HxASGnSDkqj7+grJtyD/Q/QppVDEgFfwmc
-         30FsE/N2eX75RTKKgDrnwcOoPhf9ZWutu4kRpXn8DSkbDHHNXWm4L6+u55fNxO1D22IL
-         E4c4bVHzsqw4Nr76ZoXOFbwOlLpJq/0OTcEOilCqK7UeaW/vNFTrV/wZ1SSJr4FIkZvI
-         wm5g==
-X-Gm-Message-State: APjAAAVGUblnHYIBRNGGAZuwxenSyxdCyeRJ4w+lXQYN9j7ru3L5HJ/5
-        8LXTD8ItgzdDyZ/uz7QrNQ==
-X-Google-Smtp-Source: APXvYqwHT0XCg7MQJPjIrO3FGkI6ss3iabZx/QluxT+8GcfXTqMGF+mC6vHeujjKmzoz13wa+CMPtw==
-X-Received: by 2002:a05:6830:11d6:: with SMTP id v22mr4995027otq.142.1572988410403;
-        Tue, 05 Nov 2019 13:13:30 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id c15sm6799521otk.12.2019.11.05.13.13.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 13:13:29 -0800 (PST)
-Date:   Tue, 5 Nov 2019 15:13:29 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Markus Reichl <m.reichl@fivetechno.de>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Heiko Stuebner <heiko@sntech.de>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Markus Reichl <m.reichl@fivetechno.de>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] arm64: dts: rockchip: Split rk3399-roc-pc for with
- and  without mezzanine board.
-Message-ID: <20191105211329.GA8500@bogus>
-References: <7293c5f6-a07f-cf51-954f-92907879eea2@fivetechno.de>
+        Tue, 5 Nov 2019 16:14:41 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5L97H1160963;
+        Tue, 5 Nov 2019 21:14:38 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=RAMT8X/ZhbKCXlv6pzpE03FxqLdsUKptBWrFcSxhjN8=;
+ b=MAPMHQPe2ztzYDmlZB+F2wZ72T+JwXa5RClacTpqiynSrwb6Wq/Re7ZGYmtokaK3hlih
+ 61MlpVXK69k7pR8CP/C2A6lfhE+d5HqhHC9KgpyeaMnmweTcVr2vxL17cykxp4uHWvqY
+ OhRLxLtEZkknqnFQRJbFa7LAdXiwixs+06RjWnUpw/re3t4DrIfRJPUyis7J1Av/IiFl
+ lggcoM5j/DYYOGBoxqexd5YY6iHFBsIQFEdgMnbP+aNPxI/viNU91aHMD8o9gio/1JBk
+ yaKIwFuXZgm1s37uFIfj2UIKfftI++loNeL7WY/mmftiYcy6ISwPXJXySJJg9ttIHV39 bA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2130.oracle.com with ESMTP id 2w117u1h3u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 21:14:37 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5L7vHj048641;
+        Tue, 5 Nov 2019 21:14:37 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3030.oracle.com with ESMTP id 2w35ppn60b-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 21:14:37 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA5LEZPk012269;
+        Tue, 5 Nov 2019 21:14:35 GMT
+Received: from monkey.oracle.com (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Nov 2019 13:14:35 -0800
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     kbuild@lists.01.org, Mike Kravetz <mike.kravetz@oracle.com>
+Subject: [PATCH] hugetlbfs: convert macros to static inline, fix sparse warning
+Date:   Tue,  5 Nov 2019 13:14:34 -0800
+Message-Id: <20191105211434.15804-1-mike.kravetz@oracle.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7293c5f6-a07f-cf51-954f-92907879eea2@fivetechno.de>
-Content-Language: de-DE
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=748
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911050173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=831 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911050173
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 4 Nov 2019 16:22:25 +0100, Markus Reichl wrote:
-> For rk3399-roc-pc is a mezzanine board available that carries M.2 and
-> POE interfaces. Use it with a separate dts.
-> 
-> ---
-> v3: Use enum in binding and full name in compatible string and file name.
-> v2: Add new compatible string for roc-pc with mezzanine board.
-> --
-> 
-> Signed-off-by: Markus Reichl <m.reichl@fivetechno.de>
-> ---
->  .../devicetree/bindings/arm/rockchip.yaml     |   4 +-
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../dts/rockchip/rk3399-roc-pc-mezzanine.dts  |  72 ++
->  .../arm64/boot/dts/rockchip/rk3399-roc-pc.dts | 757 +----------------
->  .../boot/dts/rockchip/rk3399-roc-pc.dtsi      | 770 ++++++++++++++++++
->  5 files changed, 847 insertions(+), 757 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc-mezzanine.dts
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-roc-pc.dtsi
-> 
+huge_pte_offset() produced a sparse warning due to an improper
+return type when the kernel was built with !CONFIG_HUGETLB_PAGE.
+Fix the bad type and also convert all the macros in this block
+to static inline wrappers.  Two existing wrappers in this block
+had lines in excess of 80 columns so clean those up as well.
 
-Acked-by: Rob Herring <robh@kernel.org>
+No functional change.
+(sent to kbuild@lists.01.org to identify potential issues in all arch/configs)
+
+Reported-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Suggested-by: Jason Gunthorpe <jgg@ziepe.ca>
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ include/linux/hugetlb.h | 137 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 115 insertions(+), 22 deletions(-)
+
+diff --git a/include/linux/hugetlb.h b/include/linux/hugetlb.h
+index 53fc34f930d0..ef412fe0be3d 100644
+--- a/include/linux/hugetlb.h
++++ b/include/linux/hugetlb.h
+@@ -164,38 +164,130 @@ static inline void adjust_range_if_pmd_sharing_possible(
+ {
+ }
+ 
+-#define follow_hugetlb_page(m,v,p,vs,a,b,i,w,n)	({ BUG(); 0; })
+-#define follow_huge_addr(mm, addr, write)	ERR_PTR(-EINVAL)
+-#define copy_hugetlb_page_range(src, dst, vma)	({ BUG(); 0; })
++static inline long follow_hugetlb_page(struct mm_struct *mm,
++			struct vm_area_struct *vma, struct page **pages,
++			struct vm_area_struct **vmas, unsigned long *position,
++			unsigned long *nr_pages, long i, unsigned int flags,
++			int *nonblocking)
++{
++	BUG();
++	return 0;
++}
++
++static inline struct page *follow_huge_addr(struct mm_struct *mm,
++					unsigned long address, int write)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline int copy_hugetlb_page_range(struct mm_struct *dst,
++			struct mm_struct *src, struct vm_area_struct *vma)
++{
++	BUG();
++	return 0;
++}
++
+ static inline void hugetlb_report_meminfo(struct seq_file *m)
+ {
+ }
+-#define hugetlb_report_node_meminfo(n, buf)	0
++
++static inline int hugetlb_report_node_meminfo(int nid, char *buf)
++{
++	return 0;
++}
++
+ static inline void hugetlb_show_meminfo(void)
+ {
+ }
+-#define follow_huge_pd(vma, addr, hpd, flags, pdshift) NULL
+-#define follow_huge_pmd(mm, addr, pmd, flags)	NULL
+-#define follow_huge_pud(mm, addr, pud, flags)	NULL
+-#define follow_huge_pgd(mm, addr, pgd, flags)	NULL
+-#define prepare_hugepage_range(file, addr, len)	(-EINVAL)
+-#define pmd_huge(x)	0
+-#define pud_huge(x)	0
+-#define is_hugepage_only_range(mm, addr, len)	0
+-#define hugetlb_free_pgd_range(tlb, addr, end, floor, ceiling) ({BUG(); 0; })
+-#define hugetlb_mcopy_atomic_pte(dst_mm, dst_pte, dst_vma, dst_addr, \
+-				src_addr, pagep)	({ BUG(); 0; })
+-#define huge_pte_offset(mm, address, sz)	0
++
++static inline struct page *follow_huge_pd(struct vm_area_struct *vma,
++				unsigned long address, hugepd_t hpd, int flags,
++				int pdshift)
++{
++	return NULL;
++}
++
++static inline struct page *follow_huge_pmd(struct mm_struct *mm,
++				unsigned long address, pmd_t *pmd, int flags)
++{
++	return NULL;
++}
++
++static inline struct page *follow_huge_pud(struct mm_struct *mm,
++				unsigned long address, pud_t *pud, int flags)
++{
++	return NULL;
++}
++
++static inline struct page *follow_huge_pgd(struct mm_struct *mm,
++				unsigned long address, pgd_t *pgd, int flags)
++{
++	return NULL;
++}
++
++static inline int prepare_hugepage_range(struct file *file,
++				unsigned long addr, unsigned long len)
++{
++	return -EINVAL;
++}
++
++static inline int pmd_huge(pmd_t pmd)
++{
++	return 0;
++}
++
++static inline int pud_huge(pud_t pud)
++{
++	return 0;
++}
++
++static inline int is_hugepage_only_range(struct mm_struct *mm,
++					unsigned long addr, unsigned long len)
++{
++	return 0;
++}
++
++static inline void hugetlb_free_pgd_range(struct mmu_gather *tlb,
++				unsigned long addr, unsigned long end,
++				unsigned long floor, unsigned long ceiling)
++{
++	BUG();
++}
++
++static inline int hugetlb_mcopy_atomic_pte(struct mm_struct *dst_mm,
++						pte_t *dst_pte,
++						struct vm_area_struct *dst_vma,
++						unsigned long dst_addr,
++						unsigned long src_addr,
++						struct page **pagep)
++{
++	BUG();
++	return 0;
++}
++
++static inline pte_t *huge_pte_offset(struct mm_struct *mm, unsigned long addr,
++					unsigned long sz)
++{
++	return NULL;
++}
+ 
+ static inline bool isolate_huge_page(struct page *page, struct list_head *list)
+ {
+ 	return false;
+ }
+-#define putback_active_hugepage(p)	do {} while (0)
+-#define move_hugetlb_state(old, new, reason)	do {} while (0)
+ 
+-static inline unsigned long hugetlb_change_protection(struct vm_area_struct *vma,
+-		unsigned long address, unsigned long end, pgprot_t newprot)
++static inline void putback_active_hugepage(struct page *page)
++{
++}
++
++static inline void move_hugetlb_state(struct page *oldpage,
++					struct page *newpage, int reason)
++{
++}
++
++static inline unsigned long hugetlb_change_protection(
++			struct vm_area_struct *vma, unsigned long address,
++			unsigned long end, pgprot_t newprot)
+ {
+ 	return 0;
+ }
+@@ -213,9 +305,10 @@ static inline void __unmap_hugepage_range(struct mmu_gather *tlb,
+ {
+ 	BUG();
+ }
++
+ static inline vm_fault_t hugetlb_fault(struct mm_struct *mm,
+-				struct vm_area_struct *vma, unsigned long address,
+-				unsigned int flags)
++			struct vm_area_struct *vma, unsigned long address,
++			unsigned int flags)
+ {
+ 	BUG();
+ 	return 0;
+-- 
+2.20.1
+
