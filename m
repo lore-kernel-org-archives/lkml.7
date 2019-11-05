@@ -3,65 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECD7C010C6
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3328C010C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:56:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D985721D7C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:54:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE0CD20869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:56:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730993AbfKELyh (ORCPT
+        id S1730938AbfKEL4p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:54:37 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41626 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726594AbfKELyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:54:37 -0500
-Received: from mbp (unknown [46.69.195.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 006B621D6C;
-        Tue,  5 Nov 2019 11:54:34 +0000 (UTC)
-Date:   Tue, 5 Nov 2019 11:54:31 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Amir Goldstein <amir73il@gmail.com>
-Cc:     Theodore Tso <tytso@mit.edu>, fstests <fstests@vger.kernel.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>,
+        Tue, 5 Nov 2019 06:56:45 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:41022 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726594AbfKEL4p (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:56:45 -0500
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iRxRx-00034c-0y; Tue, 05 Nov 2019 12:56:41 +0100
+Date:   Tue, 5 Nov 2019 12:56:40 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Florian Weimer <fweimer@redhat.com>
+cc:     Shawn Landden <shawn@git.icu>, libc-alpha@sourceware.org,
+        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Linux MM <linux-mm@kvack.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: 5.4-rc1 boot regression with kmemleak enabled
-Message-ID: <20191105115431.GD26580@mbp>
-References: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking
+ ABIs at the same time.
+In-Reply-To: <87sgn2skm6.fsf@oldenburg2.str.redhat.com>
+Message-ID: <alpine.DEB.2.21.1911051253430.17054@nanos.tec.linutronix.de>
+References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <87sgn2skm6.fsf@oldenburg2.str.redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOQ4uxgy6THDG2NsNSQ+=FP+iSZKeCkNEM9PbxQSB5p5nHvoCA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-(sorry if you got this message twice; our SMTP server went bust)
-
-On Tue, Nov 05, 2019 at 09:14:06AM +0200, Amir Goldstein wrote:
-> My kvm-xfstests [1] VM doesn't boot with kmemleak enabled since commit
-> c5665868183f ("mm: kmemleak: use the memory pool for early allocations").
+On Tue, 5 Nov 2019, Florian Weimer wrote:
+> * Thomas Gleixner:
+> > On Tue, 5 Nov 2019, Florian Weimer wrote:
+> >> * Shawn Landden:
+> >> > If this new ABI is used, then bit 1 of the *next pointer of the
+> >> > user-space robust_list indicates that the futex_offset2 value should
+> >> > be used in place of the existing futex_offset.
+> >> 
+> >> The futex interface currently has some races which can only be fixed by
+> >> API changes.  I'm concerned that we sacrifice the last bit for some
+> >> rather obscure feature.  What if we need that bit for fixing the
+> >> correctness issues?
+> >
+> > That current approach is going nowhere and if we change the ABI ever then
+> > this needs to happen with all *libc folks involved and agreeing.
+> >
+> > Out of curiosity, what's the race issue vs. robust list which you are
+> > trying to solve?
 > 
-> There is no console output when running:
+> Sadly I'm not trying to solve them.  Here's one of the issues:
 > 
-> $ kvm -boot order=c -net none -machine type=pc,accel=kvm:tcg -cpu host \
->     -drive file=$ROOTFS,if=virtio,snapshot=on -vga none -nographic \
->     -smp 2 -m 2048 -serial mon:stdio --kernel $KERNEL \
->     --append 'root=/dev/vda console=ttyS0,115200'
+>   <https://sourceware.org/bugzilla/show_bug.cgi?id=14485>
 
-This was fixed in 5.4-rc4, see commit 2abd839aa7e6 ("kmemleak: Do not
-corrupt the object_list during clean-up").
+That one seems more a life time problem, i.e. the mutex is destroyed,
+memory freed and map address reused while another thread was not yet out of
+the mutex_unlock() call. Nasty.
 
--- 
-Catalin
+Thanks,
+
+	tglx
+
+ 
