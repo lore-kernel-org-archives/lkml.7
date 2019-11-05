@@ -2,123 +2,71 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5775CA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1142CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:33:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E3F820717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B2E27206B8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:33:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CqMn8kbl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729751AbfKEA3w (ORCPT
+        id S1729834AbfKEAdR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:29:52 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:39505 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729137AbfKEA3w (ORCPT
+        Mon, 4 Nov 2019 19:33:17 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:40998 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729137AbfKEAdR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:29:52 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iRmjC-0001tZ-03; Tue, 05 Nov 2019 01:29:46 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 6B1D31C0105;
-        Tue,  5 Nov 2019 01:29:45 +0100 (CET)
-Date:   Tue, 05 Nov 2019 00:29:44 -0000
-From:   "tip-bot2 for Michael Zhivich" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: x86/urgent] x86/tsc: Respect tsc command line paraemeter for
- clocksource_tsc_early
-Cc:     Michael Zhivich <mzhivich@akamai.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191024175945.14338-1-mzhivich@akamai.com>
-References: <20191024175945.14338-1-mzhivich@akamai.com>
+        Mon, 4 Nov 2019 19:33:17 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wV0F6yJ/zqq3L+kv3YDjr6sdISX9U0BeCs3/AfpD054=; b=CqMn8kblt+lfvWoNWdFlWsw+b
+        Zo46970njfdNwt3QRWM9lbscwc9/jQaLVesxeNBKAShK9e2cQSjxsjUhS85C40bAyBWBTnuyb7Ljz
+        NFHdKav6y9rx8vgst5V757cV/xnMg/KxvvJ92IgGrgAJexdSuAzPinKiRSm0CQCvzN9mhSp/oJxcU
+        uVGuEX3Ylo1UfXkB000SrVabC4tr09oc1IoKbg5Y65woTviF+Q6aeWyikT/pLKGhgOCpGt4OU7Vbp
+        hpVnjG0kzFHdcpRDz6sSNaFh6pfqWMnvpykaV+euK5DXGTAWchpaXUTLXXI897GRsGrKXgClCt5yq
+        /EGmKJ7uA==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iRmmQ-00061c-1a; Tue, 05 Nov 2019 00:33:06 +0000
+Date:   Mon, 4 Nov 2019 16:33:06 -0800
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Valdis Kletnieks <valdis.kletnieks@vt.edu>
+Cc:     "Darrick J . Wong" <darrick.wong@oracle.com>,
+        Jan Kara <jack@suse.cz>, Theodore Ts'o <tytso@mit.edu>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Gao Xiang <xiang@kernel.org>, Chao Yu <chao@kernel.org>,
+        Andreas Dilger <adilger.kernel@dilger.ca>,
+        Jaegeuk Kim <jaegeuk@kernel.org>, linux-xfs@vger.kernel.org,
+        Jan Kara <jack@suse.com>, Arnd Bergmann <arnd@arndb.de>,
+        linux-fsdevel@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org, linux-erofs@lists.ozlabs.org,
+        linux-ext4@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net,
+        linux-arch@vger.kernel.org
+Subject: Re: [PATCH 10/10] errno.h: Provide EFSCORRUPTED for everybody
+Message-ID: <20191105003306.GA22791@infradead.org>
+References: <20191104014510.102356-1-Valdis.Kletnieks@vt.edu>
+ <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
 MIME-Version: 1.0
-Message-ID: <157291378499.29376.13943510117369625835.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104014510.102356-11-Valdis.Kletnieks@vt.edu>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Sun, Nov 03, 2019 at 08:45:06PM -0500, Valdis Kletnieks wrote:
+> There's currently 6 filesystems that have the same #define. Move it
+> into errno.h so it's defined in just one place.
 
-Commit-ID:     63ec58b44fcc05efd1542045abd7faf056ac27d9
-Gitweb:        https://git.kernel.org/tip/63ec58b44fcc05efd1542045abd7faf056ac27d9
-Author:        Michael Zhivich <mzhivich@akamai.com>
-AuthorDate:    Thu, 24 Oct 2019 13:59:45 -04:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Tue, 05 Nov 2019 01:24:56 +01:00
-
-x86/tsc: Respect tsc command line paraemeter for clocksource_tsc_early
-
-The introduction of clocksource_tsc_early broke the functionality of
-"tsc=reliable" and "tsc=nowatchdog" command line parameters, since
-clocksource_tsc_early is unconditionally registered with
-CLOCK_SOURCE_MUST_VERIFY and thus put on the watchdog list.
-
-This can cause the TSC to be declared unstable during boot:
-
-  clocksource: timekeeping watchdog on CPU0: Marking clocksource
-               'tsc-early' as unstable because the skew is too large:
-  clocksource: 'refined-jiffies' wd_now: fffb7018 wd_last: fffb6e9d
-               mask: ffffffff
-  clocksource: 'tsc-early' cs_now: 68a6a7070f6a0 cs_last: 68a69ab6f74d6
-               mask: ffffffffffffffff
-  tsc: Marking TSC unstable due to clocksource watchdog
-
-The corresponding elapsed times are cs_nsec=1224152026 and wd_nsec=378942392, so
-the watchdog differs from TSC by 0.84 seconds.
-
-This happens when HPET is not available and jiffies are used as the TSC
-watchdog instead and the jiffies update is not happening due to lost timer
-interrupts in periodic mode, which can happen e.g. with expensive debug
-mechanisms enabled or under massive overload conditions in virtualized
-environments.
-
-Before the introduction of the early TSC clocksource the command line
-parameters "tsc=reliable" and "tsc=nowatchdog" could be used to work around
-this issue.
-
-Restore the behaviour by disabling the watchdog if requested on the kernel
-command line.
-
-[ tglx: Clarify changelog ]
-
-Fixes: aa83c45762a24 ("x86/tsc: Introduce early tsc clocksource")
-Signed-off-by: Michael Zhivich <mzhivich@akamai.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191024175945.14338-1-mzhivich@akamai.com
----
- arch/x86/kernel/tsc.c | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index c59454c..7e322e2 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -1505,6 +1505,9 @@ void __init tsc_init(void)
- 		return;
- 	}
- 
-+	if (tsc_clocksource_reliable || no_tsc_watchdog)
-+		clocksource_tsc_early.flags &= ~CLOCK_SOURCE_MUST_VERIFY;
-+
- 	clocksource_register_khz(&clocksource_tsc_early, tsc_khz);
- 	detect_art();
- }
+And 4 out of 6 also define EFSBADCRC, so please lift that as well.
