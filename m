@@ -2,97 +2,104 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83A0FC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:00:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CBD9C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:01:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F087217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:00:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572969641;
-	bh=q2A2uMxzadSGRcZIaYT5uCotN7hZ7KNQChxEY5lqBfc=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=wpEZDSv4pAGVXZ7N6yXfQJjDINddq438y46J48g5OUfmeVGhC6illbr4aVgiY4jxK
-	 YSNgXiHa3JQaH2n/2+86RNWUiLx9vIIflpPsSKL8i3EFoR39Bd5yIf+KuRAK1i/Ohk
-	 Q+tJfpaLjibbRBL03cjczHkV02mb29OF84ZM1Hrw=
+	by mail.kernel.org (Postfix) with ESMTP id 21B4821882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:01:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DvEC2H29"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390079AbfKEQAk (ORCPT
+        id S2390086AbfKEQBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:00:40 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51806 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389571AbfKEQAk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:00:40 -0500
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 206B0217F5
-        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 16:00:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572969639;
-        bh=q2A2uMxzadSGRcZIaYT5uCotN7hZ7KNQChxEY5lqBfc=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=la98BUT48pfvW+DHwcuadG5iZNz4+oR5/MwjwcYS/q+eLbsi2eyOW1pVLwxPK46Sf
-         BFy0EZhUvBH7RKyVdyf2RuYqHz7s6c22dmVDH/407wHkTmazDieQwp7xJlGSdYwg+g
-         3s796AOR/nqirBqmdk5eAT4jg0/8Alxjmio4Lgpc=
-Received: by mail-wr1-f43.google.com with SMTP id j15so1365517wrw.5
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:00:39 -0800 (PST)
-X-Gm-Message-State: APjAAAWA7qAib00U5S9dMnKMjZ1uV62MpqzwLMQtGi6P4hZP3Dx08s4Q
-        QS/C14mSgEWBCb+Y/PrubMHf2b7UbzusmWqKHDEPhg==
-X-Google-Smtp-Source: APXvYqwIyCPkiSNVSjQruqDSEqU8umadRXv+BsUhkRhMyEyMplXNqV0XB7SqebnrdTOdsyPd4gU2dZ/qQ0spOgjmkRU=
-X-Received: by 2002:a5d:51c2:: with SMTP id n2mr28174168wrv.149.1572969637572;
- Tue, 05 Nov 2019 08:00:37 -0800 (PST)
+        Tue, 5 Nov 2019 11:01:03 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52751 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389571AbfKEQBC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:01:02 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c17so14234360wmk.2;
+        Tue, 05 Nov 2019 08:00:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rC8ggX+aC8YuG4dw8OqC3Cq4cY6/6sYtuLebkBYV4k=;
+        b=DvEC2H29tCL+5FSH3h12iT9678mGG5PYHCknN/4DD/qmkbY0zsnvhF6cxSvNZJJaPE
+         Fl9dfbN+IA0bbrWN9aTeyBXbqI2E9Xvs32sfb8+unxxZXeZjR6++wQv3Wda8TEqymh0r
+         tOeHIIRA9YmwNw7zH0hzB5/qDwSgYNqgnNbzWGS/XFTDp+f3/nBf+b5CUZUNsQIS8Ihc
+         F8HHsZHjKlOBkvZDsDB0K7cLtDdFzJdQsMlgrGcse6TuLYRIEj6UKo5SI4HKZMmAWqo2
+         O5V3v3eNXvGY2oPub3QLVw4Ui9GxOAkVThPOO65KCuLrOCuQJq8DGyi+VwrwjPUgpjJd
+         0oJQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2rC8ggX+aC8YuG4dw8OqC3Cq4cY6/6sYtuLebkBYV4k=;
+        b=ulA36M3xfFOWRdWeVOIlST3sxS/ewpAoEkU6dnK0epBembRcACRSv0A9TF1YS8g0C0
+         pFayvIoU5BV8keQSKVC1fTAknZzgZFNi7VqyBqj/U+LRYKlu6mTUKZ+4DBrvcKdgi2z3
+         dGxNw3N+hd3/Nl47ckYslQlKn5ATYZQNhjUh0I5IcSQcKNb907lQlDXZBb3QwffpCwwO
+         bQWkvLwBhlOLgPXCPEcVLb6YaeXO+IlMkzoYuB4rJZh+ntIT0g17kpcpKaK/0tnqeEG6
+         Gqu6nKZm5WZ10KRGUi/JkpNIS60KWdu4KoM7HJ9MzuCsEphElQeaNsRgI4SeH+lw07il
+         zoCQ==
+X-Gm-Message-State: APjAAAW34PqImE3T6LTvLJ8LYlh32s9x7uSTm4KN62RknDX8QRFo2CmK
+        42V2g+ZkqU6vb1JVhXfGCEdhsfHccP8=
+X-Google-Smtp-Source: APXvYqwRw/XYWeN4DeCUQgpwYfCK8xy2IpSeVe+Wf+k/ptFsKWKpXASzQ8Y1D3NSGWO9vJ5BJML98A==
+X-Received: by 2002:a7b:c4c8:: with SMTP id g8mr4549883wmk.36.1572969658656;
+        Tue, 05 Nov 2019 08:00:58 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id w8sm26805133wrr.44.2019.11.05.08.00.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 08:00:57 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, linux-rtc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH v2] rtc: brcmstb-waketimer: add missed clk_disable_unprepare
+Date:   Wed,  6 Nov 2019 00:00:43 +0800
+Message-Id: <20191105160043.20018-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
- <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
-In-Reply-To: <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Tue, 5 Nov 2019 08:00:26 -0800
-X-Gmail-Original-Message-ID: <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
-Message-ID: <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
-Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-To:     Daniel Colascione <dancol@google.com>
-Cc:     Mike Rapoport <rppt@linux.ibm.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        linux-mm <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 7:55 AM Daniel Colascione <dancol@google.com> wrote:
->
-> On Tue, Nov 5, 2019 at 7:29 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
-> >
-> > Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-> > descriptor table from the read() implementation of uffd, which may have
-> > security implications for unprivileged use of the userfaultfd.
-> >
-> > Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-> > CAP_SYS_PTRACE.
->
-> Thanks. But shouldn't we be doing the capability check at
-> userfaultfd(2) time (when we do the other permission checks), not
-> later, in the API ioctl?
+This driver forgets to disable and unprepare clock when remove.
+Add a call to clk_disable_unprepare to fix it.
 
-The ioctl seems reasonable to me.  In particular, if there is anyone
-who creates a userfaultfd as root and then drop permissions, a later
-ioctl could unexpectedly enable FORK.
+Fixes: c4f07ecee22e ("rtc: brcmstb-waketimer: Add Broadcom STB wake-timer")
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+Changes in v2:
+  - Remove the check for timer->clk and add fixes tag.
 
-This assumes that the code in question is only reachable through
-ioctl() and not write().
+ drivers/rtc/rtc-brcmstb-waketimer.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/rtc/rtc-brcmstb-waketimer.c b/drivers/rtc/rtc-brcmstb-waketimer.c
+index 3e9800f9878a..82d2ab0b3e9c 100644
+--- a/drivers/rtc/rtc-brcmstb-waketimer.c
++++ b/drivers/rtc/rtc-brcmstb-waketimer.c
+@@ -277,6 +277,7 @@ static int brcmstb_waketmr_remove(struct platform_device *pdev)
+ 	struct brcmstb_waketmr *timer = dev_get_drvdata(&pdev->dev);
+ 
+ 	unregister_reboot_notifier(&timer->reboot_notifier);
++	clk_disable_unprepare(timer->clk);
+ 
+ 	return 0;
+ }
+-- 
+2.23.0
+
