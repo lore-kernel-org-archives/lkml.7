@@ -2,110 +2,120 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 142C4C1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:33:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99EBDC17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E00D021882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:33:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="emRiPf5k"
+	by mail.kernel.org (Postfix) with ESMTP id 75A1821882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:34:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389695AbfKEOdz (ORCPT
+        id S2389710AbfKEOd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:33:55 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:26279 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2389563AbfKEOdy (ORCPT
+        Tue, 5 Nov 2019 09:33:59 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:56726 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389696AbfKEOd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:33:54 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1572964433;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kf4mHA+y3oJq+QHstu4rI1MJktm5ZOdROwo+HsHEzdY=;
-        b=emRiPf5kTBeeur6VT3H2tvxi4OaISWkGpvbbchKUJdu5aDVP7jsPqYCMRw1UnTB7YQAtuq
-        dpC5gvNtHGW9RvBakvHeb6OS3gC0+BW3kFCso77rGhxtnMqgK0Ixbs4NzOaDazx8QsPMum
-        pPVSEIpqFiN2+S8oCecJvS0NoSueIdg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-33-qAiX2K9vNrGbjATq5FX2UA-1; Tue, 05 Nov 2019 09:33:52 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 138311800D4A;
-        Tue,  5 Nov 2019 14:33:48 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (dhcp-192-230.str.redhat.com [10.33.192.230])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 23AAF600C6;
-        Tue,  5 Nov 2019 14:33:40 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Carlos O'Donell <carlos@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking ABIs at the same time.
-References: <20191104002909.25783-1-shawn@git.icu>
-        <87woceslfs.fsf@oldenburg2.str.redhat.com>
-        <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
-        <87sgn2skm6.fsf@oldenburg2.str.redhat.com>
-        <alpine.DEB.2.21.1911051253430.17054@nanos.tec.linutronix.de>
-        <f11d82f1-1e81-e344-3ad2-76e4cb488a3d@redhat.com>
-        <alpine.DEB.2.21.1911051520090.17054@nanos.tec.linutronix.de>
-Date:   Tue, 05 Nov 2019 15:33:38 +0100
-In-Reply-To: <alpine.DEB.2.21.1911051520090.17054@nanos.tec.linutronix.de>
-        (Thomas Gleixner's message of "Tue, 5 Nov 2019 15:27:54 +0100 (CET)")
-Message-ID: <87k18eqtod.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        Tue, 5 Nov 2019 09:33:58 -0500
+IronPort-SDR: 3cOvuvlDLfEYabgKbNUFgu51W00dAadelIZPFMyoBrw+sFopn1uxIVGEfDb+8WRbcdWdKdsZuy
+ CGybPCUj2zd51251lhUBNbIIqNAGusimfzDCQn0JGuWxVFtZOllygEE/i9/QLLxWxebeWsVJfn
+ xStv3HSIXl5aAi++1dFHlPRE9zd7yzhKsf8IXCbUBxOBRUwbPYtWefZUfv/WuKAf1NJYLUuXUq
+ GweN/AQV7apwxojtsPOeyFqDd1+zrMkqlcWH+ZFOA/nwcuIZJS30bA1Ww5qe1LVA/EyqVJGJ30
+ kuE=
+X-IronPort-AV: E=Sophos;i="5.68,271,1569312000"; 
+   d="scan'208";a="44730611"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 05 Nov 2019 06:33:57 -0800
+IronPort-SDR: WHcmjCxFx4V0fKAQEcoACmafaB3eEnvN0+XvYs63va+5BPhXc9fk+YbztXdcKi5SGsBsxrOeDk
+ 3AzI2/gX4dG1vPQe7AfU5WIY4xVsnTdFdL3kzz9IKjG7hvGJN0kYg/ZEEdNB/6KBYkPcYTqHM8
+ V25CYEdTjZ8rRBYMsF83ta16AgRW58H1vgfDPw7qLH8no1ySx7FAEwmL0Oqgfk/ydlvR8JFZo+
+ ppSKHLFE5ZjQs+erkCHJ/QfieCdKFFcXDoo2+JObO8z3KCMNBqVcNNQAi/Y9DArDxBuaCxcX3C
+ 7cQ=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>,
+        Andrew Gabbasov <andrew_gabbasov@mentor.com>
+Subject: [PATCH v2 0/8] ALSA: aloop: Support sound timer as clock source instead of jiffies
+Date:   Tue, 5 Nov 2019 08:32:10 -0600
+Message-ID: <20191105143218.5948-1-andrew_gabbasov@mentor.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: qAiX2K9vNrGbjATq5FX2UA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: svr-ies-mbx-06.mgc.mentorg.com (139.181.222.6) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Thomas Gleixner:
+This patch set is an updated version of patches by Timo Wischer:
+https://mailman.alsa-project.org/pipermail/alsa-devel/2019-March/146871.html
 
-> On Tue, 5 Nov 2019, Carlos O'Donell wrote:
->> On 11/5/19 6:56 AM, Thomas Gleixner wrote:
->> The other issue is this:
->>=20
->> "Robust mutexes do not take ROBUST_LIST_LIMIT into account"
->> https://sourceware.org/bugzilla/show_bug.cgi?id=3D19089
->
->   "The kernel limits the length of the robust mutex list to 2048 entries.
->    This constant does not seem to be exported to user space."
->
-> FWIW, the constant is defined in the UAPI futex header.
->
-> The main concern here is not the actual number of futexes held by a task.
->
-> The real issue is that the robust list could be circular by incident or
-> malice and there is no way for the kernel to figure that out. That would
-> prevent the task from exiting and make it iterate over the list until
-> doomsday, i.e. a nice unpriviledged DoS.
->
-> So I fear the kernel cannot really help with this one.
+This patch set is required for forwarding audio data between a HW sound
+card and an aloop device without the usage of an asynchronous sample rate
+converter.
 
-I'm actually fine with treating ROBUST_LIST_LIMIT as an ABI constant.
-It's just not clear to me if the constant has this status today.  I
-suspect it was just split from the implementation headers at one point.
+Most of sound and timers related code is kept the same as in previous set.
+The code, related to snd_pcm_link() functionality and its using for
+timer source setting, is removed (as rejected earlier). The changes in this
+update are mainly related to the parameters handling and some cleanup.
 
-Thanks,
-Florian
+The timer source can be initially selected by "timer_source" kernel module
+parameter. It is supposed to have the following format:
+    [<pref>:](<card name>|<card idx>)[{.,}<dev idx>[{.,}<subdev idx>]]
+For example: "hw:I82801AAICH.1.0", or "1.1", or just "I82801AAICH".
+(Prefix is ignored, just allowed here to be able to use the strings,
+the user got used to).
+Although the parsing function recognizes both '.' and ',' as a separator,
+module parameters handling routines use ',' to separate parameters for
+different module instances (array elements), so we have to use '.'
+to separate device and subdevice numbers from the card name or number
+in module parameters.
+Empty string indicates using jiffies as a timer source.
+
+Besides "static" selection of timer source at module load time,
+it is possible to dynamically change it via sound "info" interface
+(using "/proc/asound/<card>/timer_source" file in read-write mode.
+The contents of this file is used as a timer source string for
+a particular loopback card, e.g. "hw:0,0,0" (and here ',' can be used
+as a separator).
+
+The timer source string value can be changed at any time, but it is
+latched by PCM substream open callback "loopback_open()" (the first
+one for a particular cable). At this point it is actually used,
+that is the string is parsed, and the timer is looked up and opened.
+This seems to be a good trade-off between flexibility of updates and
+synchronizations or racing complexity.
+
+The timer source is set for a loopback card (the same as initial setting
+by module parameter), but every cable uses the value, current at the moment
+of opening. Theoretically, it's possible to set the timer source for each
+cable independently (via separate files), but it would be inconsistent
+with the initial setting via module parameters on a per-card basis.
+
+
+Andrew Gabbasov (1):
+  ALSA: aloop: Support runtime change of snd_timer via info interface
+
+Timo Wischer (7):
+  ALSA: aloop: Describe units of variables
+  ALSA: aloop: loopback_timer_start: Support return of error code
+  ALSA: aloop: loopback_timer_stop: Support return of error code
+  ALSA: aloop: Use callback functions for timer specific implementations
+  ALSA: aloop: Rename all jiffies timer specific functions
+  ALSA: aloop: Move CABLE_VALID_BOTH to the top of file
+  ALSA: aloop: Support selection of snd_timer instead of jiffies
+
+ sound/drivers/aloop.c | 656 +++++++++++++++++++++++++++++++++++++++---
+ 1 file changed, 621 insertions(+), 35 deletions(-)
+
+-- 
+2.21.0
 
