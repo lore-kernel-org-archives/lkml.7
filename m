@@ -2,119 +2,133 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9837C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C745FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3FC2217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AsDw99/N"
+	by mail.kernel.org (Postfix) with ESMTP id 9832D217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:08:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572980935;
+	bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=exJELm7nS/a+obE8WLg3jTOqdvljDHS2j3kR3vWRQiBBIA7UbkU/AuhkAF5Iy4W8Q
+	 LBsNWpfdJ+OyUNcf5PXY8LpPHemSghZdnViZ9BcIDJE1LueBBNCvDL2qxD8yoG0z6b
+	 xWR+p2FQNfpCp6nEN/eDihtzlkw3vc6oCJ+NJmqY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390924AbfKETIP (ORCPT
+        id S2390941AbfKETIy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:08:15 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:51902 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390895AbfKETIO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:08:14 -0500
-Received: by mail-wm1-f65.google.com with SMTP id q70so564678wme.1;
-        Tue, 05 Nov 2019 11:08:13 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=LT/gPd8R3zs4YJ1bxN7AkJw+pc+MKjRBqxF5/M8jyg4=;
-        b=AsDw99/NbUsAKlwFNGBfAst46PxLpIEP/cSfrXwFY18SV+YdoURZ/Q6KBUZRb8P4Uv
-         Z3FTkqcNkbhBNIEmeheW1KA2TIAmjWjlh8P+F43qJNDLHsI5zCTUzwKozEFc8C6nJwtg
-         qgkdiodP4/YMprsGrPdLkXRzmjsjbEjWGNhLLANyn226odlfcgTQ9en41p2BljzCQmD1
-         FxnVnNLHCXSTt9Q9YflUTiyqYpAUhJY5zkcsjWILHb6uxwFH4WJlnwuUa0jyotEoWXCN
-         UxLWfxKhMJbv7bLeFjs+GG+BLSM0S+EUJ13PgoQVZnCtxpGQeQbXUMVNa/bCflx/aZXR
-         3qNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=LT/gPd8R3zs4YJ1bxN7AkJw+pc+MKjRBqxF5/M8jyg4=;
-        b=cW0RK5AI/lnfbn11K8vYlwtXW0CEhBZo2DKt7DqQWGbL9HVVJrHS5SvsBcSgQddpeG
-         LdngK7DKqqmW4dzcuAgoAuxff64I6mVzBfwOqq72vCLsNZPlDvjjjy8PJtQPcizb2oZu
-         hCWKzgo2EQedLKXJnhwZsOKkfB3NdvmXcy7dGnKp9IkcA7xuCaUgjM+3Xymt1PD6cWLQ
-         y8g1VFWDXcah2sy2MV/DW3ly9WjbVFoAak619QLI2W5ckyLFETu9sTvlYcwqhwGiTiDK
-         3ap+JdnUOSPS9qrYHj2FO9K4jGA6SpJqiJpJQNKaiNx82EKMY+HkFZCnzDP9ZFy13/b9
-         MPtQ==
-X-Gm-Message-State: APjAAAW5kp6DOHazE5GTZIJQKwDNlU1b4NzNHT8VGPbpVHZRn3AhcGH+
-        sd3yJa+pKiNq2SZwiuNDDPg=
-X-Google-Smtp-Source: APXvYqzjlHMddsm/UPyn+7gwMHgnfy8SUVntJtZv3P98omIKXL9GDG0dm0Mx0NjOvptFS3vZHaHcfA==
-X-Received: by 2002:a05:600c:23d1:: with SMTP id p17mr482538wmb.7.1572980892334;
-        Tue, 05 Nov 2019 11:08:12 -0800 (PST)
-Received: from stbirv-lnx-3.igp.broadcom.net ([192.19.223.252])
-        by smtp.gmail.com with ESMTPSA id d11sm25974703wrf.80.2019.11.05.11.08.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 05 Nov 2019 11:08:11 -0800 (PST)
-From:   Doug Berger <opendmb@gmail.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Florian Fainelli <f.fainelli@gmail.com>,
-        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Doug Berger <opendmb@gmail.com>
-Subject: [PATCH net 3/3] net: bcmgenet: reapply manual settings to the PHY
-Date:   Tue,  5 Nov 2019 11:07:26 -0800
-Message-Id: <1572980846-37707-4-git-send-email-opendmb@gmail.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572980846-37707-1-git-send-email-opendmb@gmail.com>
-References: <1572980846-37707-1-git-send-email-opendmb@gmail.com>
+        Tue, 5 Nov 2019 14:08:54 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45838 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390709AbfKETIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 14:08:54 -0500
+Received: from mail-qv1-f51.google.com (mail-qv1-f51.google.com [209.85.219.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DF3EC21929;
+        Tue,  5 Nov 2019 19:08:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572980933;
+        bh=OXmBdFlRHFjSKG93l0PdhfI6GDLFZkT6/eylL4O2BLY=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=A4Pyc+titsh2MV21obxyJRFvEjTVhzZVdWlofZbm9ErJqczl1aSdsxzH2xh1K5BrT
+         RQi8cmmYa3bBydJXKkGV83IkSwxjUqGwYyAs11LfD/Y4+MXMyC2wo0/rIObZ9L+ZMd
+         64yEhJSyMdmn41WGoUwlTmPIbBRE864pCWHECsig=
+Received: by mail-qv1-f51.google.com with SMTP id w11so366527qvu.13;
+        Tue, 05 Nov 2019 11:08:52 -0800 (PST)
+X-Gm-Message-State: APjAAAVrpJ1quM72a6Siy0L9B1jQla1F1470E+9A20OrTnKHjkeWPmzI
+        jkrlQJtPCEuN4/yuLoRaa13wjhgl/VeIAvUzlg==
+X-Google-Smtp-Source: APXvYqxZiO3lZWJ0HQfv3215/wlPFfLAmRacWVsijd7Otyaf6TcDjfY8XMoGW2mVkceqmWdXru0Tw3AymFwc3LoYKik=
+X-Received: by 2002:a0c:ca06:: with SMTP id c6mr10688316qvk.136.1572980931880;
+ Tue, 05 Nov 2019 11:08:51 -0800 (PST)
+MIME-Version: 1.0
+References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
+ <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
+ <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
+ <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com> <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
+In-Reply-To: <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 5 Nov 2019 13:08:40 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+Message-ID: <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
+Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
+ WCD9340/WCD9341 audio codec
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     Mark Brown <broonie@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>,
+        Vinod Koul <vinod.koul@linaro.org>,
+        Linux-ALSA <alsa-devel@alsa-project.org>,
+        devicetree@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The phy_init_hw() function may reset the PHY to a configuration
-that does not match manual network settings stored in the phydev
-structure. If the phy state machine is polled rather than event
-driven this can create a timing hazard where the phy state machine
-might alter the settings stored in the phydev structure from the
-value read from the BMCR.
+On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
+<srinivas.kandagatla@linaro.org> wrote:
+>
+>
+>
+> On 29/10/2019 20:47, Rob Herring wrote:
+> > On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
+> > <srinivas.kandagatla@linaro.org> wrote:
+> >>
+> >>
+> >>
+> >> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
+> >>> Its Phandle.
+> >>>
+> >>> something like this is okay?
+> >>>
+> >>> slim-ifc-dev:
+> >>>     $ref: '/schemas/types.yaml#/definitions/phandle-array'
+> >>
+> >> Sorry this should not be an array, so something like this:
+> >>
+> >>     slim-ifc-dev:
+> >>       description: SLIMBus Interface device phandle
+> >
+> > You're just spelling out the abbreviated name. I can do that much.
+> > What is 'SLIMBus Interface device'?
+>
+> Each SLIMBus Component contains one Interface Device. Which is
+> responsible for Monitoring and reporting the status of component, Data
+> line to Data pin connection setup for SLIMBus streaming. Interface
+> device is enumerated just like any other slim device.
 
-This commit follows invocations of phy_init_hw() by the bcmgenet
-driver with invocations of the genphy_config_aneg() function to
-ensure that the BMCR is written to match the settings held in the
-phydev structure. This prevents the risk of manual settings being
-accidentally altered.
+So a standard set of registers every slimbus device has? In hindsight,
+I would have made reg have 2 entries with both addresses. I guess that
+ship has sailed.
 
-Fixes: 1c1008c793fa ("net: bcmgenet: add main driver file")
-Signed-off-by: Doug Berger <opendmb@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmgenet.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+It seems strange you would need both "devices" described as separate
+nodes in DT.
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmgenet.c b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-index b5255dd08265..1de51811fcb4 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmgenet.c
-@@ -2612,8 +2612,10 @@ static void bcmgenet_irq_task(struct work_struct *work)
- 	spin_unlock_irq(&priv->lock);
- 
- 	if (status & UMAC_IRQ_PHY_DET_R &&
--	    priv->dev->phydev->autoneg != AUTONEG_ENABLE)
-+	    priv->dev->phydev->autoneg != AUTONEG_ENABLE) {
- 		phy_init_hw(priv->dev->phydev);
-+		genphy_config_aneg(priv->dev->phydev);
-+	}
- 
- 	/* Link UP/DOWN event */
- 	if (status & UMAC_IRQ_LINK_EVENT)
-@@ -3634,6 +3636,7 @@ static int bcmgenet_resume(struct device *d)
- 	phy_init_hw(dev->phydev);
- 
- 	/* Speed settings must be restored */
-+	genphy_config_aneg(dev->phydev);
- 	bcmgenet_mii_config(priv->dev, false);
- 
- 	bcmgenet_set_hw_addr(priv, dev->dev_addr);
--- 
-2.7.4
+>
+> We already have exactly same bindings for WCD9335 in upstream at:
+>
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
+>
+> >
+> > Is it a standard SLIMBus property? If so, document it in the right
+> > place. If not, then needs a vendor prefix.
+>
+> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
+>
+> If I remember it correctly You suggested me to move to "slim-ifc-dev"
+> as this is part of SLIMBus Specification.
 
+Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
+
+Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
+convert bus.txt to schema (or feel free to do that :) ).
+
+Rob
