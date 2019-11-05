@@ -2,160 +2,145 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56F8EC5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:48:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8590CC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15C1F21A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:48:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47AA321929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:49:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="TqEhtOSM"
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="DfYf1tIr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726458AbfKETsJ (ORCPT
+        id S1727113AbfKETtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:48:09 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:42327 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725385AbfKETsI (ORCPT
+        Tue, 5 Nov 2019 14:49:04 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:33208 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726608AbfKETtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:48:08 -0500
-Received: by mail-ot1-f66.google.com with SMTP id b16so18704276otk.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:48:07 -0800 (PST)
+        Tue, 5 Nov 2019 14:49:03 -0500
+Received: by mail-wm1-f67.google.com with SMTP id 6so654336wmf.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:49:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Sqb7GQLcQVbw2N0rPy5gzCBrbUzJToKITpBvRXsoKJk=;
-        b=TqEhtOSMPG3KFe2OzLNhU+XMMbv3vQ/UqX1lLqTkWkQHbMfW2xSa8I+ZgpqLZJzmyu
-         ncJDa/AGRBUW4mEfDae3GLEC+fv4Z8ax12Y/U/zSO4qDKwd3x8lHX787XzXBGAhOlo60
-         EFccP+d8WXqgsnNWQiUXxAUsJ0zmHLBnnuL5roOl4R20eQp6/md4ZSVBWvwAmEWc2NJN
-         b7Gw6Cc7NCurX68LC1mDzuTbDIfX50hy9aThsGbd0YypIocJGwv0KMbijNcisjHvwm7b
-         GKqgWjpqG6WgtTSZGcB2zqF61YRU572ZtWOEqaItvhdW3gFvfwsMqyC0jG5FZmb2uw57
-         xyjQ==
+        d=broadcom.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=UxXl5CJZIoFnMZL6/cL403hkZBabWwNFlZGMcKNv9CI=;
+        b=DfYf1tIrKNQZt5fdgVqLgqi9HccpFBFoGh8ZAIkWq7pZT4qlZBAGSwp0X/aWi9iSvF
+         jdNUkLVEFALgwFaBiECrIdp8xyCC63qPPxyOhzLyGFAprniDgrisk5yOz3hXvx6aw7+2
+         mznBwKqa7nyBfAp3+8t/VOThwm5XgrDCzgLRk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Sqb7GQLcQVbw2N0rPy5gzCBrbUzJToKITpBvRXsoKJk=;
-        b=ZNqEw0PPdm/ZWLoh2VQkjPakM20QjcEwV68et7Tt8P9PY8Z0UGgjogKyFGCwj6tmrc
-         rrMP7AeqBVOp21XSeYP1HqWH/pGDQC0unt/lp5HWWdU7naQBE0c+NnhfXN0WHSocAnyg
-         4R44EsAsLR42334gI7YnKzqKHomRZLubI6EilGVb6bm9t4JsR+sjRoLUPfRw3UrvfZ6F
-         gwKngoju1ArLedd4NhH2QYu+bOK/6yeEUZGe/w+60bMUXaDovVmG6dq2c84bQy4BCEv2
-         JVXOiNeSIbhp5Z7V58yRP/uzWxBsrZ1YwVNaVg6WATurDUoiv9QMmTuLEiSxldPnq2YT
-         VGpg==
-X-Gm-Message-State: APjAAAUB0lTNOLT2kDndVXK+7HMpxHTHksQCbxqJ53PrHVk/NabpkS5J
-        FRtcssUkG7eX4Vwbd+no9wxoR0aqmniVQFX27zfunQ==
-X-Google-Smtp-Source: APXvYqx/5UhLYjy08pWDrSssq4y3azdX7VIiqTt2QeupWH16xoX87fJYkAl89Qva0MNLhr3vdAmwGjb9v53y9mZuS9w=
-X-Received: by 2002:a9d:75c7:: with SMTP id c7mr4595580otl.12.1572983285883;
- Tue, 05 Nov 2019 11:48:05 -0800 (PST)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=UxXl5CJZIoFnMZL6/cL403hkZBabWwNFlZGMcKNv9CI=;
+        b=cu8Eqr3Wa71XfyEXCbYyxOgmfSc08R89npfrYdOXDLBiwjyGl5amjuHr+JYLeM8Uob
+         ukN+Eux2HmHbB6R7is7qy6sT2b9K5hVgc24BiMfJqt2mYU5jV0h447Z1FfO10gQ/xHWz
+         Y1ruZCP8l6wCgkdAVoRpeSOmbuMe72oXSak06VtLwvo/5eKov4ghhUTUUKRKS7JOCbaU
+         kTqVanf5RxrN/WBC7uTo97wzKbN8bbghjIdxqNCv4UoN71oz+0gYhpozCByZyA5nKNGQ
+         VyLPqFC6MKazigbIOfun22REQoJQWQibkvbnQICLklX+G4/GUvZmrGI5hOB9k2e0zZOh
+         4SCg==
+X-Gm-Message-State: APjAAAVlRCaqIgHBe70pRDImPuUKbZ6l82jexgWpfrrOSOf0k65W0vk1
+        BzJGockTPgOYQqV01ZEpDY8aAuoTlc8QmZRvMPi8f0FxCIeivxK4GQmIvRHPdV50pvQFSNY/yz5
+        Y5+SnvbeyEi3qVfljOS5wgPqEohi3nvMjuXdM7fclV73BB4yB6I7Dhzj/NhtHFD9wY9UPOT56nR
+        P2N0cCuSNB6Vo=
+X-Google-Smtp-Source: APXvYqyqM7nhSS0Pe5eOQG7YdtR1lL/CgciM3J4IhJLEhAxoOj9knLvPotj89JcFNr2D5TiCrkX38Q==
+X-Received: by 2002:a1c:ed0e:: with SMTP id l14mr580961wmh.74.1572983341018;
+        Tue, 05 Nov 2019 11:49:01 -0800 (PST)
+Received: from [10.136.13.65] ([192.19.228.250])
+        by smtp.gmail.com with ESMTPSA id j22sm30194509wrd.41.2019.11.05.11.48.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 11:49:00 -0800 (PST)
+Subject: Re: [PATCH net 1/3] net: bcmgenet: use RGMII loopback for MAC reset
+To:     Doug Berger <opendmb@gmail.com>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>,
+        bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <1572980846-37707-1-git-send-email-opendmb@gmail.com>
+ <1572980846-37707-2-git-send-email-opendmb@gmail.com>
+ <8c5c8028-a897-bf70-95ba-a1ffc8b68264@broadcom.com>
+ <5f68345e-c58d-3d99-189b-b4be39c4b899@gmail.com>
+From:   Scott Branden <scott.branden@broadcom.com>
+Message-ID: <6bc48252-952c-008d-f43d-b8093c021ba8@broadcom.com>
+Date:   Tue, 5 Nov 2019 11:48:56 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191025234834.28214-1-john.stultz@linaro.org>
- <20191104095823.GD10326@phenom.ffwll.local> <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
- <20191105094259.GX10326@phenom.ffwll.local> <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
- <CAKMK7uFSBNqVWy0N-GH7CzH-R7c9CVb97LgCffdMzGCgvVan4Q@mail.gmail.com>
-In-Reply-To: <CAKMK7uFSBNqVWy0N-GH7CzH-R7c9CVb97LgCffdMzGCgvVan4Q@mail.gmail.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Tue, 5 Nov 2019 11:47:53 -0800
-Message-ID: <CALAqxLV+MfESanq+PenRUNR_w6KZT1KQ7suPjmiT-bdAFx83EA@mail.gmail.com>
-Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Sandeep Patil <sspatil@google.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        "Andrew F . Davis" <afd@ti.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pratik Patel <pratikp@codeaurora.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <5f68345e-c58d-3d99-189b-b4be39c4b899@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 11:19 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> On Tue, Nov 5, 2019 at 6:41 PM John Stultz <john.stultz@linaro.org> wrote:
-> > On Tue, Nov 5, 2019 at 1:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > >
-> > > On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
-> > > > On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
-> > > > > On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
-> > > > So even if the heaps are configured via DT (which at the moment there
-> > > > is no such binding, so that's not really a valid method yet), there's
-> > > > still the question of if the heap is necessary/makes sense on the
-> > > > device. And the DT would only control the availability of the heap
-> > > > interface, not if the heap driver is loaded or not.
-> > >
-> > > Hm I thought the cma regions are configured in DT? How does that work if
-> > > it's not using DT?
-> >
-> > So yea, CMA regions are either configured by DT or setup at build time
-> > (I think there's a cmdline option to set it up as well).
-> >
-> > But the CMA regions and the dmabuf cma heap driver are separate
-> > things. The latter uses the former.
+
+
+On 2019-11-05 11:27 a.m., Doug Berger wrote:
+> On 11/5/19 11:14 AM, Scott Branden wrote:
+>> Hi Doug,
+>>
+>> On 2019-11-05 11:07 a.m., Doug Berger wrote:
+>>> As noted in commit 28c2d1a7a0bf ("net: bcmgenet: enable loopback
+>>> during UniMAC sw_reset") the UniMAC must be clocked while sw_reset
+>>> is asserted for its state machines to reset cleanly.
+>>>
+>>> The transmit and receive clocks used by the UniMAC are derived from
+>>> the signals used on its PHY interface. The bcmgenet MAC can be
+>>> configured to work with different PHY interfaces including MII,
+>>> GMII, RGMII, and Reverse MII on internal and external interfaces.
+>>> Unfortunately for the UniMAC, when configured for MII the Tx clock
+>>> is always driven from the PHY which places it outside of the direct
+>>> control of the MAC.
+-- SNIP
+>>> +        /* Switch MAC clocking to RGMII generated clock */
+>>> +        bcmgenet_sys_writel(priv, PORT_MODE_EXT_GPHY, SYS_PORT_CTRL);
+>>> +        /* Ensure 5 clks with Rx disabled
+>>> +         * followed by 5 clks with Reset asserted
+>>> +         */
+>>> +        udelay(4);
+>> How do these magic delays work, they are different values?
+>> In one case you have a udelay(4) to ensure rx disabled for 5 clks.
+>> Yet below you have a udelay(2) to ensure 4 more clocks?
+> The delays are based on 2.5MHz clock cycles (the clock used for 10Mbps).
+> 5 clocks is 2us.
 >
-> Huh, I assumed the plan is that whenever there's a cma region, we want
-> to instantiate a dma-buf heap for it? Why/when would we not want to do
-> that?
-
-Not quite. Andrew noted that we may not want to expose all CMA regions
-via dmabuf heaps, so right now we only expose the default region. I
-have follow on patches that I sent out earlier (which requires a
-to-be-finalized DT binding) which allows us to specify which other CMA
-regions to expose.
-
-> > > > On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
-> > > > for the display framebuffer. So gralloc uses ION to allocate from the
-> > > > CMA heap. However on the db845c, it has no such restrictions, so the
-> > > > CMA heap isn't necessary.
-> > >
-> > > Why do you have a CMA region for the 2nd board if you don't need it?
-> > > _That_ sounds like some serious memory waster, not a few lines of code
-> > > loaded for nothing :-)
-> >
-> > ??? That's not what I said above.  If the db845c doesn't need CMA it
-> > won't have a CMA region.
-> >
-> > The issue at hand is that we may want to avoid loading the dmabuf CMA
-> > heap driver on a board that doesn't use CMA.
+> The udelay(4) is for 10 clocks: rx is disabled for 5 and then 5 more
+> clocks with reset held. The requirement is poorly specified and this is
+> a conservative interpretation.
 >
-> So the CMA core code is also a module, or how does that work? Not
-
-No.  CMA core isn't available as a module.
-
-> loading the cma dma-buf heap, but keeping all the other cma code
-> around feels slightly silly. Do we have numbers that justify this
-> silliness?
-
-I agree that is maybe not the most critical item on the list, but its
-one of many that do add up over time.
-
-Again, I'll defer to Sandeep or other folks on the Google side to help
-with the importance here. Mostly I'm trying to ensure there is
-functional parity to ION so we don't give folks any reason they could
-object to deprecating it.
-
-> > The main reason I'm only submitting system and CMA is because those
-> > are the only two I personally have a user for (HiKey/HiKey960 boards).
-> > It's my hope that once we deprecate ION in Android, vendors will
-> > migrate and we'll be able to push them to upstream their heaps as
-> > well.
+> The udelay(2) allows at least 5 more clocks without reset before rx can
+> be enabled.
 >
-> I think for upstream I'd want to see those other heaps first. If
-> they're mostly driver allocators exposed as heaps, then I think we
-> need something different than heap modules, maybe allow dma-buf to
-> allocate from drivers instead. But afaiui all such driver allocators
-> we have in upstream are cma regions only right now.
+Thanks, the part I was missing was "2.5MHz clock cycles (the clock used 
+for 10Mbps)".
+If that was added to the comment it would help those unfamiliar with in 
+understanding.
+>>> +        reg &= ~(CMD_SW_RESET | CMD_LCL_LOOP_EN);
+>>> +        bcmgenet_umac_writel(priv, reg, UMAC_CMD);
+>>> +        /* Ensure 5 more clocks before Rx is enabled */
+>>> +        udelay(2);
+>>> +    }
+>>> +
+>>>        priv->ext_phy = !priv->internal_phy &&
+>>>                (priv->phy_interface != PHY_INTERFACE_MODE_MOCA);
+>>>    @@ -254,6 +284,9 @@ int bcmgenet_mii_config(struct net_device *dev,
+>>> bool init)
+>>>            phy_set_max_speed(phydev, SPEED_100);
+>>>            bcmgenet_sys_writel(priv,
+>>>                        PORT_MODE_EXT_EPHY, SYS_PORT_CTRL);
+>>> +        /* Restore the MII PHY after isolation */
+>>> +        if (bmcr >= 0)
+>>> +            phy_write(phydev, MII_BMCR, bmcr);
+>>>            break;
+>>>          case PHY_INTERFACE_MODE_REVMII:
+> Regards,
+>      Doug
 
-I'm sorry, I'm not sure I understand what you mean here (I'm not sure
-what action I should be taking). Could you clarify this point?
-
-thanks
--john
