@@ -2,121 +2,163 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EC6BCA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:51:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 932D7CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:52:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB30A20663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:51:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E3B4214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:52:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ovFzPiyu"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="qYc2TJeP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387586AbfKEGvI (ORCPT
+        id S2387622AbfKEGwz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:51:08 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:35317 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEGvH (ORCPT
+        Tue, 5 Nov 2019 01:52:55 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:35312 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEGwy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:51:07 -0500
-Received: by mail-pl1-f195.google.com with SMTP id x6so8879053pln.2
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 22:51:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MLZvtTZXNfvRWFvhu+xZrbhbWxZa6520w7xc3DnxMfk=;
-        b=ovFzPiyueyG5Yh6NS3lam6dcbSJjihEjm+M4xFDqkGmjUXjx//55rawC9WZoTAjUsu
-         A2Xy1v2lrnDeGPeUC3k+4sEuLT7/yKwKfiYk7xxItUg8cYGd1fI4ySLpzzPY+vmrqM5l
-         JjI20g8GwXjM0iQlF0516Cs1zx7PREOSiY5GOCJGmNAIZ3UXdF50ntGkynitHmrg4Ns2
-         StTckSIMgd0t9xWKYktljntLr2DHLTVnGbeyDo6pVMh7Xve2n4Jz9ODdatcMI3zFZU6g
-         /Lk+U4N0JDLfXsHuBZl3dAPUcPkKNQrv+9kSj9KRdQECaeSsuKbIb7jhX3RYakGm4+df
-         v3rw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MLZvtTZXNfvRWFvhu+xZrbhbWxZa6520w7xc3DnxMfk=;
-        b=qTNMPi8WsIEHf2/VdsX0osij6C9n7P+sXPgNWOms/VkJOrjMbsyHqS7Ar5Ogji5Od9
-         hFTt5ypTBHMPzmyVvpA4FHKS0UJtrMC3RH3APYFKt/SaSABICpEupP6TeWwu7DMj6Ib2
-         B9eYQFNlGuWX/T3hLMC69iFPGjkFB8sVv9jIQnNvREb4Iww7Z2RTu6NIhSw6/0bA5NOA
-         YI9/trGWKf2UEtVS5o0Wmdm5THwigk3zi0efr23LLf64hD+SazevITX/h9Ob9cARE9aQ
-         vtsuHde4jSWUC6eMfqHOWQaiA47fHuikLGps4wokyrQhX7AAFL4m2zOKVqcerNePFpvB
-         HYtw==
-X-Gm-Message-State: APjAAAWylhTEdFVmHwry/pvEgOkkVSeciFt8ZlN5VUoIaolq6uMmpnZ1
-        D3wzB1zy66moJ0PDqVh6ssaXmQ==
-X-Google-Smtp-Source: APXvYqygTQR1HLlTaiQfWLrNs7Ep8bXeQMuApptnCYjO/5t+FBUMcOI0Th7332U5KHVlcuUUK4d/pA==
-X-Received: by 2002:a17:902:9a03:: with SMTP id v3mr7331351plp.61.1572936665309;
-        Mon, 04 Nov 2019 22:51:05 -0800 (PST)
-Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id s69sm7227648pgs.65.2019.11.04.22.51.04
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 22:51:04 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:20:58 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Sudeep Holla <sudeep.holla@arm.com>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Amit Kucheria <amit.kucheria@linaro.org>,
-        Amit Kucheria <amit.kucheria@verdurent.com>,
-        Zhang Rui <rui.zhang@intel.com>, agross@kernel.org,
-        bjorn.andersson@linaro.org, daniel.lezcano@linaro.org,
-        edubezval@gmail.com, ilina@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        tdas@codeaurora.org, linux-clk@vger.kernel.org
-Subject: Re: [PATCH v3 5/6] clk: qcom: Initialise clock drivers earlier
-Message-ID: <20191105065058.yhqgvilti6cdzph2@vireshk-i7>
-References: <cover.1571314830.git.amit.kucheria@linaro.org>
- <5f1ca3bfc45e268f7f9f6e091ba13b8103fb4304.1571314830.git.amit.kucheria@linaro.org>
- <20191017174723.8024521D7A@mail.kernel.org>
- <20191018060345.wjflngfdnqa3gbsu@vireshk-i7>
- <20191028172225.1B1CF20862@mail.kernel.org>
- <20191029010605.GB27884@e107533-lin.cambridge.arm.com>
+        Tue, 5 Nov 2019 01:52:54 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA56pVfq180392;
+        Tue, 5 Nov 2019 06:52:35 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=gTy58HMsZTBRLpQM3pQyloVPDJUmqS00HB111ETBoQk=;
+ b=qYc2TJeP+sc79NSM3dM7IkWIeg51zK2moBUOvwZM1QDaYwWpTsVY7116Xb6c0agbf9pp
+ 7XHLty3B6nuio8s5aI1zk0qjzha+iwiHzDz2QkUOK5Ft80kq94a1wki3py3YFvSuMadt
+ soJ+RmxarLQbTq2uazgIdtX8U44/fc8gYm9RYxLzlep6D84MNWgNKMi00lbR2M3g+tWB
+ pmxzZiISHPamaEkrFUcs0V86SX4/d65yLme2B3VQCEMqFUu0M1BXc+B4G4J0GKgBCfpP
+ 93DXE8EVgsyeKM7EsVWYPSWF9A03t0VcfDlbzUGzlGDp9tvi45MIvspuLbaeCiTQU4GU cA== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2w11rpv3c9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 06:52:35 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA56oRDl173370;
+        Tue, 5 Nov 2019 06:50:35 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2w2wchb6r9-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 05 Nov 2019 06:50:33 +0000
+Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA56nQBm028096;
+        Tue, 5 Nov 2019 06:49:26 GMT
+Received: from [192.168.0.4] (/139.215.143.17)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 04 Nov 2019 22:49:25 -0800
+Subject: Re: [PATCH 5/5] cpuidle-haltpoll: fix up the branch check
+To:     Marcelo Tosatti <mtosatti@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        joao.m.martins@oracle.com, rafael.j.wysocki@intel.com,
+        rkrcmar@redhat.com, pbonzini@redhat.com
+References: <1572060239-17401-1-git-send-email-zhenzhong.duan@oracle.com>
+ <1572060239-17401-6-git-send-email-zhenzhong.duan@oracle.com>
+ <20191101212613.GB20672@amt.cnet>
+ <bafc1688-02ea-77a4-fb1c-2fe6afa8a7cc@oracle.com>
+ <20191104150103.GA14887@amt.cnet>
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <b7c33ed5-799b-51a0-b35b-86d979a7ad6c@oracle.com>
+Date:   Tue, 5 Nov 2019 14:49:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191029010605.GB27884@e107533-lin.cambridge.arm.com>
-User-Agent: NeoMutt/20180716-391-311a52
+In-Reply-To: <20191104150103.GA14887@amt.cnet>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911050054
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911050054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29-10-19, 09:06, Sudeep Holla wrote:
-> On Mon, Oct 28, 2019 at 10:22:24AM -0700, Stephen Boyd wrote:
-> > Quoting Viresh Kumar (2019-10-17 23:03:45)
-> > > On 17-10-19, 10:47, Stephen Boyd wrote:
-> > > > Quoting Amit Kucheria (2019-10-17 05:27:37)
-> > > > > Initialise the clock drivers on sdm845 and qcs404 in core_initcall so we
-> > > > > can have earlier access to cpufreq during booting.
-> > > > >
-> > > > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > > > ---
-> > > >
-> > > > Acked-by: Stephen Boyd <sboyd@kernel.org>
-> > > >
-> > > > Makes me sad again.
-> > >
-> > > I am wondering why it makes you sad ? :)
-> > >
-> >
-> > We're playing games with initcall levels :(
-> >
-> 
-> +1, which will come back and bite us hard soon :)
 
-:)
+On 2019/11/4 23:01, Marcelo Tosatti wrote:
+> On Mon, Nov 04, 2019 at 11:10:25AM +0800, Zhenzhong Duan wrote:
+>> On 2019/11/2 5:26, Marcelo Tosatti wrote:
+>>> On Sat, Oct 26, 2019 at 11:23:59AM +0800, Zhenzhong Duan wrote:
+>>>> Ensure pool time is longer than block_ns, so there is a margin to
+>>>> avoid vCPU get into block state unnecessorily.
+>>>>
+>>>> Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+>>>> ---
+>>>>   drivers/cpuidle/governors/haltpoll.c | 6 +++---
+>>>>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>>>
+>>>> diff --git a/drivers/cpuidle/governors/haltpoll.c b/drivers/cpuidle/governors/haltpoll.c
+>>>> index 4b00d7a..59eadaf 100644
+>>>> --- a/drivers/cpuidle/governors/haltpoll.c
+>>>> +++ b/drivers/cpuidle/governors/haltpoll.c
+>>>> @@ -81,9 +81,9 @@ static void adjust_poll_limit(struct cpuidle_device *dev, unsigned int block_us)
+>>>>   	u64 block_ns = block_us*NSEC_PER_USEC;
+>>>>   	/* Grow cpu_halt_poll_us if
+>>>> -	 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
+>>>> +	 * cpu_halt_poll_us <= block_ns < guest_halt_poll_us
+>>>>   	 */
+>>>> -	if (block_ns > dev->poll_limit_ns && block_ns <= guest_halt_poll_ns) {
+>>>> +	if (block_ns >= dev->poll_limit_ns && block_ns < guest_halt_poll_ns) {
+>>> 					      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+>>>
+>>> If block_ns == guest_halt_poll_ns, you won't allow dev->poll_limit_ns to
+>>> grow. Why is that?
+>> Maybe I'm too strict here. My understanding is: if block_ns = guest_halt_poll_ns,
+>> dev->poll_limit_ns will grow to guest_halt_poll_ns,
+> OK.
+>
+>> then block_ns = dev->poll_limit_ns,
+> block_ns = dev->poll_limit_ns = guest_halt_poll_ns. OK.
+>
+>> there is not a margin to ensure poll time is enough to cover the equal block time.
+>> In this case, shrinking may be a better choice?
+> Ok, so you are considering _on the next_ halt instance, if block_ns =
+> guest_halt_poll_ns again?
+Yes, I realized it's rarely to happen in nanosecond granularity.
+>
+> Then without the suggested modification: we don't shrink, poll for
+> guest_halt_poll_ns again.
+>
+> With your modification: we shrink, because block_ns ==
+> guest_halt_poll_ns.
+>
+> IMO what really clarifies things here is either the real sleep pattern
+> or a synthetic sleep pattern similar to the real thing.
+Agree
+>
+> Do you have a scenario where the current algorithm is maintaining
+> a low dev->poll_limit_ns and performance is hurt?
+>
+> If you could come up with examples, such as the client/server pair at
+> https://lore.kernel.org/lkml/20190514135022.GD4392@amt.cnet/T/
+>
+> or just a sequence of delays:
+> block_ns, block_ns, block_ns-1,...
+>
+> It would be easier to visualize this.
 
-I don't like reordering init calls as well, but only when they are
-used to avoid issues and probe things in a particular order. While the
-only thing we are doing here is to get things to probe earlier, which
-isn't wrong IMO :)
+Looks hard to generate a sequence of delays of same value in nanoseconds 
+which is also CPU cycle granularity.
 
-Lets see if it bites us anytime soon, I would be surprised really :)
+I think this patch doesn't help much for a real scenario, so pls ignore it.
 
--- 
-viresh
+Thanks
+
+Zhenzhong
+
+
