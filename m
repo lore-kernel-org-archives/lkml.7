@@ -2,110 +2,138 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99A4ECA9EDB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24293CA9ED9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:35:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F0E2190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:35:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572939304;
-	bh=K1BKpJQLMtnH3+V92uee7SW/Z+pmSQfrcqeTyN7QlB0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ep3+Sb7acxZwb/QvsUwUC/MmARjI3QgPPHpEQthPpH+zn6xXeylvwcI60luLLW7uC
-	 wriy0I6y2ZUMf8HSg7n8purrMjoMM1SvqJpdu2bAkcGLslvBCozgAARHSs+cuwny3S
-	 6ye3nODKaPyEdzIu/CXAmPVDZKrGc7Uuwywqncu0=
+	by mail.kernel.org (Postfix) with ESMTP id EE802217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:35:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pXCBGTi3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387947AbfKEHfD (ORCPT
+        id S2387967AbfKEHfw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:35:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43052 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387484AbfKEHfD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:35:03 -0500
-Received: from localhost (host6-102.lan-isdn.imaginet.fr [195.68.6.102])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E04EF217F4;
-        Tue,  5 Nov 2019 07:35:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572939302;
-        bh=K1BKpJQLMtnH3+V92uee7SW/Z+pmSQfrcqeTyN7QlB0=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=eghPibRXlsACFFKrYkascPxzVND7Aiuqaf9uVBhvkHW5YFgjXLIJw1fi5B+JqEn2J
-         9Ap1s3dpd6jwGSXdExj1GfwpDBNlhsNN9V3qwx+NLM+UsQ+aRJnfooJHREyAUXMm3j
-         G39z1/GxCJimZ8wNJuv9uuLJ6rRp5bamdOGU6ExY=
-Date:   Tue, 5 Nov 2019 08:34:59 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Naresh Kamboju <naresh.kamboju@linaro.org>
-Cc:     Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org,
-        Dan Rue <dan.rue@linaro.org>, LTP List <ltp@lists.linux.it>,
-        open list <linux-kernel@vger.kernel.org>,
-        Jan Stancek <jstancek@redhat.com>,
-        Basil Eljuse <Basil.Eljuse@arm.com>, chrubis <chrubis@suse.cz>,
-        mmarhefk@redhat.com, Netdev <netdev@vger.kernel.org>,
-        linux- stable <stable@vger.kernel.org>
-Subject: Re: stable-rc-5.3.9-rc1: regressions detected - remove_proc_entry:
- removing non-empty directory 'net/dev_snmp6', leaking at least 'lo'
-Message-ID: <20191105073459.GB2588562@kroah.com>
-References: <CA+G9fYsWTFQZTHXUDPToaepnKGBoh61SsA_8SHcYgYZXN_L+mg@mail.gmail.com>
- <CA+G9fYu+6A3pYQGs2rydYtHNSCf1t9+OTRqrZeCbpc2ARLx2zA@mail.gmail.com>
+        Tue, 5 Nov 2019 02:35:52 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:47089 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387648AbfKEHfv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 02:35:51 -0500
+Received: by mail-lj1-f196.google.com with SMTP id e9so7285512ljp.13;
+        Mon, 04 Nov 2019 23:35:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding;
+        bh=cay3/WnjxU6wm6NbF5bf+wImiPBa6xb0ML2uvLs1A1Q=;
+        b=pXCBGTi3guJrHxMjzi4/2tE4H4AOt/1CHXZw1kW1T9jq0whADMepNtLCPc9cFCNPZ5
+         Pplvm4wE4iZEljvEkhJ4dsBKgR9eo2lZl1aLQQUpX3ivB3YCh0H86jD5/5rffJaRFH6B
+         2avwu2KxpwVFiCREittkp6YaLrfhYfKo6dNlpfRSWTnvlBJwMKWWbq1U/9YvFihKLsan
+         E4DC25TR9GMQfLzS+Zp5X6Rqf1Mwd5p8lCflZLvQS6EIdna4IUH3JdM1PQZpa/ol6VVp
+         NqxXrBk7DsrdykbhtQ3YJKcH7npe8qaxTVVBkGdej9+3d8il5Omcd5hXYln2LhLG+SxF
+         6lOQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding;
+        bh=cay3/WnjxU6wm6NbF5bf+wImiPBa6xb0ML2uvLs1A1Q=;
+        b=PCNIF/RretI8nTSNzYKZ7pfay54Wsf5nYIcqCAP0srzJptTjJKiqwKOMg9McM7iJEo
+         5Lgp8OSZadi7AGpohjR2tm7TEbB7C87HKUPzbimN8Mnxmwm681gwPFT9k7Jn4/jdefMy
+         uk1A8m8517F/5BDoDlIGgwpjW142HevtuVQ+1XqOZz83A3rbx/UaquL90mmi6Mah+QBP
+         ncu9hAOvlC+A5xKFb2A8yAT5rSzKtyssml3vjVJh8yFhqcKFDwk+AaIZflhdV8kHeb+7
+         rAsIS0fWBzs4tKT41IMZaouwyLcnmMH9CW6OJebmtYfzhE37vK6yB4y7BxHeUmIJeEbO
+         hJZQ==
+X-Gm-Message-State: APjAAAX1ztv2tAc5JD494qLgYwZx9Zl9z1yiNv37610L18qCxuNKCuA3
+        ZPKU+b4xcKdovdi+8IyZRFOpGCxS
+X-Google-Smtp-Source: APXvYqwSfnkECT6oaVzmxrR/nnJYWbkvhi5uFLMDTzWYVBBaOXVrB1FCm39zDJJXZVYkM2+OhKDELw==
+X-Received: by 2002:a2e:9985:: with SMTP id w5mr15202567lji.162.1572939349337;
+        Mon, 04 Nov 2019 23:35:49 -0800 (PST)
+Received: from [192.168.1.36] (88-114-211-119.elisa-laajakaista.fi. [88.114.211.119])
+        by smtp.gmail.com with ESMTPSA id n5sm9711531ljh.54.2019.11.04.23.35.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 04 Nov 2019 23:35:48 -0800 (PST)
+Subject: Re: [PATCH] Allow restricting permissions in /proc/sys
+To:     "Eric W. Biederman" <ebiederm@xmission.com>
+Cc:     Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        Alexey Dobriyan <adobriyan@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:FILESYSTEMS (VFS and infrastructure)" 
+        <linux-fsdevel@vger.kernel.org>
+References: <74a91362-247c-c749-5200-7bdce704ed9e@gmail.com>
+ <87d0e8g5f4.fsf@x220.int.ebiederm.org>
+ <f272bdd3-526d-6737-c906-143d5e5fc478@gmail.com>
+ <87h83jejei.fsf@x220.int.ebiederm.org>
+ <eb2da7e4-23ff-597a-08e1-e0555d490f6f@gmail.com>
+ <87tv7jciq3.fsf@x220.int.ebiederm.org>
+From:   Topi Miettinen <toiwoton@gmail.com>
+Message-ID: <1b0f94ef-ab1c-cb79-dd52-954cf0438af1@gmail.com>
+Date:   Tue, 5 Nov 2019 09:35:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CA+G9fYu+6A3pYQGs2rydYtHNSCf1t9+OTRqrZeCbpc2ARLx2zA@mail.gmail.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <87tv7jciq3.fsf@x220.int.ebiederm.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:44:39AM +0530, Naresh Kamboju wrote:
-> Hi Sasha and Greg,
+On 5.11.2019 1.41, Eric W. Biederman wrote:
+> Topi Miettinen <toiwoton@gmail.com> writes:
 > 
-> On Mon, 4 Nov 2019 at 20:59, Naresh Kamboju <naresh.kamboju@linaro.org> wrote:
-> >
-> > Linux stable rc 5.3 branch running LTP reported following test failures.
-> > While investigating these failures I have found this kernel warning
-> > from boot console.
-> > Please find detailed LTP output log in the bottom of this email.
-> >
-> > List of regression test cases:
-> >   ltp-containers-tests:
-> >     * netns_breakns_ip_ipv6_ioctl
-> >     * netns_breakns_ip_ipv6_netlink
-> >     * netns_breakns_ns_exec_ipv6_ioctl
-> >     * netns_breakns_ns_exec_ipv6_netlink
-> >     * netns_comm_ip_ipv6_ioctl
-> >     * netns_comm_ip_ipv6_netlink
-> >     * netns_comm_ns_exec_ipv6_ioctl
-> >     * netns_comm_ns_exec_ipv6_netlink
+>> On 4.11.2019 17.44, Eric W. Biederman wrote:
+>>> Do you have specific examples of the cases where you would like to
+>>> change the permissions?
+>>
+>> Unprivileged applications typically do not need to access most items
+>> in /proc/sys, so I'd like to gradually find out which are needed. So
+>> far I've seen no problems with 0500 mode for directories abi, crypto,
+>> debug, dev, fs, user or vm.
 > 
-> These reported failures got fixed on latest stable-rc 5.3.y after
-> dropping a patch [1].
+> But if there is no problem in letting everyone access the information
+> why reduce the permissions?
 
-What is the subject of the patch?
+Because information could be useful to an attacker. If there is no 
+problem in not letting everyone access the information why not allow 
+reducing the permissions? There certainly is no need to know.
 
-> The kernel warning is also gone now.
+>> I'm also using systemd's InaccessiblePaths to limit access (which
+>> mounts an inaccessible directory over the path), but that's a bit too
+>> big hammer. For example there are over 100 files in /proc/sys/kernel,
+>> perhaps there will be issues when creating a mount for each, and that
+>> multiplied by a number of services.
 > 
-> metadata:
->   git branch: linux-5.3.y
->   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
->   git commit: 75c9913bbf6e9e64cb669236571e6af45cddfd68
+> My sense is that if there is any kind of compelling reason to make
+> world-readable values not world-readable, and it doesn't break anything
+> (except malicious applications) than a kernel patch is probably the way
+> to go.
 
-The -rc tree is rebased all the time, can I get a "real" subject line to
-get a chance to figure out what you are trying to refer to here?
+With kernel patch, do you propose to change individual sysctls to not 
+world-readable? That surely would help everybody instead of just those 
+who care enough to change /proc/sys permissions. I guess it would also 
+be more effort by an order of magnitude or two to convince each owner of 
+a sysctl to accept the change.
 
-> ref:
-> [PATCH AUTOSEL 5.3 12/33] blackhole_netdev: fix syzkaller reported issue
-> [1] https://lkml.org/lkml/2019/10/25/794
+> Policy knobs like this on proc tend to break in normal maintenance
+> because they are not used enough so I am not a big fan of adding policy
+> knobs just because we can.
 
-lore.kernel.org is much more reliable :)
+But the rest of the /proc (except PID tree) allows changing permissions 
+(and also UID and GID), just /proc/sys doesn't. This doesn't seem very 
+logical to me.
 
-thanks,
+These code paths have not changed much or at all since the initial 
+version in 2007, so I suppose the maintenance burden has not been 
+overwhelming.
 
-greg k-h
+By the way, /proc/sys still allows changing the {a,c,m}time. I think 
+those are not backed anywhere, so they probably suffer from same caching 
+problems as my first version of the patch.
+
+-Topi
