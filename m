@@ -2,156 +2,140 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MALFORMED_FREEMAIL,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32054C010A3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7938CC010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E9C721928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:58:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E2D621929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:01:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R14zOSWy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730820AbfKEK6n (ORCPT
+        id S1730795AbfKELBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:58:43 -0500
-Received: from lhrrgout.huawei.com ([185.176.76.210]:2071 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726867AbfKEK6n (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:58:43 -0500
-Received: from lhreml708-cah.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id 62D9AC260B20A0E14590;
-        Tue,  5 Nov 2019 10:58:41 +0000 (GMT)
-Received: from lhreml724-chm.china.huawei.com (10.201.108.75) by
- lhreml708-cah.china.huawei.com (10.201.108.49) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 5 Nov 2019 10:58:40 +0000
-Received: from [127.0.0.1] (10.202.226.46) by lhreml724-chm.china.huawei.com
- (10.201.108.75) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5; Tue, 5 Nov 2019
- 10:58:40 +0000
-Subject: Re: [PATCH 2/3] spi: Add HiSilicon v3xx SPI NOR flash controller
- driver
-To:     Mark Brown <broonie@kernel.org>
-CC:     <marek.vasut@gmail.com>, <tudor.ambarus@microchip.com>,
-        <linuxarm@huawei.com>, <linux-kernel@vger.kernel.org>,
-        <linux-mtd@lists.infradead.org>, <linux-spi@vger.kernel.org>,
-        <xuejiancheng@hisilicon.com>, <fengsheng5@huawei.com>
-References: <1572886297-45400-1-git-send-email-john.garry@huawei.com>
- <1572886297-45400-3-git-send-email-john.garry@huawei.com>
- <20191104192406.GH5238@sirena.co.uk>
-From:   John Garry <john.garry@huawei.com>
-Message-ID: <855a67dc-1356-a763-e374-540f6ac400ab@huawei.com>
-Date:   Tue, 5 Nov 2019 10:58:39 +0000
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Tue, 5 Nov 2019 06:01:06 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36600 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726867AbfKELBF (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 06:01:05 -0500
+Received: by mail-wr1-f67.google.com with SMTP id w18so20826906wrt.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:01:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :mime-version;
+        bh=EZghrgWEU7PinMbxhgFFAGKP8eV2Li80iVqhELRRUNk=;
+        b=R14zOSWyNvnQV94JDavTe85Z2Fw5Vh6JQY1YZyMFH78lqlQ4CFLQK7+AK3SIm8RV1W
+         TgFgLPQuZkG/NAFioFBsPbrIfyUKjtJxvQGvRbCzrgILMad9ix/4OabzQJyDcYwgWRLI
+         szNcSya8o5WB6aGzYVgRCywhGgV0/aEH4h1ScNVje3D1nu1yvysHJA9ZNaM8sSVITay1
+         +MwePjVMuQn2DVL50ykuPTlNJfGnmQJNIaNnoHatgEfhhO4pa6iLY5NQbjSeKWLIa2VJ
+         bbxCkFYcBGUU9W+kGodO7729kMfdevtedaVuGwIGuQGf0SivS06ZRc8+X47mjlTl2m+I
+         j1rg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:mime-version;
+        bh=EZghrgWEU7PinMbxhgFFAGKP8eV2Li80iVqhELRRUNk=;
+        b=EJ9vxhMFP/VCe+og+Ml68vq6D+qLZLKs3dXXlo1UpNpQdOrYPxRbz98iOc8AZTaFr6
+         HAJzU2jpk+srwQnMZAOCFaL6/scK0NORU6eumwr/6fKKTrT6ppCaGAOwFV5X3fsmeciL
+         V73TNtKFzWj5CsyaOeEeoWCXoreYg0bzn7QSojEFkZzLkHb2DECCxog7Dhw/acEa+P+Y
+         5BJMvC2De5/LqziQIOe8bPqDm1/Nw3Eiu5kuhrMmw+9J3TZkNt56My+bw1Ug+0wfNveS
+         T/wQSCKSzPZxnpWmMMTtKhMa1d653H8fQzJBB8UGKO5ltf+J+j16BRu7bJ4BScMfF4Rb
+         Ng3w==
+X-Gm-Message-State: APjAAAW6FB27rBgXFJIHgAjYiMi49Krdj0bL6IxwnKCu29CZrxs6+sEJ
+        4zAGXG0qi0gLc1N2YBfDzw==
+X-Google-Smtp-Source: APXvYqyKQZkCpxcqCNeDNXiv68+h/wuBt2avz/C60IDr9TDpC+zLAg6nxXBiuknuLSIG2h47a7oeLQ==
+X-Received: by 2002:a5d:4688:: with SMTP id u8mr10457814wrq.40.1572951662765;
+        Tue, 05 Nov 2019 03:01:02 -0800 (PST)
+Received: from ninjahub.lan (79-73-36-243.dynamic.dsl.as9105.com. [79.73.36.243])
+        by smtp.gmail.com with ESMTPSA id j22sm28263721wrd.41.2019.11.05.03.01.01
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 03:01:02 -0800 (PST)
+From:   Jules Irenge <jbi.octave@gmail.com>
+X-Google-Original-From: Jules Irenge <maxx@ninjahub.org>
+Date:   Tue, 5 Nov 2019 11:00:44 +0000 (GMT)
+To:     Ian Abbott <abbotti@mev.co.uk>
+cc:     Jules Irenge <jbi.octave@gmail.com>,
+        outreachy-kernel@googlegroups.com, gregkh@linuxfoundation.org,
+        devel@driverdev.osuosl.org, linux-kernel@vger.kernel.org,
+        hsweeten@visionengravers.com
+Subject: Re: [PATCH v2] staging: comedi: rewrite macro function with GNU
+ extension typeof
+In-Reply-To: <84a2d50f-a1ac-bdc5-989c-b0294e9dea22@mev.co.uk>
+Message-ID: <alpine.LFD.2.21.1911051053560.11074@ninjahub.org>
+References: <20191104163331.68173-1-jbi.octave@gmail.com> <84a2d50f-a1ac-bdc5-989c-b0294e9dea22@mev.co.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191104192406.GH5238@sirena.co.uk>
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.226.46]
-X-ClientProxiedBy: lhreml703-chm.china.huawei.com (10.201.108.52) To
- lhreml724-chm.china.huawei.com (10.201.108.75)
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/2019 19:24, Mark Brown wrote:
-> On Tue, Nov 05, 2019 at 12:51:36AM +0800, John Garry wrote:
+
+
+On Mon, 4 Nov 2019, Ian Abbott wrote:
+
+> On 04/11/2019 16:33, Jules Irenge wrote:
+> > Rewrite macro function with the GNU extension typeof
+> > to remove a possible side-effects of MACRO argument reuse "x".
+> >   - Problem could rise if arguments have different types
+> > and different use though.
+> > 
+> > Signed-off-by: Jules Irenge <jbi.octave@gmail.com>
+> > ---
+> > v1 - had no full commit log message, with changes not intended to be in the
+> > patch
+> > v2 - remove some changes not intended to be in this driver
+> >       include note of a potential problem
+> >   drivers/staging/comedi/comedi.h | 6 ++++--
+> >   1 file changed, 4 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/staging/comedi/comedi.h
+> > b/drivers/staging/comedi/comedi.h
+> > index 09a940066c0e..a57691a2e8d8 100644
+> > --- a/drivers/staging/comedi/comedi.h
+> > +++ b/drivers/staging/comedi/comedi.h
+> > @@ -1103,8 +1103,10 @@ enum ni_common_signal_names {
+> >   
+> >   /* *** END GLOBALLY-NAMED NI TERMINALS/SIGNALS *** */
+> >   
+> > -#define NI_USUAL_PFI_SELECT(x)	(((x) < 10) ? (0x1 + (x)) : (0xb +
+> > (x)))
+> > -#define NI_USUAL_RTSI_SELECT(x)	(((x) < 7) ? (0xb + (x)) : 0x1b)
+> > +#define NI_USUAL_PFI_SELECT(x)\
+> > +	({typeof(x) x_ = (x); (x_ < 10) ? (0x1 + x_) : (0xb + x_); })
+> > +#define NI_USUAL_RTSI_SELECT(x)\
+> > +	({typeof(x) x_ = (x); (x_ < 7) ? (0xb + x_) : 0x1b; })
+> >   
+> >   /*
+> >    * mode bits for NI general-purpose counters, set with
+> > 
 > 
-
-Hi Mark,
-
->> Only ACPI firmware is supported.
+> I wasn't sure about this the first time around due to the use of GNU
+> extensions in uapi header files, but I see there are a few, rare instances of
+> this GNU extension elsewhere in other uapi headers (mainly in netfilter
+> stuff), so I guess it's OK.  However, it  does mean that user code that uses
+> these macros will no longer compile unless GNU extensions are enabled.
 > 
-> There's no ACPI dependency though?  If the driver only works with ACPI
-> I'd expect to see one with an || COMPILE_TEST like the architecture
-> dependency.
-
-Yeah, you're right. So the driver can build for !ACPI and !COMPILE_TEST, 
-but there's no point really. I'll update.
-
+> Does anyone know any "best practices" regarding use of GNU extensions in user
+> header files under Linux?
 > 
->> @@ -0,0 +1,287 @@
->> +// SPDX-License-Identifier: GPL-2.0-only
->> +/*
->> + * HiSilicon SPI NOR V3XX Flash Controller Driver for hi16xx chipsets
->> + *
+> -- 
+> -=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+> -=( MEV Ltd. is a company registered in England & Wales. )=-
+> -=( Registered number: 02862268.  Registered address:    )=-
+> -=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
 > 
-> Please make the entire comment a C++ one for neatness.
-
-ok
-
 > 
->> + * Copyright (c) 2019 HiSilicon Technologies Co., Ltd.
->> + * Author: John Garry <john.garry@huawei.com>
->> + */
->> +//#define DEBUG 1
-> 
-> Please remove this.
-
-ok
-
-> 
->> +#define GLOBAL_CFG (0x100)
->> +
->> +#define BUS_CFG1 (0x200)
->> +#define BUS_CFG2 (0x204)
->> +#define BUS_FLASH_SIZE (0x210)
->> +
->> +#define VERSION (0x1f8)
-> 
-> These could use some namespacing, especially the last one - it seems
-> quite likely there'll be some collisions at some point.
-
-ok
-
-> 
->> +#define HISI_SFC_V3XX_WAIT_TIMEOUT_US		1000000
->> +#define HISI_SFC_V3XX_WAIT_POLL_INTERVAL_US	10
-> 
-> Plus if we've got these long prefixes here it'd be good to be
-> consistent.
-
-sure
-
-> 
->> +	if (IS_ALIGNED((uintptr_t)to, 4)) {
->> +		int words = len / 4;
->> +
->> +		__ioread32_copy(to, host->regbase + CMD_DATABUF(0), words);
->> +
->> +		len -= words * 4;
->> +		if (len) {
->> +			u32 val;
->> +
->> +			val = __raw_readl(host->regbase + CMD_DATABUF(words));
->> +
->> +			to += words * 4;
->> +			for (i = 0; i < len; i++, val >>= 8, to++)
->> +				*to = (u8)val;
->> +		}
->> +	} else {
->> +		for (i = 0; i < DIV_ROUND_UP(len, 4); i++) {
->> +			u32 val = __raw_readl(host->regbase + CMD_DATABUF(i));
->> +			int j;
-> 
-> The more usual pattern for these would be to do some unaligned accesses
-> for the start/end of the buffer to get to alignment and then transfer
-> the rest as aligned data.
-> 
-
-Yeah, I understand you, but for that I would need to generate multiple 
-transactions in the driver, and I wanted to keep 1x transaction per 
-spi_controller_mem_ops.exec_op call.
-
-So maybe I can do some trickery in my adjust_op_size method to generate 
-these multiple transactions: a. any unaligned start data b. the 
-32b-aligned data b. unaligned end. I think that the HW should be able to 
-handle that.
-
-Thanks,
-John
-
+Apology, I misinterpreted the comments and send a second 
+version without thinking much.
+Please discard it unless you wish to try out.
+Any way thanks for the feedback, I really appreciate I find it educative.
+Kind regards,
+Jules
