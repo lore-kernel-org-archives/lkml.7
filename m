@@ -2,118 +2,122 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFC7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00B8FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 07FA121A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572997898;
-	bh=gKrb/nWc6NrI5JvT5eElLGrYgOjazpDrW0OXe13/FaM=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=GuXAqyEZrEa0IMYNu5ybaH9zyPQSZ4jBSDBtWXI+VgscRh9DrPCiVsfUCxMXkEk/+
-	 9wIgUnkK86SJc1T7SIvLrQ7ccvByyvuUhXOzMqe9N9oXWAntACwr0YWTKHB7dKdBwy
-	 JZlTeFPRc5iAmzJxnR2AJfCK7qXNJbci/BtcAAek=
+	by mail.kernel.org (Postfix) with ESMTP id A994321D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:51:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730565AbfKEXvh (ORCPT
+        id S1730589AbfKEXvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:51:37 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:54228 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730391AbfKEXvf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 18:51:38 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:54902 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730241AbfKEXvf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Nov 2019 18:51:35 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=tVlrHW3fxmZOFe1bZ8yArR5FsQjL7KAM/zR3KFsCR/8=; b=G7FLr5ZElFSp
-        gASTriQkirpXQY6ir9pDF/DT3hQ96HSwYAhwUXnibQ3eufee/lL+PAXA2eElW8HBO/3lACSIub007
-        GBSWKBe10RPygw0UKuaBkYAnabI5kQ6hJzkE4udtgQxjgNGCjmgNUkSZodki/lD9GOPnov7znnw6q
-        3fFN4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iS8bi-000839-3A; Tue, 05 Nov 2019 23:51:30 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 9DAE12741915; Tue,  5 Nov 2019 23:51:29 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Chris Packham <chris.packham@alliedtelesis.co.nz>
-Cc:     broonie@kernel.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        trivial@kernel.org
-Subject: Applied "spi: bcm2835: fix typo in comment" to the spi tree
-In-Reply-To: <20191105214134.25142-1-chris.packham@alliedtelesis.co.nz>
-X-Patchwork-Hint: ignore
-Message-Id: <20191105235129.9DAE12741915@ypsilon.sirena.org.uk>
-Date:   Tue,  5 Nov 2019 23:51:29 +0000 (GMT)
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 4DDD38124A
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 23:51:35 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id o202so301356wme.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 15:51:35 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=gaWZ92U9HKAb67fEM4jNLU/s4Li1fTnEeskJpsm2ZGg=;
+        b=cD0eJAkYi+gxwM6aIg2ZQNRnVNmIFMOO41Tt6+sb99tCXzBSAYGBQlAx/ShKI8nUx3
+         BQWjSKBA1552QtWIsPB5G+CqI0GFCf09vkpVZ1QAkbyyeuVi/Y8yIYIXXwiffcp1VHJj
+         PexkW2FLXnNI5nykGMwmiOFTms4sS/Cz8MiyfDrvu875WM7IUnQV0c2eWE493RJdL8N/
+         QND/N45JTkVKY1o/GH+Nthl8cZIdZf6kJqpuRphfmcW7r/IWbuOE53KXM/uTJszkPzWY
+         Kuifym24OjtP7SGOe7vXshFDh02f2KZaVEIR1SZRj+w6OxHBRcLOc4LO4bvzpQFP23Lf
+         f56g==
+X-Gm-Message-State: APjAAAVxf8L3u1VctyAt3DpFejKEG0chLa+pNaGkdwk3GkP2cQz+nMA1
+        YyCyvMQ4ZD3mCpn2gxsGDZe+Sx1/+f0k/7cT5dhaurlD4Pck24zU4sL1PNGeDIBXP9uH0V8yxzH
+        RySkcqnHCcW6pjsvQaS//yAg8
+X-Received: by 2002:a5d:6181:: with SMTP id j1mr267416wru.251.1572997893904;
+        Tue, 05 Nov 2019 15:51:33 -0800 (PST)
+X-Google-Smtp-Source: APXvYqzDqY7w8R9dweqYLGkk2vCiodr/pRCJoOl/ZjfV26tQ6Tyj4r7EE24VDAT05CYujBkslWIoTA==
+X-Received: by 2002:a5d:6181:: with SMTP id j1mr267401wru.251.1572997893599;
+        Tue, 05 Nov 2019 15:51:33 -0800 (PST)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id t24sm33590122wra.55.2019.11.05.15.51.31
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 15:51:33 -0800 (PST)
+Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
+ trustworthy
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc:     kvm@vger.kernel.org, x86@kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+References: <20191105161737.21395-1-vkuznets@redhat.com>
+ <20191105200218.GF3079@worktop.programming.kicks-ass.net>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <51c9fe0c-0bda-978c-27f7-85fe7e59e91d@redhat.com>
+Date:   Wed, 6 Nov 2019 00:51:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191105200218.GF3079@worktop.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On 05/11/19 21:02, Peter Zijlstra wrote:
+> On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
+>> Virtualized guests may pick a different strategy to mitigate hardware
+>> vulnerabilities when it comes to hyper-threading: disable SMT completely,
+>> use core scheduling, or, for example, opt in for STIBP. Making the
+>> decision, however, requires an extra bit of information which is currently
+>> missing: does the topology the guest see match hardware or if it is 'fake'
+>> and two vCPUs which look like different cores from guest's perspective can
+>> actually be scheduled on the same physical core. Disabling SMT or doing
+>> core scheduling only makes sense when the topology is trustworthy.
+>>
+>> Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the meaning
+>> that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed SMT
+>> topology is actually trustworthy. It would, of course, be possible to get
+>> away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose backwards
+>> compatibility but the current approach looks more straightforward.
+> 
+> The only way virt topology can make any sense what so ever is if the
+> vcpus are pinned to physical CPUs.
 
-   spi: bcm2835: fix typo in comment
+This is a subset of the requirements for "trustworthy" SMT.  You can have:
 
-has been applied to the spi tree at
+- vCPUs pinned to two threads in the same core and exposed as multiple
+cores in the guest
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.4
+- vCPUs from different guests pinned to two threads in the same core
 
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
+and that would be okay as far as KVM_HINTS_REALTIME is concerned, but
+would still allow exploitation of side-channels, respectively within the
+VM and between VMs.
 
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
+Paolo
 
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From c2f102f1e884fe1a6a54c36f232e560675657f12 Mon Sep 17 00:00:00 2001
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Date: Wed, 6 Nov 2019 10:41:34 +1300
-Subject: [PATCH] spi: bcm2835: fix typo in comment
-
-GPIOS_OUT_LOW should be GPIOD_OUT_LOW.
-
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Link: https://lore.kernel.org/r/20191105214134.25142-1-chris.packham@alliedtelesis.co.nz
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-bcm2835.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index b4070c0de3df..fb61a620effc 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -1248,7 +1248,7 @@ static int bcm2835_spi_setup(struct spi_device *spi)
- 	/*
- 	 * Retrieve the corresponding GPIO line used for CS.
- 	 * The inversion semantics will be handled by the GPIO core
--	 * code, so we pass GPIOS_OUT_LOW for "unasserted" and
-+	 * code, so we pass GPIOD_OUT_LOW for "unasserted" and
- 	 * the correct flag for inversion semantics. The SPI_CS_HIGH
- 	 * on spi->mode cannot be checked for polarity in this case
- 	 * as the flag use_gpio_descriptors enforces SPI_CS_HIGH.
--- 
-2.20.1
+> And I was under the impression we already had a bit for that (isn't it
+> used to disable paravirt spinlocks and the like?). But I cannot seem to
+> find it in a hurry.
+> 
+> So I would much rather you have a bit that indicates the 1:1 vcpu/cpu
+> mapping and if that is set accept the topology information and otherwise
+> completely ignore it.
+> 
 
