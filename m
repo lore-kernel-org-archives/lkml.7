@@ -2,99 +2,147 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE701C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 036AAC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:51:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E35D214B2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:50:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B91E621A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:51:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="VsXcQfps"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729893AbfKEUuJ (ORCPT
+        id S1729897AbfKEUvZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:50:09 -0500
-Received: from foss.arm.com ([217.140.110.172]:32816 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfKEUt5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:49:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF31412FC;
-        Tue,  5 Nov 2019 12:49:56 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 96B3340139;
-        Tue,  5 Nov 2019 04:32:50 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:32:40 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        roy.zang@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
-Message-ID: <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
- <20190902034319.14026-3-xiaowei.bao@nxp.com>
+        Tue, 5 Nov 2019 15:51:25 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:51502 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725806AbfKEUvZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:51:25 -0500
+Received: by mail-wm1-f65.google.com with SMTP id q70so908872wme.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:51:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=86+b3nLS9bc8VDStO93HdimlizslTYlGrlQhHJTbrT4=;
+        b=VsXcQfpstDMDBiO/7BvB/yl0oN780/GG/FJehxFtBv77wAHaYRFX8xW5lDSq2WHLlS
+         8RF/ARYHZfN5KAqvNgA91kSpzufz7c/zI/5GhNR34FdUiNTmFDlOvRAxt/jEz7Xc18fQ
+         F3+4wE6qJOQtYYHS6cz5on9mOT+NI+HGGhjDI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=86+b3nLS9bc8VDStO93HdimlizslTYlGrlQhHJTbrT4=;
+        b=Psc6cwvBehT6QCh96zkjX/UgqVsiYHWL72vfH0uuuK71yOFDZgOQ2e6kX6EQMQY0tj
+         Vv0NkXYvx8o3qTXUz9iCfW+Rd7rvS7AIMQSuYZnH4ClyPLX89t6TQB0PFvvZvuBOqFOK
+         Cxo60Y/t4J25d4OkoAvGYaclLNPZxdJOIdTnRuUxbx9G57mqQQwsxrKpZ8hbYZt3Hpup
+         tE/3DqxxXZOtFCJG18PnUN289i1cp7U9uQUNBVqg9VWRkh1BxxbiRR+5IRGjyupY+knw
+         HrE7CmvjWQymM8sZBv3tS8pkwSyICmLPX2pFiPt+dxZoi3R68Hu6VbxaBm8M3SHJF6Y0
+         vqPQ==
+X-Gm-Message-State: APjAAAUnVyruqAO5XvmqYxUg/iJrfZXssKHiWsmLIPIvdaxaf3+ly7Ij
+        QlATeWfqNVnK2nWhwoRZITCGFA==
+X-Google-Smtp-Source: APXvYqygaILxJIOrGAvvSOaxQJT6uuJyMfYoMplcREbHs8U18/qyRi5rEm0JQSsunlDySZ4b2tLKTQ==
+X-Received: by 2002:a1c:e0c4:: with SMTP id x187mr797441wmg.93.1572987082645;
+        Tue, 05 Nov 2019 12:51:22 -0800 (PST)
+Received: from prevas-ravi.prevas.se (ip-5-186-115-54.cgn.fibianet.dk. [5.186.115.54])
+        by smtp.gmail.com with ESMTPSA id 4sm690226wmd.33.2019.11.05.12.51.21
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 12:51:21 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH v2] watchdog: make nowayout sysfs file writable
+Date:   Tue,  5 Nov 2019 21:51:18 +0100
+Message-Id: <20191105205118.11359-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
+References: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-3-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:19AM +0800, Xiaowei Bao wrote:
-> Add support for the LS1028a PCIe controller.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> ---
-> v2:
->  - No change.
-> v3:
->  - Reuse the ls2088 driver data structurt.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
-> 
->  drivers/pci/controller/dwc/pci-layerscape.c | 1 +
->  1 file changed, 1 insertion(+)
+It can be useful to delay setting the nowayout feature for a watchdog
+device. Moreover, not every driver (notably gpio_wdt) implements a
+nowayout module parameter/otherwise respects CONFIG_WATCHDOG_NOWAYOUT,
+and modifying those drivers carries a risk of causing a regression for
+someone who has two watchdog devices, sets CONFIG_WATCHDOG_NOWAYOUT
+and somehow relies on the gpio_wdt driver being ignorant of
+that (i.e., allowing one to gracefully close a gpio_wdt but not the
+other watchdog in the system).
 
-I have not seen any comment on any layerscape driver patches
-coming from the maintainers as listed in the MAINTAINERS
-file (and CCed in this series).
+So instead, simply make the nowayout sysfs file writable. Obviously,
+setting nowayout is a one-way street.
 
-I request maintainers ACK on these patches and I expect them
-to start reviewing your code if they want to be still considered
-maintainers for this driver.
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+v2: drop redundant "current" variable and !!.
 
-The changes look OK minus Shawn's remark on compatible string
-that was ignored.
+ .../ABI/testing/sysfs-class-watchdog          |  9 ++++++--
+ drivers/watchdog/watchdog_dev.c               | 21 ++++++++++++++++++-
+ 2 files changed, 27 insertions(+), 3 deletions(-)
 
-Thanks,
-Lorenzo
+diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
+index 675f9b537661..9860a8b2ba75 100644
+--- a/Documentation/ABI/testing/sysfs-class-watchdog
++++ b/Documentation/ABI/testing/sysfs-class-watchdog
+@@ -17,8 +17,13 @@ What:		/sys/class/watchdog/watchdogn/nowayout
+ Date:		August 2015
+ Contact:	Wim Van Sebroeck <wim@iguana.be>
+ Description:
+-		It is a read only file. While reading, it gives '1' if that
+-		device supports nowayout feature else, it gives '0'.
++		It is a read/write file. While reading, it gives '1'
++		if the device has the nowayout feature set, otherwise
++		it gives '0'. Writing a '1' to the file enables the
++		nowayout feature. Once set, the nowayout feature
++		cannot be disabled, so writing a '0' either has no
++		effect (if the feature was already disabled) or
++		results in a permission error.
+ 
+ What:		/sys/class/watchdog/watchdogn/state
+ Date:		August 2015
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index dbd2ad4c9294..d3bdcb144657 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -452,7 +452,26 @@ static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	return sprintf(buf, "%d\n", !!test_bit(WDOG_NO_WAY_OUT, &wdd->status));
+ }
+-static DEVICE_ATTR_RO(nowayout);
++
++static ssize_t nowayout_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t len)
++{
++	struct watchdog_device *wdd = dev_get_drvdata(dev);
++	unsigned int value;
++	int ret;
++
++	ret = kstrtouint(buf, 0, &value);
++	if (ret)
++		return ret;
++	if (value > 1)
++		return -EINVAL;
++	/* nowayout cannot be disabled once set */
++	if (test_bit(WDOG_NO_WAY_OUT, &wdd->status) && !value)
++		return -EPERM;
++	watchdog_set_nowayout(wdd, value);
++	return len;
++}
++static DEVICE_ATTR_RW(nowayout);
+ 
+ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+ 				char *buf)
+-- 
+2.23.0
 
-> diff --git a/drivers/pci/controller/dwc/pci-layerscape.c b/drivers/pci/controller/dwc/pci-layerscape.c
-> index 3a5fa26..f24f79a 100644
-> --- a/drivers/pci/controller/dwc/pci-layerscape.c
-> +++ b/drivers/pci/controller/dwc/pci-layerscape.c
-> @@ -263,6 +263,7 @@ static const struct ls_pcie_drvdata ls2088_drvdata = {
->  static const struct of_device_id ls_pcie_of_match[] = {
->  	{ .compatible = "fsl,ls1012a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls1021a-pcie", .data = &ls1021_drvdata },
-> +	{ .compatible = "fsl,ls1028a-pcie", .data = &ls2088_drvdata },
->  	{ .compatible = "fsl,ls1043a-pcie", .data = &ls1043_drvdata },
->  	{ .compatible = "fsl,ls1046a-pcie", .data = &ls1046_drvdata },
->  	{ .compatible = "fsl,ls2080a-pcie", .data = &ls2080_drvdata },
-> -- 
-> 2.9.5
-> 
