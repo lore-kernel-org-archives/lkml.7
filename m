@@ -2,163 +2,175 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3CDCCA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:26:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43CA9CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:37:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3F0020659
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:26:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 14B7A20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:37:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730327AbfKED0o (ORCPT
+        id S1730222AbfKEDhT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 22:26:44 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:41724 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728910AbfKED0o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 22:26:44 -0500
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id D9A1CBC211F550606EFA;
-        Tue,  5 Nov 2019 11:26:41 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.439.0; Tue, 5 Nov 2019
- 11:26:32 +0800
-Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
-To:     Dave Chinner <david@fromorbit.com>
-References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191104204909.GB4614@dread.disaster.area>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yang Guo <guoyang2@huawei.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
-Date:   Tue, 5 Nov 2019 11:26:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191104204909.GB4614@dread.disaster.area>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+        Mon, 4 Nov 2019 22:37:19 -0500
+Received: from mga18.intel.com ([134.134.136.126]:50516 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728910AbfKEDhS (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 22:37:18 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 19:37:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,269,1569308400"; 
+   d="scan'208";a="200239845"
+Received: from kbl.sh.intel.com ([10.239.159.163])
+  by fmsmga008.fm.intel.com with ESMTP; 04 Nov 2019 19:37:15 -0800
+From:   Jin Yao <yao.jin@linux.intel.com>
+To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com
+Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com,
+        Jin Yao <yao.jin@linux.intel.com>
+Subject: [PATCH v6 0/7] perf report: Support sorting all blocks by cycles
+Date:   Tue,  5 Nov 2019 11:36:04 +0800
+Message-Id: <20191105033611.25493-1-yao.jin@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+It would be useful to support sorting for all blocks by the
+sampled cycles percent per block. This is useful to concentrate
+on the globally hottest blocks.
 
-On 2019/11/5 4:49, Dave Chinner wrote:
-> On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
->> From: Yang Guo <guoyang2@huawei.com>
->>
->> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
->> whether the counter less than 0 and it is a expensive function.
->> let's check it only when delta < 0, it will be good for xfs's performance.
-> 
-> Hmmm. I don't recall this as being expensive.
-> 
+This patch series implements a new option "--total-cycles" which
+sorts all blocks by 'Sampled Cycles%'. The 'Sampled Cycles%' is
+block sampled cycles aggregation / total sampled cycles
 
-Sorry about the misunderstanding information in commit message.
+For example,
 
-> How did you find this? Can you please always document how you found
+perf record -b ./div
+perf report --total-cycles --stdio
 
-If user creates million of files and the delete them, We found that the
-__percpu_counter_compare costed 5.78% CPU usage, you are right that itself
-is not expensive, but it calls __percpu_counter_sum which will use
-spin_lock and read other cpu's count. perf record -g is used to profile it:
+ # To display the perf.data header info, please use --header/--header-only options.
+ #
+ #
+ # Total Lost Samples: 0
+ #
+ # Samples: 2M of event 'cycles'
+ # Event count (approx.): 2753248
+ #
+ # Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
+ # ...............  ..............  ...........  ..........  .................................................................  ....................
+ #
+            26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
+            15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
+             5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
+             4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
+             4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
+             3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
+             3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
+             3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
+             2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
+             2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
+             2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
+             2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
+             2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
+             1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
+             1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
+             1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+ ......
 
-- 5.88%     0.02%  rm  [kernel.vmlinux]  [k] xfs_mod_ifree
-   - 5.86% xfs_mod_ifree
-      - 5.78% __percpu_counter_compare
-           5.61% __percpu_counter_sum
+This patch series supports both stdio and tui. And also with the supporting
+of --percent-limit.
 
-> the problem being addressed in the commit message so that we don't
-> then have to ask how the problem being fixed is reproduced.
-> 
->> Cc: "Darrick J. Wong" <darrick.wong@oracle.com>
->> Signed-off-by: Yang Guo <guoyang2@huawei.com>
->> Signed-off-by: Shaokun Zhang <zhangshaokun@hisilicon.com>
->> ---
->>  fs/xfs/xfs_mount.c | 6 ++++++
->>  1 file changed, 6 insertions(+)
->>
->> diff --git a/fs/xfs/xfs_mount.c b/fs/xfs/xfs_mount.c
->> index ba5b6f3b2b88..5e8314e6565e 100644
->> --- a/fs/xfs/xfs_mount.c
->> +++ b/fs/xfs/xfs_mount.c
->> @@ -1174,6 +1174,9 @@ xfs_mod_icount(
->>  	int64_t			delta)
->>  {
->>  	percpu_counter_add_batch(&mp->m_icount, delta, XFS_ICOUNT_BATCH);
->> +	if (delta > 0)
->> +		return 0;
->> +
->>  	if (__percpu_counter_compare(&mp->m_icount, 0, XFS_ICOUNT_BATCH) < 0) {
->>  		ASSERT(0);
->>  		percpu_counter_add(&mp->m_icount, -delta);
-> 
-> I struggle to see how this is expensive when you have more than
-> num_online_cpus() * XFS_ICOUNT_BATCH inodes allocated.
-> __percpu_counter_compare() will always take the fast path so ends up
-> being very little code at all.
-> 
->> @@ -1188,6 +1191,9 @@ xfs_mod_ifree(
->>  	int64_t			delta)
->>  {
->>  	percpu_counter_add(&mp->m_ifree, delta);
->> +	if (delta > 0)
->> +		return 0;
->> +
->>  	if (percpu_counter_compare(&mp->m_ifree, 0) < 0) {
->>  		ASSERT(0);
->>  		percpu_counter_add(&mp->m_ifree, -delta);
-> 
-> This one might have some overhead because the count is often at or
-> around zero, but I haven't noticed it being expensive in kernel
-> profiles when creating/freeing hundreds of thousands of inodes every
-> second.
-> 
-> IOWs, we typically measure the overhead of such functions by kernel
-> profile.  Creating ~200,000 inodes a second, so hammering the icount
-> and ifree counters, I see:
-> 
->       0.16%  [kernel]  [k] percpu_counter_add_batch
->       0.03%  [kernel]  [k] __percpu_counter_compare
-> 
+ v6:
+ ---
+ Move block displaying codes from builtin-report.c to
+ block-info.c. Two new functions are created in block-info.c
+ (report__browse_block_hists, report__tui_browse_block_hists).
 
-0.03% is just __percpu_counter_compare's usage.
+ Impacted patches:
+ -----------------
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for --total-cycles
+  perf report: Sort by sampled cycles percent per block for tui
+  
+ v5:
+ ---
+ 1. Move all block functions to block-info.c
 
-> Almost nothing - it's way down the long tail of noise in the
-> profile.
-> 
-> IOWs, the CPU consumed by percpu_counter_compare() is low that
-> optimisation isn't going to produce any measurable performance
-> improvement. Hence it's not really something we've concerned
-> ourselves about.  The profile is pretty much identical for removing
-> hundreds of thousands of files a second, too, so there really isn't
-> any performance gain to be had here.
-> 
-> If you want to optimise code to make it faster and show a noticable
-> performance improvement, start by running kernel profiles while your
-> performance critical workload is running. Then look at what the
-> functions and call chains that consume the most CPU and work out how
-> to do them better. Those are the places that optimisation will
-> result in measurable performance gains....
+ 2. Move the code of setting ms(map+sym) in block hist_entry to
+    patch 'perf util: Support block formats with compare/sort/display'.
+    Because this info is needed for reporting the block range
+    (i.e. source line)
 
-Hmm, I have done it and I didn't describe this problem clearly, with this
-patch, 5.78%(__percpu_counter_compare) will disappear. I will follow
-your method and reduce unnecessary noise.
+ 3. Fix a crash issue when tui mode is enabled.
 
-Thanks,
-Shaokun
+ Impacted patches:
+ -----------------
+  perf util: Support block formats with compare/sort/display
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for --total-cycles
+  perf report: Sort by sampled cycles percent per block for tui
 
-> 
-> Cheers,
-> 
-> Dave.
-> 
+ v4:
+ ---
+ 1. Move the block collection out of block printing.
+
+ 2. Use new option '--total-cycles' to replace '-s total_cycles'
+
+ 3. Move code for skipping column length calculation to patch:
+    'perf diff: Don't use hack to skip column length calculation'
+
+ 4. Some minor updates and cleanup.
+
+ v3:
+ ---
+ 1. Move common block info functions to block-info.h/block-info.c
+
+ 2. Remove nasty hack for skipping calculation of column length.
+
+ 3. Some minor cleanup.
+
+ v2:
+ ---
+ Rebase to perf/core branch
+
+Jin Yao (7):
+  perf diff: Don't use hack to skip column length calculation
+  perf util: Cleanup and refactor block info functions
+  perf util: Count the total cycles of all samples
+  perf util: Support block formats with compare/sort/display
+  perf report: Sort by sampled cycles percent per block for stdio
+  perf report: Support --percent-limit for --total-cycles
+  perf report: Sort by sampled cycles percent per block for tui
+
+ tools/perf/Documentation/perf-report.txt |  11 +
+ tools/perf/builtin-annotate.c            |   2 +-
+ tools/perf/builtin-diff.c                | 121 +-----
+ tools/perf/builtin-report.c              |  61 ++-
+ tools/perf/builtin-top.c                 |   3 +-
+ tools/perf/ui/browsers/hists.c           |  62 ++-
+ tools/perf/ui/browsers/hists.h           |   2 +
+ tools/perf/ui/stdio/hist.c               |  29 +-
+ tools/perf/util/Build                    |   1 +
+ tools/perf/util/block-info.c             | 477 +++++++++++++++++++++++
+ tools/perf/util/block-info.h             |  79 ++++
+ tools/perf/util/hist.c                   |  13 +-
+ tools/perf/util/hist.h                   |  15 +-
+ tools/perf/util/symbol.c                 |  22 --
+ tools/perf/util/symbol.h                 |  24 --
+ tools/perf/util/symbol_conf.h            |   1 +
+ 16 files changed, 762 insertions(+), 161 deletions(-)
+ create mode 100644 tools/perf/util/block-info.c
+ create mode 100644 tools/perf/util/block-info.h
+
+-- 
+2.17.1
 
