@@ -2,112 +2,110 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69BD7C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFC6BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AAD421882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 95D192190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:07:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gandi.net header.i=@gandi.net header.b="STARqt7T"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eri7qH+7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390138AbfKEQF5 (ORCPT
+        id S2390047AbfKEQH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:05:57 -0500
-Received: from mail12.gandi.net ([217.70.182.73]:48463 "EHLO gandi.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2390011AbfKEQF4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:05:56 -0500
-Received: from khany.gandi.net (unknown [10.231.1.94])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by gandi.net (Postfix) with ESMTPSA id 076811604EC;
-        Tue,  5 Nov 2019 16:05:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gandi.net; s=20190808;
-        t=1572969955;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         in-reply-to:in-reply-to:references:references;
-        bh=t6saG2bge6fB4OT/ZiIwFe0H0AmxMfR+BkgEGdWxza0=;
-        b=STARqt7TQsO1av9JWizmQTYs6hEt85jtJUkEqNAgf5ny3/mRiJl57kIDn+jW5KbXzCxbw9
-        8BvB0BukpvKumfDECEglJAofntzKC0peKOFz3mWOQF3LtCu/w1iYWo6QUZtNoRbT96BYn9
-        Hexe+Di4YhZ4062YOcFFY465ElzP7BO6t0nkSZYixGk6nOEADUvGPvy/b7yYkxjIDC7iL3
-        paZ7p5kmSVXAoAZ3+S4WLVNvr8lwp1L1NttCd0iLDyzCGj14JqrUukSVSS/C23TullGbUY
-        ZkbNj1BxldkUCSdrF/FaFNpi20da/vNijCfaAfhSL6F3zyc9HpjVfytj8N+ozQ==
-Received: by khany.gandi.net (Postfix, from userid 1000)
-        id 6A4D5DC009B; Tue,  5 Nov 2019 16:05:30 +0000 (GMT)
-Date:   Tue, 5 Nov 2019 16:05:30 +0000
-From:   Arthur Gautier <baloo@gandi.net>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Andy Lutomirski <luto@amacapital.net>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        kernel list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86: uaccess: fix regression in unsafe_get_user
-Message-ID: <20191105160530.vdaii44gckfo45rw@khany>
-References: <20190216234702.GP2217@ZenIV.linux.org.uk>
- <20190217034121.bs3q3sgevexmdt3d@khany>
- <20190217042201.GU2217@ZenIV.linux.org.uk>
- <alpine.DEB.2.21.1902181347500.1549@nanos.tec.linutronix.de>
- <CALCETrXyard2OXmOafiLks3YuyO=ObbjDXB6NJo_08rL4M6azw@mail.gmail.com>
- <20190218215150.xklqbfckwmbtdm3t@khany>
- <20190926095825.zkdpya55yjusvv4g@khany>
- <20190926140939.GD18383@zn.tnic>
- <20191010164951.kr2epy5lyywgngt6@khany>
- <20191105141112.GB28418@zn.tnic>
+        Tue, 5 Nov 2019 11:07:29 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:47005 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389760AbfKEQH3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:07:29 -0500
+Received: by mail-lj1-f194.google.com with SMTP id e9so9183564ljp.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:07:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=YLw5SYrodBEqy2waMxo41K2A0f7ArdzoSUTOLYie6s4=;
+        b=eri7qH+7uZFLsQ1nBXM7tctm6BOw+ve7hZW/6tQlf9hNm1WjWAPsqiY0Yhh6c8nJ3C
+         Xnn6dPx2b1yQNwdIRtZ0JNE5YnWD9wT4uWdQ88Alt8ix7dhCBHf1+3hKwuNpsBgC0NGc
+         ukdLhq7GYGzfbGDIUwM59OXJAAblz15nAU/hswHpLXqSIMcjqv2fwEBMUCFFkxQbTh6C
+         /Lu8vp0rEgL5fU8oJBcOT/dgw9PjRG+jLqHd2zO7jznoU26UzkHwv9gr6GQOjL28gyt7
+         uZ8vXn/mCyVxCwOnw56QpWCAoHsMV0n6qF29a/MAE/+msYFQNuy8S+uJKSCQHHYjv0EG
+         m2Xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=YLw5SYrodBEqy2waMxo41K2A0f7ArdzoSUTOLYie6s4=;
+        b=SIGfRJjk5xIXZertS3OaMGBR6Yrt6SaxCuQNkm4G/lJ0J9L6OKp/iFd3B6l1/ZvZ0E
+         5LESeqdgideqvPbLK5V+K38M/QTgLwWRg7qpgNTc5qEaSDGkshu8OBsXArkZLajmE6QM
+         HSMonvCsxCpKMCPb3v3e/9+zCMvJvjvhaFeusbDoLpnfC7B0UpQcTC5tPJ24vAwZi30R
+         JYPqyy9b6Jtc1DvIdDkCzmV4wJJE95nqOye1TAoyqsQeiyl1kSjjXMJQvcm0FvOKF7AA
+         8KGTEQjLnOa+T77424A8wDfJkMY2VBex5pzjmX3FcX25midNa5U55DmlWWLWjq92FuMr
+         RBAw==
+X-Gm-Message-State: APjAAAVuZ8NO8cHEgzfm08qZbqTE19vBUOaGyY88BXYXQvDUlXjJOqbn
+        7QJ8zkQLz3KnKml2FR4keRAT9/iALOxnaeDB2EwE0w==
+X-Google-Smtp-Source: APXvYqyfeC8M/8bOUxBWxwGOy++KCeRE1AqSp/eH8U72Cip1RCmkWIqkShJuw/Lzbce5kF+wF/uaswMUtDkVjGbpmA4=
+X-Received: by 2002:a2e:81c6:: with SMTP id s6mr1063081ljg.61.1572970045838;
+ Tue, 05 Nov 2019 08:07:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105141112.GB28418@zn.tnic>
-User-Agent: NeoMutt/20180716
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com> <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+In-Reply-To: <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+From:   Daniel Colascione <dancol@google.com>
+Date:   Tue, 5 Nov 2019 08:06:49 -0800
+Message-ID: <CAKOZuetu0QWUDAycTOFzC4HEbjH99EtOhb4gJnHAuovT_StpzA@mail.gmail.com>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:11:12PM +0100, Borislav Petkov wrote:
-> On Thu, Oct 10, 2019 at 04:49:51PM +0000, Arthur Gautier wrote:
-> > I did not receive neither the patch Andy provided, nor the comments made
-> > on it. But I'd be happy to help and/or take over to fix those if someone could
-> > send me both.
-> 
-> Yes, please do, it seems Andy's busy. You can find the whole thread here:
-> 
-> https://lore.kernel.org/lkml/20190215235901.23541-1-baloo@gandi.net/
-> 
-> and you can download it in mbox format.
-> 
-> Care to take Andy's patch, work in the comments I made to it, test it,
-> write a commit message, i.e., productize it?
-> 
-> So that we get this thing moving...
-> 
-> Thx.
-> 
+On Tue, Nov 5, 2019 at 8:00 AM Andy Lutomirski <luto@kernel.org> wrote:
+>
+> On Tue, Nov 5, 2019 at 7:55 AM Daniel Colascione <dancol@google.com> wrote:
+> >
+> > On Tue, Nov 5, 2019 at 7:29 AM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> > >
+> > > Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
+> > > descriptor table from the read() implementation of uffd, which may have
+> > > security implications for unprivileged use of the userfaultfd.
+> > >
+> > > Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
+> > > CAP_SYS_PTRACE.
+> >
+> > Thanks. But shouldn't we be doing the capability check at
+> > userfaultfd(2) time (when we do the other permission checks), not
+> > later, in the API ioctl?
+>
+> The ioctl seems reasonable to me.  In particular, if there is anyone
+> who creates a userfaultfd as root and then drop permissions, a later
+> ioctl could unexpectedly enable FORK.
 
-Hello Boris,
-
-Thank you! But I believe this is the patch I sent, I know Andy sent a
-patchset with two patches, I believe privately (not copied to a public
-ML) to some of the recepients here. I got a copy of the second patch
-but not the first one.
-
-I believe from discussions here, that comments have been made on those
-patchset and because I was not Cc-ed on those patches, I do not have
-neither the full patchset nor the comments.
-
-I cannot take over the work, nor finish the patchset.
-
-Would anyone have a copy of the thread and could send them my way?
-
-Thank you so much!
-
--- 
-\o/ Arthur
- G  Gandi.net
+Sure, but the same argument applies to all the other permission checks
+that we do at open time, not at ioctl time. For better or for worse,
+the DAC-ish model used in most places is that access checks happen at
+file object creation time and anyone who has the FD can perform those
+operations later. Confusing the model by doing *some* permission
+checks at open time and *some* permission checks at usage time makes
+the system harder to understand.
