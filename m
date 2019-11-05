@@ -2,151 +2,205 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-22.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE7FDC5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:28:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D739BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:29:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A263021929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:28:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A7ACD214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:29:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="vPxN2a9e"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MLTg0/Lz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390699AbfKES2i (ORCPT
+        id S2390728AbfKES32 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:28:38 -0500
-Received: from mail-qk1-f202.google.com ([209.85.222.202]:56431 "EHLO
-        mail-qk1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390656AbfKES2i (ORCPT
+        Tue, 5 Nov 2019 13:29:28 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:21597 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S2390626AbfKES31 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:28:38 -0500
-Received: by mail-qk1-f202.google.com with SMTP id 22so18023330qka.23
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 10:28:36 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=wgxjvwX6+cnB3A8RMM5lxB/OlF4KhSWsamiPqNj2U6w=;
-        b=vPxN2a9eb5x/Kf9/TWrUXR40il0raZDiN6LYAMVyDiDfjpf7s9xXS6bjE5/awxsuoy
-         0q1m5Zb8UvHXS6AiO3q0DRqBZT21rMVwU80N064o5cR+O0LTltXWOTW6KWnDg6PzLmHb
-         9M1FDkcKNGd4va1a96WGR8KkuNh54njhXe7jlzCokkcBEA+WXz3ori13j//Kq+ltDpEN
-         seY173tKGH4fj+4kOxr/zl/3VnAdEcGpqai8VOCJLmWbOUj4Y1MH2s/elBVlj92QhMKX
-         CRGRDyk5VgA1XMd5XFM8hjSqA1lFfraXvc5TeTIXEEbBNjacO726/dEGWgneMJa9+qcG
-         1vGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=wgxjvwX6+cnB3A8RMM5lxB/OlF4KhSWsamiPqNj2U6w=;
-        b=cTLeXPOQ5rcy3Z1XFfXUCiPP/Q4vSEkc8ipAXMSjrcK1vWvMsMiyYVoptQYWJVVlVa
-         4k7rNR9/BoOeHIxXid0wto9tdOdq9QZWXcnTjWC0iZABYG0QoS/qQ1TzT5/zNcuMX5VH
-         oJjrXr09SCHGsHTYiuj6xKWXKlzgfbVNe/ucnOuhPOda+itkKOht0HILm6fTIQDnyOUf
-         UbhOP1NFZqkQSbH78IO4H6+5LZt6nYi5zOw0gjIcMpOuQ/XOQ/3cvxnfBj4LcZABo7V1
-         PUwUYb2XIQWWGUw8Z1d2XDAnYJ97djSldWhCfaaTNEt87PLghSlaFnpi7naRRFgarVhB
-         f4yA==
-X-Gm-Message-State: APjAAAXmj/JX5303HuumME7TKSoVe0ypQ6rfzV9BO/HiZ8GaTAHjfJn1
-        LveQ2tUes2+DtR1FIsZnsrf7Ya1YUw==
-X-Google-Smtp-Source: APXvYqzTpHCaI8bTtovq6RT1gOrzAFSaWFSHvNTuvzdVkIjREWwMwBmhqgfZhpxg2SpG0OZOyHCv1UTJ7g==
-X-Received: by 2002:a37:9d44:: with SMTP id g65mr27690527qke.302.1572978515493;
- Tue, 05 Nov 2019 10:28:35 -0800 (PST)
-Date:   Tue,  5 Nov 2019 19:27:47 +0100
-Message-Id: <20191105182746.217864-1-elver@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH] blk-wbt: Fix data race and avoid possible false sharing
-From:   Marco Elver <elver@google.com>
-To:     elver@google.com
-Cc:     axboe@kernel.dk, linux-block@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        syzbot+ba8947364367f96fe16b@syzkaller.appspotmail.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 5 Nov 2019 13:29:27 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572978566;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=T1F4u3DloqEz3yiZIn87LfiBjLlR9eBatWsYBJzun54=;
+        b=MLTg0/LzqhpUwOxpdbOAzJFrjfUaEK1uQ3fUWp1VBJEgA04hNfdaf7jnwHFH0g1gk1aj+S
+        ah3PHg1j4H3SN70f+IkJRVic3hGwcbk1h8rif2KjNkWrVZNoZngC57rrvIKckJ6HkMJ/vS
+        Al7h69Ea84bcUEfYRRGt3SG4ibvb3Ys=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-148-jIcey9tJN-e2IZXzaHrR-g-1; Tue, 05 Nov 2019 13:29:22 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 65285800C73;
+        Tue,  5 Nov 2019 18:29:18 +0000 (UTC)
+Received: from gondolin (unknown [10.36.118.27])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 02D575C1BB;
+        Tue,  5 Nov 2019 18:28:54 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 19:28:51 +0100
+From:   Cornelia Huck <cohuck@redhat.com>
+To:     Alex Williamson <alex.williamson@redhat.com>
+Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        mst@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        maxime.coquelin@redhat.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, rob.miller@broadcom.com,
+        xiao.w.wang@intel.com, haotian.wang@sifive.com,
+        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
+        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
+        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
+        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
+        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
+        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V8 3/6] mdev: introduce device specific ops
+Message-ID: <20191105192851.40548978.cohuck@redhat.com>
+In-Reply-To: <20191105104418.1735d800@x1.home>
+References: <20191105093240.5135-1-jasowang@redhat.com>
+        <20191105093240.5135-4-jasowang@redhat.com>
+        <20191105175025.1a620844.cohuck@redhat.com>
+        <20191105104418.1735d800@x1.home>
+Organization: Red Hat GmbH
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: jIcey9tJN-e2IZXzaHrR-g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pattern here is to avoid possible false sharing. However, due to
-compiler optimizations the code may simply collapse to the write if we
-omit READ_ONCE/WRITE_ONCE:
-https://github.com/google/ktsan/wiki/READ_ONCE-and-WRITE_ONCE#it-may-improve-performance
+On Tue, 5 Nov 2019 10:44:18 -0700
+Alex Williamson <alex.williamson@redhat.com> wrote:
 
-==================================================================
-BUG: KCSAN: data-race in wbt_wait / wbt_wait
+> On Tue, 5 Nov 2019 17:50:25 +0100
+> Cornelia Huck <cohuck@redhat.com> wrote:
+>=20
+> > On Tue,  5 Nov 2019 17:32:37 +0800
+> > Jason Wang <jasowang@redhat.com> wrote:
+> >  =20
+> > > Currently, except for the create and remove, the rest of
+> > > mdev_parent_ops is designed for vfio-mdev driver only and may not hel=
+p
+> > > for kernel mdev driver. With the help of class id, this patch
+> > > introduces device specific callbacks inside mdev_device
+> > > structure. This allows different set of callback to be used by
+> > > vfio-mdev and virtio-mdev.
+> > >=20
+> > > Reviewed-by: Parav Pandit <parav@mellanox.com>
+> > > Signed-off-by: Jason Wang <jasowang@redhat.com>
+> > > ---
+> > >  .../driver-api/vfio-mediated-device.rst       | 35 +++++++++----
+> > >  MAINTAINERS                                   |  1 +
+> > >  drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+> > >  drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+> > >  drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+> > >  drivers/vfio/mdev/mdev_core.c                 | 24 ++++++++-
+> > >  drivers/vfio/mdev/mdev_private.h              |  5 ++
+> > >  drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+> > >  include/linux/mdev.h                          | 43 ++++-----------
+> > >  include/linux/mdev_vfio_ops.h                 | 52 +++++++++++++++++=
+++
+> > >  samples/vfio-mdev/mbochs.c                    | 20 ++++---
+> > >  samples/vfio-mdev/mdpy.c                      | 20 ++++---
+> > >  samples/vfio-mdev/mtty.c                      | 18 ++++---
+> > >  13 files changed, 206 insertions(+), 99 deletions(-)
+> > >  create mode 100644 include/linux/mdev_vfio_ops.h
+> > >    =20
+> >=20
+> > (...)
+> >  =20
+> > > @@ -172,10 +163,34 @@ that a driver should use to unregister itself w=
+ith the mdev core driver::
+> > > =20
+> > >  =09extern void mdev_unregister_device(struct device *dev);
+> > > =20
+> > > -It is also required to specify the class_id in create() callback thr=
+ough::
+> > > +As multiple types of mediated devices may be supported, class id nee=
+ds
+> > > +to be specified in the create callback(). This could be done   =20
+> >=20
+> > The brackets should probably go behind 'create'?
+> >  =20
+> > > +explicitly for the device that does not use on mdev bus for its   =
+=20
+> >=20
+> > "for devices that do not use the mdev bus" ?
+> >=20
+> > But why wouldn't they? I feel like I've missed some discussion here :/ =
+=20
+>=20
+> The device ops provide a route through mdev-core for known callbacks,
+> which is primarily useful when we have 1:N relation between mdev bus
+> driver and vendor drivers.  The obvious example here is vfio-mdev,
+> where we have GVT-g, vfio-ap, vfio-ccw, NVIDIA GRID, and various sample
+> drivers all advertising vfio-mdev support via their class id.  However,
+> if we have a tightly coupled vendor driver and mdev bus driver, as the
+> mlx5 support that Parav is developing, the claim is that they prefer
+> not to expose any device ops and intend to interact directly with the
+> mdev device.  At least that's my understanding.  Thanks,
+>=20
+> Alex
 
-read to 0xffff88821aa6d140 of 8 bytes by task 10372 on cpu 1:
- wb_timestamp block/blk-wbt.c:88 [inline]
- wb_timestamp block/blk-wbt.c:83 [inline]
- wbt_wait+0x1f9/0x250 block/blk-wbt.c:587
- __rq_qos_throttle+0x47/0x70 block/blk-rq-qos.c:72
- rq_qos_throttle block/blk-rq-qos.h:185 [inline]
- blk_mq_make_request+0x29c/0xf60 block/blk-mq.c:1971
- generic_make_request block/blk-core.c:1064 [inline]
- generic_make_request+0x196/0x740 block/blk-core.c:1006
- submit_bio+0x96/0x3c0 block/blk-core.c:1190
- submit_bh_wbc+0x40f/0x460 fs/buffer.c:3095
- submit_bh fs/buffer.c:3101 [inline]
- __bread_slow fs/buffer.c:1177 [inline]
- __bread_gfp+0xe7/0x1e0 fs/buffer.c:1359
- sb_bread include/linux/buffer_head.h:307 [inline]
- fat__get_entry+0x35e/0x4f0 fs/fat/dir.c:100
- fat_get_entry fs/fat/dir.c:128 [inline]
- fat_get_short_entry+0x103/0x200 fs/fat/dir.c:877
- fat_subdirs+0x6b/0x110 fs/fat/dir.c:943
- fat_read_root fs/fat/inode.c:1416 [inline]
- fat_fill_super+0x1552/0x1f50 fs/fat/inode.c:1862
- vfat_fill_super+0x3b/0x50 fs/fat/namei_vfat.c:1050
- mount_bdev+0x262/0x2d0 fs/super.c:1415
- vfat_mount+0x3e/0x60 fs/fat/namei_vfat.c:1057
+Ah, ok.
 
-write to 0xffff88821aa6d140 of 8 bytes by task 10375 on cpu 0:
- wb_timestamp block/blk-wbt.c:89 [inline]
- wb_timestamp block/blk-wbt.c:83 [inline]
- wbt_wait+0x21e/0x250 block/blk-wbt.c:587
- __rq_qos_throttle+0x47/0x70 block/blk-rq-qos.c:72
- rq_qos_throttle block/blk-rq-qos.h:185 [inline]
- blk_mq_make_request+0x29c/0xf60 block/blk-mq.c:1971
- generic_make_request block/blk-core.c:1064 [inline]
- generic_make_request+0x196/0x740 block/blk-core.c:1006
- submit_bio+0x96/0x3c0 block/blk-core.c:1190
- mpage_bio_submit fs/mpage.c:66 [inline]
- mpage_readpages+0x36c/0x3c0 fs/mpage.c:410
- blkdev_readpages+0x36/0x50 fs/block_dev.c:620
- read_pages+0xa2/0x2d0 mm/readahead.c:126
- __do_page_cache_readahead+0x353/0x390 mm/readahead.c:212
- force_page_cache_readahead+0x13a/0x1f0 mm/readahead.c:243
- page_cache_sync_readahead+0x1cf/0x1e0 mm/readahead.c:522
- generic_file_buffered_read mm/filemap.c:2050 [inline]
- generic_file_read_iter+0xeb6/0x1440 mm/filemap.c:2323
- blkdev_read_iter+0xb2/0xe0 fs/block_dev.c:2010
+So maybe use the phrasing "devices that interact with the mdev device
+directly" vs "devices that use device-specific ops" instead?
 
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 10375 Comm: blkid Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-==================================================================
+Not a strong critique, though.
 
-Reported-by: syzbot+ba8947364367f96fe16b@syzkaller.appspotmail.com
-Signed-off-by: Marco Elver <elver@google.com>
----
- block/blk-wbt.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/block/blk-wbt.c b/block/blk-wbt.c
-index 8641ba9793c5..ce281a9007a6 100644
---- a/block/blk-wbt.c
-+++ b/block/blk-wbt.c
-@@ -85,8 +85,8 @@ static void wb_timestamp(struct rq_wb *rwb, unsigned long *var)
- 	if (rwb_enabled(rwb)) {
- 		const unsigned long cur = jiffies;
- 
--		if (cur != *var)
--			*var = cur;
-+		if (cur != READ_ONCE(*var))
-+			WRITE_ONCE(*var, cur);
- 	}
- }
- 
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+>=20
+> > > +operation through:
+> > > =20
+> > >  =09int mdev_set_class(struct mdev_device *mdev, u16 id);
+> > > =20
+> > > +For the device that uses on the mdev bus for its operation, the
+> > > class   =20
+> >=20
+> > "For devices that use the mdev bus..."
+> >=20
+> > But same comment as above.
+> >  =20
+> > > +should provide helper function to set class id and device
+> > > specific +ops. E.g for vfio-mdev devices, the function to be
+> > > called is:: +
+> > > +=09int mdev_set_vfio_ops(struct mdev_device *mdev,
+> > > +                              const struct mdev_vfio_device_ops
+> > > *vfio_ops); +
+> > > +The class id (set by this function to MDEV_CLASS_ID_VFIO) is
+> > > used to +match a device with an mdev driver via its id table. The
+> > > device +specific callbacks (specified in *vfio_ops) are
+> > > obtainable via +mdev_get_vfio_ops() (for use by the mdev bus
+> > > driver). A vfio-mdev +device (class id MDEV_CLASS_ID_VFIO) uses
+> > > the following +device-specific ops:
+> > > +
+> > > +* open: open callback of vfio mediated device
+> > > +* close: close callback of vfio mediated device
+> > > +* ioctl: ioctl callback of vfio mediated device
+> > > +* read : read emulation callback
+> > > +* write: write emulation callback
+> > > +* mmap: mmap emulation callback
+> > > +
+> > >  Mediated Device Management Interface Through sysfs
+> > >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D   =20
+> >=20
+> > Otherwise, looks good. =20
+>=20
 
