@@ -2,174 +2,186 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 905F1C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82F23C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F75A21925
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35DEC214B2
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:19:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="hiQv1SCT"
+	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="OOxUMQEA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390906AbfKETQC (ORCPT
+        id S2390833AbfKETTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:16:02 -0500
-Received: from lelv0142.ext.ti.com ([198.47.23.249]:60696 "EHLO
-        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390526AbfKETQB (ORCPT
+        Tue, 5 Nov 2019 14:19:03 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:36212 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390734AbfKETTC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:16:01 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA5JFQhd056692;
-        Tue, 5 Nov 2019 13:15:26 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572981326;
-        bh=EcoGS6j0s8IWE01lKKx9TXLRSHW8gbHmupnZYacNFWg=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=hiQv1SCTJvcMHBzAopoD1ytQNtPv60OtKZshyfH/29z8ioz2LfWvN1b6r1jvxX/mB
-         4gfSiu8zMV3JsJtVr7SuiOmlbSRr5eM6ayTtFaTHNdIp7aBtbX3gkajdTkAaBJyJDz
-         Kuu5/s09dJ9Njpx1TrveXVrZ/3+olbhatO4LjHEI=
-Received: from DLEE113.ent.ti.com (dlee113.ent.ti.com [157.170.170.24])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA5JFQK7069157
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 13:15:26 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 5 Nov
- 2019 13:15:11 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 13:15:11 -0600
-Received: from [10.250.33.226] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA5JFPs1030118;
-        Tue, 5 Nov 2019 13:15:25 -0600
-Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
- driver
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>,
-        <mazziesaccount@gmail.com>
-CC:     Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        <linux-leds@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linux-clk@vger.kernel.org>,
-        <linux-gpio@vger.kernel.org>, <linux-rtc@vger.kernel.org>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-From:   Dan Murphy <dmurphy@ti.com>
-Message-ID: <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
-Date:   Tue, 5 Nov 2019 13:14:33 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 14:19:02 -0500
+Received: by mail-oi1-f196.google.com with SMTP id j7so18629691oib.3
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 11:19:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=U0gVoLTHTml/gTSJmP+N16diGYUPEmiGz2q8mM7NXHk=;
+        b=OOxUMQEAOFPENB/oE0Z8SW3Z7UflImE0VDVViDzkOks7EO3fibl4e7tuZLnAmV/0xy
+         55mshn0TD4wtQpxx0WGU/Wv+E97iXyKsQk+03/HRwxVwCuRqf1pRkg9V2tMXtzY4WYiM
+         F4jgTVeAeOTGhX68mN+mRwvqul78QWjiBPvG0=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=U0gVoLTHTml/gTSJmP+N16diGYUPEmiGz2q8mM7NXHk=;
+        b=Pyy/4InfK6utupkMJKKh8kQPXpn/oDPZQwxqU7AlP2gkgaHqiAdwVMgJb+L/E4AKuL
+         uEOq4pSUPoztNE4oupJUVm7IsWvV2Kp7M+QvTxf9ccWaiz0R5rjJoUcbwUxxGROW6UZm
+         B0btqsUlLd81fL0dLqUfsvu0KSyAAAlahBe1hU5/1ND1tsV/wWGoGc0Ery2oNhKJBHwb
+         HP8pLjzBdj5pG0oMizGrM0Yj/GBmD5gEPWW1tuJsrf5ugYGKzK2vVqh7krL1VQTm1LU0
+         3M9sbCffHlmq8Q2BKTX3xfgjHU3HcXanFbt1y6/ADJyymOy+nwEQaraQs5vjzUpoZ9yy
+         M+uA==
+X-Gm-Message-State: APjAAAVbN79lXqeYZPn/txBmPBDHduvOBMITA8I+pC5hY8mHoXCrptqR
+        xB5m8hcvhutft7OKt6kr5K9Cd1buoAZWhuU7ET9Qdg==
+X-Google-Smtp-Source: APXvYqyMJ9qfRIzANGCXGXlTsy/hEe5BGiTXhg7eohZGxpqDhizzylRZyVPSZU3D/KplPLUFZPAr06j/Scl4Kh2mX20=
+X-Received: by 2002:aca:b805:: with SMTP id i5mr546142oif.110.1572981541762;
+ Tue, 05 Nov 2019 11:19:01 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191025234834.28214-1-john.stultz@linaro.org>
+ <20191104095823.GD10326@phenom.ffwll.local> <CALAqxLW_CoAn-KXki0dGKK+vo-R4CTnjt1Azrw=mRdL8BUFGWw@mail.gmail.com>
+ <20191105094259.GX10326@phenom.ffwll.local> <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
+In-Reply-To: <CALAqxLWvNOL=Exybb25GgYQujyJcPNTsFuaBnjLQPKTkVAi6Xw@mail.gmail.com>
+From:   Daniel Vetter <daniel@ffwll.ch>
+Date:   Tue, 5 Nov 2019 20:18:50 +0100
+Message-ID: <CAKMK7uFSBNqVWy0N-GH7CzH-R7c9CVb97LgCffdMzGCgvVan4Q@mail.gmail.com>
+Subject: Re: [RFC][PATCH 0/2] Allow DMA BUF heaps to be loaded as modules
+To:     John Stultz <john.stultz@linaro.org>
+Cc:     lkml <linux-kernel@vger.kernel.org>,
+        Sandeep Patil <sspatil@google.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Liam Mark <lmark@codeaurora.org>, Yue Hu <huyue2@yulong.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        "Andrew F . Davis" <afd@ti.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pratik Patel <pratikp@codeaurora.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Matti
-
-On 11/1/19 6:32 AM, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC LED driver device tree bindings.
+On Tue, Nov 5, 2019 at 6:41 PM John Stultz <john.stultz@linaro.org> wrote:
 >
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+> On Tue, Nov 5, 2019 at 1:43 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> >
+> > On Mon, Nov 04, 2019 at 10:57:44AM -0800, John Stultz wrote:
+> > > On Mon, Nov 4, 2019 at 1:58 AM Daniel Vetter <daniel@ffwll.ch> wrote:
+> > > > On Fri, Oct 25, 2019 at 11:48:32PM +0000, John Stultz wrote:
+> > > So even if the heaps are configured via DT (which at the moment there
+> > > is no such binding, so that's not really a valid method yet), there's
+> > > still the question of if the heap is necessary/makes sense on the
+> > > device. And the DT would only control the availability of the heap
+> > > interface, not if the heap driver is loaded or not.
+> >
+> > Hm I thought the cma regions are configured in DT? How does that work if
+> > it's not using DT?
 >
-> Changes from v2 - new patch
+> So yea, CMA regions are either configured by DT or setup at build time
+> (I think there's a cmdline option to set it up as well).
 >
->   .../bindings/leds/rohm,leds-bd71828.yaml      | 46 +++++++++++++++++++
->   1 file changed, 46 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
+> But the CMA regions and the dmabuf cma heap driver are separate
+> things. The latter uses the former.
+
+Huh, I assumed the plan is that whenever there's a cma region, we want
+to instantiate a dma-buf heap for it? Why/when would we not want to do
+that?
+
+> > > On the HiKey/HiKey960 boards, we have to allocate contiguous buffers
+> > > for the display framebuffer. So gralloc uses ION to allocate from the
+> > > CMA heap. However on the db845c, it has no such restrictions, so the
+> > > CMA heap isn't necessary.
+> >
+> > Why do you have a CMA region for the 2nd board if you don't need it?
+> > _That_ sounds like some serious memory waster, not a few lines of code
+> > loaded for nothing :-)
 >
-> diff --git a/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> new file mode 100644
-> index 000000000000..d8aeac9911ef
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/rohm,leds-bd71828.yaml
-> @@ -0,0 +1,46 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/leds/rohm,leds-bd71828.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD71828 Power Management Integrated Circuit LED driver
-> +
-> +maintainers:
-> +  - Jacek Anaszewski <jacek.anaszewski@gmail.com>
-> +  - Pavel Machek <pavel@ucw.cz>
-> +  - Dan Murphy <dmurphy@ti.com>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
-I believe you are the maintainer of this driver not the maintainers
-> +
-> +description: |
-> +  This module is part of the ROHM BD71828 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
-> +
-> +  The LED controller is represented as a sub-node of the PMIC node on the device
-> +  tree.
-> +
-> +  The device has two LED outputs referred as GRNLED and AMBLED in data-sheet.
-> +
-> +properties:
-> +  compatible:
-> +    const: rohm,bd71828-led
-> +
-> +patternProperties:
-> +  "^led-[1-2]$":
-> +    type: object
-> +    description:
-> +      Properties for a single LED. Nodes must be named as led-1 and led-2.
+> ??? That's not what I said above.  If the db845c doesn't need CMA it
+> won't have a CMA region.
+>
+> The issue at hand is that we may want to avoid loading the dmabuf CMA
+> heap driver on a board that doesn't use CMA.
 
-Why is this required?  Can't we use the reg as the number and then we 
-can use standard node labels
+So the CMA core code is also a module, or how does that work? Not
+loading the cma dma-buf heap, but keeping all the other cma code
+around feels slightly silly. Do we have numbers that justify this
+silliness?
 
-like led@<reg value>.  Then we can check in the code to make sure that 
-the output is not out of bounds.
+> > > With Android's GKI effort, there needs to be one kernel that works on
+> > > all the devices, and they are using modules to try to minimize the
+> > > amount of memory spent on functionality that isn't universally needed.
+> > > So on devices that don't need the CMA heap, they'd probably prefer not
+> > > to load the CMA dmabuf heap driver, so it would be best if it could be
+> > > built as a module.  If we want to build the CMA heap as a module, the
+> > > symbols it uses need to be exported.
+> >
+> > Yeah, I guess I'm disagreeing on whether dma-buf heaps are core or not.
+>
+> That's fine to dispute. I'm not really in a place to assert one way or
+> not, but the Android folks have made their ION system and CMA heaps
+> loadable via a module, so it would seem like having the dmabuf system
+> and CMA heaps be modular would be useful to properly replace that
+> usage.
+>
+> For instance, the system heap as a module probably doesn't make much
+> sense, as most boards that want to use the dmabuf heaps interface are
+> likely to use that as well.  CMA is more optional as not all boards
+> will use that one, so it might make sense to avoid loading it.
+>
+> Sandeep: Can you chime in here as to how critical having the system
+> and cma heaps be modules are?
+>
+>
+> > > > Exporting symbols for no real in-tree users feels fishy.
+> > >
+> > > I'm submitting an in-tree user here. So I'm not sure what you mean?  I
+> > > suspect you're thinking there is some hidden/nefarious plan here, but
+> > > really there isn't.
+> >
+> > I was working under the assumption that you're only exporting the symbols
+> > for other heaps, and keep the current ones in-tree.
+>
+> No. I'm trying to allow the (hopefully-soon-to-be-in-tree) system and
+> cma heap drivers to be loaded from a module.
+> If other heaps need exports, they can submit their heaps upstream and
+> argue for the exported symbols themselves.
+>
+> > Are there even any
+> > out-of-tree dma-buf heaps still? out-of-tree and legit different use-case
+> > I mean ofc, not just out-of-tree because inertia :-)
+>
+> So as Andrew mentioned, he has some dmabuf heaps he's working on at
+> TI.  From what I've heard the qualcomm folks like the dmabuf heaps
+> approach, but I'm not sure if they've taken a pass at converting their
+> vendor ION heaps to it yet.
+>
+> The main reason I'm only submitting system and CMA is because those
+> are the only two I personally have a user for (HiKey/HiKey960 boards).
+> It's my hope that once we deprecate ION in Android, vendors will
+> migrate and we'll be able to push them to upstream their heaps as
+> well.
 
-> +    properties:
-> +      #$ref: "common.yaml#"
-> +      function:
-> +        description:
-> +          Purpose of LED as defined in dt-bindings/leds/common.h
-> +        $ref: "/schemas/types.yaml#/definitions/string"
-> +      color:
-> +        description:
-> +          LED colour as defined in dt-bindings/leds/common.h
-
-s/colour/color
-
-But again I believe it is indicated above that the LEDs are either going 
-to be green or amber.  Unless they can be any color.
-
-Are there plans to make sure that the color is either green or amber in 
-the code?  I don't see a patch for the code in this series
-
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +
-> +required:
-> +  - compatible
-
-Is there an example of the node and properties?
-
-Dan
-
+I think for upstream I'd want to see those other heaps first. If
+they're mostly driver allocators exposed as heaps, then I think we
+need something different than heap modules, maybe allow dma-buf to
+allocate from drivers instead. But afaiui all such driver allocators
+we have in upstream are cma regions only right now.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
++41 (0) 79 365 57 48 - http://blog.ffwll.ch
