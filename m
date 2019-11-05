@@ -2,141 +2,118 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E11C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:55:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FA2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD960204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:55:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572980129;
-	bh=9D3y5IVc0Cdhd0Dgs00PzxIFl0KZgCCUWC6wNfyvr1k=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=fgOPN8tBIo+DxZO8d+zfSYI7S1wadhdJ421bqtK1mPl8kfqD8Is6o6XZiMPRciyeJ
-	 3XvxgF4btfXWdGeA/VhQ853zR2f8CBwzTVy5bBp/wL62im76mlbIN0nnuQrHaE1JHL
-	 9ZRxFtvJ94ahQ1fn1LLisuHEcpaj3SUHBMD0xDHA=
+	by mail.kernel.org (Postfix) with ESMTP id 6141B204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390836AbfKESz2 (ORCPT
+        id S2390860AbfKES4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:55:28 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36482 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390651AbfKESz2 (ORCPT
+        Tue, 5 Nov 2019 13:56:09 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:42364 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390651AbfKES4J (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:55:28 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=dcXKl/0UqJ+dCjeE5w/EDI2rZhDXMA0VO2ph2g/2lKo=; b=YkXoDtn0mNp3
-        jFthqMO+OvdjD02O8vSt6QOaYPW6A2o/HfrkS1KnXTTHqzmAJmr6M16eewkN96qkeu3oNTOX3O1ed
-        hqBjH5+GIdql2zgffYYMjNS78o0IXbse7cvkL9co0/585HrS3ftkHrcJIsy1nelXT1wmAcZh3rnxx
-        zf7Xw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iS3z0-0007Pi-Ja; Tue, 05 Nov 2019 18:55:14 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 91F312743284; Tue,  5 Nov 2019 18:55:12 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Olivier Moysan <olivier.moysan@st.com>
-Cc:     alexandre.torgue@st.com, alsa-devel@alsa-project.org,
-        arnaud.pouliquen@st.com, benjamin.gaignard@st.com,
-        broonie@kernel.org, lgirdwood@gmail.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        Mark Brown <broonie@kernel.org>, mcoquelin.stm32@gmail.com,
-        olivier.moysan@st.com, perex@perex.cz, tiwai@suse.com
-Subject: Applied "ASoC: stm32: sai: add restriction on mmap support" to the asoc tree
-In-Reply-To: <20191104133654.28750-1-olivier.moysan@st.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191105185512.91F312743284@ypsilon.sirena.org.uk>
-Date:   Tue,  5 Nov 2019 18:55:12 +0000 (GMT)
+        Tue, 5 Nov 2019 13:56:09 -0500
+Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iS3zm-0002DU-Un; Tue, 05 Nov 2019 19:56:03 +0100
+Date:   Tue, 5 Nov 2019 19:56:01 +0100 (CET)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Oleg Nesterov <oleg@redhat.com>
+cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
+        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Keith Packard <keithp@keithp.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: handle_exit_race && PF_EXITING
+In-Reply-To: <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
+Message-ID: <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
+References: <20191104002909.25783-1-shawn@git.icu> <87woceslfs.fsf@oldenburg2.str.redhat.com> <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <20191105152728.GA5666@redhat.com> <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Tue, 5 Nov 2019, Thomas Gleixner wrote:
+> On Tue, 5 Nov 2019, Thomas Gleixner wrote:
+> > On Tue, 5 Nov 2019, Oleg Nesterov wrote:
+> > > On 11/05, Thomas Gleixner wrote:
+> > > >
+> > > > Out of curiosity, what's the race issue vs. robust list which you are
+> > > > trying to solve?
+> > > 
+> > > Off-topic, but this reminds me...
+> > > 
+> > > 	#include <sched.h>
+> > > 	#include <assert.h>
+> > > 	#include <unistd.h>
+> > > 	#include <syscall.h>
+> > > 
+> > > 	#define FUTEX_LOCK_PI		6
+> > > 
+> > > 	int main(void)
+> > > 	{
+> > > 		struct sched_param sp = {};
+> > > 
+> > > 		sp.sched_priority = 2;
+> > > 		assert(sched_setscheduler(0, SCHED_FIFO, &sp) == 0);
+> > > 
+> > > 		int lock = vfork();
+> > > 		if (!lock) {
+> > > 			sp.sched_priority = 1;
+> > > 			assert(sched_setscheduler(0, SCHED_FIFO, &sp) == 0);
+> > > 			_exit(0);
+> > > 		}
+> > > 
+> > > 		syscall(__NR_futex, &lock, FUTEX_LOCK_PI, 0,0,0);
+> > > 		return 0;
+> > > 	}
+> > > 
+> > > this creates the unkillable RT process spinning in futex_lock_pi() on
+> > > a single CPU machine (or you can use taskset).
+> > 
+> > Uuurgh.
+> 
+> But staring more at it. That's a scheduler bug.
+> 
+> parent	    	    	child
+> 
+>  set FIFO prio 2
+> 
+>  fork()	         ->	set FIFO prio 1
+>  		 	 sched_setscheduler(...)
+> 			   return from syscall		<= BUG
+> 
+>  		 	_exit()
+> 
+> When the child lowers its priority from 2 to 1, then the parent _must_
+> preempt the child simply because the parent is now the top priority task on
+> that CPU. Child should never reach exit before the parent blocks on the
+> futex.
 
-   ASoC: stm32: sai: add restriction on mmap support
+I'm a moron. It's vfork() not fork() so the behaviour is expected.
 
-has been applied to the asoc tree at
-
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.4
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
+Staring more at the trace which shows me where this goes down the drain.
 
 Thanks,
-Mark
 
-From eaf072e512d54c95b0977eda06cbca3151ace1e5 Mon Sep 17 00:00:00 2001
-From: Olivier Moysan <olivier.moysan@st.com>
-Date: Mon, 4 Nov 2019 14:36:54 +0100
-Subject: [PATCH] ASoC: stm32: sai: add restriction on mmap support
-
-Do not support mmap in S/PDIF mode. In S/PDIF mode
-the buffer has to be copied, to allow the channel status
-bits insertion.
-
-Signed-off-by: Olivier Moysan <olivier.moysan@st.com>
-Link: https://lore.kernel.org/r/20191104133654.28750-1-olivier.moysan@st.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- sound/soc/stm/stm32_sai_sub.c | 12 +++++++++++-
- 1 file changed, 11 insertions(+), 1 deletion(-)
-
-diff --git a/sound/soc/stm/stm32_sai_sub.c b/sound/soc/stm/stm32_sai_sub.c
-index a4060813bc74..48e629ac2d88 100644
---- a/sound/soc/stm/stm32_sai_sub.c
-+++ b/sound/soc/stm/stm32_sai_sub.c
-@@ -1218,6 +1218,16 @@ static int stm32_sai_pcm_process_spdif(struct snd_pcm_substream *substream,
- 	return 0;
- }
- 
-+/* No support of mmap in S/PDIF mode */
-+static const struct snd_pcm_hardware stm32_sai_pcm_hw_spdif = {
-+	.info = SNDRV_PCM_INFO_INTERLEAVED,
-+	.buffer_bytes_max = 8 * PAGE_SIZE,
-+	.period_bytes_min = 1024,
-+	.period_bytes_max = PAGE_SIZE,
-+	.periods_min = 2,
-+	.periods_max = 8,
-+};
-+
- static const struct snd_pcm_hardware stm32_sai_pcm_hw = {
- 	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_MMAP,
- 	.buffer_bytes_max = 8 * PAGE_SIZE,
-@@ -1270,7 +1280,7 @@ static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config = {
- };
- 
- static const struct snd_dmaengine_pcm_config stm32_sai_pcm_config_spdif = {
--	.pcm_hardware = &stm32_sai_pcm_hw,
-+	.pcm_hardware = &stm32_sai_pcm_hw_spdif,
- 	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
- 	.process = stm32_sai_pcm_process_spdif,
- };
--- 
-2.20.1
-
+	tglx
