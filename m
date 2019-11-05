@@ -7,66 +7,66 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A66C5C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:56:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7733C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:57:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5CCA22190F
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:56:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 70379217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:57:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="PY395sIJ"
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UphG7W/P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390635AbfKER4I (ORCPT
+        id S2390576AbfKER5j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:56:08 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44169 "EHLO
+        Tue, 5 Nov 2019 12:57:39 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:44379 "EHLO
         mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390579AbfKER4H (ORCPT
+        with ESMTP id S2389356AbfKER5j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:56:07 -0500
-Received: by mail-pg1-f196.google.com with SMTP id f19so5680014pgk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 09:56:05 -0800 (PST)
+        Tue, 5 Nov 2019 12:57:39 -0500
+Received: by mail-pg1-f196.google.com with SMTP id f19so5683632pgk.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 09:57:38 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=sifive.com; s=google;
         h=date:from:to:cc:subject:in-reply-to:message-id:references
          :user-agent:mime-version;
-        bh=gEtDP14dN6Aopp+R4qBmWYNaj39NX6WXZoaeemngS3Y=;
-        b=PY395sIJIeAvoOi6WRPmLSQFj814XdRslNX2nsBoIxS92tUK4URsIpYMwW8m9776cd
-         sfzc52RQMUaZXMvTIjmjI8YB2eWwbKzuVGcAGkBEDruqEuaflYTU40WUSngDmcpkAA9w
-         G0NM15wjdHgH1mkwzJpEOFqNydQeogFgoTKcaEc1Aq7EXkKRmcSkhUlAOBsdBSX0jHPS
-         1Ha5rwiu4aP1k55U1oIw6sALV2rXAAlQrTshfd05MpXJ0RgQEpSJeT3n5qNkRnMAM7eo
-         H4FpTp9gHydm/zRtPjZIrsUl7Spd8ZNfQsrteth0AOvlQ5nxpcj5l1b/pB019EzzbBfo
-         gh/A==
+        bh=c0mtHUCtv4Yo3jGG/+KHkyMmGtxcfes6cDs+e6Frq+s=;
+        b=UphG7W/P8xgSpCGuYHEcZ08huUl9wAKSpHkU0pRF86YW294robH5U3MqecxtxB6oCK
+         ghmshSzuPxqNIEl0pRmOpXhK+JSdeuXBMZZQdliIvGmY2WqMTsFI6YmHrUUay0m0vLMj
+         pRMc5fpSk002fCAh6WlyuKjsF8CsUEM8ZJ/sJBnSNzNw3rXWKdj9orqY/NeOL2oQRzAZ
+         LsEjB0XebUQfcm9HTSmJIBzjhjugpgtWWRPshwVCz70zoxvT2rMb/DFd0Ax1y8Doi6eP
+         JK6Hv3mAdWvnViOeiZID2I+GewsXsn0du7KlL9Zc3Sigzl6ksqY7oJdjTg2w3pXfAW1X
+         mUQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
          :references:user-agent:mime-version;
-        bh=gEtDP14dN6Aopp+R4qBmWYNaj39NX6WXZoaeemngS3Y=;
-        b=Y2825Zm1njWdayQxr4LHsfxv+dNv3xPONxXBycr1gkG5PGaTZesCZQpM6REETaT+qQ
-         IsSE7d6mRELDNtAgDYQwDEQiGx9he82LVjx77zMEiiQAV30jcM5LYRhghVuAUjSaJErp
-         6y2nCmOMbRwy89cdgyEmGf2LFxeJkvsNgBy9UoM5pQE58XmdpJG0FRJn43SARzIqreWc
-         Y+mw78o4cfwdhQNLsTDH1pbhZZTDwKUvT+nCD4MNY73zHWh3KwrAhm46UNd3Y+7WrIfg
-         6naL8CHiDfBs8eyB5UN4liqkOepLd02Rw3tUXqeNmukI96i8I7XPRAlCbm6vKr2kevdn
-         98zQ==
-X-Gm-Message-State: APjAAAUlw4qeGbRG6NkfPxpoGGjpT+2sOlmtbC8A1Ejew+2ujos4x5n1
-        mP97lK/zdqdB54N5YvItTxXRFHfMYAw=
-X-Google-Smtp-Source: APXvYqxIzbwt1VQ4GnAd4cRx9QszC95A4+wdzauFhSwvV93mlD1EH3Sh83aS41Sk17giA8vmhwk7oA==
-X-Received: by 2002:a17:90a:5895:: with SMTP id j21mr300320pji.129.1572976564735;
-        Tue, 05 Nov 2019 09:56:04 -0800 (PST)
+        bh=c0mtHUCtv4Yo3jGG/+KHkyMmGtxcfes6cDs+e6Frq+s=;
+        b=sfJ4FfC3/yIoQIYkADMlQ8tPtBt/5++p8nJayQtGVgOrPobu/vvdL7LcmBbnN2BB6p
+         qshmSrHqtg6SrkCDGMUM5+dFIQpfGecO1Bm+rim1PqgqC2T8IulryvggIw0NiYn3zo5B
+         6gVm/J0Rv9u4uGXQabGGqq5Np/7BH6LIPxcIHSJRmPBbYQ+BTVfO06scdGkIB2OORsHW
+         5IuWpBUJOW8AUQuYBEOM47wTKfTH7Mau5jwwdxc4N488LTnHLK3wIpmQ963xPH0M9kcQ
+         q0Qv3A3ZubygTxIvFGno4WN+o50RLMoLGU8YaZQD73pscEzsOJMJZbA6PG9zk/WDCHeJ
+         2dxA==
+X-Gm-Message-State: APjAAAWs4W8j+6j9d7nP5j6JDZ/2Pt4ESu2+DFqJaCo6KFuVsrRbYTIp
+        3KpU90/1vPKcAsgYq9BFY3yoAA==
+X-Google-Smtp-Source: APXvYqy3wwWydxrHeyjc6Eb35cWY/2/qFcCcpx8amSpa/BE+rR4sVcHxNi9WoyJzsyrfNormQeSjWw==
+X-Received: by 2002:a63:fa0d:: with SMTP id y13mr25432401pgh.18.1572976657179;
+        Tue, 05 Nov 2019 09:57:37 -0800 (PST)
 Received: from localhost ([64.62.168.194])
-        by smtp.gmail.com with ESMTPSA id v19sm75366pjr.14.2019.11.05.09.56.03
+        by smtp.gmail.com with ESMTPSA id w15sm6061286pfn.13.2019.11.05.09.57.36
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 09:56:04 -0800 (PST)
-Date:   Tue, 5 Nov 2019 09:56:03 -0800 (PST)
+        Tue, 05 Nov 2019 09:57:36 -0800 (PST)
+Date:   Tue, 5 Nov 2019 09:57:35 -0800 (PST)
 From:   Paul Walmsley <paul.walmsley@sifive.com>
 X-X-Sender: paulw@viisi.sifive.com
-To:     daniel.lezcano@linaro.org, tglx@linutronix.de
+To:     tglx@linutronix.de, jason@lakedaemon.net, maz@kernel.org
 cc:     Christoph Hellwig <hch@lst.de>, Palmer Dabbelt <palmer@sifive.com>,
         Damien Le Moal <damien.lemoal@wdc.com>,
         linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 01/12] riscv: abstract out CSR names for supervisor vs
  machine mode
 In-Reply-To: <20191028121043.22934-2-hch@lst.de>
-Message-ID: <alpine.DEB.2.21.9999.1911050955040.20606@viisi.sifive.com>
+Message-ID: <alpine.DEB.2.21.9999.1911050956230.20606@viisi.sifive.com>
 References: <20191028121043.22934-1-hch@lst.de> <20191028121043.22934-2-hch@lst.de>
 User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
 MIME-Version: 1.0
@@ -76,7 +76,7 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Daniel, Thomas,
+Jason, Marc, Thomas,
 
 On Mon, 28 Oct 2019, Christoph Hellwig wrote:
 
@@ -87,16 +87,17 @@ On Mon, 28 Oct 2019, Christoph Hellwig wrote:
 > 
 > Contains contributions from Damien Le Moal <Damien.LeMoal@wdc.com>
 > and Paul Walmsley <paul.walmsley@sifive.com>.
+> 
+> Signed-off-by: Christoph Hellwig <hch@lst.de>
 
-Care to give a quick ack to the drivers/clocksource/timer-riscv.c changes?
+Care to give a quick ack to the drivers/irqchip changes?
 
 
 thanks,
 
 - Paul
 
-> 
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
+
 > ---
 >  arch/riscv/Kconfig                 |  4 ++
 >  arch/riscv/include/asm/csr.h       | 72 +++++++++++++++++++++++++----
