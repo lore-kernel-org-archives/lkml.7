@@ -8,58 +8,58 @@ X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	USER_AGENT_GIT,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5E3C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1A75C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:56:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 73B5F206B8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 572CC21A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:56:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WX/V/VTf"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="jWGQrW7g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387582AbfKEX4o (ORCPT
+        id S2387599AbfKEX4s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:56:44 -0500
-Received: from mail-pg1-f201.google.com ([209.85.215.201]:36170 "EHLO
-        mail-pg1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387543AbfKEX4m (ORCPT
+        Tue, 5 Nov 2019 18:56:48 -0500
+Received: from mail-pg1-f202.google.com ([209.85.215.202]:34558 "EHLO
+        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387560AbfKEX4o (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:56:42 -0500
-Received: by mail-pg1-f201.google.com with SMTP id h12so16350147pgd.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 15:56:41 -0800 (PST)
+        Tue, 5 Nov 2019 18:56:44 -0500
+Received: by mail-pg1-f202.google.com with SMTP id w9so16295906pgl.1
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 15:56:43 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=xr3X122JfUZTOJ9HNPiJpW+Iyor6r4hGY/b4sjNxJZA=;
-        b=WX/V/VTfUhYNVK63Q6o2nwuNZuF84nG4taeFhEo17XXi/wiIq5TBNma6L2QWkkxymH
-         DvQMMy0aOWkuLzcjaD/VZ7I9iJTaYKRhuhci0d1Uv1dvow1PsPAbfcG7lofjVT32BZTo
-         XfopDA2vhLhs1jhnHF0BtxTMW++6XgIwcQqObAyguiG5eCzS2AdaeI/mW/++SFMdkYFO
-         0sFgOE5K8+grQi8hixiOmdeRZME3HY40NRXpHJTOGJP9Yp/g21dwfZOSqMKsicYNTg7M
-         PQxjmxBUU54ovXgSaLB6R/0V/BtxcVf6/NuKLrw9AecxZk0Kx+tl9gJtoHFRyt1RFLTp
-         RO5A==
+        bh=uzQ8cGBP/iiy1dmy29qxsrkA2y8A3VyyoGWk/X1qxUc=;
+        b=jWGQrW7gYc6D9nJteHiWYUXaoKd47FGvgCnUcq1RN0FNUvS12DXoQv/Qs2ZSsEmdsr
+         KIrZA7BzUYt42AyztGMVcz/QumFEYK2cJY5/FcPWOE01nPlBEr1XYQMmzvlCuOtePFHy
+         BrO2pUitDMPbbMwQ+djW4zvLYrFatsGxSZFpwthI0l0tEUjCd15qBB7CofGFXzjONnIJ
+         qdmdd/w16M48KK0143WbpUnJCYAPG0RUwEwhRL4ts3yhMXpE4SQA62x4WivBRaT/AZDF
+         1NajHEvW01XhI1VvxrXdeiyPREGJ54AL4BUaLlFQCeTXTsDjryTGcoQgi5Pmte9ZuS+r
+         +4hw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=xr3X122JfUZTOJ9HNPiJpW+Iyor6r4hGY/b4sjNxJZA=;
-        b=X0Y8xZtZxj6VXKvXAkoQPCCmZD/EbX5KrNsE9/RaVCPct4ydbLYrpwSUDTCgm1WVrG
-         9BF4lsIlUqUECOaGXvYa4R0nc3nQ8sbpMZDtI2SVSlTiHqFfNFCAPsLPWND8BVjS/Zxq
-         4nTZl2u4yx6jXABiYKcJwJbpnw3aC4wxTx2vircyYoeYmwF0ssWiF2IQdxK71fAjPh+N
-         VArFAEpMTcv2gyK9k2081fk5BO0zlN0NTk3HUdYhJhs/txnRblEaY6yZlQINNeDJYKEn
-         pocjQH0qik9wJiCSiNI/lc+xOtGAsIye+Z6i5JbWcOZFGCTcmrC4pzogKGxgb/WTgk7k
-         B2Sw==
-X-Gm-Message-State: APjAAAXHDnOGrLy7Oca9NKST/l8s9X0VHWQpkaAVlf+KT62FGs1NWn2C
-        LiQQBxX6/gq7RgO4vX8rYYKLopJjvaHVX8XTXh4=
-X-Google-Smtp-Source: APXvYqzws/iChASYEHCRVYS8P2kdCocZTmxir9yLCAbfQ2Y76yiotnVRg74apgBfcVGe/Rb1kCjSoUo8I9YbTGAoXKw=
-X-Received: by 2002:a65:5683:: with SMTP id v3mr19280245pgs.190.1572998200132;
- Tue, 05 Nov 2019 15:56:40 -0800 (PST)
-Date:   Tue,  5 Nov 2019 15:56:03 -0800
+        bh=uzQ8cGBP/iiy1dmy29qxsrkA2y8A3VyyoGWk/X1qxUc=;
+        b=l4qJpNwxURUWQ2hoBsQapY/6+n3aYqEtVmUXxmCJ0ZsjC6B6lVzq9AJ2jTU6H8c106
+         A37Y/wYD0An65H5x7Z/fJwAurOjU1DqO1HsMppqX1mM/inUcX23x8iycmPj8+5bR94WG
+         qjPRxf+nAPlKKnU5YalkVvwkAXio6zt3wNCjQmeRl67woU2EM8McNaeFqSbAmn/N8Kdc
+         BQ7xYcXbznrf41pSBXYKvWeSaFbN5Auqzwr6LQw9r8yDlso3MRgo27zjVpD0kkUi0oNv
+         +mZ40naLCffdIgVG0ju5xxedbm/RGopLrs74JfUNDs4osIPP9CJjOUmFJbVxkK7VFd7R
+         cWqg==
+X-Gm-Message-State: APjAAAVDAi8172fudrjg3kvIRBunM1AKA4m8SLJbjgu6gKz/x/wfD+9K
+        svGk/iX5ogYSg5HOIXV0A6K+VkSM+SuxwqqSMvc=
+X-Google-Smtp-Source: APXvYqzhnl/od1+4wqmG+HB56zcHmEodlg2M4/tt0l0rrKjOHl/n60b0sUyw2UaMRpO3OuPN2c7IjdKlcyCGNq68Qz4=
+X-Received: by 2002:a65:5382:: with SMTP id x2mr1469482pgq.420.1572998202872;
+ Tue, 05 Nov 2019 15:56:42 -0800 (PST)
+Date:   Tue,  5 Nov 2019 15:56:04 -0800
 In-Reply-To: <20191105235608.107702-1-samitolvanen@google.com>
-Message-Id: <20191105235608.107702-10-samitolvanen@google.com>
+Message-Id: <20191105235608.107702-11-samitolvanen@google.com>
 Mime-Version: 1.0
 References: <20191018161033.261971-1-samitolvanen@google.com> <20191105235608.107702-1-samitolvanen@google.com>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH v5 09/14] arm64: reserve x18 from general allocation with SCS
+Subject: [PATCH v5 10/14] arm64: preserve x18 when CPU is suspended
 From:   Sami Tolvanen <samitolvanen@google.com>
 To:     Will Deacon <will@kernel.org>,
         Catalin Marinas <catalin.marinas@arm.com>,
@@ -85,33 +85,68 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reserve the x18 register from general allocation when SCS is enabled,
-because the compiler uses the register to store the current task's
-shadow stack pointer. Note that all external kernel modules must also be
-compiled with -ffixed-x18 if the kernel has SCS enabled.
+Don't lose the current task's shadow stack when the CPU is suspended.
 
 Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
 Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
 Reviewed-by: Kees Cook <keescook@chromium.org>
 ---
- arch/arm64/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+ arch/arm64/include/asm/suspend.h |  2 +-
+ arch/arm64/mm/proc.S             | 14 ++++++++++++++
+ 2 files changed, 15 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/Makefile b/arch/arm64/Makefile
-index 2c0238ce0551..ef76101201b2 100644
---- a/arch/arm64/Makefile
-+++ b/arch/arm64/Makefile
-@@ -72,6 +72,10 @@ stack_protector_prepare: prepare0
- 					include/generated/asm-offsets.h))
- endif
+diff --git a/arch/arm64/include/asm/suspend.h b/arch/arm64/include/asm/suspend.h
+index 8939c87c4dce..0cde2f473971 100644
+--- a/arch/arm64/include/asm/suspend.h
++++ b/arch/arm64/include/asm/suspend.h
+@@ -2,7 +2,7 @@
+ #ifndef __ASM_SUSPEND_H
+ #define __ASM_SUSPEND_H
  
-+ifeq ($(CONFIG_SHADOW_CALL_STACK), y)
-+KBUILD_CFLAGS	+= -ffixed-x18
-+endif
-+
- ifeq ($(CONFIG_CPU_BIG_ENDIAN), y)
- KBUILD_CPPFLAGS	+= -mbig-endian
- CHECKFLAGS	+= -D__AARCH64EB__
+-#define NR_CTX_REGS 12
++#define NR_CTX_REGS 13
+ #define NR_CALLEE_SAVED_REGS 12
+ 
+ /*
+diff --git a/arch/arm64/mm/proc.S b/arch/arm64/mm/proc.S
+index fdabf40a83c8..5c8219c55948 100644
+--- a/arch/arm64/mm/proc.S
++++ b/arch/arm64/mm/proc.S
+@@ -49,6 +49,8 @@
+  * cpu_do_suspend - save CPU registers context
+  *
+  * x0: virtual address of context pointer
++ *
++ * This must be kept in sync with struct cpu_suspend_ctx in <asm/suspend.h>.
+  */
+ ENTRY(cpu_do_suspend)
+ 	mrs	x2, tpidr_el0
+@@ -73,6 +75,11 @@ alternative_endif
+ 	stp	x8, x9, [x0, #48]
+ 	stp	x10, x11, [x0, #64]
+ 	stp	x12, x13, [x0, #80]
++	/*
++	 * Save x18 as it may be used as a platform register, e.g. by shadow
++	 * call stack.
++	 */
++	str	x18, [x0, #96]
+ 	ret
+ ENDPROC(cpu_do_suspend)
+ 
+@@ -89,6 +96,13 @@ ENTRY(cpu_do_resume)
+ 	ldp	x9, x10, [x0, #48]
+ 	ldp	x11, x12, [x0, #64]
+ 	ldp	x13, x14, [x0, #80]
++	/*
++	 * Restore x18, as it may be used as a platform register, and clear
++	 * the buffer to minimize the risk of exposure when used for shadow
++	 * call stack.
++	 */
++	ldr	x18, [x0, #96]
++	str	xzr, [x0, #96]
+ 	msr	tpidr_el0, x2
+ 	msr	tpidrro_el0, x3
+ 	msr	contextidr_el1, x4
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
