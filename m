@@ -2,111 +2,200 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1155C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFAC3C5DF61
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBF02217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="oFbCjFWj"
+	by mail.kernel.org (Postfix) with ESMTP id AA9CB21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 17:48:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572976110;
+	bh=rqSz4Ho15VHI287QiYSiRFPVKKVZZLoCGHIbRvCiBlY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rHz4mpz0ubpwAaTtVB9Hedk8+FOjBPWqIftpOFJnr2IKgDei0wvQAms6f1U7yNi+N
+	 mMnOpSKliL1lhFJ3AfZ60ep++raaWaT47dLKqjWToVV+ScIgXlR1hVwh0de6ujL6wv
+	 gSB4vQMIUGP/QkRVUbqZ3lpMjBSXwlA5m1FNd2OU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390546AbfKERsH (ORCPT
+        id S2390567AbfKERs3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 12:48:07 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:50192 "EHLO vps0.lunn.ch"
+        Tue, 5 Nov 2019 12:48:29 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36684 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389356AbfKERsH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 12:48:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=LWDvwTMeC17EAC7hUSEvvrTqmpd3m3QI+NU/56B7HaM=; b=oFbCjFWjuvPbgQT31DANCYyJUP
-        IHmNfRw4eM71RdtEXzyInpEzTnOnuilNhCQ1m3ky+aOhCXSNd1NeEVQlQOWTDpJ8JEEbhctNxHEcg
-        OgxpSFeOfRE6AHFKaZf5ddUrhrAgRyUFOh6ArK0v7gAR+banjze4BWV7VkjNzNhTE/HQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iS2vp-0003Ah-Q9; Tue, 05 Nov 2019 18:47:53 +0100
-Date:   Tue, 5 Nov 2019 18:47:53 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, peppe.cavallaro@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH V2 net-next 1/4] net: ethernet: stmmac: Add support for
- syscfg clock
-Message-ID: <20191105174753.GH17620@lunn.ch>
-References: <20191105124505.4738-1-christophe.roullier@st.com>
- <20191105124505.4738-2-christophe.roullier@st.com>
+        id S2390344AbfKERs3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 12:48:29 -0500
+Received: from localhost (unknown [106.51.111.166])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BAA43217F5;
+        Tue,  5 Nov 2019 17:48:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1572976107;
+        bh=rqSz4Ho15VHI287QiYSiRFPVKKVZZLoCGHIbRvCiBlY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=S41kQmvjld7nCfq9WET/5YTWrj36zgoRns3WYyXz/7XZZr00Ju4fGSAn30gpIoInN
+         MJuxjyMCiV6ZMlyx7RAgtgM45Ye/uJtmuTKSxMVKVIoGtaGQf3Kpl5c23xr6QOoC0X
+         13r6IMu7pFy06qapwaXk5Ht1OfE+xgZFyUTBO1XA=
+Date:   Tue, 5 Nov 2019 23:18:23 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     Green Wan <green.wan@sifive.com>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 3/4] dmaengine: sf-pdma: add platform DMA support for
+ HiFive Unleashed A00
+Message-ID: <20191105174823.GF952516@vkoul-mobl>
+References: <20191028075658.12143-1-green.wan@sifive.com>
+ <20191028075658.12143-4-green.wan@sifive.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191105124505.4738-2-christophe.roullier@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191028075658.12143-4-green.wan@sifive.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 01:45:02PM +0100, Christophe Roullier wrote:
-> Add optional support for syscfg clock in dwmac-stm32.c
-> Now Syscfg clock is activated automatically when syscfg
-> registers are used
+On 28-10-19, 15:56, Green Wan wrote:
+> Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
+> Rev A00 board.
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+>  - Implement dmaengine APIs, support MEM_TO_MEM async copy.
+>  - Tested by DMA Test client
+>  - Supports 4 channels DMA, each channel has 1 done and 1 err
+>    interrupt connected to platform-level interrupt controller (PLIC).
+>  - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
+> 
+> The datasheet is here:
+> 
+>   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> 
+> Follow the DMAengine controller doc,
+> "./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
+> engine. And use the dma test client in doc,
+> "./Documentation/driver-api/dmaengine/dmatest.rst", to test.
+> 
+> Each DMA channel has separate HW regs and support done and error ISRs.
+> 4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
+> in DMA HW.
+> 
+>    ------               ------
+>    |    |--< done 23 >--|ch 0|
+>    |    |--< err  24 >--|    |     (dma0chan0)
+>    |    |               ------
+>    |    |               ------
+>    |    |--< done 25 >--|ch 1|
+>    |    |--< err  26 >--|    |     (dma0chan1)
+>    |PLIC|               ------
+>    |    |               ------
+>    |    |--< done 27 >--|ch 2|
+>    |    |--< err  28 >--|    |     (dma0chan2)
+>    |    |               ------
+>    |    |               ------
+>    |    |--< done 29 >--|ch 3|
+>    |    |--< err  30 >--|    |     (dma0chan3)
+>    ------               ------
+> 
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+
+when did i provide this?
+
+> Signed-off-by: Green Wan <green.wan@sifive.com>
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
+
+Fixes what... this is not a upstream commit?
+
+> Signed-off-by: kbuild test robot <lkp@intel.com>
 > ---
->  .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 32 ++++++++++++-------
->  1 file changed, 21 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index 4ef041bdf6a1..df7e9e913041 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -152,19 +152,24 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
->  	int ret = 0;
->  
->  	if (prepare) {
-> -		ret = clk_prepare_enable(dwmac->syscfg_clk);
-> -		if (ret)
-> -			return ret;
-> -
-> +		if (dwmac->syscfg_clk) {
-> +			ret = clk_prepare_enable(dwmac->syscfg_clk);
-> +			if (ret)
-> +				return ret;
-> +		}
 
-Hi Christophe
+Please list the changes done from prev version, here or in cover letter
 
-All the clk_ API functions are happy to take a NULL point and then do
-nothing. So you don't need these changes. 
-
-> -	/*  Clock for sysconfig */
-> +	/*  Optional Clock for sysconfig */
->  	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
->  	if (IS_ERR(dwmac->syscfg_clk)) {
-> -		dev_err(dev, "No syscfg clock provided...\n");
-> -		return PTR_ERR(dwmac->syscfg_clk);
-> +		err = PTR_ERR(dwmac->syscfg_clk);
-> +		if (err != -ENOENT)
-> +			return err;
-> +		dwmac->syscfg_clk = NULL;
->  	}
->  
-> +	err = 0;
+> +static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
+> +{
+> +	struct sf_pdma_desc *desc;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&chan->lock, flags);
+> +
+> +	if (chan->desc && !chan->desc->in_use) {
+> +		spin_unlock_irqrestore(&chan->lock, flags);
+> +		return chan->desc;
+> +	}
+> +
+> +	spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +	desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
 > +
 
-That should be all you need. Just set dwmac->syscfg_clk to NULL and
-the rest should work.
+this empty line in not required
 
-    Andrew
+> +static struct dma_async_tx_descriptor *
+> +	sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
+> +				dma_addr_t dest,
+
+please make it left justified
+
+> +static int sf_pdma_slave_config(struct dma_chan *dchan,
+> +				struct dma_slave_config *cfg)
+> +{
+> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> +
+> +	memcpy(&chan->cfg, cfg, sizeof(*cfg));
+> +	chan->dma_dir = DMA_MEM_TO_MEM;
+
+?? looking at changelog we have only memcpy support, so this should not
+be here, pls remove this.
+
+> +static enum dma_status
+> +sf_pdma_tx_status(struct dma_chan *dchan,
+> +		  dma_cookie_t cookie,
+> +		  struct dma_tx_state *txstate)
+> +{
+> +	struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> +	enum dma_status status;
+> +
+> +	status = dma_cookie_status(dchan, cookie, txstate);
+> +
+> +	if (txstate && status != DMA_ERROR)
+> +		dma_set_residue(txstate, sf_pdma_desc_residue(chan));
+
+which residue? the query can be for a cookie which is still in pending
+list! you need to check the cookie and only read register for cookie if
+submitted
+
+> +static int sf_pdma_remove(struct platform_device *pdev)
+> +{
+> +	struct sf_pdma *pdma = platform_get_drvdata(pdev);
+> +	struct sf_pdma_chan *ch;
+> +	int i;
+> +
+> +	for (i = 0; i < PDMA_NR_CH; i++) {
+> +		ch = &pdma->chans[i];
+> +
+> +		list_del(&ch->vchan.chan.device_node);
+> +		tasklet_kill(&ch->vchan.task);
+> +		tasklet_kill(&ch->done_tasklet);
+> +		tasklet_kill(&ch->err_tasklet);
+
+you have an isr registered which can fire and schedule tasklets..
+-- 
+~Vinod
