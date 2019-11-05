@@ -3,164 +3,450 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84C41C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C23AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F2A621A4A
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BBDD21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 21:42:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="UXZ+gIvr"
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="SJm2XdtA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730162AbfKEVm1 (ORCPT
+        id S1730204AbfKEVm1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Tue, 5 Nov 2019 16:42:27 -0500
-Received: from mout.web.de ([212.227.15.3]:56159 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729747AbfKEVm0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 16:42:26 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1572990136;
-        bh=eTKu9EhCet3dmCm5fMl3kzNcurmyEyUCoyJuLDVwWj4=;
-        h=X-UI-Sender-Class:Subject:From:To:Cc:References:Date:In-Reply-To;
-        b=UXZ+gIvrdgGTyGNrYsRuKAGrS3T1ztQ49s9NW8BbKMEr4sw7pNXCGAAPdWY6WTdEa
-         ubRG5jfcdm9NqVXllqFhDokWcIICNXARCw/uh9rvKlW7JkCNwo17l1n4TbBF+P8M0U
-         N2IXqB63JetNsyOgaJv+wcat1xf+SzSgrrF29BjQ=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.48.164.204]) by smtp.web.de (mrweb003
- [213.165.67.108]) with ESMTPSA (Nemesis) id 0MFcDF-1ig6o90KBx-00EaJb; Tue, 05
- Nov 2019 22:42:16 +0100
-Subject: [PATCH 1/2] CIFS: Use memdup_user() rather than duplicating its
- implementation
-From:   Markus Elfring <Markus.Elfring@web.de>
-To:     linux-cifs@vger.kernel.org, Ronnie Sahlberg <lsahlber@redhat.com>,
-        Ronnie Sahlberg <lsahlber@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org, Aurelien Aptel <aaptel@suse.com>
-References: <b797b2fc-1a33-7311-70d7-dd258d721a03@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <df3d1da0-a907-80f3-b8f1-6ec7615086d9@web.de>
-Date:   Tue, 5 Nov 2019 22:42:13 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+Received: from perceval.ideasonboard.com ([213.167.242.64]:45858 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729829AbfKEVm1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 16:42:27 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 4088D559;
+        Tue,  5 Nov 2019 22:42:23 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1572990143;
+        bh=IlttHNVUudAVNGKqKzQAAKlXVtRVyDrQd0u2nzdGDZo=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=SJm2XdtAsWqyyJ8nyr/t7FPs0pr9PfvJGxk67pV84TPBPVpV+9bxX467QM7oLz9hD
+         uoFarezuKEjStaHoCWwFQTmNeIUgeKugk9KtJIO9dd2ZlurzxeIjqZk0DeS0+SZfBz
+         6MsvtRtjoDnUmIstZj3qJg35aFMzjo6CMvI1FF74=
+Date:   Tue, 5 Nov 2019 23:42:13 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Robert Chiras <robert.chiras@nxp.com>
+Cc:     Guido =?utf-8?Q?G=C3=BCnther?= <agx@sigxcpu.org>,
+        Marek Vasut <marex@denx.de>, Stefan Agner <stefan@agner.ch>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v4 06/14] drm/mxsfb: Update mxsfb with additional pixel
+ formats
+Message-ID: <20191105214213.GH4869@pendragon.ideasonboard.com>
+References: <1567078215-31601-1-git-send-email-robert.chiras@nxp.com>
+ <1567078215-31601-7-git-send-email-robert.chiras@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <b797b2fc-1a33-7311-70d7-dd258d721a03@web.de>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zVgHY/tLl0DgTUrHlaIsTs+ghIDoq/nAsyESs+m2Vvv6afj9lXY
- D8pEyCanIRHZkgoI9ZiGjmgl/tc2aHo+ZQtP3DwvsNrjr7OKiUV3+NNBIC9l7eeN9Ynsvjy
- R6J9RCzyRhpsMIRN7tb1EJ8ckx4KZy9v7sXv74RrKNAV3l0bzNL1DH7T8Hn9Qw24F4za4di
- FrfouKqwPyzdYR5bv9OiA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:zmxHj2FgTwg=:WavkJNZsT5CIYITR1Am806
- qd76cDAfyzfuGRSwM9Xn7fLH97qgSZoUR4hNyGVtubpt8eAucb48N+DX8XkG8E9Xt2x09O5l5
- dfoWRLpPS07fcfGzbR2P7wvPYNdwRrchQIXkuHtNNl3jfFPjHHyZqGAzHlcyBVmVRpkkVCEct
- pXBCixMVdcri1lx+ecQUHDh1CS5IaOSlD8qxkhXSl9M5+zCh/XiftD+H9qr6EyBox8aUsiU8V
- tmichAyJ3QEvPROUSN5WYbmWNd9oiiYor5KHX+AhUJjZt06U+jh9tqlYLxPpkembegiwgbpNN
- BN72vTyrR+ilTramaL1k26YyLFuljYjpLPjCKn8+H8/IOyhTa5B2yhm5xtRLpU4zDB2zrdcIo
- IW6eHftD6hQtPF+qfGTcy6trd9rVJOg2ojhcStBUD1/8zyo+GlQ1S+uPftDaDj+NTbbwqzqQW
- r4z9N2tLGNVdSQY8oM9s/BH/+awRI5LdIpAlt+7pkh4jSi8TsoGe0dwyKsftkJ6qVSqJMXst4
- NCeQ/S7CNTQn3gBw538KMEisE8JvXCAxhf0PIXNaduTxGWKkB1oIaoTocI+RkGyF2h6RuIqLG
- C2g4je0cVz6AZUE5uia3pmdpQKmSr9ewgE2b3xP0jq0Yx5Sx2Icu4r2PZ+RZaQ1bkGm4eIxjm
- 5qD9Wr4/0PPWzTGTJYU+54v8XgA+uYK3b5dbeC6FmPcp7IQbWO3IUW9NfNMIVjob28jpqzttz
- 5nlwBeUwzhjZJKVhMlW46EXk5fp6hq4+s+5G5affEnGFhg3XxcxaCjj/uTfr+CDnZWgpwR1zh
- s5CPpCF6X6hk2JYZHPMZ75ERfWIa7xmgPgM/SJykh8FrKsGuf8a1j8K2ANEWf2YGZDk4Atls5
- 8ER1tqJAOhyHwuxP6GHfz+JEzGkWJwrVeL2MZypVQLiMs2YqF6rqFaSQxgGsqmp8PwHjJnxHs
- eDfkm79CjqfxQjw4VmAInFgjowoWv6f2fKyDD/vmnZWx1f3yWMN9J96Q/j9CWjd8X56oZNOUv
- MN/Z7T685XrEcdV9cD7slwXkFOvak4V487uy9l6QJpNoFBLSMRUV55HsMNB/2CWcnz+8N4dpI
- LGsObt1+isxA5FTgysQ8NQ6FLPSUhfz3kUZwRcUFWkheP5P6q4hinwbe15e/0lQpXYJDEa+Ec
- S5X7Aeu1eoeDYwGX6BoeBlkSz7Y7C0i+gWcEHp+FtHZv/bXGosxc0IvM5fXUcwqud12SOn7Xr
- 2Rpw33Dirrd74dImqnrWGRY/HIdtH7kZwfxMH1G0UmL7qM9dn6+dP20D7TLo=
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1567078215-31601-7-git-send-email-robert.chiras@nxp.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Markus Elfring <elfring@users.sourceforge.net>
-Date: Tue, 5 Nov 2019 21:30:25 +0100
+Hi Robert,
 
-Reuse existing functionality from memdup_user() instead of keeping
-duplicate source code.
+Thank you for the patch.
 
-Generated by: scripts/coccinelle/api/memdup_user.cocci
+On Thu, Aug 29, 2019 at 02:30:07PM +0300, Robert Chiras wrote:
+> Since version 4 of eLCDIF, there are some registers that can do
+> transformations on the input data, like re-arranging the pixel
+> components. By doing that, we can support more pixel formats.
+> This patch adds support for X/ABGR and RGBX/A. Although, the local alpha
+> is not supported by eLCDIF, the alpha pixel formats were added to the
+> supported pixel formats but it will be ignored. This was necessary since
+> there are systems (like Android) that requires such pixel formats.
+> 
+> Also, add support for the following pixel formats:
+>             16 bpp: RG16 ,BG16, XR15, XB15, AR15, AB15
+> 
+> Set the bus format based on input from the user and panel
+> capabilities.
+> Save the bus format in crtc->mode.private_flags, so the bridge can
+> use it.
+> 
+> Signed-off-by: Robert Chiras <robert.chiras@nxp.com>
+> Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+> Tested-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  drivers/gpu/drm/mxsfb/mxsfb_crtc.c | 147 ++++++++++++++++++++++++++++++-------
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.c  |  30 ++++++--
+>  drivers/gpu/drm/mxsfb/mxsfb_drv.h  |   3 +-
+>  drivers/gpu/drm/mxsfb/mxsfb_regs.h |  15 ++++
+>  4 files changed, 163 insertions(+), 32 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> index 5e44f57..1be29f5 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_crtc.c
+> @@ -43,14 +43,17 @@ static u32 set_hsync_pulse_width(struct mxsfb_drm_private *mxsfb, u32 val)
+>  }
+>  
+>  /* Setup the MXSFB registers for decoding the pixels out of the framebuffer */
+> -static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
+> +static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb, bool update)
+>  {
+>  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
+>  	struct drm_device *drm = crtc->dev;
+>  	const u32 format = crtc->primary->state->fb->format->format;
+> -	u32 ctrl, ctrl1;
+> +	u32 ctrl = 0, ctrl1 = 0;
+> +	bool bgr_format = true;
+> +	struct drm_format_name_buf format_name_buf;
+>  
+> -	ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
+> +	if (!update)
+> +		ctrl = CTRL_BYPASS_COUNT | CTRL_MASTER;
+>  
+>  	/*
+>  	 * WARNING: The bus width, CTRL_SET_BUS_WIDTH(), is configured to
+> @@ -59,64 +62,158 @@ static int mxsfb_set_pixel_fmt(struct mxsfb_drm_private *mxsfb)
+>  	 * to arbitrary value. This limitation should not pose an issue.
+>  	 */
+>  
+> -	/* CTRL1 contains IRQ config and status bits, preserve those. */
+> -	ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
+> -	ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
+> +	if (!update) {
+> +		/* CTRL1 contains IRQ config and status bits, preserve those. */
+> +		ctrl1 = readl(mxsfb->base + LCDC_CTRL1);
+> +		ctrl1 &= CTRL1_CUR_FRAME_DONE_IRQ_EN | CTRL1_CUR_FRAME_DONE_IRQ;
+> +	}
+> +
+> +	DRM_DEV_DEBUG_DRIVER(drm->dev, "Setting up %s mode\n",
+> +			     drm_get_format_name(format, &format_name_buf));
+> +
+> +	/* Do some clean-up that we might have from a previous mode */
+> +	ctrl &= ~CTRL_SHIFT_DIR(1);
+> +	ctrl &= ~CTRL_SHIFT_NUM(0x3f);
+> +	if (mxsfb->devdata->ipversion >= 4)
+> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR) |
+> +		       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_CLR),
+> +		       mxsfb->base + LCDC_V4_CTRL2 + REG_CLR);
+>  
+>  	switch (format) {
+> -	case DRM_FORMAT_RGB565:
+> -		dev_dbg(drm->dev, "Setting up RGB565 mode\n");
+> +	case DRM_FORMAT_BGR565: /* BG16 */
+> +		if (mxsfb->devdata->ipversion < 4)
+> +			goto err;
 
-Fixes: f5b05d622a3e99e6a97a189fe500414be802a05c ("cifs: add IOCTL for QUER=
-Y_INFO passthrough to userspace")
-Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
-=2D--
- fs/cifs/smb2ops.c | 13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
+This function should not return an error. Invalid pixel formats should
+be caught at atomic check time. The easiest way to do so is to use two
+different lists of supported formats when constructing the plane, based
+on the IP version.
 
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 9cbb0ae0e53e..fde2e6d241a8 100644
-=2D-- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -1413,15 +1413,10 @@ smb2_ioctl_query_info(const unsigned int xid,
- 	if (smb3_encryption_required(tcon))
- 		flags |=3D CIFS_TRANSFORM_REQ;
+By the way, the IP version register has been removed in i.MX6. i.MX6 and
+newer SoCs support a second plane, which I'm trying to get working. It
+would help to know what version number to use for the ipversion field
+for i.MX6, i.MX7 and i.MX8 in order to enable support for the second
+plane based on the SoC model.
 
--	buffer =3D kmalloc(qi.output_buffer_length, GFP_KERNEL);
--	if (buffer =3D=3D NULL)
--		return -ENOMEM;
--
--	if (copy_from_user(buffer, arg + sizeof(struct smb_query_info),
--			   qi.output_buffer_length)) {
--		rc =3D -EFAULT;
--		goto iqinf_exit;
--	}
-+	buffer =3D memdup_user(arg + sizeof(struct smb_query_info),
-+			     qi.output_buffer_length);
-+	if (IS_ERR(buffer))
-+		return PTR_ERR(buffer);
+On a similar topic, would you happen to have tested the second plane
+(configured through AS_CTRL, AS_BUF and AS_NEXT_BUF) ? The plane "works"
+but seems to always use a 32bpp format regardless of how I program it,
+and the frame buffer start address seems to be shifted for some reason.
 
- 	/* Open */
- 	memset(&open_iov, 0, sizeof(open_iov));
-=2D-
-2.24.0
+> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
+> +			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
+> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		/* Fall through */
+> +	case DRM_FORMAT_RGB565: /* RG16 */
+> +		ctrl |= CTRL_SET_WORD_LENGTH(0);
+> +		ctrl &= ~CTRL_DF16;
+> +		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
+> +		break;
+> +	case DRM_FORMAT_XBGR1555: /* XB15 */
+> +	case DRM_FORMAT_ABGR1555: /* AB15 */
+> +		if (mxsfb->devdata->ipversion < 4)
+> +			goto err;
+> +		writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
+> +			CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
+> +			mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		/* Fall through */
+> +	case DRM_FORMAT_XRGB1555: /* XR15 */
+> +	case DRM_FORMAT_ARGB1555: /* AR15 */
+>  		ctrl |= CTRL_SET_WORD_LENGTH(0);
+> +		ctrl |= CTRL_DF16;
+>  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0xf);
+>  		break;
+> -	case DRM_FORMAT_XRGB8888:
+> -		dev_dbg(drm->dev, "Setting up XRGB8888 mode\n");
+> +	case DRM_FORMAT_RGBX8888: /* RX24 */
+> +	case DRM_FORMAT_RGBA8888: /* RA24 */
+> +		/* RGBX - > 0RGB */
+> +		ctrl |= CTRL_SHIFT_DIR(1);
+> +		ctrl |= CTRL_SHIFT_NUM(8);
+> +		bgr_format = false;
+> +		/* Fall through */
+> +	case DRM_FORMAT_XBGR8888: /* XB24 */
+> +	case DRM_FORMAT_ABGR8888: /* AB24 */
+> +		if (bgr_format) {
+> +			if (mxsfb->devdata->ipversion < 4)
+> +				goto err;
+> +			writel(CTRL2_ODD_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR) |
+> +			       CTRL2_EVEN_LINE_PATTERN(CTRL2_LINE_PATTERN_BGR),
+> +			       mxsfb->base + LCDC_V4_CTRL2 + REG_SET);
+> +		}
+> +		/* Fall through */
+> +	case DRM_FORMAT_XRGB8888: /* XR24 */
+> +	case DRM_FORMAT_ARGB8888: /* AR24 */
+>  		ctrl |= CTRL_SET_WORD_LENGTH(3);
+>  		/* Do not use packed pixels = one pixel per word instead. */
+>  		ctrl1 |= CTRL1_SET_BYTE_PACKAGING(0x7);
+>  		break;
+>  	default:
+> -		dev_err(drm->dev, "Unhandled pixel format %08x\n", format);
+> -		return -EINVAL;
+> +		goto err;
+>  	}
+>  
+> -	writel(ctrl1, mxsfb->base + LCDC_CTRL1);
+> -	writel(ctrl, mxsfb->base + LCDC_CTRL);
+> +	if (update) {
+> +		writel(ctrl, mxsfb->base + LCDC_CTRL + REG_SET);
+> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1 + REG_SET);
+> +	} else {
+> +		writel(ctrl, mxsfb->base + LCDC_CTRL);
+> +		writel(ctrl1, mxsfb->base + LCDC_CTRL1);
+> +	}
+>  
+>  	return 0;
+> +
+> +err:
+> +	DRM_DEV_ERROR(drm->dev, "Unhandled pixel format: %s\n",
+> +		      drm_get_format_name(format, &format_name_buf));
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +static u32 get_bus_format_from_bpp(u32 bpp)
+> +{
+> +	switch (bpp) {
+> +	case 16:
+> +		return MEDIA_BUS_FMT_RGB565_1X16;
+> +	case 18:
+> +		return MEDIA_BUS_FMT_RGB666_1X18;
+> +	case 24:
+> +		return MEDIA_BUS_FMT_RGB888_1X24;
+> +	default:
+> +		return MEDIA_BUS_FMT_RGB888_1X24;
+> +	}
+>  }
+>  
+>  static void mxsfb_set_bus_fmt(struct mxsfb_drm_private *mxsfb)
+>  {
+>  	struct drm_crtc *crtc = &mxsfb->pipe.crtc;
+> +	unsigned int bits_per_pixel = crtc->primary->state->fb->format->depth;
+>  	struct drm_device *drm = crtc->dev;
+>  	u32 bus_format = MEDIA_BUS_FMT_RGB888_1X24;
+> -	u32 reg;
+> -
+> -	reg = readl(mxsfb->base + LCDC_CTRL);
+> +	int num_bus_formats = mxsfb->connector->display_info.num_bus_formats;
+> +	const u32 *bus_formats = mxsfb->connector->display_info.bus_formats;
+> +	u32 reg = 0;
+> +	int i = 0;
+> +
+> +	/* match the user requested bus_format to one supported by the panel */
+> +	if (num_bus_formats) {
+> +		u32 user_bus_format = get_bus_format_from_bpp(bits_per_pixel);
+> +
+> +		bus_format = bus_formats[0];
+> +		for (i = 0; i < num_bus_formats; i++) {
+> +			if (user_bus_format == bus_formats[i]) {
+> +				bus_format = user_bus_format;
+> +				break;
+> +			}
+> +		}
+> +	}
+>  
+> -	if (mxsfb->connector->display_info.num_bus_formats)
+> -		bus_format = mxsfb->connector->display_info.bus_formats[0];
+> +	/*
+> +	 * CRTC will dictate the bus format via private_flags[16:1]
+> +	 * and private_flags[0] will signal a bus format change
+> +	 */
+> +	crtc->mode.private_flags &= ~0x1FFFF; /* clear bus format */
+> +	crtc->mode.private_flags |= (bus_format << 1); /* set bus format */
+> +	crtc->mode.private_flags |= 0x1; /* bus format change indication*/
+>  
+>  	DRM_DEV_DEBUG_DRIVER(drm->dev, "Using bus_format: 0x%08X\n",
+>  			     bus_format);
+>  
+> -	reg &= ~CTRL_BUS_WIDTH_MASK;
+>  	switch (bus_format) {
+>  	case MEDIA_BUS_FMT_RGB565_1X16:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_16BIT);
+>  		break;
+>  	case MEDIA_BUS_FMT_RGB666_1X18:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_18BIT);
+>  		break;
+>  	case MEDIA_BUS_FMT_RGB888_1X24:
+> -		reg |= CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
+> +		reg = CTRL_SET_BUS_WIDTH(STMLCDIF_24BIT);
+>  		break;
+>  	default:
+>  		dev_err(drm->dev, "Unknown media bus format %d\n", bus_format);
+>  		break;
+>  	}
+> -	writel(reg, mxsfb->base + LCDC_CTRL);
+> +	writel(reg, mxsfb->base + LCDC_CTRL + REG_SET);
+>  }
+>  
+>  static void mxsfb_enable_controller(struct mxsfb_drm_private *mxsfb)
+> @@ -238,7 +335,7 @@ static void mxsfb_crtc_mode_set_nofb(struct mxsfb_drm_private *mxsfb)
+>  	/* Clear the FIFOs */
+>  	writel(CTRL1_FIFO_CLEAR, mxsfb->base + LCDC_CTRL1 + REG_SET);
+>  
+> -	err = mxsfb_set_pixel_fmt(mxsfb);
+> +	err = mxsfb_set_pixel_fmt(mxsfb, false);
+>  	if (err)
+>  		return;
+>  
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.c b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> index 497cf44..23027a9 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.c
+> @@ -43,6 +43,27 @@ enum mxsfb_devtype {
+>  	MXSFB_V4,
+>  };
+>  
+> +/*
+> + * When adding new formats, make sure to update the num_formats from
+> + * mxsfb_devdata below.
+> + */
+> +static const u32 mxsfb_formats[] = {
+> +	/* MXSFB_V3 */
+> +	DRM_FORMAT_XRGB8888,
+> +	DRM_FORMAT_ARGB8888,
+> +	DRM_FORMAT_RGB565,
+> +	/* MXSFB_V4 */
+> +	DRM_FORMAT_XBGR8888,
+> +	DRM_FORMAT_ABGR8888,
+> +	DRM_FORMAT_RGBX8888,
+> +	DRM_FORMAT_RGBA8888,
+> +	DRM_FORMAT_ARGB1555,
+> +	DRM_FORMAT_XRGB1555,
+> +	DRM_FORMAT_ABGR1555,
+> +	DRM_FORMAT_XBGR1555,
+> +	DRM_FORMAT_BGR565
+> +};
+> +
+>  static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  	[MXSFB_V3] = {
+>  		.transfer_count	= LCDC_V3_TRANSFER_COUNT,
+> @@ -52,6 +73,7 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  		.hs_wdth_mask	= 0xff,
+>  		.hs_wdth_shift	= 24,
+>  		.ipversion	= 3,
+> +		.num_formats	= 3,
+>  	},
+>  	[MXSFB_V4] = {
+>  		.transfer_count	= LCDC_V4_TRANSFER_COUNT,
+> @@ -61,14 +83,10 @@ static const struct mxsfb_devdata mxsfb_devdata[] = {
+>  		.hs_wdth_mask	= 0x3fff,
+>  		.hs_wdth_shift	= 18,
+>  		.ipversion	= 4,
+> +		.num_formats	= ARRAY_SIZE(mxsfb_formats),
+>  	},
+>  };
+>  
+> -static const uint32_t mxsfb_formats[] = {
+> -	DRM_FORMAT_XRGB8888,
+> -	DRM_FORMAT_RGB565
+> -};
+> -
+>  static struct mxsfb_drm_private *
+>  drm_pipe_to_mxsfb_drm_private(struct drm_simple_display_pipe *pipe)
+>  {
+> @@ -244,7 +262,7 @@ static int mxsfb_load(struct drm_device *drm, unsigned long flags)
+>  	}
+>  
+>  	ret = drm_simple_display_pipe_init(drm, &mxsfb->pipe, &mxsfb_funcs,
+> -			mxsfb_formats, ARRAY_SIZE(mxsfb_formats), NULL,
+> +			mxsfb_formats, mxsfb->devdata->num_formats, NULL,
+>  			mxsfb->connector);
+>  	if (ret < 0) {
+>  		dev_err(drm->dev, "Cannot setup simple display pipe\n");
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_drv.h b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> index 0b65b51..8fb65d3 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_drv.h
+> @@ -16,6 +16,7 @@ struct mxsfb_devdata {
+>  	unsigned int	 hs_wdth_mask;
+>  	unsigned int	 hs_wdth_shift;
+>  	unsigned int	 ipversion;
+> +	unsigned int	 num_formats;
+>  };
+>  
+>  struct mxsfb_drm_private {
+> @@ -42,6 +43,6 @@ void mxsfb_disable_axi_clk(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_enable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_crtc_disable(struct mxsfb_drm_private *mxsfb);
+>  void mxsfb_plane_atomic_update(struct mxsfb_drm_private *mxsfb,
+> -			       struct drm_plane_state *state);
+> +			       struct drm_plane_state *old_state);
+>  
+>  #endif /* __MXSFB_DRV_H__ */
+> diff --git a/drivers/gpu/drm/mxsfb/mxsfb_regs.h b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> index 9fcb1db..dc4daa0 100644
+> --- a/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> +++ b/drivers/gpu/drm/mxsfb/mxsfb_regs.h
+> @@ -44,6 +44,11 @@
+>  #define REG_PUT(x, h, l) (((x) << (l)) & GENMASK(h, l))
+>  #define REG_GET(x, h, l) (((x) & GENMASK(h, l)) >> (l))
+>  
+> +#define SWIZZLE_LE		0 /* Little-Endian or No swap */
+> +#define SWIZZLE_BE		1 /* Big-Endian or swap all */
+> +#define SWIZZLE_HWD		2 /* Swap half-words */
+> +#define SWIZZLE_HWD_BYTE	3 /* Swap bytes within each half-word */
+> +
+>  #define CTRL_SFTRST			BIT(31)
+>  #define CTRL_CLKGATE			BIT(30)
+>  #define CTRL_SHIFT_DIR(x)		REG_PUT((x), 26, 26)
+> @@ -93,6 +98,16 @@
+>  #define REQ_8	3
+>  #define REQ_16	4
+>  
+> +#define CTRL2_ODD_LINE_PATTERN(x)	REG_PUT((x), 18, 16)
+> +#define CTRL2_EVEN_LINE_PATTERN(x)	REG_PUT((x), 14, 12)
+> +#define CTRL2_LINE_PATTERN_RGB	0
+> +#define CTRL2_LINE_PATTERN_RBG	1
+> +#define CTRL2_LINE_PATTERN_GBR	2
+> +#define CTRL2_LINE_PATTERN_GRB	3
+> +#define CTRL2_LINE_PATTERN_BRG	4
+> +#define CTRL2_LINE_PATTERN_BGR	5
+> +#define CTRL2_LINE_PATTERN_CLR	7
+> +
+>  #define TRANSFER_COUNT_SET_VCOUNT(x)	REG_PUT((x), 31, 16)
+>  #define TRANSFER_COUNT_GET_VCOUNT(x)	REG_GET((x), 31, 16)
+>  #define TRANSFER_COUNT_SET_HCOUNT(x)	REG_PUT((x), 15, 0)
 
+-- 
+Regards,
+
+Laurent Pinchart
