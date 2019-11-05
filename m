@@ -2,96 +2,165 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69DFBCA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:07:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7004CCA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:09:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 346AB217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:07:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ex1ROfIg"
+	by mail.kernel.org (Postfix) with ESMTP id 50C08217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:09:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729988AbfKECHc (ORCPT
+        id S1730076AbfKECJU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:07:32 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:35471 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729428AbfKECHc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:07:32 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476Y2n1txCz9sP6;
-        Tue,  5 Nov 2019 13:07:29 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572919649;
-        bh=gxSHooczT1G2LQs4HvOkWBWHVPD5ENWKPDAFMGbTiuI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=ex1ROfIgksCfKldK8/rKos+JzjF5QHHzXeJgq9u6zNBlC90FHTyzZVBZXd9nD2GzQ
-         kEpkC5n/gUWwYD4WDcr4A9ofsS3AjLxhJ2lJty2yojDb+xxY/XtANgkJ5jWZYlRyYm
-         uRC+vEy/xYNWuHdrvIX/N1q06L9ZL/EvWluJMjlmxfKBTSMO6mVTXc57jFR9NYDdnJ
-         2dBdRzPJ6Mwc9hZLG8ZKJzC6je3MycgGl2emVK1Csj8TzRoI/++PUvyeJN3m8N04BF
-         0zwcK8f0hqmLMSBSpKOXMJ4e8o/4cpazTLo/zJyphUnftlSKSfdZxLgK9cMy25Ejw/
-         u78vsSwyhae+g==
-Date:   Tue, 5 Nov 2019 13:07:28 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Leon Romanovsky <leon@kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Parav Pandit <parav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: linux-next: build warning after merge of the mlx5-next tree
-Message-ID: <20191105130728.0dd89a42@canb.auug.org.au>
+        Mon, 4 Nov 2019 21:09:20 -0500
+Received: from out30-133.freemail.mail.aliyun.com ([115.124.30.133]:35101 "EHLO
+        out30-133.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728987AbfKECJU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:09:20 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R271e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=laijs@linux.alibaba.com;NM=1;PH=DS;RN=9;SR=0;TI=SMTPD_---0ThE8SMa_1572919755;
+Received: from C02XQCBJJG5H.local(mailfrom:laijs@linux.alibaba.com fp:SMTPD_---0ThE8SMa_1572919755)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 05 Nov 2019 10:09:16 +0800
+Subject: Re: [PATCH V2 2/7] rcu: cleanup rcu_preempt_deferred_qs()
+To:     paulmck@kernel.org
+Cc:     Boqun Feng <boqun.feng@gmail.com>, linux-kernel@vger.kernel.org,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>, rcu@vger.kernel.org
+References: <20191102124559.1135-1-laijs@linux.alibaba.com>
+ <20191102124559.1135-3-laijs@linux.alibaba.com>
+ <20191103020150.GA23770@tardis>
+ <7489f817-adaf-275b-b19d-18ad248b071f@linux.alibaba.com>
+ <20191104145539.GY20975@paulmck-ThinkPad-P72>
+From:   Lai Jiangshan <laijs@linux.alibaba.com>
+Message-ID: <e820852f-87ca-f974-2245-99833205e270@linux.alibaba.com>
+Date:   Tue, 5 Nov 2019 10:09:15 +0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:60.0)
+ Gecko/20100101 Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/A0QGPcEe_NFlxWcskC=+.tv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <20191104145539.GY20975@paulmck-ThinkPad-P72>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/A0QGPcEe_NFlxWcskC=+.tv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
 
-Hi all,
 
-After merging the mlx5-next tree, today's linux-next build (x86_64
-allmodconfig) produced this warning:
+On 2019/11/4 10:55 下午, Paul E. McKenney wrote:
+> On Sun, Nov 03, 2019 at 01:01:21PM +0800, Lai Jiangshan wrote:
+>>
+>>
+>> On 2019/11/3 10:01 上午, Boqun Feng wrote:
+>>> Hi Jiangshan,
+>>>
+>>>
+>>> I haven't checked the correctness of this patch carefully, but..
+>>>
+>>>
+>>> On Sat, Nov 02, 2019 at 12:45:54PM +0000, Lai Jiangshan wrote:
+>>>> Don't need to set ->rcu_read_lock_nesting negative, irq-protected
+>>>> rcu_preempt_deferred_qs_irqrestore() doesn't expect
+>>>> ->rcu_read_lock_nesting to be negative to work, it even
+>>>> doesn't access to ->rcu_read_lock_nesting any more.
+>>>
+>>> rcu_preempt_deferred_qs_irqrestore() will report RCU qs, and may
+>>> eventually call swake_up() or its friends to wake up, say, the gp
+>>> kthread, and the wake up functions could go into the scheduler code
+>>> path which might have RCU read-side critical section in it, IOW,
+>>> accessing ->rcu_read_lock_nesting.
+>>
+>> Sure, thank you for pointing it out.
+>>
+>> I should rewrite the changelog in next round. Like this:
+>>
+>> rcu: cleanup rcu_preempt_deferred_qs()
+>>
+>> IRQ-protected rcu_preempt_deferred_qs_irqrestore() itself doesn't
+>> expect ->rcu_read_lock_nesting to be negative to work.
+>>
+>> There might be RCU read-side critical section in it (from wakeup()
+>> or so), 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
+>> will ensure that ->rcu_read_unlock_special is zero and these RCU
+>> read-side critical sections will not call rcu_read_unlock_special().
+>>
+>> Thanks
+>> Lai
+>>
+>> ===
+>> PS: Were 1711d15bf5ef(rcu: Clear ->rcu_read_unlock_special only once)
+>> not applied earlier, it will be protected by previous patch (patch1)
+>> in this series
+>> "rcu: use preempt_count to test whether scheduler locks is held"
+>> when rcu_read_unlock_special() is called.
+> 
+> This one in -rcu, you mean?
+> 
+> 5c5d9065e4eb ("rcu: Clear ->rcu_read_unlock_special only once")
 
-drivers/net/ethernet/mellanox/mlx5/core/eswitch.c: In function 'esw_vport_i=
-ngress_config':
-drivers/net/ethernet/mellanox/mlx5/core/eswitch.c:1356:2: warning: 'spec' m=
-ay be used uninitialized in this function [-Wmaybe-uninitialized]
- 1356 |  kvfree(spec);
-      |  ^~~~~~~~~~~~
 
-Introduced by commit
+Yes, but the commit ID is floating in the tree.
 
-  10652f39943e ("net/mlx5: Refactor ingress acl configuration")
+> 
+> Some adjustment was needed due to my not applying the earlier patches
+> that assumed nested interrupts.  Please let me know if further adjustments
+> are needed.
 
---=20
-Cheers,
-Stephen Rothwell
+I don't think the earlier patches are needed. If the possible? nested
+interrupts described in my previous emails is an issue, the patch
+"rcu: don't use negative ->rcu_read_lock_nesting" in this
+series is enough to fixed it. If any adjustments needed for
+this series, I will just put the adjustments the series.
 
---Sig_/A0QGPcEe_NFlxWcskC=+.tv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+Thanks
+Lai
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3A2WAACgkQAVBC80lX
-0Gz8Jwf+LNRqgsmRHhQVY9g9pAyGu1dtsQjpQ370Qj3n83VUCNqjrRH1FKoLK5gi
-79N9W6Rb/5ebOIYtxMddDSLxJvHmUVehaMppl7Xhz7/j2AjFkTabxO/HMrhx1J0v
-VFYzOMx3mSjwyOTTAICp0GfpK0erckJXKgbKuqS7YXR7zErp2qLLVyF4AOPtmqZX
-WyeSumc4RS0vvqfQ7+42NynjWgdZUH0J68SgQ6wRydNnFlDrWBuRU+cbXErDEbKF
-9wTtOmZ27XpbdfJyFw376ekwb2VCEQ9r+GZz4tBLjYnf9cJ18orRKZ5jMk9cVE2r
-wcMqDzaV4pA1EMIrJQFV9knVdVUc8g==
-=gKqk
------END PGP SIGNATURE-----
-
---Sig_/A0QGPcEe_NFlxWcskC=+.tv--
+> 
+> 							Thanx, Paul
+> 
+>>> Again, haven't checked closely, but this argument in the commit log
+>>> seems untrue.
+>>>
+>>> Regards,
+>>> Boqun
+>>>
+>>>>
+>>>> It is true that NMI over rcu_preempt_deferred_qs_irqrestore()
+>>>> may access to ->rcu_read_lock_nesting, but it is still safe
+>>>> since rcu_read_unlock_special() can protect itself from NMI.
+>>>>
+>>>> Signed-off-by: Lai Jiangshan <laijs@linux.alibaba.com>
+>>>> ---
+>>>>    kernel/rcu/tree_plugin.h | 5 -----
+>>>>    1 file changed, 5 deletions(-)
+>>>>
+>>>> diff --git a/kernel/rcu/tree_plugin.h b/kernel/rcu/tree_plugin.h
+>>>> index aba5896d67e3..2fab8be2061f 100644
+>>>> --- a/kernel/rcu/tree_plugin.h
+>>>> +++ b/kernel/rcu/tree_plugin.h
+>>>> @@ -552,16 +552,11 @@ static bool rcu_preempt_need_deferred_qs(struct task_struct *t)
+>>>>    static void rcu_preempt_deferred_qs(struct task_struct *t)
+>>>>    {
+>>>>    	unsigned long flags;
+>>>> -	bool couldrecurse = t->rcu_read_lock_nesting >= 0;
+>>>>    	if (!rcu_preempt_need_deferred_qs(t))
+>>>>    		return;
+>>>> -	if (couldrecurse)
+>>>> -		t->rcu_read_lock_nesting -= RCU_NEST_BIAS;
+>>>>    	local_irq_save(flags);
+>>>>    	rcu_preempt_deferred_qs_irqrestore(t, flags);
+>>>> -	if (couldrecurse)
+>>>> -		t->rcu_read_lock_nesting += RCU_NEST_BIAS;
+>>>>    }
+>>>>    /*
+>>>> -- 
+>>>> 2.20.1
+>>>>
