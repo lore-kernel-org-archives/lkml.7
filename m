@@ -2,176 +2,289 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 666FCCA9ED9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96E12CA9ED9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:10:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A2FA20869
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 63AB420869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 08:10:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388146AbfKEII7 (ORCPT
+        id S2388103AbfKEIKk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 03:08:59 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40978 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2387954AbfKEII6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 03:08:58 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99549ABD6;
-        Tue,  5 Nov 2019 08:08:56 +0000 (UTC)
-From:   Daniel Wagner <dwagner@suse.de>
-To:     linux-scsi@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Daniel Wagner <dwagner@suse.de>,
-        James Smart <james.smart@broadcom.com>,
-        Dick Kennedy <dick.kennedy@broadcom.com>
-Subject: [PATCH] scsi: lpfc: Move work items to a stack list
-Date:   Tue,  5 Nov 2019 09:08:55 +0100
-Message-Id: <20191105080855.16881-1-dwagner@suse.de>
-X-Mailer: git-send-email 2.16.4
+        Tue, 5 Nov 2019 03:10:40 -0500
+Received: from relay10.mail.gandi.net ([217.70.178.230]:36271 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388008AbfKEIKk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 03:10:40 -0500
+Received: from aptenodytes (lfbn-1-17395-211.w86-250.abo.wanadoo.fr [86.250.200.211])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 3745624000E;
+        Tue,  5 Nov 2019 08:10:35 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 09:10:34 +0100
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec@siol.net>
+Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
+        gregkh@linuxfoundation.org, wens@csie.org,
+        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/3] media: cedrus: Properly signal size in mode register
+Message-ID: <20191105081034.GC584930@aptenodytes>
+References: <20191026074959.1073512-1-jernej.skrabec@siol.net>
+ <20191026074959.1073512-2-jernej.skrabec@siol.net>
+ <20191104100228.GD502900@aptenodytes>
+ <7309638.L6IRxaGt1L@jernej-laptop>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="Fig2xvG2VGoz8o/s"
+Content-Disposition: inline
+In-Reply-To: <7309638.L6IRxaGt1L@jernej-laptop>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move all work items to a list which lives on the stack while holding
-the corresponding lock.
 
-With this we avoid a race between testing if the list is empty and
-extracting an element of the list. Although, the list_remove_head()
-macro tests will return an NULL pointer if the list is empty the two
-functions lpfc_sli_handle_slow_ring_event_s4() and
-lpfc_sli4_els_xri_abort_event_proc() do not test the return element if
-it's NULL.
-
-Instead adding another test if the pointer is NULL just avoid this
-access pattern by using the stack list. This also avoids toggling the
-interrupts on/off for every item.
-
-Fixes: 4f774513f7b3 ("[SCSI] lpfc 8.3.2 : Addition of SLI4 Interface - Queues")
-Cc: James Smart <james.smart@broadcom.com>
-Cc: Dick Kennedy <dick.kennedy@broadcom.com>
-Signed-off-by: Daniel Wagner <dwagner@suse.de>
----
+--Fig2xvG2VGoz8o/s
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-While trying to understand what's going on in the Oops below I figured
-that it could be the result of the invalid pointer access. The patch
-still needs testing by our customer but indepent of this I think the
-patch fixes a real bug.
+On Mon 04 Nov 19, 17:33, Jernej =C5=A0krabec wrote:
+> Dne ponedeljek, 04. november 2019 ob 11:02:28 CET je Paul Kocialkowski=20
+> napisal(a):
+> > Hi Jernej,
+> >=20
+> > On Sat 26 Oct 19, 09:49, Jernej Skrabec wrote:
+> > > Mode register also holds information if video width is bigger than 20=
+48
+> > > and if it is equal to 4096.
+> > >=20
+> > > Rework cedrus_engine_enable() to properly signal this properties.
+> >=20
+> > Thanks for the patch, looks good to me!
+> >=20
+> > Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> >=20
+> > One minor thing: maybe we should have a way to set the maximum dimensio=
+ns
+> > depending on the generation of the engine in use and the actual maximum
+> > supported by the hardware.
+> >=20
+> > Maybe either as dedicated new fields in struct cedrus_variant or as
+> > capability flags.
+>=20
+> I was thinking about first solution, but after going trough manuals, it w=
+as=20
+> unclear what are real limitations. For example, H3 manual states that it =
+is=20
+> capable of decoding H264 1080p@60Hz. However, I know for a fact that it i=
+s=20
+> also capable of decoding 4k videos, but probably not at 60 Hz. I don't ow=
+n=20
+> anything older that A83T, so I don't know what are capabilities of those =
+SoCs.=20
 
-[  139.392029] general protection fault: 0000 [#1] SMP PTI
-[  139.397862] CPU: 5 PID: 998 Comm: kworker/5:13 Tainted: G                   4.12.14-226.g94364da-default #1 SLE15-SP1 (unreleased)
-[  139.410962] Hardware name: Dell Inc. PowerEdge R730/072T6D, BIOS 2.9.1 12/04/2018
-[  139.419339] Workqueue: lpfc_wq lpfc_sli4_hba_process_cq [lpfc]
-[  139.425847] task: ffff95c996051440 task.stack: ffffaa038601c000
-[  139.432459] RIP: 0010:lpfc_set_rrq_active+0xa6/0x2a0 [lpfc]
-[  139.438676] RSP: 0018:ffffaa038601fcf8 EFLAGS: 00010046
-[  139.444504] RAX: 0000000000000292 RBX: ffff95c5a9a0a000 RCX: 000000000000ffff
-[  139.452466] RDX: ffff95c5accbb7b8 RSI: 0064695f74726f70 RDI: ffff95c5a9a0b160
-[  139.460427] RBP: ffff95c5a9a0b160 R08: 0000000000000001 R09: 0000000000000002
-[  139.468389] R10: ffffaa038601fdd8 R11: 61c8864680b583eb R12: 0000000000000001
-[  139.476350] R13: 000000000000ffff R14: 00000000000002bb R15: 0064695f74726f70
-[  139.484311] FS:  0000000000000000(0000) GS:ffff95c9bfc80000(0000) knlGS:0000000000000000
-[  139.493340] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[  139.499749] CR2: 0000560354607098 CR3: 00000007a000a003 CR4: 00000000001606e0
-[  139.507711] Call Trace:
-[  139.510451]  lpfc_sli4_io_xri_aborted+0x1a7/0x250 [lpfc]
-[  139.516386]  lpfc_sli4_sp_handle_abort_xri_wcqe.isra.56+0xa0/0x180 [lpfc]
-[  139.523964]  ? __switch_to_asm+0x40/0x70
-[  139.528338]  ? __switch_to_asm+0x34/0x70
-[  139.532718]  ? lpfc_sli4_fp_handle_cqe+0xc3/0x450 [lpfc]
-[  139.538649]  lpfc_sli4_fp_handle_cqe+0xc3/0x450 [lpfc]
-[  139.544383]  ? __switch_to_asm+0x34/0x70
-[  139.548762]  __lpfc_sli4_process_cq+0xea/0x220 [lpfc]
-[  139.554393]  ? lpfc_sli4_sp_handle_abort_xri_wcqe.isra.56+0x180/0x180 [lpfc]
-[  139.562557]  __lpfc_sli4_hba_process_cq+0x29/0xc0 [lpfc]
-[  139.568486]  process_one_work+0x1da/0x400
-[  139.572959]  worker_thread+0x2b/0x3f0
-[  139.577044]  ? process_one_work+0x400/0x400
-[  139.581710]  kthread+0x113/0x130
-[  139.585310]  ? kthread_create_worker_on_cpu+0x50/0x50
-[  139.590945]  ret_from_fork+0x35/0x40
+So I guess in this case we should try and see. I could try to look into it =
+at
+some point in the future too if you're not particulary interested.
 
-Thanks,
-Daniel
+> Anyway, being slow is still ok for some tasks, like transcoding, so we ca=
+n't=20
+> limit decoding to 1080p just because it's slow. It is probably still fast=
+er=20
+> than doing it in SW. Not to mention that it's still ok for some videos, a=
+ lot=20
+> of them uses 24 fps.
 
- drivers/scsi/lpfc/lpfc_sli.c | 32 ++++++++++++++++++++++----------
- 1 file changed, 22 insertions(+), 10 deletions(-)
+I agree, it's best to expose the maximum supported resolution by the hardwa=
+re,
+even if it means running at a lower fps.
 
-diff --git a/drivers/scsi/lpfc/lpfc_sli.c b/drivers/scsi/lpfc/lpfc_sli.c
-index 294f041961a8..cbeb1f408ccc 100644
---- a/drivers/scsi/lpfc/lpfc_sli.c
-+++ b/drivers/scsi/lpfc/lpfc_sli.c
-@@ -3903,16 +3903,16 @@ lpfc_sli_handle_slow_ring_event_s4(struct lpfc_hba *phba,
- 	struct lpfc_cq_event *cq_event;
- 	unsigned long iflag;
- 	int count = 0;
-+	LIST_HEAD(work_list);
- 
- 	spin_lock_irqsave(&phba->hbalock, iflag);
- 	phba->hba_flag &= ~HBA_SP_QUEUE_EVT;
-+	list_splice_init(&phba->sli4_hba.sp_queue_event, &work_list);
- 	spin_unlock_irqrestore(&phba->hbalock, iflag);
--	while (!list_empty(&phba->sli4_hba.sp_queue_event)) {
-+	while (!list_empty(&work_list)) {
- 		/* Get the response iocb from the head of work queue */
--		spin_lock_irqsave(&phba->hbalock, iflag);
--		list_remove_head(&phba->sli4_hba.sp_queue_event,
--				 cq_event, struct lpfc_cq_event, list);
--		spin_unlock_irqrestore(&phba->hbalock, iflag);
-+		list_remove_head(&work_list, cq_event,
-+				 struct lpfc_cq_event, list);
- 
- 		switch (bf_get(lpfc_wcqe_c_code, &cq_event->cqe.wcqe_cmpl)) {
- 		case CQE_CODE_COMPL_WQE:
-@@ -3941,6 +3941,17 @@ lpfc_sli_handle_slow_ring_event_s4(struct lpfc_hba *phba,
- 		if (count == 64)
- 			break;
- 	}
-+
-+	/*
-+	 * If the limit stops the processing of events, move the
-+	 * remaining events back to the main event queue.
-+	 */
-+	spin_lock_irqsave(&phba->hbalock, iflag);
-+	if (!list_empty(&work_list)) {
-+		phba->hba_flag |= HBA_SP_QUEUE_EVT;
-+		list_splice(&work_list, &phba->sli4_hba.sp_queue_event);
-+	}
-+	spin_unlock_irqrestore(&phba->hbalock, iflag);
- }
- 
- /**
-@@ -12877,18 +12888,19 @@ lpfc_sli_intr_handler(int irq, void *dev_id)
- void lpfc_sli4_els_xri_abort_event_proc(struct lpfc_hba *phba)
- {
- 	struct lpfc_cq_event *cq_event;
-+	LIST_HEAD(work_list);
- 
- 	/* First, declare the els xri abort event has been handled */
- 	spin_lock_irq(&phba->hbalock);
- 	phba->hba_flag &= ~ELS_XRI_ABORT_EVENT;
-+	list_splice_init(&phba->sli4_hba.sp_els_xri_aborted_work_queue,
-+			 &work_list);
- 	spin_unlock_irq(&phba->hbalock);
- 	/* Now, handle all the els xri abort events */
--	while (!list_empty(&phba->sli4_hba.sp_els_xri_aborted_work_queue)) {
-+	while (!list_empty(&work_list)) {
- 		/* Get the first event from the head of the event queue */
--		spin_lock_irq(&phba->hbalock);
--		list_remove_head(&phba->sli4_hba.sp_els_xri_aborted_work_queue,
--				 cq_event, struct lpfc_cq_event, list);
--		spin_unlock_irq(&phba->hbalock);
-+		list_remove_head(&work_list, cq_event,
-+				 struct lpfc_cq_event, list);
- 		/* Notify aborted XRI for ELS work queue */
- 		lpfc_sli4_els_xri_aborted(phba, &cq_event->cqe.wcqe_axri);
- 		/* Free the event processed back to the free pool */
--- 
-2.16.4
+Do you know if we have a way to report some estimation of the maximum suppo=
+rted
+fps to userspace? It would be useful to let userspace decide whether it's a
+better fit than software decoding.
 
+Cheers,
+
+Paul
+
+> Best regards,
+> Jernej
+>=20
+> >=20
+> > Anyway that can be done later since we were already hardcoding this.
+> >=20
+> > Cheers,
+> >=20
+> > Paul
+> >=20
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > ---
+> > >=20
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 2 +-
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_h265.c  | 2 +-
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 9 +++++++--
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.h    | 2 +-
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c | 2 +-
+> > >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h  | 2 ++
+> > >  6 files changed, 13 insertions(+), 6 deletions(-)
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
+> > > 7487f6ab7576..d2c854ecdf15 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
+> > > @@ -485,7 +485,7 @@ static void cedrus_h264_setup(struct cedrus_ctx *=
+ctx,
+> > >=20
+> > >  {
+> > > =20
+> > >  	struct cedrus_dev *dev =3D ctx->dev;
+> > >=20
+> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
+> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H264);
+> > >=20
+> > >  	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
+> > >  	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
+> > > 9bc921866f70..6945dc74e1d7 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
+> > > @@ -276,7 +276,7 @@ static void cedrus_h265_setup(struct cedrus_ctx *=
+ctx,
+> > >=20
+> > >  	}
+> > >  =09
+> > >  	/* Activate H265 engine. */
+> > >=20
+> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
+> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H265);
+> > >=20
+> > >  	/* Source offset and length in bits. */
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
+> > > 570a9165dd5d..3acfa21bc124 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
+> > > @@ -30,7 +30,7 @@
+> > >=20
+> > >  #include "cedrus_hw.h"
+> > >  #include "cedrus_regs.h"
+> > >=20
+> > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec c=
+odec)
+> > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec c=
+odec)
+> > >=20
+> > >  {
+> > > =20
+> > >  	u32 reg =3D 0;
+> > >=20
+> > > @@ -58,7 +58,12 @@ int cedrus_engine_enable(struct cedrus_dev *dev, e=
+num
+> > > cedrus_codec codec)>=20
+> > >  		return -EINVAL;
+> > >  =09
+> > >  	}
+> > >=20
+> > > -	cedrus_write(dev, VE_MODE, reg);
+> > > +	if (ctx->src_fmt.width =3D=3D 4096)
+> > > +		reg |=3D VE_MODE_PIC_WIDTH_IS_4096;
+> > > +	if (ctx->src_fmt.width > 2048)
+> > > +		reg |=3D VE_MODE_PIC_WIDTH_MORE_2048;
+> > > +
+> > > +	cedrus_write(ctx->dev, VE_MODE, reg);
+> > >=20
+> > >  	return 0;
+> > > =20
+> > >  }
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h index
+> > > 27d0882397aa..604ff932fbf5 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
+> > > @@ -16,7 +16,7 @@
+> > >=20
+> > >  #ifndef _CEDRUS_HW_H_
+> > >  #define _CEDRUS_HW_H_
+> > >=20
+> > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec
+> > > codec);
+> > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec
+> > > codec);
+> > >=20
+> > >  void cedrus_engine_disable(struct cedrus_dev *dev);
+> > > =20
+> > >  void cedrus_dst_format_set(struct cedrus_dev *dev,
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c index
+> > > 13c34927bad5..8bcd6b8f9e2d 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
+> > > @@ -96,7 +96,7 @@ static void cedrus_mpeg2_setup(struct cedrus_ctx *c=
+tx,
+> > > struct cedrus_run *run)>=20
+> > >  	quantization =3D run->mpeg2.quantization;
+> > >  =09
+> > >  	/* Activate MPEG engine. */
+> > >=20
+> > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_MPEG2);
+> > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_MPEG2);
+> > >=20
+> > >  	/* Set intra quantization matrix. */
+> > >=20
+> > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
+> > > 4275a307d282..ace3d49fcd82 100644
+> > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
+> > > @@ -35,6 +35,8 @@
+> > >=20
+> > >  #define VE_MODE					0x00
+> > >=20
+> > > +#define VE_MODE_PIC_WIDTH_IS_4096		BIT(22)
+> > > +#define VE_MODE_PIC_WIDTH_MORE_2048		BIT(21)
+> > >=20
+> > >  #define VE_MODE_REC_WR_MODE_2MB			(0x01 << 20)
+> > >  #define VE_MODE_REC_WR_MODE_1MB			(0x00 << 20)
+> > >  #define VE_MODE_DDR_MODE_BW_128			(0x03 << 16)
+>=20
+>=20
+>=20
+>=20
+
+--=20
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
+--Fig2xvG2VGoz8o/s
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEJZpWjZeIetVBefti3cLmz3+fv9EFAl3BLnoACgkQ3cLmz3+f
+v9EjhwgAgeGyEQpAO6eVGrr8/1wd8Zn4Clb1Bmee41zx2U1LqhhWf0nr2ZSOR6/T
+qXztV6Y6ZZ5PcvRRiHXT7mVVzxpareDEuQvuyI1q53W2CBAmlXdLEp4JNOKjUDJ6
+iGPh8zvQDqaza6/88oK35uSSNreHY6RUFP0MIBT3nHsMFHKndpBgYo3kGjU46LKz
+xr3PV4NX9+8/+3m5Ol6mY5w+YTl0xJ/z3rbIXp6E0HFFFCL+pqdShu2osjHboPF1
+qTLMUK8zdHG3UYGdanhHS5jMpkZS4Qab06JYsuGKiJ/4WU4PgvAO9CEuIM0nslI1
+W6+I3tmt6J4p13N/VFoTJ+10EAooUA==
+=RajT
+-----END PGP SIGNATURE-----
+
+--Fig2xvG2VGoz8o/s--
