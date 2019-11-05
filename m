@@ -2,173 +2,223 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66918CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07582CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43A1420818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D104D20818
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:14:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727834AbfKEFOY convert rfc822-to-8bit (ORCPT
+        id S1729329AbfKEFOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:14:24 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:37264 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfKEFOX (ORCPT
+        Tue, 5 Nov 2019 00:14:37 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59040 "EHLO
+        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725385AbfKEFOh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:14:23 -0500
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iRrAc-00048c-2g
-        for linux-kernel@vger.kernel.org; Tue, 05 Nov 2019 05:14:22 +0000
-Received: by mail-pg1-f199.google.com with SMTP id q1so5970909pgl.7
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 21:14:22 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=JprAQtkugXMNo/gg2BE2hUTsxxRNgFiIwg+1mQgKeVY=;
-        b=CxdCA5rwUMvyDu+ciE6g4S8z/aBWp3bcmBixmb6RPr+r2MeGErgFDte2OLjUx31RB6
-         8lzjtO8W1fS2boY4Oxz5iWSWvLCLCe9eT+tchgUDfDTXZQkOnrubUCpAjTryZ8txrquB
-         8bGUR+nPEnhs1It0sD6RUnT8a6bPDyYXGBNsA21bjioFYPoftgr8i/4mIETSV7owNnGM
-         Hh8CfcgDTrEGtX1oMSjZGGo0RFHd00x0Ji9oxaBFIVWnC4+1TIh+REXNImOcAsNa6uLQ
-         jMBBeuRCx7Kn/5aZAy5SsfTlqOgNpBUGiuxUwe3NTLXRmIv52UXQzu8mPo6oXJckUQuD
-         /aQg==
-X-Gm-Message-State: APjAAAWwzPqvfKfJf55DbdILr98HjjVR99zJd6OAY4e7sCWTLGD3iw7J
-        7uileMU2ihHbFqUocEwMLZM+2YzFT9whb7SAQIZ4ITKuLtST44tW10madCND1v/0AWULFXLwYv5
-        RZ8wgX7AfdLO2AxVTcbsah3rJ2fLJ5LrBGtxwzSNy8A==
-X-Received: by 2002:a62:1b4a:: with SMTP id b71mr35413444pfb.167.1572930860592;
-        Mon, 04 Nov 2019 21:14:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqxLeAQ3fElRGQNEY/4syv8RZhQVelT90aGVjAH0F7fIO1ra0NmQdetGZnHO/2G4Z3YOLxkD8Q==
-X-Received: by 2002:a62:1b4a:: with SMTP id b71mr35413421pfb.167.1572930860214;
-        Mon, 04 Nov 2019 21:14:20 -0800 (PST)
-Received: from [10.101.46.71] (61-220-137-37.HINET-IP.hinet.net. [61.220.137.37])
-        by smtp.gmail.com with ESMTPSA id t8sm8783700pji.11.2019.11.04.21.14.18
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 04 Nov 2019 21:14:19 -0800 (PST)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 13.0 \(3594.4.19\))
-Subject: Re: [PATCH 2/2] usb: core: Attempt power cycle when port is in
- eSS.Disabled state
-From:   Kai Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <20191104143838.GA2183570@kroah.com>
-Date:   Tue, 5 Nov 2019 13:14:16 +0800
-Cc:     Alan Stern <stern@rowland.harvard.edu>, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Transfer-Encoding: 8BIT
-Message-Id: <CFDCF282-FBBC-43BC-9E6B-093B752E5C33@canonical.com>
-References: <20191007182840.4867-1-kai.heng.feng@canonical.com>
- <20191007182840.4867-2-kai.heng.feng@canonical.com>
- <20191104143838.GA2183570@kroah.com>
-To:     Greg KH <gregkh@linuxfoundation.org>
-X-Mailer: Apple Mail (2.3594.4.19)
+        Tue, 5 Nov 2019 00:14:37 -0500
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA557BKZ175297
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 00:14:35 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w14m4109v-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 00:14:34 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <erichte@linux.ibm.com>;
+        Tue, 5 Nov 2019 05:14:32 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 5 Nov 2019 05:14:29 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA55ERdR50397194
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 5 Nov 2019 05:14:27 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id B24004C046;
+        Tue,  5 Nov 2019 05:14:27 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EBC1D4C040;
+        Tue,  5 Nov 2019 05:14:25 +0000 (GMT)
+Received: from [9.80.237.45] (unknown [9.80.237.45])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue,  5 Nov 2019 05:14:25 +0000 (GMT)
+Subject: Re: [PATCH v10 1/9] powerpc: detect the secure boot mode of the
+ system
+To:     Mimi Zohar <zohar@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
+Cc:     Nayna Jain <nayna@linux.ibm.com>, linux-kernel@vger.kernel.org,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Jeremy Kerr <jk@ozlabs.org>,
+        "Oliver O'Halloran" <oohall@gmail.com>
+References: <1572492694-6520-1-git-send-email-zohar@linux.ibm.com>
+ <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
+From:   Eric Richter <erichte@linux.ibm.com>
+Date:   Mon, 4 Nov 2019 23:14:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.0
+MIME-Version: 1.0
+In-Reply-To: <1572492694-6520-2-git-send-email-zohar@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110505-4275-0000-0000-0000037AD8D9
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110505-4276-0000-0000-0000388E21BD
+Message-Id: <09a57ae4-c7b1-aaf4-0f89-a0d7ed16f6cf@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_01:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911050040
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-> On Nov 4, 2019, at 10:38 PM, Greg KH <gregkh@linuxfoundation.org> wrote:
+On 10/30/19 10:31 PM, Mimi Zohar wrote:
+> From: Nayna Jain <nayna@linux.ibm.com>
 > 
-> On Tue, Oct 08, 2019 at 02:28:40AM +0800, Kai-Heng Feng wrote:
->> On Dell TB16, Realtek USB ethernet (r8152) connects to an SMSC hub which
->> then connects to ASMedia xHCI's root hub:
->> 
->> /:  Bus 04.Port 1: Dev 1, Class=root_hub, Driver=xhci_hcd/2p, 5000M
->>    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/7p, 5000M
->>            |__ Port 2: Dev 3, If 0, Class=Vendor Specific Class, Driver=r8152, 5000M
->> 
->> Bus 004 Device 001: ID 1d6b:0003 Linux Foundation 3.0 root hub
->> Bus 004 Device 002: ID 0424:5537 Standard Microsystems Corp. USB5537B
->> Bus 004 Device 003: ID 0bda:8153 Realtek Semiconductor Corp. RTL8153 Gigabit Ethernet Adapter
->> 
->> The SMSC hub may disconnect after system resume from suspend. When this
->> happens, the reset resume attempt fails, and the last resort to disable
->> the port and see something comes up later, also fails.
->> 
->> When the issue occurs, the link state stays in eSS.Disabled state
->> despite the warm reset attempts. The USB spec mentioned this can be
->> caused by invalid VBus, and after some expiremets, it does show that the
->> SMSC hub can be brought back after a power cycle.
->> 
->> So let's power cycle the port at the end of reset resume attempt, if
->> it's in eSS.Disabled state.
->> 
->> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
->> ---
->> drivers/usb/core/hub.c | 21 +++++++++++++++++++--
->> 1 file changed, 19 insertions(+), 2 deletions(-)
->> 
->> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
->> index 6655a6a1651b..5f50aca7cf67 100644
->> --- a/drivers/usb/core/hub.c
->> +++ b/drivers/usb/core/hub.c
->> @@ -2739,20 +2739,33 @@ static bool hub_port_warm_reset_required(struct usb_hub *hub, int port1,
->> 		|| link_state == USB_SS_PORT_LS_COMP_MOD;
->> }
->> 
->> +static bool hub_port_power_cycle_required(struct usb_hub *hub, int port1,
->> +		u16 portstatus)
->> +{
->> +	u16 link_state;
->> +
->> +	if (!hub_is_superspeed(hub->hdev))
->> +		return false;
->> +
->> +	link_state = portstatus & USB_PORT_STAT_LINK_STATE;
->> +	return link_state == USB_SS_PORT_LS_SS_DISABLED;
->> +}
->> +
->> static void hub_port_power_cycle(struct usb_hub *hub, int port1)
->> {
->> +	struct usb_port *port_dev = hub->ports[port1  - 1];
->> 	int ret;
->> 
->> 	ret = usb_hub_set_port_power(hub, port1, false);
->> 	if (ret) {
->> -		dev_info(&udev->dev, "failed to disable port power\n");
->> +		dev_info(&port_dev->dev, "failed to disable port power\n");
->> 		return;
->> 	}
->> 
->> 	msleep(2 * hub_power_on_good_delay(hub));
->> 	ret = usb_hub_set_port_power(hub, port1, true);
->> 	if (ret) {
->> -		dev_info(&udev->dev, "failed to enable port power\n");
->> +		dev_info(&port_dev->dev, "failed to enable port power\n");
->> 		return;
->> 	}
->> 
->> @@ -3600,6 +3613,10 @@ int usb_port_resume(struct usb_device *udev, pm_message_t msg)
->> 	if (status < 0) {
->> 		dev_dbg(&udev->dev, "can't resume, status %d\n", status);
->> 		hub_port_logical_disconnect(hub, port1);
->> +		if (hub_port_power_cycle_required(hub, port1, portstatus)) {
->> +			dev_info(&udev->dev, "device in disabled state, attempt power cycle\n");
+> This patch defines a function to detect the secure boot state of a
+> PowerNV system.
 > 
-> Why dev_info()?  Shouldn't we only care if this fails?
-
-I’ll lower the level to dev_dbg().
-
+> The PPC_SECURE_BOOT config represents the base enablement of secure boot
+> for powerpc.
 > 
->> +			hub_port_power_cycle(hub, port1);
+> Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+> ---
+>  arch/powerpc/Kconfig                   | 10 ++++++++++
+>  arch/powerpc/include/asm/secure_boot.h | 23 +++++++++++++++++++++++
+>  arch/powerpc/kernel/Makefile           |  2 ++
+>  arch/powerpc/kernel/secure_boot.c      | 32 ++++++++++++++++++++++++++++++++
+>  4 files changed, 67 insertions(+)
+>  create mode 100644 arch/powerpc/include/asm/secure_boot.h
+>  create mode 100644 arch/powerpc/kernel/secure_boot.c
 > 
-> Weren't we only going to do this for the broken types of devices?  And
-> not for everything?
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index 3e56c9c2f16e..56ea0019b616 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -934,6 +934,16 @@ config PPC_MEM_KEYS
+>  
+>  	  If unsure, say y.
+>  
+> +config PPC_SECURE_BOOT
+> +	prompt "Enable secure boot support"
+> +	bool
+> +	depends on PPC_POWERNV
+> +	help
+> +	  Systems with firmware secure boot enabled need to define security
+> +	  policies to extend secure boot to the OS. This config allows a user
+> +	  to enable OS secure boot on systems that have firmware support for
+> +	  it. If in doubt say N.
+> +
+>  endmenu
+>  
+>  config ISA_DMA_API
+> diff --git a/arch/powerpc/include/asm/secure_boot.h b/arch/powerpc/include/asm/secure_boot.h
+> new file mode 100644
+> index 000000000000..07d0fe0ca81f
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/secure_boot.h
+> @@ -0,0 +1,23 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Secure boot definitions
+> + *
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain
+> + */
+> +#ifndef _ASM_POWER_SECURE_BOOT_H
+> +#define _ASM_POWER_SECURE_BOOT_H
+> +
+> +#ifdef CONFIG_PPC_SECURE_BOOT
+> +
+> +bool is_ppc_secureboot_enabled(void);
+> +
+> +#else
+> +
+> +static inline bool is_ppc_secureboot_enabled(void)
+> +{
+> +	return false;
+> +}
+> +
+> +#endif
+> +#endif
+> diff --git a/arch/powerpc/kernel/Makefile b/arch/powerpc/kernel/Makefile
+> index a7ca8fe62368..e2a54fa240ac 100644
+> --- a/arch/powerpc/kernel/Makefile
+> +++ b/arch/powerpc/kernel/Makefile
+> @@ -161,6 +161,8 @@ ifneq ($(CONFIG_PPC_POWERNV)$(CONFIG_PPC_SVM),)
+>  obj-y				+= ucall.o
+>  endif
+>  
+> +obj-$(CONFIG_PPC_SECURE_BOOT)	+= secure_boot.o
+> +
+>  # Disable GCOV, KCOV & sanitizers in odd or sensitive code
+>  GCOV_PROFILE_prom_init.o := n
+>  KCOV_INSTRUMENT_prom_init.o := n
+> diff --git a/arch/powerpc/kernel/secure_boot.c b/arch/powerpc/kernel/secure_boot.c
+> new file mode 100644
+> index 000000000000..63dc82c50862
+> --- /dev/null
+> +++ b/arch/powerpc/kernel/secure_boot.c
+> @@ -0,0 +1,32 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2019 IBM Corporation
+> + * Author: Nayna Jain
+> + */
+> +#include <linux/types.h>
+> +#include <linux/of.h>
+> +#include <asm/secure_boot.h>
+> +
+> +bool is_ppc_secureboot_enabled(void)
+> +{
+> +	struct device_node *node;
+> +	bool enabled = false;
+> +
+> +	node = of_find_compatible_node(NULL, NULL, "ibm,secvar-v1");
 
-From what I can understand from the spec, if the device is in eSS.Disabled state, there’s no way out.
-So "power cycling as a last resort” is indeed targets everything.
+Per skiboot changes, should instead look for "ibm,secureboot".
 
-Kai-Heng
+Updated set can be found here:
+https://patchwork.ozlabs.org/project/skiboot/list/?series=140626
 
-> thanks,
+> +	if (!of_device_is_available(node)) {
+> +		pr_err("Cannot find secure variable node in device tree; failing to secure state\n");
+
+The default value for "enabled" is false, so it's actually failing insecure. Although, the print is
+probably unnecessary.
+
+> +		goto out;
+> +	}
+> +
+> +	/*
+> +	 * secureboot is enabled if os-secure-enforcing property exists,
+> +	 * else disabled.
+> +	 */
+> +	enabled = of_property_read_bool(node, "os-secure-enforcing");
+
+Property has been renamed to "os-secureboot-enforcing".
+
+> +> +out:
+> +	of_node_put(node);
+> +
+> +	pr_info("Secure boot mode %s\n", enabled ? "enabled" : "disabled");
+> +	return enabled;
+> +}
 > 
-> greg k-h
 
