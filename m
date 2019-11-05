@@ -2,102 +2,116 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 467BDC010A7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94866C010A3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1ADDA206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6BA7320869
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:32:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388661AbfKEKcL (ORCPT
+        id S2388682AbfKEKcX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:32:11 -0500
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:40854 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388203AbfKEKcK (ORCPT
+        Tue, 5 Nov 2019 05:32:23 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:63694 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388465AbfKEKcX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:32:10 -0500
-Received: by mail-lf1-f67.google.com with SMTP id f4so14699552lfk.7;
-        Tue, 05 Nov 2019 02:32:08 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=QtDw/btxhGfHgbNVKiIJpWaEUnUxstTseBtZmP+0Wjs=;
-        b=V82zZ7ow7BeuIybQlL2EKANaSRw5Lb/xwRzAuxk1K22aXIp6x+i2v7/mkYH3u6Fn/F
-         7DZIEfgSyM00ZvsdvQ49YtvAasmpHB6rT4s13ZHdB5ZQKPpTeVv69tskCuUn76UPfOnF
-         dP3zMnTV3p0uy3mIxsIbIzQq9jOo0AugYdgWq4/b3cpNJifvvt0hQRyID3ViX4jfYNdz
-         CykBTvv9/zttlGpaL1JBV5V349Gwn5muZz+jiuTilCWZB9X/QjKtjUWjFycRfRA47cbG
-         CNyNC4sUvV8yFhIa5e8mhTt409rcx6tIOGTiKjN/ZHOGxBUgnp5n6TMdAOsTCfWs+mJv
-         eLeg==
-X-Gm-Message-State: APjAAAWawxJ7Hnl6yLKakrGXqk29fSQdDvsGlTRGfjsGwkWaAgKTx3Hw
-        KVBudBeZX28LkVDQYLkIhL1GZ03lznw=
-X-Google-Smtp-Source: APXvYqwD5x7b/6AgJsViO97VLS00tB8ShKMJsh/7Rw8yqgRIERxgonl7PxCD118W9fOD8wlSrBWiYg==
-X-Received: by 2002:a19:8c1c:: with SMTP id o28mr948965lfd.105.1572949927499;
-        Tue, 05 Nov 2019 02:32:07 -0800 (PST)
-Received: from localhost.localdomain ([213.255.186.46])
-        by smtp.gmail.com with ESMTPSA id g21sm2329676ljh.2.2019.11.05.02.32.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 02:32:07 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:31:58 +0200
-From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 42/62] gpio: gpio-tc3589x: Use new GPIO_LINE_DIRECTION
-Message-ID: <1aba3d3714807587fd4265c7c8abb42b665f2e04.1572945957.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1572945957.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 5 Nov 2019 05:32:23 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id fa89029b01134efa; Tue, 5 Nov 2019 11:32:21 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: [PATCH 5/5] PCI: PM: Fold __pci_complete_power_transition() into its caller
+Date:   Tue, 05 Nov 2019 11:32:02 +0100
+Message-ID: <1769241.yKxyosiRnQ@kreacher>
+In-Reply-To: <2771503.n70vfTtcVb@kreacher>
+References: <2771503.n70vfTtcVb@kreacher>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1572945957.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's hard for occasional GPIO code reader/writer to know if values 0/1
-equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
-GPIO_LINE_DIRECTION_OUT to help them out.
+From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Because pci_set_power_state() has become the only caller of
+__pci_complete_power_transition(), there is no need for the latter to
+be a separate function any more, so fold it into the former, drop a
+redundant check and reduce the number of lines of code somewhat.
+
+Code rearrangement, no intentional functional impact.
+
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 ---
- drivers/gpio/gpio-tc3589x.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c |   30 ++++++------------------------
+ 1 file changed, 6 insertions(+), 24 deletions(-)
 
-diff --git a/drivers/gpio/gpio-tc3589x.c b/drivers/gpio/gpio-tc3589x.c
-index 75b1135b383a..6be0684cfa49 100644
---- a/drivers/gpio/gpio-tc3589x.c
-+++ b/drivers/gpio/gpio-tc3589x.c
-@@ -97,7 +97,10 @@ static int tc3589x_gpio_get_direction(struct gpio_chip *chip,
- 	if (ret < 0)
- 		return ret;
- 
--	return !(ret & BIT(pos));
-+	if (ret & BIT(pos))
-+		return GPIO_LINE_DIRECTION_OUT;
-+
-+	return GPIO_LINE_DIRECTION_IN;
+Index: linux-pm/drivers/pci/pci.c
+===================================================================
+--- linux-pm.orig/drivers/pci/pci.c
++++ linux-pm/drivers/pci/pci.c
+@@ -1056,26 +1056,6 @@ void pci_bus_set_current_state(struct pc
  }
  
- static int tc3589x_gpio_set_config(struct gpio_chip *chip, unsigned int offset,
--- 
-2.21.0
+ /**
+- * __pci_complete_power_transition - Complete power transition of a PCI device
+- * @dev: PCI device to handle.
+- * @state: State to put the device into.
+- *
+- * This function should not be called directly by device drivers.
+- */
+-static int __pci_complete_power_transition(struct pci_dev *dev, pci_power_t state)
+-{
+-	int ret;
+-
+-	if (state <= PCI_D0)
+-		return -EINVAL;
+-	ret = pci_platform_power_transition(dev, state);
+-	/* Power off the bridge may power off the whole hierarchy */
+-	if (!ret && state == PCI_D3cold)
+-		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+-	return ret;
+-}
+-
+-/**
+  * pci_set_power_state - Set the power state of a PCI device
+  * @dev: PCI device to handle.
+  * @state: PCI power state (D0, D1, D2, D3hot) to put the device into.
+@@ -1094,7 +1074,7 @@ static int __pci_complete_power_transiti
+  */
+ int pci_set_power_state(struct pci_dev *dev, pci_power_t state)
+ {
+-	int error;
++	int error, ret;
+ 
+ 	/* Bound the state we're entering */
+ 	if (state > PCI_D3cold)
+@@ -1132,10 +1112,12 @@ int pci_set_power_state(struct pci_dev *
+ 	error = pci_raw_set_power_state(dev, state > PCI_D3hot ?
+ 					PCI_D3hot : state);
+ 
+-	if (!__pci_complete_power_transition(dev, state))
+-		error = 0;
++	ret = pci_platform_power_transition(dev, state);
++	/* Powering off a bridge may power off the whole hierarchy */
++	if (!ret && state == PCI_D3cold)
++		pci_bus_set_current_state(dev->subordinate, PCI_D3cold);
+ 
+-	return error;
++	return ret ? error : 0;
+ }
+ EXPORT_SYMBOL(pci_set_power_state);
+ 
 
 
--- 
-Matti Vaittinen, Linux device drivers
-ROHM Semiconductors, Finland SWDC
-Kiviharjunlenkki 1E
-90220 OULU
-FINLAND
 
-~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-Simon says - in Latin please.
-~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-Thanks to Simon Glass for the translation =] 
