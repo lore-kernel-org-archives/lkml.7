@@ -2,81 +2,120 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C02CDC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:27:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 721B1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:29:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97B1C2087E
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:27:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4B72087E
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:29:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390182AbfKEQ1C (ORCPT
+        id S2390210AbfKEQ3A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:27:02 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:46833 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390060AbfKEQ1C (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:27:02 -0500
-Received: by mail-io1-f70.google.com with SMTP id r4so5644651ioo.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 08:27:01 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=xk1NyHbooEy4YsKg2M7xCtDevKehR0j6/pRBBy2vjNw=;
-        b=G72xT1Hhh+unExdpqP5ig76bMvuKH0vxFHP+vDUVLZf1g0OOrb25LW2RW8Jcucw4UX
-         gMaqLuT0ZOv34nTF7e6JyBl5ftecUe54T/sV9AUIRjnxLZamzUfKsAkxzkDuXk1kvFTl
-         dQ7SXh6KnodGZKjXnI2NSagBBa3g3cI5eoF+z2IjIlouBQrE/4OxlZaQKrqfMPGlYeqV
-         b5oci+nbYUslTID7DluYpU5efsp+LzU5lY6X15IgcHqQnIMJs/ulBnEYg4nBPwWgw1hJ
-         wRwK8ChjsX5SqEuiwlsKi6SSrhaIQXFMqF0TFIy8awW7cHvThVgl3H90cR008NAqDERn
-         HBjQ==
-X-Gm-Message-State: APjAAAWIlwl2INguqzCxECENrBLbCsJlKvScMMiENU18KtIHfAkTzixH
-        eG8lFrgssSxgnWW9aKONpi5FCuYtjZREFVGEm8qm7j/QtGzn
-X-Google-Smtp-Source: APXvYqw3IqVWZQAVPDbpkfRF7hE8RcQNgey/R6Pf8G7Cgo3IYNCKrAbGg2rE8MnLaYC40eT3Z15gtUy8nMeNqMMOMFCOhtwdKjkd
+        Tue, 5 Nov 2019 11:29:00 -0500
+Received: from verein.lst.de ([213.95.11.211]:46395 "EHLO verein.lst.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390137AbfKEQ3A (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:29:00 -0500
+Received: by verein.lst.de (Postfix, from userid 2407)
+        id D251368AFE; Tue,  5 Nov 2019 17:28:56 +0100 (CET)
+Date:   Tue, 5 Nov 2019 17:28:56 +0100
+From:   Christoph Hellwig <hch@lst.de>
+To:     Christian Zigotzky <chzigotzky@xenosoft.de>
+Cc:     Christoph Hellwig <hch@lst.de>, linux-arch@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        iommu@lists.linux-foundation.org, Olof Johansson <olof@lixom.net>
+Subject: Re: Bug 205201 - overflow of DMA mask and bus mask
+Message-ID: <20191105162856.GA15402@lst.de>
+References: <20181213112511.GA4574@lst.de> <e109de27-f4af-147d-dc0e-067c8bafb29b@xenosoft.de> <ad5a5a8a-d232-d523-a6f7-e9377fc3857b@xenosoft.de> <e60d6ca3-860c-f01d-8860-c5e022ec7179@xenosoft.de> <008c981e-bdd2-21a7-f5f7-c57e4850ae9a@xenosoft.de> <20190103073622.GA24323@lst.de> <71A251A5-FA06-4019-B324-7AED32F7B714@xenosoft.de> <1b0c5c21-2761-d3a3-651b-3687bb6ae694@xenosoft.de> <3504ee70-02de-049e-6402-2d530bf55a84@xenosoft.de> <46025f1b-db20-ac23-7dcd-10bc43bbb6ee@xenosoft.de>
 MIME-Version: 1.0
-X-Received: by 2002:a5d:9954:: with SMTP id v20mr4300127ios.188.1572971221308;
- Tue, 05 Nov 2019 08:27:01 -0800 (PST)
-Date:   Tue, 05 Nov 2019 08:27:01 -0800
-In-Reply-To: <000000000000a367e3059691c6b4@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000e36a0405969be68c@google.com>
-Subject: Re: general protection fault in j1939_sk_bind
-From:   syzbot <syzbot+4857323ec1bb236f6a45@syzkaller.appspotmail.com>
-To:     bst@pengutronix.de, davem@davemloft.net,
-        dev.kurt@vandijck-laurijssen.be, ecathinds@gmail.com,
-        kernel@pengutronix.de, linux-can@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux@rempel-privat.de,
-        lkp@intel.com, maxime.jayat@mobile-devices.fr, mkl@pengutronix.de,
-        netdev@vger.kernel.org, o.rempel@pengutronix.de, robin@protonic.nl,
-        socketcan@hartkopp.net, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <46025f1b-db20-ac23-7dcd-10bc43bbb6ee@xenosoft.de>
+User-Agent: Mutt/1.5.17 (2007-11-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+On Tue, Nov 05, 2019 at 08:56:27AM +0100, Christian Zigotzky wrote:
+> Hi All,
+>
+> We still have DMA problems with some PCI devices. Since the PowerPC updates 
+> 4.21-1 [1] we need to decrease the RAM to 3500MB (mem=3500M) if we want to 
+> work with our PCI devices. The FSL P5020 and P5040 have these problems 
+> currently.
+>
+> Error message:
+>
+> [   25.654852] bttv 1000:04:05.0: overflow 0x00000000fe077000+4096 of DMA 
+> mask ffffffff bus mask df000000
+>
+> All 5.x Linux kernels can't initialize a SCSI PCI card anymore so booting 
+> of a Linux userland isn't possible.
+>
+> PLEASE check the DMA changes in the PowerPC updates 4.21-1 [1]. The kernel 
+> 4.20 works with all PCI devices without limitation of RAM.
 
-commit 9d71dd0c70099914fcd063135da3c580865e924c
-Author: The j1939 authors <linux-can@vger.kernel.org>
-Date:   Mon Oct 8 09:48:36 2018 +0000
+Can you send me the .config and a dmesg?  And in the meantime try the
+patch below?
 
-     can: add support of SAE J1939 protocol
+---
+From 4d659b7311bd4141fdd3eeeb80fa2d7602ea01d4 Mon Sep 17 00:00:00 2001
+From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Date: Fri, 18 Oct 2019 13:00:43 +0200
+Subject: dma-direct: check for overflows on 32 bit DMA addresses
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=16267168e00000
-start commit:   a99d8080 Linux 5.4-rc6
-git tree:       upstream
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=15267168e00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=11267168e00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
-dashboard link: https://syzkaller.appspot.com/bug?extid=4857323ec1bb236f6a45
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=110a8b8ae00000
+As seen on the new Raspberry Pi 4 and sta2x11's DMA implementation it is
+possible for a device configured with 32 bit DMA addresses and a partial
+DMA mapping located at the end of the address space to overflow. It
+happens when a higher physical address, not DMAable, is translated to
+it's DMA counterpart.
 
-Reported-by: syzbot+4857323ec1bb236f6a45@syzkaller.appspotmail.com
-Fixes: 9d71dd0c7009 ("can: add support of SAE J1939 protocol")
+For example the Raspberry Pi 4, configurable up to 4 GB of memory, has
+an interconnect capable of addressing the lower 1 GB of physical memory
+with a DMA offset of 0xc0000000. It transpires that, any attempt to
+translate physical addresses higher than the first GB will result in an
+overflow which dma_capable() can't detect as it only checks for
+addresses bigger then the maximum allowed DMA address.
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+Fix this by verifying in dma_capable() if the DMA address range provided
+is at any point lower than the minimum possible DMA address on the bus.
+
+Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+---
+ include/linux/dma-direct.h | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/include/linux/dma-direct.h b/include/linux/dma-direct.h
+index adf993a3bd58..6ad9e9ea7564 100644
+--- a/include/linux/dma-direct.h
++++ b/include/linux/dma-direct.h
+@@ -3,6 +3,7 @@
+ #define _LINUX_DMA_DIRECT_H 1
+ 
+ #include <linux/dma-mapping.h>
++#include <linux/memblock.h> /* for min_low_pfn */
+ #include <linux/mem_encrypt.h>
+ 
+ #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
+@@ -27,6 +28,13 @@ static inline bool dma_capable(struct device *dev, dma_addr_t addr, size_t size)
+ 	if (!dev->dma_mask)
+ 		return false;
+ 
++#ifndef CONFIG_ARCH_DMA_ADDR_T_64BIT
++	/* Check if DMA address overflowed */
++	if (min(addr, addr + size - 1) <
++		__phys_to_dma(dev, (phys_addr_t)(min_low_pfn << PAGE_SHIFT)))
++		return false;
++#endif
++
+ 	return addr + size - 1 <=
+ 		min_not_zero(*dev->dma_mask, dev->bus_dma_mask);
+ }
+-- 
+2.20.1
+
