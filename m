@@ -2,145 +2,135 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 969FBC49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F12C49EAD
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DB5321D71
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="GX5X3lUm"
+	by mail.kernel.org (Postfix) with ESMTP id 8A104222CE
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:28:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388515AbfKEJ2t (ORCPT
+        id S2388536AbfKEJ24 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:28:49 -0500
-Received: from mail-vs1-f67.google.com ([209.85.217.67]:46378 "EHLO
-        mail-vs1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388497AbfKEJ2s (ORCPT
+        Tue, 5 Nov 2019 04:28:56 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:40634 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388072AbfKEJ2L (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:28:48 -0500
-Received: by mail-vs1-f67.google.com with SMTP id m6so6431831vsn.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:28:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=broadcom.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Q5/7s98PhC6jxZLJVmCHmR13iFo5P8VlHAp+JLns2BA=;
-        b=GX5X3lUmaa27neYrHSlFgvaDCVsuKz/zKucQz8VNcC098H9XmWKI7OFY/WbmbEh1CC
-         fEQIldAz+Q7MpE1bwuhsGjiuiXHchytXBPJc1l65BFH4Djj36gXxuelWVFBkFdc6oCeH
-         d2Il/QdnLcun0JKe4t0Y8XUZIyAAisSSZDQyI=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Q5/7s98PhC6jxZLJVmCHmR13iFo5P8VlHAp+JLns2BA=;
-        b=CGKDoDV1C9AZn5w0wScLyweR4MIPVwOG99XzKotEwsuYMQPq+AkA1Naa4peyv0cQjA
-         WJu/ErNtRUzU4tz1EV2ziF81nwZpwbLTVANE+fGqBEadJJHaI5lc0uP/36LoESICTcnX
-         G94BpKHxzS2hNyUMZypucpUIipGuODaghmjTaH5cdtm16oY/yZO1TRtdK4eYDqLIwNqZ
-         FNqnAAHrLP55m6RqF+Lr1l8lhQFLbtYV1SWr7AIQlNNpjBXp8LeadCSdF7FGcTwBbIXo
-         DkhkJPGZYW1kLah8O0FGlsy9nM77+OlBUNf6xhu+MI1Rhk4IjlgW3ToIqHfAQrbhyWt+
-         W/IA==
-X-Gm-Message-State: APjAAAXvCYRgr1HU0vJuThsPgDpTzEnJ1ABN989ji7ZPyeV+BrEtbbPf
-        54Ov6AqUh1mXxfVOLkhXHxotK60fLi+NvQz8xD45dQ==
-X-Google-Smtp-Source: APXvYqzcC4WZuFL9Q+uUY8ZxtbmZjlncd9HmkUg6UwU2E06KR+lY3eX/ogNGlaNjf9cIke6TqFQSGDhqa/Z34PxYQiQ=
-X-Received: by 2002:a67:b917:: with SMTP id q23mr7153086vsn.205.1572946127039;
- Tue, 05 Nov 2019 01:28:47 -0800 (PST)
+        Tue, 5 Nov 2019 04:28:11 -0500
+Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tip-bot2@linutronix.de>)
+        id 1iRv7f-0007ON-5l; Tue, 05 Nov 2019 10:27:35 +0100
+Received: from [127.0.1.1] (localhost [IPv6:::1])
+        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id C31141C03AD;
+        Tue,  5 Nov 2019 10:27:29 +0100 (CET)
+Date:   Tue, 05 Nov 2019 09:27:29 -0000
+From:   "tip-bot2 for Kees Cook" <tip-bot2@linutronix.de>
+Reply-to: linux-kernel@vger.kernel.org
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip: x86/build] c6x: Move EXCEPTION_TABLE to RO_DATA segment
+Cc:     Kees Cook <keescook@chromium.org>, Borislav Petkov <bp@suse.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-c6x-dev@linux-c6x.org,
+        linux-ia64@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-s390@vger.kernel.org, Mark Salter <msalter@redhat.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michal Simek <monstr@monstr.eu>,
+        Rick Edgecombe <rick.p.edgecombe@intel.com>,
+        Segher Boessenkool <segher@kernel.crashing.org>,
+        Will Deacon <will@kernel.org>, "x86-ml" <x86@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        linux-kernel@vger.kernel.org
+In-Reply-To: <20191029211351.13243-20-keescook@chromium.org>
+References: <20191029211351.13243-20-keescook@chromium.org>
 MIME-Version: 1.0
-References: <d5c12f05-5a07-b698-ae60-2728330dd378@web.de>
-In-Reply-To: <d5c12f05-5a07-b698-ae60-2728330dd378@web.de>
-From:   Sumit Saxena <sumit.saxena@broadcom.com>
-Date:   Tue, 5 Nov 2019 14:58:35 +0530
-Message-ID: <CAL2rwxrdOVeO3RT_Y3mk3p-076eMMWm6VVF0C4yiYEWJ0TO5DQ@mail.gmail.com>
-Subject: Re: [PATCH] scsi: megaraid_sas: Use common error handling code in megasas_mgmt_ioctl_fw()
-To:     Markus Elfring <Markus.Elfring@web.de>
-Cc:     Linux SCSI List <linux-scsi@vger.kernel.org>,
-        "PDL,MEGARAIDLINUX" <megaraidlinux.pdl@broadcom.com>,
-        "James E. J. Bottomley" <jejb@linux.ibm.com>,
-        Kashyap Desai <kashyap.desai@broadcom.com>,
-        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        kernel-janitors@vger.kernel.org,
-        Chandrakanth Patil <chandrakanth.patil@broadcom.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Message-ID: <157294604951.29376.5719546125567219062.tip-bot2@tip-bot2>
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot2.linutronix.de>
+Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 1, 2019 at 3:06 AM Markus Elfring <Markus.Elfring@web.de> wrote:
->
-> From: Markus Elfring <elfring@users.sourceforge.net>
-> Date: Thu, 31 Oct 2019 22:23:02 +0100
->
-> Move the same error code assignments so that such exception handling
-> can be better reused at the end of this function.
->
-> This issue was detected by using the Coccinelle software.
->
-> Signed-off-by: Markus Elfring <elfring@users.sourceforge.net>
+The following commit has been merged into the x86/build branch of tip:
 
-Acked-by: Sumit Saxena <sumit.saxena@broadcom.com>
+Commit-ID:     1e51cd538809112a6ac702a48e9719a75152c902
+Gitweb:        https://git.kernel.org/tip/1e51cd538809112a6ac702a48e9719a75152c902
+Author:        Kees Cook <keescook@chromium.org>
+AuthorDate:    Tue, 29 Oct 2019 14:13:41 -07:00
+Committer:     Borislav Petkov <bp@suse.de>
+CommitterDate: Mon, 04 Nov 2019 18:10:58 +01:00
 
-> ---
->  drivers/scsi/megaraid/megaraid_sas_base.c | 25 ++++++++++-------------
->  1 file changed, 11 insertions(+), 14 deletions(-)
->
-> diff --git a/drivers/scsi/megaraid/megaraid_sas_base.c b/drivers/scsi/megaraid/megaraid_sas_base.c
-> index c40fbea06cc5..f2f2a240e5af 100644
-> --- a/drivers/scsi/megaraid/megaraid_sas_base.c
-> +++ b/drivers/scsi/megaraid/megaraid_sas_base.c
-> @@ -8272,27 +8272,20 @@ static int megasas_mgmt_ioctl_fw(struct file *file, unsigned long arg)
->                 return PTR_ERR(ioc);
->
->         instance = megasas_lookup_instance(ioc->host_no);
-> -       if (!instance) {
-> -               error = -ENODEV;
-> -               goto out_kfree_ioc;
-> -       }
-> +       if (!instance)
-> +               goto e_nodev;
->
->         /* Block ioctls in VF mode */
-> -       if (instance->requestorId && !allow_vf_ioctls) {
-> -               error = -ENODEV;
-> -               goto out_kfree_ioc;
-> -       }
-> +       if (instance->requestorId && !allow_vf_ioctls)
-> +               goto e_nodev;
->
->         if (atomic_read(&instance->adprecovery) == MEGASAS_HW_CRITICAL_ERROR) {
->                 dev_err(&instance->pdev->dev, "Controller in crit error\n");
-> -               error = -ENODEV;
-> -               goto out_kfree_ioc;
-> +               goto e_nodev;
->         }
->
-> -       if (instance->unload == 1) {
-> -               error = -ENODEV;
-> -               goto out_kfree_ioc;
-> -       }
-> +       if (instance->unload == 1)
-> +               goto e_nodev;
->
->         if (down_interruptible(&instance->ioctl_sem)) {
->                 error = -ERESTARTSYS;
-> @@ -8311,6 +8304,10 @@ static int megasas_mgmt_ioctl_fw(struct file *file, unsigned long arg)
->  out_kfree_ioc:
->         kfree(ioc);
->         return error;
-> +
-> +e_nodev:
-> +       error = -ENODEV;
-> +       goto out_kfree_ioc;
->  }
->
->  static int megasas_mgmt_ioctl_aen(struct file *file, unsigned long arg)
-> --
-> 2.23.0
->
+c6x: Move EXCEPTION_TABLE to RO_DATA segment
+
+Since the EXCEPTION_TABLE is read-only, collapse it into RO_DATA.
+
+Signed-off-by: Kees Cook <keescook@chromium.org>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: linux-alpha@vger.kernel.org
+Cc: linux-arch@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-c6x-dev@linux-c6x.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-s390@vger.kernel.org
+Cc: Mark Salter <msalter@redhat.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Michal Simek <monstr@monstr.eu>
+Cc: Rick Edgecombe <rick.p.edgecombe@intel.com>
+Cc: Segher Boessenkool <segher@kernel.crashing.org>
+Cc: Will Deacon <will@kernel.org>
+Cc: x86-ml <x86@kernel.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Link: https://lkml.kernel.org/r/20191029211351.13243-20-keescook@chromium.org
+---
+ arch/c6x/kernel/vmlinux.lds.S | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/arch/c6x/kernel/vmlinux.lds.S b/arch/c6x/kernel/vmlinux.lds.S
+index a3547f9..ac99ba0 100644
+--- a/arch/c6x/kernel/vmlinux.lds.S
++++ b/arch/c6x/kernel/vmlinux.lds.S
+@@ -5,6 +5,9 @@
+  *  Copyright (C) 2010, 2011 Texas Instruments Incorporated
+  *  Mark Salter <msalter@redhat.com>
+  */
++
++#define RO_EXCEPTION_TABLE_ALIGN	16
++
+ #include <asm-generic/vmlinux.lds.h>
+ #include <asm/thread_info.h>
+ #include <asm/page.h>
+@@ -80,8 +83,6 @@ SECTIONS
+ 		*(.gnu.warning)
+ 	}
+ 
+-	EXCEPTION_TABLE(16)
+-
+ 	RO_DATA(PAGE_SIZE)
+ 	.const :
+ 	{
