@@ -2,197 +2,175 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4A8CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:25:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39A73CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:27:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81D4E206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:25:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CBED206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 06:27:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="W21Wph0o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730373AbfKEGZJ (ORCPT
+        id S1730490AbfKEG1L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 01:25:09 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:45655 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEGZJ (ORCPT
+        Tue, 5 Nov 2019 01:27:11 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33145 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726842AbfKEG1K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 01:25:09 -0500
-Received: by mail-il1-f199.google.com with SMTP id n84so17636249ila.12
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 22:25:08 -0800 (PST)
+        Tue, 5 Nov 2019 01:27:10 -0500
+Received: by mail-lf1-f68.google.com with SMTP id y127so14160213lfc.0
+        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 22:27:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=W9D+1G60WFt/ifO88MXlbmnG2NsKLbtzguboTP/BcHU=;
+        b=W21Wph0o5MnmbzChDlLpXW5zDUyZl5Ul0oWUAj15Lrfc6oNOkZkt7pbsag+20eelYr
+         ScxAtGtcF8o20A+a6i3DwV20jVZ/bRQHT09G71XS2fFZ/xQgGgx4GwC+pdEcAk2vJLu4
+         5M4MnP00yvEs/GrhQFab5MZo2PGkrFl4CnpQqRFywrsZMZTYAQcd3Dx+sI2KuoqRwMnT
+         +8qEc+WJva4W9yezeTHYMNJ7mfkzYAdsKgzzNA3SOxou5GQweM0Qbd4P+fwhWu2PoQKs
+         5h4NrQCoskEK2nXddg6eV6RFImL2GFOyN7ysqQEDTJrX/cZ7t0FSjQ1HEthjinY/ox3k
+         cLqg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=IBlyAYACIA7xm3viz/NYxSDaXtjW7mwDUDpsIoQAQhI=;
-        b=t8i4S2NZ4y7kKPpebSKDAM5i7RxY/h/rkjHwlSBACxO65XRcC4BudoGwCSWXq6j04P
-         KiIGM9vyW+pb63f9QHtaqZJYP1M4n7Y7yZ/dlS4PSsOh12vPIK0OXsFinBV9srxadi78
-         G30PZLgEily0VaxflhQgUN6dQaROd99NiAtEXefCf9Lo449Y1hfRfO+xW07bB4XilHNb
-         qyJ9TI0F6l7X6eEEhJTmVwqzZ+4k3IyQmVdM35XXwpbg7OMEz5T8Hs9fgGiZXyz0irJQ
-         ZKzRHrMllUrMtrCuynJl5VCwEAk8okM38zwKMObRhwufsG9Ml7xV0G4ByKTX9aPOv4zZ
-         cVzw==
-X-Gm-Message-State: APjAAAWDZyZHyxcF/uWmTwzCfqJ5j/yvsAPqG0rGK7e5Rvp0Aw2mbc2q
-        dgBYH4a7HdlrM1d+n26hIhdUOw2nGCHad8ThdQ6LeIyhGLL/
-X-Google-Smtp-Source: APXvYqzlpBs7RxlTZE94pfGgFen4FYZATSKq7DaQo4hJlscB3914F6dOAOhQZdT3VTyCvtaBtaXD07MXl5+O29eXFtnOURovUIyC
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=W9D+1G60WFt/ifO88MXlbmnG2NsKLbtzguboTP/BcHU=;
+        b=oRth9j1+ZBGWEd2bRkSfX1UMIwsjfmLbi4UPAH2n1X9uzCPRUtDsFda7UEFsPoZqzl
+         8vfFwq7vc2kBLpE90Zn5oTQMiWR5QNkL3/SDgryTuILkOdfHAwy6+9dJkmF/LwNl63sR
+         +JAhRGoVeCDW/XKx4oTx1NSEnS0SQew7ajrTVrpsZdYjJkEDuYlRRfdgZ/LQYzl2RklC
+         CEQrveL272ICtwpIsqtBNw7CcStQZtwXP4BzXE3kZOhbAxHoXLu7ABSi55PIkZNs3Uer
+         GlxKceGNnlHz34CKNKKZZ+ztGePZJ/+SGvTPWiYmJWPs0tr28rKUz1h9UIXMuIYcLuCk
+         PiMw==
+X-Gm-Message-State: APjAAAVE4I/dii7lWXq/EJJqe9EsPOgTyUn7fOeoKLM1R6tgVvQaqfcb
+        FLYnnU+PuiSyyIBsfptGYkAaTYG0UkMw/3X8MKr0fg==
+X-Google-Smtp-Source: APXvYqzIDp3IacxrzvTOBlzew7ZDXmAMg72NkYErri/ebyzTeaSbdiW4CYmi2ki3F6fX8YWi43pvPqS/VMMr2jkE5TE=
+X-Received: by 2002:ac2:5930:: with SMTP id v16mr656873lfi.67.1572935228350;
+ Mon, 04 Nov 2019 22:27:08 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a5d:8b14:: with SMTP id k20mr2719434ion.22.1572935108053;
- Mon, 04 Nov 2019 22:25:08 -0800 (PST)
-Date:   Mon, 04 Nov 2019 22:25:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005ed7710596937e86@google.com>
-Subject: KASAN: use-after-free Read in j1939_xtp_rx_abort_one
-From:   syzbot <syzbot+db4869ba599c0de9b13e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <20191104212140.046021995@linuxfoundation.org>
+In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 5 Nov 2019 11:56:57 +0530
+Message-ID: <CA+G9fYsVHLWFEV7Tc+_EAgH1QGDrN8OBUK54rK_48bnZ=JLJNQ@mail.gmail.com>
+Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Tue, 5 Nov 2019 at 03:34, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 5.3.9 release.
+> There are 163 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
+5.3.9-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-5.3.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 
-syzbot found the following crash on:
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-HEAD commit:    a99d8080 Linux 5.4-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ed25cce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=896c87b73c6fcda6
-dashboard link: https://syzkaller.appspot.com/bug?extid=db4869ba599c0de9b13e
-compiler:       clang version 9.0.0 (/home/glider/llvm/clang  
-80fee25776c2fb61e74c1ecb1a523375c2500b69)
+Summary
+------------------------------------------------------------------------
 
-Unfortunately, I don't have any reproducer for this crash yet.
+kernel: 5.3.9-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-5.3.y
+git commit: 75c9913bbf6e9e64cb669236571e6af45cddfd68
+git describe: v5.3.8-164-g75c9913bbf6e
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.3-oe/bui=
+ld/v5.3.8-164-g75c9913bbf6e
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+db4869ba599c0de9b13e@syzkaller.appspotmail.com
+No regressions (compared to build v5.3.8)
 
-vcan0: j1939_xtp_rx_abort_one: 0x00000000704d9bae: 0x00000: (3) A timeout  
-occurred and this is the connection abort to close the session.
-vcan0: j1939_xtp_rx_abort_one: 0x000000002231a129: 0x00000: (3) A timeout  
-occurred and this is the connection abort to close the session.
-==================================================================
-BUG: KASAN: use-after-free in __lock_acquire+0x96/0x1be0  
-kernel/locking/lockdep.c:3828
-Read of size 8 at addr ffff88808feb5080 by task ksoftirqd/1/16
+No fixes (compared to build v5.3.8)
 
-CPU: 1 PID: 16 Comm: ksoftirqd/1 Not tainted 5.4.0-rc6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x1d8/0x2f8 lib/dump_stack.c:113
-  print_address_description+0x75/0x5c0 mm/kasan/report.c:374
-  __kasan_report+0x14b/0x1c0 mm/kasan/report.c:506
-  kasan_report+0x26/0x50 mm/kasan/common.c:634
-  __asan_report_load8_noabort+0x14/0x20 mm/kasan/generic_report.c:132
-  __lock_acquire+0x96/0x1be0 kernel/locking/lockdep.c:3828
-  lock_acquire+0x158/0x250 kernel/locking/lockdep.c:4487
-  __raw_spin_lock_bh include/linux/spinlock_api_smp.h:135 [inline]
-  _raw_spin_lock_bh+0x34/0x50 kernel/locking/spinlock.c:175
-  spin_lock_bh include/linux/spinlock.h:343 [inline]
-  j1939_session_list_lock net/can/j1939/transport.c:238 [inline]
-  j1939_session_get_by_addr net/can/j1939/transport.c:530 [inline]
-  j1939_xtp_rx_abort_one+0x89/0x3f0 net/can/j1939/transport.c:1242
-  j1939_xtp_rx_abort net/can/j1939/transport.c:1270 [inline]
-  j1939_tp_cmd_recv net/can/j1939/transport.c:1943 [inline]
-  j1939_tp_recv+0x731/0xb80 net/can/j1939/transport.c:1973
-  j1939_can_recv+0x424/0x650 net/can/j1939/main.c:100
-  deliver net/can/af_can.c:568 [inline]
-  can_rcv_filter+0x3c0/0x8b0 net/can/af_can.c:602
-  can_receive+0x2ac/0x3b0 net/can/af_can.c:659
-  can_rcv+0xe4/0x220 net/can/af_can.c:685
-  __netif_receive_skb_one_core net/core/dev.c:4929 [inline]
-  __netif_receive_skb+0x136/0x370 net/core/dev.c:5043
-  process_backlog+0x4d8/0x930 net/core/dev.c:5874
-  napi_poll net/core/dev.c:6311 [inline]
-  net_rx_action+0x5ef/0x10d0 net/core/dev.c:6379
-  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:766
-  run_ksoftirqd+0x64/0xf0 kernel/softirq.c:603
-  smpboot_thread_fn+0x5b3/0x9a0 kernel/smpboot.c:165
-  kthread+0x332/0x350 kernel/kthread.c:255
-  ret_from_fork+0x24/0x30 arch/x86/entry/entry_64.S:352
+Ran 24209 total tests in the following environments and test suites.
 
-Allocated by task 9951:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  __kasan_kmalloc+0x11c/0x1b0 mm/kasan/common.c:510
-  kasan_kmalloc+0x9/0x10 mm/kasan/common.c:524
-  kmem_cache_alloc_trace+0x221/0x2f0 mm/slab.c:3550
-  kmalloc include/linux/slab.h:556 [inline]
-  kzalloc include/linux/slab.h:690 [inline]
-  j1939_priv_create net/can/j1939/main.c:122 [inline]
-  j1939_netdev_start+0x177/0x730 net/can/j1939/main.c:251
-  j1939_sk_bind+0x2c0/0xac0 net/can/j1939/socket.c:438
-  __sys_bind+0x2c2/0x3a0 net/socket.c:1647
-  __do_sys_bind net/socket.c:1658 [inline]
-  __se_sys_bind net/socket.c:1656 [inline]
-  __x64_sys_bind+0x7a/0x90 net/socket.c:1656
-  do_syscall_64+0xf7/0x1c0 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+Environments
+--------------
+- dragonboard-410c
+- hi6220-hikey
+- i386
+- juno-r2
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15
+- x86
 
-Freed by task 16:
-  save_stack mm/kasan/common.c:69 [inline]
-  set_track mm/kasan/common.c:77 [inline]
-  kasan_set_free_info mm/kasan/common.c:332 [inline]
-  __kasan_slab_free+0x12a/0x1e0 mm/kasan/common.c:471
-  kasan_slab_free+0xe/0x10 mm/kasan/common.c:480
-  __cache_free mm/slab.c:3425 [inline]
-  kfree+0x115/0x200 mm/slab.c:3756
-  __j1939_priv_release net/can/j1939/main.c:154 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  j1939_priv_put+0x86/0xa0 net/can/j1939/main.c:159
-  j1939_session_destroy net/can/j1939/transport.c:271 [inline]
-  __j1939_session_release net/can/j1939/transport.c:280 [inline]
-  kref_put include/linux/kref.h:65 [inline]
-  j1939_session_put+0xfe/0x150 net/can/j1939/transport.c:285
-  j1939_xtp_rx_abort_one+0xd3/0x3f0 net/can/j1939/transport.c:1261
-  j1939_xtp_rx_abort net/can/j1939/transport.c:1269 [inline]
-  j1939_tp_cmd_recv net/can/j1939/transport.c:1943 [inline]
-  j1939_tp_recv+0x719/0xb80 net/can/j1939/transport.c:1973
-  j1939_can_recv+0x424/0x650 net/can/j1939/main.c:100
-  deliver net/can/af_can.c:568 [inline]
-  can_rcv_filter+0x3c0/0x8b0 net/can/af_can.c:602
-  can_receive+0x2ac/0x3b0 net/can/af_can.c:659
-  can_rcv+0xe4/0x220 net/can/af_can.c:685
-  __netif_receive_skb_one_core net/core/dev.c:4929 [inline]
-  __netif_receive_skb+0x136/0x370 net/core/dev.c:5043
-  process_backlog+0x4d8/0x930 net/core/dev.c:5874
-  napi_poll net/core/dev.c:6311 [inline]
-  net_rx_action+0x5ef/0x10d0 net/core/dev.c:6379
-  __do_softirq+0x333/0x7c4 arch/x86/include/asm/paravirt.h:766
+Test Suites
+-----------
+* build
+* install-android-platform-tools-r2600
+* kselftest
+* libgpiod
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* network-basic-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* ltp-open-posix-tests
+* kvm-unit-tests
+* ssuite
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
 
-The buggy address belongs to the object at ffff88808feb4000
-  which belongs to the cache kmalloc-8k of size 8192
-The buggy address is located 4224 bytes inside of
-  8192-byte region [ffff88808feb4000, ffff88808feb6000)
-The buggy address belongs to the page:
-page:ffffea00023fad00 refcount:1 mapcount:0 mapping:ffff8880aa4021c0  
-index:0x0 compound_mapcount: 0
-flags: 0x1fffc0000010200(slab|head)
-raw: 01fffc0000010200 ffffea00024cc108 ffffea0002781e08 ffff8880aa4021c0
-raw: 0000000000000000 ffff88808feb4000 0000000100000001 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
-  ffff88808feb4f80: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808feb5000: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88808feb5080: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                    ^
-  ffff88808feb5100: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88808feb5180: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+--=20
+Linaro LKFT
+https://lkft.linaro.org
