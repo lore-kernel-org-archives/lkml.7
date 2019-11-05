@@ -2,175 +2,108 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71D78CA9ED8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:05:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4907FCA9ED7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EEE0206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:05:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1660B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="fqaqXJC2"
+	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ECjSGEPa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387623AbfKEHF4 (ORCPT
+        id S2387695AbfKEHGI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:05:56 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:44891 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387517AbfKEHF4 (ORCPT
+        Tue, 5 Nov 2019 02:06:08 -0500
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:41119 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387517AbfKEHGH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:05:56 -0500
-Received: by mail-lf1-f68.google.com with SMTP id v4so14231378lfd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 04 Nov 2019 23:05:55 -0800 (PST)
+        Tue, 5 Nov 2019 02:06:07 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GIrprW1y0qd6DHcWgNZe4YGetGU2O9nSygDm9m3KcNY=;
-        b=fqaqXJC2EY0H4UW683zTh+oZauSq+H2bUiqit1GjGpUEkFj2MsaTDwDRsWJj7CUnjA
-         ge8bUfXf4RuntZc1/S055AjybL55dzSYsbpRrHENDCabiTiog9XGEmcRAgLA+gzzkbub
-         wSibvXDaSAZbOZwgQ9aPQTrMDg+OlzsPIv5HjVuURiMS+lS40cfAA6zmg8amK3+e6oPs
-         C9fMtj/1MR7cA/+Om9wN5aHIEU8OPmQMetpe3l1J/M5LBSxsKz+gLKD83uvHwOjH20i+
-         Rt65i0VBvz6RCFOyibpMeHbdOCMlrNZzu5yUCodEWYu85On9fAA0SkPW1E/IC2LSihVK
-         Wgtw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GIrprW1y0qd6DHcWgNZe4YGetGU2O9nSygDm9m3KcNY=;
-        b=Wty9PuMZIlxMXWv5kYpq9OJOKkPN+f/Zl95RGf06M3w6V0wTBnmyFForRcgMDIcUeV
-         djJrEvi8tMU9QmnzzwwgUSZMkkTcveYYuYgI3k8Cw/cys65m5yd6HmTo4OrIQOyrRd1N
-         +RBsLk32e6M1LJ2U1EwUFhS7hJh6hqzkG19qIpRLJBXpRArZdo65fGu6cKUmPAJGxYCt
-         tbAutkvR8KGTLOnxtOMUDw6RW+nuaqtU7dbfrvm7XtM3N5Gq+/sULFS2NPxk/Nn6O1Bj
-         5E1YldvXCZxEhdXLm3QaqcqiMuWY70Nl9MZuKu26AcsXfrcajEbFueDU9MChTk1qHo3R
-         wxrg==
-X-Gm-Message-State: APjAAAXzfHquQDCbZak6cbL2R4qwWQ2YyOhj0nEsxaQtaIMoVQc+hmQi
-        UpnOVwNSbagkqZ2AxY8PMcIophALhKafDSQUlPUOXQ==
-X-Google-Smtp-Source: APXvYqzQWeI8PVGEmJUXw3Vq3vMvLm/Ci0aI5voCCnbpz7glQokamUg6scHv//dMHLvGen+y6oBcJEj412qy13nbE94=
-X-Received: by 2002:a19:f811:: with SMTP id a17mr19027925lff.132.1572937554336;
- Mon, 04 Nov 2019 23:05:54 -0800 (PST)
+  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
+  t=1572937566; x=1604473566;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:mime-version:
+   content-transfer-encoding;
+  bh=Ax1km2jTcb5+fvaj9QNskJ2PDAq4TW+HvuZWm4vh7fE=;
+  b=ECjSGEPaHIgFdTycnVyqBFXKLKSE4uGMkEBc9eCwaGKohXVoigr6biJa
+   JTN7RgC6JW3caXHOfCRhIwFQ/CYFtAjj0KS9qrStfYOWHBWeQm4+vZDDy
+   J0PjHZ3llFaQIeuRh2siTahAWkjrTXXWnHdJjkKTjbYT5ETrmZpqBUYXl
+   g=;
+IronPort-SDR: vA7qQ8UlcbsPfGnPPStkd/Vajk/naxmu8vq8Sd+wkIwIvvIV1O02NtQEEcR9i1OoTufPPQV8Pj
+ vHCIMzGA3Fbg==
+X-IronPort-AV: E=Sophos;i="5.68,270,1569283200"; 
+   d="scan'208";a="4200633"
+Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Nov 2019 07:06:04 +0000
+Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 6B216A2379;
+        Tue,  5 Nov 2019 07:06:01 +0000 (UTC)
+Received: from EX13D24EUC004.ant.amazon.com (10.43.164.79) by
+ EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 5 Nov 2019 07:06:00 +0000
+Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
+ EX13D24EUC004.ant.amazon.com (10.43.164.79) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Tue, 5 Nov 2019 07:05:58 +0000
+Received: from EX13D20UWC001.ant.amazon.com ([10.43.162.244]) by
+ EX13D20UWC001.ant.amazon.com ([10.43.162.244]) with mapi id 15.00.1367.000;
+ Tue, 5 Nov 2019 07:05:57 +0000
+From:   "Graf (AWS), Alexander" <graf@amazon.de>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+CC:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
+        "joro@8bytes.org" <joro@8bytes.org>,
+        "vkuznets@redhat.com" <vkuznets@redhat.com>,
+        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
+        "Schoenherr, Jan H." <jschoenh@amazon.de>,
+        "Raslan, KarimAllah" <karahmed@amazon.de>,
+        "Lukaszewicz, Rimas" <rimasluk@amazon.com>,
+        "Grimm, Jon" <Jon.Grimm@amd.com>
+Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
+ in-kernel PIT re-injection mode.
+Thread-Index: AQHVkQWZiK56Wp7AO0m6btmzLjwET6d3peqAgAO6voCAADC+AIAAm34A
+Date:   Tue, 5 Nov 2019 07:05:57 +0000
+Message-ID: <7060AA92-0ACD-40F6-868A-5A7234F46C55@amazon.de>
+References: <4e4bd2c3-50c4-b23e-2924-728a37a5f157@redhat.com>
+In-Reply-To: <4e4bd2c3-50c4-b23e-2924-728a37a5f157@redhat.com>
+Accept-Language: en-US
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <88A7136E45DA4148B7F761429346A5A2@amazon.com>
 MIME-Version: 1.0
-References: <20191104211901.387893698@linuxfoundation.org>
-In-Reply-To: <20191104211901.387893698@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 5 Nov 2019 12:35:43 +0530
-Message-ID: <CA+G9fYtGfv8PF4q+fo8QfNc72XrqswcFvHE2XD3=M4EyJRT7hQ@mail.gmail.com>
-Subject: Re: [PATCH 4.9 00/62] 4.9.199-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 at 03:20, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.9.199 release.
-> There are 62 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.9.199-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.9.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
+DQoNCj4gQW0gMDQuMTEuMjAxOSB1bSAyMjo1MCBzY2hyaWViIFBhb2xvIEJvbnppbmkgPHBib256
+aW5pQHJlZGhhdC5jb20+Og0KPiANCj4g77u/T24gMDQvMTEvMTkgMTk6NTQsIFN1dGhpa3VscGFu
+aXQsIFN1cmF2ZWUgd3JvdGU6DQo+PiBJIHNlZSB5b3UgcG9pbnQuDQo+PiANCj4+PiBXZSBjYW4g
+d29yayBhcm91bmQgaXQgYnkgYWRkaW5nIGEgZ2xvYmFsIG1hc2sgb2YgaW5oaWJpdCByZWFzb25z
+IHRoYXQNCj4+PiBhcHBseSB0byB0aGUgdmVuZG9yLCBhbmQgaW5pdGlhbGl6aW5nIGl0IGFzIHNv
+b24gYXMgcG9zc2libGUgaW4gdm14LmMvc3ZtLmMuDQo+Pj4gDQo+Pj4gVGhlbiBrdm1fcmVxdWVz
+dF9hcGljdl91cGRhdGUgY2FuIGlnbm9yZSByZWFzb25zIHRoYXQgdGhlIHZlbmRvciBkb2Vzbid0
+DQo+Pj4gY2FyZSBhYm91dC4NCj4+IA0KPj4gV2hhdCBhYm91dCB3ZSBlbmhhbmNlIHRoZSBwcmVf
+dXBkYXRlX2FwaXZjX2V4ZWNfY3RybCgpIHRvIGFsc28gcmV0dXJuIA0KPj4gc3VjY2Vzcy9mYWls
+LiBJbiBoZXJlLCB0aGUgdmVuZG9yIHNwZWNpZmljIGNvZGUgY2FuIGRlY2lkZSB0byB1cGRhdGUg
+DQo+PiBBUElDdiBzdGF0ZSBvciBub3QuDQo+IA0KPiBUaGF0IHdvcmtzIGZvciBtZSwgdG9vLiAg
+U29tZXRoaW5nIGxpa2UgcmV0dXJuIGZhbHNlIGZvciBkZWFjdGl2YXRlIGFuZA0KPiB0cnVlIGZv
+ciBhY3RpdmF0ZS4NCg0KSSdtIHRyeWluZyB0byB3cmFwIG15IGhlYWQgYXJvdW5kIGhvdyB0aGF0
+IHdpbGwgd29yayB3aXRoIGxpdmUgbWlncmF0aW9uLiBEbyB3ZSBhbHNvIG5lZWQgdG8gc2F2ZS9y
+ZXN0b3JlIHRoZSBkZWFjdGl2YXRlIHJlYXNvbnM/DQoNCkFsZXgNCg0KPiANCj4gUGFvbG8NCgoK
+CkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEw
+MTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIFJhbGYg
+SGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIg
+SFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 4.9.199-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.9.y
-git commit: 1787d5fb47ee9c16fabc1473a713bfe3f3af7df7
-git describe: v4.9.198-63-g1787d5fb47ee
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.9-oe/bui=
-ld/v4.9.198-63-g1787d5fb47ee
-
-No regressions (compared to build v4.9.198)
-
-No fixes (compared to build v4.9.198)
-
-Ran 23491 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* build
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* network-basic-tests
-* ltp-open-posix-tests
-* kvm-unit-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-* prep-tmp-disk
-* ssuite
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
