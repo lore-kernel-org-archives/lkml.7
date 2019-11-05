@@ -2,180 +2,245 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A866CA9EC7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:30:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8296CA9EC7
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:33:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB12B20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8894F217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 04:33:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="osHdHHG7"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nq87FMhW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730422AbfKEEaY (ORCPT
+        id S1730424AbfKEEdl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 23:30:24 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:46706 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726640AbfKEEaX (ORCPT
+        Mon, 4 Nov 2019 23:33:41 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:40276 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726640AbfKEEdk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 23:30:23 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA54U86m020708;
-        Mon, 4 Nov 2019 22:30:08 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1572928208;
-        bh=k+Xm46G90D+LUV4sRFTaoSNRP8gbMZVRqUwk2h+V8Mk=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=osHdHHG7bx1sr9CrFpi/hS7cQgMXK5ShmKeydx9nPvBGx6ACSC1EcFZ0xjfLzX1LI
-         fI5TDxtupEgH2tHgoBQVZGknccQ4It+lb4cbA74PiT9H0TxsiFbyCT4aub4whkTwKL
-         kiPDxRgsWBV3z95ch76QhI1wav1nxxbJRjrCATBs=
-Received: from DFLE115.ent.ti.com (dfle115.ent.ti.com [10.64.6.36])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA54U87x045944
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Mon, 4 Nov 2019 22:30:08 -0600
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE115.ent.ti.com
- (10.64.6.36) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 4 Nov
- 2019 22:29:52 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Mon, 4 Nov 2019 22:29:53 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA54U49R050727;
-        Mon, 4 Nov 2019 22:30:05 -0600
-Subject: Re: [PATCH v2 1/2] dt-bindings: spi: Add schema for Cadence QSPI
- Controller driver
-To:     "Ramuthevar,Vadivel MuruganX" 
-        <vadivel.muruganx.ramuthevar@linux.intel.com>,
-        <linux-spi@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <broonie@kernel.org>, <robh+dt@kernel.org>,
-        <cheol.yong.kim@intel.com>, <qi-ming.wu@intel.com>
-References: <20191030081155.29947-1-vadivel.muruganx.ramuthevar@linux.intel.com>
- <20191030081155.29947-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <b553b1e8-1c35-fd7c-6855-75a4c1c943fe@ti.com>
-Date:   Tue, 5 Nov 2019 10:00:40 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Mon, 4 Nov 2019 23:33:40 -0500
+Received: by mail-pf1-f193.google.com with SMTP id r4so14182486pfl.7;
+        Mon, 04 Nov 2019 20:33:40 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=DqujcQR1IXthEE3N3Fyyf4WD+x8v8s3JUWn5jwtbB54=;
+        b=nq87FMhW0QGYvjDC82a2VWAu1KMjc8K7YnphsoihQDNkGiGPYaKsMlE1dX7EIJpAmr
+         XJWnhuR6K/rgiM8N9s64n80Z7Gh0GHmU61O3YKR698bE9Zx5gKPlVJWqq62eYi5gmoMg
+         GvREtB9FcoAW6ZwVmN+FzvcBxAfWpAuplGk2KG7CCl6BHv8lfBk8WU+iT3txyqkOzcP3
+         2yZiYhVX4wDv47wbSfn4qdZJzyZhWlxGUYe6dArB9HHQK9VhyF+puWRPiWcEiduk17Fg
+         Jn9S1PpPYnfcOqaPWVgNHdP9Z8z2ASkYi3CP5lqblqzUpn32bt1vTDdMigq1KVi5q6g5
+         9LoQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=DqujcQR1IXthEE3N3Fyyf4WD+x8v8s3JUWn5jwtbB54=;
+        b=KzIKFBB9WCIo6CSb277sMS196HjBsVZb2luab+blcw2FBCnQhzCxqAPtCZnVl1ir/p
+         HwacrLXWu61Nrw/krcDx/dnenL77Or6spRWlB51vxubLAFdM2b4aeCv3mGmeF9y8ljK5
+         pF7o1PHi+ZC+bpeDjvSSoeOMG9Nkz9aTnU5ZVcVitsz3l/G3fzCjdk7tqa33qRCbytAQ
+         i4wc60A2D/eKgcuHNV+zUfA0fvQnrjvi9DcgFjJEJ9lvnbadUS6trFzCkfBef7+OzYe3
+         AyEWRsfHsU3EhvmgepKhIQC1nszvW48H//Oe2+7D2h6WxOk4bu7iVQ73tTiNhJHGubtu
+         vKRA==
+X-Gm-Message-State: APjAAAUhrjkaGJUaxjCHLAqgvd2wTw25twr9VsAQ/NS9WjvW1CpL5fta
+        xVHiCIeGMPPN8825kCzU3yv9IqK+M9WvsA==
+X-Google-Smtp-Source: APXvYqzAqBxJ1xUqZ//4wIi6/fo06V6ubF9lLdiJjyjiRDvfSYJKsBEukT3zV3bSUOsrQqNv4ZVozg==
+X-Received: by 2002:aa7:8249:: with SMTP id e9mr35296169pfn.19.1572928419814;
+        Mon, 04 Nov 2019 20:33:39 -0800 (PST)
+Received: from Gentoo ([103.231.91.66])
+        by smtp.gmail.com with ESMTPSA id t8sm19270377pjv.18.2019.11.04.20.33.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 04 Nov 2019 20:33:39 -0800 (PST)
+Date:   Tue, 5 Nov 2019 10:03:26 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Randy Dunlap <rdunlap@infradead.org>
+Cc:     bfields@fieldses.org, yamada.masahiro@socionext.com,
+        michal.lkml@markovi.net, linux-kbuild@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191105043323.GA27350@Gentoo>
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+ <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
 MIME-Version: 1.0
-In-Reply-To: <20191030081155.29947-2-vadivel.muruganx.ramuthevar@linux.intel.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 30/10/19 1:41 PM, Ramuthevar,Vadivel MuruganX wrote:
-> From: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> 
-> Add dt-bindings documentation for Cadence-QSPI controller to support
-> spi based flash memories.
-> 
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The new driver being added in patch 2/2 is supposed to replace
-drivers/mtd/spi-nor/cadence-quadspi.c. Therefore the bindings should be
-exactly same as
-Documentation/devicetree/bindings/mtd/cadence-quadspi.txt. Otherwise, it
-breaks DT backward compatibility. There cannot be two different sets of
-bindings for same HW IP.
+On 18:03 Mon 04 Nov 2019, Randy Dunlap wrote:
+>On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
+>> This patch allow you to remove old kernels and associated modules
+>> directory from the system.You can do it at once with the -r flag
+>> and interactively with the -i flag.
+>>=20
+>> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> ---
+>>  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+>>  1 file changed, 65 insertions(+), 17 deletions(-)
+>
+>Hi,
+>I believe that this script now does what the patch author intends it to do.
+>It does have a few whitespace issues, but no big deals.  (see below)
+>
+>Tested-by: Randy Dunlap <rdunlap@infradead.org>
+>
+>
+Thank you Randy..
+>> diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+>> index e8aa940bc0a9..01d0778db71f 100755
+>> --- a/scripts/prune-kernel
+>> +++ b/scripts/prune-kernel
+>> @@ -1,21 +1,69 @@
+>>  #!/bin/bash
+>>  # SPDX-License-Identifier: GPL-2.0
+>> +#This script will remove old kernels and modules directory related to i=
+t.
+>> +#"-r" or "--remove" show how to silently remove old kernel and modules =
+dir.
+>> +# "-h" or "--help" show how to use this script or show without paramete=
+r.
+>> +#"-i" or "--interactive" show how to remove interactively.
+>> +
+>> +flag=3D$1
+>> +kernel_version=3D$2
+>> +modules_version=3D$3
+>> +boot_dir=3D/boot
+>> +modules_dir=3D/lib/modules
+>> +
+>> +remove_old_kernel() {
+>> +	cd $boot_dir
+>> +	rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kern=
+el_version
+>> +	return 0
+>> +}
+>> +
+>> +remove_old_modules_dir() {
+>> +	cd $modules_dir
+>> +	rm -rf $modules_version
+>> +	return 0
+>> +}
+>> +
+>> +usage() {
+>> +	printf "Usage: $(basename $0) [-ri]\n"
+>> +	printf "\n -r or --remove  kernel_version modules_version\n"
+>> +	printf "\n -i or --interactive do as interactive way\n"
+>> +	return 0
+>> +}
+>> +
+>> +case "$flag" in
+>> +	-i | --interactive)
+>> +		printf "\nEnter kernel version to remove or blank/empty to exit:"
+>> +		read kernel_version
+>> +		if [[ $kernel_version !=3D "" ]]; then
+>> +			remove_old_kernel
+>> +			printf "\nRemoved kernel version:$kernel_version from the system.\n\=
+n"
+>
+>space after ':'
+>
+>drop one \n above.
+>
+Will do.
+>> +			printf "Please give the full modules directory name to remove:"
+>> +			read modules_version
+>> +			if [[ $modules_version !=3D "" ]]; then
+>> +				remove_old_modules_dir
+>> +				printf "\n\nRemoved modules directory:$modules_version from the sys=
+tem.\n\n"
+>
+>space after ':'
+>
+>drop one \n above.
+>
+Will do.
+>> +			else
+>> +				exit 1
+>> +			fi
+>> +		fi
+>> +		;;
+>> +	-h | --help)
+>> +		usage
+>> +		exit 0
+>> +		;;
+>> +	-r | --remove)
+>> +		if [[ $# -ne 3 ]]; then
+>> +			 printf "You need to provide kernel version and modules directory na=
+me.\n"
+>> +			 exit 1
+>> +		 else
+>> +			 remove_old_kernel
+>> +			 remove_old_modules_dir
+>> +		fi
+>> +		;;
+>> +	*)
+>> +		usage
+>> +		exit 1
+>> +		;;
+>> +esac
+>>=20
+>> -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+>> -# again, /boot and /lib/modules/ eventually fill up.
+>> -# Dumb script to purge that stuff:
+>>=20
+>
+>OK, the former script's loop is removed.. good.
+>But the 2 preceding blank lines are not removed, so the script
+>now ends with 2 unnecessary blank lines.
+>
+Will do.
+>> -for f in "$@"
+>> -do
+>> -        if rpm -qf "/lib/modules/$f" >/dev/null; then
+>> -                echo "keeping $f (installed from rpm)"
+>> -        elif [ $(uname -r) =3D "$f" ]; then
+>> -                echo "keeping $f (running kernel) "
+>> -        else
+>> -                echo "removing $f"
+>> -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+>> -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+>> -                rm -rf "/lib/modules/$f"
+>> -                new-kernel-pkg --remove $f
+>> -        fi
+>> -done
+>> --
+>
+>
+>--=20
+>~Randy
+>
+Bhaskar
 
-Therefore please rewrite yaml schema to match existing bindings at
-Documentation/devicetree/bindings/mtd/cadence-quadspi.txt.
-And then include a patch dropping older bindings.
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-> Signed-off-by: Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> ---
->  .../devicetree/bindings/spi/cadence,qspi.yaml      | 65 ++++++++++++++++++++++
->  1 file changed, 65 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/spi/cadence,qspi.yaml b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> new file mode 100644
-> index 000000000000..295501f01e5e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/spi/cadence,qspi.yaml
-> @@ -0,0 +1,65 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: "http://devicetree.org/schemas/spi/cadence,qspi.yaml#"
-> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-> +
-> +title: Cadence QSPI Flash Controller support
-> +
-> +maintainers:
-> +  - Ramuthevar Vadivel Murugan <vadivel.muruganx.ramuthevar@linux.intel.com>
-> +
-> +allOf:
-> +  - $ref: "spi-controller.yaml#"
-> +
-> +description: |
-> +  Add support for the Cadence QSPI controller,This controller is
-> +  present in the Intel LGM, Altera SoCFPGA and TI SoCs and this driver
-> +  has been tested On Intel's LGM SoC.
-> +
-> +properties:
-> +  compatible:
-> +    const: cadence,qspi
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clocks-names:
-> +    maxItems: 1
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reset-names:
-> +    maxItems: 1
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - clocks
-> +  - clock-names
-> +  - resets
-> +  - reset-names
-> +
-> +examples:
-> +  - |
-> +    spi@ec000000 {
-> +          compatible = "cadence,qspi";
-> +          reg = <0xec000000 0x100>;
-> +          clocks = <&cgu0 LGM_CLK_QSPI>, <&cgu0 LGM_GCLK_QSPI>;
-> +          clock-names = "qspi";
-> +          resets = <&rcu0 0x10 1>;
-> +          reset-names = "qspi";
-> +          #address-cells = <1>;
-> +          #size-cells = <0>;
-> +
-> +          flash: flash@1 {
-> +              compatible = "spi-nand", "jedec, spi-nor";
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3A+48ACgkQsjqdtxFL
+KRVpDQgA0c8060YO3XdTlh547axg5JL0CI+xBlRvYOltRP7LNrqoGYssxXzJAvoW
+vr6f6dvhWoN3a+KGfiYRiWAxejFVGbwGeT7rBCz21tt/gvkG+8QKkvKttysT5g3m
+1LL/s0XFh5qrnayU0tLb7Ql07s9MXegrJn9iUKqimATOow/SVGqN3/YJwNwtS3bR
+cNx2aDfzRxBnFuwrFLO3nsMtI8slQtl8nryCrMekhug13qYCS21UJATyv4qnE8eP
+seeuGNDrPAKV/HIvLxrt+C0ZjScnSuoNgCVu93LmF+LMDc7mB/LGruFbE6md996v
+iqmNpGgkbpSjL68VG9FWvqGNDaiTgg==
+=08zP
+-----END PGP SIGNATURE-----
 
-s/"jedec, spi-nor"/"jedec,spi-nor" (i.e no space after comma)
-
-> +              reg = <1>;
-> +              spi-max-frequency = <10000000>;
-> +          };
-> +    };
-> +
-> 
-
--- 
-Regards
-Vignesh
+--ibTvN161/egqYuK8--
