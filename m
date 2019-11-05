@@ -2,302 +2,86 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAE4AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9262C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:29:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 805F9204EC
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:28:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="PC96YKae"
+	by mail.kernel.org (Postfix) with ESMTP id 761BE204EC
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:29:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572992962;
+	bh=fL/4K2vkx80Ka35D6SHndrkEkTRieQOYvN3J5gpIUc0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=mmJrkSouTwmMPFDA1aqNQqig9y0ran/AHQaQHP//eJQ1tUkFSYTRvxGYXyyl1cjn4
+	 SimkYN002bxduqM6o9dR0RM4JnkPHe1nR9b3xk014XaqIig57/bfANAgIFtlRNjrpK
+	 4cXfkiZ58ySkkj0bVS37h2I/bG9hBEatpylQeyGc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387481AbfKEW2S (ORCPT
+        id S1730453AbfKEW3V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:28:18 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:54815 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730266AbfKEW2O (ORCPT
+        Tue, 5 Nov 2019 17:29:21 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:35672 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbfKEW3V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:28:14 -0500
-Received: from ssl.serverraum.org (web.serverraum.org [172.16.0.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 06F8B22EE9;
-        Tue,  5 Nov 2019 23:28:10 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1572992890;
-        bh=hGgFuk5Nj2ZkqQgOqfvPqyJwH+mIL95XRcYip8eQf+s=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=PC96YKaeKjDhtb7Wc6uCzD+SsFg/5SwfzeJeZKg/4mDGNJQRoWh8jE9it0/Q5GxOd
-         9LxUgdOQ5F+S7IAXu2w8/N+hBfLv5M0QpsSL8yLfyF3MtAJCK+3CU5UbVe8IVUnXjT
-         F7UdBfHi4lF0ZKbjLkn6pfIrnRyq37hCZ5tJUt7o=
+        Tue, 5 Nov 2019 17:29:21 -0500
+Received: by mail-oi1-f195.google.com with SMTP id n16so19139703oig.2;
+        Tue, 05 Nov 2019 14:29:21 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UoYy8XsKNEQ2TnQ0Osc5PBrfES+IwUY4yKiGP1bttyo=;
+        b=QxekdWHLgQjVR9NUE5XMO0oGDeKarUrC7aoe+kvMy95Ghba7wnLUa/x0dWkT6Zpuhg
+         K0tbX2g47kLQ/fWK94zAX9WS+v+QTPPOoOgQSC1dfzhO12H9GktIlUrC6SIoXTVNXS8q
+         KYLbg3JGNRnAmpfbsaVhy8ihCwMdTo+o43xl5/bvN2lSs+Yn2Z9T477q1j3SsKE6tcj7
+         VR/XWsYW3c8pvC9FFvewRFVojTVMDz7U8KG7Ro1t/324KEUW98cP3WW0Wn7s+Hjr6xY1
+         QS2WF4/Fkul1KNPBT0ZdDwF+UTsBlQAgRzh3t0Q/9yzt0i//5atkRH2RSBImdNaMr0fg
+         dfSA==
+X-Gm-Message-State: APjAAAX+9+XHOk1DtBNQ6jz6NV74lxjeYSNK1jm+edl73qWYttJTTEgF
+        RDagtrTC+3guMBxc4ZmP41TfZM4=
+X-Google-Smtp-Source: APXvYqzPbkmZfrb12TZaDeT5FPREatvauqbAOXEHm6Yy22++J2iCDBKOKxPsVvP3BzIZejRzVmi09w==
+X-Received: by 2002:aca:f1c5:: with SMTP id p188mr1095047oih.125.1572992960591;
+        Tue, 05 Nov 2019 14:29:20 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id y1sm6740096ota.72.2019.11.05.14.29.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 14:29:20 -0800 (PST)
+Date:   Tue, 5 Nov 2019 16:29:19 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Baolin Wang <baolin.wang@linaro.org>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com,
+        baolin.wang@linaro.org, baolin.wang7@gmail.com,
+        zhang.lyra@gmail.com, orsonzhai@gmail.com
+Subject: Re: [PATCH v2 1/5] dt-bindings: power: Introduce one property to
+ describe the battery resistance with temperature changes
+Message-ID: <20191105222919.GA13611@bogus>
+References: <cover.1572523415.git.baolin.wang@linaro.org>
+ <c9a1357628bb091aff5e54f60a2600b129388f19.1572523415.git.baolin.wang@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 23:28:09 +0100
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: Re: [PATCH 3/5] net: phy: at803x: add device tree binding
-In-Reply-To: <20191102011351.6467-4-michael@walle.cc>
-References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-4-michael@walle.cc>
-Message-ID: <e9231afc2b4ba5cfc3cec0e0b6076e35@walle.cc>
-X-Sender: michael@walle.cc
-User-Agent: Roundcube Webmail/1.2.3
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <c9a1357628bb091aff5e54f60a2600b129388f19.1572523415.git.baolin.wang@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am 2019-11-02 02:13, schrieb Michael Walle:
-> Add support for configuring the CLK_25M pin as well as the RGMII I/O
-> voltage by the device tree.
+On Thu, 31 Oct 2019 20:22:40 +0800, Baolin Wang wrote:
+> Since the battery internal resistance can be changed as the temperature
+> changes, thus add one table to describe the battery resistance percent
+> in different temperatures to get a accurate battery internal resistance.
 > 
-> Signed-off-by: Michael Walle <michael@walle.cc>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  drivers/net/phy/at803x.c | 283 ++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 281 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/power/supply/battery.txt   |    5 +++++
+>  1 file changed, 5 insertions(+)
 > 
-> diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-> index 1eb5d4fb8925..a30a2ff57068 100644
-> --- a/drivers/net/phy/at803x.c
-> +++ b/drivers/net/phy/at803x.c
-> @@ -13,7 +13,12 @@
->  #include <linux/netdevice.h>
->  #include <linux/etherdevice.h>
->  #include <linux/of_gpio.h>
-> +#include <linux/bitfield.h>
->  #include <linux/gpio/consumer.h>
-> +#include <linux/regulator/of_regulator.h>
-> +#include <linux/regulator/driver.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <dt-bindings/net/qca-ar803x.h>
-> 
->  #define AT803X_SPECIFIC_STATUS			0x11
->  #define AT803X_SS_SPEED_MASK			(3 << 14)
-> @@ -62,6 +67,42 @@
->  #define AT803X_DEBUG_REG_5			0x05
->  #define AT803X_DEBUG_TX_CLK_DLY_EN		BIT(8)
-> 
-> +#define AT803X_DEBUG_REG_1F			0x1F
-> +#define AT803X_DEBUG_PLL_ON			BIT(2)
-> +#define AT803X_DEBUG_RGMII_1V8			BIT(3)
-> +
-> +/* AT803x supports either the XTAL input pad, an internal PLL or the
-> + * DSP as clock reference for the clock output pad. The XTAL reference
-> + * is only used for 25 MHz output, all other frequencies need the PLL.
-> + * The DSP as a clock reference is used in synchronous ethernet
-> + * applications.
-> + *
-> + * By default the PLL is only enabled if there is a link. Otherwise
-> + * the PHY will go into low power state and disabled the PLL. You can
-> + * set the PLL_ON bit (see debug register 0x1f) to keep the PLL always
-> + * enabled.
-> + */
-> +#define AT803X_MMD7_CLK25M			0x8016
-> +#define AT803X_CLK_OUT_MASK			GENMASK(4, 2)
-> +#define AT803X_CLK_OUT_25MHZ_XTAL		0
-> +#define AT803X_CLK_OUT_25MHZ_DSP		1
-> +#define AT803X_CLK_OUT_50MHZ_PLL		2
-> +#define AT803X_CLK_OUT_50MHZ_DSP		3
-> +#define AT803X_CLK_OUT_62_5MHZ_PLL		4
-> +#define AT803X_CLK_OUT_62_5MHZ_DSP		5
-> +#define AT803X_CLK_OUT_125MHZ_PLL		6
-> +#define AT803X_CLK_OUT_125MHZ_DSP		7
-> +
-> +/* Unfortunately, the AR8035 has another mask which is incompatible
-> + * with the AR8031 PHY. Also, it only supports 25MHz and 50MHz.
-> + */
-> +#define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
-> +
-> +#define AT803X_CLK_OUT_STRENGTH_MASK		GENMASK(8, 7)
-> +#define AT803X_CLK_OUT_STRENGTH_FULL		0
-> +#define AT803X_CLK_OUT_STRENGTH_HALF		1
-> +#define AT803X_CLK_OUT_STRENGTH_QUARTER		2
-> +
->  #define ATH8030_PHY_ID 0x004dd076
->  #define ATH8031_PHY_ID 0x004dd074
->  #define ATH8035_PHY_ID 0x004dd072
-> @@ -73,6 +114,13 @@ MODULE_LICENSE("GPL");
-> 
->  struct at803x_priv {
->  	bool phy_reset:1;
-> +	int flags;
-> +#define AT803X_KEEP_PLL_ENABLED	BIT(0)	/* don't turn off internal PLL 
-> */
-> +	u16 clk_25m_reg;
-> +	u16 clk_25m_mask;
-> +	struct regulator_dev *vddio_rdev;
-> +	struct regulator_dev *vddh_rdev;
-> +	struct regulator *vddio;
->  };
-> 
->  struct at803x_context {
-> @@ -240,6 +288,192 @@ static int at803x_resume(struct phy_device 
-> *phydev)
->  	return phy_modify(phydev, MII_BMCR, BMCR_PDOWN | BMCR_ISOLATE, 0);
->  }
-> 
-> +static int at803x_rgmii_reg_set_voltage_sel(struct regulator_dev 
-> *rdev,
-> +					    unsigned int selector)
-> +{
-> +	struct phy_device *phydev = rdev_get_drvdata(rdev);
-> +
-> +	if (selector)
-> +		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
-> +					     0, AT803X_DEBUG_RGMII_1V8);
-> +	else
-> +		return at803x_debug_reg_mask(phydev, AT803X_DEBUG_REG_1F,
-> +					     AT803X_DEBUG_RGMII_1V8, 0);
-> +}
-> +
-> +static int at803x_rgmii_reg_get_voltage_sel(struct regulator_dev 
-> *rdev)
-> +{
-> +	struct phy_device *phydev = rdev_get_drvdata(rdev);
-> +	int val;
-> +
-> +	val = at803x_debug_reg_read(phydev, AT803X_DEBUG_REG_1F);
-> +	if (val < 0)
-> +		return val;
-> +
-> +	return (val & AT803X_DEBUG_RGMII_1V8) ? 1 : 0;
-> +}
-> +
-> +static struct regulator_ops vddio_regulator_ops = {
-> +	.list_voltage = regulator_list_voltage_table,
-> +	.set_voltage_sel = at803x_rgmii_reg_set_voltage_sel,
-> +	.get_voltage_sel = at803x_rgmii_reg_get_voltage_sel,
-> +};
-> +
-> +static const unsigned int vddio_voltage_table[] = {
-> +	1500000,
-> +	1800000,
-> +};
-> +
-> +static const struct regulator_desc vddio_desc = {
-> +	.name = "vddio",
-> +	.of_match = of_match_ptr("vddio-regulator"),
-> +	.n_voltages = ARRAY_SIZE(vddio_voltage_table),
-> +	.volt_table = vddio_voltage_table,
-> +	.ops = &vddio_regulator_ops,
-> +	.type = REGULATOR_VOLTAGE,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static struct regulator_ops vddh_regulator_ops = {
-> +};
-> +
-> +static const struct regulator_desc vddh_desc = {
-> +	.name = "vddh",
-> +	.of_match = of_match_ptr("vddh-regulator"),
-> +	.n_voltages = 1,
-> +	.fixed_uV = 2500000,
-> +	.ops = &vddh_regulator_ops,
-> +	.type = REGULATOR_VOLTAGE,
-> +	.owner = THIS_MODULE,
-> +};
-> +
-> +static int at8031_register_regulators(struct phy_device *phydev)
-> +{
-> +	struct at803x_priv *priv = phydev->priv;
-> +	struct device *dev = &phydev->mdio.dev;
-> +	struct regulator_config config = { };
-> +
-> +	config.dev = dev;
-> +	config.driver_data = phydev;
-> +
-> +	priv->vddio_rdev = devm_regulator_register(dev, &vddio_desc, 
-> &config);
-> +	if (IS_ERR(priv->vddio_rdev)) {
-> +		phydev_err(phydev, "failed to register VDDIO regulator\n");
-> +		return PTR_ERR(priv->vddio_rdev);
-> +	}
-> +
-> +	priv->vddh_rdev = devm_regulator_register(dev, &vddh_desc, &config);
-> +	if (IS_ERR(priv->vddh_rdev)) {
-> +		phydev_err(phydev, "failed to register VDDH regulator\n");
-> +		return PTR_ERR(priv->vddh_rdev);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static bool at803x_match_phy_id(struct phy_device *phydev, u32 phy_id)
-> +{
-> +	return (phydev->phy_id & phydev->drv->phy_id_mask)
-> +		== (phy_id & phydev->drv->phy_id_mask);
-> +}
-> +
-> +static int at803x_parse_dt(struct phy_device *phydev)
-> +{
-> +	struct device_node *node = phydev->mdio.dev.of_node;
-> +	struct at803x_priv *priv = phydev->priv;
-> +	unsigned int sel, mask;
-> +	u32 freq, strength;
-> +	int ret;
-> +
-> +	if (!IS_ENABLED(CONFIG_OF_MDIO))
-> +		return 0;
-> +
-> +	ret = of_property_read_u32(node, "qca,clk-out-frequency", &freq);
-> +	if (!ret) {
-> +		mask = AT803X_CLK_OUT_MASK;
-> +		switch (freq) {
-> +		case 25000000:
-> +			sel = AT803X_CLK_OUT_25MHZ_XTAL;
-> +			break;
-> +		case 50000000:
-> +			sel = AT803X_CLK_OUT_50MHZ_PLL;
-> +			break;
-> +		case 62500000:
-> +			sel = AT803X_CLK_OUT_62_5MHZ_PLL;
-> +			break;
-> +		case 125000000:
-> +			sel = AT803X_CLK_OUT_125MHZ_PLL;
-> +			break;
-> +		default:
-> +			phydev_err(phydev, "invalid qca,clk-out-frequency\n");
-> +			return -EINVAL;
-> +		}
-> +
-> +		/* Fixup for the AR8030/AR8035. This chip has another mask and
-> +		 * supports only 25MHz and 50MHz output.
 
-This is actually wrong. There are two different datasheets with 
-contradictory information. The AR8035 actually supports up to 125MHz, 
-just the DSP option. I'll fix that in the v2.
-
-
-> +		 *
-> +		 * Warning:
-> +		 *   There was no datasheet for the AR8030 available so this is
-> +		 *   just a guess. But the AR8035 is listed as pin compatible
-> +		 *   to the AR8030 so there might be a good chance it works on
-> +		 *   the AR8030 too.
-> +		 */
-> +		if (at803x_match_phy_id(phydev, ATH8030_PHY_ID) ||
-> +		    at803x_match_phy_id(phydev, ATH8035_PHY_ID)) {
-> +			mask = AT8035_CLK_OUT_MASK;
-> +			if (freq > 50000000)
-> +				phydev_err(phydev,
-> +					   "invalid qca,clk-out-frequency\n");
-> +				return -EINVAL;
-> +		}
-> +
-> +		priv->clk_25m_reg |= FIELD_PREP(mask, sel);
-> +		priv->clk_25m_mask |= mask;
-
-
--michael
-
-
+Reviewed-by: Rob Herring <robh@kernel.org>
