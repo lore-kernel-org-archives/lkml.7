@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F5CCA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC692CA9EC9
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F91320717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7031521882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:17:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572913025;
-	bh=8g70eXRyYXIqGEgWIjaCNpc6AKzQAc3G/HC+vZHUAso=;
+	s=default; t=1572913037;
+	bh=du5wPW8mDNBCWJJtGIhJS2OiVj0j0zl/aWOKZmpNVEY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HVWm/S0SuAOJYRGH8il/xd1LtieiahHw81+dosbUDjSFVTKD2Dj3sz+tofaQmucx4
-	 ewUB8bCroQ6ZCsEfl1qkvlXOueXjjQgRYd+gG+Ac2/TCnLlJgz4GGpiBa0k3ME/Sfm
-	 ci/1YSDp7Y3p+yF6BWs2MdJPlGG75NDZHUYhHz0k=
+	b=qPFimy2LPK2919hVtySHFTNrd3ZaUTE/rqQXnaCOvwYwm8Tw3/TI36L9O88E3I+/S
+	 BjYAWGObLZCc9/GtV82ct0KA4VIvZrh3woIhxYH77pkI86ehme5YT09JOQHhjSAQfk
+	 MJjlMdOl53HCOoE5tJ0wHdNlYmOxVN+6lzopyPSM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387574AbfKEARE (ORCPT
+        id S2387594AbfKEARQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:17:04 -0500
-Received: from mail.kernel.org ([198.145.29.99]:41412 "EHLO mail.kernel.org"
+        Mon, 4 Nov 2019 19:17:16 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387415AbfKEARE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:17:04 -0500
+        id S2387415AbfKEARO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:17:14 -0500
 Received: from localhost.localdomain (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8ADB320650;
-        Tue,  5 Nov 2019 00:17:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9343E20717;
+        Tue,  5 Nov 2019 00:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572913023;
-        bh=8g70eXRyYXIqGEgWIjaCNpc6AKzQAc3G/HC+vZHUAso=;
+        s=default; t=1572913033;
+        bh=du5wPW8mDNBCWJJtGIhJS2OiVj0j0zl/aWOKZmpNVEY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=roztk8C1XT5uDSC1Fda32WgQkuiyAt00eYqkuTnnt0EqlLSeXyTwCWWbv05Xpyz7A
-         PnXtQWEXoPLXqghweAhWWeekBwz3j2tEa4g1sQ5V9lS6LD4tc0Gmtgf/V1xUCR5wcp
-         Cd4deDlamfKtXlI3VKzr7tQ3LZ6aIflJDCEED5QM=
+        b=Bs7YAZBYOfjGhbpt/3yG2dUFEUkbt72Yynuw9e646+XGMvomA5GQCePoKRRZX3FsF
+         xrCVxkW1/UZyvrsHwd1aHFJgDOrbPaLj+LjgOjfVshw9EMxqLXIloCDEpdUZl6cZ4i
+         Z4+9hU+0yQ5yE/sty0RxbdKRE0dcbSpkGNHfo+hs=
 From:   Masami Hiramatsu <mhiramat@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
@@ -48,9 +48,9 @@ Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
         Tom Zanussi <tom.zanussi@linux.intel.com>,
         Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
         Namhyung Kim <namhyung@kernel.org>
-Subject: [PATCH 2/5] perf probe: Generate event name with line number
-Date:   Tue,  5 Nov 2019 09:16:59 +0900
-Message-Id: <157291301924.19771.11830065569894242974.stgit@devnote2>
+Subject: [PATCH 3/5] perf probe: Support multiprobe event
+Date:   Tue,  5 Nov 2019 09:17:09 +0900
+Message-Id: <157291302895.19771.12251353345858434064.stgit@devnote2>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <157291299825.19771.5190465639558208592.stgit@devnote2>
 References: <157291299825.19771.5190465639558208592.stgit@devnote2>
@@ -63,56 +63,102 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Generate event name from function name with line number
-as <function>_L<line_number>. Note that this is only for
-the new event which is defined by function and lines.
+Support multiprobe event if the event is based on function
+and lines and kernel supports it. In this case, perf probe
+creates the first probe with an event, and tries to append
+following probes on that event, since those probes must be
+on the same source code line.
 
-If there is another event on same line, you have to use
-"-f" option. In that case, the new event has "_1" suffix.
-
- e.g.
-  # perf probe -a kernel_read
-  Added new event:
-    probe:kernel_read_L0 (on kernel_read)
-
-  You can now use it in all perf tools, such as:
-
-  	perf record -e probe:kernel_read_L0 -aR sleep 1
-
-  # perf probe -a kernel_read:1
+Before this patch;
+  # perf probe -a vfs_read:18
   Added new events:
-    probe:kernel_read_L1 (on kernel_read:1)
+    probe:vfs_read_L18   (on vfs_read:18)
+    probe:vfs_read_L18_1 (on vfs_read:18)
 
   You can now use it in all perf tools, such as:
 
-  	perf record -e probe:kernel_read_L1_1 -aR sleep 1
+  	perf record -e probe:vfs_read_L18_1 -aR sleep 1
 
-  # perf probe -l
-    probe:kernel_read_L0 (on kernel_read@linux/linux/fs/read_write.c)
-    probe:kernel_read_L1 (on kernel_read@linux/linux/fs/read_write.c)
+  #
+
+After this patch (on multiprobe supported kernel)
+  # perf probe -a vfs_read:18
+  Added new events:
+    probe:vfs_read_L18   (on vfs_read:18)
+    probe:vfs_read_L18   (on vfs_read:18)
+
+  You can now use it in all perf tools, such as:
+
+  	perf record -e probe:vfs_read_L18 -aR sleep 1
+
+  #
 
 Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
 ---
- tools/perf/util/probe-event.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ tools/perf/util/probe-event.c |    9 +++++++--
+ tools/perf/util/probe-file.c  |    7 +++++++
+ tools/perf/util/probe-file.h  |    1 +
+ 3 files changed, 15 insertions(+), 2 deletions(-)
 
 diff --git a/tools/perf/util/probe-event.c b/tools/perf/util/probe-event.c
-index 91cab5f669d2..d14b970a6461 100644
+index d14b970a6461..23db6786c3ea 100644
 --- a/tools/perf/util/probe-event.c
 +++ b/tools/perf/util/probe-event.c
-@@ -1679,6 +1679,14 @@ int parse_perf_probe_command(const char *cmd, struct perf_probe_event *pev)
- 	if (ret < 0)
- 		goto out;
+@@ -2738,8 +2738,13 @@ static int probe_trace_event__set_name(struct probe_trace_event *tev,
+ 	if (tev->event == NULL || tev->group == NULL)
+ 		return -ENOMEM;
  
-+	/* Generate event name if needed */
-+	if (!pev->event && pev->point.function
-+			&& !pev->point.lazy_line && !pev->point.offset) {
-+		if (asprintf(&pev->event, "%s_L%d", pev->point.function,
-+			pev->point.line) < 0)
-+			return -ENOMEM;
-+	}
+-	/* Add added event name to namelist */
+-	strlist__add(namelist, event);
++	/*
++	 * Add new event name to namelist if multiprobe event is NOT
++	 * supported, since we have to use new event name for following
++	 * probes in that case.
++	 */
++	if (!multiprobe_event_is_supported())
++		strlist__add(namelist, event);
+ 	return 0;
+ }
+ 
+diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
+index b659466ea498..a63f1a19b0e8 100644
+--- a/tools/perf/util/probe-file.c
++++ b/tools/perf/util/probe-file.c
+@@ -1007,6 +1007,7 @@ enum ftrace_readme {
+ 	FTRACE_README_KRETPROBE_OFFSET,
+ 	FTRACE_README_UPROBE_REF_CTR,
+ 	FTRACE_README_USER_ACCESS,
++	FTRACE_README_MULTIPROBE_EVENT,
+ 	FTRACE_README_END,
+ };
+ 
+@@ -1020,6 +1021,7 @@ static struct {
+ 	DEFINE_TYPE(FTRACE_README_KRETPROBE_OFFSET, "*place (kretprobe): *"),
+ 	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
+ 	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
++	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
+ };
+ 
+ static bool scan_ftrace_readme(enum ftrace_readme type)
+@@ -1085,3 +1087,8 @@ bool user_access_is_supported(void)
+ {
+ 	return scan_ftrace_readme(FTRACE_README_USER_ACCESS);
+ }
 +
- 	/* Copy arguments and ensure return probe has no C argument */
- 	pev->nargs = argc - 1;
- 	pev->args = zalloc(sizeof(struct perf_probe_arg) * pev->nargs);
++bool multiprobe_event_is_supported(void)
++{
++	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
++}
+diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
+index 986c1c94f64f..850d1b52d60a 100644
+--- a/tools/perf/util/probe-file.h
++++ b/tools/perf/util/probe-file.h
+@@ -71,6 +71,7 @@ bool probe_type_is_available(enum probe_type type);
+ bool kretprobe_offset_is_supported(void);
+ bool uprobe_ref_ctr_is_supported(void);
+ bool user_access_is_supported(void);
++bool multiprobe_event_is_supported(void);
+ #else	/* ! HAVE_LIBELF_SUPPORT */
+ static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
+ {
 
