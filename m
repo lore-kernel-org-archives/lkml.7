@@ -2,166 +2,74 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAEEC5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C2D95C5DF63
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDFA121928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=c0d3.blue header.i=@c0d3.blue header.b="eKaM8U5a"
+	by mail.kernel.org (Postfix) with ESMTP id A307721928
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 16:55:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390455AbfKEQzP (ORCPT
+        id S2390479AbfKEQzS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 11:55:15 -0500
-Received: from mail.aperture-lab.de ([138.201.29.205]:57106 "EHLO
-        mail.aperture-lab.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390060AbfKEQzP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 11:55:15 -0500
-X-Greylist: delayed 307 seconds by postgrey-1.27 at vger.kernel.org; Tue, 05 Nov 2019 11:55:14 EST
-From:   =?UTF-8?q?Linus=20L=C3=BCssing?= <linus.luessing@c0d3.blue>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue; s=2018;
-        t=1572972606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=A4o+TvT+3DU2TuZZZ5Ukyqq2OA7OUrD/LYDeu136xXo=;
-        b=eKaM8U5anTeSSbpbTfQEDsinYFx/8JXx6rrdvuxtR33xfv34H1McpU2Iwpo94Ei+126A8k
-        29w3ftw7jTj4FJwskOhlMV1Zp03RS+V++a4Mui8gAhhEb9LO8ovQoNv8g/82g036QGF4Az
-        ShI3CiJYa+M3ECi5fYdQf5pDH9ymPyn1nTmW+MQ0QtjP30vWFFBF59c6E3GVlsxv6HTN7L
-        Zlm/LxHkvZFQPqJadbLcTUc7URlB++HU/AXmZx4pezgnrJYLegJG8orlBQ3cjT9nqFoZdS
-        dt5YEzAQe87d1oGQ7tfiGnumm99LM3O3hondz8WEB8NJhgW2QDjxhojEprqQBw==
-To:     ath10k@lists.infradead.org
-Cc:     Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Ben Greear <greearb@candelatech.com>,
-        Simon Wunderlich <sw@simonwunderlich.de>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?q?Linus=20L=C3=BCssing?= <ll@simonwunderlich.de>
-Subject: [PATCH net-next] ath10k: fix RX of frames with broken FCS in monitor mode
-Date:   Tue,  5 Nov 2019 17:49:32 +0100
-Message-Id: <20191105164932.11799-1-linus.luessing@c0d3.blue>
+        Tue, 5 Nov 2019 11:55:18 -0500
+Received: from mga04.intel.com ([192.55.52.120]:22346 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2390060AbfKEQzS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 11:55:18 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 08:55:17 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,271,1569308400"; 
+   d="scan'208";a="225073629"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Nov 2019 08:55:17 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 197DB300884; Tue,  5 Nov 2019 08:55:17 -0800 (PST)
+Date:   Tue, 5 Nov 2019 08:55:17 -0800
+From:   Andi Kleen <ak@linux.intel.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Andi Kleen <andi@firstfloor.org>, kbuild-all@lists.01.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v3] x86: Add trace points to (nearly) all vectors
+Message-ID: <20191105165517.GA373029@tassilo.jf.intel.com>
+References: <20191030195619.22244-1-andi@firstfloor.org>
+ <201911020947.N041g9eA%lkp@intel.com>
+ <20191105014439.GB25308@tassilo.jf.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=c0d3.blue;
-        s=2018; t=1572972606;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding;
-        bh=A4o+TvT+3DU2TuZZZ5Ukyqq2OA7OUrD/LYDeu136xXo=;
-        b=auYd3bMkXFMp2tggRSB3WRF+GpXQmASYI8pWe/jIXmf3bEcxf3hI9StYZsZZUo1s8VaG7X
-        WvZ54nJJdXz/5Ewd94d9WU6RykrBkLACXE2m3fxyh/1ofJO8qyvjprMpcbeHzj2SLgqV9M
-        gr0FQa5orGMeMDcRXp4Vkp6dyUqbvRx+5qruQW1wgFTp6v3LP0kV4QB32oyGnYMbdN+lDx
-        HGy1YD6TTtRFMom80NKpPtmu1oraEKZR46Zv/uktMPvcXY+o6omAa6jpvXI0LWS2HVWC1s
-        c4Xd3ApQ2RJp171Vae9iRLNTQUHARIxVdOd6YPoGmiV1A50A4/XoeZXTJ3dJ/g==
-ARC-Seal: i=1; s=2018; d=c0d3.blue; t=1572972606; a=rsa-sha256; cv=none;
-        b=Qv6YtoEdX4ewk6c7mjveFfqd8SPLQ/pcDdgTLLQMxlaED05U4f0kbgHUwWWraP9psScsOV
-        roaGaQ+zFVzlBtJucdQXGBjARGzHED5HdnaJPOjo7Y312D/Xa0Ua0o4pUr4LwQz5NdnIat
-        2aSEhx2MiuANhK5np95uLiVzw2XK4bseBYjuNNjX6IR7NaiTO0AFDYlTevck60z48FuWxb
-        4kM4c3WjdjHoKm2BW8TitacGo6H9CxnTgG1g++6j9iy73r0UoODtQ9usQ/0zXdsPcHNJHD
-        ouF7nomAi3O9LDwqWSNlCwKOeb2JkEPrWFDL3F+MQERU0uCf3cM77zdW5b0sKw==
-ARC-Authentication-Results: i=1;
-        ORIGINATING;
-        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
-Authentication-Results: ORIGINATING;
-        auth=pass smtp.auth=linus.luessing@c0d3.blue smtp.mailfrom=linus.luessing@c0d3.blue
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105014439.GB25308@tassilo.jf.intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Linus Lüssing <ll@simonwunderlich.de>
+On Mon, Nov 04, 2019 at 05:44:39PM -0800, Andi Kleen wrote:
+> On Sat, Nov 02, 2019 at 09:24:50AM +0800, kbuild test robot wrote:
+> > Hi Andi,
+> > 
+> > Thank you for the patch! Yet something to improve:
+> 
+> I cannot reproduce this.
+> 
+> And the file clearly has an include for the trace file, so I can't see what
+> could be wrong.
+> 
+> > 
+> > [auto build test ERROR on tip/auto-latest]
+> > [also build test ERROR on v5.4-rc5 next-20191031]
+> 
+> Also the config the bot sent doesn't even match next-20191031 nor tip/auto-latest
 
-So far, frames were forwarded regardless of the FCS correctness leading
-to userspace applications listening on the monitor mode interface to
-receive potentially broken frames, even with the "fcsfail" flag unset.
+Never mind -- the config works with make ARCH=i386
 
-By default, with the "fcsfail" flag of a monitor mode interface
-unset, frames with FCS errors should be dropped. With this patch, the
-fcsfail flag is taken into account correctly.
+Helps when you read the message completely :-)
 
-Cc: Simon Wunderlich <sw@simonwunderlich.de>
-Signed-off-by: Linus Lüssing <ll@simonwunderlich.de>
----
-This was tested on an Open Mesh A41 device, featuring a QCA4019. And
-with this firmware:
-
-https://www.candelatech.com/downloads/ath10k-4019-10-4b/firmware-5-ct-full-community-12.bin-lede.011
-
-But from looking at the code it seems that the vanilla ath10k has the
-same issue, therefore submitting it here.
-
-Changelog RFC->v1:
-
-* removed "ar->monitor" check
-* added a debug counter
-
----
- drivers/net/wireless/ath/ath10k/core.h   |  1 +
- drivers/net/wireless/ath/ath10k/debug.c  |  2 ++
- drivers/net/wireless/ath/ath10k/htt_rx.c | 10 ++++++++++
- 3 files changed, 13 insertions(+)
-
-diff --git a/drivers/net/wireless/ath/ath10k/core.h b/drivers/net/wireless/ath/ath10k/core.h
-index 4d7db07db6ba..787065a9eb3f 100644
---- a/drivers/net/wireless/ath/ath10k/core.h
-+++ b/drivers/net/wireless/ath/ath10k/core.h
-@@ -1171,6 +1171,7 @@ struct ath10k {
- 
- 	struct {
- 		/* protected by data_lock */
-+		u32 rx_crc_err_drop;
- 		u32 fw_crash_counter;
- 		u32 fw_warm_reset_counter;
- 		u32 fw_cold_reset_counter;
-diff --git a/drivers/net/wireless/ath/ath10k/debug.c b/drivers/net/wireless/ath/ath10k/debug.c
-index bd2b5628f850..5e4cd2966e6f 100644
---- a/drivers/net/wireless/ath/ath10k/debug.c
-+++ b/drivers/net/wireless/ath/ath10k/debug.c
-@@ -1094,6 +1094,7 @@ static const char ath10k_gstrings_stats[][ETH_GSTRING_LEN] = {
- 	"d_rts_good",
- 	"d_tx_power", /* in .5 dbM I think */
- 	"d_rx_crc_err", /* fcs_bad */
-+	"d_rx_crc_err_drop", /* frame with FCS error, dropped late in kernel */
- 	"d_no_beacon",
- 	"d_tx_mpdus_queued",
- 	"d_tx_msdu_queued",
-@@ -1193,6 +1194,7 @@ void ath10k_debug_get_et_stats(struct ieee80211_hw *hw,
- 	data[i++] = pdev_stats->rts_good;
- 	data[i++] = pdev_stats->chan_tx_power;
- 	data[i++] = pdev_stats->fcs_bad;
-+	data[i++] = ar->stats.rx_crc_err_drop;
- 	data[i++] = pdev_stats->no_beacons;
- 	data[i++] = pdev_stats->mpdu_enqued;
- 	data[i++] = pdev_stats->msdu_enqued;
-diff --git a/drivers/net/wireless/ath/ath10k/htt_rx.c b/drivers/net/wireless/ath/ath10k/htt_rx.c
-index 53f1095de8ff..149728588e80 100644
---- a/drivers/net/wireless/ath/ath10k/htt_rx.c
-+++ b/drivers/net/wireless/ath/ath10k/htt_rx.c
-@@ -1285,6 +1285,16 @@ static void ath10k_process_rx(struct ath10k *ar, struct sk_buff *skb)
- 
- 	status = IEEE80211_SKB_RXCB(skb);
- 
-+	if (!(ar->filter_flags & FIF_FCSFAIL) &&
-+	    status->flag & RX_FLAG_FAILED_FCS_CRC) {
-+		spin_lock_bh(&ar->data_lock);
-+		ar->stats.rx_crc_err_drop++;
-+		spin_unlock_bh(&ar->data_lock);
-+
-+		dev_kfree_skb_any(skb);
-+		return;
-+	}
-+
- 	ath10k_dbg(ar, ATH10K_DBG_DATA,
- 		   "rx skb %pK len %u peer %pM %s %s sn %u %s%s%s%s%s%s %srate_idx %u vht_nss %u freq %u band %u flag 0x%x fcs-err %i mic-err %i amsdu-more %i\n",
- 		   skb,
--- 
-2.24.0.rc2
-
+-Andi
