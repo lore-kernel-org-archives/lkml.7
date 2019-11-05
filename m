@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D473CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF087CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026D221882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811AA21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 01:28:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="iqvJXbPD";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dWMALy59"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MUyy45DU";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="kn/rDUoL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387500AbfKEB2O (ORCPT
+        id S2387532AbfKEB2R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 20:28:14 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:38144 "EHLO
+        Mon, 4 Nov 2019 20:28:17 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:38248 "EHLO
         smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387452AbfKEB2M (ORCPT
+        with ESMTP id S2387452AbfKEB2Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 20:28:12 -0500
+        Mon, 4 Nov 2019 20:28:16 -0500
 Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 4B56660F83; Tue,  5 Nov 2019 01:28:05 +0000 (UTC)
+        id 3313260EE3; Tue,  5 Nov 2019 01:28:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572917290;
-        bh=VnFdUKh2L32i0tmOO6AdIacV6hLUL4vY01ZGI/Yc6pw=;
+        s=default; t=1572917295;
+        bh=X9ZzyOFKMrqhDNrZnEBr02spBBYDbYQ58Tmt/ROoqwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iqvJXbPDdyu4SsiV2OFVt7o435tiymKZek90MGm6qLnPgu3OxLYWyDjUkjChRo6hl
-         TI2E8b9+k2HFja8VFTTJJKC3Kp/9j/yg5CeyE4OlP4EalPRrORNC+oOhaJ+QLmmU3G
-         4q6lzzGbtyueri36MQlFz5cnz1SDOd5ncmSC+6pY=
+        b=MUyy45DUpIvYIFkmF8qxBwUlL1bckmKbYXXE0KN6dEOV1EcfbGi+wSRjL0b20Qwyj
+         AKSPM+Z+0slJLDh6brYBkJW38Y1fxfSgDQv5I6Cs9uU5/LQ/FkG4op9t+AWhBKIf57
+         1LUotmpJZToHyG9ZOCDpJz+4HLWJgtZIZ1sPU8aU=
 Received: from eberman-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
         (No client certificate requested)
         (Authenticated sender: eberman@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id B0F9A60EE2;
-        Tue,  5 Nov 2019 01:28:02 +0000 (UTC)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id A41E260F81;
+        Tue,  5 Nov 2019 01:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572917283;
-        bh=VnFdUKh2L32i0tmOO6AdIacV6hLUL4vY01ZGI/Yc6pw=;
+        s=default; t=1572917279;
+        bh=X9ZzyOFKMrqhDNrZnEBr02spBBYDbYQ58Tmt/ROoqwk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=dWMALy59LkTpPBYuM067o/Tx5YqqvwLb7W5VH4q+nTHu3k3fzsfc/8zzSkqBzU4cw
-         BZVgiTG2DXVSaH+PgCMToOKQxOEDU6GbDwe8Y8a6zndtb5SXW25DCHNsYJDz+8Oi4i
-         2a0jbE6lb0o5tUCV2bvaLdJYBaQNiDbcRc3V50Ac=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org B0F9A60EE2
+        b=kn/rDUoLDDx2doGPN5AAqj8sQPfdNIv3MwSRjBBUcwXBXd5yqwQC+Tzo7UQdNxVx3
+         M8XkvYGxtYIyxoVhRL6Pt512++7tneQboBh+cqhvNCErpaYbjlGnLNrMwcpMz89BHx
+         cuTpKNIZeErSeSDeA09+ZD2OHXyFLshZzWyHGlxs=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A41E260F81
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
 Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=eberman@codeaurora.org
 From:   Elliot Berman <eberman@codeaurora.org>
@@ -56,9 +56,9 @@ Cc:     tsoni@codeaurora.org, sidgup@codeaurora.org,
         psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
         linux-kernel@vger.kernel.org,
         Elliot Berman <eberman@codeaurora.org>
-Subject: [PATCH 16/17] firmware: qcom_scm: Enable legacy calling convention in qcom_scm-64.c
-Date:   Mon,  4 Nov 2019 17:27:35 -0800
-Message-Id: <1572917256-24205-17-git-send-email-eberman@codeaurora.org>
+Subject: [PATCH 12/17] firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
+Date:   Mon,  4 Nov 2019 17:27:31 -0800
+Message-Id: <1572917256-24205-13-git-send-email-eberman@codeaurora.org>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
 References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
@@ -67,97 +67,118 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable legacy calling convention in qcom_scm-64. Update
-is_call_available to use legacy function numbers when using legacy
-convention.
+- Move SMCCC register filling to qcom_scm_call so that qcom_scm_call_do
+  only needs to concern itself with retry mechanism.
+- Use arm_smccc_args struct in atomic variants as well.
 
 Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 ---
- drivers/firmware/qcom_scm-64.c | 43 ++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 39 insertions(+), 4 deletions(-)
+ drivers/firmware/qcom_scm-32.c | 47 ++++++++++++++++++++++++++++--------------
+ 1 file changed, 31 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
-index 7bb68f2..355d9d7 100644
---- a/drivers/firmware/qcom_scm-64.c
-+++ b/drivers/firmware/qcom_scm-64.c
-@@ -60,6 +60,7 @@ struct arm_smccc_args {
- 
- enum qcom_smc_convention {
- 	SMC_CONVENTION_UNKNOWN,
-+	SMC_CONVENTION_LEGACY,
- 	SMC_CONVENTION_ARM_32,
- 	SMC_CONVENTION_ARM_64,
+diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+index 33effed..9811560 100644
+--- a/drivers/firmware/qcom_scm-32.c
++++ b/drivers/firmware/qcom_scm-32.c
+@@ -78,6 +78,9 @@ struct qcom_scm_desc {
+ 	u64 res[MAX_QCOM_SCM_RETS];
+ 	u32 owner;
  };
-@@ -415,7 +416,16 @@ static int qcom_scm_call_atomic_legacy(struct device *dev,
- static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
++struct arm_smccc_args {
++	unsigned long a[8];
++};
+ 
+ #define LEGACY_FUNCNUM(s, c)  (((s) << 10) | ((c) & 0x3ff))
+ 
+@@ -159,16 +162,13 @@ static inline void *legacy_get_response_buffer(const struct legacy_response *rsp
+ 	return (void *)rsp + le32_to_cpu(rsp->buf_offset);
+ }
+ 
+-static u32 __qcom_scm_call_do(u32 cmd_addr)
++static void __qcom_scm_call_do(const struct arm_smccc_args *smc,
++			      struct arm_smccc_res *res)
  {
- 	might_sleep();
--	return qcom_scm_call_smccc(dev, desc, false);
-+	switch (qcom_smc_convention) {
-+	case SMC_CONVENTION_ARM_32:
-+	case SMC_CONVENTION_ARM_64:
-+		return qcom_scm_call_smccc(dev, desc, false);
-+	case SMC_CONVENTION_LEGACY:
-+		return qcom_scm_call_legacy(dev, desc);
-+	default:
-+		pr_err("Unknown current SCM calling convention.\n");
-+		return -EINVAL;
-+	}
+-	int context_id;
+-	struct arm_smccc_res res;
+ 	do {
+-		arm_smccc_smc(1, (unsigned long)&context_id, cmd_addr,
+-			      0, 0, 0, 0, 0, &res);
+-	} while (res.a0 == QCOM_SCM_INTERRUPTED);
+-
+-	return res.a0;
++		arm_smccc_smc(smc->a[0], smc->a[1], smc->a[2], smc->a[3],
++			      smc->a[4], smc->a[5], smc->a[6], smc->a[7], res);
++	} while (res->a0 == QCOM_SCM_INTERRUPTED);
  }
  
  /**
-@@ -431,7 +441,16 @@ static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
-  */
- static int qcom_scm_call_atomic(struct device *dev, struct qcom_scm_desc *desc)
+@@ -193,10 +193,12 @@ static u32 __qcom_scm_call_do(u32 cmd_addr)
+ static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
  {
--	return qcom_scm_call_smccc(dev, desc, true);
-+	switch (qcom_smc_convention) {
-+	case SMC_CONVENTION_ARM_32:
-+	case SMC_CONVENTION_ARM_64:
-+		return qcom_scm_call_smccc(dev, desc, true);
-+	case SMC_CONVENTION_LEGACY:
-+		return qcom_scm_call_atomic_legacy(dev, desc);
-+	default:
-+		pr_err("Unknown current SCM calling convention.\n");
-+		return -EINVAL;
-+	}
- }
+ 	int arglen = desc->arginfo & 0xf;
+-	int ret;
++	int ret = 0, context_id;
+ 	size_t i;
+ 	struct legacy_command *cmd;
+ 	struct legacy_response *rsp;
++	struct arm_smccc_args smc = {0};
++	struct arm_smccc_res res;
+ 	const size_t cmd_len = arglen * sizeof(__le32);
+ 	const size_t resp_len = MAX_QCOM_SCM_RETS * sizeof(__le32);
+ 	size_t alloc_len = sizeof(*cmd) + cmd_len + sizeof(*rsp) + resp_len;
+@@ -225,10 +227,14 @@ static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
+ 		return -ENOMEM;
+ 	}
  
- #define QCOM_SCM_FLAG_COLDBOOT_CPU0	0x00
-@@ -750,8 +769,19 @@ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
- 	};
- 
- 	desc.arginfo = QCOM_SCM_ARGS(1);
--	desc.args[0] = SMCCC_FUNCNUM(svc_id, cmd_id) |
--			(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
-+	switch (qcom_smc_convention) {
-+	case SMC_CONVENTION_ARM_32:
-+	case SMC_CONVENTION_ARM_64:
-+		desc.args[0] = SMCCC_FUNCNUM(svc_id, cmd_id) |
-+				(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
-+		break;
-+	case SMC_CONVENTION_LEGACY:
-+		desc.args[0] = LEGACY_FUNCNUM(svc_id, cmd_id);
-+		break;
-+	default:
-+		pr_err("Unknown SMC convention being used\n");
-+		return -EINVAL;
-+	}
- 
- 	ret = qcom_scm_call(dev, &desc);
- 
-@@ -898,6 +928,11 @@ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
- 
- void __qcom_scm_init(void)
- {
-+	qcom_smc_convention = SMC_CONVENTION_LEGACY;
-+	if (__qcom_scm_is_call_available(NULL, QCOM_SCM_SVC_INFO,
-+			QCOM_SCM_INFO_IS_CALL_AVAIL) == 1)
-+		goto out;
++	smc.a[0] = 1;
++	smc.a[1] = (unsigned long)&context_id;
++	smc.a[2] = cmd_phys;
 +
- 	qcom_smc_convention = SMC_CONVENTION_ARM_64;
- 	if (__qcom_scm_is_call_available(NULL, QCOM_SCM_SVC_INFO,
- 			QCOM_SCM_INFO_IS_CALL_AVAIL) == 1)
+ 	mutex_lock(&qcom_scm_lock);
+-	ret = __qcom_scm_call_do(cmd_phys);
+-	if (ret < 0)
+-		ret = qcom_scm_remap_error(ret);
++	__qcom_scm_call_do(&smc, &res);
++	if (res.a0 < 0)
++		ret = qcom_scm_remap_error(res.a0);
+ 	mutex_unlock(&qcom_scm_lock);
+ 	if (ret)
+ 		goto out;
+@@ -270,10 +276,14 @@ static int qcom_scm_call(struct device *dev, struct qcom_scm_desc *desc)
+ static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
+ {
+ 	int context_id;
++	struct arm_smccc_args smc = {0};
+ 	struct arm_smccc_res res;
+ 
+-	arm_smccc_smc(LEGACY_ATOMIC(svc, cmd, 1), (unsigned long)&context_id,
+-		      arg1, 0, 0, 0, 0, 0, &res);
++	smc.a[0] = LEGACY_ATOMIC(svc, cmd, 1);
++	smc.a[1] = (unsigned long)&context_id;
++	smc.a[2] = arg1;
++	arm_smccc_smc(smc.a[0], smc.a[1], smc.a[2], smc.a[3],
++		      smc.a[4], smc.a[5], smc.a[6], smc.a[7], &res);
+ 
+ 	return res.a0;
+ }
+@@ -291,10 +301,15 @@ static s32 qcom_scm_call_atomic1(u32 svc, u32 cmd, u32 arg1)
+ static s32 qcom_scm_call_atomic2(u32 svc, u32 cmd, u32 arg1, u32 arg2)
+ {
+ 	int context_id;
++	struct arm_smccc_args smc = {0};
+ 	struct arm_smccc_res res;
+ 
+-	arm_smccc_smc(LEGACY_ATOMIC(svc, cmd, 2), (unsigned long)&context_id,
+-		      arg1, arg2, 0, 0, 0, 0, &res);
++	smc.a[0] = LEGACY_ATOMIC(svc, cmd, 2);
++	smc.a[1] = (unsigned long)&context_id;
++	smc.a[2] = arg1;
++	smc.a[3] = arg2;
++	arm_smccc_smc(smc.a[0], smc.a[1], smc.a[2], smc.a[3],
++		      smc.a[4], smc.a[5], smc.a[6], smc.a[7], &res);
+ 
+ 	return res.a0;
+ }
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
