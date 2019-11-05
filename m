@@ -2,128 +2,297 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B78AFC49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:16:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2CF5C49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:20:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C1E620717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:16:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vq5W//hP"
+	by mail.kernel.org (Postfix) with ESMTP id 8771720717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:20:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730695AbfKEJQk (ORCPT
+        id S1730626AbfKEJUa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:16:40 -0500
-Received: from outils.crapouillou.net ([89.234.176.41]:58854 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730528AbfKEJQj (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:16:39 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1572945397; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=no3TrOXPIr0fb/tqGISxsTogfkVht99KnNkO4ofz60M=;
-        b=vq5W//hPFzbGEyBcqtgjAWIk3JU4FOQdB3QjM1LbXjuiaFJKNXYW0nYzdGurjRyoY2Qhvu
-        N8T+SFiQmKA3tQvgWFgjwY3V+/Nb59Xu0mWKfNUhnSh8lhI0pVPG9S1lem3ba6E5+TtMWB
-        Z6TXGP/IVLwclNA4ZfNytBlcpvtOoF4=
-Date:   Tue, 05 Nov 2019 10:16:31 +0100
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB
- charger
-To:     Rob Herring <robh+dt@kernel.org>
-Cc:     Sebastian Reichel <sre@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "open list:THERMAL" <linux-pm@vger.kernel.org>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        od@zcrc.me
-Message-Id: <1572945391.3.1@crapouillou.net>
-In-Reply-To: <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
-References: <20191103220801.10666-1-paul@crapouillou.net>
-        <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 04:20:30 -0500
+Received: from mga01.intel.com ([192.55.52.88]:41924 "EHLO mga01.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727093AbfKEJUa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 04:20:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 01:20:27 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
+   d="scan'208";a="353093772"
+Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
+  by orsmga004.jf.intel.com with ESMTP; 05 Nov 2019 01:20:25 -0800
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH] KVM: X86: Dynamically allocating MSR number lists(msrs_to_save[], emulated_msrs[], msr_based_features[])
+Date:   Tue,  5 Nov 2019 17:20:31 +0800
+Message-Id: <20191105092031.8064-1-chenyi.qiang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+The three msr number lists(msrs_to_save[], emulated_msrs[] and
+msr_based_features[]) are global arrays of kvm.ko, which are
+initialized/adjusted (copy supported MSRs forward to override the
+unsupported MSRs) when installing kvm-{intel,amd}.ko, but it doesn't
+reset these three arrays to their initial value when uninstalling
+kvm-{intel,amd}.ko. Thus, at the next installation, kvm-{intel,amd}.ko
+will initialize the modified arrays with some MSRs lost and some MSRs
+duplicated.
 
+So allocate and initialize these three MSR number lists dynamically when
+installing kvm-{intel,amd}.ko and free them when uninstalling.
 
-Le lun., nov. 4, 2019 at 07:52, Rob Herring <robh+dt@kernel.org> a=20
-=E9crit :
-> On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>  Add documentation about the devicetree bindings for the generic USB
->>  charger.
->=20
-> What makes it generic?
+Cc: stable@vger.kernel.org
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+---
+ arch/x86/kvm/x86.c | 86 ++++++++++++++++++++++++++++++----------------
+ 1 file changed, 57 insertions(+), 29 deletions(-)
 
-It only uses the USB PHY subsystem, which already has some half-baked=20
-support for chargers but not bound to the power-supply subsystem.
-
-
->>=20
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->>   .../bindings/power/supply/usb-charger.txt     | 24=20
->> +++++++++++++++++++
->>   1 file changed, 24 insertions(+)
->>   create mode 100644=20
->> Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>=20
->>  diff --git=20
->> a/Documentation/devicetree/bindings/power/supply/usb-charger.txt=20
->> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  new file mode 100644
->>  index 000000000000..fd46734cb0e5
->>  --- /dev/null
->>  +++ b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
->>  @@ -0,0 +1,24 @@
->>  +Generic USB charger bindings
->>  +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
->>  +
->>  +Required properties :
->>  + - compatible : should be "usb-charger"
->>  + - phys: phandle to the USB PHY
->>  +
->>  +Example:
->>  +
->>  +usb_con: extcon {
->>  +       compatible =3D "linux,extcon-usb-gpio";
->>  +       vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
->>  +};
->>  +
->>  +usb_phy: usb-phy@0 {
->>  +       compatible =3D "usb-nop-xceiv";
->>  +       #phy-cells =3D <0>;
->>  +       extcon =3D <&usb_con>;
->=20
-> extcon is deprecated in favor of usb-connector binding. See
-> .../bindings/connector/usb-connector.txt. There's also some pending
-> patches for adding GPIO based connector controls including Vbus sense
-> (GPIO input) and control (regulator via a GPIO).
->=20
-> Rob
-
-I understand that the usb-connector binding is better, but the current=20
-code doesn't integrate at all with the USB PHY subsystem, which has its=20
-own code to handle ID and VBUS GPIOs and supports notifiers. Is that=20
-deprecated then?
-
-What's the big picture here?
-
-Thanks,
--Paul
-
-
-=
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index ff395f812719..08efcf6351cc 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1132,13 +1132,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
+  * List of msr numbers which we expose to userspace through KVM_GET_MSRS
+  * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
+  *
+- * This list is modified at module load time to reflect the
++ * The three msr number lists(msrs_to_save, emulated_msrs, msr_based_features)
++ * are allocated and initialized at module load time and freed at unload time.
++ * msrs_to_save is selected from the msrs_to_save_all to reflect the
+  * capabilities of the host cpu. This capabilities test skips MSRs that are
+- * kvm-specific. Those are put in emulated_msrs; filtering of emulated_msrs
++ * kvm-specific. Those are put in emulated_msrs_all; filtering of emulated_msrs
+  * may depend on host virtualization features rather than host cpu features.
+  */
+ 
+-static u32 msrs_to_save[] = {
++const u32 msrs_to_save_all[] = {
+ 	MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
+ 	MSR_STAR,
+ #ifdef CONFIG_X86_64
+@@ -1179,9 +1181,10 @@ static u32 msrs_to_save[] = {
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+ };
+ 
++static u32 *msrs_to_save;
+ static unsigned num_msrs_to_save;
+ 
+-static u32 emulated_msrs[] = {
++const u32 emulated_msrs_all[] = {
+ 	MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
+ 	MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
+ 	HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
+@@ -1220,7 +1223,7 @@ static u32 emulated_msrs[] = {
+ 	 * by arch/x86/kvm/vmx/nested.c based on CPUID or other MSRs.
+ 	 * We always support the "true" VMX control MSRs, even if the host
+ 	 * processor does not, so I am putting these registers here rather
+-	 * than in msrs_to_save.
++	 * than in msrs_to_save_all.
+ 	 */
+ 	MSR_IA32_VMX_BASIC,
+ 	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+@@ -1239,13 +1242,14 @@ static u32 emulated_msrs[] = {
+ 	MSR_KVM_POLL_CONTROL,
+ };
+ 
++static u32 *emulated_msrs;
+ static unsigned num_emulated_msrs;
+ 
+ /*
+  * List of msr numbers which are used to expose MSR-based features that
+  * can be used by a hypervisor to validate requested CPU features.
+  */
+-static u32 msr_based_features[] = {
++const u32 msr_based_features_all[] = {
+ 	MSR_IA32_VMX_BASIC,
+ 	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+ 	MSR_IA32_VMX_PINBASED_CTLS,
+@@ -1270,6 +1274,7 @@ static u32 msr_based_features[] = {
+ 	MSR_IA32_ARCH_CAPABILITIES,
+ };
+ 
++static u32 *msr_based_features;
+ static unsigned int num_msr_based_features;
+ 
+ static u64 kvm_get_arch_capabilities(void)
+@@ -3311,11 +3316,11 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 		if (n < msr_list.nmsrs)
+ 			goto out;
+ 		r = -EFAULT;
+-		if (copy_to_user(user_msr_list->indices, &msrs_to_save,
++		if (copy_to_user(user_msr_list->indices, msrs_to_save,
+ 				 num_msrs_to_save * sizeof(u32)))
+ 			goto out;
+ 		if (copy_to_user(user_msr_list->indices + num_msrs_to_save,
+-				 &emulated_msrs,
++				 emulated_msrs,
+ 				 num_emulated_msrs * sizeof(u32)))
+ 			goto out;
+ 		r = 0;
+@@ -3364,7 +3369,7 @@ long kvm_arch_dev_ioctl(struct file *filp,
+ 		if (n < msr_list.nmsrs)
+ 			goto out;
+ 		r = -EFAULT;
+-		if (copy_to_user(user_msr_list->indices, &msr_based_features,
++		if (copy_to_user(user_msr_list->indices, msr_based_features,
+ 				 num_msr_based_features * sizeof(u32)))
+ 			goto out;
+ 		r = 0;
+@@ -5086,26 +5091,41 @@ long kvm_arch_vm_ioctl(struct file *filp,
+ 	return r;
+ }
+ 
+-static void kvm_init_msr_list(void)
++static int kvm_init_msr_list(void)
+ {
+ 	struct x86_pmu_capability x86_pmu;
+ 	u32 dummy[2];
+ 	unsigned i, j;
+ 
+ 	BUILD_BUG_ON_MSG(INTEL_PMC_MAX_FIXED != 4,
+-			 "Please update the fixed PMCs in msrs_to_save[]");
++			 "Please update the fixed PMCs in msrs_to_saved_all[]");
+ 
+ 	perf_get_x86_pmu_capability(&x86_pmu);
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save); i++) {
+-		if (rdmsr_safe(msrs_to_save[i], &dummy[0], &dummy[1]) < 0)
++	msrs_to_save = kmalloc(sizeof(msrs_to_save_all),
++							GFP_KERNEL_ACCOUNT);
++	if (!msrs_to_save)
++		return -ENOMEM;
++
++	emulated_msrs = kmalloc(sizeof(emulated_msrs_all),
++							GFP_KERNEL_ACCOUNT);
++	if (!emulated_msrs)
++		goto free_msrs_to_save;
++
++	msr_based_features = kmalloc(sizeof(msr_based_features_all),
++							GFP_KERNEL_ACCOUNT);
++	if (!msr_based_features)
++		goto free_emulated_msrs;
++
++	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
++		if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
+ 			continue;
+ 
+ 		/*
+ 		 * Even MSRs that are valid in the host may not be exposed
+ 		 * to the guests in some cases.
+ 		 */
+-		switch (msrs_to_save[i]) {
++		switch (msrs_to_save_all[i]) {
+ 		case MSR_IA32_BNDCFGS:
+ 			if (!kvm_mpx_supported())
+ 				continue;
+@@ -5133,17 +5153,17 @@ static void kvm_init_msr_list(void)
+ 			break;
+ 		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
+ 			if (!kvm_x86_ops->pt_supported() ||
+-				msrs_to_save[i] - MSR_IA32_RTIT_ADDR0_A >=
++				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
+ 				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
+ 				continue;
+ 			break;
+ 		case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
+-			if (msrs_to_save[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
++			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
+ 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+ 				continue;
+ 			break;
+ 		case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 17:
+-			if (msrs_to_save[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
++			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+ 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+ 				continue;
+ 		}
+@@ -5151,34 +5171,40 @@ static void kvm_init_msr_list(void)
+ 			break;
+ 		}
+ 
+-		if (j < i)
+-			msrs_to_save[j] = msrs_to_save[i];
++		if (j <= i)
++			msrs_to_save[j] = msrs_to_save_all[i];
+ 		j++;
+ 	}
+ 	num_msrs_to_save = j;
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs); i++) {
+-		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs[i]))
++	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs_all); i++) {
++		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs_all[i]))
+ 			continue;
+ 
+-		if (j < i)
+-			emulated_msrs[j] = emulated_msrs[i];
++		if (j <= i)
++			emulated_msrs[j] = emulated_msrs_all[i];
+ 		j++;
+ 	}
+ 	num_emulated_msrs = j;
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(msr_based_features); i++) {
++	for (i = j = 0; i < ARRAY_SIZE(msr_based_features_all); i++) {
+ 		struct kvm_msr_entry msr;
+ 
+-		msr.index = msr_based_features[i];
++		msr.index = msr_based_features_all[i];
+ 		if (kvm_get_msr_feature(&msr))
+ 			continue;
+ 
+-		if (j < i)
+-			msr_based_features[j] = msr_based_features[i];
++		if (j <= i)
++			msr_based_features[j] = msr_based_features_all[i];
+ 		j++;
+ 	}
+ 	num_msr_based_features = j;
++	return 0;
++free_emulated_msrs:
++	kfree(emulated_msrs);
++free_msrs_to_save:
++	kfree(msrs_to_save);
++	return -ENOMEM;
+ }
+ 
+ static int vcpu_mmio_write(struct kvm_vcpu *vcpu, gpa_t addr, int len,
+@@ -9294,12 +9320,14 @@ int kvm_arch_hardware_setup(void)
+ 		kvm_default_tsc_scaling_ratio = 1ULL << kvm_tsc_scaling_ratio_frac_bits;
+ 	}
+ 
+-	kvm_init_msr_list();
+-	return 0;
++	return kvm_init_msr_list();
+ }
+ 
+ void kvm_arch_hardware_unsetup(void)
+ {
++	kfree(msr_based_features);
++	kfree(emulated_msrs);
++	kfree(msrs_to_save);
+ 	kvm_x86_ops->hardware_unsetup();
+ }
+ 
+-- 
+2.17.1
 
