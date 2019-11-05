@@ -2,134 +2,112 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC0CCC47E49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:29:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B22CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:29:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D0C621D7D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:29:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5146F21D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:29:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uo8KLjMa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389964AbfKEP3w (ORCPT
+        id S2389981AbfKEP3z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:29:52 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:48256 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2389925AbfKEP3v (ORCPT
+        Tue, 5 Nov 2019 10:29:55 -0500
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:39369 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389962AbfKEP3x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:29:51 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA5FRcuf042315
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 10:29:50 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w3apstdrr-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 10:29:49 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
-        Tue, 5 Nov 2019 15:29:48 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 5 Nov 2019 15:29:44 -0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA5FT82Z18809216
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 5 Nov 2019 15:29:08 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 822D352052;
-        Tue,  5 Nov 2019 15:29:43 +0000 (GMT)
-Received: from rapoport-lnx (unknown [9.148.8.59])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTPS id 703345204E;
-        Tue,  5 Nov 2019 15:29:41 +0000 (GMT)
-Received: by rapoport-lnx (sSMTP sendmail emulation); Tue, 05 Nov 2019 17:29:40 +0200
-From:   Mike Rapoport <rppt@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Andrea Arcangeli <aarcange@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Daniel Colascione <dancol@google.com>,
-        Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Lokesh Gidra <lokeshgidra@google.com>,
-        Nick Kralevich <nnk@google.com>,
-        Nosh Minwalla <nosh@google.com>,
-        Pavel Emelyanov <ovzxemul@gmail.com>,
-        Tim Murray <timmurray@google.com>, linux-api@vger.kernel.org,
-        linux-mm@kvack.org, Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for UFFD_FEATURE_EVENT_FORK
-Date:   Tue,  5 Nov 2019 17:29:37 +0200
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
-References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19110515-0020-0000-0000-00000382C8FB
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110515-0021-0000-0000-000021D8F36B
-Message-Id: <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911050127
+        Tue, 5 Nov 2019 10:29:53 -0500
+Received: by mail-lj1-f196.google.com with SMTP id y3so22352492ljj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:29:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=28try4muClFQlh9iqHPnuMbdLAxeCEgg636Rpb1wZM8=;
+        b=uo8KLjMarHlD53eWZPrliRhD2xVf0hN4iqn+31jBXWm2aAP/tEyuSyteVhFDm9YH4L
+         tFHvrtdmpuTvdt6I9MUh2YqvgIMac1r3Kv870L38T8Tc7l1v0IqTFkLpX8eEl7ktLQcz
+         GboVdtCINpiR2TmJO0P35K4JZWIg1QL3/bl7byWg4vljyN+4S+NFhQG36YQpZv8ue3Nj
+         QW5grIFQF1eg6TswdZFU0HNtV+ZUpJffTh0Mugnt5dfzmFSLmj+2YhdzaL56+v2TUnoD
+         TT78Zucz1PC0L7oI5GYCKQn++/XY9bu+eE4rUukb3yd17VkJakaNTNUIOh7QAqb1P1ge
+         4JLQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=28try4muClFQlh9iqHPnuMbdLAxeCEgg636Rpb1wZM8=;
+        b=K3XsLvlEJUkrBpwo9bBluSFS3HZvGj6+TNuNhnJJlcZGx5+/fcE/ddYF/XICKE37k2
+         saZqLNym/UEQuclJpKqofnno3n0JFSbHBg0C0led6NISqsu6NtgkjLA9z0wmc4iSHCEF
+         1jd7EGeyoOqY4FjEZGOPZkgWm56uBhcVO2eI7l2amXn8PWczGij/jyiJzkeLlMI0K6Jm
+         sl6+LlDNcHQfl0A+ez0tJSrUFyzxBNo0D/7D2rLjRKZgPPd0DIr23El8u7iS46IP3n/f
+         x5VZZeCQ6YZBO0So0se6frdCD4QERpFYlE/8w2oEoTdbH1mlzlrVdV5cQTQ/xCnUF+lW
+         xoBQ==
+X-Gm-Message-State: APjAAAWxGCiFsZfx1yzhSNdedhA0/wRrXC9WmyVNb/AEB04dyAvvkRSl
+        4bKXPCmw1zVcmpf51mjDEmgO1iqkP4hn6NhSMG3uzA==
+X-Google-Smtp-Source: APXvYqxEL3fqUDLcfo6mqdD0ClDkn2bxHuGMnRoW5eEjhGzajtl3kL3nBMiBE8xX5dO1ORsfFdRO106BZJVC38Tulao=
+X-Received: by 2002:a2e:a0c9:: with SMTP id f9mr23933312ljm.77.1572967790855;
+ Tue, 05 Nov 2019 07:29:50 -0800 (PST)
+MIME-Version: 1.0
+References: <20191014184320.GA161094@dtor-ws> <20191105004050.GU57214@dtor-ws>
+In-Reply-To: <20191105004050.GU57214@dtor-ws>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 5 Nov 2019 16:29:39 +0100
+Message-ID: <CACRpkdak-gW9+OV-SZQVNNi5BuyNzkjkKvHmYp2+eYq4vu2nyg@mail.gmail.com>
+Subject: Re: [PATCH] drm/bridge: ti-tfp410: switch to using fwnode_gpiod_get_index()
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Andrzej Hajda <a.hajda@samsung.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "open list:DRM PANEL DRIVERS" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Current implementation of UFFD_FEATURE_EVENT_FORK modifies the file
-descriptor table from the read() implementation of uffd, which may have
-security implications for unprivileged use of the userfaultfd.
+On Tue, Nov 5, 2019 at 1:40 AM Dmitry Torokhov
+<dmitry.torokhov@gmail.com> wrote:
+> On Mon, Oct 14, 2019 at 11:43:20AM -0700, Dmitry Torokhov wrote:
 
-Limit availability of UFFD_FEATURE_EVENT_FORK only for callers that have
-CAP_SYS_PTRACE.
+> > Instead of fwnode_get_named_gpiod() that I plan to hide away, let's use
+> > the new fwnode_gpiod_get_index() that mimics gpiod_get_index(), but
+> > works with arbitrary firmware node.
+> >
+> > Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+> > Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > ---
+> >
+> > Andrzej, Neil,
+> >
+> > This depends on the new code that can be bound in
+> > ib-fwnode-gpiod-get-index immutable branch of Linus' Walleij tree:
+> >
+> >         git pull git://git.kernel.org/pub/scm/linux/kernel/git/linusw/linux-gpio.git ib-fwnode-gpiod-get-index
+> >
+> > I hope that it would be possible to pull in this immutable branch and
+> > not wait until after 5.5 merge window, or, alternatively, merge through
+> > Linus Walleij's tree.
+>
+> Any chance this could be merged, please?
 
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- fs/userfaultfd.c | 18 +++++++++++-------
- 1 file changed, 11 insertions(+), 7 deletions(-)
+I'm happy to merge it into the GPIO tree if some DRM maintainer can
+provide an ACK.
 
-diff --git a/fs/userfaultfd.c b/fs/userfaultfd.c
-index f9fd18670e22..d99d166fd892 100644
---- a/fs/userfaultfd.c
-+++ b/fs/userfaultfd.c
-@@ -1834,13 +1834,12 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	if (copy_from_user(&uffdio_api, buf, sizeof(uffdio_api)))
- 		goto out;
- 	features = uffdio_api.features;
--	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES)) {
--		memset(&uffdio_api, 0, sizeof(uffdio_api));
--		if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
--			goto out;
--		ret = -EINVAL;
--		goto out;
--	}
-+	ret = -EINVAL;
-+	if (uffdio_api.api != UFFD_API || (features & ~UFFD_API_FEATURES))
-+		goto err_out;
-+	ret = -EPERM;
-+	if ((features & UFFD_FEATURE_EVENT_FORK) && !capable(CAP_SYS_PTRACE))
-+		goto err_out;
- 	/* report all available features and ioctls to userland */
- 	uffdio_api.features = UFFD_API_FEATURES;
- 	uffdio_api.ioctls = UFFD_API_IOCTLS;
-@@ -1853,6 +1852,11 @@ static int userfaultfd_api(struct userfaultfd_ctx *ctx,
- 	ret = 0;
- out:
- 	return ret;
-+err_out:
-+	memset(&uffdio_api, 0, sizeof(uffdio_api));
-+	if (copy_to_user(buf, &uffdio_api, sizeof(uffdio_api)))
-+		ret = -EFAULT;
-+	goto out;
- }
- 
- static long userfaultfd_ioctl(struct file *file, unsigned cmd,
--- 
-2.7.4
+Getting ACK from DRM people is problematic and a bit of friction in the
+community, DVetter usually advice to seek mutual reviews etc, but IMO
+it would be better if some people felt more compelled to review stuff
+eventually. (And that has the problem that it doesn't scale.)
 
+Yours,
+Linus Walleij
