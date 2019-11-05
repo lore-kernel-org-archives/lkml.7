@@ -2,119 +2,233 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 707B3C17461
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72341C1747F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:40:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EAB221D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:38:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40E5921D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 13:40:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fkbpd3sr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UiGPlzmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389245AbfKENiT (ORCPT
+        id S2389259AbfKENkL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 08:38:19 -0500
-Received: from mail-eopbgr820078.outbound.protection.outlook.com ([40.107.82.78]:2769
-        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S2389172AbfKENiS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 08:38:18 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=LJmmpaK6B5mwoL5xbqW2hPQX6CvM7iqapK9lEPBOdsISXunl5eoscybSvQQqgy9vhEd93WDiH21ibr9z4cJuvv/sSnCqaiUgFtuGrJezHDXOZ0vLAIqFKFyE6Gwq7YObeM6Rjy9T2krZnoAeO8X7FTyKWyAnu1ryFmsjbT9RGkNJRY+Q7k9UDxnE4Uo7/k2Zy5edoeFWq5og1yhI07pOl26g+Fl+DbjlRk/1K/7meaDGpLieODvHcz8x33l8TiEL3z/rpkbs7nFRDVMj0nBHMTlwCAnQgZKwG0BIXSIU7r+NYDVuY2LPl65/UUfJTSiPNrxuOkpSr01AMF01Fy4DRA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lOiDCrS83r/KivqRh138gIw7PcNqONNuUMjEL8AZvQI=;
- b=k9G6AlqOBe9DPkyK5gHczj0I8l70PmuC/XTiKXxqKlog5h+bFSMSsfBYT6e2amo4tZI4q5LCCSxcSQKHBr+L/44AkUHVRqyfBCMMACi71PbFQS4kz0ywwAfyQtizY/vrrP8i6FrdX5hMZCytMmoPvgdIaYmhfEBF64u0cVIhNuFErIDELOJh7lt87B1lJbrHnw6AkZ/+4thA5+yPrFKQnfgY1jWMZ/W5AZBSGGmeFxZMEQ9w0T/wlwyo8T3fxZRhLoZiXz/Y8YfowuozOs8GSJ+/5HbdNmn+wNmVOEVmL+1EhdPQZTDXR7AO3n+fACkCEnCInNLGfioUbTtwFdd1Ug==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
- header.d=amd.com; arc=none
+        Tue, 5 Nov 2019 08:40:11 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42154 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388615AbfKENkL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 08:40:11 -0500
+Received: by mail-pf1-f196.google.com with SMTP id s5so7165395pfh.9;
+        Tue, 05 Nov 2019 05:40:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lOiDCrS83r/KivqRh138gIw7PcNqONNuUMjEL8AZvQI=;
- b=fkbpd3srk+Jm7ANejaUnPh0PetiH7NaZ4Q8sRgbQbyZ8xE6pNW+uc3Nu44CNVCUq3dtn/PztxM2ydJuv5+Xpbi7QG7uCwcQsFA90zUA3oyIB9Cjk+Bq33KqOqbAfhwM0fCTLIP37kHd0V2ufeTOMU6alg0ySHzLqITcIQm1fK3Y=
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
- SN6PR12MB2830.namprd12.prod.outlook.com (20.177.250.143) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Tue, 5 Nov 2019 13:38:15 +0000
-Received: from SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::2819:e697:4314:56ba]) by SN6PR12MB2639.namprd12.prod.outlook.com
- ([fe80::2819:e697:4314:56ba%3]) with mapi id 15.20.2408.024; Tue, 5 Nov 2019
- 13:38:15 +0000
-From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-To:     Borislav Petkov <bp@alien8.de>
-CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH v2 0/6] AMD64 EDAC: Check for nodes without memory, etc.
-Thread-Topic: [PATCH v2 0/6] AMD64 EDAC: Check for nodes without memory, etc.
-Thread-Index: AQHViRgxcQiEBlwrekGL67NfTPIxZqdrX8oAgAsY5vCAAA5UAIAGIw2A
-Date:   Tue, 5 Nov 2019 13:38:15 +0000
-Message-ID: <SN6PR12MB2639B236A40754633C8E67F5F87E0@SN6PR12MB2639.namprd12.prod.outlook.com>
-References: <20191022203448.13962-1-Yazen.Ghannam@amd.com>
- <20191025133456.GA6483@zn.tnic>
- <BYAPR12MB2630ED1425A3F01727E1C45BF8620@BYAPR12MB2630.namprd12.prod.outlook.com>
- <20191101155412.GA2300@nazgul.tnic>
-In-Reply-To: <20191101155412.GA2300@nazgul.tnic>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Yazen.Ghannam@amd.com; 
-x-originating-ip: [184.90.133.239]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 00235954-fb1c-4537-061c-08d761f56940
-x-ms-traffictypediagnostic: SN6PR12MB2830:
-x-microsoft-antispam-prvs: <SN6PR12MB28300645C2188DABE5C270C4F87E0@SN6PR12MB2830.namprd12.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6790;
-x-forefront-prvs: 0212BDE3BE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(366004)(39860400002)(136003)(346002)(189003)(199004)(13464003)(86362001)(4326008)(186003)(6506007)(8676002)(99286004)(55016002)(54906003)(229853002)(9686003)(6116002)(3846002)(66556008)(53546011)(14454004)(25786009)(486006)(11346002)(446003)(76116006)(81156014)(74316002)(6916009)(76176011)(305945005)(102836004)(52536014)(5660300002)(33656002)(7736002)(316002)(66946007)(26005)(64756008)(66066001)(2906002)(6246003)(81166006)(71200400001)(71190400001)(478600001)(6436002)(8936002)(256004)(14444005)(7696005)(66476007)(66446008)(476003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2830;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: yTmwuwBk+OZoQN9YioBvebt9uTsLtJ8vj83tgS6w9lmf4dIkznQFlRLhhP5XDbjYZ9ouxsCxOhto6azVjsssh/TlA/uTa/G2n6fvBZDGWA1KVVKCCoCRwuqmmAZkKsPc/j2N75w9WXwLLvqYPjr72XWTQrkinOaHqa43hK+S/PsPSsFZ12kg6Yn0eSR7Q0JbKeMYynbtVlvBDtZoOWP40TOhbvhkSrLswIqDXj/R8NlrMsRoGWJ38NMkpWCt7JtyR7q8P9Q1jEI8MduO/Wp964QXGWbOZnEbNQj1BV7LAIocPBnCNqlp43zG7mJWStmRdqwcwUOTWhjgZPeb8GJF/4EiC4F2wCYNwTtZ54vsf5Wcib0xRP/pTI/yh2hzPt2z2iBp7pFeymSbTmVQb9GIJetZrr5+G79iXv+BLnWz5Wz8bAshRpbwfZeVl1Hn84a4
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=cc:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=Tu80m6wrbMJTPkCK5WWbqaWzOaGUNMurp20do0UvsyM=;
+        b=UiGPlzmx7Yt3b4ee2rkhVO5DITIX4KjHSBwsAek5YwQNV9yCiwCXGCFSah2JiVtl1+
+         VdQpcaHsyYw7TFn1U/fv8hr2n70FCgzT/OA67jsQtOT9GeisN+Q+NDSWEXYDUjfDmTQ6
+         2a/22TualVwYjw+fg2a/cw426HGDZhz9l9XeemzdNXr2N4Dhn3FwAU83ds5Eha2ZI/bo
+         JUe9IsO9vS0fmUYC+AhAdEqJYHVpv23i5z9SPz22TVKp6bXLywbNg0ulDfDhx+HZyDlf
+         qdSzDvj0U1oZ7WzeqzLGMygd7sek4vRasnyt1AEs379gCJThaErK4TtoNreCIQMMWwBo
+         32mg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=Tu80m6wrbMJTPkCK5WWbqaWzOaGUNMurp20do0UvsyM=;
+        b=gsqD8SLojul3kw/mVNfoqOC1YJb7oXh/SvfOcMg/YOrClXGMmLoy5FEYZS/kcYxw89
+         4LOETP1AohvkBUzvck3WLkS0XURAc+gVkHV0oKEQFbxgMxiW4GTMkhzjA+bRuq0ouSlp
+         EeyZgoMcKLBLSiKc8vA/4lUbgLN6SNWzluS9ITQTwfVz1YZyf2+0TadumizZvh/I4Yg3
+         Ezp9m7buuwst4dgTEtL4bgmLQO39cqzcrlFfkYCjEPjayDIn06wKhA4djdE7DDnaONaA
+         thTIYu49IJSHR/SRG8UdrZ+a04quz35zz+BySl0s8ne9mk+d+8xASrH/0QCLZOEUWdYk
+         VUIQ==
+X-Gm-Message-State: APjAAAUQBma5jT9zXUDOO535e/6KUkNkCNksW989B5RMQZ5sn3R5Taq7
+        bgVBYNK5pJ0GHKE4SsaYMSFxk+XlbOM=
+X-Google-Smtp-Source: APXvYqxrIypDV6i5iWoNPprsCOJ9//BkJEUrcgZm3Noc05RtN6Fj0YFYw10wP6pl+pNTVo14ynm57A==
+X-Received: by 2002:a63:234c:: with SMTP id u12mr35391929pgm.384.1572961209547;
+        Tue, 05 Nov 2019 05:40:09 -0800 (PST)
+Received: from ?IPv6:2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb? ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
+        by smtp.gmail.com with ESMTPSA id c16sm10661399pfo.34.2019.11.05.05.40.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 05:40:08 -0800 (PST)
+Cc:     paulmck@kernel.org, joel@joelfernandes.org, corbet@lwn.net,
+        tranmanphong@gmail.com, rcu@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
+Subject: Re: [Linux-kernel-mentees] [PATCH] Documentation: RCU: NMI-RCU:
+ Converted NMI-RCU.txt to NMI-RCU.rst.
+To:     madhuparnabhowmik04@gmail.com
+References: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
+From:   Phong Tran <tranmanphong@gmail.com>
+Message-ID: <5bab8828-76e4-c67f-5855-ea4e4f43eaa5@gmail.com>
+Date:   Tue, 5 Nov 2019 20:40:05 +0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 00235954-fb1c-4537-061c-08d761f56940
-X-MS-Exchange-CrossTenant-originalarrivaltime: 05 Nov 2019 13:38:15.5780
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 0a93zh1tgwvy/d6xVdHFvbYNbQNFIV1XqprVqpmYMKxKMrH+cDTFHvLKDqDXIOZBq1yDg/aBlkjTKMlbVCRXZw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2830
+In-Reply-To: <20191028214252.17580-1-madhuparnabhowmik04@gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
-ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
-ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogRnJpZGF5LCBOb3ZlbWJlciAxLCAyMDE5IDEx
-OjU0IEFNDQo+IFRvOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0KPiBD
-YzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwLzZdIEFNRDY0IEVEQUM6IENoZWNrIGZvciBu
-b2RlcyB3aXRob3V0IG1lbW9yeSwgZXRjLg0KPiANCj4gT24gRnJpLCBOb3YgMDEsIDIwMTkgYXQg
-MDM6MTk6MzZQTSArMDAwMCwgR2hhbm5hbSwgWWF6ZW4gd3JvdGU6DQo+ID4gSXMgdGhlIG1vZHVs
-ZSBiZWluZyBwcm9iZWQgdHdpY2U/IFdlIGhhdmUgdGhpcyBwcm9ibGVtIGluIGdlbmVyYWwsIGUu
-Zy4gdGhlDQo+ID4gbW9kdWxlIGdldHMgbG9hZGVkIG11bHRpcGxlIHRpbWVzIG9uIGZhaWx1cmUu
-DQo+IA0KPiBZYXAsIGl0IGxvb2tzIGxpa2UgaXQuDQo+IA0KPiA+IFRoZSBjbHVlIGZvciBtZSBp
-cyB0aGF0IG5vZGUgMCBnZXRzIGRldGVjdGVkIHR3aWNlLiBUaGlzIGlzIGRvbmUgaW4NCj4gPiBw
-ZXJfZmFtaWx5X2luaXQoKSBlYXJseSBpbiBwcm9iZV9vbmVfaW5zdGFuY2UoKS4NCj4gPg0KPiA+
-IEluIGFueSBjYXNlLCBJIHRoaW5rIHdlIGNhbiBtYWtlICFlY2NfZW5hYmxlZChwdnQpIGluIHBy
-b2JlX29uZV9pbnN0YW5jZSgpIGENCj4gPiBmYWlsdXJlIG5vdyB0aGF0IHdlIGhhdmUgYW4gZXhw
-bGljaXQgY2hlY2sgZm9yIG1lbW9yeSBvbiBhIG5vZGUuIEluIG90aGVyDQo+ID4gd29yZHMsIGlm
-IHdlIGhhdmUgbWVtb3J5IGFuZCBFQ0MgaXMgZGlzYWJsZWQgdGhlbiB0aGlzIGlzIGEgZmFpbHVy
-ZSBmb3IgdGhlDQo+ID4gbW9kdWxlLg0KPiANCj4gWWVhaCwgZm9yIHRoYXQgY2FzZSB3ZSBzaG91
-bGQgYmUgcHJpbnRpbmcgZWNjX21zZy4gTWFrZXMgc2Vuc2UuDQo+IA0KDQpEbyB5b3UgaGF2ZSBh
-bnkgb3RoZXIgY29tbWVudHMgb24gdGhpcyBzZXQ/IFNob3VsZCBJIHNlbmQgYW5vdGhlciByZXZp
-c2lvbg0Kd2l0aCB0aGlzIGNoYW5nZT8NCg0KVGhhbmtzLA0KWWF6ZW4NCg==
+On 10/29/19 4:42 AM, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> 
+> This patch converts NMI-RCU from txt to rst format.
+> Also adds NMI-RCU in the index.rst file.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> -- >   .../RCU/{NMI-RCU.txt => NMI-RCU.rst}          | 53 ++++++++++---------
+>   Documentation/RCU/index.rst                   |  1 +
+>   2 files changed, 29 insertions(+), 25 deletions(-)
+>   rename Documentation/RCU/{NMI-RCU.txt => NMI-RCU.rst} (73%)
+> 
+> diff --git a/Documentation/RCU/NMI-RCU.txt b/Documentation/RCU/NMI-RCU.rst
+> similarity index 73%
+> rename from Documentation/RCU/NMI-RCU.txt
+> rename to Documentation/RCU/NMI-RCU.rst
+> index 881353fd5bff..da5861f6a433 100644
+> --- a/Documentation/RCU/NMI-RCU.txt
+> +++ b/Documentation/RCU/NMI-RCU.rst
+> @@ -1,4 +1,7 @@
+> +.. _NMI_rcu_doc:
+> +
+>   Using RCU to Protect Dynamic NMI Handlers
+> +=========================================
+>   
+>   
+>   Although RCU is usually used to protect read-mostly data structures,
+> @@ -9,7 +12,7 @@ work in "arch/x86/oprofile/nmi_timer_int.c" and in
+>   "arch/x86/kernel/traps.c".
+>   
+>   The relevant pieces of code are listed below, each followed by a
+> -brief explanation.
+> +brief explanation.::
+>   
+there is just a minor ":" redundant in html page.There are some same in 
+this patch.
+eg:
+  brief explanation.:
+
+Other things look good to me.
+
+Tested-by: Phong Tran <tranmanphong@gmail.com>
+
+Regards,
+Phong.
+
+>   	static int dummy_nmi_callback(struct pt_regs *regs, int cpu)
+>   	{
+> @@ -18,12 +21,12 @@ brief explanation.
+>   
+>   The dummy_nmi_callback() function is a "dummy" NMI handler that does
+>   nothing, but returns zero, thus saying that it did nothing, allowing
+> -the NMI handler to take the default machine-specific action.
+> +the NMI handler to take the default machine-specific action.::
+>   
+>   	static nmi_callback_t nmi_callback = dummy_nmi_callback;
+>   
+>   This nmi_callback variable is a global function pointer to the current
+> -NMI handler.
+> +NMI handler.::
+>   
+>   	void do_nmi(struct pt_regs * regs, long error_code)
+>   	{
+> @@ -53,11 +56,12 @@ anyway.  However, in practice it is a good documentation aid, particularly
+>   for anyone attempting to do something similar on Alpha or on systems
+>   with aggressive optimizing compilers.
+>   
+> -Quick Quiz:  Why might the rcu_dereference_sched() be necessary on Alpha,
+> -	     given that the code referenced by the pointer is read-only?
+> +Quick Quiz:
+> +		Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
+>   
+> +:ref:`Answer to Quick Quiz <answer_quick_quiz_NMI>`
+>   
+> -Back to the discussion of NMI and RCU...
+> +Back to the discussion of NMI and RCU...::
+>   
+>   	void set_nmi_callback(nmi_callback_t callback)
+>   	{
+> @@ -68,7 +72,7 @@ The set_nmi_callback() function registers an NMI handler.  Note that any
+>   data that is to be used by the callback must be initialized up -before-
+>   the call to set_nmi_callback().  On architectures that do not order
+>   writes, the rcu_assign_pointer() ensures that the NMI handler sees the
+> -initialized values.
+> +initialized values::
+>   
+>   	void unset_nmi_callback(void)
+>   	{
+> @@ -82,7 +86,7 @@ up any data structures used by the old NMI handler until execution
+>   of it completes on all other CPUs.
+>   
+>   One way to accomplish this is via synchronize_rcu(), perhaps as
+> -follows:
+> +follows::
+>   
+>   	unset_nmi_callback();
+>   	synchronize_rcu();
+> @@ -98,24 +102,23 @@ to free up the handler's data as soon as synchronize_rcu() returns.
+>   Important note: for this to work, the architecture in question must
+>   invoke nmi_enter() and nmi_exit() on NMI entry and exit, respectively.
+>   
+> +.. _answer_quick_quiz_NMI:
+>   
+> -Answer to Quick Quiz
+> -
+> -	Why might the rcu_dereference_sched() be necessary on Alpha, given
+> -	that the code referenced by the pointer is read-only?
+> +Answer to Quick Quiz:
+> +	Why might the rcu_dereference_sched() be necessary on Alpha, given that the code referenced by the pointer is read-only?
+>   
+> -	Answer: The caller to set_nmi_callback() might well have
+> -		initialized some data that is to be used by the new NMI
+> -		handler.  In this case, the rcu_dereference_sched() would
+> -		be needed, because otherwise a CPU that received an NMI
+> -		just after the new handler was set might see the pointer
+> -		to the new NMI handler, but the old pre-initialized
+> -		version of the handler's data.
+> +	The caller to set_nmi_callback() might well have
+> +	initialized some data that is to be used by the new NMI
+> +	handler.  In this case, the rcu_dereference_sched() would
+> +	be needed, because otherwise a CPU that received an NMI
+> +	just after the new handler was set might see the pointer
+> +	to the new NMI handler, but the old pre-initialized
+> +	version of the handler's data.
+>   
+> -		This same sad story can happen on other CPUs when using
+> -		a compiler with aggressive pointer-value speculation
+> -		optimizations.
+> +	This same sad story can happen on other CPUs when using
+> +	a compiler with aggressive pointer-value speculation
+> +	optimizations.
+>   
+> -		More important, the rcu_dereference_sched() makes it
+> -		clear to someone reading the code that the pointer is
+> -		being protected by RCU-sched.
+> +	More important, the rcu_dereference_sched() makes it
+> +	clear to someone reading the code that the pointer is
+> +	being protected by RCU-sched.
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index 8d20d44f8fd4..627128c230dc 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -10,6 +10,7 @@ RCU concepts
+>      arrayRCU
+>      rcu
+>      listRCU
+> +   NMI-RCU
+>      UP
+>   
+>      Design/Memory-Ordering/Tree-RCU-Memory-Ordering
+> 
