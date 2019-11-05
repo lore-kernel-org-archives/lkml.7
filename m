@@ -2,108 +2,115 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4907FCA9ED7
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38528CA9ED8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1660B206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F2D7206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 07:06:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.de header.i=@amazon.de header.b="ECjSGEPa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qly7w3n5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387695AbfKEHGI (ORCPT
+        id S2387720AbfKEHGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 02:06:08 -0500
-Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:41119 "EHLO
-        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387517AbfKEHGH (ORCPT
+        Tue, 5 Nov 2019 02:06:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:38183 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387639AbfKEHGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 02:06:07 -0500
+        Tue, 5 Nov 2019 02:06:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id w8so8900341plq.5;
+        Mon, 04 Nov 2019 23:06:50 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.de; i=@amazon.de; q=dns/txt; s=amazon201209;
-  t=1572937566; x=1604473566;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:mime-version:
-   content-transfer-encoding;
-  bh=Ax1km2jTcb5+fvaj9QNskJ2PDAq4TW+HvuZWm4vh7fE=;
-  b=ECjSGEPaHIgFdTycnVyqBFXKLKSE4uGMkEBc9eCwaGKohXVoigr6biJa
-   JTN7RgC6JW3caXHOfCRhIwFQ/CYFtAjj0KS9qrStfYOWHBWeQm4+vZDDy
-   J0PjHZ3llFaQIeuRh2siTahAWkjrTXXWnHdJjkKTjbYT5ETrmZpqBUYXl
-   g=;
-IronPort-SDR: vA7qQ8UlcbsPfGnPPStkd/Vajk/naxmu8vq8Sd+wkIwIvvIV1O02NtQEEcR9i1OoTufPPQV8Pj
- vHCIMzGA3Fbg==
-X-IronPort-AV: E=Sophos;i="5.68,270,1569283200"; 
-   d="scan'208";a="4200633"
-Received: from sea32-co-svc-lb4-vlan3.sea.corp.amazon.com (HELO email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com) ([10.47.23.38])
-  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP; 05 Nov 2019 07:06:04 +0000
-Received: from EX13MTAUEA001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
-        by email-inbound-relay-1d-2c665b5d.us-east-1.amazon.com (Postfix) with ESMTPS id 6B216A2379;
-        Tue,  5 Nov 2019 07:06:01 +0000 (UTC)
-Received: from EX13D24EUC004.ant.amazon.com (10.43.164.79) by
- EX13MTAUEA001.ant.amazon.com (10.43.61.243) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 5 Nov 2019 07:06:00 +0000
-Received: from EX13D20UWC001.ant.amazon.com (10.43.162.244) by
- EX13D24EUC004.ant.amazon.com (10.43.164.79) with Microsoft SMTP Server (TLS)
- id 15.0.1367.3; Tue, 5 Nov 2019 07:05:58 +0000
-Received: from EX13D20UWC001.ant.amazon.com ([10.43.162.244]) by
- EX13D20UWC001.ant.amazon.com ([10.43.162.244]) with mapi id 15.00.1367.000;
- Tue, 5 Nov 2019 07:05:57 +0000
-From:   "Graf (AWS), Alexander" <graf@amazon.de>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-CC:     "Suthikulpanit, Suravee" <Suravee.Suthikulpanit@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "rkrcmar@redhat.com" <rkrcmar@redhat.com>,
-        "joro@8bytes.org" <joro@8bytes.org>,
-        "vkuznets@redhat.com" <vkuznets@redhat.com>,
-        "rkagan@virtuozzo.com" <rkagan@virtuozzo.com>,
-        "Schoenherr, Jan H." <jschoenh@amazon.de>,
-        "Raslan, KarimAllah" <karahmed@amazon.de>,
-        "Lukaszewicz, Rimas" <rimasluk@amazon.com>,
-        "Grimm, Jon" <Jon.Grimm@amd.com>
-Subject: Re: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Topic: [PATCH v4 13/17] kvm: i8254: Deactivate APICv when using
- in-kernel PIT re-injection mode.
-Thread-Index: AQHVkQWZiK56Wp7AO0m6btmzLjwET6d3peqAgAO6voCAADC+AIAAm34A
-Date:   Tue, 5 Nov 2019 07:05:57 +0000
-Message-ID: <7060AA92-0ACD-40F6-868A-5A7234F46C55@amazon.de>
-References: <4e4bd2c3-50c4-b23e-2924-728a37a5f157@redhat.com>
-In-Reply-To: <4e4bd2c3-50c4-b23e-2924-728a37a5f157@redhat.com>
-Accept-Language: en-US
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <88A7136E45DA4148B7F761429346A5A2@amazon.com>
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=Qly7w3n56sEAX8+qHxDiN0dOm97fk2e0bMCHv0C7hzT7UxfgIHCXpHeCMbGxEqOu12
+         65kDjs8Q4QCxfhIo3eSam+2r87znfS+EIEpbWO4LkJnMB2KLlRe3E3Vxe9NC+fOnwAlx
+         g0BIa5NvEYLq91N8mr2/gDG40xpT1AI0+/IQYWWZ4XNWuA5nUPdJ0nPTbH7eIkfS+PFd
+         Owwjk8EccsG3BOZFZS8KGioNjnJhZne32XkdNUjXM0NvIboRHqc9qUT2lSq6kEIYm/Mp
+         1kgFJ8CYjbvzPOaU71RrfSiL8A1WQe2dzV8y0Trw6MUfemuDZ/TOhAUojHwDAV1e9dhf
+         5SpQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ShytpwrE9c/FcWybQ1i8wdsSV+dPeLCEN7Fog34ck4M=;
+        b=gMn4LDaBmmLoFnW1uo5yTDjWrfka6hfyrQCalMwdv4zl2I/8GhaMJFRU7WQ3wwrOaI
+         zOxET5RMdhAUxBuySiaTFRXq/vqZxJjPmOey5E1IZ2ZC3JpI0TWz7ioUEvtou83CLd+/
+         yOjY+xIpv9KJbkuXUpMUlTcTUbm9nL+kBShGtVEKnBIMDxwfdcVvi7kamXbiL6RSnBGA
+         5bgJiki2FWrODaMfjD9eEnWoc0Te2uY65gnkbscKQ1NEj34FPqNZbb5l+0x+imVSAAEJ
+         3pKI0uqRTVqYugD8YBQBYkRo9POMGcMhSh1BHyyYhweoSi52xd1KP5mbwq+BX+kFibK4
+         pT1g==
+X-Gm-Message-State: APjAAAXECVRENdvBxIH/mpAVI8Y24b7CEHBvXHkOT68A9LsMBcuy1GnU
+        s7ytDDZB/QOHg2a4y83oU5YRTRYi8lG5UwdJV/g=
+X-Google-Smtp-Source: APXvYqwCsvxlaaO9BJWDSs1t0acsmzJfTzTMCiW3dcP5aUui10WRJLGndqyUkT6KTRWGUChZEmuWlBLbeXmoPpc0IB4=
+X-Received: by 2002:a17:902:9881:: with SMTP id s1mr32247185plp.18.1572937609577;
+ Mon, 04 Nov 2019 23:06:49 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: base64
+References: <20191014124803.13661-1-miquel.raynal@bootlin.com>
+ <CAHp75Vc4vnNVKc+Q_TY8DpwV4rLZYGm2MvGBC7r67XjmtNoskQ@mail.gmail.com>
+ <20191015163055.0d8f44e5@xps13> <CAHp75VemkA7kap0O7=iACX4cD5_r6QXaLF6nS8R94ErStK0DwA@mail.gmail.com>
+ <20191104161103.64995b8a@xps13> <CAMpxmJVjyUXSNFEiTxMC1bdzXTex74DqeiHPqLBPdnb2_LYRnQ@mail.gmail.com>
+ <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+In-Reply-To: <20191104203346.epdbzflnynh2gf3z@pengutronix.de>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Tue, 5 Nov 2019 09:06:37 +0200
+Message-ID: <CAHp75VdULzZ6NXP7fp=6KQFAHOSvoJ-_WTqfcmhQJbrLUw3M4Q@mail.gmail.com>
+Subject: Re: [PATCH] gpio: pca953x: Add Maxim MAX7313 PWM support
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        linux-pwm@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gQW0gMDQuMTEuMjAxOSB1bSAyMjo1MCBzY2hyaWViIFBhb2xvIEJvbnppbmkgPHBib256
-aW5pQHJlZGhhdC5jb20+Og0KPiANCj4g77u/T24gMDQvMTEvMTkgMTk6NTQsIFN1dGhpa3VscGFu
-aXQsIFN1cmF2ZWUgd3JvdGU6DQo+PiBJIHNlZSB5b3UgcG9pbnQuDQo+PiANCj4+PiBXZSBjYW4g
-d29yayBhcm91bmQgaXQgYnkgYWRkaW5nIGEgZ2xvYmFsIG1hc2sgb2YgaW5oaWJpdCByZWFzb25z
-IHRoYXQNCj4+PiBhcHBseSB0byB0aGUgdmVuZG9yLCBhbmQgaW5pdGlhbGl6aW5nIGl0IGFzIHNv
-b24gYXMgcG9zc2libGUgaW4gdm14LmMvc3ZtLmMuDQo+Pj4gDQo+Pj4gVGhlbiBrdm1fcmVxdWVz
-dF9hcGljdl91cGRhdGUgY2FuIGlnbm9yZSByZWFzb25zIHRoYXQgdGhlIHZlbmRvciBkb2Vzbid0
-DQo+Pj4gY2FyZSBhYm91dC4NCj4+IA0KPj4gV2hhdCBhYm91dCB3ZSBlbmhhbmNlIHRoZSBwcmVf
-dXBkYXRlX2FwaXZjX2V4ZWNfY3RybCgpIHRvIGFsc28gcmV0dXJuIA0KPj4gc3VjY2Vzcy9mYWls
-LiBJbiBoZXJlLCB0aGUgdmVuZG9yIHNwZWNpZmljIGNvZGUgY2FuIGRlY2lkZSB0byB1cGRhdGUg
-DQo+PiBBUElDdiBzdGF0ZSBvciBub3QuDQo+IA0KPiBUaGF0IHdvcmtzIGZvciBtZSwgdG9vLiAg
-U29tZXRoaW5nIGxpa2UgcmV0dXJuIGZhbHNlIGZvciBkZWFjdGl2YXRlIGFuZA0KPiB0cnVlIGZv
-ciBhY3RpdmF0ZS4NCg0KSSdtIHRyeWluZyB0byB3cmFwIG15IGhlYWQgYXJvdW5kIGhvdyB0aGF0
-IHdpbGwgd29yayB3aXRoIGxpdmUgbWlncmF0aW9uLiBEbyB3ZSBhbHNvIG5lZWQgdG8gc2F2ZS9y
-ZXN0b3JlIHRoZSBkZWFjdGl2YXRlIHJlYXNvbnM/DQoNCkFsZXgNCg0KPiANCj4gUGFvbG8NCgoK
-CkFtYXpvbiBEZXZlbG9wbWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEw
-MTE3IEJlcmxpbgpHZXNjaGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIFJhbGYg
-SGVyYnJpY2gKRWluZ2V0cmFnZW4gYW0gQW10c2dlcmljaHQgQ2hhcmxvdHRlbmJ1cmcgdW50ZXIg
-SFJCIDE0OTE3MyBCClNpdHo6IEJlcmxpbgpVc3QtSUQ6IERFIDI4OSAyMzcgODc5CgoK
+On Mon, Nov 4, 2019 at 10:33 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+> On Mon, Nov 04, 2019 at 04:32:23PM +0100, Bartosz Golaszewski wrote:
+> > pon., 4 lis 2019 o 16:11 Miquel Raynal <miquel.raynal@bootlin.com> napi=
+sa=C5=82(a):
+> > > Andy Shevchenko <andy.shevchenko@gmail.com> wrote on Tue, 15 Oct 2019
+> > > 17:55:33 +0300:
+> > >
+> > > > Or other way around. PWM registers GPIO (which actually I prefer si=
+nce
+> > > > we have PCA9685 case where PWM provides GPIO functionality, though =
+via
+> > > > different means)
 
+> While it's not nice to have a driver that provides two different devices
+> (here: gpio controller and pwm controller) similar things are not
+> unseen. And for example the splitting of watchdog
+> (drivers/watchdog/stmp3xxx_rtc_wdt.c) and rtc
+> (drivers/rtc/rtc-stmp3xxx.c) of the device in the mx28 is more trouble
+> than worth.
+>
+> So I'd vote for putting it in a single file that lives where the
+> bigger/more complex part fits to. So assuming that's the GPIO part (as
+> the driver supports several variants and not all of them have a PWM
+> function if I'm not mistaken) having it in drivers/gpio is fine for me.
+
+For me it sounds more likely that PWM is a *pin function* of a pin
+controller and actually this GPIO driver should be a pin controller
+with corresponding function(s).
+
+--=20
+With Best Regards,
+Andy Shevchenko
