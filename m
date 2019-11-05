@@ -2,740 +2,341 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6014ACA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0D53C47E49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:19:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 262AC217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C73BD214E0
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:19:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1572920343;
+	bh=kIndTaLgEg7TrP2VJ0/ts79H57PdcO3yxthdDvdoszk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=aA1SbzHePLNipU+QK/dbgTHwnq32tP5ntkhFV8dMqvPrYSMeWkvhQW7O6RjriHqT+
+	 bWPWw01Ljb313G1MU1D0na+kD9K197w4xjJEqFeYPfx9uqLwpoXQp2w4QBdpDryNNS
+	 /F0MmjXzLYoZpJKAsmd3OjQ36ptLOi1YP4T6xfFw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729971AbfKECRu (ORCPT
+        id S1730133AbfKECTD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:17:50 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5265 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728987AbfKECRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:17:49 -0500
-Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id A0FF5ABEA00A7A751289;
-        Tue,  5 Nov 2019 10:17:45 +0800 (CST)
-Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
- (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019
- 10:17:42 +0800
-Subject: Re: [PATCH 3/3] Revert "f2fs: use kvmalloc, if kmalloc is failed"
-To:     Jaegeuk Kim <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
-References: <20191101095324.9902-1-yuchao0@huawei.com>
- <20191101095324.9902-3-yuchao0@huawei.com>
- <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
-From:   Chao Yu <yuchao0@huawei.com>
-Message-ID: <40d0df3f-cc55-d31a-474b-76f57d96bd89@huawei.com>
-Date:   Tue, 5 Nov 2019 10:17:41 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mon, 4 Nov 2019 21:19:03 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:43825 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729784AbfKECTC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:19:02 -0500
+Received: by mail-ot1-f67.google.com with SMTP id l14so1972428oti.10;
+        Mon, 04 Nov 2019 18:19:02 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=xpHWafQQ8dI08rbQ+csbAfrsm6DaLdK2l/xsLmtgqEM=;
+        b=g3jT3yM13zRmH5Fg/JZf6UEIpNK58JQnvIBiBVvVnRAOQGRMrgcXIGv1klZUtkmpXS
+         k0po+7TUi1RCuCs3EyMl6nS8wg7PSCN2X1t7ISEliOmvliQ/3xN1rjH0ly1oZ8uGLtcU
+         hVC7Tvk/kqHE/dDoZL6Ffid0xAzc0TzO7hITALypwAi85wAS7FVNBnXeE8Rt+6QOadjN
+         nU+vMKSHcXeHoVfngj+gaExwUfSCXQBUNSDkV1oU/qcGGS6f171IMZJ9booobyxgaj+X
+         rJnRcQ0+XQUmPt56PV4lfDR0rqsNW2Y6kJgYHO1U5o4kv7z/lkYFdJNp1PaPmiF5oMEf
+         el5Q==
+X-Gm-Message-State: APjAAAWbtyebFjV4pJgv2kDOOajCcJouFpgIoXfonuS5YIoSpCecB79o
+        Abc2wu3+SRkjexmrsrFuMQ==
+X-Google-Smtp-Source: APXvYqxjgIhKwvw6TzbgkV0UAa/2Lgn4y90+jE+Z2W2nEZpwbNtzA+asUedyRyOxujtz/ybQyi8Pew==
+X-Received: by 2002:a9d:2dc1:: with SMTP id g59mr20082320otb.59.1572920341419;
+        Mon, 04 Nov 2019 18:19:01 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id x65sm5698877ota.16.2019.11.04.18.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2019 18:19:00 -0800 (PST)
+Date:   Mon, 4 Nov 2019 20:19:00 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc:     vkoul@kernel.org, nm@ti.com, ssantosh@kernel.org,
+        dan.j.williams@intel.com, dmaengine@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, grygorii.strashko@ti.com,
+        lokeshvutla@ti.com, t-kristo@ti.com, tony@atomide.com,
+        j-keerthy@ti.com
+Subject: Re: [PATCH v4 08/15] dt-bindings: dma: ti: Add document for K3 UDMA
+Message-ID: <20191105021900.GA17829@bogus>
+References: <20191101084135.14811-1-peter.ujfalusi@ti.com>
+ <20191101084135.14811-9-peter.ujfalusi@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.134.22.195]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191101084135.14811-9-peter.ujfalusi@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/11/5 8:02, Jaegeuk Kim wrote:
-> On 11/01, Chao Yu wrote:
->> This reverts commit 5222595d093ebe80329d38d255d14316257afb3e.
->>
->> As discussed with Eric, as kvmalloc() will try kmalloc() first, so
->> when we need allocate large size memory, it'd better to use
->> f2fs_kvmalloc() directly rather than adding additional fallback
->> logic to call kvmalloc() after we failed in f2fs_kmalloc().
->>
->> In order to avoid allocation failure described in original commit,
->> I change to use f2fs_kvmalloc() for .free_nid_bitmap bitmap memory.
+On Fri, Nov 01, 2019 at 10:41:28AM +0200, Peter Ujfalusi wrote:
+> New binding document for
+> Texas Instruments K3 NAVSS Unified DMA – Peripheral Root Complex (UDMA-P).
 > 
-> Is there any problem in the previous flow?
+> UDMA-P is introduced as part of the K3 architecture and can be found in
+> AM654 and j721e.
+> 
+> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> ---
+> Rob,
+> 
+> can you give me some hint on how to fix these two warnings from dt_binding_check:
+> 
+>   DTC     Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
+> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dts:23.13-72: Warning (ranges_format): /example-0/interconnect@30800000:ranges: "ranges" property has invalid length (24 bytes) (parent #address-cells == 1, child #address-cells == 2, #size-cells == 2)
+>   CHECK   Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml
 
-No existing problem, however, it's redundant to introduce fallback flow in
-f2fs_kmalloc() like vmalloc() did, since we can call f2fs_vmalloc() directly in
-places where we need large memory.
+The default #address-cells is 1 for examples. So you need to 
+either override it or change ranges parent address size.
+> 
+> Documentation/devicetree/bindings/dma/ti/k3-udma.example.dt.yaml: interconnect@30800000: $nodename:0: 'interconnect@30800000' does not match '^(bus|soc|axi|ahb|apb)(@[0-9a-f]+)?$'
 
-Thanks,
+Use 'bus' for the node name of 'simple-bus'.
 
 > 
->>
->> Signed-off-by: Chao Yu <yuchao0@huawei.com>
->> ---
->>  fs/f2fs/acl.c        |  6 ++---
->>  fs/f2fs/checkpoint.c |  2 +-
->>  fs/f2fs/data.c       |  2 +-
->>  fs/f2fs/debug.c      |  2 +-
->>  fs/f2fs/dir.c        |  6 ++---
->>  fs/f2fs/f2fs.h       | 10 ++-----
->>  fs/f2fs/file.c       |  2 +-
->>  fs/f2fs/gc.c         |  4 +--
->>  fs/f2fs/hash.c       |  4 +--
->>  fs/f2fs/inline.c     |  4 +--
->>  fs/f2fs/namei.c      |  2 +-
->>  fs/f2fs/node.c       | 10 +++----
->>  fs/f2fs/segment.c    | 28 +++++++++----------
->>  fs/f2fs/super.c      | 64 ++++++++++++++++++++++----------------------
->>  fs/f2fs/xattr.c      | 10 +++----
->>  15 files changed, 75 insertions(+), 81 deletions(-)
->>
->> diff --git a/fs/f2fs/acl.c b/fs/f2fs/acl.c
->> index 217b290ae3a5..306413589827 100644
->> --- a/fs/f2fs/acl.c
->> +++ b/fs/f2fs/acl.c
->> @@ -160,7 +160,7 @@ static void *f2fs_acl_to_disk(struct f2fs_sb_info *sbi,
->>  	return (void *)f2fs_acl;
->>  
->>  fail:
->> -	kvfree(f2fs_acl);
->> +	kfree(f2fs_acl);
->>  	return ERR_PTR(-EINVAL);
->>  }
->>  
->> @@ -190,7 +190,7 @@ static struct posix_acl *__f2fs_get_acl(struct inode *inode, int type,
->>  		acl = NULL;
->>  	else
->>  		acl = ERR_PTR(retval);
->> -	kvfree(value);
->> +	kfree(value);
->>  
->>  	return acl;
->>  }
->> @@ -240,7 +240,7 @@ static int __f2fs_set_acl(struct inode *inode, int type,
->>  
->>  	error = f2fs_setxattr(inode, name_index, "", value, size, ipage, 0);
->>  
->> -	kvfree(value);
->> +	kfree(value);
->>  	if (!error)
->>  		set_cached_acl(inode, type, acl);
->>  
->> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
->> index ffdaba0c55d2..b33779822a2c 100644
->> --- a/fs/f2fs/checkpoint.c
->> +++ b/fs/f2fs/checkpoint.c
->> @@ -965,7 +965,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
->>  	f2fs_put_page(cp1, 1);
->>  	f2fs_put_page(cp2, 1);
->>  fail_no_cp:
->> -	kvfree(sbi->ckpt);
->> +	kfree(sbi->ckpt);
->>  	return err;
->>  }
->>  
->> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
->> index 0bcb28d70894..58f4bade6c2b 100644
->> --- a/fs/f2fs/data.c
->> +++ b/fs/f2fs/data.c
->> @@ -2889,7 +2889,7 @@ static void f2fs_dio_end_io(struct bio *bio)
->>  	bio->bi_private = dio->orig_private;
->>  	bio->bi_end_io = dio->orig_end_io;
->>  
->> -	kvfree(dio);
->> +	kfree(dio);
->>  
->>  	bio_endio(bio);
->>  }
->> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
->> index 9b0bedd82581..5abd1d67d8b2 100644
->> --- a/fs/f2fs/debug.c
->> +++ b/fs/f2fs/debug.c
->> @@ -515,7 +515,7 @@ void f2fs_destroy_stats(struct f2fs_sb_info *sbi)
->>  	list_del(&si->stat_list);
->>  	mutex_unlock(&f2fs_stat_mutex);
->>  
->> -	kvfree(si);
->> +	kfree(si);
->>  }
->>  
->>  void __init f2fs_create_root_stats(void)
->> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
->> index c967cacf979e..83ca3b721015 100644
->> --- a/fs/f2fs/dir.c
->> +++ b/fs/f2fs/dir.c
->> @@ -158,7 +158,7 @@ static void f2fs_fname_setup_ci_filename(struct inode *dir,
->>  					iname, cf_name->name,
->>  					F2FS_NAME_LEN);
->>  	if ((int)cf_name->len <= 0) {
->> -		kvfree(cf_name->name);
->> +		kfree(cf_name->name);
->>  		cf_name->name = NULL;
->>  	}
->>  }
->> @@ -245,7 +245,7 @@ struct f2fs_dir_entry *f2fs_find_target_dentry(struct fscrypt_name *fname,
->>  		*max_slots = max_len;
->>  
->>  #ifdef CONFIG_UNICODE
->> -	kvfree(cf_str.name);
->> +	kfree(cf_str.name);
->>  #endif
->>  	return de;
->>  }
->> @@ -1101,7 +1101,7 @@ static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
->>  	}
->>  	str->hash = full_name_hash(dentry, norm, len);
->>  out:
->> -	kvfree(norm);
->> +	kfree(norm);
->>  	return ret;
->>  }
->>  
->> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
->> index 3f6204202788..8833e9d32f9d 100644
->> --- a/fs/f2fs/f2fs.h
->> +++ b/fs/f2fs/f2fs.h
->> @@ -1677,7 +1677,7 @@ static inline void disable_nat_bits(struct f2fs_sb_info *sbi, bool lock)
->>  	if (lock)
->>  		spin_unlock_irqrestore(&sbi->cp_lock, flags);
->>  
->> -	kvfree(nat_bits);
->> +	kfree(nat_bits);
->>  }
->>  
->>  static inline bool enabled_nat_bits(struct f2fs_sb_info *sbi,
->> @@ -2798,18 +2798,12 @@ static inline bool f2fs_may_extent_tree(struct inode *inode)
->>  static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
->>  					size_t size, gfp_t flags)
->>  {
->> -	void *ret;
->> -
->>  	if (time_to_inject(sbi, FAULT_KMALLOC)) {
->>  		f2fs_show_injection_info(sbi, FAULT_KMALLOC);
->>  		return NULL;
->>  	}
->>  
->> -	ret = kmalloc(size, flags);
->> -	if (ret)
->> -		return ret;
->> -
->> -	return kvmalloc(size, flags);
->> +	return kmalloc(size, flags);
->>  }
->>  
->>  static inline void *f2fs_kzalloc(struct f2fs_sb_info *sbi,
->> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
->> index e5ce697c0544..a7d855efc294 100644
->> --- a/fs/f2fs/file.c
->> +++ b/fs/f2fs/file.c
->> @@ -3220,7 +3220,7 @@ static int f2fs_get_volume_name(struct file *filp, unsigned long arg)
->>  				min(FSLABEL_MAX, count)))
->>  		err = -EFAULT;
->>  
->> -	kvfree(vbuf);
->> +	kfree(vbuf);
->>  	return err;
->>  }
->>  
->> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
->> index 24a3b6b52210..80b8da471286 100644
->> --- a/fs/f2fs/gc.c
->> +++ b/fs/f2fs/gc.c
->> @@ -142,7 +142,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
->>  			"f2fs_gc-%u:%u", MAJOR(dev), MINOR(dev));
->>  	if (IS_ERR(gc_th->f2fs_gc_task)) {
->>  		err = PTR_ERR(gc_th->f2fs_gc_task);
->> -		kvfree(gc_th);
->> +		kfree(gc_th);
->>  		sbi->gc_thread = NULL;
->>  	}
->>  out:
->> @@ -155,7 +155,7 @@ void f2fs_stop_gc_thread(struct f2fs_sb_info *sbi)
->>  	if (!gc_th)
->>  		return;
->>  	kthread_stop(gc_th->f2fs_gc_task);
->> -	kvfree(gc_th);
->> +	kfree(gc_th);
->>  	sbi->gc_thread = NULL;
->>  }
->>  
->> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
->> index 5bc4dcd8fc03..7d1cc0e3d72c 100644
->> --- a/fs/f2fs/hash.c
->> +++ b/fs/f2fs/hash.c
->> @@ -124,14 +124,14 @@ f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
->>  
->>  	dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
->>  	if (dlen < 0) {
->> -		kvfree(buff);
->> +		kfree(buff);
->>  		goto opaque_seq;
->>  	}
->>  	folded.name = buff;
->>  	folded.len = dlen;
->>  	r = __f2fs_dentry_hash(&folded, fname);
->>  
->> -	kvfree(buff);
->> +	kfree(buff);
->>  	return r;
->>  
->>  opaque_seq:
->> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
->> index 896db0416f0e..b132568b751d 100644
->> --- a/fs/f2fs/inline.c
->> +++ b/fs/f2fs/inline.c
->> @@ -515,7 +515,7 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
->>  			!f2fs_has_inline_xattr(dir))
->>  		F2FS_I(dir)->i_inline_xattr_size = 0;
->>  
->> -	kvfree(backup_dentry);
->> +	kfree(backup_dentry);
->>  	return 0;
->>  recover:
->>  	lock_page(ipage);
->> @@ -526,7 +526,7 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
->>  	set_page_dirty(ipage);
->>  	f2fs_put_page(ipage, 1);
->>  
->> -	kvfree(backup_dentry);
->> +	kfree(backup_dentry);
->>  	return err;
->>  }
->>  
->> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
->> index 4faf06e8bf89..d8ca896e109b 100644
->> --- a/fs/f2fs/namei.c
->> +++ b/fs/f2fs/namei.c
->> @@ -655,7 +655,7 @@ static int f2fs_symlink(struct inode *dir, struct dentry *dentry,
->>  	f2fs_handle_failed_inode(inode);
->>  out_free_encrypted_link:
->>  	if (disk_link.name != (unsigned char *)symname)
->> -		kvfree(disk_link.name);
->> +		kfree(disk_link.name);
->>  	return err;
->>  }
->>  
->> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
->> index 6912faba811e..261798b9a9f7 100644
->> --- a/fs/f2fs/node.c
->> +++ b/fs/f2fs/node.c
->> @@ -3065,7 +3065,7 @@ static int init_free_nid_cache(struct f2fs_sb_info *sbi)
->>  	int i;
->>  
->>  	nm_i->free_nid_bitmap =
->> -		f2fs_kzalloc(sbi, array_size(sizeof(unsigned char *),
->> +		f2fs_kvzalloc(sbi, array_size(sizeof(unsigned char *),
->>  					     nm_i->nat_blocks),
->>  			     GFP_KERNEL);
->>  	if (!nm_i->free_nid_bitmap)
->> @@ -3183,13 +3183,13 @@ void f2fs_destroy_node_manager(struct f2fs_sb_info *sbi)
->>  	}
->>  	kvfree(nm_i->free_nid_count);
->>  
->> -	kvfree(nm_i->nat_bitmap);
->> -	kvfree(nm_i->nat_bits);
->> +	kfree(nm_i->nat_bitmap);
->> +	kfree(nm_i->nat_bits);
->>  #ifdef CONFIG_F2FS_CHECK_FS
->> -	kvfree(nm_i->nat_bitmap_mir);
->> +	kfree(nm_i->nat_bitmap_mir);
->>  #endif
->>  	sbi->nm_info = NULL;
->> -	kvfree(nm_i);
->> +	kfree(nm_i);
->>  }
->>  
->>  int __init f2fs_create_node_manager_caches(void)
->> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
->> index c525d8c87ddf..8c96d6008e20 100644
->> --- a/fs/f2fs/segment.c
->> +++ b/fs/f2fs/segment.c
->> @@ -718,7 +718,7 @@ int f2fs_create_flush_cmd_control(struct f2fs_sb_info *sbi)
->>  				"f2fs_flush-%u:%u", MAJOR(dev), MINOR(dev));
->>  	if (IS_ERR(fcc->f2fs_issue_flush)) {
->>  		err = PTR_ERR(fcc->f2fs_issue_flush);
->> -		kvfree(fcc);
->> +		kfree(fcc);
->>  		SM_I(sbi)->fcc_info = NULL;
->>  		return err;
->>  	}
->> @@ -737,7 +737,7 @@ void f2fs_destroy_flush_cmd_control(struct f2fs_sb_info *sbi, bool free)
->>  		kthread_stop(flush_thread);
->>  	}
->>  	if (free) {
->> -		kvfree(fcc);
->> +		kfree(fcc);
->>  		SM_I(sbi)->fcc_info = NULL;
->>  	}
->>  }
->> @@ -2059,7 +2059,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
->>  				"f2fs_discard-%u:%u", MAJOR(dev), MINOR(dev));
->>  	if (IS_ERR(dcc->f2fs_issue_discard)) {
->>  		err = PTR_ERR(dcc->f2fs_issue_discard);
->> -		kvfree(dcc);
->> +		kfree(dcc);
->>  		SM_I(sbi)->dcc_info = NULL;
->>  		return err;
->>  	}
->> @@ -2083,7 +2083,7 @@ static void destroy_discard_cmd_control(struct f2fs_sb_info *sbi)
->>  	if (unlikely(atomic_read(&dcc->discard_cmd_cnt)))
->>  		f2fs_issue_discard_timeout(sbi);
->>  
->> -	kvfree(dcc);
->> +	kfree(dcc);
->>  	SM_I(sbi)->dcc_info = NULL;
->>  }
->>  
->> @@ -4488,7 +4488,7 @@ static void destroy_dirty_segmap(struct f2fs_sb_info *sbi)
->>  
->>  	destroy_victim_secmap(sbi);
->>  	SM_I(sbi)->dirty_info = NULL;
->> -	kvfree(dirty_i);
->> +	kfree(dirty_i);
->>  }
->>  
->>  static void destroy_curseg(struct f2fs_sb_info *sbi)
->> @@ -4500,10 +4500,10 @@ static void destroy_curseg(struct f2fs_sb_info *sbi)
->>  		return;
->>  	SM_I(sbi)->curseg_array = NULL;
->>  	for (i = 0; i < NR_CURSEG_TYPE; i++) {
->> -		kvfree(array[i].sum_blk);
->> -		kvfree(array[i].journal);
->> +		kfree(array[i].sum_blk);
->> +		kfree(array[i].journal);
->>  	}
->> -	kvfree(array);
->> +	kfree(array);
->>  }
->>  
->>  static void destroy_free_segmap(struct f2fs_sb_info *sbi)
->> @@ -4514,7 +4514,7 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
->>  	SM_I(sbi)->free_info = NULL;
->>  	kvfree(free_i->free_segmap);
->>  	kvfree(free_i->free_secmap);
->> -	kvfree(free_i);
->> +	kfree(free_i);
->>  }
->>  
->>  static void destroy_sit_info(struct f2fs_sb_info *sbi)
->> @@ -4526,19 +4526,19 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
->>  
->>  	if (sit_i->sentries)
->>  		kvfree(sit_i->bitmap);
->> -	kvfree(sit_i->tmp_map);
->> +	kfree(sit_i->tmp_map);
->>  
->>  	kvfree(sit_i->sentries);
->>  	kvfree(sit_i->sec_entries);
->>  	kvfree(sit_i->dirty_sentries_bitmap);
->>  
->>  	SM_I(sbi)->sit_info = NULL;
->> -	kvfree(sit_i->sit_bitmap);
->> +	kfree(sit_i->sit_bitmap);
->>  #ifdef CONFIG_F2FS_CHECK_FS
->> -	kvfree(sit_i->sit_bitmap_mir);
->> +	kfree(sit_i->sit_bitmap_mir);
->>  	kvfree(sit_i->invalid_segmap);
->>  #endif
->> -	kvfree(sit_i);
->> +	kfree(sit_i);
->>  }
->>  
->>  void f2fs_destroy_segment_manager(struct f2fs_sb_info *sbi)
->> @@ -4554,7 +4554,7 @@ void f2fs_destroy_segment_manager(struct f2fs_sb_info *sbi)
->>  	destroy_free_segmap(sbi);
->>  	destroy_sit_info(sbi);
->>  	sbi->sm_info = NULL;
->> -	kvfree(sm_info);
->> +	kfree(sm_info);
->>  }
->>  
->>  int __init f2fs_create_segment_manager_caches(void)
->> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
->> index c02a47ce551b..b72d071aedd8 100644
->> --- a/fs/f2fs/super.c
->> +++ b/fs/f2fs/super.c
->> @@ -324,7 +324,7 @@ static int f2fs_set_qf_name(struct super_block *sb, int qtype,
->>  	set_opt(sbi, QUOTA);
->>  	return 0;
->>  errout:
->> -	kvfree(qname);
->> +	kfree(qname);
->>  	return ret;
->>  }
->>  
->> @@ -336,7 +336,7 @@ static int f2fs_clear_qf_name(struct super_block *sb, int qtype)
->>  		f2fs_err(sbi, "Cannot change journaled quota options when quota turned on");
->>  		return -EINVAL;
->>  	}
->> -	kvfree(F2FS_OPTION(sbi).s_qf_names[qtype]);
->> +	kfree(F2FS_OPTION(sbi).s_qf_names[qtype]);
->>  	F2FS_OPTION(sbi).s_qf_names[qtype] = NULL;
->>  	return 0;
->>  }
->> @@ -429,10 +429,10 @@ static int parse_options(struct super_block *sb, char *options)
->>  				set_opt(sbi, BG_GC);
->>  				set_opt(sbi, FORCE_FG_GC);
->>  			} else {
->> -				kvfree(name);
->> +				kfree(name);
->>  				return -EINVAL;
->>  			}
->> -			kvfree(name);
->> +			kfree(name);
->>  			break;
->>  		case Opt_disable_roll_forward:
->>  			set_opt(sbi, DISABLE_ROLL_FORWARD);
->> @@ -590,7 +590,7 @@ static int parse_options(struct super_block *sb, char *options)
->>  					!strncmp(name, "adaptive", 8)) {
->>  				if (f2fs_sb_has_blkzoned(sbi)) {
->>  					f2fs_warn(sbi, "adaptive mode is not allowed with zoned block device feature");
->> -					kvfree(name);
->> +					kfree(name);
->>  					return -EINVAL;
->>  				}
->>  				set_opt_mode(sbi, F2FS_MOUNT_ADAPTIVE);
->> @@ -598,10 +598,10 @@ static int parse_options(struct super_block *sb, char *options)
->>  					!strncmp(name, "lfs", 3)) {
->>  				set_opt_mode(sbi, F2FS_MOUNT_LFS);
->>  			} else {
->> -				kvfree(name);
->> +				kfree(name);
->>  				return -EINVAL;
->>  			}
->> -			kvfree(name);
->> +			kfree(name);
->>  			break;
->>  		case Opt_io_size_bits:
->>  			if (args->from && match_int(args, &arg))
->> @@ -730,10 +730,10 @@ static int parse_options(struct super_block *sb, char *options)
->>  					!strncmp(name, "fs-based", 8)) {
->>  				F2FS_OPTION(sbi).whint_mode = WHINT_MODE_FS;
->>  			} else {
->> -				kvfree(name);
->> +				kfree(name);
->>  				return -EINVAL;
->>  			}
->> -			kvfree(name);
->> +			kfree(name);
->>  			break;
->>  		case Opt_alloc:
->>  			name = match_strdup(&args[0]);
->> @@ -747,10 +747,10 @@ static int parse_options(struct super_block *sb, char *options)
->>  					!strncmp(name, "reuse", 5)) {
->>  				F2FS_OPTION(sbi).alloc_mode = ALLOC_MODE_REUSE;
->>  			} else {
->> -				kvfree(name);
->> +				kfree(name);
->>  				return -EINVAL;
->>  			}
->> -			kvfree(name);
->> +			kfree(name);
->>  			break;
->>  		case Opt_fsync:
->>  			name = match_strdup(&args[0]);
->> @@ -767,10 +767,10 @@ static int parse_options(struct super_block *sb, char *options)
->>  				F2FS_OPTION(sbi).fsync_mode =
->>  							FSYNC_MODE_NOBARRIER;
->>  			} else {
->> -				kvfree(name);
->> +				kfree(name);
->>  				return -EINVAL;
->>  			}
->> -			kvfree(name);
->> +			kfree(name);
->>  			break;
->>  		case Opt_test_dummy_encryption:
->>  #ifdef CONFIG_FS_ENCRYPTION
->> @@ -1052,10 +1052,10 @@ static void destroy_device_list(struct f2fs_sb_info *sbi)
->>  	for (i = 0; i < sbi->s_ndevs; i++) {
->>  		blkdev_put(FDEV(i).bdev, FMODE_EXCL);
->>  #ifdef CONFIG_BLK_DEV_ZONED
->> -		kvfree(FDEV(i).blkz_seq);
->> +		kfree(FDEV(i).blkz_type);
->>  #endif
->>  	}
->> -	kvfree(sbi->devs);
->> +	kfree(sbi->devs);
->>  }
->>  
->>  static void f2fs_put_super(struct super_block *sb)
->> @@ -1125,28 +1125,28 @@ static void f2fs_put_super(struct super_block *sb)
->>  	f2fs_destroy_node_manager(sbi);
->>  	f2fs_destroy_segment_manager(sbi);
->>  
->> -	kvfree(sbi->ckpt);
->> +	kfree(sbi->ckpt);
->>  
->>  	f2fs_unregister_sysfs(sbi);
->>  
->>  	sb->s_fs_info = NULL;
->>  	if (sbi->s_chksum_driver)
->>  		crypto_free_shash(sbi->s_chksum_driver);
->> -	kvfree(sbi->raw_super);
->> +	kfree(sbi->raw_super);
->>  
->>  	destroy_device_list(sbi);
->>  	mempool_destroy(sbi->write_io_dummy);
->>  #ifdef CONFIG_QUOTA
->>  	for (i = 0; i < MAXQUOTAS; i++)
->> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
->> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
->>  #endif
->>  	destroy_percpu_info(sbi);
->>  	for (i = 0; i < NR_PAGE_TYPE; i++)
->> -		kvfree(sbi->write_io[i]);
->> +		kfree(sbi->write_io[i]);
->>  #ifdef CONFIG_UNICODE
->>  	utf8_unload(sbi->s_encoding);
->>  #endif
->> -	kvfree(sbi);
->> +	kfree(sbi);
->>  }
->>  
->>  int f2fs_sync_fs(struct super_block *sb, int sync)
->> @@ -1600,7 +1600,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>  				GFP_KERNEL);
->>  			if (!org_mount_opt.s_qf_names[i]) {
->>  				for (j = 0; j < i; j++)
->> -					kvfree(org_mount_opt.s_qf_names[j]);
->> +					kfree(org_mount_opt.s_qf_names[j]);
->>  				return -ENOMEM;
->>  			}
->>  		} else {
->> @@ -1724,7 +1724,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>  #ifdef CONFIG_QUOTA
->>  	/* Release old quota file names */
->>  	for (i = 0; i < MAXQUOTAS; i++)
->> -		kvfree(org_mount_opt.s_qf_names[i]);
->> +		kfree(org_mount_opt.s_qf_names[i]);
->>  #endif
->>  	/* Update the POSIXACL Flag */
->>  	sb->s_flags = (sb->s_flags & ~SB_POSIXACL) |
->> @@ -1744,7 +1744,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
->>  #ifdef CONFIG_QUOTA
->>  	F2FS_OPTION(sbi).s_jquota_fmt = org_mount_opt.s_jquota_fmt;
->>  	for (i = 0; i < MAXQUOTAS; i++) {
->> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
->> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
->>  		F2FS_OPTION(sbi).s_qf_names[i] = org_mount_opt.s_qf_names[i];
->>  	}
->>  #endif
->> @@ -2935,7 +2935,7 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
->>  		}
->>  	}
->>  
->> -	kvfree(zones);
->> +	kfree(zones);
->>  
->>  	return err;
->>  }
->> @@ -2992,7 +2992,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
->>  
->>  	/* No valid superblock */
->>  	if (!*raw_super)
->> -		kvfree(super);
->> +		kfree(super);
->>  	else
->>  		err = 0;
->>  
->> @@ -3563,7 +3563,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>  		if (err)
->>  			goto sync_free_meta;
->>  	}
->> -	kvfree(options);
->> +	kfree(options);
->>  
->>  	/* recover broken superblock */
->>  	if (recovery) {
->> @@ -3620,7 +3620,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>  	f2fs_destroy_segment_manager(sbi);
->>  free_devices:
->>  	destroy_device_list(sbi);
->> -	kvfree(sbi->ckpt);
->> +	kfree(sbi->ckpt);
->>  free_meta_inode:
->>  	make_bad_inode(sbi->meta_inode);
->>  	iput(sbi->meta_inode);
->> @@ -3631,7 +3631,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>  	destroy_percpu_info(sbi);
->>  free_bio_info:
->>  	for (i = 0; i < NR_PAGE_TYPE; i++)
->> -		kvfree(sbi->write_io[i]);
->> +		kfree(sbi->write_io[i]);
->>  
->>  #ifdef CONFIG_UNICODE
->>  	utf8_unload(sbi->s_encoding);
->> @@ -3639,15 +3639,15 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
->>  free_options:
->>  #ifdef CONFIG_QUOTA
->>  	for (i = 0; i < MAXQUOTAS; i++)
->> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
->> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
->>  #endif
->> -	kvfree(options);
->> +	kfree(options);
->>  free_sb_buf:
->> -	kvfree(raw_super);
->> +	kfree(raw_super);
->>  free_sbi:
->>  	if (sbi->s_chksum_driver)
->>  		crypto_free_shash(sbi->s_chksum_driver);
->> -	kvfree(sbi);
->> +	kfree(sbi);
->>  
->>  	/* give only one another chance */
->>  	if (retry_cnt > 0 && skip_recovery) {
->> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
->> index 296b3189448a..ff2455b4ad14 100644
->> --- a/fs/f2fs/xattr.c
->> +++ b/fs/f2fs/xattr.c
->> @@ -362,7 +362,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
->>  	*base_addr = txattr_addr;
->>  	return 0;
->>  out:
->> -	kvfree(txattr_addr);
->> +	kfree(txattr_addr);
->>  	return err;
->>  }
->>  
->> @@ -405,7 +405,7 @@ static int read_all_xattrs(struct inode *inode, struct page *ipage,
->>  	*base_addr = txattr_addr;
->>  	return 0;
->>  fail:
->> -	kvfree(txattr_addr);
->> +	kfree(txattr_addr);
->>  	return err;
->>  }
->>  
->> @@ -532,7 +532,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
->>  	}
->>  	error = size;
->>  out:
->> -	kvfree(base_addr);
->> +	kfree(base_addr);
->>  	return error;
->>  }
->>  
->> @@ -590,7 +590,7 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
->>  	}
->>  	error = buffer_size - rest;
->>  cleanup:
->> -	kvfree(base_addr);
->> +	kfree(base_addr);
->>  	return error;
->>  }
->>  
->> @@ -731,7 +731,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
->>  	if (!error && S_ISDIR(inode->i_mode))
->>  		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
->>  exit:
->> -	kvfree(base_addr);
->> +	kfree(base_addr);
->>  	return error;
->>  }
->>  
->> -- 
->> 2.18.0.rc1
-> .
+> Thanks,
+> Peter
+> 
+>  .../devicetree/bindings/dma/ti/k3-udma.yaml   | 190 ++++++++++++++++++
+>  1 file changed, 190 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> new file mode 100644
+> index 000000000000..e00fe3b2364e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/ti/k3-udma.yaml
+> @@ -0,0 +1,190 @@
+> +# SPDX-License-Identifier: GPL-2.0
+
+Dual license new bindings:
+
+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/dma/ti/k3-udma.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Texas Instruments K3 NAVSS Unified DMA Device Tree Bindings
+> +
+> +maintainers:
+> +  - Peter Ujfalusi <peter.ujfalusi@ti.com>
+> +
+> +description: |
+> +  The UDMA-P is intended to perform similar (but significantly upgraded)
+> +  functions as the packet-oriented DMA used on previous SoC devices. The UDMA-P
+> +  module supports the transmission and reception of various packet types.
+> +  The UDMA-P is architected to facilitate the segmentation and reassembly of
+> +  SoC DMA data structure compliant packets to/from smaller data blocks that are
+> +  natively compatible with the specific requirements of each connected
+> +  peripheral.
+> +  Multiple Tx and Rx channels are provided within the DMA which allow multiple
+> +  segmentation or reassembly operations to be ongoing. The DMA controller
+> +  maintains state information for each of the channels which allows packet
+> +  segmentation and reassembly operations to be time division multiplexed between
+> +  channels in order to share the underlying DMA hardware. An external DMA
+> +  scheduler is used to control the ordering and rate at which this multiplexing
+> +  occurs for Transmit operations. The ordering and rate of Receive operations
+> +  is indirectly controlled by the order in which blocks are pushed into the DMA
+> +  on the Rx PSI-L interface.
+> +
+> +  The UDMA-P also supports acting as both a UTC and UDMA-C for its internal
+> +  channels. Channels in the UDMA-P can be configured to be either Packet-Based
+> +  or Third-Party channels on a channel by channel basis.
+> +
+> +  All transfers within NAVSS is done between PSI-L source and destination
+> +  threads.
+> +  The peripherals serviced by UDMA can be PSI-L native (sa2ul, cpsw, etc) or
+> +  legacy, non PSI-L native peripherals. In the later case a special, small PDMA
+> +  is tasked to act as a bridge between the PSI-L fabric and the legacy
+> +  peripheral.
+> +
+> +  PDMAs can be configured via UDMAP peer registers to match with the
+> +  configuration of the legacy peripheral.
+> +
+> +allOf:
+> +  - $ref: "../dma-controller.yaml#"
+> +
+> +properties:
+> +  "#dma-cells":
+> +    const: 1
+> +    description: |
+> +      The cell is the PSI-L  thread ID of the remote (to UDMAP) end.
+> +      Valid ranges for thread ID depends on the data movement direction:
+> +      for source thread IDs (rx): 0 - 0x7fff
+> +      for destination thread IDs (tx): 0x8000 - 0xffff
+> +
+> +      PLease refer to the device documentation for the PSI-L thread map and also
+> +      the PSI-L peripheral chapter for the correct thread ID.
+> +
+> +  compatible:
+> +    oneOf:
+> +      - const: ti,am654-navss-main-udmap
+> +      - const: ti,am654-navss-mcu-udmap
+> +      - const: ti,j721e-navss-main-udmap
+> +      - const: ti,j721e-navss-mcu-udmap
+
+enum works better than oneOf+const. Better error messages.
+
+> +
+> +  reg:
+> +    maxItems: 3
+> +
+> +  reg-names:
+> +   items:
+> +     - const: gcfg
+> +     - const: rchanrt
+> +     - const: tchanrt
+> +
+> +  msi-parent: true
+> +
+> +  ti,sci:
+> +    description: |
+
+Doesn't need to be a literal block (can drop the '|').
+
+> +      phandle to TI-SCI compatible System controller node
+> +    maxItems: 1
+
+Drop this, not an array.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ti,sci-dev-id:
+> +    description: |
+> +      TI-SCI device id of UDMAP
+> +    maxItems: 1
+
+Drop this.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  ti,ringacc:
+> +    description: |
+> +      phandle to the ring accelerator node
+> +    maxItems: 1
+
+Drop this.
+
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/phandle
+> +
+> +  ti,sci-rm-range-tchan:
+> +    description: |
+> +      Array of UDMA tchan resource subtypes for resource allocation for this
+> +      host
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      minItems: 1
+> +      # Should be enough
+> +      maxItems: 255
+
+These should not be under 'items'. Drop 'items'.
+
+Any constraints on the values of the array elements? 
+
+> +
+> +  ti,sci-rm-range-rchan:
+> +    description: |
+> +      Array of UDMA rchan resource subtypes for resource allocation for this
+> +      host
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      minItems: 1
+> +      # Should be enough
+> +      maxItems: 255
+
+Same here.
+
+> +
+> +  ti,sci-rm-range-rflow:
+> +    description: |
+> +      Array of UDMA rflow resource subtypes for resource allocation for this
+> +      host
+> +    allOf:
+> +      - $ref: /schemas/types.yaml#/definitions/uint32-array
+> +    items:
+> +      minItems: 1
+> +      # Should be enough
+> +      maxItems: 255
+
+And here.
+
+> +
+> +required:
+> +  - compatible
+> +  - "#dma-cells"
+> +  - reg
+> +  - reg-names
+> +  - msi-parent
+> +  - ti,sci
+> +  - ti,sci-dev-id
+> +  - ti,ringacc
+> +  - ti,sci-rm-range-tchan
+> +  - ti,sci-rm-range-rchan
+> +  - ti,sci-rm-range-rflow
+> +
+> +examples:
+> +  - |+
+> +    cbass_main_navss: interconnect@30800000 {
+> +        compatible = "simple-bus";
+> +        #address-cells = <2>;
+> +        #size-cells = <2>;
+> +        dma-coherent;
+> +        dma-ranges;
+> +        ranges = <0x00 0x30800000 0x00 0x30800000 0x00 0x0bc00000>;
+> +
+> +        ti,sci-dev-id = <118>;
+> +
+> +        main_udmap: dma-controller@31150000 {
+> +            compatible = "ti,am654-navss-main-udmap";
+> +            reg = <0x0 0x31150000 0x0 0x100>,
+> +                  <0x0 0x34000000 0x0 0x100000>,
+> +                  <0x0 0x35000000 0x0 0x100000>;
+> +            reg-names = "gcfg", "rchanrt", "tchanrt";
+> +            #dma-cells = <1>;
+> +            
+> +            ti,ringacc = <&ringacc>;
+> +            
+> +            msi-parent = <&inta_main_udmass>;
+> +            
+> +            ti,sci = <&dmsc>;
+> +            ti,sci-dev-id = <188>;
+> +            
+> +            ti,sci-rm-range-tchan = <0x1>, /* TX_HCHAN */
+> +                                    <0x2>; /* TX_CHAN */
+> +            ti,sci-rm-range-rchan = <0x4>, /* RX_HCHAN */
+> +                                    <0x5>; /* RX_CHAN */
+> +            ti,sci-rm-range-rflow = <0x6>; /* GP RFLOW */
+> +        };
+> +    };
+> +
+> +    mcasp0: mcasp@02B00000 {
+> +        dmas = <&main_udmap 0xc400>, <&main_udmap 0x4400>;
+> +        dma-names = "tx", "rx";
+> +    };
+> +
+> +    crypto: crypto@4E00000 {
+> +        compatible = "ti,sa2ul-crypto";
+> +
+> +        dmas = <&main_udmap 0xc000>, <&main_udmap 0x4000>, <&main_udmap 0x4001>;
+> +        dma-names = "tx", "rx1", "rx2";
+> +    };
+> +
+> -- 
+> Peter
+> 
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
 > 
