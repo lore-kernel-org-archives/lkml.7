@@ -2,345 +2,376 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AE2CCA9ED3
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07812CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:40:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68B02214D8
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9FAC214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 03:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730522AbfKEDhe (ORCPT
+        id S1730290AbfKEDj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 22:37:34 -0500
-Received: from mga18.intel.com ([134.134.136.126]:50516 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730484AbfKEDhc (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 22:37:32 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 19:37:31 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,269,1569308400"; 
-   d="scan'208";a="200239919"
-Received: from kbl.sh.intel.com ([10.239.159.163])
-  by fmsmga008.fm.intel.com with ESMTP; 04 Nov 2019 19:37:29 -0800
-From:   Jin Yao <yao.jin@linux.intel.com>
-To:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com
-Cc:     Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com,
-        Jin Yao <yao.jin@linux.intel.com>
-Subject: [PATCH v6 7/7] perf report: Sort by sampled cycles percent per block for tui
-Date:   Tue,  5 Nov 2019 11:36:11 +0800
-Message-Id: <20191105033611.25493-8-yao.jin@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191105033611.25493-1-yao.jin@linux.intel.com>
-References: <20191105033611.25493-1-yao.jin@linux.intel.com>
+        Mon, 4 Nov 2019 22:39:59 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5267 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729711AbfKEDj7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 22:39:59 -0500
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id B9066640CB8CB8FEC434;
+        Tue,  5 Nov 2019 11:39:56 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019
+ 11:39:53 +0800
+Subject: Re: [f2fs-dev] [PATCH 1/2] f2fs: support aligned pinned file
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-f2fs-devel@lists.sourceforge.net>
+References: <20191022171602.93637-1-jaegeuk@kernel.org>
+ <c916c749-0abe-a7b7-e748-f0c4d5599e4a@huawei.com>
+ <20191025181820.GA24183@jaegeuk-macbookpro.roam.corp.google.com>
+ <8cfef676-e81f-6069-3b0b-7005fbf8e0bb@huawei.com>
+ <20191030160942.GA34056@jaegeuk-macbookpro.roam.corp.google.com>
+ <1d747677-86c3-d1ad-b343-cf786e77da37@huawei.com>
+ <20191031152930.GA60005@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <53b12ae4-092f-eae0-676b-b35eeb5a5a0c@huawei.com>
+Date:   Tue, 5 Nov 2019 11:39:52 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20191031152930.GA60005@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Previous patch has implemented a new option "--total-cycles".
-But only stdio mode is supported.
+On 2019/10/31 23:29, Jaegeuk Kim wrote:
+> On 10/31, Chao Yu wrote:
+>> On 2019/10/31 0:09, Jaegeuk Kim wrote:
+>>> On 10/26, Chao Yu wrote:
+>>>> On 2019/10/26 2:18, Jaegeuk Kim wrote:
+>>>>> On 10/24, Chao Yu wrote:
+>>>>>> Hi Jaegeuk,
+>>>>>>
+>>>>>> On 2019/10/23 1:16, Jaegeuk Kim wrote:
+>>>>>>> This patch supports 2MB-aligned pinned file, which can guarantee no GC at all
+>>>>>>> by allocating fully valid 2MB segment.
+>>>>>>>
+>>>>>>> Signed-off-by: Jaegeuk Kim <jaegeuk@kernel.org>
+>>>>>>> ---
+>>>>>>>  fs/f2fs/f2fs.h     |  4 +++-
+>>>>>>>  fs/f2fs/file.c     | 39 ++++++++++++++++++++++++++++++++++-----
+>>>>>>>  fs/f2fs/recovery.c |  2 +-
+>>>>>>>  fs/f2fs/segment.c  | 21 ++++++++++++++++++++-
+>>>>>>>  fs/f2fs/segment.h  |  2 ++
+>>>>>>>  fs/f2fs/super.c    |  1 +
+>>>>>>>  fs/f2fs/sysfs.c    |  2 ++
+>>>>>>>  7 files changed, 63 insertions(+), 8 deletions(-)
+>>>>>>>
+>>>>>>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>>>>>>> index ca342f4c7db1..c681f51e351b 100644
+>>>>>>> --- a/fs/f2fs/f2fs.h
+>>>>>>> +++ b/fs/f2fs/f2fs.h
+>>>>>>> @@ -890,6 +890,7 @@ enum {
+>>>>>>>  	CURSEG_WARM_NODE,	/* direct node blocks of normal files */
+>>>>>>>  	CURSEG_COLD_NODE,	/* indirect node blocks */
+>>>>>>>  	NO_CHECK_TYPE,
+>>>>>>> +	CURSEG_COLD_DATA_PINNED,/* cold data for pinned file */
+>>>>>>>  };
+>>>>>>>  
+>>>>>>>  struct flush_cmd {
+>>>>>>> @@ -1301,6 +1302,7 @@ struct f2fs_sb_info {
+>>>>>>>  
+>>>>>>>  	/* threshold for gc trials on pinned files */
+>>>>>>>  	u64 gc_pin_file_threshold;
+>>>>>>> +	struct rw_semaphore pin_sem;
+>>>>>>>  
+>>>>>>>  	/* maximum # of trials to find a victim segment for SSR and GC */
+>>>>>>>  	unsigned int max_victim_search;
+>>>>>>> @@ -3116,7 +3118,7 @@ void f2fs_release_discard_addrs(struct f2fs_sb_info *sbi);
+>>>>>>>  int f2fs_npages_for_summary_flush(struct f2fs_sb_info *sbi, bool for_ra);
+>>>>>>>  void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+>>>>>>>  					unsigned int start, unsigned int end);
+>>>>>>> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi);
+>>>>>>> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type);
+>>>>>>>  int f2fs_trim_fs(struct f2fs_sb_info *sbi, struct fstrim_range *range);
+>>>>>>>  bool f2fs_exist_trim_candidates(struct f2fs_sb_info *sbi,
+>>>>>>>  					struct cp_control *cpc);
+>>>>>>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>>>>>>> index 29bc0a542759..f6c038e8a6a7 100644
+>>>>>>> --- a/fs/f2fs/file.c
+>>>>>>> +++ b/fs/f2fs/file.c
+>>>>>>> @@ -1545,12 +1545,41 @@ static int expand_inode_data(struct inode *inode, loff_t offset,
+>>>>>>>  	if (off_end)
+>>>>>>>  		map.m_len++;
+>>>>>>>  
+>>>>>>> -	if (f2fs_is_pinned_file(inode))
+>>>>>>> -		map.m_seg_type = CURSEG_COLD_DATA;
+>>>>>>> +	if (!map.m_len)
+>>>>>>> +		return 0;
+>>>>>>> +
+>>>>>>> +	if (f2fs_is_pinned_file(inode)) {
+>>>>>>> +		block_t len = (map.m_len >> sbi->log_blocks_per_seg) <<
+>>>>>>> +					sbi->log_blocks_per_seg;
+>>>>>>> +		block_t done = 0;
+>>>>>>> +
+>>>>>>> +		if (map.m_len % sbi->blocks_per_seg)
+>>>>>>> +			len += sbi->blocks_per_seg;
+>>>>>>>  
+>>>>>>> -	err = f2fs_map_blocks(inode, &map, 1, (f2fs_is_pinned_file(inode) ?
+>>>>>>> -						F2FS_GET_BLOCK_PRE_DIO :
+>>>>>>> -						F2FS_GET_BLOCK_PRE_AIO));
+>>>>>>> +		map.m_len = sbi->blocks_per_seg;
+>>>>>>> +next_alloc:
+>>>>>>> +		mutex_lock(&sbi->gc_mutex);
+>>>>>>> +		err = f2fs_gc(sbi, true, false, NULL_SEGNO);
+>>>>>>> +		if (err && err != -ENODATA && err != -EAGAIN)
+>>>>>>> +			goto out_err;
+>>>>>>
+>>>>>> To grab enough free space?
+>>>>>>
+>>>>>> Shouldn't we call
+>>>>>>
+>>>>>> 	if (has_not_enough_free_secs(sbi, 0, 0)) {
+>>>>>> 		mutex_lock(&sbi->gc_mutex);
+>>>>>> 		f2fs_gc(sbi, false, false, NULL_SEGNO);
+>>>>>> 	}
+>>>>>
+>>>>> The above calls gc all the time. Do we need this?
+>>>>
+>>>> Hmmm... my concern is why we need to run foreground GC even if there is enough
+>>>> free space..
+>>>
+>>> In order to get the free segment easily?
+>>
+>> However, I doubt arbitrary foreground GC with greedy algorithm will ruin
+>> hot/cold data separation, actually, for sufficient free segment case, it's
+>> unnecessary to call FGGC.
+> 
+> Two things here; 1) I do worry much about when hitting boundary on
+> has_not_enough_free_secs() which calculates # of free segments based on # of
+> dirty pages. In this case, we just jump to allocate another free segment so
+> I think it increases the possiblity of no free segment panic. 2) Even if we
 
-This patch supports the tui mode and support '--percent-limit'.
+Yup, I guess for other places, if there is thousand of threads allocating space
+concurrently, we may have small probability to hit run out-of-free-space issue,
+probability can increase if partition size decreases.
 
-For example,
+So I think the right way to fix all out-of-free-space issues is to use
+reservation mechanism in our interface,  e.g.
 
- perf record -b ./div
- perf report --total-cycles --percent-limit 1
+f2fs_create()
+{
+	int reserved_block = 1 + 1;
+	/*
+	 * reserved blocks we may dirty/allocate in create flow:
+	 * 1 block: new inode block;
+	 * 1 block: parent's dent block;
+	 */
 
- # Samples: 2753248 of event 'cycles'
- Sampled Cycles%  Sampled Cycles  Avg Cycles%  Avg Cycles                                              [Program Block Range]         Shared Object
-          26.04%            2.8M        0.40%          18                                             [div.c:42 -> div.c:39]                   div
-          15.17%            1.2M        0.16%           7                                 [random_r.c:357 -> random_r.c:380]          libc-2.27.so
-           5.11%          402.0K        0.04%           2                                             [div.c:27 -> div.c:28]                   div
-           4.87%          381.6K        0.04%           2                                     [random.c:288 -> random.c:291]          libc-2.27.so
-           4.53%          381.0K        0.04%           2                                             [div.c:40 -> div.c:40]                   div
-           3.85%          300.9K        0.02%           1                                             [div.c:22 -> div.c:25]                   div
-           3.08%          241.1K        0.02%           1                                           [rand.c:26 -> rand.c:27]          libc-2.27.so
-           3.06%          240.0K        0.02%           1                                     [random.c:291 -> random.c:291]          libc-2.27.so
-           2.78%          215.7K        0.02%           1                                     [random.c:298 -> random.c:298]          libc-2.27.so
-           2.52%          198.3K        0.02%           1                                     [random.c:293 -> random.c:293]          libc-2.27.so
-           2.36%          184.8K        0.02%           1                                           [rand.c:28 -> rand.c:28]          libc-2.27.so
-           2.33%          180.5K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.28%          176.7K        0.02%           1                                     [random.c:295 -> random.c:295]          libc-2.27.so
-           2.20%          168.8K        0.02%           1                                         [rand@plt+0 -> rand@plt+0]                   div
-           1.98%          158.2K        0.02%           1                                 [random_r.c:388 -> random_r.c:388]          libc-2.27.so
-           1.57%          123.3K        0.02%           1                                             [div.c:42 -> div.c:44]                   div
-           1.44%          116.0K        0.42%          19                                 [random_r.c:357 -> random_r.c:394]          libc-2.27.so
+	f2fs_get_budget(reserved_block); //sbi->reserved_block += 2;
 
- v6:
- ---
- Create report__tui_browse_block_hists in block-info.c
- (codes are moved from builtin-report.c).
+	f2fs_balance_fs(sbi); //has_not_enough_free_secs(): reserved_secs += get_secs(,
+sbi->reserved_block);
 
- v5:
- ---
- Fix a crash issue when running perf report without
- '--total-cycles'. The issue is because the internal flag
- is renamed from 'total_cycles' to 'total_cycles_mode' in
- previous patch but this patch still uses 'total_cycles'
- to check if the '--total-cycles' option is enabled, which
- causes the code to be inconsistent.
+	f2fs_add_link();
+	/* inode meta is dirty; dent block is dirty */
 
- v4:
- ---
- Since the block collection is moved out of printing in
- previous patch, this patch is updated accordingly for
- tui supporting.
+	f2fs_release_budget(reserved_block); //sbi->reserved_block -= 2;
+}
 
- v3:
- ---
- Minor change since the function name is changed:
- block_total_cycles_percent -> block_info__total_cycles_percent
+expand_inode_data() can switch to use this mechanism to avoid that issue.
 
-Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
----
- tools/perf/builtin-report.c    | 27 ++++++++++++---
- tools/perf/ui/browsers/hists.c | 62 +++++++++++++++++++++++++++++++++-
- tools/perf/ui/browsers/hists.h |  2 ++
- tools/perf/util/block-info.c   | 12 +++++++
- tools/perf/util/block-info.h   |  3 ++
- tools/perf/util/hist.h         | 12 +++++++
- 6 files changed, 112 insertions(+), 6 deletions(-)
+> do call FGGC a lot, I don't think it will *ruin* the hot/cold data separation
+> a lot. Putting hot/warm blocks together into cold log will make another hot
+> segment which was being used as cold log. IOWs, we don't need to keep hot data
+> in hot log at all, but should be fine to split hot and cold data in different
 
-diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
-index 7a8b0be8f09a..af5a57d06f12 100644
---- a/tools/perf/builtin-report.c
-+++ b/tools/perf/builtin-report.c
-@@ -485,6 +485,22 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
- 	return ret + fprintf(fp, "\n#\n");
- }
- 
-+static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
-+					       struct report *rep)
-+{
-+	struct evsel *pos;
-+	int i = 0, ret;
-+
-+	evlist__for_each_entry(evlist, pos) {
-+		ret = report__tui_browse_block_hists(&rep->block_reports[i++].hist,
-+						     rep->min_percent, pos);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int perf_evlist__tty_browse_hists(struct evlist *evlist,
- 					 struct report *rep,
- 					 const char *help)
-@@ -595,6 +611,11 @@ static int report__browse_hists(struct report *rep)
- 
- 	switch (use_browser) {
- 	case 1:
-+		if (rep->total_cycles_mode) {
-+			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
-+			break;
-+		}
-+
- 		ret = perf_evlist__tui_browse_hists(evlist, help, NULL,
- 						    rep->min_percent,
- 						    &session->header.env,
-@@ -1398,12 +1419,8 @@ int cmd_report(int argc, const char **argv)
- 	if (report.total_cycles_mode) {
- 		if (sort__mode != SORT_MODE__BRANCH)
- 			report.total_cycles_mode = false;
--		else if (!report.use_stdio) {
--			pr_err("Error: --total-cycles can be only used together with --stdio\n");
--			goto error;
--		} else {
-+		else
- 			sort_order = "sym";
--		}
- 	}
- 
- 	if (strcmp(input_name, "-") != 0)
-diff --git a/tools/perf/ui/browsers/hists.c b/tools/perf/ui/browsers/hists.c
-index 7a7187e069b4..04301303c246 100644
---- a/tools/perf/ui/browsers/hists.c
-+++ b/tools/perf/ui/browsers/hists.c
-@@ -26,6 +26,7 @@
- #include "../../util/sort.h"
- #include "../../util/top.h"
- #include "../../util/thread.h"
-+#include "../../util/block-info.h"
- #include "../../arch/common.h"
- #include "../../perf.h"
- 
-@@ -1783,7 +1784,11 @@ static unsigned int hist_browser__refresh(struct ui_browser *browser)
- 			continue;
- 		}
- 
--		percent = hist_entry__get_percent_limit(h);
-+		if (symbol_conf.report_individual_block)
-+			percent = block_info__total_cycles_percent(h);
-+		else
-+			percent = hist_entry__get_percent_limit(h);
-+
- 		if (percent < hb->min_pcnt)
- 			continue;
- 
-@@ -3443,3 +3448,58 @@ int perf_evlist__tui_browse_hists(struct evlist *evlist, const char *help,
- 					       warn_lost_event,
- 					       annotation_opts);
- }
-+
-+static int block_hists_browser__title(struct hist_browser *browser, char *bf,
-+				      size_t size)
-+{
-+	struct hists *hists = evsel__hists(browser->block_evsel);
-+	const char *evname = perf_evsel__name(browser->block_evsel);
-+	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
-+	int ret;
-+
-+	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
-+	if (evname)
-+		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
-+
-+	return 0;
-+}
-+
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent)
-+{
-+	struct hists *hists = &bh->block_hists;
-+	struct hist_browser *browser;
-+	int key = -1;
-+	static const char help[] =
-+	" q             Quit \n";
-+
-+	browser = hist_browser__new(hists);
-+	if (!browser)
-+		return -1;
-+
-+	browser->block_evsel = evsel;
-+	browser->title = block_hists_browser__title;
-+	browser->min_pcnt = min_percent;
-+
-+	/* reset abort key so that it can get Ctrl-C as a key */
-+	SLang_reset_tty();
-+	SLang_init_tty(0, 0, 0);
-+
-+	while (1) {
-+		key = hist_browser__run(browser, "? - help", true);
-+
-+		switch (key) {
-+		case 'q':
-+			goto out;
-+		case '?':
-+			ui_browser__help_window(&browser->b, help);
-+			break;
-+		default:
-+			break;
-+		}
-+	}
-+
-+out:
-+	hist_browser__delete(browser);
-+	return 0;
-+}
-diff --git a/tools/perf/ui/browsers/hists.h b/tools/perf/ui/browsers/hists.h
-index 91d3e18b50aa..078f2f2c7abd 100644
---- a/tools/perf/ui/browsers/hists.h
-+++ b/tools/perf/ui/browsers/hists.h
-@@ -5,6 +5,7 @@
- #include "ui/browser.h"
- 
- struct annotation_options;
-+struct evsel;
- 
- struct hist_browser {
- 	struct ui_browser   b;
-@@ -15,6 +16,7 @@ struct hist_browser {
- 	struct pstack	    *pstack;
- 	struct perf_env	    *env;
- 	struct annotation_options *annotation_opts;
-+	struct evsel	    *block_evsel;
- 	int		     print_seq;
- 	bool		     show_dso;
- 	bool		     show_headers;
-diff --git a/tools/perf/util/block-info.c b/tools/perf/util/block-info.c
-index b16a5c46daa4..1fb0a84e4f9c 100644
---- a/tools/perf/util/block-info.c
-+++ b/tools/perf/util/block-info.c
-@@ -454,6 +454,18 @@ int report__browse_block_hists(struct block_hist *bh, float min_percent)
- 	return 0;
- }
- 
-+int report__tui_browse_block_hists(struct block_hist *bh, float min_percent,
-+				   struct evsel *evsel)
-+{
-+	int ret;
-+
-+	symbol_conf.report_individual_block = true;
-+	ret = block_hists_tui_browse(bh, evsel, min_percent);
-+	hists__delete_entries(&bh->block_hists);
-+
-+	return ret;
-+}
-+
- float block_info__total_cycles_percent(struct hist_entry *he)
- {
- 	struct block_info *bi = he->block_info;
-diff --git a/tools/perf/util/block-info.h b/tools/perf/util/block-info.h
-index 2b0363e3ea39..2224f11c5320 100644
---- a/tools/perf/util/block-info.h
-+++ b/tools/perf/util/block-info.h
-@@ -71,6 +71,9 @@ struct block_report *block_info__create_report(struct evlist *evlist,
- 
- int report__browse_block_hists(struct block_hist *bh, float min_percent);
- 
-+int report__tui_browse_block_hists(struct block_hist *bh, float min_percent,
-+				   struct evsel *evsel);
-+
- float block_info__total_cycles_percent(struct hist_entry *he);
- 
- #endif /* __PERF_BLOCK_H */
-diff --git a/tools/perf/util/hist.h b/tools/perf/util/hist.h
-index 4d87c7b4c1b2..f254fa349ad6 100644
---- a/tools/perf/util/hist.h
-+++ b/tools/perf/util/hist.h
-@@ -449,6 +449,8 @@ enum rstype {
- 	A_SOURCE
- };
- 
-+struct block_hist;
-+
- #ifdef HAVE_SLANG_SUPPORT
- #include "../ui/keysyms.h"
- void attr_to_script(char *buf, struct perf_event_attr *attr);
-@@ -474,6 +476,9 @@ void run_script(char *cmd);
- int res_sample_browse(struct res_sample *res_samples, int num_res,
- 		      struct evsel *evsel, enum rstype rstype);
- void res_sample_init(void);
-+
-+int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
-+			   float min_percent);
- #else
- static inline
- int perf_evlist__tui_browse_hists(struct evlist *evlist __maybe_unused,
-@@ -516,6 +521,13 @@ static inline int res_sample_browse(struct res_sample *res_samples __maybe_unuse
- 	return 0;
- }
- 
-+static inline int block_hists_tui_browse(struct block_hist *bh __maybe_unused,
-+					 struct evsel *evsel __maybe_unused,
-+					 float min_percent __maybe_unused)
-+{
-+	return 0;
-+}
-+
- static inline void res_sample_init(void) {}
- 
- #define K_LEFT  -1000
--- 
-2.17.1
+With below codes, we are trying to mix cold data into warm data log with block
+granularity, rather than segment granularity.
 
+	if (type == CURSEG_COLD_DATA) {
+		/* GC during CURSEG_COLD_DATA_PINNED allocation */
+		if (down_read_trylock(&sbi->pin_sem)) {
+			put_pin_sem = true;
+		} else {
+			type = CURSEG_WARM_DATA;
+			curseg = CURSEG_I(sbi, type);
+		}
+
+This could cause more GC cycles on such mixed segments, or am I missing something?
+
+Thanks,
+
+> segments. So, I chose to go safer way since this is eating free segments
+> directly.
+> 
+>>
+>> Thanks,
+>>
+>>>
+>>>>
+>>>>>
+>>>>>>
+>>>>>>> +
+>>>>>>> +		down_write(&sbi->pin_sem);
+>>>>>>> +		map.m_seg_type = CURSEG_COLD_DATA_PINNED;
+>>>>>>> +		f2fs_allocate_new_segments(sbi, CURSEG_COLD_DATA);
+>>>>>>> +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_DIO);
+>>>>>>> +		up_write(&sbi->pin_sem);
+>>>>>>> +
+>>>>>>> +		done += map.m_len;
+>>>>>>> +		len -= map.m_len;
+>>>>>>> +		map.m_lblk += map.m_len;
+>>>>>>> +		if (!err && len)
+>>>>>>> +			goto next_alloc;
+>>>>>>> +
+>>>>>>> +		map.m_len = done;
+>>>>>>> +	} else {
+>>>>>>> +		err = f2fs_map_blocks(inode, &map, 1, F2FS_GET_BLOCK_PRE_AIO);
+>>>>>>> +	}
+>>>>>>> +out_err:
+>>>>>>>  	if (err) {
+>>>>>>>  		pgoff_t last_off;
+>>>>>>>  
+>>>>>>> diff --git a/fs/f2fs/recovery.c b/fs/f2fs/recovery.c
+>>>>>>> index 783773e4560d..76477f71d4ee 100644
+>>>>>>> --- a/fs/f2fs/recovery.c
+>>>>>>> +++ b/fs/f2fs/recovery.c
+>>>>>>> @@ -711,7 +711,7 @@ static int recover_data(struct f2fs_sb_info *sbi, struct list_head *inode_list,
+>>>>>>>  		f2fs_put_page(page, 1);
+>>>>>>>  	}
+>>>>>>>  	if (!err)
+>>>>>>> -		f2fs_allocate_new_segments(sbi);
+>>>>>>> +		f2fs_allocate_new_segments(sbi, NO_CHECK_TYPE);
+>>>>>>>  	return err;
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>>>>>>> index 25c750cd0272..253d72c2663c 100644
+>>>>>>> --- a/fs/f2fs/segment.c
+>>>>>>> +++ b/fs/f2fs/segment.c
+>>>>>>> @@ -2690,7 +2690,7 @@ void allocate_segment_for_resize(struct f2fs_sb_info *sbi, int type,
+>>>>>>>  	up_read(&SM_I(sbi)->curseg_lock);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> -void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+>>>>>>> +void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi, int type)
+>>>>>>>  {
+>>>>>>>  	struct curseg_info *curseg;
+>>>>>>>  	unsigned int old_segno;
+>>>>>>> @@ -2699,6 +2699,9 @@ void f2fs_allocate_new_segments(struct f2fs_sb_info *sbi)
+>>>>>>>  	down_write(&SIT_I(sbi)->sentry_lock);
+>>>>>>>  
+>>>>>>>  	for (i = CURSEG_HOT_DATA; i <= CURSEG_COLD_DATA; i++) {
+>>>>>>> +		if (type != NO_CHECK_TYPE && i != type)
+>>>>>>> +			continue;
+>>>>>>> +
+>>>>>>>  		curseg = CURSEG_I(sbi, i);
+>>>>>>>  		old_segno = curseg->segno;
+>>>>>>>  		SIT_I(sbi)->s_ops->allocate_segment(sbi, i, true);
+>>>>>>> @@ -3068,6 +3071,19 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>>>>>>>  {
+>>>>>>>  	struct sit_info *sit_i = SIT_I(sbi);
+>>>>>>>  	struct curseg_info *curseg = CURSEG_I(sbi, type);
+>>>>>>> +	bool put_pin_sem = false;
+>>>>>>> +
+>>>>>>> +	if (type == CURSEG_COLD_DATA) {
+>>>>>>> +		/* GC during CURSEG_COLD_DATA_PINNED allocation */
+>>>>>>> +		if (down_read_trylock(&sbi->pin_sem)) {
+>>>>>>> +			put_pin_sem = true;
+>>>>>>> +		} else {
+>>>>>>> +			type = CURSEG_WARM_DATA;
+>>>>>>> +			curseg = CURSEG_I(sbi, type);
+>>>>>>
+>>>>>> It will mix pending cold data into warm area... rather than recovering curseg to
+>>>>>> write pointer of last cold segment?
+>>>>>>
+>>>>>> I know maybe that fallocate aligned address could be corner case, but I guess
+>>>>>> there should be some better solutions can handle race case more effectively.
+>>>>>>
+>>>>>> One solution could be: allocating a virtual log header to select free segment as
+>>>>>> 2m-aligned space target.
+>>>>>
+>>>>> I thought about that, but concluded to avoid too much changes.
+>>>>
+>>>> We have an unupstreamed feature which is based on virtual log header, I can
+>>>> introduce that basic virtual log fwk, which can be used for aligned allocation
+>>>> and later new features, would you like to check that?
+>>>>
+>>>> Thanks,
+>>>>
+>>>>>
+>>>>>>
+>>>>>> Thanks,
+>>>>>>
+>>>>>>> +		}
+>>>>>>> +	} else if (type == CURSEG_COLD_DATA_PINNED) {
+>>>>>>> +		type = CURSEG_COLD_DATA;
+>>>>>>> +	}
+>>>>>>>  
+>>>>>>>  	down_read(&SM_I(sbi)->curseg_lock);
+>>>>>>>  
+>>>>>>> @@ -3133,6 +3149,9 @@ void f2fs_allocate_data_block(struct f2fs_sb_info *sbi, struct page *page,
+>>>>>>>  	mutex_unlock(&curseg->curseg_mutex);
+>>>>>>>  
+>>>>>>>  	up_read(&SM_I(sbi)->curseg_lock);
+>>>>>>> +
+>>>>>>> +	if (put_pin_sem)
+>>>>>>> +		up_read(&sbi->pin_sem);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>>  static void update_device_state(struct f2fs_io_info *fio)
+>>>>>>> diff --git a/fs/f2fs/segment.h b/fs/f2fs/segment.h
+>>>>>>> index 325781a1ae4d..a95467b202ea 100644
+>>>>>>> --- a/fs/f2fs/segment.h
+>>>>>>> +++ b/fs/f2fs/segment.h
+>>>>>>> @@ -313,6 +313,8 @@ struct sit_entry_set {
+>>>>>>>   */
+>>>>>>>  static inline struct curseg_info *CURSEG_I(struct f2fs_sb_info *sbi, int type)
+>>>>>>>  {
+>>>>>>> +	if (type == CURSEG_COLD_DATA_PINNED)
+>>>>>>> +		type = CURSEG_COLD_DATA;
+>>>>>>>  	return (struct curseg_info *)(SM_I(sbi)->curseg_array + type);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>>>>>>> index f320fd11db48..c02a47ce551b 100644
+>>>>>>> --- a/fs/f2fs/super.c
+>>>>>>> +++ b/fs/f2fs/super.c
+>>>>>>> @@ -2853,6 +2853,7 @@ static void init_sb_info(struct f2fs_sb_info *sbi)
+>>>>>>>  	spin_lock_init(&sbi->dev_lock);
+>>>>>>>  
+>>>>>>>  	init_rwsem(&sbi->sb_lock);
+>>>>>>> +	init_rwsem(&sbi->pin_sem);
+>>>>>>>  }
+>>>>>>>  
+>>>>>>>  static int init_percpu_info(struct f2fs_sb_info *sbi)
+>>>>>>> diff --git a/fs/f2fs/sysfs.c b/fs/f2fs/sysfs.c
+>>>>>>> index b558b64a4c9c..f164959e4224 100644
+>>>>>>> --- a/fs/f2fs/sysfs.c
+>>>>>>> +++ b/fs/f2fs/sysfs.c
+>>>>>>> @@ -154,6 +154,8 @@ static ssize_t features_show(struct f2fs_attr *a,
+>>>>>>>  	if (f2fs_sb_has_casefold(sbi))
+>>>>>>>  		len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+>>>>>>>  				len ? ", " : "", "casefold");
+>>>>>>> +	len += snprintf(buf + len, PAGE_SIZE - len, "%s%s",
+>>>>>>> +				len ? ", " : "", "pin_file");
+>>>>>>>  	len += snprintf(buf + len, PAGE_SIZE - len, "\n");
+>>>>>>>  	return len;
+>>>>>>>  }
+>>>>>>>
+>>>>> .
+>>>>>
+>>> .
+>>>
+> .
+> 
