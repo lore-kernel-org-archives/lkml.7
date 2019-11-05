@@ -2,286 +2,153 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BC07C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51A9CC5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC5121929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2962A21929
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 15:25:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="u71G5vAu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IuCRYE4F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389915AbfKEPZa (ORCPT
+        id S2389699AbfKEPZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 10:25:30 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:34973 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2389854AbfKEPZ3 (ORCPT
+        Tue, 5 Nov 2019 10:25:34 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:41112 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388865AbfKEPZc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 10:25:29 -0500
-Received: by mail-oi1-f193.google.com with SMTP id n16so17872318oig.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 07:25:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=F+CYhJdTSBVhddLA7SYp46bo6WQRi/eEfG9ft70Vz4c=;
-        b=u71G5vAuN5eK4YoBCJXnO2xds7IiybauVnqeGdwQsyuyUKRRK2KzpPy8AkptdNszl0
-         Wq9Vt/ffCzkCv/uLd1uWoUG4vyVl2SBm9iWUDuL4oE7qUMJ4phsvzkjUxdA27V2ICx9o
-         uBbxZFMVgjJjHRj1gL3mUrxJacQPLolbUyn4RB/h0DbC9ke/h+SVsE9Rm6bGY+eGMXOK
-         30hQkUjoPYI4G0qkU+HujVyzOf0cNK6sVRcmhopEl8qxn12pEeeRSmyAUeMf9xr3ABrP
-         so7aUxHrFqu6xs0RVD4EqX4GpWa+uzVVoDhwDzTVBU+1jHAhktEc2Vw312PLMQSDCV6d
-         rB0Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=F+CYhJdTSBVhddLA7SYp46bo6WQRi/eEfG9ft70Vz4c=;
-        b=tEkRe8TNJSYo9RN25wHnqkfu412//5awM8LUZ79j4RCDvP210hGYlWFVMeLwFnEHl0
-         qMapUGd+L5BhYyMh7fItuDGj4q4d/m4Rc9i1uEBhn+AM7OU75y8tjgfo7Fr9qcqU9u6g
-         KkScLD2FHPI8M5vO8VhNcaGUSVFVZb0He6vVVVJo6QtqPN0eAFxdg7+nqZwuFi2rw+WQ
-         9m8kc3tv1vzezUL5D3vt2Ig8KJ2v/3OD0/I9SGW2vF4pRX3cV4QqTF/TVe5zXVVoDx3i
-         G8yHNS/wD7JaHa77w3+Iu/TOy0D4p1e2JWzh/PjQbjsz3gWxKdLloE/cNMA+6LDn6L53
-         futA==
-X-Gm-Message-State: APjAAAV+tWFt0aFcIQiBbCpqO7y6I7gUR/amL3rRLu1uLlJszEu9nJ9O
-        B0mrDpxQEV2pKvjY9nfvjLyZZHrvLMtKTPd4Ko84mQ==
-X-Google-Smtp-Source: APXvYqwQPHjqYkXc5Iunuduc62ptGdrF5fouPXC6HOb4+99xjsnytfPeV4dt6tvvElLHXEhrxEU7gefGOW36iszyH58=
-X-Received: by 2002:aca:f046:: with SMTP id o67mr1917381oih.155.1572967526641;
- Tue, 05 Nov 2019 07:25:26 -0800 (PST)
+        Tue, 5 Nov 2019 10:25:32 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=NgATcCLTGpEPLwWdKi14PTpZ7rURfMGSbUwiELsU3Q4=; b=IuCRYE4FycS9P2WAfst2WI/cB
+        OE99a3FeQZFP5k1rXzlUwGE+qZalTv8pYKIH96bd7jqKFmgourtzl34cq2RESZADqOTU4OG2KSuyG
+        CrVwGCgx3IwlzNjMcripYiWeh0HfiXl+5kKPMINTpAWL+qwWPxji3qlifM+/RU9pclIYNa68BahSs
+        GMABOMxeGHuHU0WdOO+sTtUkc14/hpk7LkXlPQqJyNgLpduRsgZB+XXpxaN4pPPPaE5j0qpQmZfeO
+        OX2xxAHE7z+RDLVZ2GQaVHSn/eOQaLepgnJiVaZ22p2nq/eYAzRG+oFkmutkY5IdRqXNq3ipMytr8
+        elO7VvF3A==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iS0i0-0003Ji-JY; Tue, 05 Nov 2019 15:25:28 +0000
+Date:   Tue, 5 Nov 2019 07:25:28 -0800
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Marco Elver <elver@google.com>
+Cc:     syzbot <syzbot+11010f0000e50c63c2cc@syzkaller.appspotmail.com>,
+        hirofumi@mail.parknet.co.jp, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, linux-fsdevel@vger.kernel.org,
+        viro@zeniv.linux.org.uk
+Subject: Re: KCSAN: data-race in fat16_ent_put / fat_search_long
+Message-ID: <20191105152528.GD11823@bombadil.infradead.org>
+References: <00000000000016a19d0596980568@google.com>
+ <20191105143923.GA87727@google.com>
 MIME-Version: 1.0
-References: <20191104142745.14722-1-elver@google.com> <20191104164717.GE20975@paulmck-ThinkPad-P72>
- <CANpmjNOtR6NEsXGo=M1o26d8vUyF7gwj=gew+LAeE_D+qfbEmQ@mail.gmail.com>
- <20191104194658.GK20975@paulmck-ThinkPad-P72> <CANpmjNPpVCRhgVgfaApZJCnMKHsGxVUno+o-Fe+7OYKmPvCboQ@mail.gmail.com>
- <20191105142035.GR20975@paulmck-ThinkPad-P72>
-In-Reply-To: <20191105142035.GR20975@paulmck-ThinkPad-P72>
-From:   Marco Elver <elver@google.com>
-Date:   Tue, 5 Nov 2019 16:25:14 +0100
-Message-ID: <CANpmjNPEukbQtD5BGpHdxqMvnq7Uyqr9o3QCByjCKxtPboEJtA@mail.gmail.com>
-Subject: Re: [PATCH v3 0/9] Add Kernel Concurrency Sanitizer (KCSAN)
-To:     "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux Memory Management List <linux-mm@kvack.org>,
-        "the arch/x86 maintainers" <x86@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105143923.GA87727@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 at 15:20, Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Tue, Nov 05, 2019 at 12:10:56PM +0100, Marco Elver wrote:
-> > On Mon, 4 Nov 2019 at 20:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > >
-> > > On Mon, Nov 04, 2019 at 07:41:30PM +0100, Marco Elver wrote:
-> > > > On Mon, 4 Nov 2019 at 17:47, Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > > >
-> > > > > On Mon, Nov 04, 2019 at 03:27:36PM +0100, Marco Elver wrote:
-> > > > > > This is the patch-series for the Kernel Concurrency Sanitizer (KCSAN).
-> > > > > > KCSAN is a sampling watchpoint-based data-race detector. More details
-> > > > > > are included in Documentation/dev-tools/kcsan.rst. This patch-series
-> > > > > > only enables KCSAN for x86, but we expect adding support for other
-> > > > > > architectures is relatively straightforward (we are aware of
-> > > > > > experimental ARM64 and POWER support).
-> > > > > >
-> > > > > > To gather early feedback, we announced KCSAN back in September, and
-> > > > > > have integrated the feedback where possible:
-> > > > > > http://lkml.kernel.org/r/CANpmjNPJ_bHjfLZCAPV23AXFfiPiyXXqqu72n6TgWzb2Gnu1eA@mail.gmail.com
-> > > > > >
-> > > > > > We want to point out and acknowledge the work surrounding the LKMM,
-> > > > > > including several articles that motivate why data-races are dangerous
-> > > > > > [1, 2], justifying a data-race detector such as KCSAN.
-> > > > > > [1] https://lwn.net/Articles/793253/
-> > > > > > [2] https://lwn.net/Articles/799218/
-> > > > > >
-> > > > > > The current list of known upstream fixes for data-races found by KCSAN
-> > > > > > can be found here:
-> > > > > > https://github.com/google/ktsan/wiki/KCSAN#upstream-fixes-of-data-races-found-by-kcsan
-> > > > >
-> > > > > Making this more accessible to more people seems like a good thing.
-> > > > > So, for the series:
-> > > > >
-> > > > > Acked-by: Paul E. McKenney <paulmck@kernel.org>
-> > > >
-> > > > Much appreciated. Thanks, Paul!
-> > > >
-> > > > Any suggestions which tree this could eventually land in?
-> > >
-> > > I would guess that Dmitry might have some suggestions.
-> >
-> > I checked and we're both unclear what the most obvious tree to land in
-> > is (the other sanitizers are mm related, which KCSAN is not).
-> >
-> > One suggestion that comes to my mind is for KCSAN to go through the
-> > same tree (rcu?) as the LKMM due to their inherent relationship. Would
-> > that make most sense?
->
-> It works for me, though you guys have to continue to be the main
-> developers.  ;-)
+On Tue, Nov 05, 2019 at 03:39:23PM +0100, Marco Elver wrote:
+> On Tue, 05 Nov 2019, syzbot wrote:
+> > ==================================================================
+> > BUG: KCSAN: data-race in fat16_ent_put / fat_search_long
+> > 
+> > write to 0xffff8880a209c96a of 2 bytes by task 11985 on cpu 0:
+> >  fat16_ent_put+0x5b/0x90 fs/fat/fatent.c:181
+> >  fat_ent_write+0x6d/0xf0 fs/fat/fatent.c:415
+> >  fat_chain_add+0x34e/0x400 fs/fat/misc.c:130
+> >  fat_add_cluster+0x92/0xd0 fs/fat/inode.c:112
+> >  __fat_get_block fs/fat/inode.c:154 [inline]
+> >  fat_get_block+0x3ae/0x4e0 fs/fat/inode.c:189
+> >  __block_write_begin_int+0x2ea/0xf20 fs/buffer.c:1968
+> >  __block_write_begin fs/buffer.c:2018 [inline]
+> >  block_write_begin+0x77/0x160 fs/buffer.c:2077
+> >  cont_write_begin+0x3d6/0x670 fs/buffer.c:2426
+> >  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
+> >  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
+> >  cont_expand_zero fs/buffer.c:2353 [inline]
+> >  cont_write_begin+0x17a/0x670 fs/buffer.c:2416
+> >  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
+> >  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
+> >  generic_cont_expand_simple+0xb0/0x120 fs/buffer.c:2317
+> > 
+> > read to 0xffff8880a209c96b of 1 bytes by task 11990 on cpu 1:
+> >  fat_search_long+0x20a/0xc60 fs/fat/dir.c:484
+> >  vfat_find+0xc1/0xd0 fs/fat/namei_vfat.c:698
+> >  vfat_lookup+0x75/0x350 fs/fat/namei_vfat.c:712
+> >  lookup_open fs/namei.c:3203 [inline]
+> >  do_last fs/namei.c:3314 [inline]
+> >  path_openat+0x15b6/0x36e0 fs/namei.c:3525
+> >  do_filp_open+0x11e/0x1b0 fs/namei.c:3555
+> >  do_sys_open+0x3b3/0x4f0 fs/open.c:1097
+> >  __do_sys_open fs/open.c:1115 [inline]
+> >  __se_sys_open fs/open.c:1110 [inline]
+> >  __x64_sys_open+0x55/0x70 fs/open.c:1110
+> >  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+> >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+> > 
+> > Reported by Kernel Concurrency Sanitizer on:
+> > CPU: 1 PID: 11990 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
+> > Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS
+> > Google 01/01/2011
+> > ==================================================================
+> 
+> I was trying to understand what is happening here, but fail to see how
+> this can happen. So it'd be good if somebody who knows this code can
+> explain. We are quite positive this is not a false positive, given the
+> addresses accessed match.
 
-Great, thanks. We did add an entry to MAINTAINERS, so yes of course. :-)
+Both of these accesses are into a buffer head; ie the data being accessed
+is stored in the page cache.  Is it possible the page was reused for
+different data between these two accesses?
 
-> I will go through the patches more carefully, and please look into the
-> kbuild test robot complaint.
-
-I just responded to that, it seems to be a sparse problem.
-
-Thanks,
--- Marco
-
->                                                         Thanx, Paul
->
-> > Thanks,
-> > -- Marco
-> >
-> > > >
-> > > > > > Changelog
-> > > > > > ---------
-> > > > > > v3:
-> > > > > > * Major changes:
-> > > > > >  - Add microbenchmark.
-> > > > > >  - Add instruction watchpoint skip randomization.
-> > > > > >  - Refactor API and core runtime fast-path and slow-path. Compared to
-> > > > > >    the previous version, with a default config and benchmarked using the
-> > > > > >    added microbenchmark, this version is 3.8x faster.
-> > > > > >  - Make __tsan_unaligned __alias of generic accesses.
-> > > > > >  - Rename kcsan_{begin,end}_atomic ->
-> > > > > >    kcsan_{nestable,flat}_atomic_{begin,end}
-> > > > > >  - For filter list in debugfs.c use kmalloc+krealloc instead of
-> > > > > >    kvmalloc.
-> > > > > >  - Split Documentation into separate patch.
-> > > > > >
-> > > > > > v2: http://lkml.kernel.org/r/20191017141305.146193-1-elver@google.com
-> > > > > > * Major changes:
-> > > > > >  - Replace kcsan_check_access(.., {true, false}) with
-> > > > > >    kcsan_check_{read,write}.
-> > > > > >  - Change atomic-instrumented.h to use __atomic_check_{read,write}.
-> > > > > >  - Use common struct kcsan_ctx in task_struct and for per-CPU interrupt
-> > > > > >    contexts.
-> > > > > >
-> > > > > > v1: http://lkml.kernel.org/r/20191016083959.186860-1-elver@google.com
-> > > > > >
-> > > > > > Marco Elver (9):
-> > > > > >   kcsan: Add Kernel Concurrency Sanitizer infrastructure
-> > > > > >   kcsan: Add Documentation entry in dev-tools
-> > > > > >   objtool, kcsan: Add KCSAN runtime functions to whitelist
-> > > > > >   build, kcsan: Add KCSAN build exceptions
-> > > > > >   seqlock, kcsan: Add annotations for KCSAN
-> > > > > >   seqlock: Require WRITE_ONCE surrounding raw_seqcount_barrier
-> > > > > >   asm-generic, kcsan: Add KCSAN instrumentation for bitops
-> > > > > >   locking/atomics, kcsan: Add KCSAN instrumentation
-> > > > > >   x86, kcsan: Enable KCSAN for x86
-> > > > > >
-> > > > > >  Documentation/dev-tools/index.rst         |   1 +
-> > > > > >  Documentation/dev-tools/kcsan.rst         | 217 +++++++++
-> > > > > >  MAINTAINERS                               |  11 +
-> > > > > >  Makefile                                  |   3 +-
-> > > > > >  arch/x86/Kconfig                          |   1 +
-> > > > > >  arch/x86/boot/Makefile                    |   2 +
-> > > > > >  arch/x86/boot/compressed/Makefile         |   2 +
-> > > > > >  arch/x86/entry/vdso/Makefile              |   3 +
-> > > > > >  arch/x86/include/asm/bitops.h             |   6 +-
-> > > > > >  arch/x86/kernel/Makefile                  |   7 +
-> > > > > >  arch/x86/kernel/cpu/Makefile              |   3 +
-> > > > > >  arch/x86/lib/Makefile                     |   4 +
-> > > > > >  arch/x86/mm/Makefile                      |   3 +
-> > > > > >  arch/x86/purgatory/Makefile               |   2 +
-> > > > > >  arch/x86/realmode/Makefile                |   3 +
-> > > > > >  arch/x86/realmode/rm/Makefile             |   3 +
-> > > > > >  drivers/firmware/efi/libstub/Makefile     |   2 +
-> > > > > >  include/asm-generic/atomic-instrumented.h | 393 +++++++--------
-> > > > > >  include/asm-generic/bitops-instrumented.h |  18 +
-> > > > > >  include/linux/compiler-clang.h            |   9 +
-> > > > > >  include/linux/compiler-gcc.h              |   7 +
-> > > > > >  include/linux/compiler.h                  |  35 +-
-> > > > > >  include/linux/kcsan-checks.h              |  97 ++++
-> > > > > >  include/linux/kcsan.h                     | 115 +++++
-> > > > > >  include/linux/sched.h                     |   4 +
-> > > > > >  include/linux/seqlock.h                   |  51 +-
-> > > > > >  init/init_task.c                          |   8 +
-> > > > > >  init/main.c                               |   2 +
-> > > > > >  kernel/Makefile                           |   6 +
-> > > > > >  kernel/kcsan/Makefile                     |  11 +
-> > > > > >  kernel/kcsan/atomic.h                     |  27 ++
-> > > > > >  kernel/kcsan/core.c                       | 560 ++++++++++++++++++++++
-> > > > > >  kernel/kcsan/debugfs.c                    | 275 +++++++++++
-> > > > > >  kernel/kcsan/encoding.h                   |  94 ++++
-> > > > > >  kernel/kcsan/kcsan.h                      | 131 +++++
-> > > > > >  kernel/kcsan/report.c                     | 306 ++++++++++++
-> > > > > >  kernel/kcsan/test.c                       | 121 +++++
-> > > > > >  kernel/sched/Makefile                     |   6 +
-> > > > > >  lib/Kconfig.debug                         |   2 +
-> > > > > >  lib/Kconfig.kcsan                         | 119 +++++
-> > > > > >  lib/Makefile                              |   3 +
-> > > > > >  mm/Makefile                               |   8 +
-> > > > > >  scripts/Makefile.kcsan                    |   6 +
-> > > > > >  scripts/Makefile.lib                      |  10 +
-> > > > > >  scripts/atomic/gen-atomic-instrumented.sh |  17 +-
-> > > > > >  tools/objtool/check.c                     |  18 +
-> > > > > >  46 files changed, 2526 insertions(+), 206 deletions(-)
-> > > > > >  create mode 100644 Documentation/dev-tools/kcsan.rst
-> > > > > >  create mode 100644 include/linux/kcsan-checks.h
-> > > > > >  create mode 100644 include/linux/kcsan.h
-> > > > > >  create mode 100644 kernel/kcsan/Makefile
-> > > > > >  create mode 100644 kernel/kcsan/atomic.h
-> > > > > >  create mode 100644 kernel/kcsan/core.c
-> > > > > >  create mode 100644 kernel/kcsan/debugfs.c
-> > > > > >  create mode 100644 kernel/kcsan/encoding.h
-> > > > > >  create mode 100644 kernel/kcsan/kcsan.h
-> > > > > >  create mode 100644 kernel/kcsan/report.c
-> > > > > >  create mode 100644 kernel/kcsan/test.c
-> > > > > >  create mode 100644 lib/Kconfig.kcsan
-> > > > > >  create mode 100644 scripts/Makefile.kcsan
-> > > > > >
-> > > > > > --
-> > > > > > 2.24.0.rc1.363.gb1bccd3e3d-goog
-> > > > > >
-> > > > >
-> > > > > --
-> > > > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > > > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > > > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191104164717.GE20975%40paulmck-ThinkPad-P72.
-> > >
-> > > --
-> > > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> > > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> > > To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191104194658.GK20975%40paulmck-ThinkPad-P72.
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/20191105142035.GR20975%40paulmck-ThinkPad-P72.
+> The two bits of code in question here are:
+> 
+> static void fat16_ent_put(struct fat_entry *fatent, int new)
+> {
+> 	if (new == FAT_ENT_EOF)
+> 		new = EOF_FAT16;
+> 
+> 	*fatent->u.ent16_p = cpu_to_le16(new);   <<== data race here
+> 	mark_buffer_dirty_inode(fatent->bhs[0], fatent->fat_inode);
+> }
+> 
+> int fat_search_long(struct inode *inode, const unsigned char *name,
+> 		    int name_len, struct fat_slot_info *sinfo)
+> {
+> 	struct super_block *sb = inode->i_sb;
+> 	struct msdos_sb_info *sbi = MSDOS_SB(sb);
+> 	struct buffer_head *bh = NULL;
+> 	struct msdos_dir_entry *de;
+> 	unsigned char nr_slots;
+> 	wchar_t *unicode = NULL;
+> 	unsigned char bufname[FAT_MAX_SHORT_SIZE];
+> 	loff_t cpos = 0;
+> 	int err, len;
+> 
+> 	err = -ENOENT;
+> 	while (1) {
+> 		if (fat_get_entry(inode, &cpos, &bh, &de) == -1)
+> 			goto end_of_dir;
+> parse_record:
+> 		nr_slots = 0;
+> 		if (de->name[0] == DELETED_FLAG)
+> 			continue;
+> 		if (de->attr != ATTR_EXT && (de->attr & ATTR_VOLUME))  <<== data race here
+> 			continue;
+> 		if (de->attr != ATTR_EXT && IS_FREE(de->name))
+> 			continue;
+> 		<snip>
+> }
+> 
+> Thanks,
+> -- Marco
