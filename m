@@ -2,162 +2,144 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F28AC010CF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:25:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BC3C010CF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FC2621D7D
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:25:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A1F4217F4
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 12:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="TQPqrfus"
+	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="TLkHehXC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388438AbfKEMZ0 (ORCPT
+        id S2388346AbfKEMbd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 07:25:26 -0500
-Received: from canardo.mork.no ([148.122.252.1]:53839 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387833AbfKEMZ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 07:25:26 -0500
-Received: from miraculix.mork.no ([IPv6:2a02:2121:34b:47e9:c09a:74ff:fe7f:b715])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xA5CPB1d025114
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 5 Nov 2019 13:25:12 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1572956713; bh=tOwwi/WeOCAIXQ192WTBNFpglAaamg3ZODywVvTUHmw=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=TQPqrfusN90nUJlTRNsYyYncuPUeOojDV5YcLmLltY5hrfo64AICKxTw4DIG5zqFE
-         0ST3hDUderArNKlqL89Mw65AK+mf2BghLbW5Il2OLsV+xVFi/GFPx2RcU74UKBcPeM
-         81UTV4gprHWz5YN/XYQX6UmnScSjuCPXZxKdToxk=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1iRxtR-00044x-QL; Tue, 05 Nov 2019 13:25:05 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     syzbot <syzbot+0631d878823ce2411636@syzkaller.appspotmail.com>,
-        davem@davemloft.net, glider@google.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        netdev@vger.kernel.org, syzkaller-bugs@googlegroups.com
-Subject: Re: KMSAN: uninit-value in cdc_ncm_set_dgram_size
-Organization: m
-References: <00000000000013c4c1059625a655@google.com>
-        <87ftj32v6y.fsf@miraculix.mork.no> <1572952516.2921.6.camel@suse.com>
-Date:   Tue, 05 Nov 2019 13:25:05 +0100
-In-Reply-To: <1572952516.2921.6.camel@suse.com> (Oliver Neukum's message of
-        "Tue, 05 Nov 2019 12:15:16 +0100")
-Message-ID: <875zjy33z2.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 5 Nov 2019 07:31:33 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:39758 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387744AbfKEMbd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 07:31:33 -0500
+Received: by mail-lf1-f65.google.com with SMTP id 195so14959086lfj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 04:31:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=rasmusvillemoes.dk; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kMRRzBdYGAmjCi84Oik+o1hEPde0vMlLbqwfzhBep3Y=;
+        b=TLkHehXCoUaUGstiwdj8fjVlz9gpUtcPChFOwjxmUtGkFfOi0uQ7WwBFH9q99o2YaS
+         RyO+Ddp4ujrXZoIKDYOx4TOi+TqY9Mu5qkwdw83/3cvXoJW63WcWkgO+D01XxbKUhkNa
+         HyqFjL7lLvZ6HfbuTZdSE0DCCBUUTUCRDluvU=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=kMRRzBdYGAmjCi84Oik+o1hEPde0vMlLbqwfzhBep3Y=;
+        b=hXPSU3LtrB+G/XL2fO9x8jOHxIv0zDGCqcyC+IJFneZ1QozcbMnUAvCnmhvmazrao/
+         gTrfE24RvGlRapcw9N1KWrtkzMG0zxUs/Ikgzkqv1HSkERjaF9paFLHnBfiqsPrY8Owt
+         AibFewGPpNgySnM7yVb6oYdjYI5bHB86LEsB6VXN6DLl0GAXrMsp6SyAbmgZkVVfB/8d
+         2acBfqi7q3nBndhMc098iO6s14ugE0OJLMZTBuGGemJ9JhC4/+utlQHh5DF36sQu7Kbl
+         bphIMr/+gMJQB7myXV57QZU/EmsDYm6Rngxs/c4JJwyMNtzBVUApjkEu4MMyNt5N7o1i
+         LCuQ==
+X-Gm-Message-State: APjAAAWrSL0m9jQWPsxsfM1WnoSF4wGNTggIgITf6FDD/yxW9iB+Fizo
+        4Er/2womloNAPg6i7sbfBHQDAN8C4AkYcg==
+X-Google-Smtp-Source: APXvYqz7pTQrY6+PNDzgbHOOx5ljSHLg2gy/5/9BxlS/JkI4le74b5m9Xs7646wgzBUgM1YLYIcswA==
+X-Received: by 2002:ac2:4856:: with SMTP id 22mr19654061lfy.131.1572957089421;
+        Tue, 05 Nov 2019 04:31:29 -0800 (PST)
+Received: from prevas-ravi.prevas.se ([81.216.59.226])
+        by smtp.gmail.com with ESMTPSA id i128sm10953245lfd.6.2019.11.05.04.31.28
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 04:31:28 -0800 (PST)
+From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
+To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Cc:     Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
+Subject: [PATCH] watchdog: make nowayout sysfs file writable
+Date:   Tue,  5 Nov 2019 13:31:25 +0100
+Message-Id: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at canardo
-X-Virus-Status: Clean
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Oliver Neukum <oneukum@suse.com> writes:
-> Am Montag, den 04.11.2019, 22:22 +0100 schrieb Bj=C3=B8rn Mork:
->> This looks like a false positive to me. max_datagram_size is two bytes
->> declared as
->>=20
->>         __le16 max_datagram_size;
->>=20
->> and the code leading up to the access on drivers/net/usb/cdc_ncm.c:587
->> is:
->>=20
->>         /* read current mtu value from device */
->>         err =3D usbnet_read_cmd(dev, USB_CDC_GET_MAX_DATAGRAM_SIZE,
->>                               USB_TYPE_CLASS | USB_DIR_IN | USB_RECIP_IN=
-TERFACE,
->>                               0, iface_no, &max_datagram_size, 2);
->
-> At this point err can be 1.
->
->>         if (err < 0) {
->>                 dev_dbg(&dev->intf->dev, "GET_MAX_DATAGRAM_SIZE failed\n=
-");
->>                 goto out;
->>         }
->>=20
->>         if (le16_to_cpu(max_datagram_size) =3D=3D ctx->max_datagram_size)
->>=20
->>=20
->>=20
->> AFAICS, there is no way max_datagram_size can be uninitialized here.
->> usbnet_read_cmd() either read 2 bytes into it or returned an error,
->
-> No. usbnet_read_cmd() will return the number of bytes transfered up
-> to the number requested or an error.
+It can be useful to delay setting the nowayout feature for a watchdog
+device. Moreover, not every driver (notably gpio_wdt) implements a
+nowayout module parameter/otherwise respects CONFIG_WATCHDOG_NOWAYOUT,
+and modifying those drivers carries a risk of causing a regression for
+someone who has two watchdog devices, sets CONFIG_WATCHDOG_NOWAYOUT
+and somehow relies on the gpio_wdt driver being ignorant of
+that (i.e., allowing one to gracefully close a gpio_wdt but not the
+other watchdog in the system).
 
-Ah, OK. So that could be fixed with e.g.
+So instead, simply make the nowayout sysfs file writable. Obviously,
+setting nowayout is a one-way street.
 
-  if (err < 2)
-       goto out;
+Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+---
+ .../ABI/testing/sysfs-class-watchdog          |  9 ++++++--
+ drivers/watchdog/watchdog_dev.c               | 22 ++++++++++++++++++-
+ 2 files changed, 28 insertions(+), 3 deletions(-)
 
+diff --git a/Documentation/ABI/testing/sysfs-class-watchdog b/Documentation/ABI/testing/sysfs-class-watchdog
+index 675f9b537661..9860a8b2ba75 100644
+--- a/Documentation/ABI/testing/sysfs-class-watchdog
++++ b/Documentation/ABI/testing/sysfs-class-watchdog
+@@ -17,8 +17,13 @@ What:		/sys/class/watchdog/watchdogn/nowayout
+ Date:		August 2015
+ Contact:	Wim Van Sebroeck <wim@iguana.be>
+ Description:
+-		It is a read only file. While reading, it gives '1' if that
+-		device supports nowayout feature else, it gives '0'.
++		It is a read/write file. While reading, it gives '1'
++		if the device has the nowayout feature set, otherwise
++		it gives '0'. Writing a '1' to the file enables the
++		nowayout feature. Once set, the nowayout feature
++		cannot be disabled, so writing a '0' either has no
++		effect (if the feature was already disabled) or
++		results in a permission error.
+ 
+ What:		/sys/class/watchdog/watchdogn/state
+ Date:		August 2015
+diff --git a/drivers/watchdog/watchdog_dev.c b/drivers/watchdog/watchdog_dev.c
+index dbd2ad4c9294..0c478b8f8d5a 100644
+--- a/drivers/watchdog/watchdog_dev.c
++++ b/drivers/watchdog/watchdog_dev.c
+@@ -452,7 +452,27 @@ static ssize_t nowayout_show(struct device *dev, struct device_attribute *attr,
+ 
+ 	return sprintf(buf, "%d\n", !!test_bit(WDOG_NO_WAY_OUT, &wdd->status));
+ }
+-static DEVICE_ATTR_RO(nowayout);
++
++static ssize_t nowayout_store(struct device *dev, struct device_attribute *attr,
++				const char *buf, size_t len)
++{
++	struct watchdog_device *wdd = dev_get_drvdata(dev);
++	unsigned int value, current;
++	int ret;
++
++	ret = kstrtouint(buf, 0, &value);
++	if (ret)
++		return ret;
++	if (value > 1)
++		return -EINVAL;
++	current = !!test_bit(WDOG_NO_WAY_OUT, &wdd->status);
++	/* nowayout cannot be disabled once set */
++	if (current && !value)
++		return -EPERM;
++	watchdog_set_nowayout(wdd, value);
++	return len;
++}
++static DEVICE_ATTR_RW(nowayout);
+ 
+ static ssize_t status_show(struct device *dev, struct device_attribute *attr,
+ 				char *buf)
+-- 
+2.23.0
 
-Or would it be better to add a strict length checking variant of this
-API?  There are probably lots of similar cases where we expect a
-multibyte value and a short read is (or should be) considered an error.
-I can't imagine any situation where we want a 2, 4, 6 or 8 byte value
-and expect a flexible length returned.
-
->> causing the access to be skipped.  Or am I missing something?
->
-> Yes. You can get half the MTU. We have a similar class of bugs
-> with MAC addresses.
-
-Right.  And probably all 16 or 32 bit integer reads...
-
-Looking at the NCM spec, I see that the wording is annoyingly flexible
-wrt length - both ways.  E.g for GetNetAddress:
-
-  To get the entire network address, the host should set wLength to at
-  least 6. The function shall never return more than 6 bytes in response
-  to this command.
-
-Maybe the correct fix is simply to let usbnet_read_cmd() initialize the
-full buffer regardless of what the device returns?  I.e.
-
-diff --git a/drivers/net/usb/usbnet.c b/drivers/net/usb/usbnet.c
-index dde05e2fdc3e..df3efafca450 100644
---- a/drivers/net/usb/usbnet.c
-+++ b/drivers/net/usb/usbnet.c
-@@ -1982,7 +1982,7 @@ static int __usbnet_read_cmd(struct usbnet *dev, u8 c=
-md, u8 reqtype,
-                   cmd, reqtype, value, index, size);
-=20
-        if (size) {
--               buf =3D kmalloc(size, GFP_KERNEL);
-+               buf =3D kzalloc(size, GFP_KERNEL);
-                if (!buf)
-                        goto out;
-        }
-@@ -1992,7 +1992,7 @@ static int __usbnet_read_cmd(struct usbnet *dev, u8 c=
-md, u8 reqtype,
-                              USB_CTRL_GET_TIMEOUT);
-        if (err > 0 && err <=3D size) {
-         if (data)
--            memcpy(data, buf, err);
-+            memcpy(data, buf, size);
-         else
-             netdev_dbg(dev->net,
-                 "Huh? Data requested but thrown away.\n");
-
-
-
-
-What do you think?
-
-Personally, I don't think it makes sense for a device to return a 1-byte
-mtu or 3-byte mac address. But the spec allows it and this would at
-least make it safe.
-
-We have a couple of similar bugs elsewhere in the same driver, BTW..
-
-
-Bj=C3=B8rn
