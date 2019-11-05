@@ -2,232 +2,121 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0551BC010A2
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:48:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CFBC010C6
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C272421D6C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:48:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="NL6TiWTv"
+	by mail.kernel.org (Postfix) with ESMTP id 4BB4B21D71
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 11:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388285AbfKELsu (ORCPT
+        id S1730936AbfKELtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 06:48:50 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:38884 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388184AbfKELsu (ORCPT
+        Tue, 5 Nov 2019 06:49:09 -0500
+Received: from mail-io1-f69.google.com ([209.85.166.69]:37025 "EHLO
+        mail-io1-f69.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730784AbfKELtJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 06:48:50 -0500
-Received: by mail-wm1-f68.google.com with SMTP id z19so15607458wmk.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:48:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=zp9qiL0ltKb9jL4LVJWEei4ILz8NVBXvn672HPv3XcE=;
-        b=NL6TiWTvdinGYZluWGSsmZHNFr526R7MSyzrU5joAq8uK73VAEVt5GLJ6QYKHk4ABF
-         uQtRxl4A9S7biM/riwE1QQAKdMrUtyFjUg0NW55RuQMaaLUumpiq2aT07Gi2egGFx6iy
-         QepJirNZwiury2KpZ/d0E8bDtTNh/kDADtHeAmXhMbTglW2MBjbE69TphKWtv6Eh6nlZ
-         wiSCSdNBNDhFQEd04RYxnwg5IvY/cr8npLB7x9fv7+M1Nv6NWgXyf3DP/n86+XKX4g52
-         aCFvzWysEiEzr0Ae7XfHHE5aeFspdoalu9yj8/vHZDsUWJIZZMh4u/WkFTRrU/s9Nmyh
-         606A==
+        Tue, 5 Nov 2019 06:49:09 -0500
+Received: by mail-io1-f69.google.com with SMTP id u13so8635748iob.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 03:49:08 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=zp9qiL0ltKb9jL4LVJWEei4ILz8NVBXvn672HPv3XcE=;
-        b=cgjOOTbwqqEBztWVOrfaBtj0mnNOnCduok0PFdUYD731roG6sOYfNvpdOXIsVOR4vT
-         YdAsJqHzKsv9erpM7GDvBs3PZ6LV1Txh9gLLNZM8CffbMfnhdeHI3RPVGMQKie7fETpj
-         MwuT6hHjSuK3JFmUWlzdWtEtkZvhGsoEnOsQmhcZCIYpJSW9k7li0jZ0Y/TX7aXeAw63
-         jyKz2YlUo397GOdmriHIRB8TC4llsxwdN52rD1Mx6JH6cH11hBufgYWz6HRHbMGdCBLX
-         fFA6aZ9NvE/xdGLhsxTfNsK3YhQkVNJAT7Ujm4v/dP8aPi1Dt2faJHbd4AU4+aNzTbTG
-         EZ9Q==
-X-Gm-Message-State: APjAAAV3+rZZWMDduZJwr6MInz0JIWSKHlPCNUFMQEv7wEvxHMLEyE2E
-        dHrDWzhKwaYKucD7ttuNXw0boA==
-X-Google-Smtp-Source: APXvYqwzbVrprBjq+eXGIRVB0swnwWh7fhMwzUoJE509CMdkS7DkewOthPh20OJBQh8PWTIGQh1OIw==
-X-Received: by 2002:a7b:c762:: with SMTP id x2mr1768915wmk.128.1572954528016;
-        Tue, 05 Nov 2019 03:48:48 -0800 (PST)
-Received: from lophozonia ([85.195.192.192])
-        by smtp.gmail.com with ESMTPSA id f13sm19986974wrq.96.2019.11.05.03.48.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 03:48:47 -0800 (PST)
-Date:   Tue, 5 Nov 2019 12:48:44 +0100
-From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
-To:     Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        jonathan.cameron@huawei.com, grant.likely@arm.com,
-        Jerome Glisse <jglisse@redhat.com>,
-        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
-        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
-        "haojian . zhuang" <haojian.zhuang@linaro.org>,
-        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
-        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
-        iommu@lists.linux-foundation.org,
-        Kenneth Lee <liguozhu@hisilicon.com>,
-        Zaibo Xu <xuzaibo@huawei.com>
-Subject: Re: [PATCH v7 2/3] uacce: add uacce driver
-Message-ID: <20191105114844.GA3648434@lophozonia>
-References: <1572331216-9503-1-git-send-email-zhangfei.gao@linaro.org>
- <1572331216-9503-3-git-send-email-zhangfei.gao@linaro.org>
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=7ZZrgNYqJIcz9203YVjUBSmOD61O6tx3rapg2b0VLNU=;
+        b=XZy+fptnV7N2wofBNV9CO5PZl4bCcnef6tuMiRhgwq9b1HAsw1K6cABd7rESRL8Ulq
+         QezWhIQPEBnfxglmR73wPpcLDcbVWxsqgqZk3oXGNcNyJ/pGIVCtklM0rgsmBBSjtW3c
+         qZkLChh0NiqnOSrv0CEMsyh3F9d/7wt5ghIfBA8zood/jnfIhNVoxe2VVLoKqNEaEwOk
+         expSCEcVXnwptau0QtdgU1cFbBWcFCxYQaqd4CHAKO63UqWfUe4ZIwgV+obb41uT9LQ6
+         rPeIEaLVcA23soX/eYRxg8hzqu03CTkYkY8cVFAlXIFWA6iPK9jyrG+9aneaJSPYgfoz
+         3iOw==
+X-Gm-Message-State: APjAAAXS04v86jq8w/fCXqMnLo1kG2HzUcQqc7iOVp0mxuGMqwybYEBj
+        lwmi7uiKeC9Mz8N7lAYMvjqei5nky1ymMoe4HlDeZdiSV8+z
+X-Google-Smtp-Source: APXvYqw33Q5IVxSI5ZQAjzSMtpWG5MhFfC4e8zwpXxFZO5BZKYPRJbiLkRA57zHHcohbRWYYHOuGxJKTnKVPgQ5eJMzyakePQuha
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572331216-9503-3-git-send-email-zhangfei.gao@linaro.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Received: by 2002:a05:6602:2496:: with SMTP id g22mr4713011ioe.246.1572954548115;
+ Tue, 05 Nov 2019 03:49:08 -0800 (PST)
+Date:   Tue, 05 Nov 2019 03:49:08 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000016a19d0596980568@google.com>
+Subject: KCSAN: data-race in fat16_ent_put / fat_search_long
+From:   syzbot <syzbot+11010f0000e50c63c2cc@syzkaller.appspotmail.com>
+To:     elver@google.com, hirofumi@mail.parknet.co.jp,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Zhangfei,
+Hello,
 
-Thanks for simplifying this, it's a lot easier to review. I have some
-additional comments.
+syzbot found the following crash on:
 
-On Tue, Oct 29, 2019 at 02:40:15PM +0800, Zhangfei Gao wrote:
-> +static int uacce_sva_exit(struct device *dev, struct iommu_sva *handle,
-> +			  void *data)
-> +{
-> +	struct uacce_device *uacce = data;
-> +	struct uacce_queue *q;
-> +
-> +	mutex_lock(&uacce->q_lock);
-> +	list_for_each_entry(q, &uacce->qs, list) {
-> +		if (q->pid == task_pid_nr(current))
-> +			uacce_put_queue(q);
+HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
+git tree:       https://github.com/google/ktsan.git kcsan
+console output: https://syzkaller.appspot.com/x/log.txt?x=14ccaac8e00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
+dashboard link: https://syzkaller.appspot.com/bug?extid=11010f0000e50c63c2cc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
 
-This won't work in some cases, because any thread can call __mmput() and
-end up here. For example a sibling thread that inherited the queue, or a
-workqueue that's executing mmput_async_fn(). In addition I think comparing
-PID values is unsafe (see comment in pid.h), we'd need to use the struct
-pid if we wanted to do it this way.
+Unfortunately, I don't have any reproducer for this crash yet.
 
-But I still believe it would be better to create an uacce_mm structure
-that tracks all queues bound to this mm, and pass that to uacce_sva_exit
-instead of the uacce_device.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+11010f0000e50c63c2cc@syzkaller.appspotmail.com
 
-The queue isn't bound to a task, but its address space. With clone() the
-address space can be shared between tasks. In addition, whoever has a
-queue fd also gets access to this address space. So after a fork() the
-child may be able to program the queue to DMA into the parent's address
-space, even without CLONE_VM. Users must be aware of this and I think it's
-important to explain it very clearly in the UAPI.
+==================================================================
+BUG: KCSAN: data-race in fat16_ent_put / fat_search_long
 
-[...]
-> +static struct uacce_qfile_region *
-> +uacce_create_region(struct uacce_queue *q, struct vm_area_struct *vma,
-> +		    enum uacce_qfrt type, unsigned int flags)
-> +{
-> +	struct uacce_device *uacce = q->uacce;
-> +	struct uacce_qfile_region *qfr;
-> +	int ret = -ENOMEM;
-> +
-> +	qfr = kzalloc(sizeof(*qfr), GFP_KERNEL);
-> +	if (!qfr)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	qfr->type = type;
-> +	qfr->flags = flags;
-> +
-> +	if (vma->vm_flags & VM_READ)
-> +		qfr->prot |= IOMMU_READ;
+write to 0xffff8880a209c96a of 2 bytes by task 11985 on cpu 0:
+  fat16_ent_put+0x5b/0x90 fs/fat/fatent.c:181
+  fat_ent_write+0x6d/0xf0 fs/fat/fatent.c:415
+  fat_chain_add+0x34e/0x400 fs/fat/misc.c:130
+  fat_add_cluster+0x92/0xd0 fs/fat/inode.c:112
+  __fat_get_block fs/fat/inode.c:154 [inline]
+  fat_get_block+0x3ae/0x4e0 fs/fat/inode.c:189
+  __block_write_begin_int+0x2ea/0xf20 fs/buffer.c:1968
+  __block_write_begin fs/buffer.c:2018 [inline]
+  block_write_begin+0x77/0x160 fs/buffer.c:2077
+  cont_write_begin+0x3d6/0x670 fs/buffer.c:2426
+  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
+  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
+  cont_expand_zero fs/buffer.c:2353 [inline]
+  cont_write_begin+0x17a/0x670 fs/buffer.c:2416
+  fat_write_begin+0x72/0xc0 fs/fat/inode.c:235
+  pagecache_write_begin+0x6b/0x90 mm/filemap.c:3148
+  generic_cont_expand_simple+0xb0/0x120 fs/buffer.c:2317
 
-qfr->prot and qfr->flags aren't used at the moment, you could remove them.
+read to 0xffff8880a209c96b of 1 bytes by task 11990 on cpu 1:
+  fat_search_long+0x20a/0xc60 fs/fat/dir.c:484
+  vfat_find+0xc1/0xd0 fs/fat/namei_vfat.c:698
+  vfat_lookup+0x75/0x350 fs/fat/namei_vfat.c:712
+  lookup_open fs/namei.c:3203 [inline]
+  do_last fs/namei.c:3314 [inline]
+  path_openat+0x15b6/0x36e0 fs/namei.c:3525
+  do_filp_open+0x11e/0x1b0 fs/namei.c:3555
+  do_sys_open+0x3b3/0x4f0 fs/open.c:1097
+  __do_sys_open fs/open.c:1115 [inline]
+  __se_sys_open fs/open.c:1110 [inline]
+  __x64_sys_open+0x55/0x70 fs/open.c:1110
+  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
 
-> +
-> +	if (vma->vm_flags & VM_WRITE)
-> +		qfr->prot |= IOMMU_WRITE;
-> +
-> +	if (flags & UACCE_QFRF_SELFMT) {
-> +		if (!uacce->ops->mmap) {
-> +			ret = -EINVAL;
-> +			goto err_with_qfr;
-> +		}
-> +
-> +		ret = uacce->ops->mmap(q, vma, qfr);
-> +		if (ret)
-> +			goto err_with_qfr;
-> +		return qfr;
-> +	}
-> +
-> +	return qfr;
-> +
-> +err_with_qfr:
-> +	kfree(qfr);
-> +	return ERR_PTR(ret);
-> +}
-> +
-> +static int uacce_fops_mmap(struct file *filep, struct vm_area_struct *vma)
-> +{
-> +	struct uacce_queue *q = filep->private_data;
-> +	struct uacce_device *uacce = q->uacce;
-> +	struct uacce_qfile_region *qfr;
-> +	enum uacce_qfrt type = 0;
-> +	unsigned int flags = 0;
-> +	int ret;
-> +
-> +	if (vma->vm_pgoff < UACCE_QFRT_MAX)
-> +		type = vma->vm_pgoff;
+Reported by Kernel Concurrency Sanitizer on:
+CPU: 1 PID: 11990 Comm: syz-executor.2 Not tainted 5.4.0-rc3+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+==================================================================
 
-Otherwise return -EINVAL?  type probably shouldn't default to MMIO if it
-wasn't explicitly requested by the user.
 
-> +
-> +	vma->vm_flags |= VM_DONTCOPY | VM_DONTEXPAND | VM_WIPEONFORK;
-> +	vma->vm_ops = &uacce_vm_ops;
-> +	vma->vm_private_data = q;
-> +
-> +	mutex_lock(&uacce_mutex);
-> +
-> +	if (q->qfrs[type]) {
-> +		ret = -EEXIST;
-> +		goto out_with_lock;
-> +	}
-> +
-> +	switch (type) {
-> +	case UACCE_QFRT_MMIO:
-> +		flags = UACCE_QFRF_SELFMT;
-> +		break;
-> +
-> +	case UACCE_QFRT_DUS:
-> +		if (uacce->flags & UACCE_DEV_SVA) {
-> +			flags = UACCE_QFRF_SELFMT;
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I'd simplify this even further by getting rid of the SELFMT flag. It's the
-only possibility at the moment.
-
-> +			break;
-> +		}
-> +		break;
-> +
-> +	default:
-> +		WARN_ON(&uacce->dev);
-
-WARN_ON(uacce->dev). But shouldn't we instead return -EINVAL here?
-UACCE_QFRT_MAX is currently 16, so users can easily trigger this WARN by
-passing an invalid value.
-
-[...]
-> +void uacce_unregister(struct uacce_device *uacce)
-> +{
-> +	if (!uacce)
-> +		return;
-> +
-> +	mutex_lock(&uacce->q_lock);
-> +	if (!list_empty(&uacce->qs)) {
-> +		struct uacce_queue *q;
-> +
-> +		list_for_each_entry(q, &uacce->qs, list) {
-> +			uacce_put_queue(q);
-
-The open file descriptor will still exist after this function returns.
-Can all fops can be called with a stale queue?
-
-Thanks,
-Jean
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
