@@ -2,126 +2,111 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 064FECA9ECF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55487FC6197
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C426121928
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:02:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 35A5C2190F
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:04:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388193AbfKEKCD (ORCPT
+        id S2388021AbfKEKEU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:02:03 -0500
-Received: from mga03.intel.com ([134.134.136.65]:22746 "EHLO mga03.intel.com"
+        Tue, 5 Nov 2019 05:04:20 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:60680 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730699AbfKEKCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:02:03 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 02:02:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,270,1569308400"; 
-   d="scan'208";a="227047022"
-Received: from ahunter-desktop.fi.intel.com ([10.237.72.197])
-  by fmsmga004.fm.intel.com with ESMTP; 05 Nov 2019 02:01:57 -0800
-From:   Adrian Hunter <adrian.hunter@intel.com>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH] perf inject: Make --strip keep evsels
-Date:   Tue,  5 Nov 2019 12:00:57 +0200
-Message-Id: <20191105100057.21465-1-adrian.hunter@intel.com>
-X-Mailer: git-send-email 2.17.1
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki, Business Identity Code: 0357606 - 4, Domiciled in Helsinki
+        id S1730573AbfKEKET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:04:19 -0500
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com [209.85.128.72])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9CF6CC054C58
+        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 10:04:19 +0000 (UTC)
+Received: by mail-wm1-f72.google.com with SMTP id f2so7451198wmf.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 02:04:19 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=lrDn3WRTg+rwGOnenXl0j0b2dvVQo5Nmi58gDUT8LNE=;
+        b=MvBadvBXOoeN1TXzuEHho+dcuPi6wtjrmrFngRgvSeOiwVrGzyH6cqwAfefQV+zv8S
+         6EANWcntVeqoPbdOQw6vf/o1xFMxgnBnkS+gVi+YWUaHlq79h1MNKOEUnR/jGsDBc+WM
+         WZ4BknANclcfWF4ridIEtfSpmQrakMIhqVwXcO0yFmAq15cwawwRMvX6xwNgwyV5hEG2
+         eHu2Zkf5WM+GV0KleVOi8EjIbe6Ahvs7Bw98qfwJBfmjEZE4ov5Xff4OOAOcHJkT3bu6
+         7Mc2edXLjPRH3ETLVLcK68nWt19NpsdLwUYAP4gsuGMg7Pfz2YABHMJ6gZuQBUIKuCpP
+         MQow==
+X-Gm-Message-State: APjAAAVBKfiIO4+BxfZfKCttZw1r8h1SloWYpdIvcMwTFJqNI5dIFmpn
+        qXMw0GLoy3EghrY4RKm2yKPZEs5ajDzkvrUSmiWQCfI4cmtgeGOkK4sWHnMp5svuD04Lf5qRDfd
+        nP0vAeqgo0dM22tRhRQIQa9ef
+X-Received: by 2002:a05:6000:12d1:: with SMTP id l17mr13486384wrx.261.1572948258200;
+        Tue, 05 Nov 2019 02:04:18 -0800 (PST)
+X-Google-Smtp-Source: APXvYqyjNhFV5qF8IUjCi16O1NoaQu8sSVoDIfgxCmNd9O29UA3q2m/52eCf5DqgEb0rGOHyGFqzUg==
+X-Received: by 2002:a05:6000:12d1:: with SMTP id l17mr13486352wrx.261.1572948257905;
+        Tue, 05 Nov 2019 02:04:17 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
+        by smtp.gmail.com with ESMTPSA id t24sm30988243wra.55.2019.11.05.02.04.17
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 02:04:17 -0800 (PST)
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+To:     Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+References: <20191104230001.27774-1-aarcange@redhat.com>
+ <20191104230001.27774-4-aarcange@redhat.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+Date:   Tue, 5 Nov 2019 11:04:16 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
+MIME-Version: 1.0
+In-Reply-To: <20191104230001.27774-4-aarcange@redhat.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-create_gcov (refer to the autofdo example in
-tools/perf/Documentation/intel-pt.txt) now needs the evsels to read the
-perf.data file. So don't strip them.
+On 04/11/19 23:59, Andrea Arcangeli wrote:
+> kvm_x86_set_hv_timer and kvm_x86_cancel_hv_timer needs to be defined
+> to succeed the 32bit kernel build, but they can't be called.
+> 
+> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
+> ---
+>  arch/x86/kvm/vmx/vmx.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index bd17ad61f7e3..1a58ae38c8f2 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -7195,6 +7195,17 @@ void kvm_x86_cancel_hv_timer(struct kvm_vcpu *vcpu)
+>  {
+>  	to_vmx(vcpu)->hv_deadline_tsc = -1;
+>  }
+> +#else
+> +int kvm_x86_set_hv_timer(struct kvm_vcpu *vcpu, u64 guest_deadline_tsc,
+> +			 bool *expired)
+> +{
+> +	BUG();
+> +}
+> +
+> +void kvm_x86_cancel_hv_timer(struct kvm_vcpu *vcpu)
+> +{
+> +	BUG();
+> +}
+>  #endif
+>  
+>  void kvm_x86_sched_in(struct kvm_vcpu *vcpu, int cpu)
+> 
 
-Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
----
- tools/perf/builtin-inject.c | 54 -------------------------------------
- 1 file changed, 54 deletions(-)
+I'll check for how long this has been broken.  It may be the proof that
+we can actually drop 32-bit KVM support.
 
-diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
-index 372ecb3e2c06..1e5d28311e14 100644
---- a/tools/perf/builtin-inject.c
-+++ b/tools/perf/builtin-inject.c
-@@ -578,58 +578,6 @@ static void strip_init(struct perf_inject *inject)
- 		evsel->handler = drop_sample;
- }
- 
--static bool has_tracking(struct evsel *evsel)
--{
--	return evsel->core.attr.mmap || evsel->core.attr.mmap2 || evsel->core.attr.comm ||
--	       evsel->core.attr.task;
--}
--
--#define COMPAT_MASK (PERF_SAMPLE_ID | PERF_SAMPLE_TID | PERF_SAMPLE_TIME | \
--		     PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_IDENTIFIER)
--
--/*
-- * In order that the perf.data file is parsable, tracking events like MMAP need
-- * their selected event to exist, except if there is only 1 selected event left
-- * and it has a compatible sample type.
-- */
--static bool ok_to_remove(struct evlist *evlist,
--			 struct evsel *evsel_to_remove)
--{
--	struct evsel *evsel;
--	int cnt = 0;
--	bool ok = false;
--
--	if (!has_tracking(evsel_to_remove))
--		return true;
--
--	evlist__for_each_entry(evlist, evsel) {
--		if (evsel->handler != drop_sample) {
--			cnt += 1;
--			if ((evsel->core.attr.sample_type & COMPAT_MASK) ==
--			    (evsel_to_remove->core.attr.sample_type & COMPAT_MASK))
--				ok = true;
--		}
--	}
--
--	return ok && cnt == 1;
--}
--
--static void strip_fini(struct perf_inject *inject)
--{
--	struct evlist *evlist = inject->session->evlist;
--	struct evsel *evsel, *tmp;
--
--	/* Remove non-synthesized evsels if possible */
--	evlist__for_each_entry_safe(evlist, tmp, evsel) {
--		if (evsel->handler == drop_sample &&
--		    ok_to_remove(evlist, evsel)) {
--			pr_debug("Deleting %s\n", perf_evsel__name(evsel));
--			evlist__remove(evlist, evsel);
--			evsel__delete(evsel);
--		}
--	}
--}
--
- static int __cmd_inject(struct perf_inject *inject)
- {
- 	int ret = -EINVAL;
-@@ -729,8 +677,6 @@ static int __cmd_inject(struct perf_inject *inject)
- 				evlist__remove(session->evlist, evsel);
- 				evsel__delete(evsel);
- 			}
--			if (inject->strip)
--				strip_fini(inject);
- 		}
- 		session->header.data_offset = output_data_offset;
- 		session->header.data_size = inject->bytes_written;
--- 
-2.17.1
-
+Paolo
