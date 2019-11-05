@@ -4,146 +4,102 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 07B15C49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:16:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88EE5CA9ECF
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:16:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8C4321929
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:16:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66A6F217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 10:16:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730592AbfKEKQX (ORCPT
+        id S2388437AbfKEKQi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 05:16:23 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:2985 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2388283AbfKEKQX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 05:16:23 -0500
-Received: from mail-wm1-f69.google.com (mail-wm1-f69.google.com [209.85.128.69])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 77B0283F40
-        for <linux-kernel@vger.kernel.org>; Tue,  5 Nov 2019 10:16:22 +0000 (UTC)
-Received: by mail-wm1-f69.google.com with SMTP id d140so6999109wmd.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 02:16:22 -0800 (PST)
+        Tue, 5 Nov 2019 05:16:38 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:36172 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388283AbfKEKQh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 05:16:37 -0500
+Received: by mail-lj1-f194.google.com with SMTP id k15so9019038lja.3;
+        Tue, 05 Nov 2019 02:16:36 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=uZAUo/E5wcRqgEhwSboeuriam4SODw3m8iem1VMN08Q=;
-        b=VVE8hzM5c8Yo1L0BuRRWzoI9gwY6VgXX5it11mtWIQR+HSjcQemCKuNF0CBwYMUtw/
-         iKEwdb3XdKsVOPXJulhyc3YCfjxX1H8Vhzw/mnzJIVbH6qqkv5hW0lKMXgmGzw04P9uA
-         a3YLFEGvoAteZpwc2de2zbLIQIDy6PZnV5LJE4rVT20kSYMyvO+bB2CkihbcyUhBRPgq
-         Jxtg2wpQqMHL/h+wjeA2HLKxHrl3ZCMNVBwOxajuHkI6NWtDi1HWjrz1yuWRD8JuGGRQ
-         zvn5eQXZBmad58vkFETNHSauPRF2TP6xX/letU4UTw8H/3w4CGGQOgOuohSdNMb7O1uL
-         j8sA==
-X-Gm-Message-State: APjAAAW2fDGkXNtzDm0ehsXBuMVZ9CRIfw/PPNl9IsiuOf6zUYWV6E9Q
-        Jhkk5rFGN50jXbP6Wp05qF9Zmt/avmp6/LV0sOiTRwhOnGLxM6ZnkbGWl0s3vesr6ug9t3AqV35
-        U0edPvbAgQ1PxnFmExg4DXg8O
-X-Received: by 2002:a1c:a556:: with SMTP id o83mr3277641wme.165.1572948980956;
-        Tue, 05 Nov 2019 02:16:20 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzyFMQsgBm/VEPGNe2YJOVIorFff0eZiFyatDw2cYmXr4NB9b/QQ3W6fXWBvdvZukVGMHuC7g==
-X-Received: by 2002:a1c:a556:: with SMTP id o83mr3277615wme.165.1572948980663;
-        Tue, 05 Nov 2019 02:16:20 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
-        by smtp.gmail.com with ESMTPSA id b3sm12440889wmj.44.2019.11.05.02.16.19
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 02:16:20 -0800 (PST)
-Subject: Re: [PATCH 06/13] KVM: monolithic: x86: remove __exit section prefix
- from machine_unsetup
-To:     Andrea Arcangeli <aarcange@redhat.com>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>
-References: <20191104230001.27774-1-aarcange@redhat.com>
- <20191104230001.27774-7-aarcange@redhat.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <ccd2b1dc-ab23-2607-6f07-5429e7601282@redhat.com>
-Date:   Tue, 5 Nov 2019 11:16:19 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=5NebXbMF475Y2htZZ2GLrgonGKORB655pO+Ly4MPZ/c=;
+        b=HbBsIP8bGjK68mXDk3D+K3cvb8WLoXnvcgukZSTv4WIse1wd1I/5NtOcRCHgDD/Y0H
+         VP2f6+Ib4s5q8rLQZx8/Hy/reikkzi7p8Jx/B8v21wEeJ2F/OukMgXQkaelf5IYKdPMk
+         LsDBHWh3HZ6Yo1yX5p9oy8lMFMCFUiwyeJ4RvSqGVEPq48aeORrHg3HaCKEyYTxC9V3Q
+         v4KhYoHGyU2HYkjeoM9gO8C6cDPMRu5mzMUAzMSBl2f0Dm4AEPL3h+L5BEG71aDtmAA4
+         2iheRHaQi7K0FPh5vSWxWYnirVBZJFYZx3uehourwgN3dv966GCY/LVD2gAGySgq3AHq
+         SwMw==
+X-Gm-Message-State: APjAAAUk3ZQ/IyO9UcDcevP4X2BGRd5YIQP2woZdVFkpFxthfFkSRdmH
+        W5CERImd1Dyu3EpoY5KybRA=
+X-Google-Smtp-Source: APXvYqz7U8CFllFFvKlYIbQOiu2fh46CluHXoIm/6trz4KiiV6mVRJGukNHMZmUwWod0ZT5Wc+01AQ==
+X-Received: by 2002:a2e:9083:: with SMTP id l3mr7742362ljg.127.1572948995435;
+        Tue, 05 Nov 2019 02:16:35 -0800 (PST)
+Received: from localhost.localdomain ([213.255.186.46])
+        by smtp.gmail.com with ESMTPSA id g13sm1074895lfj.91.2019.11.05.02.16.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 02:16:35 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:16:25 +0200
+From:   Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+To:     matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
+Cc:     William Breathitt Gray <vilhelm.gray@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 14/62] gpio: gpio-gpio-mm: Use new GPIO_LINE_DIRECTION
+Message-ID: <ddb3030b090543401c8c8348938e5bbf5bd9e25e.1572945762.git.matti.vaittinen@fi.rohmeurope.com>
+References: <cover.1572945762.git.matti.vaittinen@fi.rohmeurope.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104230001.27774-7-aarcange@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1572945762.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/11/19 23:59, Andrea Arcangeli wrote:
-> Adjusts the section prefixes of some KVM x86 code function because
-> with the monolithic KVM model the section checker can now do a more
-> accurate static analysis at build time and it found a potentially
-> kernel crashing bug. This also allows to build without
-> CONFIG_SECTION_MISMATCH_WARN_ONLY=n.
-> 
-> The __exit removed from machine_unsetup is because
-> kvm_arch_hardware_unsetup() is called by kvm_init() which is in the
-> __init section. It's not allowed to call a function located in the
-> __exit section and dropped during the kernel link from the __init
-> section or the kernel will crash if that call is made.
-> 
-> Signed-off-by: Andrea Arcangeli <aarcange@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h | 4 ++--
->  arch/x86/kvm/svm.c              | 2 +-
->  arch/x86/kvm/vmx/vmx.c          | 2 +-
->  3 files changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index b36dd3265036..2b03ec80f6d7 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1004,7 +1004,7 @@ extern int kvm_x86_hardware_enable(void);
->  extern void kvm_x86_hardware_disable(void);
->  extern __init int kvm_x86_check_processor_compatibility(void);
->  extern __init int kvm_x86_hardware_setup(void);
-> -extern __exit void kvm_x86_hardware_unsetup(void);
-> +extern void kvm_x86_hardware_unsetup(void);
->  extern bool kvm_x86_cpu_has_accelerated_tpr(void);
->  extern bool kvm_x86_has_emulated_msr(int index);
->  extern void kvm_x86_cpuid_update(struct kvm_vcpu *vcpu);
-> @@ -1196,7 +1196,7 @@ struct kvm_x86_ops {
->  	void (*hardware_disable)(void);
->  	int (*check_processor_compatibility)(void);/* __init */
->  	int (*hardware_setup)(void);               /* __init */
-> -	void (*hardware_unsetup)(void);            /* __exit */
-> +	void (*hardware_unsetup)(void);
->  	bool (*cpu_has_accelerated_tpr)(void);
->  	bool (*has_emulated_msr)(int index);
->  	void (*cpuid_update)(struct kvm_vcpu *vcpu);
-> diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-> index 1705608246fb..4ce102f6f075 100644
-> --- a/arch/x86/kvm/svm.c
-> +++ b/arch/x86/kvm/svm.c
-> @@ -1412,7 +1412,7 @@ __init int kvm_x86_hardware_setup(void)
->  	return r;
->  }
->  
-> -__exit void kvm_x86_hardware_unsetup(void)
-> +void kvm_x86_hardware_unsetup(void)
->  {
->  	int cpu;
->  
-> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-> index 9c5f0c67b899..e406707381a4 100644
-> --- a/arch/x86/kvm/vmx/vmx.c
-> +++ b/arch/x86/kvm/vmx/vmx.c
-> @@ -7737,7 +7737,7 @@ __init int kvm_x86_hardware_setup(void)
->  	return r;
->  }
->  
-> -__exit void kvm_x86_hardware_unsetup(void)
-> +void kvm_x86_hardware_unsetup(void)
->  {
->  	if (nested)
->  		nested_vmx_hardware_unsetup();
-> 
+It's hard for occasional GPIO code reader/writer to know if values 0/1
+equal to IN or OUT. Use defined GPIO_LINE_DIRECTION_IN and
+GPIO_LINE_DIRECTION_OUT to help them out.
 
-Queued, thanks.
+Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+---
+ drivers/gpio/gpio-gpio-mm.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Paolo
+diff --git a/drivers/gpio/gpio-gpio-mm.c b/drivers/gpio/gpio-gpio-mm.c
+index 78a1db24e931..c22d6f94129c 100644
+--- a/drivers/gpio/gpio-gpio-mm.c
++++ b/drivers/gpio/gpio-gpio-mm.c
+@@ -52,7 +52,10 @@ static int gpiomm_gpio_get_direction(struct gpio_chip *chip,
+ 	const unsigned int port = offset / 8;
+ 	const unsigned int mask = BIT(offset % 8);
+ 
+-	return !!(gpiommgpio->io_state[port] & mask);
++	if (gpiommgpio->io_state[port] & mask)
++		return GPIO_LINE_DIRECTION_IN;
++
++	return GPIO_LINE_DIRECTION_OUT;
+ }
+ 
+ static int gpiomm_gpio_direction_input(struct gpio_chip *chip,
+-- 
+2.21.0
+
+
+-- 
+Matti Vaittinen, Linux device drivers
+ROHM Semiconductors, Finland SWDC
+Kiviharjunlenkki 1E
+90220 OULU
+FINLAND
+
+~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+Simon says - in Latin please.
+~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+Thanks to Simon Glass for the translation =] 
