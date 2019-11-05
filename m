@@ -2,191 +2,109 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE737C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF5BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:58:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952D5206BA
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:53:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38B4F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 22:58:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iHLJvOrK"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="d07BWnCD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730536AbfKEWxA (ORCPT
+        id S1730433AbfKEW6M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 17:53:00 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:34097 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730292AbfKEWw7 (ORCPT
+        Tue, 5 Nov 2019 17:58:12 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:40662 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729895AbfKEW6M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 17:52:59 -0500
-Received: by mail-oi1-f195.google.com with SMTP id l202so19188730oig.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:52:58 -0800 (PST)
+        Tue, 5 Nov 2019 17:58:12 -0500
+Received: by mail-io1-f68.google.com with SMTP id p6so24684676iod.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 14:58:11 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
-        b=iHLJvOrKMmGplCdoVyX0r+Vex/KiHX7/2gzEkqUGtS9y1kL5yKWQyCpQLbuDDjC9Is
-         5TTkBC0jgHz5YkvBoVLZNIH7IYS1FN/nj0Ri77yYoHW0RUq6VDBbgb860xuZ2D566gHO
-         jRvW49c1h4UyvoTIeITBnbXm1wQ3Mm8r0o2DNuoBShnqCcNpFhej58iGH3HAx+Eog3Ql
-         xiFj5N3CuW7VIh48JxSTvl30/ZCtzh10Y5GKZu7VKZvehv1luDEh0MfJe0gMx7PTzcZy
-         ZXAoO63WuczkBq1yJB+WPezvFII9eB/rDNWPzS3RklXRdMP30mo+PQRRWpMbyt72LoYA
-         NDCA==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbzRqvc8FvWk5sR5KGdavxWwldxvQh4qHgl2mJoTxrs=;
+        b=d07BWnCDYPq9AbOnFZh2cQnq7+WxNalVgk1NTA6PdAf0WHN3tNd9j7t7pDoGQ+hGhu
+         LaAnphcRnalev4XUEeyJhexhL9HhsSJ9+mrPtIw4cYe2l/QTd8wotEDPQpAXy4WC/C1E
+         S57U277pgztnLd2YvzPT08RDIr+xTsZMDxepI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ITot2P1/Oq1djB16oG4kp1TUvRDEYRsyk0+fdSTUYw4=;
-        b=fXFyLiP9WDHnwEoRFzkx0kq1AakF/LgKeZFWcEVoMSzoNggRX8qJkJSZXVrT6MB1Iy
-         Zh1Kc7fkqG9WpO1BuOZj1U5WDHgXT9T695XpYA4X9K0uy8ZGRrffCrGh+2aVkPHpQuRy
-         yIFyy5XNtPj1cPueVuMverkHW3s85EDwO0ojFR03Pong0R70PZ0WVewfYwK/7xcpzFdC
-         MpaXy7CkR71SGYKlNMtjSoTbzwfaL6AUVFK9AtZ2MbXI7rXT027PZHW0cYcvtGgVYTf4
-         8zX+2gZKqrt+hKYyK5TA17IC1hAuhwp7IWXyqCeqosHyggzmW2dzjlLCJ3fsPXou2ZaU
-         /mPw==
-X-Gm-Message-State: APjAAAVZO7S572RRWGhrgCuGwMSXYxq7rvuyPBaJWOXcg34XeeuVSsxS
-        uaXsHzXU5eBzqGrgKGy4CAb8AIRnF2yht5RBro39Sw==
-X-Google-Smtp-Source: APXvYqzIAUzPDmogTITDbFUcA/ihvKRGXKPJD4mBnp8pOOy8bZMrACShUDrVG+Osz9+7P9TgEvDK1SPeZMDgR0ab2QY=
-X-Received: by 2002:aca:d558:: with SMTP id m85mr1203360oig.43.1572994377809;
- Tue, 05 Nov 2019 14:52:57 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=wbzRqvc8FvWk5sR5KGdavxWwldxvQh4qHgl2mJoTxrs=;
+        b=JAOl+YlXn/wJBv6qZjpp7WzVa9m3+KNYklVlMtSYvO2fVYLwlS4VUD6QpT34d77pXQ
+         6oxmWsxYvxUuREBZxJlJ44qsozjKgw+uJFO3YEKeS861MD6MzXAUFQI+1uVPynkA4h7w
+         +ySYNDvqS0oB9sLh1oIZg0NqHBMluesVoprMpl6jCgNHbVnXDue5oO+Scl8pVJALmDtu
+         P8Y8575Agf3z8i/N3gYc+ffGoXydl5EnBsumOP5LVTS0C2SwmQaDLblx4ac/4hqdjy5t
+         urLYKHkemQVl9+AYziEEoZkgOFwfUgdEcv8xf0USezX5a8I12adywk/JwxuM0PyVzt6K
+         I9xg==
+X-Gm-Message-State: APjAAAWxrlhviUZTEAw0HrraDEVGQJj1iANLxvYqjLib0usxIdR3Ywen
+        CX/U28AdqplVyMdv6g5YwL5iaQ==
+X-Google-Smtp-Source: APXvYqx6XmtvqfERYm4mk+w5mZ3zxi4aVxOq3gZEKoAHqSgi4r3FR4hhxOQ8lCOIGxmzgBNdCQ7Gog==
+X-Received: by 2002:a5e:9e49:: with SMTP id j9mr31748458ioq.170.1572994691162;
+        Tue, 05 Nov 2019 14:58:11 -0800 (PST)
+Received: from localhost ([2620:15c:183:0:82e0:aef8:11bc:24c4])
+        by smtp.gmail.com with ESMTPSA id w75sm3229673ill.78.2019.11.05.14.58.10
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2019 14:58:10 -0800 (PST)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     alexander.deucher@amd.com
+Cc:     Raul E Rangel <rrangel@chromium.org>,
+        David Airlie <airlied@linux.ie>,
+        "David (ChunMing) Zhou" <David1.Zhou@amd.com>,
+        Rex Zhu <rex.zhu@amd.com>, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, amd-gfx@lists.freedesktop.org,
+        =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>,
+        Evan Quan <evan.quan@amd.com>, Daniel Vetter <daniel@ffwll.ch>
+Subject: [PATCH] drm/amd/powerplay: fix struct init in renoir_print_clk_levels
+Date:   Tue,  5 Nov 2019 15:58:02 -0700
+Message-Id: <20191105155734.1.If8740b4a5095031f2c00746fbc3224be9849d76b@changeid>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
- <7640808.4Pc6YCm0Y9@kreacher>
-In-Reply-To: <7640808.4Pc6YCm0Y9@kreacher>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Nov 2019 14:52:21 -0800
-Message-ID: <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
- differentiate errors
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>, linux-acpi@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rafael,
+drivers/gpu/drm/amd/powerplay/renoir_ppt.c:186:2: error: missing braces
+around initializer [-Werror=missing-braces]
+  SmuMetrics_t metrics = {0};
+    ^
 
-Thanks for the review.
+Fixes: 8b8031703bd7 ("drm/amd/powerplay: implement sysfs for getting dpm clock")
 
-On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
->
-> On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > When add_links() still has suppliers that it needs to link to in the
-> > future, this patch allows it to differentiate between suppliers that are
-> > needed for probing vs suppliers that are needed for sync_state()
-> > correctness.
->
-> I guess you mean that it will return different error codes in the different
-> cases.
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
 
-Yes.
+ drivers/gpu/drm/amd/powerplay/renoir_ppt.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
->
-> > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > ---
-> >  drivers/base/core.c    | 12 ++++++++----
-> >  include/linux/fwnode.h | 13 +++++++++----
-> >  2 files changed, 17 insertions(+), 8 deletions(-)
-> >
-> > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > index 48cd43a91ce6..e6d3e6d485da 100644
-> > --- a/drivers/base/core.c
-> > +++ b/drivers/base/core.c
-> > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> >       struct device *parent;
-> >       struct kobject *kobj;
-> >       struct class_interface *class_intf;
-> > -     int error = -EINVAL;
-> > +     int error = -EINVAL, fw_ret;
-> >       struct kobject *glue_dir = NULL;
-> >
-> >       dev = get_device(dev);
-> > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> >        */
-> >       device_link_add_missing_supplier_links();
-> >
-> > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > +     if (fwnode_has_op(dev->fwnode, add_links)) {
->
-> fw_ret can be defined here and I'd just call it "ret".
+diff --git a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+index e62bfba51562..e5283dafc414 100644
+--- a/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
++++ b/drivers/gpu/drm/amd/powerplay/renoir_ppt.c
+@@ -183,11 +183,13 @@ static int renoir_print_clk_levels(struct smu_context *smu,
+ 	int i, size = 0, ret = 0;
+ 	uint32_t cur_value = 0, value = 0, count = 0, min = 0, max = 0;
+ 	DpmClocks_t *clk_table = smu->smu_table.clocks_table;
+-	SmuMetrics_t metrics = {0};
++	SmuMetrics_t metrics;
+ 
+ 	if (!clk_table || clk_type >= SMU_CLK_COUNT)
+ 		return -EINVAL;
+ 
++	memset(&metrics, 0, sizeof(metrics));
++
+ 	ret = smu_update_table(smu, SMU_TABLE_SMU_METRICS, 0,
+ 			       (void *)&metrics, false);
+ 	if (ret)
+-- 
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
-I thought that style of variable declaration is frowned up in the
-kernel coding style.
-
->
-> > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > +             if (fw_ret == -ENODEV)
-> > +                     device_link_wait_for_mandatory_supplier(dev);
-> > +             else if (fw_ret)
-> > +                     device_link_wait_for_optional_supplier(dev);
-> > +     }
-> >
-> >       bus_probe_device(dev);
-> >       if (parent)
-> > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > index 25bb81f8ded8..a19134eae5a5 100644
-> > --- a/include/linux/fwnode.h
-> > +++ b/include/linux/fwnode.h
-> > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> >   *           available suppliers.
-> >   *
-> >   *           Return 0 if device links have been successfully created to all
-> > - *           the suppliers of this device or if the supplier information is
-> > - *           not known. Return an error if and only if the supplier
-> > - *           information is known but some of the suppliers are not yet
-> > - *           available to create device links to.
-> > + *           the suppliers this device needs to create device links to or if
-> > + *           the supplier information is not known.
->
-> "the known suppliers of this device or if the supplier information is not known."
-
-"suppliers it needs to create device links to" is a subset of known
-suppliers. There's no requirement that fw needs to create links to ALL
-known suppliers. Just a minor distinction.
-
-> > + *
-> > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > + *           the device are not yet available to create device links to.
->
-> It would be more precise to say something like this:
->
-> "Return -ENODEV if an attempt to create a device link to one of the device's
-> suppliers needed for probing it fails."
-
-"attempt to create a device link to one of the device's suppliers
-needed for probing it fails" to me means device_link_add() fails.
-But I'm trying to say that it should return an error if the struct
-device isn't even there yet.
-
-> > + *
-> > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > + *           that are not yet available but none of those suppliers are
-> > + *           necessary for probing this device.
->
-> "Return -EAGAIN if attempts to create device links to some of the device's
-> suppliers have failed, but those suppliers are not necessary for probing the
-> device."
-
-Same comment as before. The distinction I'm making here is that
--EAGAIN is needed when the struct device itself isn't there.
-
-Btw, Greg already pulled these into driver-core-next. Let me know if
-you want me to send a delta patch to fix any of these comments.
-
-Thanks,
-Saravana
