@@ -2,109 +2,98 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92072C5DF62
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:41:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98123C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:42:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A6E220663
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:41:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="BH4w6bZP"
+	by mail.kernel.org (Postfix) with ESMTP id 39C3D21A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 23:42:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729991AbfKEXlV (ORCPT
+        id S1730171AbfKEXmG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 18:41:21 -0500
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:15131 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfKEXlV (ORCPT
+        Tue, 5 Nov 2019 18:42:06 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:55606 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727046AbfKEXmF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 18:41:21 -0500
-Received: from hqpgpgate102.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc208670000>; Tue, 05 Nov 2019 15:40:23 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate102.nvidia.com (PGP Universal service);
-  Tue, 05 Nov 2019 15:41:20 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate102.nvidia.com on Tue, 05 Nov 2019 15:41:20 -0800
-Received: from [10.26.11.93] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 5 Nov
- 2019 23:41:17 +0000
-Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20191104212140.046021995@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <a9c51735-86c7-9e77-707b-74628a99f76b@nvidia.com>
-Date:   Tue, 5 Nov 2019 23:41:15 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 18:42:05 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id e32b34b1b09df63b; Wed, 6 Nov 2019 00:42:03 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org
+Subject: Re: [PATCH v6 11/15] software node: move small properties inline when copying
+Date:   Wed, 06 Nov 2019 00:42:02 +0100
+Message-ID: <47671501.dVG71sAca0@kreacher>
+In-Reply-To: <20191023200233.86616-12-dmitry.torokhov@gmail.com>
+References: <20191023200233.86616-1-dmitry.torokhov@gmail.com> <20191023200233.86616-12-dmitry.torokhov@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191104212140.046021995@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1572997223; bh=7YS8VdMS5xEzFW/MqfNlabrrat+Sb6EI15l+MQ8vt54=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=BH4w6bZPLQjZuMmwkNoXX5G1YwV1PIWpWrKBu0gTOQ40Qziqvuzqu7mZ/OboYpfAF
-         78C+bouQ61Jjy7SkO2HHfR6lx6XJPUXPh/92JocvcaBbaKNUuv8Afxj2xjChAg1GUC
-         bVs9AWRquDPRDQmo8hF9oUBCWKqp8soD3CQpXtXo3rHmD9dq7ml4Y9+MTFKCfIYRMg
-         dFJi5itJz/UHp/Vv0LD5PUEkGsOpCmFhJW1olbfrKKlEZ11y+E8T6fc+cYtm1Z4hys
-         qvwaHxt7WA6PkaS6YRPVA4SMxo1zv7vF3NUIaOQBKU7hRXj2dCvMvIJCEqSHrArb80
-         QrYGIofb1z4AA==
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-On 04/11/2019 21:43, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.3.9 release.
-> There are 163 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Wednesday, October 23, 2019 10:02:29 PM CET Dmitry Torokhov wrote:
+> When copying/duplicating set of properties, move smaller properties that
+> were stored separately directly inside property entry structures. We can
+> move:
 > 
-> Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> Anything received after that time might be too late.
+> - up to 8 bytes from U8 arrays
+> - up to 4 words
+> - up to 2 double words
+> - one U64 value
+> - one or 2 strings.
+
+Yes, we can do that, but how much of a difference does this really make?
+
+Also, how can one distinguish between a single-value property and an inline
+array which this change?  By looking at the length?
+
+> Signed-off-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> ---
+>  drivers/base/swnode.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.9-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> and the diffstat can be found below.
+> diff --git a/drivers/base/swnode.c b/drivers/base/swnode.c
+> index 18a30fb3cc58..49e1108aa4b7 100644
+> --- a/drivers/base/swnode.c
+> +++ b/drivers/base/swnode.c
+> @@ -280,6 +280,16 @@ static int property_entry_copy_data(struct property_entry *dst,
+>  	if (!dst->name)
+>  		goto out_free_data;
+>  
+> +	if (!dst->is_inline && dst->length <= sizeof(dst->value)) {
+> +		/* We have an opportunity to move the data inline */
+> +		const void *tmp = dst->pointer;
+> +
+> +		memcpy(&dst->value, tmp, dst->length);
+> +		dst->is_inline = true;
+> +
+> +		kfree(tmp);
+
+This would have been more useful if we had been able to avoid making the
+allocation altogether.
+
+> +	}
+> +
+>  	return 0;
+>  
+>  out_free_data:
 > 
-> thanks,
-> 
-> greg k-h
 
-All tests for Tegra are passing ...
 
-Test results for stable-v5.3:
-    12 builds:	12 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    38 tests:	38 pass, 0 fail
 
-Linux version:	5.3.9-rc1-g75c9913bbf6e
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
 
-Cheers
-Jon
-
--- 
-nvpublic
