@@ -2,261 +2,122 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF6C4C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:52:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEBD2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9840121A49
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:52:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572987153;
-	bh=Yh+Y7Ijqh/erqhoKp2ejRASB2j9+otCY3+pNbZl6n4Y=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0YwiXzxgRFG/mNqVUUioRbooF60ZeA05Q8h3ajEcK2CaW6iw8eKC3yfxn7yKoEUi+
-	 7kr3l8aKnsWJ58WDAxi3hnySCL1tnDgf0LxWypjUbWOXD/cTfx95n2aeBVl6O8Asln
-	 8y97jxgqjcK0dE/6DqU8x8AJhWjxHBxVdMOPgTSo=
+	by mail.kernel.org (Postfix) with ESMTP id 9AB2621A49
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729822AbfKEUwc (ORCPT
+        id S1729789AbfKEUy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 15:52:32 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33417 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725806AbfKEUwb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 15:52:31 -0500
-Received: by mail-oi1-f193.google.com with SMTP id m193so18901615oig.0;
-        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=/XIB9kBX8rgCqucb9RY+pGi1vrT74BwyH3QkaAjqeZI=;
-        b=sU8J6WEKTeOUi/7uzPBqqod/e15bObVKBzjM3DmmbRt2DSDY8DWUycW+z0japOkKVM
-         o8WBDCuDOjBwzHYC/Jh7KXTdDU8uGnvlNEo23t1OERv/D2rGbenWj+NAavqAobfJcAzB
-         BuJYJqcb0R52C2LaFfTuoiJsm9/Oikovv2WHHZ71WQHBkk07G7hJVuWXx6rllf+g4YU9
-         upAbO7F/ky84yBE2QnFiCzpiS0Nq9rI4DPcyH4ncKy2VQRK5N3A7U5+ezuDQFPdHICj5
-         LCaULAyPWzGG8pscO4+btjiaAjsnoNPLVktrU0WXWomfs02XrdqTPtf6QrDeXTcYFZP9
-         mDHA==
-X-Gm-Message-State: APjAAAWUPG5ply+1qvbBq3+pfvXpENKWT8Xwe/lwLRze7GfxRHAqaodE
-        Qt+IDnvRyHFTomOe6b2FGg==
-X-Google-Smtp-Source: APXvYqziVaKnSp1xfCY+f3pe1zGb9MsRO7KRl9lFwrGYmuJyVtsFZKoZqvFpq4JGdrLoT+WF5ro1Sw==
-X-Received: by 2002:aca:4d8d:: with SMTP id a135mr895431oib.1.1572987150187;
-        Tue, 05 Nov 2019 12:52:30 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id z6sm6504247otb.66.2019.11.05.12.52.29
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 12:52:29 -0800 (PST)
-Date:   Tue, 5 Nov 2019 14:52:28 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc:     mazziesaccount@gmail.com,
-        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
-        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Lee Jones <lee.jones@linaro.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-rtc@vger.kernel.org
-Subject: Re: [RFC PATCH v3 03/15] dt-bindings: regulator: Document ROHM
- BD71282 regulator bindings
-Message-ID: <20191105205228.GB629@bogus>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
- <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+        Tue, 5 Nov 2019 15:54:57 -0500
+Received: from foss.arm.com ([217.140.110.172]:53458 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKEUy5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:54:57 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 36D7C30E;
+        Tue,  5 Nov 2019 12:54:56 -0800 (PST)
+Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6A0CB4014A;
+        Tue,  5 Nov 2019 04:37:41 -0800 (PST)
+Date:   Tue, 5 Nov 2019 12:37:39 +0000
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     Andrew Murray <andrew.murray@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+ doorbell way
+Message-ID: <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+ <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <ce43bfd90455b14216262494f4ba4028827239c0.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 01:31:46PM +0200, Matti Vaittinen wrote:
-> Document ROHM BD71828 PMIC regulator device tree bindings.
+On Thu, Aug 29, 2019 at 10:43:18AM +0530, Kishon Vijay Abraham I wrote:
+> Gustavo,
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
+> On 27/08/19 6:55 PM, Andrew Murray wrote:
+> > On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
+> >>
+> >>
+> >>> -----Original Message-----
+> >>> From: Andrew Murray <andrew.murray@arm.com>
+> >>> Sent: 2019年8月23日 21:58
+> >>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+> >>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+> >>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+> >>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+> >>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+> >>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+> >>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+> >>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+> >>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+> >>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+> >>> doorbell way
+> >>>
+> >>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
+> >>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
+> >>>> in EP mode.
+> >>>>
+> >>>
+> >>> I have no problems with this patch, however...
+> >>>
+> >>> Are you able to add to this message a reason for why you are making this
+> >>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
+> >>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
+> >>
+> >> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
+> >> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
+> >> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
+> >> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
+> > 
+> > Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
+> > erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
+> > would never get used.
+> > 
+> > Now that we're adding a platform with MSIX support the existing
+> > dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
+> > different method.
 > 
-> Changes from v2 - my first encounter with yaml :/
-> 
->  .../regulator/rohm,bd71828-regulator.yaml     | 123 ++++++++++++++++++
->  1 file changed, 123 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> new file mode 100644
-> index 000000000000..60715d8b92df
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/rohm,bd71828-regulator.yaml
-> @@ -0,0 +1,123 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/regulator/rohm,bd71828-regulator.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: ROHM BD71828 Power Management Integrated Circuit regulators
-> +
-> +maintainers:
-> +  - Liam Girdwood <lgirdwood@gmail.com>
-> +  - Mark Brown <broonie@kernel.org>
-> +  - Rob Herring <robh+dt@kernel.org>
-> +  - Mark Rutland <mark.rutland@arm.com>
-> +
-> +description: |
-> +  This module is part of the ROHM BD71828 MFD device. For more details
-> +  see Documentation/devicetree/bindings/mfd/rohm,bd71828-pmic.yaml.
-> +
-> +  The regulator controller is represented as a sub-node of the PMIC node
-> +  on the device tree.
-> +
-> +  Regulator nodes should be named to BUCK_<number> and LDO_<number>.
-> +  The valid names for BD71828 regulator nodes are
-> +  BUCK1, BUCK2, BUCK3, BUCK4, BUCK5, BUCK6, BUCK7
-> +  LDO1, LDO2, LDO3, LDO4, LDO5, LDO6, LDO7
-> +
-> +patternProperties:
-> +  "^LDO[1-7]$":
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description:
-> +      Properties for single LDO regulator.
-> +
-> +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
+> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for
+> designware as it didn't work for both me and Xiaowei?
 
-Well, lowercase nodenames are preferred... But still, no, there's not.
+This question needs an answer.
 
-And I think you could just drop this and the nodename is used instead.
-
-> +      regulator-name:
-> +        description:
-> +          should be "ldo1", ..., "ldo7"
-
-You can at least do:
-
-pattern: "^ldo[1-7]$"
-
-
-> +
-> +  "^BUCK[1-7]$":
-> +    type: object
-> +    allOf:
-> +      - $ref: regulator.yaml#
-> +    description:
-> +      Properties for single BUCK regulator.
-> +
-> +    properties:
-> +      #Is there a nice way to check the name is same as node name but lower case
-> +      regulator-name:
-> +        description:
-> +          should be "buck1", ..., "buck7"
-> +
-> +      rohm,dvs-run-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "RUN" state voltage in uV. See below table for
-> +          bucks which support this.
-
-Use standard unit-suffixes on all these (-microvolt). And then drop the 
-$ref.
-
-Any constraints on the range?
-
-> +
-> +      rohm,dvs-idle-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "IDLE" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +      rohm,dvs-suspend-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "SUSPEND" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +      rohm,dvs-lpsr-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          PMIC default "LPSR" state voltage in uV. See below table for
-> +          bucks which support this.
-> +
-> +#Supported default DVS states:
-> +#buck		| run		| idle		| suspend	| lpsr
-> +#----------------------------------------------------------------------------
-> +#1, 2, 6, and 7	| supported	| supported	| 	supported (*)
-> +#----------------------------------------------------------------------------
-> +#3, 4, and 5	| 			supported (**)
-> +#----------------------------------------------------------------------------
-> +#(*)  LPSR and SUSPEND states use same voltage but both states have own enable /
-> +#     disable settings. Voltage 0 can be specified for a state to make regulator
-> +#     disabled on that state.
-> +#(**) All states use same voltage but have own enable / disable settings.
-> +#     Voltage 0 can be specified for a state to make regulator disabled on that
-> +#     state.
-> +
-> +      rohm,dvs-runlvl-ctrl:
-> +        description: |
-> +          buck control is done based on run-level. Regulator is not
-> +          individually controllable. See ../mfd/rohm,bd71828-pmic.yaml for
-> +          how to specify run-level control mechanism. Only bucks 1, 2, 6
-> +          and 7 support this.
-> +        type: boolean
-> +
-> +      rohm,dvs-runlevel0-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 0. Microvolts.
-> +
-> +      rohm,dvs-runlevel1-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 1. Microvolts.
-> +
-> +      rohm,dvs-runlevel2-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 2. Microvolts.
-> +
-> +      rohm,dvs-runlevel3-voltage:
-> +        $ref: "/schemas/types.yaml#/definitions/uint32"
-> +        description:
-> +          voltage for run-level 3. Microvolts.
-
-Perhaps an array of 4 values for runlevel?
-
-> +
-> +    required:
-> +      - regulator-name
-> +  additionalProperties: false
-> +additionalProperties: false
-> -- 
-> 2.21.0
-> 
-> 
-> -- 
-> Matti Vaittinen, Linux device drivers
-> ROHM Semiconductors, Finland SWDC
-> Kiviharjunlenkki 1E
-> 90220 OULU
-> FINLAND
-> 
-> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
-> Simon says - in Latin please.
-> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
-> Thanks to Simon Glass for the translation =] 
+Thanks,
+Lorenzo
