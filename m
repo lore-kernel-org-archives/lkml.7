@@ -2,91 +2,172 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 08410CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:28:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0B0CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:29:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8500214E0
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:28:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2302A217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:29:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="gAJaJ2CU"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="KMrEoYr7";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="nOZWF/Ro"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729925AbfKEC2e (ORCPT
+        id S1730073AbfKEC3T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:28:34 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40409 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729760AbfKEC2d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:28:33 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 476YW24dTjz9sP6;
-        Tue,  5 Nov 2019 13:28:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1572920910;
-        bh=YuJJBevMNH24b4uO51gTHuzv4G0CuabsCvDy05//4G0=;
+        Mon, 4 Nov 2019 21:29:19 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:33618 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729760AbfKEC3S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:29:18 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id F273860D7C; Tue,  5 Nov 2019 02:29:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572920958;
+        bh=Yz5Pb8QULVWB/wXiv94o8i3LmKowXMZZDYSjNSX+YYE=;
         h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=gAJaJ2CUmC8oVMi3iZd4UuUGVzzkiiNQMPrsXzgInOcf5vTK6PCoH0M3jH0oB2DSZ
-         cqlwtiK2JwK/8mKn3tJTOi1xOuN7U22jmyyLsj0w/Thi/UCMKJtDthPtiaxGm9gI8n
-         WGYqldv2Od2Xru0tBYyx/1a/PgOTbkgBXMyAQt9gR5+ZMr6dlaNdTnRiOdol8qxz5N
-         /1sXBJVv7Cw4FS5iqDlGkjQgS4U6fMu7E5w3Wq/mjk59iWEzIHD0tt6U+Zx9syAHHQ
-         5o/l8EZE8PPpnel3QPNKyOyDbfH0wM0hmjnphJ4OKKM7zYxR1qSTf8t82Ys/tmxlSw
-         J3NTzMpXhGJVw==
-Date:   Tue, 5 Nov 2019 13:28:30 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jason Gunthorpe <jgg@mellanox.com>
-Cc:     Doug Ledford <dledford@redhat.com>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: linux-next: manual merge of the rdma tree with Linus' tree
-Message-ID: <20191105132830.398ef72f@canb.auug.org.au>
-In-Reply-To: <20191105022109.GL22766@mellanox.com>
-References: <20191105121704.72edfc76@canb.auug.org.au>
-        <20191105022109.GL22766@mellanox.com>
+        b=KMrEoYr7M6bHTfQlUE95lDjwsoTzyLiP5R3gkcrVa1m4egtX/F0oemWDJVsxvY/hK
+         55B4UwnHgdG6cI8cHTOsd44mnaHy47UJRf3X79lQF5/H8POiJjFl5Q9ll4Go7gM45g
+         oO+gY50kDBXYlaUr4EkVgjxco1XG90Y7bWA9rWXg=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id D7C0A60A50;
+        Tue,  5 Nov 2019 02:29:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1572920956;
+        bh=Yz5Pb8QULVWB/wXiv94o8i3LmKowXMZZDYSjNSX+YYE=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=nOZWF/RoEvUPPAGGW4QIZHLAQSS4OIBQOQLn7EYM2wnXbIbZKtcSskHUMqdzsXoQA
+         yydh3m/fcShh8F6O9tE18yXu/3en+U+vhsoNEvU+v8+h1q0yMoaY/pIBhTIcHGR+bw
+         ICPY3t+Qoie730Vb298af7ROBz0NB3l1zniDWxUw=
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/+7MuN0yjWrb+Xp4mTNcejU6";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Tue, 05 Nov 2019 07:59:16 +0530
+From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To:     Will Deacon <will@kernel.org>
+Cc:     bjorn.andersson@linaro.org, Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        iommu@lists.linux-foundation.org,
+        Stephen Boyd <swboyd@chromium.org>,
+        Vivek Gautam <vivek.gautam@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm-owner@vger.kernel.org, Andy Gross <agross@kernel.org>
+Subject: Re: [PATCHv7 0/3] QCOM smmu-500 wait-for-safe handling for sdm845
+In-Reply-To: <20191104162339.GD24909@willie-the-truck>
+References: <cover.1568966170.git.saiprakash.ranjan@codeaurora.org>
+ <20191101163136.GC3603@willie-the-truck>
+ <af7e9a14ae7512665f0cae32e08c8b06@codeaurora.org>
+ <20191101172508.GB3983@willie-the-truck>
+ <119d4bcf5989d1aa0686fd674c6a3370@codeaurora.org>
+ <20191104051925.GC5299@hector.lan> <20191104151506.GB24909@willie-the-truck>
+ <20191104162339.GD24909@willie-the-truck>
+Message-ID: <8d20a6af33b80191d44db97b757d0dfa@codeaurora.org>
+X-Sender: saiprakash.ranjan@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/+7MuN0yjWrb+Xp4mTNcejU6
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019-11-04 21:53, Will Deacon wrote:
+> On Mon, Nov 04, 2019 at 03:15:06PM +0000, Will Deacon wrote:
+>> On Sun, Nov 03, 2019 at 11:19:25PM -0600, Andy Gross wrote:
+>> > On Fri, Nov 01, 2019 at 11:01:59PM +0530, Sai Prakash Ranjan wrote:
+>> > > >>> What's the plan for getting this merged? I'm not happy taking the
+>> > > >>> firmware
+>> > > >>> bits without Andy's ack, but I also think the SMMU changes should go via
+>> > > >>> the IOMMU tree to avoid conflicts.
+>> > > >>>
+>> > > >>> Andy?
+>> > > >>>
+>> > > >>
+>> > > >>Bjorn maintains QCOM stuff now if I am not wrong and he has already
+>> > > >>reviewed
+>> > > >>the firmware bits. So I'm hoping you could take all these through IOMMU
+>> > > >>tree.
+>> > > >
+>> > > >Oh, I didn't realise that. Is there a MAINTAINERS update someplace? If I
+>> > > >run:
+>> > > >
+>> > > >$ ./scripts/get_maintainer.pl -f drivers/firmware/qcom_scm-64.c
+>> > > >
+>> > > >in linux-next, I get:
+>> > > >
+>> > > >Andy Gross <agross@kernel.org> (maintainer:ARM/QUALCOMM SUPPORT)
+>> > > >linux-arm-msm@vger.kernel.org (open list:ARM/QUALCOMM SUPPORT)
+>> > > >linux-kernel@vger.kernel.org (open list)
+>> > > >
+>> > >
+>> > > It hasn't been updated yet then. I will leave it to Bjorn or Andy to comment
+>> > > on this.
+>> >
+>> > The rumors of my demise have been greatly exaggerated.  All kidding aside, I
+>> > ack'ed both.  Bjorn will indeed be coming on as a co-maintener at some point.
+>> > He has already done a lot of yeomans work in helping me out the past 3 months.
+>> 
+>> Cheers Andy, and I'm pleased to hear that you're still with us! I've 
+>> queued
+>> this lot for 5.5 and I'll send to Joerg this week.
+> 
+> Bah, in doing so I spotted that the existing code doesn't handle error 
+> codes
+> properly because 'a0' is unsigned. I'll queue the patch below at the 
+> start
+> of the series.
+> 
+> Will
+> 
+> --->8
+> 
+> From a9a1047f08de0eff249fb65e2d5d6f6f8b2a87f0 Mon Sep 17 00:00:00 2001
+> From: Will Deacon <will@kernel.org>
+> Date: Mon, 4 Nov 2019 15:58:15 +0000
+> Subject: [PATCH] firmware: qcom: scm: Ensure 'a0' status code is 
+> treated as
+>  signed
+> 
+> The 'a0' member of 'struct arm_smccc_res' is declared as 'unsigned 
+> long',
+> however the Qualcomm SCM firmware interface driver expects to receive
+> negative error codes via this field, so ensure that it's cast to 'long'
+> before comparing to see if it is less than 0.
+> 
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Will Deacon <will@kernel.org>
+> ---
+>  drivers/firmware/qcom_scm-64.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/qcom_scm-64.c 
+> b/drivers/firmware/qcom_scm-64.c
+> index 91d5ad7cf58b..25e0f60c759a 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -150,7 +150,7 @@ static int qcom_scm_call(struct device *dev, u32
+> svc_id, u32 cmd_id,
+>  		kfree(args_virt);
+>  	}
+> 
+> -	if (res->a0 < 0)
+> +	if ((long)res->a0 < 0)
+>  		return qcom_scm_remap_error(res->a0);
+> 
+>  	return 0;
 
-Hi Jason,
+Fixes: 6b1751a86ce2 ("firmware: qcom: scm: Add support for ARM64 SoCs") 
+?
 
-On Tue, 5 Nov 2019 02:21:13 +0000 Jason Gunthorpe <jgg@mellanox.com> wrote:
->
-> The rdma for-next tree is right as is, the xa_erase does not need to
-> be the irq varient here.
+FWIW, Reviewed-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 
-OK, thanks.  I will fix up my resolution for tomorrow.
+-Sai
 
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/+7MuN0yjWrb+Xp4mTNcejU6
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3A3k4ACgkQAVBC80lX
-0GxCbAf9HXkvSzM6mNfwu8YhrZ+9IGEOrbb1MO+Mv2zZWJqc0GKDIb4rnxKrZ7AZ
-g3S2cElxSh8vyqvCH0Yv1XlryzF+3EH+m8g0DkhpmBSYPCLOdDuhARqGIb9YtU5z
-ExNFxdF5PDp0paSMTOkjJFBipNsvFSv1IC3XFuMbSB+tc5G4ZE1YBEUp44Lwvq4i
-RN0iNgcEI1Or1w5UhDPL7ZyIgz5qJUmOwmbD149xc9+2iuGWp/ICruqRAglp7AGG
-mEVB+nHpPvrhEqANuKED7xVrk8T/ZnCiBRjayys5EpXQzNaTlKmzEKo2MoMH12t5
-Vu+GvrusRHORlAZrFPXR/SdVGCWgIQ==
-=kQLu
------END PGP SIGNATURE-----
-
---Sig_/+7MuN0yjWrb+Xp4mTNcejU6--
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member
+of Code Aurora Forum, hosted by The Linux Foundation
