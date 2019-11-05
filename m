@@ -2,150 +2,170 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3EDEC17498
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0AC6C17498
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5E5B206DF
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:56:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97378217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:57:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BfcBZ2ZL"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LJo/Lmae"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389596AbfKEO4o (ORCPT
+        id S2389667AbfKEO5I (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:56:44 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:37470 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727889AbfKEO4o (ORCPT
+        Tue, 5 Nov 2019 09:57:08 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:42085 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S2389632AbfKEO5I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:56:44 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5EsrJb013317;
-        Tue, 5 Nov 2019 14:56:12 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=U2XpltzPsohKEesiIoKecnv74molLoZ2j+lblcZhv1k=;
- b=BfcBZ2ZLB4g80O07ky8PtGzjc3Ycwu1rFDTxuigdVOlL9XMD/ckaCgyvqiYfjoLibrEu
- lGaUsb7X0a4xKYIn/3WIa2k02LUnQpsBW0n3rxtfXmzBwvz4uw8fC/v2fnjI5Rv8QpvJ
- J9R5HwOfuR1e9gN8MWP72QFPuLJnJYwZIRY48q2tbkAN/5JyKtQXxnFytlKQm0jCUV5s
- AJyuG5GRFK+KDKyG584x6LIanZcKNd+LdcZOShE6ZdKBMQNt3ON6K5SN75gwrtR37OQ+
- weMRtAZxYi55mMbrLp3CctexpYQlW4PS+Ac6/MxW3aFmzHRxPuOfIDUSYYy34skkTghh Bg== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w117ty0ch-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 14:56:12 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5EsTgO008488;
-        Tue, 5 Nov 2019 14:56:12 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by userp3030.oracle.com with ESMTP id 2w333vb7xk-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 05 Nov 2019 14:56:12 +0000
-Received: from abhmp0017.oracle.com (abhmp0017.oracle.com [141.146.116.23])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA5EuAFc028587;
-        Tue, 5 Nov 2019 14:56:10 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Nov 2019 06:56:09 -0800
-Date:   Tue, 5 Nov 2019 17:56:02 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Mao Wenan <maowenan@huawei.com>
-Cc:     wangzhou1@hisilicon.com, herbert@gondor.apana.org.au,
-        davem@davemloft.net, tanshukun1@huawei.com,
-        linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] crypto: hisilicon: move label err to #ifdef
- CONFIG_NUMA
-Message-ID: <20191105145602.GH10409@kadam>
-References: <20191105143340.32950-1-maowenan@huawei.com>
+        Tue, 5 Nov 2019 09:57:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1572965827;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=lEZHakZ/d1soyr+G6fFBZtfVSOtoyc+a/+kprjYqw1o=;
+        b=LJo/Lmae5ueVpRtxTUbvdXG0TUMEPkKTNFj8qC3x6jAy+F2zgKexO69Btge1f2egoFm/Ax
+        ho28aIM/MtVxc2aLEnVsU06nYuZ6q8murgoVHTJPVv059RX3k4j0YvC28lRu3n8OhPOyRT
+        vZGILjlQsq7tJEzJdYhd8yyg4QhZZKU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-74-pODoF3CRNrSfU86NQQcmKg-1; Tue, 05 Nov 2019 09:57:03 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A272C477;
+        Tue,  5 Nov 2019 14:57:01 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1CE891001DC0;
+        Tue,  5 Nov 2019 14:56:52 +0000 (UTC)
+Date:   Tue, 5 Nov 2019 09:56:51 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Jessica Yu <jeyu@kernel.org>,
+        Matthias Maennich <maennich@google.com>
+Subject: Re: [PATCH 03/13] kvm: monolithic: fixup x86-32 build
+Message-ID: <20191105145651.GD30717@redhat.com>
+References: <20191104230001.27774-1-aarcange@redhat.com>
+ <20191104230001.27774-4-aarcange@redhat.com>
+ <6ed4a5cd-38b1-04f8-e3d5-3327a1bd5d87@redhat.com>
+ <678358c1-0621-3d2a-186e-b60742b2a286@redhat.com>
+ <20191105135414.GA30717@redhat.com>
+ <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+In-Reply-To: <330acce5-a527-543b-84c0-f3d8d277a0e2@redhat.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: pODoF3CRNrSfU86NQQcmKg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Content-Disposition: inline
-In-Reply-To: <20191105143340.32950-1-maowenan@huawei.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911050124
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9431 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911050125
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ifdefs in this function were pretty ugly before but this makes it
-super extra ugly...  :/  There are bunch of ways to fix this nicely
-but my favourite is this:
+On Tue, Nov 05, 2019 at 03:09:37PM +0100, Paolo Bonzini wrote:
+> You can reorder patches so that kvm_x86_ops assignments never happen.
+> That way, 4/13 for example would be moved to the very beginning.
 
-Feel free to give me a Suggested-by tag.
+Ok 3/13 and 4/14 can both go before 2/13, I reordered them fine, the
+end result at least is the same and the intermediate result should
+improve. Hopefully this is the best solution for those two outliers.
 
-diff --git a/drivers/crypto/hisilicon/zip/zip_main.c b/drivers/crypto/hisilicon/zip/zip_main.c
-index 255b63cfbe1d..1b22f0ead56e 100644
---- a/drivers/crypto/hisilicon/zip/zip_main.c
-+++ b/drivers/crypto/hisilicon/zip/zip_main.c
-@@ -105,20 +105,27 @@ static void free_list(struct list_head *head)
- struct hisi_zip *find_zip_device(int node)
- {
- 	struct hisi_zip *ret = NULL;
--#ifdef CONFIG_NUMA
- 	struct hisi_zip_resource *res, *tmp;
- 	struct hisi_zip *hisi_zip;
- 	struct list_head *n;
- 	struct device *dev;
- 	LIST_HEAD(head);
- 
-+	if (!IS_ENABLED(CONFIG_NUMA)) {
-+		mutex_lock(&hisi_zip_list_lock);
-+		ret = list_first_entry(&hisi_zip_list, struct hisi_zip, list);
-+		mutex_unlock(&hisi_zip_list_lock);
-+		return ret;
-+	}
-+
- 	mutex_lock(&hisi_zip_list_lock);
- 
- 	list_for_each_entry(hisi_zip, &hisi_zip_list, list) {
- 		res = kzalloc(sizeof(*res), GFP_KERNEL);
--		if (!res)
--			goto err;
--
-+		if (!res) {
-+			ret = NULL;
-+			goto done;
-+		}
- 		dev = &hisi_zip->qm.pdev->dev;
- 		res->hzip = hisi_zip;
- 		res->distance = node_distance(dev->numa_node, node);
-@@ -140,20 +147,10 @@ struct hisi_zip *find_zip_device(int node)
- 		}
- 	}
- 
-+done:
- 	free_list(&head);
--#else
--	mutex_lock(&hisi_zip_list_lock);
--
--	ret = list_first_entry(&hisi_zip_list, struct hisi_zip, list);
--#endif
- 	mutex_unlock(&hisi_zip_list_lock);
--
- 	return ret;
--
--err:
--	free_list(&head);
--	mutex_unlock(&hisi_zip_list_lock);
--	return NULL;
- }
- 
- struct hisi_zip_hw_error {
+Once this is committed I expect Sean to take over 4/14 with a more
+optimal version to get rid of that branch like he proposed initially.
+
+> >> - look into how to remove the modpost warnings.  A simple (though
+> >> somewhat ugly) way is to keep a kvm.ko module that includes common
+> >> virt/kvm/ code as well as, for x86 only, page_track.o.  A few function=
+s,
+> >> such as kvm_mmu_gfn_disallow_lpage and kvm_mmu_gfn_allow_lpage, would
+> >> have to be moved into mmu.h, but that's not a big deal.
+> >=20
+> > I think we should:
+> >=20
+> > 1) whitelist to shut off the warnings on demand
+>=20
+> Do you mean adding a whitelist to modpost?  That would work, though I am
+> not sure if the module maintainer (Jessica Yu) would accept that.
+
+Yes that's exactly what I meant.
+
+> > 2) verify that if two modules are registering the same export symbol
+> >    the second one fails to load and the module code is robust about
+> >    that, this hopefully should already be the case
+> >=20
+> > Provided verification of 2), the whitelist is more efficient than
+> > losing 4k of ram in all KVM hypervisors out there.
+>=20
+> I agree.
+
+Ok, so I enlarged the CC list accordingly to check how the whitelist
+can be done in modpost.
+
+> >> - provide at least some examples of replacing the NULL kvm_x86_ops
+> >> checks with error codes in the function (or just early "return"s).  I
+> >> can help with the others, but remember that for the patch to be merged=
+,
+> >> kvm_x86_ops must be removed completely.
+> >=20
+> > Even if kvm_x86_ops wouldn't be guaranteed to go away, this would
+> > already provide all the performance benefit to the KVM users, so I
+> > wouldn't see a reason not to apply it even if kvm_x86_ops cannot go
+> > away.
+>=20
+> The answer is maintainability.  My suggestion is that we start looking
+> into removing all assignments and tests of kvm_x86_ops, one step at a
+> time.  Until this is done, unfortunately we won't be able to reap the
+> performance benefit.  But the advantage is that this can be done in many
+
+There's not much performance benefit left from the removal
+kvm_x86_ops. It'll only remove a few branches at best (and only if we
+don't have to replace the branches on the pointer check with other
+branches on a static variable to disambiguate the different cases).
+
+> separate submissions; it doesn't have to be one huge patch.
+>=20
+> Once this is done, removing kvm_x86_ops is trivial in the end.  It's
+> okay if the intermediate step has minimal performance regressions, we
+> know what it will look like.  I have to order patches with maintenance
+> first and performance second, if possible.
+
+The removal of kvm_x86_ops is just a badly needed code cleanup and of
+course I agree it must happen sooner than later. I'm just trying to
+avoid running into rejects on those further commit cleanups too.
+
+> By the way, we are already planning to make some module parameters
+> per-VM instead of global, so this refactoring would also help that effort=
+.
+>
+> > Said that it will go away and there's no concern about it. It's
+> > just that the patchset seems large enough already and it rejects
+> > heavily already at every port. I simply stopped at the first self
+> > contained step that provides all performance benefits.
+>=20
+> That is good enough to prove the feasibility of the idea, so I agree
+> that was a good plan.
+
+All right, so I'm not exactly sure what's the plan and if it's ok to
+do it over time or if I should go ahead doing all logic changes while
+the big patch remains out of tree.
+
+If you apply it and reorder 4/13 and 3/13 before 2/13 in a rebase like
+I did locally, it should already be good starting point in my view and
+the modpost also can be fixed over time too, the warnings appears
+harmless so far.
+
+Thanks,
+Andrea
 
