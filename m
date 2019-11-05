@@ -2,202 +2,137 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7942CA9ED5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:51:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 656C4CA9ED5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 87E1A20818
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:51:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A34420818
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 05:53:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GPVY7jb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387489AbfKEFvq (ORCPT
+        id S2387626AbfKEFxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 00:51:46 -0500
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:50763 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727113AbfKEFvq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 00:51:46 -0500
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id EC4323C0594;
-        Tue,  5 Nov 2019 06:51:42 +0100 (CET)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id NIvBb3uK3IUk; Tue,  5 Nov 2019 06:51:37 +0100 (CET)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
+        Tue, 5 Nov 2019 00:53:23 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:34153 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387555AbfKEFxX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 00:53:23 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 807E13C0585;
-        Tue,  5 Nov 2019 06:51:37 +0100 (CET)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.468.0; Tue, 5 Nov 2019
- 06:51:36 +0100
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        <linux-mmc@vger.kernel.org>
-CC:     Linus Walleij <linus.walleij@linaro.org>,
-        Mathieu Malaterre <malat@debian.org>,
-        Pavel Machek <pavel@ucw.cz>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: [PATCH 3/3] mmc: core: Add 'fixed-emmc-driver-type-hs{200,400}'
-Date:   Tue, 5 Nov 2019 06:50:15 +0100
-Message-ID: <20191105055015.23656-3-erosca@de.adit-jv.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191105055015.23656-1-erosca@de.adit-jv.com>
-References: <20191105055015.23656-1-erosca@de.adit-jv.com>
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 476f3G5hh9z9sP6;
+        Tue,  5 Nov 2019 16:53:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1572933197;
+        bh=f9hNs4jQjbohnId4YFBy7pOqvHYnA2ugkM9qvTsebHQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=GPVY7jb6FGsf8JZrV/ipYnnxNIEM7HBPaIwCw45kae9w/Q5iODqTnvsiQLpC6Ofxx
+         dJ8WhYQlGLrEh7Wg1la0Fa5ej7Aie3yacltVFawILzMPhAQ4l/l1zkbS3N7GqjrdPK
+         PT7Rk2RjsfqTmbj40SXrSWFyJMeR3T8uz0FtPzEK6KqLaQO4CnvpZzIwqpQGOsTO/B
+         +YIbyw4HV2eRbHTkPCBrHpYQa7AvSb0lDaUcYKegGQDCNIN0gIuaCs99Nd4qlKZesa
+         PFB1H7dxLkCQFg7EPMEPusINTTyM1zINwuw0WkWXn30KfnOzDlpo3TRS4vT3av90oy
+         /69Nc8RSKtaug==
+Date:   Tue, 5 Nov 2019 16:53:13 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Greg KH <greg@kroah.com>, David Miller <davem@davemloft.net>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Joe Perches <joe@perches.com>,
+        =?UTF-8?B?SsOpcsO0?= =?UTF-8?B?bWU=?= Pouiller 
+        <jerome.pouiller@silabs.com>
+Subject: linux-next: manual merge of the staging tree with the
+ staging.current and net-next trees
+Message-ID: <20191105165313.59a5cc11@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.72.93.184]
+Content-Type: multipart/signed; boundary="Sig_/f83taoECjBr4uwFqhb6tiJk";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for two more DT bindings, which stem from the need to
-implement below real-life requirement shared by eMMC vendor:
+--Sig_/f83taoECjBr4uwFqhb6tiJk
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
- ---snip---
- Use "drive strength" value of 4 or 1 for HS400 or 0 for HS200.
- ---snip---
+Hi all,
 
-Inspire from [Y] and [Z] during implementation and testing (H3ULCB-KF).
-Below decision matrix is intended as function of user's input:
+Today's linux-next merge of the staging tree got conflicts in:
 
-      [0]        [2]        [4]
-[0]  hs200:[0]  hs200:[2]  hs200:[0]
-     hs400:[0]  hs400:[0]  hs400:[4]
-[2]  hs200:[2]  hs200:[2]  hs200:[2]
-     hs400:[0]  hs400:[R]  hs400:[4]
-[4]  hs200:[0]  hs200:[2]  hs200:[R]
-     hs400:[4]  hs400:[4]  hs400:[4]
+  drivers/staging/Kconfig
+  drivers/staging/Makefile
 
-[0] "fixed-emmc-driver-type"
-[2] "fixed-emmc-driver-type-hs200"
-[4] "fixed-emmc-driver-type-hs400"
-[R] RAW/ECSD drive strength as implemented in
-    commit cc4f414c885cd0 ("mmc: mmc: Add driver strength selection")
-[Y] commit 6186d06c519e21 ("mmc: parse new binding for eMMC fixed driver type")
-[Z] https://www.elinux.org/Tests:eMMC-fixed-drive-strength
+between commits:
 
-Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
-Signed-off-by: Eugeniu Rosca <erosca@de.adit-jv.com>
----
- drivers/mmc/core/host.c  |  4 ++++
- drivers/mmc/core/mmc.c   | 19 ++++++++++++++++---
- include/linux/mmc/host.h |  2 ++
- 3 files changed, 22 insertions(+), 3 deletions(-)
+  df4028658f9d ("staging: Add VirtualBox guest shared folder (vboxsf) suppo=
+rt")
+  52340b82cf1a ("hp100: Move 100BaseVG AnyLAN driver to staging")
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 54abfdfc69ba..2a3d3b542e0d 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -336,6 +336,8 @@ int mmc_of_parse(struct mmc_host *host)
- 
- 	/* Must be after "non-removable" check */
- 	mmc_of_read_drv_type(host, "fixed-emmc-driver-type", &host->fixed_drv_type);
-+	mmc_of_read_drv_type(host, "fixed-emmc-driver-type-hs200", &host->fixed_drv_type_hs200);
-+	mmc_of_read_drv_type(host, "fixed-emmc-driver-type-hs400", &host->fixed_drv_type_hs400);
- 
- 	host->dsr_req = !device_property_read_u32(dev, "dsr", &host->dsr);
- 	if (host->dsr_req && (host->dsr & ~0xffff)) {
-@@ -455,6 +457,8 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *dev)
- 	host->max_blk_count = PAGE_SIZE / 512;
- 
- 	host->fixed_drv_type = -EINVAL;
-+	host->fixed_drv_type_hs200 = -EINVAL;
-+	host->fixed_drv_type_hs400 = -EINVAL;
- 	host->ios.power_delay_ms = 10;
- 
- 	return host;
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index c8804895595f..89e6fb9aedeb 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -62,6 +62,8 @@ static const unsigned int taac_mant[] = {
- 		__res & __mask;						\
- 	})
- 
-+static void mmc_select_driver_type(struct mmc_card *card, int timing);
-+
- /*
-  * Given the decoded CSD structure, decode the raw CID to our CID structure.
-  */
-@@ -1192,6 +1194,8 @@ static int mmc_select_hs400(struct mmc_card *card)
- 		return err;
- 	}
- 
-+	mmc_select_driver_type(card, EXT_CSD_TIMING_HS400);
-+
- 	/* Switch card to HS400 */
- 	val = EXT_CSD_TIMING_HS400 |
- 	      card->drive_strength << EXT_CSD_DRV_STR_SHIFT;
-@@ -1270,6 +1274,8 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
- 	if (err)
- 		goto out_err;
- 
-+	mmc_select_driver_type(card, EXT_CSD_TIMING_HS200);
-+
- 	/* Switch HS to HS200 */
- 	val = EXT_CSD_TIMING_HS200 |
- 	      card->drive_strength << EXT_CSD_DRV_STR_SHIFT;
-@@ -1304,10 +1310,17 @@ int mmc_hs400_to_hs200(struct mmc_card *card)
- 	return err;
- }
- 
--static void mmc_select_driver_type(struct mmc_card *card)
-+static void mmc_select_driver_type(struct mmc_card *card, int timing)
- {
- 	int card_drv_type, drive_strength, drv_type = 0;
- 	int fixed_drv_type = card->host->fixed_drv_type;
-+	int fixed_drv_type_hs200 = card->host->fixed_drv_type_hs200;
-+	int fixed_drv_type_hs400 = card->host->fixed_drv_type_hs400;
-+
-+	if (fixed_drv_type_hs200 >= 0 && timing == EXT_CSD_TIMING_HS200)
-+		fixed_drv_type = fixed_drv_type_hs200;
-+	else if (fixed_drv_type_hs400 >= 0 && timing == EXT_CSD_TIMING_HS400)
-+		fixed_drv_type = fixed_drv_type_hs400;
- 
- 	card_drv_type = card->ext_csd.raw_driver_strength |
- 			mmc_driver_type_mask(0);
-@@ -1385,7 +1398,7 @@ static int mmc_select_hs400es(struct mmc_card *card)
- 		goto out_err;
- 	}
- 
--	mmc_select_driver_type(card);
-+	mmc_select_driver_type(card, EXT_CSD_TIMING_HS400);
- 
- 	/* Switch card to HS400 */
- 	val = EXT_CSD_TIMING_HS400 |
-@@ -1445,7 +1458,7 @@ static int mmc_select_hs200(struct mmc_card *card)
- 	if (err)
- 		return err;
- 
--	mmc_select_driver_type(card);
-+	mmc_select_driver_type(card, EXT_CSD_TIMING_HS200);
- 
- 	/*
- 	 * Set the bus width(4 or 8) with host's support and
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index ba703384bea0..6960ba98810a 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -371,6 +371,8 @@ struct mmc_host {
- #define MMC_CAP2_MERGE_CAPABLE	(1 << 26)	/* Host can merge a segment over the segment size */
- 
- 	int			fixed_drv_type;	/* fixed driver type for non-removable media */
-+	int			fixed_drv_type_hs200;	/* HS200-specific fixed_drv_type */
-+	int			fixed_drv_type_hs400;	/* HS400-specific fixed_drv_type */
- 
- 	mmc_pm_flag_t		pm_caps;	/* supported pm features */
- 
--- 
-2.23.0
+from the staging.current and net-next trees and commit:
 
+  a7a91ca5a23d ("staging: wfx: add infrastructure for new driver")
+
+from the staging tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/staging/Kconfig
+index be74f91500b3,a490141a0e88..000000000000
+--- a/drivers/staging/Kconfig
++++ b/drivers/staging/Kconfig
+@@@ -125,8 -125,6 +125,10 @@@ source "drivers/staging/exfat/Kconfig
+ =20
+  source "drivers/staging/qlge/Kconfig"
+ =20
+ +source "drivers/staging/vboxsf/Kconfig"
+ +
+ +source "drivers/staging/hp/Kconfig"
+ +
++ source "drivers/staging/wfx/Kconfig"
++=20
+  endif # STAGING
+diff --cc drivers/staging/Makefile
+index b8bd05091453,4cb548a0ff87..000000000000
+--- a/drivers/staging/Makefile
++++ b/drivers/staging/Makefile
+@@@ -53,5 -53,4 +53,6 @@@ obj-$(CONFIG_UWB)		+=3D uwb
+  obj-$(CONFIG_USB_WUSB)		+=3D wusbcore/
+  obj-$(CONFIG_EXFAT_FS)		+=3D exfat/
+  obj-$(CONFIG_QLGE)		+=3D qlge/
+ +obj-$(CONFIG_VBOXSF_FS)		+=3D vboxsf/
+ +obj-$(CONFIG_NET_VENDOR_HP)	+=3D hp/
++ obj-$(CONFIG_WFX)		+=3D wfx/
+
+--Sig_/f83taoECjBr4uwFqhb6tiJk
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3BDkoACgkQAVBC80lX
+0GxBIwf+JkgmrQnEKVPJu7rwU8CbLhidBcV458j3OQGqiRJJw+TuaCAb0ygF9dX6
+0oRTOf9YvxFQBitjGkn7rqsMyGyy2p6Q4n4/9/fQU8BwjKfwdQJw13//VypkLj/I
+55D2Zwb+hwfmYOhFVioNHX4RsB9qpMK1uDG63oaz5IEHG/n9+prfwRy3raKa6ONX
+y/LqUs2LSURHj2y8r0fqh4O4nn+MuMvwQ9X8Z3/CRZgXrZQYGzPja7S3VTJEgkn/
+LCXjY0hoTSsutrkGwy4q5t7mZMpWIE49NX/1L5BMpctt6dn3vQpXl6t6wwLBVzKd
+4XWDm6zCf8G/zerbC1As51AEFG1h6w==
+=g9pO
+-----END PGP SIGNATURE-----
+
+--Sig_/f83taoECjBr4uwFqhb6tiJk--
