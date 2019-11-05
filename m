@@ -2,153 +2,740 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE100CA9ED4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:14:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6014ACA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B5591214D9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:14:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ndPLVpqw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GOiVsOwt"
+	by mail.kernel.org (Postfix) with ESMTP id 262AC217F5
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 02:17:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729879AbfKECOt (ORCPT
+        id S1729971AbfKECRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 21:14:49 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:57628 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728987AbfKECOt (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 21:14:49 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id AA64960D85; Tue,  5 Nov 2019 02:14:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572920087;
-        bh=0uidgkLkU8pB/hQcd5eELhl2vlQ93A/xAt8T1/nz1HM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ndPLVpqwIejr4mWK+39aBDHCZ+ckhTJ9vPysEZEfjNuRQ6j07dP7Kf6Ci5XP+YmZD
-         owiFjDzzxe1/ZeUqKM/m0+kEGfiCRo0rrDdZk0UOZxVexiTbuyGgX/ApZ7zNTn6chG
-         brSPHOk/VbeZbCz8le4EtVR01dft5qi/uJI6w/Fw=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 7903C60D61;
-        Tue,  5 Nov 2019 02:14:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1572920082;
-        bh=0uidgkLkU8pB/hQcd5eELhl2vlQ93A/xAt8T1/nz1HM=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GOiVsOwt7S/mDZ4dtWHF+KL+Myp7znhfio9X8xMqyWxxcgjkhEK8cT4E8/aSJbuWf
-         Lg7bC4s1PEFfIfHg7LV/A68oFRJgveBqEQpnTievgA7TCnU6ILn4wi/67nUiNjIAGA
-         bdq/kZ5O0+8kyCu8YAxM0r2bm1JiHZwKJsTVuGvs=
+        Mon, 4 Nov 2019 21:17:50 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5265 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728987AbfKECRt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 21:17:49 -0500
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id A0FF5ABEA00A7A751289;
+        Tue,  5 Nov 2019 10:17:45 +0800 (CST)
+Received: from [10.134.22.195] (10.134.22.195) by smtp.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 5 Nov 2019
+ 10:17:42 +0800
+Subject: Re: [PATCH 3/3] Revert "f2fs: use kvmalloc, if kmalloc is failed"
+To:     Jaegeuk Kim <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>
+References: <20191101095324.9902-1-yuchao0@huawei.com>
+ <20191101095324.9902-3-yuchao0@huawei.com>
+ <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
+From:   Chao Yu <yuchao0@huawei.com>
+Message-ID: <40d0df3f-cc55-d31a-474b-76f57d96bd89@huawei.com>
+Date:   Tue, 5 Nov 2019 10:17:41 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+In-Reply-To: <20191105000249.GA46956@jaegeuk-macbookpro.roam.corp.google.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-Date:   Tue, 05 Nov 2019 07:44:42 +0530
-From:   Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-To:     Elliot Berman <eberman@codeaurora.org>, swboyd@chromium.org
-Cc:     bjorn.andersson@linaro.org, agross@kernel.org,
-        tsoni@codeaurora.org, sidgup@codeaurora.org,
-        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 00/17] Restructure, improve target support for qcom_scm
- driver
-In-Reply-To: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
-References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
-Message-ID: <c608454385b38703be0888b60aa915a8@codeaurora.org>
-X-Sender: saiprakash.ranjan@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-Originating-IP: [10.134.22.195]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-05 06:57, Elliot Berman wrote:
-> This series improves support for 32-bit Qualcomm targets on qcom_scm 
-> driver.
+On 2019/11/5 8:02, Jaegeuk Kim wrote:
+> On 11/01, Chao Yu wrote:
+>> This reverts commit 5222595d093ebe80329d38d255d14316257afb3e.
+>>
+>> As discussed with Eric, as kvmalloc() will try kmalloc() first, so
+>> when we need allocate large size memory, it'd better to use
+>> f2fs_kvmalloc() directly rather than adding additional fallback
+>> logic to call kvmalloc() after we failed in f2fs_kmalloc().
+>>
+>> In order to avoid allocation failure described in original commit,
+>> I change to use f2fs_kvmalloc() for .free_nid_bitmap bitmap memory.
 > 
-> Currently, the qcom_scm driver supports only 64-bit Qualcomm targets 
-> and very
-> old 32-bit Qualcomm targets. Newer 32-bit targets use ARM's SMC Calling
-> Convention to communicate with secure world. Older 32-bit targets use a
-> "buffer-based" legacy approach for communicating with secure world (as
-> implemented in qcom_scm-32.c). All arm64 Qualcomm targets use ARM 
-> SMCCC.
-> Currently, SMCCC-based communication is enabled only on ARM64 config 
-> and
-> buffer-based communication only on ARM config. This patch-series 
-> combines SMCCC
-> and legacy conventions and selects the correct convention by querying 
-> the secure
-> world [1].
-> 
-> We decided to take the opportunity as well to clean up the driver 
-> rather than
-> try to patch together qcom_scm-32 and qcom_scm-64.
-> 
-> Patches 1-4 improve macro names, reorder macros/functions, and prune 
-> unused
->             macros/functions. No functional changes were introduced.
-> Patches 5-9 clears up the SCM abstraction in qcom_scm-64.
-> Patches 10-14 clears up the SCM abstraction in qcom_scm-32.
-> Patches 9 and 15-16 enable dynamically using the different calling 
-> conventions.
-> 
-> This series is based on 
-> https://lore.kernel.org/patchwork/cover/1129991/
-> 
-> [1]:
-> https://source.codeaurora.org/quic/la/kernel/msm-4.9/tree/drivers/soc/qcom/scm.c?h=kernel.lnx.4.9.r28-rel#n555
-> 
-> Changes since RFC:
->  - Fixed missing return values in qcom_scm_call_smccc
->  - Fixed order of arguments in qcom_scm_set_warm_boot_addr
->  - Adjusted logic of SMC convention to properly support older QCOM 
-> secure worlds
->  - Boot tested on IFC6410 based on linaro kernel tag:
->    debian-qcom-dragonboard410c-18.01 (which does basic verification of 
-> legacy
->    SCM calls: at least warm_boot_addr, cold_boot_addr, and power_down)
-> 
-> Elliot Berman (17):
->   firmware: qcom_scm: Rename macros and structures
->   firmware: qcom_scm: Apply consistent naming scheme to command IDs
->   firmware: qcom_scm: Order functions, definitions by service/command
->   firmware: qcom_scm: Remove unused qcom_scm_get_version
->   firmware: qcom_scm-64: Move svc/cmd/owner into qcom_scm_desc
->   firmware: qcom_scm-64: Add SCM results to descriptor
->   firmware: qcom_scm-64: Remove qcom_scm_call_do_smccc
->   firmware: qcom_scm-64: Move SMC register filling to
->     qcom_scm_call_smccc
->   firmware: qcom_scm-64: Improve SMC convention detection
->   firmware: qcom_scm-32: Use SMC arch wrappers
->   firmware: qcom_scm-32: Use qcom_scm_desc in non-atomic calls
->   firmware: qcom_scm-32: Move SMCCC register filling to qcom_scm_call
->   firmware: qcom_scm-32: Create common legacy atomic call
->   firmware: qcom_scm-32: Add device argument to atomic calls
->   firmware: qcom_scm: Merge legacy and SMCCC conventions
->   firmware: qcom_scm: Enable legacy calling convention in qcom_scm-64.c
->   firmware: qcom_scm: Rename -64 -> -smc, remove -32
-> 
->  drivers/firmware/Kconfig        |  18 +-
->  drivers/firmware/Makefile       |   4 +-
->  drivers/firmware/qcom_scm-32.c  | 621 --------------------------
->  drivers/firmware/qcom_scm-64.c  | 567 ------------------------
->  drivers/firmware/qcom_scm-smc.c | 949 
-> ++++++++++++++++++++++++++++++++++++++++
->  drivers/firmware/qcom_scm.c     | 235 +++++-----
->  drivers/firmware/qcom_scm.h     | 115 +++--
->  include/linux/qcom_scm.h        |  72 +--
->  8 files changed, 1169 insertions(+), 1412 deletions(-)
->  delete mode 100644 drivers/firmware/qcom_scm-32.c
->  delete mode 100644 drivers/firmware/qcom_scm-64.c
->  create mode 100644 drivers/firmware/qcom_scm-smc.c
+> Is there any problem in the previous flow?
 
-++Stephen
+No existing problem, however, it's redundant to introduce fallback flow in
+f2fs_kmalloc() like vmalloc() did, since we can call f2fs_vmalloc() directly in
+places where we need large memory.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
-member
-of Code Aurora Forum, hosted by The Linux Foundation
+Thanks,
+
+> 
+>>
+>> Signed-off-by: Chao Yu <yuchao0@huawei.com>
+>> ---
+>>  fs/f2fs/acl.c        |  6 ++---
+>>  fs/f2fs/checkpoint.c |  2 +-
+>>  fs/f2fs/data.c       |  2 +-
+>>  fs/f2fs/debug.c      |  2 +-
+>>  fs/f2fs/dir.c        |  6 ++---
+>>  fs/f2fs/f2fs.h       | 10 ++-----
+>>  fs/f2fs/file.c       |  2 +-
+>>  fs/f2fs/gc.c         |  4 +--
+>>  fs/f2fs/hash.c       |  4 +--
+>>  fs/f2fs/inline.c     |  4 +--
+>>  fs/f2fs/namei.c      |  2 +-
+>>  fs/f2fs/node.c       | 10 +++----
+>>  fs/f2fs/segment.c    | 28 +++++++++----------
+>>  fs/f2fs/super.c      | 64 ++++++++++++++++++++++----------------------
+>>  fs/f2fs/xattr.c      | 10 +++----
+>>  15 files changed, 75 insertions(+), 81 deletions(-)
+>>
+>> diff --git a/fs/f2fs/acl.c b/fs/f2fs/acl.c
+>> index 217b290ae3a5..306413589827 100644
+>> --- a/fs/f2fs/acl.c
+>> +++ b/fs/f2fs/acl.c
+>> @@ -160,7 +160,7 @@ static void *f2fs_acl_to_disk(struct f2fs_sb_info *sbi,
+>>  	return (void *)f2fs_acl;
+>>  
+>>  fail:
+>> -	kvfree(f2fs_acl);
+>> +	kfree(f2fs_acl);
+>>  	return ERR_PTR(-EINVAL);
+>>  }
+>>  
+>> @@ -190,7 +190,7 @@ static struct posix_acl *__f2fs_get_acl(struct inode *inode, int type,
+>>  		acl = NULL;
+>>  	else
+>>  		acl = ERR_PTR(retval);
+>> -	kvfree(value);
+>> +	kfree(value);
+>>  
+>>  	return acl;
+>>  }
+>> @@ -240,7 +240,7 @@ static int __f2fs_set_acl(struct inode *inode, int type,
+>>  
+>>  	error = f2fs_setxattr(inode, name_index, "", value, size, ipage, 0);
+>>  
+>> -	kvfree(value);
+>> +	kfree(value);
+>>  	if (!error)
+>>  		set_cached_acl(inode, type, acl);
+>>  
+>> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
+>> index ffdaba0c55d2..b33779822a2c 100644
+>> --- a/fs/f2fs/checkpoint.c
+>> +++ b/fs/f2fs/checkpoint.c
+>> @@ -965,7 +965,7 @@ int f2fs_get_valid_checkpoint(struct f2fs_sb_info *sbi)
+>>  	f2fs_put_page(cp1, 1);
+>>  	f2fs_put_page(cp2, 1);
+>>  fail_no_cp:
+>> -	kvfree(sbi->ckpt);
+>> +	kfree(sbi->ckpt);
+>>  	return err;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/data.c b/fs/f2fs/data.c
+>> index 0bcb28d70894..58f4bade6c2b 100644
+>> --- a/fs/f2fs/data.c
+>> +++ b/fs/f2fs/data.c
+>> @@ -2889,7 +2889,7 @@ static void f2fs_dio_end_io(struct bio *bio)
+>>  	bio->bi_private = dio->orig_private;
+>>  	bio->bi_end_io = dio->orig_end_io;
+>>  
+>> -	kvfree(dio);
+>> +	kfree(dio);
+>>  
+>>  	bio_endio(bio);
+>>  }
+>> diff --git a/fs/f2fs/debug.c b/fs/f2fs/debug.c
+>> index 9b0bedd82581..5abd1d67d8b2 100644
+>> --- a/fs/f2fs/debug.c
+>> +++ b/fs/f2fs/debug.c
+>> @@ -515,7 +515,7 @@ void f2fs_destroy_stats(struct f2fs_sb_info *sbi)
+>>  	list_del(&si->stat_list);
+>>  	mutex_unlock(&f2fs_stat_mutex);
+>>  
+>> -	kvfree(si);
+>> +	kfree(si);
+>>  }
+>>  
+>>  void __init f2fs_create_root_stats(void)
+>> diff --git a/fs/f2fs/dir.c b/fs/f2fs/dir.c
+>> index c967cacf979e..83ca3b721015 100644
+>> --- a/fs/f2fs/dir.c
+>> +++ b/fs/f2fs/dir.c
+>> @@ -158,7 +158,7 @@ static void f2fs_fname_setup_ci_filename(struct inode *dir,
+>>  					iname, cf_name->name,
+>>  					F2FS_NAME_LEN);
+>>  	if ((int)cf_name->len <= 0) {
+>> -		kvfree(cf_name->name);
+>> +		kfree(cf_name->name);
+>>  		cf_name->name = NULL;
+>>  	}
+>>  }
+>> @@ -245,7 +245,7 @@ struct f2fs_dir_entry *f2fs_find_target_dentry(struct fscrypt_name *fname,
+>>  		*max_slots = max_len;
+>>  
+>>  #ifdef CONFIG_UNICODE
+>> -	kvfree(cf_str.name);
+>> +	kfree(cf_str.name);
+>>  #endif
+>>  	return de;
+>>  }
+>> @@ -1101,7 +1101,7 @@ static int f2fs_d_hash(const struct dentry *dentry, struct qstr *str)
+>>  	}
+>>  	str->hash = full_name_hash(dentry, norm, len);
+>>  out:
+>> -	kvfree(norm);
+>> +	kfree(norm);
+>>  	return ret;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+>> index 3f6204202788..8833e9d32f9d 100644
+>> --- a/fs/f2fs/f2fs.h
+>> +++ b/fs/f2fs/f2fs.h
+>> @@ -1677,7 +1677,7 @@ static inline void disable_nat_bits(struct f2fs_sb_info *sbi, bool lock)
+>>  	if (lock)
+>>  		spin_unlock_irqrestore(&sbi->cp_lock, flags);
+>>  
+>> -	kvfree(nat_bits);
+>> +	kfree(nat_bits);
+>>  }
+>>  
+>>  static inline bool enabled_nat_bits(struct f2fs_sb_info *sbi,
+>> @@ -2798,18 +2798,12 @@ static inline bool f2fs_may_extent_tree(struct inode *inode)
+>>  static inline void *f2fs_kmalloc(struct f2fs_sb_info *sbi,
+>>  					size_t size, gfp_t flags)
+>>  {
+>> -	void *ret;
+>> -
+>>  	if (time_to_inject(sbi, FAULT_KMALLOC)) {
+>>  		f2fs_show_injection_info(sbi, FAULT_KMALLOC);
+>>  		return NULL;
+>>  	}
+>>  
+>> -	ret = kmalloc(size, flags);
+>> -	if (ret)
+>> -		return ret;
+>> -
+>> -	return kvmalloc(size, flags);
+>> +	return kmalloc(size, flags);
+>>  }
+>>  
+>>  static inline void *f2fs_kzalloc(struct f2fs_sb_info *sbi,
+>> diff --git a/fs/f2fs/file.c b/fs/f2fs/file.c
+>> index e5ce697c0544..a7d855efc294 100644
+>> --- a/fs/f2fs/file.c
+>> +++ b/fs/f2fs/file.c
+>> @@ -3220,7 +3220,7 @@ static int f2fs_get_volume_name(struct file *filp, unsigned long arg)
+>>  				min(FSLABEL_MAX, count)))
+>>  		err = -EFAULT;
+>>  
+>> -	kvfree(vbuf);
+>> +	kfree(vbuf);
+>>  	return err;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/gc.c b/fs/f2fs/gc.c
+>> index 24a3b6b52210..80b8da471286 100644
+>> --- a/fs/f2fs/gc.c
+>> +++ b/fs/f2fs/gc.c
+>> @@ -142,7 +142,7 @@ int f2fs_start_gc_thread(struct f2fs_sb_info *sbi)
+>>  			"f2fs_gc-%u:%u", MAJOR(dev), MINOR(dev));
+>>  	if (IS_ERR(gc_th->f2fs_gc_task)) {
+>>  		err = PTR_ERR(gc_th->f2fs_gc_task);
+>> -		kvfree(gc_th);
+>> +		kfree(gc_th);
+>>  		sbi->gc_thread = NULL;
+>>  	}
+>>  out:
+>> @@ -155,7 +155,7 @@ void f2fs_stop_gc_thread(struct f2fs_sb_info *sbi)
+>>  	if (!gc_th)
+>>  		return;
+>>  	kthread_stop(gc_th->f2fs_gc_task);
+>> -	kvfree(gc_th);
+>> +	kfree(gc_th);
+>>  	sbi->gc_thread = NULL;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/hash.c b/fs/f2fs/hash.c
+>> index 5bc4dcd8fc03..7d1cc0e3d72c 100644
+>> --- a/fs/f2fs/hash.c
+>> +++ b/fs/f2fs/hash.c
+>> @@ -124,14 +124,14 @@ f2fs_hash_t f2fs_dentry_hash(const struct inode *dir,
+>>  
+>>  	dlen = utf8_casefold(um, name_info, buff, PATH_MAX);
+>>  	if (dlen < 0) {
+>> -		kvfree(buff);
+>> +		kfree(buff);
+>>  		goto opaque_seq;
+>>  	}
+>>  	folded.name = buff;
+>>  	folded.len = dlen;
+>>  	r = __f2fs_dentry_hash(&folded, fname);
+>>  
+>> -	kvfree(buff);
+>> +	kfree(buff);
+>>  	return r;
+>>  
+>>  opaque_seq:
+>> diff --git a/fs/f2fs/inline.c b/fs/f2fs/inline.c
+>> index 896db0416f0e..b132568b751d 100644
+>> --- a/fs/f2fs/inline.c
+>> +++ b/fs/f2fs/inline.c
+>> @@ -515,7 +515,7 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
+>>  			!f2fs_has_inline_xattr(dir))
+>>  		F2FS_I(dir)->i_inline_xattr_size = 0;
+>>  
+>> -	kvfree(backup_dentry);
+>> +	kfree(backup_dentry);
+>>  	return 0;
+>>  recover:
+>>  	lock_page(ipage);
+>> @@ -526,7 +526,7 @@ static int f2fs_move_rehashed_dirents(struct inode *dir, struct page *ipage,
+>>  	set_page_dirty(ipage);
+>>  	f2fs_put_page(ipage, 1);
+>>  
+>> -	kvfree(backup_dentry);
+>> +	kfree(backup_dentry);
+>>  	return err;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/namei.c b/fs/f2fs/namei.c
+>> index 4faf06e8bf89..d8ca896e109b 100644
+>> --- a/fs/f2fs/namei.c
+>> +++ b/fs/f2fs/namei.c
+>> @@ -655,7 +655,7 @@ static int f2fs_symlink(struct inode *dir, struct dentry *dentry,
+>>  	f2fs_handle_failed_inode(inode);
+>>  out_free_encrypted_link:
+>>  	if (disk_link.name != (unsigned char *)symname)
+>> -		kvfree(disk_link.name);
+>> +		kfree(disk_link.name);
+>>  	return err;
+>>  }
+>>  
+>> diff --git a/fs/f2fs/node.c b/fs/f2fs/node.c
+>> index 6912faba811e..261798b9a9f7 100644
+>> --- a/fs/f2fs/node.c
+>> +++ b/fs/f2fs/node.c
+>> @@ -3065,7 +3065,7 @@ static int init_free_nid_cache(struct f2fs_sb_info *sbi)
+>>  	int i;
+>>  
+>>  	nm_i->free_nid_bitmap =
+>> -		f2fs_kzalloc(sbi, array_size(sizeof(unsigned char *),
+>> +		f2fs_kvzalloc(sbi, array_size(sizeof(unsigned char *),
+>>  					     nm_i->nat_blocks),
+>>  			     GFP_KERNEL);
+>>  	if (!nm_i->free_nid_bitmap)
+>> @@ -3183,13 +3183,13 @@ void f2fs_destroy_node_manager(struct f2fs_sb_info *sbi)
+>>  	}
+>>  	kvfree(nm_i->free_nid_count);
+>>  
+>> -	kvfree(nm_i->nat_bitmap);
+>> -	kvfree(nm_i->nat_bits);
+>> +	kfree(nm_i->nat_bitmap);
+>> +	kfree(nm_i->nat_bits);
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>> -	kvfree(nm_i->nat_bitmap_mir);
+>> +	kfree(nm_i->nat_bitmap_mir);
+>>  #endif
+>>  	sbi->nm_info = NULL;
+>> -	kvfree(nm_i);
+>> +	kfree(nm_i);
+>>  }
+>>  
+>>  int __init f2fs_create_node_manager_caches(void)
+>> diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+>> index c525d8c87ddf..8c96d6008e20 100644
+>> --- a/fs/f2fs/segment.c
+>> +++ b/fs/f2fs/segment.c
+>> @@ -718,7 +718,7 @@ int f2fs_create_flush_cmd_control(struct f2fs_sb_info *sbi)
+>>  				"f2fs_flush-%u:%u", MAJOR(dev), MINOR(dev));
+>>  	if (IS_ERR(fcc->f2fs_issue_flush)) {
+>>  		err = PTR_ERR(fcc->f2fs_issue_flush);
+>> -		kvfree(fcc);
+>> +		kfree(fcc);
+>>  		SM_I(sbi)->fcc_info = NULL;
+>>  		return err;
+>>  	}
+>> @@ -737,7 +737,7 @@ void f2fs_destroy_flush_cmd_control(struct f2fs_sb_info *sbi, bool free)
+>>  		kthread_stop(flush_thread);
+>>  	}
+>>  	if (free) {
+>> -		kvfree(fcc);
+>> +		kfree(fcc);
+>>  		SM_I(sbi)->fcc_info = NULL;
+>>  	}
+>>  }
+>> @@ -2059,7 +2059,7 @@ static int create_discard_cmd_control(struct f2fs_sb_info *sbi)
+>>  				"f2fs_discard-%u:%u", MAJOR(dev), MINOR(dev));
+>>  	if (IS_ERR(dcc->f2fs_issue_discard)) {
+>>  		err = PTR_ERR(dcc->f2fs_issue_discard);
+>> -		kvfree(dcc);
+>> +		kfree(dcc);
+>>  		SM_I(sbi)->dcc_info = NULL;
+>>  		return err;
+>>  	}
+>> @@ -2083,7 +2083,7 @@ static void destroy_discard_cmd_control(struct f2fs_sb_info *sbi)
+>>  	if (unlikely(atomic_read(&dcc->discard_cmd_cnt)))
+>>  		f2fs_issue_discard_timeout(sbi);
+>>  
+>> -	kvfree(dcc);
+>> +	kfree(dcc);
+>>  	SM_I(sbi)->dcc_info = NULL;
+>>  }
+>>  
+>> @@ -4488,7 +4488,7 @@ static void destroy_dirty_segmap(struct f2fs_sb_info *sbi)
+>>  
+>>  	destroy_victim_secmap(sbi);
+>>  	SM_I(sbi)->dirty_info = NULL;
+>> -	kvfree(dirty_i);
+>> +	kfree(dirty_i);
+>>  }
+>>  
+>>  static void destroy_curseg(struct f2fs_sb_info *sbi)
+>> @@ -4500,10 +4500,10 @@ static void destroy_curseg(struct f2fs_sb_info *sbi)
+>>  		return;
+>>  	SM_I(sbi)->curseg_array = NULL;
+>>  	for (i = 0; i < NR_CURSEG_TYPE; i++) {
+>> -		kvfree(array[i].sum_blk);
+>> -		kvfree(array[i].journal);
+>> +		kfree(array[i].sum_blk);
+>> +		kfree(array[i].journal);
+>>  	}
+>> -	kvfree(array);
+>> +	kfree(array);
+>>  }
+>>  
+>>  static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+>> @@ -4514,7 +4514,7 @@ static void destroy_free_segmap(struct f2fs_sb_info *sbi)
+>>  	SM_I(sbi)->free_info = NULL;
+>>  	kvfree(free_i->free_segmap);
+>>  	kvfree(free_i->free_secmap);
+>> -	kvfree(free_i);
+>> +	kfree(free_i);
+>>  }
+>>  
+>>  static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>> @@ -4526,19 +4526,19 @@ static void destroy_sit_info(struct f2fs_sb_info *sbi)
+>>  
+>>  	if (sit_i->sentries)
+>>  		kvfree(sit_i->bitmap);
+>> -	kvfree(sit_i->tmp_map);
+>> +	kfree(sit_i->tmp_map);
+>>  
+>>  	kvfree(sit_i->sentries);
+>>  	kvfree(sit_i->sec_entries);
+>>  	kvfree(sit_i->dirty_sentries_bitmap);
+>>  
+>>  	SM_I(sbi)->sit_info = NULL;
+>> -	kvfree(sit_i->sit_bitmap);
+>> +	kfree(sit_i->sit_bitmap);
+>>  #ifdef CONFIG_F2FS_CHECK_FS
+>> -	kvfree(sit_i->sit_bitmap_mir);
+>> +	kfree(sit_i->sit_bitmap_mir);
+>>  	kvfree(sit_i->invalid_segmap);
+>>  #endif
+>> -	kvfree(sit_i);
+>> +	kfree(sit_i);
+>>  }
+>>  
+>>  void f2fs_destroy_segment_manager(struct f2fs_sb_info *sbi)
+>> @@ -4554,7 +4554,7 @@ void f2fs_destroy_segment_manager(struct f2fs_sb_info *sbi)
+>>  	destroy_free_segmap(sbi);
+>>  	destroy_sit_info(sbi);
+>>  	sbi->sm_info = NULL;
+>> -	kvfree(sm_info);
+>> +	kfree(sm_info);
+>>  }
+>>  
+>>  int __init f2fs_create_segment_manager_caches(void)
+>> diff --git a/fs/f2fs/super.c b/fs/f2fs/super.c
+>> index c02a47ce551b..b72d071aedd8 100644
+>> --- a/fs/f2fs/super.c
+>> +++ b/fs/f2fs/super.c
+>> @@ -324,7 +324,7 @@ static int f2fs_set_qf_name(struct super_block *sb, int qtype,
+>>  	set_opt(sbi, QUOTA);
+>>  	return 0;
+>>  errout:
+>> -	kvfree(qname);
+>> +	kfree(qname);
+>>  	return ret;
+>>  }
+>>  
+>> @@ -336,7 +336,7 @@ static int f2fs_clear_qf_name(struct super_block *sb, int qtype)
+>>  		f2fs_err(sbi, "Cannot change journaled quota options when quota turned on");
+>>  		return -EINVAL;
+>>  	}
+>> -	kvfree(F2FS_OPTION(sbi).s_qf_names[qtype]);
+>> +	kfree(F2FS_OPTION(sbi).s_qf_names[qtype]);
+>>  	F2FS_OPTION(sbi).s_qf_names[qtype] = NULL;
+>>  	return 0;
+>>  }
+>> @@ -429,10 +429,10 @@ static int parse_options(struct super_block *sb, char *options)
+>>  				set_opt(sbi, BG_GC);
+>>  				set_opt(sbi, FORCE_FG_GC);
+>>  			} else {
+>> -				kvfree(name);
+>> +				kfree(name);
+>>  				return -EINVAL;
+>>  			}
+>> -			kvfree(name);
+>> +			kfree(name);
+>>  			break;
+>>  		case Opt_disable_roll_forward:
+>>  			set_opt(sbi, DISABLE_ROLL_FORWARD);
+>> @@ -590,7 +590,7 @@ static int parse_options(struct super_block *sb, char *options)
+>>  					!strncmp(name, "adaptive", 8)) {
+>>  				if (f2fs_sb_has_blkzoned(sbi)) {
+>>  					f2fs_warn(sbi, "adaptive mode is not allowed with zoned block device feature");
+>> -					kvfree(name);
+>> +					kfree(name);
+>>  					return -EINVAL;
+>>  				}
+>>  				set_opt_mode(sbi, F2FS_MOUNT_ADAPTIVE);
+>> @@ -598,10 +598,10 @@ static int parse_options(struct super_block *sb, char *options)
+>>  					!strncmp(name, "lfs", 3)) {
+>>  				set_opt_mode(sbi, F2FS_MOUNT_LFS);
+>>  			} else {
+>> -				kvfree(name);
+>> +				kfree(name);
+>>  				return -EINVAL;
+>>  			}
+>> -			kvfree(name);
+>> +			kfree(name);
+>>  			break;
+>>  		case Opt_io_size_bits:
+>>  			if (args->from && match_int(args, &arg))
+>> @@ -730,10 +730,10 @@ static int parse_options(struct super_block *sb, char *options)
+>>  					!strncmp(name, "fs-based", 8)) {
+>>  				F2FS_OPTION(sbi).whint_mode = WHINT_MODE_FS;
+>>  			} else {
+>> -				kvfree(name);
+>> +				kfree(name);
+>>  				return -EINVAL;
+>>  			}
+>> -			kvfree(name);
+>> +			kfree(name);
+>>  			break;
+>>  		case Opt_alloc:
+>>  			name = match_strdup(&args[0]);
+>> @@ -747,10 +747,10 @@ static int parse_options(struct super_block *sb, char *options)
+>>  					!strncmp(name, "reuse", 5)) {
+>>  				F2FS_OPTION(sbi).alloc_mode = ALLOC_MODE_REUSE;
+>>  			} else {
+>> -				kvfree(name);
+>> +				kfree(name);
+>>  				return -EINVAL;
+>>  			}
+>> -			kvfree(name);
+>> +			kfree(name);
+>>  			break;
+>>  		case Opt_fsync:
+>>  			name = match_strdup(&args[0]);
+>> @@ -767,10 +767,10 @@ static int parse_options(struct super_block *sb, char *options)
+>>  				F2FS_OPTION(sbi).fsync_mode =
+>>  							FSYNC_MODE_NOBARRIER;
+>>  			} else {
+>> -				kvfree(name);
+>> +				kfree(name);
+>>  				return -EINVAL;
+>>  			}
+>> -			kvfree(name);
+>> +			kfree(name);
+>>  			break;
+>>  		case Opt_test_dummy_encryption:
+>>  #ifdef CONFIG_FS_ENCRYPTION
+>> @@ -1052,10 +1052,10 @@ static void destroy_device_list(struct f2fs_sb_info *sbi)
+>>  	for (i = 0; i < sbi->s_ndevs; i++) {
+>>  		blkdev_put(FDEV(i).bdev, FMODE_EXCL);
+>>  #ifdef CONFIG_BLK_DEV_ZONED
+>> -		kvfree(FDEV(i).blkz_seq);
+>> +		kfree(FDEV(i).blkz_type);
+>>  #endif
+>>  	}
+>> -	kvfree(sbi->devs);
+>> +	kfree(sbi->devs);
+>>  }
+>>  
+>>  static void f2fs_put_super(struct super_block *sb)
+>> @@ -1125,28 +1125,28 @@ static void f2fs_put_super(struct super_block *sb)
+>>  	f2fs_destroy_node_manager(sbi);
+>>  	f2fs_destroy_segment_manager(sbi);
+>>  
+>> -	kvfree(sbi->ckpt);
+>> +	kfree(sbi->ckpt);
+>>  
+>>  	f2fs_unregister_sysfs(sbi);
+>>  
+>>  	sb->s_fs_info = NULL;
+>>  	if (sbi->s_chksum_driver)
+>>  		crypto_free_shash(sbi->s_chksum_driver);
+>> -	kvfree(sbi->raw_super);
+>> +	kfree(sbi->raw_super);
+>>  
+>>  	destroy_device_list(sbi);
+>>  	mempool_destroy(sbi->write_io_dummy);
+>>  #ifdef CONFIG_QUOTA
+>>  	for (i = 0; i < MAXQUOTAS; i++)
+>> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>>  #endif
+>>  	destroy_percpu_info(sbi);
+>>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>> -		kvfree(sbi->write_io[i]);
+>> +		kfree(sbi->write_io[i]);
+>>  #ifdef CONFIG_UNICODE
+>>  	utf8_unload(sbi->s_encoding);
+>>  #endif
+>> -	kvfree(sbi);
+>> +	kfree(sbi);
+>>  }
+>>  
+>>  int f2fs_sync_fs(struct super_block *sb, int sync)
+>> @@ -1600,7 +1600,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  				GFP_KERNEL);
+>>  			if (!org_mount_opt.s_qf_names[i]) {
+>>  				for (j = 0; j < i; j++)
+>> -					kvfree(org_mount_opt.s_qf_names[j]);
+>> +					kfree(org_mount_opt.s_qf_names[j]);
+>>  				return -ENOMEM;
+>>  			}
+>>  		} else {
+>> @@ -1724,7 +1724,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  #ifdef CONFIG_QUOTA
+>>  	/* Release old quota file names */
+>>  	for (i = 0; i < MAXQUOTAS; i++)
+>> -		kvfree(org_mount_opt.s_qf_names[i]);
+>> +		kfree(org_mount_opt.s_qf_names[i]);
+>>  #endif
+>>  	/* Update the POSIXACL Flag */
+>>  	sb->s_flags = (sb->s_flags & ~SB_POSIXACL) |
+>> @@ -1744,7 +1744,7 @@ static int f2fs_remount(struct super_block *sb, int *flags, char *data)
+>>  #ifdef CONFIG_QUOTA
+>>  	F2FS_OPTION(sbi).s_jquota_fmt = org_mount_opt.s_jquota_fmt;
+>>  	for (i = 0; i < MAXQUOTAS; i++) {
+>> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>>  		F2FS_OPTION(sbi).s_qf_names[i] = org_mount_opt.s_qf_names[i];
+>>  	}
+>>  #endif
+>> @@ -2935,7 +2935,7 @@ static int init_blkz_info(struct f2fs_sb_info *sbi, int devi)
+>>  		}
+>>  	}
+>>  
+>> -	kvfree(zones);
+>> +	kfree(zones);
+>>  
+>>  	return err;
+>>  }
+>> @@ -2992,7 +2992,7 @@ static int read_raw_super_block(struct f2fs_sb_info *sbi,
+>>  
+>>  	/* No valid superblock */
+>>  	if (!*raw_super)
+>> -		kvfree(super);
+>> +		kfree(super);
+>>  	else
+>>  		err = 0;
+>>  
+>> @@ -3563,7 +3563,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  		if (err)
+>>  			goto sync_free_meta;
+>>  	}
+>> -	kvfree(options);
+>> +	kfree(options);
+>>  
+>>  	/* recover broken superblock */
+>>  	if (recovery) {
+>> @@ -3620,7 +3620,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  	f2fs_destroy_segment_manager(sbi);
+>>  free_devices:
+>>  	destroy_device_list(sbi);
+>> -	kvfree(sbi->ckpt);
+>> +	kfree(sbi->ckpt);
+>>  free_meta_inode:
+>>  	make_bad_inode(sbi->meta_inode);
+>>  	iput(sbi->meta_inode);
+>> @@ -3631,7 +3631,7 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  	destroy_percpu_info(sbi);
+>>  free_bio_info:
+>>  	for (i = 0; i < NR_PAGE_TYPE; i++)
+>> -		kvfree(sbi->write_io[i]);
+>> +		kfree(sbi->write_io[i]);
+>>  
+>>  #ifdef CONFIG_UNICODE
+>>  	utf8_unload(sbi->s_encoding);
+>> @@ -3639,15 +3639,15 @@ static int f2fs_fill_super(struct super_block *sb, void *data, int silent)
+>>  free_options:
+>>  #ifdef CONFIG_QUOTA
+>>  	for (i = 0; i < MAXQUOTAS; i++)
+>> -		kvfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>> +		kfree(F2FS_OPTION(sbi).s_qf_names[i]);
+>>  #endif
+>> -	kvfree(options);
+>> +	kfree(options);
+>>  free_sb_buf:
+>> -	kvfree(raw_super);
+>> +	kfree(raw_super);
+>>  free_sbi:
+>>  	if (sbi->s_chksum_driver)
+>>  		crypto_free_shash(sbi->s_chksum_driver);
+>> -	kvfree(sbi);
+>> +	kfree(sbi);
+>>  
+>>  	/* give only one another chance */
+>>  	if (retry_cnt > 0 && skip_recovery) {
+>> diff --git a/fs/f2fs/xattr.c b/fs/f2fs/xattr.c
+>> index 296b3189448a..ff2455b4ad14 100644
+>> --- a/fs/f2fs/xattr.c
+>> +++ b/fs/f2fs/xattr.c
+>> @@ -362,7 +362,7 @@ static int lookup_all_xattrs(struct inode *inode, struct page *ipage,
+>>  	*base_addr = txattr_addr;
+>>  	return 0;
+>>  out:
+>> -	kvfree(txattr_addr);
+>> +	kfree(txattr_addr);
+>>  	return err;
+>>  }
+>>  
+>> @@ -405,7 +405,7 @@ static int read_all_xattrs(struct inode *inode, struct page *ipage,
+>>  	*base_addr = txattr_addr;
+>>  	return 0;
+>>  fail:
+>> -	kvfree(txattr_addr);
+>> +	kfree(txattr_addr);
+>>  	return err;
+>>  }
+>>  
+>> @@ -532,7 +532,7 @@ int f2fs_getxattr(struct inode *inode, int index, const char *name,
+>>  	}
+>>  	error = size;
+>>  out:
+>> -	kvfree(base_addr);
+>> +	kfree(base_addr);
+>>  	return error;
+>>  }
+>>  
+>> @@ -590,7 +590,7 @@ ssize_t f2fs_listxattr(struct dentry *dentry, char *buffer, size_t buffer_size)
+>>  	}
+>>  	error = buffer_size - rest;
+>>  cleanup:
+>> -	kvfree(base_addr);
+>> +	kfree(base_addr);
+>>  	return error;
+>>  }
+>>  
+>> @@ -731,7 +731,7 @@ static int __f2fs_setxattr(struct inode *inode, int index,
+>>  	if (!error && S_ISDIR(inode->i_mode))
+>>  		set_sbi_flag(F2FS_I_SB(inode), SBI_NEED_CP);
+>>  exit:
+>> -	kvfree(base_addr);
+>> +	kfree(base_addr);
+>>  	return error;
+>>  }
+>>  
+>> -- 
+>> 2.18.0.rc1
+> .
+> 
