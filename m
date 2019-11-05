@@ -2,92 +2,143 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.9 required=3.0 tests=DATE_IN_PAST_12_24,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8805C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:10:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9DE81C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:15:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67189214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:10:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="Id1K7J29"
+	by mail.kernel.org (Postfix) with ESMTP id 65C332084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:15:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729872AbfKFGKP (ORCPT
+        id S1726112AbfKFGPr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:10:15 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:27880 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725806AbfKFGKP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:10:15 -0500
-Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA66ACib028981
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 22:10:14 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=iBiMo+12y6HLPZMvxe/0Ndb0dqSCd+cXriHq+6VsBx8=;
- b=Id1K7J29/MVtCajtXkD61JsiLizYsvBj7UnMnJ6WvGRiYX8CrlEQeYdekTk0ax72kLCt
- eCCZ6QX4jpI1AF2wUo1UIPrDtIP9KWkRjb7uQ3EuuYvr+RBxFIhA5gbg4aIP6nlu5M9k
- jLpwdLiMSMXfxGlSxgNDLTw9LIUsERFL4sI= 
-Received: from maileast.thefacebook.com ([163.114.130.16])
-        by mx0a-00082601.pphosted.com with ESMTP id 2w3em1txkw-3
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:10:14 -0800
-Received: from 2401:db00:30:6012:face:0:17:0 (2620:10d:c0a8:1b::d) by
- mail.thefacebook.com (2620:10d:c0a8:83::6) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 5 Nov 2019 22:09:50 -0800
-Received: by devbig006.ftw2.facebook.com (Postfix, from userid 4523)
-        id E6D5262E36EB; Tue,  5 Nov 2019 22:09:48 -0800 (PST)
-Smtp-Origin-Hostprefix: devbig
-From:   Song Liu <songliubraving@fb.com>
-Smtp-Origin-Hostname: devbig006.ftw2.facebook.com
-To:     <linux-kernel@vger.kernel.org>, <linux-mm@kvack.org>,
-        <akpm@linux-foundation.org>
-CC:     <matthew.wilcox@oracle.com>, <kernel-team@fb.com>,
-        <william.kucharski@oracle.com>, <kirill.shutemov@linux.intel.com>,
-        Song Liu <songliubraving@fb.com>
-Smtp-Origin-Cluster: ftw2c04
-Subject: [PATCH v5 0/2] fix and improvement for file THP
-Date:   Tue, 5 Nov 2019 22:09:28 -0800
-Message-ID: <20191106060930.2571389-1-songliubraving@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 6 Nov 2019 01:15:47 -0500
+Received: from mga12.intel.com ([192.55.52.136]:2425 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725806AbfKFGPr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:15:47 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 22:15:46 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,272,1569308400"; 
+   d="scan'208";a="227382779"
+Received: from sqa-gate.sh.intel.com (HELO clx-ap-likexu.tsp.org) ([10.239.48.212])
+  by fmsmga004.fm.intel.com with ESMTP; 05 Nov 2019 22:15:44 -0800
+From:   Like Xu <like.xu@linux.intel.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>
+Subject: [PATCH] perf/x86: Expose more Intel perf_capabilities to other modules
+Date:   Tue,  5 Nov 2019 22:09:55 +0800
+Message-Id: <20191105140955.22504-1-like.xu@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-06_01:2019-11-05,2019-11-06 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 mlxscore=0
- impostorscore=0 suspectscore=0 lowpriorityscore=0 malwarescore=0
- adultscore=0 mlxlogscore=469 phishscore=0 clxscore=1015 bulkscore=0
- spamscore=0 priorityscore=1501 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.12.0-1908290000 definitions=main-1911060064
-X-FB-Internal: deliver
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This set includes a fix and an improvement for file THP.
+The vPMU feature on KVM is dependent on the native perf implementation.
+Now KVM needs to know more about PMU capabilities such as lbr, pebs and
+full_width_write to determine what features it can provide for guests.
 
-1/2 fixes pagecache corruption for file THP, where !PageUptodate page gets
-collapsed into huge page. 1/2 is needed for 5.4.
+Signed-off-by: Like Xu <like.xu@linux.intel.com>
+---
+ arch/x86/events/core.c            |  1 +
+ arch/x86/events/perf_event.h      | 19 -------------------
+ arch/x86/include/asm/perf_event.h | 20 ++++++++++++++++++++
+ 3 files changed, 21 insertions(+), 19 deletions(-)
 
-2/2 improve collapse of file THP by flushing dirty page in collapse_file().
-2/2 can wait until 5.5.
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 7b21455d7504..fe8bb51cb277 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -2587,5 +2587,6 @@ void perf_get_x86_pmu_capability(struct x86_pmu_capability *cap)
+ 	cap->bit_width_fixed	= x86_pmu.cntval_bits;
+ 	cap->events_mask	= (unsigned int)x86_pmu.events_maskl;
+ 	cap->events_mask_len	= x86_pmu.events_mask_len;
++	cap->pmu_cap		= x86_pmu.intel_cap;
+ }
+ EXPORT_SYMBOL_GPL(perf_get_x86_pmu_capability);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index ecacfbf4ebc1..ca1c94dd111f 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -505,25 +505,6 @@ struct extra_reg {
+ 
+ #define EVENT_EXTRA_END EVENT_EXTRA_REG(0, 0, 0, 0, RSP_0)
+ 
+-union perf_capabilities {
+-	struct {
+-		u64	lbr_format:6;
+-		u64	pebs_trap:1;
+-		u64	pebs_arch_reg:1;
+-		u64	pebs_format:4;
+-		u64	smm_freeze:1;
+-		/*
+-		 * PMU supports separate counter range for writing
+-		 * values > 32bit.
+-		 */
+-		u64	full_width_write:1;
+-		u64     pebs_baseline:1;
+-		u64	pebs_metrics_available:1;
+-		u64	pebs_output_pt_available:1;
+-	};
+-	u64	capabilities;
+-};
+-
+ struct x86_pmu_quirk {
+ 	struct x86_pmu_quirk *next;
+ 	void (*func)(void);
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index ee26e9215f18..7983cc8e5a15 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -131,6 +131,25 @@ union cpuid10_edx {
+ 	unsigned int full;
+ };
+ 
++union perf_capabilities {
++	struct {
++		u64	lbr_format:6;
++		u64	pebs_trap:1;
++		u64	pebs_arch_reg:1;
++		u64	pebs_format:4;
++		u64	smm_freeze:1;
++		/*
++		 * PMU supports separate counter range for writing
++		 * values > 32bit.
++		 */
++		u64	full_width_write:1;
++		u64     pebs_baseline:1;
++		u64	pebs_metrics_available:1;
++		u64	pebs_output_pt_available:1;
++	};
++	u64	capabilities;
++};
++
+ struct x86_pmu_capability {
+ 	int		version;
+ 	int		num_counters_gp;
+@@ -139,6 +158,7 @@ struct x86_pmu_capability {
+ 	int		bit_width_fixed;
+ 	unsigned int	events_mask;
+ 	int		events_mask_len;
++	union perf_capabilities pmu_cap;
+ };
+ 
+ /*
+-- 
+2.21.0
 
-Thanks,
-Song
-
-Song Liu (2):
-  mm,thp: recheck each page before collapsing file THP
-  mm/thp: flush file for !is_shmem PageDirty() case in collapse_file()
-
- mm/khugepaged.c | 42 ++++++++++++++++++++++++++++++++----------
- 1 file changed, 32 insertions(+), 10 deletions(-)
-
---
-2.17.1
