@@ -2,79 +2,94 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EAFF7C5DF61
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:59:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 411DDC5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:00:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2F52222CE
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 19:59:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F142921D6C
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 20:00:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="IlrzHL7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727857AbfKET75 (ORCPT
+        id S1728336AbfKEUAi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 14:59:57 -0500
-Received: from foss.arm.com ([217.140.110.172]:58398 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfKET75 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 14:59:57 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DFEB14F2;
-        Tue,  5 Nov 2019 11:59:56 -0800 (PST)
-Received: from [10.162.40.121] (a075563-lin.blr.arm.com [10.162.40.121])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 33DFF3FB40;
-        Mon,  4 Nov 2019 23:02:20 -0800 (PST)
-Subject: Re: [PATCHv2 1/8] ftrace: add ftrace_init_nop()
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        catalin.marinas@arm.com, deller@gmx.de, duwe@suse.de,
-        James.Bottomley@HansenPartnership.com, james.morse@arm.com,
-        jeyu@kernel.org, jpoimboe@redhat.com, jthierry@redhat.com,
-        linux-parisc@vger.kernel.org, mingo@redhat.com,
-        peterz@infradead.org, svens@stackframe.org,
-        takahiro.akashi@linaro.org, will@kernel.org
-References: <20191029165832.33606-1-mark.rutland@arm.com>
- <20191029165832.33606-2-mark.rutland@arm.com>
- <daad0785-a33f-3cfb-cf0f-657b6c677257@arm.com>
- <20191104081136.645e9b1a@grimm.local.home>
-From:   Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <ca7dd81e-5d98-c0f6-3d84-4f2cc20f4676@arm.com>
-Date:   Tue, 5 Nov 2019 12:29:23 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 5 Nov 2019 15:00:38 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:43908 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfKEUAi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 15:00:38 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l24so15140948pgh.10
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 12:00:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ijT2GiWjIk0i5IPeCeqTo4IKLHUoxPnZNqQGZcLSsUM=;
+        b=IlrzHL7ezty7NJqDoQVYCYZlgd5TLmozpoptOSResx7u8dduPfsVCwxetHhcwt9646
+         G5tawFW78NnqVIQt8407pHG1e5zjGMrJqwSAl/oTDeue+ZI2bATAOFZnrvI5R4CrFfiJ
+         n/6N9z9oo1SS6gVNC+qeZlwIfm5V4ROnhCdfuQ88aX5YBI34+oEw7Plr+gCPLfYF88Vv
+         t5tkx9zp3H7o8W4fjZlCkI79/q3S/1dYYa3tpdlZAhUsRg24PXeyBp+HEkPn07uvN5Ub
+         L9GkaFYee6+WNZPm2Nz3Y0BWrpxuapPuy18/e3w0kK2dmoGn0+nwp0yPpHzqG6gUGVPj
+         itFQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ijT2GiWjIk0i5IPeCeqTo4IKLHUoxPnZNqQGZcLSsUM=;
+        b=QAKbmGEeyx/Rx1+6lNKhvsI0cn3BnldYpEZb9YmcgV4RaUKvtcmHdVRKr8ovaooVC4
+         MQx55IfrIBmRGnQ4uKnWKy4Q6Ckf+Ywo+jFQ22nJTqL36/pyGeVALlE7ZLjfkbrCokj7
+         0Lhz07kub6VrnMszb1pNrSrlAga/AhF+RiFBhajw5nrGhg18GiOn7vn/zxin3eBvHxOV
+         4YyEjbyM7o9qXc0smCajBfvGOxaUowxLwN+zmTXU55iP7+Qw60L95FPBw6EZWQzo+bvD
+         SH5tXANx5ld1EMYPyAJU5iYj8ZgyZfo0pnjcUKTJG7i4EMffrqQO43Ezk76dThrcYbfI
+         TfCQ==
+X-Gm-Message-State: APjAAAWZx4Ne9Kamtikl9AfwoKvvME97r8hZwq4eMTaLiKQea6onfKfZ
+        A+/OLpvuaT+UixBgEf+6CTbk+pmuxRdoEx6bSbiBewY4ckk=
+X-Google-Smtp-Source: APXvYqyIFpCKniQqTsvrpnzyV0E86VzxTLXkPlxCMRfFt3g4qhjOa1M4benI/dNGWIb6R6YCFbVunWVoJWRhpBKoHRs=
+X-Received: by 2002:a17:90a:178e:: with SMTP id q14mr1056137pja.134.1572984037414;
+ Tue, 05 Nov 2019 12:00:37 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191104081136.645e9b1a@grimm.local.home>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20191018161033.261971-1-samitolvanen@google.com>
+ <20191101221150.116536-1-samitolvanen@google.com> <20191101221150.116536-12-samitolvanen@google.com>
+ <20191104171132.GB2024@lakrids.cambridge.arm.com> <CABCJKufDnLjP9vA-wSW0gSY05Cbr=NOpJ-WCh-bdj2ZNq7VNXw@mail.gmail.com>
+ <20191105091301.GB4743@lakrids.cambridge.arm.com>
+In-Reply-To: <20191105091301.GB4743@lakrids.cambridge.arm.com>
+From:   Nick Desaulniers <ndesaulniers@google.com>
+Date:   Tue, 5 Nov 2019 12:00:25 -0800
+Message-ID: <CAKwvOd=3mEUaxMX7Q6n3DAMAdge4eB=KYdiQxn2tY77taCD1NA@mail.gmail.com>
+Subject: Re: [PATCH v4 11/17] arm64: disable function graph tracing with SCS
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     Sami Tolvanen <samitolvanen@google.com>,
+        Will Deacon <will@kernel.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Kees Cook <keescook@chromium.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Marc Zyngier <maz@kernel.org>, Jann Horn <jannh@google.com>,
+        Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        clang-built-linux <clang-built-linux@googlegroups.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Nov 5, 2019 at 11:55 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> Similarly, if clang gained -fpatchable-funciton-etnry, we'd get that for
+> free.
 
-
-On 11/4/19 6:41 PM, Steven Rostedt wrote:
-> On Sat, 2 Nov 2019 17:49:00 +0530
-> Amit Daniel Kachhap <amit.kachhap@arm.com> wrote:
-> 
->> Now that ftrace_init_nop is also an arch implemented function so it may
->> be added in Documentation/trace/ftrace-design.rst along with
->> ftrace_make_nop.
->> In general also, adding some description about patchable-function-entry
->> in kernel Documentation will be useful.
-> 
-> I think this part is outside the scope of this patch set. Honestly, I
-> need to chisel out some time to rewrite the ftrace-design document, as
-> that's been long needed. But that can come at a later time. I'm
-> currently rewriting some of it now, so it will be best to not waste
-> effort to update a document that will soon become stale. ;-)
-Yes it makes sense.
-
+Filed: https://bugs.llvm.org/show_bug.cgi?id=43912
+-- 
 Thanks,
-Amit
-> 
-> -- Steve
-> 
+~Nick Desaulniers
