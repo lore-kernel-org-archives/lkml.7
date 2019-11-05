@@ -2,160 +2,181 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 817B4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:50:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 743D1C5DF60
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:51:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 588A521882
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:50:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FECC21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 18:51:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="zhz9Ie/3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n2j3Iqt4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2390838AbfKESuB (ORCPT
+        id S2390853AbfKESvh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 13:50:01 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34785 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2390828AbfKESt5 (ORCPT
+        Tue, 5 Nov 2019 13:51:37 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:39314 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2389724AbfKESvh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 13:49:57 -0500
-Received: by mail-qk1-f194.google.com with SMTP id 205so20804376qkk.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 10:49:56 -0800 (PST)
+        Tue, 5 Nov 2019 13:51:37 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 29so3614188pgm.6;
+        Tue, 05 Nov 2019 10:51:36 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/uSdHlKPf1tWhKDunGI/tN+mu3wuDSTuhFonKqIHstk=;
-        b=zhz9Ie/3qhCwSnRfeGZleXYj7TE0mY6013JOezcJuJbqNIZ0Yyz3f6AFxuKSwpCg5t
-         ejai0aD/uweZBbIr1pAoz12BDN7NSvsiP/7Jp/JNQlaWjz08O+oxhg51H3duZT3fgTDy
-         wXpo2ELGzDQ79mGVuX9D/S3r2q5vLiT8y8xlC1MSeZOYZr8w0E2z8701/sT15w+xjGvL
-         5+JNahhHmE6PI3DGPA4iqBdRZFXJHMMj1DhNkMvAI8MuUI7Pa7VkMjiJZ5T3CKxpiu06
-         wpJ0nz5ZG+taEnRd/Gwllc2Q4Y1R/tLmdoZBbEdYqfRP8p3fVjNHL84a8QqeD9NMTtFs
-         uQFQ==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=lcBaUECIV9z6RejdYiQ5mOojMFMvm3rPEw7OA6L0b/0=;
+        b=n2j3Iqt40E/JIYbIDE2YTTfCVK0fNvKdOzk/8SN1XThHY0rtuUi+Qjk8n4reLJ9p2h
+         9XQHeKAHCMAb7Fn28mfwp6/JzhzHlohoASYtxrVjpylvNCvTYe2cUAiOcAa2+hZTqKau
+         mzoiKvtAOmtmQOsfbiVV1lJ/dh64qQ0WhnvoSmZOFgsT1Bbg/DXRV0+MOR41OsvajyqA
+         yJLaI/QtaaW2is2zFzQE1N7umX72zI3jp4MC0tWRDeoCjXg2WQQpYvAzLva1aYB8X0Sq
+         sDMq9+c8bk7C/9mVbwxDl8SaiWK/v7E52drJhL5E7kBVl0QwbrKseze7VPYmofW5qW62
+         +L5w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=/uSdHlKPf1tWhKDunGI/tN+mu3wuDSTuhFonKqIHstk=;
-        b=XR6jkxSkNR8Gu+DnEB+ufyqTxfVdJILcxDEL+IYV8ZQE0Vbfmk/20IAPSrPKkFC5IL
-         7lm2oH61YeSfAwlrEuvCAQcy7XXIFnBzNNbqUsLVQRpSl5Z2SdZ/VjGDvFOBmfCcRN8j
-         Yg6RE8MJkW4ZZY2/4TTYgVHn0guG064H1WVYSJxqNfT51reivzWzEBjX0ihYERg0bhun
-         VEsKsV+4gYlX3y4k2VoUawrXo1V7HGsnDLdcMv0MlO7iCkEihh4YywA5MCNhh/SU14Oh
-         UxFZhG2t/pIskTqXad8pkPL/odYyhiJD4I+KuBKUGMYyBmkIMtVYkJoEgceluxyEGuqo
-         SDTA==
-X-Gm-Message-State: APjAAAWSz0hlMI3mkovp3sNBolPHc7uRoGuTCSeuaBf5TfyohSm/L1F2
-        Y58TfhpqJ21TDGT+YS/aS5F/VQOuHeo=
-X-Google-Smtp-Source: APXvYqxQAWUYsgytD6yhx8qK6s6J4frcLIQ5To4Lb9k2kkaaXr9s5y2hUf+IWlbUTNFA6yFq7SCGcQ==
-X-Received: by 2002:a05:620a:1437:: with SMTP id k23mr7967359qkj.15.1572979795875;
-        Tue, 05 Nov 2019 10:49:55 -0800 (PST)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-246-27.washdc.fios.verizon.net. [71.255.246.27])
-        by smtp.googlemail.com with ESMTPSA id j7sm6832565qkd.46.2019.11.05.10.49.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 05 Nov 2019 10:49:55 -0800 (PST)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-Subject: [Patch v5 6/6] sched/fair: Enable tuning of decay period
-Date:   Tue,  5 Nov 2019 13:49:46 -0500
-Message-Id: <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=lcBaUECIV9z6RejdYiQ5mOojMFMvm3rPEw7OA6L0b/0=;
+        b=KKDyVkXB1cdnk230af1gPrkUfKHWhSoputAq6qKxTrB3OcCpLFMfxlpCzGBP8KPnGV
+         q7zrsjlH2SapBaN7bpyJBcPLAuALT+l4MMk0MvJSujul/+4xKxRVuP0KAjHZ7yU5QkiH
+         ZpJvuuw5QfxrZM+ZRKdDiENgJneTkNb8a/n9NOz0prwGDg67Nms9ScEPMk0SdQpHVJIM
+         laeSyUxxYAvj3qC6j7Zy8hc5OxxGw9lD/zofL7TLZNORJ3i7r61R/BOBFrY8P4yioBPB
+         l3MHNY2VBPCvqqk4GdIShkNOwY9TMR/9TaysImqENgqLGp42XOtIsJOfMgl8n2pcrfil
+         XODA==
+X-Gm-Message-State: APjAAAXgE4xIe+dihUstvQV3Mov0jPLgb+nK6M1Jg/pwn8EbBfW3c9q3
+        wBgWiahfeePSDdE3Qht4a4Y=
+X-Google-Smtp-Source: APXvYqzCh2dPz7Hs4WtoduoRjDjqQKuomFW5z0gvVduSb2rzqoTVYvHq0h7JcgOLBSVP7a4JHv6a+w==
+X-Received: by 2002:aa7:9156:: with SMTP id 22mr39719992pfi.246.1572979896117;
+        Tue, 05 Nov 2019 10:51:36 -0800 (PST)
+Received: from workstation ([2405:204:1388:f954:e471:b4bc:a8c7:e586])
+        by smtp.gmail.com with ESMTPSA id w8sm12546619pfi.60.2019.11.05.10.51.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 10:51:35 -0800 (PST)
+Date:   Wed, 6 Nov 2019 00:21:25 +0530
+From:   Amol Grover <frextrite@gmail.com>
+To:     "Paul E. McKenney" <paulmck@kernel.org>,
+        Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>
+Cc:     rcu@vger.kernel.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Phong Tran <tranmanphong@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: Re: [PATCH v2] Documentation: RCU: whatisRCU: Fix formatting for
+ section 2
+Message-ID: <20191105185125.GA13672@workstation>
+References: <20191105073340.GA3682@workstation-kernel-dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105073340.GA3682@workstation-kernel-dev>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Thermal pressure follows pelt signas which means the
-decay period for thermal pressure is the default pelt
-decay period. Depending on soc charecteristics and thermal
-activity, it might be beneficial to decay thermal pressure
-slower, but still in-tune with the pelt signals.
-One way to achieve this is to provide a command line parameter
-to set a decay shift parameter to an integer between 0 and 10.
+On Tue, Nov 05, 2019 at 01:03:40PM +0530, Amol Grover wrote:
+> Convert RCU API methods text to sub-headings and
+> add footnote linking to 2 literary notes
+> under rcu_dereference() section for improved UX
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
+> ---
+>  Documentation/RCU/whatisRCU.rst | 14 ++++++++++----
+>  1 file changed, 10 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
+> index ae40c8bcc56c..4c6f1f595757 100644
+> --- a/Documentation/RCU/whatisRCU.rst
+> +++ b/Documentation/RCU/whatisRCU.rst
+> @@ -150,6 +150,7 @@ later.  See the kernel docbook documentation for more info, or look directly
+>  at the function header comments.
+>  
+>  rcu_read_lock()
+> +^^^^^^^^^^^^^^^
+>  
+>  	void rcu_read_lock(void);
+>  
+> @@ -164,6 +165,7 @@ rcu_read_lock()
+>  	longer-term references to data structures.
+>  
+>  rcu_read_unlock()
+> +^^^^^^^^^^^^^^^^^
+>  
+>  	void rcu_read_unlock(void);
+>  
+> @@ -172,6 +174,7 @@ rcu_read_unlock()
+>  	read-side critical sections may be nested and/or overlapping.
+>  
+>  synchronize_rcu()
+> +^^^^^^^^^^^^^^^^^
+>  
+>  	void synchronize_rcu(void);
+>  
+> @@ -225,6 +228,7 @@ synchronize_rcu()
+>  	checklist.txt for some approaches to limiting the update rate.
+>  
+>  rcu_assign_pointer()
+> +^^^^^^^^^^^^^^^^^^^^
+>  
+>  	void rcu_assign_pointer(p, typeof(p) v);
+>  
+> @@ -245,6 +249,7 @@ rcu_assign_pointer()
+>  	the _rcu list-manipulation primitives such as list_add_rcu().
+>  
+>  rcu_dereference()
+> +^^^^^^^^^^^^^^^^^
+>  
+>  	typeof(p) rcu_dereference(p);
+>  
+> @@ -280,7 +285,7 @@ rcu_dereference()
+>  	unnecessary overhead on Alpha CPUs.
+>  
+>  	Note that the value returned by rcu_dereference() is valid
+> -	only within the enclosing RCU read-side critical section [1].
+> +	only within the enclosing RCU read-side critical section [1]_.
+>  	For example, the following is -not- legal::
+>  
+>  		rcu_read_lock();
+> @@ -304,9 +309,9 @@ rcu_dereference()
+>  	at any time, including immediately after the rcu_dereference().
+>  	And, again like rcu_assign_pointer(), rcu_dereference() is
+>  	typically used indirectly, via the _rcu list-manipulation
+> -	primitives, such as list_for_each_entry_rcu() [2].
+> +	primitives, such as list_for_each_entry_rcu() [2]_.
+>  
+> -	[1] The variant rcu_dereference_protected() can be used outside
+> +..	[1] The variant rcu_dereference_protected() can be used outside
+>  	of an RCU read-side critical section as long as the usage is
+>  	protected by locks acquired by the update-side code.  This variant
+>  	avoids the lockdep warning that would happen when using (for
+> @@ -319,7 +324,8 @@ rcu_dereference()
+>  	a lockdep splat is emitted.  See Documentation/RCU/Design/Requirements/Requirements.rst
+>  	and the API's code comments for more details and example usage.
+>  
+> -	[2] If the list_for_each_entry_rcu() instance might be used by
+> +
+> +..	[2] If the list_for_each_entry_rcu() instance might be used by
+>  	update-side code as well as by RCU readers, then an additional
+>  	lockdep expression can be added to its list of arguments.
+>  	For example, given an additional "lock_is_held(&mylock)" argument,
+> -- 
+> 2.20.1
+>
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
+Please ignore this patch.
 
-v4->v5:
-	- Changed _coeff to _shift as per review comments on the list.
-
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- kernel/sched/fair.c                             | 25 +++++++++++++++++++++++--
- 2 files changed, 28 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index c82f87c..0b8f55e 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -4281,6 +4281,11 @@
- 			incurs a small amount of overhead in the scheduler
- 			but is useful for debugging and performance tuning.
- 
-+	sched_thermal_decay_shift=
-+			[KNL, SMP] Set decay shift for thermal pressure signal.
-+			Format: integer betweer 0 and 10
-+			Default is 0.
-+
- 	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
- 			xtime_lock contention on larger systems, and/or RCU lock
- 			contention on all systems with CONFIG_MAXSMP set.
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index 5f6c371..61a020b 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -91,6 +91,18 @@ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
-  * and maximum available capacity due to thermal events.
-  */
- static DEFINE_PER_CPU(unsigned long, thermal_pressure);
-+/**
-+ * By default the decay is the default pelt decay period.
-+ * The decay shift can change the decay period in
-+ * multiples of 32.
-+ *  Decay shift		Decay period(ms)
-+ *	0			32
-+ *	1			64
-+ *	2			128
-+ *	3			256
-+ *	4			512
-+ */
-+static int sched_thermal_decay_shift;
- 
- static void trigger_thermal_pressure_average(struct rq *rq);
- 
-@@ -10435,6 +10447,15 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
- 	delta = arch_scale_cpu_capacity(cpu) - capped_capacity;
- 	per_cpu(thermal_pressure, cpu) = delta;
- }
-+
-+static int __init setup_sched_thermal_decay_shift(char *str)
-+{
-+	if (kstrtoint(str, 0, &sched_thermal_decay_shift))
-+		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
-+
-+	return 1;
-+}
-+__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
- #endif
- 
- /**
-@@ -10444,8 +10465,8 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
- static void trigger_thermal_pressure_average(struct rq *rq)
- {
- #ifdef CONFIG_SMP
--	update_thermal_load_avg(rq_clock_task(rq), rq,
--				per_cpu(thermal_pressure, cpu_of(rq)));
-+	update_thermal_load_avg(rq_clock_task(rq) >> sched_thermal_decay_shift,
-+				rq, per_cpu(thermal_pressure, cpu_of(rq)));
- #endif
- }
- 
--- 
-2.1.4
-
+Thanks
+Amol 
