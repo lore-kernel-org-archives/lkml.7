@@ -2,145 +2,128 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F7BCC49EAB
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:14:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B78AFC49EAB
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B4FC217F4
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:14:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C1E620717
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 09:16:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="vq5W//hP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730694AbfKEJOH (ORCPT
+        id S1730695AbfKEJQk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 04:14:07 -0500
-Received: from mail-wr1-f45.google.com ([209.85.221.45]:35593 "EHLO
-        mail-wr1-f45.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730499AbfKEJOG (ORCPT
+        Tue, 5 Nov 2019 04:16:40 -0500
+Received: from outils.crapouillou.net ([89.234.176.41]:58854 "EHLO
+        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730528AbfKEJQj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 04:14:06 -0500
-Received: by mail-wr1-f45.google.com with SMTP id l10so20395791wrb.2
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 01:14:04 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:autocrypt
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=8afJflpQHdlMffmxhwLm5wD2IqXhvLBuz6PQFQi/S/k=;
-        b=PqSZHqUmCQe2fWR0EEOTi3wlAV5MXxhyfOjGklXIHqWtr7WvyhYV3gVn///tXSCM57
-         9rg7WzT3Q+WVJw6JLlrac146iRszLkMPouODdLm6Bku7fDNQ7zgp7KHkWKn0b5fdi+3G
-         Gd5J5e1xz1cNGJvv39D33BOEHso6jUnF7xw7Mm8viMBUHwgwNbZePzyYoyV2fz1skJAt
-         8bi5KnOokxs+r6I8p2AY2lCFIq4CiYLTW8IppnBqGmhWD/o2KG7JTwwgZLXolPZSuwKp
-         IYdy/Y18gw4KlFofZb3yOCCCb6mVp/PE4zXSedch466qhENNEIDrWe+YxWZmghdSryZu
-         Mo1Q==
-X-Gm-Message-State: APjAAAVypgbHexI2Zv7zaWZFXCoNH7F69bc4qHj2w1ivG7bpyFrQe5tO
-        wHY+A2S8pqF7s9+cb2l8DJI=
-X-Google-Smtp-Source: APXvYqx+Coc5W8OGjawJ2XmJfVJ45uAJNfb9j9lU7Yp1EUjNWmvtUe2o1Dy/8mG9Kaco0bd/TNV0ZA==
-X-Received: by 2002:adf:c105:: with SMTP id r5mr27364773wre.125.1572945244062;
-        Tue, 05 Nov 2019 01:14:04 -0800 (PST)
-Received: from ?IPv6:2a0b:e7c0:0:107::49? ([2a0b:e7c0:0:107::49])
-        by smtp.gmail.com with ESMTPSA id l2sm18527867wrt.15.2019.11.05.01.14.02
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 01:14:03 -0800 (PST)
-Subject: Re: Bug report - slab-out-of-bounds in vcs_scr_readw
-To:     Or Cohen <orcohen@paloaltonetworks.com>
-Cc:     Nicolas Pitre <nico@fluxnic.net>,
-        Greg KH <gregkh@linuxfoundation.org>, textshell@uchuujin.de,
-        Daniel Vetter <daniel.vetter@ffwll.ch>, sam@ravnborg.org,
-        mpatocka@redhat.com, ghalat@redhat.com,
-        linux-kernel@vger.kernel.org, jwilk@jwilk.net,
-        Nadav Markus <nmarkus@paloaltonetworks.com>,
-        syzkaller@googlegroups.com
-References: <CAM6JnLeEnvjjQPyLeh+8dt5wGNud_vks5k_eXJZy2T1H7ao=hQ@mail.gmail.com>
- <20191104152428.GA2252441@kroah.com>
- <nycvar.YSQ.7.76.1911041648280.30289@knanqh.ubzr>
- <CAM6JnLdrzCPOYyfTdmriFo7cRaGM4p2OEPd_0MHa3_WemamffA@mail.gmail.com>
- <nycvar.YSQ.7.76.1911041928030.30289@knanqh.ubzr>
- <c30fc539-68a8-65d7-226c-6f8e6fd8bdfb@suse.com>
- <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com>
-From:   Jiri Slaby <jslaby@suse.com>
-Autocrypt: addr=jslaby@suse.com; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <a0550a96-a7db-60d7-c4ac-86be8c8dd275@suse.com>
-Date:   Tue, 5 Nov 2019 10:14:01 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 5 Nov 2019 04:16:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
+        s=mail; t=1572945397; h=from:from:sender:reply-to:subject:subject:date:date:
+         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+         content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=no3TrOXPIr0fb/tqGISxsTogfkVht99KnNkO4ofz60M=;
+        b=vq5W//hPFzbGEyBcqtgjAWIk3JU4FOQdB3QjM1LbXjuiaFJKNXYW0nYzdGurjRyoY2Qhvu
+        N8T+SFiQmKA3tQvgWFgjwY3V+/Nb59Xu0mWKfNUhnSh8lhI0pVPG9S1lem3ba6E5+TtMWB
+        Z6TXGP/IVLwclNA4ZfNytBlcpvtOoF4=
+Date:   Tue, 05 Nov 2019 10:16:31 +0100
+From:   Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH 1/2] dt-bindings: power/supply: Document generic USB
+ charger
+To:     Rob Herring <robh+dt@kernel.org>
+Cc:     Sebastian Reichel <sre@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:THERMAL" <linux-pm@vger.kernel.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        od@zcrc.me
+Message-Id: <1572945391.3.1@crapouillou.net>
+In-Reply-To: <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
+References: <20191103220801.10666-1-paul@crapouillou.net>
+        <CAL_Jsq+aSXPT-vmHbDLygO0G3RmM3svTeS+S5FKKjj_Auf3gPw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CAM6JnLe88xf8hO0F=_Ni+irNt40+987tHmz9ZjppgxhnMnLxpw@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05. 11. 19, 10:03, Or Cohen wrote:
-> @Nicolas Pitre  - I agree with you, "vcs_size" may return a negative
-> error code, so the patch is correct but as @jslaby@suse.com  said it
-> won't fix the issue.
-> In my debugging session, "vcs_size" returns a positive integer ( 8000
-> decimal ) and the bug still triggers.
-> 
-> Maybe it's related to the following logic in "vcs_size"? ( not sure
-> about that.. )
-> 
-> 221        if (use_attributes(inode)) {
-> 222                if (use_unicode(inode))
-> 223                        return -EOPNOTSUPP;
-> 224                size = 2*size + HEADER_SIZE;
-> 225       } else if (use_unicode(inode))
-> 226               size *= 4;
-> 227        return size;
-> 
-> Why in the case of "use_unicode(inode)" size is multiplied by 4 and
-> not 2?  ( as we can see in line 224 )
+Hi Rob,
 
-Because unicode uses 4 bytes. The issue is that there is no handling for
-unicode in vcs_write at all. (Compare with vcs_read.)
 
-thanks,
--- 
-js
-suse labs
+Le lun., nov. 4, 2019 at 07:52, Rob Herring <robh+dt@kernel.org> a=20
+=E9crit :
+> On Sun, Nov 3, 2019 at 4:08 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Add documentation about the devicetree bindings for the generic USB
+>>  charger.
+>=20
+> What makes it generic?
+
+It only uses the USB PHY subsystem, which already has some half-baked=20
+support for chargers but not bound to the power-supply subsystem.
+
+
+>>=20
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  ---
+>>   .../bindings/power/supply/usb-charger.txt     | 24=20
+>> +++++++++++++++++++
+>>   1 file changed, 24 insertions(+)
+>>   create mode 100644=20
+>> Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>=20
+>>  diff --git=20
+>> a/Documentation/devicetree/bindings/power/supply/usb-charger.txt=20
+>> b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  new file mode 100644
+>>  index 000000000000..fd46734cb0e5
+>>  --- /dev/null
+>>  +++ b/Documentation/devicetree/bindings/power/supply/usb-charger.txt
+>>  @@ -0,0 +1,24 @@
+>>  +Generic USB charger bindings
+>>  +~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>  +
+>>  +Required properties :
+>>  + - compatible : should be "usb-charger"
+>>  + - phys: phandle to the USB PHY
+>>  +
+>>  +Example:
+>>  +
+>>  +usb_con: extcon {
+>>  +       compatible =3D "linux,extcon-usb-gpio";
+>>  +       vbus-gpios =3D <&gpb 5 GPIO_ACTIVE_HIGH>;
+>>  +};
+>>  +
+>>  +usb_phy: usb-phy@0 {
+>>  +       compatible =3D "usb-nop-xceiv";
+>>  +       #phy-cells =3D <0>;
+>>  +       extcon =3D <&usb_con>;
+>=20
+> extcon is deprecated in favor of usb-connector binding. See
+> .../bindings/connector/usb-connector.txt. There's also some pending
+> patches for adding GPIO based connector controls including Vbus sense
+> (GPIO input) and control (regulator via a GPIO).
+>=20
+> Rob
+
+I understand that the usb-connector binding is better, but the current=20
+code doesn't integrate at all with the USB PHY subsystem, which has its=20
+own code to handle ID and VBUS GPIOs and supports notifiers. Is that=20
+deprecated then?
+
+What's the big picture here?
+
+Thanks,
+-Paul
+
+
+=
+
