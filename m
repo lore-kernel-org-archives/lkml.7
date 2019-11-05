@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80CA8CA9EC9
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC7E2CA9ED3
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 506FC20717
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9782B21882
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 00:25:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387508AbfKEAZ3 (ORCPT
+        id S2387712AbfKEAZu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 4 Nov 2019 19:25:29 -0500
-Received: from mga14.intel.com ([192.55.52.115]:11885 "EHLO mga14.intel.com"
+        Mon, 4 Nov 2019 19:25:50 -0500
+Received: from mga05.intel.com ([192.55.52.43]:25037 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387405AbfKEAZ2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 4 Nov 2019 19:25:28 -0500
+        id S2387484AbfKEAZ3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 4 Nov 2019 19:25:29 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 16:25:28 -0800
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 04 Nov 2019 16:25:28 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,268,1569308400"; 
-   d="scan'208";a="191928136"
+   d="scan'208";a="401802619"
 Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
-  by orsmga007.jf.intel.com with ESMTP; 04 Nov 2019 16:25:28 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 04 Nov 2019 16:25:28 -0800
 Received: by tassilo.localdomain (Postfix, from userid 1000)
-        id F2E243002BD; Mon,  4 Nov 2019 16:25:27 -0800 (PST)
+        id 1714F301A7E; Mon,  4 Nov 2019 16:25:28 -0800 (PST)
 From:   Andi Kleen <andi@firstfloor.org>
 To:     acme@kernel.org
 Cc:     jolsa@kernel.org, linux-kernel@vger.kernel.org,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH v4 1/9] perf pmu: Use file system cache to optimize sysfs access
-Date:   Mon,  4 Nov 2019 16:25:14 -0800
-Message-Id: <20191105002522.83803-2-andi@firstfloor.org>
+Subject: [PATCH v4 5/9] perf stat: Use affinity for closing file descriptors
+Date:   Mon,  4 Nov 2019 16:25:18 -0800
+Message-Id: <20191105002522.83803-6-andi@firstfloor.org>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191105002522.83803-1-andi@firstfloor.org>
 References: <20191105002522.83803-1-andi@firstfloor.org>
@@ -49,286 +49,153 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Andi Kleen <ak@linux.intel.com>
 
-pmu.c does a lot of redundant /sys accesses while parsing aliases
-and probing for PMUs. On large systems with a lot of PMUs this
-can get expensive (>2s):
+Closing a perf fd can also trigger an IPI to the target CPU.
+Use the same affinity technique as we use for reading/enabling events
+to closing to optimize the CPU transitions.
+
+Before on a large test case with 94 CPUs:
 
 % time     seconds  usecs/call     calls    errors syscall
 ------ ----------- ----------- --------- --------- ----------------
- 27.25    1.227847           8    160888     16976 openat
- 26.42    1.190481           7    164224    164077 stat
+ 32.56    3.085463          50     61483           close
 
-Add a cache to remember if specific file names exist or don't
-exist, which eliminates most of this overhead.
+After:
 
-Also optimize some stat() calls to be slightly cheaper access()
-
-Resulting in:
-
-  0.18    0.004166           2      1851       305 open
-  0.08    0.001970           2       829       622 access
+ 10.54    0.735704          11     61485           close
 
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 
 ---
 
-v2: Use single lookup function as API (Jiri)
+v2: Use new iterator macros
+v3: Use new iterator macros
+Add missing affinity__cleanup
 ---
- tools/perf/util/Build     |  1 +
- tools/perf/util/fncache.c | 63 +++++++++++++++++++++++++++++++++++++++
- tools/perf/util/fncache.h |  7 +++++
- tools/perf/util/pmu.c     | 34 +++++++--------------
- tools/perf/util/srccode.c |  9 +-----
- 5 files changed, 83 insertions(+), 31 deletions(-)
- create mode 100644 tools/perf/util/fncache.c
- create mode 100644 tools/perf/util/fncache.h
+ tools/perf/lib/evsel.c              | 27 +++++++++++++++++++++------
+ tools/perf/lib/include/perf/evsel.h |  1 +
+ tools/perf/util/evlist.c            | 29 +++++++++++++++++++++++++++--
+ tools/perf/util/evsel.h             |  1 +
+ 4 files changed, 50 insertions(+), 8 deletions(-)
 
-diff --git a/tools/perf/util/Build b/tools/perf/util/Build
-index 39814b1806a6..2c1504fe924c 100644
---- a/tools/perf/util/Build
-+++ b/tools/perf/util/Build
-@@ -48,6 +48,7 @@ perf-y += header.o
- perf-y += callchain.o
- perf-y += values.o
- perf-y += debug.o
-+perf-y += fncache.o
- perf-y += machine.o
- perf-y += map.o
- perf-y += pstack.o
-diff --git a/tools/perf/util/fncache.c b/tools/perf/util/fncache.c
-new file mode 100644
-index 000000000000..5afcd7edbe7a
---- /dev/null
-+++ b/tools/perf/util/fncache.c
-@@ -0,0 +1,63 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/* Manage a cache of file names' existence */
-+#include <stdlib.h>
-+#include <unistd.h>
-+#include <string.h>
-+#include <linux/list.h>
-+#include "fncache.h"
-+
-+struct fncache {
-+	struct hlist_node nd;
-+	bool res;
-+	char name[];
-+};
-+
-+#define FNHSIZE 61
-+
-+static struct hlist_head fncache_hash[FNHSIZE];
-+
-+unsigned shash(const unsigned char *s)
+diff --git a/tools/perf/lib/evsel.c b/tools/perf/lib/evsel.c
+index 5a89857b0381..ea775dacbd2d 100644
+--- a/tools/perf/lib/evsel.c
++++ b/tools/perf/lib/evsel.c
+@@ -114,16 +114,23 @@ int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 	return err;
+ }
+ 
++static void perf_evsel__close_fd_cpu(struct perf_evsel *evsel, int cpu)
 +{
-+	unsigned h = 0;
-+	while (*s)
-+		h = 65599 * h + *s++;
-+	return h ^ (h >> 16);
++	int thread;
++
++	for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
++		if (FD(evsel, cpu, thread) >= 0)
++			close(FD(evsel, cpu, thread));
++		FD(evsel, cpu, thread) = -1;
++	}
 +}
 +
-+static bool lookup_fncache(const char *name, bool *res)
+ void perf_evsel__close_fd(struct perf_evsel *evsel)
+ {
+-	int cpu, thread;
++	int cpu;
+ 
+ 	for (cpu = 0; cpu < xyarray__max_x(evsel->fd); cpu++)
+-		for (thread = 0; thread < xyarray__max_y(evsel->fd); ++thread) {
+-			if (FD(evsel, cpu, thread) >= 0)
+-				close(FD(evsel, cpu, thread));
+-			FD(evsel, cpu, thread) = -1;
+-		}
++		perf_evsel__close_fd_cpu(evsel, cpu);
+ }
+ 
+ void perf_evsel__free_fd(struct perf_evsel *evsel)
+@@ -141,6 +148,14 @@ void perf_evsel__close(struct perf_evsel *evsel)
+ 	perf_evsel__free_fd(evsel);
+ }
+ 
++void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu)
 +{
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+	struct fncache *n;
++	if (evsel->fd == NULL)
++		return;
 +
-+	hlist_for_each_entry (n, &fncache_hash[h], nd) {
-+		if (!strcmp(n->name, name)) {
-+			*res = n->res;
-+			return true;
++	perf_evsel__close_fd_cpu(evsel, cpu);
++}
++
+ int perf_evsel__read_size(struct perf_evsel *evsel)
+ {
+ 	u64 read_format = evsel->attr.read_format;
+diff --git a/tools/perf/lib/include/perf/evsel.h b/tools/perf/lib/include/perf/evsel.h
+index 557f5815a9c9..e7add554f861 100644
+--- a/tools/perf/lib/include/perf/evsel.h
++++ b/tools/perf/lib/include/perf/evsel.h
+@@ -26,6 +26,7 @@ LIBPERF_API void perf_evsel__delete(struct perf_evsel *evsel);
+ LIBPERF_API int perf_evsel__open(struct perf_evsel *evsel, struct perf_cpu_map *cpus,
+ 				 struct perf_thread_map *threads);
+ LIBPERF_API void perf_evsel__close(struct perf_evsel *evsel);
++LIBPERF_API void perf_evsel__close_cpu(struct perf_evsel *evsel, int cpu);
+ LIBPERF_API int perf_evsel__read(struct perf_evsel *evsel, int cpu, int thread,
+ 				 struct perf_counts_values *count);
+ LIBPERF_API int perf_evsel__enable(struct perf_evsel *evsel);
+diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+index dccf96e0d01b..8f3bfbe277b5 100644
+--- a/tools/perf/util/evlist.c
++++ b/tools/perf/util/evlist.c
+@@ -18,6 +18,7 @@
+ #include "debug.h"
+ #include "units.h"
+ #include <internal/lib.h> // page_size
++#include "affinity.h"
+ #include "../perf.h"
+ #include "asm/bug.h"
+ #include "bpf-event.h"
+@@ -1165,9 +1166,33 @@ void perf_evlist__set_selected(struct evlist *evlist,
+ void evlist__close(struct evlist *evlist)
+ {
+ 	struct evsel *evsel;
++	struct affinity affinity;
++	int cpu, i;
+ 
+-	evlist__for_each_entry_reverse(evlist, evsel)
+-		evsel__close(evsel);
++	if (!evlist->core.cpus) {
++		evlist__for_each_entry_reverse(evlist, evsel)
++			evsel__close(evsel);
++		return;
++	}
++
++	if (affinity__setup(&affinity) < 0)
++		return;
++	evlist__cpu_iter_start(evlist);
++	evlist__for_each_cpu (evlist, i, cpu) {
++		affinity__set(&affinity, cpu);
++
++		evlist__for_each_entry_reverse(evlist, evsel) {
++			if (evlist__cpu_iter_skip(evsel, cpu))
++			    continue;
++			perf_evsel__close_cpu(&evsel->core, evsel->cpu_index);
++			evlist__cpu_iter_next(evsel);
 +		}
 +	}
-+	return false;
-+}
-+
-+static void update_fncache(const char *name, bool res)
-+{
-+	struct fncache *n = malloc(sizeof(struct fncache) + strlen(name) + 1);
-+	int h = shash((const unsigned char *)name) % FNHSIZE;
-+
-+	if (!n)
-+		return;
-+	strcpy(n->name, name);
-+	n->res = res;
-+	hlist_add_head(&n->nd, &fncache_hash[h]);
-+}
-+
-+/* No LRU, only use when bounded in some other way. */
-+bool file_available(const char *name)
-+{
-+	bool res;
-+
-+	if (lookup_fncache(name, &res))
-+		return res;
-+	res = access(name, R_OK) == 0;
-+	update_fncache(name, res);
-+	return res;
-+}
-diff --git a/tools/perf/util/fncache.h b/tools/perf/util/fncache.h
-new file mode 100644
-index 000000000000..fe020beaefb1
---- /dev/null
-+++ b/tools/perf/util/fncache.h
-@@ -0,0 +1,7 @@
-+#ifndef _FCACHE_H
-+#define _FCACHE_H 1
-+
-+unsigned shash(const unsigned char *s);
-+bool file_available(const char *name);
-+
-+#endif
-diff --git a/tools/perf/util/pmu.c b/tools/perf/util/pmu.c
-index adbe97e941dd..81357cc3d59a 100644
---- a/tools/perf/util/pmu.c
-+++ b/tools/perf/util/pmu.c
-@@ -24,6 +24,7 @@
- #include "pmu-events/pmu-events.h"
- #include "string2.h"
- #include "strbuf.h"
-+#include "fncache.h"
- 
- struct perf_pmu_format {
- 	char *name;
-@@ -82,7 +83,6 @@ int perf_pmu__format_parse(char *dir, struct list_head *head)
-  */
- static int pmu_format(const char *name, struct list_head *format)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -92,8 +92,8 @@ static int pmu_format(const char *name, struct list_head *format)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/format", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	/* no error if format does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (perf_pmu__format_parse(path, format))
- 		return -1;
-@@ -475,7 +475,6 @@ static int pmu_aliases_parse(char *dir, struct list_head *head)
-  */
- static int pmu_aliases(const char *name, struct list_head *head)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
- 
-@@ -485,8 +484,8 @@ static int pmu_aliases(const char *name, struct list_head *head)
- 	snprintf(path, PATH_MAX,
- 		 "%s/bus/event_source/devices/%s/events", sysfs, name);
- 
--	if (stat(path, &st) < 0)
--		return 0;	 /* no error if 'events' does not exist */
-+	if (!file_available(path))
-+		return 0;
- 
- 	if (pmu_aliases_parse(path, head))
- 		return -1;
-@@ -525,7 +524,6 @@ static int pmu_alias_terms(struct perf_pmu_alias *alias,
-  */
- static int pmu_type(const char *name, __u32 *type)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	FILE *file;
- 	int ret = 0;
-@@ -537,7 +535,7 @@ static int pmu_type(const char *name, __u32 *type)
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/type", sysfs, name);
- 
--	if (stat(path, &st) < 0)
-+	if (access(path, R_OK) < 0)
- 		return -1;
- 
- 	file = fopen(path, "r");
-@@ -628,14 +626,11 @@ static struct perf_cpu_map *pmu_cpumask(const char *name)
- static bool pmu_is_uncore(const char *name)
- {
- 	char path[PATH_MAX];
--	struct perf_cpu_map *cpus;
--	const char *sysfs = sysfs__mountpoint();
-+	const char *sysfs;
- 
-+	sysfs = sysfs__mountpoint();
- 	snprintf(path, PATH_MAX, CPUS_TEMPLATE_UNCORE, sysfs, name);
--	cpus = __pmu_cpumask(path);
--	perf_cpu_map__put(cpus);
--
--	return !!cpus;
-+	return file_available(path);
++	affinity__cleanup(&affinity);
++	evlist__for_each_entry_reverse(evlist, evsel) {
++		perf_evsel__free_fd(&evsel->core);
++		perf_evsel__free_id(&evsel->core);
++	}
  }
  
- /*
-@@ -645,7 +640,6 @@ static bool pmu_is_uncore(const char *name)
-  */
- static int is_arm_pmu_core(const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs = sysfs__mountpoint();
+ static int perf_evlist__create_syswide_maps(struct evlist *evlist)
+diff --git a/tools/perf/util/evsel.h b/tools/perf/util/evsel.h
+index cf90019ae744..2e3b011ed09e 100644
+--- a/tools/perf/util/evsel.h
++++ b/tools/perf/util/evsel.h
+@@ -391,4 +391,5 @@ static inline bool evsel__has_callchain(const struct evsel *evsel)
+ struct perf_env *perf_evsel__env(struct evsel *evsel);
  
-@@ -655,10 +649,7 @@ static int is_arm_pmu_core(const char *name)
- 	/* Look for cpu sysfs (specific to arm) */
- 	scnprintf(path, PATH_MAX, "%s/bus/event_source/devices/%s/cpus",
- 				sysfs, name);
--	if (stat(path, &st) == 0)
--		return 1;
--
--	return 0;
-+	return file_available(path);
- }
- 
- static char *perf_pmu__getcpuid(struct perf_pmu *pmu)
-@@ -1528,7 +1519,6 @@ bool pmu_have_event(const char *pname, const char *name)
- 
- static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- {
--	struct stat st;
- 	char path[PATH_MAX];
- 	const char *sysfs;
- 
-@@ -1538,10 +1528,8 @@ static FILE *perf_pmu__open_file(struct perf_pmu *pmu, const char *name)
- 
- 	snprintf(path, PATH_MAX,
- 		 "%s" EVENT_SOURCE_DEVICE_PATH "%s/%s", sysfs, pmu->name, name);
--
--	if (stat(path, &st) < 0)
-+	if (!file_available(path))
- 		return NULL;
--
- 	return fopen(path, "r");
- }
- 
-diff --git a/tools/perf/util/srccode.c b/tools/perf/util/srccode.c
-index d84ed8b6caaa..c29edaaca863 100644
---- a/tools/perf/util/srccode.c
-+++ b/tools/perf/util/srccode.c
-@@ -16,6 +16,7 @@
- #include "srccode.h"
- #include "debug.h"
- #include <internal/lib.h> // page_size
-+#include "fncache.h"
- 
- #define MAXSRCCACHE (32*1024*1024)
- #define MAXSRCFILES     64
-@@ -36,14 +37,6 @@ static LIST_HEAD(srcfile_list);
- static long map_total_sz;
- static int num_srcfiles;
- 
--static unsigned shash(unsigned char *s)
--{
--	unsigned h = 0;
--	while (*s)
--		h = 65599 * h + *s++;
--	return h ^ (h >> 16);
--}
--
- static int countlines(char *map, int maplen)
- {
- 	int numl;
+ int perf_evsel__store_ids(struct evsel *evsel, struct evlist *evlist);
++
+ #endif /* __PERF_EVSEL_H */
 -- 
 2.23.0
 
