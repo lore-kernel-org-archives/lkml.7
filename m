@@ -2,84 +2,86 @@ Return-Path: <SRS0=2+op=Y5=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E65DC1747C
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:30:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F058C17460
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA1CC217F5
-	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:30:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572964214;
-	bh=JyhAvuI9xYpQM+SGSD5xqGtMqgtkBy4E96Wgjf5mP7A=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=TSKrY/2BvqKPel2bRQGNT/dESPtNT5+RPeZIChl/ZMa1E2DJA6E9VuoBY9yoraZJx
-	 8JmHIJF2KB3fC6742OJnHwLd6KLOTGFtZkGen8E0BEQ8bmoYqynSWWkFBoeR23n+oy
-	 Z4UNFu2qNRjQLT4xgQX1AI1DUI8xXzE6MltOAY1E=
+	by mail.kernel.org (Postfix) with ESMTP id E0417214D8
+	for <linux-kernel@archiver.kernel.org>; Tue,  5 Nov 2019 14:30:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389525AbfKEOaM (ORCPT
+        id S2389570AbfKEOa2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 09:30:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48214 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727857AbfKEOaM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 09:30:12 -0500
-Received: from localhost (unknown [193.47.165.251])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6028B214D8;
-        Tue,  5 Nov 2019 14:30:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572964212;
-        bh=JyhAvuI9xYpQM+SGSD5xqGtMqgtkBy4E96Wgjf5mP7A=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=vKvMqMa2amnF6+cRLGcowJrS/zcYqKIg6kH5w1NdUX71TD9tI8BvYEug+xlRVhpBX
-         Q8VvnU+jeQlL0eGV2SStVZRwSbQ4nFbGEZO58PLgVdbxT/S3XQRFqjfcwTAdfjDxKl
-         zwqC/WMiO8Cz4rwS7vT/kh5VZPy23fkB+UFQMpyA=
-Date:   Tue, 5 Nov 2019 16:30:08 +0200
-From:   Leon Romanovsky <leon@kernel.org>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
-        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] IB: mlx5: no need to check return value of
- debugfs_create functions
-Message-ID: <20191105143008.GC6763@unreal>
-References: <20191104074141.GA1292396@kroah.com>
+        Tue, 5 Nov 2019 09:30:28 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:50036 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727857AbfKEOa2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 09:30:28 -0500
+Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 78F22EEBB3532B380AED;
+        Tue,  5 Nov 2019 22:30:25 +0800 (CST)
+Received: from localhost.localdomain (10.90.53.225) by
+ DGGEMS406-HUB.china.huawei.com (10.3.19.206) with Microsoft SMTP Server id
+ 14.3.439.0; Tue, 5 Nov 2019 22:30:18 +0800
+From:   Chen Wandun <chenwandun@huawei.com>
+To:     <linux-kernel@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <perex@perex.cz>, <gregkh@linuxfoundation.org>,
+        <kstewart@linuxfoundation.org>, <allison@lohutok.net>,
+        <tglx@linutronix.de>, <joe@perches.com>
+CC:     <chenwandun@huawei.com>
+Subject: [PATCH v2] hp100: remove set but not used variable val
+Date:   Tue, 5 Nov 2019 22:36:59 +0800
+Message-ID: <1572964619-76671-1-git-send-email-chenwandun@huawei.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <20191105133554.6C01F9A06CB85816F399@huawei.com>
+References: <20191105133554.6C01F9A06CB85816F399@huawei.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104074141.GA1292396@kroah.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+Content-Type: text/plain
+X-Originating-IP: [10.90.53.225]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 08:41:41AM +0100, Greg Kroah-Hartman wrote:
-> When calling debugfs functions, there is no need to ever check the
-> return value.  The function can work or not, but the code logic should
-> never do something different based on this.
->
-> Cc: Leon Romanovsky <leon@kernel.org>
-> Cc: Doug Ledford <dledford@redhat.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> ---
->  drivers/infiniband/hw/mlx5/main.c    | 62 +++++++---------------------
->  drivers/infiniband/hw/mlx5/mlx5_ib.h |  9 +---
->  2 files changed, 16 insertions(+), 55 deletions(-)
->
-> Note, I kind of need to take this through my tree now as I broke the
-> build due to me changing the use of debugfs_create_atomic_t() in my
-> tree and not noticing this being used here.  Sorry about that, any
-> objections?
->
-> And 0-day seems really broken to have missed this for the past months,
-> ugh, I need to stop relying on it...
->
+From: Chenwandun <chenwandun@huawei.com>
 
-Thanks,
-Acked-by: Leon Romanovsky <leonro@mellanox.com>
+Fixes gcc '-Wunused-but-set-variable' warning:
+
+drivers/staging/hp/hp100.c: In function hp100_start_xmit:
+drivers/staging/hp/hp100.c:1629:10: warning: variable val set but not used [-Wunused-but-set-variable]
+
+Signed-off-by: Chenwandun <chenwandun@huawei.com>
+---
+ drivers/staging/hp/hp100.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/drivers/staging/hp/hp100.c b/drivers/staging/hp/hp100.c
+index 6ec78f5..6fc7733 100644
+--- a/drivers/staging/hp/hp100.c
++++ b/drivers/staging/hp/hp100.c
+@@ -1626,7 +1626,9 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
+ 	unsigned long flags;
+ 	int i, ok_flag;
+ 	int ioaddr = dev->base_addr;
++#ifdef HP100_DEBUG_TX
+ 	u_short val;
++#endif
+ 	struct hp100_private *lp = netdev_priv(dev);
+ 
+ #ifdef HP100_DEBUG_B
+@@ -1695,7 +1697,9 @@ static netdev_tx_t hp100_start_xmit(struct sk_buff *skb,
+ 
+ 	spin_lock_irqsave(&lp->lock, flags);
+ 	hp100_ints_off();
++#ifdef HP100_DEBUG_TX
+ 	val = hp100_inw(IRQ_STATUS);
++#endif
+ 	/* Ack / clear the interrupt TX_COMPLETE interrupt - this interrupt is set
+ 	 * when the current packet being transmitted on the wire is completed. */
+ 	hp100_outw(HP100_TX_COMPLETE, IRQ_STATUS);
+-- 
+2.7.4
+
