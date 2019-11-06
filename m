@@ -2,185 +2,101 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,HK_RANDOM_FROM,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 090C5FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:29:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94230FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:31:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBCFD20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6403020663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:31:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JUXKo99u"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwQTp+0U"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732705AbfKFX27 (ORCPT
+        id S1732779AbfKFXbf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:28:59 -0500
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:33767 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727316AbfKFX27 (ORCPT
+        Wed, 6 Nov 2019 18:31:35 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36612 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfKFXbf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:28:59 -0500
-Received: by mail-yb1-f196.google.com with SMTP id i15so238336ybq.0;
-        Wed, 06 Nov 2019 15:28:58 -0800 (PST)
+        Wed, 6 Nov 2019 18:31:35 -0500
+Received: by mail-pl1-f195.google.com with SMTP id g9so12306638plp.3;
+        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wsGkky6yfeJ+ut8glQWS3HkTq744rNXXFxtFxOcqi6E=;
-        b=JUXKo99uMkVxowlJ3qm1o6kw842BvWhmlNS5Z9hyRW0pcJphoXOcCtnUNtfx8IdPpR
-         oySoQsb3lPIh+NM2b8zCSRhLOFT75guRcYd72Ts72gYIuaxUBsRjPqNCrElolRdmbi3E
-         cTkFII1BHLz7OoDVHGOip9fuVLPcoQjm/Gi019NG/gIAXNd7Jy/L2kFziZmD22JV2Woe
-         igAfYSWRe5lE2vascU6L0OmI4tkSH8zacRn77dFgUbztKeXyLUT/HwoKtl7OFODUxaEv
-         MruH3USO7MVQaKrCNOxZNubsnMJhoYa+UfquEtgRfwjKRBuo3hJLYEnqthAnmXfvpdp0
-         YEKw==
+        h=from:to:cc:subject:date:message-id;
+        bh=XQlBjJQQjlLiOw6f2ULlsVGlJrKy32umFggc4zmnopc=;
+        b=gwQTp+0U9NUDWWwM66Vo43vKr5F6kMz6YnYStCt7FNFJHX+scw5dGwfAbuEShRbc8v
+         XcmX1D+eSJZYvdO0k9WgO/00JGvL5kjTxBS3D/FLPLBDgT2lLsa6Gho9KRe04ezZreU7
+         ttLGuXono0x8uy6S0YxD0shypeQWo1wKv5Z08VuRXS0KnWBtOCZwzJPgnDzTEWTuq18j
+         azzWsYkZWIWokwnvKfvCfdBwDww9XJV8XRquLpogRYv8WMBwwo5SUBM1XZNZVmzI/Tez
+         1OSlIqNp3kGEIeR9fRxGBHKxWT9pIGy2pEzMpOU+X5UCTFQrjf/QBMNRR9EsM0929Ccd
+         z4zw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wsGkky6yfeJ+ut8glQWS3HkTq744rNXXFxtFxOcqi6E=;
-        b=pPEp3qheNX8lxj8zg6Pvamc+e3a060oCePxLSSIpPB56gZ9BNDLS3CXUtKwd6M0f4A
-         rqGbOuUl2NoswjE6DZuNbb9ZmPzu6gBKelUaBiLDfcVWBNYt+dAJYoiL06Pk2okKaI/n
-         GNwK+HjuTvQgFj07f6FYe7WZx0OYKPhZ2TZec7wmKle0sZmk2DsZDO32T4IbTY/qGnXS
-         MewRE53R9f8fl3Idi1u/+fTBpwbMTUz3ZWLQzJCDqVbjVod+Op0m04SHQFuXz6Mc3doV
-         cUsywFnYZhK3y2ud8a3IlhMnDxdG3S2wFWhXwjPoWtCwJ9N+TXXDiK3wOZyYJAKIkbj6
-         Beow==
-X-Gm-Message-State: APjAAAUf6uu77CZOev0db+NNItMyvFrdOnCVRzwIUBBc3QbzYTy5sFxq
-        FtK1bQKjtGVQHJuf0RL0qBlTjVzu3BJglPtMWow=
-X-Google-Smtp-Source: APXvYqxwSsU7QfnftZPBDmOxKeNz94oi9xpUFIFhUMbydvHrpAxIVz+AeNKsE7P/ockLy/g7TTo/2lk/DxpneCbwUcM=
-X-Received: by 2002:a25:774b:: with SMTP id s72mr613338ybc.287.1573082937865;
- Wed, 06 Nov 2019 15:28:57 -0800 (PST)
-MIME-Version: 1.0
-References: <1573002091-9744-1-git-send-email-gkulkarni@marvell.com>
- <1573002091-9744-2-git-send-email-gkulkarni@marvell.com> <20191106112810.GA50610@lakrids.cambridge.arm.com>
-In-Reply-To: <20191106112810.GA50610@lakrids.cambridge.arm.com>
-From:   Ganapatrao Kulkarni <gklkml16@gmail.com>
-Date:   Wed, 6 Nov 2019 15:28:46 -0800
-Message-ID: <CAKTKpr6U8gUp4C9muN2cL4wn33o2LAa5QnTO2MSmfnBz8oUc=Q@mail.gmail.com>
-Subject: Re: [PATCH 1/2] perf/core: Adding capability to disable PMUs event multiplexing
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>,
-        "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=XQlBjJQQjlLiOw6f2ULlsVGlJrKy32umFggc4zmnopc=;
+        b=Jppb/Fql/riqbrEgE6d4nwJIl4nGCWf2ZeFzm8BYZOEvis3Hf+EKsjeueruN/JR7ef
+         d0OTOaRd/pjPrD9Cc5L0Oo3N9VPBQywmnkY9l4oNzoMvq17WUBASb+3nawMiC6Vc3IR2
+         PyTBrX7oTs06M1CZbyUC4fzmKqbYMFKS+jSsoafKGVC+ModB7HdYVxvWSOlzLojt96BT
+         WQ1Jwksh7wRoCtoct79YwkOoLvuS6eI3xqlU7ZtwAne93OhYM1083EXSJ9YG0be9LxHg
+         fXZ86TxdEWMoZfOLnekRp4dsQCnY96Pb4sZGPVZKqpzpj03v6gi9BBTLhV3GYfpVHqE9
+         uzhw==
+X-Gm-Message-State: APjAAAXJ+pUDmwJ19HPKQz1tSui3khv3dvkXvUjfQ+mHpa5ErkUb9DJ/
+        0aPTA/my6MlKwlriCOADO5mH3rVb
+X-Google-Smtp-Source: APXvYqyxj6AvcxSxTZ1uXkDQ4TdMBL4b+00frqdfXS3bHWC4a2N3B+rJNl7uiZQ1SRrjJzBidWs0oQ==
+X-Received: by 2002:a17:902:b10c:: with SMTP id q12mr239799plr.97.1573083094431;
+        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id f7sm70667pfa.150.2019.11.06.15.31.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] ath10k: Handle when FW doesn't support QMI_WLFW_HOST_CAP_REQ_V01
+Date:   Wed,  6 Nov 2019 15:31:30 -0800
+Message-Id: <20191106233130.2169-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter, Mark,
+Firmware with the build id QC_IMAGE_VERSION_STRING=WLAN.HL.1.0.2-XXXX does
+not support the QMI_WLFW_HOST_CAP_REQ_V01 message and will return the
+QMI not supported error to the ath10k driver.  Since not supporting this
+message is not fatal to the firmware nor the ath10k driver, lets catch
+this particular scenario and ignore it so that we can still bring up
+wifi services successfully.
 
-On Wed, Nov 6, 2019 at 3:28 AM Mark Rutland <mark.rutland@arm.com> wrote:
->
-> On Wed, Nov 06, 2019 at 01:01:40AM +0000, Ganapatrao Prabhakerrao Kulkarni wrote:
-> > When PMUs are registered, perf core enables event multiplexing
-> > support by default. There is no provision for PMUs to disable
-> > event multiplexing, if PMUs want to disable due to unavoidable
-> > circumstances like hardware errata etc.
-> >
-> > Adding PMU capability flag PERF_PMU_CAP_NO_MUX_EVENTS and support
-> > to allow PMUs to explicitly disable event multiplexing.
->
-> Even without multiplexing, this PMU activity can happen when switching
-> tasks, or when creating/destroying events, so as-is I don't think this
-> makes much sense.
->
-> If there's an erratum whereby heavy access to the PMU can lockup the
-> core, and it's possible to workaround that by minimzing accesses, that
-> should be done in the back-end PMU driver.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/net/wireless/ath/ath10k/qmi.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-As said in errata,  If there are heavy access to memory like stream
-application running and along with that if PMU control registers are
-also accessed frequently, then CPU lockup is seen.
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index 545ac1f06997..eb618a2652db 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -614,7 +614,9 @@ static int ath10k_qmi_host_cap_send_sync(struct ath10k_qmi *qmi)
+ 	if (ret < 0)
+ 		goto out;
+ 
+-	if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
++	/* older FW didn't support this request, which is not fatal */
++	if (resp.resp.result != QMI_RESULT_SUCCESS_V01 &&
++	    resp.resp.error != QMI_ERR_NOT_SUPPORTED_V01) {
+ 		ath10k_err(ar, "host capability request rejected: %d\n", resp.resp.error);
+ 		ret = -EINVAL;
+ 		goto out;
+-- 
+2.17.1
 
-I ran perf stat with 4 events of thuderx2 PMU as well as with 6 events
-for stream application.
-For 4 events run, there is no event multiplexing, where as for 6
-events run the events are multiplexed.
-
-For 4 event run:
-No of times pmu->add is called: 10
-No of times pmu->del is called: 10
-No of times pmu->read is called: 310
-
-For 6 events run:
-No of times pmu->add is called: 5216
-No of times pmu->del is called: 5216
-No of times pmu->read is called: 5216
-
-Issue happens when the add and del are called too many times as seen
-with 6 event case.
-The PMU hardware control registers are programmed when add and del
-functions are called.
-For pmu->read no issues since no h/w issue with the data path.
-
-This is UNCORE driver, not sure context switch has any influence on this?
-Please suggest me, how can we fix this in back-end PMU driver without
-any perf core help?
-
->
-> Either way, this minimzes the utility of the PMU.
->
-> Thanks,
-> Mark.
->
-> >
-> > Signed-off-by: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
-> > ---
-> >  include/linux/perf_event.h | 1 +
-> >  kernel/events/core.c       | 8 ++++++++
-> >  2 files changed, 9 insertions(+)
-> >
-> > diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> > index 61448c19a132..9e18d841daf7 100644
-> > --- a/include/linux/perf_event.h
-> > +++ b/include/linux/perf_event.h
-> > @@ -247,6 +247,7 @@ struct perf_event;
-> >  #define PERF_PMU_CAP_HETEROGENEOUS_CPUS              0x40
-> >  #define PERF_PMU_CAP_NO_EXCLUDE                      0x80
-> >  #define PERF_PMU_CAP_AUX_OUTPUT                      0x100
-> > +#define PERF_PMU_CAP_NO_MUX_EVENTS           0x200
-> >
-> >  /**
-> >   * struct pmu - generic performance monitoring unit
-> > diff --git a/kernel/events/core.c b/kernel/events/core.c
-> > index 4655adbbae10..65452784f81c 100644
-> > --- a/kernel/events/core.c
-> > +++ b/kernel/events/core.c
-> > @@ -1092,6 +1092,10 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
-> >       if (pmu->task_ctx_nr == perf_sw_context)
-> >               return;
-> >
-> > +     /* No PMU support */
-> > +     if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
-> > +             return 0;
-> > +
-> >       /*
-> >        * check default is sane, if not set then force to
-> >        * default interval (1/tick)
-> > @@ -1117,6 +1121,10 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
-> >       if (pmu->task_ctx_nr == perf_sw_context)
-> >               return 0;
-> >
-> > +     /* No PMU support */
-> > +     if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
-> > +             return 0;
-> > +
-> >       raw_spin_lock_irqsave(&cpuctx->hrtimer_lock, flags);
-> >       if (!cpuctx->hrtimer_active) {
-> >               cpuctx->hrtimer_active = 1;
-> > --
-> > 2.17.1
-> >
-
-Thanks,
-Ganapat
