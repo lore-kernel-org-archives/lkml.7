@@ -2,42 +2,41 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36094C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC9C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0BD932178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9222178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731625AbfKFJtJ (ORCPT
+        id S1731639AbfKFJtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:49:09 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:43148 "EHLO inva020.nxp.com"
+        Wed, 6 Nov 2019 04:49:07 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:46790 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731535AbfKFJtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1731487AbfKFJtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 04:49:06 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id ACD1F1A05F8;
-        Wed,  6 Nov 2019 10:49:04 +0100 (CET)
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 924B62005EE;
+        Wed,  6 Nov 2019 10:49:03 +0100 (CET)
 Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 30E5B1A011D;
-        Wed,  6 Nov 2019 10:49:00 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 159E32005DA;
+        Wed,  6 Nov 2019 10:48:59 +0100 (CET)
 Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 4987E402FC;
-        Wed,  6 Nov 2019 17:48:54 +0800 (SGT)
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 35853402EE;
+        Wed,  6 Nov 2019 17:48:53 +0800 (SGT)
 From:   Anson Huang <Anson.Huang@nxp.com>
 To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
         s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org
 Cc:     Linux-imx@nxp.com
-Subject: [PATCH 3/3] ARM: dts: imx6sll: Add Rev A board support
-Date:   Wed,  6 Nov 2019 17:47:30 +0800
-Message-Id: <1573033650-11848-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/3] ARM: dts: imx6sll-evk: Add eMMC support
+Date:   Wed,  6 Nov 2019 17:47:29 +0800
+Message-Id: <1573033650-11848-2-git-send-email-Anson.Huang@nxp.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
 References: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
@@ -47,46 +46,106 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX6SLL EVK Rev A board is same with latest i.MX6SLL EVK board except
-eMMC can ONLY run at HS200 mode, add support for this board.
+i.MX6SLL EVK board has eMMC connected on uSDHC2, add support
+for it.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/imx6sll-evk-reva.dts | 12 ++++++++++++
- 2 files changed, 13 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sll-evk-reva.dts
+ arch/arm/boot/dts/imx6sll-evk.dts | 67 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 67 insertions(+)
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 71f08e7..3845bbf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -557,6 +557,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SLL) += \
- 	imx6sll-evk.dtb \
-+	imx6sll-evk-reva.dtb \
- 	imx6sll-kobo-clarahd.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-evk-reva.dts b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-new file mode 100644
-index 0000000..7ca2563
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-@@ -0,0 +1,12 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2019 NXP.
-+ *
-+ */
+diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
+index 3e1d32f..29b284c 100644
+--- a/arch/arm/boot/dts/imx6sll-evk.dts
++++ b/arch/arm/boot/dts/imx6sll-evk.dts
+@@ -109,6 +109,14 @@
+ 		enable-active-high;
+ 	};
+ 
++	reg_sd2_vmmc: regulator-sd2-vmmc {
++		compatible = "regulator-fixed";
++		regulator-name = "eMMC-VCCQ";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		regulator-boot-on;
++	};
 +
-+#include "imx6sll-evk.dts"
-+
+ 	reg_sd3_vmmc: regulator-sd3-vmmc {
+ 		compatible = "regulator-fixed";
+ 		pinctrl-names = "default";
+@@ -314,6 +322,17 @@
+ 	status = "okay";
+ };
+ 
 +&usdhc2 {
-+	compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
++	pinctrl-names = "default", "state_100mhz", "state_200mhz";
++	pinctrl-0 = <&pinctrl_usdhc2>;
++	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
++	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
++	vqmmc-supply = <&reg_sd2_vmmc>;
++	bus-width = <8>;
++	no-removable;
++	status = "okay";
 +};
++
+ &usdhc3 {
+ 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+ 	pinctrl-0 = <&pinctrl_usdhc3>;
+@@ -403,6 +422,54 @@
+ 		>;
+ 	};
+ 
++	pinctrl_usdhc2: usdhc2grp {
++		fsl,pins = <
++			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x17059
++			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x13059
++			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x17059
++			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x17059
++			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x17059
++			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x17059
++			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x17059
++			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x17059
++			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x17059
++			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x17059
++			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x413059
++		>;
++	};
++
++	pinctrl_usdhc2_100mhz: usdhc2grp_100mhz {
++		fsl,pins = <
++			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170b9
++			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130b9
++			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170b9
++			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170b9
++			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170b9
++			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170b9
++			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170b9
++			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170b9
++			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170b9
++			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170b9
++			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130b9
++		>;
++	};
++
++	pinctrl_usdhc2_200mhz: usdhc2grp_200mhz {
++		fsl,pins = <
++			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170f9
++			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130f9
++			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170f9
++			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170f9
++			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170f9
++			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170f9
++			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170f9
++			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170f9
++			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170f9
++			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170f9
++			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130f9
++		>;
++	};
++
+ 	pinctrl_usbotg1: usbotg1grp {
+ 		fsl,pins = <
+ 			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
 -- 
 2.7.4
 
