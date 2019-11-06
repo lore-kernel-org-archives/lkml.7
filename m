@@ -2,70 +2,87 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C79FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:42:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E501BC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:43:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36DB02178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:42:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF4E4217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:43:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732415AbfKFRmV (ORCPT
+        id S1732418AbfKFRnB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:42:21 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44903 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728983AbfKFRmU (ORCPT
+        Wed, 6 Nov 2019 12:43:01 -0500
+Received: from out30-132.freemail.mail.aliyun.com ([115.124.30.132]:53771 "EHLO
+        out30-132.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727286AbfKFRnB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:42:20 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iSPJu-0000c5-FI; Wed, 06 Nov 2019 18:42:14 +0100
-Date:   Wed, 6 Nov 2019 18:42:13 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Oleg Nesterov <oleg@redhat.com>
-cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: handle_exit_race && PF_EXITING
-In-Reply-To: <20191106121111.GC12575@redhat.com>
-Message-ID: <alpine.DEB.2.21.1911061808030.1869@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <20191105152728.GA5666@redhat.com> <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de> <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de> <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de> <20191106085529.GA12575@redhat.com> <alpine.DEB.2.21.1911061028020.1869@nanos.tec.linutronix.de> <20191106103509.GB12575@redhat.com>
- <alpine.DEB.2.21.1911061154520.1869@nanos.tec.linutronix.de> <20191106121111.GC12575@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 6 Nov 2019 12:43:01 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R111e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=4;SR=0;TI=SMTPD_---0ThMmvMI_1573062176;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ThMmvMI_1573062176)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 07 Nov 2019 01:42:58 +0800
+Subject: Re: [PATCH] mm: rmap: use VM_BUG_ON() in __page_check_anon_rmap()
+To:     "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc:     akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1572973416-18532-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191106082848.eukf2jnjqxlvxgnx@box>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <0d881dbe-b517-a68c-a61f-c4bfe18e75ca@linux.alibaba.com>
+Date:   Wed, 6 Nov 2019 09:42:52 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191106082848.eukf2jnjqxlvxgnx@box>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019, Oleg Nesterov wrote:
-> 
-> I think that (with or without this fix) handle_exit_race() logic needs
-> cleanups, there is no reason for get_futex_value_locked(), we can drop
-> ->pi_lock right after we see PF_EXITPIDONE. Lets discuss this later.
 
-Which still is in atomic because the hash bucket lock is held, ergo
-get_futex_value_locked() needs to stay for now.
 
-So the only thing we could do is to reduce the pi_lock held section a bit.
+On 11/6/19 12:28 AM, Kirill A. Shutemov wrote:
+> On Wed, Nov 06, 2019 at 01:03:36AM +0800, Yang Shi wrote:
+>> The __page_check_anon_rmap() just calls two BUG_ON()s protected by
+>> CONFIG_DEBUG_VM, the #ifdef could be eliminated by using VM_BUG_ON().
+>>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>>   mm/rmap.c | 6 ++----
+>>   1 file changed, 2 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/mm/rmap.c b/mm/rmap.c
+>> index d17cbf3..39178eb 100644
+>> --- a/mm/rmap.c
+>> +++ b/mm/rmap.c
+>> @@ -1055,7 +1055,6 @@ static void __page_set_anon_rmap(struct page *page,
+>>   static void __page_check_anon_rmap(struct page *page,
+>>   	struct vm_area_struct *vma, unsigned long address)
+>>   {
+>> -#ifdef CONFIG_DEBUG_VM
+>>   	/*
+>>   	 * The page's anon-rmap details (mapping and index) are guaranteed to
+>>   	 * be set up correctly at this point.
+>> @@ -1068,9 +1067,8 @@ static void __page_check_anon_rmap(struct page *page,
+>>   	 * are initially only visible via the pagetables, and the pte is locked
+>>   	 * over the call to page_add_new_anon_rmap.
+>>   	 */
+>> -	BUG_ON(page_anon_vma(page)->root != vma->anon_vma->root);
+>> -	BUG_ON(page_to_pgoff(page) != linear_page_index(vma, address));
+>> -#endif
+>> +	VM_BUG_ON(page_anon_vma(page)->root != vma->anon_vma->root);
+>> +	VM_BUG_ON(page_to_pgoff(page) != linear_page_index(vma, address));
+> Why not VM_BUG_ON_PAGE()?
 
-Thanks,
+Because I was not intended to change the behavior, just cleanup. We 
+definitely could use VM_BUG_ON_PAGE() if that is preferred.
 
-	tglx
+>
 
