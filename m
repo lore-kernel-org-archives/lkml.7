@@ -2,108 +2,105 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA287C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:35:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B50C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AECAA217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:35:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573025725;
-	bh=tSn/w5SW/mmNiyhDfH7SvCgKVaTFQTCA0J0BgcdxKN0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BZRfCO1UdZSjawLu1S2MefuzkTaXfrd0+IpM6iwJl5B3DTwWfZXtubIIyf6qey2tt
-	 y2Rd51EidFhMJDmhQg5RdLWDym5fwUSjN8cVSKIzI5RjV7U0D5S3xQY5Lsev9zeS7h
-	 468hf35vLiC83c5pah/9hrOQJftHsWf+jZEn3SQg=
+	by mail.kernel.org (Postfix) with ESMTP id E6A0B21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:38:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fx6NFhty"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731277AbfKFHfY (ORCPT
+        id S1731252AbfKFHi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:35:24 -0500
-Received: from mx2.suse.de ([195.135.220.15]:60896 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729870AbfKFHfY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:35:24 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 8E059AE3F;
-        Wed,  6 Nov 2019 07:35:22 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 08:35:21 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     David Rientjes <rientjes@google.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote hugepages
-Message-ID: <20191106073521.GC8314@dhcp22.suse.cz>
-References: <20191001083743.GC15624@dhcp22.suse.cz>
- <20191018141550.GS5017@dhcp22.suse.cz>
- <53c4a6ca-a4d0-0862-8744-f999b17d82d8@suse.cz>
- <alpine.DEB.2.21.1910241156370.130350@chino.kir.corp.google.com>
- <08a3f4dd-c3ce-0009-86c5-9ee51aba8557@suse.cz>
- <20191029151549.GO31513@dhcp22.suse.cz>
- <20191029143351.95f781f09a9fbf254163d728@linux-foundation.org>
- <alpine.DEB.2.21.1910291623050.9914@chino.kir.corp.google.com>
- <20191105130253.GO22672@dhcp22.suse.cz>
- <alpine.DEB.2.21.1911051659010.181254@chino.kir.corp.google.com>
+        Wed, 6 Nov 2019 02:38:58 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:32886 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728291AbfKFHi6 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:38:58 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67clM9004697;
+        Wed, 6 Nov 2019 01:38:47 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573025927;
+        bh=Ct1yAMrZn1WGva5J/pseiPkfqGTYIlCrhJlXHcNEXiQ=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=fx6NFhtyPKHH5owLe3mapQpV9sFsqd2wRTyxB8cISVEYnwmDN1durhYL4qLSoiYM/
+         dtXqI6lF1ynlQGE6ZzvT0IP6OsbJ1KzaR4vo8fIy3tzxzbDgz+K5FxZwrMJH03LrDy
+         BwX1E2bXCk2H+hBu6PlZfd9z9u/O08uJ1UiqAUXo=
+Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67clVD075518
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 01:38:47 -0600
+Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 01:38:32 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 01:38:32 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67cink009701;
+        Wed, 6 Nov 2019 01:38:45 -0600
+Subject: Re: [PATCH v4 12/20] mtd: spi-nor: Print debug message when the read
+ back test fails
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
+ <20191102112316.20715-13-tudor.ambarus@microchip.com>
+ <9474c875-94a1-3d19-ddab-b90d352967a9@ti.com>
+ <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
+Date:   Wed, 6 Nov 2019 13:09:20 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1911051659010.181254@chino.kir.corp.google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 05-11-19 17:01:00, David Rientjes wrote:
-> On Tue, 5 Nov 2019, Michal Hocko wrote:
+
+
+On 06/11/19 12:54 PM, Tudor.Ambarus@microchip.com wrote:
 > 
-> > > > Thanks, I'll queue this for some more testing.  At some point we should
-> > > > decide on a suitable set of Fixes: tags and a backporting strategy, if any?
-> > > > 
-> > > 
-> > > I'd strongly suggest that Andrea test this patch out on his workload on 
-> > > hosts where all nodes are low on memory because based on my understanding 
-> > > of his reported issue this would result in swap storms reemerging but 
-> > > worse this time because they wouldn't be constrained only locally.  (This 
-> > > patch causes us to no longer circumvent excessive reclaim when using 
-> > > MADV_HUGEPAGE.)
-> > 
-> > Could you be more specific on why this would be the case? My testing is
-> > doesn't show any such signs and I am effectivelly testing memory low
-> > situation. The amount of reclaimed memory matches the amount of
-> > requested memory.
-> > 
 > 
-> The follow-up allocation in alloc_pages_vma() would no longer use 
-> __GFP_NORETRY and there is no special handling to avoid swap storms in the 
-> page allocator anymore as a result of this patch.
+> On 11/05/2019 02:37 PM, Vignesh Raghavendra wrote:
+>> On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
+>>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>
+>>> Demystify where the EIO error occurs.
+>>>
+>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>> ---
+>> I think this is a small enough change that can be squashed into previous
+>> patch itself
+>>
+> 
+> I made separate patches because this is a separate logical change. The previous
+> patch extends the check on all bits of the Status Register, while this one
+> prints a debug message in case of EIO. Thus I tried to have a single logical
+> change contained in a single patch. I'm clearly no expert in this (Boris asked
+> me in v3 to split patches because I did too many things in one patch :) ), so I
+> would keep this as is, but if you still feel that it should be squashed, then
+> I'll do it. Please let me know.
+> 
 
-Yes there is no __GFP_NORETRY in the fallback path because the control
-over how hard to retry is controlled by alloc_hugepage_direct_gfpmask
-depending on the defrag mode and madvise mode.
+I am fine either way. I don't have a strong preference...
 
-> I don't see any 
-> indication that this allocation would behave any different than the code 
-> that Andrea experienced swap storms with, but now worse if remote memory 
-> is in the same state local memory is when he's using __GFP_THISNODE.
-
-The primary reason for the extensive swapping was exactly the __GFP_THISNODE
-in conjunction with an unbounded direct reclaim AFAIR.
-
-The whole point of the Vlastimil's patch is to have an optimistic local
-node allocation first and the full gfp context one in the fallback path.
-If our full gfp context doesn't really work well then we can revisit
-that of course but that should happen at alloc_hugepage_direct_gfpmask
-level.
 -- 
-Michal Hocko
-SUSE Labs
+Regards
+Vignesh
