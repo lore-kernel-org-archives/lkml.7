@@ -2,163 +2,93 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2E68C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:25:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04153C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD5552067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:25:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D07A221848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732034AbfKFTZj (ORCPT
+        id S1727762AbfKFTaK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:25:39 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:41606 "EHLO mx1.redhat.com"
+        Wed, 6 Nov 2019 14:30:10 -0500
+Received: from fieldses.org ([173.255.197.46]:34206 "EHLO fieldses.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727422AbfKFTZj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:25:39 -0500
-Received: from mail-qk1-f199.google.com (mail-qk1-f199.google.com [209.85.222.199])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 3F5B8859FB
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 19:25:38 +0000 (UTC)
-Received: by mail-qk1-f199.google.com with SMTP id r2so25918093qkb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:25:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to;
-        bh=J/Zt/NfiTx+Ld2uAQJIUZCZlEBcXHtsRtDQxesGEOxE=;
-        b=bMuaoR0CuNXHgEEl2KlvfUU95HAuowEVA8AmoDrzghoaUt+vX09SpekhOpfEnrA0tb
-         6VCOOgz5y0cWCks9wS8S9MgUTfsLzIA+pK2r5G6jONG8UbHGVqvRzXk2Rg+clbzgEV9u
-         bj9py1j/kr4D6YbWSZaIDCQCZNOXpsa3eG7fWWs0U242JMUbqoJfLpF2ZdOnv2UWzmDU
-         x/J2W+12O/LeLAhR0R5z/59O9G37bVc3U+z9CAF6K6J4RLIW7rTj1dK8wZTUL+/ODUX5
-         iIjsB65lkSYe7th9fk2aI7NLZn5dbynSRnt6fwamgOjojOqEyWYE2FrnilGSM98D+oKH
-         Wniw==
-X-Gm-Message-State: APjAAAXhaRH7ulZN2+HKRNpg+xRONc/6j8vsSEVpX5exZL3O195fBz6F
-        pi0S+DdeEiik8JwPAW6N1qLBUpEMs5lQBCewumSZHLvzPIrBeOcvZxrIrcbZqa8tiKQ9Y+vW30N
-        39diawLd8yf874joGRy51U+Qb
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr3561008qkm.393.1573068337471;
-        Wed, 06 Nov 2019 11:25:37 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwVUeLBA9o5ynyS/oZRBUg3gqW1DOYZfoi4p5JLJ/1OKZhj6MjBGfohoGDCJio3vEXQLJQBsQ==
-X-Received: by 2002:a05:620a:226:: with SMTP id u6mr3560981qkm.393.1573068337135;
-        Wed, 06 Nov 2019 11:25:37 -0800 (PST)
-Received: from redhat.com (bzq-79-178-12-128.red.bezeqint.net. [79.178.12.128])
-        by smtp.gmail.com with ESMTPSA id f39sm13094663qtb.26.2019.11.06.11.25.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:25:35 -0800 (PST)
-Date:   Wed, 6 Nov 2019 14:25:23 -0500
-From:   "Michael S. Tsirkin" <mst@redhat.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-Message-ID: <20191106142449-mutt-send-email-mst@kernel.org>
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105105834.469675f0@x1.home>
- <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
- <20191106120312.77a6a318@x1.home>
+        id S1726713AbfKFTaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:30:10 -0500
+Received: by fieldses.org (Postfix, from userid 2815)
+        id 5443E1BE7; Wed,  6 Nov 2019 14:30:10 -0500 (EST)
+Date:   Wed, 6 Nov 2019 14:30:10 -0500
+From:   "J. Bruce Fields" <bfields@fieldses.org>
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191106193010.GG17669@fieldses.org>
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+ <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+ <20191105023243.GA16635@fieldses.org>
+ <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+ <20191106043120.GB6355@fieldses.org>
+ <20191106044223.GA18076@Gentoo>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20191106120312.77a6a318@x1.home>
+In-Reply-To: <20191106044223.GA18076@Gentoo>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 12:03:12PM -0700, Alex Williamson wrote:
-> On Wed, 6 Nov 2019 11:56:46 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
+On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
+> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
+> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
+> >>BTW.
+> >>Bruce,
+> >>Does the current script expect RHEL or something?
+> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
+> >
+> >I test on Fedora.  Looks like on recent Fedora that's only provided by
+> >an rpm "grubby-deprecated", which is an inauspicious name....
+> >
+> >I think maybe you're supposed to use "grubby" itself now.  Do you have
+> >that?
+> >
+> >>It would still work with 'new-kernel-pkg: command not found'
+> >>warning.
+> >>
+> >>We could bypass it if we like.
+> >>
+> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
+> >
+> >Looks like it's what updates the grub configuration, which is probably a
+> >nice thing to do if you can.
+> >
+> >--b.
 > 
-> > On 2019/11/6 上午1:58, Alex Williamson wrote:
-> > > On Tue,  5 Nov 2019 17:32:34 +0800
-> > > Jason Wang <jasowang@redhat.com> wrote:
-> > >  
-> > >> Hi all:
-> > >>
-> > >> There are hardwares that can do virtio datapath offloading while
-> > >> having its own control path. This path tries to implement a mdev based
-> > >> unified API to support using kernel virtio driver to drive those
-> > >> devices. This is done by introducing a new mdev transport for virtio
-> > >> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> > >> it provides a unified way for kernel virtio driver to talk with mdev
-> > >> device implementation.
-> > >>
-> > >> Though the series only contains kernel driver support, the goal is to
-> > >> make the transport generic enough to support userspace drivers. This
-> > >> means vhost-mdev[1] could be built on top as well by resuing the
-> > >> transport.
-> > >>
-> > >> A sample driver is also implemented which simulate a virito-net
-> > >> loopback ethernet device on top of vringh + workqueue. This could be
-> > >> used as a reference implementation for real hardware driver.
-> > >>
-> > >> Also a real ICF VF driver was also posted here[2] which is a good
-> > >> reference for vendors who is interested in their own virtio datapath
-> > >> offloading product.
-> > >>
-> > >> Consider mdev framework only support VFIO device and driver right now,
-> > >> this series also extend it to support other types. This is done
-> > >> through introducing class id to the device and pairing it with
-> > >> id_talbe claimed by the driver. On top, this seris also decouple
-> > >> device specific parents ops out of the common ones.
-> > >>
-> > >> Pktgen test was done with virito-net + mvnet loop back device.
-> > >>
-> > >> Please review.
-> > >>
-> > >> [1] https://lkml.org/lkml/2019/10/31/440
-> > >> [2] https://lkml.org/lkml/2019/10/15/1226
-> > >>
-> > >> Changes from V7:
-> > >> - drop {set|get}_mdev_features for virtio
-> > >> - typo and comment style fixes  
-> > >
-> > > Seems we're nearly there, all the remaining comments are relatively
-> > > superficial, though I would appreciate a v9 addressing them as well as
-> > > the checkpatch warnings:
-> > >
-> > > https://patchwork.freedesktop.org/series/68977/  
-> > 
-> > 
-> > Will do.
-> > 
-> > Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to 
-> > go through Michael's vhost tree?
+> Bruce,
 > 
-> I can include it if you wish.  The mdev changes are isolated enough in
-> that patch that I wouldn't presume it, but clearly it would require
-> less merge coordination to drop it in my tree.  Let me know.  Thanks,
+> Two things,
 > 
-> Alex
+> If the system doesn't run grub , how the fallback policy???
+> 
+> This binary "new-kernel-pkg" also missing in other systems too...I can
+> confirm that... i.e gentoo,slackware,
+> 
+> So , you are only targeting the rpm based system????
 
-I'm fine with merging through your tree. If you do, feel free to
-include
+It's just what I happen to use.  If someone wants to make it work
+elsewhere that'd be great, as long as we don't break what already works.
 
-Acked-by: Michael S. Tsirkin <mst@redhat.com>
+I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
+dunno.
 
-
--- 
-MST
+--b.
