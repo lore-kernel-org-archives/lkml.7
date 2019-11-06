@@ -7,44 +7,45 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A34FFC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD2CFC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3169121848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EBC3218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573079109;
-	bh=NqKgcoRD8Fxe8s22bkEne22XCbz650EvgtZNN84wf1s=;
+	s=default; t=1573079135;
+	bh=38YTlOFF2LwXTtqqi0l0MmFmAxPVKs8CCcWEJ81Bo30=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2Eyjk+d0qctQc7sgRTBYqgYLzhVNwoAesdxcg0RrO8kMOodK+j0wswM+9yUUF6Nhe
-	 zix682HnjY6ebU8LSjyrL3ej2Pe2DxqygJXe3KM85Swd6bdwe+lnfrv1NyNl3QyRM3
-	 alNom/itjl/JAg2myYNdr05uNvvggHxwxy0RwaD0=
+	b=mF500tIOXSmSyfICpzhhRH7kZlp+yg8B7X9zgXq0Bs8mEPH1V8rBDBgP3ch26lrUS
+	 qQezZCefGjUNCWt8X8tfYdSDM/iH4juJyjwJfTTQV/OHMKli78zWcWyckumKYkM/ob
+	 JkbvC4reedBnHvy2PWPGmVHhE1TFAIRTe4qG/oOg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732717AbfKFWZI (ORCPT
+        id S1732733AbfKFWZe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:25:08 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42168 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 17:25:34 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42474 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726817AbfKFWZI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:25:08 -0500
+        id S1726817AbfKFWZe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:25:34 -0500
 Received: from localhost (unknown [69.71.4.100])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2972A2166E;
-        Wed,  6 Nov 2019 22:25:07 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C81521848;
+        Wed,  6 Nov 2019 22:25:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573079107;
-        bh=NqKgcoRD8Fxe8s22bkEne22XCbz650EvgtZNN84wf1s=;
+        s=default; t=1573079133;
+        bh=38YTlOFF2LwXTtqqi0l0MmFmAxPVKs8CCcWEJ81Bo30=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t2rPKzYg/B+OV76/WYnG0MRvkziYkHm5CPodrKxpNJgojzdHlV2rbqzbJk1y2IUQe
-         8h/ROGJ6THAAe/a0tqtQ9KnaXNodC4Cbrds+mBhcLv+69Z+3t1gxsRXRrdjTeji4dn
-         8tQm1/McPwnbpucjLmrSSb/Azwaj/2aJ3KtNFMSU=
+        b=GnBo0iM5B0woiOYVuklG9j/bVyoCK5feTzs5egucalAaCQ4o3ko0w+hPXwxti67Na
+         eFDKNuWsJB3hbXvJp6BH4WprvhImPLtmerjHsNrn8n0Mb3zsL0sTWVljS3BxWR2ltg
+         Cea9dR1KLyeV93EugjhoTJTA/QZrmFOtT1rXG8mo=
 From:   Bjorn Helgaas <helgaas@kernel.org>
 To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 1/5] PCI/PTM: Remove spurious "d" from granularity message
-Date:   Wed,  6 Nov 2019 16:24:17 -0600
-Message-Id: <20191106222420.10216-2-helgaas@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>,
+        Jonathan Yong <jonathan.yong@intel.com>
+Subject: [PATCH 2/5] PCI/PTM: Remove dependency on PCIEPORTBUS
+Date:   Wed,  6 Nov 2019 16:24:18 -0600
+Message-Id: <20191106222420.10216-3-helgaas@kernel.org>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 In-Reply-To: <20191106222420.10216-1-helgaas@kernel.org>
 References: <20191106222420.10216-1-helgaas@kernel.org>
@@ -57,32 +58,27 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Bjorn Helgaas <bhelgaas@google.com>
 
-The granularity message has an extra "d":
+The PTM support does not depend on the portdrv, so remove the Kconfig
+dependency.
 
-  pci 0000:02:00.0: PTM enabled, 4dns granularity
-
-Remove the "d" so the message is simply "PTM enabled, 4ns granularity".
-
-Fixes: 8b2ec318eece ("PCI: Add PTM clock granularity information")
 Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jonathan Yong <jonathan.yong@intel.com
+Cc: Jonathan Yong <jonathan.yong@intel.com>
 ---
- drivers/pci/pcie/ptm.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/pci/pcie/Kconfig | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/pci/pcie/ptm.c b/drivers/pci/pcie/ptm.c
-index 98cfa30f3fae..9361f3aa26ab 100644
---- a/drivers/pci/pcie/ptm.c
-+++ b/drivers/pci/pcie/ptm.c
-@@ -21,7 +21,7 @@ static void pci_ptm_info(struct pci_dev *dev)
- 		snprintf(clock_desc, sizeof(clock_desc), ">254ns");
- 		break;
- 	default:
--		snprintf(clock_desc, sizeof(clock_desc), "%udns",
-+		snprintf(clock_desc, sizeof(clock_desc), "%uns",
- 			 dev->ptm_granularity);
- 		break;
- 	}
+diff --git a/drivers/pci/pcie/Kconfig b/drivers/pci/pcie/Kconfig
+index 362eb8cfa53b..b0d781d72d1b 100644
+--- a/drivers/pci/pcie/Kconfig
++++ b/drivers/pci/pcie/Kconfig
+@@ -135,7 +135,6 @@ config PCIE_DPC
+ 
+ config PCIE_PTM
+ 	bool "PCI Express Precision Time Measurement support"
+-	depends on PCIEPORTBUS
+ 	help
+ 	  This enables PCI Express Precision Time Measurement (PTM)
+ 	  support.
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
