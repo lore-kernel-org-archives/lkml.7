@@ -2,76 +2,108 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96485C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:31:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 187AFC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E152084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:31:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC5A62077C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MT8FjZlC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731237AbfKFNbp (ORCPT
+        id S1729572AbfKFNhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:31:45 -0500
-Received: from mga02.intel.com ([134.134.136.20]:21090 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfKFNbo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:31:44 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 05:31:44 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="212774039"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 06 Nov 2019 05:31:38 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 06 Nov 2019 15:31:37 +0200
-Date:   Wed, 6 Nov 2019 15:31:37 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191106133137.GN2552@lahna.fi.intel.com>
-References: <20191105125818.GW2552@lahna.fi.intel.com>
- <20191105200105.GA239884@google.com>
+        Wed, 6 Nov 2019 08:37:04 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:59015 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726673AbfKFNhE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:37:04 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573047423;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=a4A/mMQkY14kjAgt3Bt+aoHAn+YimNMP05kIez+opDg=;
+        b=MT8FjZlC2HKlhqsEtif1OwmvxkSw9A2NMYjrPNqC5sziS3io0KIMoY+W57atFSOh2XYsWE
+        dCqqQmlB0WH0/aDVyizMT9dhHy14GUH9uYp7WMvPMI47cnMooC3S+I1vVoJQd/ISGGKgIO
+        8k1yCONs18cY5mkr/zpd9mJPHjk3fR4=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-177-3lGQ8HhkMcaUc1z8XZXVGA-1; Wed, 06 Nov 2019 08:37:00 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 2F3F7477;
+        Wed,  6 Nov 2019 13:36:58 +0000 (UTC)
+Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 449395D9E5;
+        Wed,  6 Nov 2019 13:36:51 +0000 (UTC)
+From:   Nitesh Narayan Lal <nitesh@redhat.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, mtosatti@redhat.com, rkrcmar@redhat.com,
+        vkuznets@redhat.com, sean.j.christopherson@intel.com,
+        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
+Subject: [PATCH v1 0/2] KVM: deliver IOAPIC scan request only to the target vCPUs
+Date:   Wed,  6 Nov 2019 08:36:36 -0500
+Message-Id: <1573047398-7665-1-git-send-email-nitesh@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105200105.GA239884@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: 3lGQ8HhkMcaUc1z8XZXVGA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 02:01:05PM -0600, Bjorn Helgaas wrote:
-> > I feel that the following is the right place to perform the delay but if
-> > you think we can ignore the above, I will just do what you say and do it
-> > in pci_pm_default_resume_early() (and pci_restore_standard_config() for
-> > runtime path).
-> > 
-> > [The below diff does not have check for pci_dev->skip_bus_pm because I
-> >  was planning to move it inside pci_bridge_wait_for_secondary_bus() itself.]
-> 
-> What do you gain by moving it?  IIUC we want them to be the same
-> condition, and if one is in pci_pm_resume_noirq() and another is
-> inside pci_bridge_wait_for_secondary_bus(), it's hard to see that
-> they're connected.  I'd rather have pci_pm_resume_noirq() check it
-> once, save the result, and test that result before calling
-> pci_pm_default_resume_early() and pci_bridge_wait_for_secondary_bus().
+IOAPIC scan requests with fixed delivery mode should only be delivered to t=
+he vCPUs
+specified by the destination ID.
+The second patch in this patch-set introduces an additional
+kvm_get_dest_vcpus_mask() API which retrieves a bitmap with bits set for ea=
+ch
+target vCPUs. This bitmap is later passed on to the kvm_make_vcpus_request_=
+mask().
 
-Fair enough :)
+I have re-used the patch sent by Radim Kr=C4=8Dm=C3=A1=C5=99, which adds th=
+e support to
+remember the position of each vCPUs in kvm->vcpus array.
+As I needed to find out the vCPUs index in kvm->vcpus array for setting the
+bits in the bitmap corresponding to the target vCPUs.
+
+This support will enable us to reduce the latency overhead on isolated
+vCPUs caused by the IPI to process due to KVM_REQ_IOAPIC_SCAN. With the cur=
+rent
+implementation, the KVM_REQ_IOAPIC_SCAN is flushed on to all the vCPUs even
+if it is meant for just one of them.
+
+Testing:
+I have added the support for testing IOAPIC logical and physical destinatio=
+n
+mode under Fixed Delivery mode to kvm-unit-test and used it to test this pa=
+tch.
+https://patchwork.kernel.org/cover/11230215/
+
+Nitesh Narayan Lal (1):
+  KVM: x86: deliver KVM IOAPIC scan request to target vCPUs
+
+Radim Kr=C4=8Dm=C3=A1=C5=99 (1):
+  KVM: remember position in kvm->vcpus array
+
+ arch/x86/include/asm/kvm_host.h |  2 ++
+ arch/x86/kvm/ioapic.c           | 33 ++++++++++++++++++++++++++++--
+ arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++++++++++++++++++++=
+++++
+ arch/x86/kvm/lapic.h            |  3 +++
+ arch/x86/kvm/x86.c              |  6 ++++++
+ include/linux/kvm_host.h        | 13 +++++-------
+ virt/kvm/kvm_main.c             | 19 ++++++++++++++++-
+ 7 files changed, 110 insertions(+), 11 deletions(-)
+
+--=20
+
