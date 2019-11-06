@@ -2,99 +2,111 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B47B6C5DF61
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:26:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 001A5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:27:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6087B2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:26:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1572999967;
-	bh=VXbUZ4KP8QXE6F919GIoaA8/5d6Bwk12wYF5B3idnQI=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
-	b=i9B5fKjgoe7cUN/aYavcod/dsFOGzpwbFrgrvJaAYVOcA+Bps89UfU1OmB3j0G4Wx
-	 Yirjw7AZAYluH+H8tcCU7wH8Nzn4y0iyzUcNpaeVxmIUhV22CD5ugp+uDAX2o3wPwA
-	 RN5n0SwujhXDwBpn3/+uf2UNnsacO1o7vS04gUhQ=
+	by mail.kernel.org (Postfix) with ESMTP id 96FA620869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:27:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KH4/tFyc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfKFA0G (ORCPT
+        id S1730378AbfKFA1M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:26:06 -0500
-Received: from mail.kernel.org ([198.145.29.99]:53838 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727252AbfKFA0F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:26:05 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1BC72087E;
-        Wed,  6 Nov 2019 00:26:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1572999964;
-        bh=VXbUZ4KP8QXE6F919GIoaA8/5d6Bwk12wYF5B3idnQI=;
-        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-        b=uJvTqiHUujNfGUavE5LTIOkTuaiaQQt7dxXKZ5bySTJOUJar7VaT+RD+CvTOJ/gvl
-         RFTlE29nr/VwdwQmcJ0MiClkhY8B9Eqdzn7xvPwV2EGf/iW/KEIGWMk7TGMPpJh5tn
-         rbHjV3U9FXYyXciOEt9EnNtoRLn+gB1Fnrlnke7I=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572524473-19344-3-git-send-email-tdas@codeaurora.org>
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-3-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 2/7] dt-bindings: clock: Add YAML schemas for the QCOM GPUCC clock bindings
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 05 Nov 2019 16:26:04 -0800
-Message-Id: <20191106002604.A1BC72087E@mail.kernel.org>
+        Tue, 5 Nov 2019 19:27:12 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:46468 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfKFA1M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 19:27:12 -0500
+Received: by mail-pl1-f194.google.com with SMTP id l4so5304259plt.13
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:27:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=message-id:subject:from:to:cc:date:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=z1j1yIp5rIMoQKSGNIhBICR9Hyk56ICQBuP9FBhyVq4=;
+        b=KH4/tFyc4WxszKIMrUBOydPWhVKcefPh7MtTFV6OCH3DHwLbFwIh3nKkfJu5nKKEDH
+         Heshpi4d6WRXtl6dqRyiLBN/NUH28JZIUjgH8rZcJWrKi3pQg87/o6X81RHIb8vQD5+b
+         xr5VnwQDImaBYACqEg1VLTFuvveJMg78mbmc4SHvt9mQRsL5nJbrG6AwfFt+MH+aG8EN
+         qvKfx2J83j5/YzG/C7BvG0cgXkw4lddGQTVHpci7qNz1zCL1otqHqGP/aKwf1pgLK+zx
+         SrdEY8vvQx0SSyuzjhanzDrfEebhYXZ1U1XEAgLDXmmGCS1sqOG7/+qTRtRyYQO2fjL1
+         Ne1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=z1j1yIp5rIMoQKSGNIhBICR9Hyk56ICQBuP9FBhyVq4=;
+        b=WNxL/p7H7/+HdrZhY/bl6ZbLZnJHRVk2H2ZIICOtjpoLApdErss/D8bo8MISpWYiPg
+         G48pNXPfxnezoVrUTxLAGfkODpe/RGOzwZM3LG6Rr8GcjyVVCXwkTA74T0wl2XHlTIHd
+         z1tlAEcF9Teqsk8w8l9VW5R42+FMPHbehGuojZKxGGw+DAGynR4VwOZLLKVFzOZx179u
+         V9mwAnbyBuoroxDtTx0XyYizQHMTexholS+Tos2cgoe6QsFrKFDws6OyNBqDRmgRsMDd
+         OxbB7yA33jw2Hm3PApUdI8dU1mvHDrbpjNPzgIKWW6TBrkZldJk87CkJ6CdYQVS9RTgy
+         C2GA==
+X-Gm-Message-State: APjAAAUPGiqmTIz/YFeZrAFiu4zoUfDX32z1QmLEa+xDo6i/P82CSqq0
+        19i90r9JJaU9RYXOo2XvgAs=
+X-Google-Smtp-Source: APXvYqziAjo0MsiZfMdR+6SVcTpxmnhunE5fp2hQubz6SwfmsxubnR/owyuKTizz2w1Ib6vllnTUFg==
+X-Received: by 2002:a17:902:b58e:: with SMTP id a14mr36560258pls.0.1573000031351;
+        Tue, 05 Nov 2019 16:27:11 -0800 (PST)
+Received: from u2f459ca2e0dd5b.ant.amazon.com ([61.69.148.113])
+        by smtp.googlemail.com with ESMTPSA id c13sm10294111pfi.0.2019.11.05.16.27.05
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 05 Nov 2019 16:27:07 -0800 (PST)
+Message-ID: <50abba6cb6643a8beaf29b233bea28d7b6eed5e5.camel@gmail.com>
+Subject: Re: [PATCH] taskstats: fix data-race
+From:   Balbir Singh <bsingharora@gmail.com>
+To:     Christian Brauner <christian.brauner@ubuntu.com>,
+        syzbot+c5d03165a1bd1dead0c1@syzkaller.appspotmail.com
+Cc:     elver@google.com, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com
+Date:   Wed, 06 Nov 2019 11:27:03 +1100
+In-Reply-To: <20191005112806.13960-1-christian.brauner@ubuntu.com>
+References: <0000000000009b403005942237bf@google.com>
+         <20191005112806.13960-1-christian.brauner@ubuntu.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-10-31 05:21:08)
-> diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Do=
-cumentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> new file mode 100644
-> index 0000000..96aaf36
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> @@ -0,0 +1,69 @@
-> +# SPDX-License-Identifier: GPL-2.0-only
+On Sat, 2019-10-05 at 13:28 +0200, Christian Brauner wrote:
+> When assiging and testing taskstats in taskstats
+> taskstats_exit() there's a race around writing and reading sig->stats.
+> 
+> cpu0:
+> task calls exit()
+> do_exit()
+> 	-> taskstats_exit()
+> 		-> taskstats_tgid_alloc()
+> The task takes sighand lock and assigns new stats to sig->stats.
+> 
+> cpu1:
+> task catches signal
+> do_exit()
+> 	-> taskstats_tgid_alloc()
+> 		-> taskstats_exit()
+> The tasks reads sig->stats __without__ holding sighand lock seeing
+> garbage.
+> 
+> Fix this by taking sighand lock when reading sig->stats.
+> 
 
-Can it be GPL2 or BSD? I think Rob is asking for that sort of license on
-these files.
+Hi
 
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Qualcomm Graphics Clock & Reset Controller Binding
-> +
-> +maintainers:
-> +  - Taniya Das <tdas@codeaurora.org>
-> +
-> +description: |
-> +  Qualcomm grpahics clock control module which supports the clocks, rese=
-ts and
-> +  power domains.
-> +
-> +properties:
-> +  compatible:
-> +    enum:
-> +      - qcom,sdm845-gpucc
-> +      - qcom,msm8998-gpucc
+Sorry I am just catching up with my inbox, why is sig->stats garbage? I'll
+need to go back and look, unsigned long (pointer) reads are atomic and the
+expectation is that they would be NULL initially and then non NULL for thread
+groups when first allocated. May be I am just being dense in the morning -
+what am I missing?
 
-Sort please.
+Balbir Singh.
+
+
 
