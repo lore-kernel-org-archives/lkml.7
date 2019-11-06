@@ -2,159 +2,106 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E517EFC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:59:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A90BCFC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:59:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2330217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:59:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7966B217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:59:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="Xh6mlYul"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eNEWXheY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728937AbfKFX7F (ORCPT
+        id S1732411AbfKFX7M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:59:05 -0500
-Received: from mx1.cock.li ([185.10.68.5]:50751 "EHLO cock.li"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727393AbfKFX7F (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:59:05 -0500
+        Wed, 6 Nov 2019 18:59:12 -0500
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:43406 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfKFX7M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:59:12 -0500
+Received: by mail-lf1-f68.google.com with SMTP id j5so69385lfh.10;
+        Wed, 06 Nov 2019 15:59:09 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=DYf8aAMmRvjXUQpfphEhKk+3TLfQLLQK5Utz/xmwQg4=;
+        b=eNEWXheYDRU8KdxiR6Eq6OKP9rbfiwIXWnSwfYK3lptAs0cRbbRl01t9JcVXalaIh5
+         y5sxUuHGokzteBEcjK8mBHHkoLq7JHMnn23V5W2mJhBUiIUgrvl3oF1pq+sr1z6cBJxv
+         w3eHDjFYfJezAaK/NsMEUKVVIZJ5TFDG0We2gyWI/AhQ9SkdJVHsJ0ZneMp9Jx+SgXap
+         z+nmvDEKuEG02F8kN6/mSP+9g9L/m4RB4Wh4NGMx1ahdpnOvw+Wkbk/+oPC0sNKgqNHa
+         y7BNrhoLlxgtUoxnGZN71FSRLbeSQtVJfsGUeU2dF8SNF0Z5rBiZap12A/JP43u9aKuf
+         FaEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=DYf8aAMmRvjXUQpfphEhKk+3TLfQLLQK5Utz/xmwQg4=;
+        b=SqkNxOm9mNNmMAaYq8NtzL+t8ik8a+7v4+MP8MbZprxUKbwjkSX39EkSDwbvWmBVd3
+         4ItxkcdAjvC9Vytfni3NHfoXcu1p291bWS6R8acEqMha7X/60KvP9CGVScK1Ep3CkBJ7
+         6D28jrG+TOVK/6t54tcEs1KSwy8PuW5QJcHg1PQrzCQgAHakN5sSayq3CQqhO+cpMmnA
+         hHxRRRWyMi/5MmeEmzx9za2Vy5jPZD2SsZFtPYYXyGyLs/5DKpD8eqCigPla1MDN32hQ
+         M6UY5UisbQ7cu2YJUMNPzM1vDIcI1UwrkHP91nVJEYyR7PeLjYjy4jxOcNNAbfQyMUU3
+         VUIg==
+X-Gm-Message-State: APjAAAXCrBTX2BgJnHkFmcBMdwPhGoF0cJIV3WxPGDrVBivSrvA1L8Qu
+        TtUmQC0PnUgXQ/FK2B+Oub/25IL8wlYao8mC1/k=
+X-Google-Smtp-Source: APXvYqztjgeRQgd01HKyl8vySOmEV7cS+8kabNLlMrm2GoVNxgvas+z4ZglnjF6coc9mkDxpziUQPrtI7QW8056NeqM=
+X-Received: by 2002:a19:6454:: with SMTP id b20mr69757lfj.159.1573084748421;
+ Wed, 06 Nov 2019 15:59:08 -0800 (PST)
 MIME-Version: 1.0
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
-        t=1573084743; bh=2AqzAp/MU61A3nJg8ovSV63D7yvFw5Q+aV3/5BDrcOE=;
-        h=Date:From:To:Subject:In-Reply-To:References:From;
-        b=Xh6mlYulmgw+onz9qqV/ngPJWi3OzSGfIpZw63jFe2w9QREXGfAk7giAn0+84QKLs
-         OMwCVkYei41YgMFJPG144aPhNvLapc6FVy5saHcVN3UxZAYPUsslTKe4ZOj1JaVCj7
-         mmNOah/Lp2TtiAcS0wVGJKfjUq/Yk18Ldz0u0lXRSshiGIbc6m+lKsS93LDk4ms7E2
-         ehUS33twNZK0aPEvKeI54sXdG6I5bSWreK9WePXxcZxkE0w5Cmsx8tLx78YD5P8PS2
-         sbUmX3GMb678+fm3gzf39/gG2sjAgY8u8REXxiwTJNPHODoPPNHxrkh4VSsCmTZt4N
-         Uy7bBuqQolzFw==
-Content-Type: text/plain; charset=UTF-8;
- format=flowed
-Content-Transfer-Encoding: 8bit
-Date:   Wed, 06 Nov 2019 23:59:02 +0000
-From:   gameonlinux@redchan.it
-To:     linux-kernel@vger.kernel.org
-Subject: Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the
- blobs (compile time option). - Why the [edits]?
-In-Reply-To: <30253120.XGK1vlv84B@pc-713>
-References: <b1b6ab4e31856450d82afccaba587b0f@redchan.it>
- <10419249.ilHZ0GCc2g@pc-713> <9352ba078b5f8fb0f464b6d65209b482@redchan.it>
- <30253120.XGK1vlv84B@pc-713>
-Message-ID: <c7857b5322ebd4dbd7d1ad83b388913f@redchan.it>
-X-Sender: gameonlinux@redchan.it
-User-Agent: Roundcube Webmail/1.3.6
+References: <20191029223214.18889-1-linux@roeck-us.net> <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
+ <20191106212921.GA7020@amd>
+In-Reply-To: <20191106212921.GA7020@amd>
+From:   Chris Healy <cphealy@gmail.com>
+Date:   Wed, 6 Nov 2019 15:58:56 -0800
+Message-ID: <CAFXsbZrGudirV7j9=h_BHG3HGAVs_zGRpgz7J4DRy2SxioVvLQ@mail.gmail.com>
+Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Keith Busch <kbusch@kernel.org>,
+        Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-nvme@lists.infradead.org,
+        Akinobu Mita <akinobu.mita@gmail.com>, linux-pm@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The man is no[w] a eunich is what I ment to type. I did type it later in 
-the post. My definition is the anti-american definition.
+> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+> >
+> > This looks fine to me, but I'll wait a few more days to see if there ar=
+e
+> > any additional comments..
+>
+> User wants to know temperature of /dev/sda... and we already have an
+> userspace tools knowing about smart, etc...
 
-Men are men. Women are women. Women who cannot have children are broken 
-women. Men with their genitals sawn off (with proof posted to their own 
-website) are Euniches.
+At least for my use cases, being able to use the thermal subsystem of
+the kernel to cool things down when the SSD gets too hot is important.
+Is there a way to do this with userspace tools feeding back to the
+kernel's thermal subsystem?
 
-(And you shouldn't marry ANY of them: only marry young virgin girls.)
-
-Remember: RMS was "cancled" for TEXT he posted to /his own/ website, and 
-people here felt it "on topic" to demand his removal.
-
-
-
-On 2019-11-06 22:32, Alexandre François Garreau wrote:
-> Le mercredi 6 novembre 2019 22:49:07 CET, vous avez écrit :
->> The man is no a
->> eunich, but he is not a woman (since he cannot have children).
-> 
-> So you go under M. Garisson definition of a women, according which 
-> sterile
-> cissexual (that is non-transsexual) “women” are actually “men”, and any 
-> man
-> dating whoever is not able to get pregnant is being gay?
-> 
-> Does that also apply to hormonal contraception?  Does it mean a woman 
-> taking
-> the pill is a man?  Damn, trans men must be happy of this consideration 
-> x)
-> 
-> At least it’s easy to become a man through surgery, according your 
-> definitions.
-> 
-> Sooooooo did you check all women you had sex with are fertile? there 
-> are
-> common affections that make women sterile.  Maybe you have been having 
-> gay sex
-> without knowing it.
-> 
->> A woman
->> without a womb
-> 
-> Actually if you looked well at the photos, she has one.  That’s the 
-> goal of
-> sex reassignment surgery.
-> 
->> is like a broken compiler: it's not a compiler: just the
->> pieces that could have been one. Same with a man without genitals.
-> 
-> If you believe the only purpose of a human is to give birth, “make love 
-> not
-> war” and stop bothering people on mailing lists.  But afaik, according 
-> your
-> definitions… you can’t (give birth).
-> 
-> But wait… you were defending pedophilia… but a prepubere girl can’t get
-> pregnant… so… what’s the point of it?
-> 
-> I mean, having sex with a prepubere girl and with a transsexual woman 
-> is
-> biologically just the same: it can’t give birth.
-> 
->> In america it is lauded when men have their genitals chopped off.
-> 
-> No, many americans are transphobic too.  And most of them are neither
-> supporters of transgender rights, nor transphobes, but don’t care.  
-> Like
-> everywhere actually.
-> 
->> But when a man might hint at the wish to marry adorable young girls:
->> america wants to kill and torture him.
-> 
-> Sadly, yet you’re doing nothing to help but more harm, because nobody 
-> allies
-> with your views and you’re not trying to understand a fuck.
-> 
->> The old religions
-> 
-> I’m pretty much sure the old religions, especially some popular 
-> branches of
-> Islam and Christianism condemn what you say about women.
-> 
->> And the libreboot maintainer is a Eunich, NOT a woman - a he or a
->> neuter.
-> 
-> An eunuch is a man without genitals.  But she has (female) genitals, 
-> female
-> levels of hormone, looks like a woman, and by the virtue of “if it’s 
-> all like
-> a duck, it’s a duck” she’s a woman. period. you just draw essentialism 
-> for the
-> rest.
-> 
->> I doubt [she]'ll ever contribute anything much more after having [her] 
->> balls
->> sliced off of his body. They usually lose the will.
-> 
-> Loss of testosterone imply indeed small depression and loss of will.  
-> That’s
-> why in sex reassignment we gives hormone including testosterone and 
-> female
-> sexual hormones, so the will come back ;) and without the depression 
-> coming
-> with gender dysphoria.
-> 
-> I think she works on other stuff.  LibreBoot is worked on by other 
-> people now.
+>
+> pavel@amd:/data/film$ sudo hddtemp /dev/sda
+> /dev/sda: ST1000LM014-1EJ164: 48=C2=B0C
+>
+> I see we also have sensors framework but it does _not_ handle
+> harddrive temperatures.
+>
+> Does it need some kind of unification? Should NVMe devices expose
+> "SMART" information in the same way other SSDs do?
+>
+> Best regards,
+>                                                                 Pavel
+> --
+> (english) http://www.livejournal.com/~pavelmachek
+> (cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/b=
+log.html
