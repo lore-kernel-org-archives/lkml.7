@@ -2,85 +2,157 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1A9C3C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:25:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0EAC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E172F218AE
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:25:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1963C20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573046893;
+	bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=ryccSi1Eu1wSMlFS/GTL4xEifIlUtwC+LjomuZbXFVHYmI+8Dwk9Yp0kM2KHPYrhk
+	 wJYyb7RZlvCNyoKTDH4uc6fzGRvjz4QmPeal1SfjSTSJZV0OHlfrzgKABJy2J9KfiC
+	 GlzMMFAe7JPw8I11XfHVY5Y6ek9CXHnGKXZnuMMo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfKFNZr (ORCPT
+        id S1730630AbfKFN2M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:25:47 -0500
-Received: from imap1.codethink.co.uk ([176.9.8.82]:48630 "EHLO
-        imap1.codethink.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfKFNZr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:25:47 -0500
-Received: from [167.98.27.226] (helo=rainbowdash.codethink.co.uk)
-        by imap1.codethink.co.uk with esmtpsa (Exim 4.84_2 #1 (Debian))
-        id 1iSLJQ-0002fe-E6; Wed, 06 Nov 2019 13:25:28 +0000
-Received: from ben by rainbowdash.codethink.co.uk with local (Exim 4.92.3)
-        (envelope-from <ben@rainbowdash.codethink.co.uk>)
-        id 1iSLJP-0005Cy-Rt; Wed, 06 Nov 2019 13:25:27 +0000
-From:   "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-To:     linux-kernel@lists.codethink.co.uk
-Cc:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] perf/core: fix missing static inline on perf_cgroup_switch
-Date:   Wed,  6 Nov 2019 13:25:27 +0000
-Message-Id: <20191106132527.19977-1-ben.dooks@codethink.co.uk>
-X-Mailer: git-send-email 2.24.0.rc1
+        Wed, 6 Nov 2019 08:28:12 -0500
+Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726845AbfKFN2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:28:11 -0500
+Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com [209.85.161.51])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 32FE921929;
+        Wed,  6 Nov 2019 13:28:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573046890;
+        bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jZCC9XWTKGCvZag4+8V0UwjSYNo7v90srn98UNulQLavQBtfjW4BMQEgF1ASG6OsF
+         4+SuurrY3gyC0uZARvElUNvI0CXVruo3sPOoVx2IZdnzOS14D7P59a36nfD22tEEaG
+         Rpp5m08UYu/81Hv/79a0uZXLlHCbQVYhq+9zqHYc=
+Received: by mail-yw1-f51.google.com with SMTP id j137so3338668ywa.12;
+        Wed, 06 Nov 2019 05:28:10 -0800 (PST)
+X-Gm-Message-State: APjAAAX3VQdw0MzNnpbtIF1HeS1S9vB5DaCbiCBDjhMwOrotI4qi25HL
+        89Kp8ilWZB3E7//w/pqXWUzHL+UPnWcw+bSroQ==
+X-Google-Smtp-Source: APXvYqx8YEmGlOUOkomM0+9+OiizTTLGhZ01a7PA3/CuWEQJuLejHW9brVzu8Jzm5uL/IT1LYjYyaenn1W38v9BxxTE=
+X-Received: by 2002:a81:2748:: with SMTP id n69mr1363487ywn.281.1573046889250;
+ Wed, 06 Nov 2019 05:28:09 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191028124238.19224-1-t-kristo@ti.com> <20191028124238.19224-2-t-kristo@ti.com>
+ <20191106032727.GA21162@bogus> <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
+In-Reply-To: <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Nov 2019 07:27:56 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc bindings
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It looks like a "static inline" has been missed in front
-of the empty definition of perf_cgroup_switch under
-certain configurations. Fixes the following sparse warning:
+On Wed, Nov 6, 2019 at 6:44 AM Tero Kristo <t-kristo@ti.com> wrote:
+>
+> On 06/11/2019 05:27, Rob Herring wrote:
+> > On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
+> >> From: Suman Anna <s-anna@ti.com>
+> >>
+> >> Add the device tree bindings document for the IPU and DSP
+> >> remote processor devices on OMAP4+ SoCs.
+> >>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Suman Anna <s-anna@ti.com>
+> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> >> ---
+> >>   .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+> >>   1 file changed, 205 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+> >>
+> >
+> > Looks to be in pretty good shape, but how about doing a schema.
+>
+> iommu / mailbox is not in schema format, can I just convert this one to
+> schema without considering those? If yes, I can go ahead and do it.
 
-kernel/events/core.c:1035:1: warning: symbol 'perf_cgroup_switch' was not declared. Should it be static?
+The client side both have schema (in dt-schema repo).
 
-Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
----
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: linux-kernel@vger.kernel.org
----
- kernel/events/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> >> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+> >> new file mode 100644
+> >> index 000000000000..e2bcfcab21c1
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+> >> @@ -0,0 +1,205 @@
+> >> +OMAP4+ Remoteproc Devices
+> >> +=========================
+> >> +
+> >> +The OMAP family of SoCs usually have one or more slave processor sub-systems
+> >> +that are used to offload some of the processor-intensive tasks, or to manage
+> >> +other hardware accelerators, for achieving various system level goals.
+> >> +
+> >> +The processor cores in the sub-system are usually behind an IOMMU, and may
+> >> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+> >> +caches, an Interrupt Controller, a Cache Controller etc.
+> >> +
+> >> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+> >> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+> >> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+> >> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
+> >> +processors.
+> >> +
+> >> +Remote Processor Node:
+> >> +======================
+> >> +Each remote processor sub-system is represented as a single DT node. Each node
+> >> +has a number of required or optional properties that enable the OS running on
+> >> +the host processor (MPU) to perform the device management of the remote
+> >> +processor and to communicate with the remote processor. The various properties
+> >> +can be classified as constant or variable. The constant properties are dictated
+> >> +by the SoC and does not change from one board to another having the same SoC.
+> >> +Examples of constant properties include 'iommus', 'reg'. The variable properties
+> >> +are dictated by the system integration aspects such as memory on the board, or
+> >> +configuration used within the corresponding firmware image. Examples of variable
+> >> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
+> >> +
+> >> +Required properties:
+> >> +--------------------
+> >> +The following are the mandatory properties:
+> >> +
+> >> +- compatible:       Should be one of the following,
+> >> +                "ti,omap4-dsp" for DSPs on OMAP4 SoCs
+> >> +                "ti,omap5-dsp" for DSPs on OMAP5 SoCs
+> >> +                "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
+> >> +                "ti,omap4-ipu" for IPUs on OMAP4 SoCs
+> >> +                "ti,omap5-ipu" for IPUs on OMAP5 SoCs
+> >> +                "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
+> >> +
+> >> +- iommus:   phandles to OMAP IOMMU nodes, that need to be programmed
+> >> +            for this remote processor to access any external RAM memory or
+> >> +            other peripheral device address spaces. This property usually
+> >> +            has only a single phandle. Multiple phandles are used only in
+> >> +            cases where the sub-system has different ports for different
+> >> +            sub-modules within the processor sub-system (eg: DRA7 DSPs),
+> >> +            and need the same programming in both the MMUs.
+>
+> ^ the target of this is not in schema.
 
-diff --git a/kernel/events/core.c b/kernel/events/core.c
-index aec8dba2bea4..a4bad9f32fb7 100644
---- a/kernel/events/core.c
-+++ b/kernel/events/core.c
-@@ -1031,7 +1031,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
- {
- }
- 
--void
-+static inline void
- perf_cgroup_switch(struct task_struct *task, struct task_struct *next)
- {
- }
--- 
-2.24.0.rc1
+You mean the OMAP IOMMU binding? That doesn't matter at all.
 
+Rob
