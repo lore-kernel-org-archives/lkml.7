@@ -2,167 +2,136 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5DBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE79C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89ED4214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:47:54 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="LZbgbd8u"
+	by mail.kernel.org (Postfix) with ESMTP id E9D08214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573048230;
+	bh=rD+K0G3PNJPVV5SKG6uhdNqSE37LMcwOqBihOQnsysg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=bcwdUjpprFczLv2LnAu17pCqeA24Y6iLp/X6rKl/uT4MOJJZ2UQaYUsxynZRYeD3c
+	 Ms7+FdNMOLpqqj0tTDmY6KL5OtBZUvEAvYc5ahfZTbFd4pOeSLrwDCv/iuuRtCoRQZ
+	 a2Pa+mefuA4MpZNfHnncd08+d4T5bw9rTu0jE0X4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731633AbfKFNrx (ORCPT
+        id S1728716AbfKFNu2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:47:53 -0500
-Received: from mail-eopbgr70075.outbound.protection.outlook.com ([40.107.7.75]:30363
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726673AbfKFNrw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:47:52 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=iBJb0aZlCso2BiQoHzrA3zX/rt0E7Lu4273tZ3WvQ9HgvtffPxaPwXcEbdGz9Wpg+KloEWrFGiq71Xu5WKyWHgp58Xp+lEapewL4GugSMFV+REGAcSSt+4oFKBVUzeChy9NZ3NFLtGWm4we2r+dUXI8rXvtth62ElZ+QdfVA8hXhNlIVtCu6MKNcCOmozgHfXrNAN4M1o086yUw4a+9Fi164aEJl0P21gzuzrFJnytWLpb/Iy1jxpd/Cd73RiwAQB473LM1wDAWloFkMo8owgIsg2+DbkrcFUot7THV15p+ylNFAuFSJEuM0qkLDBEGCe6kwl5I2JnLyu2NzSXlvDQ==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cojqmL+MtB33r2Mf97GTs7TJdYeDFKeljZg83PEJhWU=;
- b=n4J+xz42SLpEv2BsSGjS83iqtRKzf0jzPabhO1m82JNqCQ8KYdx3rlPzpPctiOe+jRgNiwjrvyg6NxZTbQMDMb+8dd3GzttxRa6nXFXN8+QwJJ9bgrAvsId0KYJgGDpDzWjtQap9AS/I/wPN5Dy6t8P6hCJ4v61UzS+4farY6i1ywmYCrwM2LzMKpGbOdMY/+mkHTVtWBbsQygWiNN5o/9doeZMZA5vV9FO/7XxrCs0w88K42zcbcQacywG4kz4/eWU1nxiilmTp+7KpJDv3ATfvjgW7ok+ugvNs2PfEd4nS5dBstHfsRhpa/lTuP+cOGB+1ZOCZqAurj9vy5EYkiQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=cojqmL+MtB33r2Mf97GTs7TJdYeDFKeljZg83PEJhWU=;
- b=LZbgbd8ufFmfrs3L9yilm7Afe5d1V9fD3WLiw6MwhHzd730yfiLCFycU1HJP0hhgUnJk/n3m5jqBt9+RZJQ8KEayprZ1YYfmcnlTYMoswUeaFOtXP0qwsQz0lLq4EUPLjGus50C43rqXtW5hyjyau28CQlYnRaaYuZW5khz+zck=
-Received: from DB6PR0402MB2789.eurprd04.prod.outlook.com (10.172.245.7) by
- DB6PR0402MB2792.eurprd04.prod.outlook.com (10.172.246.17) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 6 Nov 2019 13:47:48 +0000
-Received: from DB6PR0402MB2789.eurprd04.prod.outlook.com
- ([fe80::4a8:4223:6954:59b9]) by DB6PR0402MB2789.eurprd04.prod.outlook.com
- ([fe80::4a8:4223:6954:59b9%9]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 13:47:48 +0000
-From:   Ioana Ciornei <ioana.ciornei@nxp.com>
-To:     Andrew Lunn <andrew@lunn.ch>
-CC:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
-Subject: RE: [PATCH 06/12] staging: dpaa2-ethsw: add ACL entry to redirect STP
- to CPU
-Thread-Topic: [PATCH 06/12] staging: dpaa2-ethsw: add ACL entry to redirect
- STP to CPU
-Thread-Index: AQHVk9VwUttQp4rnGEyeNWyFfbjmDKd8oR0AgAAAhWCAABrTAIABX2xA
-Date:   Wed, 6 Nov 2019 13:47:47 +0000
-Message-ID: <DB6PR0402MB27899B298481E7A3460BB9BFE0790@DB6PR0402MB2789.eurprd04.prod.outlook.com>
-References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
- <1572957275-23383-7-git-send-email-ioana.ciornei@nxp.com>
- <20191105142202.GC7189@lunn.ch>
- <VI1PR0402MB28007254BB7614477CED4DBCE07E0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
- <20191105155954.GE17620@lunn.ch>
-In-Reply-To: <20191105155954.GE17620@lunn.ch>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=ioana.ciornei@nxp.com; 
-x-originating-ip: [212.146.100.6]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b0fab34e-38ed-4017-5ad2-08d762bfe8e0
-x-ms-traffictypediagnostic: DB6PR0402MB2792:
-x-microsoft-antispam-prvs: <DB6PR0402MB2792A557FDEE2A9EA0168A24E0790@DB6PR0402MB2792.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:9508;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(136003)(39860400002)(366004)(346002)(396003)(189003)(199004)(26005)(6916009)(229853002)(6436002)(8676002)(55016002)(446003)(54906003)(76176011)(44832011)(9686003)(316002)(52536014)(76116006)(8936002)(6246003)(81166006)(81156014)(478600001)(25786009)(11346002)(186003)(5660300002)(66476007)(64756008)(66446008)(66556008)(14454004)(86362001)(66946007)(476003)(71200400001)(71190400001)(256004)(7736002)(4326008)(3846002)(6116002)(74316002)(305945005)(2906002)(7696005)(486006)(102836004)(99286004)(6506007)(33656002)(66066001);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0402MB2792;H:DB6PR0402MB2789.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: mA6NupQFxpOPJT9NsJY6XTGVfOz2F4LdP0WGmhW4LBkpwdR36WRXqFf+CPVX1Gq/HeNkub1Q+cX6I8bKfT7Wz+QFPaqZXS7SJNRdeRPa2DGl0loadm5zqerZKSekjywYT67+1VSC5iX3gonLnLiV+MzyZ0Ap0MgV/Z4aKQAw0IEs9EdBoKtXIDq93b9StaYcqBBJekksSVfk/KOpiSFQ5zU9X9FyOvIqRXLmlGki6imosr28r6FXGBXcj27JltBzh0dbht4Y3b2D+IWfi1jdbrPxxtK4mRj7oIIIRdEHF174jun60k0PcWck5IgHSUSnQsSYow2Jg5A3op6PzVe0EXw3GUdPzBKQDd2WCB4uCL+dlzNpE9OQ6ucoub5piyqLMm0zgNzow4Vi8h1IkqX5LukYL6Yp3/J1oFzaYfebSMNFwB+37cRtimji778S9t6F
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 Nov 2019 08:50:28 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:37863 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfKFNu2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:50:28 -0500
+Received: by mail-wr1-f66.google.com with SMTP id t1so19941490wrv.4;
+        Wed, 06 Nov 2019 05:50:27 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=cvnGoYA1nxIWzHKPGnMvGjsm7DK1fN/JIf8O6DGY4wM=;
+        b=YJV4hvkIvb5RQt9Is8GHAnnixH55XjTT2QvGs9LRbjLx5cElS44rQaMU/Vpe1mX4fE
+         ZZ6B+W/BH2zz0pHIHEf+byAQ/ZXhUoykJFSHW2aspHetFzZo3thJ2lgr6WkxfW4p4OZL
+         1cJsavhby1Tq8xwnZRDbbMbe/ikQ5eD9vhGW8SheokLGAHv2ZTBRi/N2+gUUlMJn369m
+         kC5oCz2JNC4L/mOPxC6/xIiB4dFp/knF0mFNeBWwa/9sICspPD5Vng8N4McgG0RiRSHF
+         tL++FQDIwkZjiO5iLJ8ofUKmjNmgkYZxFWq/py5L/fXa0AoDKxpp9zT3UXjrG0Qq41wP
+         DJCQ==
+X-Gm-Message-State: APjAAAXBZOkS694u1PLRXTaAfb2SovG7dKFoJEQW5yKHI06Bb4lWLfm+
+        CY+lmtH8SFacFenPPHqpxfFTS0+RwyJYv1g7wP0=
+X-Google-Smtp-Source: APXvYqz0jRDuP53ISYwccGpwG0/d58L5srOHroxn4RNKS7/o9vJChpPgrK5CHtUZsye3bEH8dvXksnP8WrN+IVLdpTc=
+X-Received: by 2002:adf:ffd0:: with SMTP id x16mr2690726wrs.86.1573048226318;
+ Wed, 06 Nov 2019 05:50:26 -0800 (PST)
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b0fab34e-38ed-4017-5ad2-08d762bfe8e0
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 13:47:48.0697
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Y44KpDKn5d/Su9lMoFl+Zs+hmhgR1rILogZ5rbjA6zSgwsaTKmKm9FEY73rUcNeYzT3jNBuGkcsD3Z0x9pSTLg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0402MB2792
+References: <20191104235944.3470866-1-tj@kernel.org>
+In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
+From:   Namhyung Kim <namhyung@kernel.org>
+Date:   Wed, 6 Nov 2019 22:50:15 +0900
+Message-ID: <CAM9d7cjXX8aYYjJdnb0SUjBYwhOTWiD+V9fagUVnW9FUS6C=5g@mail.gmail.com>
+Subject: Re: [PATCHSET cgroup/for-5.5] kernfs,cgroup: support 64bit inos and
+ unify cgroup IDs
+To:     Tejun Heo <tj@kernel.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        kernel-team@fb.com, linux-kernel <linux-kernel@vger.kernel.org>,
+        cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Subject: Re: [PATCH 06/12] staging: dpaa2-ethsw: add ACL entry to redirec=
-t
-> STP to CPU
->=20
-> > The control queues do not form an actual interface in the sense that
-> > the CPU does not receive unknown unicast, broadcast and multicast
-> > frames by default.  For each frame that we want to direct to the CPU
-> > we must add an ACL entry.
->=20
-> So this appears to be one of the dumbest switches so far :-(
+Hi Tejun,
 
-To be fair, the actual hardware can do much more.
-The problem here is that the firmware models the switch in a non-Linux styl=
-e.
+On Tue, Nov 5, 2019 at 8:59 AM Tejun Heo <tj@kernel.org> wrote:
+>
+> Hello,
+>
+> Currently, there are three IDs which are being used to identify a
+> cgroup.
+>
+> 1. cgroup->id
+> 2. cgroupfs 32bit ino
+> 3. cgroupfs 32bit ino + 32bit gen
+>
+> All three IDs are visible to userland through different interfaces.
+> This is very confusing and #1 can't even be resolved to cgroups from
+> userland.
+>
+> A 64bit number is sufficient to identify a cgroup instance uniquely
+> and ino_t is 64bit on all archs except for alpha.  There's no reason
+> for three different IDs at all.  This patchset updates kernfs so that
+> it supports 64bit ino and associated exportfs operations and unifies
+> the cgroup IDs.
+>
+> * On 64bit ino archs, ino is kernfs node ID which is also the cgroup
+>   ID.  The ino can be passed directly into open_by_handle_at(2) w/ the
+>   new key type FILEID_KERNFS.  Backward compatibility is maintained
+>   for FILEID_INO32_GEN keys.
+>
+> * On 32bit ino archs, kernfs node ID is still 64bit and the cgroup ID.
+>   ino is the low 32bits and gen is the high 32bits.  If the high
+>   32bits is zero, open_by_handle_at(2) only matches the ino part of
+>   the ID allowing userland to resolve inos to cgroups as long as
+>   distinguishing recycled inos isn't necessary.
+>
+> This patchset contains the following 10 patches.
+>
+>  0001-kernfs-fix-ino-wrap-around-detection.patch
+>  0002-writeback-use-ino_t-for-inodes-in-tracepoints.patch
+>  0003-netprio-use-css-ID-instead-of-cgroup-ID.patch
+>  0004-kernfs-use-dumber-locking-for-kernfs_find_and_get_no.patch
+>  0005-kernfs-kernfs_find_and_get_node_by_ino-should-only-l.patch
+>  0006-kernfs-convert-kernfs_node-id-from-union-kernfs_node.patch
+>  0007-kernfs-combine-ino-id-lookup-functions-into-kernfs_f.patch
+>  0008-kernfs-implement-custom-exportfs-ops-and-fid-type.patch
+>  0009-kernfs-use-64bit-inos-if-ino_t-is-64bit.patch
+>  0010-cgroup-use-cgrp-kn-id-as-the-cgroup-ID.patch
+>
+> 0001 is a fix which should be backported through -stable.  0002 and
+> 0003 are prep patches.  0004-0009 make kernfs_node->id a u64 and use
+> it as ino on 64bit ino archs.  0010 replaces cgroup->id with the
+> kernfs node ID.
+>
+> Greg, how do you want to route the patches?  We can route 0001-0009
+> through your tree and the last one through cgroup after pulling in.
+> I'd be happy to route them all too.
+>
+> This patchset is also available in the following git branch.
+>
+>   git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-unified-cgid
+>
+> diffstat follows.  Thanks.
 
->=20
-> Can you add an ACL which is all L2 broadcast/multicast?  That would be a =
-good
-> first step.
+Thanks a lot for doing this!  I've tested it with my perf cgroup patchset
+based on top of this series and it looks good.  You can add my
 
-I can add that but it would not be enough.
-For example, unknown unicast would not be matched thus would not reach the =
-CPU.
+Tested-by: Namhyung Kim <namhyung@kernel.org>
 
->=20
-> Does the ACL stop further processing of the frame? Ideally you want the
-> switch to also flood broadcast/multicast out other ports, if they are in =
-a
-> bridge. If it cannot, you end up with the software bridge doing the flood=
-ing.
-
-Yes, the ACL stops any further processing.=20
-
->=20
-> So i also assume it does not perform learning on CPU frames? That probabl=
-y
-> means you need to connect up the fdb add/remove calls to add in ACLs. And
-> you will need to implement ndo_set_rx_mode. Each unicast and multicast
-> address needs to be turned into an ACL. What i don't know is if the netwo=
-rk
-> stack will automatically add the interfaces own MAC address. You might ha=
-ve
-> to handle that special case.
->=20
->     Andrew
-
-Your assumption is true, learning, with the current implementation, is not =
-possible for CPU frames.
-In .ndo_start_xmit() we inject directly into the switch port's Tx queues, t=
-hus bypassing the entire learning process.
-
-All in all, I do not see a way out just by using the ACL mechanism (because=
- of unknown unicast frames).
-
-I have to talk in detail with the firmware team, but from what I can unders=
-tand if we make the following changes in firmware it would better fit the L=
-inux framework:
- * make the CPU receive unknown unicast, broadcast and multicast frames by =
-default (without any ACLs)
- * frames originated on the CPU should not bypass the learning process (it =
-should have its own Tx queues that go through the same learning process)
-
-Thanks,
-Ioana
-
-
+Thanks
+Namhyung
