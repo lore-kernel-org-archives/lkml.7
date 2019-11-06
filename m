@@ -2,113 +2,515 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7892C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A2BDC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B78921848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 220BC218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Rz/rPIy5"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Oo1UA7Pi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728536AbfKFPcr (ORCPT
+        id S1731932AbfKFPcy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:32:47 -0500
-Received: from mout.gmx.net ([212.227.17.21]:59251 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727996AbfKFPcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:32:47 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573054346;
-        bh=GiiIhgBUTGJFic+FI6UJgeWlvOItAhL++J46ickbhNg=;
-        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
-         References;
-        b=Rz/rPIy5Ax5ix3Dyn8AXepCuUzN5rQv6BAchJqwveDSFBB9nph96TeD12yg176QE8
-         CRd4O0ewS1iH6vGVCZE9QwwyeGxP57Gc3oywGEV7/ZzvPEK+kP6aOcMSxJZlJyADrq
-         A42daZdP4szqG85Y979j1prlxugcGDusEexypRW0=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx105
- [212.227.17.168]) with ESMTPSA (Nemesis) id 1N49hB-1hkPWd2p0b-0105FF; Wed, 06
- Nov 2019 16:32:26 +0100
-Message-ID: <d6f7fe9e15a5f6cae98b89bad8826a43be6ab87d.camel@gmx.de>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-From:   Robert Stupp <snazy@gmx.de>
-Reply-To: snazy@snazy.de
-To:     Jan Kara <jack@suse.cz>
-Cc:     Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Date:   Wed, 06 Nov 2019 16:32:23 +0100
-In-Reply-To: <20191106143537.GI16085@quack2.suse.cz>
-References: <20191025132700.GJ17610@dhcp22.suse.cz>
-         <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
-         <20191025135749.GK17610@dhcp22.suse.cz>
-         <20191025140029.GL17610@dhcp22.suse.cz>
-         <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
-         <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
-         <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
-         <20191105182211.GA33242@cmpxchg.org>
-         <20191106120315.GF16085@quack2.suse.cz>
-         <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
-         <20191106143537.GI16085@quack2.suse.cz>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.34.1-2 
+        Wed, 6 Nov 2019 10:32:54 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:35553 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728638AbfKFPcx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:32:53 -0500
+Received: by mail-wr1-f67.google.com with SMTP id p2so1123947wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:32:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=udfOIEK5WftU+3hJ0QWaj8LH2eZyxJmkc/JKt1seLOs=;
+        b=Oo1UA7PiO7SaxQJEPN5EQ5Th2ShxZAZrUO9uMtn5LklEAg4p+CFSsXswLD6TjqgkSZ
+         o6N9pCRQlASPd3hZR+rlelEShSeUGcTm0CffpexNgvvmx3GuMVYqdHFF0eKyolrKWuDm
+         2VAYtHrQcTUtjSyuhe8iShFtlMHGqwjS627FjMWvWwlmWekx8A+o7Z+tAUraevHqMIuF
+         mUD89fI3pOMIZWyzTozu3S4K7icOMkaxVA06e5rB9iOUj4x4zifn0+c8XecR+TAKhg+S
+         DskFIyDjnIO/xZO31OLJ9nML1TO9CydXKZ38XvEp7o385hIuL3z1ajNB3+OPX3hPvv/M
+         Ndsw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=udfOIEK5WftU+3hJ0QWaj8LH2eZyxJmkc/JKt1seLOs=;
+        b=SCbSrADCUhnWB0xs4AJBOrut5jgREtoT8Nv2ecAa0bRQKdkyWVE6JoJ1CoGOcB66ZA
+         8UVjW1pOdOc+wMmC5wtBdOJVQeWvjcD9HJSJQfTF8Cch3Nd7WI4079PM8Sb6RNBXFcBn
+         INF6c5oieQBXKVPkYU6Td8Tb24/ZUNT8v87zk+o89QwgY5oHGfyKdhL9V53J53tYVdV6
+         uHz3yPT4hmr/mueNn5RszBwdYODjFEmyqT03SLQ9uFQSP42hN++HqbCPnMNYMiibjrES
+         qWI1g/Cc8pjuw9M7f83dLucRqCEInUdTUKFqp/5e8qKwyXKkJxmOjIXnSifvB5llHYbt
+         lAOA==
+X-Gm-Message-State: APjAAAUqZPPmhooEFkwzlYDSp8MJhmvRph+ILDyerlpUwcI8oNJNLQz0
+        dXvqPfRfYbxvIouQxnEDUMP62A==
+X-Google-Smtp-Source: APXvYqxW2PJotobnvKVABwUffRMsszXhBfwOeRjonUD0JAktpL3nQ4x2pZhdtUJ/fqzmV6gMtsU9Zw==
+X-Received: by 2002:a5d:634b:: with SMTP id b11mr3368850wrw.13.1573054369660;
+        Wed, 06 Nov 2019 07:32:49 -0800 (PST)
+Received: from lophozonia ([85.195.192.192])
+        by smtp.gmail.com with ESMTPSA id f19sm11840wrf.23.2019.11.06.07.32.47
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 07:32:48 -0800 (PST)
+Date:   Wed, 6 Nov 2019 16:32:46 +0100
+From:   Jean-Philippe Brucker <jean-philippe@linaro.org>
+To:     zhangfei <zhangfei.gao@linaro.org>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        jonathan.cameron@huawei.com, grant.likely@arm.com,
+        Jerome Glisse <jglisse@redhat.com>,
+        ilias.apalodimas@linaro.org, francois.ozog@linaro.org,
+        kenneth-lee-2012@foxmail.com, Wangzhou <wangzhou1@hisilicon.com>,
+        "haojian . zhuang" <haojian.zhuang@linaro.org>,
+        guodong.xu@linaro.org, linux-accelerators@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org,
+        iommu@lists.linux-foundation.org,
+        Kenneth Lee <liguozhu@hisilicon.com>,
+        Zaibo Xu <xuzaibo@huawei.com>
+Subject: Re: [PATCH v7 2/3] uacce: add uacce driver
+Message-ID: <20191106153246.GA3695715@lophozonia>
+References: <1572331216-9503-1-git-send-email-zhangfei.gao@linaro.org>
+ <1572331216-9503-3-git-send-email-zhangfei.gao@linaro.org>
+ <20191105114844.GA3648434@lophozonia>
+ <24cbcd55-56d0-83b9-6284-04c29da11306@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:waigNbie1AqBRiW5XPbLt6zvxCfyaVnFGrhF3ElfAcas//+fLS4
- J+GWECsnLqkKE5e92XOrn1JZaPmj2i+MafyZyci9GDV8+7ytUAt962iGpIP7nk8M44YZ94q
- yj/tdC5oGXPXOyiWxVyY3enQJ51tM2aKuqWsthKbw70AmUbove863Qi3DUFAF0z1Nnv4jIS
- sPQcZSCDmhaYqMNahjZqw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:XPJ9aTDuOHY=:B0VcQTOH1i0tiZlmB209FR
- Sl9AS/v48S4VhpN/zoPxEZ8B/gAguY2iX8yk0maYwcqCXPyMZdG7T6Z5u66S+iRqfOASxYtVT
- 0aZmZgUVIUITY5fwOwY3tlbPpp/UROqaxJcSEw5zdhRIsTvRg0VeaJEIBsGVKYB4ZqCxbdCYj
- aQvlIFvXmTYHAm5eHhCKOQ1yqc5AKw6N0nwGOvLzM99atOjTtB2igmMMGt6YLaHxIykikCgPO
- tkhFJcsmrV2T2hpsgVrpZwqNzYGX73naYsOigEIDLg8hEuxymWDxT5OEkHJc13aKz+rBWtOZb
- EnFYOYm7tRr2mPnT6oVka5DrdV/nawk9LDAgzIFYjHg9gNcCzXwZBT7dDEzxXCgZ1B4BV0BrC
- 0aUlOtiKNa5wAY3fYc6OwmPMQmMO4sBEFBSCl5XHTqNWX34HSe7x58i5BqUquaDow0MYNCq0n
- rpWkEmQoaCKqb/sgOPZsMRKa9/Bi340ed5SksFNy+FHDXcuYmQgDhd5WNKPKiUPa3JSc/T4dZ
- SqLcmNBKtL2LdcIUS8AZ4mRAAuRiyJTMfCxKWGXNoucNWviguXWmC37zb9fr76UxS3mzBKAKt
- DPZsZVB7vF8XszKRv7QnqWjfDc+TGoBRxap8A5ZTjr7TQ5LQ3CdO7GhWAMs99JPS+cMufwin4
- Cgh98KcEFmpjJN5DZDX6rvjI/Bbg+H8jS1ftt458dQI6uFJ1rb7g0Vr9A5FsyhxUBEsvL5PBs
- xI+KZckAE0UpMp54SKgWGbuotlwS5ffremm7tRBtAkM19MTHUGstTSsZm4NMoSWeIoLycSOjr
- jPM8UTd8B3gHXAk7RoRfTrbyHATfYmhJ8UZHEzQpa3lxhMJpLziQgayWw9MdHMKFz5lQIeDJC
- wvvwusRyo/xEvVaGUW/tFjEATVXnBEE5CUEZpYL5DvLFjdk/XXngTPhNUXUioKInW8In8DlZo
- 5hlGGDS9KYupkL4KMVbJT7QvJYF915e6ZevunMlp+gkgcSdwcVbxK0KsO851BO3OOYkhfs9y3
- /3FBNfYrbM0CJuCJPG4L9n18frv4rxIhBN6fVoQKTfVE63estrs8LbTJ3x/VU1v5+eTjIaGVK
- 7mat56fg5yHve43hpZw4zH0cS6452LCSzvqA/tvb4HS6jhaJ518hpRDV2MxnuoS3+euLBdonW
- xt1mUD/YnpkNRK8NMAimoDIQaubRXiFpoRR6YzGu3FOjQrwhSolyq8gbptpmJUhLeDnzcIhdh
- kVe+OybIiVKOJ2B1pD9x71zc1RTOHRqp5YBEMeQ==
+Content-Type: multipart/mixed; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <24cbcd55-56d0-83b9-6284-04c29da11306@linaro.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-06 at 15:35 +0100, Jan Kara wrote:
-> On Wed 06-11-19 14:45:43, Robert Stupp wrote:
-> >
-> > Yes, ra_pages=3D=3D0
->
-> OK, thanks for confirmation!
->
-> > 5637e22a2000-5637e22a3000 r--p 00000000 103:02
-> > 49172550                  /home/snazy/devel/misc/zzz/test
->
-> What kind of device & fs does your /home stay on? I don't recognize
-> the major
-> number...
->
 
-It's ext4 on an NVMe SSD
-Maybe it's of interest as well: my /tmp is on tmpfs
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Nov 06, 2019 at 04:17:40PM +0800, zhangfei wrote:
+> > But I still believe it would be better to create an uacce_mm structure
+> > that tracks all queues bound to this mm, and pass that to uacce_sva_exit
+> > instead of the uacce_device.
+> I am afraid this method may not work.
+> Since currently iommu_sva_bind_device only accept the same drvdata for the
+> same dev,
+> that's the reason we can not directly use "queue" as drvdata.
+> Each time create an uacce_mm structure should be same problem as queue, and
+> fail for same dev.
+> So we use uacce and pick up the right queue inside.
+
+What I had in mind is keep one uacce_mm per mm and per device, and we can
+pass that to iommu_sva_bind_device(). It requires some structure changes,
+see the attached patch.
+
+> > The queue isn't bound to a task, but its address space. With clone() the
+> > address space can be shared between tasks. In addition, whoever has a
+> > queue fd also gets access to this address space. So after a fork() the
+> > child may be able to program the queue to DMA into the parent's address
+> > space, even without CLONE_VM. Users must be aware of this and I think it's
+> > important to explain it very clearly in the UAPI.
+> > [...]
+> > > +void uacce_unregister(struct uacce_device *uacce)
+> > > +{
+> > > +	if (!uacce)
+> > > +		return;
+> > > +
+> > > +	mutex_lock(&uacce->q_lock);
+> > > +	if (!list_empty(&uacce->qs)) {
+> > > +		struct uacce_queue *q;
+> > > +
+> > > +		list_for_each_entry(q, &uacce->qs, list) {
+> > > +			uacce_put_queue(q);
+> > The open file descriptor will still exist after this function returns.
+> > Can all fops can be called with a stale queue?
+> To more clear:.
+> Do you mean rmmod without fops_release.
+
+Yes I think so. What happens when userspace starts some queues, and
+the device driver suddenly calls uacce_unregister(). We call
+cdev_device_del() later in this function, but quoting the documentation:
+"any cdevs already open will remain and their fops will still be callable
+even after this function returns." So we need to make sure that any of the
+fops is safe to run after the uacce device disappears.
+
+I noticed a lock dependency inversion on uacce->q_lock: uacce_unregister()
+calls iommu_sva_unbind_device() while holding the uacce->q_lock, but
+uacce_sva_exit() takes the uacce->q_lock with the SVA lock held. In theory
+we could simply avoid calling iommu_sva_unbind_device() here since it will
+be done by fops_release(), but then disabling the SVA feature in
+uacce_unregister() won't work (because there still are bonds). The
+attached patch should fix it, but I haven't tried running uacce_register()
+yet.
+
+Thanks,
+Jean
+
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-uacce-Track-mm-queue-bonds.patch"
+
+From 49559efc5cb26aadbcf580de03afd6e4ff67cedc Mon Sep 17 00:00:00 2001
+From: Jean-Philippe Brucker <jean-philippe@linaro.org>
+Date: Wed, 6 Nov 2019 10:10:07 +0000
+Subject: [PATCH] uacce: Track mm<->queue bonds
+
+The IOMMU core only tracks mm<->device bonds at the moment, because it
+only needs to handle IOTLB invalidation and PASID table entries. However
+uacce needs a finer granularity since multiple queues from the same
+device can be bound to an mm. When the mm exits, all bound queues must
+be stopped so that the IOMMU can safely clear the PASID table entry and
+reallocate the PASID.
+
+Introduce an intermediate struct uacce_mm that links uacce devices and
+queues. Note that an mm may be bound to multiple devices but an uacce_mm
+structure only ever belongs to a single device, because we don't need
+anything more complex (if multiple devices are bound to one mm, then
+we'll create one uacce_mm for each bond).
+
+        uacce_device --+-- uacce_mm --+-- uacce_queue
+                       |              '-- uacce_queue
+                       |
+                       '-- uacce_mm --+-- uacce_queue
+                                      +-- uacce_queue
+                                      '-- uacce_queue
+
+If multiple device drivers need this model, it should be possible to
+move it to iommu-sva in the future, with some changes to the API, and
+have mm_exit() be called for multiple contexts per iommu_bond.
+
+Signed-off-by: Jean-Philippe Brucker <jean-philippe@linaro.org>
+---
+ drivers/misc/uacce/uacce.c | 174 +++++++++++++++++++++++++++----------
+ include/linux/uacce.h      |  34 ++++++--
+ 2 files changed, 152 insertions(+), 56 deletions(-)
+
+diff --git a/drivers/misc/uacce/uacce.c b/drivers/misc/uacce/uacce.c
+index 2b6b03855ac6..d8a7fbfe7399 100644
+--- a/drivers/misc/uacce/uacce.c
++++ b/drivers/misc/uacce/uacce.c
+@@ -92,15 +92,19 @@ static long uacce_fops_compat_ioctl(struct file *filep,
+ static int uacce_sva_exit(struct device *dev, struct iommu_sva *handle,
+ 			  void *data)
+ {
+-	struct uacce_device *uacce = data;
++	struct uacce_mm *uacce_mm = data;
+ 	struct uacce_queue *q;
+ 
+-	mutex_lock(&uacce->q_lock);
+-	list_for_each_entry(q, &uacce->qs, list) {
+-		if (q->pid == task_pid_nr(current))
+-			uacce_put_queue(q);
+-	}
+-	mutex_unlock(&uacce->q_lock);
++	/*
++	 * No new queue can be added concurrently because no caller can have a
++	 * reference to this mm. But there may be concurrent calls to
++	 * uacce_mm_put(), so we need the lock.
++	 */
++	mutex_lock(&uacce_mm->lock);
++	list_for_each_entry(q, &uacce_mm->queues, list)
++		uacce_put_queue(q);
++	uacce_mm->mm = NULL;
++	mutex_unlock(&uacce_mm->lock);
+ 
+ 	return 0;
+ }
+@@ -109,13 +113,88 @@ static struct iommu_sva_ops uacce_sva_ops = {
+ 	.mm_exit = uacce_sva_exit,
+ };
+ 
+-static int uacce_fops_open(struct inode *inode, struct file *filep)
++static struct uacce_mm *uacce_mm_get(struct uacce_device *uacce,
++				     struct uacce_queue *q,
++				     struct mm_struct *mm)
+ {
++	struct uacce_mm *uacce_mm = NULL;
+ 	struct iommu_sva *handle = NULL;
++	int ret;
++
++	lockdep_assert_held(&uacce->mm_lock);
++
++	list_for_each_entry(uacce_mm, &uacce->mm_list, list) {
++		if (uacce_mm->mm == mm) {
++			mutex_lock(&uacce_mm->lock);
++			list_add(&q->list, &uacce_mm->queues);
++			mutex_unlock(&uacce_mm->lock);
++			return uacce_mm;
++		}
++	}
++
++	uacce_mm = kzalloc(sizeof(*uacce_mm), GFP_KERNEL);
++	if (!uacce_mm)
++		return NULL;
++
++	if (uacce->flags & UACCE_DEV_SVA) {
++		/*
++		 * Safe to pass an incomplete uacce_mm, since mm_exit cannot
++		 * fire while we hold a reference to the mm.
++		 */
++		handle = iommu_sva_bind_device(uacce->pdev, mm, uacce_mm);
++		if (IS_ERR(handle))
++			goto err_free;
++
++		ret = iommu_sva_set_ops(handle, &uacce_sva_ops);
++		if (ret)
++			goto err_unbind;
++
++		uacce_mm->pasid = iommu_sva_get_pasid(handle);
++		if (uacce_mm->pasid == IOMMU_PASID_INVALID)
++			goto err_unbind;
++	}
++
++	uacce_mm->mm = mm;
++	uacce_mm->handle = handle;
++	INIT_LIST_HEAD(&uacce_mm->queues);
++	mutex_init(&uacce_mm->lock);
++	list_add(&q->list, &uacce_mm->queues);
++	list_add(&uacce_mm->list, &uacce->mm_list);
++
++	return uacce_mm;
++
++err_unbind:
++	if (handle)
++		iommu_sva_unbind_device(handle);
++err_free:
++	kfree(uacce_mm);
++	return NULL;
++}
++
++static void uacce_mm_put(struct uacce_queue *q)
++{
++	struct uacce_mm *uacce_mm = q->uacce_mm;
++
++	lockdep_assert_held(&q->uacce->mm_lock);
++
++	mutex_lock(&uacce_mm->lock);
++	list_del(&q->list);
++	mutex_unlock(&uacce_mm->lock);
++
++	if (list_empty(&uacce_mm->queues)) {
++		if (uacce_mm->handle)
++			iommu_sva_unbind_device(uacce_mm->handle);
++		list_del(&uacce_mm->list);
++		kfree(uacce_mm);
++	}
++}
++
++static int uacce_fops_open(struct inode *inode, struct file *filep)
++{
++	struct uacce_mm *uacce_mm = NULL;
+ 	struct uacce_device *uacce;
+ 	struct uacce_queue *q;
+ 	int ret = 0;
+-	int pasid = 0;
+ 
+ 	uacce = xa_load(&uacce_xa, iminor(inode));
+ 	if (!uacce)
+@@ -130,44 +209,37 @@ static int uacce_fops_open(struct inode *inode, struct file *filep)
+ 		goto out_with_module;
+ 	}
+ 
+-	if (uacce->flags & UACCE_DEV_SVA) {
+-		handle = iommu_sva_bind_device(uacce->pdev, current->mm, uacce);
+-		if (IS_ERR(handle))
+-			goto out_with_mem;
+-
+-		ret = iommu_sva_set_ops(handle, &uacce_sva_ops);
+-		if (ret)
+-			goto out_unbind;
++	q->state = UACCE_Q_ZOMBIE;
+ 
+-		pasid = iommu_sva_get_pasid(handle);
+-		if (pasid == IOMMU_PASID_INVALID)
+-			goto out_unbind;
++	mutex_lock(&uacce->mm_lock);
++	uacce_mm = uacce_mm_get(uacce, q, current->mm);
++	mutex_unlock(&uacce->mm_lock);
++	if (!uacce_mm) {
++		ret = -ENOMEM;
++		goto out_with_mem;
+ 	}
+ 
++	q->uacce = uacce;
++	q->uacce_mm = uacce_mm;
++
+ 	if (uacce->ops->get_queue) {
+-		ret = uacce->ops->get_queue(uacce, pasid, q);
++		ret = uacce->ops->get_queue(uacce, uacce_mm->pasid, q);
+ 		if (ret < 0)
+-			goto out_unbind;
++			goto out_with_mm;
+ 	}
+ 
+ 	q->pid = task_pid_nr(current);
+-	q->pasid = pasid;
+-	q->handle = handle;
+-	q->uacce = uacce;
+ 	memset(q->qfrs, 0, sizeof(q->qfrs));
+ 	init_waitqueue_head(&q->wait);
+ 	filep->private_data = q;
+ 	q->state = UACCE_Q_INIT;
+ 
+-	mutex_lock(&uacce->q_lock);
+-	list_add(&q->list, &uacce->qs);
+-	mutex_unlock(&uacce->q_lock);
+-
+ 	return 0;
+ 
+-out_unbind:
+-	if (uacce->flags & UACCE_DEV_SVA)
+-		iommu_sva_unbind_device(handle);
++out_with_mm:
++	mutex_lock(&uacce->mm_lock);
++	uacce_mm_put(q);
++	mutex_unlock(&uacce->mm_lock);
+ out_with_mem:
+ 	kfree(q);
+ out_with_module:
+@@ -182,12 +254,10 @@ static int uacce_fops_release(struct inode *inode, struct file *filep)
+ 
+ 	uacce_put_queue(q);
+ 
+-	if (uacce->flags & UACCE_DEV_SVA)
+-		iommu_sva_unbind_device(q->handle);
++	mutex_lock(&uacce->mm_lock);
++	uacce_mm_put(q);
++	mutex_unlock(&uacce->mm_lock);
+ 
+-	mutex_lock(&uacce->q_lock);
+-	list_del(&q->list);
+-	mutex_unlock(&uacce->q_lock);
+ 	kfree(q);
+ 	module_put(uacce->pdev->driver->owner);
+ 
+@@ -484,8 +554,8 @@ struct uacce_device *uacce_register(struct device *parent,
+ 		goto err_with_xa;
+ 	}
+ 
+-	INIT_LIST_HEAD(&uacce->qs);
+-	mutex_init(&uacce->q_lock);
++	INIT_LIST_HEAD(&uacce->mm_list);
++	mutex_init(&uacce->mm_lock);
+ 	uacce->cdev->ops = &uacce_fops;
+ 	uacce->cdev->owner = THIS_MODULE;
+ 	device_initialize(&uacce->dev);
+@@ -519,20 +589,30 @@ EXPORT_SYMBOL_GPL(uacce_register);
+  */
+ void uacce_unregister(struct uacce_device *uacce)
+ {
++	struct uacce_mm *uacce_mm;
++	struct uacce_queue *q;
++
+ 	if (!uacce)
+ 		return;
+ 
+-	mutex_lock(&uacce->q_lock);
+-	if (!list_empty(&uacce->qs)) {
+-		struct uacce_queue *q;
+-
+-		list_for_each_entry(q, &uacce->qs, list) {
++	mutex_lock(&uacce->mm_lock);
++	list_for_each_entry(uacce_mm, &uacce->mm_list, list) {
++		/*
++		 * We don't take the uacce_mm->lock here. Since we hold the
++		 * device's mm_lock, no queue can be added to or removed from
++		 * this uacce_mm. We may run concurrently with mm_exit, but
++		 * uacce_put_queue() is serialized and iommu_sva_unbind_device()
++		 * waits for the lock that mm_exit is holding.
++		 */
++		list_for_each_entry(q, &uacce_mm->queues, list)
+ 			uacce_put_queue(q);
+-			if (uacce->flags & UACCE_DEV_SVA)
+-				iommu_sva_unbind_device(q->handle);
++
++		if (uacce->flags & UACCE_DEV_SVA) {
++			iommu_sva_unbind_device(uacce_mm->handle);
++			uacce_mm->handle = NULL;
+ 		}
+ 	}
+-	mutex_unlock(&uacce->q_lock);
++	mutex_unlock(&uacce->mm_lock);
+ 
+ 	if (uacce->flags & UACCE_DEV_SVA)
+ 		iommu_dev_disable_feature(uacce->pdev, IOMMU_DEV_FEAT_SVA);
+diff --git a/include/linux/uacce.h b/include/linux/uacce.h
+index 04c8643c130b..8564e078287a 100644
+--- a/include/linux/uacce.h
++++ b/include/linux/uacce.h
+@@ -88,10 +88,9 @@ enum uacce_q_state {
+  * @uacce: pointer to uacce
+  * @priv: private pointer
+  * @wait: wait queue head
+- * @pasid: pasid of the queue
+  * @pid: pid of the process using the queue
+- * @handle: iommu_sva handle return from iommu_sva_bind_device
+- * @list: queue list
++ * @list: index into uacce_mm
++ * @uacce_mm: the corresponding mm
+  * @qfrs: pointer of qfr regions
+  * @state: queue state machine
+  */
+@@ -99,10 +98,9 @@ struct uacce_queue {
+ 	struct uacce_device *uacce;
+ 	void *priv;
+ 	wait_queue_head_t wait;
+-	int pasid;
+ 	pid_t pid;
+-	struct iommu_sva *handle;
+ 	struct list_head list;
++	struct uacce_mm *uacce_mm;
+ 	struct uacce_qfile_region *qfrs[UACCE_QFRT_MAX];
+ 	enum uacce_q_state state;
+ };
+@@ -121,8 +119,8 @@ struct uacce_queue {
+  * @cdev: cdev of the uacce
+  * @dev: dev of the uacce
+  * @priv: private pointer of the uacce
+- * @qs: list head of queue->list
+- * @q_lock: lock for qs
++ * @mm_list: list head of uacce_mm->list
++ * @mm_lock: lock for mm_list
+  */
+ struct uacce_device {
+ 	const char *algs;
+@@ -137,8 +135,26 @@ struct uacce_device {
+ 	struct cdev *cdev;
+ 	struct device dev;
+ 	void *priv;
+-	struct list_head qs;
+-	struct mutex q_lock;
++	struct list_head mm_list;
++	struct mutex mm_lock;
++};
++
++/*
++ * struct uacce_mm - keep track of queues bound to a process
++ * @list: index into uacce_device
++ * @queues: list of queues
++ * @mm: the mm struct
++ * @lock: protects the list of queues
++ * @pasid: pasid of the queue
++ * @handle: iommu_sva handle return from iommu_sva_bind_device
++ */
++struct uacce_mm {
++	struct list_head list;
++	struct list_head queues;
++	struct mm_struct *mm;
++	struct mutex lock;
++	int pasid;
++	struct iommu_sva *handle;
+ };
+ 
+ #if IS_ENABLED(CONFIG_UACCE)
+-- 
+2.20.1
 
 
+--3MwIy2ne0vdjdPXF--
