@@ -2,117 +2,99 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC33C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D7D1C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE3A82173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1732173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9fFXGfh"
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="lzdpTGi5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732647AbfKFWEM (ORCPT
+        id S1732683AbfKFWEl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:04:12 -0500
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:52553 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726957AbfKFWEL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:04:11 -0500
-Received: by mail-wm1-f66.google.com with SMTP id c17so5854212wmk.2;
-        Wed, 06 Nov 2019 14:04:08 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6r8I0SCpSbo6ngTh6F9dpz6iIrvn5396OXePTnNw2U8=;
-        b=h9fFXGfhomwsrDhIOPlDTH9/XZNGxhz0qH64mPq2HdxKiW+ySowOe8rBfq/r3/Rcb1
-         Ep6ozet54YeOvC9w4iZxIgXZIQVl3yNw/LSMRDaPpW/nLocNKuRCSL2+hLMWvAHPkwHJ
-         BGih7Jj9wc2zeknUzfCLNwBI0jfMnzbomsz2MrLY53Idlye719FyMGPZchdeIxJCQQcp
-         uHnWr/s2NTDxuif8+uqR++6vBEFK6kIq6Khbh3RhnmbMk6NnQXwvr0jf9M4msqza8cuk
-         5ByxgtrHj5Dovio4lWjryoIrXCQSHxT9jSTp20o3FAZQ7ti/jX9vr98SKhmke9oFYXV6
-         Mdmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6r8I0SCpSbo6ngTh6F9dpz6iIrvn5396OXePTnNw2U8=;
-        b=hhs32uvq4AZeTiL4irV2cjtwEK9nQjDUOIFFnIBJlIdu3Ts0MXh2xBjpFkLjRjWtfd
-         7GK+Hixagh0rqM0Ls3IXI3KugMj9XfO+xEZYNdXKF3eo+nrBHTzQtVfnLd/HSPFwGEf9
-         K8U5TFTbBi+0U8J7kNqwThjjcXb5VeKw0uf6Rn9r+Fq19SG9Y6dcpdIeEWUKQ7x6TWc/
-         4pHO9O1kofjioeP2Pzr+ZZhhwLNK4GAL1mjhYoQvvowuqEGGxQ7DlyM3M+WGurtYObgw
-         HLAu5s36w7t/HJQpiWPaYh8BwU69wZJdCeq5dOuADmRP46oNdEULxJaFlv5MxtHTpB/J
-         EEUw==
-X-Gm-Message-State: APjAAAWbCFvdSAHimBTPAPYji2CM2p3h/u6dZActAzpeLYTtUteMFToq
-        2qWYulOY2ZccBh/sFQXHW1A=
-X-Google-Smtp-Source: APXvYqwqZSYx00vA5vA5YuZhAaxFTgiX+RTj4W8pTe+SVTWIv7moEx0LZFAY7DH06jt1HBx1FrPN7Q==
-X-Received: by 2002:a05:600c:295:: with SMTP id 21mr4400198wmk.43.1573077847737;
-        Wed, 06 Nov 2019 14:04:07 -0800 (PST)
-Received: from localhost.localdomain (dynamic-2a00-1028-9192-7022-5e51-4fff-feaa-03a7.ipv6.broadband.iol.cz. [2a00:1028:9192:7022:5e51:4fff:feaa:3a7])
-        by smtp.gmail.com with ESMTPSA id b3sm3958842wma.13.2019.11.06.14.04.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 14:04:07 -0800 (PST)
-From:   Jaroslav Beran <jara.beran@gmail.com>
-To:     Oliver Hartkopp <socketcan@hartkopp.net>,
-        Marc Kleine-Budde <mkl@pengutronix.de>,
-        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Jaroslav Beran <jara.beran@gmail.com>
-Subject: [PATCH] can: return error from can_send() in BUS-OFF state
-Date:   Wed,  6 Nov 2019 23:03:02 +0100
-Message-Id: <20191106220302.27698-1-jara.beran@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 6 Nov 2019 17:04:41 -0500
+Received: from mx1.cock.li ([185.10.68.5]:37585 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726957AbfKFWEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:04:40 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1573077877; bh=3JpdTRQeSUwGryhFQwse0VFJSngi9OZhnGVIKgZWnno=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=lzdpTGi58UqlyOF7yzQdWGAOddkZgXjsH6+NCBBLx/vB4NCmveObhLU3SHXN8Myw7
+         resJzS0B1XUmR8zJGwrk6ePJy4enDjZfxNJzfg5ns5TYThg2NcXSc8spGZXEPa3X+n
+         q0T9kDIZvUGK6IuyV5+8DzTZeGpac+6MGz43nnoswT36kUeFTBY51vrYCcB3FQ5FIA
+         56bfKk9/poRoka/YiibNDsIpyH+VFMXcx3KgTbVE1LgMmspHuduuq+2Mmp3vvXZdEn
+         EcXfM38ORsuUUlIjole/5D88A1e3gNsazNgin7awPvn2h5o28RYLMzJ90PNHEWAaIp
+         4sQE2dSQLvtjg==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Nov 2019 22:04:37 +0000
+From:   gameonlinux@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the
+ blobs (compile time option). - Local politics in Software
+In-Reply-To: <CAJsg1E-HrrexDVYxV=qf=LDT2PrY=tUH_JhrpYyDNu95Y2wpLw@mail.gmail.com>
+References: <b1b6ab4e31856450d82afccaba587b0f@redchan.it>
+ <CAJsg1E-HrrexDVYxV=qf=LDT2PrY=tUH_JhrpYyDNu95Y2wpLw@mail.gmail.com>
+Message-ID: <07ebf4d78e2f257c68d39d2697a16e3d@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When a CAN node reaches BUS-OFF state, its netdev state
-is set to __LINK_STATE_NOCARRIER and qdisc ->enqueue() starts
-dropping frames and returning NET_XMIT_CN that is turned to 0
-by net_xmit_errno(). So can_send() returns success to a sender
-even if his frame is lost.
+Andy: RMS was the victim of such local politics/religion (one can see 
+said US belief system as a religion); his enemies opened the door.
 
-As this behavior is inappropriate for a node in BUS-OFF state,
-this patch adds a check for no-carrier condition and returns
--ENETUNREACH in such case.
+And it is local. Even the foreign-to-us people that were attacking RMS 
+and had him physically thrown out of his home at MIT were following 
+local-American morals and beliefs, even if some of them were in Europe.
 
-Signed-off-by: Jaroslav Beran <jara.beran@gmail.com>
----
- net/can/af_can.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+I am just expressing a weak opposition to what they used against RMS.
 
-diff --git a/net/can/af_can.c b/net/can/af_can.c
-index 5518a7d9eed9..68c56241733b 100644
---- a/net/can/af_can.c
-+++ b/net/can/af_can.c
-@@ -189,6 +189,7 @@ static int can_create(struct net *net, struct socket *sock, int protocol,
-  * Return:
-  *  0 on success
-  *  -ENETDOWN when the selected interface is down
-+ *  -ENETUNREACH when the node is in BUS-OFF state
-  *  -ENOBUFS on full driver queue (see net_xmit_errno())
-  *  -ENOMEM when local loopback failed at calling skb_clone()
-  *  -EPERM when trying to send on a non-CAN interface
-@@ -233,6 +234,11 @@ int can_send(struct sk_buff *skb, int loop)
- 		goto inval_skb;
- 	}
- 
-+	if (unlikely(!netif_carrier_ok(skb->dev))) {
-+		err = -ENETUNREACH;
-+		goto inval_skb;
-+	}
-+
- 	skb->ip_summed = CHECKSUM_UNNECESSARY;
- 
- 	skb_reset_mac_header(skb);
--- 
-2.23.0
+If they are able to call for RMS' removal from his OWN project (and yes: 
+GNU is _his_ project), and they have threads on this that go on for 
+centuries on -devel lists, and this is fine (it is seen as fine), then 
+they have already opened the door.
 
+They would like it to be closed after they said their piece, ofcourse.
+
+They even got RMS to recant! RMS, recanting!
+After they pressured him, and had him thrown out with bouncers from 
+where he lived for 40 years. Because he offended /their/ 
+religion/local-politics (which are global because the demon won't leave 
+anyone alone)
+
+On 2019-11-06 18:21, Andy Tai wrote:
+> Please no politics of these "American" hate/evil stuff.  These are not
+> qualified factors in making technical decisions.
+> This is a global list.  Your opinions are of local nature and should
+> not be imposed on anyone in your country or anywhere else.
+> 
+> On Wed, Nov 6, 2019 at 9:54 AM <gameonlinux@redchan.it> wrote:
+>> 
+>> 
+>> (because white women _HATE_ men: thus libreboot-"maintainer"'s 
+>> shameful
+>> act is in keeping with their interests, while RMS's past text ideas 
+>> are
+>> not: white women are _EVIL_ tyrants who encourage their men (and they
+>> are _their_ men) to MURDER COUNTLESS INNOCENT muslim men, women,
+>> children BECAUSE "they are p[a]edos: the men should be killed, the
+>> children are better of dead than living in that society"))]
+>> 
+>> ...
+>> For these reasons I propose coreboot with the no-blobs option be used
+>> over "libreboot". It is free-software without the blobs; but even
+>> blobless the spyware in your processor is still there either way
+>> (another gift of America).
+>> 
+>> 
+>> 
