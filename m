@@ -2,113 +2,125 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 85B1AC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6625FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 583DB2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="C+qMW4kV"
+	by mail.kernel.org (Postfix) with ESMTP id 386DE2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573057315;
+	bh=VE5vkRe3MFeUD2//s8FzHmt7DQoPZJ0thztKl9CyqPA=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=g834Z/IVKIUuQMiXYdT0PbPhHj1e13hhl3ykk4bWNIKlUJbnGKrcqeTxyc50xCeEn
+	 vr0BP++UQDf8vHu4E1K7flVDtnfl73ttUDQKlxqG1kw1hGrd7TbW29JWf62Ewuj5PM
+	 7+u9EFvAk3TwJA+Py9ugpXc8dsKextDnsh+zKNcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732200AbfKFQVP (ORCPT
+        id S1732209AbfKFQVy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:21:15 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:55772 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727244AbfKFQVO (ORCPT
+        Wed, 6 Nov 2019 11:21:54 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53208 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728462AbfKFQVx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:21:14 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6GJ4nO093660;
-        Wed, 6 Nov 2019 16:19:50 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=BHF9V2BMWD9Pr0Y6kWZezyM7R00JEGZI1MLT3+/esck=;
- b=C+qMW4kV6AiiID3zRA4eFEh1iX0V0jb92IUfDGDnvp08JPssVjd22upG/uurPQLSzCRK
- sEqo02HI/+QUjqWU+BQlQJjYOrSivMJoo9YxcZoR1hezK42jfyOUcEwZd9BF23XvwDxQ
- EzJMjEHQIJcavsnqqvlcYLjRuWb7vDMf1v2+3tw0m3pGB2rEymZ/WtqpYhzJJYWhd8CF
- w7UkfPdGvZ2hc5TnypS8JMJ3DOHneEDuQ3GWcO09wHdZ22sSh5UeKSqQ0wqokcDJdXry
- HUQntv52EIQZQyQXrhRSiujZyEJnMzwH1/MnaNjYs2+15VSVRRbfUdVI/kvq/eY8R2KP +Q== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2w12erfqqj-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 16:19:50 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6GItWC111870;
-        Wed, 6 Nov 2019 16:19:49 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3030.oracle.com with ESMTP id 2w35prbnqq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 16:19:49 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA6GJmvd024109;
-        Wed, 6 Nov 2019 16:19:48 GMT
-Received: from [10.39.238.145] (/10.39.238.145)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 08:19:47 -0800
-Subject: Re: [patch V2 05/17] x86/traps: Make interrupt enable/disable
- symmetric in C code
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        LKML <linux-kernel@vger.kernel.org>
-Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Will Deacon <will@kernel.org>,
-        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
-        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Miroslav Benes <mbenes@suse.cz>
-References: <20191023122705.198339581@linutronix.de>
- <20191023123118.084086112@linutronix.de>
-From:   Alexandre Chartre <alexandre.chartre@oracle.com>
-Organization: Oracle Corporation
-Message-ID: <1c6ad81c-9518-909a-03d2-e2a2cf53240d@oracle.com>
-Date:   Wed, 6 Nov 2019 17:19:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
-MIME-Version: 1.0
-In-Reply-To: <20191023123118.084086112@linutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=776
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911060157
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=856 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911060157
+        Wed, 6 Nov 2019 11:21:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=sY1LTU5lxUVLEh6S37lvZk7THzZIaZaTQC81eTfTnuk=; b=lg5npjXa7UrM
+        o4APQc5VZqHpvfdeQeZpru4dy5KxjKxjwSpUPPY4n3raeWcBZufDG/x2uw8L+nBub+RiRVc7ZdkJg
+        fomp+UmMLkCYNjZ4oq4BSSKZFng0+aR9ULXYERCeBkaLQk7FjjHUsWm1OaX7+nXBshQQ7sMPWuLfs
+        jtiEw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <broonie@sirena.co.uk>)
+        id 1iSO47-0001pF-NY; Wed, 06 Nov 2019 16:21:51 +0000
+Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
+        id 35F4B2743035; Wed,  6 Nov 2019 16:21:51 +0000 (GMT)
+From:   Mark Brown <broonie@kernel.org>
+To:     Vasily Khoruzhick <anarsoul@gmail.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: fan53555: add chip id for Silergy SYR83X" to the regulator tree
+In-Reply-To: <20191106161211.1700663-1-anarsoul@gmail.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20191106162151.35F4B2743035@ypsilon.sirena.org.uk>
+Date:   Wed,  6 Nov 2019 16:21:51 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The patch
 
-On 10/23/19 2:27 PM, Thomas Gleixner wrote:
-> Traps enable interrupts conditionally but rely on the ASM return code to
-> disable them again. That results in redundant interrupt disable and trace
-> calls.
-> 
-> Make the trap handlers disable interrupts before returning to avoid that,
-> which allows simplification of the ASM entry code.
-> 
-> Originally-by: Peter Zijlstra <peterz@infradead.org>
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
->   arch/x86/kernel/traps.c |   32 +++++++++++++++++++++-----------
->   arch/x86/mm/fault.c     |    7 +++++--
->   2 files changed, 26 insertions(+), 13 deletions(-)
-> 
+   regulator: fan53555: add chip id for Silergy SYR83X
 
-Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
+has been applied to the regulator tree at
 
-alex.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From 5365e3df422938e6b34e1afdd2ff1cfc5768290e Mon Sep 17 00:00:00 2001
+From: Vasily Khoruzhick <anarsoul@gmail.com>
+Date: Wed, 6 Nov 2019 08:12:11 -0800
+Subject: [PATCH] regulator: fan53555: add chip id for Silergy SYR83X
+
+SYR83X is used in Rockpro64 and it has die ID == 9. All other
+registers are the same as in SYR82X
+
+Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
+Link: https://lore.kernel.org/r/20191106161211.1700663-1-anarsoul@gmail.com
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/fan53555.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
+index dbe477da4e55..00c83492f774 100644
+--- a/drivers/regulator/fan53555.c
++++ b/drivers/regulator/fan53555.c
+@@ -83,6 +83,7 @@ enum {
+ 
+ enum {
+ 	SILERGY_SYR82X = 8,
++	SILERGY_SYR83X = 9,
+ };
+ 
+ struct fan53555_device_info {
+@@ -302,6 +303,7 @@ static int fan53555_voltages_setup_silergy(struct fan53555_device_info *di)
+ 	/* Init voltage range and step */
+ 	switch (di->chip_id) {
+ 	case SILERGY_SYR82X:
++	case SILERGY_SYR83X:
+ 		di->vsel_min = 712500;
+ 		di->vsel_step = 12500;
+ 		break;
+-- 
+2.20.1
+
