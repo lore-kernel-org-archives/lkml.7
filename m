@@ -2,512 +2,207 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D46DC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:01:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4809C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:02:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E1EE20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:01:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5667920663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:02:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="haDg07dH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731816AbfKFOBQ (ORCPT
+        id S1731876AbfKFOCj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:01:16 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:34892 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbfKFOBQ (ORCPT
+        Wed, 6 Nov 2019 09:02:39 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22554 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730456AbfKFOCi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:01:16 -0500
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: koike)
-        with ESMTPSA id 9EAA928EBC7
-Subject: Re: [PATCH v3] media: vimc: Implement get/set selection in sink
-To:     Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hverkuil-cisco@xs4all.nl, lkcamp@lists.libreplanetbr.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=c3=b6derlund?= <niklas.soderlund@ragnatech.se>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        pedro@terraco.de
-References: <20191106011200.1645-1-drocha.figueiredo@gmail.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <41bf90e9-a229-e84e-4e1c-cd2cfae7ead7@collabora.com>
-Date:   Wed, 6 Nov 2019 10:59:59 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 6 Nov 2019 09:02:38 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573048957;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+        bh=rMmylZ/uCMhR/BQFHvtb6oY7XcVPylzq+fuVI4wfh8A=;
+        b=haDg07dHdo7e84HqJW3XIxeyy9cQU5UqQS+8L0i8BKQQHkFX0QLT7lLwkuL9oQCSE0wZZ4
+        xrbzlnUlDHIFpEx/6/vPlWzWpnGXARD4JfIMHHiLFm5z8MsNgotdVfF/y8DRPNgA6g5DgR
+        9RYdQ5XxpgLF+Bo8OBJnmo799bcxSUM=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-324--Q2gXHEePJSRQHD_Eho47Q-1; Wed, 06 Nov 2019 09:02:35 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 57D57107ACC3;
+        Wed,  6 Nov 2019 14:02:34 +0000 (UTC)
+Received: from [10.36.117.83] (ovpn-117-83.ams2.redhat.com [10.36.117.83])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 20E80600C4;
+        Wed,  6 Nov 2019 14:02:26 +0000 (UTC)
+Subject: Re: [PATCH] virtio_console: allocate inbufs in add_port() only if it
+ is needed
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Amit Shah <amit@kernel.org>,
+        virtualization@lists.linux-foundation.org,
+        Arnd Bergmann <arnd@arndb.de>
+References: <20191018164718.15999-1-lvivier@redhat.com>
+ <20191106085548-mutt-send-email-mst@kernel.org>
+From:   Laurent Vivier <lvivier@redhat.com>
+Autocrypt: addr=lvivier@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ D+Ofp0T3KOr1RUHvCZoLURfFhSQ=
+Message-ID: <83d88904-1626-8dd6-9e5c-7abcee27bcd0@redhat.com>
+Date:   Wed, 6 Nov 2019 15:02:25 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191106011200.1645-1-drocha.figueiredo@gmail.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20191106085548-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: -Q2gXHEePJSRQHD_Eho47Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Danilo and Guilherme,
+On 06/11/2019 14:56, Michael S. Tsirkin wrote:
+> On Fri, Oct 18, 2019 at 06:47:18PM +0200, Laurent Vivier wrote:
+>> When we hot unplug a virtserialport and then try to hot plug again,
+>> it fails:
+>>
+>> (qemu) chardev-add socket,id=3Dserial0,path=3D/tmp/serial0,server,nowait
+>> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+>>                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+>> (qemu) device_del serial0
+>> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
+>>                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
+>> kernel error:
+>>   virtio-ports vport2p2: Error allocating inbufs
+>> qemu error:
+>>   virtio-serial-bus: Guest failure in adding port 2 for device \
+>>                      virtio-serial0.0
+>>
+>> This happens because buffers for the in_vq are allocated when the port i=
+s
+>> added but are not released when the port is unplugged.
+>>
+>> They are only released when virtconsole is removed (see a7a69ec0d8e4)
+>>
+>> To avoid the problem and to be symmetric, we could allocate all the buff=
+ers
+>> in init_vqs() as they are released in remove_vqs(), but it sounds like
+>> a waste of memory.
+>>
+>> Rather than that, this patch changes add_port() logic to only allocate t=
+he
+>> buffers if the in_vq has available free slots.
+>>
+>> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
+>> Cc: mst@redhat.com
+>> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
+>> ---
+>>  drivers/char/virtio_console.c | 17 +++++++++++------
+>>  1 file changed, 11 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console=
+.c
+>> index 7270e7b69262..77105166fe01 100644
+>> --- a/drivers/char/virtio_console.c
+>> +++ b/drivers/char/virtio_console.c
+>> @@ -1421,12 +1421,17 @@ static int add_port(struct ports_device *portdev=
+, u32 id)
+>>  =09spin_lock_init(&port->outvq_lock);
+>>  =09init_waitqueue_head(&port->waitqueue);
+>> =20
+>> -=09/* Fill the in_vq with buffers so the host can send us data. */
+>> -=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
+>> -=09if (!nr_added_bufs) {
+>> -=09=09dev_err(port->dev, "Error allocating inbufs\n");
+>> -=09=09err =3D -ENOMEM;
+>> -=09=09goto free_device;
+>> +=09/* if the in_vq has not already been filled (the port has already be=
+en
+>> +=09 * used and unplugged), fill the in_vq with buffers so the host can
+>> +=09 * send us data.
+>> +=09 */
+>> +=09if (port->in_vq->num_free !=3D 0) {
+>> +=09=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
+>> +=09=09if (!nr_added_bufs) {
+>> +=09=09=09dev_err(port->dev, "Error allocating inbufs\n");
+>> +=09=09=09err =3D -ENOMEM;
+>> +=09=09=09goto free_device;
+>> +=09=09}
+>>  =09}
+>> =20
+>>  =09if (is_rproc_serial(port->portdev->vdev))
+>=20
+> Well fill_queue will just add slots as long as it can.
+> So on a full queue it does nothing. How does this patch help?
 
-On 11/5/19 11:12 PM, Danilo Figueiredo Rocha wrote:
-> From: Guilherme Alcarde Gallo <gagallo7@gmail.com>
-> 
-> Add support for the sink pad of scaler subdevice to respond
-> VIDIOC_G_SELECTION and VIDIOC_S_SELECTION ioctls with the following
-> targets: V4L2_SEL_TGT_COMPOSE_BOUNDS and V4L2_SEL_TGT_CROP.
-> 
-> * Add new const struct crop_rect_default to initialize subdev scaler
->   properly.
-> * Make changes in sink pad format reflect to the crop rectangle. E.g.
->   changing the frame format to a smaller size one can make the former
->   crop rectangle selects a non existing frame area. To solve this
->   situation the crop rectangle is clamped to the frame boundaries.
-> * Clamp crop rectangle respecting the sink bounds during set_selection
->   ioctl.
-> 
-> Signed-off-by: Guilherme Alcarde Gallo <gagallo7@gmail.com>
-> Co-developed-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
-> Signed-off-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
+Yes, but in this case it returns 0 and so add_port() fails and exits
+with -ENOMEM and the device is freed. It's what this patch tries to avoid.
 
-Thanks for the patch, lgtm, just minor nitpicking comments below.
+Thanks,
+Laurent
 
-Also, I'm adding libcamera people in CC, as this might require updating it.
-
-And I'm also adding Gabriela and Pedro in CC, as this might require some
-changes in patch "media: vimc: Enable set resolution at the scaler src pad",
-which removes the hardcoded scaling factor.
-
-> 
-> ---
-> Changes in V3:
-> * Sort the headers in alphabetical order.
-> * Change all functions prefix to 'vimc_sca_'.
-> * Remove useless case.
-> * Change commit message subject.
-> 
-> Changes in V2:
-> * Use v4l2_rect_map_inside to clamp the crop rectangle.
-> * Do the crop rectangle clamping after changing sink format.
-> * Implement try ioctls for selection with CROP* targets.
-> * Treat tiny rectangles with area smaller than minimal dimensions of vimc
->   frames.
-> * Allow user to get selection when the streaming is on.
-> * Reuse bound rectangle generation in a static function.
-> * Disable get_selection for Source pads as we did before with
->   set_selection.
-> ---
->  drivers/media/platform/vimc/vimc-scaler.c | 170 ++++++++++++++++++++--
->  1 file changed, 154 insertions(+), 16 deletions(-)
-> 
-> diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> index 2f88a7d9d67b..935bb0e0d0ee 100644
-> --- a/drivers/media/platform/vimc/vimc-scaler.c
-> +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> @@ -6,8 +6,9 @@
->   */
->  
->  #include <linux/moduleparam.h>
-> -#include <linux/vmalloc.h>
->  #include <linux/v4l2-mediabus.h>
-> +#include <linux/vmalloc.h>
-
-I think you moved this one by accident?
-Please, send v4 fixing this.
-
-> +#include <media/v4l2-rect.h>
->  #include <media/v4l2-subdev.h>
->  
->  #include "vimc-common.h"
-> @@ -18,6 +19,9 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
->  
->  #define MAX_ZOOM	8
->  
-> +#define VIMC_SCA_FMT_WIDTH_DEFAULT  640
-> +#define VIMC_SCA_FMT_HEIGHT_DEFAULT	480
-> +
->  struct vimc_sca_device {
->  	struct vimc_ent_device ved;
->  	struct v4l2_subdev sd;
-> @@ -25,6 +29,7 @@ struct vimc_sca_device {
->  	 * with the width and hight multiplied by mult
->  	 */
->  	struct v4l2_mbus_framefmt sink_fmt;
-> +	struct v4l2_rect crop_rect;
->  	/* Values calculated when the stream starts */
->  	u8 *src_frame;
->  	unsigned int src_line_size;
-> @@ -33,22 +38,64 @@ struct vimc_sca_device {
->  };
->  
->  static const struct v4l2_mbus_framefmt sink_fmt_default = {
-> -	.width = 640,
-> -	.height = 480,
-> +	.width = VIMC_SCA_FMT_WIDTH_DEFAULT,
-> +	.height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
->  	.code = MEDIA_BUS_FMT_RGB888_1X24,
->  	.field = V4L2_FIELD_NONE,
->  	.colorspace = V4L2_COLORSPACE_DEFAULT,
->  };
->  
-> +static const struct v4l2_rect crop_rect_default = {
-> +	.width = VIMC_SCA_FMT_WIDTH_DEFAULT,
-> +	.height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
-> +	.top = 0,
-> +	.left = 0,
-> +};
-> +
-> +static const struct v4l2_rect crop_rect_min = {
-> +	.width = VIMC_FRAME_MIN_WIDTH,
-> +	.height = VIMC_FRAME_MIN_HEIGHT,
-> +	.top = 0,
-> +	.left = 0,
-> +};
-> +
-> +static struct v4l2_rect
-> +vimc_sca_get_crop_bound_sink(const struct v4l2_mbus_framefmt *sink_fmt)
-> +{
-> +	/* Get the crop bounds to clamp the crop rectangle correctly */
-> +	struct v4l2_rect r = {
-> +		.left = 0,
-> +		.top = 0,
-> +		.width = sink_fmt->width,
-> +		.height = sink_fmt->height,
-> +	};
-> +	return r;
-> +}
-> +
-> +static void vimc_sca_adjust_sink_crop(struct v4l2_rect *r,
-> +				 const struct v4l2_mbus_framefmt *sink_fmt)
-> +{
-> +	const struct v4l2_rect sink_rect =
-> +		vimc_sca_get_crop_bound_sink(sink_fmt);
-> +
-> +	/* Disallow rectangles smaller than the minimal one. */
-> +	v4l2_rect_set_min_size(r, &crop_rect_min);
-> +	v4l2_rect_map_inside(r, &sink_rect);
-> +}
-> +
->  static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
->  			     struct v4l2_subdev_pad_config *cfg)
->  {
->  	struct v4l2_mbus_framefmt *mf;
-> +	struct v4l2_rect *r;
->  	unsigned int i;
->  
->  	mf = v4l2_subdev_get_try_format(sd, cfg, 0);
->  	*mf = sink_fmt_default;
->  
-> +	r = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> +	*r = crop_rect_default;
-> +
->  	for (i = 1; i < sd->entity.num_pads; i++) {
->  		mf = v4l2_subdev_get_try_format(sd, cfg, i);
->  		*mf = sink_fmt_default;
-> @@ -107,16 +154,21 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
->  			    struct v4l2_subdev_format *format)
->  {
->  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> +	struct v4l2_rect *crop_rect;
->  
->  	/* Get the current sink format */
-> -	format->format = (format->which == V4L2_SUBDEV_FORMAT_TRY) ?
-> -			 *v4l2_subdev_get_try_format(sd, cfg, 0) :
-> -			 vsca->sink_fmt;
-> +	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> +		format->format = *v4l2_subdev_get_try_format(sd, cfg, 0);
-> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> +	} else {
-> +		format->format = vsca->sink_fmt;
-> +		crop_rect = &vsca->crop_rect;
-> +	}
->  
->  	/* Scale the frame size for the source pad */
->  	if (VIMC_IS_SRC(format->pad)) {
-> -		format->format.width = vsca->sink_fmt.width * sca_mult;
-> -		format->format.height = vsca->sink_fmt.height * sca_mult;
-> +		format->format.width = crop_rect->width * sca_mult;
-> +		format->format.height = crop_rect->height * sca_mult;
->  	}
->  
->  	return 0;
-> @@ -148,6 +200,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
->  {
->  	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
->  	struct v4l2_mbus_framefmt *sink_fmt;
-> +	struct v4l2_rect *crop_rect;
->  
->  	if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
->  		/* Do not change the format while stream is on */
-> @@ -155,8 +208,10 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
->  			return -EBUSY;
->  
->  		sink_fmt = &vsca->sink_fmt;
-> +		crop_rect = &vsca->crop_rect;
->  	} else {
->  		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
->  	}
->  
->  	/*
-> @@ -165,8 +220,8 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
->  	 */
->  	if (VIMC_IS_SRC(fmt->pad)) {
->  		fmt->format = *sink_fmt;
-> -		fmt->format.width = sink_fmt->width * sca_mult;
-> -		fmt->format.height = sink_fmt->height * sca_mult;
-> +		fmt->format.width = crop_rect->width * sca_mult;
-> +		fmt->format.height = crop_rect->height * sca_mult;
->  	} else {
->  		/* Set the new format in the sink pad */
->  		vimc_sca_adjust_sink_fmt(&fmt->format);
-> @@ -184,6 +239,80 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
->  			fmt->format.xfer_func, fmt->format.ycbcr_enc);
->  
->  		*sink_fmt = fmt->format;
-> +
-> +		/* Do the crop, but respect the current bounds */
-> +		vimc_sca_adjust_sink_crop(crop_rect, sink_fmt);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int vimc_sca_get_selection(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_pad_config *cfg,
-> +				  struct v4l2_subdev_selection *sel)
-> +{
-> +	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> +	struct v4l2_mbus_framefmt *sink_fmt;
-> +	struct v4l2_rect *crop_rect;
-> +
-> +	if (VIMC_IS_SRC(sel->pad))
-> +		return -EINVAL;
-> +
-> +	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> +		sink_fmt = &vsca->sink_fmt;
-> +		crop_rect = &vsca->crop_rect;
-> +	} else {
-> +		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> +	}
-> +
-> +	switch (sel->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +		sel->r = *crop_rect;
-> +		break;
-> +	case V4L2_SEL_TGT_CROP_BOUNDS:
-> +		sel->r = vimc_sca_get_crop_bound_sink(sink_fmt);
-> +		break;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int vimc_sca_set_selection(struct v4l2_subdev *sd,
-> +				  struct v4l2_subdev_pad_config *cfg,
-> +				  struct v4l2_subdev_selection *sel)
-> +{
-> +	struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> +	struct v4l2_rect *crop_rect;
-> +	struct v4l2_rect sink_rect;
-> +	struct v4l2_mbus_framefmt *sink_fmt;
-
-Do you mind declaring this just after vsca? I was trying to put bigger lines first in the declaration order.
-
-> +
-> +	if (VIMC_IS_SRC(sel->pad))
-> +		return -EINVAL;
-> +
-> +	if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> +		/* Do not change the format while stream is on */
-> +		if (vsca->src_frame)
-> +			return -EBUSY;
-> +
-> +		crop_rect = &vsca->crop_rect;
-> +		sink_fmt = &vsca->sink_fmt;
-> +	} else {
-> +		crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> +		sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> +	}
-> +
-> +	switch (sel->target) {
-> +	case V4L2_SEL_TGT_CROP:
-> +		/* Do the crop, but respect the current bounds */
-> +		sink_rect = vimc_sca_get_crop_bound_sink(sink_fmt);
-> +		vimc_sca_adjust_sink_crop(&sel->r, sink_fmt);
-> +		*crop_rect = sel->r;
-> +		break;
-> +	default:
-> +		return -EINVAL;
->  	}
->  
->  	return 0;
-> @@ -195,6 +324,8 @@ static const struct v4l2_subdev_pad_ops vimc_sca_pad_ops = {
->  	.enum_frame_size	= vimc_sca_enum_frame_size,
->  	.get_fmt		= vimc_sca_get_fmt,
->  	.set_fmt		= vimc_sca_set_fmt,
-> +	.get_selection		= vimc_sca_get_selection,
-> +	.set_selection		= vimc_sca_set_selection,
->  };
->  
->  static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
-> @@ -213,11 +344,11 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
->  		vsca->bpp = vpix->bpp;
->  
->  		/* Calculate the width in bytes of the src frame */
-> -		vsca->src_line_size = vsca->sink_fmt.width *
-> +		vsca->src_line_size = vsca->crop_rect.width *
->  				      sca_mult * vsca->bpp;
->  
->  		/* Calculate the frame size of the source pad */
-> -		frame_size = vsca->src_line_size * vsca->sink_fmt.height *
-> +		frame_size = vsca->src_line_size * vsca->crop_rect.height *
->  			     sca_mult;
->  
->  		/* Allocate the frame buffer. Use vmalloc to be able to
-> @@ -259,11 +390,12 @@ static void vimc_sca_fill_pix(u8 *const ptr,
->  }
->  
->  static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
-> -			       const unsigned int lin, const unsigned int col,
-> +			       unsigned int lin, unsigned int col,
->  			       const u8 *const sink_frame)
->  {
->  	unsigned int i, j, index;
->  	const u8 *pixel;
-> +	const struct v4l2_rect crop_rect = vsca->crop_rect;
-
-Same here.
-
->  
->  	/* Point to the pixel value in position (lin, col) in the sink frame */
->  	index = VIMC_FRAME_INDEX(lin, col,
-> @@ -278,8 +410,10 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
->  	/* point to the place we are going to put the first pixel
->  	 * in the scaled src frame
->  	 */
-> +	lin -= crop_rect.top;
-> +	col -= crop_rect.left;
->  	index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
-> -				 vsca->sink_fmt.width * sca_mult, vsca->bpp);
-> +				 crop_rect.width * sca_mult, vsca->bpp);
->  
->  	dev_dbg(vsca->ved.dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
->  		vsca->sd.name, lin * sca_mult, col * sca_mult, index);
-> @@ -308,11 +442,12 @@ static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
->  				    const u8 *const sink_frame)
->  {
->  	unsigned int i, j;
-> +	const struct v4l2_rect r = vsca->crop_rect;
-
-Same here.
-
->  
->  	/* Scale each pixel from the original sink frame */
->  	/* TODO: implement scale down, only scale up is supported for now */
-> -	for (i = 0; i < vsca->sink_fmt.height; i++)
-> -		for (j = 0; j < vsca->sink_fmt.width; j++)
-> +	for (i = r.top; i < r.top + r.height; i++)
-> +		for (j = r.left; j < r.left + r.width; j++)
->  			vimc_sca_scale_pix(vsca, i, j, sink_frame);
->  }
->  
-> @@ -384,5 +519,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
->  	/* Initialize the frame format */
->  	vsca->sink_fmt = sink_fmt_default;
->  
-> +	/* Initialize the crop selection */
-> +	vsca->crop_rect = crop_rect_default;
-> +
->  	return &vsca->ved;
->  }
-> 
-
-With these changes:
-
-Acked-by: Helen Koike <helen.koike@collabora.com>
-
-Thanks
-Helen
