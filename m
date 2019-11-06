@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B3CDC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DFC5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D9C1217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA7E821848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="klG2q3nF"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QUFsaUN8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732155AbfKFPDw (ORCPT
+        id S1732113AbfKFPDq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:03:52 -0500
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43130 "EHLO
+        Wed, 6 Nov 2019 10:03:46 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43154 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731948AbfKFPDN (ORCPT
+        by vger.kernel.org with ESMTP id S1731955AbfKFPDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 10:03:13 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 24C9EC0F50;
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3CF36C0F53;
         Wed,  6 Nov 2019 15:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573052592; bh=ntn5h+EtiIr26cxuzm1ZrBPes0SSBYvLTZygjleUGzc=;
+        t=1573052592; bh=8Mgy8SE+u7zp7nfFF49sdswEnUy9PwnZGeHPTqEIxvs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=klG2q3nFG65HPrpY5Kdxt47P3pYI7LWxN8yFGTQ9ytOchwkVULKnj/kfj2fmz6kTp
-         bo20ZV4qA+5zBEgV7eTtSmoeeeacKbJDbClj9VXmp8JJvXZaN9SkhmT3P8zofep/7X
-         PMZVqBY98iJsPwys1f4y7hFtQ5cDX3kexvDKl2lCE47/Qg201fXq6MEld9SVV6wRmE
-         zjKK19Yks6TWJQZvrG8ts6NovA5/rhw6Md7qHK/+vnkfg744b7YYg6MoceD6wUTgyn
-         Zt8uzjiz/4/aSmexQJo5bLNv+eY57D88JRDvkvkiQrJWNXXYjwTodHU8VJ2gA+4e52
-         cuseJ31+kCE0Q==
+        b=QUFsaUN8n6uJW35Bjts1fuCuAV7CwwSDDXMVSR/wfROz4qCGrLjgwJwyW3NBYzqTm
+         4Y52+zxsSeebPHI6duugX6SENImDA+xrkCuD53HXMNQMrAXD9NlS4iQUN2LXbmp3hG
+         nkfUo+OaPPldukiLn10lkSxdJDFEctjD/I524uxcST9SdnNxfwf4FYxe+XVfxr8S7g
+         W1aggZr6SPa68+kwtQThFQeIK+Y0/9+ByJmuvSBgqyNkvlS7jGryNBigAV9XGIrClE
+         RXU7Hr7RqscxVQ/YC8yKXaESrRhOynXHuNcXmClQQ8TmP8jQixtv8pjgtzwI/aMwYI
+         I1lP3BEFgguaA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id DE67CA007D;
+        by mailhost.synopsys.com (Postfix) with ESMTP id EF2AAA0085;
         Wed,  6 Nov 2019 15:03:10 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 08/11] net: stmmac: xgmac: Disable MMC interrupts by default
-Date:   Wed,  6 Nov 2019 16:03:02 +0100
-Message-Id: <d89d225566d012d499eec5c8ab30b5e441f5c509.1573052379.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 10/11] net: stmmac: Fix TSO descriptor with Enhanced Addressing
+Date:   Wed,  6 Nov 2019 16:03:04 +0100
+Message-Id: <c9c9e9d025b2164632b24ce560ac52981f77d57e.1573052379.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
 References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
@@ -65,11 +65,11 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MMC interrupts were being enabled, which is not what we want because it
-will lead to a storm of interrupts that are not handled at all. Fix it
-by disabling all MMC interrupts for XGMAC.
+When using addressing > 32 bits the TSO first descriptor only has the
+header so we can't set the payload field for this descriptor. Let's
+reset the variable so that buffer 2 value is zero.
 
-Fixes: b6cdf09f51c2 ("net: stmmac: xgmac: Implement MMC counters")
+Fixes: a993db88d17d ("net: stmmac: Enable support for > 32 Bits addressing in XGMAC")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -83,33 +83,21 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/mmc_core.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-index a223584f5f9a..252cf48c5816 100644
---- a/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/mmc_core.c
-@@ -176,6 +176,7 @@
- #define MMC_XGMAC_RX_PKT_SMD_ERR	0x22c
- #define MMC_XGMAC_RX_PKT_ASSEMBLY_OK	0x230
- #define MMC_XGMAC_RX_FPE_FRAG		0x234
-+#define MMC_XGMAC_RX_IPC_INTR_MASK	0x25c
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 1ab1eea1556a..b0a16d7c6e3d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -2996,6 +2996,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 		stmmac_set_desc_addr(priv, first, des);
+ 		tmp_pay_len = pay_len;
+ 		des += proto_hdr_len;
++		pay_len = 0;
+ 	}
  
- static void dwmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- {
-@@ -333,8 +334,9 @@ static void dwxgmac_mmc_ctrl(void __iomem *mmcaddr, unsigned int mode)
- 
- static void dwxgmac_mmc_intr_all_mask(void __iomem *mmcaddr)
- {
--	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_RX_INTR_MASK);
--	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_TX_INTR_MASK);
-+	writel(0x0, mmcaddr + MMC_RX_INTR_MASK);
-+	writel(0x0, mmcaddr + MMC_TX_INTR_MASK);
-+	writel(MMC_DEFAULT_MASK, mmcaddr + MMC_XGMAC_RX_IPC_INTR_MASK);
- }
- 
- static void dwxgmac_read_mmc_reg(void __iomem *addr, u32 reg, u32 *dest)
+ 	stmmac_tso_allocator(priv, des, tmp_pay_len, (nfrags == 0), queue);
 -- 
 2.7.4
 
