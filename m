@@ -2,158 +2,174 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AFCC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 247F0C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:07:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC5162245A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A3F217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:07:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="b5tCaED+"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="N/J9VXjb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387935AbfKFDHh (ORCPT
+        id S2387954AbfKFDHk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:07:37 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:41418 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387917AbfKFDHg (ORCPT
+        Tue, 5 Nov 2019 22:07:40 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:40055 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387939AbfKFDHi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:07:36 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7FD8720B7192;
-        Tue,  5 Nov 2019 19:07:35 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7FD8720B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573009655;
-        bh=t+UX8ssq46MLjcIIguwgYQLFTqBQfN20laK/0LJnJMk=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=b5tCaED+1a14jU4yDtJu7DHZpYKeU9bgyFe7/6cyEQ9AMFm/YaUzZN3tW3ammEHen
-         3XQnptYEN3Xga6e/24SucJMjEQ/auFnVvUJ7eTfQW8LMG1nQVLpe/LyWzLc6mUNPRR
-         6zW1QXKCY3gFLNwPy+gFg1B+uGOBz9wacrmAJUWA=
-Subject: Re: [PATCH v6 1/4] powerpc/powernv: Add OPAL API interface to access
- secure variable
-To:     Eric Richter <erichte@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        Tue, 5 Nov 2019 22:07:38 -0500
+Received: by mail-pf1-f195.google.com with SMTP id r4so17716049pfl.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:07:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=OJpEld2QKF+PvrPXqtQgZ4GmUaU4su2Lr5l8Oh0dmOY=;
+        b=N/J9VXjbzzzgPuXhGSoFsZZg0ZhhFydihSzCkbqvio4bm0HYEoLAmopPSavXAhkAgH
+         SF4FbBN7i4/Q71QmBR8bYcVoW8jQkOM2m6FIgRzSbmS1ttiaFHGuOUXNA2HfWtIIXHO7
+         hB8Nf1Ha0LwSxmsMzO2iPixnjkqwbM2sL3ZcdJq5KXvR1bRCCSEusVxzVNhpywzeHUt8
+         /NSnF3kQe6A83oqF2twFpKcSjkW6d4H5SxsxZ/mHps78VeF3MlAC8qKY1vnPPo6XWnIY
+         6GCmqBCCcybYLQJT8XrSdxzp6L/wQQgxMiNSJWIasQ/BNaJGWEywKM7pgCxfN9X4crIk
+         ldWw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=OJpEld2QKF+PvrPXqtQgZ4GmUaU4su2Lr5l8Oh0dmOY=;
+        b=dftTOKqZ25KO8nc5Y1gahF8j86Y7OCKWv212mKe2/yzD7ltKVfLemF+5rQt+KsGQFP
+         dDB0xSxu21tex9q+Zj0MVjbx4r2zLxIVW/3ly4NMkMPKVj5lGdtwrc4OXIOBRl2RoRYK
+         0jdyATgwRfKkUC1cJBPwwoHDthDSadenQ3nSLX44d9dtAMbYVrUIl2CbjhvpmOjc7V1M
+         EM7XDyv/gnHCBqhFowE4aIIlGcfRMWXKz69Q3YQelqpA+0OTFQNQhWnD4RV7s3T9l1TS
+         CRwVxQq2UEbJstEyqbR7Wh/XzuX5G8U6M/ZFbquWJJzPObIiFky8ikoCtrRuXK4hihBx
+         iRCA==
+X-Gm-Message-State: APjAAAUJ3j2dzbihGBaVzKt3Z7qyhkta+DhLPj13bYBV4L1xZpAidExQ
+        rg4eJZlbc287ztzCggruaMLlNXS+Yh8=
+X-Google-Smtp-Source: APXvYqxaGXp77NL5yr4M+lMKqaGSRwAsmSkMEXcFHbKCHUpY6ecqSMIJQawHJFkhGJyrHJlHU4m4fA==
+X-Received: by 2002:a17:90a:f982:: with SMTP id cq2mr647143pjb.34.1573009657400;
+        Tue, 05 Nov 2019 19:07:37 -0800 (PST)
+Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.07.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:07:36 -0800 (PST)
+From:   Dmitry Safonov <dima@arista.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-References: <20191105082450.14746-1-erichte@linux.ibm.com>
- <20191105082450.14746-2-erichte@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <3d2e3792-e78e-95a8-623e-1ddcf3ccf241@linux.microsoft.com>
-Date:   Tue, 5 Nov 2019 19:07:55 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Ley Foon Tan <lftan@altera.com>,
+        nios2-dev@lists.rocketboards.org
+Subject: [PATCH 23/50] nios2: Add show_stack_loglvl()
+Date:   Wed,  6 Nov 2019 03:05:14 +0000
+Message-Id: <20191106030542.868541-24-dima@arista.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191106030542.868541-1-dima@arista.com>
+References: <20191106030542.868541-1-dima@arista.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105082450.14746-2-erichte@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/2019 12:24 AM, Eric Richter wrote:
+Currently, the log-level of show_stack() depends on a platform
+realization. It creates situations where the headers are printed with
+lower log level or higher than the stacktrace (depending on
+a platform or user).
 
-> From: Nayna Jain <nayna@linux.ibm.com>
-> 
-> The X.509 certificates trusted by the platform and required to secure boot
-> the OS kernel are wrapped in secure variables, which are controlled by
-> OPAL.
-> 
-> This patch adds firmware/kernel interface to read and write OPAL secure
-> variables based on the unique key.
+Furthermore, it forces the logic decision from user to an architecture
+side. In result, some users as sysrq/kdb/etc are doing tricks with
+temporary rising console_loglevel while printing their messages.
+And in result it not only may print unwanted messages from other CPUs,
+but also omit printing at all in the unlucky case where the printk()
+was deferred.
 
-I feel splitting this patch into smaller set of changes would make it 
-easier to review. For instance roughly as below:
+Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+an easier approach than introducing more printk buffers.
+Also, it will consolidate printings with headers.
 
-  1, opal-api.h which adds the #defines  OPAL_SECVAR_ and the API signature.
-  2, secvar.h then adds secvar_operations struct
-  3, powerpc/kernel for the Interface definitions
-  4, powernv/opal-secvar.c for the API implementations
-  5, powernv/opal-call.c for the API calls
-  6, powernv/opal.c for the secvar init calls.
+Introduce show_stack_loglvl(), that eventually will substitute
+show_stack().
 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index 378e3997845a..c1f25a760eb1 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -211,7 +211,10 @@
->   #define OPAL_MPIPL_UPDATE			173
->   #define OPAL_MPIPL_REGISTER_TAG			174
->   #define OPAL_MPIPL_QUERY_TAG			175
-> -#define OPAL_LAST				175
-> +#define OPAL_SECVAR_GET				176
-> +#define OPAL_SECVAR_GET_NEXT			177
-> +#define OPAL_SECVAR_ENQUEUE_UPDATE		178
-> +#define OPAL_LAST				178
+Cc: Ley Foon Tan <lftan@altera.com>
+Cc: nios2-dev@lists.rocketboards.org
+[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+Signed-off-by: Dmitry Safonov <dima@arista.com>
+---
+ arch/nios2/kernel/traps.c | 23 +++++++++++++++--------
+ 1 file changed, 15 insertions(+), 8 deletions(-)
 
-Please fix the indentation for the #defines
-
-
-> +static int opal_get_variable(const char *key, uint64_t ksize,
-> +			     u8 *data, uint64_t *dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!key || !dsize)
-> +		return -EINVAL;
-> +
-> +	*dsize = cpu_to_be64(*dsize);
-> +
-> +	rc = opal_secvar_get(key, ksize, data, dsize);
-> +
-> +	*dsize = be64_to_cpu(*dsize);
-
-Should the return status (rc) from opal_secvar_get be checked before 
-attempting to do the conversion (be64_to_cpu)?
-
-> +static int opal_get_next_variable(const char *key, uint64_t *keylen,
-> +				  uint64_t keybufsize)
-> +{
-> +	int rc;
-> +
-> +	if (!key || !keylen)
-> +		return -EINVAL;
-> +
-> +	*keylen = cpu_to_be64(*keylen);
-> +
-> +	rc = opal_secvar_get_next(key, keylen, keybufsize);
-> +
-> +	*keylen = be64_to_cpu(*keylen);
-
-Same comment as above - should rc be checke before attempting to convert?
-
-> +
-> +	return opal_status_to_err(rc);
-> +}
-> +
-> +static int opal_set_variable(const char *key, uint64_t ksize, u8 *data,
-> +			     uint64_t dsize)
-> +{
-> +	int rc;
-> +
-> +	if (!key || !data)
-> +		return -EINVAL;
-
-Is the key and data received here from a trusted caller? If not, should 
-there be some validation checks done here before enqueuing the data?
-
-  -lakshmi
+diff --git a/arch/nios2/kernel/traps.c b/arch/nios2/kernel/traps.c
+index 486db793923c..08071caa9b36 100644
+--- a/arch/nios2/kernel/traps.c
++++ b/arch/nios2/kernel/traps.c
+@@ -52,12 +52,14 @@ void _exception(int signo, struct pt_regs *regs, int code, unsigned long addr)
+ }
+ 
+ /*
+- * The show_stack is an external API which we do not use ourselves.
++ * The show_stack(), show_stack_loglvl() are external API
++ * which we do not use ourselves.
+  */
+ 
+ int kstack_depth_to_print = 48;
+ 
+-void show_stack(struct task_struct *task, unsigned long *stack)
++void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
++		       const char *loglvl)
+ {
+ 	unsigned long *endstack, addr;
+ 	int i;
+@@ -72,16 +74,16 @@ void show_stack(struct task_struct *task, unsigned long *stack)
+ 	addr = (unsigned long) stack;
+ 	endstack = (unsigned long *) PAGE_ALIGN(addr);
+ 
+-	pr_emerg("Stack from %08lx:", (unsigned long)stack);
++	printk("%sStack from %08lx:", loglvl, (unsigned long)stack);
+ 	for (i = 0; i < kstack_depth_to_print; i++) {
+ 		if (stack + 1 > endstack)
+ 			break;
+ 		if (i % 8 == 0)
+-			pr_emerg("\n       ");
+-		pr_emerg(" %08lx", *stack++);
++			printk("%s\n       ", loglvl);
++		printk("%s %08lx", loglvl, *stack++);
+ 	}
+ 
+-	pr_emerg("\nCall Trace:");
++	printk("%s\nCall Trace:", loglvl);
+ 	i = 0;
+ 	while (stack + 1 <= endstack) {
+ 		addr = *stack++;
+@@ -97,11 +99,16 @@ void show_stack(struct task_struct *task, unsigned long *stack)
+ 		     (addr <= (unsigned long) _etext))) {
+ 			if (i % 4 == 0)
+ 				pr_emerg("\n       ");
+-			pr_emerg(" [<%08lx>]", addr);
++			printk("%s [<%08lx>]", loglvl, addr);
+ 			i++;
+ 		}
+ 	}
+-	pr_emerg("\n");
++	printk("%s\n", loglvl);
++}
++
++void show_stack(struct task_struct *task, unsigned long *stack)
++{
++	show_stack_loglvl(task, stack, KERN_EMERG);
+ }
+ 
+ void __init trap_init(void)
+-- 
+2.23.0
 
