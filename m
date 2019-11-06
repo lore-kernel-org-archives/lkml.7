@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A4FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C0A5C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E23214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F72C214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HsFPoEXQ"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="JRWAv8jY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732538AbfKFTB7 (ORCPT
+        id S1732558AbfKFTCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:01:59 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:36170 "EHLO
+        Wed, 6 Nov 2019 14:02:04 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:36136 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732259AbfKFTB2 (ORCPT
+        with ESMTP id S1732217AbfKFTB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:01:28 -0500
+        Wed, 6 Nov 2019 14:01:27 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 4EDA020B4906;
-        Wed,  6 Nov 2019 11:01:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4EDA020B4906
+        by linux.microsoft.com (Postfix) with ESMTPSA id A63CF20B4902;
+        Wed,  6 Nov 2019 11:01:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com A63CF20B4902
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573066887;
-        bh=n1NP0EUOPt57DXoMwVasH/v3zddNJcqY0C3hlBcerBA=;
+        s=default; t=1573066886;
+        bh=emQkMogDPg+7vZ3mbA++3IrBI+JG/p38LRyTUkrJ4qw=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=HsFPoEXQcPIUDqX9bZ6aRXalWlW33QNp6m4uPNRI8qfX2Nk2pc4RFV/riaoCL0OV+
-         t54Kgxzd/ZVPMYvy6ZOMrr3IbfpiY/7+JpDIUqo17y9UFDPQ7awv8BeAUvA5ENngxX
-         2ZgXtkqAT2MPOIcw5xSl6tWlZfFFcRlYHweAiOmE=
+        b=JRWAv8jY0lkvRKSxRG0bkY8whJhlPyPo/gc5HddtERuoEfQ9x15MTs0QxvR9oMD3d
+         EhvM9F14J3BHtK890ZG87YQUwDc11huOBlzAwURe/bXzC97l6JSerE+lhuUVRo9pti
+         Sh2WbaoVCxs8rOrpBHomgCpnPdvx7hWd4Z0v4+dg=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com,
         matthewgarrett@google.com, sashal@kernel.org,
         jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 06/10] IMA: Measure key if the IMA policy allows measurement for the keyring to which the key is linked to
-Date:   Wed,  6 Nov 2019 11:01:12 -0800
-Message-Id: <20191106190116.2578-7-nramas@linux.microsoft.com>
+Subject: [PATCH v4 02/10] IMA: Added KEYRING_CHECK func in IMA policy to measure keys
+Date:   Wed,  6 Nov 2019 11:01:08 -0800
+Message-Id: <20191106190116.2578-3-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106190116.2578-1-nramas@linux.microsoft.com>
 References: <20191106190116.2578-1-nramas@linux.microsoft.com>
@@ -51,114 +51,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-process_buffer_measurement() needs to check if the keyring to which
-the given key is linked to is listed in the keyrings option in
-the IMA policy.
+IMA policy needs to support a func to enable measurement of
+asymmetric keys.
 
-This patch adds a new parameter "keyring" to process_buffer_measurement().
-
-If process_buffer_measurement() is called with func KEYRING_CHECK and
-the name of the keyring to which the key is linked to, then the given
-key is measured if:
-  1, IMA policy did not specify "keyrings=" option.
-  2, Or, the given keyring name is listed in the "keyrings=" option.
+This patch defines a new IMA policy func namely KEYRING_CHECK to
+measure asymmetric keys.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- security/integrity/ima/ima.h          |  2 +-
- security/integrity/ima/ima_appraise.c |  2 +-
- security/integrity/ima/ima_main.c     | 26 ++++++++++++++++++++++++--
- 3 files changed, 26 insertions(+), 4 deletions(-)
+ Documentation/ABI/testing/ima_policy | 6 ++++++
+ security/integrity/ima/ima.h         | 1 +
+ security/integrity/ima/ima_policy.c  | 2 +-
+ 3 files changed, 8 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/ABI/testing/ima_policy b/Documentation/ABI/testing/ima_policy
+index 29aaedf33246..341df49b5ad1 100644
+--- a/Documentation/ABI/testing/ima_policy
++++ b/Documentation/ABI/testing/ima_policy
+@@ -30,6 +30,7 @@ Description:
+ 				[FIRMWARE_CHECK]
+ 				[KEXEC_KERNEL_CHECK] [KEXEC_INITRAMFS_CHECK]
+ 				[KEXEC_CMDLINE]
++				[KEYRING_CHECK]
+ 			mask:= [[^]MAY_READ] [[^]MAY_WRITE] [[^]MAY_APPEND]
+ 			       [[^]MAY_EXEC]
+ 			fsmagic:= hex value
+@@ -113,3 +114,8 @@ Description:
+ 		Example of appraise rule allowing modsig appended signatures:
+ 
+ 			appraise func=KEXEC_KERNEL_CHECK appraise_type=imasig|modsig
++
++		Example of measure rule using KEYRING_CHECK to measure
++		all keys:
++
++			measure func=KEYRING_CHECK
 diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 387829afb9a2..f15199f7ff2a 100644
+index df4ca482fb53..7f23405b2718 100644
 --- a/security/integrity/ima/ima.h
 +++ b/security/integrity/ima/ima.h
-@@ -221,7 +221,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   struct ima_template_desc *template_desc);
- void process_buffer_measurement(const void *buf, int size,
- 				const char *eventname, enum ima_hooks func,
--				int pcr);
-+				int pcr, const char *keyring);
- void ima_audit_measurement(struct integrity_iint_cache *iint,
- 			   const unsigned char *filename);
- int ima_alloc_init_template(struct ima_event_data *event_data,
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index 47ad4f56c0a8..a9649b04b9f1 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -330,7 +330,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
- 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
- 			process_buffer_measurement(digest, digestsize,
- 						   "blacklisted-hash", NONE,
--						   pcr);
-+						   pcr, NULL);
- 	}
+@@ -193,6 +193,7 @@ static inline unsigned long ima_hash_key(u8 *digest)
+ 	hook(KEXEC_INITRAMFS_CHECK)	\
+ 	hook(POLICY_CHECK)		\
+ 	hook(KEXEC_CMDLINE)		\
++	hook(KEYRING_CHECK)		\
+ 	hook(MAX_CHECK)
+ #define __ima_hook_enumify(ENUM)	ENUM,
  
- 	return rc;
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index b6d17f37ba61..56540357c854 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -632,12 +632,22 @@ int ima_load_data(enum kernel_load_data_id id)
-  * @eventname: event name to be used for the buffer entry.
-  * @func: IMA hook
-  * @pcr: pcr to extend the measurement
-+ * @keyring: keyring for the measurement
-+ *
-+ *	The following scenarios are possible with respect to
-+ *	the parameter "keyring":
-+ *	1, keyring is NULL. In this case buffer is measured.
-+ *	2, keyring is not NULL, but ima_get_action returned
-+ *	   a NULL keyrings. In this case also the buffer is measured.
-+ *	3, keyring is not NULL and ima_get_action returned
-+ *	   a non-NULL keyrings. In this case measure the buffer
-+ *	   only if the given keyring is present in the keyrings.
-  *
-  * Based on policy, the buffer is measured into the ima log.
-  */
- void process_buffer_measurement(const void *buf, int size,
- 				const char *eventname, enum ima_hooks func,
--				int pcr)
-+				int pcr, const char *keyring)
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index f19a895ad7cd..4344b7354fc5 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -373,7 +373,7 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
  {
- 	int ret = 0;
- 	struct ima_template_entry *entry = NULL;
-@@ -656,6 +666,13 @@ void process_buffer_measurement(const void *buf, int size,
- 	int action = 0;
- 	u32 secid;
+ 	int i;
  
-+	/*
-+	 * If IMA is not yet initialized or IMA policy is empty
-+	 * then there is no need to measure.
-+	 */
-+	if (!ima_policy_flag)
-+		return;
-+
- 	/*
- 	 * Both LSM hooks and auxilary based buffer measurements are
- 	 * based on policy.  To avoid code duplication, differentiate
-@@ -671,6 +688,11 @@ void process_buffer_measurement(const void *buf, int size,
- 			return;
- 	}
- 
-+	if ((keyring != NULL) && (keyrings != NULL)
-+	    && (strstr(keyrings, keyring) == NULL)) {
-+		return;
-+	}
-+
- 	if (!pcr)
- 		pcr = CONFIG_IMA_MEASURE_PCR_IDX;
- 
-@@ -719,7 +741,7 @@ void ima_kexec_cmdline(const void *buf, int size)
- {
- 	if (buf && size != 0)
- 		process_buffer_measurement(buf, size, "kexec-cmdline",
--					   KEXEC_CMDLINE, 0);
-+					   KEXEC_CMDLINE, 0, NULL);
- }
- 
- /**
+-	if (func == KEXEC_CMDLINE) {
++	if ((func == KEXEC_CMDLINE) || (func == KEYRING_CHECK)) {
+ 		if ((rule->flags & IMA_FUNC) && (rule->func == func))
+ 			return true;
+ 		return false;
 -- 
 2.17.1
 
