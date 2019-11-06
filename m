@@ -2,92 +2,129 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55314C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:58:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C821C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:59:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BEB42173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:58:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0F9852173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:59:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="HRYyyvVQ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="FPufp6MK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728469AbfKFJ6Q (ORCPT
+        id S1729802AbfKFJ7W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:58:16 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:34012 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725906AbfKFJ6Q (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:58:16 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=pEOi60hxj9rUlpmt3AQ2uyxpDVk2yVdnMhMixbzTFeI=; b=HRYyyvVQsAS6nAl+fCluFegk1
-        jeYNquWSMkN9TaXSNwh6k8vUGgVyIpMek9be5kmVO4ugopk1YFD/5gHHx7mnrmnmHewqbMlrsloJa
-        WcwXroIxDJYrHs4dfHjc4Z7dBq1Yv/YT3gpCNQL7VGpZV4N8T6VzYL+i3WXk/+BXC9DXvR24lyAXL
-        L/wbBjPI/zGJrWhOrNVumMj5YTFL/t+Y8hkAVY1668Afwkn9D0GmZiBLeQwZJ3UvR3THH5540hPrV
-        cRtHfpjY9TE/VLcpAYt+yxNk8sTSQGNeZvxbOsDgvOBRCBa+MP06lFzaekAEi+G0aXc27Y3r1rHHH
-        Aqgx/lpvA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSI4q-0003dA-BR; Wed, 06 Nov 2019 09:58:12 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6FB11301A79;
-        Wed,  6 Nov 2019 10:57:06 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 7142529ABB5FD; Wed,  6 Nov 2019 10:58:10 +0100 (CET)
-Date:   Wed, 6 Nov 2019 10:58:10 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gklkml16@gmail.com" <gklkml16@gmail.com>
-Subject: Re: [PATCH 1/2] perf/core: Adding capability to disable PMUs event
- multiplexing
-Message-ID: <20191106095810.GK5671@hirez.programming.kicks-ass.net>
-References: <1573002091-9744-1-git-send-email-gkulkarni@marvell.com>
- <1573002091-9744-2-git-send-email-gkulkarni@marvell.com>
- <20191106094032.GV4131@hirez.programming.kicks-ass.net>
+        Wed, 6 Nov 2019 04:59:22 -0500
+Received: from mail-eopbgr720047.outbound.protection.outlook.com ([40.107.72.47]:6897
+        "EHLO NAM05-CO1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727239AbfKFJ7V (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:59:21 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Nl5Wf0kgVg/4l0d9vYYxBDUqxgT1KC7jy1QdHrg5l8yJyrJh7wd73u7bAwLSkzKdGyppsAYMS8+VoLAGl70d4AN7LScDwU/GbV2Ga5tly1r7PwHUTi+61GLfoornKcOvAXJfDy8l9vLmbs78BBXsK0QiMAybVo8GTmV4oKFMr+tZyvFH3NU2kSuDFPfR3B81KMAVV7dtvRUUOvUaUXpt7aAaT3bd9TpsxfT3FSscafnqv/U+nC5FD9evj/8vCmmKeFboypjOTv4sDA100luAWmXPXwZk/VDJUpnBUcbQMirO8yymxwu5q2iYefJG+LvmWpo03W9rgaLX9Mg79hprTw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=++0vHScicFMYU3AoK1PWUKBvS9x7WxKbCGrFmfCb1to=;
+ b=Q7a9U5L9uOSGOmvUeVhDpgXdS6jKJ0A48dy3zvovTwhEK2duBJ1VxoBXKbnN/ovjZ3/hlZU12/KR5iTpgG79W381haz1tZTYIPmg0KFMqn5lNMYLt/D3IlgBk9iTkYNn91/6q4cl3u6N4QTogl3SnFqmDe4bxx+mH2H8qpChUt2ZimNHPmTqDhoChWn9QY2rAxYgH8BnF0YrkZYP3DT7bLLN8PuGRLqjZbdYftWXVx9mUzPeDXltYUauvegbUc1O6/oNmizu7bTq4XOmCE9a3RTkrynC94a+L+1hMOdXnVqQ0X48z32upGF35gt0cR0vYVeajqKN8Bh6efvE8KUcrw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=++0vHScicFMYU3AoK1PWUKBvS9x7WxKbCGrFmfCb1to=;
+ b=FPufp6MKw4TyqaoCbMYgOjMu7ao6WHsQGuq1oncx9FGGTHQXJilFUABoBRWfxbsJlr3wfryYe0yEP1RHxGx4dRA7zi3HOsnYWBr/tGSYBJEuBDkqb9bSqhMqrSes0ST+3UlvtARgUn6wbzM2+H1izxu7BWdFa7Edo+6WxGcH3uM=
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com (10.175.88.22) by
+ DM5PR12MB2583.namprd12.prod.outlook.com (52.132.140.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Wed, 6 Nov 2019 09:59:14 +0000
+Received: from DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933]) by DM5PR12MB1705.namprd12.prod.outlook.com
+ ([fe80::e5e7:96f0:ad90:d933%7]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 09:59:14 +0000
+From:   "Koenig, Christian" <Christian.Koenig@amd.com>
+To:     Pan Bian <bianpan2016@163.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>
+CC:     "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/amdgpu: fix double reference dropping
+Thread-Topic: [PATCH] drm/amdgpu: fix double reference dropping
+Thread-Index: AQHVlIgIUEATmLAki0qOQWOuXuremad96JYA
+Date:   Wed, 6 Nov 2019 09:59:14 +0000
+Message-ID: <b7b3c444-9ece-dd08-cb4c-c7ac4009373b@amd.com>
+References: <1573033994-17102-1-git-send-email-bianpan2016@163.com>
+In-Reply-To: <1573033994-17102-1-git-send-email-bianpan2016@163.com>
+Accept-Language: de-DE, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
+x-clientproxiedby: AM4PR08CA0050.eurprd08.prod.outlook.com
+ (2603:10a6:205:2::21) To DM5PR12MB1705.namprd12.prod.outlook.com
+ (2603:10b6:3:10c::22)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Christian.Koenig@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 361df50a-e2dc-41ad-5f03-08d7629ffa9b
+x-ms-traffictypediagnostic: DM5PR12MB2583:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <DM5PR12MB2583C71F049E8900954D399983790@DM5PR12MB2583.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(136003)(366004)(376002)(189003)(199004)(66946007)(46003)(2616005)(54906003)(102836004)(58126008)(7736002)(316002)(446003)(11346002)(256004)(186003)(305945005)(6116002)(76176011)(36756003)(81166006)(476003)(8676002)(486006)(386003)(6506007)(66556008)(81156014)(64756008)(8936002)(99286004)(66446008)(110136005)(52116002)(66476007)(25786009)(5660300002)(6486002)(65956001)(6436002)(65806001)(31686004)(2906002)(229853002)(6512007)(6246003)(86362001)(4326008)(71190400001)(31696002)(71200400001)(478600001)(14454004);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB2583;H:DM5PR12MB1705.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: pooUUX74HMMRtpKe6Oe74fsXXoY26Q0369JAsyl7iK9R3U/YYOhnxgaVAWm07BRzDKJqxFMLTOFyIiF1SYiOOl5TcWG642Tu+UwVWjJAKRFj+8Rqju0DszGUWJ4b+0RIu36KNn5HKO+Oii2axrsTRzL5Nfw4zyJJ49OLmD0KQAs6ezC4gUsFhvoJS/5bUNTSwbpEzU96sgLk4ocMcitWPjtqE5ogPStIHyGPzEpRI0XuF5kNRAgwGeTmQqVglE5Z1z+WQg8363O8gchxB3dw1R6uOMy95WedWnoaZoZKFQd8Xu+fJfDpgJXrzLx8Rt0CFFZceJVIE2y9zvf/07XC2hFfPJfA9L6INy3UNK6+3sYhEpr8GBwxCkUfXXj1HKsGekJjeFAYpDFym9929F/jofnRMh/jrlmRRLI64nsPMaFN5PFX8haSwEjtPVHSLVoP
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <77E364CC8E10554AB20F379E5D40C4B0@namprd12.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106094032.GV4131@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 361df50a-e2dc-41ad-5f03-08d7629ffa9b
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 09:59:14.4061
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: rqoJlOWVPSqrrbqWZ8ZzsoGnHyWjlwiu2woT2wklhio79klsmN3eOvhsb+SEpBao
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB2583
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 10:40:32AM +0100, Peter Zijlstra wrote:
-> On Wed, Nov 06, 2019 at 01:01:40AM +0000, Ganapatrao Prabhakerrao Kulkarni wrote:
-> > When PMUs are registered, perf core enables event multiplexing
-> > support by default. There is no provision for PMUs to disable
-> > event multiplexing, if PMUs want to disable due to unavoidable
-> > circumstances like hardware errata etc.
-> > 
-> > Adding PMU capability flag PERF_PMU_CAP_NO_MUX_EVENTS and support
-> > to allow PMUs to explicitly disable event multiplexing.
-> 
-> This doesn't make sense, multiplexing relies on nothing that normal
-> event scheduling doesn't also rely on.
-> 
-> Either you can schedule different sets of events, or you cannot.
-
-More specifically, how is a reschedule due to rotation any different
-than a reschedule due to context switch?
-
-Both cases we do a full reprogram of the PMU.
+QW0gMDYuMTEuMTkgdW0gMTA6NTMgc2NocmllYiBQYW4gQmlhbjoNCj4gQWZ0ZXIgZHJvcHBpbmcg
+dGhlIHJlZmVyZW5jZSBvZiBvYmplY3QgZmVuY2UgaW4gdGhlIGxvb3AsIGl0IHNob3VsZCBiZQ0K
+PiBzZXQgdG8gTlVMTCB0byBwcm90ZWN0aW5nIGRyb3BwaW5nIGl0cyByZWZlcmVuY2UgYWdhaW4g
+b3V0c2lkZSB0aGUgbG9vcC4NCg0KTkFLLCB0aGUgYWN0dWFsIGJ1ZyBpcyB0aGF0IHdlIHNob3Vs
+ZG4ndCBkcm9wIHRoZSBmZW5jZSBvdXRzaWRlIHRoZSBsb29wIA0KaW4gdGhlIGZpcnN0IHBsYWNl
+Lg0KDQpKdXN0IG1vdmUgdGhlIGRtYV9mZW5jZV9wdXQoZmVuY2UpOyB0d28gbGluZXMgdXAgYW5k
+IGRyb3AgaW5pdGlhbGl6aW5nIA0KZmVuY2UgdG8gTlVMTC4NCg0KUmVnYXJkcywNCkNocmlzdGlh
+bi4NCg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBQYW4gQmlhbiA8YmlhbnBhbjIwMTZAMTYzLmNvbT4N
+Cj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvYW1kZ3B1X2JlbmNobWFyay5j
+IHwgMSArDQo+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+DQo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYmVuY2htYXJrLmMgYi9kcml2
+ZXJzL2dwdS9kcm0vYW1kL2FtZGdwdS9hbWRncHVfYmVuY2htYXJrLmMNCj4gaW5kZXggNjQ5ZTY4
+YzQ0NzliLi4zMTc0MDkzZjM1ZjMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hbWQv
+YW1kZ3B1L2FtZGdwdV9iZW5jaG1hcmsuYw0KPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vYW1kL2Ft
+ZGdwdS9hbWRncHVfYmVuY2htYXJrLmMNCj4gQEAgLTQ3LDYgKzQ3LDcgQEAgc3RhdGljIGludCBh
+bWRncHVfYmVuY2htYXJrX2RvX21vdmUoc3RydWN0IGFtZGdwdV9kZXZpY2UgKmFkZXYsIHVuc2ln
+bmVkIHNpemUsDQo+ICAgCQlpZiAocikNCj4gICAJCQlnb3RvIGV4aXRfZG9fbW92ZTsNCj4gICAJ
+CWRtYV9mZW5jZV9wdXQoZmVuY2UpOw0KPiArCQlmZW5jZSA9IE5VTEw7DQo+ICAgCX0NCj4gICAJ
+ZW5kX2ppZmZpZXMgPSBqaWZmaWVzOw0KPiAgIAlyID0gamlmZmllc190b19tc2VjcyhlbmRfamlm
+ZmllcyAtIHN0YXJ0X2ppZmZpZXMpOw0KDQo=
