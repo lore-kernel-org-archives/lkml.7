@@ -2,221 +2,136 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_FUTURE_12_24,
-	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A5DC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAA6BC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:39:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D334321848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vqnF6Rji"
+	by mail.kernel.org (Postfix) with ESMTP id 858E0217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:39:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732060AbfKFOi6 (ORCPT
+        id S1732071AbfKFOjB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:38:58 -0500
-Received: from mail-eopbgr760081.outbound.protection.outlook.com ([40.107.76.81]:43360
-        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        Wed, 6 Nov 2019 09:39:01 -0500
+Received: from mx2.suse.de ([195.135.220.15]:54504 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731665AbfKFOi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:38:57 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=RdRY872VFb+0RfmVD0r1HHzi/m0jT/woCgo+2pj7VpBgkfIDOcC0Q8T54+r/E6xml2vCJEi6JELlg24EvjUr7OpJlxm8HOQSmIn3BOzj89RgcxG0lIvKWKmSQ86AdrrL368QrdDW9Xksj1iikzM3MIWKmw5WR1my5g0i6Yzv1WEbv2ke10IOkNI8nhWo+mT6b+SW+HwrZIJDEs8KamAXF6FlP/vdDeOglEuOEY6vTuTAY89fy3pEsP7je2DFAzfzSCzynTA7nNw8wWNZDLo+u/ioksTavrTKQ0nevid+/dIoNhCywgp/ktRA5lpO01Gz1RBFis13T/Bi4JwfJpC1fw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0B/t1v2Z1NWhdEa0GLPIRGJsFm50+cqhiczf9o7Kvo4=;
- b=h2ydmLeuQFCs2b1AKLxxKV/5s9923MlXyTnC1MpJ5ivkk1ck5Yh0ZePyoCpbKjjDMdVgeu3L2GLHu2vnKs6nRdeenSRRRFpDMbsAnRImx1IWc4eJ6gZ/AkYLJn/B55uLYtNLQs+vT3SNTsGYFKkqZYr5+RfVKeyV2mnFVtixAmY7TaAArmd32KffN35NXI0vpUKkSN2gu76dXetK7f66kcoqxbph2mPDuZEsLkNmAwq3+ERvcV0S6q9T2NoEFFIKXe2C1pjG+VuF/gOYtEiKW6O+qwYKjhqRILf2B3WdFrMh0AOaTK5IaadADXY9oN+UI7vApgAuhObLamr0Sglceg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
- 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
- dmarc=permerror action=none header.from=amd.com; dkim=none (message not
- signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=0B/t1v2Z1NWhdEa0GLPIRGJsFm50+cqhiczf9o7Kvo4=;
- b=vqnF6Rji/1UDDMvmV8qWffOieyTAvs/YY7kOcIUbtFiu+iz4xZr8/nNtQHo573WuXa0BGM75Jrd4Gt8Cdn/Iu8q7LEAZMhhNQvffNc73e8yRoekTW/3c3VBecWAtQi97as0xKvwsqUYYrvzbiFgo5Qg894Q19FFI2/DatmNJYbk=
-Received: from MWHPR12CA0047.namprd12.prod.outlook.com (2603:10b6:301:2::33)
- by CY4PR1201MB2486.namprd12.prod.outlook.com (2603:10b6:903:d6::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.20; Wed, 6 Nov
- 2019 14:38:52 +0000
-Received: from DM3NAM03FT024.eop-NAM03.prod.protection.outlook.com
- (2a01:111:f400:7e49::206) by MWHPR12CA0047.outlook.office365.com
- (2603:10b6:301:2::33) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
- Transport; Wed, 6 Nov 2019 14:38:52 +0000
-Authentication-Results: spf=none (sender IP is 165.204.84.17)
- smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
- header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
-Received-SPF: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-Received: from SATLEXMB01.amd.com (165.204.84.17) by
- DM3NAM03FT024.mail.protection.outlook.com (10.152.82.182) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.20.2430.20 via Frontend Transport; Wed, 6 Nov 2019 14:38:51 +0000
-Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB01.amd.com
- (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 6 Nov 2019
- 08:38:51 -0600
-Received: from vishnu-All-Series.amd.com (10.180.168.240) by
- SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
- via Frontend Transport; Wed, 6 Nov 2019 08:38:40 -0600
-From:   Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
-        <Akshu.Agrawal@amd.com>,
-        Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        "Takashi Iwai" <tiwai@suse.com>,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        "Maruthi Srinivas Bayyavarapu" <Maruthi.Bayyavarapu@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Colin Ian King <colin.king@canonical.com>,
-        "Dan Carpenter" <dan.carpenter@oracle.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: [RESEND PATCH v2 7/7] ASoC: amd: Added ACP3x system resume and runtime pm ops
-Date:   Thu, 7 Nov 2019 20:06:04 +0530
-Message-ID: <1573137364-5592-8-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573137364-5592-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-References: <1573137364-5592-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+        id S1732050AbfKFOi6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:38:58 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C942DB167;
+        Wed,  6 Nov 2019 14:38:55 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 9F90C1E4353; Wed,  6 Nov 2019 15:38:55 +0100 (CET)
+Date:   Wed, 6 Nov 2019 15:38:55 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     snazy@snazy.de
+Cc:     Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191106143855.GJ16085@quack2.suse.cz>
+References: <20191025132700.GJ17610@dhcp22.suse.cz>
+ <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
+ <20191025135749.GK17610@dhcp22.suse.cz>
+ <20191025140029.GL17610@dhcp22.suse.cz>
+ <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+ <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+ <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+ <20191105182211.GA33242@cmpxchg.org>
+ <20191106120315.GF16085@quack2.suse.cz>
+ <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(428003)(199004)(189003)(6666004)(4326008)(1671002)(76176011)(51416003)(7696005)(86362001)(14444005)(305945005)(26005)(48376002)(109986005)(356004)(50466002)(47776003)(186003)(36756003)(70586007)(70206006)(11346002)(446003)(8936002)(478600001)(316002)(126002)(476003)(2616005)(2906002)(50226002)(426003)(53416004)(81156014)(336012)(16586007)(81166006)(5660300002)(54906003)(486006)(8676002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2486;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: 6db894fe-0b41-4b1d-1ec8-08d762c70b16
-X-MS-TrafficTypeDiagnostic: CY4PR1201MB2486:
-X-Microsoft-Antispam-PRVS: <CY4PR1201MB2486C1688583DFC87AF4A6C5E7790@CY4PR1201MB2486.namprd12.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
-X-Forefront-PRVS: 02135EB356
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: qq0udayBe7hoAj94WJYufJOSLp9cKtHQY9AhovbqUpf7Zua3xZ1ldtxw2TCJfdBI7UUzvsXJ+exJpNEdhkWTh0PvuAF4VrNeCRKeWdNSx6qjeXOFoorby5X0iOySB/IlKtqbRzr29FETpW2cejfuDHNUez9p9jm+T6Ul9Xrmzv2NpXIV2UVpEICgWRC1wyUGJZ8jHX7saSzbVt1ePkiKw0TuYNQV3B6v6MY2zKTzqbcE2E2fncUc1LBLB+r/CW6RRgevbd8WdrWuu5ket3fwcCvbqofFuNSfukUbs9k8kPSonqY9KBh66+0nYnUKh2Z747KjLGyCZbwC1HulwWtNgZjRNAMYRi3wFtyMCxjE/ydCR8p1hXqBrICrsZqp/owwmCSa6dDAcyoXkuFaGMty7WkpIizQQxi6Ue6/PGnAg56zkLjAkQkLFY7WkHLQznww
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2019 14:38:51.9366
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6db894fe-0b41-4b1d-1ec8-08d762c70b16
-X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2486
-To:     unlisted-recipients:; (no To-header on input)
+Content-Type: multipart/mixed; boundary="hQiwHBbRI9kgIhsi"
+Content-Disposition: inline
+In-Reply-To: <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When system wide suspend happens, ACP will be powered off
-and when system resumes,for audio usecase to continue,
-all the runtime configuration data needs to be programmed again.
-Added resume pm call back to ACP pm ops and
-also Added runtime PM operations for ACP3x PCM platform device.
-Device will enter into D3 state when there is no activity
-on audio I2S lines.
 
-Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
----
- sound/soc/amd/raven/pci-acp3x.c | 47 ++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 46 insertions(+), 1 deletion(-)
+--hQiwHBbRI9kgIhsi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
-index 7727c9d..d567585 100644
---- a/sound/soc/amd/raven/pci-acp3x.c
-+++ b/sound/soc/amd/raven/pci-acp3x.c
-@@ -9,6 +9,9 @@
- #include <linux/io.h>
- #include <linux/platform_device.h>
- #include <linux/interrupt.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/delay.h>
-+#include <sound/pcm.h>
- 
- #include "acp3x.h"
- 
-@@ -247,6 +250,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 		}
- 		break;
- 	}
-+	pm_runtime_set_autosuspend_delay(&pci->dev, 10000);
-+	pm_runtime_use_autosuspend(&pci->dev);
-+	pm_runtime_set_active(&pci->dev);
-+	pm_runtime_put_noidle(&pci->dev);
-+	pm_runtime_enable(&pci->dev);
- 	return 0;
- 
- unmap_mmio:
-@@ -268,6 +276,39 @@ static int snd_acp3x_probe(struct pci_dev *pci,
- 	return ret;
- }
- 
-+static int  snd_acp3x_suspend(struct device *dev)
-+{
-+	int status;
-+	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
-+
-+	status = acp3x_deinit(adata->acp3x_base);
-+	if (status)
-+		dev_err(dev, "ACP de-init failed\n");
-+	else
-+		dev_info(dev, "ACP de-initialized\n");
-+
-+	return 0;
-+}
-+static int  snd_acp3x_resume(struct device *dev)
-+{
-+	int status;
-+	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
-+
-+	status = acp3x_init(adata->acp3x_base);
-+	if (status) {
-+		dev_err(dev, "ACP init failed\n");
-+		return status;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct dev_pm_ops acp3x_pm = {
-+	.runtime_suspend = snd_acp3x_suspend,
-+	.runtime_resume =  snd_acp3x_resume,
-+	.resume =       snd_acp3x_resume,
-+};
-+
- static void snd_acp3x_remove(struct pci_dev *pci)
- {
- 	int i, ret;
-@@ -283,7 +324,8 @@ static void snd_acp3x_remove(struct pci_dev *pci)
- 	else
- 		dev_info(&pci->dev, "ACP de-initialized\n");
- 	iounmap(adata->acp3x_base);
--
-+	pm_runtime_disable(&pci->dev);
-+	pm_runtime_get_noresume(&pci->dev);
- 	pci_disable_msi(pci);
- 	pci_release_regions(pci);
- 	pci_disable_device(pci);
-@@ -302,6 +344,9 @@ static struct pci_driver acp3x_driver  = {
- 	.id_table = snd_acp3x_ids,
- 	.probe = snd_acp3x_probe,
- 	.remove = snd_acp3x_remove,
-+	.driver = {
-+		.pm = &acp3x_pm,
-+	}
- };
- 
- module_pci_driver(acp3x_driver);
+On Wed 06-11-19 14:45:43, Robert Stupp wrote:
+> On Wed, 2019-11-06 at 13:03 +0100, Jan Kara wrote:
+> > On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
+> > > What I don't quite understand yet is why the fault path doesn't
+> > > make
+> > > progress eventually. We must drop the mmap_sem without changing the
+> > > state in any way. How can we keep looping on the same page?
+> >
+> > That may be a slight suboptimality with Josef's patches. If the page
+> > is marked as PageReadahead, we always drop mmap_sem if we can and
+> > start
+> > readahead without checking whether that makes sense or not in
+> > do_async_mmap_readahead(). OTOH page_cache_async_readahead() then
+> > clears
+> > PageReadahead so the only way how I can see we could loop like this
+> > is when
+> > file->ra->ra_pages is 0. Not sure if that's what's happening through.
+> > We'd
+> > need to find which of the paths in filemap_fault() calls
+> > maybe_unlock_mmap_for_io() to tell more.
+> 
+> Yes, ra_pages==0
+
+BTW, attached patch should workaround your problem as well. But that's just
+a performance optimization that happens to paper over your problem. Real
+fix is the proper handling of fault retry as you did it.
+
+								Honza
 -- 
-2.7.4
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
 
+--hQiwHBbRI9kgIhsi
+Content-Type: text/x-patch; charset=us-ascii
+Content-Disposition: attachment; filename="0001-mm-Don-t-bother-dropping-mmap_sem-for-zero-size-read.patch"
+
+From e12c861e687364ff5a891f0ae90283b384d74197 Mon Sep 17 00:00:00 2001
+From: Jan Kara <jack@suse.cz>
+Date: Wed, 6 Nov 2019 15:30:26 +0100
+Subject: [PATCH] mm: Don't bother dropping mmap_sem for zero size readahead
+
+When handling a page fault, we drop mmap_sem to start async readahead so
+that we don't block on IO submission with mmap_sem held.  However
+there's no point to drop mmap_sem in case readahead is disabled. Handle
+that case to avoid pointless dropping of mmap_sem and retrying the
+fault.
+
+Signed-off-by: Jan Kara <jack@suse.cz>
+---
+ mm/filemap.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/mm/filemap.c b/mm/filemap.c
+index 1146fcfa3215..3d39c437b07e 100644
+--- a/mm/filemap.c
++++ b/mm/filemap.c
+@@ -2458,7 +2458,7 @@ static struct file *do_async_mmap_readahead(struct vm_fault *vmf,
+ 	pgoff_t offset = vmf->pgoff;
+ 
+ 	/* If we don't want any read-ahead, don't bother */
+-	if (vmf->vma->vm_flags & VM_RAND_READ)
++	if (vmf->vma->vm_flags & VM_RAND_READ || !ra->ra_pages)
+ 		return fpin;
+ 	if (ra->mmap_miss > 0)
+ 		ra->mmap_miss--;
+-- 
+2.16.4
+
+
+--hQiwHBbRI9kgIhsi--
