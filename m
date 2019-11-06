@@ -2,66 +2,79 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8AFC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49246C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:22:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CEE720717
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:22:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="h8vE0YBT"
+	by mail.kernel.org (Postfix) with ESMTP id 176D5205C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:22:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731067AbfKFDWA (ORCPT
+        id S1731118AbfKFDWU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:22:00 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:46526 "EHLO
-        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730585AbfKFDWA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:22:00 -0500
-Received: from [10.137.112.111] (unknown [131.107.147.111])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 188C720B7192;
-        Tue,  5 Nov 2019 19:21:59 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 188C720B7192
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573010519;
-        bh=btanoP8xvS9QFvuryL6LOBj/cR6eFnV38JO12TA+2Es=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=h8vE0YBTBFtolSdZJ6D5H4kGsI8Fe1ayeWlTmxyy2LPG/uxRdVa6pe1IYU77Gz2sB
-         MpYk0o1suZiadsaEDpVL2zwUf9LYYj5U9LsVUfyVmaJZR/iA5V9qV7g6pNWaeE+u31
-         Kxd8IkbeVsmeuXj0v3befYTEYuI4h0vOTVs25gNc=
-Subject: Re: [PATCH v6 2/4] powerpc: expose secure variables to userspace via
- sysfs
-To:     Eric Richter <erichte@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        linux-efi@vger.kernel.org, linux-integrity@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Jeremy Kerr <jk@ozlabs.org>,
-        Matthew Garret <matthew.garret@nebula.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
+        Tue, 5 Nov 2019 22:22:20 -0500
+Received: from foss.arm.com ([217.140.110.172]:33116 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730839AbfKFDWT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:22:19 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D732A30E;
+        Tue,  5 Nov 2019 19:22:18 -0800 (PST)
+Received: from [192.168.225.149] (unknown [172.31.20.19])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 5A8D63F719;
+        Tue,  5 Nov 2019 19:21:57 -0800 (PST)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Claudio Carvalho <cclaudio@linux.ibm.com>,
-        George Wilson <gcwilson@linux.ibm.com>,
-        Elaine Palmer <erpalmer@us.ibm.com>,
-        Oliver O'Halloran <oohall@gmail.com>,
-        Nayna Jain <nayna@linux.ibm.com>
-References: <20191105082450.14746-1-erichte@linux.ibm.com>
- <20191105082450.14746-3-erichte@linux.ibm.com>
-From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-Message-ID: <79a6a7de-360c-c5c9-04e9-807952098ae5@linux.microsoft.com>
-Date:   Tue, 5 Nov 2019 19:22:19 -0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+Date:   Wed, 6 Nov 2019 08:52:30 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <20191105082450.14746-3-erichte@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -69,64 +82,41 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/2019 12:24 AM, Eric Richter wrote:
 
-> From: Nayna Jain <nayna@linux.ibm.com>
-> 
-> PowerNV secure variables, which store the keys used for OS kernel
-> verification, are managed by the firmware. These secure variables need to
-> be accessed by the userspace for addition/deletion of the certificates.
-> 
-> This patch adds the sysfs interface to expose secure variables for PowerNV
-> secureboot. The users shall use this interface for manipulating
-> the keys stored in the secure variables.
 
-Can this patch be split into smaller set of changes:
-1, Definitions of attribute functions like backend_show, size_show, etc.
-2, secvar_sysfs_load
-3, secvar_sysfs_init
-4, secvar_sysfs_exit
+On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
+> +    -----------------------
+> +    |         arch |status|
+> +    -----------------------
+> +    |       alpha: | TODO |
+> +    |         arc: | TODO |
+> +    |         arm: | TODO |
+> +    |       arm64: |  ok  |
+> +    |         c6x: | TODO |
+> +    |        csky: | TODO |
+> +    |       h8300: | TODO |
+> +    |     hexagon: | TODO |
+> +    |        ia64: | TODO |
+> +    |        m68k: | TODO |
+> +    |  microblaze: | TODO |
+> +    |        mips: | TODO |
+> +    |       nds32: | TODO |
+> +    |       nios2: | TODO |
+> +    |    openrisc: | TODO |
+> +    |      parisc: | TODO |
+> +    |     powerpc: | TODO |
+> +    |       ppc32: |  ok  |
+> +    |       riscv: | TODO |
+> +    |        s390: | TODO |
+> +    |          sh: | TODO |
+> +    |       sparc: | TODO |
+> +    |          um: | TODO |
+> +    |   unicore32: | TODO |
+> +    |         x86: |  ok  |
+> +    |      xtensa: | TODO |
+> +    -----------------------
 
-> +static int secvar_sysfs_load(void)
-> +{
-> +	char *name;
-> +	uint64_t namesize = 0;
-> +	struct kobject *kobj;
-> +	int rc;
-> +
-> +	name = kzalloc(NAME_MAX_SIZE, GFP_KERNEL);
-> +	if (!name)
-> +		return -ENOMEM;
-> +
-> +	do {
-> +		rc = secvar_ops->get_next(name, &namesize, NAME_MAX_SIZE);
-> +		if (rc) {
-> +			if (rc != -ENOENT)
-> +				pr_err("error getting secvar from firmware %d\n",
-> +					rc);
-> +			break;
-> +		}
-> +
-> +		kobj = kzalloc(sizeof(*kobj), GFP_KERNEL);
-> +		if (!kobj) {
-> +			rc = -ENOMEM;
-> +			break;
-> +		}
-> +
-> +		kobject_init(kobj, &secvar_ktype);
-> +
-> +		rc = kobject_add(kobj, &secvar_kset->kobj, "%s", name);
-> +		if (rc) {
-> +			pr_warn("kobject_add error %d for attribute: %s\n", rc,
-> +				name);
-> +			kobject_put(kobj);
-> +			kobj = NULL;
-> +		}
-> +
-> +		if (kobj)
-> +			kobject_uevent(kobj, KOBJ_ADD);
+While here, are there some volunteers to test this on any of the
+'yet to be tested and supported' platforms ?
 
-kobject_event() will add kobj and free the memory when done using the 
-object?
-
-  -lakshmi
+- Anshuman
