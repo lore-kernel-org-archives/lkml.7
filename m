@@ -2,179 +2,197 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19685C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:25:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95D84C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:25:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D93C7206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5EAA1206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:25:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="jRB0bTsx"
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="pkbFRrG7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731535AbfKFLY7 (ORCPT
+        id S1731544AbfKFLZV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:24:59 -0500
-Received: from userp2120.oracle.com ([156.151.31.85]:39136 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfKFLY6 (ORCPT
+        Wed, 6 Nov 2019 06:25:21 -0500
+Received: from conuserg-09.nifty.com ([210.131.2.76]:47954 "EHLO
+        conuserg-09.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfKFLZV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:24:58 -0500
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6BIoCk007402;
-        Wed, 6 Nov 2019 11:23:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=dS9fPvp5JFtr7OtCyzHtVChNlktMu26XAdqZYEjFFTA=;
- b=jRB0bTsxKRqKXMi5qcaa+HoYJKKVD8K9XF+zZc5PUEs8jq2WW6DtYT7ndX95l+/iNGsE
- u6IzeZHtq7Rmnq/d3hrW6YVlSzw3U+zqRyi4bqccq6b+2gX60Fu0++ldAW7ETW2WwHoo
- Jgg7rEqL8NfeUFcchjQgqAXYxQ+EtCF/xupCnE+b1GS+ua++kXEVQi9UiHoCZ9Kl9AU6
- Ku/4meUoBTbXqg0slKYfSh3O0WnuFcg9KYgdeQj/35HHhHTeGQwAtDrj8aG2HIuaUto1
- 0628zaUA4Lw1FtKb83TzjddoCLiL5zqFjK3fuXaPCJ8K8ewyCVGQp60lYOIOrN35+ssX 3Q== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2120.oracle.com with ESMTP id 2w12erd805-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 11:23:46 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6BNE8b128684;
-        Wed, 6 Nov 2019 11:23:45 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w333x54cv-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 11:23:43 +0000
-Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA6BNE45017045;
-        Wed, 6 Nov 2019 11:23:15 GMT
-Received: from kadam (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 03:23:14 -0800
-Date:   Wed, 6 Nov 2019 14:23:03 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     Mao Wenan <maowenan@huawei.com>, gregkh@linuxfoundation.org,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: Re: [PATCH -next] usb: roles: Hide option USB_ROLE_SWITCH
-Message-ID: <20191106112303.GJ10409@kadam>
-References: <20191104135312.GD996639@ulmo>
- <20191104144850.91305-1-maowenan@huawei.com>
- <20191105124218.GB12204@kuha.fi.intel.com>
- <20191105131605.GF10409@kadam>
- <20191105152624.GC12204@kuha.fi.intel.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105152624.GC12204@kuha.fi.intel.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=934
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911060117
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911060117
+        Wed, 6 Nov 2019 06:25:21 -0500
+Received: from localhost.localdomain (p14092-ipngnfx01kyoto.kyoto.ocn.ne.jp [153.142.97.92]) (authenticated)
+        by conuserg-09.nifty.com with ESMTP id xA6BO1Em018531;
+        Wed, 6 Nov 2019 20:24:01 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conuserg-09.nifty.com xA6BO1Em018531
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573039442;
+        bh=rLZcOrok9PdZlKG4VRBTQujCqfo2C2HipVKQXAB7ZNc=;
+        h=From:To:Cc:Subject:Date:From;
+        b=pkbFRrG7vHWYHM1pshA3Ue0PBy3/uE1m+zP1ucyA47F9KzYFOotOL6eexS7TnejYE
+         ZZozWyll4V5rXUTCogyxXfrNOvS6RvCFk3W8bPnF7wXohalB42Wg9uzIUby2FeQinx
+         dWibk0Yx0vGo0ATJBme0jcGKqeKucr0lTIiVjDYhg30ZWHd0BKHifgaFjJSBNf+72l
+         7GPoN6/nOariFEnqJP/Ftz11zjC1F2A2bOB3qI+iAGRAH89AUU2eEaQzQZgDFCr0M+
+         Jv8bQvAkzWQQw0iR2irr4/VO2Rd1O+eFrsgptLDQy8yi4xDMhlQS9JyKgH8V6OZI9B
+         5jZAZupTC33qQ==
+X-Nifty-SrcIP: [153.142.97.92]
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+To:     linux-kbuild@vger.kernel.org
+Cc:     Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Jeff Moyer <jmoyer@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] modpost: add an option to suppress 'exported twice' warnings
+Date:   Wed,  6 Nov 2019 20:23:57 +0900
+Message-Id: <20191106112357.29053-1-yamada.masahiro@socionext.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 05:26:24PM +0200, Heikki Krogerus wrote:
-> Hi Dan,
-> 
-> On Tue, Nov 05, 2019 at 04:16:05PM +0300, Dan Carpenter wrote:
-> > On Tue, Nov 05, 2019 at 02:42:18PM +0200, Heikki Krogerus wrote:
-> > > On Mon, Nov 04, 2019 at 10:48:50PM +0800, Mao Wenan wrote:
-> > > > The USB role switch class is, after all,
-> > > > not useful by itself. Hiding USB_ROLE_SWITCH
-> > > > so we can avoid any of the pitfalls associated
-> > > > with user-visible symbols and "select".
-> > > > 
-> > > > Signed-off-by: Mao Wenan <maowenan@huawei.com>
-> > > > ---
-> > > >  drivers/usb/roles/Kconfig | 2 +-
-> > > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > > > 
-> > > > diff --git a/drivers/usb/roles/Kconfig b/drivers/usb/roles/Kconfig
-> > > > index f8b31aa..1da58d4 100644
-> > > > --- a/drivers/usb/roles/Kconfig
-> > > > +++ b/drivers/usb/roles/Kconfig
-> > > > @@ -1,7 +1,7 @@
-> > > >  # SPDX-License-Identifier: GPL-2.0
-> > > >  
-> > > >  config USB_ROLE_SWITCH
-> > > > -	tristate "USB Role Switch Support"
-> > > > +	tristate
-> > > >  	help
-> > > >  	  USB Role Switch is a device that can select the USB role - host or
-> > > >  	  device - for a USB port (connector). In most cases dual-role capable
-> > > 
-> > > You didn't actually convert the "depends on USB_ROLE_SWTICH" to
-> > > "select USB_ROLE_SWITCH" before this. You also left the help text that
-> > > is now useless.
-> > > 
-> > > I really think that instead of this, we should just convert all
-> > > "select USB_ROLE_SWTICH" to "depends on USB_ROLE_SWITCH".
-> > 
-> > The you have to find USB_ROLE_SWITCH first when you want to enable your
-> > hardware...  It's feels really confusing when you want to create a
-> > .config file...
-> 
-> Unfortunately selecting the class alone is not enough. The USB role
-> switch on the system may be a dual-role capable USB controller, but it
-> may also be a mux that has its own separate driver.
-> 
-> It's equally or even more confusing for the user if the USB drivers
-> are enabled, including the dual-role mode, but the connector still
-> works only in one role, or in worst case not at all (if there is no
-> mux driver and the mux is left in "safe mode" so that the pins on the
-> connector are not connected to anything).
-> 
-> I still think that we should make these drivers depend on the class
-> instead of just selecting it. That way we at least give the user a
-> hint that there are also separate USB role switch drivers that may be
-> needed.
-> 
+Since commit "modpost: do not set ->preloaded for symbols from
+Module.symvers", the modpost always warns about symbols exported
+multiple times.
 
-I guess I see your point.  My problem then is just with the menuconfig
-system, not really with this patch.
+Generally, I believe it is a good thing to show a warning when the
+same symbol name is exported twice. This avoids the accidental symbol
+conflict.
 
-> > I sometimes think maybe I'm too stupid to configure a kernel these days
-> > and that's sort of sad because how is Aunt Tillie supposed to manage?
-> 
-> We can always use something like conditional comments in the
-> Kconfig files to make sure that the user is told that in order to
-> select the driver, a dependency must be satisfied:
-> 
->         config MY_AWESOME_DRIVER
->                 tristate "My awesome driver!"
->                 depends on USB_ROLE_SWITCH
->                 help
->                   That's right! IT REALLY IS AWESOME!
-> 
->         comment "My awesome driver depends on USB_ROLE_SWITCH..."
->                 depends on USB_ROLE_SWITCH=n
-> 
+However, in some cases, we build an external module to provide a
+different version/variant of the in-kernel module, overriding the
+same set of exported symbols.
 
-Those sorts of help don't show up unless you already meet the
-dependencies or if you search for it.  And if you search for it then it
-already lists the depnds so the comment isn't required...
+At least, there is one use-case in the upstream code;
+tools/testing/nvdimm/libnvdimm.ko replaces drivers/nvdimm/libnvdimm.ko
+in order to link it against mocked version of core kernel symbols.
 
-I guess that in the olden days you used to go through the menus and
-look at all the high level options and figure it out.  These days you
-sort of have to know what you want already.  And then you use the search
-feature to enable it.
+Now, this emits a lots of 'exported twice' warnings:
 
-The menuconfig system really is very broken.  I've looked at alternative
-ways to do it, but it quite a bit of work involved...
+  https://lkml.org/lkml/2019/10/31/627
 
-regards,
-dan carpenter
+To suppress those, add a new option KBUILD_DUPLICATED_EXPORTS_NO_WARN.
+
+If you intentionally override the existing symbols, you can pass it
+from the command line:
+
+  make M=tools/testing/nvdimm KBUILD_DUPLICATED_EXPORTS_NO_WARN=1
+
+Or, more conveniently, you can add it to the module Makefile, so
+you can still do:
+
+  make M=tools/testing/nvdimm
+
+without sprinkling the warnings.
+
+Reported-by: Jeff Moyer <jmoyer@redhat.com>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+---
+
+Jeff Moyer,
+Dan Williams,
+
+Please check if this patch solves the nvdimm build issue.
+
+
+ Documentation/kbuild/kbuild.rst | 7 +++++++
+ scripts/Makefile.modpost        | 1 +
+ scripts/mod/modpost.c           | 9 +++++++--
+ tools/testing/nvdimm/Kbuild     | 4 ++++
+ 4 files changed, 19 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/kbuild/kbuild.rst b/Documentation/kbuild/kbuild.rst
+index f1e5dce86af7..8ff0935f9e7f 100644
+--- a/Documentation/kbuild/kbuild.rst
++++ b/Documentation/kbuild/kbuild.rst
+@@ -223,6 +223,13 @@ KBUILD_SIGN_PIN
+ This variable allows a passphrase or PIN to be passed to the sign-file
+ utility when signing kernel modules, if the private key requires such.
+ 
++KBUILD_DUPLICATED_EXPORTS_NO_WARN
++---------------------------------
++This variable can be set to suppress warnings about symbols exported
++multiple times. This is useful when you are building an external module
++to provide a different version of an in-tree module.
++
++
+ KBUILD_MODPOST_WARN
+ -------------------
+ KBUILD_MODPOST_WARN can be set to avoid errors in case of undefined
+diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+index 8359f8af5ee6..52e50ac45688 100644
+--- a/scripts/Makefile.modpost
++++ b/scripts/Makefile.modpost
+@@ -53,6 +53,7 @@ MODPOST = scripts/mod/modpost						\
+ 	$(if $(KBUILD_EXTMOD),$(addprefix -e ,$(KBUILD_EXTRA_SYMBOLS)))	\
+ 	$(if $(KBUILD_EXTMOD),-o $(modulesymfile))			\
+ 	$(if $(CONFIG_SECTION_MISMATCH_WARN_ONLY),,-E)			\
++	$(if $(KBUILD_DUPLICATED_EXPORTS_NO_WARN),-W)			\
+ 	$(if $(KBUILD_MODPOST_WARN),-w)
+ 
+ ifdef MODPOST_VMLINUX
+diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+index f70b924f379f..858568f4edb4 100644
+--- a/scripts/mod/modpost.c
++++ b/scripts/mod/modpost.c
+@@ -33,6 +33,8 @@ static int external_module = 0;
+ static int vmlinux_section_warnings = 1;
+ /* Only warn about unresolved symbols */
+ static int warn_unresolved = 0;
++/* Warn about symbols exported multiple times */
++static int warn_duplicated_exports = 1;
+ /* How a symbol is exported */
+ static int sec_mismatch_count = 0;
+ static int sec_mismatch_fatal = 0;
+@@ -382,7 +384,7 @@ static struct symbol *sym_add_exported(const char *name, struct module *mod,
+ 	if (!s) {
+ 		s = new_symbol(name, mod, export);
+ 	} else {
+-		if (!s->preloaded) {
++		if (warn_duplicated_exports && !s->preloaded) {
+ 			warn("%s: '%s' exported twice. Previous export was in %s%s\n",
+ 			     mod->name, name, s->module->name,
+ 			     is_vmlinux(s->module->name) ? "" : ".ko");
+@@ -2559,7 +2561,7 @@ int main(int argc, char **argv)
+ 	struct ext_sym_list *extsym_iter;
+ 	struct ext_sym_list *extsym_start = NULL;
+ 
+-	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awEd:")) != -1) {
++	while ((opt = getopt(argc, argv, "i:e:mnsT:o:awWEd:")) != -1) {
+ 		switch (opt) {
+ 		case 'i':
+ 			kernel_read = optarg;
+@@ -2594,6 +2596,9 @@ int main(int argc, char **argv)
+ 		case 'w':
+ 			warn_unresolved = 1;
+ 			break;
++		case 'W':
++			warn_duplicated_exports = 0;
++			break;
+ 		case 'E':
+ 			sec_mismatch_fatal = 1;
+ 			break;
+diff --git a/tools/testing/nvdimm/Kbuild b/tools/testing/nvdimm/Kbuild
+index c4a9196d794c..c848374f3b0b 100644
+--- a/tools/testing/nvdimm/Kbuild
++++ b/tools/testing/nvdimm/Kbuild
+@@ -93,4 +93,8 @@ libnvdimm-y += dimm_devs.o
+ libnvdimm-y += libnvdimm_test.o
+ libnvdimm-y += config_check.o
+ 
++# This intentionally overrides the original libnvdimm.ko
++# Suppress 'exported twice' warnings from the modpost.
++KBUILD_DUPLICATED_EXPORTS_NO_WARN := 1
++
+ obj-m += test/
+-- 
+2.17.1
 
