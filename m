@@ -2,160 +2,121 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D1FC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F221FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA84E21D7E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B25DD207FA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uDQK58sa"
+	dkim=pass (2048-bit key) header.d=igel-co-jp.20150623.gappssmtp.com header.i=@igel-co-jp.20150623.gappssmtp.com header.b="mfw9WvE5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731166AbfKFGlN (ORCPT
+        id S1731189AbfKFGlg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:41:13 -0500
-Received: from pegase1.c-s.fr ([93.17.236.30]:39227 "EHLO pegase1.c-s.fr"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725948AbfKFGlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:41:12 -0500
-Received: from localhost (mailhub1-int [192.168.12.234])
-        by localhost (Postfix) with ESMTP id 477H450GyXz9v00D;
-        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
-Authentication-Results: localhost; dkim=pass
-        reason="1024-bit key; insecure key"
-        header.d=c-s.fr header.i=@c-s.fr header.b=uDQK58sa; dkim-adsp=pass;
-        dkim-atps=neutral
-X-Virus-Scanned: Debian amavisd-new at c-s.fr
-Received: from pegase1.c-s.fr ([192.168.12.234])
-        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
-        with ESMTP id NP7mUVlPVLBt; Wed,  6 Nov 2019 07:41:08 +0100 (CET)
-Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
-        by pegase1.c-s.fr (Postfix) with ESMTP id 477H445kq5z9v00C;
-        Wed,  6 Nov 2019 07:41:08 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
-        t=1573022468; bh=ldK6jtPphgl+yNa6VSaAerjL+prNDwgkLRC6nRKEIeI=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=uDQK58saIN0zvehZkL7oENgA4DemT8lDWmLXhETHs2fgk7tiYooqK7uit5oPw6kqK
-         UOoMgZlJGvnNPw1TVCdC6OsuYDkWv6rJFk3JlidSUeiN1jyfI5kOdxu8g2Q0UGfHfG
-         nJ9ksEtevKFg7K5FRpbJoChZCjEM1dr9rYK/i7Rk=
-Received: from localhost (localhost [127.0.0.1])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 973408B82D;
-        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
-X-Virus-Scanned: amavisd-new at c-s.fr
-Received: from messagerie.si.c-s.fr ([127.0.0.1])
-        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
-        with ESMTP id A7VVbo-RdBde; Wed,  6 Nov 2019 07:41:09 +0100 (CET)
-Received: from [172.25.230.101] (unknown [172.25.230.101])
-        by messagerie.si.c-s.fr (Postfix) with ESMTP id 27E838B7CC;
-        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
- helpers
-To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
- <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
-From:   Christophe Leroy <christophe.leroy@c-s.fr>
-Message-ID: <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
-Date:   Wed, 6 Nov 2019 07:41:08 +0100
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+        Wed, 6 Nov 2019 01:41:36 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37652 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfKFGlg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:41:36 -0500
+Received: by mail-pf1-f194.google.com with SMTP id p24so11588079pfn.4
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:41:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=igel-co-jp.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=E8lztbuGXtEogRXJuFerbz/ny9VEKOaNJSM1lQ3x6Fs=;
+        b=mfw9WvE5QlPdCdwoH4OTzfFy2KQDUPqW9gC9HaEKVtVb6u1YC2Xbxj0+MdP/dfSs5q
+         GnVOiVNEN0Ev8dUbc1tdjr8mpNKIuQWYJIheC+rbLa6Px1Qw5icAkv+JAwYO1PlrMBj7
+         C7xCs4J100rYtPzT7yogn3gwgcZr+MZpStDoyyLkYdQ8tr9oB/NGMdRWcuD3uyVnvGyh
+         ONJi1f9Mnv9UsQQgddjRv5jJHL15UCU0AOEa2xYT//PpDusX38OxwXVjFE85I8U5ZY6X
+         BzgKoRPBIqo8PsF7WJBUMoes1mJVhaX0Q2pGZUQOSy+O6IO/cfJvBRuwsayJZZ6y2rTE
+         4nig==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=E8lztbuGXtEogRXJuFerbz/ny9VEKOaNJSM1lQ3x6Fs=;
+        b=JZ4DrwbCF52ogzLlR4oxnvrjnDCdVk1Qc0d6m2ZPYW7ztB64z/4HtHLP8gfy6+eGRC
+         QAm773Hp4HRSxljVE2mgHahdIcybM7QeG225sDeExHJJ1eQmOxq5h0Ceo4PZ2Z6kgO3F
+         z2YXtnMTBujgbCQ/9KbaDhpXYlTiIgCnT3s3iWV7tS4rpN6fbN1xKnT4VJRiLvaVUDCW
+         CrXR1afazDRpAdTmuoMsBlZdDzE12T2jckmBBdWX7Qot6rxytJIV36Knlw6UgPkGz2D2
+         230/2yOst3WrR6EPFwww892flSDq+ug6wjRnOmWTZWmtOtmY7OiiLvNkPYCOxBHDM6J6
+         zWBQ==
+X-Gm-Message-State: APjAAAUCoWop+yc+/kpiPSt7cXB02g6MuRpdzQ+gjN/4g7+cXSXD4mwA
+        n0nTKU+ZzvIN1Ror5veMRDM2eg==
+X-Google-Smtp-Source: APXvYqyHRJoGFmWTM2Lh7PQozJSs8NGAL4XSVwYtlNLsTuZqiolravOvDOAoW0UlaZv1/GKN6nKmEQ==
+X-Received: by 2002:a63:1242:: with SMTP id 2mr1054261pgs.288.1573022495425;
+        Tue, 05 Nov 2019 22:41:35 -0800 (PST)
+Received: from [10.16.129.137] (napt.igel.co.jp. [219.106.231.132])
+        by smtp.googlemail.com with ESMTPSA id l24sm21102992pff.151.2019.11.05.22.41.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 22:41:34 -0800 (PST)
+Subject: Re: [PATCH v2] uio: fix irq init with dt support & irq not defined
+To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
+        linux-kernel@vger.kernel.org
+Cc:     gregkh@linuxfoundation.org,
+        Dragos Bogdan <dragos.bogdan@analog.com>
+References: <20191105072807.14420-1-alexandru.ardelean@analog.com>
+ <20191105073212.16719-1-alexandru.ardelean@analog.com>
+From:   Damian Hobson-Garcia <dhobsong@igel.co.jp>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dhobsong@igel.co.jp; prefer-encrypt=mutual; keydata=
+ mQENBFL7DcgBCADLqQvkQExYdn1UhfLLsvqtoQwS4M0llP4mCMBGntcTQ90viNgmXUp8mode
+ GXu6Qcr4uaIO75b8g6XP2g1jP969cDotlAvsjh7uEDR+eZjTDB6XvqQOroQpq80eiBjETesX
+ R5elnlLa6H+wsWCtl+xNohjBq+i/c9pC9B4k4CXOcwhxyTk6HB5w7hA502KY4zFmeRsnQyC/
+ VHx+TcRYjB5karzbJqWT3t5nEnVgOb34rUXnqbtE7Eyu6Ts1Q6Oyw9FwpzGa/fJI7asX5ahv
+ 26IJv6dgFbLPL8Gz1dOpcSKjkv2GX6NYNn0iPCgX6leGDEQjhZ1+OpyhxmHjgADz9b15ABEB
+ AAG0KkRhbWlhbiBIb2Jzb24tR2FyY2lhIDxkaG9ic29uZ0BpZ2VsLmNvLmpwPokBPwQTAQIA
+ KQUCUvsNyAIbIwUJCWYBgAcLCQgHAwIBBhUIAgkKCwQWAgMBAh4BAheAAAoJEK3AW9cCDHCG
+ qdgH/1bDxLkQ0WchfLDGdD7pKJ3X43nouVRjbeuLtCkDMIMzCXLveR0yJ9tRtI37t3LneS/f
+ oBCSNZoEED57UjGvYTepub9cqGRDKN56n8OKGM3e0Ph5OAqI1afloiJXa/LBhNDMCzdgFB/a
+ oyuiqbD5v1oo73TCsNtHIrotg91jG7SaOHLOfQzy5drgGqM84W63z102YeHOm3jcB0PbUCOj
+ x/MPIyxcggTdedlkQFtlTZugCiCllrHcFvG30WEl4lNTF9qOeyhOyiPJRcOVEEXbt3nMcFey
+ MkMuNikkLFFq5dZ/7jbxhiQpXrZgdPXhml8lGqezhLPrk86BqtLjy4tm9Qg=
+Message-ID: <17b0d90f-5e87-2d40-8b95-d5c25f9f27c7@igel.co.jp>
+Date:   Wed, 6 Nov 2019 15:41:31 +0900
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: fr
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105073212.16719-1-alexandru.ardelean@analog.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
+On 2019-11-05 4:32 p.m., Alexandru Ardelean wrote:
+> This change also does a bit of a unification for the IRQ init code.
 > 
+> But the actual problem is that UIO_IRQ_NONE == 0, so for the DT case where
+> UIO_IRQ_NONE gets assigned to `uioinfo->irq`, a 2nd initialization will get
+> triggered (for the IRQ) and this one will exit via `goto bad1`.
 > 
-> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
->> +    -----------------------
->> +    |         arch |status|
->> +    -----------------------
->> +    |       alpha: | TODO |
->> +    |         arc: | TODO |
->> +    |         arm: | TODO |
->> +    |       arm64: |  ok  |
->> +    |         c6x: | TODO |
->> +    |        csky: | TODO |
->> +    |       h8300: | TODO |
->> +    |     hexagon: | TODO |
->> +    |        ia64: | TODO |
->> +    |        m68k: | TODO |
->> +    |  microblaze: | TODO |
->> +    |        mips: | TODO |
->> +    |       nds32: | TODO |
->> +    |       nios2: | TODO |
->> +    |    openrisc: | TODO |
->> +    |      parisc: | TODO |
->> +    |     powerpc: | TODO |
->> +    |       ppc32: |  ok  |
-
-Note that ppc32 is a part of powerpc, not a standalone arch.
-
-Maybe something like the following would be more correct:
-|  powerpc/32: |  ok  |
-|  powerpc/64: | TODO |
-
-Christophe
-
->> +    |       riscv: | TODO |
->> +    |        s390: | TODO |
->> +    |          sh: | TODO |
->> +    |       sparc: | TODO |
->> +    |          um: | TODO |
->> +    |   unicore32: | TODO |
->> +    |         x86: |  ok  |
->> +    |      xtensa: | TODO |
->> +    -----------------------
+> As far as things seem to go, the only case where UIO_IRQ_NONE seems valid,
+> is when using a device-tree. The driver has some legacy support for old
+> platform_data structures. It looks like, for platform_data a non-existent
+> IRQ is an invalid case (or was considered an invalid case).
+> Which is why -ENXIO is treated only when a DT is used.
 > 
-> While here, are there some volunteers to test this on any of the
-> 'yet to be tested and supported' platforms ?
+> Signed-off-by: Dragos Bogdan <dragos.bogdan@analog.com>
+> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
+> ---
 > 
-> - Anshuman
+> Changelog v1 -> v2:
+> * removed `int irq` variable ; was omitted when porting the patch to a
+>   newer kernel base
 > 
+
+This also brings the implementation in line with the what is done in
+uio_pdrv_genirq.c
+
+Acked-by: Damian Hobson-Garcia <dhobsong@igel.co.jp>
