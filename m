@@ -2,199 +2,89 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0CB4C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:10:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F3FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81338217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:10:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJUWstEO"
+	by mail.kernel.org (Postfix) with ESMTP id 95B862166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:16:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731190AbfKFLKC (ORCPT
+        id S1729750AbfKFLQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:10:02 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:35007 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726402AbfKFLKC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:10:02 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y6so17730870lfj.2;
-        Wed, 06 Nov 2019 03:10:00 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnwVsjbNiFuh5JOeo4upmlnPXVCJtlYPqMTxNS+DiLI=;
-        b=cJUWstEO1+yXWrupneRMJq4VR/toW3Xn6XKBkK8AFQk3KovnnsTne6c7yoxHJfzAAJ
-         mSZDlDpUPFKDZX75azo7tTmfn1KD79reG+D0kjqTKcWpYpBnj9a8yZAM+V27nwRLcLsi
-         Ap7V3VQOx1fiLTjfx+D41QBSoYmGDUSXOaDFc0t9iu5/A0dUU/sl1ULFkWkehL52uKQC
-         ujueJS8KncjrAaS+Q8JmPegGh0BuEgEad957GuRTSpQRIqVH2TSYtSMQ7JAzSK+K8sDD
-         Pq+X+SnOGEhP/XiMng+HDbdSBKo4hgj6jixGLbNJnzV8z+DWdsmU2CKb4EJYVvI1AH9C
-         v0ng==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=bnwVsjbNiFuh5JOeo4upmlnPXVCJtlYPqMTxNS+DiLI=;
-        b=m3ujWBOsX64ZrHjj8tt2qyPxBG0ykcFdq0050zRp/JBSXWvomqIcH8DSWD088D0WFf
-         fu1xg69cJR8nGQuW6g3iiwnniHxJzKWP01qWMB2SXJ9Pm6uaKiwGInGINWMmff12vpwM
-         7O1Ago/nMcctHCMS0Q2i5/+oabmv/Ae7aWqFJPh2GboBOUj1jbR/mSmrB9xdEvhxM89o
-         YcTIhKiAs26Xt4O5eQkuKf5zjr1I92ONWN22bBVm0jj1I/tc6IVOqbiesVV1eTtc7ejQ
-         w7Z/tBkpSzQ2VLhqvP2EUMJb/XW7FJl70nEX3u//BxuZWv0lB0LvFRtnK0k5uOrupmQw
-         IUKw==
-X-Gm-Message-State: APjAAAVmzj6HO9fEsHa2KVpfyQ3dfABAwnANSPwaCsf3lhTmeESmYYE+
-        XtxsVAFduBoqdiLGlZEbOFY=
-X-Google-Smtp-Source: APXvYqyDAZlkhUC0it716Vc74H5Yhm1zXCS8linsSxcwyIkPeH3AM/teWSo+RcUkqCBTSrnOY7ThEQ==
-X-Received: by 2002:ac2:4856:: with SMTP id 22mr23327083lfy.131.1573038599923;
-        Wed, 06 Nov 2019 03:09:59 -0800 (PST)
-Received: from localhost.localdomain ([94.234.51.156])
-        by smtp.gmail.com with ESMTPSA id 28sm9888753lfy.38.2019.11.06.03.09.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 03:09:59 -0800 (PST)
-From:   Marcus Folkesson <marcus.folkesson@gmail.com>
-To:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marcus Folkesson <marcus.folkesson@gmail.com>,
-        Kent Gustavsson <kent@minoris.se>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Paul E . McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2] dt-bindings: iio: dac: Migrate LTC1660 documentation to yaml
-Date:   Wed,  6 Nov 2019 12:12:33 +0100
-Message-Id: <20191106111233.6905-1-marcus.folkesson@gmail.com>
-X-Mailer: git-send-email 2.23.0
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 6 Nov 2019 06:16:22 -0500
+Received: from cnc.isely.net ([75.149.91.89]:43795 "EHLO cnc.isely.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725890AbfKFLQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:16:22 -0500
+X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 06:16:21 EST
+Received: from ts3-dock2.isely.net (ts3-dock2.isely.net [::ffff:192.168.23.14])
+  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-GCM-SHA384)
+  by cnc.isely.net with ESMTPSA; Wed, 06 Nov 2019 05:11:15 -0600
+  id 00000000001420F5.000000005DC2AA53.00004E44
+Date:   Wed, 6 Nov 2019 05:11:14 -0600 (CST)
+From:   Mike Isely <isely@pobox.com>
+X-X-Sender: isely@sheridan.isely.net
+Reply-To: Mike Isely at pobox <isely@pobox.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+cc:     Mike Isely at pobox <isely@pobox.com>
+Subject: [PATCH] pvrusb2: Fix oops on tear-down when radio support is not
+ present
+Message-ID: <alpine.DEB.2.21.1911060510410.31133@sheridan.isely.net>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Rewrite bindings to use json-schema vocabulary.
+In some device configurations there's no radio or radio support in the
+driver.  That's OK, as the driver sets itself up accordingly.  However
+on tear-down in these caes it's still trying to tear down radio
+related context when there isn't anything there, leading to
+dereferences through a null pointer and chaos follows.
 
-Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+mystery to me.
+
+Signed-off-by: Mike Isely <isely@pobox.com>
 ---
+ drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-Notes:
-    v2:
-    	- Remove description for reg and spi-max-frequency (Rob & Alexa)
-    	- Drop maxItems for vref-supply
-
- .../bindings/iio/dac/lltc,ltc1660.yaml        | 49 +++++++++++++++++++
- .../devicetree/bindings/iio/dac/ltc1660.txt   | 21 --------
- MAINTAINERS                                   |  2 +-
- 3 files changed, 50 insertions(+), 22 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- delete mode 100644 Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-
-diff --git a/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-new file mode 100644
-index 000000000000..505b3d54b81c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
-@@ -0,0 +1,49 @@
-+# SPDX-License-Identifier: GPL-2.0
-+# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
-+%YAML 1.2
-+---
-+$id: "http://devicetree.org/schemas/bindings/iio/dac/lltc,ltc1660.yaml#"
-+$schema: "http://devicetree.org/meta-schemas/core.yaml#"
-+
-+title: Linear Technology Micropower octal 8-Bit and 10-Bit DACs
-+
-+maintainers:
-+  - Marcus Folkesson <marcus.folkesson@gmail.com>
-+
-+description: |
-+  Bindings for the Linear Technology Micropower octal 8-Bit and 10-Bit DAC.
-+  Datasheet can be found here: https://www.analog.com/media/en/technical-documentation/data-sheets/166560fa.pdf
-+
-+properties:
-+  compatible:
-+    enum:
-+      - lltc,ltc1660
-+      - lltc,ltc1665
-+
-+  reg:
-+    maxItems: 1
-+
-+  spi-max-frequency:
-+    maximum: 5000000
-+
-+  vref-supply:
-+    description: Phandle to the external reference voltage supply.
-+
-+required:
-+  - compatible
-+  - reg
-+  - vref-supply
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+  
-+      dac@0 {
-+        compatible = "lltc,ltc1660";
-+        reg = <0>;
-+        spi-max-frequency = <5000000>;
-+        vref-supply = <&vref_reg>;
-+      };
-+    };
-diff --git a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt b/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-deleted file mode 100644
-index c5b5f22d6c64..000000000000
---- a/Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+++ /dev/null
-@@ -1,21 +0,0 @@
--* Linear Technology Micropower octal 8-Bit and 10-Bit DACs
--
--Required properties:
-- - compatible: Must be one of the following:
--		"lltc,ltc1660"
--		"lltc,ltc1665"
-- - reg: SPI chip select number for the device
-- - vref-supply: Phandle to the voltage reference supply
--
--Recommended properties:
-- - spi-max-frequency: Definition as per
--	 Documentation/devicetree/bindings/spi/spi-bus.txt.
--	 Max frequency for this chip is 5 MHz.
--
--Example:
--dac@0 {
--	compatible = "lltc,ltc1660";
--	reg = <0>;
--	spi-max-frequency = <5000000>;
--	vref-supply = <&vref_reg>;
--};
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fbccc9d450ff..23497d713298 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9619,7 +9619,7 @@ LTC1660 DAC DRIVER
- M:	Marcus Folkesson <marcus.folkesson@gmail.com>
- L:	linux-iio@vger.kernel.org
- S:	Maintained
--F:	Documentation/devicetree/bindings/iio/dac/ltc1660.txt
-+F:	Documentation/devicetree/bindings/iio/dac/lltc,ltc1660.yaml
- F:	drivers/iio/dac/ltc1660.c
+diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+index aa4fbc3e88cc..339119f6cc23 100644
+--- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
++++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+@@ -909,8 +909,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+ 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+ 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+-	    !list_empty(&vp->dev_radio->devbase.fh_list))
++	    ((vp->dev_radio != NULL) &&
++	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
++		pvr2_trace(PVR2_TRACE_STRUCT,
++			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+ 		return;
++	}
+ 	pvr2_v4l2_destroy_no_lock(vp);
+ }
  
- LTC4261 HARDWARE MONITOR DRIVER
+@@ -946,7 +950,8 @@ static int pvr2_v4l2_release(struct file *file)
+ 	kfree(fhp);
+ 	if (vp->channel.mc_head->disconnect_flag &&
+ 	    list_empty(&vp->dev_video->devbase.fh_list) &&
+-	    list_empty(&vp->dev_radio->devbase.fh_list)) {
++	    ((vp->dev_radio == NULL) ||
++	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+ 		pvr2_v4l2_destroy_no_lock(vp);
+ 	}
+ 	return 0;
 -- 
-2.23.0
-
+2.20.1
