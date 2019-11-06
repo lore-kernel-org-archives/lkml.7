@@ -2,220 +2,98 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA1C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:39:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ECEAFC6196
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A3E52217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:39:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60E22217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:40:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oincruMT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lktGWLr3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732766AbfKFWjf (ORCPT
+        id S1732789AbfKFWkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:39:35 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:36711 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfKFWjf (ORCPT
+        Wed, 6 Nov 2019 17:40:20 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:33377 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfKFWkU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:39:35 -0500
-Received: by mail-pl1-f194.google.com with SMTP id g9so12194389plp.3;
-        Wed, 06 Nov 2019 14:39:34 -0800 (PST)
+        Wed, 6 Nov 2019 17:40:20 -0500
+Received: by mail-pf1-f196.google.com with SMTP id c184so255405pfb.0;
+        Wed, 06 Nov 2019 14:40:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=BMKd8G9zMkgN0f5Y0tqmmKfixfcWLZBRkofJy97iGiI=;
-        b=oincruMTn5V9mTz+UjSpw6gCAfrjxD3rHfFUb7+yDs1GwMQc7x76PTRZ3NZep2zds0
-         8qMS96GOZIWuWyJDvASCfP6Ljs9u0R4qa50TWVF291ejwe8hCO2iS80we91/vnh6z+9H
-         zJCV18tbb53WlYkS7BwPMpLKki+h088raFgCUwxwusQu3CE3rfMhzoeZ81LNzu3u9kwd
-         r0ptc6c5MY1grztnZrpIj0nrBUgy79Bcv4xbWadetoC8snyyolC6OcBeHr06lKodLD9t
-         42mvfWTxvfiC6LNuBHzPyJapxy238EgOaeHhZdshYdtbQJYBlrONgriFDtUkPwK2zPMW
-         6spg==
+        h=from:to:cc:subject:date:message-id;
+        bh=G+wFREXzWnU4DvNTPp24jRK6gxHaykXaWaMf/sx6ATg=;
+        b=lktGWLr3/bgx3/ucB1j1LiAdjYxPUv/VzQAxdgfeHQb4IreqFBsad+ABk5LnWp4VXN
+         ttc8B0sCWR9Tq6/LAX6Yn0gAa7L65tRj/gmKJ9zUIL0NKQUkxTvG4bp0Qebbfy66Y7bq
+         vi7UAHgEEPOAraCB0IiaShYNCUimetDf6pirOFAiteCULQyL45HCKkN8turz6u7Nhr0O
+         7UN2l2E1izSVZdI8eeq7HuujZr48EwEkvt+F7lW8Iwb6j8Dily2nOEFPcsRNZ19Xji28
+         2dJ9tmA18ToYOSAuVgtV7aQ2FnO0HDU1YkQpJ3GiWjcufjmcCCE5zCcPbeVJ0/mc5e1i
+         X4GA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=BMKd8G9zMkgN0f5Y0tqmmKfixfcWLZBRkofJy97iGiI=;
-        b=CO3w/j1XabNst3jqpUANF8TSHAvJofRKrKqvslb4rYB+Hebd5POlTQFv3XAnSkSfDU
-         cjzWPvfEATntx3vDKVHnEyoV0UfyuN5nuefHm+g3mC/pAd9BPWtbRz2nrYEnxoy3EU9s
-         YyXdWHdQP1zRaNY2gmyTPb9KLIVi5wVvxC2FcbCZo0FLn0ZSvV5jU+JMXVnGJnN58Kwt
-         IEWbnGPeFV7tpGn3IVVXCaRboVmNK9zjB8k3nfYKD41ydjx0WPuf3W1TKS4yVCFBkDdH
-         7vh1vQG3f/oUFnVPVLoMtf6reUdwuS4U9jxPn8zFjcRpGSPVL/awMtGaQaNuz2gGgQrK
-         cZJg==
-X-Gm-Message-State: APjAAAWiFZ9GgDqpKnkblpp/Lf0Qhry4XASyUc5lTdnrWSQ7K/iXZflT
-        Ys0aQegHm9I4a3Farr53to2XFakvjTE=
-X-Google-Smtp-Source: APXvYqw+Mm/Jhhto447HAdZ8pprhH6qVmc3DP2CM+G83oLje4qaSKbFz16GkCebLsIhVSE+yNgPWjg==
-X-Received: by 2002:a17:902:346:: with SMTP id 64mr18408pld.283.1573079973779;
-        Wed, 06 Nov 2019 14:39:33 -0800 (PST)
-Received: from Slackware ([103.231.90.174])
-        by smtp.gmail.com with ESMTPSA id k32sm4766756pje.10.2019.11.06.14.39.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 14:39:32 -0800 (PST)
-Date:   Thu, 7 Nov 2019 04:09:18 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     "J. Bruce Fields" <bfields@fieldses.org>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-Message-ID: <20191106223918.GB1852@Slackware>
-References: <20191102063036.28601-1-unixbhaskar@gmail.com>
- <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
- <20191105023243.GA16635@fieldses.org>
- <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
- <20191106043120.GB6355@fieldses.org>
- <20191106044223.GA18076@Gentoo>
- <20191106193010.GG17669@fieldses.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
-Content-Disposition: inline
-In-Reply-To: <20191106193010.GG17669@fieldses.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=G+wFREXzWnU4DvNTPp24jRK6gxHaykXaWaMf/sx6ATg=;
+        b=Y6/XxNbokdhXLNjn4IN0ob2oPfQISynM9UqH6a0+qW+oMZckhmN/PMQEHd9xFFGO41
+         hc6KoJVd9B22B5tNr7EOU+90WtTFMD9KwmPO4W5lHVeKZeJOfvTy0/cHLvVk5JCmWoin
+         g5jbugCwFOgAKfpXwvLJ2RNQyt/Z9OPTu8lsfKNF6XrHqNvF6vTu1CCBErSGuUunuByG
+         kQ6R+yi/M6jNKw4LE2vZycUNAZAkoisyuc5zn5LC33MmjtEOxlKEGekooqdbLIo0hXM6
+         DYIoaiDzuOBRLEAX1yuZwglyvcCwPduf8BWJGuh8/mH9VcYDeOj4e4ncSuMGV72h5T+p
+         /glQ==
+X-Gm-Message-State: APjAAAVQeATF0jkYvZcQtLOb1IDN+kXCrMn30CLPJisXrT0+fyFBR2XC
+        6GWiceGB+tpDa6qWmsirEXPftoveh4s=
+X-Google-Smtp-Source: APXvYqxvCPKVks8a1VhUTjXjnqv1qXKWQbwY0UcGGC+kQVTDOwaguh/Hl96NDqbeuoc4aVExN+jJ/Q==
+X-Received: by 2002:a63:934d:: with SMTP id w13mr283470pgm.185.1573080019554;
+        Wed, 06 Nov 2019 14:40:19 -0800 (PST)
+Received: from odroid.ad.adelaide.edu.au (staff-249-202.wireless.adelaide.edu.au. [129.127.249.202])
+        by smtp.googlemail.com with ESMTPSA id v2sm96783pgf.39.2019.11.06.14.40.16
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 14:40:19 -0800 (PST)
+From:   Marian Mihailescu <mihailescu2m@gmail.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org
+Cc:     Marian Mihailescu <mihailescu2m@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: gpu: mali-midgard: add samsung exynos 5420 compatible
+Date:   Thu,  7 Nov 2019 09:10:07 +1030
+Message-Id: <20191106224008.7588-1-mihailescu2m@gmail.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Add "samsung,exynos5420-mali" binding
 
---uZ3hkaAS1mZxFaxD
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+---
+ Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 14:30 Wed 06 Nov 2019, J. Bruce Fields wrote:
->On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
->> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
->> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
->> >>BTW.
->> >>Bruce,
->> >>Does the current script expect RHEL or something?
->> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
->> >
->> >I test on Fedora.  Looks like on recent Fedora that's only provided by
->> >an rpm "grubby-deprecated", which is an inauspicious name....
->> >
->> >I think maybe you're supposed to use "grubby" itself now.  Do you have
->> >that?
->> >
->> >>It would still work with 'new-kernel-pkg: command not found'
->> >>warning.
->> >>
->> >>We could bypass it if we like.
->> >>
->> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
->> >
->> >Looks like it's what updates the grub configuration, which is probably a
->> >nice thing to do if you can.
->> >
->> >--b.
->>=20
->> Bruce,
->>=20
->> Two things,
->>=20
->> If the system doesn't run grub , how the fallback policy???
->>=20
->> This binary "new-kernel-pkg" also missing in other systems too...I can
->> confirm that... i.e gentoo,slackware,
->>=20
->> So , you are only targeting the rpm based system????
->
->It's just what I happen to use.  If someone wants to make it work
->elsewhere that'd be great, as long as we don't break what already works.
->
->I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
->dunno.
->
->--b.
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 47bc1ac36426..41b928bce4ea 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -38,9 +38,12 @@ properties:
+           - enum:
+              - samsung,exynos5433-mali
+           - const: arm,mali-t760
++      - items:
++          - enum:
++             - samsung,exynos5420-mali
++          - const: arm,mali-t628
+ 
+           # "arm,mali-t624"
+-          # "arm,mali-t628"
+           # "arm,mali-t830"
+           # "arm,mali-t880"
+ 
+-- 
+2.14.1
 
-Okay , thanks for the input. I was trying to write something in
-generalize way , that is why my code spins off.And if you see the
-subject line of my very first attempt to patch written was "removing
-old kernels and modules dir in selective way"... that was it.
-
-Now, there are plenty of distros around, not only rpm based one(yes I do
-agree that ,you wrote it while using and testing on it, but that is
-limited in nature),the broader user base might be using something else.
-
-we simply can not restrict it to certain packaging version or several
-packaging versions of selected distros. We are making and building this
-(worth an effort) to make it as generalized as possible.=20
-
-Importantly I was only thinking of people who put the stuff in standard
-places in the FSH and use it. I might be wrong.
-
-As I have said it before, I was no way trying to bypass your work ,but
-it seems very limited in nature to adopted. So trying to widen the
-spectrum.
-
-I am trying to incorporating both the pole, different kind user base in
-mind, like you , who don't like to be prompted for this operation and
-assuming things should go well, and you are right.
-
-On the other hand , I am kinda guy , sometime I need to know what is
-going on, so the prompting.=20
-
-Well, I have never taken into account about modifying the bootloader
-config by looking at your work. Had I been, I would have done it already
-and it would be extremely trivial in nature.
-
-Now, Grub, no doubt it's fantastic piece of software, but complexity
-is paramount with it. Don't you think so???  I HAVE NOTHING AGAINST
-GRUB!
-
-I have personally stops using it for years and using something very
-rudimentary and simple and useful. That is because I know what I am
-doing and my system well.=20
-
-Caveat emptor: that was me, not every one else in the wild. Grub is used
-by the most distro by default,everybody knows it,but certainly not the
-norm.
-
-I would love to give it a stab again and if you better people feel it is
-necessary, but I need some concrete understanding from you,Masahiro and
-Randy(who is helping me actively).
-
-Say, You people might come up ,
-
-We need these :
-
-a)
-b)
-c)=20
-
-and we don't need these:
-
-a)
-b)
-c)
-
-
-My two cents! kindly, flame me with your thoughts.
-
-~Bhaskar
-
---uZ3hkaAS1mZxFaxD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3DS5IACgkQsjqdtxFL
-KRV7Rgf+OMwhspUynXOGPUZfJm3a7pgGlvYmk7wseYUHUHD1binTyLxb77HXYIFZ
-AUpLuLOJYvWkJlfYzUWdrEYfU08+xxt38lp+M7wQgNEY8dBSk9paB++dk7TAnGAS
-FfbDvW+4vOoaw6pooIvdzWCSVe+MrfvX5Fhr59/VzW9iJ/d6NTirTo0MjoKlsgJi
-/6NWndrkD7yl0ARLXJqPT74OsYeTHPxvcPC0Z9EoUZTl+wRGWCDnb0fG065Phoc4
-IU7ndS1AU149FyPQxON/SfrA39CtlzSs76kcaoyJwFmF1faAmFZWboZa5R0NxjXB
-/3FGNxq/s6LJGTwOTRlj87zaryftuQ==
-=amex
------END PGP SIGNATURE-----
-
---uZ3hkaAS1mZxFaxD--
