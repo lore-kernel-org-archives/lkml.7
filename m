@@ -2,127 +2,198 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04E8DC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:24:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA1CC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:25:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B023A206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:24:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 03CB9206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:25:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="YhmgYsIJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AyjF+UFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730337AbfKFGY3 (ORCPT
+        id S1730756AbfKFGZ3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:24:29 -0500
-Received: from mail-eopbgr00056.outbound.protection.outlook.com ([40.107.0.56]:24961
-        "EHLO EUR02-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727568AbfKFGY3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:24:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=fdtk0HJ4FRO0XVLdCgDyFCEddIwDLK6/snl1IxZtGwHD3DWbhWbEIiSdP8I5YKGoaV0vhEUKcuoZSwsRFCyn+qhQ7EvrmUWVgat8vDsyP1P5dl51S/QZGoc8RZmi1fHm7d0l6ye/zeyBlg7Br2BwB2CpoO/pvZTuDbaOP3wkkeupF4n9Lyxz5tcwzilo54yLO4kJdbLk6K78yLTvY1urfTiNqtXZVegf/xlIMdtdqDDxoajOSZYVqLuEZ9Unn0fxf4AqBYf06rKWXPww9o4Ngf4I3XpE7H3h4+MUj8+6pM2qHLGtJLaHHMtHG7ys3JECmYOI0lzKEVjajTcpzJ4o6g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QRtqHBscXHuue4va/8wphdLUqXcLP0HSJ0seEAcmliI=;
- b=Ih8yZoZiCPB+cjPAYfCmZGkUUm0a3YqjYIV5NWuKHxhLSpj6ok7g6aBSDq5WITi6xSdcDAiKXbtLRVHlj9FUdSLhgAj+kh141ik/VSsBaE4sXSyfg7TuWupiLdMFI33tmZswUGGaQudHHL2WGhg0aQRe/iNZm+7rAzgtMTWzTKu6pwRUhnXSPi5bsyYi245hgDVlbKYepPyNxtNKDzJQYB1eTFFwEEUH/sODWdMWMkzjZRLXRUVEAb0cm6r5JUrXGTmWR2Umeq7ckq3OcvS1eIg0lqy9TnmVUmPzN7eGo46kz3WCaiYln96qDEtSqSClRz3qM931dtu2qqmghQ4MtQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
- dkim=pass header.d=mellanox.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QRtqHBscXHuue4va/8wphdLUqXcLP0HSJ0seEAcmliI=;
- b=YhmgYsIJUlVRI4NUgnwuWIBt6SVtJgMvXwnbXMeGB+l5MRhdh4xoIzgoJE1CbcEp+m86x2RkF6qHYVRJLyqNcZ/adlZEk/+UQx2no7Qqnoo2G2qNrPUiuu0QmBECYnEvDwpTefbplGi1tjC921RWLjOfI/5n1rpeADNDH90tgfk=
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com (20.177.51.151) by
- VI1PR05MB6446.eurprd05.prod.outlook.com (20.179.28.84) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 6 Nov 2019 06:24:25 +0000
-Received: from VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d41a:9a5d:5482:497e]) by VI1PR05MB5102.eurprd05.prod.outlook.com
- ([fe80::d41a:9a5d:5482:497e%5]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 06:24:25 +0000
-From:   Saeed Mahameed <saeedm@mellanox.com>
-To:     Parav Pandit <parav@mellanox.com>,
-        "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "colin.king@canonical.com" <colin.king@canonical.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "leon@kernel.org" <leon@kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH][next] net/mlx5: fix kvfree of uninitialized pointer spec
-Thread-Topic: [PATCH][next] net/mlx5: fix kvfree of uninitialized pointer spec
-Thread-Index: AQHVlAa2MrKk1PZdlEqSKXtQGIB+aad9rZoA
-Date:   Wed, 6 Nov 2019 06:24:25 +0000
-Message-ID: <d6854c959a2ff5d8493e97982cd3bb8ee5ec7789.camel@mellanox.com>
-References: <20191105182740.87146-1-colin.king@canonical.com>
-In-Reply-To: <20191105182740.87146-1-colin.king@canonical.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Evolution 3.32.4 (3.32.4-1.fc30) 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=saeedm@mellanox.com; 
-x-originating-ip: [73.15.39.150]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: 8e1a4310-4f38-4ae3-48c7-08d76281f858
-x-ms-traffictypediagnostic: VI1PR05MB6446:|VI1PR05MB6446:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <VI1PR05MB6446B5D58E4D456961C64087BE790@VI1PR05MB6446.eurprd05.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:2582;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(136003)(376002)(366004)(346002)(39860400002)(189003)(199004)(71190400001)(71200400001)(14444005)(256004)(8936002)(2501003)(8676002)(54906003)(6512007)(6246003)(446003)(229853002)(11346002)(4326008)(118296001)(2616005)(476003)(6436002)(25786009)(486006)(6486002)(26005)(66066001)(2906002)(102836004)(305945005)(66446008)(64756008)(66476007)(66556008)(66946007)(99286004)(316002)(91956017)(5660300002)(76116006)(86362001)(36756003)(186003)(2201001)(81166006)(81156014)(110136005)(478600001)(58126008)(14454004)(3846002)(76176011)(7736002)(6506007)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR05MB6446;H:VI1PR05MB5102.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: mellanox.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: 9yAplFByDjeuvZ5QT3+xi65w4tXPYWb30om1HDSrz11+JLCHzGwiMFpnlAlyi/u1Ovq2rY6nmHHvhzAf36psxySaIsIv+Ny81UOa6GubylB/qPA1jC/0gxyvIHMS/3H6LMawl0VYBNCx8cZKfFYnj6gUiJVsSvPFf0LJqqceEu3v+xqSCKULv5y/aluYzdnimkzae6cC8sW7xImh5qKJHo8weaj/FYFbVf6tCFUT3oNVRnQvSaMqfBRLurTgSkId0GXdhtljK77zt5ojbeZ5lNjp1SQTI5+emWPh7aUQZFh86nOBikmmeGm96IIr7kz8rkewfHe4dbnZQnCdL62o/m4Eg7GUs2dCaQD3nmnTSpZuldHsVdkldiM0oRWD8pj7uEVtaBusZNzEtNUJ5y+s6hahh0TFZs44Vu/EJoJ54coyDUdlueRDhc3E6mgdcdM9
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <47833ABE6718214DB3E9F08BEE40FD8C@eurprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: Mellanox.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 8e1a4310-4f38-4ae3-48c7-08d76281f858
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 06:24:25.1863
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: utXZqRkMsX0ulzjV5GZrybwLR9WOkcc22AXJ4MfWw8u3elX4lapXEaioGOLLcmaAZuawn1SHtOB08L8CEtZc3Q==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR05MB6446
+        Wed, 6 Nov 2019 01:25:29 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:45257 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfKFGZ3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:25:29 -0500
+Received: by mail-pf1-f193.google.com with SMTP id z4so12029150pfn.12;
+        Tue, 05 Nov 2019 22:25:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2z2zzwrYZ89SfiCuWmgXUPVWQMuF3fw9rReYi+2N7KE=;
+        b=AyjF+UFgW43piHCYUZKLwAxP4I/dTqeJJR8QAxrE4FXSu6JTVNGGua0F2U0rS9awZ0
+         ng5nGCzhxTTxFVaRHnAktFDqqsq8DukOob1HZdnU/dcS1+tWZS9ZrsC0WDDtcG/AVj3/
+         ZD9R4S8yTCrVNsI5JupLyNa6Jc6agB6bZkZ74a+tjvt/yQhPSFAaEzKnRqihcDBbPmCc
+         PoceSfGHdK5UY1Mxor7p1hOsh3UBHLO2HSbV/zWMp508VVfgvno0MlhgOCxNqTRvan+f
+         vRNX79UO4gkEbRNxYpJ4aLUFSD+UVem9zF1n6JRZXdCyUiMmKHjh0cpK8lUZ7BmzrK7u
+         k9Lw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2z2zzwrYZ89SfiCuWmgXUPVWQMuF3fw9rReYi+2N7KE=;
+        b=Qn4YctS5Iy0WqGLZ7eIDFLJncxpYeaQXXDl02KF7XiUJfrTg0Hk6+yJxF1/VDte+19
+         abPXU1RD0HTSQNjMprQxPR2OFxFhtwWacjowKC8q7pb1fO714riFrIMOHj+ckzGO3UQh
+         0Tvg6o+OESvsT1qcvs8XgEFuFPTplp5Uw2DAYhr9FRwHDNLfl058ScLx8f855lT2+JV0
+         eVWvkYN434buJt+6Q2T5FVSp5NcxPdSOHKasaKeELf91eHnskAE75XY/CQjK9m8f+cyW
+         U0BBs2cpHgA6D9dP7kpqTvCpcs4+Na50OMJsZgfRQJXiecweHnhOvWQpHQh40V201cVe
+         8LPg==
+X-Gm-Message-State: APjAAAX9R25csdfVHg2n/6NuAuJA5V1vOgkD/7XKFIb1KLm6XP3+TEhi
+        s7/rJI6oLW191okW5vWkEfY/beUZfJg=
+X-Google-Smtp-Source: APXvYqwVKVpY4Yu383X57nPEcilngoPHxaetzEiFo6tuZQucqF7xzatqr8jYSwt82c+XX66eLgyrMA==
+X-Received: by 2002:a17:90a:1089:: with SMTP id c9mr1640780pja.8.1573021528406;
+        Tue, 05 Nov 2019 22:25:28 -0800 (PST)
+Received: from odroid.ad.adelaide.edu.au (staff-249-202.wireless.adelaide.edu.au. [129.127.249.202])
+        by smtp.googlemail.com with ESMTPSA id l22sm20384453pgj.4.2019.11.05.22.25.24
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 22:25:27 -0800 (PST)
+From:   Marian Mihailescu <mihailescu2m@gmail.com>
+To:     linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, kgene@kernel.org
+Cc:     memeka <mihailescu2m@gmail.com>
+Subject: [PATCH] ARM: dts: exynos5420: add mali dt bindings and enable mali on Odroid XU3/4
+Date:   Wed,  6 Nov 2019 16:55:11 +1030
+Message-Id: <20191106062511.3262-1-mihailescu2m@gmail.com>
+X-Mailer: git-send-email 2.14.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gVHVlLCAyMDE5LTExLTA1IGF0IDE4OjI3ICswMDAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiBG
-cm9tOiBDb2xpbiBJYW4gS2luZyA8Y29saW4ua2luZ0BjYW5vbmljYWwuY29tPg0KPiANCj4gQ3Vy
-cmVudGx5IHdoZW4gYSBjYWxsIHRvICBlc3dfdnBvcnRfY3JlYXRlX2xlZ2FjeV9pbmdyZXNzX2Fj
-bF9ncm91cA0KPiBmYWlscyB0aGUgZXJyb3IgZXhpdCBwYXRoIHRvIGxhYmVsICdvdXQnIHdpbGwg
-Y2F1c2UgYSBrdmZyZWUgb24gdGhlDQo+IHVuaW5pdGlhbGl6ZWQgcG9pbnRlciBzcGVjLiAgRml4
-IHRoaXMgYnkgZW5zdXJpbmcgcG9pbnRlciBzcGVjIGlzDQo+IGluaXRpYWxpemVkIHRvIE5VTEwg
-dG8gYXZvaWQgdGhpcyBpc3N1ZS4NCj4gDQo+IEFkZHJlc3Nlcy1Db3Zlcml0eTogKCJVbmluaXRp
-YWxpemVkIHBvaW50ZXIgcmVhZCIpDQo+IEZpeGVzOiAxMDY1MmYzOTk0M2UgKCJuZXQvbWx4NTog
-UmVmYWN0b3IgaW5ncmVzcyBhY2wgY29uZmlndXJhdGlvbiIpDQo+IFNpZ25lZC1vZmYtYnk6IENv
-bGluIElhbiBLaW5nIDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+DQo+IC0tLQ0KPiAgZHJpdmVy
-cy9uZXQvZXRoZXJuZXQvbWVsbGFub3gvbWx4NS9jb3JlL2Vzd2l0Y2guYyB8IDIgKy0NCj4gIDEg
-ZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoLmMN
-Cj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZXN3aXRjaC5jDQo+
-IGluZGV4IDdiYWFkZTllNjJiNy4uZjJlNDAwYTIzYTU5IDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9tZWxsYW5veC9tbHg1L2NvcmUvZXN3aXRjaC5jDQo+ICsrKyBiL2RyaXZl
-cnMvbmV0L2V0aGVybmV0L21lbGxhbm94L21seDUvY29yZS9lc3dpdGNoLmMNCj4gQEAgLTEyNTMs
-NyArMTI1Myw3IEBAIHN0YXRpYyBpbnQgZXN3X3Zwb3J0X2luZ3Jlc3NfY29uZmlnKHN0cnVjdA0K
-PiBtbHg1X2Vzd2l0Y2ggKmVzdywNCj4gIAlzdHJ1Y3QgbWx4NV9mbG93X2Rlc3RpbmF0aW9uIGRy
-b3BfY3RyX2RzdCA9IHswfTsNCj4gIAlzdHJ1Y3QgbWx4NV9mbG93X2Rlc3RpbmF0aW9uICpkc3Qg
-PSBOVUxMOw0KPiAgCXN0cnVjdCBtbHg1X2Zsb3dfYWN0IGZsb3dfYWN0ID0gezB9Ow0KPiAtCXN0
-cnVjdCBtbHg1X2Zsb3dfc3BlYyAqc3BlYzsNCj4gKwlzdHJ1Y3QgbWx4NV9mbG93X3NwZWMgKnNw
-ZWMgPSBOVUxMOw0KPiAgCWludCBkZXN0X251bSA9IDA7DQo+ICAJaW50IGVyciA9IDA7DQo+ICAJ
-dTggKnNtYWNfdjsNCg0KDQpBcHBsaWVkIHRvIG1seDUtbmV4dC4NClRoYW5rcyENCg==
+From: memeka <mihailescu2m@gmail.com>
+
+Add device tree bindings and nodes for Mali GPU for Exynos 542x SoC.
+GPU is disabled by default, and is enabled for each board after the regulator
+is defined. Tested on Odroid-XU4.
+
+Changes since v1:
+- used generic node and label for GPU
+- added bindings for compatible
+- fixed irq indentation
+- fixed interrupt-names to match bindings
+- added cooling cells for future TMU connection
+- used generic node and label for GPU opp table
+- removed always-on from SoC GPU regulator
+
+Signed-off-by: Marian Mihailescu <mihailescu2m@gmail.com>
+---
+ .../devicetree/bindings/gpu/arm,mali-midgard.yaml  |  5 ++-
+ arch/arm/boot/dts/exynos5420.dtsi                  | 50 ++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5422-odroid-core.dtsi      |  6 ++-
+ 3 files changed, 59 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+index 47bc1ac36426..e8868cb587de 100644
+--- a/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
++++ b/Documentation/devicetree/bindings/gpu/arm,mali-midgard.yaml
+@@ -38,9 +38,12 @@ properties:
+           - enum:
+              - samsung,exynos5433-mali
+           - const: arm,mali-t760
++      - items:
++          - enum:
++             - samsung,exynis5420-mali
++          - const: arm,mali-t628
+ 
+           # "arm,mali-t624"
+-          # "arm,mali-t628"
+           # "arm,mali-t830"
+           # "arm,mali-t880"
+ 
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index 7d51e0f4ab79..31b5f7ba0e3b 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -670,6 +670,56 @@
+ 			iommus = <&sysmmu_gscl1>;
+ 		};
+ 
++		gpu: gpu@11800000 {
++			compatible = "samsung,exynos5422-mali", "arm,mali-t628";
++			reg = <0x11800000 0x5000>;
++			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>,
++			             <GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "job", "mmu", "gpu";
++
++			clocks = <&clock CLK_G3D>;
++			clock-names = "core";
++			power-domains = <&g3d_pd>;
++			operating-points-v2 = <&gpu_opp_table>;
++
++			status = "disabled";
++			#cooling-cells = <2>;
++
++			gpu_opp_table: opp-table {
++				compatible = "operating-points-v2";
++
++				opp@177000000 {
++					opp-hz = /bits/ 64 <177000000>;
++					opp-microvolt = <812500>;
++				};
++				opp@266000000 {
++					opp-hz = /bits/ 64 <266000000>;
++					opp-microvolt = <862500>;
++				};
++				opp@350000000 {
++					opp-hz = /bits/ 64 <350000000>;
++					opp-microvolt = <912500>;
++				};
++				opp-420000000 {
++					opp-hz = /bits/ 64 <420000000>;
++					opp-microvolt = <962500>;
++				};
++				opp-480000000 {
++					opp-hz = /bits/ 64 <480000000>;
++					opp-microvolt = <1000000>;
++				};
++				opp-543000000 {
++					opp-hz = /bits/ 64 <543000000>;
++					opp-microvolt = <1037500>;
++				};
++				opp-600000000 {
++					opp-hz = /bits/ 64 <600000000>;
++					opp-microvolt = <1150000>;
++				};
++			};
++		};
++
+ 		scaler_0: scaler@12800000 {
+ 			compatible = "samsung,exynos5420-scaler";
+ 			reg = <0x12800000 0x1294>;
+diff --git a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+index 422692b20c46..ce774f7b2ce0 100644
+--- a/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
++++ b/arch/arm/boot/dts/exynos5422-odroid-core.dtsi
+@@ -522,7 +522,6 @@
+ 				regulator-name = "vdd_g3d";
+ 				regulator-min-microvolt = <800000>;
+ 				regulator-max-microvolt = <1400000>;
+-				regulator-always-on;
+ 				regulator-boot-on;
+ 
+ 				regulator-state-mem {
+@@ -659,6 +658,11 @@
+ 	status = "okay";
+ };
+ 
++&gpu {
++	mali-supply = <&buck4_reg>;
++	status = "okay";
++};
++
+ &rtc {
+ 	status = "okay";
+ 	clocks = <&clock CLK_RTC>, <&s2mps11_osc S2MPS11_CLK_AP>;
+-- 
+2.14.1
+
