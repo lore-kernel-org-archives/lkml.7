@@ -2,307 +2,71 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5EDBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A998C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:56:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9DF1321882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bXX2X5MF"
+	by mail.kernel.org (Postfix) with ESMTP id 4342221929
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:56:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731504AbfKFIzm (ORCPT
+        id S1731546AbfKFI4U (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:55:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:59658 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731470AbfKFIzl (ORCPT
+        Wed, 6 Nov 2019 03:56:20 -0500
+Received: from retiisi.org.uk ([95.216.213.190]:55938 "EHLO
+        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727068AbfKFI4U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:55:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573030538;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=a5xdFXcNgincji0RYeUETKSWOPK9/JzBbCUJSaYDbgU=;
-        b=bXX2X5MFoGSNi1IHzD8y0yfP9hHEe4rY4c5QT9WRO+y6cUznRbGHSO/rrPItyKxOFSS1bx
-        fgesLBowetmvRIlkMsUcF6vdqog/ha5Uu/bkF3asnzA/IIfcikcYSUKX9w5pB2mRPBhfqB
-        p5wK6TUcDxO3bu8IEJVLJlroAjK6Ox0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-36-boHwpARWOCe1CnVuNAgH4w-1; Wed, 06 Nov 2019 03:55:35 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 Nov 2019 03:56:20 -0500
+Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F67C800C72;
-        Wed,  6 Nov 2019 08:55:33 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 653E35D70E;
-        Wed,  6 Nov 2019 08:55:30 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  6 Nov 2019 09:55:32 +0100 (CET)
-Date:   Wed, 6 Nov 2019 09:55:29 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: handle_exit_race && PF_EXITING
-Message-ID: <20191106085529.GA12575@redhat.com>
-References: <20191104002909.25783-1-shawn@git.icu>
- <87woceslfs.fsf@oldenburg2.str.redhat.com>
- <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
- <20191105152728.GA5666@redhat.com>
- <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de>
+        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 0D78C634C87;
+        Wed,  6 Nov 2019 10:55:03 +0200 (EET)
+Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
+        (envelope-from <sakari.ailus@retiisi.org.uk>)
+        id 1iSH5i-0002VM-1T; Wed, 06 Nov 2019 10:55:02 +0200
+Date:   Wed, 6 Nov 2019 10:55:02 +0200
+From:   Sakari Ailus <sakari.ailus@iki.fi>
+To:     Benoit Parrot <bparrot@ti.com>
+Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Jyri Sarha <jsarha@ti.com>
+Subject: Re: [Patch v2 07/20] media: ti-vpe: cal: add CSI2 PHY LDO errata
+ support
+Message-ID: <20191106085501.GA6253@valkosipuli.retiisi.org.uk>
+References: <20191104193140.31145-1-bparrot@ti.com>
+ <20191104193140.31145-8-bparrot@ti.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: boHwpARWOCe1CnVuNAgH4w-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20191104193140.31145-8-bparrot@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/05, Thomas Gleixner wrote:
->
->  sys_futex()
->     loop infinite because
->     =09 PF_EXITING is set,
-> =09 but PF_EXITPIDONE not
+Hi Benoit,
 
-Yes.
+On Mon, Nov 04, 2019 at 01:31:27PM -0600, Benoit Parrot wrote:
 
-IOW, the problem is very simple. RT task preempts the exiting lock owner
-after it sets PF_EXITING but before it sets PF_EXITPIDONE, if they run on
-the same CPU futex_lock_pi() will spin forever.
+...
 
-> So the obvious question is why PF_EXITPIDONE is set way after the futex
-> exit cleanup has run,
+> @@ -458,6 +483,8 @@
+>  #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+>  #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+>  
+> +#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
 
-Another obvious question is why this code checks PF_EXITING. I still think
-it should not.
+BIT(6) ?
 
-> The way we can deal with that is:
->
->     do_exit()
->     tsk->flags |=3D PF_EXITING;
->     ...
->     mutex_lock(&tsk->futex_exit_mutex);
->     futex_exit();
->     tsk->flags |=3D PF_EXITPIDONE;
->     mutex_unlock(&tsk->futex_exit_mutex);
->
-> and on the futex lock_pi side:
->
->     if (!(tsk->flags & PF_EXITING))
->     =09return 0;=09=09<- All good
->
->     if (tsk->flags & PF_EXITPIDONE)
->         return -EOWNERDEAD;=09<- Locker can take over
->
->     mutex_lock(&tsk->futex_exit_mutex);
->     if (tsk->flags & PF_EXITPIDONE) {
->         mutex_unlock(&tsk->futex_exit_mutex);
->         return -EOWNERDEAD;=09<- Locker can take over
->     }
->
->     queue_futex();
->     mutex_unlock(&tsk->futex_exit_mutex);
->
-> Not that I think it's pretty, but it plugs all holes AFAICT.
+BIT_MASK() is intended for a different purpose.
 
-I have found the fix I sent in 2015, attached below. I forgot everything
-I knew about futex.c, so I need some time to adapt it to the current code.
+-- 
+Regards,
 
-But I think it is clear what this patch tries to do, do you see any hole?
-
-Oleg.
-
-[PATCH] futex: don't spin waiting for PF_EXITING -> PF_EXITPIDONE transitio=
-n
-
-It is absolutely not clear why attach_to_pi_owner() returns -EAGAIN which
-triggers "retry" if the lock owner is PF_EXITING but not PF_EXITPIDONE.
-This burns CPU for no reason and this can even livelock if the rt_task()
-caller preempts a PF_EXITING owner.
-
-Remove the PF_EXITING check altogether. We do not care if it is exiting,
-all we need to know is can we rely on exit_pi_state_list() or not. So we
-also need to set PF_EXITPIDONE before we flush ->pi_state_list and call
-exit_pi_state_list() unconditionally.
-
-Perhaps we can add the fast-path list_empty() check in mm_release() back,
-but lets fix the problem first. Besides, in theory this check is already
-not correct, at least it should be list_empty_careful() to avoid the race
-with free_pi_state() in progress.
-
-Signed-off-by: Oleg Nesterov <oleg@redhat.com>
----
- kernel/exit.c  |   22 +---------------------
- kernel/fork.c  |    3 +--
- kernel/futex.c |   40 ++++++++++------------------------------
- 3 files changed, 12 insertions(+), 53 deletions(-)
-
-diff --git a/kernel/exit.c b/kernel/exit.c
-index 6806c55..bc969ed 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -683,27 +683,13 @@ void do_exit(long code)
- =09 */
- =09if (unlikely(tsk->flags & PF_EXITING)) {
- =09=09pr_alert("Fixing recursive fault but reboot is needed!\n");
--=09=09/*
--=09=09 * We can do this unlocked here. The futex code uses
--=09=09 * this flag just to verify whether the pi state
--=09=09 * cleanup has been done or not. In the worst case it
--=09=09 * loops once more. We pretend that the cleanup was
--=09=09 * done as there is no way to return. Either the
--=09=09 * OWNER_DIED bit is set by now or we push the blocked
--=09=09 * task into the wait for ever nirwana as well.
--=09=09 */
-+=09=09/* Avoid the new additions to ->pi_state_list at least */
- =09=09tsk->flags |=3D PF_EXITPIDONE;
- =09=09set_current_state(TASK_UNINTERRUPTIBLE);
- =09=09schedule();
- =09}
-=20
- =09exit_signals(tsk);  /* sets PF_EXITING */
--=09/*
--=09 * tsk->flags are checked in the futex code to protect against
--=09 * an exiting task cleaning up the robust pi futexes.
--=09 */
--=09smp_mb();
--=09raw_spin_unlock_wait(&tsk->pi_lock);
-=20
- =09if (unlikely(in_atomic()))
- =09=09pr_info("note: %s[%d] exited with preempt_count %d\n",
-@@ -779,12 +765,6 @@ void do_exit(long code)
- =09 * Make sure we are holding no locks:
- =09 */
- =09debug_check_no_locks_held();
--=09/*
--=09 * We can do this unlocked here. The futex code uses this flag
--=09 * just to verify whether the pi state cleanup has been done
--=09 * or not. In the worst case it loops once more.
--=09 */
--=09tsk->flags |=3D PF_EXITPIDONE;
-=20
- =09if (tsk->io_context)
- =09=09exit_io_context(tsk);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 4dc2dda..ec3208e 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -803,8 +803,7 @@ void mm_release(struct task_struct *tsk, struct mm_stru=
-ct *mm)
- =09=09tsk->compat_robust_list =3D NULL;
- =09}
- #endif
--=09if (unlikely(!list_empty(&tsk->pi_state_list)))
--=09=09exit_pi_state_list(tsk);
-+=09exit_pi_state_list(tsk);
- #endif
-=20
- =09uprobe_free_utask(tsk);
-diff --git a/kernel/futex.c b/kernel/futex.c
-index b101381..c1104a8 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -716,11 +716,13 @@ void exit_pi_state_list(struct task_struct *curr)
-=20
- =09if (!futex_cmpxchg_enabled)
- =09=09return;
-+
- =09/*
--=09 * We are a ZOMBIE and nobody can enqueue itself on
--=09 * pi_state_list anymore, but we have to be careful
--=09 * versus waiters unqueueing themselves:
-+=09 * attach_to_pi_owner() can no longer add the new entry. But
-+=09 * we have to be careful versus waiters unqueueing themselves.
- =09 */
-+=09curr->flags |=3D PF_EXITPIDONE;
-+
- =09raw_spin_lock_irq(&curr->pi_lock);
- =09while (!list_empty(head)) {
-=20
-@@ -905,24 +907,12 @@ static int attach_to_pi_owner(u32 uval, union futex_k=
-ey *key,
- =09=09return -EPERM;
- =09}
-=20
--=09/*
--=09 * We need to look at the task state flags to figure out,
--=09 * whether the task is exiting. To protect against the do_exit
--=09 * change of the task flags, we do this protected by
--=09 * p->pi_lock:
--=09 */
- =09raw_spin_lock_irq(&p->pi_lock);
--=09if (unlikely(p->flags & PF_EXITING)) {
--=09=09/*
--=09=09 * The task is on the way out. When PF_EXITPIDONE is
--=09=09 * set, we know that the task has finished the
--=09=09 * cleanup:
--=09=09 */
--=09=09int ret =3D (p->flags & PF_EXITPIDONE) ? -ESRCH : -EAGAIN;
--
-+=09if (unlikely(p->flags & PF_EXITPIDONE)) {
-+=09=09/* exit_pi_state_list() was already called */
- =09=09raw_spin_unlock_irq(&p->pi_lock);
- =09=09put_task_struct(p);
--=09=09return ret;
-+=09=09return -ESRCH;
- =09}
-=20
- =09/*
-@@ -1633,12 +1623,7 @@ retry_private:
- =09=09=09=09goto retry;
- =09=09=09goto out;
- =09=09case -EAGAIN:
--=09=09=09/*
--=09=09=09 * Two reasons for this:
--=09=09=09 * - Owner is exiting and we just wait for the
--=09=09=09 *   exit to complete.
--=09=09=09 * - The user space value changed.
--=09=09=09 */
-+=09=09=09/* The user space value changed. */
- =09=09=09free_pi_state(pi_state);
- =09=09=09pi_state =3D NULL;
- =09=09=09double_unlock_hb(hb1, hb2);
-@@ -2295,12 +2280,7 @@ retry_private:
- =09=09case -EFAULT:
- =09=09=09goto uaddr_faulted;
- =09=09case -EAGAIN:
--=09=09=09/*
--=09=09=09 * Two reasons for this:
--=09=09=09 * - Task is exiting and we just wait for the
--=09=09=09 *   exit to complete.
--=09=09=09 * - The user space value changed.
--=09=09=09 */
-+=09=09=09/* The user space value changed. */
- =09=09=09queue_unlock(hb);
- =09=09=09put_futex_key(&q.key);
- =09=09=09cond_resched();
---=20
-1.5.5.1
-
-
-
+Sakari Ailus
