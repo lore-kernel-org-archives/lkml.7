@@ -2,124 +2,169 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02741C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8457FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C50B421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:37:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97269217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="c5r7NCOu"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1fsHwJz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727589AbfKFWhc (ORCPT
+        id S1732754AbfKFWiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:37:32 -0500
-Received: from ssl.serverraum.org ([176.9.125.105]:48345 "EHLO
-        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727524AbfKFWg7 (ORCPT
+        Wed, 6 Nov 2019 17:38:11 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41064 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbfKFWiL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:36:59 -0500
-Received: from apollo.fritz.box (unknown [IPv6:2a02:810c:c200:2e91:6257:18ff:fec4:ca34])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by ssl.serverraum.org (Postfix) with ESMTPSA id 317CB23E4A;
-        Wed,  6 Nov 2019 23:36:57 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
-        s=mail2016061301; t=1573079817;
-        bh=bHgzmPWMQvRLD4IDF6kRyjvUWHwW1NVG2ZzBKrWk2cM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=c5r7NCOuLDM+GY2Md38faRERyiNuUNtONA1JvvJmarD9B/Ba72YVr+F8ryeCspVrH
-         3eQKOhuLu/Jp2Ud/hXMROrk2iv9pwkn0JZhvOKqa7IRLZfUJvPlp3lYPGV+RrQOF6O
-         +cmbr8572/zwexutMVoIa2T+7u3hNh+bYAq+28l4=
-From:   Michael Walle <michael@walle.cc>
-To:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org
-Cc:     Rob Herring <robh@kernel.org>, David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Andrew Lunn <andrew@lunn.ch>,
-        Oleksij Rempel <o.rempel@pengutronix.de>,
-        Michael Walle <michael@walle.cc>
-Subject: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
-Date:   Wed,  6 Nov 2019 23:36:15 +0100
-Message-Id: <20191106223617.1655-5-michael@walle.cc>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106223617.1655-1-michael@walle.cc>
-References: <20191106223617.1655-1-michael@walle.cc>
+        Wed, 6 Nov 2019 17:38:11 -0500
+Received: by mail-pl1-f194.google.com with SMTP id d29so5817205plj.8;
+        Wed, 06 Nov 2019 14:38:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=NhLwyjiytcYSqAw2MKZJzXtEEN6/UjRwW19b5+Kxoko=;
+        b=B1fsHwJzunde+XUqyu3U6KO/UaBvzPKaViffUAvOFBsY+2+3d9EgH+Z2+yYgUrT2dj
+         nfu/GSd1JkRgRRt9xX2iRkYmCCVzORgIK/dtOKfIFGi0pSa+7HdHS/4Ti7FQDHUXNWF/
+         o5w1hTljp1oHK3OBmt1rxNEOZsaPOKxttj/yDfSokIr81sSP3sE7DAIEXbkzQxSNKktV
+         dxpTQfDukUzQ80k6hEcrqsiqTpgx5MmrzS8eZe9ryvSZLTrdBKVadVcfVZEuq1Lcb1GI
+         ulMcQcLhV9YRzzeD66PsT0ONqsWA01kFPNJNY85twehsMjp8Yx3I4DiM2c2lQkWwe1vH
+         xk8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NhLwyjiytcYSqAw2MKZJzXtEEN6/UjRwW19b5+Kxoko=;
+        b=pzmH25k7H/O0PRjPuFfYr9lqM/XbVZddpLTl0xuAEuel6xwEDXZVdSzaKhxFParzmw
+         eunm+KONgL75kLG2wiIHXB4iPfdQuNHfn9G9A+fneowE1zE1ZJh0BAltOvCEfRahyxxP
+         euOVh03HIzTVOBb8XRxFYitHY+AnDltUhJdX5GrpYcwB2Hj0Q0gbhot43yE7gdCFcLF5
+         ZzJFy+lziDUALH1hStujhTc2qz3wwkq0Paiu7s0uBexBRvCH/RDXtI3xM4ycj3jzVChg
+         q4aU4Fr6NMsTHPy/wcKusfpMDGvjpNKwsA+A4LymTnc3dxV7Zocpov4NK1NEmfBpl5Yi
+         Z9Qw==
+X-Gm-Message-State: APjAAAUguX9gycEAoCUwJ9Y0shMFvu7KsSK06JVtxJZKJKZQLLJcAJDL
+        fpMroCjlrayHdthBrqB0OPo=
+X-Google-Smtp-Source: APXvYqwehfybuckKda8ttVPtF1fcYViIFX1E5srRIuEnDbfzuJmzexMVpUmMgwLKkCfzzu4HknuG+A==
+X-Received: by 2002:a17:902:a98c:: with SMTP id bh12mr12236plb.289.1573079890298;
+        Wed, 06 Nov 2019 14:38:10 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id z11sm3735pfg.117.2019.11.06.14.38.09
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 14:38:09 -0800 (PST)
+Date:   Wed, 6 Nov 2019 14:38:08 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jdelvare@suse.com
+Subject: Re: [PATCH 2/2] hwmon: (pmbus/ibm-cffps) Fix LED blink behavior
+Message-ID: <20191106223808.GA20956@roeck-us.net>
+References: <20191106200106.29519-1-eajames@linux.ibm.com>
+ <20191106200106.29519-3-eajames@linux.ibm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Virus-Scanned: clamav-milter 0.101.4 at web
-X-Virus-Status: Clean
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106200106.29519-3-eajames@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The AR8033 is the AR8031 without PTP support. All other registers are
-the same. Unfortunately, they share the same PHY ID. Therefore, we
-cannot distinguish between the one with PTP support and the one without.
+On Wed, Nov 06, 2019 at 02:01:06PM -0600, Eddie James wrote:
+> The LED blink_set function incorrectly did not tell the PSU LED to blink
+> if brightness was LED_OFF. Fix this, and also correct the LED_OFF
+> command data, which should give control of the LED back to the PSU
+> firmware. Also prevent I2C failures from getting the driver LED state
+> out of sync and add some dev_dbg statements.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Signed-off-by: Michael Walle <michael@walle.cc>
----
- drivers/net/phy/Kconfig  |  2 +-
- drivers/net/phy/at803x.c | 12 +++++++-----
- 2 files changed, 8 insertions(+), 6 deletions(-)
+Applied.
 
-diff --git a/drivers/net/phy/Kconfig b/drivers/net/phy/Kconfig
-index 1b884ebb4e48..8bccadf17e60 100644
---- a/drivers/net/phy/Kconfig
-+++ b/drivers/net/phy/Kconfig
-@@ -442,7 +442,7 @@ config NXP_TJA11XX_PHY
- config AT803X_PHY
- 	tristate "Qualcomm Atheros AR803X PHYs"
- 	help
--	  Currently supports the AR8030, AR8031 and AR8035 model
-+	  Currently supports the AR8030, AR8031, AR8033 and AR8035 model
- 
- config QSEMI_PHY
- 	tristate "Quality Semiconductor PHYs"
-diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
-index aa782b28615b..716672edd415 100644
---- a/drivers/net/phy/at803x.c
-+++ b/drivers/net/phy/at803x.c
-@@ -93,8 +93,8 @@
- #define AT803X_CLK_OUT_125MHZ_PLL		6
- #define AT803X_CLK_OUT_125MHZ_DSP		7
- 
--/* The AR8035 has another mask which is compatible with the AR8031 mask but
-- * doesn't support choosing between XTAL/PLL and DSP.
-+/* The AR8035 has another mask which is compatible with the AR8031/AR8033 mask
-+ * but doesn't support choosing between XTAL/PLL and DSP.
-  */
- #define AT8035_CLK_OUT_MASK			GENMASK(4, 3)
- 
-@@ -449,7 +449,9 @@ static int at803x_parse_dt(struct phy_device *phydev)
- 		}
- 	}
- 
--	/* Only supported on AR8031, the AR8030/AR8035 use strapping options */
-+	/* Only supported on AR8031/AR8033, the AR8030/AR8035 use strapping
-+	 * options.
-+	 */
- 	if (at803x_match_phy_id(phydev, ATH8031_PHY_ID)) {
- 		if (of_property_read_bool(node, "qca,keep-pll-enabled"))
- 			priv->flags |= AT803X_KEEP_PLL_ENABLED;
-@@ -734,9 +736,9 @@ static struct phy_driver at803x_driver[] = {
- 	.ack_interrupt		= at803x_ack_interrupt,
- 	.config_intr		= at803x_config_intr,
- }, {
--	/* ATHEROS 8031 */
-+	/* ATHEROS 8031/8033 */
- 	.phy_id			= ATH8031_PHY_ID,
--	.name			= "Atheros 8031 ethernet",
-+	.name			= "Atheros 8031/8033 ethernet",
- 	.phy_id_mask		= AT803X_PHY_ID_MASK,
- 	.probe			= at803x_probe,
- 	.config_init		= at803x_config_init,
--- 
-2.20.1
+Thanks,
+Guenter
 
+> ---
+>  drivers/hwmon/pmbus/ibm-cffps.c | 27 +++++++++++++++++++--------
+>  1 file changed, 19 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+> index c6a00e83aac6..d359b76bcb36 100644
+> --- a/drivers/hwmon/pmbus/ibm-cffps.c
+> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
+> @@ -44,9 +44,13 @@
+>  #define CFFPS_MFR_VAUX_FAULT			BIT(6)
+>  #define CFFPS_MFR_CURRENT_SHARE_WARNING		BIT(7)
+>  
+> +/*
+> + * LED off state actually relinquishes LED control to PSU firmware, so it can
+> + * turn on the LED for faults.
+> + */
+> +#define CFFPS_LED_OFF				0
+>  #define CFFPS_LED_BLINK				BIT(0)
+>  #define CFFPS_LED_ON				BIT(1)
+> -#define CFFPS_LED_OFF				BIT(2)
+>  #define CFFPS_BLINK_RATE_MS			250
+>  
+>  enum {
+> @@ -301,23 +305,31 @@ static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+>  					enum led_brightness brightness)
+>  {
+>  	int rc;
+> +	u8 next_led_state;
+>  	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+>  
+>  	if (brightness == LED_OFF) {
+> -		psu->led_state = CFFPS_LED_OFF;
+> +		next_led_state = CFFPS_LED_OFF;
+>  	} else {
+>  		brightness = LED_FULL;
+> +
+>  		if (psu->led_state != CFFPS_LED_BLINK)
+> -			psu->led_state = CFFPS_LED_ON;
+> +			next_led_state = CFFPS_LED_ON;
+> +		else
+> +			next_led_state = CFFPS_LED_BLINK;
+>  	}
+>  
+> +	dev_dbg(&psu->client->dev, "LED brightness set: %d. Command: %d.\n",
+> +		brightness, next_led_state);
+> +
+>  	pmbus_set_page(psu->client, 0);
+>  
+>  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+> -				       psu->led_state);
+> +				       next_led_state);
+>  	if (rc < 0)
+>  		return rc;
+>  
+> +	psu->led_state = next_led_state;
+>  	led_cdev->brightness = brightness;
+>  
+>  	return 0;
+> @@ -330,10 +342,7 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+>  	int rc;
+>  	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+>  
+> -	psu->led_state = CFFPS_LED_BLINK;
+> -
+> -	if (led_cdev->brightness == LED_OFF)
+> -		return 0;
+> +	dev_dbg(&psu->client->dev, "LED blink set.\n");
+>  
+>  	pmbus_set_page(psu->client, 0);
+>  
+> @@ -342,6 +351,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+>  	if (rc < 0)
+>  		return rc;
+>  
+> +	psu->led_state = CFFPS_LED_BLINK;
+> +	led_cdev->brightness = LED_FULL;
+>  	*delay_on = CFFPS_BLINK_RATE_MS;
+>  	*delay_off = CFFPS_BLINK_RATE_MS;
+>  
