@@ -2,111 +2,284 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3E82C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:45:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 646B2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:47:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A986217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:45:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24362206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:47:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="qsv82tH3"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShlBgR1n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731606AbfKFHpK (ORCPT
+        id S1731347AbfKFHrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:45:10 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:49236 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731425AbfKFHpI (ORCPT
+        Wed, 6 Nov 2019 02:47:00 -0500
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:34739 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729896AbfKFHq7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:45:08 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67j4bf098986;
-        Wed, 6 Nov 2019 01:45:04 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573026304;
-        bh=3QYMKEUjgYKhBdSdP2qag3H2Be3e+nUu5MFS1L0YuzE=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=qsv82tH3JMICrFhOnAkXxD4FlLI/Q6SJFUM/qGmokKoSTpdBmHZV2jg3kr2Mua8NJ
-         XV3ZbeCAYvANRS/9cA7Wkai24DkAe+jbJadoikz5XhViWAeRTDVJaksRFiHn7/tSNu
-         o+54m+DMZ1WMhchNozlG5QmD7HYeif/mTWNKHthQ=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67j4OY014026
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 01:45:04 -0600
-Received: from DLEE107.ent.ti.com (157.170.170.37) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 01:44:47 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 01:44:47 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67j0kv010832;
-        Wed, 6 Nov 2019 01:45:01 -0600
-Subject: Re: [PATCH v5 0/3] dmaengine: bindings/edma: dma-channel-mask to
- array
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <devicetree@vger.kernel.org>
-References: <20191025073056.25450-1-peter.ujfalusi@ti.com>
- <20191105170101.GE952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <1dbaa288-06b6-7ba4-e1ee-d76202c6be8b@ti.com>
-Date:   Wed, 6 Nov 2019 09:46:12 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 02:46:59 -0500
+Received: by mail-lj1-f194.google.com with SMTP id 139so24957509ljf.1;
+        Tue, 05 Nov 2019 23:46:58 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=av47Q/iim9RNgqgq4Bmm3HSeM8JMpXROtypRo+EI6qQ=;
+        b=ShlBgR1n9Sk0PdCClS/t8wlllquptCN1V/q2gzdIn/lYs4TeosBLdKratWLBcjVOX9
+         F1DZz+6kxyVcGLLcygLT880qORC4Vy2MZxan5p+NUbdGpx2e6CcuTApFaN2yTY0CeJ2I
+         t6l5jPtBQGb21I9kvyMe3gznx5E90lirlDcdrbOK+x7r6moFkv/uzczOVUt5C28usqwK
+         c7XrZTcqLMhXQliVrg3KBipGYV3n1ABlJHEY+b6mJiYxusLSFGguv98tVK6jgtcUCTQu
+         8gCmV/c4+whCRiX6CWc8/pkZpqWzq+f/s+LVL3scCejHa04wooqArTrcbAFSZep/w7Yf
+         Qodw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=av47Q/iim9RNgqgq4Bmm3HSeM8JMpXROtypRo+EI6qQ=;
+        b=Y47gTxUWKTASpHP1f81gI5SKXmmxc1z8Dp+FUb5h3aoi/vx33jUKC+j9nOVLTC+bqv
+         bo6hK+vHhuMdPNOqPxWzt2/z0OURoNTVCgK0uS6iKvhKphHDH6/qUdY/UdcMADzeV5g0
+         s57RWy9f4GWaILXRVPJImcjQcUX93RX5FkhDw+HsopY6tmS7/fzFW5DMg4JyLSd69Has
+         v24t54zysI7iZNVuiRD5i8I4inoEMSurcYn7w/lPAl5NBVaiW9WW/j/uPP2kTLGuJMDv
+         kWxKE9y6rlGBRzxil/pff7/E1qoerPCX+bQ75wRyVkoy3vO2JNXEQsRvU9hRCxyeRbYV
+         EFyA==
+X-Gm-Message-State: APjAAAXZIrrUo64wLpGw1ELty5bsdYdv1vnn6AunPoUoEwpa9mvPkV29
+        oW0YkAwD9QR6d8Bcffq/V6wI3/5CrZm6+A==
+X-Google-Smtp-Source: APXvYqz135mVKLw+H2DIsJPov4sRirJ60o0BH6yAXNe4gTREjzSpKrdjtA3qWGvKyul7lKO65hpsww==
+X-Received: by 2002:a2e:9841:: with SMTP id e1mr813101ljj.19.1573026417271;
+        Tue, 05 Nov 2019 23:46:57 -0800 (PST)
+Received: from gmail.com ([94.234.51.156])
+        by smtp.gmail.com with ESMTPSA id p88sm15335721ljp.13.2019.11.05.23.46.55
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 23:46:56 -0800 (PST)
+Date:   Wed, 6 Nov 2019 08:49:35 +0100
+From:   Marcus Folkesson <marcus.folkesson@gmail.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kent Gustavsson <kent@minoris.se>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Paul E . McKenney" <paulmck@linux.ibm.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] dt-bindings: iio: adc: Migrate MCP3911 documentation to
+ yaml
+Message-ID: <20191106074935.GA1200@gmail.com>
+References: <20191029211142.14650-1-marcus.folkesson@gmail.com>
+ <20191106034920.GA15882@bogus>
 MIME-Version: 1.0
-In-Reply-To: <20191105170101.GE952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191106034920.GA15882@bogus>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Rob,
 
+Thank you for comment. See inline comments.
 
-On 05/11/2019 19.01, Vinod Koul wrote:
-> On 25-10-19, 10:30, Peter Ujfalusi wrote:
->> Hi,
->>
->> Changes since v4:
->> - Rebased on next to make it apply cleanly
->> - Added Reviewed-by from Rob for the DT documentation patches
->>
->> Changes since v3:
->> - Update the dma-common.yaml and edma binding documentation according to Rob's
->>   suggestion
->>
->> Changes since v2:
->> - Fix dma-common.yaml documentation patch and extend the description of the
->>   dma-channel-mask array
->> - The edma documentation now includes information on the dma-channel-mask array
->>   size for EDMAs with 32 or 64 channels
->>
->> Changes since v1:
->> - Extend the common dma-channel-mask to uint32-array to be usable for
->>   controllers with more than 32 channels
->> - Use the dma-channel-mask instead custom property for available channels for
->>   EDMA.
->>
->> The original patch was part of the EDMA multicore usage series.
->>
->> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
->> needs to be an array to be usable for the driver.
-> 
-> And now I saw this and have applied these and dropped the ones I fixed
-> up manually!
+I will apply the changes to this pending patch as well.
+Subject: [PATCH] dt-bindings: iio: dac: Migrate LTC1660 documentation to ya=
+ml
 
-OK, thank you for picking these up! - Péter
+On Tue, Nov 05, 2019 at 09:49:20PM -0600, Rob Herring wrote:
+> On Tue, Oct 29, 2019 at 10:11:42PM +0100, Marcus Folkesson wrote:
+> > Rewrite bindings to use json-schema vocabulary.
+> >=20
+> > Signed-off-by: Marcus Folkesson <marcus.folkesson@gmail.com>
+> > ---
+> >  .../devicetree/bindings/iio/adc/mcp3911.txt   | 30 --------
+> >  .../bindings/iio/adc/microchip,mcp3911.yaml   | 72 +++++++++++++++++++
+> >  MAINTAINERS                                   |  2 +-
+> >  3 files changed, 73 insertions(+), 31 deletions(-)
+> >  delete mode 100644 Documentation/devicetree/bindings/iio/adc/mcp3911.t=
+xt
+> >  create mode 100644 Documentation/devicetree/bindings/iio/adc/microchip=
+,mcp3911.yaml
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt b/Do=
+cumentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > deleted file mode 100644
+> > index 3071f48fb30b..000000000000
+> > --- a/Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > +++ /dev/null
+> > @@ -1,30 +0,0 @@
+> > -* Microchip MCP3911 Dual channel analog front end (ADC)
+> > -
+> > -Required properties:
+> > - - compatible: Should be "microchip,mcp3911"
+> > - - reg: SPI chip select number for the device
+> > -
+> > -Recommended properties:
+> > - - spi-max-frequency: Definition as per
+> > -	 Documentation/devicetree/bindings/spi/spi-bus.txt.
+> > -	 Max frequency for this chip is 20MHz.
+> > -
+> > -Optional properties:
+> > - - clocks: Phandle and clock identifier for sampling clock
+> > - - interrupt-parent: Phandle to the parent interrupt controller
+> > - - interrupts: IRQ line for the ADC
+> > - - microchip,device-addr: Device address when multiple MCP3911 chips a=
+re present on the
+> > -	same SPI bus. Valid values are 0-3. Defaults to 0.
+> > - - vref-supply: Phandle to the external reference voltage supply.
+> > -
+> > -Example:
+> > -adc@0 {
+> > -	compatible =3D "microchip,mcp3911";
+> > -	reg =3D <0>;
+> > -	interrupt-parent =3D <&gpio5>;
+> > -	interrupts =3D <15 IRQ_TYPE_EDGE_RISING>;
+> > -	spi-max-frequency =3D <20000000>;
+> > -	microchip,device-addr =3D <0>;
+> > -	vref-supply =3D <&vref_reg>;
+> > -	clocks =3D <&xtal>;
+> > -};
+> > diff --git a/Documentation/devicetree/bindings/iio/adc/microchip,mcp391=
+1.yaml b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> > new file mode 100644
+> > index 000000000000..bfcf6a5fb44e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> > @@ -0,0 +1,72 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +# Copyright 2019 Marcus Folkesson <marcus.folkesson@gmail.com>
+> > +%YAML 1.2
+> > +---
+> > +$id: "http://devicetree.org/schemas/bindings/iio/adc/microchip,mcp3911=
+=2Eyaml#"
+> > +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> > +
+> > +title: Microchip MCP3911 Dual channel analog front end (ADC)
+> > +
+> > +maintainers:
+> > +  - Marcus Folkesson <marcus.folkesson@gmail.com>
+> > +  - Kent Gustavsson <nedo80@gmail.com>
+> > +
+> > +description: |
+> > +  Bindings for the Microchip MCP3911 Dual channel ADC device. Datashee=
+t can be
+> > +  found here: https://ww1.microchip.com/downloads/en/DeviceDoc/2000228=
+6C.pdf
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - microchip,mcp3911
+> > +
+> > +  reg:
+> > +    description: SPI chip select number for the device
+>=20
+> No need to describe common properties if you have nothing special for=20
+> this device to say.
+>=20
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+OK
+
+> > +    maxItems: 1
+> > +
+> > +  spi-max-frequency:
+> > +    description: |
+> > +      Definition as per Documentation/devicetree/bindings/spi/spi-bus.=
+txt.
+>=20
+> Same here.
+>=20
+> > +    maximum: 20000000
+> > +    maxItems: 1
+
+Should I keep the maximum property?
+
+>=20
+> Not an array, so drop.
+>=20
+> > +
+> > +  clocks:
+> > +    description: Phandle and clock identifier for sampling clock
+>=20
+> Same comment on descriptions.
+>=20
+
+I describe it a little bit more. Thanks
+
+> > +    maxItems: 1
+> > +
+> > +  interrupts:
+> > +    description: IRQ line of the ADC
+> > +    maxItems: 1
+> > +
+> > +  microchip,device-addr:
+> > +    description: Device address when multiple MCP3911 chips are presen=
+t on the same SPI bus.
+> > +    allOf:
+> > +      - $ref: /schemas/types.yaml#/definitions/uint32
+> > +      - enum: [0, 1, 2, 3]
+> > +      - default: 0
+> > +
+> > +  vref-supply:
+> > +    description: Phandle to the external reference voltage supply.
+> > +    maxItems: 1
+>=20
+> Drop this *-supply is always 1 item.
+>=20
+
+OK
+
+> > +
+> > +required:
+> > +  - compatible
+> > +  - reg
+> > +
+> > +examples:
+> > +  - |
+> > +    spi {
+> > +      #address-cells =3D <1>;
+> > +      #size-cells =3D <0>;
+> > +
+> > +      adc@0 {
+> > +        compatible =3D "microchip,mcp3911";
+> > +        reg =3D <0>;
+> > +        interrupt-parent =3D <&gpio5>;
+> > +        interrupts =3D <15 2>;
+> > +        spi-max-frequency =3D <20000000>;
+> > +        microchip,device-addr =3D <0>;
+> > +        vref-supply =3D <&vref_reg>;
+> > +        clocks =3D <&xtal>;
+> > +      };
+> > +    };
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index e51a68bf8ca8..fbccc9d450ff 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -10723,7 +10723,7 @@ M:	Kent Gustavsson <kent@minoris.se>
+> >  L:	linux-iio@vger.kernel.org
+> >  S:	Supported
+> >  F:	drivers/iio/adc/mcp3911.c
+> > -F:	Documentation/devicetree/bindings/iio/adc/mcp3911.txt
+> > +F:	Documentation/devicetree/bindings/iio/adc/microchip,mcp3911.yaml
+> > =20
+> >  MICROCHIP NAND DRIVER
+> >  M:	Tudor Ambarus <tudor.ambarus@microchip.com>
+> > --=20
+> > 2.23.0
+> >=20
+
+Thanks,
+Marcus Folkesson
+
