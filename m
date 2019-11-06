@@ -2,82 +2,110 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1F1EC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:23:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D66C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75BDA206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:23:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4D1A206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="Wln6GCVy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731376AbfKFLXP (ORCPT
+        id S1731446AbfKFLYE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:23:15 -0500
-Received: from foss.arm.com ([217.140.110.172]:38158 "EHLO foss.arm.com"
+        Wed, 6 Nov 2019 06:24:04 -0500
+Received: from canardo.mork.no ([148.122.252.1]:54583 "EHLO canardo.mork.no"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726101AbfKFLXP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:23:15 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 78A097A7;
-        Wed,  6 Nov 2019 03:23:14 -0800 (PST)
-Received: from arrakis.emea.arm.com (unknown [10.1.197.42])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 2525F3F6C4;
-        Wed,  6 Nov 2019 03:23:13 -0800 (PST)
-Date:   Wed, 6 Nov 2019 11:23:11 +0000
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Bhupesh Sharma <bhsharma@redhat.com>
-Cc:     linux-arm-kernel@lists.infradead.org, bhupesh.linux@gmail.com,
-        James Morse <james.morse@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Steve Capper <steve.capper@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        linux-kernel@vger.kernel.org, kexec@lists.infradead.org
-Subject: Re: [PATCH] arm64: mm: Remove MAX_USER_VA_BITS definition
-Message-ID: <20191106112310.GG21133@arrakis.emea.arm.com>
-References: <1572904606-27961-1-git-send-email-bhsharma@redhat.com>
+        id S1725890AbfKFLYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:24:04 -0500
+Received: from miraculix.mork.no ([IPv6:2a02:2121:340:755f:c09a:74ff:fe7f:b715])
+        (authenticated bits=0)
+        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xA6BNVj8026517
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 6 Nov 2019 12:23:32 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
+        t=1573039412; bh=v3Ba2yCnHfZ6sWycbEkeGJ9xcXrxQTVKv4WO5jG2qwc=;
+        h=From:To:Cc:Subject:References:Date:Message-ID:From;
+        b=Wln6GCVyIkaef7sMAOv6ek7lP5o1xy0S1INtPHQnAoDUffuDZ2o0pPydAUfne/laa
+         ctt3go12cGkgv/kwJEghK4+6Y1OMP5f4eLb8q3xIdMJi3okndPjaJaw+kiFAQF2MG2
+         IjfTIXRXX1PJQ4nncvXP5p0i0jOr5FifEL7Ps8f8=
+Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
+        (envelope-from <bjorn@mork.no>)
+        id 1iSJPI-0005PT-KN; Wed, 06 Nov 2019 12:23:24 +0100
+From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
+        gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] usb: Allow USB device to be warm reset in suspended state
+Organization: m
+References: <Pine.LNX.4.44L0.1911051200570.1678-100000@iolanthe.rowland.org>
+Date:   Wed, 06 Nov 2019 12:23:24 +0100
+In-Reply-To: <Pine.LNX.4.44L0.1911051200570.1678-100000@iolanthe.rowland.org>
+        (Alan Stern's message of "Tue, 5 Nov 2019 13:07:34 -0500 (EST)")
+Message-ID: <87o8xpz1sj.fsf@miraculix.mork.no>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572904606-27961-1-git-send-email-bhsharma@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Virus-Scanned: clamav-milter 0.101.4 at canardo
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 03:26:46AM +0530, Bhupesh Sharma wrote:
-> commit 9b31cf493ffa ("arm64: mm: Introduce MAX_USER_VA_BITS definition")
-> introduced the MAX_USER_VA_BITS definition, which was used to support
-> the arm64 mm use-cases where the user-space could use 52-bit virtual
-> addresses whereas the kernel-space would still could a maximum of 48-bit
-> virtual addressing.
-> 
-> But, now with commit b6d00d47e81a ("arm64: mm: Introduce 52-bit Kernel
-> VAs"), we removed the 52-bit user/48-bit kernel kconfig option and hence
-> there is no longer any scenario where user VA != kernel VA size
-> (even with CONFIG_ARM64_FORCE_52BIT enabled, the same is true).
-> 
-> Hence we can do away with the MAX_USER_VA_BITS macro as it is equal to
-> VA_BITS (maximum VA space size) in all possible use-cases. Note that
-> even though the 'vabits_actual' value would be 48 for arm64 hardware
-> which don't support LVA-8.2 extension (even when CONFIG_ARM64_VA_BITS_52
-> is enabled), VA_BITS would still be set to a value 52. Hence this change
-> would be safe in all possible VA address space combinations.
-> 
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Alan Stern <stern@rowland.harvard.edu> writes:
 
-Queued for 5.5. Thanks.
+> I was sure I remembered reading somewhere that suspended devices were
+> not allowed to be reset, but now I can't find that requirement anywhere
+> in the USB spec.
 
--- 
-Catalin
+I don't know anything about this, but "Reset From Suspended State" is
+part of Appendix C in the USB 2.0 spec. Looks valid to me..
+
+Quoting the relevant section for those who don't have that spec at hand:
+
+
+  C.2.1 Reset From Suspended State
+
+  As can be seen from Figure C-2, the device wakes up from the Suspended
+  state as soon as it sees a K or an SE0 on the bus. A J would be
+  indistinguishable from idle on the bus that a suspended device sees
+  normally. On seeing a K, the device will initiate a resume
+  process. For the details of this process, see Section 7.1.7.7. On
+  seeing an SE0, the device could enter the reset handshake procedure,
+  so it starts timer T0.
+
+  The actual reset handshake is only started after seeing a continuous
+  assertion of SE0 for at least 2.5 =CE=BCs (T FILTSE0 ).  The loop between
+  the blocks with =E2=80=9CClear timer T1=E2=80=9D and =E2=80=9CRun timer T=
+1=E2=80=9D represents this
+  filtering. If the device has not detected a continuous SE0 before
+  timer T0 exceeds the value of T UCHEND - T UCH , the device goes back
+  into the Suspended state.
+
+  A device coming from suspend most probably had its high-speed clock
+  stopped to meet the power requirements for a suspended device (see
+  Section 7.2.3). Therefore, it may take some time to let the clock
+  settle to a level of operation where it is able to perform the reset
+  detection and handshake with enough precision. In the state diagram, a
+  time symbol T WTCLK is used to have the device wait for a stable
+  clock. This symbol is not part of the USB 2.0 specification and does
+  not appear in Chapter 7. It is an implementation specific detail of
+  the reset detection state diagram for the upstream facing port, where
+  it is marked with a asterisk (*). T WTCLK should have a value
+  somewhere between 0 and 5.0 ms. This allows at least 1.0 ms time to
+  detect the continuous SE0.
+
+  If the device has seen an SE0 signal on the bus for at least T FILTSE0
+  , then it can safely assume to have detected a reset and can start the
+  reset handshake.
+
+
+
+
+Bj=C3=B8rn
