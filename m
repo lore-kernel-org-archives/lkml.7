@@ -2,172 +2,113 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A19CCC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC97C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C07A206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EF1C206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e0d3mmTA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfKFHD4 (ORCPT
+        id S1729712AbfKFHDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:03:56 -0500
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:9055 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731709AbfKFHDz (ORCPT
+        Wed, 6 Nov 2019 02:03:32 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:40850 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731601AbfKFHDa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:03:55 -0500
-IronPort-SDR: pxkYdO2ElJF+nddIDEtBjSp78R57KIyN+Jwu1RS1h24ERArbk0NMi3kOXgN6xTkLhayG9uCo6e
- yOfjU42NwT5UYfCYcBfRAspb/GXT6NgXl3pOh3HsbLyza8BkPm9M22oWgolL6kkpaHXG43KGwD
- H/t+8buxd/SBo3vH6KS1exQF4H0bGzf6fVm5m1WvKuYhXBYWrPrFhIAGaLNRB1OHH7TkmkIK3Z
- AaB89IgKVZt3lecpMoeYXIu7s3kZ6b46w4BNlKVVt9tPeCGKnE6RJqkHNMpVk/q6uJnIa2f9jN
- oUA=
-X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
-   d="scan'208";a="42848300"
-Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
-  by esa2.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:03:54 -0800
-IronPort-SDR: O7M+BwzV4jsGblTL4oMEcB/tCztlAtqDwvUyWrnyIzJD8vfyvmDdqla4S9l6/kJVj+NRiayRDW
- KSDMupJha6cKriXLbEp2wIL5K29YAWcvQCQq9DjUjpX3r0Fy8TKNsXAANaugxQyjIZOcmdPlEa
- maYdngbhkzh1etIEN/QKdTD58Cq3tyDPp+YNEWIoUPgrzyw8kNzxsmHKZ97oRP36efQEHHrLY8
- 4w0PAypZF6px7bFZFNLzGMvifU1mSj69O2NgROY3DADvgZTEgcqRiqW1yRVnuDbv5dJT0+o4aD
- IBM=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
-        <nick@shmanahar.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
-        <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v5 32/48] Input: atmel_mxt_ts - rely on calculated_crc rather than file config_crc
-Date:   Wed, 6 Nov 2019 16:01:30 +0900
-Message-ID: <20191106070146.18759-33-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
-References: <20191106070146.18759-1-jiada_wang@mentor.com>
+        Wed, 6 Nov 2019 02:03:30 -0500
+Received: by mail-pl1-f194.google.com with SMTP id e3so8860402plt.7;
+        Tue, 05 Nov 2019 23:03:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=WN6t2RxJTrcSpXWmkeYE7YP/Liw+XUS9WWZURfMVu18=;
+        b=e0d3mmTA3q+QfxCGgXPi0MsudpNOZYUrnPNw83QkvDpwth/fkqJuxRIWo2EkiK6DLz
+         IeJqc46wle64sFTk8FuEVNXLJrRk4prjD8RX/WOCZ3/OzvEtypYyfPtU5PDwGwVBfbER
+         JZ0wW0gPRcE7OhCBImVi2VYJfOdqvaoQzUjUwOqUge+mExV/crPCKnPmNGjcnAxP6h/g
+         kpEJECsmzWVub9jtDJw+OWKvohu1AcTJXc0BlSGYF18mnqPh6cQ7sE964JYSDrwXExk9
+         ipSMejz88ZGZHsVszIpIEsBdqxIxj1pzUwHj3TFpbT4z1CfnxmrmnuDUWfIoCUysFjAc
+         qxQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WN6t2RxJTrcSpXWmkeYE7YP/Liw+XUS9WWZURfMVu18=;
+        b=I6mHt/7wRhqQXrPE7pTLs641uAzSNpqG7uGqj8Y/0c5B5e/D1rDBfPSrPYLKNF8lCo
+         Y76nNVUCl8gZtbn85gQML7oMY0cBIkveXX35DpcU2XOaAm9hWLTgeyk0Sb3OU8yso3ie
+         VlLbXsOEhG1jZaJoUqLbhAeWL5Mns/QH144svv0GEnsiUuqvS1nlnZ2qyPjVhrisz0+g
+         iy/1ECYv/97LIjYMiOcQN1Oj6pZTfHGkiun5Sk7woOWH9G9aGYDaV79j9iyPBn7rSnOC
+         xYgdpYd6QZt4RNZIdlqG4saEoHeemsCKtI4TyRiFnzERZxeh5U6CzUwOgOOmF/bHE2QL
+         R15w==
+X-Gm-Message-State: APjAAAX7M97vjtRaNB+6oXdAU+triff4QK6tmxl9jYSnoGt/yfKIORV0
+        +llJNJiRIhQ6bpnj5sYD7C5oOng+MLB1WE7rhZ0=
+X-Google-Smtp-Source: APXvYqw4jyXL6u9kK1PwIkQAjG0ZoqTmBU33xW+M3eN+g5vMz4eih/Rdu9J4jTWVAlWUjIE3n3XB5B69aeDKKfte098=
+X-Received: by 2002:a17:902:bb84:: with SMTP id m4mr1006603pls.255.1573023809520;
+ Tue, 05 Nov 2019 23:03:29 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20191104213417.18036-1-leonmaxx@gmail.com> <20191104213907.18413-1-leonmaxx@gmail.com>
+In-Reply-To: <20191104213907.18413-1-leonmaxx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Nov 2019 09:03:17 +0200
+Message-ID: <CAHp75VfgTAa8TgTYn99gr_F4mmVuJZgEu=JcDE+bOnAO-pqqxA@mail.gmail.com>
+Subject: Re: [PATCH v2 3/3] platform/x86: asus_wmi: Set default fan boost mode
+ to normal
+To:     Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Chris Chiu <chiu@endlessm.com>,
+        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Kristian Klausen <kristian@klausen.dk>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kautuk Consul <kautuk_consul@mentor.com>
+On Mon, Nov 4, 2019 at 11:39 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+>
+> Set default fan boost mode to normal for multiple reasons:
+>
+> 1) existing code assumes that laptop started in normal mode and that is
+>    not always correct.
+> 2) FX705DY/FX505DY starts in silent mode and under heavy CPU load it
+>    overheats and drops CPU frequency to 399MHz [1]. Setting fan mode to
+>    normal avoids overheating.
+>
+> [1] Link: https://bugzilla.kernel.org/show_bug.cgi?id=203733
+>
+> Signed-off-by: Leonid Maksymchuk <leonmaxx@gmail.com>
 
-We now prefer to rely on the calculated CRC and not on the CRC stored in
-the file.
+> +static int fan_boost_mode_set_default(struct asus_wmi *asus)
+> +{
+> +       int result = 0;
+> +
+> +       if (asus->fan_boost_mode_available) {
+> +               asus->fan_boost_mode = ASUS_FAN_BOOST_MODE_NORMAL;
+> +               result = fan_boost_mode_write(asus);
+> +       }
+> +
+> +       return result;
+> +}
 
-The new logic is as follows:
-1) stored CRC of file != calculated CRC of file, then refuse the possible
-   corrupted file
-2) calculated CRC of file != CRC of configuration in controller, then
-   update configuration in controller
-3) calculated CRC of file == CRC of configuration in controller, then
-   ignore configuration file
+This can be refactored
 
-Signed-off-by: Kautuk Consul <kautuk_consul@mentor.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
----
- drivers/input/touchscreen/atmel_mxt_ts.c | 65 +++++++++++++-----------
- 1 file changed, 36 insertions(+), 29 deletions(-)
+if (!foo)
+  return 0;
+...
+return bar(asus);
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index acbba44d604c..3513413158c3 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -1908,7 +1908,7 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- 	int ret;
- 	int offset;
- 	int i;
--	u32 info_crc, config_crc, calculated_crc;
-+	u32 info_crc, config_crc, calculated_crc = 0;
- 	u16 crc_start = 0;
- 
- 	/* Make zero terminated copy of the OBP_RAW file */
-@@ -1971,30 +1971,6 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- 	}
- 	cfg.raw_pos += offset;
- 
--	/*
--	 * The Info Block CRC is calculated over mxt_info and the object
--	 * table. If it does not match then we are trying to load the
--	 * configuration from a different chip or firmware version, so
--	 * the configuration CRC is invalid anyway.
--	 */
--	if (info_crc == data->info_crc) {
--		if (config_crc == 0 || data->config_crc == 0) {
--			dev_info(dev, "CRC zero, attempting to apply config\n");
--		} else if (config_crc == data->config_crc) {
--			dev_dbg(dev, "Config CRC 0x%06X: OK\n",
--				 data->config_crc);
--			ret = 0;
--			goto release_raw;
--		} else {
--			dev_info(dev, "Config CRC 0x%06X: does not match file 0x%06X\n",
--				 data->config_crc, config_crc);
--		}
--	} else {
--		dev_warn(dev,
--			 "Warning: Info CRC error - device=0x%06X file=0x%06X\n",
--			 data->info_crc, info_crc);
--	}
--
- 	/* Malloc memory to store configuration */
- 	cfg.start_ofs = MXT_OBJECT_START +
- 			data->info->object_num * sizeof(struct mxt_object) +
-@@ -2018,14 +1994,45 @@ static int mxt_update_cfg(struct mxt_data *data, const struct firmware *fw)
- 	else
- 		dev_warn(dev, "Could not find CRC start\n");
- 
--	if (crc_start > cfg.start_ofs) {
-+	if (crc_start > cfg.start_ofs)
- 		calculated_crc = mxt_calculate_crc(cfg.mem,
- 						   crc_start - cfg.start_ofs,
- 						   cfg.mem_size);
- 
--		if (config_crc > 0 && config_crc != calculated_crc)
--			dev_warn(dev, "Config CRC in file inconsistent, calculated=%06X, file=%06X\n",
--				 calculated_crc, config_crc);
-+	/* If the CRC stored in the file is not the same as what
-+	 * was calculated by mxt_calculate_crc, this means we
-+	 * have to refuse the config file and abort download.
-+	 */
-+	if (config_crc != calculated_crc) {
-+		dev_warn(dev,
-+			 "Config CRC in file inconsistent, calculated=%06X, file=%06X\n",
-+			 calculated_crc, config_crc);
-+		ret = 0;
-+		goto release_mem;
-+	}
-+
-+	/*
-+	 * The Info Block CRC is calculated over mxt_info and the object
-+	 * table. If it does not match then we are trying to load the
-+	 * configuration from a different chip or firmware version, so
-+	 * the configuration CRC is invalid anyway.
-+	 */
-+	if (info_crc == data->info_crc) {
-+		if (config_crc == 0 || data->config_crc == 0) {
-+			dev_info(dev, "CRC zero, attempting to apply config\n");
-+		} else if (config_crc == data->config_crc) {
-+			dev_dbg(dev, "Config CRC 0x%06X: OK\n",
-+				data->config_crc);
-+			ret = 0;
-+			goto release_mem;
-+		} else {
-+			dev_info(dev, "Config CRC 0x%06X: does not match file 0x%06X\n",
-+				 data->config_crc, config_crc);
-+		}
-+	} else {
-+		dev_warn(dev,
-+			 "Warning: Info CRC error - device=0x%06X file=0x%06X\n",
-+			 data->info_crc, info_crc);
- 	}
- 
- 	ret = mxt_upload_cfg_mem(data, &cfg);
 -- 
-2.17.1
-
+With Best Regards,
+Andy Shevchenko
