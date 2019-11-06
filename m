@@ -2,136 +2,92 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B83E6FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921DFC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:53:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822E1217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B40217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:53:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="ELCF7P/V"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbWsBt9J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732810AbfKFWwt (ORCPT
+        id S1728226AbfKFWx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:52:49 -0500
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:15620 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726912AbfKFWvr (ORCPT
+        Wed, 6 Nov 2019 17:53:57 -0500
+Received: from mail-io1-f68.google.com ([209.85.166.68]:36223 "EHLO
+        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfKFWx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:51:47 -0500
-Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6MmG0D020832
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 14:51:46 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=facebook;
- bh=dSwdKAQfYz7C+OHgnNdW7b0Q3n07QRmPPJ73bo3ipfs=;
- b=ELCF7P/V93Fe7uNaUwabJuRU0dYxANy+gb5uNyqdO6mL9Ait2b2wnPb8enAkMhhCCktx
- U7n9OpRSUMRVvfZug7YU210qR/xzwu+F+5q60JzYpTt0YP+fA8qilVga69X5hcKie+2l
- Pq65mdPSehvuKfdr3jE0xTJmNTPeUC/mkqU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2w41vxssww-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:51:46 -0800
-Received: from 2401:db00:30:6012:face:0:17:0 (2620:10d:c081:10::13) by
- mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
- Wed, 6 Nov 2019 14:51:44 -0800
-Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
-        id 5E6AD19E16A81; Wed,  6 Nov 2019 14:51:44 -0800 (PST)
-Smtp-Origin-Hostprefix: devvm
-From:   Roman Gushchin <guro@fb.com>
-Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
-To:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>
-CC:     Michal Hocko <mhocko@kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
-        Roman Gushchin <guro@fb.com>, <stable@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>
-Smtp-Origin-Cluster: prn2c23
-Subject: [PATCH 1/2] mm: memcg: switch to css_tryget() in get_mem_cgroup_from_mm()
-Date:   Wed, 6 Nov 2019 14:51:30 -0800
-Message-ID: <20191106225131.3543616-1-guro@fb.com>
-X-Mailer: git-send-email 2.17.1
-X-FB-Internal: Safe
+        Wed, 6 Nov 2019 17:53:57 -0500
+Received: by mail-io1-f68.google.com with SMTP id s3so133080ioe.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:53:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qWwP0m6SqLRG+rteRbiBDc7/QsyVICBLBoO7IhUEkA4=;
+        b=MbWsBt9JRPefZXp4V7YBgwnLmXu5L6g7ZNW4e3Yn+vtZpGUlfyipuDo4DhTpUiiIYE
+         GWWtNUzW1i1cuB1GJAS3g1enLp0/xfCQ35eRURv9PJ4q8gPnHCy5RHlqzVPqygJSNTdT
+         VP4EDnY69Vlpky3sSUUgz/4induxxdpMquyLMChBNluyDN/XT2OuXlIeSJnGkGf+NDm/
+         Qf23ZtWfSG4vyO/TkZ1QfW8oCqvoU62SZA2+ViaWDxyfrz23Pb2N49hwwp3f1YsafcMs
+         VfpFMwViiZoC8o/v5M5ab8IfX/NeMYFwOvQP1RnOBO9HI8JRh0hTRNnK9CyPWwoAvY7t
+         A/sg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qWwP0m6SqLRG+rteRbiBDc7/QsyVICBLBoO7IhUEkA4=;
+        b=YSDVXjAWwJTuB0R4Sem6QQ0CTLQypvoLlHLnasp1Anvh1QQSBCCTCQqJJYDsJ6n9Xl
+         xmMKS1stttiI7OyCeKX5Nqn2OcjJprYkwEo4zNJR/7LBsBLfDERRi8IqEVde0e9rrfRb
+         dk++EclMzh7L+1aVWaow7/cKwaudL1taKaUSQoIy6vTZyhdu3JAzNVTHsHMED6yMo3nE
+         OkEker0xXXZfKgxOEKsTjAWU515yaHWMGKFee8ZTWn0iS1NWNvTXu38ATC+l8BxGcBr2
+         B7pltHasdwnfoaJmkYegQaCggL+2Vf5xWeF2fxpHp4MujGttz9EG5bPgZElXmxOrJCEl
+         7dqQ==
+X-Gm-Message-State: APjAAAUso6PZARNLlqakZ4WQw+yyICXWd2cfpnGh+A6mEj893KG1pw2Q
+        MwKmlBfw9GbBt46emLuKm56IJBNQxPY2TASC5P+OAHRXiGU=
+X-Google-Smtp-Source: APXvYqyNmeXLaksAr8Nl2Pam7oHSAtHGxBjGGzGx56rn/KBJsvcEm3oHyZSfK8yscXJ3Fkkfrs0LIJyLln81Fn3KcWw=
+X-Received: by 2002:a5e:8e02:: with SMTP id a2mr64653ion.269.1573080835360;
+ Wed, 06 Nov 2019 14:53:55 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-06_08:2019-11-06,2019-11-06 signatures=0
-X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
- malwarescore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
- suspectscore=0 bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=999
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1910280000 definitions=main-1911060219
-X-FB-Internal: deliver
+References: <20191106174804.74723-1-edumazet@google.com> <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
+In-Reply-To: <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
+From:   Eric Dumazet <edumazet@google.com>
+Date:   Wed, 6 Nov 2019 14:53:43 -0800
+Message-ID: <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
+Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     linux-tip-commits@vger.kernel.org,
+        syzbot <syzkaller@googlegroups.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-We've encountered a rcu stall in get_mem_cgroup_from_mm():
+On Wed, Nov 6, 2019 at 2:24 PM tip-bot2 for Eric Dumazet
+<tip-bot2@linutronix.de> wrote:
+>
+> The following commit has been merged into the timers/core branch of tip:
+>
+> Commit-ID:     56144737e67329c9aaed15f942d46a6302e2e3d8
+> Gitweb:        https://git.kernel.org/tip/56144737e67329c9aaed15f942d46a6302e2e3d8
+> Author:        Eric Dumazet <edumazet@google.com>
+> AuthorDate:    Wed, 06 Nov 2019 09:48:04 -08:00
+> Committer:     Thomas Gleixner <tglx@linutronix.de>
+> CommitterDate: Wed, 06 Nov 2019 23:18:31 +01:00
+>
+> hrtimer: Annotate lockless access to timer->state
+>
 
- rcu: INFO: rcu_sched self-detected stall on CPU
- rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
- (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
- <...>
- RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
- <...>
- __memcg_kmem_charge+0x55/0x140
- __alloc_pages_nodemask+0x267/0x320
- pipe_write+0x1ad/0x400
- new_sync_write+0x127/0x1c0
- __kernel_write+0x4f/0xf0
- dump_emit+0x91/0xc0
- writenote+0xa0/0xc0
- elf_core_dump+0x11af/0x1430
- do_coredump+0xc65/0xee0
- ? unix_stream_sendmsg+0x37d/0x3b0
- get_signal+0x132/0x7c0
- do_signal+0x36/0x640
- ? recalc_sigpending+0x17/0x50
- exit_to_usermode_loop+0x61/0xd0
- do_syscall_64+0xd4/0x100
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+I guess we also need to fix timer_pending(), since timer->entry.pprev
+could change while we read it.
 
-The problem is caused by an exiting task which is associated with
-an offline memcg. We're iterating over and over in the
-do {} while (!css_tryget_online()) loop, but obviously the memcg won't
-become online and the exiting task won't be migrated to a live memcg.
+I will try to find a KCSAN report showing the issue.
 
-Let's fix it by switching from css_tryget_online() to css_tryget().
-
-As css_tryget_online() cannot guarantee that the memcg won't go
-offline, the check is usually useless, except some rare cases
-when for example it determines if something should be presented
-to a user.
-
-A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
-css_tryget() instead of css_tryget_online() in task_get_css()").
-
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Cc: stable@vger.kernel.org
-Cc: Tejun Heo <tj@kernel.org>
----
- mm/memcontrol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 50f5bc55fcec..c5b5f74cfd4d 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -939,7 +939,7 @@ struct mem_cgroup *get_mem_cgroup_from_mm(struct mm_struct *mm)
- 			if (unlikely(!memcg))
- 				memcg = root_mem_cgroup;
- 		}
--	} while (!css_tryget_online(&memcg->css));
-+	} while (!css_tryget(&memcg->css));
- 	rcu_read_unlock();
- 	return memcg;
- }
--- 
-2.17.1
-
+Thanks !
