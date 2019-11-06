@@ -2,131 +2,125 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 09D7DC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4947FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:30:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1EEA217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:29:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 078DE217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:30:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="NbEcbyZK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725943AbfKFF3V (ORCPT
+        id S1726026AbfKFFaI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 00:29:21 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:14226 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725616AbfKFF3V (ORCPT
+        Wed, 6 Nov 2019 00:30:08 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:45657 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725616AbfKFFaH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 00:29:21 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA65Mc3S037495
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 00:29:20 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w3pgptg1v-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 00:29:19 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <sourabhjain@linux.ibm.com>;
-        Wed, 6 Nov 2019 05:29:18 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 05:29:15 -0000
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA65TEZI53936150
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 05:29:14 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 42BAFA4060;
-        Wed,  6 Nov 2019 05:29:14 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1CF17A405C;
-        Wed,  6 Nov 2019 05:29:13 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.124.35.70])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 05:29:12 +0000 (GMT)
-Subject: Re: [PATCH v2 3/4] Documentation/ABI: mark /sys/kernel/fadump_* sysfs
- files deprecated
-To:     Hari Bathini <hbathini@linux.ibm.com>, mpe@ellerman.id.au
-Cc:     corbet@lwn.net, mahesh@linux.vnet.ibm.com,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@ozlabs.org
-References: <20191018130557.2217-1-sourabhjain@linux.ibm.com>
- <20191018130557.2217-4-sourabhjain@linux.ibm.com>
- <f69daa7b-ddb3-8190-c409-28a22c504fed@linux.ibm.com>
- <b1bc42cc-8d80-d104-b1b3-684c08531c78@linux.ibm.com>
- <d0a34f71-1b78-e387-c3a5-d771995a91f6@linux.ibm.com>
-From:   Sourabh Jain <sourabhjain@linux.ibm.com>
-Date:   Wed, 6 Nov 2019 10:59:12 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 6 Nov 2019 00:30:07 -0500
+Received: by mail-qv1-f65.google.com with SMTP id g12so939291qvy.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 21:30:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDDk07eKG9qEhLhrH+Zk15TBEiXJzk1xwv/XlIHf5XM=;
+        b=NbEcbyZKAqBEi+a+8d9bkLXrYAJLYaPLD0f+r0EtlUbZI2FeFMgowh36hKRbjtc9t0
+         5jeaePfvePCdgI8aU4XftyMrv6hFjgj5wvEa096MfJB1kQzB3kBCM/kTXw0/2b9untvd
+         +AsuCEHEFpKyJs2Rq5zqBPs4KmTm4hzW7Z4wghoXRPO8bAzjefaR/50xzd12Fyrx2Id/
+         tkEINnPKnxtml4Danynnn8LkPsK/GbD6yJ64BU+vM4ThImtYtF3pBxBbko0Q4uAd3Por
+         q1cM94zNGc6JpS5vpSpEH9tBbXU0lTJ94vKR9OBEclLRxJ/wH1c7Hjf7B6q7UWY5uRw4
+         8cFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=aDDk07eKG9qEhLhrH+Zk15TBEiXJzk1xwv/XlIHf5XM=;
+        b=U2FgxhHjGwFRxcNA5Jhe/eKJXZ1qKPHeISHWBW6QdziMyheMUNvgG5Z1Sd/tqtcDqR
+         1Bu0bUq1fj6I/EdnU+Vr+GKdlTjlkqgfK9xjh/lt3AaAUW29UdHO0mJ7NQ0eepZMGq5w
+         N4vbIgW65WkRk6yzWriKHPBEDjVpZNRytuLJ/b6UwHGXnjOHXKEyb6CgT0gZw7X53XPE
+         wkK5EgTGGTq/4GgBhqKT6bKwNiXs2rcRoj3c27PPhYJpFPoYWtaR7EcB8b3ej3mXEvxR
+         v2akuPw+Zdz+gb+ny4Z6a+GqRzCMFgFdomys5mfi7e9cz1/nlz8E8aKXRLTJE2jLioJJ
+         /kYw==
+X-Gm-Message-State: APjAAAVgqAh+Y+lHpjPbuiUlzxlPYJoEMsV5NxUpk+Gv+o8vG0u2ahwz
+        xOGHXXOtR39FBegrHe1hTrobsA==
+X-Google-Smtp-Source: APXvYqw1TTnYH8qWCLEj/NWTwXRqc7I2dZ0XoiNZgRsm5w7NGcJsha2s0EQoOUy4+VxMDiivAmwW+A==
+X-Received: by 2002:ad4:4e2c:: with SMTP id dm12mr673283qvb.195.1573018206535;
+        Tue, 05 Nov 2019 21:30:06 -0800 (PST)
+Received: from ovpn-124-162.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id n20sm12483453qkn.118.2019.11.05.21.30.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 21:30:05 -0800 (PST)
+From:   Qian Cai <cai@lca.pw>
+To:     mingo@redhat.com, peterz@infradead.org
+Cc:     andi@firstfloor.org, acme@kernel.org, mark.rutland@arm.com,
+        jolsa@redhat.com, namhyung@kernel.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>
+Subject: [PATCH -next] perf/core: fix unlock balance in perf_init_event
+Date:   Wed,  6 Nov 2019 00:29:35 -0500
+Message-Id: <20191106052935.8352-1-cai@lca.pw>
+X-Mailer: git-send-email 2.21.0 (Apple Git-122)
 MIME-Version: 1.0
-In-Reply-To: <d0a34f71-1b78-e387-c3a5-d771995a91f6@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110605-4275-0000-0000-0000037B2DD2
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110605-4276-0000-0000-0000388E7A21
-Message-Id: <c7973234-6847-a8f3-7dc9-04f4d3fc99c0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911060056
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The -next commit "perf/core: Optimize perf_init_event()" [1] introduced
+an unlock imbalance in perf_init_event() where it calls "goto again" and
+then only repeat rcu_read_unlock().
 
+  WARNING: bad unlock balance detected!
+  perf_event_open/6185 is trying to release lock (rcu_read_lock) at:
+  [<ffffffffb5eb4039>] perf_event_alloc+0xbb9/0x17f0
+  but there are no more locks to release!
+  other info that might help us debug this:
+  2 locks held by perf_event_open/6185:
+  #0: ffff888526780b50 (&sig->cred_guard_mutex){+.+.}, at: __do_sys_perf_event_open+0x6ee/0x1460
+  #1: ffffffffb866b4e8 (&pmus_srcu){....}, at: perf_event_alloc+0xab8/0x17f0
+  Call Trace:
+   dump_stack+0xa0/0xea
+   print_unlock_imbalance_bug.cold.40+0xb1/0xb6
+   lock_release+0x349/0x4b0
+   perf_event_alloc+0xbcf/0x17f0
+   __do_sys_perf_event_open+0x1e2/0x1460
+   __x64_sys_perf_event_open+0x62/0x70
+   do_syscall_64+0xcc/0xaec
+   entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
-On 11/5/19 10:31 PM, Hari Bathini wrote:
-> 
-> 
-> On 05/11/19 2:24 PM, Sourabh Jain wrote:
->>
->>
->> On 10/21/19 1:11 PM, Hari Bathini wrote:
->>>
->>>
->>> On 18/10/19 6:35 PM, Sourabh Jain wrote:
->>>> The /sys/kernel/fadump_* sysfs files are replicated under
->>>
->>> [...]
->>>
->>>> +Note: The following FADump sysfs files are deprecated.
->>>> +
->>>> +    Deprecated                       Alternative
->>>> +    -------------------------------------------------------------------------------
->>>> +    /sys/kernel/fadump_enabled           /sys/kernel/fadump/fadump_enabled
->>>> +    /sys/kernel/fadump_registered        /sys/kernel/fadump/fadump_registered
->>>> +    /sys/kernel/fadump_release_mem       /sys/kernel/fadump/fadump_release_mem
->>>
->>> /sys/kernel/fadump/* looks tidy instead of /sys/kernel/fadump/fadump_* 
->>> I mean, /sys/kernel/fadump/fadump_enabled => /sys/kernel/fadump/enabled and such..
->>
->>
->>
->> Could you please confirm whether you want to address the sysfs file path differently or
->> actually changing the sysfs file name from fadump_enabled to enabled.
-> 
-> I meant, given the path "/sys/kernel/fadump/", the prefix fadump_ is redundant.
-> If there are no conventions that we should retain the same file name, I suggest
-> to drop the fadump_ prefix and just call them enabled, registered, etc..
+[1] https://lore.kernel.org/lkml/20191022092307.425783389@infradead.org/
 
-Oh Yes, I agree with you. It's better not to prefix the sysfs files with fadump_. As we already
-have directory that convey the same information.
+Signed-off-by: Qian Cai <cai@lca.pw>
+---
+ kernel/events/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-I did not find any rule regarding renaming an obsolete sysfs file in Documentation/ABI/README.
-So lets remove the fadump_ prefix from fadump sysfs file. 
-
-Thanks,
-Sourabh Jain
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index cfd89b4a02d8..8226d6ecdb86 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -10307,7 +10307,6 @@ static struct pmu *perf_init_event(struct perf_event *event)
+ 			goto unlock;
+ 	}
+ 
+-	rcu_read_lock();
+ 	/*
+ 	 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
+ 	 * are often aliases for PERF_TYPE_RAW.
+@@ -10317,6 +10316,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
+ 		type = PERF_TYPE_RAW;
+ 
+ again:
++	rcu_read_lock();
+ 	pmu = idr_find(&pmu_idr, type);
+ 	rcu_read_unlock();
+ 	if (pmu) {
+-- 
+2.21.0 (Apple Git-122)
 
