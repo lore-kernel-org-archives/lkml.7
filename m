@@ -2,154 +2,210 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CC9EBC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A04ADC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:47:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 99F7120663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5424C20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:47:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="YHFILQCp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731059AbfKFDq6 (ORCPT
+        id S1731223AbfKFDrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:46:58 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:42428 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726368AbfKFDq6 (ORCPT
+        Tue, 5 Nov 2019 22:47:11 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:39629 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFDrK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:46:58 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA63kaZW017642
-        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 22:46:57 -0500
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3n352a29-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:46:56 -0500
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
-        Wed, 6 Nov 2019 03:46:53 -0000
-Received: from b06avi18878370.portsmouth.uk.ibm.com (9.149.26.194)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 03:46:45 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA63kiwk46727510
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 03:46:44 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 63DEE42041;
-        Wed,  6 Nov 2019 03:46:44 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 0C2B142049;
-        Wed,  6 Nov 2019 03:46:44 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 03:46:44 +0000 (GMT)
-Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6FF61A00F1;
-        Wed,  6 Nov 2019 14:46:39 +1100 (AEDT)
-Subject: Re: [PATCH 10/10] ocxl: Conditionally bind SCM devices to the generic
- OCXL driver
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Frederic Barrat <fbarrat@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Allison Randal <allison@lohutok.net>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-11-alastair@au1.ibm.com>
-From:   Andrew Donnellan <ajd@linux.ibm.com>
-Date:   Wed, 6 Nov 2019 14:46:40 +1100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Tue, 5 Nov 2019 22:47:10 -0500
+Received: by mail-io1-f67.google.com with SMTP id k1so13589442ioj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:47:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Z2H/vfY+M3FOVI8nyc1KajqzdWqSXMeNKABjk0rdQL0=;
+        b=YHFILQCp/WqkCCA/t3E5TZqDHrrZL0ezjrzpHcw8xJd/nT4G4Cov+gxz6SmCFE/cij
+         9BNwJ62Azjuuo+MFxfXeBcRjneHg1rluxOFicfqjSD/DLMv1RCTlh2Qyg/nkHkYT5V9n
+         Qjdyn0JZaL4uG6byGwnWrnkNocwPBsZrIuBSs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Z2H/vfY+M3FOVI8nyc1KajqzdWqSXMeNKABjk0rdQL0=;
+        b=NnkuqdWMslmPX6qRiCVcR9dc7nv0J7J6CJlFe/pNOeAq4o/ypSv+NRPecSF67pRl1X
+         e/Ls6joSIf/bKFheg5i4tb1IgG1f7EQfeWRwWkJEJPYF7oMZBd0E4tU5bt6VZl1YMvoM
+         QwJHT/mAepcXklG8/XIUZFIjgFc6qLgP7W+2s6zlU17zrUTOh7PquemFyoqyqzGKb7jF
+         MSeXn0X78kPeZCWEyCuPQnAawMTvzs/cpFsyKVUQl9RTYRqQQ1nWL3Z4wFJdgH6jTufN
+         1zgajv5BwlwcBV4CJC8Y6kLO7QAzJ50sxVaD7rwwwwuPy9BwlX/Jj/fIVLN6hngO/72v
+         DmvQ==
+X-Gm-Message-State: APjAAAV6Q12mHaggc1xUq5t0xHxQx1BqnSKKnBXg41armjtAMgw2AFbd
+        O19qQEsxlX85ee36UcMEnrwlo1JmB5+DynQi/gt+mg==
+X-Google-Smtp-Source: APXvYqzM4v8A7/KdBti0Vuh47ZVMEZFBED5Uz6EFt/lWzRoGkj9v0kX9qfllxewVAnd9O0epfOmwy6yqBkGg6SO1Zv4=
+X-Received: by 2002:a02:742a:: with SMTP id o42mr25123417jac.24.1573012029823;
+ Tue, 05 Nov 2019 19:47:09 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191025044721.16617-11-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110603-0008-0000-0000-0000032B1484
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110603-0009-0000-0000-00004A4A7093
-Message-Id: <e1a28cc0-2a48-3149-ee77-0c4bc2727aa7@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911060038
+References: <20191104173737.142558-1-robdclark@gmail.com>
+In-Reply-To: <20191104173737.142558-1-robdclark@gmail.com>
+From:   Rob Clark <robdclark@chromium.org>
+Date:   Tue, 5 Nov 2019 19:46:59 -0800
+Message-ID: <CAJs_Fx4qbQXdDmxB4-F+vJTBr7y2YkSvGbOVGid6T1=HGZer6Q@mail.gmail.com>
+Subject: Re: [PATCH 1/2 v2] drm/atomic: fix self-refresh helpers crtc state dereference
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel <dri-devel@lists.freedesktop.org>,
+        Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 25/10/19 3:47 pm, Alastair D'Silva wrote:
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch allows the user to bind OpenCAPI SCM devices to the generic OCXL
-> driver.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+On Mon, Nov 4, 2019 at 9:39 AM Rob Clark <robdclark@gmail.com> wrote:
+>
+> From: Rob Clark <robdclark@chromium.org>
+>
+> drm_self_refresh_helper_update_avg_times() was incorrectly accessing the
+> new incoming state after drm_atomic_helper_commit_hw_done().  But this
+> state might have already been superceeded by an !nonblock atomic update
+> resulting in dereferencing an already free'd crtc_state.
+>
+> TODO I *think* this will more or less do the right thing.. althought I'm
+> not 100% sure if, for example, we enter psr in a nonblock commit, and
+> then leave psr in a !nonblock commit that overtakes the completion of
+> the nonblock commit.  Not sure if this sort of scenario can happen in
+> practice.  But not crashing is better than crashing, so I guess we
+> should either take this patch or rever the self-refresh helpers until
+> Sean can figure out a better solution.
 
-Agree that this needs more explanation - both in the commit and the 
-Kconfig help.
+btw, I think we can drop this TODO para from the commit msg.. but
+would be nice to get this (1/2) landed in v5.4-fixes as it fixes an
+actual regressions..
 
-> diff --git a/drivers/misc/ocxl/pci.c b/drivers/misc/ocxl/pci.c
-> index cb920aa88d3a..7137055c1883 100644
-> --- a/drivers/misc/ocxl/pci.c
-> +++ b/drivers/misc/ocxl/pci.c
-> @@ -10,6 +10,9 @@
->    */
->   static const struct pci_device_id ocxl_pci_tbl[] = {
->   	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x062B), },
-> +#ifdef CONFIG_OCXL_SCM_GENERIC
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_IBM, 0x0625), },
-> +#endif
->   	{ }
->   };
->   MODULE_DEVICE_TABLE(pci, ocxl_pci_tbl);
-> 
+patch 2/2 probably shouldn't be for v5.4, since according to kbuild
+robot it is turning up some other problems.. but I still think it is
+probably a good idea
 
-If there's no way to use the ID table from ocxl-scm directly, there 
-should at least be a comment both here and in the ocxl-scm device ID 
-table mentioning that you need to keep these in sync.
+BR,
+-R
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-ajd@linux.ibm.com             IBM Australia Limited
-
+>
+> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
+> Cc: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c       | 14 +++++++++++++-
+>  drivers/gpu/drm/drm_self_refresh_helper.c | 15 +++++++++------
+>  include/drm/drm_self_refresh_helper.h     |  3 ++-
+>  3 files changed, 24 insertions(+), 8 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 3ef2ac52ce94..648494c813e5 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1581,8 +1581,11 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>  {
+>         struct drm_device *dev = old_state->dev;
+>         const struct drm_mode_config_helper_funcs *funcs;
+> +       struct drm_crtc_state *new_crtc_state;
+> +       struct drm_crtc *crtc;
+>         ktime_t start;
+>         s64 commit_time_ms;
+> +       unsigned i, new_self_refresh_mask = 0;
+>
+>         funcs = dev->mode_config.helper_private;
+>
+> @@ -1602,6 +1605,14 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>
+>         drm_atomic_helper_wait_for_dependencies(old_state);
+>
+> +       /*
+> +        * We cannot safely access new_crtc_state after drm_atomic_helper_commit_hw_done()
+> +        * so figure out which crtc's have self-refresh active beforehand:
+> +        */
+> +       for_each_new_crtc_in_state(old_state, crtc, new_crtc_state, i)
+> +               if (new_crtc_state->self_refresh_active)
+> +                       new_self_refresh_mask |= BIT(i);
+> +
+>         if (funcs && funcs->atomic_commit_tail)
+>                 funcs->atomic_commit_tail(old_state);
+>         else
+> @@ -1610,7 +1621,8 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>         commit_time_ms = ktime_ms_delta(ktime_get(), start);
+>         if (commit_time_ms > 0)
+>                 drm_self_refresh_helper_update_avg_times(old_state,
+> -                                                (unsigned long)commit_time_ms);
+> +                                                (unsigned long)commit_time_ms,
+> +                                                new_self_refresh_mask);
+>
+>         drm_atomic_helper_commit_cleanup_done(old_state);
+>
+> diff --git a/drivers/gpu/drm/drm_self_refresh_helper.c b/drivers/gpu/drm/drm_self_refresh_helper.c
+> index 68f4765a5896..011b8d5f7dd6 100644
+> --- a/drivers/gpu/drm/drm_self_refresh_helper.c
+> +++ b/drivers/gpu/drm/drm_self_refresh_helper.c
+> @@ -133,6 +133,8 @@ static void drm_self_refresh_helper_entry_work(struct work_struct *work)
+>   * drm_self_refresh_helper_update_avg_times - Updates a crtc's SR time averages
+>   * @state: the state which has just been applied to hardware
+>   * @commit_time_ms: the amount of time in ms that this commit took to complete
+> + * @new_self_refresh_mask: bitmask of crtc's that have self_refresh_active in
+> + *    new state
+>   *
+>   * Called after &drm_mode_config_funcs.atomic_commit_tail, this function will
+>   * update the average entry/exit self refresh times on self refresh transitions.
+> @@ -140,22 +142,23 @@ static void drm_self_refresh_helper_entry_work(struct work_struct *work)
+>   * entering self refresh mode after activity.
+>   */
+>  void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
+> -                                             unsigned int commit_time_ms)
+> +                                             unsigned int commit_time_ms,
+> +                                             unsigned int new_self_refresh_mask)
+>  {
+>         struct drm_crtc *crtc;
+> -       struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> +       struct drm_crtc_state *old_crtc_state;
+>         int i;
+>
+> -       for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state,
+> -                                     new_crtc_state, i) {
+> +       for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
+> +               bool new_self_refresh_active = new_self_refresh_mask & BIT(i);
+>                 struct drm_self_refresh_data *sr_data = crtc->self_refresh_data;
+>                 struct ewma_psr_time *time;
+>
+>                 if (old_crtc_state->self_refresh_active ==
+> -                   new_crtc_state->self_refresh_active)
+> +                   new_self_refresh_active)
+>                         continue;
+>
+> -               if (new_crtc_state->self_refresh_active)
+> +               if (new_self_refresh_active)
+>                         time = &sr_data->entry_avg_ms;
+>                 else
+>                         time = &sr_data->exit_avg_ms;
+> diff --git a/include/drm/drm_self_refresh_helper.h b/include/drm/drm_self_refresh_helper.h
+> index 5b79d253fb46..b2c08b328aa1 100644
+> --- a/include/drm/drm_self_refresh_helper.h
+> +++ b/include/drm/drm_self_refresh_helper.h
+> @@ -13,7 +13,8 @@ struct drm_crtc;
+>
+>  void drm_self_refresh_helper_alter_state(struct drm_atomic_state *state);
+>  void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
+> -                                             unsigned int commit_time_ms);
+> +                                             unsigned int commit_time_ms,
+> +                                             unsigned int new_self_refresh_mask);
+>
+>  int drm_self_refresh_helper_init(struct drm_crtc *crtc);
+>  void drm_self_refresh_helper_cleanup(struct drm_crtc *crtc);
+> --
+> 2.23.0
+>
