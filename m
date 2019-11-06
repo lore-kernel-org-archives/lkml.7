@@ -2,304 +2,182 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DA3FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:14:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 661C5C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:14:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A889217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:14:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3924C2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:14:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=toxicpanda-com.20150623.gappssmtp.com header.i=@toxicpanda-com.20150623.gappssmtp.com header.b="H4W1Gfzu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731691AbfKFPOa (ORCPT
+        id S1731900AbfKFPOh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:14:30 -0500
-Received: from mga01.intel.com ([192.55.52.88]:57717 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727202AbfKFPO3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:14:29 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 07:14:29 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="196235732"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga008.jf.intel.com with ESMTP; 06 Nov 2019 07:14:28 -0800
-Date:   Wed, 6 Nov 2019 07:14:28 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Nitesh Narayan Lal <nitesh@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mtosatti@redhat.com, rkrcmar@redhat.com,
-        vkuznets@redhat.com, wanpengli@tencent.com, jmattson@google.com,
-        joro@8bytes.org
-Subject: Re: [Patch v1 2/2] KVM: x86: deliver KVM IOAPIC scan request to
- target vCPUs
-Message-ID: <20191106151428.GB16249@linux.intel.com>
-References: <1573047398-7665-1-git-send-email-nitesh@redhat.com>
- <1573047398-7665-3-git-send-email-nitesh@redhat.com>
+        Wed, 6 Nov 2019 10:14:37 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:41664 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727685AbfKFPOg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:14:36 -0500
+Received: by mail-qv1-f65.google.com with SMTP id g18so1544647qvp.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:14:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=toxicpanda-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MaiX8VRerzyev1ZArUoTJw696l2Gt83YXij8tyjJQbM=;
+        b=H4W1GfzuYZ7DP0U0AybPzo8AboknGRb62bqzuQaXpMPd0WPSRuV572/5Fs/qVH/GOn
+         lw3uqqU+HUwYTcVnrfYaLXinDqfO3AzL6wWm6yWXf5nGT3EEViJkb+hoLCIorOgQKlIl
+         AD/yWfh5HrjZm06Gq9HAeKtg11KNLQO9VoVN7eAs0wi6hu8UX2TF14ELkTpJV0/u04V4
+         lYqhhX6xaAdKoBneQRK4Xj4aDOo53fksK3cpIbHdeuW5VFJGrRq+jGVM7F9kOKvK5kFx
+         3aVc7fth2qT7Zmlj84xPqI3DorZOd+qvsKl/u498TTdVDJvFG20OeOiSoYmn83m2JruN
+         Q+8A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MaiX8VRerzyev1ZArUoTJw696l2Gt83YXij8tyjJQbM=;
+        b=BQerg8peprjtnU+Xp+6zd1fli6WbzOAPN/LhQRjwXX81qtY+QxQ6dwle3/EtgYDgwG
+         dqHaZ2A4yjOudsRrSGRSZbxdMbohNUCng5My0G0KrOhin9t/nx5VgPw9NFhEH4Cs/vrg
+         x8bhH+h1FT40OiWlLC4bB6k67XTbNreelq8/3VRBmRwYXY4JsImkSeAXKikiTAnDSkyf
+         IyPNRz8ijp/+06sznVScscsMPlXXy4cv3Z+cw6YauqRFqYlEF/6vY185M/yi+gknWwdy
+         RrGyPCQ00JoAwpYOt0uii1R4XWBxMFG4vU/KwxKwxUq9HrwlNs2dTAFm3uoondHL8TiA
+         T9dg==
+X-Gm-Message-State: APjAAAVs8H/F1eCWcqiqv59knVuEn3PBg72znB2K+9o9aed1xfoszpDt
+        SjlD+aJk8/GSZq488EEo5IMaHg==
+X-Google-Smtp-Source: APXvYqzsVlFvlPYamFE6V1750HdcL+cbp5Vvqr3c7qxxcyeD2Ubns1CJiXub1aPqHB9M3Tkx4jkiug==
+X-Received: by 2002:a0c:fa05:: with SMTP id q5mr2721824qvn.182.1573053273346;
+        Wed, 06 Nov 2019 07:14:33 -0800 (PST)
+Received: from localhost ([2620:10d:c091:480::66e4])
+        by smtp.gmail.com with ESMTPSA id u7sm12505786qkm.127.2019.11.06.07.14.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 07:14:32 -0800 (PST)
+Date:   Wed, 6 Nov 2019 10:14:31 -0500
+From:   Josef Bacik <josef@toxicpanda.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     Josef Bacik <josef@toxicpanda.com>, snazy@snazy.de,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191106151429.swqtq2dt4uelhjzn@macbook-pro-91.dhcp.thefacebook.com>
+References: <20191025135749.GK17610@dhcp22.suse.cz>
+ <20191025140029.GL17610@dhcp22.suse.cz>
+ <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+ <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+ <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+ <20191105182211.GA33242@cmpxchg.org>
+ <20191106120315.GF16085@quack2.suse.cz>
+ <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+ <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
+ <20191106150524.GL16085@quack2.suse.cz>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573047398-7665-3-git-send-email-nitesh@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20191106150524.GL16085@quack2.suse.cz>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 08:36:38AM -0500, Nitesh Narayan Lal wrote:
-> In IOAPIC fixed delivery mode instead of flushing the scan
-> requests to all vCPUs, we should only send the requests to
-> vCPUs specified within the destination field.
+On Wed, Nov 06, 2019 at 04:05:24PM +0100, Jan Kara wrote:
+> On Wed 06-11-19 09:56:09, Josef Bacik wrote:
+> > On Wed, Nov 06, 2019 at 02:45:43PM +0100, Robert Stupp wrote:
+> > > On Wed, 2019-11-06 at 13:03 +0100, Jan Kara wrote:
+> > > > On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
+> > > > > What I don't quite understand yet is why the fault path doesn't
+> > > > > make
+> > > > > progress eventually. We must drop the mmap_sem without changing the
+> > > > > state in any way. How can we keep looping on the same page?
+> > > >
+> > > > That may be a slight suboptimality with Josef's patches. If the page
+> > > > is marked as PageReadahead, we always drop mmap_sem if we can and
+> > > > start
+> > > > readahead without checking whether that makes sense or not in
+> > > > do_async_mmap_readahead(). OTOH page_cache_async_readahead() then
+> > > > clears
+> > > > PageReadahead so the only way how I can see we could loop like this
+> > > > is when
+> > > > file->ra->ra_pages is 0. Not sure if that's what's happening through.
+> > > > We'd
+> > > > need to find which of the paths in filemap_fault() calls
+> > > > maybe_unlock_mmap_for_io() to tell more.
+> > > 
+> > > Yes, ra_pages==0
+> > > Attached the dmesg + smaps outputs
+> > > 
+> > > 
+> > 
+> > Ah ok I see what's happening, __get_user_pages() returns 0 if we get an EBUSY
+> > from faultin_page, and then __mm_populate does nend = nstart + ret * PAGE_SIZE,
+> > which just leaves us where we are.
+> > 
+> > We need to handle the non-blocking and the locking separately in __mm_populate
+> > so we know what's going on.  Jan's fix for the readahead thing is definitely
+> > valid as well, but this will keep us from looping forever in other retry cases.
 > 
-> This patch introduces kvm_get_dest_vcpus_mask() API which
-> retrieves an array of target vCPUs by using
-> kvm_apic_map_get_dest_lapic() and then based on the
-> vcpus_idx, it sets the bit in a bitmap. However, if the above
-> fails kvm_get_dest_vcpus_mask() finds the target vCPUs by
-> traversing all available vCPUs. Followed by setting the
-> bits in the bitmap.
+> I don't think this will work. AFAICS faultin_page() just checks whether
+> 'nonblocking' is != NULL but doesn't ever look at its value... Honestly the
+> whole interface is rather weird like lots of things around gup().
 > 
-> If we had different vCPUs in the previous request for the
-> same redirection table entry then bits corresponding to
-> these vCPUs are also set. This to done to keep
-> ioapic_handled_vectors synchronized.
-> 
-> This bitmap is then eventually passed on to
-> kvm_make_vcpus_request_mask() to generate a masked request
-> only for the target vCPUs.
-> 
-> This would enable us to reduce the latency overhead on isolated
-> vCPUs caused by the IPI to process due to KVM_REQ_IOAPIC_SCAN.
-> 
-> Suggested-by: Marcelo Tosatti <mtosatti@redhat.com>
-> Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
-> ---
->  arch/x86/include/asm/kvm_host.h |  2 ++
->  arch/x86/kvm/ioapic.c           | 33 ++++++++++++++++++++++++++++--
->  arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++++++++++++++++++++++++
->  arch/x86/kvm/lapic.h            |  3 +++
->  arch/x86/kvm/x86.c              |  6 ++++++
->  include/linux/kvm_host.h        |  2 ++
->  virt/kvm/kvm_main.c             | 14 +++++++++++++
->  7 files changed, 103 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_host.h
-> index 24d6598..b2aca6d 100644
-> --- a/arch/x86/include/asm/kvm_host.h
-> +++ b/arch/x86/include/asm/kvm_host.h
-> @@ -1571,6 +1571,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ipi_bitmap_low,
->  
->  void kvm_make_mclock_inprogress_request(struct kvm *kvm);
->  void kvm_make_scan_ioapic_request(struct kvm *kvm);
-> +void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-> +				       unsigned long *vcpu_bitmap);
->  
->  void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
->  				     struct kvm_async_pf *work);
-> diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-> index d859ae8..c8d0a83 100644
-> --- a/arch/x86/kvm/ioapic.c
-> +++ b/arch/x86/kvm/ioapic.c
-> @@ -271,8 +271,9 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->  {
->  	unsigned index;
->  	bool mask_before, mask_after;
-> -	int old_remote_irr, old_delivery_status;
->  	union kvm_ioapic_redirect_entry *e;
-> +	unsigned long vcpu_bitmap;
-> +	int old_remote_irr, old_delivery_status, old_dest_id, old_dest_mode;
->  
->  	switch (ioapic->ioregsel) {
->  	case IOAPIC_REG_VERSION:
-> @@ -296,6 +297,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->  		/* Preserve read-only fields */
->  		old_remote_irr = e->fields.remote_irr;
->  		old_delivery_status = e->fields.delivery_status;
-> +		old_dest_id = e->fields.dest_id;
-> +		old_dest_mode = e->fields.dest_mode;
->  		if (ioapic->ioregsel & 1) {
->  			e->bits &= 0xffffffff;
->  			e->bits |= (u64) val << 32;
-> @@ -321,7 +324,33 @@ static void ioapic_write_indirect(struct kvm_ioapic *ioapic, u32 val)
->  		if (e->fields.trig_mode == IOAPIC_LEVEL_TRIG
->  		    && ioapic->irr & (1 << index))
->  			ioapic_service(ioapic, index, false);
-> -		kvm_make_scan_ioapic_request(ioapic->kvm);
-> +		if (e->fields.delivery_mode == APIC_DM_FIXED) {
-> +			struct kvm_lapic_irq irq;
-> +
-> +			irq.shorthand = 0;
-> +			irq.vector = e->fields.vector;
-> +			irq.delivery_mode = e->fields.delivery_mode << 8;
-> +			irq.dest_id = e->fields.dest_id;
-> +			irq.dest_mode = e->fields.dest_mode;
-> +			kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-> +						&vcpu_bitmap);
-> +			if (old_dest_mode != e->fields.dest_mode ||
-> +			    old_dest_id != e->fields.dest_id) {
-> +				/*
-> +				 * Update vcpu_bitmap with vcpus specified in
-> +				 * the previous request as well. This is done to
-> +				 * keep ioapic_handled_vectors synchronized.
-> +				 */
-> +				irq.dest_id = old_dest_id;
-> +				irq.dest_mode = old_dest_mode;
-> +				kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-> +							&vcpu_bitmap);
-> +			}
-> +			kvm_make_scan_ioapic_request_mask(ioapic->kvm,
-> +							  &vcpu_bitmap);
-> +		} else {
-> +			kvm_make_scan_ioapic_request(ioapic->kvm);
-> +		}
->  		break;
->  	}
->  }
-> diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-> index b29d00b..90869c4 100644
-> --- a/arch/x86/kvm/lapic.c
-> +++ b/arch/x86/kvm/lapic.c
-> @@ -1124,6 +1124,51 @@ static int __apic_accept_irq(struct kvm_lapic *apic, int delivery_mode,
->  	return result;
->  }
->  
-> +/*
-> + * This routine identifies the destination vcpus mask meant to receive the
-> + * IOAPIC interrupts. It either uses kvm_apic_map_get_dest_lapic() to find
-> + * out the destination vcpus array and set the bitmap or it traverses to
-> + * each available vcpu to identify the same.
-> + */
-> +void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-> +			     unsigned long *vcpu_bitmap)
-> +{
-> +	struct kvm_lapic **dest_vcpu = NULL;
-> +	struct kvm_lapic *src = NULL;
-> +	struct kvm_apic_map *map;
-> +	struct kvm_vcpu *vcpu;
-> +	unsigned long bitmap;
-> +	int i, vcpus_idx;
-> +	bool ret;
-> +
-> +	rcu_read_lock();
-> +	map = rcu_dereference(kvm->arch.apic_map);
-> +
-> +	ret = kvm_apic_map_get_dest_lapic(kvm, &src, irq, map, &dest_vcpu,
-> +					  &bitmap);
-> +	if (ret) {
-> +		for_each_set_bit(i, &bitmap, 16) {
-> +			if (!dest_vcpu[i])
-> +				continue;
-> +			vcpus_idx = dest_vcpu[i]->vcpu->vcpus_idx;
-> +			__set_bit(vcpus_idx, vcpu_bitmap);
-> +		}
-> +	} else {
-> +		kvm_for_each_vcpu(i, vcpu, kvm) {
-> +			if (!kvm_apic_present(vcpu))
-> +				continue;
-> +			if (!kvm_apic_match_dest(vcpu, NULL,
-> +						 irq->delivery_mode,
-> +						 irq->dest_id,
-> +						 irq->dest_mode))
-> +				continue;
-> +			vcpus_idx = dest_vcpu[i]->vcpu->vcpus_idx;
 
-This can't possibly be correct.  AFAICT, dest_vcpu is guaranteed to be
-*NULL* when kvm_apic_map_get_dest_lapic() returns false, and on top of
-that I'm pretty sure it's not intended to be indexed by the vcpu index.
+Oh what the hell, yeah this is super bonkers.  The whole fault path probably
+should be cleaned up to handle retry better.  This will do the trick I think?
 
-But vcpus_idx isn't needed here, you already have @vcpu, and even that
-is superfluous as @i itself is the vcpu index.
+Josef
 
-It's probably worth manually testing this path by forcing @ret to false,
-I'm guessing it's not being hit in normal operation.
-
-> +			__set_bit(vcpus_idx, vcpu_bitmap);
-> +		}
-> +	}
-> +	rcu_read_unlock();
-> +}
-> +
->  int kvm_apic_compare_prio(struct kvm_vcpu *vcpu1, struct kvm_vcpu *vcpu2)
->  {
->  	return vcpu1->arch.apic_arb_prio - vcpu2->arch.apic_arb_prio;
-> diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-> index 1f501485..49b0c6c 100644
-> --- a/arch/x86/kvm/lapic.h
-> +++ b/arch/x86/kvm/lapic.h
-> @@ -226,6 +226,9 @@ static inline int kvm_lapic_latched_init(struct kvm_vcpu *vcpu)
->  
->  void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
->  
-> +void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-> +			     unsigned long *vcpu_bitmap);
-> +
->  bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *irq,
->  			struct kvm_vcpu **dest_vcpu);
->  int kvm_vector_to_index(u32 vector, u32 dest_vcpus,
-> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-> index ff395f8..ee6945f 100644
-> --- a/arch/x86/kvm/x86.c
-> +++ b/arch/x86/kvm/x86.c
-> @@ -7838,6 +7838,12 @@ static void process_smi(struct kvm_vcpu *vcpu)
->  	kvm_make_request(KVM_REQ_EVENT, vcpu);
->  }
->  
-> +void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-> +				       unsigned long *vcpu_bitmap)
-> +{
-> +	kvm_make_cpus_request_mask(kvm, KVM_REQ_SCAN_IOAPIC, vcpu_bitmap);
-> +}
-> +
->  void kvm_make_scan_ioapic_request(struct kvm *kvm)
->  {
->  	kvm_make_all_cpus_request(kvm, KVM_REQ_SCAN_IOAPIC);
-> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-> index 31c4fde..2f69eae 100644
-> --- a/include/linux/kvm_host.h
-> +++ b/include/linux/kvm_host.h
-> @@ -786,6 +786,8 @@ int kvm_vcpu_write_guest(struct kvm_vcpu *vcpu, gpa_t gpa, const void *data,
->  bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
->  				 unsigned long *vcpu_bitmap, cpumask_var_t tmp);
->  bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req);
-> +bool kvm_make_cpus_request_mask(struct kvm *kvm, unsigned int req,
-> +				unsigned long *vcpu_bitmap);
->  
->  long kvm_arch_dev_ioctl(struct file *filp,
->  			unsigned int ioctl, unsigned long arg);
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index 24ab711..9e85df8 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -242,6 +242,20 @@ bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
->  	return called;
->  }
->  
-> +bool kvm_make_cpus_request_mask(struct kvm *kvm, unsigned int req,
-> +				unsigned long *vcpu_bitmap)
-> +{
-> +	cpumask_var_t cpus;
-> +	bool called;
-> +
-> +	zalloc_cpumask_var(&cpus, GFP_ATOMIC);
-> +
-> +	called = kvm_make_vcpus_request_mask(kvm, req, vcpu_bitmap, cpus);
-> +
-> +	free_cpumask_var(cpus);
-> +	return called;
-
-kvm_make_all_cpus_request() should call this new function, the code is
-identical except for its declared vcpu_bitmap.  
-
-> +}
-> +
->  bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req)
->  {
->  	cpumask_var_t cpus;
-> -- 
-> 1.8.3.1
-> 
+diff --git a/mm/gup.c b/mm/gup.c
+index 8f236a335ae9..2468789298e6 100644
+--- a/mm/gup.c
++++ b/mm/gup.c
+@@ -628,7 +628,7 @@ static int faultin_page(struct task_struct *tsk, struct vm_area_struct *vma,
+ 		fault_flags |= FAULT_FLAG_WRITE;
+ 	if (*flags & FOLL_REMOTE)
+ 		fault_flags |= FAULT_FLAG_REMOTE;
+-	if (nonblocking)
++	if (nonblocking && *nonblocking != 0)
+ 		fault_flags |= FAULT_FLAG_ALLOW_RETRY;
+ 	if (*flags & FOLL_NOWAIT)
+ 		fault_flags |= FAULT_FLAG_ALLOW_RETRY | FAULT_FLAG_RETRY_NOWAIT;
+@@ -1237,6 +1237,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 	unsigned long end, nstart, nend;
+ 	struct vm_area_struct *vma = NULL;
+ 	int locked = 0;
++	int nonblocking = 1;
+ 	long ret = 0;
+ 
+ 	end = start + len;
+@@ -1268,7 +1269,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 		 * double checks the vma flags, so that it won't mlock pages
+ 		 * if the vma was already munlocked.
+ 		 */
+-		ret = populate_vma_page_range(vma, nstart, nend, &locked);
++		ret = populate_vma_page_range(vma, nstart, nend, &nonblocking);
+ 		if (ret < 0) {
+ 			if (ignore_errors) {
+ 				ret = 0;
+@@ -1276,6 +1277,14 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+ 			}
+ 			break;
+ 		}
++
++		/*
++		 * We dropped the mmap_sem, so we need to re-lock, and the next
++		 * loop around we won't drop because nonblocking is now 0.
++		 */
++		if (!nonblocking)
++			locked = 0;
++
+ 		nend = nstart + ret * PAGE_SIZE;
+ 		ret = 0;
+ 	}
