@@ -2,54 +2,57 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3301C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:01:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7A73C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:01:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD2822187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:01:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9016721882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:01:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="mEcudq/M"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gerhold.net header.i=@gerhold.net header.b="e3UVDyBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732373AbfKFRBI (ORCPT
+        id S1732393AbfKFRBM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:01:08 -0500
-Received: from mo4-p00-ob.smtp.rzone.de ([81.169.146.218]:23671 "EHLO
-        mo4-p00-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfKFRBG (ORCPT
+        Wed, 6 Nov 2019 12:01:12 -0500
+Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.171]:25683 "EHLO
+        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732365AbfKFRBI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:01:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573059664;
+        Wed, 6 Nov 2019 12:01:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573059665;
         s=strato-dkim-0002; d=gerhold.net;
-        h=Message-Id:Date:Subject:Cc:To:From:X-RZG-CLASS-ID:X-RZG-AUTH:From:
-        Subject:Sender;
-        bh=S1CYtW/UKvourRGitE9tLFPWLqns2bi9wjMLuuoA2Yo=;
-        b=mEcudq/MpkHqKMLM8f7VDd7qiXz+9BS6YucYeqGAIX/GmnwmfvbzGFIpTvw6k10UqJ
-        ijB+lJxavw4rJiUxmZyls2KMRbBFOVjoyB+81xewH7OXxD64yISPNub+qEGIPsRJmNTl
-        V5ckT2I3eSxEpPx3KBnU1dLo/R3HWz33Ebea/MXtZVJQzFTefYVS9rR+rWAUAZz0L38o
-        3OkpD2yQasfh+yzrLEp7br5RS9voqoPhSLsvoTn2kR6ZqfSKK8nI09JWclrq0Mq3qrB3
-        HModIx9o49fEXGPd0r251dLRkWlO4iZW1OZVCql/arviiI+XY9UTK05VRKrn51MgcFA9
-        LQtg==
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=uZcQk++YEkD2ap+7a/P9KdfqpT2ypee67VJ6/UFHXeA=;
+        b=e3UVDyBmq66yy/OZMAN/KPIIIvY2IwTuzsv0GwVWt6ie7MvKI7vYAEDXuiOJ9ZG+Qw
+        QDKeol282wSsWyr04ek2FyS9mm7wdVia55UhAHey7/aGhWSkEUaxUvxfiNJuPmNuHcFl
+        b37JwrtbYfvt4g/pWd6rBZdOxL5eBbK8LwB8MhX9II7IPKjAVqPUJUtKa/L4Z4vz/OBZ
+        BP+zAGCL72N+Ad6CYP4O/WOUFxL44jfoZQDC1oLtOvDGiaWdcx0lMCIjMrGp+EFBg+mN
+        2s90pkm80xXcsHGQolyyPpcMKVRN8KD0xhRXapy9yuWAJjbeeaSZ+bQNzGRKtXLoxbPU
+        rfQA==
 X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8PvtBNfIQ=="
 X-RZG-CLASS-ID: mo00
 Received: from localhost.localdomain
         by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vA6H12hLp
+        with ESMTPSA id e07688vA6H15hLv
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Wed, 6 Nov 2019 18:01:02 +0100 (CET)
+        Wed, 6 Nov 2019 18:01:05 +0100 (CET)
 From:   Stephan Gerhold <stephan@gerhold.net>
 To:     Linus Walleij <linus.walleij@linaro.org>
 Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 0/7] drm/mcde: DSI video mode fixes
-Date:   Wed,  6 Nov 2019 17:58:28 +0100
-Message-Id: <20191106165835.2863-1-stephan@gerhold.net>
+Subject: [PATCH 5/7] drm/mcde: dsi: Fix duplicated DSI connector
+Date:   Wed,  6 Nov 2019 17:58:33 +0100
+Message-Id: <20191106165835.2863-6-stephan@gerhold.net>
 X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191106165835.2863-1-stephan@gerhold.net>
+References: <20191106165835.2863-1-stephan@gerhold.net>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,37 +60,141 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a collection of fixes to make DSI video mode work better
-using the MCDE driver. With these changes, MCDE appears to work
-properly for the video mode panel I have been testing with.
+Using a (single) DSI display with MCDE currently results in
+two "connected" connectors:
 
-Note: The patch that fixes the DSI link register setup for
-video mode [1] is still necessary; but we still need to finish it
-and actually make it initialize a panel correctly.
+  Connector: DSI-1
+          id             : 34
+          encoder id     : 0
+          conn           : connected
+          size           : 0x0 (mm)
+          count_modes    : 0
+          count_props    : 5
+          props          : 1 2 5 6 4
+          count_encoders : 1
+          encoders       : 33
+  Connector: DSI-2
+          id             : 35
+          encoder id     : 33
+          conn           : connected
+          size           : 53x89 (mm)
+          count_modes    : 1
+          count_props    : 5
+          props          : 1 2 5 6 4
+          count_encoders : 1
+          encoders       : 33
+    Mode: "480x800" 480x800 60
 
-This series contains only patches for the other parts in MCDE.
-I have tested it by disabling most of the register setup in the
-DSI driver, which makes it re-use the properly working DSI register
-set by the bootloader.
+Although both show up as connected, the first one does not have
+any size and no available modes. This confuses userspace tools
+(e.g. kmscube) who look for available modes for the first connector.
 
-[1]: https://lists.freedesktop.org/archives/dri-devel/2019-October/238175.html
+The reason for the duplicated connector is that mcde_dsi.c and the
+DRM panel bridge helper both set up a DSI connector, with more or less
+the same code. The connector set up by the DRM panel bridge is the
+one that is correctly set up in the example above.
 
-Stephan Gerhold (7):
-  drm/mcde: Provide vblank handling unconditionally
-  drm/mcde: Fix frame sync setup for video mode panels
-  drm/mcde: dsi: Make video mode errors more verbose
-  drm/mcde: dsi: Delay start of video stream generator
-  drm/mcde: dsi: Fix duplicated DSI connector
-  drm/mcde: dsi: Enable clocks in pre_enable() instead of mode_set()
-  drm/mcde: Handle pending vblank while disabling display
+Therefore we can just remove the connector setup from mcde_dsi.c
+and let the DRM core handle all the hard work.
 
- drivers/gpu/drm/mcde/mcde_display.c  |  57 +++++----
- drivers/gpu/drm/mcde/mcde_drm.h      |   1 +
- drivers/gpu/drm/mcde/mcde_drv.c      |  18 +--
- drivers/gpu/drm/mcde/mcde_dsi.c      | 167 +++++++++++++--------------
- drivers/gpu/drm/mcde/mcde_dsi_regs.h |  10 ++
- 5 files changed, 126 insertions(+), 127 deletions(-)
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ drivers/gpu/drm/mcde/mcde_dsi.c | 52 +--------------------------------
+ 1 file changed, 1 insertion(+), 51 deletions(-)
 
+diff --git a/drivers/gpu/drm/mcde/mcde_dsi.c b/drivers/gpu/drm/mcde/mcde_dsi.c
+index 4710f23b2966..df963e078c35 100644
+--- a/drivers/gpu/drm/mcde/mcde_dsi.c
++++ b/drivers/gpu/drm/mcde/mcde_dsi.c
+@@ -39,7 +39,6 @@ struct mcde_dsi {
+ 	struct device *dev;
+ 	struct mcde *mcde;
+ 	struct drm_bridge bridge;
+-	struct drm_connector connector;
+ 	struct drm_panel *panel;
+ 	struct drm_bridge *bridge_out;
+ 	struct mipi_dsi_host dsi_host;
+@@ -64,11 +63,6 @@ static inline struct mcde_dsi *host_to_mcde_dsi(struct mipi_dsi_host *h)
+ 	return container_of(h, struct mcde_dsi, dsi_host);
+ }
+ 
+-static inline struct mcde_dsi *connector_to_mcde_dsi(struct drm_connector *c)
+-{
+-	return container_of(c, struct mcde_dsi, connector);
+-}
+-
+ bool mcde_dsi_irq(struct mipi_dsi_device *mdsi)
+ {
+ 	struct mcde_dsi *d;
+@@ -843,67 +837,23 @@ static void mcde_dsi_bridge_disable(struct drm_bridge *bridge)
+ 	clk_disable_unprepare(d->lp_clk);
+ }
+ 
+-/*
+- * This connector needs no special handling, just use the default
+- * helpers for everything. It's pretty dummy.
+- */
+-static const struct drm_connector_funcs mcde_dsi_connector_funcs = {
+-	.reset = drm_atomic_helper_connector_reset,
+-	.fill_modes = drm_helper_probe_single_connector_modes,
+-	.destroy = drm_connector_cleanup,
+-	.atomic_duplicate_state = drm_atomic_helper_connector_duplicate_state,
+-	.atomic_destroy_state = drm_atomic_helper_connector_destroy_state,
+-};
+-
+-static int mcde_dsi_get_modes(struct drm_connector *connector)
+-{
+-	struct mcde_dsi *d = connector_to_mcde_dsi(connector);
+-
+-	/* Just pass the question to the panel */
+-	if (d->panel)
+-		return drm_panel_get_modes(d->panel);
+-
+-	/* TODO: deal with bridges */
+-
+-	return 0;
+-}
+-
+-static const struct drm_connector_helper_funcs
+-mcde_dsi_connector_helper_funcs = {
+-	.get_modes = mcde_dsi_get_modes,
+-};
+-
+ static int mcde_dsi_bridge_attach(struct drm_bridge *bridge)
+ {
+ 	struct mcde_dsi *d = bridge_to_mcde_dsi(bridge);
+ 	struct drm_device *drm = bridge->dev;
+ 	int ret;
+ 
+-	drm_connector_helper_add(&d->connector,
+-				 &mcde_dsi_connector_helper_funcs);
+-
+ 	if (!drm_core_check_feature(drm, DRIVER_ATOMIC)) {
+ 		dev_err(d->dev, "we need atomic updates\n");
+ 		return -ENOTSUPP;
+ 	}
+ 
+-	ret = drm_connector_init(drm, &d->connector,
+-				 &mcde_dsi_connector_funcs,
+-				 DRM_MODE_CONNECTOR_DSI);
+-	if (ret) {
+-		dev_err(d->dev, "failed to initialize DSI bridge connector\n");
+-		return ret;
+-	}
+-	d->connector.polled = DRM_CONNECTOR_POLL_CONNECT;
+-	/* The encoder in the bridge attached to the DSI bridge */
+-	drm_connector_attach_encoder(&d->connector, bridge->encoder);
+-	/* Then we attach the DSI bridge to the output (panel etc) bridge */
++	/* Attach the DSI bridge to the output (panel etc) bridge */
+ 	ret = drm_bridge_attach(bridge->encoder, d->bridge_out, bridge);
+ 	if (ret) {
+ 		dev_err(d->dev, "failed to attach the DSI bridge\n");
+ 		return ret;
+ 	}
+-	d->connector.status = connector_status_connected;
+ 
+ 	return 0;
+ }
 -- 
 2.23.0
 
