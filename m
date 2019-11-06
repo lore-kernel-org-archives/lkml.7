@@ -2,122 +2,94 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59612C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:03:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4DDAC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31BDC2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:03:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89FD6217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:04:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SKUagXxE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732537AbfKFUDA (ORCPT
+        id S1731964AbfKFUEL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:03:00 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:29160 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726934AbfKFUC7 (ORCPT
+        Wed, 6 Nov 2019 15:04:11 -0500
+Received: from mail-qt1-f174.google.com ([209.85.160.174]:36429 "EHLO
+        mail-qt1-f174.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726934AbfKFUEK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:02:59 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6JxxFm083667;
-        Wed, 6 Nov 2019 15:01:15 -0500
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41wfppmq-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 15:01:15 -0500
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-        by ppma04wdc.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA6K0eWb008217;
-        Wed, 6 Nov 2019 20:01:14 GMT
-Received: from b01cxnp23032.gho.pok.ibm.com (b01cxnp23032.gho.pok.ibm.com [9.57.198.27])
-        by ppma04wdc.us.ibm.com with ESMTP id 2w41uj9e7g-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 20:01:14 +0000
-Received: from b01ledav001.gho.pok.ibm.com (b01ledav001.gho.pok.ibm.com [9.57.199.106])
-        by b01cxnp23032.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6K1DKw46268706
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 20:01:13 GMT
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 7D61428065;
-        Wed,  6 Nov 2019 20:01:13 +0000 (GMT)
-Received: from b01ledav001.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DA07528066;
-        Wed,  6 Nov 2019 20:01:12 +0000 (GMT)
-Received: from wisp4.ibm.com (unknown [9.163.22.179])
-        by b01ledav001.gho.pok.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 20:01:12 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-hwmon@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux@roeck-us.net,
-        jdelvare@suse.com, Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH 1/2] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking brightness call
-Date:   Wed,  6 Nov 2019 14:01:05 -0600
-Message-Id: <20191106200106.29519-2-eajames@linux.ibm.com>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106200106.29519-1-eajames@linux.ibm.com>
-References: <20191106200106.29519-1-eajames@linux.ibm.com>
+        Wed, 6 Nov 2019 15:04:10 -0500
+Received: by mail-qt1-f174.google.com with SMTP id y10so28311887qto.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 12:04:10 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Syvd9OtNpcXiNUdc2Ks9QJdKdCRXCjH9isxgWic1uto=;
+        b=SKUagXxE3aHtk6zXf03B6K9HgYRdjVe27Aj68kyYDQALM45zhfcD8mP1NABiAZCoDm
+         LdyANegIr7Uua4/fB8Xz6qdpk2ik8QSkT9UIIwtiGPLzMwG3f3LPLVGoQ/7pJdSPi4bH
+         w0mYwWNOLcvNyTRaIPa9RLXJ3oZIZHCAI9TFK85ZdD8TeP2txhm1cfZoazJLKmUYokY3
+         xkpMfxQHEWFZqIBWlK+wE8wBKwCuRwt4yV5B7eGYkk/aDM+EvtUaPbWg+uuaeZdXk55l
+         ZPWFtigum1Xvc4myBZRW+dFXYDgXUEhC9vZVz4875W2aDqbJ4CDnePdjhsoILz0Csvfa
+         +ODA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Syvd9OtNpcXiNUdc2Ks9QJdKdCRXCjH9isxgWic1uto=;
+        b=eDpM/fY89gZkjSkp6tb1DIWWIkreohmKov/I2mfDf6QgbB4NY9BHLlvD7MicfgnbKT
+         /pcilnZ6ULiQYGd5J7I3Q48OTb1KqZG0cITYUI5qtiw5o4FgviMxDfHki9u2TI16ym/g
+         pR/6LTYdbL3vw5i37jQq+1uFS0beZeeI/q1L9LfYHnb4S3/0I8sFxjNf6ZaG5vE+w12i
+         LIBaam19mYIQBGU2yvCrvOQKbxTjYOsZeZKcFxNe5rpYJYl+u6JFMPcXnZXaQqG+li7C
+         y8jv2Qvd9CEjfAmJ3HplESb8jlfCRce/0irZd8jXxAbqM2UHw1Srg4TroIpB2q8ul6HB
+         NnUw==
+X-Gm-Message-State: APjAAAWqZpRpRZujmogkooHQ4RfiNg+NV0OromZYdrwaCpJMJrABWomv
+        /6ACzwnmKmwVJ0nBSrkMpLM=
+X-Google-Smtp-Source: APXvYqxE8neSG3qy+YpgpyQUKpHWzoIuV5JYwTwYaNO1iBJb69vcybbOqfBa2f9eH6tOapNfyzz8Vw==
+X-Received: by 2002:ac8:51d6:: with SMTP id d22mr4287228qtn.102.1573070649831;
+        Wed, 06 Nov 2019 12:04:09 -0800 (PST)
+Received: from quaco.ghostprotocols.net (187-26-100-98.3g.claro.net.br. [187.26.100.98])
+        by smtp.gmail.com with ESMTPSA id r80sm5832652qke.121.2019.11.06.12.04.07
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 12:04:09 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id 9B21040B1D; Wed,  6 Nov 2019 17:04:01 -0300 (-03)
+Date:   Wed, 6 Nov 2019 17:04:01 -0300
+To:     Masami Hiramatsu <mhiramat@kernel.org>
+Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [BUGFIX PATCH 1/4] perf probe: Skip end-of-sequence and non
+ statement lines
+Message-ID: <20191106200401.GB13829@kernel.org>
+References: <157241935028.32002.10228194508152968737.stgit@devnote2>
+ <157241936090.32002.12156347518596111660.stgit@devnote2>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911060196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157241936090.32002.12156347518596111660.stgit@devnote2>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Since i2c_smbus functions can sleep, the brightness setting function
-for this driver must be the blocking version to avoid scheduling while
-atomic.
+Em Wed, Oct 30, 2019 at 04:09:21PM +0900, Masami Hiramatsu escreveu:
+> Skip end-of-sequence and non-statement lines while walking
+> through lines list.
+> 
+> The "end-of-sequence" line information means
+>  "the current address is that of the first byte after the
+>   end of a sequence of target machine instructions."
+>  (DWARF version 4 spec 6.2.2)
+> This actually means out of scope and we can not probe on it.
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
- drivers/hwmon/pmbus/ibm-cffps.c | 10 ++++++----
- 1 file changed, 6 insertions(+), 4 deletions(-)
+Thanks, tested before and after and applied,
 
-diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-index d61547ed0da0..c6a00e83aac6 100644
---- a/drivers/hwmon/pmbus/ibm-cffps.c
-+++ b/drivers/hwmon/pmbus/ibm-cffps.c
-@@ -297,8 +297,8 @@ static int ibm_cffps_read_word_data(struct i2c_client *client, int page,
- 	return rc;
- }
- 
--static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
--					 enum led_brightness brightness)
-+static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
-+					enum led_brightness brightness)
- {
- 	int rc;
- 	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
-@@ -316,9 +316,11 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
- 	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
- 				       psu->led_state);
- 	if (rc < 0)
--		return;
-+		return rc;
- 
- 	led_cdev->brightness = brightness;
-+
-+	return 0;
- }
- 
- static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
-@@ -356,7 +358,7 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
- 		 client->addr);
- 	psu->led.name = psu->led_name;
- 	psu->led.max_brightness = LED_FULL;
--	psu->led.brightness_set = ibm_cffps_led_brightness_set;
-+	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
- 	psu->led.blink_set = ibm_cffps_led_blink_set;
- 
- 	rc = devm_led_classdev_register(dev, &psu->led);
--- 
-2.23.0
-
+- Arnaldo
