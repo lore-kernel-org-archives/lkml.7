@@ -4,25 +4,24 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DAC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4175FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353CC217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19717217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732786AbfKFVWA (ORCPT
+        id S1732776AbfKFVV6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:22:00 -0500
-Received: from sauhun.de ([88.99.104.3]:59054 "EHLO pokefinder.org"
+        Wed, 6 Nov 2019 16:21:58 -0500
+Received: from sauhun.de ([88.99.104.3]:59014 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732647AbfKFVV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1732654AbfKFVV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 16:21:29 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id 68AC02C0561;
-        Wed,  6 Nov 2019 22:21:27 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 08B762C053B;
+        Wed,  6 Nov 2019 22:21:28 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-media@vger.kernel.org
 Cc:     linux-i2c@vger.kernel.org,
@@ -30,9 +29,9 @@ Cc:     linux-i2c@vger.kernel.org,
         Antti Palosaari <crope@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 11/17] media: usb: dvb-usb-v2: af9035: convert to use i2c_new_client_device()
-Date:   Wed,  6 Nov 2019 22:21:11 +0100
-Message-Id: <20191106212120.27983-12-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 12/17] media: usb: dvb-usb-v2: anysee: convert to use i2c_new_client_device()
+Date:   Wed,  6 Nov 2019 22:21:12 +0100
+Message-Id: <20191106212120.27983-13-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
 References: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
@@ -48,14 +47,14 @@ out.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/media/usb/dvb-usb-v2/af9035.c | 4 ++--
+ drivers/media/usb/dvb-usb-v2/anysee.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
-index 792667ee5ebc..2db286d88fa5 100644
---- a/drivers/media/usb/dvb-usb-v2/af9035.c
-+++ b/drivers/media/usb/dvb-usb-v2/af9035.c
-@@ -208,8 +208,8 @@ static int af9035_add_i2c_dev(struct dvb_usb_device *d, const char *type,
+diff --git a/drivers/media/usb/dvb-usb-v2/anysee.c b/drivers/media/usb/dvb-usb-v2/anysee.c
+index fb6d99dea31a..0514e87405b6 100644
+--- a/drivers/media/usb/dvb-usb-v2/anysee.c
++++ b/drivers/media/usb/dvb-usb-v2/anysee.c
+@@ -649,8 +649,8 @@ static int anysee_add_i2c_dev(struct dvb_usb_device *d, const char *type,
  	request_module("%s", board_info.type);
  
  	/* register I2C device */
