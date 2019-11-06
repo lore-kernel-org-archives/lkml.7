@@ -2,116 +2,148 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA760C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0065C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B28E32187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UfWy7760"
+	by mail.kernel.org (Postfix) with ESMTP id 768452173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731581AbfKFHoo (ORCPT
+        id S1731584AbfKFHoz convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:44:44 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:34396 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731136AbfKFHon (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:44:43 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67idae109132;
-        Wed, 6 Nov 2019 01:44:39 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573026279;
-        bh=f1NEPFJjClLNi2nXj2/pBImQn0eR1YY7EU9xYbARDFY=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=UfWy7760YyHkaT2NRw59cyv7eFBBc2ElZuZ6711GeQI2LpkxxKIyIS3gXR6ZtbZkH
-         33ZDi+aNXJ4bf65emhVovprynkAAbxDvLzQUfUo3kbLVVnmtBLVUM2XqL6N89fyTQj
-         u9ya/lWygS+943byIWb9IArzdpVGWfpJIXB1X5p0=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67idbQ084075
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 01:44:39 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 01:44:37 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 01:44:22 -0600
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67iZjb063767;
-        Wed, 6 Nov 2019 01:44:36 -0600
-Subject: Re: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to
- array
-To:     Vinod Koul <vkoul@kernel.org>
-CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
-        <devicetree@vger.kernel.org>
-References: <20190930114055.29315-1-peter.ujfalusi@ti.com>
- <20191105165145.GB952516@vkoul-mobl>
-From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
-Message-ID: <fc83b096-f737-4d90-cb3e-0d8eb43c7f12@ti.com>
-Date:   Wed, 6 Nov 2019 09:45:47 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <20191105165145.GB952516@vkoul-mobl>
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Nov 2019 02:44:55 -0500
+Received: from mga04.intel.com ([192.55.52.120]:30171 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731147AbfKFHoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:44:55 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 23:44:54 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
+   d="scan'208";a="227138250"
+Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
+  by FMSMGA003.fm.intel.com with ESMTP; 05 Nov 2019 23:44:54 -0800
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Tue, 5 Nov 2019 23:44:54 -0800
+Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Tue, 5 Nov 2019 23:44:54 -0800
+Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
+ fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
+ via Frontend Transport; Tue, 5 Nov 2019 23:44:53 -0800
+Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
+ shsmsx102.ccr.corp.intel.com ([169.254.2.108]) with mapi id 14.03.0439.000;
+ Wed, 6 Nov 2019 15:44:52 +0800
+From:   "Kang, Luwei" <luwei.kang@intel.com>
+To:     'Peter Zijlstra' <peterz@infradead.org>
+CC:     "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        "'pbonzini@redhat.com'" <pbonzini@redhat.com>,
+        "'rkrcmar@redhat.com'" <rkrcmar@redhat.com>,
+        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
+        "'vkuznets@redhat.com'" <vkuznets@redhat.com>,
+        "'wanpengli@tencent.com'" <wanpengli@tencent.com>,
+        "'jmattson@google.com'" <jmattson@google.com>,
+        "'joro@8bytes.org'" <joro@8bytes.org>,
+        "'tglx@linutronix.de'" <tglx@linutronix.de>,
+        "'mingo@redhat.com'" <mingo@redhat.com>,
+        "'bp@alien8.de'" <bp@alien8.de>, "'hpa@zytor.com'" <hpa@zytor.com>,
+        "'x86@kernel.org'" <x86@kernel.org>,
+        "'ak@linux.intel.com'" <ak@linux.intel.com>,
+        "'thomas.lendacky@amd.com'" <thomas.lendacky@amd.com>,
+        "'acme@kernel.org'" <acme@kernel.org>,
+        "'mark.rutland@arm.com'" <mark.rutland@arm.com>,
+        "'alexander.shishkin@linux.intel.com'" 
+        <alexander.shishkin@linux.intel.com>,
+        "'jolsa@redhat.com'" <jolsa@redhat.com>,
+        "'namhyung@kernel.org'" <namhyung@kernel.org>
+Subject: RE: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Topic: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
+ event
+Thread-Index: AQHVjLd13+lWyOpx00qD/bA0eE059qdxL6sAgAEppjCAABXXgIACK7fwgAk3MFA=
+Date:   Wed, 6 Nov 2019 07:44:51 +0000
+Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738387F8@SHSMSX104.ccr.corp.intel.com>
+References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
+ <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
+ <20191029144612.GK4097@hirez.programming.kicks-ass.net>
+ <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
+ <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
+ <82D7661F83C1A047AF7DC287873BF1E17383642D@SHSMSX104.ccr.corp.intel.com>
+In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E17383642D@SHSMSX104.ccr.corp.intel.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ctpclassification: CTP_NT
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzE3NjQyYjEtYmE2OS00YjI4LTk2MjUtMmVlZTIwM2Y2M2UzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR2xDRGN4bHZSakV6S01JcHJMaVJnZFFmcTl3NHRyN0U4UkNOTmoxR0RsXC8rVmJKV1g4WGx0NWVDQTlvT3hFXC9EIn0=
+dlp-product: dlpe-windows
+dlp-version: 11.2.0.6
+dlp-reaction: no-action
+x-originating-ip: [10.239.127.40]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vinod,
-
-On 05/11/2019 18.51, Vinod Koul wrote:
-> On 30-09-19, 14:40, Peter Ujfalusi wrote:
->> Hi,
->>
->> Changes since v3:
->> - Update the dma-common.yaml and edma binding documentation according to Rob's
->>   suggestion
->>
->> Changes since v2:
->> - Fix dma-common.yaml documentation patch and extend the description of the
->>   dma-channel-mask array
->> - The edma documentation now includes information on the dma-channel-mask array
->>   size for EDMAs with 32 or 64 channels
->>
->> Changes since v1:
->> - Extend the common dma-channel-mask to uint32-array to be usable for
->>   controllers with more than 32 channels
->> - Use the dma-channel-mask instead custom property for available channels for
->>   EDMA.
->>
->> The original patch was part of the EDMA multicore usage series.
->>
->> Rob: I'm not sure if I got the dma-common.yaml update correctly...
->>
->> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
->> needs to be an array to be usable for the driver.
+> > > > >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
+> > > > >  				  unsigned config, bool exclude_user,
+> > > > >  				  bool exclude_kernel, bool intr,
+> > > > > -				  bool in_tx, bool in_tx_cp)
+> > > > > +				  bool in_tx, bool in_tx_cp, bool pebs)
+> > > > >  {
+> > > > >  	struct perf_event *event;
+> > > > >  	struct perf_event_attr attr = { @@ -111,9 +111,12 @@ static
+> > > > > void pmc_reprogram_counter(struct kvm_pmc *pmc,
+> > u32 type,
+> > > > >  		.exclude_user = exclude_user,
+> > > > >  		.exclude_kernel = exclude_kernel,
+> > > > >  		.config = config,
+> > > > > +		.precise_ip = pebs ? 1 : 0,
+> > > > > +		.aux_output = pebs ? 1 : 0,
+> > > >
+> > > > srsly?
+> > >
+> > > Hi Peter,
+> > >     Thanks for review. For aux_output, I think it should be set 1
+> > > when the guest wants to
+> > enabled PEBS by Intel PT.
+> > >      For precise_ip, it is the precise level in perf and set by perf
+> > > command line in KVM
+> > guest, this may not reflect the accurate value (can be 0~3) here. Here
+> > set to 1 is used to allocate a counter for PEBS event and set the
+> > MSR_IA32_PEBS_ENABLE register. For PMU virtualization, KVM will trap
+> > the guest's write operation to PMU registers and allocate/free event
+> > counter from host if a counter enable/disable in guest. We can't
+> > always deduce the exact parameter of perf command line from the value of the guest
+> writers to the register.
+> >
+> > Please, teach your MUA to wrap on 78 chars.
+> >
+> > The thing I really fell over is the gratuitous 'bool ? 1 : 0'. But
+> > yes, the aux_output without a group leader is dead wrong. We'll go fix
+> > perf_event_create_kernel_counter() to refuse that.
 > 
-> Applied, thanks
+> Yes, I also think it is a little gratuitous here. But it is a little hard to reconstruct the guest
+> perf parameters from the register value, especially the "precise_ip". Do you have any
+> advice?
 > 
-> There was a conflict on patch3, I have reolved it, please check.
+> About refuse the perf_event_create_kernel_counter() request w/o aux_ouput, I think I
+> need to allocate the PT event as group leader here,  is that right?
 
-Looks good, I wonder what caused the conflict. The patch looks identical
-in your vinod/next and in my linux-next-wip.
+Hi Peter,
+     What's your opinion?
 
-Oh, this is v4 and you have picked the v5. That explains.
-
-Thank you,
-- Péter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Thanks,
+Luwei Kang
