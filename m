@@ -2,148 +2,149 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0065C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAB56C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 768452173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 98A6E2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:45:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="abpYqtWB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731584AbfKFHoz convert rfc822-to-8bit (ORCPT
+        id S1731591AbfKFHpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:44:55 -0500
-Received: from mga04.intel.com ([192.55.52.120]:30171 "EHLO mga04.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731147AbfKFHoz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:44:55 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 23:44:54 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="227138250"
-Received: from fmsmsx105.amr.corp.intel.com ([10.18.124.203])
-  by FMSMGA003.fm.intel.com with ESMTP; 05 Nov 2019 23:44:54 -0800
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- FMSMSX105.amr.corp.intel.com (10.18.124.203) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 5 Nov 2019 23:44:54 -0800
-Received: from fmsmsx602.amr.corp.intel.com (10.18.126.82) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Tue, 5 Nov 2019 23:44:54 -0800
-Received: from shsmsx102.ccr.corp.intel.com (10.239.4.154) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256) id 15.1.1713.5
- via Frontend Transport; Tue, 5 Nov 2019 23:44:53 -0800
-Received: from shsmsx104.ccr.corp.intel.com ([169.254.5.127]) by
- shsmsx102.ccr.corp.intel.com ([169.254.2.108]) with mapi id 14.03.0439.000;
- Wed, 6 Nov 2019 15:44:52 +0800
-From:   "Kang, Luwei" <luwei.kang@intel.com>
-To:     'Peter Zijlstra' <peterz@infradead.org>
-CC:     "'kvm@vger.kernel.org'" <kvm@vger.kernel.org>,
-        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
-        "'pbonzini@redhat.com'" <pbonzini@redhat.com>,
-        "'rkrcmar@redhat.com'" <rkrcmar@redhat.com>,
-        "Christopherson, Sean J" <sean.j.christopherson@intel.com>,
-        "'vkuznets@redhat.com'" <vkuznets@redhat.com>,
-        "'wanpengli@tencent.com'" <wanpengli@tencent.com>,
-        "'jmattson@google.com'" <jmattson@google.com>,
-        "'joro@8bytes.org'" <joro@8bytes.org>,
-        "'tglx@linutronix.de'" <tglx@linutronix.de>,
-        "'mingo@redhat.com'" <mingo@redhat.com>,
-        "'bp@alien8.de'" <bp@alien8.de>, "'hpa@zytor.com'" <hpa@zytor.com>,
-        "'x86@kernel.org'" <x86@kernel.org>,
-        "'ak@linux.intel.com'" <ak@linux.intel.com>,
-        "'thomas.lendacky@amd.com'" <thomas.lendacky@amd.com>,
-        "'acme@kernel.org'" <acme@kernel.org>,
-        "'mark.rutland@arm.com'" <mark.rutland@arm.com>,
-        "'alexander.shishkin@linux.intel.com'" 
-        <alexander.shishkin@linux.intel.com>,
-        "'jolsa@redhat.com'" <jolsa@redhat.com>,
-        "'namhyung@kernel.org'" <namhyung@kernel.org>
-Subject: RE: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
- event
-Thread-Topic: [PATCH v1 3/8] KVM: x86: Allocate performance counter for PEBS
- event
-Thread-Index: AQHVjLd13+lWyOpx00qD/bA0eE059qdxL6sAgAEppjCAABXXgIACK7fwgAk3MFA=
-Date:   Wed, 6 Nov 2019 07:44:51 +0000
-Message-ID: <82D7661F83C1A047AF7DC287873BF1E1738387F8@SHSMSX104.ccr.corp.intel.com>
-References: <1572217877-26484-1-git-send-email-luwei.kang@intel.com>
- <1572217877-26484-4-git-send-email-luwei.kang@intel.com>
- <20191029144612.GK4097@hirez.programming.kicks-ass.net>
- <82D7661F83C1A047AF7DC287873BF1E173835B1A@SHSMSX104.ccr.corp.intel.com>
- <20191030094941.GQ4097@hirez.programming.kicks-ass.net>
- <82D7661F83C1A047AF7DC287873BF1E17383642D@SHSMSX104.ccr.corp.intel.com>
-In-Reply-To: <82D7661F83C1A047AF7DC287873BF1E17383642D@SHSMSX104.ccr.corp.intel.com>
+        Wed, 6 Nov 2019 02:45:08 -0500
+Received: from mail-eopbgr70085.outbound.protection.outlook.com ([40.107.7.85]:18985
+        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729986AbfKFHpH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:45:07 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=Jlakg06RjDkIE1KDSVYBM9NXNvTX0Fwk1Z88Xi3zq1CHUAjRilzyKBNy2bnMQJ3kSnkCGaIW/rMABA3Go/ylobXqnvF9LE6pgbaj+S6yzJwhYhzKeiHHifoqF54s2Qdi3TSo0ecTD2GwwEZ3tbj+hhckjkITg1Na5G+LMqY0e4LId+on47IC/v05NUzfmvMiTH7w0mpaWBQlWN+Z1tBA9q+8tCVseuZnp+314mueJfpJhwbtrffWxaayK86B479iuE6tgr1QcznDUqYLcm55O535RfhOGBOdDQdszHyLsDDJRe8xt1lof4hR7xA43xQfJaPrpgxzoEZh5q6yHKL23A==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DEp+4k3DsabS3lPCUEm6IwDjGzuiraozcekKoU0utuw=;
+ b=a6u6xnCj7MA/vxhM8vYYLo1qOVqJvsfxbPN/Fsn/EvTqbbBmyiy2UcwY6I/e6mgLv2MH6lfciWepne0rfeuWKRIu8mzLJEhK7cuJ2zCO/tJx10Z5Yi4iQKc9RmFgBLQUQhWTYOXspIHJoXZr1AAExIuXdUbLBy7lnjc6kR4X2u/Bgi8eZwCdjo+XEGlVc4dP9KSpjUNtNQvbpHU/84NXZUGltrHDsbbOWebmjUXta4yjr+e+E4Mkcm1E40JpY7lP7FR20ATe5CAuI6K0Ed9zzlx+UHRR2h1yaU1iRGBUwdRuZP+L0ehQotPFJK2U8mjiVklRjgyHnYsqjldBhb16ZQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=DEp+4k3DsabS3lPCUEm6IwDjGzuiraozcekKoU0utuw=;
+ b=abpYqtWBQQZdnl6Tt/aXybxHaHaUSxz0YNcM5CNNXun7e2xRLoTI5r3uI/HCTT/JDfecU6kHF4Sq0DIAgzAtpKgVJHND/C8L8lQBmizu3igZJadwyyQD/l9nBqriK9BXkQcYpsqZYug1H8cPb+glISo7H/V16sgDon9RSSCcRT8=
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com (20.178.202.151) by
+ AM0PR04MB3956.eurprd04.prod.outlook.com (52.134.93.159) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 07:45:02 +0000
+Received: from AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde]) by AM0PR04MB5779.eurprd04.prod.outlook.com
+ ([fe80::fd44:1b14:587c:9fde%7]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 07:45:01 +0000
+From:   Abel Vesa <abel.vesa@nxp.com>
+To:     Peng Fan <peng.fan@nxp.com>
+CC:     "sboyd@kernel.org" <sboyd@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        dl-linux-imx <linux-imx@nxp.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Topic: [PATCH] clk: imx: pll14xx: fix clk_pll14xx_wait_lock
+Thread-Index: AQHVlGNoepC2TDBj7kaCYRyt+h3yD6d9w2gA
+Date:   Wed, 6 Nov 2019 07:45:01 +0000
+Message-ID: <20191106074500.vwihbt6s4dwqyun7@fsr-ub1664-175>
+References: <1573018178-14939-1-git-send-email-peng.fan@nxp.com>
+In-Reply-To: <1573018178-14939-1-git-send-email-peng.fan@nxp.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNzE3NjQyYjEtYmE2OS00YjI4LTk2MjUtMmVlZTIwM2Y2M2UzIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiR2xDRGN4bHZSakV6S01JcHJMaVJnZFFmcTl3NHRyN0U4UkNOTmoxR0RsXC8rVmJKV1g4WGx0NWVDQTlvT3hFXC9EIn0=
-dlp-product: dlpe-windows
-dlp-version: 11.2.0.6
-dlp-reaction: no-action
-x-originating-ip: [10.239.127.40]
+x-clientproxiedby: AM4PR0101CA0057.eurprd01.prod.exchangelabs.com
+ (2603:10a6:200:41::25) To AM0PR04MB5779.eurprd04.prod.outlook.com
+ (2603:10a6:208:131::23)
+x-originating-ip: [89.37.124.34]
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=abel.vesa@nxp.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 44bb08a1-bf45-4b4a-f4ef-08d7628d3b01
+x-ms-traffictypediagnostic: AM0PR04MB3956:|AM0PR04MB3956:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM0PR04MB395665F85B4C56349A243B5CF6790@AM0PR04MB3956.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(7916004)(4636009)(376002)(346002)(136003)(396003)(366004)(39860400002)(199004)(189003)(6512007)(316002)(64756008)(6636002)(5660300002)(66446008)(2906002)(26005)(305945005)(102836004)(7736002)(86362001)(6116002)(76176011)(14444005)(8936002)(8676002)(66476007)(44832011)(66556008)(6506007)(3846002)(66066001)(71200400001)(6436002)(71190400001)(6486002)(478600001)(81166006)(6246003)(99286004)(476003)(9686003)(229853002)(52116002)(386003)(256004)(54906003)(81156014)(446003)(486006)(1076003)(6862004)(4744005)(25786009)(14454004)(66946007)(4326008)(53546011)(33716001)(11346002)(186003)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB3956;H:AM0PR04MB5779.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: PoAT/lwDNarbS17vfheekcGmymmENkNYSI+U1qLmqUpBZ2BgO4xBagbMGTLRBW+FWidooLGz4kBjEuH+YgYG8ImGvv5k8czCvwZvggNCQ+8yzD4Yxt4LRG5mDk8RT6eVwwoeq/yJOyEAHnWG5xzZ8wo5GzycKGv+0TaUMuVTfcf1dv7qpjJOhm1/JdF6YsCtCk2Tk0grUY76em95RMnhXkPy/KcExX1XzyGJsvKTE+dWUtrf/7fLpeMxSG08pCED4dR00g5J9gKrK95umpdkajl0cx9cEThmSkaz8RPqiTaehpV9N8y0YGetRRkXTyGxwFG3uRbNhi1eTaLAzToMSVRwtyFPuH4avgsZ0ZyXf0AIZxT8c5aEAg/fo3tDkwAsE+J5eifzHUdSX5JpulyY8S/inmQfE4JUS/1DgK1NLvwHVv5vqhEuvirno9WSdPu7
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+Content-ID: <3C2A340762855A46862663A22A7574CA@eurprd04.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 44bb08a1-bf45-4b4a-f4ef-08d7628d3b01
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 07:45:01.8697
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 6qHDHv/EU/5rIHVd3bzy4CWxTEnN0HJAlOu8krcC3jnaS+FNLxw5URS1aRaWjAZbTx3kW3dZR5rEA1p/kI2wQg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB3956
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> > > > >  static void pmc_reprogram_counter(struct kvm_pmc *pmc, u32 type,
-> > > > >  				  unsigned config, bool exclude_user,
-> > > > >  				  bool exclude_kernel, bool intr,
-> > > > > -				  bool in_tx, bool in_tx_cp)
-> > > > > +				  bool in_tx, bool in_tx_cp, bool pebs)
-> > > > >  {
-> > > > >  	struct perf_event *event;
-> > > > >  	struct perf_event_attr attr = { @@ -111,9 +111,12 @@ static
-> > > > > void pmc_reprogram_counter(struct kvm_pmc *pmc,
-> > u32 type,
-> > > > >  		.exclude_user = exclude_user,
-> > > > >  		.exclude_kernel = exclude_kernel,
-> > > > >  		.config = config,
-> > > > > +		.precise_ip = pebs ? 1 : 0,
-> > > > > +		.aux_output = pebs ? 1 : 0,
-> > > >
-> > > > srsly?
-> > >
-> > > Hi Peter,
-> > >     Thanks for review. For aux_output, I think it should be set 1
-> > > when the guest wants to
-> > enabled PEBS by Intel PT.
-> > >      For precise_ip, it is the precise level in perf and set by perf
-> > > command line in KVM
-> > guest, this may not reflect the accurate value (can be 0~3) here. Here
-> > set to 1 is used to allocate a counter for PEBS event and set the
-> > MSR_IA32_PEBS_ENABLE register. For PMU virtualization, KVM will trap
-> > the guest's write operation to PMU registers and allocate/free event
-> > counter from host if a counter enable/disable in guest. We can't
-> > always deduce the exact parameter of perf command line from the value of the guest
-> writers to the register.
-> >
-> > Please, teach your MUA to wrap on 78 chars.
-> >
-> > The thing I really fell over is the gratuitous 'bool ? 1 : 0'. But
-> > yes, the aux_output without a group leader is dead wrong. We'll go fix
-> > perf_event_create_kernel_counter() to refuse that.
-> 
-> Yes, I also think it is a little gratuitous here. But it is a little hard to reconstruct the guest
-> perf parameters from the register value, especially the "precise_ip". Do you have any
-> advice?
-> 
-> About refuse the perf_event_create_kernel_counter() request w/o aux_ouput, I think I
-> need to allocate the PT event as group leader here,  is that right?
+On 19-11-06 05:31:15, Peng Fan wrote:
+> From: Peng Fan <peng.fan@nxp.com>
+>=20
+> The usage of readl_poll_timeout is wrong, the cond should be
+> "val & LOCK_STATUS" not "val & LOCK_TIMEOUT_US".
+>=20
+> Fixes: 8646d4dcc7fb ("clk: imx: Add PLLs driver for imx8mm soc")
+> Signed-off-by: Peng Fan <peng.fan@nxp.com>
 
-Hi Peter,
-     What's your opinion?
+Reviewed-by: Abel Vesa <abel.vesa@nxp.com>
 
-Thanks,
-Luwei Kang
+> ---
+>=20
+> V1:
+>  Hi Shawn,
+>    This patch is made based on 5.4-rc6, not your for-next branch,
+>    not sure whether this patch could catch 5.4 release.
+>=20
+>  drivers/clk/imx/clk-pll14xx.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.=
+c
+> index 7a815ec76aa5..d43b4a3c0de8 100644
+> --- a/drivers/clk/imx/clk-pll14xx.c
+> +++ b/drivers/clk/imx/clk-pll14xx.c
+> @@ -153,7 +153,7 @@ static int clk_pll14xx_wait_lock(struct clk_pll14xx *=
+pll)
+>  {
+>  	u32 val;
+> =20
+> -	return readl_poll_timeout(pll->base, val, val & LOCK_TIMEOUT_US, 0,
+> +	return readl_poll_timeout(pll->base, val, val & LOCK_STATUS, 0,
+>  			LOCK_TIMEOUT_US);
+>  }
+> =20
+> --=20
+> 2.16.4
+>=20
