@@ -5,42 +5,42 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CEA9C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38E58C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EA732178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C57F2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="NBQ93KNC"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bIYJgrEh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731984AbfKFPDO (ORCPT
+        id S1732079AbfKFPDh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:03:14 -0500
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43052 "EHLO
+        Wed, 6 Nov 2019 10:03:37 -0500
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43190 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727275AbfKFPDM (ORCPT
+        by vger.kernel.org with ESMTP id S1731959AbfKFPDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:03:12 -0500
+        Wed, 6 Nov 2019 10:03:13 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id CE87DC0F49;
-        Wed,  6 Nov 2019 15:03:11 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 50588C0F54;
+        Wed,  6 Nov 2019 15:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573052592; bh=fWGeKBFpVt8zESUdTNXzV3l2mEqYnnnzi2hkL4gzYWg=;
+        t=1573052592; bh=orkA0OJGVviH22JL3eQ4nAhgpmWxuQSkZ3UgLXnjgm0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=NBQ93KNCNLVml9SLgUHxGK7NGJs6VXvrC7nOM+Na/6QYc4GvZpJMbTZgetQdr997I
-         KMHLgPrOQHy3Z7ztbpWFR+g0Xz0ZjLxVlQGkEUX9sI5sfPbYgfueep3zV+4fPc/F2w
-         nK/VzfSZTIKf7WgTIkT+DxqL6SPCfEm+5zx/8s4nJOuEjQZXQOZ5moS7mKtLWiK7W2
-         RLWs5gDIlA9MlAyvZNkndQWlMSh+c+ST4HgzU22S/MB4p+FXPtZ3mrpxLcBSc7AR71
-         T37N5KVh1pm+iGxpPI86ZQSO9A052Zs9NNCSMp5vib/E522SztadgTe6jgibX15ADs
-         7bkvvCYMgAfOg==
+        b=bIYJgrEhHrAHDP8W8EOKXHDUEzWGAV9bnUFIYw2M8abdWkMiwibuCwgM8pBfGPxQ7
+         c3GCuceKCwc7LkqaHSzue0qOB+CcdFlGQeCFFURgQGEnv+OLfASjx6wrVKYjdIeCnF
+         NPFt8AuTAxxNMtYYMt2yBGL4ICrcGhLjRAwdEoFMZIhyCSpVxWUwe5O3QeNU98aIVg
+         yCXebNikdqOP8o4jS25TGUn7MCWlwjKT+LZuiOK+ZijQSiFHz0YUO6Arz3C5AnK3nK
+         EuvOAYw2YiuAXnUMZVNaWqOmLAAJzWsDp59BaeqQuoIjWvj79rvEWpoRGZd0fLPt9B
+         sX6xx9aoLo+xg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 84B60A0063;
-        Wed,  6 Nov 2019 15:03:10 +0000 (UTC)
+        by mailhost.synopsys.com (Postfix) with ESMTP id 0E724A0089;
+        Wed,  6 Nov 2019 15:03:11 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
 Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 02/11] net: stmmac: xgmac: bitrev32 returns u32
-Date:   Wed,  6 Nov 2019 16:02:56 +0100
-Message-Id: <ea9ec1de0fca9d37ef595d1a8b64b1919a9589f7.1573052379.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 11/11] net: stmmac: Fix the TX IOC in xmit path
+Date:   Wed,  6 Nov 2019 16:03:05 +0100
+Message-Id: <b8d2676910857e8cede306c3fb140bd8fccf9ad3.1573052379.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
 References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
@@ -65,9 +65,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bitrev32 function returns an u32 var, not an int. Fix it.
+IOC bit must be only set in the last descriptor. Move the logic up a
+little bit to make sure it's set in the correct descriptor.
 
-Fixes: 0efedbf11f07 ("net: stmmac: xgmac: Fix XGMAC selftests")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -81,22 +81,105 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 64 ++++++++++++-----------
+ 1 file changed, 34 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-index 5031398e612c..01075a955c66 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_core.c
-@@ -463,7 +463,7 @@ static void dwxgmac2_set_filter(struct mac_device_info *hw,
- 		value |= XGMAC_FILTER_HMC;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index b0a16d7c6e3d..f826365c979d 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3024,6 +3024,19 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	/* Only the last descriptor gets to point to the skb. */
+ 	tx_q->tx_skbuff[tx_q->cur_tx] = skb;
  
- 		netdev_for_each_mc_addr(ha, dev) {
--			int nr = (bitrev32(~crc32_le(~0, ha->addr, 6)) >>
-+			u32 nr = (bitrev32(~crc32_le(~0, ha->addr, 6)) >>
- 					(32 - mcbitslog2));
- 			mc_filter[nr >> 5] |= (1 << (nr & 0x1F));
- 		}
++	/* Manage tx mitigation */
++	tx_q->tx_count_frames += nfrags + 1;
++	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
++	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++	      priv->hwts_tx_en)) {
++		stmmac_tx_timer_arm(priv, queue);
++	} else {
++		desc = &tx_q->dma_tx[tx_q->cur_tx];
++		tx_q->tx_count_frames = 0;
++		stmmac_set_tx_ic(priv, desc);
++		priv->xstats.tx_set_ic_bit++;
++	}
++
+ 	/* We've used all descriptors we need for this skb, however,
+ 	 * advance cur_tx so that it references a fresh descriptor.
+ 	 * ndo_start_xmit will fill this descriptor the next time it's
+@@ -3041,19 +3054,6 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	priv->xstats.tx_tso_frames++;
+ 	priv->xstats.tx_tso_nfrags += nfrags;
+ 
+-	/* Manage tx mitigation */
+-	tx_q->tx_count_frames += nfrags + 1;
+-	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
+-	    !(priv->synopsys_id >= DWMAC_CORE_4_00 &&
+-	    (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
+-	    priv->hwts_tx_en)) {
+-		stmmac_tx_timer_arm(priv, queue);
+-	} else {
+-		tx_q->tx_count_frames = 0;
+-		stmmac_set_tx_ic(priv, desc);
+-		priv->xstats.tx_set_ic_bit++;
+-	}
+-
+ 	if (priv->sarc_type)
+ 		stmmac_set_desc_sarc(priv, first, priv->sarc_type);
+ 
+@@ -3225,6 +3225,27 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 	/* Only the last descriptor gets to point to the skb. */
+ 	tx_q->tx_skbuff[entry] = skb;
+ 
++	/* According to the coalesce parameter the IC bit for the latest
++	 * segment is reset and the timer re-started to clean the tx status.
++	 * This approach takes care about the fragments: desc is the first
++	 * element in case of no SG.
++	 */
++	tx_q->tx_count_frames += nfrags + 1;
++	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
++	    !((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
++	      priv->hwts_tx_en)) {
++		stmmac_tx_timer_arm(priv, queue);
++	} else {
++		if (likely(priv->extend_desc))
++			desc = &tx_q->dma_etx[entry].basic;
++		else
++			desc = &tx_q->dma_tx[entry];
++
++		tx_q->tx_count_frames = 0;
++		stmmac_set_tx_ic(priv, desc);
++		priv->xstats.tx_set_ic_bit++;
++	}
++
+ 	/* We've used all descriptors we need for this skb, however,
+ 	 * advance cur_tx so that it references a fresh descriptor.
+ 	 * ndo_start_xmit will fill this descriptor the next time it's
+@@ -3260,23 +3281,6 @@ static netdev_tx_t stmmac_xmit(struct sk_buff *skb, struct net_device *dev)
+ 
+ 	dev->stats.tx_bytes += skb->len;
+ 
+-	/* According to the coalesce parameter the IC bit for the latest
+-	 * segment is reset and the timer re-started to clean the tx status.
+-	 * This approach takes care about the fragments: desc is the first
+-	 * element in case of no SG.
+-	 */
+-	tx_q->tx_count_frames += nfrags + 1;
+-	if (likely(priv->tx_coal_frames > tx_q->tx_count_frames) &&
+-	    !(priv->synopsys_id >= DWMAC_CORE_4_00 &&
+-	    (skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
+-	    priv->hwts_tx_en)) {
+-		stmmac_tx_timer_arm(priv, queue);
+-	} else {
+-		tx_q->tx_count_frames = 0;
+-		stmmac_set_tx_ic(priv, desc);
+-		priv->xstats.tx_set_ic_bit++;
+-	}
+-
+ 	if (priv->sarc_type)
+ 		stmmac_set_desc_sarc(priv, first, priv->sarc_type);
+ 
 -- 
 2.7.4
 
