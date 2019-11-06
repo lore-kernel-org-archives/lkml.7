@@ -2,145 +2,135 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B353C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF3EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:13:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F279A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A07F206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:13:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VMB2FIKp";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Kjd7AuVi"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CD5T4lcL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731375AbfKFIIg (ORCPT
+        id S1731306AbfKFINJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:08:36 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:32918 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729986AbfKFIIg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:08:36 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0A4E7611FA; Wed,  6 Nov 2019 08:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573027715;
-        bh=Yo8SjkHYjtVRfPkp1PCsQaZra8UH8YIzC2IL8wAokAQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=VMB2FIKpdyZBdj/Gzgg0EPW60ktlEchBic4EaMJey34K57PbxkBAqpzVCppzsgqed
-         5yj5n03ZLKZRzXEvUyIqAP2W6ElvRfKcluz88VLPT+b5x5njoLRKhuTlpZnw61QVCd
-         W3g/pA8A6ChQYV0Ng/wgNRmFQNLMHT+t5x6y1jaM=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 0F17A611FA;
-        Wed,  6 Nov 2019 08:08:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573027714;
-        bh=Yo8SjkHYjtVRfPkp1PCsQaZra8UH8YIzC2IL8wAokAQ=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=Kjd7AuVic0Qh7zYpZM8+B10ufNxRXRFu1YkVYV1UH4ckWBzt1b2HedvixzIeG4wIk
-         4gX5fnjwTQ1CKTZZKPs6gaQev5qPNR9TKNqqqiZCLjfz+5s1jKoUk/NIVzuu6byMnk
-         ZcFHv6z/PC7j1xE+547iGggtVbr3c2G/jsQsaGp8=
+        Wed, 6 Nov 2019 03:13:09 -0500
+Received: from mail-eopbgr30051.outbound.protection.outlook.com ([40.107.3.51]:9447
+        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729881AbfKFINI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:13:08 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=ciAOEyTH2TLxyEAzdcBAFldWSVYYCmUS+yP7mBROU12q21wCDqodZPcbFhdQyz2YmS8Ai3NrlXDIwVLqN8XgeirNHTAH+rgXq46B/u9ubg9rX3/8f0K3M/fEzfZIqIykgan3zoUpnTlvkQQN9+k2bWtxrAbJlN7AozokEuYloZQ38o9U1yCfgj90vP0PQPLLuvnsNc8Rp9DG8ZO3mfLXP2KwohpTMwZDsOeKkRAj3dIR1O1mrQy7/DtiRE83SMfBRb3xkJp0ZLbyFlhxV0Medlv8iFGajfHNzl1qtJzWAPjxJxJmJr5HiNgWhosZOuWJ9JIdVKe51UgO0+/qAiHYqg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HDG5toMBYB+CJstZ6hJBQc/qDHkq8bgFuNo1FT8HW+A=;
+ b=E8D+lcHSBOgD8ksPMqw7zM6b0aCVHI3LVPw+9dxA6j31KuyCV+PZ9nyIeXc3+HjPYAT8Y+KSf2ftxuLjp8sNC70Q2W8M8lUX54QKpKNhVsl21zg5732zIoO69bQ9Sln/NxMSIGdkmXY9V3PGgSgryIoPzxytMU+1EsFzDWH/TVgJX1pX5cHS+iOCUgM6dT7FkBsONFzeJgmSziWn2By/Fb1zwnBTgAxbDmrfouD662gDQUK1He6UEFH1dlHJJG0GXF9PdFxB9iBTKDhYzDT1ebR26+Ur1CkyA7eqzEa0ZAn2C5pLI8TCQ3kc/NOtplxhyKHeVpWtQqw55f4UgPkEdg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=HDG5toMBYB+CJstZ6hJBQc/qDHkq8bgFuNo1FT8HW+A=;
+ b=CD5T4lcLJam8VVc620PgfWA6C8oqUCJYnBBFHq2dMfryHoXWIfhlfr3vDuk/Wv05VoUDd5Dw02wR3C6pbfKDYzBpZ74I+m/hcZY+nRn91G0CfMqDonzPnKZUXc+rM5dhHNZyE8gHMNriFyFuMvHbIAzZ8K+Y6VnkrUjQcwIM/KY=
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
+ VI1PR0402MB2751.eurprd04.prod.outlook.com (10.175.22.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 08:13:05 +0000
+Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::5dd6:297c:51e5:2b52]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
+ ([fe80::5dd6:297c:51e5:2b52%7]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 08:13:04 +0000
+From:   Andy Duan <fugang.duan@nxp.com>
+To:     Chuhong Yuan <hslester96@gmail.com>
+CC:     "David S . Miller" <davem@davemloft.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH] net: fec: add a check for CONFIG_PM to avoid clock
+ count mis-match
+Thread-Topic: [EXT] [PATCH] net: fec: add a check for CONFIG_PM to avoid clock
+ count mis-match
+Thread-Index: AQHVlHh1RxWa9XB3VkWu+bqZPxdiDad9ymZQ
+Date:   Wed, 6 Nov 2019 08:13:04 +0000
+Message-ID: <VI1PR0402MB3600F14956A82EF8D7B53CC4FF790@VI1PR0402MB3600.eurprd04.prod.outlook.com>
+References: <20191106080128.23284-1-hslester96@gmail.com>
+In-Reply-To: <20191106080128.23284-1-hslester96@gmail.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=fugang.duan@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: b26e4eb2-7c18-42ca-50d7-08d762912651
+x-ms-traffictypediagnostic: VI1PR0402MB2751:
+x-microsoft-antispam-prvs: <VI1PR0402MB2751FCE4EA71611C9E244BDDFF790@VI1PR0402MB2751.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:1468;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(199004)(189003)(74316002)(54906003)(81156014)(66066001)(486006)(1411001)(11346002)(476003)(14454004)(99286004)(81166006)(52536014)(25786009)(8936002)(86362001)(5660300002)(478600001)(4326008)(2906002)(14444005)(6246003)(55016002)(33656002)(7696005)(305945005)(446003)(6916009)(7736002)(6436002)(229853002)(76116006)(102836004)(66476007)(3846002)(6116002)(316002)(66446008)(66556008)(64756008)(71200400001)(71190400001)(66946007)(256004)(9686003)(186003)(76176011)(6506007)(8676002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2751;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: SlOKWji3cBsbZ+LtZ9nMfwhyYUl6F76F9znrb50VUVRMhG3CGu0sseRZeYwiLKUVdLqN4D1RV/aI43Q64U89wnfPs8vAa5+s+PywWWCQLNtPYTyWOCyO3ZxBD0xfTLQ3xPXScp6wsCzcxk2lB7BqnowFG2O8TuyOJL7Et8I2WMpvxd9IPBYqxXI30PD3QArdBMgwVU7vJBVrpSLrSZYhxEzol/Xmh5idP48MczLE7Sut3i/2oZ5xdqc8PJ2cDMYofmaMwGvJ5EBoy6uwUOMeI6ei6VecM75gtH41cDWQlhXmXlSNhVDR6t6GLDlPGnRUZIghLfhM36qJku2CT5bu5kq0bRxEERLPGYxvYzL3lX0wXnB+8jVabE8TcaMjSh+YY7tXCviiTi9Nj7hDxCiDfD5P3L5B4/rcZsYq/bBWE5zJPNoddlLZm/PhdwJLdITo
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 06 Nov 2019 13:38:34 +0530
-From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
-To:     Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc:     marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org,
-        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
-        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        tientzu@chromium.org, seanpaul@chromium.org
-Subject: Re: [PATCH v1 2/2] Bluetooth: hci_qca: Add support for Qualcomm
- Bluetooth SoC WCN3991
-In-Reply-To: <20191105184407.GA1852@minitux>
-References: <20191105144508.22989-1-bgodavar@codeaurora.org>
- <20191105144508.22989-3-bgodavar@codeaurora.org>
- <20191105184407.GA1852@minitux>
-Message-ID: <739a8cadc6e01971a523d5a0b6fae057@codeaurora.org>
-X-Sender: bgodavar@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b26e4eb2-7c18-42ca-50d7-08d762912651
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 08:13:04.7558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: JUHNE7XY0LWTmvL0sxN02rxMVw7AnQyO8tUZAv4ubPGLk8NpUlsuG04M5zr9wK7AmHgbay4XNa+kWknCcwdHkA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2751
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jorn,
+From: Chuhong Yuan <hslester96@gmail.com> Sent: Wednesday, November 6, 2019=
+ 4:01 PM
+> If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
+> automatically to disable clks.
+> Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
+> Add this check to avoid clock count mis-match caused by double-disable.
+>=20
+> This patch depends on patch
+> ("net: fec: add missed clk_disable_unprepare in remove").
+>=20
+Please add Fixes tag here.
 
-On 2019-11-06 00:14, Bjorn Andersson wrote:
-> On Tue 05 Nov 06:45 PST 2019, Balakrishna Godavarthi wrote:
-> 
->> This patch add support for WCN3991 i.e. current values and fw download
->> support.
->> 
->> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
->> ---
->>  drivers/bluetooth/btqca.c   | 68 
->> +++++++++++++++++++++++++++++--------
->>  drivers/bluetooth/btqca.h   | 10 ++++--
->>  drivers/bluetooth/hci_qca.c | 16 +++++++--
->>  3 files changed, 74 insertions(+), 20 deletions(-)
->> 
->> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
-> [..]
->> @@ -48,13 +62,16 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
->> *soc_version)
->>  	}
->> 
->>  	if (edl->cresp != EDL_CMD_REQ_RES_EVT ||
->> -	    edl->rtype != EDL_APP_VER_RES_EVT) {
->> +	    edl->rtype != rtype) {
->>  		bt_dev_err(hdev, "QCA Wrong packet received %d %d", edl->cresp,
->>  			   edl->rtype);
->>  		err = -EIO;
->>  		goto out;
->>  	}
->> 
->> +	if (soc_type == QCA_WCN3991)
->> +		memcpy(&edl->data, &edl->data[1], sizeof(*ver));
-> 
-> memcpy() shouldn't be used when the two memory regions are overlapping,
-> use memmove() for this.
-> 
+Andy
+> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+> ---
+>  drivers/net/ethernet/freescale/fec_main.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/net/ethernet/freescale/fec_main.c
+> b/drivers/net/ethernet/freescale/fec_main.c
+> index a9c386b63581..696550f4972f 100644
+> --- a/drivers/net/ethernet/freescale/fec_main.c
+> +++ b/drivers/net/ethernet/freescale/fec_main.c
+> @@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device *pdev)
+>                 regulator_disable(fep->reg_phy);
+>         pm_runtime_put(&pdev->dev);
+>         pm_runtime_disable(&pdev->dev);
+> +#ifndef CONFIG_PM
+>         clk_disable_unprepare(fep->clk_ahb);
+>         clk_disable_unprepare(fep->clk_ipg);
+> +#endif
+>         if (of_phy_is_fixed_link(np))
+>                 of_phy_deregister_fixed_link(np);
+>         of_node_put(fep->phy_node);
+> --
+> 2.23.0
 
-[Bala]: will update
-
-> [..]
->> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
->> index 7f7a2b2c0df6..309a720ff216 100644
->> --- a/drivers/bluetooth/btqca.h
->> +++ b/drivers/bluetooth/btqca.h
->> @@ -126,6 +126,7 @@ enum qca_btsoc_type {
->>  	QCA_ROME,
->>  	QCA_WCN3990,
->>  	QCA_WCN3998,
->> +	QCA_WCN3991,
-> 
-> Please maintain sort order.
-> 
-
-[Bala]: will update
-
-> [..]
->> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
-> [..]
->> @@ -1663,6 +1674,7 @@ static const struct of_device_id 
->> qca_bluetooth_of_match[] = {
->>  	{ .compatible = "qcom,qca6174-bt" },
->>  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
->>  	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
->> +	{ .compatible = "qcom,wcn3991-bt", .data = &qca_soc_data_wcn3991},
-> 
-> Ditto
-> 
-
-[Bala]: will update
-
-> Regards,
-> Bjorn
-
--- 
-Regards
-Balakrishna.
