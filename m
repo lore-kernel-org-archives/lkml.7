@@ -2,234 +2,132 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.2 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8833C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAD8AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A322D2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 868552087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:22:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gandi.net header.i=@gandi.net header.b="VmzJQ+5i"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730848AbfKFCSd (ORCPT
+        id S1730835AbfKFCWp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 21:18:33 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:36322 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730724AbfKFCSd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 21:18:33 -0500
-Received: from [213.220.153.21] (helo=wittgenstein)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <christian.brauner@ubuntu.com>)
-        id 1iSAty-0006yE-Ua; Wed, 06 Nov 2019 02:18:31 +0000
-Date:   Wed, 6 Nov 2019 03:18:30 +0100
-From:   Christian Brauner <christian.brauner@ubuntu.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
+        Tue, 5 Nov 2019 21:22:45 -0500
+Received: from mail12.gandi.net ([217.70.182.73]:36683 "EHLO gandi.net"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730562AbfKFCWp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 21:22:45 -0500
+Received: from khany.gandi.net (unknown [IPv6:2001:470:f3c7:4:4e47:6b16:8d51:b670])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by gandi.net (Postfix) with ESMTPSA id 889CF160548;
+        Wed,  6 Nov 2019 02:22:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=gandi.net; s=20190808;
+        t=1573006962;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         in-reply-to:in-reply-to:references:references;
+        bh=NyNsVExiET/B0p0O+Ccmm1UHgNhyv2yUtlitAUYuRAQ=;
+        b=VmzJQ+5iUrdHlevo7nUuQChnyVYJIlNkU7I+Yw0yS+8LHy/vvJWfOToiHRi/yq7XKfjFLo
+        D7KHD4s+bEmg37zhDUnak08bIrzyZu8UVDZvtrfoh4oMMoaWWJPXr/X60ThX0jYKQGcjs0
+        VZtt/DLCjV0NnKlPJlfUiWU+bin+OeJJOv9ijnZKE5tpXczxW/6cNjD/fiaJYuv4tfTVYj
+        o+hq7jaUY0nN5ig12y9fw3TSjPUtXvf32zgqhwUZqBi6h5wXBpZ6/+MWqgrY4CYGi2IUvH
+        cTaBDNi1QNqHeZsWPRwStwd+ZBwI6J5wJ76txzSZ57aGXMWwSM/R8Y/ksQ2kOw==
+Received: by khany.gandi.net (Postfix, from userid 1000)
+        id 822C6DC009B; Wed,  6 Nov 2019 02:22:16 +0000 (GMT)
+Date:   Wed, 6 Nov 2019 02:22:16 +0000
+From:   Arthur Gautier <baloo@gandi.net>
+To:     Andy Lutomirski <luto@kernel.org>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Al Viro <viro@zeniv.linux.org.uk>,
         Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
+        the arch/x86 maintainers <x86@kernel.org>,
         Ingo Molnar <mingo@redhat.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        linux-api@vger.kernel.org,
-        GNU C Library <libc-alpha@sourceware.org>,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] clone3: validate stack arguments
-Message-ID: <20191106021829.zihexhy2vq4z3if3@wittgenstein>
-References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
- <20191031124037.E26AF20650@mail.kernel.org>
+        kernel list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86: uaccess: fix regression in unsafe_get_user
+Message-ID: <20191106022216.emntu2aiapsbyyeh@khany>
+References: <20190217042201.GU2217@ZenIV.linux.org.uk>
+ <alpine.DEB.2.21.1902181347500.1549@nanos.tec.linutronix.de>
+ <CALCETrXyard2OXmOafiLks3YuyO=ObbjDXB6NJo_08rL4M6azw@mail.gmail.com>
+ <20190218215150.xklqbfckwmbtdm3t@khany>
+ <20190926095825.zkdpya55yjusvv4g@khany>
+ <20190926140939.GD18383@zn.tnic>
+ <20191010164951.kr2epy5lyywgngt6@khany>
+ <20191105141112.GB28418@zn.tnic>
+ <20191105160530.vdaii44gckfo45rw@khany>
+ <CALCETrXVuPWwMj9MByvdbRuerboweajaY3zT4eUaJQk4PXqnnQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191031124037.E26AF20650@mail.kernel.org>
+In-Reply-To: <CALCETrXVuPWwMj9MByvdbRuerboweajaY3zT4eUaJQk4PXqnnQ@mail.gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Oct 31, 2019 at 12:40:36PM +0000, Sasha Levin wrote:
-> Hi,
+On Tue, Nov 05, 2019 at 04:21:06PM -0800, Andy Lutomirski wrote:
+> On Tue, Nov 5, 2019 at 8:05 AM Arthur Gautier <baloo@gandi.net> wrote:
+> >
+> > On Tue, Nov 05, 2019 at 03:11:12PM +0100, Borislav Petkov wrote:
+> > > On Thu, Oct 10, 2019 at 04:49:51PM +0000, Arthur Gautier wrote:
+> > > > I did not receive neither the patch Andy provided, nor the comments made
+> > > > on it. But I'd be happy to help and/or take over to fix those if someone could
+> > > > send me both.
+> > >
+> > > Yes, please do, it seems Andy's busy. You can find the whole thread here:
+> > >
+> > > https://lore.kernel.org/lkml/20190215235901.23541-1-baloo@gandi.net/
+> > >
+> > > and you can download it in mbox format.
+> > >
+> > > Care to take Andy's patch, work in the comments I made to it, test it,
+> > > write a commit message, i.e., productize it?
+> > >
+> > > So that we get this thing moving...
+> > >
+> > > Thx.
+> > >
+> >
+> > Hello Boris,
+> >
+> > Thank you! But I believe this is the patch I sent, I know Andy sent a
+> > patchset with two patches, I believe privately (not copied to a public
+> > ML) to some of the recepients here. I got a copy of the second patch
+> > but not the first one.
+> >
+> > I believe from discussions here, that comments have been made on those
+> > patchset and because I was not Cc-ed on those patches, I do not have
+> > neither the full patchset nor the comments.
+> >
+> > I cannot take over the work, nor finish the patchset.
+> >
+> > Would anyone have a copy of the thread and could send them my way?
+> >
 > 
-> [This is an automated email]
+> I forwarded it to you.
 > 
-> This commit has been processed because it contains a "Fixes:" tag,
-> fixing commit: 7f192e3cd316b fork: add clone3.
+> Here are the patches in git:
 > 
-> The bot has tested the following trees: v5.3.8.
+> https://git.kernel.org/pub/scm/linux/kernel/git/luto/linux.git/log/?h=task_size
 > 
-> v5.3.8: Failed to apply! Possible dependencies:
->     78f6face5af34 ("sched: add kernel-doc for struct clone_args")
+> it's "unaligned", "fix test sparse warning", optionally
+> "strncpy_from_user: Zero any extra output bytes that get written",
+> "uaccess: Add a selftest for strncpy_from_user()", and
+> "strncpy_from_user: Don't overrun the input buffer onto the next page"
 > 
-> 
-> NOTE: The patch will not be queued to stable trees until it is upstream.
-> 
-> How should we proceed with this patch?
+> The basic summary is that Linus didn't like calling it bug fix, but it
+> might be acceptable as an improvement.  I also thought that the
+> KERNEL_DS oops was changed so it didn't trigger here.
 
-Hey Sasha,
+Thank you so much!
 
-This has now landed in mainline (cf. [2]).
-I would suggest to backport [1] together with [2].
-The patch in [1] only documents struct clone_args and has no functional
-changes.
-If you prefer to only backport a v5.3 specific version of [2] you can
-find it inline (cf. [3]) including the base commit info for the 5.3 stable
-tree.
-
-Christian
-
-[1]: 78f6face5af3 ("sched: add kernel-doc for struct clone_args")
-[2]: fa729c4df558 ("clone3: validate stack arguments")
-[3]:
-
-From 5bc5279d0dfa90cc6af385b6e3f65958f223ccab Mon Sep 17 00:00:00 2001
-From: Christian Brauner <christian.brauner@ubuntu.com>
-Date: Thu, 31 Oct 2019 12:36:08 +0100
-Subject: [PATCH] clone3: validate stack arguments
-
-Validate the stack arguments and setup the stack depening on whether or not
-it is growing down or up.
-
-Legacy clone() required userspace to know in which direction the stack is
-growing and pass down the stack pointer appropriately. To make things more
-confusing microblaze uses a variant of the clone() syscall selected by
-CONFIG_CLONE_BACKWARDS3 that takes an additional stack_size argument.
-IA64 has a separate clone2() syscall which also takes an additional
-stack_size argument. Finally, parisc has a stack that is growing upwards.
-Userspace therefore has a lot nasty code like the following:
-
- #define __STACK_SIZE (8 * 1024 * 1024)
- pid_t sys_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
- {
-         pid_t ret;
-         void *stack;
-
-         stack = malloc(__STACK_SIZE);
-         if (!stack)
-                 return -ENOMEM;
-
- #ifdef __ia64__
-         ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
- #elif defined(__parisc__) /* stack grows up */
-         ret = clone(fn, stack, flags | SIGCHLD, arg, pidfd);
- #else
-         ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
- #endif
-         return ret;
- }
-
-or even crazier variants such as [3].
-
-With clone3() we have the ability to validate the stack. We can check that
-when stack_size is passed, the stack pointer is valid and the other way
-around. We can also check that the memory area userspace gave us is fine to
-use via access_ok(). Furthermore, we probably should not require
-userspace to know in which direction the stack is growing. It is easy
-for us to do this in the kernel and I couldn't find the original
-reasoning behind exposing this detail to userspace.
-
-/* Intentional user visible API change */
-clone3() was released with 5.3. Currently, it is not documented and very
-unclear to userspace how the stack and stack_size argument have to be
-passed. After talking to glibc folks we concluded that trying to change
-clone3() to setup the stack instead of requiring userspace to do this is
-the right course of action.
-Note, that this is an explicit change in user visible behavior we introduce
-with this patch. If it breaks someone's use-case we will revert! (And then
-e.g. place the new behavior under an appropriate flag.)
-Breaking someone's use-case is very unlikely though. First, neither glibc
-nor musl currently expose a wrapper for clone3(). Second, there is no real
-motivation for anyone to use clone3() directly since it does not provide
-features that legacy clone doesn't. New features for clone3() will first
-happen in v5.5 which is why v5.4 is still a good time to try and make that
-change now and backport it to v5.3. Searches on [4] did not reveal any
-packages calling clone3().
-
-[1]: https://lore.kernel.org/r/CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com
-[2]: https://lore.kernel.org/r/20191028172143.4vnnjpdljfnexaq5@wittgenstein
-[3]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/raw-clone.h#L31
-[4]: https://codesearch.debian.net
-Fixes: 7f192e3cd316 ("fork: add clone3")
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Cc: David Howells <dhowells@redhat.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Florian Weimer <fweimer@redhat.com>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: linux-api@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: <stable@vger.kernel.org> # 5.3
-Cc: GNU C Library <libc-alpha@sourceware.org>
-Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Acked-by: Aleksa Sarai <cyphar@cyphar.com>
-Link: https://lore.kernel.org/r/20191031113608.20713-1-christian.brauner@ubuntu.com
----
- kernel/fork.c | 33 ++++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
-
-diff --git a/kernel/fork.c b/kernel/fork.c
-index 3647097e6783..8bbd39585301 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -2586,7 +2586,35 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
- 	return 0;
- }
- 
--static bool clone3_args_valid(const struct kernel_clone_args *kargs)
-+/**
-+ * clone3_stack_valid - check and prepare stack
-+ * @kargs: kernel clone args
-+ *
-+ * Verify that the stack arguments userspace gave us are sane.
-+ * In addition, set the stack direction for userspace since it's easy for us to
-+ * determine.
-+ */
-+static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
-+{
-+	if (kargs->stack == 0) {
-+		if (kargs->stack_size > 0)
-+			return false;
-+	} else {
-+		if (kargs->stack_size == 0)
-+			return false;
-+
-+		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
-+			return false;
-+
-+#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
-+		kargs->stack += kargs->stack_size;
-+#endif
-+	}
-+
-+	return true;
-+}
-+
-+static bool clone3_args_valid(struct kernel_clone_args *kargs)
- {
- 	/*
- 	 * All lower bits of the flag word are taken.
-@@ -2606,6 +2634,9 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
- 	    kargs->exit_signal)
- 		return false;
- 
-+	if (!clone3_stack_valid(kargs))
-+		return false;
-+
- 	return true;
- }
- 
-
-base-commit: db0655e705be645ad673b0a70160921e088517c0
 -- 
-2.23.0
-
+\o/ Arthur
+ G  Gandi.net
