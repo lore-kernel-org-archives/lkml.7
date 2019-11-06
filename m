@@ -2,88 +2,108 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C5EDC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93CEEC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:50:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE409217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:48:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491F321848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:50:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="IreTXyYz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="pMQRdpKI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732814AbfKFWsG (ORCPT
+        id S1732016AbfKFWui (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:48:06 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:41427 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726912AbfKFWsG (ORCPT
+        Wed, 6 Nov 2019 17:50:38 -0500
+Received: from bombadil.infradead.org ([198.137.202.133]:51038 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726004AbfKFWuh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:48:06 -0500
-Received: by mail-pg1-f195.google.com with SMTP id h4so68426pgv.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:48:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=e4ahwvwEenCW3Ssy97Go1KwhMTmop2CdID3ppVgbYFg=;
-        b=IreTXyYzkcyCRUuEUBoIo9m1mKz28IIQSdPSFoqi+uqqHfkqGViv23VBDhGs1OsYra
-         qQP4cYTXyZPbHCM4+142sFe37YyZFQDoaOl3XIzdt0A6sWejvp0EgytFgqkd/Ju6Jmf1
-         Zalng+bdd0Wbjg7KYwZpQNF9MDmNcm80wTOJOvWiiZ/C+BVgklJHj9fijYhUrHtu/wR2
-         1lhD+AUpRU5FedUIofnCYApIfTWe8b+cW7HHubnSOEVhoPe4xzUC905NII3Y48GvZmyj
-         biq3EpJrRwue6J8Md3V+8SRCtOZuxt+Ly/L3dyQSWd/JQksp6xvBGaLD6zzsErsXlDMc
-         Q33A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=e4ahwvwEenCW3Ssy97Go1KwhMTmop2CdID3ppVgbYFg=;
-        b=uN014YqwAmfIpRiUmUusyywM3lLA/rJ7exiDO7i+S4gId9jE7+EiGCP1KwZeXV0iEv
-         98UtWRElumpZRPC42gZJrBljODCavOqRGOAdtOBSyXR+N9GhFRadqTzN5TrvCbco2ueh
-         X93owYBMXGrsQUfcDauleNBw+3VXeZeDFjwV90jrYS1oyohFvEM4iLosstU76m3PL4zn
-         tMiL3fK2IPVB+nFktuhD1oecVyighfcyH3ggaUT3G9naxO+tCHAPdwCVGM7gFSp9orQq
-         da/h/CndW8r8YVumN0kcKvyJysyvZYcVsHuiCaBMRQEEPvcz8aAEPUUvp1Gk0gjy9OFW
-         4tIw==
-X-Gm-Message-State: APjAAAVLI6eoDCOaBwnS14iKdsvpPzCYDOrsfvkHOTsFBR2dhTmIfNV5
-        DLfSj5DMn31Dzk8saoE34joYGw==
-X-Google-Smtp-Source: APXvYqyr+y0D1jq1rNuNO65CIHswePbMJN08xlpb8XRXVBMMBoJvb6+TV4m3ywBKKJveiNntlfYEBg==
-X-Received: by 2002:a63:395:: with SMTP id 143mr325134pgd.93.1573080485690;
-        Wed, 06 Nov 2019 14:48:05 -0800 (PST)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id o1sm112685pgm.1.2019.11.06.14.48.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 14:48:04 -0800 (PST)
-Date:   Wed, 6 Nov 2019 14:48:04 -0800 (PST)
-From:   Paul Walmsley <paul.walmsley@sifive.com>
-X-X-Sender: paulw@viisi.sifive.com
-To:     Zong Li <zong.li@sifive.com>
-cc:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        palmer@sifive.com
-Subject: Re: [PATCH] riscv: clean up the macro format in each header file
-In-Reply-To: <1572248567-22504-1-git-send-email-zong.li@sifive.com>
-Message-ID: <alpine.DEB.2.21.9999.1911061423390.20606@viisi.sifive.com>
-References: <1572248567-22504-1-git-send-email-zong.li@sifive.com>
-User-Agent: Alpine 2.21.9999 (DEB 301 2018-08-15)
+        Wed, 6 Nov 2019 17:50:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        Content-Type:In-Reply-To:MIME-Version:Date:Message-ID:From:References:Cc:To:
+        Subject:Sender:Reply-To:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=S+NDVwxnw7pUxx3P5o8f+I/8HtJJXwHD+rPflie4cnM=; b=pMQRdpKIQCx3SN9Vl5hh63a0q
+        NN9hM0Rdx0FKjbRc5iGGjxbdKBzcS60ZVcKZX3pcxvoMr4KualdndEDr47JlzlgcGEmw70yQfewI1
+        T7bj38nguBRwOjJHbfR5kz1aDqZ015cYLHqHBgeIMUOqld6zyuIA3N5V6zdW6x9UObSW4us0x+Qz4
+        kUgZP3BVbKCZ2SoXTdv7WaUdAelz4i/YSG84yCv78On6N1pDStA1x/uK/u+lwrYTKCzIhLfi3J9bi
+        +8mALHWxYMUbvB1tFVeq03G484MQcFQavQi2yCJuwxOzS9J58eV4AgmbpLY2iffnv5aR7Yu8gdBt7
+        g9cvCQqnA==;
+Received: from [2601:1c0:6280:3f0::4ba1]
+        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSU8G-0006ML-Gr; Wed, 06 Nov 2019 22:50:32 +0000
+Subject: Re: [PATCH V9 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106070548.18980-1-jasowang@redhat.com>
+ <20191106070548.18980-7-jasowang@redhat.com>
+From:   Randy Dunlap <rdunlap@infradead.org>
+Message-ID: <88efad07-70aa-3879-31e7-ace4d2ad63a1@infradead.org>
+Date:   Wed, 6 Nov 2019 14:50:30 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20191106070548.18980-7-jasowang@redhat.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019, Zong Li wrote:
+On 11/5/19 11:05 PM, Jason Wang wrote:
+> diff --git a/samples/Kconfig b/samples/Kconfig
+> index c8dacb4dda80..13a2443e18e0 100644
+> --- a/samples/Kconfig
+> +++ b/samples/Kconfig
+> @@ -131,6 +131,16 @@ config SAMPLE_VFIO_MDEV_MDPY
+>  	  mediated device.  It is a simple framebuffer and supports
+>  	  the region display interface (VFIO_GFX_PLANE_TYPE_REGION).
+>  
+> +config SAMPLE_VIRTIO_MDEV_NET
+> +	tristate "Build VIRTIO net example mediated device sample code -- loadable modules only"
+> +	depends on VIRTIO_MDEV && VHOST_RING && m
+> +	help
+> +	  Build a networking sample device for use as a virtio
+> +	  mediated device. The device coopreates with virtio-mdev bus
 
-> There are many different formats in each header now, such as
-> _ASM_XXX_H, __ASM_XXX_H, _ASM_RISCV_XXX_H, RISCV_XXX_H, etc., This patch
-> tries to unify the format by using _ASM_RISCV_XXX_H, because the most
-> header use it now. This patch also adds the conditional to the headers
-> if they lost it.
-> 
-> Signed-off-by: Zong Li <zong.li@sifive.com>
+typo here:
+	                              cooperates
 
-Thanks, queued for v5.5-rc1.
+> +	  driver to present an virtio ethernet driver for
+> +	  kernel. It simply loopbacks all packets from its TX
+> +	  virtqueue to its RX virtqueue.
+> +
+>  config SAMPLE_VFIO_MDEV_MDPY_FB
+>  	tristate "Build VFIO mdpy example guest fbdev driver -- loadable module only"
+>  	depends on FB && m
 
-- Paul
+ciao.
+-- 
+~Randy
+
