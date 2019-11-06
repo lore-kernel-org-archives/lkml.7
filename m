@@ -2,154 +2,93 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5D95C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFEE8C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95531217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92872217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:29 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Zb6XWmzK"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JQ+22H2m";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="f/yfTO60"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729400AbfKFR4Z (ORCPT
+        id S1732437AbfKFR42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:56:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41001 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726963AbfKFR4Z (ORCPT
+        Wed, 6 Nov 2019 12:56:28 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:35564 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726963AbfKFR40 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:56:25 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 94so21573289oty.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:56:24 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wVNAkLALcXf3ECseCh6fIvYcw+YM/ecsEduyd+L1OzY=;
-        b=Zb6XWmzK5jZjbch2MifX0aU6MslUtqvH7JbhSPtSBmHPH66O7HbtFoy6LpphJKLUwB
-         723tGBxQfPxaoBW6PpvIpwg6lf3XhiiVWKXW1UzkcxiMbWml24UT3FTI+Lageu5vNGFT
-         INVLdgOdIaQLo3ou/yTt8IgVtwT6MW23mq+KA=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wVNAkLALcXf3ECseCh6fIvYcw+YM/ecsEduyd+L1OzY=;
-        b=jNeSt/VnX/h8Pm2DFqFQ0m5T0mEaTw++KpOsZj/iMLl9hBZYdMF1bca4ZNtVMlKe4O
-         Uo991kD18VKXpRHeUeWYqgJ2gQAhnDtOc9TCN57/Qq+12Hw4+m2bi+NoWGoeoPUGtNPw
-         w6ar0zU749dkLdHVOceUHVMXSMreTcL2D4UbW0WO2ogjVn9cYOchqiMvzbNP58C1uf3l
-         Big+a5DdJM7Ymt9/hs/cn84U8DlIfqb7Otb3joGmKslB3pPBfq4E6XnVly0eXYgy8Oc6
-         NX5OjKxJoGZYSWk94fQWs4Ugx5DDPDKeMjPiDTzUxjnFmga822YA4gLa7tTSd6VyjhfN
-         D2cw==
-X-Gm-Message-State: APjAAAWmBPk6EAfKOvbHiT04oaBUCxrRzrAwyl4Ky0HnfiRiy/ciqEWM
-        QeBuQIzPiRvFiYGYjjdIQ2u2mRk7L03mKwaUD2gDjw==
-X-Google-Smtp-Source: APXvYqzxbABqhuHazS+yjloa/OpTTnWvOIpez+z4/iPCKEvqK9ko+QH4PbBYKrqM2WqcfHeTeq609guGaPY66JUrYAc=
-X-Received: by 2002:a9d:62d8:: with SMTP id z24mr2924164otk.188.1573062983862;
- Wed, 06 Nov 2019 09:56:23 -0800 (PST)
+        Wed, 6 Nov 2019 12:56:26 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 02CE66021C; Wed,  6 Nov 2019 17:56:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573062985;
+        bh=OWp/Ep5laIfxpLZ/jbqh2BVdcBHVyI+joJJufx17uo4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=JQ+22H2mxrVwbIDMKO7OzuaFDkk9+rEk4alrpGA95zIuH/wOoCJeGnv2qybIVXGR2
+         WFfTXVpy6oSYoQe0+WAS7xrXr+74pKizUs3fJvNwAvrcykfh4pUFX+CJ3F6KaktnZC
+         8VgiYXuPajlgkCxBN9V0FqBWq871fGiMsfAaXZB0=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 4353E6021C;
+        Wed,  6 Nov 2019 17:56:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573062984;
+        bh=OWp/Ep5laIfxpLZ/jbqh2BVdcBHVyI+joJJufx17uo4=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=f/yfTO604seJdDkSkdnBSCsKcjba3QPxzjuaPolkgJwTdLsWBiYp436fP3UoCaQGc
+         sefSstGVnfebMn2+Y+ibJiVQvC0p9N117j2PXB1/LmgRUvOJ1zAQNcH7dcuNlYE9rq
+         66CTO0SC+aCkRQ1FB3yisTeVUyaZHUpiLKYQ8v+8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 4353E6021C
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20191106164755.31478-1-daniel.vetter@ffwll.ch> <201911060920.71D7E76E@keescook>
-In-Reply-To: <201911060920.71D7E76E@keescook>
-From:   Daniel Vetter <daniel.vetter@ffwll.ch>
-Date:   Wed, 6 Nov 2019 18:56:12 +0100
-Message-ID: <CAKMK7uGq5o+jj-YigTomfx2XEHh5eUjnKD70Trkc6opZOViUHg@mail.gmail.com>
-Subject: Re: [PATCH] drm: Limit to INT_MAX in create_blob ioctl
-To:     Kees Cook <keescook@chromium.org>
-Cc:     DRI Development <dri-devel@lists.freedesktop.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Daniel Vetter <daniel.vetter@intel.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] brcmsmac: remove set but not used variables
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191101135035.11612-1-yuehaibing@huawei.com>
+References: <20191101135035.11612-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <arend.vanspriel@broadcom.com>, <franky.lin@broadcom.com>,
+        <hante.meuleman@broadcom.com>, <chi-hsien.lin@cypress.com>,
+        <wright.feng@cypress.com>, <davem@davemloft.net>,
+        <yuehaibing@huawei.com>, <christophe.jaillet@wanadoo.fr>,
+        <linux-wireless@vger.kernel.org>,
+        <brcm80211-dev-list.pdl@broadcom.com>,
+        <brcm80211-dev-list@cypress.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191106175625.02CE66021C@smtp.codeaurora.org>
+Date:   Wed,  6 Nov 2019 17:56:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:24 PM Kees Cook <keescook@chromium.org> wrote:
->
-> On Wed, Nov 06, 2019 at 05:47:55PM +0100, Daniel Vetter wrote:
-> > The hardened usercpy code is too paranoid ever since:
-> >
-> > commit 6a30afa8c1fbde5f10f9c584c2992aa3c7f7a8fe
-> > Author: Kees Cook <keescook@chromium.org>
-> > Date:   Wed Nov 6 16:07:01 2019 +1100
-> >
-> >     uaccess: disallow > INT_MAX copy sizes
-> >
-> > Code itself should have been fine as-is.
->
-> I had to go read the syzbot report to understand what was actually being
-> fixed here. Can you be a bit more verbose in this commit log? It sounds
-> like huge usercopy sizes were allowed by drm (though I guess they would
-> fail gracefully in some other way?) but after 6a30afa8c1fb, the copy
-> would yell about sizes where INT_MAX < size < ULONG_MAX - sizeof(...) ?
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-The WARNING seems to have been the only bad effect. I guess in
-practice the real big stuff fails at memory allocation time, but
-shouldn't overflow. Or maybe I still don't get how this C thing works.
-Anyway I figured the cited patch is good enough, userptr copies >
-INT_MAX aren't allowed anymore, so we need to adjust our overflow
-checks.
--Daniel
+> drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:841:7: warning: variable free_pdu set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:842:30: warning: variable tx_rts_count set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:842:6: warning: variable tx_rts set but not used [-Wunused-but-set-variable]
+> drivers/net/wireless/broadcom/brcm80211/brcmsmac/main.c:843:7: warning: variable totlen set but not used [-Wunused-but-set-variable]
+> 
+> They are never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-> What was the prior failure mode that made the existing ULONG_MAX check
-> safe? Your patch looks fine, though:
->
-> Reviewed-by: Kees Cook <keescook@chromium.org>
->
-> > Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-> > Fixes: 6a30afa8c1fb ("uaccess: disallow > INT_MAX copy sizes")
-> > Cc: Kees Cook <keescook@chromium.org>
-> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> > Cc: Andrew Morton <akpm@linux-foundation.org>
-> > Cc: Stephen Rothwell <sfr@canb.auug.org.au>
-> > Signed-off-by: Daniel Vetter <daniel.vetter@intel.com>
-> > --
-> > Kees/Andrew,
-> >
-> > Since this is -mm can I have a stable sha1 or something for
-> > referencing? Or do you want to include this in the -mm patch bomb for
-> > the merge window?
->
-> Traditionally these things live in akpm's tree when they are fixes for
-> patches in there. I have no idea how the Fixes tags work in that case,
-> though...
->
-> -Kees
->
-> > -Daniel
-> > ---
-> >  drivers/gpu/drm/drm_property.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/gpu/drm/drm_property.c b/drivers/gpu/drm/drm_property.c
-> > index 892ce636ef72..6ee04803c362 100644
-> > --- a/drivers/gpu/drm/drm_property.c
-> > +++ b/drivers/gpu/drm/drm_property.c
-> > @@ -561,7 +561,7 @@ drm_property_create_blob(struct drm_device *dev, size_t length,
-> >       struct drm_property_blob *blob;
-> >       int ret;
-> >
-> > -     if (!length || length > ULONG_MAX - sizeof(struct drm_property_blob))
-> > +     if (!length || length > INT_MAX - sizeof(struct drm_property_blob))
-> >               return ERR_PTR(-EINVAL);
-> >
-> >       blob = kvzalloc(sizeof(struct drm_property_blob)+length, GFP_KERNEL);
-> > --
-> > 2.24.0.rc2
-> >
->
-> --
-> Kees Cook
+Patch applied to wireless-drivers-next.git, thanks.
 
-
+5565331152ee brcmsmac: remove set but not used variables
 
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+https://patchwork.kernel.org/patch/11223159/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
