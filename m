@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 36148C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20054C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F7642067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F06FC2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732069AbfKFTWg (ORCPT
+        id S1732691AbfKFTXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:22:36 -0500
+        Wed, 6 Nov 2019 14:23:44 -0500
 Received: from mga02.intel.com ([134.134.136.20]:50594 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731985AbfKFTWe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:22:34 -0500
+        id S1732087AbfKFTWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:22:37 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:34 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:36 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="403835078"
+   d="scan'208";a="403835096"
 Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:32 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:35 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 03/19] soundwire: bus: add PM/no-PM versions of read/write functions
-Date:   Wed,  6 Nov 2019 13:22:07 -0600
-Message-Id: <20191106192223.6003-4-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 05/19] soundwire: intel: add helpers for link power down and shim wake
+Date:   Wed,  6 Nov 2019 13:22:09 -0600
+Message-Id: <20191106192223.6003-6-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
 References: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
@@ -51,121 +51,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for pm_runtime with the appropriate error checks for
-sdw_write/read functions, e.g. when pm_runtime is not supported.
-
-Also expose internal functions without pm_runtime support, which are
-required to perform any sort of suspend/resume operation, as well as
-any enumeration tasks.
+These routines are required for power management
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/bus.c | 68 +++++++++++++++++++++++++++++++----------
- 1 file changed, 52 insertions(+), 16 deletions(-)
+ drivers/soundwire/intel.c | 53 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index 903aee258800..7f431677f152 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -317,6 +317,46 @@ int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
- 	return 0;
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index c918a26d0772..fe3a8b3b2c04 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -362,6 +362,59 @@ static int intel_shim_init(struct sdw_intel *sdw)
+ 	return ret;
  }
  
-+/*
-+ * Read/Write IO functions.
-+ * no_pm versions can only be called by the bus, e.g. while enumerating or
-+ * handling suspend-resume sequences.
-+ * all clients need to use the pm versions
-+ */
-+
-+static int
-+sdw_nread_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
++static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
 +{
-+	struct sdw_msg msg;
-+	int ret;
++	void __iomem *shim = sdw->link_res->shim;
++	unsigned int link_id = sdw->instance;
++	u16 wake_en, wake_sts;
 +
-+	ret = sdw_fill_msg(&msg, slave, addr, count,
-+			   slave->dev_num, SDW_MSG_FLAG_READ, val);
++	if (wake_enable) {
++		/* Enable the wakeup */
++		intel_writew(shim, SDW_SHIM_WAKEEN,
++			     (SDW_SHIM_WAKEEN_ENABLE << link_id));
++	} else {
++		/* Disable the wake up interrupt */
++		wake_en = intel_readw(shim, SDW_SHIM_WAKEEN);
++		wake_en &= ~(SDW_SHIM_WAKEEN_ENABLE << link_id);
++		intel_writew(shim, SDW_SHIM_WAKEEN, wake_en);
++
++		/* Clear wake status */
++		wake_sts = intel_readw(shim, SDW_SHIM_WAKESTS);
++		wake_sts |= (SDW_SHIM_WAKEEN_ENABLE << link_id);
++		intel_writew(shim, SDW_SHIM_WAKESTS_STATUS, wake_sts);
++	}
++}
++
++static int intel_link_power_down(struct sdw_intel *sdw)
++{
++	int link_control, spa_mask, cpa_mask, ret;
++	unsigned int link_id = sdw->instance;
++	void __iomem *shim = sdw->link_res->shim;
++	u16 ioctl;
++
++	/* Glue logic */
++	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
++	ioctl |= SDW_SHIM_IOCTL_BKE;
++	ioctl |= SDW_SHIM_IOCTL_COE;
++	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
++
++	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
++	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
++
++	/* Link power down sequence */
++	link_control = intel_readl(shim, SDW_SHIM_LCTL);
++	spa_mask = ~(SDW_SHIM_LCTL_SPA << link_id);
++	cpa_mask = (SDW_SHIM_LCTL_CPA << link_id);
++	link_control &=  spa_mask;
++
++	ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
 +	if (ret < 0)
 +		return ret;
 +
-+	return sdw_transfer(slave->bus, &msg);
++	sdw->cdns.link_up = false;
++	return 0;
 +}
 +
-+static int
-+sdw_nwrite_no_pm(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
-+{
-+	struct sdw_msg msg;
-+	int ret;
-+
-+	ret = sdw_fill_msg(&msg, slave, addr, count,
-+			   slave->dev_num, SDW_MSG_FLAG_WRITE, val);
-+	if (ret < 0)
-+		return ret;
-+
-+	return sdw_transfer(slave->bus, &msg);
-+}
-+
-+int sdw_write_no_pm(struct sdw_slave *slave, u32 addr, u8 value)
-+{
-+	return sdw_nwrite_no_pm(slave, addr, 1, &value);
-+}
-+
- /**
-  * sdw_nread() - Read "n" contiguous SDW Slave registers
-  * @slave: SDW Slave
-@@ -326,19 +366,17 @@ int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
+ /*
+  * PDI routines
   */
- int sdw_nread(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
- {
--	struct sdw_msg msg;
- 	int ret;
- 
--	ret = sdw_fill_msg(&msg, slave, addr, count,
--			   slave->dev_num, SDW_MSG_FLAG_READ, val);
--	if (ret < 0)
--		return ret;
--
- 	ret = pm_runtime_get_sync(slave->bus->dev);
--	if (ret < 0)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_noidle(slave->bus->dev);
- 		return ret;
-+	}
-+
-+	ret = sdw_nread_no_pm(slave, addr, count, val);
- 
--	ret = sdw_transfer(slave->bus, &msg);
-+	pm_runtime_mark_last_busy(slave->bus->dev);
- 	pm_runtime_put(slave->bus->dev);
- 
- 	return ret;
-@@ -354,19 +392,17 @@ EXPORT_SYMBOL(sdw_nread);
-  */
- int sdw_nwrite(struct sdw_slave *slave, u32 addr, size_t count, u8 *val)
- {
--	struct sdw_msg msg;
- 	int ret;
- 
--	ret = sdw_fill_msg(&msg, slave, addr, count,
--			   slave->dev_num, SDW_MSG_FLAG_WRITE, val);
--	if (ret < 0)
--		return ret;
--
- 	ret = pm_runtime_get_sync(slave->bus->dev);
--	if (ret < 0)
-+	if (ret < 0 && ret != -EACCES) {
-+		pm_runtime_put_noidle(slave->bus->dev);
- 		return ret;
-+	}
-+
-+	ret = sdw_nwrite_no_pm(slave, addr, count, val);
- 
--	ret = sdw_transfer(slave->bus, &msg);
-+	pm_runtime_mark_last_busy(slave->bus->dev);
- 	pm_runtime_put(slave->bus->dev);
- 
- 	return ret;
 -- 
 2.20.1
 
