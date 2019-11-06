@@ -2,147 +2,83 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F824C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:44:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DB59C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:44:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA85207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:44:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3ED90217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:44:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="bV12NHnS";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="dU0u4vis"
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="S314PZdg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729940AbfKFGoC (ORCPT
+        id S1730821AbfKFGob (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:44:02 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:41500 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfKFGoB (ORCPT
+        Wed, 6 Nov 2019 01:44:31 -0500
+Received: from mail-m975.mail.163.com ([123.126.97.5]:57514 "EHLO
+        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfKFGob (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:44:01 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 65FE961186; Wed,  6 Nov 2019 06:44:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573022640;
-        bh=42CLJ/ww7+uXdAJLfPh+1+RfcFXtImJ/OlVgtayzZSo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=bV12NHnSPbKxJQnDPKfiOT9WTaTGypL6VHkHfSrcvOm58+TDrUBjrNTo1epGGfI0W
-         JTlJbm4l6TJ1oi1La19/zARbulmbukTtgptFCKe4df6fKjlu9EQytvoeT6vAFDq8oA
-         872vHOSkYEUpyodLNrURQJ6XdebIuB+YVglbF1J4=
-Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
-        by smtp.codeaurora.org (Postfix) with ESMTP id 4E1AB60D7B;
-        Wed,  6 Nov 2019 06:43:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573022639;
-        bh=42CLJ/ww7+uXdAJLfPh+1+RfcFXtImJ/OlVgtayzZSo=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=dU0u4vis36ZClO+i9NY9xZZGqM4y4lDCfen1VGz5xT0jvdRyxkFTV6qhM9ur4gPfa
-         zkxukND5EjfcrfD8H31AMVvxUC1WRPJc8kuhB1PfhmX/7EtbVUjPnXvh+Z0by7mXj0
-         Kb/LakGkE1mhUPoYKoVZcZLfn09tjCZ8/BK/pSJM=
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Wed, 06 Nov 2019 12:13:59 +0530
-From:   kgunda@codeaurora.org
-To:     Stephen Boyd <swboyd@chromium.org>
-Cc:     Andy Gross <agross@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
-        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, robh+dt@kernel.org,
-        rnayak@codeaurora.org
-Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and
- pm6150l
-In-Reply-To: <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
-References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
- <5dc1cb4c.1c69fb81.af253.0b8a@mx.google.com>
-Message-ID: <c4cee81775c6d82024ca05250290f603@codeaurora.org>
-X-Sender: kgunda@codeaurora.org
-User-Agent: Roundcube Webmail/1.2.5
+        Wed, 6 Nov 2019 01:44:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=6VwGQ5l/KHaUkHzUwx
+        fxyN0z/nNADVZmGBoR+CEIEok=; b=S314PZdgSxxGR3mxVByXgpZfccNhpoo0DT
+        nxsXiDOmN2lINO82O10eLehUm2I2o74zl7cY7+c6wHnrlDlyMBo75FilcW3CDj5P
+        KtQINWtlF2DdjK7OISHmNZwO/lLIlXX3DAJplpZ/g/Y0dHpvFgfwpyTrKi6EPhkj
+        fNuvrYueQ=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp5 (Coremail) with SMTP id HdxpCgAnI128a8Jd9n5eKA--.114S3;
+        Wed, 06 Nov 2019 14:44:22 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Faisal Latif <faisal.latif@intel.com>,
+        Shiraz Saleem <shiraz.saleem@intel.com>,
+        Doug Ledford <dledford@redhat.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>
+Cc:     linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] RDMA/i40iw: fix potential use after free
+Date:   Wed,  6 Nov 2019 14:44:11 +0800
+Message-Id: <1573022651-37171-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HdxpCgAnI128a8Jd9n5eKA--.114S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7JF1kXr1UKFy8ArykGFW3Wrg_yoW3trgEya
+        12g3WxWr15Cr17Wr45ArnxZFy2krWqga1Fvw4ktFn3JryYg3Z8C395CF1ru393Xr1xKrZx
+        W348Gr18CF4rGjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU14v37UUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiDg9lclXluaIe5wACsG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-06 00:49, Stephen Boyd wrote:
-> Quoting Kiran Gunda (2019-11-04 21:21:49)
->> Add the compatibles and PMIC ids for pm6150 and pm6150l PMICs
->> found on SC7180 based platforms.
->> 
->> Signed-off-by: Kiran Gunda <kgunda@codeaurora.org>
->> ---
->>  - Changes from V1:
->>    Sorted the macros and compatibles.
-> 
-> I don't see anything sorted though.
-> 
-Sorry .. I might have misunderstood your comment. Let me know if my 
-understanding is correct.
+Release variable dst after logging dst->error to avoid possible use after
+free.
 
->>>> And compatible here.
->>> And on macro name here.
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ drivers/infiniband/hw/i40iw/i40iw_cm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This means you want to sort all the existing compatible and macros in 
-alpha numeric order ?
+diff --git a/drivers/infiniband/hw/i40iw/i40iw_cm.c b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+index 2d6a378e8560..bb78d3280acc 100644
+--- a/drivers/infiniband/hw/i40iw/i40iw_cm.c
++++ b/drivers/infiniband/hw/i40iw/i40iw_cm.c
+@@ -2079,9 +2079,9 @@ static int i40iw_addr_resolve_neigh_ipv6(struct i40iw_device *iwdev,
+ 	dst = i40iw_get_dst_ipv6(&src_addr, &dst_addr);
+ 	if (!dst || dst->error) {
+ 		if (dst) {
+-			dst_release(dst);
+ 			i40iw_pr_err("ip6_route_output returned dst->error = %d\n",
+ 				     dst->error);
++			dst_release(dst);
+ 		}
+ 		return rc;
+ 	}
+-- 
+2.7.4
 
->>>> Please sort on compatible string
-This means you want sort in the order how the compatibles are defined ?
-
->> 
->>  Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt | 2 ++
->>  drivers/mfd/qcom-spmi-pmic.c                             | 4 ++++
->>  2 files changed, 6 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt 
->> b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> index 1437062..b5fc64e 100644
->> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
->> @@ -32,6 +32,8 @@ Required properties:
->>                     "qcom,pm8998",
->>                     "qcom,pmi8998",
->>                     "qcom,pm8005",
->> +                  "qcom,pm6150",
->> +                  "qcom,pm6150l",
-> 
-> And this looks badly tabbed or something?
-> 
-My bad, I used tabs. Will correct it in next post.
->>                     or generalized "qcom,spmi-pmic".
->>  - reg:             Specifies the SPMI USID slave address for this 
->> device.
->>                     For more information see:
->> diff --git a/drivers/mfd/qcom-spmi-pmic.c 
->> b/drivers/mfd/qcom-spmi-pmic.c
->> index e8fe705..74b7980 100644
->> --- a/drivers/mfd/qcom-spmi-pmic.c
->> +++ b/drivers/mfd/qcom-spmi-pmic.c
->> @@ -34,6 +34,8 @@
->>  #define PM8998_SUBTYPE         0x14
->>  #define PMI8998_SUBTYPE                0x15
->>  #define PM8005_SUBTYPE         0x18
->> +#define PM6150_SUBTYPE         0x28
->> +#define PM6150L_SUBTYPE                0x27
->> 
->>  static const struct of_device_id pmic_spmi_id_table[] = {
->>         { .compatible = "qcom,spmi-pmic", .data = (void 
->> *)COMMON_SUBTYPE },
->> @@ -53,6 +55,8 @@
->>         { .compatible = "qcom,pm8998",    .data = (void 
->> *)PM8998_SUBTYPE },
->>         { .compatible = "qcom,pmi8998",   .data = (void 
->> *)PMI8998_SUBTYPE },
->>         { .compatible = "qcom,pm8005",    .data = (void 
->> *)PM8005_SUBTYPE },
->> +       { .compatible = "qcom,pm6150",    .data = (void 
->> *)PM6150_SUBTYPE },
->> +       { .compatible = "qcom,pm6150l",   .data = (void 
->> *)PM6150L_SUBTYPE },
->>         { }
->>  };
->> 
