@@ -2,91 +2,89 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7326EC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DDDC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAE121882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE71121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012748;
-	bh=B5rssGLUu7rLVxRt2++B9DVXKRArQjh+/atMS5ZdJgQ=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PooV0lrlob9pxhzja20C6cAsxYBha1VPRPeDKi/PovIsBvkfh3QRv8GNdKaH/JkRw
-	 AHH9uguf6ty5KAPpmcTSXzaYS31Z6XNmgkI9AJej41AY9bKwojElMszfINt+/YZOKa
-	 orObjlIY83ozH1TPCatYSzPPuEb/2bSY3i0Sis7I=
+	s=default; t=1573012825;
+	bh=EHB0u3MVxEhZWTCAi5ESkXM4zpATJfaJBa2YTknoRTg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=oipuylEs3Vt1mOvMe7IcKWAVbNhgtLeWr4X+xCIjjGsSEiEXd4+UwXtNOBl1i3Tn4
+	 d/0PQqE3yiVP0P2CYj7Wh/Zetuw6tVtVPTW+eyPaIeBxd5sJKxNzlklteW+lkB9a6S
+	 cnTjKPp5rsTsLIxAxpRPnif5cjKDTyaAKAJQ5kB0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731184AbfKFD7H (ORCPT
+        id S1731192AbfKFEAZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:59:07 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:37747 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfKFD7G (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:59:06 -0500
-Received: by mail-ot1-f66.google.com with SMTP id d5so7625898otp.4;
-        Tue, 05 Nov 2019 19:59:06 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=3+jUWUO/bkFGdV0o7ONSAdtw/CD/1zLOWv9k0T1s+7k=;
-        b=FQ54nInJ4rJfm4Prwwap7N+gMCsGxFtHecNhV7k4NwVxs92QFCYMR0XWu2/UdlDLXQ
-         CN9xg62hw+Mnei9UVm43fUWclwSh2JNeiC0nNGca77A8bQbsaQRvpmUrObNo6bpvfXFG
-         vcaKT4wANN1rEa7yf+sOjlsWhLbIzisf5PKykqXU2LR2UhYTRG5fIUpO9fdwu0TPnwnl
-         vmfI/wYRu2ChxyEtXptaTgl9nZWKW2gliADb3g2vDpDxw1ryfyMEAaTgfuU7KAmPe66h
-         wPZvQm0ozQjdleMnWWjRtbztapwMqTxmX21cKoZKQjXN5ITvZ6sihnymOG+y5S2mD3b5
-         g6Ag==
-X-Gm-Message-State: APjAAAWt8Pc1rft2Uqf/7prloHCC+wWzc3MXvYDZFTEgsG3ja8lFGy2b
-        qf2P3LqPKosdPDKXnPgk1arjWe8=
-X-Google-Smtp-Source: APXvYqym4eHg6yJ8m7KJdSNq9SIvske3hrK1picvTYuzgQLPgCwl5Zg8oHQpbKKuZkQsSOH3aNv20Q==
-X-Received: by 2002:a9d:1c8f:: with SMTP id l15mr203341ota.313.1573012745732;
-        Tue, 05 Nov 2019 19:59:05 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id k10sm6167581oig.25.2019.11.05.19.59.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:59:05 -0800 (PST)
-Date:   Tue, 5 Nov 2019 21:59:04 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1 3/7] dt-bindings: clock: Introduce QCOM Graphics clock
- bindings
-Message-ID: <20191106035904.GA2362@bogus>
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
- <1572524473-19344-4-git-send-email-tdas@codeaurora.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572524473-19344-4-git-send-email-tdas@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 5 Nov 2019 23:00:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42600 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727266AbfKFEAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 23:00:24 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id BF06F2087E;
+        Wed,  6 Nov 2019 04:00:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573012824;
+        bh=EHB0u3MVxEhZWTCAi5ESkXM4zpATJfaJBa2YTknoRTg=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=ED+AyhOAGBVb9eR7kmanZ6wkAt4L+7d3LzYOhxHrTEdk65Q6f+V6vk5gZxfwJuoLL
+         qbbGHBThIPKa5oqbpA8lBNoUPrjZ/vauXJeSdCFvF1FM6/NL8a7CqBQxXfMecOsBMp
+         ciWGs8vlr8ZM46fm58Xbgd5Q2FC3L1aBBgaZEHWM=
+Date:   Tue, 5 Nov 2019 20:00:22 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Alexander Duyck <alexander.duyck@gmail.com>
+Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
+        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
+        mgorman@techsingularity.net, vbabka@suse.cz,
+        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
+        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
+        lcapitulino@redhat.com, dave.hansen@intel.com,
+        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
+        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
+        osalvador@suse.de
+Subject: Re: [PATCH v13 3/6] mm: Introduce Reported pages
+Message-Id: <20191105200022.ed3b5f803bef55377bcc5d30@linux-foundation.org>
+In-Reply-To: <20191105220219.15144.69031.stgit@localhost.localdomain>
+References: <20191105215940.15144.65968.stgit@localhost.localdomain>
+        <20191105220219.15144.69031.stgit@localhost.localdomain>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 17:51:09 +0530, Taniya Das wrote:
-> Add device tree bindings for graphics clock controller for
-> Qualcomm Technology Inc's SC7180 SoCs.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,gpucc.yaml       |  1 +
->  include/dt-bindings/clock/qcom,gpucc-sc7180.h       | 21 +++++++++++++++++++++
->  2 files changed, 22 insertions(+)
->  create mode 100644 include/dt-bindings/clock/qcom,gpucc-sc7180.h
-> 
+On Tue, 05 Nov 2019 14:02:19 -0800 Alexander Duyck <alexander.duyck@gmail.com> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> In order to pave the way for free page reporting in virtualized
+> environments we will need a way to get pages out of the free lists and
+> identify those pages after they have been returned. To accomplish this,
+> this patch adds the concept of a Reported Buddy, which is essentially
+> meant to just be the Uptodate flag used in conjunction with the Buddy
+> page type.
+
+build fix
+
+--- a/mm/page_reporting.h~mm-introduce-reported-pages-fix
++++ a/mm/page_reporting.h
+@@ -158,7 +158,7 @@ free_area_reporting(struct zone *zone, u
+ 	return false;
+ }
+ static inline struct list_head *
+-get_unreported_tail(struct zone *zone, unsigned int order, int migratetype)
++get_unreported_tail(unsigned int order, int migratetype)
+ {
+ 	return NULL;
+ }
+_
+
