@@ -6,80 +6,158 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0318C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C66C1C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8BC96217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91EF0217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:03:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731598AbfKFHD3 (ORCPT
+        id S1731638AbfKFHDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:03:29 -0500
-Received: from mailoutvs7.siol.net ([185.57.226.198]:52844 "EHLO mail.siol.net"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731206AbfKFHD2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:03:28 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTP id B373352475C;
-        Wed,  6 Nov 2019 08:03:25 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta12.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta12.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id X00OQJgGRu0m; Wed,  6 Nov 2019 08:03:25 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Zimbra) with ESMTPS id 6677B52506A;
-        Wed,  6 Nov 2019 08:03:25 +0100 (CET)
-Received: from localhost.localdomain (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: 031275009)
-        by mail.siol.net (Zimbra) with ESMTPSA id 1B990524D52;
-        Wed,  6 Nov 2019 08:03:25 +0100 (CET)
-From:   Jernej Skrabec <jernej.skrabec@siol.net>
-To:     mchehab@kernel.org, hverkuil-cisco@xs4all.nl
-Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v2] media: v4l2-mem2mem: Fix hold buf flag checks
-Date:   Wed,  6 Nov 2019 08:02:53 +0100
-Message-Id: <20191106070253.1986421-1-jernej.skrabec@siol.net>
-X-Mailer: git-send-email 2.24.0
+        Wed, 6 Nov 2019 02:03:34 -0500
+Received: from esa1.mentor.iphmx.com ([68.232.129.153]:18602 "EHLO
+        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731619AbfKFHDd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:03:33 -0500
+IronPort-SDR: VigbTDZeOVcq6JOIKNspXDGa9eMgIRJRk7LnewnQOC5YFRsgdW2aTyfqqIQ0pfRuJxg9fhDeuZ
+ vFIHXTy52EHHNlb+g5GQfJ2bVQ014HSYByAkpq4xXe5mWUnih2DeMp7hGXOKMjCRBASDYtVjTi
+ GNP/iVLAecwQHsxdMKhi2L0XRw3mtBnGSjdOaMCll/LVtIvXI8dg0A+bF0evexIPFsakMu+OXz
+ TMd6EaY/QfpKtjtNjzeLwvRrd/+IUY486Lo37hS773oRxd9VW3NHFkNRIdjgaC57ovhg5ml32B
+ nzo=
+X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
+   d="scan'208";a="44759274"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa1.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:03:32 -0800
+IronPort-SDR: iRtb1r84yoJWIABdY6wXYT90gvbbBGUfODIhCgp+A76CHxlcWMz+Hf+OLPxWgR5ttTJ6OXYPJb
+ fC/qRXntIgkmuvAla7tfj9Sfwbf2UrEbFYVDZdEw8pRi0OqE+OY35NlKkFalja2t0WSht3oqJR
+ TpyL3WBhbfFFr+VEE5IZOurZ9F8mmwGxTmMldw2rGsDoK7Df252oo3Q6ekSksyIK5Li1L6Ri98
+ EEbVjGDimkvWXFWzJYKw2lne/qytmBXnV5spehQCm7uWxijOO+mmojzNAaz7LTKVXNWvw4kq00
+ iwc=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
+        <Andrew_Gabbasov@mentor.com>
+Subject: [PATCH v5 26/48] Input: atmel_mxt_ts - implement I2C retries
+Date:   Wed, 6 Nov 2019 16:01:24 +0900
+Message-ID: <20191106070146.18759-27-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
+References: <20191106070146.18759-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hold buf flag is set on output queue, not capture. Fix that.
+From: Nick Dyer <nick.dyer@itdev.co.uk>
 
-Fixes: f07602ac3887 ("media: v4l2-mem2mem: add new_frame detection")
-Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+Some maXTouch chips (eg mXT1386) will not respond on the first I2C request
+when they are in a sleep state. It must be retried after a delay for the
+chip to wake up.
+
+Signed-off-by: Nick Dyer <nick.dyer@itdev.co.uk>
+Acked-by: Yufeng Shen <miletus@chromium.org>
+(cherry picked from ndyer/linux/for-upstream commit 63fd7a2cd03c3a572a5db39c52f4856819e1835d)
+[gdavis: Forward port and fix conflicts.]
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/media/v4l2-core/v4l2-mem2mem.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 45 ++++++++++++++++--------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/media/v4l2-core/v4l2-mem2mem.c b/drivers/media/v4l2-=
-core/v4l2-mem2mem.c
-index db07ef3bf3d0..1afd9c6ad908 100644
---- a/drivers/media/v4l2-core/v4l2-mem2mem.c
-+++ b/drivers/media/v4l2-core/v4l2-mem2mem.c
-@@ -335,7 +335,7 @@ static void __v4l2_m2m_try_queue(struct v4l2_m2m_dev =
-*m2m_dev,
- 		}
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index f5d67e43a786..fc2f804e5293 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -216,6 +216,7 @@ enum t100_type {
+ #define MXT_CRC_TIMEOUT		1000	/* msec */
+ #define MXT_FW_RESET_TIME	3000	/* msec */
+ #define MXT_FW_CHG_TIMEOUT	300	/* msec */
++#define MXT_WAKEUP_TIME		25	/* msec */
+ #define MXT_REGULATOR_DELAY	150	/* msec */
+ #define MXT_CHG_DELAY	        100	/* msec */
+ #define MXT_POWERON_DELAY	150	/* msec */
+@@ -723,6 +724,7 @@ static int __mxt_read_chunk(struct i2c_client *client,
+ 	struct i2c_msg xfer[2];
+ 	u8 buf[2];
+ 	int ret;
++	bool retry = false;
+ 
+ 	buf[0] = reg & 0xff;
+ 	buf[1] = (reg >> 8) & 0xff;
+@@ -739,17 +741,22 @@ static int __mxt_read_chunk(struct i2c_client *client,
+ 	xfer[1].len = len;
+ 	xfer[1].buf = val;
+ 
+-	ret = i2c_transfer(client->adapter, xfer, 2);
+-	if (ret == 2) {
+-		ret = 0;
+-	} else {
+-		if (ret >= 0)
+-			ret = -EIO;
+-		dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
+-			__func__, ret);
++retry_read:
++	ret = i2c_transfer(client->adapter, xfer, ARRAY_SIZE(xfer));
++	if (ret != ARRAY_SIZE(xfer)) {
++		if (!retry) {
++			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
++			msleep(MXT_WAKEUP_TIME);
++			retry = true;
++			goto retry_read;
++		} else {
++			dev_err(&client->dev, "%s: i2c transfer failed (%d)\n",
++				__func__, ret);
++			return -EIO;
++		}
  	}
-=20
--	if (src && dst && (m2m_ctx->cap_q_ctx.q.subsystem_flags &
-+	if (src && dst && (m2m_ctx->out_q_ctx.q.subsystem_flags &
- 			   VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF))
- 		m2m_ctx->new_frame =3D !dst->vb2_buf.copied_timestamp ||
- 			dst->vb2_buf.timestamp !=3D src->vb2_buf.timestamp;
-@@ -474,7 +474,7 @@ void v4l2_m2m_job_finish(struct v4l2_m2m_dev *m2m_dev=
-,
- 	 * holding capture buffers. Those should use
- 	 * v4l2_m2m_buf_done_and_job_finish() instead.
- 	 */
--	WARN_ON(m2m_ctx->cap_q_ctx.q.subsystem_flags &
-+	WARN_ON(m2m_ctx->out_q_ctx.q.subsystem_flags &
- 		VB2_V4L2_FL_SUPPORTS_M2M_HOLD_CAPTURE_BUF);
- 	spin_lock_irqsave(&m2m_dev->job_spinlock, flags);
- 	schedule_next =3D _v4l2_m2m_job_finish(m2m_dev, m2m_ctx);
---=20
-2.24.0
+ 
+-	return ret;
++	return 0;
+ }
+ 
+ static int __mxt_read_reg(struct i2c_client *client,
+@@ -780,6 +787,7 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 	u8 *buf;
+ 	size_t count;
+ 	int ret;
++	bool retry = false;
+ 
+ 	count = len + 2;
+ 	buf = kmalloc(count, GFP_KERNEL);
+@@ -790,14 +798,21 @@ static int __mxt_write_reg(struct i2c_client *client, u16 reg, u16 len,
+ 	buf[1] = (reg >> 8) & 0xff;
+ 	memcpy(&buf[2], val, len);
+ 
++retry_write:
+ 	ret = i2c_master_send(client, buf, count);
+-	if (ret == count) {
+-		ret = 0;
+-	} else {
+-		if (ret >= 0)
++	if (ret != count) {
++		if (!retry) {
++			dev_dbg(&client->dev, "%s: i2c retry\n", __func__);
++			msleep(MXT_WAKEUP_TIME);
++			retry = true;
++			goto retry_write;
++		} else {
++			dev_err(&client->dev, "%s: i2c send failed (%d)\n",
++				__func__, ret);
+ 			ret = -EIO;
+-		dev_err(&client->dev, "%s: i2c send failed (%d)\n",
+-			__func__, ret);
++		}
++	} else {
++		ret = 0;
+ 	}
+ 
+ 	kfree(buf);
+-- 
+2.17.1
 
