@@ -2,133 +2,283 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29FFEC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E13DC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4B920659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7C9F217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlwfvW2F"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731231AbfKFDKo (ORCPT
+        id S1731243AbfKFDKr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:10:44 -0500
-Received: from foss.arm.com ([217.140.110.172]:32962 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730562AbfKFDKo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:10:44 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 0480C30E;
-        Tue,  5 Nov 2019 19:10:43 -0800 (PST)
-Received: from [192.168.225.149] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4DA843F719;
-        Tue,  5 Nov 2019 19:10:22 -0800 (PST)
-Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
- helpers
-To:     Gerald Schaefer <gerald.schaefer@de.ibm.com>
-Cc:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Mark Brown <broonie@kernel.org>,
-        Steven Price <Steven.Price@arm.com>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Kees Cook <keescook@chromium.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sri Krishna chowdary <schowdary@nvidia.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Paul Mackerras <paulus@samba.org>,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Vineet Gupta <vgupta@synopsys.com>,
-        James Hogan <jhogan@kernel.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Ingo Molnar <mingo@kernel.org>,
-        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
-        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
-        x86@kernel.org, linux-kernel@vger.kernel.org
-References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
- <20191105203638.6889a994@thinkpad>
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Message-ID: <d9487d9b-7f23-6311-f432-d2271b961f00@arm.com>
-Date:   Wed, 6 Nov 2019 08:40:57 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Tue, 5 Nov 2019 22:10:47 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:36163 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730562AbfKFDKp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:10:45 -0500
+Received: by mail-pf1-f195.google.com with SMTP id v19so17733150pfm.3;
+        Tue, 05 Nov 2019 19:10:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=61rW3ZN687Kx3j+VgwRzZNWD70+TlJxx1UgOBW1jhZs=;
+        b=RlwfvW2FHvnQ+TqEQmEQXdzw9lKZuOOTOuydSdJA0wohAfLqDmCFF9z7AFR8fphKRW
+         Bw/OXm/vlqfX0LkDGNiqXT5TG1pu/YcY+vdq7gUml4ZMzO4QgRHKRtlbehBmCJ1Fz6T+
+         KV1lsj5D8SeZJh37loLRcMjNlY8XkPxDdocc0SLfE8l10xgRB5nh3tRBkNczxfkzbIxm
+         aJ5Y7Z802lg56hEdudzKNA37kmYZ+wnaRgR4gjh9ZFMwgh1WzVxNh6lfRMU5CMqEY7cF
+         l0v+3wrL1Z4qpWsS6D9AOaPDqKnTUhqK0NP0qR/ewdTYP+RJNQatfdxOyZ2MnRrv1HYR
+         ZV7Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=61rW3ZN687Kx3j+VgwRzZNWD70+TlJxx1UgOBW1jhZs=;
+        b=nQF2Rf4q2fmp40xpy6hM6OrVl/pQNEffbUQaoUh8E09rtT7dSqKry4bdyG9kGAp27r
+         mfELtNfNIAQ2FeCRr4KsV6f4EayEFIVUVsdyCOBbUqXDvmEs/WZ+qKBqm42semuGbBZe
+         DRdm64E8+RjfOAlvMZtRfpJ2/AbJHC/jBpJuH/JriKBH1c/Vyolc9s0bzWjs1I+Pk+KZ
+         fTD2PuJuCQhBABAOZ78nTpxvxqvUY/9ogXcAoXW8725sceLOvbEciJe2nvKVTTsLBNe4
+         1btyxk0ivd4irmI2sBDXwricHnhKqhDc4lzPr28BHnwGaVDboYwiEbSRIoyftB/7KdVc
+         WoJw==
+X-Gm-Message-State: APjAAAXDJGnCncJvP8DCxN1ePV8b9W9LnYsEziagfAAHQwWnOTN+1it/
+        9YM85QUXv8Jv955vThtrMFc=
+X-Google-Smtp-Source: APXvYqxa/auhPBR0HVhmqJA1NTLFPujr+I2Qoyq8gC+9dsGyZ4ocI2p833oFKzyrnNYhYSqwjSStSA==
+X-Received: by 2002:a63:de0b:: with SMTP id f11mr242482pgg.8.1573009844516;
+        Tue, 05 Nov 2019 19:10:44 -0800 (PST)
+Received: from Gentoo ([103.231.91.67])
+        by smtp.gmail.com with ESMTPSA id a21sm816475pjv.20.2019.11.05.19.10.38
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 19:10:43 -0800 (PST)
+Date:   Wed, 6 Nov 2019 08:40:30 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191106031027.GA20442@Gentoo>
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+ <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+ <20191105023243.GA16635@fieldses.org>
+ <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105203638.6889a994@thinkpad>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--3MwIy2ne0vdjdPXF
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
 
-On 11/06/2019 01:06 AM, Gerald Schaefer wrote:
-> On Mon, 28 Oct 2019 10:59:22 +0530
-> Anshuman Khandual <anshuman.khandual@arm.com> wrote:
-> 
->> This adds tests which will validate architecture page table helpers and
->> other accessors in their compliance with expected generic MM semantics.
->> This will help various architectures in validating changes to existing
->> page table helpers or addition of new ones.
+On 11:53 Wed 06 Nov 2019, Masahiro Yamada wrote:
+>On Tue, Nov 5, 2019 at 11:32 AM J. Bruce Fields <bfields@fieldses.org> wrote:
 >>
->> This test covers basic page table entry transformations including but not
->> limited to old, young, dirty, clean, write, write protect etc at various
->> level along with populating intermediate entries with next page table page
->> and validating them.
+>> On Mon, Nov 04, 2019 at 06:03:13PM -0800, Randy Dunlap wrote:
+>> > On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
+>> > > This patch allow you to remove old kernels and associated modules
+>> > > directory from the system.You can do it at once with the -r flag
+>> > > and interactively with the -i flag.
+>> > >
+>> > > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+>> > > ---
+>> > >  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+>> > >  1 file changed, 65 insertions(+), 17 deletions(-)
+>> >
+>> > Hi,
+>> > I believe that this script now does what the patch author intends it to do.
+>> > It does have a few whitespace issues, but no big deals.  (see below)
 >>
->> Test page table pages are allocated from system memory with required size
->> and alignments. The mapped pfns at page table levels are derived from a
->> real pfn representing a valid kernel text symbol. This test gets called
->> right after page_alloc_init_late().
+>> My original comment stands: looks like it prompts for full module path
+>> and kernel versions which means it's no more convenient than just doing
+>> an "ls" and then removing the ones you want to.  (In fact, with "rm"
+>> you'd also get the benefit of tab completion....)
 >>
->> This gets build and run when CONFIG_DEBUG_VM_PGTABLE is selected along with
->> CONFIG_VM_DEBUG. Architectures willing to subscribe this test also need to
->> select CONFIG_ARCH_HAS_DEBUG_VM_PGTABLE which for now is limited to x86 and
->> arm64. Going forward, other architectures too can enable this after fixing
->> build or runtime problems (if any) with their page table helpers.
-> 
-> I've prepared a couple of commits to our arch code to make this work on s390,
-> they will go upstream in the next merge window. After that, we can add s390
-> to the supported architectures.
+>> It's quite different from the original script and I don't really see the
+>> advantage.
+>>
+>> --b.
+>
+>I am with Bruce.
+>
+>This patch is trying to replace everything
+>with worse code.
+Well,Masahiro,
+I won't mind dropping the idea, which you already concluded.But, would
+you care to let me know how worse the code seems to be????
+>
+>
+>BTW.
+>Bruce,
+>Does the current script expect RHEL or something?
+>I do not see 'new-kernel-pkg' on my Ubuntu machine.
+>
+>It would still work with 'new-kernel-pkg: command not found'
+>warning.
+>
+>We could bypass it if we like.
+>
+>command -v new-kernel-pkg && new-kernel-pkg --remove $f
+>
+>
+>
+>Masahiro Yamada
+>
+>
+>
+>> >
+>> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
+>> >
+>> >
+>> > > diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+>> > > index e8aa940bc0a9..01d0778db71f 100755
+>> > > --- a/scripts/prune-kernel
+>> > > +++ b/scripts/prune-kernel
+>> > > @@ -1,21 +1,69 @@
+>> > >  #!/bin/bash
+>> > >  # SPDX-License-Identifier: GPL-2.0
+>> > > +#This script will remove old kernels and modules directory related to it.
+>> > > +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
+>> > > +# "-h" or "--help" show how to use this script or show without parameter.
+>> > > +#"-i" or "--interactive" show how to remove interactively.
+>> > > +
+>> > > +flag=$1
+>> > > +kernel_version=$2
+>> > > +modules_version=$3
+>> > > +boot_dir=/boot
+>> > > +modules_dir=/lib/modules
+>> > > +
+>> > > +remove_old_kernel() {
+>> > > +   cd $boot_dir
+>> > > +   rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
+>> > > +   return 0
+>> > > +}
+>> > > +
+>> > > +remove_old_modules_dir() {
+>> > > +   cd $modules_dir
+>> > > +   rm -rf $modules_version
+>> > > +   return 0
+>> > > +}
+>> > > +
+>> > > +usage() {
+>> > > +   printf "Usage: $(basename $0) [-ri]\n"
+>> > > +   printf "\n -r or --remove  kernel_version modules_version\n"
+>> > > +   printf "\n -i or --interactive do as interactive way\n"
+>> > > +   return 0
+>> > > +}
+>> > > +
+>> > > +case "$flag" in
+>> > > +   -i | --interactive)
+>> > > +           printf "\nEnter kernel version to remove or blank/empty to exit:"
+>> > > +           read kernel_version
+>> > > +           if [[ $kernel_version != "" ]]; then
+>> > > +                   remove_old_kernel
+>> > > +                   printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
+>> >
+>> > space after ':'
+>> >
+>> > drop one \n above.
+>> >
+>> > > +                   printf "Please give the full modules directory name to remove:"
+>> > > +                   read modules_version
+>> > > +                   if [[ $modules_version != "" ]]; then
+>> > > +                           remove_old_modules_dir
+>> > > +                           printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
+>> >
+>> > space after ':'
+>> >
+>> > drop one \n above.
+>> >
+>> > > +                   else
+>> > > +                           exit 1
+>> > > +                   fi
+>> > > +           fi
+>> > > +           ;;
+>> > > +   -h | --help)
+>> > > +           usage
+>> > > +           exit 0
+>> > > +           ;;
+>> > > +   -r | --remove)
+>> > > +           if [[ $# -ne 3 ]]; then
+>> > > +                    printf "You need to provide kernel version and modules directory name.\n"
+>> > > +                    exit 1
+>> > > +            else
+>> > > +                    remove_old_kernel
+>> > > +                    remove_old_modules_dir
+>> > > +           fi
+>> > > +           ;;
+>> > > +   *)
+>> > > +           usage
+>> > > +           exit 1
+>> > > +           ;;
+>> > > +esac
+>> > >
+>> > > -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+>> > > -# again, /boot and /lib/modules/ eventually fill up.
+>> > > -# Dumb script to purge that stuff:
+>> > >
+>> >
+>> > OK, the former script's loop is removed.. good.
+>> > But the 2 preceding blank lines are not removed, so the script
+>> > now ends with 2 unnecessary blank lines.
+>> >
+>> > > -for f in "$@"
+>> > > -do
+>> > > -        if rpm -qf "/lib/modules/$f" >/dev/null; then
+>> > > -                echo "keeping $f (installed from rpm)"
+>> > > -        elif [ $(uname -r) = "$f" ]; then
+>> > > -                echo "keeping $f (running kernel) "
+>> > > -        else
+>> > > -                echo "removing $f"
+>> > > -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+>> > > -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+>> > > -                rm -rf "/lib/modules/$f"
+>> > > -                new-kernel-pkg --remove $f
+>> > > -        fi
+>> > > -done
+>> > > --
+>> >
+>> >
+>> > --
+>> > ~Randy
+>
+>
+>
+>--
+>Best Regards
+>
+>Masahiro Yamada
 
-Thats good.
+--3MwIy2ne0vdjdPXF
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> 
-> We had some issues, e.g. because we do not report large entries as bad in
-> pxd_bad(), do not check for folded page tables in pxd_free(), or assume
-> that primitives like pmd_mkdirty() will only be called after pmd_mkhuge().
-> None of those should have any impact on current code, but your test module
-> revealed that we do not behave like other architectures in some aspects,
-> and it's good to find and fix such things to prevent possible future issues.
+-----BEGIN PGP SIGNATURE-----
 
-Right and those s390 fixes are the testimony for the usefulness of this test.
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3COZ8ACgkQsjqdtxFL
+KRWVrAf/f7XlGHTm+DCHQQvJc/N5CFlmb0pqxDZadAw3T/yDSA7HDcGjNQlxb3Gb
+9+/ald1wwaxhsFlbQ+hd0tRDPljsz6uoQlKTW+/JfBxPi+SFoojAZUhx18t7d7AK
+fruM+AjZ7nfIRmQil8zcIOp5U7WDJ26UveAcWwuDN/u/EsdqOCUJqOYYhph91L1W
+trl+5LD4NerIA8+7ULBB1wIto1Bf4F7KH3K5Qbl2aC+wLkWsEVN+VkIMjy0cTkdj
+q9SwT7VGmETkRa+NiUWgthM97z/mzdFafkHpPNMNyM/+Dlhww9Zc4sYF23yBzkwt
+xAUXFEQ2FFpIw48SYEZBAlVdQBijsw==
+=NThd
+-----END PGP SIGNATURE-----
 
-> 
-> Thanks a lot for the effort!
-> 
-> Regards,
-> Gerald
-> 
-> 
+--3MwIy2ne0vdjdPXF--
