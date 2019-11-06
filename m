@@ -2,114 +2,297 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E780AFC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B1FDFC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:08:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F20217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:06:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GYQve1t6"
+	by mail.kernel.org (Postfix) with ESMTP id C2EC5217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:08:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728280AbfKFXGG (ORCPT
+        id S1731937AbfKFXIH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:06:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:59250 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727813AbfKFXGG (ORCPT
+        Wed, 6 Nov 2019 18:08:07 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45498 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727629AbfKFXIH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:06:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573081565;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=oz3HskjRqxhlPDCGk63+nwo4iuGFQJFiMO6YAWOvkkM=;
-        b=GYQve1t6NGiezcLfohkRAMCaoAaqwzmz9FU32gaR+FtnWxOibxDHk26S7x2BCq5hLjPEpe
-        ITyuB7j3QPdVsXPyVL9t9iv6mWb/Mghhg6R5pKkGyH0XLWW1+v6vo3g0Mc40zOzwbYI+n8
-        Lh/w+qyKaOi+ME4hEAkHSAyquYfHi5w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-139-EYyaIi7oOz6ejyNGGCbU1Q-1; Wed, 06 Nov 2019 18:06:02 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 52FB4800C73;
-        Wed,  6 Nov 2019 23:06:01 +0000 (UTC)
-Received: from treble (ovpn-122-162.rdu2.redhat.com [10.10.122.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A3ACB60BE0;
-        Wed,  6 Nov 2019 23:05:57 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 17:05:53 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] x86/stacktrace: update kconfig help text for reliable
- unwinders
-Message-ID: <20191106230553.wnyltmkzwk5dph4l@treble>
-References: <20191106224344.8373-1-joe.lawrence@redhat.com>
+        Wed, 6 Nov 2019 18:08:07 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iSUPA-0004in-Q7; Thu, 07 Nov 2019 00:08:02 +0100
+Message-Id: <20191106224555.943191378@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 06 Nov 2019 22:55:35 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <darren@dvhart.com>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Yang Tao <yang.tao172@zte.com.cn>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: [patch 01/12] futex: Prevent robust futex exit race
+References: <20191106215534.241796846@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191106224344.8373-1-joe.lawrence@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: EYyaIi7oOz6ejyNGGCbU1Q-1
-X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 05:43:44PM -0500, Joe Lawrence wrote:
-> commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
-> for the ORC unwinder") marked the ORC unwinder as a "reliable" unwinder.
-> Update the help text to reflect that change: the frame pointer unwinder
-> is no longer the only one that provides HAVE_RELIABLE_STACKTRACE.
->=20
-> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> ---
->  arch/x86/Kconfig.debug | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->=20
-> diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-> index bf9cd83de777..69cdf0558c13 100644
-> --- a/arch/x86/Kconfig.debug
-> +++ b/arch/x86/Kconfig.debug
-> @@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
->  =09  unwinder, but the kernel text size will grow by ~3% and the kernel'=
-s
->  =09  overall performance will degrade by roughly 5-10%.
-> =20
-> -=09  This option is recommended if you want to use the livepatch
-> -=09  consistency model, as this is currently the only way to get a
-> -=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
-> -
->  config UNWINDER_GUESS
->  =09bool "Guess unwinder"
->  =09depends on EXPERT
-> @@ -333,6 +329,10 @@ config UNWINDER_GUESS
->  =09  useful in many cases.  Unlike the other unwinders, it has no runtim=
-e
->  =09  overhead.
-> =20
-> +=09  This option is not recommended if you want to use the livepatch
-> +=09  consistency model, as this unwinder cannot guarantee reliable stack
-> +=09  traces.
-> +
+From: Yang Tao <yang.tao172@zte.com.cn>
 
-I'm not sure whether this last hunk is helpful.  At the very least the
-wording of "not recommended" might be confusing because it's not even
-possible to combine UNWINDER_GUESS+HAVE_RELIABLE_STACKTRACE.
+Robust futexes utilize the robust_list mechanism to allow the kernel to
+release futexes which are held when a task exits. The exit can be voluntary
+or caused by a signal or fault. This prevents that waiters block forever.
 
-arch/x86/Kconfig:       select HAVE_RELIABLE_STACKTRACE         if X86_64 &=
-& (UNWINDER_FRAME_POINTER || UNWINDER_ORC) && STACK_VALIDATION
+The futex operations in user space store a pointer to the futex they are
+either locking or unlocking in the op_pending member of the per task robust
+list.
 
---=20
-Josh
+After a lock operation has succeeded the futex is queued in the robust list
+linked list and the op_pending pointer is cleared.
+
+After an unlock operation has succeeded the futex is removed from the
+robust list linked list and the op_pending pointer is cleared.
+
+The robust list exit code checks for the pending operation and any futex
+which is queued in the linked list. It carefully checks whether the futex
+value is the TID of the exiting task. If so, it sets the OWNER_DIED bit and
+tries to wake up a potential waiter.
+
+This is race free for the lock operation but unlock has two race scenarios
+where waiters might not be woken up. These issues can be observed with
+regular robust pthread mutexes. PI aware pthread mutexes are not affected.
+
+(1) Unlocking task is killed after unlocking the futex value in user space
+    before being able to wake a waiter.
+
+        pthread_mutex_unlock()
+                |
+                V
+        atomic_exchange_rel (&mutex->__data.__lock, 0)
+                        <------------------------killed
+            lll_futex_wake ()                   |
+                                                |
+                                                |(__lock = 0)
+                                                |(enter kernel)
+                                                |
+                                                V
+                                            do_exit()
+                                            exit_mm()
+                                          mm_release()
+                                        exit_robust_list()
+                                        handle_futex_death()
+                                                |
+                                                |(__lock = 0)
+                                                |(uval = 0)
+                                                |
+                                                V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;
+
+    The sanity check which ensures that the user space futex is owned by
+    the exiting task prevents the wakeup of waiters which in consequence
+    block infinitely.
+
+(2) Waiting task is killed after a wakeup and before it can acquire the
+    futex in user space.
+
+        OWNER                         WAITER
+				futex_wait()      		
+   pthread_mutex_unlock()               |
+                |                       |
+                |(__lock = 0)           |
+                |                       |
+                V                       |
+         futex_wake() ------------>  wakeup()
+                                        |
+                                        |(return to userspace)
+                                        |(__lock = 0)
+                                        |
+                                        V
+                        oldval = mutex->__data.__lock
+                                          <-----------------killed
+    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
+                        id | assume_other_futex_waiters, 0)      |
+                                                                 |
+                                                                 |
+                                                   (enter kernel)|
+                                                                 |
+                                                                 V
+                                                         do_exit()
+                                                        |
+                                                        |
+                                                        V
+                                        handle_futex_death()
+                                        |
+                                        |(__lock = 0)
+                                        |(uval = 0)
+                                        |
+                                        V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;
+
+    The sanity check which ensures that the user space futex is owned
+    by the exiting task prevents the wakeup of waiters, which seems to
+    be correct as the exiting task does not own the futex value, but
+    the consequence is that other waiters wont be woken up and block
+    infinitely.
+
+In both scenarios the following conditions are true:
+
+   - task->robust_list->list_op_pending != NULL
+   - user space futex value == 0
+   - Regular futex (not PI)
+
+If these conditions are met then it is reasonably safe to wake up a
+potential waiter in order to prevent the above problems.
+
+As this might be a false positive it can cause spurious wakeups, but the
+waiter side has to handle other types of unrelated wakeups, e.g. signals
+gracefully anyway. So such a spurious wakeup will not affect the
+correctness of these operations.
+
+This workaround must not touch the user space futex value and cannot set
+the OWNER_DIED bit because the lock value is 0, i.e. uncontended. Setting
+OWNER_DIED in this case would result in inconsistent state and subsequently
+in malfunction of the owner died handling in user space.
+
+The rest of the user space state is still consistent as no other task can
+observe the list_op_pending entry in the exiting tasks robust list.
+
+The eventually woken up waiter will observe the uncontended lock value and
+take it over.
+
+[ tglx: Massaged changelog and comment. Made the return explicit and not
+  	depend on the subsequent check and added constants to hand into
+  	handle_futex_death() instead of plain numbers. Fixed a few coding
+	style issues. ]
+
+Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
+Signed-off-by: Yi Wang <wang.yi59@zte.com.cn>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Link: https://lkml.kernel.org/r/1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn
+---
+ kernel/futex.c |   58 ++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ 1 file changed, 51 insertions(+), 7 deletions(-)
+
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3452,11 +3452,16 @@ SYSCALL_DEFINE3(get_robust_list, int, pi
+ 	return ret;
+ }
+ 
++/* Constants for the pending_op argument of handle_futex_death */
++#define HANDLE_DEATH_PENDING	true
++#define HANDLE_DEATH_LIST	false
++
+ /*
+  * Process a futex-list entry, check whether it's owned by the
+  * dying task, and do notification if so:
+  */
+-static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
++static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr,
++			      bool pi, bool pending_op)
+ {
+ 	u32 uval, uninitialized_var(nval), mval;
+ 	int err;
+@@ -3469,6 +3474,42 @@ static int handle_futex_death(u32 __user
+ 	if (get_user(uval, uaddr))
+ 		return -1;
+ 
++	/*
++	 * Special case for regular (non PI) futexes. The unlock path in
++	 * user space has two race scenarios:
++	 *
++	 * 1. The unlock path releases the user space futex value and
++	 *    before it can execute the futex() syscall to wake up
++	 *    waiters it is killed.
++	 *
++	 * 2. A woken up waiter is killed before it can acquire the
++	 *    futex in user space.
++	 *
++	 * In both cases the TID validation below prevents a wakeup of
++	 * potential waiters which can cause these waiters to block
++	 * forever.
++	 *
++	 * In both cases the following conditions are met:
++	 *
++	 *	1) task->robust_list->list_op_pending != NULL
++	 *	   @pending_op == true
++	 *	2) User space futex value == 0
++	 *	3) Regular futex: @pi == false
++	 *
++	 * If these conditions are met, it is safe to attempt waking up a
++	 * potential waiter without touching the user space futex value and
++	 * trying to set the OWNER_DIED bit. The user space futex value is
++	 * uncontended and the rest of the user space mutex state is
++	 * consistent, so a woken waiter will just take over the
++	 * uncontended futex. Setting the OWNER_DIED bit would create
++	 * inconsistent state and malfunction of the user space owner died
++	 * handling.
++	 */
++	if (pending_op && !pi && !uval) {
++		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++		return 0;
++	}
++
+ 	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+ 		return 0;
+ 
+@@ -3588,10 +3629,11 @@ void exit_robust_list(struct task_struct
+ 		 * A pending lock might already be on the list, so
+ 		 * don't process it twice:
+ 		 */
+-		if (entry != pending)
++		if (entry != pending) {
+ 			if (handle_futex_death((void __user *)entry + futex_offset,
+-						curr, pi))
++						curr, pi, HANDLE_DEATH_LIST))
+ 				return;
++		}
+ 		if (rc)
+ 			return;
+ 		entry = next_entry;
+@@ -3605,9 +3647,10 @@ void exit_robust_list(struct task_struct
+ 		cond_resched();
+ 	}
+ 
+-	if (pending)
++	if (pending) {
+ 		handle_futex_death((void __user *)pending + futex_offset,
+-				   curr, pip);
++				   curr, pip, HANDLE_DEATH_PENDING);
++	}
+ }
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+@@ -3784,7 +3827,8 @@ void compat_exit_robust_list(struct task
+ 		if (entry != pending) {
+ 			void __user *uaddr = futex_uaddr(entry, futex_offset);
+ 
+-			if (handle_futex_death(uaddr, curr, pi))
++			if (handle_futex_death(uaddr, curr, pi,
++					       HANDLE_DEATH_LIST))
+ 				return;
+ 		}
+ 		if (rc)
+@@ -3803,7 +3847,7 @@ void compat_exit_robust_list(struct task
+ 	if (pending) {
+ 		void __user *uaddr = futex_uaddr(pending, futex_offset);
+ 
+-		handle_futex_death(uaddr, curr, pip);
++		handle_futex_death(uaddr, curr, pip, HANDLE_DEATH_PENDING);
+ 	}
+ }
+ 
+
 
