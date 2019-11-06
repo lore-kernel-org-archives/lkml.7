@@ -2,200 +2,115 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95B1EC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34583C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BE1721A49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="cxv9ZpLO"
+	by mail.kernel.org (Postfix) with ESMTP id 0F868217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732370AbfKFRWY (ORCPT
+        id S1732406AbfKFRWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:22:24 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:31199 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728340AbfKFRWX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:22:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573060942;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wZtDGdfo7vXdtWrOoV18T6iDMYJ4ms1A4QXFYMIJNHA=;
-        b=cxv9ZpLOgT7I2VjMllNWBPMsNkxubwwN+inUgfqQ4qprPg/3iB8ZNEsiY9/mLDdeQMkExu
-        rThWXkytgOEQNsafcTEy3e0A95zzmMUwYr70uuV99hybECUZSTyYTULFO3mZ4xRF9UTnB6
-        KxfRzaLBfuZ0yN3ohA7/cwtP16yyr80=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-406-1dEdgbm0PpGYAyVYiGNXng-1; Wed, 06 Nov 2019 12:22:19 -0500
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Wed, 6 Nov 2019 12:22:33 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:28848 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732389AbfKFRWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:22:32 -0500
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D04C1477;
-        Wed,  6 Nov 2019 17:22:17 +0000 (UTC)
-Received: from bfoster (dhcp-41-2.bos.redhat.com [10.18.41.2])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3CFD45C1C3;
-        Wed,  6 Nov 2019 17:22:17 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 12:22:15 -0500
-From:   Brian Foster <bfoster@redhat.com>
-To:     Dave Chinner <david@fromorbit.com>
-Cc:     linux-xfs@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 26/28] xfs: use xfs_ail_push_all in xfs_reclaim_inodes
-Message-ID: <20191106172215.GD37080@bfoster>
-References: <20191031234618.15403-1-david@fromorbit.com>
- <20191031234618.15403-27-david@fromorbit.com>
+        by mx1.redhat.com (Postfix) with ESMTPS id 469A25AFE0
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 17:22:32 +0000 (UTC)
+Received: by mail-wr1-f71.google.com with SMTP id 92so14625862wro.14
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:22:32 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=7lJxgAWCW8T3bcUZhMKJItz5qgGgFx2fg3nRIeSIa28=;
+        b=YQCeg2TWvoajMIvamsGTEF+oy0TiX4CdwHZ1vEyufPzdk9DCMrUuFPHv+6d5NdvdXJ
+         FpjOBs+4ug3tbaS5u0/6NjnEBaj44LDYsiIFcW23xT3hWDqxZ1sUy7CtFGvQ/ydpYPBD
+         Cnk3jxRjxnnKaYbvcgqob21laR42tTGcDItSN/OrnA7yWJJOIiLYxIQugEZ6/lO5uW54
+         wCkUfZxeBKlkWxqtlf9pWGzDBMQPWufWttPMiyd68TfsK62lqFPg0m5fcNdN9SPQ9m73
+         LgrpouZwwPYy4V2eF/v391kfEVYtqVmhxmLxIkVmjxugXPLjFGW8fQf8ARSbGHezcDnZ
+         kq4w==
+X-Gm-Message-State: APjAAAVoBoCOQ9wIWQEjTYf4trDeewOI4uZtaS9bU2brirRz7lZ1RpQI
+        Vx22sWTn+w7b7HJkKOFlDFG9C7n6Omx1hL0eGoWNms7f6KGGl2bamREuQqLpH3YYtMJVtYT+WMC
+        cW7vEeFDzb0g4eshsQHiMkZYO
+X-Received: by 2002:a7b:c853:: with SMTP id c19mr3370871wml.48.1573060950897;
+        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
+X-Google-Smtp-Source: APXvYqz6pdOPx+AAeZZqH4fmE+ZC+rck52bJZ9rsot7WpLYCv6sn/6q9wKCL5cJG5B5TqooJZUp+3g==
+X-Received: by 2002:a7b:c853:: with SMTP id c19mr3370846wml.48.1573060950602;
+        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
+        by smtp.gmail.com with ESMTPSA id n22sm2988799wmk.19.2019.11.06.09.22.29
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
+Subject: Re: [PATCH 2/2] KVM: x86/mmu: Add helper to consolidate huge page
+ promotion
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-3-sean.j.christopherson@intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <9b3e3cc3-9cd0-1f55-ee19-f33c4cfb7f8a@redhat.com>
+Date:   Wed, 6 Nov 2019 18:22:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191031234618.15403-27-david@fromorbit.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-MC-Unique: 1dEdgbm0PpGYAyVYiGNXng-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <20191106170727.14457-3-sean.j.christopherson@intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Nov 01, 2019 at 10:46:16AM +1100, Dave Chinner wrote:
-> From: Dave Chinner <dchinner@redhat.com>
->=20
-> If we are reclaiming all inodes, it is likely we need to flush the
-> entire AIL to do that. We have mechanisms to do that without needing
-> to push to a specific LSN.
->=20
-> Convert xfs_relaim_all_inodes() to use xfs_ail_push_all variant so
-> we can get rid of the hacky xfs_ail_push_sync() scaffolding we used
-> to support the intermediate stages of the non-blocking reclaim
-> changeset.
->=20
-> Signed-off-by: Dave Chinner <dchinner@redhat.com>
-> ---
->  fs/xfs/xfs_icache.c     | 17 +++++++++++------
->  fs/xfs/xfs_trans_ail.c  | 32 --------------------------------
->  fs/xfs/xfs_trans_priv.h |  2 --
->  3 files changed, 11 insertions(+), 40 deletions(-)
->=20
-> diff --git a/fs/xfs/xfs_icache.c b/fs/xfs/xfs_icache.c
-> index 71a729e29260..11bf4768d491 100644
-> --- a/fs/xfs/xfs_icache.c
-> +++ b/fs/xfs/xfs_icache.c
-...
-> @@ -1066,13 +1074,10 @@ xfs_reclaim_all_inodes(
->  =09=09=09=09      xfs_inode_reclaim_isolate, &ra, to_free);
->  =09=09xfs_dispose_inodes(&ra.freeable);
-> =20
-> -=09=09if (freed =3D=3D 0) {
-> +=09=09if (freed =3D=3D 0)
->  =09=09=09xfs_log_force(mp, XFS_LOG_SYNC);
-> -=09=09=09xfs_ail_push_all(mp->m_ail);
-> -=09=09} else if (ra.lowest_lsn !=3D NULLCOMMITLSN) {
-> -=09=09=09xfs_ail_push_sync(mp->m_ail, ra.lowest_lsn);
-> -=09=09}
-> -=09=09cond_resched();
-> +=09=09else if (ra.dirty_skipped)
-> +=09=09=09congestion_wait(BLK_RW_ASYNC, HZ/10);
+On 06/11/19 18:07, Sean Christopherson wrote:
+>  	 */
+> -	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> -	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+> -	    PageTransCompoundMap(pfn_to_page(pfn)) &&
+> +	if (level == PT_PAGE_TABLE_LEVEL && kvm_is_hugepage_allowed(pfn) &&
+>  	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+>  		unsigned long mask;
+>  		/*
+> @@ -5914,9 +5919,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+>  		 * the guest, and the guest page table is using 4K page size
+>  		 * mapping if the indirect sp has level = 1.
+>  		 */
+> -		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> -		    !kvm_is_zone_device_pfn(pfn) &&
+> -		    PageTransCompoundMap(pfn_to_page(pfn))) {
+> +		if (sp->role.direct && kvm_is_hugepage_allowed(pfn)) {
+>  			pte_list_remove(rmap_head, sptep);
 
-Why not use xfs_ail_push_all_sync() in this function and skip the direct
-stall? This is only used in the unmount and quiesce paths so the big
-hammer approach seems reasonable. As it is, the former already calls
-xfs_ail_push_all_sync() before xfs_reclaim_all_inodes() and the latter
-calls xfs_log_force(mp, XFS_LOG_SYNC).
+I don't think is_error_noslot_pfn(pfn) makes sense in
+kvm_mmu_zap_collapsible_spte, so I'd rather keep it in
+transparent_hugepage_adjust.  Actually, it must be is_noslot_pfn only at
+this point---error pfns have been sieved earlier in handle_abnormal_pfn,
+so perhaps
 
-Brian
+	if (WARN_ON_ONCE(is_error_pfn(pfn)) || is_noslot_pfn(pfn))
+		return;
 
->  =09}
->  }
-> =20
-> diff --git a/fs/xfs/xfs_trans_ail.c b/fs/xfs/xfs_trans_ail.c
-> index 3e1d0e1439e2..685a21cd24c0 100644
-> --- a/fs/xfs/xfs_trans_ail.c
-> +++ b/fs/xfs/xfs_trans_ail.c
-> @@ -662,36 +662,6 @@ xfs_ail_push_all(
->  =09=09xfs_ail_push(ailp, threshold_lsn);
->  }
-> =20
-> -/*
-> - * Push the AIL to a specific lsn and wait for it to complete.
-> - */
-> -void
-> -xfs_ail_push_sync(
-> -=09struct xfs_ail=09=09*ailp,
-> -=09xfs_lsn_t=09=09threshold_lsn)
-> -{
-> -=09struct xfs_log_item=09*lip;
-> -=09DEFINE_WAIT(wait);
-> -
-> -=09spin_lock(&ailp->ail_lock);
-> -=09while ((lip =3D xfs_ail_min(ailp)) !=3D NULL) {
-> -=09=09prepare_to_wait(&ailp->ail_push, &wait, TASK_UNINTERRUPTIBLE);
-> -=09=09if (XFS_FORCED_SHUTDOWN(ailp->ail_mount) ||
-> -=09=09    XFS_LSN_CMP(threshold_lsn, lip->li_lsn) < 0)
-> -=09=09=09break;
-> -=09=09if (XFS_LSN_CMP(threshold_lsn, ailp->ail_target) > 0)
-> -=09=09=09ailp->ail_target =3D threshold_lsn;
-> -=09=09wake_up_process(ailp->ail_task);
-> -=09=09spin_unlock(&ailp->ail_lock);
-> -=09=09schedule();
-> -=09=09spin_lock(&ailp->ail_lock);
-> -=09}
-> -=09spin_unlock(&ailp->ail_lock);
-> -
-> -=09finish_wait(&ailp->ail_push, &wait);
-> -}
-> -
-> -
->  /*
->   * Push out all items in the AIL immediately and wait until the AIL is e=
-mpty.
->   */
-> @@ -732,7 +702,6 @@ xfs_ail_update_finish(
->  =09if (!XFS_FORCED_SHUTDOWN(mp))
->  =09=09xlog_assign_tail_lsn_locked(mp);
-> =20
-> -=09wake_up_all(&ailp->ail_push);
->  =09if (list_empty(&ailp->ail_head))
->  =09=09wake_up_all(&ailp->ail_empty);
->  =09spin_unlock(&ailp->ail_lock);
-> @@ -889,7 +858,6 @@ xfs_trans_ail_init(
->  =09spin_lock_init(&ailp->ail_lock);
->  =09INIT_LIST_HEAD(&ailp->ail_buf_list);
->  =09init_waitqueue_head(&ailp->ail_empty);
-> -=09init_waitqueue_head(&ailp->ail_push);
-> =20
->  =09ailp->ail_task =3D kthread_run(xfsaild, ailp, "xfsaild/%s",
->  =09=09=09ailp->ail_mount->m_fsname);
-> diff --git a/fs/xfs/xfs_trans_priv.h b/fs/xfs/xfs_trans_priv.h
-> index 1b6f4bbd47c0..35655eac01a6 100644
-> --- a/fs/xfs/xfs_trans_priv.h
-> +++ b/fs/xfs/xfs_trans_priv.h
-> @@ -61,7 +61,6 @@ struct xfs_ail {
->  =09int=09=09=09ail_log_flush;
->  =09struct list_head=09ail_buf_list;
->  =09wait_queue_head_t=09ail_empty;
-> -=09wait_queue_head_t=09ail_push;
->  };
-> =20
->  /*
-> @@ -114,7 +113,6 @@ xfs_trans_ail_remove(
->  }
-> =20
->  void=09=09=09xfs_ail_push(struct xfs_ail *, xfs_lsn_t);
-> -void=09=09=09xfs_ail_push_sync(struct xfs_ail *, xfs_lsn_t);
->  void=09=09=09xfs_ail_push_all(struct xfs_ail *);
->  void=09=09=09xfs_ail_push_all_sync(struct xfs_ail *);
->  struct xfs_log_item=09*xfs_ail_min(struct xfs_ail  *ailp);
-> --=20
-> 2.24.0.rc0
->=20
+	if (level == PT_PAGE_TABLE_LEVEL &&
+	    kvm_is_hugepage_allowed(pfn) &&
+	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL))
 
+would be the best option.
+
+Paolo
