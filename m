@@ -4,24 +4,25 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A8DC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A5DAC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B057217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353CC217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732751AbfKFVVu (ORCPT
+        id S1732786AbfKFVWA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:21:50 -0500
-Received: from sauhun.de ([88.99.104.3]:59084 "EHLO pokefinder.org"
+        Wed, 6 Nov 2019 16:22:00 -0500
+Received: from sauhun.de ([88.99.104.3]:59054 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732673AbfKFVVa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:21:30 -0500
+        id S1732647AbfKFVV3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:21:29 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id 20D722C056C;
-        Wed,  6 Nov 2019 22:21:29 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 68AC02C0561;
+        Wed,  6 Nov 2019 22:21:27 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-media@vger.kernel.org
 Cc:     linux-i2c@vger.kernel.org,
@@ -29,9 +30,9 @@ Cc:     linux-i2c@vger.kernel.org,
         Antti Palosaari <crope@iki.fi>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 14/17] media: usb: dvb-usb-v2: zd1301: convert to use i2c_new_client_device()
-Date:   Wed,  6 Nov 2019 22:21:14 +0100
-Message-Id: <20191106212120.27983-15-wsa+renesas@sang-engineering.com>
+Subject: [PATCH 11/17] media: usb: dvb-usb-v2: af9035: convert to use i2c_new_client_device()
+Date:   Wed,  6 Nov 2019 22:21:11 +0100
+Message-Id: <20191106212120.27983-12-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
 References: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
@@ -47,23 +48,23 @@ out.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- drivers/media/usb/dvb-usb-v2/zd1301.c | 4 ++--
+ drivers/media/usb/dvb-usb-v2/af9035.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/usb/dvb-usb-v2/zd1301.c b/drivers/media/usb/dvb-usb-v2/zd1301.c
-index 63b66b207b64..ba2c1b0d3989 100644
---- a/drivers/media/usb/dvb-usb-v2/zd1301.c
-+++ b/drivers/media/usb/dvb-usb-v2/zd1301.c
-@@ -172,8 +172,8 @@ static int zd1301_frontend_attach(struct dvb_usb_adapter *adap)
- 	board_info.addr = 0x60;
- 	board_info.platform_data = &dev->mt2060_pdata;
- 	request_module("%s", "mt2060");
+diff --git a/drivers/media/usb/dvb-usb-v2/af9035.c b/drivers/media/usb/dvb-usb-v2/af9035.c
+index 792667ee5ebc..2db286d88fa5 100644
+--- a/drivers/media/usb/dvb-usb-v2/af9035.c
++++ b/drivers/media/usb/dvb-usb-v2/af9035.c
+@@ -208,8 +208,8 @@ static int af9035_add_i2c_dev(struct dvb_usb_device *d, const char *type,
+ 	request_module("%s", board_info.type);
+ 
+ 	/* register I2C device */
 -	client = i2c_new_device(adapter, &board_info);
--	if (!client || !client->dev.driver) {
+-	if (client == NULL || client->dev.driver == NULL) {
 +	client = i2c_new_client_device(adapter, &board_info);
 +	if (!i2c_client_has_driver(client)) {
  		ret = -ENODEV;
- 		goto err_module_put_demod;
+ 		goto err;
  	}
 -- 
 2.20.1
