@@ -2,86 +2,121 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC40BC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:23:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 53E47C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:23:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C1F920869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:23:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YQWssHj1";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YQWssHj1"
+	by mail.kernel.org (Postfix) with ESMTP id 2F3CD20869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:23:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732514AbfKFSXE (ORCPT
+        id S1732528AbfKFSXd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:23:04 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:52008 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbfKFSXD (ORCPT
+        Wed, 6 Nov 2019 13:23:33 -0500
+Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:41353 "EHLO
+        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727397AbfKFSXd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:23:03 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id C39B46039C; Wed,  6 Nov 2019 18:23:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573064582;
-        bh=f8LjsY8UAdJTWrsEXBbmOOJZMmDExAEs4UlfYAv6xAE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=YQWssHj1hIp+G+mBMsNF/15B/cru208q0naT/vdBj3rtlvIu7fUahenofDI4Piq/y
-         qNiNd1pxe245ohucnRRUocr5eajxHZz+C/KU6HmfVXMYUSzJk4WAUIv2J1th6eZERc
-         sIcnVZfWrRrtW66MdifMuOenKtQG2c8Jv6OscM2U=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 832D860274;
-        Wed,  6 Nov 2019 18:23:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573064582;
-        bh=f8LjsY8UAdJTWrsEXBbmOOJZMmDExAEs4UlfYAv6xAE=;
-        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
-        b=YQWssHj1hIp+G+mBMsNF/15B/cru208q0naT/vdBj3rtlvIu7fUahenofDI4Piq/y
-         qNiNd1pxe245ohucnRRUocr5eajxHZz+C/KU6HmfVXMYUSzJk4WAUIv2J1th6eZERc
-         sIcnVZfWrRrtW66MdifMuOenKtQG2c8Jv6OscM2U=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 832D860274
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-From:   Kalle Valo <kvalo@codeaurora.org>
-To:     Ikjoon Jang <ikjn@chromium.org>
-Cc:     ath10k@lists.infradead.org, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "David S . Miller" <davem@davemloft.net>
-Subject: Re: [PATCH] ath10k: disable cpuidle during downloading firmware.
-References: <20191101054035.42101-1-ikjn@chromium.org>
-Date:   Wed, 06 Nov 2019 20:22:58 +0200
-In-Reply-To: <20191101054035.42101-1-ikjn@chromium.org> (Ikjoon Jang's message
-        of "Fri, 1 Nov 2019 13:40:35 +0800")
-Message-ID: <87y2ws3lvh.fsf@kamboji.qca.qualcomm.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
+        Wed, 6 Nov 2019 13:23:33 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R631e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01f04391;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=5;SR=0;TI=SMTPD_---0ThMUXs8_1573064607;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0ThMUXs8_1573064607)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Thu, 07 Nov 2019 02:23:29 +0800
+Subject: Re: [PATCH] mm: shmem: use proper gfp flags for shmem_writepage()
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     hughd@google.com, akpm@linux-foundation.org, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1572991351-86061-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20191106151820.GB8138@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <733100ea-97aa-db27-4b43-cf42317afaf8@linux.alibaba.com>
+Date:   Wed, 6 Nov 2019 10:23:24 -0800
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <20191106151820.GB8138@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ikjoon Jang <ikjn@chromium.org> writes:
 
-> Downloading ath10k firmware needs a large number of IOs and
-> cpuidle's miss predictions make it worse. In the worst case,
-> resume time can be three times longer than the average on sdio.
+
+On 11/6/19 7:18 AM, Michal Hocko wrote:
+> On Wed 06-11-19 06:02:31, Yang Shi wrote:
+>> The shmem_writepage() uses GFP_ATOMIC to allocate swap cache.
+>> GFP_ATOMIC used to mean __GFP_HIGH, but now it means __GFP_HIGH |
+>> __GFP_ATOMIC | __GFP_KSWAPD_RECLAIM.  However, shmem_writepage() should
+>> write out to swap only in response to memory pressure, so
+>> __GFP_KSWAPD_RECLAIM looks useless since the caller may be kswapd itself
+>> or in direct reclaim already.
+> What kind of problem are you trying to fix here?
+
+I didn't run into any visible problem. I just happened to find this 
+inconsistency when I was looking into the other problem.
+
+The add_to_swap() does:
+
+int add_to_swap(struct page *page)
+{
+...
+err = add_to_swap_cache(page, entry,
+                         __GFP_HIGH|__GFP_NOMEMALLOC|__GFP_NOWARN);
+...
+}
+
+Actually, shmem_writepage() does almost the same thing and both of them 
+are called in reclaim context, so I didn't see why they should use 
+different gfp flag. And, GFP_ATOMIC is also different from the old 
+definition as I mentioned in the commit log.
+
 >
-> This patch disables cpuidle during firmware downloading by
-> applying PM_QOS_CPU_DMA_LATENCY in ath10k_download_fw().
+>> In addition, XArray node allocations from PF_MEMALLOC contexts could
+>> completely exhaust the page allocator, __GFP_NOMEMALLOC stops emergency
+>> reserves from being allocated.
+> I am not really familiar with XArray much, could you be more specific
+> please?
+
+It comes from the comments of add_to_swap(), says:
+
+/*
+          * XArray node allocations from PF_MEMALLOC contexts could
+          * completely exhaust the page allocator. __GFP_NOMEMALLOC
+          * stops emergency reserves from being allocated.
+
+And, it looks the original comment came from pre-git time, TBH I'm not 
+quite sure about the specific problem which incurred this. I suspect it 
+may be because PF_MEMALLOC context allows ALLOC_NO_WATERMARK.
+
 >
-> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
+>> Here just copy the gfp flags used by add_to_swap().
+>>
+>> Cc: Hugh Dickins <hughd@google.com>
+>> Signed-off-by: Yang Shi <yang.shi@linux.alibaba.com>
+>> ---
+>>   mm/shmem.c | 3 ++-
+>>   1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/mm/shmem.c b/mm/shmem.c
+>> index 220be9f..9691dec 100644
+>> --- a/mm/shmem.c
+>> +++ b/mm/shmem.c
+>> @@ -1369,7 +1369,8 @@ static int shmem_writepage(struct page *page, struct writeback_control *wbc)
+>>   	if (list_empty(&info->swaplist))
+>>   		list_add(&info->swaplist, &shmem_swaplist);
+>>   
+>> -	if (add_to_swap_cache(page, swap, GFP_ATOMIC) == 0) {
+>> +	if (add_to_swap_cache(page, swap,
+>> +			__GFP_HIGH | __GFP_NOMEMALLOC | __GFP_NOWARN) == 0) {
+>>   		spin_lock_irq(&info->lock);
+>>   		shmem_recalc_inode(inode);
+>>   		info->swapped++;
+>> -- 
+>> 1.8.3.1
 
-On what hardware and firmware versions did you test this? I'll add that
-to the commit log.
-
-https://wireless.wiki.kernel.org/en/users/drivers/ath10k/submittingpatches#guidelines
-
--- 
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
