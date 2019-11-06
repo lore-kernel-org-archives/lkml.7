@@ -2,161 +2,115 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D64D2C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:53:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E4F1C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABBF221882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:53:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62A6821882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:54:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YjFJBlz0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728339AbfKFIxY (ORCPT
+        id S1730242AbfKFIyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:53:24 -0500
-Received: from smtprelay0180.hostedemail.com ([216.40.44.180]:54415 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726755AbfKFIxY (ORCPT
+        Wed, 6 Nov 2019 03:54:44 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:39969 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726830AbfKFIyo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:53:24 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 76B35182CF668;
-        Wed,  6 Nov 2019 08:53:23 +0000 (UTC)
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-HE-Tag: books19_3a82ba9ffe32a
-X-Filterd-Recvd-Size: 4543
-Received: from grimm.local.home (unknown [94.155.134.143])
-        (Authenticated sender: rostedt@goodmis.org)
-        by omf01.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 Nov 2019 08:53:21 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 03:53:17 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        andriy.shevchenko@intel.com, cezary.rojewski@intel.com,
-        gustaw.lewandowski@intel.com
-Subject: Re: [PATCH 1/2] seq_buf: Add printing formatted hex dumps
-Message-ID: <20191106035317.7558e47e@grimm.local.home>
-In-Reply-To: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
-References: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 6 Nov 2019 03:54:44 -0500
+Received: by mail-pl1-f196.google.com with SMTP id e3so8985588plt.7;
+        Wed, 06 Nov 2019 00:54:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=n6GjS6HuTnbZ88vQVj4JSFkPPvT/i5ODPCza1wsk6Lc=;
+        b=YjFJBlz0++/RfQRFL30Y70Clnu/B5Hp9fXIBT1QrAOFMv/NsaZC2Flm5rjoMJ20tlw
+         f5e0FEe+rH0OW3NB8daQp/K0Bs8KgObrXvagmBkyDglxa3uFIHg+axqXP935hwlBBBEQ
+         HT6WSpSUcMTsASmr4ElQU7ydbAHQjyqz0F+akDk0u3WSqKoW/bjFKuZkgj8PLWk3upfl
+         i/KjRmaEVmEkXQjWyQ+9zpLOwWPbUvtdZVpM6mlmKK2Fc12N1nMb+ZULqUPr9XXzr+Ql
+         iYdtfEtxgoUHDjMSISrzU291orjEHaXndF3Uhq8yEI/JFXiVeNmv81Jxan2aSkTGWK6Q
+         5+GA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=n6GjS6HuTnbZ88vQVj4JSFkPPvT/i5ODPCza1wsk6Lc=;
+        b=CiK9fnFs0/0HZw+dpmx//EYDn9YvaaQwpUgPFbjYUJL5otIUFSZgCQ0NRshbv5MYD1
+         mC62gDwJMD8wZ8/DEaXGaXbN3FwovB60ylgqxD9rgfw5iRjepnc5eUaOoI5REJYeyY7H
+         t9C0kWcIrSu711fPBS0hjx6B7RIhY5w1K4eIyJRyz8OmgjhM04PL6Ts5I7+uqBA79sm/
+         flRq8RrwxEYBYIy0Cx0L/c6P/sDMGC1C05cqJT8VaorXGPzRQk4pLDfWV6i7oEEEzOqr
+         x4QoTrQb6ZvGyUIcst6oUUR695qrZrdjG33b2tELRQ9AArOA5awJyXCtZanSIJkW8GMS
+         lFSw==
+X-Gm-Message-State: APjAAAVzYuxL2QBSsWtSjR+TvJoDbILU4cH7DSXEywLZmI61DN8UzTES
+        AJ9nbdAowskRCfYRCDkTlZLnD6jRLocnl28qiX0=
+X-Google-Smtp-Source: APXvYqxFnaPObwnV4COxhNQXBd8N5/3daW/8Ez/WckSwKSEWB7RTX/MES+iZPC3KFUYBE1ai/zETl1cz5ChX9RR8Tos=
+X-Received: by 2002:a17:902:b40e:: with SMTP id x14mr1434268plr.262.1573030482891;
+ Wed, 06 Nov 2019 00:54:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <1573029503-18369-1-git-send-email-bianpan2016@163.com>
+In-Reply-To: <1573029503-18369-1-git-send-email-bianpan2016@163.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Nov 2019 10:54:32 +0200
+Message-ID: <CAHp75VeQ_3mConCN=u9O_Ckz9O+awHU=s+d3Kn6R35ZfzzAJKg@mail.gmail.com>
+Subject: Re: [PATCH] usb: gadget: pch_udc: fix use after free
+To:     Pan Bian <bianpan2016@163.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chuhong Yuan <hslester96@gmail.com>,
+        USB <linux-usb@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 07:27:39 +0100
-Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
+On Wed, Nov 6, 2019 at 10:41 AM Pan Bian <bianpan2016@163.com> wrote:
+>
+> The next field of the DMA descriptor is written after releasing the
+> descriptor, which may result in a use-after-free issue. Set the value of
+> the field before it is released to fix the bug.
+>
 
-> Provided function is an analogue of print_hex_dump().
-> 
-> Implementing this function in seq_buf allows using for multiple
-> purposes (e.g. for tracing) and therefore prevents from code duplication
-> in every layer that uses seq_buf.
-> 
-> print_hex_dump() is an essential part of logging data to dmesg. Adding
-> similar capability for other purposes is beneficial to all users.
+Had you chance to read the discussion [1]?
+I Cc to Gustavo to hear from him about destiny of the change.
 
-Can you add to the change log an example output of print_hex_dump().
+[1]: http://lkml.iu.edu/hypermail/linux/kernel/1702.1/00843.html
 
-It makes it easier for reviewers to know if what is implemented matches
-what is expected.
-
-> 
-> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
 > ---
->  include/linux/seq_buf.h |  3 +++
->  lib/seq_buf.c           | 38 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
-> 
-> diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
-> index aa5deb0..fb0205d 100644
-> --- a/include/linux/seq_buf.h
-> +++ b/include/linux/seq_buf.h
-> @@ -125,6 +125,9 @@ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
->  extern int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
->  			      unsigned int len);
->  extern int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc);
-> +extern int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str,
-> +			    int prefix_type, int rowsize, int groupsize,
-> +			    const void *buf, size_t len, bool ascii);
->  
->  #ifdef CONFIG_BINARY_PRINTF
->  extern int
-> diff --git a/lib/seq_buf.c b/lib/seq_buf.c
-> index bd807f5..0509706 100644
-> --- a/lib/seq_buf.c
-> +++ b/lib/seq_buf.c
-> @@ -328,3 +328,41 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
->  	s->readpos += cnt;
->  	return cnt;
->  }
-> +
-
-Requires a kernel doc header here.
-
-> +int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str, int prefix_type,
-> +		     int rowsize, int groupsize,
-> +		     const void *buf, size_t len, bool ascii)
-> +{
-> +	const u8 *ptr = buf;
-> +	int i, linelen, remaining = len;
-> +	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
-
-What do the above magic numbers mean? Should have a comment explaining
-why you picked those numbers and created the length this way.
-
-Also the preferred method of declarations is to order it by longest
-first. That is, linebuf, followed by the ints, followed by ptr.
+>  drivers/usb/gadget/udc/pch_udc.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
+> index 265dab2bbfac..c5b8ec908aab 100644
+> --- a/drivers/usb/gadget/udc/pch_udc.c
+> +++ b/drivers/usb/gadget/udc/pch_udc.c
+> @@ -1518,8 +1518,8 @@ static void pch_udc_free_dma_chain(struct pch_udc_dev *dev,
+>                 /* do not free first desc., will be done by free for request */
+>                 td = phys_to_virt(addr);
+>                 addr2 = (dma_addr_t)td->next;
+> -               dma_pool_free(dev->data_requests, td, addr);
+>                 td->next = 0x00;
+> +               dma_pool_free(dev->data_requests, td, addr);
+>                 addr = addr2;
+>         }
+>         req->chain_len = 1;
+> --
+> 2.7.4
+>
 
 
-> +	int ret;
-> +
-> +	if (rowsize != 16 && rowsize != 32)
-> +		rowsize = 16;
-> +
-> +	for (i = 0; i < len; i += rowsize) {
-> +		linelen = min(remaining, rowsize);
-> +		remaining -= rowsize;
-
-Probably should make the above:
-
-		remaining -= linelen;
-
-Yeah, what you have works, but it makes a reviewer worry about using
-remaining later and having it negative.
-
-> +
-> +		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
-> +				   linebuf, sizeof(linebuf), ascii);
-> +
-> +		switch (prefix_type) {
-> +		case DUMP_PREFIX_ADDRESS:
-
-I'm curious to know what uses the above type? By default, today,
-pointers are pretty much obfuscated, and that will show up here too.
-
--- Steve
-
-> +			ret = seq_buf_printf(s, "%s%p: %s\n",
-> +			       prefix_str, ptr + i, linebuf);
-> +			break;
-> +		case DUMP_PREFIX_OFFSET:
-> +			ret = seq_buf_printf(s, "%s%.8x: %s\n",
-> +					     prefix_str, i, linebuf);
-> +			break;
-> +		default:
-> +			ret = seq_buf_printf(s, "%s%s\n", prefix_str, linebuf);
-> +			break;
-> +		}
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-
+-- 
+With Best Regards,
+Andy Shevchenko
