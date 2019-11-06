@@ -2,100 +2,218 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2B8DC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7280C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A81A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F2FB21D7F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:16 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ddcOjiSe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731892AbfKFN3N (ORCPT
+        id S1731903AbfKFN3P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:29:13 -0500
-Received: from mga03.intel.com ([134.134.136.65]:35175 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731876AbfKFN3L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:29:11 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 05:29:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="212773427"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.163])
-  by fmsmga001.fm.intel.com with SMTP; 06 Nov 2019 05:29:05 -0800
-Received: by lahna (sSMTP sendmail emulation); Wed, 06 Nov 2019 15:29:04 +0200
-Date:   Wed, 6 Nov 2019 15:29:04 +0200
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Bjorn Helgaas <helgaas@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, Lukas Wunner <lukas@wunner.de>,
-        Keith Busch <keith.busch@intel.com>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        Alexandru Gagniuc <mr.nuke.me@gmail.com>,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        Paul Menzel <pmenzel@molgen.mpg.de>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>,
-        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/2] PCI: Add missing link delays required by the PCIe
- spec
-Message-ID: <20191106132904.GL2552@lahna.fi.intel.com>
-References: <20191105152832.GC2552@lahna.fi.intel.com>
- <20191105161017.GA219591@google.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105161017.GA219591@google.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 6 Nov 2019 08:29:15 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:37975 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731886AbfKFN3M (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:29:12 -0500
+Received: by mail-pl1-f196.google.com with SMTP id w8so11424332plq.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:29:12 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=7255+C81bgkCi8NGM8c0LBC3vCxrIbGTPf3ioqLcyWY=;
+        b=ddcOjiSextgQgzgcfT/whbaOfy/nCfGeGuEGl2N4Ki0Atdupm/umvsICnXhHuZ6QLj
+         QzlPsgnzZAGelJxDBlasD3SISnQudVbzb+ryGfqUla8rmjEwGfrkONCrDYJjzSZwjTvx
+         VPA0r9ABhIY3CAcJNS+bzaA6YRsL2bA8v1BpF7JkjGr/vgXnIwTa3zBudYVkdNjE+DMn
+         27jMaw5vTbktUbz2qUA9wlQBsEnJunmiF4N5wSkOA+P7I7e8eGsEqYGe7ZkpbNBgpTSi
+         +djdpFzIeFkzs3/6Mn5IethZC30s7HajAi9qTK1482fMaI92qN+OPBA554jkYSPgLPkO
+         mH0Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=7255+C81bgkCi8NGM8c0LBC3vCxrIbGTPf3ioqLcyWY=;
+        b=WT9Uou/DJh7SiuHcd0VSFw53pmB4PsN4cgvYPfO8m7Nu04ccqItccwk9UufCa50aSB
+         WRKO3At742T7AhwxV+Q9fIhjomq6hpVstDf0meuTKgpm2k8/M5MJX/VqytVb/ncVNTjZ
+         G+8A7F5GIu/mVmFgCo3szNSCd+n4WZNAwMKnGuB5CNO/7Wn8+X6FlFTKz2QjnryKLCrY
+         bQ1UXwC9NamcZtubQ8Z2pcharbeHN1JtHq+A11eU6MjGMR3ChedGrVXw8+KmRudqtWm3
+         OzjXQMedUhRHY35OPIPSdzno3zgHma7+16FAXH7F482trJ7qMNkt6y98G5Q5opZRP0q8
+         cSbA==
+X-Gm-Message-State: APjAAAVERzICY1GhIZqUJOg2YPdKuj44MF2VrvQJZYbGiJ6t7P1FE7wY
+        JiutRvWVCGJ+fOveyEMWpb6O9+Hr2VCLcQ==
+X-Google-Smtp-Source: APXvYqyeNXgF7biG1nwiqCenHBeFxFsORJqDAJyTpsd6aDgQGfxwcYqK4YoW8uZnbSSjDUTalwVjNg==
+X-Received: by 2002:a17:902:7207:: with SMTP id ba7mr2659118plb.172.1573046951646;
+        Wed, 06 Nov 2019 05:29:11 -0800 (PST)
+Received: from localhost ([49.248.202.230])
+        by smtp.gmail.com with ESMTPSA id l24sm22658774pff.151.2019.11.06.05.29.10
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 05:29:11 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH 09/11] thermal: tegra: Appease the kernel-doc deity
+Date:   Wed,  6 Nov 2019 18:58:25 +0530
+Message-Id: <4cba46c100cb504a52e52062bdf4e4a4e9427b99.1573046440.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <cover.1573046440.git.amit.kucheria@linaro.org>
+References: <cover.1573046440.git.amit.kucheria@linaro.org>
+In-Reply-To: <cover.1573046440.git.amit.kucheria@linaro.org>
+References: <cover.1573046440.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:10:17AM -0600, Bjorn Helgaas wrote:
-> > > I actually suspect there *is* a dependency -- we should respect the
-> > > Target Link Speed and and width so the link resumes in the same
-> > > configuration it was before suspend.  And I suspect that may require
-> > > an explicit retrain after restoring PCI_EXP_LNKCTL2.
-> > 
-> > According the PCIe spec the PCI_EXP_LNKCTL2 Target Link Speed is marked
-> > as RWS (S for sticky) so I suspect its value is retained after reset in
-> > the same way as PME bits. Assuming I understood it correctly.
-> 
-> This patch is about coming from D3cold, isn't it?  I don't think we
-> can assume sticky bits are preserved in D3cold (except maybe when
-> auxiliary power is enabled).
+Fix up the following warning when compiled with make W=1:
 
-Indeed, good point. I see some GPU drivers are programming Target Link
-Speed which will not be retained after the hierarchy is put into D3cold
-and back. I think this potential problem is not related to the missing
-link delays this patch is addressing, though. It has been existing in
-pci_restore_pcie_state() already (where it restores PCI_EXP_LNKCTL2).
+linux.git/drivers/thermal/tegra/soctherm.c:369: warning: Function parameter or member 'value' not described in 'ccroc_writel'
+linux.git/drivers/thermal/tegra/soctherm.c:369: warning: Excess function parameter 'v' description in 'ccroc_writel'
+linux.git/drivers/thermal/tegra/soctherm.c:447: warning: Function parameter or member 'dev' not described in 'enforce_temp_range'
+linux.git/drivers/thermal/tegra/soctherm.c:772: warning: Function parameter or member 'sg' not described in 'tegra_soctherm_set_hwtrips'
+linux.git/drivers/thermal/tegra/soctherm.c:772: warning: Function parameter or member 'tz' not described in 'tegra_soctherm_set_hwtrips'
+linux.git/drivers/thermal/tegra/soctherm.c:944: warning: Function parameter or member 'ts' not described in 'soctherm_oc_intr_enable'
+linux.git/drivers/thermal/tegra/soctherm.c:1167: warning: Function parameter or member 'data' not described in 'soctherm_oc_irq_disable'
+linux.git/drivers/thermal/tegra/soctherm.c:1167: warning: Excess function parameter 'irq_data' description in 'soctherm_oc_irq_disable'
+linux.git/drivers/thermal/tegra/soctherm.c:1224: warning: Function parameter or member 'ctrlr' not described in 'soctherm_irq_domain_xlate_twocell'
+linux.git/drivers/thermal/tegra/soctherm.c:1686: warning: Function parameter or member 'pdev' not described in 'soctherm_init_hw_throt_cdev'
+linux.git/drivers/thermal/tegra/soctherm.c:1764: warning: Function parameter or member 'ts' not described in 'throttlectl_cpu_level_cfg'
+linux.git/drivers/thermal/tegra/soctherm.c:1812: warning: Function parameter or member 'ts' not described in 'throttlectl_cpu_level_select'
+linux.git/drivers/thermal/tegra/soctherm.c:1855: warning: Function parameter or member 'ts' not described in 'throttlectl_cpu_mn'
+linux.git/drivers/thermal/tegra/soctherm.c:1886: warning: Function parameter or member 'ts' not described in 'throttlectl_gpu_level_select'
+linux.git/drivers/thermal/tegra/soctherm.c:1928: warning: Function parameter or member 'ts' not described in 'soctherm_throttle_program'
 
-I think this can be solved as a separate patch by doing something
-like:
+Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+---
+ drivers/thermal/tegra/soctherm.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-  1. In pci_restore_pcie_state() check if the saved Target Link Speed
-     differs from what is in the register currently.
+diff --git a/drivers/thermal/tegra/soctherm.c b/drivers/thermal/tegra/soctherm.c
+index 5acaad3a594f3..66e0639da4bf2 100644
+--- a/drivers/thermal/tegra/soctherm.c
++++ b/drivers/thermal/tegra/soctherm.c
+@@ -360,7 +360,7 @@ static struct soctherm_oc_irq_chip_data soc_irq_cdata;
+ /**
+  * ccroc_writel() - writes a value to a CCROC register
+  * @ts: pointer to a struct tegra_soctherm
+- * @v: the value to write
++ * @value: the value to write
+  * @reg: the register offset
+  *
+  * Writes @v to @reg.  No return value.
+@@ -435,6 +435,7 @@ static int tegra_thermctl_get_temp(void *data, int *out_temp)
+ 
+ /**
+  * enforce_temp_range() - check and enforce temperature range [min, max]
++ * @dev: struct device * of the SOC_THERM instance
+  * @trip_temp: the trip temperature to check
+  *
+  * Checks and enforces the permitted temperature range that SOC_THERM
+@@ -747,6 +748,8 @@ static int get_hot_temp(struct thermal_zone_device *tz, int *trip, int *temp)
+ /**
+  * tegra_soctherm_set_hwtrips() - set HW trip point from DT data
+  * @dev: struct device * of the SOC_THERM instance
++ * @sg: pointer to the sensor group to set the thermtrip temperature for
++ * @tz: struct thermal_zone_device *
+  *
+  * Configure the SOC_THERM HW trip points, setting "THERMTRIP"
+  * "THROTTLE" trip points , using "thermtrips", "critical" or "hot"
+@@ -931,6 +934,7 @@ static irqreturn_t soctherm_thermal_isr_thread(int irq, void *dev_id)
+ 
+ /**
+  * soctherm_oc_intr_enable() - Enables the soctherm over-current interrupt
++ * @ts:		pointer to a struct tegra_soctherm
+  * @alarm:		The soctherm throttle id
+  * @enable:		Flag indicating enable the soctherm over-current
+  *			interrupt or disable it
+@@ -1156,7 +1160,7 @@ static void soctherm_oc_irq_enable(struct irq_data *data)
+ 
+ /**
+  * soctherm_oc_irq_disable() - Disables overcurrent interrupt requests
+- * @irq_data:	The interrupt request information
++ * @data:	The interrupt request information
+  *
+  * Clears the interrupt request enable bit of the overcurrent
+  * interrupt request chip data.
+@@ -1206,6 +1210,7 @@ static int soctherm_oc_irq_map(struct irq_domain *h, unsigned int virq,
+ /**
+  * soctherm_irq_domain_xlate_twocell() - xlate for soctherm interrupts
+  * @d:      Interrupt request domain
++ * @ctrlr:      Controller device tree node
+  * @intspec:    Array of u32s from DTs "interrupt" property
+  * @intsize:    Number of values inside the intspec array
+  * @out_hwirq:  HW IRQ value associated with this interrupt
+@@ -1681,6 +1686,7 @@ static int soctherm_throt_cfg_parse(struct device *dev,
+ /**
+  * soctherm_init_hw_throt_cdev() - Parse the HW throttle configurations
+  * and register them as cooling devices.
++ * @pdev: Pointer to platform_device struct
+  */
+ static void soctherm_init_hw_throt_cdev(struct platform_device *pdev)
+ {
+@@ -1751,6 +1757,7 @@ static void soctherm_init_hw_throt_cdev(struct platform_device *pdev)
+ 
+ /**
+  * throttlectl_cpu_level_cfg() - programs CCROC NV_THERM level config
++ * @ts: pointer to a struct tegra_soctherm
+  * @level: describing the level LOW/MED/HIGH of throttling
+  *
+  * It's necessary to set up the CPU-local CCROC NV_THERM instance with
+@@ -1798,6 +1805,7 @@ static void throttlectl_cpu_level_cfg(struct tegra_soctherm *ts, int level)
+ 
+ /**
+  * throttlectl_cpu_level_select() - program CPU pulse skipper config
++ * @ts: pointer to a struct tegra_soctherm
+  * @throt: the LIGHT/HEAVY of throttle event id
+  *
+  * Pulse skippers are used to throttle clock frequencies.  This
+@@ -1841,6 +1849,7 @@ static void throttlectl_cpu_level_select(struct tegra_soctherm *ts,
+ 
+ /**
+  * throttlectl_cpu_mn() - program CPU pulse skipper configuration
++ * @ts: pointer to a struct tegra_soctherm
+  * @throt: the LIGHT/HEAVY of throttle event id
+  *
+  * Pulse skippers are used to throttle clock frequencies.  This
+@@ -1874,6 +1883,7 @@ static void throttlectl_cpu_mn(struct tegra_soctherm *ts,
+ 
+ /**
+  * throttlectl_gpu_level_select() - selects throttling level for GPU
++ * @ts: pointer to a struct tegra_soctherm
+  * @throt: the LIGHT/HEAVY of throttle event id
+  *
+  * This function programs soctherm's interface to GK20a NV_THERM to select
+@@ -1918,6 +1928,7 @@ static int soctherm_oc_cfg_program(struct tegra_soctherm *ts,
+ 
+ /**
+  * soctherm_throttle_program() - programs pulse skippers' configuration
++ * @ts: pointer to a struct tegra_soctherm
+  * @throt: the LIGHT/HEAVY of the throttle event id.
+  *
+  * Pulse skippers are used to throttle clock frequencies.
+-- 
+2.17.1
 
-  2. Restore the value as we already do now.
-
-  3. If there the speed differs then trigger link retrain.
-
-  4. Restore rest of the root/downstream port state.
-
-It is not clear if we need to do anything for upstream ports (PCIe 5.0
-sec 6.11 talks about doing this on upstream component e.g downstream
-port). After this there will be the link delay (added by this patch)
-which takes care of waiting for the downstream component to be
-accessible (even after retrain).
-
-However, I'm not sure how this can be properly tested. Maybe hacking
-some downstream port to lower the speed, enter D3cold and then resume it
-and see if the Target Link Speed gets updated correctly.
