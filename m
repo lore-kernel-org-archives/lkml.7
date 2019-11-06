@@ -2,60 +2,81 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCD58C5DF61
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:35:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9253C5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95A2E21A49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:35:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A40D92178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="hrVyVY3f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730952AbfKFCfX (ORCPT
+        id S1730977AbfKFCgj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 21:35:23 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:42364 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfKFCfX (ORCPT
+        Tue, 5 Nov 2019 21:36:39 -0500
+Received: from mail-m972.mail.163.com ([123.126.97.2]:40950 "EHLO
+        mail-m972.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730585AbfKFCgj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 21:35:23 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 8AC661510CDF5;
-        Tue,  5 Nov 2019 18:35:22 -0800 (PST)
-Date:   Tue, 05 Nov 2019 18:35:22 -0800 (PST)
-Message-Id: <20191105.183522.2155800632990290770.davem@davemloft.net>
-To:     colin.king@canonical.com
-Cc:     saeedm@mellanox.com, leon@kernel.org, netdev@vger.kernel.org,
-        linux-rdma@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] net/mlx5: fix spelling mistake "metdata" ->
- "metadata"
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191105145416.60451-1-colin.king@canonical.com>
-References: <20191105145416.60451-1-colin.king@canonical.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 Nov 2019 18:35:22 -0800 (PST)
+        Tue, 5 Nov 2019 21:36:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=ZFXpLVG5uThs7vf3Kv
+        ZYYNRN+s4SQE8rWXfbVnccwms=; b=hrVyVY3fAg3vDNzXzKQTC3krID75xcW+g0
+        nZG0maYhqi/nF1PXSbISVVPTGcBxTjyHzw2Gq/i8cHu68bfaM2gqDSoKrQHzv1PX
+        dcWDoAjH/ouzu6B4cLW0akhPRaO2vdFDGIEpJWDZ68O54BqUl9PXlEMXAponzoiJ
+        e7ZHUVC+4=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp2 (Coremail) with SMTP id GtxpCgB35LacMcJdwsA2BA--.329S3;
+        Wed, 06 Nov 2019 10:36:35 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] spi: img-spfi: fix potential double release
+Date:   Wed,  6 Nov 2019 10:36:09 +0800
+Message-Id: <1573007769-20131-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: GtxpCgB35LacMcJdwsA2BA--.329S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrury5Zr48Ar4DGFWxJF4xWFg_yoWDGFXE9r
+        48Wws7Cr10yrWjgF17KrW8JryaqF98X3Z8J3Z2qFZxt34DAFn2v34qqr1vg348uw47CFZ8
+        CFs5Xa4rury3ujkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbO6ptUUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiQBNlclSIdHxr6gAAsR
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin King <colin.king@canonical.com>
-Date: Tue,  5 Nov 2019 14:54:16 +0000
+The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
+are released. As a result, they will be released again, either on the
+error handling branch in the same function or in the corresponding
+remove function, i.e. img_spfi_remove(). This patch fixes the bug by
+setting the two members to NULL.
 
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a esw_warn warning message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ drivers/spi/spi-img-spfi.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Saeed, please pick this one up.
+diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
+index 439b01e4a2c8..f4a8f470aecc 100644
+--- a/drivers/spi/spi-img-spfi.c
++++ b/drivers/spi/spi-img-spfi.c
+@@ -673,6 +673,8 @@ static int img_spfi_probe(struct platform_device *pdev)
+ 			dma_release_channel(spfi->tx_ch);
+ 		if (spfi->rx_ch)
+ 			dma_release_channel(spfi->rx_ch);
++		spfi->tx_ch = NULL;
++		spfi->rx_ch = NULL;
+ 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
+ 	} else {
+ 		master->dma_tx = spfi->tx_ch;
+-- 
+2.7.4
 
-Thank you.
