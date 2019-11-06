@@ -2,95 +2,117 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33199C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCC33C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3D06217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE3A82173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:04:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h9fFXGfh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732472AbfKFWEK (ORCPT
+        id S1732647AbfKFWEM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:04:10 -0500
-Received: from mga12.intel.com ([192.55.52.136]:17526 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726912AbfKFWEK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:04:10 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 14:04:10 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="205969023"
-Received: from xshen14-linux.bj.intel.com ([10.238.155.105])
-  by orsmga006.jf.intel.com with ESMTP; 06 Nov 2019 14:04:07 -0800
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-To:     tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        xiaochen.shen@intel.com
-Subject: [PATCH] x86/resctrl: Fix potential lockdep warning
-Date:   Thu,  7 Nov 2019 06:36:36 +0800
-Message-Id: <1573079796-11713-1-git-send-email-xiaochen.shen@intel.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 6 Nov 2019 17:04:12 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:52553 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726957AbfKFWEL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:04:11 -0500
+Received: by mail-wm1-f66.google.com with SMTP id c17so5854212wmk.2;
+        Wed, 06 Nov 2019 14:04:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6r8I0SCpSbo6ngTh6F9dpz6iIrvn5396OXePTnNw2U8=;
+        b=h9fFXGfhomwsrDhIOPlDTH9/XZNGxhz0qH64mPq2HdxKiW+ySowOe8rBfq/r3/Rcb1
+         Ep6ozet54YeOvC9w4iZxIgXZIQVl3yNw/LSMRDaPpW/nLocNKuRCSL2+hLMWvAHPkwHJ
+         BGih7Jj9wc2zeknUzfCLNwBI0jfMnzbomsz2MrLY53Idlye719FyMGPZchdeIxJCQQcp
+         uHnWr/s2NTDxuif8+uqR++6vBEFK6kIq6Khbh3RhnmbMk6NnQXwvr0jf9M4msqza8cuk
+         5ByxgtrHj5Dovio4lWjryoIrXCQSHxT9jSTp20o3FAZQ7ti/jX9vr98SKhmke9oFYXV6
+         Mdmg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=6r8I0SCpSbo6ngTh6F9dpz6iIrvn5396OXePTnNw2U8=;
+        b=hhs32uvq4AZeTiL4irV2cjtwEK9nQjDUOIFFnIBJlIdu3Ts0MXh2xBjpFkLjRjWtfd
+         7GK+Hixagh0rqM0Ls3IXI3KugMj9XfO+xEZYNdXKF3eo+nrBHTzQtVfnLd/HSPFwGEf9
+         K8U5TFTbBi+0U8J7kNqwThjjcXb5VeKw0uf6Rn9r+Fq19SG9Y6dcpdIeEWUKQ7x6TWc/
+         4pHO9O1kofjioeP2Pzr+ZZhhwLNK4GAL1mjhYoQvvowuqEGGxQ7DlyM3M+WGurtYObgw
+         HLAu5s36w7t/HJQpiWPaYh8BwU69wZJdCeq5dOuADmRP46oNdEULxJaFlv5MxtHTpB/J
+         EEUw==
+X-Gm-Message-State: APjAAAWbCFvdSAHimBTPAPYji2CM2p3h/u6dZActAzpeLYTtUteMFToq
+        2qWYulOY2ZccBh/sFQXHW1A=
+X-Google-Smtp-Source: APXvYqwqZSYx00vA5vA5YuZhAaxFTgiX+RTj4W8pTe+SVTWIv7moEx0LZFAY7DH06jt1HBx1FrPN7Q==
+X-Received: by 2002:a05:600c:295:: with SMTP id 21mr4400198wmk.43.1573077847737;
+        Wed, 06 Nov 2019 14:04:07 -0800 (PST)
+Received: from localhost.localdomain (dynamic-2a00-1028-9192-7022-5e51-4fff-feaa-03a7.ipv6.broadband.iol.cz. [2a00:1028:9192:7022:5e51:4fff:feaa:3a7])
+        by smtp.gmail.com with ESMTPSA id b3sm3958842wma.13.2019.11.06.14.04.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 14:04:07 -0800 (PST)
+From:   Jaroslav Beran <jara.beran@gmail.com>
+To:     Oliver Hartkopp <socketcan@hartkopp.net>,
+        Marc Kleine-Budde <mkl@pengutronix.de>,
+        "David S. Miller" <davem@davemloft.net>, linux-can@vger.kernel.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     Jaroslav Beran <jara.beran@gmail.com>
+Subject: [PATCH] can: return error from can_send() in BUS-OFF state
+Date:   Wed,  6 Nov 2019 23:03:02 +0100
+Message-Id: <20191106220302.27698-1-jara.beran@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-rdtgroup_cpus_write() and mkdir_rdt_prepare() call
-rdtgroup_kn_lock_live() -> kernfs_to_rdtgroup() to get 'rdtgrp', and
-then call rdt_last_cmd_xxx() functions which will check if
-rdtgroup_mutex is held/requires its caller to hold rdtgroup_mutex.
-But if 'rdtgrp' returned from kernfs_to_rdtgroup() is NULL,
-rdtgroup_mutex is not held and calling rdt_last_cmd_xxx() will result
-in a lockdep warning.
+When a CAN node reaches BUS-OFF state, its netdev state
+is set to __LINK_STATE_NOCARRIER and qdisc ->enqueue() starts
+dropping frames and returning NET_XMIT_CN that is turned to 0
+by net_xmit_errno(). So can_send() returns success to a sender
+even if his frame is lost.
 
-Remove rdt_last_cmd_xxx() in these two paths. Just returning error
-should be sufficient to report to the user that the entry doesn't exist
-any more.
+As this behavior is inappropriate for a node in BUS-OFF state,
+this patch adds a check for no-carrier condition and returns
+-ENETUNREACH in such case.
 
-Fixes: 94457b36e8a5 ("x86/intel_rdt: Add diagnostics when writing the cpus file")
-Fixes: cfd0f34e4cd5 ("x86/intel_rdt: Add diagnostics when making directories")
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+Signed-off-by: Jaroslav Beran <jara.beran@gmail.com>
 ---
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 4 ----
- 1 file changed, 4 deletions(-)
+ net/can/af_can.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index a46dee8e78db..2e3b06d6bbc6 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -461,10 +461,8 @@ static ssize_t rdtgroup_cpus_write(struct kernfs_open_file *of,
+diff --git a/net/can/af_can.c b/net/can/af_can.c
+index 5518a7d9eed9..68c56241733b 100644
+--- a/net/can/af_can.c
++++ b/net/can/af_can.c
+@@ -189,6 +189,7 @@ static int can_create(struct net *net, struct socket *sock, int protocol,
+  * Return:
+  *  0 on success
+  *  -ENETDOWN when the selected interface is down
++ *  -ENETUNREACH when the node is in BUS-OFF state
+  *  -ENOBUFS on full driver queue (see net_xmit_errno())
+  *  -ENOMEM when local loopback failed at calling skb_clone()
+  *  -EPERM when trying to send on a non-CAN interface
+@@ -233,6 +234,11 @@ int can_send(struct sk_buff *skb, int loop)
+ 		goto inval_skb;
  	}
  
- 	rdtgrp = rdtgroup_kn_lock_live(of->kn);
--	rdt_last_cmd_clear();
- 	if (!rdtgrp) {
- 		ret = -ENOENT;
--		rdt_last_cmd_puts("Directory was removed\n");
- 		goto unlock;
- 	}
++	if (unlikely(!netif_carrier_ok(skb->dev))) {
++		err = -ENETUNREACH;
++		goto inval_skb;
++	}
++
+ 	skb->ip_summed = CHECKSUM_UNNECESSARY;
  
-@@ -2648,10 +2646,8 @@ static int mkdir_rdt_prepare(struct kernfs_node *parent_kn,
- 	int ret;
- 
- 	prdtgrp = rdtgroup_kn_lock_live(prgrp_kn);
--	rdt_last_cmd_clear();
- 	if (!prdtgrp) {
- 		ret = -ENODEV;
--		rdt_last_cmd_puts("Directory was removed\n");
- 		goto out_unlock;
- 	}
- 
+ 	skb_reset_mac_header(skb);
 -- 
-1.8.3.1
+2.23.0
 
