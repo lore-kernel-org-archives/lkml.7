@@ -2,68 +2,246 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54B17C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C8FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:24:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C347206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:22:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2FD322166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:24:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r9vZIVJC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732055AbfKFVVX (ORCPT
+        id S1732119AbfKFVYx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:21:23 -0500
-Received: from sauhun.de ([88.99.104.3]:58976 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727949AbfKFVVW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:21:22 -0500
-Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id 0C5FC2C054A;
-        Wed,  6 Nov 2019 22:21:21 +0100 (CET)
-From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
-To:     linux-media@vger.kernel.org
-Cc:     linux-i2c@vger.kernel.org,
-        Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
-Subject: [PATCH 01/17] i2c: add helper to check if a client has a driver attached
-Date:   Wed,  6 Nov 2019 22:21:01 +0100
-Message-Id: <20191106212120.27983-2-wsa+renesas@sang-engineering.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
-References: <20191106212120.27983-1-wsa+renesas@sang-engineering.com>
+        Wed, 6 Nov 2019 16:24:53 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33958 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfKFVYw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:24:52 -0500
+Received: by mail-wr1-f66.google.com with SMTP id e6so318795wrw.1;
+        Wed, 06 Nov 2019 13:24:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=Soz8WtFTFYQ3Yhy0YEr2VY/OqOycp6OKY0yTpNQTkFw=;
+        b=r9vZIVJCWykgW/nN32WfACkf4jz43sN6bgKR6zhShogOCOQ1tUniFQrEZ7lQR8IVS0
+         kRTQUCpXGp7ylRNvNqIdROXtKQ9kzd3KXzBsEPJSyide6Wet9MtfJcAJLf8cJYnBzna4
+         FCVqZDkR7pW1YLwLvuvG08bcbw9Sxu4aizimdlNddnw3ZKHc0ol6TNoSpm31APRDnFW7
+         CLQkt8Tcu+K3iHBpKFFfBKFtfybdZBKJtpogFJP7u0v12bN4l3YbmuNjgPoxJo0mzA3Y
+         zeWVechXbanbAjOJgizujceGFHrNI2GP2FSkyBmKT+dc69S9B8DZM3lJtaCgaGsoWlc8
+         by9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=Soz8WtFTFYQ3Yhy0YEr2VY/OqOycp6OKY0yTpNQTkFw=;
+        b=Q/AmRNFmKq3jAN16yOmIC0gQbjlbDJvvB0TCMHMYizGefybPnkJAP9DBAT9Dudd/iD
+         i48jT1koleQRZv0o9qDHz8i1o2XEJs+m4fcdH7f/ep6btvuD+4hQvs7RpRsj6qDYtLqZ
+         JMCGYhLGCpwANYY0LFFGu4DIx9S/sH2NmrDwmeii2KKg++TXE63mUkRvIIKb42PPdmCD
+         ouMWcECYBoaTjU9kwVjqZQnY+ZFZxrZFFG4nq2IHq0XMm8fMn19Sl+B0va8nwoO3YQKz
+         mOOcKGqTLyDjmbONUUM7GOczG2+bEx0bRsdQiV0WuGu0FLJB7E8g9vPim/Iy0IgMe+Pu
+         z6gw==
+X-Gm-Message-State: APjAAAXqaE6o2SnH4Wf0AY+rL2J2OUa4zIaEXW61mPnsVMTlMN5FTHto
+        ujhmNkrw0D9kWtrdloYP5Vb46XdJ+xru0InLKuk=
+X-Google-Smtp-Source: APXvYqzxY2Zi37gqEk4onhPJdIaLEgv2hV0xed9u6vFW9KegQrjOjRehlIouz7HG5lrDsV9X9J4GPfU2gXyZn+dqNXM=
+X-Received: by 2002:a5d:69c8:: with SMTP id s8mr4633064wrw.167.1573075490460;
+ Wed, 06 Nov 2019 13:24:50 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20191105131456.32400-1-peron.clem@gmail.com> <20191105131456.32400-5-peron.clem@gmail.com>
+ <20191105145659.ffezqntodsys4phn@pengutronix.de>
+In-Reply-To: <20191105145659.ffezqntodsys4phn@pengutronix.de>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 6 Nov 2019 22:24:39 +0100
+Message-ID: <CAJiuCcdXr3y0oe19ZNaiQoN7Y39p54p8LjQjXfjHbTH8tbnrpw@mail.gmail.com>
+Subject: Re: [PATCH v3 4/7] pwm: sun4i: Add support to output source clock directly
+To:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Cc:     Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>,
+        Philipp Zabel <pza@pengutronix.de>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Factoring out something used in the media subsystem. As an improvement,
-it bails out on both, NULL and ERRPTR.
+Hi Uwe,
 
-Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
----
- include/linux/i2c.h | 5 +++++
- 1 file changed, 5 insertions(+)
+On Tue, 5 Nov 2019 at 15:57, Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> On Tue, Nov 05, 2019 at 02:14:53PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> >
+> > PWM core has an option to bypass whole logic and output unchanged sourc=
+e
+> > clock as PWM output. This is achieved by enabling bypass bit.
+> >
+> > Note that when bypass is enabled, no other setting has any meaning, not
+> > even enable bit.
+> >
+> > This mode of operation is needed to achieve high enough frequency to
+> > serve as clock source for AC200 chip which is integrated into same
+> > package as H6 SoC.
+> >
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > ---
+> >  drivers/pwm/pwm-sun4i.c | 38 +++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 37 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pwm/pwm-sun4i.c b/drivers/pwm/pwm-sun4i.c
+> > index 54e19fa56a4e..810abf47c261 100644
+> > --- a/drivers/pwm/pwm-sun4i.c
+> > +++ b/drivers/pwm/pwm-sun4i.c
+> > @@ -3,6 +3,10 @@
+> >   * Driver for Allwinner sun4i Pulse Width Modulation Controller
+> >   *
+> >   * Copyright (C) 2014 Alexandre Belloni <alexandre.belloni@free-electr=
+ons.com>
+> > + *
+> > + * Limitations:
+> > + * - When outputing the source clock directly, the PWM logic will be b=
+ypassed
+> > + *   and the currently running period is not guaranteed to be complete=
+d
+> >   */
+> >
+> >  #include <linux/bitops.h>
+> > @@ -73,6 +77,7 @@ static const u32 prescaler_table[] =3D {
+> >
+> >  struct sun4i_pwm_data {
+> >       bool has_prescaler_bypass;
+> > +     bool has_direct_mod_clk_output;
+> >       unsigned int npwm;
+> >  };
+> >
+> > @@ -118,6 +123,20 @@ static void sun4i_pwm_get_state(struct pwm_chip *c=
+hip,
+> >
+> >       val =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > +     /*
+> > +      * PWM chapter in H6 manual has a diagram which explains that if =
+bypass
+> > +      * bit is set, no other setting has any meaning. Even more, exper=
+iment
+> > +      * proved that also enable bit is ignored in this case.
+> > +      */
+> > +     if ((val & BIT_CH(PWM_BYPASS, pwm->hwpwm)) &&
+> > +         sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             state->period =3D DIV_ROUND_UP_ULL(NSEC_PER_SEC, clk_rate=
+);
+> > +             state->duty_cycle =3D state->period / 2;
+>
+> Please round up here.
+Ok
+>
+> > +             state->polarity =3D PWM_POLARITY_NORMAL;
+> > +             state->enabled =3D true;
+> > +             return;
+> > +     }
+> > +
+> >       if ((PWM_REG_PRESCAL(val, pwm->hwpwm) =3D=3D PWM_PRESCAL_MASK) &&
+> >           sun4i_pwm->data->has_prescaler_bypass)
+> >               prescaler =3D 1;
+> > @@ -203,7 +222,8 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, s=
+truct pwm_device *pwm,
+> >  {
+> >       struct sun4i_pwm_chip *sun4i_pwm =3D to_sun4i_pwm_chip(chip);
+> >       struct pwm_state cstate;
+> > -     u32 ctrl;
+> > +     u32 ctrl, clk_rate;
+> > +     bool bypass;
+> >       int ret;
+> >       unsigned int delay_us;
+> >       unsigned long now;
+> > @@ -218,6 +238,15 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               }
+> >       }
+> >
+> > +     /*
+> > +      * Although it would make much more sense to check for bypass in
+> > +      * sun4i_pwm_calculate(), value of bypass bit also depends on "en=
+abled".
+> > +      */
+> > +     clk_rate =3D clk_get_rate(sun4i_pwm->clk);
+>
+> clk_get_rate must not be called if the clk might be off.
+Ok,
 
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index aaf57d9b41db..93b315c9a062 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -850,6 +850,11 @@ extern void i2c_del_driver(struct i2c_driver *driver);
- #define i2c_add_driver(driver) \
- 	i2c_register_driver(THIS_MODULE, driver)
- 
-+static inline bool i2c_client_has_driver(struct i2c_client *client)
-+{
-+	return !IS_ERR_OR_NULL(client) && client->dev.driver;
-+}
-+
- extern struct i2c_client *i2c_use_client(struct i2c_client *client);
- extern void i2c_release_client(struct i2c_client *client);
- 
--- 
-2.20.1
+>
+> > +     bypass =3D state->enabled &&
+> > +              (state->period * clk_rate >=3D NSEC_PER_SEC) &&
+>
+> This is too coarse. With state->period =3D 1000000 this is fulfilled
+> (unless the multiplication overflows).
 
+Sorry, misunderstood the previous mail
+
+What about something like this ?
+((state->period - 1) * clk_rate <=3D NSEC_PER_SEC) &&
+((state->period + 1) * clk_rate >=3D NSEC_PER_SEC) &&
+ ((state->duty_cycle - 1) * 2 <=3D state->period) &&
+ ((state->duty_cycle + 1) * 2 >=3D state->period);
+
+We are sure that the user is looking for a PWM around the OSC with a
+50% duty cycle ?
+
+Regards,
+Clement
+
+>
+> > +              (state->duty_cycle * 2 =3D=3D state->period);
+>
+> This is too strict. See my previous mail about how this should be done.
+>
+> If bypass is true (and the hardware support it) you can skip the
+> calculation of the other parameters.
+Yes correct and also we can skip
+
+
+>
+> > +
+> >       spin_lock(&sun4i_pwm->ctrl_lock);
+> >       ctrl =3D sun4i_pwm_readl(sun4i_pwm, PWM_CTRL_REG);
+> >
+> > @@ -265,6 +294,13 @@ static int sun4i_pwm_apply(struct pwm_chip *chip, =
+struct pwm_device *pwm,
+> >               ctrl &=3D ~BIT_CH(PWM_CLK_GATING, pwm->hwpwm);
+> >       }
+> >
+> > +     if (sun4i_pwm->data->has_direct_mod_clk_output) {
+> > +             if (bypass)
+> > +                     ctrl |=3D BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +             else
+> > +                     ctrl &=3D ~BIT_CH(PWM_BYPASS, pwm->hwpwm);
+> > +     }
+> > +
+> >       sun4i_pwm_writel(sun4i_pwm, ctrl, PWM_CTRL_REG);
+> >
+> >       spin_unlock(&sun4i_pwm->ctrl_lock);
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
