@@ -2,150 +2,186 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B458C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B379C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:19:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E877217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 17315217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:19:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jNy0kVsQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="RipgNPFg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732375AbfKFRSg (ORCPT
+        id S1732381AbfKFRTV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:18:36 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:60980 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732329AbfKFRSf (ORCPT
+        Wed, 6 Nov 2019 12:19:21 -0500
+Received: from pandora.armlinux.org.uk ([78.32.30.218]:38310 "EHLO
+        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729075AbfKFRTU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:18:35 -0500
-Received: from lelv0266.itg.ti.com ([10.180.67.225])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6HI3Wc000838;
-        Wed, 6 Nov 2019 11:18:03 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573060683;
-        bh=EcRltSnNjGkBxvjA5L9hzMCEuCsbKiaLjGExl987Je0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=jNy0kVsQqRx5r6VL3gmNqWLtrHrwg/g7DwWrYx3+VZzF4IxnA1TLh0efpMMBbshu0
-         8C1FxnlW40jL4YNdEotIzjcl3UUnxPGCCoPSC5Hl6/T2Fo1cNXg0dG/GsmlVL0pEen
-         svmkYqMFVACZ+Ck6kdpvRq0q9zZtx4f9Zh/9RbFg=
-Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
-        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6HI3DU052782
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 11:18:03 -0600
-Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 11:17:47 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
- (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 11:17:47 -0600
-Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6HI0LQ051929;
-        Wed, 6 Nov 2019 11:18:00 -0600
-Subject: Re: [PATCH v15 1/5] dma-buf: Add dma-buf heaps framework
-To:     John Stultz <john.stultz@linaro.org>
-CC:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
-References: <20191106042252.72452-1-john.stultz@linaro.org>
- <20191106042252.72452-2-john.stultz@linaro.org>
- <7154851c-fc55-e157-5a01-21abdd4a23e6@ti.com>
- <CALAqxLW1vgLCik5WfDN7qkRsO=K9U4otNBp72aOH5UNN1jUgMQ@mail.gmail.com>
-From:   "Andrew F. Davis" <afd@ti.com>
-Message-ID: <26700d4b-07c6-65b1-9fc6-bb3e239202e5@ti.com>
-Date:   Wed, 6 Nov 2019 12:18:00 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 12:19:20 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q1snHVOjvov2W8i0pGQGf0sAPNpUIvqQUdMy3Qldyrk=; b=RipgNPFgEN6zp/8BlVS2Wwri6
+        SELXtoB+F+T3Oh0b4EfQS3WElMFIR6wm27qGvGUr/xsGRDKdkVv0ljG3HGmGYlFbBkDdLrBfgkgJw
+        qKOUNW1L14Pn8MNpvNq5KobiEtaTOn1gPbTidQUDUx8hkJdLje4Zc1rNZ7INM4z7tgNheMQBdNqSc
+        1kbYvO+qq/uY159PmplUK77n/IAiqAreOllyv35uiHTDPbpssMUI9VFpbQi/upd67kQjt5Syxziyn
+        GPskyN9mQbLFko7Aspjq2iabkp05eS4mlgRB+PIIzzbEDr4SgkbcEuz7DrkVpOnevGo/q53OB1zzW
+        esbWcUgRg==;
+Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:52656)
+        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
+        (Exim 4.90_1)
+        (envelope-from <linux@armlinux.org.uk>)
+        id 1iSOxW-0006QF-5B; Wed, 06 Nov 2019 17:19:06 +0000
+Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
+        (envelope-from <linux@shell.armlinux.org.uk>)
+        id 1iSOxS-0004Cq-8b; Wed, 06 Nov 2019 17:19:02 +0000
+Date:   Wed, 6 Nov 2019 17:19:02 +0000
+From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+Subject: Re: Linux-next-20191106 : arm64: Internal error: Oops: 96000007
+Message-ID: <20191106171902.GT25745@shell.armlinux.org.uk>
+References: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <CALAqxLW1vgLCik5WfDN7qkRsO=K9U4otNBp72aOH5UNN1jUgMQ@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 12:03 PM, John Stultz wrote:
-> On Wed, Nov 6, 2019 at 5:52 AM Andrew F. Davis <afd@ti.com> wrote:
->>
->> On 11/5/19 11:22 PM, John Stultz wrote:
->>> +unsigned int dma_heap_ioctl_cmds[] = {
->>> +     DMA_HEAP_IOC_ALLOC,
->>> +};
->>> +
->>> +static long dma_heap_ioctl(struct file *file, unsigned int ucmd,
->>> +                        unsigned long arg)
->>> +{
->>> +     char stack_kdata[128];
->>> +     char *kdata = stack_kdata;
->>> +     unsigned int kcmd;
->>> +     unsigned int in_size, out_size, drv_size, ksize;
->>> +     int nr = _IOC_NR(ucmd);
->>> +     int ret = 0;
->>> +
->>> +     if (nr >= ARRAY_SIZE(dma_heap_ioctl_cmds))
->>> +             return -EINVAL;
->>> +
->>> +     /* Get the kernel ioctl cmd that matches */
->>> +     kcmd = dma_heap_ioctl_cmds[nr];
->>
->>
->> Why do we need this indirection here and all the complexity below? I
->> know DRM ioctl does something like this but it has a massive table,
->> legacy ioctls, driver defined ioctls, etc..
->>
->> I don't expect we will ever need complex handling like this, could we
->> switch back to the more simple handler from v13?
+Hi,
+
+Could you please explain why you've sent this to me?
+
+Thanks.
+
+On Wed, Nov 06, 2019 at 09:26:29PM +0530, Naresh Kamboju wrote:
+> arm64 devices Juno-r2, hikey (Hi6220) and dragonboard (APQ 8016 SBC)
+> boot failed while running linux next 20191106 kernel. But qemu_arm64
+> boot pass.
 > 
-> I agree it does add complexity, but I'm not sure I see how to avoid
-> some of this. The logic trying to handle that the user may pass a cmd
-> that has the same _IOC_NR() as DMA_HEAP_IOC_ALLOC but not the same
-> size. So the simple "switch(cmd) { case DMA_HEAP_IOC_ALLOC:" we had
-> before won't work (as the cmd will be a different value).
+> Crash log from dragonboard,
+> 
+> [   10.656527] Unable to handle kernel paging request at virtual
+> address ffff800011b3ef68
+> [   10.656580] Mem abort info:
+> [   10.656587]   ESR = 0x96000007
+> [   10.656594]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   10.656600]   SET = 0, FnV = 0
+> [   10.656605]   EA = 0, S1PTW = 0
+> [   10.656610] Data abort info:
+> [   10.656616]   ISV = 0, ISS = 0x00000007
+> [   10.656621]   CM = 0, WnR = 0
+> [   10.656629] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000081980000
+> [   10.656635] [ffff800011b3ef68] pgd=00000000bfeff003,
+> pud=00000000bfefe003, pmd=00000000bfefa003, pte=0000000000000000
+> [   10.656887] Internal error: Oops: 96000007 [#1] PREEMPT SMP
+> [   10.656894] Modules linked in: adv7511(+) cec msm(+) mdt_loader
+> drm_kms_helper qcom_rng drm socinfo rmtfs_mem qrtr fuse
+> [   10.656928] CPU: 0 PID: 230 Comm: systemd-udevd Not tainted
+> 5.4.0-rc6-next-20191106 #1
+> [   10.656933] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [   10.656939] pstate: a0000085 (NzCv daIf -PAN -UAO)
+> [   10.656953] pc : __of_match_node.part.5+0x48/0x88
+> [   10.656960] lr : of_match_node+0x40/0x70
+> [   10.656964] sp : ffff8000132534d0
+> [   10.656968] x29: ffff8000132534d0 x28: ffff8000101d6260
+> [   10.656977] x27: ffff80001241a7a0 x26: ffff80001241a7a0
+> [   10.656985] x25: ffff80001241a860 x24: ffff80001241a6e8
+> [   10.656993] x23: 0000000000000000 x22: ffff00003fd08010
+> [   10.657001] x21: 0000000000000000 x20: 0000000000000000
+> [   10.657008] x19: ffff800011b3ef68 x18: ffffffffffffffff
+> [   10.657016] x17: 0000000000000000 x16: 0000000000000000
+> [   10.657024] x15: ffff8000121ffa48 x14: 4e3a666f3d534149
+> [   10.657032] x13: 0000000000000040 x12: 0000000000000028
+> [   10.657039] x11: 0000000000000001 x10: 0101010101010101
+> [   10.657047] x9 : ffff800012532c50 x8 : 0000000000000050
+> [   10.657055] x7 : ffff800010df1164 x6 : 0000000000000000
+> [   10.657063] x5 : 00000000a4fd7f12 x4 : ffff00003bd7cd18
+> [   10.657070] x3 : 0000000000000000 x2 : 0000000000000001
+> [   10.657078] x1 : ffff00003fd08010 x0 : ffff800010df1178
+> [   10.657086] Call trace:
+> [   10.657094]  __of_match_node.part.5+0x48/0x88
+> [   10.657099]  of_match_node+0x40/0x70
+> [   10.657106]  of_match_device+0x30/0x50
+> [   10.657115]  platform_match+0x4c/0xe8
+> [   10.657122]  __device_attach_driver+0x3c/0x120
+> [   10.657128]  bus_for_each_drv+0x78/0xd8
+> [   10.657135]  __device_attach+0xe8/0x170
+> [   10.657141]  device_initial_probe+0x24/0x30
+> [   10.657148]  bus_probe_device+0xa0/0xa8
+> [   10.657154]  device_add+0x4fc/0x7a8
+> [   10.657160]  of_device_add+0x50/0x68
+> [   10.657167]  of_platform_device_create_pdata+0xf0/0x170
+> [   10.657173]  of_platform_bus_create+0x174/0x550
+> [   10.657180]  of_platform_populate+0x94/0x158
+> [   10.657358]  msm_pdev_probe+0x74/0x358 [msm]
+> [   10.657369]  platform_drv_probe+0x58/0xa8
+> [   10.657377]  really_probe+0x290/0x488
+> [   10.657384]  driver_probe_device+0x12c/0x148
+> [   10.657391]  device_driver_attach+0x74/0x98
+> [   10.657397]  __driver_attach+0xc4/0x178
+> [   10.657403]  bus_for_each_dev+0x84/0xd8
+> [   10.657409]  driver_attach+0x30/0x40
+> [   10.657416]  bus_add_driver+0x170/0x258
+> [   10.657423]  driver_register+0x64/0x118
+> [   10.657430]  __platform_driver_register+0x54/0x60
+> [   10.657582]  msm_drm_register+0x60/0x6c [msm]
+> [   10.657592]  do_one_initcall+0x94/0x460
+> [   10.657600]  do_init_module+0x60/0x204
+> [   10.657606]  load_module+0x2078/0x2720
+> [   10.657613]  __do_sys_finit_module+0x100/0x120
+> [   10.657619]  __arm64_sys_finit_module+0x28/0x38
+> [   10.657628]  el0_svc_common.constprop.2+0x7c/0x180
+> [   10.657635]  el0_svc_handler+0x34/0xa0
+> [   10.657643]  el0_sync_handler+0x124/0x1f8
+> [   10.657649]  el0_sync+0x140/0x180
+> [   10.657659] Code: 1a80d281 9a93d2b5 2a0103f4 91032273 (39400264)
+> [   10.657667] ---[ end trace 8b4c2740f71524d1 ]---
+> 
+> Full test log,
+> https://lkft.validation.linaro.org/scheduler/job/994051#L1396
+> 
+> metadata:
+>   git branch: master
+>   git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>   git commit: dcd34bd234181ec74f081c7d0025204afe6b213e
+>   git describe: next-20191106
+>   make_kernelversion: 5.4.0-rc6
+>   kernel-config:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/640/config
+>   build-location:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/640
+> 
+> 
+> Best regards
+> Naresh Kamoju
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
 > 
 
-
-DMA_HEAP_IOC_ALLOC encodes everything we need, if the size is different
-then the switch case will not match. It handled everything we have.
-
-
-> Thus why I thought the cleanest approach would be to use the
-> dma_heap_ioctl_cmds array to convert from whatever the user cmd is to
-> the matching kernel cmd value.
-> 
-
-
-There are no kernel or user commands, just commands, they will match or
-they are not valid. If someday we some need a variable sized ioctl then
-we can deal with that then.
-
-Andrew
-
-
-> Do you have an alternative suggestion that I'm overlooking?
-> 
-> thanks
-> -john
-> 
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
