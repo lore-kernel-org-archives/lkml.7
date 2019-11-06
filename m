@@ -2,110 +2,109 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00D66C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCF58C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4D1A206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mork.no header.i=@mork.no header.b="Wln6GCVy"
+	by mail.kernel.org (Postfix) with ESMTP id B149A206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731446AbfKFLYE (ORCPT
+        id S1731497AbfKFLYK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:24:04 -0500
-Received: from canardo.mork.no ([148.122.252.1]:54583 "EHLO canardo.mork.no"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfKFLYE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:24:04 -0500
-Received: from miraculix.mork.no ([IPv6:2a02:2121:340:755f:c09a:74ff:fe7f:b715])
-        (authenticated bits=0)
-        by canardo.mork.no (8.15.2/8.15.2) with ESMTPSA id xA6BNVj8026517
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 6 Nov 2019 12:23:32 +0100
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mork.no; s=b;
-        t=1573039412; bh=v3Ba2yCnHfZ6sWycbEkeGJ9xcXrxQTVKv4WO5jG2qwc=;
-        h=From:To:Cc:Subject:References:Date:Message-ID:From;
-        b=Wln6GCVyIkaef7sMAOv6ek7lP5o1xy0S1INtPHQnAoDUffuDZ2o0pPydAUfne/laa
-         ctt3go12cGkgv/kwJEghK4+6Y1OMP5f4eLb8q3xIdMJi3okndPjaJaw+kiFAQF2MG2
-         IjfTIXRXX1PJQ4nncvXP5p0i0jOr5FifEL7Ps8f8=
-Received: from bjorn by miraculix.mork.no with local (Exim 4.92)
-        (envelope-from <bjorn@mork.no>)
-        id 1iSJPI-0005PT-KN; Wed, 06 Nov 2019 12:23:24 +0100
-From:   =?utf-8?Q?Bj=C3=B8rn_Mork?= <bjorn@mork.no>
-To:     Alan Stern <stern@rowland.harvard.edu>
-Cc:     Kai-Heng Feng <kai.heng.feng@canonical.com>,
-        gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
-        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb: Allow USB device to be warm reset in suspended state
-Organization: m
-References: <Pine.LNX.4.44L0.1911051200570.1678-100000@iolanthe.rowland.org>
-Date:   Wed, 06 Nov 2019 12:23:24 +0100
-In-Reply-To: <Pine.LNX.4.44L0.1911051200570.1678-100000@iolanthe.rowland.org>
-        (Alan Stern's message of "Tue, 5 Nov 2019 13:07:34 -0500 (EST)")
-Message-ID: <87o8xpz1sj.fsf@miraculix.mork.no>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 6 Nov 2019 06:24:10 -0500
+Received: from lb2-smtp-cloud8.xs4all.net ([194.109.24.25]:45109 "EHLO
+        lb2-smtp-cloud8.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725890AbfKFLYK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:24:10 -0500
+Received: from [IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a]
+ ([IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a])
+        by smtp-cloud8.xs4all.net with ESMTPA
+        id SJPviPSTwTzKrSJPziyAi1; Wed, 06 Nov 2019 12:24:08 +0100
+Subject: Re: [RFC PATCH 12/12] media: v4l2-core: convert to
+ i2c_new_scanned_device
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org
+Cc:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
+ <20191106095033.25182-13-wsa+renesas@sang-engineering.com>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <4799e282-2f49-a0ae-8396-ee8f0fa26064@xs4all.nl>
+Date:   Wed, 6 Nov 2019 12:24:03 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
+In-Reply-To: <20191106095033.25182-13-wsa+renesas@sang-engineering.com>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-X-Virus-Scanned: clamav-milter 0.101.4 at canardo
-X-Virus-Status: Clean
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfJ0z9ugTAiIGMFQtuOXFD4BDdp1quJn20dF04acRBYYGdUg5s05sQzKopywruJFux6tz0HVf/rsMOGdrzTN/7PfQ18+cglKE9HM/3EjAJm/wM5V/FRMC
+ Pku36bLhs24G5YCZd6scmWbxmNEEfrHDNQVRurOzFKRgQVtzeYFuTKAe4Ie+6xFT+wquLICDb9Uq9RsZzp+BbDc62WVjMLxUJiTHpnNp0SY4wpBcwvioee6g
+ wMGb3pb2F26CKQkcu0qXaUfp/fknLMOQvUGKHHdH6a8NulvyG1mLSgZrpXoxNqmTRYWaC8rMV1FdWDTDJ4xAkt4klhrWTEeBKENCUEr2v2tYjIEYsmY4jec2
+ woG3FwVqC+0rg4YDIbwixpsloKp+isaxjn5ZXG297xMCVRpoJq6PS1MZFaE4ANVj/epgAWZIoRCUX0odkioWNJciMD7TuA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Alan Stern <stern@rowland.harvard.edu> writes:
+On 11/6/19 10:50 AM, Wolfram Sang wrote:
+> Move from the deprecated i2c_new_probed_device() to the new
+> i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-> I was sure I remembered reading somewhere that suspended devices were
-> not allowed to be reset, but now I can't find that requirement anywhere
-> in the USB spec.
+Acked-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
 
-I don't know anything about this, but "Reset From Suspended State" is
-part of Appendix C in the USB 2.0 spec. Looks valid to me..
+Regards,
 
-Quoting the relevant section for those who don't have that spec at hand:
+	Hans
 
+> ---
+> 
+> Build tested only. RFC, please comment and/or ack, but don't apply yet.
+> 
+>  drivers/media/v4l2-core/v4l2-i2c.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/media/v4l2-core/v4l2-i2c.c b/drivers/media/v4l2-core/v4l2-i2c.c
+> index 5bf99e7c0c09..25ddda3b7ce6 100644
+> --- a/drivers/media/v4l2-core/v4l2-i2c.c
+> +++ b/drivers/media/v4l2-core/v4l2-i2c.c
+> @@ -74,10 +74,10 @@ struct v4l2_subdev
+>  
+>  	/* Create the i2c client */
+>  	if (info->addr == 0 && probe_addrs)
+> -		client = i2c_new_probed_device(adapter, info, probe_addrs,
+> -					       NULL);
+> +		client = i2c_new_scanned_device(adapter, info, probe_addrs,
+> +					        NULL);
+>  	else
+> -		client = i2c_new_device(adapter, info);
+> +		client = i2c_new_client_device(adapter, info);
+>  
+>  	/*
+>  	 * Note: by loading the module first we are certain that c->driver
+> @@ -88,7 +88,7 @@ struct v4l2_subdev
+>  	 * want to use the i2c device, so explicitly loading the module
+>  	 * is the best alternative.
+>  	 */
+> -	if (!client || !client->dev.driver)
+> +	if (IS_ERR(client) || !client->dev.driver)
+>  		goto error;
+>  
+>  	/* Lock the module so we can safely get the v4l2_subdev pointer */
+> @@ -110,7 +110,7 @@ struct v4l2_subdev
+>  	 * If we have a client but no subdev, then something went wrong and
+>  	 * we must unregister the client.
+>  	 */
+> -	if (client && !sd)
+> +	if (!IS_ERR(client) && !sd)
+>  		i2c_unregister_device(client);
+>  	return sd;
+>  }
+> 
 
-  C.2.1 Reset From Suspended State
-
-  As can be seen from Figure C-2, the device wakes up from the Suspended
-  state as soon as it sees a K or an SE0 on the bus. A J would be
-  indistinguishable from idle on the bus that a suspended device sees
-  normally. On seeing a K, the device will initiate a resume
-  process. For the details of this process, see Section 7.1.7.7. On
-  seeing an SE0, the device could enter the reset handshake procedure,
-  so it starts timer T0.
-
-  The actual reset handshake is only started after seeing a continuous
-  assertion of SE0 for at least 2.5 =CE=BCs (T FILTSE0 ).  The loop between
-  the blocks with =E2=80=9CClear timer T1=E2=80=9D and =E2=80=9CRun timer T=
-1=E2=80=9D represents this
-  filtering. If the device has not detected a continuous SE0 before
-  timer T0 exceeds the value of T UCHEND - T UCH , the device goes back
-  into the Suspended state.
-
-  A device coming from suspend most probably had its high-speed clock
-  stopped to meet the power requirements for a suspended device (see
-  Section 7.2.3). Therefore, it may take some time to let the clock
-  settle to a level of operation where it is able to perform the reset
-  detection and handshake with enough precision. In the state diagram, a
-  time symbol T WTCLK is used to have the device wait for a stable
-  clock. This symbol is not part of the USB 2.0 specification and does
-  not appear in Chapter 7. It is an implementation specific detail of
-  the reset detection state diagram for the upstream facing port, where
-  it is marked with a asterisk (*). T WTCLK should have a value
-  somewhere between 0 and 5.0 ms. This allows at least 1.0 ms time to
-  detect the continuous SE0.
-
-  If the device has seen an SE0 signal on the bus for at least T FILTSE0
-  , then it can safely assume to have detected a reset and can start the
-  reset handshake.
-
-
-
-
-Bj=C3=B8rn
