@@ -2,97 +2,151 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8DEEC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:49:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9801C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:50:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9752C217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:49:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9D502173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:50:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="kxBJiJoC"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="TmPGAP/3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731531AbfKFKtn (ORCPT
+        id S1731551AbfKFKuj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:49:43 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:32814 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726656AbfKFKtn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 05:49:43 -0500
-Received: by mail-wr1-f66.google.com with SMTP id w30so2452062wra.0
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 02:49:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kl4ziYImo8mxXSUIUzerWcurMfUG2nKE46XW1BkCvlw=;
-        b=kxBJiJoCz+uvEjlaoHMgcQr+fPhAS0j2sc8HQCdJjk0eOme7VQHHlm3TDIUwxNStV/
-         IAr8TqzToP3BUIwWnA7k3eNZDWdns4KTC1BChbku6s+9vm65UyDEPJIgV4KXwCKpfUHR
-         3GqU0MH9ui+CytCItnEbyCTbgcvYV7VjZW0QGrt/jtVusHHPs8WevG+USUqczTgjBlq4
-         kD6WEBWIFfNMsOfhxJRESwTtuQfvK5JMtJdJfKFxXFe+hKKplRvMHMUAf5DaA7nMaRw9
-         2q24dcf3jUtUASsUuACt6r/sejqO/Dx1+pNfRBy3dce6DwxTECCghcvZySDx55qOM/c5
-         OeWg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=kl4ziYImo8mxXSUIUzerWcurMfUG2nKE46XW1BkCvlw=;
-        b=FTeFX6EOFutnI8Hkj3FJc55qIvQVsGkVJjcxxdfhdRgKWfJGBJumEG/HJuVbSXWTEO
-         RZSRreotYyEgPyD0OIwte/fyUEj5DX2VGcwaMEiNX8NNLG2Wztj8a/o82EE3pnDwG9uS
-         q4Ke2QSgzSOFwKE35qB3XY1+ewIkaRJGrWESvzWJIZFPzl6s2lmAZCzyjX/VolbTpvEi
-         VsiMjp/xGayeV458U9q8Pk5lPXlJhWxCo7cVerxWx7g9uLPS0DTsJ4Sg8DQ6bI3m0tg9
-         f6H0dTXPVOEGkxJ1D36MdR1GzN2fCMqBORzknRTisuwBuHHAvRaD1J+AR6aOIosIT7kW
-         nptA==
-X-Gm-Message-State: APjAAAXjZmM1PRlOiLQcjSFEpmUHn+m8HrjG/4oGw19IVa+TTcVZEqu3
-        sdPP27tfyIEd92eteiybp+yhftUNdDZYMQ==
-X-Google-Smtp-Source: APXvYqzq1lHX4GDEZEPtsCJdyQnYK9ZIjkX+6ml9wEgDrjlLUn4+3HRgIK41WbnzWNEb4WSW+nUPmg==
-X-Received: by 2002:a5d:6789:: with SMTP id v9mr1978787wru.344.1573037381252;
-        Wed, 06 Nov 2019 02:49:41 -0800 (PST)
-Received: from bender.baylibre.local (laubervilliers-658-1-213-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
-        by smtp.gmail.com with ESMTPSA id b14sm2331695wmj.18.2019.11.06.02.49.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 02:49:40 -0800 (PST)
-From:   Neil Armstrong <narmstrong@baylibre.com>
-To:     hverkuil@xs4all.nl, mchehab@kernel.org
-Cc:     linux-amlogic@lists.infradead.org, linux-media@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>
-Subject: [PATCH] MAINTAINERS: ao-cec: Update path for yaml bindings
-Date:   Wed,  6 Nov 2019 11:49:35 +0100
-Message-Id: <20191106104935.24307-1-narmstrong@baylibre.com>
-X-Mailer: git-send-email 2.22.0
+        Wed, 6 Nov 2019 05:50:39 -0500
+Received: from mail-eopbgr130080.outbound.protection.outlook.com ([40.107.13.80]:18142
+        "EHLO EUR01-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfKFKuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 05:50:39 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=b1THa4ENgGt5zeS5PUnngWUk6tvLAIe+Bh8K5psJ516yNjkQj6cC10ZFnatU6nX5idUSole5ClT3dD4iHe4iQ1/85/zq1PN011XyHoYmVrcEG3oguvVPdhyK2JBsoZZGdSxncj6UIFQ9LaOvXdikQ3zYhgEqXGFTxxnxqbZ5Ftc6ovpLikMR1DMBf8vFqDiPFx9J0xDrk3+A4qOfk/d6We8V5+1utmEX+MIqU6Jwy+c+bkWdFiBZWSJ+BCyPOmLK5voyvwVn8ilexYTQeKcdQcWqAoQc7WGtNaUIQNmKh21iZ8XJbLRMmRuO4dfDD30bGNkHqJr5GncoMNG7zWTvww==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V0QX3C80PD91klugzd+I0gq7rm8l0f4Q8ArIqfdx/C8=;
+ b=kGT7XzeT7fL/ufeic2MJ7xEJMrpeHFPLQzcDzkzMZYpxbFgBK6SP14LFOQ7DPJxmOLsmzaqG70CyhwMKZHYyyr2k16KDGT5NUJUHe4DUbhBFUzyRVInej6NTLRu2k9+J7/F6SNEIxSPx1sisBmBwlgZ0OMLuNsnLlB0MewZHOlc78NYWt9k6s34JZ0/vmH0Pnv4a+kBqt6YhVdvi1ezFC1o7aXV+wBtyIph2romHwxNBFNxOgN1Fw4NEXU83GBve2j0d54UGtoWtv8EtnlrAU32FBzMjOyeHCmvCnB8Klem6AuRb4fOe6ekSBqpHBYR7EHNH6GMsmyNdC16mvmtPbw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=V0QX3C80PD91klugzd+I0gq7rm8l0f4Q8ArIqfdx/C8=;
+ b=TmPGAP/3idjE4UU+VwcUc5yRgY2BZEqQX+GbvY7zNAnQ6oIHjhJjkjNZenlRbAsxANTwnv3cKnhNsA43PakTCJiLNVdEH7kIZVF9mFn4kLxrUt2kyCdu3XY5evxYfw8lQWeed36UQaoo4eGBtvsfLJqxbJNGjChuds6xNHi+67c=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.232.225) by
+ VE1PR04MB6383.eurprd04.prod.outlook.com (20.179.232.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Wed, 6 Nov 2019 10:50:35 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::9c38:e113:f0b4:f9]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::9c38:e113:f0b4:f9%7]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 10:50:35 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>, Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "tiwai@suse.com" <tiwai@suse.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add compatible string
+ for imx8qm
+Thread-Topic: [PATCH V2 1/2] ASoC: dt-bindings: fsl_asrc: add compatible
+ string for imx8qm
+Thread-Index: AdWUjzC3wwj9eI6oTXKcjGy6eTmZpg==
+Date:   Wed, 6 Nov 2019 10:50:34 +0000
+Message-ID: <VE1PR04MB6479DD8BDA0A8B6981F61532E3790@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: e20ddbff-caba-4f8f-18ba-08d762a72715
+x-ms-traffictypediagnostic: VE1PR04MB6383:|VE1PR04MB6383:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VE1PR04MB6383608AF7B0E2FA06EF075DE3790@VE1PR04MB6383.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(39860400002)(366004)(376002)(396003)(346002)(136003)(189003)(199004)(478600001)(229853002)(14454004)(99286004)(8936002)(26005)(186003)(3846002)(6116002)(4326008)(25786009)(66066001)(316002)(110136005)(256004)(2906002)(14444005)(7416002)(54906003)(71190400001)(305945005)(7696005)(74316002)(81156014)(7736002)(66476007)(66946007)(66556008)(6506007)(52536014)(66446008)(64756008)(33656002)(6436002)(102836004)(76116006)(5660300002)(9686003)(55016002)(6246003)(486006)(8676002)(476003)(86362001)(71200400001)(81166006)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6383;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: s59rthG3RgI8klH72jKE9UQW2witPfrZ5abu8SsjwMNQziZtZpINIpL93pU30kCJH3hhvmtRSB/TLzmI1OMJTLUgw/GTmupj6ae0qJ30LXe+A1de6aigo/2Urc89Q8y/eOmvveTHCN9YWcW0oifDqB0b12brr5LYpTpiKvv0twbt8q39ZYk2JpAKVkQDvJAo7+jDB4tQTDnOa+76u45LNoPMcnO+Onf+EOs5SVQlvRfNtqJdZ8qHij9kr54WOVNUwpMLSJYvBNKw+QvQfvjggbCe67VJz1SnhqqgS0dlt8MfilFTXYk113R/2MHrTUZQikozZR4NvcYey7GsmK31xOWwsqHfZcgPk2IPpovqHos+Vcsk5w0isloUbSL5V2oB8M6CALL3VBj00t8u5YW+b5PcJMjtx/UxKj+ObDYJhPxXihDdgdbSju81fpqLkQmX
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: e20ddbff-caba-4f8f-18ba-08d762a72715
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 10:50:35.0239
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: wpRZHb+9dP0mkVSdFJZYBzmev3k+MOBzUVELZF9clE5pEyJUUi9WcYMjj79mAFqBheAQslvwwMeZ7n2Blkcixg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6383
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Update the path to the ao-cec bindings after convertion to DT Schemas.
+Hi Rob
+>=20
+> Hi
+> >
+> > On Wed, Oct 30, 2019 at 07:41:26PM +0800, Shengjiu Wang wrote:
+> > > In order to support the two asrc modules in imx8qm, we need to add
+> > > compatible string "fsl,imx8qm-asrc0" and "fsl,imx8qm-asrc1"
+> >
+> > Are the blocks different in some way?
+> >
+> > If not, why do you need to distinguish them?
+> >
+> The internal clock mapping is different for each module.
+>=20
 
-Suggested-by: Hans Verkuil <hverkuil@xs4all.nl>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
----
- MAINTAINERS | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Or we can use one compatible string, but need add another property
+"fsl,asrc-clk-map" to distinguish the different clock map.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 296de2b51c83..11108701cadf 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -10581,7 +10581,7 @@ W:	http://linux-meson.com/
- S:	Supported
- F:	drivers/media/platform/meson/ao-cec.c
- F:	drivers/media/platform/meson/ao-cec-g12a.c
--F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
-+F:	Documentation/devicetree/bindings/media/amlogic,meson-gx-ao-cec.yaml
- T:	git git://linuxtv.org/media_tree.git
- 
- MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
--- 
-2.22.0
+The change is in below.
 
+Which one do you think is better?=20
+
+Required properties:
+
+-  - compatible         : Contains "fsl,imx35-asrc" or "fsl,imx53-asrc".
++  - compatible         : Contains "fsl,imx35-asrc", "fsl,imx53-asrc",
++                         "fsl,imx8qm-asrc".
+
+   - reg                        : Offset and length of the register set for=
+ the device.
+
+@@ -35,6 +36,11 @@ Required properties:
+
+    - fsl,asrc-width    : Defines a mutual sample width used by DPCM Back E=
+nds.
+
++   - fsl,asrc-clk-map   : Defines clock map used in driver. which is requi=
+red
++                         by imx8qm
++                         <0> - select the map for asrc0
++                         <1> - select the map for asrc1
++
+ Optional properties:
+
+
+Best regards
+Wang shengjiu
