@@ -2,135 +2,111 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F320FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:54:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D56AFC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10E18206C3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:54:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0FE0E217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:58:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="h2pVQQwq"
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="WI5B42i1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727316AbfKFXye (ORCPT
+        id S1728029AbfKFX6N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:54:34 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27491 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727369AbfKFXye (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:54:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573084473;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=OeBSvkxKgLwEN5Lh3YlOG/EG6vi47zYej441MNR7eJM=;
-        b=h2pVQQwqe3YviKrslafWWJy0EDDakVRhbFo9pJHsJQOTkowkcDSBZnIdjwrlqC2NChFlGH
-        yfUStDcZb5K6eyCnd9f9QNOvzBY+cXUPDYoVSoAbC6Doysdqi+RY4Vu7ACMPF21gsDYJ9h
-        kZhl4GIqgnHen7d8vO4518AgQIl0Mgg=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-194-R_j9mkZuOLSRp0VQugwtwA-1; Wed, 06 Nov 2019 18:54:29 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F00FF1800D63;
-        Wed,  6 Nov 2019 23:54:28 +0000 (UTC)
-Received: from treble (ovpn-122-162.rdu2.redhat.com [10.10.122.162])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 71EE31A7E3;
-        Wed,  6 Nov 2019 23:54:25 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 17:54:23 -0600
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Subject: Re: [PATCH] x86/stacktrace: update kconfig help text for reliable
- unwinders
-Message-ID: <20191106235423.hjamrggd4x3js5hm@treble>
-References: <20191106224344.8373-1-joe.lawrence@redhat.com>
- <20191106230553.wnyltmkzwk5dph4l@treble>
- <c8bae684-2a46-68e6-dc43-a8c215bdd111@redhat.com>
+        Wed, 6 Nov 2019 18:58:13 -0500
+Received: from mx1.cock.li ([185.10.68.5]:32959 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727498AbfKFX6N (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:58:13 -0500
 MIME-Version: 1.0
-In-Reply-To: <c8bae684-2a46-68e6-dc43-a8c215bdd111@redhat.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: R_j9mkZuOLSRp0VQugwtwA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1573084690; bh=Cr3zBphchll6Ki3SEndQvh4+5WCBVAg9TGxvATyvOUE=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=WI5B42i1piwGAzPmGz2KPJIrVeC3gnli/5Yk4KLJ/8wSRMPTc7BVsKEUHJXeJiHQR
+         HqtIMpOtJh9lkfMSC8Qns4BM5f2D6Y11elLK9SRjqoFwZ7U9FwduP8QHtTmfR1CKvj
+         IiDmcvKqwJnpFXL9u8fs3NAAUG8bySc6HWxcmjFG3uYYIpgAnbGa7zRusK+noflHM7
+         FdHg+EM9ngLnFE3vEi+6LBByCHnk6l5l9bH4g9xr9ZSyOvAgUtx42fDGmroCQw6yBT
+         PobBtz2Rdv0tlgFKaZgb0mnMIrTjA/rropz+u5+HKSoyT1goG/Sz/y9zHQTGwLiKY/
+         o7r8ddLlYIxvg==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Wed, 06 Nov 2019 23:58:10 +0000
+From:   gameonlinux@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the
+ blobs (compile time option). - Why the [edits]?
+In-Reply-To: <4574490.MYgbJlzDTv@pc-713>
+References: <b1b6ab4e31856450d82afccaba587b0f@redchan.it>
+ <10419249.ilHZ0GCc2g@pc-713> <9352ba078b5f8fb0f464b6d65209b482@redchan.it>
+ <4574490.MYgbJlzDTv@pc-713>
+Message-ID: <2f9f478fd6ef998d3caf0c2210f192af@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 06:16:28PM -0500, Joe Lawrence wrote:
-> On 11/6/19 6:05 PM, Josh Poimboeuf wrote:
-> > On Wed, Nov 06, 2019 at 05:43:44PM -0500, Joe Lawrence wrote:
-> > > commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
-> > > for the ORC unwinder") marked the ORC unwinder as a "reliable" unwind=
-er.
-> > > Update the help text to reflect that change: the frame pointer unwind=
-er
-> > > is no longer the only one that provides HAVE_RELIABLE_STACKTRACE.
-> > >=20
-> > > Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
-> > > ---
-> > >   arch/x86/Kconfig.debug | 8 ++++----
-> > >   1 file changed, 4 insertions(+), 4 deletions(-)
-> > >=20
-> > > diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-> > > index bf9cd83de777..69cdf0558c13 100644
-> > > --- a/arch/x86/Kconfig.debug
-> > > +++ b/arch/x86/Kconfig.debug
-> > > @@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
-> > >   =09  unwinder, but the kernel text size will grow by ~3% and the ke=
-rnel's
-> > >   =09  overall performance will degrade by roughly 5-10%.
-> > > -=09  This option is recommended if you want to use the livepatch
-> > > -=09  consistency model, as this is currently the only way to get a
-> > > -=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
-> > > -
-> > >   config UNWINDER_GUESS
-> > >   =09bool "Guess unwinder"
-> > >   =09depends on EXPERT
-> > > @@ -333,6 +329,10 @@ config UNWINDER_GUESS
-> > >   =09  useful in many cases.  Unlike the other unwinders, it has no r=
-untime
-> > >   =09  overhead.
-> > > +=09  This option is not recommended if you want to use the livepatch
-> > > +=09  consistency model, as this unwinder cannot guarantee reliable s=
-tack
-> > > +=09  traces.
-> > > +
-> >=20
-> > I'm not sure whether this last hunk is helpful.  At the very least the
-> > wording of "not recommended" might be confusing because it's not even
-> > possible to combine UNWINDER_GUESS+HAVE_RELIABLE_STACKTRACE.
-> >=20
-> > arch/x86/Kconfig:       select HAVE_RELIABLE_STACKTRACE         if X86_=
-64 && (UNWINDER_FRAME_POINTER || UNWINDER_ORC) && STACK_VALIDATION
-> >=20
->=20
-> Ah good point.  The alternative would be to copy the recommended note to
-> both UNWINDER_FRAME_POINTER and UNWINDER_ORC, or at least remove the "onl=
-y"
-> phrasing.  I dunno, nobody has noticed it yet, so maybe the first hunk wo=
-uld
-> be good enough.
+I am not exibiting "pure"-cissexism because I wholly support men who 
+wish to marry young girls. "Paedophillia" is not "pure-cissexism". It' 
+might be "misogyny", since women constantly use their white pitbulls to 
+attack however.
 
-The guess unwinder is listed as an expert option, so the user would have
-to enable CONFIG_EXPERT to get to it.  Then if they do enable it and try
-to load a livepatch, they'll get a runtime warning along with a patch
-which never transitions.
+You editing my words was no authorized by me. Short quotes are fine and 
+fair-use, but editing the work for anything other than spelling is not. 
+I did not call the man a [she] I called him a he. A he that CHOPPED OFF 
+HIS GENITALS.
 
-And like you said, nobody has complained, so I'd say just dropping the
-2nd hunk would be fine.
+Any "difficulty" he is going through is of his own making. It is 
+perverse to tell me about it.
 
---=20
-Josh
+That is who "represents" the Free Software movement now: you toss out 
+the guy who you _think_ __maybe__ likes young girls for his 3 text posts 
+on his own website, and you uphold the guy who pays people to cut off 
+his penis and slice away his testicals and take pictures of it.
 
+Which is fairly similar to what he does to core boot: so I think maybe 
+that sorta gave him the idea. Also the fact that he never put the 
+weights up probably exacerbated the problem (weight training excercize 
+increases testosterone: which is why I'm so productive in programming my 
+Free Software game)
+
+Libre boot is known as "tranny boot" and the FSF is known as "a buch of 
+do-nothing trannys and gays plus one straight old MIT hacker who they 
+just threw out because he didn't fit in with the society there"
+
+You drive the actual programmers away, in order to get some women and 
+queers. You let the bird in the hand go, thinking you will get those in 
+the bush.
+
+On 2019-11-06 21:59, Alexandre François Garreau wrote:
+> Pure cissexism is off-topic on gnu-system-discuss, which is about 
+> technical
+> aspects of the GNU system.  You shall not talk about social or politics 
+> (other
+> than software freedom) here.  For further questions please ask in 
+> private.
+> 
+> Le mercredi 6 novembre 2019 22:49:07 CET, vous avez écrit :
+>> Why did you edit my words of [something] […] to [[something else]]?
+> 
+> Because I don’t want to relay your statements I disagree with myself.
+> Quotations are for convenience, not relaying.  If one want to correct 
+> or
+> summarize something, convention is to do so by putting such 
+> modification into
+> square brackets.
+> 
+>> I did not authorize you do do
+>> that.
+> 
+> I don’t need.
+> 
+>> Verbatim quotes are fine, changing words is not.
+> 
+> Yes it is, as it is small quotation, and not plagiarism nor 
+> counterfeit.
