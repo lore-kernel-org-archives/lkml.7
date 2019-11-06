@@ -2,101 +2,114 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B7D2C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:04:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AEBC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 57D8920663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:04:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D633E20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:07:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KmC6l7I7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLaTYVUn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727780AbfKFOEm (ORCPT
+        id S1731790AbfKFOHG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:04:42 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:49096 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726926AbfKFOEm (ORCPT
+        Wed, 6 Nov 2019 09:07:06 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25899 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1727324AbfKFOHG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:04:42 -0500
+        Wed, 6 Nov 2019 09:07:06 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573049081;
+        s=mimecast20190719; t=1573049225;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
          to:to:cc:cc:mime-version:mime-version:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding:
          in-reply-to:in-reply-to:references:references;
-        bh=bjDw7VtURttV92AniQsvr1aCutSqy+spKGbff6QZDRU=;
-        b=KmC6l7I7mRzFWAOGXISq6O+F+CeMtzuxn8ZhP2rBrSRBWqlL8ikXIIjiMbwn9MdxBxofh5
-        8Sj97ssa5ROG/Ug3U1OrQzeNHMGMyhddItAz5DTFckt6WM7h4DqkE3diW8JRRJ/Dqm9O0+
-        smD+gANR8EwnkOINKB0yKcWz30HPb6A=
+        bh=kQUJhTS5ZQPa+H7gyw31F1k30QCMAlnrwuTj8cTiw28=;
+        b=gLaTYVUn6kD9WkF0dMmEDGdz2CosD2e3eoxCQT5zEMq07ip7LyRlWM20eaBadufyP328N2
+        W+CZZttraCUlln0w3VsMbZ2ohh1e5oIt4TXccsdeMuKQXdPAFxEhMOfdouXMz2Nkya5ZJd
+        wH1/fHMAhFu6KxbOZy2rOzypHwj4R+o=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-39-SlrdrPz0OqCEPyD-rxFU8w-1; Wed, 06 Nov 2019 09:04:37 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+ us-mta-37-HIuIU22MPBuvr-Q7-vH7Vw-1; Wed, 06 Nov 2019 09:06:59 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9A1891005500;
-        Wed,  6 Nov 2019 14:04:35 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (ovpn-116-224.ams2.redhat.com [10.36.116.224])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 4F539608B8;
-        Wed,  6 Nov 2019 14:04:19 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Zack Weinberg <zackw@panix.com>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        "Carlos O'Donell" <carlos@redhat.com>,
-        Shawn Landden <shawn@git.icu>,
-        GNU C Library <libc-alpha@sourceware.org>,
-        linux-api@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [RFC v2 PATCH] futex: extend set_robust_list to allow 2 locking ABIs at the same time.
-References: <20191104002909.25783-1-shawn@git.icu>
-        <87woceslfs.fsf@oldenburg2.str.redhat.com>
-        <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
-        <87sgn2skm6.fsf@oldenburg2.str.redhat.com>
-        <alpine.DEB.2.21.1911051253430.17054@nanos.tec.linutronix.de>
-        <f11d82f1-1e81-e344-3ad2-76e4cb488a3d@redhat.com>
-        <alpine.DEB.2.21.1911051520090.17054@nanos.tec.linutronix.de>
-        <CAKCAbMjYBpTjwyMJkkENps09o4KFoQAb_KOKp4g0BtWUXjYAzQ@mail.gmail.com>
-Date:   Wed, 06 Nov 2019 15:04:17 +0100
-In-Reply-To: <CAKCAbMjYBpTjwyMJkkENps09o4KFoQAb_KOKp4g0BtWUXjYAzQ@mail.gmail.com>
-        (Zack Weinberg's message of "Wed, 6 Nov 2019 09:00:51 -0500")
-Message-ID: <87a799nlsu.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.2 (gnu/linux)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 257561005500;
+        Wed,  6 Nov 2019 14:06:57 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 513F25DA76;
+        Wed,  6 Nov 2019 14:06:51 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 15:06:50 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 01/10] perf tools: add parse events handle error
+Message-ID: <20191106140650.GE30214@krava>
+References: <20191025180827.191916-1-irogers@google.com>
+ <20191030223448.12930-1-irogers@google.com>
+ <20191030223448.12930-2-irogers@google.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: SlrdrPz0OqCEPyD-rxFU8w-1
+In-Reply-To: <20191030223448.12930-2-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: HIuIU22MPBuvr-Q7-vH7Vw-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Zack Weinberg:
+On Wed, Oct 30, 2019 at 03:34:39PM -0700, Ian Rogers wrote:
+> Parse event error handling may overwrite one error string with another
+> creating memory leaks. Introduce a helper routine that warns about
+> multiple error messages as well as avoiding the memory leak.
+>=20
+> A reproduction of this problem can be seen with:
+>   perf stat -e c/c/
+> After this change this produces:
+> WARNING: multiple event parsing errors
+> event syntax error: 'c/c/'
+>                        \___ unknown term
+>=20
+> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,fil=
+ter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_=
+not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
+> Run 'perf list' for a list of valid events
+>=20
+>  Usage: perf stat [<options>] [<command>]
+>=20
+>     -e, --event <event>   event selector. use 'perf list' to list availab=
+le events
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-> On Tue, Nov 5, 2019 at 9:28 AM Thomas Gleixner <tglx@linutronix.de> wrote=
-:
->>
->> The real issue is that the robust list could be circular by incident or
->> malice and there is no way for the kernel to figure that out. That would
->> prevent the task from exiting and make it iterate over the list until
->> doomsday, i.e. a nice unpriviledged DoS.
->
-> Why can't the kernel use the standard tortoise-and-hare algorithm for
-> detecting circular linked lists here?
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-It's not guaranteed to terminate if the list is in shared memory.
-
-Thanks,
-Florian
+thanks,
+jirka
 
