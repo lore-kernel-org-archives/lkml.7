@@ -2,116 +2,113 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9008AC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:31:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7892C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 616FA21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:31:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B78921848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:32:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="ksjGv+rD"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="Rz/rPIy5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727447AbfKFPbg (ORCPT
+        id S1728536AbfKFPcr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:31:36 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:41914 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKFPbg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:31:36 -0500
-Received: by mail-ot1-f65.google.com with SMTP id 94so21135090oty.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ZfcZe9oAWNS5cY+zOKEHcifoIj+GXmX62KAGJO2tELE=;
-        b=ksjGv+rDVrfFKq4SrfX25KHYUoZD40eY/vdrA1L1rRwKvhWwyM/U8/0JTcSouughJ2
-         ShNHkRzqbWvGVvZJRJImFTkTpOhBDsvVSyZYEHXjAxs0Z9Ye62gnr6g17tOHWJ979lRD
-         fQVdCoTe2+R8x57FHmFv0U/56bzLXn6zpcrTQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ZfcZe9oAWNS5cY+zOKEHcifoIj+GXmX62KAGJO2tELE=;
-        b=XxJ1VppoOt8AW633CplXr2kSyd9lFmQbpWAAUX2VjS1fpyJhB+v2TM5u+Dhnu4Jl8N
-         ZSmvkBNwOVz1JPgIAJ3MUN9ZtAA/O4Tz+qUUAu1EauHwB0RKfzvvwBSBhL0XtMdy6GfQ
-         RZKwhPTG+zK187gp33qbHdypwfQdKUya5a4QgD10M2GBjdbwx64WSQjgX0IN0U4zpZkR
-         lt+L5bT8kWr5rmWV4F5aSGoTwxH9wgtmgPtmdVO4hzfDiAxU4zc8TnH0TiM4OmT/pA7n
-         2ta6LXcimaEvbiE6+QXv+JJpgI6BcP1SEmhZqMpQiTbdHzD4iAOej31sAuEt5EMeYxEx
-         NTug==
-X-Gm-Message-State: APjAAAWacWXutrz66kLyWNJlgUBSnA10vuRHhtN34LE0eltAMycB4Y0c
-        osUQQuNCm5h4p+bsESMSNiLwTs0VKr174vnRmm/U4g==
-X-Google-Smtp-Source: APXvYqw///Krsse2DBdzdG/Ka2FfTS2Yrqhg8d4s7w790j42sEyA6RynvjYQk6BR3wvplC+Qo9T0aGtE99YzD1fI/Tc=
-X-Received: by 2002:a9d:6343:: with SMTP id y3mr2195352otk.106.1573053846999;
- Wed, 06 Nov 2019 07:24:06 -0800 (PST)
-MIME-Version: 1.0
-References: <000000000000b2de3a0594d8b4ca@google.com> <00000000000012ff570596af15cc@google.com>
-In-Reply-To: <00000000000012ff570596af15cc@google.com>
-From:   Daniel Vetter <daniel@ffwll.ch>
-Date:   Wed, 6 Nov 2019 16:23:55 +0100
-Message-ID: <CAKMK7uFQt+=7XMo9jvz77QvDWLAAU_V7-_qZ=iKe-GXG7cqeJg@mail.gmail.com>
-Subject: Re: WARNING in drm_mode_createblob_ioctl
-To:     syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>
-Cc:     Dave Airlie <airlied@linux.ie>,
+        Wed, 6 Nov 2019 10:32:47 -0500
+Received: from mout.gmx.net ([212.227.17.21]:59251 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727996AbfKFPcr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:32:47 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1573054346;
+        bh=GiiIhgBUTGJFic+FI6UJgeWlvOItAhL++J46ickbhNg=;
+        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
+         References;
+        b=Rz/rPIy5Ax5ix3Dyn8AXepCuUzN5rQv6BAchJqwveDSFBB9nph96TeD12yg176QE8
+         CRd4O0ewS1iH6vGVCZE9QwwyeGxP57Gc3oywGEV7/ZzvPEK+kP6aOcMSxJZlJyADrq
+         A42daZdP4szqG85Y979j1prlxugcGDusEexypRW0=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx105
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1N49hB-1hkPWd2p0b-0105FF; Wed, 06
+ Nov 2019 16:32:26 +0100
+Message-ID: <d6f7fe9e15a5f6cae98b89bad8826a43be6ab87d.camel@gmx.de>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+From:   Robert Stupp <snazy@gmx.de>
+Reply-To: snazy@snazy.de
+To:     Jan Kara <jack@suse.cz>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Date:   Wed, 06 Nov 2019 16:32:23 +0100
+In-Reply-To: <20191106143537.GI16085@quack2.suse.cz>
+References: <20191025132700.GJ17610@dhcp22.suse.cz>
+         <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
+         <20191025135749.GK17610@dhcp22.suse.cz>
+         <20191025140029.GL17610@dhcp22.suse.cz>
+         <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+         <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+         <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+         <20191105182211.GA33242@cmpxchg.org>
+         <20191106120315.GF16085@quack2.suse.cz>
+         <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+         <20191106143537.GI16085@quack2.suse.cz>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:waigNbie1AqBRiW5XPbLt6zvxCfyaVnFGrhF3ElfAcas//+fLS4
+ J+GWECsnLqkKE5e92XOrn1JZaPmj2i+MafyZyci9GDV8+7ytUAt962iGpIP7nk8M44YZ94q
+ yj/tdC5oGXPXOyiWxVyY3enQJ51tM2aKuqWsthKbw70AmUbove863Qi3DUFAF0z1Nnv4jIS
+ sPQcZSCDmhaYqMNahjZqw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:XPJ9aTDuOHY=:B0VcQTOH1i0tiZlmB209FR
+ Sl9AS/v48S4VhpN/zoPxEZ8B/gAguY2iX8yk0maYwcqCXPyMZdG7T6Z5u66S+iRqfOASxYtVT
+ 0aZmZgUVIUITY5fwOwY3tlbPpp/UROqaxJcSEw5zdhRIsTvRg0VeaJEIBsGVKYB4ZqCxbdCYj
+ aQvlIFvXmTYHAm5eHhCKOQ1yqc5AKw6N0nwGOvLzM99atOjTtB2igmMMGt6YLaHxIykikCgPO
+ tkhFJcsmrV2T2hpsgVrpZwqNzYGX73naYsOigEIDLg8hEuxymWDxT5OEkHJc13aKz+rBWtOZb
+ EnFYOYm7tRr2mPnT6oVka5DrdV/nawk9LDAgzIFYjHg9gNcCzXwZBT7dDEzxXCgZ1B4BV0BrC
+ 0aUlOtiKNa5wAY3fYc6OwmPMQmMO4sBEFBSCl5XHTqNWX34HSe7x58i5BqUquaDow0MYNCq0n
+ rpWkEmQoaCKqb/sgOPZsMRKa9/Bi340ed5SksFNy+FHDXcuYmQgDhd5WNKPKiUPa3JSc/T4dZ
+ SqLcmNBKtL2LdcIUS8AZ4mRAAuRiyJTMfCxKWGXNoucNWviguXWmC37zb9fr76UxS3mzBKAKt
+ DPZsZVB7vF8XszKRv7QnqWjfDc+TGoBRxap8A5ZTjr7TQ5LQ3CdO7GhWAMs99JPS+cMufwin4
+ Cgh98KcEFmpjJN5DZDX6rvjI/Bbg+H8jS1ftt458dQI6uFJ1rb7g0Vr9A5FsyhxUBEsvL5PBs
+ xI+KZckAE0UpMp54SKgWGbuotlwS5ffremm7tRBtAkM19MTHUGstTSsZm4NMoSWeIoLycSOjr
+ jPM8UTd8B3gHXAk7RoRfTrbyHATfYmhJ8UZHEzQpa3lxhMJpLziQgayWw9MdHMKFz5lQIeDJC
+ wvvwusRyo/xEvVaGUW/tFjEATVXnBEE5CUEZpYL5DvLFjdk/XXngTPhNUXUioKInW8In8DlZo
+ 5hlGGDS9KYupkL4KMVbJT7QvJYF915e6ZevunMlp+gkgcSdwcVbxK0KsO851BO3OOYkhfs9y3
+ /3FBNfYrbM0CJuCJPG4L9n18frv4rxIhBN6fVoQKTfVE63estrs8LbTJ3x/VU1v5+eTjIaGVK
+ 7mat56fg5yHve43hpZw4zH0cS6452LCSzvqA/tvb4HS6jhaJ518hpRDV2MxnuoS3+euLBdonW
+ xt1mUD/YnpkNRK8NMAimoDIQaubRXiFpoRR6YzGu3FOjQrwhSolyq8gbptpmJUhLeDnzcIhdh
+ kVe+OybIiVKOJ2B1pD9x71zc1RTOHRqp5YBEMeQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:20 PM syzbot
-<syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com> wrote:
+On Wed, 2019-11-06 at 15:35 +0100, Jan Kara wrote:
+> On Wed 06-11-19 14:45:43, Robert Stupp wrote:
+> >
+> > Yes, ra_pages=3D=3D0
 >
-> syzbot has bisected this bug to:
+> OK, thanks for confirmation!
 >
-> commit 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-> Author: Kees Cook <keescook@chromium.org>
-> Date:   Mon Nov 4 22:57:23 2019 +0000
+> > 5637e22a2000-5637e22a3000 r--p 00000000 103:02
+> > 49172550                  /home/snazy/devel/misc/zzz/test
 >
->      uaccess: disallow > INT_MAX copy sizes
-
-Ah cool, this explains it.
-
-fwiw I never managed to get the WARNING in the backtrace to lign up
-with any code. No idea what's been going on.
-
-I'll type a patch to paper over this.
--Daniel
-
+> What kind of device & fs does your /home stay on? I don't recognize
+> the major
+> number...
 >
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=125fe6dce00000
-> start commit:   51309b9d Add linux-next specific files for 20191105
-> git tree:       linux-next
-> final crash:    https://syzkaller.appspot.com/x/report.txt?x=115fe6dce00000
-> console output: https://syzkaller.appspot.com/x/log.txt?x=165fe6dce00000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-> dashboard link: https://syzkaller.appspot.com/bug?extid=fb77e97ebf0612ee6914
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1212dc3ae00000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145f604ae00000
->
-> Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-> Fixes: 9e5a64c71b2f ("uaccess: disallow > INT_MAX copy sizes")
->
-> For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+It's ext4 on an NVMe SSD
+Maybe it's of interest as well: my /tmp is on tmpfs
 
 
-
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
