@@ -4,112 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DA287C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44BA4C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A509D20650
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C4DC20650
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731718AbfKFMcM (ORCPT
+        id S1731747AbfKFMcN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:32:12 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:44175 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbfKFMcL (ORCPT
+        Wed, 6 Nov 2019 07:32:13 -0500
+Received: from mail-il1-f199.google.com ([209.85.166.199]:53834 "EHLO
+        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731055AbfKFMcM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:32:11 -0500
-Received: by mail-io1-f71.google.com with SMTP id q13so17917402iot.11
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:32:11 -0800 (PST)
+        Wed, 6 Nov 2019 07:32:12 -0500
+Received: by mail-il1-f199.google.com with SMTP id y17so9453684ila.20
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:32:10 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=FxwEXdnT5G2NQEd8PmMUeHdK02q7Pp1C9goKfaWk6fQ=;
-        b=PDr62C65zhjhxjmf9lZjGB+iNHhPMyXTw7oqTqKX4M9Y/nilbEVKoZn64xFfifY5e6
-         f/qSwOmbeJRR4pyKhNRw70aIm+HuOS9buYIZEVpcnLLkkOt2Un+gJTD+HhCRqULh8zMq
-         ymQGUi2N2iElwhrLjmR+JYulOGZrHceYJovpikxWO8WnGHhLiEvmYR3bCTzcni3v3Lrw
-         rIouiedyafuI6bDkEf3TFtZnSNobJXby0/vyZQEZchOnpz560xH9qiDy9ic6sd2EOlVu
-         JSphto2pXh5foGunwmBMSoluftMoKR/jIZhX8oFFpm3STdktFVAQQloCegumQNCH7pl0
-         Qz8Q==
-X-Gm-Message-State: APjAAAWiDzrpdsF2zdz7XWWZ0+Qb6Sq+hk+pRIvvohK63iTTlE3OE8bX
-        QhN5+P1jqZMZitsQLfU0dxhkQNBvzVx0VeeNUV4FiTcn9WvA
-X-Google-Smtp-Source: APXvYqyCjOfCuWqE0bZBFVHctD31OG+ozp6yMjwgOwRMXSe5BEwjmp48ZgbvK97njWjxu5ulFnJ6d7allYzh3TAEZ3NGuNY5fzb0
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to
+         :content-transfer-encoding;
+        bh=3T09uIwIwU5DRUVmjKbkvsI0BQBJlkgqaWi2GtbOfkc=;
+        b=pSBswkBF2TP5VJAfH84fEMdjoh/vG9SEEb3RwROO5yGSN/vFHE59YB9RtXFinAE8ns
+         poB2o4COIL868fzNQkrM35HUDrHzh/LXXFucPi6tNUuZYjRbc/+s206dNgLT4JOX+olq
+         zrdy95w/G8L+6D5q3kD4TmnO+VuVX+dy6ZfHVv00/KWhQM8cBbtfVB4qFnBef+526y+f
+         H13IHj6SaYLq8SjYTICzHd3j806lS5/xRBfOnLiNuzQ8CGEyf63HRLZ3AQQ8rMJtTCux
+         mQP+PrR0SzRxeVgTU3bTKYd8mO7hb34BC/BBHIZ3/+qfKLK3LoeuGVDsjR4xBYlDxhnG
+         lBaw==
+X-Gm-Message-State: APjAAAVJmGtLtTSh8aHeQvTqXLzck93A439gVhHwOt3IXVkD0rWoKuTK
+        hafovWraIUK0X5WiL5pAVHAobRRBrernucmtFCuJ67JB1mkz
+X-Google-Smtp-Source: APXvYqwpEVq7BTZNdDKa0IvmpPBiN99qQV0liktGM/r5hF1MG15lgPMZRr51FIyEpW9+iHZZgtOmfjp86OjfpuxHrKJRBzN0ROks
 MIME-Version: 1.0
-X-Received: by 2002:a92:9ace:: with SMTP id c75mr2459846ill.296.1573043530008;
+X-Received: by 2002:a6b:9089:: with SMTP id s131mr33836149iod.107.1573043530199;
  Wed, 06 Nov 2019 04:32:10 -0800 (PST)
 Date:   Wed, 06 Nov 2019 04:32:10 -0800
 X-Google-Appengine-App-Id: s~syzkaller
 X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d292a50596acbc73@google.com>
-Subject: WARNING in dln2_start_rx_urbs/usb_submit_urb
-From:   syzbot <syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
-        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+Message-ID: <000000000000d5795d0596acbc93@google.com>
+Subject: BUG: bad host security descriptor; not enough data (2 vs 5 left)
+From:   syzbot <syzbot+8a8429a8b80280ff1c80@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, linux-kernel@vger.kernel.org,
         linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
 Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=12599e8ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=48a2851be24583b864dc
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166cd064e00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144c7adce00000
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
-
-usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
-usb 1-1: config 0 descriptor??
-------------[ cut here ]------------
-usb 1-1: BOGUS urb xfer, pipe 3 != type 1
-WARNING: CPU: 1 PID: 83 at drivers/usb/core/urb.c:477  
-usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: usb_hub_wq hub_event
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  panic+0x2aa/0x6e1 kernel/panic.c:221
-  __warn.cold+0x2f/0x33 kernel/panic.c:582
-  report_bug+0x27b/0x2f0 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
-Code: 4d 85 ed 74 2c e8 b8 21 ef fd 4c 89 f7 e8 40 34 1f ff 41 89 d8 44 89  
-e1 4c 89 ea 48 89 c6 48 c7 c7 40 77 14 86 e8 cd bc c4 fd <0f> 0b e9 20 f4  
-ff ff e8 8c 21 ef fd 4c 89 f2 48 b8 00 00 00 00 00
-RSP: 0018:ffff8881d89ef180 EFLAGS: 00010286
-RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
-RDX: 0000000000000000 RSI: ffffffff8128c9cd RDI: ffffed103b13de22
-RBP: ffff8881d53ae450 R08: ffff8881d8c5c800 R09: fffffbfff11ab3ae
-R10: fffffbfff11ab3ad R11: ffffffff88d59d6f R12: 0000000000000003
-R13: ffff8881d3571318 R14: ffff8881d037c0a0 R15: ffff8881d53ae200
-  dln2_start_rx_urbs+0x6
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+SGVsbG8sDQoNCnN5emJvdCBmb3VuZCB0aGUgZm9sbG93aW5nIGNyYXNoIG9uOg0KDQpIRUFEIGNv
+bW1pdDogICAgYjFhYTlkODMgdXNiOiByYXc6IGFkZCByYXctZ2FkZ2V0IGludGVyZmFjZQ0KZ2l0
+IHRyZWU6ICAgICAgIGh0dHBzOi8vZ2l0aHViLmNvbS9nb29nbGUva2FzYW4uZ2l0IHVzYi1mdXp6
+ZXINCmNvbnNvbGUgb3V0cHV0OiBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L2xvZy50
+eHQ/eD0xNTNhMWY4YWUwMDAwMA0Ka2VybmVsIGNvbmZpZzogIGh0dHBzOi8vc3l6a2FsbGVyLmFw
+cHNwb3QuY29tL3gvLmNvbmZpZz94PTc5ZGU4MDMzMDAwM2I1ZjcNCmRhc2hib2FyZCBsaW5rOiBo
+dHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS9idWc/ZXh0aWQ9OGE4NDI5YThiODAyODBmZjFj
+ODANCmNvbXBpbGVyOiAgICAgICBnY2MgKEdDQykgOS4wLjAgMjAxODEyMzEgKGV4cGVyaW1lbnRh
+bCkNCnN5eiByZXBybzogICAgICBodHRwczovL3N5emthbGxlci5hcHBzcG90LmNvbS94L3JlcHJv
+LnN5ej94PTEwODkzZmNjZTAwMDAwDQpDIHJlcHJvZHVjZXI6ICAgaHR0cHM6Ly9zeXprYWxsZXIu
+YXBwc3BvdC5jb20veC9yZXByby5jP3g9MTViYmFhNjJlMDAwMDANCg0KSU1QT1JUQU5UOiBpZiB5
+b3UgZml4IHRoZSBidWcsIHBsZWFzZSBhZGQgdGhlIGZvbGxvd2luZyB0YWcgdG8gdGhlIGNvbW1p
+dDoNClJlcG9ydGVkLWJ5OiBzeXpib3QrOGE4NDI5YThiODAyODBmZjFjODBAc3l6a2FsbGVyLmFw
+cHNwb3RtYWlsLmNvbQ0KDQp1c2IgMS0xOiBjb25maWcgMCBpbnRlcmZhY2UgMCBhbHRzZXR0aW5n
+IDAgaGFzIDMgZW5kcG9pbnQgZGVzY3JpcHRvcnMsICANCmRpZmZlcmVudCBmcm9tIHRoZSBpbnRl
+cmZhY2UgZGVzY3JpcHRvcidzIHZhbHVlOiA0DQp1c2IgMS0xOiBOZXcgVVNCIGRldmljZSBmb3Vu
+ZCwgaWRWZW5kb3I9MTNkYywgaWRQcm9kdWN0PTU2MTEsICANCmJjZERldmljZT00MC4xNQ0KdXNi
+IDEtMTogTmV3IFVTQiBkZXZpY2Ugc3RyaW5nczogTWZyPTAsIFByb2R1Y3Q9MCwgU2VyaWFsTnVt
+YmVyPTANCnVzYiAxLTE6IGNvbmZpZyAwIGRlc2NyaXB0b3I/Pw0KaHdhLWhjIDEtMTowLjA6IFdp
+cmUgQWRhcHRlciB2MTA2LjUyIG5ld2VyIHRoYW4gZ3Jva2VkIHYxLjANCmh3YS1oYyAxLTE6MC4w
+OiBGSVhNRTogVVNCX01BWENISUxEUkVOIHRvbyBsb3cgZm9yIFdVU0IgYWRhcHRlciAoMTk0IHBv
+cnRzKQ0KdXNiIDEtMTogQlVHOiBiYWQgaG9zdCBzZWN1cml0eSBkZXNjcmlwdG9yOyBub3QgZW5v
+dWdoIGRhdGEgKDIgdnMgNSBsZWZ0KQ0KdXNiIDEtMTogc3VwcG9ydGVkIGVuY3J5cHRpb24gdHlw
+ZXM6IO+/ve+/vc+B77+977+977+9fO+/ve+/vc+B77+977+977+977+977+977+9z4Hvv73vv73v
+v70NCnVzYiAxLTE6IEU6IGhvc3QgZG9lc24ndCBzdXBwb3J0IENDTS0xIGNyeXB0bw0KaHdhLWhj
+IDEtMTowLjA6IENhbm5vdCBpbml0aWFsaXplIGludGVybmFsczogLTE5DQoNCg0KLS0tDQpUaGlz
+IGJ1ZyBpcyBnZW5lcmF0ZWQgYnkgYSBib3QuIEl0IG1heSBjb250YWluIGVycm9ycy4NClNlZSBo
+dHRwczovL2dvby5nbC90cHNtRUogZm9yIG1vcmUgaW5mb3JtYXRpb24gYWJvdXQgc3l6Ym90Lg0K
+c3l6Ym90IGVuZ2luZWVycyBjYW4gYmUgcmVhY2hlZCBhdCBzeXprYWxsZXJAZ29vZ2xlZ3JvdXBz
+LmNvbS4NCg0Kc3l6Ym90IHdpbGwga2VlcCB0cmFjayBvZiB0aGlzIGJ1ZyByZXBvcnQuIFNlZToN
+Cmh0dHBzOi8vZ29vLmdsL3Rwc21FSiNzdGF0dXMgZm9yIGhvdyB0byBjb21tdW5pY2F0ZSB3aXRo
+IHN5emJvdC4NCnN5emJvdCBjYW4gdGVzdCBwYXRjaGVzIGZvciB0aGlzIGJ1ZywgZm9yIGRldGFp
+bHMgc2VlOg0KaHR0cHM6Ly9nb28uZ2wvdHBzbUVKI3Rlc3RpbmctcGF0Y2hlcw0K
