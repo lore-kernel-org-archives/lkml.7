@@ -2,108 +2,145 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4BC0C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B353C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9765B217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F279A206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:08:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VMB2FIKp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="Kjd7AuVi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730235AbfKFIIE (ORCPT
+        id S1731375AbfKFIIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:08:04 -0500
-Received: from mailgw01.mediatek.com ([210.61.82.183]:21663 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729734AbfKFIIE (ORCPT
+        Wed, 6 Nov 2019 03:08:36 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:32918 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729986AbfKFIIg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:08:04 -0500
-X-UUID: 8ca62760f9b54534a57f712a1ec937ab-20191106
-X-UUID: 8ca62760f9b54534a57f712a1ec937ab-20191106
-Received: from mtkcas08.mediatek.inc [(172.21.101.126)] by mailgw01.mediatek.com
-        (envelope-from <chun-hung.wu@mediatek.com>)
-        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
-        with ESMTP id 1091685658; Wed, 06 Nov 2019 16:07:54 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs05n1.mediatek.inc (172.21.101.15) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 6 Nov 2019 16:07:50 +0800
-Received: from [172.21.77.33] (172.21.77.33) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 6 Nov 2019 16:07:50 +0800
-Message-ID: <1573027672.2646.1.camel@mtkswgap22>
-Subject: Re: [PATCH 3/3] [3/3] dt-bindings: mmc: mediatek: Add document for
- mt6779
-From:   Chun-Hung Wu <chun-hung.wu@mediatek.com>
-To:     Rob Herring <robh@kernel.org>
-CC:     Chaotian Jing <chaotian.jing@mediatek.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        "Matthias Brugger" <matthias.bgg@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Pavel Machek <pavel@ucw.cz>,
-        Kate Stewart <kstewart@linuxfoundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
-        Pan Bian <bianpan2016@163.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Kuohong Wang <kuohong.wang@mediatek.com>,
-        <linux-kernel@vger.kernel.org>, <linux-mmc@vger.kernel.org>,
-        <linux-mediatek@lists.infradead.org>, <devicetree@vger.kernel.org>,
-        <wsd_upstream@mediatek.com>, <linux-arm-kernel@lists.infradead.org>
-Date:   Wed, 6 Nov 2019 16:07:52 +0800
-In-Reply-To: <20191106041708.GA26489@bogus>
-References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
-         <1572590582-11056-3-git-send-email-chun-hung.wu@mediatek.com>
-         <20191106041708.GA26489@bogus>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.2.3-0ubuntu6 
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Nov 2019 03:08:36 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 0A4E7611FA; Wed,  6 Nov 2019 08:08:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573027715;
+        bh=Yo8SjkHYjtVRfPkp1PCsQaZra8UH8YIzC2IL8wAokAQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=VMB2FIKpdyZBdj/Gzgg0EPW60ktlEchBic4EaMJey34K57PbxkBAqpzVCppzsgqed
+         5yj5n03ZLKZRzXEvUyIqAP2W6ElvRfKcluz88VLPT+b5x5njoLRKhuTlpZnw61QVCd
+         W3g/pA8A6ChQYV0Ng/wgNRmFQNLMHT+t5x6y1jaM=
+Received: from mail.codeaurora.org (localhost.localdomain [127.0.0.1])
+        by smtp.codeaurora.org (Postfix) with ESMTP id 0F17A611FA;
+        Wed,  6 Nov 2019 08:08:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573027714;
+        bh=Yo8SjkHYjtVRfPkp1PCsQaZra8UH8YIzC2IL8wAokAQ=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=Kjd7AuVic0Qh7zYpZM8+B10ufNxRXRFu1YkVYV1UH4ckWBzt1b2HedvixzIeG4wIk
+         4gX5fnjwTQ1CKTZZKPs6gaQev5qPNR9TKNqqqiZCLjfz+5s1jKoUk/NIVzuu6byMnk
+         ZcFHv6z/PC7j1xE+547iGggtVbr3c2G/jsQsaGp8=
 MIME-Version: 1.0
-X-MTK:  N
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Nov 2019 13:38:34 +0530
+From:   Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     marcel@holtmann.org, johan.hedberg@gmail.com, mka@chromium.org,
+        linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        hemantg@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        tientzu@chromium.org, seanpaul@chromium.org
+Subject: Re: [PATCH v1 2/2] Bluetooth: hci_qca: Add support for Qualcomm
+ Bluetooth SoC WCN3991
+In-Reply-To: <20191105184407.GA1852@minitux>
+References: <20191105144508.22989-1-bgodavar@codeaurora.org>
+ <20191105144508.22989-3-bgodavar@codeaurora.org>
+ <20191105184407.GA1852@minitux>
+Message-ID: <739a8cadc6e01971a523d5a0b6fae057@codeaurora.org>
+X-Sender: bgodavar@codeaurora.org
+User-Agent: Roundcube Webmail/1.2.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Rob,
+Hi Jorn,
 
-  Thanks for the reply.
-We will prepare another patch set to remove these tags.
-
-
-On Tue, 2019-11-05 at 22:17 -0600, Rob Herring wrote:
-> On Fri, Nov 01, 2019 at 02:43:02PM +0800, Chun-Hung Wu wrote:
-> > Add compatible node for mt6779 mmc
-> > 
-> > Change-Id: Id36a136a75e892c9360ec95c7f52db06f5b308a4
-> > CR-Id:
-> > Feature:
+On 2019-11-06 00:14, Bjorn Andersson wrote:
+> On Tue 05 Nov 06:45 PST 2019, Balakrishna Godavarthi wrote:
 > 
-> Remove these tags.
+>> This patch add support for WCN3991 i.e. current values and fw download
+>> support.
+>> 
+>> Signed-off-by: Balakrishna Godavarthi <bgodavar@codeaurora.org>
+>> ---
+>>  drivers/bluetooth/btqca.c   | 68 
+>> +++++++++++++++++++++++++++++--------
+>>  drivers/bluetooth/btqca.h   | 10 ++++--
+>>  drivers/bluetooth/hci_qca.c | 16 +++++++--
+>>  3 files changed, 74 insertions(+), 20 deletions(-)
+>> 
+>> diff --git a/drivers/bluetooth/btqca.c b/drivers/bluetooth/btqca.c
+> [..]
+>> @@ -48,13 +62,16 @@ int qca_read_soc_version(struct hci_dev *hdev, u32 
+>> *soc_version)
+>>  	}
+>> 
+>>  	if (edl->cresp != EDL_CMD_REQ_RES_EVT ||
+>> -	    edl->rtype != EDL_APP_VER_RES_EVT) {
+>> +	    edl->rtype != rtype) {
+>>  		bt_dev_err(hdev, "QCA Wrong packet received %d %d", edl->cresp,
+>>  			   edl->rtype);
+>>  		err = -EIO;
+>>  		goto out;
+>>  	}
+>> 
+>> +	if (soc_type == QCA_WCN3991)
+>> +		memcpy(&edl->data, &edl->data[1], sizeof(*ver));
 > 
-> > Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
-> > ---
-> >  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > index 8a532f4..0c9cf6a 100644
-> > --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
-> > @@ -12,6 +12,7 @@ Required properties:
-> >  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
-> >  	"mediatek,mt8183-mmc": for mmc host ip compatible with mt8183
-> >  	"mediatek,mt8516-mmc": for mmc host ip compatible with mt8516
-> > +	"mediatek,mt6779-mmc": for mmc host ip compatible with mt6779
-> >  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
-> >  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
-> >  	"mediatek,mt7622-mmc": for MT7622 SoC
-> > -- 
-> > 1.9.1
-> > 
+> memcpy() shouldn't be used when the two memory regions are overlapping,
+> use memmove() for this.
+> 
 
+[Bala]: will update
 
+> [..]
+>> diff --git a/drivers/bluetooth/btqca.h b/drivers/bluetooth/btqca.h
+>> index 7f7a2b2c0df6..309a720ff216 100644
+>> --- a/drivers/bluetooth/btqca.h
+>> +++ b/drivers/bluetooth/btqca.h
+>> @@ -126,6 +126,7 @@ enum qca_btsoc_type {
+>>  	QCA_ROME,
+>>  	QCA_WCN3990,
+>>  	QCA_WCN3998,
+>> +	QCA_WCN3991,
+> 
+> Please maintain sort order.
+> 
+
+[Bala]: will update
+
+> [..]
+>> diff --git a/drivers/bluetooth/hci_qca.c b/drivers/bluetooth/hci_qca.c
+> [..]
+>> @@ -1663,6 +1674,7 @@ static const struct of_device_id 
+>> qca_bluetooth_of_match[] = {
+>>  	{ .compatible = "qcom,qca6174-bt" },
+>>  	{ .compatible = "qcom,wcn3990-bt", .data = &qca_soc_data_wcn3990},
+>>  	{ .compatible = "qcom,wcn3998-bt", .data = &qca_soc_data_wcn3998},
+>> +	{ .compatible = "qcom,wcn3991-bt", .data = &qca_soc_data_wcn3991},
+> 
+> Ditto
+> 
+
+[Bala]: will update
+
+> Regards,
+> Bjorn
+
+-- 
+Regards
+Balakrishna.
