@@ -2,171 +2,167 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F06C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CCBD6C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:07:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61DF62187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="fmQ82ggq"
+	by mail.kernel.org (Postfix) with ESMTP id A7B7E2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:07:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731923AbfKFQGv (ORCPT
+        id S1732066AbfKFQH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:06:51 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35701 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKFQGu (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:06:50 -0500
-Received: by mail-pl1-f193.google.com with SMTP id s10so804802plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:06:50 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MU4B5Z3680XHcQVk6C2PWPbSktTT7euqohP8tzAAGDU=;
-        b=fmQ82ggqU87fJbVpu3/qnFFzYMgwB85jhZbftAnpaHLjx1W301Gsz2AIixlzqefuOC
-         Quo7Xzcazplt9qe0bp3khkmFvdqokNEaCkejilj1zZcL3S8V4ENbQgfkNqyLyw16jW4Y
-         KXF1/SjD7uAjy9HeqOJYayRnOKOmJtDPjna2mALyHyKAqvtKlwC34fhzJ0BK9R+kKoOP
-         EU1TLDf+46h1GRFX8c/nc+l2sGaxY9Z2zpRlRQb8RQuOTskfKUwHe0kLXdvmalCXoCw9
-         Up5iyN60Q9rSI2j37TGQB/VGihHGofP5ru/UyVFrf8v13wfZcmOUP6edi7RuyWGkblqT
-         Baew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MU4B5Z3680XHcQVk6C2PWPbSktTT7euqohP8tzAAGDU=;
-        b=dIQpX/U4f54S7kcJMYWWR3m++RnStrE8G+cxqc+xcoB3LkPOWM9URqZz010zAs8Ohg
-         M3h/acfY3rgP4sUW3fhXREMrhE+Z0CwJDD3fXrW8frNFdJQD2V0cKkEYOD6QqRUwshuy
-         0pLLrzl7si2vEZCzY5lrJEPFEniG+raS9tmZhth4ZqsEDv+3VgzELABu/0D64k22LlIJ
-         WdE5wXBEy6eC8na1QT7jL0UZYRfwL4w8QT++msjK07znRkMpfjnz3ybyBlJ+vKabpIx2
-         VM+tH2++Wg4TTmFx5BN2CIlkjqCd9HqHE8FjbqPyBFHWMR/cVwrzhEbO3Wj1QxhrMvO5
-         BLPA==
-X-Gm-Message-State: APjAAAW2ag7WG8lBVzuNNQRmhbm2zTJLhjn995Fz9Q15pjN6cp221j1R
-        73xLp536qOtHfGfjYpPVVmbQ8A==
-X-Google-Smtp-Source: APXvYqyDchkIFxqXv9vZv2vVtfSKicJHrTSHbvL1iHYeeGXIMj5RZcbhulDfvEAjwXyW4XgY1fhWXA==
-X-Received: by 2002:a17:902:47:: with SMTP id 65mr3362715pla.81.1573056409920;
-        Wed, 06 Nov 2019 08:06:49 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id o20sm32187971pfp.16.2019.11.06.08.06.45
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 08:06:48 -0800 (PST)
-Subject: Re: [PATCH 43/50] xtensa: Add show_stack_loglvl()
-To:     Petr Mladek <pmladek@suse.com>, Max Filippov <jcmvbkbc@gmail.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        Chris Zankel <chris@zankel.net>,
-        "open list:TENSILICA XTENSA PORT (xtensa)" 
-        <linux-xtensa@linux-xtensa.org>
-References: <20191106030542.868541-1-dima@arista.com>
- <20191106030542.868541-44-dima@arista.com>
- <CAMo8Bf+q0j81VZeUQdvCkXt131uzSBfJ0N7RTe7+NpjRkVpzdA@mail.gmail.com>
- <20191106081541.soxefwyvu3o72tqg@pathway.suse.cz>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <836351a4-581d-325f-862f-99c0c4f98e19@arista.com>
-Date:   Wed, 6 Nov 2019 16:06:44 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 6 Nov 2019 11:07:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:42378 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbfKFQH4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:07:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 76AA846A;
+        Wed,  6 Nov 2019 08:07:55 -0800 (PST)
+Received: from [10.1.196.37] (e121345-lin.cambridge.arm.com [10.1.196.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EFE5D3F71A;
+        Wed,  6 Nov 2019 08:07:53 -0800 (PST)
+Subject: Re: Linux-next-20191106 : arm64: Internal error: Oops: 96000007
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        catalin.marinas@arm.com, will@kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        open list <linux-kernel@vger.kernel.org>,
+        lkft-triage@lists.linaro.org, Mark Brown <broonie@kernel.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Linux-Next Mailing List <linux-next@vger.kernel.org>
+References: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bfced8c8-c64f-982e-8797-d48b5ec65291@arm.com>
+Date:   Wed, 6 Nov 2019 16:07:52 +0000
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191106081541.soxefwyvu3o72tqg@pathway.suse.cz>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 8:15 AM, Petr Mladek wrote:
-> On Tue 2019-11-05 20:13:22, Max Filippov wrote:
-[..]
->>> @@ -511,16 +512,21 @@ void show_stack(struct task_struct *task, unsigned long *sp)
->>>                 sp = stack_pointer(task);
->>>         stack = sp;
->>>
->>> -       pr_info("Stack:\n");
->>> +       printk("%sStack:\n", loglvl);
->>>
->>>         for (i = 0; i < kstack_depth_to_print; i++) {
->>>                 if (kstack_end(sp))
->>>                         break;
->>> -               pr_cont(" %08lx", *sp++);
->>> +               printk("%s %08lx", loglvl, *sp++);
+On 06/11/2019 15:56, Naresh Kamboju wrote:
+> arm64 devices Juno-r2, hikey (Hi6220) and dragonboard (APQ 8016 SBC)
+> boot failed while running linux next 20191106 kernel. But qemu_arm64
+> boot pass.
 > 
-> KERN_CONT can be combined with any other loglevel.
-> So you could keep using pr_cont() together with explicit loglevel:
+> Crash log from dragonboard,
 > 
-> 			pr_cont("%s %08lx", loglvl, *sp++);
+> [   10.656527] Unable to handle kernel paging request at virtual
+> address ffff800011b3ef68
+> [   10.656580] Mem abort info:
+> [   10.656587]   ESR = 0x96000007
+> [   10.656594]   EC = 0x25: DABT (current EL), IL = 32 bits
+> [   10.656600]   SET = 0, FnV = 0
+> [   10.656605]   EA = 0, S1PTW = 0
+> [   10.656610] Data abort info:
+> [   10.656616]   ISV = 0, ISS = 0x00000007
+> [   10.656621]   CM = 0, WnR = 0
+> [   10.656629] swapper pgtable: 4k pages, 48-bit VAs, pgdp=0000000081980000
+> [   10.656635] [ffff800011b3ef68] pgd=00000000bfeff003,
+> pud=00000000bfefe003, pmd=00000000bfefa003, pte=0000000000000000
+> [   10.656887] Internal error: Oops: 96000007 [#1] PREEMPT SMP
+> [   10.656894] Modules linked in: adv7511(+) cec msm(+) mdt_loader
+> drm_kms_helper qcom_rng drm socinfo rmtfs_mem qrtr fuse
+> [   10.656928] CPU: 0 PID: 230 Comm: systemd-udevd Not tainted
+> 5.4.0-rc6-next-20191106 #1
+> [   10.656933] Hardware name: Qualcomm Technologies, Inc. APQ 8016 SBC (DT)
+> [   10.656939] pstate: a0000085 (NzCv daIf -PAN -UAO)
+> [   10.656953] pc : __of_match_node.part.5+0x48/0x88
+> [   10.656960] lr : of_match_node+0x40/0x70
+> [   10.656964] sp : ffff8000132534d0
+> [   10.656968] x29: ffff8000132534d0 x28: ffff8000101d6260
+> [   10.656977] x27: ffff80001241a7a0 x26: ffff80001241a7a0
+> [   10.656985] x25: ffff80001241a860 x24: ffff80001241a6e8
+> [   10.656993] x23: 0000000000000000 x22: ffff00003fd08010
+> [   10.657001] x21: 0000000000000000 x20: 0000000000000000
+> [   10.657008] x19: ffff800011b3ef68 x18: ffffffffffffffff
+> [   10.657016] x17: 0000000000000000 x16: 0000000000000000
+> [   10.657024] x15: ffff8000121ffa48 x14: 4e3a666f3d534149
+> [   10.657032] x13: 0000000000000040 x12: 0000000000000028
+> [   10.657039] x11: 0000000000000001 x10: 0101010101010101
+> [   10.657047] x9 : ffff800012532c50 x8 : 0000000000000050
+> [   10.657055] x7 : ffff800010df1164 x6 : 0000000000000000
+> [   10.657063] x5 : 00000000a4fd7f12 x4 : ffff00003bd7cd18
+> [   10.657070] x3 : 0000000000000000 x2 : 0000000000000001
+> [   10.657078] x1 : ffff00003fd08010 x0 : ffff800010df1178
+> [   10.657086] Call trace:
+> [   10.657094]  __of_match_node.part.5+0x48/0x88
 
-Yes, that's what I had, but than misread the printk() code and thought
-that it doesn't add '\n' to messages.. Will fix.
+FWIW this smells like a builtin driver had its of_device_id table marked 
+__init, leaving drv->of_match_table as a dangling pointer to freed 
+memory by this point.
 
-> It should fix the problems reported below.
+Robin.
+
+> [   10.657099]  of_match_node+0x40/0x70
+> [   10.657106]  of_match_device+0x30/0x50
+> [   10.657115]  platform_match+0x4c/0xe8
+> [   10.657122]  __device_attach_driver+0x3c/0x120
+> [   10.657128]  bus_for_each_drv+0x78/0xd8
+> [   10.657135]  __device_attach+0xe8/0x170
+> [   10.657141]  device_initial_probe+0x24/0x30
+> [   10.657148]  bus_probe_device+0xa0/0xa8
+> [   10.657154]  device_add+0x4fc/0x7a8
+> [   10.657160]  of_device_add+0x50/0x68
+> [   10.657167]  of_platform_device_create_pdata+0xf0/0x170
+> [   10.657173]  of_platform_bus_create+0x174/0x550
+> [   10.657180]  of_platform_populate+0x94/0x158
+> [   10.657358]  msm_pdev_probe+0x74/0x358 [msm]
+> [   10.657369]  platform_drv_probe+0x58/0xa8
+> [   10.657377]  really_probe+0x290/0x488
+> [   10.657384]  driver_probe_device+0x12c/0x148
+> [   10.657391]  device_driver_attach+0x74/0x98
+> [   10.657397]  __driver_attach+0xc4/0x178
+> [   10.657403]  bus_for_each_dev+0x84/0xd8
+> [   10.657409]  driver_attach+0x30/0x40
+> [   10.657416]  bus_add_driver+0x170/0x258
+> [   10.657423]  driver_register+0x64/0x118
+> [   10.657430]  __platform_driver_register+0x54/0x60
+> [   10.657582]  msm_drm_register+0x60/0x6c [msm]
+> [   10.657592]  do_one_initcall+0x94/0x460
+> [   10.657600]  do_init_module+0x60/0x204
+> [   10.657606]  load_module+0x2078/0x2720
+> [   10.657613]  __do_sys_finit_module+0x100/0x120
+> [   10.657619]  __arm64_sys_finit_module+0x28/0x38
+> [   10.657628]  el0_svc_common.constprop.2+0x7c/0x180
+> [   10.657635]  el0_svc_handler+0x34/0xa0
+> [   10.657643]  el0_sync_handler+0x124/0x1f8
+> [   10.657649]  el0_sync+0x140/0x180
+> [   10.657659] Code: 1a80d281 9a93d2b5 2a0103f4 91032273 (39400264)
+> [   10.657667] ---[ end trace 8b4c2740f71524d1 ]---
 > 
-> Well, the preferred solution would be to snprintf() the continuous
-> line into a temporary buffer. And printk() it when it is complete.
-> pr_cont() is not reliable when more CPUs print at the same time.
-
-Yep. Not sure if doing it now in those per-arch patches or keep the
-changes to minimum.
-
+> Full test log,
+> https://lkft.validation.linaro.org/scheduler/job/994051#L1396
 > 
->> This change doesn't work well with printk timestamps, it changes
->> the following output on xtensa architecture
->>
->> [    3.404675] Stack:
->> [    3.404861]  a05773e2 00000018 bb03dc34 bb03dc30 a0008640 bb03dc70
->> ba9ba410 37c3f000
->> [    3.405414]  37c3f000 d7c3f000 00000800 bb03dc50 a02b97ed bb03dc90
->> ba9ba400 ba9ba410
->> [    3.405969]  a05fc1bc bbff28dc 00000000 bb03dc70 a02b7fb9 bb03dce0
->> ba9ba410 a0579044
->>
->> into this:
->> [    3.056825] Stack:
->> [    3.056963]  a04ebb20
->> [    3.056995]  bb03dc10
->> [    3.057138]  00000001
->> [    3.057277]  bb03dc10
->> [    3.057815]  a00083ca
->> [    3.057965]  bb03dc50
->> [    3.058107]  ba9ba410
->> [    3.058247]  37c3f000
->> [    3.058387]
->> [    3.058584]  a05773e2
->> [    3.058614]  00000001
->> [    3.058755]  a05ca0bc
->> [    3.058896]  bb03dc30
->> [    3.059035]  a000865c
->> [    3.059180]  bb03dc70
->> [    3.059319]  ba9ba410
->> [    3.059459]  37c3f000
->> [    3.059598]
->> [    3.059795]  37c3f000
->> [    3.059824]  d7c3f000
->> [    3.059964]  00000800
->> [    3.060103]  bb03dc50
->> [    3.060241]  a02b9809
->> [    3.060379]  bb03dc90
->> [    3.060519]  ba9ba400
->> [    3.060658]  ba9ba410
->> [    3.060796]
-
-Hey Max,
-
-thanks for the testing and the report - will fix it in v2.
-
-Thanks,
-          Dmitry
+> metadata:
+>    git branch: master
+>    git repo: https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git
+>    git commit: dcd34bd234181ec74f081c7d0025204afe6b213e
+>    git describe: next-20191106
+>    make_kernelversion: 5.4.0-rc6
+>    kernel-config:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/640/config
+>    build-location:
+> http://snapshots.linaro.org/openembedded/lkft/lkft/sumo/dragonboard-410c/lkft/linux-next/640
+> 
+> 
+> Best regards
+> Naresh Kamoju
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
