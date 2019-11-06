@@ -2,196 +2,166 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D51DCC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D00BBC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8ACD2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9AF162166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732133AbfKFWWN (ORCPT
+        id S1727747AbfKFWWz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:22:13 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:41754 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfKFWWN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:22:13 -0500
-Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A9B4FC05A1D0
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 22:22:12 +0000 (UTC)
-Received: by mail-qk1-f198.google.com with SMTP id p68so26446544qkf.9
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:22:12 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=dLGSnQ4fkDuSeMipTwar+6JmifzoOygUiu/8/zw4SzM=;
-        b=TLDGE337TrgjTxm40qyKiIAG99zEDLFxk26CHzbtCb4WU1TEeczoH7iIfjbqK5WkiJ
-         ejtlMHzED0RxNNsu0z5sv53KHjc5y1UcZ9ZRsYCQ/IFhZYqUKvZGJ4UDVAyiguuSASeQ
-         qSmUssIH3E6+1x3eP+i/DtVtnwqJedTwv9lTf9/a/SYza4gw/C50B/n2xyBcjKIA5l/u
-         5PRBVcKr6kO5TZYPz7ilzd1+hpoUZH8JxA5oepD35X3aFAhtU22mQW2vU7BW4MYkHvCV
-         5br53HBEc2puiEdiixvgC2kyWUB5HwxQ1TzYwJ1yWudt27srJyB5sHnu7cWbhMr+sleU
-         I+aw==
-X-Gm-Message-State: APjAAAVcDF1dOoCG/TDlYeM8K6c+UdLA8NjTq0GUBI5T0Uy2iMw66AVl
-        2xrYCtrC4TIhhKpZgxDlUppBl7NCVWQfcTJRcwsVDRV1vzcR8DRHUSBktqPYlBtV9/3F0ODBBn6
-        jI07av5C5CUgpRVh9N83OewK5
-X-Received: by 2002:ac8:22b5:: with SMTP id f50mr323365qta.229.1573078931910;
-        Wed, 06 Nov 2019 14:22:11 -0800 (PST)
-X-Google-Smtp-Source: APXvYqzHQnmM1Vt9DyGkXwPmrF6WH+1xUM4DgxYXTh69ua35Qf6sOfTXB/8AHJsSBTp5UTA69gXkkA==
-X-Received: by 2002:ac8:22b5:: with SMTP id f50mr323334qta.229.1573078931573;
-        Wed, 06 Nov 2019 14:22:11 -0800 (PST)
-Received: from labbott-redhat.redhat.com (pool-96-235-39-235.pitbpa.fios.verizon.net. [96.235.39.235])
-        by smtp.gmail.com with ESMTPSA id 32sm156131qth.16.2019.11.06.14.22.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 14:22:10 -0800 (PST)
-From:   Laura Abbott <labbott@redhat.com>
-To:     Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     Laura Abbott <labbott@redhat.com>, netdev@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>, clipos@ssi.gouv.fr,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-Subject: [PATCH] mm: slub: Really fix slab walking for init_on_free
-Date:   Wed,  6 Nov 2019 17:22:08 -0500
-Message-Id: <20191106222208.26815-1-labbott@redhat.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 6 Nov 2019 17:22:55 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42470 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726798AbfKFWWz (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:22:55 -0500
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6MG2vb036806
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 17:22:53 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w455ebkrd-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:22:53 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Wed, 6 Nov 2019 22:22:50 -0000
+Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Nov 2019 22:22:45 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6MM9FI36569426
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Nov 2019 22:22:09 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 9F61FA4051;
+        Wed,  6 Nov 2019 22:22:44 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D218EA404D;
+        Wed,  6 Nov 2019 22:22:40 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.236.142])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  6 Nov 2019 22:22:40 +0000 (GMT)
+Date:   Wed, 6 Nov 2019 14:22:37 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Michael Roth <mdroth@linux.vnet.ibm.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Alexey Kardashevskiy <aik@ozlabs.ru>,
+        linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, mpe@ellerman.id.au, paulus@ozlabs.org,
+        hch@lst.de, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com,
+        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
+        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
+ <265679db-9cb3-1660-0cf6-97f740b1b48b@ozlabs.ru>
+ <20191106130558-mutt-send-email-mst@kernel.org>
+ <157306632211.17570.17567742230498149897@sif>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <157306632211.17570.17567742230498149897@sif>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19110622-4275-0000-0000-0000037B7171
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110622-4276-0000-0000-0000388EC0D6
+Message-Id: <20191106222237.GE5201@oc0525413822.ibm.com>
+Subject: RE: [RFC v1 0/2] Enable IOMMU support for pseries Secure VMs
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911060212
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit 1b7e816fc80e ("mm: slub: Fix slab walking for init_on_free")
-fixed one problem with the slab walking but missed a key detail:
-When walking the list, the head and tail pointers need to be updated
-since we end up reversing the list as a result. Without doing this,
-bulk free is broken. One way this is exposed is a NULL pointer with
-slub_debug=F:
+On Wed, Nov 06, 2019 at 12:52:02PM -0600, Michael Roth wrote:
+> Quoting Michael S. Tsirkin (2019-11-06 12:06:37)
+> > On Wed, Nov 06, 2019 at 12:59:50PM +1100, Alexey Kardashevskiy wrote:
+> > > 
+> > > 
+> > > On 05/11/2019 08:28, Ram Pai wrote:
+> > > > This patch series enables IOMMU support for pseries Secure VMs.
+> > > > 
+> > > > 
+> > > > Tested using QEMU command line option:
+> > > > 
+> > > >  "-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
+> > > >     iommu_platform=on,disable-modern=off,disable-legacy=on"
+> > > >  and 
+> > > > 
+> > > >  "-device virtio-blk-pci,scsi=off,bus=pci.0,
+> > > >     addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
+> > > >     iommu_platform=on,disable-modern=off,disable-legacy=on"
+> > > 
+> > > 
+> > > Worth mentioning that SLOF won't boot with such devices as SLOF does not know about iommu_platform=on.
+> > 
+> > Shouldn't be hard to support: set up the iommu to allow everything
+> > and ack the feature. Right?
+> 
+> It's not a static/linear mapping in this case so we need calls to map DMA
+> buffers as-needed. I've gotten it to boot with virtio-blk, but the patches
+> have some hacks and need cleanup, hoping to post them soon.
+> 
+> I'm a bit perplexed how we would manage to boot a guest without those
+> changes though, this is what I get with qemu 4.1.0:
+> 
+>   qemu-system-ppc64 -M pseries,ic-mode=xics -m 512M -bios /home/mdroth/w/build/qemu-4.1.0-build/pc-bios/slof.bin -device virtio-blk-pci,drive=drive0,id=blk0,disable-modern=off,disable-legacy=on,iommu_platform=on -drive file=/home/mdroth/vm/bionic-server-cloudimg-ppc64el.img,if=none,id=drive0 -trace enable=spapr_iommu\*,file=trace.out -monitor unix:/tmp/mon.sock,server,nowait -vga none -nographic
+>   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-cfpc=workaround
+>   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-sbbc=workaround
+>   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-ibs=workaround
+>   
+>   
+>   SLOF **********************************************************************
+>   QEMU Starting
+>    Build Date = Jul  3 2019 12:26:14
+>    FW Version = git-ba1ab360eebe6338
+>    Press "s" to enter Open Firmware.
+>   
+>   Populating /vdevice methods
+>   Populating /vdevice/vty@71000000
+>   Populating /vdevice/nvram@71000001
+>   Populating /vdevice/l-lan@71000002
+>   Populating /vdevice/v-scsi@71000003
+>          SCSI: Looking for devices
+>             8200000000000000 CD-ROM   : "QEMU     QEMU CD-ROM      2.5+"
+>   Populating /pci@800000020000000
+>                        00 0000 (D) : 1af4 1042    virtio [ block ]
+>   No NVRAM common partition, re-initializing...
+>   Scanning USB
+>   Using default console: /vdevice/vty@71000000
+>   
+>     Welcome to Open Firmware
+>   
+>     Copyright (c) 2004, 2017 IBM Corporation All rights reserved.
+>     This program and the accompanying materials are made available
+>     under the terms of the BSD License available at
+>     https://urldefense.proofpoint.com/v2/url?u=http-3A__www.opensource.org_licenses_bsd-2Dlicense.php&d=DwIFaQ&c=jf_iaSHvJObTbx-siA1ZOg&r=m-UrKChQVkZtnPpjbF6YY99NbT8FBByQ-E-ygV8luxw&m=-xG4gaWE7BANKGOFx0wmF5ZgZVd8A1r-tsN44n4JUW4&s=QcpPgRqeZAk1pICsA-kk2gNKKiMJLASiPVi-hPinur0&e= 
+>   
+>   
+>   Trying to load:  from: /pci@800000020000000/scsi@0 ... virtioblk_init: failed
+>   virtioblk_transfer: Access beyond end of device!
+> 
+> And then it hangs. This is with TCG so maybe it behaves differently with
+> KVM, but that's the result I would expect with the current SLOF code.
 
-=============================================================================
-BUG skbuff_head_cache (Tainted: G                T): Object already free
------------------------------------------------------------------------------
+you are right. In my case, I was providing the kernel image
+on the qemu command line. So there was no need for SLOF to read the
+virtio disk. Hence it continued without hanging. SLOF needs to be enhanced
+to support IOMMU.
 
-INFO: Slab 0x000000000d2d2f8f objects=16 used=3 fp=0x0000000064309071 flags=0x3fff00000000201
-BUG: kernel NULL pointer dereference, address: 0000000000000000
-PGD 0 P4D 0
-Oops: 0000 [#1] PREEMPT SMP PTI
-CPU: 0 PID: 0 Comm: swapper/0 Tainted: G    B           T 5.3.8 #1
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 0.0.0 02/06/2015
-RIP: 0010:print_trailer+0x70/0x1d5
-Code: 28 4d 8b 4d 00 4d 8b 45 20 81 e2 ff 7f 00 00 e8 86 ce ef ff 8b 4b 20 48 89 ea 48 89 ee 4c 29 e2 48 c7 c7 90 6f d4 89 48 01 e9 <48> 33 09 48 33 8b 70 01 00 00 e8 61 ce ef ff f6 43 09 04 74 35 8b
-RSP: 0018:ffffbf7680003d58 EFLAGS: 00010046
-RAX: 000000000000005d RBX: ffffa3d2bb08e540 RCX: 0000000000000000
-RDX: 00005c2d8fdc2000 RSI: 0000000000000000 RDI: ffffffff89d46f90
-RBP: 0000000000000000 R08: 0000000000000242 R09: 000000000000006c
-R10: 0000000000000000 R11: 0000000000000030 R12: ffffa3d27023e000
-R13: fffff11080c08f80 R14: ffffa3d2bb047a80 R15: 0000000000000002
-FS:  0000000000000000(0000) GS:ffffa3d2be400000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000000000000 CR3: 000000007a6c4000 CR4: 00000000000006f0
-Call Trace:
- <IRQ>
- free_debug_processing.cold.37+0xc9/0x149
- ? __kfree_skb_flush+0x30/0x40
- ? __kfree_skb_flush+0x30/0x40
- __slab_free+0x22a/0x3d0
- ? tcp_wfree+0x2a/0x140
- ? __sock_wfree+0x1b/0x30
- kmem_cache_free_bulk+0x415/0x420
- ? __kfree_skb_flush+0x30/0x40
- __kfree_skb_flush+0x30/0x40
- net_rx_action+0x2dd/0x480
- __do_softirq+0xf0/0x246
- irq_exit+0x93/0xb0
- do_IRQ+0xa0/0x110
- common_interrupt+0xf/0xf
- </IRQ>
 
-Given we're now almost identical to the existing debugging
-code which correctly walks the list, combine with that.
-
-Link: https://lkml.kernel.org/r/20191104170303.GA50361@gandi.net
-Reported-by: Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-Fixes: 1b7e816fc80e ("mm: slub: Fix slab walking for init_on_free")
-Signed-off-by: Laura Abbott <labbott@redhat.com>
----
- mm/slub.c | 39 +++++++++------------------------------
- 1 file changed, 9 insertions(+), 30 deletions(-)
-
-diff --git a/mm/slub.c b/mm/slub.c
-index dac41cf0b94a..d2445dd1c7ed 100644
---- a/mm/slub.c
-+++ b/mm/slub.c
-@@ -1432,12 +1432,15 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
- 	void *old_tail = *tail ? *tail : *head;
- 	int rsize;
- 
--	if (slab_want_init_on_free(s)) {
--		void *p = NULL;
-+	/* Head and tail of the reconstructed freelist */
-+	*head = NULL;
-+	*tail = NULL;
- 
--		do {
--			object = next;
--			next = get_freepointer(s, object);
-+	do {
-+		object = next;
-+		next = get_freepointer(s, object);
-+
-+		if (slab_want_init_on_free(s)) {
- 			/*
- 			 * Clear the object and the metadata, but don't touch
- 			 * the redzone.
-@@ -1447,29 +1450,8 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
- 							   : 0;
- 			memset((char *)object + s->inuse, 0,
- 			       s->size - s->inuse - rsize);
--			set_freepointer(s, object, p);
--			p = object;
--		} while (object != old_tail);
--	}
--
--/*
-- * Compiler cannot detect this function can be removed if slab_free_hook()
-- * evaluates to nothing.  Thus, catch all relevant config debug options here.
-- */
--#if defined(CONFIG_LOCKDEP)	||		\
--	defined(CONFIG_DEBUG_KMEMLEAK) ||	\
--	defined(CONFIG_DEBUG_OBJECTS_FREE) ||	\
--	defined(CONFIG_KASAN)
- 
--	next = *head;
--
--	/* Head and tail of the reconstructed freelist */
--	*head = NULL;
--	*tail = NULL;
--
--	do {
--		object = next;
--		next = get_freepointer(s, object);
-+		}
- 		/* If object's reuse doesn't have to be delayed */
- 		if (!slab_free_hook(s, object)) {
- 			/* Move object to the new freelist */
-@@ -1484,9 +1466,6 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
- 		*tail = NULL;
- 
- 	return *head != NULL;
--#else
--	return true;
--#endif
- }
- 
- static void *setup_object(struct kmem_cache *s, struct page *page,
--- 
-2.21.0
+RP
 
