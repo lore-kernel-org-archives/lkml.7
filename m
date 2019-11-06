@@ -2,158 +2,107 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 340EBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59377C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C142173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 23B8B2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uNP1KXd/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EgpPWSF8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731370AbfKFIc3 (ORCPT
+        id S1731464AbfKFIco (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:32:29 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:41973 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729951AbfKFIc3 (ORCPT
+        Wed, 6 Nov 2019 03:32:44 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:47612 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729951AbfKFIcn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:32:29 -0500
-Received: by mail-lj1-f195.google.com with SMTP id m9so25023824ljh.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 00:32:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UfU4NeD6tWwvbn+OCuUBpeKGLeW4/SjBIuSOjEeExYc=;
-        b=uNP1KXd/gAPRLd0Eazn3Zf4B0u8fajPWtMoC9BhRbuQx6jrzvJIGhOKHc48SewNhIg
-         +p0aF/NYvyVmb9Z2R71vkEHF+YP0R5eZ0oKTyc1Bx7MGXTDlPXmwXkxAVfv6hyVibwXE
-         vNwWUTMz2t1bgLmyV/Iu7TrlvZx7KiiyUBdkDw0OLrjxmeBEUJkNmTCw4xdEZ/19a4Gp
-         8BiZlp/7mn4WkmyiVuD0czhy6lzDAWn4qXJEjXvSwfFb5k1x+r04X1H7OWziYK3NzUxh
-         +4XXa41XBfE4RfdqcRhV+r6tugdU/FQh9l6Gr8VqABhaCV2HpqHS9E4YuaI9kPs8b0Ma
-         crTQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UfU4NeD6tWwvbn+OCuUBpeKGLeW4/SjBIuSOjEeExYc=;
-        b=fVnxC6yFcf+g989+jgQlQY4pLuGBevwrVxKn90t1souZiS4WiYIbL7nutmJb7zW58f
-         yUafhvLj8r2iOb4zLcgmcvdIGG++0yt0rSMdBYDJmcwWkl4rGPA/cCVmKchTgxqJ7w2N
-         IqR5ZCo8GXFqesQs2RXS+g4VUINLmGk9LVEiddBbqzOYPk/6Jgnj/4KTL1taXyjoBOo0
-         7lTPL+qrDAOG5T1hOT8XBkV4Gf6tLb6cIMey+QE86SeP4v9PAMchzct2lRKGHQ7wNTS9
-         zK7OVBcntUXt9TG1EDf1oVEDAHmCJPTdURtL3WsLhcS+IGWFgCDadkkns6Xk7MzT/abQ
-         ErOA==
-X-Gm-Message-State: APjAAAX1Rv7pTNbIWH2SzvCytlZBOSrFQD3daG5JBEz5LYBXy5TrPKC9
-        cS6ZRVr2UfBZm1IWJ1wODEsIYk31Hapxq3ddZ4eBIg==
-X-Google-Smtp-Source: APXvYqyUjaV0HLLoLBDZjU01SCdwFqenALueMpCsP0M5G1ItAp8nKWFv5O/8RqXbxvrD1P9/GlN7mNy08s4jH85/gCY=
-X-Received: by 2002:a2e:b053:: with SMTP id d19mr1001036ljl.36.1573029147514;
- Wed, 06 Nov 2019 00:32:27 -0800 (PST)
+        Wed, 6 Nov 2019 03:32:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=JQcWfG3124w8lNoztrGuavAOXYtN6kCwqs+HotAy+So=; b=EgpPWSF8eMk3N3qqPjbk4Jt+E
+        SxjSom1p1GGu+dLQgS/BgYBczHGQ+p511sCdvLqyGafRJJ3MewDobDhoOoP/iu/f1hupBJn7Viylt
+        5SmKD5yKloD2DnB0SRnD1QD9956xOIjtGzztvF54GV9+JigeAgpM0y8s0OwQyQiWbPhB8a0jNbOul
+        H1wTz4VDTNU2OdiWY9t/KRa04hsmhYy/8wc3kzg/MXvQ5tQxZNhYm8Jxw5fD1pY0Zx+YrsEhdroIC
+        3OMA9Apo5UMREI2WNL8wVJjWkxr16RFRMQL8kMSC6JL4fE5HHvO5ud0e1R6nd9vhad47eakOmeV2E
+        0Ht94iGTA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSGjg-0004RW-JA; Wed, 06 Nov 2019 08:32:16 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id C9090301747;
+        Wed,  6 Nov 2019 09:31:08 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id C85132020D8FD; Wed,  6 Nov 2019 09:32:12 +0100 (CET)
+Date:   Wed, 6 Nov 2019 09:32:12 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>, kvm@vger.kernel.org,
+        x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Jim Mattson <jmattson@google.com>,
+        Liran Alon <liran.alon@oracle.com>,
+        linux-kernel@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>
+Subject: Re: [PATCH RFC] KVM: x86: tell guests if the exposed SMT topology is
+ trustworthy
+Message-ID: <20191106083212.GO4131@hirez.programming.kicks-ass.net>
+References: <20191105161737.21395-1-vkuznets@redhat.com>
+ <20191105200218.GF3079@worktop.programming.kicks-ass.net>
+ <51c9fe0c-0bda-978c-27f7-85fe7e59e91d@redhat.com>
 MIME-Version: 1.0
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org> <1572979786-20361-4-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1572979786-20361-4-git-send-email-thara.gopinath@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 6 Nov 2019 09:32:16 +0100
-Message-ID: <CAKfTPtBrOdiN+wBfy-1cHr65d48-cBZc3LS7Jt_65Ptssb0Gpg@mail.gmail.com>
-Subject: Re: [Patch v5 3/6] sched/fair: Enable periodic update of average
- thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <51c9fe0c-0bda-978c-27f7-85fe7e59e91d@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 at 19:49, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Introduce support in CFS periodic tick and other bookkeeping apis
-> to trigger the process of computing average thermal pressure for a
-> cpu. Also consider avg_thermal.load_avg in others_have_blocked
-> which allows for decay of pelt signals.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
-> ---
->
-> v4->v5:
->         - Updated both versions of update_blocked_averages to trigger the
->           process of computing average thermal pressure.
->         - Updated others_have_blocked to considerd avg_thermal.load_avg.
->
->  kernel/sched/fair.c | 10 ++++++++++
->  1 file changed, 10 insertions(+)
->
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 2e907cc..9fb0494 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -92,6 +92,8 @@ const_debug unsigned int sysctl_sched_migration_cost  = 500000UL;
->   */
->  static DEFINE_PER_CPU(unsigned long, thermal_pressure);
->
-> +static void trigger_thermal_pressure_average(struct rq *rq);
-> +
->  #ifdef CONFIG_SMP
->  /*
->   * For asym packing, by default the lower numbered CPU has higher priority.
-> @@ -7493,6 +7495,9 @@ static inline bool others_have_blocked(struct rq *rq)
->         if (READ_ONCE(rq->avg_dl.util_avg))
->                 return true;
->
-> +       if (READ_ONCE(rq->avg_thermal.load_avg))
-> +               return true;
-> +
->  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
->         if (READ_ONCE(rq->avg_irq.util_avg))
->                 return true;
-> @@ -7580,6 +7585,8 @@ static void update_blocked_averages(int cpu)
->                 done = false;
->
->         update_blocked_load_status(rq, !done);
-> +
-> +       trigger_thermal_pressure_average(rq);
+On Wed, Nov 06, 2019 at 12:51:30AM +0100, Paolo Bonzini wrote:
+> On 05/11/19 21:02, Peter Zijlstra wrote:
+> > On Tue, Nov 05, 2019 at 05:17:37PM +0100, Vitaly Kuznetsov wrote:
+> >> Virtualized guests may pick a different strategy to mitigate hardware
+> >> vulnerabilities when it comes to hyper-threading: disable SMT completely,
+> >> use core scheduling, or, for example, opt in for STIBP. Making the
+> >> decision, however, requires an extra bit of information which is currently
+> >> missing: does the topology the guest see match hardware or if it is 'fake'
+> >> and two vCPUs which look like different cores from guest's perspective can
+> >> actually be scheduled on the same physical core. Disabling SMT or doing
+> >> core scheduling only makes sense when the topology is trustworthy.
+> >>
+> >> Add two feature bits to KVM: KVM_FEATURE_TRUSTWORTHY_SMT with the meaning
+> >> that KVM_HINTS_TRUSTWORTHY_SMT bit answers the question if the exposed SMT
+> >> topology is actually trustworthy. It would, of course, be possible to get
+> >> away with a single bit (e.g. 'KVM_FEATURE_FAKE_SMT') and not lose backwards
+> >> compatibility but the current approach looks more straightforward.
+> > 
+> > The only way virt topology can make any sense what so ever is if the
+> > vcpus are pinned to physical CPUs.
+> 
+> This is a subset of the requirements for "trustworthy" SMT.  You can have:
+> 
+> - vCPUs pinned to two threads in the same core and exposed as multiple
+> cores in the guest
 
-This must be called before others_have_blocked() to take into account
-the latest update
+Why the .... would one do anything like that?
 
->         rq_unlock_irqrestore(rq, &rf);
->  }
->
-> @@ -7646,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
->         update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
->         update_irq_load_avg(rq, 0);
->         update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
-> +       trigger_thermal_pressure_average(rq);
+> - vCPUs from different guests pinned to two threads in the same core
+> 
+> and that would be okay as far as KVM_HINTS_REALTIME is concerned, but
+> would still allow exploitation of side-channels, respectively within the
+> VM and between VMs.
 
-idem
-
->         rq_unlock_irqrestore(rq, &rf);
->  }
->
-> @@ -9939,6 +9947,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
->
->         update_misfit_status(curr, rq);
->         update_overutilized_status(task_rq(curr));
-> +
-
-remove blank line
-
-> +       trigger_thermal_pressure_average(rq);
->  }
->
->  /*
-> --
-> 2.1.4
->
+Hardly, RT really rather would not have SMT. SMT is pretty crap for
+determinism.
