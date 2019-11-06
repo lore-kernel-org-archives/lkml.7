@@ -2,193 +2,72 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 71446C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:46:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5989C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 49DFC2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:46:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D84E222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:48:21 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Q/we3jVu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732716AbfKFVqI (ORCPT
+        id S1732579AbfKFVsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:46:08 -0500
-Received: from mx2.suse.de ([195.135.220.15]:35906 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726779AbfKFVpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:45:49 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id CC0CCAE35;
-        Wed,  6 Nov 2019 21:45:46 +0000 (UTC)
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Andrew Murray <andrew.murray@arm.com>, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>
-Cc:     james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe device
-Date:   Wed,  6 Nov 2019 22:45:23 +0100
-Message-Id: <20191106214527.18736-2-nsaenzjulienne@suse.de>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106214527.18736-1-nsaenzjulienne@suse.de>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
+        Wed, 6 Nov 2019 16:48:20 -0500
+Received: from mail.andi.de1.cc ([85.214.55.253]:58440 "EHLO mail.andi.de1.cc"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726798AbfKFVsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:48:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
+        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=8xhVIvuFQsMtf2/Cr1aLwZDItnhm47cEr04p7WxqBBk=; b=Q/we3jVuZNUW3yjrBpx7D4lMTH
+        gAO8zCmBEd13rar2osstULmfass26cqb+yH6o1ONljI4wxNE7vqaGpj2mMgwktY/iLB6Tz/102TCL
+        7IA0//NqcDKe2TaOdk/lVZSJ6+qLbV0IEPGi2t1uVEcfcw7Z28Hzsc3Cm/VsBhEY2q6U=;
+Received: from p200300ccff0a4d001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:1a3d:a2ff:febf:d33a] helo=aktux)
+        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <andreas@kemnade.info>)
+        id 1iST9y-0004Vn-JQ; Wed, 06 Nov 2019 22:48:14 +0100
+Date:   Wed, 6 Nov 2019 22:48:13 +0100
+From:   Andreas Kemnade <andreas@kemnade.info>
+To:     lee.jones@linaro.org, a.zummo@towertech.it,
+        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
+        linux-rtc@vger.kernel.org, phh@phh.me, b.galvani@gmail.com,
+        stefan@agner.ch, letux-kernel@openphoenux.org
+Subject: Re: [PATCH v2 2/5] mfd: rn5t618: add irq support
+Message-ID: <20191106224813.19cb26ea@aktux>
+In-Reply-To: <20191031213835.11390-3-andreas@kemnade.info>
+References: <20191031213835.11390-1-andreas@kemnade.info>
+        <20191031213835.11390-3-andreas@kemnade.info>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jim Quinlan <james.quinlan@broadcom.com>
+On Thu, 31 Oct 2019 22:38:32 +0100
+Andreas Kemnade <andreas@kemnade.info> wrote:
 
-The DT bindings description of the brcmstb PCIe device is described.
-This node can only be used for now on the Raspberry Pi 4.
+> This adds support for irq handling in the rc5t619 which is required
+> for properly implementing subdevices like rtc.
+> For now only definitions for the variant rc5t619 are included.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 
-This was based on Jim's original submission[1], converted to yaml and
-adapted to the RPi4 case.
+after having some more look at it, I think I should note the interrupts
+property in the bindings documentation since it gets used by using
+i2c->irq. Will probably send a v3 the next days. 
 
-[1] https://patchwork.kernel.org/patch/10605937/
-
-Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
----
- .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
- 1 file changed, 116 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-
-diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-new file mode 100644
-index 000000000000..0b81c26f8568
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-@@ -0,0 +1,116 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Brcmstb PCIe Host Controller Device Tree Bindings
-+
-+maintainers:
-+  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-+
-+properties:
-+  compatible:
-+    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-+
-+  reg:
-+    maxItems: 1
-+
-+  interrupts:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - description: PCIe host controller
-+      - description: builtin MSI controller
-+
-+  interrupt-names:
-+    minItems: 1
-+    maxItems: 2
-+    items:
-+      - const: pcie
-+      - const: msi
-+
-+  "#address-cells":
-+    const: 3
-+
-+  "#size-cells":
-+    const: 2
-+
-+  "#interrupt-cells":
-+    const: 1
-+
-+  interrupt-map-mask: true
-+
-+  interrupt-map: true
-+
-+  ranges: true
-+
-+  dma-ranges: true
-+
-+  clocks:
-+    maxItems: 1
-+
-+  clock-names:
-+    items:
-+      - const: sw_pcie
-+
-+  msi-controller:
-+    description: Identifies the node as an MSI controller.
-+    type: boolean
-+
-+  msi-parent:
-+    description: MSI controller the device is capable of using.
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+
-+  linux,pci-domain:
-+    description: PCI domain ID. Should be unique for each host controller.
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+
-+  brcm,enable-ssc:
-+    description: Indicates usage of spread-spectrum clocking.
-+    type: boolean
-+
-+required:
-+  - compatible
-+  - reg
-+  - "#address-cells"
-+  - "#size-cells"
-+  - "#interrupt-cells"
-+  - interrupt-map-mask
-+  - interrupt-map
-+  - ranges
-+  - dma-ranges
-+  - linux,pci-domain
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    scb {
-+            #address-cells = <2>;
-+            #size-cells = <1>;
-+            pcie0: pcie@7d500000 {
-+                    compatible = "brcm,bcm2711-pcie";
-+                    reg = <0x0 0x7d500000 0x9310>;
-+                    #address-cells = <3>;
-+                    #size-cells = <2>;
-+                    #interrupt-cells = <1>;
-+                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-+                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-+                    interrupt-names = "pcie", "msi";
-+                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-+                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-+                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-+                    msi-parent = <&pcie0>;
-+                    msi-controller;
-+                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-+                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-+                    linux,pci-domain = <0>;
-+                    brcm,enable-ssc;
-+            };
-+    };
--- 
-2.23.0
-
+Regards,
+Andreas
