@@ -2,104 +2,96 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85EC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:30:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E66FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:31:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC20A2173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:30:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC49C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:31:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="UeYFaws6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731325AbfKFHaD (ORCPT
+        id S1731218AbfKFHbn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:30:03 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:41429 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729683AbfKFHaD (ORCPT
+        Wed, 6 Nov 2019 02:31:43 -0500
+Received: from mail-m974.mail.163.com ([123.126.97.4]:51108 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729787AbfKFHbn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:30:03 -0500
-Received: from [192.168.2.10] ([46.9.232.237])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id SFlDilsww9P9bSFlIicPA8; Wed, 06 Nov 2019 08:29:59 +0100
-Subject: Re: [PATCH] pvrusb2: Fix oops on tear-down when radio support is not
- present
-To:     Mike Isely at pobox <isely@pobox.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-References: <alpine.DEB.2.21.1911052034300.31133@sheridan.isely.net>
-From:   Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <5491a24e-e41a-5d11-7ac5-6d6804989550@xs4all.nl>
-Date:   Wed, 6 Nov 2019 08:29:47 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911052034300.31133@sheridan.isely.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfGdfI3TDc2NnorQhQx1V7ZhhxNM81FDJQyN21HuildDLKPJOTVsc9LUUqFTVP3+AMxz6oCZYX3cFQJBUY/2zRp4zKjJn+BBGBOYSDUap+uYf0Lzg1Mir
- Bi4TBoMBEFUZiIbfYb+gF+EVVqcIfw5EidYYZRPrU1OvMoRNOWbty8ePG1YIQFQu9FsRvNxCQcUvgy4x87lzIV7Bng3VKVfwKbRLO7zWNj3OHRp6THWLeiaY
- VIkBU9fmupzaS3kWCUmFdxgjtnbVJAxmW/MKWeVjfN0=
+        Wed, 6 Nov 2019 02:31:43 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=10j9yC2LKZ4Yu8yJAT
+        38Az579fi88WXpZdGmSsenJPQ=; b=UeYFaws6OMq6xy765lPDJs+n7oC6z4TtQl
+        vbRk9uEz0iZ5qE5YN/NlX6LAaS6zPv86MgtPDw1tUc0aA3+UGA6XpunNBUnojJrF
+        09FfMGQxsNFdoFNXRD1fYqiB3jW7aUpe7OYDqcjV3jUpHLrIU5rbsXXXcJ/Aeqzm
+        R+rHk2M8c=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp4 (Coremail) with SMTP id HNxpCgCXRjG8dsJd0yl7BQ--.263S3;
+        Wed, 06 Nov 2019 15:31:26 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Zhenyu Wang <zhenyuw@linux.intel.com>,
+        Zhi Wang <zhi.a.wang@intel.com>,
+        Jani Nikula <jani.nikula@linux.intel.com>,
+        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
+        Rodrigo Vivi <rodrigo.vivi@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+Cc:     intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] drm/i915/gvt: fix dropping obj reference twice
+Date:   Wed,  6 Nov 2019 15:31:07 +0800
+Message-Id: <1573025467-18278-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HNxpCgCXRjG8dsJd0yl7BQ--.263S3
+X-Coremail-Antispam: 1Uf129KBjvdXoWrtrW3tr1DXFWxKrWfKw1kGrg_yoWkurbEkr
+        WYqF17CrZrKFs09r1jyr9rAas2gF4UZFW8W3y7t34kA342kw1DZFZ5Zr15Zr18uF4UAFZx
+        AF1xury3ZFWF9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1xwIPUUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBUQ5lclaD5JcnsgAAs7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+The reference count of obj will be decremented twice if error occurs
+in dma_buf_fd(). Additionally, attempting to read the reference count of
+obj after dropping reference may lead to a use after free bug. Here, we
+drop obj's reference until it is not used.
 
-For some reason your mailer didn't include a "From:" line, only a "Reply-To:"
-line. This means that the patch authorship is not detected by patchwork and
-git. Can you repost with a valid From: line in the email header?
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ drivers/gpu/drm/i915/gvt/dmabuf.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Thanks!
-
-	Hans
-
-On 11/6/19 3:36 AM,  wrote:
-> In some device configurations there's no radio or radio support in the
-> driver.  That's OK, as the driver sets itself up accordingly.  However
-> on tear-down in these caes it's still trying to tear down radio
-> related context when there isn't anything there, leading to
-> dereferences through a null pointer and chaos follows.
-> 
-> How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-> mystery to me.
-> 
-> Signed-off-by: Mike Isely <isely@pobox.com>
-> ---
->  drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
->  1 file changed, 7 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-> index aa4fbc3e88cc..339119f6cc23 100644
-> --- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-> +++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-> @@ -909,8 +909,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
->  	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
->  	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
->  	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
-> -	    !list_empty(&vp->dev_radio->devbase.fh_list))
-> +	    ((vp->dev_radio != NULL) &&
-> +	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-> +		pvr2_trace(PVR2_TRACE_STRUCT,
-> +			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
->  		return;
-> +	}
->  	pvr2_v4l2_destroy_no_lock(vp);
->  }
->  
-> @@ -946,7 +950,8 @@ static int pvr2_v4l2_release(struct file *file)
->  	kfree(fhp);
->  	if (vp->channel.mc_head->disconnect_flag &&
->  	    list_empty(&vp->dev_video->devbase.fh_list) &&
-> -	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-> +	    ((vp->dev_radio == NULL) ||
-> +	     list_empty(&vp->dev_radio->devbase.fh_list))) {
->  		pvr2_v4l2_destroy_no_lock(vp);
->  	}
->  	return 0;
-> 
+diff --git a/drivers/gpu/drm/i915/gvt/dmabuf.c b/drivers/gpu/drm/i915/gvt/dmabuf.c
+index 13044c027f27..4bfaefdf548d 100644
+--- a/drivers/gpu/drm/i915/gvt/dmabuf.c
++++ b/drivers/gpu/drm/i915/gvt/dmabuf.c
+@@ -498,8 +498,6 @@ int intel_vgpu_get_dmabuf(struct intel_vgpu *vgpu, unsigned int dmabuf_id)
+ 		goto out_free_gem;
+ 	}
+ 
+-	i915_gem_object_put(obj);
+-
+ 	ret = dma_buf_fd(dmabuf, DRM_CLOEXEC | DRM_RDWR);
+ 	if (ret < 0) {
+ 		gvt_vgpu_err("create dma-buf fd failed ret:%d\n", ret);
+@@ -524,6 +522,8 @@ int intel_vgpu_get_dmabuf(struct intel_vgpu *vgpu, unsigned int dmabuf_id)
+ 		    file_count(dmabuf->file),
+ 		    kref_read(&obj->base.refcount));
+ 
++	i915_gem_object_put(obj);
++
+ 	return dmabuf_fd;
+ 
+ out_free_dmabuf:
+-- 
+2.7.4
 
