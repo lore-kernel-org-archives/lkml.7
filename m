@@ -2,104 +2,77 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91673C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:12:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3FEEC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:13:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56E0C217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:12:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="O+pJTJfs"
+	by mail.kernel.org (Postfix) with ESMTP id BD9B0217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:13:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573064031;
+	bh=Ta1ybKjmi0q0KWQZNpGJKfbd9zOitUNAQZVj6Hxc294=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=eTpSFO1Ayyoz24wE0ZEWz7SkNgIJIyVthlr+Tl+cOuoF00/TP9VIIa6e5zuXqhnvm
+	 kUFpC0nWogxZQiSr9rJx1ROEXpzbmZeHoMbQmcMlfctvnouIwtorvSGcK4W2coOLTC
+	 qMS4A+efMsw9fmr3Y6Pv/oYXWbxEiL0P12fYrF8Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732485AbfKFSMw (ORCPT
+        id S1732487AbfKFSNu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:12:52 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:52160 "EHLO vps0.lunn.ch"
+        Wed, 6 Nov 2019 13:13:50 -0500
+Received: from mail.kernel.org ([198.145.29.99]:58990 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFSMw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:12:52 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=Ql6gwXAOAwvh2zRxBMnKt0ol68zRLOWR3hAo8drYM2U=; b=O+pJTJfsDgHm+psr+qtQYtRB1J
-        lBjczeTu2OQRHA2uLuGUZJi4piArK6u4sgkP+osKQd8DpRBdEasXO699aC/ROcs2nWGP/y4i/8a+l
-        SQvZMKqDdlPZ4j8xyfBCaOH0xoxX0amPjPpgaru/AzX+d/fb28lOPTVPbF2Ws0j6oYsI=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iSPnM-0000oB-My; Wed, 06 Nov 2019 19:12:40 +0100
-Date:   Wed, 6 Nov 2019 19:12:40 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Christophe Roullier <christophe.roullier@st.com>
-Cc:     robh@kernel.org, davem@davemloft.net, joabreu@synopsys.com,
-        mark.rutland@arm.com, mcoquelin.stm32@gmail.com,
-        alexandre.torgue@st.com, peppe.cavallaro@st.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org
-Subject: Re: [PATCH V3 net-next 1/4] net: ethernet: stmmac: Add support for
- syscfg clock
-Message-ID: <20191106181240.GG30762@lunn.ch>
-References: <20191106101220.12693-1-christophe.roullier@st.com>
- <20191106101220.12693-2-christophe.roullier@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106101220.12693-2-christophe.roullier@st.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        id S1727286AbfKFSNu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 13:13:50 -0500
+Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8358D2166E;
+        Wed,  6 Nov 2019 18:13:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573064029;
+        bh=Ta1ybKjmi0q0KWQZNpGJKfbd9zOitUNAQZVj6Hxc294=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+        b=LdWzgySPOwqFPRp6S8W/AdVCXFeh0qivlwI4NKVsoiWM2TbBGXUlRJIR1GIYzWxcV
+         8kGunXPENoww38XldDZxprZcnF4nPE2X9i01z4pWt3OC6eVVUwSZMkMMTI/J/WcgpN
+         HMIBcYWinzHjE3tBtxfuy4b1RLfkAtoTZ3GaUzvw=
+Date:   Wed, 6 Nov 2019 10:13:49 -0800
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Daniel Vetter <daniel.vetter@ffwll.ch>,
+        DRI Development <dri-devel@lists.freedesktop.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Daniel Vetter <daniel.vetter@intel.com>
+Subject: Re: [PATCH] drm: Limit to INT_MAX in create_blob ioctl
+Message-Id: <20191106101349.7dfaa4282db4c7a0239b96f2@linux-foundation.org>
+In-Reply-To: <201911060920.71D7E76E@keescook>
+References: <20191106164755.31478-1-daniel.vetter@ffwll.ch>
+        <201911060920.71D7E76E@keescook>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:12:17AM +0100, Christophe Roullier wrote:
-> Add optional support for syscfg clock in dwmac-stm32.c
-> Now Syscfg clock is activated automatically when syscfg
-> registers are used
+On Wed, 6 Nov 2019 09:24:18 -0800 Kees Cook <keescook@chromium.org> wrote:
+
+> > Since this is -mm can I have a stable sha1 or something for
+> > referencing? Or do you want to include this in the -mm patch bomb for
+> > the merge window?
 > 
-> Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
-> ---
->  .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 28 +++++++++++--------
->  1 file changed, 16 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> index 4ef041bdf6a1..be7d58d83cfa 100644
-> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
-> @@ -152,19 +152,24 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
->  	int ret = 0;
->  
->  	if (prepare) {
-> -		ret = clk_prepare_enable(dwmac->syscfg_clk);
-> -		if (ret)
-> -			return ret;
-> -
-> +		if (dwmac->syscfg_clk) {
-> +			ret = clk_prepare_enable(dwmac->syscfg_clk);
-> +			if (ret)
-> +				return ret;
-> +		}
+> Traditionally these things live in akpm's tree when they are fixes for
+> patches in there. I have no idea how the Fixes tags work in that case,
+> though...
 
-Hi Christophe
+I queued it immediately ahead of
+uaccess-disallow-int_max-copy-sizes.patch so all should be good,
+thanks.
 
-I think you did not understand what i said.  clk_prepare_enable() is
-happy to take a NULL pointer. So you don't need this new guard. You
-don't need this change at all.
-
->  		if (dwmac->clk_eth_ck) {
->  			ret = clk_prepare_enable(dwmac->clk_eth_ck);
->  			if (ret) {
-> -				clk_disable_unprepare(dwmac->syscfg_clk);
-> +				if (dwmac->syscfg_clk)
-> +					clk_disable_unprepare
-> +						(dwmac->syscfg_clk);
-
-clk_disable_unprepare() is happy to take a NULL pointer...
-
-	Andrew
