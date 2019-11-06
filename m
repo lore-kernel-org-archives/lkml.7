@@ -2,201 +2,181 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA9C0C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:53:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FAEC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:53:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6BA6B214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:53:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3020D214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:53:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="DxrIuMXt"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/qHUHQv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731702AbfKFNxU (ORCPT
+        id S1731823AbfKFNxX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:53:20 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:58138 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726673AbfKFNxT (ORCPT
+        Wed, 6 Nov 2019 08:53:23 -0500
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:42150 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731760AbfKFNxW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:53:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573048398;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-        bh=v+AWAxfDzYP0DMgd1VtOBpTj9iVgFk2qNbX9GR9YwRs=;
-        b=DxrIuMXtdsr0vHg0YqLqQcUihQdxL96fQ3pazf5zZLmwNTI736Xt7v0kNepfeKY2HMawA7
-        kvLMNrr+pYXxNRUd4V3UYukyTCbT4aWvjX83ukkLOmJ2C2VIaTwGbePQ+LFVU9KSB96se6
-        HDg1rkpXvSM9/Vna+aD+ju+ANQKDcXY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-187-hajMUZ2aO_aTyOmBsmPdPg-1; Wed, 06 Nov 2019 08:53:14 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 976B61005500;
-        Wed,  6 Nov 2019 13:53:13 +0000 (UTC)
-Received: from [10.36.117.83] (ovpn-117-83.ams2.redhat.com [10.36.117.83])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5CCD060BF4;
-        Wed,  6 Nov 2019 13:53:07 +0000 (UTC)
-Subject: Re: [PATCH] virtio_console: allocate inbufs in add_port() only if it
- is needed
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Amit Shah <amit@kernel.org>,
-        virtualization@lists.linux-foundation.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Michael S . Tsirkin" <mst@redhat.com>
-References: <20191018164718.15999-1-lvivier@redhat.com>
-From:   Laurent Vivier <lvivier@redhat.com>
-Autocrypt: addr=lvivier@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- D+Ofp0T3KOr1RUHvCZoLURfFhSQ=
-Message-ID: <ac1cad60-dd5e-532a-8a35-a8dfa2a586a0@redhat.com>
-Date:   Wed, 6 Nov 2019 14:53:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 6 Nov 2019 08:53:22 -0500
+Received: by mail-ed1-f66.google.com with SMTP id m13so13071564edv.9
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:53:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:openpgp:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=f/07mDa7U3BeT4TUXv97i2fvuP+QZqH0SLBfnWPxR0U=;
+        b=e/qHUHQvOfyQWuy3eA3qaDE8QLdLHxOxgBx/u8WrUcPLw2FI90PTvJFxyxqsUNLPcK
+         o48+3FUDK3eRMzzx+D7+KEiZPRV/jFqRLoHsVyi/5NguB6gBPvM/LIaXj+splYGGG5kR
+         ZXvinxHU5+Lahgxs2ggeu1zUqtVOqRhUIdEqTbEOQxvYYMi+LarsvZ30hxcvMjRnEqog
+         KGrrSYluKhd2IUsGFqQxHRH1MblzTFCIw11rsXgj02UVzpf41mqQUp/H+C9mQjupJ8g+
+         pL5c1zvuCtZbWAgfe336LUIpRyY6H99nA9ssqIa8KHZsVdAFTzosjeZaaqBWPdjWlDxj
+         S6Ew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=f/07mDa7U3BeT4TUXv97i2fvuP+QZqH0SLBfnWPxR0U=;
+        b=YCeaANquC56KBX7xmb/pl9azAQRoKibRfgchXcJrmqCcdn99+I+6jGuG31tAXzkmbq
+         H8KFzHLkKQFCBzvHp4HMJsn5Id0uVkikQkaVhaPTDMx0MZRHhqMQmIgm3BL/36Fz4td2
+         RyvaLVuYSvz2HX0Lt2DtLbj3kBkLspcE5EhPQUJkyBvfdlijbwzw/4KqBdTFyOnGU9/3
+         wayhGOu5GNZ/KiC5iO6yaYpxSTHl5MCAKApvHd20tYqvNWEMyHRbf+hcDbTB+TS2EIGL
+         XbQnr4x9VaaV10iTav2g8d2nChV0kaRjStjljcpTjS2etyLkfkpWKhNdw3El2jxxJZkl
+         rnVw==
+X-Gm-Message-State: APjAAAXrCV4qMKIuxBhGJNBlen4+68+ie66piqQIu7qTaayVpyuRiOxd
+        ld9ChTSbTWP6KGvNBQCPZArbz/Fh/Fo=
+X-Google-Smtp-Source: APXvYqzmxUPfsyqC+mhuIOKBx2mpzZZuLmym1ciYOftytpCIGE4z17WT5/rL35GNWkuidzuUHi5yvA==
+X-Received: by 2002:a50:fd03:: with SMTP id i3mr2831317eds.70.1573048400117;
+        Wed, 06 Nov 2019 05:53:20 -0800 (PST)
+Received: from [192.168.27.135] ([37.157.136.206])
+        by smtp.googlemail.com with ESMTPSA id c93sm1172968edf.92.2019.11.06.05.53.18
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 05:53:19 -0800 (PST)
+Subject: Re: [PATCH 2/3] arm64: dts: qcom: sdm845: Add second PCIe PHY and
+ controller
+To:     Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc:     Andy Gross <agross@kernel.org>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191102003148.4091335-1-bjorn.andersson@linaro.org>
+ <20191102003148.4091335-3-bjorn.andersson@linaro.org>
+From:   Georgi Djakov <georgi.djakov@linaro.org>
+Openpgp: preference=signencrypt
+Message-ID: <af66ac9a-f473-44b7-8604-2153c680960b@linaro.org>
+Date:   Wed, 6 Nov 2019 15:53:18 +0200
 MIME-Version: 1.0
-In-Reply-To: <20191018164718.15999-1-lvivier@redhat.com>
+In-Reply-To: <20191102003148.4091335-3-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: hajMUZ2aO_aTyOmBsmPdPg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Any comments?
+Hi Bjorn,
+
+On 2.11.19 г. 2:31 ч., Bjorn Andersson wrote:
+> Add the second PCIe controller and the associated QHP PHY found on
+> SDM845.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 111 +++++++++++++++++++++++++++
+>  1 file changed, 111 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index b93537b7a59f..0cdcc8d6d223 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1468,6 +1468,117 @@
+>  			};
+>  		};
+>  
+> +		pcie1: pci@1c08000 {
+> +			compatible = "qcom,pcie-sdm845", "snps,dw-pcie";
+> +			reg = <0 0x01c08000 0 0x2000>,
+> +			      <0 0x40000000 0 0xf1d>,
+> +			      <0 0x40000f20 0 0xa8>,
+> +			      <0 0x40100000 0 0x100000>;
+> +			reg-names = "parf", "dbi", "elbi", "config";
+> +			device_type = "pci";
+> +			linux,pci-domain = <1>;
+> +			bus-range = <0x00 0xff>;
+> +			num-lanes = <1>;
+> +
+> +			#address-cells = <3>;
+> +			#size-cells = <2>;
+> +
+> +			ranges = <0x01000000 0x0 0x40200000 0x0 0x40200000 0x0 0x100000>,
+> +				 <0x02000000 0x0 0x40300000 0x0 0x40300000 0x0 0x1fd00000>;
+> +
+> +			interrupts = <GIC_SPI 307 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "msi";
+> +			#interrupt-cells = <1>;
+> +			interrupt-map-mask = <0 0 0 0x7>;
+> +			interrupt-map = <0 0 0 1 &intc 0 434 IRQ_TYPE_LEVEL_HIGH>, /* int_a */
+> +					<0 0 0 2 &intc 0 435 IRQ_TYPE_LEVEL_HIGH>, /* int_b */
+> +					<0 0 0 3 &intc 0 438 IRQ_TYPE_LEVEL_HIGH>, /* int_c */
+> +					<0 0 0 4 &intc 0 439 IRQ_TYPE_LEVEL_HIGH>; /* int_d */
+> +
+> +			clocks = <&gcc GCC_PCIE_1_PIPE_CLK>,
+> +				 <&gcc GCC_PCIE_1_AUX_CLK>,
+> +				 <&gcc GCC_PCIE_1_CFG_AHB_CLK>,
+> +				 <&gcc GCC_PCIE_1_MSTR_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_1_SLV_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_1_SLV_Q2A_AXI_CLK>,
+> +				 <&gcc GCC_PCIE_1_CLKREF_CLK>,
+> +				 <&gcc GCC_AGGRE_NOC_PCIE_TBU_CLK>;
+> +			clock-names = "pipe",
+> +				      "aux",
+> +				      "cfg",
+> +				      "bus_master",
+> +				      "bus_slave",
+> +				      "slave_q2a",
+> +				      "ref",
+> +				      "tbu";
+> +
+> +			assigned-clocks = <&gcc GCC_PCIE_1_AUX_CLK>;
+> +			assigned-clock-rates = <19200000>;
+> +
+> +			iommus = <&apps_smmu 0x1c00 0xf>;
+> +			iommu-map = <0x0   &apps_smmu 0x1c00 0x1>,
+> +				    <0x100 &apps_smmu 0x1c01 0x1>,
+> +				    <0x200 &apps_smmu 0x1c02 0x1>,
+> +				    <0x300 &apps_smmu 0x1c03 0x1>,
+> +				    <0x400 &apps_smmu 0x1c04 0x1>,
+> +				    <0x500 &apps_smmu 0x1c05 0x1>,
+> +				    <0x600 &apps_smmu 0x1c06 0x1>,
+> +				    <0x700 &apps_smmu 0x1c07 0x1>,
+> +				    <0x800 &apps_smmu 0x1c08 0x1>,
+> +				    <0x900 &apps_smmu 0x1c09 0x1>,
+> +				    <0xa00 &apps_smmu 0x1c0a 0x1>,
+> +				    <0xb00 &apps_smmu 0x1c0b 0x1>,
+> +				    <0xc00 &apps_smmu 0x1c0c 0x1>,
+> +				    <0xd00 &apps_smmu 0x1c0d 0x1>,
+> +				    <0xe00 &apps_smmu 0x1c0e 0x1>,
+> +				    <0xf00 &apps_smmu 0x1c0f 0x1>;
+> +
+> +			resets = <&gcc GCC_PCIE_1_BCR>;
+> +			reset-names = "pci";
+> +
+> +			power-domains = <&gcc PCIE_1_GDSC>;
+> +
+> +			interconnects = <&rsc_hlos MASTER_PCIE_0 &rsc_hlos SLAVE_EBI1>;
+> +			interconnect-names = "pcie-mem";
+
+Maybe leave this hunk out (although it looks good), until we conclude on these
+refactoring patches [1].
 
 Thanks,
-Laurent
+Georgi
 
-On 18/10/2019 18:47, Laurent Vivier wrote:
-> When we hot unplug a virtserialport and then try to hot plug again,
-> it fails:
->=20
-> (qemu) chardev-add socket,id=3Dserial0,path=3D/tmp/serial0,server,nowait
-> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
->                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
-> (qemu) device_del serial0
-> (qemu) device_add virtserialport,bus=3Dvirtio-serial0.0,nr=3D2,\
->                   chardev=3Dserial0,id=3Dserial0,name=3Dserial0
-> kernel error:
->   virtio-ports vport2p2: Error allocating inbufs
-> qemu error:
->   virtio-serial-bus: Guest failure in adding port 2 for device \
->                      virtio-serial0.0
->=20
-> This happens because buffers for the in_vq are allocated when the port is
-> added but are not released when the port is unplugged.
->=20
-> They are only released when virtconsole is removed (see a7a69ec0d8e4)
->=20
-> To avoid the problem and to be symmetric, we could allocate all the buffe=
-rs
-> in init_vqs() as they are released in remove_vqs(), but it sounds like
-> a waste of memory.
->=20
-> Rather than that, this patch changes add_port() logic to only allocate th=
-e
-> buffers if the in_vq has available free slots.
->=20
-> Fixes: a7a69ec0d8e4 ("virtio_console: free buffers after reset")
-> Cc: mst@redhat.com
-> Signed-off-by: Laurent Vivier <lvivier@redhat.com>
-> ---
->  drivers/char/virtio_console.c | 17 +++++++++++------
->  1 file changed, 11 insertions(+), 6 deletions(-)
->=20
-> diff --git a/drivers/char/virtio_console.c b/drivers/char/virtio_console.=
-c
-> index 7270e7b69262..77105166fe01 100644
-> --- a/drivers/char/virtio_console.c
-> +++ b/drivers/char/virtio_console.c
-> @@ -1421,12 +1421,17 @@ static int add_port(struct ports_device *portdev,=
- u32 id)
->  =09spin_lock_init(&port->outvq_lock);
->  =09init_waitqueue_head(&port->waitqueue);
-> =20
-> -=09/* Fill the in_vq with buffers so the host can send us data. */
-> -=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
-> -=09if (!nr_added_bufs) {
-> -=09=09dev_err(port->dev, "Error allocating inbufs\n");
-> -=09=09err =3D -ENOMEM;
-> -=09=09goto free_device;
-> +=09/* if the in_vq has not already been filled (the port has already bee=
-n
-> +=09 * used and unplugged), fill the in_vq with buffers so the host can
-> +=09 * send us data.
-> +=09 */
-> +=09if (port->in_vq->num_free !=3D 0) {
-> +=09=09nr_added_bufs =3D fill_queue(port->in_vq, &port->inbuf_lock);
-> +=09=09if (!nr_added_bufs) {
-> +=09=09=09dev_err(port->dev, "Error allocating inbufs\n");
-> +=09=09=09err =3D -ENOMEM;
-> +=09=09=09goto free_device;
-> +=09=09}
->  =09}
-> =20
->  =09if (is_rproc_serial(port->portdev->vdev))
->=20
-
+[1]
+http://lore.kernel.org/r/1571278852-8023-1-git-send-email-daidavid1@codeaurora.org
