@@ -3,476 +3,174 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CC8C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:59:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F11AC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D595217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:59:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1C752178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:01:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NZETyA3G"
+	dkim=pass (1024-bit key) header.d=Mellanox.com header.i=@Mellanox.com header.b="DnjIXl4N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731779AbfKFO7h (ORCPT
+        id S1731912AbfKFPBO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:59:37 -0500
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46256 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727231AbfKFO7h (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:59:37 -0500
-Received: by mail-lf1-f65.google.com with SMTP id 19so13124085lft.13;
-        Wed, 06 Nov 2019 06:59:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=4KtBICKPj4oES1eHmA6z4l7p9BNsGWHMa3DgVdTYwR4=;
-        b=NZETyA3GS+aDtL0gpbu32eOGHMQmVP8JkitzSZ5GnYiTtO9YSQGg7SnvfXn2+o8JQh
-         9+KYjeJjP5v4GCfi1qLwXfsPUO4iLm2euPpQ7SautMJuIsffqutoB6/OBD7/7JPZo2JV
-         zvx/9aQc7tWNnk1XFfOasyXpyCHGiXZmUvzhZRmQV3JKOcAY3nbry1om1MXFt3ksz63B
-         BXSbIZ1UmBmCgBMw2oZHPW/J/dMASkOiaibvgzauzMksnlrwgGwvch64xt15Lm3c+vQ4
-         +nSO2MW5Rw9z/LhGbcxp95/tKs6zr2n6fK2034pKK/3B3nO03fdq9OASw3kFlGmnAng5
-         xLhw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=4KtBICKPj4oES1eHmA6z4l7p9BNsGWHMa3DgVdTYwR4=;
-        b=uGw3/U2ROoLMdXsEZMU36RWlbuaQVmK31+Tc8a0fes43RWkGUaZ/Wtt+/Eu2MrYLK4
-         c3zt1+/WPO3D+bqKmsPDZZ7qs6wXuQJr0D5Tq4OJLWvl+RWjrus4m/U37ev6umDrAam5
-         Fu2PVJP5rplErFQmmWyUPuC8Nd6YilsFdnaFuvA/yDuMU+gWS1M+U6PEB9VGVrdUHTa7
-         L1ldwh+fKWOdZbsVUaqzUEZZiLxhCnGZ1XmS5CVeuI4RJHYiTGnGno//YBFyiVmxwINK
-         gst/6lYcY/3pcnreOJ52hVeMWLMucFtXh975wLyZTjNHrQoBo2j/QWtQFaeufn4VHVv6
-         Lpgw==
-X-Gm-Message-State: APjAAAXM9TbndMI+9E9DnsskbZZq+1FZmCXNRjau8x7sY8v6UmHa/BD2
-        A4T5HhZCijddb+WFCsS/Kwfdd15SzzTq28CAiss=
-X-Google-Smtp-Source: APXvYqyHpl5ZUwbH/XezLt9egAhGu/WlSrzG8uFjTgQX+bczflNqFd5aPVjLxJNonWqomN14f2I3sjGkXFU2cBujByY=
-X-Received: by 2002:ac2:5097:: with SMTP id f23mr24703214lfm.90.1573052373737;
- Wed, 06 Nov 2019 06:59:33 -0800 (PST)
+        Wed, 6 Nov 2019 10:01:14 -0500
+Received: from mail-eopbgr150053.outbound.protection.outlook.com ([40.107.15.53]:26498
+        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727557AbfKFPBN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:01:13 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=jh1nHwsur2aE5drsb0u1JQJElM49v9TMnVJDYhdQo/L0HNjVJ4mr50oFFArE/gdK2wuHX9R8UbWVrB7IQ7oDGi7AnvD5qH1zqtwK6j0Y/Q+a3Hg67SHQHkRvGBM9G0pZCjSiVpCJkOt5xykUFqRiV0q9hsXfzi+cePPHYijVPVaCgtuqLUl5QseHscicogwXmSGFtccEz4L5YLGK+k/e6XjP0JTMzt/NNWWynvpYwQGsuake181j6c293VqstzPCk1kc7wmyVDfr9VRD23Z2sk+dzOAWjnzHADO73jmfFPjWm+d6qfWC0ykWGCiibRo3C0I2GtkmRJd/UNEYuL9HVw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sQ5uReGwBTAE/QciIEkj5OFVBCNo1tzPNkOqKtI6h0=;
+ b=WJECdIX7AqpJztL0N15osu8HoubQNi8lWbjcD0nrr5JsNrVqtgM0bOFm959ISRUXKSuXpb7f7HOp5Fc+77SIPKZtRwQ2uMQUz80IU3ds9kc4cUj7vQ9Ovq9544QeT8KvpUyGQiHvKXPa4azzUwXyd2c0VwKcqMuD8UlXh9ss84d8xXq6dHeArpS3zUhoRBlpZ52g3oi+xlKSF1xwwN4VC7RnqVRWCvc5xMPxKB2VWcZYPEZUSMMOpWveBqaK65XDo4XY0s8BLLjhW8GQtsvF0hscFCl6ZxocGmjx1eHth3FKTSHtVomn5NNmFl6W8Qf4Jm/Ofwo5fbW7acFRFZQP+A==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=mellanox.com; dmarc=pass action=none header.from=mellanox.com;
+ dkim=pass header.d=mellanox.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Mellanox.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9sQ5uReGwBTAE/QciIEkj5OFVBCNo1tzPNkOqKtI6h0=;
+ b=DnjIXl4NoM1EvIXLvl9LuQzeG5YXaWnjlrhmRtLkVj9qvjh8MnDk1n98bnBIAaUWQJgoDprbRd00B1pwDcXGDUwFHFTQrLq2gG8cVAtvb7/EpBRM8401tl++ezHS184wKzKtbpVIU01mzG2yO1ckyM0S81khHgq31WrKpgqeO7U=
+Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com (10.172.225.17) by
+ DB6PR0501MB2677.eurprd05.prod.outlook.com (10.172.225.23) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 15:01:07 +0000
+Received: from DB6PR0501MB2712.eurprd05.prod.outlook.com
+ ([fe80::99be:5f3a:9871:ecd1]) by DB6PR0501MB2712.eurprd05.prod.outlook.com
+ ([fe80::99be:5f3a:9871:ecd1%12]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 15:01:07 +0000
+From:   Asmaa Mnebhi <Asmaa@mellanox.com>
+To:     Vijay Khemka <vijaykhemka@fb.com>,
+        "minyard@acm.org" <minyard@acm.org>
+CC:     Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "openipmi-developer@lists.sourceforge.net" 
+        <openipmi-developer@lists.sourceforge.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "cminyard@mvista.com" <cminyard@mvista.com>,
+        "joel@jms.id.au" <joel@jms.id.au>,
+        "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>,
+        Sai Dasari <sdasari@fb.com>
+Subject: RE: [PATCH] drivers: ipmi: Support for both IPMB Req and Resp
+Thread-Topic: [PATCH] drivers: ipmi: Support for both IPMB Req and Resp
+Thread-Index: AQHVlBIujLLpoJV+NUGR9Gnl5krqyqd9URQAgABlvwCAAIXUEA==
+Date:   Wed, 6 Nov 2019 15:01:07 +0000
+Message-ID: <DB6PR0501MB2712BEF34969BF377E71B691DA790@DB6PR0501MB2712.eurprd05.prod.outlook.com>
+References: <20191105194732.1521963-1-vijaykhemka@fb.com>
+ <20191106005332.GA2754@minyard.net>
+ <63FB7A84-EF61-45CA-9CA7-9564F28B5D42@fb.com>
+In-Reply-To: <63FB7A84-EF61-45CA-9CA7-9564F28B5D42@fb.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Asmaa@mellanox.com; 
+x-originating-ip: [216.156.69.42]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 6404fa18-7361-44fe-b156-08d762ca275c
+x-ms-traffictypediagnostic: DB6PR0501MB2677:
+x-microsoft-antispam-prvs: <DB6PR0501MB26777857541EF516AA3C8661DA790@DB6PR0501MB2677.eurprd05.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:3173;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(39860400002)(366004)(136003)(376002)(189003)(199004)(13464003)(9686003)(7416002)(81156014)(66066001)(55016002)(33656002)(74316002)(86362001)(6436002)(11346002)(446003)(14454004)(76176011)(7736002)(53546011)(305945005)(8676002)(478600001)(476003)(80792005)(316002)(229853002)(486006)(4326008)(81166006)(99286004)(25786009)(54906003)(6506007)(256004)(186003)(6246003)(6116002)(102836004)(66946007)(76116006)(64756008)(52536014)(66556008)(5660300002)(66446008)(66476007)(2906002)(2501003)(71200400001)(71190400001)(8936002)(7696005)(110136005)(14444005)(26005)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:DB6PR0501MB2677;H:DB6PR0501MB2712.eurprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: mellanox.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: BEnB+zY2Iahx7uEaBSV1lIo7y5DIH7tdkyQqp82W1kxJd/sxMXASMYFyCUziaaRBogwIPD7Up2LMxG5cOiksczcFbuiwPXM5zQd8M5Az3Jwcz+SWto1tt7j57KrplBwNapnXtKmwhb0yVhg/iDxMQeUjvRqtCqvfxlijAAlUIdtEFJO3sjxCGy6YecEh3jkOO2q8+jRHDUkvAAAVxH+vpZxHp/4lmp5ihpEKtJN2R/0eCBKbBNgHTA18FQbfLn81ZscCvLzalZbFaLlVoej0QBfGXAZZCHNeQ49yTddKKpivGZPxy8YXi0DYg3PNxSoNiYpykzA+rdHxOj6hvpdmYwq1Q0WBLhEdazwp8wvgLEDA4nrMgK9t5ZeAEzRxRKcF57f8bsVyWwtm5d+tVmdyaNXylNdhmuFaygcLM/L6wtDI8HV2i3OIPow/PervMP/X
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191106011200.1645-1-drocha.figueiredo@gmail.com> <41bf90e9-a229-e84e-4e1c-cd2cfae7ead7@collabora.com>
-In-Reply-To: <41bf90e9-a229-e84e-4e1c-cd2cfae7ead7@collabora.com>
-From:   Guilherme Alcarde Gallo <gagallo7@gmail.com>
-Date:   Wed, 6 Nov 2019 11:58:57 -0300
-Message-ID: <CAF2jNbitDhN32fYbOcPshSfqJ47F=xe4iMeHALavZ8PnCy8P2w@mail.gmail.com>
-Subject: Re: [Lkcamp] [PATCH v3] media: vimc: Implement get/set selection in sink
-To:     Helen Koike <helen.koike@collabora.com>
-Cc:     Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>,
-        Shuah Khan <skhan@linuxfoundation.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
-        hverkuil-cisco@xs4all.nl, lkcamp@lists.libreplanetbr.org,
-        Kieran Bingham <kieran.bingham@ideasonboard.com>,
-        Jacopo Mondi <jacopo@jmondi.org>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        =?UTF-8?Q?Niklas_S=C3=B6derlund?= <niklas.soderlund@ragnatech.se>,
-        Gabriela Bittencourt <gabrielabittencourt00@gmail.com>,
-        pedro@terraco.de
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: Mellanox.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6404fa18-7361-44fe-b156-08d762ca275c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 15:01:07.8437
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: a652971c-7d2e-4d9b-a6a4-d149256f461b
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: u2TOzOdSQj7B9qfFRq4K+vGd37nBUWx9BbRXYXGahlvgtfQnajvbxAhM6aVLfBZoxUI/Z3yqzgU51dCHM/fMow==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: DB6PR0501MB2677
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Helen,
-Thanks for the prompt review!
-
-Just one comment below.
-
-On Wed, Nov 6, 2019 at 11:01 AM Helen Koike <helen.koike@collabora.com> wrote:
->
-> Hi Danilo and Guilherme,
->
-> On 11/5/19 11:12 PM, Danilo Figueiredo Rocha wrote:
-> > From: Guilherme Alcarde Gallo <gagallo7@gmail.com>
-> >
-> > Add support for the sink pad of scaler subdevice to respond
-> > VIDIOC_G_SELECTION and VIDIOC_S_SELECTION ioctls with the following
-> > targets: V4L2_SEL_TGT_COMPOSE_BOUNDS and V4L2_SEL_TGT_CROP.
-> >
-> > * Add new const struct crop_rect_default to initialize subdev scaler
-> >   properly.
-> > * Make changes in sink pad format reflect to the crop rectangle. E.g.
-> >   changing the frame format to a smaller size one can make the former
-> >   crop rectangle selects a non existing frame area. To solve this
-> >   situation the crop rectangle is clamped to the frame boundaries.
-> > * Clamp crop rectangle respecting the sink bounds during set_selection
-> >   ioctl.
-> >
-> > Signed-off-by: Guilherme Alcarde Gallo <gagallo7@gmail.com>
-> > Co-developed-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
-> > Signed-off-by: Danilo Figueiredo Rocha <drocha.figueiredo@gmail.com>
->
-> Thanks for the patch, lgtm, just minor nitpicking comments below.
->
-> Also, I'm adding libcamera people in CC, as this might require updating it.
->
-> And I'm also adding Gabriela and Pedro in CC, as this might require some
-> changes in patch "media: vimc: Enable set resolution at the scaler src pad",
-> which removes the hardcoded scaling factor.
->
-> >
-> > ---
-> > Changes in V3:
-> > * Sort the headers in alphabetical order.
-> > * Change all functions prefix to 'vimc_sca_'.
-> > * Remove useless case.
-> > * Change commit message subject.
-> >
-> > Changes in V2:
-> > * Use v4l2_rect_map_inside to clamp the crop rectangle.
-> > * Do the crop rectangle clamping after changing sink format.
-> > * Implement try ioctls for selection with CROP* targets.
-> > * Treat tiny rectangles with area smaller than minimal dimensions of vimc
-> >   frames.
-> > * Allow user to get selection when the streaming is on.
-> > * Reuse bound rectangle generation in a static function.
-> > * Disable get_selection for Source pads as we did before with
-> >   set_selection.
-> > ---
-> >  drivers/media/platform/vimc/vimc-scaler.c | 170 ++++++++++++++++++++--
-> >  1 file changed, 154 insertions(+), 16 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/vimc/vimc-scaler.c b/drivers/media/platform/vimc/vimc-scaler.c
-> > index 2f88a7d9d67b..935bb0e0d0ee 100644
-> > --- a/drivers/media/platform/vimc/vimc-scaler.c
-> > +++ b/drivers/media/platform/vimc/vimc-scaler.c
-> > @@ -6,8 +6,9 @@
-> >   */
-> >
-> >  #include <linux/moduleparam.h>
-> > -#include <linux/vmalloc.h>
-> >  #include <linux/v4l2-mediabus.h>
-> > +#include <linux/vmalloc.h>
->
-> I think you moved this one by accident?
-> Please, send v4 fixing this.
-Actually we sorted the include headers as you requested in the last review.
-Is there any rule about how to sort the headers?
->
-> > +#include <media/v4l2-rect.h>
-> >  #include <media/v4l2-subdev.h>
-> >
-> >  #include "vimc-common.h"
-> > @@ -18,6 +19,9 @@ MODULE_PARM_DESC(sca_mult, " the image size multiplier");
-> >
-> >  #define MAX_ZOOM     8
-> >
-> > +#define VIMC_SCA_FMT_WIDTH_DEFAULT  640
-> > +#define VIMC_SCA_FMT_HEIGHT_DEFAULT  480
-> > +
-> >  struct vimc_sca_device {
-> >       struct vimc_ent_device ved;
-> >       struct v4l2_subdev sd;
-> > @@ -25,6 +29,7 @@ struct vimc_sca_device {
-> >        * with the width and hight multiplied by mult
-> >        */
-> >       struct v4l2_mbus_framefmt sink_fmt;
-> > +     struct v4l2_rect crop_rect;
-> >       /* Values calculated when the stream starts */
-> >       u8 *src_frame;
-> >       unsigned int src_line_size;
-> > @@ -33,22 +38,64 @@ struct vimc_sca_device {
-> >  };
-> >
-> >  static const struct v4l2_mbus_framefmt sink_fmt_default = {
-> > -     .width = 640,
-> > -     .height = 480,
-> > +     .width = VIMC_SCA_FMT_WIDTH_DEFAULT,
-> > +     .height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
-> >       .code = MEDIA_BUS_FMT_RGB888_1X24,
-> >       .field = V4L2_FIELD_NONE,
-> >       .colorspace = V4L2_COLORSPACE_DEFAULT,
-> >  };
-> >
-> > +static const struct v4l2_rect crop_rect_default = {
-> > +     .width = VIMC_SCA_FMT_WIDTH_DEFAULT,
-> > +     .height = VIMC_SCA_FMT_HEIGHT_DEFAULT,
-> > +     .top = 0,
-> > +     .left = 0,
-> > +};
-> > +
-> > +static const struct v4l2_rect crop_rect_min = {
-> > +     .width = VIMC_FRAME_MIN_WIDTH,
-> > +     .height = VIMC_FRAME_MIN_HEIGHT,
-> > +     .top = 0,
-> > +     .left = 0,
-> > +};
-> > +
-> > +static struct v4l2_rect
-> > +vimc_sca_get_crop_bound_sink(const struct v4l2_mbus_framefmt *sink_fmt)
-> > +{
-> > +     /* Get the crop bounds to clamp the crop rectangle correctly */
-> > +     struct v4l2_rect r = {
-> > +             .left = 0,
-> > +             .top = 0,
-> > +             .width = sink_fmt->width,
-> > +             .height = sink_fmt->height,
-> > +     };
-> > +     return r;
-> > +}
-> > +
-> > +static void vimc_sca_adjust_sink_crop(struct v4l2_rect *r,
-> > +                              const struct v4l2_mbus_framefmt *sink_fmt)
-> > +{
-> > +     const struct v4l2_rect sink_rect =
-> > +             vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +
-> > +     /* Disallow rectangles smaller than the minimal one. */
-> > +     v4l2_rect_set_min_size(r, &crop_rect_min);
-> > +     v4l2_rect_map_inside(r, &sink_rect);
-> > +}
-> > +
-> >  static int vimc_sca_init_cfg(struct v4l2_subdev *sd,
-> >                            struct v4l2_subdev_pad_config *cfg)
-> >  {
-> >       struct v4l2_mbus_framefmt *mf;
-> > +     struct v4l2_rect *r;
-> >       unsigned int i;
-> >
-> >       mf = v4l2_subdev_get_try_format(sd, cfg, 0);
-> >       *mf = sink_fmt_default;
-> >
-> > +     r = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     *r = crop_rect_default;
-> > +
-> >       for (i = 1; i < sd->entity.num_pads; i++) {
-> >               mf = v4l2_subdev_get_try_format(sd, cfg, i);
-> >               *mf = sink_fmt_default;
-> > @@ -107,16 +154,21 @@ static int vimc_sca_get_fmt(struct v4l2_subdev *sd,
-> >                           struct v4l2_subdev_format *format)
-> >  {
-> >       struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> > +     struct v4l2_rect *crop_rect;
-> >
-> >       /* Get the current sink format */
-> > -     format->format = (format->which == V4L2_SUBDEV_FORMAT_TRY) ?
-> > -                      *v4l2_subdev_get_try_format(sd, cfg, 0) :
-> > -                      vsca->sink_fmt;
-> > +     if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-> > +             format->format = *v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +             crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     } else {
-> > +             format->format = vsca->sink_fmt;
-> > +             crop_rect = &vsca->crop_rect;
-> > +     }
-> >
-> >       /* Scale the frame size for the source pad */
-> >       if (VIMC_IS_SRC(format->pad)) {
-> > -             format->format.width = vsca->sink_fmt.width * sca_mult;
-> > -             format->format.height = vsca->sink_fmt.height * sca_mult;
-> > +             format->format.width = crop_rect->width * sca_mult;
-> > +             format->format.height = crop_rect->height * sca_mult;
-> >       }
-> >
-> >       return 0;
-> > @@ -148,6 +200,7 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >  {
-> >       struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> >       struct v4l2_mbus_framefmt *sink_fmt;
-> > +     struct v4l2_rect *crop_rect;
-> >
-> >       if (fmt->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> >               /* Do not change the format while stream is on */
-> > @@ -155,8 +208,10 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >                       return -EBUSY;
-> >
-> >               sink_fmt = &vsca->sink_fmt;
-> > +             crop_rect = &vsca->crop_rect;
-> >       } else {
-> >               sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +             crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> >       }
-> >
-> >       /*
-> > @@ -165,8 +220,8 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >        */
-> >       if (VIMC_IS_SRC(fmt->pad)) {
-> >               fmt->format = *sink_fmt;
-> > -             fmt->format.width = sink_fmt->width * sca_mult;
-> > -             fmt->format.height = sink_fmt->height * sca_mult;
-> > +             fmt->format.width = crop_rect->width * sca_mult;
-> > +             fmt->format.height = crop_rect->height * sca_mult;
-> >       } else {
-> >               /* Set the new format in the sink pad */
-> >               vimc_sca_adjust_sink_fmt(&fmt->format);
-> > @@ -184,6 +239,80 @@ static int vimc_sca_set_fmt(struct v4l2_subdev *sd,
-> >                       fmt->format.xfer_func, fmt->format.ycbcr_enc);
-> >
-> >               *sink_fmt = fmt->format;
-> > +
-> > +             /* Do the crop, but respect the current bounds */
-> > +             vimc_sca_adjust_sink_crop(crop_rect, sink_fmt);
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int vimc_sca_get_selection(struct v4l2_subdev *sd,
-> > +                               struct v4l2_subdev_pad_config *cfg,
-> > +                               struct v4l2_subdev_selection *sel)
-> > +{
-> > +     struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> > +     struct v4l2_mbus_framefmt *sink_fmt;
-> > +     struct v4l2_rect *crop_rect;
-> > +
-> > +     if (VIMC_IS_SRC(sel->pad))
-> > +             return -EINVAL;
-> > +
-> > +     if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> > +             sink_fmt = &vsca->sink_fmt;
-> > +             crop_rect = &vsca->crop_rect;
-> > +     } else {
-> > +             sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +             crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +     }
-> > +
-> > +     switch (sel->target) {
-> > +     case V4L2_SEL_TGT_CROP:
-> > +             sel->r = *crop_rect;
-> > +             break;
-> > +     case V4L2_SEL_TGT_CROP_BOUNDS:
-> > +             sel->r = vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> > +     }
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int vimc_sca_set_selection(struct v4l2_subdev *sd,
-> > +                               struct v4l2_subdev_pad_config *cfg,
-> > +                               struct v4l2_subdev_selection *sel)
-> > +{
-> > +     struct vimc_sca_device *vsca = v4l2_get_subdevdata(sd);
-> > +     struct v4l2_rect *crop_rect;
-> > +     struct v4l2_rect sink_rect;
-> > +     struct v4l2_mbus_framefmt *sink_fmt;
->
-> Do you mind declaring this just after vsca? I was trying to put bigger lines first in the declaration order.
->
-> > +
-> > +     if (VIMC_IS_SRC(sel->pad))
-> > +             return -EINVAL;
-> > +
-> > +     if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE) {
-> > +             /* Do not change the format while stream is on */
-> > +             if (vsca->src_frame)
-> > +                     return -EBUSY;
-> > +
-> > +             crop_rect = &vsca->crop_rect;
-> > +             sink_fmt = &vsca->sink_fmt;
-> > +     } else {
-> > +             crop_rect = v4l2_subdev_get_try_crop(sd, cfg, 0);
-> > +             sink_fmt = v4l2_subdev_get_try_format(sd, cfg, 0);
-> > +     }
-> > +
-> > +     switch (sel->target) {
-> > +     case V4L2_SEL_TGT_CROP:
-> > +             /* Do the crop, but respect the current bounds */
-> > +             sink_rect = vimc_sca_get_crop_bound_sink(sink_fmt);
-> > +             vimc_sca_adjust_sink_crop(&sel->r, sink_fmt);
-> > +             *crop_rect = sel->r;
-> > +             break;
-> > +     default:
-> > +             return -EINVAL;
-> >       }
-> >
-> >       return 0;
-> > @@ -195,6 +324,8 @@ static const struct v4l2_subdev_pad_ops vimc_sca_pad_ops = {
-> >       .enum_frame_size        = vimc_sca_enum_frame_size,
-> >       .get_fmt                = vimc_sca_get_fmt,
-> >       .set_fmt                = vimc_sca_set_fmt,
-> > +     .get_selection          = vimc_sca_get_selection,
-> > +     .set_selection          = vimc_sca_set_selection,
-> >  };
-> >
-> >  static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
-> > @@ -213,11 +344,11 @@ static int vimc_sca_s_stream(struct v4l2_subdev *sd, int enable)
-> >               vsca->bpp = vpix->bpp;
-> >
-> >               /* Calculate the width in bytes of the src frame */
-> > -             vsca->src_line_size = vsca->sink_fmt.width *
-> > +             vsca->src_line_size = vsca->crop_rect.width *
-> >                                     sca_mult * vsca->bpp;
-> >
-> >               /* Calculate the frame size of the source pad */
-> > -             frame_size = vsca->src_line_size * vsca->sink_fmt.height *
-> > +             frame_size = vsca->src_line_size * vsca->crop_rect.height *
-> >                            sca_mult;
-> >
-> >               /* Allocate the frame buffer. Use vmalloc to be able to
-> > @@ -259,11 +390,12 @@ static void vimc_sca_fill_pix(u8 *const ptr,
-> >  }
-> >
-> >  static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
-> > -                            const unsigned int lin, const unsigned int col,
-> > +                            unsigned int lin, unsigned int col,
-> >                              const u8 *const sink_frame)
-> >  {
-> >       unsigned int i, j, index;
-> >       const u8 *pixel;
-> > +     const struct v4l2_rect crop_rect = vsca->crop_rect;
->
-> Same here.
->
-> >
-> >       /* Point to the pixel value in position (lin, col) in the sink frame */
-> >       index = VIMC_FRAME_INDEX(lin, col,
-> > @@ -278,8 +410,10 @@ static void vimc_sca_scale_pix(const struct vimc_sca_device *const vsca,
-> >       /* point to the place we are going to put the first pixel
-> >        * in the scaled src frame
-> >        */
-> > +     lin -= crop_rect.top;
-> > +     col -= crop_rect.left;
-> >       index = VIMC_FRAME_INDEX(lin * sca_mult, col * sca_mult,
-> > -                              vsca->sink_fmt.width * sca_mult, vsca->bpp);
-> > +                              crop_rect.width * sca_mult, vsca->bpp);
-> >
-> >       dev_dbg(vsca->ved.dev, "sca: %s: scale_pix src pos %dx%d, index %d\n",
-> >               vsca->sd.name, lin * sca_mult, col * sca_mult, index);
-> > @@ -308,11 +442,12 @@ static void vimc_sca_fill_src_frame(const struct vimc_sca_device *const vsca,
-> >                                   const u8 *const sink_frame)
-> >  {
-> >       unsigned int i, j;
-> > +     const struct v4l2_rect r = vsca->crop_rect;
->
-> Same here.
->
-> >
-> >       /* Scale each pixel from the original sink frame */
-> >       /* TODO: implement scale down, only scale up is supported for now */
-> > -     for (i = 0; i < vsca->sink_fmt.height; i++)
-> > -             for (j = 0; j < vsca->sink_fmt.width; j++)
-> > +     for (i = r.top; i < r.top + r.height; i++)
-> > +             for (j = r.left; j < r.left + r.width; j++)
-> >                       vimc_sca_scale_pix(vsca, i, j, sink_frame);
-> >  }
-> >
-> > @@ -384,5 +519,8 @@ struct vimc_ent_device *vimc_sca_add(struct vimc_device *vimc,
-> >       /* Initialize the frame format */
-> >       vsca->sink_fmt = sink_fmt_default;
-> >
-> > +     /* Initialize the crop selection */
-> > +     vsca->crop_rect = crop_rect_default;
-> > +
-> >       return &vsca->ved;
-> >  }
-> >
->
-> With these changes:
->
-> Acked-by: Helen Koike <helen.koike@collabora.com>
->
-> Thanks
-> Helen
->
-> _______________________________________________
-> Lkcamp mailing list
-> Lkcamp@lists.libreplanetbr.org
-> https://lists.libreplanetbr.org/mailman/listinfo/lkcamp
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBWaWpheSBLaGVta2EgPHZpamF5
+a2hlbWthQGZiLmNvbT4gDQpTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDYsIDIwMTkgMTo1OCBB
+TQ0KVG86IG1pbnlhcmRAYWNtLm9yZw0KQ2M6IEFybmQgQmVyZ21hbm4gPGFybmRAYXJuZGIuZGU+
+OyBHcmVnIEtyb2FoLUhhcnRtYW4gPGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnPjsgb3Blbmlw
+bWktZGV2ZWxvcGVyQGxpc3RzLnNvdXJjZWZvcmdlLm5ldDsgbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgY21pbnlhcmRAbXZpc3RhLmNvbTsgQXNtYWEgTW5lYmhpIDxBc21hYUBtZWxsYW5v
+eC5jb20+OyBqb2VsQGptcy5pZC5hdTsgbGludXgtYXNwZWVkQGxpc3RzLm96bGFicy5vcmc7IFNh
+aSBEYXNhcmkgPHNkYXNhcmlAZmIuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSF0gZHJpdmVyczog
+aXBtaTogU3VwcG9ydCBmb3IgYm90aCBJUE1CIFJlcSBhbmQgUmVzcA0KDQoNCg0K77u/T24gMTEv
+NS8xOSwgNDo1NCBQTSwgIkNvcmV5IE1pbnlhcmQiIDx0Y21pbnlhcmRAZ21haWwuY29tIG9uIGJl
+aGFsZiBvZiBtaW55YXJkQGFjbS5vcmc+IHdyb3RlOg0KDQogICAgT24gVHVlLCBOb3YgMDUsIDIw
+MTkgYXQgMTE6NDc6MzFBTSAtMDgwMCwgVmlqYXkgS2hlbWthIHdyb3RlOg0KICAgID4gUmVtb3Zl
+ZCBjaGVjayBmb3IgcmVxdWVzdCBvciByZXNwb25zZSBpbiBJUE1CIHBhY2tldHMgY29taW5nIGZy
+b20NCiAgICA+IGRldmljZSBhcyB3ZWxsIGFzIGZyb20gaG9zdC4gTm93IGl0IHN1cHBvcnRzIGJv
+dGggd2F5IGNvbW11bmljYXRpb24NCiAgICA+IHRvIGRldmljZSB2aWEgSVBNQi4gQm90aCByZXF1
+ZXN0IGFuZCByZXNwb25zZSB3aWxsIGJlIHBhc3NlZCB0bw0KICAgID4gYXBwbGljYXRpb24uDQog
+ICAgPiANCiAgICA+IFNpZ25lZC1vZmYtYnk6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIu
+Y29tPg0KICAgID4gLS0tDQogICAgPiAgZHJpdmVycy9jaGFyL2lwbWkvaXBtYl9kZXZfaW50LmMg
+fCAyOSArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KICAgID4gIDEgZmlsZSBjaGFuZ2Vk
+LCAxIGluc2VydGlvbigrKSwgMjggZGVsZXRpb25zKC0pDQogICAgPiANCiAgICA+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYyBiL2RyaXZlcnMvY2hhci9pcG1p
+L2lwbWJfZGV2X2ludC5jDQogICAgPiBpbmRleCAyODVlMGI4ZjlhOTcuLjcyMDFmZGI1MzNkOCAx
+MDA2NDQNCiAgICA+IC0tLSBhL2RyaXZlcnMvY2hhci9pcG1pL2lwbWJfZGV2X2ludC5jDQogICAg
+PiArKysgYi9kcml2ZXJzL2NoYXIvaXBtaS9pcG1iX2Rldl9pbnQuYw0KICAgID4gQEAgLTEzMyw5
+ICsxMzMsNiBAQCBzdGF0aWMgc3NpemVfdCBpcG1iX3dyaXRlKHN0cnVjdCBmaWxlICpmaWxlLCBj
+b25zdCBjaGFyIF9fdXNlciAqYnVmLA0KICAgID4gIAlycV9zYSA9IEdFVF83QklUX0FERFIobXNn
+W1JRX1NBXzhCSVRfSURYXSk7DQogICAgPiAgCW5ldGZfcnFfbHVuID0gbXNnW05FVEZOX0xVTl9J
+RFhdOw0KICAgID4gIA0KICAgID4gLQlpZiAoIShuZXRmX3JxX2x1biAmIE5FVEZOX1JTUF9CSVRf
+TUFTSykpDQogICAgPiAtCQlyZXR1cm4gLUVJTlZBTDsNCiAgICA+IC0NCiAgICA+ICAJLyoNCiAg
+ICA+ICAJICogc3VidHJhY3QgcnFfc2EgYW5kIG5ldGZfcnFfbHVuIGZyb20gdGhlIGxlbmd0aCBv
+ZiB0aGUgbXNnIHBhc3NlZCB0bw0KICAgID4gIAkgKiBpMmNfc21idXNfeGZlcg0KICAgID4gQEAg
+LTIwMywyOCArMjAwLDYgQEAgc3RhdGljIHU4IGlwbWJfdmVyaWZ5X2NoZWNrc3VtMShzdHJ1Y3Qg
+aXBtYl9kZXYgKmlwbWJfZGV2LCB1OCByc19zYSkNCiAgICA+ICAJCWlwbWJfZGV2LT5yZXF1ZXN0
+LmNoZWNrc3VtMSk7DQogICAgPiAgfQ0KICAgID4gIA0KICAgID4gLXN0YXRpYyBib29sIGlzX2lw
+bWJfcmVxdWVzdChzdHJ1Y3QgaXBtYl9kZXYgKmlwbWJfZGV2LCB1OCByc19zYSkNCiAgICA+IC17
+DQogICAgPiAtCWlmIChpcG1iX2Rldi0+bXNnX2lkeCA+PSBJUE1CX1JFUVVFU1RfTEVOX01JTikg
+ew0KICAgID4gLQkJaWYgKGlwbWJfdmVyaWZ5X2NoZWNrc3VtMShpcG1iX2RldiwgcnNfc2EpKQ0K
+ICAgID4gLQkJCXJldHVybiBmYWxzZTsNCiAgICANCiAgICBZb3Ugc3RpbGwgbmVlZCB0byBjaGVj
+ayB0aGUgbWVzc2FnZSBsZW5ndGggYW5kIGNoZWNrc3VtLCB5b3UganVzdCBuZWVkDQogICAgdG8g
+aWdub3JlIHRoZSByZXEvcmVzcCBiaXQuDQpZZXMgeW91IGFyZSByaWdodCwgSSB3YXMgbG9va2lu
+ZyBmb3IgY2hlY2tzdW0gY29kZSBhZnRlciByZW1vdmluZyBpdCBfXy4gSSB3aWxsIG1vZGlmeSBp
+dC4NCg0KQmVzaWRlcyBDb3JleSdzIGNvbW1lbnQsIGxvb2tzIGdvb2QgdG8gbWUuIFRoZSBsb2dp
+YyBzaG91bGQgYmUgc29tZXRoaW5nIGxpa2UgdGhpczoNCnN0YXRpYyBib29sIGlzX2lwbWJfbXNn
+KHN0cnVjdCBpcG1iX2RldiAqaXBtYl9kZXYsIHU4IHJzX3NhKQ0KIHsNCiAgICAgICAgIGlmIChp
+cG1iX2Rldi0+bXNnX2lkeCA+PSBJUE1CX1JFUVVFU1RfTEVOX01JTikgew0KICAgICAgICAgICAg
+ICAgICBpZiAoaXBtYl92ZXJpZnlfY2hlY2tzdW0xKGlwbWJfZGV2LCByc19zYSkpDQogICAgICAg
+ICAgICAgICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KICAgICAgICAgfSBlbHNlIHsNCiAgICAg
+ICAgICAgICAgICAgcmV0dXJuIGZhbHNlOw0KICAgICAgICAgfQ0KICAgICAgICAgcmV0dXJuIHRy
+dWU7DQp9DQogICAgDQogICAgLWNvcmV5DQogICAgDQogICAgPiAtDQogICAgPiAtCQkvKg0KICAg
+ID4gLQkJICogQ2hlY2sgd2hldGhlciB0aGlzIGlzIGFuIElQTUIgcmVxdWVzdCBvcg0KICAgID4g
+LQkJICogcmVzcG9uc2UuDQogICAgPiAtCQkgKiBUaGUgNiBNU0Igb2YgbmV0Zm5fcnNfbHVuIGFy
+ZSBkZWRpY2F0ZWQgdG8gdGhlIG5ldGZuDQogICAgPiAtCQkgKiB3aGlsZSB0aGUgcmVtYWluaW5n
+IGJpdHMgYXJlIGRlZGljYXRlZCB0byB0aGUgbHVuLg0KICAgID4gLQkJICogSWYgdGhlIExTQiBv
+ZiB0aGUgbmV0Zm4gaXMgY2xlYXJlZCwgaXQgaXMgYXNzb2NpYXRlZA0KICAgID4gLQkJICogd2l0
+aCBhbiBJUE1CIHJlcXVlc3QuDQogICAgPiAtCQkgKiBJZiB0aGUgTFNCIG9mIHRoZSBuZXRmbiBp
+cyBzZXQsIGl0IGlzIGFzc29jaWF0ZWQgd2l0aA0KICAgID4gLQkJICogYW4gSVBNQiByZXNwb25z
+ZS4NCiAgICA+IC0JCSAqLw0KICAgID4gLQkJaWYgKCEoaXBtYl9kZXYtPnJlcXVlc3QubmV0Zm5f
+cnNfbHVuICYgTkVURk5fUlNQX0JJVF9NQVNLKSkNCiAgICA+IC0JCQlyZXR1cm4gdHJ1ZTsNCiAg
+ICA+IC0JfQ0KICAgID4gLQlyZXR1cm4gZmFsc2U7DQogICAgPiAtfQ0KICAgID4gLQ0KICAgID4g
+IC8qDQogICAgPiAgICogVGhlIElQTUIgcHJvdG9jb2wgb25seSBzdXBwb3J0cyBJMkMgV3JpdGVz
+IHNvIHRoZXJlIGlzIG5vIG5lZWQNCiAgICA+ICAgKiB0byBzdXBwb3J0IEkyQ19TTEFWRV9SRUFE
+KiBldmVudHMuDQogICAgPiBAQCAtMjczLDkgKzI0OCw3IEBAIHN0YXRpYyBpbnQgaXBtYl9zbGF2
+ZV9jYihzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KICAgID4gIA0KICAgID4gIAljYXNlIEky
+Q19TTEFWRV9TVE9QOg0KICAgID4gIAkJaXBtYl9kZXYtPnJlcXVlc3QubGVuID0gaXBtYl9kZXYt
+Pm1zZ19pZHg7DQogICAgPiAtDQogICAgPiAtCQlpZiAoaXNfaXBtYl9yZXF1ZXN0KGlwbWJfZGV2
+LCBHRVRfOEJJVF9BRERSKGNsaWVudC0+YWRkcikpKQ0KICAgID4gLQkJCWlwbWJfaGFuZGxlX3Jl
+cXVlc3QoaXBtYl9kZXYpOw0KICAgID4gKwkJaXBtYl9oYW5kbGVfcmVxdWVzdChpcG1iX2Rldik7
+DQoNCktlZXAgdGhpcyBsaW5lLg0KICAgID4gIAkJYnJlYWs7DQogICAgPiAgDQogICAgPiAgCWRl
+ZmF1bHQ6DQogICAgPiAtLSANCiAgICA+IDIuMTcuMQ0KICAgID4gDQogICAgDQoNCg==
