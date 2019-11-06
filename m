@@ -2,103 +2,126 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFB4C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 799DBC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21D5420869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E651217F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="rPaGli8m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732207AbfKFTBY (ORCPT
+        id S1732372AbfKFTBa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:01:24 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:39600 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfKFTBY (ORCPT
+        Wed, 6 Nov 2019 14:01:30 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:36164 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732221AbfKFTB1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:01:24 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 57FD11C0998; Wed,  6 Nov 2019 20:01:22 +0100 (CET)
-Date:   Wed, 6 Nov 2019 20:01:21 +0100
-From:   Pavel Machek <pavel@denx.de>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Thierry Reding <treding@nvidia.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: Re: [PATCH 4.19 078/149] gpio: max77620: Use correct unit for
- debounce times
-Message-ID: <20191106190121.GA2306@amd>
-References: <20191104212126.090054740@linuxfoundation.org>
- <20191104212142.090938480@linuxfoundation.org>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="+QahgC5+KEYLbs62"
-Content-Disposition: inline
-In-Reply-To: <20191104212142.090938480@linuxfoundation.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 6 Nov 2019 14:01:27 -0500
+Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
+        by linux.microsoft.com (Postfix) with ESMTPSA id F417520B4904;
+        Wed,  6 Nov 2019 11:01:26 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com F417520B4904
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573066887;
+        bh=pdZMTl5IJ3XXZubK6GdXhNLleyudkMn7QHLhVAEdwuA=;
+        h=From:To:Subject:Date:In-Reply-To:References:From;
+        b=rPaGli8mIP/hietVzL5XjZNbR1xELEi+RlsF2Xm8RNqO0HQfsz8FpkD6ui+ZjnMIS
+         fSo9KOx7BykKmYLW+mHRXcjmyx2Vft7qC3Zgeb+MTUyyCqtXrtzCgLeKyLJekFeg91
+         8+5EGzxHiLz/YbsgzEc0m7yPAiytUz4v3bBwJnYI=
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To:     zohar@linux.ibm.com, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v4 04/10] IMA: Read keyrings= option from the IMA policy into ima_rule_entry
+Date:   Wed,  6 Nov 2019 11:01:10 -0800
+Message-Id: <20191106190116.2578-5-nramas@linux.microsoft.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191106190116.2578-1-nramas@linux.microsoft.com>
+References: <20191106190116.2578-1-nramas@linux.microsoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+"keyrings=" option, if specified in the IMA policy, needs to be
+stored in the list of IMA rules when the configured IMA policy is read.
 
---+QahgC5+KEYLbs62
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This patch defines a new policy token enum namely Opt_keyrings
+for reading "keyrings=" option from the IMA policy.
 
-Hi!
+Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+---
+ security/integrity/ima/ima_policy.c | 28 +++++++++++++++++++++++++++-
+ 1 file changed, 27 insertions(+), 1 deletion(-)
 
-> The gpiod_set_debounce() function takes the debounce time in
-> microseconds. Adjust the switch/case values in the MAX77620 GPIO to use
-> the correct unit.
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 4d68ad8ed91c..74a727dc6030 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -768,7 +768,8 @@ enum {
+ 	Opt_uid_gt, Opt_euid_gt, Opt_fowner_gt,
+ 	Opt_uid_lt, Opt_euid_lt, Opt_fowner_lt,
+ 	Opt_appraise_type, Opt_appraise_flag,
+-	Opt_permit_directio, Opt_pcr, Opt_template, Opt_err
++	Opt_permit_directio, Opt_pcr, Opt_template, Opt_keyrings,
++	Opt_err
+ };
+ 
+ static const match_table_t policy_tokens = {
+@@ -804,6 +805,7 @@ static const match_table_t policy_tokens = {
+ 	{Opt_permit_directio, "permit_directio"},
+ 	{Opt_pcr, "pcr=%s"},
+ 	{Opt_template, "template=%s"},
++	{Opt_keyrings, "keyrings=%s"},
+ 	{Opt_err, NULL}
+ };
+ 
+@@ -1051,6 +1053,23 @@ static int ima_parse_rule(char *rule, struct ima_rule_entry *entry)
+ 			result = 0;
+ 			entry->flags |= IMA_FSNAME;
+ 			break;
++		case Opt_keyrings:
++			ima_log_string(ab, "keyrings", args[0].from);
++
++			if ((entry->keyrings) ||
++			    (entry->action != MEASURE) ||
++			    (entry->func != KEYRING_CHECK)) {
++				result = -EINVAL;
++				break;
++			}
++			entry->keyrings = kstrdup(args[0].from, GFP_KERNEL);
++			if (!entry->keyrings) {
++				result = -ENOMEM;
++				break;
++			}
++			result = 0;
++			entry->flags |= IMA_KEYRINGS;
++			break;
+ 		case Opt_fsuuid:
+ 			ima_log_string(ab, "fsuuid", args[0].from);
+ 
+@@ -1426,6 +1445,13 @@ int ima_policy_show(struct seq_file *m, void *v)
+ 		seq_puts(m, " ");
+ 	}
+ 
++	if (entry->flags & IMA_KEYRINGS) {
++		if (entry->keyrings != NULL)
++			snprintf(tbuf, sizeof(tbuf), "%s", entry->keyrings);
++		seq_printf(m, pt(Opt_keyrings), tbuf);
++		seq_puts(m, " ");
++	}
++
+ 	if (entry->flags & IMA_PCR) {
+ 		snprintf(tbuf, sizeof(tbuf), "%d", entry->pcr);
+ 		seq_printf(m, pt(Opt_pcr), tbuf);
+-- 
+2.17.1
 
-
-> +++ b/drivers/gpio/gpio-max77620.c
-> @@ -163,13 +163,13 @@ static int max77620_gpio_set_debounce(struct max776=
-20_gpio *mgpio,
->  	case 0:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_None;
->  		break;
-> -	case 1 ... 8:
-> +	case 1000 ... 8000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_8ms;
->  		break;
-
-AFAICT the range should be 1 ... 8000, then 8001 ... 16000 etc below...
-
-> -	case 9 ... 16:
-> +	case 9000 ... 16000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_16ms;
->  		break;
-> -	case 17 ... 32:
-> +	case 17000 ... 32000:
->  		val =3D MAX77620_CNFG_GPIO_DBNC_32ms;
->  		break;
->  	default:
-
-Best regards,
-									Pavel
-
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---+QahgC5+KEYLbs62
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3DGIEACgkQMOfwapXb+vKDjACdEBrHzhRnSS2tlzRywsjY1nqB
-AWYAn237wdZfhpbkxh6xewtJbqZA4PRp
-=4/4n
------END PGP SIGNATURE-----
-
---+QahgC5+KEYLbs62--
