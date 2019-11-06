@@ -2,98 +2,130 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E3EFC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:46:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64C63C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0E252173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:46:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AGaoiWuH"
+	by mail.kernel.org (Postfix) with ESMTP id 231702087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:46:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573015569;
+	bh=8oZt09c8tH/+LHkPmiNy6c9xvTNztGEAHbz98GwY858=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=bJxyDv0QENHpnJ20/V5mQjhUROtBrZ/KAxo7p5kFP8cYnv9VvECm0s8GDi9dDQWdF
+	 MVgTTuj/4oC2Q2j4q2mkBJumeMDT6zxcthBSr8GPIzk2BDrQVjssOQ3NDQ89COE+ai
+	 NEtCr7VC8m7ZmupPt4xpw5oLQHYCKcAIAyvzc1Zs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfKFEqC (ORCPT
+        id S1731297AbfKFEqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:46:02 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:39772 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729303AbfKFEqC (ORCPT
+        Tue, 5 Nov 2019 23:46:08 -0500
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:44669 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729303AbfKFEqH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:46:02 -0500
-Received: by mail-lj1-f194.google.com with SMTP id p18so1128987ljc.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 20:46:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gJMPHhKHFX8udqWNx4esBxs7+6CjmiT3KwNBEYCiDu4=;
-        b=AGaoiWuH4Fsah/5Mrnysi1CUGLJA95+VACk5fohzuSyNRGRqjFWx/bzNkkjPzfXmn4
-         Y56Mfrcr6KlRajYlG8J7KWJAzdar9H1F0kQSjY+NkGPXkylSOBzxNGc8EYAurRfcmB6W
-         43XMW6wWO+KuWZ1x2OgcbRKsHTZipTg9iq1cqcSeYN66xeR7uy8Njsi51KVfJz+5ptjW
-         6D0z5JCz3b+KpM0c+b+GyEa3DW++SaLoFMLmFNX+jRCwBR7lqHsH0/t1F5oUENfxCUfW
-         SzqAF/JT6aUsvr6p7H9ff6QpT6lsCCcdg5dNgHRCLTaRIyLqKDptL5tfjfXLbtrBDfPD
-         2HNA==
+        Tue, 5 Nov 2019 23:46:07 -0500
+Received: by mail-oi1-f196.google.com with SMTP id s71so19796395oih.11;
+        Tue, 05 Nov 2019 20:46:06 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gJMPHhKHFX8udqWNx4esBxs7+6CjmiT3KwNBEYCiDu4=;
-        b=h02FihivnopCpa3BVO4ves2HQcN+Vbb0EO+y09dZoexvVirT1SYwMf/ZaJdNEHtPaI
-         wgjw5C4FHEeitpfGOtvMvdUA2/q72LIgKzWu2ZgbmZK7XlwASJsQzmqz7lNNTA/wqWC9
-         4KioulNTK/Q2Xm2MJkud1XYFV4E/TeRQSpIiJhZ1dKP0Ih34URcezsczQDr/pwEOuRqZ
-         NRgxMshsiwAb9W1nGspvofJhAtvrBf315YFFwyOKpw0cdDODNvf88cxTn5yczJaq8jlX
-         2WBnHb9VR2JT1RTIJG0u2NPKdA65+iHa4Eaud/p4ezPaOwCyGgY27bwhs1FTFzDcHHAU
-         B5gw==
-X-Gm-Message-State: APjAAAW92Fxj2cEN8sf2QL1TZ3TaDQ0RVUDAgf3109w99etRuoQjumS0
-        FgxTrFg+0MadBwy3w/eoyYOkIYPX7UHxu4dyfdQ=
-X-Google-Smtp-Source: APXvYqzoj6tUsrC/BVFopD/SaOTrIMULCeKMkv2c1g5ElpPga9joMdtHCw+m/HoGVDnKOKrvi8XqjS+oHuccO/VR5HI=
-X-Received: by 2002:a2e:2419:: with SMTP id k25mr252654ljk.59.1573015560588;
- Tue, 05 Nov 2019 20:46:00 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=wGH4y8/QINgJibe6iZ9D+TwVEAiOc3D7dGreYmQ5/Jo=;
+        b=PcPPcKtcb5RD+Sjz/zWztR6iG52z8wcUOi81skxd0tvQTrxS6NFbRqsUWAwSBR/TNl
+         Awy3323AQMJH3eL+E5pVsL7/6tWek453OCU43QhsrLcB+uZmf+uV3wMSnRRWWgtIXWFo
+         hnb0mrqevGQOiwDgp9+dNazt/hwrCliETYwQgHLx8MEGVEsSn7atOi5qEZpkJly4Xlyk
+         rQc7aVPdxQnZ++RM42B8hxlRnbumi0Y9972P9cD9zA1hGIaT0Ebh1ldMJBdCmGMBK3l0
+         66/QLwSNxArU6shG7h6rjxEvefUd+GJDl+FmSJ4BaLqIZQK98F3Jv9h00SBazVJgK2zZ
+         x9FA==
+X-Gm-Message-State: APjAAAU8HWkr7yGRz/7aiKE4FCc9iHYuUSoBBK3VzHYXFiZc0hMAxvcE
+        hjO2j+1SFc+eNDhrfOX/0w==
+X-Google-Smtp-Source: APXvYqxfLJ2h0dh0Tw9BSu30JLuugYqBhvX0Klb2+BzPFTk0XNj+BsaKeLMDjCxGYwt28bCZd9hang==
+X-Received: by 2002:aca:ad52:: with SMTP id w79mr500353oie.149.1573015566353;
+        Tue, 05 Nov 2019 20:46:06 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c15sm7156877otk.12.2019.11.05.20.46.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 20:46:05 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:46:05 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [RFC 05/11] dt-bindings: soc: realtek: rtd1195-chip: Extend reg
+ property
+Message-ID: <20191106044605.GA28959@bogus>
+References: <20191103013645.9856-1-afaerber@suse.de>
+ <20191103013645.9856-6-afaerber@suse.de>
 MIME-Version: 1.0
-References: <20191018161033.261971-1-samitolvanen@google.com>
- <20191105235608.107702-1-samitolvanen@google.com> <20191105235608.107702-12-samitolvanen@google.com>
-In-Reply-To: <20191105235608.107702-12-samitolvanen@google.com>
-From:   Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>
-Date:   Wed, 6 Nov 2019 05:45:49 +0100
-Message-ID: <CANiq72mZC-G_R_RJjapZS+NvkQcrjdiri0NyHUgesFzUpe-MDg@mail.gmail.com>
-Subject: Re: [PATCH v5 11/14] arm64: efi: restore x18 if it was corrupted
-To:     Sami Tolvanen <samitolvanen@google.com>
-Cc:     Will Deacon <will@kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Dave Martin <Dave.Martin@arm.com>,
-        Kees Cook <keescook@chromium.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Marc Zyngier <maz@kernel.org>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Jann Horn <jannh@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        clang-built-linux <clang-built-linux@googlegroups.com>,
-        Kernel Hardening <kernel-hardening@lists.openwall.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191103013645.9856-6-afaerber@suse.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:56 AM Sami Tolvanen <samitolvanen@google.com> wrote:
->
-> If we detect a corrupted x18 and SCS is enabled, restore the register
-> before jumping back to instrumented code. This is safe, because the
-> wrapper is called with preemption disabled and a separate shadow stack
-> is used for interrupt handling.
+On Sun, Nov 03, 2019 at 02:36:39AM +0100, Andreas Färber wrote:
+> Allow to optionally specify a second register to identify the chip.
+> Whether needed and which register to specify depends on the family;
+> RTD1295 family will want the CHIP_INFO1 register.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  A SoC specific binding would defeat the purpose of the generic Linux driver;
 
-In case you do v6: I think putting the explanation about why this is
-safe in the existing comment would be best given it is justifying a
-subtlety of the code rather than the change itself. Ard?
+Why? You can map any number of compatibles to a generic driver.
 
-Cheers,
-Miguel
+>  is it possible to check the root node's compatible in an if: expression
+>  to prohibit using more than one reg on "realtek,rtd1195"?
+
+The "rule" is different programming model, different compatible string 
+for the block. But this looks simple enough, I don't really care.
+
+>  
+>  .../devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml  | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> index 565ad2419553..e431cf559b66 100644
+> --- a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> +++ b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> @@ -11,13 +11,15 @@ maintainers:
+>  
+>  description: |
+>    The Realtek SoCs have some registers to identify the chip and revision.
+> +  To identify the exact model within a family, further registers are needed.
+>  
+>  properties:
+>    compatible:
+>      const: "realtek,rtd1195-chip"
+>  
+>    reg:
+> -    maxItems: 1
+> +    minItems: 1
+> +    maxItems: 2
+>  
+>  required:
+>    - compatible
+> @@ -29,4 +31,10 @@ examples:
+>          compatible = "realtek,rtd1195-chip";
+>          reg = <0x1801a200 0x8>;
+>      };
+> +  - |
+> +    chip-info@9801a200 {
+> +        compatible = "realtek,rtd1195-chip";
+> +        reg = <0x9801a200 0x8>,
+> +              <0x98007028 0x4>;
+> +    };
+>  ...
+> -- 
+> 2.16.4
+> 
