@@ -2,109 +2,104 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B9B2C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE85EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:30:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C325E217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC20A2173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:30:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731364AbfKFH3Y (ORCPT
+        id S1731325AbfKFHaD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:29:24 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:40496 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729683AbfKFH3X (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:29:23 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 16AB42001C8;
-        Wed,  6 Nov 2019 08:29:21 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 8CC4E20013E;
-        Wed,  6 Nov 2019 08:29:16 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id AD12340285;
-        Wed,  6 Nov 2019 15:29:10 +0800 (SGT)
-From:   Shengjiu Wang <shengjiu.wang@nxp.com>
-To:     timur@kernel.org, nicoleotsuka@gmail.com, Xiubo.Lee@gmail.com,
-        festevam@gmail.com, broonie@kernel.org, perex@perex.cz,
-        tiwai@suse.com, alsa-devel@alsa-project.org,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ASoC: fsl_audmix: Add spin lock to protect tdms
-Date:   Wed,  6 Nov 2019 15:27:45 +0800
-Message-Id: <1573025265-31852-1-git-send-email-shengjiu.wang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 6 Nov 2019 02:30:03 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:41429 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1729683AbfKFHaD (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:30:03 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id SFlDilsww9P9bSFlIicPA8; Wed, 06 Nov 2019 08:29:59 +0100
+Subject: Re: [PATCH] pvrusb2: Fix oops on tear-down when radio support is not
+ present
+To:     Mike Isely at pobox <isely@pobox.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+References: <alpine.DEB.2.21.1911052034300.31133@sheridan.isely.net>
+From:   Hans Verkuil <hverkuil@xs4all.nl>
+Message-ID: <5491a24e-e41a-5d11-7ac5-6d6804989550@xs4all.nl>
+Date:   Wed, 6 Nov 2019 08:29:47 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <alpine.DEB.2.21.1911052034300.31133@sheridan.isely.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfGdfI3TDc2NnorQhQx1V7ZhhxNM81FDJQyN21HuildDLKPJOTVsc9LUUqFTVP3+AMxz6oCZYX3cFQJBUY/2zRp4zKjJn+BBGBOYSDUap+uYf0Lzg1Mir
+ Bi4TBoMBEFUZiIbfYb+gF+EVVqcIfw5EidYYZRPrU1OvMoRNOWbty8ePG1YIQFQu9FsRvNxCQcUvgy4x87lzIV7Bng3VKVfwKbRLO7zWNj3OHRp6THWLeiaY
+ VIkBU9fmupzaS3kWCUmFdxgjtnbVJAxmW/MKWeVjfN0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Audmix support two substream, When two substream start
-to run, the trigger function may be called by two substream
-in same time, that the priv->tdms may be updated wrongly.
+Hi Mike,
 
-The expected priv->tdms is 0x3, but sometimes the
-result is 0x2, or 0x1.
+For some reason your mailer didn't include a "From:" line, only a "Reply-To:"
+line. This means that the patch authorship is not detected by patchwork and
+git. Can you repost with a valid From: line in the email header?
 
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
----
- sound/soc/fsl/fsl_audmix.c | 6 ++++++
- sound/soc/fsl/fsl_audmix.h | 1 +
- 2 files changed, 7 insertions(+)
+Thanks!
 
-diff --git a/sound/soc/fsl/fsl_audmix.c b/sound/soc/fsl/fsl_audmix.c
-index c7e4e9757dce..a1db1bce330f 100644
---- a/sound/soc/fsl/fsl_audmix.c
-+++ b/sound/soc/fsl/fsl_audmix.c
-@@ -286,6 +286,7 @@ static int fsl_audmix_dai_trigger(struct snd_pcm_substream *substream, int cmd,
- 				  struct snd_soc_dai *dai)
- {
- 	struct fsl_audmix *priv = snd_soc_dai_get_drvdata(dai);
-+	unsigned long lock_flags;
- 
- 	/* Capture stream shall not be handled */
- 	if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
-@@ -295,12 +296,16 @@ static int fsl_audmix_dai_trigger(struct snd_pcm_substream *substream, int cmd,
- 	case SNDRV_PCM_TRIGGER_START:
- 	case SNDRV_PCM_TRIGGER_RESUME:
- 	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms |= BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
-+		spin_lock_irqsave(&priv->lock, lock_flags);
- 		priv->tdms &= ~BIT(dai->driver->id);
-+		spin_unlock_irqrestore(&priv->lock, lock_flags);
- 		break;
- 	default:
- 		return -EINVAL;
-@@ -491,6 +496,7 @@ static int fsl_audmix_probe(struct platform_device *pdev)
- 		return PTR_ERR(priv->ipg_clk);
- 	}
- 
-+	spin_lock_init(&priv->lock);
- 	platform_set_drvdata(pdev, priv);
- 	pm_runtime_enable(dev);
- 
-diff --git a/sound/soc/fsl/fsl_audmix.h b/sound/soc/fsl/fsl_audmix.h
-index 7812ffec45c5..479f05695d53 100644
---- a/sound/soc/fsl/fsl_audmix.h
-+++ b/sound/soc/fsl/fsl_audmix.h
-@@ -96,6 +96,7 @@ struct fsl_audmix {
- 	struct platform_device *pdev;
- 	struct regmap *regmap;
- 	struct clk *ipg_clk;
-+	spinlock_t lock; /* Protect tdms */
- 	u8 tdms;
- };
- 
--- 
-2.21.0
+	Hans
+
+On 11/6/19 3:36 AM,  wrote:
+> In some device configurations there's no radio or radio support in the
+> driver.  That's OK, as the driver sets itself up accordingly.  However
+> on tear-down in these caes it's still trying to tear down radio
+> related context when there isn't anything there, leading to
+> dereferences through a null pointer and chaos follows.
+> 
+> How this bug survived unfixed for 11 years in the pvrusb2 driver is a
+> mystery to me.
+> 
+> Signed-off-by: Mike Isely <isely@pobox.com>
+> ---
+>  drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
+>  1 file changed, 7 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+> index aa4fbc3e88cc..339119f6cc23 100644
+> --- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+> +++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
+> @@ -909,8 +909,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
+>  	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
+>  	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
+>  	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
+> -	    !list_empty(&vp->dev_radio->devbase.fh_list))
+> +	    ((vp->dev_radio != NULL) &&
+> +	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
+> +		pvr2_trace(PVR2_TRACE_STRUCT,
+> +			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
+>  		return;
+> +	}
+>  	pvr2_v4l2_destroy_no_lock(vp);
+>  }
+>  
+> @@ -946,7 +950,8 @@ static int pvr2_v4l2_release(struct file *file)
+>  	kfree(fhp);
+>  	if (vp->channel.mc_head->disconnect_flag &&
+>  	    list_empty(&vp->dev_video->devbase.fh_list) &&
+> -	    list_empty(&vp->dev_radio->devbase.fh_list)) {
+> +	    ((vp->dev_radio == NULL) ||
+> +	     list_empty(&vp->dev_radio->devbase.fh_list))) {
+>  		pvr2_v4l2_destroy_no_lock(vp);
+>  	}
+>  	return 0;
+> 
 
