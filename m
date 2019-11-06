@@ -2,316 +2,207 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22B28C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:10:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 815D9C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:10:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D12FC217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:10:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=bitmath.org header.i=@bitmath.org header.b="iGM7AeIe"
+	by mail.kernel.org (Postfix) with ESMTP id 4C8CE217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:10:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727837AbfKFVKY (ORCPT
+        id S1732012AbfKFVKf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:10:24 -0500
-Received: from mailrelay3-2.pub.mailoutpod1-cph3.one.com ([46.30.212.2]:17770
-        "EHLO mailrelay3-2.pub.mailoutpod1-cph3.one.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726680AbfKFVKY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:10:24 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bitmath.org; s=20140924;
-        h=content-transfer-encoding:content-type:in-reply-to:mime-version:date:
-         message-id:from:references:cc:to:subject:from;
-        bh=4+RTek27QBVcIe/cdkCy2pe8OGRWOH0S5ORmdwUyo30=;
-        b=iGM7AeIepsnEM1adlQI2SZpebCSTEXL6ESCJ9k0jEXLS3VHNrhhtkLBEVQiT4Vz4ZLww7LYNlSBXc
-         SRRN4o6+1pvV/9titRXaHIAh4Lap1tSGBvUzxacYEI/5OAplQqIhnN4avtRhx2iURrIhiIY6nKq+Gu
-         8CnFhXJLUim3KCew=
-X-HalOne-Cookie: 1e9321a08137a81d8fd412420f3d1a74df673a1c
-X-HalOne-ID: d5042bd6-00d9-11ea-b5f1-d0431ea8bb03
-Received: from [192.168.19.13] (unknown [98.128.166.87])
-        by mailrelay3.pub.mailoutpod1-cph3.one.com (Halon) with ESMTPSA
-        id d5042bd6-00d9-11ea-b5f1-d0431ea8bb03;
-        Wed, 06 Nov 2019 21:10:17 +0000 (UTC)
-Subject: Re: [PATCH v5 01/48] Input: introduce input_mt_report_slot_inactive
-To:     Jiada Wang <jiada_wang@mentor.com>, jikos@kernel.org,
-        benjamin.tissoires@redhat.com, dmitry.torokhov@gmail.com,
-        nick@shmanahar.org
-Cc:     linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        erosca@de.adit-jv.com, Andrew_Gabbasov@mentor.com
-References: <20191106070146.18759-1-jiada_wang@mentor.com>
- <20191106070146.18759-2-jiada_wang@mentor.com>
-From:   Henrik Rydberg <rydberg@bitmath.org>
-Message-ID: <bb392c48-3d1e-cb79-046b-355b12331e8a@bitmath.org>
-Date:   Wed, 6 Nov 2019 22:11:56 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 6 Nov 2019 16:10:35 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:33898 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727921AbfKFVKe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:10:34 -0500
+Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com [209.85.221.69])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D83563DE20
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 21:10:33 +0000 (UTC)
+Received: by mail-wr1-f69.google.com with SMTP id e3so12523868wrs.17
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 13:10:33 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=C3LgI3FZCo4MFBwXeZWw6RGjP/s+c0ceBa3NjK+vj58=;
+        b=E+y8OArjrQa2XysPoAihlxNotX54y249agq8eHsOo1ZplsqVvQndVUIeuqlRQtsq/c
+         qHOeZNoQ7AtoDwB1rMWkDlakXyRIyj1BoFfAIC5GIPU5aJIY4GGRkw1GO1tGaqHmPYpo
+         E6W44TUIhgBxNd2p57cRTvRrWcmEHECH9vzNtKz18/rF9V7T7+ATLzHQSnodZZrNlNOZ
+         i6I61PDKl9OUc39j2zIumlsbkVH7oPhWF3/0VVE8IMHVf16yGmPwE8r8Dw9izOQ3DSnW
+         YIZRt+bfQJ2WuhYIXZH1hPtry+ZZk/olXa5IjyKrhFaBZuCu51RZ1aO4TnV5yGKXNFXF
+         QOdg==
+X-Gm-Message-State: APjAAAVaE43s/z8YhKFnCjY//12AuZrGqFlk6irckEniBz6gBWgL7CIk
+        6gNx5l7sPMWh6SaAbGShRUWL43irPXBnvyt36h9n+7oJI+YAla6/kzHnRqyORVsWpaMqmWxyKQP
+        eAci57aazHtmgX3xtWH/NA8T2
+X-Received: by 2002:a1c:ab0a:: with SMTP id u10mr4714785wme.0.1573074632302;
+        Wed, 06 Nov 2019 13:10:32 -0800 (PST)
+X-Google-Smtp-Source: APXvYqy5XOZTrhpzonDUnIja4CnKgKdNvmgOSOp4dSYjni1Ag4Vj3+2b5CH/cGa2EdkBk6Mn3zZ5IQ==
+X-Received: by 2002:a1c:ab0a:: with SMTP id u10mr4714761wme.0.1573074631888;
+        Wed, 06 Nov 2019 13:10:31 -0800 (PST)
+Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
+        by smtp.gmail.com with ESMTPSA id t185sm4344643wmf.45.2019.11.06.13.10.30
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 13:10:31 -0800 (PST)
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+To:     Dan Williams <dan.j.williams@intel.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+Date:   Wed, 6 Nov 2019 22:09:29 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191106070146.18759-2-jiada_wang@mentor.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-11-06 08:00, Jiada Wang wrote:
+On 06/11/19 19:04, Dan Williams wrote:
+> On Wed, Nov 6, 2019 at 9:07 AM Sean Christopherson
+> <sean.j.christopherson@intel.com> wrote:
+>>
+>> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+>> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+>> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+>> pages, e.g. put pages grabbed via gup().  But KVM needs special handling
+>> in other flows where ZONE_DEVICE pages lack the underlying machinery,
+>> e.g. when setting accessed/dirty bits and shifting refcounts for
+>> transparent huge pages.
+>>
+>> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+>> when running a KVM guest backed with /dev/dax memory, as KVM straight up
+>> doesn't put any references to ZONE_DEVICE pages acquired by gup().
+>>
+>> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+>>
+>> Reported-by: Adam Borowski <kilobyte@angband.pl>
+>> Debugged-by: David Hildenbrand <david@redhat.com>
+>> Cc: Dan Williams <dan.j.williams@intel.com>
+>> Cc: stable@vger.kernel.org
+>> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+>> ---
+>>  arch/x86/kvm/mmu.c       |  8 ++++----
+>>  include/linux/kvm_host.h |  1 +
+>>  virt/kvm/kvm_main.c      | 19 +++++++++++++++----
+>>  3 files changed, 20 insertions(+), 8 deletions(-)
+>>
+>> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+>> index 24c23c66b226..bf82b1f2e834 100644
+>> --- a/arch/x86/kvm/mmu.c
+>> +++ b/arch/x86/kvm/mmu.c
+>> @@ -3306,7 +3306,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+>>          * here.
+>>          */
+>>         if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+>> -           level == PT_PAGE_TABLE_LEVEL &&
+>> +           !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+>>             PageTransCompoundMap(pfn_to_page(pfn)) &&
+>>             !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+>>                 unsigned long mask;
+>> @@ -5914,9 +5914,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+>>                  * the guest, and the guest page table is using 4K page size
+>>                  * mapping if the indirect sp has level = 1.
+>>                  */
+>> -               if (sp->role.direct &&
+>> -                       !kvm_is_reserved_pfn(pfn) &&
+>> -                       PageTransCompoundMap(pfn_to_page(pfn))) {
+>> +               if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+>> +                   !kvm_is_zone_device_pfn(pfn) &&
+>> +                   PageTransCompoundMap(pfn_to_page(pfn))) {
+>>                         pte_list_remove(rmap_head, sptep);
+>>
+>>                         if (kvm_available_flush_tlb_with_range())
+>> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+>> index a817e446c9aa..4ad1cd7d2d4d 100644
+>> --- a/include/linux/kvm_host.h
+>> +++ b/include/linux/kvm_host.h
+>> @@ -966,6 +966,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
+>>  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+>>
+>>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
+>> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+>>
+>>  struct kvm_irq_ack_notifier {
+>>         struct hlist_node link;
+>> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+>> index b8534c6b8cf6..0a781b1fb8f0 100644
+>> --- a/virt/kvm/kvm_main.c
+>> +++ b/virt/kvm/kvm_main.c
+>> @@ -151,12 +151,23 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+>>
+>>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+>>  {
+>> +       /*
+>> +        * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
+>> +        * perspective they are "normal" pages, albeit with slightly different
+>> +        * usage rules.
+>> +        */
+>>         if (pfn_valid(pfn))
+>> -               return PageReserved(pfn_to_page(pfn));
+>> +               return PageReserved(pfn_to_page(pfn)) &&
+>> +                      !is_zone_device_page(pfn_to_page(pfn));
+> 
+> This is racy unless you can be certain that the pfn and resulting page
+> has already been pinned by get_user_pages().
 
-> input_mt_report_slot_state() ignores the tool when the slot is closed.
-> which has caused a bit of confusion.
-> This patch introduces input_mt_report_slot_inactive() to report slot
-> inactive state.
-> replaces all input_mt_report_slot_state() with
-> input_mt_report_slot_inactive() in case of close of slot.
->
-> Suggested-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+What is the race exactly?
 
-     Reviewed-by: Henrik Rydberg <rydberg@bitmath.org>
+In general KVM does not use pfn's until after having gotten them from
+get_user_pages (or follow_pfn for VM_IO | VM_PFNMAP vmas, for which
+get_user_pages fails, but this is not an issue here).  It then creates
+the page tables and releases the reference to the struct page.
 
-Thanks,
-Henrik
+Anything else happens _after_ the reference has been released, but still
+from an mmu notifier; this is why KVM uses pfn_to_page quite pervasively.
 
-> ---
->   drivers/hid/hid-alps.c                     | 3 +--
->   drivers/hid/hid-multitouch.c               | 6 ++----
->   drivers/input/input-mt.c                   | 2 +-
->   drivers/input/misc/xen-kbdfront.c          | 2 +-
->   drivers/input/mouse/elan_i2c_core.c        | 2 +-
->   drivers/input/touchscreen/atmel_mxt_ts.c   | 7 +++----
->   drivers/input/touchscreen/cyttsp4_core.c   | 5 ++---
->   drivers/input/touchscreen/cyttsp_core.c    | 2 +-
->   drivers/input/touchscreen/melfas_mip4.c    | 4 ++--
->   drivers/input/touchscreen/mms114.c         | 2 +-
->   drivers/input/touchscreen/raspberrypi-ts.c | 2 +-
->   drivers/input/touchscreen/stmfts.c         | 2 +-
->   include/linux/input/mt.h                   | 5 +++++
->   13 files changed, 22 insertions(+), 22 deletions(-)
->
-> diff --git a/drivers/hid/hid-alps.c b/drivers/hid/hid-alps.c
-> index ae79a7c66737..36ca1d815d53 100644
-> --- a/drivers/hid/hid-alps.c
-> +++ b/drivers/hid/hid-alps.c
-> @@ -387,8 +387,7 @@ static int u1_raw_event(struct alps_dev *hdata, u8 *data, int size)
->   				input_report_abs(hdata->input,
->   					ABS_MT_PRESSURE, z);
->   			} else {
-> -				input_mt_report_slot_state(hdata->input,
-> -					MT_TOOL_FINGER, 0);
-> +				input_mt_report_slot_inactive(hdata->input);
->   			}
->   		}
->   
-> diff --git a/drivers/hid/hid-multitouch.c b/drivers/hid/hid-multitouch.c
-> index 3cfeb1629f79..15e6c04a76dd 100644
-> --- a/drivers/hid/hid-multitouch.c
-> +++ b/drivers/hid/hid-multitouch.c
-> @@ -896,7 +896,7 @@ static void mt_release_pending_palms(struct mt_device *td,
->   		clear_bit(slotnum, app->pending_palm_slots);
->   
->   		input_mt_slot(input, slotnum);
-> -		input_mt_report_slot_state(input, MT_TOOL_PALM, false);
-> +		input_mt_report_slot_inactive(input);
->   
->   		need_sync = true;
->   	}
-> @@ -1640,9 +1640,7 @@ static void mt_release_contacts(struct hid_device *hid)
->   		if (mt) {
->   			for (i = 0; i < mt->num_slots; i++) {
->   				input_mt_slot(input_dev, i);
-> -				input_mt_report_slot_state(input_dev,
-> -							   MT_TOOL_FINGER,
-> -							   false);
-> +				input_mt_report_slot_inactive(input_dev);
->   			}
->   			input_mt_sync_frame(input_dev);
->   			input_sync(input_dev);
-> diff --git a/drivers/input/input-mt.c b/drivers/input/input-mt.c
-> index a81e14148407..7626fe5bfe44 100644
-> --- a/drivers/input/input-mt.c
-> +++ b/drivers/input/input-mt.c
-> @@ -145,7 +145,7 @@ bool input_mt_report_slot_state(struct input_dev *dev,
->   	slot->frame = mt->frame;
->   
->   	if (!active) {
-> -		input_event(dev, EV_ABS, ABS_MT_TRACKING_ID, -1);
-> +		input_mt_report_slot_inactive(dev);
->   		return false;
->   	}
->   
-> diff --git a/drivers/input/misc/xen-kbdfront.c b/drivers/input/misc/xen-kbdfront.c
-> index 24bc5c5d876f..a1bba722b234 100644
-> --- a/drivers/input/misc/xen-kbdfront.c
-> +++ b/drivers/input/misc/xen-kbdfront.c
-> @@ -146,7 +146,7 @@ static void xenkbd_handle_mt_event(struct xenkbd_info *info,
->   		break;
->   
->   	case XENKBD_MT_EV_UP:
-> -		input_mt_report_slot_state(info->mtouch, MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(info->mtouch);
->   		break;
->   
->   	case XENKBD_MT_EV_SYN:
-> diff --git a/drivers/input/mouse/elan_i2c_core.c b/drivers/input/mouse/elan_i2c_core.c
-> index 8719da540383..3f9354baac4b 100644
-> --- a/drivers/input/mouse/elan_i2c_core.c
-> +++ b/drivers/input/mouse/elan_i2c_core.c
-> @@ -938,7 +938,7 @@ static void elan_report_contact(struct elan_tp_data *data,
->   		input_report_abs(input, ABS_MT_TOUCH_MINOR, minor);
->   	} else {
->   		input_mt_slot(input, contact_num);
-> -		input_mt_report_slot_state(input, MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(input);
->   	}
->   }
->   
-> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-> index 24c4b691b1c9..6e758af343ea 100644
-> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
-> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-> @@ -822,8 +822,7 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
->   		 * have happened.
->   		 */
->   		if (status & MXT_T9_RELEASE) {
-> -			input_mt_report_slot_state(input_dev,
-> -						   MT_TOOL_FINGER, 0);
-> +			input_mt_report_slot_inactive(input_dev);
->   			mxt_input_sync(data);
->   		}
->   
-> @@ -839,7 +838,7 @@ static void mxt_proc_t9_message(struct mxt_data *data, u8 *message)
->   		input_report_abs(input_dev, ABS_MT_TOUCH_MAJOR, area);
->   	} else {
->   		/* Touch no longer active, close out slot */
-> -		input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, 0);
-> +		input_mt_report_slot_inactive(input_dev);
->   	}
->   
->   	data->update_input = true;
-> @@ -947,7 +946,7 @@ static void mxt_proc_t100_message(struct mxt_data *data, u8 *message)
->   		dev_dbg(dev, "[%u] release\n", id);
->   
->   		/* close out slot */
-> -		input_mt_report_slot_state(input_dev, 0, 0);
-> +		input_mt_report_slot_inactive(input_dev);
->   	}
->   
->   	data->update_input = true;
-> diff --git a/drivers/input/touchscreen/cyttsp4_core.c b/drivers/input/touchscreen/cyttsp4_core.c
-> index 4b22d49a0f49..a3a85e2348a2 100644
-> --- a/drivers/input/touchscreen/cyttsp4_core.c
-> +++ b/drivers/input/touchscreen/cyttsp4_core.c
-> @@ -744,8 +744,7 @@ static void cyttsp4_report_slot_liftoff(struct cyttsp4_mt_data *md,
->   
->   	for (t = 0; t < max_slots; t++) {
->   		input_mt_slot(md->input, t);
-> -		input_mt_report_slot_state(md->input,
-> -			MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(md->input);
->   	}
->   }
->   
-> @@ -845,7 +844,7 @@ static void cyttsp4_final_sync(struct input_dev *input, int max_slots, int *ids)
->   		if (ids[t])
->   			continue;
->   		input_mt_slot(input, t);
-> -		input_mt_report_slot_state(input, MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(input);
->   	}
->   
->   	input_sync(input);
-> diff --git a/drivers/input/touchscreen/cyttsp_core.c b/drivers/input/touchscreen/cyttsp_core.c
-> index 3f5d463dbeed..697aa2c158f7 100644
-> --- a/drivers/input/touchscreen/cyttsp_core.c
-> +++ b/drivers/input/touchscreen/cyttsp_core.c
-> @@ -340,7 +340,7 @@ static void cyttsp_report_tchdata(struct cyttsp *ts)
->   			continue;
->   
->   		input_mt_slot(input, i);
-> -		input_mt_report_slot_state(input, MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(input);
->   	}
->   
->   	input_sync(input);
-> diff --git a/drivers/input/touchscreen/melfas_mip4.c b/drivers/input/touchscreen/melfas_mip4.c
-> index 247c3aaba2d8..f67efdd040b2 100644
-> --- a/drivers/input/touchscreen/melfas_mip4.c
-> +++ b/drivers/input/touchscreen/melfas_mip4.c
-> @@ -391,7 +391,7 @@ static void mip4_clear_input(struct mip4_ts *ts)
->   	/* Screen */
->   	for (i = 0; i < MIP4_MAX_FINGERS; i++) {
->   		input_mt_slot(ts->input, i);
-> -		input_mt_report_slot_state(ts->input, MT_TOOL_FINGER, 0);
-> +		input_mt_report_slot_inactive(ts->input);
->   	}
->   
->   	/* Keys */
-> @@ -534,7 +534,7 @@ static void mip4_report_touch(struct mip4_ts *ts, u8 *packet)
->   	} else {
->   		/* Release event */
->   		input_mt_slot(ts->input, id);
-> -		input_mt_report_slot_state(ts->input, MT_TOOL_FINGER, 0);
-> +		input_mt_report_slot_inactive(ts->input);
->   	}
->   
->   	input_mt_sync_frame(ts->input);
-> diff --git a/drivers/input/touchscreen/mms114.c b/drivers/input/touchscreen/mms114.c
-> index a5ab774da4cc..8112bd77afae 100644
-> --- a/drivers/input/touchscreen/mms114.c
-> +++ b/drivers/input/touchscreen/mms114.c
-> @@ -550,7 +550,7 @@ static int __maybe_unused mms114_suspend(struct device *dev)
->   	/* Release all touch */
->   	for (id = 0; id < MMS114_MAX_TOUCH; id++) {
->   		input_mt_slot(input_dev, id);
-> -		input_mt_report_slot_state(input_dev, MT_TOOL_FINGER, false);
-> +		input_mt_report_slot_inactive(input_dev);
->   	}
->   
->   	input_mt_report_pointer_emulation(input_dev, true);
-> diff --git a/drivers/input/touchscreen/raspberrypi-ts.c b/drivers/input/touchscreen/raspberrypi-ts.c
-> index 69881265d121..147ea4f8f87b 100644
-> --- a/drivers/input/touchscreen/raspberrypi-ts.c
-> +++ b/drivers/input/touchscreen/raspberrypi-ts.c
-> @@ -102,7 +102,7 @@ static void rpi_ts_poll(struct input_polled_dev *dev)
->   	released_ids = ts->known_ids & ~modified_ids;
->   	for_each_set_bit(i, &released_ids, RPI_TS_MAX_SUPPORTED_POINTS) {
->   		input_mt_slot(input, i);
-> -		input_mt_report_slot_state(input, MT_TOOL_FINGER, 0);
-> +		input_mt_report_slot_inactive(input);
->   		modified_ids &= ~(BIT(i));
->   	}
->   	ts->known_ids = modified_ids;
-> diff --git a/drivers/input/touchscreen/stmfts.c b/drivers/input/touchscreen/stmfts.c
-> index b6f95f20f924..b54cc64e4ea6 100644
-> --- a/drivers/input/touchscreen/stmfts.c
-> +++ b/drivers/input/touchscreen/stmfts.c
-> @@ -198,7 +198,7 @@ static void stmfts_report_contact_release(struct stmfts_data *sdata,
->   	u8 slot_id = (event[0] & STMFTS_MASK_TOUCH_ID) >> 4;
->   
->   	input_mt_slot(sdata->input, slot_id);
-> -	input_mt_report_slot_state(sdata->input, MT_TOOL_FINGER, false);
-> +	input_mt_report_slot_inactive(sdata->input);
->   
->   	input_sync(sdata->input);
->   }
-> diff --git a/include/linux/input/mt.h b/include/linux/input/mt.h
-> index 9e409bb13642..3b8580bd33c1 100644
-> --- a/include/linux/input/mt.h
-> +++ b/include/linux/input/mt.h
-> @@ -100,6 +100,11 @@ static inline bool input_is_mt_axis(int axis)
->   bool input_mt_report_slot_state(struct input_dev *dev,
->   				unsigned int tool_type, bool active);
->   
-> +static inline void input_mt_report_slot_inactive(struct input_dev *dev)
-> +{
-> +	input_mt_report_slot_state(dev, 0, false);
-> +}
-> +
->   void input_mt_report_finger_count(struct input_dev *dev, int count);
->   void input_mt_report_pointer_emulation(struct input_dev *dev, bool use_count);
->   void input_mt_drop_unused(struct input_dev *dev);
+If this is enough to avoid races, then I prefer Sean's patch.  If it is
+racy, we need to fix kvm_set_pfn_accessed and kvm_set_pfn_dirty first,
+and second at transparent_hugepage_adjust and kvm_mmu_zap_collapsible_spte:
+
+- if accessed/dirty state need not be tracked properly for ZONE_DEVICE,
+then I suppose David's patch is okay (though I'd like to have a big
+comment explaining all the things that went on in these emails).  If
+they need to work, however, Sean's patch 1 is the right thing to do.
+
+- if we need Sean's patch 1, but it is racy to use is_zone_device_page,
+we could first introduce a helper similar to kvm_is_hugepage_allowed()
+from his patch 2, but using pfn_to_online_page() to filter out
+ZONE_DEVICE pages.  This would cover both transparent_hugepage_adjust
+and kvm_mmu_zap_collapsible_spte.
+
+> This is why I told David
+> to steer clear of adding more is_zone_device_page() usage, it's
+> difficult to audit. Without an existing pin the metadata to determine
+> whether a page is ZONE_DEVICE or not could be in the process of being
+> torn down. Ideally KVM would pass around a struct { struct page *page,
+> unsigned long pfn } tuple so it would not have to do this "recall
+> context" dance on every pfn operation.
+
+Unfortunately once KVM has created its own page tables, the struct page*
+reference is lost, as the PFN is the only thing that is stored in there.
+
+Paolo
