@@ -2,87 +2,283 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
+	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBC1C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1156C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:46:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D500A20869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:43:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5C40E217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:46:43 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="YEKNuwnX"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bMol0jV6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728247AbfKFTnT (ORCPT
+        id S1728627AbfKFTqm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:43:19 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:57382 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFTnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:43:19 -0500
-Received: from zn.tnic (p200300EC2F0E770015F12088A3A733FB.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:7700:15f1:2088:a3a7:33fb])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 476DB1EC0CCC;
-        Wed,  6 Nov 2019 20:43:17 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573069397;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=ispzmoCNVnfldM6nKX7veRr0TPeyd0yKxE1spA1TaBc=;
-        b=YEKNuwnXhFvXTQKghtkDmqtoKBfr+3vCzK+52VXSmLJzHsUMi2Eszo+4Y3+CPZzZ6FR7Wr
-        Psetif/T1gU5xoavkZKEWuju6VydeqZkc4MLlwubc0Ojq+5x3OB7HoSoavN8i3HRs6/KPM
-        GUFBk8Z/klTXeVYa+6vDlVbXTmDuni4=
-Date:   Wed, 6 Nov 2019 20:43:10 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     hpa@zytor.com
-Cc:     Daniel Kiper <daniel.kiper@oracle.com>, linux-efi@vger.kernel.org,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        xen-devel@lists.xenproject.org, ard.biesheuvel@linaro.org,
-        boris.ostrovsky@oracle.com, corbet@lwn.net,
-        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
-        eric.snowberg@oracle.com, jgross@suse.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-Subject: Re: [PATCH v5 0/3] x86/boot: Introduce the kernel_info et consortes
-Message-ID: <20191106194310.GE28380@zn.tnic>
-References: <20191104151354.28145-1-daniel.kiper@oracle.com>
- <20191106170333.GD28380@zn.tnic>
- <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 6 Nov 2019 14:46:42 -0500
+Received: from mail-pf1-f202.google.com ([209.85.210.202]:40036 "EHLO
+        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727319AbfKFTqm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:46:42 -0500
+Received: by mail-pf1-f202.google.com with SMTP id h67so10518653pfb.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:46:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:message-id:mime-version:subject:from:to:cc;
+        bh=XMIoZmq3jzflCx/mOOBG8L+JHVjKdPs5Ze6dku/isc8=;
+        b=bMol0jV6gQMh4E3B2H837bFujfxShKd7aFYex3oQh76AgZHWxQAJxDcki+arj1XaMw
+         zetFAVUTVnvecFKwY/bgQFYe4cUPxHrYu24rdycUO0yj1FKnz3QMTKlLoNMq2eScr1a8
+         OQSRIPY+UiH509bu20sMuySS8jRDCXTV54fQNGPaoZ/YhnfFEY1zSrfjLMLe2dxIu71C
+         9LawlybmZsw4CEFKGzTFHPMUYKEg0gXzNSK6IXV9JmGL/uat3VsL2ybIduQZx3HP1RNH
+         Lc71aKXI0TG0SNFTR8shGe5xf3PSIyZanQjwOGyE8OLjLNCHaezVnfJARiXRPkBsv/YS
+         6hQg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
+        bh=XMIoZmq3jzflCx/mOOBG8L+JHVjKdPs5Ze6dku/isc8=;
+        b=g0qted7FEjCdLYVLTciOvrQhDj7gJn8Oerk26w0HrEDs/J5/XSz7Tzu439lw2o0PFa
+         1/z8q8DWgEQ0sjQ6NePh7k8D9NBgdkmRxttlbU5wUvJgQHfMAaUdo4nwTIS9Wx0E0hWn
+         LWDn4xh1oGEDUp8Z81vxV7U1seFCmcXbr9S8J4jmjSFuMPMJOAWZyxXEaimsxBO+MA9A
+         pXMoJohCIq3IBBNU2o0XVJWxPc6Ch1ddMaMMJ/dL1BjJdlw5XVl7SPg8vQ+aTrYjJxjV
+         ZZ69JIE0eX9gJOchCCfA8SpOTrCiHKK7vATu+hBHeywnl0ZaVGa784V96C10WX7ys0Vm
+         5dgg==
+X-Gm-Message-State: APjAAAXlgcIxujLT8jtjUIeY1g51SRrliDMMfiWyHHxlCLH0JpOXnggg
+        hEmfU9sl2YUe5cC9XCmyG7ALRQJ1CR+/
+X-Google-Smtp-Source: APXvYqwt4qM5R0zDv+lGCi4SZzw6mIxaprwzDEWcuzztj6HRSd5IOz1TMwpaUdYlD5mkkc7cZfXJTWmyTUOd
+X-Received: by 2002:a63:a05c:: with SMTP id u28mr5138858pgn.333.1573069600951;
+ Wed, 06 Nov 2019 11:46:40 -0800 (PST)
+Date:   Wed,  6 Nov 2019 11:46:25 -0800
+Message-Id: <20191106194625.116692-1-smuckle@google.com>
+Mime-Version: 1.0
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
+Subject: [PATCH] rtc: class: support hctosys from modular RTC drivers
+From:   Steve Muckle <smuckle@google.com>
+To:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
+        kernel-team@android.com, Steve Muckle <smuckle@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 09:56:48AM -0800, hpa@zytor.com wrote:
-> For one thing, we already have people asking for more than 4 GiB
-> worth of initramfs, and especially with initramfs that huge it would
-> make a *lot* of sense to allow loading it in chunks without having to
-> concatenate them.
+Due to distribution constraints it may not be possible to statically
+compile the required RTC driver into the kernel.
 
-Yeah, tglx gave me his use case on IRC where they have the rootfs in the
-initrd and how they would hit the limit when the rootfs has a bunch of
-debug libs etc tools, which would blow up its size.
+Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
+or not) by checking at the end of RTC device registration whether the
+time should be synced.
 
-> I have been asking for a long time for initramfs creators to split the
-> kernel-dependent and kernel independent parts into separate initramfs
-> modules.
+Signed-off-by: Steve Muckle <smuckle@google.com>
+---
+ drivers/rtc/Kconfig   | 18 ++++++-----
+ drivers/rtc/Makefile  |  1 -
+ drivers/rtc/class.c   | 63 +++++++++++++++++++++++++++++++++++++++
+ drivers/rtc/hctosys.c | 69 -------------------------------------------
+ 4 files changed, 73 insertions(+), 78 deletions(-)
+ delete mode 100644 drivers/rtc/hctosys.c
 
-Right.
-
-Thx.
-
+diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
+index 1adf9f815652..f663d77deb41 100644
+--- a/drivers/rtc/Kconfig
++++ b/drivers/rtc/Kconfig
+@@ -35,14 +35,16 @@ config RTC_HCTOSYS_DEVICE
+ 	depends on RTC_HCTOSYS
+ 	default "rtc0"
+ 	help
+-	  The RTC device that will be used to (re)initialize the system
+-	  clock, usually rtc0. Initialization is done when the system
+-	  starts up, and when it resumes from a low power state. This
+-	  device should record time in UTC, since the kernel won't do
+-	  timezone correction.
+-
+-	  The driver for this RTC device must be loaded before late_initcall
+-	  functions run, so it must usually be statically linked.
++	  The RTC device that will be used to (re)initialize the system clock,
++	  usually rtc0. Initialization is done when the driver for the RTC
++	  device registers, and when it resumes from a low power state. This
++	  device should record time in UTC, since the kernel won't do timezone
++	  correction.
++
++	  During startup it is useful to initialize the system clock from the
++	  RTC as early as possible. For this reason the driver for this RTC
++	  device should be statically linked, or alternately, the kernel module
++	  for the RTC device driver loaded immediately.
+ 
+ 	  This clock should be battery-backed, so that it reads the correct
+ 	  time when the system boots from a power-off state. Otherwise, your
+diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
+index 4ac8f19fb631..33f932d08262 100644
+--- a/drivers/rtc/Makefile
++++ b/drivers/rtc/Makefile
+@@ -6,7 +6,6 @@
+ ccflags-$(CONFIG_RTC_DEBUG)	:= -DDEBUG
+ 
+ obj-$(CONFIG_RTC_LIB)		+= lib.o
+-obj-$(CONFIG_RTC_HCTOSYS)	+= hctosys.o
+ obj-$(CONFIG_RTC_SYSTOHC)	+= systohc.o
+ obj-$(CONFIG_RTC_CLASS)		+= rtc-core.o
+ obj-$(CONFIG_RTC_MC146818_LIB)	+= rtc-mc146818-lib.o
+diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
+index 9458e6d6686a..b1ed5f3be223 100644
+--- a/drivers/rtc/class.c
++++ b/drivers/rtc/class.c
+@@ -34,6 +34,64 @@ static void rtc_device_release(struct device *dev)
+ #ifdef CONFIG_RTC_HCTOSYS_DEVICE
+ /* Result of the last RTC to system clock attempt. */
+ int rtc_hctosys_ret = -ENODEV;
++
++/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
++ * whether it stores the most close value or the value with partial
++ * seconds truncated. However, it is important that we use it to store
++ * the truncated value. This is because otherwise it is necessary,
++ * in an rtc sync function, to read both xtime.tv_sec and
++ * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
++ * of >32bits is not possible. So storing the most close value would
++ * slow down the sync API. So here we have the truncated value and
++ * the best guess is to add 0.5s.
++ */
++
++static int rtc_hctosys(void)
++{
++	int err = -ENODEV;
++	struct rtc_time tm;
++	struct timespec64 tv64 = {
++		.tv_nsec = NSEC_PER_SEC >> 1,
++	};
++	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
++
++	if (!rtc) {
++		pr_info("unable to open rtc device (%s)\n",
++			CONFIG_RTC_HCTOSYS_DEVICE);
++		goto err_open;
++	}
++
++	err = rtc_read_time(rtc, &tm);
++	if (err) {
++		dev_err(rtc->dev.parent,
++			"hctosys: unable to read the hardware clock\n");
++		goto err_read;
++	}
++
++	tv64.tv_sec = rtc_tm_to_time64(&tm);
++
++#if BITS_PER_LONG == 32
++	if (tv64.tv_sec > INT_MAX) {
++		err = -ERANGE;
++		goto err_read;
++	}
++#endif
++
++	err = do_settimeofday64(&tv64);
++
++	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
++		 &tm, (long long)tv64.tv_sec);
++
++err_read:
++	rtc_class_close(rtc);
++
++err_open:
++	rtc_hctosys_ret = err;
++
++	return err;
++}
++
++
+ #endif
+ 
+ #if defined(CONFIG_PM_SLEEP) && defined(CONFIG_RTC_HCTOSYS_DEVICE)
+@@ -375,6 +433,11 @@ int __rtc_register_device(struct module *owner, struct rtc_device *rtc)
+ 	dev_info(rtc->dev.parent, "registered as %s\n",
+ 		 dev_name(&rtc->dev));
+ 
++#ifdef CONFIG_RTC_HCTOSYS_DEVICE
++	if (!strcmp(dev_name(&rtc->dev), CONFIG_RTC_HCTOSYS_DEVICE))
++		rtc_hctosys();
++#endif
++
+ 	return 0;
+ }
+ EXPORT_SYMBOL_GPL(__rtc_register_device);
+diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
+deleted file mode 100644
+index a74d0d890600..000000000000
+--- a/drivers/rtc/hctosys.c
++++ /dev/null
+@@ -1,69 +0,0 @@
+-// SPDX-License-Identifier: GPL-2.0
+-/*
+- * RTC subsystem, initialize system time on startup
+- *
+- * Copyright (C) 2005 Tower Technologies
+- * Author: Alessandro Zummo <a.zummo@towertech.it>
+- */
+-
+-#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+-
+-#include <linux/rtc.h>
+-
+-/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
+- * whether it stores the most close value or the value with partial
+- * seconds truncated. However, it is important that we use it to store
+- * the truncated value. This is because otherwise it is necessary,
+- * in an rtc sync function, to read both xtime.tv_sec and
+- * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
+- * of >32bits is not possible. So storing the most close value would
+- * slow down the sync API. So here we have the truncated value and
+- * the best guess is to add 0.5s.
+- */
+-
+-static int __init rtc_hctosys(void)
+-{
+-	int err = -ENODEV;
+-	struct rtc_time tm;
+-	struct timespec64 tv64 = {
+-		.tv_nsec = NSEC_PER_SEC >> 1,
+-	};
+-	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
+-
+-	if (!rtc) {
+-		pr_info("unable to open rtc device (%s)\n",
+-			CONFIG_RTC_HCTOSYS_DEVICE);
+-		goto err_open;
+-	}
+-
+-	err = rtc_read_time(rtc, &tm);
+-	if (err) {
+-		dev_err(rtc->dev.parent,
+-			"hctosys: unable to read the hardware clock\n");
+-		goto err_read;
+-	}
+-
+-	tv64.tv_sec = rtc_tm_to_time64(&tm);
+-
+-#if BITS_PER_LONG == 32
+-	if (tv64.tv_sec > INT_MAX) {
+-		err = -ERANGE;
+-		goto err_read;
+-	}
+-#endif
+-
+-	err = do_settimeofday64(&tv64);
+-
+-	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
+-		 &tm, (long long)tv64.tv_sec);
+-
+-err_read:
+-	rtc_class_close(rtc);
+-
+-err_open:
+-	rtc_hctosys_ret = err;
+-
+-	return err;
+-}
+-
+-late_initcall(rtc_hctosys);
 -- 
-Regards/Gruss,
-    Boris.
+2.24.0.rc1.363.gb1bccd3e3d-goog
 
-https://people.kernel.org/tglx/notes-about-netiquette
