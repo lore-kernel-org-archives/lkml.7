@@ -2,125 +2,147 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AFA4C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:17:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 519DCC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:20:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEF4E20869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:17:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B432217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:20:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="K5C8nkI5"
+	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="xDVucej4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731930AbfKFORF (ORCPT
+        id S1730705AbfKFOUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:17:05 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:36171 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731652AbfKFORE (ORCPT
+        Wed, 6 Nov 2019 09:20:22 -0500
+Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:35724 "EHLO
+        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727645AbfKFOUW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:17:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573049823;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=ER/WquWBpU7PunGVOI/swL9aOZ32qLf8hTv9Vd0HUN0=;
-        b=K5C8nkI56OkAcoj9twh1LjAQV4fRlomAPzQEvTMAkaZJMTjsIC3gGXhwOERomTqWE9zDd4
-        2fYmRhI6Kb/dAWuaHtBlrkqUvXaxiPxvAttKWCLkDpaH1sNEQx8nVltqBrUdej2IO+3/zK
-        lhJF7todK2to4K7dbs5zChnSCptTpGc=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-23-I-KaKfnbOz6RjNvb_LV7Ig-1; Wed, 06 Nov 2019 09:16:59 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id A78B3477;
-        Wed,  6 Nov 2019 14:16:55 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id BD5815D70D;
-        Wed,  6 Nov 2019 14:16:37 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 15:16:35 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V10 0/6] mdev based hardware virtio offloading support
-Message-ID: <20191106151635.0d1cb3bc.cohuck@redhat.com>
-In-Reply-To: <20191106133531.693-1-jasowang@redhat.com>
-References: <20191106133531.693-1-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 6 Nov 2019 09:20:22 -0500
+Received: from pps.filterd (m0167088.ppops.net [127.0.0.1])
+        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6EIWST004750;
+        Wed, 6 Nov 2019 09:19:54 -0500
+Received: from pps.reinject (localhost [127.0.0.1])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2w2a4e7rx7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 09:19:54 -0500
+Received: from m0167088.ppops.net (m0167088.ppops.net [127.0.0.1])
+        by pps.reinject (8.16.0.36/8.16.0.36) with SMTP id xA6EJrmp005932;
+        Wed, 6 Nov 2019 09:19:54 -0500
+Received: from nam01-sn1-obe.outbound.protection.outlook.com (mail-sn1nam01lp2058.outbound.protection.outlook.com [104.47.32.58])
+        by mx0a-00128a01.pphosted.com with ESMTP id 2w2a4e7rx4-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 09:19:53 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=a87tPT+Xr830c4J7Xxvx43QDKSqDbZ2Cl2Vqn6gfaapVSfMJt9L6v8xDMXo7VHfloJGfwbL7Fom0rnLw/nEJEEg0h4Rjlm5NKMH3+pem4hzqZtFHgL6ji7AMYwyPRcxOQBou1l+8OYmGBhLUK4gJ8ScISrR2zCOkH2TSUz9l8yQiHnGDp4jxyY0QvfZ4DwaC4Fzi7zKMB5ZV9vhv/Xly2LayOkwutA/gwyTQkBGa2khQ/QC/C9vTTBbnAWkOYA5UwBxAPkhcAF9UXr4BYSheoxYsdjaCgFspo7LfezvCuJUcaHGlFT3upbMvolpBLB9bYUP1wxnAZrmbp94VpQdeBA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dTP+vvW97yGMLf03k8H9jXrPhdEkHwitzxLrE2PjqQ0=;
+ b=Hoc18nA2YdkUX4L8DLX/LGk6bPvGIkS5w21CEd84bLr8juORC3YAOAy8xqXrd70iktNbd+V/Bg5Svi2iqcW/wk/SfgvgsJYYaNGynjm3ISm8+sX5a+q5SXmlLqQPD2lkwquR3rGvWsfoQ6MVlOLGY5cr5/KOp/XTr2eBg9xEEb3uK+7Y4HbsVUld9yb6gJoTxkT5NivU58fVTiSzrfhZTvfNTiohpYHVIQhaSL19AlPXXZ+zmHq2ROgcQMBW1sRapfBwz4OmPz0izzAoDFHup+3ykkz8JEQNtcdK2CWeHY0IDQkxB80CNBmiDdLhZlB/4gz9Uu0UvIFHvMnlmfOcOw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=analog.com; dmarc=pass action=none header.from=analog.com;
+ dkim=pass header.d=analog.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=dTP+vvW97yGMLf03k8H9jXrPhdEkHwitzxLrE2PjqQ0=;
+ b=xDVucej4oyGEi5l0xzeNFsPaJz+xk02d15PSjK/vdysjRYp6P83jJUWXmW4cBRnsPtYcMEarxyVKOsZ/F9FkFI51fef7v1GSO6t0QMcHMrXCszrzZEaM9R3Rr9kA3kdxJ/dRzu0GQELIooGiOc0ZVJH+xDOvBU2jgzp6Jtxy2CQ=
+Received: from MN2PR03MB5117.namprd03.prod.outlook.com (52.132.169.145) by
+ MN2PR03MB5022.namprd03.prod.outlook.com (52.132.170.139) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.22; Wed, 6 Nov 2019 14:19:52 +0000
+Received: from MN2PR03MB5117.namprd03.prod.outlook.com
+ ([fe80::9d35:c43f:1cdd:4c7d]) by MN2PR03MB5117.namprd03.prod.outlook.com
+ ([fe80::9d35:c43f:1cdd:4c7d%6]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 14:19:52 +0000
+From:   "Sa, Nuno" <Nuno.Sa@analog.com>
+To:     "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "Jonathan.Cameron@huawei.com" <Jonathan.Cameron@huawei.com>,
+        "colin.king@canonical.com" <colin.king@canonical.com>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lars@metafoo.de" <lars@metafoo.de>
+CC:     "kernel-janitors@vger.kernel.org" <kernel-janitors@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] iio: temperature: ltc2983: fix u32 read into a unsigned
+ long long
+Thread-Topic: [PATCH] iio: temperature: ltc2983: fix u32 read into a unsigned
+ long long
+Thread-Index: AQHVlBeUdoPWrASrBUa+bZTQPdnd2ad+MnkA
+Date:   Wed, 6 Nov 2019 14:19:52 +0000
+Message-ID: <dab9cfd93e6affa5d94f078154c3e181303bbf47.camel@analog.com>
+References: <20191105202818.90065-1-colin.king@canonical.com>
+In-Reply-To: <20191105202818.90065-1-colin.king@canonical.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [137.71.226.54]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: bb6fea16-2a3b-4ec2-fa05-08d762c463ca
+x-ms-traffictypediagnostic: MN2PR03MB5022:
+x-microsoft-antispam-prvs: <MN2PR03MB5022D44CBF60F55DB366667299790@MN2PR03MB5022.namprd03.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6790;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(136003)(39860400002)(366004)(396003)(189003)(199004)(486006)(26005)(6506007)(76176011)(256004)(476003)(186003)(14454004)(25786009)(305945005)(7736002)(11346002)(66066001)(446003)(2616005)(6486002)(2201001)(229853002)(2906002)(99286004)(76116006)(110136005)(6436002)(66946007)(6116002)(71190400001)(6512007)(86362001)(102836004)(71200400001)(316002)(5660300002)(2501003)(6246003)(8676002)(478600001)(118296001)(91956017)(66476007)(81156014)(66556008)(66446008)(81166006)(64756008)(36756003)(4326008)(3846002)(8936002)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5022;H:MN2PR03MB5117.namprd03.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: analog.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: oB8sBeanAIB/CfnTedIMj+NCXeTtDQeFVKsBNfMCyk18iN6uV7NiICSlzHHd8RTD8TlUUbx83LVLp9vv7sGvx+Hq+bvVPqT4MhE/OpCVXz8pV2ewCVF/W4f7ZZjICV93UfFk7Oe3dsV9CD95V/vgohEdojiWvYk5tKhOQU7WIijUTxwGmiXqieDUqvcsIC9oz9eY3OSD4qqlBW9Z1fYQVGAPSRNYdBpqbkKRs55nqIM5BJ/4cQfr3Uc6jShTKNTZkzVKcONtG5L4HzAajvxeLsVXjHiI3r+7iey9Oxl3Sr7nr3041gbaQgMV5B/hsTNXaMWBQ9Zjx45JOmnM7bBEEVQUHCU6a13ZU0gziJe0BvJTQa9OsJFnMvFK1Q7N940WiBbvgnseyVcgPYhvOQzM0T8xw52EREDxjFKFpovlLRVXH1O234E5uIvTT+7PRWEm
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <5AED64D5BA055E40A111120D232609E3@namprd03.prod.outlook.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: I-KaKfnbOz6RjNvb_LV7Ig-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+X-OriginatorOrg: analog.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: bb6fea16-2a3b-4ec2-fa05-08d762c463ca
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 14:19:52.3075
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: PKW82vXST8ze9sc1QPx3Wnxw+kQE+BJ/S5+rlTCu6ZBGiv2pDcIxGqa3V7k9wYtF/+XJjU0qOetBNxI4MjqbJg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5022
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_04:2019-11-06,2019-11-06 signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 mlxscore=0 lowpriorityscore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxlogscore=999 priorityscore=1501
+ malwarescore=0 clxscore=1011 adultscore=0 impostorscore=0 suspectscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-1908290000
+ definitions=main-1911060141
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 21:35:25 +0800
-Jason Wang <jasowang@redhat.com> wrote:
-
-> Hi all:
->=20
-> There are hardwares that can do virtio datapath offloading while
-> having its own control path. This path tries to implement a mdev based
-> unified API to support using kernel virtio driver to drive those
-> devices. This is done by introducing a new mdev transport for virtio
-> (virtio_mdev) and register itself as a new kind of mdev driver. Then
-> it provides a unified way for kernel virtio driver to talk with mdev
-> device implementation.
->=20
-> Though the series only contains kernel driver support, the goal is to
-> make the transport generic enough to support userspace drivers. This
-> means vhost-mdev[1] could be built on top as well by resuing the
-> transport.
->=20
-> A sample driver is also implemented which simulate a virito-net
-> loopback ethernet device on top of vringh + workqueue. This could be
-> used as a reference implementation for real hardware driver.
->=20
-> Also a real IFC VF driver was also posted here[2] which is a good
-> reference for vendors who is interested in their own virtio datapath
-> offloading product.
->=20
-> Consider mdev framework only support VFIO device and driver right now,
-> this series also extend it to support other types. This is done
-> through introducing class id to the device and pairing it with
-> id_talbe claimed by the driver. On top, this seris also decouple
-> device specific ops out of the common ones for implementing class
-> specific operations over mdev bus.
->=20
-> Pktgen test was done with virito-net + mvnet loop back device.
->=20
-> Please review.
-
-All looking good to me now.
-
->=20
-> [1] https://lkml.org/lkml/2019/11/5/424
-> [2] https://lkml.org/lkml/2019/11/5/227
-
+T24gVHVlLCAyMDE5LTExLTA1IGF0IDIwOjI4ICswMDAwLCBDb2xpbiBLaW5nIHdyb3RlOg0KPiAN
+Cj4gRnJvbTogQ29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gDQo+
+IEN1cnJlbnRseSB0aGUgcmVhZCBvZiB0ZW1wIHVzaW5nIG9mX3Byb3BlcnR5X3JlYWRfdTMyX2lu
+ZGV4IGlzDQo+IHJlYWRpbmcNCj4gYSB1MzIgdmFsdWUgaW50byBhIHVuc2lnbmVkIGxvbmcgbG9u
+Zy4gIFRoaXMgcmVsaWVzIG9uIG1hY2hpbmUNCj4gZW5kaWFubmVzcw0KPiB0byB3b3JrIGNvcnJl
+Y3RseSwgc28gZml4IHRoaXMgYnkgcmVhZGluZyBhIHUzMiB2YWx1ZSBhbmQgc2V0dGluZw0KPiB0
+ZW1wDQo+IHRvIHRoaXMgdmFsdWUuDQo+IA0KPiBBZGRyZXNzZXMtQ292ZXJpdHk6ICgiUmVsaWFu
+Y2Ugb24gaW50ZWdlciBlbmRpYW5uZXNzIikNCj4gRml4ZXM6IGYxMTBmMzE4OGU1NiAoImlpbzog
+dGVtcGVyYXR1cmU6IEFkZCBzdXBwb3J0IGZvciBMVEMyOTgzIikNCj4gU2lnbmVkLW9mZi1ieTog
+Q29saW4gSWFuIEtpbmcgPGNvbGluLmtpbmdAY2Fub25pY2FsLmNvbT4NCj4gLS0tDQo+ICBkcml2
+ZXJzL2lpby90ZW1wZXJhdHVyZS9sdGMyOTgzLmMgfCA2ICsrKystLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDQgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gDQo+IGRpZmYgLS1naXQgYS9k
+cml2ZXJzL2lpby90ZW1wZXJhdHVyZS9sdGMyOTgzLmMNCj4gYi9kcml2ZXJzL2lpby90ZW1wZXJh
+dHVyZS9sdGMyOTgzLmMNCj4gaW5kZXggZGRmNDcwMjMzNjRiLi5kMzljMGQ2Yjc3ZjEgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvaWlvL3RlbXBlcmF0dXJlL2x0YzI5ODMuYw0KPiArKysgYi9kcml2
+ZXJzL2lpby90ZW1wZXJhdHVyZS9sdGMyOTgzLmMNCj4gQEAgLTQ0NCw4ICs0NDQsMTAgQEAgc3Rh
+dGljIHN0cnVjdCBsdGMyOTgzX2N1c3RvbV9zZW5zb3INCj4gKl9fbHRjMjk4M19jdXN0b21fc2Vu
+c29yX25ldygNCj4gIAkJCWVsc2UNCj4gIAkJCQl0ZW1wID0gX19jb252ZXJ0X3RvX3Jhdyh0ZW1w
+LA0KPiByZXNvbHV0aW9uKTsNCj4gIAkJfSBlbHNlIHsNCj4gLQkJCW9mX3Byb3BlcnR5X3JlYWRf
+dTMyX2luZGV4KG5wLCBwcm9wbmFtZSwgaW5kZXgsDQo+IC0JCQkJCQkgICAodTMyICopJnRlbXAp
+Ow0KPiArCQkJdTMyIHQzMjsNCj4gKw0KPiArCQkJb2ZfcHJvcGVydHlfcmVhZF91MzJfaW5kZXgo
+bnAsIHByb3BuYW1lLCBpbmRleCwNCj4gJnQzMik7DQo+ICsJCQl0ZW1wID0gdDMyOw0KPiAgCQl9
+DQo+ICANCj4gIAkJZm9yIChqID0gMDsgaiA8IG5fc2l6ZTsgaisrKQ0KDQpBY2tlZC1ieTogTnVu
+byBTw6EgPG51bm8uc2FAYW5hbG9nLmNvbT4NCg0KVGhhbmtzLA0KTnVubyBTw6ENCg==
