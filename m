@@ -2,129 +2,107 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CA5C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:37:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78F02C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:40:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80B722173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:37:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3FC8A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="nScaucjR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731713AbfKFPhi (ORCPT
+        id S1731759AbfKFPkE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:37:38 -0500
-Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38119 "EHLO
-        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727129AbfKFPhi (ORCPT
+        Wed, 6 Nov 2019 10:40:04 -0500
+Received: from conssluserg-06.nifty.com ([210.131.2.91]:44274 "EHLO
+        conssluserg-06.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727345AbfKFPkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:37:38 -0500
-Received: from [IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a]
- ([IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a])
-        by smtp-cloud9.xs4all.net with ESMTPA
-        id SNMxiod2G9P9bSNN0ieLmp; Wed, 06 Nov 2019 16:37:32 +0100
-Subject: Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
-        shawnguo@kernel.org, robh+dt@kernel.org
-Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
-        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
-        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
-        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
-        mark.rutland@arm.com, devicetree@vger.kernel.org,
-        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
-        niklas.soderlund+renesas@ragnatech.se,
-        dafna.hirschfeld@collabora.com
-References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
-Message-ID: <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
-Date:   Wed, 6 Nov 2019 16:37:15 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 6 Nov 2019 10:40:04 -0500
+Received: from mail-vs1-f52.google.com (mail-vs1-f52.google.com [209.85.217.52]) (authenticated)
+        by conssluserg-06.nifty.com with ESMTP id xA6Fdjxb014243;
+        Thu, 7 Nov 2019 00:39:45 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-06.nifty.com xA6Fdjxb014243
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573054786;
+        bh=wE/LvVLrB/JZtW3C52Gm068T4Aw49NfRM4jApBELfAs=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=nScaucjRCcgWZy5+lc5AHUr497AOQ/8IFuo6nuP+YdwqCuoAXOfqIsGsAhI9JOfMX
+         rpnAIX0OWiKYv0n5qPs8w8Zj9Y4BLlOncGUrn7u6GqIz8NJp2Z6kcrOVP6/PFw62gy
+         JiDpptuXRXpiW8WlPUo3SQCANsfSA28uJ+GtcwnfgJXGGLjEOjyD9XzBgDcCGQ8Wkv
+         qpTwtbnlm/Uyf0pcAANzvCgMnlB3iqd0WMxGr2OpraOhmt+RhftS5VtAL4oPFAZsaw
+         CMx6+CHdGeBMrAfbc6g0gu6CUjPkvi8DEFHVjOUmFXDnpY1I/AHpZ6YQTtuN5tbYyz
+         gMaW5RtsTi3DQ==
+X-Nifty-SrcIP: [209.85.217.52]
+Received: by mail-vs1-f52.google.com with SMTP id y129so16238713vsc.6;
+        Wed, 06 Nov 2019 07:39:45 -0800 (PST)
+X-Gm-Message-State: APjAAAWE157x9WJZ3zANiAoBZ6ILkGIOKl329aamblMV/szwmhMFssud
+        Q3LCAbTEajnCHylSXpRuBLS/RPwUE4ZbsWftm00=
+X-Google-Smtp-Source: APXvYqyYdahLGrjJirAdEnUrO5r5K1irlhVDTxi2h384bpkyHSv/QFwAp+XGDfplSLODwLTDMSId2gSly3EEdxySeY4=
+X-Received: by 2002:a67:e290:: with SMTP id g16mr1627678vsf.54.1573054784354;
+ Wed, 06 Nov 2019 07:39:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-CMAE-Envelope: MS4wfDdX7D9rseKh8lAwDMMNwaOzCMluGQOcvybOlIVb/fUHxpfIy/OVNw4K3cwguOTRZFYHEfGoT2gmmymyeKhlMGQ83J4lXFssVcGgDsa/Cd8cU2Js+1PQ
- MUfYhEF42MUK+BxHdLzqbPhX4s4stBQY8NYQvnnUT8LtCqCd9DLBPlWGNTwpzG2Ic5mYpeIygiFFVXJtzA3EIeNOkvjsp/tzUfCsaXH43eYhPPmOy499Nval
- zGxM1wdTJUT/U6Ig+HzXi9gJ98QthCpmAuW2/JfyRr1w1qHP7K/CEK6bs6tGdYySUTf7600I58V7AESN339D0cfNlXwzMH5j+OlGFI/Aq6ZHFiaqdRVG+rgl
- gJgoVW78L0rGyfitVglEL4Hh0w9/iNOhjEpm79NSbiACbEWoBYYeSPy1qlmZgoiSXwwTMOiJXSpqewbs4isn4IOd0SXed/Ue3PdbrPsyq20WcwFuLwfgobN/
- +tg83Mo6/H3Kmb5F91PYJvhE6ugJRPzn6i3k8Kx36GPmpqN8oa34LQWdzPiyEO7sofGSlioiNzjKzNd+t776a+1qjezsWzBJULhO0XOrfcejMbe6EQqRessx
- vfeXhLQY6kqOjZqgStGEcgGEPAQRXrY8P4lIrw+gwKBObh76fnGFnJxhC48hGP/ENKLmoym+nYWTSxRL/IaJKTUmVv7MVSV8GWJ8JD5BlSIH75pBBT4AkieB
- Enzei+gi2tz1FrVrSIq/6cztK8mdDT1jC5+GmKA5XS0Z5XBvY4W9dX4lSNCWAbr8tErSCeM9Z+csUQFBGePYMwUAuaUwZjTAKKd4+6ftQiunlBhUr5YrO9b5
- kh8aqN/rHrGBPu4qm/u7hxki2vkKorIcrs5smHNLydRDfR2B8k/mwrF/n/iduoPRbFV2vUSip/STzItjtrOYJ29IcFkJXgX3tje6Gt+eBYH4D9rzOq/U/8Mj
- sSSD3S4/Q4sZgLQ2mSaKqBXrr8eieNQhcQPMRS8E5KUc0Jf/fjxQ2Bed2xWiApVCyQvOQw==
+References: <20191029123809.29301-1-yamada.masahiro@socionext.com> <20191029123809.29301-5-yamada.masahiro@socionext.com>
+In-Reply-To: <20191029123809.29301-5-yamada.masahiro@socionext.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Thu, 7 Nov 2019 00:39:08 +0900
+X-Gmail-Original-Message-ID: <CAK7LNATq5vK36hs0W3Ywu7j1xy6FgJxB7E3serAv6B1LmVA-nA@mail.gmail.com>
+Message-ID: <CAK7LNATq5vK36hs0W3Ywu7j1xy6FgJxB7E3serAv6B1LmVA-nA@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mospost: remove unneeded local variable in contains_namespace()
+To:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc:     Jessica Yu <jeyu@kernel.org>, Matthias Kaehlcke <mka@chromium.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mirela,
+On Tue, Oct 29, 2019 at 9:38 PM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> The local variable, ns_entry, is unneeded.
+>
+> While I was here, I also cleaned up the comparison with NULL or 0.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-On 11/6/19 4:20 PM, Mirela Rabulea wrote:
-> This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
-> and it's dependencies.
-> The driver was tested on i.MX8QXP, using a unit test application and
-> the v4l2-compliance tool, which passes when run on the encoder/decoder dev
-> node, without any other parameters:
-> v4l2-compliance -d /dev/video0
-> v4l2-compliance -d /dev/video1
-> v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
+Fixed the typo in the subject ( mospost -> modpost )
+and applied to linux-kbuild.
 
-That's too old. Always test with the latest version from the v4l-utils git
-repo (git://linuxtv.org/v4l-utils.git). v4l2-compliance is continually
-improved, so driver testing should always be done with the latest version.
 
-For the JPEG encoder you can add the -s option to v4l2-compliance. Unfortunately,
-the streaming tests for JPEG decoders in v4l2-compliance are not well supported
-at the moment, so you can't use -s there.
+>
+>  scripts/mod/modpost.c | 6 ++----
+>  1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/scripts/mod/modpost.c b/scripts/mod/modpost.c
+> index f7425f5d4ab0..f70b924f379f 100644
+> --- a/scripts/mod/modpost.c
+> +++ b/scripts/mod/modpost.c
+> @@ -239,10 +239,8 @@ static struct symbol *find_symbol(const char *name)
+>  static bool contains_namespace(struct namespace_list *list,
+>                                const char *namespace)
+>  {
+> -       struct namespace_list *ns_entry;
+> -
+> -       for (ns_entry = list; ns_entry != NULL; ns_entry = ns_entry->next)
+> -               if (strcmp(ns_entry->namespace, namespace) == 0)
+> +       for (; list; list = list->next)
+> +               if (!strcmp(list->namespace, namespace))
+>                         return true;
+>
+>         return false;
+> --
+> 2.17.1
+>
 
-Please provide the full output of the v4l2-compliance command as well, I'd
-like to see the actual output.
 
-Thank you very much for working on this, always nice to see new HW support.
-
-Regards,
-
-	Hans
-
-> 
-> The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
-> upstream, but not accepted because there was no driver using this format,
-> until now. This pixel format, YUV444 24bpp, is now used and needed by the
-> i.MX8QXP/QM JPEG encoder/decoder driver.
-> 
-> Mirela Rabulea (5):
->   media: v4l: Add packed YUV444 24bpp pixel format
->   firmware: imx: scu-pd: Add power domains for imx-jpeg
->   media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
->   media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
->   arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
-> 
->  .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
->  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
->  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
->  arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
->  drivers/firmware/imx/scu-pd.c                      |    6 +
->  drivers/media/platform/Kconfig                     |    2 +
->  drivers/media/platform/Makefile                    |    1 +
->  drivers/media/platform/imx-jpeg/Kconfig            |   10 +
->  drivers/media/platform/imx-jpeg/Makefile           |    3 +
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
->  drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
->  drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
->  include/uapi/linux/videodev2.h                     |    1 +
->  15 files changed, 2949 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
->  create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
->  create mode 100644 drivers/media/platform/imx-jpeg/Makefile
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
->  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
-> 
-
+-- 
+Best Regards
+Masahiro Yamada
