@@ -2,144 +2,475 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21C8BC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:13:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A124CC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:13:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBD8221848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:13:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6A14C218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573060416;
+	bh=f7PRcMCKDTNQzmP+eAkNmLHozWUCuZ4U3jTEE9Ajcp0=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=DLukGYI0KJPZtsDLM0uCcaKrXEYvrXmAlM7oXV0IPp06pMruKdCMnQ/YZmAWOMrDA
+	 rBEpd/Ol1EymtGbNjKjm2HpGGxlmJK4pRoouscFzsFR+MeM0QXkDqHiDKDkd2B/sSu
+	 mvkhQ7Tg+1wag0h/RC9Hi5AjY2qHBdkyMXw/OUZo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732135AbfKFRNK (ORCPT
+        id S1732280AbfKFRNf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:13:10 -0500
-Received: from mail-io1-f71.google.com ([209.85.166.71]:51440 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727894AbfKFRNJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:13:09 -0500
-Received: by mail-io1-f71.google.com with SMTP id v14so4218062iob.18
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:13:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=WsMxdV+W3wwqHTs+iCPhAwFOLdmjVwNTGfvPeK6mtPU=;
-        b=Lxoqu9+HFQahEhyfxkPhawXOdqALikzBCK34c3BT0rFROwutQQm3srejj7OV7v6dDJ
-         nhpZgXaF3Zq7VG8wBaTje9tHQqR6o92vT3uZhXEg/aDX8lCZ6O+X0I2J879ei1sx+cdI
-         N2ZVj2fqB2QFPXeslQ36dlV1n55ktx43IixusI16iOm7DoQYUoutYrQMHcWxdd4sFbGa
-         eyLUShJ7ZVlGEkfnscw4IF66AxEQ9SQUQEgn48wvzo9LjYZCQCeiamcO3GL+dssVwNXF
-         wUWGik/AsnkqguoeauK5rlzbuija9KmcaoC71vU+Gx/NiOSVeF83Hc727L8fAWE+5Ngt
-         dfow==
-X-Gm-Message-State: APjAAAWD1sIbkSr2p2KHKp8Gfu2ViuV8O/65G6TiQxYPHeGgTuFTYeDu
-        8k4aEwn0KIlrqaKddi/bYox1wq2lbn7uOYDDQpFEVcLHwAWe
-X-Google-Smtp-Source: APXvYqwHTMiLlD19IQ3V6eu173n6ZHXLVsjnAZM3ONuyfn9BuF6hTyUNFPjT/ah6Po2oS2qSvC4ZwQ0aiAt3nsAl3EYfybEckjmJ
+        Wed, 6 Nov 2019 12:13:35 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbfKFRNf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:13:35 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [109.144.215.213])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 160F521848;
+        Wed,  6 Nov 2019 17:13:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573060413;
+        bh=f7PRcMCKDTNQzmP+eAkNmLHozWUCuZ4U3jTEE9Ajcp0=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=GdqbSKrJzCILELi/B+JpAVFME8uHZkqxrNsy7cAobOjb7Kf390djZ8qCSX1oSK9Ru
+         4BlEToFILKOmzGeRu93K5yH5T+ev3vzhbZRzfDGhFudPzkGukA2ygHCsHxDGD94fgt
+         Y8XTlxdZwV9MtGJV2+m7SnxaK/lBmhLWFVOtQb68=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id 2F2BC3520B54; Wed,  6 Nov 2019 09:13:31 -0800 (PST)
+Date:   Wed, 6 Nov 2019 09:13:31 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     Amol Grover <frextrite@gmail.com>
+Cc:     Josh Triplett <josh@joshtriplett.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Lai Jiangshan <jiangshanlai@gmail.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>, rcu@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        Shuah Khan <skhan@linuxfoundation.org>,
+        Phong Tran <tranmanphong@gmail.com>,
+        Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+Subject: Re: [PATCH] Documentation: RCU: rcubarrier: Convert to reST
+Message-ID: <20191106171331.GH20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191106165617.GA12205@workstation-kernel-dev>
 MIME-Version: 1.0
-X-Received: by 2002:a92:360b:: with SMTP id d11mr3776421ila.143.1573060388960;
- Wed, 06 Nov 2019 09:13:08 -0800 (PST)
-Date:   Wed, 06 Nov 2019 09:13:08 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000b1c4700596b0a982@google.com>
-Subject: KASAN: global-out-of-bounds Write in kbd_event
-From:   syzbot <syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, gregkh@linuxfoundation.org, jslaby@suse.com,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        rei4dan@gmail.com, slyfox@gentoo.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106165617.GA12205@workstation-kernel-dev>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+On Wed, Nov 06, 2019 at 10:26:17PM +0530, Amol Grover wrote:
+> Convert rcubarrier.txt to rcubarrier.rst and
+> add it to index.rst
+> 
+> Format file according to reST
+> - Add headings and sub-headings
+> - Add code segments
+> - Add cross-references to quizes and answers
+> 
+> Signed-off-by: Amol Grover <frextrite@gmail.com>
 
-syzbot found the following crash on:
+Thank you, Amol!
 
-HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
-git tree:       https://github.com/google/kasan.git usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=125cd8fce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
-dashboard link: https://syzkaller.appspot.com/bug?extid=19340dff067c2d3835c0
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=123d089ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=14167958e00000
+Phong and Madhuparna, could you please look at this one?  I will hold
+off queuing it for a couple of days to allow you to look it over.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+19340dff067c2d3835c0@syzkaller.appspotmail.com
+							Thanx, Paul
 
-==================================================================
-BUG: KASAN: global-out-of-bounds in clear_bit  
-include/asm-generic/bitops-instrumented.h:56 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_keycode  
-drivers/tty/vt/keyboard.c:1411 [inline]
-BUG: KASAN: global-out-of-bounds in kbd_event+0xe6b/0x3790  
-drivers/tty/vt/keyboard.c:1495
-Write of size 8 at addr ffffffff89a1b2d8 by task syz-executor108/1722
-
-CPU: 1 PID: 1722 Comm: syz-executor108 Not tainted 5.4.0-rc6+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xca/0x13e lib/dump_stack.c:113
-  print_address_description.constprop.0.cold+0x5/0x2fc mm/kasan/report.c:374
-  __kasan_report.cold+0x1a/0x33 mm/kasan/report.c:506
-  kasan_report+0xe/0x20 mm/kasan/common.c:634
-  check_memory_region_inline mm/kasan/generic.c:185 [inline]
-  check_memory_region+0x128/0x190 mm/kasan/generic.c:192
-  clear_bit include/asm-generic/bitops-instrumented.h:56 [inline]
-  kbd_keycode drivers/tty/vt/keyboard.c:1411 [inline]
-  kbd_event+0xe6b/0x3790 drivers/tty/vt/keyboard.c:1495
-  input_to_handler+0x3b6/0x4c0 drivers/input/input.c:118
-  input_pass_values.part.0+0x2e3/0x720 drivers/input/input.c:145
-  input_pass_values drivers/input/input.c:949 [inline]
-  input_set_keycode+0x290/0x320 drivers/input/input.c:954
-  evdev_handle_set_keycode_v2+0xc4/0x120 drivers/input/evdev.c:882
-  evdev_do_ioctl drivers/input/evdev.c:1150 [inline]
-  evdev_ioctl_handler+0xd49/0x19f0 drivers/input/evdev.c:1284
-  vfs_ioctl fs/ioctl.c:46 [inline]
-  file_ioctl fs/ioctl.c:509 [inline]
-  do_vfs_ioctl+0xd2d/0x1330 fs/ioctl.c:696
-  ksys_ioctl+0x9b/0xc0 fs/ioctl.c:713
-  __do_sys_ioctl fs/ioctl.c:720 [inline]
-  __se_sys_ioctl fs/ioctl.c:718 [inline]
-  __x64_sys_ioctl+0x6f/0xb0 fs/ioctl.c:718
-  do_syscall_64+0xb7/0x580 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x444dc9
-Code: e8 bc af 02 00 48 83 c4 18 c3 0f 1f 80 00 00 00 00 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 1b d8 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007fffaf4eda08 EFLAGS: 00000246 ORIG_RAX: 0000000000000010
-RAX: ffffffffffffffda RBX: 00000000004002e0 RCX: 0000000000444dc9
-RDX: 0000000020000080 RSI: 0000000040284504 RDI: 0000000000000004
-RBP: 00000000006cf018 R08: 090b000000008300 R09: 00000000004002e0
-R10: 000000000000000f R11: 0000000000000246 R12: 0000000000402a70
-R13: 0000000000402b00 R14: 0000000000000000 R15: 0000000000000000
-
-The buggy address belongs to the variable:
-  key_down+0x78/0x80
-
-Memory state around the buggy address:
-  ffffffff89a1b180: fa fa fa fa 04 fa fa fa fa fa fa fa 01 fa fa fa
-  ffffffff89a1b200: fa fa fa fa 00 01 fa fa fa fa fa fa 00 00 00 00
-> ffffffff89a1b280: 00 00 00 00 00 00 00 00 fa fa fa fa 00 00 00 00
-                                                     ^
-  ffffffff89a1b300: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-  ffffffff89a1b380: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-syzbot can test patches for this bug, for details see:
-https://goo.gl/tpsmEJ#testing-patches
+> ---
+>  Documentation/RCU/index.rst                   |   1 +
+>  .../RCU/{rcubarrier.txt => rcubarrier.rst}    | 220 ++++++++++--------
+>  2 files changed, 125 insertions(+), 96 deletions(-)
+>  rename Documentation/RCU/{rcubarrier.txt => rcubarrier.rst} (73%)
+> 
+> diff --git a/Documentation/RCU/index.rst b/Documentation/RCU/index.rst
+> index c81d0e4fd999..81a0a1e5f767 100644
+> --- a/Documentation/RCU/index.rst
+> +++ b/Documentation/RCU/index.rst
+> @@ -8,6 +8,7 @@ RCU concepts
+>     :maxdepth: 3
+>  
+>     arrayRCU
+> +   rcubarrier
+>     rcu_dereference
+>     whatisRCU
+>     rcu
+> diff --git a/Documentation/RCU/rcubarrier.txt b/Documentation/RCU/rcubarrier.rst
+> similarity index 73%
+> rename from Documentation/RCU/rcubarrier.txt
+> rename to Documentation/RCU/rcubarrier.rst
+> index a2782df69732..1aa9ed1d1b5b 100644
+> --- a/Documentation/RCU/rcubarrier.txt
+> +++ b/Documentation/RCU/rcubarrier.rst
+> @@ -1,4 +1,7 @@
+> +.. _rcu_barrier:
+> +
+>  RCU and Unloadable Modules
+> +==========================
+>  
+>  [Originally published in LWN Jan. 14, 2007: http://lwn.net/Articles/217484/]
+>  
+> @@ -21,7 +24,7 @@ given that readers might well leave absolutely no trace of their
+>  presence? There is a synchronize_rcu() primitive that blocks until all
+>  pre-existing readers have completed. An updater wishing to delete an
+>  element p from a linked list might do the following, while holding an
+> -appropriate lock, of course:
+> +appropriate lock, of course::
+>  
+>  	list_del_rcu(p);
+>  	synchronize_rcu();
+> @@ -32,13 +35,13 @@ primitive must be used instead. This primitive takes a pointer to an
+>  rcu_head struct placed within the RCU-protected data structure and
+>  another pointer to a function that may be invoked later to free that
+>  structure. Code to delete an element p from the linked list from IRQ
+> -context might then be as follows:
+> +context might then be as follows::
+>  
+>  	list_del_rcu(p);
+>  	call_rcu(&p->rcu, p_callback);
+>  
+>  Since call_rcu() never blocks, this code can safely be used from within
+> -IRQ context. The function p_callback() might be defined as follows:
+> +IRQ context. The function p_callback() might be defined as follows::
+>  
+>  	static void p_callback(struct rcu_head *rp)
+>  	{
+> @@ -49,6 +52,7 @@ IRQ context. The function p_callback() might be defined as follows:
+>  
+>  
+>  Unloading Modules That Use call_rcu()
+> +-------------------------------------
+>  
+>  But what if p_callback is defined in an unloadable module?
+>  
+> @@ -69,10 +73,11 @@ in realtime kernels in order to avoid excessive scheduling latencies.
+>  
+>  
+>  rcu_barrier()
+> +-------------
+>  
+>  We instead need the rcu_barrier() primitive.  Rather than waiting for
+>  a grace period to elapse, rcu_barrier() waits for all outstanding RCU
+> -callbacks to complete.  Please note that rcu_barrier() does -not- imply
+> +callbacks to complete.  Please note that rcu_barrier() does **not** imply
+>  synchronize_rcu(), in particular, if there are no RCU callbacks queued
+>  anywhere, rcu_barrier() is within its rights to return immediately,
+>  without waiting for a grace period to elapse.
+> @@ -89,78 +94,78 @@ module uses multiple flavors of call_rcu(), then it must also use multiple
+>  flavors of rcu_barrier() when unloading that module.  For example, if
+>  it uses call_rcu(), call_srcu() on srcu_struct_1, and call_srcu() on
+>  srcu_struct_2(), then the following three lines of code will be required
+> -when unloading:
+> +when unloading::
+>  
+>   1 rcu_barrier();
+>   2 srcu_barrier(&srcu_struct_1);
+>   3 srcu_barrier(&srcu_struct_2);
+>  
+>  The rcutorture module makes use of rcu_barrier() in its exit function
+> -as follows:
+> +as follows::
+>  
+> - 1 static void
+> - 2 rcu_torture_cleanup(void)
+> - 3 {
+> - 4   int i;
+> + 1  static void
+> + 2  rcu_torture_cleanup(void)
+> + 3  {
+> + 4    int i;
+>   5
+> - 6   fullstop = 1;
+> - 7   if (shuffler_task != NULL) {
+> + 6    fullstop = 1;
+> + 7    if (shuffler_task != NULL) {
+>   8     VERBOSE_PRINTK_STRING("Stopping rcu_torture_shuffle task");
+>   9     kthread_stop(shuffler_task);
+> -10   }
+> -11   shuffler_task = NULL;
+> -12
+> -13   if (writer_task != NULL) {
+> -14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
+> -15     kthread_stop(writer_task);
+> -16   }
+> -17   writer_task = NULL;
+> -18
+> -19   if (reader_tasks != NULL) {
+> -20     for (i = 0; i < nrealreaders; i++) {
+> -21       if (reader_tasks[i] != NULL) {
+> -22         VERBOSE_PRINTK_STRING(
+> -23           "Stopping rcu_torture_reader task");
+> -24         kthread_stop(reader_tasks[i]);
+> -25       }
+> -26       reader_tasks[i] = NULL;
+> -27     }
+> -28     kfree(reader_tasks);
+> -29     reader_tasks = NULL;
+> -30   }
+> -31   rcu_torture_current = NULL;
+> -32
+> -33   if (fakewriter_tasks != NULL) {
+> -34     for (i = 0; i < nfakewriters; i++) {
+> -35       if (fakewriter_tasks[i] != NULL) {
+> -36         VERBOSE_PRINTK_STRING(
+> -37           "Stopping rcu_torture_fakewriter task");
+> -38         kthread_stop(fakewriter_tasks[i]);
+> -39       }
+> -40       fakewriter_tasks[i] = NULL;
+> -41     }
+> -42     kfree(fakewriter_tasks);
+> -43     fakewriter_tasks = NULL;
+> -44   }
+> -45
+> -46   if (stats_task != NULL) {
+> -47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
+> -48     kthread_stop(stats_task);
+> -49   }
+> -50   stats_task = NULL;
+> -51
+> -52   /* Wait for all RCU callbacks to fire. */
+> -53   rcu_barrier();
+> -54
+> -55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
+> -56
+> -57   if (cur_ops->cleanup != NULL)
+> -58     cur_ops->cleanup();
+> -59   if (atomic_read(&n_rcu_torture_error))
+> -60     rcu_torture_print_module_parms("End of test: FAILURE");
+> -61   else
+> -62     rcu_torture_print_module_parms("End of test: SUCCESS");
+> -63 }
+> + 10   }
+> + 11   shuffler_task = NULL;
+> + 12
+> + 13   if (writer_task != NULL) {
+> + 14     VERBOSE_PRINTK_STRING("Stopping rcu_torture_writer task");
+> + 15     kthread_stop(writer_task);
+> + 16   }
+> + 17   writer_task = NULL;
+> + 18
+> + 19   if (reader_tasks != NULL) {
+> + 20     for (i = 0; i < nrealreaders; i++) {
+> + 21       if (reader_tasks[i] != NULL) {
+> + 22         VERBOSE_PRINTK_STRING(
+> + 23           "Stopping rcu_torture_reader task");
+> + 24         kthread_stop(reader_tasks[i]);
+> + 25       }
+> + 26       reader_tasks[i] = NULL;
+> + 27     }
+> + 28     kfree(reader_tasks);
+> + 29     reader_tasks = NULL;
+> + 30   }
+> + 31   rcu_torture_current = NULL;
+> + 32
+> + 33   if (fakewriter_tasks != NULL) {
+> + 34     for (i = 0; i < nfakewriters; i++) {
+> + 35       if (fakewriter_tasks[i] != NULL) {
+> + 36         VERBOSE_PRINTK_STRING(
+> + 37           "Stopping rcu_torture_fakewriter task");
+> + 38         kthread_stop(fakewriter_tasks[i]);
+> + 39       }
+> + 40       fakewriter_tasks[i] = NULL;
+> + 41     }
+> + 42     kfree(fakewriter_tasks);
+> + 43     fakewriter_tasks = NULL;
+> + 44   }
+> + 45
+> + 46   if (stats_task != NULL) {
+> + 47     VERBOSE_PRINTK_STRING("Stopping rcu_torture_stats task");
+> + 48     kthread_stop(stats_task);
+> + 49   }
+> + 50   stats_task = NULL;
+> + 51
+> + 52   /* Wait for all RCU callbacks to fire. */
+> + 53   rcu_barrier();
+> + 54
+> + 55   rcu_torture_stats_print(); /* -After- the stats thread is stopped! */
+> + 56
+> + 57   if (cur_ops->cleanup != NULL)
+> + 58     cur_ops->cleanup();
+> + 59   if (atomic_read(&n_rcu_torture_error))
+> + 60     rcu_torture_print_module_parms("End of test: FAILURE");
+> + 61   else
+> + 62     rcu_torture_print_module_parms("End of test: SUCCESS");
+> + 63 }
+>  
+>  Line 6 sets a global variable that prevents any RCU callbacks from
+>  re-posting themselves. This will not be necessary in most cases, since
+> @@ -176,9 +181,14 @@ for any pre-existing callbacks to complete.
+>  Then lines 55-62 print status and do operation-specific cleanup, and
+>  then return, permitting the module-unload operation to be completed.
+>  
+> -Quick Quiz #1: Is there any other situation where rcu_barrier() might
+> +.. _rcubarrier_quiz_1:
+> +
+> +Quick Quiz #1:
+> +	Is there any other situation where rcu_barrier() might
+>  	be required?
+>  
+> +:ref:`Answer to Quick Quiz #1 <answer_rcubarrier_quiz_1>`
+> +
+>  Your module might have additional complications. For example, if your
+>  module invokes call_rcu() from timers, you will need to first cancel all
+>  the timers, and only then invoke rcu_barrier() to wait for any remaining
+> @@ -188,11 +198,12 @@ Of course, if you module uses call_rcu(), you will need to invoke
+>  rcu_barrier() before unloading.  Similarly, if your module uses
+>  call_srcu(), you will need to invoke srcu_barrier() before unloading,
+>  and on the same srcu_struct structure.  If your module uses call_rcu()
+> --and- call_srcu(), then you will need to invoke rcu_barrier() -and-
+> +-and- call_srcu(), then you will need to invoke rcu_barrier() **and**
+>  srcu_barrier().
+>  
+>  
+>  Implementing rcu_barrier()
+> +--------------------------
+>  
+>  Dipankar Sarma's implementation of rcu_barrier() makes use of the fact
+>  that RCU callbacks are never reordered once queued on one of the per-CPU
+> @@ -200,19 +211,19 @@ queues. His implementation queues an RCU callback on each of the per-CPU
+>  callback queues, and then waits until they have all started executing, at
+>  which point, all earlier RCU callbacks are guaranteed to have completed.
+>  
+> -The original code for rcu_barrier() was as follows:
+> +The original code for rcu_barrier() was as follows::
+>  
+> - 1 void rcu_barrier(void)
+> - 2 {
+> - 3   BUG_ON(in_interrupt());
+> - 4   /* Take cpucontrol mutex to protect against CPU hotplug */
+> - 5   mutex_lock(&rcu_barrier_mutex);
+> - 6   init_completion(&rcu_barrier_completion);
+> - 7   atomic_set(&rcu_barrier_cpu_count, 0);
+> - 8   on_each_cpu(rcu_barrier_func, NULL, 0, 1);
+> - 9   wait_for_completion(&rcu_barrier_completion);
+> -10   mutex_unlock(&rcu_barrier_mutex);
+> -11 }
+> + 1  void rcu_barrier(void)
+> + 2  {
+> + 3    BUG_ON(in_interrupt());
+> + 4    /* Take cpucontrol mutex to protect against CPU hotplug */
+> + 5    mutex_lock(&rcu_barrier_mutex);
+> + 6    init_completion(&rcu_barrier_completion);
+> + 7    atomic_set(&rcu_barrier_cpu_count, 0);
+> + 8    on_each_cpu(rcu_barrier_func, NULL, 0, 1);
+> + 9    wait_for_completion(&rcu_barrier_completion);
+> + 10   mutex_unlock(&rcu_barrier_mutex);
+> + 11 }
+>  
+>  Line 3 verifies that the caller is in process context, and lines 5 and 10
+>  use rcu_barrier_mutex to ensure that only one rcu_barrier() is using the
+> @@ -226,18 +237,18 @@ This code was rewritten in 2008 and several times thereafter, but this
+>  still gives the general idea.
+>  
+>  The rcu_barrier_func() runs on each CPU, where it invokes call_rcu()
+> -to post an RCU callback, as follows:
+> +to post an RCU callback, as follows::
+>  
+> - 1 static void rcu_barrier_func(void *notused)
+> - 2 {
+> - 3 int cpu = smp_processor_id();
+> - 4 struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
+> - 5 struct rcu_head *head;
+> + 1  static void rcu_barrier_func(void *notused)
+> + 2  {
+> + 3    int cpu = smp_processor_id();
+> + 4    struct rcu_data *rdp = &per_cpu(rcu_data, cpu);
+> + 5    struct rcu_head *head;
+>   6
+> - 7 head = &rdp->barrier;
+> - 8 atomic_inc(&rcu_barrier_cpu_count);
+> - 9 call_rcu(head, rcu_barrier_callback);
+> -10 }
+> + 7    head = &rdp->barrier;
+> + 8    atomic_inc(&rcu_barrier_cpu_count);
+> + 9    call_rcu(head, rcu_barrier_callback);
+> + 10 }
+>  
+>  Lines 3 and 4 locate RCU's internal per-CPU rcu_data structure,
+>  which contains the struct rcu_head that needed for the later call to
+> @@ -248,20 +259,25 @@ the current CPU's queue.
+>  
+>  The rcu_barrier_callback() function simply atomically decrements the
+>  rcu_barrier_cpu_count variable and finalizes the completion when it
+> -reaches zero, as follows:
+> +reaches zero, as follows::
+>  
+>   1 static void rcu_barrier_callback(struct rcu_head *notused)
+>   2 {
+> - 3 if (atomic_dec_and_test(&rcu_barrier_cpu_count))
+> - 4 complete(&rcu_barrier_completion);
+> + 3   if (atomic_dec_and_test(&rcu_barrier_cpu_count))
+> + 4     complete(&rcu_barrier_completion);
+>   5 }
+>  
+> -Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
+> +.. _rcubarrier_quiz_2:
+> +
+> +Quick Quiz #2:
+> +	What happens if CPU 0's rcu_barrier_func() executes
+>  	immediately (thus incrementing rcu_barrier_cpu_count to the
+>  	value one), but the other CPU's rcu_barrier_func() invocations
+>  	are delayed for a full grace period? Couldn't this result in
+>  	rcu_barrier() returning prematurely?
+>  
+> +:ref:`Answer to Quick Quiz #2 <answer_rcubarrier_quiz_2>`
+> +
+>  The current rcu_barrier() implementation is more complex, due to the need
+>  to avoid disturbing idle CPUs (especially on battery-powered systems)
+>  and the need to minimally disturb non-idle CPUs in real-time systems.
+> @@ -269,6 +285,7 @@ However, the code above illustrates the concepts.
+>  
+>  
+>  rcu_barrier() Summary
+> +---------------------
+>  
+>  The rcu_barrier() primitive has seen relatively little use, since most
+>  code using RCU is in the core kernel rather than in modules. However, if
+> @@ -277,8 +294,12 @@ so that your module may be safely unloaded.
+>  
+>  
+>  Answers to Quick Quizzes
+> +------------------------
+> +
+> +.. _answer_rcubarrier_quiz_1:
+>  
+> -Quick Quiz #1: Is there any other situation where rcu_barrier() might
+> +Quick Quiz #1:
+> +	Is there any other situation where rcu_barrier() might
+>  	be required?
+>  
+>  Answer: Interestingly enough, rcu_barrier() was not originally
+> @@ -292,7 +313,12 @@ Answer: Interestingly enough, rcu_barrier() was not originally
+>  	implementing rcutorture, and found that rcu_barrier() solves
+>  	this problem as well.
+>  
+> -Quick Quiz #2: What happens if CPU 0's rcu_barrier_func() executes
+> +:ref:`Back to Quick Quiz #1 <rcubarrier_quiz_1>`
+> +
+> +.. _answer_rcubarrier_quiz_2:
+> +
+> +Quick Quiz #2:
+> +	What happens if CPU 0's rcu_barrier_func() executes
+>  	immediately (thus incrementing rcu_barrier_cpu_count to the
+>  	value one), but the other CPU's rcu_barrier_func() invocations
+>  	are delayed for a full grace period? Couldn't this result in
+> @@ -323,3 +349,5 @@ Answer: This cannot happen. The reason is that on_each_cpu() has its last
+>  	is to add an rcu_read_lock() before line 8 of rcu_barrier()
+>  	and an rcu_read_unlock() after line 8 of this same function. If
+>  	you can think of a better change, please let me know!
+> +
+> +:ref:`Back to Quick Quiz #2 <rcubarrier_quiz_2>`
+> -- 
+> 2.20.1
+> 
