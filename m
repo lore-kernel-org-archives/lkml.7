@@ -2,111 +2,149 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31F8BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B520C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:12:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 096ED206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 015512173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:12:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="dk9GfzGx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731728AbfKFKKr (ORCPT
+        id S1731389AbfKFKMp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:10:47 -0500
-Received: from mga12.intel.com ([192.55.52.136]:20726 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729164AbfKFKKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 05:10:46 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 02:10:46 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="196154035"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by orsmga008.jf.intel.com with ESMTP; 06 Nov 2019 02:10:42 -0800
-Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
- complete data requests if needed
-To:     Baolin Wang <baolin.wang@linaro.org>, ulf.hansson@linaro.org,
-        asutoshd@codeaurora.org
-Cc:     orsonzhai@gmail.com, zhang.lyra@gmail.com, arnd@arndb.de,
-        linus.walleij@linaro.org, vincent.guittot@linaro.org,
-        baolin.wang7@gmail.com, linux-mmc@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <cover.1572326519.git.baolin.wang@linaro.org>
- <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com>
-Date:   Wed, 6 Nov 2019 12:09:42 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 05:12:45 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29140 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727239AbfKFKMo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 05:12:44 -0500
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6AC4Qg022141;
+        Wed, 6 Nov 2019 11:12:28 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=ZE5EHY9r5E8wwKp2B+vrmo3u31wmEuBrC/3bKOYK1gg=;
+ b=dk9GfzGxgJnH/+LGcJaQRky3btuB2/bmemD0T9011yYuhtbyhJQ3Nh0A4svwuhGeYntM
+ EYrCog9LZMPg7U2lUjBWQMSntVun+q4Yg+OS+1gAeQISdW1sqtQP0o9xpqG1iODOrFmm
+ lY0zQV6pgGqVnTtuRqoIkFbCuw/OqxjDcH/WVUClfFfZO0xZhVcW810qyu/ltmPLugKt
+ 3838HMI/7Pp1w4r8+UIkYI1l4mLdl3DbXgTmosT+OECHO4FY/yuyPhsDD/ndItcKjX3D
+ /9m/shbTb4qgXwveDCUA8riNsWK17h+zbrtczPIy+DUgKljcqbcDplJa7M0DxBUUNRlf QQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w0ytcwf2v-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 11:12:28 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id C6851100038;
+        Wed,  6 Nov 2019 11:12:23 +0100 (CET)
+Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id B6E462AD343;
+        Wed,  6 Nov 2019 11:12:23 +0100 (CET)
+Received: from SAFEX1HUBCAS21.st.com (10.75.90.45) by Safex1hubcas22.st.com
+ (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019
+ 11:12:23 +0100
+Received: from localhost (10.201.22.222) by Webmail-ga.st.com (10.75.90.48)
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Wed, 6 Nov 2019 11:12:23
+ +0100
+From:   Christophe Roullier <christophe.roullier@st.com>
+To:     <robh@kernel.org>, <davem@davemloft.net>, <joabreu@synopsys.com>,
+        <mark.rutland@arm.com>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <peppe.cavallaro@st.com>
+CC:     <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-kernel@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <netdev@vger.kernel.org>,
+        <christophe.roullier@st.com>, <andrew@lunn.ch>
+Subject: [PATCH V3 net-next 1/4] net: ethernet: stmmac: Add support for syscfg clock
+Date:   Wed, 6 Nov 2019 11:12:17 +0100
+Message-ID: <20191106101220.12693-2-christophe.roullier@st.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191106101220.12693-1-christophe.roullier@st.com>
+References: <20191106101220.12693-1-christophe.roullier@st.com>
 MIME-Version: 1.0
-In-Reply-To: <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.201.22.222]
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_02:2019-11-06,2019-11-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 29/10/19 7:43 AM, Baolin Wang wrote:
-> When using the host software queue, it will trigger the next request in
-> irq handler without a context switch. But the sdhci_request() can not be
-> called in interrupt context when using host software queue for some host
-> drivers, due to the get_cd() ops can be sleepable.
-> 
-> But for some host drivers, such as Spreadtrum host driver, the card is
-> nonremovable, so the get_cd() ops is not sleepable, which means we can
-> complete the data request and trigger the next request in irq handler
-> to remove the context switch for the Spreadtrum host driver.
-> 
-> Thus we still need introduce a variable in struct sdhci_host to indicate
-> that we will always to defer to complete data requests if the sdhci_request()
-> can not be called in interrupt context for some host drivers, when using
-> the host software queue.
-> 
-> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
-> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
-> ---
->  drivers/mmc/host/sdhci.c |    2 +-
->  drivers/mmc/host/sdhci.h |    1 +
->  2 files changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 850241f..9cf2130 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct sdhci_host *host,
->  {
->  	struct mmc_data *data = mrq->data;
->  
-> -	return host->pending_reset ||
-> +	return host->pending_reset || (host->always_defer_done && data) ||
+Add optional support for syscfg clock in dwmac-stm32.c
+Now Syscfg clock is activated automatically when syscfg
+registers are used
 
-I didn't realize you still wanted to call the request function in interrupt
-context.  In my view that needs a new host API
-i.e. int (*request_atomic)(struct mmc_host *mmc, struct mmc_request *mrq)
+Signed-off-by: Christophe Roullier <christophe.roullier@st.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-stm32.c | 28 +++++++++++--------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
->  	       ((host->flags & SDHCI_REQ_USE_DMA) && data &&
->  		data->host_cookie == COOKIE_MAPPED);
->  }
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index d89cdb9..38fbd18 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -533,6 +533,7 @@ struct sdhci_host {
->  	bool pending_reset;	/* Cmd/data reset is pending */
->  	bool irq_wake_enabled;	/* IRQ wakeup is enabled */
->  	bool v4_mode;		/* Host Version 4 Enable */
-> +	bool always_defer_done;	/* Always defer to complete data requests */
->  
->  	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
->  	struct mmc_command *cmd;	/* Current command */
-> 
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+index 4ef041bdf6a1..be7d58d83cfa 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-stm32.c
+@@ -152,19 +152,24 @@ static int stm32mp1_clk_prepare(struct stm32_dwmac *dwmac, bool prepare)
+ 	int ret = 0;
+ 
+ 	if (prepare) {
+-		ret = clk_prepare_enable(dwmac->syscfg_clk);
+-		if (ret)
+-			return ret;
+-
++		if (dwmac->syscfg_clk) {
++			ret = clk_prepare_enable(dwmac->syscfg_clk);
++			if (ret)
++				return ret;
++		}
+ 		if (dwmac->clk_eth_ck) {
+ 			ret = clk_prepare_enable(dwmac->clk_eth_ck);
+ 			if (ret) {
+-				clk_disable_unprepare(dwmac->syscfg_clk);
++				if (dwmac->syscfg_clk)
++					clk_disable_unprepare
++						(dwmac->syscfg_clk);
+ 				return ret;
+ 			}
+ 		}
+ 	} else {
+-		clk_disable_unprepare(dwmac->syscfg_clk);
++		if (dwmac->syscfg_clk)
++			clk_disable_unprepare(dwmac->syscfg_clk);
++
+ 		if (dwmac->clk_eth_ck)
+ 			clk_disable_unprepare(dwmac->clk_eth_ck);
+ 	}
+@@ -320,12 +325,10 @@ static int stm32mp1_parse_data(struct stm32_dwmac *dwmac,
+ 		return PTR_ERR(dwmac->clk_ethstp);
+ 	}
+ 
+-	/*  Clock for sysconfig */
++	/*  Optional Clock for sysconfig */
+ 	dwmac->syscfg_clk = devm_clk_get(dev, "syscfg-clk");
+-	if (IS_ERR(dwmac->syscfg_clk)) {
+-		dev_err(dev, "No syscfg clock provided...\n");
+-		return PTR_ERR(dwmac->syscfg_clk);
+-	}
++	if (IS_ERR(dwmac->syscfg_clk))
++		dwmac->syscfg_clk = NULL;
+ 
+ 	/* Get IRQ information early to have an ability to ask for deferred
+ 	 * probe if needed before we went too far with resource allocation.
+@@ -436,7 +439,8 @@ static int stm32mp1_suspend(struct stm32_dwmac *dwmac)
+ 		return ret;
+ 
+ 	clk_disable_unprepare(dwmac->clk_tx);
+-	clk_disable_unprepare(dwmac->syscfg_clk);
++	if (dwmac->syscfg_clk)
++		clk_disable_unprepare(dwmac->syscfg_clk);
+ 	if (dwmac->clk_eth_ck)
+ 		clk_disable_unprepare(dwmac->clk_eth_ck);
+ 
+-- 
+2.17.1
 
