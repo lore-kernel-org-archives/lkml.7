@@ -2,142 +2,148 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E34C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:38:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF7EAC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:41:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C885D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:38:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERM74Ezu"
+	by mail.kernel.org (Postfix) with ESMTP id B25AB2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:41:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573015315;
+	bh=rxAoH2/L+tfCezEoNe1/FFHqVCAChSRLkHNV+rzFoZs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=pq+WI7Ff+VMvLAmqgzYnezvo320sPZK9VhVU1CqaaUZMdro/zJxVTs42yDr93gLfi
+	 1MLbpvvngeYXRK+AJmkbXVnyJusHxElP7zso+G2R3f51U9ter5VO99/CHtofXAI5sN
+	 TuLEHTgVXdTJbE164AEj9jEvJso+ZtWgcvThNj1k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731262AbfKFEiz (ORCPT
+        id S1731227AbfKFEly (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:38:55 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:45539 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729632AbfKFEiz (ORCPT
+        Tue, 5 Nov 2019 23:41:54 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:37210 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFEly (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:38:55 -0500
-Received: by mail-pl1-f193.google.com with SMTP id y24so10818377plr.12;
-        Tue, 05 Nov 2019 20:38:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=7V01zh+xuKN9jfSDl1ahnvbuyiRHEuk9/Psk/loZcsc=;
-        b=ERM74EzueCUrY7DD9YRMnMl3BPIK4mBaTBFxynZ/aWbqEady7VfI4NAjDyAj7+iIQ5
-         RQsqgoasqS4agr75oIh7Tl5hc9WiiVUtYimMeQl32Rb/aI0IwdqEsUMSEmry0hk405Z5
-         TtwMBzGiEEAVJv6VSBygU1Wty69JTHrHaurUNWtF4AK0J8qA6Q8beJGlhLICH6z+cir1
-         4CbfhjZAuaSwuIxX67mdsHWySCDb4IA332+cM7yRUZ4V1LgeWt2JvmDoY4jWmKw3pcbn
-         kL2GHKw5w/+5GXNSQXsTH2a4Of8xaWeGu2DRBIRA8kB2fARaLicInjf9eeGmpKlpROAA
-         IUhQ==
+        Tue, 5 Nov 2019 23:41:54 -0500
+Received: by mail-oi1-f194.google.com with SMTP id y194so19834448oie.4;
+        Tue, 05 Nov 2019 20:41:53 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7V01zh+xuKN9jfSDl1ahnvbuyiRHEuk9/Psk/loZcsc=;
-        b=edLvpFmgzOXfYZh2UwltAlug42c7t2zt8S4fCruqYooQkiRqAs314qT9Dc70MidPGm
-         Fn0uGtvriP4qeZIq0Z1/CdEQWEx57X0fYu9YOXWjkcSbSIqpw8l4ACrtyiAdFgYXdZUg
-         GWyhJKxRdg6Ylhkcnbb8UJNaucjY+QhFENq1SQ9oZlQjpvCWgUF/2LFtrnimD4JhFjxv
-         z3MwaK7TpFWyfSEUwVF+dw0DgJx+tAqH8//VUEE6Y3C1iRDy07DqH9A82utwF/zQ6gqj
-         NiicsEhOf6ZAkqb2e0DWrKDUmdUstfTFLygC7lJ1XTXn7Y+fjOJ0k8XhNe1DEWHExtpC
-         nLPA==
-X-Gm-Message-State: APjAAAWAAxMF54HPltumu1C3Xod7cEnaYSgC98uwcoG/t4sJ6Z3NhAvF
-        5MnhcCHNBxDPyvfEn82BmUo=
-X-Google-Smtp-Source: APXvYqy/jC4Qc1JZAQO3ZxzldK9w2HMGugt9CwQIfB+u8xFLUZ9B8Zl3gxVf2USX7FyO6dM4ufDePQ==
-X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr548969pls.46.1573015134663;
-        Tue, 05 Nov 2019 20:38:54 -0800 (PST)
-Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
-        by smtp.gmail.com with ESMTPSA id y2sm22630177pfe.126.2019.11.05.20.38.52
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=kExrcIwewO5meaE9ViSZ9PEk4wNZBD0E9gb/qgrKUcI=;
+        b=UBnJ4uW3WSCL1JKJwTNtm6Unh17NGGKRvx8qOezW9l6ODbppjaiBiW9ykhTArSY0Sv
+         ygpQ2vqVXVpusJzz7ayhKf7Hmyk2PhCR7jWwG4E3tfjEl4jcBcIGmqLWBKhlVSd9DCXU
+         3XDX82mhEyfbLliKcg6qTY0eny0JvO1NiK7HZ/bhneP7luuXscdhLNj8bNxGg8eHVR2Q
+         KX6763hna5llZZGJwHz83nV68tW6enqLbCkOBLuSm46D8aNcarNQnQmsiJrABIo8cGfz
+         Q2Pm0RMSfggytAp/A0Ng6qxAGwu9qPstmq65jiy3DYve63W+GRaFpHQqBo8wCNxJtV9D
+         5dKw==
+X-Gm-Message-State: APjAAAVyHqrFeunKfNIuOGLYsO2rlkoBS/B0V564A5kZFGexLWJL1LbC
+        4C54nVUZhHn/lfE1VehkFw==
+X-Google-Smtp-Source: APXvYqxmk7nxkZvyzvyIdu53qhvNJePeZ1ZjaB/WVSemAb5HsQboL1nEWJcM17/eP/f5e7eko5Xxgw==
+X-Received: by 2002:aca:f543:: with SMTP id t64mr498893oih.89.1573015313469;
+        Tue, 05 Nov 2019 20:41:53 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 21sm6216231oin.26.2019.11.05.20.41.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:38:53 -0800 (PST)
-Date:   Wed, 6 Nov 2019 13:38:51 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Greentime Hu <green.hu@gmail.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        James Hogan <jhogan@kernel.org>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
-        Palmer Dabbelt <palmer@dabbelt.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vincent Chen <deanbo422@gmail.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
-        linux-riscv@lists.infradead.org
-Subject: Re: [PATCH 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
-Message-ID: <20191106043851.GA131976@google.com>
-References: <20191106030542.868541-1-dima@arista.com>
- <20191106030542.868541-2-dima@arista.com>
+        Tue, 05 Nov 2019 20:41:52 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:41:52 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc:     linux-realtek-soc@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Subject: Re: [RFC 01/11] dt-bindings: soc: Add Realtek RTD1195 chip info
+ binding
+Message-ID: <20191106044152.GA23224@bogus>
+References: <20191103013645.9856-1-afaerber@suse.de>
+ <20191103013645.9856-2-afaerber@suse.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20191106030542.868541-2-dima@arista.com>
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191103013645.9856-2-afaerber@suse.de>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (19/11/06 03:04), Dmitry Safonov wrote:
-[..]
->  #endif /*_LINUX_KALLSYMS_H*/
-> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
-> index 233459c03b5a..914ff610b880 100644
-> --- a/kernel/locking/lockdep.c
-> +++ b/kernel/locking/lockdep.c
-> @@ -3999,7 +3999,7 @@ static void print_unlock_imbalance_bug(struct task_struct *curr,
->  		curr->comm, task_pid_nr(curr));
->  	print_lockdep_cache(lock);
->  	pr_cont(") at:\n");
-> -	print_ip_sym(ip);
-> +	print_ip_sym(KERN_WARNING, ip);
->  	pr_warn("but there are no more locks to release!\n");
->  	pr_warn("\nother info that might help us debug this:\n");
->  	lockdep_print_held_locks(curr);
-> @@ -4604,7 +4604,7 @@ static void print_lock_contention_bug(struct task_struct *curr,
->  		curr->comm, task_pid_nr(curr));
->  	print_lockdep_cache(lock);
->  	pr_cont(") at:\n");
-> -	print_ip_sym(ip);
-> +	print_ip_sym(KERN_WARNING, ip);
->  	pr_warn("but there are no locks held!\n");
->  	pr_warn("\nother info that might help us debug this:\n");
->  	lockdep_print_held_locks(curr);
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index dd05a378631a..774ff0d8dfe9 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -3858,7 +3858,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
->  	if (IS_ENABLED(CONFIG_DEBUG_PREEMPT)
->  	    && in_atomic_preempt_off()) {
->  		pr_err("Preemption disabled at:");
-> -		print_ip_sym(preempt_disable_ip);
-> +		print_ip_sym(KERN_ERR, preempt_disable_ip);
->  		pr_cont("\n");
+On Sun, Nov 03, 2019 at 02:36:35AM +0100, Andreas Färber wrote:
+> Define a binding for RTD1195 and later SoCs' chip info registers.
+> Add the new directory to MAINTAINERS.
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>  Note: The binding gets extended compatibly later for up to three reg entries.
+>  
+>  .../bindings/soc/realtek/realtek,rtd1195-chip.yaml | 32 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> new file mode 100644
+> index 000000000000..565ad2419553
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/soc/realtek/realtek,rtd1195-chip.yaml
+> @@ -0,0 +1,32 @@
+> +# SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +%YAML 1.2
+> +---
+> +$id: "http://devicetree.org/schemas/soc/realtek/realtek,rtd1195-chip.yaml#"
+> +$schema: "http://devicetree.org/meta-schemas/core.yaml#"
+> +
+> +title: Realtek RTD1195 chip identification
+> +
+> +maintainers:
+> +  - Andreas Färber <afaerber@suse.de>
+> +
+> +description: |
+> +  The Realtek SoCs have some registers to identify the chip and revision.
+> +
+> +properties:
+> +  compatible:
+> +    const: "realtek,rtd1195-chip"
 
-Is this working with pr_cont()?
+Don't need quotes.
 
-	-ss
+> +
+> +  reg:
+> +    maxItems: 1
+> +
+> +required:
+> +  - compatible
+> +  - reg
+
+Add here:
+
+additionalProperties: false
+
+> +
+> +examples:
+> +  - |
+> +    chip-info@1801a200 {
+> +        compatible = "realtek,rtd1195-chip";
+> +        reg = <0x1801a200 0x8>;
+> +    };
+> +...
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index f33adc430230..5c61cf5a44cb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -2188,6 +2188,7 @@ L:	linux-realtek-soc@lists.infradead.org (moderated for non-subscribers)
+>  S:	Maintained
+>  F:	arch/arm64/boot/dts/realtek/
+>  F:	Documentation/devicetree/bindings/arm/realtek.yaml
+> +F:	Documentation/devicetree/bindings/soc/realtek/
+>  
+>  ARM/RENESAS ARM64 ARCHITECTURE
+>  M:	Geert Uytterhoeven <geert+renesas@glider.be>
+> -- 
+> 2.16.4
+> 
