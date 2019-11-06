@@ -2,129 +2,409 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2781C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:34:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90F1CC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2EF32187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:34:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C74E21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIA55X3E"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l1CD8bvt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731951AbfKFOeN (ORCPT
+        id S1731907AbfKFOfZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:34:13 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41807 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1731938AbfKFOeM (ORCPT
+        Wed, 6 Nov 2019 09:35:25 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41526 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728591AbfKFOfY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:34:12 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573050850;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=GuEqvoKpnhY6ya78PGmgiZL+8devT6u4gdgAYEGLPDg=;
-        b=VIA55X3EtOyt71OlvKhRZRq1C7nctMBIlNDroOKKCutgJtgiGzykDzT/ZJ13mlvNizP5Zc
-        ss89/+N1QpvWiw6UAbp6uwxzL0ep9KDt/IdO97ZLA2buUJHrCO5su9qTtFTH/QqWE146qA
-        lt0iigbh56u4T90W7GTbIwP/+Xx5tII=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-434-1PeyxA2-PYqpmjo5-mRw7Q-1; Wed, 06 Nov 2019 09:34:07 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46F26477;
-        Wed,  6 Nov 2019 14:34:05 +0000 (UTC)
-Received: from segfault.boston.devel.redhat.com (unknown [10.19.60.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9DE85D70D;
-        Wed,  6 Nov 2019 14:34:03 +0000 (UTC)
-From:   Jeff Moyer <jmoyer@redhat.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     linux-kbuild@vger.kernel.org,
-        Lucas De Marchi <lucas.de.marchi@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] modpost: add an option to suppress 'exported twice' warnings
-References: <20191106112357.29053-1-yamada.masahiro@socionext.com>
-X-PGP-KeyID: 1F78E1B4
-X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
-Date:   Wed, 06 Nov 2019 09:34:02 -0500
-In-Reply-To: <20191106112357.29053-1-yamada.masahiro@socionext.com> (Masahiro
-        Yamada's message of "Wed, 6 Nov 2019 20:23:57 +0900")
-Message-ID: <x49d0e5nkf9.fsf@segfault.boston.devel.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Wed, 6 Nov 2019 09:35:24 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l3so17266045pgr.8;
+        Wed, 06 Nov 2019 06:35:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=we3h10lm3YgWFbme1gJ1zC3H5p68LHje1sLtHQ8OjNs=;
+        b=l1CD8bvtb+FLNCqegQUmEcabUKCIPNOM0BrG4iCZl97lAbbw9/UNesuR433V/Phlb2
+         vLIfwbdXwr4v81HSWymoBlspj92drCMdF2VN6RRGycPYbFR1OswABdZYcaSbZt3h6zBS
+         3D1zBlyBwDZRb/A12HSkBDV94/E+78uZUXEaSW0My/uNI9vp4IUIkrulj5/I1Sfg5Q61
+         Z/IYoREGP6K8EHFNbxNaq/ir1nIqTfyNI+34DQLZ1rNqWukMj/iD9IfyuWHaK5/eyBtG
+         nFVJoMkN5Hy7uRJD35fj7oaKqroPw1dIHR5mP4pRSX8nrFAINoQbdHLgp0SQgMakeKbz
+         g1VQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
+         :mime-version:content-transfer-encoding;
+        bh=we3h10lm3YgWFbme1gJ1zC3H5p68LHje1sLtHQ8OjNs=;
+        b=pii5DHml+Vdg8XgMcWM+crtH8xkM/Z1gEamImofpwOVoEmbbBos5qCiAQQg22rTROb
+         fI9z9RjL4jrXKN8u10RBGc/4MCRQDELudeQbRC3XyBYSObfBnTO3PvxprxRlPf/FW2uW
+         AGqB5b68XWR44Ce+eNZMN1zE0K0XJBs0A4J02D1GgTTeHpzo4ifNhBz2wk9loVB8UTKF
+         CpdH87SW7diDJUus+TFprBzclVhccSF+RphA+x+Ql+/ySlDaVEZ1xKqwnVfzjcyXJhz8
+         d4henCl6GaNLklLJTN+5e8i2zmup2Py14osYYF6rbNwoGfGLr5VsmP9FLErI4TJiA9VD
+         b/gw==
+X-Gm-Message-State: APjAAAVL1KcmeUDo+oe9GGGZQpBPy8gOfIGDpX+2FLaersXcZs/85dqp
+        L8sGPML2fRh4l322XHB+Fh974TEh
+X-Google-Smtp-Source: APXvYqz0k5S6Yv8GDL5W1FZHLqwYlB5ev6LiyWREt3n9Ly/UJkApb1SKy16Q7FwHiCjDOZE/iSk+Zw==
+X-Received: by 2002:a63:fa4a:: with SMTP id g10mr3146134pgk.432.1573050921842;
+        Wed, 06 Nov 2019 06:35:21 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id r20sm1052530pgo.74.2019.11.06.06.35.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 06:35:21 -0800 (PST)
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Keith Busch <kbusch@kernel.org>
+Cc:     Chris Healy <cphealy@gmail.com>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-pm@vger.kernel.org, Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH v5] nvme: Add hardware monitoring support
+Date:   Wed,  6 Nov 2019 06:35:18 -0800
+Message-Id: <20191106143518.1557-1-linux@roeck-us.net>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: 1PeyxA2-PYqpmjo5-mRw7Q-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Masahiro Yamada <yamada.masahiro@socionext.com> writes:
+nvme devices report temperature information in the controller information
+(for limits) and in the smart log. Currently, the only means to retrieve
+this information is the nvme command line interface, which requires
+super-user privileges.
 
-> Since commit "modpost: do not set ->preloaded for symbols from
-> Module.symvers", the modpost always warns about symbols exported
-> multiple times.
->
-> Generally, I believe it is a good thing to show a warning when the
-> same symbol name is exported twice. This avoids the accidental symbol
-> conflict.
->
-> However, in some cases, we build an external module to provide a
-> different version/variant of the in-kernel module, overriding the
-> same set of exported symbols.
->
-> At least, there is one use-case in the upstream code;
-> tools/testing/nvdimm/libnvdimm.ko replaces drivers/nvdimm/libnvdimm.ko
-> in order to link it against mocked version of core kernel symbols.
->
-> Now, this emits a lots of 'exported twice' warnings:
->
->   https://lkml.org/lkml/2019/10/31/627
->
-> To suppress those, add a new option KBUILD_DUPLICATED_EXPORTS_NO_WARN.
->
-> If you intentionally override the existing symbols, you can pass it
-> from the command line:
->
->   make M=3Dtools/testing/nvdimm KBUILD_DUPLICATED_EXPORTS_NO_WARN=3D1
->
-> Or, more conveniently, you can add it to the module Makefile, so
-> you can still do:
->
->   make M=3Dtools/testing/nvdimm
->
-> without sprinkling the warnings.
->
-> Reported-by: Jeff Moyer <jmoyer@redhat.com>
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
->
-> Jeff Moyer,
-> Dan Williams,
->
-> Please check if this patch solves the nvdimm build issue.
+At the same time, it would be desirable to be able to use NVMe temperature
+information for thermal control.
 
-Yep, that fixes it for me.
+This patch adds support to read NVMe temperatures from the kernel using the
+hwmon API and adds temperature zones for NVMe drives. The thermal subsystem
+can use this information to set thermal policies, and userspace can access
+it using libsensors and/or the "sensors" command.
 
-You can add:
+Example output from the "sensors" command:
 
-Tested-by: Jeff Moyer <jmoyer@redhat.com>
+nvme0-pci-0100
+Adapter: PCI adapter
+Composite:    +39.0°C  (high = +85.0°C, crit = +85.0°C)
+Sensor 1:     +39.0°C
+Sensor 2:     +41.0°C
 
-Thanks!
+Reviewed-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+---
+Note: I retained Christoph's Reviewed-by: tag since the changes since
+v4 are not substantial. I hope that is ok.
+
+v5: Report temp1_alarm instead of temp1_crit_alarm
+
+v4: Attach hwmon device to ctrl->dev instead of ctrl->device
+    Use "nvme" as hwmon device chip name
+
+v3: NVME -> NVMe
+    Call nvme_hwmon_init() only once, when the controller is first
+    identified
+    Protect call to nvme_get_log() and reading the log with mutex
+    Convert error return from nvme_get_log() to Linux error code
+    in nvme_hwmon_get_smart_log()
+    Don't read smart log for reporting warning and critical limits
+    Use get_unaligned_le16() instead of le16_to_cpup() to read the
+    composite temperature
+    Use #ifdef CONFIG_NVME_HWMON instead of IS_ENABLED(CONFIG_NVME_HWMON)
+    -EPROTO -> -EIO for generic NVMe level errors
+    Tab-align '=' in data structure initializations
+
+v2: Use devm_kfree() to release memory in error path
+
+Tested with the following NVMe drives:
+	Intel SSDPEKKW512G7 500GB
+	Samsung SSD 960 EVO 500GB
+	Samsung SSD 970 EVO 500GB
+	Samsung SSD 970 EVO 1TB
+
+ drivers/nvme/host/Kconfig      |  10 ++
+ drivers/nvme/host/Makefile     |   1 +
+ drivers/nvme/host/core.c       |   6 ++
+ drivers/nvme/host/nvme-hwmon.c | 181 +++++++++++++++++++++++++++++++++
+ drivers/nvme/host/nvme.h       |   8 ++
+ 5 files changed, 206 insertions(+)
+ create mode 100644 drivers/nvme/host/nvme-hwmon.c
+
+diff --git a/drivers/nvme/host/Kconfig b/drivers/nvme/host/Kconfig
+index 2b36f052bfb9..c6439638a419 100644
+--- a/drivers/nvme/host/Kconfig
++++ b/drivers/nvme/host/Kconfig
+@@ -23,6 +23,16 @@ config NVME_MULTIPATH
+ 	   /dev/nvmeXnY device will show up for each NVMe namespaces,
+ 	   even if it is accessible through multiple controllers.
+ 
++config NVME_HWMON
++	bool "NVMe hardware monitoring"
++	depends on (NVME_CORE=y && HWMON=y) || (NVME_CORE=m && HWMON)
++	help
++	  This provides support for NVMe hardware monitoring. If enabled,
++	  a hardware monitoring device will be created for each NVMe drive
++	  in the system.
++
++	  If unsure, say N.
++
+ config NVME_FABRICS
+ 	tristate
+ 
+diff --git a/drivers/nvme/host/Makefile b/drivers/nvme/host/Makefile
+index 8a4b671c5f0c..03de4797a877 100644
+--- a/drivers/nvme/host/Makefile
++++ b/drivers/nvme/host/Makefile
+@@ -14,6 +14,7 @@ nvme-core-$(CONFIG_TRACING)		+= trace.o
+ nvme-core-$(CONFIG_NVME_MULTIPATH)	+= multipath.o
+ nvme-core-$(CONFIG_NVM)			+= lightnvm.o
+ nvme-core-$(CONFIG_FAULT_INJECTION_DEBUG_FS)	+= fault_inject.o
++nvme-core-$(CONFIG_NVME_HWMON)		+= nvme-hwmon.o
+ 
+ nvme-y					+= pci.o
+ 
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index fa7ba09dca77..d039e392de36 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -2796,6 +2796,9 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 	ctrl->oncs = le16_to_cpu(id->oncs);
+ 	ctrl->mtfa = le16_to_cpu(id->mtfa);
+ 	ctrl->oaes = le32_to_cpu(id->oaes);
++	ctrl->wctemp = le16_to_cpu(id->wctemp);
++	ctrl->cctemp = le16_to_cpu(id->cctemp);
++
+ 	atomic_set(&ctrl->abort_limit, id->acl + 1);
+ 	ctrl->vwc = id->vwc;
+ 	if (id->mdts)
+@@ -2895,6 +2898,9 @@ int nvme_init_identify(struct nvme_ctrl *ctrl)
+ 	if (ret < 0)
+ 		return ret;
+ 
++	if (!ctrl->identified)
++		nvme_hwmon_init(ctrl);
++
+ 	ctrl->identified = true;
+ 
+ 	return 0;
+diff --git a/drivers/nvme/host/nvme-hwmon.c b/drivers/nvme/host/nvme-hwmon.c
+new file mode 100644
+index 000000000000..5480cbb84f9f
+--- /dev/null
++++ b/drivers/nvme/host/nvme-hwmon.c
+@@ -0,0 +1,181 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * NVM Express hardware monitoring support
++ * Copyright (c) 2019, Guenter Roeck
++ */
++
++#include <linux/hwmon.h>
++#include <asm/unaligned.h>
++
++#include "nvme.h"
++
++struct nvme_hwmon_data {
++	struct nvme_ctrl *ctrl;
++	struct nvme_smart_log log;
++	struct mutex read_lock;
++};
++
++static int nvme_hwmon_get_smart_log(struct nvme_hwmon_data *data)
++{
++	int ret;
++
++	ret = nvme_get_log(data->ctrl, NVME_NSID_ALL, NVME_LOG_SMART, 0,
++			   &data->log, sizeof(data->log), 0);
++
++	return ret <= 0 ? ret : -EIO;
++}
++
++static int nvme_hwmon_read(struct device *dev, enum hwmon_sensor_types type,
++			   u32 attr, int channel, long *val)
++{
++	struct nvme_hwmon_data *data = dev_get_drvdata(dev);
++	struct nvme_smart_log *log = &data->log;
++	int temp;
++	int err;
++
++	/*
++	 * First handle attributes which don't require us to read
++	 * the smart log.
++	 */
++	switch (attr) {
++	case hwmon_temp_max:
++		*val = (data->ctrl->wctemp - 273) * 1000;
++		return 0;
++	case hwmon_temp_crit:
++		*val = (data->ctrl->cctemp - 273) * 1000;
++		return 0;
++	default:
++		break;
++	}
++
++	mutex_lock(&data->read_lock);
++	err = nvme_hwmon_get_smart_log(data);
++	if (err)
++		goto unlock;
++
++	switch (attr) {
++	case hwmon_temp_input:
++		if (!channel)
++			temp = get_unaligned_le16(log->temperature);
++		else
++			temp = le16_to_cpu(log->temp_sensor[channel - 1]);
++		*val = (temp - 273) * 1000;
++		break;
++	case hwmon_temp_alarm:
++		*val = !!(log->critical_warning & NVME_SMART_CRIT_TEMPERATURE);
++		break;
++	default:
++		err = -EOPNOTSUPP;
++		break;
++	}
++unlock:
++	mutex_unlock(&data->read_lock);
++	return err;
++}
++
++static const char * const nvme_hwmon_sensor_names[] = {
++	"Composite",
++	"Sensor 1",
++	"Sensor 2",
++	"Sensor 3",
++	"Sensor 4",
++	"Sensor 5",
++	"Sensor 6",
++	"Sensor 7",
++	"Sensor 8",
++};
++
++static int nvme_hwmon_read_string(struct device *dev,
++				  enum hwmon_sensor_types type, u32 attr,
++				  int channel, const char **str)
++{
++	*str = nvme_hwmon_sensor_names[channel];
++	return 0;
++}
++
++static umode_t nvme_hwmon_is_visible(const void *_data,
++				     enum hwmon_sensor_types type,
++				     u32 attr, int channel)
++{
++	const struct nvme_hwmon_data *data = _data;
++
++	switch (attr) {
++	case hwmon_temp_crit:
++		if (!channel && data->ctrl->cctemp)
++			return 0444;
++		break;
++	case hwmon_temp_max:
++		if (!channel && data->ctrl->wctemp)
++			return 0444;
++		break;
++	case hwmon_temp_alarm:
++		if (!channel)
++			return 0444;
++		break;
++	case hwmon_temp_input:
++	case hwmon_temp_label:
++		if (!channel || data->log.temp_sensor[channel - 1])
++			return 0444;
++		break;
++	default:
++		break;
++	}
++	return 0;
++}
++
++static const struct hwmon_channel_info *nvme_hwmon_info[] = {
++	HWMON_CHANNEL_INFO(chip, HWMON_C_REGISTER_TZ),
++	HWMON_CHANNEL_INFO(temp,
++			   HWMON_T_INPUT | HWMON_T_MAX | HWMON_T_CRIT |
++				HWMON_T_LABEL | HWMON_T_ALARM,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL,
++			   HWMON_T_INPUT | HWMON_T_LABEL),
++	NULL
++};
++
++static const struct hwmon_ops nvme_hwmon_ops = {
++	.is_visible	= nvme_hwmon_is_visible,
++	.read		= nvme_hwmon_read,
++	.read_string	= nvme_hwmon_read_string,
++};
++
++static const struct hwmon_chip_info nvme_hwmon_chip_info = {
++	.ops	= &nvme_hwmon_ops,
++	.info	= nvme_hwmon_info,
++};
++
++void nvme_hwmon_init(struct nvme_ctrl *ctrl)
++{
++	struct device *dev = ctrl->dev;
++	struct nvme_hwmon_data *data;
++	struct device *hwmon;
++	int err;
++
++	data = devm_kzalloc(dev, sizeof(*data), GFP_KERNEL);
++	if (!data)
++		return;
++
++	data->ctrl = ctrl;
++	mutex_init(&data->read_lock);
++
++	err = nvme_hwmon_get_smart_log(data);
++	if (err) {
++		dev_warn(dev, "Failed to read smart log (error %d)\n", err);
++		devm_kfree(dev, data);
++		return;
++	}
++
++	hwmon = devm_hwmon_device_register_with_info(dev, "nvme", data,
++						     &nvme_hwmon_chip_info,
++						     NULL);
++	if (IS_ERR(hwmon)) {
++		dev_warn(dev, "Failed to instantiate hwmon device\n");
++		devm_kfree(dev, data);
++	}
++}
+diff --git a/drivers/nvme/host/nvme.h b/drivers/nvme/host/nvme.h
+index 22e8401352c2..cb3b242a214e 100644
+--- a/drivers/nvme/host/nvme.h
++++ b/drivers/nvme/host/nvme.h
+@@ -231,6 +231,8 @@ struct nvme_ctrl {
+ 	u16 kas;
+ 	u8 npss;
+ 	u8 apsta;
++	u16 wctemp;
++	u16 cctemp;
+ 	u32 oaes;
+ 	u32 aen_result;
+ 	u32 ctratt;
+@@ -652,4 +654,10 @@ static inline struct nvme_ns *nvme_get_ns_from_dev(struct device *dev)
+ 	return dev_to_disk(dev)->private_data;
+ }
+ 
++#ifdef CONFIG_NVME_HWMON
++void nvme_hwmon_init(struct nvme_ctrl *ctrl);
++#else
++static inline void nvme_hwmon_init(struct nvme_ctrl *ctrl) { }
++#endif
++
+ #endif /* _NVME_H */
+-- 
+2.17.1
 
