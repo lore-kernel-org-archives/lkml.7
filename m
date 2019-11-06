@@ -2,95 +2,100 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC9BC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C46DC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D55E21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3D94E217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="q9IIk3N0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730949AbfKFTa3 (ORCPT
+        id S1729435AbfKFTfx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:30:29 -0500
-Received: from mga17.intel.com ([192.55.52.151]:12634 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727681AbfKFTa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:30:29 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:30:28 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="205931904"
-Received: from rbidasar-mobl.amr.corp.intel.com (HELO [10.251.0.251]) ([10.251.0.251])
-  by orsmga006.jf.intel.com with ESMTP; 06 Nov 2019 11:30:27 -0800
-Subject: Re: [alsa-devel] [PATCH 0/3] soundwire: use UniqueID only when
- relevant
-To:     alsa-devel@alsa-project.org
-Cc:     tiwai@suse.de, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        vkoul@kernel.org, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com,
-        slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>
-References: <20191022234808.17432-1-pierre-louis.bossart@linux.intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <caa9b0cb-ea85-e7de-6ada-35ad906dec28@linux.intel.com>
-Date:   Wed, 6 Nov 2019 13:30:27 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 6 Nov 2019 14:35:53 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:41848 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKFTfw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:35:52 -0500
+Received: by mail-wr1-f68.google.com with SMTP id p4so27441253wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:35:51 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
+        b=q9IIk3N0mImL9Zq2/ZsglmYzRHe8LvSH4HOm2W+RTudvjNo5s5lAxnFr5bmJSNSw27
+         Qw3oITHHNNjuSyYlXtyhNuzi75kFzY+upd6DMsEDo/jzMXzhf3EEDNelH3Fdi2cYhDky
+         fRwv7kxmZrslp1sKm75QW/F8HM1WlNCid38gtm3uUiGtZLND5VsrEu3pzVtZQMgqbTBR
+         mOyiZcWxhwz/98a3C2Mal9trGeroRzY5pqlHvOyJ+6YewtI7J/97G5MvL8CDEqUXgAKH
+         v6ummHlWnV3CW56zPq85BsIA0hKvApNHdOGNV3NDDQT1VAYJyRyNS2nHbVSgmsFkkBek
+         EfvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
+        b=r1icbelU/eelPJhZCNaclf/u/neuGZR/5Tnz2VdD6aFiF4c4aKnrlwGiVOj9VbGSlN
+         1k59r2fAWQRmabXWIrDM87JGImmWcLgHRvd2Au9O72EfmM+N29zqjYHpDqTDCOTfpcNk
+         9lEa0vafB+Cu6rND01Rx1cQsQf5vkoxaCrtdN6yDglQmZPBsgziOJ1sIGGcyC7ih8fd6
+         wmXgbZcGk2cHCEsHABx+SzqplxPSWaFftzQE+F7RCv6Frq+0KOqgaXlE7PEcf5R9GoE8
+         sO5dq4boawqfE+blPUOCKAbrRGddM2y/Y+RhrQFw6uCR8I3aBAce7Jzw4JI6WnpFZg6M
+         4qAw==
+X-Gm-Message-State: APjAAAXXj0zjzub5jhIpY1LaMaK7PfwGlWt/vcmnPjLOcQOTkiISPutf
+        64pNkBqwgKBGMmsKjwqCcKALZw==
+X-Google-Smtp-Source: APXvYqz6zkvJvFecNHz0gOcK2N6VovMdJvan9hQM6kndetNbNVDayZPMavQNRQqFjByWobWfaToSrQ==
+X-Received: by 2002:adf:97dd:: with SMTP id t29mr4070073wrb.283.1573068950319;
+        Wed, 06 Nov 2019 11:35:50 -0800 (PST)
+Received: from localhost (amontpellier-652-1-71-119.w109-210.abo.wanadoo.fr. [109.210.54.119])
+        by smtp.gmail.com with ESMTPSA id w13sm30928713wrm.8.2019.11.06.11.35.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 11:35:49 -0800 (PST)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Christian Hewitt <christianshewitt@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Christian Hewitt <christianshewitt@gmail.com>
+Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to common dtsi
+In-Reply-To: <7h4kzg7rev.fsf@baylibre.com>
+References: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com> <7h4kzg7rev.fsf@baylibre.com>
+Date:   Wed, 06 Nov 2019 20:35:48 +0100
+Message-ID: <7hk18c6bmz.fsf@baylibre.com>
 MIME-Version: 1.0
-In-Reply-To: <20191022234808.17432-1-pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Kevin Hilman <khilman@baylibre.com> writes:
 
+> Christian Hewitt <christianshewitt@gmail.com> writes:
+>
+>> Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
+>> boards in the VIM3 family including VIM3L.
+>>
+>> This change depends on [1] being merged/applied first.
+>>
+>> [1] https://patchwork.kernel.org/patch/11198535/
+>>
+>> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
+>
+> Queued for v5.5, but...
+>
+>> -&frddr_a {
+>> -        status = "okay";
+>> -};
+>
+> This node doesn't exist upstream...
 
-On 10/22/19 6:48 PM, Pierre-Louis Bossart wrote:
-> The hardware UniqueID, typically enabled with pin-strapping, is
-> required during enumeration to avoid conflicts between devices of the
-> same type.
-> 
-> When there are no devices of the same type, using the UniqueID is
-> overkill and results in a lot of probe errors due to mismatches
-> between ACPI tables and hardware capabilities. For example it's not
-> uncommon for BIOS vendors to copy/paste the same settings between
-> platforms but the hardware pin-strapping is different. This is
-> perfectly legit and permitted by MIPI specs.
-> 
-> With this patchset, the UniqueID is only used when multiple devices of
-> the same type are detected. The loop to detect multiple identical
-> devices is not super efficient but with typically fewer than 4 devices
-> per link there's no real incentive to be smarter.
-> 
-> This change is only implemented for ACPI platforms, for DeviceTree
-> there is no change.
+oops, nevermind.  I see it's not upstream because it's still in my fixes
+branch.
 
-Vinod, this series has been submitted for review on October 22 and I 
-answered to your questions. There's been no feedback since October 24, 
-so is there any sustained objection here?
-
-ACPI platforms are completely unmanageable without this patchset.
-
-> 
-> Pierre-Louis Bossart (3):
->    soundwire: remove bitfield for unique_id, use u8
->    soundwire: slave: add helper to extract slave ID
->    soundwire: ignore uniqueID when irrelevant
-> 
->   drivers/soundwire/bus.c       |  7 +--
->   drivers/soundwire/slave.c     | 98 +++++++++++++++++++++++++++--------
->   include/linux/soundwire/sdw.h |  4 +-
->   3 files changed, 84 insertions(+), 25 deletions(-)
-> 
+Kevin
