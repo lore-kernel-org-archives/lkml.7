@@ -2,77 +2,77 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B07C2FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:44:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F10D3C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:45:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89E4B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:44:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CB20A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:45:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732772AbfKFWox (ORCPT
+        id S1732797AbfKFWpI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:44:53 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:11138 "EHLO
+        Wed, 6 Nov 2019 17:45:08 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38254 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1732411AbfKFWox (ORCPT
+        by vger.kernel.org with ESMTP id S1727154AbfKFWpI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:44:53 -0500
+        Wed, 6 Nov 2019 17:45:08 -0500
 Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6MghjD103125
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 17:44:51 -0500
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6MggIv103088
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 17:45:04 -0500
 Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w44af5chf-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w44af5csj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:44:51 -0500
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:45:04 -0500
 Received: from localhost
         by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 6 Nov 2019 22:44:48 -0000
+        Wed, 6 Nov 2019 22:45:02 -0000
 Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
         by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 22:44:43 -0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6MigNn36372620
+        Wed, 6 Nov 2019 22:45:00 -0000
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6MixhP55640138
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 22:44:42 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A2E1AAE068;
-        Wed,  6 Nov 2019 22:44:42 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B01EFAE056;
-        Wed,  6 Nov 2019 22:44:41 +0000 (GMT)
+        Wed, 6 Nov 2019 22:44:59 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F376A4076;
+        Wed,  6 Nov 2019 22:44:59 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 55B85A406F;
+        Wed,  6 Nov 2019 22:44:58 +0000 (GMT)
 Received: from dhcp-9-31-102-173.watson.ibm.com (unknown [9.31.102.173])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 22:44:41 +0000 (GMT)
-Subject: Re: [PATCH v4 08/10] IMA: Defined functions to queue and dequeue
- keys for measurement
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Nov 2019 22:44:58 +0000 (GMT)
+Subject: Re: [PATCH v4 01/10] IMA: Defined an IMA hook to measure keys on
+ key create or update
 From:   Mimi Zohar <zohar@linux.ibm.com>
 To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
         dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
         jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Date:   Wed, 06 Nov 2019 17:44:41 -0500
-In-Reply-To: <20191106190116.2578-9-nramas@linux.microsoft.com>
+In-Reply-To: <20191106190116.2578-2-nramas@linux.microsoft.com>
 References: <20191106190116.2578-1-nramas@linux.microsoft.com>
-         <20191106190116.2578-9-nramas@linux.microsoft.com>
+         <20191106190116.2578-2-nramas@linux.microsoft.com>
 Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
+Date:   Wed, 06 Nov 2019 17:43:09 -0500
 Mime-Version: 1.0
+X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19110622-0012-0000-0000-000003615CB3
+x-cbid: 19110622-0012-0000-0000-000003615CB7
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110622-0013-0000-0000-0000219CBB5F
-Message-Id: <1573080281.5028.314.camel@linux.ibm.com>
+x-cbparentid: 19110622-0013-0000-0000-0000219CBB65
+Message-Id: <1573080189.5028.313.camel@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_08:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=4 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1910280000 definitions=main-1911060218
@@ -82,68 +82,51 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On Wed, 2019-11-06 at 11:01 -0800, Lakshmi Ramasubramanian wrote:
-
-> +int ima_queue_or_process_key_for_measurement(struct key *keyring,
-> +					     struct key *key)
+> Asymmetric keys used for verifying file signatures or certificates
+> are currently not included in the IMA measurement list.
+> 
+> This patch defines a new IMA hook namely ima_post_key_create_or_update()
+> to measure asymmetric keys.
+> 
+> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>  security/integrity/ima/ima_main.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index d7e987baf127..a0e233afe876 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -721,6 +721,22 @@ void ima_kexec_cmdline(const void *buf, int size)
+>  					   KEXEC_CMDLINE, 0);
+>  }
+>  
+> +/**
+> + * ima_post_key_create_or_update - measure asymmetric keys
+> + * @keyring: keyring to which the key is linked to
+> + * @key: created or updated key
+> + * @flags: key flags
+> + * @create: flag indicating whether the key was created or updated
+> + *
+> + * Keys can only be measured, not appraised.
+> + */
+> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+> +				   unsigned long flags, bool create)
 > +{
-> +	int rc = 0;
-> +	struct ima_measure_key_entry *entry = NULL;
-> +	const struct public_key *pk;
-> +
-> +	if (key->type != &key_type_asymmetric)
-> +		return 0;
-> +
-> +	mutex_lock(&ima_measure_keys_mutex);
+> +	if ((keyring != NULL) && (key != NULL))
+> +		return;
 
-Unless the key is being queued, there's no reason to take the lock. 
-
-> +
-> +	if (ima_initialized) {
-
-ima_initialized is being set in ima_init(), before a custom policy is
-loaded.  I would think that is too early.  ima_update_policy() is
-called after loading a custom policy.  Please see how to detect when a
-custom policy is loaded.
-
-> +		/*
-> +		 * keyring->description points to the name of the keyring
-> +		 * (such as ".builtin_trusted_keys", ".ima", etc.) to
-> +		 * which the given key is linked to.
-> +		 *
-> +		 * The name of the keyring is passed in the "eventname"
-> +		 * parameter to process_buffer_measurement() and is set
-> +		 * in the "eventname" field in ima_event_data for
-> +		 * the key measurement IMA event.
-> +		 *
-> +		 * The name of the keyring is also passed in the "keyring"
-> +		 * parameter to process_buffer_measurement() to check
-> +		 * if the IMA policy is configured to measure a key linked
-> +		 * to the given keyring.
-> +		 */
-> +		pk = key->payload.data[asym_crypto];
-> +		process_buffer_measurement(pk->key, pk->keylen,
-> +					   keyring->description,
-> +					   KEYRING_CHECK, 0,
-> +					   keyring->description);
-
-Measuring the key should be done in ima_post_key_create_or_update()
-unless, it is being deferred.  Please update the function name to
-reflect this.
+I would move the patch that defines the "keyring=" policy option prior
+to this one.  Include the call to process_buffer_measurement() in this
+patch.  A subsequent patch would add support to defer measuring the
+key, by calling a function named something like
+ima_queue_key_measurement().
 
 Mimi
 
-
-> +	} else {
-> +		entry = ima_alloc_measure_key_entry(keyring, key);
-> +		if (entry != NULL) {
-> +			INIT_LIST_HEAD(&entry->list);
-> +			list_add_tail(&entry->list, &ima_measure_keys);
-> +		} else
-> +			rc = -ENOMEM;
-> +	}
-> +
-> +	mutex_unlock(&ima_measure_keys_mutex);
-> +
-> +	return rc;
 > +}
+> +
+>  static int __init init_ima(void)
+>  {
+>  	int error;
 
