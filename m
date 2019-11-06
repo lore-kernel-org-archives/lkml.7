@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EFC0C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3293C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3427521882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0F0620869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfKFTO2 (ORCPT
+        id S1732552AbfKFTO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:14:28 -0500
+        Wed, 6 Nov 2019 14:14:26 -0500
 Received: from mga12.intel.com ([192.55.52.136]:4046 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732548AbfKFTO0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:14:26 -0500
+        id S1732527AbfKFTOY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:14:24 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:14:25 -0800
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:14:24 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="402465861"
+   d="scan'208";a="402465857"
 Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 11:14:24 -0800
+  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 11:14:22 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 14/14] soundwire: intel_init: add implementation of sdw_intel_enable_irq()
-Date:   Wed,  6 Nov 2019 13:13:58 -0600
-Message-Id: <20191106191358.5712-15-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 13/14] soundwire: intel: free all resources on hw_free()
+Date:   Wed,  6 Nov 2019 13:13:57 -0600
+Message-Id: <20191106191358.5712-14-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106191358.5712-1-pierre-louis.bossart@linux.intel.com>
 References: <20191106191358.5712-1-pierre-louis.bossart@linux.intel.com>
@@ -51,48 +51,84 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This function is required to enable all interrupts across all links.
+Make sure all calls to the SoundWire stream API are done and involve
+callback
 
+Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel_init.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+ drivers/soundwire/intel.c | 40 +++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 38 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
-index 42f7ae034bea..14ffe9ce2929 100644
---- a/drivers/soundwire/intel_init.c
-+++ b/drivers/soundwire/intel_init.c
-@@ -137,6 +137,30 @@ sdw_intel_scan_controller(struct sdw_intel_acpi_info *info)
- 	return 0;
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index af24fa048add..cad1c0b64ee3 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -548,6 +548,25 @@ static int intel_params_stream(struct sdw_intel *sdw,
+ 	return -EIO;
  }
  
-+#define HDA_DSP_REG_ADSPIC2             (0x10)
-+#define HDA_DSP_REG_ADSPIS2             (0x14)
-+#define HDA_DSP_REG_ADSPIC2_SNDW        BIT(5)
-+
-+/**
-+ * sdw_intel_enable_irq() - enable/disable Intel SoundWire IRQ
-+ * @mmio_base: The mmio base of the control register
-+ * @enable: true if enable
-+ */
-+void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable)
++static int intel_free_stream(struct sdw_intel *sdw,
++			     struct snd_pcm_substream *substream,
++			     struct snd_soc_dai *dai,
++			     int link_id)
 +{
-+	u32 val;
++	struct sdw_intel_link_res *res = sdw->link_res;
++	struct sdw_intel_stream_free_data free_data;
 +
-+	val = readl(mmio_base + HDA_DSP_REG_ADSPIC2);
++	free_data.substream = substream;
++	free_data.dai = dai;
++	free_data.link_id = link_id;
 +
-+	if (enable)
-+		val |= HDA_DSP_REG_ADSPIC2_SNDW;
-+	else
-+		val &= ~HDA_DSP_REG_ADSPIC2_SNDW;
++	if (res->ops && res->ops->free_stream && res->dev)
++		return res->ops->free_stream(res->dev,
++					     &free_data);
 +
-+	writel(val, mmio_base + HDA_DSP_REG_ADSPIC2);
++	return 0;
 +}
-+EXPORT_SYMBOL(sdw_intel_enable_irq);
 +
- static struct sdw_intel_ctx
- *sdw_intel_probe_controller(struct sdw_intel_res *res)
+ /*
+  * bank switch routines
+  */
+@@ -816,6 +835,7 @@ static int
+ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
  {
+ 	struct sdw_cdns *cdns = snd_soc_dai_get_drvdata(dai);
++	struct sdw_intel *sdw = cdns_to_intel(cdns);
+ 	struct sdw_cdns_dma_data *dma;
+ 	int ret;
+ 
+@@ -823,12 +843,28 @@ intel_hw_free(struct snd_pcm_substream *substream, struct snd_soc_dai *dai)
+ 	if (!dma)
+ 		return -EIO;
+ 
++	ret = sdw_deprepare_stream(dma->stream);
++	if (ret) {
++		dev_err(dai->dev, "sdw_deprepare_stream: failed %d", ret);
++		return ret;
++	}
++
+ 	ret = sdw_stream_remove_master(&cdns->bus, dma->stream);
+-	if (ret < 0)
++	if (ret < 0) {
+ 		dev_err(dai->dev, "remove master from stream %s failed: %d\n",
+ 			dma->stream->name, ret);
++		return ret;
++	}
+ 
+-	return ret;
++	ret = intel_free_stream(sdw, substream, dai, sdw->instance);
++	if (ret < 0) {
++		dev_err(dai->dev, "intel_free_stream: failed %d", ret);
++		return ret;
++	}
++
++	sdw_release_stream(dma->stream);
++
++	return 0;
+ }
+ 
+ static void intel_shutdown(struct snd_pcm_substream *substream,
 -- 
 2.20.1
 
