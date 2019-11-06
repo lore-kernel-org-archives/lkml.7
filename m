@@ -2,177 +2,182 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26D32C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 794B4C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:20:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBE1A217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:13:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="H04+1xWt"
+	by mail.kernel.org (Postfix) with ESMTP id 49C9D217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:20:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732584AbfKFVNr (ORCPT
+        id S1727822AbfKFVUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:13:47 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:42711 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727351AbfKFVNq (ORCPT
+        Wed, 6 Nov 2019 16:20:49 -0500
+Received: from mail104.syd.optusnet.com.au ([211.29.132.246]:49549 "EHLO
+        mail104.syd.optusnet.com.au" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726798AbfKFVUt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:13:46 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573074824;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QHAakULJ6ctlC4Fo+B5oEGN78VlGbOoTFxrZX89s2Vg=;
-        b=H04+1xWtnvUvyVv5yNNYVoZdqKjA0b0IdS+AVJx77XyFtR0EUWiwRxZlOFvyGSn2BxGRx4
-        z+ugiC8GSeTis767YTGkbMYOdza0SLIKpAKLcJdKcpZGIvRoQFu0j+PQ0qfJZIN1EXu0Q5
-        TsrrGGlUUyzq52Fsc4kL7bUsDfzsV7w=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-134-eZpJXGxRPUGlxMVqCCmNYQ-1; Wed, 06 Nov 2019 16:13:40 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B8E69107ACC3;
-        Wed,  6 Nov 2019 21:13:34 +0000 (UTC)
-Received: from x1.home (ovpn-116-138.phx2.redhat.com [10.3.116.138])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B04A61001938;
-        Wed,  6 Nov 2019 21:13:18 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 14:13:18 -0700
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     Jason Wang <jasowang@redhat.com>, kvm@vger.kernel.org,
-        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-Message-ID: <20191106141318.150f3b9b@x1.home>
-In-Reply-To: <20191106142449-mutt-send-email-mst@kernel.org>
-References: <20191105093240.5135-1-jasowang@redhat.com>
-        <20191105105834.469675f0@x1.home>
-        <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
-        <20191106120312.77a6a318@x1.home>
-        <20191106142449-mutt-send-email-mst@kernel.org>
-Organization: Red Hat
+        Wed, 6 Nov 2019 16:20:49 -0500
+Received: from dread.disaster.area (pa49-180-67-183.pa.nsw.optusnet.com.au [49.180.67.183])
+        by mail104.syd.optusnet.com.au (Postfix) with ESMTPS id 6282D7E9CFD;
+        Thu,  7 Nov 2019 08:20:43 +1100 (AEDT)
+Received: from dave by dread.disaster.area with local (Exim 4.92.3)
+        (envelope-from <david@fromorbit.com>)
+        id 1iSSjJ-0006sw-Ve; Thu, 07 Nov 2019 08:20:41 +1100
+Date:   Thu, 7 Nov 2019 08:20:41 +1100
+From:   Dave Chinner <david@fromorbit.com>
+To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
+Cc:     linux-xfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yang Guo <guoyang2@huawei.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
+Message-ID: <20191106212041.GF4614@dread.disaster.area>
+References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191104204909.GB4614@dread.disaster.area>
+ <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
+ <20191105040325.GC4614@dread.disaster.area>
+ <675693c2-8600-1cbd-ce50-5696c45c6cd9@hisilicon.com>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: eZpJXGxRPUGlxMVqCCmNYQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <675693c2-8600-1cbd-ce50-5696c45c6cd9@hisilicon.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Optus-CM-Score: 0
+X-Optus-CM-Analysis: v=2.2 cv=P6RKvmIu c=1 sm=1 tr=0
+        a=3wLbm4YUAFX2xaPZIabsgw==:117 a=3wLbm4YUAFX2xaPZIabsgw==:17
+        a=jpOVt7BSZ2e4Z31A5e1TngXxSK0=:19 a=kj9zAlcOel0A:10 a=MeAgGD-zjQ4A:10
+        a=i0EeH86SAAAA:8 a=7-415B0cAAAA:8 a=waIoS2Gabq21BWvHE1cA:9
+        a=9lEU_OVQspMH1i_r:21 a=yjND_H8rfCXGR7Z_:21 a=CjuIK1q_8ugA:10
+        a=biEYGPWJfzWAr4FL6Ov7:22
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019 14:25:23 -0500
-"Michael S. Tsirkin" <mst@redhat.com> wrote:
+On Wed, Nov 06, 2019 at 02:00:58PM +0800, Shaokun Zhang wrote:
+> Hi Dave,
+> 
+> On 2019/11/5 12:03, Dave Chinner wrote:
+> > On Tue, Nov 05, 2019 at 11:26:32AM +0800, Shaokun Zhang wrote:
+> >> Hi Dave,
+> >>
+> >> On 2019/11/5 4:49, Dave Chinner wrote:
+> >>> On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
+> >>>> From: Yang Guo <guoyang2@huawei.com>
+> >>>>
+> >>>> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
+> >>>> whether the counter less than 0 and it is a expensive function.
+> >>>> let's check it only when delta < 0, it will be good for xfs's performance.
+> >>>
+> >>> Hmmm. I don't recall this as being expensive.
+> >>>
+> >>
+> >> Sorry about the misunderstanding information in commit message.
+> >>
+> >>> How did you find this? Can you please always document how you found
+> >>
+> >> If user creates million of files and the delete them, We found that the
+> >> __percpu_counter_compare costed 5.78% CPU usage, you are right that itself
+> >> is not expensive, but it calls __percpu_counter_sum which will use
+> >> spin_lock and read other cpu's count. perf record -g is used to profile it:
+> >>
+> >> - 5.88%     0.02%  rm  [kernel.vmlinux]  [k] xfs_mod_ifree
+> >>    - 5.86% xfs_mod_ifree
+> >>       - 5.78% __percpu_counter_compare
+> >>            5.61% __percpu_counter_sum
+> > 
+> > Interesting. Your workload is hitting the slow path, which I most
+> > certainly do no see when creating lots of files. What's your
+> > workload?
+> > 
+> 
+> The hardware has 128 cpu cores, and the xfs filesystem format config is default,
+> while the test is a single thread, as follow:
+> ./mdtest -I 10  -z 6 -b 8 -d /mnt/ -t -c 2
 
-> On Wed, Nov 06, 2019 at 12:03:12PM -0700, Alex Williamson wrote:
-> > On Wed, 6 Nov 2019 11:56:46 +0800
-> > Jason Wang <jasowang@redhat.com> wrote:
-> >  =20
-> > > On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote: =20
-> > > > On Tue,  5 Nov 2019 17:32:34 +0800
-> > > > Jason Wang <jasowang@redhat.com> wrote:
-> > > >   =20
-> > > >> Hi all:
-> > > >>
-> > > >> There are hardwares that can do virtio datapath offloading while
-> > > >> having its own control path. This path tries to implement a mdev b=
-ased
-> > > >> unified API to support using kernel virtio driver to drive those
-> > > >> devices. This is done by introducing a new mdev transport for virt=
-io
-> > > >> (virtio_mdev) and register itself as a new kind of mdev driver. Th=
-en
-> > > >> it provides a unified way for kernel virtio driver to talk with md=
-ev
-> > > >> device implementation.
-> > > >>
-> > > >> Though the series only contains kernel driver support, the goal is=
- to
-> > > >> make the transport generic enough to support userspace drivers. Th=
-is
-> > > >> means vhost-mdev[1] could be built on top as well by resuing the
-> > > >> transport.
-> > > >>
-> > > >> A sample driver is also implemented which simulate a virito-net
-> > > >> loopback ethernet device on top of vringh + workqueue. This could =
-be
-> > > >> used as a reference implementation for real hardware driver.
-> > > >>
-> > > >> Also a real ICF VF driver was also posted here[2] which is a good
-> > > >> reference for vendors who is interested in their own virtio datapa=
-th
-> > > >> offloading product.
-> > > >>
-> > > >> Consider mdev framework only support VFIO device and driver right =
-now,
-> > > >> this series also extend it to support other types. This is done
-> > > >> through introducing class id to the device and pairing it with
-> > > >> id_talbe claimed by the driver. On top, this seris also decouple
-> > > >> device specific parents ops out of the common ones.
-> > > >>
-> > > >> Pktgen test was done with virito-net + mvnet loop back device.
-> > > >>
-> > > >> Please review.
-> > > >>
-> > > >> [1] https://lkml.org/lkml/2019/10/31/440
-> > > >> [2] https://lkml.org/lkml/2019/10/15/1226
-> > > >>
-> > > >> Changes from V7:
-> > > >> - drop {set|get}_mdev_features for virtio
-> > > >> - typo and comment style fixes   =20
-> > > >
-> > > > Seems we're nearly there, all the remaining comments are relatively
-> > > > superficial, though I would appreciate a v9 addressing them as well=
- as
-> > > > the checkpatch warnings:
-> > > >
-> > > > https://patchwork.freedesktop.org/series/68977/   =20
-> > >=20
-> > >=20
-> > > Will do.
-> > >=20
-> > > Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it t=
-o=20
-> > > go through Michael's vhost tree? =20
-> >=20
-> > I can include it if you wish.  The mdev changes are isolated enough in
-> > that patch that I wouldn't presume it, but clearly it would require
-> > less merge coordination to drop it in my tree.  Let me know.  Thanks,
-> >=20
-> > Alex =20
->=20
-> I'm fine with merging through your tree. If you do, feel free to
-> include
->=20
-> Acked-by: Michael S. Tsirkin <mst@redhat.com>
+What version and where do I get it?
 
-AFAICT, it looks like we're expecting at least one more version of
-Tiwei's patch after V5, so it'd probably be best to provide the ack and
-go-ahead on that next version so there's no confusion.  Thanks,
+Hmmm - isn't mdtest a MPI benchmark intended for highly concurrent
+metadata workload testing? How representative is it of your actual
+production workload? Is that single threaded?
 
-Alex
+> xfs info:
+> meta-data=/dev/bcache2           isize=512    agcount=4, agsize=244188661 blks
 
+only 4 AGs, which explains the lack of free inodes - there isn't
+enough concurrency in the filesystem layout to push the free inode
+count in all AGs beyond the batchsize * num_online_cpus().
+
+i.e. single threaded workloads typically drain the free inode count
+all the way down to zero before new inodes are allocated. Workloads
+that are highly concurrent allocate from lots of AGs at once,
+leaving free inodes in every AG that is not current being actively
+allocated out of.
+
+As a test, can you remake that test filesystem with "-d agcount=32"
+and see if the overhead you are seeing disappears?
+
+> > files and you have lots of idle CPU and hence the inode allocation
+> > is not clearing the fast path batch threshold on the ifree counter.
+> > And because you have lots of CPUs, the cost of a sum is very
+> > expensive compared to running single threaded creates. That's my
+> > current hypothesis based what I see on my workloads that
+> > xfs_mod_ifree overhead goes down as concurrency goes up....
+> > 
+> 
+> Agree, we add some debug info in xfs_mod_ifree and found most times
+> m_ifree.count < batch * num_online_cpus(),  because we have 128 online
+> cpus and m_ifree.count around 999.
+
+Ok, the threshold is 32 * 128 = ~4000 to get out of the slow
+path. 32 AGs may well push the count over this threshold, so it's
+definitely worth trying....
+
+> > FWIW, the profiles I took came from running this on 16 and 32p
+> > machines:
+> > 
+> > --
+> > dirs=""
+> > for i in `seq 1 $THREADS`; do
+> >         dirs="$dirs -d /mnt/scratch/$i"
+> > done
+> > 
+> > cycles=$((512 / $THREADS))
+> > 
+> > time ./fs_mark $XATTR -D 10000 -S0 -n $NFILES -s 0 -L $cycles $dirs
+> > --
+> > 
+> > With THREADS=16 or 32 and NFILES=100000 on a big sparse filesystem
+> > image:
+> > 
+> > meta-data=/dev/vdc               isize=512    agcount=500, agsize=268435455 blks
+> >          =                       sectsz=512   attr=2, projid32bit=1
+> >          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+> >          =                       reflink=1
+> > data     =                       bsize=4096   blocks=134217727500, imaxpct=1
+> >          =                       sunit=0      swidth=0 blks
+> > naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+> > log      =internal log           bsize=4096   blocks=521728, version=2
+> >          =                       sectsz=512   sunit=0 blks, lazy-count=1
+> > realtime =none                   extsz=4096   blocks=0, rtextents=0
+> > 
+> > That's allocating enough inodes to keep the free inode counter
+> > entirely out of the slow path...
+> 
+> percpu_counter_read that reads the count will cause cache synchronization
+> cost if other cpu changes the count, Maybe it's better not to call
+> percpu_counter_compare if possible.
+
+Depends.  Sometimes we trade off ultimate single threaded
+performance and efficiency for substantially better scalability.
+i.e. if we lose 5% on single threaded performance but gain 10x on
+concurrent workloads, then that is a good tradeoff to make.
+
+Cheers,
+
+Dave.
+-- 
+Dave Chinner
+david@fromorbit.com
