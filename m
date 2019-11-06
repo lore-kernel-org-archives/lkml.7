@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 823FAC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:24:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 035DAC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:24:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5408B217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:24:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9A80217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:24:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="nljccjlz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SUagUyYt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732459AbfKFUYF (ORCPT
+        id S1732539AbfKFUYG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:24:05 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:41372 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727577AbfKFUYE (ORCPT
+        Wed, 6 Nov 2019 15:24:06 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:41000 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732234AbfKFUYF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:24:04 -0500
+        Wed, 6 Nov 2019 15:24:05 -0500
 Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6KNuxH060697;
-        Wed, 6 Nov 2019 14:23:56 -0600
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6KNxXC090423;
+        Wed, 6 Nov 2019 14:23:59 -0600
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573071836;
-        bh=8802dADt23gudPuHuQTsQCUgEmLe/TiFogJEbCDwyNk=;
+        s=ti-com-17Q1; t=1573071839;
+        bh=Bb+RT8SQh95qU51XROkC4ETq9FqCfyxaupssY38UWcs=;
         h=From:To:CC:Subject:Date:In-Reply-To:References;
-        b=nljccjlzLsjZXd8a3hLstJfMDE9xoebWW6H1ad+cnxlqwHvH0MxO4+3aKKAD95Eqw
-         UBngVtwyk4BDi0B5AuBW0X+zYcLihRqHfDDWEDtL4xuPq7kfvrh7TDweEqUdiNidAg
-         wG9I1hBtmK4agCPhfMqv1km6i2QxRpVGhkB1hLJU=
-Received: from DFLE105.ent.ti.com (dfle105.ent.ti.com [10.64.6.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6KNuch120447
+        b=SUagUyYtUMicaoH4or86zRSleQXk7wNFF+Kw84WMxJu93G1yQrBbq0i1O6tOF4x5X
+         RKG/TlCg+XrtKi+7jQEHlcc+bs47xvlCbCstbS+YFjYLClDvof5O6Z2Gp+PiyuVoge
+         5OJeTA7nGmw/L1NdBErti2tgdpN17QyPdg9dbOLk=
+Received: from DLEE100.ent.ti.com (dlee100.ent.ti.com [157.170.170.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6KNxOo120467
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 14:23:56 -0600
-Received: from DFLE106.ent.ti.com (10.64.6.27) by DFLE105.ent.ti.com
- (10.64.6.26) with Microsoft SMTP Server (version=TLS1_2,
+        Wed, 6 Nov 2019 14:23:59 -0600
+Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE100.ent.ti.com
+ (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 14:23:40 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE106.ent.ti.com
- (10.64.6.27) with Microsoft SMTP Server (version=TLS1_2,
+ 2019 14:23:43 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
+ (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 14:23:40 -0600
+ Frontend Transport; Wed, 6 Nov 2019 14:23:43 -0600
 Received: from uda0869644b.dal.design.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6KNsis119124;
-        Wed, 6 Nov 2019 14:23:55 -0600
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6KNsiu119124;
+        Wed, 6 Nov 2019 14:23:58 -0600
 From:   Benoit Parrot <bparrot@ti.com>
 To:     Hans Verkuil <hverkuil@xs4all.nl>,
         Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>
@@ -56,9 +56,9 @@ CC:     <linux-omap@vger.kernel.org>, <linux-clk@vger.kernel.org>,
         <linux-media@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
         <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         Benoit Parrot <bparrot@ti.com>
-Subject: [Patch v3 1/5] dt-bindings: media: ti-vpe: Document VPE driver
-Date:   Wed, 6 Nov 2019 14:26:18 -0600
-Message-ID: <20191106202622.2648-2-bparrot@ti.com>
+Subject: [Patch v3 3/5] ARM: dts: dra7: add vpe clkctrl node
+Date:   Wed, 6 Nov 2019 14:26:20 -0600
+Message-ID: <20191106202622.2648-4-bparrot@ti.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106202622.2648-1-bparrot@ti.com>
 References: <20191106202622.2648-1-bparrot@ti.com>
@@ -70,98 +70,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Device Tree bindings for the Video Processing Engine (VPE).
+Add clkctrl nodes for VPE module.
 
 Signed-off-by: Benoit Parrot <bparrot@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../devicetree/bindings/media/ti,vpe.yaml     | 64 +++++++++++++++++++
- MAINTAINERS                                   |  1 +
- 2 files changed, 65 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/ti,vpe.yaml
+ arch/arm/boot/dts/dra7xx-clocks.dtsi | 18 ++++++++++++++++--
+ 1 file changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/ti,vpe.yaml b/Documentation/devicetree/bindings/media/ti,vpe.yaml
-new file mode 100644
-index 000000000000..f3a8a350e85f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/ti,vpe.yaml
-@@ -0,0 +1,64 @@
-+# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/media/ti,vpe.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Texas Instruments DRA7x Video Processing Engine (VPE) Device Tree Bindings
-+
-+maintainers:
-+  - Benoit Parrot <bparrot@ti.com>
-+
-+description: |-
-+  The Video Processing Engine (VPE) is a key component for image post
-+  processing applications. VPE consist of a single memory to memory
-+  path which can perform chroma up/down sampling, deinterlacing,
-+  scaling and color space conversion.
-+
-+properties:
-+  compatible:
-+      const: ti,dra7-vpe
-+
-+  reg:
-+    items:
-+      - description: The VPE main register region
-+      - description: Scaler (SC) register region
-+      - description: Color Space Conversion (CSC) register region
-+      - description: Video Port Direct Memory Access (VPDMA) register region
-+
-+  reg-names:
-+    items:
-+      - const: vpe_top
-+      - const: sc
-+      - const: csc
-+      - const: vpdma
-+
-+  interrupts:
-+    maxItems: 1
-+
-+required:
-+  - compatible
-+  - reg
-+  - reg-names
-+  - interrupts
-+
-+additionalProperties: false
-+
-+examples:
-+  - |
-+    #include <dt-bindings/interrupt-controller/arm-gic.h>
-+
-+    vpe: vpe@489d0000 {
-+        compatible = "ti,dra7-vpe";
-+        reg = <0x489d0000 0x120>,
-+              <0x489d0700 0x80>,
-+              <0x489d5700 0x18>,
-+              <0x489dd000 0x400>;
-+        reg-names = "vpe_top",
-+                    "sc",
-+                    "csc",
-+                    "vpdma";
-+        interrupts = <GIC_SPI 354 IRQ_TYPE_LEVEL_HIGH>;
-+    };
-+
-+...
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fb8e7d94492b..bb60674cf89d 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -16324,6 +16324,7 @@ Q:	http://patchwork.linuxtv.org/project/linux-media/list/
- S:	Maintained
- F:	drivers/media/platform/ti-vpe/
- F:	Documentation/devicetree/bindings/media/ti,cal.yaml
-+F:	Documentation/devicetree/bindings/media/ti,vpe.yaml
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 93e1eb83bed9..d1c2406ec71c 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1591,10 +1591,10 @@
  
- TI WILINK WIRELESS DRIVERS
- L:	linux-wireless@vger.kernel.org
+ 	rtc_cm: rtc-cm@700 {
+ 		compatible = "ti,omap4-cm";
+-		reg = <0x700 0x100>;
++		reg = <0x700 0x60>;
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+-		ranges = <0 0x700 0x100>;
++		ranges = <0 0x700 0x60>;
+ 
+ 		rtc_clkctrl: rtc-clkctrl@20 {
+ 			compatible = "ti,clkctrl";
+@@ -1603,6 +1603,20 @@
+ 		};
+ 	};
+ 
++	vpe_cm: vpe-cm@760 {
++		compatible = "ti,omap4-cm";
++		reg = <0x760 0xc>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0 0x760 0xc>;
++
++		vpe_clkctrl: vpe-clkctrl@0 {
++			compatible = "ti,clkctrl";
++			reg = <0x0 0xc>;
++			#clock-cells = <2>;
++		};
++	};
++
+ };
+ 
+ &cm_core {
 -- 
 2.17.1
 
