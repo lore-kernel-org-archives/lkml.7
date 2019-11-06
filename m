@@ -2,135 +2,172 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BF3EC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:13:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72741C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:15:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A07F206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:13:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="CD5T4lcL"
+	by mail.kernel.org (Postfix) with ESMTP id 44D992178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:15:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731306AbfKFINJ (ORCPT
+        id S1731401AbfKFIPs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:13:09 -0500
-Received: from mail-eopbgr30051.outbound.protection.outlook.com ([40.107.3.51]:9447
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
+        Wed, 6 Nov 2019 03:15:48 -0500
+Received: from mx2.suse.de ([195.135.220.15]:44090 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729881AbfKFINI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:13:08 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=ciAOEyTH2TLxyEAzdcBAFldWSVYYCmUS+yP7mBROU12q21wCDqodZPcbFhdQyz2YmS8Ai3NrlXDIwVLqN8XgeirNHTAH+rgXq46B/u9ubg9rX3/8f0K3M/fEzfZIqIykgan3zoUpnTlvkQQN9+k2bWtxrAbJlN7AozokEuYloZQ38o9U1yCfgj90vP0PQPLLuvnsNc8Rp9DG8ZO3mfLXP2KwohpTMwZDsOeKkRAj3dIR1O1mrQy7/DtiRE83SMfBRb3xkJp0ZLbyFlhxV0Medlv8iFGajfHNzl1qtJzWAPjxJxJmJr5HiNgWhosZOuWJ9JIdVKe51UgO0+/qAiHYqg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HDG5toMBYB+CJstZ6hJBQc/qDHkq8bgFuNo1FT8HW+A=;
- b=E8D+lcHSBOgD8ksPMqw7zM6b0aCVHI3LVPw+9dxA6j31KuyCV+PZ9nyIeXc3+HjPYAT8Y+KSf2ftxuLjp8sNC70Q2W8M8lUX54QKpKNhVsl21zg5732zIoO69bQ9Sln/NxMSIGdkmXY9V3PGgSgryIoPzxytMU+1EsFzDWH/TVgJX1pX5cHS+iOCUgM6dT7FkBsONFzeJgmSziWn2By/Fb1zwnBTgAxbDmrfouD662gDQUK1He6UEFH1dlHJJG0GXF9PdFxB9iBTKDhYzDT1ebR26+Ur1CkyA7eqzEa0ZAn2C5pLI8TCQ3kc/NOtplxhyKHeVpWtQqw55f4UgPkEdg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=HDG5toMBYB+CJstZ6hJBQc/qDHkq8bgFuNo1FT8HW+A=;
- b=CD5T4lcLJam8VVc620PgfWA6C8oqUCJYnBBFHq2dMfryHoXWIfhlfr3vDuk/Wv05VoUDd5Dw02wR3C6pbfKDYzBpZ74I+m/hcZY+nRn91G0CfMqDonzPnKZUXc+rM5dhHNZyE8gHMNriFyFuMvHbIAzZ8K+Y6VnkrUjQcwIM/KY=
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com (52.134.3.146) by
- VI1PR0402MB2751.eurprd04.prod.outlook.com (10.175.22.149) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 08:13:05 +0000
-Received: from VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::5dd6:297c:51e5:2b52]) by VI1PR0402MB3600.eurprd04.prod.outlook.com
- ([fe80::5dd6:297c:51e5:2b52%7]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 08:13:04 +0000
-From:   Andy Duan <fugang.duan@nxp.com>
-To:     Chuhong Yuan <hslester96@gmail.com>
-CC:     "David S . Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] net: fec: add a check for CONFIG_PM to avoid clock
- count mis-match
-Thread-Topic: [EXT] [PATCH] net: fec: add a check for CONFIG_PM to avoid clock
- count mis-match
-Thread-Index: AQHVlHh1RxWa9XB3VkWu+bqZPxdiDad9ymZQ
-Date:   Wed, 6 Nov 2019 08:13:04 +0000
-Message-ID: <VI1PR0402MB3600F14956A82EF8D7B53CC4FF790@VI1PR0402MB3600.eurprd04.prod.outlook.com>
-References: <20191106080128.23284-1-hslester96@gmail.com>
-In-Reply-To: <20191106080128.23284-1-hslester96@gmail.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=fugang.duan@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: b26e4eb2-7c18-42ca-50d7-08d762912651
-x-ms-traffictypediagnostic: VI1PR0402MB2751:
-x-microsoft-antispam-prvs: <VI1PR0402MB2751FCE4EA71611C9E244BDDFF790@VI1PR0402MB2751.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:1468;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(39860400002)(396003)(366004)(376002)(199004)(189003)(74316002)(54906003)(81156014)(66066001)(486006)(1411001)(11346002)(476003)(14454004)(99286004)(81166006)(52536014)(25786009)(8936002)(86362001)(5660300002)(478600001)(4326008)(2906002)(14444005)(6246003)(55016002)(33656002)(7696005)(305945005)(446003)(6916009)(7736002)(6436002)(229853002)(76116006)(102836004)(66476007)(3846002)(6116002)(316002)(66446008)(66556008)(64756008)(71200400001)(71190400001)(66946007)(256004)(9686003)(186003)(76176011)(6506007)(8676002)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0402MB2751;H:VI1PR0402MB3600.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: SlOKWji3cBsbZ+LtZ9nMfwhyYUl6F76F9znrb50VUVRMhG3CGu0sseRZeYwiLKUVdLqN4D1RV/aI43Q64U89wnfPs8vAa5+s+PywWWCQLNtPYTyWOCyO3ZxBD0xfTLQ3xPXScp6wsCzcxk2lB7BqnowFG2O8TuyOJL7Et8I2WMpvxd9IPBYqxXI30PD3QArdBMgwVU7vJBVrpSLrSZYhxEzol/Xmh5idP48MczLE7Sut3i/2oZ5xdqc8PJ2cDMYofmaMwGvJ5EBoy6uwUOMeI6ei6VecM75gtH41cDWQlhXmXlSNhVDR6t6GLDlPGnRUZIghLfhM36qJku2CT5bu5kq0bRxEERLPGYxvYzL3lX0wXnB+8jVabE8TcaMjSh+YY7tXCviiTi9Nj7hDxCiDfD5P3L5B4/rcZsYq/bBWE5zJPNoddlLZm/PhdwJLdITo
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        id S1729951AbfKFIPs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:15:48 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id DE6FDB011;
+        Wed,  6 Nov 2019 08:15:44 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 09:15:41 +0100
+From:   Petr Mladek <pmladek@suse.com>
+To:     Max Filippov <jcmvbkbc@gmail.com>
+Cc:     Dmitry Safonov <dima@arista.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>
+Subject: Re: [PATCH 43/50] xtensa: Add show_stack_loglvl()
+Message-ID: <20191106081541.soxefwyvu3o72tqg@pathway.suse.cz>
+References: <20191106030542.868541-1-dima@arista.com>
+ <20191106030542.868541-44-dima@arista.com>
+ <CAMo8Bf+q0j81VZeUQdvCkXt131uzSBfJ0N7RTe7+NpjRkVpzdA@mail.gmail.com>
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: b26e4eb2-7c18-42ca-50d7-08d762912651
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 08:13:04.7558
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: JUHNE7XY0LWTmvL0sxN02rxMVw7AnQyO8tUZAv4ubPGLk8NpUlsuG04M5zr9wK7AmHgbay4XNa+kWknCcwdHkA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0402MB2751
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAMo8Bf+q0j81VZeUQdvCkXt131uzSBfJ0N7RTe7+NpjRkVpzdA@mail.gmail.com>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Chuhong Yuan <hslester96@gmail.com> Sent: Wednesday, November 6, 2019=
- 4:01 PM
-> If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
-> automatically to disable clks.
-> Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
-> Add this check to avoid clock count mis-match caused by double-disable.
->=20
-> This patch depends on patch
-> ("net: fec: add missed clk_disable_unprepare in remove").
->=20
-Please add Fixes tag here.
+On Tue 2019-11-05 20:13:22, Max Filippov wrote:
+> Hi Dmitry,
+> 
+> On Tue, Nov 5, 2019 at 7:08 PM Dmitry Safonov <dima@arista.com> wrote:
+> >
+> > Currently, the log-level of show_stack() depends on a platform
+> > realization. It creates situations where the headers are printed with
+> > lower log level or higher than the stacktrace (depending on
+> > a platform or user).
+> >
+> > Furthermore, it forces the logic decision from user to an architecture
+> > side. In result, some users as sysrq/kdb/etc are doing tricks with
+> > temporary rising console_loglevel while printing their messages.
+> > And in result it not only may print unwanted messages from other CPUs,
+> > but also omit printing at all in the unlucky case where the printk()
+> > was deferred.
+> >
+> > Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+> > an easier approach than introducing more printk buffers.
+> > Also, it will consolidate printings with headers.
+> >
+> > Introduce show_stack_loglvl(), that eventually will substitute
+> > show_stack().
+> >
+> > Cc: Chris Zankel <chris@zankel.net>
+> > Cc: Max Filippov <jcmvbkbc@gmail.com>
+> > Cc: linux-xtensa@linux-xtensa.org
+> > [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+> > Signed-off-by: Dmitry Safonov <dima@arista.com>
+> > ---
+> >  arch/xtensa/kernel/traps.c | 16 +++++++++++-----
+> >  1 file changed, 11 insertions(+), 5 deletions(-)
+> >
+> > diff --git a/arch/xtensa/kernel/traps.c b/arch/xtensa/kernel/traps.c
+> > index cbc0d673f542..ba6c150095c6 100644
+> > --- a/arch/xtensa/kernel/traps.c
+> > +++ b/arch/xtensa/kernel/traps.c
+> > @@ -502,7 +502,8 @@ static void show_trace(struct task_struct *task, unsigned long *sp,
+> >
+> >  static int kstack_depth_to_print = 24;
+> >
+> > -void show_stack(struct task_struct *task, unsigned long *sp)
+> > +void show_stack_loglvl(struct task_struct *task, unsigned long *sp,
+> > +                      const char *loglvl)
+> >  {
+> >         int i = 0;
+> >         unsigned long *stack;
+> > @@ -511,16 +512,21 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+> >                 sp = stack_pointer(task);
+> >         stack = sp;
+> >
+> > -       pr_info("Stack:\n");
+> > +       printk("%sStack:\n", loglvl);
+> >
+> >         for (i = 0; i < kstack_depth_to_print; i++) {
+> >                 if (kstack_end(sp))
+> >                         break;
+> > -               pr_cont(" %08lx", *sp++);
+> > +               printk("%s %08lx", loglvl, *sp++);
 
-Andy
-> Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
-> ---
->  drivers/net/ethernet/freescale/fec_main.c | 2 ++
->  1 file changed, 2 insertions(+)
->=20
-> diff --git a/drivers/net/ethernet/freescale/fec_main.c
-> b/drivers/net/ethernet/freescale/fec_main.c
-> index a9c386b63581..696550f4972f 100644
-> --- a/drivers/net/ethernet/freescale/fec_main.c
-> +++ b/drivers/net/ethernet/freescale/fec_main.c
-> @@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device *pdev)
->                 regulator_disable(fep->reg_phy);
->         pm_runtime_put(&pdev->dev);
->         pm_runtime_disable(&pdev->dev);
-> +#ifndef CONFIG_PM
->         clk_disable_unprepare(fep->clk_ahb);
->         clk_disable_unprepare(fep->clk_ipg);
-> +#endif
->         if (of_phy_is_fixed_link(np))
->                 of_phy_deregister_fixed_link(np);
->         of_node_put(fep->phy_node);
-> --
-> 2.23.0
+KERN_CONT can be combined with any other loglevel.
+So you could keep using pr_cont() together with explicit loglevel:
 
+			pr_cont("%s %08lx", loglvl, *sp++);
+
+It should fix the problems reported below.
+
+Well, the preferred solution would be to snprintf() the continuous
+line into a temporary buffer. And printk() it when it is complete.
+pr_cont() is not reliable when more CPUs print at the same time.
+
+Best Regards,
+Petr
+
+> This change doesn't work well with printk timestamps, it changes
+> the following output on xtensa architecture
+> 
+> [    3.404675] Stack:
+> [    3.404861]  a05773e2 00000018 bb03dc34 bb03dc30 a0008640 bb03dc70
+> ba9ba410 37c3f000
+> [    3.405414]  37c3f000 d7c3f000 00000800 bb03dc50 a02b97ed bb03dc90
+> ba9ba400 ba9ba410
+> [    3.405969]  a05fc1bc bbff28dc 00000000 bb03dc70 a02b7fb9 bb03dce0
+> ba9ba410 a0579044
+> 
+> into this:
+> [    3.056825] Stack:
+> [    3.056963]  a04ebb20
+> [    3.056995]  bb03dc10
+> [    3.057138]  00000001
+> [    3.057277]  bb03dc10
+> [    3.057815]  a00083ca
+> [    3.057965]  bb03dc50
+> [    3.058107]  ba9ba410
+> [    3.058247]  37c3f000
+> [    3.058387]
+> [    3.058584]  a05773e2
+> [    3.058614]  00000001
+> [    3.058755]  a05ca0bc
+> [    3.058896]  bb03dc30
+> [    3.059035]  a000865c
+> [    3.059180]  bb03dc70
+> [    3.059319]  ba9ba410
+> [    3.059459]  37c3f000
+> [    3.059598]
+> [    3.059795]  37c3f000
+> [    3.059824]  d7c3f000
+> [    3.059964]  00000800
+> [    3.060103]  bb03dc50
+> [    3.060241]  a02b9809
+> [    3.060379]  bb03dc90
+> [    3.060519]  ba9ba400
+> [    3.060658]  ba9ba410
+> [    3.060796]
+> 
+> -- 
+> Thanks.
+> -- Max
