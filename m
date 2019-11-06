@@ -2,144 +2,150 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23472C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B458C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB99521848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E877217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tfm+AIKz"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="jNy0kVsQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732356AbfKFRSb (ORCPT
+        id S1732375AbfKFRSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:18:31 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:40589 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732329AbfKFRSa (ORCPT
+        Wed, 6 Nov 2019 12:18:36 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:60980 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732329AbfKFRSf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:18:30 -0500
-Received: by mail-pg1-f194.google.com with SMTP id 15so17577519pgt.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:18:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to;
-        bh=kqep8XBz+ob9m9HgLeaELks6sa5oaorHLu84jPUpdI0=;
-        b=Tfm+AIKzVLe4DKvn7S7UE7TTNFzSpLQpGOJ0dbBICYYiDkzHHhPep0L3G96Vp0HLkn
-         3iFEtU69J8jfFGl/vrroJ5cmlLPPZ/jEFJYPh5Iiuzsg9xZmv+vWYtIEUnvnADfAz+O0
-         6EHPI8OypMmHrVeVHx6LKUwBIdRVeHrA8kypc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=kqep8XBz+ob9m9HgLeaELks6sa5oaorHLu84jPUpdI0=;
-        b=pfqHQcfOUcIuMWpyW1GHTLW7igqlNGj7koFaGbmABVR3r3z07Sq3SZJIWANH6BBefF
-         diVrdqZnalWzwRNMsFMrCgphaSBNTO8Ogih2t0TqjoRLIZCboGJY35ec+NZVT5LmVx7X
-         SCaYeYR8tigNFPKALYh3z7+x2EYnJAAqxVW84h6uwuJn7b1IcHNH75VFS3STzIO09TGI
-         iw3a8qY+DsXZ+9Umbfk479bG7N1i7UcyUrIyjQVu6foF4BX8kHn0MxOaXCEL8xy/tvGH
-         61zxTNPQXDvOT4HbxqmXT/6J5XwA7RAIo5LEkxkQitkawD7orjFgHhRDIIoLAZN1MQzI
-         7rdA==
-X-Gm-Message-State: APjAAAUvPC5vElIpaQ2dCWO0E7lpP4+KosAbEtVJRrVJXb1Z6PQmgifJ
-        PwastVcX2Bt+8HenoZrMgFJyZA==
-X-Google-Smtp-Source: APXvYqyZHHZJMCCOAUO2Q7fAPKf5j8qTcabKvqS3xUm4Nyrs58kWQPudNMOakH9O8x+5MrgTLl1e+w==
-X-Received: by 2002:a63:d452:: with SMTP id i18mr4222869pgj.76.1573060709773;
-        Wed, 06 Nov 2019 09:18:29 -0800 (PST)
-Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
-        by smtp.gmail.com with ESMTPSA id s5sm3084844pjn.24.2019.11.06.09.18.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 09:18:28 -0800 (PST)
-Date:   Wed, 6 Nov 2019 09:18:27 -0800
-From:   Kees Cook <keescook@chromium.org>
-To:     Brendan Higgins <brendanhiggins@google.com>
-Cc:     shuah@kernel.org, john.johansen@canonical.com, jmorris@namei.org,
-        serge@hallyn.com, alan.maguire@oracle.com, yzaikin@google.com,
-        davidgow@google.com, mcgrof@kernel.org, tytso@mit.edu,
-        linux-kernel@vger.kernel.org,
-        linux-security-module@vger.kernel.org, kunit-dev@googlegroups.com,
-        linux-kselftest@vger.kernel.org,
-        Mike Salvatore <mike.salvatore@canonical.com>
-Subject: Re: [PATCH linux-kselftest/test v2] apparmor: add AppArmor KUnit
- tests for policy unpack
-Message-ID: <201911060916.AC9E14B@keescook>
-References: <20191106004329.16991-1-brendanhiggins@google.com>
+        Wed, 6 Nov 2019 12:18:35 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6HI3Wc000838;
+        Wed, 6 Nov 2019 11:18:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573060683;
+        bh=EcRltSnNjGkBxvjA5L9hzMCEuCsbKiaLjGExl987Je0=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=jNy0kVsQqRx5r6VL3gmNqWLtrHrwg/g7DwWrYx3+VZzF4IxnA1TLh0efpMMBbshu0
+         8C1FxnlW40jL4YNdEotIzjcl3UUnxPGCCoPSC5Hl6/T2Fo1cNXg0dG/GsmlVL0pEen
+         svmkYqMFVACZ+Ck6kdpvRq0q9zZtx4f9Zh/9RbFg=
+Received: from DLEE111.ent.ti.com (dlee111.ent.ti.com [157.170.170.22])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6HI3DU052782
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 11:18:03 -0600
+Received: from DLEE111.ent.ti.com (157.170.170.22) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 11:17:47 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE111.ent.ti.com
+ (157.170.170.22) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 11:17:47 -0600
+Received: from [10.250.45.147] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6HI0LQ051929;
+        Wed, 6 Nov 2019 11:18:00 -0600
+Subject: Re: [PATCH v15 1/5] dma-buf: Add dma-buf heaps framework
+To:     John Stultz <john.stultz@linaro.org>
+CC:     lkml <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
+        Sumit Semwal <sumit.semwal@linaro.org>,
+        Liam Mark <lmark@codeaurora.org>,
+        Pratik Patel <pratikp@codeaurora.org>,
+        Brian Starkey <Brian.Starkey@arm.com>,
+        Vincent Donnefort <Vincent.Donnefort@arm.com>,
+        Sudipto Paul <Sudipto.Paul@arm.com>,
+        Christoph Hellwig <hch@infradead.org>,
+        Chenbo Feng <fengc@google.com>,
+        Alistair Strachan <astrachan@google.com>,
+        Hridya Valsaraju <hridya@google.com>,
+        Sandeep Patil <sspatil@google.com>,
+        Hillf Danton <hdanton@sina.com>,
+        Dave Airlie <airlied@gmail.com>,
+        dri-devel <dri-devel@lists.freedesktop.org>
+References: <20191106042252.72452-1-john.stultz@linaro.org>
+ <20191106042252.72452-2-john.stultz@linaro.org>
+ <7154851c-fc55-e157-5a01-21abdd4a23e6@ti.com>
+ <CALAqxLW1vgLCik5WfDN7qkRsO=K9U4otNBp72aOH5UNN1jUgMQ@mail.gmail.com>
+From:   "Andrew F. Davis" <afd@ti.com>
+Message-ID: <26700d4b-07c6-65b1-9fc6-bb3e239202e5@ti.com>
+Date:   Wed, 6 Nov 2019 12:18:00 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106004329.16991-1-brendanhiggins@google.com>
+In-Reply-To: <CALAqxLW1vgLCik5WfDN7qkRsO=K9U4otNBp72aOH5UNN1jUgMQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 04:43:29PM -0800, Brendan Higgins wrote:
-> From: Mike Salvatore <mike.salvatore@canonical.com>
+On 11/6/19 12:03 PM, John Stultz wrote:
+> On Wed, Nov 6, 2019 at 5:52 AM Andrew F. Davis <afd@ti.com> wrote:
+>>
+>> On 11/5/19 11:22 PM, John Stultz wrote:
+>>> +unsigned int dma_heap_ioctl_cmds[] = {
+>>> +     DMA_HEAP_IOC_ALLOC,
+>>> +};
+>>> +
+>>> +static long dma_heap_ioctl(struct file *file, unsigned int ucmd,
+>>> +                        unsigned long arg)
+>>> +{
+>>> +     char stack_kdata[128];
+>>> +     char *kdata = stack_kdata;
+>>> +     unsigned int kcmd;
+>>> +     unsigned int in_size, out_size, drv_size, ksize;
+>>> +     int nr = _IOC_NR(ucmd);
+>>> +     int ret = 0;
+>>> +
+>>> +     if (nr >= ARRAY_SIZE(dma_heap_ioctl_cmds))
+>>> +             return -EINVAL;
+>>> +
+>>> +     /* Get the kernel ioctl cmd that matches */
+>>> +     kcmd = dma_heap_ioctl_cmds[nr];
+>>
+>>
+>> Why do we need this indirection here and all the complexity below? I
+>> know DRM ioctl does something like this but it has a massive table,
+>> legacy ioctls, driver defined ioctls, etc..
+>>
+>> I don't expect we will ever need complex handling like this, could we
+>> switch back to the more simple handler from v13?
 > 
-> Add KUnit tests to test AppArmor unpacking of userspace policies.
-> AppArmor uses a serialized binary format for loading policies. To find
-> policy format documentation see
-> Documentation/admin-guide/LSM/apparmor.rst.
+> I agree it does add complexity, but I'm not sure I see how to avoid
+> some of this. The logic trying to handle that the user may pass a cmd
+> that has the same _IOC_NR() as DMA_HEAP_IOC_ALLOC but not the same
+> size. So the simple "switch(cmd) { case DMA_HEAP_IOC_ALLOC:" we had
+> before won't work (as the cmd will be a different value).
 > 
-> In order to write the tests against the policy unpacking code, some
-> static functions needed to be exposed for testing purposes. One of the
-> goals of this patch is to establish a pattern for which testing these
-> kinds of functions should be done in the future.
-> 
-> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
-> Signed-off-by: Mike Salvatore <mike.salvatore@canonical.com>
-> ---
->  security/apparmor/Kconfig              |  16 +
->  security/apparmor/policy_unpack.c      |   4 +
->  security/apparmor/policy_unpack_test.c | 607 +++++++++++++++++++++++++
->  3 files changed, 627 insertions(+)
->  create mode 100644 security/apparmor/policy_unpack_test.c
-> 
-> diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
-> index d8b1a360a6368..78a33ccac2574 100644
-> --- a/security/apparmor/Kconfig
-> +++ b/security/apparmor/Kconfig
-> @@ -66,3 +66,19 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
->  	  Set the default value of the apparmor.debug kernel parameter.
->  	  When enabled, various debug messages will be logged to
->  	  the kernel message buffer.
-> +
-> +config SECURITY_APPARMOR_KUNIT_TEST
-> +	bool "Build KUnit tests for policy_unpack.c"
-> +	depends on KUNIT && SECURITY_APPARMOR
-> +	help
-> +	  This builds the AppArmor KUnit tests.
-> +
-> +	  KUnit tests run during boot and output the results to the debug log
-> +	  in TAP format (http://testanything.org/). Only useful for kernel devs
-> +	  running KUnit test harness and are not for inclusion into a
-> +	  production build.
-> +
-> +	  For more information on KUnit and unit tests in general please refer
-> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
-> +
-> +	  If unsure, say N.
-> diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
-> index 8cfc9493eefc7..37c1dd3178fc0 100644
-> --- a/security/apparmor/policy_unpack.c
-> +++ b/security/apparmor/policy_unpack.c
-> @@ -1120,3 +1120,7 @@ int aa_unpack(struct aa_loaddata *udata, struct list_head *lh,
->  
->  	return error;
->  }
-> +
-> +#ifdef CONFIG_SECURITY_APPARMOR_KUNIT_TEST
-> +#include "policy_unpack_test.c"
-> +#endif /* CONFIG_SECURITY_APPARMOR_KUNIT_TEST */
 
-To make this even LESS intrusive, the ifdefs could live in ..._test.c.
 
-Also, while I *think* the kernel build system will correctly track this
-dependency, can you double-check that changes to ..._test.c correctly
-trigger a recompile of policy_unpack.c?
+DMA_HEAP_IOC_ALLOC encodes everything we need, if the size is different
+then the switch case will not match. It handled everything we have.
 
--- 
-Kees Cook
+
+> Thus why I thought the cleanest approach would be to use the
+> dma_heap_ioctl_cmds array to convert from whatever the user cmd is to
+> the matching kernel cmd value.
+> 
+
+
+There are no kernel or user commands, just commands, they will match or
+they are not valid. If someday we some need a variable sized ioctl then
+we can deal with that then.
+
+Andrew
+
+
+> Do you have an alternative suggestion that I'm overlooking?
+> 
+> thanks
+> -john
+> 
