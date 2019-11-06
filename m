@@ -2,108 +2,107 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F251C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:58:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8877C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF0D72173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:58:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573016317;
-	bh=OYGZe4Y6kWI8ux52zLIbquW9cR6zY7hfuBXqrqwr1wc=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rmxNrqkhE3rZS0sCNtgG8c5mzdVuI9ayBfHVAsbJRmu6r/87yV9UC9SY5leEIyAYn
-	 LVDED50eJtUgj4q5vVdudUs0OEeLprkhRRACIguFbvKnKL5hTAyajAYuKA+KO66GzH
-	 1b31J6NKmuiP3jP/5nO/QhaXRdANcYw+l/ch9oT4=
+	by mail.kernel.org (Postfix) with ESMTP id 798AD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:01:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731210AbfKFE6g (ORCPT
+        id S1725817AbfKFFBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:58:36 -0500
-Received: from mail.kernel.org ([198.145.29.99]:34594 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727266AbfKFE6f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:58:35 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C6CF8214D8;
-        Wed,  6 Nov 2019 04:58:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573016315;
-        bh=OYGZe4Y6kWI8ux52zLIbquW9cR6zY7hfuBXqrqwr1wc=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=TBhoVGJQTZ+E9SIiFJuABeDLvEI/E0N9x+RZWx/Z58ToEhwc4O/fkSZjjtCsQoPNS
-         jnzyWCyPc3f6sracKxKYaehf4aAMtvZW2LISMAi9wwZCHqvWVhQ8NvahdN0QLN4igo
-         Mpaax3WS3XRmlGZo0wqSvu4ccQPNeHIUMgHb7bhw=
-Date:   Tue, 5 Nov 2019 20:58:34 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Song Liu <songliubraving@fb.com>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        "matthew.wilcox@oracle.com" <matthew.wilcox@oracle.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "william.kucharski@oracle.com" <william.kucharski@oracle.com>,
-        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
-        "Johannes Weiner" <hannes@cmpxchg.org>,
-        Hugh Dickins <hughd@google.com>
-Subject: Re: [PATCH v3] mm,thp: recheck each page before collapsing file THP
-Message-Id: <20191105205834.aaebbbfead54637d17a84775@linux-foundation.org>
-In-Reply-To: <9DC29F5B-1DF5-408F-BEDF-FD1FBAAB1361@fb.com>
-References: <20191018180345.4188310-1-songliubraving@fb.com>
-        <20191018181712.91dd9e9f9941642300e1b8d9@linux-foundation.org>
-        <9DC29F5B-1DF5-408F-BEDF-FD1FBAAB1361@fb.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+        Wed, 6 Nov 2019 00:01:06 -0500
+Received: from esa4.mentor.iphmx.com ([68.232.137.252]:63027 "EHLO
+        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725294AbfKFFBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 00:01:06 -0500
+IronPort-SDR: LEjyBz/hShNhraoTai+ddYuiJnC1TtvDitH1geiFEYqBgSNnPJ5yyTpNes34b20w6BzO/ESa4Q
+ Q1jxx0EeFreH/4yyQPN8VINzeXOuowgWy4zeF5O/d0OPcrCQwwVzZ8vrKBK5hNWMpvgmjQs4Cu
+ jYLLgiedWyxri+t4QZU7bAtwAoJhuTk4C2pl/gxfMbXWZu3x/ZhMR6r7eKcBdjXbykUrVwh+X/
+ 4r0BP/x4V+UipLocTcCfUhdJdo2tRZu9aFpsSLYkQjwKEs8+R1Z74YrfqMO4vQRhV7Fu6rx2/5
+ WNg=
+X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
+   d="scan'208";a="42941235"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa4.mentor.iphmx.com with ESMTP; 05 Nov 2019 21:01:05 -0800
+IronPort-SDR: DEnSIc8sTnkLz5TFHo1a55qhTvAGt9UxuO2A7jtmFGllmL/3TK6ahhHsxD4lub43mEv+fXH8zN
+ OOSQ6QW3Os9QirBX6VSMORtYK80kVPhsmuQ+9XuZ1xJOATJZudosND+xPWiMnNXIkrHWZ2bwWX
+ ZiOyKXf4fsSyTRvgBvKEJS3heEX/xY3QBHmOMKPEdKuOGUflVjVL2i+wxbBVOsiCqwb7Ksgpnj
+ OUUgA3ETpDGQKv5egt0aij8PYaqRTkjVw4j9WFtWx8izFGqJytzZJ7fXQLa7UVkfvFIsEWmWtW
+ JII=
+Subject: Re: [PATCH v4 01/48] Input: introduce input_mt_report_slot_inactive
+To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>
+CC:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
+References: <20191029072010.8492-1-jiada_wang@mentor.com>
+ <20191029072010.8492-2-jiada_wang@mentor.com>
+ <b3de4c05-d2d1-58f8-a447-d5e127574ac0@bitmath.org>
+ <20191030232311.GK57214@dtor-ws>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <d16af9ab-0814-0986-1558-06b7ea60d4f7@mentor.com>
+Date:   Wed, 6 Nov 2019 14:00:55 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+MIME-Version: 1.0
+In-Reply-To: <20191030232311.GK57214@dtor-ws>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, 19 Oct 2019 05:24:00 +0000 Song Liu <songliubraving@fb.com> wrote:
+Hi Dmitry
 
-> > We don't have a ref on that page.  After we've released the xarray lock
-> > we have no business playing with *page at all, correct?
-> 
-> Yeah, this piece is not just redundant, but also buggy. I am also 
-> including some information about it. 
-> 
-> Updated commit log:
-> 
-> ============================= 8< =============================
-> 
-> In collapse_file(), for !is_shmem case, current check cannot guarantee 
-> the locked page is up-to-date. Specifically, xas_unlock_irq() should not
-> be called before lock_page() and get_page(); and it is necessary to 
-> recheck PageUptodate() after locking the page. 
-> 
-> With this bug and CONFIG_READ_ONLY_THP_FOR_FS=y, madvise(HUGE)'ed .text 
-> may contain corrupted data. This is because khugepaged mistakenly 
-> collapses some not up-to-date sub pages into a huge page, and assumes the 
-> huge page is up-to-date. This will NOT corrupt data in the disk, because 
-> the page is read-only and never written back. Fix this by properly 
-> checking PageUptodate() after locking the page. This check replaces 
-> "VM_BUG_ON_PAGE(!PageUptodate(page), page);". 
-> 
-> Also, move PageDirty() check after locking the page. Current khugepaged 
-> should not try to collapse dirty file THP, because it is limited to 
-> read-only .text. Add a warning with the PageDirty() check as it should 
-> not happen. This warning is added after page_mapping() check, because 
-> if the page is truncated, it might be dirty.
+thanks for your comment,
+I will update accordingly in v5 patch-set
 
-I've lost the plot on this patch.  I have the v3 patch plus these fixes:
+Thanks,
+Jiada
 
-http://lkml.kernel.org/r/20191028221414.3685035-1-songliubraving@fb.com
-http://lkml.kernel.org/r/20191022191006.411277-1-songliubraving@fb.com
-http://lkml.kernel.org/r/20191030200736.3455046-1-songliubraving@fb.com
-
-and there's a v4 which I can't correlate with the above.  And there has
-been discussion about deferring some of the filemap_flush() changes
-until later.
-
-So I think it's best if we just start again.  Can you please prepare
-and send out a v5 (which might be a 2-patch series)?
+On 2019/10/31 8:23, Dmitry Torokhov wrote:
+> On Tue, Oct 29, 2019 at 06:13:09PM +0100, Henrik Rydberg wrote:
+>> Hi Jiada,
+>>
+>>> input_mt_report_slot_state() ignores the tool when the slot is closed.
+>>> which has caused a bit of confusion.
+>>> This patch introduces input_mt_report_slot_inactive() to report slot
+>>> inactive state.
+>>> replaces all input_mt_report_slot_state() with
+>>> input_mt_report_slot_inactive() in case of close of slot.
+>>>
+>>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>>
+>> NACK on this one.
+>>
+>> We already discussed this patch and the potentially changed behavior to
+>> existing setups stemming from ignoring the MT state.
+>>
+>> On the upside, what I can see this patch does exactly no difference to the
+>> cases where the MT state is set, so it can be safely dropped without
+>> affecting the rest of the patch series.
+> 
+> I guess Jiada's concern that we are forcing to pass tool type even
+> though we end up ignoring it intervally, which confuses users of the API
+> as they might not know what tool to specify.
+> 
+> How about we do:
+> 
+> static inline void input_mt_report_slot_inactive(struct input_dev *dev)
+> {
+> 	input_mt_report_slot_state(dev, 0, false);
+> }
+> 
+> This should not change any behavior.
+> 
+> Thanks.
+> 
