@@ -2,80 +2,128 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 088B2C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF06EC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9FF4217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="n1I8rIIq"
+	by mail.kernel.org (Postfix) with ESMTP id 91251217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:53:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731614AbfKFJxi (ORCPT
+        id S1731726AbfKFJxp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:53:38 -0500
-Received: from mail-m975.mail.163.com ([123.126.97.5]:58488 "EHLO
-        mail-m975.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726129AbfKFJxi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:53:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=GuSX7DsLSoatQP2nsn
-        2ObQ5BXs4qfIxJlA/iMyeHF5Q=; b=n1I8rIIqQQ8aM0wOQQsICihs4L8tOLFpV1
-        GSEwHTbgS/85UBfLAcT/LoJ2efWFshsxwNupaWQeLgKHgrGwZQwFYdbbgRuELNum
-        Ui1QH7W/3jZPPnrb2AGf3+Xfk+g/tRjZ1b/4yNXrtRPAFlfvwA21+/VBXLMiTb9w
-        +dn80pFzo=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp5 (Coremail) with SMTP id HdxpCgC3ag4LmMJdJKR2KA--.242S3;
-        Wed, 06 Nov 2019 17:53:17 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Alex Deucher <alexander.deucher@amd.com>, christian.koenig@amd.com,
-        David1.Zhou@amd.com, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Sam Ravnborg <sam@ravnborg.org>
-Cc:     amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org, Pan Bian <bianpan2016@163.com>
-Subject: [PATCH] drm/amdgpu: fix double reference dropping
-Date:   Wed,  6 Nov 2019 17:53:14 +0800
-Message-Id: <1573033994-17102-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: HdxpCgC3ag4LmMJdJKR2KA--.242S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWruF1DZr18ur4fZF4fuF1xKrg_yoW3KrX_ua
-        y8Jr1kXr1ayFnFgr12yrs8Zrn5tFy5ZrZ5Gr13twsYyryUZ3yjy34DZr4rX3Wxu3ZF9asI
-        g3W2gF1akwn3GjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjXdb7UUUUU==
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiVA1lclUMK-VKwgAAsB
+        Wed, 6 Nov 2019 04:53:45 -0500
+Received: from foss.arm.com ([217.140.110.172]:36852 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731554AbfKFJxp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:53:45 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 700D9328;
+        Wed,  6 Nov 2019 01:53:44 -0800 (PST)
+Received: from localhost (unknown [10.37.6.20])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id CA2DE3F6C4;
+        Wed,  6 Nov 2019 01:53:43 -0800 (PST)
+Date:   Wed, 6 Nov 2019 09:53:41 +0000
+From:   Andrew Murray <andrew.murray@arm.com>
+To:     Rob Herring <robh@kernel.org>
+Cc:     Anvesh Salveru <anvesh.s@samsung.com>, linux-pci@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        bhelgaas@google.com, gustavo.pimentel@synopsys.com,
+        jingoohan1@gmail.com, pankaj.dubey@samsung.com,
+        Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: PCI: designware: Add binding for
+ ZRX-DC PHY property
+Message-ID: <20191106095340.GO9723@e119886-lin.cambridge.arm.com>
+References: <1572264988-17455-1-git-send-email-anvesh.s@samsung.com>
+ <CGME20191028121748epcas5p3054c9583c14a2edde9f725d005895a04@epcas5p3.samsung.com>
+ <1572264988-17455-2-git-send-email-anvesh.s@samsung.com>
+ <20191105215332.GA19296@bogus>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105215332.GA19296@bogus>
+User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After dropping the reference of object fence in the loop, it should be
-set to NULL to protecting dropping its reference again outside the loop.
+On Tue, Nov 05, 2019 at 03:53:32PM -0600, Rob Herring wrote:
+> On Mon, Oct 28, 2019 at 05:46:27PM +0530, Anvesh Salveru wrote:
+> > Add support for ZRX-DC compliant PHYs. If PHY is not compliant to ZRX-DC
+> > specification, then after every 100ms link should transition to recovery
+> > state during the low power states which increases power consumption.
+> > 
+> > Platforms with ZRX-DC compliant PHY can use "snps,phy-zrxdc-compliant"
+> > property in DesignWare controller DT node.
+> > 
+> > CC: Rob Herring <robh+dt@kernel.org>
+> > CC: Mark Rutland <mark.rutland@arm.com>
+> > Signed-off-by: Anvesh Salveru <anvesh.s@samsung.com>
+> > Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+> > Reviewed-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+> > ---
+> > Change in v2: None
+> > 
+> >  Documentation/devicetree/bindings/pci/designware-pcie.txt | 2 ++
+> >  1 file changed, 2 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > index 78494c4050f7..9507ac38ac89 100644
+> > --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> > @@ -38,6 +38,8 @@ Optional properties:
+> >     for data corruption. CDM registers include standard PCIe configuration
+> >     space registers, Port Logic registers, DMA and iATU (internal Address
+> >     Translation Unit) registers.
+> > +- snps,phy-zrxdc-compliant: This property is needed if phy complies with the
+> > +  ZRX-DC specification.
+> 
+> If this is a property of the phy, then it belongs in the phy node or 
+> should just be implied by the phy's compatible. 
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c | 1 +
- 1 file changed, 1 insertion(+)
+As suggested in the previous revision of this series [1], this is absolutely a
+property of the phy.
 
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c
-index 649e68c4479b..3174093f35f3 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c
-@@ -47,6 +47,7 @@ static int amdgpu_benchmark_do_move(struct amdgpu_device *adev, unsigned size,
- 		if (r)
- 			goto exit_do_move;
- 		dma_fence_put(fence);
-+		fence = NULL;
- 	}
- 	end_jiffies = jiffies;
- 	r = jiffies_to_msecs(end_jiffies - start_jiffies);
--- 
-2.7.4
+> IOW, you should be able 
+> to support this or not without changing DTs.
+> 
+> Is this spec Synopys specific? (About the only thing Google turns up are 
+> your patches.) If not, then probably shouldn't have a 'snps' prefix.
 
+This was also unfamiliar to me, however my current understanding is that
+Zrx-dc describes the 'Receiver DC single ended impedance' limits, this is
+specified in the PCI specification (table 'Common Receiver Parameters'),
+with a different limit for each speed.
+
+I believe the purpose of this series is to to satisfy the following
+implementation note in the spec "Ports that meet the Zrx-dc specification
+for 2.5 GT/s while in the L1.Idle state are therefore not required to
+implement the 100 ms timeout and transition to Recovery should avoid
+implementing it, since it will reduce the power savings expected from the
+L1 state".
+
+In other words, if it is known that the phy is compliant then an
+unnecessary transition to a higher energy state can be avoided. Though it's
+the PCI controller (in this case) that must action this and must find out
+about the phy it is connected to.
+
+So in my view 'phy-zrxdc-compliant' should be a property of a phy (without
+snps prefix), and if a controller wants to determine if it is compliant then
+there must be a phandle to the phy so the controller can find out.
+
+[1] https://patchwork.kernel.org/patch/11202121/
+
+Thanks,
+
+Andrew Murray
+
+> 
+> >  RC mode:
+> >  - num-viewport: number of view ports configured in hardware. If a platform
+> >    does not specify it, the driver assumes 2.
+> > -- 
+> > 2.17.1
+> > 
