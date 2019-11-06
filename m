@@ -2,220 +2,124 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-19.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E05C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:11:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 459A4C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:11:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B31214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:11:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13BDB2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="MBEoqQ0o"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="S+4x+fUo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730447AbfKFMLX (ORCPT
+        id S1731393AbfKFMLZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:11:23 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:23250 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727652AbfKFMLW (ORCPT
+        Wed, 6 Nov 2019 07:11:25 -0500
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:41561 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730461AbfKFMLX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:11:22 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573042280;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=lpGpajIdUKG+l3evsOIcGbv3/o82O4FHGiGfJ+VbwHE=;
-        b=MBEoqQ0o3G+DqF08lFkLGnyyvj+B8oGImjPz1HBPFCyJkYgUa4eVHyCvwwGg24J+0ilTJ8
-        niGbETLW0/ObBu8EXfHMSKhhY0+MGr2nKmtNKSE1LoOhphAeXqZ40Y5nG+fzjpSbPjeE7Z
-        FcYroEidvpbbTqA1hn509GUAMt2lRx4=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-20-6Y_jhjCfPPmLke4XljSNoQ-1; Wed, 06 Nov 2019 07:11:17 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1F305800EBA;
-        Wed,  6 Nov 2019 12:11:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.44])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 9B42160BE0;
-        Wed,  6 Nov 2019 12:11:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed,  6 Nov 2019 13:11:14 +0100 (CET)
-Date:   Wed, 6 Nov 2019 13:11:11 +0100
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: handle_exit_race && PF_EXITING
-Message-ID: <20191106121111.GC12575@redhat.com>
-References: <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de>
- <20191105152728.GA5666@redhat.com>
- <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de>
- <20191106085529.GA12575@redhat.com>
- <alpine.DEB.2.21.1911061028020.1869@nanos.tec.linutronix.de>
- <20191106103509.GB12575@redhat.com>
- <alpine.DEB.2.21.1911061154520.1869@nanos.tec.linutronix.de>
+        Wed, 6 Nov 2019 07:11:23 -0500
+Received: by mail-pf1-f196.google.com with SMTP id p26so18716963pfq.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:11:23 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fvggoBmVPHsmq8MljpGEGs96jCpg2b7Ib4WvpQs+2nE=;
+        b=S+4x+fUoX2Te9gAAKioxA/6aiwmDy1LJwKLNVbuddPUNqG+BlHLAZDZ3M8mOnnaQAQ
+         z4k7Hqtl0uvCBIK7ohN2/mf3Y13MXKphlMsv0sAlf9anzW3hrLyt1ZdA6bvSOPfVHgbD
+         Zgj5Ng8KGnwXlmXicQZ47JZ/BmPQexGqEJ+L6O4OR5QQQNhvZTlkZMv9+Vh4krk4wLbH
+         22uceJ4m7i+E7nRrVa3gGiwHuRKpzKddyNDCzKDRAftOlpHrYv8coKONbN/BA24GoP8P
+         MBjLW5MPqL68xzrwas3b4NRW+wdZZTxVUN9r+Jt4hpPlWfWybqM3Jp547oCT58qzseP3
+         Cc9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fvggoBmVPHsmq8MljpGEGs96jCpg2b7Ib4WvpQs+2nE=;
+        b=bdSW/IPQ5WY2Gm1JGaZbQ9V1pOmny1ioawhp3vDePF0bjfgcYcTP44xFpNFu9R5Mcp
+         dgAOj/KS/KwQLGEYExD8+onx3g9SGez05PZQUhs4CQbxTTd1U3l4b5TicQPUl/x54Txi
+         ck1RnlPjpWrIFzH7QkAcuK7BllVbMih9IpfL3ZdVqNucveMl3cAixZQsH2mfGbaRZQPc
+         CQYxj2xyo4z4C4dqM1IuiG1hXn9GAMuKN9YdPwSRdIh4+fIVpQKH2pD3kVaCxkhr04gl
+         1lkW+/s8C4hyIMrVF8UPP4AGwuSm6Nih4G54pK/t4EYBbTRsVJ1+CrAvoTO+bf30yDEq
+         oNJg==
+X-Gm-Message-State: APjAAAVfX/HB59oz+pdlkTha+SmxN0lweN6RDmv8AXh+tuZsHP7lG6+k
+        CxuGn2qxuueL3OHfVShi40+eYdNv0IRL5zLyJu4eTg==
+X-Google-Smtp-Source: APXvYqwSGbUjKhoe0EizJSFk5e2DKZ5IFkYWt+lZ/BAMoM2M2U/89OaTgLLxGdf13lyF6LBS3GXwfAHfxKSbRIFHb64=
+X-Received: by 2002:a63:9d0f:: with SMTP id i15mr2563556pgd.286.1573042282725;
+ Wed, 06 Nov 2019 04:11:22 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1911061154520.1869@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: 6Y_jhjCfPPmLke4XljSNoQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+References: <00000000000042d60805933945b5@google.com> <20191105233652.21033-1-tranmanphong@gmail.com>
+ <CAAeHK+zKShqnZ=R8KQvVjsfOkAGrWW5jbsXRUnuEY8k4XN3+Fw@mail.gmail.com>
+In-Reply-To: <CAAeHK+zKShqnZ=R8KQvVjsfOkAGrWW5jbsXRUnuEY8k4XN3+Fw@mail.gmail.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Wed, 6 Nov 2019 13:11:09 +0100
+Message-ID: <CAAeHK+zzio=k6aN8rX2meYk1bWiE_TvyzovRkGXm01fbCc_nwA@mail.gmail.com>
+Subject: Re: [PATCH] usb: appledisplay: fix use-after-free in bl_get_brightness
+To:     Phong Tran <tranmanphong@gmail.com>
+Cc:     syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com, 2pi@mok.nu,
+        alex.theissen@me.com,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
+        linux-kernel-mentees@lists.linuxfoundation.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06, Thomas Gleixner wrote:
+On Wed, Nov 6, 2019 at 1:10 PM Andrey Konovalov <andreyknvl@google.com> wrote:
 >
-> But even if we adapt that patch to the current code it won't solve the
-> -ESRCH issue I described above.
+> On Wed, Nov 6, 2019 at 12:37 AM Phong Tran <tranmanphong@gmail.com> wrote:
+> >
+> > In context of USB disconnect, the delaywork trigger and calling
+> > appledisplay_bl_get_brightness() and the msgdata was freed.
+> >
+> > add the checking return value of usb_control_msg() and only update the
+> > data while the retval is valid.
+> >
+> > Reported-by: syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+> > Reported-and-tested-by:
+> > syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
+> >
+> > https://groups.google.com/d/msg/syzkaller-bugs/dRmkh2UYusY/l2a6Mg3FAQAJ
+>
+> Hi Phong,
+>
+> FYI, when testing patches with the usb-fuzzer instance, you need to
+> provide the same kernel commit id as the one where the bug was
+> triggered. Please see here for details:
 
-Hmm. I must have missed something. Why?
+https://github.com/google/syzkaller/blob/master/docs/syzbot.md#usb-bugs
 
-Please see the unfinished/untested patch below.
-
-I think that (with or without this fix) handle_exit_race() logic needs
-cleanups, there is no reason for get_futex_value_locked(), we can drop
-->pi_lock right after we see PF_EXITPIDONE. Lets discuss this later.
-
-But why we can not rely on handle_exit_race() without PF_EXITING check?
-
-Yes, exit_robust_list() is called before exit_pi_state_list() which (with
-this patch) sets PF_EXITPIDONE. But this is fine? handle_futex_death()
-doesn't wakeup pi futexes, exit_pi_state_list() does this.
-
-Could you explain?
-
-Oleg.
-
-
-diff --git a/kernel/exit.c b/kernel/exit.c
-index a46a50d..a6c788c 100644
---- a/kernel/exit.c
-+++ b/kernel/exit.c
-@@ -761,17 +761,6 @@ void __noreturn do_exit(long code)
- =09}
-=20
- =09exit_signals(tsk);  /* sets PF_EXITING */
--=09/*
--=09 * Ensure that all new tsk->pi_lock acquisitions must observe
--=09 * PF_EXITING. Serializes against futex.c:attach_to_pi_owner().
--=09 */
--=09smp_mb();
--=09/*
--=09 * Ensure that we must observe the pi_state in exit_mm() ->
--=09 * mm_release() -> exit_pi_state_list().
--=09 */
--=09raw_spin_lock_irq(&tsk->pi_lock);
--=09raw_spin_unlock_irq(&tsk->pi_lock);
-=20
- =09if (unlikely(in_atomic())) {
- =09=09pr_info("note: %s[%d] exited with preempt_count %d\n",
-@@ -846,12 +835,6 @@ void __noreturn do_exit(long code)
- =09 * Make sure we are holding no locks:
- =09 */
- =09debug_check_no_locks_held();
--=09/*
--=09 * We can do this unlocked here. The futex code uses this flag
--=09 * just to verify whether the pi state cleanup has been done
--=09 * or not. In the worst case it loops once more.
--=09 */
--=09tsk->flags |=3D PF_EXITPIDONE;
-=20
- =09if (tsk->io_context)
- =09=09exit_io_context(tsk);
-diff --git a/kernel/fork.c b/kernel/fork.c
-index bcdf531..0d8edcf 100644
---- a/kernel/fork.c
-+++ b/kernel/fork.c
-@@ -1297,8 +1297,7 @@ void mm_release(struct task_struct *tsk, struct mm_st=
-ruct *mm)
- =09=09tsk->compat_robust_list =3D NULL;
- =09}
- #endif
--=09if (unlikely(!list_empty(&tsk->pi_state_list)))
--=09=09exit_pi_state_list(tsk);
-+=09exit_pi_state_list(tsk);
- #endif
-=20
- =09uprobe_free_utask(tsk);
-diff --git a/kernel/futex.c b/kernel/futex.c
-index bd18f60..c3b5d33 100644
---- a/kernel/futex.c
-+++ b/kernel/futex.c
-@@ -905,6 +905,7 @@ void exit_pi_state_list(struct task_struct *curr)
- =09 * versus waiters unqueueing themselves:
- =09 */
- =09raw_spin_lock_irq(&curr->pi_lock);
-+=09curr->flags |=3D PF_EXITPIDONE;
- =09while (!list_empty(head)) {
- =09=09next =3D head->next;
- =09=09pi_state =3D list_entry(next, struct futex_pi_state, list);
-@@ -1169,18 +1170,11 @@ static int attach_to_pi_state(u32 __user *uaddr, u3=
-2 uval,
- =09return ret;
- }
-=20
--static int handle_exit_race(u32 __user *uaddr, u32 uval,
--=09=09=09    struct task_struct *tsk)
-+static int handle_exit_race(u32 __user *uaddr, u32 uval)
- {
- =09u32 uval2;
-=20
- =09/*
--=09 * If PF_EXITPIDONE is not yet set, then try again.
--=09 */
--=09if (tsk && !(tsk->flags & PF_EXITPIDONE))
--=09=09return -EAGAIN;
--
--=09/*
- =09 * Reread the user space value to handle the following situation:
- =09 *
- =09 * CPU0=09=09=09=09CPU1
-@@ -1245,7 +1239,7 @@ static int attach_to_pi_owner(u32 __user *uaddr, u32 =
-uval, union futex_key *key,
- =09=09return -EAGAIN;
- =09p =3D find_get_task_by_vpid(pid);
- =09if (!p)
--=09=09return handle_exit_race(uaddr, uval, NULL);
-+=09=09return handle_exit_race(uaddr, uval);
-=20
- =09if (unlikely(p->flags & PF_KTHREAD)) {
- =09=09put_task_struct(p);
-@@ -1259,13 +1253,13 @@ static int attach_to_pi_owner(u32 __user *uaddr, u3=
-2 uval, union futex_key *key,
- =09 * p->pi_lock:
- =09 */
- =09raw_spin_lock_irq(&p->pi_lock);
--=09if (unlikely(p->flags & PF_EXITING)) {
-+=09if (unlikely(p->flags & PF_EXITPIDONE)) {
- =09=09/*
- =09=09 * The task is on the way out. When PF_EXITPIDONE is
- =09=09 * set, we know that the task has finished the
- =09=09 * cleanup:
- =09=09 */
--=09=09int ret =3D handle_exit_race(uaddr, uval, p);
-+=09=09int ret =3D handle_exit_race(uaddr, uval);
-=20
- =09=09raw_spin_unlock_irq(&p->pi_lock);
- =09=09put_task_struct(p);
-
+>
+> >
+> > Signed-off-by: Phong Tran <tranmanphong@gmail.com>
+> > ---
+> >  drivers/usb/misc/appledisplay.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
+> > index ac92725458b5..3e3dfa5a3954 100644
+> > --- a/drivers/usb/misc/appledisplay.c
+> > +++ b/drivers/usb/misc/appledisplay.c
+> > @@ -164,7 +164,8 @@ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
+> >                 0,
+> >                 pdata->msgdata, 2,
+> >                 ACD_USB_TIMEOUT);
+> > -       brightness = pdata->msgdata[1];
+> > +       if (retval >= 0)
+> > +               brightness = pdata->msgdata[1];
+> >         mutex_unlock(&pdata->sysfslock);
+> >
+> >         if (retval < 0)
+> > --
+> > 2.20.1
+> >
