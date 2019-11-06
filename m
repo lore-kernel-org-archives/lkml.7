@@ -4,54 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB93EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 508DDFC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B88DF217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 224362173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goMeXVsT"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bVqZ07QD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732615AbfKFWnu (ORCPT
+        id S1732744AbfKFWny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:43:50 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54775 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726779AbfKFWnu (ORCPT
+        Wed, 6 Nov 2019 17:43:54 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:45803 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1732658AbfKFWnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:43:50 -0500
+        Wed, 6 Nov 2019 17:43:53 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573080229;
+        s=mimecast20190719; t=1573080232;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         to:to:cc:cc:content-type:content-type:
          content-transfer-encoding:content-transfer-encoding;
-        bh=lS+dCPRsw8mKe+le1Zkw7/5bXkrSkYDfn4dgVdUMQG4=;
-        b=goMeXVsTBG95ZZnE0BKy5sjJDMKWBKsTESPISAwg64M8m8iSMu+S81Nbll7pnK+bcf5aRO
-        d2RX+cV4J+pT1dZGdPK/SPpHp0Xwu6TdZVCnjEuOJOQtVNX7Pc9VjLM8AxTA91wepMoJjl
-        TEW3Q04kjGab01h7EgSjVUMyHue/3CE=
+        bh=ehcenr1LSi0upLqj9Lbf+2rbNqzvy+MiD6O9YRzn41o=;
+        b=bVqZ07QDFK2H6WT9tcBkkpuksqLdnfHSfZht245cVDpjAwwRafqTzogKIdl7Iuy4X1tBAB
+        tgxwp04BC4tYkV0L703VqE160T3QsImwdAVug6FCho2z6yRuC2KzX/p7HbVuRz3n/1heKZ
+        sqIlAOFoSgzUJ8lqJDkPwlKX4DDGlsE=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-45--x2kj8y5M569zTGeJgJ96g-1; Wed, 06 Nov 2019 17:43:47 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+ us-mta-361-qna9tDmHOLalurHbBo30iQ-1; Wed, 06 Nov 2019 17:43:49 -0500
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF84E8017DD;
-        Wed,  6 Nov 2019 22:43:46 +0000 (UTC)
-Received: from jlaw-desktop.bos.redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 6275860BE0;
-        Wed,  6 Nov 2019 22:43:46 +0000 (UTC)
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: [PATCH] x86/stacktrace: update kconfig help text for reliable unwinders
-Date:   Wed,  6 Nov 2019 17:43:44 -0500
-Message-Id: <20191106224344.8373-1-joe.lawrence@redhat.com>
-MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: -x2kj8y5M569zTGeJgJ96g-1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 053098017E0;
+        Wed,  6 Nov 2019 22:43:48 +0000 (UTC)
+Received: from dustball.brq.redhat.com (unknown [10.43.17.163])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EF7CE5C296;
+        Wed,  6 Nov 2019 22:43:43 +0000 (UTC)
+From:   Jan Stancek <jstancek@redhat.com>
+To:     tglx@linutronix.de, mingo@redhat.com
+Cc:     peterz@infradead.org, dvhart@infradead.org, longman@redhat.com,
+        linux-kernel@vger.kernel.org, jstancek@redhat.com
+Subject: [RFC PATCH] futex: don't retry futex_wait() with stale uaddr/val after spurious wakeup
+Date:   Wed,  6 Nov 2019 23:43:19 +0100
+Message-Id: <9179dbc3505e1de99ee36b09b0a12995239d73c3.1573079868.git.jstancek@redhat.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-MC-Unique: qna9tDmHOLalurHbBo30iQ-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -60,42 +60,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
-for the ORC unwinder") marked the ORC unwinder as a "reliable" unwinder.
-Update the help text to reflect that change: the frame pointer unwinder
-is no longer the only one that provides HAVE_RELIABLE_STACKTRACE.
+Assume following scenario: process A is sleeping on futex (uaddr1)
+inside futex_wait(). Process B requeues this waiter via FUTEX_CMP_REQUEUE
+to uaddr2, but doesn't wake it up. Later, process A spuriously wakes up
+and futex_wait() retries to queue again with same uaddr1/val1:
+        if (!signal_pending(current))
+                goto retry;
 
-Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+Problem: Userspace fails to wake process A with futex(uaddr2, FUTEX_WAKE)
+
+Store target uaddr/val in futex_requeue() and let futex_wait()
+retry after spurious wake up using stored values.
+
+Fixes: d58e6576b0de ("futex: Handle spurious wake up")
+Signed-off-by: Jan Stancek <jstancek@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Darren Hart <dvhart@infradead.org>
+Cc: Waiman Long <longman@redhat.com>
 ---
- arch/x86/Kconfig.debug | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ kernel/futex.c | 52 +++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 33 insertions(+), 19 deletions(-)
 
-diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
-index bf9cd83de777..69cdf0558c13 100644
---- a/arch/x86/Kconfig.debug
-+++ b/arch/x86/Kconfig.debug
-@@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
- =09  unwinder, but the kernel text size will grow by ~3% and the kernel's
- =09  overall performance will degrade by roughly 5-10%.
-=20
--=09  This option is recommended if you want to use the livepatch
--=09  consistency model, as this is currently the only way to get a
--=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
--
- config UNWINDER_GUESS
- =09bool "Guess unwinder"
- =09depends on EXPERT
-@@ -333,6 +329,10 @@ config UNWINDER_GUESS
- =09  useful in many cases.  Unlike the other unwinders, it has no runtime
- =09  overhead.
-=20
-+=09  This option is not recommended if you want to use the livepatch
-+=09  consistency model, as this unwinder cannot guarantee reliable stack
-+=09  traces.
+diff --git a/kernel/futex.c b/kernel/futex.c
+index bd18f60e4c6c..c13cfee25d35 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -237,6 +237,9 @@ struct futex_q {
+ =09struct rt_mutex_waiter *rt_waiter;
+ =09union futex_key *requeue_pi_key;
+ =09u32 bitset;
 +
- endchoice
++=09u32 *uaddr;
++=09u32 val;
+ } __randomize_layout;
 =20
- config FRAME_POINTER
+ static const struct futex_q futex_q_init =3D {
+@@ -1939,6 +1942,7 @@ static int futex_requeue(u32 __user *uaddr1, unsigned=
+ int flags,
+ =09struct futex_hash_bucket *hb1, *hb2;
+ =09struct futex_q *this, *next;
+ =09DEFINE_WAKE_Q(wake_q);
++=09u32 curval, targetval;
+=20
+ =09if (nr_wake < 0 || nr_requeue < 0)
+ =09=09return -EINVAL;
+@@ -2005,30 +2009,32 @@ static int futex_requeue(u32 __user *uaddr1, unsign=
+ed int flags,
+ =09hb_waiters_inc(hb2);
+ =09double_lock_hb(hb1, hb2);
+=20
+-=09if (likely(cmpval !=3D NULL)) {
+-=09=09u32 curval;
+-
++=09ret =3D get_futex_value_locked(&targetval, uaddr2);
++=09if (!ret && likely(cmpval !=3D NULL))
+ =09=09ret =3D get_futex_value_locked(&curval, uaddr1);
+=20
+-=09=09if (unlikely(ret)) {
+-=09=09=09double_unlock_hb(hb1, hb2);
+-=09=09=09hb_waiters_dec(hb2);
++=09if (unlikely(ret)) {
++=09=09double_unlock_hb(hb1, hb2);
++=09=09hb_waiters_dec(hb2);
+=20
++=09=09ret =3D get_user(targetval, uaddr2);
++=09=09if (!ret && likely(cmpval !=3D NULL))
+ =09=09=09ret =3D get_user(curval, uaddr1);
+-=09=09=09if (ret)
+-=09=09=09=09goto out_put_keys;
+=20
+-=09=09=09if (!(flags & FLAGS_SHARED))
+-=09=09=09=09goto retry_private;
++=09=09if (ret)
++=09=09=09goto out_put_keys;
+=20
+-=09=09=09put_futex_key(&key2);
+-=09=09=09put_futex_key(&key1);
+-=09=09=09goto retry;
+-=09=09}
+-=09=09if (curval !=3D *cmpval) {
+-=09=09=09ret =3D -EAGAIN;
+-=09=09=09goto out_unlock;
+-=09=09}
++=09=09if (!(flags & FLAGS_SHARED))
++=09=09=09goto retry_private;
++
++=09=09put_futex_key(&key2);
++=09=09put_futex_key(&key1);
++=09=09goto retry;
++=09}
++
++=09if (likely(cmpval !=3D NULL) && (curval !=3D *cmpval)) {
++=09=09ret =3D -EAGAIN;
++=09=09goto out_unlock;
+ =09}
+=20
+ =09if (requeue_pi && (task_count - nr_wake < nr_requeue)) {
+@@ -2185,6 +2191,12 @@ static int futex_requeue(u32 __user *uaddr1, unsigne=
+d int flags,
+ =09=09=09}
+ =09=09}
+ =09=09requeue_futex(this, hb1, hb2, &key2);
++=09=09/*
++=09=09 * Save target uaddr/val, in case futex_wait() wakes
++=09=09 * up spuriously and retries to requeue.
++=09=09 */
++=09=09this->uaddr =3D uaddr2;
++=09=09this->val =3D targetval;
+ =09=09drop_count++;
+ =09}
+=20
+@@ -2717,6 +2729,8 @@ static int futex_wait(u32 __user *uaddr, unsigned int=
+ flags, u32 val,
+ =09if (!bitset)
+ =09=09return -EINVAL;
+ =09q.bitset =3D bitset;
++=09q.uaddr =3D uaddr;
++=09q.val =3D val;
+=20
+ =09to =3D futex_setup_timer(abs_time, &timeout, flags,
+ =09=09=09       current->timer_slack_ns);
+@@ -2725,7 +2739,7 @@ static int futex_wait(u32 __user *uaddr, unsigned int=
+ flags, u32 val,
+ =09 * Prepare to wait on uaddr. On success, holds hb lock and increments
+ =09 * q.key refs.
+ =09 */
+-=09ret =3D futex_wait_setup(uaddr, val, flags, &q, &hb);
++=09ret =3D futex_wait_setup(q.uaddr, q.val, flags, &q, &hb);
+ =09if (ret)
+ =09=09goto out;
+=20
 --=20
-2.21.0
+1.8.3.1
 
