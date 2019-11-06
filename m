@@ -2,136 +2,109 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD339C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:26:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1767DC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:28:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8FD2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:26:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DAA34218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:28:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aneJfRUv"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="BGQBi3Fn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732003AbfKFP0E (ORCPT
+        id S1731905AbfKFP2i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:26:04 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:22168 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727996AbfKFP0E (ORCPT
+        Wed, 6 Nov 2019 10:28:38 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45388 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727548AbfKFP2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:26:04 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573053962;
-        h=from:from:reply-to:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=cDyn55vQ0zC56fcCjJAvaWSHX2sqlnGb0sAKw8IHj/s=;
-        b=aneJfRUvdywDzDWd/WOkeJ8ZA1q+pFDq3KXhhpFZu636uqw6IduSJQ9+IjIOiRWUiWU0Qd
-        28lJn/QfoVbEwK3gjIJaQtjaF+wE/oY1eyjuRH7kozSnrzPVRBcHeNeY63M1hPE3mNtaq3
-        uz4DNtgLWY2bfjUkj6K26WlB71uyaHM=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-48-EXmaXr8tOJKEjNTa7TImNQ-1; Wed, 06 Nov 2019 10:25:59 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id D983D107ACC3;
-        Wed,  6 Nov 2019 15:25:57 +0000 (UTC)
-Received: from crecklin.bos.csb (ovpn-121-160.rdu2.redhat.com [10.10.121.160])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 04D8960BE0;
-        Wed,  6 Nov 2019 15:25:55 +0000 (UTC)
-Reply-To: crecklin@redhat.com
-Subject: Re: [PATCH] security/keyring: avoid pagefaults in
- keyring_read_iterator
-From:   Chris von Recklinghausen <crecklin@redhat.com>
-To:     David Howells <dhowells@redhat.com>
-Cc:     Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        James Morris <jmorris@namei.org>,
-        "Serge E . Hallyn" <serge@hallyn.com>, keyrings@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Waiman Long <longman@redhat.com>
-References: <20191018184030.8407-1-crecklin@redhat.com>
- <30309.1571667719@warthog.procyon.org.uk>
- <b8aa0f7c-0a90-efae-9fb7-aa85b19a0d9a@redhat.com>
- <3c87bfba-9dc9-665f-17e8-0656e87c658b@redhat.com>
-Organization: Red Hat
-Message-ID: <3390b0d2-0f8e-3240-2ebb-94400456fdf0@redhat.com>
-Date:   Wed, 6 Nov 2019 10:25:55 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 6 Nov 2019 10:28:37 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6FJ0cO030936;
+        Wed, 6 Nov 2019 15:26:49 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=Gp/4+tA+nfk9rlLajbtqYFNVsFBZek7aLAZWT5/6WUc=;
+ b=BGQBi3FnQ2UbVGpzikZN7H51H+NOmA1Z8WfOGWs5QJLjSZQdcjoKH6MPDxxhI9WyLu58
+ hMto282idxf3nuu7tonotXWJPGeR26BZaxViPDR6B16zooEIDqL4aP/GVkaDbMQ75Xid
+ gGrfPzCyhTwhzc3n4gq6yzbRbnYxTQSNjMhwfILlucCekThONZbPkHvSHblBJy9b2bXM
+ Sm4kxeZaMRCSGVYJuyIgwWPjA7tYx5Lkp38F0XRXg1EA7oyLQ8rE3z5LVzFe8Va6M7uN
+ iVX0L9Fz3kJzKTsAAAWrpHLQ3wdti/dUjovUw6icBV9RIuhwVqn3rgjiJ2RmPPHgBTM8 4g== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by userp2120.oracle.com with ESMTP id 2w12erf7tu-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 15:26:49 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6FONKa113587;
+        Wed, 6 Nov 2019 15:26:48 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2w35pr7wuj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 15:26:48 +0000
+Received: from abhmp0014.oracle.com (abhmp0014.oracle.com [141.146.116.20])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA6FQkiH011641;
+        Wed, 6 Nov 2019 15:26:47 GMT
+Received: from [10.39.238.145] (/10.39.238.145)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 07:26:46 -0800
+Subject: Re: [patch V2 01/17] x86/entry/32: Remove unused resume_userspace
+ label
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Will Deacon <will@kernel.org>,
+        Paolo Bonzini <pbonzini@redhat.com>, kvm@vger.kernel.org,
+        linux-arch@vger.kernel.org, Mike Rapoport <rppt@linux.ibm.com>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Miroslav Benes <mbenes@suse.cz>
+References: <20191023122705.198339581@linutronix.de>
+ <20191023123117.686514045@linutronix.de>
+From:   Alexandre Chartre <alexandre.chartre@oracle.com>
+Organization: Oracle Corporation
+Message-ID: <92929be8-d936-75b9-80c0-368d7f33162a@oracle.com>
+Date:   Wed, 6 Nov 2019 16:26:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.0
 MIME-Version: 1.0
-In-Reply-To: <3c87bfba-9dc9-665f-17e8-0656e87c658b@redhat.com>
+In-Reply-To: <20191023123117.686514045@linutronix.de>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: EXmaXr8tOJKEjNTa7TImNQ-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911060150
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911060150
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/25/2019 07:10 AM, Chris von Recklinghausen wrote:
-> On 10/21/2019 11:46 AM, Chris von Recklinghausen wrote:
->> On 10/21/2019 10:21 AM, David Howells wrote:
->>> Chris von Recklinghausen <crecklin@redhat.com> wrote:
->>>
->>>> The put_user call from keyring_read_iterator caused a page fault which
->>>> attempts to lock mm->mmap_sem and type->lock_class (key->sem) in the r=
-everse
->>>> order that keyring_read_iterator did, thus causing the circular lockin=
-g
->>>> dependency.
->>>>
->>>> Remedy this by using access_ok and __put_user instead of put_user so w=
-e'll
->>>> return an error instead of faulting in the page.
->>> I wonder if it's better to create a kernel buffer outside of the lock i=
-n
->>> keyctl_read_key().  Hmmm...  The reason I didn't want to do that is tha=
-t
->>> keyrings have don't have limits on the size.  Maybe that's not actually=
- a
->>> problem, since 1MiB would be able to hold a list of a quarter of a mill=
-ion
->>> keys.
->>>
->>> David
->>>
->> Hi David,
->>
->> Thanks for the feedback.
->>
->> I can try to prototype that, but regardless of where the kernel buffer
->> is allocated, the important part is causing the initial pagefault in the
->> read path outside the lock so __put_user won't fail due to a valid user
->> address but page backing the user address isn't in-core.
->>
->> I'll start work on v2.
-> Actually I'm going to back off on a v2 effort at this point and request
-> that folks comment on the code as-is. Changing keyctl_read_key to use
-> its own kernel buffer might be a worthwhile effort, but it doesn't
-> appear to me to have any effects on preventing pagefaults on user pages
-> at inopportune points of the code.
 
-Does anyone have any more feedback on v1 of this patch?
+On 10/23/19 2:27 PM, Thomas Gleixner wrote:
+> The C reimplementation of SYSENTER left that unused ENTRY() label
+> around. Remove it.
+> 
+> Fixes: 5f310f739b4c ("x86/entry/32: Re-implement SYSENTER using the new C path")
+> Originally-by: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>   arch/x86/entry/entry_32.S |    1 -
+>   1 file changed, 1 deletion(-)
+> 
 
-Thanks,
+Reviewed-by: Alexandre Chartre <alexandre.chartre@oracle.com>
 
-Chris
-
->
-> Thanks,
->
-> Chris
->
->> Thanks,
->>
->> Chris
->>
-
+alex.
