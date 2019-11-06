@@ -2,78 +2,63 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B701C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4349CC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A82B217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mvb6Iz5U"
+	by mail.kernel.org (Postfix) with ESMTP id 03B1220659
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573009784;
+	bh=AeyuQDx16SbC4kiHgjnITMVBwHgRfMgTSaw25Q9xYbo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=U2LxN0X4nU0fFyuhYN0wIuLYhmee0bVVyW/9rktMlqqdCArVsKCmsnuIQE91MjQ59
+	 AR1+lrPpGKgdHUn5Uw3+ua2gtvYF2jlOgpbq0BLF7zJq1EpcURhU7uYqUXESWCJIMf
+	 w3iBKHHfBvetjJXD1rYkIvAiZ+WQiiZXHoj7gpTI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388373AbfKFDIh (ORCPT
+        id S2388358AbfKFDIg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:08:37 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:46923 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388234AbfKFDI3 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:08:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44298 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388289AbfKFDI3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Nov 2019 22:08:29 -0500
-Received: by mail-pf1-f195.google.com with SMTP id 193so16424185pfc.13
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:08:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=4fXE9czW8hWaOtj01khUGwi1SAyRucZp67h3RqZ+R3M=;
-        b=mvb6Iz5U3YsLez5cPxYyq5dhNroBU84x+gbHAcNOmSxPjJTP/akePTmzDy0SPubeon
-         q5puo0iDLJdhWopUyEtB7cKz2EPeoSn5/A+bJVMe8gKQdyLzXyp43gqTItXWa3WZ7dzY
-         K9avoMupjfsV3FqdzNQufdrphYS+uuZqooDffyfL5M2HaCnjRr8ntBkvtyXDrGpXi7S6
-         vQSeeQXIKUlz9OI1cBHQVuAdI0Bx0JR/GE47jntGqX3vhSrAlboIT+yIB26HVgzbJIEL
-         qskY3Zd1aqBT/CcFsFODvnHPlCdcxqjGnH8Tt8M+mBJPQ0/o+fGmRTn4AhqEweV+Jop1
-         KV6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=4fXE9czW8hWaOtj01khUGwi1SAyRucZp67h3RqZ+R3M=;
-        b=Lp9eqpPipobGDExdiqH5dX4p+BGLEwC0U6KvKjAiP1UaOCCdnPx70Fx8G+P09lfzhr
-         UOnODUiYDhgQuVTPVfzmyyk3eAGvcQZVpqje4enFDQGQ6oLptcDGd/WFawpQJhf3A0iH
-         YnHmJU0Q5Uuwf9NH+dsrAqR/EZGw8ovluy5oQfPXXBXFXrqSgfJ4v2Slz1nhk4bk+h0U
-         eBRGz6R7cbiuB831S+6Fwf8oCSiayDmBCvZz1jkWEuWYKxEeheil2XzKyoW2n5hDODCL
-         eEMafo/2cpIZhDuI7K3vjOq0fjpDTLMlz976GuDr0eeP7P81fowBKp7R2ewvrV7EbG2R
-         Hh4A==
-X-Gm-Message-State: APjAAAVAs1nn5CBJG9/YrKZtsHgey6XKhLI5zLsiuoyvfnZG/Alg1P3s
-        zoh+Dfkc6PJeCyiarIFGPlrsfEb2ohE=
-X-Google-Smtp-Source: APXvYqxBMkMj52pcKKND54Tj38Fn9IYZBcWPZf25EpL+praWo4AH7Nru3egE6LZe2Xkd2W2EEYurHQ==
-X-Received: by 2002:a62:174d:: with SMTP id 74mr408115pfx.145.1573009708474;
-        Tue, 05 Nov 2019 19:08:28 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.08.25
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:08:27 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Guan Xuetao <gxt@pku.edu.cn>
-Subject: [PATCH 37/50] unicore32: Remove unused pmode argument in c_backtrace()
-Date:   Wed,  6 Nov 2019 03:05:28 +0000
-Message-Id: <20191106030542.868541-38-dima@arista.com>
+Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 83D7C222CB;
+        Wed,  6 Nov 2019 03:08:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573009708;
+        bh=AeyuQDx16SbC4kiHgjnITMVBwHgRfMgTSaw25Q9xYbo=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LgBI0mperws14tFGgqjJq23DXJf2MXPwBCbflHFPx1gIdG0NEcIkHjBBTfeuDgXzn
+         wih4ucL4/vYLeXWjHLK+OujynKBLVwxi4ESsCnek17YI5WjfEKCduXM0Yd9kIXP6AB
+         ygbTASVvSPM0CMbQLV6pN0A3L36sJWbQveAojR5o=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: [PATCH 4/9] sched/cputime: Support other fields on kcpustat_field()
+Date:   Wed,  6 Nov 2019 04:08:02 +0100
+Message-Id: <20191106030807.31091-5-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106030542.868541-1-dima@arista.com>
-References: <20191106030542.868541-1-dima@arista.com>
+In-Reply-To: <20191106030807.31091-1-frederic@kernel.org>
+References: <20191106030807.31091-1-frederic@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -81,71 +66,85 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pmode parameter isn't used in assembly - remove it.
-Second argument will be reused for printk() log level.
+Now that we support nice updates under vtime accounting, we can provide
+tickless values for kcpustat readers of user and guest time.
 
-Cc: Guan Xuetao <gxt@pku.edu.cn>
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Ingo Molnar <mingo@kernel.org>
 ---
- arch/unicore32/kernel/setup.h |  2 +-
- arch/unicore32/kernel/traps.c | 14 +++++---------
- 2 files changed, 6 insertions(+), 10 deletions(-)
+ kernel/sched/cputime.c | 40 +++++++++++++++++++++++++++++++++-------
+ 1 file changed, 33 insertions(+), 7 deletions(-)
 
-diff --git a/arch/unicore32/kernel/setup.h b/arch/unicore32/kernel/setup.h
-index e40d3603c7e7..03e70e37f472 100644
---- a/arch/unicore32/kernel/setup.h
-+++ b/arch/unicore32/kernel/setup.h
-@@ -29,7 +29,7 @@ extern void kernel_thread_helper(void);
- extern void __init early_signal_init(void);
- 
- extern asmlinkage void __backtrace(void);
--extern asmlinkage void c_backtrace(unsigned long fp, int pmode);
-+extern asmlinkage void c_backtrace(unsigned long fp);
- 
- extern void __show_regs(struct pt_regs *);
- 
-diff --git a/arch/unicore32/kernel/traps.c b/arch/unicore32/kernel/traps.c
-index e24f67283864..3682a4c5d927 100644
---- a/arch/unicore32/kernel/traps.c
-+++ b/arch/unicore32/kernel/traps.c
-@@ -137,7 +137,7 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
- 
- static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- {
--	unsigned int fp, mode;
-+	unsigned int fp;
- 	int ok = 1;
- 
- 	printk(KERN_DEFAULT "Backtrace: ");
-@@ -145,16 +145,12 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- 	if (!tsk)
- 		tsk = current;
- 
--	if (regs) {
-+	if (regs)
- 		fp = regs->UCreg_fp;
--		mode = processor_mode(regs);
--	} else if (tsk != current) {
-+	else if (tsk != current)
- 		fp = thread_saved_fp(tsk);
--		mode = 0x10;
--	} else {
-+	else
- 		asm("mov %0, fp" : "=r" (fp) : : "cc");
--		mode = 0x10;
--	}
- 
- 	if (!fp) {
- 		printk("no frame pointer");
-@@ -167,7 +163,7 @@ static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- 	printk("\n");
- 
- 	if (ok)
--		c_backtrace(fp, mode);
-+		c_backtrace(fp);
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index e09194415c35..bf4b61f71194 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -1042,6 +1042,15 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
  }
  
- void show_stack(struct task_struct *tsk, unsigned long *sp)
++static u64 kcpustat_user_vtime(struct vtime *vtime)
++{
++	if (vtime->state == VTIME_USER)
++		return vtime->utime + vtime_delta(vtime);
++	else if (vtime->state == VTIME_GUEST)
++		return vtime->gtime + vtime_delta(vtime);
++	return 0;
++}
++
+ static int kcpustat_field_vtime(u64 *cpustat,
+ 				struct vtime *vtime,
+ 				enum cpu_usage_stat usage,
+@@ -1076,9 +1085,30 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 
+ 		*val = cpustat[usage];
+ 
+-		if (vtime->state == VTIME_SYS)
+-			*val += vtime->stime + vtime_delta(vtime);
+-
++		switch (usage) {
++		case CPUTIME_SYSTEM:
++			if (vtime->state == VTIME_SYS)
++				*val += vtime->stime + vtime_delta(vtime);
++			break;
++		case CPUTIME_USER:
++			if (!vtime->nice)
++				*val += kcpustat_user_vtime(vtime);
++			break;
++		case CPUTIME_NICE:
++			if (vtime->nice)
++				*val += kcpustat_user_vtime(vtime);
++			break;
++		case CPUTIME_GUEST:
++			if (vtime->state == VTIME_GUEST && !vtime->nice)
++				*val += vtime->gtime + vtime_delta(vtime);
++			break;
++		case CPUTIME_GUEST_NICE:
++			if (vtime->state == VTIME_GUEST && vtime->nice)
++				*val += vtime->gtime + vtime_delta(vtime);
++			break;
++		default:
++			break;
++		}
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
+ 
+ 	return 0;
+@@ -1095,10 +1125,6 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 	if (!vtime_accounting_enabled_cpu(cpu))
+ 		return cpustat[usage];
+ 
+-	/* Only support sys vtime for now */
+-	if (usage != CPUTIME_SYSTEM)
+-		return cpustat[usage];
+-
+ 	rq = cpu_rq(cpu);
+ 
+ 	for (;;) {
 -- 
 2.23.0
 
