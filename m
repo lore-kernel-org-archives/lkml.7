@@ -2,183 +2,120 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD38FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97D21C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:33:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D45C21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:33:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62DB421929
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:33:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iXsO6yva"
+	dkim=pass (1024-bit key) header.d=micron.com header.i=@micron.com header.b="gWD+xswr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731993AbfKFPdY (ORCPT
+        id S1732043AbfKFPdw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:33:24 -0500
-Received: from mail-qv1-f66.google.com ([209.85.219.66]:41765 "EHLO
-        mail-qv1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727345AbfKFPdY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:33:24 -0500
-Received: by mail-qv1-f66.google.com with SMTP id g18so1573600qvp.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:33:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zdno54+YrnAis2IfaLsHue6J0VhFxBM3FnDvV7pWPE0=;
-        b=iXsO6yva0aQZuX4+y9BQ7GZSJYcllIFyCdyEQ+l7gHjC4BzR1seiva0AMKvEye11VM
-         2v108y0tDdwffVHSNTuDS5sgUowcAVOHrjbokW2Ve1V936IfXcW/6Nnu/seNTsntGB5O
-         VFIqon8WatW0MXEXrc2nocVfBM8DeEr/oCWMoy8tAnOAOS9Errt/BWfx6hJE2+7Z2v1I
-         jFUph1pn5NaZkSpXREX7oxCb4siXnY7OEV4983VXJWvu769VI3eGrUcZR3/D7Cvne9Ne
-         vFDkEZmbEKMIaISAxO0ffPp/5qbBRJGzHpEPnhIE0F87jguXcOm2DOv33KLfZobGf0y/
-         ZtdA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zdno54+YrnAis2IfaLsHue6J0VhFxBM3FnDvV7pWPE0=;
-        b=EgndqXWRBNXX+aEvubm8d1Cuq0BEKJqEY8kZDhnf206Rfy0cTSfgrA0VeeS61WDrDP
-         xv7mcQyllkLVQLLpWvHEft5aIKYkfPHUL/MdXZM5Zoh/BS3UQ/zDtI04u4/DRZNMZi7Y
-         tytZ1Tc8okp7ZSmLJeQ6WWuGhJTuuflsdFDB2Dv5J4NwmclYTiRMA+G3b8BlP0iIXVYL
-         NYsxpdhG4p95orr/SMnyHmEEeJBFNrOwG0q40xlEBYjtMMQeim7OHVSQ7G0Lwr6h6c+B
-         EHSB+/CtEjtgjoJrds8W/2dUi71o2+gClJkhI2C3mH5Nk6dCBodk9mT7fBtwzrMXrj8N
-         Jbvw==
-X-Gm-Message-State: APjAAAUC04EtsSHid0bcYqpPwCBV+L8zr/fS6L2Zc6nGVaA2Yyr2Ho6f
-        SjSyt+0LNWA9kw2yf0f7QFD/ZEIvCDdjWoAidOCt7A==
-X-Google-Smtp-Source: APXvYqyLSem31h83DgUIYvdHHQeKGyX/qiJCt7AlY4nkLyEIHADw27IRWEXv92THikVCLb+PUsaN/wYsMyEz7dLBjDM=
-X-Received: by 2002:a0c:b064:: with SMTP id l33mr2823588qvc.34.1573054402522;
- Wed, 06 Nov 2019 07:33:22 -0800 (PST)
+        Wed, 6 Nov 2019 10:33:52 -0500
+Received: from mail-eopbgr820078.outbound.protection.outlook.com ([40.107.82.78]:27264
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727345AbfKFPdv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:33:51 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=H2oRWWgLrpm1xmg3zc0c4Dpzcn4azM6I+FOhBCKEdhv8CHfjAByl9xHIkS+iqPXo8y0YbDEZr83cztledsnwfXZT1JjUXpvbs+8olfH5lWQGtjCo1G+nakbwzLRkMhAvkXqb+K/ZDrr44EK925ZYK7dILovUPk7zd3Pjm8lRnTS+V2JeB7xbqeFFAreDAuWq0kO6EGM/UKIAGXQEtMPkRHdXu68InthB/K5oFq/0Lcg5NPoPoC9oM8K+oKwu/aG/onAYGFKphH0phouskqjERiO4pycuISfEfmn6Ms+ghEB5EBLRZmT2Sm9n48NOr+WG6NCmUrlQS7bZQQxN/lqGHg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rIiE3hrVnw2sfogY/lKXgx2oPUFpLvsLPJisbd9oN6k=;
+ b=NoWgF7bLFWlbyVax3RskWy/+j/edF8xvTnN2EIOQFMarWYzGrxei3kYTczSZmmw3zCssRp2cDM38BNgYm9pOcU6OwVyuXq0DWqdZ+Vr7SizC6HAm3+b+RdVvsN+oG0t99LkLGtEf+qkvsPTMWqgl4WQeUg7u4leYw/GxYGEDE7xbgaQENyQ3friIEDVIBCE4pV9/jHL3fVzc3Y/9aU4jQk/H24J+7P807Lpj3Yw+XUdz5wg9E0bJJcwB4bxMOnNVa9v759IIPvIW1166IAp/v6YURW1pBpmGGWEmKgmDBVN3bFviT7xEkEm+8ofrr5f0w9kuyGZ3YyqBV7WYnuoFvg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=micron.com; dmarc=pass action=none header.from=micron.com;
+ dkim=pass header.d=micron.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=micron.com;
+ s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=rIiE3hrVnw2sfogY/lKXgx2oPUFpLvsLPJisbd9oN6k=;
+ b=gWD+xswrft/y01g3gKztRBNGspaTLchOxEzp/swgWSEX+o0uCi/Xw3qbOGUu6b4CHX6LLxXSmSLh598iYvDSdSG2i3Yt1Em7p0v0i/RbDereICGb1/9hDLiKNlI0HJ5klhZP27EcPDg3Ar2174vAhrSE3j104AC4jupC7Z1lr4M=
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com (20.176.179.87) by
+ BN7PR08MB4273.namprd08.prod.outlook.com (52.132.222.151) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 15:33:49 +0000
+Received: from BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285]) by BN7PR08MB5684.namprd08.prod.outlook.com
+ ([fe80::a91a:c2f5:c557:4285%6]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 15:33:49 +0000
+From:   "Bean Huo (beanhuo)" <beanhuo@micron.com>
+To:     Can Guo <cang@codeaurora.org>,
+        "asutoshd@codeaurora.org" <asutoshd@codeaurora.org>,
+        "nguyenb@codeaurora.org" <nguyenb@codeaurora.org>,
+        "rnayak@codeaurora.org" <rnayak@codeaurora.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "kernel-team@android.com" <kernel-team@android.com>,
+        "saravanak@google.com" <saravanak@google.com>,
+        "salyzyn@google.com" <salyzyn@google.com>
+CC:     Alim Akhtar <alim.akhtar@samsung.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Pedro Sousa <pedrom.sousa@synopsys.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Tomas Winkler <tomas.winkler@intel.com>,
+        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
+        Subhash Jadavani <subhashj@codeaurora.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: RE: [EXT] [PATCH v3 6/7] scsi: ufs: Abort gating if clock on request
+ is pending
+Thread-Topic: [EXT] [PATCH v3 6/7] scsi: ufs: Abort gating if clock on request
+ is pending
+Thread-Index: AQHVk42VXFg7+RwuvUGHe9iPWHp3qKd+NApg
+Date:   Wed, 6 Nov 2019 15:33:49 +0000
+Message-ID: <BN7PR08MB56847C506ADF9A2960CA6B1ADB790@BN7PR08MB5684.namprd08.prod.outlook.com>
+References: <1572926236-720-1-git-send-email-cang@codeaurora.org>
+ <1572926236-720-7-git-send-email-cang@codeaurora.org>
+In-Reply-To: <1572926236-720-7-git-send-email-cang@codeaurora.org>
+Accept-Language: en-150, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcYmVhbmh1b1xhcHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJhMjllMzViXG1zZ3NcbXNnLWQyMzExMjNhLTAwYWEtMTFlYS04Yjg1LWRjNzE5NjFmOWRkM1xhbWUtdGVzdFxkMjMxMTIzYi0wMGFhLTExZWEtOGI4NS1kYzcxOTYxZjlkZDNib2R5LnR4dCIgc3o9IjI2MyIgdD0iMTMyMTc1MjgwMjY5NzQzNjIzIiBoPSJEVGNQZkNkTmxLamlacHYzcjhWekFwZHVOOU09IiBpZD0iIiBibD0iMCIgYm89IjEiLz48L21ldGE+
+x-dg-rorf: true
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=beanhuo@micron.com; 
+x-originating-ip: [165.225.81.21]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: d0d472bb-ef31-46db-8e84-08d762ceb86f
+x-ms-traffictypediagnostic: BN7PR08MB4273:|BN7PR08MB4273:|BN7PR08MB4273:
+x-microsoft-antispam-prvs: <BN7PR08MB4273FF81502B38681AD44C5DDB790@BN7PR08MB4273.namprd08.prod.outlook.com>
+x-ms-exchange-transport-forked: True
+x-ms-oob-tlc-oobclassifiers: OLM:400;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(376002)(396003)(39860400002)(346002)(366004)(189003)(199004)(76176011)(33656002)(66066001)(2201001)(86362001)(305945005)(446003)(11346002)(6436002)(55236004)(7736002)(74316002)(14454004)(7416002)(476003)(478600001)(486006)(8676002)(229853002)(316002)(6116002)(3846002)(81156014)(81166006)(71190400001)(110136005)(25786009)(71200400001)(6506007)(4326008)(102836004)(7696005)(6246003)(186003)(55016002)(9686003)(66446008)(76116006)(52536014)(66946007)(64756008)(5660300002)(66556008)(2906002)(558084003)(66476007)(8936002)(2501003)(54906003)(99286004)(26005)(256004);DIR:OUT;SFP:1101;SCL:1;SRVR:BN7PR08MB4273;H:BN7PR08MB5684.namprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: micron.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: yCX/ipUFkLg4J6RZDsoEPsqwgnldvsh48CwjQcPwoPciWlqB7ZFJsaXZTiMD1u39f7/KLUuAnvpmn5MIkkA2FjIs4yH8d55YhPsQZuSJvVL4w7Xvg1QKCpyYpneXqDTlwwoRWld+p55ocZ89/5sRw9MYm/cWdrcZAR9PAUbCZ7DwF7N9k6A3NEB6dKyLiiyUXz3eDMVJLqLRt+IK0NPH29r6lrx/8AZCFi1hWIzyn/9UXfGMbFWcOMGCK2J7UY+grFeoxkzxUDuHrDNfbg3EyQBRnVvJG/tT7kJ3KIRK1cizj6c+RSonB5LEu9YuaYI18U0+0qpJD37UvIS9caG1rtU53LRfInc8oqw54Jxp7Sve3tOBc681FP7a0aB3BSWCr7AQhleKfsxWJQZp2vsxjutU2B+1iJLew9dDVlqoQk9ik1zIIGlWGuc/w6lK/YSe
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <000000000000b2de3a0594d8b4ca@google.com> <00000000000012ff570596af15cc@google.com>
- <CAKMK7uFQt+=7XMo9jvz77QvDWLAAU_V7-_qZ=iKe-GXG7cqeJg@mail.gmail.com> <CAKMK7uEeQnxMXeyMTvqJ-8H3wFeSexkbL1OJ0oJeUoep=YXcVg@mail.gmail.com>
-In-Reply-To: <CAKMK7uEeQnxMXeyMTvqJ-8H3wFeSexkbL1OJ0oJeUoep=YXcVg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 6 Nov 2019 16:33:11 +0100
-Message-ID: <CACT4Y+b1yx9cYAtedSv+D4utu+MF_3uJt5oKmcQs7qDBrPx2=w@mail.gmail.com>
-Subject: Re: WARNING in drm_mode_createblob_ioctl
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: micron.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d0d472bb-ef31-46db-8e84-08d762ceb86f
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 15:33:49.0693
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: f38a5ecd-2813-4862-b11b-ac1d563c806f
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: A78XF+z2Rx3Zt+1WR5eK3MIPHta/sG1kvdc2qv2Z7zkBZz/m/SU91XVg9CYCj7nSx/7OIMX3nCnzrTpuAqQ+wg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN7PR08MB4273
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:28 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Wed, Nov 6, 2019 at 4:23 PM Daniel Vetter <daniel@ffwll.ch> wrote:
-> >
-> > On Wed, Nov 6, 2019 at 4:20 PM syzbot
-> > <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com> wrote:
-> > >
-> > > syzbot has bisected this bug to:
-> > >
-> > > commit 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-> > > Author: Kees Cook <keescook@chromium.org>
-> > > Date:   Mon Nov 4 22:57:23 2019 +0000
-> > >
-> > >      uaccess: disallow > INT_MAX copy sizes
-> >
-> > Ah cool, this explains it.
-> >
-> > fwiw I never managed to get the WARNING in the backtrace to lign up
-> > with any code. No idea what's been going on.
->
-> Ok I think I have an idea, the above commit isn't in the linux-next I
-> have here. Where is this from?
-> -Daniel
+>=20
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
+> Signed-off-by: Can Guo <cang@codeaurora.org>
+Reviewed-by: Bean Huo <beanhuo@micron.com>
 
-You need to fetch tags to linux-next. syzbot started bisecting from
-the commit where the crash happened, and it is now probably not the
-current tag.
-
-linux$ git show 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-commit 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-Author: Kees Cook <keescook@chromium.org>
-Date:   Tue Nov 5 09:57:23 2019 +1100
-
-    uaccess: disallow > INT_MAX copy sizes
-
-    As we've done with VFS, string operations, etc, reject usercopy sizes
-    larger than INT_MAX, which would be nice to have for catching bugs related
-    to size calculation overflows[1].
-
-    This adds 10 bytes to x86_64 defconfig text and 1980 bytes to the data
-    section:
-
-       text    data     bss     dec     hex filename
-    19691167        5134320 1646664 26472151        193eed7 vmlinux.before
-    19691177        5136300 1646664 26474141        193f69d vmlinux.after
-
-    [1] https://marc.info/?l=linux-s390&m=156631939010493&w=2
-
-    Link: http://lkml.kernel.org/r/201908251612.F9902D7A@keescook
-    Signed-off-by: Kees Cook <keescook@chromium.org>
-    Suggested-by: Dan Carpenter <dan.carpenter@oracle.com>
-    Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-    Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-    Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
-
-diff --git a/include/linux/thread_info.h b/include/linux/thread_info.h
-index 659a4400517b2..e93e249a4e9bf 100644
---- a/include/linux/thread_info.h
-+++ b/include/linux/thread_info.h
-@@ -147,6 +147,8 @@ check_copy_size(const void *addr, size_t bytes,
-bool is_source)
-                        __bad_copy_to();
-                return false;
-        }
-+       if (WARN_ON_ONCE(bytes > INT_MAX))
-+               return false;
-        check_object_size(addr, bytes, is_source);
-        return true;
- }
-
-
-> > I'll type a patch to paper over this.
-> > -Daniel
-> >
-> > >
-> > > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=125fe6dce00000
-> > > start commit:   51309b9d Add linux-next specific files for 20191105
-> > > git tree:       linux-next
-> > > final crash:    https://syzkaller.appspot.com/x/report.txt?x=115fe6dce00000
-> > > console output: https://syzkaller.appspot.com/x/log.txt?x=165fe6dce00000
-> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-> > > dashboard link: https://syzkaller.appspot.com/bug?extid=fb77e97ebf0612ee6914
-> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1212dc3ae00000
-> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145f604ae00000
-> > >
-> > > Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-> > > Fixes: 9e5a64c71b2f ("uaccess: disallow > INT_MAX copy sizes")
-> > >
-> > > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-> >
-> >
-> >
-> > --
-> > Daniel Vetter
-> > Software Engineer, Intel Corporation
-> > +41 (0) 79 365 57 48 - http://blog.ffwll.ch
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
