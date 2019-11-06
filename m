@@ -2,111 +2,246 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E636BC5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0ECC5DF61
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CEE21A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="jfzwzkAr"
+	by mail.kernel.org (Postfix) with ESMTP id CE2B721A4A
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573000256;
+	bh=gZp+z/amWKS+opoT1nKVVWREQdTOQMs0bXoNemoIUy0=;
+	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
+	b=YEIVv/jHEQ4PG7pqgaQIuBsT3UYGU+Ph9UPt3bACP4gtada1691Gnt6m+r6lutL4m
+	 i8s9QNVj6VhHvJ0oSlJWmTse+KSFSkQaWcfA1dZCC+d7fWJ/nl3fIFPvblQdIkTXyN
+	 SVLpKiMSDnOCYf566cBIeBt2P2ARY7pCiKX/TJ5s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387492AbfKFAaQ (ORCPT
+        id S1730667AbfKFAa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:30:16 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:43835 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730636AbfKFAaN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:30:13 -0500
-Received: by mail-pf1-f196.google.com with SMTP id 3so17406963pfb.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:30:11 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=wC1fV3XmJiisvf6Wmub25EKlo5Tq9rK55tShjUn1JT0=;
-        b=jfzwzkArakv+2H4BiI7PnShrmXYvKyjGhz5dkAGMEfFJ0oHIdHV+dH9FeVwkQZ/N3e
-         IjSijEYi3wNSpL6nPpXlTgw3sUkN5qGSgM14CN6r6afhxVqPjhZE+ztJb7XGJSXpzzHE
-         YLxvo2fiKlwZHtPwoxvq6eiNnYKj2pOSN6OrU=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=wC1fV3XmJiisvf6Wmub25EKlo5Tq9rK55tShjUn1JT0=;
-        b=qTdQDZdbL6CZaRkHi7jcBc98tlq166uTTtclDYkXRdM9V2rkBlj29zTLBjbBPAttpE
-         VrRlLaEpTGrBWqF0wD1pv3z7LrpLB9RaXhmwn3L3cVZG+yBCXGe1upy0AbcTfhQxJAoc
-         jnNkK/WhHJfUCoyNBmcwdaOmyrJKIosgfAMdWTw0CUUm89lkzT42coe5F852M/BX0A0P
-         8oauEvV+FJa5uKsR0/uT5qXdiAI21+rlLVwTKeFkSkGL+FcwL7pdvUmjJdTOj+nkfJDZ
-         waAJYAAUvfhHf1KP+QEg5kaVkCifbz+KhAi1qoNooouiM+weGoIVV9BVoOZuBOwrGgMJ
-         CjyA==
-X-Gm-Message-State: APjAAAX3st9/q/Xvcc7Yx4G92ls0rQl1X+aW2QbfmWGjuXwXt2Vs334c
-        7PN64ajwXVAfeI5CaWlTRxjHPQ==
-X-Google-Smtp-Source: APXvYqx47hh5YbDuUa3YWMzpsYd8LTO0GxdEdRVR/2Z/sRZoF/LYzFRNgsN5YHICZtVdUUY1kfyW0w==
-X-Received: by 2002:a17:90a:989:: with SMTP id 9mr13112pjo.35.1573000210856;
-        Tue, 05 Nov 2019 16:30:10 -0800 (PST)
-Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id k9sm21032835pfk.72.2019.11.05.16.30.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 16:30:10 -0800 (PST)
-From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
-To:     Marcel Holtmann <marcel@holtmann.org>,
-        Johan Hedberg <johan.hedberg@gmail.com>
-Cc:     linux-bluetooth@vger.kernel.org,
-        Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
-        devicetree@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Ondrej Jirman <megous@megous.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 4/4] dt-bindings: net: bluetooth: update broadcom-bluetooth
-Date:   Tue,  5 Nov 2019 16:29:23 -0800
-Message-Id: <20191106002923.109344-5-abhishekpandit@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191106002923.109344-1-abhishekpandit@chromium.org>
-References: <20191106002923.109344-1-abhishekpandit@chromium.org>
+        Tue, 5 Nov 2019 19:30:56 -0500
+Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729494AbfKFAa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 19:30:56 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DA8462178F;
+        Wed,  6 Nov 2019 00:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573000254;
+        bh=gZp+z/amWKS+opoT1nKVVWREQdTOQMs0bXoNemoIUy0=;
+        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
+        b=i3ZUsc/nJLdk/BggWLM5WyJY3F3qmoSIz8ZV4f2m4YFz9IEqRSBzoyto/qSoE+lJk
+         11FXEHdFVaOc+ISHEququIn7KpdH8+9G/n0u2D0vg5BXZDnSxkWetRNN6PgnY0o3gz
+         7YAZqtmx1OobHgEZNrUSHEQhjLn3jfc6J40WAxtc=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1572524473-19344-5-git-send-email-tdas@codeaurora.org>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-5-git-send-email-tdas@codeaurora.org>
+Subject: Re: [PATCH v1 4/7] clk: qcom: Add graphics clock controller driver for SC7180
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Tue, 05 Nov 2019 16:30:53 -0800
+Message-Id: <20191106003053.DA8462178F@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add documentation for pcm-parameters.
+Quoting Taniya Das (2019-10-31 05:21:10)
+> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7=
+180.c
+> new file mode 100644
+> index 0000000..0d893e6
+> --- /dev/null
+> +++ b/drivers/clk/qcom/gpucc-sc7180.c
+> @@ -0,0 +1,274 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +#include <linux/clk-provider.h>
+> +#include <linux/err.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
 
-Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
+Are these of includes used?
 
----
+> +#include <linux/regmap.h>
+> +
+> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
+> +
+> +#include "clk-alpha-pll.h"
+> +#include "clk-branch.h"
+> +#include "clk-rcg.h"
+> +#include "clk-regmap.h"
+> +#include "common.h"
+> +#include "gdsc.h"
+> +
+> +#define CX_GMU_CBCR_SLEEP_MASK         0xF
+> +#define CX_GMU_CBCR_SLEEP_SHIFT                4
+> +#define CX_GMU_CBCR_WAKE_MASK          0xF
+> +#define CX_GMU_CBCR_WAKE_SHIFT         8
+> +#define CLK_DIS_WAIT_SHIFT             12
+> +#define CLK_DIS_WAIT_MASK              (0xf << CLK_DIS_WAIT_SHIFT)
+> +
+> +enum {
+> +       P_BI_TCXO,
+> +       P_CORE_BI_PLL_TEST_SE,
+> +       P_GPLL0_OUT_MAIN,
+> +       P_GPLL0_OUT_MAIN_DIV,
+> +       P_GPU_CC_PLL1_OUT_EVEN,
+> +       P_GPU_CC_PLL1_OUT_MAIN,
+> +       P_GPU_CC_PLL1_OUT_ODD,
+> +};
+> +
+> +static struct pll_vco fabia_vco[] =3D {
 
- Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+const?
 
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index c749dc297624..ae60277b5569 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -29,6 +29,9 @@ Optional properties:
-    - "lpo": external low power 32.768 kHz clock
-  - vbat-supply: phandle to regulator supply for VBAT
-  - vddio-supply: phandle to regulator supply for VDDIO
-+ - pcm-parameters: When set, will configure PCM parameters on the device. The
-+   contents should be a 10-byte array corresponding to the pcm params (see
-+   btbcm.h for more information).
- 
- 
- Example:
-@@ -40,5 +43,6 @@ Example:
-        bluetooth {
-                compatible = "brcm,bcm43438-bt";
-                max-speed = <921600>;
-+               pcm-parameters = [1 2 0 1 1 0 0 0 0 0];
-        };
- };
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+> +       { 249600000, 2000000000, 0 },
+> +};
+> +
+> +static struct clk_alpha_pll gpu_cc_pll1 =3D {
+> +       .offset =3D 0x100,
+> +       .vco_table =3D fabia_vco,
+> +       .num_vco =3D ARRAY_SIZE(fabia_vco),
+> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
+> +       .clkr =3D {
+> +               .hw.init =3D &(struct clk_init_data){
+> +                       .name =3D "gpu_cc_pll1",
+> +                       .parent_data =3D  &(const struct clk_parent_data){
+> +                               .fw_name =3D "bi_tcxo",
+> +                               .name =3D "bi_tcxo",
 
+Do we need both? This is new so it should just work with .fw_name right?
+
+> +                       },
+> +                       .num_parents =3D 1,
+> +                       .ops =3D &clk_alpha_pll_fabia_ops,
+> +               },
+> +       },
+> +};
+> +
+> +static const struct parent_map gpu_cc_parent_map_0[] =3D {
+> +       { P_BI_TCXO, 0 },
+> +       { P_GPU_CC_PLL1_OUT_MAIN, 3 },
+> +       { P_GPLL0_OUT_MAIN, 5 },
+> +       { P_GPLL0_OUT_MAIN_DIV, 6 },
+> +       { P_CORE_BI_PLL_TEST_SE, 7 },
+> +};
+> +
+> +static const struct clk_parent_data gpu_cc_parent_data_0[] =3D {
+> +       { .fw_name =3D "bi_tcxo", .name =3D "bi_tcxo" },
+> +       { .hw =3D &gpu_cc_pll1.clkr.hw },
+> +       { .fw_name =3D "gcc_gpu_gpll0_clk_src", .name =3D "gcc_gpu_gpll0_=
+clk_src" },
+> +       { .fw_name =3D "gcc_gpu_gpll0_div_clk_src",
+> +                                       .name =3D "gcc_gpu_gpll0_div_clk_=
+src" },
+> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
+_se" },
+> +};
+
+Same for these.
+
+> +
+> +static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] =3D {
+> +       F(19200000, P_BI_TCXO, 1, 0, 0),
+> +       F(200000000, P_GPLL0_OUT_MAIN_DIV, 1.5, 0, 0),
+> +       { }
+> +};
+[..]
+> +
+> +
+> +static int gpu_cc_sc7180_probe(struct platform_device *pdev)
+> +{
+> +       struct regmap *regmap;
+> +       struct alpha_pll_config gpu_cc_pll_config =3D {};
+> +       unsigned int value, mask;
+> +
+> +       regmap =3D qcom_cc_map(pdev, &gpu_cc_sc7180_desc);
+> +       if (IS_ERR(regmap))
+> +               return PTR_ERR(regmap);
+> +
+> +       /* 360MHz Configuration */
+> +       gpu_cc_pll_config.l =3D 0x12;
+> +       gpu_cc_pll_config.alpha =3D 0xC000;
+> +       gpu_cc_pll_config.config_ctl_val =3D 0x20485699;
+> +       gpu_cc_pll_config.config_ctl_hi_val =3D 0x00002067;
+> +       gpu_cc_pll_config.user_ctl_val =3D 0x00000001;
+> +       gpu_cc_pll_config.user_ctl_hi_val =3D 0x00004805;
+> +       gpu_cc_pll_config.test_ctl_hi_val =3D 0x40000000;
+
+Is there a reason this is built on the stack? Save space or something?
+
+> +
+> +       clk_fabia_pll_configure(&gpu_cc_pll1, regmap, &gpu_cc_pll_config);
+> +
+> +       /* Recommended WAKEUP/SLEEP settings for the gpu_cc_cx_gmu_clk */
+> +       mask =3D CX_GMU_CBCR_WAKE_MASK << CX_GMU_CBCR_WAKE_SHIFT;
+> +       mask |=3D CX_GMU_CBCR_SLEEP_MASK << CX_GMU_CBCR_SLEEP_SHIFT;
+> +       value =3D 0xF << CX_GMU_CBCR_WAKE_SHIFT | 0xF << CX_GMU_CBCR_SLEE=
+P_SHIFT;
+
+mask and value can just be big constants? I'm not sure anyone cares to
+tweak this later, but I guess it's fine this way too.
+
+> +       regmap_update_bits(regmap, 0x1098, mask, value);
+> +
+> +       /* gpu_cc_ahb_clk */
+
+What are we doing to gpu_cc_ahb_clk??
+
+> +       regmap_update_bits(regmap, 0x1078, 0x1, 0x1);
+> +
+> +       /* Configure clk_dis_wait for gpu_cx_gdsc */
+> +       regmap_update_bits(regmap, 0x106c, CLK_DIS_WAIT_MASK,
+> +                                               8 << CLK_DIS_WAIT_SHIFT);
+> +
+> +       return qcom_cc_really_probe(pdev, &gpu_cc_sc7180_desc, regmap);
+> +}
+> +
+> +static struct platform_driver gpu_cc_sc7180_driver =3D {
+> +       .probe =3D gpu_cc_sc7180_probe,
+> +       .driver =3D {
+> +               .name =3D "sc7180-gpucc",
+> +               .of_match_table =3D gpu_cc_sc7180_match_table,
+> +       },
+> +};
+> +
+> +static int __init gpu_cc_sc7180_init(void)
+> +{
+> +       return platform_driver_register(&gpu_cc_sc7180_driver);
+> +}
+> +core_initcall(gpu_cc_sc7180_init);
+
+Does it need to be core initcal? Maybe module_platform_driver() works
+just as well?
+
+> +
+> +static void __exit gpu_cc_sc7180_exit(void)
+> +{
+> +       platform_driver_unregister(&gpu_cc_sc7180_driver);
+> +}
+> +module_exit(gpu_cc_sc7180_exit);
+> +
+> +MODULE_DESCRIPTION("QTI GPU_CC SC7180 Driver");
+> +MODULE_LICENSE("GPL v2");
