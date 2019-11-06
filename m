@@ -2,87 +2,100 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98020C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 50218C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:37:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B98B2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="a+cxZvr0"
+	by mail.kernel.org (Postfix) with ESMTP id 2715E217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:37:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731683AbfKFMcz (ORCPT
+        id S1729671AbfKFMha (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:32:55 -0500
-Received: from mail-m974.mail.163.com ([123.126.97.4]:37442 "EHLO
-        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729001AbfKFMcz (ORCPT
+        Wed, 6 Nov 2019 07:37:30 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:56275 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727652AbfKFMh3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:32:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=CgYUH4XHr5w2XeXP9y
-        jIu87F+L7k9QHEB4zdKmLhZUU=; b=a+cxZvr01oxJ2vIYNCP6AYiSVnKMVCMbLS
-        VsHN9iwcxTxvtsld4JJT7DeoRSmSTdC4nKGwQERExkDcsnexx/64htg4Yzzii3jR
-        oWyi3FCt5GnQq+cYYBjWxv+nqb9mBGk4g0l/7dq1U/cmHf+alxojDk0owGwRJ6do
-        gFLfEEWAQ=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp4 (Coremail) with SMTP id HNxpCgBnQrxWvcJd4xuXBQ--.252S3;
-        Wed, 06 Nov 2019 20:32:24 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     QLogic-Storage-Upstream@qlogic.com,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc:     linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: [PATCH] scsi: bnx2i: fix potential use after free
-Date:   Wed,  6 Nov 2019 20:32:21 +0800
-Message-Id: <1573043541-19126-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: HNxpCgBnQrxWvcJd4xuXBQ--.252S3
-X-Coremail-Antispam: 1Uf129KBjvdXoW7GF48CF17XrWrGryxAr1kXwb_yoWDtwcE9F
-        WjqrW7JryUC39rGr1UWrWrZ39Yk3y3XryIv3Z2ka4rurWUXrnrZry8uFyFvw45W3yUW3s8
-        t3yDAay2vrsxKjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1WSotUUUUU==
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiQBhlclSIdIKejgAAs1
+        Wed, 6 Nov 2019 07:37:29 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 302e3675ce793f7a; Wed, 6 Nov 2019 13:37:27 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Jamal Shareef <jamal.k.shareef@gmail.com>
+Cc:     outreachy-kernel@googlegroups.com,
+        srinivas.pandruvada@linux.intel.com, lenb@kernel.org,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] cpufreq: intel_pstate: Fix sparse plain int pointer
+Date:   Wed, 06 Nov 2019 13:37:27 +0100
+Message-ID: <1650009.YP25ckTgOY@kreacher>
+In-Reply-To: <20191105055427.11943-1-jamal.k.shareef@gmail.com>
+References: <20191105055427.11943-1-jamal.k.shareef@gmail.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The membe hba->pcidev may be used after its reference is dropped. Move
-the put function to where it is never used to avoid potential use after
-free issues.
+On Tuesday, November 5, 2019 6:54:27 AM CET Jamal Shareef wrote:
+> Patch fixes sparse warning: Using plain integer as NULL pointer.
+> Replaces assignment of 0 to pointer with NULL assignment.
+> 
+> Signed-off-by: Jamal Shareef <jamal.k.shareef@gmail.com>
+> ---
+>  drivers/cpufreq/intel_pstate.c | 30 +++++++++++++++---------------
+>  1 file changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/drivers/cpufreq/intel_pstate.c b/drivers/cpufreq/intel_pstate.c
+> index 53a51c169451..cfcf34e04c3d 100644
+> --- a/drivers/cpufreq/intel_pstate.c
+> +++ b/drivers/cpufreq/intel_pstate.c
+> @@ -2664,21 +2664,21 @@ enum {
+>  
+>  /* Hardware vendor-specific info that has its own power management modes */
+>  static struct acpi_platform_list plat_info[] __initdata = {
+> -	{"HP    ", "ProLiant", 0, ACPI_SIG_FADT, all_versions, 0, PSS},
+> -	{"ORACLE", "X4-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4-2L   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4-2B   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X3-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X3-2L   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X3-2B   ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4470M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4270M3 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4270M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4170M2 ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4170 M3", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X4275 M3", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "X6-2    ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> -	{"ORACLE", "Sudbury ", 0, ACPI_SIG_FADT, all_versions, 0, PPC},
+> +	{"HP    ", "ProLiant", 0, ACPI_SIG_FADT, all_versions, NULL, PSS},
+> +	{"ORACLE", "X4-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4-2L   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4-2B   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X3-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X3-2L   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X3-2B   ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4470M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4270M3 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4270M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4170M2 ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4170 M3", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X4275 M3", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "X6-2    ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+> +	{"ORACLE", "Sudbury ", 0, ACPI_SIG_FADT, all_versions, NULL, PPC},
+>  	{ } /* End */
+>  };
+>  
+> 
 
-Fixes: a77171806515 ("[SCSI] bnx2i: Removed the reference to the netdev->base_addr")
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- drivers/scsi/bnx2i/bnx2i_iscsi.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Applying as 5.5 material, thanks!
 
-diff --git a/drivers/scsi/bnx2i/bnx2i_iscsi.c b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-index c5fa5f3b00e9..0b28d44d3573 100644
---- a/drivers/scsi/bnx2i/bnx2i_iscsi.c
-+++ b/drivers/scsi/bnx2i/bnx2i_iscsi.c
-@@ -915,12 +915,12 @@ void bnx2i_free_hba(struct bnx2i_hba *hba)
- 	INIT_LIST_HEAD(&hba->ep_ofld_list);
- 	INIT_LIST_HEAD(&hba->ep_active_list);
- 	INIT_LIST_HEAD(&hba->ep_destroy_list);
--	pci_dev_put(hba->pcidev);
- 
- 	if (hba->regview) {
- 		pci_iounmap(hba->pcidev, hba->regview);
- 		hba->regview = NULL;
- 	}
-+	pci_dev_put(hba->pcidev);
- 	bnx2i_free_mp_bdt(hba);
- 	bnx2i_release_free_cid_que(hba);
- 	iscsi_host_free(shost);
--- 
-2.7.4
+
+
 
