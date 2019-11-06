@@ -2,146 +2,152 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1168BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29E8FC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:02:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C31EE2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:02:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="q13agy6I";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="UPrh9Kno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730693AbfKFBBW (ORCPT
+        id S1730737AbfKFBCD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 20:01:22 -0500
-Received: from mga09.intel.com ([134.134.136.24]:35686 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729614AbfKFBBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 20:01:21 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 17:01:21 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,272,1569308400"; 
-   d="scan'208";a="205687897"
-Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.239.198.110]) ([10.239.198.110])
-  by orsmga006.jf.intel.com with ESMTP; 05 Nov 2019 17:01:18 -0800
-Subject: Re: [PATCH] KVM: X86: Dynamically allocating MSR number
- lists(msrs_to_save[], emulated_msrs[], msr_based_features[])
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-References: <20191105092031.8064-1-chenyi.qiang@intel.com>
- <4a5fd5b4-64b7-726a-57a5-a5c669ce84f6@redhat.com>
- <477da390-4bdb-c25d-24b1-5b57c3bf78bb@intel.com>
- <cd930947-2621-550c-8a41-e1a396650928@redhat.com>
-From:   cqiang <chenyi.qiang@intel.com>
-Message-ID: <f55f719d-7aca-a0e4-54cd-8a2420dc2618@intel.com>
-Date:   Wed, 6 Nov 2019 09:01:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <cd930947-2621-550c-8a41-e1a396650928@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+        Tue, 5 Nov 2019 20:02:03 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:21424 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1730054AbfKFBCC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 20:02:02 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA61092t028449;
+        Tue, 5 Nov 2019 17:01:42 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=pfpt0818; bh=BVp8qUxRE121/tm+T2vAbDt1Z1MHkG+jRqNO0T9Q5w8=;
+ b=q13agy6I5i1iqfD4YnmPGa8TRm0fGQOqEK9hygBoBc45bW9VrN0JewgjzkthxpRQ7zj6
+ zSFPJ47PWjWFoIWNjOVyfOzyFYSxBwBsbMDUW15xCeggpRXiOZvW/7rVrD+4HLmfGsaO
+ U2JONSYsKHgrghhu1RIvDn7BYyTB6zqPTo9ZlLv09U64MNU1rOMo4ZswGQKV69knFqKM
+ OxuVIUgT0G/0GSATL3GINC4ss4QAbrxdzkpdWt4UNxw7sNzuxXNy7pGDabYyENosdug5
+ EbhrwYJ5sFRN540nvVP0TVd3pBFgm/e6RbqiLJWEGX6XTlj2fX/xjuX8l8Eoxd9bzslp zg== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2w3eud17ea-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 05 Nov 2019 17:01:41 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Tue, 5 Nov
+ 2019 17:01:40 -0800
+Received: from NAM03-DM3-obe.outbound.protection.outlook.com (104.47.41.57) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Tue, 5 Nov 2019 17:01:40 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cxLmRvOp5oZwxO+fRusbj/pIBLSll9g7aCGpgjB/9xKjTPMswUZWJ1mHpUATDKmnRAHlANynr549QaPTKsB7QL7H8gYzg0JFs6qbpnN4fGefyiGgFoLVwqe99dUxDWw4S3yN3yRS22ANLZpE9h/cGUZWtdDog4ps/xkwGnW8iTrfwFq9lCDZyVWGcrIbZ8poOmg0yo1i22NgsMENhnVo7oI1Rwk2y9YYbwpkHQqaqN+L1On8S/oQox+6KF6WVbujc3C5cEBFzr9tHiWm2Jh/I9bDIfLajJ3qokqpwKYG+8s6tkKqVhwZnDPQIOu/JQGHzLXXh7dumH72V6L3WD51xQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BVp8qUxRE121/tm+T2vAbDt1Z1MHkG+jRqNO0T9Q5w8=;
+ b=VflQ/2/2yTGvxqUr+0gMNZWBp+ekRr7g+PcJEBOXZPUZlOb8RlOibrOOjYsUco0BvyBliR6K2xOhuj+gX8GNt7VKw5Xb+834YfgAPxH0zEXPDsvCivJSOo8wqyrwAm+ejAdTr8sRFi8I7exRHSAh0+9BrhI0eonuZMwp/1ygQ1JFy+omYAl87m6kTDnAQjekZoA7ztkMSl+r6e6q4kmcTa+tSow02D4yF0HxkvL6qVQRVyaqEpQhsaYWWUrgNl7rstBkaFAAlLbe8/OYDRpPrZjGk9B2rmuBkNgeAFh/qAgi2h0O+0WR598HxnQwajQQ6Lz4QBRwmnGWai56QKswMw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BVp8qUxRE121/tm+T2vAbDt1Z1MHkG+jRqNO0T9Q5w8=;
+ b=UPrh9KnoJpgdk55a6MmcoazMm1XscpdoM+FrihQVhNzWsku83IgwQha2w0+lN65cgi9EIx1E7F3GjWKsEKaJWAi4ChK6G65AHiIIfHk29h0IlvnoKFO4HliYcb9j1No9Tib3p08qCUzasG4/9/OLX+n/B5kw5P/QEqDZ0ZaCYik=
+Received: from BN8PR18MB2868.namprd18.prod.outlook.com (20.179.74.155) by
+ BN8PR18MB2804.namprd18.prod.outlook.com (20.179.73.85) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.20; Wed, 6 Nov 2019 01:01:39 +0000
+Received: from BN8PR18MB2868.namprd18.prod.outlook.com
+ ([fe80::431:e92e:ca76:f241]) by BN8PR18MB2868.namprd18.prod.outlook.com
+ ([fe80::431:e92e:ca76:f241%5]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 01:01:39 +0000
+From:   Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
+To:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     "peterz@infradead.org" <peterz@infradead.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "will@kernel.org" <will@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        "gklkml16@gmail.com" <gklkml16@gmail.com>
+Subject: [PATCH 0/2] Workaround for ThunderX2 erratum 221
+Thread-Topic: [PATCH 0/2] Workaround for ThunderX2 erratum 221
+Thread-Index: AQHVlD2+Hbd68lyaXEuRVf5Y/wFAFw==
+Date:   Wed, 6 Nov 2019 01:01:39 +0000
+Message-ID: <1573002091-9744-1-git-send-email-gkulkarni@marvell.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: BYAPR11CA0087.namprd11.prod.outlook.com
+ (2603:10b6:a03:f4::28) To BN8PR18MB2868.namprd18.prod.outlook.com
+ (2603:10b6:408:a2::27)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 1.8.3.1
+x-originating-ip: [199.233.59.128]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: e681de9a-873d-475f-003f-08d76254e112
+x-ms-traffictypediagnostic: BN8PR18MB2804:
+x-microsoft-antispam-prvs: <BN8PR18MB280492D82BC5ED5E5F6BD1C3B2790@BN8PR18MB2804.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7219;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(396003)(136003)(366004)(376002)(39860400002)(199004)(189003)(4744005)(8676002)(99286004)(81166006)(81156014)(2906002)(316002)(2501003)(50226002)(8936002)(54906003)(110136005)(3846002)(6116002)(36756003)(476003)(25786009)(14454004)(186003)(478600001)(26005)(102836004)(66066001)(386003)(6506007)(486006)(2201001)(2616005)(86362001)(66556008)(71200400001)(71190400001)(256004)(14444005)(7736002)(305945005)(4720700003)(52116002)(66446008)(64756008)(6486002)(66476007)(66946007)(6436002)(4326008)(6512007)(5660300002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN8PR18MB2804;H:BN8PR18MB2868.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: gdPAi0IudJncwAfHg3+ydnPPFyFxgek/aHbqJCznAPxBbNDAXxnjjxkheGlr09As5JdFV4BLn6MaXLn63Ak88vFWBrOmOoa2wfmgJaPApZmVXndcRPcQooW0EUVWsC3L2u4Wyh2ZmBh0iYzonDE+f2shifTwEmmyJg2ZVTqe9rNlh4Ay7qr4xz9q/G5ML2D3ZgE4kVZP03ntWcBbhapH5TySTt+8NzAYRPVqyQjmDW1P7zxMqMUWi6Noa1dqOX9+5xcHUDxld8dtgtpGRQ8ccdh5m4u8PcfU0qDG9ySY13J/7BCXw4Rt8yv07WYddGp06sO8AKQQU6HTEdhA8pGjh2pAnERFEgTzBVJMC4kTCUvEX65eKogoQ6EDyTFj+OmwaXhILHN2K8H6n5Jq2U9ljTTslrsDgGPWwxbbFXNtrVluweTRoidorIDnujAWkyGD
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: e681de9a-873d-475f-003f-08d76254e112
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 01:01:39.1091
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 5PK8DoYlw8CL9xo8CTeKpVGq0Q7G//xt9sFMHdXPA8JEn5gikxzQVb9ehfRoaEQQan6DSpVu+QFW3GTvANX5QQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN8PR18MB2804
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,1.0.8
+ definitions=2019-11-05_09:2019-11-05,2019-11-05 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This erratum is found when system hang reported by internal
+benchmarking team while they were trying ThunderX2 PMU uncore
+events along with cpu/memory intensive applications like stream,
+SPECjbb, SPECInt, etc.
 
+The workaround is to disable event multiplexing.
 
-On 11/5/2019 9:03 PM, Paolo Bonzini wrote:
-> On 05/11/19 13:51, Xiaoyao Li wrote:
->> On 11/5/2019 7:30 PM, Paolo Bonzini wrote:
->>> On 05/11/19 10:20, Chenyi Qiang wrote:
->>>> The three msr number lists(msrs_to_save[], emulated_msrs[] and
->>>> msr_based_features[]) are global arrays of kvm.ko, which are
->>>> initialized/adjusted (copy supported MSRs forward to override the
->>>> unsupported MSRs) when installing kvm-{intel,amd}.ko, but it doesn't
->>>> reset these three arrays to their initial value when uninstalling
->>>> kvm-{intel,amd}.ko. Thus, at the next installation, kvm-{intel,amd}.ko
->>>> will initialize the modified arrays with some MSRs lost and some MSRs
->>>> duplicated.
->>>>
->>>> So allocate and initialize these three MSR number lists dynamically when
->>>> installing kvm-{intel,amd}.ko and free them when uninstalling.
->>>>
->>>> Cc: stable@vger.kernel.org
->>>> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
->>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
->>>> ---
->>>>    arch/x86/kvm/x86.c | 86 ++++++++++++++++++++++++++++++----------------
->>>>    1 file changed, 57 insertions(+), 29 deletions(-)
->>>>
->>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
->>>> index ff395f812719..08efcf6351cc 100644
->>>> --- a/arch/x86/kvm/x86.c
->>>> +++ b/arch/x86/kvm/x86.c
->>>> @@ -1132,13 +1132,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
->>>>     * List of msr numbers which we expose to userspace through
->>>> KVM_GET_MSRS
->>>>     * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
->>>>     *
->>>> - * This list is modified at module load time to reflect the
->>>> + * The three msr number lists(msrs_to_save, emulated_msrs,
->>>> msr_based_features)
->>>> + * are allocated and initialized at module load time and freed at
->>>> unload time.
->>>> + * msrs_to_save is selected from the msrs_to_save_all to reflect the
->>>>     * capabilities of the host cpu. This capabilities test skips MSRs
->>>> that are
->>>> - * kvm-specific. Those are put in emulated_msrs; filtering of
->>>> emulated_msrs
->>>> + * kvm-specific. Those are put in emulated_msrs_all; filtering of
->>>> emulated_msrs
->>>>     * may depend on host virtualization features rather than host cpu
->>>> features.
->>>>     */
->>>>    -static u32 msrs_to_save[] = {
->>>> +const u32 msrs_to_save_all[] = {
->>>
->>> This can remain static.
->>
->> How about static const u32 msrs_to_save_all[] ?
->>
->> Or you think static is enough?
-> 
-> "static const" is best indeed (that's what I meant, but I wasn't very
-> clear).
-> 
+The current Perf core does not provide any provision to PMUs
+to disable event multiplexing. In first patch, adding PMU
+capability to disable event multiplexing in perf core.
+In second patch, setting the capability to disable for
+the ThunderX2 UNCORE PMUs.
 
-Yes, considering the read-only property and scope of these arrays, 
-"static const" is more accurate. Thanks.
+Ganapatrao Prabhakerrao Kulkarni (2):
+  perf/core: Adding capability to disable PMUs event multiplexing
+  Thunderx2, uncore: Add workaround for ThunderX2 erratum 221
 
-> Paolo
-> 
->>>>        MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP,
->>>> MSR_IA32_SYSENTER_EIP,
->>>>        MSR_STAR,
->>>>    #ifdef CONFIG_X86_64
->>>> @@ -1179,9 +1181,10 @@ static u32 msrs_to_save[] = {
->>>>        MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
->>>>    };
->>>>    +static u32 *msrs_to_save;
->>>
->>> You can use ARRAY_SIZE to allocate the destination arrays statically.
->>
->> It's much better, then we don't need to allocation and free.
->>
+ Documentation/admin-guide/perf/thunderx2-pmu.rst | 9 +++++++++
+ drivers/perf/thunderx2_pmu.c                     | 3 ++-
+ include/linux/perf_event.h                       | 1 +
+ kernel/events/core.c                             | 8 ++++++++
+ 4 files changed, 20 insertions(+), 1 deletion(-)
 
-Got it. Thanks!
+--=20
+2.17.1
 
->>> Paolo
->>>
-> 
