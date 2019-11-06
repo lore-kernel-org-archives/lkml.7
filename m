@@ -2,164 +2,114 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DF7C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C73C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:17:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 620FE2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PQGhudb9"
+	by mail.kernel.org (Postfix) with ESMTP id ACBE22067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:17:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573013833;
+	bh=zsRfHQrQtnfc54A/CM8ZP89661pnhSCbCHe1FUEiTCI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hS1sw5rlGiZ2XGl5ixKWwb3GFALuWuED7Su+muSS9j0o56fUcRDM9qdFlZpBN3UrO
+	 YLml+OJ/ct+pL13uCd5P7Kpm+Rwo4EUDp1Y4RagM8tRdbmaogvCzPvqKQdEx5yVXi4
+	 gaZDvvZGHLzypWMYPkD1USs+S5t86LSKAkP0TcrY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731226AbfKFEQc (ORCPT
+        id S1731239AbfKFERM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:16:32 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:33463 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfKFEQc (ORCPT
+        Tue, 5 Nov 2019 23:17:12 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:42065 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727830AbfKFERM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:16:32 -0500
-Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id xA64GQDP008203;
-        Wed, 6 Nov 2019 13:16:27 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xA64GQDP008203
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573013787;
-        bh=oq2kVTgJnhwHzQg6FYk0N33Gkp9WTDpEnW/af98rhL8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=PQGhudb9I08q8LPWfnqoOWuLLs5X+mGpAQziK25vEzrTIvYt5zBVFCgvQeaD6mSNz
-         8nSM9Wjtt2ecKL1ccG0YsJF7zaLURVJ2xhI3uR22YINY4XebxpTOp+AtO7wtittIvI
-         HMfhOphz2kfwtkGaQMet8OjJXAwwH1/suWVnpEq2F5RNCGx++35U357xEETqnsau4U
-         yNNj0rlxBtKHWbU2ux4iDicg9Lz5ugIsrpVOeaYClNH4HZBOsMdzyS+ezqk3HfhAL7
-         wG+cJ0dR5LNC5A8rnFkn3D/SwDefQ46T1V2PFAm1g3zaRhN8GtS89t6lvLnKTixTXf
-         u4eUobhmuJkzQ==
-X-Nifty-SrcIP: [209.85.217.49]
-Received: by mail-vs1-f49.google.com with SMTP id k15so15073726vsp.2;
-        Tue, 05 Nov 2019 20:16:26 -0800 (PST)
-X-Gm-Message-State: APjAAAUHHw2T/9q6kXRIyMsPOyIwWAqEpXstB6PNGZapLcdsVqnUIv+c
-        VUxBvlRJSiGi9em89O5uHCgO8Iei8b9plZYpJKE=
-X-Google-Smtp-Source: APXvYqyj2fn6n6xfIF0zWdZVbfoYZNCKmN0aECMFEX4AODzPIGTNIPvyzpVHP4cWRdHOCSwn4LNzAWBWw3vOWk/7IsE=
-X-Received: by 2002:a05:6102:726:: with SMTP id u6mr262077vsg.179.1573013785785;
- Tue, 05 Nov 2019 20:16:25 -0800 (PST)
+        Tue, 5 Nov 2019 23:17:12 -0500
+Received: by mail-ot1-f66.google.com with SMTP id b16so19691859otk.9;
+        Tue, 05 Nov 2019 20:17:10 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Pasjx8CSERkmvokF+MIWXBinQV2inOneX0DH/i8NKYE=;
+        b=U+LJqdGjDkkNh+3qJ1z9xTR8oWWZJdxenpqDWaJpcBywxHrvKKcF5Jpt5jRd8jFLWU
+         SUANNssHnY1UEXfH/4JuxBZ+ndX6Tcrz3nZ+4rqP9DzVKcrCZRXV0SEYq0a7uoH3UsqM
+         ZM6p0xq4vqOffZn2gx7J6A/XqITbwgAT9YKiYzdXn/94Kixky+1HEqXEIx2DVhWRU+tA
+         iAxl4ylykSA7kWo3Tkmvdrxf8zDkFZCqrrWTlEvAxfmLWknNihSd0auVBTORHrOCMtYp
+         qxgnYrlfH8Y9XBbqGkFVbLC4Pxioox8rjHwFqVm0XEzPx2g4EepifuOd3zSCx612FGku
+         QX4A==
+X-Gm-Message-State: APjAAAVMXvtJpQOa1PBbpunGut38fyv/N4yJk2jRJ6QvyJeFVCu/bh6e
+        nxAQ+Snb1sp98iHcFYjDDQ==
+X-Google-Smtp-Source: APXvYqymW3STVwrnKyM7oB8B3KKofNBMHecjlu2u2+qn0yFU8UaxgzxpuvOLNAN28Z1FkkCBVB69Ew==
+X-Received: by 2002:a05:6830:1e84:: with SMTP id n4mr262047otr.233.1573013829794;
+        Tue, 05 Nov 2019 20:17:09 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id e193sm837103oib.53.2019.11.05.20.17.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 20:17:09 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:17:08 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Chun-Hung Wu <chun-hung.wu@mediatek.com>
+Cc:     Chaotian Jing <chaotian.jing@mediatek.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Pavel Machek <pavel@ucw.cz>,
+        Kate Stewart <kstewart@linuxfoundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Pan Bian <bianpan2016@163.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Stanley Chu <stanley.chu@mediatek.com>,
+        Kuohong Wang <kuohong.wang@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        wsd_upstream@mediatek.com, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 3/3] [3/3] dt-bindings: mmc: mediatek: Add document for
+ mt6779
+Message-ID: <20191106041708.GA26489@bogus>
+References: <1572590582-11056-1-git-send-email-chun-hung.wu@mediatek.com>
+ <1572590582-11056-3-git-send-email-chun-hung.wu@mediatek.com>
 MIME-Version: 1.0
-References: <20191025080544.7209-1-unixbhaskar@gmail.com>
-In-Reply-To: <20191025080544.7209-1-unixbhaskar@gmail.com>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 6 Nov 2019 13:15:50 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
-Message-ID: <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
-Subject: Re: [PATCH] scripts:patch-kernel:bash syntax replace,correct one
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572590582-11056-3-git-send-email-chun-hung.wu@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Oct 25, 2019 at 5:06 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
-> This patch will replace backquote to dollar parenthesis syntax
-> for better readability.Corrected one.
+On Fri, Nov 01, 2019 at 02:43:02PM +0800, Chun-Hung Wu wrote:
+> Add compatible node for mt6779 mmc
+> 
+> Change-Id: Id36a136a75e892c9360ec95c7f52db06f5b308a4
+> CR-Id:
+> Feature:
 
-Talking about the commit subject,
-which part is 'bash syntax' ?
+Remove these tags.
 
-One more thing,
-"correct one" is not the correct way to send
-a new patch version.
-See the patch submission from other people.
-The version number is enclosed in the square brackets.
-
-[PATCH v2]
-
-
-The commit subject should describe what it does
-in imperative mood.
-
-https://patchwork.kernel.org/patch/11205593/
-
-
-
-
-
-> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> Signed-off-by: Chun-Hung Wu <chun-hung.wu@mediatek.com>
 > ---
->  scripts/patch-kernel | 14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
->
-> diff --git a/scripts/patch-kernel b/scripts/patch-kernel
-> index 033d5916797d..6f9443336f9a 100755
-> --- a/scripts/patch-kernel
-> +++ b/scripts/patch-kernel
-> @@ -153,7 +153,7 @@ applyPatch () {
->      echo "failed.  Clean up yourself."
->      return 1;
->    fi
-> -  if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
-> +  if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
->    then
->      echo "Aborting.  Reject files found."
->      return 1;
-> @@ -175,7 +175,7 @@ reversePatch () {
->                 echo "failed.  Clean it up."
->                 exit 1
->         fi
-> -       if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
-> +       if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
->         then
->                 echo "Aborting.  Reject files found."
->                 return 1
-> @@ -189,7 +189,7 @@ reversePatch () {
->  # set current VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
->  # force $TMPFILEs below to be in local directory: a slash character prevents
->  # the dot command from using the search path.
-> -TMPFILE=`mktemp ./.tmpver.XXXXXX` || { echo "cannot make temp file" ; exit 1; }
-> +TMPFILE=$(mktemp ./.tmpver.XXXXXX) || { echo "cannot make temp file" ; exit 1; }
->  grep -E "^(VERSION|PATCHLEVEL|SUBLEVEL|EXTRAVERSION)" $sourcedir/Makefile > $TMPFILE
->  tr -d [:blank:] < $TMPFILE > $TMPFILE.1
->  . $TMPFILE.1
-> @@ -200,7 +200,7 @@ then
->      exit 1
->  fi
->
-> -NAME=`grep ^NAME $sourcedir/Makefile`
-> +NAME=$(grep ^NAME $sourcedir/Makefil)
->  NAME=${NAME##*=}
->
->  echo "Current kernel version is $VERSION.$PATCHLEVEL.$SUBLEVEL${EXTRAVERSION} ($NAME)"
-> @@ -216,8 +216,8 @@ fi
->
->  #echo "stopvers=$stopvers"
->  if [ $stopvers != "default" ]; then
-> -       STOPSUBLEVEL=`echo $stopvers | cut -d. -f3`
-> -       STOPEXTRA=`echo $stopvers | cut -d. -f4`
-> +       STOPSUBLEVEL=$(echo $stopvers | cut -d. -f3)
-> +       STOPEXTRA=$(echo $stopvers | cut -d. -f4)
->         STOPFULLVERSION=${stopvers%%.$STOPEXTRA}
->         #echo "#___STOPSUBLEVEL=/$STOPSUBLEVEL/, STOPEXTRA=/$STOPEXTRA/"
->  else
-> @@ -306,7 +306,7 @@ if [ x$gotac != x ]; then
->                 HIGHESTPATCH=0
->                 for PATCHNAMES in $patchdir/patch-${CURRENTFULLVERSION}-ac*\.*
->                 do
-> -                       ACVALUE=`echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/'`
-> +                       ACVALUE=$(echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/')
->                         # Check it is actually a recognised patch type
->                         findFile $patchdir/patch-${CURRENTFULLVERSION}-ac${ACVALUE} || break
->
-> --
-> 2.20.1
->
-
-
---
-Best Regards
-Masahiro Yamada
+>  Documentation/devicetree/bindings/mmc/mtk-sd.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/mtk-sd.txt b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> index 8a532f4..0c9cf6a 100644
+> --- a/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mtk-sd.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>  	"mediatek,mt8173-mmc": for mmc host ip compatible with mt8173
+>  	"mediatek,mt8183-mmc": for mmc host ip compatible with mt8183
+>  	"mediatek,mt8516-mmc": for mmc host ip compatible with mt8516
+> +	"mediatek,mt6779-mmc": for mmc host ip compatible with mt6779
+>  	"mediatek,mt2701-mmc": for mmc host ip compatible with mt2701
+>  	"mediatek,mt2712-mmc": for mmc host ip compatible with mt2712
+>  	"mediatek,mt7622-mmc": for MT7622 SoC
+> -- 
+> 1.9.1
+> 
