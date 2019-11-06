@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A49A5C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83D98C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8039C2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61472217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732311AbfKFTWn (ORCPT
+        id S1732365AbfKFTWq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:22:43 -0500
-Received: from mga02.intel.com ([134.134.136.20]:50594 "EHLO mga02.intel.com"
+        Wed, 6 Nov 2019 14:22:46 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50608 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732263AbfKFTWl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:22:41 -0500
+        id S1732320AbfKFTWo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:22:44 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:41 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:43 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="403835112"
+   d="scan'208";a="403835126"
 Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:39 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:42 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 08/19] soundwire: intel: reset pm_runtime status during system resume
-Date:   Wed,  6 Nov 2019 13:22:12 -0600
-Message-Id: <20191106192223.6003-9-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 10/19] soundwire: intel: call helper to reset Slave states on resume
+Date:   Wed,  6 Nov 2019 13:22:14 -0600
+Message-Id: <20191106192223.6003-11-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
 References: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
@@ -51,93 +51,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The system resume does the entire bus re-initialization and brings it
-to full-power. If the device was pm_runtime suspended, there is no
-need to run the pm_runtime resume sequence after the system runtime.
-
-Follow the documentation from runtime_pm.rst, and conditionally
-disable, set_active and re-enable the device on system resume.
+This helps make sure they are all UNATTACHED.
 
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel.c     | 30 ++++++++++++++++++++++++++++++
- include/linux/soundwire/sdw.h |  1 +
- 2 files changed, 31 insertions(+)
+ drivers/soundwire/intel.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index 650581348732..c3cd7d2d5a34 100644
+index c3cd7d2d5a34..36e09e273eda 100644
 --- a/drivers/soundwire/intel.c
 +++ b/drivers/soundwire/intel.c
-@@ -1298,6 +1298,7 @@ static int intel_master_remove(struct sdw_master_device *md)
- 
- static int intel_suspend(struct device *dev)
- {
-+	struct sdw_master_device *md = to_sdw_master_device(dev);
- 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
- 	int ret;
-@@ -1308,6 +1309,20 @@ static int intel_suspend(struct device *dev)
- 		return 0;
+@@ -1435,6 +1435,9 @@ static int intel_resume_runtime(struct device *dev)
+ 		return ret;
  	}
  
-+	if (pm_runtime_status_suspended(dev)) {
-+		dev_dbg(dev,
-+			"%s: pm_runtime status: suspended\n",
-+			__func__);
++	/* make sure all Slaves are tagged as UNATTACHED */
++	sdw_clear_slave_status(&sdw->cdns.bus);
 +
-+		/*
-+		 * keep track of the state for the system resume, where
-+		 * we will need to reset the pm_runtime status to active
-+		 */
-+		md->pm_runtime_suspended = true;
-+
-+		return 0;
-+	}
-+
- 	ret = sdw_cdns_enable_interrupt(cdns, false);
+ 	ret = sdw_cdns_enable_interrupt(cdns, true);
  	if (ret < 0) {
- 		dev_err(dev, "cannot disable interrupts on suspend\n");
-@@ -1356,6 +1371,7 @@ static int intel_suspend_runtime(struct device *dev)
- 
- static int intel_resume(struct device *dev)
- {
-+	struct sdw_master_device *md = to_sdw_master_device(dev);
- 	struct sdw_cdns *cdns = dev_get_drvdata(dev);
- 	struct sdw_intel *sdw = cdns_to_intel(cdns);
- 	int ret;
-@@ -1366,6 +1382,20 @@ static int intel_resume(struct device *dev)
- 		return 0;
- 	}
- 
-+	if (md->pm_runtime_suspended) {
-+		dev_dbg(dev,
-+			"%s: pm_runtime status was suspended, forcing active\n",
-+			__func__);
-+
-+		/* follow required sequence from runtime_pm.rst */
-+		pm_runtime_disable(dev);
-+		pm_runtime_set_active(dev);
-+		pm_runtime_mark_last_busy(dev);
-+		pm_runtime_enable(dev);
-+
-+		md->pm_runtime_suspended = false;
-+	}
-+
- 	ret = intel_init(sdw);
- 	if (ret) {
- 		dev_err(dev, "%s failed: %d", __func__, ret);
-diff --git a/include/linux/soundwire/sdw.h b/include/linux/soundwire/sdw.h
-index 17ec786d3a15..c06c515abad9 100644
---- a/include/linux/soundwire/sdw.h
-+++ b/include/linux/soundwire/sdw.h
-@@ -583,6 +583,7 @@ struct sdw_master_device {
- 	struct device dev;
- 	int link_id;
- 	struct sdw_md_driver *driver;
-+	bool pm_runtime_suspended;
- 	void *pdata; /* core does not touch */
- };
- 
+ 		dev_err(dev, "cannot enable interrupts during resume\n");
 -- 
 2.20.1
 
