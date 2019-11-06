@@ -2,104 +2,66 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2071FC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF09CC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D96E92077C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573039031;
-	bh=MofkAeh32ygz8kQiJ/NW8nxCM7dhfQeKB7/bbaa70aU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Wv9ONMBn9a/fAo3k81NslWcor2NpGXxmiUaiPWm+cgtGs2BOJWrIwgVnOKsv9TxOB
-	 vNHkDmXmgZYtXNjbVvw7VraFS5fqPAYejzCZR1u1TWW2fhkGgUOBs33VnBdzwtiOk1
-	 Xeek3DUHKb3Lg2yWDsNMq+COzjc+Y2hIoQfXvaEQ=
+	by mail.kernel.org (Postfix) with ESMTP id B5CE02077C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730322AbfKFLRJ (ORCPT
+        id S1731285AbfKFLRv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:17:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 06:17:51 -0500
+Received: from foss.arm.com ([217.140.110.172]:38072 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfKFLRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:17:09 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 12B192067B;
-        Wed,  6 Nov 2019 11:17:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573039028;
-        bh=MofkAeh32ygz8kQiJ/NW8nxCM7dhfQeKB7/bbaa70aU=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ns9bAC0NqPB9Y8HYDug8Evp+nR+wHYk3/sqAjAcgF9twD05PXqHjgA7LBc6r7yiEa
-         SFCzyhXELwHDKfwXqsCuv4Pr8PdDIWLg23rSncp1FMWKdvzJLkrYtnJbD54ae9/woL
-         D4AinOxxBdoy3rg7i7xRze7VjeSoujc7MhNEd64U=
-Date:   Wed, 6 Nov 2019 12:17:06 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Oliver Neukum <oneukum@suse.com>
-Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
-        Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 4.9 37/62] UAS: Revert commit 3ae62a42090f ("UAS: fix
- alignment of scatter/gather segments")
-Message-ID: <20191106111706.GA3033188@kroah.com>
-References: <20191104211901.387893698@linuxfoundation.org>
- <20191104211940.713506931@linuxfoundation.org>
- <1572964268.2921.19.camel@suse.com>
- <20191106001102.GI4787@sasha-vm>
- <1573026302.3090.2.camel@suse.com>
+        id S1725890AbfKFLRv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:17:51 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9152A7A7;
+        Wed,  6 Nov 2019 03:17:48 -0800 (PST)
+Received: from arrakis.emea.arm.com (unknown [10.1.197.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C55D43F6C4;
+        Wed,  6 Nov 2019 03:17:46 -0800 (PST)
+Date:   Wed, 6 Nov 2019 11:17:44 +0000
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Anshuman Khandual <anshuman.khandual@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        David Hildenbrand <david@redhat.com>,
+        Hsin-Yi Wang <hsinyi@chromium.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Steve Capper <steve.capper@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yu Zhao <yuzhao@google.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] arm64: mm: simplify the page end calculation in
+ __create_pgd_mapping()
+Message-ID: <20191106111743.GF21133@arrakis.emea.arm.com>
+References: <20191103123559.8866-1-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1573026302.3090.2.camel@suse.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191103123559.8866-1-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 08:45:02AM +0100, Oliver Neukum wrote:
-> Am Dienstag, den 05.11.2019, 19:11 -0500 schrieb Sasha Levin:
-> > On Tue, Nov 05, 2019 at 03:31:08PM +0100, Oliver Neukum wrote:
-> > > Am Montag, den 04.11.2019, 22:44 +0100 schrieb Greg Kroah-Hartman:
-> > > >         All the host controllers capable of SuperSpeed operation can
-> > > >         handle fully general SG;
-> > > > 
-> > > >         Since commit ea44d190764b ("usbip: Implement SG support to
-> > > >         vhci-hcd and stub driver") was merged, the USB/IP driver can
-> > > >         also handle SG.
-> > > 
-> > > Not in 4.9.x. AFAICT the same story as 4.4.x
-> > > The patch is not strictly needed, but breaks UAS over usbip.
-> > 
-> > It's in 4.9 since April this year... Same story for 4.4.
+On Sun, Nov 03, 2019 at 09:35:58PM +0900, Masahiro Yamada wrote:
+> Calculate the page-aligned end address more simply.
 > 
-> Hi,
+> The local variable, "length" is unneeded.
 > 
-> now I am confused. Neither looking at the logs nor the source
-> I can see the commit. Top commit is
-> 9e48f0c28dd505e39bd136ec92a042b311b127c6
-> of git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
-> 
-> I am sorry for being obnoxious here and it is entirely possible that
-> I am stupid, but this is a discrepancy that needs to be resolved.
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 
-Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments") is
-the patch that is being reverted here, and it is in the following kernel
-releases:
-	4.4.180 4.9.175 4.14.118 4.19.42 5.0.15 5.1.1 5.2
-And it is causing known issues, so we should revert it.
+Queued for 5.5. Thanks.
 
-Now if usbip breaks with this revert, we should add the newer patch that
-keeps it working properly, is that what you are thinking that
-ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub driver")
-is?
-
-thanks,
-
-greg k-h
+-- 
+Catalin
