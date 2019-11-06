@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C96D2C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14444C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A77D217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C6D48217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FEKUt/CI"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="YS81HEYN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731167AbfKFDJN (ORCPT
+        id S1731177AbfKFDJR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:09:13 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:44878 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731131AbfKFDJM (ORCPT
+        Tue, 5 Nov 2019 22:09:17 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:41372 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731131AbfKFDJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:09:12 -0500
-Received: by mail-pf1-f194.google.com with SMTP id q26so17709671pfn.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:09:12 -0800 (PST)
+        Tue, 5 Nov 2019 22:09:15 -0500
+Received: by mail-pf1-f193.google.com with SMTP id p26so17722225pfq.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:09:14 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=MbFjCcAubd11uC4jn25Hggo8LJLFYUWUem/fHxABFTk=;
-        b=FEKUt/CI+v+uoMiHa4DN5cE1nnITW5AZOfT6jXOsFTkw/ZGuaRhlwL33bXq2KOYzOJ
-         fbt7cSQ7ipBXtHdx79ufPvA2Rpjbsm67YLO0KOme19TNyDOCC3qvr7MvWNto3Lio/UhH
-         rELinsD9fmyfXXjvXyW5wYO5VKJFzG64AnPXdR9gM2vFJQGeYezPve6ADxo6mTM19EDf
-         iXR3LhxMc2/T664FpxBhu91nbf+QC3z7E9t4WK6oqyTuzLEKBBrb8xUL61zWgOiFN5co
-         H5burYeP2hKe8553Bc3GBunPVq46LseahtmTOXXOQp5Gliwb6yBCad6bpPnWnY6z8MDh
-         XNRA==
+        bh=dB7fFw32rtoRG2JD28kol5jcf3rR2T1j0ow9Tcr0Ndo=;
+        b=YS81HEYNXq+/54UHLJ3cwesb4UYyI4Z0SgZ3bISdz06YMV1TRRTSQQRmbp1u276VyT
+         oDqJOGIRTnlqhRCKHx2vgq2yT0ZjhpletQzgLJ6nlhkmFTRNEpxyGDiN3o1fS3u0aGqS
+         BDpg2SYzZGOtQc1IDTYpD90OFAvqor24PwYTIV7fN3hPbqlnhJKhXQSAN0bEhTEzTAjP
+         jMWCcUfl7vkvuiJQCFzCQbQ5NFssmIeSt+va5LBjbZeWHzSIfyItu8POCO/S6TtFKMVD
+         mG6d1WjRTEphxRI86yGAnbZ8/FB3qReOBDJ7GSdmLxHbG3/NhKV6Nnury5sKSnL9HkDl
+         t81w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=MbFjCcAubd11uC4jn25Hggo8LJLFYUWUem/fHxABFTk=;
-        b=lff5zTlL/aoRC9VSFoaSRCEWALTU5imonGHLeYgiYnovKErFtA4o0RHwx9ah7JgWD2
-         ijbHTN2d16Xl3qa3xEi9BXJ80TUBumW3cSNJ1Xs/elTR4FWQbBNHOOx+D8zgEbXV1+wt
-         LRdtAryPSkrxV0O0IhU/lNs4jtRdvUlwt6SyxtGD9d64knrZnDDqy/uWpxYzbUkwDydY
-         a/MqkoxKAFQVofgrpu8yayjcqdnCxGUTpdB2VuwL56oZ4TfMfQZXpBBrbFUGOh6HwOqI
-         6QXcbTzQ0I9bVYoRpIl96qOxHbQhOruV2ko5jVAJDAr8dTLMb6XpQ1spG3PJuedqbAML
-         hHow==
-X-Gm-Message-State: APjAAAV2ff85zXHH6MQdbBkTS8E2IyQODlvWSm+n1Pb8esmoVmF2KGdr
-        Cv1cqeakGGewCh1J4/sf1N7H4vcf8XA=
-X-Google-Smtp-Source: APXvYqxkEDOGkuoqfX+brJqg5uvyvczdQs5nnxdgLvS8d5e3/i1UmiBjK16f/wM5RXUhQq0sKHYIyA==
-X-Received: by 2002:a17:90a:22a6:: with SMTP id s35mr604467pjc.3.1573009750094;
-        Tue, 05 Nov 2019 19:09:10 -0800 (PST)
+        bh=dB7fFw32rtoRG2JD28kol5jcf3rR2T1j0ow9Tcr0Ndo=;
+        b=Pk5HE/VNn8KDEMghgyx2w0xVzgqIO7LvQkMQ6HPNS2ZK+4A/1Dg4hvnnxKdowS5GmQ
+         evSNEpsTElHSGtwActbG5j5TmLyI+O74UcUeTjiPqBAm/pNcbEyea8HqODKfJGFtYHfa
+         pfs7Zl6BnMU4byygGHvmKI2xcrUGZwXYYaUQBxH2NS6UacVMaAZOv1M9WYpWeJTXBTsp
+         bFFEMKzgsmSbxKWv/Hxhwl2Y6TEgLXOtTZcQIUOvcch98oZAOpAgOsI4Vuer9OMjJIcz
+         u37f6pWaE88a15vb8iBs0odhEk00EmHSMFfP6nQ5ScGulMPYIaU4PUBpF/q/sCx4nakt
+         91Fg==
+X-Gm-Message-State: APjAAAUNG0wTk3d539xJENueLxfqgwm+I4FF0UGL5mWSUSx19yUOKHF4
+        okoeemAZL6GY6GL2mseqnn5W151PrVU=
+X-Google-Smtp-Source: APXvYqzj5jp+Mwfalxwrqp2vavSt0MHXskm5wqlU05HKC/SIXB1uovgVJKU9J9MkMKmfIrqr/PDL8A==
+X-Received: by 2002:a63:af13:: with SMTP id w19mr177011pge.189.1573009753631;
+        Tue, 05 Nov 2019 19:09:13 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.09.06
+        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.09.10
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:09:09 -0800 (PST)
+        Tue, 05 Nov 2019 19:09:12 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,16 +67,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Ben Segall <bsegall@google.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
         Ingo Molnar <mingo@redhat.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
         Peter Zijlstra <peterz@infradead.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>
-Subject: [PATCH 48/50] sched: Print stack trace with KERN_INFO
-Date:   Wed,  6 Nov 2019 03:05:39 +0000
-Message-Id: <20191106030542.868541-49-dima@arista.com>
+        Will Deacon <will@kernel.org>
+Subject: [PATCH 49/50] kernel: Use show_stack_loglvl()
+Date:   Wed,  6 Nov 2019 03:05:40 +0000
+Message-Id: <20191106030542.868541-50-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191106030542.868541-1-dima@arista.com>
 References: <20191106030542.868541-1-dima@arista.com>
@@ -87,35 +83,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Aligning with other messages printed in sched_show_task() - use
-KERN_INFO to print the backtrace.
+Align the last users of show_stack() by KERN_DEFAULT as the surrounding
+headers/messages.
 
-Cc: Ben Segall <bsegall@google.com>
-Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
 Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Juri Lelli <juri.lelli@redhat.com>
-Cc: Mel Gorman <mgorman@suse.de>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>
-Cc: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Will Deacon <will@kernel.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- kernel/sched/core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/locking/rtmutex-debug.c | 2 +-
+ lib/dump_stack.c               | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 774ff0d8dfe9..eb50c70e73ea 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -5932,7 +5932,7 @@ void sched_show_task(struct task_struct *p)
- 		(unsigned long)task_thread_info(p)->flags);
+diff --git a/kernel/locking/rtmutex-debug.c b/kernel/locking/rtmutex-debug.c
+index fd4fe1f5b458..5e63d6e8a223 100644
+--- a/kernel/locking/rtmutex-debug.c
++++ b/kernel/locking/rtmutex-debug.c
+@@ -125,7 +125,7 @@ void debug_rt_mutex_print_deadlock(struct rt_mutex_waiter *waiter)
  
- 	print_worker_info(KERN_INFO, p);
--	show_stack(p, NULL);
-+	show_stack_loglvl(p, NULL, KERN_INFO);
- 	put_task_stack(p);
+ 	printk("\n%s/%d's [blocked] stackdump:\n\n",
+ 		task->comm, task_pid_nr(task));
+-	show_stack(task, NULL);
++	show_stack_loglvl(task, NULL, KERN_DEFAULT);
+ 	printk("\n%s/%d's [current] stackdump:\n\n",
+ 		current->comm, task_pid_nr(current));
+ 	dump_stack();
+diff --git a/lib/dump_stack.c b/lib/dump_stack.c
+index 5cff72f18c4a..efb8e651709d 100644
+--- a/lib/dump_stack.c
++++ b/lib/dump_stack.c
+@@ -74,7 +74,7 @@ void show_regs_print_info(const char *log_lvl)
+ static void __dump_stack(void)
+ {
+ 	dump_stack_print_info(KERN_DEFAULT);
+-	show_stack(NULL, NULL);
++	show_stack_loglvl(NULL, NULL, KERN_DEFAULT);
  }
- EXPORT_SYMBOL_GPL(sched_show_task);
+ 
+ /**
 -- 
 2.23.0
 
