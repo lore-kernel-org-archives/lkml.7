@@ -2,145 +2,112 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C37EC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40E3CFC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC5A217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0BF1C217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:52:51 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r7Gp67AJ"
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="UWC9KHaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732768AbfKFWwN (ORCPT
+        id S1732835AbfKFWwt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:52:13 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:45652 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727154AbfKFWwN (ORCPT
+        Wed, 6 Nov 2019 17:52:49 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:7648 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727815AbfKFWvr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:52:13 -0500
-Received: by mail-pf1-f196.google.com with SMTP id z4so240260pfn.12;
-        Wed, 06 Nov 2019 14:52:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=u2/FunqG+UkKDpn0+06WTLYPLK034XiOIhC0cH32hb0=;
-        b=r7Gp67AJ5944FsNaRkIK0VzE8k70kSwtF8LpsbOJLHSXK074PHQiFDu2eEwNYuM5GL
-         aHi3RAV2vkptxLiM7NlaIYx+St7ORVUaLJAjK/qzHeIqFObe8Pk0doBPXCv0TRagI/bS
-         KJKDKozHexwdJPz7FhW2FUmclwtpv+dJK40maU+hsjXG/Z7h3heyL2DHDyWuATjAOZjH
-         dlw59UnVlOhl7uO0SUXhA9Fei8q/0OIEdbejECPEhTJogkjQGep8IuU+yZ6nsO/nV9SK
-         KRLVXCL4bwj0Kb0uimhDc97SPta19ngqXrZ5gO1tByS5h2ULCVPc+R++ElX9wNp42Upu
-         i3lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=u2/FunqG+UkKDpn0+06WTLYPLK034XiOIhC0cH32hb0=;
-        b=nyBWqBykw64dkFFzci+te2wik8KHb6oSISkg298KPOsAKZLcHXEEFdKm519d/vdvNY
-         uoW5rJjcKnlq+3vLQ+LibuviAetqR4Xs6B0N9VKXAk589wRQir4u93XNk+Yat0QLb5Da
-         pKhULrONr4MsPjPOMfuOIfdiYvRzVYGSa0ULdJRxTYI/Mz/5WK7hQNRYoBnUFF8Z0FSv
-         o+V8tXjjcxZQcEARDYa9Sq5pIW0uxPgBdIYDqWfKRx1lQ9l1ASbqabkYqPTgfvwLO4y/
-         2VRB+KkURJNIp2ncyMsxUoOIb+5a1wcKdn3oXkRvnmXgBM0PvVDjtjw5wHWzgCsNh480
-         iO9A==
-X-Gm-Message-State: APjAAAX0sYhKcp5VWVF+eqxS4glMdPWyfL5m9zKwxqNuqthgGSH06HLN
-        3Z3OK1PdpKpuXftfcAH8eA==
-X-Google-Smtp-Source: APXvYqwqKvO/yHrO7tYHxUprIGc69ItBfq7sQsOr1wVRxcn8zb8PQiShJz8QAXswaLRRaxjZVbhVFQ==
-X-Received: by 2002:a62:6086:: with SMTP id u128mr6562692pfb.4.1573080732152;
-        Wed, 06 Nov 2019 14:52:12 -0800 (PST)
-Received: from localhost.localdomain ([216.52.21.4])
-        by smtp.gmail.com with ESMTPSA id q26sm102679pgk.60.2019.11.06.14.52.11
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 06 Nov 2019 14:52:11 -0800 (PST)
-From:   Praveen Chaudhary <praveen5582@gmail.com>
-X-Google-Original-From: Praveen Chaudhary <pchaudhary@linkedin.com>
-To:     fw@strlen.de, pablo@netfilter.org, davem@davemloft.net,
-        kadlec@netfilter.org, netfilter-devel@vger.kernel.org,
-        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Zhenggen Xu <zxu@linkedin.com>,
-        Andy Stracner <astracner@linkedin.com>
-Subject: [PATCH v3] [net]: Fix skb->csum update in inet_proto_csum_replace16().
-Date:   Wed,  6 Nov 2019 14:52:09 -0800
-Message-Id: <1573080729-3102-2-git-send-email-pchaudhary@linkedin.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
-References: <1573080729-3102-1-git-send-email-pchaudhary@linkedin.com>
+        Wed, 6 Nov 2019 17:51:47 -0500
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6MmG0F020832
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 14:51:47 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=facebook; bh=b0a5BpouPO7gAbWCAkVMisyIA5YcsFbBQ4BU5Ai03bM=;
+ b=UWC9KHaEbkVNUgaOoSvyamwSww4roUVDbdPbnYQhZxJ7ke8Sipknv7Bzpb70NkOa250y
+ vx2vnKWmC31tAjS4mXDvVo7DrSWpJoKmDiTsG016ZvPhCG+/JJuY8HUc2d9AbGkrw6Uv
+ TPh1fqXjxmk9UJWlYzacTYonZu2bTOj+Wis= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w41vxssww-3
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:51:47 -0800
+Received: from 2401:db00:30:6012:face:0:17:0 (2620:10d:c081:10::13) by
+ mail.thefacebook.com (2620:10d:c081:35::126) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA) id 15.1.1713.5;
+ Wed, 6 Nov 2019 14:51:45 -0800
+Received: by devvm2643.prn2.facebook.com (Postfix, from userid 111017)
+        id 60B3D19E16A83; Wed,  6 Nov 2019 14:51:44 -0800 (PST)
+Smtp-Origin-Hostprefix: devvm
+From:   Roman Gushchin <guro@fb.com>
+Smtp-Origin-Hostname: devvm2643.prn2.facebook.com
+To:     <linux-mm@kvack.org>, Andrew Morton <akpm@linux-foundation.org>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        <linux-kernel@vger.kernel.org>, <kernel-team@fb.com>,
+        Roman Gushchin <guro@fb.com>, <stable@vger.kernel.org>,
+        Tejun Heo <tj@kernel.org>
+Smtp-Origin-Cluster: prn2c23
+Subject: [PATCH 2/2] mm: hugetlb: switch to css_tryget() in hugetlb_cgroup_charge_cgroup()
+Date:   Wed, 6 Nov 2019 14:51:31 -0800
+Message-ID: <20191106225131.3543616-2-guro@fb.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191106225131.3543616-1-guro@fb.com>
+References: <20191106225131.3543616-1-guro@fb.com>
+X-FB-Internal: Safe
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_08:2019-11-06,2019-11-06 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 priorityscore=1501
+ malwarescore=0 lowpriorityscore=0 impostorscore=0 clxscore=1015 mlxscore=0
+ suspectscore=0 bulkscore=0 phishscore=0 adultscore=0 mlxlogscore=752
+ spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911060219
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-skb->csum is updated incorrectly, when manipulation for NF_NAT_MANIP_SRC\DST
-is done on IPV6 packet.
+An exiting task might belong to an offline cgroup. In this case
+an attempt to grab a cgroup reference from the task can end up
+with an infinite loop in hugetlb_cgroup_charge_cgroup(), because
+neither the cgroup will become online, neither the task will
+be migrated to a live cgroup.
 
-Fix:
-No need to update skb->csum in function inet_proto_csum_replace16(), even if
-skb->ip_summed == CHECKSUM_COMPLETE, because change in L4 header checksum field
-and change in IPV6 header cancels each other for skb->csum calculation.
+Fix this by switching over to css_tryget(). As css_tryget_online()
+can't guarantee that the cgroup won't go offline, in most cases
+the check doesn't make sense. In this particular case users of
+hugetlb_cgroup_charge_cgroup() are not affected by this change.
 
-Signed-off-by: Praveen Chaudhary <pchaudhary@linkedin.com>
-Signed-off-by: Zhenggen Xu <zxu@linkedin.com>
-Signed-off-by: Andy Stracner <astracner@linkedin.com>
+A similar problem is described by commit 18fa84a2db0e ("cgroup: Use
+css_tryget() instead of css_tryget_online() in task_get_css()").
 
-Reviewed-by: Florian Westphal <fw@strlen.de>
+Signed-off-by: Roman Gushchin <guro@fb.com>
+Cc: stable@vger.kernel.org
+Cc: Tejun Heo <tj@kernel.org>
 ---
-Changes in V2.
-1.) Updating diff as per email discussion with Florian Westphal.
-    Since inet_proto_csum_replace16() does incorrect calculation
-    for skb->csum in all cases.
-2.) Change in Commmit logs.
----
+ mm/hugetlb_cgroup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
----
-Changes in V3.
-Addressing Pablo`s Suggesion.
-1.) Updated Subject and description
-2.) Added full documentation of function.
----
----
- net/core/utils.c | 18 +++++++++++++++---
- 1 file changed, 15 insertions(+), 3 deletions(-)
-
-diff --git a/net/core/utils.c b/net/core/utils.c
-index 6b6e51d..af3b5cb 100644
---- a/net/core/utils.c
-+++ b/net/core/utils.c
-@@ -438,6 +438,21 @@ void inet_proto_csum_replace4(__sum16 *sum, struct sk_buff *skb,
- }
- EXPORT_SYMBOL(inet_proto_csum_replace4);
- 
-+/**
-+ * inet_proto_csum_replace16 - update L4 header checksum field as per the
-+ * update in IPv6 Header. Note, there is no need to update skb->csum in this
-+ * function, even if skb->ip_summed == CHECKSUM_COMPLETE, because change in L4
-+ * header checksum field and change in IPV6 header cancels each other for
-+ * skb->csum calculation.
-+ *
-+ * @sum: L4 header checksum field
-+ * @skb: sk_buff for the packet
-+ * @from: old IPv6 address
-+ * @to: new IPv6 address
-+ * @pseudohdr: True if L4 header checksum includes pseudoheader
-+ *
-+ * Return void
-+ */
- void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
- 			       const __be32 *from, const __be32 *to,
- 			       bool pseudohdr)
-@@ -449,9 +464,6 @@ void inet_proto_csum_replace16(__sum16 *sum, struct sk_buff *skb,
- 	if (skb->ip_summed != CHECKSUM_PARTIAL) {
- 		*sum = csum_fold(csum_partial(diff, sizeof(diff),
- 				 ~csum_unfold(*sum)));
--		if (skb->ip_summed == CHECKSUM_COMPLETE && pseudohdr)
--			skb->csum = ~csum_partial(diff, sizeof(diff),
--						  ~skb->csum);
- 	} else if (pseudohdr)
- 		*sum = ~csum_fold(csum_partial(diff, sizeof(diff),
- 				  csum_unfold(*sum)));
+diff --git a/mm/hugetlb_cgroup.c b/mm/hugetlb_cgroup.c
+index f1930fa0b445..2ac38bdc18a1 100644
+--- a/mm/hugetlb_cgroup.c
++++ b/mm/hugetlb_cgroup.c
+@@ -196,7 +196,7 @@ int hugetlb_cgroup_charge_cgroup(int idx, unsigned long nr_pages,
+ again:
+ 	rcu_read_lock();
+ 	h_cg = hugetlb_cgroup_from_task(current);
+-	if (!css_tryget_online(&h_cg->css)) {
++	if (!css_tryget(&h_cg->css)) {
+ 		rcu_read_unlock();
+ 		goto again;
+ 	}
 -- 
-2.7.4
+2.17.1
 
