@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20453C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57BBEC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F17A52067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25DD82067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732468AbfKFTWw (ORCPT
+        id S1732660AbfKFTX2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:22:52 -0500
-Received: from mga02.intel.com ([134.134.136.20]:50613 "EHLO mga02.intel.com"
+        Wed, 6 Nov 2019 14:23:28 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50615 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732392AbfKFTWt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:22:49 -0500
+        id S1732348AbfKFTWu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:22:50 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:48 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:50 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="403835150"
+   d="scan'208";a="403835162"
 Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:47 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:48 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 13/19] soundwire: bus: add initialization_complete signaling
-Date:   Wed,  6 Nov 2019 13:22:17 -0600
-Message-Id: <20191106192223.6003-14-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 14/19] soundwire: intel: disable pm_runtime when removing a master
+Date:   Wed,  6 Nov 2019 13:22:18 -0600
+Message-Id: <20191106192223.6003-15-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
 References: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
@@ -51,83 +51,30 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-init_completion() is called when the Slave device becomes unattached,
-as done with enumeration_complete.
+Prevent race conditions between remove and resume by disabling
+pm_runtime.
 
-The difference with the enumeration_complete case is that complete()
-is signaled when the Slave device is fully initialized after the
-.update_status() callback is called.
+Note that this only takes care of pm_runtime at the Master level, the
+same precautions are needed when removing a Slave device.
 
-A Slave device driver can decide to wait on either of the two
-complete() cases, depending on its initialization code and
-requirements.
-
-Signed-off-by: Rander Wang <rander.wang@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/bus.c   | 8 ++++++++
- drivers/soundwire/slave.c | 1 +
- 2 files changed, 9 insertions(+)
+ drivers/soundwire/intel.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/soundwire/bus.c b/drivers/soundwire/bus.c
-index b18110726273..93856747b934 100644
---- a/drivers/soundwire/bus.c
-+++ b/drivers/soundwire/bus.c
-@@ -648,6 +648,7 @@ static void sdw_modify_slave_status(struct sdw_slave *slave,
- 			__func__, slave->dev_num);
- 
- 		init_completion(&slave->enumeration_complete);
-+		init_completion(&slave->initialization_complete);
- 
- 	} else if (status == SDW_SLAVE_ATTACHED) {
- 		dev_dbg(&slave->dev,
-@@ -1050,6 +1051,7 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
+diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
+index 36e09e273eda..f0f9a6252522 100644
+--- a/drivers/soundwire/intel.c
++++ b/drivers/soundwire/intel.c
+@@ -1275,6 +1275,8 @@ static int intel_master_remove(struct sdw_master_device *md)
  {
- 	enum sdw_slave_status prev_status;
- 	struct sdw_slave *slave;
-+	bool attached_initializing;
- 	int i, ret = 0;
+ 	struct sdw_intel *sdw;
  
- 	/* first check if any Slaves fell off the bus */
-@@ -1095,6 +1097,8 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
- 		if (!slave)
- 			continue;
- 
-+		attached_initializing = false;
++	pm_runtime_disable(&md->dev);
 +
- 		switch (status[i]) {
- 		case SDW_SLAVE_UNATTACHED:
- 			if (slave->status == SDW_SLAVE_UNATTACHED)
-@@ -1121,6 +1125,8 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
- 			if (prev_status == SDW_SLAVE_ALERT)
- 				break;
+ 	sdw = md->pdata;
  
-+			attached_initializing = true;
-+
- 			ret = sdw_initialize_slave(slave);
- 			if (ret)
- 				dev_err(bus->dev,
-@@ -1139,6 +1145,8 @@ int sdw_handle_slave_status(struct sdw_bus *bus,
- 		if (ret)
- 			dev_err(slave->bus->dev,
- 				"Update Slave status failed:%d\n", ret);
-+		if (attached_initializing)
-+			complete(&slave->initialization_complete);
- 	}
- 
- 	return ret;
-diff --git a/drivers/soundwire/slave.c b/drivers/soundwire/slave.c
-index 5c6c744e0713..543f4ddd9de0 100644
---- a/drivers/soundwire/slave.c
-+++ b/drivers/soundwire/slave.c
-@@ -52,6 +52,7 @@ static int sdw_slave_add(struct sdw_bus *bus,
- 	slave->bus = bus;
- 	slave->status = SDW_SLAVE_UNATTACHED;
- 	init_completion(&slave->enumeration_complete);
-+	init_completion(&slave->initialization_complete);
- 	slave->dev_num = 0;
- 	init_completion(&slave->probe_complete);
- 	slave->probed = false;
+ 	if (!sdw->cdns.bus.prop.hw_disabled) {
 -- 
 2.20.1
 
