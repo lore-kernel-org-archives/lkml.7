@@ -2,154 +2,111 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CA95C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:00:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6E36C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:01:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1BF9A2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:00:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33542075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:01:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="eucGx3ix"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="hV6Qq7AT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732144AbfKFUA4 (ORCPT
+        id S1732323AbfKFUA7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:00:56 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:40759 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726934AbfKFUAz (ORCPT
+        Wed, 6 Nov 2019 15:00:59 -0500
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:6910 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726934AbfKFUA6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:00:55 -0500
-Received: by mail-il1-f193.google.com with SMTP id d83so22937070ilk.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 12:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=/3y/HsMnf3xjkCgZbJ75a/7ySpMXpDRsiX47kiV0kas=;
-        b=eucGx3ixQjhVaCvF6gXziLvcJkw+l6DT+Q2wVTm+1guyoIEvME5ivibD3nG90DcL48
-         /RPdlQxbnO9icQEWOrKZKL65lcRO/ZXPS4Kydrh8k4kcHLsBhUtDbF9YgQl43KJvHmaY
-         Oi4BiUML2CSaZZDdjA+s36gFtX0TN3uKXSiNNkRB3D8ASzWP4yX8trfgXsRoczPEwUwo
-         h7Gh0/1eoFhAKbmLQC+yjkje2G+gUDp1zE/q9A8fECmAxQXiBwxmMmQjmJlhEGpckqGx
-         zI6XXMAJl2KB6y/wMFC8frqM3eSb2gP5zjb3jjv1QBS0kfKI4zlA+4OSOFQPJZbOgcjB
-         8NtQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=/3y/HsMnf3xjkCgZbJ75a/7ySpMXpDRsiX47kiV0kas=;
-        b=oou7NPs8zYoI9IlEQr/VVx7uwjyZloBUv7XiuohMGCLadQUifP9YnMOrbuaFNo+6Xw
-         bvWKH5ON6mb4Etj9fAr9U+zNVeNDbWXf3UEWZtpUj1leM0/8dlDCczMossw3+s9RQHyv
-         FdN2d0VLuZdEbmpDWZ8ipyGmaQi0dK5UB2ksQrXPveFBBEPnA1lviFVIreBiE7DxonM3
-         BKe+AEIfJyIPRub/hAXX3YCg6QnMjqHL51mITtQiOEXFi3/6LIWYIUbdH2iWMOQ+mzK+
-         6zYeKKOV4DdloqJkinXFy9MBKW31FBAgSaQ0KeLjqWyHLzL40CFkoX2UbHhdi5IVtmPm
-         FRTw==
-X-Gm-Message-State: APjAAAVLkr6ZnIhni6sRR21GxieQvMCyeYKSlPVxPdrnZxE16JJ+Ptfs
-        NDsyCDkICQtQIsDh8Lm93eGtiv+TEw/wGQK+eq2M09tl
-X-Google-Smtp-Source: APXvYqxzuW3h2H4ygtVCpGc8gJSsSyu+Opcy9pvD2+7FVap80uBzotktHcyZz55nwKcJx3XxCyODCD9OorXkwYezZUs=
-X-Received: by 2002:a92:ca8d:: with SMTP id t13mr4636539ilo.58.1573070454269;
- Wed, 06 Nov 2019 12:00:54 -0800 (PST)
+        Wed, 6 Nov 2019 15:00:58 -0500
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6Jvkil015972;
+        Wed, 6 Nov 2019 20:58:09 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=UUgh3Lo+qJDaOFvLiwrfPtl8yZf8yXbRZxfUc/25B9k=;
+ b=hV6Qq7ATFv/8SsV9FqDv6wBDql0Y1AzlHZtF/pE7cBOUhEnHCNjNPQ7/rC1dW/nPwKUB
+ a0OzrCjvqCSA4SOt4sy3nHKKVtvfPjHPVpZrqJLS4NlojDMcHuVIZ/FWXr/HRZTgrks/
+ BlbLa6VY7mFYiredqke+l/zYKVBlHsdW09g1cQgTDiuxMx09Xgyyo+Vfj/qo30XzR5m2
+ P14QcPUq5kQ2voYcxgPhN+sVMJyIG2rB6T+zIwFjszb1By9+GtEK4jXjKuXk3WdRqEJ/
+ UpaKfnZbH5gT01tK+1VHarybQjZgLMwlpOcdGHGHEq4XqJposqZxXqr7c4J4X5zBYyqs Jg== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2w41vdrs0f-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 20:58:09 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3794C10002A;
+        Wed,  6 Nov 2019 20:58:09 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node2.st.com [10.75.127.14])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 1BA882BEC50;
+        Wed,  6 Nov 2019 20:58:09 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE2.st.com
+ (10.75.127.14) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Nov
+ 2019 20:58:08 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 6 Nov 2019 20:58:08 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings
+ to json-schema
+Thread-Topic: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings
+ to json-schema
+Thread-Index: AQHVj+cHKYpjTBsaoUanlMQvDBdoeKd9f6aAgAABnACAAQcxAA==
+Date:   Wed, 6 Nov 2019 19:58:08 +0000
+Message-ID: <29d97cd1-4dc2-24a1-182f-d1bf6956ee5b@st.com>
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-2-benjamin.gaignard@st.com>
+ <20191106041023.GB5294@bogus> <20191106041608.GA24747@bogus>
+In-Reply-To: <20191106041608.GA24747@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <9AC39F460CE5B44394ED8C7013DF655A@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-References: <20191106174804.74723-1-edumazet@google.com> <alpine.DEB.2.21.1911061908070.1869@nanos.tec.linutronix.de>
- <CANn89iK12QGBagUiNr+j-ToawJ9J1behtySyL9vLattYPAD-7w@mail.gmail.com> <alpine.DEB.2.21.1911062002490.1869@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911062002490.1869@nanos.tec.linutronix.de>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 6 Nov 2019 12:00:42 -0800
-Message-ID: <CANn89i+adxqR+L7ArTQhOmvryO0++ajf1FHt7bQcCnUkEkgu+g@mail.gmail.com>
-Subject: Re: [PATCH] hrtimer: Annotate lockless access to timer->state
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_07:2019-11-06,2019-11-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 11:15 AM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, 6 Nov 2019, Eric Dumazet wrote:
-> > On Wed, Nov 6, 2019 at 10:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >
-> > > On Wed, 6 Nov 2019, Eric Dumazet wrote:
-> > > > @@ -1013,8 +1013,9 @@ static void __remove_hrtimer(struct hrtimer *timer,
-> > > >  static inline int
-> > > >  remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
-> > > >  {
-> > > > -     if (hrtimer_is_queued(timer)) {
-> > > > -             u8 state = timer->state;
-> > > > +     u8 state = timer->state;
-> > >
-> > > Shouldn't that be a read once then at least for consistency sake?
-> >
-> > We own the lock here, this is not really needed ?
-> >
-> > Note they are other timer->state reads I chose to leave unchanged.
-> >
-> > But no big deal if you prefer I can add a READ_ONCE()
->
-> Nah. I can add it myself if at all.
->
-> I know that the READ_ONCE() is not required there, but I really hate to
-> twist my brain when staring at code why some places use it and some not.
->
-> So at least some commentry helps to avoid that. Something like the
-> below. If you have no objections I just queue the patch with this folded
-> in.
-
-
-This looks good to me, thanks !
-
->
-> Thanks,
->
->         tglx
->
-> 8<-------------
-> --- a/include/linux/hrtimer.h
-> +++ b/include/linux/hrtimer.h
-> @@ -456,12 +456,18 @@ extern u64 hrtimer_next_event_without(co
->
->  extern bool hrtimer_active(const struct hrtimer *timer);
->
-> -/*
-> - * Helper function to check, whether the timer is on one of the queues
-> +/**
-> + * hrtimer_is_queued = check, whether the timer is on one of the queues
-> + * @timer:     Timer to check
-> + *
-> + * Returns: True if the timer is queued, false otherwise
-> + *
-> + * The function can be used lockless, but it gives only a momentary snapshot.
->   */
-> -static inline int hrtimer_is_queued(struct hrtimer *timer)
-> +static inline bool hrtimer_is_queued(struct hrtimer *timer)
->  {
-> -       return READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED;
-> +       /* The READ_ONCE pairs with the update functions of timer->state */
-> +       return !!READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED;
->  }
->
->  /*
-> --- a/kernel/time/hrtimer.c
-> +++ b/kernel/time/hrtimer.c
-> @@ -966,6 +966,7 @@ static int enqueue_hrtimer(struct hrtime
->
->         base->cpu_base->active_bases |= 1 << base->index;
->
-> +       /* Pairs with the lockless read in hrtimer_is_queued() */
->         WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
->
->         return timerqueue_add(&base->active, &timer->node);
-> @@ -988,6 +989,7 @@ static void __remove_hrtimer(struct hrti
->         struct hrtimer_cpu_base *cpu_base = base->cpu_base;
->         u8 state = timer->state;
->
-> +       /* Pairs with the lockless read in hrtimer_is_queued() */
->         WRITE_ONCE(timer->state, newstate);
->         if (!(state & HRTIMER_STATE_ENQUEUED))
->                 return;
+DQpPbiAxMS82LzE5IDU6MTYgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUsIE5vdiAw
+NSwgMjAxOSBhdCAxMDoxMDoyM1BNIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToNCj4+IE9uIFRo
+dSwgT2N0IDMxLCAyMDE5IGF0IDAxOjMwOjM3UE0gKzAxMDAsIEJlbmphbWluIEdhaWduYXJkIHdy
+b3RlOg0KPj4+IENvbnZlcnQgdGhlIFNUTTMyIGNvdW50ZXIgYmluZGluZyB0byBEVCBzY2hlbWEg
+Zm9ybWF0IHVzaW5nIGpzb24tc2NoZW1hDQo+PiBQcm9iYWJseSB0aGlzIHNob3VsZCBhbGwgYmUg
+MSBmaWxlIGluc3RlYWQuDQo+IEFsc28sIGNoZWNrcGF0Y2ggcmVwb3J0cyB0cmFpbGluZyB3aGl0
+ZXNwYWNlIGluIHNldmVyYWwgb2YgeW91ciBwYXRjaGVzLg0KDQpJIHdpbGwgd3JpdGUgYWxsIGlu
+IG9uZSBmaWxlIGFuZCBmaXggdHJhaWxpbmcgd2hpdGVzcGFjZSBpbiB2Mg0KDQpUaGFua3MgZm9y
+IHlvdXIgcmV2aWV3DQoNCkJlbmphbWluDQoNCj4gLg0KPg0KPiBSb2I=
