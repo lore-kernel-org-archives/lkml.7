@@ -2,162 +2,94 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 377A7C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C34C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01C10217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE653217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=dabbelt-com.20150623.gappssmtp.com header.i=@dabbelt-com.20150623.gappssmtp.com header.b="PGZwZeqh"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FNbKbf+h";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VKc9x2sQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732458AbfKFR4h (ORCPT
+        id S1732484AbfKFR4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:56:37 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:40078 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732379AbfKFR4g (ORCPT
+        Wed, 6 Nov 2019 12:56:53 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:35934 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729435AbfKFR4w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:56:36 -0500
-Received: by mail-pf1-f196.google.com with SMTP id r4so19482508pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:56:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=dabbelt-com.20150623.gappssmtp.com; s=20150623;
-        h=date:subject:in-reply-to:cc:from:to:message-id;
-        bh=xZW1gMrCUoJqpGWBEYHWFfV09K+K/0uVmzI4MIoxGS8=;
-        b=PGZwZeqhjPGqmbBUrw44Auucb8k6dPtlYxXbuNpTAeEMGmKlsnFWXhrKzSARRD1P5Z
-         ofkafacEFrUvuMMQ8srHmApZNGXOM2FXgWNtdGS1rg8UPKc85d79tzD5/t3BF7GMjDtX
-         WoCFpoFoR/nlY6sa8P7ME55iO2h9Yfcb7ZSd7Zw+om2XJAjYyCK0yIJtNHDyXsnWFiZL
-         JcRZR97cwQ2ZvZRsXx81CQhAqwyUUPUY90oJrysCQQ7l1b0iCyPludGEBBLbIE1elh0S
-         JIqszC7OB8xZ2n5/8rEoDBU7MzMibg41EDmgXW2rJwIAtaViAg8zHwFVYITgL2sVpvu1
-         UzBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:subject:in-reply-to:cc:from:to:message-id;
-        bh=xZW1gMrCUoJqpGWBEYHWFfV09K+K/0uVmzI4MIoxGS8=;
-        b=gkvvbUjiuPuahG6NamUw4Zb/6xKnYhsbi1PYzaCX4BPBsAghlQ/SGnHjbP1z77zjMz
-         FddC24zEqbSOUcA2vkdGtkqIvGgyMcl+rSdeoHPRulifuaYQtgjPlsSQrlbKDZ6EB/EY
-         dvhpLd8pOSKCHITs57IKbd1Xjm4hqibvW4G3aBkrBZsoUP97fKZ15SeJL6aA3QaTvwP6
-         ZYGgEYOpJNtGdjL686Fj8Zii+Irt7XZV90FxNPWQdh8Myub7Y4QJRvlyc96KBMjntrNU
-         XaGH4ouxYaylh/LOF0dezK1DyTK6qKA4fZlzXULLbG07caEJIKjkBdv+seWoYhRBxZbZ
-         6jPw==
-X-Gm-Message-State: APjAAAX+i+RZjgwt0f7e0a/r8+yv7HPnr6OGi9fxb7rRGplEik3Acp0C
-        5f9jnB54RLDXrDyfsnHeq1r/jA==
-X-Google-Smtp-Source: APXvYqyZI0/opOONYHdOR3l6SH/z69P+ajsTKg8L6ObdzcVPlsahU45e+bD0ChxR/pgAJsTDNgZ9EA==
-X-Received: by 2002:a17:90a:340c:: with SMTP id o12mr5529604pjb.18.1573062994968;
-        Wed, 06 Nov 2019 09:56:34 -0800 (PST)
-Received: from localhost ([12.206.222.5])
-        by smtp.gmail.com with ESMTPSA id z11sm32745913pfg.117.2019.11.06.09.56.34
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 09:56:34 -0800 (PST)
-Date:   Wed, 06 Nov 2019 09:56:34 -0800 (PST)
-X-Google-Original-Date: Wed, 06 Nov 2019 09:56:23 PST (-0800)
-Subject:     Re: [PATCH 10/21] asm-generic: ioremap_uc should behave the same with and without MMU
-In-Reply-To: <20191029064834.23438-11-hch@lst.de>
-CC:     Arnd Bergmann <arnd@arndb.de>, guoren@kernel.org, monstr@monstr.eu,
-        green.hu@gmail.com, deanbo422@gmail.com, gxt@pku.edu.cn,
-        x86@kernel.org, linux-alpha@vger.kernel.org,
-        linux-snps-arc@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-hexagon@vger.kernel.org, linux-ia64@vger.kernel.org,
-        linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org,
-        nios2-dev@lists.rocketboards.org, openrisc@lists.librecores.org,
-        linux-parisc@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-s390@vger.kernel.org, linux-sh@vger.kernel.org,
-        sparclinux@vger.kernel.org, linux-xtensa@linux-xtensa.org,
-        linux-mtd@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Palmer Dabbelt <palmer@dabbelt.com>
-To:     Christoph Hellwig <hch@lst.de>
-Message-ID: <mhng-3f709a8a-a8c3-4612-b4de-847d13b4af0a@palmer-si-x1c4>
+        Wed, 6 Nov 2019 12:56:52 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id E537660134; Wed,  6 Nov 2019 17:56:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573063010;
+        bh=nQ+P7pXx778DX1/XphSgc5IhHKuslBvN8ajv5VvEmxU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
+        b=FNbKbf+hcv2URueWbVdvZ0S25w8iTl82Q6TiJ8Yk0Mpix9jlzrDpVNtlNuT80Qf7M
+         RvyuBy/NgDx5nE9F8DPudiaeV9c1/8iwLVE2nlXod0TDdDlFknITylabKkgIJjaYaw
+         ZTMQO1Gr2ikGmFCboS2JZYjl0XIMiSAlHhKElqMg=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB0C8601D4;
+        Wed,  6 Nov 2019 17:56:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573063010;
+        bh=nQ+P7pXx778DX1/XphSgc5IhHKuslBvN8ajv5VvEmxU=;
+        h=Subject:From:In-Reply-To:References:To:Cc:From;
+        b=VKc9x2sQgEtMEFTKscLB6q8EVrIiHCkAaiUiJ/yxXSNjPJgZmsRMbQUahC+xu3ehg
+         D9ZMEAEGyxcxW5CTmN5+HwgoMeBQnKgAd6PyJB8LiVqt7A+FYUK7PapoxUwXUOocRi
+         60oQXgkxN0SZPdh+xLMywBe841nkAEOCDeleqOnA=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB0C8601D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] rtlwifi: rtl8225se: remove some unused const variables
+From:   Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <20191102074603.38516-1-yuehaibing@huawei.com>
+References: <20191102074603.38516-1-yuehaibing@huawei.com>
+To:     YueHaibing <yuehaibing@huawei.com>
+Cc:     <davem@davemloft.net>, <allison@lohutok.net>,
+        <gregkh@linuxfoundation.org>, <kstewart@linuxfoundation.org>,
+        <info@metux.net>, <tglx@linutronix.de>, <yuehaibing@huawei.com>,
+        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
+Message-Id: <20191106175650.E537660134@smtp.codeaurora.org>
+Date:   Wed,  6 Nov 2019 17:56:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 28 Oct 2019 23:48:23 PDT (-0700), Christoph Hellwig wrote:
-> Whatever reason there is for the existence of ioremap_uc, and the fact
-> that it returns NULL by default on architectures with an MMU applies
-> equally to nommu architectures, so don't provide different defaults.
->
-> In practice the difference is meaningless as the only portable driver
-> that uses ioremap_uc is atyfb which probably doesn't show up on nommu
-> devices.
->
-> Signed-off-by: Christoph Hellwig <hch@lst.de>
-> ---
->  include/asm-generic/io.h | 36 ++++++++++++++++--------------------
->  1 file changed, 16 insertions(+), 20 deletions(-)
->
-> diff --git a/include/asm-generic/io.h b/include/asm-generic/io.h
-> index d02806513670..a98ed6325727 100644
-> --- a/include/asm-generic/io.h
-> +++ b/include/asm-generic/io.h
-> @@ -935,18 +935,7 @@ static inline void *phys_to_virt(unsigned long address)
->   * defined your own ioremap_*() variant you must then declare your own
->   * ioremap_*() variant as defined to itself to avoid the default NULL return.
->   */
-> -
-> -#ifdef CONFIG_MMU
-> -
-> -#ifndef ioremap_uc
-> -#define ioremap_uc ioremap_uc
-> -static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
-> -{
-> -	return NULL;
-> -}
-> -#endif
-> -
-> -#else /* !CONFIG_MMU */
-> +#ifndef CONFIG_MMU
->
->  /*
->   * Change "struct page" to physical address.
-> @@ -980,14 +969,6 @@ static inline void __iomem *ioremap_nocache(phys_addr_t offset, size_t size)
->  }
->  #endif
->
-> -#ifndef ioremap_uc
-> -#define ioremap_uc ioremap_uc
-> -static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
-> -{
-> -	return ioremap_nocache(offset, size);
-> -}
-> -#endif
-> -
->  #ifndef ioremap_wc
->  #define ioremap_wc ioremap_wc
->  static inline void __iomem *ioremap_wc(phys_addr_t offset, size_t size)
-> @@ -1004,6 +985,21 @@ static inline void __iomem *ioremap_wt(phys_addr_t offset, size_t size)
->  }
->  #endif
->
-> +/*
-> + * ioremap_uc is special in that we do require an explicit architecture
-> + * implementation.  In general you do now want to use this function in a
+YueHaibing <yuehaibing@huawei.com> wrote:
 
-Presumably that's supposed to be "do not want to use"?
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:83:17: warning: 'rtl8225sez2_tx_power_cck' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:79:17: warning: 'rtl8225sez2_tx_power_cck_A' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:75:17: warning: 'rtl8225sez2_tx_power_cck_B' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:71:17: warning: 'rtl8225sez2_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:62:17: warning: 'rtl8225se_tx_power_ofdm' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:53:17: warning: 'rtl8225se_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:44:17: warning: 'rtl8225se_tx_power_cck' defined but not used [-Wunused-const-variable=]
+> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:40:17: warning: 'rtl8225se_tx_gain_cck_ofdm' defined but not used [-Wunused-const-variable=]
+> 
+> They are never used, so can be removed.
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-> + * driver and use plain ioremap, which is uncached by default.  Similarly
-> + * architectures should not implement it unless they have a very good
-> + * reason.
-> + */
-> +#ifndef ioremap_uc
-> +#define ioremap_uc ioremap_uc
-> +static inline void __iomem *ioremap_uc(phys_addr_t offset, size_t size)
-> +{
-> +	return NULL;
-> +}
-> +#endif
-> +
->  #ifdef CONFIG_HAS_IOPORT_MAP
->  #ifndef CONFIG_GENERIC_IOMAP
->  #ifndef ioport_map
+Patch applied to wireless-drivers-next.git, thanks.
 
-With the fix:
+a3a03716196f rtlwifi: rtl8225se: remove some unused const variables
 
-Reviewed-by: Palmer Dabbelt <palmer@dabbelt.com>
+-- 
+https://patchwork.kernel.org/patch/11224057/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+
