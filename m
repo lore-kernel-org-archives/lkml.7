@@ -2,174 +2,211 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCBEC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C8C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:01:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2C852084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+xoTHoc"
+	by mail.kernel.org (Postfix) with ESMTP id 183ED217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:01:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730900AbfKFF7t (ORCPT
+        id S1730956AbfKFGBK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 00:59:49 -0500
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:48428 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725856AbfKFF7s (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 00:59:48 -0500
-Received: from fllv0034.itg.ti.com ([10.64.40.246])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA65xcY6070610;
-        Tue, 5 Nov 2019 23:59:38 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573019978;
-        bh=/RK0uOCbClf9VxVsdthFZWLOyuG/GQTi/0ClInCExY8=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=i+xoTHocY4Dl3oq5ERNLhp2Fw+DfK7gwro/M0dDMtSSMriQLKQ71xgfpcQWehA3Ox
-         MntAXR3R7tJ66lE/G7NMX4M/jYRy+kdYQA6XxgVYAiv8VulqK3glK2CwiMJqPxc/A9
-         94igXccbXOm3Ctv0MG/5MryfsziLt1I20yCUFO2w=
-Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
-        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA65xcYW066822
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 5 Nov 2019 23:59:38 -0600
-Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
- (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
- 2019 23:59:23 -0600
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
- (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Tue, 5 Nov 2019 23:59:23 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA65xYLe081054;
-        Tue, 5 Nov 2019 23:59:35 -0600
-Subject: Re: [PATCH v4 18/20] mtd: spi-nor: Rename macronix_quad_enable to
- spi_nor_sr1_bit6_quad_enable
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
- <20191102112316.20715-19-tudor.ambarus@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <10b14e43-0f06-88fa-20b5-05f99cd93b6f@ti.com>
-Date:   Wed, 6 Nov 2019 11:30:10 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 01:01:10 -0500
+Received: from szxga07-in.huawei.com ([45.249.212.35]:39914 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725856AbfKFGBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:01:09 -0500
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 8C8E5E464016A5528EC9;
+        Wed,  6 Nov 2019 14:01:06 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 6 Nov 2019
+ 14:00:58 +0800
+Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
+To:     Dave Chinner <david@fromorbit.com>
+References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191104204909.GB4614@dread.disaster.area>
+ <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
+ <20191105040325.GC4614@dread.disaster.area>
+CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Yang Guo <guoyang2@huawei.com>,
+        "Darrick J. Wong" <darrick.wong@oracle.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <675693c2-8600-1cbd-ce50-5696c45c6cd9@hisilicon.com>
+Date:   Wed, 6 Nov 2019 14:00:58 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-In-Reply-To: <20191102112316.20715-19-tudor.ambarus@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+In-Reply-To: <20191105040325.GC4614@dread.disaster.area>
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Dave,
 
-
-On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
-> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+On 2019/11/5 12:03, Dave Chinner wrote:
+> On Tue, Nov 05, 2019 at 11:26:32AM +0800, Shaokun Zhang wrote:
+>> Hi Dave,
+>>
+>> On 2019/11/5 4:49, Dave Chinner wrote:
+>>> On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
+>>>> From: Yang Guo <guoyang2@huawei.com>
+>>>>
+>>>> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
+>>>> whether the counter less than 0 and it is a expensive function.
+>>>> let's check it only when delta < 0, it will be good for xfs's performance.
+>>>
+>>> Hmmm. I don't recall this as being expensive.
+>>>
+>>
+>> Sorry about the misunderstanding information in commit message.
+>>
+>>> How did you find this? Can you please always document how you found
+>>
+>> If user creates million of files and the delete them, We found that the
+>> __percpu_counter_compare costed 5.78% CPU usage, you are right that itself
+>> is not expensive, but it calls __percpu_counter_sum which will use
+>> spin_lock and read other cpu's count. perf record -g is used to profile it:
+>>
+>> - 5.88%     0.02%  rm  [kernel.vmlinux]  [k] xfs_mod_ifree
+>>    - 5.86% xfs_mod_ifree
+>>       - 5.78% __percpu_counter_compare
+>>            5.61% __percpu_counter_sum
 > 
-> Rename method to a generic name: spi_nor_sr1_bit6_quad_enable().
-> 
-> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
-
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
-
-> ---
->  drivers/mtd/spi-nor/spi-nor.c | 19 +++++++++----------
->  include/linux/mtd/spi-nor.h   |  2 +-
->  2 files changed, 10 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
-> index 8bc29cc073a0..85e5a56fb2d7 100644
-> --- a/drivers/mtd/spi-nor/spi-nor.c
-> +++ b/drivers/mtd/spi-nor/spi-nor.c
-> @@ -2078,16 +2078,15 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
->  }
->  
->  /**
-> - * macronix_quad_enable() - set QE bit in Status Register.
-> + * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Status
-> + * Register 1.
->   * @nor:	pointer to a 'struct spi_nor'
->   *
-> - * Set the Quad Enable (QE) bit in the Status Register.
-> - *
-> - * bit 6 of the Status Register is the QE bit for Macronix like QSPI memories.
-> + * Bit 6 of the Status Register 1 is the QE bit for Macronix like QSPI memories.
->   *
->   * Return: 0 on success, -errno otherwise.
->   */
-> -static int macronix_quad_enable(struct spi_nor *nor)
-> +static int spi_nor_sr1_bit6_quad_enable(struct spi_nor *nor)
->  {
->  	int ret;
->  
-> @@ -2095,10 +2094,10 @@ static int macronix_quad_enable(struct spi_nor *nor)
->  	if (ret)
->  		return ret;
->  
-> -	if (nor->bouncebuf[0] & SR_QUAD_EN_MX)
-> +	if (nor->bouncebuf[0] & SR1_QUAD_EN_BIT6)
->  		return 0;
->  
-> -	nor->bouncebuf[0] |= SR_QUAD_EN_MX;
-> +	nor->bouncebuf[0] |= SR1_QUAD_EN_BIT6;
->  
->  	return spi_nor_write_sr1_and_check(nor, nor->bouncebuf[0]);
->  }
-> @@ -2349,7 +2348,7 @@ static void gd25q256_default_init(struct spi_nor *nor)
->  	 * indicate the quad_enable method for this case, we need
->  	 * to set it in the default_init fixup hook.
->  	 */
-> -	nor->params.quad_enable = macronix_quad_enable;
-> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
->  }
->  
->  static struct spi_nor_fixups gd25q256_fixups = {
-> @@ -3729,7 +3728,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
->  
->  	case BFPT_DWORD15_QER_SR1_BIT6:
->  		nor->flags &= ~SNOR_F_HAS_16BIT_SR;
-> -		params->quad_enable = macronix_quad_enable;
-> +		params->quad_enable = spi_nor_sr1_bit6_quad_enable;
->  		break;
->  
->  	case BFPT_DWORD15_QER_SR2_BIT7:
-> @@ -4627,7 +4626,7 @@ static int spi_nor_setup(struct spi_nor *nor,
->  
->  static void macronix_set_default_init(struct spi_nor *nor)
->  {
-> -	nor->params.quad_enable = macronix_quad_enable;
-> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
->  	nor->params.set_4byte = macronix_set_4byte;
->  }
->  
-> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
-> index f626e0e52909..6d703df97f13 100644
-> --- a/include/linux/mtd/spi-nor.h
-> +++ b/include/linux/mtd/spi-nor.h
-> @@ -133,7 +133,7 @@
->  #define SR_E_ERR		BIT(5)
->  #define SR_P_ERR		BIT(6)
->  
-> -#define SR_QUAD_EN_MX		BIT(6)	/* Macronix Quad I/O */
-> +#define SR1_QUAD_EN_BIT6	BIT(6)
->  
->  /* Enhanced Volatile Configuration Register bits */
->  #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
+> Interesting. Your workload is hitting the slow path, which I most
+> certainly do no see when creating lots of files. What's your
+> workload?
 > 
 
--- 
-Regards
-Vignesh
+The hardware has 128 cpu cores, and the xfs filesystem format config is default,
+while the test is a single thread, as follow:
+./mdtest -I 10  -z 6 -b 8 -d /mnt/ -t -c 2
+
+xfs info:
+meta-data=/dev/bcache2           isize=512    agcount=4, agsize=244188661 blks
+         =                       sectsz=512   attr=2, projid32bit=1
+         =                       crc=1        finobt=1 spinodes=1 rmapbt=0
+         =                       reflink=0
+data     =                       bsize=4096   blocks=976754644, imaxpct=5
+         =                       sunit=0      swidth=0 blks
+naming   =version 2              bsize=4096   ascii-ci=0 ftype=1	
+log      =internal               bsize=4096   blocks=476930, version=2
+         =                       sectsz=512   sunit=0 blks, lazy-count=1
+realtime =none                   extsz=4096   blocks=0, rtextents=0
+
+disk info:
+Disk /dev/bcache2: 4000.8 GB, 4000787021824 bytes, 7814037152 sectors
+Units = sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
+
+>>> IOWs, we typically measure the overhead of such functions by kernel
+>>> profile.  Creating ~200,000 inodes a second, so hammering the icount
+>>> and ifree counters, I see:
+>>>
+>>>       0.16%  [kernel]  [k] percpu_counter_add_batch
+>>>       0.03%  [kernel]  [k] __percpu_counter_compare
+>>>
+>>
+>> 0.03% is just __percpu_counter_compare's usage.
+> 
+> No, that's the total of _all_ the percpu counter functions captured
+> by the profile - it was the list of all samples filtered by
+> "percpu". I just re-ran the profile again, and got:
+> 
+> 
+>    0.23%  [kernel]  [k] percpu_counter_add_batch
+>    0.04%  [kernel]  [k] __percpu_counter_compare
+>    0.00%  [kernel]  [k] collect_percpu_times
+>    0.00%  [kernel]  [k] __handle_irq_event_percpu
+>    0.00%  [kernel]  [k] __percpu_counter_sum
+>    0.00%  [kernel]  [k] handle_irq_event_percpu
+>    0.00%  [kernel]  [k] fprop_reflect_period_percpu.isra.0
+>    0.00%  [kernel]  [k] percpu_ref_switch_to_atomic_rcu
+>    0.00%  [kernel]  [k] free_percpu
+>    0.00%  [kernel]  [k] percpu_ref_exit
+> 
+> So you can see that this essentially no samples in
+> __percpu_counter_sum at all - my tests are not hitting the slow path
+> at all, despite allocating inodes continuously.
+
+Got it,
+
+> 
+> IOWs, your workload is hitting the slow path repeatedly, and so the
+> question that needs to be answered is "why is the slow path actually
+> being exercised?". IOWs, we need to know what your workload is, what
+> the filesystem config is, what hardware (cpus, storage, etc) you are
+> running on, etc. There must be some reason for the slow path being
+> used, and that's what we need to understand first before deciding
+> what the best fix might be...
+> 
+> I suspect that you are only running one or two threads creating
+
+Yeah, we just run one thread test.
+
+> files and you have lots of idle CPU and hence the inode allocation
+> is not clearing the fast path batch threshold on the ifree counter.
+> And because you have lots of CPUs, the cost of a sum is very
+> expensive compared to running single threaded creates. That's my
+> current hypothesis based what I see on my workloads that
+> xfs_mod_ifree overhead goes down as concurrency goes up....
+> 
+
+Agree, we add some debug info in xfs_mod_ifree and found most times
+m_ifree.count < batch * num_online_cpus(),  because we have 128 online
+cpus and m_ifree.count around 999.
+
+
+> FWIW, the profiles I took came from running this on 16 and 32p
+> machines:
+> 
+> --
+> dirs=""
+> for i in `seq 1 $THREADS`; do
+>         dirs="$dirs -d /mnt/scratch/$i"
+> done
+> 
+> cycles=$((512 / $THREADS))
+> 
+> time ./fs_mark $XATTR -D 10000 -S0 -n $NFILES -s 0 -L $cycles $dirs
+> --
+> 
+> With THREADS=16 or 32 and NFILES=100000 on a big sparse filesystem
+> image:
+> 
+> meta-data=/dev/vdc               isize=512    agcount=500, agsize=268435455 blks
+>          =                       sectsz=512   attr=2, projid32bit=1
+>          =                       crc=1        finobt=1, sparse=1, rmapbt=0
+>          =                       reflink=1
+> data     =                       bsize=4096   blocks=134217727500, imaxpct=1
+>          =                       sunit=0      swidth=0 blks
+> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
+> log      =internal log           bsize=4096   blocks=521728, version=2
+>          =                       sectsz=512   sunit=0 blks, lazy-count=1
+> realtime =none                   extsz=4096   blocks=0, rtextents=0
+> 
+> That's allocating enough inodes to keep the free inode counter
+> entirely out of the slow path...
+
+percpu_counter_read that reads the count will cause cache synchronization
+cost if other cpu changes the count, Maybe it's better not to call
+percpu_counter_compare if possible.
+
+Thanks,
+Shaokun
+
+> 
+> Cheers,
+> 
+> Dave.
+> 
+
