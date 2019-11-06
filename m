@@ -2,159 +2,119 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF5E0C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EA9BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B337A214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=analog.onmicrosoft.com header.i=@analog.onmicrosoft.com header.b="LpNt4tqA"
+	by mail.kernel.org (Postfix) with ESMTP id 23AD021848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731716AbfKFMCz (ORCPT
+        id S1731735AbfKFMDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:02:55 -0500
-Received: from mx0a-00128a01.pphosted.com ([148.163.135.77]:17432 "EHLO
-        mx0a-00128a01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729671AbfKFMCy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:02:54 -0500
-Received: from pps.filterd (m0167089.ppops.net [127.0.0.1])
-        by mx0a-00128a01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6BrKKY011139;
-        Wed, 6 Nov 2019 07:02:29 -0500
-Received: from nam03-dm3-obe.outbound.protection.outlook.com (mail-dm3nam03lp2054.outbound.protection.outlook.com [104.47.41.54])
-        by mx0a-00128a01.pphosted.com with ESMTP id 2w2a5rqbtm-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 07:02:29 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=X2Xz2/BcI7SKxbJth96DxcHTgHm85Hj5Rtrl1Xe19gHn3Bhi+K2E+07G97TW/Oddv+Ogh5CWDCRmroui/wsMzVh1cOk5G1vAsY7IlMAfNWZxL6qDRhWwRNwARPQfUN2KfEAhmL1PnDbwhIDvVwT4ydjfHd/do8D29xhE9GY7+S62lOCnFPdb/E23ZOmoJ3dt0I8uoDtqLE6hmuZbQEOSVDIIaoSaw52sQfOHJ/g5Am4ZpIHERntEGsOekDsn8hWaNLOiGuSlf8QcIB9X22QqBxyYZTC0uKwZOO0PORWYaR5Xdzkh4GX7qptcr/1io7Yzcxq+STeu1bblHP9PLtKzew==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Icw1DLwKVIlabD5X2NZjvcB3oTqvQN1/67h7TLklTug=;
- b=Vlg/Q0q7Igc4p597TI4NF0eyo/cK1XXyvuX/xKYlzRiZvA71uCj36If5RgPjMka7Ecisq0TlD0waDWnWlCWpNHf6aGVVUyfR4AMuxqoUEQsWJdOnaiU4p7HaTx5797gkTBQnAIJHvM7FlOAnlDdcnTu3yL/DGXYTIUGVZt3O7JhS42hvkf8Rpx6PIaDq+Y1Vs2Xybue3Upt0i4EJcqse6xgtUs+T6fQAcnlQJ1ECplh8OPJQ0DmPE2zbOSxSS/IKS3YgDGwtEMZSrX3BcSWsOTnlw+VRyIMduaaLLJAYdCaxROCAT4/tEFMh73raHUPGU70kCJgWoPzjI3lWd2ndtg==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 137.71.25.57) smtp.rcpttodomain=kernel.org smtp.mailfrom=analog.com;
- dmarc=bestguesspass action=none header.from=analog.com; dkim=none (message
- not signed); arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=analog.onmicrosoft.com; s=selector2-analog-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=Icw1DLwKVIlabD5X2NZjvcB3oTqvQN1/67h7TLklTug=;
- b=LpNt4tqAaDAmTKrkwicUVFHlEIUHUykLJvxbMD9o8tisIcpZPlITDERfaInVHloTH4gBa6kNUh8or8dhElF6RGtdE+5cWSp9YC6kuNKA4wW99Mmce2b1zjvXUVq5mZ0bCsaSGTJrP5OCjzPJsvcXgluwsVhg2MXkDvfur54FGbs=
-Received: from BYAPR03CA0028.namprd03.prod.outlook.com (2603:10b6:a02:a8::41)
- by MN2PR03MB5231.namprd03.prod.outlook.com (2603:10b6:208:1e0::17) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.20; Wed, 6 Nov
- 2019 12:02:27 +0000
-Received: from CY1NAM02FT033.eop-nam02.prod.protection.outlook.com
- (2a01:111:f400:7e45::205) by BYAPR03CA0028.outlook.office365.com
- (2603:10b6:a02:a8::41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2408.24 via Frontend
- Transport; Wed, 6 Nov 2019 12:02:27 +0000
-Received-SPF: Pass (protection.outlook.com: domain of analog.com designates
- 137.71.25.57 as permitted sender) receiver=protection.outlook.com;
- client-ip=137.71.25.57; helo=nwd2mta2.analog.com;
-Received: from nwd2mta2.analog.com (137.71.25.57) by
- CY1NAM02FT033.mail.protection.outlook.com (10.152.75.179) with Microsoft SMTP
- Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.2387.20
- via Frontend Transport; Wed, 6 Nov 2019 12:02:26 +0000
-Received: from NWD2HUBCAS7.ad.analog.com (nwd2hubcas7.ad.analog.com [10.64.69.107])
-        by nwd2mta2.analog.com (8.13.8/8.13.8) with ESMTP id xA6C2HSr010827
-        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=OK);
-        Wed, 6 Nov 2019 04:02:17 -0800
-Received: from saturn.ad.analog.com (10.48.65.117) by
- NWD2HUBCAS7.ad.analog.com (10.64.69.107) with Microsoft SMTP Server id
- 14.3.408.0; Wed, 6 Nov 2019 07:02:25 -0500
-From:   Alexandru Ardelean <alexandru.ardelean@analog.com>
-To:     <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-CC:     <balbi@kernel.org>, <gregkh@linuxfoundation.org>,
-        <mina86@mina86.com>, Lars-Peter Clausen <lars@metafoo.de>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-Subject: [PATCH] usb: gadget: ffs: ffs_aio_cancel(): Save/restore IRQ flags
-Date:   Wed, 6 Nov 2019 14:02:19 +0200
-Message-ID: <20191106120219.15028-1-alexandru.ardelean@analog.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 6 Nov 2019 07:03:19 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40712 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729286AbfKFMDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 07:03:18 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 33B8BB4E0;
+        Wed,  6 Nov 2019 12:03:16 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 81CD01E4862; Wed,  6 Nov 2019 13:03:15 +0100 (CET)
+Date:   Wed, 6 Nov 2019 13:03:15 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Johannes Weiner <hannes@cmpxchg.org>
+Cc:     Vlastimil Babka <vbabka@suse.cz>, snazy@snazy.de,
+        Michal Hocko <mhocko@kernel.org>,
+        Josef Bacik <josef@toxicpanda.com>, Jan Kara <jack@suse.cz>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191106120315.GF16085@quack2.suse.cz>
+References: <20191025121104.GH17610@dhcp22.suse.cz>
+ <c8950b81000e08bfca9fd9128cf87d8a329a904b.camel@gmx.de>
+ <20191025132700.GJ17610@dhcp22.suse.cz>
+ <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
+ <20191025135749.GK17610@dhcp22.suse.cz>
+ <20191025140029.GL17610@dhcp22.suse.cz>
+ <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+ <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+ <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+ <20191105182211.GA33242@cmpxchg.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ADIRoutedOnPrem: True
-X-EOPAttributedMessage: 0
-X-MS-Office365-Filtering-HT: Tenant
-X-Forefront-Antispam-Report: CIP:137.71.25.57;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(346002)(39860400002)(136003)(199004)(189003)(2616005)(50226002)(7636002)(50466002)(476003)(486006)(14444005)(70586007)(70206006)(336012)(1076003)(126002)(86362001)(8676002)(246002)(6666004)(478600001)(47776003)(426003)(186003)(54906003)(51416003)(316002)(7696005)(110136005)(106002)(8936002)(356004)(48376002)(36756003)(107886003)(26005)(5660300002)(2906002)(2870700001)(4326008)(44832011)(305945005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR03MB5231;H:nwd2mta2.analog.com;FPR:;SPF:Pass;LANG:en;PTR:nwd2mail11.analog.com;A:1;MX:1;
-X-MS-PublicTrafficType: Email
-X-MS-Office365-Filtering-Correlation-Id: df58e0c0-ae3b-4d92-c68f-08d762b1312e
-X-MS-TrafficTypeDiagnostic: MN2PR03MB5231:
-X-Microsoft-Antispam-PRVS: <MN2PR03MB52312519F9D19BBB2AE7524BF9790@MN2PR03MB5231.namprd03.prod.outlook.com>
-X-MS-Oob-TLC-OOBClassifiers: OLM:1728;
-X-Forefront-PRVS: 02135EB356
-X-MS-Exchange-SenderADCheck: 1
-X-Microsoft-Antispam: BCL:0;
-X-Microsoft-Antispam-Message-Info: RiCdJXhynu0TWKSxn1ttsh22yVPaWmqOQo0HiLwT9xQ9OHrSw+Jia1m/OYdhsoKd3yjTI0qpj+stxYrLM96YPuxkHYCo+f1QXqDc4sr482MOGmx/K/uscyBrHDBDuEbb+urlx6o9qD9mzJLg+2uwGeBqvBpcDYlf320BPa7kSfmkotucNHQZAVoYn5Wx8Lr1MXpfdCkGk9xsgp6EGtYbh0wiMW+B8fF/nUchCOAnDiMrNnmaMEpR7nr6HS7FXv/Fg9xwSEMU67C0VSEkPGxHEG/zNLZw0C9pb+JB4ItjkytV8n9EjHO3aVVjCGSGUPsuazcu+MirmC1Q98n8L5eFAS5l3a820WaqqKx/GV8yIT4lr/WJdqGDmm2s0RlZF3nJK1tr+qF+DXDw6XIB9YiHegRvX0JsVaNZNlljKhFGDgLb19T57yml7j/4sJZEkNOB
-X-OriginatorOrg: analog.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2019 12:02:26.8836
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: df58e0c0-ae3b-4d92-c68f-08d762b1312e
-X-MS-Exchange-CrossTenant-Id: eaa689b4-8f87-40e0-9c6f-7228de4d754a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=eaa689b4-8f87-40e0-9c6f-7228de4d754a;Ip=[137.71.25.57];Helo=[nwd2mta2.analog.com]
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR03MB5231
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-06_03:2019-11-06,2019-11-06 signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 spamscore=0 mlxscore=0
- malwarescore=0 lowpriorityscore=0 phishscore=0 adultscore=0 clxscore=1011
- mlxlogscore=557 priorityscore=1501 bulkscore=0 impostorscore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-1908290000 definitions=main-1911060119
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105182211.GA33242@cmpxchg.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lars-Peter Clausen <lars@metafoo.de>
+On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
+> On Tue, Nov 05, 2019 at 04:28:21PM +0100, Vlastimil Babka wrote:
+> > On 11/5/19 2:23 PM, Robert Stupp wrote:
+> > > "git bisect" led to a result.
+> > > 
+> > > The offending merge commit is f91f2ee54a21404fbc633550e99d69d14c2478f2
+> > > "Merge branch 'akpm' (rest of patches from Andrew)".
+> > > 
+> > > The first bad commit in the merged series of commits is
+> > > https://github.com/torvalds/linux/commit/6b4c9f4469819a0c1a38a0a4541337e0f9bf6c11
+> > > . a75d4c33377277b6034dd1e2663bce444f952c14, the commit before 6b4c9f44,
+> > > is good.
+> > 
+> > Ah, great you could bisect this. CCing people from the commit
+> > 6b4c9f446981 ("filemap: drop the mmap_sem for all blocking operations")
+> 
+> Judging from Robert's stack captures, the task is not hung but
+> busy-looping in __mm_populate(). AFAICS, the only way this can occur
+> is if populate_vma_page_range() returns 0 and we don't advance the
+> iteration position (if it returned an error, we wouldn't reset nend
+> and move on to the next vma as ignore_errors is 1 for mlockall.)
+> 
+> populate_vma_page_range() returns 0 when the first page is not found
+> and faultin_page() returns -EBUSY (if it were processing pages, or if
+> the error from faultin_page() would be a different one, we would
+> return the number of pages processed or -error).
+> 
+> faultin_page() returns -EBUSY when VM_FAULT_RETRY is set, i.e. we
+> dropped the mmap_sem in order to initiate IO and require a retry. That
+> is consistent with the bisect result (new VM_FAULT_RETRY conditions).
+> 
+> At this point, regular page fault would retry with FAULT_FLAG_TRIED to
+> indicate that the mmap_sem cannot be dropped a second time. But this
+> mlock path doesn't set that flag and we can loop repeatedly. That is
+> something we probably need to fix with a FOLL_TRIED somewhere.
 
-ffs_aio_cancel() can be called from both interrupt and thread context. Make
-sure that the current IRQ state is saved and restored by using
-spin_{un,}lock_irq{save,restore}().
+It seems we could use __get_user_pages_locked() for that in
+populate_vma_page_range() if we were guaranteed that mm stays alive.  This
+is guaranteed for current->mm cases but there seem to be some callers to
+populate_vma_page_range() where mm could indeed go away once we drop
+mmap_sem. These luckily pass NULL for the 'nonblocking' parameter though so
+all call sites seem to be fine but it would be fragile...
 
-Otherwise undefined behavior might occur.
+> What I don't quite understand yet is why the fault path doesn't make
+> progress eventually. We must drop the mmap_sem without changing the
+> state in any way. How can we keep looping on the same page?
 
-Signed-off-by: Lars-Peter Clausen <lars@metafoo.de>
-Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
----
- drivers/usb/gadget/function/f_fs.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+That may be a slight suboptimality with Josef's patches. If the page
+is marked as PageReadahead, we always drop mmap_sem if we can and start
+readahead without checking whether that makes sense or not in
+do_async_mmap_readahead(). OTOH page_cache_async_readahead() then clears
+PageReadahead so the only way how I can see we could loop like this is when
+file->ra->ra_pages is 0. Not sure if that's what's happening through. We'd
+need to find which of the paths in filemap_fault() calls
+maybe_unlock_mmap_for_io() to tell more.
 
-diff --git a/drivers/usb/gadget/function/f_fs.c b/drivers/usb/gadget/function/f_fs.c
-index 59d9d512dcda..ed3bcbb84b95 100644
---- a/drivers/usb/gadget/function/f_fs.c
-+++ b/drivers/usb/gadget/function/f_fs.c
-@@ -1160,18 +1160,19 @@ static int ffs_aio_cancel(struct kiocb *kiocb)
- {
- 	struct ffs_io_data *io_data = kiocb->private;
- 	struct ffs_epfile *epfile = kiocb->ki_filp->private_data;
-+	unsigned long flags;
- 	int value;
- 
- 	ENTER();
- 
--	spin_lock_irq(&epfile->ffs->eps_lock);
-+	spin_lock_irqsave(&epfile->ffs->eps_lock, flags);
- 
- 	if (likely(io_data && io_data->ep && io_data->req))
- 		value = usb_ep_dequeue(io_data->ep, io_data->req);
- 	else
- 		value = -EINVAL;
- 
--	spin_unlock_irq(&epfile->ffs->eps_lock);
-+	spin_unlock_irqrestore(&epfile->ffs->eps_lock, flags);
- 
- 	return value;
- }
+								Honza
 -- 
-2.20.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
