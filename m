@@ -2,133 +2,110 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0403FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:43:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9956CFC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67FE52178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:43:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6AB322173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:31 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBM+UW+9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732807AbfKFXnF (ORCPT
+        id S1732812AbfKFXra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:43:05 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:40853 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727376AbfKFXnE (ORCPT
+        Wed, 6 Nov 2019 18:47:30 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:43160 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfKFXr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:43:04 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iSUx4-0002vl-3u; Wed, 06 Nov 2019 23:43:02 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Miklos Szeredi <miklos@szeredi.hu>, linux-unionfs@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ovl: create UUIDs for file systems that do not set the superblock UUID
-Date:   Wed,  6 Nov 2019 23:43:01 +0000
-Message-Id: <20191106234301.283006-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Wed, 6 Nov 2019 18:47:29 -0500
+Received: by mail-pf1-f194.google.com with SMTP id 3so458141pfb.10;
+        Wed, 06 Nov 2019 15:47:29 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=IITHycz/tKeCtcoGS9oSqQaaGm3H0ejbd50X22z8NiA=;
+        b=QBM+UW+9MI+uREWzRjPCDMTdRcJ1Qg9A1mV9chE5KjhqRQK8ZTlnzavCFuKjvmApo0
+         dLMC9dCKtbzlyt2F0etYRl9F6hMMAl2ZWhnqk+1qjKTziWxKwfA9tYuxgHLUtNXUaQFY
+         OAtGyQlApB2naKonvaurwkRT8u5RsF2+hJd6dXgnsZvq4NSYZPju1+8F+8zPDs9+pZ+J
+         S2gwQtppNc/DtmGJz6rSAq4SJ5J4LjD/1ZNAluTfXjvV++shwxekEoJIQcMKzFiTHlL7
+         BPRzlUZ8gf1gO6+TvpexhzXi4VNnhOwwrCMQwpY24IymcCjHxGV2MjWegPyqB5uBNd1g
+         xyIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=IITHycz/tKeCtcoGS9oSqQaaGm3H0ejbd50X22z8NiA=;
+        b=Ke9gYUfGogLpJdxKDkjkDe8Tix2vovfNghwn58tkOhQ39XH8H81gg5EdAUcl1i/aI/
+         bOMLDCDTTEBSAjGyRfVOYPR+SfBCAaBQvrWVZ/PIQcph+ulvAxQAP1vllYkx3D+nqU4q
+         z/NpP7FfBC3HpjZ9ddFj5OmchDJl+j348GHDQJYOhetorqGqixCH/ra+vU1DnnSFOrmi
+         9jrR9UidkNrrCkQIeXWFspp15s7fc2R7dXQiaVolVXxm0z9Nw7UyNTZNeXT5lTgKZIJy
+         KQNU1kqmUPInBdovxNhC8SyNx3PUYnESY7Ta+lG/UinU8MiB79OyFQfhHgoIp1fY0RDr
+         +rdA==
+X-Gm-Message-State: APjAAAXaEO+vQu/K7QHizu35e+gP9JZY+dPnibjQNUsIPbBrNeTx0Ml0
+        +QcA5Bt+qMWR4IRN9eJDFsZ76g2d
+X-Google-Smtp-Source: APXvYqxUKtpDTnctikFB0dQsxG/rxh3cI4BqhqNcmERqcbnbqreW4bT2lTMAT4Iu/13iDxCfITTTBQ==
+X-Received: by 2002:a63:ed17:: with SMTP id d23mr620290pgi.125.1573084049060;
+        Wed, 06 Nov 2019 15:47:29 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id y26sm104198pfo.76.2019.11.06.15.47.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 15:47:28 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] ath10k: Handle "invalid" BDFs for msm8998 devices
+Date:   Wed,  6 Nov 2019 15:47:12 -0800
+Message-Id: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+When the BDF download QMI message has the end field set to 1, it signals
+the end of the transfer, and triggers the firmware to do a CRC check.  The
+BDFs for msm8998 devices fail this check, yet the firmware is happy to
+still use the BDF.  It appears that this error is not caught by the
+downstream drive by concidence, therefore there are production devices
+in the field where this issue needs to be handled otherwise we cannot
+support wifi on them.  So, attempt to detect this scenario as best we can
+and treat it as non-fatal.
 
-Some file systems such as squashfs do not set the UUID in the
-superblock resulting in a zero'd UUID.  In cases were two or more
-of these file systems are overlayed on the lower layer we can hit
-overlay corruption issues because identical zero'd overlayfs UUIDs
-are impossible to differentiate between.  This can be fixed by
-creating an overlayfs UUID based on the file system from the
-superblock s_magic and s_dev fields.  (This currently seems like
-enough information to be able create a UUID, but the could be
-scope to use other super block fields such as the pointer s_fs_info
-but may need some obfuscation).
-
-This issue can be reproduced with the following commands:
-
-mkdir -p /cdrom
-mount -t iso9660 -o ro,noatime /dev/sr0 /cdrom
-sleep 1
-mkdir -p /cow
-mount -t tmpfs -o 'rw,noatime,mode=755' tmpfs /cow
-mkdir -p /cow/upper
-mkdir -p /cow/work
-modprobe -q -b overlay
-modprobe -q -b loop
-dev=$(losetup -f)
-mkdir -p /filesystem.squashfs
-losetup $dev /cdrom/casper/filesystem.squashfs
-mount -t squashfs -o ro,noatime $dev /filesystem.squashfs
-dev=$(losetup -f)
-mkdir -p /installer.squashfs
-losetup $dev /cdrom/casper/installer.squashfs
-mount -t squashfs -o ro,noatime $dev /installer.squashfs
-mkdir -p /root-tmp
-mount -t overlay -o 'upperdir=/cow/upper,lowerdir=/installer.squashfs:/filesystem.squashfs,workdir=/cow/work' /cow /root-tmp
-
-FILE=/root-tmp/etc/.pwd.lock
-
-echo foo > $FILE
-cat $FILE
-sync
-echo 3 > /proc/sys/vm/drop_caches
-cat $FILE
-
-The output from cat $FILE:
-cat: /root-tmp/etc/.pwd.lock: Input/output error
-
-dmesg reports:
-[ 42.415432] overlayfs: invalid origin (etc/.pwd.lock, ftype=8000, origin ftype=4000).
-
-BugLink: https://bugs.launchpad.net/bugs/1824407
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
 ---
- fs/overlayfs/copy_up.c | 16 +++++++++++++++-
- 1 file changed, 15 insertions(+), 1 deletion(-)
+ drivers/net/wireless/ath/ath10k/qmi.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/fs/overlayfs/copy_up.c b/fs/overlayfs/copy_up.c
-index b801c6353100..a578db87936b 100644
---- a/fs/overlayfs/copy_up.c
-+++ b/fs/overlayfs/copy_up.c
-@@ -231,6 +231,7 @@ struct ovl_fh *ovl_encode_real_fh(struct dentry *real, bool is_upper)
- 	void *buf;
- 	int buflen = MAX_HANDLE_SZ;
- 	uuid_t *uuid = &real->d_sb->s_uuid;
-+	static const uuid_t z_uuid;
+diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
+index eb618a2652db..5ff8cfc93778 100644
+--- a/drivers/net/wireless/ath/ath10k/qmi.c
++++ b/drivers/net/wireless/ath/ath10k/qmi.c
+@@ -265,10 +265,13 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
+ 			goto out;
  
- 	buf = kmalloc(buflen, GFP_KERNEL);
- 	if (!buf)
-@@ -272,7 +273,20 @@ struct ovl_fh *ovl_encode_real_fh(struct dentry *real, bool is_upper)
- 	if (is_upper)
- 		fh->flags |= OVL_FH_FLAG_PATH_UPPER;
- 	fh->len = fh_len;
--	fh->uuid = *uuid;
-+
-+	if (uuid_equal(uuid, &z_uuid)) {
-+		/*
-+		 * An zero'd uuid indicates the uuid in the super block was
-+		 * not set by the file system, so fake one instead
-+		 */
-+		struct super_block *sb = real->d_sb;
-+
-+		memcpy(&fh->uuid.b[0], &sb->s_magic, 8);
-+		memcpy(&fh->uuid.b[8], &sb->s_dev, 8);
-+	} else {
-+		fh->uuid = *uuid;
-+	}
-+
- 	memcpy(fh->fid, buf, buflen);
+ 		if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
+-			ath10k_err(ar, "failed to download board data file: %d\n",
+-				   resp.resp.error);
+-			ret = -EINVAL;
+-			goto out;
++			if (!(req->end == 1 &&
++			      resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
++				ath10k_err(ar, "failed to download board data file: %d\n",
++					   resp.resp.error);
++				ret = -EINVAL;
++				goto out;
++			}
+ 		}
  
- out:
+ 		remaining -= req->data_len;
 -- 
-2.20.1
+2.17.1
 
