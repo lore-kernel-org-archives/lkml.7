@@ -2,91 +2,141 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05074C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E019BC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D6FDC217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BDC4F21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728083AbfKFPE4 (ORCPT
+        id S1731902AbfKFPF1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:04:56 -0500
-Received: from foss.arm.com ([217.140.110.172]:41416 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727548AbfKFPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:04:56 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 625E97CD;
-        Wed,  6 Nov 2019 07:04:55 -0800 (PST)
-Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 442CB3F71A;
-        Wed,  6 Nov 2019 07:04:53 -0800 (PST)
-Date:   Wed, 6 Nov 2019 15:04:50 +0000
-From:   Qais Yousef <qais.yousef@arm.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
-        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
-        pauld@redhat.com, jdesfossez@digitalocean.com,
-        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        kernel-team@android.com, john.stultz@linaro.org
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-Message-ID: <20191106150450.fa5ppdejiggsb46a@e107158-lin.cambridge.arm.com>
-References: <20191028174603.GA246917@google.com>
- <20191106120525.GX4131@hirez.programming.kicks-ass.net>
- <20191106130838.GL5671@hirez.programming.kicks-ass.net>
+        Wed, 6 Nov 2019 10:05:27 -0500
+Received: from mx2.suse.de ([195.135.220.15]:40126 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727548AbfKFPF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:05:27 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id F0AA5AC18;
+        Wed,  6 Nov 2019 15:05:24 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id A02211E4353; Wed,  6 Nov 2019 16:05:24 +0100 (CET)
+Date:   Wed, 6 Nov 2019 16:05:24 +0100
+From:   Jan Kara <jack@suse.cz>
+To:     Josef Bacik <josef@toxicpanda.com>
+Cc:     snazy@snazy.de, Jan Kara <jack@suse.cz>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+Message-ID: <20191106150524.GL16085@quack2.suse.cz>
+References: <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
+ <20191025135749.GK17610@dhcp22.suse.cz>
+ <20191025140029.GL17610@dhcp22.suse.cz>
+ <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+ <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+ <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+ <20191105182211.GA33242@cmpxchg.org>
+ <20191106120315.GF16085@quack2.suse.cz>
+ <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+ <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106130838.GL5671@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20171215
+In-Reply-To: <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/06/19 14:08, Peter Zijlstra wrote:
-> On Wed, Nov 06, 2019 at 01:05:25PM +0100, Peter Zijlstra wrote:
-> > On Mon, Oct 28, 2019 at 05:46:03PM +0000, Quentin Perret wrote:
-> > > 
-> > > After digging a bit, the offending commit seems to be:
-> > > 
-> > >     67692435c411 ("sched: Rework pick_next_task() slow-path")
-> > > 
-> > > By 'offending' I mean that reverting it makes the issue go away. The
-> > > issue comes from the fact that pick_next_entity() returns a NULL se in
-> > > the 'simple' path of pick_next_task_fair(), which causes obvious
-> > > problems in the subsequent call to set_next_entity().
-> > > 
-> > > I'll dig more, but if anybody understands the issue in the meatime feel
-> > > free to send me a patch to try out :)
+On Wed 06-11-19 09:56:09, Josef Bacik wrote:
+> On Wed, Nov 06, 2019 at 02:45:43PM +0100, Robert Stupp wrote:
+> > On Wed, 2019-11-06 at 13:03 +0100, Jan Kara wrote:
+> > > On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
+> > > > What I don't quite understand yet is why the fault path doesn't
+> > > > make
+> > > > progress eventually. We must drop the mmap_sem without changing the
+> > > > state in any way. How can we keep looping on the same page?
+> > >
+> > > That may be a slight suboptimality with Josef's patches. If the page
+> > > is marked as PageReadahead, we always drop mmap_sem if we can and
+> > > start
+> > > readahead without checking whether that makes sense or not in
+> > > do_async_mmap_readahead(). OTOH page_cache_async_readahead() then
+> > > clears
+> > > PageReadahead so the only way how I can see we could loop like this
+> > > is when
+> > > file->ra->ra_pages is 0. Not sure if that's what's happening through.
+> > > We'd
+> > > need to find which of the paths in filemap_fault() calls
+> > > maybe_unlock_mmap_for_io() to tell more.
 > > 
-> > So for all those who didn't follow along on IRC, the below seems to cure
-> > things.
+> > Yes, ra_pages==0
+> > Attached the dmesg + smaps outputs
 > > 
-> > The only thing I'm now considering is if we shouldn't be setting
-> > ->on_cpu=2 _before_ calling put_prev_task(). I'll go audit the RT/DL
-> > cases.
+> > 
 > 
-> So I think it all works, but that's more by accident than anything else.
-> I'll move the ->on_cpu=2 assignment earlier. That clearly avoids calling
-> put_prev_task() while we're in put_prev_task().
+> Ah ok I see what's happening, __get_user_pages() returns 0 if we get an EBUSY
+> from faultin_page, and then __mm_populate does nend = nstart + ret * PAGE_SIZE,
+> which just leaves us where we are.
+> 
+> We need to handle the non-blocking and the locking separately in __mm_populate
+> so we know what's going on.  Jan's fix for the readahead thing is definitely
+> valid as well, but this will keep us from looping forever in other retry cases.
 
-Did you mean avoids calling *set_next_task()* while we're in put_prev_task()?
+I don't think this will work. AFAICS faultin_page() just checks whether
+'nonblocking' is != NULL but doesn't ever look at its value... Honestly the
+whole interface is rather weird like lots of things around gup().
 
-So what you're saying is that put_prev_task_{rt,dl}() could drop the rq_lock()
-too and the race could happen while we're inside these functions, correct? Or
-is it a different reason?
+								Honza
 
-By the way, is all reads/writes to ->on_cpu happen when a lock is held? Ie: we
-don't need to use any smp read/write barriers?
-
-Cheers
-
---
-Qais Yousef
+> 
+> diff --git a/mm/gup.c b/mm/gup.c
+> index 8f236a335ae9..ac625805d569 100644
+> --- a/mm/gup.c
+> +++ b/mm/gup.c
+> @@ -1237,6 +1237,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+>  	unsigned long end, nstart, nend;
+>  	struct vm_area_struct *vma = NULL;
+>  	int locked = 0;
+> +	int nonblocking = 1;
+>  	long ret = 0;
+>  
+>  	end = start + len;
+> @@ -1268,7 +1269,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+>  		 * double checks the vma flags, so that it won't mlock pages
+>  		 * if the vma was already munlocked.
+>  		 */
+> -		ret = populate_vma_page_range(vma, nstart, nend, &locked);
+> +		ret = populate_vma_page_range(vma, nstart, nend, &nonblocking);
+>  		if (ret < 0) {
+>  			if (ignore_errors) {
+>  				ret = 0;
+> @@ -1276,6 +1277,14 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
+>  			}
+>  			break;
+>  		}
+> +
+> +		/*
+> +		 * We dropped the mmap_sem, so we need to re-lock, and the next
+> +		 * loop around we won't drop because nonblocking is now 0.
+> +		 */
+> +		if (!nonblocking)
+> +			locked = 0;
+> +
+>  		nend = nstart + ret * PAGE_SIZE;
+>  		ret = 0;
+>  	}
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
