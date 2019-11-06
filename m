@@ -2,81 +2,99 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3FC9C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:20:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EFEC5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 916502166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:20:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 338002166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731946AbfKFPUD (ORCPT
+        id S1731971AbfKFPVC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:20:03 -0500
-Received: from mail-io1-f72.google.com ([209.85.166.72]:45681 "EHLO
-        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727202AbfKFPUC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:20:02 -0500
-Received: by mail-io1-f72.google.com with SMTP id c17so15084349ioh.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:20:00 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
-         :from:to;
-        bh=QbobwaWWXn01psZxrEEOIRgurZbAVL2YBBMKCRdbKg0=;
-        b=KxUFSSzDbnbumcL/GgIbQfN8spPRIaGbAzIFK24L096iugRWUzA5IvxeE12LAse5fs
-         PyOW2k0XCpFX7ltH9So79rFH9Xpab1stPXycKBDwkfvY0t08ORwy7C9kE482BICQBCCw
-         2/n+aVXKuDwL8DRAirFC+Dv3xo+9hFIX/WUf/xdGTG4JLzfy1BxfTZgsDD4FOuF8vOAf
-         iDKiAmjXdw3FccI06dqdJDWaO51CkjS159an+gTyWNQsORBPJhYdj+1Gj62w7bdBkxNj
-         2OQ/cQPUbC9H656wtH+lcAkBw1ZJ07Dks+/I8WE1cFI2+CqZA32dplun7IeXSVUjBDMP
-         Tnuw==
-X-Gm-Message-State: APjAAAUsQxJlpF/GHvrMYZw2Clzg/ug6TVCpJSL3NqCgJBHNxYPsT3Uy
-        R2CaUW0kLtac+7UfdIB8SGlmPJq33qZ2x6Drk1o/qVIuuKvj
-X-Google-Smtp-Source: APXvYqypSQ9fhpxFp136CkTuJg8S2JHGyT1Q1HM7ZQrLQcFZ1R8db4+KQgj35ozavDMfx9kbB4OKxsoKjNLFZ6xz4SrlcF5/UZsr
-MIME-Version: 1.0
-X-Received: by 2002:a92:8c92:: with SMTP id s18mr3258760ill.2.1573053600559;
- Wed, 06 Nov 2019 07:20:00 -0800 (PST)
-Date:   Wed, 06 Nov 2019 07:20:00 -0800
-In-Reply-To: <000000000000b2de3a0594d8b4ca@google.com>
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000012ff570596af15cc@google.com>
-Subject: Re: WARNING in drm_mode_createblob_ioctl
-From:   syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>
-To:     airlied@linux.ie, akpm@linux-foundation.org, daniel@ffwll.ch,
-        dri-devel@lists.freedesktop.org, dvyukov@google.com,
-        keescook@chromium.org, linux-kernel@vger.kernel.org,
-        maarten.lankhorst@linux.intel.com, mripard@kernel.org,
-        sean@poorly.run, sfr@canb.auug.org.au,
-        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+        Wed, 6 Nov 2019 10:21:02 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:33004 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727231AbfKFPVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:21:01 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5791E1A0647;
+        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 402691A0645;
+        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7337E205EB;
+        Wed,  6 Nov 2019 16:20:58 +0100 (CET)
+From:   Mirela Rabulea <mirela.rabulea@nxp.com>
+To:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-imx@nxp.com, s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com,
+        Mirela Rabulea <mirela.rabulea@nxp.com>
+Subject: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+Date:   Wed,  6 Nov 2019 17:20:28 +0200
+Message-Id: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-syzbot has bisected this bug to:
+This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
+and it's dependencies.
+The driver was tested on i.MX8QXP, using a unit test application and
+the v4l2-compliance tool, which passes when run on the encoder/decoder dev
+node, without any other parameters:
+v4l2-compliance -d /dev/video0
+v4l2-compliance -d /dev/video1
+v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
 
-commit 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-Author: Kees Cook <keescook@chromium.org>
-Date:   Mon Nov 4 22:57:23 2019 +0000
+The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
+upstream, but not accepted because there was no driver using this format,
+until now. This pixel format, YUV444 24bpp, is now used and needed by the
+i.MX8QXP/QM JPEG encoder/decoder driver.
 
-     uaccess: disallow > INT_MAX copy sizes
+Mirela Rabulea (5):
+  media: v4l: Add packed YUV444 24bpp pixel format
+  firmware: imx: scu-pd: Add power domains for imx-jpeg
+  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
 
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=125fe6dce00000
-start commit:   51309b9d Add linux-next specific files for 20191105
-git tree:       linux-next
-final crash:    https://syzkaller.appspot.com/x/report.txt?x=115fe6dce00000
-console output: https://syzkaller.appspot.com/x/log.txt?x=165fe6dce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-dashboard link: https://syzkaller.appspot.com/bug?extid=fb77e97ebf0612ee6914
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1212dc3ae00000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145f604ae00000
+ .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
+ arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
+ drivers/firmware/imx/scu-pd.c                      |    6 +
+ drivers/media/platform/Kconfig                     |    2 +
+ drivers/media/platform/Makefile                    |    1 +
+ drivers/media/platform/imx-jpeg/Kconfig            |   10 +
+ drivers/media/platform/imx-jpeg/Makefile           |    3 +
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
+ drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
+ drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+ include/uapi/linux/videodev2.h                     |    1 +
+ 15 files changed, 2949 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+ create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+ create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+ create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
 
-Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-Fixes: 9e5a64c71b2f ("uaccess: disallow > INT_MAX copy sizes")
+-- 
+2.7.4
 
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
