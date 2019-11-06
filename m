@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 515FBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D9E4C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ECF0222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F47020659
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hvKtCam4"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="ChIZGBOd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731129AbfKFDJB (ORCPT
+        id S1731144AbfKFDJG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:09:01 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33139 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731100AbfKFDI7 (ORCPT
+        Tue, 5 Nov 2019 22:09:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:41959 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731131AbfKFDJD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:08:59 -0500
-Received: by mail-pg1-f194.google.com with SMTP id u23so16141192pgo.0
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:08:59 -0800 (PST)
+        Tue, 5 Nov 2019 22:09:03 -0500
+Received: by mail-pg1-f193.google.com with SMTP id l3so16115107pgr.8
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:09:02 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=LTJGC0hehufyDDpJLdIwX4sd+5PzEDd8462b9AsWsFc=;
-        b=hvKtCam4oJJLynyWlpMbOP1ctt6jOY2teqQzdk50+u4uBIeZUhQgld0ISgeBlj7Zkv
-         cdXdd8pXEOdL5e5LDb7EML7hMQXppl6ii0m4b3ekd9x02SzCTUKYLzEp3yMDwS6/NUHc
-         p00bfqg+t6UrqfAr5ToW7eJX3C2ft+S0ggQKaPL5ZQ5gR3qvDk9GLy1DZe1XpJefmeZ5
-         020l99AY72cjgIlmB5VbWVoDuYQ/HxTLyTVQB+CKsZRiP0u1N9yj3oDtM7oi+otKYAX9
-         Z4JTQ+RZOpoKgY0M7t2XPr4dVh72s106ytrsF3Yoj/Qriq8dq4MhEKSL5vOvOXlpFGDs
-         /V6w==
+        bh=u9meDnCrlVy1TEfNYgEE4zPiyrI7Aj0wUdJgTmJwPd0=;
+        b=ChIZGBOdauzWNRPMnZx4mS7Rx5rG6NTYLpSXvupVqsl+sUmP7noGaGBGMiiv/y2/Ma
+         MtXYd6Baj2roRqbE6Vq6XJNznJVhMLo+2V7rdESrYmmVPxu1Vew+x9mNg0BbRFRsAtTP
+         gB7hfkRq5dCyv7yVeof+dALAis+0NRgnD4civRyhjY9SA2ON+JtbvVj7G/A8wPwllzZB
+         rEeomigcHVdNEBgUrhkQg1IUIyaVKXk15XMbslvyVMTP5upDAUrcnY2PQhbp6s/1e0TF
+         u26VOSKxbMhfkA8cjZj7Ka4FmmwXhD1VE52xXEsj5Cv0F37K4aukNd36KzI3Kkn+WEuq
+         4f4g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=LTJGC0hehufyDDpJLdIwX4sd+5PzEDd8462b9AsWsFc=;
-        b=kXtE5T4DWmC7cF7lrwNscasBLC6+4uQKhMD1zbM+ByjiCtyqGv9n48i2xAEwzbjCS8
-         a9dw53Wvs8o27SNmvgdT+wDBjQNUmEL2jH79cxYkdhHZMslUkMn2AOVyhUWmCLCTIJAl
-         DPBFS4VMMedejagUlg+VlKy8G8TFeLKZeROY8JjqEZWPMGuGJ+CM6YU4S8vCZdYwJ3zW
-         v5frLqkLj+18A+xgas+yxkhcstmmasYIQ+A572KVyfe9aMM3+ClExBDku9zT5y7gjAUL
-         myVTXnog/WWoCj8pacHcd4Fl+AUlzFfwijRO8TZ2vGoTT6dt+hYwZQZq9kLmacbCZzw0
-         X8mA==
-X-Gm-Message-State: APjAAAXAQaVrlb4+hCvQ/XneMGwuuhXw27wgMX7BDEE8BGdha9ppU8+U
-        VEMV7/Ar+4qnqMv3j9SluQrDn1+OGYA=
-X-Google-Smtp-Source: APXvYqx1029Zf1jFMc5t5qbu9Z49aYAcoYPxwzothKeaiV5/uBHIk0FsUPkqOgp0OAreuJ7lcxISKA==
-X-Received: by 2002:aa7:82d7:: with SMTP id f23mr423039pfn.141.1573009738407;
-        Tue, 05 Nov 2019 19:08:58 -0800 (PST)
+        bh=u9meDnCrlVy1TEfNYgEE4zPiyrI7Aj0wUdJgTmJwPd0=;
+        b=LPzGurebICmK68uuDqDjraMoaDsRoeqzXajrLKyEQiqQE16dvzVu03+ih8VNFRi6PD
+         jnpm1aZHPgsMC3ozK+ALK0APZNwKPEpHYY1fcd2Uumai6fFO5LqeM8rzwMW+n0rnygEK
+         dH82uQB3yDZHUxgWCm/g0gfAMuiUCP/Zs3oyfk7yh50gAfwxQWR+7NVdrNvCF5fMD468
+         KqzgNxv+82jfV24KK3hyROKt8TCSdO0vnY9bfX4GZ4Lyp0aPlmAAHhWWi4q1AvmZJnx5
+         rCSn/q/4ueOPCLwp9Jo9b4GbQzvxcmcfXgCZ7z6cE7PMqgNUC1/ys6nhxqdgMtpaLJDu
+         QBag==
+X-Gm-Message-State: APjAAAUNp9je/SCu4OzogY0mdUXlwL9PCi50HLq1ZP6+ecjVJWrE1Q9S
+        nqZpJ5yssrIMY2+DmPnzUx15DQrdJ5k=
+X-Google-Smtp-Source: APXvYqzhrFwpuYwd8Wlj1WmlC+ES/GKmbsEVqf2kNamEBw9yHqXZ/UGxwK3ReXng8nT7sP5aDGlQyg==
+X-Received: by 2002:a17:90a:c56:: with SMTP id u22mr654373pje.24.1573009742083;
+        Tue, 05 Nov 2019 19:09:02 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.08.54
+        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.08.58
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:08:57 -0800 (PST)
+        Tue, 05 Nov 2019 19:09:01 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,12 +67,11 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Thomas Gleixner <tglx@linutronix.de>, x86@kernel.org
-Subject: [PATCH 45/50] x86/amd_gart: Print stacktrace for a leak with KERN_ERR
-Date:   Wed,  6 Nov 2019 03:05:36 +0000
-Message-Id: <20191106030542.868541-46-dima@arista.com>
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org
+Subject: [PATCH 46/50] power: Use show_stack_loglvl()
+Date:   Wed,  6 Nov 2019 03:05:37 +0000
+Message-Id: <20191106030542.868541-47-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191106030542.868541-1-dima@arista.com>
 References: <20191106030542.868541-1-dima@arista.com>
@@ -83,33 +82,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It's under CONFIG_IOMMU_LEAK option which is enabled by debug config.
-Likely the backtrace is worth to be seen - so aligning with log level of
-error message in iommu_full().
+Aligning with other watchdog messages just before panic - use
+KERN_EMERG.
 
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86@kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Len Brown <len.brown@intel.com>
+Cc: Pavel Machek <pavel@ucw.cz>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: linux-pm@vger.kernel.org
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/x86/kernel/amd_gart_64.c | 2 +-
+ drivers/base/power/main.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/amd_gart_64.c b/arch/x86/kernel/amd_gart_64.c
-index a6ac3712db8b..033503f394f7 100644
---- a/arch/x86/kernel/amd_gart_64.c
-+++ b/arch/x86/kernel/amd_gart_64.c
-@@ -159,7 +159,7 @@ static void dump_leak(void)
- 		return;
- 	dump = 1;
+diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
+index 134a8af51511..3f39c9524c4d 100644
+--- a/drivers/base/power/main.c
++++ b/drivers/base/power/main.c
+@@ -487,7 +487,7 @@ static void dpm_watchdog_handler(struct timer_list *t)
+ 	struct dpm_watchdog *wd = from_timer(wd, t, timer);
  
--	show_stack(NULL, NULL);
-+	show_stack_loglvl(NULL, NULL, KERN_ERR);
- 	debug_dma_dump_mappings(NULL);
+ 	dev_emerg(wd->dev, "**** DPM device timeout ****\n");
+-	show_stack(wd->tsk, NULL);
++	show_stack_loglvl(wd->tsk, NULL, KERN_EMERG);
+ 	panic("%s %s: unrecoverable failure\n",
+ 		dev_driver_string(wd->dev), dev_name(wd->dev));
  }
- #endif
 -- 
 2.23.0
 
