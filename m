@@ -2,183 +2,144 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39F04C5DF66
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23472C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A0A0218AE
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EB99521848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:18:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Tfm+AIKz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732322AbfKFRS2 (ORCPT
+        id S1732356AbfKFRSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:18:28 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47586 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727894AbfKFRS1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:18:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 39AE2B186;
-        Wed,  6 Nov 2019 17:18:25 +0000 (UTC)
-Subject: Re: [PATCH STABLE 4.9] x86, mm, gup: prevent get_page() race with
- munmap in paravirt guest
-To:     Ben Hutchings <ben@decadent.org.uk>, stable@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org,
-        Jann Horn <jannh@google.com>,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        xen-devel@lists.xenproject.org, Oscar Salvador <osalvador@suse.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Juergen Gross <jgross@suse.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ajay Kaher <akaher@vmware.com>
-References: <20190802160614.8089-1-vbabka@suse.cz>
- <d3bb280b405d6acf0bc4176d63639201ff62853f.camel@decadent.org.uk>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <9c130fa4-e52d-f8bd-c450-42341c7ab441@suse.cz>
-Date:   Wed, 6 Nov 2019 18:18:23 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Wed, 6 Nov 2019 12:18:31 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:40589 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732329AbfKFRSa (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:18:30 -0500
+Received: by mail-pg1-f194.google.com with SMTP id 15so17577519pgt.7
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:18:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to;
+        bh=kqep8XBz+ob9m9HgLeaELks6sa5oaorHLu84jPUpdI0=;
+        b=Tfm+AIKzVLe4DKvn7S7UE7TTNFzSpLQpGOJ0dbBICYYiDkzHHhPep0L3G96Vp0HLkn
+         3iFEtU69J8jfFGl/vrroJ5cmlLPPZ/jEFJYPh5Iiuzsg9xZmv+vWYtIEUnvnADfAz+O0
+         6EHPI8OypMmHrVeVHx6LKUwBIdRVeHrA8kypc=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=kqep8XBz+ob9m9HgLeaELks6sa5oaorHLu84jPUpdI0=;
+        b=pfqHQcfOUcIuMWpyW1GHTLW7igqlNGj7koFaGbmABVR3r3z07Sq3SZJIWANH6BBefF
+         diVrdqZnalWzwRNMsFMrCgphaSBNTO8Ogih2t0TqjoRLIZCboGJY35ec+NZVT5LmVx7X
+         SCaYeYR8tigNFPKALYh3z7+x2EYnJAAqxVW84h6uwuJn7b1IcHNH75VFS3STzIO09TGI
+         iw3a8qY+DsXZ+9Umbfk479bG7N1i7UcyUrIyjQVu6foF4BX8kHn0MxOaXCEL8xy/tvGH
+         61zxTNPQXDvOT4HbxqmXT/6J5XwA7RAIo5LEkxkQitkawD7orjFgHhRDIIoLAZN1MQzI
+         7rdA==
+X-Gm-Message-State: APjAAAUvPC5vElIpaQ2dCWO0E7lpP4+KosAbEtVJRrVJXb1Z6PQmgifJ
+        PwastVcX2Bt+8HenoZrMgFJyZA==
+X-Google-Smtp-Source: APXvYqyZHHZJMCCOAUO2Q7fAPKf5j8qTcabKvqS3xUm4Nyrs58kWQPudNMOakH9O8x+5MrgTLl1e+w==
+X-Received: by 2002:a63:d452:: with SMTP id i18mr4222869pgj.76.1573060709773;
+        Wed, 06 Nov 2019 09:18:29 -0800 (PST)
+Received: from www.outflux.net (smtp.outflux.net. [198.145.64.163])
+        by smtp.gmail.com with ESMTPSA id s5sm3084844pjn.24.2019.11.06.09.18.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 09:18:28 -0800 (PST)
+Date:   Wed, 6 Nov 2019 09:18:27 -0800
+From:   Kees Cook <keescook@chromium.org>
+To:     Brendan Higgins <brendanhiggins@google.com>
+Cc:     shuah@kernel.org, john.johansen@canonical.com, jmorris@namei.org,
+        serge@hallyn.com, alan.maguire@oracle.com, yzaikin@google.com,
+        davidgow@google.com, mcgrof@kernel.org, tytso@mit.edu,
+        linux-kernel@vger.kernel.org,
+        linux-security-module@vger.kernel.org, kunit-dev@googlegroups.com,
+        linux-kselftest@vger.kernel.org,
+        Mike Salvatore <mike.salvatore@canonical.com>
+Subject: Re: [PATCH linux-kselftest/test v2] apparmor: add AppArmor KUnit
+ tests for policy unpack
+Message-ID: <201911060916.AC9E14B@keescook>
+References: <20191106004329.16991-1-brendanhiggins@google.com>
 MIME-Version: 1.0
-In-Reply-To: <d3bb280b405d6acf0bc4176d63639201ff62853f.camel@decadent.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106004329.16991-1-brendanhiggins@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 9/19/19 8:26 PM, Ben Hutchings wrote:
-> On Mon, 2019-08-19 at 18:58 +0100, Vlastimil Babka wrote:
-> [...]
->> Hi, I'm sending this stable-only patch for consideration because it's probably
->> unrealistic to backport the 4.13 switch to generic GUP. I can look at 4.4 and
->> 3.16 if accepted. The RCU page table freeing could be also considered.
+On Tue, Nov 05, 2019 at 04:43:29PM -0800, Brendan Higgins wrote:
+> From: Mike Salvatore <mike.salvatore@canonical.com>
 > 
-> I would be interested in backports for 3.16 and 4.4.
+> Add KUnit tests to test AppArmor unpacking of userspace policies.
+> AppArmor uses a serialized binary format for loading policies. To find
+> policy format documentation see
+> Documentation/admin-guide/LSM/apparmor.rst.
 > 
->> Note the patch also includes page refcount protection. I found out that
->> 8fde12ca79af ("mm: prevent get_user_pages() from overflowing page refcount")
->> backport to 4.9 missed the arch-specific gup implementations:
->> https://lore.kernel.org/lkml/6650323f-dbc9-f069-000b-f6b0f941a065@suse.cz/
-> [...]
+> In order to write the tests against the policy unpacking code, some
+> static functions needed to be exposed for testing purposes. One of the
+> goals of this patch is to establish a pattern for which testing these
+> kinds of functions should be done in the future.
 > 
-> I suppose that still needs to be addressed for 4.9, right?
+> Signed-off-by: Brendan Higgins <brendanhiggins@google.com>
+> Signed-off-by: Mike Salvatore <mike.salvatore@canonical.com>
+> ---
+>  security/apparmor/Kconfig              |  16 +
+>  security/apparmor/policy_unpack.c      |   4 +
+>  security/apparmor/policy_unpack_test.c | 607 +++++++++++++++++++++++++
+>  3 files changed, 627 insertions(+)
+>  create mode 100644 security/apparmor/policy_unpack_test.c
+> 
+> diff --git a/security/apparmor/Kconfig b/security/apparmor/Kconfig
+> index d8b1a360a6368..78a33ccac2574 100644
+> --- a/security/apparmor/Kconfig
+> +++ b/security/apparmor/Kconfig
+> @@ -66,3 +66,19 @@ config SECURITY_APPARMOR_DEBUG_MESSAGES
+>  	  Set the default value of the apparmor.debug kernel parameter.
+>  	  When enabled, various debug messages will be logged to
+>  	  the kernel message buffer.
+> +
+> +config SECURITY_APPARMOR_KUNIT_TEST
+> +	bool "Build KUnit tests for policy_unpack.c"
+> +	depends on KUNIT && SECURITY_APPARMOR
+> +	help
+> +	  This builds the AppArmor KUnit tests.
+> +
+> +	  KUnit tests run during boot and output the results to the debug log
+> +	  in TAP format (http://testanything.org/). Only useful for kernel devs
+> +	  running KUnit test harness and are not for inclusion into a
+> +	  production build.
+> +
+> +	  For more information on KUnit and unit tests in general please refer
+> +	  to the KUnit documentation in Documentation/dev-tools/kunit/.
+> +
+> +	  If unsure, say N.
+> diff --git a/security/apparmor/policy_unpack.c b/security/apparmor/policy_unpack.c
+> index 8cfc9493eefc7..37c1dd3178fc0 100644
+> --- a/security/apparmor/policy_unpack.c
+> +++ b/security/apparmor/policy_unpack.c
+> @@ -1120,3 +1120,7 @@ int aa_unpack(struct aa_loaddata *udata, struct list_head *lh,
+>  
+>  	return error;
+>  }
+> +
+> +#ifdef CONFIG_SECURITY_APPARMOR_KUNIT_TEST
+> +#include "policy_unpack_test.c"
+> +#endif /* CONFIG_SECURITY_APPARMOR_KUNIT_TEST */
 
-Here's what is AFAIK missing for 4.9 for x86 and s390.
+To make this even LESS intrusive, the ifdefs could live in ..._test.c.
 
-----8<----
-From d981bbf770ca41e999115cf3b0f27dde57479df0 Mon Sep 17 00:00:00 2001
-From: Vlastimil Babka <vbabka@suse.cz>
-Date: Wed, 6 Nov 2019 16:32:57 +0100
-Subject: [PATCH STABLE 4.9] mm, gup: add missing refcount overflow checks on x86 and s390
+Also, while I *think* the kernel build system will correctly track this
+dependency, can you double-check that changes to ..._test.c correctly
+trigger a recompile of policy_unpack.c?
 
-The mainline commit 8fde12ca79af ("mm: prevent get_user_pages() from
-overflowing page refcount") was backported to 4.9.y stable as commit
-2ed768cfd895. The backport however missed that in 4.9, there are several
-arch-specific gup.c versions with fast gup implementations, so these do not
-prevent refcount overflow.
-
-This is partially fixed for x86 in stable-only commit d73af79742e7 ("x86, mm,
-gup: prevent get_page() race with munmap in paravirt guest"). This stable-only
-commit adds missing parts to x86 version, as well as s390 version, both taken
-from the SUSE SLES/openSUSE 4.12-based kernels.
-
-The remaining architectures with own gup.c are sparc, mips, sh. It's unlikely
-the known overflow scenario based on FUSE, which needs 140GB of RAM, is a
-problem for those architectures, and I don't feel confident enough to patch
-them.
-
-Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
----
- arch/s390/mm/gup.c |  9 ++++++---
- arch/x86/mm/gup.c  | 10 ++++++++--
- 2 files changed, 14 insertions(+), 5 deletions(-)
-
-diff --git a/arch/s390/mm/gup.c b/arch/s390/mm/gup.c
-index 97fc449a7470..33a940389a6d 100644
---- a/arch/s390/mm/gup.c
-+++ b/arch/s390/mm/gup.c
-@@ -38,7 +38,8 @@ static inline int gup_pte_range(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		VM_BUG_ON(!pfn_valid(pte_pfn(pte)));
- 		page = pte_page(pte);
- 		head = compound_head(page);
--		if (!page_cache_get_speculative(head))
-+		if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+		    || !page_cache_get_speculative(head)))
- 			return 0;
- 		if (unlikely(pte_val(pte) != pte_val(*ptep))) {
- 			put_page(head);
-@@ -76,7 +77,8 @@ static inline int gup_huge_pmd(pmd_t *pmdp, pmd_t pmd, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
- 		return 0;
- 	}
-@@ -150,7 +152,8 @@ static int gup_huge_pud(pud_t *pudp, pud_t pud, unsigned long addr,
- 		refs++;
- 	} while (addr += PAGE_SIZE, addr != end);
- 
--	if (!page_cache_add_speculative(head, refs)) {
-+	if (unlikely(WARN_ON_ONCE(page_ref_count(head) < 0)
-+	    || !page_cache_add_speculative(head, refs))) {
- 		*nr -= refs;
- 		return 0;
- 	}
-diff --git a/arch/x86/mm/gup.c b/arch/x86/mm/gup.c
-index d7db45bdfb3b..551fc7fea046 100644
---- a/arch/x86/mm/gup.c
-+++ b/arch/x86/mm/gup.c
-@@ -202,10 +202,12 @@ static int __gup_device_huge_pmd(pmd_t pmd, unsigned long addr,
- 			undo_dev_pagemap(nr, nr_start, pages);
- 			return 0;
- 		}
-+		if (unlikely(!try_get_page(page))) {
-+			put_dev_pagemap(pgmap);
-+			return 0;
-+		}
- 		SetPageReferenced(page);
- 		pages[*nr] = page;
--		get_page(page);
--		put_dev_pagemap(pgmap);
- 		(*nr)++;
- 		pfn++;
- 	} while (addr += PAGE_SIZE, addr != end);
-@@ -230,6 +232,8 @@ static noinline int gup_huge_pmd(pmd_t pmd, unsigned long addr,
- 
- 	refs = 0;
- 	head = pmd_page(pmd);
-+	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
-+		return 0;
- 	page = head + ((addr & ~PMD_MASK) >> PAGE_SHIFT);
- 	do {
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
-@@ -289,6 +293,8 @@ static noinline int gup_huge_pud(pud_t pud, unsigned long addr,
- 
- 	refs = 0;
- 	head = pud_page(pud);
-+	if (WARN_ON_ONCE(page_ref_count(head) <= 0))
-+		return 0;
- 	page = head + ((addr & ~PUD_MASK) >> PAGE_SHIFT);
- 	do {
- 		VM_BUG_ON_PAGE(compound_head(page) != head, page);
 -- 
-2.23.0
-
-
-
+Kees Cook
