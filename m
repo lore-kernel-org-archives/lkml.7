@@ -2,237 +2,858 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93697C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D95EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 587852166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 426522166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T6+hrNSE"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="D6pSzjsh"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731734AbfKFNkR (ORCPT
+        id S1731868AbfKFNkc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:40:17 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:48988 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730456AbfKFNkQ (ORCPT
+        Wed, 6 Nov 2019 08:40:32 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:49431 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727074AbfKFNkb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:40:16 -0500
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjRd104694;
-        Wed, 6 Nov 2019 07:39:45 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573047585;
-        bh=B4AqWpvbkF9WwJU+qXr/4lM8+KtnmSOFmTVCwEr68/c=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=T6+hrNSEcYbMNGY8yQ8noGwJoc1vkj/nZLrAdWGY4qwTosk3QasLuy2seIDsn9tjG
-         NW1S0DM+36C9zcG8uKT1PJYysjyv7gt3g/Hfr8bZz4icnETFcs9f+ysa30CDAj9YlX
-         iBj+pEBwVXYN5BYoh3tnvYhOqTyM80B2C7xzBFJQ=
-Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjmR071492;
-        Wed, 6 Nov 2019 07:39:45 -0600
-Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
- (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 07:39:30 -0600
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 07:39:30 -0600
-Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6Dddi6039199;
-        Wed, 6 Nov 2019 07:39:40 -0600
-Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
-        Andrew Murray <andrew.murray@arm.com>,
-        Xiaowei Bao <xiaowei.bao@nxp.com>
-CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
- <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
- <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-Message-ID: <e34708a1-1116-89f9-c3f8-7f21b63c9d9c@ti.com>
-Date:   Wed, 6 Nov 2019 19:09:05 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 08:40:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573047630;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=SsFfHA12rLKQuNw+Ju5OJCJI1NTIItUqVY4qTacphZY=;
+        b=D6pSzjshwDbOau5BDOdOkCAe69e/rqVKgMS7levRX1Mb/fP0taBc3Qzpqr+ktoMOQc/4NV
+        ZMVcg8YO+JoQkN1Oyq/cc+LclhUCfdV1ka6gQWqJvlE32HwCIFtrHbUiO1x7CRTpIczaq5
+        Q2hWvKQbfc4eWgbh08e/LtPuJGmCWTU=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-134-5Cvay2IcMtiJZLFOESjbiw-1; Wed, 06 Nov 2019 08:40:25 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id C4204800C72;
+        Wed,  6 Nov 2019 13:40:21 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-193.pek2.redhat.com [10.72.12.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D5B6619756;
+        Wed,  6 Nov 2019 13:39:15 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V10 3/6] mdev: introduce device specific ops
+Date:   Wed,  6 Nov 2019 21:35:28 +0800
+Message-Id: <20191106133531.693-4-jasowang@redhat.com>
+In-Reply-To: <20191106133531.693-1-jasowang@redhat.com>
+References: <20191106133531.693-1-jasowang@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: 5Cvay2IcMtiJZLFOESjbiw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gustavo,
+Currently, except for the create and remove, the rest of
+mdev_parent_ops is designed for vfio-mdev driver only and may not help
+for kernel mdev driver. With the help of class id, this patch
+introduces device specific callbacks inside mdev_device
+structure. This allows different set of callback to be used by
+vfio-mdev and virtio-mdev.
 
-On 06/11/19 3:10 PM, Gustavo Pimentel wrote:
-> On Thu, Aug 29, 2019 at 6:13:18, Kishon Vijay Abraham I <kishon@ti.com> 
-> wrote:
-> 
-> Hi, this email slip away from my attention...
-> 
->> Gustavo,
->>
->> On 27/08/19 6:55 PM, Andrew Murray wrote:
->>> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
->>>>
->>>>
->>>>> -----Original Message-----
->>>>> From: Andrew Murray <andrew.murray@arm.com>
->>>>> Sent: 2019年8月23日 21:58
->>>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
->>>>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
->>>>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
->>>>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
->>>>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
->>>>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
->>>>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
->>>>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
->>>>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
->>>>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
->>>>> doorbell way
->>>>>
->>>>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
->>>>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
->>>>>> in EP mode.
->>>>>>
->>>>>
->>>>> I have no problems with this patch, however...
->>>>>
->>>>> Are you able to add to this message a reason for why you are making this
->>>>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
->>>>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
->>>>
->>>> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
->>>> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
->>>> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
->>>> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
->>>
->>> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
->>> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
->>> would never get used.
->>>
->>> Now that we're adding a platform with MSIX support the existing
->>> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
->>> different method.
->>
->> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
->> didn't work for both me and Xiaowei?
-> 
-> When I implemented the dw_pcie_ep_raise_msix_irq(), the implementation 
-> was working quite fine on DesignWare solution. Otherwise, I wouldn't 
-> submit it to the kernel.
-> From what I have seen and if I recall well, Xiaowei implementation was 
-> done having PF's configurated on his solution, which is a configuration 
-> that I don't have in my solution, I believe this could be the missing 
-> piece that differs between our 2 implementations.
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ .../driver-api/vfio-mediated-device.rst       | 35 +++++++++----
+ MAINTAINERS                                   |  1 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
+ drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
+ drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
+ drivers/vfio/mdev/mdev_core.c                 | 24 ++++++++-
+ drivers/vfio/mdev/mdev_private.h              |  5 ++
+ drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
+ include/linux/mdev.h                          | 43 ++++-----------
+ include/linux/mdev_vfio_ops.h                 | 52 +++++++++++++++++++
+ samples/vfio-mdev/mbochs.c                    | 20 ++++---
+ samples/vfio-mdev/mdpy.c                      | 20 ++++---
+ samples/vfio-mdev/mtty.c                      | 18 ++++---
+ 13 files changed, 206 insertions(+), 99 deletions(-)
+ create mode 100644 include/linux/mdev_vfio_ops.h
 
-I haven't debugged the issue yet but in my understanding the MSI-X table should
-be in the memory (DDR) of EP system. This table will be populated by RC while
-configuring MSI-X (with msg address and msg data). The EP will use the
-populated msg address and msg data for raising MSI-X interrupt.
-
-From the dw_pcie_ep_raise_msix_irq() (copied below), nowhere the MSI-X table is
-being read from the memory of EP system. I've given my comments below.
-
-int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
-			     u16 interrupt_num)
+diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentat=
+ion/driver-api/vfio-mediated-device.rst
+index 6709413bee29..04d56884c357 100644
+--- a/Documentation/driver-api/vfio-mediated-device.rst
++++ b/Documentation/driver-api/vfio-mediated-device.rst
+@@ -152,15 +152,6 @@ callbacks per mdev parent device, per mdev type, or an=
+y other categorization.
+ Vendor drivers are expected to be fully asynchronous in this respect or
+ provide their own internal resource protection.)
+=20
+-The callbacks in the mdev_parent_ops structure are as follows:
+-
+-* open: open callback of mediated device
+-* close: close callback of mediated device
+-* ioctl: ioctl callback of mediated device
+-* read : read emulation callback
+-* write: write emulation callback
+-* mmap: mmap emulation callback
+-
+ A driver should use the mdev_parent_ops structure in the function call to
+ register itself with the mdev core driver::
+=20
+@@ -172,10 +163,34 @@ that a driver should use to unregister itself with th=
+e mdev core driver::
+=20
+ =09extern void mdev_unregister_device(struct device *dev);
+=20
+-It is also required to specify the class_id in create() callback through::
++As multiple types of mediated devices may be supported, class id needs
++to be specified in the create() callback. This could be done
++explicitly for the device that interacts with the mdev device directly
++through::
+=20
+ =09int mdev_set_class(struct mdev_device *mdev, u16 id);
+=20
++For the device that uses the mdev bus for its operation, the class
++should provide helper function to set class id and device specific
++ops. E.g for vfio-mdev devices, the function to be called is::
++
++=09int mdev_set_vfio_ops(struct mdev_device *mdev,
++                              const struct mdev_vfio_device_ops *vfio_ops)=
+;
++
++The class id (set by this function to MDEV_CLASS_ID_VFIO) is used to
++match a device with an mdev driver via its id table. The device
++specific callbacks (specified in *vfio_ops) are obtainable via
++mdev_get_vfio_ops() (for use by the mdev bus driver). A vfio-mdev
++device (class id MDEV_CLASS_ID_VFIO) uses the following
++device-specific ops:
++
++* open: open callback of vfio mediated device
++* close: close callback of vfio mediated device
++* ioctl: ioctl callback of vfio mediated device
++* read : read emulation callback
++* write: write emulation callback
++* mmap: mmap emulation callback
++
+ Mediated Device Management Interface Through sysfs
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+=20
+diff --git a/MAINTAINERS b/MAINTAINERS
+index cba1095547fd..f661d13344d6 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -17121,6 +17121,7 @@ S:=09Maintained
+ F:=09Documentation/driver-api/vfio-mediated-device.rst
+ F:=09drivers/vfio/mdev/
+ F:=09include/linux/mdev.h
++F:=09include/linux/mdev_vfio_ops.h
+ F:=09samples/vfio-mdev/
+=20
+ VFIO PLATFORM DRIVER
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kv=
+mgt.c
+index 6420f0dbd31b..662f3a672372 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -42,6 +42,7 @@
+ #include <linux/kvm_host.h>
+ #include <linux/vfio.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <linux/debugfs.h>
+=20
+ #include <linux/nospec.h>
+@@ -643,6 +644,8 @@ static void kvmgt_put_vfio_device(void *vgpu)
+ =09vfio_device_put(((struct intel_vgpu *)vgpu)->vdev.vfio_device);
+ }
+=20
++static const struct mdev_vfio_device_ops intel_vfio_vgpu_dev_ops;
++
+ static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mde=
+v)
+ {
+ =09struct intel_vgpu *vgpu =3D NULL;
+@@ -678,7 +681,7 @@ static int intel_vgpu_create(struct kobject *kobj, stru=
+ct mdev_device *mdev)
+ =09=09     dev_name(mdev_dev(mdev)));
+ =09ret =3D 0;
+=20
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &intel_vfio_vgpu_dev_ops);
+ out:
+ =09return ret;
+ }
+@@ -1599,20 +1602,21 @@ static const struct attribute_group *intel_vgpu_gro=
+ups[] =3D {
+ =09NULL,
+ };
+=20
+-static struct mdev_parent_ops intel_vgpu_ops =3D {
+-=09.mdev_attr_groups       =3D intel_vgpu_groups,
+-=09.create=09=09=09=3D intel_vgpu_create,
+-=09.remove=09=09=09=3D intel_vgpu_remove,
+-
++static const struct mdev_vfio_device_ops intel_vfio_vgpu_dev_ops =3D {
+ =09.open=09=09=09=3D intel_vgpu_open,
+ =09.release=09=09=3D intel_vgpu_release,
+-
+ =09.read=09=09=09=3D intel_vgpu_read,
+ =09.write=09=09=09=3D intel_vgpu_write,
+ =09.mmap=09=09=09=3D intel_vgpu_mmap,
+ =09.ioctl=09=09=09=3D intel_vgpu_ioctl,
+ };
+=20
++static struct mdev_parent_ops intel_vgpu_ops =3D {
++=09.mdev_attr_groups       =3D intel_vgpu_groups,
++=09.create=09=09=09=3D intel_vgpu_create,
++=09.remove=09=09=09=3D intel_vgpu_remove,
++};
++
+ static int kvmgt_host_init(struct device *dev, void *gvt, const void *ops)
+ {
+ =09struct attribute **kvm_type_attrs;
+diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_op=
+s.c
+index cf2c013ae32f..fa473ded71c7 100644
+--- a/drivers/s390/cio/vfio_ccw_ops.c
++++ b/drivers/s390/cio/vfio_ccw_ops.c
+@@ -12,6 +12,7 @@
+=20
+ #include <linux/vfio.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <linux/nospec.h>
+ #include <linux/slab.h>
+=20
+@@ -110,6 +111,8 @@ static struct attribute_group *mdev_type_groups[] =3D {
+ =09NULL,
+ };
+=20
++static const struct mdev_vfio_device_ops mdev_vfio_ops;
++
+ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *=
+mdev)
+ {
+ =09struct vfio_ccw_private *private =3D
+@@ -129,7 +132,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, s=
+truct mdev_device *mdev)
+ =09=09=09   private->sch->schid.ssid,
+ =09=09=09   private->sch->schid.sch_no);
+=20
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
+ =09return 0;
+ }
+=20
+@@ -575,11 +578,7 @@ static ssize_t vfio_ccw_mdev_ioctl(struct mdev_device =
+*mdev,
+ =09}
+ }
+=20
+-static const struct mdev_parent_ops vfio_ccw_mdev_ops =3D {
+-=09.owner=09=09=09=3D THIS_MODULE,
+-=09.supported_type_groups  =3D mdev_type_groups,
+-=09.create=09=09=09=3D vfio_ccw_mdev_create,
+-=09.remove=09=09=09=3D vfio_ccw_mdev_remove,
++static const struct mdev_vfio_device_ops mdev_vfio_ops =3D {
+ =09.open=09=09=09=3D vfio_ccw_mdev_open,
+ =09.release=09=09=3D vfio_ccw_mdev_release,
+ =09.read=09=09=09=3D vfio_ccw_mdev_read,
+@@ -587,6 +586,13 @@ static const struct mdev_parent_ops vfio_ccw_mdev_ops =
+=3D {
+ =09.ioctl=09=09=09=3D vfio_ccw_mdev_ioctl,
+ };
+=20
++static const struct mdev_parent_ops vfio_ccw_mdev_ops =3D {
++=09.owner=09=09=09=3D THIS_MODULE,
++=09.supported_type_groups  =3D mdev_type_groups,
++=09.create=09=09=09=3D vfio_ccw_mdev_create,
++=09.remove=09=09=09=3D vfio_ccw_mdev_remove,
++};
++
+ int vfio_ccw_mdev_reg(struct subchannel *sch)
+ {
+ =09return mdev_register_device(&sch->dev, &vfio_ccw_mdev_ops);
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_a=
+p_ops.c
+index 07c31070afeb..7bdc62393112 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -16,6 +16,7 @@
+ #include <linux/bitops.h>
+ #include <linux/kvm_host.h>
+ #include <linux/module.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <asm/kvm.h>
+ #include <asm/zcrypt.h>
+=20
+@@ -321,6 +322,8 @@ static void vfio_ap_matrix_init(struct ap_config_info *=
+info,
+ =09matrix->adm_max =3D info->apxa ? info->Nd : 15;
+ }
+=20
++static const struct mdev_vfio_device_ops mdev_vfio_ops;
++
+ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *m=
+dev)
+ {
+ =09struct ap_matrix_mdev *matrix_mdev;
+@@ -343,7 +346,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, st=
+ruct mdev_device *mdev)
+ =09list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
+ =09mutex_unlock(&matrix_dev->lock);
+=20
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
+ =09return 0;
+ }
+=20
+@@ -1281,15 +1284,18 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_devic=
+e *mdev,
+ =09return ret;
+ }
+=20
++static const struct mdev_vfio_device_ops mdev_vfio_ops =3D {
++=09.open=09=09=09=3D vfio_ap_mdev_open,
++=09.release=09=09=3D vfio_ap_mdev_release,
++=09.ioctl=09=09=09=3D vfio_ap_mdev_ioctl,
++};
++
+ static const struct mdev_parent_ops vfio_ap_matrix_ops =3D {
+ =09.owner=09=09=09=3D THIS_MODULE,
+ =09.supported_type_groups=09=3D vfio_ap_mdev_type_groups,
+ =09.mdev_attr_groups=09=3D vfio_ap_mdev_attr_groups,
+ =09.create=09=09=09=3D vfio_ap_mdev_create,
+ =09.remove=09=09=09=3D vfio_ap_mdev_remove,
+-=09.open=09=09=09=3D vfio_ap_mdev_open,
+-=09.release=09=09=3D vfio_ap_mdev_release,
+-=09.ioctl=09=09=09=3D vfio_ap_mdev_ioctl,
+ };
+=20
+ int vfio_ap_mdev_register(void)
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index 7bfa2e46e829..4e70f19ac145 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -47,7 +47,8 @@ EXPORT_SYMBOL(mdev_set_drvdata);
+=20
+ /*
+  * Specify the class for the mdev device, this must be called during
+- * create() callback.
++ * create() callback explicitly or implicitly through the helpers
++ * provided by each class.
+  */
+ void mdev_set_class(struct mdev_device *mdev, u16 id)
+ {
+@@ -56,6 +57,27 @@ void mdev_set_class(struct mdev_device *mdev, u16 id)
+ }
+ EXPORT_SYMBOL(mdev_set_class);
+=20
++/*
++ * Specify the mdev device to be a VFIO mdev device, and set VFIO
++ * device ops for it. This must be called from the create() callback
++ * for VFIO mdev device.
++ */
++void mdev_set_vfio_ops(struct mdev_device *mdev,
++=09=09       const struct mdev_vfio_device_ops *vfio_ops)
++{
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev->vfio_ops =3D vfio_ops;
++}
++EXPORT_SYMBOL(mdev_set_vfio_ops);
++
++/* Get the VFIO device ops for the mdev device. */
++const struct mdev_vfio_device_ops *mdev_get_vfio_ops(struct mdev_device *m=
+dev)
++{
++=09WARN_ON(mdev->class_id !=3D MDEV_CLASS_ID_VFIO);
++=09return mdev->vfio_ops;
++}
++EXPORT_SYMBOL(mdev_get_vfio_ops);
++
+ struct device *mdev_dev(struct mdev_device *mdev)
+ {
+ =09return &mdev->dev;
+diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_priv=
+ate.h
+index c65f436c1869..411227373625 100644
+--- a/drivers/vfio/mdev/mdev_private.h
++++ b/drivers/vfio/mdev/mdev_private.h
+@@ -10,6 +10,8 @@
+ #ifndef MDEV_PRIVATE_H
+ #define MDEV_PRIVATE_H
+=20
++#include <linux/mdev_vfio_ops.h>
++
+ int  mdev_bus_register(void);
+ void mdev_bus_unregister(void);
+=20
+@@ -34,6 +36,9 @@ struct mdev_device {
+ =09struct device *iommu_device;
+ =09bool active;
+ =09u16 class_id;
++=09union {
++=09=09const struct mdev_vfio_device_ops *vfio_ops;
++=09};
+ };
+=20
+ #define to_mdev_device(dev)=09container_of(dev, struct mdev_device, dev)
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index a6641cd8b5a3..c01e2194e4b3 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -14,6 +14,7 @@
+ #include <linux/slab.h>
+ #include <linux/vfio.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+=20
+ #include "mdev_private.h"
+=20
+@@ -24,16 +25,16 @@
+ static int vfio_mdev_open(void *device_data)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+ =09int ret;
+=20
+-=09if (unlikely(!parent->ops->open))
++=09if (unlikely(!ops->open))
+ =09=09return -EINVAL;
+=20
+ =09if (!try_module_get(THIS_MODULE))
+ =09=09return -ENODEV;
+=20
+-=09ret =3D parent->ops->open(mdev);
++=09ret =3D ops->open(mdev);
+ =09if (ret)
+ =09=09module_put(THIS_MODULE);
+=20
+@@ -43,10 +44,10 @@ static int vfio_mdev_open(void *device_data)
+ static void vfio_mdev_release(void *device_data)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+=20
+-=09if (likely(parent->ops->release))
+-=09=09parent->ops->release(mdev);
++=09if (likely(ops->release))
++=09=09ops->release(mdev);
+=20
+ =09module_put(THIS_MODULE);
+ }
+@@ -55,47 +56,47 @@ static long vfio_mdev_unlocked_ioctl(void *device_data,
+ =09=09=09=09     unsigned int cmd, unsigned long arg)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+=20
+-=09if (unlikely(!parent->ops->ioctl))
++=09if (unlikely(!ops->ioctl))
+ =09=09return -EINVAL;
+=20
+-=09return parent->ops->ioctl(mdev, cmd, arg);
++=09return ops->ioctl(mdev, cmd, arg);
+ }
+=20
+ static ssize_t vfio_mdev_read(void *device_data, char __user *buf,
+ =09=09=09      size_t count, loff_t *ppos)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+=20
+-=09if (unlikely(!parent->ops->read))
++=09if (unlikely(!ops->read))
+ =09=09return -EINVAL;
+=20
+-=09return parent->ops->read(mdev, buf, count, ppos);
++=09return ops->read(mdev, buf, count, ppos);
+ }
+=20
+ static ssize_t vfio_mdev_write(void *device_data, const char __user *buf,
+ =09=09=09       size_t count, loff_t *ppos)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+=20
+-=09if (unlikely(!parent->ops->write))
++=09if (unlikely(!ops->write))
+ =09=09return -EINVAL;
+=20
+-=09return parent->ops->write(mdev, buf, count, ppos);
++=09return ops->write(mdev, buf, count, ppos);
+ }
+=20
+ static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
+ {
+ =09struct mdev_device *mdev =3D device_data;
+-=09struct mdev_parent *parent =3D mdev->parent;
++=09const struct mdev_vfio_device_ops *ops =3D mdev_get_vfio_ops(mdev);
+=20
+-=09if (unlikely(!parent->ops->mmap))
++=09if (unlikely(!ops->mmap))
+ =09=09return -EINVAL;
+=20
+-=09return parent->ops->mmap(mdev, vma);
++=09return ops->mmap(mdev, vma);
+ }
+=20
+ static const struct vfio_device_ops vfio_mdev_dev_ops =3D {
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index 78b69d09eb54..9e37506d1987 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -10,7 +10,13 @@
+ #ifndef MDEV_H
+ #define MDEV_H
+=20
++#include <linux/types.h>
++#include <linux/device.h>
++#include <linux/mdev.h>
++#include <uapi/linux/uuid.h>
++
+ struct mdev_device;
++struct mdev_vfio_device_ops;
+=20
+ /*
+  * Called by the parent device driver to set the device which represents
+@@ -48,30 +54,7 @@ struct device *mdev_get_iommu_device(struct device *dev)=
+;
+  *=09=09=09@mdev: mdev_device device structure which is being
+  *=09=09=09       destroyed
+  *=09=09=09Returns integer: success (0) or error (< 0)
+- * @open:=09=09Open mediated device.
+- *=09=09=09@mdev: mediated device.
+- *=09=09=09Returns integer: success (0) or error (< 0)
+- * @release:=09=09release mediated device
+- *=09=09=09@mdev: mediated device.
+- * @read:=09=09Read emulation callback
+- *=09=09=09@mdev: mediated device structure
+- *=09=09=09@buf: read buffer
+- *=09=09=09@count: number of bytes to read
+- *=09=09=09@ppos: address.
+- *=09=09=09Retuns number on bytes read on success or error.
+- * @write:=09=09Write emulation callback
+- *=09=09=09@mdev: mediated device structure
+- *=09=09=09@buf: write buffer
+- *=09=09=09@count: number of bytes to be written
+- *=09=09=09@ppos: address.
+- *=09=09=09Retuns number on bytes written on success or error.
+- * @ioctl:=09=09IOCTL callback
+- *=09=09=09@mdev: mediated device structure
+- *=09=09=09@cmd: ioctl command
+- *=09=09=09@arg: arguments to ioctl
+- * @mmap:=09=09mmap callback
+- *=09=09=09@mdev: mediated device structure
+- *=09=09=09@vma: vma structure
++ *
+  * Parent device that support mediated device should be registered with md=
+ev
+  * module with mdev_parent_ops structure.
+  **/
+@@ -83,15 +66,6 @@ struct mdev_parent_ops {
+=20
+ =09int     (*create)(struct kobject *kobj, struct mdev_device *mdev);
+ =09int     (*remove)(struct mdev_device *mdev);
+-=09int     (*open)(struct mdev_device *mdev);
+-=09void    (*release)(struct mdev_device *mdev);
+-=09ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
+-=09=09=09size_t count, loff_t *ppos);
+-=09ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
+-=09=09=09 size_t count, loff_t *ppos);
+-=09long=09(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
+-=09=09=09 unsigned long arg);
+-=09int=09(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
+ };
+=20
+ /* interface for exporting mdev supported type attributes */
+@@ -135,6 +109,9 @@ void *mdev_get_drvdata(struct mdev_device *mdev);
+ void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+ const guid_t *mdev_uuid(struct mdev_device *mdev);
+ void mdev_set_class(struct mdev_device *mdev, u16 id);
++void mdev_set_vfio_ops(struct mdev_device *mdev,
++=09=09       const struct mdev_vfio_device_ops *vfio_ops);
++const struct mdev_vfio_device_ops *mdev_get_vfio_ops(struct mdev_device *m=
+dev);
+=20
+ extern struct bus_type mdev_bus_type;
+=20
+diff --git a/include/linux/mdev_vfio_ops.h b/include/linux/mdev_vfio_ops.h
+new file mode 100644
+index 000000000000..317518f30621
+--- /dev/null
++++ b/include/linux/mdev_vfio_ops.h
+@@ -0,0 +1,52 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * VFIO Mediated device definition
++ */
++
++#ifndef MDEV_VFIO_OPS_H
++#define MDEV_VFIO_OPS_H
++
++#include <linux/mdev.h>
++
++/**
++ * struct mdev_vfio_device_ops - Structure to be registered for each
++ * mdev device to register the device to vfio-mdev module.
++ *
++ * @open:=09=09Open mediated device.
++ *=09=09=09@mdev: mediated device.
++ *=09=09=09Returns integer: success (0) or error (< 0)
++ * @release:=09=09release mediated device
++ *=09=09=09@mdev: mediated device.
++ * @read:=09=09Read emulation callback
++ *=09=09=09@mdev: mediated device structure
++ *=09=09=09@buf: read buffer
++ *=09=09=09@count: number of bytes to read
++ *=09=09=09@ppos: address.
++ *=09=09=09Retuns number on bytes read on success or error.
++ * @write:=09=09Write emulation callback
++ *=09=09=09@mdev: mediated device structure
++ *=09=09=09@buf: write buffer
++ *=09=09=09@count: number of bytes to be written
++ *=09=09=09@ppos: address.
++ *=09=09=09Retuns number on bytes written on success or error.
++ * @ioctl:=09=09IOCTL callback
++ *=09=09=09@mdev: mediated device structure
++ *=09=09=09@cmd: ioctl command
++ *=09=09=09@arg: arguments to ioctl
++ * @mmap:=09=09mmap callback
++ *=09=09=09@mdev: mediated device structure
++ *=09=09=09@vma: vma structure
++ */
++struct mdev_vfio_device_ops {
++=09int     (*open)(struct mdev_device *mdev);
++=09void    (*release)(struct mdev_device *mdev);
++=09ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
++=09=09=09size_t count, loff_t *ppos);
++=09ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
++=09=09=09 size_t count, loff_t *ppos);
++=09long=09(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
++=09=09=09 unsigned long arg);
++=09int=09(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
++};
++
++#endif
+diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+index 115bc5074656..12963767ba37 100644
+--- a/samples/vfio-mdev/mbochs.c
++++ b/samples/vfio-mdev/mbochs.c
+@@ -30,6 +30,7 @@
+ #include <linux/iommu.h>
+ #include <linux/sysfs.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <linux/pci.h>
+ #include <linux/dma-buf.h>
+ #include <linux/highmem.h>
+@@ -516,6 +517,8 @@ static int mbochs_reset(struct mdev_device *mdev)
+ =09return 0;
+ }
+=20
++static const struct mdev_vfio_device_ops mdev_vfio_ops;
++
+ static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)
+ {
+ =09const struct mbochs_type *type =3D mbochs_find_type(kobj);
+@@ -561,7 +564,7 @@ static int mbochs_create(struct kobject *kobj, struct m=
+dev_device *mdev)
+ =09mbochs_reset(mdev);
+=20
+ =09mbochs_used_mbytes +=3D type->mbytes;
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
+ =09return 0;
+=20
+ err_mem:
+@@ -1419,12 +1422,7 @@ static struct attribute_group *mdev_type_groups[] =
+=3D {
+ =09NULL,
+ };
+=20
+-static const struct mdev_parent_ops mdev_fops =3D {
+-=09.owner=09=09=09=3D THIS_MODULE,
+-=09.mdev_attr_groups=09=3D mdev_dev_groups,
+-=09.supported_type_groups=09=3D mdev_type_groups,
+-=09.create=09=09=09=3D mbochs_create,
+-=09.remove=09=09=09=3D mbochs_remove,
++static const struct mdev_vfio_device_ops mdev_vfio_ops =3D {
+ =09.open=09=09=09=3D mbochs_open,
+ =09.release=09=09=3D mbochs_close,
+ =09.read=09=09=09=3D mbochs_read,
+@@ -1433,6 +1431,14 @@ static const struct mdev_parent_ops mdev_fops =3D {
+ =09.mmap=09=09=09=3D mbochs_mmap,
+ };
+=20
++static const struct mdev_parent_ops mdev_fops =3D {
++=09.owner=09=09=09=3D THIS_MODULE,
++=09.mdev_attr_groups=09=3D mdev_dev_groups,
++=09.supported_type_groups=09=3D mdev_type_groups,
++=09.create=09=09=09=3D mbochs_create,
++=09.remove=09=09=09=3D mbochs_remove,
++};
++
+ static const struct file_operations vd_fops =3D {
+ =09.owner=09=09=3D THIS_MODULE,
+ };
+diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+index 665614574d50..50ee6c98b2af 100644
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -26,6 +26,7 @@
+ #include <linux/iommu.h>
+ #include <linux/sysfs.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <linux/pci.h>
+ #include <drm/drm_fourcc.h>
+ #include "mdpy-defs.h"
+@@ -226,6 +227,8 @@ static int mdpy_reset(struct mdev_device *mdev)
+ =09return 0;
+ }
+=20
++static const struct mdev_vfio_device_ops mdev_vfio_ops;
++
+ static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)
+ {
+ =09const struct mdpy_type *type =3D mdpy_find_type(kobj);
+@@ -269,7 +272,7 @@ static int mdpy_create(struct kobject *kobj, struct mde=
+v_device *mdev)
+ =09mdpy_reset(mdev);
+=20
+ =09mdpy_count++;
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
+ =09return 0;
+ }
+=20
+@@ -726,12 +729,7 @@ static struct attribute_group *mdev_type_groups[] =3D =
 {
-	.
-	.
-	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
-	bar_addr_upper = 0;
-	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
+ =09NULL,
+ };
+=20
+-static const struct mdev_parent_ops mdev_fops =3D {
+-=09.owner=09=09=09=3D THIS_MODULE,
+-=09.mdev_attr_groups=09=3D mdev_dev_groups,
+-=09.supported_type_groups=09=3D mdev_type_groups,
+-=09.create=09=09=09=3D mdpy_create,
+-=09.remove=09=09=09=3D mdpy_remove,
++static const struct mdev_vfio_device_ops mdev_vfio_ops =3D {
+ =09.open=09=09=09=3D mdpy_open,
+ =09.release=09=09=3D mdpy_close,
+ =09.read=09=09=09=3D mdpy_read,
+@@ -740,6 +738,14 @@ static const struct mdev_parent_ops mdev_fops =3D {
+ =09.mmap=09=09=09=3D mdpy_mmap,
+ };
+=20
++static const struct mdev_parent_ops mdev_fops =3D {
++=09.owner=09=09=09=3D THIS_MODULE,
++=09.mdev_attr_groups=09=3D mdev_dev_groups,
++=09.supported_type_groups=09=3D mdev_type_groups,
++=09.create=09=09=09=3D mdpy_create,
++=09.remove=09=09=09=3D mdpy_remove,
++};
++
+ static const struct file_operations vd_fops =3D {
+ =09.owner=09=09=3D THIS_MODULE,
+ };
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index 90da12ff7fd9..be476e7ad1f8 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -27,6 +27,7 @@
+ #include <linux/ctype.h>
+ #include <linux/file.h>
+ #include <linux/mdev.h>
++#include <linux/mdev_vfio_ops.h>
+ #include <linux/pci.h>
+ #include <linux/serial.h>
+ #include <uapi/linux/serial_reg.h>
+@@ -708,6 +709,8 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8=
+ *buf, size_t count,
+ =09return ret;
+ }
+=20
++static const struct mdev_vfio_device_ops vfio_dev_ops;
++
+ static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
+ {
+ =09struct mdev_state *mdev_state;
+@@ -755,7 +758,7 @@ static int mtty_create(struct kobject *kobj, struct mde=
+v_device *mdev)
+ =09list_add(&mdev_state->next, &mdev_devices_list);
+ =09mutex_unlock(&mdev_list_lock);
+=20
+-=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
++=09mdev_set_vfio_ops(mdev, &vfio_dev_ops);
+ =09return 0;
+ }
+=20
+@@ -1388,6 +1391,14 @@ static struct attribute_group *mdev_type_groups[] =
+=3D {
+ =09NULL,
+ };
+=20
++static const struct mdev_vfio_device_ops vfio_dev_ops =3D {
++=09.open=09=09=3D mtty_open,
++=09.release=09=3D mtty_close,
++=09.read=09=09=3D mtty_read,
++=09.write=09=09=3D mtty_write,
++=09.ioctl=09=09=3D mtty_ioctl,
++};
++
+ static const struct mdev_parent_ops mdev_fops =3D {
+ =09.owner                  =3D THIS_MODULE,
+ =09.dev_attr_groups        =3D mtty_dev_groups,
+@@ -1395,11 +1406,6 @@ static const struct mdev_parent_ops mdev_fops =3D {
+ =09.supported_type_groups  =3D mdev_type_groups,
+ =09.create                 =3D mtty_create,
+ =09.remove=09=09=09=3D mtty_remove,
+-=09.open                   =3D mtty_open,
+-=09.release                =3D mtty_close,
+-=09.read                   =3D mtty_read,
+-=09.write                  =3D mtty_write,
+-=09.ioctl=09=09        =3D mtty_ioctl,
+ };
+=20
+ static void mtty_device_release(struct device *dev)
+--=20
+2.19.1
 
-BAR register will hold the "PCI address" programmed by the host. So
-"bar_addr_lower" will have PCI address.
-
-	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
-	if (reg_u64 == PCI_BASE_ADDRESS_MEM_TYPE_64)
-		bar_addr_upper = dw_pcie_readl_dbi(pci, reg + 4);
-
-	tbl_addr = ((u64) bar_addr_upper) << 32 | bar_addr_lower;
-
-The "tbl_addr" now has the PCI address programmed by the host.
-
-	tbl_addr += (tbl_offset + ((interrupt_num - 1) * PCI_MSIX_ENTRY_SIZE));
-	tbl_addr &= PCI_BASE_ADDRESS_MEM_MASK;
-
-	msix_tbl = ioremap_nocache(ep->phys_base + tbl_addr,
-				   PCI_MSIX_ENTRY_SIZE);
-
-"ep->phys_base" will have EPs outbound memory address and "tbl_addr" will have
-PCI address. So msix_tbl points to the EPs outbound memory region.
-	if (!msix_tbl)
-		return -EINVAL;
-
-	msg_addr_lower = readl(msix_tbl + PCI_MSIX_ENTRY_LOWER_ADDR);
-	msg_addr_upper = readl(msix_tbl + PCI_MSIX_ENTRY_UPPER_ADDR);
-
-Here an access to the EP outbound region is made (and the transaction will be
-based on ATU configuration).
-The message address should ideally be obtained from the MSI-X table present in
-the EP system. There need not be any access to the OB region for getting data
-from MSI-X table.
-
-	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
-	msg_data = readl(msix_tbl + PCI_MSIX_ENTRY_DATA);
-	vec_ctrl = readl(msix_tbl + PCI_MSIX_ENTRY_VECTOR_CTRL);
-
-All this should be obtained from the memory of EP.
-	.
-	.
-}
-
-I'm not sure how this worked for you.
-
-Thanks
-Kishon
-
-> 
-> Since patch submission into the kernel related to msix feature on pcitest 
-> tool, I didn't touch or re-tested the msix feature by lack of time (other 
-> projects requires my full attention for now). However is on my roadmap to 
-> came back to add some other features on DesignWare eDMA driver and I can 
-> do at that time some tests to see if the 
-> dw_pcie_ep_raise_msix_irq_doorbell() is compatible or not with my 
-> solution. If so, I can do some patch to simplify and use the 
-> dw_pcie_ep_raise_msix_irq_doorbell() if it still works as expected like 
-> on dw_pcie_ep_raise_msix_irq(). Agree?
-> 
-> Gustavo
-> 
->>
->> Thanks
->> Kishon
-> 
-> 
