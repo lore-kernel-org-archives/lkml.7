@@ -2,188 +2,114 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BAFFC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:22:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B8C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6ABA12173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:22:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3046B2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iy429A2C"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWzySGaI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728555AbfKFOWk (ORCPT
+        id S1730577AbfKFOXV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:22:40 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:34836 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfKFOWk (ORCPT
+        Wed, 6 Nov 2019 09:23:21 -0500
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46574 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726945AbfKFOXV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:22:40 -0500
-Received: by mail-pl1-f195.google.com with SMTP id s10so668670plp.2;
-        Wed, 06 Nov 2019 06:22:39 -0800 (PST)
+        Wed, 6 Nov 2019 09:23:21 -0500
+Received: by mail-yw1-f68.google.com with SMTP id i2so9601609ywg.13;
+        Wed, 06 Nov 2019 06:23:20 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=VZ2YuX9WkVdA2wqZva8TfQh4uDZmSLYmnIZt2JxlnZI=;
-        b=iy429A2Ct25xdGd6rSxaImff/6n7BsHMEcJ1elNUhEYMpfsceHyGsLNXGfuTPDayK9
-         OFPB5QxinNwR4ztz4fGc0RArA+ldntUVcI17PR4mIv9i9ouOu3OprX0DrvEiucfB3qCe
-         ojrGH8Y2Bej9sf4mQc5Zh2KmXMvlI28OK8qX75pVrssia1PGcmimRnnXmalbb7l9ghEF
-         aSqhve8jp7NQmQsqhN4U0BZ1UsCxu1GttGQU5Kd7foRsDk3M87j5YFPXTImBlyRdyLPW
-         6R37tu0qG1FEROElVWSlVT8h3l2dRpy18ed5l7anPKE2wvGdeGftqxx40ElLgYr6E9Sf
-         tiRQ==
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
+        b=bWzySGaI1gx56KAqizix5H7Yk63JM+hiMx+HiAX2uSV+XOVSC9t6Jrkst9wSIn/yLa
+         Xcu/wWwfjHrzCGL5RS/ikhES7rrC7bIxuo/xobxeHHdGdiupSqBrywwc01R4ggjyVVwT
+         6JEpWFWZxnJ/BBGpPpEnMjKz3Upd/nuofT7yj7MARsElGSSh3VroG1/9NtMtS9asMnub
+         XLFSnfkiGKtLmEppBnfnGIvYYIlvm1VLadl1ERrUOnACBilCnP8g/fKJMCpoXlfG+JUY
+         67VOsBsBFFpozYlaQHVQN8dlLJyN6q8JLY/4aG2J/Ve/avl4AYaZ4kmHQxum19YIaqTs
+         NVrQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=VZ2YuX9WkVdA2wqZva8TfQh4uDZmSLYmnIZt2JxlnZI=;
-        b=DnWNB1KhWQVzMZyR+JdHTsrzjTEnIqqatky1IB3VoR2VRN3K0GdNHH7RzvtJRHrGk3
-         gVcNOUdpFQwtOj62HiPubeR/Ti9h66PtThEzRJIQ4vkOVV9H2dhVfGoph1qrXudtiMUd
-         DlkiVFmERhnm028S1XzNaJm86Zw0Xhd2bHFA5cE9ZZ7tzhFmMZ1Wqc6nehfyf6NKQG4e
-         j2tdjlXUxiVcwsjqlNpOxJtSXKvMBiqr+l8seiNcPXAH7vOJO1gpD7SCrMQlPpZkon5a
-         XMfQ6BLSjU8bEWXe25jOS/abHCDVlFRqIaL2fmm8yRJ4MaAONUcV11loI1F1EMj+bIwR
-         7Ipw==
-X-Gm-Message-State: APjAAAXKVSI21YMaUB4XvFRVb6jqFjVsN0/kwnN0ZsWCoEPSjtELY8ad
-        85PVc5sm9RaG/bmh0tZp9pFefk5chklyhA==
-X-Google-Smtp-Source: APXvYqwW8FePfs310Sjh8MLuZtyWmpxZSQ7ZkwcJbVr51fSef7+NsmDIBarHxe3GMmwrsHrOOTtxEw==
-X-Received: by 2002:a17:902:8343:: with SMTP id z3mr2920223pln.200.1573050158836;
-        Wed, 06 Nov 2019 06:22:38 -0800 (PST)
-Received: from ?IPv6:2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb? ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
-        by smtp.gmail.com with ESMTPSA id c184sm26760638pfc.159.2019.11.06.06.22.35
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 06:22:38 -0800 (PST)
-Cc:     tranmanphong@gmail.com, 2pi@mok.nu, alex.theissen@me.com,
-        andreyknvl@google.com, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
-        syzkaller-bugs@googlegroups.com,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: [PATCH] usb: appledisplay: fix use-after-free in
- bl_get_brightness
-To:     Oliver Neukum <oneukum@suse.com>,
-        syzbot+495dab1f175edc9c2f13@syzkaller.appspotmail.com
-References: <00000000000042d60805933945b5@google.com>
- <20191105233652.21033-1-tranmanphong@gmail.com>
- <1573040577.3090.22.camel@suse.com>
-From:   Phong Tran <tranmanphong@gmail.com>
-Message-ID: <d6c628d0-71ad-7343-d80e-1b0cd0795242@gmail.com>
-Date:   Wed, 6 Nov 2019 21:22:34 +0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
+        b=qtKs5GLIU+YfDebyWhUMdfm/bNZAHgHx/y3Hi3xLbx9Tqcy3wXsvUDhSBZY37Zrj8W
+         xjLpQskhxGI9T5kJ0IP/rJcEQnGGMx5KDkXJ6suEHVyjPnutbPRJ2a0NDqUMtU69bWYr
+         P89CNtcHGuz6SQhWVQZ1+PvJNvr/X+j1AFFqaPMZCdbU/m1EeHWWVujNWBAg4W4SCQXM
+         8w60ryy34mRSScIeosW1Ax2eKogZP7dHPBTs8wp+03gVcWHFih3dtlqEGa233EJm/AeP
+         iBDymxPVeUmgGY981iKEn8KEj3VX6moAgWJ6B82SX6mXb3QyXZIIrcvgkXuPecxBWl/Y
+         HRrQ==
+X-Gm-Message-State: APjAAAWvnrWG5dPY6Sy/aUcytqzEL4EUWoZI4fIX6LVIxuO9pcoQZtGm
+        9i6FbIcPCu4lWQVNL3HRrNXSW961+uo=
+X-Google-Smtp-Source: APXvYqzoYMq5gT/9eBMtyUIJu1a4USxwCNgZTNpjMjW3B/XCmy9qZhYAuVQhtBUvi/iW0mEQY3Xf8A==
+X-Received: by 2002:a81:58c6:: with SMTP id m189mr1437100ywb.25.1573050199708;
+        Wed, 06 Nov 2019 06:23:19 -0800 (PST)
+Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
+        by smtp.gmail.com with ESMTPSA id f203sm4436246ywa.106.2019.11.06.06.23.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 06:23:18 -0800 (PST)
+From:   Adam Ford <aford173@gmail.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
+Date:   Wed,  6 Nov 2019 08:23:08 -0600
+Message-Id: <20191106142308.10511-1-aford173@gmail.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <1573040577.3090.22.camel@suse.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The LCD used with the imx6q-logicpd board has an integrated
+ili2117a touch controller connected to i2c1.
 
+This patch adds the node to enable this feature.
 
-On 11/6/19 6:42 PM, Oliver Neukum wrote:
-> Am Mittwoch, den 06.11.2019, 06:36 +0700 schrieb Phong Tran:
->> In context of USB disconnect, the delaywork trigger and calling
->> appledisplay_bl_get_brightness() and the msgdata was freed.
->>
->> add the checking return value of usb_control_msg() and only update the
->> data while the retval is valid.
-> 
-> Hi,
-> 
-> I am afraid there are some issues with your patch. First, let me stress
-> that you found the right place to fix an issue and you partially fixed
-> an issue. But the the fix you applied is incomplete and left another
-> issue open.
-> 
-> Your patch still allows doing IO to a device that may already be bound
-> to another driver. That is bad, especially as the buffer is already
-> free. Yes, if IO is failing, you have fixed that narrow issue.
-> But it need not fail.
-> 
-> If you look into appledisplay_probe() you will see that it can fail
-> because backlight_device_register() fails. The error handling will
-> thereupon kill the URB and free memory. But it will not kill an already
-> scheduled work. The scheduled work will then call usb_control_msg()
-> on pdata->msgdata, which has been freed. If that IO fails, all is well.
-> If not, the issue still exists.
-> 
-Hello Oliver,
+Signed-off-by: Adam Ford <aford173@gmail.com>
+---
+ili2117 support is scheduled to be introduced for Kernel v5.5.
 
-argee, there need a cancel workqueue in case error of probe().
+V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
 
-> Secondly, your error check is off by 2. You are checking only for
-> usb_control_msg() failing. But it can return only one byte instead
-> of two. If that happens, the value you return is stale, although
-> the buffer is correctly allocated.
-> 
-> 	Regards
-> 		Oliver
-> 
-> The correct fix for both issues would be:
-> 
-> #syz test: https://github.com/google/kasan.git e0bd8d79
-> 
->  From 2497a62bdbeb9bd94f690c22d96dd1b8cf22861f Mon Sep 17 00:00:00 2001
-> From: Oliver Neukum <oneukum@suse.com>
-> Date: Wed, 6 Nov 2019 12:36:28 +0100
-> Subject: [PATCH] appledisplay: fix error handling in the scheduled work
-> 
-> The work item can operate on
-> 
-> 1. stale memory left over from the last transfer
-> the actual length of the data transfered needs to be checked
-> 2. memory already freed
-> the error handling in appledisplay_probe() needs
-> to cancel the work in that case
-> 
-> Signed-off-by: Oliver Neukum <oneukum@suse.com>
-> ---
->   drivers/usb/misc/appledisplay.c | 8 +++++++-
->   1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/misc/appledisplay.c b/drivers/usb/misc/appledisplay.c
-> index ac92725458b5..ba1eaabc7796 100644
-> --- a/drivers/usb/misc/appledisplay.c
-> +++ b/drivers/usb/misc/appledisplay.c
-> @@ -164,7 +164,12 @@ static int appledisplay_bl_get_brightness(struct backlight_device *bd)
->   		0,
->   		pdata->msgdata, 2,
->   		ACD_USB_TIMEOUT);
-> -	brightness = pdata->msgdata[1];
-> +	if (retval < 2) {
-> +		if (retval >= 0)
-> +			retval = -EMSGSIZE;
-> +	} else {
-> +		brightness = pdata->msgdata[1];
-> +	}
+diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
+index d96ae54be338..7a3d1d3e54a9 100644
+--- a/arch/arm/boot/dts/imx6q-logicpd.dts
++++ b/arch/arm/boot/dts/imx6q-logicpd.dts
+@@ -73,6 +73,16 @@
+ 	status = "okay";
+ };
+ 
++&i2c1 {
++	touchscreen@26 {
++		compatible = "ilitek,ili2117";
++		reg = <0x26>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pinctrl_touchscreen>;
++		interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
++	};
++};
++
+ &ldb {
+ 	status = "okay";
+ 
+-- 
+2.20.1
 
-compare with message size (2) can be considered.
-
-if (retval == 2) {
-	brightness = pdata->msgdata[1];
-} else {
-	retval = -EMSGSIZE;
-}
-
-Regards,
-Phong.
-
->   	mutex_unlock(&pdata->sysfslock);
->   
->   	if (retval < 0)
-> @@ -299,6 +304,7 @@ static int appledisplay_probe(struct usb_interface *iface,
->   	if (pdata) {
->   		if (pdata->urb) {
->   			usb_kill_urb(pdata->urb);
-> +			cancel_delayed_work_sync(&pdata->work);
->   			if (pdata->urbdata)
->   				usb_free_coherent(pdata->udev, ACD_URB_BUFFER_LEN,
->   					pdata->urbdata, pdata->urb->transfer_dma);
-> 
