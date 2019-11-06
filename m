@@ -2,124 +2,213 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9F85C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:24:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65E91C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:25:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 71E7B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:24:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 36626217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="GG/e9clQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="uSdRdcv3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728192AbfKFJX7 (ORCPT
+        id S1731530AbfKFJZq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:23:59 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:41330 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKFJX7 (ORCPT
+        Wed, 6 Nov 2019 04:25:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:35159 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726755AbfKFJZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:23:59 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=dZAvUYDePFsqcqkjX6yNxgsmYiIMmUcwPOFdzrAXXu4=; b=GG/e9clQsUsKdrpSf3iPml1VC
-        7JsEg1rFXmLJpheGRfp3a5aFxDX3xvWBVEdsOxjixgv3baBpShQPTo1XBy2bDUzS144dBcmfRUhse
-        OOIFW8m7FkZHLzlFHL514g/oU88KsD5KN5R/WVbrv8n03Ua6YbXEZAmTCNpBkv0OxFctdhy+2Z+6i
-        a52KD0IvC0w6PE8WOw3b53HNxplzezNOL+WxXFEvebzaj+iBojvBGn4OTibQH3Js8Mx4T1vAJYefI
-        aYa3DwMH8lWj4B4/CHew3QDr2HDDqmMc5RuddVfWcDa6ydVib1pQMicA/ZgKnmMHYu2G/3QaMEXgy
-        4sg1eyrYA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSHXe-0005dK-BV; Wed, 06 Nov 2019 09:23:54 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 8C5BF301A79;
-        Wed,  6 Nov 2019 10:22:48 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 981E229A4C2C7; Wed,  6 Nov 2019 10:23:52 +0100 (CET)
-Date:   Wed, 6 Nov 2019 10:23:52 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qian Cai <cai@lca.pw>
-Cc:     mingo@redhat.com, andi@firstfloor.org, acme@kernel.org,
-        mark.rutland@arm.com, jolsa@redhat.com, namhyung@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH -next] perf/core: fix unlock balance in perf_init_event
-Message-ID: <20191106092352.GU4131@hirez.programming.kicks-ass.net>
-References: <20191106052935.8352-1-cai@lca.pw>
+        Wed, 6 Nov 2019 04:25:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id 8so2488747wmo.0;
+        Wed, 06 Nov 2019 01:25:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=ZOJbwXEfRC32OcivT3s1o5LQP4VegomtuiAoRP6hxYA=;
+        b=uSdRdcv3jeShjMmF5bqnACHCGtOE8ifA4CsrRxHIqqgtxQ/d12HF2mHz3rwOKh369v
+         tu0OtHSk7IUdW2Es8R8/C1tQrVQ4Vz9ziK61IGiwfzCm1pTDWx+/ol0tTetP1VepH4t+
+         gxBGHtExamDG8RAVJVOx39ihsTZgO5VX6noiLCwODHjpdcXmGdrZZ/hbzLAOB6PY3Afa
+         /UoxdAfjQ/aC+cX1BfChQeM0rO9tTfbhh4f/rPvMD4RkhKDoHTtpr+vpntrP6zPenrmQ
+         DkfgNbgc0Q+VWLmyPkeiAPhm57Yy3xjTZWcTEnKQ1qlSRPKTSFXW5AZ/NOk+e4dQwKmZ
+         eXqw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=ZOJbwXEfRC32OcivT3s1o5LQP4VegomtuiAoRP6hxYA=;
+        b=dhjIWVnWjXqKI6f7uoMZ7Lk/SMBAzTGK9MG5iakLwfZMuezqTiOqoaCw8o1Z8mwR86
+         LzznIYWojAYmdA0eKmUus/8Ui4G1tnIfE2C9Q580WbfSRdaT3jnA4iY8+ig+Zx/qxVZC
+         UCMQISGbAFVYPUfsaldL6DWFivCdJ9uYicv6h2pX8T0ENLQiAu9NFimdhojfAK4YYMTm
+         iBstpRFVVfTy1qtaU6u+olg6yLkb+ErKrSncnes2cVgfRPgXkGqFlYN4Lu6kDnjOl9df
+         Fc+PsaenbqVmPX59O19FaMaZJ6EgzLwyYfj4/xDHhiaG5cn16lN7fG6iAFJlj4xM03+/
+         ELMQ==
+X-Gm-Message-State: APjAAAU6ic6EAYJH/4qre3sy1955UzOcCb90qCsizJyojm4fM8rupqXy
+        yDCK2C1MVJmd7sOUzVm0djbPVAl4pWpG79+Va1w=
+X-Google-Smtp-Source: APXvYqwDNQcqlVPCyFV9lSCoMv7rDyFzRgqxYkaCN0CfxqAF1uaJ8P0S7puanFdFxDqIiquTmFnYtsUfsuz3l1taXL0=
+X-Received: by 2002:a1c:a512:: with SMTP id o18mr1431731wme.4.1573032342346;
+ Wed, 06 Nov 2019 01:25:42 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106052935.8352-1-cai@lca.pw>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191103203334.10539-1-peron.clem@gmail.com> <20191103203334.10539-2-peron.clem@gmail.com>
+ <20191104080359.6kjugbt3yi63ywhb@pengutronix.de> <20191105111134.GG3876@gilmour.lan>
+ <CAJiuCcc7sQvuPX+FTErXS+_RzUDvbDrB3Z5EX9wE_2EZaex0qw@mail.gmail.com> <20191105173208.GA46143@gilmour.lan>
+In-Reply-To: <20191105173208.GA46143@gilmour.lan>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Wed, 6 Nov 2019 10:25:31 +0100
+Message-ID: <CAJiuCcdQzXScxu=nOP6HaKyFK6Q--gvQubNR8wezTVvPctVf7w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/7] dt-bindings: pwm: allwinner: Add H6 PWM description
+To:     Maxime Ripard <mripard@kernel.org>
+Cc:     =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pwm@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 12:29:35AM -0500, Qian Cai wrote:
-> The -next commit "perf/core: Optimize perf_init_event()" [1] introduced
-> an unlock imbalance in perf_init_event() where it calls "goto again" and
-> then only repeat rcu_read_unlock().
-> 
->   WARNING: bad unlock balance detected!
->   perf_event_open/6185 is trying to release lock (rcu_read_lock) at:
->   [<ffffffffb5eb4039>] perf_event_alloc+0xbb9/0x17f0
->   but there are no more locks to release!
->   other info that might help us debug this:
->   2 locks held by perf_event_open/6185:
->   #0: ffff888526780b50 (&sig->cred_guard_mutex){+.+.}, at: __do_sys_perf_event_open+0x6ee/0x1460
->   #1: ffffffffb866b4e8 (&pmus_srcu){....}, at: perf_event_alloc+0xab8/0x17f0
->   Call Trace:
->    dump_stack+0xa0/0xea
->    print_unlock_imbalance_bug.cold.40+0xb1/0xb6
->    lock_release+0x349/0x4b0
->    perf_event_alloc+0xbcf/0x17f0
->    __do_sys_perf_event_open+0x1e2/0x1460
->    __x64_sys_perf_event_open+0x62/0x70
->    do_syscall_64+0xcc/0xaec
->    entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> [1] https://lore.kernel.org/lkml/20191022092307.425783389@infradead.org/
+Hi,
 
-You wanted to write:
+On Tue, 5 Nov 2019 at 18:32, Maxime Ripard <mripard@kernel.org> wrote:
+>
+> On Tue, Nov 05, 2019 at 01:34:37PM +0100, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Tue, 5 Nov 2019 at 12:11, Maxime Ripard <mripard@kernel.org> wrote:
+> > >
+> > > Hi Clement, Uwe,
+> > >
+> > > On Mon, Nov 04, 2019 at 09:03:59AM +0100, Uwe Kleine-K=C3=B6nig wrote=
+:
+> > > > On Sun, Nov 03, 2019 at 09:33:28PM +0100, Cl=C3=A9ment P=C3=A9ron w=
+rote:
+> > > > > From: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > >
+> > > > > H6 PWM block is basically the same as A20 PWM, except that it als=
+o has
+> > > > > bus clock and reset line which needs to be handled accordingly.
+> > > > >
+> > > > > Expand Allwinner PWM binding with H6 PWM specifics.
+> > > > >
+> > > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
+> > > > > Signed-off-by: Cl=C3=A9ment P=C3=A9ron <peron.clem@gmail.com>
+> > > > > ---
+> > > > >  .../bindings/pwm/allwinner,sun4i-a10-pwm.yaml | 45 +++++++++++++=
++++++-
+> > > > >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/pwm/allwinner,sun4=
+i-a10-pwm.yaml b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-=
+pwm.yaml
+> > > > > index 0ac52f83a58c..bf36ea509f31 100644
+> > > > > --- a/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
+wm.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/pwm/allwinner,sun4i-a10-p=
+wm.yaml
+> > > > > @@ -30,13 +30,46 @@ properties:
+> > > > >        - items:
+> > > > >            - const: allwinner,sun50i-h5-pwm
+> > > > >            - const: allwinner,sun5i-a13-pwm
+> > > > > +      - const: allwinner,sun50i-h6-pwm
+> > > > >
+> > > > >    reg:
+> > > > >      maxItems: 1
+> > > > >
+> > > > > -  clocks:
+> > > > > +  # Even though it only applies to subschemas under the conditio=
+nals,
+> > > > > +  # not listing them here will trigger a warning because of the
+> > > > > +  # additionalsProperties set to false.
+> > > > > +  clocks: true
+> > > > > +  clock-names: true
+> > > > > +  resets:
+> > > > >      maxItems: 1
+> > > > >
+> > > > > +  if:
+> > > > > +    properties:
+> > > > > +      compatible:
+> > > > > +        contains:
+> > > > > +          const: allwinner,sun50i-h6-pwm
+> > > > > +
+> > > > > +  then:
+> > > > > +    properties:
+> > > > > +      clocks:
+> > > > > +        items:
+> > > > > +          - description: Module Clock
+> > > > > +          - description: Bus Clock
+> > > > > +
+> > > > > +      clock-names:
+> > > > > +        items:
+> > > > > +          - const: mod
+> > > > > +          - const: bus
+> > > > > +
+> > > > > +    required:
+> > > > > +      - clock-names
+> > > > > +      - resets
+> > > > > +
+> > > > > +  else:
+> > > > > +    properties:
+> > > > > +      clocks:
+> > > > > +        maxItems: 1
+> > > > > +
+> > > >
+> > > > I guess this hunk says "If this is a allwinner,sun50i-h6-pwm, a mod=
+ and
+> > > > bus clock is required.", right?
+> > > >
+> > > > I wonder if it is sensible to require a clock-names property in the=
+ else
+> > > > branch, too. This would make it obvious if the clock there correspo=
+nds
+> > > > to the "mod" or the "bus" clock on H6. (I guess it's "mod".)
+> > >
+> > > This can be done a bit differently and could address your concerns
+> > >
+> > > Something like
+> > >
+> > > properties:
+> > >   ...
+> > >
+> > >   clocks:
+> > >     minItems: 1
+> > >     maxItems: 2
+> > >     items:
+> > >       - description: Bus Clock
+> > >       - description: Module Clock
+> > >
+> > > required:
+> > >   - clocks
+> > >
+> > > if:
+> > >   ...
+> > >
+> > > then:
+> > >   properties:
+> > >     clocks:
+> > >       maxItems: 2
+> >
+> > Here we should set minItems to 2 right ?
+> > so Max =3D Min =3D 2
+>
+> It's done automatically by the tooling when the other is missing.
 
-Fixes: 66d258c5b048 ("perf/core: Optimize perf_init_event()")
+Ok thanks,
+I will update in v4.
 
-instead, right? Fixed that for you.
+Regards,
+Cl=C3=A9ment
 
-> Signed-off-by: Qian Cai <cai@lca.pw>
-> ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index cfd89b4a02d8..8226d6ecdb86 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -10307,7 +10307,6 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  			goto unlock;
->  	}
->  
-> -	rcu_read_lock();
->  	/*
->  	 * PERF_TYPE_HARDWARE and PERF_TYPE_HW_CACHE
->  	 * are often aliases for PERF_TYPE_RAW.
-> @@ -10317,6 +10316,7 @@ static struct pmu *perf_init_event(struct perf_event *event)
->  		type = PERF_TYPE_RAW;
->  
->  again:
-> +	rcu_read_lock();
->  	pmu = idr_find(&pmu_idr, type);
->  	rcu_read_unlock();
->  	if (pmu) {
-> -- 
-> 2.21.0 (Apple Git-122)
-> 
+>
+> Maxime
