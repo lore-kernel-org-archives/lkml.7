@@ -2,144 +2,116 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83475C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:12:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C358C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:18:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37B2C20650
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:12:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gQB5aFP5"
+	by mail.kernel.org (Postfix) with ESMTP id 1E3302053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:18:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573010320;
+	bh=794v0ru8pfalS+8Pyn18QoBVERGFnv+vgCcy8vjcww4=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=EHbN8EWOffTDjG3n4IHezpb7QYiGTkYnt/JCUQvmt/5N1STPNhkacxYjau097mMe9
+	 8Xupf8wTHMtp5wjHYQJ787XEtsbZ+RwVyZHqPRAYfjnDo4FPWDIhe6sSmzaD2taXWA
+	 7Xr5iqRMMj+vW8CscxX5OpvV13foxvvS8pp7zWew=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731109AbfKFDME (ORCPT
+        id S1730963AbfKFDSj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:12:04 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34202 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730752AbfKFDMD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:12:03 -0500
-Received: by mail-pl1-f194.google.com with SMTP id k7so10751869pll.1;
-        Tue, 05 Nov 2019 19:12:02 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Lha2oDoZN0tSfiTj9/tLkrzR/D7C50FvvVu/qFpZHiE=;
-        b=gQB5aFP5Sq3MmhQu4fv+tNeLWjCDPpPYQWdokpqwr+n90heWUxVqQyG5cuQtCRaS/f
-         YeGvnFDt69S8Tunn3K9mm2zRL0Tz+m1WmKfgSo7QgrwMmm2pgbcU15ALsnffmy8x7kcd
-         4fKrTlxZTo8h4uE8f9UQoeO6Rn713mEOnUH/1ejSdlL00bL3NPP5Rv1KLiZkfdULU7Qs
-         uMx3I6HQXz45+QVulNJ1TJr+TrJyq+qICPbAYf63RPBNJHYnlPtGecSaxkSjoDvki97y
-         lybZ9vQumlUdj6UyjDz2dWNHyssqy1WEK4dsYPYpGgiY31cOhajsL2m+pndCFZ0NRu8q
-         0bhQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Lha2oDoZN0tSfiTj9/tLkrzR/D7C50FvvVu/qFpZHiE=;
-        b=OplSTkG3a6asgSMcYDgzmYB+zx1QK4nQ/YvKG4ZEbE0lxYFV1CVJCL8S7Gau8TcG4y
-         sH3vtUuSRePUNyxrsbws7rMPaQ+KsO2lFFnMSphbfDDNhjK7ptoFdw5f+03tMq9voYmb
-         9DxM/WgpwwCBmkj5MRWLCW+caBP5UHl00imIVguuKahTddZ71n97hACBGwx8r+eYL9/Y
-         V3M/FFpH7Gm/6QFW/RHZ8Vu88TLrw3OFSuVKPIOdmO6jomN9qCyA1n3XTtOu/Dv6S3KY
-         ZuXVAIqlziN1V42wiK6yi6Gby5p8t/iCb6IMIgCpaR7joU/FUxN9LZwhvsmKGDEghpzF
-         HCgw==
-X-Gm-Message-State: APjAAAXRz/BITtCtnfk0S97Qg9rfa9VZTkLocN+nOUNsYTgLLDX9gmyy
-        TiCQ8UObDVQkpP11feokh94=
-X-Google-Smtp-Source: APXvYqwh87bMkwPA4PLre6V5QNCsAJtQLqMTJMGvORj1hjtk0F4BddtNuPf95nHdseX5OfQwWq3mdQ==
-X-Received: by 2002:a17:902:9f81:: with SMTP id g1mr186846plq.286.1573009921721;
-        Tue, 05 Nov 2019 19:12:01 -0800 (PST)
-Received: from Gentoo ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id s11sm13309256pgo.85.2019.11.05.19.11.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 19:12:01 -0800 (PST)
-Date:   Wed, 6 Nov 2019 08:41:47 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Alexander Kapshuk <alexander.kapshuk@gmail.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts: ver_linux:add flex, bison and yacc to the
- checklist
-Message-ID: <20191106031144.GB20442@Gentoo>
-References: <20191105113100.521-1-unixbhaskar@gmail.com>
- <CAK7LNARqHQwiQEQS_6ZX4GiBuVjo92fECLiVJYN2ixCcJUjU5w@mail.gmail.com>
+        Tue, 5 Nov 2019 22:18:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51890 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730576AbfKFDSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:18:38 -0500
+Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8C18C2053B;
+        Wed,  6 Nov 2019 03:18:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573010317;
+        bh=794v0ru8pfalS+8Pyn18QoBVERGFnv+vgCcy8vjcww4=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=h4+X6NnESnFUg7hSGbT1qji0fnzSSyx2iXJY2mCnwfnAuYQe1ssCMb3PYIL+aPRy4
+         r42LTaTdD0fNUJoKCRiky6GIjL9rbgUsGCoPn5bQFbtCo0qQ9mG5pf/A2RK6+M51E3
+         C/4a+yVOEYe4PXxvHTOqR6XEHcFq4n7Ww72WFhVo=
+Received: by mail-qt1-f178.google.com with SMTP id p20so13910367qtq.5;
+        Tue, 05 Nov 2019 19:18:37 -0800 (PST)
+X-Gm-Message-State: APjAAAVWmKHdvEaFgZLRdy2IeAQp2ehY1U6pIXJJ7wycsTmxnVK8/u3d
+        My+2Z1u8quJN3g6EEzrDsta8zoVuWDIwLP3QgA==
+X-Google-Smtp-Source: APXvYqx/MDqiFs4boZftGQ4Sm3LD1j9ie9A1PR+9tSRnYrAzeyJ63l67XS86a0hZ+oVQ8PeNFdWmOuEziMGHCusZdFg=
+X-Received: by 2002:ac8:458c:: with SMTP id l12mr483091qtn.300.1573010316820;
+ Tue, 05 Nov 2019 19:18:36 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="tsOsTdHNUZQcU9Ye"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARqHQwiQEQS_6ZX4GiBuVjo92fECLiVJYN2ixCcJUjU5w@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+ <1572524473-19344-3-git-send-email-tdas@codeaurora.org> <20191106002604.A1BC72087E@mail.kernel.org>
+In-Reply-To: <20191106002604.A1BC72087E@mail.kernel.org>
+From:   Rob Herring <robh@kernel.org>
+Date:   Tue, 5 Nov 2019 21:18:24 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+dihzR7Wy+9kbz+A8tJ8LCpUcci6w0oW7SxBML4jX_Fw@mail.gmail.com>
+Message-ID: <CAL_Jsq+dihzR7Wy+9kbz+A8tJ8LCpUcci6w0oW7SxBML4jX_Fw@mail.gmail.com>
+Subject: Re: [PATCH v1 2/7] dt-bindings: clock: Add YAML schemas for the QCOM
+ GPUCC clock bindings
+To:     Stephen Boyd <sboyd@kernel.org>
+Cc:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>,
+        David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
+        linux-clk <linux-clk@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---tsOsTdHNUZQcU9Ye
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On 11:33 Wed 06 Nov 2019, Masahiro Yamada wrote:
->On Tue, Nov 5, 2019 at 8:31 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> w=
-rote:
->>
->> This patch add three ulities explicitly to the checklist,namely
->> flex,bison and yacc.
->>
->> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> ---
->>  scripts/ver_linux | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/scripts/ver_linux b/scripts/ver_linux
->> index 810e608baa24..397497cf9430 100755
->> --- a/scripts/ver_linux
->> +++ b/scripts/ver_linux
->> @@ -32,6 +32,9 @@ BEGIN {
->>         printversion("PPP", version("pppd --version"))
->>         printversion("Isdn4k-utils", version("isdnctrl"))
->>         printversion("Nfs-utils", version("showmount --version"))
->> +       printversion("Bison", version("bison --version"))
->> +       printversion("Flex", version("flex --version"))
->> +       printversion("Yacc", version("yacc --version"))
+On Tue, Nov 5, 2019 at 6:26 PM Stephen Boyd <sboyd@kernel.org> wrote:
 >
->I think adding only "Bison" an "Flex" is enough.
+> Quoting Taniya Das (2019-10-31 05:21:08)
+> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> > new file mode 100644
+> > index 0000000..96aaf36
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
+> > @@ -0,0 +1,69 @@
+> > +# SPDX-License-Identifier: GPL-2.0-only
 >
-Will remove yacc from it.
->
->
->>         while (getline <"/proc/self/maps" > 0) {
->>                 if (/libc.*\.so$/) {
->> --
->> 2.23.0
->>
->
->
->--=20
->Best Regards
->Masahiro Yamada
+> Can it be GPL2 or BSD? I think Rob is asking for that sort of license on
+> these files.
 
---tsOsTdHNUZQcU9Ye
-Content-Type: application/pgp-signature; name="signature.asc"
+I do, but only on new bindings unless we determine relicensing is
+okay. Though here it doesn't look like much is copied over.
 
------BEGIN PGP SIGNATURE-----
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Qualcomm Graphics Clock & Reset Controller Binding
+> > +
+> > +maintainers:
+> > +  - Taniya Das <tdas@codeaurora.org>
+> > +
+> > +description: |
+> > +  Qualcomm grpahics clock control module which supports the clocks, resets and
+> > +  power domains.
+> > +
+> > +properties:
+> > +  compatible:
+> > +    enum:
+> > +      - qcom,sdm845-gpucc
+> > +      - qcom,msm8998-gpucc
+>
+> Sort please.
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3COfAACgkQsjqdtxFL
-KRWtCgf8CouRnUp+HDpl/vEAFahAEY0o4lqamsshO4cdXap+8KbO2PHfLNLcSmQW
-59dALcN1hYR4JkW+Cs29frcKV0vqx/nJExRdakrdlqJsYEmVF7LbEU94B8J8YrUm
-Qmqk70nWSHeOFrRkwQ13QWCK5XYY6BgbLQ/qeR3/Vfvn99vNKNSqlO0BViYex3CO
-uFqsDTweFhC3PW48Po+13aHksNJVgQM+muztCmRcBhF9bj9ySLI+lcPb3rnrWKJi
-8nFDLtPwqhA2icvDdJzg+K8M7uIgTSetdpwu1VDXXMehz2yn/eGx7nQlyPrV1I0I
-rTj51Xzr2H1KVxhE6Cq2pHngocTdDQ==
-=0RrW
------END PGP SIGNATURE-----
+When you get tired of telling people to do this we can make the
+tooling do it. :) Shouldn't be too hard. The majority of the work is
+probably fixing the existing cases that aren't sorted.
 
---tsOsTdHNUZQcU9Ye--
+Rob
