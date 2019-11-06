@@ -2,89 +2,104 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0F3FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2071FC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95B862166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:16:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D96E92077C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:17:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573039031;
+	bh=MofkAeh32ygz8kQiJ/NW8nxCM7dhfQeKB7/bbaa70aU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Wv9ONMBn9a/fAo3k81NslWcor2NpGXxmiUaiPWm+cgtGs2BOJWrIwgVnOKsv9TxOB
+	 vNHkDmXmgZYtXNjbVvw7VraFS5fqPAYejzCZR1u1TWW2fhkGgUOBs33VnBdzwtiOk1
+	 Xeek3DUHKb3Lg2yWDsNMq+COzjc+Y2hIoQfXvaEQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729750AbfKFLQW (ORCPT
+        id S1730322AbfKFLRJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:16:22 -0500
-Received: from cnc.isely.net ([75.149.91.89]:43795 "EHLO cnc.isely.net"
+        Wed, 6 Nov 2019 06:17:09 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52106 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfKFLQW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:16:22 -0500
-X-Greylist: delayed 305 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 06:16:21 EST
-Received: from ts3-dock2.isely.net (ts3-dock2.isely.net [::ffff:192.168.23.14])
-  (AUTH: PLAIN isely, TLS: TLSv1/SSLv3,256bits,DHE-RSA-AES256-GCM-SHA384)
-  by cnc.isely.net with ESMTPSA; Wed, 06 Nov 2019 05:11:15 -0600
-  id 00000000001420F5.000000005DC2AA53.00004E44
-Date:   Wed, 6 Nov 2019 05:11:14 -0600 (CST)
-From:   Mike Isely <isely@pobox.com>
-X-X-Sender: isely@sheridan.isely.net
-Reply-To: Mike Isely at pobox <isely@pobox.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-cc:     Mike Isely at pobox <isely@pobox.com>
-Subject: [PATCH] pvrusb2: Fix oops on tear-down when radio support is not
- present
-Message-ID: <alpine.DEB.2.21.1911060510410.31133@sheridan.isely.net>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-Mime-Version: 1.0
+        id S1725890AbfKFLRJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:17:09 -0500
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 12B192067B;
+        Wed,  6 Nov 2019 11:17:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573039028;
+        bh=MofkAeh32ygz8kQiJ/NW8nxCM7dhfQeKB7/bbaa70aU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=ns9bAC0NqPB9Y8HYDug8Evp+nR+wHYk3/sqAjAcgF9twD05PXqHjgA7LBc6r7yiEa
+         SFCzyhXELwHDKfwXqsCuv4Pr8PdDIWLg23rSncp1FMWKdvzJLkrYtnJbD54ae9/woL
+         D4AinOxxBdoy3rg7i7xRze7VjeSoujc7MhNEd64U=
+Date:   Wed, 6 Nov 2019 12:17:06 +0100
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Oliver Neukum <oneukum@suse.com>
+Cc:     Sasha Levin <sashal@kernel.org>, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>,
+        Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH 4.9 37/62] UAS: Revert commit 3ae62a42090f ("UAS: fix
+ alignment of scatter/gather segments")
+Message-ID: <20191106111706.GA3033188@kroah.com>
+References: <20191104211901.387893698@linuxfoundation.org>
+ <20191104211940.713506931@linuxfoundation.org>
+ <1572964268.2921.19.camel@suse.com>
+ <20191106001102.GI4787@sasha-vm>
+ <1573026302.3090.2.camel@suse.com>
+MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1573026302.3090.2.camel@suse.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In some device configurations there's no radio or radio support in the
-driver.  That's OK, as the driver sets itself up accordingly.  However
-on tear-down in these caes it's still trying to tear down radio
-related context when there isn't anything there, leading to
-dereferences through a null pointer and chaos follows.
+On Wed, Nov 06, 2019 at 08:45:02AM +0100, Oliver Neukum wrote:
+> Am Dienstag, den 05.11.2019, 19:11 -0500 schrieb Sasha Levin:
+> > On Tue, Nov 05, 2019 at 03:31:08PM +0100, Oliver Neukum wrote:
+> > > Am Montag, den 04.11.2019, 22:44 +0100 schrieb Greg Kroah-Hartman:
+> > > >         All the host controllers capable of SuperSpeed operation can
+> > > >         handle fully general SG;
+> > > > 
+> > > >         Since commit ea44d190764b ("usbip: Implement SG support to
+> > > >         vhci-hcd and stub driver") was merged, the USB/IP driver can
+> > > >         also handle SG.
+> > > 
+> > > Not in 4.9.x. AFAICT the same story as 4.4.x
+> > > The patch is not strictly needed, but breaks UAS over usbip.
+> > 
+> > It's in 4.9 since April this year... Same story for 4.4.
+> 
+> Hi,
+> 
+> now I am confused. Neither looking at the logs nor the source
+> I can see the commit. Top commit is
+> 9e48f0c28dd505e39bd136ec92a042b311b127c6
+> of git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+> 
+> I am sorry for being obnoxious here and it is entirely possible that
+> I am stupid, but this is a discrepancy that needs to be resolved.
 
-How this bug survived unfixed for 11 years in the pvrusb2 driver is a
-mystery to me.
+Commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments") is
+the patch that is being reverted here, and it is in the following kernel
+releases:
+	4.4.180 4.9.175 4.14.118 4.19.42 5.0.15 5.1.1 5.2
+And it is causing known issues, so we should revert it.
 
-Signed-off-by: Mike Isely <isely@pobox.com>
----
- drivers/media/usb/pvrusb2/pvrusb2-v4l2.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+Now if usbip breaks with this revert, we should add the newer patch that
+keeps it working properly, is that what you are thinking that
+ea44d190764b ("usbip: Implement SG support to vhci-hcd and stub driver")
+is?
 
-diff --git a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-index aa4fbc3e88cc..339119f6cc23 100644
---- a/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-+++ b/drivers/media/usb/pvrusb2/pvrusb2-v4l2.c
-@@ -909,8 +909,12 @@ static void pvr2_v4l2_internal_check(struct pvr2_channel *chp)
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_video);
- 	pvr2_v4l2_dev_disassociate_parent(vp->dev_radio);
- 	if (!list_empty(&vp->dev_video->devbase.fh_list) ||
--	    !list_empty(&vp->dev_radio->devbase.fh_list))
-+	    ((vp->dev_radio != NULL) &&
-+	     !list_empty(&vp->dev_radio->devbase.fh_list))) {
-+		pvr2_trace(PVR2_TRACE_STRUCT,
-+			   "pvr2_v4l2 internal_check exit-empty id=%p", vp);
- 		return;
-+	}
- 	pvr2_v4l2_destroy_no_lock(vp);
- }
- 
-@@ -946,7 +950,8 @@ static int pvr2_v4l2_release(struct file *file)
- 	kfree(fhp);
- 	if (vp->channel.mc_head->disconnect_flag &&
- 	    list_empty(&vp->dev_video->devbase.fh_list) &&
--	    list_empty(&vp->dev_radio->devbase.fh_list)) {
-+	    ((vp->dev_radio == NULL) ||
-+	     list_empty(&vp->dev_radio->devbase.fh_list))) {
- 		pvr2_v4l2_destroy_no_lock(vp);
- 	}
- 	return 0;
--- 
-2.20.1
+thanks,
+
+greg k-h
