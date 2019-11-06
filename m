@@ -2,101 +2,134 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F02FBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59A4DC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC864217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573032132;
-	bh=M9G0HwhgUSpx80ddg4nMBBHD3OELZdSYi1Usddbm0R8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Q6PpFFLYpKZ14QslHyZ9xd9L7EmaC6zsKpWzho4vgno8A/qyzJdtyLDd76klrOczd
-	 4i4Kctvr0NHtWYY28KiuEW8PsPwPy+AFInz/dOl6/EXeyIy+7DODR8CsXyrTy+qxd1
-	 OiZhOCgcsEFQNBrULam8MUB5GH952TvOr966KOH8=
+	by mail.kernel.org (Postfix) with ESMTP id 25D90217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:22:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="I8DryP5b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731550AbfKFJWL (ORCPT
+        id S1731615AbfKFJWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:22:11 -0500
-Received: from mx2.suse.de ([195.135.220.15]:36770 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727041AbfKFJWL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:22:11 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 82F36AC8C;
-        Wed,  6 Nov 2019 09:22:09 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 10:22:08 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Shaokun Zhang <zhangshaokun@hisilicon.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v2] lib: optimize cpumask_local_spread()
-Message-ID: <20191106092208.GE8314@dhcp22.suse.cz>
-References: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191105070141.GF22672@dhcp22.suse.cz>
- <20191105173359.39052327cf221d9c4b26b783@linux-foundation.org>
- <20191106071742.GB8314@dhcp22.suse.cz>
- <f8f1bce1-4503-4da0-71ea-6fd12fcd687a@hisilicon.com>
+        Wed, 6 Nov 2019 04:22:13 -0500
+Received: from lelv0142.ext.ti.com ([198.47.23.249]:51990 "EHLO
+        lelv0142.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfKFJWM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:22:12 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by lelv0142.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA69M1wk068510;
+        Wed, 6 Nov 2019 03:22:02 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573032122;
+        bh=nDCiTg+AGtGr0dZ/+jhmDYrrfhHz9pKeKyYvNkCel2k=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=I8DryP5b7FZM8h0XiWnOIVcVIAcYzWX26Z4VQOGDAZiTfya0SATzcxInZt5vYEX/d
+         6N3ancFsu5pKs3fQLUxotE+jvopwpB2E1zavF1HdEKjHk2L5t6KSf/GddZlp0Z7Hrc
+         4bpTe6F1y/XVHGGeJ8RMW6YIa927OzRGrCYRyQ4E=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA69M1t6009702
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 03:22:01 -0600
+Received: from DLEE114.ent.ti.com (157.170.170.25) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 03:21:46 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE114.ent.ti.com
+ (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 03:21:46 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA69Lw8s101919;
+        Wed, 6 Nov 2019 03:21:58 -0600
+Subject: Re: [RFC v2 0/2] gpio: Support for shared GPIO lines on boards
+To:     Grygorii Strashko <grygorii.strashko@ti.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>
+CC:     Mark Brown <broonie@kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        Tero Kristo <t-kristo@ti.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Philipp Zabel <p.zabel@pengutronix.de>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>
+References: <20191030120440.3699-1-peter.ujfalusi@ti.com>
+ <CAL_JsqK-eqoyU7RWiVXMpPZ8BfT8a0WB47756s8AUtyOqbkPXA@mail.gmail.com>
+ <5bca4eb6-6379-394f-c95e-5bbbba5308f1@ti.com>
+ <20191030141736.GN4568@sirena.org.uk>
+ <f9c181d1-5e0c-5e82-a740-f4e97822604f@ti.com>
+ <CAL_JsqJ4WdaRvmZcjQG-jVyOOeKZX9fn1WcQZGWfUPqwunQCFw@mail.gmail.com>
+ <1258a5bf-a829-d47a-902f-bf2c3db07513@ti.com>
+ <CAL_Jsq+V0oAdVCaW+S12CUa4grCJhZD8OGDeu=0ohcGgxOkPVg@mail.gmail.com>
+ <5669a4c1-2bc1-423b-1407-073317f7df7e@ti.com>
+ <CAL_JsqJbhG+-zVs9bjHg8asGuM1+FNnGJ0xx7qcPBwuRX35ijw@mail.gmail.com>
+ <CACRpkdbiG5mt3WGEeHWsu-L3dzQJUQjxjGwQXK0cLgZNZ74yWg@mail.gmail.com>
+ <109f9ff2-81e0-6d3d-db60-d48cb0a4e74f@ti.com>
+ <ffb8e042-7f22-0e6e-f855-afa0dc3236bb@ti.com>
+ <61c8c126-3061-e297-8dab-7333316b0754@ti.com>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <e209692a-18a3-4079-fda7-1cc7b6b74667@ti.com>
+Date:   Wed, 6 Nov 2019 11:23:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <f8f1bce1-4503-4da0-71ea-6fd12fcd687a@hisilicon.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <61c8c126-3061-e297-8dab-7333316b0754@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06-11-19 16:02:29, Shaokun Zhang wrote:
-> Hi Michal,
-> 
-> On 2019/11/6 15:17, Michal Hocko wrote:
-> > On Tue 05-11-19 17:33:59, Andrew Morton wrote:
-> >> On Tue, 5 Nov 2019 08:01:41 +0100 Michal Hocko <mhocko@kernel.org> wrote:
-> >>
-> >>> On Mon 04-11-19 18:27:48, Shaokun Zhang wrote:
-> >>>> From: yuqi jin <jinyuqi@huawei.com>
-> >>>>
-> >>>> In the multi-processor and NUMA system, I/O device may have many numa
-> >>>> nodes belonging to multiple cpus. When we get a local numa, it is
-> >>>> better to find the node closest to the local numa node, instead
-> >>>> of choosing any online cpu immediately.
-> >>>>
-> >>>> For the current code, it only considers the local NUMA node and it
-> >>>> doesn't compute the distances between different NUMA nodes for the
-> >>>> non-local NUMA nodes. Let's optimize it and find the nearest node
-> >>>> through NUMA distance. The performance will be better if it return
-> >>>> the nearest node than the random node.
-> >>>
-> >>> Numbers please
-> >>
-> >> The changelog had
-> >>
-> >> : When Parameter Server workload is tested using NIC device on Huawei
-> >> : Kunpeng 920 SoC:
-> >> : Without the patch, the performance is 22W QPS;
-> >> : Added this patch, the performance become better and it is 26W QPS.
-> > 
-> > Maybe it is just me but this doesn't really tell me a lot. What is
-> > Parameter Server workload? What do I do to replicate those numbers? Is
-> 
-> I will give it better description on it in next version. Since it returns
-> the nearest node from the non-local node than the random one, no harmless
-> to others, Right?
 
-Well, I am not really familiar with consumers of this API to understand
-the full consequences and that is why I keep asking. From a very
-highlevel POV prefering CPUs on the same NUMA domain sounds like a
-reasonable thing to do.
--- 
-Michal Hocko
-SUSE Labs
+
+On 05/11/2019 20.07, Grygorii Strashko wrote:
+>>> (but hey - if this is boot only then gpio-hogs should work. Are they?)
+>>
+>> That is another thing which almost works ;)
+>> w/o gpio binding deferred probing is not possible if the GPIO controller
+>> is probed later.
+>> In some cases it might be even impossible to make sure that the GPIO
+>> controller would probe first (GPIO extender on different i2c bus than
+>> the user(s) of the gpio line)
+>> In some cases moving around nodes in DT might artificially make things
+>> work, but then someone compiles the expander as module, or some 'small'
+>> change in kernel and the probe order on the bus changes.
+>> I don't think it is a valid thing to have commits on the DT files
+>> saying: move the expander front/after the hog affected user since since
+>> Monday the probe order has changed. Then move it back two weeks later ;)
+>>
+> 
+> Ok. Above sounds like real problem. The implicit dependence is exist,
+> but can't
+> be resolved if any driver depends on gpio-hog of some gpio-controller.
+> Probe deferring of gpio-controller will not lead to probe differing of
+> dependent driver.
+> 
+> Question: will gpio-hog mechanism resolve your case if it works (and
+> probe differing issues)?
+
+I see gpio-hog to fulfill different role, use cases. It is more like
+controlling muxes on boards to select between different exclusive
+features. Things like route the I2S lines to analog codec or HDMI, route
+RGB video to LCD panel or to HDMI, etc.
+
+But, if it would work it could be used for components which can be
+enabled all the time. On the other hand, if a device has reset/enable
+line then the driver should have a way to control it.
+
+- Péter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
