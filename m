@@ -2,119 +2,379 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05A8EC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:58:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CF4AC5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:59:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE6852178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="AuN18Jnu"
+	by mail.kernel.org (Postfix) with ESMTP id 57C772178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:59:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732105AbfKFP6j (ORCPT
+        id S1732102AbfKFP7V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:58:39 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:50510 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKFP6i (ORCPT
+        Wed, 6 Nov 2019 10:59:21 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:57005 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfKFP7U (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:58:38 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6FvcFk095971;
-        Wed, 6 Nov 2019 15:58:35 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=z2DPWMc3TKp1oFbPYOXdhDkuZDHNEjaRiG/t99Bj+Vs=;
- b=AuN18JnuOGoe/JpvfkXBWlPG1alUPMAZIK/8tDhZenMyV72fWeJ92TUOFLCE67sl5a45
- 16XSpKbn8YLleS5zPwsX0MNrtynoaTIw7PY8ga1r0+R5ab5LTcYeZQzRlFz9WGoQI+Uk
- Vl4dWI34rvOBbCS1VuQWxVjKL6e2mkYurfVtotKGI9bGj56VtvCshMe+FoWSD2ZYFChD
- CqMkIF+fMOo6PbsHuii78O1FX9PL9kF/qv/ykMWTjeiDTvs3gy8H4FHNw0DmBqQrkk2b
- ztcFuIE+MhVnS0p5optw76GYHFOzbS/DWsVm3M8nONXgj4TA6MzscXETw/FYDc1nl2id WA== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2w117u7rpn-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 15:58:35 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6FrASK157567;
-        Wed, 6 Nov 2019 15:56:34 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by userp3020.oracle.com with ESMTP id 2w3163tmay-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 15:56:34 +0000
-Received: from abhmp0004.oracle.com (abhmp0004.oracle.com [141.146.116.10])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA6FuXZI007616;
-        Wed, 6 Nov 2019 15:56:33 GMT
-Received: from localhost (/67.169.218.210)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 07:56:32 -0800
-Date:   Wed, 6 Nov 2019 07:56:31 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Colin King <colin.king@canonical.com>
-Cc:     linux-xfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH][next] xfs: remove redundant assignment to variable error
-Message-ID: <20191106155631.GJ4153244@magnolia>
-References: <20191106155248.266489-1-colin.king@canonical.com>
+        Wed, 6 Nov 2019 10:59:20 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iSNiG-0003C8-BP; Wed, 06 Nov 2019 15:59:16 +0000
+Date:   Wed, 6 Nov 2019 16:59:15 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Adrian Reber <areber@redhat.com>
+Cc:     Shuah Khan <shuah@kernel.org>,
+        Eugene Syromiatnikov <esyr@redhat.com>,
+        linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] selftests: add tests for clone3()
+Message-ID: <20191106155914.hzolyolz2w4hcn7w@wittgenstein>
+References: <20191104131846.1076814-1-areber@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191106155248.266489-1-colin.king@canonical.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911060153
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911060153
+In-Reply-To: <20191104131846.1076814-1-areber@redhat.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 03:52:48PM +0000, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
+On Mon, Nov 04, 2019 at 02:18:46PM +0100, Adrian Reber wrote:
+> This adds tests for clone3() with different values and sizes
+> of struct clone_args.
 > 
-> Variable error is being initialized with a value that is never read
-> and is being re-assigned a couple of statements later on. The
-> assignment is redundant and hence can be removed.
+> This selftest was initially part of of the clone3() with PID selftest.
+> After that patch was almost merged Eugene sent out a couple of patches
+> to fix problems with these test.
 > 
-> Addresses-Coverity: ("Unused value")
+> This commit now only contains the clone3() selftest after the LPC
+> decision to rework clone3() with PID to allow setting the PID in
+> multiple PID namespaces including all of Eugene's patches.
+> 
+> Signed-off-by: Eugene Syromiatnikov <esyr@redhat.com>
+> Signed-off-by: Adrian Reber <areber@redhat.com>
 
-Er... is there a coverity id that goes with this?
+Resending, since mutt messed-up the quoting due to a new configuration I
+was testing.
 
-Patch looks fine otherwise.
+A few more comments below.
 
---D
+Also, would you be open to adding tests here for the newly added .stack
+and .stack_size API (cf. [1])?
 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+[1]: https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=fa729c4df558936b4a1a7b3e2234011f44ede28b
+
 > ---
->  fs/xfs/xfs_super.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> v2:
+>  - Applied Christian's suggestions
+>  - Skip root-only tests when running as non-root
+> ---
+>  MAINTAINERS                               |   1 +
+>  tools/testing/selftests/Makefile          |   1 +
+>  tools/testing/selftests/clone3/.gitignore |   1 +
+>  tools/testing/selftests/clone3/Makefile   |   7 +
+>  tools/testing/selftests/clone3/clone3.c   | 225 ++++++++++++++++++++++
+>  5 files changed, 235 insertions(+)
+>  create mode 100644 tools/testing/selftests/clone3/.gitignore
+>  create mode 100644 tools/testing/selftests/clone3/Makefile
+>  create mode 100644 tools/testing/selftests/clone3/clone3.c
 > 
-> diff --git a/fs/xfs/xfs_super.c b/fs/xfs/xfs_super.c
-> index b3188ea49413..2302f67d1a18 100644
-> --- a/fs/xfs/xfs_super.c
-> +++ b/fs/xfs/xfs_super.c
-> @@ -1362,7 +1362,7 @@ xfs_fc_fill_super(
->  {
->  	struct xfs_mount	*mp = sb->s_fs_info;
->  	struct inode		*root;
-> -	int			flags = 0, error = -ENOMEM;
-> +	int			flags = 0, error;
->  
->  	mp->m_super = sb;
->  
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index cba1095547fd..0040b7a6410b 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -12829,6 +12829,7 @@ S:	Maintained
+>  T:	git git://git.kernel.org/pub/scm/linux/kernel/git/brauner/linux.git
+>  F:	samples/pidfd/
+>  F:	tools/testing/selftests/pidfd/
+> +F:	tools/testing/selftests/clone3/
+>  K:	(?i)pidfd
+>  K:	(?i)clone3
+>  K:	\b(clone_args|kernel_clone_args)\b
+> diff --git a/tools/testing/selftests/Makefile b/tools/testing/selftests/Makefile
+> index 4cdbae6f4e61..ad442364218a 100644
+> --- a/tools/testing/selftests/Makefile
+> +++ b/tools/testing/selftests/Makefile
+> @@ -4,6 +4,7 @@ TARGETS += bpf
+>  TARGETS += breakpoints
+>  TARGETS += capabilities
+>  TARGETS += cgroup
+> +TARGETS += clone3
+>  TARGETS += cpufreq
+>  TARGETS += cpu-hotplug
+>  TARGETS += drivers/dma-buf
+> diff --git a/tools/testing/selftests/clone3/.gitignore b/tools/testing/selftests/clone3/.gitignore
+> new file mode 100644
+> index 000000000000..85d9d3ba2524
+> --- /dev/null
+> +++ b/tools/testing/selftests/clone3/.gitignore
+> @@ -0,0 +1 @@
+> +clone3
+> diff --git a/tools/testing/selftests/clone3/Makefile b/tools/testing/selftests/clone3/Makefile
+> new file mode 100644
+> index 000000000000..ea922c014ae4
+> --- /dev/null
+> +++ b/tools/testing/selftests/clone3/Makefile
+> @@ -0,0 +1,7 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +
+> +CFLAGS += -I../../../../usr/include/
+> +
+> +TEST_GEN_PROGS := clone3
+> +
+> +include ../lib.mk
+> diff --git a/tools/testing/selftests/clone3/clone3.c b/tools/testing/selftests/clone3/clone3.c
+> new file mode 100644
+> index 000000000000..a982d95189bf
+> --- /dev/null
+> +++ b/tools/testing/selftests/clone3/clone3.c
+> @@ -0,0 +1,225 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +/* Based on Christian Brauner's clone3() example */
+> +
+> +#define _GNU_SOURCE
+> +#include <errno.h>
+> +#include <inttypes.h>
+> +#include <linux/types.h>
+> +#include <linux/sched.h>
+> +#include <stdint.h>
+> +#include <stdio.h>
+> +#include <stdlib.h>
+> +#include <sys/syscall.h>
+> +#include <sys/types.h>
+> +#include <sys/un.h>
+> +#include <sys/wait.h>
+> +#include <unistd.h>
+> +#include <sched.h>
+> +
+> +#include "../kselftest.h"
+> +
+> +/*
+> + * Different sizes of struct clone_args
+> + */
+> +#ifndef CLONE3_ARGS_SIZE_V0
+> +#define CLONE3_ARGS_SIZE_V0 64
+> +#endif
+> +
+> +enum test_mode {
+> +	CLONE3_ARGS_NO_TEST,
+> +	CLONE3_ARGS_ALL_0,
+> +	CLONE3_ARGS_ALL_1,
+> +	CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG,
+> +	CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG,
+> +	CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG,
+> +	CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG,
+> +};
+> +
+> +static pid_t raw_clone(struct clone_args *args, size_t size)
+> +{
+> +	return syscall(__NR_clone3, args, size);
+> +}
+> +
+> +static int call_clone3(uint64_t flags, size_t size, enum test_mode test_mode)
+> +{
+> +	struct clone_args args = {
+> +		.flags = flags,
+> +		.exit_signal = SIGCHLD,
+> +	};
+> +
+> +	struct clone_args_extended {
+> +		struct clone_args args;
+> +		__aligned_u64 excess_space[2];
+> +	} args_ext;
+> +
+> +	pid_t pid = -1;
+> +	int status;
+> +
+> +	memset(&args_ext, 0, sizeof(args_ext));
+> +	if (size > sizeof(struct clone_args))
+> +		args_ext.excess_space[1] = 1;
+> +
+> +	if (size == 0)
+> +		size = sizeof(struct clone_args);
+> +
+> +	switch (test_mode) {
+> +	case CLONE3_ARGS_ALL_0:
+> +		args.flags = 0;
+> +		args.exit_signal = 0;
+> +		break;
+> +	case CLONE3_ARGS_ALL_1:
+
+I don't fully understand this test case. What is this for exactly?
+
+> +		args.flags = 1;
+> +		args.pidfd = 1;
+> +		args.child_tid = 1;
+> +		args.parent_tid = 1;
+> +		args.exit_signal = 1;
+> +		args.stack = 1;
+> +		args. stack_size = 1;
+> +		args.tls = 1;
+> +		break;
+> +	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG:
+> +		args.exit_signal = 0xbadc0ded00000000ULL;
+> +		break;
+> +	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG:
+> +		args.exit_signal = 0x0000000080000000ULL;
+> +		break;
+> +	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG:
+> +		args.exit_signal = 0x0000000000000100ULL;
+> +		break;
+> +	case CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG:
+> +		args.exit_signal = 0x00000000000000f0ULL;
+> +		break;
+> +	}
+> +
+> +	memcpy(&args_ext.args, &args, sizeof(struct clone_args));
+> +
+> +	pid = raw_clone((struct clone_args *)&args_ext, size);
+> +	if (pid < 0) {
+> +		ksft_print_msg("%s - Failed to create new process\n",
+> +				strerror(errno));
+> +		return -errno;
+> +	}
+> +
+> +	if (pid == 0) {
+> +		ksft_print_msg("I am the child, my PID is %d\n", getpid());
+> +		_exit(EXIT_SUCCESS);
+> +	}
+> +
+> +	ksft_print_msg("I am the parent (%d). My child's pid is %d\n",
+> +			getpid(), pid);
+> +
+> +	if (wait(&status) < 0) {
+> +		ksft_print_msg("Child returned %s\n", strerror(errno));
+> +		return -errno;
+> +	}
+> +	if (WEXITSTATUS(status))
+> +		return WEXITSTATUS(status);
+> +
+> +	return 0;
+> +}
+> +
+> +static void test_clone3(uint64_t flags, size_t size, int expected,
+> +		       enum test_mode test_mode)
+> +{
+> +	int ret;
+> +
+> +	ksft_print_msg(
+> +		"[%d] Trying clone3() with flags %#" PRIx64 " (size %zu)\n",
+> +		getpid(), flags, size);
+> +	ret = call_clone3(flags, size, test_mode);
+> +	ksft_print_msg("[%d] clone3() with flags says: %d expected %d\n",
+> +			getpid(), ret, expected);
+> +	if (ret != expected)
+> +		ksft_test_result_fail(
+> +			"[%d] Result (%d) is different than expected (%d)\n",
+> +			getpid(), ret, expected);
+> +	else
+> +		ksft_test_result_pass(
+> +			"[%d] Result (%d) matches expectation (%d)\n",
+> +			getpid(), ret, expected);
+> +}
+> +int main(int argc, char *argv[])
+> +{
+> +	pid_t pid;
+> +
+> +	uid_t uid = getuid();
+> +
+> +	ksft_print_header();
+> +	ksft_set_plan(17);
+> +
+> +	/* Just a simple clone3() should return 0.*/
+> +	test_clone3(0, 0, 0, CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() in a new PID NS.*/
+> +	if (uid == 0)
+> +		test_clone3(CLONE_NEWPID, 0, 0, CLONE3_ARGS_NO_TEST);
+> +	else
+> +		ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
+> +
+> +	/* Do a clone3() with CLONE3_ARGS_SIZE_V0. */
+> +	test_clone3(0, CLONE3_ARGS_SIZE_V0, 0, CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 */
+> +	test_clone3(0, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL, CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() with sizeof(struct clone_args) + 8 */
+> +	test_clone3(0, sizeof(struct clone_args) + 8, 0, CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() with all members set to 1 */
+> +	test_clone3(0, 0, -EINVAL, CLONE3_ARGS_ALL_1);
+> +
+> +	/* Do a clone3() with exit_signal having highest 32 bits non-zero */
+> +	test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_BIG);
+> +
+> +	/* Do a clone3() with negative 32-bit exit_signal */
+> +	test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NEG);
+> +
+> +	/* Do a clone3() with exit_signal not fitting into CSIGNAL mask */
+> +	test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_CSIG);
+> +
+> +	/* Do a clone3() with NSIG < exit_signal < CSIG */
+> +	test_clone3(0, 0, -EINVAL, CLONE3_ARGS_INVAL_EXIT_SIGNAL_NSIG);
+> +
+> +	/*
+> +	 * Do a clone3() with sizeof(struct clone_args) + 8
+> +	 * and all members set to 0. This resets exit_signal and wait()
+> +	 * will not get a result.
+> +	 */
+> +	test_clone3(0, sizeof(struct clone_args) + 8, -ECHILD,
+> +			CLONE3_ARGS_ALL_0);
+
+Ah, I haven't caught this during the first review. No, that's not
+correct. You don't get a signal since exit_signal is 0, that's correct
+_but_ you still need to wait on the child. You don't see the child
+because the kernel will by default not wait on clone()-children aka
+processes created with exit_signal != SIGCHLD. To wait on
+clone()-children as well,  you need to set __WCLONE or __WALL in the
+options argument for wait{p}id(2).
+
+> +
+> +	/*
+> +	 * Do a clone3() with sizeof(struct clone_args) + 8
+> +	 * and all members set to 0.
+> +	 */
+> +	test_clone3(0, sizeof(struct clone_args) + 8, -EINVAL,
+> +			CLONE3_ARGS_ALL_1);
+
+The comment and the test don't line up. :)
+
+> +
+> +	/* Do a clone3() with > page size */
+> +	test_clone3(0, getpagesize() + 8, -E2BIG, CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() with CLONE3_ARGS_SIZE_V0 in a new PID NS. */
+> +	if (uid == 0)
+> +		test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0, 0,
+> +				CLONE3_ARGS_NO_TEST);
+> +	else
+> +		ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
+> +
+> +	/* Do a clone3() with CLONE3_ARGS_SIZE_V0 - 8 in a new PID NS */
+> +	test_clone3(CLONE_NEWPID, CLONE3_ARGS_SIZE_V0 - 8, -EINVAL,
+> +			CLONE3_ARGS_NO_TEST);
+> +
+> +	/* Do a clone3() with sizeof(struct clone_args) + 8 in a new PID NS */
+> +	if (uid == 0)
+> +		test_clone3(CLONE_NEWPID, sizeof(struct clone_args) + 8, 0,
+> +				CLONE3_ARGS_NO_TEST);
+> +	else
+> +		ksft_test_result_skip("Skipping clone3() with CLONE_NEWPID\n");
+> +
+> +	/* Do a clone3() with > page size in a new PID NS */
+> +	test_clone3(CLONE_NEWPID, getpagesize() + 8, -E2BIG,
+> +			CLONE3_ARGS_NO_TEST);
+> +
+> +	return !ksft_get_fail_cnt() ? ksft_exit_pass() : ksft_exit_fail();
+> +}
 > -- 
-> 2.20.1
+> 2.23.0
 > 
