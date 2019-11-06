@@ -2,32 +2,32 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54EFEC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7617FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 338002166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 54DCB217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:21:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731971AbfKFPVC (ORCPT
+        id S1732036AbfKFPVF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:21:02 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:33004 "EHLO inva020.nxp.com"
+        Wed, 6 Nov 2019 10:21:05 -0500
+Received: from inva021.nxp.com ([92.121.34.21]:51140 "EHLO inva021.nxp.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727231AbfKFPVB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:21:01 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 5791E1A0647;
-        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+        id S1727231AbfKFPVE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:21:04 -0500
+Received: from inva021.nxp.com (localhost [127.0.0.1])
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id B64B5200A3E;
+        Wed,  6 Nov 2019 16:21:01 +0100 (CET)
 Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 402691A0645;
-        Wed,  6 Nov 2019 16:20:59 +0100 (CET)
+        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 9DF8020096F;
+        Wed,  6 Nov 2019 16:21:01 +0100 (CET)
 Received: from fsr-ub1664-134.ea.freescale.net (fsr-ub1664-134.ea.freescale.net [10.171.74.111])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id 7337E205EB;
-        Wed,  6 Nov 2019 16:20:58 +0100 (CET)
+        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id D2F8E205EB;
+        Wed,  6 Nov 2019 16:21:00 +0100 (CET)
 From:   Mirela Rabulea <mirela.rabulea@nxp.com>
 To:     mchehab@kernel.org, shawnguo@kernel.org, robh+dt@kernel.org
 Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
@@ -40,61 +40,111 @@ Cc:     hverkuil-cisco@xs4all.nl, paul.kocialkowski@bootlin.com,
         niklas.soderlund+renesas@ragnatech.se,
         dafna.hirschfeld@collabora.com,
         Mirela Rabulea <mirela.rabulea@nxp.com>
-Subject: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-Date:   Wed,  6 Nov 2019 17:20:28 +0200
-Message-Id: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+Subject: [PATCH 1/5] media: v4l: Add packed YUV444 24bpp pixel format
+Date:   Wed,  6 Nov 2019 17:20:29 +0200
+Message-Id: <1573053633-21437-2-git-send-email-mirela.rabulea@nxp.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
 X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
-and it's dependencies.
-The driver was tested on i.MX8QXP, using a unit test application and
-the v4l2-compliance tool, which passes when run on the encoder/decoder dev
-node, without any other parameters:
-v4l2-compliance -d /dev/video0
-v4l2-compliance -d /dev/video1
-v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
+The added format is V4L2_PIX_FMT_YUV24, this is a packed
+YUV 4:4:4 format, with 8 bits for each component, 24 bits
+per sample.
 
-The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
-upstream, but not accepted because there was no driver using this format,
-until now. This pixel format, YUV444 24bpp, is now used and needed by the
-i.MX8QXP/QM JPEG encoder/decoder driver.
+This format is used by the i.MX 8QuadMax and i.MX 8DualXPlus/8QuadXPlus
+JPEG encoder/decoder.
 
-Mirela Rabulea (5):
-  media: v4l: Add packed YUV444 24bpp pixel format
-  firmware: imx: scu-pd: Add power domains for imx-jpeg
-  media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
-  media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
-  arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
+Signed-off-by: Mirela Rabulea <mirela.rabulea@nxp.com>
+---
+ Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst | 37 +++++++++++++++++++++-
+ drivers/media/v4l2-core/v4l2-ioctl.c               |  1 +
+ include/uapi/linux/videodev2.h                     |  1 +
+ 3 files changed, 38 insertions(+), 1 deletion(-)
 
- .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
- Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
- arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
- drivers/firmware/imx/scu-pd.c                      |    6 +
- drivers/media/platform/Kconfig                     |    2 +
- drivers/media/platform/Makefile                    |    1 +
- drivers/media/platform/imx-jpeg/Kconfig            |   10 +
- drivers/media/platform/imx-jpeg/Makefile           |    3 +
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
- drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
- drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
- drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
- include/uapi/linux/videodev2.h                     |    1 +
- 15 files changed, 2949 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
- create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
- create mode 100644 drivers/media/platform/imx-jpeg/Makefile
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
- create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
-
+diff --git a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+index 41b60fa..5750ff6 100644
+--- a/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
++++ b/Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst
+@@ -17,7 +17,8 @@ Description
+ ===========
+ 
+ Similar to the packed RGB formats these formats store the Y, Cb and Cr
+-component of each pixel in one 16 or 32 bit word.
++component of each pixel next to each other in memory. They occupy 16, 24 or 32
++bits per pixel.
+ 
+ 
+ .. raw:: latex
+@@ -157,6 +158,40 @@ component of each pixel in one 16 or 32 bit word.
+ 
+       -  :cspan:`15`
+ 
++    * .. _V4L2-PIX-FMT-YUV24:
++
++      - ``V4L2_PIX_FMT_YUV24``
++      - 'YUV3'
++
++      - Y'\ :sub:`7`
++      - Y'\ :sub:`6`
++      - Y'\ :sub:`5`
++      - Y'\ :sub:`4`
++      - Y'\ :sub:`3`
++      - Y'\ :sub:`2`
++      - Y'\ :sub:`1`
++      - Y'\ :sub:`0`
++
++      - Cb\ :sub:`7`
++      - Cb\ :sub:`6`
++      - Cb\ :sub:`5`
++      - Cb\ :sub:`4`
++      - Cb\ :sub:`3`
++      - Cb\ :sub:`2`
++      - Cb\ :sub:`1`
++      - Cb\ :sub:`0`
++
++      - Cr\ :sub:`7`
++      - Cr\ :sub:`6`
++      - Cr\ :sub:`5`
++      - Cr\ :sub:`4`
++      - Cr\ :sub:`3`
++      - Cr\ :sub:`2`
++      - Cr\ :sub:`1`
++      - Cr\ :sub:`0`
++
++      -  :cspan:`7`
++
+     * .. _V4L2-PIX-FMT-YUV32:
+ 
+       - ``V4L2_PIX_FMT_YUV32``
+diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
+index 315ac12..9973fdf 100644
+--- a/drivers/media/v4l2-core/v4l2-ioctl.c
++++ b/drivers/media/v4l2-core/v4l2-ioctl.c
+@@ -1246,6 +1246,7 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
+ 	case V4L2_PIX_FMT_YUV444:	descr = "16-bit A/XYUV 4-4-4-4"; break;
+ 	case V4L2_PIX_FMT_YUV555:	descr = "16-bit A/XYUV 1-5-5-5"; break;
+ 	case V4L2_PIX_FMT_YUV565:	descr = "16-bit YUV 5-6-5"; break;
++	case V4L2_PIX_FMT_YUV24:	descr = "24-bit YUV 4:4:4 8-8-8"; break;
+ 	case V4L2_PIX_FMT_YUV32:	descr = "32-bit A/XYUV 8-8-8-8"; break;
+ 	case V4L2_PIX_FMT_AYUV32:	descr = "32-bit AYUV 8-8-8-8"; break;
+ 	case V4L2_PIX_FMT_XYUV32:	descr = "32-bit XYUV 8-8-8-8"; break;
+diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
+index f98bbcc..8a1d9b4 100644
+--- a/include/uapi/linux/videodev2.h
++++ b/include/uapi/linux/videodev2.h
+@@ -588,6 +588,7 @@ struct v4l2_pix_format {
+ #define V4L2_PIX_FMT_YUV444  v4l2_fourcc('Y', '4', '4', '4') /* 16  xxxxyyyy uuuuvvvv */
+ #define V4L2_PIX_FMT_YUV555  v4l2_fourcc('Y', 'U', 'V', 'O') /* 16  YUV-5-5-5     */
+ #define V4L2_PIX_FMT_YUV565  v4l2_fourcc('Y', 'U', 'V', 'P') /* 16  YUV-5-6-5     */
++#define V4L2_PIX_FMT_YUV24   v4l2_fourcc('Y', 'U', 'V', '3') /* 24  YUV-8-8-8     */
+ #define V4L2_PIX_FMT_YUV32   v4l2_fourcc('Y', 'U', 'V', '4') /* 32  YUV-8-8-8-8   */
+ #define V4L2_PIX_FMT_AYUV32  v4l2_fourcc('A', 'Y', 'U', 'V') /* 32  AYUV-8-8-8-8  */
+ #define V4L2_PIX_FMT_XYUV32  v4l2_fourcc('X', 'Y', 'U', 'V') /* 32  XYUV-8-8-8-8  */
 -- 
 2.7.4
 
