@@ -2,766 +2,363 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DB08C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327E6C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD3A2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F1CB02173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:52:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732274AbfKFQwN (ORCPT
+        id S1732288AbfKFQwx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:52:13 -0500
-Received: from mga14.intel.com ([192.55.52.115]:57056 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727824AbfKFQwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:52:12 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 08:52:11 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="353532363"
-Received: from pdblomfi-mobl.gar.corp.intel.com (HELO [10.254.107.145]) ([10.254.107.145])
-  by orsmga004.jf.intel.com with ESMTP; 06 Nov 2019 08:52:10 -0800
-Subject: Re: [alsa-devel] [PATCH v2 3/7] ASoC: amd: Enabling I2S instance in
- DMA and DAI
-To:     Ravulapati Vishnu vardhan rao 
-        <Vishnuvardhanrao.Ravulapati@amd.com>
-Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.com>,
-        YueHaibing <yuehaibing@huawei.com>,
-        Liam Girdwood <lgirdwood@gmail.com>, Akshu.Agrawal@amd.com,
-        Sanju R Mehta <sanju.mehta@amd.com>,
-        Mark Brown <broonie@kernel.org>, djkurtz@google.com,
-        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
-        Alex Deucher <alexander.deucher@amd.com>,
-        Colin Ian King <colin.king@canonical.com>
-References: <1573137364-5592-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
- <1573137364-5592-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <99656586-8512-ed13-6174-12e0b1fbb3dd@linux.intel.com>
-Date:   Wed, 6 Nov 2019 10:34:54 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 6 Nov 2019 11:52:53 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:55753 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727824AbfKFQww (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:52:52 -0500
+Received: from [192.168.2.10] ([46.9.232.237])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id SOXyip2Ly9P9bSOY1iedV0; Wed, 06 Nov 2019 17:52:49 +0100
+Subject: Re: [EXT] Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG
+ Encoder/Decoder
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>,
+        "mchehab@kernel.org" <mchehab@kernel.org>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>
+Cc:     dl-linux-imx <linux-imx@nxp.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "laurent.pinchart+renesas@ideasonboard.com" 
+        <laurent.pinchart+renesas@ideasonboard.com>,
+        Aisheng Dong <aisheng.dong@nxp.com>,
+        Laurentiu Palcu <laurentiu.palcu@nxp.com>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "paul.kocialkowski@bootlin.com" <paul.kocialkowski@bootlin.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Robert Chiras <robert.chiras@nxp.com>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "p.zabel@pengutronix.de" <p.zabel@pengutronix.de>,
+        "niklas.soderlund+renesas@ragnatech.se" 
+        <niklas.soderlund+renesas@ragnatech.se>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Leonard Crestez <leonard.crestez@nxp.com>,
+        "dafna.hirschfeld@collabora.com" <dafna.hirschfeld@collabora.com>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+ <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
+ <1573058741.16477.18.camel@nxp.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <2ad1718b-2556-ea7c-27e0-9e60445a5b71@xs4all.nl>
+Date:   Wed, 6 Nov 2019 17:52:42 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <1573137364-5592-4-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <1573058741.16477.18.camel@nxp.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-CMAE-Envelope: MS4wfCMhwsl33WKBOGR5KEGFopnmg4H1XlpCQB/6CM7GEZqrOm74S2xriGDTT44JIkOW09Bb2apG+ue6gNcRv9Qr4tYBHfyXXvlf7f0Z3P8F0TANRM5rE+jS
+ tacpFFZhM3hcGirOm/RKPsHs410rpc1wFQckmCY/ZIrZqdShRm3HbCBLjJ4iOB1562nKiNOgNbkvA++zyHcCreEsRjCcAGK7kZXG/Yo9ZZGjf60hzUgP0vni
+ AFen8J/3PAUWiYTgR4GI6CSjAnfLOcVl+O//v0toZZOCR/xpbvCOWRg2OhfEHg0ukUNkGWH7dYfYA8oHRWDxA2Cj80xG0PXxIOSbuMfjnqBX+HwtYyLbBkqW
+ 1wLjX54suiaNqoCOvlrYEH26R4qsY986udaf8A8lDBxmHMYkDa5lqbqMPoLEgMprkfP6WDzPy41vp0VnfObS/rtpMe+DOd6VvznlBctNAqP9UqNoDfstj9GM
+ Ro397qPqzueG1n0iCB9AkbgeWUSFyc0bJi3mPPGBgCQyX8nCV70fHUxBAtj8QSgexIVNBevAdPUrCIUaJSTTa88XiMaFwweCpWFc7WoKUd5VemwFMgkCEN08
+ J77F3to+fGpCxxRRxKBd1dose8aA3RoBXCW+zUUdMNKjQJEXYkQ1cftKzZ6GLdbVCB0dR4T2Mw5el/g2Q1UTFMDTzWh+2IwWwA891sDG64F3LfbTQ37YLPWo
+ IeetJVTfncRZVDUMB24TpGCmWPJPUr5HTnvW4HKVVhQr/CiNO4knt/zPDpU4uDgILhOtGuP/mwSYX+FFWabMoX+mVmZZDUe5+MAsu2xFXFhe8b1poA9/pJPw
+ 9aD8tfE4pg8CQrBz025SdzdyYcKHCtfhhWykgol1EgQ3Dvxhxm+q8uCkCxvKOA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/7/19 8:36 AM, Ravulapati Vishnu vardhan rao wrote:
-> This patch adds I2S SP support in ACP PCM DMA and DAI.
-> Added I2S support in DMA and DAI probe,its hw_params handling
-> its open and close functionalities.
-> This enable to open and close on the SP instance for
-> playback and capture.
+On 11/6/19 5:45 PM, Mirela Rabulea wrote:
+> Hi Hans,
 > 
-> Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
-> ---
->   sound/soc/amd/raven/acp3x-i2s.c     | 168 ++++++++++++++++++++++-----
->   sound/soc/amd/raven/acp3x-pcm-dma.c | 219 +++++++++++++++++++++++++++---------
->   sound/soc/amd/raven/acp3x.h         |  74 +++++++++---
->   3 files changed, 360 insertions(+), 101 deletions(-)
+> On Mi, 2019-11-06 at 16:37 +0100, Hans Verkuil wrote:
+>> That's too old. Always test with the latest version from the v4l-
+>> utils git
+>> repo (git://linuxtv.org/v4l-utils.git). v4l2-compliance is
+>> continually
+>> improved, so driver testing should always be done with the latest
+>> version.
+>>
+>> For the JPEG encoder you can add the -s option to v4l2-compliance.
+>> Unfortunately,
+>> the streaming tests for JPEG decoders in v4l2-compliance are not well
+>> supported
+>> at the moment, so you can't use -s there.
+>>
+>> Please provide the full output of the v4l2-compliance command as
+>> well, I'd
+>> like to see the actual output.
 > 
-> diff --git a/sound/soc/amd/raven/acp3x-i2s.c b/sound/soc/amd/raven/acp3x-i2s.c
-> index 728e757..725e71a 100644
-> --- a/sound/soc/amd/raven/acp3x-i2s.c
-> +++ b/sound/soc/amd/raven/acp3x-i2s.c
-> @@ -30,8 +30,8 @@ static int acp3x_i2s_set_fmt(struct snd_soc_dai *cpu_dai, unsigned int fmt)
->   		adata->tdm_mode = false;
->   		break;
->   	case SND_SOC_DAIFMT_DSP_A:
-> -			adata->tdm_mode = true;
-> -			break;
-> +		adata->tdm_mode = true;
-> +		break;
-
-this should have been squashed in the previous patch
-
->   	default:
->   		return -EINVAL;
->   	}
-> @@ -82,8 +82,18 @@ static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
->   		struct snd_soc_dai *dai)
->   {
->   	u32 val = 0;
-> +	struct snd_soc_pcm_runtime *prtd = substream->private_data;
-> +	struct snd_soc_card *card = prtd->card;
-> +	struct acp3x_platform_info *pinfo = snd_soc_card_get_drvdata(card);
->   	struct i2s_stream_instance *rtd = substream->runtime->private_data;
->   
-> +	if (pinfo) {
-> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +			rtd->i2s_instance = pinfo->play_i2s_instance;
-> +		else
-> +			rtd->i2s_instance = pinfo->cap_i2s_instance;
-> +	}
-> +
->   	switch (params_format(params)) {
->   	case SNDRV_PCM_FORMAT_U8:
->   	case SNDRV_PCM_FORMAT_S8:
-> @@ -101,12 +111,33 @@ static int acp3x_i2s_hwparams(struct snd_pcm_substream *substream,
->   	default:
->   		return -EINVAL;
->   	}
-> -	val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-> -	val = val | (rtd->xfer_resolution  << 3);
-> -	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> -		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-> -	else
-> -		rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +			val = val | (rtd->xfer_resolution  << 3);
-> +			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_ITER);
-> +			val = val | (rtd->xfer_resolution  << 3);
-> +			rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_ITER);
-> +		}
-> +	} else {
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +			val = val | (rtd->xfer_resolution  << 3);
-> +			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_IRER);
-> +			val = val | (rtd->xfer_resolution  << 3);
-> +			rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_IRER);
-> +		}
-> +	}
->   
->   	return 0;
->   }
-> @@ -117,7 +148,16 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
->   	int ret = 0;
->   	struct i2s_stream_instance *rtd = substream->runtime->private_data;
->   	u32 val, period_bytes;
-> -
-> +	struct snd_soc_pcm_runtime *prtd = substream->private_data;
-> +	struct snd_soc_card *card = prtd->card;
-> +	struct acp3x_platform_info *pinfo = snd_soc_card_get_drvdata(card);
-> +
-> +	if (pinfo) {
-> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +			rtd->i2s_instance = pinfo->play_i2s_instance;
-> +		else
-> +			rtd->i2s_instance = pinfo->cap_i2s_instance;
-> +	}
->   	period_bytes = frames_to_bytes(substream->runtime,
->   			substream->runtime->period_size);
->   	switch (cmd) {
-> @@ -127,33 +167,104 @@ static int acp3x_i2s_trigger(struct snd_pcm_substream *substream,
->   		rtd->bytescount = acp_get_byte_count(rtd,
->   						substream->stream);
->   		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> -			rv_writel(period_bytes, rtd->acp3x_base +
-> +			switch (rtd->i2s_instance) {
-> +			case I2S_BT_INSTANCE:
-> +				rv_writel(period_bytes, rtd->acp3x_base +
->   					mmACP_BT_TX_INTR_WATERMARK_SIZE);
-> -			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-> -			val = val | BIT(0);
-> -			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +				val = rv_readl(rtd->acp3x_base +
-> +						mmACP_BTTDM_ITER);
-> +				val = val | BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +						mmACP_BTTDM_ITER);
-> +				rv_writel(1, rtd->acp3x_base +
-> +						mmACP_BTTDM_IER);
-> +				break;
-> +			case I2S_SP_INSTANCE:
-> +			default:
-> +				rv_writel(period_bytes, rtd->acp3x_base +
-> +					mmACP_I2S_TX_INTR_WATERMARK_SIZE);
-> +				val = rv_readl(rtd->acp3x_base +
-> +						mmACP_I2STDM_ITER);
-> +				val = val | BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +						mmACP_I2STDM_ITER);
-> +				rv_writel(1, rtd->acp3x_base +
-> +						mmACP_I2STDM_IER);
-> +			}
->   		} else {
-> -			rv_writel(period_bytes, rtd->acp3x_base +
-> +			switch (rtd->i2s_instance) {
-> +			case I2S_BT_INSTANCE:
-> +				rv_writel(period_bytes, rtd->acp3x_base +
->   					mmACP_BT_RX_INTR_WATERMARK_SIZE);
-> -			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-> -			val = val | BIT(0);
-> -			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +				val = rv_readl(rtd->acp3x_base +
-> +						mmACP_BTTDM_IRER);
-> +				val = val | BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +						mmACP_BTTDM_IRER);
-> +				rv_writel(1, rtd->acp3x_base +
-> +						mmACP_BTTDM_IER);
-> +				break;
-> +			case I2S_SP_INSTANCE:
-> +			default:
-> +				rv_writel(period_bytes, rtd->acp3x_base +
-> +					mmACP_I2S_RX_INTR_WATERMARK_SIZE);
-> +				val = rv_readl(rtd->acp3x_base +
-> +						mmACP_I2STDM_IRER);
-> +				val = val | BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +						 mmACP_I2STDM_IRER);
-> +				rv_writel(1, rtd->acp3x_base +
-> +						mmACP_I2STDM_IER);
-> +			}
->   		}
-> -		rv_writel(1, rtd->acp3x_base + mmACP_BTTDM_IER);
->   		break;
->   	case SNDRV_PCM_TRIGGER_STOP:
->   	case SNDRV_PCM_TRIGGER_SUSPEND:
->   	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
->   		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
-> -			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_ITER);
-> -			val = val & ~BIT(0);
-> -			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +			switch (rtd->i2s_instance) {
-> +			case I2S_BT_INSTANCE:
-> +				val = rv_readl(rtd->acp3x_base +
-> +							mmACP_BTTDM_ITER);
-> +				val = val & ~BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +							mmACP_BTTDM_ITER);
-> +				rv_writel(0, rtd->acp3x_base +
-> +							mmACP_BTTDM_IER);
-> +				break;
-> +			case I2S_SP_INSTANCE:
-> +			default:
-> +				val = rv_readl(rtd->acp3x_base +
-> +							mmACP_I2STDM_ITER);
-> +				val = val & ~BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +							mmACP_I2STDM_ITER);
-> +				rv_writel(0, rtd->acp3x_base +
-> +							mmACP_I2STDM_IER);
-> +			}
-> +
->   		} else {
-> -			val = rv_readl(rtd->acp3x_base + mmACP_BTTDM_IRER);
-> -			val = val & ~BIT(0);
-> -			rv_writel(val, rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +			switch (rtd->i2s_instance) {
-> +			case I2S_BT_INSTANCE:
-> +				val = rv_readl(rtd->acp3x_base +
-> +							mmACP_BTTDM_IRER);
-> +				val = val & ~BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +							mmACP_BTTDM_IRER);
-> +				rv_writel(0, rtd->acp3x_base +
-> +							mmACP_BTTDM_IER);
-> +				break;
-> +			case I2S_SP_INSTANCE:
-> +			default:
-> +				val = rv_readl(rtd->acp3x_base +
-> +							mmACP_I2STDM_IRER);
-> +				val = val & ~BIT(0);
-> +				rv_writel(val, rtd->acp3x_base +
-> +							mmACP_I2STDM_IRER);
-> +				rv_writel(0, rtd->acp3x_base +
-> +							mmACP_I2STDM_IER);
-> +			}
->   		}
-> -		rv_writel(0, rtd->acp3x_base + mmACP_BTTDM_IER);
->   		break;
->   	default:
->   		ret = -EINVAL;
-> @@ -208,11 +319,6 @@ static int acp3x_dai_probe(struct platform_device *pdev)
->   	struct resource *res;
->   	struct i2s_dev_data *adata;
->   
-> -	if (!pdev->dev.platform_data) {
-> -		dev_err(&pdev->dev, "platform_data not retrieved\n");
-> -		return -ENODEV;
-> -	}
-> -
->   	adata = devm_kzalloc(&pdev->dev, sizeof(struct i2s_dev_data),
->   			GFP_KERNEL);
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> @@ -231,6 +337,8 @@ static int acp3x_dai_probe(struct platform_device *pdev)
->   	adata->i2s_irq = res->start;
->   	adata->play_stream = NULL;
->   	adata->capture_stream = NULL;
-> +	adata->i2ssp_play_stream = NULL;
-> +	adata->i2ssp_capture_stream = NULL;
-
-is all this necessary, you are doing a devm_kzalloc above?
-
->   
->   	dev_set_drvdata(&pdev->dev, adata);
->   	status = devm_snd_soc_register_component(&pdev->dev,
-> diff --git a/sound/soc/amd/raven/acp3x-pcm-dma.c b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> index f5e4c7b..58db11b 100644
-> --- a/sound/soc/amd/raven/acp3x-pcm-dma.c
-> +++ b/sound/soc/amd/raven/acp3x-pcm-dma.c
-> @@ -193,20 +193,35 @@ static irqreturn_t i2s_irq_handler(int irq, void *dev_id)
->   static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->   {
->   	u16 page_idx;
-> -	u32 low, high, val, acp_fifo_addr;
-> -	dma_addr_t addr = rtd->dma_addr;
-> +	uint64_t low, high, val, acp_fifo_addr;
-> +	dma_addr_t addr;
->   
-> -	/* 8 scratch registers used to map one 64 bit address */
-> -	if (direction == SNDRV_PCM_STREAM_PLAYBACK)
-> -		val = 0;
-> -	else
-> -		val = rtd->num_pages * 8;
-> +	addr = rtd->dma_addr;
->   
-> +	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			val = ACP_SRAM_BT_PB_PTE_OFFSET;
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			val = ACP_SRAM_SP_PB_PTE_OFFSET;
-> +		}
-> +	} else {
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			val = ACP_SRAM_BT_CP_PTE_OFFSET;
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			val = ACP_SRAM_SP_CP_PTE_OFFSET;
-> +		}
-> +	}
->   	/* Group Enable */
->   	rv_writel(ACP_SRAM_PTE_OFFSET | BIT(31), rtd->acp3x_base +
-> -		  mmACPAXI2AXI_ATU_BASE_ADDR_GRP_1);
-> +			mmACPAXI2AXI_ATU_BASE_ADDR_GRP_1);
->   	rv_writel(PAGE_SIZE_4K_ENABLE, rtd->acp3x_base +
-> -		  mmACPAXI2AXI_ATU_PAGE_SIZE_GRP_1);
-> +			mmACPAXI2AXI_ATU_PAGE_SIZE_GRP_1);
->   
->   	for (page_idx = 0; page_idx < rtd->num_pages; page_idx++) {
->   		/* Load the low address of page int ACP SRAM through SRBM */
-> @@ -223,38 +238,95 @@ static void config_acp3x_dma(struct i2s_stream_instance *rtd, int direction)
->   	}
->   
->   	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-> -		/* Config ringbuffer */
-> -		rv_writel(MEM_WINDOW_START, rtd->acp3x_base +
-> -			  mmACP_BT_TX_RINGBUFADDR);
-> -		rv_writel(MAX_BUFFER, rtd->acp3x_base +
-> -			  mmACP_BT_TX_RINGBUFSIZE);
-> -		rv_writel(DMA_SIZE, rtd->acp3x_base + mmACP_BT_TX_DMA_SIZE);
-> -
-> -		/* Config audio fifo */
-> -		acp_fifo_addr = ACP_SRAM_PTE_OFFSET + (rtd->num_pages * 8)
-> -				+ PLAYBACK_FIFO_ADDR_OFFSET;
-> -		rv_writel(acp_fifo_addr, rtd->acp3x_base +
-> -			  mmACP_BT_TX_FIFOADDR);
-> -		rv_writel(FIFO_SIZE, rtd->acp3x_base + mmACP_BT_TX_FIFOSIZE);
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +				/* Config ringbuffer */
-> +			rv_writel(I2S_BT_TX_MEM_WINDOW_START,
-> +				rtd->acp3x_base + mmACP_BT_TX_RINGBUFADDR);
-> +			rv_writel(MAX_BUFFER, rtd->acp3x_base +
-> +					mmACP_BT_TX_RINGBUFSIZE);
-> +			rv_writel(DMA_SIZE,
-> +				rtd->acp3x_base + mmACP_BT_TX_DMA_SIZE);
-> +
-> +			/* Config audio fifo */
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +						BT_PB_FIFO_ADDR_OFFSET;
-> +			rv_writel(acp_fifo_addr,
-> +				rtd->acp3x_base +  mmACP_BT_TX_FIFOADDR);
-> +			rv_writel(FIFO_SIZE,
-> +				rtd->acp3x_base + mmACP_BT_TX_FIFOSIZE);
-> +			/* Enable  watermark/period interrupt to host */
-> +			rv_writel(BIT(BT_TX_THRESHOLD),
-> +				rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
-> +			break;
-> +
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			/* Config ringbuffer */
-> +			rv_writel(I2S_SP_TX_MEM_WINDOW_START,
-> +				rtd->acp3x_base + mmACP_I2S_TX_RINGBUFADDR);
-> +			rv_writel(MAX_BUFFER,
-> +				rtd->acp3x_base + mmACP_I2S_TX_RINGBUFSIZE);
-> +			rv_writel(DMA_SIZE,
-> +				rtd->acp3x_base + mmACP_I2S_TX_DMA_SIZE);
-> +
-> +			/* Config audio fifo */
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +						SP_PB_FIFO_ADDR_OFFSET;
-> +			rv_writel(acp_fifo_addr,
-> +				rtd->acp3x_base + mmACP_I2S_TX_FIFOADDR);
-> +			rv_writel(FIFO_SIZE,
-> +				rtd->acp3x_base + mmACP_I2S_TX_FIFOSIZE);
-> +			/* Enable  watermark/period interrupt to host */
-> +			rv_writel(BIT(I2S_TX_THRESHOLD),
-> +				rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
-> +		}
->   	} else {
-> -		/* Config ringbuffer */
-> -		rv_writel(MEM_WINDOW_START + MAX_BUFFER, rtd->acp3x_base +
-> -			  mmACP_BT_RX_RINGBUFADDR);
-> -		rv_writel(MAX_BUFFER, rtd->acp3x_base +
-> -			  mmACP_BT_RX_RINGBUFSIZE);
-> -		rv_writel(DMA_SIZE, rtd->acp3x_base + mmACP_BT_RX_DMA_SIZE);
-> -
-> -		/* Config audio fifo */
-> -		acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> -				(rtd->num_pages * 8) + CAPTURE_FIFO_ADDR_OFFSET;
-> -		rv_writel(acp_fifo_addr, rtd->acp3x_base +
-> -			  mmACP_BT_RX_FIFOADDR);
-> -		rv_writel(FIFO_SIZE, rtd->acp3x_base + mmACP_BT_RX_FIFOSIZE);
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			/* Config ringbuffer */
-> +			rv_writel(I2S_BT_RX_MEM_WINDOW_START,
-> +				rtd->acp3x_base + mmACP_BT_RX_RINGBUFADDR);
-> +			rv_writel(MAX_BUFFER,
-> +				rtd->acp3x_base + mmACP_BT_RX_RINGBUFSIZE);
-> +			rv_writel(DMA_SIZE,
-> +				rtd->acp3x_base + mmACP_BT_RX_DMA_SIZE);
-> +
-> +			/* Config audio fifo */
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +						BT_CAPT_FIFO_ADDR_OFFSET;
-> +			rv_writel(acp_fifo_addr,
-> +				rtd->acp3x_base + mmACP_BT_RX_FIFOADDR);
-> +			rv_writel(FIFO_SIZE,
-> +				rtd->acp3x_base + mmACP_BT_RX_FIFOSIZE);
-> +			/* Enable  watermark/period interrupt to host */
-> +			rv_writel(BIT(BT_RX_THRESHOLD),
-> +				rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
-> +			break;
-> +
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			/* Config ringbuffer */
-> +			rv_writel(I2S_SP_RX_MEM_WINDOW_START,
-> +				rtd->acp3x_base + mmACP_I2S_RX_RINGBUFADDR);
-> +			rv_writel(MAX_BUFFER,
-> +				rtd->acp3x_base + mmACP_I2S_RX_RINGBUFSIZE);
-> +			rv_writel(DMA_SIZE,
-> +				rtd->acp3x_base + mmACP_I2S_RX_DMA_SIZE);
-> +
-> +			/* Config audio fifo */
-> +			acp_fifo_addr = ACP_SRAM_PTE_OFFSET +
-> +						SP_CAPT_FIFO_ADDR_OFFSET;
-> +			rv_writel(acp_fifo_addr,
-> +				rtd->acp3x_base + mmACP_I2S_RX_FIFOADDR);
-> +			rv_writel(FIFO_SIZE,
-> +				rtd->acp3x_base + mmACP_I2S_RX_FIFOSIZE);
-> +			/* Enable  watermark/period interrupt to host */
-> +			rv_writel(BIT(I2S_RX_THRESHOLD),
-> +				rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
-> +		}
->   	}
->   
-> -	/* Enable  watermark/period interrupt to host */
-> -	rv_writel(BIT(BT_TX_THRESHOLD) | BIT(BT_RX_THRESHOLD),
-> -		  rtd->acp3x_base + mmACP_EXTERNAL_INTR_CNTL);
->   }
->   
->   static int acp3x_dma_open(struct snd_soc_component *component,
-> @@ -285,13 +357,17 @@ static int acp3x_dma_open(struct snd_soc_component *component,
->   		return ret;
->   	}
->   
-> -	if (!adata->play_stream && !adata->capture_stream)
-> +	if (!adata->play_stream && !adata->capture_stream &&
-> +		adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
->   		rv_writel(1, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
->   
-> -	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
->   		adata->play_stream = substream;
-> -	else
-> +		adata->i2ssp_play_stream = substream;
-> +	} else {
->   		adata->capture_stream = substream;
-> +		adata->i2ssp_capture_stream = substream;
-> +	}
->   
->   	i2s_data->acp3x_base = adata->acp3x_base;
->   	runtime->private_data = i2s_data;
-> @@ -304,13 +380,24 @@ static int acp3x_dma_hw_params(struct snd_soc_component *component,
->   			       struct snd_pcm_hw_params *params)
->   {
->   	int status;
-> -	u64 size;
-> -	struct snd_pcm_runtime *runtime = substream->runtime;
-> -	struct i2s_stream_instance *rtd = runtime->private_data;
-> +	uint64_t size;
-> +	struct snd_soc_pcm_runtime *prtd = substream->private_data;
-> +	struct snd_soc_card *card = prtd->card;
-> +	struct acp3x_platform_info *pinfo = snd_soc_card_get_drvdata(card);
->   
-> +	struct i2s_stream_instance *rtd = substream->runtime->private_data;
->   	if (!rtd)
->   		return -EINVAL;
->   
-> +
-> +	if (pinfo) {
-> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +			rtd->i2s_instance = pinfo->play_i2s_instance;
-> +		else
-> +			rtd->i2s_instance = pinfo->cap_i2s_instance;
-> +	} else
-> +		pr_err("pinfo failed\n");
-> +
->   	size = params_buffer_bytes(params);
->   	status = snd_pcm_lib_malloc_pages(substream, size);
->   	if (status < 0)
-> @@ -334,8 +421,17 @@ static snd_pcm_uframes_t acp3x_dma_pointer(struct snd_soc_component *component,
->   	u32 pos = 0;
->   	u32 buffersize = 0;
->   	u64 bytescount = 0;
-> -	struct i2s_stream_instance *rtd =
-> -		substream->runtime->private_data;
-> +	struct snd_soc_pcm_runtime *prtd = substream->private_data;
-> +	struct snd_soc_card *card = prtd->card;
-> +	struct acp3x_platform_info *pinfo = snd_soc_card_get_drvdata(card);
-> +	struct i2s_stream_instance *rtd = substream->runtime->private_data;
-> +
-> +	if (pinfo) {
-> +		if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +			rtd->i2s_instance = pinfo->play_i2s_instance;
-> +		else
-> +			rtd->i2s_instance = pinfo->cap_i2s_instance;
-> +	}
->   
->   	buffersize = frames_to_bytes(substream->runtime,
->   				     substream->runtime->buffer_size);
-> @@ -377,15 +473,19 @@ static int acp3x_dma_close(struct snd_soc_component *component,
->   	component = snd_soc_rtdcom_lookup(prtd, DRV_NAME);
->   	struct i2s_dev_data *adata = dev_get_drvdata(component->dev);
->   
-> -	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
-> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
->   		adata->play_stream = NULL;
-> -	else
-> +		adata->i2ssp_play_stream = NULL;
-> +	} else {
->   		adata->capture_stream = NULL;
-> +		adata->i2ssp_capture_stream = NULL;
-> +	}
->   
->   	/* Disable ACP irq, when the current stream is being closed and
->   	 * another stream is also not active.
->   	 */
-> -	if (!adata->play_stream && !adata->capture_stream)
-> +	if (!adata->play_stream && !adata->capture_stream &&
-> +		!adata->i2ssp_play_stream && !adata->i2ssp_capture_stream)
->   		rv_writel(0, adata->acp3x_base + mmACP_EXTERNAL_INTR_ENB);
->   	kfree(rtd);
->   	return 0;
-> @@ -437,6 +537,8 @@ static int acp3x_audio_probe(struct platform_device *pdev)
->   	adata->i2s_irq = res->start;
->   	adata->play_stream = NULL;
->   	adata->capture_stream = NULL;
-> +	adata->i2ssp_play_stream = NULL;
-> +	adata->i2ssp_capture_stream = NULL;
->   
->   	dev_set_drvdata(&pdev->dev, adata);
->   	/* Initialize ACP */
-> @@ -501,13 +603,16 @@ static int acp3x_resume(struct device *dev)
->   			adata->play_stream->runtime->private_data;
->   		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_PLAYBACK);
->   		rv_writel((rtd->xfer_resolution  << 3),
-> -			  rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +				rtd->acp3x_base + mmACP_BTTDM_ITER);
-> +		val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_ITER);
-> +		val = val | (rtd->xfer_resolution  << 3);
-> +		rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_ITER);
->   		if (adata->tdm_mode == true) {
->   			rv_writel(adata->tdm_fmt, adata->acp3x_base +
-> -				  mmACP_BTTDM_TXFRMT);
-> +					mmACP_BTTDM_TXFRMT);
->   			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_ITER);
->   			rv_writel((val | 0x2), adata->acp3x_base +
-> -				  mmACP_BTTDM_ITER);
-> +					mmACP_BTTDM_ITER);
->   		}
->   	}
->   
-> @@ -516,13 +621,17 @@ static int acp3x_resume(struct device *dev)
->   			adata->capture_stream->runtime->private_data;
->   		config_acp3x_dma(rtd, SNDRV_PCM_STREAM_CAPTURE);
->   		rv_writel((rtd->xfer_resolution  << 3),
-> -			  rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +				rtd->acp3x_base + mmACP_BTTDM_IRER);
-> +		val = rv_readl(rtd->acp3x_base + mmACP_I2STDM_ITER);
-> +		val = val | (rtd->xfer_resolution  << 3);
-> +		rv_writel(val, rtd->acp3x_base + mmACP_I2STDM_ITER);
-> +
->   		if (adata->tdm_mode == true) {
->   			rv_writel(adata->tdm_fmt, adata->acp3x_base +
-> -				  mmACP_BTTDM_RXFRMT);
-> +					mmACP_BTTDM_RXFRMT);
->   			val = rv_readl(adata->acp3x_base + mmACP_BTTDM_IRER);
->   			rv_writel((val | 0x2), adata->acp3x_base +
-> -				  mmACP_BTTDM_IRER);
-> +					mmACP_BTTDM_IRER);
->   		}
->   	}
->   
-> diff --git a/sound/soc/amd/raven/acp3x.h b/sound/soc/amd/raven/acp3x.h
-> index 72c1a23..c071477 100644
-> --- a/sound/soc/amd/raven/acp3x.h
-> +++ b/sound/soc/amd/raven/acp3x.h
-> @@ -7,6 +7,9 @@
->   
->   #include "chip_offset_byte.h"
->   
-> +#define I2S_SP_INSTANCE                 0x01
-> +#define I2S_BT_INSTANCE                 0x02
-> +
->   #define ACP3x_DEVS		3
->   #define ACP3x_PHY_BASE_ADDRESS 0x1240000
->   #define	ACP3x_I2S_MODE	0
-> @@ -17,8 +20,11 @@
->   #define ACP3x_BT_TDM_REG_START	0x1242800
->   #define ACP3x_BT_TDM_REG_END	0x1242810
->   #define I2S_MODE	0x04
-> +#define	I2S_RX_THRESHOLD	27
-> +#define	I2S_TX_THRESHOLD	28
->   #define	BT_TX_THRESHOLD 26
->   #define	BT_RX_THRESHOLD 25
-> +#define ACP_ERR_INTR_MASK	29
->   #define ACP3x_POWER_ON 0x00
->   #define ACP3x_POWER_ON_IN_PROGRESS 0x01
->   #define ACP3x_POWER_OFF 0x02
-> @@ -26,19 +32,28 @@
->   #define ACP3x_SOFT_RESET__SoftResetAudDone_MASK	0x00010001
->   
->   #define ACP_SRAM_PTE_OFFSET	0x02050000
-> +#define ACP_SRAM_SP_PB_PTE_OFFSET	0x0
-> +#define ACP_SRAM_SP_CP_PTE_OFFSET	0x100
-> +#define ACP_SRAM_BT_PB_PTE_OFFSET	0x200
-> +#define ACP_SRAM_BT_CP_PTE_OFFSET	0x300
->   #define PAGE_SIZE_4K_ENABLE 0x2
-> -#define MEM_WINDOW_START	0x4000000
-> -#define PLAYBACK_FIFO_ADDR_OFFSET 0x400
-> -#define CAPTURE_FIFO_ADDR_OFFSET  0x500
-> +#define I2S_SP_TX_MEM_WINDOW_START	0x4000000
-> +#define I2S_SP_RX_MEM_WINDOW_START	0x4020000
-> +#define I2S_BT_TX_MEM_WINDOW_START	0x4040000
-> +#define I2S_BT_RX_MEM_WINDOW_START	0x4060000
->   
-> +#define SP_PB_FIFO_ADDR_OFFSET		0x500
-> +#define SP_CAPT_FIFO_ADDR_OFFSET	0x700
-> +#define BT_PB_FIFO_ADDR_OFFSET		0x900
-> +#define BT_CAPT_FIFO_ADDR_OFFSET	0xB00
->   #define PLAYBACK_MIN_NUM_PERIODS    2
->   #define PLAYBACK_MAX_NUM_PERIODS    8
-> -#define PLAYBACK_MAX_PERIOD_SIZE    16384
-> -#define PLAYBACK_MIN_PERIOD_SIZE    4096
-> +#define PLAYBACK_MAX_PERIOD_SIZE    8192
-> +#define PLAYBACK_MIN_PERIOD_SIZE    1024
->   #define CAPTURE_MIN_NUM_PERIODS     2
->   #define CAPTURE_MAX_NUM_PERIODS     8
-> -#define CAPTURE_MAX_PERIOD_SIZE     16384
-> -#define CAPTURE_MIN_PERIOD_SIZE     4096
-> +#define CAPTURE_MAX_PERIOD_SIZE     8192
-> +#define CAPTURE_MIN_PERIOD_SIZE     1024
->   
->   #define MAX_BUFFER (PLAYBACK_MAX_PERIOD_SIZE * PLAYBACK_MAX_NUM_PERIODS)
->   #define MIN_BUFFER MAX_BUFFER
-> @@ -64,14 +79,20 @@ struct i2s_dev_data {
->   	void __iomem *acp3x_base;
->   	struct snd_pcm_substream *play_stream;
->   	struct snd_pcm_substream *capture_stream;
-> +	struct snd_pcm_substream *i2ssp_play_stream;
-> +	struct snd_pcm_substream *i2ssp_capture_stream;
->   };
->   
->   struct i2s_stream_instance {
->   	u16 num_pages;
-> +	u16 i2s_instance;
-> +	u16 capture_channel;
-> +	u16 direction;
->   	u16 channels;
->   	u32 xfer_resolution;
-> -	u64 bytescount;
-> +	u32 val;
->   	dma_addr_t dma_addr;
-> +	u64 bytescount;
->   	void __iomem *acp3x_base;
->   };
->   
-> @@ -91,15 +112,36 @@ static inline u64 acp_get_byte_count(struct i2s_stream_instance *rtd,
->   	u64 byte_count;
->   
->   	if (direction == SNDRV_PCM_STREAM_PLAYBACK) {
-> -		byte_count = rv_readl(rtd->acp3x_base +
-> -				mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
-> -		byte_count |= rv_readl(rtd->acp3x_base +
-> -				mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			byte_count = rv_readl(rtd->acp3x_base +
-> +					mmACP_BT_TX_LINEARPOSITIONCNTR_HIGH);
-> +			byte_count |= rv_readl(rtd->acp3x_base +
-> +					mmACP_BT_TX_LINEARPOSITIONCNTR_LOW);
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			byte_count = rv_readl(rtd->acp3x_base +
-> +					mmACP_I2S_TX_LINEARPOSITIONCNTR_HIGH);
-> +			byte_count |= rv_readl(rtd->acp3x_base +
-> +					mmACP_I2S_TX_LINEARPOSITIONCNTR_LOW);
-> +		}
-> +
->   	} else {
-> -		byte_count = rv_readl(rtd->acp3x_base +
-> -				mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
-> -		byte_count |= rv_readl(rtd->acp3x_base +
-> -				mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
-> +		switch (rtd->i2s_instance) {
-> +		case I2S_BT_INSTANCE:
-> +			byte_count = rv_readl(rtd->acp3x_base +
-> +					mmACP_BT_RX_LINEARPOSITIONCNTR_HIGH);
-> +			byte_count |= rv_readl(rtd->acp3x_base +
-> +					mmACP_BT_RX_LINEARPOSITIONCNTR_LOW);
-> +			break;
-> +		case I2S_SP_INSTANCE:
-> +		default:
-> +			byte_count = rv_readl(rtd->acp3x_base +
-> +					mmACP_I2S_RX_LINEARPOSITIONCNTR_HIGH);
-> +			byte_count |= rv_readl(rtd->acp3x_base +
-> +					mmACP_I2S_RX_LINEARPOSITIONCNTR_LOW);
-> +		}
->   	}
->   	return byte_count;
->   }
+> Thanks for the reply. I updated to the latest v4l-utils, basic tests
+> pass, but I have issues with the streaming tests (-s). I'll work on
+> those, it might take a while.
+> For the reference, here's the actual output, for both the encoder &
+> decoder.
 > 
+> 
+> root@imx8qxpmek:/unit_tests/JPEG# ./v4l2-compliance -d /dev/video1 -s
+> v4l2-compliance SHA: 6c415a11fceb32067cdb5c2e33f90dbf018182a4, 64 bits
+> 
+> Compliance test for mxc-jpeg decode device /dev/video1:
+> 
+> Driver Info:
+> 	Driver name      : mxc-jpeg decode
+> 	Card type        : mxc-jpeg decoder
+> 	Bus info         : platform:58450000.jpegenc
+> 	Driver version   : 5.4.0
+> 	Capabilities     : 0x84204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 		Device Capabilities
+> 	Device Caps      : 0x04204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 	Detected JPEG Encoder
+> 
+> Required ioctls:
+> 	test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+> 	test second /dev/video1 open: OK
+> 	test VIDIOC_QUERYCAP: OK
+> 	test VIDIOC_G/S_PRIORITY: OK
+> 	test for unlimited opens: OK
+> 
+> Debug ioctls:
+> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls:
+> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
+> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
+> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> 	Standard Controls: 0 Private Controls: 0
+> 
+> Format ioctls:
+> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> 	test VIDIOC_G/S_PARM: OK (Not Supported)
+> 	test VIDIOC_G_FBUF: OK (Not Supported)
+> 	test VIDIOC_G_FMT: OK
+> 	test VIDIOC_TRY_FMT: OK
+> 	test VIDIOC_S_FMT: OK
+> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 	test Cropping: OK (Not Supported)
+> 	test Composing: OK (Not Supported)
+> 	test Scaling: OK
+
+The presence of a scaler is suspicious: is the encoder indeed
+capable of scaling? I suspect this is a bug.
+
+> 
+> Codec ioctls:
+> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
+
+The presence of this...
+
+> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> 	test VIDIOC_(TRY_)DECODER_CMD: OK
+
+...and this is also strange for a JPEG codec. These ioctls are typically only
+needed for MPEG/H264/etc. codecs, and not for a simple JPEG codec.
+
+The same issues are found for the JPEG decoder.
+
+> 
+> Buffer ioctls:
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> 	test Requests: OK (Not Supported)
+> 
+> Test input 0:
+> 
+> Streaming ioctls:
+> 	test read/write: OK (Not Supported)
+> 	test blocking wait: OK
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+
+The driver shall never return FIELD_ANY. This needs to be FIELD_NONE.
+
+Regards,
+
+	Hans
+
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (no poll): FAIL
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (select): FAIL
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (epoll): FAIL
+> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
+> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
+> q)
+> 	test USERPTR (no poll): FAIL
+> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
+> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
+> q)
+> 	test USERPTR (select): FAIL
+> 	test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total for mxc-jpeg decode device /dev/video1: 51, Succeeded: 46,
+> Failed: 5, Warnings: 0
+> 
+> 
+> 
+> root@imx8qxpmek:/unit_tests/JPEG# ./v4l2-compliance -d /dev/video0 -s
+> v4l2-compliance SHA: 6c415a11fceb32067cdb5c2e33f90dbf018182a4, 64 bits
+> 
+> Compliance test for mxc-jpeg decode device /dev/video0:
+> 
+> Driver Info:
+> 	Driver name      : mxc-jpeg decode
+> 	Card type        : mxc-jpeg decoder
+> 	Bus info         : platform:58400000.jpegdec
+> 	Driver version   : 5.4.0
+> 	Capabilities     : 0x84204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 		Device Capabilities
+> 	Device Caps      : 0x04204000
+> 		Video Memory-to-Memory Multiplanar
+> 		Streaming
+> 		Extended Pix Format
+> 	Detected JPEG Decoder
+> 
+> Required ioctls:
+> 	test VIDIOC_QUERYCAP: OK
+> 
+> Allow for multiple opens:
+> 	test second /dev/video0 open: OK
+> 	test VIDIOC_QUERYCAP: OK
+> 	test VIDIOC_G/S_PRIORITY: OK
+> 	test for unlimited opens: OK
+> 
+> Debug ioctls:
+> 	test VIDIOC_DBG_G/S_REGISTER: OK (Not Supported)
+> 	test VIDIOC_LOG_STATUS: OK (Not Supported)
+> 
+> Input ioctls:
+> 	test VIDIOC_G/S_TUNER/ENUM_FREQ_BANDS: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_S_HW_FREQ_SEEK: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDIO: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMINPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDIO: OK (Not Supported)
+> 	Inputs: 0 Audio Inputs: 0 Tuners: 0
+> 
+> Output ioctls:
+> 	test VIDIOC_G/S_MODULATOR: OK (Not Supported)
+> 	test VIDIOC_G/S_FREQUENCY: OK (Not Supported)
+> 	test VIDIOC_ENUMAUDOUT: OK (Not Supported)
+> 	test VIDIOC_G/S/ENUMOUTPUT: OK (Not Supported)
+> 	test VIDIOC_G/S_AUDOUT: OK (Not Supported)
+> 	Outputs: 0 Audio Outputs: 0 Modulators: 0
+> 
+> Input/Output configuration ioctls:
+> 	test VIDIOC_ENUM/G/S/QUERY_STD: OK (Not Supported)
+> 	test VIDIOC_ENUM/G/S/QUERY_DV_TIMINGS: OK (Not Supported)
+> 	test VIDIOC_DV_TIMINGS_CAP: OK (Not Supported)
+> 	test VIDIOC_G/S_EDID: OK (Not Supported)
+> 
+> Control ioctls:
+> 	test VIDIOC_QUERY_EXT_CTRL/QUERYMENU: OK (Not Supported)
+> 	test VIDIOC_QUERYCTRL: OK (Not Supported)
+> 	test VIDIOC_G/S_CTRL: OK (Not Supported)
+> 	test VIDIOC_G/S/TRY_EXT_CTRLS: OK (Not Supported)
+> 	test VIDIOC_(UN)SUBSCRIBE_EVENT/DQEVENT: OK (Not Supported)
+> 	test VIDIOC_G/S_JPEGCOMP: OK (Not Supported)
+> 	Standard Controls: 0 Private Controls: 0
+> 
+> Format ioctls:
+> 	test VIDIOC_ENUM_FMT/FRAMESIZES/FRAMEINTERVALS: OK
+> 	test VIDIOC_G/S_PARM: OK (Not Supported)
+> 	test VIDIOC_G_FBUF: OK (Not Supported)
+> 	test VIDIOC_G_FMT: OK
+> 	test VIDIOC_TRY_FMT: OK
+> 	test VIDIOC_S_FMT: OK
+> 	test VIDIOC_G_SLICED_VBI_CAP: OK (Not Supported)
+> 	test Cropping: OK (Not Supported)
+> 	test Composing: OK (Not Supported)
+> 	test Scaling: OK
+> 
+> Codec ioctls:
+> 	test VIDIOC_(TRY_)ENCODER_CMD: OK
+> 	test VIDIOC_G_ENC_INDEX: OK (Not Supported)
+> 	test VIDIOC_(TRY_)DECODER_CMD: OK
+> 
+> Buffer ioctls:
+> 	test VIDIOC_REQBUFS/CREATE_BUFS/QUERYBUF: OK
+> 	test VIDIOC_EXPBUF: OK
+> 	test Requests: OK (Not Supported)
+> 
+> Test input 0:
+> 
+> Streaming ioctls:
+> 	test read/write: OK (Not Supported)
+> 	test blocking wait: OK
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (no poll): FAIL
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (select): FAIL
+> 		fail: v4l2-test-buffers.cpp(254): g_field() ==
+> V4L2_FIELD_ANY
+> 		fail: v4l2-test-buffers.cpp(1266): buf.qbuf(node)
+> 	test MMAP (epoll): FAIL
+> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
+> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
+> q)
+> 	test USERPTR (no poll): FAIL
+> 		fail: v4l2-test-buffers.cpp(1492): ret && ret != ENOTTY
+> 		fail: v4l2-test-buffers.cpp(1580): setupUserPtr(node,
+> q)
+> 	test USERPTR (select): FAIL
+> 	test DMABUF: Cannot test, specify --expbuf-device
+> 
+> Total for mxc-jpeg decode device /dev/video0: 51, Succeeded: 46,
+> Failed: 5, Warnings: 0
+> 
+> 
+> 
+
