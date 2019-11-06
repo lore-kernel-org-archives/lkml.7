@@ -2,113 +2,108 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B7295C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:13:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96D90C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B11D2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:13:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="k3l2bcgE"
+	by mail.kernel.org (Postfix) with ESMTP id 73E6621848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:14:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730898AbfKFTNv (ORCPT
+        id S1732058AbfKFTOE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:13:51 -0500
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:52679 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727411AbfKFTNv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:13:51 -0500
-Received: by mail-wm1-f68.google.com with SMTP id c17so5096078wmk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:13:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:subject:in-reply-to:references:date:message-id:mime-version;
-        bh=imOl6s7WJtDyzdyKMjRfhQfqUS+7pQQOdxq1MLkDHB4=;
-        b=k3l2bcgEB5zMkimsxKUQaGYW3GYIvbfgMggqg/xIB3b2muNxpyx9iikRkTO+F6RLxJ
-         LUcr0uc5iBHAdfUSBBpKXUBMm9+BEmHlNt67rEhtZUQ5h3XKC1Df7udpm6b2psNg/3ti
-         QKUPBecJaHFBH0QXl864EcYvb05hFLadvo3uAkDvtofUjF22SMDjeq9bLPD5vZahtJV4
-         LWwhQgi5HUdjCcDO7F6rtbI3y9EWiRqYxlTn7T9eOQKAY68SqHn8KpWXWsCn/Ci7RAjI
-         ohClif+oPgof1ms9CpXvfBI3zmZgajDQe2KxSwgkq59Lv5E4MKwDLfqub5cteAA6suid
-         jbpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=imOl6s7WJtDyzdyKMjRfhQfqUS+7pQQOdxq1MLkDHB4=;
-        b=uPjjBIN3LXP6cZ6sVLuQVi74+3AP6RnJvAF3ZBcH1vP6+vUV2CPnjBOXUtO5NbOnlD
-         1oOpKEvehcuFxhZF1jb01GeXKKZ0NmJNGOKsVEaHL/w0kUoNcJp9kRd7cJsdII+ISNHG
-         AMlcoJBJmKDOgq6ZQRAAPTOH2eCgskDXRvQjF5/X5VeCq2OJ6gpFBD5dD8stMwADn2sE
-         XyrwhHU4tsUZjWrd46urAWi/a/02pc3ZcZqVr/cQGzTRlL6pCMIA9tNAJvZXSZhgv/Mb
-         izKizKn6m6rcQPrOOfqe0uvsAAaSz3SRmAngZ78NoSK1JsRPvR7DEQ0wD4ZHB0t54sRt
-         gKtA==
-X-Gm-Message-State: APjAAAX4xI7oOHN/IeixgLzJZevfSCCvD+TsN8GD1ZgbAr0ImqmCKsEj
-        Plffzpwm6m2STVlI24AIH9YPYg==
-X-Google-Smtp-Source: APXvYqxofhZf6+9Ut84ichRu3J3mOUD9QKq9fRKGXAHOm5aOY3zxs0m2DqEz4oxZsC8/9oJnOIgeQg==
-X-Received: by 2002:a1c:f602:: with SMTP id w2mr3859157wmc.83.1573067627615;
-        Wed, 06 Nov 2019 11:13:47 -0800 (PST)
-Received: from localhost (amontpellier-652-1-71-119.w109-210.abo.wanadoo.fr. [109.210.54.119])
-        by smtp.gmail.com with ESMTPSA id h140sm4515466wme.22.2019.11.06.11.13.46
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 11:13:46 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>,
-        Christian Hewitt <christianshewitt@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2] soc: amlogic: meson-gx-socinfo: Fix S905D3 ID for VIM3L
-In-Reply-To: <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
-References: <1571646004-21269-1-git-send-email-christianshewitt@gmail.com> <7d8e80b5-0b37-691a-3375-6a37cc774a95@baylibre.com>
-Date:   Wed, 06 Nov 2019 20:13:45 +0100
-Message-ID: <7hy2ws6cnq.fsf@baylibre.com>
+        Wed, 6 Nov 2019 14:14:04 -0500
+Received: from mga12.intel.com ([192.55.52.136]:4046 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727208AbfKFTOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:14:03 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga005.fm.intel.com ([10.253.24.32])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:14:03 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
+   d="scan'208";a="402465639"
+Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
+  by fmsmga005.fm.intel.com with ESMTP; 06 Nov 2019 11:14:02 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 00/14] soundwire: intel: implement new ASoC interfaces
+Date:   Wed,  6 Nov 2019 13:13:44 -0600
+Message-Id: <20191106191358.5712-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+This patchset applies on top of the series "[PATCH v2 0/5] soundwire:
+update ASoC interfaces"
 
-> On 21/10/2019 10:20, Christian Hewitt wrote:
->> Chip on the board is S905D3 not S905X3:
->> 
->> [    0.098998] soc soc0: Amlogic Meson SM1 (S905D3) Revision 2b:c (b0:2) Detected
->> 
->> Change from v1: use 0xf0 mask instead of 0xf2 as advised by Neil Armstrong.
->> 
->> Fixes: 1d7c541b8a5b ("soc: amlogic: meson-gx-socinfo: Add S905X3 ID for VIM3L")
->> 
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->> ---
->>  drivers/soc/amlogic/meson-gx-socinfo.c | 2 +-
->>  1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->> diff --git a/drivers/soc/amlogic/meson-gx-socinfo.c b/drivers/soc/amlogic/meson-gx-socinfo.c
->> index 87ed558..01fc0d2 100644
->> --- a/drivers/soc/amlogic/meson-gx-socinfo.c
->> +++ b/drivers/soc/amlogic/meson-gx-socinfo.c
->> @@ -69,7 +69,7 @@ static const struct meson_gx_package_id {
->>  	{ "S922X", 0x29, 0x40, 0xf0 },
->>  	{ "A311D", 0x29, 0x10, 0xf0 },
->>  	{ "S905X3", 0x2b, 0x5, 0xf },
->> -	{ "S905X3", 0x2b, 0xb0, 0xf2 },
->> +	{ "S905D3", 0x2b, 0xb0, 0xf0 },
->>  	{ "A113L", 0x2c, 0x0, 0xf8 },
->>  };
->>  
->> 
->
-> Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+The changes are essentially a removal of the platform devices and the
+implementation of the new interfaces required to scan the ACPI tables,
+probe the links and start them.
 
-Queued for v5.5,
+The missing prepare, trigger and setup ASoC callbacks are also
+implemented. The hw_params and free callbacks use the new interfaces
+as well.
 
-Kevin
+While there are quite a few lines of code changed, this is mostly
+about interface changes. The next series will contain more functional
+changes and deal with race conditions on probe, enumeration and
+suspend/resume issues.
 
+Changes since v1:
+fix typo (Vinod)
+removed uevent open for Master (Vinod)
+clarified commit messages (Cezary)
+no functionality change
+
+Bard Liao (1):
+  soundwire: add device driver to sdw_md_driver
+
+Pierre-Louis Bossart (10):
+  soundwire: renames to prepare support for master drivers/devices
+  soundwire: rename dev_to_sdw_dev macro
+  soundwire: rename drv_to_sdw_slave_driver macro
+  soundwire: bus_type: rename sdw_drv_ to sdw_slave_drv
+  soundwire: intel: rename res field as link_res
+  soundwire: add support for sdw_slave_type
+  soundwire: add initial definitions for sdw_master_device
+  soundwire: intel: remove platform devices and provide new interface
+  soundwire: intel: free all resources on hw_free()
+  soundwire: intel_init: add implementation of sdw_intel_enable_irq()
+
+Rander Wang (3):
+  soundwire: intel: add prepare support in sdw dai driver
+  soundwire: intel: add trigger support in sdw dai driver
+  soundwire: intel: add sdw_stream_setup helper for .startup callback
+
+ drivers/base/regmap/regmap-sdw.c   |   4 +-
+ drivers/soundwire/Makefile         |   2 +-
+ drivers/soundwire/bus.c            |   2 +-
+ drivers/soundwire/bus_type.c       |  57 +++---
+ drivers/soundwire/intel.c          | 280 ++++++++++++++++++++++-----
+ drivers/soundwire/intel.h          |   8 +-
+ drivers/soundwire/intel_init.c     | 300 ++++++++++++++++++++++-------
+ drivers/soundwire/master.c         |  64 ++++++
+ drivers/soundwire/slave.c          |   9 +-
+ include/linux/soundwire/sdw.h      |  39 +++-
+ include/linux/soundwire/sdw_type.h |  34 +++-
+ 11 files changed, 639 insertions(+), 160 deletions(-)
+ create mode 100644 drivers/soundwire/master.c
+
+-- 
+2.20.1
 
