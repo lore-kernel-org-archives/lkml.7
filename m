@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B03C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAFEC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A0AC2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5B87D21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731374AbfKFHFH (ORCPT
+        id S1731873AbfKFHFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:05:07 -0500
-Received: from esa2.mentor.iphmx.com ([68.232.141.98]:9081 "EHLO
-        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfKFHEO (ORCPT
+        Wed, 6 Nov 2019 02:05:11 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:8786 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731000AbfKFHEM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:04:14 -0500
-IronPort-SDR: tcuC1pS3emJO1AlSAutXc/QbEcjegQWoe5MBT5FeJtw8hiQn4vu+Y59QzBnM+ELpCvKXajuVIN
- kSqQoriQMdEAMAv0z3Bqt61bri7spLMQgXbqzWbA3OELOoAG1IwJpZxmNcQSd1a0gSywXong1V
- Tp49O/h5kUZUXhEqKX5WoosnzDTw/4NRfdMAlhJRjDw7hIcZ0LyvHpBA6Ge7py+zrA51qF6Q9P
- 3P0npgH8WA3yybTdC9jOkSn5sT9qUc/a7h4+QitvdwdlDVY+ctPdMBrSosdXCsaCdda6zg20tg
- TPs=
+        Wed, 6 Nov 2019 02:04:12 -0500
+IronPort-SDR: dRB2aqNO4j5397tx1Bk5irvsFEsiqpsbe0pR0rAIW3u73gBKQNFp4QpeCardAukp6XPc4Wo+e1
+ 2JYL0uQSYLCb6AAlIFNLNqrYFED6xKkjGvGmbmJ5unYmjYQjGFCN4JLAlhjbeBo3wr3RSP4P6/
+ 2ZXF4dJHgZHte0ZDNYA9M+9Z1x5b912g7vW2uoN9TZHORS7sZkf/SGtPdsBrfHqypEA1xQlAi7
+ s/Z3vrewf+ahv5/qt0hlOrFuTQuzTRf89aq5C9uytF9O/XYPl8TNdOuJct0vl4FDmxhzrWm0Eh
+ /VU=
 X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
-   d="scan'208";a="42848315"
+   d="scan'208";a="42908660"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa2.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:13 -0800
-IronPort-SDR: Og4fHgY6kITyoI/3Rco2BFCTQLqqF/TIe2seKNCKcxHv2yRdzoZpbOrxTEssYfxmId3TP3mbSQ
- m3d5/zaKz9GDbFKU1SuVZRCwQjQboUp4SvowVn0Apu6UktXN8NMlnSmApXTZrOagTfhbZIVTO2
- K0Plh4OavvqVkNxQ5wRC6dd/JiO1Nm6ewXv5UrWyp9paveN+kkiVwFRprqFytHl8BU+qDwNHug
- zoWF+5zRYC8tQUajKLDBQ+hlL1GlU6wQbZdvNwMdqM5Rne2Ks1Ww+j/Zyd7SbMnwY5UKVmFxaM
- Mjc=
+  by esa3.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:02 -0800
+IronPort-SDR: XK5BxMdEY0Lozxy2SWgAp5XMZTXUdo8mJ3s3hv+3J3qErXV17i+SRoj8ok6Htf2KX9A6GM40Zz
+ NM75U8onkHuepN0ZcZ4RSc0cNIE6xFt7XV2wdIy0MJ1bLcgJJZxaiiOeAm90/okERPQfHAY1CW
+ rX5oo341X5h7ecjdYm062T4Saapp3z7qGXIBbCGYuujjFrCkWqjRxdmjhTYfu3MVuX7QKpklk7
+ MporTs+JqRSFefV5sT7svd7fvHFn+E6wc8LaGTzo3HsIMJ5RhCQj9vyxbpInigzqv8UUeVOOaH
+ VaE=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
@@ -41,9 +41,9 @@ To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
         <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v5 37/48] Input: atmel_mxt_ts: return error from mxt_process_messages_until_invalid()
-Date:   Wed, 6 Nov 2019 16:01:35 +0900
-Message-ID: <20191106070146.18759-38-jiada_wang@mentor.com>
+Subject: [PATCH v5 34/48] input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel touch panel controller in detachable displays.
+Date:   Wed, 6 Nov 2019 16:01:32 +0900
+Message-ID: <20191106070146.18759-35-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
 References: <20191106070146.18759-1-jiada_wang@mentor.com>
@@ -54,32 +54,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dean Jenkins <Dean_Jenkins@mentor.com>
+From: keerthikumarp <Keerthikumar.Padmanabha@in.bosch.com>
 
-mxt_process_messages_until_invalid() failed to propagate the error
-code from mxt_read_and_process_messages() so return the error code.
+In case of attached display, the touchpanel reset is controlled
+via imx gpio's from  atmel driver and the delay between
+touchpanel reset and the time at which the chip becomes capable to
+communicate with the host processor, has be taken care.
 
-Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
-Signed-off-by: Deepak Das <deepak_das@mentor.com>
+However in case of detachable displays, the touchpanel reset is
+controlled via a deserializer gpio which is triggered just before
+the atmel driver is probed.The delay between touchpanel reset and
+the time at which the chip becomes capable to communicate (as
+specified in datasheet) was not being accounted for. This patch
+introduces that delay.
+
+Signed-off-by: keerthikumarp <Keerthikumar.Padmanabha@in.bosch.com>
 Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 054aacc768b8..a5af1f91d704 100644
+index f357d353447f..835cc7a29c2f 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -1564,6 +1564,8 @@ static int mxt_process_messages_until_invalid(struct mxt_data *data)
- 	/* Read messages until we force an invalid */
- 	do {
- 		read = mxt_read_and_process_messages(data, count);
-+		if (read < 0)
-+			return read;
- 		if (read < count)
- 			return 0;
- 	} while (--tries);
+@@ -4112,6 +4112,10 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
+ 		msleep(MXT_RESET_GPIO_TIME);
+ 		gpiod_set_value(data->reset_gpio, 1);
+ 		msleep(MXT_RESET_INVALID_CHG);
++	} else {
++		dev_dbg(&client->dev,
++			"atmel reset pin not found in device tree");
++		msleep(MXT_RESET_TIME);
+ 	}
+ 
+ 	error = mxt_initialize(data);
 -- 
 2.17.1
 
