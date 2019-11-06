@@ -2,104 +2,101 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CCFD8C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CAE3C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8FC94214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:37:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EE022084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eIhxf6+Y"
+	dkim=pass (2048-bit key) header.d=norrbonn-se.20150623.gappssmtp.com header.i=@norrbonn-se.20150623.gappssmtp.com header.b="Lpn0EaXP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725911AbfKFFhe (ORCPT
+        id S1726092AbfKFFja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 00:37:34 -0500
-Received: from mail-io1-f66.google.com ([209.85.166.66]:45413 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725616AbfKFFhe (ORCPT
+        Wed, 6 Nov 2019 00:39:30 -0500
+Received: from mail-lf1-f48.google.com ([209.85.167.48]:39589 "EHLO
+        mail-lf1-f48.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfKFFj3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 00:37:34 -0500
-Received: by mail-io1-f66.google.com with SMTP id s17so25597256iol.12;
-        Tue, 05 Nov 2019 21:37:33 -0800 (PST)
+        Wed, 6 Nov 2019 00:39:29 -0500
+Received: by mail-lf1-f48.google.com with SMTP id 195so16982519lfj.6
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 21:39:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
-        b=eIhxf6+YBKxXXanCrpjy9m6LcWa7mOKSyqdsrTDJFCwvUSKKeqJU/L8V0n/6F3agP3
-         HqRUiotx5g/K6NiA2pddwtPSSeemhplxj00BKjVuVleZZWwL8ZRJJhuvQEXjqdyMfwa5
-         7rjxE996A5N2goi8Q5tFBNHeEvFnQF7XzzGqZonA2yNoSoKcPcCrblu8RdXbF1kGgji8
-         jyEPs0bNsGUCHolkdb67Levt7xX8tSBpcCSTS2ZLeK0qO1tivwUmFSZ9UTVLh7fA0vPp
-         RLxKcnvBff5fqT/fkDOQRhGYW9THwF0NMb+CN/ePAIV0zd7toKnAXpv2FghzW/U2WPPO
-         iaDQ==
+        d=norrbonn-se.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GHIf5mDgZLljmFUkOq24Gp9TCbOM9O3cWPqt9cOVGZ8=;
+        b=Lpn0EaXP7QQ2PPid317+Zmtpz4I05Prd/oE0N7JbiAUP02AFeP7k0qv11Kb/1/zF9X
+         tM9vBjnczPDzcydBssC0xmyStZ1Ru0ZPkFVDdYwQEFjBWpjsmF1N57OGiRbYQhASQeXJ
+         Zkp2HV99KLf59yquoHDT4Z9zSoIRvCi+OYAOisLwNV94PKYgkVpqcHxhUY0FCiaybkD8
+         6MKTzl7w00KErFvhGVKXU3bNq9cSyQkQ4ElAj1Y58mAfpdN1sQbe8kL4s64j10zB7f1x
+         UtnDg2qzKgx1bMtX0UY/DvoRUt5rUeg7mKyEzRfPIrFTp23Evt6YIQOe0oNBfGcNIX6R
+         HE6Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=YtzABwczyZfNxL6XzweD6I6Q63/FdFYN7U2QH0SQbdg=;
-        b=IFV7bJoOFoWwyNxyosAd2Kg/gQrWvo0HCXE8MgdO1v78aPiO8KY0fCdtgvmhNvDaUF
-         w+sCPzXnlAn4uTBbrxd4Xeu7VR8DQNNCehrIjnNHn+6vbkG3oF1aGUqOiBVhljTSmH14
-         VfITP81lZt/4cltpn9XgHXf1u95SG3+bIYuGFjHK7VW+Ha85JAi9Q1hr/srTvkIoF946
-         E+k2W6X780N8ut33JglD0k4kH8O4u6jLJ7ZPPro0PjqEk2GoGVYdg8AbYPEq/ZixXfTg
-         STehUAXKQhCK1KwoyY2dgYeM6xDDE2bk/6YB/BCGvw6+UuvmhgkrLHCgYprYLgYRx7XW
-         WJLA==
-X-Gm-Message-State: APjAAAUos+hOwEK62sqg4tTuQAVZjrqSlKGevynT9MHaU5iRsObxTtBI
-        5bi1mLjmdU829Og23HsiplR+Njocmh0gpqXCENKL3g==
-X-Google-Smtp-Source: APXvYqzv1ZnOAK1rEr6ulQ1qi0lC4bdrx7fbrkHaMMOiwYG3QZDrvYhJvFAjURZg3OzoSr8i0tnquTbI5EU4fUTlqjg=
-X-Received: by 2002:a5e:9706:: with SMTP id w6mr2508377ioj.252.1573018652955;
- Tue, 05 Nov 2019 21:37:32 -0800 (PST)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=GHIf5mDgZLljmFUkOq24Gp9TCbOM9O3cWPqt9cOVGZ8=;
+        b=jkNkbCsnofGKFFZdBU4bwxG3eBAQjJYgY+bnrhko9lrhm+q+VODF3/sJI25QDNL/at
+         b+bbw8TQx5/TNqbMB324A+Wl8NZWI1dIsCIuj1KRS0gxXKO0jwHY99SF7CxvuYaxi1KG
+         zzz0/QnH85k46mGMn7iIDH9AFQ8qZVW/2nVa14Hac4X9AwvfjrsGQkFZ9srTWsPWmVCB
+         GRiJ7SsNde4Ta0cgkj1PcIFgPpL71yTsui+B1QsjWSXCcK/0PK2oHHzqLt+K2FbEY7yn
+         6c5jlBNupaob0tTVOhjvmGvnusKtrR/4s61oVNB4uWL5/gV1+DniE1crcv5SePIzO1NP
+         Ql6g==
+X-Gm-Message-State: APjAAAUCO8d6AoFzqTIRq2QASPnkchuMUS7q/vxnp732hWRkLaHCPkZ5
+        /pxMfs5l6ozX5XbojRVfkpJjPw==
+X-Google-Smtp-Source: APXvYqw9LhBoyZ+T7F0ttWVowqdJU54xLZJ1xtS3yNseyOPCBT0Vl/GT/5OZF2Jqps3IA8wel5FbyA==
+X-Received: by 2002:ac2:44a9:: with SMTP id c9mr6517246lfm.26.1573018767595;
+        Tue, 05 Nov 2019 21:39:27 -0800 (PST)
+Received: from mimer.lan (h-137-65.A159.priv.bahnhof.se. [81.170.137.65])
+        by smtp.gmail.com with ESMTPSA id c22sm754737ljk.43.2019.11.05.21.39.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 21:39:26 -0800 (PST)
+From:   Jonas Bonn <jonas@norrbonn.se>
+To:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     davem@davemloft.net, Jonas Bonn <jonas@norrbonn.se>
+Subject: [PATCH v2 0/5] Add namespace awareness to Netlink methods
+Date:   Wed,  6 Nov 2019 06:39:18 +0100
+Message-Id: <20191106053923.10414-1-jonas@norrbonn.se>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-In-Reply-To: <20190920002232.27477-1-navid.emamdoost@gmail.com>
-From:   Navid Emamdoost <navid.emamdoost@gmail.com>
-Date:   Tue, 5 Nov 2019 23:37:22 -0600
-Message-ID: <CAEkB2EQ2BPpXcpRpN-+ErJD5Vkq6LiKONy8XQfvu0F1pO4weqw@mail.gmail.com>
-Subject: Re: [PATCH] NFSv4: fix memory leak if nfs4_begin_drain_session fails
-To:     Anna Schumaker <anna.schumaker@netapp.com>,
-        Trond Myklebust <trond.myklebust@hammerspace.com>
-Cc:     Navid Emamdoost <emamd001@umn.edu>,
-        Stephen McCamant <smccaman@umn.edu>, Kangjie Lu <kjlu@umn.edu>,
-        linux-nfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Would you please review this patch?
+Changed in v2:
+- address comment from Nicolas
+- add accumulated ACK's
 
-On Thu, Sep 19, 2019 at 7:22 PM Navid Emamdoost
-<navid.emamdoost@gmail.com> wrote:
->
-> In nfs4_try_migration, if nfs4_begin_drain_session fails the allocated
-> memory should be released.
->
-> Signed-off-by: Navid Emamdoost <navid.emamdoost@gmail.com>
-> ---
->  fs/nfs/nfs4state.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/fs/nfs/nfs4state.c b/fs/nfs/nfs4state.c
-> index cad4e064b328..124649f12067 100644
-> --- a/fs/nfs/nfs4state.c
-> +++ b/fs/nfs/nfs4state.c
-> @@ -2096,7 +2096,7 @@ static int nfs4_try_migration(struct nfs_server *server, const struct cred *cred
->
->         status = nfs4_begin_drain_session(clp);
->         if (status != 0)
-> -               return status;
-> +               goto out;
->
->         status = nfs4_replace_transport(server, locations);
->         if (status != 0) {
-> --
-> 2.17.1
->
+Currently, Netlink has partial support for acting outside of the current
+namespace.  It appears that the intention was to extend this to all the
+methods eventually, but it hasn't been done to date.
 
+With this series RTM_SETLINK, RTM_NEWLINK, RTM_NEWADDR, and RTM_NEWNSID
+are extended to respect the selection of the namespace to work in.
+
+/Jonas
+
+Jonas Bonn (5):
+  rtnetlink: allow RTM_SETLINK to reference other namespaces
+  rtnetlink: skip namespace change if already effect
+  rtnetlink: allow RTM_NEWLINK to act upon interfaces in arbitrary
+    namespaces
+  net: ipv4: allow setting address on interface outside current
+    namespace
+  net: namespace: allow setting NSIDs outside current namespace
+
+ net/core/net_namespace.c | 19 ++++++++++
+ net/core/rtnetlink.c     | 79 ++++++++++++++++++++++++++++++++++------
+ net/ipv4/devinet.c       | 58 +++++++++++++++++++++--------
+ 3 files changed, 129 insertions(+), 27 deletions(-)
 
 -- 
-Navid.
+2.20.1
+
