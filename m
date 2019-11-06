@@ -2,105 +2,134 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FC9C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC59EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A44D2053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrbKKbkE"
+	by mail.kernel.org (Postfix) with ESMTP id B9E202173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731383AbfKFIBq (ORCPT
+        id S1731409AbfKFICn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:01:46 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53458 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729878AbfKFIBq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:01:46 -0500
-Received: by mail-wm1-f65.google.com with SMTP id x4so2200694wmi.3;
-        Wed, 06 Nov 2019 00:01:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OmFJplJ1m4VwQ427zpEUzGG+xB7JCkAtrYHj59vzKyE=;
-        b=MrbKKbkEEpLaaU1VA3LNiZShxLjleQKizjxFb7o/RogoTWhFIPRUc8oQXlcid/bVNM
-         4vs+KOYK7Xf5q6D0wkM5qVbvZknjzUgZottXfmR5MFEA8mY2XmBlY4ZTY/GEXT4tQgGD
-         xZMblYOfLeUwcmgAh0AYFTdcMatBIMY9scFaNjjkUM2hSIGADavlKn+ob8wlhdBpTWFE
-         b6u2fPUxGn+S7Y+T9FluJIptb5NoU0PCt/U5tbNkP8kJORoGJCa5gfOx1u6OtF32xgIi
-         kcJUVmQsTwlYtYMdKaLGN1KJKArN03Zdlu1TVBOLR+b2T91a2uyIj49Iyzv0HjsN4W4a
-         XJ9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=OmFJplJ1m4VwQ427zpEUzGG+xB7JCkAtrYHj59vzKyE=;
-        b=nNQW7zFxps+qoCaaIc0dYMZchZdo19VtBkJNQWKNHjFK27xNr5Dx2Gkt7BXJ84lOX3
-         jA1Q1041VuoNLShWJqsVpzXo0ojx1q/GXkGu/cWcQOXYW9O9qCIaEkuYcfwFHa+Gl6VI
-         56TJeAP9dXQMJWSXLBLn6KWUgiLWRtEMyBOQ8uRhSPZGeP22f+n/04w1wpD+NNljP/fH
-         rVobrQBa53zmat08GNuRT/neCHaktCW8u8qlpUocXuHDr18xh6fjXGf1YVBp+6HsCaOU
-         sAXnqOCWLg3pSMnp17jFRam5dqpbuKExW1Tl12YCbGiXKdJVllYh1CqM5YkFZ+e8Jcyv
-         0Sxg==
-X-Gm-Message-State: APjAAAUV56qm7uV/YygmjQZ5cY3RUm0iqqKtrvDYxfEpCP11Y4GfgvN0
-        E2XdCNnsH4jmNlqFpob4G6I=
-X-Google-Smtp-Source: APXvYqz0qSwFylWIoX9SCHh6ZEfiYNutupEMlWdsubaKkmKhmucKMct2x7LvguGkr4ZOhw5eOEZczQ==
-X-Received: by 2002:a1c:b607:: with SMTP id g7mr1032801wmf.94.1573027304320;
-        Wed, 06 Nov 2019 00:01:44 -0800 (PST)
-Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
-        by smtp.gmail.com with ESMTPSA id q124sm1196668wme.13.2019.11.06.00.01.39
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 00:01:43 -0800 (PST)
-From:   Chuhong Yuan <hslester96@gmail.com>
-Cc:     Fugang Duan <fugang.duan@nxp.com>,
-        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
-Subject: [PATCH] net: fec: add a check for CONFIG_PM to avoid clock count mis-match
-Date:   Wed,  6 Nov 2019 16:01:28 +0800
-Message-Id: <20191106080128.23284-1-hslester96@gmail.com>
-X-Mailer: git-send-email 2.23.0
+        Wed, 6 Nov 2019 03:02:43 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6158 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729878AbfKFICn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:02:43 -0500
+Received: from DGGEMS407-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id A97916C62C43118DD2C0;
+        Wed,  6 Nov 2019 16:02:39 +0800 (CST)
+Received: from [127.0.0.1] (10.74.221.148) by DGGEMS407-HUB.china.huawei.com
+ (10.3.19.207) with Microsoft SMTP Server id 14.3.439.0; Wed, 6 Nov 2019
+ 16:02:30 +0800
+Subject: Re: [PATCH v2] lib: optimize cpumask_local_spread()
+To:     Michal Hocko <mhocko@kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>
+References: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
+ <20191105070141.GF22672@dhcp22.suse.cz>
+ <20191105173359.39052327cf221d9c4b26b783@linux-foundation.org>
+ <20191106071742.GB8314@dhcp22.suse.cz>
+CC:     <linux-kernel@vger.kernel.org>, yuqi jin <jinyuqi@huawei.com>,
+        "Mike Rapoport" <rppt@linux.ibm.com>,
+        Paul Burton <paul.burton@mips.com>,
+        "Michael Ellerman" <mpe@ellerman.id.au>,
+        Anshuman Khandual <anshuman.khandual@arm.com>
+From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
+Message-ID: <f8f1bce1-4503-4da0-71ea-6fd12fcd687a@hisilicon.com>
+Date:   Wed, 6 Nov 2019 16:02:29 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.1.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191106071742.GB8314@dhcp22.suse.cz>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.74.221.148]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
-automatically to disable clks.
-Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
-Add this check to avoid clock count mis-match caused by double-disable.
+Hi Michal,
 
-This patch depends on patch
-("net: fec: add missed clk_disable_unprepare in remove").
+On 2019/11/6 15:17, Michal Hocko wrote:
+> On Tue 05-11-19 17:33:59, Andrew Morton wrote:
+>> On Tue, 5 Nov 2019 08:01:41 +0100 Michal Hocko <mhocko@kernel.org> wrote:
+>>
+>>> On Mon 04-11-19 18:27:48, Shaokun Zhang wrote:
+>>>> From: yuqi jin <jinyuqi@huawei.com>
+>>>>
+>>>> In the multi-processor and NUMA system, I/O device may have many numa
+>>>> nodes belonging to multiple cpus. When we get a local numa, it is
+>>>> better to find the node closest to the local numa node, instead
+>>>> of choosing any online cpu immediately.
+>>>>
+>>>> For the current code, it only considers the local NUMA node and it
+>>>> doesn't compute the distances between different NUMA nodes for the
+>>>> non-local NUMA nodes. Let's optimize it and find the nearest node
+>>>> through NUMA distance. The performance will be better if it return
+>>>> the nearest node than the random node.
+>>>
+>>> Numbers please
+>>
+>> The changelog had
+>>
+>> : When Parameter Server workload is tested using NIC device on Huawei
+>> : Kunpeng 920 SoC:
+>> : Without the patch, the performance is 22W QPS;
+>> : Added this patch, the performance become better and it is 26W QPS.
+> 
+> Maybe it is just me but this doesn't really tell me a lot. What is
+> Parameter Server workload? What do I do to replicate those numbers? Is
 
-Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
----
- drivers/net/ethernet/freescale/fec_main.c | 2 ++
- 1 file changed, 2 insertions(+)
+I will give it better description on it in next version. Since it returns
+the nearest node from the non-local node than the random one, no harmless
+to others, Right?
 
-diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
-index a9c386b63581..696550f4972f 100644
---- a/drivers/net/ethernet/freescale/fec_main.c
-+++ b/drivers/net/ethernet/freescale/fec_main.c
-@@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device *pdev)
- 		regulator_disable(fep->reg_phy);
- 	pm_runtime_put(&pdev->dev);
- 	pm_runtime_disable(&pdev->dev);
-+#ifndef CONFIG_PM
- 	clk_disable_unprepare(fep->clk_ahb);
- 	clk_disable_unprepare(fep->clk_ipg);
-+#endif
- 	if (of_phy_is_fixed_link(np))
- 		of_phy_deregister_fixed_link(np);
- 	of_node_put(fep->phy_node);
--- 
-2.23.0
+> this really specific to the Kunpeng 920 server? What is the usual
+> variance of the performance numbers?
+> 
+>>> [...]
+>>>> +/**
+>>>> + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
+>>>> + * @i: index number
+>>>> + * @node: local numa_node
+>>>> + *
+>>>> + * This function selects an online CPU according to a numa aware policy;
+>>>> + * local cpus are returned first, followed by the nearest non-local ones,
+>>>> + * then it wraps around.
+>>>> + *
+>>>> + * It's not very efficient, but useful for setup.
+>>>> + */
+>>>> +unsigned int cpumask_local_spread(unsigned int i, int node)
+>>>> +{
+>>>> +	int node_dist[MAX_NUMNODES] = {0};
+>>>> +	bool used[MAX_NUMNODES] = {0};
+>>>
+>>> Ugh. This might be a lot of stack space. Some distro kernels use large
+>>> NODE_SHIFT (e.g 10 so this would be 4kB of stack space just for the
+>>> node_dist).
+>>
+>> Yes, that's big.  From a quick peek I suspect we could get by using an
+>> array of unsigned shorts here but that might be fragile over time even
+>> if it works now?
+> 
+> Whatever data type we use it will be still quite large to be on the
+> stack.
+> 
+>> Perhaps we could make it a statically allocated array and protect the
+>> entire thing with a spin_lock_irqsave()?  It's not a frequently called
+>> function.
+> 
+> This is what I was suggesting in previous review feedback.
+
+Ok, will do it in next version.
+
+Thanks,
+Shaokun
+
+> 
 
