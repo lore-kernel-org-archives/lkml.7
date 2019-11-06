@@ -2,78 +2,151 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6094EC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:41:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 289F0C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D17217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:41:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D82F1206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:42:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573011729;
+	bh=Ekf8ELrKyF/PUVn/Dsw6DSc4nKWrhBSXvzrOjIHHJfI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vuXRQgDCQwQaFHLYpSnm5I8/JfWsBxK/zdIYGTUL+GaPsNuodS4Hd9GrsyAonSXYo
+	 qOUgKKccUpFh+kSMxTAfrqoFj2Bej9XSljZ/nK09jY+WA2H5rOKt3qTJDZMEUXG2wW
+	 +cQwRv92s2/A5+xaWTBxJ3bfAvo1LK6mTK05D4yU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfKFDl0 (ORCPT
+        id S1731010AbfKFDmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:41:26 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:42846 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfKFDlZ (ORCPT
+        Tue, 5 Nov 2019 22:42:09 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:37686 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFDmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:41:25 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5BE8E151226D2;
-        Tue,  5 Nov 2019 19:33:30 -0800 (PST)
-Date:   Tue, 05 Nov 2019 19:33:27 -0800 (PST)
-Message-Id: <20191105.193327.1393649190609263166.davem@davemloft.net>
-To:     dima@arista.com
-Cc:     linux-kernel@vger.kernel.org, 0x7f454c46@gmail.com,
-        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
-        mingo@kernel.org, jslaby@suse.com, pmladek@suse.com,
-        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
-        penguin-kernel@I-love.SAKURA.ne.jp, sparclinux@vger.kernel.org
-Subject: Re: [PATCH 34/50] sparc: Add show_stack_loglvl()
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191106030542.868541-35-dima@arista.com>
-References: <20191106030542.868541-1-dima@arista.com>
-        <20191106030542.868541-35-dima@arista.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 Nov 2019 19:33:30 -0800 (PST)
+        Tue, 5 Nov 2019 22:42:08 -0500
+Received: by mail-ot1-f67.google.com with SMTP id d5so7600811otp.4;
+        Tue, 05 Nov 2019 19:42:08 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=sUzou7nm3+h5Nog2SILrIw3hOq4AAUw3wk7D48f6f9E=;
+        b=J8obnx141Qoa3/g2Ugy8HmiSVyEb9Ijxk85MyyPtbXrQLoGZefiu0r5FpdhofJnB6I
+         /15GcLcKytXYSjJ0ecAOMhhCf/LWB+TUWNtZ0/bIyVR/3VOLywpzsJ4cCdtxC0Gq3Ybs
+         eejbfnyIBT+m+iPKvBUt94D6T9MoAdeZIccxh1AoCxTnJxo0v4ybMQR/Kl6QcXL1Wnwp
+         zpIPgMXqq1YWpmsQJgYzTtr/BcqN0+X36bkRxxKt+FxqfulvOsz1No8/2LksUgIzRfzf
+         qKaVm1DH3Rl/0nwCfZfAee/7FHvM1fKwXpUSdRGw1qbMJAVtxL/hA1TJnk7q86KXu5j9
+         iNTg==
+X-Gm-Message-State: APjAAAWooeIuSrham1GgkR/DHZAd8UaLR4jNN5R6W7aKGn/dqZn9VDfH
+        k1y4KNGDooxAy/9YF4ioFA==
+X-Google-Smtp-Source: APXvYqwUV6RFvARpSfB4zpl/i7CUMTJhvg1A13ghNfgJ0S+DOQ+NTMpRGGJY9xSkzf+EVUAXUvZ96g==
+X-Received: by 2002:a9d:854:: with SMTP id 78mr189460oty.284.1573011727551;
+        Tue, 05 Nov 2019 19:42:07 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id 38sm7270106otr.7.2019.11.05.19.42.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:42:06 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:42:06 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc:     mazziesaccount@gmail.com,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [RFC PATCH 2/5] dt-bindings: an30259a: example for using fixed
+ LED node names.
+Message-ID: <20191106034206.GA6299@bogus>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+ <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dmitry Safonov <dima@arista.com>
-Date: Wed,  6 Nov 2019 03:05:25 +0000
+On Tue, Oct 29, 2019 at 02:47:26PM +0200, Matti Vaittinen wrote:
+> Use predefined LED node name to match the LED node in driver.
+> 
+> It would be nice to offload common LED property parsing to
+> LED core driver. One of the key things to allow this is somehow
+> 'pair' the LED DT node with LED driver initialization data.
+> 
+> This patch uses LED node name as a 'key' in a same fashion
+> as regulators do. The an30259a was selected as demonstration
+> example and this change may not be really feasible for an30259a
+> as I have no idea whether the existing DTs for devices out there
+> have specific node names (or can be changed). This servers just
+> as an example to initiate discussion as to how we could pair the
+> driver data and DT node.
+> 
+> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> ---
+>  Documentation/devicetree/bindings/leds/leds-an30259a.txt | 9 +++++----
+>  1 file changed, 5 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-an30259a.txt b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+> index cbd833906b2b..bd1a2d11a0ad 100644
+> --- a/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+> +++ b/Documentation/devicetree/bindings/leds/leds-an30259a.txt
+> @@ -9,7 +9,8 @@ Required properties:
+>  	- #address-cells: Must be 1.
+>  	- #size-cells: Must be 0.
+>  
+> -Each LED is represented as a sub-node of the panasonic,an30259a node.
+> +Each LED is represented as a sub-node of the panasonic,an30259a node. LED nodes
+> +must be named as led1 led2 and led3.
+>  
+>  Required sub-node properties:
+>  	- reg: Pin that the LED is connected to. Must be 1, 2, or 3.
+> @@ -34,20 +35,20 @@ led-controller@30 {
+>  	#address-cells = <1>;
+>  	#size-cells = <0>;
+>  
+> -	led@1 {
+> +	led1 {
+>  		reg = <1>;
 
-> Currently, the log-level of show_stack() depends on a platform
-> realization. It creates situations where the headers are printed with
-> lower log level or higher than the stacktrace (depending on
-> a platform or user).
-> 
-> Furthermore, it forces the logic decision from user to an architecture
-> side. In result, some users as sysrq/kdb/etc are doing tricks with
-> temporary rising console_loglevel while printing their messages.
-> And in result it not only may print unwanted messages from other CPUs,
-> but also omit printing at all in the unlucky case where the printk()
-> was deferred.
-> 
-> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-> an easier approach than introducing more printk buffers.
-> Also, it will consolidate printings with headers.
-> 
-> Introduce show_stack_loglvl(), that eventually will substitute
-> show_stack().
-> 
-> Cc: "David S. Miller" <davem@davemloft.net>
-> Cc: sparclinux@vger.kernel.org
-> [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
+This is wrong. reg requires a unit-address and vice-versa.
 
-Acked-by: David S. Miller <davem@davemloft.net>
+>  		linux,default-trigger = "heartbeat";
+>  		function = LED_FUNCTION_INDICATOR;
+>  		color = <LED_COLOR_ID_RED>;
+>  	};
+>  
+> -	led@2 {
+> +	led2 {
+>  		reg = <2>;
+>  		function = LED_FUNCTION_INDICATOR;
+>  		color = <LED_COLOR_ID_GREEN>;
+>  	};
+>  
+> -	led@3 {
+> +	led3 {
+>  		reg = <3>;
+>  		function = LED_FUNCTION_INDICATOR;
+>  		color = <LED_COLOR_ID_BLUE>;
+> -- 
+> 2.21.0
+> 
+> 
+> -- 
+> Matti Vaittinen, Linux device drivers
+> ROHM Semiconductors, Finland SWDC
+> Kiviharjunlenkki 1E
+> 90220 OULU
+> FINLAND
+> 
+> ~~~ "I don't think so," said Rene Descartes. Just then he vanished ~~~
+> Simon says - in Latin please.
+> ~~~ "non cogito me" dixit Rene Descarte, deinde evanescavit ~~~
+> Thanks to Simon Glass for the translation =] 
