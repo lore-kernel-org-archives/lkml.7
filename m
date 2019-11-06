@@ -2,116 +2,129 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D232C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2781C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:34:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D7922217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2EF32187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:34:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mkpwWNqz"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="VIA55X3E"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731894AbfKFObz (ORCPT
+        id S1731951AbfKFOeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:31:55 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:38085 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726926AbfKFObz (ORCPT
+        Wed, 6 Nov 2019 09:34:13 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:41807 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731938AbfKFOeM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:31:55 -0500
-Received: by mail-qt1-f193.google.com with SMTP id p20so15626913qtq.5;
-        Wed, 06 Nov 2019 06:31:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=JggrbZPVaiVzXbq+DGZI87bNjE++01il9vOKZ8JWpJ0=;
-        b=mkpwWNqzhlZS6hEDUW2cRoKy8gXQaSXb0ZEvpvwsJlvIWIDp1fEO2jz3i/QDYfDnHR
-         hNsv1i5w+vZkxgzFPhzmJANIi0boBmJHSYCpJsJlu4RfzwpDddihPJTZhRxAhJqY7g36
-         gAlgjzF6ZcayNgnWh63vGga2AydTPtV+LeSmkiV2dqLtlJCqwn+QDFVhbMjmbeh2nBEi
-         1QTpyLearIkUtV+7MXe3MJRj81MWAwio55NhIBjM/XFqSTWs3GrZz1R3cghFtbBBbmgI
-         iKrlgJ4ASUseX8mLn3oxtX1hQD82MMM+Q+SwfNhJhPr9EipPfqc2e5uthJF+54AbgL5N
-         OAeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=JggrbZPVaiVzXbq+DGZI87bNjE++01il9vOKZ8JWpJ0=;
-        b=OuEvwrk6YyGES3kiHjkyth04FjtS5/ORJyuxxw7v7mhF8UfrRznB50aKnzNyA50h2b
-         TcKw+ZfnSuyV+DjFwBkGcYngBaM7ndvIjP6jCZSElya488NV0mAc8R20v7HEOqsYHb4S
-         6W2wfcf7WV/Vc/Jai6SqnN5yniAbTkcsrkjMni0HMFLgDD4b6Us6Z2ThNOL5UZRdwX1G
-         wcB1TbzFoRg6VyRNs0/N9SDfaTGF4oiO6Chgw3vGoklGhx+CIZxUno8dQHblX935jUJe
-         xmGvHjn/RladI5F0JeUJczbeEySUf1MGwsTRsdyIO4nW9lZSwa98PRuMACP4pOq4/CGw
-         duGQ==
-X-Gm-Message-State: APjAAAU48/W8KpnYtWkvTh3P7BqFv0p55oKUxQNWgbj68fNGKlZKHh2U
-        2SG/OZYCZ6O2DMQ9IzVPKPU=
-X-Google-Smtp-Source: APXvYqyQlQQstY6ckpzdxTq3eqyaTVMV1RbzAKXFHZ0p2+80Z3cUQ2hw1PgqERO7Z2iHF/jYWW8cTQ==
-X-Received: by 2002:ac8:31c1:: with SMTP id i1mr2652197qte.197.1573050713934;
-        Wed, 06 Nov 2019 06:31:53 -0800 (PST)
-Received: from quaco.ghostprotocols.net ([179.97.35.50])
-        by smtp.gmail.com with ESMTPSA id q3sm12827090qkf.18.2019.11.06.06.31.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 06:31:53 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 5EB2940B1D; Wed,  6 Nov 2019 11:31:51 -0300 (-03)
-Date:   Wed, 6 Nov 2019 11:31:51 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     Ian Rogers <irogers@google.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 05/10] perf tools: ensure config and str in terms are
- unique
-Message-ID: <20191106143151.GC6259@kernel.org>
-References: <20191025180827.191916-1-irogers@google.com>
- <20191030223448.12930-1-irogers@google.com>
- <20191030223448.12930-6-irogers@google.com>
- <20191106142503.GK30214@krava>
+        Wed, 6 Nov 2019 09:34:12 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573050850;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=GuEqvoKpnhY6ya78PGmgiZL+8devT6u4gdgAYEGLPDg=;
+        b=VIA55X3EtOyt71OlvKhRZRq1C7nctMBIlNDroOKKCutgJtgiGzykDzT/ZJ13mlvNizP5Zc
+        ss89/+N1QpvWiw6UAbp6uwxzL0ep9KDt/IdO97ZLA2buUJHrCO5su9qTtFTH/QqWE146qA
+        lt0iigbh56u4T90W7GTbIwP/+Xx5tII=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-434-1PeyxA2-PYqpmjo5-mRw7Q-1; Wed, 06 Nov 2019 09:34:07 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 46F26477;
+        Wed,  6 Nov 2019 14:34:05 +0000 (UTC)
+Received: from segfault.boston.devel.redhat.com (unknown [10.19.60.26])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id E9DE85D70D;
+        Wed,  6 Nov 2019 14:34:03 +0000 (UTC)
+From:   Jeff Moyer <jmoyer@redhat.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org,
+        Lucas De Marchi <lucas.de.marchi@gmail.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] modpost: add an option to suppress 'exported twice' warnings
+References: <20191106112357.29053-1-yamada.masahiro@socionext.com>
+X-PGP-KeyID: 1F78E1B4
+X-PGP-CertKey: F6FE 280D 8293 F72C 65FD  5A58 1FF8 A7CA 1F78 E1B4
+Date:   Wed, 06 Nov 2019 09:34:02 -0500
+In-Reply-To: <20191106112357.29053-1-yamada.masahiro@socionext.com> (Masahiro
+        Yamada's message of "Wed, 6 Nov 2019 20:23:57 +0900")
+Message-ID: <x49d0e5nkf9.fsf@segfault.boston.devel.redhat.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106142503.GK30214@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: 1PeyxA2-PYqpmjo5-mRw7Q-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Nov 06, 2019 at 03:25:03PM +0100, Jiri Olsa escreveu:
-> On Wed, Oct 30, 2019 at 03:34:43PM -0700, Ian Rogers wrote:
-> > Make it easier to release memory associated with parse event terms by
-> > duplicating the string for the config name and ensuring the val string
-> > is a duplicate.
-> > 
-> > Currently the parser may memory leak terms and this is addressed in a
-> > later patch.
-> > 
-> > Signed-off-by: Ian Rogers <irogers@google.com>
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
+Masahiro Yamada <yamada.masahiro@socionext.com> writes:
 
-Thanks, applied.
+> Since commit "modpost: do not set ->preloaded for symbols from
+> Module.symvers", the modpost always warns about symbols exported
+> multiple times.
+>
+> Generally, I believe it is a good thing to show a warning when the
+> same symbol name is exported twice. This avoids the accidental symbol
+> conflict.
+>
+> However, in some cases, we build an external module to provide a
+> different version/variant of the in-kernel module, overriding the
+> same set of exported symbols.
+>
+> At least, there is one use-case in the upstream code;
+> tools/testing/nvdimm/libnvdimm.ko replaces drivers/nvdimm/libnvdimm.ko
+> in order to link it against mocked version of core kernel symbols.
+>
+> Now, this emits a lots of 'exported twice' warnings:
+>
+>   https://lkml.org/lkml/2019/10/31/627
+>
+> To suppress those, add a new option KBUILD_DUPLICATED_EXPORTS_NO_WARN.
+>
+> If you intentionally override the existing symbols, you can pass it
+> from the command line:
+>
+>   make M=3Dtools/testing/nvdimm KBUILD_DUPLICATED_EXPORTS_NO_WARN=3D1
+>
+> Or, more conveniently, you can add it to the module Makefile, so
+> you can still do:
+>
+>   make M=3Dtools/testing/nvdimm
+>
+> without sprinkling the warnings.
+>
+> Reported-by: Jeff Moyer <jmoyer@redhat.com>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
+>
+> Jeff Moyer,
+> Dan Williams,
+>
+> Please check if this patch solves the nvdimm build issue.
 
-- Arnaldo
+Yep, that fixes it for me.
+
+You can add:
+
+Tested-by: Jeff Moyer <jmoyer@redhat.com>
+
+Thanks!
+
