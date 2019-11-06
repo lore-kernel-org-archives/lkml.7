@@ -2,60 +2,73 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EE3AC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95DEC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33B9F2084C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACA83218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:37:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Qcv3XhYx"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gmpRpEJE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731677AbfKFNhJ (ORCPT
+        id S1731803AbfKFNhd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:37:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:20541 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730655AbfKFNhH (ORCPT
+        Wed, 6 Nov 2019 08:37:33 -0500
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]:20121 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731733AbfKFNhc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:37:07 -0500
+        Wed, 6 Nov 2019 08:37:32 -0500
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573047426;
+        s=mimecast20190719; t=1573047450;
         h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=zFJtbi40NQp0Azk9V10i1JYDXOyupgSpOeME9YZ9Kvc=;
-        b=Qcv3XhYxcbs0DXcASmqg+do8Ni1dMJi6CnzmfbIvs2SJNrkGHn9AP61jAZWSPELtxOPDKJ
-        lmViE8m3yRWFYWTTb62A6l1Il230f3jsicIEZ/lF9oFh6lRY4lamNA8rvVyQRwDRlAE25H
-        OwEdear35nqRaZ/NlSF+jWom5u3WWXg=
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=/s0k4qOLB5UOKCj30GSBInNIxwTgiYyppdT2vH2+WjY=;
+        b=gmpRpEJEe9WA8/VON8MCK3hKz35Iv88V5XwL2X4ogTWY9PKGGgE5dRWpjOwtcQejTaiHmG
+        jIe1FgCdRVEhM5fg/rwgocs69V3jBdE1SHZqB261Gpy7zmx2CKVIiVg4ayJcfs1jjWSRXD
+        dCHGEPs8KN7gu/6r2Joqe4338xu30uM=
 Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
  [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-250-di9Z1Jc_O4qzzVYjWnSpyA-1; Wed, 06 Nov 2019 08:37:02 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+ us-mta-343-L9tT79FEPFObmEa3AfYP2Q-1; Wed, 06 Nov 2019 08:37:27 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 48DA8800C72;
-        Wed,  6 Nov 2019 13:37:01 +0000 (UTC)
-Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5849E5D9CD;
-        Wed,  6 Nov 2019 13:37:00 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mtosatti@redhat.com, rkrcmar@redhat.com,
-        vkuznets@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
-Subject: [Patch v1 2/2] KVM: x86: deliver KVM IOAPIC scan request to target vCPUs
-Date:   Wed,  6 Nov 2019 08:36:38 -0500
-Message-Id: <1573047398-7665-3-git-send-email-nitesh@redhat.com>
-In-Reply-To: <1573047398-7665-1-git-send-email-nitesh@redhat.com>
-References: <1573047398-7665-1-git-send-email-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: di9Z1Jc_O4qzzVYjWnSpyA-1
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 24B2C8017E0;
+        Wed,  6 Nov 2019 13:37:23 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-193.pek2.redhat.com [10.72.12.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2235A27067;
+        Wed,  6 Nov 2019 13:35:45 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V10 0/6] mdev based hardware virtio offloading support
+Date:   Wed,  6 Nov 2019 21:35:25 +0800
+Message-Id: <20191106133531.693-1-jasowang@redhat.com>
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: L9tT79FEPFObmEa3AfYP2Q-1
 X-Mimecast-Spam-Score: 0
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -64,250 +77,182 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In IOAPIC fixed delivery mode instead of flushing the scan
-requests to all vCPUs, we should only send the requests to
-vCPUs specified within the destination field.
+Hi all:
 
-This patch introduces kvm_get_dest_vcpus_mask() API which
-retrieves an array of target vCPUs by using
-kvm_apic_map_get_dest_lapic() and then based on the
-vcpus_idx, it sets the bit in a bitmap. However, if the above
-fails kvm_get_dest_vcpus_mask() finds the target vCPUs by
-traversing all available vCPUs. Followed by setting the
-bits in the bitmap.
+There are hardwares that can do virtio datapath offloading while
+having its own control path. This path tries to implement a mdev based
+unified API to support using kernel virtio driver to drive those
+devices. This is done by introducing a new mdev transport for virtio
+(virtio_mdev) and register itself as a new kind of mdev driver. Then
+it provides a unified way for kernel virtio driver to talk with mdev
+device implementation.
 
-If we had different vCPUs in the previous request for the
-same redirection table entry then bits corresponding to
-these vCPUs are also set. This to done to keep
-ioapic_handled_vectors synchronized.
+Though the series only contains kernel driver support, the goal is to
+make the transport generic enough to support userspace drivers. This
+means vhost-mdev[1] could be built on top as well by resuing the
+transport.
 
-This bitmap is then eventually passed on to
-kvm_make_vcpus_request_mask() to generate a masked request
-only for the target vCPUs.
+A sample driver is also implemented which simulate a virito-net
+loopback ethernet device on top of vringh + workqueue. This could be
+used as a reference implementation for real hardware driver.
 
-This would enable us to reduce the latency overhead on isolated
-vCPUs caused by the IPI to process due to KVM_REQ_IOAPIC_SCAN.
+Also a real IFC VF driver was also posted here[2] which is a good
+reference for vendors who is interested in their own virtio datapath
+offloading product.
 
-Suggested-by: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/ioapic.c           | 33 ++++++++++++++++++++++++++++--
- arch/x86/kvm/lapic.c            | 45 +++++++++++++++++++++++++++++++++++++=
-++++
- arch/x86/kvm/lapic.h            |  3 +++
- arch/x86/kvm/x86.c              |  6 ++++++
- include/linux/kvm_host.h        |  2 ++
- virt/kvm/kvm_main.c             | 14 +++++++++++++
- 7 files changed, 103 insertions(+), 2 deletions(-)
+Consider mdev framework only support VFIO device and driver right now,
+this series also extend it to support other types. This is done
+through introducing class id to the device and pairing it with
+id_talbe claimed by the driver. On top, this seris also decouple
+device specific ops out of the common ones for implementing class
+specific operations over mdev bus.
 
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
-t.h
-index 24d6598..b2aca6d 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1571,6 +1571,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ip=
-i_bitmap_low,
-=20
- void kvm_make_mclock_inprogress_request(struct kvm *kvm);
- void kvm_make_scan_ioapic_request(struct kvm *kvm);
-+void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-+=09=09=09=09       unsigned long *vcpu_bitmap);
-=20
- void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- =09=09=09=09     struct kvm_async_pf *work);
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index d859ae8..c8d0a83 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -271,8 +271,9 @@ static void ioapic_write_indirect(struct kvm_ioapic *io=
-apic, u32 val)
- {
- =09unsigned index;
- =09bool mask_before, mask_after;
--=09int old_remote_irr, old_delivery_status;
- =09union kvm_ioapic_redirect_entry *e;
-+=09unsigned long vcpu_bitmap;
-+=09int old_remote_irr, old_delivery_status, old_dest_id, old_dest_mode;
-=20
- =09switch (ioapic->ioregsel) {
- =09case IOAPIC_REG_VERSION:
-@@ -296,6 +297,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *io=
-apic, u32 val)
- =09=09/* Preserve read-only fields */
- =09=09old_remote_irr =3D e->fields.remote_irr;
- =09=09old_delivery_status =3D e->fields.delivery_status;
-+=09=09old_dest_id =3D e->fields.dest_id;
-+=09=09old_dest_mode =3D e->fields.dest_mode;
- =09=09if (ioapic->ioregsel & 1) {
- =09=09=09e->bits &=3D 0xffffffff;
- =09=09=09e->bits |=3D (u64) val << 32;
-@@ -321,7 +324,33 @@ static void ioapic_write_indirect(struct kvm_ioapic *i=
-oapic, u32 val)
- =09=09if (e->fields.trig_mode =3D=3D IOAPIC_LEVEL_TRIG
- =09=09    && ioapic->irr & (1 << index))
- =09=09=09ioapic_service(ioapic, index, false);
--=09=09kvm_make_scan_ioapic_request(ioapic->kvm);
-+=09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
-+=09=09=09struct kvm_lapic_irq irq;
-+
-+=09=09=09irq.shorthand =3D 0;
-+=09=09=09irq.vector =3D e->fields.vector;
-+=09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
-+=09=09=09irq.dest_id =3D e->fields.dest_id;
-+=09=09=09irq.dest_mode =3D e->fields.dest_mode;
-+=09=09=09kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-+=09=09=09=09=09=09&vcpu_bitmap);
-+=09=09=09if (old_dest_mode !=3D e->fields.dest_mode ||
-+=09=09=09    old_dest_id !=3D e->fields.dest_id) {
-+=09=09=09=09/*
-+=09=09=09=09 * Update vcpu_bitmap with vcpus specified in
-+=09=09=09=09 * the previous request as well. This is done to
-+=09=09=09=09 * keep ioapic_handled_vectors synchronized.
-+=09=09=09=09 */
-+=09=09=09=09irq.dest_id =3D old_dest_id;
-+=09=09=09=09irq.dest_mode =3D old_dest_mode;
-+=09=09=09=09kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-+=09=09=09=09=09=09=09&vcpu_bitmap);
-+=09=09=09}
-+=09=09=09kvm_make_scan_ioapic_request_mask(ioapic->kvm,
-+=09=09=09=09=09=09=09  &vcpu_bitmap);
-+=09=09} else {
-+=09=09=09kvm_make_scan_ioapic_request(ioapic->kvm);
-+=09=09}
- =09=09break;
- =09}
- }
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index b29d00b..90869c4 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1124,6 +1124,51 @@ static int __apic_accept_irq(struct kvm_lapic *apic,=
- int delivery_mode,
- =09return result;
- }
-=20
-+/*
-+ * This routine identifies the destination vcpus mask meant to receive the
-+ * IOAPIC interrupts. It either uses kvm_apic_map_get_dest_lapic() to find
-+ * out the destination vcpus array and set the bitmap or it traverses to
-+ * each available vcpu to identify the same.
-+ */
-+void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+=09=09=09     unsigned long *vcpu_bitmap)
-+{
-+=09struct kvm_lapic **dest_vcpu =3D NULL;
-+=09struct kvm_lapic *src =3D NULL;
-+=09struct kvm_apic_map *map;
-+=09struct kvm_vcpu *vcpu;
-+=09unsigned long bitmap;
-+=09int i, vcpus_idx;
-+=09bool ret;
-+
-+=09rcu_read_lock();
-+=09map =3D rcu_dereference(kvm->arch.apic_map);
-+
-+=09ret =3D kvm_apic_map_get_dest_lapic(kvm, &src, irq, map, &dest_vcpu,
-+=09=09=09=09=09  &bitmap);
-+=09if (ret) {
-+=09=09for_each_set_bit(i, &bitmap, 16) {
-+=09=09=09if (!dest_vcpu[i])
-+=09=09=09=09continue;
-+=09=09=09vcpus_idx =3D dest_vcpu[i]->vcpu->vcpus_idx;
-+=09=09=09__set_bit(vcpus_idx, vcpu_bitmap);
-+=09=09}
-+=09} else {
-+=09=09kvm_for_each_vcpu(i, vcpu, kvm) {
-+=09=09=09if (!kvm_apic_present(vcpu))
-+=09=09=09=09continue;
-+=09=09=09if (!kvm_apic_match_dest(vcpu, NULL,
-+=09=09=09=09=09=09 irq->delivery_mode,
-+=09=09=09=09=09=09 irq->dest_id,
-+=09=09=09=09=09=09 irq->dest_mode))
-+=09=09=09=09continue;
-+=09=09=09vcpus_idx =3D dest_vcpu[i]->vcpu->vcpus_idx;
-+=09=09=09__set_bit(vcpus_idx, vcpu_bitmap);
-+=09=09}
-+=09}
-+=09rcu_read_unlock();
-+}
-+
- int kvm_apic_compare_prio(struct kvm_vcpu *vcpu1, struct kvm_vcpu *vcpu2)
- {
- =09return vcpu1->arch.apic_arb_prio - vcpu2->arch.apic_arb_prio;
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 1f501485..49b0c6c 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -226,6 +226,9 @@ static inline int kvm_lapic_latched_init(struct kvm_vcp=
-u *vcpu)
-=20
- void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-=20
-+void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+=09=09=09     unsigned long *vcpu_bitmap);
-+
- bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *i=
-rq,
- =09=09=09struct kvm_vcpu **dest_vcpu);
- int kvm_vector_to_index(u32 vector, u32 dest_vcpus,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ff395f8..ee6945f 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7838,6 +7838,12 @@ static void process_smi(struct kvm_vcpu *vcpu)
- =09kvm_make_request(KVM_REQ_EVENT, vcpu);
- }
-=20
-+void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-+=09=09=09=09       unsigned long *vcpu_bitmap)
-+{
-+=09kvm_make_cpus_request_mask(kvm, KVM_REQ_SCAN_IOAPIC, vcpu_bitmap);
-+}
-+
- void kvm_make_scan_ioapic_request(struct kvm *kvm)
- {
- =09kvm_make_all_cpus_request(kvm, KVM_REQ_SCAN_IOAPIC);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 31c4fde..2f69eae 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -786,6 +786,8 @@ int kvm_vcpu_write_guest(struct kvm_vcpu *vcpu, gpa_t g=
-pa, const void *data,
- bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
- =09=09=09=09 unsigned long *vcpu_bitmap, cpumask_var_t tmp);
- bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req);
-+bool kvm_make_cpus_request_mask(struct kvm *kvm, unsigned int req,
-+=09=09=09=09unsigned long *vcpu_bitmap);
-=20
- long kvm_arch_dev_ioctl(struct file *filp,
- =09=09=09unsigned int ioctl, unsigned long arg);
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index 24ab711..9e85df8 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -242,6 +242,20 @@ bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsi=
-gned int req,
- =09return called;
- }
-=20
-+bool kvm_make_cpus_request_mask(struct kvm *kvm, unsigned int req,
-+=09=09=09=09unsigned long *vcpu_bitmap)
-+{
-+=09cpumask_var_t cpus;
-+=09bool called;
-+
-+=09zalloc_cpumask_var(&cpus, GFP_ATOMIC);
-+
-+=09called =3D kvm_make_vcpus_request_mask(kvm, req, vcpu_bitmap, cpus);
-+
-+=09free_cpumask_var(cpus);
-+=09return called;
-+}
-+
- bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req)
- {
- =09cpumask_var_t cpus;
+Pktgen test was done with virito-net + mvnet loop back device.
+
+Please review.
+
+[1] https://lkml.org/lkml/2019/11/5/424
+[2] https://lkml.org/lkml/2019/11/5/227
+
+Changes from V9:
+- Tweak the help text for virito-mdev kconfig
+
+Changes from V8:
+- try silent checkpatch, some are still there becuase they were inherited
+  from virtio_config_ops which needs to be resolved in an independent serie=
+s
+- tweak on the comment and doc
+- remove VIRTIO_MDEV_F_VERSION_1 completely
+- rename CONFIG_VIRTIO_MDEV_DEVICE to CONFIG_VIRTIO_MDEV
+
+Changes from V7:
+- drop {set|get}_mdev_features for virtio
+- typo and comment style fixes
+
+Changes from V6:
+- rename ops files and compile guard
+
+Changes from V5:
+- use dev_warn() instead of WARN(1) when class id is not set
+- validate id_table before trying to do matching between device and
+  driver
+- add wildcard for modpost script
+- use unique name for id_table
+- move get_mdev_features() to be the first member of virtio_device_ops
+  and more comments for it
+- typo fixes for the comments above virtio_mdev_ops
+
+Changes from V4:
+- keep mdev_set_class() for the device that doesn't use device ops
+- use union for device ops pointer in mdev_device
+- introduce class specific helper for getting is device ops
+- use WARN_ON instead of BUG_ON in mdev_set_virtio_ops
+- explain details of get_mdev_features() and get_vendor_id()
+- distinguish the optional virito device ops from mandatory ones and
+  make get_generation() optional
+- rename vfio_mdev.h to vfio_mdev_ops.h, rename virito_mdev.h to
+  virtio_mdev_ops.h
+- don't abuse version fileds in virtio_mdev structure, use features
+  instead
+- fix warning during device remove
+- style & docs tweaks and typo fixes
+
+Changes from V3:
+- document that class id (device ops) must be specified in create()
+- add WARN() when trying to set class_id when it has already set
+- add WARN() when class_id is not specified in create() and correctly
+  return an error in this case
+- correct the prototype of mdev_set_class() in the doc
+- add documention of mdev_set_class()
+- remove the unnecessary "class_id_fail" label when class id is not
+  specified in create()
+- convert id_table in vfio_mdev to const
+- move mdev_set_class and its friends after mdev_uuid()
+- suqash the patch of bus uevent into patch of introducing class id
+- tweak the words in the docs per Cornelia suggestion
+- tie class_id and device ops through class specific initialization
+  routine like mdev_set_vfio_ops()
+- typos fixes in the docs of virtio-mdev callbacks
+- document the usage of virtqueues in struct virtio_mdev_device
+- remove the useless vqs array in struct virtio_mdev_device
+- rename MDEV_ID_XXX to MDEV_CLASS_ID_XXX
+
+Changes from V2:
+- fail when class_id is not specified
+- drop the vringh patch
+- match the doc to the code
+- tweak the commit log
+- move device_ops from parent to mdev device
+- remove the unused MDEV_ID_VHOST
+
+Changes from V1:
+- move virtio_mdev.c to drivers/virtio
+- store class_id in mdev_device instead of mdev_parent
+- store device_ops in mdev_device instead of mdev_parent
+- reorder the patch, vringh fix comes first
+- really silent compiling warnings
+- really switch to use u16 for class_id
+- uevent and modpost support for mdev class_id
+- vraious tweaks per comments from Parav
+
+Changes from RFC-V2:
+- silent compile warnings on some specific configuration
+- use u16 instead u8 for class id
+- reseve MDEV_ID_VHOST for future vhost-mdev work
+- introduce "virtio" type for mvnet and make "vhost" type for future
+  work
+- add entries in MAINTAINER
+- tweak and typos fixes in commit log
+
+Changes from RFC-V1:
+- rename device id to class id
+- add docs for class id and device specific ops (device_ops)
+- split device_ops into seperate headers
+- drop the mdev_set_dma_ops()
+- use device_ops to implement the transport API, then it's not a part
+  of UAPI any more
+- use GFP_ATOMIC in mvnet sample device and other tweaks
+- set_vring_base/get_vring_base support for mvnet device
+
+Jason Wang (6):
+  mdev: class id support
+  modpost: add support for mdev class id
+  mdev: introduce device specific ops
+  mdev: introduce virtio device and its device ops
+  virtio: introduce a mdev based transport
+  docs: sample driver to demonstrate how to implement virtio-mdev
+    framework
+
+ .../driver-api/vfio-mediated-device.rst       |  38 +-
+ MAINTAINERS                                   |   3 +
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  17 +-
+ drivers/s390/cio/vfio_ccw_ops.c               |  17 +-
+ drivers/s390/crypto/vfio_ap_ops.c             |  13 +-
+ drivers/vfio/mdev/mdev_core.c                 |  60 ++
+ drivers/vfio/mdev/mdev_driver.c               |  25 +
+ drivers/vfio/mdev/mdev_private.h              |   8 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  45 +-
+ drivers/virtio/Kconfig                        |  13 +
+ drivers/virtio/Makefile                       |   1 +
+ drivers/virtio/virtio_mdev.c                  | 406 +++++++++++
+ include/linux/mdev.h                          |  57 +-
+ include/linux/mdev_vfio_ops.h                 |  52 ++
+ include/linux/mdev_virtio_ops.h               | 147 ++++
+ include/linux/mod_devicetable.h               |   8 +
+ samples/Kconfig                               |  10 +
+ samples/vfio-mdev/Makefile                    |   1 +
+ samples/vfio-mdev/mbochs.c                    |  19 +-
+ samples/vfio-mdev/mdpy.c                      |  19 +-
+ samples/vfio-mdev/mtty.c                      |  17 +-
+ samples/vfio-mdev/mvnet.c                     | 686 ++++++++++++++++++
+ scripts/mod/devicetable-offsets.c             |   3 +
+ scripts/mod/file2alias.c                      |  11 +
+ 24 files changed, 1585 insertions(+), 91 deletions(-)
+ create mode 100644 drivers/virtio/virtio_mdev.c
+ create mode 100644 include/linux/mdev_vfio_ops.h
+ create mode 100644 include/linux/mdev_virtio_ops.h
+ create mode 100644 samples/vfio-mdev/mvnet.c
+
 --=20
-1.8.3.1
+2.19.1
 
