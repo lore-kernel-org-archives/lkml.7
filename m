@@ -2,207 +2,118 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6CBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:02:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B467C5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:07:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6DAAC214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:02:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6606214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:06:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="riESuNN7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="KngW0n+d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729949AbfKFACk (ORCPT
+        id S1730097AbfKFAG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:02:40 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:44690 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfKFACk (ORCPT
+        Tue, 5 Nov 2019 19:06:59 -0500
+Received: from esa6.hgst.iphmx.com ([216.71.154.45]:2563 "EHLO
+        esa6.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728410AbfKFAG6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:02:40 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5NwnEL097487;
-        Wed, 6 Nov 2019 00:02:25 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=by6LNx6WNtJ7JPgSY3hY6+LsTSFnwmTyPzoIFjvPop8=;
- b=riESuNN78i/R6qArs5ZSON/196AA6nLZ/QS8Qpy47fXf3IDP3D7XZMULUiZ7UTr44Ryf
- +XTaLmrwXr/6I4BhpnRd7zlJghiTPdPBFKts1A3TtxfXXlYkcE+1D94hPLlitmbDnO02
- 7qwidmj2xJxYyfNiPorlmD1c3a3ksD7Tc7nq6HoYu8MNu7pmHGCBAoOKUm+gBFoVApG5
- AyHBdY9Y6Bqxn/JHJLHjzzMuhRwPjlKlkDTkpg2CeLa0arEq6teqPluubiIfYWJjSHs3
- SSZ8550skNb5JFisJU0H3k4M5gjnwwK5/a63T44WwHqfDR1vo38yXwiHBbLu4qHrYNoQ kw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w117u27ms-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 00:02:25 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5Nwmh6129346;
-        Wed, 6 Nov 2019 00:00:24 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3030.oracle.com with ESMTP id 2w333w76gc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 06 Nov 2019 00:00:24 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA600MOt005551;
-        Wed, 6 Nov 2019 00:00:22 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 05 Nov 2019 16:00:22 -0800
-Subject: Re: linux-next: build failure after merge of the akpm-current tree
-To:     Michael Ellerman <mpe@ellerman.id.au>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mm@kvack.org" <linux-mm@kvack.org>
-References: <20191105211920.787df2ab@canb.auug.org.au>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <0892a018-152f-629d-3dd0-60ce79f2887b@oracle.com>
-Date:   Tue, 5 Nov 2019 16:00:20 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Tue, 5 Nov 2019 19:06:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
+  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
+  t=1572998819; x=1604534819;
+  h=from:to:cc:subject:date:message-id:mime-version:
+   content-transfer-encoding;
+  bh=9+9EDzlFDTNp9/Z8GOSoCt1TUGGrH1xywpXlR2HtQmI=;
+  b=KngW0n+dUhjVzCyfsc+vaqvi9K6MSCBuagY6aqnn+x279iCYUCKlf+cB
+   VlmyHkMnE+DDVauw90/WBLUHHf9CSvbsa4ut/qox/beTfHhSE8euWMlRg
+   aK5aCIuomvzG3qqswZaR2fNXVZQmeAU0ZJapD0j6puafw7kL5EZlb55cp
+   MINuw79PRPTGJWxQF7SEqfBH815NMb6NRhF3fEDB9kuvWi05o+XBIob+0
+   EYxIIOsQ9K5VOGcSqeiliVlr34gSUw7wKeDQKoVvceF80HpBmBXS2P61P
+   TutL4aX/2rWPyayfG6xom88aviPeul+EidsCQ9SnGYFSy/QhC+jTeWTpq
+   Q==;
+IronPort-SDR: eDefiXdZwHee1smZz4gDSiq6Xf/vz8fDb0U+JTKMqnB45QRuSlDraRPykJKgAfRhlxKuEvLAiW
+ PlBYuMTQeUc/3xB6idf+YQ1Q1WIDvX2JDt0AP46ikqi3y61/gI/9GbZz641hXY5h0FRozIvYMH
+ K478Htqtx2f+7snLwX1xNhPF5kOig1NyFfyBDLcFh/rJB9XQOTFVny524XIBYp+G15yn7IkP6u
+ llbOoHlcH7VNlbj5xi8zaXvTeecjoMp7cwo6VybBm0A2FtJ/uwHw+B0GaR67BIHzZmaiV+79SW
+ Yyk=
+X-IronPort-AV: E=Sophos;i="5.68,271,1569254400"; 
+   d="scan'208";a="123838558"
+Received: from h199-255-45-15.hgst.com (HELO uls-op-cesaep02.wdc.com) ([199.255.45.15])
+  by ob1.hgst.iphmx.com with ESMTP; 06 Nov 2019 08:06:58 +0800
+IronPort-SDR: ZO/3uHRJGoWYOPTUBx0CuJ/bkASTSjwldWsD0xiHTi+AC0AphuIlB6pUcLGJU0rRnvDliwNNrX
+ VCZwWCEeIQ0+6SBySyqP8hnDvoOGh38tRq3tgjqGHp1IeKqruDm2wfvl+Zcaply9sk+2od1RLk
+ X1iucNKrr/CpLPQ1lPbB2sEiZi2rHg2JS8aSv+e/1TEwo9JwX+Yo+yxcIf+NH4I963DV6LBpIb
+ ccvYo3ju8F1kZ819lh1CPklO5kpnodvg9w7QLrBCFfYzaGDsl116S3Hx+gDIkxcW97Y3dZtrBd
+ v590NdcT4ZGFZNwwfgUj160X
+Received: from uls-op-cesaip01.wdc.com ([10.248.3.36])
+  by uls-op-cesaep02.wdc.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 16:02:11 -0800
+IronPort-SDR: vh7cUu24VmQmVXEdKsm4LuWH9m0ZsRfp77NEUxJhWkKhEXJXYChdhjvup9hikb6x+KE2pPuAOD
+ hdm7fc96/jeIBGZ7nMYyKFoNnasKxt/vmA8UB4jDiH6hxH/bRikK7uDxMrB0dpAEu0V4DV6LPi
+ KXqxX/xzIJwaoUxXekMJbI1RKigPE9V3c7X6bbBdqRb4nSAf0VWGNvOXxRIcE9mDDlFN1GxAZV
+ dRZn7Wg0k4jWgvEHmtZWWhfT2xYbV9NWLE46Dfy0as6J5WajHCKsJ+r6ZapH+CnkVi63SaA5G0
+ cqk=
+WDCIronportException: Internal
+Received: from jedi-01.sdcorp.global.sandisk.com (HELO jedi-01.int.fusionio.com) ([10.11.143.218])
+  by uls-op-cesaip01.wdc.com with ESMTP; 05 Nov 2019 16:06:58 -0800
+From:   Atish Patra <atish.patra@wdc.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Atish Patra <atish.patra@wdc.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>
+Subject: [PATCH] RISC-V: Add multiple compression image format.
+Date:   Tue,  5 Nov 2019 16:06:52 -0800
+Message-Id: <20191106000652.8370-1-atish.patra@wdc.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191105211920.787df2ab@canb.auug.org.au>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1908290000 definitions=main-1911050194
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
- definitions=main-1911050194
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 2:19 AM, Stephen Rothwell wrote:
-> Hi all,
-> 
-> After merging the akpm-current tree, today's linux-next build (powerpc64
-> allnoconfig) failed like this:
-> 
-> In file included from arch/powerpc/mm/mem.c:30:
-> include/linux/hugetlb.h:233:19: error: redefinition of 'pmd_huge'
->   233 | static inline int pmd_huge(pmd_t pmd)
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
->                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
->                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
->                  from arch/powerpc/include/asm/mmu.h:356,
->                  from arch/powerpc/include/asm/lppaca.h:47,
->                  from arch/powerpc/include/asm/paca.h:17,
->                  from arch/powerpc/include/asm/current.h:13,
->                  from include/linux/sched.h:12,
->                  from arch/powerpc/mm/mem.c:16:
-> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:74:19: note: previous definition of 'pmd_huge' was here
->    74 | static inline int pmd_huge(pmd_t pmd) { return 0; }
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/mm/mem.c:30:
-> include/linux/hugetlb.h:238:19: error: redefinition of 'pud_huge'
->   238 | static inline int pud_huge(pud_t pud)
->       |                   ^~~~~~~~
-> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
->                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
->                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
->                  from arch/powerpc/include/asm/mmu.h:356,
->                  from arch/powerpc/include/asm/lppaca.h:47,
->                  from arch/powerpc/include/asm/paca.h:17,
->                  from arch/powerpc/include/asm/current.h:13,
->                  from include/linux/sched.h:12,
->                  from arch/powerpc/mm/mem.c:16:
-> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:75:19: note: previous definition of 'pud_huge' was here
->    75 | static inline int pud_huge(pud_t pud) { return 0; }
->       |                   ^~~~~~~~
-> 
-> Caused by commit
-> 
->   9823e12e021f ("hugetlbfs: convert macros to static inline, fix sparse warning")
-> 
-> I have reverted that commit for today.
+Currently, there is only support for .gz compression type
+for generating kernel Image.
 
-Hello Michael,
+Add support for other compression methods(lzma, lz4, lzo, bzip2)
+that helps in generating a even smaller kernel image. Image.gz
+will still be the default compressed image.
 
-When I started to look into this I noticed that you added commit aad71e3928be
-("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") some time back.
-It appears that all other architectures get the definition of pmd_huge and
-pud_huge from <linux/hugetlb.h> in the !CONFIG_HUGETLB_PAGE case.  Previously,
-this was not an issue as the #define pmd_huge/pud_huge did not conflict with
-the static inline in the powerpc header files.  The conflicts above happened
-when I converted the macros to also be static inlines.  Could you live with
-a patch like the following to remove the stubs from powerpc header files and
-fix your original build break by including  <linux/hugetlb.h>?  After the
-below patch is applied, the above commit will not cause the build errors seen
-in linux-next.
-
-From 4b3ab017e639e4e583fff801e6d8e6727b7877e8 Mon Sep 17 00:00:00 2001
-From: Mike Kravetz <mike.kravetz@oracle.com>
-Date: Tue, 5 Nov 2019 15:12:15 -0800
-Subject: [PATCH] powerpc/mm: remove pmd_huge/pud_huge stubs and include
- hugetlb.h
-
-This removes the power specific stubs created by commit aad71e3928be
-("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") used when
-!CONFIG_HUGETLB_PAGE.  Instead, it addresses the build break by
-getting the definitions from <linux/hugetlb.h>.
-
-Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+Signed-off-by: Atish Patra <atish.patra@wdc.com>
 ---
- arch/powerpc/include/asm/book3s/64/pgtable-4k.h  | 3 ---
- arch/powerpc/include/asm/book3s/64/pgtable-64k.h | 3 ---
- arch/powerpc/mm/book3s64/radix_pgtable.c         | 1 +
- 3 files changed, 1 insertion(+), 6 deletions(-)
+ arch/riscv/boot/Makefile | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-index a069dfcac9a9..4e697bc2f4cd 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
-@@ -70,9 +70,6 @@ static inline int get_hugepd_cache_index(int index)
- 	/* should not reach */
- }
+diff --git a/arch/riscv/boot/Makefile b/arch/riscv/boot/Makefile
+index 0990a9fdbe5d..88356650c992 100644
+--- a/arch/riscv/boot/Makefile
++++ b/arch/riscv/boot/Makefile
+@@ -24,6 +24,18 @@ $(obj)/Image: vmlinux FORCE
+ $(obj)/Image.gz: $(obj)/Image FORCE
+ 	$(call if_changed,gzip)
  
--#else /* !CONFIG_HUGETLB_PAGE */
--static inline int pmd_huge(pmd_t pmd) { return 0; }
--static inline int pud_huge(pud_t pud) { return 0; }
- #endif /* CONFIG_HUGETLB_PAGE */
- 
- #endif /* __ASSEMBLY__ */
-diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-index e3d4dd4ae2fa..34d1018896b3 100644
---- a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-+++ b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
-@@ -59,9 +59,6 @@ static inline int get_hugepd_cache_index(int index)
- 	BUG();
- }
- 
--#else /* !CONFIG_HUGETLB_PAGE */
--static inline int pmd_huge(pmd_t pmd) { return 0; }
--static inline int pud_huge(pud_t pud) { return 0; }
- #endif /* CONFIG_HUGETLB_PAGE */
- 
- static inline int remap_4k_pfn(struct vm_area_struct *vma, unsigned long addr,
-diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
-index 6ee17d09649c..974109bb85db 100644
---- a/arch/powerpc/mm/book3s64/radix_pgtable.c
-+++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
-@@ -13,6 +13,7 @@
- #include <linux/memblock.h>
- #include <linux/of_fdt.h>
- #include <linux/mm.h>
-+#include <linux/hugetlb.h>
- #include <linux/string_helpers.h>
- #include <linux/stop_machine.h>
- 
++$(obj)/Image.bz2: $(obj)/Image FORCE
++	$(call if_changed,bzip2)
++
++$(obj)/Image.lz4: $(obj)/Image FORCE
++	$(call if_changed,lz4)
++
++$(obj)/Image.lzma: $(obj)/Image FORCE
++	$(call if_changed,lzma)
++
++$(obj)/Image.lzo: $(obj)/Image FORCE
++	$(call if_changed,lzo)
++
+ install:
+ 	$(CONFIG_SHELL) $(srctree)/$(src)/install.sh $(KERNELRELEASE) \
+ 	$(obj)/Image System.map "$(INSTALL_PATH)"
 -- 
-2.23.0
+2.21.0
 
