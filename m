@@ -7,31 +7,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A90C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 258B0C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15FCC217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00A79217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731785AbfKFJu7 (ORCPT
+        id S1731805AbfKFJvE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:50:59 -0500
-Received: from sauhun.de ([88.99.104.3]:50224 "EHLO pokefinder.org"
+        Wed, 6 Nov 2019 04:51:04 -0500
+Received: from sauhun.de ([88.99.104.3]:50228 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731685AbfKFJul (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:50:41 -0500
+        id S1731672AbfKFJuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:50:39 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id CFD0B2C0548;
-        Wed,  6 Nov 2019 10:50:39 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 1C18E2C054E;
+        Wed,  6 Nov 2019 10:50:38 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Andy Walls <awalls@md.metrocast.net>,
         Mauro Carvalho Chehab <mchehab@kernel.org>,
         linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 11/12] media: pci: ivtv: convert to i2c_new_scanned_device
-Date:   Wed,  6 Nov 2019 10:50:29 +0100
-Message-Id: <20191106095033.25182-12-wsa+renesas@sang-engineering.com>
+Subject: [RFC PATCH 08/12] media: pci: cx88: convert to i2c_new_scanned_device
+Date:   Wed,  6 Nov 2019 10:50:26 +0100
+Message-Id: <20191106095033.25182-9-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
 References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
@@ -43,60 +42,29 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Move from the deprecated i2c_new_probed_device() to the new
-i2c_new_scanned_device(). Make use of the new ERRPTR if suitable. Change
-the legacy function to simply return void because the retval was never
-used anywhere.
+i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
 
 Build tested only. RFC, please comment and/or ack, but don't apply yet.
 
- drivers/media/pci/ivtv/ivtv-i2c.c | 6 +++---
- drivers/media/pci/ivtv/ivtv-i2c.h | 2 +-
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ drivers/media/pci/cx88/cx88-input.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/media/pci/ivtv/ivtv-i2c.c b/drivers/media/pci/ivtv/ivtv-i2c.c
-index 0772d757a389..982045c4eea8 100644
---- a/drivers/media/pci/ivtv/ivtv-i2c.c
-+++ b/drivers/media/pci/ivtv/ivtv-i2c.c
-@@ -208,12 +208,12 @@ static int ivtv_i2c_new_ir(struct ivtv *itv, u32 hw, const char *type, u8 addr)
- 	info.platform_data = init_data;
- 	strscpy(info.type, type, I2C_NAME_SIZE);
+diff --git a/drivers/media/pci/cx88/cx88-input.c b/drivers/media/pci/cx88/cx88-input.c
+index 589f52d961eb..c7c2acd55266 100644
+--- a/drivers/media/pci/cx88/cx88-input.c
++++ b/drivers/media/pci/cx88/cx88-input.c
+@@ -613,7 +613,7 @@ void cx88_i2c_init_ir(struct cx88_core *core)
+ 	}
  
--	return i2c_new_probed_device(adap, &info, addr_list, NULL) == NULL ?
-+	return IS_ERR(i2c_new_scanned_device(adap, &info, addr_list, NULL)) ?
- 	       -1 : 0;
- }
- 
- /* Instantiate the IR receiver device using probing -- undesirable */
--struct i2c_client *ivtv_i2c_new_ir_legacy(struct ivtv *itv)
-+void ivtv_i2c_new_ir_legacy(struct ivtv *itv)
- {
- 	struct i2c_board_info info;
  	/*
-@@ -235,7 +235,7 @@ struct i2c_client *ivtv_i2c_new_ir_legacy(struct ivtv *itv)
- 
- 	memset(&info, 0, sizeof(struct i2c_board_info));
- 	strscpy(info.type, "ir_video", I2C_NAME_SIZE);
--	return i2c_new_probed_device(&itv->i2c_adap, &info, addr_list, NULL);
-+	i2c_new_scanned_device(&itv->i2c_adap, &info, addr_list, NULL);
- }
- 
- int ivtv_i2c_register(struct ivtv *itv, unsigned idx)
-diff --git a/drivers/media/pci/ivtv/ivtv-i2c.h b/drivers/media/pci/ivtv/ivtv-i2c.h
-index 462f73449a6e..2d9cdaa682c5 100644
---- a/drivers/media/pci/ivtv/ivtv-i2c.h
-+++ b/drivers/media/pci/ivtv/ivtv-i2c.h
-@@ -9,7 +9,7 @@
- #ifndef IVTV_I2C_H
- #define IVTV_I2C_H
- 
--struct i2c_client *ivtv_i2c_new_ir_legacy(struct ivtv *itv);
-+void ivtv_i2c_new_ir_legacy(struct ivtv *itv);
- int ivtv_i2c_register(struct ivtv *itv, unsigned idx);
- struct v4l2_subdev *ivtv_find_hw(struct ivtv *itv, u32 hw);
- 
+-	 * We can't call i2c_new_probed_device() because it uses
++	 * We can't call i2c_new_scanned_device() because it uses
+ 	 * quick writes for probing and at least some RC receiver
+ 	 * devices only reply to reads.
+ 	 * Also, Hauppauge XVR needs to be specified, as address 0x71
 -- 
 2.20.1
 
