@@ -2,83 +2,103 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24790FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:38:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A4A3FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:39:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC8DE207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="kxCPnkll"
+	by mail.kernel.org (Postfix) with ESMTP id 0CC5721D7F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:39:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732833AbfKFXiy (ORCPT
+        id S1732859AbfKFXjO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:38:54 -0500
-Received: from mail-yb1-f195.google.com ([209.85.219.195]:36961 "EHLO
-        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728065AbfKFXix (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:38:53 -0500
-Received: by mail-yb1-f195.google.com with SMTP id e13so238622ybh.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 15:38:52 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=netronome-com.20150623.gappssmtp.com; s=20150623;
-        h=date:from:to:cc:subject:message-id:in-reply-to:references
-         :organization:mime-version:content-transfer-encoding;
-        bh=NXCGiVKTXXEjzDxDKPWm4qRbQINthtPG/DF3mE8dX04=;
-        b=kxCPnkllRFkeV9ZKT0vPLK4zwrVw+ZIGPflI0u5vk0j5pV5zLWHRpkAzf35kkz/5XC
-         RIlII4oE7WfBPgvN2mVCbQYEo9K5fyHa0b87urxXjOe1LqWcNYx1mQ+M1OENSM6qPNc1
-         KKlDhCAKesadT+zSpoL5FMzs/ZDI2z/yuaG4z8Lh7st3mJDDhqDucU7bYyX8r6Tx8tTv
-         IvWbK17y0NFyGnmfQKAGivMO8CFlccpSFp0KyWcXwip0cWszVzs5oguhC41DP9kdj+vc
-         uzSbWQgVizDX0lT+3W8BRm8iLDVZd530GuZg1sYszeXs4yPAj/n7rNX/rkb6bP6sTFt1
-         SRCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
-         :references:organization:mime-version:content-transfer-encoding;
-        bh=NXCGiVKTXXEjzDxDKPWm4qRbQINthtPG/DF3mE8dX04=;
-        b=sfTarDzSu2lROpWp+kc7YokLRXIJMCd0JB8YBbY997H9FuDwmz0gtaooz3tuqqxgfp
-         6OQFhDLVaXGTbsTX+uwxeT2MCtwoqjTbeUjlVb6WDghtvU/WjMPx95SLbjjQ7Pan0yBV
-         nOCt3gkD5kkFR6WyrUO/zv5Szr0Z9sKpR2/n5a3jz050RElJOrOzSypS9X4c35b67kwf
-         THMSXySKo6fdpwIZmUvQT021UuIZsMyR3/E6HHhdQsbKGW/aKBTmdcycwosKhPgh2Sfm
-         ttUkt7X3lC30rKM01hnVtla8PAFyJ+PPNyFgN7SXHF8pt7SXNrxl91XIjt23/7Tq08ns
-         62aw==
-X-Gm-Message-State: APjAAAVNhKFuocX+YDVyeErLUyGzj+RzuvfoWLyhRvscgIHk7+pCECcA
-        irkDdx5jDIXakZzbu5MEOIpyanxa3PM=
-X-Google-Smtp-Source: APXvYqym0i0romvCrdOaz7lsINZQYcGiuzpul4r2zM7EYgZuhgx34Vaj0wOMFqNyMeyL778+8rXK9g==
-X-Received: by 2002:a25:af05:: with SMTP id a5mr633074ybh.155.1573083531576;
-        Wed, 06 Nov 2019 15:38:51 -0800 (PST)
-Received: from cakuba.netronome.com ([64.63.152.34])
-        by smtp.gmail.com with ESMTPSA id z127sm194842ywb.38.2019.11.06.15.38.51
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 15:38:51 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:38:48 -0500
-From:   Jakub Kicinski <jakub.kicinski@netronome.com>
-To:     Jonas Bonn <jonas@norrbonn.se>
-Cc:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org, davem@davemloft.net
-Subject: Re: [PATCH v2 1/5] rtnetlink: allow RTM_SETLINK to reference other
- namespaces
-Message-ID: <20191106183848.3b914620@cakuba.netronome.com>
-In-Reply-To: <20191106053923.10414-2-jonas@norrbonn.se>
-References: <20191106053923.10414-1-jonas@norrbonn.se>
-        <20191106053923.10414-2-jonas@norrbonn.se>
-Organization: Netronome Systems, Ltd.
+        Wed, 6 Nov 2019 18:39:14 -0500
+Received: from mga17.intel.com ([192.55.52.151]:32481 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727238AbfKFXjO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:39:14 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga008.fm.intel.com ([10.253.24.58])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 15:39:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
+   d="scan'208";a="200863753"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga008.fm.intel.com with ESMTP; 06 Nov 2019 15:39:13 -0800
+Date:   Wed, 6 Nov 2019 15:39:13 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Paolo Bonzini <pbonzini@redhat.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191106233913.GC21617@linux.intel.com>
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+ <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+ <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 06:39:19 +0100, Jonas Bonn wrote:
-> +	if (tb[IFLA_TARGET_NETNSID]) {
-> +		int32_t netnsid = nla_get_s32(tb[IFLA_TARGET_NETNSID]);
-> +		tgt_net = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, netnsid);
+On Wed, Nov 06, 2019 at 03:20:11PM -0800, Dan Williams wrote:
+> After some more thought I'd feel more comfortable just collapsing the
+> ZONE_DEVICE case into the VM_IO/VM_PFNMAP case. I.e. with something
+> like this (untested) that just drops the reference immediately and let
+> kvm_is_reserved_pfn() do the right thing going forward.
 
-No comments on merits but you should definitely run this through
-checkpatch..
+This will break the page fault flow, as it will allow the page to be
+whacked before KVM can ensure it will get proper notification from the
+mmu_notifier.  E.g. KVM would install the PFN in its secondary MMU after
+getting the invalidate notification for the PFN.
+
+> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> index d6f0696d98ef..d21689e2b4eb 100644
+> --- a/virt/kvm/kvm_main.c
+> +++ b/virt/kvm/kvm_main.c
+> @@ -1464,6 +1464,14 @@ static bool hva_to_pfn_fast(unsigned long addr,
+> bool write_fault,
+>         npages = __get_user_pages_fast(addr, 1, 1, page);
+>         if (npages == 1) {
+>                 *pfn = page_to_pfn(page[0]);
+> +               /*
+> +                * ZONE_DEVICE pages are effectively VM_IO/VM_PFNMAP as
+> +                * far as KVM is concerned kvm_is_reserved_pfn() will
+> +                * prevent further unnecessary page management on this
+> +                * page.
+> +                */
+> +               if (is_zone_device_page(page[0]))
+> +                       put_page(page[0]);
+> 
+>                 if (writable)
+>                         *writable = true;
+> @@ -1509,6 +1517,11 @@ static int hva_to_pfn_slow(unsigned long addr,
+> bool *async, bool write_fault,
+>                 }
+>         }
+>         *pfn = page_to_pfn(page);
+> +
+> +       /* See comment in hva_to_pfn_fast. */
+> +       if (is_zone_device_page(page[0]))
+> +               put_page(page[0]);
+> +
+>         return npages;
+>  }
