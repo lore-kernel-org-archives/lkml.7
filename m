@@ -6,137 +6,118 @@ X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E019BC47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F1C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDC4F21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D15D42178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731902AbfKFPF1 (ORCPT
+        id S1731986AbfKFPFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:05:27 -0500
-Received: from mx2.suse.de ([195.135.220.15]:40126 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727548AbfKFPF1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:05:27 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id F0AA5AC18;
-        Wed,  6 Nov 2019 15:05:24 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id A02211E4353; Wed,  6 Nov 2019 16:05:24 +0100 (CET)
-Date:   Wed, 6 Nov 2019 16:05:24 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     Josef Bacik <josef@toxicpanda.com>
-Cc:     snazy@snazy.de, Jan Kara <jack@suse.cz>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <20191106150524.GL16085@quack2.suse.cz>
-References: <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
- <20191025135749.GK17610@dhcp22.suse.cz>
- <20191025140029.GL17610@dhcp22.suse.cz>
- <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
- <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
- <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
- <20191105182211.GA33242@cmpxchg.org>
- <20191106120315.GF16085@quack2.suse.cz>
- <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
- <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
+        Wed, 6 Nov 2019 10:05:52 -0500
+Received: from foss.arm.com ([217.140.110.172]:41486 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727361AbfKFPFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:05:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD1D07CD;
+        Wed,  6 Nov 2019 07:05:51 -0800 (PST)
+Received: from [10.1.32.101] (e122027.cambridge.arm.com [10.1.32.101])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEA113F71A;
+        Wed,  6 Nov 2019 07:05:48 -0800 (PST)
+From:   Steven Price <steven.price@arm.com>
+Subject: Re: [PATCH v15 00/23] Generic page walk and ptdump
+To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
+        linux-mm@kvack.org
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
+        Arnd Bergmann <arnd@arndb.de>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        linux-kernel@vger.kernel.org,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        James Morse <james.morse@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        linux-arm-kernel@lists.infradead.org,
+        "Liang, Kan" <kan.liang@linux.intel.com>
+References: <20191101140942.51554-1-steven.price@arm.com>
+ <1572896147.5937.116.camel@lca.pw>
+ <7B040741-EC8A-4CC0-964B-4046AE2E617A@lca.pw>
+Message-ID: <16da6118-ac4d-a165-6202-0731a776ac72@arm.com>
+Date:   Wed, 6 Nov 2019 15:05:29 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <7B040741-EC8A-4CC0-964B-4046AE2E617A@lca.pw>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06-11-19 09:56:09, Josef Bacik wrote:
-> On Wed, Nov 06, 2019 at 02:45:43PM +0100, Robert Stupp wrote:
-> > On Wed, 2019-11-06 at 13:03 +0100, Jan Kara wrote:
-> > > On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
-> > > > What I don't quite understand yet is why the fault path doesn't
-> > > > make
-> > > > progress eventually. We must drop the mmap_sem without changing the
-> > > > state in any way. How can we keep looping on the same page?
-> > >
-> > > That may be a slight suboptimality with Josef's patches. If the page
-> > > is marked as PageReadahead, we always drop mmap_sem if we can and
-> > > start
-> > > readahead without checking whether that makes sense or not in
-> > > do_async_mmap_readahead(). OTOH page_cache_async_readahead() then
-> > > clears
-> > > PageReadahead so the only way how I can see we could loop like this
-> > > is when
-> > > file->ra->ra_pages is 0. Not sure if that's what's happening through.
-> > > We'd
-> > > need to find which of the paths in filemap_fault() calls
-> > > maybe_unlock_mmap_for_io() to tell more.
-> > 
-> > Yes, ra_pages==0
-> > Attached the dmesg + smaps outputs
-> > 
-> > 
+On 06/11/2019 13:31, Qian Cai wrote:
 > 
-> Ah ok I see what's happening, __get_user_pages() returns 0 if we get an EBUSY
-> from faultin_page, and then __mm_populate does nend = nstart + ret * PAGE_SIZE,
-> which just leaves us where we are.
 > 
-> We need to handle the non-blocking and the locking separately in __mm_populate
-> so we know what's going on.  Jan's fix for the readahead thing is definitely
-> valid as well, but this will keep us from looping forever in other retry cases.
-
-I don't think this will work. AFAICS faultin_page() just checks whether
-'nonblocking' is != NULL but doesn't ever look at its value... Honestly the
-whole interface is rather weird like lots of things around gup().
-
-								Honza
-
+>> On Nov 4, 2019, at 2:35 PM, Qian Cai <cai@lca.pw> wrote:
+>>
+>> On Fri, 2019-11-01 at 14:09 +0000, Steven Price wrote:
+[...]
+>>> Changes since v14:
+>>> https://lore.kernel.org/lkml/20191028135910.33253-1-steven.price@arm.com/
+>>> * Switch walk_page_range() into two functions, the existing
+>>>    walk_page_range() now still requires VMAs (and treats areas without a
+>>>    VMA as a 'hole'). The new walk_page_range_novma() ignores VMAs and
+>>>    will report the actual page table layout. This fixes the previous
+>>>    breakage of /proc/<pid>/pagemap
+>>> * New patch at the end of the series which reduces the 'level' numbers
+>>>    by 1 to simplify the code slightly
+>>> * Added tags
+>>
+>> Does this new version also take care of this boot crash seen with v14? Suppose
+>> it is now breaking CONFIG_EFI_PGT_DUMP=y? The full config is,
+>>
+>> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
+>>
 > 
-> diff --git a/mm/gup.c b/mm/gup.c
-> index 8f236a335ae9..ac625805d569 100644
-> --- a/mm/gup.c
-> +++ b/mm/gup.c
-> @@ -1237,6 +1237,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
->  	unsigned long end, nstart, nend;
->  	struct vm_area_struct *vma = NULL;
->  	int locked = 0;
-> +	int nonblocking = 1;
->  	long ret = 0;
->  
->  	end = start + len;
-> @@ -1268,7 +1269,7 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
->  		 * double checks the vma flags, so that it won't mlock pages
->  		 * if the vma was already munlocked.
->  		 */
-> -		ret = populate_vma_page_range(vma, nstart, nend, &locked);
-> +		ret = populate_vma_page_range(vma, nstart, nend, &nonblocking);
->  		if (ret < 0) {
->  			if (ignore_errors) {
->  				ret = 0;
-> @@ -1276,6 +1277,14 @@ int __mm_populate(unsigned long start, unsigned long len, int ignore_errors)
->  			}
->  			break;
->  		}
-> +
-> +		/*
-> +		 * We dropped the mmap_sem, so we need to re-lock, and the next
-> +		 * loop around we won't drop because nonblocking is now 0.
-> +		 */
-> +		if (!nonblocking)
-> +			locked = 0;
-> +
->  		nend = nstart + ret * PAGE_SIZE;
->  		ret = 0;
->  	}
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+> V15 is indeed DOA here.
+
+Thanks for finding this, it looks like EFI causes issues here. The below fixes
+this for me (booting in QEMU).
+
+Andrew: do you want me to send out the entire series again for this fix, or
+can you squash this into mm-pagewalk-allow-walking-without-vma.patch?
+
+Thanks,
+
+Steve
+
+---8<---
+diff --git a/mm/pagewalk.c b/mm/pagewalk.c
+index c7529dc4f82b..70dcaa23598f 100644
+--- a/mm/pagewalk.c
++++ b/mm/pagewalk.c
+@@ -90,7 +90,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
+  			split_huge_pmd(walk->vma, pmd, addr);
+  			if (pmd_trans_unstable(pmd))
+  				goto again;
+-		} else if (pmd_leaf(*pmd)) {
++		} else if (pmd_leaf(*pmd) || !pmd_present(*pmd)) {
+  			continue;
+  		}
+  
+@@ -141,7 +141,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
+  			split_huge_pud(walk->vma, pud, addr);
+  			if (pud_none(*pud))
+  				goto again;
+-		} else if (pud_leaf(*pud)) {
++		} else if (pud_leaf(*pud) || !pud_present(*pud)) {
+  			continue;
+  		}
+  
