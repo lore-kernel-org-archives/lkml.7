@@ -2,169 +2,220 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8457FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:38:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2DA1C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:39:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97269217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:38:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3E52217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:39:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="B1fsHwJz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oincruMT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732754AbfKFWiL (ORCPT
+        id S1732766AbfKFWjf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:38:11 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:41064 "EHLO
+        Wed, 6 Nov 2019 17:39:35 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36711 "EHLO
         mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727196AbfKFWiL (ORCPT
+        with ESMTP id S1727196AbfKFWjf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:38:11 -0500
-Received: by mail-pl1-f194.google.com with SMTP id d29so5817205plj.8;
-        Wed, 06 Nov 2019 14:38:10 -0800 (PST)
+        Wed, 6 Nov 2019 17:39:35 -0500
+Received: by mail-pl1-f194.google.com with SMTP id g9so12194389plp.3;
+        Wed, 06 Nov 2019 14:39:34 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=NhLwyjiytcYSqAw2MKZJzXtEEN6/UjRwW19b5+Kxoko=;
-        b=B1fsHwJzunde+XUqyu3U6KO/UaBvzPKaViffUAvOFBsY+2+3d9EgH+Z2+yYgUrT2dj
-         nfu/GSd1JkRgRRt9xX2iRkYmCCVzORgIK/dtOKfIFGi0pSa+7HdHS/4Ti7FQDHUXNWF/
-         o5w1hTljp1oHK3OBmt1rxNEOZsaPOKxttj/yDfSokIr81sSP3sE7DAIEXbkzQxSNKktV
-         dxpTQfDukUzQ80k6hEcrqsiqTpgx5MmrzS8eZe9ryvSZLTrdBKVadVcfVZEuq1Lcb1GI
-         ulMcQcLhV9YRzzeD66PsT0ONqsWA01kFPNJNY85twehsMjp8Yx3I4DiM2c2lQkWwe1vH
-         xk8w==
+        bh=BMKd8G9zMkgN0f5Y0tqmmKfixfcWLZBRkofJy97iGiI=;
+        b=oincruMTn5V9mTz+UjSpw6gCAfrjxD3rHfFUb7+yDs1GwMQc7x76PTRZ3NZep2zds0
+         8qMS96GOZIWuWyJDvASCfP6Ljs9u0R4qa50TWVF291ejwe8hCO2iS80we91/vnh6z+9H
+         zJCV18tbb53WlYkS7BwPMpLKki+h088raFgCUwxwusQu3CE3rfMhzoeZ81LNzu3u9kwd
+         r0ptc6c5MY1grztnZrpIj0nrBUgy79Bcv4xbWadetoC8snyyolC6OcBeHr06lKodLD9t
+         42mvfWTxvfiC6LNuBHzPyJapxy238EgOaeHhZdshYdtbQJYBlrONgriFDtUkPwK2zPMW
+         6spg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=NhLwyjiytcYSqAw2MKZJzXtEEN6/UjRwW19b5+Kxoko=;
-        b=pzmH25k7H/O0PRjPuFfYr9lqM/XbVZddpLTl0xuAEuel6xwEDXZVdSzaKhxFParzmw
-         eunm+KONgL75kLG2wiIHXB4iPfdQuNHfn9G9A+fneowE1zE1ZJh0BAltOvCEfRahyxxP
-         euOVh03HIzTVOBb8XRxFYitHY+AnDltUhJdX5GrpYcwB2Hj0Q0gbhot43yE7gdCFcLF5
-         ZzJFy+lziDUALH1hStujhTc2qz3wwkq0Paiu7s0uBexBRvCH/RDXtI3xM4ycj3jzVChg
-         q4aU4Fr6NMsTHPy/wcKusfpMDGvjpNKwsA+A4LymTnc3dxV7Zocpov4NK1NEmfBpl5Yi
-         Z9Qw==
-X-Gm-Message-State: APjAAAUguX9gycEAoCUwJ9Y0shMFvu7KsSK06JVtxJZKJKZQLLJcAJDL
-        fpMroCjlrayHdthBrqB0OPo=
-X-Google-Smtp-Source: APXvYqwehfybuckKda8ttVPtF1fcYViIFX1E5srRIuEnDbfzuJmzexMVpUmMgwLKkCfzzu4HknuG+A==
-X-Received: by 2002:a17:902:a98c:: with SMTP id bh12mr12236plb.289.1573079890298;
-        Wed, 06 Nov 2019 14:38:10 -0800 (PST)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id z11sm3735pfg.117.2019.11.06.14.38.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 14:38:09 -0800 (PST)
-Date:   Wed, 6 Nov 2019 14:38:08 -0800
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        jdelvare@suse.com
-Subject: Re: [PATCH 2/2] hwmon: (pmbus/ibm-cffps) Fix LED blink behavior
-Message-ID: <20191106223808.GA20956@roeck-us.net>
-References: <20191106200106.29519-1-eajames@linux.ibm.com>
- <20191106200106.29519-3-eajames@linux.ibm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=BMKd8G9zMkgN0f5Y0tqmmKfixfcWLZBRkofJy97iGiI=;
+        b=CO3w/j1XabNst3jqpUANF8TSHAvJofRKrKqvslb4rYB+Hebd5POlTQFv3XAnSkSfDU
+         cjzWPvfEATntx3vDKVHnEyoV0UfyuN5nuefHm+g3mC/pAd9BPWtbRz2nrYEnxoy3EU9s
+         YyXdWHdQP1zRaNY2gmyTPb9KLIVi5wVvxC2FcbCZo0FLn0ZSvV5jU+JMXVnGJnN58Kwt
+         IEWbnGPeFV7tpGn3IVVXCaRboVmNK9zjB8k3nfYKD41ydjx0WPuf3W1TKS4yVCFBkDdH
+         7vh1vQG3f/oUFnVPVLoMtf6reUdwuS4U9jxPn8zFjcRpGSPVL/awMtGaQaNuz2gGgQrK
+         cZJg==
+X-Gm-Message-State: APjAAAWiFZ9GgDqpKnkblpp/Lf0Qhry4XASyUc5lTdnrWSQ7K/iXZflT
+        Ys0aQegHm9I4a3Farr53to2XFakvjTE=
+X-Google-Smtp-Source: APXvYqw+Mm/Jhhto447HAdZ8pprhH6qVmc3DP2CM+G83oLje4qaSKbFz16GkCebLsIhVSE+yNgPWjg==
+X-Received: by 2002:a17:902:346:: with SMTP id 64mr18408pld.283.1573079973779;
+        Wed, 06 Nov 2019 14:39:33 -0800 (PST)
+Received: from Slackware ([103.231.90.174])
+        by smtp.gmail.com with ESMTPSA id k32sm4766756pje.10.2019.11.06.14.39.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 14:39:32 -0800 (PST)
+Date:   Thu, 7 Nov 2019 04:09:18 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     "J. Bruce Fields" <bfields@fieldses.org>
+Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+Message-ID: <20191106223918.GB1852@Slackware>
+References: <20191102063036.28601-1-unixbhaskar@gmail.com>
+ <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+ <20191105023243.GA16635@fieldses.org>
+ <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+ <20191106043120.GB6355@fieldses.org>
+ <20191106044223.GA18076@Gentoo>
+ <20191106193010.GG17669@fieldses.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="uZ3hkaAS1mZxFaxD"
 Content-Disposition: inline
-In-Reply-To: <20191106200106.29519-3-eajames@linux.ibm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191106193010.GG17669@fieldses.org>
+User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 02:01:06PM -0600, Eddie James wrote:
-> The LED blink_set function incorrectly did not tell the PSU LED to blink
-> if brightness was LED_OFF. Fix this, and also correct the LED_OFF
-> command data, which should give control of the LED back to the PSU
-> firmware. Also prevent I2C failures from getting the driver LED state
-> out of sync and add some dev_dbg statements.
-> 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Applied.
+--uZ3hkaAS1mZxFaxD
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
-Guenter
+On 14:30 Wed 06 Nov 2019, J. Bruce Fields wrote:
+>On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
+>> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
+>> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
+>> >>BTW.
+>> >>Bruce,
+>> >>Does the current script expect RHEL or something?
+>> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
+>> >
+>> >I test on Fedora.  Looks like on recent Fedora that's only provided by
+>> >an rpm "grubby-deprecated", which is an inauspicious name....
+>> >
+>> >I think maybe you're supposed to use "grubby" itself now.  Do you have
+>> >that?
+>> >
+>> >>It would still work with 'new-kernel-pkg: command not found'
+>> >>warning.
+>> >>
+>> >>We could bypass it if we like.
+>> >>
+>> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
+>> >
+>> >Looks like it's what updates the grub configuration, which is probably a
+>> >nice thing to do if you can.
+>> >
+>> >--b.
+>>=20
+>> Bruce,
+>>=20
+>> Two things,
+>>=20
+>> If the system doesn't run grub , how the fallback policy???
+>>=20
+>> This binary "new-kernel-pkg" also missing in other systems too...I can
+>> confirm that... i.e gentoo,slackware,
+>>=20
+>> So , you are only targeting the rpm based system????
+>
+>It's just what I happen to use.  If someone wants to make it work
+>elsewhere that'd be great, as long as we don't break what already works.
+>
+>I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
+>dunno.
+>
+>--b.
 
-> ---
->  drivers/hwmon/pmbus/ibm-cffps.c | 27 +++++++++++++++++++--------
->  1 file changed, 19 insertions(+), 8 deletions(-)
-> 
-> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
-> index c6a00e83aac6..d359b76bcb36 100644
-> --- a/drivers/hwmon/pmbus/ibm-cffps.c
-> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
-> @@ -44,9 +44,13 @@
->  #define CFFPS_MFR_VAUX_FAULT			BIT(6)
->  #define CFFPS_MFR_CURRENT_SHARE_WARNING		BIT(7)
->  
-> +/*
-> + * LED off state actually relinquishes LED control to PSU firmware, so it can
-> + * turn on the LED for faults.
-> + */
-> +#define CFFPS_LED_OFF				0
->  #define CFFPS_LED_BLINK				BIT(0)
->  #define CFFPS_LED_ON				BIT(1)
-> -#define CFFPS_LED_OFF				BIT(2)
->  #define CFFPS_BLINK_RATE_MS			250
->  
->  enum {
-> @@ -301,23 +305,31 @@ static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
->  					enum led_brightness brightness)
->  {
->  	int rc;
-> +	u8 next_led_state;
->  	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
->  
->  	if (brightness == LED_OFF) {
-> -		psu->led_state = CFFPS_LED_OFF;
-> +		next_led_state = CFFPS_LED_OFF;
->  	} else {
->  		brightness = LED_FULL;
-> +
->  		if (psu->led_state != CFFPS_LED_BLINK)
-> -			psu->led_state = CFFPS_LED_ON;
-> +			next_led_state = CFFPS_LED_ON;
-> +		else
-> +			next_led_state = CFFPS_LED_BLINK;
->  	}
->  
-> +	dev_dbg(&psu->client->dev, "LED brightness set: %d. Command: %d.\n",
-> +		brightness, next_led_state);
-> +
->  	pmbus_set_page(psu->client, 0);
->  
->  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
-> -				       psu->led_state);
-> +				       next_led_state);
->  	if (rc < 0)
->  		return rc;
->  
-> +	psu->led_state = next_led_state;
->  	led_cdev->brightness = brightness;
->  
->  	return 0;
-> @@ -330,10 +342,7 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
->  	int rc;
->  	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
->  
-> -	psu->led_state = CFFPS_LED_BLINK;
-> -
-> -	if (led_cdev->brightness == LED_OFF)
-> -		return 0;
-> +	dev_dbg(&psu->client->dev, "LED blink set.\n");
->  
->  	pmbus_set_page(psu->client, 0);
->  
-> @@ -342,6 +351,8 @@ static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
->  	if (rc < 0)
->  		return rc;
->  
-> +	psu->led_state = CFFPS_LED_BLINK;
-> +	led_cdev->brightness = LED_FULL;
->  	*delay_on = CFFPS_BLINK_RATE_MS;
->  	*delay_off = CFFPS_BLINK_RATE_MS;
->  
+Okay , thanks for the input. I was trying to write something in
+generalize way , that is why my code spins off.And if you see the
+subject line of my very first attempt to patch written was "removing
+old kernels and modules dir in selective way"... that was it.
+
+Now, there are plenty of distros around, not only rpm based one(yes I do
+agree that ,you wrote it while using and testing on it, but that is
+limited in nature),the broader user base might be using something else.
+
+we simply can not restrict it to certain packaging version or several
+packaging versions of selected distros. We are making and building this
+(worth an effort) to make it as generalized as possible.=20
+
+Importantly I was only thinking of people who put the stuff in standard
+places in the FSH and use it. I might be wrong.
+
+As I have said it before, I was no way trying to bypass your work ,but
+it seems very limited in nature to adopted. So trying to widen the
+spectrum.
+
+I am trying to incorporating both the pole, different kind user base in
+mind, like you , who don't like to be prompted for this operation and
+assuming things should go well, and you are right.
+
+On the other hand , I am kinda guy , sometime I need to know what is
+going on, so the prompting.=20
+
+Well, I have never taken into account about modifying the bootloader
+config by looking at your work. Had I been, I would have done it already
+and it would be extremely trivial in nature.
+
+Now, Grub, no doubt it's fantastic piece of software, but complexity
+is paramount with it. Don't you think so???  I HAVE NOTHING AGAINST
+GRUB!
+
+I have personally stops using it for years and using something very
+rudimentary and simple and useful. That is because I know what I am
+doing and my system well.=20
+
+Caveat emptor: that was me, not every one else in the wild. Grub is used
+by the most distro by default,everybody knows it,but certainly not the
+norm.
+
+I would love to give it a stab again and if you better people feel it is
+necessary, but I need some concrete understanding from you,Masahiro and
+Randy(who is helping me actively).
+
+Say, You people might come up ,
+
+We need these :
+
+a)
+b)
+c)=20
+
+and we don't need these:
+
+a)
+b)
+c)
+
+
+My two cents! kindly, flame me with your thoughts.
+
+~Bhaskar
+
+--uZ3hkaAS1mZxFaxD
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3DS5IACgkQsjqdtxFL
+KRV7Rgf+OMwhspUynXOGPUZfJm3a7pgGlvYmk7wseYUHUHD1binTyLxb77HXYIFZ
+AUpLuLOJYvWkJlfYzUWdrEYfU08+xxt38lp+M7wQgNEY8dBSk9paB++dk7TAnGAS
+FfbDvW+4vOoaw6pooIvdzWCSVe+MrfvX5Fhr59/VzW9iJ/d6NTirTo0MjoKlsgJi
+/6NWndrkD7yl0ARLXJqPT74OsYeTHPxvcPC0Z9EoUZTl+wRGWCDnb0fG065Phoc4
+IU7ndS1AU149FyPQxON/SfrA39CtlzSs76kcaoyJwFmF1faAmFZWboZa5R0NxjXB
+/3FGNxq/s6LJGTwOTRlj87zaryftuQ==
+=amex
+-----END PGP SIGNATURE-----
+
+--uZ3hkaAS1mZxFaxD--
