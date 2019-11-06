@@ -2,121 +2,138 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DBC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69741C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1192067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573057322;
-	bh=NSqcKQReHCpg7tEC0Oy/cMJbohp2OdoG7xVCWiTUgDs=;
-	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=qN64ogs5i46WacNmXBFv9W4U+iJOk8KNKnFrdpoSYsLJhyuZq5Q7i+dpQ92t1+T0g
-	 oTobfOigT4Ei+yHmWovs7BaS7hl1icNsdydps4PB1rxT9pEJPOaDI8tEQi6DAD+dpZ
-	 oqcCaaxHu9ecNTTGDpjHOhRjIU/HNI9qkZgTvpaE=
+	by mail.kernel.org (Postfix) with ESMTP id 3EA892067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EimbKafr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732220AbfKFQWB (ORCPT
+        id S1732232AbfKFQWF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:22:01 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53442 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728462AbfKFQWB (ORCPT
+        Wed, 6 Nov 2019 11:22:05 -0500
+Received: from mail-io1-f67.google.com ([209.85.166.67]:40111 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729392AbfKFQWE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:22:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
-        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=CGgaROaaaA1kcCTZbTkbd3PjQEAz1ZDGj0CbBNL/ZKE=; b=n8mwbBIFPWIV
-        IOq+5KYrZVB8Jg7g8chQYCTOfBw/rr6xRDmiMJlW9868HE3dxkM0wSA85ils4VPrZq3V02tFU5qPW
-        k7OqyYTYD750lvWwmNUjcAwJv0bqMfcfYK1pfuHtyJHNLONR/PUDegQ5KcT0QlHt2lRInvJFfS0vg
-        y/pF8=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iSO4C-0001pP-Rb; Wed, 06 Nov 2019 16:21:56 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5B0D82743035; Wed,  6 Nov 2019 16:21:56 +0000 (GMT)
-From:   Mark Brown <broonie@kernel.org>
-To:     Pan Bian <bianpan2016@163.com>
-Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>
-Subject: Applied "spi: img-spfi: fix potential double release" to the spi tree
-In-Reply-To: <1573007769-20131-1-git-send-email-bianpan2016@163.com>
-X-Patchwork-Hint: ignore
-Message-Id: <20191106162156.5B0D82743035@ypsilon.sirena.org.uk>
-Date:   Wed,  6 Nov 2019 16:21:56 +0000 (GMT)
+        Wed, 6 Nov 2019 11:22:04 -0500
+Received: by mail-io1-f67.google.com with SMTP id p6so27620463iod.7;
+        Wed, 06 Nov 2019 08:22:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=59XQ5SNoCKcU9R/PCRZyan3lCrtseemq8GIa0acmfkU=;
+        b=EimbKafrvHiN3BqeZxgenZgrMpxL6E4An7CLk7ZVMlUQEPlY0T0b1oU+UNFZLUKz2j
+         k5OrGyLdz9a8i5OyGiCqzCNp3/JA+iPYUNBmVa25SO237Jn3SGbT+D3VuAlDm94BFF+3
+         pWBnQC+oXjBVTV9ecmFbZJwsM+UupVvXMQ7CrLWqtWXk0tK5X7WMLyruIv48PyK1yz44
+         Fxbwl4/C53ZI61tzw4wzR1AifUolw3CeZWC2jqHBdIRytGo1jY435GE5rpcgLS70Q57v
+         e8Tu149y9QKlxAkvgLd+ubV6GKlcXlFlSEa2p8xneHKzQiNN8/XmTNMWOu2qd28VR27r
+         rYTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=59XQ5SNoCKcU9R/PCRZyan3lCrtseemq8GIa0acmfkU=;
+        b=fv6uAZOM/K//QwwNFnlb+n+Aw7yBfx5MPK/GFEGNF5O1Be82sXqMfiOiR613KzkomY
+         iIhD1kw7qjgXIY4ZcUHGJsqE8og8QotihI9uIYmu10afKozNrrX9q/7NUvpDwjuwps0G
+         i8SbwJ3cQwmKymfmSEMFWUBhJY52iPi4rJ4zQBw6VWqOSR/ZAV23olheUeGWDfZqltF2
+         MRNM0it3CfV2TkkPtKdH/DyiZDLhcP+NL1VMP05pl0R/NnFpvMmZ3tzl7KoqrzrpMeJu
+         3OT57AQM03jv6Ez254tlg0znBzmMhH8JWHjZo3b2i2zut07nWs+EfZuktX/9R62ZUqLj
+         wkKg==
+X-Gm-Message-State: APjAAAX5I5Gj1vdfUq0y4I5C+F1etR065r54caxpFGIOqwZElKaV6J5L
+        oyB1MxtrZakoR3CtOOGYyfnnTD86jUinRGWq8i4=
+X-Google-Smtp-Source: APXvYqxLQgzXURaBRHPl1cBxULqCnEVqzdjEhkfMTD9htL1WTWIPDSZgvCkH+7/0Q5VQWQnNrR+kAlIJPF81zjHKrxI=
+X-Received: by 2002:a5e:8c0a:: with SMTP id n10mr5241548ioj.78.1573057323206;
+ Wed, 06 Nov 2019 08:22:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20191106142308.10511-1-aford173@gmail.com> <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
+In-Reply-To: <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
+From:   Adam Ford <aford173@gmail.com>
+Date:   Wed, 6 Nov 2019 10:21:52 -0600
+Message-ID: <CAHCN7xLRJ8y7039iiCbrm5ZxgXyEdKtubYNNr8TcSBDHDNEENg@mail.gmail.com>
+Subject: Re: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
+To:     Marco Felsch <m.felsch@pengutronix.de>
+Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch
+On Wed, Nov 6, 2019 at 10:18 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
+>
+> Hi Adam,
+>
+> On 19-11-06 08:23, Adam Ford wrote:
+> > The LCD used with the imx6q-logicpd board has an integrated
+> > ili2117a touch controller connected to i2c1.
+> >
+> > This patch adds the node to enable this feature.
+> >
+> > Signed-off-by: Adam Ford <aford173@gmail.com>
+> > ---
+> > ili2117 support is scheduled to be introduced for Kernel v5.5.
+> >
+> > V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
+> >
+> > diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
+> > index d96ae54be338..7a3d1d3e54a9 100644
+> > --- a/arch/arm/boot/dts/imx6q-logicpd.dts
+> > +++ b/arch/arm/boot/dts/imx6q-logicpd.dts
+> > @@ -73,6 +73,16 @@
+> >       status = "okay";
+> >  };
+> >
+> > +&i2c1 {
+> > +     touchscreen@26 {
+> > +             compatible = "ilitek,ili2117";
+> > +             reg = <0x26>;
+> > +             pinctrl-names = "default";
+> > +             pinctrl-0 = <&pinctrl_touchscreen>;
+>
+> This phandle already exists?
 
-   spi: img-spfi: fix potential double release
+Yes it does exist, but it probably should not have been since there
+was no user of it.  At least this fixes that.  :-)
 
-has been applied to the spi tree at
+adam
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
-From e9a8ba9769a0e354341bc6cc01b98aadcea1dfe9 Mon Sep 17 00:00:00 2001
-From: Pan Bian <bianpan2016@163.com>
-Date: Wed, 6 Nov 2019 10:36:09 +0800
-Subject: [PATCH] spi: img-spfi: fix potential double release
-
-The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
-are released. As a result, they will be released again, either on the
-error handling branch in the same function or in the corresponding
-remove function, i.e. img_spfi_remove(). This patch fixes the bug by
-setting the two members to NULL.
-
-Signed-off-by: Pan Bian <bianpan2016@163.com>
-Link: https://lore.kernel.org/r/1573007769-20131-1-git-send-email-bianpan2016@163.com
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- drivers/spi/spi-img-spfi.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
-index 439b01e4a2c8..f4a8f470aecc 100644
---- a/drivers/spi/spi-img-spfi.c
-+++ b/drivers/spi/spi-img-spfi.c
-@@ -673,6 +673,8 @@ static int img_spfi_probe(struct platform_device *pdev)
- 			dma_release_channel(spfi->tx_ch);
- 		if (spfi->rx_ch)
- 			dma_release_channel(spfi->rx_ch);
-+		spfi->tx_ch = NULL;
-+		spfi->rx_ch = NULL;
- 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
- 	} else {
- 		master->dma_tx = spfi->tx_ch;
--- 
-2.20.1
-
+>
+> Regards,
+>   Marco
+>
+> > +             interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
+> > +     };
+> > +};
+> > +
+> >  &ldb {
+> >       status = "okay";
+> >
+> > --
+> > 2.20.1
+> >
+> >
+> >
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
