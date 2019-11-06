@@ -2,142 +2,201 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1173C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 560F2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5E22214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24FDD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:02:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731045AbfKFMCF (ORCPT
+        id S1731466AbfKFMCI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:02:05 -0500
-Received: from mga07.intel.com ([134.134.136.100]:36492 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727391AbfKFMCF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:02:05 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga008.jf.intel.com ([10.7.209.65])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 04:02:04 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
-   d="scan'208";a="196184483"
-Received: from ahunter-desktop.fi.intel.com (HELO [10.237.72.197]) ([10.237.72.197])
-  by orsmga008.jf.intel.com with ESMTP; 06 Nov 2019 04:02:01 -0800
-Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
- complete data requests if needed
-To:     Baolin Wang <baolin.wang@linaro.org>
-Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
-        Orson Zhai <orsonzhai@gmail.com>,
-        Chunyan Zhang <zhang.lyra@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <cover.1572326519.git.baolin.wang@linaro.org>
- <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
- <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com>
- <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
-From:   Adrian Hunter <adrian.hunter@intel.com>
-Organization: Intel Finland Oy, Registered Address: PL 281, 00181 Helsinki,
- Business Identity Code: 0357606 - 4, Domiciled in Helsinki
-Message-ID: <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com>
-Date:   Wed, 6 Nov 2019 14:01:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 07:02:08 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:33208 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731225AbfKFMCH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 07:02:07 -0500
+Received: from floko.floko.floko (unknown [IPv6:2804:431:c7f1:970a:5c8b:9def:467e:dc3f])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: koike)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id CFE3128DC3B;
+        Wed,  6 Nov 2019 12:01:58 +0000 (GMT)
+From:   Helen Koike <helen.koike@collabora.com>
+To:     linux-rockchip@lists.infradead.org
+Cc:     linux-media@vger.kernel.org, eddie.cai.linux@gmail.com,
+        mchehab@kernel.org, heiko@sntech.de, gregkh@linuxfoundation.org,
+        jeffy.chen@rock-chips.com, zyc@rock-chips.com,
+        linux-kernel@vger.kernel.org, tfiga@chromium.org,
+        hans.verkuil@cisco.com, laurent.pinchart@ideasonboard.com,
+        sakari.ailus@linux.intel.com, kernel@collabora.com,
+        ezequiel@collabora.com, linux-arm-kernel@lists.infradead.org,
+        zhengsq@rock-chips.com, Helen Koike <helen.koike@collabora.com>
+Subject: [PATCH v9 0/4] Rockchip ISP Driver
+Date:   Wed,  6 Nov 2019 09:01:28 -0300
+Message-Id: <20191106120132.6876-1-helen.koike@collabora.com>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-In-Reply-To: <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 6/11/19 12:48 PM, Baolin Wang wrote:
-> On Wed, 6 Nov 2019 at 18:10, Adrian Hunter <adrian.hunter@intel.com> wrote:
->>
->> On 29/10/19 7:43 AM, Baolin Wang wrote:
->>> When using the host software queue, it will trigger the next request in
->>> irq handler without a context switch. But the sdhci_request() can not be
->>> called in interrupt context when using host software queue for some host
->>> drivers, due to the get_cd() ops can be sleepable.
->>>
->>> But for some host drivers, such as Spreadtrum host driver, the card is
->>> nonremovable, so the get_cd() ops is not sleepable, which means we can
->>> complete the data request and trigger the next request in irq handler
->>> to remove the context switch for the Spreadtrum host driver.
->>>
->>> Thus we still need introduce a variable in struct sdhci_host to indicate
->>> that we will always to defer to complete data requests if the sdhci_request()
->>> can not be called in interrupt context for some host drivers, when using
->>> the host software queue.
->>>
->>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
->>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
->>> ---
->>>  drivers/mmc/host/sdhci.c |    2 +-
->>>  drivers/mmc/host/sdhci.h |    1 +
->>>  2 files changed, 2 insertions(+), 1 deletion(-)
->>>
->>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
->>> index 850241f..9cf2130 100644
->>> --- a/drivers/mmc/host/sdhci.c
->>> +++ b/drivers/mmc/host/sdhci.c
->>> @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct sdhci_host *host,
->>>  {
->>>       struct mmc_data *data = mrq->data;
->>>
->>> -     return host->pending_reset ||
->>> +     return host->pending_reset || (host->always_defer_done && data) ||
+Hello,
 
-To move ahead in the meantime without a new host API, just defer always i.e.
+I'm submitting v9 of the Rockchip ISP driver to staging this time.
 
-+     return host->pending_reset || host->always_defer_done ||
+The main reason is that people are already using it from the mailing
+list (including libcamera), and having it mainlined makes the workflow
+easier. Also, it is easier for other people to contribute back (with code
+or testing the driver).
 
->>
->> I didn't realize you still wanted to call the request function in interrupt
->> context.  In my view that needs a new host API
->> i.e. int (*request_atomic)(struct mmc_host *mmc, struct mmc_request *mrq)
-> 
-> Actually there are no documentation said that the
-> mmc_host_ops->request() is a sleepable API, so I introduce a
-> host->always_defer_done flag to decide if the request can be called in
-> interrupt context or not, since for some host drivers, the request()
-> implementation can be called in interrupt context.
-> 
-> Yes, I agree a new host API is more reasonable, if you do not like the
-> current approach, I can add new patches to introduce the new
-> request_atomic() API. But can I create another separate patch set to
-> do this? since in this patch set, the Spreadtrum host driver's
-> request() implementation can be called in interrupt context. Or you
-> still want these changes introducing new request_atomic() can be done
-> in this patch set? Thanks.
-> 
->>
->>>              ((host->flags & SDHCI_REQ_USE_DMA) && data &&
->>>               data->host_cookie == COOKIE_MAPPED);
->>>  }
->>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
->>> index d89cdb9..38fbd18 100644
->>> --- a/drivers/mmc/host/sdhci.h
->>> +++ b/drivers/mmc/host/sdhci.h
->>> @@ -533,6 +533,7 @@ struct sdhci_host {
->>>       bool pending_reset;     /* Cmd/data reset is pending */
->>>       bool irq_wake_enabled;  /* IRQ wakeup is enabled */
->>>       bool v4_mode;           /* Host Version 4 Enable */
->>> +     bool always_defer_done; /* Always defer to complete data requests */
->>>
->>>       struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
->>>       struct mmc_command *cmd;        /* Current command */
->>>
->>
-> 
-> 
+We plan to actively work on this driver to get it our of staging.
+
+I squashed the patches in a single commit. The previous series
+splitted the commits by files, but since they had dependencies
+on each other, it was harder to review.
+
+This patchset is also available at:
+https://gitlab.collabora.com/koike/linux/tree/rockchip/isp/v9
+
+Libcamera patched to work with this version:
+https://gitlab.collabora.com/koike/libcamera
+(also sent to the mailing list)
+
+Thanks
+Helen
+
+Changes in v9:
+* dphy
+	- Move to staging
+	- replace memcpy by a directly assignment
+	- remove unecessary ret variable in rockchip_dphy_init
+	- s/0x1/1
+	- s/0x0/0
+	- coding style changes
+	- dphy_reg variable sizes
+	- variables from int to unsigned int
+	- rename functions to start with rk_
+	- rename dphy0 to rx
+	- fix hardcoded lane0 usage
+	- disable rx on power off
+	- general cleanups of unused variables
+	- Move to staging
+	- Previous patch series had a patch for file and the last commit would
+	add the Makefile bits to make it compile. But one file was dependent on
+	each other, so it doesn't make much sense to have a patch for each file
+	and it doesn't make it easier to review.
+* capture.c
+        - replace v4l2_{dgb,info,warn,err} by dev_*
+* isp_stats.c
+        - replace v4l2_{dgb,info,warn,err} by dev_*
+        - remove LOG_ISR_EXE_TIME ifndef's
+        - constify ops structs
+        - s/strlcpy/strscpy
+        - add missing mutex_destroy() calls in rkisp1_register_stats_vdev error path
+* rkisp1.c:
+        - replace v4l2_{dgb,info,warn,err} by dev_*
+        - fix error returned in link_validate
+        - remove s_power() callback
+        - add regwrite/regread wrappers
+        - add macros RKISP1_DEF_SRC_PAD_FMT/RKISP1_DEF_SINK_PAD_FMT
+        - several minor cleanups
+        - s/RKISP1_ISP_PAD_SINK([^_])/RKISP1_ISP_PAD_SINK_VIDEO\1/
+        - merge tables rkisp1_isp_input_formats and rkisp1_isp_output_formats
+        - in_fmt and out_fmt as pointers
+        - simply struct rkisp1_isp_subdev to work correctly with try format
+        - fix crop/fmt propagation
+* dev.h / dev.c / regs.c / regs.h / common.h
+        - replace v4l2_{dgb,info,warn,err} by dev_*
+        - s/pr_info/dev_dbg
+        - s/int size/unsigned int size
+        - remove module param rkisp1_debug
+        - coding style fixes
+        - fix error in subdev_notifier_bound, check dphy before assigning to sensor->dphy
+        - remove subdevs fixed size array from rkisp1_pipeline
+        - remove sensors list, as it can be identified from the media topology
+        - Kconfig: add COMPILE_TEST in the dependency
+        - use v4l2_pipeline_pm_use and remove _isp_pipeline_s_power() and _subdev_set_power()
+        - remove struct rkisp1_pipeline and retrieve pipeline information from the media framework
+        - remove remaining rk3288 code
+        - cache pixel rate control in sctruct sensor_async_subdev
+        - remove enum rkisp1_sd_type
+
+Please see a more complete history of changes at
+https://patchwork.kernel.org/cover/11066499/
+
+Helen Koike (3):
+  media: staging: phy-rockchip-dphy: add Rockchip MIPI Synopsys DPHY
+    driver
+  media: staging: rkisp1: add Rockchip ISP1 driver
+  MAINTAINERS: add entry for Rockchip ISP1 driver
+
+Shunqian Zheng (1):
+  media: videodev2.h, v4l2-ioctl: add rkisp1 meta buffer format
+
+ MAINTAINERS                                   |    6 +
+ drivers/media/v4l2-core/v4l2-ioctl.c          |    2 +
+ drivers/staging/media/Kconfig                 |    4 +
+ drivers/staging/media/Makefile                |    2 +
+ .../staging/media/phy-rockchip-dphy/Kconfig   |   11 +
+ .../staging/media/phy-rockchip-dphy/Makefile  |    2 +
+ drivers/staging/media/phy-rockchip-dphy/TODO  |    6 +
+ .../phy-rockchip-dphy/phy-rockchip-dphy.c     |  400 ++++
+ .../bindings/media/rockchip-isp1.txt          |   71 +
+ .../bindings/media/rockchip-mipi-dphy.txt     |   38 +
+ .../uapi/v4l/pixfmt-meta-rkisp1-params.rst    |   23 +
+ .../uapi/v4l/pixfmt-meta-rkisp1-stat.rst      |   22 +
+ drivers/staging/media/rkisp1/Kconfig          |   13 +
+ drivers/staging/media/rkisp1/Makefile         |    7 +
+ drivers/staging/media/rkisp1/TODO             |   20 +
+ drivers/staging/media/rkisp1/capture.c        | 1869 +++++++++++++++++
+ drivers/staging/media/rkisp1/capture.h        |  164 ++
+ drivers/staging/media/rkisp1/common.h         |   98 +
+ drivers/staging/media/rkisp1/dev.c            |  439 ++++
+ drivers/staging/media/rkisp1/dev.h            |   67 +
+ drivers/staging/media/rkisp1/isp_params.c     | 1604 ++++++++++++++
+ drivers/staging/media/rkisp1/isp_params.h     |   50 +
+ drivers/staging/media/rkisp1/isp_stats.c      |  494 +++++
+ drivers/staging/media/rkisp1/isp_stats.h      |   60 +
+ drivers/staging/media/rkisp1/regs.c           |  224 ++
+ drivers/staging/media/rkisp1/regs.h           | 1525 ++++++++++++++
+ drivers/staging/media/rkisp1/rkisp1.c         | 1246 +++++++++++
+ drivers/staging/media/rkisp1/rkisp1.h         |   97 +
+ .../staging/media/rkisp1/uapi/rkisp1-config.h |  815 +++++++
+ include/uapi/linux/videodev2.h                |    4 +
+ 30 files changed, 9383 insertions(+)
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Kconfig
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/Makefile
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/TODO
+ create mode 100644 drivers/staging/media/phy-rockchip-dphy/phy-rockchip-dphy.c
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-isp1.txt
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/devicetree/bindings/media/rockchip-mipi-dphy.txt
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-params.rst
+ create mode 100644 drivers/staging/media/rkisp1/Documentation/media/uapi/v4l/pixfmt-meta-rkisp1-stat.rst
+ create mode 100644 drivers/staging/media/rkisp1/Kconfig
+ create mode 100644 drivers/staging/media/rkisp1/Makefile
+ create mode 100644 drivers/staging/media/rkisp1/TODO
+ create mode 100644 drivers/staging/media/rkisp1/capture.c
+ create mode 100644 drivers/staging/media/rkisp1/capture.h
+ create mode 100644 drivers/staging/media/rkisp1/common.h
+ create mode 100644 drivers/staging/media/rkisp1/dev.c
+ create mode 100644 drivers/staging/media/rkisp1/dev.h
+ create mode 100644 drivers/staging/media/rkisp1/isp_params.c
+ create mode 100644 drivers/staging/media/rkisp1/isp_params.h
+ create mode 100644 drivers/staging/media/rkisp1/isp_stats.c
+ create mode 100644 drivers/staging/media/rkisp1/isp_stats.h
+ create mode 100644 drivers/staging/media/rkisp1/regs.c
+ create mode 100644 drivers/staging/media/rkisp1/regs.h
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1.c
+ create mode 100644 drivers/staging/media/rkisp1/rkisp1.h
+ create mode 100644 drivers/staging/media/rkisp1/uapi/rkisp1-config.h
+
+-- 
+2.22.0
 
