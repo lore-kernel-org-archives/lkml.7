@@ -2,89 +2,97 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB63BC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CB21C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B09242187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573059396;
-	bh=U2nsQMfV/CP9zqFEvIKsaDEwXvLJIyKfNfbdwzBjG4M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MajR9PkGPCwewho+jRHgC0PNRIxc3NXq6f2hfrKbzsg12dqB5tAlvz5v7EutlZOMZ
-	 Pp9qlIG/R6WJF4u6dmj/XsZEPGtCIei2G+fLCxFdsyDcLN7SMJ5jPM/olvPi1VL1qe
-	 ARw3orQX8uRkoxfol+9JlobGmB9lt1Bdk5qEspvo=
+	by mail.kernel.org (Postfix) with ESMTP id 237CB2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:56:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732303AbfKFQ4f (ORCPT
+        id S1732325AbfKFQ4x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:56:35 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35477 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732257AbfKFQ4f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:56:35 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z6so21440543otb.2;
-        Wed, 06 Nov 2019 08:56:34 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bKw0VnnNhxLDCfwgkMNCot+CxHtvj7koN2Tbmbg1cOw=;
-        b=fm3vTN8eRQ8DisXG10MynigUvTppWhqVDbDkU812wTUV/lv7l9bytSm6Ko8cBpIfO2
-         SgPbphbgasBw68+FshnIokXUuBjqyJx0vUu0OrDVW4JEQ0wHVv6B4+x0zhxT7ZmVFDpC
-         TtddQqLHCjAdEL6rCJRY5b+iUkupoVgp5jXdqYFQvyQHpBvhiTTUyByHScZcX6nSiSbB
-         S2zm0ebGa+QmBA3WLarkZtCd1t+f/CQ6WPbWjzqyyDRKYQY1QleMO7X9sYRCs+5ZwYlp
-         +NzocnNu+0XTI2hciVZSuAg2PuD7CQf/MH+ohXQKvlpd/mfkd2glNGH+juxtmpRADp2h
-         Sqrw==
-X-Gm-Message-State: APjAAAWQa1IocxhqxD/c/DcwE94jOkojZgm/APBvfgeJ8UfDS2HmUrd7
-        eIoly9WoNO3RbYy6p4RWBA==
-X-Google-Smtp-Source: APXvYqxwsNDVP+nSwdBJITYQaV3J9Tytq+ZUv8LySKHZGMEWBhzTrOvwwhFD75qIHPp0+x1ihlXTRA==
-X-Received: by 2002:a05:6830:1d74:: with SMTP id l20mr2613599oti.111.1573059393967;
-        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id d205sm2583526oig.28.2019.11.06.08.56.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 08:56:33 -0800 (PST)
-Date:   Wed, 6 Nov 2019 10:56:32 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Rajendra Nayak <rnayak@codeaurora.org>
-Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
-        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mka@chromium.org,
-        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>,
-        Lina Iyer <ilina@codeaurora.org>, Marc Zyngier <maz@kernel.org>
-Subject: Re: [PATCH v4 08/14] dt-bindings: qcom,pdc: Add compatible for sc7180
-Message-ID: <20191106165632.GA15103@bogus>
-References: <20191106065017.22144-1-rnayak@codeaurora.org>
- <20191106065017.22144-9-rnayak@codeaurora.org>
+        Wed, 6 Nov 2019 11:56:53 -0500
+Received: from foss.arm.com ([217.140.110.172]:43158 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732201AbfKFQ4w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:56:52 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 375C746A;
+        Wed,  6 Nov 2019 08:56:52 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 9CC9B3F719;
+        Wed,  6 Nov 2019 08:56:50 -0800 (PST)
+Date:   Wed, 6 Nov 2019 16:56:48 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v5 4/6] sched/fair: update cpu_capcity to reflect thermal
+ pressure
+Message-ID: <20191106165646.vc7j4hbhj2hcrku4@e107158-lin.cambridge.arm.com>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-5-git-send-email-thara.gopinath@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20191106065017.22144-9-rnayak@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1572979786-20361-5-git-send-email-thara.gopinath@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 12:20:11 +0530, Rajendra Nayak wrote:
-> Add the compatible string for sc7180 SoC from Qualcomm.
+On 11/05/19 13:49, Thara Gopinath wrote:
+> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
+> pressure on a cpu means this maximum available capacity is reduced. This
+> patch reduces the average thermal pressure for a cpu from its maximum
+> available capacity so that cpu_capacity reflects the actual
+> available capacity.
 > 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Cc: Marc Zyngier <maz@kernel.org>
+> Other signals that are deducted from cpu_capacity to reflect the actual
+> capacity available are rt and dl util_avg. util_avg tracks a binary signal
+> and uses the weights 1024 and 0. Whereas thermal pressure is tracked
+> using load_avg. load_avg uses the actual "delta" capacity as the weight.
+
+I think you intended to put this as comment...
+
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 > ---
->  .../devicetree/bindings/interrupt-controller/qcom,pdc.txt      | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  kernel/sched/fair.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 9fb0494..5f6c371 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -7738,6 +7738,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+>  
+>  	used = READ_ONCE(rq->avg_rt.util_avg);
+>  	used += READ_ONCE(rq->avg_dl.util_avg);
+> +	used += READ_ONCE(rq->avg_thermal.load_avg);
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+... here?
 
-If a tag was not added on purpose, please state why and what changed.
+I find the explanation hard to parse too. Do you think you can rephrase it?
+Something based on what you wrote here would be more understandable IMHO:
+https://lore.kernel.org/lkml/5DBB05BC.40502@linaro.org/
+
+
+Thanks!
+
+--
+Qais Yousef
+
+>  
+>  	if (unlikely(used >= max))
+>  		return 1;
+> -- 
+> 2.1.4
+> 
