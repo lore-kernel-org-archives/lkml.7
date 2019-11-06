@@ -2,94 +2,122 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9AAFEC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0176C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5B87D21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EFD921848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731873AbfKFHFL (ORCPT
+        id S1731863AbfKFHFL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 6 Nov 2019 02:05:11 -0500
-Received: from esa3.mentor.iphmx.com ([68.232.137.180]:8786 "EHLO
-        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731000AbfKFHEM (ORCPT
+Received: from relmlor1.renesas.com ([210.160.252.171]:54517 "EHLO
+        relmlie5.idc.renesas.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731136AbfKFHFG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:04:12 -0500
-IronPort-SDR: dRB2aqNO4j5397tx1Bk5irvsFEsiqpsbe0pR0rAIW3u73gBKQNFp4QpeCardAukp6XPc4Wo+e1
- 2JYL0uQSYLCb6AAlIFNLNqrYFED6xKkjGvGmbmJ5unYmjYQjGFCN4JLAlhjbeBo3wr3RSP4P6/
- 2ZXF4dJHgZHte0ZDNYA9M+9Z1x5b912g7vW2uoN9TZHORS7sZkf/SGtPdsBrfHqypEA1xQlAi7
- s/Z3vrewf+ahv5/qt0hlOrFuTQuzTRf89aq5C9uytF9O/XYPl8TNdOuJct0vl4FDmxhzrWm0Eh
- /VU=
-X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
-   d="scan'208";a="42908660"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa3.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:02 -0800
-IronPort-SDR: XK5BxMdEY0Lozxy2SWgAp5XMZTXUdo8mJ3s3hv+3J3qErXV17i+SRoj8ok6Htf2KX9A6GM40Zz
- NM75U8onkHuepN0ZcZ4RSc0cNIE6xFt7XV2wdIy0MJ1bLcgJJZxaiiOeAm90/okERPQfHAY1CW
- rX5oo341X5h7ecjdYm062T4Saapp3z7qGXIBbCGYuujjFrCkWqjRxdmjhTYfu3MVuX7QKpklk7
- MporTs+JqRSFefV5sT7svd7fvHFn+E6wc8LaGTzo3HsIMJ5RhCQj9vyxbpInigzqv8UUeVOOaH
- VaE=
-From:   Jiada Wang <jiada_wang@mentor.com>
-To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
-        <nick@shmanahar.org>
-CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
-        <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v5 34/48] input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel touch panel controller in detachable displays.
-Date:   Wed, 6 Nov 2019 16:01:32 +0900
-Message-ID: <20191106070146.18759-35-jiada_wang@mentor.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
-References: <20191106070146.18759-1-jiada_wang@mentor.com>
-MIME-Version: 1.0
-Content-Type: text/plain
+        Wed, 6 Nov 2019 02:05:06 -0500
+X-IronPort-AV: E=Sophos;i="5.68,272,1569250800"; 
+   d="scan'208";a="30965352"
+Received: from unknown (HELO relmlir5.idc.renesas.com) ([10.200.68.151])
+  by relmlie5.idc.renesas.com with ESMTP; 06 Nov 2019 16:05:05 +0900
+Received: from morimoto-PC.renesas.com (unknown [10.166.18.140])
+        by relmlir5.idc.renesas.com (Postfix) with ESMTP id 5D10140031EA;
+        Wed,  6 Nov 2019 16:05:05 +0900 (JST)
+Date:   Wed, 06 Nov 2019 16:05:05 +0900
+Message-ID: <87bltph4da.wl-kuninori.morimoto.gx@renesas.com>
+From:   Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Subject: [PATCH] ASoC: soc-core: fixup dead-lock at snd_soc_unregister_component()
+User-Agent: Wanderlust/2.15.9 Emacs/24.5 Mule/6.0
+To:     Mark Brown <broonie@kernel.org>
+Cc:     "kernelci.org bot" <bot@kernelci.org>, tomeu.vizoso@collabora.com,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com, Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>, alsa-devel@alsa-project.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+MIME-Version: 1.0 (generated by SEMI-EPG 1.14.7 - "Harue")
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: keerthikumarp <Keerthikumar.Padmanabha@in.bosch.com>
+From: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 
-In case of attached display, the touchpanel reset is controlled
-via imx gpio's from  atmel driver and the delay between
-touchpanel reset and the time at which the chip becomes capable to
-communicate with the host processor, has be taken care.
+snd_soc_unregister_component() is calling snd_soc_lookup_component()
+under mutex_lock(). But, snd_soc_lookup_component() itself is using
+mutex_lock(), thus it will be dead-lock.
+This patch adds _nolocked version of it, and avoid dead-lock issue.
 
-However in case of detachable displays, the touchpanel reset is
-controlled via a deserializer gpio which is triggered just before
-the atmel driver is probed.The delay between touchpanel reset and
-the time at which the chip becomes capable to communicate (as
-specified in datasheet) was not being accounted for. This patch
-introduces that delay.
-
-Signed-off-by: keerthikumarp <Keerthikumar.Padmanabha@in.bosch.com>
-Signed-off-by: George G. Davis <george_davis@mentor.com>
-Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+Fixes: ac6a4dd3e9f0("ASoC: soc-core: use snd_soc_lookup_component() at snd_soc_unregister_component()")
+Reported-by: "kernelci.org bot" <bot@kernelci.org>"
+Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 4 ++++
- 1 file changed, 4 insertions(+)
+> Please double check/test it.
 
-diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index f357d353447f..835cc7a29c2f 100644
---- a/drivers/input/touchscreen/atmel_mxt_ts.c
-+++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -4112,6 +4112,10 @@ static int mxt_probe(struct i2c_client *client, const struct i2c_device_id *id)
- 		msleep(MXT_RESET_GPIO_TIME);
- 		gpiod_set_value(data->reset_gpio, 1);
- 		msleep(MXT_RESET_INVALID_CHG);
-+	} else {
-+		dev_dbg(&client->dev,
-+			"atmel reset pin not found in device tree");
-+		msleep(MXT_RESET_TIME);
- 	}
+ sound/soc/soc-core.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index cc59687..94f1078 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -356,14 +356,13 @@ struct snd_soc_component *snd_soc_rtdcom_lookup(struct snd_soc_pcm_runtime *rtd,
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_rtdcom_lookup);
  
- 	error = mxt_initialize(data);
+-struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
+-						   const char *driver_name)
++static struct snd_soc_component
++*snd_soc_lookup_component_nolocked(struct device *dev, const char *driver_name)
+ {
+ 	struct snd_soc_component *component;
+ 	struct snd_soc_component *found_component;
+ 
+ 	found_component = NULL;
+-	mutex_lock(&client_mutex);
+ 	for_each_component(component) {
+ 		if ((dev == component->dev) &&
+ 		    (!driver_name ||
+@@ -373,10 +372,21 @@ struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
+ 			break;
+ 		}
+ 	}
+-	mutex_unlock(&client_mutex);
+ 
+ 	return found_component;
+ }
++
++struct snd_soc_component *snd_soc_lookup_component(struct device *dev,
++						   const char *driver_name)
++{
++	struct snd_soc_component *component;
++
++	mutex_lock(&client_mutex);
++	component = snd_soc_lookup_component_nolocked(dev, driver_name);
++	mutex_unlock(&client_mutex);
++
++	return component;
++}
+ EXPORT_SYMBOL_GPL(snd_soc_lookup_component);
+ 
+ struct snd_pcm_substream *snd_soc_get_dai_substream(struct snd_soc_card *card,
+@@ -2853,7 +2863,7 @@ void snd_soc_unregister_component(struct device *dev)
+ 
+ 	mutex_lock(&client_mutex);
+ 	while (1) {
+-		component = snd_soc_lookup_component(dev, NULL);
++		component = snd_soc_lookup_component_nolocked(dev, NULL);
+ 		if (!component)
+ 			break;
+ 
 -- 
-2.17.1
+2.7.4
 
