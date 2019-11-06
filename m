@@ -2,52 +2,73 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD601C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93D12C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:46:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A1DC217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 689F62178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:46:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mm9eG5iW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732508AbfKFShv (ORCPT
+        id S1728354AbfKFSqF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:37:51 -0500
-Received: from mo4-p02-ob.smtp.rzone.de ([81.169.146.168]:8448 "EHLO
-        mo4-p02-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727169AbfKFSht (ORCPT
+        Wed, 6 Nov 2019 13:46:05 -0500
+Received: from mail-qv1-f65.google.com ([209.85.219.65]:44344 "EHLO
+        mail-qv1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfKFSqF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:37:49 -0500
-X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8PvtBNfIQ=="
-X-RZG-CLASS-ID: mo00
-Received: from localhost.localdomain
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id e07688vA6IbkhoV
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Wed, 6 Nov 2019 19:37:46 +0100 (CET)
-From:   Stephan Gerhold <stephan@gerhold.net>
-To:     Jonathan Cameron <jic23@kernel.org>
-Cc:     Hartmut Knaack <knaack.h@gmx.de>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Brian Masney <masneyb@onstation.org>,
-        Jonathan Marek <jonathan@marek.ca>,
-        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
-        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
-Subject: [PATCH 2/2] iio: imu: mpu6050: Add support for vdd-supply regulator
-Date:   Wed,  6 Nov 2019 19:35:36 +0100
-Message-Id: <20191106183536.123070-2-stephan@gerhold.net>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106183536.123070-1-stephan@gerhold.net>
-References: <20191106183536.123070-1-stephan@gerhold.net>
+        Wed, 6 Nov 2019 13:46:05 -0500
+Received: by mail-qv1-f65.google.com with SMTP id h3so1863929qvu.11;
+        Wed, 06 Nov 2019 10:46:04 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqKVR8+28xX8jn1ajKOvJmCoNPe5YW5nnfJvLZP2QFA=;
+        b=mm9eG5iWo3edDJ5Q6P3hPOxVep5q2K3KjbsWIEMNuVcWmLT0v51xRqYkA+77cgFTAm
+         AkqWkSfXJILEUzBCTxogMOMUYi/kgJOs3UrW/GFbwEZtNN69rp4jt0F3SplaXx2fILs5
+         LDWHdNz/sR5YodJ7v1RQWj6VbAd/WwmyUnhwXDwGA5aT96Q/BM79AcAvNXVXyISLL1hc
+         2BsMQvg/v7UzH8JlMrqMXxJ4yyUk5QGTK39rZ0el5EIZ9SZIW8Wir1EELgTxZh7jEtpz
+         /PwNvxEhdBzRK/jqFOQG4IY6BTDfKQg4raEiDuMzq75L8OLjyImBcbiC8m94Zg/vj9P8
+         CKXg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=xqKVR8+28xX8jn1ajKOvJmCoNPe5YW5nnfJvLZP2QFA=;
+        b=g3u3edmWaWlRTpcr+JHJY5LPWUfGy0r1vH4xzI5TyfrqcP1PvG+TFm3nMu8rQKDsmx
+         u0rLDthm7e1lwdmwe0fFwjTxV7Ta9+TUiD1PPdKn/qLpjPaGEbyNulBSbEoc/KiVbWvF
+         cLm9fqyy/ASFUM2m1u7EnA5I6dRvgVHDLl2F+uu+L7L5U4iCs6FfqehsVTOsgid9pM5y
+         DjHCIr1fcMLBwNhvlTOjcupD3oVAYgBN1WZwj+5NfeQtASwO7Ns2F1ZP5sBioxUvaP1i
+         6dEsevdrvtszB4NVFUOk5G1xNefvn2qHyAWhK9epQNE28GQDkx9CUqnRUBh8izDTEfIZ
+         Lmpw==
+X-Gm-Message-State: APjAAAW8kuYH7LVNJWLhYH7i0zDVNEi73Vf7B92SkGTQ8imNwSsRXTM/
+        C5teGpC+pc3oEL/rkMMRA6ikBnh/SBsWcg==
+X-Google-Smtp-Source: APXvYqwcr92g+ImNjq8gjyE9YsbjIoCi8Q5957/WEcZP2A43LYQ7q7Wa7mNdy5c/Qon9X06VYNo/Og==
+X-Received: by 2002:ad4:4201:: with SMTP id k1mr3768993qvp.33.1573065964124;
+        Wed, 06 Nov 2019 10:46:04 -0800 (PST)
+Received: from localhost.localdomain ([2804:14d:72b1:8920:a2ce:f815:f14d:bfac])
+        by smtp.gmail.com with ESMTPSA id o1sm13977350qtb.82.2019.11.06.10.46.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 10:46:03 -0800 (PST)
+From:   "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
+X-Google-Original-From: Daniel W. S. Almeida
+To:     mchehab@kernel.org, rfontana@redhat.com,
+        gregkh@linuxfoundation.org, allison@lohutok.net,
+        kstewart@linuxfoundation.org, tglx@linutronix.de
+Cc:     "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>,
+        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        skhan@linuxfoundation.org
+Subject: [PATCH] media: dvb_dummy_fe: place EXPORT_SYMBOL below corresponding function
+Date:   Wed,  6 Nov 2019 15:37:16 -0300
+Message-Id: <20191106183716.29170-1-dwlsalmeida@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -55,106 +76,50 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MPU6050 has two power supply pins: VDD and VLOGIC, but the mpu6050
-only supports enabling one of them at the moment. In some cases,
-they may need to be enabled separately.
+From: "Daniel W. S. Almeida" <dwlsalmeida@gmail.com>
 
-Add an additional "vdd-supply", but keep the code simple by making
-the driver use the regulator bulk API. This actually allows further
-simplifying the code since regulator_bulk_* already logs the errors
-for us.
-
-Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+Suggested-by: Shuah Khan <skhan@linuxfoundation.org>
+Signed-off-by: Daniel W. S. Almeida <dwlsalmeida@gmail.com>
 ---
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 30 +++++++---------------
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  5 ++--
- 2 files changed, 12 insertions(+), 23 deletions(-)
+ drivers/media/dvb-frontends/dvb_dummy_fe.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 354030e9bed5..8e50dbcd730b 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -1144,11 +1144,8 @@ static int inv_mpu_core_enable_regulator(struct inv_mpu6050_state *st)
- {
- 	int result;
- 
--	result = regulator_enable(st->vddio_supply);
--	if (result) {
--		dev_err(regmap_get_device(st->map),
--			"Failed to enable regulator: %d\n", result);
--	} else {
-+	result = regulator_bulk_enable(ARRAY_SIZE(st->supplies), st->supplies);
-+	if (result == 0) {
- 		/* Give the device a little bit of time to start up. */
- 		usleep_range(35000, 70000);
- 	}
-@@ -1158,14 +1155,7 @@ static int inv_mpu_core_enable_regulator(struct inv_mpu6050_state *st)
- 
- static int inv_mpu_core_disable_regulator(struct inv_mpu6050_state *st)
- {
--	int result;
--
--	result = regulator_disable(st->vddio_supply);
--	if (result)
--		dev_err(regmap_get_device(st->map),
--			"Failed to disable regulator: %d\n", result);
--
--	return result;
-+	return regulator_bulk_disable(ARRAY_SIZE(st->supplies), st->supplies);
+diff --git a/drivers/media/dvb-frontends/dvb_dummy_fe.c b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+index 4db679cb70ad..909dac2345c4 100644
+--- a/drivers/media/dvb-frontends/dvb_dummy_fe.c
++++ b/drivers/media/dvb-frontends/dvb_dummy_fe.c
+@@ -121,6 +121,7 @@ struct dvb_frontend* dvb_dummy_fe_ofdm_attach(void)
+ 	state->frontend.demodulator_priv = state;
+ 	return &state->frontend;
  }
++EXPORT_SYMBOL(dvb_dummy_fe_ofdm_attach);
  
- static void inv_mpu_core_disable_regulator_action(void *_data)
-@@ -1239,14 +1229,12 @@ int inv_mpu_core_probe(struct regmap *regmap, int irq, const char *name,
- 		return -EINVAL;
- 	}
+ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops;
  
--	st->vddio_supply = devm_regulator_get(dev, "vddio");
--	if (IS_ERR(st->vddio_supply)) {
--		if (PTR_ERR(st->vddio_supply) != -EPROBE_DEFER)
--			dev_err(dev, "Failed to get vddio regulator %d\n",
--				(int)PTR_ERR(st->vddio_supply));
+@@ -138,6 +139,7 @@ struct dvb_frontend *dvb_dummy_fe_qpsk_attach(void)
+ 	state->frontend.demodulator_priv = state;
+ 	return &state->frontend;
+ }
++EXPORT_SYMBOL(dvb_dummy_fe_qpsk_attach);
+ 
+ static const struct dvb_frontend_ops dvb_dummy_fe_qam_ops;
+ 
+@@ -155,6 +157,7 @@ struct dvb_frontend *dvb_dummy_fe_qam_attach(void)
+ 	state->frontend.demodulator_priv = state;
+ 	return &state->frontend;
+ }
++EXPORT_SYMBOL(dvb_dummy_fe_qam_attach);
+ 
+ static const struct dvb_frontend_ops dvb_dummy_fe_ofdm_ops = {
+ 	.delsys = { SYS_DVBT },
+@@ -253,7 +256,3 @@ static const struct dvb_frontend_ops dvb_dummy_fe_qpsk_ops = {
+ MODULE_DESCRIPTION("DVB DUMMY Frontend");
+ MODULE_AUTHOR("Emard");
+ MODULE_LICENSE("GPL");
 -
--		return PTR_ERR(st->vddio_supply);
--	}
-+	st->supplies[0].supply = "vdd";
-+	st->supplies[1].supply = "vddio";
-+	result = devm_regulator_bulk_get(dev, ARRAY_SIZE(st->supplies),
-+					 st->supplies);
-+	if (result)
-+		return result;
- 
- 	result = inv_mpu_core_enable_regulator(st);
- 	if (result)
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index 52fcf45050a5..96cbd7f2b4b3 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -12,6 +12,7 @@
- #include <linux/iio/iio.h>
- #include <linux/iio/buffer.h>
- #include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/iio/sysfs.h>
- #include <linux/iio/kfifo_buf.h>
- #include <linux/iio/trigger.h>
-@@ -130,7 +131,7 @@ struct inv_mpu6050_hw {
-  *  @chip_period:	chip internal period estimation (~1kHz).
-  *  @it_timestamp:	timestamp from previous interrupt.
-  *  @data_timestamp:	timestamp for next data sample.
-- *  @vddio_supply	voltage regulator for the chip.
-+ *  @supplies:		voltage regulators for the chip.
-  *  @magn_disabled:     magnetometer disabled for backward compatibility reason.
-  *  @magn_raw_to_gauss:	coefficient to convert mag raw value to Gauss.
-  *  @magn_orient:       magnetometer sensor chip orientation if available.
-@@ -154,7 +155,7 @@ struct inv_mpu6050_state {
- 	s64 chip_period;
- 	s64 it_timestamp;
- 	s64 data_timestamp;
--	struct regulator *vddio_supply;
-+	struct regulator_bulk_data supplies[2];
- 	bool magn_disabled;
- 	s32 magn_raw_to_gauss[3];
- 	struct iio_mount_matrix magn_orient;
+-EXPORT_SYMBOL(dvb_dummy_fe_ofdm_attach);
+-EXPORT_SYMBOL(dvb_dummy_fe_qam_attach);
+-EXPORT_SYMBOL(dvb_dummy_fe_qpsk_attach);
 -- 
-2.23.0
+2.24.0
 
