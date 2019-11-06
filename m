@@ -2,276 +2,251 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4F1FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:19:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24928FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE9E92178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:19:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D7B85217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:20:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ti/x39hU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfKFXTi (ORCPT
+        id S1732548AbfKFXUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:19:38 -0500
-Received: from relay3-d.mail.gandi.net ([217.70.183.195]:39721 "EHLO
-        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfKFXTi (ORCPT
+        Wed, 6 Nov 2019 18:20:23 -0500
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:34791 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727296AbfKFXUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:19:38 -0500
-X-Originating-IP: 92.184.100.196
-Received: from localhost (unknown [92.184.100.196])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 9FD0660002;
-        Wed,  6 Nov 2019 23:19:26 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 00:19:23 +0100
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Steve Muckle <smuckle@google.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        kernel-team@android.com
-Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
-Message-ID: <20191106231923.GK8309@piout.net>
-References: <20191106194625.116692-1-smuckle@google.com>
+        Wed, 6 Nov 2019 18:20:23 -0500
+Received: by mail-oi1-f193.google.com with SMTP id l202so299073oig.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 15:20:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nB9aWq+Y/LCuEgsvayS807omBQanlFOOtFCdR/UCom0=;
+        b=ti/x39hUAOa/flTP+ItdW5Cgpw3yOlbkXOIBPu7hUAOD8eIQE8iqCpg+Qo5mbIYyQ0
+         rDM/8o8Nj3MMwEvZJHuL+ImWQVjM7kmJV+J8ysJd/Pr3sVLvRMJ5m8Myy1s/VOtPil69
+         5VqJyg1VCC0JTWp+/VUUam85eNbeNTQ0KibURYFkHx2+JihjUuQRu7NmW2ufLWNOXB1h
+         o2coM9phOW0hrxwqvj1i0aYOSvaczotjWQpI4FeB7K757krqfUXLK4zj6QXY1jD8u4mc
+         q8O5Seav7VH9bZaKnEsImh5Wa6FYDyCFU22tTZNHODdN1wnz14Jn11bntGpI+Kiu4BLP
+         NbjQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nB9aWq+Y/LCuEgsvayS807omBQanlFOOtFCdR/UCom0=;
+        b=O/aLLWQ5lpd62fS3rQo5/SJFoCa2dGWpY6oQa69Khs3/nD7ECPLVl/N9aMx6A430cG
+         QYY3Qd8NStFPrLu9Iz54+GBcFSg/iExdDQ9UdWEK8I3ePhhuksQXfRQMr16anwLxohd7
+         6ochLbDX2xo3D6UHaYSI5Eo7Z+a58z5L9Iytbdk6WBy1fzRj7WIr+Ic78sI0FMTB7mp0
+         9m3pEJ9lFt6Wjqd/qVoqKECwwFCpd/DmVgoJ4nl7cr+NsMs5GkrGadcwU3bN2SZUXU5j
+         /p/ROnxrewgrXBQ1MoIujqe9P48nznp9I0rGdYmVIIvcX7pfNUQMqz0F2LnrKyVkiu7K
+         kXwA==
+X-Gm-Message-State: APjAAAW94TR2qSBwzEFYIrEBLUcwWHbklhH/YT4MDiRKplXMUn59uvEJ
+        oGk7bozd/H8jvJTZFhlugtu3I3ai/UNCgmxC3gNmGw==
+X-Google-Smtp-Source: APXvYqwJq+UE9XqNqMgjEwBspF4w4dYGlUGrRq/h+xwpLVNRM3/gq6FOVPXrJrjRALFSJMuRsW5fprLdEemp6WUx2Y8=
+X-Received: by 2002:aca:ad52:: with SMTP id w79mr476508oie.149.1573082422013;
+ Wed, 06 Nov 2019 15:20:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106194625.116692-1-smuckle@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-2-sean.j.christopherson@intel.com> <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+ <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+In-Reply-To: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 6 Nov 2019 15:20:11 -0800
+Message-ID: <CAPcyv4hMOxPDKAZtTvWKEMPBwE_kPrKPB_JxE2YfV5EKkKj_dQ@mail.gmail.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being reserved
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 6, 2019 at 1:10 PM Paolo Bonzini <pbonzini@redhat.com> wrote:
+>
+> On 06/11/19 19:04, Dan Williams wrote:
+> > On Wed, Nov 6, 2019 at 9:07 AM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> >>
+> >> Explicitly exempt ZONE_DEVICE pages from kvm_is_reserved_pfn() and
+> >> instead manually handle ZONE_DEVICE on a case-by-case basis.  For things
+> >> like page refcounts, KVM needs to treat ZONE_DEVICE pages like normal
+> >> pages, e.g. put pages grabbed via gup().  But KVM needs special handling
+> >> in other flows where ZONE_DEVICE pages lack the underlying machinery,
+> >> e.g. when setting accessed/dirty bits and shifting refcounts for
+> >> transparent huge pages.
+> >>
+> >> This fixes a hang reported by Adam Borowski[*] in dev_pagemap_cleanup()
+> >> when running a KVM guest backed with /dev/dax memory, as KVM straight up
+> >> doesn't put any references to ZONE_DEVICE pages acquired by gup().
+> >>
+> >> [*] http://lkml.kernel.org/r/20190919115547.GA17963@angband.pl
+> >>
+> >> Reported-by: Adam Borowski <kilobyte@angband.pl>
+> >> Debugged-by: David Hildenbrand <david@redhat.com>
+> >> Cc: Dan Williams <dan.j.williams@intel.com>
+> >> Cc: stable@vger.kernel.org
+> >> Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
+> >> ---
+> >>  arch/x86/kvm/mmu.c       |  8 ++++----
+> >>  include/linux/kvm_host.h |  1 +
+> >>  virt/kvm/kvm_main.c      | 19 +++++++++++++++----
+> >>  3 files changed, 20 insertions(+), 8 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kvm/mmu.c b/arch/x86/kvm/mmu.c
+> >> index 24c23c66b226..bf82b1f2e834 100644
+> >> --- a/arch/x86/kvm/mmu.c
+> >> +++ b/arch/x86/kvm/mmu.c
+> >> @@ -3306,7 +3306,7 @@ static void transparent_hugepage_adjust(struct kvm_vcpu *vcpu,
+> >>          * here.
+> >>          */
+> >>         if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
+> >> -           level == PT_PAGE_TABLE_LEVEL &&
+> >> +           !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
+> >>             PageTransCompoundMap(pfn_to_page(pfn)) &&
+> >>             !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
+> >>                 unsigned long mask;
+> >> @@ -5914,9 +5914,9 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
+> >>                  * the guest, and the guest page table is using 4K page size
+> >>                  * mapping if the indirect sp has level = 1.
+> >>                  */
+> >> -               if (sp->role.direct &&
+> >> -                       !kvm_is_reserved_pfn(pfn) &&
+> >> -                       PageTransCompoundMap(pfn_to_page(pfn))) {
+> >> +               if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
+> >> +                   !kvm_is_zone_device_pfn(pfn) &&
+> >> +                   PageTransCompoundMap(pfn_to_page(pfn))) {
+> >>                         pte_list_remove(rmap_head, sptep);
+> >>
+> >>                         if (kvm_available_flush_tlb_with_range())
+> >> diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
+> >> index a817e446c9aa..4ad1cd7d2d4d 100644
+> >> --- a/include/linux/kvm_host.h
+> >> +++ b/include/linux/kvm_host.h
+> >> @@ -966,6 +966,7 @@ int kvm_cpu_has_pending_timer(struct kvm_vcpu *vcpu);
+> >>  void kvm_vcpu_kick(struct kvm_vcpu *vcpu);
+> >>
+> >>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn);
+> >> +bool kvm_is_zone_device_pfn(kvm_pfn_t pfn);
+> >>
+> >>  struct kvm_irq_ack_notifier {
+> >>         struct hlist_node link;
+> >> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+> >> index b8534c6b8cf6..0a781b1fb8f0 100644
+> >> --- a/virt/kvm/kvm_main.c
+> >> +++ b/virt/kvm/kvm_main.c
+> >> @@ -151,12 +151,23 @@ __weak int kvm_arch_mmu_notifier_invalidate_range(struct kvm *kvm,
+> >>
+> >>  bool kvm_is_reserved_pfn(kvm_pfn_t pfn)
+> >>  {
+> >> +       /*
+> >> +        * ZONE_DEVICE pages currently set PG_reserved, but from a refcounting
+> >> +        * perspective they are "normal" pages, albeit with slightly different
+> >> +        * usage rules.
+> >> +        */
+> >>         if (pfn_valid(pfn))
+> >> -               return PageReserved(pfn_to_page(pfn));
+> >> +               return PageReserved(pfn_to_page(pfn)) &&
+> >> +                      !is_zone_device_page(pfn_to_page(pfn));
+> >
+> > This is racy unless you can be certain that the pfn and resulting page
+> > has already been pinned by get_user_pages().
+>
+> What is the race exactly?
 
-On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
-> Due to distribution constraints it may not be possible to statically
-> compile the required RTC driver into the kernel.
-> 
-> Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
-> or not) by checking at the end of RTC device registration whether the
-> time should be synced.
-> 
+The race is that nothing protects the page from being destroyed while
+is_zone_device_page() is running. All other pages obtained from the
+page allocator have an existing reference from the core-mm otherwise
+KVM would be touch free memory. In the case of ZONE_DEVICE the page
+that KVM is looking up is only alive while the underlying device is
+pinned. GUP will take the device reference and check that the device
+is not already dying where a pfn_valid() +  get_page() sequence will
+not.
 
-This does not really help distributions because most of them will still
-have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
+>
+> In general KVM does not use pfn's until after having gotten them from
+> get_user_pages (or follow_pfn for VM_IO | VM_PFNMAP vmas, for which
+> get_user_pages fails, but this is not an issue here).  It then creates
+> the page tables and releases the reference to the struct page.
 
-Can't you move away from HCTOSYS and do the correct thing in userspace
-instead of the crap hctosys is doing?
+In this case I think it would be better to treat ZONE_DEVICE like the
+VM_IO and VM_PFNMAP case, and never take a reference in the first
+instance. This keeps the existing correct usages of
+kvm_is_reserved_pfn() in tact, and avoids the broken case of a missing
+put_page().
 
-> Signed-off-by: Steve Muckle <smuckle@google.com>
-> ---
->  drivers/rtc/Kconfig   | 18 ++++++-----
->  drivers/rtc/Makefile  |  1 -
->  drivers/rtc/class.c   | 63 +++++++++++++++++++++++++++++++++++++++
->  drivers/rtc/hctosys.c | 69 -------------------------------------------
->  4 files changed, 73 insertions(+), 78 deletions(-)
->  delete mode 100644 drivers/rtc/hctosys.c
-> 
-> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-> index 1adf9f815652..f663d77deb41 100644
-> --- a/drivers/rtc/Kconfig
-> +++ b/drivers/rtc/Kconfig
-> @@ -35,14 +35,16 @@ config RTC_HCTOSYS_DEVICE
->  	depends on RTC_HCTOSYS
->  	default "rtc0"
->  	help
-> -	  The RTC device that will be used to (re)initialize the system
-> -	  clock, usually rtc0. Initialization is done when the system
-> -	  starts up, and when it resumes from a low power state. This
-> -	  device should record time in UTC, since the kernel won't do
-> -	  timezone correction.
-> -
-> -	  The driver for this RTC device must be loaded before late_initcall
-> -	  functions run, so it must usually be statically linked.
-> +	  The RTC device that will be used to (re)initialize the system clock,
-> +	  usually rtc0. Initialization is done when the driver for the RTC
-> +	  device registers, and when it resumes from a low power state. This
-> +	  device should record time in UTC, since the kernel won't do timezone
-> +	  correction.
-> +
-> +	  During startup it is useful to initialize the system clock from the
-> +	  RTC as early as possible. For this reason the driver for this RTC
-> +	  device should be statically linked, or alternately, the kernel module
-> +	  for the RTC device driver loaded immediately.
->  
->  	  This clock should be battery-backed, so that it reads the correct
->  	  time when the system boots from a power-off state. Otherwise, your
-> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-> index 4ac8f19fb631..33f932d08262 100644
-> --- a/drivers/rtc/Makefile
-> +++ b/drivers/rtc/Makefile
-> @@ -6,7 +6,6 @@
->  ccflags-$(CONFIG_RTC_DEBUG)	:= -DDEBUG
->  
->  obj-$(CONFIG_RTC_LIB)		+= lib.o
-> -obj-$(CONFIG_RTC_HCTOSYS)	+= hctosys.o
->  obj-$(CONFIG_RTC_SYSTOHC)	+= systohc.o
->  obj-$(CONFIG_RTC_CLASS)		+= rtc-core.o
->  obj-$(CONFIG_RTC_MC146818_LIB)	+= rtc-mc146818-lib.o
-> diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-> index 9458e6d6686a..b1ed5f3be223 100644
-> --- a/drivers/rtc/class.c
-> +++ b/drivers/rtc/class.c
-> @@ -34,6 +34,64 @@ static void rtc_device_release(struct device *dev)
->  #ifdef CONFIG_RTC_HCTOSYS_DEVICE
->  /* Result of the last RTC to system clock attempt. */
->  int rtc_hctosys_ret = -ENODEV;
-> +
-> +/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
-> + * whether it stores the most close value or the value with partial
-> + * seconds truncated. However, it is important that we use it to store
-> + * the truncated value. This is because otherwise it is necessary,
-> + * in an rtc sync function, to read both xtime.tv_sec and
-> + * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
-> + * of >32bits is not possible. So storing the most close value would
-> + * slow down the sync API. So here we have the truncated value and
-> + * the best guess is to add 0.5s.
-> + */
-> +
-> +static int rtc_hctosys(void)
-> +{
-> +	int err = -ENODEV;
-> +	struct rtc_time tm;
-> +	struct timespec64 tv64 = {
-> +		.tv_nsec = NSEC_PER_SEC >> 1,
-> +	};
-> +	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
-> +
-> +	if (!rtc) {
-> +		pr_info("unable to open rtc device (%s)\n",
-> +			CONFIG_RTC_HCTOSYS_DEVICE);
-> +		goto err_open;
-> +	}
-> +
-> +	err = rtc_read_time(rtc, &tm);
-> +	if (err) {
-> +		dev_err(rtc->dev.parent,
-> +			"hctosys: unable to read the hardware clock\n");
-> +		goto err_read;
-> +	}
-> +
-> +	tv64.tv_sec = rtc_tm_to_time64(&tm);
-> +
-> +#if BITS_PER_LONG == 32
-> +	if (tv64.tv_sec > INT_MAX) {
-> +		err = -ERANGE;
-> +		goto err_read;
-> +	}
-> +#endif
-> +
-> +	err = do_settimeofday64(&tv64);
-> +
-> +	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
-> +		 &tm, (long long)tv64.tv_sec);
-> +
-> +err_read:
-> +	rtc_class_close(rtc);
-> +
-> +err_open:
-> +	rtc_hctosys_ret = err;
-> +
-> +	return err;
-> +}
-> +
-> +
->  #endif
->  
->  #if defined(CONFIG_PM_SLEEP) && defined(CONFIG_RTC_HCTOSYS_DEVICE)
-> @@ -375,6 +433,11 @@ int __rtc_register_device(struct module *owner, struct rtc_device *rtc)
->  	dev_info(rtc->dev.parent, "registered as %s\n",
->  		 dev_name(&rtc->dev));
->  
-> +#ifdef CONFIG_RTC_HCTOSYS_DEVICE
-> +	if (!strcmp(dev_name(&rtc->dev), CONFIG_RTC_HCTOSYS_DEVICE))
-> +		rtc_hctosys();
-> +#endif
-> +
->  	return 0;
->  }
->  EXPORT_SYMBOL_GPL(__rtc_register_device);
-> diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
-> deleted file mode 100644
-> index a74d0d890600..000000000000
-> --- a/drivers/rtc/hctosys.c
-> +++ /dev/null
-> @@ -1,69 +0,0 @@
-> -// SPDX-License-Identifier: GPL-2.0
-> -/*
-> - * RTC subsystem, initialize system time on startup
-> - *
-> - * Copyright (C) 2005 Tower Technologies
-> - * Author: Alessandro Zummo <a.zummo@towertech.it>
-> - */
-> -
-> -#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> -
-> -#include <linux/rtc.h>
-> -
-> -/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
-> - * whether it stores the most close value or the value with partial
-> - * seconds truncated. However, it is important that we use it to store
-> - * the truncated value. This is because otherwise it is necessary,
-> - * in an rtc sync function, to read both xtime.tv_sec and
-> - * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
-> - * of >32bits is not possible. So storing the most close value would
-> - * slow down the sync API. So here we have the truncated value and
-> - * the best guess is to add 0.5s.
-> - */
-> -
-> -static int __init rtc_hctosys(void)
-> -{
-> -	int err = -ENODEV;
-> -	struct rtc_time tm;
-> -	struct timespec64 tv64 = {
-> -		.tv_nsec = NSEC_PER_SEC >> 1,
-> -	};
-> -	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
-> -
-> -	if (!rtc) {
-> -		pr_info("unable to open rtc device (%s)\n",
-> -			CONFIG_RTC_HCTOSYS_DEVICE);
-> -		goto err_open;
-> -	}
-> -
-> -	err = rtc_read_time(rtc, &tm);
-> -	if (err) {
-> -		dev_err(rtc->dev.parent,
-> -			"hctosys: unable to read the hardware clock\n");
-> -		goto err_read;
-> -	}
-> -
-> -	tv64.tv_sec = rtc_tm_to_time64(&tm);
-> -
-> -#if BITS_PER_LONG == 32
-> -	if (tv64.tv_sec > INT_MAX) {
-> -		err = -ERANGE;
-> -		goto err_read;
-> -	}
-> -#endif
-> -
-> -	err = do_settimeofday64(&tv64);
-> -
-> -	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
-> -		 &tm, (long long)tv64.tv_sec);
-> -
-> -err_read:
-> -	rtc_class_close(rtc);
-> -
-> -err_open:
-> -	rtc_hctosys_ret = err;
-> -
-> -	return err;
-> -}
-> -
-> -late_initcall(rtc_hctosys);
-> -- 
-> 2.24.0.rc1.363.gb1bccd3e3d-goog
-> 
+> Anything else happens _after_ the reference has been released, but still
+> from an mmu notifier; this is why KVM uses pfn_to_page quite pervasively.
+>
+> If this is enough to avoid races, then I prefer Sean's patch.  If it is
+> racy, we need to fix kvm_set_pfn_accessed and kvm_set_pfn_dirty first,
+> and second at transparent_hugepage_adjust and kvm_mmu_zap_collapsible_spte:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Those are already ok due to kvm_is_reserved_pfn() == true being the
+right answer for ZONE_DEVICE.
+
+> - if accessed/dirty state need not be tracked properly for ZONE_DEVICE,
+> then I suppose David's patch is okay (though I'd like to have a big
+> comment explaining all the things that went on in these emails).  If
+> they need to work, however, Sean's patch 1 is the right thing to do.
+
+They can't work, there's no core-mm managing ZONE_DEVICE pages, so
+PageDirty() and THP housekeeping have no meaning.
+
+> - if we need Sean's patch 1, but it is racy to use is_zone_device_page,
+> we could first introduce a helper similar to kvm_is_hugepage_allowed()
+> from his patch 2, but using pfn_to_online_page() to filter out
+> ZONE_DEVICE pages.  This would cover both transparent_hugepage_adjust
+> and kvm_mmu_zap_collapsible_spte.
+
+After some more thought I'd feel more comfortable just collapsing the
+ZONE_DEVICE case into the VM_IO/VM_PFNMAP case. I.e. with something
+like this (untested) that just drops the reference immediately and let
+kvm_is_reserved_pfn() do the right thing going forward.
+
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index d6f0696d98ef..d21689e2b4eb 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -1464,6 +1464,14 @@ static bool hva_to_pfn_fast(unsigned long addr,
+bool write_fault,
+        npages = __get_user_pages_fast(addr, 1, 1, page);
+        if (npages == 1) {
+                *pfn = page_to_pfn(page[0]);
++               /*
++                * ZONE_DEVICE pages are effectively VM_IO/VM_PFNMAP as
++                * far as KVM is concerned kvm_is_reserved_pfn() will
++                * prevent further unnecessary page management on this
++                * page.
++                */
++               if (is_zone_device_page(page[0]))
++                       put_page(page[0]);
+
+                if (writable)
+                        *writable = true;
+@@ -1509,6 +1517,11 @@ static int hva_to_pfn_slow(unsigned long addr,
+bool *async, bool write_fault,
+                }
+        }
+        *pfn = page_to_pfn(page);
++
++       /* See comment in hva_to_pfn_fast. */
++       if (is_zone_device_page(page[0]))
++               put_page(page[0]);
++
+        return npages;
+ }
