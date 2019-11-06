@@ -2,126 +2,153 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFCBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A47C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:39:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E57732173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E7E412166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:39:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8cw92+b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731848AbfKFNis (ORCPT
+        id S1731862AbfKFNjY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:38:48 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:44271 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbfKFNir (ORCPT
+        Wed, 6 Nov 2019 08:39:24 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27656 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727034AbfKFNjX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:38:47 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iSLWB-0005eJ-OQ; Wed, 06 Nov 2019 14:38:39 +0100
-Date:   Wed, 6 Nov 2019 14:38:38 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Oleg Nesterov <oleg@redhat.com>
-cc:     Florian Weimer <fweimer@redhat.com>, Shawn Landden <shawn@git.icu>,
-        libc-alpha@sourceware.org, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Keith Packard <keithp@keithp.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: handle_exit_race && PF_EXITING
-In-Reply-To: <20191106121111.GC12575@redhat.com>
-Message-ID: <alpine.DEB.2.21.1911061409480.1869@nanos.tec.linutronix.de>
-References: <alpine.DEB.2.21.1911051053470.17054@nanos.tec.linutronix.de> <20191105152728.GA5666@redhat.com> <alpine.DEB.2.21.1911051800070.1869@nanos.tec.linutronix.de> <alpine.DEB.2.21.1911051851380.1869@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1911051920420.1869@nanos.tec.linutronix.de> <alpine.DEB.2.21.1911051959260.1869@nanos.tec.linutronix.de> <20191106085529.GA12575@redhat.com> <alpine.DEB.2.21.1911061028020.1869@nanos.tec.linutronix.de> <20191106103509.GB12575@redhat.com>
- <alpine.DEB.2.21.1911061154520.1869@nanos.tec.linutronix.de> <20191106121111.GC12575@redhat.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 6 Nov 2019 08:39:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573047562;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=4jYHNi5/Z7oowUoL78rMhKZ6a5a5wDzQX/xErsA9Orw=;
+        b=U8cw92+bYoYExjOxFI45FJ99GH5yQs2Nu0zKXU9c7Lzzec4oWHJbbWvBor1OhUcbfwD0gY
+        ZWsWS7kMpYhkou1rvgK8TWJZYcIw/1gmxai+KPgZEOF6SnZOezb42jpAlWIPAkOENK6vPS
+        GUvWja15X3xdwxRLaSsJ833hA7DGJtY=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-382-U-6pCuExOSSG_LLOl9z0Fg-1; Wed, 06 Nov 2019 08:39:19 -0500
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C8B6107ACC3;
+        Wed,  6 Nov 2019 13:39:15 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-193.pek2.redhat.com [10.72.12.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 205D719756;
+        Wed,  6 Nov 2019 13:38:25 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V10 2/6] modpost: add support for mdev class id
+Date:   Wed,  6 Nov 2019 21:35:27 +0800
+Message-Id: <20191106133531.693-3-jasowang@redhat.com>
+In-Reply-To: <20191106133531.693-1-jasowang@redhat.com>
+References: <20191106133531.693-1-jasowang@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-MC-Unique: U-6pCuExOSSG_LLOl9z0Fg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019, Oleg Nesterov wrote:
-> But why we can not rely on handle_exit_race() without PF_EXITING check?
-> 
-> Yes, exit_robust_list() is called before exit_pi_state_list() which (with
-> this patch) sets PF_EXITPIDONE. But this is fine? handle_futex_death()
-> doesn't wakeup pi futexes, exit_pi_state_list() does this.
+Add support to parse mdev class id table.
 
-I know. You still create inconsistent state because of this:
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ drivers/vfio/mdev/vfio_mdev.c     |  2 ++
+ scripts/mod/devicetable-offsets.c |  3 +++
+ scripts/mod/file2alias.c          | 11 +++++++++++
+ 3 files changed, 16 insertions(+)
 
->  	raw_spin_lock_irq(&p->pi_lock);
-> -	if (unlikely(p->flags & PF_EXITING)) {
-> +	if (unlikely(p->flags & PF_EXITPIDONE)) {
->  		/*
->  		 * The task is on the way out. When PF_EXITPIDONE is
->  		 * set, we know that the task has finished the
->  		 * cleanup:
->  		 */
-> -		int ret = handle_exit_race(uaddr, uval, p);
-> +		int ret = handle_exit_race(uaddr, uval);
->  
->  		raw_spin_unlock_irq(&p->pi_lock);
->  		put_task_struct(p);
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index 38431e9ef7f5..a6641cd8b5a3 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] =3D {
+ =09{ 0 },
+ };
+=20
++MODULE_DEVICE_TABLE(mdev, vfio_id_table);
++
+ static struct mdev_driver vfio_mdev_driver =3D {
+ =09.name=09=3D "vfio_mdev",
+ =09.probe=09=3D vfio_mdev_probe,
+diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
+fsets.c
+index 054405b90ba4..6cbb1062488a 100644
+--- a/scripts/mod/devicetable-offsets.c
++++ b/scripts/mod/devicetable-offsets.c
+@@ -231,5 +231,8 @@ int main(void)
+ =09DEVID(wmi_device_id);
+ =09DEVID_FIELD(wmi_device_id, guid_string);
+=20
++=09DEVID(mdev_class_id);
++=09DEVID_FIELD(mdev_class_id, id);
++
+ =09return 0;
+ }
+diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
+index c91eba751804..45f1c22f49be 100644
+--- a/scripts/mod/file2alias.c
++++ b/scripts/mod/file2alias.c
+@@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *=
+symval, char *alias)
+ =09return 1;
+ }
+=20
++/* looks like: "mdev:cN" */
++static int do_mdev_entry(const char *filename, void *symval, char *alias)
++{
++=09DEF_FIELD(symval, mdev_class_id, id);
++
++=09sprintf(alias, "mdev:c%02X", id);
++=09add_wildcard(alias);
++=09return 1;
++}
++
+ /* Does namelen bytes of name exactly match the symbol? */
+ static bool sym_is(const char *name, unsigned namelen, const char *symbol)
+ {
+@@ -1407,6 +1417,7 @@ static const struct devtable devtable[] =3D {
+ =09{"typec", SIZE_typec_device_id, do_typec_entry},
+ =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
+ =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
++=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
+ };
+=20
+ /* Create MODULE_ALIAS() statements.
+--=20
+2.19.1
 
-Same explanation as before just not prosa this time:
-
-exit()					lock_pi(futex2)
-  exit_pi_state_list()
-   lock(tsk->pi_lock)
-   tsk->flags |= PF_EXITPIDONE;		 attach_to_pi_owner()
-					  ...
-  // Loop unrolled for clarity
-  while(!list_empty())			  lock(tsk->pi_lock);
-     cleanup(futex1)
-       unlock(tsk->pi_lock)
-     ...			          if (tsk->flags & PF_EXITPIDONE)
-					     ret = handle_exit_race()
-					       if (uval != orig_uval)
-					           return -EAGAIN;
-					       return -ESRCH;
-
-    cleanup(futex2)			  return to userspace err = -ESRCH
-      update futex2->uval
-      with new owner TID and set
-      OWNER_DIED
-
-    					 userspace handles -ESRCH
-
-					 but futex2->uval has a valid TID
-					 and OWNER_DIED set.
-
-That's inconsistent state, the futex became a SNAFUtex and user space
-cannot recover from that. At least not existing user space and we cannot
-break that, right?
-
-If the kernel returns -ESRCH then the futex value must be preserved (except
-for the waiters bit being set, but that's not part of the problem at hand).
-
-You cannot just look at the kernel state with futexes. We have to guarantee
-consistent state between kernel and user space no matter what. And of
-course we have to be careful about user space creating inconsistent state
-for stupid or malicious reasons. See the whole state table above
-attach_to_pi_state().
-
-The only way to fix this live lock issue is to gracefully wait for the
-cleanup to complete instead of busy looping.
-
-Yes, it sucks, but futexes suck by definition.
-
-Thanks,
-
-	tglx
