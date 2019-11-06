@@ -2,94 +2,142 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25C34C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D3A6C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:57:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE653217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:56:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB32217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:57:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="FNbKbf+h";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VKc9x2sQ"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="IkEA0Vxf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732484AbfKFR4x (ORCPT
+        id S1732488AbfKFR5s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:56:53 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:35934 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729435AbfKFR4w (ORCPT
+        Wed, 6 Nov 2019 12:57:48 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:45030 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727872AbfKFR5s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:56:52 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id E537660134; Wed,  6 Nov 2019 17:56:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573063010;
-        bh=nQ+P7pXx778DX1/XphSgc5IhHKuslBvN8ajv5VvEmxU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:Date:From;
-        b=FNbKbf+hcv2URueWbVdvZ0S25w8iTl82Q6TiJ8Yk0Mpix9jlzrDpVNtlNuT80Qf7M
-         RvyuBy/NgDx5nE9F8DPudiaeV9c1/8iwLVE2nlXod0TDdDlFknITylabKkgIJjaYaw
-         ZTMQO1Gr2ikGmFCboS2JZYjl0XIMiSAlHhKElqMg=
-Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: kvalo@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id AB0C8601D4;
-        Wed,  6 Nov 2019 17:56:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573063010;
-        bh=nQ+P7pXx778DX1/XphSgc5IhHKuslBvN8ajv5VvEmxU=;
-        h=Subject:From:In-Reply-To:References:To:Cc:From;
-        b=VKc9x2sQgEtMEFTKscLB6q8EVrIiHCkAaiUiJ/yxXSNjPJgZmsRMbQUahC+xu3ehg
-         D9ZMEAEGyxcxW5CTmN5+HwgoMeBQnKgAd6PyJB8LiVqt7A+FYUK7PapoxUwXUOocRi
-         60oQXgkxN0SZPdh+xLMywBe841nkAEOCDeleqOnA=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org AB0C8601D4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
-Content-Type: text/plain; charset="utf-8"
+        Wed, 6 Nov 2019 12:57:48 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6HsKcq003208;
+        Wed, 6 Nov 2019 17:56:34 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=MdbVWmDz8xkvlQ078mvBd8bDaGm/LTI2iHt8U7Q0AT0=;
+ b=IkEA0Vxf9r2AB6/pbXp0iZ+ah6dQ9X4x/J11RYbAPKt/64+mZur6Dfye99u+b6VZLUTs
+ jtluOOQRHlvgqgiCy/epmfAu/iNjvw4Uj7K4jNovK8QtnIFlKJRDjnvjEY7KI1XdYIam
+ XRN659HAZJkBZD5vfSZDm17HRRymQo8tkL36Sf2O1jAy3BvP87mlEotAvdrZNGRJvviS
+ sLLPZIZwOBwFAqZZPEQIQtetlM7vUKGwgPpxL3Q6aGGVtUlY+Eo0rFlxU+w/faxYlNDe
+ ziWODqW2IoKfLJB9THUyrYSG0GMpHzPxKTMQAL6EF1o1pJtIKma8C6Aih0UdfaD4iFj3 fA== 
+Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
+        by aserp2120.oracle.com with ESMTP id 2w41w0rkrp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 17:56:34 +0000
+Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
+        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6Hre4C022398;
+        Wed, 6 Nov 2019 17:56:34 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by aserp3030.oracle.com with ESMTP id 2w41wcvfav-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 17:56:33 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA6HuXYZ032009;
+        Wed, 6 Nov 2019 17:56:33 GMT
+Received: from paddy.uk.oracle.com (/10.175.178.239)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 09:56:32 -0800
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     kvm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+Subject: [PATCH v1 3/3] KVM: VMX: Introduce pi_is_pir_empty() helper
+Date:   Wed,  6 Nov 2019 17:56:02 +0000
+Message-Id: <20191106175602.4515-4-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191106175602.4515-1-joao.m.martins@oracle.com>
+References: <20191106175602.4515-1-joao.m.martins@oracle.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Subject: Re: [PATCH] rtlwifi: rtl8225se: remove some unused const variables
-From:   Kalle Valo <kvalo@codeaurora.org>
-In-Reply-To: <20191102074603.38516-1-yuehaibing@huawei.com>
-References: <20191102074603.38516-1-yuehaibing@huawei.com>
-To:     YueHaibing <yuehaibing@huawei.com>
-Cc:     <davem@davemloft.net>, <allison@lohutok.net>,
-        <gregkh@linuxfoundation.org>, <kstewart@linuxfoundation.org>,
-        <info@metux.net>, <tglx@linutronix.de>, <yuehaibing@huawei.com>,
-        <linux-wireless@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-User-Agent: pwcli/0.0.0-git (https://github.com/kvalo/pwcli/) Python/2.7.12
-Message-Id: <20191106175650.E537660134@smtp.codeaurora.org>
-Date:   Wed,  6 Nov 2019 17:56:50 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=634
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911060173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=712 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911060174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-YueHaibing <yuehaibing@huawei.com> wrote:
+Streamline the PID.PIR check and change its call sites to use
+the newly added helper.
 
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:83:17: warning: 'rtl8225sez2_tx_power_cck' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:79:17: warning: 'rtl8225sez2_tx_power_cck_A' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:75:17: warning: 'rtl8225sez2_tx_power_cck_B' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:71:17: warning: 'rtl8225sez2_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:62:17: warning: 'rtl8225se_tx_power_ofdm' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:53:17: warning: 'rtl8225se_tx_power_cck_ch14' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:44:17: warning: 'rtl8225se_tx_power_cck' defined but not used [-Wunused-const-variable=]
-> drivers/net/wireless//realtek/rtl818x/rtl8180/rtl8225se.c:40:17: warning: 'rtl8225se_tx_gain_cck_ofdm' defined but not used [-Wunused-const-variable=]
-> 
-> They are never used, so can be removed.
-> 
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Suggested-by: Liran Alon <liran.alon@oracle.com>
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 5 ++---
+ arch/x86/kvm/vmx/vmx.h | 5 +++++
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
-Patch applied to wireless-drivers-next.git, thanks.
-
-a3a03716196f rtlwifi: rtl8225se: remove some unused const variables
-
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 75d903455e1c..8e8dbb174d14 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1311,7 +1311,7 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+ 	 */
+ 	smp_mb__after_atomic();
+ 
+-	if (!bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS))
++	if (!pi_is_pir_empty(pi_desc))
+ 		pi_set_on(pi_desc);
+ }
+ 
+@@ -6157,8 +6157,7 @@ static bool vmx_dy_apicv_has_pending_interrupt(struct kvm_vcpu *vcpu)
+ {
+ 	struct pi_desc *pi_desc = vcpu_to_pi_desc(vcpu);
+ 
+-	return pi_test_on(pi_desc) ||
+-		!bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
++	return pi_test_on(pi_desc) || !pi_is_pir_empty(pi_desc);
+ }
+ 
+ static void vmx_load_eoi_exitmap(struct kvm_vcpu *vcpu, u64 *eoi_exit_bitmap)
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index 1e32ab54fc2d..5a0f34b1e226 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -355,6 +355,11 @@ static inline int pi_test_and_set_pir(int vector, struct pi_desc *pi_desc)
+ 	return test_and_set_bit(vector, (unsigned long *)pi_desc->pir);
+ }
+ 
++static inline bool pi_is_pir_empty(struct pi_desc *pi_desc)
++{
++	return bitmap_empty((unsigned long *)pi_desc->pir, NR_VECTORS);
++}
++
+ static inline void pi_set_sn(struct pi_desc *pi_desc)
+ {
+ 	set_bit(POSTED_INTR_SN,
 -- 
-https://patchwork.kernel.org/patch/11224057/
-
-https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
+2.11.0
 
