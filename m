@@ -2,103 +2,79 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E31C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BEC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357FA207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=cisco.com header.i=@cisco.com header.b="Hsxudzhp"
+	by mail.kernel.org (Postfix) with ESMTP id F3F71207FA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732334AbfKFRqK (ORCPT
+        id S1732413AbfKFRqy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:46:10 -0500
-Received: from rcdn-iport-3.cisco.com ([173.37.86.74]:40575 "EHLO
-        rcdn-iport-3.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728539AbfKFRqJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:46:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=cisco.com; i=@cisco.com; l=1489; q=dns/txt; s=iport;
-  t=1573062369; x=1574271969;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=9LWdUWFwz+0nguJkEnlwOwG8B5lAe20QbOKg7mn/Puw=;
-  b=HsxudzhpllSSNe7+0sDmvsEGE/LLaIuYC7p9+Qbx5hKn6vomfRwiBz6R
-   FWQubN9poyG8iyY8Ptxw1HuPiE4TsQw07notF+O4m+a9tgrAxW3p0NwNk
-   AwPvYPBJRcEds8teFdOybqQcGJsNlCKTDEBc8CIYt8iY80f0qimMAMlPv
-   4=;
-X-IronPort-AV: E=Sophos;i="5.68,275,1569283200"; 
-   d="scan'208";a="646600509"
-Received: from alln-core-10.cisco.com ([173.36.13.132])
-  by rcdn-iport-3.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 06 Nov 2019 17:46:08 +0000
-Received: from zorba ([10.154.200.26])
-        by alln-core-10.cisco.com (8.15.2/8.15.2) with ESMTPS id xA6Hk55r004590
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Wed, 6 Nov 2019 17:46:07 GMT
-Date:   Wed, 6 Nov 2019 09:46:02 -0800
-From:   Daniel Walker <danielwa@cisco.com>
-To:     Claudiu Manoil <claudiu.manoil@nxp.com>
-Cc:     Sathish Jarugumalli <sjarugum@cisco.com>,
-        "xe-linux-external@cisco.com" <xe-linux-external@cisco.com>,
-        Daniel Walker <dwalker@fifo99.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drivers: net: gianfar: Shortest frame drops at Ethernet
- port
-Message-ID: <20191106174602.GV18744@zorba>
-References: <20191106170320.27662-1-danielwa@cisco.com>
- <VI1PR04MB4880B060847C1CD175B998DF96790@VI1PR04MB4880.eurprd04.prod.outlook.com>
+        Wed, 6 Nov 2019 12:46:54 -0500
+Received: from mga18.intel.com ([134.134.136.126]:24378 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727894AbfKFRqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:46:53 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 09:46:52 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
+   d="scan'208";a="228407130"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by FMSMGA003.fm.intel.com with ESMTP; 06 Nov 2019 09:46:52 -0800
+Date:   Wed, 6 Nov 2019 09:46:52 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>,
+        Dan Williams <dan.j.williams@intel.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191106174652.GE16249@linux.intel.com>
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <8ba98630-9ca0-85c2-3c94-45d54a448fca@redhat.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <VI1PR04MB4880B060847C1CD175B998DF96790@VI1PR04MB4880.eurprd04.prod.outlook.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Auto-Response-Suppress: DR, OOF, AutoReply
-X-Outbound-SMTP-Client: 10.154.200.26, [10.154.200.26]
-X-Outbound-Node: alln-core-10.cisco.com
+In-Reply-To: <8ba98630-9ca0-85c2-3c94-45d54a448fca@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 05:38:06PM +0000, Claudiu Manoil wrote:
-> >-----Original Message-----
-> >From: Daniel Walker <danielwa@cisco.com>
-> >Sent: Wednesday, November 6, 2019 7:03 PM
-> >To: Claudiu Manoil <claudiu.manoil@nxp.com>
-> >Cc: Sathish Jarugumalli <sjarugum@cisco.com>; xe-linux-external@cisco.com;
-> >Daniel Walker <dwalker@fifo99.com>; David S. Miller
-> ><davem@davemloft.net>; netdev@vger.kernel.org; linux-
-> >kernel@vger.kernel.org
-> >Subject: [PATCH] drivers: net: gianfar: Shortest frame drops at Ethernet port
-> >
-> >NXP has provided the patch for packet drops  at ethernet port
-> >Frames shorter than 60bytes are getting dropped at ethernetport
-> >need to add padding for the shorter range frames to be transmit
-> >the function "eth_skb_pad(skb" provides padding (and CRC) for
-> >packets under 60 bytes
-> >
-> >Signed-off-by: Sathish Jarugumalli <sjarugum@cisco.com>
-> >Cc: xe-linux-external@cisco.com
-> >Signed-off-by: Daniel Walker <dwalker@fifo99.com>
+On Wed, Nov 06, 2019 at 06:14:40PM +0100, Paolo Bonzini wrote:
+> On 06/11/19 18:07, Sean Christopherson wrote:
+> >  void kvm_get_pfn(kvm_pfn_t pfn)
+> >  {
+> > -	if (!kvm_is_reserved_pfn(pfn))
+> > +	if (!kvm_is_reserved_pfn(pfn) && !WARN_ON(kvm_is_zone_device_pfn(pfn)))
+> >  		get_page(pfn_to_page(pfn));
+> >  }
+> >  EXPORT_SYMBOL_GPL(kvm_get_pfn);
 > 
-> Signed-off-by: Claudiu Manoil <claudiu.manoil@nxp.com>
-> 
-> Normally padding is done by the hardware, and it works at least on my
-> test cases and boards.
-> But cisco seems to have hit a case where h/w padding gets
-> unexpectedly disabled (concurrency issue writing the config register?).
-> This patch should go as a workaround, until root cause found.
+> Can you call remap_pfn_range with a source address that is ZONE_DEVICE?
+>  If so, you would get a WARN from the kvm_get_pfn call in
+> hva_to_pfn_remapped.
 
+I don't know, at a quick glance I'm guessing it's possible via /dev/mem?
+But, get_page() isn't sufficient to properly grab a ZONE_DEVICE page, so
+the WARN is a good thing and intentional.
 
-Where would this hardware setup normally happen? Does it happen in the
-bootloader or inside the kernel someplace ?
-
-Daniel
+So assuming the answer is "yes", perhaps hva_to_pfn_remapped() should
+adds its own check on kvm_is_zone_device_pfn() and return -EINVAL or
+something?  That'd likely end up kill the guest, but wouldn't break the
+kernel.
