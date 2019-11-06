@@ -2,90 +2,111 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FD0FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:06:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7493C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:07:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6252120659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:06:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D7B62178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:07:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728227AbfKFJGr (ORCPT
+        id S1729622AbfKFJHt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:06:47 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:49111 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKFJGr (ORCPT
+        Wed, 6 Nov 2019 04:07:49 -0500
+Received: from mout.kundenserver.de ([212.227.126.187]:43043 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726843AbfKFJHt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:06:47 -0500
-Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
-        by metis.ext.pengutronix.de with esmtp (Exim 4.92)
-        (envelope-from <p.zabel@pengutronix.de>)
-        id 1iSHH4-0001ZZ-4g; Wed, 06 Nov 2019 10:06:46 +0100
-Message-ID: <412b74046c51be6d1228758624b8577453806758.camel@pengutronix.de>
-Subject: Re: [PATCH] reset: Free struct reset_control_array in
- reset_control_array_put()
-From:   Philipp Zabel <p.zabel@pengutronix.de>
-To:     Jyri Sarha <jsarha@ti.com>, linux-kernel@vger.kernel.org
-Cc:     tomi.valkeinen@ti.com, colin.king@canonical.com, treding@nvidia.com
-Date:   Wed, 06 Nov 2019 10:06:45 +0100
-In-Reply-To: <7280f9d5-1048-f130-37fd-9a3068f54df7@ti.com>
-References: <9c8c5c337a9351a561a4bf18f2faa1e9a01b50e6.1572884515.git.jsarha@ti.com>
-         <3a970f3f3518485f58e86f2523e5085f47ec4b15.camel@pengutronix.de>
-         <7280f9d5-1048-f130-37fd-9a3068f54df7@ti.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1.1 
+        Wed, 6 Nov 2019 04:07:49 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MIdW9-1igtkS0UiL-00EZgr; Wed, 06 Nov 2019 10:07:37 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
+        Andy Gross <agross@kernel.org>,
+        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
+        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] media: venus: remove invalid compat_ioctl32 handler
+Date:   Wed,  6 Nov 2019 10:06:54 +0100
+Message-Id: <20191106090731.3152446-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
-X-SA-Exim-Mail-From: p.zabel@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:8RmDx4hHYVaGCRLB35n3qdiZOzUXcVe0+StcVe0UHvHpojc5T/4
+ uzsWV9aOL+uHX72YbQa8qjbMgaBFg4cUcIuX3JwFT33wd+hDOHw0Gxu/AACyXMMPHDpO3qS
+ e8SezUBQFDXhSY4USnlbekvkOTc1byAB440qbxJg6rA8EyNETSc1rU5kjdE6LCJiVl742X9
+ hLCFCuyKLHCV6f6MIz+NA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0e6MMvLXfls=:4/MvFiPhzD2v4dq4ei/GqJ
+ upkwO1ea9eMllyQ5KzkyyMTYbb60gFwFTEtrz+i1c2gBGOvyvCLOHIHEiLQ4mc7grzJgOnLo5
+ cLAI7xO9iOjJ+TLiYYsar95qpgCMbdpilVzPE5D4fAObNbjO6NbZxxKafvpaZebU/5FSGCy1R
+ xsL/R0rjvdeRtCL/vRMRkiCr2+sbjYeYyQwtbTdATCP2+ZYLAMNgNux4U8+DbWB53HQHTsOL/
+ yvvZx3Ib7IVG5Nl24s1cKtUNMIpPuakHOail8qcrPP4agnnQvtCcOCJLSPxK+75uo1sdlrtMN
+ Hiz3h44usxXP9FjoU7DQi5/CgdKCEON9JSrsa/Ngw/rnHk+KARie5v6/I7Lfgtf4lsgiM2QXI
+ iP5RScn8nQ+z48MBPpJCBsRqDGUWU04DPfosdtLeQXwoPCigrATip1eSK4DnGDYVC7Z2U2NLK
+ MWHX5Auc8oQxCompC2le/breqc7FgdOj/tE9eVK/REyPzUblOwYse1MY2Pujs+ftFwt5JDVXX
+ IlRu+bxvfhCaGYLK8S7q7YpBMkf3UA99ulViCXC8ZxVAv0T0+UXQ5JScvXisuCGnT1cUUTyFG
+ tAi6dhVwDpJMUQcJZG/4rNfO9v7u1BO3h+w3ajKJ3P8XtpNgfFLwBlkgvT676IdMPntGQj2oy
+ ueso2NPqA7MP8javvvaTs5CZg1uxO8z8ej+5qhqLCycAH9FaXkGrkQcbaZYeKcrjPDbRftAHe
+ wIEkudc61tT8/Cu7fbETvo5oYwjjPvFMWlOcqzAtjH+ZA1wQFeS+BDTzIZ/219dljJ/3/donI
+ HhB0FZo5AKnKawpGrRG/p1broZNesSc/6l466L377Bzj7tUJBkqWFeIPsPjmminibnprfgbbi
+ QBpI7ZPdm/tcrJr3FH7w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-11-04 at 21:03 +0200, Jyri Sarha wrote:
-> On 04/11/2019 18:30, Philipp Zabel wrote:
-> > Hi Jyri,
-> > 
-> > On Mon, 2019-11-04 at 18:24 +0200, Jyri Sarha wrote:
-> > > Fix memory leak in devm_reset_control_array_get(). Free also the
-> > > struct reset_control_array pointer in reset_control_array_put() not
-> > > only the reset-controls stored in it.
-> > > 
-> > > Reported-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-> > > Signed-off-by: Jyri Sarha <jsarha@ti.com>
-> > > ---
-> > >  drivers/reset/core.c | 2 ++
-> > >  1 file changed, 2 insertions(+)
-> > > 
-> > > diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-> > > index 213ff40dda11..85d9676ee969 100644
-> > > --- a/drivers/reset/core.c
-> > > +++ b/drivers/reset/core.c
-> > > @@ -748,6 +748,8 @@ static void reset_control_array_put(struct reset_control_array *resets)
-> > >  	for (i = 0; i < resets->num_rstcs; i++)
-> > >  		__reset_control_put_internal(resets->rstc[i]);
-> > >  	mutex_unlock(&reset_list_mutex);
-> > > +
-> > > +	kfree(resets);
-> > >  }
-> > >  
-> > >  /**
-> > 
-> > Thank you, this just got fixed in 532f9cd6ee99 ("reset: Fix memory leak
-> > in reset_control_array_put()").
-> > 
-> 
-> Ok, sorry. I just checked the mainline, not the mailing lists etc.
+v4l2_compat_ioctl32() is the function that calls into
+v4l2_file_operations->compat_ioctl32(), so setting that back to the same
+function leads to a trivial endless loop, followed by a kernel
+stack overrun.
 
-No worries, that's perfectly fine. Just letting you know why this patch
-isn't picked up.
+Remove the incorrect assignment.
 
-regards
-Philipp
+Cc: stable@vger.kernel.org
+Fixes: 7472c1c69138 ("[media] media: venus: vdec: add video decoder files")
+Fixes: aaaa93eda64b ("[media] media: venus: venc: add video encoder files")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/media/platform/qcom/venus/vdec.c | 3 ---
+ drivers/media/platform/qcom/venus/venc.c | 3 ---
+ 2 files changed, 6 deletions(-)
+
+diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
+index 7f4660555ddb..59ae7a1e63bc 100644
+--- a/drivers/media/platform/qcom/venus/vdec.c
++++ b/drivers/media/platform/qcom/venus/vdec.c
+@@ -1412,9 +1412,6 @@ static const struct v4l2_file_operations vdec_fops = {
+ 	.unlocked_ioctl = video_ioctl2,
+ 	.poll = v4l2_m2m_fop_poll,
+ 	.mmap = v4l2_m2m_fop_mmap,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl32 = v4l2_compat_ioctl32,
+-#endif
+ };
+ 
+ static int vdec_probe(struct platform_device *pdev)
+diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
+index 1b7fb2d5887c..30028ceb548b 100644
+--- a/drivers/media/platform/qcom/venus/venc.c
++++ b/drivers/media/platform/qcom/venus/venc.c
+@@ -1235,9 +1235,6 @@ static const struct v4l2_file_operations venc_fops = {
+ 	.unlocked_ioctl = video_ioctl2,
+ 	.poll = v4l2_m2m_fop_poll,
+ 	.mmap = v4l2_m2m_fop_mmap,
+-#ifdef CONFIG_COMPAT
+-	.compat_ioctl32 = v4l2_compat_ioctl32,
+-#endif
+ };
+ 
+ static int venc_probe(struct platform_device *pdev)
+-- 
+2.20.0
 
