@@ -2,75 +2,105 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EF05C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42FC9C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDC92206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A44D2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:01:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MrbKKbkE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731333AbfKFIBG (ORCPT
+        id S1731383AbfKFIBq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:01:06 -0500
-Received: from mx2.suse.de ([195.135.220.15]:39306 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729878AbfKFIBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:01:05 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 05EFFAFBB;
-        Wed,  6 Nov 2019 08:01:04 +0000 (UTC)
-Message-ID: <1573026302.3090.2.camel@suse.com>
-Subject: Re: [PATCH 4.9 37/62] UAS: Revert commit 3ae62a42090f ("UAS: fix
- alignment of scatter/gather segments")
-From:   Oliver Neukum <oneukum@suse.com>
-To:     Sasha Levin <sashal@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Christoph Hellwig <hch@lst.de>
-Date:   Wed, 06 Nov 2019 08:45:02 +0100
-In-Reply-To: <20191106001102.GI4787@sasha-vm>
-References: <20191104211901.387893698@linuxfoundation.org>
-         <20191104211940.713506931@linuxfoundation.org>
-         <1572964268.2921.19.camel@suse.com> <20191106001102.GI4787@sasha-vm>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Wed, 6 Nov 2019 03:01:46 -0500
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:53458 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729878AbfKFIBq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:01:46 -0500
+Received: by mail-wm1-f65.google.com with SMTP id x4so2200694wmi.3;
+        Wed, 06 Nov 2019 00:01:44 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OmFJplJ1m4VwQ427zpEUzGG+xB7JCkAtrYHj59vzKyE=;
+        b=MrbKKbkEEpLaaU1VA3LNiZShxLjleQKizjxFb7o/RogoTWhFIPRUc8oQXlcid/bVNM
+         4vs+KOYK7Xf5q6D0wkM5qVbvZknjzUgZottXfmR5MFEA8mY2XmBlY4ZTY/GEXT4tQgGD
+         xZMblYOfLeUwcmgAh0AYFTdcMatBIMY9scFaNjjkUM2hSIGADavlKn+ob8wlhdBpTWFE
+         b6u2fPUxGn+S7Y+T9FluJIptb5NoU0PCt/U5tbNkP8kJORoGJCa5gfOx1u6OtF32xgIi
+         kcJUVmQsTwlYtYMdKaLGN1KJKArN03Zdlu1TVBOLR+b2T91a2uyIj49Iyzv0HjsN4W4a
+         XJ9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=OmFJplJ1m4VwQ427zpEUzGG+xB7JCkAtrYHj59vzKyE=;
+        b=nNQW7zFxps+qoCaaIc0dYMZchZdo19VtBkJNQWKNHjFK27xNr5Dx2Gkt7BXJ84lOX3
+         jA1Q1041VuoNLShWJqsVpzXo0ojx1q/GXkGu/cWcQOXYW9O9qCIaEkuYcfwFHa+Gl6VI
+         56TJeAP9dXQMJWSXLBLn6KWUgiLWRtEMyBOQ8uRhSPZGeP22f+n/04w1wpD+NNljP/fH
+         rVobrQBa53zmat08GNuRT/neCHaktCW8u8qlpUocXuHDr18xh6fjXGf1YVBp+6HsCaOU
+         sAXnqOCWLg3pSMnp17jFRam5dqpbuKExW1Tl12YCbGiXKdJVllYh1CqM5YkFZ+e8Jcyv
+         0Sxg==
+X-Gm-Message-State: APjAAAUV56qm7uV/YygmjQZ5cY3RUm0iqqKtrvDYxfEpCP11Y4GfgvN0
+        E2XdCNnsH4jmNlqFpob4G6I=
+X-Google-Smtp-Source: APXvYqz0qSwFylWIoX9SCHh6ZEfiYNutupEMlWdsubaKkmKhmucKMct2x7LvguGkr4ZOhw5eOEZczQ==
+X-Received: by 2002:a1c:b607:: with SMTP id g7mr1032801wmf.94.1573027304320;
+        Wed, 06 Nov 2019 00:01:44 -0800 (PST)
+Received: from suzukaze.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.gmail.com with ESMTPSA id q124sm1196668wme.13.2019.11.06.00.01.39
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 00:01:43 -0800 (PST)
+From:   Chuhong Yuan <hslester96@gmail.com>
+Cc:     Fugang Duan <fugang.duan@nxp.com>,
+        "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Chuhong Yuan <hslester96@gmail.com>
+Subject: [PATCH] net: fec: add a check for CONFIG_PM to avoid clock count mis-match
+Date:   Wed,  6 Nov 2019 16:01:28 +0800
+Message-Id: <20191106080128.23284-1-hslester96@gmail.com>
+X-Mailer: git-send-email 2.23.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Am Dienstag, den 05.11.2019, 19:11 -0500 schrieb Sasha Levin:
-> On Tue, Nov 05, 2019 at 03:31:08PM +0100, Oliver Neukum wrote:
-> > Am Montag, den 04.11.2019, 22:44 +0100 schrieb Greg Kroah-Hartman:
-> > >         All the host controllers capable of SuperSpeed operation can
-> > >         handle fully general SG;
-> > > 
-> > >         Since commit ea44d190764b ("usbip: Implement SG support to
-> > >         vhci-hcd and stub driver") was merged, the USB/IP driver can
-> > >         also handle SG.
-> > 
-> > Not in 4.9.x. AFAICT the same story as 4.4.x
-> > The patch is not strictly needed, but breaks UAS over usbip.
-> 
-> It's in 4.9 since April this year... Same story for 4.4.
+If CONFIG_PM is enabled, runtime pm will work and call runtime_suspend
+automatically to disable clks.
+Therefore, remove only needs to disable clks when CONFIG_PM is disabled.
+Add this check to avoid clock count mis-match caused by double-disable.
 
-Hi,
+This patch depends on patch
+("net: fec: add missed clk_disable_unprepare in remove").
 
-now I am confused. Neither looking at the logs nor the source
-I can see the commit. Top commit is
-9e48f0c28dd505e39bd136ec92a042b311b127c6
-of git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git
+Signed-off-by: Chuhong Yuan <hslester96@gmail.com>
+---
+ drivers/net/ethernet/freescale/fec_main.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-I am sorry for being obnoxious here and it is entirely possible that
-I am stupid, but this is a discrepancy that needs to be resolved.
-
-	Regards
-		Oliver
+diff --git a/drivers/net/ethernet/freescale/fec_main.c b/drivers/net/ethernet/freescale/fec_main.c
+index a9c386b63581..696550f4972f 100644
+--- a/drivers/net/ethernet/freescale/fec_main.c
++++ b/drivers/net/ethernet/freescale/fec_main.c
+@@ -3645,8 +3645,10 @@ fec_drv_remove(struct platform_device *pdev)
+ 		regulator_disable(fep->reg_phy);
+ 	pm_runtime_put(&pdev->dev);
+ 	pm_runtime_disable(&pdev->dev);
++#ifndef CONFIG_PM
+ 	clk_disable_unprepare(fep->clk_ahb);
+ 	clk_disable_unprepare(fep->clk_ipg);
++#endif
+ 	if (of_phy_is_fixed_link(np))
+ 		of_phy_deregister_fixed_link(np);
+ 	of_node_put(fep->phy_node);
+-- 
+2.23.0
 
