@@ -2,208 +2,477 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8868FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DF58C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:28:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47C0221929
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:27:41 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s9GNFshb"
+	by mail.kernel.org (Postfix) with ESMTP id 3CD462178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:28:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730324AbfKFI1j (ORCPT
+        id S1731332AbfKFI2g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:27:39 -0500
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:41920 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729951AbfKFI1j (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:27:39 -0500
-Received: by mail-lf1-f68.google.com with SMTP id j14so17322238lfb.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 00:27:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=wU786Awcjz+6BSkvh6Je1o6qXR7QFvkpKoodPXBut84=;
-        b=s9GNFshb9nAwn/bv6cCM8g+T5gn5Rc+IG0iKjtgg3S1cYLkuCkx5GavWDIHU0uZJ3K
-         8yrpWzfq7qEJIFyDL/3n4m9Rup++Ji2eLKTAX8UHqBmV3jSDara7Kpg3oHnlPvcZS/Rk
-         eT57j2ZQ0VApzIDT+eosMzV02inMXeLyP5blWfsfeu3XoeQZ9TueE9opm4dVOD8lxCf4
-         5vKI2V41SKH5JnBI9uBcW2W5JhaXuuKPTbJy9CSumBCnjSCMT/L+c3yFxRRG+VQOfaYe
-         5g/nAFHuQ4/QlZD0z6qYqzm2AtyDC2OlUce5kAdD0DkoFf6kcH/g4drayoNxAnb38WBj
-         UskQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=wU786Awcjz+6BSkvh6Je1o6qXR7QFvkpKoodPXBut84=;
-        b=qnsqTX8Pzn+yghy3sQb0KFKg79pig7g3oG8rAyLQWirgpxytx5fwma0SK5B0kh127z
-         v6no8UeKo9nFp92A9JVjpmFIUAteXu8sjwV4v/XgjEq/+n1V8c6GxUOGMQEo/7vMmfdZ
-         ZHWS/ZE/KZ/cRYuKryavGKATJwDdDavR+x7hTwNHLrkVAb6sK8F7f2630zg36I1hpuEe
-         aO4uRXZv0wFzKNWHx/2BS0jb5+EKiGNTC5AWAFKsHIDjmK7lT4TYxtWp8VVvwYrKaA04
-         SPcQRxAWDr6KLBP0jcHdsxUZSiDJlmwHScut/FRSxPp1U2NGyzdtRmFnSCwNRHNaW6bm
-         TmUA==
-X-Gm-Message-State: APjAAAVD8atkSrsHW5NQsgP9kPnCifAIT20+aRkNXEI4p0jSR1xH22q/
-        sODGw8CEHZtvCWnivNkEmHLN+CtPguhmDyraiI6/Eg==
-X-Google-Smtp-Source: APXvYqzMPulg84uWK0w+cm+98LMbTv/olVPFsmQAip52riq3jM0NFQRKfuA8pfRa4RE7HyFmQNp4Fru5nXDMEQUCS0A=
-X-Received: by 2002:ac2:4650:: with SMTP id s16mr24761323lfo.32.1573028854869;
- Wed, 06 Nov 2019 00:27:34 -0800 (PST)
+        Wed, 6 Nov 2019 03:28:36 -0500
+Received: from mx2.suse.de ([195.135.220.15]:47568 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729881AbfKFI2f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:28:35 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D0699AF19;
+        Wed,  6 Nov 2019 08:28:31 +0000 (UTC)
+Subject: Re: [PATCH] arm64: dts: realtek: Add Realtek rtd1619 and mjolnir
+To:     James Tai <james.tai@realtek.com>
+Cc:     "linux-realtek-soc@lists.infradead.org" 
+        <linux-realtek-soc@lists.infradead.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Organization: SUSE Software Solutions Germany GmbH
+Message-ID: <25fdd8eb-f1a0-82ae-9c4b-22325b163b0e@suse.de>
+Date:   Wed, 6 Nov 2019 09:28:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org> <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
-In-Reply-To: <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
-From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Wed, 6 Nov 2019 09:27:23 +0100
-Message-ID: <CAKfTPtCQXSoR5ohpJvT+esAeXewRDFoBEGGzfgB37_ZWJuKjeQ@mail.gmail.com>
-Subject: Re: [Patch v5 2/6] sched/fair: Add infrastructure to store and update
- instantaneous thermal pressure
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <43B123F21A8CFE44A9641C099E4196FFCF91BEFA@RTITMBSVM04.realtek.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Thara,
+Hi James,
 
+Thanks for your patch.
 
-On Tue, 5 Nov 2019 at 19:49, Thara Gopinath <thara.gopinath@linaro.org> wrote:
->
-> Add interface APIs to initialize, update/average, track, accumulate
-> and decay thermal pressure per cpu basis. A per cpu variable
-> thermal_pressure is introduced to keep track of instantaneous per
-> cpu thermal pressure. Thermal pressure is the delta between maximum
-> capacity and capped capacity due to a thermal event.
-> API trigger_thermal_pressure_average is called for periodic accumulate
-> and decay of the thermal pressure.This API passes on the instantaneous
-> thermal pressure of a cpu to update_thermal_load_avg to do the necessary
-> accumulate, decay and average.
-> API update_thermal_pressure is for the system to update the thermal
-> pressure by providing a capped maximum capacity.
-> Considering, trigger_thermal_pressure_average reads thermal_pressure and
-> update_thermal_pressure writes into thermal_pressure, one can argue for
-> some sort of locking mechanism to avoid a stale value.
-> But considering trigger_thermal_pressure_average can be called from a
-> system critical path like scheduler tick function, a locking mechanism
-> is not ideal. This means that it is possible the thermal_pressure value
-> used to calculate average thermal pressure for a cpu can be
-> stale for upto 1 tick period.
->
-> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+$subject: "RTD1619", "Mjolnir". (I can fix up such spelling nits myself
+when applying, but there's more change requests below, so please do.)
+
+In theory "Realtek RTD1619" is redundant with "realtek:". Compare recent
+patches on linux-realtek-soc or
+`git log --oneline -- arch/arm64/boot/dts/realtek/` on linux-next.git.
+Not wrong obviously.
+
+Am 05.11.19 um 09:00 schrieb James Tai:
+> This patch adds a generic devicetree board file and a dtsi for
+> Realtek rtd1619 SoC.
+
+There is no such thing as a "generic devicetree board file"! It is
+specific to that one board. If you create a second eval board or when
+your ODM customers design their own boards they should only be reusing
+the rtd1619.dtsi, as seen with the various rtd1295-*.dts files.
+
+Also, once a patch gets applied to Git, it becomes a commit, so avoid
+the term "patch" in the commit message. What about the following:
+
+"Add Device Trees for Realtek RTD1619 SoC family, RTD1619 SoC and
+Realtek's Mjolnir evaluation board." (or "This adds ...")
+
+> 
+> Signed-off-by: james tai <james.tai@realtek.com>
+
+You've already fixed this from "james.tai", but can you please adjust
+your config again to match the regular Western spelling of "James Tai"
+in From? Thanks. (In theory UTF-8 would also allow you to add your
+Chinese name, like you did in an earlier From, if you wanted to.)
+
 > ---
->
-> v3->v4:
->         - Dropped per cpu max_capacity_info struct and instead added a per
->           delta_capacity variable to store the delta between maximum
->           capacity and capped capacity. The delta is now calculated when
->           thermal pressure is updated and not every tick.
->         - Dropped populate_max_capacity_info api as only per cpu delta
->           capacity is stored.
->         - Renamed update_periodic_maxcap to
->           trigger_thermal_pressure_average and update_maxcap_capacity to
->           update_thermal_pressure.
-> v4->v5:
->         - As per Peter's review comments folded thermal.c into fair.c.
->         - As per Ionela's review comments revamped update_thermal_pressure
->           to take maximum available capacity as input instead of maximum
->           capped frequency ration.
->
-> ---
->  include/linux/sched.h |  9 +++++++++
->  kernel/sched/fair.c   | 37 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 46 insertions(+)
->
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index 263cf08..3c31084 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -1993,6 +1993,15 @@ static inline void rseq_syscall(struct pt_regs *regs)
->
->  #endif
->
-> +#ifdef CONFIG_SMP
-> +void update_thermal_pressure(int cpu, unsigned long capped_capacity);
-> +#else
-> +static inline void
-> +update_thermal_pressure(int cpu, unsigned long capped_capacity)
-> +{
-> +}
-> +#endif
+>  arch/arm64/boot/dts/realtek/Makefile          |  3 +
+>  .../boot/dts/realtek/rtd1619-mjolnir.dts      | 31 +++++++
+>  arch/arm64/boot/dts/realtek/rtd1619.dtsi      | 91 +++++++++++++++++++
+>  arch/arm64/boot/dts/realtek/rtd16xx.dtsi      | 66 ++++++++++++++
+>  4 files changed, 191 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd1619.dtsi
+>  create mode 100644 arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> 
+> diff --git a/arch/arm64/boot/dts/realtek/Makefile b/arch/arm64/boot/dts/realtek/Makefile
+> index 555638ada721..a58353a1d99a 100644
+> --- a/arch/arm64/boot/dts/realtek/Makefile
+> +++ b/arch/arm64/boot/dts/realtek/Makefile
+> @@ -7,3 +7,6 @@ dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-probox2-ava.dtb
+>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1295-zidoo-x9s.dtb
+>  
+>  dtb-$(CONFIG_ARCH_REALTEK) += rtd1296-ds418.dtb
 > +
->  const struct sched_avg *sched_trace_cfs_rq_avg(struct cfs_rq *cfs_rq);
->  char *sched_trace_cfs_rq_path(struct cfs_rq *cfs_rq, char *str, int len);
->  int sched_trace_cfs_rq_cpu(struct cfs_rq *cfs_rq);
-> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-> index 682a754..2e907cc 100644
-> --- a/kernel/sched/fair.c
-> +++ b/kernel/sched/fair.c
-> @@ -86,6 +86,12 @@ static unsigned int normalized_sysctl_sched_wakeup_granularity       = 1000000UL;
->
->  const_debug unsigned int sysctl_sched_migration_cost   = 500000UL;
->
+> +dtb-$(CONFIG_ARCH_REALTEK) += rtd1619-mjolnir.dtb
+> +
+
+Please don't add trailing newlines, here and elsewhere.
+
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+> new file mode 100644
+> index 000000000000..def5964c7715
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1619-mjolnir.dts
+> @@ -0,0 +1,31 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
 > +/*
-> + * Per-cpu instantaneous delta between maximum capacity
-> + * and maximum available capacity due to thermal events.
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
 > + */
-> +static DEFINE_PER_CPU(unsigned long, thermal_pressure);
 > +
->  #ifdef CONFIG_SMP
->  /*
->   * For asym packing, by default the lower numbered CPU has higher priority.
-> @@ -10401,6 +10407,37 @@ static unsigned int get_rr_interval_fair(struct rq *rq, struct task_struct *task
->         return rr_interval;
->  }
->
-> +#ifdef CONFIG_SMP
-> +/**
-> + * update_thermal_pressure: Update thermal pressure
-> + * @cpu: the cpu for which thermal pressure is to be updated for
-> + * @capped_capacity: maximum capacity of the cpu after the capping
-> + *                  due to thermal event.
+> +/dts-v1/;
+> +
+> +#include "rtd1619.dtsi"
+> +
+> +/ {
+> +	compatible = "realtek,rtd1619";
+
+Please run ./scripts/checkpatch.pl before submitting:
+
+You're not allowed to use compatible strings without defining them first
+in a separate "dt-bindings: ..." patch, in this case against
+Documentation/devicetree/bindings/arm/realtek.yaml.
+
+Please also define a suitable compatible string specific to this board:
+"realtek,mjolnir", "realtek,rtd1619"?
+
+So v2 should be a two-patch series with a cover letter please.
+
+> +	model= "Realtek Mjolnir EVB";
+> +
+> +	memory@0 {
+> +		device_type = "memory";
+> +		reg = <0x0 0x0 0x0 0x80000000>;
+> +	};
+> +
+> +	chosen {
+> +		stdout-path = "serial0:115200n8";
+> +	};
+> +
+> +	aliases {
+> +		serial0 = &uart0;
+> +	};
+> +};
+> +
+> +&uart0 {
+> +	status = "okay";
+> +};
+> +
+
+Trailing newline.
+
+> diff --git a/arch/arm64/boot/dts/realtek/rtd1619.dtsi b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+> new file mode 100644
+> index 000000000000..ac5c737b04db
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd1619.dtsi
+> @@ -0,0 +1,91 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD1619 SoC
 > + *
-> + * Delta between the arch_scale_cpu_capacity and capped max capacity is
-> + * stored in per cpu thermal_pressure variable.
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
 > + */
-> +void update_thermal_pressure(int cpu, unsigned long capped_capacity)
-> +{
-> +       unsigned long delta;
 > +
-> +       delta = arch_scale_cpu_capacity(cpu) - capped_capacity;
-> +       per_cpu(thermal_pressure, cpu) = delta;
-
-use WRITE_ONCE
-
-> +}
-> +#endif
+> +#include "rtd16xx.dtsi"
 > +
-> +/**
-> + * trigger_thermal_pressure_average: Trigger the thermal pressure accumulate
-> + *                                  and average algorithm
+> +/ {
+> +	compatible = "realtek,rtd1619";
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu0: cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x000>;
+
+Missing enable-method = "psci"?
+
+> +			next-level-cache = <&l2>;
+> +		};
+> +
+> +		cpu1: cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x100>;
+
+reg value and node unit address need to match, i.e., cpu@100 if that's
+the correct value. The label can stay with the intuitive number (cpu1).
+
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu2: cpu@2 {
+
+Ditto.
+
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x200>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu3: cpu@3 {
+
+Ditto.
+
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x300>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu4: cpu@4 {
+
+Ditto.
+
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x400>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+> +
+> +		cpu5: cpu@5 {
+
+Ditto.
+
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a55";
+> +			reg = <0x500>;
+> +			enable-method = "psci";
+> +			next-level-cache = <&l3>;
+> +		};
+
+Just to be sure: This is one cluster of 6 CPUs? Or is it some 4+2
+big.LITTLE, DynamiQ or whatever multi-cluster configuration with
+different frequencies, power domains or something?
+
+> +
+> +		l2: l2-cache {
+> +			compatible = "cache";
+> +			next-level-cache = <&l3>;
+> +
+> +		};
+> +
+> +		l3: l3-cache {
+> +			compatible = "cache";
+> +		};
+
+Caches look weird - only cpu0 uses L2 and all others use L3 directly?
+
+> +	};
+> +
+> +	timer {
+> +		compatible = "arm,armv8-timer";
+> +		interrupts = <GIC_PPI 13
+> +			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 14
+> +			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 11
+> +			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>,
+> +			     <GIC_PPI 10
+> +			(GIC_CPU_MASK_RAW(0xf) | IRQ_TYPE_LEVEL_LOW)>;
+
+Generic question also applying to my RTD1295/RTD1195 patches: Are you
+sure about GIC_CPU_MASK_RAW(0xf) or could this be GIC_CPU_MASK_SIMPLE(6)
+in this case? This here would seem equivalent of GIC_CPU_MASK_SIMPLE(8).
+
+> +	};
+> +};
+> +
+> +&arm_pmu {
+> +	interrupt-affinity = <&cpu0>, <&cpu1>, <&cpu2>,
+> +		<&cpu3>, <&cpu4>, <&cpu5>;
+> +};
+
+Just to be sure: You expect there to be later rtd16*.dtsi files that
+would have a different number of CPUs than 6? Otherwise both the cpus
+node and the interrupt-affinity should go into rtd16xx.dtsi and only
+diverging things should go here. For RTD1295 this was refactored due to
+dual-core RTD1293 vs. quad-core RTD1295/96, so just verifying that
+you're not unintentionally copying its design pattern.
+
+> diff --git a/arch/arm64/boot/dts/realtek/rtd16xx.dtsi b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> new file mode 100644
+> index 000000000000..ef56c6ed6663
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/realtek/rtd16xx.dtsi
+> @@ -0,0 +1,66 @@
+> +// SPDX-License-Identifier: (GPL-2.0-or-later OR BSD-2-Clause)
+> +/*
+> + * Realtek RTD1619 SoC
+
+Hmm, my rtd129x.dtsi has the exact list of SoCs it applies to:
+"Realtek RTD1293/RTD1295/RTD1296 SoC"
+Copying that pattern here leads to identical description in rtd16xx.dtsi
+and rtd1619.dtsi - make that "SoC family" maybe, for distinction?
+
+> + *
+> + * Copyright (c) 2019 Realtek Semiconductor Corp.
 > + */
-> +static void trigger_thermal_pressure_average(struct rq *rq)
-> +{
-> +#ifdef CONFIG_SMP
-> +       update_thermal_load_avg(rq_clock_task(rq), rq,
-> +                               per_cpu(thermal_pressure, cpu_of(rq)));
-> +#endif
-> +}
 > +
->  /*
->   * All the scheduling class methods:
->   */
-> --
-> 2.1.4
->
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+
+Please swap these for alphabetic ordering, so that the next contributor
+can add further #includes in a well-defined place.
+
+> +
+> +/{
+> +	compatible = "realtek,rtd1619";
+
+Copy&paste? Suggest to drop it here. You still have it in rtd1619.dtsi.
+
+> +	interrupt-parent = <&gic>;
+> +	#address-cells = <0x2>;
+> +	#size-cells = <0x2>;
+
+Please always use decimal numbers for these two properties.
+
+And double-check whether you actually need <2> - compare rtd129x.dtsi
+using <1> because nothing went beyond 32-bit address space. It was a
+review request back then. Can RTD1619 have more than 2 GiB RAM, with a
+second RAM region in high mem, requiring two cells for memory nodes?
+
+> +
+> +	arm_pmu: pmu {
+> +		compatible = "arm,armv8-pmuv3";
+> +		interrupts = <GIC_PPI 7
+> +			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_LOW)>;
+
+Here you use GIC_CPU_MASK_SIMPLE(4) but rtd1619.dtsi with 6 CPUs does
+not override it with 6 - are you sure about 4 here?
+
+> +	};
+> +
+> +	osc27M: osc {
+> +		compatible = "fixed-clock";
+> +		#clock-cells = <0>;
+
+Order this property last please - it only affects references to this node.
+
+> +		clock-frequency = <27000000>;
+> +		clock-output-names = "osc27M";
+> +	};
+> +
+> +	psci {
+> +		compatible = "arm,psci-1.0";
+
+Lorenzo, should this be "arm,psci-1.0", "arm,psci-0.2"? The YAML schema
+allows either, without documenting which one is preferred for new DTs.
+
+> +		method = "smc";
+> +	};
+> +
+> +	soc {
+> +		compatible = "simple-bus";
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+
+Please specify the ranges property in a safe way. Compare RTD1295 (which
+you can probably copy from?) and my RTD1195 patches. One of the text
+files in Documentation/devicetree/ defines the syntax for ranges.
+
+In addition please use #address-cells and #size-cells of 1 here, if
+there are no registers beyond 32-bit address space.
+
+> +
+> +		uart0: serial0@98007800 {
+> +			compatible = "snps,dw-apb-uart";
+> +			reg = <0x0 0x98007800 0x0 0x400>,
+> +				<0x0 0x98007000 0x0 0x100>;
+
+This looks wrong... What is the second reg entry for, have you run "make
+dtbs_check"? My pending irqchip driver avoids the need to extend each
+and every driver with the region for acknowledging their interrupts.
+
+> +			reg-shift = <2>;
+> +			reg-io-width = <4>;
+> +			interrupts = <0 68 4>;
+
+Please use symbolic names for first and last cell.
+
+Is the UART no longer behind an IRQ mux on RTD1619, or is the above the
+IRQ mux interrupt as a workaround for lack of in-tree irqchip driver?
+
+> +			clock-frequency = <27000000>;
+> +			status = "disabled";
+> +		};
+
+My suggestion here would be to refactor as follows:
+
+	rbus: r-bus@98000000 {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <1>;
+		ranges = <0x98000000 0x0 rbussize>;
+
+		uart0: serial@7800 {
+			compatible = ...
+			reg = <0x7800 0x400>;
+			...
+		};
+	};
+
+If we do the same for RTD1295 and RTD1195 as proposed earlier, we would
+have neatly comparable register offsets independent of {98,18}000000.
+
+> +
+> +		gic: interrupt-controller@ff100000 {
+> +			compatible = "arm,gic-v3";
+> +			#interrupt-cells = <3>;
+> +			#address-cells = <2>;
+> +			#size-cells = <2>;
+> +			ranges;
+> +			interrupt-controller;
+> +			redistributor-stride = <0x0 0x20000>;
+> +			#redistributor-regions = <1>;
+> +			reg = <0x0 0xff100000 0x0 0x10000>,
+> +				<0x0 0xff140000 0x0 0x200000>;
+> +			interrupts = <GIC_PPI 9 4>;
+> +		};
+
+This is really hard to read, please clean up the property order:
+
+reg goes immediately after compatible, so that we have it close to the
+node's unit address.
+
+There are no child nodes here or in derived .dts[i] - can we drop
+#address-cells, #size-cells and ranges? Otherwise please place them last.
+
+Also please place #interrupt-cells after interrupt-controller - compare
+other GICv3 examples for whether they should go after or before
+[#]redistributor-*. If we get more such pairs you might use a whiteline
+for grouping to aid in reading.
+
+Are you sure you don't have GICC, GICH, GICV and IRQ? No MBI support?
+
+For RTD1295 I extended the GICv2 node during review, and KVM initialized
+fine, although I'm not sure whether I've run an actual guest yet, given
+how many drivers were missing still.
+
+(I'd also appreciate Realtek to review my RTD1195 patch's GIC [1] for
+whether we should have all four regions and some interrupt there - the
+OEM's U-Boot doesn't boot in HYP mode, so I can't test myself.)
+
+> +	};
+> +};
+
+Thanks,
+Andreas
+
+[1] https://patchwork.kernel.org/patch/11221609/
+
+-- 
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer
+HRB 36809 (AG Nürnberg)
