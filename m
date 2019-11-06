@@ -2,84 +2,142 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8843CC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:37:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10E34C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:38:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BB082075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:37:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573015049;
-	bh=+bhHjzE2hxEsvMiDPETaCSeGFCpO2SoDeq8p0xmDVUM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Ds/gtXh+WgeDgUekA1Zxecw4Ayovs4sLALiSs8qE3AWONAkiSdYz2Nr+GCP7DQn6k
-	 /QqlRYiaotOMLB9WA56Ruh+4eKKLa9zcmbz39GGWflCt5LTs+9mC3vsQuCWqEErZdG
-	 nXqKeN/PbCC+1YL6GNLDM2Nk1fWB71l7mdVHJ6tg=
+	by mail.kernel.org (Postfix) with ESMTP id C885D2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:38:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ERM74Ezu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731247AbfKFEh2 (ORCPT
+        id S1731262AbfKFEiz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:37:28 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45828 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729774AbfKFEh2 (ORCPT
+        Tue, 5 Nov 2019 23:38:55 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:45539 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729632AbfKFEiz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:37:28 -0500
-Received: by mail-oi1-f193.google.com with SMTP id k2so19768268oij.12;
-        Tue, 05 Nov 2019 20:37:27 -0800 (PST)
+        Tue, 5 Nov 2019 23:38:55 -0500
+Received: by mail-pl1-f193.google.com with SMTP id y24so10818377plr.12;
+        Tue, 05 Nov 2019 20:38:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=7V01zh+xuKN9jfSDl1ahnvbuyiRHEuk9/Psk/loZcsc=;
+        b=ERM74EzueCUrY7DD9YRMnMl3BPIK4mBaTBFxynZ/aWbqEady7VfI4NAjDyAj7+iIQ5
+         RQsqgoasqS4agr75oIh7Tl5hc9WiiVUtYimMeQl32Rb/aI0IwdqEsUMSEmry0hk405Z5
+         TtwMBzGiEEAVJv6VSBygU1Wty69JTHrHaurUNWtF4AK0J8qA6Q8beJGlhLICH6z+cir1
+         4CbfhjZAuaSwuIxX67mdsHWySCDb4IA332+cM7yRUZ4V1LgeWt2JvmDoY4jWmKw3pcbn
+         kL2GHKw5w/+5GXNSQXsTH2a4Of8xaWeGu2DRBIRA8kB2fARaLicInjf9eeGmpKlpROAA
+         IUhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=wBkgFIR6Kddj9nLfsLZP7ND3JlvDRFLlyjJtifLy8TY=;
-        b=qnGrByb6CU5RcV626fRGyQ8wuCA+lSHKhHTP6ye5mjEdJRGmeOb5RbXNRWOch2bBK8
-         AiZh1CNhmBzypGJBRkWm/tRUBo+9ajiNlagdsdVS+8evnbV2VlZRiVXf7d+2rLXTnSDP
-         XHBFpXSOU3GWU1cHGyUeunCUP5lTBmDk9vNj3yqafafG78DTW7RL+6xl7zHtLci7cOEL
-         0cS+BDtbeOntglXeRF91jW0znL3Q0Lx/LJoiIbe8ChU6Sgry3v6VuG552Dl60PhLVhPV
-         eXVu74dy9BypcOg3AeDubVOzKWoiNRhIsRzbY5eg8iwr3YKPpV0LyqJouqaeM5Yj1i6O
-         PqaQ==
-X-Gm-Message-State: APjAAAU7k+tYSJOHjhzteAHUwpwLfDkB/8O4mhwAaEwn01PjDQqdHwYe
-        j2tQ5M2aJ+kHZpCgYZh/Ra5TLEE=
-X-Google-Smtp-Source: APXvYqy90LJVrIuahwIy0VRpgub2GkHXZqwsDU+WNaRy7fXQpKonC/mLfrcj46KU5AazjL9lDKIFZA==
-X-Received: by 2002:a54:4484:: with SMTP id v4mr489884oiv.49.1573015046949;
-        Tue, 05 Nov 2019 20:37:26 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id s66sm6861328otb.65.2019.11.05.20.37.26
+        bh=7V01zh+xuKN9jfSDl1ahnvbuyiRHEuk9/Psk/loZcsc=;
+        b=edLvpFmgzOXfYZh2UwltAlug42c7t2zt8S4fCruqYooQkiRqAs314qT9Dc70MidPGm
+         Fn0uGtvriP4qeZIq0Z1/CdEQWEx57X0fYu9YOXWjkcSbSIqpw8l4ACrtyiAdFgYXdZUg
+         GWyhJKxRdg6Ylhkcnbb8UJNaucjY+QhFENq1SQ9oZlQjpvCWgUF/2LFtrnimD4JhFjxv
+         z3MwaK7TpFWyfSEUwVF+dw0DgJx+tAqH8//VUEE6Y3C1iRDy07DqH9A82utwF/zQ6gqj
+         NiicsEhOf6ZAkqb2e0DWrKDUmdUstfTFLygC7lJ1XTXn7Y+fjOJ0k8XhNe1DEWHExtpC
+         nLPA==
+X-Gm-Message-State: APjAAAWAAxMF54HPltumu1C3Xod7cEnaYSgC98uwcoG/t4sJ6Z3NhAvF
+        5MnhcCHNBxDPyvfEn82BmUo=
+X-Google-Smtp-Source: APXvYqy/jC4Qc1JZAQO3ZxzldK9w2HMGugt9CwQIfB+u8xFLUZ9B8Zl3gxVf2USX7FyO6dM4ufDePQ==
+X-Received: by 2002:a17:902:bcca:: with SMTP id o10mr548969pls.46.1573015134663;
+        Tue, 05 Nov 2019 20:38:54 -0800 (PST)
+Received: from localhost ([2401:fa00:8f:203:250d:e71d:5a0a:9afe])
+        by smtp.gmail.com with ESMTPSA id y2sm22630177pfe.126.2019.11.05.20.38.52
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:37:26 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:37:25 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Michael Walle <michael@walle.cc>
-Subject: Re: [PATCH 2/5] dt-bindings: net: phy: Add support for AT803X
-Message-ID: <20191106043725.GA22549@bogus>
-References: <20191102011351.6467-1-michael@walle.cc>
- <20191102011351.6467-3-michael@walle.cc>
+        Tue, 05 Nov 2019 20:38:53 -0800 (PST)
+Date:   Wed, 6 Nov 2019 13:38:51 +0900
+From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
+To:     Dmitry Safonov <dima@arista.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Greentime Hu <green.hu@gmail.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        James Hogan <jhogan@kernel.org>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>, Michal Simek <monstr@monstr.eu>,
+        Palmer Dabbelt <palmer@dabbelt.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Will Deacon <will@kernel.org>, linux-mips@vger.kernel.org,
+        linux-riscv@lists.infradead.org
+Subject: Re: [PATCH 01/50] kallsyms/printk: Add loglvl to print_ip_sym()
+Message-ID: <20191106043851.GA131976@google.com>
+References: <20191106030542.868541-1-dima@arista.com>
+ <20191106030542.868541-2-dima@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191102011351.6467-3-michael@walle.cc>
+In-Reply-To: <20191106030542.868541-2-dima@arista.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat,  2 Nov 2019 02:13:48 +0100, Michael Walle wrote:
-> Document the Atheros AR803x PHY bindings.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> ---
->  .../devicetree/bindings/net/qca,ar803x.yaml   | 111 ++++++++++++++++++
->  MAINTAINERS                                   |   2 +
->  include/dt-bindings/net/qca-ar803x.h          |  13 ++
->  3 files changed, 126 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qca,ar803x.yaml
->  create mode 100644 include/dt-bindings/net/qca-ar803x.h
-> 
+On (19/11/06 03:04), Dmitry Safonov wrote:
+[..]
+>  #endif /*_LINUX_KALLSYMS_H*/
+> diff --git a/kernel/locking/lockdep.c b/kernel/locking/lockdep.c
+> index 233459c03b5a..914ff610b880 100644
+> --- a/kernel/locking/lockdep.c
+> +++ b/kernel/locking/lockdep.c
+> @@ -3999,7 +3999,7 @@ static void print_unlock_imbalance_bug(struct task_struct *curr,
+>  		curr->comm, task_pid_nr(curr));
+>  	print_lockdep_cache(lock);
+>  	pr_cont(") at:\n");
+> -	print_ip_sym(ip);
+> +	print_ip_sym(KERN_WARNING, ip);
+>  	pr_warn("but there are no more locks to release!\n");
+>  	pr_warn("\nother info that might help us debug this:\n");
+>  	lockdep_print_held_locks(curr);
+> @@ -4604,7 +4604,7 @@ static void print_lock_contention_bug(struct task_struct *curr,
+>  		curr->comm, task_pid_nr(curr));
+>  	print_lockdep_cache(lock);
+>  	pr_cont(") at:\n");
+> -	print_ip_sym(ip);
+> +	print_ip_sym(KERN_WARNING, ip);
+>  	pr_warn("but there are no locks held!\n");
+>  	pr_warn("\nother info that might help us debug this:\n");
+>  	lockdep_print_held_locks(curr);
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index dd05a378631a..774ff0d8dfe9 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -3858,7 +3858,7 @@ static noinline void __schedule_bug(struct task_struct *prev)
+>  	if (IS_ENABLED(CONFIG_DEBUG_PREEMPT)
+>  	    && in_atomic_preempt_off()) {
+>  		pr_err("Preemption disabled at:");
+> -		print_ip_sym(preempt_disable_ip);
+> +		print_ip_sym(KERN_ERR, preempt_disable_ip);
+>  		pr_cont("\n");
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Is this working with pr_cont()?
+
+	-ss
