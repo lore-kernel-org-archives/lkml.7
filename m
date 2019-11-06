@@ -2,117 +2,234 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-13.2 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF5CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8833C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EE12087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="ZxrwjyFG"
+	by mail.kernel.org (Postfix) with ESMTP id A322D2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:18:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730778AbfKFCSH (ORCPT
+        id S1730848AbfKFCSd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 21:18:07 -0500
-Received: from conssluserg-01.nifty.com ([210.131.2.80]:18370 "EHLO
-        conssluserg-01.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730231AbfKFCSG (ORCPT
+        Tue, 5 Nov 2019 21:18:33 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:36322 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730724AbfKFCSd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 21:18:06 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-01.nifty.com with ESMTP id xA62HqFq016699;
-        Wed, 6 Nov 2019 11:17:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-01.nifty.com xA62HqFq016699
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573006673;
-        bh=MIIePTYxao8A7607DZxT7kKQKSrj+FcHtdTeYX/rXac=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=ZxrwjyFGkKh6aAKjgf2Q8c4hxpYZBoVhXN1Lc9DZJq3+UsULj5CD/cHygjzsz7dHn
-         AtsssGaIafZL7PfexHsV8N79ipR54GjPz0uEbDomRAdg6P08mYmvjFfajHUtQ/bNP8
-         Kxs61lE38NRGyg0LvKUbxiULMrxn4QDqUm//YrJTCXuFtYksHawhoUAaBvtNyviphr
-         BDeV1LUYVAvx/6GWMEqqfAFUB9C2QmIwfDntCLQ9HBUB+VeUd4368konyjgCkr3qDE
-         2KK23j9JRwmnlToT76cBqDqUfK4I8/8oaU4MQOPpaKOMSynoXU3Jm26DggvCdLuLro
-         JHcKUVbxA8bjQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id y129so14907983vsc.6;
-        Tue, 05 Nov 2019 18:17:53 -0800 (PST)
-X-Gm-Message-State: APjAAAUmtSR3P2c9Yv0BVl+dVIsCjrz1aV/178IAXKMj3eQPkrxjWRR2
-        S2clnYEnGvI7JBw6hU3H8zHiajwKdqufo5wzZVQ=
-X-Google-Smtp-Source: APXvYqwXOXBx1mo4GWJNOySOsF7t7TP5Qq1gMhb8usdVvxM+cITLONKJ0TKdYDTH0swURTQGEHeM9gWOHcpKT1ls9mA=
-X-Received: by 2002:a67:2d08:: with SMTP id t8mr105270vst.155.1573006672003;
- Tue, 05 Nov 2019 18:17:52 -0800 (PST)
+        Tue, 5 Nov 2019 21:18:33 -0500
+Received: from [213.220.153.21] (helo=wittgenstein)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <christian.brauner@ubuntu.com>)
+        id 1iSAty-0006yE-Ua; Wed, 06 Nov 2019 02:18:31 +0000
+Date:   Wed, 6 Nov 2019 03:18:30 +0100
+From:   Christian Brauner <christian.brauner@ubuntu.com>
+To:     Sasha Levin <sashal@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, Florian Weimer <fweimer@redhat.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-api@vger.kernel.org,
+        GNU C Library <libc-alpha@sourceware.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] clone3: validate stack arguments
+Message-ID: <20191106021829.zihexhy2vq4z3if3@wittgenstein>
+References: <20191031113608.20713-1-christian.brauner@ubuntu.com>
+ <20191031124037.E26AF20650@mail.kernel.org>
 MIME-Version: 1.0
-References: <20191105150415.13098-1-hi@alyssa.is> <20191105150735.17200-1-hi@alyssa.is>
-In-Reply-To: <20191105150735.17200-1-hi@alyssa.is>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 6 Nov 2019 11:17:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARFER=4bVMMB0SCViVMHrd1kQa-MQO2O4jAm_-zFBCXnA@mail.gmail.com>
-Message-ID: <CAK7LNARFER=4bVMMB0SCViVMHrd1kQa-MQO2O4jAm_-zFBCXnA@mail.gmail.com>
-Subject: Re: [PATCH v3] kconfig: be more helpful if pkg-config is missing
-To:     Alyssa Ross <hi@alyssa.is>
-Cc:     Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191031124037.E26AF20650@mail.kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:08 AM Alyssa Ross <hi@alyssa.is> wrote:
->
-> If ncurses is installed, but at a non-default location, the previous
-> error message was not helpful in resolving the situation.  Now it will
-> suggest that pkg-config might need to be installed in addition to
-> ncurses.
->
-> Signed-off-by: Alyssa Ross <hi@alyssa.is>
+On Thu, Oct 31, 2019 at 12:40:36PM +0000, Sasha Levin wrote:
+> Hi,
+> 
+> [This is an automated email]
+> 
+> This commit has been processed because it contains a "Fixes:" tag,
+> fixing commit: 7f192e3cd316b fork: add clone3.
+> 
+> The bot has tested the following trees: v5.3.8.
+> 
+> v5.3.8: Failed to apply! Possible dependencies:
+>     78f6face5af34 ("sched: add kernel-doc for struct clone_args")
+> 
+> 
+> NOTE: The patch will not be queued to stable trees until it is upstream.
+> 
+> How should we proceed with this patch?
 
-Applied to linux-kbuild.
-Thanks.
+Hey Sasha,
 
+This has now landed in mainline (cf. [2]).
+I would suggest to backport [1] together with [2].
+The patch in [1] only documents struct clone_args and has no functional
+changes.
+If you prefer to only backport a v5.3 specific version of [2] you can
+find it inline (cf. [3]) including the base commit info for the 5.3 stable
+tree.
 
-> ---
-> Apologies -- was a little too hasty in sending v2, and it only
-> included the updated message in one of the two files that needed to be
-> changed.
->
->  scripts/kconfig/mconf-cfg.sh | 3 +++
->  scripts/kconfig/nconf-cfg.sh | 3 +++
->  2 files changed, 6 insertions(+)
->
-> diff --git a/scripts/kconfig/mconf-cfg.sh b/scripts/kconfig/mconf-cfg.sh
-> index c812872d7f9d..aa68ec95620d 100755
-> --- a/scripts/kconfig/mconf-cfg.sh
-> +++ b/scripts/kconfig/mconf-cfg.sh
-> @@ -44,4 +44,7 @@ echo >&2 "* Unable to find the ncurses package."
->  echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
->  echo >&2 "* depending on your distribution)."
->  echo >&2 "*"
-> +echo >&2 "* You may also need to install pkg-config to find the"
-> +echo >&2 "* ncurses installed in a non-default location."
-> +echo >&2 "*"
->  exit 1
-> diff --git a/scripts/kconfig/nconf-cfg.sh b/scripts/kconfig/nconf-cfg.sh
-> index 001559ef0a60..c212255070c0 100755
-> --- a/scripts/kconfig/nconf-cfg.sh
-> +++ b/scripts/kconfig/nconf-cfg.sh
-> @@ -44,4 +44,7 @@ echo >&2 "* Unable to find the ncurses package."
->  echo >&2 "* Install ncurses (ncurses-devel or libncurses-dev"
->  echo >&2 "* depending on your distribution)."
->  echo >&2 "*"
-> +echo >&2 "* You may also need to install pkg-config to find the"
-> +echo >&2 "* ncurses installed in a non-default location."
-> +echo >&2 "*"
->  exit 1
-> --
-> 2.23.0
->
+Christian
 
+[1]: 78f6face5af3 ("sched: add kernel-doc for struct clone_args")
+[2]: fa729c4df558 ("clone3: validate stack arguments")
+[3]:
 
+From 5bc5279d0dfa90cc6af385b6e3f65958f223ccab Mon Sep 17 00:00:00 2001
+From: Christian Brauner <christian.brauner@ubuntu.com>
+Date: Thu, 31 Oct 2019 12:36:08 +0100
+Subject: [PATCH] clone3: validate stack arguments
+
+Validate the stack arguments and setup the stack depening on whether or not
+it is growing down or up.
+
+Legacy clone() required userspace to know in which direction the stack is
+growing and pass down the stack pointer appropriately. To make things more
+confusing microblaze uses a variant of the clone() syscall selected by
+CONFIG_CLONE_BACKWARDS3 that takes an additional stack_size argument.
+IA64 has a separate clone2() syscall which also takes an additional
+stack_size argument. Finally, parisc has a stack that is growing upwards.
+Userspace therefore has a lot nasty code like the following:
+
+ #define __STACK_SIZE (8 * 1024 * 1024)
+ pid_t sys_clone(int (*fn)(void *), void *arg, int flags, int *pidfd)
+ {
+         pid_t ret;
+         void *stack;
+
+         stack = malloc(__STACK_SIZE);
+         if (!stack)
+                 return -ENOMEM;
+
+ #ifdef __ia64__
+         ret = __clone2(fn, stack, __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+ #elif defined(__parisc__) /* stack grows up */
+         ret = clone(fn, stack, flags | SIGCHLD, arg, pidfd);
+ #else
+         ret = clone(fn, stack + __STACK_SIZE, flags | SIGCHLD, arg, pidfd);
+ #endif
+         return ret;
+ }
+
+or even crazier variants such as [3].
+
+With clone3() we have the ability to validate the stack. We can check that
+when stack_size is passed, the stack pointer is valid and the other way
+around. We can also check that the memory area userspace gave us is fine to
+use via access_ok(). Furthermore, we probably should not require
+userspace to know in which direction the stack is growing. It is easy
+for us to do this in the kernel and I couldn't find the original
+reasoning behind exposing this detail to userspace.
+
+/* Intentional user visible API change */
+clone3() was released with 5.3. Currently, it is not documented and very
+unclear to userspace how the stack and stack_size argument have to be
+passed. After talking to glibc folks we concluded that trying to change
+clone3() to setup the stack instead of requiring userspace to do this is
+the right course of action.
+Note, that this is an explicit change in user visible behavior we introduce
+with this patch. If it breaks someone's use-case we will revert! (And then
+e.g. place the new behavior under an appropriate flag.)
+Breaking someone's use-case is very unlikely though. First, neither glibc
+nor musl currently expose a wrapper for clone3(). Second, there is no real
+motivation for anyone to use clone3() directly since it does not provide
+features that legacy clone doesn't. New features for clone3() will first
+happen in v5.5 which is why v5.4 is still a good time to try and make that
+change now and backport it to v5.3. Searches on [4] did not reveal any
+packages calling clone3().
+
+[1]: https://lore.kernel.org/r/CAG48ez3q=BeNcuVTKBN79kJui4vC6nw0Bfq6xc-i0neheT17TA@mail.gmail.com
+[2]: https://lore.kernel.org/r/20191028172143.4vnnjpdljfnexaq5@wittgenstein
+[3]: https://github.com/systemd/systemd/blob/5238e9575906297608ff802a27e2ff9effa3b338/src/basic/raw-clone.h#L31
+[4]: https://codesearch.debian.net
+Fixes: 7f192e3cd316 ("fork: add clone3")
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jann Horn <jannh@google.com>
+Cc: David Howells <dhowells@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Oleg Nesterov <oleg@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Florian Weimer <fweimer@redhat.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: linux-api@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org
+Cc: <stable@vger.kernel.org> # 5.3
+Cc: GNU C Library <libc-alpha@sourceware.org>
+Signed-off-by: Christian Brauner <christian.brauner@ubuntu.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Acked-by: Aleksa Sarai <cyphar@cyphar.com>
+Link: https://lore.kernel.org/r/20191031113608.20713-1-christian.brauner@ubuntu.com
+---
+ kernel/fork.c | 33 ++++++++++++++++++++++++++++++++-
+ 1 file changed, 32 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 3647097e6783..8bbd39585301 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -2586,7 +2586,35 @@ noinline static int copy_clone_args_from_user(struct kernel_clone_args *kargs,
+ 	return 0;
+ }
+ 
+-static bool clone3_args_valid(const struct kernel_clone_args *kargs)
++/**
++ * clone3_stack_valid - check and prepare stack
++ * @kargs: kernel clone args
++ *
++ * Verify that the stack arguments userspace gave us are sane.
++ * In addition, set the stack direction for userspace since it's easy for us to
++ * determine.
++ */
++static inline bool clone3_stack_valid(struct kernel_clone_args *kargs)
++{
++	if (kargs->stack == 0) {
++		if (kargs->stack_size > 0)
++			return false;
++	} else {
++		if (kargs->stack_size == 0)
++			return false;
++
++		if (!access_ok((void __user *)kargs->stack, kargs->stack_size))
++			return false;
++
++#if !defined(CONFIG_STACK_GROWSUP) && !defined(CONFIG_IA64)
++		kargs->stack += kargs->stack_size;
++#endif
++	}
++
++	return true;
++}
++
++static bool clone3_args_valid(struct kernel_clone_args *kargs)
+ {
+ 	/*
+ 	 * All lower bits of the flag word are taken.
+@@ -2606,6 +2634,9 @@ static bool clone3_args_valid(const struct kernel_clone_args *kargs)
+ 	    kargs->exit_signal)
+ 		return false;
+ 
++	if (!clone3_stack_valid(kargs))
++		return false;
++
+ 	return true;
+ }
+ 
+
+base-commit: db0655e705be645ad673b0a70160921e088517c0
 -- 
-Best Regards
-Masahiro Yamada
+2.23.0
+
