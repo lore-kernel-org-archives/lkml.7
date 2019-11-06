@@ -7,53 +7,53 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6625FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 161DBC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386DE2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:21:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1192067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573057315;
-	bh=VE5vkRe3MFeUD2//s8FzHmt7DQoPZJ0thztKl9CyqPA=;
+	s=default; t=1573057322;
+	bh=NSqcKQReHCpg7tEC0Oy/cMJbohp2OdoG7xVCWiTUgDs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=g834Z/IVKIUuQMiXYdT0PbPhHj1e13hhl3ykk4bWNIKlUJbnGKrcqeTxyc50xCeEn
-	 vr0BP++UQDf8vHu4E1K7flVDtnfl73ttUDQKlxqG1kw1hGrd7TbW29JWf62Ewuj5PM
-	 7+u9EFvAk3TwJA+Py9ugpXc8dsKextDnsh+zKNcI=
+	b=qN64ogs5i46WacNmXBFv9W4U+iJOk8KNKnFrdpoSYsLJhyuZq5Q7i+dpQ92t1+T0g
+	 oTobfOigT4Ei+yHmWovs7BaS7hl1icNsdydps4PB1rxT9pEJPOaDI8tEQi6DAD+dpZ
+	 oqcCaaxHu9ecNTTGDpjHOhRjIU/HNI9qkZgTvpaE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732209AbfKFQVy (ORCPT
+        id S1732220AbfKFQWB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:21:54 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53208 "EHLO
+        Wed, 6 Nov 2019 11:22:01 -0500
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:53442 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728462AbfKFQVx (ORCPT
+        with ESMTP id S1728462AbfKFQWB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:21:53 -0500
+        Wed, 6 Nov 2019 11:22:01 -0500
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=sY1LTU5lxUVLEh6S37lvZk7THzZIaZaTQC81eTfTnuk=; b=lg5npjXa7UrM
-        o4APQc5VZqHpvfdeQeZpru4dy5KxjKxjwSpUPPY4n3raeWcBZufDG/x2uw8L+nBub+RiRVc7ZdkJg
-        fomp+UmMLkCYNjZ4oq4BSSKZFng0+aR9ULXYERCeBkaLQk7FjjHUsWm1OaX7+nXBshQQ7sMPWuLfs
-        jtiEw=;
+        List-Archive; bh=CGgaROaaaA1kcCTZbTkbd3PjQEAz1ZDGj0CbBNL/ZKE=; b=n8mwbBIFPWIV
+        IOq+5KYrZVB8Jg7g8chQYCTOfBw/rr6xRDmiMJlW9868HE3dxkM0wSA85ils4VPrZq3V02tFU5qPW
+        k7OqyYTYD750lvWwmNUjcAwJv0bqMfcfYK1pfuHtyJHNLONR/PUDegQ5KcT0QlHt2lRInvJFfS0vg
+        y/pF8=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
         (envelope-from <broonie@sirena.co.uk>)
-        id 1iSO47-0001pF-NY; Wed, 06 Nov 2019 16:21:51 +0000
+        id 1iSO4C-0001pP-Rb; Wed, 06 Nov 2019 16:21:56 +0000
 Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 35F4B2743035; Wed,  6 Nov 2019 16:21:51 +0000 (GMT)
+        id 5B0D82743035; Wed,  6 Nov 2019 16:21:56 +0000 (GMT)
 From:   Mark Brown <broonie@kernel.org>
-To:     Vasily Khoruzhick <anarsoul@gmail.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+To:     Pan Bian <bianpan2016@163.com>
+Cc:     linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
         Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: fan53555: add chip id for Silergy SYR83X" to the regulator tree
-In-Reply-To: <20191106161211.1700663-1-anarsoul@gmail.com>
+Subject: Applied "spi: img-spfi: fix potential double release" to the spi tree
+In-Reply-To: <1573007769-20131-1-git-send-email-bianpan2016@163.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20191106162151.35F4B2743035@ypsilon.sirena.org.uk>
-Date:   Wed,  6 Nov 2019 16:21:51 +0000 (GMT)
+Message-Id: <20191106162156.5B0D82743035@ypsilon.sirena.org.uk>
+Date:   Wed,  6 Nov 2019 16:21:56 +0000 (GMT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: fan53555: add chip id for Silergy SYR83X
+   spi: img-spfi: fix potential double release
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.5
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.5
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,41 +86,37 @@ to this mail.
 Thanks,
 Mark
 
-From 5365e3df422938e6b34e1afdd2ff1cfc5768290e Mon Sep 17 00:00:00 2001
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Date: Wed, 6 Nov 2019 08:12:11 -0800
-Subject: [PATCH] regulator: fan53555: add chip id for Silergy SYR83X
+From e9a8ba9769a0e354341bc6cc01b98aadcea1dfe9 Mon Sep 17 00:00:00 2001
+From: Pan Bian <bianpan2016@163.com>
+Date: Wed, 6 Nov 2019 10:36:09 +0800
+Subject: [PATCH] spi: img-spfi: fix potential double release
 
-SYR83X is used in Rockpro64 and it has die ID == 9. All other
-registers are the same as in SYR82X
+The channels spfi->tx_ch and spfi->rx_ch are not set to NULL after they
+are released. As a result, they will be released again, either on the
+error handling branch in the same function or in the corresponding
+remove function, i.e. img_spfi_remove(). This patch fixes the bug by
+setting the two members to NULL.
 
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-Link: https://lore.kernel.org/r/20191106161211.1700663-1-anarsoul@gmail.com
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+Link: https://lore.kernel.org/r/1573007769-20131-1-git-send-email-bianpan2016@163.com
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/fan53555.c | 2 ++
+ drivers/spi/spi-img-spfi.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/drivers/regulator/fan53555.c b/drivers/regulator/fan53555.c
-index dbe477da4e55..00c83492f774 100644
---- a/drivers/regulator/fan53555.c
-+++ b/drivers/regulator/fan53555.c
-@@ -83,6 +83,7 @@ enum {
- 
- enum {
- 	SILERGY_SYR82X = 8,
-+	SILERGY_SYR83X = 9,
- };
- 
- struct fan53555_device_info {
-@@ -302,6 +303,7 @@ static int fan53555_voltages_setup_silergy(struct fan53555_device_info *di)
- 	/* Init voltage range and step */
- 	switch (di->chip_id) {
- 	case SILERGY_SYR82X:
-+	case SILERGY_SYR83X:
- 		di->vsel_min = 712500;
- 		di->vsel_step = 12500;
- 		break;
+diff --git a/drivers/spi/spi-img-spfi.c b/drivers/spi/spi-img-spfi.c
+index 439b01e4a2c8..f4a8f470aecc 100644
+--- a/drivers/spi/spi-img-spfi.c
++++ b/drivers/spi/spi-img-spfi.c
+@@ -673,6 +673,8 @@ static int img_spfi_probe(struct platform_device *pdev)
+ 			dma_release_channel(spfi->tx_ch);
+ 		if (spfi->rx_ch)
+ 			dma_release_channel(spfi->rx_ch);
++		spfi->tx_ch = NULL;
++		spfi->rx_ch = NULL;
+ 		dev_warn(spfi->dev, "Failed to get DMA channels, falling back to PIO mode\n");
+ 	} else {
+ 		master->dma_tx = spfi->tx_ch;
 -- 
 2.20.1
 
