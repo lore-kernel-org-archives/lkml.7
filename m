@@ -2,85 +2,93 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C07DC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:49:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6BC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50648217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:49:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 78E7020679
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731874AbfKFOtd (ORCPT
+        id S1730781AbfKFOuF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:49:33 -0500
-Received: from sauhun.de ([88.99.104.3]:53808 "EHLO pokefinder.org"
+        Wed, 6 Nov 2019 09:50:05 -0500
+Received: from foss.arm.com ([217.140.110.172]:41168 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727275AbfKFOtc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:49:32 -0500
-Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id 2518A2C053B;
-        Wed,  6 Nov 2019 15:49:31 +0100 (CET)
-Date:   Wed, 6 Nov 2019 15:49:30 +0100
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Hans Verkuil <hverkuil@xs4all.nl>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [RFC PATCH 08/12] media: pci: cx88: convert to
- i2c_new_scanned_device
-Message-ID: <20191106144930.GA25832@ninjato>
-References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
- <20191106095033.25182-9-wsa+renesas@sang-engineering.com>
- <faa29a3b-c939-eec3-355e-8c0ddc873391@xs4all.nl>
+        id S1726945AbfKFOuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:50:05 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BEE30E;
+        Wed,  6 Nov 2019 06:50:04 -0800 (PST)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66E1A3F71A;
+        Wed,  6 Nov 2019 06:50:03 -0800 (PST)
+Date:   Wed, 6 Nov 2019 14:50:01 +0000
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
+Cc:     linux-kernel@lists.codethink.co.uk,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf/core: fix missing static inline on
+ perf_cgroup_switch
+Message-ID: <20191106145000.GD50610@lakrids.cambridge.arm.com>
+References: <20191106132527.19977-1-ben.dooks@codethink.co.uk>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wRRV7LY7NUeQGEoC"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <faa29a3b-c939-eec3-355e-8c0ddc873391@xs4all.nl>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106132527.19977-1-ben.dooks@codethink.co.uk>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 01:25:27PM +0000, Ben Dooks (Codethink) wrote:
+> It looks like a "static inline" has been missed in front
+> of the empty definition of perf_cgroup_switch under
+> certain configurations. Fixes the following sparse warning:
+> 
+> kernel/events/core.c:1035:1: warning: symbol 'perf_cgroup_switch' was not declared. Should it be static?
+> 
+> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
+> ---
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> Cc: Jiri Olsa <jolsa@redhat.com>
+> Cc: Namhyung Kim <namhyung@kernel.org>
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  kernel/events/core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
---wRRV7LY7NUeQGEoC
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Acked-by: Mark Rutland <mark.rutland@arm.com>
 
-On Wed, Nov 06, 2019 at 12:18:28PM +0100, Hans Verkuil wrote:
-> On 11/6/19 10:50 AM, Wolfram Sang wrote:
-> > Move from the deprecated i2c_new_probed_device() to the new
-> > i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
->=20
-> This commit text is a bit out-of-sync with the actual patch.
+Mark.
 
-Ha, true :) Thanks for pointing out (and the other reviews, too, of
-course!)
-
-
---wRRV7LY7NUeQGEoC
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAl3C3XIACgkQFA3kzBSg
-KbZirA//X36v9Slo0cUGXuxTQ9RfKip30Dw3SpKsmSvrjs225Zx3qTp+1j9NaTQG
-einz6gUyFGFngP8gMFbUx3eBY+0Y1wWfpF3R76NilUR9aIoCKvahHQznpiNeZZ+Z
-Vqj/fGVB6xPMRLdGlHACHh7XXXmCm4zyQ72Mco0o2YmTQBpoP6LM6YYd1+VgVlXN
-3PrM96cUdTCyxFfeHXXr0XFRW5FB+3sgxSNgIJzC8Rrl1j2bfYD6BXPF1Ov8Tmgo
-fBd9DOIJWG4djlw4zVc3l83zNliEDXlzVQfsyVKgn3U5jXsdiX2fSzFGvb7hR9Nv
-U9z+Ap1DF0rq8jzAlgwso8/IlUnV9SrLml5+P+eA4d8+aBNEifqy63S7svDXp75Q
-4ixqa76r/VLfV/yC8i5ib3NJVjZ7BI+Tq033LrFTujOxJW4O/wXE5XrbtDMXVVik
-q7UVbjkpslXQz+2/cCUtU/z+tSlKjGu4ylKSSi0mPY9Nq92l6XvbQOoL0+icFURM
-tFnLaM5ZIDvhZaO/nLmcwPHMgrbChkneTGkfbfZLUJhzLtmbG5KIOoJ8DAsMx7vD
-svZKcFzxJCpkGrrNBRDMWXFbnb0gx+0WMSPITIgcFp5YGF6BJOHIBe4x032789Li
-IPuhi8lSj+khmz84vFYaqINDdlx4zvO38zaEgxjgDTwPLKYUkXE=
-=p3Ys
------END PGP SIGNATURE-----
-
---wRRV7LY7NUeQGEoC--
+> 
+> diff --git a/kernel/events/core.c b/kernel/events/core.c
+> index aec8dba2bea4..a4bad9f32fb7 100644
+> --- a/kernel/events/core.c
+> +++ b/kernel/events/core.c
+> @@ -1031,7 +1031,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
+>  {
+>  }
+>  
+> -void
+> +static inline void
+>  perf_cgroup_switch(struct task_struct *task, struct task_struct *next)
+>  {
+>  }
+> -- 
+> 2.24.0.rc1
+> 
