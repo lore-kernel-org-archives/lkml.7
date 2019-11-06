@@ -2,127 +2,109 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CC40C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:08:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D72AC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:09:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 432CF2178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:08:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 19742217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:09:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="j2sxpBb/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731482AbfKFJIu (ORCPT
+        id S1731526AbfKFJJf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:08:50 -0500
-Received: from retiisi.org.uk ([95.216.213.190]:56050 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726891AbfKFJIt (ORCPT
+        Wed, 6 Nov 2019 04:09:35 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:45618 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727041AbfKFJJe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:08:49 -0500
-Received: from valkosipuli.localdomain (valkosipuli.retiisi.org.uk [IPv6:2a01:4f9:c010:4572::80:2])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by hillosipuli.retiisi.org.uk (Postfix) with ESMTPS id 7A2CF634C87;
-        Wed,  6 Nov 2019 11:07:33 +0200 (EET)
-Received: from sailus by valkosipuli.localdomain with local (Exim 4.92)
-        (envelope-from <sakari.ailus@retiisi.org.uk>)
-        id 1iSHHo-0002Vb-HM; Wed, 06 Nov 2019 11:07:32 +0200
-Date:   Wed, 6 Nov 2019 11:07:32 +0200
-From:   Sakari Ailus <sakari.ailus@iki.fi>
-To:     Benoit Parrot <bparrot@ti.com>
-Cc:     Hans Verkuil <hverkuil@xs4all.nl>, linux-media@vger.kernel.org,
-        Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [Patch v2 14/20] media: ti-vpe: cal: Add AM654 support
-Message-ID: <20191106090732.GC6253@valkosipuli.retiisi.org.uk>
-References: <20191104193140.31145-1-bparrot@ti.com>
- <20191104193140.31145-15-bparrot@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191104193140.31145-15-bparrot@ti.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 6 Nov 2019 04:09:34 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6990N6090942;
+        Wed, 6 Nov 2019 09:09:23 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id; s=corp-2019-08-05;
+ bh=vtOUSXhJOWeZNpYZPR4dz6ez1tfCq89k9rogWBbRY90=;
+ b=j2sxpBb/lPk6e1dqkColY5vG17mDQmIPt4iVQK1+2HUYK5wbbvi6oMc1BF3ahclFly3l
+ E+eLHsmK/xeAnBrlQJGA5/1O8OrSPd3DT75xwFL914AdOK8ALKt5x8mqFR4frnMd7+z7
+ qFKGRf82F909hXBBkpKrLrogskVGebi7mXWMPsXXfS5yQ4wSP/7j26UD2WXAOU+pArip
+ b8RorxKwywk0k4PCn5tWZv953Mo/quv2oXWRr9ie3oI+WDuUzPOAlhfw47dAIrWO618A
+ uBBFOBZtsPPDus3sqdggL9usJRw8C59LIym6ehNTTC8P+Xf2wW18qrXpK+7179CQe/Oh Cw== 
+Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
+        by userp2120.oracle.com with ESMTP id 2w12erca4k-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 09:09:23 +0000
+Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
+        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA698rXT015312;
+        Wed, 6 Nov 2019 09:09:22 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3020.oracle.com with ESMTP id 2w31631dsm-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 09:09:22 +0000
+Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA699LR2006042;
+        Wed, 6 Nov 2019 09:09:21 GMT
+Received: from z2.cn.oracle.com (/10.182.71.218)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 01:09:21 -0800
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        rafael.j.wysocki@intel.com, joao.m.martins@oracle.com,
+        mtosatti@redhat.com, Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH v2 0/4] misc fixes on halt-poll code both KVM and guest
+Date:   Wed,  6 Nov 2019 17:08:48 +0800
+Message-Id: <1573031332-2121-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911060096
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911060096
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Benoit,
+This patchset tries to fix below issues:
 
-On Mon, Nov 04, 2019 at 01:31:34PM -0600, Benoit Parrot wrote:
-> Add the needed control module register bit layout to support the AM654
-> family of devices.
-> 
-> Signed-off-by: Benoit Parrot <bparrot@ti.com>
-> ---
->  drivers/media/platform/Kconfig      |  2 +-
->  drivers/media/platform/ti-vpe/cal.c | 28 +++++++++++++++++++++++++++-
->  2 files changed, 28 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/media/platform/Kconfig b/drivers/media/platform/Kconfig
-> index e84f35d3a68e..995f4c67f764 100644
-> --- a/drivers/media/platform/Kconfig
-> +++ b/drivers/media/platform/Kconfig
-> @@ -151,7 +151,7 @@ source "drivers/media/platform/sunxi/Kconfig"
->  config VIDEO_TI_CAL
->  	tristate "TI CAL (Camera Adaptation Layer) driver"
->  	depends on VIDEO_DEV && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
-> -	depends on SOC_DRA7XX || COMPILE_TEST
-> +	depends on SOC_DRA7XX || ARCH_K3 || COMPILE_TEST
->  	select VIDEOBUF2_DMA_CONTIG
->  	select V4L2_FWNODE
->  	help
-> diff --git a/drivers/media/platform/ti-vpe/cal.c b/drivers/media/platform/ti-vpe/cal.c
-> index 72ed2348389d..45653e9ed6cd 100644
-> --- a/drivers/media/platform/ti-vpe/cal.c
-> +++ b/drivers/media/platform/ti-vpe/cal.c
-> @@ -322,6 +322,26 @@ static struct cal_data dra76x_cal_data = {
->  	.flags = 0,
->  };
->  
-> +static struct reg_field am654_ctrl_core_csi0_reg_fields[F_MAX_FIELDS] = {
-> +	[F_CTRLCLKEN] = REG_FIELD(0, 15, 15),
-> +	[F_CAMMODE] = REG_FIELD(0, 24, 25),
-> +	[F_LANEENABLE] = REG_FIELD(0, 0, 4),
-> +};
-> +
-> +static struct cal_csi2_phy am654_cal_csi_phy[] = {
-> +	{
-> +		.base_fields = am654_ctrl_core_csi0_reg_fields,
-> +		.num_lanes = 5,
-> +	},
-> +};
-> +
-> +static struct cal_data am654_cal_data = {
-> +	.csi2_phy_core = am654_cal_csi_phy,
-> +	.num_csi2_phy = ARRAY_SIZE(am654_cal_csi_phy),
-> +
-> +	.flags = 0,
+1. Admin could set halt_poll_ns to 0 at runtime to disable poll and kernel
+behave just like the generic halt driver. Then If guest_halt_poll_grow_start
+is set to 0 and guest_halt_poll_ns set to nonzero later, cpu_halt_poll_us will
+never grow beyond 0. The first two patches fix this issue from both kvm and
+guest side.
 
-Same comments as on 12th patch.
+2. guest_halt_poll_grow_start and guest_halt_poll_ns could be adjusted at
+runtime by admin, this could make a window where cpu_halt_poll_us jump out
+of the boundary. the window could be long in some cases(e.g. guest_halt_poll_grow_start
+is bumped and cpu_halt_poll_us is shrinking) The last two patches fix this
+issue from both kvm and guest side.
 
-Could all these structs be const?
+3. The 4th patch also simplifies branch check code.
 
-> +};
-> +
->  /*
->   * there is one cal_dev structure in the driver, it is shared by
->   * all instances.
-> @@ -548,7 +568,9 @@ static void camerarx_phy_enable(struct cal_ctx *ctx)
->  	/* Always enable all lanes at the phy control level */
->  	max_lanes = (1 << cal_data_get_phy_max_lanes(ctx)) - 1;
->  	regmap_field_write(phy->fields[F_LANEENABLE], max_lanes);
-> -	regmap_field_write(phy->fields[F_CSI_MODE], 1);
-> +	/* F_CSI_MODE is not present on every architecture */
-> +	if (phy->fields[F_CSI_MODE])
-> +		regmap_field_write(phy->fields[F_CSI_MODE], 1);
->  	regmap_field_write(phy->fields[F_CTRLCLKEN], 1);
->  }
->  
+v2:
+Rewrite the patches and drop unnecessory changes
+
+Zhenzhong Duan (4):
+  cpuidle-haltpoll: ensure grow start value is nonzero
+  KVM: ensure grow start value is nonzero
+  cpuidle-haltpoll: ensure cpu_halt_poll_us in right scope
+  KVM: ensure vCPU halt_poll_us in right scope
+
+ drivers/cpuidle/governors/haltpoll.c | 50 ++++++++++++++++++++++++-----------
+ virt/kvm/kvm_main.c                  | 51 ++++++++++++++++++++++++------------
+ 2 files changed, 68 insertions(+), 33 deletions(-)
 
 -- 
-Regards,
+1.8.3.1
 
-Sakari Ailus
