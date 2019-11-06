@@ -2,87 +2,105 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E94CC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:54:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDAF6C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:56:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F1CA217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8CFB6217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:56:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T8/62/ea"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727934AbfKFUyD (ORCPT
+        id S1728547AbfKFU4F (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:54:03 -0500
-Received: from mga12.intel.com ([192.55.52.136]:11844 "EHLO mga12.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727587AbfKFUyC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:54:02 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 12:54:02 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="228688826"
-Received: from cjense2x-mobl1.amr.corp.intel.com (HELO [10.251.130.63]) ([10.251.130.63])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Nov 2019 12:54:01 -0800
-Subject: Re: [PATCH 0/5] ASoC: SOF: Intel: Soundwire integration
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
-References: <20191023211504.32675-1-pierre-louis.bossart@linux.intel.com>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <633d2d68-dabe-be97-260f-2914c7f386b3@linux.intel.com>
-Date:   Wed, 6 Nov 2019 14:54:00 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
+        Wed, 6 Nov 2019 15:56:05 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49942 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727376AbfKFU4F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 15:56:05 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6KtdZU073969;
+        Wed, 6 Nov 2019 14:55:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573073739;
+        bh=w+Tyy9QsPPN1sBDVfeliF6HcdaVsegn5tBhO2yOcUfA=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=T8/62/eaTgvMfifJlSmFVr/I9zNJa3P1Kw3aOcCh8XKIlnYIUa3v5+4P8r0CHJchU
+         vInP7lCxFryjt1ylRgrk3XPwzdZnpvm5o/2OLig/MU/5DuuNzT6Srg/tlkcrH72MgR
+         0kj1aWa5V4vjkD3ZrjIYpalMQIaq0dCgR2d6iXGw=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6KtdjK035505
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 14:55:39 -0600
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 14:55:38 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 14:55:38 -0600
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id xA6KtcLI095631;
+        Wed, 6 Nov 2019 14:55:38 -0600
+Date:   Wed, 6 Nov 2019 14:58:39 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [Patch v2 12/20] media: ti-vpe: cal: Add DRA76x support
+Message-ID: <20191106205839.3zxqdttlqmrzghla@ti.com>
+References: <20191104193140.31145-1-bparrot@ti.com>
+ <20191104193140.31145-13-bparrot@ti.com>
+ <20191106085709.GB6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-In-Reply-To: <20191023211504.32675-1-pierre-louis.bossart@linux.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+In-Reply-To: <20191106085709.GB6253@valkosipuli.retiisi.org.uk>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 10/23/19 4:14 PM, Pierre-Louis Bossart wrote:
-> This patchset applies on top of the series "[PATCH 0/4] soundwire:
-> update ASoC interfaces". The SOF/Intel code makes use of the
-> interfaces defined for initialization.
+Sakari Ailus <sakari.ailus@iki.fi> wrote on Wed [2019-Nov-06 10:57:09 +0200]:
+> Hi Benoit,
 > 
-> Build support for SoundWire is not provided for now, all
-> Soundwire-related code will be handled with a dummy fallback. We will
-> enable SoundWire interfaces in the Kconfigs when the functionality is
-> enabled in the soundwire tree.
+> On Mon, Nov 04, 2019 at 01:31:32PM -0600, Benoit Parrot wrote:
 > 
-> In short, if the interfaces are agreed on, there is no risk with the
-> integration of these patches on the ASoC side.
+> ...
+> 
+> > +static struct cal_data dra76x_cal_data = {
+> 
+> const?
 
-Mark, Vinod, any comments/objections on the suggested interfaces? I 
-tried to make your life simpler with a clean separation between 
-SoundWire and ASoC/SOF.
+Hmm, most likely.
 
 > 
-> Pierre-Louis Bossart (5):
->    ASoC: SOF: Intel: add SoundWire configuration interface
->    ASoC: SOF: IPC: dai-intel: move ALH declarations in header file
->    ASoC: SOF: Intel: hda: add SoundWire stream config/free callbacks
->    ASoC: SOF: Intel: hda: initial SoundWire machine driver autodetect
->    ASoC: SOF: Intel: hda: disable SoundWire interrupts on suspend
+> > +	.csi2_phy_core = dra76x_cal_csi_phy,
+> > +	.num_csi2_phy = ARRAY_SIZE(dra76x_cal_csi_phy),
+> > +
 > 
->   include/sound/sof/dai-intel.h    |  18 +--
->   sound/soc/sof/intel/hda-dsp.c    |   2 +
->   sound/soc/sof/intel/hda-loader.c |  13 ++
->   sound/soc/sof/intel/hda.c        | 230 ++++++++++++++++++++++++++++++-
->   sound/soc/sof/intel/hda.h        |  44 ++++++
->   5 files changed, 295 insertions(+), 12 deletions(-)
+> This newline seems extra.
 > 
+> > +	.flags = 0,
+> 
+> And flags will be zero in any case, as one more struct members are assigned
+> to.
+
+Is this guaranteed or compiler version dependent?
+
+> 
+> > +};
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
