@@ -2,134 +2,175 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2A15C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95AE5C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E69E20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F54721882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:46:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SPOZRLbq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbfKFDqN (ORCPT
+        id S1731221AbfKFDqY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:46:13 -0500
-Received: from mail-io1-f70.google.com ([209.85.166.70]:36315 "EHLO
-        mail-io1-f70.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726368AbfKFDqM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:46:12 -0500
-Received: by mail-io1-f70.google.com with SMTP id g126so17183704iof.3
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:46:09 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=VXg4Mq0SWPKWmRdwQW93Z51ZtCZqzCSQfSajmJNia7w=;
-        b=GbhTclleGgZ9hYuTcsDrtZn7uJVKnh9191Rn3/RMFuH7wpgTNeeExSuuPV0xe0hnCP
-         yQYbKd5q1ZKeDxbUiFcr9cObWpTPcLALtaR/H9EuTOe6oHUW43RrUPTsAcKt+ED69z1A
-         oIoavWJhRDUwNGv66n1pThfkuzbYbgwcpD6EQkbFuIlsq4a4P3ikpfIBLY/i84uIxVUY
-         RyG4XTWvK9CgqZTIkB9YSGUXpLmZu9ltdcJy+3d3ZRl6WDosMtuhAfcRIyYPm6iYEks4
-         jcNOtmGYRxYb2UkWBR2bKb51qZzmfn5qoiC17ar29rBlW6kmduWs5BxPIusTIueYVkC+
-         PWXQ==
-X-Gm-Message-State: APjAAAV0XtfBsaQfN+HxQIFPsGoEeFHtEthcw6ukdZwe7NE6xmhNgACX
-        px/mPbk82/H2pwO6PlKsDLrJh90QIObZn0Pjne92pfylftQh
-X-Google-Smtp-Source: APXvYqz0exuhDAqf8OGKbULgDJ3QFG01eYS7lhaQg2N475G/AW27mI4xyzY1bu/1aPrqAouAnKS7BMCHBgn41UKC4+7ZbegNbmbR
+        Tue, 5 Nov 2019 22:46:24 -0500
+Received: from mail-eopbgr40084.outbound.protection.outlook.com ([40.107.4.84]:63968
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726368AbfKFDqX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:46:23 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=cIMbOqOEbdeZaNS6jdABL+6GGOxy7Ru4DmkNqIoRRcNelsO8Ln0GrLlNn49AI5HsIi3AdF9fO3zEwywqE5F4jNAGemJwCHpSfZDF6p3+JEEV1skAalKgSytf/Dsy3Hq/Pv93LUTZ3TWZ/REP5lj3dLC3Lo3SticFV/sp9zeCz/3Kx7jkIgOyUGkNwoqc+wpi4kJqij7xot0WX6LIuTvktBpZupSpLGhuJx/6qEDvSNAvKjFdOd3OffXIbo5/5IRuznX7VxAh9e/RrUavsIlcqMv4+pyr8LWGhk9ZZxWB38IfC4QkFctdGfSrz/dswsaesgYMyR8P4iLTuxsEIiSZHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P68tMLpWq9kFEBhnHN69n57VwGyIoQLcKTrKde2RcyM=;
+ b=SqJr9nKR3HUmdnYkFDvSxCFkQzjJYrWuIxGVg32XaAkGpKTQJs9yjzLFBjiAjAsXPOn9y1dJhzhGGtY7J5MIIDuiPvJUVcuy/8OnrgF3eUDc0w8hzt+MlHxQGQE2pgZiX/GsGuP94fXaEdA10Qa3eaMt+aRpLnfzZx/9oXpcPPLtEygVimqr4mJxMnVoSJOAHLosu6W8v00z+MVoaE5Bfwhln9+vO2ZVX6CLGUgOEeXd8hkZkB04dzoCobl6jZLLOmA1gZX/uEqe0XQqUQaCj0cyBX2FYobiqxHv6mrT7WieA5pFaOkZ5Ubv6k5ailVwHYJYOOLwzZKo5+4RyJwODw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=P68tMLpWq9kFEBhnHN69n57VwGyIoQLcKTrKde2RcyM=;
+ b=SPOZRLbqosgCagKQ2mpteTOF49VMK5soKXPGWJwxrdkUHcK8EaDwiawNIupRi2/frrZjBEfz+NnuhbX4rlemHvkqR00UhQKaCIVdowp6ipnNJoiHB4Cgl+4Hk9fd44NHeUNA+zo1+alPyymILQy+/El26yAdQEvr9ZAbgn3BFL8=
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com (10.169.132.138) by
+ VI1PR0401MB2352.eurprd04.prod.outlook.com (10.169.134.137) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 03:46:17 +0000
+Received: from VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::2d81:2d60:747c:d0ad]) by VI1PR0401MB2237.eurprd04.prod.outlook.com
+ ([fe80::2d81:2d60:747c:d0ad%3]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 03:46:17 +0000
+From:   "M.h. Lian" <minghuan.lian@nxp.com>
+To:     Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>,
+        Roy Zang <roy.zang@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Thread-Topic: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Thread-Index: AQHVlFNBk08WsOHby0SolYA/Js4oiKd9gAVQ
+Date:   Wed, 6 Nov 2019 03:46:17 +0000
+Message-ID: <VI1PR0401MB22372AF4F02D3F22EA2184BEE8790@VI1PR0401MB2237.eurprd04.prod.outlook.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
+ <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
+ <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
+In-Reply-To: <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
+Accept-Language: zh-CN, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=minghuan.lian@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: f99e9545-d31c-455e-4ed0-08d7626be115
+x-ms-traffictypediagnostic: VI1PR0401MB2352:|VI1PR0401MB2352:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <VI1PR0401MB23522885BC1D7E465C616B66E8790@VI1PR0401MB2352.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(366004)(396003)(39860400002)(376002)(199004)(189003)(13464003)(7736002)(7416002)(486006)(55016002)(6436002)(81156014)(64756008)(11346002)(476003)(26005)(8676002)(6506007)(7696005)(81166006)(76176011)(53546011)(186003)(66946007)(66556008)(8936002)(316002)(102836004)(66476007)(229853002)(110136005)(86362001)(54906003)(3846002)(6116002)(305945005)(66066001)(76116006)(74316002)(66446008)(99286004)(4326008)(71190400001)(14454004)(33656002)(25786009)(52536014)(71200400001)(5660300002)(14444005)(256004)(9686003)(6246003)(2906002)(478600001)(446003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR0401MB2352;H:VI1PR0401MB2237.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 8RlyC+F704Tsa4Un8luDcZeE+6jsRhFfanJHZuTyfP2QMAIP+j5KYNNa/i2//mcK9qDV429BhjOLOQei6qlcHwFQIJS42uvIhI6HWpXdueu8Y6pKIkdkgy84/G+G2y9iOXCqePouPQAJODDzd3HPc8vwv3ni9k31WZVs99t6kI4V6zhAsFkYX7XaIpTJmKvw4UPqPU3MzHAGHjsu/BvFz6YP6/aZn9DAK096vByOeMk+Bry4oGNAL33ac4Wei+8CG0wzuxV1r38nI/dhUMnA1gana7yJTYdDwXafTWHTWcr1ZFSY5XGC3/UN3Ib1E4MRw1FzCCvNn6t5hwuYkIwuY4gRG2zJzaQAIHd+vy9EzKzi/+QAxjnXLVjfs5WqTrVJCKpcFL59g9+4Ncm99oYSM1mI6nZbXZJw2q/j//t2m/1aTE1bxuKgVtUGHN8xyeoU
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-X-Received: by 2002:a5e:c31a:: with SMTP id a26mr32781557iok.0.1573011969464;
- Tue, 05 Nov 2019 19:46:09 -0800 (PST)
-Date:   Tue, 05 Nov 2019 19:46:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000aae1480596a5632b@google.com>
-Subject: WARNING: refcount bug in j1939_netdev_start
-From:   syzbot <syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, kernel@pengutronix.de,
-        linux-can@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@rempel-privat.de, mkl@pengutronix.de, netdev@vger.kernel.org,
-        robin@protonic.nl, socketcan@hartkopp.net,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: f99e9545-d31c-455e-4ed0-08d7626be115
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 03:46:17.2967
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: hxJVY/IUmlPvq2OO6Evi5oJN5ISICEuEkZeXjX7WTCHwFXHc/InrBMqoZqKNZ1T5SHW1JgUTda3TpeDNkJ77hw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR0401MB2352
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
-
-syzbot found the following crash on:
-
-HEAD commit:    a99d8080 Linux 5.4-rc6
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=11a7443ae00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=8c5e2eca3f31f9bf
-dashboard link: https://syzkaller.appspot.com/bug?extid=afd421337a736d6c1ee6
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+afd421337a736d6c1ee6@syzkaller.appspotmail.com
-
-------------[ cut here ]------------
-refcount_t: increment on 0; use-after-free.
-WARNING: CPU: 0 PID: 27509 at lib/refcount.c:156 refcount_inc_checked  
-lib/refcount.c:156 [inline]
-WARNING: CPU: 0 PID: 27509 at lib/refcount.c:156  
-refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Kernel panic - not syncing: panic_on_warn set ...
-CPU: 0 PID: 27509 Comm: syz-executor.5 Not tainted 5.4.0-rc6 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
-  panic+0x2e3/0x75c kernel/panic.c:221
-  __warn.cold+0x2f/0x35 kernel/panic.c:582
-  report_bug+0x289/0x300 lib/bug.c:195
-  fixup_bug arch/x86/kernel/traps.c:179 [inline]
-  fixup_bug arch/x86/kernel/traps.c:174 [inline]
-  do_error_trap+0x11b/0x200 arch/x86/kernel/traps.c:272
-  do_invalid_op+0x37/0x50 arch/x86/kernel/traps.c:291
-  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
-RIP: 0010:refcount_inc_checked lib/refcount.c:156 [inline]
-RIP: 0010:refcount_inc_checked+0x61/0x70 lib/refcount.c:154
-Code: 1d ce 0c 7e 06 31 ff 89 de e8 bb a8 2e fe 84 db 75 dd e8 72 a7 2e fe  
-48 c7 c7 c0 af e6 87 c6 05 ae 0c 7e 06 01 e8 57 dc ff fd <0f> 0b eb c1 90  
-90 90 90 90 90 90 90 90 90 90 55 48 89 e5 41 57 41
-RSP: 0018:ffff88805c33fce8 EFLAGS: 00010282
-RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-RDX: 0000000000016597 RSI: ffffffff815cc396 RDI: ffffed100b867f8f
-RBP: ffff88805c33fcf8 R08: ffff8880921ae440 R09: ffffed1015d04101
-R10: ffffed1015d04100 R11: ffff8880ae820807 R12: ffff8880604010f0
-R13: ffff88805c33fe00 R14: ffff888045255580 R15: 0000000000000118
-  kref_get include/linux/kref.h:45 [inline]
-  j1939_netdev_start+0x53/0x550 net/can/j1939/main.c:247
-  j1939_sk_bind+0x65a/0x8e0 net/can/j1939/socket.c:438
-  __sys_bind+0x239/0x290 net/socket.c:1647
-  __do_sys_bind net/socket.c:1658 [inline]
-  __se_sys_bind net/socket.c:1656 [inline]
-  __x64_sys_bind+0x73/0xb0 net/socket.c:1656
-  do_syscall_64+0xfa/0x760 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x45a219
-Code: ad b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00 00 66 90 48 89 f8 48 89 f7  
-48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff  
-ff 0f 83 7b b6 fb ff c3 66 2e 0f 1f 84 00 00 00 00
-RSP: 002b:00007f2ba4d29c78 EFLAGS: 00000246 ORIG_RAX: 0000000000000031
-RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 000000000045a219
-RDX: 0000000000000018 RSI: 0000000020000240 RDI: 0000000000000003
-RBP: 000000000075bfc8 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f2ba4d2a6d4
-R13: 00000000004c057e R14: 00000000004d2c50 R15: 00000000ffffffff
-Kernel Offset: disabled
-Rebooting in 86400 seconds..
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+SGkgTG9yZW56bywNCg0KU29ycnkgZm9yIHRoZSBsYXRlIHJlcGx5Lg0KDQpBY2tlZC1ieTogTWlu
+Z2h1YW4gTGlhbiA8bWluZ2h1YW4uTGlhbkBueHAuY29tPg0KDQpUaGFua3MsDQpNaW5naHVhbg0K
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFhpYW93ZWkgQmFvIDx4aWFv
+d2VpLmJhb0BueHAuY29tPg0KPiBTZW50OiBXZWRuZXNkYXksIE5vdmVtYmVyIDYsIDIwMTkgMTE6
+MzYgQU0NCj4gVG86IExvcmVuem8gUGllcmFsaXNpIDxsb3JlbnpvLnBpZXJhbGlzaUBhcm0uY29t
+Pg0KPiBDYzogcm9iaCtkdEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25n
+dW9Aa2VybmVsLm9yZzsNCj4gTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4g
+PG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkNCj4gSHUgPG1pbmdrYWkuaHVAbnhwLmNv
+bT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsgbGludXgtDQo+IHBjaUB2Z2VyLmtlcm5l
+bC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC0NCj4ga2VybmVsQHZnZXIu
+a2VybmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eHBw
+Yy0NCj4gZGV2QGxpc3RzLm96bGFicy5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207IFoucS4gSG91
+DQo+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gU3ViamVjdDogUkU6IFtQQVRDSCB2NiAzLzNd
+IFBDSTogbGF5ZXJzY2FwZTogQWRkIExTMTAyOGEgc3VwcG9ydA0KPiANCj4gDQo+IA0KPiA+IC0t
+LS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gRnJvbTogTG9yZW56byBQaWVyYWxpc2kgPGxv
+cmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+ID4gU2VudDogMjAxOcTqMTHUwjXI1SAyMDozMw0K
+PiA+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4gPiBDYzogcm9iaCtk
+dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsN
+Cj4gTGVvDQo+ID4gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IE0uaC4gTGlhbiA8bWluZ2h1YW4u
+bGlhbkBueHAuY29tPjsgTWluZ2thaQ0KPiBIdQ0KPiA+IDxtaW5na2FpLmh1QG54cC5jb20+OyBS
+b3kgWmFuZyA8cm95LnphbmdAbnhwLmNvbT47DQo+ID4gbGludXgtcGNpQHZnZXIua2VybmVsLm9y
+ZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gbGludXgta2VybmVsQHZnZXIua2Vy
+bmVsLm9yZzsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0KPiA+IGxpbnV4
+cHBjLWRldkBsaXN0cy5vemxhYnMub3JnOyBiaGVsZ2Fhc0Bnb29nbGUuY29tOyBaLnEuIEhvdQ0K
+PiA+IDx6aGlxaWFuZy5ob3VAbnhwLmNvbT4NCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY2IDMv
+M10gUENJOiBsYXllcnNjYXBlOiBBZGQgTFMxMDI4YSBzdXBwb3J0DQo+ID4NCj4gPiBPbiBNb24s
+IFNlcCAwMiwgMjAxOSBhdCAxMTo0MzoxOUFNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4g
+PiA+IEFkZCBzdXBwb3J0IGZvciB0aGUgTFMxMDI4YSBQQ0llIGNvbnRyb2xsZXIuDQo+ID4gPg0K
+PiA+ID4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93ZWkuYmFvQG54cC5jb20+DQo+
+ID4gPiBTaWduZWQtb2ZmLWJ5OiBIb3UgWmhpcWlhbmcgPFpoaXFpYW5nLkhvdUBueHAuY29tPg0K
+PiA+ID4gLS0tDQo+ID4gPiB2MjoNCj4gPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiA+IHYzOg0KPiA+
+ID4gIC0gUmV1c2UgdGhlIGxzMjA4OCBkcml2ZXIgZGF0YSBzdHJ1Y3R1cnQuDQo+ID4gPiB2NDoN
+Cj4gPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiA+IHY1Og0KPiA+ID4gIC0gTm8gY2hhbmdlLg0KPiA+
+ID4gdjY6DQo+ID4gPiAgLSBObyBjaGFuZ2UuDQo+ID4gPg0KPiA+ID4gIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMgfCAxICsNCj4gPiA+ICAxIGZpbGUgY2hhbmdl
+ZCwgMSBpbnNlcnRpb24oKykNCj4gPg0KPiA+IEkgaGF2ZSBub3Qgc2VlbiBhbnkgY29tbWVudCBv
+biBhbnkgbGF5ZXJzY2FwZSBkcml2ZXIgcGF0Y2hlcyBjb21pbmcNCj4gPiBmcm9tIHRoZSBtYWlu
+dGFpbmVycyBhcyBsaXN0ZWQgaW4gdGhlIE1BSU5UQUlORVJTIGZpbGUgKGFuZCBDQ2VkIGluIHRo
+aXMNCj4gc2VyaWVzKS4NCj4gPg0KPiA+IEkgcmVxdWVzdCBtYWludGFpbmVycyBBQ0sgb24gdGhl
+c2UgcGF0Y2hlcyBhbmQgSSBleHBlY3QgdGhlbSB0byBzdGFydA0KPiA+IHJldmlld2luZyB5b3Vy
+IGNvZGUgaWYgdGhleSB3YW50IHRvIGJlIHN0aWxsIGNvbnNpZGVyZWQgbWFpbnRhaW5lcnMNCj4g
+PiBmb3IgdGhpcyBkcml2ZXIuDQo+ID4NCj4gPiBUaGUgY2hhbmdlcyBsb29rIE9LIG1pbnVzIFNo
+YXduJ3MgcmVtYXJrIG9uIGNvbXBhdGlibGUgc3RyaW5nIHRoYXQgd2FzDQo+ID4gaWdub3JlZC4N
+Cj4gDQo+IEhpIExvcmVuem8sDQo+IA0KPiBUaGFua3MgZm9yIHlvdXIgY29tbWVudHMuDQo+IA0K
+PiBJbiBmYWN0LCB0aGUgcGF0Y2hlcyBoYXZlIHJldmlld2VkIGluIG91ciBpbnRlcm5hbCBtYWls
+IGxpc3QsIGFmdGVyIHRoZSByZXZpZXcgYnkNCj4gTWluZ2h1YW4gYW5kIE1pbmdrYWksIEkgd2ls
+bCBzZW5kIHRoZXNlIHBhdGNoZXMgdG8gb3BlbnNvdXJjZSwgdGhleSB3aWxsDQo+IGdpdmUgdGhl
+IEFDSyB3aGVuIHRoZXNlIHBhdGNoZXMgc2VlbXMgaXMgT0sgYW5kIG5vIGNvbW1lbnRzIG9uIHRo
+aXMuDQo+IA0KPiBUaGFua3MNCj4gWGlhb3dlaQ0KPiANCj4gPg0KPiA+IFRoYW5rcywNCj4gPiBM
+b3JlbnpvDQo+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3
+Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3Bj
+aS1sYXllcnNjYXBlLmMNCj4gPiA+IGluZGV4IDNhNWZhMjYuLmYyNGY3OWEgMTAwNjQ0DQo+ID4g
+PiAtLS0gYS9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4g
+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4g
+PiBAQCAtMjYzLDYgKzI2Myw3IEBAIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbHNfcGNpZV9kcnZkYXRh
+DQo+ID4gPiBsczIwODhfZHJ2ZGF0YSA9IHsgIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2ZfZGV2aWNl
+X2lkIGxzX3BjaWVfb2ZfbWF0Y2hbXSA9IHsNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2ws
+bHMxMDEyYS1wY2llIiwgLmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDIxYS1wY2llIiwgLmRhdGEgPSAmbHMxMDIxX2RydmRhdGEgfSwN
+Cj4gPiA+ICsJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDI4YS1wY2llIiwgLmRhdGEgPSAmbHMy
+MDg4X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQzYS1wY2ll
+IiwgLmRhdGEgPSAmbHMxMDQzX2RydmRhdGEgfSwNCj4gPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJm
+c2wsbHMxMDQ2YS1wY2llIiwgLmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiA+ICAJeyAu
+Y29tcGF0aWJsZSA9ICJmc2wsbHMyMDgwYS1wY2llIiwgLmRhdGEgPSAmbHMyMDgwX2RydmRhdGEg
+fSwNCj4gPiA+IC0tDQo+ID4gPiAyLjkuNQ0KPiA+ID4NCg==
