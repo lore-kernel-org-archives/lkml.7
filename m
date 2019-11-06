@@ -2,131 +2,209 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F10D3C43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:45:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 908F2FC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:46:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB20A2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:45:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552AD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:46:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="rLZM9R01"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732797AbfKFWpI (ORCPT
+        id S1732800AbfKFWqB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:45:08 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:38254 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727154AbfKFWpI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:45:08 -0500
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6MggIv103088
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 17:45:04 -0500
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2w44af5csj-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:45:04 -0500
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <zohar@linux.ibm.com>;
-        Wed, 6 Nov 2019 22:45:02 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 22:45:00 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6MixhP55640138
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 22:44:59 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4F376A4076;
-        Wed,  6 Nov 2019 22:44:59 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55B85A406F;
-        Wed,  6 Nov 2019 22:44:58 +0000 (GMT)
-Received: from dhcp-9-31-102-173.watson.ibm.com (unknown [9.31.102.173])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 22:44:58 +0000 (GMT)
-Subject: Re: [PATCH v4 01/10] IMA: Defined an IMA hook to measure keys on
- key create or update
-From:   Mimi Zohar <zohar@linux.ibm.com>
-To:     Lakshmi Ramasubramanian <nramas@linux.microsoft.com>,
-        dhowells@redhat.com, matthewgarrett@google.com, sashal@kernel.org,
-        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
-        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-In-Reply-To: <20191106190116.2578-2-nramas@linux.microsoft.com>
-References: <20191106190116.2578-1-nramas@linux.microsoft.com>
-         <20191106190116.2578-2-nramas@linux.microsoft.com>
-Content-Type: text/plain; charset="UTF-8"
-Date:   Wed, 06 Nov 2019 17:43:09 -0500
-Mime-Version: 1.0
-X-Mailer: Evolution 3.20.5 (3.20.5-1.fc24) 
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110622-0012-0000-0000-000003615CB7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110622-0013-0000-0000-0000219CBB65
-Message-Id: <1573080189.5028.313.camel@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=3 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911060218
+        Wed, 6 Nov 2019 17:46:01 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:44091 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbfKFWqB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:46:01 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477hTJ51wWz9sP3;
+        Thu,  7 Nov 2019 09:45:56 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573080358;
+        bh=+XwusxsL0b4rJBumGPAzaru0IjxloMP02YE8X8kLabo=;
+        h=Date:From:To:Cc:Subject:From;
+        b=rLZM9R01VqV7vgXOwFbsOeF67bN/WIoz/XjxhJHxjXsf5MMzeYoPJX8x9VBP9DGCt
+         ZTdQDaXK5fcRKzIJmWnQcPLPI4RtfkEMrOiISWci3m159I0wOmpUhn/zfNbH+FLtiW
+         BNo6AgPyOPsgVJDzcwGXom+j5WzDPafsCOYLjGw0b5mljlguia+6p8mf2aIoqPwBUg
+         yb4jlPWvHNJhO1zYHTKk84AzaXBCj+hS0zKb3nEolOEbW3SkHjLgefMnLDSAZndLa0
+         5uEgN05cqImpGB4YsLppF3q13bKXt8miBMeF2pnBoEdrCCdEXOzlvR4O4qFlgWVbG5
+         k3X9bb9Mbc7ig==
+Date:   Thu, 7 Nov 2019 09:45:55 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
+        Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>,
+        ARM <linux-arm-kernel@lists.infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>,
+        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Fabio Estevam <festevam@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: linux-next: manual merge of the pci tree with the arm-soc tree
+Message-ID: <20191107094555.6296b943@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; boundary="Sig_//QyZLzC9Q_pWsXAriLWbKQm";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-11-06 at 11:01 -0800, Lakshmi Ramasubramanian wrote:
-> Asymmetric keys used for verifying file signatures or certificates
-> are currently not included in the IMA measurement list.
-> 
-> This patch defines a new IMA hook namely ima_post_key_create_or_update()
-> to measure asymmetric keys.
-> 
-> Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  security/integrity/ima/ima_main.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
-> 
-> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-> index d7e987baf127..a0e233afe876 100644
-> --- a/security/integrity/ima/ima_main.c
-> +++ b/security/integrity/ima/ima_main.c
-> @@ -721,6 +721,22 @@ void ima_kexec_cmdline(const void *buf, int size)
->  					   KEXEC_CMDLINE, 0);
->  }
->  
-> +/**
-> + * ima_post_key_create_or_update - measure asymmetric keys
-> + * @keyring: keyring to which the key is linked to
-> + * @key: created or updated key
-> + * @flags: key flags
-> + * @create: flag indicating whether the key was created or updated
-> + *
-> + * Keys can only be measured, not appraised.
-> + */
-> +void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-> +				   unsigned long flags, bool create)
-> +{
-> +	if ((keyring != NULL) && (key != NULL))
-> +		return;
+--Sig_//QyZLzC9Q_pWsXAriLWbKQm
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-I would move the patch that defines the "keyring=" policy option prior
-to this one.  Include the call to process_buffer_measurement() in this
-patch.  A subsequent patch would add support to defer measuring the
-key, by calling a function named something like
-ima_queue_key_measurement().
+Hi all,
 
-Mimi
+Today's linux-next merge of the pci tree got a conflict in:
 
-> +}
-> +
->  static int __init init_ima(void)
->  {
->  	int error;
+  arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
 
+between commit:
+
+  68e36a429ef5 ("arm64: dts: ls1028a: Move thermal-zone out of SoC")
+
+from the arm-soc tree and commit:
+
+  8d49ebe713ab ("arm64: dts: ls1028a: Add PCIe controller DT nodes")
+
+from the pci tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+index 8e8a77eb596a,71d7c6949b9e..000000000000
+--- a/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-ls1028a.dtsi
+@@@ -611,6 -594,89 +611,58 @@@
+  			#thermal-sensor-cells =3D <1>;
+  		};
+ =20
+ -		thermal-zones {
+ -			core-cluster {
+ -				polling-delay-passive =3D <1000>;
+ -				polling-delay =3D <5000>;
+ -				thermal-sensors =3D <&tmu 0>;
+ -
+ -				trips {
+ -					core_cluster_alert: core-cluster-alert {
+ -						temperature =3D <85000>;
+ -						hysteresis =3D <2000>;
+ -						type =3D "passive";
+ -					};
+ -
+ -					core_cluster_crit: core-cluster-crit {
+ -						temperature =3D <95000>;
+ -						hysteresis =3D <2000>;
+ -						type =3D "critical";
+ -					};
+ -				};
+ -
+ -				cooling-maps {
+ -					map0 {
+ -						trip =3D <&core_cluster_alert>;
+ -						cooling-device =3D
+ -							<&cpu0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+ -							<&cpu1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+ -					};
+ -				};
+ -			};
+ -		};
+ -
++ 		pcie@3400000 {
++ 			compatible =3D "fsl,ls1028a-pcie";
++ 			reg =3D <0x00 0x03400000 0x0 0x00100000   /* controller registers */
++ 			       0x80 0x00000000 0x0 0x00002000>; /* configuration space */
++ 			reg-names =3D "regs", "config";
++ 			interrupts =3D <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>, /* PME interrupt */
++ 				     <GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH>; /* aer interrupt */
++ 			interrupt-names =3D "pme", "aer";
++ 			#address-cells =3D <3>;
++ 			#size-cells =3D <2>;
++ 			device_type =3D "pci";
++ 			dma-coherent;
++ 			num-viewport =3D <8>;
++ 			bus-range =3D <0x0 0xff>;
++ 			ranges =3D <0x81000000 0x0 0x00000000 0x80 0x00010000 0x0 0x00010000  =
+ /* downstream I/O */
++ 				  0x82000000 0x0 0x40000000 0x80 0x40000000 0x0 0x40000000>; /* non-p=
+refetchable memory */
++ 			msi-parent =3D <&its>;
++ 			#interrupt-cells =3D <1>;
++ 			interrupt-map-mask =3D <0 0 0 7>;
++ 			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 109 IRQ_TYPE_LEVEL_HIGH=
+>,
++ 					<0000 0 0 2 &gic 0 0 GIC_SPI 110 IRQ_TYPE_LEVEL_HIGH>,
++ 					<0000 0 0 3 &gic 0 0 GIC_SPI 111 IRQ_TYPE_LEVEL_HIGH>,
++ 					<0000 0 0 4 &gic 0 0 GIC_SPI 112 IRQ_TYPE_LEVEL_HIGH>;
++ 			status =3D "disabled";
++ 		};
++=20
++ 		pcie@3500000 {
++ 			compatible =3D "fsl,ls1028a-pcie";
++ 			reg =3D <0x00 0x03500000 0x0 0x00100000   /* controller registers */
++ 			       0x88 0x00000000 0x0 0x00002000>; /* configuration space */
++ 			reg-names =3D "regs", "config";
++ 			interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_HIGH>,
++ 				     <GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH>;
++ 			interrupt-names =3D "pme", "aer";
++ 			#address-cells =3D <3>;
++ 			#size-cells =3D <2>;
++ 			device_type =3D "pci";
++ 			dma-coherent;
++ 			num-viewport =3D <8>;
++ 			bus-range =3D <0x0 0xff>;
++ 			ranges =3D <0x81000000 0x0 0x00000000 0x88 0x00010000 0x0 0x00010000  =
+ /* downstream I/O */
++ 				  0x82000000 0x0 0x40000000 0x88 0x40000000 0x0 0x40000000>; /* non-p=
+refetchable memory */
++ 			msi-parent =3D <&its>;
++ 			#interrupt-cells =3D <1>;
++ 			interrupt-map-mask =3D <0 0 0 7>;
++ 			interrupt-map =3D <0000 0 0 1 &gic 0 0 GIC_SPI 114 IRQ_TYPE_LEVEL_HIGH=
+>,
++ 					<0000 0 0 2 &gic 0 0 GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>,
++ 					<0000 0 0 3 &gic 0 0 GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>,
++ 					<0000 0 0 4 &gic 0 0 GIC_SPI 117 IRQ_TYPE_LEVEL_HIGH>;
++ 			status =3D "disabled";
++ 		};
++=20
+  		pcie@1f0000000 { /* Integrated Endpoint Root Complex */
+  			compatible =3D "pci-host-ecam-generic";
+  			reg =3D <0x01 0xf0000000 0x0 0x100000>;
+
+--Sig_//QyZLzC9Q_pWsXAriLWbKQm
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DTSMACgkQAVBC80lX
+0GyQKwf/VAheeyOnOzyIAVAMHqtb1sfJTdKl+hDzUT89TKwR5zEAKirJOb57fRGF
+mMntSiwVjsXWz/YZ/Gw2crLxXm1l71KSJDMsbZQcEBZ8W3eWhlg/zT/zf0gM9hxt
+p0wcfTyBmmTnl8h8um3cvfRMeT9t2e8FLBX8K6N4luPVnDilX/oWtaeJK66BTw+J
+A931O81QXJnapRnfoWF0ZgArWaOFu/3/cdzSfVkm0+YEszmoOTMaisOsKGZ50cSt
+lpnWEOtanhHSkzeJK/E7O1geHvyCg7LpRQPkAinXuoVpFlYupBkSQJZW/27JF7Qf
+CLq/1L3SH2krNGqSN5a7x0CPBF/dDw==
+=9vD4
+-----END PGP SIGNATURE-----
+
+--Sig_//QyZLzC9Q_pWsXAriLWbKQm--
