@@ -2,174 +2,171 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A565C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F06C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FBD2084D
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61DF62187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:52 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="fmQ82ggq"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728929AbfKFQGh (ORCPT
+        id S1731923AbfKFQGv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:06:37 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:39724 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727028AbfKFQGh (ORCPT
+        Wed, 6 Nov 2019 11:06:51 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:35701 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfKFQGu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:06:37 -0500
-Received: from linux.loongson.cn (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPDx72B+78JdqhYAAA--.24S2;
-        Thu, 07 Nov 2019 00:06:22 +0800 (CST)
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-To:     Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yinglu Yang <yangyinglu@loongson.cn>
-Subject: [PATCH] MIPS: Scan the DMI system information
-Date:   Thu,  7 Nov 2019 00:05:41 +0800
-Message-Id: <1573056341-21159-1-git-send-email-yangtiezhu@loongson.cn>
-X-Mailer: git-send-email 2.1.0
-X-CM-TRANSID: QMiowPDx72B+78JdqhYAAA--.24S2
-X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4DAr47GFW8KFyUWrg_yoW5KFWxpF
-        4kA3Z5tr45Wr17GFWfAFyxuF13JFs3XFW5KFW7KF9rAas8Xa4UZrsag3ZxAFy0yr4kta4F
-        ga4SgF4UGrsFyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUU9S14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
-        6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r1j6r
-        4UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0
-        Y40En7xvr7AKxVWUJVW8JwAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr
-        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7VAKI48G
-        6xCjnVAKz4kxM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxV
-        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
-        6r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
-        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
-        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
-        4UYxBIdaVFxhVjvjDU0xZFpf9x0JUrkuxUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+        Wed, 6 Nov 2019 11:06:50 -0500
+Received: by mail-pl1-f193.google.com with SMTP id s10so804802plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:06:50 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=MU4B5Z3680XHcQVk6C2PWPbSktTT7euqohP8tzAAGDU=;
+        b=fmQ82ggqU87fJbVpu3/qnFFzYMgwB85jhZbftAnpaHLjx1W301Gsz2AIixlzqefuOC
+         Quo7Xzcazplt9qe0bp3khkmFvdqokNEaCkejilj1zZcL3S8V4ENbQgfkNqyLyw16jW4Y
+         KXF1/SjD7uAjy9HeqOJYayRnOKOmJtDPjna2mALyHyKAqvtKlwC34fhzJ0BK9R+kKoOP
+         EU1TLDf+46h1GRFX8c/nc+l2sGaxY9Z2zpRlRQb8RQuOTskfKUwHe0kLXdvmalCXoCw9
+         Up5iyN60Q9rSI2j37TGQB/VGihHGofP5ru/UyVFrf8v13wfZcmOUP6edi7RuyWGkblqT
+         Baew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MU4B5Z3680XHcQVk6C2PWPbSktTT7euqohP8tzAAGDU=;
+        b=dIQpX/U4f54S7kcJMYWWR3m++RnStrE8G+cxqc+xcoB3LkPOWM9URqZz010zAs8Ohg
+         M3h/acfY3rgP4sUW3fhXREMrhE+Z0CwJDD3fXrW8frNFdJQD2V0cKkEYOD6QqRUwshuy
+         0pLLrzl7si2vEZCzY5lrJEPFEniG+raS9tmZhth4ZqsEDv+3VgzELABu/0D64k22LlIJ
+         WdE5wXBEy6eC8na1QT7jL0UZYRfwL4w8QT++msjK07znRkMpfjnz3ybyBlJ+vKabpIx2
+         VM+tH2++Wg4TTmFx5BN2CIlkjqCd9HqHE8FjbqPyBFHWMR/cVwrzhEbO3Wj1QxhrMvO5
+         BLPA==
+X-Gm-Message-State: APjAAAW2ag7WG8lBVzuNNQRmhbm2zTJLhjn995Fz9Q15pjN6cp221j1R
+        73xLp536qOtHfGfjYpPVVmbQ8A==
+X-Google-Smtp-Source: APXvYqyDchkIFxqXv9vZv2vVtfSKicJHrTSHbvL1iHYeeGXIMj5RZcbhulDfvEAjwXyW4XgY1fhWXA==
+X-Received: by 2002:a17:902:47:: with SMTP id 65mr3362715pla.81.1573056409920;
+        Wed, 06 Nov 2019 08:06:49 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id o20sm32187971pfp.16.2019.11.06.08.06.45
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 08:06:48 -0800 (PST)
+Subject: Re: [PATCH 43/50] xtensa: Add show_stack_loglvl()
+To:     Petr Mladek <pmladek@suse.com>, Max Filippov <jcmvbkbc@gmail.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Dmitry Safonov <0x7f454c46@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
+        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Chris Zankel <chris@zankel.net>,
+        "open list:TENSILICA XTENSA PORT (xtensa)" 
+        <linux-xtensa@linux-xtensa.org>
+References: <20191106030542.868541-1-dima@arista.com>
+ <20191106030542.868541-44-dima@arista.com>
+ <CAMo8Bf+q0j81VZeUQdvCkXt131uzSBfJ0N7RTe7+NpjRkVpzdA@mail.gmail.com>
+ <20191106081541.soxefwyvu3o72tqg@pathway.suse.cz>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <836351a4-581d-325f-862f-99c0c4f98e19@arista.com>
+Date:   Wed, 6 Nov 2019 16:06:44 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
+MIME-Version: 1.0
+In-Reply-To: <20191106081541.soxefwyvu3o72tqg@pathway.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
-(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
-information (dmi_memdev_info) from the SMBIOS table. With this patch, the
-driver can easily match various of mainboards.
+On 11/6/19 8:15 AM, Petr Mladek wrote:
+> On Tue 2019-11-05 20:13:22, Max Filippov wrote:
+[..]
+>>> @@ -511,16 +512,21 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+>>>                 sp = stack_pointer(task);
+>>>         stack = sp;
+>>>
+>>> -       pr_info("Stack:\n");
+>>> +       printk("%sStack:\n", loglvl);
+>>>
+>>>         for (i = 0; i < kstack_depth_to_print; i++) {
+>>>                 if (kstack_end(sp))
+>>>                         break;
+>>> -               pr_cont(" %08lx", *sp++);
+>>> +               printk("%s %08lx", loglvl, *sp++);
+> 
+> KERN_CONT can be combined with any other loglevel.
+> So you could keep using pr_cont() together with explicit loglevel:
+> 
+> 			pr_cont("%s %08lx", loglvl, *sp++);
 
-In the SMBIOS reference specification, the table anchor string "_SM_" is
-present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
-but there exists a special case for loongson platform, when call function
-dmi_early_remap, it should specify the start address to 0xFFFE000 due to
-it is reserved for SMBIOS and can be normally access in the BIOS.
+Yes, that's what I had, but than misread the printk() code and thought
+that it doesn't add '\n' to messages.. Will fix.
 
-Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
-Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/mips/Kconfig           | 12 ++++++++++++
- arch/mips/include/asm/dmi.h | 43 +++++++++++++++++++++++++++++++++++++++++++
- arch/mips/kernel/setup.c    |  2 ++
- 3 files changed, 57 insertions(+)
- create mode 100644 arch/mips/include/asm/dmi.h
+> It should fix the problems reported below.
+> 
+> Well, the preferred solution would be to snprintf() the continuous
+> line into a temporary buffer. And printk() it when it is complete.
+> pr_cont() is not reliable when more CPUs print at the same time.
 
-diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
-index 7cb8947..0a67b18 100644
---- a/arch/mips/Kconfig
-+++ b/arch/mips/Kconfig
-@@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
- 	  Enable hardware performance counter support for perf events. If
- 	  disabled, perf events will use software events only.
- 
-+# Mark as expert because too many people got it wrong.
-+# The code disables itself when not needed.
-+config DMI
-+	default y
-+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
-+	bool "Enable DMI scanning" if EXPERT
-+	help
-+	  Enabled scanning of DMI to identify machine quirks. Say Y
-+	  here unless you have verified that your setup is not
-+	  affected by entries in the DMI blacklist. Required by PNP
-+	  BIOS code.
-+
- config SMP
- 	bool "Multi-Processing support"
- 	depends on SYS_SUPPORTS_SMP
-diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
-new file mode 100644
-index 0000000..1f3da37
---- /dev/null
-+++ b/arch/mips/include/asm/dmi.h
-@@ -0,0 +1,43 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_MIPS_DMI_H
-+#define _ASM_MIPS_DMI_H
-+
-+#define dmi_early_remap		mips_early_memremap
-+#define dmi_early_unmap		mips_early_memunmap
-+#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
-+#define dmi_unmap(_x)		mips_memunmap(_x)
-+
-+#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
-+
-+void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
-+{
-+#if defined(CONFIG_MACH_LOONGSON64)
-+	if (phys_addr == 0xF0000)
-+		phys_addr = 0xFFFE000;
-+
-+	return (void *)TO_CAC(phys_addr);
-+#else
-+	return NULL;
-+#endif
-+}
-+
-+void __init mips_early_memunmap(void *addr, unsigned long size)
-+{
-+
-+}
-+
-+void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
-+{
-+#if defined(CONFIG_MACH_LOONGSON64)
-+	return (void *)TO_CAC(offset);
-+#else
-+	return NULL;
-+#endif
-+}
-+
-+void mips_memunmap(void *addr)
-+{
-+
-+}
-+
-+#endif /* _ASM_MIPS_DMI_H */
-diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-index c3d4212..da7d312 100644
---- a/arch/mips/kernel/setup.c
-+++ b/arch/mips/kernel/setup.c
-@@ -28,6 +28,7 @@
- #include <linux/decompress/generic.h>
- #include <linux/of_fdt.h>
- #include <linux/of_reserved_mem.h>
-+#include <linux/dmi.h>
- 
- #include <asm/addrspace.h>
- #include <asm/bootinfo.h>
-@@ -802,6 +803,7 @@ void __init setup_arch(char **cmdline_p)
- #endif
- 
- 	arch_mem_init(cmdline_p);
-+	dmi_setup();
- 
- 	resource_init();
- 	plat_smp_setup();
--- 
-2.1.0
+Yep. Not sure if doing it now in those per-arch patches or keep the
+changes to minimum.
 
+> 
+>> This change doesn't work well with printk timestamps, it changes
+>> the following output on xtensa architecture
+>>
+>> [    3.404675] Stack:
+>> [    3.404861]  a05773e2 00000018 bb03dc34 bb03dc30 a0008640 bb03dc70
+>> ba9ba410 37c3f000
+>> [    3.405414]  37c3f000 d7c3f000 00000800 bb03dc50 a02b97ed bb03dc90
+>> ba9ba400 ba9ba410
+>> [    3.405969]  a05fc1bc bbff28dc 00000000 bb03dc70 a02b7fb9 bb03dce0
+>> ba9ba410 a0579044
+>>
+>> into this:
+>> [    3.056825] Stack:
+>> [    3.056963]  a04ebb20
+>> [    3.056995]  bb03dc10
+>> [    3.057138]  00000001
+>> [    3.057277]  bb03dc10
+>> [    3.057815]  a00083ca
+>> [    3.057965]  bb03dc50
+>> [    3.058107]  ba9ba410
+>> [    3.058247]  37c3f000
+>> [    3.058387]
+>> [    3.058584]  a05773e2
+>> [    3.058614]  00000001
+>> [    3.058755]  a05ca0bc
+>> [    3.058896]  bb03dc30
+>> [    3.059035]  a000865c
+>> [    3.059180]  bb03dc70
+>> [    3.059319]  ba9ba410
+>> [    3.059459]  37c3f000
+>> [    3.059598]
+>> [    3.059795]  37c3f000
+>> [    3.059824]  d7c3f000
+>> [    3.059964]  00000800
+>> [    3.060103]  bb03dc50
+>> [    3.060241]  a02b9809
+>> [    3.060379]  bb03dc90
+>> [    3.060519]  ba9ba400
+>> [    3.060658]  ba9ba410
+>> [    3.060796]
 
+Hey Max,
+
+thanks for the testing and the report - will fix it in v2.
+
+Thanks,
+          Dmitry
