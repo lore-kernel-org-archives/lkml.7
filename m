@@ -2,100 +2,95 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90509C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DFC83C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5450A21D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:53:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LhNflBN+"
+	by mail.kernel.org (Postfix) with ESMTP id 9A7D621D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:55:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573012549;
+	bh=VwuRRaMN+bakfDolLqAaICs5KqXbmNH9snyGnwOMiqU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=kEypumSo2yqDa3DmZBZmRl1bxpQjm9Rv/HWTzC1ntxBu+Vlw9gU4G+BOAWBQWyDFf
+	 WuJfqVd3+5C72mlsbBvJ4n1fsKxXrDGARSnXvM/ZdU5C21BgmSsL5wy0/gq3Az6hSI
+	 O+E8csuKKXVaGUcZfTT3lKPA6dfRyu/ZNtQJ+3E4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731152AbfKFDxq (ORCPT
+        id S1730946AbfKFDzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:53:46 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:39303 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729784AbfKFDxp (ORCPT
+        Tue, 5 Nov 2019 22:55:48 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:34892 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKFDzs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:53:45 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573012424;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=EaTbE+HmGj8bDfQK0HMuk+gfERcklzcbJD+zUHMoips=;
-        b=LhNflBN+PrTgQwEkL5Fd+8csaEcGKVVgVJyT/E2WhSNoe/4Xq9E9s0/bHJ6MQjkG+VMp97
-        xhmbxHnS59znS1kq0xxCIK+xeZeuSWAZ94liz7ydU08yqOlngCjacqI2zd66n+y6YwINos
-        GSALM/6JGyHZTvtK99s2/CmavTMxiF0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-41-s3GVRo2xO9Kh53Br-bjUiw-1; Tue, 05 Nov 2019 22:53:41 -0500
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id EE2061005500;
-        Wed,  6 Nov 2019 03:53:36 +0000 (UTC)
-Received: from [10.72.12.193] (ovpn-12-193.pek2.redhat.com [10.72.12.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 16874600C6;
-        Wed,  6 Nov 2019 03:51:35 +0000 (UTC)
-Subject: Re: [PATCH V8 4/6] mdev: introduce virtio device and its device ops
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105093240.5135-5-jasowang@redhat.com> <20191105104710.16d0f629@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <0de9abaf-d740-f4c7-50ff-3bd68a50ab40@redhat.com>
-Date:   Wed, 6 Nov 2019 11:51:33 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 5 Nov 2019 22:55:48 -0500
+Received: by mail-oi1-f194.google.com with SMTP id n16so19743687oig.2;
+        Tue, 05 Nov 2019 19:55:46 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HjUAd9X8fjLKsDxJpN2012RcMafvu6lngdZt6RcTJmE=;
+        b=oAvomgS7+612l4DdAVlOAMLAkoewa7XcB8MmP8NDj1zJM/vDTusKWQ92J9R6OZHSI+
+         uhT45bhZHRZiG9Sad+sgZ/yH1RcUQIl1UGbHgOaWDZAFCaybTkORddgeqLPxFmaqtDLP
+         Ec1HAuOE/DW2chzTJoD3CvzziZY1a5U9JSV5m35cDZ8JWnPhIe/Fi9IG0bcTZLYwn0Kn
+         1J4Vja5+jhqTnJ2pdhQ2DJbf4Lsk4zT/bHJtpluAlOpfi4mL8eV5NmfJ50+7V1igQEFs
+         YKN1MM587cyU1jnewMJMlE5+FOo2eW1j2DC0xaJdsb/l2PKzskjMzk1vUgdxXZ9eAAQv
+         QmGA==
+X-Gm-Message-State: APjAAAX3lxHqBdAazdCqNT88G5F3crgOA0ZHR4oyB/d1Nd8r3232KLPi
+        nlgXbvGiZGuBczWlPFe7Aw==
+X-Google-Smtp-Source: APXvYqxJkijcKLeyFdKVWB0o60ED3NvjcHRUtiDM4zKRWEtVlOO/Z5sLKo86HRD5S3kjvC0jks7g6Q==
+X-Received: by 2002:aca:c753:: with SMTP id x80mr337979oif.115.1573012545901;
+        Tue, 05 Nov 2019 19:55:45 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id c23sm6055178oiy.20.2019.11.05.19.55.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:55:45 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:55:44 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Florian Fainelli <f.fainelli@gmail.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Markus Mayer <mmayer@broadcom.com>,
+        "maintainer:BROADCOM STB AVS TMON DRIVER" 
+        <bcm-kernel-feedback-list@broadcom.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        "open list:BROADCOM STB AVS TMON DRIVER" <linux-pm@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>,
+        "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 3/6] dt-bindings: thermal: Define BCM7216 thermal sensor
+ compatible
+Message-ID: <20191106035544.GA29667@bogus>
+References: <20191030182132.25763-1-f.fainelli@gmail.com>
+ <20191030182132.25763-4-f.fainelli@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191105104710.16d0f629@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-MC-Unique: s3GVRo2xO9Kh53Br-bjUiw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030182132.25763-4-f.fainelli@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 30 Oct 2019 11:21:29 -0700, Florian Fainelli wrote:
+> BCM7216 is a 16nm process STB chip, which requires a different
+> compatible string to differentiate different temperature formulas.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  .../devicetree/bindings/thermal/brcm,avs-tmon.txt         | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
+> 
 
-On 2019/11/6 =E4=B8=8A=E5=8D=881:47, Alex Williamson wrote:
->> +#define VIRTIO_MDEV_DEVICE_API_STRING=09=09"virtio-mdev"
->> +#define VIRTIO_MDEV_F_VERSION_1 0x1
-> This entire concept of VIRTIO_MDEV_F_VERSION_1 is gone now, right?
-> Let's remove it here and below.  Thanks,
->
-> Alex
->
-
-Yes, will fix.
-
-Thanks
-
+Reviewed-by: Rob Herring <robh@kernel.org>
