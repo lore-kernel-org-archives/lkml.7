@@ -2,106 +2,78 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD0EC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:38:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6094EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:41:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A64F2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:38:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sw6iNRzN"
+	by mail.kernel.org (Postfix) with ESMTP id 29D17217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:41:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731100AbfKFDiY (ORCPT
+        id S1730816AbfKFDl0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:38:24 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33524 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfKFDiX (ORCPT
+        Tue, 5 Nov 2019 22:41:26 -0500
+Received: from shards.monkeyblade.net ([23.128.96.9]:42846 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726368AbfKFDlZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:38:23 -0500
-Received: by mail-lf1-f66.google.com with SMTP id y9so747988lfy.0;
-        Tue, 05 Nov 2019 19:38:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PQNvjkqU67idBz4OClsv+GBdG1CkudkHJ4L8UJX4w/w=;
-        b=sw6iNRzNVysag3UPMEbh+Kn8on6rXPfvM9tKGSmC3XEjYBt44boYgzZl4C3FM3NJ0U
-         FaQiqVvJvWYX7LDrTPBV9mXzd5M29led45NN1+CftEh5QTL7rsc6pXruuvymoVu6RJ98
-         U6EdiJTElql9KXjcAm8BPjiVlUROKm22bl3GEjV56ji7BcvW+lqDHqe18k4OlZAi50WC
-         tVrNdQwzOQYBdRdYa25twOy6CV6cdMgEMB28ysF8ySX6+5Scz9o8NDw57H2u2vM3g9yS
-         lzvGCZkyQOqcl2VvHSvAwKRmzL4l2lPXO+sTQevXbHU1J7nudI0SZKkxkrIVkdzqpEAV
-         LmFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PQNvjkqU67idBz4OClsv+GBdG1CkudkHJ4L8UJX4w/w=;
-        b=nl89sMjVdyynv3Srux80NKBteSlY/NxRIxbx84C78nLRqHw/ndB3Z3w9FsrKxh95at
-         VKp7jf3rOLRmQVpCsUYiwb6/jxJXgaAFN84lEgtRin9fA5i1T8lTfKCdfPUJkhsEcvgP
-         60KYlHlmXTXp1t8JmbchXSuF0JN6s0O70N6wEhAA+hW+qmgtZhLHJvGLENBNYHxELDTL
-         v2E9NpuAUFKH6gyR8VvOMV1LFAAbZatn/VK/Fh/BaJcAM7cwfMf66y1H7Oob/rDeG1S0
-         ZDH2CfXTGE45kUKGtRYhtURHVxcYVWeuHMahq6O2eODprBI4lSgFt/xIrNH6iSmO0gOl
-         EvPA==
-X-Gm-Message-State: APjAAAUgDJK+loYuWTsDCp0ThD8vvSB7A+jF3+fuNxYG39+RjsrOkkbl
-        yTrGODGSzDNysXszwFEO3vOa4+lqoGs+CWDxMZM=
-X-Google-Smtp-Source: APXvYqwsChCPnzWywORig0kW/0YNBnseFKqWqgZ9Fh/5TQNFafS9PAOY1lUanc9n2WfrvRNPjoeKt/V48muf9nJQN0c=
-X-Received: by 2002:a19:f610:: with SMTP id x16mr10831876lfe.141.1573011501515;
- Tue, 05 Nov 2019 19:38:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20190816083246.169312-1-arul.jeniston@gmail.com>
- <CACAVd4izozzXNF9qwNcXC+EUx5n1sfsNeb9JNXNJF56LdZkkYg@mail.gmail.com>
- <alpine.DEB.2.21.1908191646350.2147@nanos.tec.linutronix.de>
- <CACAVd4j60pn=td5hh485SJOcoYZ_jWQDQg2DVasSodPtsaupkw@mail.gmail.com>
- <alpine.DEB.2.21.1908191752580.2147@nanos.tec.linutronix.de>
- <CACAVd4iRN7=eq_B1+Yb-xcspU-Sg1dmMo_=VtLXXVPkjN1hY5Q@mail.gmail.com>
- <alpine.DEB.2.21.1908191943280.1796@nanos.tec.linutronix.de>
- <CACAVd4jAJ5QcOH=q=Q9kAz20X4_nAc7=vVU_gPWTS1UuiGK-fg@mail.gmail.com>
- <alpine.DEB.2.21.1908201036200.2223@nanos.tec.linutronix.de>
- <CACAVd4jT4Ke7giPmKSzt+Wo3Ro-g9zWDRz_GHaRcs0Nb3_rkBw@mail.gmail.com>
- <CACAVd4gRoQih6f_K7kMzr=AwA_DvP0OksxBKj1bGPsP2F_9sFg@mail.gmail.com>
- <alpine.DEB.2.21.1909051707150.1902@nanos.tec.linutronix.de>
- <CACAVd4hS1i--fxWaarXP2psagW-JmBoLAJRrfu9gkRc49Ja4pg@mail.gmail.com>
- <alpine.DEB.2.21.1909071630000.1902@nanos.tec.linutronix.de>
- <CACAVd4grhGVVSYpwjof5YiS1duZ2_SFjvXtctP+cmR5Actkjyg@mail.gmail.com> <alpine.DEB.2.21.1911051100471.17054@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911051100471.17054@nanos.tec.linutronix.de>
-From:   Arul Jeniston <arul.jeniston@gmail.com>
-Date:   Wed, 6 Nov 2019 09:08:10 +0530
-Message-ID: <CACAVd4geU0aFqvFhNQ4YGHDtLPwcqhubh8hcu4CT7CN+G2zpdA@mail.gmail.com>
-Subject: Re: [PATCH] FS: timerfd: Fix unexpected return value of timerfd_read function.
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     viro@zeniv.linux.org.uk, linux-fsdevel@vger.kernel.org,
-        linux-kernel@vger.kernel.org, arul_mc@dell.com
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 5 Nov 2019 22:41:25 -0500
+Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id 5BE8E151226D2;
+        Tue,  5 Nov 2019 19:33:30 -0800 (PST)
+Date:   Tue, 05 Nov 2019 19:33:27 -0800 (PST)
+Message-Id: <20191105.193327.1393649190609263166.davem@davemloft.net>
+To:     dima@arista.com
+Cc:     linux-kernel@vger.kernel.org, 0x7f454c46@gmail.com,
+        akpm@linux-foundation.org, gregkh@linuxfoundation.org,
+        mingo@kernel.org, jslaby@suse.com, pmladek@suse.com,
+        sergey.senozhatsky@gmail.com, rostedt@goodmis.org,
+        penguin-kernel@I-love.SAKURA.ne.jp, sparclinux@vger.kernel.org
+Subject: Re: [PATCH 34/50] sparc: Add show_stack_loglvl()
+From:   David Miller <davem@davemloft.net>
+In-Reply-To: <20191106030542.868541-35-dima@arista.com>
+References: <20191106030542.868541-1-dima@arista.com>
+        <20191106030542.868541-35-dima@arista.com>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 05 Nov 2019 19:33:30 -0800 (PST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi Tglx,
+From: Dmitry Safonov <dima@arista.com>
+Date: Wed,  6 Nov 2019 03:05:25 +0000
 
-Thank you for the update. We have few customers who are waiting for
-this patch. Please prioritize it.
+> Currently, the log-level of show_stack() depends on a platform
+> realization. It creates situations where the headers are printed with
+> lower log level or higher than the stacktrace (depending on
+> a platform or user).
+> 
+> Furthermore, it forces the logic decision from user to an architecture
+> side. In result, some users as sysrq/kdb/etc are doing tricks with
+> temporary rising console_loglevel while printing their messages.
+> And in result it not only may print unwanted messages from other CPUs,
+> but also omit printing at all in the unlucky case where the printk()
+> was deferred.
+> 
+> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
+> an easier approach than introducing more printk buffers.
+> Also, it will consolidate printings with headers.
+> 
+> Introduce show_stack_loglvl(), that eventually will substitute
+> show_stack().
+> 
+> Cc: "David S. Miller" <davem@davemloft.net>
+> Cc: sparclinux@vger.kernel.org
+> [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
+> Signed-off-by: Dmitry Safonov <dima@arista.com>
 
-Regards,
-Arul
-
-On Tue, Nov 5, 2019 at 3:31 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Arul,
->
-> On Tue, 5 Nov 2019, Arul Jeniston wrote:
-> > >  So I'm going to send a patch to document that in the manpage.
-> >
-> > Did you get a chance to make the manpage patch? if yes, please help us
-> > by sharing the link where we can find the patch.
->
-> No. I would have Cc'ed you when posting. It's somewhere on my todo list.
->
-> Thanks,
->
->         tglx
+Acked-by: David S. Miller <davem@davemloft.net>
