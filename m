@@ -2,72 +2,75 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D5989C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:48:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8547BC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:50:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D84E222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:48:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B9BB42084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:50:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=kemnade.info header.i=@kemnade.info header.b="Q/we3jVu"
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="J1ndgO/u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732579AbfKFVsU (ORCPT
+        id S1732327AbfKFVuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:48:20 -0500
-Received: from mail.andi.de1.cc ([85.214.55.253]:58440 "EHLO mail.andi.de1.cc"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726798AbfKFVsT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:48:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=kemnade.info; s=20180802; h=Content-Transfer-Encoding:Content-Type:
-        MIME-Version:References:In-Reply-To:Message-ID:Subject:To:From:Date:Sender:
-        Reply-To:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8xhVIvuFQsMtf2/Cr1aLwZDItnhm47cEr04p7WxqBBk=; b=Q/we3jVuZNUW3yjrBpx7D4lMTH
-        gAO8zCmBEd13rar2osstULmfass26cqb+yH6o1ONljI4wxNE7vqaGpj2mMgwktY/iLB6Tz/102TCL
-        7IA0//NqcDKe2TaOdk/lVZSJ6+qLbV0IEPGi2t1uVEcfcw7Z28Hzsc3Cm/VsBhEY2q6U=;
-Received: from p200300ccff0a4d001a3da2fffebfd33a.dip0.t-ipconnect.de ([2003:cc:ff0a:4d00:1a3d:a2ff:febf:d33a] helo=aktux)
-        by mail.andi.de1.cc with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <andreas@kemnade.info>)
-        id 1iST9y-0004Vn-JQ; Wed, 06 Nov 2019 22:48:14 +0100
-Date:   Wed, 6 Nov 2019 22:48:13 +0100
-From:   Andreas Kemnade <andreas@kemnade.info>
-To:     lee.jones@linaro.org, a.zummo@towertech.it,
-        alexandre.belloni@bootlin.com, linux-kernel@vger.kernel.org,
-        linux-rtc@vger.kernel.org, phh@phh.me, b.galvani@gmail.com,
-        stefan@agner.ch, letux-kernel@openphoenux.org
-Subject: Re: [PATCH v2 2/5] mfd: rn5t618: add irq support
-Message-ID: <20191106224813.19cb26ea@aktux>
-In-Reply-To: <20191031213835.11390-3-andreas@kemnade.info>
-References: <20191031213835.11390-1-andreas@kemnade.info>
-        <20191031213835.11390-3-andreas@kemnade.info>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 6 Nov 2019 16:50:52 -0500
+Received: from mx1.cock.li ([185.10.68.5]:60519 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726779AbfKFVuw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:50:52 -0500
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1573077049; bh=KTtklCX0nL8a8oMWRv355zmC3+tyOFKpminB+rgiiZM=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=J1ndgO/uPuj9/AINuEYWPrfE9xOwFE2tezL6jTBnjh3Gebe9ZVBKTK18e0xo8TW9X
+         Ei1UOIgynDYE+SPPsgniSLVMVsM/L3k4RXouykNz/6DTpHFToxAOcoq9pCgbsIhgCs
+         pJi/4jjV++Q9rnjZOG+tf0xGYqfZy6bGA7rNE2NdLfgG+71Tii9BfN46RGKXe80LNq
+         eSgkxPTBCgIhXzEYhr3IIy5SAbnfkuhA1d0XCajxvXJaS4U1qw/C+AuoJuqUb9cu3O
+         jMAwiWMhINkoWROf2VaVI7PBnLp/mYmbmfftNeF0INpdMcwViQlfBo/y1OLbJ+ugzP
+         8Ev2Ys324QMgw==
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
+Date:   Wed, 06 Nov 2019 21:50:49 +0000
+From:   gameonlinux@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the
+ blobs (compile time option). - Why the [edits]?
+In-Reply-To: <10419249.ilHZ0GCc2g@pc-713>
+References: <b1b6ab4e31856450d82afccaba587b0f@redchan.it>
+ <10419249.ilHZ0GCc2g@pc-713>
+Message-ID: <80736178498d2953eb814d290126fb1f@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 22:38:32 +0100
-Andreas Kemnade <andreas@kemnade.info> wrote:
+Why did you edit my words of he (the libreboot maintain is a man: who 
+had his genitals sliced off) to [she]? I did not authorize you do do 
+that. Verbatim quotes are fine, changing words is not. The man is now a 
+eunich, but he is not a woman (since he cannot have children). A woman 
+without a womb is like a broken compiler: it's not a compiler: just the 
+pieces that could have been one. Same with a man without genitals.
 
-> This adds support for irq handling in the rc5t619 which is required
-> for properly implementing subdevices like rtc.
-> For now only definitions for the variant rc5t619 are included.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+In america it is lauded when men have their genitals chopped off.
+But when a man might hint at the wish to marry adorable young girls: 
+america wants to kill and torture him.
 
-after having some more look at it, I think I should note the interrupts
-property in the bindings documentation since it gets used by using
-i2c->irq. Will probably send a v3 the next days. 
+RMS defended the idea of man+girl (paedophillia) being OK, 3 times, in 
+his writings. He has now "walked that back" (sadly, we grieve) and tries 
+to keep to the american religion: (because you all attacked him for 
+deviating from your evil sick belief system.)
 
-Regards,
-Andreas
+The old religions all support RMS's previous stance and more. America's 
+new religion does not.
+
+And the libreboot maintainer is a Eunich, NOT a woman - a he or a 
+neuter.
+
+I doubt he'll ever contribute anything much more after having his balls 
+sliced off of his body. They usually lose the will.
