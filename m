@@ -2,129 +2,105 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 310A8C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E196C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:03:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0564E2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2C452173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:03:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Fg82y5+/"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="RCQB+6NM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732464AbfKFRDZ (ORCPT
+        id S1732473AbfKFRDa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:03:25 -0500
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45129 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732411AbfKFRDX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:03:23 -0500
-Received: by mail-ot1-f65.google.com with SMTP id r24so5150410otk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:03:23 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=13XiEQK8Wfi1t0rOXtClrpgGr0M1MsxM4DjcUQln3M4=;
-        b=Fg82y5+/m4XYC7+TXTEObVZp0oO/gdUR8ls6Gztw9ARyKO/M421qhy1RRD2jEGLEUw
-         VKgI0VbcQ/Ao4avg6W+OSkcj5EtmXbztGbk75Dij721u4or6l8vc09DGum7kiIiKOfpC
-         UAQxiKf8lrx49pgXN7OlNB4Bnew3F4rvfOvjOzLetyXYj4ZmBnVREiBqnbD+cid5C8TO
-         1LvJzNXsM9/e2Ugvl4kkhlrp47+KgX1opNdqHpBu77Q9tnYbq443XxLelWgsTiNb+4dx
-         vJVtmPmBBFVJJzKQO7Nq9OUTswoiu0YrIVYj1iivcboY6E5qag9Z+ZlyqEsUg9db/vpt
-         4UWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=13XiEQK8Wfi1t0rOXtClrpgGr0M1MsxM4DjcUQln3M4=;
-        b=Du2J2ak9p97+IhFod/xV1w6ronyIPNthUoMn8fWqxuGl67+Wml099Zyl8+MrTw68vM
-         MmpB4kR9wzys1nBsljfxJc17EQF7o/Iep/3IeTt/wicWSn5C+y7Xas3nhmlKK1K0Va4/
-         4QE8tDBOYPUcLtfjv7ZT2Dm/S0TIUK/iP3JcPQIv4iiId5IH2hVUeX6nqtDH2pavI8NQ
-         r4BRSrpG1RbVK3JrhoDEn39267Gt7n8Z8InmwZCUXlDhmHVxhhADk0n/CjnPHONmEeRx
-         ck4EWYNZd/IUqloLSAfkh9KQLH8jLKuu/jPkyTXTaGZb7i2GFMM8Adonge0vIRg13n3e
-         hp3g==
-X-Gm-Message-State: APjAAAW8ZUXVg/2aPx2kSwJ2sFt6LYXPeqIIvjOgkBo7nrYH+3im+Kw9
-        C5+AAcG/CnkToBdxL+ohoQrM/OxvlqYcerdsDy/guQ==
-X-Google-Smtp-Source: APXvYqxA21M83YXgjSCtZkjN7heKaT/7/0PT0b0l2nJ5K0JzCI1YBIavSwGU0cxJ2gksIniKC8dgfk8zYAAoPRimlnQ=
-X-Received: by 2002:a9d:5a0b:: with SMTP id v11mr2687592oth.102.1573059801948;
- Wed, 06 Nov 2019 09:03:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106042252.72452-1-john.stultz@linaro.org>
- <20191106042252.72452-2-john.stultz@linaro.org> <7154851c-fc55-e157-5a01-21abdd4a23e6@ti.com>
-In-Reply-To: <7154851c-fc55-e157-5a01-21abdd4a23e6@ti.com>
-From:   John Stultz <john.stultz@linaro.org>
-Date:   Wed, 6 Nov 2019 09:03:10 -0800
-Message-ID: <CALAqxLW1vgLCik5WfDN7qkRsO=K9U4otNBp72aOH5UNN1jUgMQ@mail.gmail.com>
-Subject: Re: [PATCH v15 1/5] dma-buf: Add dma-buf heaps framework
-To:     "Andrew F. Davis" <afd@ti.com>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Benjamin Gaignard <benjamin.gaignard@linaro.org>,
-        Sumit Semwal <sumit.semwal@linaro.org>,
-        Liam Mark <lmark@codeaurora.org>,
-        Pratik Patel <pratikp@codeaurora.org>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        Vincent Donnefort <Vincent.Donnefort@arm.com>,
-        Sudipto Paul <Sudipto.Paul@arm.com>,
-        Christoph Hellwig <hch@infradead.org>,
-        Chenbo Feng <fengc@google.com>,
-        Alistair Strachan <astrachan@google.com>,
-        Hridya Valsaraju <hridya@google.com>,
-        Sandeep Patil <sspatil@google.com>,
-        Hillf Danton <hdanton@sina.com>,
-        Dave Airlie <airlied@gmail.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>
+        Wed, 6 Nov 2019 12:03:30 -0500
+Received: from mout.gmx.net ([212.227.15.15]:54297 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732275AbfKFRD3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:03:29 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1573059793;
+        bh=DXiFHcDw6sm/LXNoMrhS8D2YEJLpr2IJCcrUXxItYpI=;
+        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
+         References;
+        b=RCQB+6NMv5g9ZdYK5Iz/40FbLE3/cceoFtn5ztQCmHG0B+NRRL1dT7o3NzTkNwUK6
+         AggznjXfZxCHAYeD/lZcA0rYw3nlrbqD107nrCMbhZMO+6jKrsilJxicLvtm6UvTUq
+         f4puFjvXN6rIukJgTUEu/iRUua8oysYnb0XjR6Gs=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx005
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1Mlf4S-1i1HN52O9a-00ioUh; Wed, 06
+ Nov 2019 18:03:13 +0100
+Message-ID: <94c71621a0245db763db9e289286b79056cc9bc5.camel@gmx.de>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+From:   Robert Stupp <snazy@gmx.de>
+Reply-To: snazy@snazy.de
+To:     Josef Bacik <josef@toxicpanda.com>, Jan Kara <jack@suse.cz>
+Cc:     Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Date:   Wed, 06 Nov 2019 18:03:10 +0100
+In-Reply-To: <9f6b707c69ceb34e3916b1d47f2e2fa6a4f025ab.camel@gmx.de>
+References: <20191025135749.GK17610@dhcp22.suse.cz>
+         <20191025140029.GL17610@dhcp22.suse.cz>
+         <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
+         <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+         <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+         <20191105182211.GA33242@cmpxchg.org>
+         <20191106120315.GF16085@quack2.suse.cz>
+         <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+         <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
+         <20191106150524.GL16085@quack2.suse.cz>
+         <20191106151429.swqtq2dt4uelhjzn@macbook-pro-91.dhcp.thefacebook.com>
+         <9f6b707c69ceb34e3916b1d47f2e2fa6a4f025ab.camel@gmx.de>
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:CO6OVHDAphAzpdeON2DyDlN0DNDvfNBBjl0vWS0Fl5ys175/BtM
+ oEIGiB/sW+wj5915kNPhHjSK4Ll9v/QMTfkLsI7/4bNT3ruvZTs3+SpUxJm0dFR7O7s8Ty0
+ S9VmHfDK7spIzKMuxiveXyx4hhS5GV/bc24mLXMI8zlgSEfl21n3ygVjTOuCxVFrEB0k17W
+ FCdfP+1hY8ULEcfhwrYnw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:faxpn5ZK4iI=:YiOAj8DrU0zyOERP3Z4K+Q
+ jHn6zZlJf4UHxjzNE78LtMENDs15LfQGRYSDxVwVHljgvzIrfzBWz1/PpSxDrTC5enre92Ovv
+ vDzv1nVP4Ls/CmQKTRJXysomnPSYdeUYmeO1mOZiNi+huD1EtT/j5A9vSNTohmpUpcRTmUfes
+ /V6qW5D7pSjJ07cuiLlH/RsmmDwTHkgGSn4rJuE69+KhcK0DJtjIIhz2wf6WCsn7d+Q6F8QX4
+ qbaoM4ihW8tk95qJiytAql/7l2sa7tfbOYqEN3vpdUJuW7+mTXHI3q+LD5X9XZdJhN35RNcSh
+ Y4bwcxajOZALxLYHKpj02UQq91yG0VuRBWNIEyl6re3V7S+J3wi3rVz8YGxj74Ft4j2LaQojO
+ xftEds4jB/fUnB/C4EZfDQHVpoUBzVufNb+arZoBiZl7lkFlQkPZtj14JXgbSwhKmGyy3hOZV
+ 4nElKlX0S+ISePIitLzjtZbd23c9+F5SeVXQEAMDlpoldXyXOoQz3W8HxTpG22w92wdjiT/pV
+ v4ec508owQzQCS9nJIu2xidOgbgrS4/Zu01+n6mGMuz11boICCGhcaWdEaxoj/Ustnl/CCc0V
+ U0HZCC547BPu5teaHbvqiCA6THshIm15nlFz5cJ2A+dav+dIFgy+/UO51HyVGBEeIQxpZt4f0
+ Qs9SB13gXlnvJA40rYdfz7nDSVDXqY8/enKaT3qx/t28RaBkw6G8WnnkguA6JEuQFhejRz8P/
+ Ex+/RB7wlaCa4Hw8dkYSmJWVJWcTXTV76fVO7XUfAbyBDAEP2SfehyPm0RR8UGbvEPJJCzljv
+ 0aKzbeL34sKBPJxIfD8W9JesEAwxUVyF18a9i/jrecc55T0egMdak0/wVeyZUeDxe0jduBAsS
+ smIGcCht1qNIdI4rbHzZHJrWbrodTMD1ZVv5A78pZ+xK4OiYnVj5KJ7aL16tDmqP7T2nGkNq6
+ S9jw3L+UHXTFexbooyFHsK5Fs5d0LNFKKWTY87NoFrS9rrUAIqecUjiGvq5/IEWl/BCjjfF+c
+ 5LdpvNgD0FmzgcMl7ln8oRr05buxXfw6vZECFkuOBJrS2lq88XFWjs3C/ys8jzqGBvTK3f6P3
+ k63aghjaPqE4dYvOezlJ8/bedqnAwogYGrOq7jqdNurScej9YZmGOYUUmKAZ5sL3H0H/JcIln
+ ay+CLVXZcsqWDhZoCfGLIG2mVtbJG+hqIg2Td6BSCxieGG3wHnYthNHob0KMHFXYS0bj4yyMh
+ 4g1kjX9NJbXrzvYDcbTO1jdnYJDtYdp07FXHX/Q==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 5:52 AM Andrew F. Davis <afd@ti.com> wrote:
->
-> On 11/5/19 11:22 PM, John Stultz wrote:
-> > +unsigned int dma_heap_ioctl_cmds[] = {
-> > +     DMA_HEAP_IOC_ALLOC,
-> > +};
-> > +
-> > +static long dma_heap_ioctl(struct file *file, unsigned int ucmd,
-> > +                        unsigned long arg)
-> > +{
-> > +     char stack_kdata[128];
-> > +     char *kdata = stack_kdata;
-> > +     unsigned int kcmd;
-> > +     unsigned int in_size, out_size, drv_size, ksize;
-> > +     int nr = _IOC_NR(ucmd);
-> > +     int ret = 0;
-> > +
-> > +     if (nr >= ARRAY_SIZE(dma_heap_ioctl_cmds))
-> > +             return -EINVAL;
-> > +
-> > +     /* Get the kernel ioctl cmd that matches */
-> > +     kcmd = dma_heap_ioctl_cmds[nr];
->
->
-> Why do we need this indirection here and all the complexity below? I
-> know DRM ioctl does something like this but it has a massive table,
-> legacy ioctls, driver defined ioctls, etc..
->
-> I don't expect we will ever need complex handling like this, could we
-> switch back to the more simple handler from v13?
+Oh, and I just realized, that I have two custom settings in my
+/etc/rc.local - guess, I configured that when I installed that machine
+years ago. Sorry, that I haven't mentioned that earlier.
 
-I agree it does add complexity, but I'm not sure I see how to avoid
-some of this. The logic trying to handle that the user may pass a cmd
-that has the same _IOC_NR() as DMA_HEAP_IOC_ALLOC but not the same
-size. So the simple "switch(cmd) { case DMA_HEAP_IOC_ALLOC:" we had
-before won't work (as the cmd will be a different value).
+echo 0 > /sys/block/nvme0n1/queue/read_ahead_kb
+echo never >
+/sys/kernel/mm/transparent_hugepage/defrag
 
-Thus why I thought the cleanest approach would be to use the
-dma_heap_ioctl_cmds array to convert from whatever the user cmd is to
-the matching kernel cmd value.
+That setting is probably not quite standard, but I assume there are
+some database server setups out there, that set RA=0 as well.
 
-Do you have an alternative suggestion that I'm overlooking?
-
-thanks
--john
