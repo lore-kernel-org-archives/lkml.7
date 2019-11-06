@@ -2,123 +2,113 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1984FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF0C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB676217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573024667;
-	bh=9Y1MIvIIHhKrzAg9igk6OG98yxeK7TL5QPbOJUY85hs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=knYAovsYuw2cUFXHkVuEFJz7IiW58gnzJpYi7NzlorkMtMAhFARcQbcebQSIwc/4A
-	 U1ROnOdkPbzNBCbb9eMHW7/VjoNgSfAssMqglDJyd6QOhI04woeCtoS2M1Wajk4oTD
-	 E4JH8orrhQ96fRmcH7pBzG7HJiB+dWkhfMuakp2g=
+	by mail.kernel.org (Postfix) with ESMTP id 857E5217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GanIKZ9M"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731198AbfKFHRq (ORCPT
+        id S1730024AbfKFHVm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:17:46 -0500
-Received: from mx2.suse.de ([195.135.220.15]:55262 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729979AbfKFHRq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:17:46 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 7F0A7AFB0;
-        Wed,  6 Nov 2019 07:17:44 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 08:17:42 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Shaokun Zhang <zhangshaokun@hisilicon.com>,
-        linux-kernel@vger.kernel.org, yuqi jin <jinyuqi@huawei.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Paul Burton <paul.burton@mips.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH v2] lib: optimize cpumask_local_spread()
-Message-ID: <20191106071742.GB8314@dhcp22.suse.cz>
-References: <1572863268-28585-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191105070141.GF22672@dhcp22.suse.cz>
- <20191105173359.39052327cf221d9c4b26b783@linux-foundation.org>
+        Wed, 6 Nov 2019 02:21:42 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:34404 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfKFHVm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:21:42 -0500
+Received: by mail-pf1-f194.google.com with SMTP id n13so6454249pff.1;
+        Tue, 05 Nov 2019 23:21:41 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=RjcWseZDp53ZsKtc5YLxUsse+m3KARrZ1Ou63MXjdxQ=;
+        b=GanIKZ9MrdVtBmKUbTdfFXkeiCjXtfZJ2sAWIt7dqViG995heeXhR12lcDHp4Emy0w
+         m6Zn2lJmHsEdLZ8jT60LNbMuTcgOSxGjszVigD/1RPxx/aKJC0Q2Y5wwCC2aRAe6zQK/
+         NWv4SdxPlHL9MJgDY6XJWg+QBHq2KT927l211txYZ2pUckdmTThNiMdxT0VZpcVqWdja
+         GTvzYKvKETktYTQnpsar89tAHTNhZNbtC7qz1nJL9ywYaySOjKkaG3uSzLCbhzYhKMSw
+         lDpxBi2gf+sz+fyGrh8tsa8F63bfv62cKMzEQReLKwnHx2b2IjvayiN0k4uuCyUZYoyO
+         M2qA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RjcWseZDp53ZsKtc5YLxUsse+m3KARrZ1Ou63MXjdxQ=;
+        b=MnXdrAj2ZuPYm4wVVE66i/hluSW8FCs0zULZ5Dh9gQmoqWKr5tkh2U8tL3pSkseJ0V
+         vq3MASyrEsNEZx1WaddDcjhaclGoxdM8A8VKDTBESuQfwP8dRukcaEo1xS0W2PmCE0PI
+         MfFQX29sWV/wd6dqoRj8Q0Q0jcHdEEyUDog4gxKrWQV85rvGkyRUFJ4TL31kQ3vpdP5B
+         C3GyAkj6gDoipiVThANX6oTKDpp1sXW/7YLwZ9Tl63olntO9cXsxfeTtp4BeJWhYiyPD
+         CwUy9btCm82RoKcDpdPgR6fvSnIPxZsEnDZb/usZAk5MiAwDHbuuRCskJICMmx3AZ42l
+         YiKg==
+X-Gm-Message-State: APjAAAVvt//L+b7JXZQTehss6v1uzBHn49oArWLH3buSOoRuFtBJsB8b
+        zM3JEetDK4xrqwbLAvpywm1f86U5cpI1uQPqejU=
+X-Google-Smtp-Source: APXvYqwiBxDuq0Qr009Xx2Cx16r9gU2XC0rGWaLGYHUJDm1uLLJ/41h46s+FlxHihfoFLZfWrPOmuWKgHGe8w48SPyI=
+X-Received: by 2002:a17:90b:958:: with SMTP id dw24mr1895113pjb.30.1573024901387;
+ Tue, 05 Nov 2019 23:21:41 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105173359.39052327cf221d9c4b26b783@linux-foundation.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191104213417.18036-1-leonmaxx@gmail.com>
+In-Reply-To: <20191104213417.18036-1-leonmaxx@gmail.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Wed, 6 Nov 2019 09:21:30 +0200
+Message-ID: <CAHp75VfS_AC+QmCY5M1VXd6QJLFQ=YtTdY4yDrJMPPMY_JxYLg@mail.gmail.com>
+Subject: Re: [PATCH v2 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
+To:     Leonid Maksymchuk <leonmaxx@gmail.com>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
+        Chris Chiu <chiu@endlessm.com>,
+        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
+        Kristian Klausen <kristian@klausen.dk>,
+        Andy Shevchenko <andy@infradead.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Corentin Chary <corentin.chary@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 05-11-19 17:33:59, Andrew Morton wrote:
-> On Tue, 5 Nov 2019 08:01:41 +0100 Michal Hocko <mhocko@kernel.org> wrote:
-> 
-> > On Mon 04-11-19 18:27:48, Shaokun Zhang wrote:
-> > > From: yuqi jin <jinyuqi@huawei.com>
-> > > 
-> > > In the multi-processor and NUMA system, I/O device may have many numa
-> > > nodes belonging to multiple cpus. When we get a local numa, it is
-> > > better to find the node closest to the local numa node, instead
-> > > of choosing any online cpu immediately.
-> > > 
-> > > For the current code, it only considers the local NUMA node and it
-> > > doesn't compute the distances between different NUMA nodes for the
-> > > non-local NUMA nodes. Let's optimize it and find the nearest node
-> > > through NUMA distance. The performance will be better if it return
-> > > the nearest node than the random node.
-> > 
-> > Numbers please
-> 
-> The changelog had
-> 
-> : When Parameter Server workload is tested using NIC device on Huawei
-> : Kunpeng 920 SoC:
-> : Without the patch, the performance is 22W QPS;
-> : Added this patch, the performance become better and it is 26W QPS.
+On Mon, Nov 4, 2019 at 11:34 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
+>
+> Hi,
+>
+> this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
+> asus_wmi platform driver and also fixes minor bug.
+>
+> v2: fixed indentation.
 
-Maybe it is just me but this doesn't really tell me a lot. What is
-Parameter Server workload? What do I do to replicate those numbers? Is
-this really specific to the Kunpeng 920 server? What is the usual
-variance of the performance numbers?
+Usual versioning
+RFC [RFC v2, ...]
+v1
+v2, ...
 
-> > [...]
-> > > +/**
-> > > + * cpumask_local_spread - select the i'th cpu with local numa cpu's first
-> > > + * @i: index number
-> > > + * @node: local numa_node
-> > > + *
-> > > + * This function selects an online CPU according to a numa aware policy;
-> > > + * local cpus are returned first, followed by the nearest non-local ones,
-> > > + * then it wraps around.
-> > > + *
-> > > + * It's not very efficient, but useful for setup.
-> > > + */
-> > > +unsigned int cpumask_local_spread(unsigned int i, int node)
-> > > +{
-> > > +	int node_dist[MAX_NUMNODES] = {0};
-> > > +	bool used[MAX_NUMNODES] = {0};
-> > 
-> > Ugh. This might be a lot of stack space. Some distro kernels use large
-> > NODE_SHIFT (e.g 10 so this would be 4kB of stack space just for the
-> > node_dist).
-> 
-> Yes, that's big.  From a quick peek I suspect we could get by using an
-> array of unsigned shorts here but that might be fragile over time even
-> if it works now?
+Okay, next one will be v3 to avoid overlapping.
 
-Whatever data type we use it will be still quite large to be on the
-stack.
+I'll take first patch later, but I also will give more comments to patch 2.
+Please, give me time to review it properly.
 
-> Perhaps we could make it a statically allocated array and protect the
-> entire thing with a spin_lock_irqsave()?  It's not a frequently called
-> function.
+>
+> Leonid Maksymchuk (3):
+>   asus_wmi: Fix return value of fan_boost_mode_store
+>   asus_wmi: Add support for fan boost mode on FX505DY/FX705DY
+>   asus_wmi: Set default fan boost mode to normal
+>
+>  drivers/platform/x86/asus-wmi.c            | 57 ++++++++++++++++++++++--------
+>  include/linux/platform_data/x86/asus-wmi.h |  1 +
+>  2 files changed, 43 insertions(+), 15 deletions(-)
+>
+> --
+> 1.8.3.1
+>
 
-This is what I was suggesting in previous review feedback.
 
 -- 
-Michal Hocko
-SUSE Labs
+With Best Regards,
+Andy Shevchenko
