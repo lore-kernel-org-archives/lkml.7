@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C80C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9C5AC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F0E01218AE
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 64F7221929
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GmREb2gA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="EEInOP7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731844AbfKFN3C (ORCPT
+        id S1731860AbfKFN3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:29:02 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39643 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731826AbfKFN3B (ORCPT
+        Wed, 6 Nov 2019 08:29:06 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:39652 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731826AbfKFN3E (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:29:01 -0500
-Received: by mail-pg1-f196.google.com with SMTP id 29so5829810pgm.6
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:29:00 -0800 (PST)
+        Wed, 6 Nov 2019 08:29:04 -0500
+Received: by mail-pg1-f193.google.com with SMTP id 29so5829949pgm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:29:04 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=2JC2BSAON2aTYfWnY286zBqdcBgF1dUkhFpgqH52P8A=;
-        b=GmREb2gAFzVBw1JzE2epBfRKDBD9/8BHb4WsdWVr5lOtzpidmIw5GF3ZoJMBmiR2Lc
-         hkiJAEHW0blLAPRX292U+12+AsV/FjNwUbuecXH9XavsxZR5ZGdmfy8qUOiga8JBaCHQ
-         rCdQcLyLGFupMzXBlQpqtMxOpCb8qylIQELk0s8wrkVmGkfF79umn2K6WDk4xLVOpiLI
-         5RJyH9RUJzoadMkubpIwpy0T4PfwtaRawxNZF/W2TAMXRAOFzifYXQJu6tRRIoAW2IM2
-         ZhYtAHd6FSX09lWSsG6PADFFgZ4VKpmYAIPfmwW7hzVEJ1wgNQYi8uk7j2YsIzi3VNI/
-         dNYw==
+        bh=Rxuz5AKRhYwDEc2ju4DSL4K4+pPb8Uk4j39gu0W8ZCQ=;
+        b=EEInOP7DB8lbrJuWagzB9tYaHP/rrHOL2bKvo3JM0gyhWrT02CnUe9hqCCpm9PcO8j
+         gMqiSIawVDAZ9mrcDA7xtuPbw8DnA9wWCxCIN03EONVvvd5nLDPAIWmTK2INLgKQuQCx
+         r6Cad7CUa3txk8jRPoX6WL2fRVXxszPE6VbNZZyVPcayMLaYC1hAhJCMMz4iHZRF7ait
+         66JHaWPmgAmyRGvaszkezzMGCCxKaBMwhpPm4DIP6mOB3GfVoH4vigDdZdfNMhuObvv+
+         tosGonmI/ET9XLrsIZUy9SQ/G5jAVgOWFvlk9QFQA7r9xN/NIhsoA4jYgcd7AanNv73u
+         U9IQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=2JC2BSAON2aTYfWnY286zBqdcBgF1dUkhFpgqH52P8A=;
-        b=JcSR2iOf5uz3MRl/whrPsVRUvs4Jw5ZphR5WlrKtHwBg/8kR+spyrGrugzcotmtfl9
-         5bVaeOpJsCh7oVBxq7E2mFlzB53h7/0NgjLTMnfB0AYEbPp+DS2gsvcqqo1yP0Z1IdkH
-         2Zn0lKg/pSO/7EZ1Yd/9GA7Rm7y2+bAiYeGm53SLd2Ay/kf70F/kBC+TfkS56liBzuR+
-         6ceBj7DEMhNMyRNUzTy6Yctlz02qH3Vej2zClCEEE/+TgkPv/rGDvqarFAoQW7qKW83A
-         iNoilYPJ7rwMKSrkvBVhnKbVj0AsZgyFIT5PC/FHRwADPrZeX/v+c7GyKo7JeDrkH6n0
-         L9/A==
-X-Gm-Message-State: APjAAAUWb2LnfydIQtyfTPqXe1yX3GHSbsxFxq4J6Mq78i51sP/W37mv
-        jw6IRqt1HE2Lc93GOQJiPDTd/4YMgNv2qw==
-X-Google-Smtp-Source: APXvYqzT7yY171Uj3lkOCncUrwz2j9jISfZ79+XTPrykw/o8bUa0kJNh8nso8pz12NOQBzd7gSDYaw==
-X-Received: by 2002:aa7:9192:: with SMTP id x18mr3340660pfa.229.1573046939554;
-        Wed, 06 Nov 2019 05:28:59 -0800 (PST)
+        bh=Rxuz5AKRhYwDEc2ju4DSL4K4+pPb8Uk4j39gu0W8ZCQ=;
+        b=BREhtdcjJicDFHg4IXaz0IhvssRl7hIaSNRbdgMYdYHPdtUWBvqGHXPTL610QI72g5
+         zECZwWqR5+AdiCFampFojGV6KGYtWp8jZfzzarCdCOwbRfbHNQDENF0lvvoJ7Ksifh7N
+         Kwnhuclc9siq5d2NuQd7GKXkQxlKrFWXtT4V8766t/bLX29r43Zt5TYi8T8sOGX1WAH3
+         3JXXOr/ckzEMpxj5XDTWqRiMFAFTQLE0rtoEJatQ1ztNhdsAr7tETdUp7I8kmLLzOs23
+         dVyX6udcoz+HDRn7cG5szUfZOuuMwhNBitpTptcJEZhO1goyY1BrfSBlndxxqKXiJYQK
+         w2Gg==
+X-Gm-Message-State: APjAAAXrEuVnWK674OAK4FySkZbHZ+ilrFTjvFgL0b6ws4sCl1OXKGUS
+        XlLP/tYSwSWXI+i2/8fkgZSFtSl3hrqMgg==
+X-Google-Smtp-Source: APXvYqytz/JuKcJu8N2v0TNGLdkW02GIDujkuuO3j9EjYVAQNa4OjvjOCsKfTKAhFD0GvFtzg+g6og==
+X-Received: by 2002:a17:90b:24c:: with SMTP id fz12mr3761393pjb.51.1573046943798;
+        Wed, 06 Nov 2019 05:29:03 -0800 (PST)
 Received: from localhost ([49.248.202.230])
-        by smtp.gmail.com with ESMTPSA id q8sm20785909pgg.15.2019.11.06.05.28.58
+        by smtp.gmail.com with ESMTPSA id hi2sm2412031pjb.22.2019.11.06.05.29.02
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 05:28:59 -0800 (PST)
+        Wed, 06 Nov 2019 05:29:03 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
         Amit Daniel Kachhap <amit.kachhap@gmail.com>,
@@ -75,10 +75,10 @@ To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
 Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH 06/11] thermal: mediatek: Appease the kernel-doc deity
-Date:   Wed,  6 Nov 2019 18:58:22 +0530
-Message-Id: <2961e4ac4b32ea7db8b5f6916751a5c02ee85960.1573046440.git.amit.kucheria@linaro.org>
+        linux-rockchip@lists.infradead.org
+Subject: [PATCH 07/11] thermal: rockchip: Appease the kernel-doc deity
+Date:   Wed,  6 Nov 2019 18:58:23 +0530
+Message-Id: <290895a22aa8a13c13b3a4ae77c13244b4ecee58.1573046440.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1573046440.git.amit.kucheria@linaro.org>
 References: <cover.1573046440.git.amit.kucheria@linaro.org>
@@ -95,84 +95,149 @@ parameters where needed.
 
 Fixes up the following warnings when compiled with make W=1:
 
-linux.git/drivers/thermal/mtk_thermal.c:374: warning: cannot understand
-function prototype: 'const struct mtk_thermal_data mt8173_thermal_data =
-'
-linux.git/drivers/thermal/mtk_thermal.c:413: warning: cannot understand
-function prototype: 'const struct mtk_thermal_data mt2701_thermal_data =
-'
-linux.git/drivers/thermal/mtk_thermal.c:443: warning: cannot understand
-function prototype: 'const struct mtk_thermal_data mt2712_thermal_data =
-'
-linux.git/drivers/thermal/mtk_thermal.c:499: warning: cannot understand
-function prototype: 'const struct mtk_thermal_data mt8183_thermal_data =
-'
-linux.git/drivers/thermal/mtk_thermal.c:529: warning: Function parameter
-or member 'sensno' not described in 'raw_to_mcelsius'
+linux.git/drivers/thermal/rockchip_thermal.c:27: warning: cannot
+understand function prototype: 'enum tshut_mode '
+linux.git/drivers/thermal/rockchip_thermal.c:37: warning: cannot
+understand function prototype: 'enum tshut_polarity '
+linux.git/drivers/thermal/rockchip_thermal.c:46: warning: cannot
+understand function prototype: 'enum sensor_id '
+linux.git/drivers/thermal/rockchip_thermal.c:56: warning: cannot
+understand function prototype: 'enum adc_sort_mode '
+linux.git/drivers/thermal/rockchip_thermal.c:123: warning: Function
+parameter or member 'chn_id' not described in 'rockchip_tsadc_chip'
+linux.git/drivers/thermal/rockchip_thermal.c:123: warning: Function
+parameter or member 'control' not described in 'rockchip_tsadc_chip'
+linux.git/drivers/thermal/rockchip_thermal.c:167: warning: Function
+parameter or member 'sensors' not described in 'rockchip_thermal_data'
+linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
+parameter or member 'grf' not described in 'rk_tsadcv2_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
+parameter or member 'regs' not described in 'rk_tsadcv2_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
+parameter or member 'tshut_polarity' not described in
+'rk_tsadcv2_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
+parameter or member 'grf' not described in 'rk_tsadcv3_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
+parameter or member 'regs' not described in 'rk_tsadcv3_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
+parameter or member 'tshut_polarity' not described in
+'rk_tsadcv3_initialize'
+linux.git/drivers/thermal/rockchip_thermal.c:732: warning: Function
+parameter or member 'regs' not described in 'rk_tsadcv3_control'
+linux.git/drivers/thermal/rockchip_thermal.c:732: warning: Function
+parameter or member 'enable' not described in 'rk_tsadcv3_control'
+linux.git/drivers/thermal/rockchip_thermal.c:1211: warning: Function
+parameter or member 'reset' not described in
+'rockchip_thermal_reset_controller'
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/mtk_thermal.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ drivers/thermal/rockchip_thermal.c | 22 ++++++++++++++++------
+ 1 file changed, 16 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
-index acf4854cbb8b8..76e30603d4d58 100644
---- a/drivers/thermal/mtk_thermal.c
-+++ b/drivers/thermal/mtk_thermal.c
-@@ -358,7 +358,7 @@ static const int mt7622_mux_values[MT7622_NUM_SENSORS] = { 0, };
- static const int mt7622_vts_index[MT7622_NUM_SENSORS] = { VTS1 };
- static const int mt7622_tc_offset[MT7622_NUM_CONTROLLER] = { 0x0, };
+diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
+index 343c2f5c5a259..9ed8085bb7924 100644
+--- a/drivers/thermal/rockchip_thermal.c
++++ b/drivers/thermal/rockchip_thermal.c
+@@ -19,7 +19,7 @@
+ #include <linux/mfd/syscon.h>
+ #include <linux/pinctrl/consumer.h>
  
 -/**
 +/*
-  * The MT8173 thermal controller has four banks. Each bank can read up to
-  * four temperature sensors simultaneously. The MT8173 has a total of 5
-  * temperature sensors. We use each bank to measure a certain area of the
-@@ -400,7 +400,7 @@ static const struct mtk_thermal_data mt8173_thermal_data = {
- 	.sensor_mux_values = mt8173_mux_values,
+  * If the temperature over a period of time High,
+  * the resulting TSHUT gave CRU module,let it reset the entire chip,
+  * or via GPIO give PMIC.
+@@ -29,7 +29,7 @@ enum tshut_mode {
+ 	TSHUT_MODE_GPIO,
  };
  
 -/**
 +/*
-  * The MT2701 thermal controller has one bank, which can read up to
-  * three temperature sensors simultaneously. The MT2701 has a total of 3
-  * temperature sensors.
-@@ -430,7 +430,7 @@ static const struct mtk_thermal_data mt2701_thermal_data = {
- 	.sensor_mux_values = mt2701_mux_values,
+  * The system Temperature Sensors tshut(tshut) polarity
+  * the bit 8 is tshut polarity.
+  * 0: low active, 1: high active
+@@ -39,7 +39,7 @@ enum tshut_polarity {
+ 	TSHUT_HIGH_ACTIVE,
  };
  
 -/**
 +/*
-  * The MT2712 thermal controller has one bank, which can read up to
-  * four temperature sensors simultaneously. The MT2712 has a total of 4
-  * temperature sensors.
-@@ -484,7 +484,7 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
- 	.sensor_mux_values = mt7622_mux_values,
- };
- 
--/**
-+/*
-  * The MT8183 thermal controller has one bank for the current SW framework.
-  * The MT8183 has a total of 6 temperature sensors.
-  * There are two thermal controller to control the six sensor.
-@@ -495,7 +495,6 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
-  * data, and this indeed needs the temperatures of the individual banks
-  * for making better decisions.
+  * The system has two Temperature Sensors.
+  * sensor0 is for CPU, and sensor1 is for GPU.
   */
--
- static const struct mtk_thermal_data mt8183_thermal_data = {
- 	.auxadc_channel = MT8183_TEMP_AUXADC_CHANNEL,
- 	.num_banks = MT8183_NUM_SENSORS_PER_ZONE,
-@@ -519,7 +518,8 @@ static const struct mtk_thermal_data mt8183_thermal_data = {
+@@ -48,7 +48,7 @@ enum sensor_id {
+ 	SENSOR_GPU,
+ };
+ 
+-/**
++/*
+  * The conversion table has the adc value and temperature.
+  * ADC_DECREMENT: the adc value is of diminishing.(e.g. rk3288_code_table)
+  * ADC_INCREMENT: the adc value is incremental.(e.g. rk3368_code_table)
+@@ -80,13 +80,14 @@ struct chip_tsadc_table {
  
  /**
-  * raw_to_mcelsius - convert a raw ADC value to mcelsius
-- * @mt:		The thermal controller
-+ * @mt:	The thermal controller
-+ * @sensno:	sensor number
-  * @raw:	raw ADC value
+  * struct rockchip_tsadc_chip - hold the private data of tsadc chip
+- * @chn_id[SOC_MAX_SENSORS]: the sensor id of chip correspond to the channel
++ * @chn_id: array of sensor ids of chip corresponding to the channel
+  * @chn_num: the channel number of tsadc chip
+  * @tshut_temp: the hardware-controlled shutdown temperature value
+  * @tshut_mode: the hardware-controlled shutdown mode (0:CRU 1:GPIO)
+  * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
+  * @initialize: SoC special initialize tsadc controller method
+  * @irq_ack: clear the interrupt
++ * @control: enable/disable method for the tsadc controller
+  * @get_temp: get the temperature
+  * @set_alarm_temp: set the high temperature interrupt
+  * @set_tshut_temp: set the hardware-controlled shutdown temperature
+@@ -139,7 +140,7 @@ struct rockchip_thermal_sensor {
+  * @chip: pointer to the platform/configuration data
+  * @pdev: platform device of thermal
+  * @reset: the reset controller of tsadc
+- * @sensors[SOC_MAX_SENSORS]: the thermal sensor
++ * @sensors: array of thermal sensors
+  * @clk: the controller clock is divided by the exteral 24MHz
+  * @pclk: the advanced peripherals bus clock
+  * @grf: the general register file will be used to do static set by software
+@@ -590,6 +591,9 @@ static int rk_tsadcv2_code_to_temp(const struct chip_tsadc_table *table,
+ 
+ /**
+  * rk_tsadcv2_initialize - initialize TASDC Controller.
++ * @grf: the general register file will be used to do static set by software
++ * @regs: the base address of tsadc controller
++ * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
   *
-  * This converts the raw ADC value to mcelsius using the SoC specific
+  * (1) Set TSADC_V2_AUTO_PERIOD:
+  *     Configure the interleave between every two accessing of
+@@ -624,6 +628,9 @@ static void rk_tsadcv2_initialize(struct regmap *grf, void __iomem *regs,
+ 
+ /**
+  * rk_tsadcv3_initialize - initialize TASDC Controller.
++ * @grf: the general register file will be used to do static set by software
++ * @regs: the base address of tsadc controller
++ * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
+  *
+  * (1) The tsadc control power sequence.
+  *
+@@ -723,6 +730,8 @@ static void rk_tsadcv2_control(void __iomem *regs, bool enable)
+ 
+ /**
+  * rk_tsadcv3_control - the tsadc controller is enabled or disabled.
++ * @regs: the base address of tsadc controller
++ * @enable: boolean flag to enable the controller
+  *
+  * NOTE: TSADC controller works at auto mode, and some SoCs need set the
+  * tsadc_q_sel bit on TSADCV2_AUTO_CON[1]. The (1024 - tsadc_q) as output
+@@ -1206,6 +1215,7 @@ rockchip_thermal_register_sensor(struct platform_device *pdev,
+ 
+ /**
+  * Reset TSADC Controller, reset all tsadc registers.
++ * @reset: the reset controller of tsadc
+  */
+ static void rockchip_thermal_reset_controller(struct reset_control *reset)
+ {
 -- 
 2.17.1
 
