@@ -3,370 +3,972 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3A25C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E22F6C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8AD432077C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 926A121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:21:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eKdLEu+G"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="KGBjpx6B"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730392AbfKFNQn (ORCPT
+        id S1729676AbfKFNVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:16:43 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:33118 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726781AbfKFNQm (ORCPT
+        Wed, 6 Nov 2019 08:21:11 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:21652 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726926AbfKFNVL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:16:42 -0500
-Received: by mail-pl1-f194.google.com with SMTP id ay6so4416632plb.0;
-        Wed, 06 Nov 2019 05:16:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=cc:subject:to:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=jH1CxWqEe5u9tGVGijQtsOXtAhLD0z88WC7LLZl90EA=;
-        b=eKdLEu+G6yD6w9fFrb36tbbY8q/Qizz9j2ep8AtDSIqRH0N4OX38AJYVrNqQQLJgiI
-         fDVdvWbtQrwjtko0umuiNgkAQP7MpBKd76opQgeqGTguqkoPWHkT0nrSlTEFDQKcwZox
-         J0Czo4e3Li/Al5Nt624/TuZ2BYvjv7sos3uaFow4VTXTjlXS1BibegLDC04lhfkSZgeo
-         3X3ymRUegYNqP1Q9B410+uiAzPZuwsV5kCCrswl0N3+h2gA111mwTtls3m83UAlSnKi9
-         BCvCYOTXU/i46/zMelsgYqRevWnfAdwXUrf4JTxEECLwCP7GDYwlfpnYnC+GPpahuWUG
-         CrSA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:cc:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=jH1CxWqEe5u9tGVGijQtsOXtAhLD0z88WC7LLZl90EA=;
-        b=YFbUOgxJuFDXpXxSKgJf4aUyZHz3deuN5X98cLJSZ8juDq1Bu3Vc7oEJGyulx2e4A3
-         ywIWDz6pyOMi9ijuK3IbSTI4OJwHdltfPixFc2psMUR3i6tTKAdkzTWurg13h8Eo/DhY
-         wVT6eTy5JLdb+P1b1kRhryiQimFXEg69am8QUjuwrb3QbshZdPYWExuNeHY+fShxFNYu
-         8XJvvNVa1l7eh2IHMbpeQV+Wi/Tcf9aglyXdCUaL9mn8AxGx5nYYGaRZ1+KM2liz30t4
-         UYrd1ScYteSqXH69xj/uGafF9mSJTEam/GLY/3bFu+G3OLx6B0ek7kL1XhEbegYW8S0V
-         hyQA==
-X-Gm-Message-State: APjAAAVI5cltGFi+d+xf2Gj21XnMWpdpclC1FvOKV65sdem6lzW68IF6
-        MKlZV0ara/M8EDGmDvxCcjI=
-X-Google-Smtp-Source: APXvYqxp58pt5cP0YvZCIifD24FK0eCy/ukLAA5N1vzz0ykRvr6pUS6GC7funBp42A5ELVgxTOhPzQ==
-X-Received: by 2002:a17:902:9687:: with SMTP id n7mr2665743plp.166.1573046200967;
-        Wed, 06 Nov 2019 05:16:40 -0800 (PST)
-Received: from ?IPv6:2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb? ([2405:4800:58f7:3f8f:27cb:abb4:d0bd:49cb])
-        by smtp.gmail.com with ESMTPSA id 18sm23577703pfp.100.2019.11.06.05.16.37
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 05:16:40 -0800 (PST)
-Cc:     tranmanphong@gmail.com, paulmck@kernel.org,
-        linux-doc@vger.kernel.org, corbet@lwn.net, jiangshanlai@gmail.com,
-        josh@joshtriplett.org, rostedt@goodmis.org,
-        linux-kernel@vger.kernel.org, rcu@vger.kernel.org,
-        mathieu.desnoyers@efficios.com, joel@joelfernandes.org,
-        linux-kernel-mentees@lists.linuxfoundation.org
-Subject: Re: Re: [Linux-kernel-mentees] [PATCH] Doc: whatisRCU: Add more
- Markup
-To:     Amol Grover <frextrite@gmail.com>
-References: <20191105165938.GA10903@workstation>
- <20191105214234.17116-1-tranmanphong@gmail.com>
- <20191106094523.GA1245@workstation-kernel-dev>
-From:   Phong Tran <tranmanphong@gmail.com>
-Message-ID: <8705475b-7423-1af1-a664-bdee2bf3894d@gmail.com>
-Date:   Wed, 6 Nov 2019 20:16:36 +0700
+        Wed, 6 Nov 2019 08:21:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573046469;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=F+C25GQSIKj54k6/oHa4FdnGqop2t3y/rj6KMXbhd2k=;
+        b=KGBjpx6BkDzfQSPcWpCTnqJ+3S8UYDmC7CbIkQ8g0jUT/szFfQ14l0WsQco73q1ZaqfeVt
+        PPPgRnelZzfd1uqzvD9BxSiABrzxlFRqBIC49FslWSVc/ksePLdf9GmqeNFBoroWmzF05W
+        8gr3cbgZFZoS22YvSQAVkl84TeJwHns=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255--5dL4p17OuOriUFGnCYnBA-1; Wed, 06 Nov 2019 08:21:06 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B7A43800C72;
+        Wed,  6 Nov 2019 13:21:04 +0000 (UTC)
+Received: from [10.72.12.193] (ovpn-12-193.pek2.redhat.com [10.72.12.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5BD535D9CD;
+        Wed,  6 Nov 2019 13:20:23 +0000 (UTC)
+Subject: Re: [PATCH v5] vhost: introduce mdev based hardware backend
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Tiwei Bie <tiwei.bie@intel.com>
+Cc:     alex.williamson@redhat.com, maxime.coquelin@redhat.com,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        dan.daly@intel.com, cunming.liang@intel.com,
+        zhihong.wang@intel.com, lingshan.zhu@intel.com
+References: <20191105115332.11026-1-tiwei.bie@intel.com>
+ <16f31c27-3a0e-09d7-3925-dc9777f5e229@redhat.com> <20191106122249.GA3235@___>
+ <20191106075607-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <580dfa2c-f1ff-2f6f-bbc8-1c4b0a829a3d@redhat.com>
+Date:   Wed, 6 Nov 2019 21:20:20 +0800
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-In-Reply-To: <20191106094523.GA1245@workstation-kernel-dev>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20191106075607-mutt-send-email-mst@kernel.org>
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: -5dL4p17OuOriUFGnCYnBA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-
-On 11/6/19 4:45 PM, Amol Grover wrote:
-> On Wed, Nov 06, 2019 at 04:42:34AM +0700, Phong Tran wrote:
->> o Adding more crossrefs.
->> o Bold some words.
->> o Add header levels.
+On 2019/11/6 =E4=B8=8B=E5=8D=888:57, Michael S. Tsirkin wrote:
+> On Wed, Nov 06, 2019 at 08:22:50PM +0800, Tiwei Bie wrote:
+>> On Wed, Nov 06, 2019 at 03:54:45PM +0800, Jason Wang wrote:
+>>> On 2019/11/5 =E4=B8=8B=E5=8D=887:53, Tiwei Bie wrote:
+>>>> This patch introduces a mdev based hardware vhost backend.
+>>>> This backend is built on top of the same abstraction used
+>>>> in virtio-mdev and provides a generic vhost interface for
+>>>> userspace to accelerate the virtio devices in guest.
+>>>>
+>>>> This backend is implemented as a mdev device driver on top
+>>>> of the same mdev device ops used in virtio-mdev but using
+>>>> a different mdev class id, and it will register the device
+>>>> as a VFIO device for userspace to use. Userspace can setup
+>>>> the IOMMU with the existing VFIO container/group APIs and
+>>>> then get the device fd with the device name. After getting
+>>>> the device fd, userspace can use vhost ioctls on top of it
+>>>> to setup the backend.
+>>>>
+>>>> Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+>>>
+>>> Looks good to me. Only minor nits which could be addressed on top.
+>>>
+>>> Reviewed-by: Jason Wang <jasowang@redhat.com>
+>> Thanks!
 >>
->> Signed-off-by: Phong Tran <tranmanphong@gmail.com>
->> ---
->>   Documentation/RCU/whatisRCU.rst | 67 ++++++++++++++++++++-------------
->>   1 file changed, 41 insertions(+), 26 deletions(-)
+>>>
+>>>> ---
+>>>> This patch depends on below series:
+>>>> https://lkml.org/lkml/2019/11/5/217
+>>>>
+>>>> v4 -> v5:
+>>>> - Rebase on top of virtio-mdev series v8;
+>>>> - Use the virtio_ops of mdev_device in vhost-mdev (Jason);
+>>>> - Some minor improvements on commit log;
+>>>>
+>>>> v3 -> v4:
+>>>> - Rebase on top of virtio-mdev series v6;
+>>>> - Some minor tweaks and improvements;
+>>>>
+>>>> v2 -> v3:
+>>>> - Fix the return value (Jason);
+>>>> - Don't cache unnecessary information in vhost-mdev (Jason);
+>>>> - Get rid of the memset in open (Jason);
+>>>> - Add comments for VHOST_SET_MEM_TABLE, ... (Jason);
+>>>> - Filter out unsupported features in vhost-mdev (Jason);
+>>>> - Add _GET_DEVICE_ID ioctl (Jason);
+>>>> - Add _GET_CONFIG/_SET_CONFIG ioctls (Jason);
+>>>> - Drop _GET_QUEUE_NUM ioctl (Jason);
+>>>> - Fix the copy-paste errors in _IOW/_IOR usage;
+>>>> - Some minor fixes and improvements;
+>>>>
+>>>> v1 -> v2:
+>>>> - Replace _SET_STATE with _SET_STATUS (MST);
+>>>> - Check status bits at each step (MST);
+>>>> - Report the max ring size and max number of queues (MST);
+>>>> - Add missing MODULE_DEVICE_TABLE (Jason);
+>>>> - Only support the network backend w/o multiqueue for now;
+>>>> - Some minor fixes and improvements;
+>>>> - Rebase on top of virtio-mdev series v4;
+>>>>
+>>>> RFC v4 -> v1:
+>>>> - Implement vhost-mdev as a mdev device driver directly and
+>>>>     connect it to VFIO container/group. (Jason);
+>>>> - Pass ring addresses as GPAs/IOVAs in vhost-mdev to avoid
+>>>>     meaningless HVA->GPA translations (Jason);
+>>>>
+>>>> RFC v3 -> RFC v4:
+>>>> - Build vhost-mdev on top of the same abstraction used by
+>>>>     virtio-mdev (Jason);
+>>>> - Introduce vhost fd and pass VFIO fd via SET_BACKEND ioctl (MST);
+>>>>
+>>>> RFC v2 -> RFC v3:
+>>>> - Reuse vhost's ioctls instead of inventing a VFIO regions/irqs
+>>>>     based vhost protocol on top of vfio-mdev (Jason);
+>>>>
+>>>> RFC v1 -> RFC v2:
+>>>> - Introduce a new VFIO device type to build a vhost protocol
+>>>>     on top of vfio-mdev;
+>>>>
+>>>>    drivers/vfio/mdev/mdev_core.c    |  21 ++
+>>>>    drivers/vhost/Kconfig            |  12 +
+>>>>    drivers/vhost/Makefile           |   3 +
+>>>>    drivers/vhost/mdev.c             | 553 ++++++++++++++++++++++++++++=
++++
+>>>>    include/linux/mdev.h             |   5 +
+>>>>    include/uapi/linux/vhost.h       |  18 +
+>>>>    include/uapi/linux/vhost_types.h |   8 +
+>>>>    7 files changed, 620 insertions(+)
+>>>>    create mode 100644 drivers/vhost/mdev.c
+>>>>
+>>>> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_co=
+re.c
+>>>> index c58253404ed5..d855be5afbae 100644
+>>>> --- a/drivers/vfio/mdev/mdev_core.c
+>>>> +++ b/drivers/vfio/mdev/mdev_core.c
+>>>> @@ -99,6 +99,27 @@ mdev_get_virtio_ops(struct mdev_device *mdev)
+>>>>    }
+>>>>    EXPORT_SYMBOL(mdev_get_virtio_ops);
+>>>> +/*
+>>>> + * Specify the vhost device ops for the mdev device, this
+>>>> + * must be called during create() callback for vhost mdev device.
+>>>> + */
+>>>> +void mdev_set_vhost_ops(struct mdev_device *mdev,
+>>>> +=09=09=09const struct mdev_virtio_device_ops *vhost_ops)
+>>>> +{
+>>>> +=09mdev_set_class(mdev, MDEV_CLASS_ID_VHOST);
+>>>> +=09mdev->virtio_ops =3D vhost_ops;
+>>>> +}
+>>>> +EXPORT_SYMBOL(mdev_set_vhost_ops);
+>>>> +
+>>>> +/* Get the vhost device ops for the mdev device. */
+>>>> +const struct mdev_virtio_device_ops *
+>>>> +mdev_get_vhost_ops(struct mdev_device *mdev)
+>>>> +{
+>>>> +=09WARN_ON(mdev->class_id !=3D MDEV_CLASS_ID_VHOST);
+>>>> +=09return mdev->virtio_ops;
+>>>> +}
+>>>> +EXPORT_SYMBOL(mdev_get_vhost_ops);
+>>>> +
+>>>>    struct device *mdev_dev(struct mdev_device *mdev)
+>>>>    {
+>>>>    =09return &mdev->dev;
+>>>> diff --git a/drivers/vhost/Kconfig b/drivers/vhost/Kconfig
+>>>> index 3d03ccbd1adc..062cada28f89 100644
+>>>> --- a/drivers/vhost/Kconfig
+>>>> +++ b/drivers/vhost/Kconfig
+>>>> @@ -34,6 +34,18 @@ config VHOST_VSOCK
+>>>>    =09To compile this driver as a module, choose M here: the module wi=
+ll be called
+>>>>    =09vhost_vsock.
+>>>> +config VHOST_MDEV
+>>>> +=09tristate "Vhost driver for Mediated devices"
+>>>> +=09depends on EVENTFD && VFIO && VFIO_MDEV
+>>>> +=09select VHOST
+>>>> +=09default n
+>>>> +=09---help---
+>>>> +=09This kernel module can be loaded in host kernel to accelerate
+>>>> +=09guest virtio devices with the mediated device based backends.
+>>>> +
+>>>> +=09To compile this driver as a module, choose M here: the module will
+>>>> +=09be called vhost_mdev.
+>>>> +
+>>>>    config VHOST
+>>>>    =09tristate
+>>>>    =09---help---
+>>>> diff --git a/drivers/vhost/Makefile b/drivers/vhost/Makefile
+>>>> index 6c6df24f770c..ad9c0f8c6d8c 100644
+>>>> --- a/drivers/vhost/Makefile
+>>>> +++ b/drivers/vhost/Makefile
+>>>> @@ -10,4 +10,7 @@ vhost_vsock-y :=3D vsock.o
+>>>>    obj-$(CONFIG_VHOST_RING) +=3D vringh.o
+>>>> +obj-$(CONFIG_VHOST_MDEV) +=3D vhost_mdev.o
+>>>> +vhost_mdev-y :=3D mdev.o
+>>>> +
+>>>>    obj-$(CONFIG_VHOST)=09+=3D vhost.o
+>>>> diff --git a/drivers/vhost/mdev.c b/drivers/vhost/mdev.c
+>>>> new file mode 100644
+>>>> index 000000000000..0bcde0f3a9cd
+>>>> --- /dev/null
+>>>> +++ b/drivers/vhost/mdev.c
+>>>> @@ -0,0 +1,553 @@
+>>>> +// SPDX-License-Identifier: GPL-2.0
+>>>> +/*
+>>>> + * Vhost driver for mediated device based backends.
+>>>> + *
+>>>> + * Copyright (C) 2018-2019 Intel Corporation.
+>>>> + *
+>>>> + * Author: Tiwei Bie <tiwei.bie@intel.com>
+>>>> + *
+>>>> + * Thanks to Jason Wang and Michael S. Tsirkin for the valuable
+>>>> + * comments and suggestions.  And thanks to Cunming Liang and
+>>>> + * Zhihong Wang for all their supports.
+>>>> + */
+>>>> +
+>>>> +#include <linux/kernel.h>
+>>>> +#include <linux/module.h>
+>>>> +#include <linux/mdev.h>
+>>>> +#include <linux/mdev_virtio_ops.h>
+>>>> +#include <linux/nospec.h>
+>>>> +#include <linux/vfio.h>
+>>>> +#include <linux/vhost.h>
+>>>> +#include <linux/virtio_net.h>
+>>>> +
+>>>> +#include "vhost.h"
+>>>> +
+>>>> +enum {
+>>>> +=09VHOST_MDEV_FEATURES =3D
+>>>> +=09=09(1ULL << VIRTIO_F_NOTIFY_ON_EMPTY) |
+>>>> +=09=09(1ULL << VIRTIO_F_ANY_LAYOUT) |
+>>>> +=09=09(1ULL << VIRTIO_F_VERSION_1) |
+>>>> +=09=09(1ULL << VIRTIO_F_IOMMU_PLATFORM) |
+>>>> +=09=09(1ULL << VIRTIO_F_RING_PACKED) |
+>>>> +=09=09(1ULL << VIRTIO_F_ORDER_PLATFORM) |
+>>>> +=09=09(1ULL << VIRTIO_RING_F_INDIRECT_DESC) |
+>>>> +=09=09(1ULL << VIRTIO_RING_F_EVENT_IDX),
+>>>> +
+>>>> +=09VHOST_MDEV_NET_FEATURES =3D VHOST_MDEV_FEATURES |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_CSUM) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_GUEST_CSUM) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_MTU) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_MAC) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_GUEST_TSO4) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_GUEST_TSO6) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_GUEST_ECN) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_GUEST_UFO) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_HOST_TSO4) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_HOST_TSO6) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_HOST_ECN) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_HOST_UFO) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_MRG_RXBUF) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_STATUS) |
+>>>> +=09=09(1ULL << VIRTIO_NET_F_SPEED_DUPLEX),
+>>>> +};
+>>>> +
+>>>> +/* Currently, only network backend w/o multiqueue is supported. */
+>>>> +#define VHOST_MDEV_VQ_MAX=092
+>>>> +
+>>>> +struct vhost_mdev {
+>>>> +=09/* The lock is to protect this structure. */
+>>>> +=09struct mutex mutex;
+>>>> +=09struct vhost_dev dev;
+>>>> +=09struct vhost_virtqueue *vqs;
+>>>> +=09int nvqs;
+>>>> +=09int virtio_id;
+>>>> +=09bool opened;
+>>>> +=09struct mdev_device *mdev;
+>>>> +};
+>>>> +
+>>>> +static const u64 vhost_mdev_features[] =3D {
+>>>> +=09[VIRTIO_ID_NET] =3D VHOST_MDEV_NET_FEATURES,
+>>>> +};
+>>>> +
+>>>> +static void handle_vq_kick(struct vhost_work *work)
+>>>> +{
+>>>> +=09struct vhost_virtqueue *vq =3D container_of(work, struct vhost_vir=
+tqueue,
+>>>> +=09=09=09=09=09=09  poll.work);
+>>>> +=09struct vhost_mdev *m =3D container_of(vq->dev, struct vhost_mdev, =
+dev);
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(m-=
+>mdev);
+>>>> +
+>>>> +=09ops->kick_vq(m->mdev, vq - m->vqs);
+>>>> +}
+>>>> +
+>>>> +static irqreturn_t vhost_mdev_virtqueue_cb(void *private)
+>>>> +{
+>>>> +=09struct vhost_virtqueue *vq =3D private;
+>>>> +=09struct eventfd_ctx *call_ctx =3D vq->call_ctx;
+>>>> +
+>>>> +=09if (call_ctx)
+>>>> +=09=09eventfd_signal(call_ctx, 1);
+>>>> +
+>>>> +=09return IRQ_HANDLED;
+>>>> +}
+>>>> +
+>>>> +static void vhost_mdev_reset(struct vhost_mdev *m)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +
+>>>> +=09ops->set_status(mdev, 0);
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_get_device_id(struct vhost_mdev *m, u8 __user =
+*argp)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u32 device_id;
+>>>> +
+>>>> +=09device_id =3D ops->get_device_id(mdev);
+>>>> +
+>>>> +=09if (copy_to_user(argp, &device_id, sizeof(device_id)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_get_status(struct vhost_mdev *m, u8 __user *st=
+atusp)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u8 status;
+>>>> +
+>>>> +=09status =3D ops->get_status(mdev);
+>>>> +
+>>>> +=09if (copy_to_user(statusp, &status, sizeof(status)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_set_status(struct vhost_mdev *m, u8 __user *st=
+atusp)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u8 status;
+>>>> +
+>>>> +=09if (copy_from_user(&status, statusp, sizeof(status)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09/*
+>>>> +=09 * Userspace shouldn't remove status bits unless reset the
+>>>> +=09 * status to 0.
+>>>> +=09 */
+>>>> +=09if (status !=3D 0 && (ops->get_status(mdev) & ~status) !=3D 0)
+>>>> +=09=09return -EINVAL;
+>>>> +
+>>>> +=09ops->set_status(mdev, status);
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static int vhost_mdev_config_validate(struct vhost_mdev *m,
+>>>> +=09=09=09=09      struct vhost_mdev_config *c)
+>>>> +{
+>>>> +=09long size =3D 0;
+>>>> +
+>>>> +=09switch (m->virtio_id) {
+>>>> +=09case VIRTIO_ID_NET:
+>>>> +=09=09size =3D sizeof(struct virtio_net_config);
+>>>> +=09=09break;
+>>>> +=09}
+>>>> +
+>>>> +=09if (c->len =3D=3D 0)
+>>>> +=09=09return -EINVAL;
+>>>> +
+>>>> +=09if (c->off >=3D size || c->len > size || c->off + c->len > size)
+>>>> +=09=09return -E2BIG;
+>>>
+>>> Nit: It should be the same as check with c->off + c->len > size only.
+>> I did a quick test with below program:
 >>
->> diff --git a/Documentation/RCU/whatisRCU.rst b/Documentation/RCU/whatisRCU.rst
->> index ae40c8bcc56c..3e24e0155a91 100644
->> --- a/Documentation/RCU/whatisRCU.rst
->> +++ b/Documentation/RCU/whatisRCU.rst
->> @@ -150,7 +150,7 @@ later.  See the kernel docbook documentation for more info, or look directly
->>   at the function header comments.
->>   
->>   rcu_read_lock()
->> -
->> +^^^^^^^^^^^^^^^
->>   	void rcu_read_lock(void);
->>   
->>   	Used by a reader to inform the reclaimer that the reader is
->> @@ -164,7 +164,7 @@ rcu_read_lock()
->>   	longer-term references to data structures.
->>   
->>   rcu_read_unlock()
->> -
->> +^^^^^^^^^^^^^^^^^
->>   	void rcu_read_unlock(void);
->>   
->>   	Used by a reader to inform the reclaimer that the reader is
->> @@ -172,13 +172,13 @@ rcu_read_unlock()
->>   	read-side critical sections may be nested and/or overlapping.
->>   
->>   synchronize_rcu()
->> -
->> +^^^^^^^^^^^^^^^^^
->>   	void synchronize_rcu(void);
->>   
->>   	Marks the end of updater code and the beginning of reclaimer
->>   	code.  It does this by blocking until all pre-existing RCU
->>   	read-side critical sections on all CPUs have completed.
->> -	Note that synchronize_rcu() will -not- necessarily wait for
->> +	Note that synchronize_rcu() will **not** necessarily wait for
->>   	any subsequent RCU read-side critical sections to complete.
->>   	For example, consider the following sequence of events::
->>   
->> @@ -196,7 +196,7 @@ synchronize_rcu()
->>   	any that begin after synchronize_rcu() is invoked.
->>   
->>   	Of course, synchronize_rcu() does not necessarily return
->> -	-immediately- after the last pre-existing RCU read-side critical
->> +	**immediately** after the last pre-existing RCU read-side critical
->>   	section completes.  For one thing, there might well be scheduling
->>   	delays.  For another thing, many RCU implementations process
->>   	requests in batches in order to improve efficiencies, which can
->> @@ -225,10 +225,10 @@ synchronize_rcu()
->>   	checklist.txt for some approaches to limiting the update rate.
->>   
->>   rcu_assign_pointer()
->> -
->> +^^^^^^^^^^^^^^^^^^^^
->>   	void rcu_assign_pointer(p, typeof(p) v);
->>   
->> -	Yes, rcu_assign_pointer() -is- implemented as a macro, though it
->> +	Yes, rcu_assign_pointer() **is** implemented as a macro, though it
->>   	would be cool to be able to declare a function in this manner.
->>   	(Compiler experts will no doubt disagree.)
->>   
->> @@ -245,7 +245,7 @@ rcu_assign_pointer()
->>   	the _rcu list-manipulation primitives such as list_add_rcu().
->>   
->>   rcu_dereference()
->> -
->> +^^^^^^^^^^^^^^^^^
->>   	typeof(p) rcu_dereference(p);
->>   
->>   	Like rcu_assign_pointer(), rcu_dereference() must be implemented
->> @@ -280,8 +280,8 @@ rcu_dereference()
->>   	unnecessary overhead on Alpha CPUs.
->>   
->>   	Note that the value returned by rcu_dereference() is valid
->> -	only within the enclosing RCU read-side critical section [1].
->> -	For example, the following is -not- legal::
->> +	only within the enclosing RCU read-side critical section [1]_.
->> +	For example, the following is **not** legal::
->>   
->>   		rcu_read_lock();
->>   		p = rcu_dereference(head.next);
->> @@ -304,9 +304,11 @@ rcu_dereference()
->>   	at any time, including immediately after the rcu_dereference().
->>   	And, again like rcu_assign_pointer(), rcu_dereference() is
->>   	typically used indirectly, via the _rcu list-manipulation
->> -	primitives, such as list_for_each_entry_rcu() [2].
->> +	primitives, such as list_for_each_entry_rcu() [2]_.
->> +
->> +	.. [1]
-> 
-> Hey Phong,
-> I just checked the patch but this change doesn't seem quite right.
-> It just creates an empty footnote. Something on the lines of
-> ..	[1] The variant rcu_dereference_protected()...
-> should work.
-> 
-thanks, Amol.
-fixed it. The patch sent out amend to 7c12b3764c47
-
-https://lkml.org/lkml/2019/11/6/513
-
->>   
->> -	[1] The variant rcu_dereference_protected() can be used outside
->> +	The variant rcu_dereference_protected() can be used outside
->>   	of an RCU read-side critical section as long as the usage is
->>   	protected by locks acquired by the update-side code.  This variant
->>   	avoids the lockdep warning that would happen when using (for
->> @@ -319,7 +321,9 @@ rcu_dereference()
->>   	a lockdep splat is emitted.  See Documentation/RCU/Design/Requirements/Requirements.rst
->>   	and the API's code comments for more details and example usage.
->>   
->> -	[2] If the list_for_each_entry_rcu() instance might be used by
->> +	.. [2]
-> 
-> Similarly for this.
-> 
-Fixed it
-
->> +
->> +	If the list_for_each_entry_rcu() instance might be used by
->>   	update-side code as well as by RCU readers, then an additional
->>   	lockdep expression can be added to its list of arguments.
->>   	For example, given an additional "lock_is_held(&mylock)" argument,
->> @@ -459,22 +463,22 @@ uses of RCU may be found in :ref:`listRCU.rst <list_rcu_doc>`,
->>   
->>   So, to sum up:
->>   
->> -o	Use rcu_read_lock() and rcu_read_unlock() to guard RCU
->> +-	Use rcu_read_lock() and rcu_read_unlock() to guard RCU
->>   	read-side critical sections.
->>   
->> -o	Within an RCU read-side critical section, use rcu_dereference()
->> +-	Within an RCU read-side critical section, use rcu_dereference()
->>   	to dereference RCU-protected pointers.
->>   
->> -o	Use some solid scheme (such as locks or semaphores) to
->> +-	Use some solid scheme (such as locks or semaphores) to
->>   	keep concurrent updates from interfering with each other.
->>   
->> -o	Use rcu_assign_pointer() to update an RCU-protected pointer.
->> +-	Use rcu_assign_pointer() to update an RCU-protected pointer.
->>   	This primitive protects concurrent readers from the updater,
->> -	-not- concurrent updates from each other!  You therefore still
->> +	**not** concurrent updates from each other!  You therefore still
->>   	need to use locking (or something similar) to keep concurrent
->>   	rcu_assign_pointer() primitives from interfering with each other.
->>   
->> -o	Use synchronize_rcu() -after- removing a data element from an
->> +-	Use synchronize_rcu() **after** removing a data element from an
->>   	RCU-protected data structure, but -before- reclaiming/freeing
-> 
-> And this -before- is feeling lonely aswell.
-> 
-okay, fixed.
-
-Regards,
-Phong.
-
-> 
-> Thanks
-> Amol
-> 
->>   	the data element, in order to wait for the completion of all
->>   	RCU read-side critical sections that might be referencing that
->> @@ -566,7 +570,7 @@ namely foo_reclaim().
->>   The summary of advice is the same as for the previous section, except
->>   that we are now using call_rcu() rather than synchronize_rcu():
->>   
->> -o	Use call_rcu() -after- removing a data element from an
->> +-	Use call_rcu() **after** removing a data element from an
->>   	RCU-protected data structure in order to register a callback
->>   	function that will be invoked after the completion of all RCU
->>   	read-side critical sections that might be referencing that
->> @@ -603,7 +607,7 @@ more details on the current implementation as of early 2004.
->>   
->>   
->>   5A.  "TOY" IMPLEMENTATION #1: LOCKING
->> -
->> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>   This section presents a "toy" RCU implementation that is based on
->>   familiar locking primitives.  Its overhead makes it a non-starter for
->>   real-life use, as does its lack of scalability.  It is also unsuitable
->> @@ -671,6 +675,8 @@ that the only thing that can block rcu_read_lock() is a synchronize_rcu().
->>   But synchronize_rcu() does not acquire any locks while holding rcu_gp_mutex,
->>   so there can be no deadlock cycle.
->>   
->> +.. _quiz_1:
->> +
->>   Quick Quiz #1:
->>   		Why is this argument naive?  How could a deadlock
->>   		occur when using this algorithm in a real-world Linux
->> @@ -679,7 +685,7 @@ Quick Quiz #1:
->>   :ref:`Answers to Quick Quiz <8_whatisRCU>`
->>   
->>   5B.  "TOY" EXAMPLE #2: CLASSIC RCU
->> -
->> +^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
->>   This section presents a "toy" RCU implementation that is based on
->>   "classic RCU".  It is also short on performance (but only for updates) and
->>   on features such as hotplug CPU and the ability to run in CONFIG_PREEMPT
->> @@ -710,14 +716,14 @@ CPU in turn.  The run_on() primitive can be implemented straightforwardly
->>   in terms of the sched_setaffinity() primitive.  Of course, a somewhat less
->>   "toy" implementation would restore the affinity upon completion rather
->>   than just leaving all tasks running on the last CPU, but when I said
->> -"toy", I meant -toy-!
->> +"toy", I meant **toy**!
->>   
->>   So how the heck is this supposed to work???
->>   
->>   Remember that it is illegal to block while in an RCU read-side critical
->>   section.  Therefore, if a given CPU executes a context switch, we know
->>   that it must have completed all preceding RCU read-side critical sections.
->> -Once -all- CPUs have executed a context switch, then -all- preceding
->> +Once **all** CPUs have executed a context switch, then **all** preceding
->>   RCU read-side critical sections will have completed.
->>   
->>   So, suppose that we remove a data item from its structure and then invoke
->> @@ -725,12 +731,16 @@ synchronize_rcu().  Once synchronize_rcu() returns, we are guaranteed
->>   that there are no RCU read-side critical sections holding a reference
->>   to that data item, so we can safely reclaim it.
->>   
->> +.. _quiz_2:
->> +
->>   Quick Quiz #2:
->>   		Give an example where Classic RCU's read-side
->> -		overhead is -negative-.
->> +		overhead is **negative**.
->>   
->>   :ref:`Answers to Quick Quiz <8_whatisRCU>`
->>   
->> +.. _quiz_3:
->> +
->>   Quick Quiz #3:
->>   		If it is illegal to block in an RCU read-side
->>   		critical section, what the heck do you do in
->> @@ -1076,9 +1086,11 @@ Answer:
->>   		approach where tasks in RCU read-side critical sections
->>   		cannot be blocked by tasks executing synchronize_rcu().
->>   
->> +:ref:`Back to Quick Quiz #1 <quiz_1>`
->> +
->>   Quick Quiz #2:
->>   		Give an example where Classic RCU's read-side
->> -		overhead is -negative-.
->> +		overhead is **negative**.
->>   
->>   Answer:
->>   		Imagine a single-CPU system with a non-CONFIG_PREEMPT
->> @@ -1103,6 +1115,8 @@ Answer:
->>   		even the theoretical possibility of negative overhead for
->>   		a synchronization primitive is a bit unexpected.  ;-)
->>   
->> +:ref:`Back to Quick Quiz #2 <quiz_2>`
->> +
->>   Quick Quiz #3:
->>   		If it is illegal to block in an RCU read-side
->>   		critical section, what the heck do you do in
->> @@ -1128,6 +1142,7 @@ Answer:
->>   		Besides, how does the computer know what pizza parlor
->>   		the human being went to???
->>   
->> +:ref:`Back to Quick Quiz #3 <quiz_3>`
->>   
->>   ACKNOWLEDGEMENTS
->>   
->> -- 
->> 2.20.1
+>> #include <stdio.h>
 >>
-> _______________________________________________
-> Linux-kernel-mentees mailing list
-> Linux-kernel-mentees@lists.linuxfoundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/linux-kernel-mentees
-> 
+>> int main(void)
+>> {
+>> =09unsigned int a, b;
+>> =09long c;
+>>
+>> =09scanf("%u%u%ld", &a, &b, &c);
+>> =09printf("%d\n", a + b > c);
+>> =09printf("%d\n", (long)a + b > c);
+>>
+>> =09return 0;
+>> }
+>>
+>> And I got this:
+>>
+>> $ echo 4294967295 1 1 | ./a.out
+>> 0
+>> 1
+>>
+>> As c->off and c->len are __u32, we would need to cast one of
+>> them to long if we want to just check c->off + c->len > size,
+>> e.g. (long)c->off + c->len > size
+
+
+I miss that, you're right.
+
+
+>>
+>> Off the topic, one thing I'm not quite sure about and want to
+>> confirm is that, will it be better to define c->off and c->len
+>> as __u64 (they are parts of UAPI)?
+>
+> Can't hurt but then we need to be very careful with range checking.
+
+
+Yes, so I tend to keep the code as is since set/get_config use unsigned int=
+.
+
+
+>
+>
+>>>
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_get_config(struct vhost_mdev *m,
+>>>> +=09=09=09=09  struct vhost_mdev_config __user *c)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09struct vhost_mdev_config config;
+>>>> +=09unsigned long size =3D offsetof(struct vhost_mdev_config, buf);
+>>>> +=09u8 *buf;
+>>>> +
+>>>> +=09if (copy_from_user(&config, c, size))
+>>>> +=09=09return -EFAULT;
+>>>> +=09if (vhost_mdev_config_validate(m, &config))
+>>>> +=09=09return -EINVAL;
+>>>> +=09buf =3D kvzalloc(config.len, GFP_KERNEL);
+>>>> +=09if (!buf)
+>>>> +=09=09return -ENOMEM;
+>>>> +
+>>>> +=09ops->get_config(mdev, config.off, buf, config.len);
+>>>> +
+>>>> +=09if (copy_to_user(c->buf, buf, config.len)) {
+>>>> +=09=09kvfree(buf);
+>>>> +=09=09return -EFAULT;
+>>>> +=09}
+>>>> +
+>>>> +=09kvfree(buf);
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_set_config(struct vhost_mdev *m,
+>>>> +=09=09=09=09  struct vhost_mdev_config __user *c)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09struct vhost_mdev_config config;
+>>>> +=09unsigned long size =3D offsetof(struct vhost_mdev_config, buf);
+>>>> +=09u8 *buf;
+>>>> +
+>>>> +=09if (copy_from_user(&config, c, size))
+>>>> +=09=09return -EFAULT;
+>>>> +=09if (vhost_mdev_config_validate(m, &config))
+>>>> +=09=09return -EINVAL;
+>>>> +=09buf =3D kvzalloc(config.len, GFP_KERNEL);
+>>>> +=09if (!buf)
+>>>> +=09=09return -ENOMEM;
+>>>> +
+>>>> +=09if (copy_from_user(buf, c->buf, config.len)) {
+>>>> +=09=09kvfree(buf);
+>>>> +=09=09return -EFAULT;
+>>>> +=09}
+>>>> +
+>>>> +=09ops->set_config(mdev, config.off, buf, config.len);
+>>>> +
+>>>> +=09kvfree(buf);
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_get_features(struct vhost_mdev *m, u64 __user =
+*featurep)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u64 features;
+>>>> +
+>>>> +=09features =3D ops->get_features(mdev);
+>>>> +=09features &=3D vhost_mdev_features[m->virtio_id];
+>>>> +
+>>>> +=09if (copy_to_user(featurep, &features, sizeof(features)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_set_features(struct vhost_mdev *m, u64 __user =
+*featurep)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u64 features;
+>>>> +
+>>>> +=09/*
+>>>> +=09 * It's not allowed to change the features after they have
+>>>> +=09 * been negotiated.
+>>>> +=09 */
+>>>> +=09if (ops->get_status(mdev) & VIRTIO_CONFIG_S_FEATURES_OK)
+>>>> +=09=09return -EBUSY;
+>>>> +
+>>>> +=09if (copy_from_user(&features, featurep, sizeof(features)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09if (features & ~vhost_mdev_features[m->virtio_id])
+>>>> +=09=09return -EINVAL;
+>>>> +
+>>>> +=09if (ops->set_features(mdev, features))
+>>>> +=09=09return -EINVAL;
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_get_vring_num(struct vhost_mdev *m, u16 __user=
+ *argp)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09u16 num;
+>>>> +
+>>>> +=09num =3D ops->get_vq_num_max(mdev);
+>>>> +
+>>>> +=09if (copy_to_user(argp, &num, sizeof(num)))
+>>>> +=09=09return -EFAULT;
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_vring_ioctl(struct vhost_mdev *m, unsigned int=
+ cmd,
+>>>> +=09=09=09=09   void __user *argp)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D m->mdev;
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09struct virtio_mdev_callback cb;
+>>>> +=09struct vhost_virtqueue *vq;
+>>>> +=09struct vhost_vring_state s;
+>>>> +=09u8 status;
+>>>> +=09u32 idx;
+>>>> +=09long r;
+>>>> +
+>>>> +=09r =3D get_user(idx, (u32 __user *)argp);
+>>>> +=09if (r < 0)
+>>>> +=09=09return r;
+>>>> +=09if (idx >=3D m->nvqs)
+>>>> +=09=09return -ENOBUFS;
+>>>> +
+>>>> +=09idx =3D array_index_nospec(idx, m->nvqs);
+>>>> +=09vq =3D &m->vqs[idx];
+>>>> +
+>>>> +=09status =3D ops->get_status(mdev);
+>>>> +
+>>>> +=09/*
+>>>> +=09 * It's not allowed to detect and program vqs before
+>>>> +=09 * features negotiation or after enabling driver.
+>>>> +=09 */
+>>>> +=09if (!(status & VIRTIO_CONFIG_S_FEATURES_OK) ||
+>>>> +=09    (status & VIRTIO_CONFIG_S_DRIVER_OK))
+>>>> +=09=09return -EBUSY;
+>>>> +
+>>>> +=09if (cmd =3D=3D VHOST_MDEV_SET_VRING_ENABLE) {
+>>>> +=09=09if (copy_from_user(&s, argp, sizeof(s)))
+>>>> +=09=09=09return -EFAULT;
+>>>> +=09=09ops->set_vq_ready(mdev, idx, s.num);
+>>>> +=09=09return 0;
+>>>> +=09}
+>>>> +
+>>>> +=09/*
+>>>> +=09 * It's not allowed to detect and program vqs with
+>>>> +=09 * vqs enabled.
+>>>> +=09 */
+>>>> +=09if (ops->get_vq_ready(mdev, idx))
+>>>> +=09=09return -EBUSY;
+>>>> +
+>>>> +=09if (cmd =3D=3D VHOST_GET_VRING_BASE)
+>>>> +=09=09vq->last_avail_idx =3D ops->get_vq_state(m->mdev, idx);
+>>>> +
+>>>> +=09r =3D vhost_vring_ioctl(&m->dev, cmd, argp);
+>>>> +=09if (r)
+>>>> +=09=09return r;
+>>>> +
+>>>> +=09switch (cmd) {
+>>>> +=09case VHOST_SET_VRING_ADDR:
+>>>> +=09=09/*
+>>>> +=09=09 * In vhost-mdev, the ring addresses set by userspace should
+>>>> +=09=09 * be the DMA addresses within the VFIO container/group.
+>>>> +=09=09 */
+>>>> +=09=09if (ops->set_vq_address(mdev, idx, (u64)vq->desc,
+>>>> +=09=09=09=09=09(u64)vq->avail, (u64)vq->used))
+>>>> +=09=09=09r =3D -EINVAL;
+>>>> +=09=09break;
+>>>> +
+>>>> +=09case VHOST_SET_VRING_BASE:
+>>>> +=09=09if (ops->set_vq_state(mdev, idx, vq->last_avail_idx))
+>>>> +=09=09=09r =3D -EINVAL;
+>>>> +=09=09break;
+>>>> +
+>>>> +=09case VHOST_SET_VRING_CALL:
+>>>> +=09=09if (vq->call_ctx) {
+>>>> +=09=09=09cb.callback =3D vhost_mdev_virtqueue_cb;
+>>>> +=09=09=09cb.private =3D vq;
+>>>> +=09=09} else {
+>>>> +=09=09=09cb.callback =3D NULL;
+>>>> +=09=09=09cb.private =3D NULL;
+>>>> +=09=09}
+>>>> +=09=09ops->set_vq_cb(mdev, idx, &cb);
+>>>> +=09=09break;
+>>>> +
+>>>> +=09case VHOST_SET_VRING_NUM:
+>>>> +=09=09ops->set_vq_num(mdev, idx, vq->num);
+>>>> +=09=09break;
+>>>> +=09}
+>>>> +
+>>>> +=09return r;
+>>>> +}
+>>>> +
+>>>> +static int vhost_mdev_open(void *device_data)
+>>>> +{
+>>>> +=09struct vhost_mdev *m =3D device_data;
+>>>> +=09struct vhost_dev *dev;
+>>>> +=09struct vhost_virtqueue **vqs;
+>>>> +=09int nvqs, i, r;
+>>>> +
+>>>> +=09if (!try_module_get(THIS_MODULE))
+>>>> +=09=09return -ENODEV;
+>>>> +
+>>>> +=09mutex_lock(&m->mutex);
+>>>> +
+>>>> +=09if (m->opened) {
+>>>> +=09=09r =3D -EBUSY;
+>>>> +=09=09goto err;
+>>>> +=09}
+>>>> +
+>>>> +=09nvqs =3D m->nvqs;
+>>>> +=09vhost_mdev_reset(m);
+>>>> +
+>>>> +=09vqs =3D kmalloc_array(nvqs, sizeof(*vqs), GFP_KERNEL);
+>>>> +=09if (!vqs) {
+>>>> +=09=09r =3D -ENOMEM;
+>>>> +=09=09goto err;
+>>>> +=09}
+>>>> +
+>>>> +=09dev =3D &m->dev;
+>>>> +=09for (i =3D 0; i < nvqs; i++) {
+>>>> +=09=09vqs[i] =3D &m->vqs[i];
+>>>> +=09=09vqs[i]->handle_kick =3D handle_vq_kick;
+>>>> +=09}
+>>>> +=09vhost_dev_init(dev, vqs, nvqs, 0, 0, 0);
+>>>> +=09m->opened =3D true;
+>>>> +=09mutex_unlock(&m->mutex);
+>>>> +
+>>>> +=09return 0;
+>>>> +
+>>>> +err:
+>>>> +=09mutex_unlock(&m->mutex);
+>>>> +=09module_put(THIS_MODULE);
+>>>> +=09return r;
+>>>> +}
+>>>> +
+>>>> +static void vhost_mdev_release(void *device_data)
+>>>> +{
+>>>> +=09struct vhost_mdev *m =3D device_data;
+>>>> +
+>>>> +=09mutex_lock(&m->mutex);
+>>>> +=09vhost_mdev_reset(m);
+>>>> +=09vhost_dev_stop(&m->dev);
+>>>> +=09vhost_dev_cleanup(&m->dev);
+>>>> +
+>>>> +=09kfree(m->dev.vqs);
+>>>> +=09m->opened =3D false;
+>>>> +=09mutex_unlock(&m->mutex);
+>>>> +=09module_put(THIS_MODULE);
+>>>> +}
+>>>> +
+>>>> +static long vhost_mdev_unlocked_ioctl(void *device_data,
+>>>> +=09=09=09=09      unsigned int cmd, unsigned long arg)
+>>>> +{
+>>>> +=09struct vhost_mdev *m =3D device_data;
+>>>> +=09void __user *argp =3D (void __user *)arg;
+>>>> +=09long r;
+>>>> +
+>>>> +=09mutex_lock(&m->mutex);
+>>>> +
+>>>> +=09switch (cmd) {
+>>>> +=09case VHOST_MDEV_GET_DEVICE_ID:
+>>>> +=09=09r =3D vhost_mdev_get_device_id(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_MDEV_GET_STATUS:
+>>>> +=09=09r =3D vhost_mdev_get_status(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_MDEV_SET_STATUS:
+>>>> +=09=09r =3D vhost_mdev_set_status(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_MDEV_GET_CONFIG:
+>>>> +=09=09r =3D vhost_mdev_get_config(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_MDEV_SET_CONFIG:
+>>>> +=09=09r =3D vhost_mdev_set_config(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_GET_FEATURES:
+>>>> +=09=09r =3D vhost_mdev_get_features(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_SET_FEATURES:
+>>>> +=09=09r =3D vhost_mdev_set_features(m, argp);
+>>>> +=09=09break;
+>>>> +=09case VHOST_MDEV_GET_VRING_NUM:
+>>>> +=09=09r =3D vhost_mdev_get_vring_num(m, argp);
+>>>> +=09=09break;
+>>>> +=09default:
+>>>> +=09=09/*
+>>>> +=09=09 * VHOST_SET_MEM_TABLE, VHOST_SET_LOG_BASE, and
+>>>> +=09=09 * VHOST_SET_LOG_FD are not used yet.
+>>>> +=09=09 */
+>>>
+>>> If we don't even use them, there's probably no need to call
+>>> vhost_dev_ioctl(). This may help to avoid confusion when we want to dev=
+elop
+>>> new API for e.g dirty page tracking.
+>> Good point. It's better to reject these ioctls for now.
+>>
+>> PS. One thing I may need to clarify is that, we need the
+>> VHOST_SET_OWNER ioctl to get the vq->handle_kick to work.
+>> So if we don't call vhost_dev_ioctl(), we will need to
+>> call vhost_dev_set_owner() directly.
+
+
+I may miss something, it looks to me the there's no owner check in=20
+vhost_vring_ioctl() and the vhost_poll_start() can make sure handle_kick=20
+works?
+
+
+>>
+>>>
+>>>> +=09=09r =3D vhost_dev_ioctl(&m->dev, cmd, argp);
+>>>> +=09=09if (r =3D=3D -ENOIOCTLCMD)
+>>>> +=09=09=09r =3D vhost_mdev_vring_ioctl(m, cmd, argp);
+>>>> +=09}
+>>>> +
+>>>> +=09mutex_unlock(&m->mutex);
+>>>> +=09return r;
+>>>> +}
+>>>> +
+>>>> +static const struct vfio_device_ops vfio_vhost_mdev_dev_ops =3D {
+>>>> +=09.name=09=09=3D "vfio-vhost-mdev",
+>>>> +=09.open=09=09=3D vhost_mdev_open,
+>>>> +=09.release=09=3D vhost_mdev_release,
+>>>> +=09.ioctl=09=09=3D vhost_mdev_unlocked_ioctl,
+>>>> +};
+>>>> +
+>>>> +static int vhost_mdev_probe(struct device *dev)
+>>>> +{
+>>>> +=09struct mdev_device *mdev =3D mdev_from_dev(dev);
+>>>> +=09const struct mdev_virtio_device_ops *ops =3D mdev_get_vhost_ops(md=
+ev);
+>>>> +=09struct vhost_mdev *m;
+>>>> +=09int nvqs, r;
+>>>> +
+>>>> +=09/* Currently, we only accept the network devices. */
+>>>> +=09if (ops->get_device_id(mdev) !=3D VIRTIO_ID_NET)
+>>>> +=09=09return -ENOTSUPP;
+>>>> +
+>>>> +=09m =3D devm_kzalloc(dev, sizeof(*m), GFP_KERNEL | __GFP_RETRY_MAYFA=
+IL);
+>>>> +=09if (!m)
+>>>> +=09=09return -ENOMEM;
+>>>> +
+>>>> +=09nvqs =3D VHOST_MDEV_VQ_MAX;
+>>>
+>>> On top. I think we probably need a better way other than hard-coded val=
+ue
+>>> here.
+>>>
+>>> E.g we can read config and detect the max virtqueue supported based on
+>>> device id.
+>> Totally agree. We do need a better way than the hardcoded
+>> value in the future. For now, it might be better to keep
+>> it as is for simplicity before we have the MQ support.
+
+
+Yes, not for this patch for sure.
+
+Thanks
+
+
+>>
+>>
+>>> Thanks
+>>>
+>>>
+>>>> +
+>>>> +=09m->vqs =3D devm_kmalloc_array(dev, nvqs, sizeof(struct vhost_virtq=
+ueue),
+>>>> +=09=09=09=09    GFP_KERNEL);
+>>>> +=09if (!m->vqs)
+>>>> +=09=09return -ENOMEM;
+>>>> +
+>>>> +=09mutex_init(&m->mutex);
+>>>> +
+>>>> +=09m->mdev =3D mdev;
+>>>> +=09m->nvqs =3D nvqs;
+>>>> +=09m->virtio_id =3D ops->get_device_id(mdev);
+>>>> +
+>>>> +=09r =3D vfio_add_group_dev(dev, &vfio_vhost_mdev_dev_ops, m);
+>>>> +=09if (r) {
+>>>> +=09=09mutex_destroy(&m->mutex);
+>>>> +=09=09return r;
+>>>> +=09}
+>>>> +
+>>>> +=09return 0;
+>>>> +}
+>>>> +
+>>>> +static void vhost_mdev_remove(struct device *dev)
+>>>> +{
+>>>> +=09struct vhost_mdev *m;
+>>>> +
+>>>> +=09m =3D vfio_del_group_dev(dev);
+>>>> +=09mutex_destroy(&m->mutex);
+>>>> +}
+>>>> +
+>>>> +static const struct mdev_class_id vhost_mdev_match[] =3D {
+>>>> +=09{ MDEV_CLASS_ID_VHOST },
+>>>> +=09{ 0 },
+>>>> +};
+>>>> +MODULE_DEVICE_TABLE(mdev, vhost_mdev_match);
+>>>> +
+>>>> +static struct mdev_driver vhost_mdev_driver =3D {
+>>>> +=09.name=09=3D "vhost_mdev",
+>>>> +=09.probe=09=3D vhost_mdev_probe,
+>>>> +=09.remove=09=3D vhost_mdev_remove,
+>>>> +=09.id_table =3D vhost_mdev_match,
+>>>> +};
+>>>> +
+>>>> +static int __init vhost_mdev_init(void)
+>>>> +{
+>>>> +=09return mdev_register_driver(&vhost_mdev_driver, THIS_MODULE);
+>>>> +}
+>>>> +module_init(vhost_mdev_init);
+>>>> +
+>>>> +static void __exit vhost_mdev_exit(void)
+>>>> +{
+>>>> +=09mdev_unregister_driver(&vhost_mdev_driver);
+>>>> +}
+>>>> +module_exit(vhost_mdev_exit);
+>>>> +
+>>>> +MODULE_VERSION("0.0.1");
+>>>> +MODULE_LICENSE("GPL v2");
+>>>> +MODULE_AUTHOR("Intel Corporation");
+>>>> +MODULE_DESCRIPTION("Mediated device based accelerator for virtio");
+>>>> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+>>>> index f3d75a60c2b5..8af7fb9e0149 100644
+>>>> --- a/include/linux/mdev.h
+>>>> +++ b/include/linux/mdev.h
+>>>> @@ -117,6 +117,10 @@ void mdev_set_virtio_ops(struct mdev_device *mdev=
+,
+>>>>    =09=09=09 const struct mdev_virtio_device_ops *virtio_ops);
+>>>>    const struct mdev_virtio_device_ops *
+>>>>    mdev_get_virtio_ops(struct mdev_device *mdev);
+>>>> +void mdev_set_vhost_ops(struct mdev_device *mdev,
+>>>> +=09=09=09const struct mdev_virtio_device_ops *vhost_ops);
+>>>> +const struct mdev_virtio_device_ops *
+>>>> +mdev_get_vhost_ops(struct mdev_device *mdev);
+>>>>    extern struct bus_type mdev_bus_type;
+>>>> @@ -133,6 +137,7 @@ struct mdev_device *mdev_from_dev(struct device *d=
+ev);
+>>>>    enum {
+>>>>    =09MDEV_CLASS_ID_VFIO =3D 1,
+>>>>    =09MDEV_CLASS_ID_VIRTIO =3D 2,
+>>>> +=09MDEV_CLASS_ID_VHOST =3D 3,
+>>>>    =09/* New entries must be added here */
+>>>>    };
+>>>> diff --git a/include/uapi/linux/vhost.h b/include/uapi/linux/vhost.h
+>>>> index 40d028eed645..061a2824a1b3 100644
+>>>> --- a/include/uapi/linux/vhost.h
+>>>> +++ b/include/uapi/linux/vhost.h
+>>>> @@ -116,4 +116,22 @@
+>>>>    #define VHOST_VSOCK_SET_GUEST_CID=09_IOW(VHOST_VIRTIO, 0x60, __u64)
+>>>>    #define VHOST_VSOCK_SET_RUNNING=09=09_IOW(VHOST_VIRTIO, 0x61, int)
+>>>> +/* VHOST_MDEV specific defines */
+>>>> +
+>>>> +/* Get the device id. The device ids follow the same definition of
+>>>> + * the device id defined in virtio-spec. */
+>>>> +#define VHOST_MDEV_GET_DEVICE_ID=09_IOR(VHOST_VIRTIO, 0x70, __u32)
+>>>> +/* Get and set the status. The status bits follow the same definition
+>>>> + * of the device status defined in virtio-spec. */
+>>>> +#define VHOST_MDEV_GET_STATUS=09=09_IOR(VHOST_VIRTIO, 0x71, __u8)
+>>>> +#define VHOST_MDEV_SET_STATUS=09=09_IOW(VHOST_VIRTIO, 0x72, __u8)
+>>>> +/* Get and set the device config. The device config follows the same
+>>>> + * definition of the device config defined in virtio-spec. */
+>>>> +#define VHOST_MDEV_GET_CONFIG=09=09_IOR(VHOST_VIRTIO, 0x73, struct vh=
+ost_mdev_config)
+>>>> +#define VHOST_MDEV_SET_CONFIG=09=09_IOW(VHOST_VIRTIO, 0x74, struct vh=
+ost_mdev_config)
+>>>> +/* Enable/disable the ring. */
+>>>> +#define VHOST_MDEV_SET_VRING_ENABLE=09_IOW(VHOST_VIRTIO, 0x75, struct=
+ vhost_vring_state)
+>>>> +/* Get the max ring size. */
+>>>> +#define VHOST_MDEV_GET_VRING_NUM=09_IOR(VHOST_VIRTIO, 0x76, __u16)
+>>>> +
+>>>>    #endif
+>>>> diff --git a/include/uapi/linux/vhost_types.h b/include/uapi/linux/vho=
+st_types.h
+>>>> index c907290ff065..7b105d0b2fb9 100644
+>>>> --- a/include/uapi/linux/vhost_types.h
+>>>> +++ b/include/uapi/linux/vhost_types.h
+>>>> @@ -119,6 +119,14 @@ struct vhost_scsi_target {
+>>>>    =09unsigned short reserved;
+>>>>    };
+>>>> +/* VHOST_MDEV specific definitions */
+>>>> +
+>>>> +struct vhost_mdev_config {
+>>>> +=09__u32 off;
+>>>> +=09__u32 len;
+>>>> +=09__u8 buf[0];
+>>>> +};
+>>>> +
+>>>>    /* Feature bits */
+>>>>    /* Log all write descriptors. Can be changed while device is active=
+. */
+>>>>    #define VHOST_F_LOG_ALL 26
+
