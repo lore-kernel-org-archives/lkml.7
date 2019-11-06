@@ -4,174 +4,227 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3597FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:29:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D73EC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:35:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEDE2206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:29:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 606F62075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:35:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730995AbfKFG35 (ORCPT
+        id S1730075AbfKFGfO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:29:57 -0500
-Received: from mga11.intel.com ([192.55.52.93]:52106 "EHLO mga11.intel.com"
+        Wed, 6 Nov 2019 01:35:14 -0500
+Received: from mga01.intel.com ([192.55.52.88]:15587 "EHLO mga01.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725806AbfKFG35 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:29:57 -0500
+        id S1727795AbfKFGfO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:35:14 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 22:29:56 -0800
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 22:35:13 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,272,1569308400"; 
-   d="scan'208";a="376952057"
-Received: from test-hp-compaq-8100-elite-cmt-pc.igk.intel.com ([10.237.149.93])
-  by orsmga005.jf.intel.com with ESMTP; 05 Nov 2019 22:29:54 -0800
-From:   Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     rostedt@goodmis.org, mingo@redhat.com, andriy.shevchenko@intel.com,
-        cezary.rojewski@intel.com, gustaw.lewandowski@intel.com,
-        Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Subject: [PATCH 2/2] tracing: Use seq_buf_hex_dump() to dump buffers
-Date:   Wed,  6 Nov 2019 07:27:40 +0100
-Message-Id: <1573021660-30540-2-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
-References: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
+   d="scan'208";a="232754499"
+Received: from chenyi-pc.sh.intel.com ([10.239.159.72])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Nov 2019 22:35:11 -0800
+From:   Chenyi Qiang <chenyi.qiang@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     Xiaoyao Li <xiaoyao.li@intel.com>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Subject: [PATCH v2] KVM: X86: Fix initialization of MSR lists(msrs_to_save[], emulated_msrs[] and msr_based_features[])
+Date:   Wed,  6 Nov 2019 14:35:20 +0800
+Message-Id: <20191106063520.1915-1-chenyi.qiang@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Without this, buffers can be printed with __print_array macro that has
-no formatting options and can be hard to read. The other way is to
-mimic formatting capability with multiple calls of trace event with one
-call per row which gives performance impact and different timestamp in
-each row.
+The three MSR lists(msrs_to_save[], emulated_msrs[] and
+msr_based_features[]) are global arrays of kvm.ko, which are
+adjusted (copy supported MSRs forward to override the unsupported MSRs)
+when insmod kvm-{intel,amd}.ko, but it doesn't reset these three arrays
+to their initial value when rmmod kvm-{intel,amd}.ko. Thus, at the next
+installation, kvm-{intel,amd}.ko will do operations on the modified
+arrays with some MSRs lost and some MSRs duplicated.
 
-Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
+So define three constant arrays to hold the initial MSR lists and
+initialize msrs_to_save[], emulated_msrs[] and msr_based_features[]
+based on the constant arrays.
+
+Cc: stable@vger.kernel.org
+Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
 ---
- include/linux/trace_events.h |  5 +++++
- include/linux/trace_seq.h    |  4 ++++
- include/trace/trace_events.h |  6 ++++++
- kernel/trace/trace_output.c  | 15 +++++++++++++++
- kernel/trace/trace_seq.c     | 30 ++++++++++++++++++++++++++++++
- 5 files changed, 60 insertions(+)
+Changes in v2:
+ - define initial MSR lists with static const.
+ - change the dynamic allocation of supported MSR lists to static allocation.
 
-diff --git a/include/linux/trace_events.h b/include/linux/trace_events.h
-index 30a8cdc..60a41b7 100644
---- a/include/linux/trace_events.h
-+++ b/include/linux/trace_events.h
-@@ -45,6 +45,11 @@ const char *trace_print_array_seq(struct trace_seq *p,
- 				   const void *buf, int count,
- 				   size_t el_size);
+ arch/x86/kvm/x86.c | 51 +++++++++++++++++++++++++---------------------
+ 1 file changed, 28 insertions(+), 23 deletions(-)
+
+diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+index 89621025577a..0b4b6db5b13f 100644
+--- a/arch/x86/kvm/x86.c
++++ b/arch/x86/kvm/x86.c
+@@ -1138,13 +1138,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
+  * List of msr numbers which we expose to userspace through KVM_GET_MSRS
+  * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
+  *
+- * This list is modified at module load time to reflect the
++ * The three MSR lists(msrs_to_save, emulated_msrs, msr_based_features)
++ * extract the supported MSRs from the related const lists.
++ * msrs_to_save is selected from the msrs_to_save_all to reflect the
+  * capabilities of the host cpu. This capabilities test skips MSRs that are
+- * kvm-specific. Those are put in emulated_msrs; filtering of emulated_msrs
++ * kvm-specific. Those are put in emulated_msrs_all; filtering of emulated_msrs
+  * may depend on host virtualization features rather than host cpu features.
+  */
  
-+const char *
-+trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
-+			 int prefix_type, int rowsize, int groupsize,
-+			 const void *buf, size_t len, bool ascii);
-+
- struct trace_iterator;
- struct trace_event;
+-static u32 msrs_to_save[] = {
++static const u32 msrs_to_save_all[] = {
+ 	MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP, MSR_IA32_SYSENTER_EIP,
+ 	MSR_STAR,
+ #ifdef CONFIG_X86_64
+@@ -1185,9 +1187,10 @@ static u32 msrs_to_save[] = {
+ 	MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+ };
  
-diff --git a/include/linux/trace_seq.h b/include/linux/trace_seq.h
-index 6609b39a..6c30508 100644
---- a/include/linux/trace_seq.h
-+++ b/include/linux/trace_seq.h
-@@ -92,6 +92,10 @@ extern int trace_seq_path(struct trace_seq *s, const struct path *path);
- extern void trace_seq_bitmask(struct trace_seq *s, const unsigned long *maskp,
- 			     int nmaskbits);
++static u32 msrs_to_save[ARRAY_SIZE(msrs_to_save_all)];
+ static unsigned num_msrs_to_save;
  
-+extern int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
-+			      int prefix_type, int rowsize, int groupsize,
-+			      const void *buf, size_t len, bool ascii);
-+
- #else /* CONFIG_TRACING */
- static inline void trace_seq_printf(struct trace_seq *s, const char *fmt, ...)
- {
-diff --git a/include/trace/trace_events.h b/include/trace/trace_events.h
-index 4ecdfe2..7089760 100644
---- a/include/trace/trace_events.h
-+++ b/include/trace/trace_events.h
-@@ -340,6 +340,12 @@ TRACE_MAKE_SYSTEM_STR();
- 		trace_print_array_seq(p, array, count, el_size);	\
- 	})
+-static u32 emulated_msrs[] = {
++static const u32 emulated_msrs_all[] = {
+ 	MSR_KVM_SYSTEM_TIME, MSR_KVM_WALL_CLOCK,
+ 	MSR_KVM_SYSTEM_TIME_NEW, MSR_KVM_WALL_CLOCK_NEW,
+ 	HV_X64_MSR_GUEST_OS_ID, HV_X64_MSR_HYPERCALL,
+@@ -1226,7 +1229,7 @@ static u32 emulated_msrs[] = {
+ 	 * by arch/x86/kvm/vmx/nested.c based on CPUID or other MSRs.
+ 	 * We always support the "true" VMX control MSRs, even if the host
+ 	 * processor does not, so I am putting these registers here rather
+-	 * than in msrs_to_save.
++	 * than in msrs_to_save_all.
+ 	 */
+ 	MSR_IA32_VMX_BASIC,
+ 	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+@@ -1245,13 +1248,14 @@ static u32 emulated_msrs[] = {
+ 	MSR_KVM_POLL_CONTROL,
+ };
  
-+#undef __print_hex_dump
-+#define __print_hex_dump(prefix_str, prefix_type,			\
-+			 rowsize, groupsize, buf, len, ascii)		\
-+	trace_print_hex_dump_seq(p, prefix_str, prefix_type,		\
-+				 rowsize, groupsize, buf, len, ascii)
-+
- #undef DECLARE_EVENT_CLASS
- #define DECLARE_EVENT_CLASS(call, proto, args, tstruct, assign, print)	\
- static notrace enum print_line_t					\
-diff --git a/kernel/trace/trace_output.c b/kernel/trace/trace_output.c
-index d54ce25..d9b4b7c 100644
---- a/kernel/trace/trace_output.c
-+++ b/kernel/trace/trace_output.c
-@@ -274,6 +274,21 @@ trace_print_array_seq(struct trace_seq *p, const void *buf, int count,
- }
- EXPORT_SYMBOL(trace_print_array_seq);
++static u32 emulated_msrs[ARRAY_SIZE(emulated_msrs_all)];
+ static unsigned num_emulated_msrs;
  
-+const char *
-+trace_print_hex_dump_seq(struct trace_seq *p, const char *prefix_str,
-+			 int prefix_type, int rowsize, int groupsize,
-+			 const void *buf, size_t len, bool ascii)
-+{
-+	const char *ret = trace_seq_buffer_ptr(p);
-+
-+	trace_seq_putc(p, '\n');
-+	trace_seq_hex_dump(p, prefix_str, prefix_type,
-+			   rowsize, groupsize, buf, len, ascii);
-+	trace_seq_putc(p, 0);
-+	return ret;
-+}
-+EXPORT_SYMBOL(trace_print_hex_dump_seq);
-+
- int trace_raw_output_prep(struct trace_iterator *iter,
- 			  struct trace_event *trace_event)
- {
-diff --git a/kernel/trace/trace_seq.c b/kernel/trace/trace_seq.c
-index 6b1c562..344e4c1 100644
---- a/kernel/trace/trace_seq.c
-+++ b/kernel/trace/trace_seq.c
-@@ -376,3 +376,33 @@ int trace_seq_to_user(struct trace_seq *s, char __user *ubuf, int cnt)
- 	return seq_buf_to_user(&s->seq, ubuf, cnt);
- }
- EXPORT_SYMBOL_GPL(trace_seq_to_user);
-+
-+int trace_seq_hex_dump(struct trace_seq *s, const char *prefix_str,
-+		       int prefix_type, int rowsize, int groupsize,
-+		       const void *buf, size_t len, bool ascii)
-+{
-+		unsigned int save_len = s->seq.len;
-+
-+	if (s->full)
-+		return 0;
-+
-+	__trace_seq_init(s);
-+
-+	if (TRACE_SEQ_BUF_LEFT(s) < 1) {
-+		s->full = 1;
-+		return 0;
-+	}
-+
-+	seq_buf_hex_dump(&(s->seq), prefix_str,
-+		   prefix_type, rowsize, groupsize,
-+		   buf, len, ascii);
-+
-+	if (unlikely(seq_buf_has_overflowed(&s->seq))) {
-+		s->seq.len = save_len;
-+		s->full = 1;
-+		return 0;
-+	}
-+
-+	return 1;
-+}
-+EXPORT_SYMBOL(trace_seq_hex_dump);
+ /*
+  * List of msr numbers which are used to expose MSR-based features that
+  * can be used by a hypervisor to validate requested CPU features.
+  */
+-static u32 msr_based_features[] = {
++static const u32 msr_based_features_all[] = {
+ 	MSR_IA32_VMX_BASIC,
+ 	MSR_IA32_VMX_TRUE_PINBASED_CTLS,
+ 	MSR_IA32_VMX_PINBASED_CTLS,
+@@ -1276,6 +1280,7 @@ static u32 msr_based_features[] = {
+ 	MSR_IA32_ARCH_CAPABILITIES,
+ };
+ 
++static u32 msr_based_features[ARRAY_SIZE(msr_based_features_all)];
+ static unsigned int num_msr_based_features;
+ 
+ static u64 kvm_get_arch_capabilities(void)
+@@ -5131,19 +5136,19 @@ static void kvm_init_msr_list(void)
+ 	unsigned i, j;
+ 
+ 	BUILD_BUG_ON_MSG(INTEL_PMC_MAX_FIXED != 4,
+-			 "Please update the fixed PMCs in msrs_to_save[]");
++			 "Please update the fixed PMCs in msrs_to_saved_all[]");
+ 
+ 	perf_get_x86_pmu_capability(&x86_pmu);
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save); i++) {
+-		if (rdmsr_safe(msrs_to_save[i], &dummy[0], &dummy[1]) < 0)
++	for (i = j = 0; i < ARRAY_SIZE(msrs_to_save_all); i++) {
++		if (rdmsr_safe(msrs_to_save_all[i], &dummy[0], &dummy[1]) < 0)
+ 			continue;
+ 
+ 		/*
+ 		 * Even MSRs that are valid in the host may not be exposed
+ 		 * to the guests in some cases.
+ 		 */
+-		switch (msrs_to_save[i]) {
++		switch (msrs_to_save_all[i]) {
+ 		case MSR_IA32_BNDCFGS:
+ 			if (!kvm_mpx_supported())
+ 				continue;
+@@ -5171,17 +5176,17 @@ static void kvm_init_msr_list(void)
+ 			break;
+ 		case MSR_IA32_RTIT_ADDR0_A ... MSR_IA32_RTIT_ADDR3_B: {
+ 			if (!kvm_x86_ops->pt_supported() ||
+-				msrs_to_save[i] - MSR_IA32_RTIT_ADDR0_A >=
++				msrs_to_save_all[i] - MSR_IA32_RTIT_ADDR0_A >=
+ 				intel_pt_validate_hw_cap(PT_CAP_num_address_ranges) * 2)
+ 				continue;
+ 			break;
+ 		case MSR_ARCH_PERFMON_PERFCTR0 ... MSR_ARCH_PERFMON_PERFCTR0 + 17:
+-			if (msrs_to_save[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
++			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_PERFCTR0 >=
+ 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+ 				continue;
+ 			break;
+ 		case MSR_ARCH_PERFMON_EVENTSEL0 ... MSR_ARCH_PERFMON_EVENTSEL0 + 17:
+-			if (msrs_to_save[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
++			if (msrs_to_save_all[i] - MSR_ARCH_PERFMON_EVENTSEL0 >=
+ 			    min(INTEL_PMC_MAX_GENERIC, x86_pmu.num_counters_gp))
+ 				continue;
+ 		}
+@@ -5189,31 +5194,31 @@ static void kvm_init_msr_list(void)
+ 			break;
+ 		}
+ 
+-		if (j < i)
+-			msrs_to_save[j] = msrs_to_save[i];
++		if (j <= i)
++			msrs_to_save[j] = msrs_to_save_all[i];
+ 		j++;
+ 	}
+ 	num_msrs_to_save = j;
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs); i++) {
+-		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs[i]))
++	for (i = j = 0; i < ARRAY_SIZE(emulated_msrs_all); i++) {
++		if (!kvm_x86_ops->has_emulated_msr(emulated_msrs_all[i]))
+ 			continue;
+ 
+-		if (j < i)
+-			emulated_msrs[j] = emulated_msrs[i];
++		if (j <= i)
++			emulated_msrs[j] = emulated_msrs_all[i];
+ 		j++;
+ 	}
+ 	num_emulated_msrs = j;
+ 
+-	for (i = j = 0; i < ARRAY_SIZE(msr_based_features); i++) {
++	for (i = j = 0; i < ARRAY_SIZE(msr_based_features_all); i++) {
+ 		struct kvm_msr_entry msr;
+ 
+-		msr.index = msr_based_features[i];
++		msr.index = msr_based_features_all[i];
+ 		if (kvm_get_msr_feature(&msr))
+ 			continue;
+ 
+-		if (j < i)
+-			msr_based_features[j] = msr_based_features[i];
++		if (j <= i)
++			msr_based_features[j] = msr_based_features_all[i];
+ 		j++;
+ 	}
+ 	num_msr_based_features = j;
 -- 
-2.7.4
+2.17.1
 
