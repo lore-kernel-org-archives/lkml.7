@@ -2,178 +2,153 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33E7CC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:13:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ECFFC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:13:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3A84217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:13:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2D192178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:13:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="PGPKVKzC"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="JZ7pcRrn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfKFJNR (ORCPT
+        id S1731537AbfKFJNi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:13:17 -0500
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:60362 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727068AbfKFJNR (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:13:17 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=TOdQALz0m5WieFGaUz1ns1b04RuCs9AC7LJ76ZAlU8g=; b=PGPKVKzClKmB52+NYumu5YW9W
-        qaQh7cG1XxzG/gZCfo8c9ti5kC2wGTkEM0az9+JS/AXaVOkSVT9GmSCnFaC7W3cA28LorvRuwp9kz
-        8lX0gcWRcunHPEjyFl0t86cTDsP5e8+KM/4p+jMf9xRp3hcUL6e++GHkF09LwV8Hyp+J8elBt8t0U
-        y7LrZ5nRNjRNeX7ttzWtY9MmFEro+7gmTzbsYha4tuUExMFolPfzeN7RmvP0u+NvJN7xTWWUMmhzA
-        iu5jqDK47hh3s/ozrCQCbbpTtTsxZKBuWN36bA80rgkpTc5z+xuUIlrNdF0FTifarInFQi1YQVesa
-        tNbH0EjvA==;
-Received: from shell.armlinux.org.uk ([2001:4d48:ad52:3201:5054:ff:fe00:4ec]:52522)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1iSHNB-0003vt-DG; Wed, 06 Nov 2019 09:13:05 +0000
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.92)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1iSHN5-0003wB-1z; Wed, 06 Nov 2019 09:12:59 +0000
-Date:   Wed, 6 Nov 2019 09:12:59 +0000
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Dmitry Safonov <dima@arista.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-Subject: Re: [PATCH 05/50] arm: Add loglvl to unwind_backtrace()
-Message-ID: <20191106091258.GS25745@shell.armlinux.org.uk>
-References: <20191106030542.868541-1-dima@arista.com>
- <20191106030542.868541-6-dima@arista.com>
+        Wed, 6 Nov 2019 04:13:38 -0500
+Received: from onstation.org ([52.200.56.107]:50818 "EHLO onstation.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727068AbfKFJNh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:13:37 -0500
+Received: from localhost (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: masneyb)
+        by onstation.org (Postfix) with ESMTPSA id 4C6AD3E89E;
+        Wed,  6 Nov 2019 09:13:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
+        s=default; t=1573031616;
+        bh=RUF1WwHyOvF/ICJ9FPqUfBjj8jBynQSgDGGQCKj3KcU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=JZ7pcRrncpt2INI1fhnGVZld48I0H1BWpwgs/IFVtpcbeS3G0hex4iVWfr2R9CiAk
+         ilG9jWvfBz7JtizUD21xVJSid8A/XPYJn+J3RL0SvBM2aS0s7PV+nkZrLi5UUPcbiG
+         WncMd6mFPNbEg7eMg5YKAyiHFBJs1AopFvKSpK7Y=
+Date:   Wed, 6 Nov 2019 04:13:35 -0500
+From:   Brian Masney <masneyb@onstation.org>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async
+ commit changes
+Message-ID: <20191106091335.GA16729@onstation.org>
+References: <20191105000129.GA6536@onstation.org>
+ <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
+ <20191105100804.GA9492@onstation.org>
+ <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106030542.868541-6-dima@arista.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 03:04:56AM +0000, Dmitry Safonov wrote:
-> Currently, the log-level of show_stack() depends on a platform
-> realization. It creates situations where the headers are printed with
-> lower log level or higher than the stacktrace (depending on
-> a platform or user).
+On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
+> On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
+> > The 'pp done time out' errors go away if I revert the following three
+> > commits:
+> >
+> > cd6d923167b1 ("drm/msm/dpu: async commit support")
+> > d934a712c5e6 ("drm/msm: add atomic traces")
+> > 2d99ced787e3 ("drm/msm: async commit support")
+> >
+> > I reverted the first one to fix a compiler error, and the second one so
+> > that the last patch can be reverted without any merge conflicts.
+> >
+> > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
+> > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
+> > buffer dance around the screen like its out of sync. I renamed
+> > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
+> > declaration. Here's the relevant part of what I tried:
+> >
+> > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
+> >
+> >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
+> >  {
+> > -       /* TODO */
+> > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
+> > +       struct drm_crtc *crtc;
+> > +
+> > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
+> > +               if (!crtc->state->active)
+> > +                       continue;
+> > +
+> > +               mdp5_crtc_flush_all(crtc);
+> > +       }
+> >  }
+> >
+> > Any tips would be appreciated.
 > 
-> Furthermore, it forces the logic decision from user to an architecture
-> side. In result, some users as sysrq/kdb/etc are doing tricks with
-> temporary rising console_loglevel while printing their messages.
-> And in result it not only may print unwanted messages from other CPUs,
-> but also omit printing at all in the unlucky case where the printk()
-> was deferred.
 > 
-> Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-> an easier approach than introducing more printk buffers.
-> Also, it will consolidate printings with headers.
+> I think this is along the lines of what we need to enable async commit
+> for mdp5 (but also removing the flush from the atomic-commit path)..
+> the principle behind the async commit is to do all the atomic state
+> commit normally, but defer writing the flush bits.  This way, if you
+> get another async update before the next vblank, you just apply it
+> immediately instead of waiting for vblank.
 > 
-> Add log level argument to unwind_backtrace() as a preparation for
-> introducing show_stack_loglvl().
-> 
-> As a good side-effect arm_syscall() is now printing errors with the same
-> log level as the backtrace.
-> 
-> Cc: Russell King <linux@armlinux.org.uk>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: clang-built-linux@googlegroups.com
-> [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-> Signed-off-by: Dmitry Safonov <dima@arista.com>
-> ---
->  arch/arm/include/asm/unwind.h | 3 ++-
->  arch/arm/kernel/traps.c       | 6 +++---
->  arch/arm/kernel/unwind.c      | 7 ++++---
->  3 files changed, 9 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/unwind.h b/arch/arm/include/asm/unwind.h
-> index 6e282c33126b..0f8a3439902d 100644
-> --- a/arch/arm/include/asm/unwind.h
-> +++ b/arch/arm/include/asm/unwind.h
-> @@ -36,7 +36,8 @@ extern struct unwind_table *unwind_table_add(unsigned long start,
->  					     unsigned long text_addr,
->  					     unsigned long text_size);
->  extern void unwind_table_del(struct unwind_table *tab);
-> -extern void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk);
-> +extern void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
-> +			     const char *loglvl);
->  
->  #endif	/* !__ASSEMBLY__ */
->  
-> diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
-> index 7c3f32b26585..69e35462c9e9 100644
-> --- a/arch/arm/kernel/traps.c
-> +++ b/arch/arm/kernel/traps.c
-> @@ -202,7 +202,7 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
->  #ifdef CONFIG_ARM_UNWIND
->  static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->  {
-> -	unwind_backtrace(regs, tsk);
-> +	unwind_backtrace(regs, tsk, KERN_DEBUG);
+> But I guess you are on a command mode panel, if I remember?  Which is
+> a case I didn't have a way to test.  And I'm not entirely about how
+> kms_funcs->vsync_time() should be implemented for cmd mode panels.
 
-Why demote this to debug level?  This is used as part of the kernel
-panic message, surely we don't want this at debug level?  What about
-the non-unwind version?
+Yes, this is a command-mode panel and there's no hardware frame counter
+available. The key to getting the display working on this phone was this
+patch:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
 
->  }
->  #else
->  static void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
-> @@ -660,10 +660,10 @@ asmlinkage int arm_syscall(int no, struct pt_regs *regs)
->  	if (user_debug & UDBG_SYSCALL) {
->  		pr_err("[%d] %s: arm syscall %d\n",
->  		       task_pid_nr(current), current->comm, no);
-> -		dump_instr("", regs);
-> +		dump_instr(KERN_ERR, regs);
->  		if (user_mode(regs)) {
->  			__show_regs(regs);
-> -			c_backtrace(frame_pointer(regs), processor_mode(regs), NULL);
-> +			c_backtrace(frame_pointer(regs), processor_mode(regs), KERN_ERR);
->  		}
->  	}
->  #endif
-> diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
-> index 0a65005e10f0..caaae1b6f721 100644
-> --- a/arch/arm/kernel/unwind.c
-> +++ b/arch/arm/kernel/unwind.c
-> @@ -455,11 +455,12 @@ int unwind_frame(struct stackframe *frame)
->  	return URC_OK;
->  }
->  
-> -void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
-> +void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
-> +		      const char *loglvl)
->  {
->  	struct stackframe frame;
->  
-> -	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
-> +	printk("%s%s(regs = %p tsk = %p)\n", loglvl, __func__, regs, tsk);
+> That all said, I think we should first fix what is broken, before
+> worrying about extending async commit support to mdp5.. which
+> shouldn't hit the async==true path, due to not implementing
+> kms_funcs->vsync_time().
+> 
+> What I think is going on is that, in the cmd mode case,
+> mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
+> which waits for a pp-done irq regardless of whether there is a flush
+> in progress.  Since there is no flush pending, the irq never comes.
+> But the expectation is that kms_funcs->wait_flush() returns
+> immediately if there is nothing to wait for.
 
-Clearly, this isn't supposed to be part of the normal backtrace output...
+I don't think that's happening in this case. I added some pr_info()
+statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
+Here's the first two sets of messages that appear in dmesg:
 
-Overall impression at this point is really not good.
+[   14.018907] msm fd900000.mdss: pp done time out, lm=0
+[   14.018993] request_pp_done_pending: HERE
+[   14.074208] mdp5_crtc_pp_done_irq: HERE
+[   14.074368] Console: switching to colour frame buffer device 135x120
+[   14.138938] msm fd900000.mdss: pp done time out, lm=0
+[   14.139021] request_pp_done_pending: HERE
+[   14.158097] mdp5_crtc_pp_done_irq: HERE
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+The messages go on like this with the same pattern.
+
+I tried two different changes:
+
+1) I moved the request_pp_done_pending() and corresponding if statement
+   from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
+
+2) I increased the timeout in wait_for_completion_timeout() by several
+   increments; all the way to 5 seconds.
+
+I haven't dug into the new code anymore.
+
+Brian
