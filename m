@@ -2,136 +2,174 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE79C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C0DBC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9D08214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573048230;
-	bh=rD+K0G3PNJPVV5SKG6uhdNqSE37LMcwOqBihOQnsysg=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=bcwdUjpprFczLv2LnAu17pCqeA24Y6iLp/X6rKl/uT4MOJJZ2UQaYUsxynZRYeD3c
-	 Ms7+FdNMOLpqqj0tTDmY6KL5OtBZUvEAvYc5ahfZTbFd4pOeSLrwDCv/iuuRtCoRQZ
-	 a2Pa+mefuA4MpZNfHnncd08+d4T5bw9rTu0jE0X4=
+	by mail.kernel.org (Postfix) with ESMTP id D21DF214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:50:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="xj54XUR6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728716AbfKFNu2 (ORCPT
+        id S1731780AbfKFNun (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:50:28 -0500
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:37863 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726673AbfKFNu2 (ORCPT
+        Wed, 6 Nov 2019 08:50:43 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:50138 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726673AbfKFNun (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:50:28 -0500
-Received: by mail-wr1-f66.google.com with SMTP id t1so19941490wrv.4;
-        Wed, 06 Nov 2019 05:50:27 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=cvnGoYA1nxIWzHKPGnMvGjsm7DK1fN/JIf8O6DGY4wM=;
-        b=YJV4hvkIvb5RQt9Is8GHAnnixH55XjTT2QvGs9LRbjLx5cElS44rQaMU/Vpe1mX4fE
-         ZZ6B+W/BH2zz0pHIHEf+byAQ/ZXhUoykJFSHW2aspHetFzZo3thJ2lgr6WkxfW4p4OZL
-         1cJsavhby1Tq8xwnZRDbbMbe/ikQ5eD9vhGW8SheokLGAHv2ZTBRi/N2+gUUlMJn369m
-         kC5oCz2JNC4L/mOPxC6/xIiB4dFp/knF0mFNeBWwa/9sICspPD5Vng8N4McgG0RiRSHF
-         tL++FQDIwkZjiO5iLJ8ofUKmjNmgkYZxFWq/py5L/fXa0AoDKxpp9zT3UXjrG0Qq41wP
-         DJCQ==
-X-Gm-Message-State: APjAAAXBZOkS694u1PLRXTaAfb2SovG7dKFoJEQW5yKHI06Bb4lWLfm+
-        CY+lmtH8SFacFenPPHqpxfFTS0+RwyJYv1g7wP0=
-X-Google-Smtp-Source: APXvYqz0jRDuP53ISYwccGpwG0/d58L5srOHroxn4RNKS7/o9vJChpPgrK5CHtUZsye3bEH8dvXksnP8WrN+IVLdpTc=
-X-Received: by 2002:adf:ffd0:: with SMTP id x16mr2690726wrs.86.1573048226318;
- Wed, 06 Nov 2019 05:50:26 -0800 (PST)
+        Wed, 6 Nov 2019 08:50:43 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6Dod3r078580;
+        Wed, 6 Nov 2019 07:50:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573048239;
+        bh=JBEs1A2urMLjy0KcP/S/vkPdWlz5mh2fUZWBFV44Gkw=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=xj54XUR6dXTuBlKGKVP1kGZmvQYo8m+4Gcbibjr0+RiqbxWGxtIqs5QbmrFAH/FvD
+         Aj+dagzieo0lM4viCfYRD9zTAHjNgS5cTebxJ3Zzmd8j0ZYMwPjcWcF36egZsovl9W
+         ZJbr5n+aB4gMdN+PMBmBQ9Vm/2gcIMitvmJPE7zY=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6DodN3038794
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 07:50:39 -0600
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 07:50:24 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 07:50:24 -0600
+Received: from [127.0.0.1] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6Doaxd121369;
+        Wed, 6 Nov 2019 07:50:36 -0600
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc
+ bindings
+To:     Rob Herring <robh@kernel.org>
+CC:     Bjorn Andersson <bjorn.andersson@linaro.org>,
+        Ohad Ben-Cohen <ohad@wizery.com>,
+        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
+        <linux-remoteproc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        linux-omap <linux-omap@vger.kernel.org>,
+        Suman Anna <s-anna@ti.com>, <devicetree@vger.kernel.org>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-2-t-kristo@ti.com> <20191106032727.GA21162@bogus>
+ <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
+ <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+From:   Tero Kristo <t-kristo@ti.com>
+Message-ID: <80d28cf5-1219-fb49-a416-5a879f719ebd@ti.com>
+Date:   Wed, 6 Nov 2019 15:50:35 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191104235944.3470866-1-tj@kernel.org>
-In-Reply-To: <20191104235944.3470866-1-tj@kernel.org>
-From:   Namhyung Kim <namhyung@kernel.org>
-Date:   Wed, 6 Nov 2019 22:50:15 +0900
-Message-ID: <CAM9d7cjXX8aYYjJdnb0SUjBYwhOTWiD+V9fagUVnW9FUS6C=5g@mail.gmail.com>
-Subject: Re: [PATCHSET cgroup/for-5.5] kernfs,cgroup: support 64bit inos and
- unify cgroup IDs
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        kernel-team@fb.com, linux-kernel <linux-kernel@vger.kernel.org>,
-        cgroups@vger.kernel.org, Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Tejun,
+On 06/11/2019 15:27, Rob Herring wrote:
+> On Wed, Nov 6, 2019 at 6:44 AM Tero Kristo <t-kristo@ti.com> wrote:
+>>
+>> On 06/11/2019 05:27, Rob Herring wrote:
+>>> On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
+>>>> From: Suman Anna <s-anna@ti.com>
+>>>>
+>>>> Add the device tree bindings document for the IPU and DSP
+>>>> remote processor devices on OMAP4+ SoCs.
+>>>>
+>>>> Cc: Rob Herring <robh@kernel.org>
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Suman Anna <s-anna@ti.com>
+>>>> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+>>>> ---
+>>>>    .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+>>>>    1 file changed, 205 insertions(+)
+>>>>    create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>>
+>>>
+>>> Looks to be in pretty good shape, but how about doing a schema.
+>>
+>> iommu / mailbox is not in schema format, can I just convert this one to
+>> schema without considering those? If yes, I can go ahead and do it.
+> 
+> The client side both have schema (in dt-schema repo).
+> 
+>>>> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>> new file mode 100644
+>>>> index 000000000000..e2bcfcab21c1
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>>>> @@ -0,0 +1,205 @@
+>>>> +OMAP4+ Remoteproc Devices
+>>>> +=========================
+>>>> +
+>>>> +The OMAP family of SoCs usually have one or more slave processor sub-systems
+>>>> +that are used to offload some of the processor-intensive tasks, or to manage
+>>>> +other hardware accelerators, for achieving various system level goals.
+>>>> +
+>>>> +The processor cores in the sub-system are usually behind an IOMMU, and may
+>>>> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+>>>> +caches, an Interrupt Controller, a Cache Controller etc.
+>>>> +
+>>>> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+>>>> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+>>>> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+>>>> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
+>>>> +processors.
+>>>> +
+>>>> +Remote Processor Node:
+>>>> +======================
+>>>> +Each remote processor sub-system is represented as a single DT node. Each node
+>>>> +has a number of required or optional properties that enable the OS running on
+>>>> +the host processor (MPU) to perform the device management of the remote
+>>>> +processor and to communicate with the remote processor. The various properties
+>>>> +can be classified as constant or variable. The constant properties are dictated
+>>>> +by the SoC and does not change from one board to another having the same SoC.
+>>>> +Examples of constant properties include 'iommus', 'reg'. The variable properties
+>>>> +are dictated by the system integration aspects such as memory on the board, or
+>>>> +configuration used within the corresponding firmware image. Examples of variable
+>>>> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
+>>>> +
+>>>> +Required properties:
+>>>> +--------------------
+>>>> +The following are the mandatory properties:
+>>>> +
+>>>> +- compatible:       Should be one of the following,
+>>>> +                "ti,omap4-dsp" for DSPs on OMAP4 SoCs
+>>>> +                "ti,omap5-dsp" for DSPs on OMAP5 SoCs
+>>>> +                "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
+>>>> +                "ti,omap4-ipu" for IPUs on OMAP4 SoCs
+>>>> +                "ti,omap5-ipu" for IPUs on OMAP5 SoCs
+>>>> +                "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
+>>>> +
+>>>> +- iommus:   phandles to OMAP IOMMU nodes, that need to be programmed
+>>>> +            for this remote processor to access any external RAM memory or
+>>>> +            other peripheral device address spaces. This property usually
+>>>> +            has only a single phandle. Multiple phandles are used only in
+>>>> +            cases where the sub-system has different ports for different
+>>>> +            sub-modules within the processor sub-system (eg: DRA7 DSPs),
+>>>> +            and need the same programming in both the MMUs.
+>>
+>> ^ the target of this is not in schema.
+> 
+> You mean the OMAP IOMMU binding? That doesn't matter at all.
 
-On Tue, Nov 5, 2019 at 8:59 AM Tejun Heo <tj@kernel.org> wrote:
->
-> Hello,
->
-> Currently, there are three IDs which are being used to identify a
-> cgroup.
->
-> 1. cgroup->id
-> 2. cgroupfs 32bit ino
-> 3. cgroupfs 32bit ino + 32bit gen
->
-> All three IDs are visible to userland through different interfaces.
-> This is very confusing and #1 can't even be resolved to cgroups from
-> userland.
->
-> A 64bit number is sufficient to identify a cgroup instance uniquely
-> and ino_t is 64bit on all archs except for alpha.  There's no reason
-> for three different IDs at all.  This patchset updates kernfs so that
-> it supports 64bit ino and associated exportfs operations and unifies
-> the cgroup IDs.
->
-> * On 64bit ino archs, ino is kernfs node ID which is also the cgroup
->   ID.  The ino can be passed directly into open_by_handle_at(2) w/ the
->   new key type FILEID_KERNFS.  Backward compatibility is maintained
->   for FILEID_INO32_GEN keys.
->
-> * On 32bit ino archs, kernfs node ID is still 64bit and the cgroup ID.
->   ino is the low 32bits and gen is the high 32bits.  If the high
->   32bits is zero, open_by_handle_at(2) only matches the ino part of
->   the ID allowing userland to resolve inos to cgroups as long as
->   distinguishing recycled inos isn't necessary.
->
-> This patchset contains the following 10 patches.
->
->  0001-kernfs-fix-ino-wrap-around-detection.patch
->  0002-writeback-use-ino_t-for-inodes-in-tracepoints.patch
->  0003-netprio-use-css-ID-instead-of-cgroup-ID.patch
->  0004-kernfs-use-dumber-locking-for-kernfs_find_and_get_no.patch
->  0005-kernfs-kernfs_find_and_get_node_by_ino-should-only-l.patch
->  0006-kernfs-convert-kernfs_node-id-from-union-kernfs_node.patch
->  0007-kernfs-combine-ino-id-lookup-functions-into-kernfs_f.patch
->  0008-kernfs-implement-custom-exportfs-ops-and-fid-type.patch
->  0009-kernfs-use-64bit-inos-if-ino_t-is-64bit.patch
->  0010-cgroup-use-cgrp-kn-id-as-the-cgroup-ID.patch
->
-> 0001 is a fix which should be backported through -stable.  0002 and
-> 0003 are prep patches.  0004-0009 make kernfs_node->id a u64 and use
-> it as ino on 64bit ino archs.  0010 replaces cgroup->id with the
-> kernfs node ID.
->
-> Greg, how do you want to route the patches?  We can route 0001-0009
-> through your tree and the last one through cgroup after pulling in.
-> I'd be happy to route them all too.
->
-> This patchset is also available in the following git branch.
->
->   git://git.kernel.org/pub/scm/linux/kernel/git/tj/cgroup.git review-unified-cgid
->
-> diffstat follows.  Thanks.
+Yeah, OMAP IOMMU.
 
-Thanks a lot for doing this!  I've tested it with my perf cgroup patchset
-based on top of this series and it looks good.  You can add my
+Ok, if it does not matter, I will just convert this all. Will send v2 
+once I am done.
 
-Tested-by: Namhyung Kim <namhyung@kernel.org>
-
-Thanks
-Namhyung
+-Tero
+--
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
