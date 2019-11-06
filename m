@@ -2,91 +2,82 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10155FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7646EFC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CB1352166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:25:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573079144;
-	bh=4oc5GVAOqhLsNNVeJWSPpy36QsbUzSTu6fOqxyLp4JM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=clCG84ffrSYo+Ofx9XAwzBecMI/zEWRRctglvHaDwj0V6kBBCY2A/fGEMpINqX3c9
-	 1d/avmqeEvvirJ9muCqQ6SSBSlIlJ1qN7l6Y2nDe88xZp9m5zGU03DIpLg0iNulox+
-	 i0P5WqhROlG2XdNiFdFYSQoK7EaJWoxwUa+vrQRE=
+	by mail.kernel.org (Postfix) with ESMTP id 4FA57207FA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732774AbfKFWZn (ORCPT
+        id S1727900AbfKFW1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:25:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42714 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728149AbfKFWZm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:25:42 -0500
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 Nov 2019 17:27:06 -0500
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:39968 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfKFW1F (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:27:05 -0500
+Received: from [IPv6:2a00:5f00:102:0:5c62:8eff:fefa:67] (unknown [IPv6:2a00:5f00:102:0:5c62:8eff:fefa:67])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 341A721848;
-        Wed,  6 Nov 2019 22:25:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573079142;
-        bh=4oc5GVAOqhLsNNVeJWSPpy36QsbUzSTu6fOqxyLp4JM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=VvKkJE/UwWIz+zJYb40wq8kiXbuHCTCDp5pi7pYSQC1w5SGmmkaUI96tOquwIfCAN
-         REidiPtmivEBNh8otNI4SZmh2723ZCdElWtT+xUT0OtWvW9jD77EpWmgbf12cmChCi
-         xGOBBKue83py/1v7lqzBSXpw/Yt1SsRVtMYzE/v0=
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     linux-pci@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org, Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 5/5] PCI: Allow building PCIe things without PCIEPORTBUS
-Date:   Wed,  6 Nov 2019 16:24:21 -0600
-Message-Id: <20191106222420.10216-6-helgaas@kernel.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-In-Reply-To: <20191106222420.10216-1-helgaas@kernel.org>
-References: <20191106222420.10216-1-helgaas@kernel.org>
+        (Authenticated sender: gtucker)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 9EB7E28FF3E;
+        Wed,  6 Nov 2019 22:26:50 +0000 (GMT)
+Subject: Re: next/master boot bisection: next-20191106 on r8a7795-salvator-x
+To:     Linus Walleij <linus.walleij@linaro.org>,
+        tomeu.vizoso@collabora.com, mgalka@collabora.com,
+        broonie@kernel.org, matthew.hart@linaro.org,
+        Scott Branden <scott.branden@broadcom.com>,
+        khilman@baylibre.com, enric.balletbo@collabora.com,
+        Chris Packham <chris.packham@alliedtelesis.co.nz>
+Cc:     Scott Branden <sbranden@broadcom.com>,
+        linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
+        Ray Jui <rjui@broadcom.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com>
+From:   Guillaume Tucker <guillaume.tucker@collabora.com>
+Message-ID: <e2ba3c23-4b85-f83b-0ba4-dc0db1b8dd0f@collabora.com>
+Date:   Wed, 6 Nov 2019 22:26:47 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <5dc3460a.1c69fb81.bfae4.adf1@mx.google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+On 06/11/2019 22:15, kernelci.org bot wrote:
+> +static const struct of_device_id bcm_iproc_gpio_of_match[] __initconst = {
+> +	{ .compatible = "brcm,iproc-gpio-cca" },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, bcm_iproc_gpio_of_match);
+> +
+> +static struct platform_driver bcm_iproc_gpio_driver = {
+> +	.driver = {
+> +		.name = "iproc-xgs-gpio",
+> +		.owner = THIS_MODULE,
+> +		.of_match_table = bcm_iproc_gpio_of_match,
+> +	},
+> +	.probe = iproc_gpio_probe,
+> +	.remove = iproc_gpio_remove,
+> +};
 
-Some things in drivers/pci/pcie (aspm.c and ptm.c) do not depend on the
-PCIe portdrv, so we should be able to build them even if PCIEPORTBUS is not
-selected.  Remove the PCIEPORTBUS guard from building pcie/.
+There's a fix for this which Mark sent yesterday[1] and should
+have now been applied, by removing __initconst for the
+of_device_id table.  So this regression should not be present in
+the next linux-next tag.
 
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
----
- drivers/pci/Makefile | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Guillaume
 
-diff --git a/drivers/pci/Makefile b/drivers/pci/Makefile
-index 28cdd8c0213a..522d2b974e91 100644
---- a/drivers/pci/Makefile
-+++ b/drivers/pci/Makefile
-@@ -7,6 +7,8 @@ obj-$(CONFIG_PCI)		+= access.o bus.o probe.o host-bridge.o \
- 				   pci-sysfs.o rom.o setup-res.o irq.o vpd.o \
- 				   setup-bus.o vc.o mmap.o setup-irq.o
- 
-+obj-$(CONFIG_PCI)		+= pcie/
-+
- ifdef CONFIG_PCI
- obj-$(CONFIG_PROC_FS)		+= proc.o
- obj-$(CONFIG_SYSFS)		+= slot.o
-@@ -15,7 +17,6 @@ endif
- 
- obj-$(CONFIG_OF)		+= of.o
- obj-$(CONFIG_PCI_QUIRKS)	+= quirks.o
--obj-$(CONFIG_PCIEPORTBUS)	+= pcie/
- obj-$(CONFIG_HOTPLUG_PCI)	+= hotplug/
- obj-$(CONFIG_PCI_MSI)		+= msi.o
- obj-$(CONFIG_PCI_ATS)		+= ats.o
--- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+[1] https://www.spinics.net/lists/arm-kernel/msg766621.html
 
