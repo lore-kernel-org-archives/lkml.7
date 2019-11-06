@@ -2,211 +2,512 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 598C8C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:01:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 834F2C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:02:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 183ED217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:01:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 27108214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:02:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="klnQKFix"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730956AbfKFGBK (ORCPT
+        id S1729766AbfKFGCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:01:10 -0500
-Received: from szxga07-in.huawei.com ([45.249.212.35]:39914 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725856AbfKFGBJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:01:09 -0500
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 8C8E5E464016A5528EC9;
-        Wed,  6 Nov 2019 14:01:06 +0800 (CST)
-Received: from [127.0.0.1] (10.74.221.148) by DGGEMS414-HUB.china.huawei.com
- (10.3.19.214) with Microsoft SMTP Server id 14.3.439.0; Wed, 6 Nov 2019
- 14:00:58 +0800
-Subject: Re: [PATCH] xfs: optimise xfs_mod_icount/ifree when delta < 0
-To:     Dave Chinner <david@fromorbit.com>
-References: <1572866980-13001-1-git-send-email-zhangshaokun@hisilicon.com>
- <20191104204909.GB4614@dread.disaster.area>
- <dc7456d6-616d-78c5-0ac6-c5ffaf721e41@hisilicon.com>
- <20191105040325.GC4614@dread.disaster.area>
-CC:     <linux-xfs@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Yang Guo <guoyang2@huawei.com>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-From:   Shaokun Zhang <zhangshaokun@hisilicon.com>
-Message-ID: <675693c2-8600-1cbd-ce50-5696c45c6cd9@hisilicon.com>
-Date:   Wed, 6 Nov 2019 14:00:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.1.1
+        Wed, 6 Nov 2019 01:02:49 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:32932 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725813AbfKFGCs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:02:48 -0500
+Received: by mail-pf1-f193.google.com with SMTP id c184so18044651pfb.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:02:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=tAxu1D7jnaYG9t5UYdYwwWMp1Ky7maVOBKbfFFzDsEY=;
+        b=klnQKFixm9MdjfhKmih/M9n1wyzCEFoJ2dMQKA1J11EEUjJmzGand6jK46Yi/p84F3
+         UEBkGcYt2GPFLFAfa/Fceqs6+QX0pYeoipIHZuyR6xT2ABIV8AI/qwZV5G+RMocz9fbl
+         in3mWiey+v53ZvTgtgUJoeQTYJGCWqPkf/RIvRJhmZuodbG25NBxvg/s3NOUBY9IQI63
+         aZNJ00/dwCSLU8MIW2+WuXgr3mZYG1PHQZ8JRWiqB2/LvKPgz7PeZ9U+C7fFdghBXIN9
+         kG/7V2Ez5Gs06a1xi2xOMsKVLiXZEM5PFd2Eyf77Xsj62fo9aqickSGKexgePvIzxeU5
+         CHgw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=tAxu1D7jnaYG9t5UYdYwwWMp1Ky7maVOBKbfFFzDsEY=;
+        b=Ipir/iK0ULANd+yFR82FMnHC6CXwrJh3DOcglLrXUgTWi6QYuJUnanaFF/ZUaDBgwJ
+         mHaDA1jkQfiQmdhFp8Xk59axNLyn3OD1aqzt/mPUgnzz3C83ipvTr9MBKoarqPRpK/nf
+         k7U9TzytFLikEUqYsz9Wwx/6CBAUBA/U9rGNrb35ZcZLsfUz8QXsuH9PCVbV/bB+1M7B
+         QQVmMwVNIZzYDf6qSXcD8Cn2WhS9C6d+s7237TM6ezUZTSbxLqjn1HbQDDd4KbXNuamZ
+         k3uK1JKAzKRCr8Pzrmyw0TUWTAkZD6WOhgWUExN/hkmxJCgH0f+ry3CGKJnEUjCIdyf6
+         qvzg==
+X-Gm-Message-State: APjAAAVhqPMSa1HGBmSCFNBsiGtTRaqa9VIzQoB2mL0FvUv5HCo//B2j
+        p2GbST7VEIKHBd7mL0xQdpXMlQ==
+X-Google-Smtp-Source: APXvYqwBpUoI69XNcRv+Xo344Qm/nls+2eWqJaiIuhA+1ic1XuGn2hIRFvn/qO5e3AWtsjkGtkhcKA==
+X-Received: by 2002:a17:90a:48:: with SMTP id 8mr1441656pjb.82.1573020167139;
+        Tue, 05 Nov 2019 22:02:47 -0800 (PST)
+Received: from tuxbook-pro (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id s66sm11042974pfb.38.2019.11.05.22.02.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 22:02:46 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:02:43 -0800
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Elliot Berman <eberman@codeaurora.org>
+Cc:     saiprakash.ranjan@codeaurora.org, agross@kernel.org,
+        tsoni@codeaurora.org, sidgup@codeaurora.org,
+        psodagud@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 02/17] firmware: qcom_scm: Apply consistent naming scheme
+ to command IDs
+Message-ID: <20191106060243.GF586@tuxbook-pro>
+References: <1572917256-24205-1-git-send-email-eberman@codeaurora.org>
+ <1572917256-24205-3-git-send-email-eberman@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191105040325.GC4614@dread.disaster.area>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.74.221.148]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572917256-24205-3-git-send-email-eberman@codeaurora.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dave,
+On Mon 04 Nov 17:27 PST 2019, Elliot Berman wrote:
 
-On 2019/11/5 12:03, Dave Chinner wrote:
-> On Tue, Nov 05, 2019 at 11:26:32AM +0800, Shaokun Zhang wrote:
->> Hi Dave,
->>
->> On 2019/11/5 4:49, Dave Chinner wrote:
->>> On Mon, Nov 04, 2019 at 07:29:40PM +0800, Shaokun Zhang wrote:
->>>> From: Yang Guo <guoyang2@huawei.com>
->>>>
->>>> percpu_counter_compare will be called by xfs_mod_icount/ifree to check
->>>> whether the counter less than 0 and it is a expensive function.
->>>> let's check it only when delta < 0, it will be good for xfs's performance.
->>>
->>> Hmmm. I don't recall this as being expensive.
->>>
->>
->> Sorry about the misunderstanding information in commit message.
->>
->>> How did you find this? Can you please always document how you found
->>
->> If user creates million of files and the delete them, We found that the
->> __percpu_counter_compare costed 5.78% CPU usage, you are right that itself
->> is not expensive, but it calls __percpu_counter_sum which will use
->> spin_lock and read other cpu's count. perf record -g is used to profile it:
->>
->> - 5.88%     0.02%  rm  [kernel.vmlinux]  [k] xfs_mod_ifree
->>    - 5.86% xfs_mod_ifree
->>       - 5.78% __percpu_counter_compare
->>            5.61% __percpu_counter_sum
+> Create a consistent naming scheme for command IDs. The scheme is
+> QCOM_SCM_##svc_##cmd. Remove unused macros QCOM_SCM_FLAG_HLOS,
+> QCOM_SCM_FLAG_COLDBOOT_MC, QCOM_SCM_FLAG_WARMBOOT_MC,
+> QCOM_SCM_CMD_CORE_HOTPLUGGED, and QCOM_SCM_BOOT_ADDR_MC.
 > 
-> Interesting. Your workload is hitting the slow path, which I most
-> certainly do no see when creating lots of files. What's your
-> workload?
-> 
+> Signed-off-by: Elliot Berman <eberman@codeaurora.org>
 
-The hardware has 128 cpu cores, and the xfs filesystem format config is default,
-while the test is a single thread, as follow:
-./mdtest -I 10  -z 6 -b 8 -d /mnt/ -t -c 2
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-xfs info:
-meta-data=/dev/bcache2           isize=512    agcount=4, agsize=244188661 blks
-         =                       sectsz=512   attr=2, projid32bit=1
-         =                       crc=1        finobt=1 spinodes=1 rmapbt=0
-         =                       reflink=0
-data     =                       bsize=4096   blocks=976754644, imaxpct=5
-         =                       sunit=0      swidth=0 blks
-naming   =version 2              bsize=4096   ascii-ci=0 ftype=1	
-log      =internal               bsize=4096   blocks=476930, version=2
-         =                       sectsz=512   sunit=0 blks, lazy-count=1
-realtime =none                   extsz=4096   blocks=0, rtextents=0
-
-disk info:
-Disk /dev/bcache2: 4000.8 GB, 4000787021824 bytes, 7814037152 sectors
-Units = sectors of 1 * 512 = 512 bytes
-Sector size (logical/physical): 512 bytes / 512 bytes
-I/O size (minimum/optimal): 512 bytes / 512 bytes
-
->>> IOWs, we typically measure the overhead of such functions by kernel
->>> profile.  Creating ~200,000 inodes a second, so hammering the icount
->>> and ifree counters, I see:
->>>
->>>       0.16%  [kernel]  [k] percpu_counter_add_batch
->>>       0.03%  [kernel]  [k] __percpu_counter_compare
->>>
->>
->> 0.03% is just __percpu_counter_compare's usage.
+> ---
+>  drivers/firmware/qcom_scm-32.c | 28 ++++++++++++++--------------
+>  drivers/firmware/qcom_scm-64.c | 38 +++++++++++++++++++-------------------
+>  drivers/firmware/qcom_scm.c    |  8 ++++----
+>  drivers/firmware/qcom_scm.h    | 41 ++++++++++++++++++-----------------------
+>  4 files changed, 55 insertions(+), 60 deletions(-)
 > 
-> No, that's the total of _all_ the percpu counter functions captured
-> by the profile - it was the list of all samples filtered by
-> "percpu". I just re-ran the profile again, and got:
+> diff --git a/drivers/firmware/qcom_scm-32.c b/drivers/firmware/qcom_scm-32.c
+> index d416efc..87b520f 100644
+> --- a/drivers/firmware/qcom_scm-32.c
+> +++ b/drivers/firmware/qcom_scm-32.c
+> @@ -356,7 +356,7 @@ int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus)
+>  			set_cpu_present(cpu, false);
+>  	}
+>  
+> -	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
+> +	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_ADDR,
+>  				    flags, virt_to_phys(entry));
+>  }
+>  
+> @@ -395,7 +395,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+>  
+>  	cmd.addr = cpu_to_le32(virt_to_phys(entry));
+>  	cmd.flags = cpu_to_le32(flags);
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_ADDR,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_ADDR,
+>  			    &cmd, sizeof(cmd), NULL, 0);
+>  	if (!ret) {
+>  		for_each_cpu(cpu, cpus)
+> @@ -415,7 +415,7 @@ int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+>   */
+>  void __qcom_scm_cpu_power_down(u32 flags)
+>  {
+> -	qcom_scm_call_atomic1(QCOM_SCM_SVC_BOOT, QCOM_SCM_CMD_TERMINATE_PC,
+> +	qcom_scm_call_atomic1(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_TERMINATE_PC,
+>  			flags & QCOM_SCM_FLUSH_FLAG_MASK);
+>  }
+>  
+> @@ -425,7 +425,7 @@ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
+>  	__le32 svc_cmd = cpu_to_le32((svc_id << 10) | cmd_id);
+>  	__le32 ret_val = 0;
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_CMD,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_SCM_INFO_IS_CALL_AVAIL,
+>  			    &svc_cmd, sizeof(svc_cmd), &ret_val,
+>  			    sizeof(ret_val));
+>  	if (ret)
+> @@ -440,7 +440,7 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+>  	if (req_cnt > QCOM_SCM_HDCP_MAX_REQ_CNT)
+>  		return -ERANGE;
+>  
+> -	return qcom_scm_call(dev, QCOM_SCM_SVC_HDCP, QCOM_SCM_CMD_HDCP,
+> +	return qcom_scm_call(dev, QCOM_SCM_SVC_HDCP, QCOM_SCM_HDCP_INVOKE,
+>  		req, req_cnt * sizeof(*req), resp, sizeof(*resp));
+>  }
+>  
+> @@ -456,7 +456,7 @@ bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral)
+>  
+>  	in = cpu_to_le32(peripheral);
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -			    QCOM_SCM_PAS_IS_SUPPORTED_CMD,
+> +			    QCOM_SCM_PIL_PAS_IS_SUPPORTED,
+>  			    &in, sizeof(in),
+>  			    &out, sizeof(out));
+>  
+> @@ -477,7 +477,7 @@ int __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+>  	request.image_addr = cpu_to_le32(metadata_phys);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -			    QCOM_SCM_PAS_INIT_IMAGE_CMD,
+> +			    QCOM_SCM_PIL_PAS_INIT_IMAGE,
+>  			    &request, sizeof(request),
+>  			    &scm_ret, sizeof(scm_ret));
+>  
+> @@ -500,7 +500,7 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+>  	request.len = cpu_to_le32(size);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -			    QCOM_SCM_PAS_MEM_SETUP_CMD,
+> +			    QCOM_SCM_PIL_PAS_MEM_SETUP,
+>  			    &request, sizeof(request),
+>  			    &scm_ret, sizeof(scm_ret));
+>  
+> @@ -515,7 +515,7 @@ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+>  
+>  	in = cpu_to_le32(peripheral);
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -			    QCOM_SCM_PAS_AUTH_AND_RESET_CMD,
+> +			    QCOM_SCM_PIL_PAS_AUTH_AND_RESET,
+>  			    &in, sizeof(in),
+>  			    &out, sizeof(out));
+>  
+> @@ -530,7 +530,7 @@ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
+>  
+>  	in = cpu_to_le32(peripheral);
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -			    QCOM_SCM_PAS_SHUTDOWN_CMD,
+> +			    QCOM_SCM_PIL_PAS_SHUTDOWN,
+>  			    &in, sizeof(in),
+>  			    &out, sizeof(out));
+>  
+> @@ -543,7 +543,7 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+>  	__le32 in = cpu_to_le32(reset);
+>  	int ret;
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_MSS_RESET,
+>  			&in, sizeof(in),
+>  			&out, sizeof(out));
+>  
+> @@ -552,8 +552,8 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+>  
+>  int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>  {
+> -	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE,
+> -				     enable ? QCOM_SCM_SET_DLOAD_MODE : 0, 0);
+> +	return qcom_scm_call_atomic2(QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_DLOAD_MODE,
+> +				     enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0, 0);
+>  }
+>  
+>  int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+> @@ -568,7 +568,7 @@ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+>  	req.state = cpu_to_le32(state);
+>  	req.id = cpu_to_le32(id);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_REMOTE_STATE,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_REMOTE_STATE,
+>  			    &req, sizeof(req), &scm_ret, sizeof(scm_ret));
+>  
+>  	return ret ? : le32_to_cpu(scm_ret);
+> diff --git a/drivers/firmware/qcom_scm-64.c b/drivers/firmware/qcom_scm-64.c
+> index e6721b5..f0b4853 100644
+> --- a/drivers/firmware/qcom_scm-64.c
+> +++ b/drivers/firmware/qcom_scm-64.c
+> @@ -256,7 +256,7 @@ int __qcom_scm_is_call_available(struct device *dev, u32 svc_id, u32 cmd_id)
+>  	desc.args[0] = SMCCC_FUNCNUM(svc_id, cmd_id) |
+>  			(ARM_SMCCC_OWNER_SIP << ARM_SMCCC_OWNER_SHIFT);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_CMD,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_INFO, QCOM_SCM_INFO_IS_CALL_AVAIL,
+>  			    &desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -284,7 +284,7 @@ int __qcom_scm_hdcp_req(struct device *dev, struct qcom_scm_hdcp_req *req,
+>  	desc.args[9] = req[4].val;
+>  	desc.arginfo = QCOM_SCM_ARGS(10);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_HDCP, QCOM_SCM_CMD_HDCP, &desc,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_HDCP, QCOM_SCM_HDCP_INVOKE, &desc,
+>  			    &res);
+>  	*resp = res.a1;
+>  
+> @@ -295,7 +295,7 @@ void __qcom_scm_init(void)
+>  {
+>  	u64 cmd;
+>  	struct arm_smccc_res res;
+> -	u32 function = SMCCC_FUNCNUM(QCOM_SCM_SVC_INFO, QCOM_IS_CALL_AVAIL_CMD);
+> +	u32 function = SMCCC_FUNCNUM(QCOM_SCM_SVC_INFO, QCOM_SCM_INFO_IS_CALL_AVAIL);
+>  
+>  	/* First try a SMC64 call */
+>  	cmd = ARM_SMCCC_CALL_VAL(ARM_SMCCC_FAST_CALL, ARM_SMCCC_SMC_64,
+> @@ -320,7 +320,7 @@ bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral)
+>  	desc.arginfo = QCOM_SCM_ARGS(1);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -				QCOM_SCM_PAS_IS_SUPPORTED_CMD,
+> +				QCOM_SCM_PIL_PAS_IS_SUPPORTED,
+>  				&desc, &res);
+>  
+>  	return ret ? false : !!res.a1;
+> @@ -337,7 +337,7 @@ int __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+>  	desc.args[1] = metadata_phys;
+>  	desc.arginfo = QCOM_SCM_ARGS(2, QCOM_SCM_VAL, QCOM_SCM_RW);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_INIT_IMAGE_CMD,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_INIT_IMAGE,
+>  				&desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -355,7 +355,7 @@ int __qcom_scm_pas_mem_setup(struct device *dev, u32 peripheral,
+>  	desc.args[2] = size;
+>  	desc.arginfo = QCOM_SCM_ARGS(3);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MEM_SETUP_CMD,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_MEM_SETUP,
+>  				&desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -371,7 +371,7 @@ int __qcom_scm_pas_auth_and_reset(struct device *dev, u32 peripheral)
+>  	desc.arginfo = QCOM_SCM_ARGS(1);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL,
+> -				QCOM_SCM_PAS_AUTH_AND_RESET_CMD,
+> +				QCOM_SCM_PIL_PAS_AUTH_AND_RESET,
+>  				&desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -386,7 +386,7 @@ int __qcom_scm_pas_shutdown(struct device *dev, u32 peripheral)
+>  	desc.args[0] = peripheral;
+>  	desc.arginfo = QCOM_SCM_ARGS(1);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_SHUTDOWN_CMD,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_SHUTDOWN,
+>  			&desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -402,7 +402,7 @@ int __qcom_scm_pas_mss_reset(struct device *dev, bool reset)
+>  	desc.args[1] = 0;
+>  	desc.arginfo = QCOM_SCM_ARGS(2);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PAS_MSS_RESET, &desc,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_PIL, QCOM_SCM_PIL_PAS_MSS_RESET, &desc,
+>  			    &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -418,7 +418,7 @@ int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id)
+>  	desc.args[1] = id;
+>  	desc.arginfo = QCOM_SCM_ARGS(2);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_REMOTE_STATE,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_REMOTE_STATE,
+>  			    &desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -445,7 +445,7 @@ int __qcom_scm_assign_mem(struct device *dev, phys_addr_t mem_region,
+>  				     QCOM_SCM_VAL, QCOM_SCM_VAL);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+> -			    QCOM_MEM_PROT_ASSIGN_ID,
+> +			    QCOM_SCM_MP_ASSIGN,
+>  			    &desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -461,7 +461,7 @@ int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id, u32 spare)
+>  	desc.args[1] = spare;
+>  	desc.arginfo = QCOM_SCM_ARGS(2);
+>  
+> -	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP, QCOM_SCM_RESTORE_SEC_CFG,
+> +	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP, QCOM_SCM_MP_RESTORE_SEC_CFG,
+>  			    &desc, &res);
+>  
+>  	return ret ? : res.a1;
+> @@ -478,7 +478,7 @@ int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+>  	desc.arginfo = QCOM_SCM_ARGS(1);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+> -			    QCOM_SCM_IOMMU_SECURE_PTBL_SIZE, &desc, &res);
+> +			    QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE, &desc, &res);
+>  
+>  	if (size)
+>  		*size = res.a1;
+> @@ -500,7 +500,7 @@ int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr, u32 size,
+>  				     QCOM_SCM_VAL);
+>  
+>  	ret = qcom_scm_call(dev, QCOM_SCM_SVC_MP,
+> -			    QCOM_SCM_IOMMU_SECURE_PTBL_INIT, &desc, &res);
+> +			    QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT, &desc, &res);
+>  
+>  	/* the pg table has been initialized already, ignore the error */
+>  	if (ret == -EPERM)
+> @@ -514,11 +514,11 @@ int __qcom_scm_set_dload_mode(struct device *dev, bool enable)
+>  	struct qcom_scm_desc desc = {0};
+>  	struct arm_smccc_res res;
+>  
+> -	desc.args[0] = QCOM_SCM_SET_DLOAD_MODE;
+> -	desc.args[1] = enable ? QCOM_SCM_SET_DLOAD_MODE : 0;
+> +	desc.args[0] = QCOM_SCM_BOOT_SET_DLOAD_MODE;
+> +	desc.args[1] = enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0;
+>  	desc.arginfo = QCOM_SCM_ARGS(2);
+>  
+> -	return qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_SET_DLOAD_MODE,
+> +	return qcom_scm_call(dev, QCOM_SCM_SVC_BOOT, QCOM_SCM_BOOT_SET_DLOAD_MODE,
+>  			     &desc, &res);
+>  }
+>  
+> @@ -558,10 +558,10 @@ int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev, bool en)
+>  	struct qcom_scm_desc desc = {0};
+>  	struct arm_smccc_res res;
+>  
+> -	desc.args[0] = QCOM_SCM_CONFIG_ERRATA1_CLIENT_ALL;
+> +	desc.args[0] = QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL;
+>  	desc.args[1] = en;
+>  	desc.arginfo = QCOM_SCM_ARGS(2);
+>  
+>  	return qcom_scm_call_atomic(dev, QCOM_SCM_SVC_SMMU_PROGRAM,
+> -				    QCOM_SCM_CONFIG_ERRATA1, &desc, &res);
+> +				    QCOM_SCM_SMMU_CONFIG_ERRATA1, &desc, &res);
+>  }
+> diff --git a/drivers/firmware/qcom_scm.c b/drivers/firmware/qcom_scm.c
+> index 40222b1..450d6d6 100644
+> --- a/drivers/firmware/qcom_scm.c
+> +++ b/drivers/firmware/qcom_scm.c
+> @@ -140,7 +140,7 @@ bool qcom_scm_hdcp_available(void)
+>  		return ret;
+>  
+>  	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_HDCP,
+> -						QCOM_SCM_CMD_HDCP);
+> +						QCOM_SCM_HDCP_INVOKE);
+>  
+>  	qcom_scm_clk_disable();
+>  
+> @@ -181,7 +181,7 @@ bool qcom_scm_pas_supported(u32 peripheral)
+>  	int ret;
+>  
+>  	ret = __qcom_scm_is_call_available(__scm->dev, QCOM_SCM_SVC_PIL,
+> -					   QCOM_SCM_PAS_IS_SUPPORTED_CMD);
+> +					   QCOM_SCM_PIL_PAS_IS_SUPPORTED);
+>  	if (ret <= 0)
+>  		return false;
+>  
+> @@ -368,12 +368,12 @@ static void qcom_scm_set_download_mode(bool enable)
+>  
+>  	avail = __qcom_scm_is_call_available(__scm->dev,
+>  					     QCOM_SCM_SVC_BOOT,
+> -					     QCOM_SCM_SET_DLOAD_MODE);
+> +					     QCOM_SCM_BOOT_SET_DLOAD_MODE);
+>  	if (avail) {
+>  		ret = __qcom_scm_set_dload_mode(__scm->dev, enable);
+>  	} else if (__scm->dload_mode_addr) {
+>  		ret = __qcom_scm_io_writel(__scm->dev, __scm->dload_mode_addr,
+> -					   enable ? QCOM_SCM_SET_DLOAD_MODE : 0);
+> +					   enable ? QCOM_SCM_BOOT_SET_DLOAD_MODE : 0);
+>  	} else {
+>  		dev_err(__scm->dev,
+>  			"No available mechanism for setting download mode\n");
+> diff --git a/drivers/firmware/qcom_scm.h b/drivers/firmware/qcom_scm.h
+> index baee744..99e91ba 100644
+> --- a/drivers/firmware/qcom_scm.h
+> +++ b/drivers/firmware/qcom_scm.h
+> @@ -5,23 +5,18 @@
+>  #define __QCOM_SCM_INT_H
+>  
+>  #define QCOM_SCM_SVC_BOOT		0x1
+> -#define QCOM_SCM_BOOT_ADDR		0x1
+> -#define QCOM_SCM_SET_DLOAD_MODE		0x10
+> -#define QCOM_SCM_BOOT_ADDR_MC		0x11
+> -#define QCOM_SCM_SET_REMOTE_STATE	0xa
+> +#define QCOM_SCM_BOOT_SET_ADDR		0x1
+> +#define QCOM_SCM_BOOT_SET_DLOAD_MODE		0x10
+> +#define QCOM_SCM_BOOT_SET_REMOTE_STATE	0xa
+>  extern int __qcom_scm_set_remote_state(struct device *dev, u32 state, u32 id);
+>  extern int __qcom_scm_set_dload_mode(struct device *dev, bool enable);
+>  
+> -#define QCOM_SCM_FLAG_HLOS		0x01
+> -#define QCOM_SCM_FLAG_COLDBOOT_MC	0x02
+> -#define QCOM_SCM_FLAG_WARMBOOT_MC	0x04
+>  extern int __qcom_scm_set_warm_boot_addr(struct device *dev, void *entry,
+>  		const cpumask_t *cpus);
+>  extern int __qcom_scm_set_cold_boot_addr(void *entry, const cpumask_t *cpus);
+>  
+> -#define QCOM_SCM_CMD_TERMINATE_PC	0x2
+> +#define QCOM_SCM_BOOT_TERMINATE_PC	0x2
+>  #define QCOM_SCM_FLUSH_FLAG_MASK	0x3
+> -#define QCOM_SCM_CMD_CORE_HOTPLUGGED	0x10
+>  extern void __qcom_scm_cpu_power_down(u32 flags);
+>  
+>  #define QCOM_SCM_SVC_IO			0x5
+> @@ -31,24 +26,24 @@ extern int __qcom_scm_io_readl(struct device *dev, phys_addr_t addr, unsigned in
+>  extern int __qcom_scm_io_writel(struct device *dev, phys_addr_t addr, unsigned int val);
+>  
+>  #define QCOM_SCM_SVC_INFO		0x6
+> -#define QCOM_IS_CALL_AVAIL_CMD		0x1
+> +#define QCOM_SCM_INFO_IS_CALL_AVAIL	0x1
+>  extern int __qcom_scm_is_call_available(struct device *dev, u32 svc_id,
+>  		u32 cmd_id);
+>  
+>  #define QCOM_SCM_SVC_HDCP		0x11
+> -#define QCOM_SCM_CMD_HDCP		0x01
+> +#define QCOM_SCM_HDCP_INVOKE		0x01
+>  extern int __qcom_scm_hdcp_req(struct device *dev,
+>  		struct qcom_scm_hdcp_req *req, u32 req_cnt, u32 *resp);
+>  
+>  extern void __qcom_scm_init(void);
+>  
+>  #define QCOM_SCM_SVC_PIL		0x2
+> -#define QCOM_SCM_PAS_INIT_IMAGE_CMD	0x1
+> -#define QCOM_SCM_PAS_MEM_SETUP_CMD	0x2
+> -#define QCOM_SCM_PAS_AUTH_AND_RESET_CMD	0x5
+> -#define QCOM_SCM_PAS_SHUTDOWN_CMD	0x6
+> -#define QCOM_SCM_PAS_IS_SUPPORTED_CMD	0x7
+> -#define QCOM_SCM_PAS_MSS_RESET		0xa
+> +#define QCOM_SCM_PIL_PAS_INIT_IMAGE	0x1
+> +#define QCOM_SCM_PIL_PAS_MEM_SETUP	0x2
+> +#define QCOM_SCM_PIL_PAS_AUTH_AND_RESET	0x5
+> +#define QCOM_SCM_PIL_PAS_SHUTDOWN	0x6
+> +#define QCOM_SCM_PIL_PAS_IS_SUPPORTED	0x7
+> +#define QCOM_SCM_PIL_PAS_MSS_RESET		0xa
+>  extern bool __qcom_scm_pas_supported(struct device *dev, u32 peripheral);
+>  extern int  __qcom_scm_pas_init_image(struct device *dev, u32 peripheral,
+>  		dma_addr_t metadata_phys);
+> @@ -86,21 +81,21 @@ static inline int qcom_scm_remap_error(int err)
+>  }
+>  
+>  #define QCOM_SCM_SVC_MP			0xc
+> -#define QCOM_SCM_RESTORE_SEC_CFG	2
+> +#define QCOM_SCM_MP_RESTORE_SEC_CFG	2
+>  extern int __qcom_scm_restore_sec_cfg(struct device *dev, u32 device_id,
+>  				      u32 spare);
+> -#define QCOM_SCM_IOMMU_SECURE_PTBL_SIZE	3
+> -#define QCOM_SCM_IOMMU_SECURE_PTBL_INIT	4
+> +#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_SIZE	3
+> +#define QCOM_SCM_MP_IOMMU_SECURE_PTBL_INIT	4
+>  #define QCOM_SCM_SVC_SMMU_PROGRAM	0x15
+> -#define QCOM_SCM_CONFIG_ERRATA1		0x3
+> -#define QCOM_SCM_CONFIG_ERRATA1_CLIENT_ALL	0x2
+> +#define QCOM_SCM_SMMU_CONFIG_ERRATA1		0x3
+> +#define QCOM_SCM_SMMU_CONFIG_ERRATA1_CLIENT_ALL	0x2
+>  extern int __qcom_scm_iommu_secure_ptbl_size(struct device *dev, u32 spare,
+>  					     size_t *size);
+>  extern int __qcom_scm_iommu_secure_ptbl_init(struct device *dev, u64 addr,
+>  					     u32 size, u32 spare);
+>  extern int __qcom_scm_qsmmu500_wait_safe_toggle(struct device *dev,
+>  						bool enable);
+> -#define QCOM_MEM_PROT_ASSIGN_ID	0x16
+> +#define QCOM_SCM_MP_ASSIGN	0x16
+>  extern int  __qcom_scm_assign_mem(struct device *dev,
+>  				  phys_addr_t mem_region, size_t mem_sz,
+>  				  phys_addr_t src, size_t src_sz,
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
-> 
->    0.23%  [kernel]  [k] percpu_counter_add_batch
->    0.04%  [kernel]  [k] __percpu_counter_compare
->    0.00%  [kernel]  [k] collect_percpu_times
->    0.00%  [kernel]  [k] __handle_irq_event_percpu
->    0.00%  [kernel]  [k] __percpu_counter_sum
->    0.00%  [kernel]  [k] handle_irq_event_percpu
->    0.00%  [kernel]  [k] fprop_reflect_period_percpu.isra.0
->    0.00%  [kernel]  [k] percpu_ref_switch_to_atomic_rcu
->    0.00%  [kernel]  [k] free_percpu
->    0.00%  [kernel]  [k] percpu_ref_exit
-> 
-> So you can see that this essentially no samples in
-> __percpu_counter_sum at all - my tests are not hitting the slow path
-> at all, despite allocating inodes continuously.
-
-Got it,
-
-> 
-> IOWs, your workload is hitting the slow path repeatedly, and so the
-> question that needs to be answered is "why is the slow path actually
-> being exercised?". IOWs, we need to know what your workload is, what
-> the filesystem config is, what hardware (cpus, storage, etc) you are
-> running on, etc. There must be some reason for the slow path being
-> used, and that's what we need to understand first before deciding
-> what the best fix might be...
-> 
-> I suspect that you are only running one or two threads creating
-
-Yeah, we just run one thread test.
-
-> files and you have lots of idle CPU and hence the inode allocation
-> is not clearing the fast path batch threshold on the ifree counter.
-> And because you have lots of CPUs, the cost of a sum is very
-> expensive compared to running single threaded creates. That's my
-> current hypothesis based what I see on my workloads that
-> xfs_mod_ifree overhead goes down as concurrency goes up....
-> 
-
-Agree, we add some debug info in xfs_mod_ifree and found most times
-m_ifree.count < batch * num_online_cpus(),  because we have 128 online
-cpus and m_ifree.count around 999.
-
-
-> FWIW, the profiles I took came from running this on 16 and 32p
-> machines:
-> 
-> --
-> dirs=""
-> for i in `seq 1 $THREADS`; do
->         dirs="$dirs -d /mnt/scratch/$i"
-> done
-> 
-> cycles=$((512 / $THREADS))
-> 
-> time ./fs_mark $XATTR -D 10000 -S0 -n $NFILES -s 0 -L $cycles $dirs
-> --
-> 
-> With THREADS=16 or 32 and NFILES=100000 on a big sparse filesystem
-> image:
-> 
-> meta-data=/dev/vdc               isize=512    agcount=500, agsize=268435455 blks
->          =                       sectsz=512   attr=2, projid32bit=1
->          =                       crc=1        finobt=1, sparse=1, rmapbt=0
->          =                       reflink=1
-> data     =                       bsize=4096   blocks=134217727500, imaxpct=1
->          =                       sunit=0      swidth=0 blks
-> naming   =version 2              bsize=4096   ascii-ci=0, ftype=1
-> log      =internal log           bsize=4096   blocks=521728, version=2
->          =                       sectsz=512   sunit=0 blks, lazy-count=1
-> realtime =none                   extsz=4096   blocks=0, rtextents=0
-> 
-> That's allocating enough inodes to keep the free inode counter
-> entirely out of the slow path...
-
-percpu_counter_read that reads the count will cause cache synchronization
-cost if other cpu changes the count, Maybe it's better not to call
-percpu_counter_compare if possible.
-
-Thanks,
-Shaokun
-
-> 
-> Cheers,
-> 
-> Dave.
-> 
-
