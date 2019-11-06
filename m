@@ -2,154 +2,216 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4CAC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05D12C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A8D8F217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLii/lUK"
+	by mail.kernel.org (Postfix) with ESMTP id BFE59217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731196AbfKFHBn (ORCPT
+        id S1731242AbfKFHBw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:01:43 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42111 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfKFHBi (ORCPT
+        Wed, 6 Nov 2019 02:01:52 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:22361 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfKFHBw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:01:38 -0500
-Received: by mail-pl1-f193.google.com with SMTP id j12so9024576plt.9;
-        Tue, 05 Nov 2019 23:01:38 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=MxSa1n+gHrOp6PMKGpdNcDU3YHnlnlTnVOvtpXq96hQ=;
-        b=FLii/lUKFxSP7NlBkRW8TcsfS8d12PrwyIgYxduQTcjuvyO9CSyhsJnn2Qk0TNlYZL
-         lB34iRpSXhlGGdUXgX5MmRflnU7KXpwFcbmIbkCWCtnMpq6GtOvYzOjEesFtxoTL92Nv
-         sMALWipHX2DnW1kFC+Akjuc9TXl6Zh7EP3kWO85NfzZkDgE/uuUvOeigxT1LF9oUjSee
-         s43QZDIWgxX7Z/CWGUm53hnu6aL+EoYztEHHblxLBrYIgu9aZCxgiUe94EotG4FLe1SD
-         NtpM8j7GArccqwtORn/sMlN/fuI4za73VDm5Ebe3neYfj5/ddYthqtwdXiro5ZMVOWjW
-         Y/DA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=MxSa1n+gHrOp6PMKGpdNcDU3YHnlnlTnVOvtpXq96hQ=;
-        b=Zcr14IFdH/7TlCTXKzIo9ootrVfXcHvyz8Gav/mwf5UTRu75ozWonzlDoBusY+uEVW
-         0Z2esHW0A8OwalJgQSgBJ/CJ++mAhwsT/dnyiw32T+4oM6Lbo8bVWZ459x6YFvKRGYqp
-         Z4RsMSKx4Mj4vdra4dpT7VpthQbUSCmFof/er9gNr1p/fdVK5dNbfZwO2ASCljJs4Okh
-         kINDCnfLHSsKFLJLkKiVql9FDfmcCL+vezqtru/7rusegK38YISXa8KdBoHv3Ut16x6I
-         BPKrey+TWcFKwZx7Zd1hOxJ6youpBhJfPiSuu3ueXgwnQW9dF1XNL3PDlisesKs0dZo2
-         YpAg==
-X-Gm-Message-State: APjAAAWjGzzF4NptmVat0deV8BF9wAyqsKmuc3+qLJdTQwxhFV3V1AXO
-        8z1BCcKSOsMhiaFRQs6VwDk=
-X-Google-Smtp-Source: APXvYqzJbw0+dj2HtLWRRpzgQPo9WOyJIwJJXerw9Xlczh2u7AtxkcVMkYZ8LmD3j/nBrXCnbQzT+g==
-X-Received: by 2002:a17:902:7c8d:: with SMTP id y13mr1021481pll.155.1573023697546;
-        Tue, 05 Nov 2019 23:01:37 -0800 (PST)
-Received: from Gentoo ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id 65sm13508394pff.2.2019.11.05.23.01.31
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 23:01:36 -0800 (PST)
-Date:   Wed, 6 Nov 2019 12:31:23 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts:patch-kernel:bash syntax replace,correct one
-Message-ID: <20191106070120.GB18076@Gentoo>
-References: <20191025080544.7209-1-unixbhaskar@gmail.com>
- <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
- <20191106042049.GC20442@Gentoo>
- <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
+        Wed, 6 Nov 2019 02:01:52 -0500
+IronPort-SDR: DxMWfcyGRMW20us5xxgYaDrOjKs0Y5FjSD+NzZUe7LLzZU0OFhcUVJkx5VCa9BywDpaY9X64PE
+ qNC1lSECFCH2LcmucHn22ShXjXDneOr76D6wI1+nE6TcZE/Q+8SXZ+27aYDDXOoRD72OFtXLGg
+ HFeSM3BhOBc+4BZBn6mlH5oGy9BrDgZDmaDd9BSsKWzad4BqnZwQL4Ua4/2j9mk57gxXN4alYf
+ FYeLBDmqO8UfKkUYZ8HV8yGdWCB+/q5GVxaGgYIMqIOFvOwy7oF2fZgOG1sI5gaM7uThWS2cQX
+ NUM=
+X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
+   d="scan'208";a="42848207"
+Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
+  by esa2.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:01:51 -0800
+IronPort-SDR: 0ojCCtfzTUrhdd9b7vAATxZ6Iz0EwjtoK+U/8hS+c7tpAbMBoAk+EyhY62nv0xdXfdwMSpujjH
+ XTny5ZZXMj8kiq3Rc43lZsIdzE3YmQgJjClO8eKtttV8EwSLua6lDrzX0XZXcqdP01P40QxRKF
+ v8OCvHnCvSNibyNGebZqxBFoPsecfhCiLMxOpCxB7nDssNUO5iHqOXu9nnwWDsuhcdmP4yQ9qd
+ jllcyS9a9Nmg1WVfM9uye2lzWT8aKECEsPuM81/aSiGZET3rF3LT+Q5DLqmO13+kAzWk7pKjBA
+ XLo=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
+        <Andrew_Gabbasov@mentor.com>
+Subject: [PATCH v5 00/48] atmel_mxt_ts misc
+Date:   Wed, 6 Nov 2019 16:00:58 +0900
+Message-ID: <20191106070146.18759-1-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch-set forward ports Nick Dyer's work in ndyer/linux github repository
+as long as some other features and fixes
 
---rS8CxjVDS/+yyDmU
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Balasubramani Vivekanandan (2):
+  Input: atmel_mxt_ts: Limit the max bytes transferred in an i2c
+    transaction
+  Input: atmel_mxt_ts: use gpiod_set_value_cansleep for reset pin
 
-On 15:25 Wed 06 Nov 2019, Masahiro Yamada wrote:
->On Wed, Nov 6, 2019 at 1:21 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> w=
-rote:
->>
->> On 13:15 Wed 06 Nov 2019, Masahiro Yamada wrote:
->> >On Fri, Oct 25, 2019 at 5:06 PM Bhaskar Chowdhury <unixbhaskar@gmail.co=
-m> wrote:
->> >>
->> >> This patch will replace backquote to dollar parenthesis syntax
->> >> for better readability.Corrected one.
->> >
->> >Talking about the commit subject,
->> >which part is 'bash syntax' ?
->> >
->> >One more thing,
->> >"correct one" is not the correct way to send
->> >a new patch version.
->> >See the patch submission from other people.
->> >The version number is enclosed in the square brackets.
->> >
->> >[PATCH v2]
->> >
->> >
->> >The commit subject should describe what it does
->> >in imperative mood.
->> >
->> >https://patchwork.kernel.org/patch/11205593/
->> You are right ..my mistake ..shouldn't have included the
->> "correct one" ...and you are absolutely right..."bash syntax"
->> is as vague and confusing .
->>
->> Again , Would you mind if I send you the correct one with
->> proper subject line and explained what changed.
->
->
->I will pick up the patch with the subject corrected
->but you do not need to send similar patches any more.
->
->`...` is the correct syntax.
->Even if $(...) is more readable,
->the added value is quite small.
->
-Okay , noted.
->
->
->
->--=20
->Best Regards
->Masahiro Yamada
+Dean Jenkins (1):
+  Input: atmel_mxt_ts: return error from
+    mxt_process_messages_until_invalid()
 
---rS8CxjVDS/+yyDmU
-Content-Type: application/pgp-signature; name="signature.asc"
+Deepak Das (6):
+  Input: Atmel: improve error handling in mxt_start()
+  Input: Atmel: improve error handling in mxt_initialize()
+  Input: Atmel: improve error handling in mxt_update_cfg()
+  Input: Atmel: Improve error handling in mxt_initialize_input_device()
+  Input: Atmel: handle ReportID "0x00" while processing T5 messages
+  Input: Atmel: use T44 object to process T5 messages
 
------BEGIN PGP SIGNATURE-----
+George G. Davis (1):
+  input: atmel_mxt_ts: export GPIO reset line via sysfs
 
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3Cb7wACgkQsjqdtxFL
-KRWlBwgAj6yVqeQEReDZGWZ7OHnr0GRoGU13xPVK27xr0ibe2N7SJq1fwDeno/Fw
-edI7d8aufFlP+vvpzZVdjdLvbMkWv/mOW3kxnURxXcq3X95nkGDoceE5Fyh7tZ+i
-hxLrYMYOYFwlJikJJnI4S5HTGQ7A4B884zGRMqcC8bpAWAe6BNPDUZbmNaCZ02sW
-C/3olrDvpffviu4APEtLN1lAeuKVegz4k8Mybf+5dR1wH/G9FCp1/Q/oOSCUcLpt
-g7JZXEsw0xfXWtBmbI3Uwq9gEGoQ/PXDi6MC7+lRiL3LW+JBmDtlik/zKwk6DRM+
-Uhm8I6PssRajlg8Pu41UBQT0VVXBMw==
-=9wMq
------END PGP SIGNATURE-----
+Jiada Wang (3):
+  Input: introduce input_mt_report_slot_inactive
+  Input: atmel_mxt_ts - eliminate data->raw_info_block
+  Input: atmel_mxt_ts - Fix compilation warning
 
---rS8CxjVDS/+yyDmU--
+Karl Tsou (1):
+  Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Kautuk Consul (2):
+  Input: atmel_mxt_ts - Change call-points of mxt_free_* functions
+  Input: atmel_mxt_ts - rely on calculated_crc rather than file
+    config_crc
+
+Naveen Chakka (2):
+  input: touchscreen: atmel_mxt_ts: Added sysfs entry for touchscreen
+    status
+  input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+
+Nick Dyer (26):
+  Input: atmel_mxt_ts - rework sysfs init/remove
+  Input: atmel_mxt_ts - only read messages in mxt_acquire_irq() when
+    necessary
+  Input: atmel_mxt_ts - split large i2c transfers into blocks
+  Input: atmel_mxt_ts - output status from T48 Noise Supression
+  Input: atmel_mxt_ts - output status from T42 Touch Suppression
+  Input: atmel_mxt_ts - implement T9 vector/orientation support
+  Input: atmel_mxt_ts - implement T15 Key Array support
+  Input: atmel_mxt_ts - handle reports from T47 Stylus object
+  Input: atmel_mxt_ts - implement support for T107 active stylus
+  Input: atmel_mxt_ts - release touch state during suspend
+  Input: atmel_mxt_ts - add regulator control support
+  Input: atmel_mxt_ts - report failures in suspend/resume
+  Input: atmel_mxt_ts - allow specification of firmware file name
+  Input: atmel_mxt_ts - handle cfg filename via pdata/sysfs
+  Input: atmel_mxt_ts - allow input name to be specified in platform
+    data
+  Input: atmel_mxt_ts - refactor firmware flash to extract context into
+    struct
+  Input: atmel_mxt_ts - refactor code to enter bootloader into separate
+    func
+  Input: atmel_mxt_ts - combine bootloader version query with probe
+  Input: atmel_mxt_ts - improve bootloader state machine handling
+  Input: atmel_mxt_ts - rename bl_completion to chg_completion
+  Input: atmel_mxt_ts - make bootloader interrupt driven
+  Input: atmel_mxt_ts - delay enabling IRQ when not using regulators
+  Input: atmel_mxt_ts - implement I2C retries
+  Input: atmel_mxt_ts - orientation is not present in hover
+  Input: atmel_mxt_ts - implement debug output for messages
+  Input: atmel_mxt_ts - implement improved debug message interface
+
+Nikhil Ravindran (1):
+  Input: atmel_mxt_ts: Add support for run self-test routine.
+
+Sanjeev Chugh (1):
+  Input: atmel_mxt_ts: Implement synchronization during various
+    operation
+
+karl tsou (1):
+  Input: atmel_mxt_ts - add config checksum attribute to sysfs
+
+keerthikumarp (1):
+  input: atmel_mxt_ts: Add Missing Delay for reset handling of Atmel
+    touch panel controller in detachable displays.
+
+---
+v5:
+Following commits have been updated to address warnings & errors
+reported by kbuild test robot 
+Input: atmel_mxt_ts - make bootloader interrupt driven
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msgs
+
+Following commit has been updated
+Input: introduce input_mt_report_slot_inactive
+
+v4:
+Following commit in v3 patch-set has been removed
+Input: switch to use return value of input_mt_report_slot_state
+
+Following commit has been updated to address checkpatch warning
+Input: atmel_mxt_ts: Implement synchronization during various operation
+
+v3:
+Following commits have been updated compared to v2 patchset
+Input: atmel_mxt_ts - implement debug output for messages
+- added inline comment
+Input: atmel_mxt_ts - add debug for T92 gesture and T93 touch seq msg
+- changed dev_info() to dev_dbg()
+
+v2:
+Following commit in v1 patchset has been split into two commits
+Input: introduce input_mt_report_slot_inactive
+
+Following commits have been updated compared to v1 patchset
+Input: atmel_mxt_ts - split large i2c transfers into blocks
+Input: atmel_mxt_ts - output status from T42 Touch Suppression
+
+Following commits in v1 patchset have been squashed
+Input: touchscreen: Atmel: Add device tree support for T15 key array objects
+Input: atmel_mxt_ts - check data->input_dev is not null in mxt_input_sync()
+Input: atmel_mxt_ts - check firmware format before entering bootloader
+Input: atmel_mxt_ts: update stale use_retrigen_workaround flag
+input: atmel_mxt_ts: move bootloader probe from mxt_initialize()
+input: Atmel: limit the max bytes transferred while reading T5 messages
+Input: atmel_mxt_ts: Use msecs_to_jiffies() instead of HZ
+Input: atmel_mxt_ts: Use complete when in_bootloader true
+Input: atmel_mxt_ts: Prevent crash due to freeing of input device
+input: atmel_mxt_ts: Add NULL check for sysfs attribute debug_msg_attr
+
+Following commits in v1 patchset have been dropped:
+Input: atmel_mxt_ts - configure and use gpios as real gpios
+Input: touchscreen: Atmel: Enable IRQ_DISABLE_UNLAZY flag for interrupt
+Input: atmel_mxt_ts - add memory access interface via sysfs
+Input: atmel_mxt_ts: Remove sysfs attributes during driver detach
+Input: atmel_mxt_ts: Avoid race condition in freeing of input device
+
+
+v1: initial version
+---
+ .../bindings/input/atmel,maxtouch.txt         |   14 +
+ MAINTAINERS                                   |    1 +
+ drivers/hid/hid-alps.c                        |    3 +-
+ drivers/hid/hid-multitouch.c                  |    6 +-
+ drivers/input/input-mt.c                      |    2 +-
+ drivers/input/misc/xen-kbdfront.c             |    2 +-
+ drivers/input/mouse/elan_i2c_core.c           |    2 +-
+ drivers/input/touchscreen/atmel_mxt_ts.c      | 2266 ++++++++++++++---
+ drivers/input/touchscreen/cyttsp4_core.c      |    5 +-
+ drivers/input/touchscreen/cyttsp_core.c       |    2 +-
+ drivers/input/touchscreen/melfas_mip4.c       |    4 +-
+ drivers/input/touchscreen/mms114.c            |    2 +-
+ drivers/input/touchscreen/raspberrypi-ts.c    |    2 +-
+ drivers/input/touchscreen/stmfts.c            |    2 +-
+ include/dt-bindings/input/atmel_mxt_ts.h      |   22 +
+ include/linux/input/mt.h                      |    5 +
+ 16 files changed, 1984 insertions(+), 356 deletions(-)
+ create mode 100644 include/dt-bindings/input/atmel_mxt_ts.h
+
+-- 
+2.17.1
+
