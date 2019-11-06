@@ -6,30 +6,31 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50946C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9ECC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FC9B217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C312C217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731698AbfKFJum (ORCPT
+        id S1731723AbfKFJul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:50:42 -0500
+        Wed, 6 Nov 2019 04:50:41 -0500
 Received: from sauhun.de ([88.99.104.3]:50202 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731677AbfKFJuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:50:40 -0500
+        id S1727015AbfKFJui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:50:38 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id A35402C0554;
-        Wed,  6 Nov 2019 10:50:38 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 736C82C0553;
+        Wed,  6 Nov 2019 10:50:36 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 09/12] media: pci: bt8xx: convert to i2c_new_scanned_device
-Date:   Wed,  6 Nov 2019 10:50:27 +0100
-Message-Id: <20191106095033.25182-10-wsa+renesas@sang-engineering.com>
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 05/12] video: fbdev: matrox: convert to i2c_new_scanned_device
+Date:   Wed,  6 Nov 2019 10:50:23 +0100
+Message-Id: <20191106095033.25182-6-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
 References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
@@ -48,34 +49,24 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Build tested only. RFC, please comment and/or ack, but don't apply yet.
 
- drivers/media/pci/bt8xx/bttv-input.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ drivers/video/fbdev/matrox/i2c-matroxfb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/media/pci/bt8xx/bttv-input.c b/drivers/media/pci/bt8xx/bttv-input.c
-index 492bc85c2700..41226f1d0e5b 100644
---- a/drivers/media/pci/bt8xx/bttv-input.c
-+++ b/drivers/media/pci/bt8xx/bttv-input.c
-@@ -386,7 +386,7 @@ void init_bttv_i2c_ir(struct bttv *btv)
+diff --git a/drivers/video/fbdev/matrox/i2c-matroxfb.c b/drivers/video/fbdev/matrox/i2c-matroxfb.c
+index 34e2659c3189..e2e4705e3fe0 100644
+--- a/drivers/video/fbdev/matrox/i2c-matroxfb.c
++++ b/drivers/video/fbdev/matrox/i2c-matroxfb.c
+@@ -191,8 +191,8 @@ static void* i2c_matroxfb_probe(struct matrox_fb_info* minfo) {
+ 				0x1b, I2C_CLIENT_END
+ 			};
  
- 	if (btv->init_data.name) {
- 		info.platform_data = &btv->init_data;
--		i2c_dev = i2c_new_device(&btv->c.i2c_adap, &info);
-+		i2c_dev = i2c_new_client_device(&btv->c.i2c_adap, &info);
- 	} else {
- 		/*
- 		 * The external IR receiver is at i2c address 0x34 (0x35 for
-@@ -396,9 +396,9 @@ void init_bttv_i2c_ir(struct bttv *btv)
- 		 * internal.
- 		 * That's why we probe 0x1a (~0x34) first. CB
- 		 */
--		i2c_dev = i2c_new_probed_device(&btv->c.i2c_adap, &info, addr_list, NULL);
-+		i2c_dev = i2c_new_scanned_device(&btv->c.i2c_adap, &info, addr_list, NULL);
+-			i2c_new_probed_device(&m2info->maven.adapter,
+-					      &maven_info, addr_list, NULL);
++			i2c_new_scanned_device(&m2info->maven.adapter,
++					       &maven_info, addr_list, NULL);
+ 		}
  	}
--	if (NULL == i2c_dev)
-+	if (IS_ERR(i2c_dev))
- 		return;
- 
- #if defined(CONFIG_MODULES) && defined(MODULE)
+ 	return m2info;
 -- 
 2.20.1
 
