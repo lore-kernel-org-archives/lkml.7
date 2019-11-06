@@ -2,153 +2,237 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 29A47C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:39:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93697C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7E412166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:39:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 587852166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:40:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="U8cw92+b"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="T6+hrNSE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731862AbfKFNjY (ORCPT
+        id S1731734AbfKFNkR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:39:24 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:27656 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727034AbfKFNjX (ORCPT
+        Wed, 6 Nov 2019 08:40:17 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:48988 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730456AbfKFNkQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:39:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573047562;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=4jYHNi5/Z7oowUoL78rMhKZ6a5a5wDzQX/xErsA9Orw=;
-        b=U8cw92+bYoYExjOxFI45FJ99GH5yQs2Nu0zKXU9c7Lzzec4oWHJbbWvBor1OhUcbfwD0gY
-        ZWsWS7kMpYhkou1rvgK8TWJZYcIw/1gmxai+KPgZEOF6SnZOezb42jpAlWIPAkOENK6vPS
-        GUvWja15X3xdwxRLaSsJ833hA7DGJtY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-382-U-6pCuExOSSG_LLOl9z0Fg-1; Wed, 06 Nov 2019 08:39:19 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 4C8B6107ACC3;
-        Wed,  6 Nov 2019 13:39:15 +0000 (UTC)
-Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-193.pek2.redhat.com [10.72.12.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 205D719756;
-        Wed,  6 Nov 2019 13:38:25 +0000 (UTC)
-From:   Jason Wang <jasowang@redhat.com>
-To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
-Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
-Subject: [PATCH V10 2/6] modpost: add support for mdev class id
-Date:   Wed,  6 Nov 2019 21:35:27 +0800
-Message-Id: <20191106133531.693-3-jasowang@redhat.com>
-In-Reply-To: <20191106133531.693-1-jasowang@redhat.com>
-References: <20191106133531.693-1-jasowang@redhat.com>
+        Wed, 6 Nov 2019 08:40:16 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjRd104694;
+        Wed, 6 Nov 2019 07:39:45 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573047585;
+        bh=B4AqWpvbkF9WwJU+qXr/4lM8+KtnmSOFmTVCwEr68/c=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=T6+hrNSEcYbMNGY8yQ8noGwJoc1vkj/nZLrAdWGY4qwTosk3QasLuy2seIDsn9tjG
+         NW1S0DM+36C9zcG8uKT1PJYysjyv7gt3g/Hfr8bZz4icnETFcs9f+ysa30CDAj9YlX
+         iBj+pEBwVXYN5BYoh3tnvYhOqTyM80B2C7xzBFJQ=
+Received: from DLEE107.ent.ti.com (dlee107.ent.ti.com [157.170.170.37])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6DdjmR071492;
+        Wed, 6 Nov 2019 07:39:45 -0600
+Received: from DLEE109.ent.ti.com (157.170.170.41) by DLEE107.ent.ti.com
+ (157.170.170.37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 07:39:30 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE109.ent.ti.com
+ (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 07:39:30 -0600
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6Dddi6039199;
+        Wed, 6 Nov 2019 07:39:40 -0600
+Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
+ way
+To:     Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>,
+        Andrew Murray <andrew.murray@arm.com>,
+        Xiaowei Bao <xiaowei.bao@nxp.com>
+CC:     "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
+        "arnd@arndb.de" <arnd@arndb.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
+ <20190822112242.16309-7-xiaowei.bao@nxp.com>
+ <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
+ <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
+ <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
+ <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
+ <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <e34708a1-1116-89f9-c3f8-7f21b63c9d9c@ti.com>
+Date:   Wed, 6 Nov 2019 19:09:05 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: U-6pCuExOSSG_LLOl9z0Fg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <DM6PR12MB40107A9B97A8DAF32A4C651EDA790@DM6PR12MB4010.namprd12.prod.outlook.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to parse mdev class id table.
+Gustavo,
 
-Reviewed-by: Parav Pandit <parav@mellanox.com>
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Jason Wang <jasowang@redhat.com>
----
- drivers/vfio/mdev/vfio_mdev.c     |  2 ++
- scripts/mod/devicetable-offsets.c |  3 +++
- scripts/mod/file2alias.c          | 11 +++++++++++
- 3 files changed, 16 insertions(+)
+On 06/11/19 3:10 PM, Gustavo Pimentel wrote:
+> On Thu, Aug 29, 2019 at 6:13:18, Kishon Vijay Abraham I <kishon@ti.com> 
+> wrote:
+> 
+> Hi, this email slip away from my attention...
+> 
+>> Gustavo,
+>>
+>> On 27/08/19 6:55 PM, Andrew Murray wrote:
+>>> On Sat, Aug 24, 2019 at 12:08:40AM +0000, Xiaowei Bao wrote:
+>>>>
+>>>>
+>>>>> -----Original Message-----
+>>>>> From: Andrew Murray <andrew.murray@arm.com>
+>>>>> Sent: 2019年8月23日 21:58
+>>>>> To: Xiaowei Bao <xiaowei.bao@nxp.com>
+>>>>> Cc: bhelgaas@google.com; robh+dt@kernel.org; mark.rutland@arm.com;
+>>>>> shawnguo@kernel.org; Leo Li <leoyang.li@nxp.com>; kishon@ti.com;
+>>>>> lorenzo.pieralisi@arm.co; arnd@arndb.de; gregkh@linuxfoundation.org; M.h.
+>>>>> Lian <minghuan.lian@nxp.com>; Mingkai Hu <mingkai.hu@nxp.com>; Roy
+>>>>> Zang <roy.zang@nxp.com>; jingoohan1@gmail.com;
+>>>>> gustavo.pimentel@synopsys.com; linux-pci@vger.kernel.org;
+>>>>> devicetree@vger.kernel.org; linux-kernel@vger.kernel.org;
+>>>>> linux-arm-kernel@lists.infradead.org; linuxppc-dev@lists.ozlabs.org
+>>>>> Subject: Re: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
+>>>>> doorbell way
+>>>>>
+>>>>> On Thu, Aug 22, 2019 at 07:22:39PM +0800, Xiaowei Bao wrote:
+>>>>>> The layerscape platform use the doorbell way to trigger MSIX interrupt
+>>>>>> in EP mode.
+>>>>>>
+>>>>>
+>>>>> I have no problems with this patch, however...
+>>>>>
+>>>>> Are you able to add to this message a reason for why you are making this
+>>>>> change? Did dw_pcie_ep_raise_msix_irq not work when func_no != 0? Or did
+>>>>> it work yet dw_pcie_ep_raise_msix_irq_doorbell is more efficient?
+>>>>
+>>>> The fact is that, this driver is verified in ls1046a platform of NXP before, and ls1046a don't
+>>>> support MSIX feature, so I set the msix_capable of pci_epc_features struct is false,
+>>>> but in other platform, e.g. ls1088a, it support the MSIX feature, I verified the MSIX
+>>>> feature in ls1088a, it is not OK, so I changed to another way. Thanks.
+>>>
+>>> Right, so the existing pci-layerscape-ep.c driver never supported MSIX yet it
+>>> erroneously had a switch case statement to call dw_pcie_ep_raise_msix_irq which
+>>> would never get used.
+>>>
+>>> Now that we're adding a platform with MSIX support the existing
+>>> dw_pcie_ep_raise_msix_irq doesn't work (for this platform) so we are adding a
+>>> different method.
+>>
+>> Gustavo, can you confirm dw_pcie_ep_raise_msix_irq() works for designware as it
+>> didn't work for both me and Xiaowei?
+> 
+> When I implemented the dw_pcie_ep_raise_msix_irq(), the implementation 
+> was working quite fine on DesignWare solution. Otherwise, I wouldn't 
+> submit it to the kernel.
+> From what I have seen and if I recall well, Xiaowei implementation was 
+> done having PF's configurated on his solution, which is a configuration 
+> that I don't have in my solution, I believe this could be the missing 
+> piece that differs between our 2 implementations.
 
-diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-index 38431e9ef7f5..a6641cd8b5a3 100644
---- a/drivers/vfio/mdev/vfio_mdev.c
-+++ b/drivers/vfio/mdev/vfio_mdev.c
-@@ -125,6 +125,8 @@ static const struct mdev_class_id vfio_id_table[] =3D {
- =09{ 0 },
- };
-=20
-+MODULE_DEVICE_TABLE(mdev, vfio_id_table);
-+
- static struct mdev_driver vfio_mdev_driver =3D {
- =09.name=09=3D "vfio_mdev",
- =09.probe=09=3D vfio_mdev_probe,
-diff --git a/scripts/mod/devicetable-offsets.c b/scripts/mod/devicetable-of=
-fsets.c
-index 054405b90ba4..6cbb1062488a 100644
---- a/scripts/mod/devicetable-offsets.c
-+++ b/scripts/mod/devicetable-offsets.c
-@@ -231,5 +231,8 @@ int main(void)
- =09DEVID(wmi_device_id);
- =09DEVID_FIELD(wmi_device_id, guid_string);
-=20
-+=09DEVID(mdev_class_id);
-+=09DEVID_FIELD(mdev_class_id, id);
-+
- =09return 0;
- }
-diff --git a/scripts/mod/file2alias.c b/scripts/mod/file2alias.c
-index c91eba751804..45f1c22f49be 100644
---- a/scripts/mod/file2alias.c
-+++ b/scripts/mod/file2alias.c
-@@ -1335,6 +1335,16 @@ static int do_wmi_entry(const char *filename, void *=
-symval, char *alias)
- =09return 1;
- }
-=20
-+/* looks like: "mdev:cN" */
-+static int do_mdev_entry(const char *filename, void *symval, char *alias)
-+{
-+=09DEF_FIELD(symval, mdev_class_id, id);
-+
-+=09sprintf(alias, "mdev:c%02X", id);
-+=09add_wildcard(alias);
-+=09return 1;
-+}
-+
- /* Does namelen bytes of name exactly match the symbol? */
- static bool sym_is(const char *name, unsigned namelen, const char *symbol)
- {
-@@ -1407,6 +1417,7 @@ static const struct devtable devtable[] =3D {
- =09{"typec", SIZE_typec_device_id, do_typec_entry},
- =09{"tee", SIZE_tee_client_device_id, do_tee_entry},
- =09{"wmi", SIZE_wmi_device_id, do_wmi_entry},
-+=09{"mdev", SIZE_mdev_class_id, do_mdev_entry},
- };
-=20
- /* Create MODULE_ALIAS() statements.
---=20
-2.19.1
+I haven't debugged the issue yet but in my understanding the MSI-X table should
+be in the memory (DDR) of EP system. This table will be populated by RC while
+configuring MSI-X (with msg address and msg data). The EP will use the
+populated msg address and msg data for raising MSI-X interrupt.
 
+From the dw_pcie_ep_raise_msix_irq() (copied below), nowhere the MSI-X table is
+being read from the memory of EP system. I've given my comments below.
+
+int dw_pcie_ep_raise_msix_irq(struct dw_pcie_ep *ep, u8 func_no,
+			     u16 interrupt_num)
+{
+	.
+	.
+	reg = PCI_BASE_ADDRESS_0 + (4 * bir);
+	bar_addr_upper = 0;
+	bar_addr_lower = dw_pcie_readl_dbi(pci, reg);
+
+BAR register will hold the "PCI address" programmed by the host. So
+"bar_addr_lower" will have PCI address.
+
+	reg_u64 = (bar_addr_lower & PCI_BASE_ADDRESS_MEM_TYPE_MASK);
+	if (reg_u64 == PCI_BASE_ADDRESS_MEM_TYPE_64)
+		bar_addr_upper = dw_pcie_readl_dbi(pci, reg + 4);
+
+	tbl_addr = ((u64) bar_addr_upper) << 32 | bar_addr_lower;
+
+The "tbl_addr" now has the PCI address programmed by the host.
+
+	tbl_addr += (tbl_offset + ((interrupt_num - 1) * PCI_MSIX_ENTRY_SIZE));
+	tbl_addr &= PCI_BASE_ADDRESS_MEM_MASK;
+
+	msix_tbl = ioremap_nocache(ep->phys_base + tbl_addr,
+				   PCI_MSIX_ENTRY_SIZE);
+
+"ep->phys_base" will have EPs outbound memory address and "tbl_addr" will have
+PCI address. So msix_tbl points to the EPs outbound memory region.
+	if (!msix_tbl)
+		return -EINVAL;
+
+	msg_addr_lower = readl(msix_tbl + PCI_MSIX_ENTRY_LOWER_ADDR);
+	msg_addr_upper = readl(msix_tbl + PCI_MSIX_ENTRY_UPPER_ADDR);
+
+Here an access to the EP outbound region is made (and the transaction will be
+based on ATU configuration).
+The message address should ideally be obtained from the MSI-X table present in
+the EP system. There need not be any access to the OB region for getting data
+from MSI-X table.
+
+	msg_addr = ((u64) msg_addr_upper) << 32 | msg_addr_lower;
+	msg_data = readl(msix_tbl + PCI_MSIX_ENTRY_DATA);
+	vec_ctrl = readl(msix_tbl + PCI_MSIX_ENTRY_VECTOR_CTRL);
+
+All this should be obtained from the memory of EP.
+	.
+	.
+}
+
+I'm not sure how this worked for you.
+
+Thanks
+Kishon
+
+> 
+> Since patch submission into the kernel related to msix feature on pcitest 
+> tool, I didn't touch or re-tested the msix feature by lack of time (other 
+> projects requires my full attention for now). However is on my roadmap to 
+> came back to add some other features on DesignWare eDMA driver and I can 
+> do at that time some tests to see if the 
+> dw_pcie_ep_raise_msix_irq_doorbell() is compatible or not with my 
+> solution. If so, I can do some patch to simplify and use the 
+> dw_pcie_ep_raise_msix_irq_doorbell() if it still works as expected like 
+> on dw_pcie_ep_raise_msix_irq(). Agree?
+> 
+> Gustavo
+> 
+>>
+>> Thanks
+>> Kishon
+> 
+> 
