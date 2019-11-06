@@ -2,138 +2,165 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1ACC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:03:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AAD5C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:04:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B8C821848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:03:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9DCE217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:04:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mxxn.io header.i=@mxxn.io header.b="BgZvCYSE";
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o87Av97m"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Q2FhsOd5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728570AbfKFLDZ (ORCPT
+        id S1729399AbfKFLEA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:03:25 -0500
-Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35703 "EHLO
-        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725890AbfKFLDY (ORCPT
+        Wed, 6 Nov 2019 06:04:00 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:40728 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725890AbfKFLEA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:03:24 -0500
-Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
-        by mailout.west.internal (Postfix) with ESMTP id 03D344D7;
-        Wed,  6 Nov 2019 06:03:22 -0500 (EST)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute3.internal (MEProxy); Wed, 06 Nov 2019 06:03:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mxxn.io; h=from
-        :to:cc:subject:date:message-id:mime-version:content-type
-        :content-transfer-encoding; s=fm3; bh=Ii2oxrWwPIXyOz9KTyWZWso10b
-        yGznburLcw9Zjh5ao=; b=BgZvCYSEOWLQrLl7SRYAy5u+NZbovI1AEIFybvfyzt
-        MQwfOWtqj1YDSsB1yOOdFxb/9M2Hen4rosBd2qEI1HzAnBqEL0sWG6APSv84W7gA
-        Vf74wohU89kSvuOOFjIAofRDZrRpheoUnj8n8UiHbS4ZJK6q+KdgJkpc+OgOcVc7
-        DPfKL5G5YAk/wLATdYsL9cc0/g//EyUJc6U+7mcprQufGLyMiBYScQxdzPIDiVu+
-        M1/Zjrk1JWj9iaVW/8rObsmrUuxKDsw4n2EN4x2tEETgohv+gIUtzqFNQRpZFIix
-        n40KUBcM7Nww4+yPFHuev/MEj6IFTwm+1IWlIGFNyzOQ==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-transfer-encoding:content-type
-        :date:from:message-id:mime-version:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Ii2oxr
-        WwPIXyOz9KTyWZWso10byGznburLcw9Zjh5ao=; b=o87Av97mKTjX57VjcioQ3N
-        la1PH9XaL3wB/G1Q/SaAmH9aNV6ximiqj1dgqJHrq/W8p0v01n7l+HE/16kVw4sp
-        Br4/eJ8PcTng0/FZgKz+wAH+KWvDf36W1TG+AUiLTLXCJ97T30yZAWLEbLdl56ly
-        DFX/Vq1K95YPHGkQQqZBkv83CRNlkcIBYu7kepkWNF+c9rSBbUsRy6c3KWvkVl5I
-        iDVURqXaH+Zj4PeVda85VylY/1WKnu24dP858Ex6FXThbbMMUmDVdjX1JEh0RrG5
-        8DPD3L2M4wqynxtEMjNG+Yaw3niGIYtzMfB/Vv2E+p/eGc6Rr3oDi0ADvn1Dp7hw
-        ==
-X-ME-Sender: <xms:eqjCXSlPQceVNtPabUw40ukxAK3L7W1DC0hbhISZ1bcVZM0zNUWZlA>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddujedgvdefucetufdoteggodetrfdotf
-    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
-    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
-    hmihhsshhinhhgucfvqfcufhhivghlugculdeftddmnegoteeftdduqddtudculdduhedm
-    necujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepuehlrgkkuc
-    fjrhgrshhtnhhikhcuoegslhgriiesmhiggihnrdhioheqnecukfhppeduuddurddutdej
-    rddvtdelrddvvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpegslhgriiesmhiggihnrd
-    hiohenucevlhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:eqjCXVhaXBg-6fXjBSMW-_nm_kXGEvOoMsAcekaLsf0qyg8gkxZCtg>
-    <xmx:eqjCXbXg5Y0kTfvtAS9mf6Yvl8aT5kYIkqryH062pklkpoCRIKc8Jg>
-    <xmx:eqjCXXiSyd0fnmkoVm8KkBN2jnyvfjzFkh-yraj964I4mGlIqLNyvQ>
-    <xmx:eqjCXUJSqQcRIgPGKUN_hlMB4jBhuWZzlj1Gkadch9kITwQkT8Uw-Q>
-Received: from localhost.localdomain (225.ec0279u.cyberhome.ne.jp [111.107.209.225])
-        by mail.messagingengine.com (Postfix) with ESMTPA id C271680062;
-        Wed,  6 Nov 2019 06:03:20 -0500 (EST)
-From:   =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>
-Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
-        Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] HID: Improve Windows Precision Touchpad detection.
-Date:   Wed,  6 Nov 2019 20:02:46 +0900
-Message-Id: <20191106110246.70937-1-blaz@mxxn.io>
-X-Mailer: git-send-email 2.23.0
+        Wed, 6 Nov 2019 06:04:00 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573038238;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=+yiaFBPNVk5pMIRaf+s+qIRoKfCfzA9T/3QQFstf9Ak=;
+        b=Q2FhsOd5ksNqTmbCdWvbPRpYssG61Zjdnkgm3nTwUn8iVcUy9wX2wsV6B1MitK1oyJOM8H
+        hV1So2GUHkhOgQJjOyBAFdSQJeKEGYJtCGd3X8MAhrATqq6rchwadlSbR/b4bK0C2CPXu/
+        6ms+tJRBI6dGpYu3OqEH+2xrGzBwdU8=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-312-bMR3NZMjPDCsWQYV6M5g8g-1; Wed, 06 Nov 2019 06:03:55 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7BB8A1005500;
+        Wed,  6 Nov 2019 11:03:54 +0000 (UTC)
+Received: from krava (unknown [10.40.205.189])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 696345D6D4;
+        Wed,  6 Nov 2019 11:03:53 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 12:03:52 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] perf inject: Make --strip keep evsels
+Message-ID: <20191106110352.GB30214@krava>
+References: <20191105100057.21465-1-adrian.hunter@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+In-Reply-To: <20191105100057.21465-1-adrian.hunter@intel.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: bMR3NZMjPDCsWQYV6M5g8g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
-data used to verify the touchpad as a Windows Precision Touchpad.
+On Tue, Nov 05, 2019 at 12:00:57PM +0200, Adrian Hunter wrote:
+> create_gcov (refer to the autofdo example in
+> tools/perf/Documentation/intel-pt.txt) now needs the evsels to read the
+> perf.data file. So don't strip them.
+>=20
+> Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
+> ---
+>  tools/perf/builtin-inject.c | 54 -------------------------------------
+>  1 file changed, 54 deletions(-)
 
-   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
-    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
-    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
-    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
-    0x75, 0x08,              //    REPORT_SIZE (8)
-    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
-    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
+good stats ;-)
 
-However, some devices, namely Microsoft's Surface line of products
-instead implement a "segmented device certification report" (usage 0xC6)
-which returns the same report, but in smaller chunks.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
-    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
-    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
-    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
-    0x75, 0x08,              //     REPORT_SIZE (8)
-    0x95, 0x01,              //     REPORT_COUNT (1)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
-    0x09, 0xC7,              //     USAGE (Vendor Usage)
-    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
-    0x95, 0x20,              //     REPORT_COUNT (32)
-    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+thanks,
+jirka
 
-By expanding Win8 touchpad detection to also look for the segmented
-report, all Surface touchpads are now properly recognized by
-hid-multitouch.
-
-Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
----
- drivers/hid/hid-core.c | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
-index 63fdbf09b044..2af597cd5d65 100644
---- a/drivers/hid/hid-core.c
-+++ b/drivers/hid/hid-core.c
-@@ -742,6 +742,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
- 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
- 	    parser->global.report_size == 8)
- 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
-+
-+	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
-+	    parser->global.report_size == 8)
-+		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
- }
- 
- static void hid_scan_collection(struct hid_parser *parser, unsigned type)
--- 
-2.23.0
+>=20
+> diff --git a/tools/perf/builtin-inject.c b/tools/perf/builtin-inject.c
+> index 372ecb3e2c06..1e5d28311e14 100644
+> --- a/tools/perf/builtin-inject.c
+> +++ b/tools/perf/builtin-inject.c
+> @@ -578,58 +578,6 @@ static void strip_init(struct perf_inject *inject)
+>  =09=09evsel->handler =3D drop_sample;
+>  }
+> =20
+> -static bool has_tracking(struct evsel *evsel)
+> -{
+> -=09return evsel->core.attr.mmap || evsel->core.attr.mmap2 || evsel->core=
+.attr.comm ||
+> -=09       evsel->core.attr.task;
+> -}
+> -
+> -#define COMPAT_MASK (PERF_SAMPLE_ID | PERF_SAMPLE_TID | PERF_SAMPLE_TIME=
+ | \
+> -=09=09     PERF_SAMPLE_ID | PERF_SAMPLE_CPU | PERF_SAMPLE_IDENTIFIER)
+> -
+> -/*
+> - * In order that the perf.data file is parsable, tracking events like MM=
+AP need
+> - * their selected event to exist, except if there is only 1 selected eve=
+nt left
+> - * and it has a compatible sample type.
+> - */
+> -static bool ok_to_remove(struct evlist *evlist,
+> -=09=09=09 struct evsel *evsel_to_remove)
+> -{
+> -=09struct evsel *evsel;
+> -=09int cnt =3D 0;
+> -=09bool ok =3D false;
+> -
+> -=09if (!has_tracking(evsel_to_remove))
+> -=09=09return true;
+> -
+> -=09evlist__for_each_entry(evlist, evsel) {
+> -=09=09if (evsel->handler !=3D drop_sample) {
+> -=09=09=09cnt +=3D 1;
+> -=09=09=09if ((evsel->core.attr.sample_type & COMPAT_MASK) =3D=3D
+> -=09=09=09    (evsel_to_remove->core.attr.sample_type & COMPAT_MASK))
+> -=09=09=09=09ok =3D true;
+> -=09=09}
+> -=09}
+> -
+> -=09return ok && cnt =3D=3D 1;
+> -}
+> -
+> -static void strip_fini(struct perf_inject *inject)
+> -{
+> -=09struct evlist *evlist =3D inject->session->evlist;
+> -=09struct evsel *evsel, *tmp;
+> -
+> -=09/* Remove non-synthesized evsels if possible */
+> -=09evlist__for_each_entry_safe(evlist, tmp, evsel) {
+> -=09=09if (evsel->handler =3D=3D drop_sample &&
+> -=09=09    ok_to_remove(evlist, evsel)) {
+> -=09=09=09pr_debug("Deleting %s\n", perf_evsel__name(evsel));
+> -=09=09=09evlist__remove(evlist, evsel);
+> -=09=09=09evsel__delete(evsel);
+> -=09=09}
+> -=09}
+> -}
+> -
+>  static int __cmd_inject(struct perf_inject *inject)
+>  {
+>  =09int ret =3D -EINVAL;
+> @@ -729,8 +677,6 @@ static int __cmd_inject(struct perf_inject *inject)
+>  =09=09=09=09evlist__remove(session->evlist, evsel);
+>  =09=09=09=09evsel__delete(evsel);
+>  =09=09=09}
+> -=09=09=09if (inject->strip)
+> -=09=09=09=09strip_fini(inject);
+>  =09=09}
+>  =09=09session->header.data_offset =3D output_data_offset;
+>  =09=09session->header.data_size =3D inject->bytes_written;
+> --=20
+> 2.17.1
+>=20
 
