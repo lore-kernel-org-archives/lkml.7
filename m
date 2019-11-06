@@ -2,101 +2,76 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B2A1C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:33:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F8C1C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D946221D7F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:33:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MKc7VUJJ"
+	by mail.kernel.org (Postfix) with ESMTP id 7DD97217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:37:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732495AbfKFSd4 (ORCPT
+        id S1728798AbfKFSht (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:33:56 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:44849 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfKFSd4 (ORCPT
+        Wed, 6 Nov 2019 13:37:49 -0500
+Received: from mo4-p01-ob.smtp.rzone.de ([81.169.146.165]:12372 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfKFSht (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:33:56 -0500
-Received: by mail-ot1-f66.google.com with SMTP id c19so5593892otr.11;
-        Wed, 06 Nov 2019 10:33:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:in-reply-to:references:from:date:message-id:subject:to
-         :cc;
-        bh=NaBv7i8Bvb+Nh7AUP99bMks2ey3ZpHBIKQxNdaEVNi0=;
-        b=MKc7VUJJ0V/sAeBy2uCFu+tjBwm8cteZ+cOgZQjrrliLE09kwu+UfmXKF7JAjDwONQ
-         W2p5r8mxWTbA2FxYySMXEfocXYvV06JlzqK7qXB+ehgm2VjgrMa36tll1Isv0cpGeFjV
-         pI02a2hAmI8rDpFpMkLI8dhzev5pKJLGmdNOHh7oWsgkay3AxJ6dyJ0U1NRXOrWAYEgZ
-         hFJlfaIe1pBM4q1Tkpmm/4caWD8OADMVcuGxoQwCn8yn2P2QVXH5BQ4f1/8xW+8UQASA
-         b08AD1nXVr96c3IpP0g/2m7ivr+/likVDNW7pcLA/beK5aUjerrvcvWMsx31liv0Lixt
-         guAA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:in-reply-to:references:from:date
-         :message-id:subject:to:cc;
-        bh=NaBv7i8Bvb+Nh7AUP99bMks2ey3ZpHBIKQxNdaEVNi0=;
-        b=d/UTcHw57QEn0V2jZgZ9fO1RiUlT7fsmKERcbdwJRRExOXg1rMjNJc86yuhwEqZn02
-         ROjNKrhwPIOvs54uF9Wu15gFLrGkdYQSjJwfoDGCftCp5/l8kjeC9EFeIJGKmXDjm8NY
-         wCjhtE2v4cid4NjINjhwATKSCcj6f6FD2B7HAj1PkdRTf6SolydRDMIkanx0eLar9vwX
-         lfvOJhn8/aRgReHHo640hgK0D5yzJt/Gt8D6AGtIGvVFFZP/bpReqUkvWPdLW6B4NamL
-         VhM+xa3On8gP7hG7yeZY4dFBoVJyPZZxP8jz6vSjNUTG2KnZFhGFsmotRNJG9S4SJk0Z
-         gCxw==
-X-Gm-Message-State: APjAAAUC1OJGTLl1TrwDk3WuniA5NN1W7w7c6JJN0HO8qd5z+dZfplwu
-        Ihi6KQFtv2+kGkerZ55iRNR20D8iZZEbl5sG6TY=
-X-Google-Smtp-Source: APXvYqz60uFQoaLI3TGk/tRSFQHzj+M/3oJFUHnreNIoBaZNzbqvlDF3xOTdHhbBsFzjnKUwyP1Z2kE1RV9wWhUJft8=
-X-Received: by 2002:a05:6830:22ef:: with SMTP id t15mr2900337otc.256.1573065235432;
- Wed, 06 Nov 2019 10:33:55 -0800 (PST)
+        Wed, 6 Nov 2019 13:37:49 -0500
+X-RZG-AUTH: ":P3gBZUipdd93FF5ZZvYFPugejmSTVR2nRPhVORvLd4SsytBXQrEOHTIXs8PvtBNfIQ=="
+X-RZG-CLASS-ID: mo00
+Received: from localhost.localdomain
+        by smtp.strato.de (RZmta 44.29.0 AUTH)
+        with ESMTPSA id e07688vA6IbihoU
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Wed, 6 Nov 2019 19:37:44 +0100 (CET)
+From:   Stephan Gerhold <stephan@gerhold.net>
+To:     Jonathan Cameron <jic23@kernel.org>
+Cc:     Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Brian Masney <masneyb@onstation.org>,
+        Jonathan Marek <jonathan@marek.ca>,
+        Jean-Baptiste Maneyrol <JManeyrol@invensense.com>,
+        linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Stephan Gerhold <stephan@gerhold.net>
+Subject: [PATCH 1/2] dt-bindings: iio: imo: mpu6050: add vdd-supply
+Date:   Wed,  6 Nov 2019 19:35:35 +0100
+Message-Id: <20191106183536.123070-1-stephan@gerhold.net>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-Received: by 2002:a9d:384:0:0:0:0:0 with HTTP; Wed, 6 Nov 2019 10:33:54 -0800 (PST)
-In-Reply-To: <87y2ws3lvh.fsf@kamboji.qca.qualcomm.com>
-References: <20191101054035.42101-1-ikjn@chromium.org> <87y2ws3lvh.fsf@kamboji.qca.qualcomm.com>
-From:   Tom Psyborg <pozega.tomislav@gmail.com>
-Date:   Wed, 6 Nov 2019 19:33:54 +0100
-Message-ID: <CAKR_QVKqGv+hpiENHmNFE4y=FY+Mqb7cAh7_5xhTXH27HW+Taw@mail.gmail.com>
-Subject: Re: [PATCH] ath10k: disable cpuidle during downloading firmware.
-To:     Kalle Valo <kvalo@codeaurora.org>
-Cc:     Ikjoon Jang <ikjn@chromium.org>, netdev@vger.kernel.org,
-        linux-wireless@vger.kernel.org, linux-kernel@vger.kernel.org,
-        ath10k@lists.infradead.org,
-        "David S . Miller" <davem@davemloft.net>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2019, Kalle Valo <kvalo@codeaurora.org> wrote:
-> Ikjoon Jang <ikjn@chromium.org> writes:
->
->> Downloading ath10k firmware needs a large number of IOs and
->> cpuidle's miss predictions make it worse. In the worst case,
->> resume time can be three times longer than the average on sdio.
->>
->> This patch disables cpuidle during firmware downloading by
->> applying PM_QOS_CPU_DMA_LATENCY in ath10k_download_fw().
->>
->> Signed-off-by: Ikjoon Jang <ikjn@chromium.org>
->
-> On what hardware and firmware versions did you test this? I'll add that
-> to the commit log.
->
-> https://wireless.wiki.kernel.org/en/users/drivers/ath10k/submittingpatches#guidelines
->
-> --
-> https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
->
-> _______________________________________________
-> ath10k mailing list
-> ath10k@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/ath10k
->
+inv_mpu6050 now supports an additional vdd-supply; document it.
 
-Hi
+Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+---
+ Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-I've tested this on QCA9880. No issues during firmware download.
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index 268bf7568e19..c5ee8a20af9f 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -21,6 +21,7 @@ Required properties:
+   bindings.
+ 
+ Optional properties:
++ - vdd-supply: regulator phandle for VDD supply
+  - vddio-supply: regulator phandle for VDDIO supply
+  - mount-matrix: an optional 3x3 mounting rotation matrix
+  - i2c-gate node.  These devices also support an auxiliary i2c bus.  This is
+-- 
+2.23.0
+
