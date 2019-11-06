@@ -2,181 +2,180 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23850C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:26:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1E1C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:30:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E457E2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:26:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 884322067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:30:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ISC8GuM8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MzMKRFbA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728164AbfKFQ0v (ORCPT
+        id S1729021AbfKFQ37 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:26:51 -0500
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:54930 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727285AbfKFQ0v (ORCPT
+        Wed, 6 Nov 2019 11:29:59 -0500
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35684 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfKFQ37 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:26:51 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6GQNDb117954;
-        Wed, 6 Nov 2019 10:26:23 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573057583;
-        bh=X2oBSwJNQPZVsVwxr22Pa+22epqGXv5cpkuKVJLk37w=;
-        h=From:Subject:To:CC:References:Date:In-Reply-To;
-        b=ISC8GuM88VTWl5REKJnJPa5Uu5p5RrYZ3NzQDKRMyFVbx08bjbhxkVsmRh8eFitnk
-         JNOOWtavqblIKvUNmQs//m4KC4nrf0rFaMiTp8+Ys5bb44F6M7rgOHXGYu7RX7B6rU
-         FXQhcAKPnaN5OuaqCWiZ7M/4pObIJR+ttoMuVmvk=
-Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6GQNsi046367
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 10:26:23 -0600
-Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
- (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 10:26:22 -0600
-Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 10:26:07 -0600
-Received: from [10.250.133.248] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6GQKaH056886;
-        Wed, 6 Nov 2019 10:26:20 -0600
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Subject: Re: [PATCH v4 13/20] mtd: spi-nor: Fix clearing of QE bit on
- lock()/unlock()
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
- <20191102112316.20715-14-tudor.ambarus@microchip.com>
- <14e9c474-1a92-b8be-12cf-56c7f6d0d696@ti.com>
- <af6fa950-495f-9e49-bcfe-09188e454b6d@microchip.com>
-Message-ID: <36967b16-a52d-667f-cd61-cef9b87a83cf@ti.com>
-Date:   Wed, 6 Nov 2019 21:56:04 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 11:29:59 -0500
+Received: by mail-ed1-f65.google.com with SMTP id r16so5108806edq.2;
+        Wed, 06 Nov 2019 08:29:57 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=ZhOsGIzKwcmxV2i84iILMrkYIWM1itj56Bt1iGZX5zw=;
+        b=MzMKRFbA10485jRuvz3tQ8DotJq2PCUsghpbhte/Dk3wiY5LOKVP8lLRnN4m5XzIp8
+         QSZ9gq/8jxUyRt9w8OTuPnkZbt+0ljMNlwM4C4eqgN+a/fzZ7/XFNzw07DZfMtOP4rIN
+         NMEWnluBhCErVvZc9nS0hJgIWDXrj00FZ7mVGZbIoXiCykoQgemNiJNBse2nr6i1Hmz4
+         6/k3YLY6fA/GX44TB0cuRoilpgTPtvWVLJIzTpd7woqc3MyZj97/L8Fpv0VKcz3VwNgj
+         bLJNctQizj9a7s53SHWDp6+3SyrC52ukl9X848YIrNjxc+QP001fR6fPEDq05sRScI5i
+         XDOw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=ZhOsGIzKwcmxV2i84iILMrkYIWM1itj56Bt1iGZX5zw=;
+        b=BGHZGdI3QFfKS0B/kJGmhJwGwm0XXOhmd7SvJZbLlrTUKCs4B9MyO0PVpv9mXFK3fm
+         l2/x33Iku07IcHQzv7LGBpX6VB6l2g+xi0XgtCPO4WETPzUcgdZPR5BPwznOu2Fgwqrc
+         M/A2BZw+h5UBVPBV8hE79vENR4PxRUZjSC4hPHw58O9c7dTwHMwskZ4pNd3SkvKzJOWz
+         rdVYH9Lrz+iYegMWI3vUNxolHxe4btHlWYjHiPzzZHH96EoSC0ep50xSg/YQ9sCwUU/q
+         emVK2mPrqqS79NTfesLoqhMlxoyxM4ZIslmKf6wGXiXF/rX6Vh9gkPeq6rNyKS4K0Wp1
+         q3Bg==
+X-Gm-Message-State: APjAAAUsQZx/AjdfRb8xo3qLtf6rOs/3RAJxbdKFxptLiO9BKiKoonLC
+        uR8I1mWXu3sfi/Ge5NgOzmrsGbe8N9e5LmLXBqM=
+X-Google-Smtp-Source: APXvYqw5qpUIPzBJKpJK5MaBBx+BRYa25bDNiZ8H29i7NfGOsBmfuP4o+ssZcJrSFjkMMP3trAu4GRpadedH4teLkVA=
+X-Received: by 2002:a50:a697:: with SMTP id e23mr3704006edc.264.1573057796426;
+ Wed, 06 Nov 2019 08:29:56 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <af6fa950-495f-9e49-bcfe-09188e454b6d@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20191105000129.GA6536@onstation.org> <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
+ <20191105100804.GA9492@onstation.org> <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
+ <20191106091335.GA16729@onstation.org>
+In-Reply-To: <20191106091335.GA16729@onstation.org>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 6 Nov 2019 08:29:45 -0800
+Message-ID: <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
+Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Sean Paul <sean@poorly.run>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, Nov 6, 2019 at 1:13 AM Brian Masney <masneyb@onstation.org> wrote:
+>
+> On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
+> > On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > The 'pp done time out' errors go away if I revert the following three
+> > > commits:
+> > >
+> > > cd6d923167b1 ("drm/msm/dpu: async commit support")
+> > > d934a712c5e6 ("drm/msm: add atomic traces")
+> > > 2d99ced787e3 ("drm/msm: async commit support")
+> > >
+> > > I reverted the first one to fix a compiler error, and the second one so
+> > > that the last patch can be reverted without any merge conflicts.
+> > >
+> > > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
+> > > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
+> > > buffer dance around the screen like its out of sync. I renamed
+> > > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
+> > > declaration. Here's the relevant part of what I tried:
+> > >
+> > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
+> > >
+> > >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
+> > >  {
+> > > -       /* TODO */
+> > > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
+> > > +       struct drm_crtc *crtc;
+> > > +
+> > > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
+> > > +               if (!crtc->state->active)
+> > > +                       continue;
+> > > +
+> > > +               mdp5_crtc_flush_all(crtc);
+> > > +       }
+> > >  }
+> > >
+> > > Any tips would be appreciated.
+> >
+> >
+> > I think this is along the lines of what we need to enable async commit
+> > for mdp5 (but also removing the flush from the atomic-commit path)..
+> > the principle behind the async commit is to do all the atomic state
+> > commit normally, but defer writing the flush bits.  This way, if you
+> > get another async update before the next vblank, you just apply it
+> > immediately instead of waiting for vblank.
+> >
+> > But I guess you are on a command mode panel, if I remember?  Which is
+> > a case I didn't have a way to test.  And I'm not entirely about how
+> > kms_funcs->vsync_time() should be implemented for cmd mode panels.
+>
+> Yes, this is a command-mode panel and there's no hardware frame counter
+> available. The key to getting the display working on this phone was this
+> patch:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
+>
+> > That all said, I think we should first fix what is broken, before
+> > worrying about extending async commit support to mdp5.. which
+> > shouldn't hit the async==true path, due to not implementing
+> > kms_funcs->vsync_time().
+> >
+> > What I think is going on is that, in the cmd mode case,
+> > mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
+> > which waits for a pp-done irq regardless of whether there is a flush
+> > in progress.  Since there is no flush pending, the irq never comes.
+> > But the expectation is that kms_funcs->wait_flush() returns
+> > immediately if there is nothing to wait for.
+>
+> I don't think that's happening in this case. I added some pr_info()
+> statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
+> Here's the first two sets of messages that appear in dmesg:
+>
+> [   14.018907] msm fd900000.mdss: pp done time out, lm=0
+> [   14.018993] request_pp_done_pending: HERE
+> [   14.074208] mdp5_crtc_pp_done_irq: HERE
+> [   14.074368] Console: switching to colour frame buffer device 135x120
+> [   14.138938] msm fd900000.mdss: pp done time out, lm=0
+> [   14.139021] request_pp_done_pending: HERE
+> [   14.158097] mdp5_crtc_pp_done_irq: HERE
+>
+> The messages go on like this with the same pattern.
+>
+> I tried two different changes:
+>
+> 1) I moved the request_pp_done_pending() and corresponding if statement
+>    from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
+>
+> 2) I increased the timeout in wait_for_completion_timeout() by several
+>    increments; all the way to 5 seconds.
 
-On 06/11/19 2:03 PM, Tudor.Ambarus@microchip.com wrote:
-> 
-> 
-> On 11/05/2019 07:07 PM, Vignesh Raghavendra wrote:
->> On 02-Nov-19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
->>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
->>>
->>> Make sure that when doing a lock() or an unlock() operation we don't clear
->>> the QE bit from Status Register 2.
->>>
->>> JESD216 revB or later offers information about the *default* Status
->>> Register commands to use (see BFPT DWORDS[15], bits 22:20). In this
->>> standard, Status Register 1 refers to the first data byte transferred on a
->>> Read Status (05h) or Write Status (01h) command. Status register 2 refers
->>> to the byte read using instruction 35h. Status register 2 is the second
->>> byte transferred in a Write Status (01h) command.
->>>
->>> Industry naming and definitions of these Status Registers may differ.
->>> The definitions are described in JESD216B, BFPT DWORDS[15], bits 22:20.
->>> There are cases in which writing only one byte to the Status Register 1
->>> has the side-effect of clearing Status Register 2 and implicitly the Quad
->>> Enable bit. This side-effect is hit just by the
->>> BFPT_DWORD15_QER_SR2_BIT1_BUGGY and BFPT_DWORD15_QER_SR2_BIT1 cases.
->>>
->> But I see that 1 byte SR1 write still happens as part of
->> spi_nor_clear_sr_bp() until patch 20/20. So is this only a partial fix?
-> 
-> Fixing spi_nor_clear_sr_bp() would mean to add dead code that will be removed
-> anyway with patch 20/20. This patch fixes the clearing of the QE bit, while in
-> 20/20 the QE bit is already zero when the one byte SR1 write is used, so the
-> quad mode is not affected. 20/20 fixes indirectly the clearing of all the bits
-> from SR2 but QE bit, because it's already zero. I would say it's not a partial
-> fix, but a different bug.
-> 
+increasing the timeout won't help, because the pp-done irq has already
+come at the point where we wait for it..
 
-I was not suggesting on fixing up spi_nor_clear_sr_bp(), but pointing
-out that single byte writes SR1 can happen until patch 20/20.
+maybe the easy thing is just add mdp5_crtc->needs_pp, set to true
+before requesting, and false when we get the irq.. and then
+mdp5_crtc_wait_for_pp_done() just returns if needs_pp==false..
 
-But now I see that these patches are fixing related but different bugs.
+BR,
+-R
 
-> There are different angles to look at this, I chose the modifying of the quad
-> mode angle. Given the two arguments from above (avoid adding dead code and
-> changing of quad mode approach), I would prefer to keep things as they are. 
-
-Ok, sounds fine, no need to change...
-
-> But I get your approach too, so if you still want yours, I can do it. Please let me
-> know.
-> 
->> Should this patch be rearranged to appear along with 20/20?
-> 
-> Not necessarily (different bugs) but I can bring 20/20 immediately after this
-> one if you want.
-> >>
->>
->>> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
->>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
->>> ---
->>>  drivers/mtd/spi-nor/spi-nor.c | 120 ++++++++++++++++++++++++++++++++++++++++--
->>>  include/linux/mtd/spi-nor.h   |   3 ++
->>>  2 files changed, 118 insertions(+), 5 deletions(-)
->>>
->>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
->>> index 725dab241271..f96bc80c0ed1 100644
->>> --- a/drivers/mtd/spi-nor/spi-nor.c
->>> +++ b/drivers/mtd/spi-nor/spi-nor.c
->>> @@ -959,12 +959,19 @@ static int spi_nor_write_sr(struct spi_nor *nor, const u8 *sr, size_t len)
->>>  	return spi_nor_wait_till_ready(nor);
->>>  }
->>>  
->> [...]
->>> +/**
->>>   * spi_nor_write_sr2() - Write the Status Register 2 using the
->>>   * SPINOR_OP_WRSR2 (3eh) command.
->>>   * @nor:	pointer to 'struct spi_nor'.
->>> @@ -3634,19 +3723,38 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
->>>  		break;
->>>  
->>>  	case BFPT_DWORD15_QER_SR2_BIT1_BUGGY:
->>> +		/*
->>> +		 * Writing only one byte to the Status Register has the
->>> +		 * side-effect of clearing Status Register 2.
->>> +		 */
->>>  	case BFPT_DWORD15_QER_SR2_BIT1_NO_RD:
->>> +		/*
->>> +		 * Read Configuration Register (35h) instruction is not
->>> +		 * supported.
->>> +		 */
->>> +		nor->flags |= SNOR_F_HAS_16BIT_SR | SNOR_F_NO_READ_CR;
->> Since SNOR_F_HAS_16BIT_SR is set by default in
->> spi_nor_info_init_params(), no need to set the flag here again
->>
-> 
-> I did this on purpose. I set SNOR_F_HAS_16BIT_SR here based on SFDP standard, I
-> want to indicate where the standard requires the 16 bit SR write .
-> spi_nor_info_init_params() initializes data based on info, but that data can be
-> overwritten (even with the same data) when parsing SFDP.
-> 
-
-Alright.
-
-Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
-
-Regards
-Vignesh
+> I haven't dug into the new code anymore.
+>
+> Brian
