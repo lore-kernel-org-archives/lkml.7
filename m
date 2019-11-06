@@ -2,113 +2,83 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAAF0C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:21:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C822C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:24:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 857E5217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:21:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GanIKZ9M"
+	by mail.kernel.org (Postfix) with ESMTP id C98362173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:24:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730024AbfKFHVm (ORCPT
+        id S1731000AbfKFHYL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:21:42 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:34404 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfKFHVm (ORCPT
+        Wed, 6 Nov 2019 02:24:11 -0500
+Received: from zeniv.linux.org.uk ([195.92.253.2]:56518 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728291AbfKFHYK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:21:42 -0500
-Received: by mail-pf1-f194.google.com with SMTP id n13so6454249pff.1;
-        Tue, 05 Nov 2019 23:21:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RjcWseZDp53ZsKtc5YLxUsse+m3KARrZ1Ou63MXjdxQ=;
-        b=GanIKZ9MrdVtBmKUbTdfFXkeiCjXtfZJ2sAWIt7dqViG995heeXhR12lcDHp4Emy0w
-         m6Zn2lJmHsEdLZ8jT60LNbMuTcgOSxGjszVigD/1RPxx/aKJC0Q2Y5wwCC2aRAe6zQK/
-         NWv4SdxPlHL9MJgDY6XJWg+QBHq2KT927l211txYZ2pUckdmTThNiMdxT0VZpcVqWdja
-         GTvzYKvKETktYTQnpsar89tAHTNhZNbtC7qz1nJL9ywYaySOjKkaG3uSzLCbhzYhKMSw
-         lDpxBi2gf+sz+fyGrh8tsa8F63bfv62cKMzEQReLKwnHx2b2IjvayiN0k4uuCyUZYoyO
-         M2qA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RjcWseZDp53ZsKtc5YLxUsse+m3KARrZ1Ou63MXjdxQ=;
-        b=MnXdrAj2ZuPYm4wVVE66i/hluSW8FCs0zULZ5Dh9gQmoqWKr5tkh2U8tL3pSkseJ0V
-         vq3MASyrEsNEZx1WaddDcjhaclGoxdM8A8VKDTBESuQfwP8dRukcaEo1xS0W2PmCE0PI
-         MfFQX29sWV/wd6dqoRj8Q0Q0jcHdEEyUDog4gxKrWQV85rvGkyRUFJ4TL31kQ3vpdP5B
-         C3GyAkj6gDoipiVThANX6oTKDpp1sXW/7YLwZ9Tl63olntO9cXsxfeTtp4BeJWhYiyPD
-         CwUy9btCm82RoKcDpdPgR6fvSnIPxZsEnDZb/usZAk5MiAwDHbuuRCskJICMmx3AZ42l
-         YiKg==
-X-Gm-Message-State: APjAAAVvt//L+b7JXZQTehss6v1uzBHn49oArWLH3buSOoRuFtBJsB8b
-        zM3JEetDK4xrqwbLAvpywm1f86U5cpI1uQPqejU=
-X-Google-Smtp-Source: APXvYqwiBxDuq0Qr009Xx2Cx16r9gU2XC0rGWaLGYHUJDm1uLLJ/41h46s+FlxHihfoFLZfWrPOmuWKgHGe8w48SPyI=
-X-Received: by 2002:a17:90b:958:: with SMTP id dw24mr1895113pjb.30.1573024901387;
- Tue, 05 Nov 2019 23:21:41 -0800 (PST)
+        Wed, 6 Nov 2019 02:24:10 -0500
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSFfj-0005CX-5l; Wed, 06 Nov 2019 07:24:07 +0000
+Date:   Wed, 6 Nov 2019 07:24:07 +0000
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Thibaut Sautereau <thibaut@sautereau.fr>
+Cc:     Christian Brauner <christian.brauner@ubuntu.com>,
+        dhowells@redhat.com, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Christian Brauner <christian@brauner.io>,
+        cgroups@vger.kernel.org
+Subject: Re: NULL pointer deref in put_fs_context with unprivileged LXC
+Message-ID: <20191106072407.GU26530@ZenIV.linux.org.uk>
+References: <20191010213512.GA875@gandi.net>
+ <20191011141403.ghjptf4nrttgg7jd@wittgenstein>
+ <20191105205830.GA871@gandi.net>
 MIME-Version: 1.0
-References: <20191104213417.18036-1-leonmaxx@gmail.com>
-In-Reply-To: <20191104213417.18036-1-leonmaxx@gmail.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 6 Nov 2019 09:21:30 +0200
-Message-ID: <CAHp75VfS_AC+QmCY5M1VXd6QJLFQ=YtTdY4yDrJMPPMY_JxYLg@mail.gmail.com>
-Subject: Re: [PATCH v2 0/3] asus_wmi: Support of ASUS TUF laptops on Ryzen CPUs
-To:     Leonid Maksymchuk <leonmaxx@gmail.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Chris Chiu <chiu@endlessm.com>,
-        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105205830.GA871@gandi.net>
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 11:34 PM Leonid Maksymchuk <leonmaxx@gmail.com> wrote:
->
-> Hi,
->
-> this patch series adds support of ASUS TUF laptops on Ryzen CPUs to existing
-> asus_wmi platform driver and also fixes minor bug.
->
-> v2: fixed indentation.
+On Tue, Nov 05, 2019 at 09:58:30PM +0100, Thibaut Sautereau wrote:
 
-Usual versioning
-RFC [RFC v2, ...]
-v1
-v2, ...
+> > > 	BUG: kernel NULL pointer dereference, address: 0000000000000043
 
-Okay, next one will be v3 to avoid overlapping.
+ERR_PTR(something)->d_sb, most likely.
 
-I'll take first patch later, but I also will give more comments to patch 2.
-Please, give me time to review it properly.
+> > > 	493		if (fc->root) {
+> > > 	494			sb = fc->root->d_sb;
+> > > 	495			dput(fc->root);
+> > > 	496			fc->root = NULL;
+> > > 	497			deactivate_super(sb);
+> > > 	498		}
 
->
-> Leonid Maksymchuk (3):
->   asus_wmi: Fix return value of fan_boost_mode_store
->   asus_wmi: Add support for fan boost mode on FX505DY/FX705DY
->   asus_wmi: Set default fan boost mode to normal
->
->  drivers/platform/x86/asus-wmi.c            | 57 ++++++++++++++++++++++--------
->  include/linux/platform_data/x86/asus-wmi.h |  1 +
->  2 files changed, 43 insertions(+), 15 deletions(-)
->
-> --
-> 1.8.3.1
->
+> 	fs_context: DEBUG: fc->root = fffffffffffffff3
+> 	fs_context: DEBUG: fc->source = cgroup2
 
+Yup.  That'd be ERR_PTR(-13), i.e. ERR_PTR(-EACCES).  Most likely
+from
+                nsdentry = kernfs_node_dentry(cgrp->kn, sb);
+                dput(fc->root);
+                fc->root = nsdentry;
+                if (IS_ERR(nsdentry)) {
+                        ret = PTR_ERR(nsdentry);
+                        deactivate_locked_super(sb);
+                }
 
--- 
-With Best Regards,
-Andy Shevchenko
+in cgroup_do_get_tree().  As a quick test, try to add fc->root = NULL;
+next to that deactivate_locked_super(sb); inside the if (IS_ERR(...))
+body and see if it helps; it's not the best way to fix it (I'd rather
+go for
+                if (IS_ERR(nsdentry)) {
+                        ret = PTR_ERR(nsdentry);
+                        deactivate_locked_super(sb);
+			nsdentry = NULL;
+                }
+                fc->root = nsdentry;
+), but it would serve to verify that this is the source of that crap.
