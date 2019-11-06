@@ -2,262 +2,164 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C130C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:05:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EBAECC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:05:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2138A217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:05:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573045506;
-	bh=OfrZVaeo2e+1KTxvRpXHnqoV1NiRaNuUB/dOpNsRqV4=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=PkH3c38WnVAYA+Md8rfjCbmYFtKDuFy3SavCj90rczdhfnRPdEKKqbTfUrTw0iI/U
-	 +4INGttlwOmcGkkuVNClzyPcqZChX4Q2V0ViAGO5uJvVum3m4t/zhmegx3gUS3HB9r
-	 MkYr7M+WqKrgrQNxUHMN7S0sZGFeFWuBWvWuqBQI=
+	by mail.kernel.org (Postfix) with ESMTP id B924021882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:05:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730293AbfKFNFF (ORCPT
+        id S1731402AbfKFNFQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:05:05 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38926 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726673AbfKFNFE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:05:04 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C6AF217F4;
-        Wed,  6 Nov 2019 13:05:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573045503;
-        bh=OfrZVaeo2e+1KTxvRpXHnqoV1NiRaNuUB/dOpNsRqV4=;
-        h=Date:From:To:Cc:Subject:From;
-        b=wCfZUB3Mfopi5hduLfWvdCwIAkjhfv8t4AeTZwaHIR6nUP6adBgw4iEKabxGPbqdV
-         GHsaOjjXKvByxzQ4A0d5KKW9FMfg3mZPD4tRmOUCNYOfzr24RmtNnXMvd5QFVlAl0l
-         dJAlEy3nbRd1tX0427pEe4tQS5vgLu0kjVpDdOJY=
-Date:   Wed, 6 Nov 2019 14:05:01 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.4.199
-Message-ID: <20191106130501.GA3229566@kroah.com>
+        Wed, 6 Nov 2019 08:05:16 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:61590 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730530AbfKFNFP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:05:15 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-05-5dc2c507663f
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id A4.FC.08102.705C2CD5; Wed,  6 Nov 2019 14:05:11 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 6 Nov 2019 14:05:06 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "dmurphy@ti.com" <dmurphy@ti.com>
+CC:     "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
+        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "mturquette@baylibre.com" <mturquette@baylibre.com>,
+        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "a.zummo@towertech.it" <a.zummo@towertech.it>,
+        "linus.walleij@linaro.org" <linus.walleij@linaro.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
+        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
+        "sboyd@kernel.org" <sboyd@kernel.org>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "pavel@ucw.cz" <pavel@ucw.cz>
+Subject: Re: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
+ driver
+Thread-Topic: [RFC PATCH v3 04/15] dt-bindings: leds: ROHM BD71282 PMIC LED
+ driver
+Thread-Index: AQHVkKgPi9BQDVNbQEqWWkMqaKUihqd86G+AgAErIAA=
+Date:   Wed, 6 Nov 2019 13:05:05 +0000
+Message-ID: <113d20653c41a311b0c5227eb5bbc6ad43d24c2c.camel@fi.rohmeurope.com>
+References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <f9178204ea3925b454ecbe58df4c297fec346a4f.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
+         <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
+In-Reply-To: <37d85b2d-8fca-a998-95ae-61f0c049054d@ti.com>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <D11D9541D7CF324FBB493C0718F49F08@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFnrEJsWRmVeSWpSXmKPExsVyYMXvTbrsRw/FGhy8amyx5OJVdov2d8vY
+        Lb7MPcViMfXhEzaL+UfOsVp0n97CanF76wYWi/tfjzJafLvSwWQx5c9yJouPPfdYLTbP/8No
+        cXnXHDaLrW/WMVocW32FzWLp9YtMFnOWnmCxuHjK1eLuqaNsFq17j7Bb/Lu2kcVB1GPNvDWM
+        Hu9vtLJ7zFtT7bFz1l12j02rOtk87lzbw+Zx/MZ2Jo/p834yeaxY/Z3d4/MmuQCuKG6bpMSS
+        suDM9Dx9uwTujHeTJjIW/NKu2NvWwN7A+EKri5GTQ0LARGJ3x2+2LkYuDiGBq4wSy1e8Z4Rw
+        jjNKTJv+nrmLkYODTcBGousmO0iDiECcxLKLB8EamAW+s0t8vdjBCpIQFgiWeN33hwmiKERi
+        3ok/UA1WEnNfzgOzWQRUJBZcmw1m8wr4Sdzf+IgJYtkVRonpP26wgCQ4gRreP+wGsxkFZCU6
+        G96BDWUWEJfY9Ow7K8TZAhJL9pxnhrBFJV4+/gcVV5LY+/MhC8jRzAKaEut36UO0OkjsftPG
+        DGErSkzpfgh1g6DEyZlPWCYwis1CsmEWQvcsJN2zkHTPQtK9gJF1FaNEbmJmTnpiSaqhXlFq
+        qV5RfkYukErOz93ECEkzX3Yw/j/keYiRiYPxEKMkB5OSKK/xoUOxQnxJ+SmVGYnFGfFFpTmp
+        xYcYJTiYlUR4Y/oOxgrxpiRWVqUW5cOkpDlYlMR51R9OjBUSANmVnZpakFoEk5Xh4FCS4FUE
+        GSpYlJqeWpGWmVOCkGbi4AQZziUlUpyal5JalFhakhEPSiDxxcAUApLiAdrbBtLOW1yQmAsU
+        hWg9xajNMeHl3EXMHEfmLl3ELMSSl5+XKiXOe2wrUKkASGlGaR7coleM4hyMSsK8/SCDeIAZ
+        B27OK6AVTEArfB7vA1lRkoiQkmpg5Nh/qt9DQa7M3P/Br4SbLNFWHaaKYhp7XzWfXstc0K93
+        S/f2fR3d1ZNPCk1ZPeF0Z2LaJZnaTFdZte3T5zaenr2+6q6C4D+3o/HH/r2aMX8rb8LZrK44
+        s9lW5+oVdUwuzvVlDY3qib22RL4sfv+yloVMXGZLL/NnbQlbebN6P4vzCxvLmjmLlViKMxIN
+        tZiLihMBXTiQxfUDAAA=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I'm announcing the release of the 4.4.199 kernel.
-
-All users of the 4.4 kernel series must upgrade.
-
-The updated 4.4.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linux-4.4.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=linux/kernel/git/stable/linux-stable.git;a=summary
-
-thanks,
-
-greg k-h
-
-------------
-
- Makefile                                  |    2 
- arch/mips/fw/sni/sniprom.c                |    2 
- arch/s390/mm/cmm.c                        |   12 +-
- arch/x86/include/asm/intel-family.h       |    3 
- arch/x86/platform/efi/efi.c               |    3 
- drivers/firmware/efi/cper.c               |    2 
- drivers/hid/hid-axff.c                    |   11 +
- drivers/hid/hid-core.c                    |    7 -
- drivers/hid/hid-dr.c                      |   12 +-
- drivers/hid/hid-emsff.c                   |   12 +-
- drivers/hid/hid-gaff.c                    |   12 +-
- drivers/hid/hid-holtekff.c                |   12 +-
- drivers/hid/hid-lg2ff.c                   |   12 +-
- drivers/hid/hid-lg3ff.c                   |   11 +
- drivers/hid/hid-lg4ff.c                   |   11 +
- drivers/hid/hid-lgff.c                    |   11 +
- drivers/hid/hid-sony.c                    |   12 +-
- drivers/hid/hid-tmff.c                    |   12 +-
- drivers/hid/hid-zpff.c                    |   12 +-
- drivers/iio/accel/bmc150-accel-core.c     |    2 
- drivers/infiniband/core/cma.c             |    3 
- drivers/md/dm-bio-prison.c                |    2 
- drivers/md/dm-io.c                        |    2 
- drivers/md/dm-kcopyd.c                    |    2 
- drivers/md/dm-region-hash.c               |    2 
- drivers/md/dm-snap.c                      |  178 ++++++++++++++++++++----------
- drivers/md/dm-thin.c                      |    2 
- drivers/net/bonding/bond_main.c           |    2 
- drivers/net/usb/sr9800.c                  |    2 
- drivers/net/wireless/ath/ath6kl/usb.c     |    8 +
- drivers/net/wireless/realtek/rtlwifi/ps.c |    6 +
- drivers/thunderbolt/nhi.c                 |   22 +++
- drivers/tty/serial/sc16is7xx.c            |   28 ++++
- drivers/tty/serial/serial_mctrl_gpio.c    |    3 
- drivers/usb/core/hub.c                    |    7 +
- drivers/usb/misc/ldusb.c                  |    6 -
- drivers/usb/misc/legousbtower.c           |    2 
- drivers/usb/serial/whiteheat.c            |   13 +-
- drivers/usb/serial/whiteheat.h            |    2 
- drivers/usb/storage/uas.c                 |   20 ---
- fs/binfmt_script.c                        |   57 ++++++++-
- fs/cifs/netmisc.c                         |    4 
- fs/fuse/dir.c                             |   13 ++
- fs/fuse/file.c                            |   10 +
- fs/nfs/nfs4proc.c                         |    1 
- fs/ocfs2/ioctl.c                          |    2 
- fs/ocfs2/xattr.c                          |   56 +++------
- fs/xfs/xfs_buf.c                          |    2 
- include/linux/usb/gadget.h                |   10 +
- include/net/llc_conn.h                    |    2 
- include/net/sch_generic.h                 |    5 
- include/net/sctp/sctp.h                   |    2 
- kernel/trace/trace.c                      |    1 
- net/llc/llc_c_ac.c                        |    8 +
- net/llc/llc_conn.c                        |   32 +----
- net/llc/llc_s_ac.c                        |   12 +-
- net/llc/llc_sap.c                         |   23 +--
- net/sched/sch_netem.c                     |    2 
- net/sctp/ipv6.c                           |    2 
- net/sctp/protocol.c                       |    2 
- net/sctp/socket.c                         |   55 ++++-----
- net/wireless/nl80211.c                    |    3 
- scripts/setlocalversion                   |   12 +-
- sound/firewire/bebob/bebob_stream.c       |    3 
- sound/hda/hdac_controller.c               |    2 
- sound/pci/hda/hda_intel.c                 |    2 
- tools/perf/util/map.c                     |    3 
- 67 files changed, 532 insertions(+), 279 deletions(-)
-
-Adam Ford (1):
-      serial: mctrl_gpio: Check for NULL pointer
-
-Alan Stern (3):
-      UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gather segments")
-      USB: gadget: Reject endpoints with 0 maxpacket value
-      HID: Fix assumption that devices have inputs
-
-Austin Kim (1):
-      fs: cifs: mute -Wunused-const-variable message
-
-Bart Van Assche (1):
-      RDMA/iwcm: Fix a lock inversion issue
-
-Brian Norris (1):
-      scripts/setlocalversion: Improve -dirty check with git-status --no-optional-locks
-
-Chuck Lever (1):
-      NFSv4: Fix leak of clp->cl_acceptor string
-
-Dan Carpenter (1):
-      USB: legousbtower: fix a signedness bug in tower_probe()
-
-Dave Young (1):
-      efi/x86: Do not clean dummy variable in kexec path
-
-Eric Biggers (2):
-      llc: fix sk_buff leak in llc_sap_state_process()
-      llc: fix sk_buff leak in llc_conn_service()
-
-Eric Dumazet (2):
-      bonding: fix potential NULL deref in bond_update_slave_arr
-      sch_netem: fix rcu splat in netem_enqueue()
-
-Greg Kroah-Hartman (1):
-      Linux 4.4.199
-
-Hui Peng (1):
-      ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
-
-Jan-Marek Glogowski (1):
-      usb: handle warm-reset port requests on hub resume
-
-Jia-Ju Bai (2):
-      fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare_entry()
-      fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan_inode_alloc()
-
-Johan Hovold (4):
-      USB: ldusb: fix ring-buffer locking
-      USB: ldusb: fix control-message timeout
-      USB: serial: whiteheat: fix potential slab corruption
-      USB: serial: whiteheat: fix line-speed endianness
-
-Kan Liang (1):
-      x86/cpu: Add Atom Tremont (Jacobsville)
-
-Kees Cook (1):
-      exec: load_script: Do not exec truncated interpreter path
-
-Kent Overstreet (1):
-      dm: Use kzalloc for all structs with embedded biosets/mempools
-
-Laura Abbott (1):
-      rtlwifi: Fix potential overflow on P2P code
-
-Lukas Wunner (1):
-      efi/cper: Fix endianness of PCIe class code
-
-Markus Theil (1):
-      nl80211: fix validation of mesh path nexthop
-
-Michał Mirosław (1):
-      HID: fix error message in hid_open_report()
-
-Mika Westerberg (1):
-      thunderbolt: Use 32-bit writes when writing ring producer/consumer
-
-Miklos Szeredi (2):
-      fuse: flush dirty data/metadata before non-truncate setattr
-      fuse: truncate pending writes on O_TRUNC
-
-Mikulas Patocka (3):
-      dm snapshot: use mutex instead of rw_semaphore
-      dm snapshot: introduce account_start_copy() and account_end_copy()
-      dm snapshot: rework COW throttling to fix deadlock
-
-Pascal Bouwmann (1):
-      iio: fix center temperature of bmc150-accel-core
-
-Petr Mladek (1):
-      tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-
-Phil Elwell (1):
-      sc16is7xx: Fix for "Unexpected interrupt: 8"
-
-Steve MacLean (1):
-      perf map: Fix overlapped map handling
-
-Takashi Iwai (1):
-      Revert "ALSA: hda: Flush interrupts on disabling"
-
-Takashi Sakamoto (1):
-      ALSA: bebob: Fix prototype of helper function to return negative value
-
-Thomas Bogendoerfer (1):
-      MIPS: fw: sni: Fix out of bounds init of o32 stack
-
-Valentin Vidic (1):
-      net: usb: sr9800: fix uninitialized local variable
-
-Vratislav Bendel (1):
-      xfs: Correctly invert xfs_buftarg LRU isolation logic
-
-Xin Long (2):
-      sctp: fix the issue that flags are ignored when using kernel_connect
-      sctp: not bind the socket in sctp_connect
-
-Yihui ZENG (1):
-      s390/cmm: fix information leak in cmm_timeout_handler()
-
+SGVsbG8gRGFuLA0KDQpUaGFua3MgZm9yIHRoZSBjaGVjayBvbmNlIGFnYWluIQ0KDQpPbiBUdWUs
+IDIwMTktMTEtMDUgYXQgMTM6MTQgLTA2MDAsIERhbiBNdXJwaHkgd3JvdGU6DQo+IE1hdHRpDQo+
+IA0KPiBPbiAxMS8xLzE5IDY6MzIgQU0sIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gPiBEb2N1
+bWVudCBST0hNIEJENzE4MjggUE1JQyBMRUQgZHJpdmVyIGRldmljZSB0cmVlIGJpbmRpbmdzLg0K
+PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRpbmVu
+QGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+IA0KPiA+IENoYW5nZXMgZnJvbSB2MiAt
+IG5ldyBwYXRjaA0KPiA+IA0KPiA+ICAgLi4uL2JpbmRpbmdzL2xlZHMvcm9obSxsZWRzLWJkNzE4
+MjgueWFtbCAgICAgIHwgNDYNCj4gPiArKysrKysrKysrKysrKysrKysrDQo+ID4gICAxIGZpbGUg
+Y2hhbmdlZCwgNDYgaW5zZXJ0aW9ucygrKQ0KPiA+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4g
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvcm9obSxsZWRzLWJkNzE4Mjgu
+eWFtbA0KPiA+IA0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbGVkcy9yb2htLGxlZHMtDQo+ID4gYmQ3MTgyOC55YW1sIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvcm9obSxsZWRzLQ0KPiA+IGJkNzE4MjgueWFtbA0KPiA+
+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMDAwMDAwLi5kOGFlYWM5OTEx
+ZWYNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL2xlZHMvcm9obSxsZWRzLWJkNzE4MjgueWFtbA0KPiA+IEBAIC0wLDAgKzEsNDYg
+QEANCj4gPiArIyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICslWUFNTCAx
+LjINCj4gPiArLS0tDQo+ID4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVtYXMvbGVk
+cy9yb2htLGxlZHMtYmQ3MTgyOC55YW1sIw0KPiA+ICskc2NoZW1hOiBodHRwOi8vZGV2aWNldHJl
+ZS5vcmcvbWV0YS1zY2hlbWFzL2NvcmUueWFtbCMNCj4gPiArDQo+ID4gK3RpdGxlOiBST0hNIEJE
+NzE4MjggUG93ZXIgTWFuYWdlbWVudCBJbnRlZ3JhdGVkIENpcmN1aXQgTEVEIGRyaXZlcg0KPiA+
+ICsNCj4gPiArbWFpbnRhaW5lcnM6DQo+ID4gKyAgLSBKYWNlayBBbmFzemV3c2tpIDxqYWNlay5h
+bmFzemV3c2tpQGdtYWlsLmNvbT4NCj4gPiArICAtIFBhdmVsIE1hY2hlayA8cGF2ZWxAdWN3LmN6
+Pg0KPiA+ICsgIC0gRGFuIE11cnBoeSA8ZG11cnBoeUB0aS5jb20+DQo+ID4gKyAgLSBSb2IgSGVy
+cmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPg0KPiA+ICsgIC0gTWFyayBSdXRsYW5kIDxtYXJrLnJ1
+dGxhbmRAYXJtLmNvbT4NCj4gSSBiZWxpZXZlIHlvdSBhcmUgdGhlIG1haW50YWluZXIgb2YgdGhp
+cyBkcml2ZXIgbm90IHRoZSBtYWludGFpbmVycw0KDQpSaWdodC4gVGhhbmtzIGZvciBwb2ludGlu
+ZyB0aGF0IG91dC4NCg0KPiA+ICsNCj4gPiArZGVzY3JpcHRpb246IHwNCj4gPiArICBUaGlzIG1v
+ZHVsZSBpcyBwYXJ0IG9mIHRoZSBST0hNIEJENzE4MjggTUZEIGRldmljZS4gRm9yIG1vcmUNCj4g
+PiBkZXRhaWxzDQo+ID4gKyAgc2VlIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9t
+ZmQvcm9obSxiZDcxODI4LQ0KPiA+IHBtaWMueWFtbC4NCj4gPiArDQo+ID4gKyAgVGhlIExFRCBj
+b250cm9sbGVyIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5vZGUgb2YgdGhlIFBNSUMgbm9kZQ0K
+PiA+IG9uIHRoZSBkZXZpY2UNCj4gPiArICB0cmVlLg0KPiA+ICsNCj4gPiArICBUaGUgZGV2aWNl
+IGhhcyB0d28gTEVEIG91dHB1dHMgcmVmZXJyZWQgYXMgR1JOTEVEIGFuZCBBTUJMRUQgaW4NCj4g
+PiBkYXRhLXNoZWV0Lg0KPiA+ICsNCj4gPiArcHJvcGVydGllczoNCj4gPiArICBjb21wYXRpYmxl
+Og0KPiA+ICsgICAgY29uc3Q6IHJvaG0sYmQ3MTgyOC1sZWQNCj4gPiArDQo+ID4gK3BhdHRlcm5Q
+cm9wZXJ0aWVzOg0KPiA+ICsgICJebGVkLVsxLTJdJCI6DQo+ID4gKyAgICB0eXBlOiBvYmplY3QN
+Cj4gPiArICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsgICAgICBQcm9wZXJ0aWVzIGZvciBhIHNpbmds
+ZSBMRUQuIE5vZGVzIG11c3QgYmUgbmFtZWQgYXMgbGVkLTENCj4gPiBhbmQgbGVkLTIuDQo+IA0K
+PiBXaHkgaXMgdGhpcyByZXF1aXJlZD8gIENhbid0IHdlIHVzZSB0aGUgcmVnIGFzIHRoZSBudW1i
+ZXIgYW5kIHRoZW4NCj4gd2UgDQo+IGNhbiB1c2Ugc3RhbmRhcmQgbm9kZSBsYWJlbHMNCg0KVGhp
+cyB3YXMgcmVsYXRlZCB0byBteSBpZGVhIG9mIHVzaW5nIHRoZSBub2RlLW5hbWVzIGFzIHVuaXF1
+ZSBrZXlzLg0KUGxlYXNlIHNlZToNCmh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvY292ZXIu
+MTU3MjM1MTc3NC5naXQubWF0dGkudmFpdHRpbmVuQGZpLnJvaG1ldXJvcGUuY29tLw0KDQpXaGF0
+IHdvdWxkIHlvdSBleHBlY3QgdGhlIHJlZyA9IDw+OyB0byBkZXNjcmliZSBmcm9tIEhXPw0KDQo+
+IGxpa2UgbGVkQDxyZWcgdmFsdWU+LiAgVGhlbiB3ZSBjYW4gY2hlY2sgaW4gdGhlIGNvZGUgdG8g
+bWFrZSBzdXJlDQo+IHRoYXQgDQo+IHRoZSBvdXRwdXQgaXMgbm90IG91dCBvZiBib3VuZHMuDQo+
+IA0KPiA+ICsgICAgcHJvcGVydGllczoNCj4gPiArICAgICAgIyRyZWY6ICJjb21tb24ueWFtbCMi
+DQo+ID4gKyAgICAgIGZ1bmN0aW9uOg0KPiA+ICsgICAgICAgIGRlc2NyaXB0aW9uOg0KPiA+ICsg
+ICAgICAgICAgUHVycG9zZSBvZiBMRUQgYXMgZGVmaW5lZCBpbiBkdC1iaW5kaW5ncy9sZWRzL2Nv
+bW1vbi5oDQo+ID4gKyAgICAgICAgJHJlZjogIi9zY2hlbWFzL3R5cGVzLnlhbWwjL2RlZmluaXRp
+b25zL3N0cmluZyINCj4gPiArICAgICAgY29sb3I6DQo+ID4gKyAgICAgICAgZGVzY3JpcHRpb246
+DQo+ID4gKyAgICAgICAgICBMRUQgY29sb3VyIGFzIGRlZmluZWQgaW4gZHQtYmluZGluZ3MvbGVk
+cy9jb21tb24uaA0KPiANCj4gcy9jb2xvdXIvY29sb3INCg0KVGhhdCBkZXBlbmRzIG9uIHlvdXIg
+bG9jYXRpb24gOikNCg0KPiBCdXQgYWdhaW4gSSBiZWxpZXZlIGl0IGlzIGluZGljYXRlZCBhYm92
+ZSB0aGF0IHRoZSBMRURzIGFyZSBlaXRoZXINCj4gZ29pbmcgDQo+IHRvIGJlIGdyZWVuIG9yIGFt
+YmVyLiAgVW5sZXNzIHRoZXkgY2FuIGJlIGFueSBjb2xvci4NCg0KVGhpcyB3YXMgbXkgb3JpZ2lu
+YWwgcmVhc29uIGZvciBvbWl0dGluZyB0aGUgRFQgZm9yIEJENzE4MjggTEVEcw0KYWx0b2dldGhl
+ci4gTEVEcyBhcmUgZXhwZWN0ZWQgdG8gYmUgZ3JlZW4gYW5kIGFtYmVyIC0gYnV0IGl0IGlzIHRy
+dWUNCnRoYXQgUE1JQyBjYW4gbm90IGVuc3VyZSB0aGVyZSB3aWxsIGJlIG5vIG90aGVyIGNvbG91
+cnMuDQoNCj4gQXJlIHRoZXJlIHBsYW5zIHRvIG1ha2Ugc3VyZSB0aGF0IHRoZSBjb2xvciBpcyBl
+aXRoZXIgZ3JlZW4gb3IgYW1iZXINCj4gaW4gDQo+IHRoZSBjb2RlPyAgSSBkb24ndCBzZWUgYSBw
+YXRjaCBmb3IgdGhlIGNvZGUgaW4gdGhpcyBzZXJpZXMNCg0KWWVzLiBBcyBJIHdyb3RlIGluIGNv
+dmVyLWxldHRlciwgdGhlIExFRCBkcml2ZXIgaXMgcGVuZGluZyB1bnRpbCBJIHNlZQ0KaG93IHRo
+ZSBSRkMgZm9yIGFkZGluZyBMRUQgbm9kZSBmaW5kaW5nIGFuZCBzb21lIG1vcmUgY29tbW9uIHBy
+b3BlcnR5DQpwYXJzaW5nIHRvIExFRCBjb3JlIGlzIHJlY2VpdmVkIGJ5IG90aGVycy4gKEFsdGhv
+dWdoIEkgZG8gdW5kZXJzdGFuZCBpZg0KeW91IGRpZG4ndCByZWFkIHRoZSBjb3Zlci1sZXR0ZXIu
+IEl0J3MgcXVpdGUgYSBidW5jaCBvZiB0ZXh0IGFuZA0KcmVhZGluZyBpdCBvdmVyIGFuZCBvdmVy
+IGFnYWluIGlzIG5vIGZ1bikuDQoNCj4gDQo+ID4gKyAgICAgICAgJHJlZjogIi9zY2hlbWFzL3R5
+cGVzLnlhbWwjL2RlZmluaXRpb25zL3VpbnQzMiINCj4gPiArDQo+ID4gK3JlcXVpcmVkOg0KPiA+
+ICsgIC0gY29tcGF0aWJsZQ0KPiANCj4gSXMgdGhlcmUgYW4gZXhhbXBsZSBvZiB0aGUgbm9kZSBh
+bmQgcHJvcGVydGllcz8NCg0KWWVzLCBpbiBNRkQgZG9jLg0KDQpCciwNCglNYXR0aSBWYWl0dGlu
+ZW4NCg==
