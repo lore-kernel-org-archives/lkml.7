@@ -2,87 +2,79 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F57C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:46:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C412C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:47:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CCC23217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:46:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573037173;
-	bh=eSHpZGIiVicGJP+7/7raVfKihwjNw/PcaPaMQYJk17g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Nlnqkcw7161/Y0WSF+DVWhqis++saXfqt11bkldZ66eruluKM4z7G6zusedtMuFU6
-	 rTSEv18ZZs84Xr6citziPm5E/ZqvixcgRlscarZdbgKa5gbLY28LOkAXvz8L6IZBKC
-	 OmgqyFmL3LoF6UWzWXabJcakqIU7CfEkzkUdMfVs=
+	by mail.kernel.org (Postfix) with ESMTP id 13761217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:47:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731362AbfKFKqN (ORCPT
+        id S1731172AbfKFKry convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:46:13 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40988 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfKFKqM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 05:46:12 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 93C942173E;
-        Wed,  6 Nov 2019 10:46:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573037172;
-        bh=eSHpZGIiVicGJP+7/7raVfKihwjNw/PcaPaMQYJk17g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ows1ZmwXHRBv0/gH2ODL+rr5lSFHUc18PvPsVueEGK4qU6Fcn2f/0oYFuREn6xRGB
-         7TTAJIJnUe4mUIng9mS51DjYpJ/y7W7SBwbT5+5ZBFLEOvBovrCVFlvqBhj00GgRRv
-         fMsnnAcE1dOt8x7aQX8XlzMcyC5tDy3nTOWqxM5o=
-Date:   Wed, 6 Nov 2019 11:46:09 +0100
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     shuah <shuah@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 5.3 000/163] 5.3.9-stable review
-Message-ID: <20191106104609.GB2982490@kroah.com>
-References: <20191104212140.046021995@linuxfoundation.org>
- <82ebb88b-6828-2c80-e4ac-891427e90f2a@kernel.org>
+        Wed, 6 Nov 2019 05:47:54 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:52163 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725890AbfKFKrx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 05:47:53 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id 9c54dacee3369b38; Wed, 6 Nov 2019 11:47:51 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Chanwoo Choi <cw00.choi@samsung.com>
+Cc:     myungjoo.ham@samsung.com,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "chanwoo@kernel.org" <chanwoo@kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "robh@kernel.org" <robh@kernel.org>, CPGS <cpgs@samsung.com>
+Subject: Re: [PATCH] MAINTAINERS: Update myself as maintainer for DEVFREQ subsystem support
+Date:   Wed, 06 Nov 2019 11:47:51 +0100
+Message-ID: <14440582.Pig9OX8cUD@kreacher>
+In-Reply-To: <6a94e191-b460-bd9c-cae1-50ac93163eb1@samsung.com>
+References: <1019298652.01572934681167.JavaMail.epsvc@epcpadp2> <11401342.1EApItjJl2@kreacher> <6a94e191-b460-bd9c-cae1-50ac93163eb1@samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <82ebb88b-6828-2c80-e4ac-891427e90f2a@kernel.org>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 09:51:43AM -0700, shuah wrote:
-> On 11/4/19 2:43 PM, Greg Kroah-Hartman wrote:
-> > This is the start of the stable review cycle for the 5.3.9 release.
-> > There are 163 patches in this series, all will be posted as a response
-> > to this one.  If anyone has any issues with these being applied, please
-> > let me know.
+On Wednesday, November 6, 2019 3:59:16 AM CET Chanwoo Choi wrote:
+> On 19. 11. 6. 오전 1:44, Rafael J. Wysocki wrote:
+> > On Tuesday, November 5, 2019 8:35:05 AM CET MyungJoo Ham wrote:
+> >>> Update myself to the DEVFREQ entry as maintainer from reviewer and
+> >>> the git repository information to manage the devfreq patches. I've been
+> >>> reviewing and tesing the devfreq support for the couple of years as reviewer.
+> >> >From now, I'll help and reiview the devfreq as maintainer.
+> >>>
+> >>> Suggested-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> >>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> >>
+> >> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+> >>
+> >>
+> >> Thanks a lot, Chanwoo!
 > > 
-> > Responses should be made by Wed 06 Nov 2019 09:14:04 PM UTC.
-> > Anything received after that time might be too late.
+> > I can take this one if no one is against that.
+> 
+> Thanks for picking up.
+> 
 > > 
-> > The whole patch series can be found in one patch at:
-> > 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.3.9-rc1.gz
-> > or in the git tree and branch at:
-> > 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.3.y
-> > and the diffstat can be found below.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> > I will be expecting devfreq pull requests from Chanwoo going forward.
 > > 
 > 
-> Compiled and booted on my test system. No dmesg regressions.
+> After you applied it, If it's not late, I'll send the pull-request
+> of devfreq for v5.5. Thanks.
 
-Thanks for testing all of these and letting me know.
+No, it is not too late, you can send it at any time now.
 
-greg k-h
+Thanks!
+
+
+
