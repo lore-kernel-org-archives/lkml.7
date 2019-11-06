@@ -2,108 +2,158 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FDB1C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B343BC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:35:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5EFBD2077B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 699E3222C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:35:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Zue3TGj5"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="M1Ul3n1c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730950AbfKFDfL (ORCPT
+        id S1731043AbfKFDfl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:35:11 -0500
-Received: from ozlabs.org ([203.11.71.1]:35991 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726368AbfKFDfK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:35:10 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477BxS0Hdwz9sPK;
-        Wed,  6 Nov 2019 14:35:08 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573011308;
-        bh=5tQVxw9udsjAubC6/XLuiktJFlolgo185dw0xi1l250=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Zue3TGj5O8+EIJd/FUI5Bn99EHDcdX8d0UDWFnUe+Qk0QtdYIRbolyWO5lGrHK6Gl
-         jqoPnliFjLIkLFR90M7S5cYS2VTGJji0jxKPcJbPuDhOs0ZBRx2vw0bJb0fNSZVy7F
-         D3QDKNZWd2PdexNHreMufboo0EK1Kvh3cD0bRBylxI2XadZX9+fobrKqXoK/IRJ5An
-         nCwT/AR0/tg6Ok/QIKZK9GqEfohPMd7cEdQ255W1DHqmeiHEb1X7P02EEhBL7byMmT
-         I1YpNBex0hrDkn3mMyoe26xfel2bKfSdNxH2FfLkPoJSep8k3zY/Ercl7c3q7GmdTw
-         0xdIXVte0bX7w==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     John Hubbard <jhubbard@nvidia.com>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Shilpasri G Bhat <shilpa.bhat@linux.vnet.ibm.com>
-Cc:     linux-pm@vger.kernel.org, "Rafael J . Wysocki" <rjw@rjwysocki.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Preeti U Murthy <preeti@linux.vnet.ibm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v2] cpufreq: powernv: fix stack bloat and NR_CPUS limitation
-In-Reply-To: <405c2ac2-a61c-e7e6-3487-c55bcdf1e839@nvidia.com>
-References: <20191018045539.3765565-1-jhubbard@nvidia.com> <87pnidbptw.fsf@mpe.ellerman.id.au> <405c2ac2-a61c-e7e6-3487-c55bcdf1e839@nvidia.com>
-Date:   Wed, 06 Nov 2019 14:35:05 +1100
-Message-ID: <87d0e5wuc6.fsf@mpe.ellerman.id.au>
+        Tue, 5 Nov 2019 22:35:41 -0500
+Received: from mail-eopbgr20062.outbound.protection.outlook.com ([40.107.2.62]:52451
+        "EHLO EUR02-VE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725768AbfKFDfl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:35:41 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=oVRbKHsUQsoLNPxHiK3xQpxq/7ecg4F4aK/uHp5pF/zDSaVKDLP5znyWMcr6VCBw6Md3orb5EDgh6IgVfecH4uv3docvFRiVTJOooDN1mdW20ecJE/fW5SALCwbjJCVoAyVercKsJezWEAb7ORjPIzjjSeuNgq6G4N68YeQcHBWCnkIDiM0Haozyui8MnDA9EXiak6BJ1TaXR/VqN5anTf5XvKe8p+NfiEVw+m19zbjNCvLcLrpqIQoqIHxqW3tGKjMoPFsECdbqpcxlCgLrg9aNESjXlu+h7dS0OMtyh1gUPT/+zAncb9B9COUGgrZnzkQynQsvd92HKXGn7ZZshA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CHPi9eqeDDxQbUo2ToZpOvNibNXbQ3Rbrihq2faQP7E=;
+ b=DqBM8cHYhJ/lzLUnk3g3YZY+FZvAFnixbP6eMCUHJa9R2B2PPPqsKTzqNYBePrlF79/Yp6OzNSw96aqJ6rMi+Nzbi/X5txaV4GS7QjZkeWgoyKSudowuZVg2wbEf7qjbVoHTJzZe6aTl+Vy0uHF4+JcktFwLQjBa0qFIgBGymXSKQF4oRdPYl5w+nHOYKC9/fxaiI0wG5NB24eZCTMR1UxTpWu/LK2A/0/zZfc25CyZkh2ONiWsazjvu2FzymBimdSnlyV7fXFN37TGU7y909DFPhYqW7a1LzbrJco5HhXn1P941Y1r0dr/8iBeigN/LxwL/mOb9WC9ebJHygI4DKA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
+ header.d=nxp.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=CHPi9eqeDDxQbUo2ToZpOvNibNXbQ3Rbrihq2faQP7E=;
+ b=M1Ul3n1cNZv8ljoIN/1C0TbaZldh2FuFg5GZ8JC2cWMNishze+9VVs0HoHkOKuQio2CIZj4VgjMwLsx6yLXqpo90mvK/d1xZyLN50Xafcu8SVbkQf6lxxjAlLYjeFXbGeHMs2cAlEitkEniwlXvI8mupjEJhFKYhv5EV2088QFU=
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
+ AM5PR04MB3106.eurprd04.prod.outlook.com (10.167.170.145) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 03:35:36 +0000
+Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::8ce8:9eaf:3916:4bc9]) by AM5PR04MB3299.eurprd04.prod.outlook.com
+ ([fe80::8ce8:9eaf:3916:4bc9%6]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 03:35:36 +0000
+From:   Xiaowei Bao <xiaowei.bao@nxp.com>
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+CC:     "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        Leo Li <leoyang.li@nxp.com>,
+        "M.h. Lian" <minghuan.lian@nxp.com>,
+        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "Z.q. Hou" <zhiqiang.hou@nxp.com>
+Subject: RE: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Thread-Topic: [PATCH v6 3/3] PCI: layerscape: Add LS1028a support
+Thread-Index: AQHVYUIADtGnPn3wtky/OvhdSoTT96d857UAgAD6lQA=
+Date:   Wed, 6 Nov 2019 03:35:36 +0000
+Message-ID: <AM5PR04MB32999C59EE51DACC030E13D7F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
+References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+ <20190902034319.14026-3-xiaowei.bao@nxp.com>
+ <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
+In-Reply-To: <20191105123233.GA26960@e121166-lin.cambridge.arm.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=xiaowei.bao@nxp.com; 
+x-originating-ip: [119.31.174.73]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 99f897e0-8870-4da9-975c-08d7626a6321
+x-ms-traffictypediagnostic: AM5PR04MB3106:|AM5PR04MB3106:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <AM5PR04MB3106B52341838483163AE3AFF5790@AM5PR04MB3106.eurprd04.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(136003)(346002)(396003)(376002)(39860400002)(366004)(13464003)(189003)(199004)(6916009)(6506007)(66066001)(74316002)(446003)(66446008)(3846002)(2906002)(305945005)(14444005)(478600001)(9686003)(99286004)(6246003)(6116002)(25786009)(33656002)(14454004)(4326008)(256004)(71200400001)(52536014)(5660300002)(71190400001)(76176011)(64756008)(76116006)(26005)(53546011)(8676002)(7696005)(81166006)(476003)(11346002)(7416002)(81156014)(55016002)(86362001)(486006)(54906003)(44832011)(316002)(8936002)(186003)(66476007)(66556008)(66946007)(6436002)(7736002)(102836004)(229853002);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3106;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: f5ahmGEd/sNWba0MA9NlMTXxkrTp//wP0Pt6WIDrr1bKO14RpsWOddUkuURxuaHVGFJGMX8bTNM4YosVac8lvCAh8/3YWLaTCjmZFAKEJT/I138Bm4sqwmx2d2BrnWF1F38mglcjB8rGU62axI3E2txxe22RjFc40dEgAKyDMZQj7uGvTwrKIEmA4CFMg8fQEW8ynmY+JLzp5pu2jbJcAalOPOaIww3Tq5pTyNlk8w7l1uRY/oHKynpbSSgoqX7MDq1fjVEaHWl1NaMxjPSt7wVStSFAPPTEuLCrgmo69E3GoNbMMinGZnnOR/j5dBAu/OnDhW3VhCBvxkk+ZEWfWrKTHOSqLFCDUEhMaCFbQTeRDuWU+SA/mF5ftok9m3isvLztyHGK1GxvEWZ2AFrs6KN2qwJZWi7+ybsSWpZknmvI3Hs+0tNs7msdv/j3zsr9
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 99f897e0-8870-4da9-975c-08d7626a6321
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 03:35:36.4676
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 28ZEX/yzG5QCgwrOwSfqc9etq7/R2dmw2HPgQMsPqu3RPPwWfX+NShaeZqOBW3CvktHuOIWELp+VWlBXzb6l5A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3106
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-John Hubbard <jhubbard@nvidia.com> writes:
-> On 10/30/19 7:39 PM, Michael Ellerman wrote:
->> Hi John,
->> 
->> Sorry I didn't reply to this sooner, too many patches :/
->> 
->> John Hubbard <jhubbard@nvidia.com> writes:
->>> The following build warning occurred on powerpc 64-bit builds:
->>>
->>> drivers/cpufreq/powernv-cpufreq.c: In function 'init_chip_info':
->>> drivers/cpufreq/powernv-cpufreq.c:1070:1: warning: the frame size of 1040 bytes is larger than 1024 bytes [-Wframe-larger-than=]
->> 
->> Oddly I don't see that warning in my builds, eg with GCC9:
->> 
->>    https://travis-ci.org/linuxppc/linux/jobs/604870722
->
-> This is with a cross-compiler based on gcc 8.1.0, which I got from:
->    https://mirrors.edge.kernel.org/pub/tools/crosstool/files/bin/x86_64/8.1.0/
->
-> I'll put that in the v3 commit description.
->
->> 
->>> This is due to putting 1024 bytes on the stack:
->>>
->>>      unsigned int chip[256];
->>>
->>> ...and while looking at this, it also has a bug: it fails with a stack
->>> overrun, if CONFIG_NR_CPUS > 256.
->> 
->> It _probably_ doesn't, because it only increments the index when the
->> chip_id of the CPU changes, ie. it doesn't create a chip for every CPU.
->> But I agree it's flaky the way it's written.
->
-> I'll soften up the wording accordingly.
->
->> 
->>> Fix both problems by dynamically allocating based on CONFIG_NR_CPUS.
->> 
->> Shouldn't it use num_possible_cpus() ?
->> 
->> Given the for loop is over possible CPUs that seems like the upper
->> bound. In practice it should be lower because some CPUs will share a
->> chip.
->> 
->
-> OK, I see, that's more consistent with the code, I'll change to that.
-
-Thanks.
-
-cheers
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
+c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnE6jEx1MI1yNUgMjA6
+MzMNCj4gVG86IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiBDYzogcm9iaCtk
+dEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9Aa2VybmVsLm9yZzsg
+TGVvDQo+IExpIDxsZW95YW5nLmxpQG54cC5jb20+OyBNLmguIExpYW4gPG1pbmdodWFuLmxpYW5A
+bnhwLmNvbT47IE1pbmdrYWkgSHUNCj4gPG1pbmdrYWkuaHVAbnhwLmNvbT47IFJveSBaYW5nIDxy
+b3kuemFuZ0BueHAuY29tPjsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJl
+ZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2QGxpc3RzLm96
+bGFicy5vcmc7IGJoZWxnYWFzQGdvb2dsZS5jb207IFoucS4gSG91DQo+IDx6aGlxaWFuZy5ob3VA
+bnhwLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NiAzLzNdIFBDSTogbGF5ZXJzY2FwZTog
+QWRkIExTMTAyOGEgc3VwcG9ydA0KPiANCj4gT24gTW9uLCBTZXAgMDIsIDIwMTkgYXQgMTE6NDM6
+MTlBTSArMDgwMCwgWGlhb3dlaSBCYW8gd3JvdGU6DQo+ID4gQWRkIHN1cHBvcnQgZm9yIHRoZSBM
+UzEwMjhhIFBDSWUgY29udHJvbGxlci4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkg
+QmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEhvdSBaaGlxaWFu
+ZyA8WmhpcWlhbmcuSG91QG54cC5jb20+DQo+ID4gLS0tDQo+ID4gdjI6DQo+ID4gIC0gTm8gY2hh
+bmdlLg0KPiA+IHYzOg0KPiA+ICAtIFJldXNlIHRoZSBsczIwODggZHJpdmVyIGRhdGEgc3RydWN0
+dXJ0Lg0KPiA+IHY0Og0KPiA+ICAtIE5vIGNoYW5nZS4NCj4gPiB2NToNCj4gPiAgLSBObyBjaGFu
+Z2UuDQo+ID4gdjY6DQo+ID4gIC0gTm8gY2hhbmdlLg0KPiA+DQo+ID4gIGRyaXZlcnMvcGNpL2Nv
+bnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMgfCAxICsNCj4gPiAgMSBmaWxlIGNoYW5nZWQs
+IDEgaW5zZXJ0aW9uKCspDQo+IA0KPiBJIGhhdmUgbm90IHNlZW4gYW55IGNvbW1lbnQgb24gYW55
+IGxheWVyc2NhcGUgZHJpdmVyIHBhdGNoZXMgY29taW5nIGZyb20NCj4gdGhlIG1haW50YWluZXJz
+IGFzIGxpc3RlZCBpbiB0aGUgTUFJTlRBSU5FUlMgZmlsZSAoYW5kIENDZWQgaW4gdGhpcyBzZXJp
+ZXMpLg0KPiANCj4gSSByZXF1ZXN0IG1haW50YWluZXJzIEFDSyBvbiB0aGVzZSBwYXRjaGVzIGFu
+ZCBJIGV4cGVjdCB0aGVtIHRvIHN0YXJ0DQo+IHJldmlld2luZyB5b3VyIGNvZGUgaWYgdGhleSB3
+YW50IHRvIGJlIHN0aWxsIGNvbnNpZGVyZWQgbWFpbnRhaW5lcnMgZm9yIHRoaXMNCj4gZHJpdmVy
+Lg0KPiANCj4gVGhlIGNoYW5nZXMgbG9vayBPSyBtaW51cyBTaGF3bidzIHJlbWFyayBvbiBjb21w
+YXRpYmxlIHN0cmluZyB0aGF0IHdhcw0KPiBpZ25vcmVkLg0KDQpIaSBMb3JlbnpvLA0KDQpUaGFu
+a3MgZm9yIHlvdXIgY29tbWVudHMuDQoNCkluIGZhY3QsIHRoZSBwYXRjaGVzIGhhdmUgcmV2aWV3
+ZWQgaW4gb3VyIGludGVybmFsIG1haWwgbGlzdCwgYWZ0ZXIgdGhlIHJldmlldyBieSBNaW5naHVh
+biANCmFuZCBNaW5na2FpLCBJIHdpbGwgc2VuZCB0aGVzZSBwYXRjaGVzIHRvIG9wZW5zb3VyY2Us
+IHRoZXkgd2lsbCBnaXZlIHRoZSBBQ0sgd2hlbiB0aGVzZQ0KcGF0Y2hlcyBzZWVtcyBpcyBPSyBh
+bmQgbm8gY29tbWVudHMgb24gdGhpcy4NCiAgIA0KVGhhbmtzIA0KWGlhb3dlaQ0KDQo+IA0KPiBU
+aGFua3MsDQo+IExvcmVuem8NCj4gDQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGNpL2NvbnRy
+b2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gPiBiL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIv
+ZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4gPiBpbmRleCAzYTVmYTI2Li5mMjRmNzlhIDEwMDY0NA0K
+PiA+IC0tLSBhL2RyaXZlcnMvcGNpL2NvbnRyb2xsZXIvZHdjL3BjaS1sYXllcnNjYXBlLmMNCj4g
+PiArKysgYi9kcml2ZXJzL3BjaS9jb250cm9sbGVyL2R3Yy9wY2ktbGF5ZXJzY2FwZS5jDQo+ID4g
+QEAgLTI2Myw2ICsyNjMsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IGxzX3BjaWVfZHJ2ZGF0YSBs
+czIwODhfZHJ2ZGF0YQ0KPiA+ID0geyAgc3RhdGljIGNvbnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQg
+bHNfcGNpZV9vZl9tYXRjaFtdID0gew0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDEy
+YS1wY2llIiwgLmRhdGEgPSAmbHMxMDQ2X2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUg
+PSAiZnNsLGxzMTAyMWEtcGNpZSIsIC5kYXRhID0gJmxzMTAyMV9kcnZkYXRhIH0sDQo+ID4gKwl7
+IC5jb21wYXRpYmxlID0gImZzbCxsczEwMjhhLXBjaWUiLCAuZGF0YSA9ICZsczIwODhfZHJ2ZGF0
+YSB9LA0KPiA+ICAJeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMxMDQzYS1wY2llIiwgLmRhdGEgPSAm
+bHMxMDQzX2RydmRhdGEgfSwNCj4gPiAgCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA0NmEtcGNp
+ZSIsIC5kYXRhID0gJmxzMTA0Nl9kcnZkYXRhIH0sDQo+ID4gIAl7IC5jb21wYXRpYmxlID0gImZz
+bCxsczIwODBhLXBjaWUiLCAuZGF0YSA9ICZsczIwODBfZHJ2ZGF0YSB9LA0KPiA+IC0tDQo+ID4g
+Mi45LjUNCj4gPg0K
