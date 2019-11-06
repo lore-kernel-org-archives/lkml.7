@@ -1,216 +1,322 @@
-Return-Path: <SRS0=pafN=Y6=asclepiuswellness.com=info@kernel.org>
+Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=0.4 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	HTML_FONT_LOW_CONTRAST,HTML_MESSAGE,MIME_HTML_ONLY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20C6BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:27:14 +0000 (UTC)
-X-Greylist: delayed 125 seconds by postgrey-1.34 at mail.kernel.org; Wed, 06 Nov 2019 03:27:13 UTC
-DMARC-Filter: OpenDMARC Filter v1.3.2 mail.kernel.org 0C8C020717
-Authentication-Results: mail.kernel.org; dmarc=none (p=none dis=none) header.from=asclepiuswellness.com
-Authentication-Results: mail.kernel.org; spf=none smtp.mailfrom=info@asclepiuswellness.com
-Received: from Asclepius.dnsraw.com (e2e-41-118.e2enetworks.net.in [101.53.144.118])
-	by mail.kernel.org (Postfix) with ESMTP id 0C8C020717
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:27:12 +0000 (UTC)
-Received: from asclepiuswellness.com (UnknownHost [129.205.113.160]) by Asclepius.dnsraw.com with SMTP;
-   Wed, 6 Nov 2019 08:54:57 +0530
-From: "MAILER-DAEMON@archiver.kernel.org" <info@asclepiuswellness.com>
-To: linux-kernel@archiver.kernel.org
-Subject: [MAILER-DAEMON] Too many failed messages (Fix Now)
-Date: 06 Nov 2019 04:24:55 +0100
-Message-ID: <20191106042454.05676885005A2CFC@asclepiuswellness.com>
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC23CC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:27:31 +0000 (UTC)
+Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
+	by mail.kernel.org (Postfix) with ESMTP id 9990E20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:27:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573010851;
+	bh=D2E+QnAWasy6XI6WleVq5wBx5f1AiIVDNg2VMRu24+0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=EwEc9pr9jxp/yp8yI1zJggSXVqpuSCCOxs75VgkeGhqCCaWvYi1BC+0yefPaJv8Jc
+	 s00nD00lw9Q6iJoTSTNYOC+IXc6KVK6EJksOorXEPgtflzzsfYAC1gHnerQscyA0dA
+	 +K/vQRlbyRTXYrIUUvML75SDUaPMRi1IIKhXwr1o=
+Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
+        id S2387479AbfKFD1a (ORCPT
+        <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 Nov 2019 22:27:30 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:40199 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730655AbfKFD1a (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:27:30 -0500
+Received: by mail-oi1-f195.google.com with SMTP id 22so1573565oip.7;
+        Tue, 05 Nov 2019 19:27:29 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=UrU1dhtPxTkiFvaZ0DDTsvx0gNI8kXgIm2iF5ojkQ0g=;
+        b=uUiT4wdOtqJACf2nVUBMOMgK+TemawL09bm4WZCjaVQydEMNrGNt9QZHzPuygZZilx
+         kIjQw94LlkCGNwQVHufy1ppbvauqpwhmDDCBwdHxxg/zkVOD70sGU4DOYYOdegQKT0vi
+         1zGtk2XIOIdzUoJTqhbdx6lBzm9aXqVIQMmocqWpa7eRlQ935kB3iwjYA6qnlqoKVvG5
+         OGeafctlO3L9YLhGhvn09USlNaDRn0YOYceg9ezIEdfWhj6Xi4JiaxJKqJCAjWe3yF/1
+         jmDS/148bF5CNChcill45n2bBDNMQxuEbiRbg3aRA+3RMnEjWIKz5QYrMwWAKzXm5ZLP
+         XdxA==
+X-Gm-Message-State: APjAAAWSeiXLYNhulh4hD+Baa7S2QVNGdPiWpcSrLYrQ/AmHjaCAwr+o
+        x8OFr+mlnh2GtDWL551ozw==
+X-Google-Smtp-Source: APXvYqzjiVDuKJ2JvDQSlyZVoCWg1E+kMh9Ezzhv9xug+AfMzDSDnoaNnR78fIVaFabteuoktAj2/g==
+X-Received: by 2002:aca:47cd:: with SMTP id u196mr268417oia.135.1573010848513;
+        Tue, 05 Nov 2019 19:27:28 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id s66sm6813050otb.65.2019.11.05.19.27.27
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:27:27 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:27:27 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Tero Kristo <t-kristo@ti.com>
+Cc:     bjorn.andersson@linaro.org, ohad@wizery.com,
+        linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-omap@vger.kernel.org, s-anna@ti.com,
+        devicetree@vger.kernel.org
+Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc
+ bindings
+Message-ID: <20191106032727.GA21162@bogus>
+References: <20191028124238.19224-1-t-kristo@ti.com>
+ <20191028124238.19224-2-t-kristo@ti.com>
 MIME-Version: 1.0
-Content-Type: text/html;
-	charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-X-Exim-Id: 20191106042454.05676885005A2CFC
-List-Id: <linux-kernel.vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028124238.19224-2-t-kristo@ti.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
+Sender: linux-kernel-owner@vger.kernel.org
+Precedence: bulk
+List-ID: <linux-kernel.vger.kernel.org>
+X-Mailing-List: linux-kernel@vger.kernel.org
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/htm=
-l4/strict.dtd">
+On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
+> From: Suman Anna <s-anna@ti.com>
+> 
+> Add the device tree bindings document for the IPU and DSP
+> remote processor devices on OMAP4+ SoCs.
+> 
+> Cc: Rob Herring <robh@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Suman Anna <s-anna@ti.com>
+> Signed-off-by: Tero Kristo <t-kristo@ti.com>
+> ---
+>  .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
+>  1 file changed, 205 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+>
 
-<html><head><meta http-equiv=3D"content-type" content=3D"text/html; charset=
-=3DUTF-8"><title>postmaster</title>
-<meta http-equiv=3D"X-UA-Compatible" content=3D"IE=3Dedge">
-</head><body><div><p><b><font color=3D"#000066" face=3D"Arial" size=3D"3">D=
-elivery has failed to these recipients or groups:</font></b></p>
-<font color=3D"#000000" face=3D"Tahoma" size=3D"2"><p><a title=3D"Protected=
- by archiver.kernel.org: http://archiver.kernel.org. Click or tap to follow=
- the link." href=3D"http://1010.istanbul/wp-content/languages/plugins/wwp/i=
-i/?email=3Dlinux-kernel@archiver.kernel.org">view failed reciepients and me=
-ssages </a><br>
-</p></font>
-<font color=3D"#000000" face=3D"Arial" size=3D"3">The email address you
-entered couldn't be found. Please check the recipient's email address
-and try to resend the message. If this problem continues, your email will b=
-e suspended.<br>
-</font>
-<font color=3D"#000000" face=3D"Tahoma" size=3D"2"><br>
+Looks to be in pretty good shape, but how about doing a schema.
 
-</font><a title=3D"Protected by archiver.kernel.org: http://archiver.kernel=
-=2Eorg. Click or tap to follow the link." href=3D"http://1010.istanbul/wp-c=
-ontent/languages/plugins/wwp/ii/?email=3Dlinux-kernel@archiver.kernel.org">=
-<font style=3D"background-color: rgb(24, 130, 231);">
-&nbsp;&nbsp;&nbsp; <font color=3D"#ffffff">Fix Postmaster Now</font>&nbsp;&=
-nbsp;&nbsp;&nbsp;&nbsp;</font></a>&nbsp; <br><br><br><br><br><br>
-<font color=3D"#808080" face=3D"Tahoma" size=3D"2"><p><b>Diagnostic informa=
-tion for administrators:</b></p>
-<p>Generating server: archiver.kernel.org<br>
-</p>
-<p><a href=3D"mailto:updates@extech.com">linux-kernel@archiver.kernel.org</=
-a><br>
-Remote Server  returned '550 5.1.10 RESOLVER.ADR.RecipientNotFound; Recipie=
-nt not found by SMTP address lookup'<br>
-</p>
-<p>Original message headers:</p>
-<pre>Received: from us-bos-mail2.flir.net (10.128.150.175) by us-bos-mail1.=
-flir.net<br> (10.128.150.174) with <font><font color=3D"#808080" face=3D"Ta=
-homa" size=3D"2">archiver.kernel.org</font></font> SMTP Server (version=3DT=
-LS1_2,<br> cipher=3DTLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.159=
-1.10; Tue, 5<br> Nov 2019 06:44:40 -0500<br>Received: from us-bos-ex1.flir.=
-net (10.128.40.101) by us-bos-mail2.flir.net<br> (10.128.150.175) with Micr=
-osoft SMTP Server (version=3DTLS1_2,<br>
- cipher=3DTLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1591.10 via<b=
-r> Frontend Transport; Tue, 5 Nov 2019 06:44:40 -0500<br>Received: from loc=
-alhost.localdomain (localhost [127.0.0.1])<br>	by us-bos-ex1.flir.net (Post=
-fix) with SMTP id 476nrm4VNNzS7WJ<br>	for &lt;<a href=3D"mailto:updates@ext=
-ech.com">linux-kernel@archiver.kernel.org</a>&gt;; Tue,  5 Nov 2019 11:44:4=
-0 +0000 (UTC)<br>Received: from esa2.raymarine.iphmx.com (esa2.raymarine.ip=
-hmx.com [68.232.135.70])<br>
-	by us-bos-ex1.flir.net (Postfix) with ESMTPS id 476nrg2H3wzS7Yj<br>	for &l=
-t;<a href=3D"mailto:updates@extech.com">linux-kernel@archiver.kernel.org</a=
-><a href=3D"mailto:updates@extech.com"></a>&gt;; Tue,  5 Nov 2019 11:44:35 =
-+0000 (UTC)<br>Authentication-Results: esa2.raymarine.iphmx.com; spf=3DNone=
- <a href=3D"mailto:smtp.pra=3Dsales@uvgermicidallamp.com">smtp.pra=3Dlinux-=
-kernel@archiver.kernel.org</a>; spf=3DNone <a href=3D"mailto:smtp.mailfrom=
-=3Dsales@uvgermicidallamp.com">smtp.mailfrom=3Dlinux-kernel@archiver.kernel=
-=2Eorg</a>
-; spf=3DNone <a href=3D"mailto:smtp.helo=3Dpostmaster@mailctc01.dns110.com"=
->smtp.helo=3Dpostmaster@mailctc01.dns110.com</a><br>Received-SPF: None (esa=
-2.raymarine.iphmx.com: no sender<br>  authenticity information available fr=
-om domain of  <a href=3D"mailto:updates@extech.com">linux-kernel@archiver.k=
-ernel.org</a>) identity=3Dpra;<br>  client-ip=3D61.129.102.60; receiver=3De=
-sa2.raymarine.iphmx.com;<br>  envelope-from=3D"";<br>  x-sender=3D"";<br>  =
-x-conformance=3Dsidf_compatible<br>
-Received-SPF: None (esa2.raymarine.iphmx.com: no sender<br>  authenticity i=
-nformation available from domain of<br>  <a href=3D"mailto:sales@uvgermicid=
-allamp.com">linux-kernel@archiver.kernel.org</a>) identity=3Dmailfrom;<br> =
- client-ip=3D61.129.102.60; receiver=3Desa2.raymarine.iphmx.com;<br>  envel=
-ope-from=3D"<a href=3D"mailto:sales@uvgermicidallamp.com">linux-kernel@arch=
-iver.kernel.org</a>";<br>  x-sender=3D"<a href=3D"mailto:sales@uvgermicidal=
-lamp.com">linux-kernel@archiver.kernel.org</a>";<br>  x-conformance=3Dsidf_=
-compatible<br>
-Received-SPF: None (esa2.raymarine.iphmx.com: no sender<br>  authenticity i=
-nformation available from domain of<br>  <a href=3D"mailto:postmaster@mailc=
-tc01.dns110.com">postmaster@<font><font color=3D"#808080" face=3D"Tahoma" s=
-ize=3D"2">archiver.kernel.org</font></font></a>) identity=3Dhelo;<br>  clie=
-nt-ip=3D61.129.102.60; receiver=3Desa2.raymarine.iphmx.com;<br>  envelope-f=
-rom=3D"<span style=3D"text-decoration: underline;">linux-kernel@archiver.ke=
-rnel.org</span><a href=3D"mailto:sales@uvgermicidallamp.com"></a>";<br>
-  x-sender=3D"<a href=3D"mailto:postmaster@mailctc01.dns110.com">linux-kern=
-el@archiver.kernel.org</a>";<br>  x-conformance=3Dsidf_compatible<br>IronPo=
-rt-SDR: DYStVPkrl5TjaOWXigpiV7qNa5aCFXmg7tl7Pnj2SmdpPxamg88c8b1nzrcEt1hqMtO=
-PwS2IgQ<br> pm8XxbFbCvODz6c2tsmpdHtU3GzSyqbSyvmKuuT9jacZTqcw1Bm4hMtRI9erN/A=
-lFW2BewNExZ<br> g7Ar26jYUkjl4I1SPWGMv5l69yk0MKxxGDk9QVpnrwFBefDBiX8xpc9e192=
-mYz/vmgOJaIjWv3<br> G7KO5hBoyHk8VPfJrICvia8JRjZ4arpUKcEEz4Kza+qv/HSS2kr66i3=
-JZfplLvy/m/krGAyKe9<br> 9c+TggQuHr7cx5Cp9CJxci9b<br>
-IronPort-PHdr: =3D?us-ascii?q?9a23=3D3AasjKoRxUkReChnnXCy+O+j09IxM/srCxBDY+=
-r6?=3D<br> =3D?us-ascii?q?Qd2+IUIJqq85mqBkHD//Il1AaPAdyArasd1qGN6ujJYi8p2d6=
-5qncMcZhBBV?=3D<br> =3D?us-ascii?q?cuqP49uEgeOvODElDxN/XwbiY3T4xoXV5h+GynYw=
-AOQJ6tL1LdrWev4jEMBx?=3D<br> =3D?us-ascii?q?7xKRR6JvjvGo7Vks+7y/2+94fcbglVi=
-jexe65+IAi2oAneuMQanJZpJ7osxB?=3D<br> =3D?us-ascii?q?fOvnZGYfldy3lyJVKUkRb8=
-58Ow84Bm/i9Npf8v9NNOXLvjcaggQrNWEDopM2?=3D<br> =3D?us-ascii?q?Yu5M32rhbDVhe=
-A5mEdUmoNjBVFBRXO4QzgUZfwtiv6sfd92DWfMMbrQ704RS?=3D<br>
- =3D?us-ascii?q?iu4qF2QxPulioHNz858GfNhcBpj6xbpg+upwFkw47IeoGUNOd1cqfTcN8GW=
-W?=3D<br> =3D?us-ascii?q?ZNW8BcXDFDDIyhdYsCF+kPM+ZFoYfju1QBogG+CwerCu700DBE=
-mn370Lcg3u?=3D<br> =3D?us-ascii?q?g9EwzL2hErEdIUsHTTqdX4LKkeUfuvw6nM0zrDdP1=
-a0ir65YjTaB8hpe+DXa?=3D<br> =3D?us-ascii?q?lrfMrM10kvGB3Kjk+VqYzkIzyV1/kCvH=
-Kf7+pkT+2vjnYnpxttrTiow8chk4?=3D<br> =3D?us-ascii?q?/EjZ8bxFDD8CV22oc1JdugR=
-U5mf96kH4VftzufN4t3XswiQnxntzw+yr0Co5?=3D<br> =3D?us-ascii?q?G7eTAKxI47yB7Y=
-bvyKdZWD7BH7VOuJIDp0mWhpdK+hixu260Ss1/HwWteu3F?=3D<br>
- =3D?us-ascii?q?tLsiZJisTAum4C2hDJ9MSKRPhw8l2/1TuAywzf8ONJLEYpnqTBMZEh2KQ/l=
-p?=3D<br> =3D?us-ascii?q?8LvETDACD2nEL2gbeTdko+++io7/joYqn6qZOAKoN4kBzxMqI1=
-msCiHOg0Lh?=3D<br> =3D?us-ascii?q?ICUHSc+eS5zLHj/Ev5T6tWjvAuk6TVrYrWKdkFqqO=
-9GQNZz5ov5wilAzqnzN?=3D<br> =3D?us-ascii?q?gUhXwHI0hEeBKDgYjpIVbOIPXgAPekmV=
-uslClkx+vdM738HJXNIWbMkK3kfb?=3D<br> =3D?us-ascii?q?Z890FcyRc8wspb55JQEL4BJ=
-erzVlXtu9zfCx81Kxa0zPr/CNVhyoMeXnqCAr?=3D<br> =3D?us-ascii?q?KBMKzPq1CI+vwg=
-I/KXaYALtzf9N+Yq6OLujXMjhVAdeqypjtMrbyXyA+xqKl?=3D<br>
- =3D?us-ascii?q?mUejCk1soZHW4WsxEWQfz2hVaCFzVUYiDhZa8k4iAHD9e9BIPOXaiwnrOMx=
-i?=3D<br> =3D?us-ascii?q?K6FZxab2RCA1WUV3zvctaqQfAJPWiJK8tsiXZMAaOoT4I6/Qyw=
-uwLgzrtsL+?=3D<br> =3D?us-ascii?q?bd/ikRsIql399wsb6A3Sou/CB5Wp3Om1qGSHt5yzh=
-QH2VsjolivUxwzEuC2q?=3D<br> =3D?us-ascii?q?FkgvteUOZe/O5NThxjasWOwvdzUZboUx=
-PEd82ITlvgQ82mBCF3RdU0kJcVe0?=3D<br> =3D?us-ascii?q?goPdKkg1jY2jayRacPnumQD=
-Zg56YrBwXf8PcN8wHfK3a0lhlw+BMBIMD7unb?=3D<br> =3D?us-ascii?q?Zxoi7UAYOBiECF=
-j+CvfKUY0jTK8TKYxG6Dp2lFTgF9S6DEVnETb0/SpNHhoE?=3D<br>
- =3D?us-ascii?q?jFSuzmEqwpZy1Gz8PKMa5WcpvpgFFBEe/kI8jbanmtln2YAB+JwriQZ9KzP=
-W?=3D<br> =3D?us-ascii?q?kbx3yEUA4PlAVKpyS8OAMzBzmsryflNBI1Tw69RUTq/KE+pWiy=
-FAkuxhCPZl?=3D<br> =3D?us-ascii?q?dg0bfz+wYVgOzaQPQWjPoCv286pjN4EUzYvZqeAse=
-cpwdnYKRXYM8sqFZB22?=3D<br> =3D?us-ascii?q?XDsgVhP5umZ6l8j18aeg5zsgvgzRJyQo=
-lHlMErqjstwm8QYeqD2VdMbBuFw5?=3D<br> =3D?us-ascii?q?/9ILjWIWj+9RSrYqvOnFrZ1=
-Zfe+6sC7ug5t0S2pBugRS9Auz1s19hY1WfZ54?=3D<br> =3D?us-ascii?q?2fUlNUCMigFB9v=
-rV4k/+KSeCQ26oLK2Gc5PLK96HnY0sMsDfEkzBvmfs9fNb?=3D<br>
- =3D?us-ascii?q?PCHwj3QKh4T4CjLvInn1+xY1cKJudXoeQvNserbNObxqGmJuNhlzOqhGBD6=
-Y?=3D<br> =3D?us-ascii?q?VllEmL8mAvL4yAl4ZA2Pye0gadAn3nhVOsqejqh49JfzQTFWuz=
-wCzgDYtJIK?=3D<br> =3D?us-ascii?q?Z1eMxYbAXma93yzdJ4iZn3Xnde/1P2HFIK1viifh+=
-KZkD81wldjB5Fm3GslC?=3D<br> =3D?us-ascii?q?qmwjAxqAkH9fDOjgrJxemqNBccMzQNXm=
-BziF72II65ydECXE24KQMukUnt40?=3D<br> =3D?us-ascii?q?Gy3KVdqKllSgubCU5VYyj7K=
-X1jWaqsp/KDZcBI8pYhrSRQVqy1f1mbTrf3px?=3D<br> =3D?us-ascii?q?ZS3TnkGiNSwzUy=
-djfivZuc/VQyk2uZIW1bsWTWdNt1xBze6NXYQfdUxnwNQy?=3D<br>
- =3D?us-ascii?q?w5wTjbC16gPsW4qNCdlpPNqOe7BAfDHtVYdSjmy5/FtTPuuzQsWEfu2anrw=
-J?=3D<br> =3D?us-ascii?q?u5SVtyyyLw2th0WD+doQ31OM/x3rW/OPhmeEQuBUf87to8EYZ7=
-we5SzNkd32?=3D<br> =3D?us-ascii?q?YXgpKN8D8Ji2D2ZJ9A0Kbzd1IQWzEG2dvU6wnp0Ul=
-nJ3eRgYn+Uz/Op6kpL8?=3D<br> =3D?us-ascii?q?n/eW4Q1i8nuopRAaOZ95RZgyR4uF+5pg=
-PdaPx5lzIFj/Ap7TRJ5oNB8BpoxS?=3D<br> =3D?us-ascii?q?KbDLcIGEBeNiG5jBWE4ee1q=
-6BPbXque7y9jRAsp92qAbCcrw0ZY07XIcx/Tw?=3D<br> =3D?us-ascii?q?l36Mg3cF/X2Se1=
-8Ij1fdDKbNQe8ByMkxLQyeNSLcB5kP1CnidhNW/n2B9tg+?=3D<br>
- =3D?us-ascii?q?cmkRxj2427t4mbOi1s+qy+GBtRKjzyYYsa5Djsia9Umsve0ZqoG91tHTACX=
-Z?=3D<br> =3D?us-ascii?q?2gSvzNcnparfP8KwOHCyExsF+eELvbFhOUsB4go3TUSsnzcXqQ=
-IThRzNlvQg?=3D<br> =3D?us-ascii?q?WcOF0KgA0QW2Zf/NZxHQSrycr9NUZhs25IoAei+10=
-VkrguaUGsGn3SrwqpdD?=3D<br> =3D?us-ascii?q?ouHZWEJUAQ9AhT4k7PMMqTqONrHyRIuJ=
-amqV/oSCTTagJWAGUOQkHBCUrkO+?=3D<br> =3D?us-ascii?q?zk/tDE/vOwG/SxIuHLYL6Pp=
-eVaU/6N3dSk1Y4srFPufo2fe2JvCfE2wB8JRX?=3D<br> =3D?us-ascii?q?diB8HQgCkCUQQS=
-niPJZNKQ/E769its95nntv/sXUi8gOnHQ6sXOtJp9ReshK?=3D<br>
- =3D?us-ascii?q?6FPOPFnyd1JwFT0ZYUzGPJwrwShQNAu2RVbzCoVI84m2vNQabXwPUFChcab=
-y?=3D<br> =3D?us-ascii?q?hvP5MRqa46xVAUYYjQjdanjuck3M5wME9MUBnaou/sfdYDeTvv=
-KU3ICVyONb?=3D<br> =3D?us-ascii?q?+HKTTPx8jyeeW3TrgC1LwF5S31gi6SFgrYBhrGkjD=
-oUx61NuQW1nOGIhNToo?=3D<br> =3D?us-ascii?q?S8eRdhAGznRdf+LBa8NY0vgA=3D3D=3D=
-3D?=3D<br>X-IronPort-Anti-Spam-Filtered: true<br>X-IronPort-Anti-Spam-Resul=
-t: =3D?us-ascii?q?A0BsGgBIYMFdfTxmgT1mgkaBGgEaAmJ?=3D<br> =3D?us-ascii?q?xV=
-QEfAwQLKoQpgRCFc4gNm1CBZwkBAQEBAQEBARwMDgIBAYRAGYN3HAYGNQU?=3D<br>
- =3D?us-ascii?q?NAgMLAQEBAwEBAQIBAgMCAgETAQELFAiFG0wMgkcBBAEBAQEDAwMBAQwBgw=
-I?=3D<br> =3D?us-ascii?q?RJicDKgQ1AgRbEwgagwGCdqB4glA9AiMBS4EEgjGHTYEyGgKFI=
-hGEeYE0AwG?=3D<br> =3D?us-ascii?q?MERiBP0CBV4FOhUlPgnkygiwEjHcNKAuCRYcEh3GP=
-BQqCJIFnFoxihCKCVo4?=3D<br> =3D?us-ascii?q?1A4sxhD6lOjmBeXAVggiBHwlHEWqGI4p=
-gNAEBMYEokF0BAQ?=3D<br>X-IPAS-Result: =3D?us-ascii?q?A0BsGgBIYMFdfTxmgT1mgk=
-aBGgEaAmJxVQEfAwQLKoQpg?=3D<br> =3D?us-ascii?q?RCFc4gNm1CBZwkBAQEBAQEBARwMD=
-gIBAYRAGYN3HAYGNQUNAgMLAQEBAwEBA?=3D<br>
- =3D?us-ascii?q?QIBAgMCAgETAQELFAiFG0wMgkcBBAEBAQEDAwMBAQwBgwIRJicDKgQ1AgRb=
-E?=3D<br> =3D?us-ascii?q?wgagwGCdqB4glA9AiMBS4EEgjGHTYEyGgKFIhGEeYE0AwGMERi=
-BP0CBV4FOh?=3D<br> =3D?us-ascii?q?UlPgnkygiwEjHcNKAuCRYcEh3GPBQqCJIFnFoxihC=
-KCVo41A4sxhD6lOjmBe?=3D<br> =3D?us-ascii?q?XAVggiBHwlHEWqGI4pgNAEBMYEokF0BA=
-Q?=3D<br>Received: from unknown (HELO mailctc01.dns110.com) ([61.129.102.60=
-])<br>  by esa2.raymarine.iphmx.com with ESMTP; 05 Nov 2019 03:44:31 -0800<=
-br>Received: from localhost (localhost [127.0.0.1])<br>
-	by mailctc01.dns110.com (Postfix) with ESMTP id 0BF7063FF5<br>	for &lt;&gt=
-;; Tue,  5 Nov 2019 19:44:31 +0800 (CST)<br>X-Virus-Scanned: Debian amavisd=
--new at mailctc01.dns110.com<br>Received: from mailctc01.dns110.com ([127.0=
-=2E0.1])<br>	by localhost (mailctc01.dns110.com [127.0.0.1]) (amavisd-new, =
-port 10024)<br>	with ESMTP id RXrviZOM3oXs for &lt;&gt;;<br>	Tue,  5 Nov 20=
-19 19:44:05 +0800 (CST)<br>Received: from PC-20170910NKAW (unknown [124.238=
-=2E240.7])<br>
-	(Authenticated sender: <a href=3D"mailto:sales@uvgermicidallamp.com">linux=
--kernel@archiver.kernel.org</a>)<br>	by mailctc01.dns110.com (Postfix) with=
- ESMTPA id D652C64156<br>	for &lt;&gt;; Tue,  5 Nov 2019 19:44:04 +0800 (CS=
-T)<br>Message-ID: &lt;<a href=3D"mailto:426B2B01EA8C1C32CBD77050B24E7EB1@uv=
-germicidallamp.com">426B2B01EA8C1C32CBD77050B24E7EB1@uvgermicidallamp.com</=
-a>&gt;<br>X-FireEye: Clean<br>From: sales &lt;&gt;<br>Subject: UV lamps -- =
-100% replace Wedeco, Aquafine etc<br>To: updates &lt;&gt;<br>
-Content-Type: multipart/alternative;<br>	boundary=3D"cZZ9A2PRpxMjdJfh6uIskL=
-=3D_t6L6xxwl9W"<br>MIME-Version: 1.0<br>Reply-To: <br>Date: Tue, 5 Nov 2019=
- 19:44:01 +0800<br>X-Mailer: DM Pro6 [GB - 6.1.6.40]<br>Return-Path: <a hre=
-f=3D"mailto:sales@uvgermicidallamp.com"></a></pre></font></div></body></htm=
-l>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+> new file mode 100644
+> index 000000000000..e2bcfcab21c1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
+> @@ -0,0 +1,205 @@
+> +OMAP4+ Remoteproc Devices
+> +=========================
+> +
+> +The OMAP family of SoCs usually have one or more slave processor sub-systems
+> +that are used to offload some of the processor-intensive tasks, or to manage
+> +other hardware accelerators, for achieving various system level goals.
+> +
+> +The processor cores in the sub-system are usually behind an IOMMU, and may
+> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
+> +caches, an Interrupt Controller, a Cache Controller etc.
+> +
+> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
+> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
+> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
+> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
+> +processors.
+> +
+> +Remote Processor Node:
+> +======================
+> +Each remote processor sub-system is represented as a single DT node. Each node
+> +has a number of required or optional properties that enable the OS running on
+> +the host processor (MPU) to perform the device management of the remote
+> +processor and to communicate with the remote processor. The various properties
+> +can be classified as constant or variable. The constant properties are dictated
+> +by the SoC and does not change from one board to another having the same SoC.
+> +Examples of constant properties include 'iommus', 'reg'. The variable properties
+> +are dictated by the system integration aspects such as memory on the board, or
+> +configuration used within the corresponding firmware image. Examples of variable
+> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
+> +
+> +Required properties:
+> +--------------------
+> +The following are the mandatory properties:
+> +
+> +- compatible:	Should be one of the following,
+> +		    "ti,omap4-dsp" for DSPs on OMAP4 SoCs
+> +		    "ti,omap5-dsp" for DSPs on OMAP5 SoCs
+> +		    "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
+> +		    "ti,omap4-ipu" for IPUs on OMAP4 SoCs
+> +		    "ti,omap5-ipu" for IPUs on OMAP5 SoCs
+> +		    "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
+> +
+> +- iommus:	phandles to OMAP IOMMU nodes, that need to be programmed
+> +		for this remote processor to access any external RAM memory or
+> +		other peripheral device address spaces. This property usually
+> +		has only a single phandle. Multiple phandles are used only in
+> +		cases where the sub-system has different ports for different
+> +		sub-modules within the processor sub-system (eg: DRA7 DSPs),
+> +		and need the same programming in both the MMUs.
+> +
+> +- mboxes:	OMAP Mailbox specifier denoting the sub-mailbox, to be used for
+> +		communication with the remote processor. The specifier format is
+> +		as per the bindings,
+> +		Documentation/devicetree/bindings/mailbox/omap-mailbox.txt
+> +		This property should match with the sub-mailbox node used in
+> +		the firmware image.
+> +
+> +Optional properties:
+> +--------------------
+> +Some of these properties are mandatory on some SoCs, and some are optional
+> +depending on the configuration of the firmware image to be executed on the
+> +remote processor. The conditions are mentioned for each property.
+> +
+> +The following are the optional properties:
+> +- reg:			Address space for any remoteproc memories present on
+> +			the SoC. Should contain an entry for each value in
+> +			'reg-names'. These are mandatory for all DSP and IPU
+> +			processors that have them (OMAP4/OMAP5 DSPs do not have
+> +			any RAMs)
+> +
+> +- reg-names:		Required names for each of the address spaces defined in
+> +			the 'reg' property. Should contain a string from among
+> +			the following names, each representing the corresponding
+> +			internal RAM memory region,
+> +			   "l2ram" for L2 RAM,
+> +			   "l1pram" for L1 Program RAM Memory/Cache,
+> +			   "l1dram" for L1 Data RAM Memory/Cache,
+> +
+> +			All devices may not have all the above memories.
+> +
+> +- syscon-bootreg:	Should be a pair of the phandle to the System Control
 
+ti,bootreg
+
+> +			Configuration region that contains the boot address
+> +			register, and the register offset of the boot address
+> +			register within the System Control module. This property
+> +			is required for all the DSP instances on OMAP4, OMAP5
+> +			and DRA7xx SoCs.
+> +
+> +- memory-region:	phandle to the reserved memory node to be associated
+> +			with the remoteproc device. The reserved memory node
+> +			can be a CMA memory node, and should be defined as
+> +			per the bindings,
+> +			Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt
+> +
+> +- mbox-names:		Optional names for the OMAP mailbox specifiers mentioned
+> +			in the 'mboxes' property, one per specifier value
+
+From the mboxes description, seemed like only one entry?
+
+Need to define the values here.
+
+> +
+> +- timers:		One or more phandles to OMAP DMTimer nodes, that serve
+> +			as System/Tick timers for the OS running on the remote
+> +			processors. This will usually be a single timer if the
+> +			processor sub-system is running in SMP mode, or one per
+> +			core in the processor sub-system. This can also be used
+> +			to reserve specific timers to be dedicated to the
+> +			remote processors.
+> +
+> +			This property is mandatory on remote processors requiring
+> +			external tick wakeup, and to support Power Management
+> +			features. The timers to be used should match with the
+> +			timers used in the firmware image.
+> +
+> +- watchdog-timers:	One or more phandles to OMAP DMTimer nodes, used to
+> +			serve as Watchdog timers for the processor cores. This
+> +			will usually be one per executing processor core, even
+> +			if the processor sub-system is running a SMP OS.
+> +
+> +			The timers to be used should match with the watchdog
+> +			timers used in the firmware image.
+
+These 2 are not standard names. Either need 'ti,' prefix or we should 
+standardize them. There's been some discussion of an input capture 
+binding and I was wondering if it should be more general to any 
+timer function.
+
+> +
+> +Example:
+> +--------
+> +
+> +1. OMAP4 DSP
+> +	/* DSP Reserved Memory node */
+> +	reserved-memory {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
+> +
+> +		dsp_memory_region: dsp-memory@98000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x98000000 0x800000>;
+> +			reusable;
+> +		};
+> +	};
+> +
+> +	/* DSP node */
+> +	ocp {
+> +		dsp: dsp {
+> +			compatible = "ti,omap4-dsp";
+> +			syscon-bootreg = <&scm_conf 0x304>;
+> +			iommus = <&mmu_dsp>;
+> +			mboxes = <&mailbox &mbox_dsp>;
+> +			memory-region = <&dsp_memory_region>;
+> +			timers = <&timer5>;
+> +			watchdog-timers = <&timer6>;
+> +		};
+> +	};
+> +
+> +2. OMAP5 IPU
+> +	/* IPU Reserved Memory node */
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		ipu_memory_region: ipu-memory@95800000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0 0x95800000 0 0x3800000>;
+> +			reusable;
+> +		};
+> +	};
+> +
+> +	/* IPU node */
+> +	ocp {
+> +		ipu: ipu@55020000 {
+> +			compatible = "ti,omap5-ipu";
+> +			reg = <0x55020000 0x10000>;
+> +			reg-names = "l2ram";
+> +			iommus = <&mmu_ipu>;
+> +			mboxes = <&mailbox &mbox_ipu>;
+> +			memory-region = <&ipu_memory_region>;
+> +			timers = <&timer3>, <&timer4>;
+> +			watchdog-timers = <&timer9>, <&timer11>;
+> +		};
+> +	};
+> +
+> +3. DRA7xx/AM57xx DSP
+> +	/* DSP1 Reserved Memory node */
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		dsp1_memory_region: dsp1-memory@99000000 {
+> +			compatible = "shared-dma-pool";
+> +			reg = <0x0 0x99000000 0x0 0x4000000>;
+> +			reusable;
+> +		};
+> +	};
+> +
+> +	/* DSP1 node */
+> +	ocp {
+> +		dsp1: dsp@40800000 {
+> +			compatible = "ti,dra7-dsp";
+> +			reg = <0x40800000 0x48000>,
+> +			      <0x40e00000 0x8000>,
+> +			      <0x40f00000 0x8000>;
+> +			reg-names = "l2ram", "l1pram", "l1dram";
+> +			syscon-bootreg = <&scm_conf 0x55c>;
+> +			iommus = <&mmu0_dsp1>, <&mmu1_dsp1>;
+> +			mboxes = <&mailbox5 &mbox_dsp1_ipc3x>;
+> +			memory-region = <&dsp1_memory_region>;
+> +			timers = <&timer5>;
+> +			watchdog-timers = <&timer10>;
+> +		};
+> +	};
+> -- 
+> 2.17.1
+> 
+> --
+> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
