@@ -2,114 +2,127 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D3B8C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40522C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:24:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3046B2178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:23:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12C4A2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:24:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bWzySGaI"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PHprarRW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730577AbfKFOXV (ORCPT
+        id S1731872AbfKFOYX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:23:21 -0500
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46574 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726945AbfKFOXV (ORCPT
+        Wed, 6 Nov 2019 09:24:23 -0500
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]:49318 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727825AbfKFOYW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:23:21 -0500
-Received: by mail-yw1-f68.google.com with SMTP id i2so9601609ywg.13;
-        Wed, 06 Nov 2019 06:23:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
-        b=bWzySGaI1gx56KAqizix5H7Yk63JM+hiMx+HiAX2uSV+XOVSC9t6Jrkst9wSIn/yLa
-         Xcu/wWwfjHrzCGL5RS/ikhES7rrC7bIxuo/xobxeHHdGdiupSqBrywwc01R4ggjyVVwT
-         6JEpWFWZxnJ/BBGpPpEnMjKz3Upd/nuofT7yj7MARsElGSSh3VroG1/9NtMtS9asMnub
-         XLFSnfkiGKtLmEppBnfnGIvYYIlvm1VLadl1ERrUOnACBilCnP8g/fKJMCpoXlfG+JUY
-         67VOsBsBFFpozYlaQHVQN8dlLJyN6q8JLY/4aG2J/Ve/avl4AYaZ4kmHQxum19YIaqTs
-         NVrQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=eSWVp70y2kpyJk9Cxl49/cxLR3cgjAESMYLS12E5oUY=;
-        b=qtKs5GLIU+YfDebyWhUMdfm/bNZAHgHx/y3Hi3xLbx9Tqcy3wXsvUDhSBZY37Zrj8W
-         xjLpQskhxGI9T5kJ0IP/rJcEQnGGMx5KDkXJ6suEHVyjPnutbPRJ2a0NDqUMtU69bWYr
-         P89CNtcHGuz6SQhWVQZ1+PvJNvr/X+j1AFFqaPMZCdbU/m1EeHWWVujNWBAg4W4SCQXM
-         8w60ryy34mRSScIeosW1Ax2eKogZP7dHPBTs8wp+03gVcWHFih3dtlqEGa233EJm/AeP
-         iBDymxPVeUmgGY981iKEn8KEj3VX6moAgWJ6B82SX6mXb3QyXZIIrcvgkXuPecxBWl/Y
-         HRrQ==
-X-Gm-Message-State: APjAAAWvnrWG5dPY6Sy/aUcytqzEL4EUWoZI4fIX6LVIxuO9pcoQZtGm
-        9i6FbIcPCu4lWQVNL3HRrNXSW961+uo=
-X-Google-Smtp-Source: APXvYqzoYMq5gT/9eBMtyUIJu1a4USxwCNgZTNpjMjW3B/XCmy9qZhYAuVQhtBUvi/iW0mEQY3Xf8A==
-X-Received: by 2002:a81:58c6:: with SMTP id m189mr1437100ywb.25.1573050199708;
-        Wed, 06 Nov 2019 06:23:19 -0800 (PST)
-Received: from localhost.localdomain (c-73-37-219-234.hsd1.mn.comcast.net. [73.37.219.234])
-        by smtp.gmail.com with ESMTPSA id f203sm4436246ywa.106.2019.11.06.06.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 06:23:18 -0800 (PST)
-From:   Adam Ford <aford173@gmail.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     Adam Ford <aford173@gmail.com>, Rob Herring <robh+dt@kernel.org>,
+        Wed, 6 Nov 2019 09:24:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573050260;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=Flm1vJLqrcBnxQjlITmfF1YMq+3fPfsxFYeiifRPFwo=;
+        b=PHprarRWKUnc/W3o9iGx3c4VyKYFuY7bdn/VZBDyNHiv2+p9Xi9H0v6+aDUBmYzPm+rjRB
+        w/OJhBbFlAvYagLF9BLHUe9ZaYWD+OKpzvHaa8wlZrmOx4lAmK9WRMh/O1GzFnL6wMyXMg
+        9eLye1QqjwFr817aVcK7T08hFQjD5wk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-366-2UVS68OJOFikukoLMDiSDA-1; Wed, 06 Nov 2019 09:24:17 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 8202A800C72;
+        Wed,  6 Nov 2019 14:24:14 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 9C7B060BF4;
+        Wed,  6 Nov 2019 14:24:09 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 15:24:08 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Ian Rogers <irogers@google.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
-Date:   Wed,  6 Nov 2019 08:23:08 -0600
-Message-Id: <20191106142308.10511-1-aford173@gmail.com>
-X-Mailer: git-send-email 2.20.1
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 08/10] perf tools: if pmu configuration fails free
+ terms
+Message-ID: <20191106142408.GF30214@krava>
+References: <20191025180827.191916-1-irogers@google.com>
+ <20191030223448.12930-1-irogers@google.com>
+ <20191030223448.12930-9-irogers@google.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191030223448.12930-9-irogers@google.com>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: 2UVS68OJOFikukoLMDiSDA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The LCD used with the imx6q-logicpd board has an integrated
-ili2117a touch controller connected to i2c1.
+On Wed, Oct 30, 2019 at 03:34:46PM -0700, Ian Rogers wrote:
+> Avoid a memory leak when the configuration fails.
+>=20
+> Signed-off-by: Ian Rogers <irogers@google.com>
 
-This patch adds the node to enable this feature.
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Signed-off-by: Adam Ford <aford173@gmail.com>
----
-ili2117 support is scheduled to be introduced for Kernel v5.5.
+thanks,
+jirka
 
-V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
-
-diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
-index d96ae54be338..7a3d1d3e54a9 100644
---- a/arch/arm/boot/dts/imx6q-logicpd.dts
-+++ b/arch/arm/boot/dts/imx6q-logicpd.dts
-@@ -73,6 +73,16 @@
- 	status = "okay";
- };
- 
-+&i2c1 {
-+	touchscreen@26 {
-+		compatible = "ilitek,ili2117";
-+		reg = <0x26>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_touchscreen>;
-+		interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
-+	};
-+};
-+
- &ldb {
- 	status = "okay";
- 
--- 
-2.20.1
+> ---
+>  tools/perf/util/parse-events.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
+>=20
+> diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-event=
+s.c
+> index 578288c94d2a..a0a80f4e7038 100644
+> --- a/tools/perf/util/parse-events.c
+> +++ b/tools/perf/util/parse-events.c
+> @@ -1388,8 +1388,15 @@ int parse_events_add_pmu(struct parse_events_state=
+ *parse_state,
+>  =09if (get_config_terms(head_config, &config_terms))
+>  =09=09return -ENOMEM;
+> =20
+> -=09if (perf_pmu__config(pmu, &attr, head_config, parse_state->error))
+> +=09if (perf_pmu__config(pmu, &attr, head_config, parse_state->error)) {
+> +=09=09struct perf_evsel_config_term *pos, *tmp;
+> +
+> +=09=09list_for_each_entry_safe(pos, tmp, &config_terms, list) {
+> +=09=09=09list_del_init(&pos->list);
+> +=09=09=09free(pos);
+> +=09=09}
+>  =09=09return -EINVAL;
+> +=09}
+> =20
+>  =09evsel =3D __add_event(list, &parse_state->idx, &attr,
+>  =09=09=09    get_config_name(head_config), pmu,
+> --=20
+> 2.24.0.rc1.363.gb1bccd3e3d-goog
+>=20
 
