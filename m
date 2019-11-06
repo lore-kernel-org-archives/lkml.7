@@ -2,152 +2,131 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D75B5C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:34:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E03C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A1D32067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:34:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DE6C20650
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:38:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gYqMUQs2"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XH9LTRsp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732308AbfKFQem (ORCPT
+        id S1732238AbfKFQiX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:34:42 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:60798 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727570AbfKFQel (ORCPT
+        Wed, 6 Nov 2019 11:38:23 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:38475 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728380AbfKFQiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:34:41 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573058080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=IZCsNH8mhID3uhq4CoMtih4TeSDJ9ibx3kHU/lSzM90=;
-        b=gYqMUQs2xJuHGdKo+WcNYAeq+axMRoLpVpWJsSCSfVTbc7ObvYYSg7bkTf9e966YSiIvQi
-        /pURoF3O4jse7fydkzEZ9O7w4J6yCgp9cbx8FMK5NOKdpNQzDvQ+5NBFn4+NVG4txWGkDf
-        BmcXHUXPXsAP+BC0/CgbnZ/81eX4ljs=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-RRCGNq_-PxuIptA594t_IA-1; Wed, 06 Nov 2019 11:34:35 -0500
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3B16C477;
-        Wed,  6 Nov 2019 16:34:34 +0000 (UTC)
-Received: from krava (ovpn-204-115.brq.redhat.com [10.40.204.115])
-        by smtp.corp.redhat.com (Postfix) with SMTP id ABB2219C6A;
-        Wed,  6 Nov 2019 16:34:32 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 17:34:31 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Andi Kleen <andi@firstfloor.org>
-Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
-        Andi Kleen <ak@linux.intel.com>
-Subject: Re: [PATCH v4 9/9] perf stat: Use affinity for enabling/disabling
- events
-Message-ID: <20191106163431.GQ30214@krava>
-References: <20191105002522.83803-1-andi@firstfloor.org>
- <20191105002522.83803-10-andi@firstfloor.org>
+        Wed, 6 Nov 2019 11:38:22 -0500
+Received: by mail-pg1-f195.google.com with SMTP id 15so4316165pgh.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:38:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=message-id:mime-version:content-transfer-encoding:in-reply-to
+         :references:subject:from:to:cc:user-agent:date;
+        bh=vixhL9deqefE5oopP6BfzCyRk2tgLWnqZMgLkmD3lTo=;
+        b=XH9LTRspkfNjaasAMtOzBr55zH/FRPUWjhw+WLwURBkz7uW7FrygrNmEmig3N8wf4S
+         kaZuJqlDDWJrFSTgjt3rsWmlOO+GE3nuFP7KggnXom7hGcsujoB4iSmg2rHM6cGNFqJI
+         2rOHvn557K8KcfeKUDnmkw66hYrtM1k+9WX1A=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:mime-version
+         :content-transfer-encoding:in-reply-to:references:subject:from:to:cc
+         :user-agent:date;
+        bh=vixhL9deqefE5oopP6BfzCyRk2tgLWnqZMgLkmD3lTo=;
+        b=T04PrBmDy2T2Fsy1LIYvUi1xGTvW+IHI8zeOnYFfikl69/1Tefr8+F9wfkwihh/Po2
+         VYgws2I/Uwc5q32/GRDRvBMCVbHBiXnmI57skhcSBgkamzgdrIuod6B2xrDljLVF9Lgm
+         HBabR5i5TaztAG16Yr/Ag9nvK3podErzARCK1Oo9kVgpysCPWc5D5vSZYLb7CcTqYlnj
+         1P3lDLliWc2VCC4Noah6O4G+cvXA/SPcE4f+RtfoPcPLsbwWwfAIb3aaPzcpsRyaoh0x
+         Mf4Sr6WWkVtSLWRdhV7z/UTFkSPPKvj9HHFWkpWO0DhO4KcwACdNvL2pjOG6qh+CU0TE
+         woHQ==
+X-Gm-Message-State: APjAAAVRvaT+YG1/++h72VWbjeRrGjEEh5/hTaDg2B9cSaUS8Et+j+8X
+        8Ax2pFBrtF75POBZim61Ia4YF9lKzcwuTA==
+X-Google-Smtp-Source: APXvYqyaXPHoDuKFTssWM38U0rfI6iOm+3n/rJwChfcWnknMH41AGnK0V5cIdIJl7GeEFATCyZxg3g==
+X-Received: by 2002:a17:90a:7142:: with SMTP id g2mr5059471pjs.36.1573058300477;
+        Wed, 06 Nov 2019 08:38:20 -0800 (PST)
+Received: from chromium.org ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id x9sm3685058pje.27.2019.11.06.08.38.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 08:38:19 -0800 (PST)
+Message-ID: <5dc2f6fb.1c69fb81.195ac.9fff@mx.google.com>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-In-Reply-To: <20191105002522.83803-10-andi@firstfloor.org>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-MC-Unique: RRCGNq_-PxuIptA594t_IA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+References: <1572931309-16250-1-git-send-email-kgunda@codeaurora.org>
+Subject: Re: [PATCH V2] mfd: qcom-spmi-pmic: Add support for pm6150 and pm6150l
+From:   Stephen Boyd <swboyd@chromium.org>
+To:     Andy Gross <agross@kernel.org>,
+        Kiran Gunda <kgunda@codeaurora.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        bjorn.andersson@linaro.org, devicetree@vger.kernel.org,
+        lee.jones@linaro.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Cc:     rnayak@codeaurora.org, Kiran Gunda <kgunda@codeaurora.org>
+User-Agent: alot/0.8.1
+Date:   Wed, 06 Nov 2019 08:38:18 -0800
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 04, 2019 at 04:25:22PM -0800, Andi Kleen wrote:
+Quoting Kiran Gunda (2019-11-04 21:21:49)
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> index 1437062..b5fc64e 100644
+> --- a/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,spmi-pmic.txt
+> @@ -32,6 +32,8 @@ Required properties:
+>                     "qcom,pm8998",
+>                     "qcom,pmi8998",
+>                     "qcom,pm8005",
+> +                  "qcom,pm6150",
+> +                  "qcom,pm6150l",
 
-SNIP
+This seems to match the compatible list in the driver. Can you convert
+this binding to YAML and then sort this compatible string list
+alpha-numberically? Two patches, one to convert to YAML and sort and
+another patch to add these new compatible strings.
 
->  }
-> =20
->  static int perf_evsel__run_ioctl(struct perf_evsel *evsel,
-> -=09=09=09=09 int ioc,  void *arg)
-> +=09=09=09=09 int ioc,  void *arg,
-> +=09=09=09=09 int cpu)
->  {
-> -=09int cpu, thread;
-> +=09int thread;
-> =20
-> -=09for (cpu =3D 0; cpu < xyarray__max_x(evsel->fd); cpu++) {
-> -=09=09for (thread =3D 0; thread < xyarray__max_y(evsel->fd); thread++) {
-> -=09=09=09int fd =3D FD(evsel, cpu, thread),
-> -=09=09=09    err =3D ioctl(fd, ioc, arg);
-> +=09for (thread =3D 0; thread < xyarray__max_y(evsel->fd); thread++) {
-> +=09=09int fd =3D FD(evsel, cpu, thread),
-> +=09=09    err =3D ioctl(fd, ioc, arg);
-> =20
-> -=09=09=09if (err)
-> -=09=09=09=09return err;
-> -=09=09}
-> +=09=09if (err)
-> +=09=09=09return err;
->  =09}
-> =20
->  =09return 0;
->  }
-> =20
-> +int perf_evsel__enable_cpu(struct perf_evsel *evsel, int cpu)
-> +{
-> +=09return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, cpu);
-> +}
-> +
->  int perf_evsel__enable(struct perf_evsel *evsel)
->  {
-> -=09return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0);
-> +=09int i;
-> +=09int err =3D 0;
-> +
-> +=09for (i =3D 0; i < evsel->cpus->nr && !err; i++)
-> +=09=09err =3D perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_ENABLE, 0, i);
-> +=09return err;
-> +}
-> +
-> +int perf_evsel__disable_cpu(struct perf_evsel *evsel, int cpu)
-> +{
-> +=09return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, cpu);
->  }
-> =20
->  int perf_evsel__disable(struct perf_evsel *evsel)
->  {
-> -=09return perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0);
-> +=09int i;
-> +=09int err =3D 0;
-> +
-> +=09for (i =3D 0; i < evsel->cpus->nr && !err; i++)
-> +=09=09err =3D perf_evsel__run_ioctl(evsel, PERF_EVENT_IOC_DISABLE, 0, i)=
-;
-> +=09return err;
->  }
-> =20
->  int perf_evsel__apply_filter(struct perf_evsel *evsel, const char *filte=
-r)
->  {
-> -=09return perf_evsel__run_ioctl(evsel,
-> +=09int err =3D 0, i;
-> +
-> +=09for (i =3D 0; i < evsel->cpus->nr && !err; i++)
-> +=09=09err =3D perf_evsel__run_ioctl(evsel,
->  =09=09=09=09     PERF_EVENT_IOC_SET_FILTER,
-> -=09=09=09=09     (void *)filter);
-> +=09=09=09=09     (void *)filter, i);
-> +=09return err;
->  }
+>                     or generalized "qcom,spmi-pmic".
+>  - reg:             Specifies the SPMI USID slave address for this device.
+>                     For more information see:
+> diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+> index e8fe705..74b7980 100644
+> --- a/drivers/mfd/qcom-spmi-pmic.c
+> +++ b/drivers/mfd/qcom-spmi-pmic.c
+> @@ -34,6 +34,8 @@
+>  #define PM8998_SUBTYPE         0x14
+>  #define PMI8998_SUBTYPE                0x15
+>  #define PM8005_SUBTYPE         0x18
+> +#define PM6150_SUBTYPE         0x28
+> +#define PM6150L_SUBTYPE                0x27
 
-please move the new function additions to separate patches
+This list looks to be sorted based on id number, so just swap the two
+here.
 
-thanks,
-jirka
+> =20
+>  static const struct of_device_id pmic_spmi_id_table[] =3D {
+>         { .compatible =3D "qcom,spmi-pmic", .data =3D (void *)COMMON_SUBT=
+YPE },
+> @@ -53,6 +55,8 @@
+>         { .compatible =3D "qcom,pm8998",    .data =3D (void *)PM8998_SUBT=
+YPE },
+>         { .compatible =3D "qcom,pmi8998",   .data =3D (void *)PMI8998_SUB=
+TYPE },
+>         { .compatible =3D "qcom,pm8005",    .data =3D (void *)PM8005_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150",    .data =3D (void *)PM6150_SUBT=
+YPE },
+> +       { .compatible =3D "qcom,pm6150l",   .data =3D (void *)PM6150L_SUB=
+TYPE },
 
+This is also sorted based on .data value, so swap the two here too.
+
+>         { }
