@@ -2,136 +2,427 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB9E1C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:32:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D15AC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9382067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:32:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 475402067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="RDjOLla7"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CielUG2j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732253AbfKFQcP (ORCPT
+        id S1732204AbfKFQd0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:32:15 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46446 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727321AbfKFQcP (ORCPT
+        Wed, 6 Nov 2019 11:33:26 -0500
+Received: from mail-io1-f65.google.com ([209.85.166.65]:35635 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfKFQdZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:32:15 -0500
-Received: by mail-pl1-f195.google.com with SMTP id l4so6433025plt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:32:15 -0800 (PST)
+        Wed, 6 Nov 2019 11:33:25 -0500
+Received: by mail-io1-f65.google.com with SMTP id x21so12022659iol.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:33:24 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YDXR99N/YzQ/pZqCEI29huJxwejGrYigJcQpVl3mLN0=;
-        b=RDjOLla7UpdFA1uZVV/RjkQ6SwfLGswLg8cNYaDk16wAy2jKbHaMgvrGMS8PErrxrW
-         GFDxosOG5HVnj4O+ADH20k7STXbGnrgA7hy1HmziitFTqXDWjWdcbKeriEp4JFFQeLZa
-         kDyPWLHToo27tjU2eNGO/Vllhc2AHU6Bdq/yxqnkKCoOCkUQH6vfLsUVOoMGt/A/2npb
-         gnyLGHxmd5oYviEmAREMcaw4zruZmAxc07zAPbTcHGNNXl8MvZLk3Fl2rWYvWkwoyDCE
-         1xPysUBCTD+eYaEZERw3pv6bKvd/HaBKrT6uITNWO/cM57G9mxGX2doCTFJq47dDsnYs
-         p8gQ==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=JpJ0RKZdBuwsjP9UTfQRNupNqWTgtK1FhT+N5xdXJvA=;
+        b=CielUG2jTjOnDUsGvP84lfgnpVBwfpdYgolhaiDVpxAmKa9qGIIyxlhMPw4CnHX2o3
+         HRpxkileagZb8/h8upzAcCsJW1yM/RJvhua5SSOzZ7E/bbGv3pipv9Kv+SBB2Dg70x/+
+         cIeX6lQHVi1RoFaBPDWwRBsG7U1UtK4dIOzY4=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=YDXR99N/YzQ/pZqCEI29huJxwejGrYigJcQpVl3mLN0=;
-        b=S7kk+yJMCCcy2LC4t02LtBOIxzBjYC4Q6UbWLipf4xBD19w1hBnNXIVrUKti5HUe78
-         H/oZU4I/NjnLpI/s3bu0NlIUPreMXGiIo1Uap9nZISEml+i8WtfxT38xoVBqt/meD8Rv
-         0ylQ4+kKcPSVtw7usS68ZJQNBqExtzFjMN3YKZ0Ja/7+hfdWGmllM7iVKhq4ma4/gW0F
-         dZhwcZEf8E1E8oXdawbA6al5zlbtQsUWjRiTWm6z+GClhDiZjMw0CT+v5y9++IaJwb1T
-         7gOl7StXiKeInBWVwj7RO1RgSS00yAY9wtxjlKbWN4WSJGBrT1JzsM8pr6eia5oCOf7o
-         0DPw==
-X-Gm-Message-State: APjAAAXI0v1LMFBiZxBTBcjRWDX2U3H8FZV2+x+9lIXHUY4ZG7ynvkfV
-        IKiPtjtyQDNHcBge7ShVqqzC6Q==
-X-Google-Smtp-Source: APXvYqzGnty5jGHPlGvF4cPMglmlPHfo5F67afnyOnzik5KBFCH43E7LJ5r8u2evmErEOI3pDLHStg==
-X-Received: by 2002:a17:902:8486:: with SMTP id c6mr274839plo.137.1573057934474;
-        Wed, 06 Nov 2019 08:32:14 -0800 (PST)
-Received: from [10.83.36.153] ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id m12sm2974603pjk.13.2019.11.06.08.32.10
+        bh=JpJ0RKZdBuwsjP9UTfQRNupNqWTgtK1FhT+N5xdXJvA=;
+        b=hHom/au6aw0kJMZBRLwGjSMKCq4FhOMdIK1q5aKFVMXZfplaQojDm/PLWcdg1t5bU7
+         Zk3Ua7bW8+zZR7aVtpvDjW5uw9s1xe7AHgSSNO47cv7cTcn+MC1I7fqGJaoCFhmAyVYt
+         zxqQv0t9CxOWdzv2YO1JVo7+qSBHXzEx+qAVxyOLQrqy0VZ7VWLvLzTCq76EkFKI1T7M
+         6+MAtCPHMKOnciy40adxYQvXsbg2WpOaFIaCNowT0yFQ+4ajNLpxjY59UnAFPO8/1sI9
+         UprsXp8HpRp6A4G876ikMSjerftCmGCaTmmfnHhvsYAQHCLy7tIT/2GnRmKQblphLnOK
+         pgdw==
+X-Gm-Message-State: APjAAAXDoxuabKb+CmMOHDww+qtQ4xkQmXUwLdxpqPJphjsWflXgrG38
+        1PExjJ4qdczrjU2NqewzDQNfaleNynI=
+X-Google-Smtp-Source: APXvYqw+48T6SlKI48jmcI6Yli3rfgfaQZ6DE/L7tU5Z+m0D4UzPnEAvS0a0bP4N9Fh3OKYJiAs3Wg==
+X-Received: by 2002:a6b:400e:: with SMTP id k14mr10064919ioa.254.1573058003685;
+        Wed, 06 Nov 2019 08:33:23 -0800 (PST)
+Received: from localhost ([2620:15c:183:200:2be5:d5bc:3dd:6c78])
+        by smtp.gmail.com with ESMTPSA id n15sm283166iom.7.2019.11.06.08.33.22
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 08:32:13 -0800 (PST)
-Subject: Re: [PATCH 05/50] arm: Add loglvl to unwind_backtrace()
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     linux-kernel@vger.kernel.org,
-        Dmitry Safonov <0x7f454c46@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        clang-built-linux@googlegroups.com
-References: <20191106030542.868541-1-dima@arista.com>
- <20191106030542.868541-6-dima@arista.com>
- <20191106091258.GS25745@shell.armlinux.org.uk>
-From:   Dmitry Safonov <dima@arista.com>
-Message-ID: <cd6c5df5-effd-a1f9-8a25-9f5aac3a92f9@arista.com>
-Date:   Wed, 6 Nov 2019 16:32:07 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Wed, 06 Nov 2019 08:33:23 -0800 (PST)
+From:   Daniel Campello <campello@chromium.org>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     Daniel Campello <campello@chromium.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Wei Yongjun <weiyongjun1@huawei.com>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Duncan Laurie <dlaurie@google.com>,
+        Benson Leung <bleung@chromium.org>
+Subject: [PATCH v9] platform/chrome: wilco_ec: Add keyboard backlight LED support
+Date:   Wed,  6 Nov 2019 09:33:19 -0700
+Message-Id: <20191106093045.1.I81b5d7a86ef1cdf5433d1feb8b51fd9304a5b3c2@changeid>
+X-Mailer: git-send-email 2.24.0.432.g9d3f5f5b63-goog
 MIME-Version: 1.0
-In-Reply-To: <20191106091258.GS25745@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 9:12 AM, Russell King - ARM Linux admin wrote:
-> On Wed, Nov 06, 2019 at 03:04:56AM +0000, Dmitry Safonov wrote:
->> diff --git a/arch/arm/kernel/traps.c b/arch/arm/kernel/traps.c
->> index 7c3f32b26585..69e35462c9e9 100644
->> --- a/arch/arm/kernel/traps.c
->> +++ b/arch/arm/kernel/traps.c
->> @@ -202,7 +202,7 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
->>  #ifdef CONFIG_ARM_UNWIND
->>  static inline void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->>  {
->> -	unwind_backtrace(regs, tsk);
->> +	unwind_backtrace(regs, tsk, KERN_DEBUG);
-> 
-> Why demote this to debug level?  This is used as part of the kernel
-> panic message, surely we don't want this at debug level?  What about
-> the non-unwind version?
+The EC is in charge of controlling the keyboard backlight on
+the Wilco platform. We expose a standard LED class device
+named platform::kbd_backlight.
 
-Right, I wanted to keep the old loglevel in this patch - KERN_DEFAULT.
-But got confused with log level in unwind_backtrace().
-Will fix.
+Since the EC will never change the backlight level of its own accord,
+we don't need to implement a brightness_get() method.
 
-[..]
->> diff --git a/arch/arm/kernel/unwind.c b/arch/arm/kernel/unwind.c
->> index 0a65005e10f0..caaae1b6f721 100644
->> --- a/arch/arm/kernel/unwind.c
->> +++ b/arch/arm/kernel/unwind.c
->> @@ -455,11 +455,12 @@ int unwind_frame(struct stackframe *frame)
->>  	return URC_OK;
->>  }
->>  
->> -void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk)
->> +void unwind_backtrace(struct pt_regs *regs, struct task_struct *tsk,
->> +		      const char *loglvl)
->>  {
->>  	struct stackframe frame;
->>  
->> -	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
->> +	printk("%s%s(regs = %p tsk = %p)\n", loglvl, __func__, regs, tsk);
-> 
-> Clearly, this isn't supposed to be part of the normal backtrace output...
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+Signed-off-by: Daniel Campello <campello@chromium.org>
+Reviewed-by: Daniel Campello <campello@chromium.org>
+---
 
-Yes, sorry it's debug for a backtrace - will return pr_debug() for the
-message.
+v9 changes:
+ -Added dependency on LEDS_CLASS for config WILCO_EC.
 
-Thanks,
-          Dmitry
+v8 changes:
+ -Removed unneeded #includes from keyboard_leds.h
+
+v7 changes:
+ -Merged the LED stuff into the core wilco_ec module. This allows
+  us to de-duplicate a lot of code, hide a lot of the LED internals
+  from the core driver, and generally simplify things.
+ -Follow reverse xmas tree variable declaration
+ -Remove unneeded warning about BIOS not initializing the LEDs
+ -Fix and standardize some comments and log messages.
+ -Document all fields of wilco_keyboard_leds_msg
+ -rm outdated and useless comment at top of core file.
+
+v6 changes:
+ -Rebased patch
+ -Fixed bug related to request/response buffer pointers on
+ send_kbbl_mesg()
+ -Now sends WILCO_KBBL_SUBCMD_SET_STATE instead of
+ WILCO_KBBL_SUBCMD_GET_STATE command for keyboard_led_set_brightness()
+
+v5 changes:
+ -Rename the LED device to "platform::kbd_backlight", to
+ denote that this is the built-in system keyboard.
+
+v4 changes:
+ -Call keyboard_led_set_brightness() directly within
+  initialize_brightness(), instead of calling the library function.
+
+v3 changes:
+ -Since this behaves the same as the standard Chrome OS keyboard
+  backlight, rename the led device to "chromeos::kbd_backlight"
+ -Move wilco_ec_keyboard_backlight_exists() into core module, so
+  that the core does not depend upon the keyboard backlight driver.
+ -This required moving some code into wilco-ec.h
+ -Refactor out some common code in set_brightness() and
+  initialize_brightness()
+
+v2 changes:
+ -Remove and fix uses of led vs LED in kconfig
+ -Assume BIOS initializes brightness, but double check in probe()
+ -Remove get_brightness() callback, as EC never changes brightness
+  by itself.
+ -Use a __packed struct as message instead of opaque array
+ -Add exported wilco_ec_keyboard_leds_exist() so the core driver
+  now only creates a platform _device if relevant
+ -Fix use of keyboard_led_set_brightness() since it can sleep
+
+ drivers/platform/chrome/wilco_ec/Kconfig      |   2 +-
+ drivers/platform/chrome/wilco_ec/Makefile     |   3 +-
+ drivers/platform/chrome/wilco_ec/core.c       |  13 +-
+ .../platform/chrome/wilco_ec/keyboard_leds.c  | 191 ++++++++++++++++++
+ include/linux/platform_data/wilco-ec.h        |  13 ++
+ 5 files changed, 216 insertions(+), 6 deletions(-)
+ create mode 100644 drivers/platform/chrome/wilco_ec/keyboard_leds.c
+
+diff --git a/drivers/platform/chrome/wilco_ec/Kconfig b/drivers/platform/chrome/wilco_ec/Kconfig
+index 89007b0bc743..365f30e116ee 100644
+--- a/drivers/platform/chrome/wilco_ec/Kconfig
++++ b/drivers/platform/chrome/wilco_ec/Kconfig
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0-only
+ config WILCO_EC
+ 	tristate "ChromeOS Wilco Embedded Controller"
+-	depends on ACPI && X86 && CROS_EC_LPC
++	depends on ACPI && X86 && CROS_EC_LPC && LEDS_CLASS
+ 	help
+ 	  If you say Y here, you get support for talking to the ChromeOS
+ 	  Wilco EC over an eSPI bus. This uses a simple byte-level protocol
+diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
+index bc817164596e..ecb3145cab18 100644
+--- a/drivers/platform/chrome/wilco_ec/Makefile
++++ b/drivers/platform/chrome/wilco_ec/Makefile
+@@ -1,6 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+
+-wilco_ec-objs				:= core.o mailbox.o properties.o sysfs.o
++wilco_ec-objs				:= core.o keyboard_leds.o mailbox.o \
++					   properties.o sysfs.o
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
+ wilco_ec_debugfs-objs			:= debugfs.o
+ obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
+diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
+index 3724bf4b77c6..36c78e52ff3c 100644
+--- a/drivers/platform/chrome/wilco_ec/core.c
++++ b/drivers/platform/chrome/wilco_ec/core.c
+@@ -5,10 +5,6 @@
+  * Copyright 2018 Google LLC
+  *
+  * This is the entry point for the drivers that control the Wilco EC.
+- * This driver is responsible for several tasks:
+- * - Initialize the register interface that is used by wilco_ec_mailbox()
+- * - Create a platform device which is picked up by the debugfs driver
+- * - Create a platform device which is picked up by the RTC driver
+  */
+
+ #include <linux/acpi.h>
+@@ -87,6 +83,15 @@ static int wilco_ec_probe(struct platform_device *pdev)
+ 		goto unregister_debugfs;
+ 	}
+
++	/* Set up the keyboard backlight LEDs. */
++	ret = wilco_keyboard_leds_init(ec);
++	if (ret < 0) {
++		dev_err(dev,
++			"Failed to initialize keyboard LEDs: %d\n",
++			ret);
++		goto unregister_rtc;
++	}
++
+ 	ret = wilco_ec_add_sysfs(ec);
+ 	if (ret < 0) {
+ 		dev_err(dev, "Failed to create sysfs entries: %d", ret);
+diff --git a/drivers/platform/chrome/wilco_ec/keyboard_leds.c b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
+new file mode 100644
+index 000000000000..bb0edf51dfda
+--- /dev/null
++++ b/drivers/platform/chrome/wilco_ec/keyboard_leds.c
+@@ -0,0 +1,191 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Keyboard backlight LED driver for the Wilco Embedded Controller
++ *
++ * Copyright 2019 Google LLC
++ *
++ * Since the EC will never change the backlight level of its own accord,
++ * we don't need to implement a brightness_get() method.
++ */
++
++#include <linux/device.h>
++#include <linux/kernel.h>
++#include <linux/leds.h>
++#include <linux/platform_data/wilco-ec.h>
++#include <linux/slab.h>
++
++#define WILCO_EC_COMMAND_KBBL		0x75
++#define WILCO_KBBL_MODE_FLAG_PWM	BIT(1)	/* Set brightness by percent. */
++#define WILCO_KBBL_DEFAULT_BRIGHTNESS   0
++
++struct wilco_keyboard_leds {
++	struct wilco_ec_device *ec;
++	struct led_classdev keyboard;
++};
++
++enum wilco_kbbl_subcommand {
++	WILCO_KBBL_SUBCMD_GET_FEATURES = 0x00,
++	WILCO_KBBL_SUBCMD_GET_STATE    = 0x01,
++	WILCO_KBBL_SUBCMD_SET_STATE    = 0x02,
++};
++
++/**
++ * struct wilco_keyboard_leds_msg - Message to/from EC for keyboard LED control.
++ * @command: Always WILCO_EC_COMMAND_KBBL.
++ * @status: Set by EC to 0 on success, 0xFF on failure.
++ * @subcmd: One of enum wilco_kbbl_subcommand.
++ * @reserved3: Should be 0.
++ * @mode: Bit flags for used mode, we want to use WILCO_KBBL_MODE_FLAG_PWM.
++ * @reserved5to8: Should be 0.
++ * @percent: Brightness in 0-100. Only meaningful in PWM mode.
++ * @reserved10to15: Should be 0.
++ */
++struct wilco_keyboard_leds_msg {
++	u8 command;
++	u8 status;
++	u8 subcmd;
++	u8 reserved3;
++	u8 mode;
++	u8 reserved5to8[4];
++	u8 percent;
++	u8 reserved10to15[6];
++} __packed;
++
++/* Send a request, get a response, and check that the response is good. */
++static int send_kbbl_msg(struct wilco_ec_device *ec,
++			 struct wilco_keyboard_leds_msg *request,
++			 struct wilco_keyboard_leds_msg *response)
++{
++	struct wilco_ec_message msg;
++	int ret;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.type = WILCO_EC_MSG_LEGACY;
++	msg.request_data = request;
++	msg.request_size = sizeof(*request);
++	msg.response_data = response;
++	msg.response_size = sizeof(*response);
++
++	ret = wilco_ec_mailbox(ec, &msg);
++	if (ret < 0) {
++		dev_err(ec->dev,
++			"Failed sending keyboard LEDs command: %d", ret);
++		return ret;
++	}
++
++	if (response->status) {
++		dev_err(ec->dev,
++			"EC reported failure sending keyboard LEDs command: %d",
++			response->status);
++		return -EIO;
++	}
++
++	return 0;
++}
++
++static int set_kbbl(struct wilco_ec_device *ec, enum led_brightness brightness)
++{
++	struct wilco_keyboard_leds_msg request;
++	struct wilco_keyboard_leds_msg response;
++
++	memset(&request, 0, sizeof(request));
++	request.command = WILCO_EC_COMMAND_KBBL;
++	request.subcmd  = WILCO_KBBL_SUBCMD_SET_STATE;
++	request.mode    = WILCO_KBBL_MODE_FLAG_PWM;
++	request.percent = brightness;
++
++	return send_kbbl_msg(ec, &request, &response);
++}
++
++static int kbbl_exist(struct wilco_ec_device *ec, bool *exists)
++{
++	struct wilco_keyboard_leds_msg request;
++	struct wilco_keyboard_leds_msg response;
++	int ret;
++
++	memset(&request, 0, sizeof(request));
++	request.command = WILCO_EC_COMMAND_KBBL;
++	request.subcmd  = WILCO_KBBL_SUBCMD_GET_FEATURES;
++
++	ret = send_kbbl_msg(ec, &request, &response);
++	if (ret < 0)
++		return ret;
++
++	*exists = response.status != 0xFF;
++
++	return 0;
++}
++
++/**
++ * kbbl_init() - Initialize the state of the keyboard backlight.
++ * @ec: EC device to talk to.
++ *
++ * Gets the current brightness, ensuring that the BIOS already initialized the
++ * backlight to PWM mode. If not in PWM mode, then the current brightness is
++ * meaningless, so set the brightness to WILCO_KBBL_DEFAULT_BRIGHTNESS.
++ *
++ * Return: Final brightness of the keyboard, or negative error code on failure.
++ */
++static int kbbl_init(struct wilco_ec_device *ec)
++{
++	struct wilco_keyboard_leds_msg request;
++	struct wilco_keyboard_leds_msg response;
++	int ret;
++
++	memset(&request, 0, sizeof(request));
++	request.command = WILCO_EC_COMMAND_KBBL;
++	request.subcmd  = WILCO_KBBL_SUBCMD_GET_STATE;
++
++	ret = send_kbbl_msg(ec, &request, &response);
++	if (ret < 0)
++		return ret;
++
++	if (response.mode & WILCO_KBBL_MODE_FLAG_PWM)
++		return response.percent;
++
++	ret = set_kbbl(ec, WILCO_KBBL_DEFAULT_BRIGHTNESS);
++	if (ret < 0)
++		return ret;
++
++	return WILCO_KBBL_DEFAULT_BRIGHTNESS;
++}
++
++static int wilco_keyboard_leds_set(struct led_classdev *cdev,
++				   enum led_brightness brightness)
++{
++	struct wilco_keyboard_leds *wkl =
++		container_of(cdev, struct wilco_keyboard_leds, keyboard);
++	return set_kbbl(wkl->ec, brightness);
++}
++
++int wilco_keyboard_leds_init(struct wilco_ec_device *ec)
++{
++	struct wilco_keyboard_leds *wkl;
++	bool leds_exist;
++	int ret;
++
++	ret = kbbl_exist(ec, &leds_exist);
++	if (ret < 0) {
++		dev_err(ec->dev,
++			"Failed checking keyboard LEDs support: %d", ret);
++		return ret;
++	}
++	if (!leds_exist)
++		return 0;
++
++	wkl = devm_kzalloc(ec->dev, sizeof(*wkl), GFP_KERNEL);
++	if (!wkl)
++		return -ENOMEM;
++
++	wkl->ec = ec;
++	wkl->keyboard.name = "platform::kbd_backlight";
++	wkl->keyboard.max_brightness = 100;
++	wkl->keyboard.flags = LED_CORE_SUSPENDRESUME;
++	wkl->keyboard.brightness_set_blocking = wilco_keyboard_leds_set;
++	ret = kbbl_init(ec);
++	if (ret < 0)
++		return ret;
++	wkl->keyboard.brightness = ret;
++
++	return devm_led_classdev_register(ec->dev, &wkl->keyboard);
++}
+diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+index ad03b586a095..0f7df3498a24 100644
+--- a/include/linux/platform_data/wilco-ec.h
++++ b/include/linux/platform_data/wilco-ec.h
+@@ -120,6 +120,19 @@ struct wilco_ec_message {
+  */
+ int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg);
+
++/**
++ * wilco_keyboard_leds_init() - Set up the keyboard backlight LEDs.
++ * @ec: EC device to query.
++ *
++ * After this call, the keyboard backlight will be exposed through a an LED
++ * device at /sys/class/leds.
++ *
++ * This may sleep because it uses wilco_ec_mailbox().
++ *
++ * Return: 0 on success, negative error code on failure.
++ */
++int wilco_keyboard_leds_init(struct wilco_ec_device *ec);
++
+ /*
+  * A Property is typically a data item that is stored to NVRAM
+  * by the EC. Each of these data items has an index associated
+--
+2.24.0.432.g9d3f5f5b63-goog
+
