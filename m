@@ -2,346 +2,221 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4940AC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:06:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3318FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:06:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 04B18217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:06:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573045564;
-	bh=91PYUfqUCzLv8NiwThz+K99+CJocBD0WEzANA98OLZY=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=y1ML81HEdpjFzWqUsz71M0S5kuO0c46QEzeiyIIYvIiK/jTo3uOWbDjUkBsZRtQ69
-	 DSGqg49BtMEp8+xsEr4VetZ9Lg4P3+OW/+EIgVxyHB63m8JMTCzyUrXY1jFFkEmkqn
-	 pu2/oZFwg4nIZDrG/C4nGnvr/IYLfLq5018Mp5Xk=
+	by mail.kernel.org (Postfix) with ESMTP id E9EAC2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:06:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ideasonboard.com header.i=@ideasonboard.com header.b="aNPiEWK3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731654AbfKFNGD (ORCPT
+        id S1731693AbfKFNGK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:06:03 -0500
-Received: from mail.kernel.org ([198.145.29.99]:39292 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728754AbfKFNGC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:06:02 -0500
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7CBA7217F4;
-        Wed,  6 Nov 2019 13:06:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573045561;
-        bh=91PYUfqUCzLv8NiwThz+K99+CJocBD0WEzANA98OLZY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=eTmINooa8Kky5he2JogjlJfj1abhYMeOa3ZIy0MPJYguzbLW4D3R+E+j225aGsIYe
-         9qLhSpReNdhKm8z685B+rHDxpswC8CNo2F06+U6TkUQK2/r/DLhLn8Zqj60ALajiIO
-         DPQX3jzlNZya9hZgz/xFWxc6JswxMVkieaw4UVKs=
-Date:   Wed, 6 Nov 2019 14:05:58 +0100
-From:   Greg KH <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org,
-        Andrew Morton <akpm@linux-foundation.org>,
-        torvalds@linux-foundation.org, stable@vger.kernel.org
-Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
-Subject: Linux 4.9.199
-Message-ID: <20191106130558.GA3240034@kroah.com>
+        Wed, 6 Nov 2019 08:06:10 -0500
+Received: from perceval.ideasonboard.com ([213.167.242.64]:52938 "EHLO
+        perceval.ideasonboard.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731647AbfKFNGJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:06:09 -0500
+Received: from pendragon.ideasonboard.com (81-175-216-236.bb.dnainternet.fi [81.175.216.236])
+        by perceval.ideasonboard.com (Postfix) with ESMTPSA id 3F66D52C;
+        Wed,  6 Nov 2019 14:06:06 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ideasonboard.com;
+        s=mail; t=1573045566;
+        bh=rwBoN4G+nIkI+5mwwd3pzYuox8k2CBX+v3Hd1yQBQGw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=aNPiEWK3sndyfV2uKQzJt9vYTAKeVjELD9xjz1RZxQvRYlrfizq8BhE5JMF7786tS
+         yiP/KIA0+YSBYXx1Hg+0yQgUK9i/MD9DcTyQGguIJInQ00TU9Df+thxLlpRs9wTZom
+         9fPWxbx8TEzZc2kktPxlbJbZqNHSFhNTwyXaCCq8=
+Date:   Wed, 6 Nov 2019 15:05:57 +0200
+From:   Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+To:     Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+Cc:     dri-devel@lists.freedesktop.org, a.hajda@samsung.com,
+        hjc@rock-chips.com, robh+dt@kernel.org, mark.rutland@arm.com,
+        narmstrong@baylibre.com, jonas@kwiboo.se, jernej.skrabec@siol.net,
+        philippe.cornu@st.com, yannick.fertre@st.com,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
+        heiko@sntech.de, christoph.muellner@theobroma-systems.com
+Subject: Re: [PATCH 2/3] drm/rockchip: add ability to handle external dphys
+ in mipi-dsi
+Message-ID: <20191106130557.GF4878@pendragon.ideasonboard.com>
+References: <20191106112650.8365-1-heiko.stuebner@theobroma-systems.com>
+ <20191106112650.8365-2-heiko.stuebner@theobroma-systems.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="huq684BweRXVnRxX"
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <20191106112650.8365-2-heiko.stuebner@theobroma-systems.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Heiko,
 
---huq684BweRXVnRxX
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thank you for the patch.
 
-I'm announcing the release of the 4.9.199 kernel.
+On Wed, Nov 06, 2019 at 12:26:49PM +0100, Heiko Stuebner wrote:
+> While the common case is that the dsi controller uses an internal dphy,
+> accessed through the phy registers inside the dsi controller, there is
+> also the possibility to use a separate dphy from a different vendor.
+> 
+> One such case is the Rockchip px30 that uses a Innosilicon Mipi dphy,
+> so add the support for handling such a constellation, including the pll
+> also getting generated inside that external phy.
+> 
+> Signed-off-by: Heiko Stuebner <heiko.stuebner@theobroma-systems.com>
+> ---
+>  .../display/rockchip/dw_mipi_dsi_rockchip.txt |  7 ++-
+>  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 54 ++++++++++++++++++-
+>  2 files changed, 57 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+> index ce4c1fc9116c..8b25156a9dcf 100644
+> --- a/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+> +++ b/Documentation/devicetree/bindings/display/rockchip/dw_mipi_dsi_rockchip.txt
+> @@ -8,8 +8,9 @@ Required properties:
+>  	      "rockchip,rk3399-mipi-dsi", "snps,dw-mipi-dsi".
+>  - reg: Represent the physical address range of the controller.
+>  - interrupts: Represent the controller's interrupt to the CPU(s).
+> -- clocks, clock-names: Phandles to the controller's pll reference
+> -  clock(ref) and APB clock(pclk). For RK3399, a phy config clock
+> +- clocks, clock-names: Phandles to the controller's and APB clock(pclk)
+> +  and either a pll reference clock(ref) (internal dphy) or pll clock(pll)
+> +  (when connected to an external phy). For RK3399, a phy config clock
 
-All users of the 4.9 kernel series must upgrade.
+Why does external PHY clock need to be specified here ? Shouldn't it be
+handled by the PHY instead ?
 
-The updated 4.9.y git tree can be found at:
-	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable.git linu=
-x-4.9.y
-and can be browsed at the normal kernel.org git web browser:
-	https://git.kernel.org/?p=3Dlinux/kernel/git/stable/linux-stable.git;a=3Ds=
-ummary
+>    (phy_cfg) and a grf clock(grf) are required. As described in [1].
+>  - rockchip,grf: this soc should set GRF regs to mux vopl/vopb.
+>  - ports: contain a port node with endpoint definitions as defined in [2].
+> @@ -18,6 +19,8 @@ Required properties:
+>  - video port 1 for either a panel or subsequent encoder
+>  
+>  Optional properties:
+> +- phys: from general PHY binding: the phandle for the PHY device.
+> +- phy-names: Should be "dphy" if phys references an external phy.
+>  - power-domains: a phandle to mipi dsi power domain node.
+>  - resets: list of phandle + reset specifier pairs, as described in [3].
+>  - reset-names: string reset name, must be "apb".
+> diff --git a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> index bc073ec5c183..99ec625e0448 100644
+> --- a/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> +++ b/drivers/gpu/drm/rockchip/dw-mipi-dsi-rockchip.c
+> @@ -12,6 +12,7 @@
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/module.h>
+>  #include <linux/of_device.h>
+> +#include <linux/phy/phy.h>
+>  #include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+>  
+> @@ -223,6 +224,9 @@ struct dw_mipi_dsi_rockchip {
+>  	bool is_slave;
+>  	struct dw_mipi_dsi_rockchip *slave;
+>  
+> +	/* optional external dphy */
+> +	struct phy *phy;
+> +
+>  	unsigned int lane_mbps; /* per lane */
+>  	u16 input_div;
+>  	u16 feedback_div;
+> @@ -359,6 +363,9 @@ static int dw_mipi_dsi_phy_init(void *priv_data)
+>  	struct dw_mipi_dsi_rockchip *dsi = priv_data;
+>  	int ret, i, vco;
+>  
+> +	if (dsi->phy)
+> +		return 0;
+> +
+>  	/*
+>  	 * Get vco from frequency(lane_mbps)
+>  	 * vco	frequency table
+> @@ -467,6 +474,27 @@ static int dw_mipi_dsi_phy_init(void *priv_data)
+>  	return ret;
+>  }
+>  
+> +static void dw_mipi_dsi_phy_power_on(void *priv_data)
+> +{
+> +	struct dw_mipi_dsi_rockchip *dsi = priv_data;
+> +	int ret;
+> +
+> +	ret = phy_set_mode(dsi->phy, PHY_MODE_MIPI_DPHY);
+> +	if (ret) {
+> +		DRM_DEV_ERROR(dsi->dev, "failed to set phy mode: %d\n", ret);
+> +		return;
+> +	}
+> +
+> +	phy_power_on(dsi->phy);
+> +}
+> +
+> +static void dw_mipi_dsi_phy_power_off(void *priv_data)
+> +{
+> +	struct dw_mipi_dsi_rockchip *dsi = priv_data;
+> +
+> +	phy_power_off(dsi->phy);
+> +}
+> +
+>  static int
+>  dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+>  			  unsigned long mode_flags, u32 lanes, u32 format,
+> @@ -504,9 +532,21 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+>  				      "DPHY clock frequency is out of range\n");
+>  	}
+>  
+> -	fin = clk_get_rate(dsi->pllref_clk);
+>  	fout = target_mbps * USEC_PER_SEC;
+>  
+> +	/* an external phy does have a controllable pll clk */
+> +	if (dsi->phy) {
+> +		fout = clk_round_rate(dsi->pllref_clk, fout);
+> +		clk_set_rate(dsi->pllref_clk, fout);
+> +
+> +		dsi->lane_mbps = target_mbps;
+> +		*lane_mbps = dsi->lane_mbps;
+> +
+> +		return 0;
+> +	}
+> +
+> +	fin = clk_get_rate(dsi->pllref_clk);
+> +
+>  	/* constraint: 5Mhz <= Fref / N <= 40MHz */
+>  	min_prediv = DIV_ROUND_UP(fin, 40 * USEC_PER_SEC);
+>  	max_prediv = fin / (5 * USEC_PER_SEC);
+> @@ -561,6 +601,8 @@ dw_mipi_dsi_get_lane_mbps(void *priv_data, const struct drm_display_mode *mode,
+>  
+>  static const struct dw_mipi_dsi_phy_ops dw_mipi_dsi_rockchip_phy_ops = {
+>  	.init = dw_mipi_dsi_phy_init,
+> +	.power_on = dw_mipi_dsi_phy_power_on,
+> +	.power_off = dw_mipi_dsi_phy_power_off,
+>  	.get_lane_mbps = dw_mipi_dsi_get_lane_mbps,
+>  };
+>  
+> @@ -920,7 +962,15 @@ static int dw_mipi_dsi_rockchip_probe(struct platform_device *pdev)
+>  		return -EINVAL;
+>  	}
+>  
+> -	dsi->pllref_clk = devm_clk_get(dev, "ref");
+> +	/* try to get a possible external dphy */
+> +	dsi->phy = devm_phy_optional_get(dev, "dphy");
+> +	if (IS_ERR(dsi->phy)) {
+> +		ret = PTR_ERR(dsi->phy);
+> +		DRM_DEV_ERROR(dev, "failed to get mipi dphy: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	dsi->pllref_clk = devm_clk_get(dev, dsi->phy ? "pll" : "ref");
+>  	if (IS_ERR(dsi->pllref_clk)) {
+>  		ret = PTR_ERR(dsi->pllref_clk);
+>  		DRM_DEV_ERROR(dev,
 
-thanks,
+-- 
+Regards,
 
-greg k-h
-
-------------
-
- Makefile                                    |    2=20
- arch/mips/fw/sni/sniprom.c                  |    2=20
- arch/s390/include/asm/uaccess.h             |    4=20
- arch/s390/mm/cmm.c                          |   12 -
- arch/x86/include/asm/intel-family.h         |    3=20
- arch/x86/platform/efi/efi.c                 |    3=20
- drivers/dma/cppi41.c                        |   21 +++
- drivers/firmware/efi/cper.c                 |    2=20
- drivers/gpio/gpio-max77620.c                |    6=20
- drivers/hid/hid-axff.c                      |   11 +
- drivers/hid/hid-core.c                      |    7 -
- drivers/hid/hid-dr.c                        |   12 +
- drivers/hid/hid-emsff.c                     |   12 +
- drivers/hid/hid-gaff.c                      |   12 +
- drivers/hid/hid-holtekff.c                  |   12 +
- drivers/hid/hid-lg2ff.c                     |   12 +
- drivers/hid/hid-lg3ff.c                     |   11 +
- drivers/hid/hid-lg4ff.c                     |   11 +
- drivers/hid/hid-lgff.c                      |   11 +
- drivers/hid/hid-logitech-hidpp.c            |   11 +
- drivers/hid/hid-sony.c                      |   12 +
- drivers/hid/hid-tmff.c                      |   12 +
- drivers/hid/hid-zpff.c                      |   12 +
- drivers/hid/i2c-hid/i2c-hid-dmi-quirks.c    |   35 +++++
- drivers/iio/accel/bmc150-accel-core.c       |    2=20
- drivers/infiniband/core/cma.c               |    3=20
- drivers/md/dm-bio-prison.c                  |    2=20
- drivers/md/dm-io.c                          |    2=20
- drivers/md/dm-kcopyd.c                      |    2=20
- drivers/md/dm-region-hash.c                 |    2=20
- drivers/md/dm-snap.c                        |  178 ++++++++++++++++++-----=
------
- drivers/md/dm-thin.c                        |    2=20
- drivers/net/bonding/bond_main.c             |    2=20
- drivers/net/usb/sr9800.c                    |    2=20
- drivers/net/wireless/ath/ath6kl/usb.c       |    8 +
- drivers/net/wireless/realtek/rtlwifi/ps.c   |    6=20
- drivers/rtc/rtc-pcf8523.c                   |   28 +++-
- drivers/staging/rtl8188eu/os_dep/usb_intf.c |    6=20
- drivers/thunderbolt/nhi.c                   |   22 ++-
- drivers/tty/serial/sc16is7xx.c              |   28 ++++
- drivers/tty/serial/serial_mctrl_gpio.c      |    3=20
- drivers/usb/core/hub.c                      |    7 +
- drivers/usb/gadget/udc/core.c               |   11 +
- drivers/usb/misc/ldusb.c                    |    6=20
- drivers/usb/misc/legousbtower.c             |    2=20
- drivers/usb/serial/whiteheat.c              |   13 +-
- drivers/usb/serial/whiteheat.h              |    2=20
- drivers/usb/storage/scsiglue.c              |   10 -
- drivers/usb/storage/uas.c                   |   20 ---
- fs/binfmt_script.c                          |   57 +++++++-
- fs/cifs/netmisc.c                           |    4=20
- fs/fuse/dir.c                               |   13 ++
- fs/fuse/file.c                              |   10 +
- fs/nfs/nfs4proc.c                           |    1=20
- fs/ocfs2/aops.c                             |   25 +++
- fs/ocfs2/ioctl.c                            |    2=20
- fs/ocfs2/xattr.c                            |   56 +++-----
- fs/xfs/xfs_buf.c                            |    2=20
- include/net/llc_conn.h                      |    2=20
- include/net/sch_generic.h                   |    5=20
- include/net/sctp/sctp.h                     |    2=20
- include/sound/timer.h                       |    2=20
- kernel/trace/trace.c                        |    1=20
- net/llc/llc_c_ac.c                          |    8 -
- net/llc/llc_conn.c                          |   32 +----
- net/llc/llc_s_ac.c                          |   12 +
- net/llc/llc_sap.c                           |   23 +--
- net/sched/sch_netem.c                       |    2=20
- net/sctp/ipv6.c                             |    2=20
- net/sctp/protocol.c                         |    2=20
- net/sctp/socket.c                           |   55 ++++----
- net/wireless/nl80211.c                      |    3=20
- scripts/setlocalversion                     |   12 +
- sound/core/hrtimer.c                        |    1=20
- sound/core/timer.c                          |  141 +++++++++++++++-------
- sound/firewire/bebob/bebob_stream.c         |    3=20
- sound/hda/hdac_controller.c                 |    2=20
- sound/pci/hda/hda_intel.c                   |    2=20
- tools/perf/pmu-events/jevents.c             |   12 -
- tools/perf/util/map.c                       |    3=20
- 80 files changed, 754 insertions(+), 360 deletions(-)
-
-Adam Ford (1):
-      serial: mctrl_gpio: Check for NULL pointer
-
-Alan Stern (4):
-      UAS: Revert commit 3ae62a42090f ("UAS: fix alignment of scatter/gathe=
-r segments")
-      USB: gadget: Reject endpoints with 0 maxpacket value
-      usb-storage: Revert commit 747668dbc061 ("usb-storage: Set virt_bound=
-ary_mask to avoid SG overflows")
-      HID: Fix assumption that devices have inputs
-
-Andi Kleen (1):
-      perf jevents: Fix period for Intel fixed counters
-
-Austin Kim (1):
-      fs: cifs: mute -Wunused-const-variable message
-
-Bart Van Assche (1):
-      RDMA/iwcm: Fix a lock inversion issue
-
-Brian Norris (1):
-      scripts/setlocalversion: Improve -dirty check with git-status --no-op=
-tional-locks
-
-Christian Borntraeger (1):
-      s390/uaccess: avoid (false positive) compiler warnings
-
-Chuck Lever (1):
-      NFSv4: Fix leak of clp->cl_acceptor string
-
-Connor Kuehl (1):
-      staging: rtl8188eu: fix null dereference when kzalloc fails
-
-Dan Carpenter (1):
-      USB: legousbtower: fix a signedness bug in tower_probe()
-
-Dave Young (1):
-      efi/x86: Do not clean dummy variable in kexec path
-
-Eric Biggers (2):
-      llc: fix sk_buff leak in llc_sap_state_process()
-      llc: fix sk_buff leak in llc_conn_service()
-
-Eric Dumazet (2):
-      bonding: fix potential NULL deref in bond_update_slave_arr
-      sch_netem: fix rcu splat in netem_enqueue()
-
-Greg Kroah-Hartman (1):
-      Linux 4.9.199
-
-Hans de Goede (2):
-      HID: i2c-hid: Add Odys Winbook 13 to descriptor override
-      HID: i2c-hid: add Trekstor Primebook C11B to descriptor override
-
-Hui Peng (1):
-      ath6kl: fix a NULL-ptr-deref bug in ath6kl_usb_alloc_urb_from_pipe()
-
-Jan-Marek Glogowski (1):
-      usb: handle warm-reset port requests on hub resume
-
-Jia Guo (1):
-      ocfs2: clear zero in unaligned direct IO
-
-Jia-Ju Bai (3):
-      fs: ocfs2: fix possible null-pointer dereferences in ocfs2_xa_prepare=
-_entry()
-      fs: ocfs2: fix a possible null-pointer dereference in ocfs2_write_end=
-_nolock()
-      fs: ocfs2: fix a possible null-pointer dereference in ocfs2_info_scan=
-_inode_alloc()
-
-Johan Hovold (4):
-      USB: ldusb: fix ring-buffer locking
-      USB: ldusb: fix control-message timeout
-      USB: serial: whiteheat: fix potential slab corruption
-      USB: serial: whiteheat: fix line-speed endianness
-
-Julian Sax (1):
-      HID: i2c-hid: add Direkt-Tek DTLAPY133-1 to descriptor override
-
-Kan Liang (1):
-      x86/cpu: Add Atom Tremont (Jacobsville)
-
-Kees Cook (1):
-      exec: load_script: Do not exec truncated interpreter path
-
-Kent Overstreet (1):
-      dm: Use kzalloc for all structs with embedded biosets/mempools
-
-Laura Abbott (1):
-      rtlwifi: Fix potential overflow on P2P code
-
-Lukas Wunner (1):
-      efi/cper: Fix endianness of PCIe class code
-
-Markus Theil (1):
-      nl80211: fix validation of mesh path nexthop
-
-Micha=C5=82 Miros=C5=82aw (1):
-      HID: fix error message in hid_open_report()
-
-Mika Westerberg (1):
-      thunderbolt: Use 32-bit writes when writing ring producer/consumer
-
-Miklos Szeredi (2):
-      fuse: flush dirty data/metadata before non-truncate setattr
-      fuse: truncate pending writes on O_TRUNC
-
-Mikulas Patocka (3):
-      dm snapshot: use mutex instead of rw_semaphore
-      dm snapshot: introduce account_start_copy() and account_end_copy()
-      dm snapshot: rework COW throttling to fix deadlock
-
-Pascal Bouwmann (1):
-      iio: fix center temperature of bmc150-accel-core
-
-Petr Mladek (1):
-      tracing: Initialize iter->seq after zeroing in tracing_read_pipe()
-
-Phil Elwell (1):
-      sc16is7xx: Fix for "Unexpected interrupt: 8"
-
-Sam Ravnborg (1):
-      rtc: pcf8523: set xtal load capacitance from DT
-
-Steve MacLean (1):
-      perf map: Fix overlapped map handling
-
-Takashi Iwai (5):
-      ALSA: timer: Follow standard EXPORT_SYMBOL() declarations
-      ALSA: timer: Limit max instances per timer
-      ALSA: timer: Simplify error path in snd_timer_open()
-      ALSA: timer: Fix mutex deadlock at releasing card
-      Revert "ALSA: hda: Flush interrupts on disabling"
-
-Takashi Sakamoto (1):
-      ALSA: bebob: Fix prototype of helper function to return negative value
-
-Thierry Reding (1):
-      gpio: max77620: Use correct unit for debounce times
-
-Thomas Bogendoerfer (1):
-      MIPS: fw: sni: Fix out of bounds init of o32 stack
-
-Tony Lindgren (1):
-      dmaengine: cppi41: Fix cppi41_dma_prep_slave_sg() when idle
-
-Valentin Vidic (1):
-      net: usb: sr9800: fix uninitialized local variable
-
-Vratislav Bendel (1):
-      xfs: Correctly invert xfs_buftarg LRU isolation logic
-
-Xin Long (2):
-      sctp: fix the issue that flags are ignored when using kernel_connect
-      sctp: not bind the socket in sctp_connect
-
-Yihui ZENG (1):
-      s390/cmm: fix information leak in cmm_timeout_handler()
-
-
---huq684BweRXVnRxX
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEEZH8oZUiU471FcZm+ONu9yGCSaT4FAl3CxTAACgkQONu9yGCS
-aT7PdBAAuwTOSvUGBSej8Q0B1il2jlLxYRaLldyZ+BR44xbzRKQGPB34QgJfm2BJ
-ofjkF+FH3AeiK3gMfSz1zPWiVFhhtVZZC7vN2hMa4F6tx5LCnvoBHFpMulAU5OS1
-M8Prn5cyEkuJSVJUQlsF00Wlb5MEtDGmZmvj6NF9pROZGFASP8CdPzawJZONdxbU
-9DWYJyCqtUM2dhZQEH53UvFRjYlkRIPq+aLiYzRYEu+Y38yRUFfWP35Cujbsrzuj
-cMsQBX7All2ebYrfw9QrYleivpqMeu1KA++cLR6p/mHP9Dvx6k4zdWcTbIODNc+Y
-QxDi74b8b5Yp6dJvrhgJ53kho0WrrpSX1sUE02xxv/mE3jRM98uQl2C7tCgqZVtc
-6osyRzC2deeNsfV5mFloSOYZrwA5Sf7twzGJLypHXQLs8uEOWYh4WB9r8EcQ7prw
-8sRLUyEa2jJmWiUahv+e9cc/PClyeXzRLjzKtbIGm75l35B6WCjJu7AhqRvyUZG9
-8puAmwoTfDapMFYE9PmH+8I51BuIL9z+UQFCPcZ8b3itpf3XANc3mF1j5dCpn0O4
-mkl1OLGfEjnEGeH6imdH43AIz4Mo+Pa3ZD9StHG69XE8yZj+DZMnI55pJLU6YWXV
-VZmJqz1zze1J1FHulTMeWa4bq1REFoU9rBqhWSOKJ/EmblPMR/Q=
-=s+qY
------END PGP SIGNATURE-----
-
---huq684BweRXVnRxX--
+Laurent Pinchart
