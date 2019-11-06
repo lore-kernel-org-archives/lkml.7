@@ -2,101 +2,88 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5E54C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:51:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 127CAC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:52:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68D5F222C4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:51:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA86F21D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:52:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012278;
-	bh=Ch2qZ4hrZWMCG0BfzRa/bcgEyOD2CW9P0h6uzzt78BU=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=CUmdDamQx72gjjatKyW9SW/2FRHcYLes92oWvVIzbyNnBai5nlmfs34qYxtOmqQqK
-	 +XAHCdmOGRr6wIXZ3tKub6SW9PwA4IhLjhDtmF8G20DFogsVSEUUY4Y03uIlhH9BUG
-	 6RrLmx/sR5jpvWeW8903+OC52jOYOjzMvH7dkX04=
+	s=default; t=1573012362;
+	bh=6oXmlfJnb2stkrodmW4PjBQSrQ2i8FRz0yc8v3PgDnA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=JtZ/zm/CQWCpbs1+Sg84D5BrcyiZwYBdcO5u+UQhMVVM6lTMEBCfx8VY8B5yz2lC2
+	 9c7DVyOs8ZO8ISzkIk0vJfbBAKZdILulR1bx8qN44xK1Tw+B/M6qo3O5tQjSz3SCpL
+	 99svyYEESj7g+4hy8eO+MN4VNLy8dfn/hU65Il5o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731133AbfKFDvR (ORCPT
+        id S1731130AbfKFDwl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:51:17 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38824 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727266AbfKFDvQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:51:16 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B1B2087E;
-        Wed,  6 Nov 2019 03:51:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573012275;
-        bh=Ch2qZ4hrZWMCG0BfzRa/bcgEyOD2CW9P0h6uzzt78BU=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=lkZ5AKd0if3lcumlQA2ZsO0HM8ctchvN67RfVm0fze0k1k06BCszdsXCClXwDJVr6
-         v/zCv+t/X+B7YQirkazLBgZYED9mQ6MFrjuFcGhJ+xMOA9U5ssrUJM2iKhrsY+p6hW
-         dVuGaKOkDg02iDxaFzOvE0IXkiSWGJzEG3VgB4qM=
-Date:   Tue, 5 Nov 2019 19:51:14 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Thomas =?ISO-8859-1?Q?Hellstr=F6m?= (VMware) 
-        <thomas_os@shipmail.org>
-Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        torvalds@linux-foundation.org,
-        Thomas Hellstrom <thellstrom@vmware.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Rik van Riel <riel@surriel.com>,
-        Minchan Kim <minchan@kernel.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Huang Ying <ying.huang@intel.com>,
-        =?ISO-8859-1?Q?J=E9r=F4me?= Glisse <jglisse@redhat.com>,
-        "Kirill A . Shutemov" <kirill@shutemov.name>
-Subject: Re: [PATCH v6 4/8] mm: Add write-protect and clean utilities for
- address space ranges
-Message-Id: <20191105195114.f75be5e76763da5546121b41@linux-foundation.org>
-In-Reply-To: <20191014132204.7721-5-thomas_os@shipmail.org>
-References: <20191014132204.7721-1-thomas_os@shipmail.org>
-        <20191014132204.7721-5-thomas_os@shipmail.org>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+        Tue, 5 Nov 2019 22:52:41 -0500
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:44936 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKFDwl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:52:41 -0500
+Received: by mail-ot1-f67.google.com with SMTP id c19so3550282otr.11;
+        Tue, 05 Nov 2019 19:52:39 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=qVL6/KdJU5CK3KGDry37q377IXjdSjsU4IwjB7ytqvU=;
+        b=AOdIx3mGPHoOBVTbgrR3Ttjyc1KxVQ/dsXwYAAx6JfxXfqiTnLJL0dk/EGZlkVaAvy
+         g0P9h7uY5VBXBFdJbB8aYblf8feoPB88INwQN10CnQwUQX9MzhIahs70KpMnS075qGmA
+         FIHFIfcXvLRtXOFor5y0K/CeDeOqAa0M82/RkEHljwbcl3ViZ1Z04OD4EBvEYGZNhyP+
+         CoWddgQU2Zl+C5cyMWKuGQXsv/YVEqOhaQJPF7tJxvVHI7GxNbRPYuoxnODMPt3xQeh/
+         saURn0KKPUEvaPlcFzpV0Xp3qUDukwjA7z5qWjR+mxEYdY8qcm5uV8n4b4uBPlFtDjni
+         OXPQ==
+X-Gm-Message-State: APjAAAX+umnKDBiXH1i0rPFQu604ZSCndBbkAAzLjctnBHVXp8bhW2z6
+        AyMD/+kR+naye2RgEr/gqg==
+X-Google-Smtp-Source: APXvYqw9JKyWfFwQh0q+Ym9dD6boCstaS2iRfFy5rBdgL0cCxIbhhpjTpkl5RRvH3B5KqmWgf9RjNQ==
+X-Received: by 2002:a9d:4604:: with SMTP id y4mr219841ote.10.1573012359179;
+        Tue, 05 Nov 2019 19:52:39 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id m205sm6483459oif.10.2019.11.05.19.52.38
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:52:38 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:52:38 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Georgi Djakov <georgi.djakov@linaro.org>
+Cc:     robh+dt@kernel.org, agross@kernel.org, bjorn.andersson@linaro.org,
+        mark.rutland@arm.com, linux-arm-msm@vger.kernel.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH] dt-bindings: interconnect: Convert qcom,qcs404 to DT
+ schema
+Message-ID: <20191106035238.GA25559@bogus>
+References: <20191030101555.10955-1-georgi.djakov@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191030101555.10955-1-georgi.djakov@linaro.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 14 Oct 2019 15:22:00 +0200 Thomas Hellstr=F6m (VMware) <thomas_os@s=
-hipmail.org> wrote:
+On Wed, 30 Oct 2019 12:15:55 +0200, Georgi Djakov wrote:
+> Convert the qcom,qcs404 interconnect provider binding to DT schema.
+> 
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+> ---
+>  .../bindings/interconnect/qcom,qcs404.txt     | 45 -----------
+>  .../bindings/interconnect/qcom,qcs404.yaml    | 77 +++++++++++++++++++
+>  2 files changed, 77 insertions(+), 45 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+>  create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,qcs404.yaml
+> 
 
-> Add two utilities to 1) write-protect and 2) clean all ptes pointing into
-> a range of an address space.
-> The utilities are intended to aid in tracking dirty pages (either
-> driver-allocated system memory or pci device memory).
-> The write-protect utility should be used in conjunction with
-> page_mkwrite() and pfn_mkwrite() to trigger write page-faults on page
-> accesses. Typically one would want to use this on sparse accesses into
-> large memory regions. The clean utility should be used to utilize
-> hardware dirtying functionality and avoid the overhead of page-faults,
-> typically on large accesses into small memory regions.
+Applied, thanks.
 
-Not fully comfortable reviewing this one.
-
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -736,4 +736,7 @@ config ARCH_HAS_PTE_SPECIAL
->  config ARCH_HAS_HUGEPD
->  	bool
-> =20
-> +config MAPPING_DIRTY_HELPERS
-> +        bool
-> +
-
-But given this, it's your problem ;)  So
-
-Acked-by: Andrew Morton <akpm@linux-foundation.org>
-
-Yes, please proceed with merging [1-4] via a drm tree.
+Rob
