@@ -2,94 +2,139 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F72DC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:14:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 569B6C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:15:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3B71421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:14:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2760221D6C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:15:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMxNIDvA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfKFROo (ORCPT
+        id S1732316AbfKFRPq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:14:44 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:50798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbfKFROo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:14:44 -0500
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com [209.85.221.70])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02D5F821CC
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 17:14:44 +0000 (UTC)
-Received: by mail-wr1-f70.google.com with SMTP id v6so5255850wrm.18
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:14:43 -0800 (PST)
+        Wed, 6 Nov 2019 12:15:46 -0500
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:52248 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728448AbfKFRPp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:15:45 -0500
+Received: by mail-wm1-f67.google.com with SMTP id c17so4515595wmk.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:15:42 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=FqojnfYcPbpr6KlP+Ft2/Gak6vptdJZ9xOr44jOMXnA=;
+        b=tMxNIDvAAP/3hNNmYb9dR65I23CNeDHFutYeUIj9UPBedZMtQzp3pYv5OUT+TvGVXK
+         +be5HiG0r/qx+rEtzAVw+mNotoUdTmkLyldiFaLeag1CMBNl89KjljTBm2Kbv43R+IF1
+         ljyerVW6mBUC5F/3GrLuHyBxjdl/oaEtJLseE5zDbssgIGmn18VnhADXluty/a/s6NNQ
+         7hqapMvw//uieaJYjRfPZSG4Istnz/3w91Oj2cNmPemFqjzyOpnuWw3j8PSR+m+DNoMI
+         hCwPvrK1VPwcOtfNx2lYJr9yuIm7nvhMNiM2KDL256WYI/HiqsNe8R2XrGj3QIkrLLgc
+         ZaKA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QPuewg+igX+Y9jROhNdPAEozZADLHEAOgnbpEs8tHxs=;
-        b=Kq6WwUFlSF9ujkvrNtVrdWhqtbGnsBiBzn7cb9f9VN2BFBd53kQJeEG+gBVsV8jEr/
-         Sc1q6/fBdf+mljPxmDokHXAEbtGLnVsCxDcZggjp720FPVoVB7lbzsjoz/l9Y3OpY5W/
-         bAdaGQ/hjBEXa61ggIomC1zbcGoUBHTaNHEPW507vak6A6SqCzFBbwT31TWM4UejiOiw
-         atwRbyYpgfeb6QLmDi0Ql9KpH+swsegwrVn2Gb8LXNrN6M4c0gQpE1he3g14tCq+y1xW
-         RnKIyl9Wr17oU7XwIrMR0B0j8pTJAppUhyyxVhu/XlGr2yFnGm0jePkAPg3mdMCqYtWs
-         vE+w==
-X-Gm-Message-State: APjAAAWEpa2+vPo2qJHkZ8EWWet+cwVgXSyTPif9SMk8E1qa3PUaqNT3
-        4T3CWbCsdufP9id7Pmmn39noaz+c5tT5fqSnjQ/2urJMy/cbSLH74Q7iyYLDBFIfE1SLiPtCg/g
-        2PZAzFIuHn6F+B+DvvW4l1w++
-X-Received: by 2002:a5d:448f:: with SMTP id j15mr3616055wrq.70.1573060482631;
-        Wed, 06 Nov 2019 09:14:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwcqvKi/yfxsnHz+4Kb94GBXp/EaSDtrQzEUSyZMEwzz9UPgjC0hCLIufNNRbA+TILPZ0ZWHg==
-X-Received: by 2002:a5d:448f:: with SMTP id j15mr3616032wrq.70.1573060482299;
-        Wed, 06 Nov 2019 09:14:42 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
-        by smtp.gmail.com with ESMTPSA id j6sm3193919wrr.34.2019.11.06.09.14.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 09:14:41 -0800 (PST)
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
- <20191106170727.14457-2-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <8ba98630-9ca0-85c2-3c94-45d54a448fca@redhat.com>
-Date:   Wed, 6 Nov 2019 18:14:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=FqojnfYcPbpr6KlP+Ft2/Gak6vptdJZ9xOr44jOMXnA=;
+        b=EyQ+e5tyuSQHuBQJhM/UUZOOw8GDcWIWa5xBIXT0wzcNoLzVQYQybk96IJWoka4h+4
+         AcsHke7DMsXwe9juRiYwq5gEFwE4PBREOaX9PhiL3hnow0tHXNfDewoInDBoQJu0qAmr
+         Fx2Gp48VIR2G2/jLrDuoRBQrbAHhP+WZBgXGbor+ZfxELZw2IOvZu9bod8bs+jaQL0qF
+         Ev7OhwdQbo+RRLrCNJlFh4JM8JPjmDoi7DqUUZKPPsryi8jXoOoEidgFhJN80mkIDcH1
+         syhvSiClsqNEpIkotD87LcFMitAIq/kjjBqendT7XHN2uVgruZbPpTnuZp80S3FlnlYD
+         3qgQ==
+X-Gm-Message-State: APjAAAXgepcMpg3X1ijazR9H9BATy4Y5Y8HAhMLPfS1oCwha7AjpxqsA
+        /J/CoYwZFIuF9TKhECooAdKliO9U2msgbPz9gug=
+X-Google-Smtp-Source: APXvYqxjPjEx3asqTpjp4vKsp2+A7S51N7f18TYCVywGXqWdqcC5r2midJFtjkDsHCgtr+/qe5CInKwpDXjoLN9dJy8=
+X-Received: by 2002:a1c:790b:: with SMTP id l11mr3718261wme.127.1573060541884;
+ Wed, 06 Nov 2019 09:15:41 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191106170727.14457-2-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1572874046-30996-1-git-send-email-yukuai3@huawei.com> <1572874046-30996-8-git-send-email-yukuai3@huawei.com>
+In-Reply-To: <1572874046-30996-8-git-send-email-yukuai3@huawei.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 6 Nov 2019 12:15:30 -0500
+Message-ID: <CADnq5_MjhnBA-mUwPgdHRuit+=CgZjs0HC+JHqeD_gmciaONFQ@mail.gmail.com>
+Subject: Re: [PATCH 7/7] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
+To:     yu kuai <yukuai3@huawei.com>
+Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
+        Christian Koenig <christian.koenig@amd.com>,
+        Chunming Zhou <David1.Zhou@amd.com>,
+        Dave Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        "Zhou, Jammy" <Jammy.Zhou@amd.com>, tiancyin <tianci.yin@amd.com>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "Tuikov, Luben" <luben.tuikov@amd.com>, yi.zhang@huawei.com,
+        LKML <linux-kernel@vger.kernel.org>,
+        Maling list - DRI developers 
+        <dri-devel@lists.freedesktop.org>,
+        zhengbin <zhengbin13@huawei.com>,
+        amd-gfx list <amd-gfx@lists.freedesktop.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 18:07, Sean Christopherson wrote:
->  void kvm_get_pfn(kvm_pfn_t pfn)
+On Mon, Nov 4, 2019 at 8:54 AM yu kuai <yukuai3@huawei.com> wrote:
+>
+> Fixes gcc '-Wunused-but-set-variable' warning:
+>
+> drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
+> =E2=80=98gfx_v8_0_gpu_early_init=E2=80=99:
+> drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
+> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
+able]
+>
+> Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw part=
+s")
+> Signed-off-by: yu kuai <yukuai3@huawei.com>
+
+Looks like gfx_v7_0.c and gfx_v6_0.c could have the same treatment.
+Care to send patches?
+
+Applied the series.  Thanks!
+
+Alex
+
+> ---
+>  drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/=
+amdgpu/gfx_v8_0.c
+> index e4c645d..80b7958 100644
+> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
+> @@ -1710,7 +1710,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct a=
+mdgpu_device *adev)
+>  static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
 >  {
-> -	if (!kvm_is_reserved_pfn(pfn))
-> +	if (!kvm_is_reserved_pfn(pfn) && !WARN_ON(kvm_is_zone_device_pfn(pfn)))
->  		get_page(pfn_to_page(pfn));
->  }
->  EXPORT_SYMBOL_GPL(kvm_get_pfn);
-
-Can you call remap_pfn_range with a source address that is ZONE_DEVICE?
- If so, you would get a WARN from the kvm_get_pfn call in
-hva_to_pfn_remapped.
-
-Paolo
+>         u32 gb_addr_config;
+> -       u32 mc_shared_chmap, mc_arb_ramcfg;
+> +       u32 mc_arb_ramcfg;
+>         u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_add=
+r_map;
+>         u32 tmp;
+>         int ret;
+> @@ -1850,7 +1850,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_de=
+vice *adev)
+>                 break;
+>         }
+>
+> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
+>         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
+>         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
+>
+> --
+> 2.7.4
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
