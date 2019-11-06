@@ -2,139 +2,235 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-11.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D36BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2188DC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8688217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C928B206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernelci-org.20150623.gappssmtp.com header.i=@kernelci-org.20150623.gappssmtp.com header.b="aTLsOLR8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731033AbfKFG1V (ORCPT
+        id S1730992AbfKFG1y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:27:21 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:44398 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728112AbfKFG1V (ORCPT
+        Wed, 6 Nov 2019 01:27:54 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:40338 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727795AbfKFG1y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:27:21 -0500
-Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1iSEmj-0004kO-6K; Wed, 06 Nov 2019 06:27:17 +0000
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-To:     gregkh@linuxfoundation.org
-Cc:     mathias.nyman@intel.com, stern@rowland.harvard.edu,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Kai-Heng Feng <kai.heng.feng@canonical.com>
-Subject: [PATCH v2] usb: Allow USB device to be warm reset in suspended state
-Date:   Wed,  6 Nov 2019 14:27:10 +0800
-Message-Id: <20191106062710.29880-1-kai.heng.feng@canonical.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 Nov 2019 01:27:54 -0500
+Received: by mail-wr1-f66.google.com with SMTP id i10so3596114wrs.7
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:27:52 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernelci-org.20150623.gappssmtp.com; s=20150623;
+        h=message-id:date:mime-version:content-transfer-encoding:subject:to
+         :from:cc;
+        bh=+f/nil2KcNNXA8az57lhYCTpyXUZt+dq0Bg8utXgN+w=;
+        b=aTLsOLR8XKvkP09Cm88Qty3MSj8H0AdpWVfK7IXIBsbyXZvBgtBP7fE1FOUc6HMmQV
+         MdbY9lLFK8ghS/SESrC2gtwjiLFkZW9cm10F7kIjxJQc/8/DXNhXGoPJbd+m1B43cqB/
+         LuTLCPgNAgUgWQ7USx9FsPP0HxfOba/YnfHGBIvlxLLKomnTSoKaiHZVjkubAMmWZGA9
+         4K8Of/X9REoxmRvSKFzqiQptpOvEGBxJysI5PynIHJEJo7+oTbW0Aq+TAO+y9lqROTMg
+         NO5dCI0qFrxGS2kwGe9hCQw+HZER/tTUWjhap3zwUWmeOg20mI4m8KUq+REdKHlToXOs
+         f7kg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:date:mime-version
+         :content-transfer-encoding:subject:to:from:cc;
+        bh=+f/nil2KcNNXA8az57lhYCTpyXUZt+dq0Bg8utXgN+w=;
+        b=tJAULkyj5VTOGXAgn3JTs/6Dh07//4+fQ4PiWj46Fw2SdLGfOr6nKVXt9SvUfM4+bv
+         jn1SnCnPkO9n9TMHvaT88klq8XiaCtJQ+c3CGN7AgHioTYftAazF5dtnXbxqfV+F9isv
+         JtXjx6aeu9hd/0h8FJk7TDUwqmj+fVWorewgLaobAyXJxMVnTRZFWmoZW4Oap1hvtLlw
+         NU5A/H4mx4jrflDghTf3osgu8h8E0HtqgI5yQQQ88aJ2F7AlCeEL1vAgFLdW6XJazwuc
+         TzLgotONSdnDXQgHK39zGywLmNplXgINR2fxphXoB3v0coI/7TTeLRqtGhyuu4ZNYUfo
+         zEfg==
+X-Gm-Message-State: APjAAAVqSyti5EAPKQy9XTbLGyHr1mSFvGCIN0S08acxCzeZRXaCa1Xr
+        6fx4yIg/1gfTJPgIIkb1Ts9Sig==
+X-Google-Smtp-Source: APXvYqz6P5q5So52dKSs2wpTTJBgXtQgtXoxAH4VNw3qFZ3E2lGPWwjIbwQBgaJ2j4ai0xiM7MiOMA==
+X-Received: by 2002:adf:e386:: with SMTP id e6mr905440wrm.397.1573021671687;
+        Tue, 05 Nov 2019 22:27:51 -0800 (PST)
+Received: from [148.251.42.114] ([2a01:4f8:201:9271::2])
+        by smtp.gmail.com with ESMTPSA id l18sm26812563wrn.48.2019.11.05.22.27.50
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 22:27:51 -0800 (PST)
+Message-ID: <5dc267e7.1c69fb81.496da.9bf1@mx.google.com>
+Date:   Tue, 05 Nov 2019 22:27:51 -0800 (PST)
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+X-Kernelci-Branch: for-next
+X-Kernelci-Lab-Name: lab-baylibre
+X-Kernelci-Tree: broonie-sound
+X-Kernelci-Report-Type: bisect
+X-Kernelci-Kernel: v5.4-rc6-292-gc1efaea10be0
+Subject: broonie-sound/for-next boot bisection: v5.4-rc6-292-gc1efaea10be0 on
+ sun8i-h3-libretech-all-h3-cc
+To:     Mark Brown <broonie@kernel.org>, tomeu.vizoso@collabora.com,
+        guillaume.tucker@collabora.com, mgalka@collabora.com,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        broonie@kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        matthew.hart@linaro.org, khilman@baylibre.com,
+        enric.balletbo@collabora.com
+From:   "kernelci.org bot" <bot@kernelci.org>
+Cc:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+        alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Dell WD15 dock, sometimes USB ethernet cannot be detected after plugging
-cable to the ethernet port, the hub and roothub get runtime resumed and
-runtime suspended immediately:
-...
-[  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.315204] usb usb4: usb auto-resume
-[  433.315226] hub 4-0:1.0: hub_resume
-[  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
-[  433.315264] usb usb4-port1: status 0343 change 0001
-[  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
-[  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
-[  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-[  433.422307] usb usb4-port1: do warm reset
-[  433.422311] usb 4-1: device reset not allowed in state 8
-[  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
-[  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
-[  433.422356] usb usb4-port1: do warm reset
-[  433.422358] usb 4-1: device reset not allowed in state 8
-[  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
-[  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
-[  433.422465] hub 4-0:1.0: hub_suspend
-[  433.422475] usb usb4: bus auto-suspend, wakeup 1
-[  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
-[  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
-[  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
-[  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
-[  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
-[  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
-[  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
-[  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
-[  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
-[  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
-[  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
-[  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
-[  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
-[  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
-[  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
-[  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
-[  433.902919] usb usb4: usb wakeup-resume
-[  433.902942] usb usb4: usb auto-resume
-[  433.902966] hub 4-0:1.0: hub_resume
-...
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+* This automated bisection report was sent to you on the basis  *
+* that you may be involved with the breaking commit it has      *
+* found.  No manual investigation has been done to verify it,   *
+* and the root cause of the problem may be somewhere else.      *
+*                                                               *
+* If you do send a fix, please include this trailer:            *
+*   Reported-by: "kernelci.org bot" <bot@kernelci.org>          *
+*                                                               *
+* Hope this helps!                                              *
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
-As Mathias pointed out, the hub enters Cold Attach Status state and
-requires a warm reset. However usb_reset_device() bails out early when
-the device is in suspended state, as its callers port_event() and
-hub_event() don't always resume the device.
+broonie-sound/for-next boot bisection: v5.4-rc6-292-gc1efaea10be0 on sun8i-=
+h3-libretech-all-h3-cc
 
-Since there's nothing wrong to reset a suspended device, allow
-usb_reset_device() to do so to solve the issue.
+Summary:
+  Start:      c1efaea10be0 Merge branch 'asoc-5.5' into asoc-next
+  Details:    https://kernelci.org/boot/id/5dc218e159b5142346138dff
+  Plain log:  https://storage.kernelci.org//broonie-sound/for-next/v5.4-rc6=
+-292-gc1efaea10be0/arm/sunxi_defconfig/gcc-8/lab-baylibre/boot-sun8i-h3-lib=
+retech-all-h3-cc.txt
+  HTML log:   https://storage.kernelci.org//broonie-sound/for-next/v5.4-rc6=
+-292-gc1efaea10be0/arm/sunxi_defconfig/gcc-8/lab-baylibre/boot-sun8i-h3-lib=
+retech-all-h3-cc.html
+  Result:     ac6a4dd3e9f0 ASoC: soc-core: use snd_soc_lookup_component() a=
+t snd_soc_unregister_component()
 
-Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
----
-v2:
-- Update kerneldoc.
+Checks:
+  revert:     PASS
+  verify:     PASS
 
- drivers/usb/core/hub.c | 5 ++---
- 1 file changed, 2 insertions(+), 3 deletions(-)
+Parameters:
+  Tree:       broonie-sound
+  URL:        https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound=
+.git
+  Branch:     for-next
+  Target:     sun8i-h3-libretech-all-h3-cc
+  CPU arch:   arm
+  Lab:        lab-baylibre
+  Compiler:   gcc-8
+  Config:     sunxi_defconfig
+  Test suite: boot
 
-diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
-index 05a2d51bdbe0..eaf28eed51b0 100644
---- a/drivers/usb/core/hub.c
-+++ b/drivers/usb/core/hub.c
-@@ -5849,7 +5849,7 @@ static int usb_reset_and_verify_device(struct usb_device *udev)
- 
- /**
-  * usb_reset_device - warn interface drivers and perform a USB port reset
-- * @udev: device to reset (not in SUSPENDED or NOTATTACHED state)
-+ * @udev: device to reset (not in NOTATTACHED state)
+Breaking commit found:
+
+---------------------------------------------------------------------------=
+----
+commit ac6a4dd3e9f09697ab6a1774d7ab6a34e7ab36fa
+Author: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Date:   Tue Nov 5 15:46:51 2019 +0900
+
+    ASoC: soc-core: use snd_soc_lookup_component() at snd_soc_unregister_co=
+mponent()
+    =
+
+    snd_soc_unregister_component() is now finding component manually,
+    but we already have snd_soc_lookup_component() to find component;
+    Let's use existing function.
+    =
+
+    Signed-off-by: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+    Reviewed-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+    Reviewed-by: Ranjani Sridharan <ranjani.sridharan@linux.intel.com>
+    Link: https://lore.kernel.org/r/87zhha252c.wl-kuninori.morimoto.gx@rene=
+sas.com
+    Signed-off-by: Mark Brown <broonie@kernel.org>
+
+diff --git a/sound/soc/soc-core.c b/sound/soc/soc-core.c
+index bb0592159414..0ce333669138 100644
+--- a/sound/soc/soc-core.c
++++ b/sound/soc/soc-core.c
+@@ -2876,29 +2876,19 @@ EXPORT_SYMBOL_GPL(snd_soc_register_component);
   *
-  * Warns all drivers bound to registered interfaces (using their pre_reset
-  * method), performs the port reset, and then lets the drivers know that
-@@ -5877,8 +5877,7 @@ int usb_reset_device(struct usb_device *udev)
- 	struct usb_host_config *config = udev->actconfig;
- 	struct usb_hub *hub = usb_hub_to_struct_hub(udev->parent);
- 
--	if (udev->state == USB_STATE_NOTATTACHED ||
--			udev->state == USB_STATE_SUSPENDED) {
-+	if (udev->state == USB_STATE_NOTATTACHED) {
- 		dev_dbg(&udev->dev, "device reset not allowed in state %d\n",
- 				udev->state);
- 		return -EINVAL;
--- 
-2.17.1
+  * @dev: The device to unregister
+  */
+-static int __snd_soc_unregister_component(struct device *dev)
++void snd_soc_unregister_component(struct device *dev)
+ {
+ 	struct snd_soc_component *component;
+-	int found =3D 0;
+ =
 
+ 	mutex_lock(&client_mutex);
+-	for_each_component(component) {
+-		if (dev !=3D component->dev)
+-			continue;
++	while (1) {
++		component =3D snd_soc_lookup_component(dev, NULL);
++		if (!component)
++			break;
+ =
+
+ 		snd_soc_del_component_unlocked(component);
+-		found =3D 1;
+-		break;
+ 	}
+ 	mutex_unlock(&client_mutex);
+-
+-	return found;
+-}
+-
+-void snd_soc_unregister_component(struct device *dev)
+-{
+-	while (__snd_soc_unregister_component(dev))
+-		;
+ }
+ EXPORT_SYMBOL_GPL(snd_soc_unregister_component);
+---------------------------------------------------------------------------=
+----
+
+
+Git bisection log:
+
+---------------------------------------------------------------------------=
+----
+git bisect start
+# good: [a99d8080aaf358d5d23581244e5da23b35e340b9] Linux 5.4-rc6
+git bisect good a99d8080aaf358d5d23581244e5da23b35e340b9
+# bad: [c1efaea10be0d91b6986af5c14cd3482ab160981] Merge branch 'asoc-5.5' i=
+nto asoc-next
+git bisect bad c1efaea10be0d91b6986af5c14cd3482ab160981
+# good: [1092b09708882e3c216f0b9c02e606b3c0942c5b] ASoC: tlv320aic32x4: add=
+ a check for devm_clk_get
+git bisect good 1092b09708882e3c216f0b9c02e606b3c0942c5b
+# good: [f03412b78a947857bbd20899e1423482fba55761] ASoC: rockchip-max98090:=
+ Support usage with and without HDMI
+git bisect good f03412b78a947857bbd20899e1423482fba55761
+# good: [acbf27746ecfa96b290b54cc7f05273482ea128a] ASoC: pcm: update FE/BE =
+trigger order based on the command
+git bisect good acbf27746ecfa96b290b54cc7f05273482ea128a
+# bad: [e443c20593de9f8efd9b2935ed40eb0bbacce30b] ASoC: soc-core: don't cal=
+l snd_soc_dapm_new_dai_widgets() at snd_soc_register_dai()
+git bisect bad e443c20593de9f8efd9b2935ed40eb0bbacce30b
+# good: [b8132657990b5a09ad8e1c9e2c8efc20b5f9372a] ASoC: soc-core: move snd=
+_soc_lookup_component()
+git bisect good b8132657990b5a09ad8e1c9e2c8efc20b5f9372a
+# bad: [ac6a4dd3e9f09697ab6a1774d7ab6a34e7ab36fa] ASoC: soc-core: use snd_s=
+oc_lookup_component() at snd_soc_unregister_component()
+git bisect bad ac6a4dd3e9f09697ab6a1774d7ab6a34e7ab36fa
+# good: [486c7978ff665eb763f70cc9477e0de6326e1c41] ASoC: soc-core: add snd_=
+soc_del_component_unlocked()
+git bisect good 486c7978ff665eb763f70cc9477e0de6326e1c41
+# good: [b18768f56162964f70bbb9119dba59a947d7d577] ASoC: soc-core: remove s=
+nd_soc_component_add/del()
+git bisect good b18768f56162964f70bbb9119dba59a947d7d577
+# first bad commit: [ac6a4dd3e9f09697ab6a1774d7ab6a34e7ab36fa] ASoC: soc-co=
+re: use snd_soc_lookup_component() at snd_soc_unregister_component()
+---------------------------------------------------------------------------=
+----
