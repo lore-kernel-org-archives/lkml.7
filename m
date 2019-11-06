@@ -2,100 +2,131 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0AEFC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:27:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F24D7FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:30:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B840207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:27:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC84D2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:30:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ipYgt89j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732796AbfKFW1K (ORCPT
+        id S1727614AbfKFWau (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:27:10 -0500
-Received: from mga17.intel.com ([192.55.52.151]:26990 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727154AbfKFW1I (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:27:08 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga004.jf.intel.com ([10.7.209.38])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 14:27:08 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="353613712"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by orsmga004.jf.intel.com with ESMTP; 06 Nov 2019 14:27:07 -0800
-Date:   Wed, 6 Nov 2019 14:27:07 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Alexander Graf <graf@amazon.com>,
-        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-Subject: Re: [PATCH v2 00/14] KVM: x86: Remove emulation_result enums
-Message-ID: <20191106222707.GB21617@linux.intel.com>
-References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
- <8dec39ac-7d69-b1fd-d07c-cf9d014c4af3@redhat.com>
- <686b499e-7700-228e-3602-8e0979177acb@amazon.com>
- <20191106005806.GK23297@linux.intel.com>
- <3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com>
+        Wed, 6 Nov 2019 17:30:50 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40415 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726817AbfKFWau (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:30:50 -0500
+Received: by mail-pl1-f195.google.com with SMTP id e3so10045639plt.7;
+        Wed, 06 Nov 2019 14:30:49 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=mPlyd2uOwDFOJHnR0FcKb5obhlxfQ+BfqyeB8GcPgsM=;
+        b=ipYgt89j3kpMg5qiTffNN6LdEoQP3g88e4XH3OUIaj0Z1pwFVRdoVoPrav7ormtT6e
+         Yf6Zlqm0O6Cu2dz1Jgu7MzZ6i7vvuOMrZlc+520c0B5WoTg1vngQsV9E8VQ5/y8FEPAf
+         sZs+isfCarOcx8lO2M2uDUS5piSvkSVBJ+Fsm5JnyE4Bn1FWsFBLumzdq3eFlOmqY1hS
+         UblmrDi/CJE/00/cMNHcjqsxiKXlTRKCaf2phgBK+xzt3Lo3A7IofRysuc854zYiHqal
+         epMUIgkSu5EO5pgC/oalwJLC4H+zrJoRTTZBRlpOnKIyvDs6Deyr00nN4xehlV4PpMNH
+         Qr9Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=mPlyd2uOwDFOJHnR0FcKb5obhlxfQ+BfqyeB8GcPgsM=;
+        b=KJDQg7M7FjrZODb6HWiJ6l4tOZ6FsYieEKMeC//y2eb1OrdqY892XR8GgEYV28YITo
+         phqsvZMvkAgqEFjKyvrP2YBZ4ua6kpD/BA1PlvYqxlj92gouvA+d+Xjc03bfM5TJK3d+
+         Xi5qSV8U4+G5jDsrCWYNiDCCrIYGDLq/Q2niCU94RjKeQRNJLufF39tSrvsyWrTPvDGh
+         6hJPgqa0HHN1siBFPbocKO14MPrWcRRBGyt+5uioN8diCMXrPMXlVOf7EXNlWObvwoDo
+         C9oyaswLfMObIyDV+MiJ/2MVy2SY1YygSZXMDT2oV8/nonvjmBGmMlCMz92mi+Lir4A1
+         t7Hw==
+X-Gm-Message-State: APjAAAW2P3KOysytZXojhrHUJLnI9+NQv1JnualAhDPJnKrPyrwKE7u1
+        NLKkLBvmOct7eOHM/+pCMdE=
+X-Google-Smtp-Source: APXvYqz/nEBTHz99NrVlIxam5Ibb6hcu+7t9BxFhU/n7xTbsGLzwL4ZkdOXjp/g2h9VT2OgKYIofkA==
+X-Received: by 2002:a17:902:860a:: with SMTP id f10mr5228913plo.233.1573079449371;
+        Wed, 06 Nov 2019 14:30:49 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id o7sm8717360pjo.7.2019.11.06.14.30.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 14:30:48 -0800 (PST)
+Date:   Wed, 6 Nov 2019 14:30:46 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     Keith Busch <kbusch@kernel.org>, Jens Axboe <axboe@fb.com>,
+        Christoph Hellwig <hch@lst.de>,
+        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
+        linux-nvme@lists.infradead.org,
+        Akinobu Mita <akinobu.mita@gmail.com>,
+        linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>
+Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
+Message-ID: <20191106223046.GA19493@roeck-us.net>
+References: <20191029223214.18889-1-linux@roeck-us.net>
+ <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
+ <20191106212921.GA7020@amd>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191106212921.GA7020@amd>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 01:17:40PM +0100, Paolo Bonzini wrote:
-> On 06/11/19 01:58, Sean Christopherson wrote:
-> >> enum kvm_return {
-> >>     KVM_RET_USER_EXIT = 0,
-> >>     KVM_RET_GUEST = 1,
-> >> };
-> >>
-> >> and then consistently use them as return values? That way anyone who has not
-> >> worked on kvm before can still make sense of the code.
-> > Hmm, I think it'd make more sense to use #define instead of enum to
-> > hopefully make it clear that they aren't the *only* values that can be
-> > returned.  That'd also prevent anyone from changing the return types from
-> > 'int' to 'enum kvm_return', which IMO would hurt readability overall.
+On Wed, Nov 06, 2019 at 10:29:21PM +0100, Pavel Machek wrote:
+> Hi!
+> 
+> > > nvme devices report temperature information in the controller information
+> > > (for limits) and in the smart log. Currently, the only means to retrieve
+> > > this information is the nvme command line interface, which requires
+> > > super-user privileges.
+> > > 
+> > > At the same time, it would be desirable to use NVME temperature information
+> > > for thermal control.
+> > > 
+> > > This patch adds support to read NVME temperatures from the kernel using the
+> > > hwmon API and adds temperature zones for NVME drives. The thermal subsystem
+> > > can use this information to set thermal policies, and userspace can access
+> > > it using libsensors and/or the "sensors" command.
+> > > 
+> > > Example output from the "sensors" command:
+> > > 
+> > > nvme0-pci-0100
+> > > Adapter: PCI adapter
+> > > Composite:    +39.0°C  (high = +85.0°C, crit = +85.0°C)
+> > > Sensor 1:     +39.0°C
+> > > Sensor 2:     +41.0°C
+> > > 
+> > > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 > > 
-> > And maybe KVM_EXIT_TO_USERSPACE and KVM_RETURN_TO_GUEST?
+> > This looks fine to me, but I'll wait a few more days to see if there are
+> > any additional comments..
 > 
-> That would be quite some work.  Right now there is some consistency
-> between all of:
+> User wants to know temperature of /dev/sda... and we already have an
+> userspace tools knowing about smart, etc...
 > 
-> - x86_emulate_instruction and its callers
+> pavel@amd:/data/film$ sudo hddtemp /dev/sda
+> /dev/sda: ST1000LM014-1EJ164: 48°C
 > 
-> - vcpu->arch.complete_userspace_io
+> I see we also have sensors framework but it does _not_ handle
+> harddrive temperatures.
 > 
-> - vcpu_enter_guest/vcpu_block
+> Does it need some kind of unification? Should NVMe devices expose
+> "SMART" information in the same way other SSDs do?
 > 
-> - kvm_x86_ops->handle_exit
-> 
-> so it would be very easy to end up with a half-int-half-enum state that
-> is more confusing than before...
- 
-Ya, my thought was to update the obvious cases, essentially the ones you
-listed above, to use the define.  So almost intentionally end up in a
-half-n-half state, at least in the short term, the thought being that the
-extra annotation would do more harm than good.  But there's really no way
-to determine whether or not it would actually be a net positive without
-writing the code...
 
-> I'm more worried about cases where we have functions returning either 0
-> or -errno, but 0 lets you enter the guest.  I'm not sure if the only one
-> is kvm_mmu_reload or there are others.
+The unification to report hardware monitoring information to userspace
+is called the sensors framework. Also, users in general prefer to not
+have to run "sudo" to get such information.
 
-There are lots of those, e.g. basically all of the helpers for nested
-consistency checks.
+Guenter
