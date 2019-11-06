@@ -2,291 +2,171 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E781C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:04:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 090A0C47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:07:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1203E20717
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:04:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UGJF71MS"
+	by mail.kernel.org (Postfix) with ESMTP id B7E3A20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:07:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573013221;
+	bh=k03/NoU9yY0j1kkrXdGAfiuxBRECPKDW/G6G/PAEHY0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=cvqzYgqigJyZ9dJBSxY0Apm2xfUigePnD2MnbWhvIRW79xpmSFQC9cl9iOlxyJjCq
+	 AQvi8wllBivMd7BltqvdnWfTzpKXRfcEgEwyC356/KrOnTNTlWFMqiSdfRkv+7qok5
+	 2fH9KjF45ewl4jxKypV4myUcRGzugfSdE6rqn2NM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731142AbfKFEEC (ORCPT
+        id S1731179AbfKFEHB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:04:02 -0500
-Received: from conssluserg-04.nifty.com ([210.131.2.83]:64111 "EHLO
-        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725768AbfKFEEC (ORCPT
+        Tue, 5 Nov 2019 23:07:01 -0500
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:45954 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFEHA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:04:02 -0500
-Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
-        by conssluserg-04.nifty.com with ESMTP id xA643rHT001039;
-        Wed, 6 Nov 2019 13:03:53 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xA643rHT001039
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573013034;
-        bh=Q0cc2X1MjTt4VhZMgWmZrlmkbFMLKCaE5TUKfcrczZI=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=UGJF71MSB2Ju6xL21sGoBuKyLGzZVv1uvkIrwLyjlbhQPKdj2CKLYbUH2PNskTI/N
-         D22Dt1OGfqGXhIq3adE4pnXP1CaqxIOb1PCQGRsWL2G+B8HLYa+3zmo7W+gaZA171U
-         8niAvt4kcj9ysDGIuJu6SOm8tU26tCx44Etvp5SJmGxKCXBDJaK5vUWFVcMenmgOvf
-         XPYNG7HMe9wPW8q3HjHkyKsG6cYbcARx0ujfxpCd/Q1KFunAcIpEcto3XW/GgQ0ja5
-         lrbeBBLqINjcin9U/IGESeebhhaDGTx7uxlvR9ak+vEPQjklhrCG0NoDZVdbSZ4GO9
-         m/+C8yCLpJTVQ==
-X-Nifty-SrcIP: [209.85.217.54]
-Received: by mail-vs1-f54.google.com with SMTP id c25so4747697vsp.0;
-        Tue, 05 Nov 2019 20:03:53 -0800 (PST)
-X-Gm-Message-State: APjAAAWpCJZAhtAyjrTRAWoMxp0ypsNVRs/J9d9skC3M4lXBfu3rBhb0
-        7/cNwAH6nLenSjrOuRn2wSFj0pyxCFWEND/lZCE=
-X-Google-Smtp-Source: APXvYqwCe1qFGgwM7WG1d1TFIx1VPbJBTAIrzglfkTm5deQvyjJ8KnJVyRPrUvY2rfAizmKDd3eqG0ZGksqZSz7pYPg=
-X-Received: by 2002:a67:e290:: with SMTP id g16mr286532vsf.54.1573013032448;
- Tue, 05 Nov 2019 20:03:52 -0800 (PST)
+        Tue, 5 Nov 2019 23:07:00 -0500
+Received: by mail-oi1-f195.google.com with SMTP id k2so19721544oij.12;
+        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=pbXWYeEjjc1tNeD8Va0Rn7W5q8WImyzirMTHLiEKYGY=;
+        b=HDvT0r1O4hYvec9HRTLyyiRoRCgRpMUAnN8NYp3qonrng2HCXN05NI8IF//H6UzyTz
+         s37E6T15SEV+ZNYj4JbFAvNUzQ2njM88WrhHTmWiv2VI/tmYa/GkJYl3fBPghGLjRap7
+         TCc6L2ixyel0KqCdeHQaW8MP5faYkPGaNoxdyNQJMbnIdiVoIGr+XxJSIs3+8LSxEZy/
+         UhhiL++TWq+rig8o3KvXasRs1axFUSltBNfM5aUZk4uPxbQD9zi5MJ8YMXkTZdyaJTsq
+         XrjXuetjq/Kcd+fGjcyCJ6kuZLfd2D+mSCt4hG/lVpagelMVrD1F0IoTJzXR/W67mI93
+         KqIA==
+X-Gm-Message-State: APjAAAWxQyuhT2AoHxUH1Uqccj9rF26Efe3IdILIKmorCJAh1t8/RZYH
+        RZR/QMpzTz8HNSkW/g/R0iBxHjk=
+X-Google-Smtp-Source: APXvYqwe0beNgeLE8gya+f9XdJ7ynxnQMAtyk6u+v0005b8KLbqtym2m20lGy9EYFxREtXyxePD27Q==
+X-Received: by 2002:aca:f18b:: with SMTP id p133mr406122oih.22.1573013219216;
+        Tue, 05 Nov 2019 20:06:59 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k93sm6726958otc.30.2019.11.05.20.06.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 20:06:58 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:06:57 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Benjamin Gaignard <benjamin.gaignard@linaro.org>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Benjamin Gaignard <benjamin.gaignard@st.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Linux PWM List <linux-pwm@vger.kernel.org>,
+        linux-iio@vger.kernel.org, u.kleine-koenig@pengutronix.de,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        Hartmut Knaack <knaack.h@gmx.de>,
+        Fabrice Gasnier <fabrice.gasnier@st.com>,
+        Lee Jones <lee.jones@linaro.org>,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/4] dt-bindings: iio: timer: Convert stm32 IIO trigger
+ bindings to json-schema
+Message-ID: <20191106040657.GA5294@bogus>
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-3-benjamin.gaignard@st.com>
+ <20191103110841.3ad3ecfb@archlinux>
+ <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
 MIME-Version: 1.0
-References: <20191102063036.28601-1-unixbhaskar@gmail.com> <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
- <20191105023243.GA16635@fieldses.org> <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
- <20191106031027.GA20442@Gentoo>
-In-Reply-To: <20191106031027.GA20442@Gentoo>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 6 Nov 2019 13:03:16 +0900
-X-Gmail-Original-Message-ID: <CAK7LNAQVhUS=WNoqgWQaS2-MJ9KoVBXurop8_vS5OC1VPtVTKw@mail.gmail.com>
-Message-ID: <CAK7LNAQVhUS=WNoqgWQaS2-MJ9KoVBXurop8_vS5OC1VPtVTKw@mail.gmail.com>
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+M3ks5sZ6wwV-V+HCLC8OLdeLqrxK0Ga-pXTsdktQErbMOk4g@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:10 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
-> On 11:53 Wed 06 Nov 2019, Masahiro Yamada wrote:
-> >On Tue, Nov 5, 2019 at 11:32 AM J. Bruce Fields <bfields@fieldses.org> wrote:
-> >>
-> >> On Mon, Nov 04, 2019 at 06:03:13PM -0800, Randy Dunlap wrote:
-> >> > On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
-> >> > > This patch allow you to remove old kernels and associated modules
-> >> > > directory from the system.You can do it at once with the -r flag
-> >> > > and interactively with the -i flag.
-> >> > >
-> >> > > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
-> >> > > ---
-> >> > >  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
-> >> > >  1 file changed, 65 insertions(+), 17 deletions(-)
-> >> >
-> >> > Hi,
-> >> > I believe that this script now does what the patch author intends it to do.
-> >> > It does have a few whitespace issues, but no big deals.  (see below)
-> >>
-> >> My original comment stands: looks like it prompts for full module path
-> >> and kernel versions which means it's no more convenient than just doing
-> >> an "ls" and then removing the ones you want to.  (In fact, with "rm"
-> >> you'd also get the benefit of tab completion....)
-> >>
-> >> It's quite different from the original script and I don't really see the
-> >> advantage.
-> >>
-> >> --b.
+On Tue, Nov 05, 2019 at 11:07:16AM +0100, Benjamin Gaignard wrote:
+> Le dim. 3 nov. 2019 à 12:08, Jonathan Cameron <jic23@kernel.org> a écrit :
 > >
-> >I am with Bruce.
+> > On Thu, 31 Oct 2019 13:30:38 +0100
+> > Benjamin Gaignard <benjamin.gaignard@st.com> wrote:
 > >
-> >This patch is trying to replace everything
-> >with worse code.
-> Well,Masahiro,
-> I won't mind dropping the idea, which you already concluded.But, would
-> you care to let me know how worse the code seems to be????
-
-
-As far as I understood this script,
-it is useful to delete stale versions with a single command.
-
-scripts/prune-kernel  5.2-rc1  5.2-rc2  5.2-rc3
-
-
-This patch is dropping the 'for f in "$@"' loop,
-so you would end up with running this script multiple times.
-
-scripts/prune-kernel -r  5.2-rc1  5.2-rc1
-scripts/prune-kernel -r  5.2-rc2  5.2-rc2
-scripts/prune-kernel -r  5.2-rc3  5.2-rc3
-
-
-What is funny is, it takes the kernel_version and modules_version
-separately.
-And now it requires -r option for the default behavior.
-I see nothing cool overall.
-
-
-
-J. Bruce Fields suggested:
-"But if somebody does actually use it as-is, it'd be nicer to keep the
-current behavior and add an option ("-i" or something) for the
-interactive behavior."
-
-
-I want to see a patch if and only if
-you can add -i without intrusively changing the current code.
-
-
-Masahiro
-
-
-
-
+> > > Convert the STM32 IIO trigger binding to DT schema format using json-schema
+> > >
+> > > Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> > I'm far from great on these as still haven't taken the time I should to learn
+> > the yaml syntax properly.  A few comments inline however based mostly on this
+> > doesn't quite look like other ones I've seen recently.
 > >
-> >BTW.
-> >Bruce,
-> >Does the current script expect RHEL or something?
-> >I do not see 'new-kernel-pkg' on my Ubuntu machine.
+> > Thanks,
 > >
-> >It would still work with 'new-kernel-pkg: command not found'
-> >warning.
+> > Jonathan
 > >
-> >We could bypass it if we like.
+> > > ---
+> > >  .../bindings/iio/timer/st,stm32-timer-trigger.yaml | 44 ++++++++++++++++++++++
+> > >  .../bindings/iio/timer/stm32-timer-trigger.txt     | 25 ------------
+> > >  2 files changed, 44 insertions(+), 25 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > >  delete mode 100644 Documentation/devicetree/bindings/iio/timer/stm32-timer-trigger.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > > new file mode 100644
+> > > index 000000000000..1c8c8b55e8cd
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/iio/timer/st,stm32-timer-trigger.yaml
+> > > @@ -0,0 +1,44 @@
+> > > +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/iio/timer/st,stm32-timer-trigger.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: STMicroelectronics STM32 Timers IIO timer bindings
+> > > +
+> > > +maintainers:
+> > > +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> > > +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> > > +
+> > > +properties:
+> > > +  $nodemane:
 > >
-> >command -v new-kernel-pkg && new-kernel-pkg --remove $f
-> >
-> >
-> >
-> >Masahiro Yamada
-> >
-> >
-> >
-> >> >
-> >> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
-> >> >
-> >> >
-> >> > > diff --git a/scripts/prune-kernel b/scripts/prune-kernel
-> >> > > index e8aa940bc0a9..01d0778db71f 100755
-> >> > > --- a/scripts/prune-kernel
-> >> > > +++ b/scripts/prune-kernel
-> >> > > @@ -1,21 +1,69 @@
-> >> > >  #!/bin/bash
-> >> > >  # SPDX-License-Identifier: GPL-2.0
-> >> > > +#This script will remove old kernels and modules directory related to it.
-> >> > > +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
-> >> > > +# "-h" or "--help" show how to use this script or show without parameter.
-> >> > > +#"-i" or "--interactive" show how to remove interactively.
-> >> > > +
-> >> > > +flag=$1
-> >> > > +kernel_version=$2
-> >> > > +modules_version=$3
-> >> > > +boot_dir=/boot
-> >> > > +modules_dir=/lib/modules
-> >> > > +
-> >> > > +remove_old_kernel() {
-> >> > > +   cd $boot_dir
-> >> > > +   rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
-> >> > > +   return 0
-> >> > > +}
-> >> > > +
-> >> > > +remove_old_modules_dir() {
-> >> > > +   cd $modules_dir
-> >> > > +   rm -rf $modules_version
-> >> > > +   return 0
-> >> > > +}
-> >> > > +
-> >> > > +usage() {
-> >> > > +   printf "Usage: $(basename $0) [-ri]\n"
-> >> > > +   printf "\n -r or --remove  kernel_version modules_version\n"
-> >> > > +   printf "\n -i or --interactive do as interactive way\n"
-> >> > > +   return 0
-> >> > > +}
-> >> > > +
-> >> > > +case "$flag" in
-> >> > > +   -i | --interactive)
-> >> > > +           printf "\nEnter kernel version to remove or blank/empty to exit:"
-> >> > > +           read kernel_version
-> >> > > +           if [[ $kernel_version != "" ]]; then
-> >> > > +                   remove_old_kernel
-> >> > > +                   printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
-> >> >
-> >> > space after ':'
-> >> >
-> >> > drop one \n above.
-> >> >
-> >> > > +                   printf "Please give the full modules directory name to remove:"
-> >> > > +                   read modules_version
-> >> > > +                   if [[ $modules_version != "" ]]; then
-> >> > > +                           remove_old_modules_dir
-> >> > > +                           printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
-> >> >
-> >> > space after ':'
-> >> >
-> >> > drop one \n above.
-> >> >
-> >> > > +                   else
-> >> > > +                           exit 1
-> >> > > +                   fi
-> >> > > +           fi
-> >> > > +           ;;
-> >> > > +   -h | --help)
-> >> > > +           usage
-> >> > > +           exit 0
-> >> > > +           ;;
-> >> > > +   -r | --remove)
-> >> > > +           if [[ $# -ne 3 ]]; then
-> >> > > +                    printf "You need to provide kernel version and modules directory name.\n"
-> >> > > +                    exit 1
-> >> > > +            else
-> >> > > +                    remove_old_kernel
-> >> > > +                    remove_old_modules_dir
-> >> > > +           fi
-> >> > > +           ;;
-> >> > > +   *)
-> >> > > +           usage
-> >> > > +           exit 1
-> >> > > +           ;;
-> >> > > +esac
-> >> > >
-> >> > > -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
-> >> > > -# again, /boot and /lib/modules/ eventually fill up.
-> >> > > -# Dumb script to purge that stuff:
-> >> > >
-> >> >
-> >> > OK, the former script's loop is removed.. good.
-> >> > But the 2 preceding blank lines are not removed, so the script
-> >> > now ends with 2 unnecessary blank lines.
-> >> >
-> >> > > -for f in "$@"
-> >> > > -do
-> >> > > -        if rpm -qf "/lib/modules/$f" >/dev/null; then
-> >> > > -                echo "keeping $f (installed from rpm)"
-> >> > > -        elif [ $(uname -r) = "$f" ]; then
-> >> > > -                echo "keeping $f (running kernel) "
-> >> > > -        else
-> >> > > -                echo "removing $f"
-> >> > > -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
-> >> > > -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
-> >> > > -                rm -rf "/lib/modules/$f"
-> >> > > -                new-kernel-pkg --remove $f
-> >> > > -        fi
-> >> > > -done
-> >> > > --
-> >> >
-> >> >
-> >> > --
-> >> > ~Randy
-> >
-> >
-> >
-> >--
-> >Best Regards
-> >
-> >Masahiro Yamada
+> > nodename?
+> 
+> That will be in v2
 
+No, $nodename is correct. The '$' signifies something we generate and 
+add in. IOW, not a real property. I guess we could have used 'name' here 
+and stuck with traditional OpenFirmware.
 
+> 
+> >
+> > > +    pattern: "^timer@[0-9]+$"
+> > > +    type: object
+> > > +
+> > > +    description:
+> > > +      must be a sub-node of an STM32 Timer device tree node
+> > > +
+> > > +    properties:
+> > > +      compatible:
+> > > +        oneOf:
+> >
+> > enum is I think preferred for these.
+> 
+> as you like it will be in v2
+> 
+> >
+> > > +          - const: st,stm32-timer-trigger
+> > > +          - const: st,stm32h7-timer-trigger
+> > > +
+> > > +      reg: true
+> >
+> > Normally some info for what the reg value is..
+> I can't put "description" on this field because the syntax doesn't allow it.
+> I will add a comment in v2 to explain what reg is.
 
--- 
-Best Regards
-Masahiro Yamada
+items:
+  - maximum: <max timer number>
+
+Rob
