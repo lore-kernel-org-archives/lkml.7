@@ -2,188 +2,122 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FE32C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:50:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24BC0C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D98F2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:50:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573073403;
-	bh=sHen7yNyuv/b3F1zCq8lqv8vBRIH1BD3upjKdalnjME=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=lvPpYzBDVTgDgZHD7xsfu44YCXuCttSDheCt85B6HLv7dIIi4a84NR1cPev/JflXX
-	 6BtwTAkjJN4HByLY0BHhcwNaKMshuwzWCyIUxdmIzxUd021iQejCgx9fbwnZqizfgg
-	 myYIC97QxwcerH3771fuqVBuGvZwrX1RXiBOM6YQ=
+	by mail.kernel.org (Postfix) with ESMTP id C0D5C2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:51:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="mBGIaMQE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732617AbfKFUuC (ORCPT
+        id S1729383AbfKFUvL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:50:02 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:43122 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732414AbfKFUuB (ORCPT
+        Wed, 6 Nov 2019 15:51:11 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:41146 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727587AbfKFUvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:50:01 -0500
-Received: by mail-qk1-f194.google.com with SMTP id z23so566872qkj.10;
-        Wed, 06 Nov 2019 12:50:00 -0800 (PST)
+        Wed, 6 Nov 2019 15:51:10 -0500
+Received: by mail-pg1-f195.google.com with SMTP id l3so17947805pgr.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 12:51:10 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=CiK8igEDVXgKaHvMads6gYnmVhNv244fVisSAjJVZyQ=;
-        b=L1igbyJIS3B3Z6CUwNO8Av0YgANed5N5Nac+ANz7oSf+L6b3WdT62vZknFaWMMHcto
-         yeHa5jGPJRCOXyTLOwq2RjTjSIFjqxWfke9qtXc2EWCRJZl8iTY8PuKsdkLuywa9qMXo
-         GUkxWVgHEuA0jWHXDQJtkKUPYDFOq5Y06GTwkgr1JPJILt5Pcc/CLL4bqhmkJtJYgRwz
-         JWVFI3EX9FJRqttzXCJVbIS5T7oxMsmG5p3M9WUDWTZoC6Xd7gbo0mXQ1ToeNkC9UGlm
-         2cpnIlYKVDXusG3s4V22kIvMBVmIOSjvYjcSne5VfMzjwJKOOAGAcwcrYXqO4YLcyx8M
-         P8GQ==
+        d=arista.com; s=googlenew;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=vJ9OYEmFicBQTWC5Whu4ZobVh1fTGzzolfkLnikbPY4=;
+        b=mBGIaMQE3+XoVaKnpNhd92Abqgr7jZea+yZZJIKuyqtQXCqrt1QwBqnV/d1M6mMaLI
+         CpbZ0Ed/mH7mdSu3rACsHRsu0R4J1u1lKv4a0FhPvA8hv4V4u6K73a+8auCT1VxRsXF4
+         qBEfKY+G7dDAdfa44Cc2QlpWcfB1f6l3xozLnpY4F6WQsq1agIgA09BqYKZDmQPq5yuR
+         tvsxe4T9Pa99B3/RaWl//T0GtcPZPyPBsTbc4nfbyvW5iGAadIOjil73EhVOfpUJ9zfi
+         KMHfqTLRnsf48A9ZVi9H5ALepCZS8V4UFj3j+Yah/iY8YqPWOPgwnEUtps47DFwtEIs3
+         h6gA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mime-version:content-disposition:user-agent;
-        bh=CiK8igEDVXgKaHvMads6gYnmVhNv244fVisSAjJVZyQ=;
-        b=DNUTRyFsqiHELRMw1E5wykXqFthY60tX8Hd7IZ/sUAkMnFP0C6yI0RjSv+RZDPx1uv
-         gEn5a2NET2mjApEgqcAaHErYcnb/52MpKPEBipRIL9DsNzckUDk9AQFFpj2ahyHl04pn
-         ejKWtcOyrtP0ANYG0dxk8vFSGU6/TQKXbC941uQ/vx5ZLIn9qrbiieJ8zBlmeMernf1Q
-         AnQDaPJ3kQhs1f2lmEby8JCuBPOVKhurp07q2rj6Jpxsp/gJZoGAAcakeYpGW3G0oFVP
-         E6t5It0KcnDhdRszy+7i1muHgYN/kIXnalRlD1n2sWsX82YzK1vAWs5WTFHDmcLsmW1A
-         WO4Q==
-X-Gm-Message-State: APjAAAW7k7Iqf7/0xt0/zlLiS8UDZsEygvNrH8tnWqsHK7e5/4oe5D2i
-        4/rR45l5iPby4sqt4P5TEAiK1xob
-X-Google-Smtp-Source: APXvYqwOhnRWgIky9jY4TKVQ3orEZlRl3NtxCGDBiQzZ8OtIR+HX+drX7zMSWGgQ4QYDdxqUuhbovg==
-X-Received: by 2002:a05:620a:12cb:: with SMTP id e11mr4065334qkl.247.1573073399941;
-        Wed, 06 Nov 2019 12:49:59 -0800 (PST)
-Received: from localhost ([2620:10d:c091:500::5bd1])
-        by smtp.gmail.com with ESMTPSA id u189sm12924792qkd.62.2019.11.06.12.49.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 12:49:59 -0800 (PST)
-Date:   Wed, 6 Nov 2019 12:49:57 -0800
-From:   Tejun Heo <tj@kernel.org>
-To:     cgroups@vger.kernel.org
-Cc:     Li Zefan <lizefan@huawei.com>,
-        Johannes Weiner <hannes@cmpxchg.org>, kernel-team@fb.com,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH cgroup/for-5.5] cgroup: use cgroup->last_bstat instead of
- cgroup->bstat_pending for consistency
-Message-ID: <20191106204957.GT3622521@devbig004.ftw2.facebook.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=vJ9OYEmFicBQTWC5Whu4ZobVh1fTGzzolfkLnikbPY4=;
+        b=LrK+ZuimzNqqzsIXaJm+FGfKK40BO9h0VorV8EbWb0vI+2uo5jX9p0vBghdMP3qoys
+         V4nU+r+9UV7W5YB4aynLesS31JDXRdtUBfwe4so7vif3NaewzdZ31i7eYDHPqUl0IH5D
+         imQbVKM6zVZy/rRHDZJUZ7typA154RfPStk9cZxeWm9VFNyIeKcqrmfA15CWvbc4SMeD
+         km6amBZoyN+sC8b77D2mBjPRJJHoiP0FcLBZcG0sZQk7aCrBbGu5qOBWCMGlMH29NWvW
+         r5ivhVu64BA5zZ2yfD1+c8wt5gn5U5ybwd0R7FHY8OjdYxlil3VJc38Lq6ULlROsskjs
+         WDAQ==
+X-Gm-Message-State: APjAAAW/bh3u8bYSSOxQDk/HkXoXLmlJgUP1zL2dHO6bv6TcMs2fAlFl
+        eHBsIWRRCtksrdZbpVcU8EPaXw==
+X-Google-Smtp-Source: APXvYqwouta6uHeps+u/Wn/QIEPYm2HcRS7bY3pNz6pJLTSOhmt8wo684FG3WBIqHX1IT/+hoWNhtw==
+X-Received: by 2002:a65:6119:: with SMTP id z25mr5370779pgu.332.1573073469666;
+        Wed, 06 Nov 2019 12:51:09 -0800 (PST)
+Received: from [10.83.36.153] ([217.173.96.166])
+        by smtp.gmail.com with ESMTPSA id 205sm22138639pge.56.2019.11.06.12.51.06
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 12:51:07 -0800 (PST)
+Subject: Re: [PATCH] xtensa: improve stack dumping
+To:     Max Filippov <jcmvbkbc@gmail.com>, linux-xtensa@linux-xtensa.org
+Cc:     Chris Zankel <chris@zankel.net>, linux-kernel@vger.kernel.org,
+        Petr Mladek <pmladek@suse.com>
+References: <20191106181617.1832-1-jcmvbkbc@gmail.com>
+From:   Dmitry Safonov <dima@arista.com>
+Message-ID: <27720768-9fb7-0382-e1ef-ac9760cdf5cc@arista.com>
+Date:   Wed, 6 Nov 2019 20:50:58 +0000
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191106181617.1832-1-jcmvbkbc@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cgroup->bstat_pending is used to determine the base stat delta to
-propagate to the parent.  While correct, this is different from how
-percpu delta is determined for no good reason and the inconsistency
-makes the code more difficult to understand.
+Hi Max,
 
-This patch makes parent propagation delta calculation use the same
-method as percpu to global propagation.
+On 11/6/19 6:16 PM, Max Filippov wrote:
+> Collect whole stack dump lines in a buffer and print the whole buffer
+> when it's ready with pr_info instead of pr_cont. This makes stack dump
+> lines consistent in SMP case and relies less on pr_cont/printk
+> differences related to timestamps.
+> Make size of stack dump configurable.
+> Drop extra newline output in show_trace as its output format does not
+> depend on CONFIG_KALLSYMS.
+> 
+> Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
 
-* cgroup_base_stat_accumulate() is renamed to cgroup_base_stat_add()
-  and cgroup_base_stat_sub() is added.
+[..]
 
-* percpu propagation calculation is updated to use the above helpers.
+>  void show_stack(struct task_struct *task, unsigned long *sp)
+>  {
+>  	int i = 0;
+>  	unsigned long *stack;
+> +	char buf[9 * 8 + 1];
+>  
+>  	if (!sp)
+>  		sp = stack_pointer(task);
+> @@ -512,10 +510,12 @@ void show_stack(struct task_struct *task, unsigned long *sp)
+>  	for (i = 0; i < kstack_depth_to_print; i++) {
+>  		if (kstack_end(sp))
+>  			break;
+> -		pr_cont(" %08lx", *sp++);
+> +		sprintf(buf + (i % 8) * 9, " %08lx", *sp++);
 
-* cgroup->bstat_pending is replaced with cgroup->last_bstat and
-  updated to use the same calculation as percpu propagation.
+buf is on the stack, does sprintf() put null-terminator for hex?
 
-Signed-off-by: Tejun Heo <tj@kernel.org>
----
-Applying to cgroup/for-5.5.
+>  		if (i % 8 == 7)
+> -			pr_cont("\n");
+> +			pr_info("%s\n", buf);
+>  	}
+> +	if (i % 8)
+> +		pr_info("%s\n", buf);
 
-Thanks.
+If the stack trace ends with (i % 8 == 7), you'll double-print the last
+line?
 
- include/linux/cgroup-defs.h |    2 -
- kernel/cgroup/rstat.c       |   46 +++++++++++++++++++++++---------------------
- 2 files changed, 26 insertions(+), 22 deletions(-)
-
---- a/include/linux/cgroup-defs.h
-+++ b/include/linux/cgroup-defs.h
-@@ -458,7 +458,7 @@ struct cgroup {
- 	struct list_head rstat_css_list;
- 
- 	/* cgroup basic resource statistics */
--	struct cgroup_base_stat pending_bstat;	/* pending from children */
-+	struct cgroup_base_stat last_bstat;
- 	struct cgroup_base_stat bstat;
- 	struct prev_cputime prev_cputime;	/* for printing out cputime */
- 
---- a/kernel/cgroup/rstat.c
-+++ b/kernel/cgroup/rstat.c
-@@ -304,44 +304,48 @@ void __init cgroup_rstat_boot(void)
-  * Functions for cgroup basic resource statistics implemented on top of
-  * rstat.
-  */
--static void cgroup_base_stat_accumulate(struct cgroup_base_stat *dst_bstat,
--					struct cgroup_base_stat *src_bstat)
-+static void cgroup_base_stat_add(struct cgroup_base_stat *dst_bstat,
-+				 struct cgroup_base_stat *src_bstat)
- {
- 	dst_bstat->cputime.utime += src_bstat->cputime.utime;
- 	dst_bstat->cputime.stime += src_bstat->cputime.stime;
- 	dst_bstat->cputime.sum_exec_runtime += src_bstat->cputime.sum_exec_runtime;
- }
- 
-+static void cgroup_base_stat_sub(struct cgroup_base_stat *dst_bstat,
-+				 struct cgroup_base_stat *src_bstat)
-+{
-+	dst_bstat->cputime.utime -= src_bstat->cputime.utime;
-+	dst_bstat->cputime.stime -= src_bstat->cputime.stime;
-+	dst_bstat->cputime.sum_exec_runtime -= src_bstat->cputime.sum_exec_runtime;
-+}
-+
- static void cgroup_base_stat_flush(struct cgroup *cgrp, int cpu)
- {
- 	struct cgroup *parent = cgroup_parent(cgrp);
- 	struct cgroup_rstat_cpu *rstatc = cgroup_rstat_cpu(cgrp, cpu);
--	struct task_cputime *last_cputime = &rstatc->last_bstat.cputime;
--	struct task_cputime cputime;
--	struct cgroup_base_stat delta;
-+	struct cgroup_base_stat cur, delta;
- 	unsigned seq;
- 
- 	/* fetch the current per-cpu values */
- 	do {
- 		seq = __u64_stats_fetch_begin(&rstatc->bsync);
--		cputime = rstatc->bstat.cputime;
-+		cur.cputime = rstatc->bstat.cputime;
- 	} while (__u64_stats_fetch_retry(&rstatc->bsync, seq));
- 
--	/* calculate the delta to propgate */
--	delta.cputime.utime = cputime.utime - last_cputime->utime;
--	delta.cputime.stime = cputime.stime - last_cputime->stime;
--	delta.cputime.sum_exec_runtime = cputime.sum_exec_runtime -
--					 last_cputime->sum_exec_runtime;
--	*last_cputime = cputime;
--
--	/* transfer the pending stat into delta */
--	cgroup_base_stat_accumulate(&delta, &cgrp->pending_bstat);
--	memset(&cgrp->pending_bstat, 0, sizeof(cgrp->pending_bstat));
--
--	/* propagate delta into the global stat and the parent's pending */
--	cgroup_base_stat_accumulate(&cgrp->bstat, &delta);
--	if (parent)
--		cgroup_base_stat_accumulate(&parent->pending_bstat, &delta);
-+	/* propagate percpu delta to global */
-+	delta = cur;
-+	cgroup_base_stat_sub(&delta, &rstatc->last_bstat);
-+	cgroup_base_stat_add(&cgrp->bstat, &delta);
-+	cgroup_base_stat_add(&rstatc->last_bstat, &delta);
-+
-+	/* propagate global delta to parent */
-+	if (parent) {
-+		delta = cgrp->bstat;
-+		cgroup_base_stat_sub(&delta, &cgrp->last_bstat);
-+		cgroup_base_stat_add(&parent->bstat, &delta);
-+		cgroup_base_stat_add(&cgrp->last_bstat, &delta);
-+	}
- }
- 
- static struct cgroup_rstat_cpu *
+Thanks,
+          Dmitry
