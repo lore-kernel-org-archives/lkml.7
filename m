@@ -2,226 +2,114 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40126C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:31:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA287C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0DED32187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:31:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A509D20650
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:32:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731616AbfKFMbG (ORCPT
+        id S1731718AbfKFMcM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:31:06 -0500
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:33760 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728716AbfKFMbF (ORCPT
+        Wed, 6 Nov 2019 07:32:12 -0500
+Received: from mail-io1-f71.google.com ([209.85.166.71]:44175 "EHLO
+        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728716AbfKFMcL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:31:05 -0500
-Received: from [IPv6:2804:431:c7f1:970a:5c8b:9def:467e:dc3f] (unknown [IPv6:2804:431:c7f1:970a:5c8b:9def:467e:dc3f])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: koike)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6AF2328FD3B;
-        Wed,  6 Nov 2019 12:30:57 +0000 (GMT)
-Subject: Re: [PATCH v9 1/4] media: videodev2.h, v4l2-ioctl: add rkisp1 meta
- buffer format
-To:     "Hans Verkuil (hansverk)" <hansverk@cisco.com>,
-        "linux-rockchip@lists.infradead.org" 
-        <linux-rockchip@lists.infradead.org>
-Cc:     "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "eddie.cai.linux@gmail.com" <eddie.cai.linux@gmail.com>,
-        "mchehab@kernel.org" <mchehab@kernel.org>,
-        "heiko@sntech.de" <heiko@sntech.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "jeffy.chen@rock-chips.com" <jeffy.chen@rock-chips.com>,
-        "zyc@rock-chips.com" <zyc@rock-chips.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "tfiga@chromium.org" <tfiga@chromium.org>,
-        "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>,
-        "laurent.pinchart@ideasonboard.com" 
-        <laurent.pinchart@ideasonboard.com>,
-        "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>,
-        "kernel@collabora.com" <kernel@collabora.com>,
-        "ezequiel@collabora.com" <ezequiel@collabora.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "zhengsq@rock-chips.com" <zhengsq@rock-chips.com>,
-        Jacob Chen <jacob2.chen@rock-chips.com>
-References: <20191106120132.6876-1-helen.koike@collabora.com>
- <20191106120132.6876-2-helen.koike@collabora.com>
- <9102bcf8-0279-7972-daff-b15aaf98804d@cisco.com>
-From:   Helen Koike <helen.koike@collabora.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=helen.koike@collabora.com; keydata=
- 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
-Message-ID: <28cff7ab-ef56-791e-0342-571f64cb9807@collabora.com>
-Date:   Wed, 6 Nov 2019 09:30:53 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.2
+        Wed, 6 Nov 2019 07:32:11 -0500
+Received: by mail-io1-f71.google.com with SMTP id q13so17917402iot.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:32:11 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
+        bh=FxwEXdnT5G2NQEd8PmMUeHdK02q7Pp1C9goKfaWk6fQ=;
+        b=PDr62C65zhjhxjmf9lZjGB+iNHhPMyXTw7oqTqKX4M9Y/nilbEVKoZn64xFfifY5e6
+         f/qSwOmbeJRR4pyKhNRw70aIm+HuOS9buYIZEVpcnLLkkOt2Un+gJTD+HhCRqULh8zMq
+         ymQGUi2N2iElwhrLjmR+JYulOGZrHceYJovpikxWO8WnGHhLiEvmYR3bCTzcni3v3Lrw
+         rIouiedyafuI6bDkEf3TFtZnSNobJXby0/vyZQEZchOnpz560xH9qiDy9ic6sd2EOlVu
+         JSphto2pXh5foGunwmBMSoluftMoKR/jIZhX8oFFpm3STdktFVAQQloCegumQNCH7pl0
+         Qz8Q==
+X-Gm-Message-State: APjAAAWiDzrpdsF2zdz7XWWZ0+Qb6Sq+hk+pRIvvohK63iTTlE3OE8bX
+        QhN5+P1jqZMZitsQLfU0dxhkQNBvzVx0VeeNUV4FiTcn9WvA
+X-Google-Smtp-Source: APXvYqyCjOfCuWqE0bZBFVHctD31OG+ozp6yMjwgOwRMXSe5BEwjmp48ZgbvK97njWjxu5ulFnJ6d7allYzh3TAEZ3NGuNY5fzb0
 MIME-Version: 1.0
-In-Reply-To: <9102bcf8-0279-7972-daff-b15aaf98804d@cisco.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:9ace:: with SMTP id c75mr2459846ill.296.1573043530008;
+ Wed, 06 Nov 2019 04:32:10 -0800 (PST)
+Date:   Wed, 06 Nov 2019 04:32:10 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000d292a50596acbc73@google.com>
+Subject: WARNING in dln2_start_rx_urbs/usb_submit_urb
+From:   syzbot <syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello,
+
+syzbot found the following crash on:
+
+HEAD commit:    b1aa9d83 usb: raw: add raw-gadget interface
+git tree:       https://github.com/google/kasan.git usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=12599e8ae00000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=79de80330003b5f7
+dashboard link: https://syzkaller.appspot.com/bug?extid=48a2851be24583b864dc
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=166cd064e00000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=144c7adce00000
+
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+48a2851be24583b864dc@syzkaller.appspotmail.com
+
+usb 1-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+usb 1-1: config 0 descriptor??
+------------[ cut here ]------------
+usb 1-1: BOGUS urb xfer, pipe 3 != type 1
+WARNING: CPU: 1 PID: 83 at drivers/usb/core/urb.c:477  
+usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 1 PID: 83 Comm: kworker/1:2 Not tainted 5.4.0-rc6+ #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xca/0x13e lib/dump_stack.c:113
+  panic+0x2aa/0x6e1 kernel/panic.c:221
+  __warn.cold+0x2f/0x33 kernel/panic.c:582
+  report_bug+0x27b/0x2f0 lib/bug.c:195
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x12b/0x1e0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x32/0x40 arch/x86/kernel/traps.c:291
+  invalid_op+0x23/0x30 arch/x86/entry/entry_64.S:1028
+RIP: 0010:usb_submit_urb+0x1188/0x13b0 drivers/usb/core/urb.c:477
+Code: 4d 85 ed 74 2c e8 b8 21 ef fd 4c 89 f7 e8 40 34 1f ff 41 89 d8 44 89  
+e1 4c 89 ea 48 89 c6 48 c7 c7 40 77 14 86 e8 cd bc c4 fd <0f> 0b e9 20 f4  
+ff ff e8 8c 21 ef fd 4c 89 f2 48 b8 00 00 00 00 00
+RSP: 0018:ffff8881d89ef180 EFLAGS: 00010286
+RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+RDX: 0000000000000000 RSI: ffffffff8128c9cd RDI: ffffed103b13de22
+RBP: ffff8881d53ae450 R08: ffff8881d8c5c800 R09: fffffbfff11ab3ae
+R10: fffffbfff11ab3ad R11: ffffffff88d59d6f R12: 0000000000000003
+R13: ffff8881d3571318 R14: ffff8881d037c0a0 R15: ffff8881d53ae200
+  dln2_start_rx_urbs+0x6
 
 
-On 11/6/19 10:22 AM, Hans Verkuil (hansverk) wrote:
-> On 11/6/19 1:01 PM, Helen Koike wrote:
->> From: Shunqian Zheng <zhengsq@rock-chips.com>
->>
->> Add the Rockchip ISP1 specific processing parameter format
->> V4L2_META_FMT_RK_ISP1_PARAMS and metadata format
->> V4L2_META_FMT_RK_ISP1_STAT_3A for 3A.
->>
->> Signed-off-by: Shunqian Zheng <zhengsq@rock-chips.com>
->> Signed-off-by: Jacob Chen <jacob2.chen@rock-chips.com>
->> Acked-by: Hans Verkuil <hans.verkuil@cisco.com>
-> 
-> I acked this? It is missing documentation for these new formats.
+---
+This bug is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-I think so https://www.spinics.net/lists/linux-rockchip/msg18999.html :)
-
-I'll update the docs and the fixes you pointed below.
-
-Thanks.
-Helen
-
-> 
->> [refactored for upstream]
->> Signed-off-by: Helen Koike <helen.koike@collabora.com>
->> Reviewed-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>
->> ---
->>
->> Changes in v9:
->> - Add reviewed-by tag from Laurent
->>
->> Changes in v8: None
->> Changes in v7:
->> - s/IPU3/RK_ISP1
->>
->>  drivers/media/v4l2-core/v4l2-ioctl.c | 2 ++
->>  include/uapi/linux/videodev2.h       | 4 ++++
->>  2 files changed, 6 insertions(+)
->>
->> diff --git a/drivers/media/v4l2-core/v4l2-ioctl.c b/drivers/media/v4l2-core/v4l2-ioctl.c
->> index 315ac12c3e0a..ade990554caf 100644
->> --- a/drivers/media/v4l2-core/v4l2-ioctl.c
->> +++ b/drivers/media/v4l2-core/v4l2-ioctl.c
->> @@ -1341,6 +1341,8 @@ static void v4l_fill_fmtdesc(struct v4l2_fmtdesc *fmt)
->>  	case V4L2_META_FMT_UVC:		descr = "UVC Payload Header Metadata"; break;
->>  	case V4L2_META_FMT_D4XX:	descr = "Intel D4xx UVC Metadata"; break;
->>  	case V4L2_META_FMT_VIVID:       descr = "Vivid Metadata"; break;
->> +	case V4L2_META_FMT_RK_ISP1_PARAMS:	descr = "Rockchip ISP1 3A params"; break;
-> 
-> params -> Params
-> 
->> +	case V4L2_META_FMT_RK_ISP1_STAT_3A:	descr = "Rockchip ISP1 3A statistics"; break;
-> 
-> statistics -> Statistics
-> 
->>  
->>  	default:
->>  		/* Compressed formats */
->> diff --git a/include/uapi/linux/videodev2.h b/include/uapi/linux/videodev2.h
->> index f98bbcced8ff..56798b09cd85 100644
->> --- a/include/uapi/linux/videodev2.h
->> +++ b/include/uapi/linux/videodev2.h
->> @@ -762,6 +762,10 @@ struct v4l2_pix_format {
->>  #define V4L2_META_FMT_D4XX        v4l2_fourcc('D', '4', 'X', 'X') /* D4XX Payload Header metadata */
->>  #define V4L2_META_FMT_VIVID	  v4l2_fourcc('V', 'I', 'V', 'D') /* Vivid Metadata */
->>  
->> +/* Vendor specific - used for RK_ISP1 camera sub-system */
->> +#define V4L2_META_FMT_RK_ISP1_PARAMS	v4l2_fourcc('R', 'K', '1', 'P') /* Rockchip ISP1 params */
->> +#define V4L2_META_FMT_RK_ISP1_STAT_3A	v4l2_fourcc('R', 'K', '1', 'S') /* Rockchip ISP1 3A statistics */
->> +
->>  /* priv field value to indicates that subsequent fields are valid. */
->>  #define V4L2_PIX_FMT_PRIV_MAGIC		0xfeedcafe
->>  
->>
-> 
-> Regards,
-> 
-> 	Hans
-> 
+syzbot will keep track of this bug report. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+syzbot can test patches for this bug, for details see:
+https://goo.gl/tpsmEJ#testing-patches
