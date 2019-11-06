@@ -2,92 +2,291 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F577C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E781C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:04:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0BB421882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012828;
-	bh=EGN2Lrh3me+FAqx+ox1JwNnU297H3BtLLGtjLCglSss=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=ncmKjBaMzCqmEEMWT9yxkeio2CKCvl76lAfrPY+ziwp6EnxppMmpuMAzuMgZLVGJs
-	 uf/PTfMy3Itle9j1EFjJwfe0eAEthWmAu6/XeNqJBwqdJvsEHqzSx6/Zp4C+3g1PKz
-	 v6WaXoEScdejGpXvhGucr3siQj/Ega3o8V2FqyOM=
+	by mail.kernel.org (Postfix) with ESMTP id 1203E20717
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:04:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="UGJF71MS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731216AbfKFEA1 (ORCPT
+        id S1731142AbfKFEEC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:00:27 -0500
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:45498 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfKFEA0 (ORCPT
+        Tue, 5 Nov 2019 23:04:02 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:64111 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFEEC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:00:26 -0500
-Received: by mail-oi1-f194.google.com with SMTP id k2so19710918oij.12;
-        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ysqS9rcdYrTtEuoWI9nbxHqCjwSJ2N3Q7Hvz5EM+mmA=;
-        b=Qry9BVoYDD8cxzLSjE/RKrBpCIwYoCdorOgRkAE8ePauvrZKkqPVSiv9aTmaasgnje
-         Xw8nbu2faNbSO7RQfp3085YljoANOOaPLbl3XDj0eK1pE7cbKkVR9UgJnfkVyiUQWcZ4
-         3gW2xv/X9ANuvl3rvnguqu2ICj89ugNCpYzucKgDGd+i0bbRLLmjlV5K9G9JCRaBdQqV
-         Ob9eGJZR0X5R0afKO1LdfhKbpdBLSJVxijVkKfOsLYjqhyJtvQX+lgf7PYDAE/vuRDBy
-         LHTS+IONBbaEQtC4m23SbE9p07tqcyQU+wcw5OxeKMfecf1dZxaf3qK03p0cdhg/m7+H
-         oxzg==
-X-Gm-Message-State: APjAAAUOzYx3Josg1ZdH7LjmbWSv2iw+bcGMrR7yY3hhowg2WRMFvh9L
-        qdSG9BzuqEAibRv4RyIJgg==
-X-Google-Smtp-Source: APXvYqyT5mAWFh8aqygKOd9JM7fV1DLfzWIErkA64Ibng0c8MMAJ375J/TSg1ewt4VmCOvZwOVxrFw==
-X-Received: by 2002:aca:5104:: with SMTP id f4mr407777oib.40.1573012825074;
-        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id p18sm6244401oip.18.2019.11.05.20.00.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:00:24 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:00:23 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Taniya Das <tdas@codeaurora.org>
-Cc:     Stephen Boyd <sboyd@kernel.org>,
-        Michael Turquette =?iso-8859-1?Q?=A0?= 
-        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1 5/7] dt-bindings: clock: Add YAML schemas for the QCOM
- VIDEOCC clock bindings
-Message-ID: <20191106040023.GA4519@bogus>
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
- <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
+        Tue, 5 Nov 2019 23:04:02 -0500
+Received: from mail-vs1-f54.google.com (mail-vs1-f54.google.com [209.85.217.54]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xA643rHT001039;
+        Wed, 6 Nov 2019 13:03:53 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xA643rHT001039
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573013034;
+        bh=Q0cc2X1MjTt4VhZMgWmZrlmkbFMLKCaE5TUKfcrczZI=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=UGJF71MSB2Ju6xL21sGoBuKyLGzZVv1uvkIrwLyjlbhQPKdj2CKLYbUH2PNskTI/N
+         D22Dt1OGfqGXhIq3adE4pnXP1CaqxIOb1PCQGRsWL2G+B8HLYa+3zmo7W+gaZA171U
+         8niAvt4kcj9ysDGIuJu6SOm8tU26tCx44Etvp5SJmGxKCXBDJaK5vUWFVcMenmgOvf
+         XPYNG7HMe9wPW8q3HjHkyKsG6cYbcARx0ujfxpCd/Q1KFunAcIpEcto3XW/GgQ0ja5
+         lrbeBBLqINjcin9U/IGESeebhhaDGTx7uxlvR9ak+vEPQjklhrCG0NoDZVdbSZ4GO9
+         m/+C8yCLpJTVQ==
+X-Nifty-SrcIP: [209.85.217.54]
+Received: by mail-vs1-f54.google.com with SMTP id c25so4747697vsp.0;
+        Tue, 05 Nov 2019 20:03:53 -0800 (PST)
+X-Gm-Message-State: APjAAAWpCJZAhtAyjrTRAWoMxp0ypsNVRs/J9d9skC3M4lXBfu3rBhb0
+        7/cNwAH6nLenSjrOuRn2wSFj0pyxCFWEND/lZCE=
+X-Google-Smtp-Source: APXvYqwCe1qFGgwM7WG1d1TFIx1VPbJBTAIrzglfkTm5deQvyjJ8KnJVyRPrUvY2rfAizmKDd3eqG0ZGksqZSz7pYPg=
+X-Received: by 2002:a67:e290:: with SMTP id g16mr286532vsf.54.1573013032448;
+ Tue, 05 Nov 2019 20:03:52 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191102063036.28601-1-unixbhaskar@gmail.com> <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
+ <20191105023243.GA16635@fieldses.org> <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+ <20191106031027.GA20442@Gentoo>
+In-Reply-To: <20191106031027.GA20442@Gentoo>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 6 Nov 2019 13:03:16 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAQVhUS=WNoqgWQaS2-MJ9KoVBXurop8_vS5OC1VPtVTKw@mail.gmail.com>
+Message-ID: <CAK7LNAQVhUS=WNoqgWQaS2-MJ9KoVBXurop8_vS5OC1VPtVTKw@mail.gmail.com>
+Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
+ from system
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 31 Oct 2019 17:51:11 +0530, Taniya Das wrote:
-> The VIDEOCC clock provider have a bunch of generic properties that
-> are needed in a device tree. Add a YAML schemas for those.
-> 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
-> ---
->  .../devicetree/bindings/clock/qcom,videocc.txt     | 18 -------
->  .../devicetree/bindings/clock/qcom,videocc.yaml    | 61 ++++++++++++++++++++++
->  2 files changed, 61 insertions(+), 18 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
->  create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
-> 
+On Wed, Nov 6, 2019 at 12:10 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+>
+> On 11:53 Wed 06 Nov 2019, Masahiro Yamada wrote:
+> >On Tue, Nov 5, 2019 at 11:32 AM J. Bruce Fields <bfields@fieldses.org> wrote:
+> >>
+> >> On Mon, Nov 04, 2019 at 06:03:13PM -0800, Randy Dunlap wrote:
+> >> > On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
+> >> > > This patch allow you to remove old kernels and associated modules
+> >> > > directory from the system.You can do it at once with the -r flag
+> >> > > and interactively with the -i flag.
+> >> > >
+> >> > > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> >> > > ---
+> >> > >  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
+> >> > >  1 file changed, 65 insertions(+), 17 deletions(-)
+> >> >
+> >> > Hi,
+> >> > I believe that this script now does what the patch author intends it to do.
+> >> > It does have a few whitespace issues, but no big deals.  (see below)
+> >>
+> >> My original comment stands: looks like it prompts for full module path
+> >> and kernel versions which means it's no more convenient than just doing
+> >> an "ls" and then removing the ones you want to.  (In fact, with "rm"
+> >> you'd also get the benefit of tab completion....)
+> >>
+> >> It's quite different from the original script and I don't really see the
+> >> advantage.
+> >>
+> >> --b.
+> >
+> >I am with Bruce.
+> >
+> >This patch is trying to replace everything
+> >with worse code.
+> Well,Masahiro,
+> I won't mind dropping the idea, which you already concluded.But, would
+> you care to let me know how worse the code seems to be????
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+As far as I understood this script,
+it is useful to delete stale versions with a single command.
+
+scripts/prune-kernel  5.2-rc1  5.2-rc2  5.2-rc3
+
+
+This patch is dropping the 'for f in "$@"' loop,
+so you would end up with running this script multiple times.
+
+scripts/prune-kernel -r  5.2-rc1  5.2-rc1
+scripts/prune-kernel -r  5.2-rc2  5.2-rc2
+scripts/prune-kernel -r  5.2-rc3  5.2-rc3
+
+
+What is funny is, it takes the kernel_version and modules_version
+separately.
+And now it requires -r option for the default behavior.
+I see nothing cool overall.
+
+
+
+J. Bruce Fields suggested:
+"But if somebody does actually use it as-is, it'd be nicer to keep the
+current behavior and add an option ("-i" or something) for the
+interactive behavior."
+
+
+I want to see a patch if and only if
+you can add -i without intrusively changing the current code.
+
+
+Masahiro
+
+
+
+
+> >
+> >BTW.
+> >Bruce,
+> >Does the current script expect RHEL or something?
+> >I do not see 'new-kernel-pkg' on my Ubuntu machine.
+> >
+> >It would still work with 'new-kernel-pkg: command not found'
+> >warning.
+> >
+> >We could bypass it if we like.
+> >
+> >command -v new-kernel-pkg && new-kernel-pkg --remove $f
+> >
+> >
+> >
+> >Masahiro Yamada
+> >
+> >
+> >
+> >> >
+> >> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
+> >> >
+> >> >
+> >> > > diff --git a/scripts/prune-kernel b/scripts/prune-kernel
+> >> > > index e8aa940bc0a9..01d0778db71f 100755
+> >> > > --- a/scripts/prune-kernel
+> >> > > +++ b/scripts/prune-kernel
+> >> > > @@ -1,21 +1,69 @@
+> >> > >  #!/bin/bash
+> >> > >  # SPDX-License-Identifier: GPL-2.0
+> >> > > +#This script will remove old kernels and modules directory related to it.
+> >> > > +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
+> >> > > +# "-h" or "--help" show how to use this script or show without parameter.
+> >> > > +#"-i" or "--interactive" show how to remove interactively.
+> >> > > +
+> >> > > +flag=$1
+> >> > > +kernel_version=$2
+> >> > > +modules_version=$3
+> >> > > +boot_dir=/boot
+> >> > > +modules_dir=/lib/modules
+> >> > > +
+> >> > > +remove_old_kernel() {
+> >> > > +   cd $boot_dir
+> >> > > +   rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
+> >> > > +   return 0
+> >> > > +}
+> >> > > +
+> >> > > +remove_old_modules_dir() {
+> >> > > +   cd $modules_dir
+> >> > > +   rm -rf $modules_version
+> >> > > +   return 0
+> >> > > +}
+> >> > > +
+> >> > > +usage() {
+> >> > > +   printf "Usage: $(basename $0) [-ri]\n"
+> >> > > +   printf "\n -r or --remove  kernel_version modules_version\n"
+> >> > > +   printf "\n -i or --interactive do as interactive way\n"
+> >> > > +   return 0
+> >> > > +}
+> >> > > +
+> >> > > +case "$flag" in
+> >> > > +   -i | --interactive)
+> >> > > +           printf "\nEnter kernel version to remove or blank/empty to exit:"
+> >> > > +           read kernel_version
+> >> > > +           if [[ $kernel_version != "" ]]; then
+> >> > > +                   remove_old_kernel
+> >> > > +                   printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
+> >> >
+> >> > space after ':'
+> >> >
+> >> > drop one \n above.
+> >> >
+> >> > > +                   printf "Please give the full modules directory name to remove:"
+> >> > > +                   read modules_version
+> >> > > +                   if [[ $modules_version != "" ]]; then
+> >> > > +                           remove_old_modules_dir
+> >> > > +                           printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
+> >> >
+> >> > space after ':'
+> >> >
+> >> > drop one \n above.
+> >> >
+> >> > > +                   else
+> >> > > +                           exit 1
+> >> > > +                   fi
+> >> > > +           fi
+> >> > > +           ;;
+> >> > > +   -h | --help)
+> >> > > +           usage
+> >> > > +           exit 0
+> >> > > +           ;;
+> >> > > +   -r | --remove)
+> >> > > +           if [[ $# -ne 3 ]]; then
+> >> > > +                    printf "You need to provide kernel version and modules directory name.\n"
+> >> > > +                    exit 1
+> >> > > +            else
+> >> > > +                    remove_old_kernel
+> >> > > +                    remove_old_modules_dir
+> >> > > +           fi
+> >> > > +           ;;
+> >> > > +   *)
+> >> > > +           usage
+> >> > > +           exit 1
+> >> > > +           ;;
+> >> > > +esac
+> >> > >
+> >> > > -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
+> >> > > -# again, /boot and /lib/modules/ eventually fill up.
+> >> > > -# Dumb script to purge that stuff:
+> >> > >
+> >> >
+> >> > OK, the former script's loop is removed.. good.
+> >> > But the 2 preceding blank lines are not removed, so the script
+> >> > now ends with 2 unnecessary blank lines.
+> >> >
+> >> > > -for f in "$@"
+> >> > > -do
+> >> > > -        if rpm -qf "/lib/modules/$f" >/dev/null; then
+> >> > > -                echo "keeping $f (installed from rpm)"
+> >> > > -        elif [ $(uname -r) = "$f" ]; then
+> >> > > -                echo "keeping $f (running kernel) "
+> >> > > -        else
+> >> > > -                echo "removing $f"
+> >> > > -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
+> >> > > -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
+> >> > > -                rm -rf "/lib/modules/$f"
+> >> > > -                new-kernel-pkg --remove $f
+> >> > > -        fi
+> >> > > -done
+> >> > > --
+> >> >
+> >> >
+> >> > --
+> >> > ~Randy
+> >
+> >
+> >
+> >--
+> >Best Regards
+> >
+> >Masahiro Yamada
+
+
+
+-- 
+Best Regards
+Masahiro Yamada
