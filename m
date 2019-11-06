@@ -6,31 +6,30 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA9ECC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19DC1C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C312C217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6EF321A49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731723AbfKFJul (ORCPT
+        id S1731706AbfKFJul (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 6 Nov 2019 04:50:41 -0500
-Received: from sauhun.de ([88.99.104.3]:50202 "EHLO pokefinder.org"
+Received: from sauhun.de ([88.99.104.3]:50216 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727015AbfKFJui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727257AbfKFJui (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 04:50:38 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id 736C82C0553;
-        Wed,  6 Nov 2019 10:50:36 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id 0507E2C053E;
+        Wed,  6 Nov 2019 10:50:37 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 05/12] video: fbdev: matrox: convert to i2c_new_scanned_device
-Date:   Wed,  6 Nov 2019 10:50:23 +0100
-Message-Id: <20191106095033.25182-6-wsa+renesas@sang-engineering.com>
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 06/12] input: mouse: convert to i2c_new_scanned_device
+Date:   Wed,  6 Nov 2019 10:50:24 +0100
+Message-Id: <20191106095033.25182-7-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
 References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
@@ -49,24 +48,29 @@ Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
 Build tested only. RFC, please comment and/or ack, but don't apply yet.
 
- drivers/video/fbdev/matrox/i2c-matroxfb.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/input/mouse/psmouse-smbus.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/video/fbdev/matrox/i2c-matroxfb.c b/drivers/video/fbdev/matrox/i2c-matroxfb.c
-index 34e2659c3189..e2e4705e3fe0 100644
---- a/drivers/video/fbdev/matrox/i2c-matroxfb.c
-+++ b/drivers/video/fbdev/matrox/i2c-matroxfb.c
-@@ -191,8 +191,8 @@ static void* i2c_matroxfb_probe(struct matrox_fb_info* minfo) {
- 				0x1b, I2C_CLIENT_END
- 			};
+diff --git a/drivers/input/mouse/psmouse-smbus.c b/drivers/input/mouse/psmouse-smbus.c
+index 027efdd2b2ad..35bf50a871d2 100644
+--- a/drivers/input/mouse/psmouse-smbus.c
++++ b/drivers/input/mouse/psmouse-smbus.c
+@@ -198,10 +198,12 @@ static int psmouse_smbus_create_companion(struct device *dev, void *data)
+ 	if (!i2c_check_functionality(adapter, I2C_FUNC_SMBUS_HOST_NOTIFY))
+ 		return 0;
  
--			i2c_new_probed_device(&m2info->maven.adapter,
--					      &maven_info, addr_list, NULL);
-+			i2c_new_scanned_device(&m2info->maven.adapter,
-+					       &maven_info, addr_list, NULL);
- 		}
- 	}
- 	return m2info;
+-	smbdev->client = i2c_new_probed_device(adapter, &smbdev->board,
+-					       addr_list, NULL);
+-	if (!smbdev->client)
++	smbdev->client = i2c_new_scanned_device(adapter, &smbdev->board,
++					        addr_list, NULL);
++	if (IS_ERR(smbdev->client)) {
++		smbdev->client = NULL;
+ 		return 0;
++	}
+ 
+ 	/* We have our(?) device, stop iterating i2c bus. */
+ 	return 1;
 -- 
 2.20.1
 
