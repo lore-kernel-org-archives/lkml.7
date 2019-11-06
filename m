@@ -2,92 +2,174 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2658CC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:58:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11BC6C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:59:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8077217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D740B217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:59:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="nPgclH4n"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="EY6rnttZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbfKFR6w (ORCPT
+        id S1732460AbfKFR7y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:58:52 -0500
-Received: from terminus.zytor.com ([198.137.202.136]:39153 "EHLO
-        mail.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727397AbfKFR6u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:58:50 -0500
-Received: from [IPv6:2601:646:8600:3281:adfc:245e:17b7:39c3] ([IPv6:2601:646:8600:3281:adfc:245e:17b7:39c3])
-        (authenticated bits=0)
-        by mail.zytor.com (8.15.2/8.15.2) with ESMTPSA id xA6Huv4Q961810
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NO);
-        Wed, 6 Nov 2019 09:57:02 -0800
-DKIM-Filter: OpenDKIM Filter v2.11.0 mail.zytor.com xA6Huv4Q961810
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019091901; t=1573063025;
-        bh=o6xliq1yN4/+nK8dGGImbCX2PNM/ohBM3dagy4vL754=;
-        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
-        b=nPgclH4nMtbQ8UfGwygCasCgN6IoeV+EpUy5/3dLimB/x0V+ZOS/1v69nOqvKLjyl
-         UVkmYWRjgVm/tTKcbuYFoJsVloKj41EdZJ809hhD5f8GnNLc0EoTOykyJu9LXvBDJx
-         egAHsjXTaD8QRl7xOkHrK/R2Cmb2quVJVyJXnMMoZPiqjRikl0dRVC9D4RuI9vED0/
-         lZq/abejpSSyvE1WLODo2w9OjR9BfsGRRGBiq9I5nd4NDIjE8g/DXwLfItjrCJX6bD
-         fw1bjRVh9jpsFyN7HUXKIsvDS702sx+otdr3QZFgXjtuc9+B6GxF2Eaur+/TQQGZRY
-         KEDqPZD/uyQzw==
-Date:   Wed, 06 Nov 2019 09:56:48 -0800
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20191106170333.GD28380@zn.tnic>
-References: <20191104151354.28145-1-daniel.kiper@oracle.com> <20191106170333.GD28380@zn.tnic>
+        Wed, 6 Nov 2019 12:59:54 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:33612 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbfKFR7y (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:59:54 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6HsRgI015900;
+        Wed, 6 Nov 2019 17:58:32 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references : mime-version :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=oZuMeHaMaOYuKrxpCHjtxszEeyvg+X97FPZxAHAp6C4=;
+ b=EY6rnttZWedzTFX/wcpCd2oM0+W/5yaQ04qdDT0/rDiJCiDVbD8NU2VdpNAKuWFXoMYm
+ L7AFUVK33ETtp5+NcI6b6RANVQB9dbpJaWrGMPnvbFLgtj3w+4fjUOU2L6MhtOI9ZSBL
+ ZxIJ/a//DW57FsrKErDiVhwr50GwEF7QeWDPPC0saHT58ROQMAWEXd/A/v3Sp5ELXRaP
+ u4jatYyb2c75iQXrTVSqjqoRu5mUqDY5tC7pgFofd3qNszhdmgN+mdmxLuGrhqz6e32L
+ w8ysmasiXoAJraOuCKZmfN5hYMQ+GNeDKGGVht7H1wHQs60ko6+8e6fG/6rLBkE1r9A1 3g== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2w41w10mp7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 17:58:32 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6HrjYl142999;
+        Wed, 6 Nov 2019 17:56:31 GMT
+Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
+        by aserp3020.oracle.com with ESMTP id 2w41wds1jp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 17:56:31 +0000
+Received: from abhmp0012.oracle.com (abhmp0012.oracle.com [141.146.116.18])
+        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA6HuUOR015793;
+        Wed, 6 Nov 2019 17:56:30 GMT
+Received: from paddy.uk.oracle.com (/10.175.178.239)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 09:56:29 -0800
+From:   Joao Martins <joao.m.martins@oracle.com>
+To:     kvm@vger.kernel.org
+Cc:     Joao Martins <joao.m.martins@oracle.com>,
+        linux-kernel@vger.kernel.org, Paolo Bonzini <pbonzini@redhat.com>,
+        =?UTF-8?q?Radim=20Kr=C4=8Dm=C3=A1=C5=99?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Liran Alon <liran.alon@oracle.com>,
+        Jag Raman <jag.raman@oracle.com>
+Subject: [PATCH v1 2/3] KVM: VMX: Do not change PID.NDST when loading a blocked vCPU
+Date:   Wed,  6 Nov 2019 17:56:01 +0000
+Message-Id: <20191106175602.4515-3-joao.m.martins@oracle.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20191106175602.4515-1-joao.m.martins@oracle.com>
+References: <20191106175602.4515-1-joao.m.martins@oracle.com>
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v5 0/3] x86/boot: Introduce the kernel_info et consortes
-To:     Borislav Petkov <bp@alien8.de>,
-        Daniel Kiper <daniel.kiper@oracle.com>
-CC:     linux-efi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        x86@kernel.org, xen-devel@lists.xenproject.org,
-        ard.biesheuvel@linaro.org, boris.ostrovsky@oracle.com,
-        corbet@lwn.net, dave.hansen@linux.intel.com, luto@kernel.org,
-        peterz@infradead.org, eric.snowberg@oracle.com, jgross@suse.com,
-        kanth.ghatraju@oracle.com, konrad.wilk@oracle.com,
-        mingo@redhat.com, rdunlap@infradead.org, ross.philipson@oracle.com,
-        tglx@linutronix.de
-From:   hpa@zytor.com
-Message-ID: <3EABBAB2-5BEF-4FEE-8BB4-9EB4B0180B10@zytor.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911060173
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911060174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On November 6, 2019 9:03:33 AM PST, Borislav Petkov <bp@alien8=2Ede> wrote:
->On Mon, Nov 04, 2019 at 04:13:51PM +0100, Daniel Kiper wrote:
->> Hi,
->>=20
->> Due to very limited space in the setup_header this patch series
->introduces new
->> kernel_info struct which will be used to convey information from the
->kernel to
->> the bootloader=2E This way the boot protocol can be extended regardless
->of the
->> setup_header limitations=2E Additionally, the patch series introduces
->some
->> convenience features like the setup_indirect struct and the
->> kernel_info=2Esetup_type_max field=2E
->
->That's all fine and dandy but I'm missing an example about what that'll
->be used for, in practice=2E
->
->Thx=2E
+When vCPU enters block phase, pi_pre_block() inserts vCPU to a per pCPU
+linked list of all vCPUs that are blocked on this pCPU. Afterwards, it
+changes PID.NV to POSTED_INTR_WAKEUP_VECTOR which its handler
+(wakeup_handler()) is responsible to kick (unblock) any vCPU on that
+linked list that now has pending posted interrupts.
 
-For one thing, we already have people asking for more than 4 GiB worth of =
-initramfs, and especially with initramfs that huge it would make a *lot* of=
- sense to allow loading it in chunks without having to concatenate them=2E =
-I have been asking for a long time for initramfs creators to split the kern=
-el-dependent and kernel independent parts into separate initramfs modules=
-=2E
---=20
-Sent from my Android device with K-9 Mail=2E Please excuse my brevity=2E
+While vCPU is blocked (in kvm_vcpu_block()), it may be preempted which
+will cause vmx_vcpu_pi_put() to set PID.SN.  If later the vCPU will be
+scheduled to run on a different pCPU, vmx_vcpu_pi_load() will clear
+PID.SN but will also *overwrite PID.NDST to this different pCPU*.
+Instead of keeping it with original pCPU which vCPU had entered block
+phase on.
+
+This results in an issue because when a posted interrupt is delivered,
+the wakeup_handler() will be executed and fail to find blocked vCPU on
+its per pCPU linked list of all vCPUs that are blocked on this pCPU.
+Which is due to the vCPU being placed on a *different* per pCPU
+linked list than the original pCPU that it had entered block phase.
+
+The regression is introduced by commit c112b5f50232 ("KVM: x86:
+Recompute PID.ON when clearing PID.SN"). Therefore, partially revert
+it and reintroduce the condition in vmx_vcpu_pi_load() responsible for
+avoiding changing PID.NDST when loading a blocked vCPU.
+
+Fixes: c112b5f50232 ("KVM: x86: Recompute PID.ON when clearing PID.SN")
+Signed-off-by: Joao Martins <joao.m.martins@oracle.com>
+Signed-off-by: Liran Alon <liran.alon@oracle.com>
+---
+ arch/x86/kvm/vmx/vmx.c | 14 ++++++++++++++
+ arch/x86/kvm/vmx/vmx.h |  6 ++++++
+ 2 files changed, 20 insertions(+)
+
+diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+index 18b0bee662a5..75d903455e1c 100644
+--- a/arch/x86/kvm/vmx/vmx.c
++++ b/arch/x86/kvm/vmx/vmx.c
+@@ -1274,6 +1274,18 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+ 	if (!pi_test_sn(pi_desc) && vcpu->cpu == cpu)
+ 		return;
+ 
++	/*
++	 * If the 'nv' field is POSTED_INTR_WAKEUP_VECTOR, do not change
++	 * PI.NDST: pi_post_block is the one expected to change PID.NDST and the
++	 * wakeup handler expects the vCPU to be on the blocked_vcpu_list that
++	 * matches PI.NDST. Otherwise, a vcpu may not be able to be woken up
++	 * correctly.
++	 */
++	if (pi_desc->nv == POSTED_INTR_WAKEUP_VECTOR || vcpu->cpu == cpu) {
++		pi_clear_sn(pi_desc);
++		goto after_clear_sn;
++	}
++
+ 	/* The full case.  */
+ 	do {
+ 		old.control = new.control = pi_desc->control;
+@@ -1289,6 +1301,8 @@ static void vmx_vcpu_pi_load(struct kvm_vcpu *vcpu, int cpu)
+ 	} while (cmpxchg64(&pi_desc->control, old.control,
+ 			   new.control) != old.control);
+ 
++after_clear_sn:
++
+ 	/*
+ 	 * Clear SN before reading the bitmap.  The VT-d firmware
+ 	 * writes the bitmap and reads SN atomically (5.2.3 in the
+diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
+index bee16687dc0b..1e32ab54fc2d 100644
+--- a/arch/x86/kvm/vmx/vmx.h
++++ b/arch/x86/kvm/vmx/vmx.h
+@@ -373,6 +373,12 @@ static inline void pi_clear_on(struct pi_desc *pi_desc)
+ 		(unsigned long *)&pi_desc->control);
+ }
+ 
++static inline void pi_clear_sn(struct pi_desc *pi_desc)
++{
++	clear_bit(POSTED_INTR_SN,
++		(unsigned long *)&pi_desc->control);
++}
++
+ static inline int pi_test_on(struct pi_desc *pi_desc)
+ {
+ 	return test_bit(POSTED_INTR_ON,
+-- 
+2.11.0
+
