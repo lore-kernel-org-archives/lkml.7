@@ -2,105 +2,161 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38B50C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:39:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 044DBC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:42:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6A0B21848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:38:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="fx6NFhty"
+	by mail.kernel.org (Postfix) with ESMTP id C15642173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:42:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfKFHi6 (ORCPT
+        id S1731261AbfKFHmm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:38:58 -0500
-Received: from fllv0015.ext.ti.com ([198.47.19.141]:32886 "EHLO
-        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728291AbfKFHi6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:38:58 -0500
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67clM9004697;
-        Wed, 6 Nov 2019 01:38:47 -0600
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1573025927;
-        bh=Ct1yAMrZn1WGva5J/pseiPkfqGTYIlCrhJlXHcNEXiQ=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=fx6NFhtyPKHH5owLe3mapQpV9sFsqd2wRTyxB8cISVEYnwmDN1durhYL4qLSoiYM/
-         dtXqI6lF1ynlQGE6ZzvT0IP6OsbJ1KzaR4vo8fIy3tzxzbDgz+K5FxZwrMJH03LrDy
-         BwX1E2bXCk2H+hBu6PlZfd9z9u/O08uJ1UiqAUXo=
-Received: from DLEE104.ent.ti.com (dlee104.ent.ti.com [157.170.170.34])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67clVD075518
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 6 Nov 2019 01:38:47 -0600
-Received: from DLEE100.ent.ti.com (157.170.170.30) by DLEE104.ent.ti.com
- (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
- 2019 01:38:32 -0600
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE100.ent.ti.com
- (157.170.170.30) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
- Frontend Transport; Wed, 6 Nov 2019 01:38:32 -0600
-Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67cink009701;
-        Wed, 6 Nov 2019 01:38:45 -0600
-Subject: Re: [PATCH v4 12/20] mtd: spi-nor: Print debug message when the read
- back test fails
-To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
- <20191102112316.20715-13-tudor.ambarus@microchip.com>
- <9474c875-94a1-3d19-ddab-b90d352967a9@ti.com>
- <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
-Date:   Wed, 6 Nov 2019 13:09:20 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+        Wed, 6 Nov 2019 02:42:42 -0500
+Received: from mga06.intel.com ([134.134.136.31]:15128 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726772AbfKFHmm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 02:42:42 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 23:42:41 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,274,1569308400"; 
+   d="scan'208";a="232770668"
+Received: from unknown (HELO local-michael-cet-test.sh.intel.com) ([10.239.159.128])
+  by fmsmga002.fm.intel.com with ESMTP; 05 Nov 2019 23:42:39 -0800
+From:   Yang Weijiang <weijiang.yang@intel.com>
+To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        pbonzini@redhat.com, jmattson@google.com,
+        sean.j.christopherson@intel.com
+Cc:     yu.c.zhang@linux.intel.com, alazar@bitdefender.com,
+        edwin.zhai@intel.com, Yang Weijiang <weijiang.yang@intel.com>
+Subject: [PATCH v6 0/9] Enable Sub-Page Write Protection Support
+Date:   Wed,  6 Nov 2019 15:44:55 +0800
+Message-Id: <20191106074504.14858-1-weijiang.yang@intel.com>
+X-Mailer: git-send-email 2.17.2
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+EPT-Based Sub-Page write Protection(SPP) allows Virtual Machine Monitor(VMM)
+specify write-permission for guest physical memory at a sub-page(128 byte)
+granularity. When SPP works, HW enforces write-access check for sub-pages
+within a protected 4KB page.
+
+The feature targets to provide fine-grained memory protection for
+usages such as memory guard and VM introspection etc.
+
+SPP is active when the "sub-page write protection" (bit 23) is 1 in
+Secondary VM-Execution Controls. The feature is backed with a Sub-Page
+Permission Table(SPPT), and subpage permission vector is stored in the
+leaf entry of SPPT. The root page is referenced via a Sub-Page Permission
+Table Pointer (SPPTP) in VMCS.
+
+To enable SPP for guest memory, the guest page should be first mapped
+to a 4KB EPT entry, then set SPP bit 61 of the corresponding entry. 
+While HW walks EPT, it traverses SPPT with the gpa to look up the sub-page
+permission vector within SPPT leaf entry. If the corresponding bit is set,
+write to sub-page is permitted, otherwise, SPP induced EPT violation is generated.
+
+This patch serial passed SPP function test and selftest on Ice-Lake platform.
+
+Please refer to the SPP introduction document in this patch set and
+Intel SDM for details:
+
+Intel SDM:
+https://software.intel.com/sites/default/files/managed/39/c5/325462-sdm-vol-1-2abcd-3abcd.pdf
+
+SPP selftest patch:
+https://lkml.org/lkml/2019/6/18/1197
+
+Previous patch:
+https://lkml.org/lkml/2019/9/17/180
+
+Patch 1: Documentation for SPP and related API.
+Patch 2: Add control flags for Sub-Page Protection(SPP).
+Patch 3: Add SPP Table setup functions.
+Patch 4: Add functions to create/destroy SPP bitmap block.
+Patch 5: Introduce user-space SPP IOCTLs.
+Patch 6: Set up SPP paging table at vmentry/vmexit.
+Patch 7: Enable Lazy mode SPP protection.
+Patch 8: Handle SPP protected pages when VM memory changes.
+Patch 9: Add SPP protection check in emulation case.
 
 
-On 06/11/19 12:54 PM, Tudor.Ambarus@microchip.com wrote:
-> 
-> 
-> On 11/05/2019 02:37 PM, Vignesh Raghavendra wrote:
->> On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
->>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
->>>
->>> Demystify where the EIO error occurs.
->>>
->>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
->>> ---
->> I think this is a small enough change that can be squashed into previous
->> patch itself
->>
-> 
-> I made separate patches because this is a separate logical change. The previous
-> patch extends the check on all bits of the Status Register, while this one
-> prints a debug message in case of EIO. Thus I tried to have a single logical
-> change contained in a single patch. I'm clearly no expert in this (Boris asked
-> me in v3 to split patches because I did too many things in one patch :) ), so I
-> would keep this as is, but if you still feel that it should be squashed, then
-> I'll do it. Please let me know.
-> 
+Change logs:
 
-I am fine either way. I don't have a strong preference...
+V5 -> V6:
+  1. Added SPP protection patch for emulation cases per Jim's review.
+  2. Modified documentation and added API description per Jim's review.
+  3. Other minior changes suggested by Jim.
+
+V4 -> V5:
+  1. Enable SPP support for Hugepage(1GB/2MB) to extend application.
+  2. Make SPP miss vm-exit handler as the unified place to set up SPPT.
+  3. If SPP protected pages are access-tracked or dirty-page-tracked,
+     store SPP flag in reserved address bit, restore it in
+     fast_page_fault() handler.
+  4. Move SPP specific functions to vmx/spp.c and vmx/spp.h
+  5. Rebased code to kernel v5.3
+  6. Other change suggested by KVM community.
+  
+V3 -> V4:
+  1. Modified documentation to make it consistent with patches.
+  2. Allocated SPPT root page in init_spp() instead of vmx_set_cr3() to
+     avoid SPPT miss error.
+  3. Added back co-developers and sign-offs.
+
+V2 -> V3:                                                                
+  1. Rebased patches to kernel 5.1 release                                
+  2. Deferred SPPT setup to EPT fault handler if the page is not
+     available while set_subpage() is being called.
+  3. Added init IOCTL to reduce extra cost if SPP is not used.
+  4. Refactored patch structure, cleaned up cross referenced functions.
+  5. Added code to deal with memory swapping/migration/shrinker cases.
+
+V2 -> V1:
+  1. Rebased to 4.20-rc1
+  2. Move VMCS change to a separated patch.
+  3. Code refine and Bug fix 
+
+
+Yang Weijiang (9):
+  Documentation: Introduce EPT based Subpage Protection and related
+    ioctls
+  vmx: spp: Add control flags for Sub-Page Protection(SPP)
+  mmu: spp: Add SPP Table setup functions
+  mmu: spp: Add functions to create/destroy SPP bitmap block
+  x86: spp: Introduce user-space SPP IOCTLs
+  vmx: spp: Set up SPP paging table at vmentry/vmexit
+  mmu: spp: Enable Lazy mode SPP protection
+  mmu: spp: Handle SPP protected pages when VM memory changes
+  x86: spp: Add SPP protection check in emulation.
+
+ Documentation/virt/kvm/api.txt        |  46 ++
+ Documentation/virtual/kvm/spp_kvm.txt | 180 +++++++
+ arch/x86/include/asm/cpufeatures.h    |   1 +
+ arch/x86/include/asm/kvm_host.h       |  10 +-
+ arch/x86/include/asm/vmx.h            |  10 +
+ arch/x86/include/uapi/asm/vmx.h       |   2 +
+ arch/x86/kernel/cpu/intel.c           |   4 +
+ arch/x86/kvm/mmu.c                    |  78 +++-
+ arch/x86/kvm/mmu.h                    |   2 +
+ arch/x86/kvm/vmx/capabilities.h       |   5 +
+ arch/x86/kvm/vmx/spp.c                | 649 ++++++++++++++++++++++++++
+ arch/x86/kvm/vmx/spp.h                |  28 ++
+ arch/x86/kvm/vmx/vmx.c                |  97 ++++
+ arch/x86/kvm/x86.c                    |  87 ++++
+ include/uapi/linux/kvm.h              |  17 +
+ 15 files changed, 1214 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/virtual/kvm/spp_kvm.txt
+ create mode 100644 arch/x86/kvm/vmx/spp.c
+ create mode 100644 arch/x86/kvm/vmx/spp.h
 
 -- 
-Regards
-Vignesh
+2.17.2
+
