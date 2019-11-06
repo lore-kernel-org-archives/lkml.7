@@ -2,110 +2,132 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01927C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1D35C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:50:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1807207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685972173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:50:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="abCcUhsP";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="abCcUhsP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfKFGpG (ORCPT
+        id S1729826AbfKFGuw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:45:06 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48074 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfKFGpF (ORCPT
+        Wed, 6 Nov 2019 01:50:52 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:44738 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726118AbfKFGuv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:45:05 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-41-5dc26bef4139
-Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 35.4A.08102.FEB62CD5; Wed,  6 Nov 2019 07:45:03 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
- 14.03.0439.000; Wed, 6 Nov 2019 07:44:59 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "simon.guinot@sequanux.org" <simon.guinot@sequanux.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-Subject: Re: [PATCH 13/62] gpio: gpio-f7188x: Use new GPIO_LINE_DIRECTION
-Thread-Topic: [PATCH 13/62] gpio: gpio-f7188x: Use new GPIO_LINE_DIRECTION
-Thread-Index: AQHVk8IIs7vdKnF54E63iVBGE/Lbsqd9j4QAgAATogA=
-Date:   Wed, 6 Nov 2019 06:44:59 +0000
-Message-ID: <c7cc7d66a5d3e398bf5109f58260e9dca5a317df.camel@fi.rohmeurope.com>
-References: <cover.1572945757.git.matti.vaittinen@fi.rohmeurope.com>
-         <0a1fe4365ef599adde42396f0bb735c8623f679c.1572945757.git.matti.vaittinen@fi.rohmeurope.com>
-         <20191106053446.GD5290@kw.sim.vm.gnt>
-In-Reply-To: <20191106053446.GD5290@kw.sim.vm.gnt>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <65F99CB176F5DD45BF14547D1568950D@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 01:50:51 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CF7C361180; Wed,  6 Nov 2019 06:50:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573023050;
+        bh=U4eaKrxV4bYoOxl1bDFa3xlc7LyElFv6Hc81HMZ9mP4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=abCcUhsPW8bWUFFKNSjyYi4BA6QH9XEIhGwEdEWbjrG0WPie8kUVfw5uLzIolcDuq
+         NtLh0oSMHDlAKc1ti982ivxjpzir1TCSfF9zEI6YzLgB5EyRpPDAg5QWtTsGqqcPZj
+         GVSO1xP0GkQsZljm5oJcD8lGoGE3hOKz80Dc8muM=
+Received: from blr-ubuntu-173.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1D4B561060;
+        Wed,  6 Nov 2019 06:50:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573023050;
+        bh=U4eaKrxV4bYoOxl1bDFa3xlc7LyElFv6Hc81HMZ9mP4=;
+        h=From:To:Cc:Subject:Date:From;
+        b=abCcUhsPW8bWUFFKNSjyYi4BA6QH9XEIhGwEdEWbjrG0WPie8kUVfw5uLzIolcDuq
+         NtLh0oSMHDlAKc1ti982ivxjpzir1TCSfF9zEI6YzLgB5EyRpPDAg5QWtTsGqqcPZj
+         GVSO1xP0GkQsZljm5oJcD8lGoGE3hOKz80Dc8muM=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1D4B561060
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+To:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        swboyd@chromium.org, Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v4 00/14] Add device tree support for sc7180
+Date:   Wed,  6 Nov 2019 12:20:03 +0530
+Message-Id: <20191106065017.22144-1-rnayak@codeaurora.org>
+X-Mailer: git-send-email 2.22.0
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrLKsWRmVeSWpSXmKPExsVyYMXvTbrvsw/FGpz8pWnxZe4pFospf5Yz
-        WWye/4fR4vKuOWwWc5aeYLG4fmQfkwObx/sbreweO2fdZfe4c20Pm0fb9XlsHp83yQWwRnHb
-        JCWWlAVnpufp2yVwZ9xqfcxS8ESs4uKZVcwNjDPEuhg5OSQETCRmzP/MDmILCVxllLgwpRzC
-        Ps4oce9dWRcjBwebgI1E102wEhEBa4nrH2+wdDFycTALrGaSODJ9BRtIQljAU2JT4w9WiCIv
-        iVenF0LZVhLNByYxgcxhEVCReNfjBRLmFfCTaFm3jBFkjpDAGUaJW0/+M4MkOAWMJHrWbmME
-        sRkFZCU6G94xgdjMAuISm559Z4W4WUBiyZ7zzBC2qMTLx/+g4koSe38+ZAHZxSygKbF+lz5E
-        q4PE/tmvWCFsRYkp3Q/ZIW4QlDg58wnLBEaxWUg2zELonoWkexaS7llIuhcwsq5ilMhNzMxJ
-        TyxJNdQrSi3VK8rPyAVSyfm5mxgh0fllB+P/Q56HGJk4GA8xSnIwKYnyemUejBXiS8pPqcxI
-        LM6ILyrNSS0+xCjBwawkwhvTB5TjTUmsrEotyodJSXOwKInzqj+cGCskALIrOzW1ILUIJivD
-        waEkwfsj81CskGBRanpqRVpmTglCmomDE2Q4l5RIcWpeSmpRYmlJRjwodcQXA5MHSIoHaK9L
-        FlA7b3FBYi5QFKL1FKM2x4SXcxcxcxyZu3QRsxBLXn5eqpQ4rxBIqQBIaUZpHtyiV4ziHIxK
-        wrzXQLI8wDQNN+cV0AomoBU+j/eBrChJREhJNTDu6HlZN4VPaeNqi5d2H5+/eZJ+/eCn3COC
-        51Y/UvAOOLzj0f43SqXxqQwzr5cLTRVlcls5Q/vKDJ7X57TeSm9wjmxS4n4lVnfyxmRLIUe1
-        l+8m/n+3qkBm6zO5f0sb232XZBSVWn8rmZpj6lDhxxBvLGN5UfF2GHPkwq7NIqtCpR/Na3tq
-        cvatEktxRqKhFnNRcSIAhw7HvpADAAA=
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TW9ybmluZyBTaW1vbiwNCg0KT24gV2VkLCAyMDE5LTExLTA2IGF0IDA2OjM0ICswMTAwLCBTaW1v
-biBHdWlub3Qgd3JvdGU6DQo+IE9uIFR1ZSwgTm92IDA1LCAyMDE5IGF0IDEyOjE2OjAzUE0gKzAy
-MDAsIE1hdHRpIFZhaXR0aW5lbiB3cm90ZToNCj4gPiBJdCdzIGhhcmQgZm9yIG9jY2FzaW9uYWwg
-R1BJTyBjb2RlIHJlYWRlci93cml0ZXIgdG8ga25vdyBpZiB2YWx1ZXMNCj4gPiAwLzENCj4gPiBl
-cXVhbCB0byBJTiBvciBPVVQuIFVzZSBkZWZpbmVkIEdQSU9fTElORV9ESVJFQ1RJT05fSU4gYW5k
-DQo+ID4gR1BJT19MSU5FX0RJUkVDVElPTl9PVVQgdG8gaGVscCB0aGVtIG91dC4NCj4gPiANCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRpLnZhaXR0aW5lbkBmaS5yb2ht
-ZXVyb3BlLmNvbT4NCj4gPiAtLS0NCj4gPiAgZHJpdmVycy9ncGlvL2dwaW8tZjcxODh4LmMgfCA1
-ICsrKystDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2VydGlvbnMoKyksIDEgZGVsZXRpb24o
-LSkNCj4gPiANCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncGlvL2dwaW8tZjcxODh4LmMgYi9k
-cml2ZXJzL2dwaW8vZ3Bpby0NCj4gPiBmNzE4OHguYw0KPiA+IGluZGV4IGZkYzYzOWY4NTZmMS4u
-Y2FkZDAyOTkzNTM5IDEwMDY0NA0KPiA+IC0tLSBhL2RyaXZlcnMvZ3Bpby9ncGlvLWY3MTg4eC5j
-DQo+ID4gKysrIGIvZHJpdmVycy9ncGlvL2dwaW8tZjcxODh4LmMNCj4gPiBAQCAtMjUwLDcgKzI1
-MCwxMCBAQCBzdGF0aWMgaW50IGY3MTg4eF9ncGlvX2dldF9kaXJlY3Rpb24oc3RydWN0DQo+ID4g
-Z3Bpb19jaGlwICpjaGlwLCB1bnNpZ25lZCBvZmZzZXQpDQo+ID4gIA0KPiA+ICAJc3VwZXJpb19l
-eGl0KHNpby0+YWRkcik7DQo+ID4gIA0KPiA+IC0JcmV0dXJuICEoZGlyICYgMSA8PCBvZmZzZXQp
-Ow0KPiA+ICsJaWYgKGRpciAmIDEgPDwgb2Zmc2V0KQ0KPiA+ICsJCXJldHVybiBHUElPX0xJTkVf
-RElSRUNUSU9OX09VVDsNCj4gPiArDQo+ID4gKwlyZXR1cm4gR1BJT19MSU5FX0RJUkVDVElPTl9J
-Tg0KPiANCj4gSGkgTWF0dGksDQo+IA0KPiBJIGFtIHByb2JhYmx5IG1pc3Npbmcgc29tZXRoaW5n
-IGJ1dCBJIGNhbid0IGZpbmQNCj4gR1BJT19MSU5FX0RJUkVDVElPTl9JTg0KPiBhbmQgR1BJT19M
-SU5FX0RJUkVDVElPTl9PVVQgZGVmaW5lZCBhbnl3aGVyZS4NCg0KU29ycnkuIEkgYWNjaWRlbnRh
-bGx5IHNlbnQgdGhlIHBhdGNoIDAxLzYyIHRvIGxpbWl0ZWQgYXVkaWVuY2UgLSBhbmQNCmFsc28g
-bWVzc2VkIHVwIHRoZSBtZXNzYWdlLUlEIGZyb20gdGhlIHNlcmllcyBzbyB0aHJlYWRpbmcgbWVz
-c2FnZXMgaXMNCnByb2JhYmx5IG5vdCB3b3JraW5nIDooIEkgZGlkIHJlc2VuZCB0aGUgcGF0Y2gg
-YWRkaW5nIGRlZmluZXMgdG8gYWxsDQpyZXZpZXdlcnMgeWVzdGVyZGF5IC0gdGl0bGUgc2hvdWxk
-IGJlICJbUkVTRU5EIFBBVENIIDAxLzYyXSBncGlvOiBBZGQNCmRlZmluaXRpb24gZm9yIEdQSU8g
-ZGlyZWN0aW9uIi4NCg0KPiBCZXNpZGVzIEkgYW0gYW4gb2NjYXNpb25hbCBjb2RlIHJlYWRlci93
-cml0ZXIgYW5kIEkgZmluZCB0aGUgb3JpZ2luYWwNCj4gY29kZSBlYXN5IHRvIHVuZGVyc3RhbmQu
-DQoNCkdsYWQgdG8gaGVhciB0aGF0LiBXaGVuIEkgcmVhZCBjb2RlOg0KDQpyZXR1cm4gIShkaXIg
-JiAxIDw8IG9mZnNldCk7DQoNCkl0J3MgaW1wb3NzaWJsZSBmb3IgbWUgdG8gdGVsbCBpZiBkaXIg
-aGF2aW5nIGJpdCBhdCBvZmZzZXQgJ29mZnNldCcgc2V0DQptZWFucyBJTiBvciBPVVQgLSBJIGtu
-b3cgdGhlIG1lYW5pbmcgb2YgY29kZSwgaXQgY2hlY2tzIHRoaXMgYml0IGZvcg0KaW4vb3V0IC0g
-YnV0IHdoaWNoIGRpciB2YWx1ZSBpcyBJTiBhbmQgd2hpY2ggaXMgT1VUPw0KDQpXaGVuIHRoaXMg
-aXMgd3JpdHRlbiBhczoNCg0KCWlmIChkaXIgJiAxIDw8IG9mZnNldCkNCgkJcmV0dXJuIEdQSU9f
-TElORV9ESVJFQ1RJT05fT1VUOw0KDQoJcmV0dXJuIEdQSU9fTElORV9ESVJFQ1RJT05fSU4NCg0K
-aXQgZ2V0J3MgcXVpdGUgb2J2aW91cyBldmVuIGZvciBtZSB0aGF0IGhhdmluZyB0aGUgbWF0Y2hp
-bmcgYml0IHNldA0KbWVhbnMgZGlyZWN0aW9uIHRvIGJlIE9VVC4NCg0KQmVzdCBSZWdhcmRzDQoJ
-TWF0dGkgVmFpdHRpbmVuDQoNCg==
+Changes in v4:
+* Rebased on top of Rob;s for-next
+* reorderd patches to take care of pdc dependency
+* Updated pdc binding to use a soc specific and soc independent compatible
+* Other updates based on v3 feedback, changes listed in each patch 
+
+Changes in v3:
+* PATCH 2/11: Updated the qup and uart lables to be consistent
+with the naming convention followed in sdm845 as suggested
+by Matthias
+* Dropped 2 patches from v2 which added the new compatible and
+binding updates for sc7180 pdc and reused sdm845 compatible instead
+as suggested by Marc Z
+
+This series adds DT support for basic peripherals on qualcomm's sc7180 SoC,
+drivers for which are already upstream.
+
+The series has a dependency on gcc clock driver patches [1]
+to merge first
+
+[1] https://www.spinics.net/lists/linux-clk/msg41851.html
+
+Kiran Gunda (3):
+  arm64: dts: qcom: sc7180: Add SPMI PMIC arbiter device
+  arm64: dts: qcom: pm6150: Add PM6150/PM6150L PMIC peripherals
+  arm64: dts: qcom: sc7180-idp: Add RPMh regulators
+
+Maulik Shah (3):
+  arm64: dts: qcom: sc7180: Add cmd_db reserved area
+  arm64: dts: qcom: sc7180: Add rpmh-rsc node
+  arm64: dts: qcom: sc7180: Add pdc interrupt controller
+
+Rajendra Nayak (5):
+  dt-bindings: qcom: Add SC7180 bindings
+  arm64: dts: sc7180: Add minimal dts/dtsi files for SC7180 soc
+  dt-bindings: arm-smmu: update binding for qcom sc7180 SoC
+  drivers: irqchip: qcom-pdc: Move to an SoC independent compatible
+  dt-bindings: qcom,pdc: Add compatible for sc7180
+
+Roja Rani Yarubandi (1):
+  arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+
+Taniya Das (1):
+  arm64: dts: qcom: SC7180: Add node for rpmhcc clock driver
+
+Vivek Gautam (1):
+  arm64: dts: sc7180: Add device node for apps_smmu
+
+ .../devicetree/bindings/arm/qcom.yaml         |    6 +
+ .../interrupt-controller/qcom,pdc.txt         |    3 +-
+ .../devicetree/bindings/iommu/arm,smmu.yaml   |    1 +
+ arch/arm64/boot/dts/qcom/Makefile             |    1 +
+ arch/arm64/boot/dts/qcom/pm6150.dtsi          |   72 ++
+ arch/arm64/boot/dts/qcom/pm6150l.dtsi         |   31 +
+ arch/arm64/boot/dts/qcom/sc7180-idp.dts       |  402 ++++++
+ arch/arm64/boot/dts/qcom/sc7180.dtsi          | 1133 +++++++++++++++++
+ drivers/irqchip/qcom-pdc.c                    |    2 +-
+ 9 files changed, 1649 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/pm6150l.dtsi
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180-idp.dts
+ create mode 100644 arch/arm64/boot/dts/qcom/sc7180.dtsi
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
+
