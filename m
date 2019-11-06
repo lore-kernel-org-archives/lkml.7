@@ -2,115 +2,95 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43BC0C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:52:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A6A9C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:55:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E73C217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:52:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7DBD2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:55:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="nl4Vnswy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfKFGwH (ORCPT
+        id S1730015AbfKFGzD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:52:07 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48286 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731330AbfKFGwG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:52:06 -0500
-X-AuditID: c0a8fbf4-183ff70000001fa6-76-5dc26d945d76
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 4D.4A.08102.49D62CD5; Wed,  6 Nov 2019 07:52:04 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 6 Nov 2019 07:52:00 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
-        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>,
-        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "mturquette@baylibre.com" <mturquette@baylibre.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>,
-        "lee.jones@linaro.org" <lee.jones@linaro.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "pavel@ucw.cz" <pavel@ucw.cz>
-Subject: Re: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Topic: [RFC PATCH v3 14/15] gpio: Add definition for GPIO direction
-Thread-Index: AQHVkKp+hdqKw9vEbUql9O/haZZyiad5+mgAgAEiGoCAAYY1gIABCI2A
-Date:   Wed, 6 Nov 2019 06:51:59 +0000
-Message-ID: <c4a2462cf810c4468638522d901b6416d1a770a4.camel@fi.rohmeurope.com>
-References: <cover.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <f08d265c12ebf185c0e1dbbfe0a3f86de4907194.1572606437.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdYhasTEQq2btQ_3GSo=hMJetp128jFo-6hE=JMeX4MJSA@mail.gmail.com>
-         <411ac5e107cd2a6c628d1fb46e7d284c8f594768.camel@fi.rohmeurope.com>
-         <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-In-Reply-To: <CACRpkdaRt3Du4y_Yhv39d7KoQ=hOkPR-RqXYjPukxb7JG_yymQ@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <25065393F3209F438FDBAA6CC3CC6B53@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 01:55:03 -0500
+Received: from ozlabs.org ([203.11.71.1]:34527 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729278AbfKFGzC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:55:02 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477HN33N5rz9sP6;
+        Wed,  6 Nov 2019 17:54:59 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573023300;
+        bh=+ca69yklGxVDq5u/XqTTPDhj0GQN4B5UGmaF7EImZOA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=nl4VnswyiB4YljQsTnk5ryd5P6oULhlkcO3bIDmnmRxtLu4ntqvmBvzP2Y0YdqA+m
+         c0XIfKpCgiAnwHV2tJYvdFkD5caVgrT+Tr+S89XjQhNNRkCeB2BZretUqCPAu9f9Nt
+         +G0cSA+l/GL4If4uyk9aroXC+7YHVfga63qt1C+CPMaMTCv86OAJOrECQZtJX/1zRc
+         Nk6muMzbf/Hzn3Gw6p63GKfQjZksSEUU5OEabKH5WUTM+GxVEE0VZRvYOZpu7f5Ne8
+         NZlBSyfR1pZN3fmhc7h21kzquaJLDLSZPnQmpgwc4emWD2Z6TXYRKwT+dqZawIoPbm
+         vG4S2pDL0jRqQ==
+Date:   Wed, 6 Nov 2019 17:54:51 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: linux-next: build warning after merge of the akpm-current tree
+Message-ID: <20191106175451.6bf0ab50@canb.auug.org.au>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Ta0gUaxjHeWdmZ16tkWnSfM9mlzMEUVEmRL5FSF+sKSK60nWxKUd3ay8y
-        u0pWkN0w1+iGUS3rJU+W6NJlLTIp01HL9pwKy8yoFE/SSbtxyDLJLjOOpZ/eP8//+T+/58Pz
-        QpJvp83Q5vTIilOyC3Q4VVP69fL0PIdqmfmlTcBnmx4zOPv9OQb35IcofKKjk8aF9fdNOPfv
-        Kyb87OolCrd/agD4c/NBAuf1nyfw/4faTLiisB/gR1V+Gl99ewHg2+XNNC550kRgf0kjhZtC
-        ifhFqIHGB27WM/h7y2VqfpQYKAgA8UPrAUYsCOwUr/teMGKwLIcWn7fcoMU7rdcI8WRBHyGW
-        lvcy4sfg+GXh60fM2yx5MlbaUp2xCZtGWGtadqVVRmx/F+o2ZYGDEV4QBhE3Cx327yO8IBzy
-        3GOA/gpVULrBc3cACn5a5QUQ0tw85H3K6OVIbg6qa/QPtJCcH6I9ret0PZpbhG71hwZ7FqO8
-        ohrS0AvQq95OQtcUNwn1qW9oXbPcUlT5bzkwuH0E6ipqGBgaxi1H7Q/eDYQBNw7lZL0nDFg0
-        Cr7qNRlLc+jsjQekoaNQ18vvg3UB3ezroPSdSW4KulgVa0Tno7YnewZ3/hPl5XYwxg6j0N3T
-        ndRRMMY3jOAbSvuGpX3D0r5h6SJgKgPIIdnsqZJHjpuhyOkzFJfVoT1bXI4gMA6mpxL8UBep
-        gIBABX9AQohiF9tqLXzEZldyplVyW5OUdLvsVgGCpBDJbjyseWyylLlDVly/rLGQEqLZyR3H
-        LDyns7bJcpqs/HJjIBQQW2VXLfwoRU6Vt6fY7J4hm4Bh+vBwc6RbdibLipTusSbp15Hk1s5D
-        t0Zq3MZtWpx1p0kOrWpEQ2AaPNqVX0zC+vySYpKnnC6nbI5mP+skTm+1pjt/g7pBNATCaHat
-        7o7Ufs3vOd0agtAQS15W6wiPNGSZs8Dse7nAc/zEDnqqhz/utQfiV2TfSlxtCfTsXLv3dft/
-        Unn/qurbcZnNlT27fyT5shLWnVIz1qhr6ipMMdPHJr651lu0oWl1c1kbX1z9ZcKHbwtex5vX
-        f3yUuDUlPiclNmZvRm1pXVnC0piF1jNXJs6Ws5lAq7i/di6Ye+SflpJLUvVDgXJbpbippOKW
-        fgLtDG6o8gMAAA==
+Content-Type: multipart/signed; boundary="Sig_/SkBjReTnFJYaVZKmoRU2.5F";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGVsbG8gTGludXMsDQoNCk9uIFR1ZSwgMjAxOS0xMS0wNSBhdCAxNjowNSArMDEwMCwgTGludXMg
-V2FsbGVpaiB3cm90ZToNCj4gT24gTW9uLCBOb3YgNCwgMjAxOSBhdCA0OjQ4IFBNIFZhaXR0aW5l
-biwgTWF0dGkNCj4gPE1hdHRpLlZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4gd3JvdGU6DQo+
-IA0KPiA+ID4gR29vZCBpbml0aWF0aXZlIChhbmQgSSB3aWxsIHNlZSBhIHRvbiBvZiBqYW5pdG9y
-aWFsIHBhdGNoZXMgYXMgYQ0KPiA+ID4gcmVzdWx0IG9mIHRoaXMuLi4pDQo+ID4gDQo+ID4gSSBo
-YXZlIHNvbWV3aGVyZSBuZWFyIDYyIHBhdGNoZXMgd2FpdGluZyB0byBiZSBzZW50ID0pIFRoZXkn
-cmUNCj4gPiBwcmV0dHkNCj4gPiBzbWFsbCBidXQgSSdkIGFwcHJlY2lhdGUgdGhvcm91Z2ggcmV2
-aWV3IGFzIHRoZXkncmUgbW9zdGx5DQo+ID4gdW50ZXN0ZWQuLi4NCj4gPiBEbyB5b3UgbWluZCBy
-ZWNlaXZpbmcgdGhlbSBhbGwgaW4gb25lIGdvPyBPciBkbyB5b3UgdGhpbmsgSSBzaG91bGQNCj4g
-PiBzZW5kDQo+ID4gdGhlIHNlcmllcyBpbiBzbWFsbGVyIGNodW5ja3M/DQo+IA0KPiBJIHdvdWxk
-IGJlIGZpbmUgd2l0aCBvbmUgcGF0Y2ggaW50cm9kdWNpbmcgdGhlIGRlZmluZXMgYW5kIHRoZW4N
-Cj4gb25lIGJpZyBwYXRjaCBzd2l0Y2hpbmcgZXZlcnlib2R5IGFuZCB0aGVpciBkb2cgb3ZlciB0
-byB1c2luZw0KPiB0aGVzZSBkZWZpbml0aW9ucy4NCj4gDQo+IEkgdXN1YWxseSBrZWVwIHRvIGEg
-cGF0Y2ggYmVpbmcgIm9uZSB0ZWNobmljYWwgc3RlcCIgYW5kIGl0IGlzDQo+IGNsZWFybHkgKElN
-Tykgb25lIHN0ZXAgdG8gaW50cm9kdWNlIHRoZSBkZWZpbmVzIGFuZCBvbmUgc3RlcA0KPiB0byBt
-YWtlIHVzZSBvZiBpdCBpbiBhbGwgbGVnYWN5IGRyaXZlcnMuDQo+IA0KPiBJdCdzIGxhdGUgaW4g
-dGhlIGtlcm5lbCBjeWNsZSBidXQgdGhpcyBwYXJ0aWN1bGFyIHBhcnQgKHRoZSBkZWZpbmVzDQo+
-IGFuZCBzd2l0Y2hpbmcgb3ZlciBvbGQgZHJpdmVyIHRvIHVzZSBpdCkgSSdkIGJlIGhhcHB5DQo+
-IHRvIG1lcmdlIGZvciB2NS41Lg0KDQpJJ2xsIHByZXBhcmUgb25lIHBhdGNoIGZvciBkZWZpbmVz
-IGFuZCBvbmUgbGFyZ2UgcGF0Y2ggZm9yIGRyaXZlcg0KY2hhbmdlcyBvbiB0b3Agb2YgR1BJTyB0
-cmVlIHRoZW4uIEknbGwgbGVhdmUgb3V0IHRoZSBsYXN0IG9uZSA2Mi82MiAtDQppdCBjYW4gYmUg
-YXBwbGllZCBsYXRlciBpZiBpdCBpcyBjb25zaWRlcmVkIGEgZ29vZCBpZGVhIC0gSSdkDQphcHBy
-ZWNpYXRlIGlmIHlvdSAvIEJhcnRvc3ogaGFkIHRoZSB0aW1lIHRvIGNoZWNrIGl0IHRob3VnaC4g
-DQoNCj4gDQo+IFlvdXJzLA0KPiBMaW51cyBXYWxsZWlqDQoNCg==
+--Sig_/SkBjReTnFJYaVZKmoRU2.5F
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi all,
+
+After merging the akpm-current tree, today's linux-next build (arm
+multi_v7_defconfig) produced this warning:
+
+lib/vsprintf.c: In function 'ptr_to_hashval':
+lib/vsprintf.c:766:14: warning: unused variable 'str' [-Wunused-variable]
+  766 |  const char *str =3D sizeof(ptr) =3D=3D 8 ? "(____ptrval____)" : "(=
+ptrval)";
+      |              ^~~
+
+Introduced by commit
+
+  aea87b9b95b9 ("rss_stat: add support to detect RSS updates of external mm=
+")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/SkBjReTnFJYaVZKmoRU2.5F
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3CbjsACgkQAVBC80lX
+0GwkyggAoFElSZZOFnjG/neWy6n1lKUtzTh9rT6HOWGZlaKL02sqZZzqCFTQ/1rz
+jFdzFt7iZEo+kw9cb4vwRibMYfzOTaAkBLbh3YwwB8Tk9wSMHnREOdQoQuv3R52p
+8QbAIlKGGqmbTUYtfJcrSFYNSewSU1R5VAtSROXh3CfNcF6X5Fhn4xsygQwVdxFz
++G5k5gNqbBIh8iltAPMSNRDJK4+/65LOeEX97cNrxKE8Mq9Fg/PIVCNcJf0uSNeE
+MP0VqT4THpkbS+B1uHCRKpylRjzlil5nRL9ZA0ZRuizth7ojFB4QeJhbnQZqjq+R
+S6cjja877prPlFEfZFHtc+Vb7scglg==
+=8pmB
+-----END PGP SIGNATURE-----
+
+--Sig_/SkBjReTnFJYaVZKmoRU2.5F--
