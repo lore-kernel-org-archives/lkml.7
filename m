@@ -2,104 +2,116 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1B39C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA760C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E7B2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B28E32187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:44:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=rasmusvillemoes.dk header.i=@rasmusvillemoes.dk header.b="WAw9vU4J"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="UfWy7760"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731566AbfKFHoh (ORCPT
+        id S1731581AbfKFHoo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:44:37 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39950 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731553AbfKFHoh (ORCPT
+        Wed, 6 Nov 2019 02:44:44 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:34396 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731136AbfKFHon (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:44:37 -0500
-Received: by mail-lj1-f193.google.com with SMTP id q2so18352987ljg.7
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 23:44:35 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=rasmusvillemoes.dk; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=GQiDbpJ2lWoQjxogiLC76wvVDvALWHHs4GpRXuiccOI=;
-        b=WAw9vU4JDVSEM4/tX3dXF8lllf4N+YzqBd5KUQ8snC5w5eDIIZ+umT4kLbyVnFM++0
-         ZB8hLVMoITJnSq1rOsxgeKtkROl/uFH9ESV8xVpi8yb698FGYQmgutU67Wm0q//x2Bsj
-         SZ/Bk5cn1mPajr330aCYxLLHJQpMBwRD7lKS4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=GQiDbpJ2lWoQjxogiLC76wvVDvALWHHs4GpRXuiccOI=;
-        b=gGbgq83uBcvYw8mhVfOzd2HgI90WxYZDE5QU5Mg96JtVkgvexpA5gUu0jY16YX3GPJ
-         6obA8IGvV9SuvooGOrOUEUf5X73uCI/Qd0pzTrdU0bszwhmChMGAasiY9tPlzQarxq+C
-         ws7v8r+F3dLcRz37GkkbPexu2zRkI+qTW0LvRZx3AuFIg8Cp0kBssOWrcj8tFiOWug8E
-         vcFL8Mn7sKeo32aJyRLI3Ga/N7Ow1q7AOw/jGuNtxw/rMAsQ1IFxCX01Xa49IIQQQLtH
-         xuAI6g7+tyfpx3VnhFgHxyt2NESeNzPoidbTmrpxHpCWLWCbBzgIe/ihuKKdZUzw21Dv
-         rQQQ==
-X-Gm-Message-State: APjAAAXdhk0wrSuToSwuVxmdLYo85bv59MrVu1KJfGh5ZWw+RWckL+pX
-        wiQ8jaG3odmE7NOyuDq26bNsjA==
-X-Google-Smtp-Source: APXvYqw8lqO4bBk2ADhwLIclnOcuGlmrYsbeOu9P1od+oauKtzslw1xjfudWN5y+gXx9dri9uatmXA==
-X-Received: by 2002:a2e:6a19:: with SMTP id f25mr798316ljc.147.1573026274938;
-        Tue, 05 Nov 2019 23:44:34 -0800 (PST)
-Received: from [172.16.11.28] ([81.216.59.226])
-        by smtp.gmail.com with ESMTPSA id t16sm8449870ljc.106.2019.11.05.23.44.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 23:44:34 -0800 (PST)
-Subject: Re: [PATCH] watchdog: make nowayout sysfs file writable
-To:     kbuild test robot <lkp@intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc:     kbuild-all@lists.01.org, Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org
-References: <20191105123125.25985-1-linux@rasmusvillemoes.dk>
- <201911060551.VIFgN8pe%lkp@intel.com>
-From:   Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <fdc909d7-bf73-740e-0da0-1aad41806734@rasmusvillemoes.dk>
-Date:   Wed, 6 Nov 2019 08:44:33 +0100
+        Wed, 6 Nov 2019 02:44:43 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA67idae109132;
+        Wed, 6 Nov 2019 01:44:39 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573026279;
+        bh=f1NEPFJjClLNi2nXj2/pBImQn0eR1YY7EU9xYbARDFY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=UfWy7760YyHkaT2NRw59cyv7eFBBc2ElZuZ6711GeQI2LpkxxKIyIS3gXR6ZtbZkH
+         33ZDi+aNXJ4bf65emhVovprynkAAbxDvLzQUfUo3kbLVVnmtBLVUM2XqL6N89fyTQj
+         u9ya/lWygS+943byIWb9IArzdpVGWfpJIXB1X5p0=
+Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA67idbQ084075
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 01:44:39 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE112.ent.ti.com
+ (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 01:44:37 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 01:44:22 -0600
+Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA67iZjb063767;
+        Wed, 6 Nov 2019 01:44:36 -0600
+Subject: Re: [PATCH v4 0/3] dmaengine: bindings/edma: dma-channel-mask to
+ array
+To:     Vinod Koul <vkoul@kernel.org>
+CC:     <robh+dt@kernel.org>, <dmaengine@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <dan.j.williams@intel.com>,
+        <devicetree@vger.kernel.org>
+References: <20190930114055.29315-1-peter.ujfalusi@ti.com>
+ <20191105165145.GB952516@vkoul-mobl>
+From:   Peter Ujfalusi <peter.ujfalusi@ti.com>
+Message-ID: <fc83b096-f737-4d90-cb3e-0d8eb43c7f12@ti.com>
+Date:   Wed, 6 Nov 2019 09:45:47 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <201911060551.VIFgN8pe%lkp@intel.com>
-Content-Type: text/plain; charset=windows-1252
+In-Reply-To: <20191105165145.GB952516@vkoul-mobl>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 05/11/2019 22.16, kbuild test robot wrote:
+Hi Vinod,
 
->    In file included from include/linux/mutex.h:14:0,
->                     from include/linux/kernfs.h:12,
->                     from include/linux/sysfs.h:16,
->                     from include/linux/kobject.h:20,
->                     from include/linux/cdev.h:5,
->                     from drivers/watchdog/watchdog_dev.c:31:
->    drivers/watchdog/watchdog_dev.c: In function 'nowayout_store':
->>> arch/ia64/include/asm/current.h:16:19: error: expected identifier or '(' before 'struct'
->     #define current ((struct task_struct *) ia64_getreg(_IA64_REG_TP))
->                       ^
->    drivers/watchdog/watchdog_dev.c:460:22: note: in expansion of macro 'current'
->      unsigned int value, current;
->                          ^~~~~~~
+On 05/11/2019 18.51, Vinod Koul wrote:
+> On 30-09-19, 14:40, Peter Ujfalusi wrote:
+>> Hi,
+>>
+>> Changes since v3:
+>> - Update the dma-common.yaml and edma binding documentation according to Rob's
+>>   suggestion
+>>
+>> Changes since v2:
+>> - Fix dma-common.yaml documentation patch and extend the description of the
+>>   dma-channel-mask array
+>> - The edma documentation now includes information on the dma-channel-mask array
+>>   size for EDMAs with 32 or 64 channels
+>>
+>> Changes since v1:
+>> - Extend the common dma-channel-mask to uint32-array to be usable for
+>>   controllers with more than 32 channels
+>> - Use the dma-channel-mask instead custom property for available channels for
+>>   EDMA.
+>>
+>> The original patch was part of the EDMA multicore usage series.
+>>
+>> Rob: I'm not sure if I got the dma-common.yaml update correctly...
+>>
+>> EDMAs can have 32 or 64 channels depending on the SoC, the dma-channel-mask
+>> needs to be an array to be usable for the driver.
+> 
+> Applied, thanks
+> 
+> There was a conflict on patch3, I have reolved it, please check.
 
-:facecpalm:
+Looks good, I wonder what caused the conflict. The patch looks identical
+in your vinod/next and in my linux-next-wip.
 
-And it happened to work just fine in my test because I was targeting
-ppc32 where unlike most other arches, current is not a macro but a
-(more-or-less) ordinary global declaration
+Oh, this is v4 and you have picked the v5. That explains.
 
-register struct task_struct *current asm ("r2");
+Thank you,
+- Péter
 
-Oh well, already fixed in v2 which dropped current for other reasons.
-
-Rasmus
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
