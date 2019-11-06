@@ -2,111 +2,139 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FFE5C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:26:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D36BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1452206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:26:30 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="Yp0YpKRn"
+	by mail.kernel.org (Postfix) with ESMTP id D8688217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:27:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730870AbfKFG03 (ORCPT
+        id S1731033AbfKFG1V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:26:29 -0500
-Received: from conssluserg-02.nifty.com ([210.131.2.81]:20719 "EHLO
-        conssluserg-02.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725948AbfKFG03 (ORCPT
+        Wed, 6 Nov 2019 01:27:21 -0500
+Received: from youngberry.canonical.com ([91.189.89.112]:44398 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728112AbfKFG1V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:26:29 -0500
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44]) (authenticated)
-        by conssluserg-02.nifty.com with ESMTP id xA66QLgl015592;
-        Wed, 6 Nov 2019 15:26:22 +0900
-DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-02.nifty.com xA66QLgl015592
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
-        s=dec2015msa; t=1573021582;
-        bh=nwdmRec0SwvFntm3oIpBtAklltXncxX2mwlUG5yNPgo=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Yp0YpKRn+UMpUGuxOb739Zn1aD65XmZMHkgCbVNF8VdKW/8BpXQmfi428Y0d5Y5Qv
-         hYJM6tjObUgtnAxz7jWyUfW5yVwhePikksylra69GtRAPQR4mIQrzcF5OcQGbwJuIc
-         T20EmCLlV6s34eKBcUQxzwBTB6dw43IC5mA4y4yOodes1AsQLGRpodOVxK9+8z9Qa2
-         DVWd94hvIDm1YglRI5VROjb3QusI4jPlgb/WjEASYrYH91sKA6ylWIWzH85f/U/UJB
-         Fpoqlj1wg4/nSOTg2iKLzfwTvbBH0Jb9sG91tNdD5+BOO7JZtM3CZvjyKHHvPBwf6O
-         /W2QppSZ1nIeg==
-X-Nifty-SrcIP: [209.85.217.44]
-Received: by mail-vs1-f44.google.com with SMTP id c25so4923268vsp.0;
-        Tue, 05 Nov 2019 22:26:22 -0800 (PST)
-X-Gm-Message-State: APjAAAW3sC7fGL2CXxpFwBKa2875tMKriu7IRWfZQeH0FWG0YYTYyQvV
-        z0SpJPKpR/GSuwrgAB4VVzW0/h4nsi4Mj8YMU3E=
-X-Google-Smtp-Source: APXvYqwGgJ9D5WT2pjLPzqfIFFWGWWXEasOPtaXRompnn/0I3eBIhmjsnMRvmqemlUnLD5mT+T5vt2z+TsxRh/7goAs=
-X-Received: by 2002:a67:2d08:: with SMTP id t8mr475945vst.155.1573021581064;
- Tue, 05 Nov 2019 22:26:21 -0800 (PST)
-MIME-Version: 1.0
-References: <20191025080544.7209-1-unixbhaskar@gmail.com> <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
- <20191106042049.GC20442@Gentoo>
-In-Reply-To: <20191106042049.GC20442@Gentoo>
-From:   Masahiro Yamada <yamada.masahiro@socionext.com>
-Date:   Wed, 6 Nov 2019 15:25:45 +0900
-X-Gmail-Original-Message-ID: <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
-Message-ID: <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
-Subject: Re: [PATCH] scripts:patch-kernel:bash syntax replace,correct one
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     Michal Marek <michal.lkml@markovi.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Nov 2019 01:27:21 -0500
+Received: from 61-220-137-37.hinet-ip.hinet.net ([61.220.137.37] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
+        (Exim 4.86_2)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1iSEmj-0004kO-6K; Wed, 06 Nov 2019 06:27:17 +0000
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+To:     gregkh@linuxfoundation.org
+Cc:     mathias.nyman@intel.com, stern@rowland.harvard.edu,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Subject: [PATCH v2] usb: Allow USB device to be warm reset in suspended state
+Date:   Wed,  6 Nov 2019 14:27:10 +0800
+Message-Id: <20191106062710.29880-1-kai.heng.feng@canonical.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 1:21 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
->
-> On 13:15 Wed 06 Nov 2019, Masahiro Yamada wrote:
-> >On Fri, Oct 25, 2019 at 5:06 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
-> >>
-> >> This patch will replace backquote to dollar parenthesis syntax
-> >> for better readability.Corrected one.
-> >
-> >Talking about the commit subject,
-> >which part is 'bash syntax' ?
-> >
-> >One more thing,
-> >"correct one" is not the correct way to send
-> >a new patch version.
-> >See the patch submission from other people.
-> >The version number is enclosed in the square brackets.
-> >
-> >[PATCH v2]
-> >
-> >
-> >The commit subject should describe what it does
-> >in imperative mood.
-> >
-> >https://patchwork.kernel.org/patch/11205593/
-> You are right ..my mistake ..shouldn't have included the
-> "correct one" ...and you are absolutely right..."bash syntax"
-> is as vague and confusing .
->
-> Again , Would you mind if I send you the correct one with
-> proper subject line and explained what changed.
+On Dell WD15 dock, sometimes USB ethernet cannot be detected after plugging
+cable to the ethernet port, the hub and roothub get runtime resumed and
+runtime suspended immediately:
+...
+[  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
+[  433.315204] usb usb4: usb auto-resume
+[  433.315226] hub 4-0:1.0: hub_resume
+[  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
+[  433.315264] usb usb4-port1: status 0343 change 0001
+[  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
+[  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
+[  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+[  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
+[  433.422307] usb usb4-port1: do warm reset
+[  433.422311] usb 4-1: device reset not allowed in state 8
+[  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
+[  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
+[  433.422356] usb usb4-port1: do warm reset
+[  433.422358] usb 4-1: device reset not allowed in state 8
+[  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
+[  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
+[  433.422465] hub 4-0:1.0: hub_suspend
+[  433.422475] usb usb4: bus auto-suspend, wakeup 1
+[  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+[  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+[  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+[  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
+[  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
+[  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
+[  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
+[  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
+[  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
+[  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
+[  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
+[  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
+[  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
+[  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
+[  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
+[  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
+[  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
+[  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+[  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
+[  433.902919] usb usb4: usb wakeup-resume
+[  433.902942] usb usb4: usb auto-resume
+[  433.902966] hub 4-0:1.0: hub_resume
+...
 
+As Mathias pointed out, the hub enters Cold Attach Status state and
+requires a warm reset. However usb_reset_device() bails out early when
+the device is in suspended state, as its callers port_event() and
+hub_event() don't always resume the device.
 
-I will pick up the patch with the subject corrected
-but you do not need to send similar patches any more.
+Since there's nothing wrong to reset a suspended device, allow
+usb_reset_device() to do so to solve the issue.
 
-`...` is the correct syntax.
-Even if $(...) is more readable,
-the added value is quite small.
+Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+---
+v2:
+- Update kerneldoc.
 
+ drivers/usb/core/hub.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-
-
+diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+index 05a2d51bdbe0..eaf28eed51b0 100644
+--- a/drivers/usb/core/hub.c
++++ b/drivers/usb/core/hub.c
+@@ -5849,7 +5849,7 @@ static int usb_reset_and_verify_device(struct usb_device *udev)
+ 
+ /**
+  * usb_reset_device - warn interface drivers and perform a USB port reset
+- * @udev: device to reset (not in SUSPENDED or NOTATTACHED state)
++ * @udev: device to reset (not in NOTATTACHED state)
+  *
+  * Warns all drivers bound to registered interfaces (using their pre_reset
+  * method), performs the port reset, and then lets the drivers know that
+@@ -5877,8 +5877,7 @@ int usb_reset_device(struct usb_device *udev)
+ 	struct usb_host_config *config = udev->actconfig;
+ 	struct usb_hub *hub = usb_hub_to_struct_hub(udev->parent);
+ 
+-	if (udev->state == USB_STATE_NOTATTACHED ||
+-			udev->state == USB_STATE_SUSPENDED) {
++	if (udev->state == USB_STATE_NOTATTACHED) {
+ 		dev_dbg(&udev->dev, "device reset not allowed in state %d\n",
+ 				udev->state);
+ 		return -EINVAL;
 -- 
-Best Regards
-Masahiro Yamada
+2.17.1
+
