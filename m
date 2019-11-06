@@ -2,106 +2,114 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 131DBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:14:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6CBC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0827217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:14:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573042450;
-	bh=6pXVrNEi0TQdglHE4NKwGTm6WggLgXwchzzv4dRBuzc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=rwb/bWydDjekExTREvJjE1J+Ohm+PdMuDtCjef6NXv70Bs01jocKZ/yDCYbZ/1RmA
-	 o3zR5h0erD0LtFOXlcfUuhp3BD65A5AfjW37YNcEDuFlv3c/jJ/JI2sKHGSLnrls2O
-	 NKyXOIdosYzKwHEOGEf2ngvnCGEM6bJVX+FDu+D4=
+	by mail.kernel.org (Postfix) with ESMTP id 9EA7520869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfKFMOJ (ORCPT
+        id S1730466AbfKFMRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:14:09 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60060 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727391AbfKFMOJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:14:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8OkFhjqnHHDimjh3kNYigriAaDRNxTtnxl3F/wSWgO4=; b=tyWGGmIg5lpIkDPc1T4eRbPcf
-        ukghfI+MIRb4nNzy7h1+MnZggP+iQhGQUNuhkzNo5+WDf6lI7ab7FXZXG6pIlJFFcPF5J3cvITG0k
-        jJQI5958xcxrQvR1QzuEVQNvUt9XVa4ByY6caF8PZw1MlGI/miryb7AcwXCgb/fpDeepo=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iSKBb-0001NJ-4e; Wed, 06 Nov 2019 12:13:19 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 7A24D2743035; Wed,  6 Nov 2019 12:13:18 +0000 (GMT)
-Date:   Wed, 6 Nov 2019 12:13:18 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     syzbot <syzbot+f1048ebddb93befb085f@syzkaller.appspotmail.com>
-Cc:     alexandre.belloni@bootlin.com, alsa-devel-owner@alsa-project.org,
-        alsa-devel@alsa-project.org, bhelgaas@google.com, kirr@nexedi.com,
-        linux-kernel@vger.kernel.org, linux@roeck-us.net, lkundrak@v3.sk,
-        maxime.ripard@bootlin.com, perex@perex.cz, peron.clem@gmail.com,
-        robh@kernel.org, syzkaller-bugs@googlegroups.com,
-        tglx@linutronix.de, tiwai@suse.com, tiwai@suse.de
-Subject: Re: INFO: task hung in snd_timer_close
-Message-ID: <20191106121318.GB4544@sirena.co.uk>
-References: <0000000000004dfaf005969d1755@google.com>
- <000000000000b9dd9c0596ac5b94@google.com>
+        Wed, 6 Nov 2019 07:17:44 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:51104 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725856AbfKFMRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 07:17:44 -0500
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id ECA6F5AFF8
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 12:17:43 +0000 (UTC)
+Received: by mail-wm1-f71.google.com with SMTP id 2so1108494wmd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:17:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=3JkGp+uV4EX2YLZVMnoCzXMV7AWPPY0mdAbm7lpOXew=;
+        b=XcyZoupnHgZdqk0NH3wDL3Qd0QF5C39MZEnNkMcgddFkggSKQncy56aSbaJE67cYcl
+         X6Q4ZDjqjWKTs1WYcn+jf8me3XAx6LgSayf/afO9qWXEQEg8Q1I+h0xWQc0BQRgucLYn
+         woP6Ji2vhkvXR3Iq/WgeEntTQB+a2ai+3/oGDmCunu8hgmE6QagGgQA67EAIX9EGd619
+         1HhT0tmjv8ZDm5sDK8v869H8VlXXqiu/YZ5YFO7qi63V4ZHx3HfQ/ROJzDPp5boLmzKc
+         T1GiKWk5vFRU0nwOIif5nPRE3aEhTkqJ/V2QrFgO8At31etU13wkHfpYAZgt37QDF5Ct
+         pIlQ==
+X-Gm-Message-State: APjAAAUhhf4SIRI8H/h5qocbOXMrDiSpBz71Jf+ZtTIXywd+95nA562L
+        chE8EGEBkhr3/HtrERdJxd5HKlYpiqYOQkfz8JlgmuNca8A0QuErNmveSC4mApE91hllA92DdKf
+        7fYSPDmUmFAeDzp0EtPKvpQQO
+X-Received: by 2002:adf:e94e:: with SMTP id m14mr2467676wrn.233.1573042662550;
+        Wed, 06 Nov 2019 04:17:42 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwQJTB+/eQhKDoIKLZpiIrACRJvyGIu0CSnXiN36tE+zV7iuxwSMzhyus8+dHVO26p11jq30w==
+X-Received: by 2002:adf:e94e:: with SMTP id m14mr2467638wrn.233.1573042661943;
+        Wed, 06 Nov 2019 04:17:41 -0800 (PST)
+Received: from [192.168.10.150] ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id x7sm46454174wrg.63.2019.11.06.04.17.40
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 04:17:41 -0800 (PST)
+Subject: Re: [PATCH v2 00/14] KVM: x86: Remove emulation_result enums
+To:     Sean Christopherson <sean.j.christopherson@intel.com>,
+        Alexander Graf <graf@amazon.com>
+Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
+References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
+ <8dec39ac-7d69-b1fd-d07c-cf9d014c4af3@redhat.com>
+ <686b499e-7700-228e-3602-8e0979177acb@amazon.com>
+ <20191106005806.GK23297@linux.intel.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Message-ID: <3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com>
+Date:   Wed, 6 Nov 2019 13:17:40 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="7iMSBzlTiPOCCT2k"
-Content-Disposition: inline
-In-Reply-To: <000000000000b9dd9c0596ac5b94@google.com>
-X-Cookie: No line available at 300 baud.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106005806.GK23297@linux.intel.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 06/11/19 01:58, Sean Christopherson wrote:
+>> enum kvm_return {
+>>     KVM_RET_USER_EXIT = 0,
+>>     KVM_RET_GUEST = 1,
+>> };
+>>
+>> and then consistently use them as return values? That way anyone who has not
+>> worked on kvm before can still make sense of the code.
+> Hmm, I think it'd make more sense to use #define instead of enum to
+> hopefully make it clear that they aren't the *only* values that can be
+> returned.  That'd also prevent anyone from changing the return types from
+> 'int' to 'enum kvm_return', which IMO would hurt readability overall.
+> 
+> And maybe KVM_EXIT_TO_USERSPACE and KVM_RETURN_TO_GUEST?
 
---7iMSBzlTiPOCCT2k
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+That would be quite some work.  Right now there is some consistency
+between all of:
 
-On Wed, Nov 06, 2019 at 04:05:00AM -0800, syzbot wrote:
-> syzbot has bisected this bug to:
->=20
-> commit b2045303147254d01b1db90a83e5df3832c4264b
-> Author: Cl=E9ment P=E9ron <peron.clem@gmail.com>
-> Date:   Mon May 27 20:06:21 2019 +0000
->=20
->     dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
->=20
-> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=3D14acecb4e0=
-0000
-> start commit:   a99d8080 Linux 5.4-rc6
+- x86_emulate_instruction and its callers
 
-This bisection is clearly a false positive.
+- vcpu->arch.complete_userspace_io
 
---7iMSBzlTiPOCCT2k
-Content-Type: application/pgp-signature; name="signature.asc"
+- vcpu_enter_guest/vcpu_block
 
------BEGIN PGP SIGNATURE-----
+- kvm_x86_ops->handle_exit
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3CuN0ACgkQJNaLcl1U
-h9C/tgf+OL9uHYsC4lsb0+2dZcC9mIuU5eRO1OGKyj/Xs+3IQzoSdG8lmnAzGOnN
-9u9rGTWJmcjpjdTI+ir/OvOuj3EiIVaHI74Sg7ZcByEr0VApnnGd3uWhWy+TwSBp
-Q+hhd9YWbC/em3843B3lmwUq/OAj178uTaQ/ZrNxhiK3vZZlloiZg1OoKE3eGXIz
-IGSjn8VRTmZZV4VBRZtlr6DkDzuujg2a0f8cdHboIN+UICCtav/4U5UJNKzqSBXV
-+6kEZZxPeE//jOjMW3+DLwiGkh05BQuM1F010oVKUs6pDTBrKlZ3WI2mPgB5tZ5S
-eESyKon52UVVzt8flxZuQ/UDWmbShw==
-=Whut
------END PGP SIGNATURE-----
+so it would be very easy to end up with a half-int-half-enum state that
+is more confusing than before...
 
---7iMSBzlTiPOCCT2k--
+I'm more worried about cases where we have functions returning either 0
+or -errno, but 0 lets you enter the guest.  I'm not sure if the only one
+is kvm_mmu_reload or there are others.
+
+Paolo
