@@ -2,153 +2,152 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF569C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FAB8C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:56:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77E2F217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:52:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573041148;
-	bh=OF5G2aua6XJ/Sp4YTPouRXr0Og+dxfgO9zAId67DLXE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=2MqhvZeXsWNQn+2Wma0h96R3uUJ5jFyEZ3dRUDW1q76XwDDXZq2elh5dOcymM4qhh
-	 AxEz05Vjoq5P8/szJ7+LroDSq843aILQELUkHcYwizMNJjlGrZ181CVfC5LhR0rSjD
-	 Yt7pdq+/CFfjZoVBaD6ljad/4JMf72HTcMWm/Ks4=
+	by mail.kernel.org (Postfix) with ESMTP id 26E6F217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:56:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eKPgNEYL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729320AbfKFLw1 (ORCPT
+        id S1730098AbfKFL4E (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:52:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:38318 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfKFLw0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:52:26 -0500
-Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 870302075C;
-        Wed,  6 Nov 2019 11:52:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573041146;
-        bh=OF5G2aua6XJ/Sp4YTPouRXr0Og+dxfgO9zAId67DLXE=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=qIUFYfJ37F3Z3WnIERx/g5BXRvKYxqkb58MjBLfS4mnY4LrPgrprykjOUbSbTH9wM
-         1BuL2ZUvQD1NSjB4KzI13eNg5rZ87yDmhcv8TXNPYjjm7WtzxFgizy7YU9zdiIVb+c
-         P3USJmz6ZAZQsdpb0C+2dlJeMGpZWWzEeWU0kOrs=
-Date:   Wed, 6 Nov 2019 12:52:22 +0100
-From:   Maxime Ripard <mripard@kernel.org>
-To:     Alistair Francis <alistair23@gmail.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Alistair Francis <alistair@alistair23.me>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH] arm64: dts: sun50i: sopine-baseboard: Expose serial1,
- serial2 and serial3
-Message-ID: <20191106115222.GA8617@gilmour.lan>
-References: <20191012200524.23512-1-alistair@alistair23.me>
- <20191016144946.p3tm67vh5lqigndn@gilmour>
- <CAGb2v67QrTJjSO99UNs-=3ZZnK948am11=izRTHT6gZ06E28eA@mail.gmail.com>
- <20191021111709.dpu6g7jltuw6cbbn@gilmour>
- <CAKmqyKN8Ru19h3y=9O13=5wpys3BC2LQM65S+2QYjPdJQn2O4w@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Content-Disposition: inline
-In-Reply-To: <CAKmqyKN8Ru19h3y=9O13=5wpys3BC2LQM65S+2QYjPdJQn2O4w@mail.gmail.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
+        Wed, 6 Nov 2019 06:56:04 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:40140 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFL4D (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:56:03 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6BsJOu050056;
+        Wed, 6 Nov 2019 11:55:52 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : in-reply-to : references; s=corp-2019-08-05;
+ bh=ITh4bqD9xE5YeUegJCsH0m9UXI6eEn2CS5ZImoYu/nk=;
+ b=eKPgNEYLBCRGh1Pax3oS6cIJQHd5BE6cCoIie94e2RzspGhfduHmCKVrIGdWJ1CnVZ7O
+ 2vnFPgOVNuJXhZ1hwynUHMZbzzdbuNrTTBuZHwK1xMzJB7DyOAsoyVRi79Vl6heh6AD4
+ PVDPj25M9Vb23d80Ah9JIJYVc+xu5BEsvh9VPSwwkkZg2VRm85XY/L+dg5fVmoi9Idx9
+ loyZVrJcHsP+7LjxMMcfsPv+ZYmJDctwQGUf4XPeO63deomVN/kIVSwjFjjK3J7/XXKj
+ 3QIW2+oIfSjZuscvP3Wi38JJz6NS5XHp2A/8ZLzs8wo1MdYUzN+iAbnIkjPswuYprsEH 4w== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2120.oracle.com with ESMTP id 2w11rq5m73-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 11:55:51 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA6Btgxv061288;
+        Wed, 6 Nov 2019 11:55:51 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2w3vr25smd-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 11:55:51 +0000
+Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA6BtnVQ027585;
+        Wed, 6 Nov 2019 11:55:49 GMT
+Received: from z2.cn.oracle.com (/10.182.71.218)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 03:55:48 -0800
+From:   Zhenzhong Duan <zhenzhong.duan@oracle.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     pbonzini@redhat.com, rkrcmar@redhat.com,
+        rafael.j.wysocki@intel.com, joao.m.martins@oracle.com,
+        mtosatti@redhat.com, kvm@vger.kernel.org, linux-pm@vger.kernel.org,
+        Zhenzhong Duan <zhenzhong.duan@oracle.com>
+Subject: [PATCH RESEND v2 4/4] KVM: ensure vCPU halt_poll_us in right scope
+Date:   Wed,  6 Nov 2019 19:55:02 +0800
+Message-Id: <1573041302-4904-5-git-send-email-zhenzhong.duan@oracle.com>
+X-Mailer: git-send-email 1.8.3.1
+In-Reply-To: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
+References: <1573041302-4904-1-git-send-email-zhenzhong.duan@oracle.com>
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=990
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911060119
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911060119
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+As user can adjust halt_poll_ns_grow_start and halt_poll_ns which
+leads to vcpu->halt_poll_ns beyond the two boundaries. This patch
+ensures vcpu->halt_poll_ns in that scope after growing or shrinking.
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+If halt_poll_ns_shrink is 0, shrink vcpu->halt_poll_ns to
+halt_poll_ns_grow_start instead of 0. To disable poll we can set
+halt_poll_ns to 0.
 
-On Tue, Nov 05, 2019 at 11:27:42AM -0800, Alistair Francis wrote:
-> On Mon, Oct 21, 2019 at 4:17 AM Maxime Ripard <mripard@kernel.org> wrote:
-> >
-> > Hi,
-> >
-> > On Wed, Oct 16, 2019 at 10:54:27PM +0800, Chen-Yu Tsai wrote:
-> > > On Wed, Oct 16, 2019 at 10:49 PM Maxime Ripard <mripard@kernel.org> wrote:
-> > > > On Sat, Oct 12, 2019 at 01:05:24PM -0700, Alistair Francis wrote:
-> > > > > Follow what the sun50i-a64-pine64.dts does and expose all 5 serial
-> > > > > connections.
-> > > > >
-> > > > > Signed-off-by: Alistair Francis <alistair@alistair23.me>
-> > > > > ---
-> > > > >  .../allwinner/sun50i-a64-sopine-baseboard.dts | 25 +++++++++++++++++++
-> > > > >  1 file changed, 25 insertions(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > > > index 124b0b030b28..49c37b21ab36 100644
-> > > > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-sopine-baseboard.dts
-> > > > > @@ -56,6 +56,10 @@
-> > > > >       aliases {
-> > > > >               ethernet0 = &emac;
-> > > > >               serial0 = &uart0;
-> > > > > +             serial1 = &uart1;
-> > > > > +             serial2 = &uart2;
-> > > > > +             serial3 = &uart3;
-> > > > > +             serial4 = &uart4;
-> > > > >       };
-> > > > >
-> > > > >       chosen {
-> > > > > @@ -280,6 +284,27 @@
-> > > > >       };
-> > > > >  };
-> > > > >
-> > > > > +/* On Pi-2 connector */
-> > > > > +&uart2 {
-> > > > > +     pinctrl-names = "default";
-> > > > > +     pinctrl-0 = <&uart2_pins>;
-> > > > > +     status = "disabled";
-> > > > > +};
-> > > > > +
-> > > > > +/* On Euler connector */
-> > > > > +&uart3 {
-> > > > > +     pinctrl-names = "default";
-> > > > > +     pinctrl-0 = <&uart3_pins>;
-> > > > > +     status = "disabled";
-> > > > > +};
-> > > > > +
-> > > > > +/* On Euler connector, RTS/CTS optional */
-> > > > > +&uart4 {
-> > > > > +     pinctrl-names = "default";
-> > > > > +     pinctrl-0 = <&uart4_pins>;
-> > > > > +     status = "disabled";
-> > > > > +};
-> > > >
-> > > > Since these are all the default muxing, maybe we should just set that
-> > > > in the DTSI?
-> > >
-> > > Maybe not, since people may want to only use RX/TX, and leave the other
-> > > two pins for GPIO?
-> >
-> > Right, I'll apply that patch.
->
-> Ping, just want to make sure this has been applied/will be applied.
+In case user wrongly set halt_poll_ns_grow_start > halt_poll_ns > 0,
+halt_poll_ns take precedency and poll time is a fixed value of
+halt_poll_ns.
 
-This has been applied, and was part of the PR for 5.5 sent last week
+This patch also simplifies branch check based on the guest haltpoll
+code.
 
-Maxime
+Signed-off-by: Zhenzhong Duan <zhenzhong.duan@oracle.com>
+---
+ virt/kvm/kvm_main.c | 29 +++++++++++++----------------
+ 1 file changed, 13 insertions(+), 16 deletions(-)
 
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
+diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
+index 359516b..b4fca66 100644
+--- a/virt/kvm/kvm_main.c
++++ b/virt/kvm/kvm_main.c
+@@ -2308,9 +2308,15 @@ static void shrink_halt_poll_ns(struct kvm_vcpu *vcpu)
+ 	old = val = vcpu->halt_poll_ns;
+ 	shrink = READ_ONCE(halt_poll_ns_shrink);
+ 	if (shrink == 0)
+-		val = 0;
+-	else
++		val = halt_poll_ns_grow_start;
++	else {
+ 		val /= shrink;
++		if (val < halt_poll_ns_grow_start)
++			val = halt_poll_ns_grow_start;
++	}
++
++	if (val > halt_poll_ns)
++		val = halt_poll_ns;
+ 
+ 	vcpu->halt_poll_ns = val;
+ 	trace_kvm_halt_poll_ns_shrink(vcpu->vcpu_id, val, old);
+@@ -2385,21 +2391,12 @@ void kvm_vcpu_block(struct kvm_vcpu *vcpu)
+ 	block_ns = ktime_to_ns(cur) - ktime_to_ns(start);
+ 
+ 	if (!kvm_arch_no_poll(vcpu)) {
+-		if (!vcpu_valid_wakeup(vcpu)) {
++		/* we had a long block, shrink polling */
++		if (!vcpu_valid_wakeup(vcpu) || block_ns > halt_poll_ns)
+ 			shrink_halt_poll_ns(vcpu);
+-		} else if (halt_poll_ns) {
+-			if (block_ns <= vcpu->halt_poll_ns)
+-				;
+-			/* we had a long block, shrink polling */
+-			else if (vcpu->halt_poll_ns && block_ns > halt_poll_ns)
+-				shrink_halt_poll_ns(vcpu);
+-			/* we had a short halt and our poll time is too small */
+-			else if (vcpu->halt_poll_ns < halt_poll_ns &&
+-				block_ns < halt_poll_ns)
+-				grow_halt_poll_ns(vcpu);
+-		} else {
+-			vcpu->halt_poll_ns = 0;
+-		}
++		/* we had a short block and our poll time is too small */
++		else if (block_ns > vcpu->halt_poll_ns)
++			grow_halt_poll_ns(vcpu);
+ 	}
+ 
+ 	trace_kvm_vcpu_wakeup(block_ns, waited, vcpu_valid_wakeup(vcpu));
+-- 
+1.8.3.1
 
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXcKz9gAKCRDj7w1vZxhR
-xfPJAP4qP44/SpPzLjXIyoizSx9xs7CQpWprZuxSoSTc3Ba5RgEA4Q2NIc2Xk6rr
-HnXc85K09hZjEcpzLo2Q1Dw6Kx3rBw0=
-=Zoc5
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
