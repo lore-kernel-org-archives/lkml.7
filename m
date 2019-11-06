@@ -2,222 +2,122 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C8DFC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:06:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3E01C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:06:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F948217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:06:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8452A20663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:06:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=6wind.com header.i=@6wind.com header.b="P1oAt0ql"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732618AbfKFVGj (ORCPT
+        id S1732637AbfKFVGk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:06:39 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45359 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727774AbfKFVGi (ORCPT
+        Wed, 6 Nov 2019 16:06:40 -0500
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:41581 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732012AbfKFVGj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:06:38 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iSSVa-0003ER-KP; Wed, 06 Nov 2019 22:06:30 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id E76D01C0131;
-        Wed,  6 Nov 2019 22:06:29 +0100 (CET)
-Date:   Wed, 06 Nov 2019 21:06:29 -0000
-From:   "tip-bot2 for Eric Dumazet" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
-Cc:     syzbot <syzkaller@googlegroups.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Wed, 6 Nov 2019 16:06:39 -0500
+Received: by mail-wr1-f65.google.com with SMTP id p4so168540wrm.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 13:06:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=6wind.com; s=google;
+        h=reply-to:subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=MqpzOP5xpsOGjxOWnYRkigNeIfXpG8rAI4fIo15URUY=;
+        b=P1oAt0qlmih7JMLNJhSKqQU4lqJwqZB8qwP555w60EsNIjTAikbFGpt295wdN/GMHC
+         8NJtuYhp4lKjYGcGElAfTYpezzhRHQZBn1PCpSN/Rn1y9RVvnufwU/T3U708c2NliNpQ
+         beq+Xp/PYJ+xDXJsKcOrQ5b1vyDiiac3xXV6KZ/QZrwiY8oJn4xHVkgr/FF0jQL77zgn
+         xA+mJlgIKM9WfPOxrzY9rv8QvMwPDMtyM7qj8YOh9C5tQV4Vnt9QvNCnaD5cHS2OayOZ
+         v7jyO+4MYr/h9sGGJbpy15isNJQ8bIXWngs5Rn67Tl0kNK1bQ43qlTs2/E4n3VayfnKh
+         PSdA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:reply-to:subject:to:cc:references:from
+         :organization:message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=MqpzOP5xpsOGjxOWnYRkigNeIfXpG8rAI4fIo15URUY=;
+        b=IAjsM3o2/lteiwbWq+dJjJJhakXKSnuLAbFE1jcHtXM3uWzMQrr5VRnjbqxR9J8qf4
+         zfCdztIKkS72oQVyCOjG41h9f74GH/SheROnZsAKYG5Q7kGcwziIgJehwTSHgI42DQ0f
+         E/jDgeJKNxP1ik9prEnzETTHem9wU/NWBAMh6/+LfV9RHlPXmTu+h50GNw9dooHIMDnY
+         U9yO8D+WOeI79omMihJ54AkZw9jP+1ZBaPp84ZV9oONm+EMWxfy6fuspHXNcJ8gB34tv
+         ZbKq+N6+BHtp5a2JGwMn33fkMT2ivXB/bfOha4h6jqemh2YoERgeFnaaQAI5dDizTCTf
+         MY6g==
+X-Gm-Message-State: APjAAAWodjlqH95ACIkXqnKh/550eJplOkEGoNp4dB9EiSWSHaar8clS
+        plFfYdrM6tcrk+MPjUyIk7wzSQ==
+X-Google-Smtp-Source: APXvYqwTUSiPjuk15gUSlYdIkf+wbFPwh8bCd8IdB3llI0ntHZ/2HZKzv5VwlEvWH3wOKa09pnOmoQ==
+X-Received: by 2002:a5d:4649:: with SMTP id j9mr4710551wrs.248.1573074394971;
+        Wed, 06 Nov 2019 13:06:34 -0800 (PST)
+Received: from ?IPv6:2a01:e35:8b63:dc30:95e0:8058:2b4b:3437? ([2a01:e35:8b63:dc30:95e0:8058:2b4b:3437])
+        by smtp.gmail.com with ESMTPSA id x205sm5354939wmb.5.2019.11.06.13.06.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 13:06:33 -0800 (PST)
+Reply-To: nicolas.dichtel@6wind.com
+Subject: Re: [PATCH v2 4/5] net: ipv4: allow setting address on interface
+ outside current namespace
+To:     Jonas Bonn <jonas@norrbonn.se>, netdev@vger.kernel.org,
         linux-kernel@vger.kernel.org
-In-Reply-To: <20191106174804.74723-1-edumazet@google.com>
-References: <20191106174804.74723-1-edumazet@google.com>
+Cc:     davem@davemloft.net
+References: <20191106053923.10414-1-jonas@norrbonn.se>
+ <20191106053923.10414-5-jonas@norrbonn.se>
+From:   Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Organization: 6WIND
+Message-ID: <1f8a0f3e-e4ac-40c9-26e6-f14498ccdbe9@6wind.com>
+Date:   Wed, 6 Nov 2019 22:06:33 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Message-ID: <157307438959.29376.9644507314555163943.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+In-Reply-To: <20191106053923.10414-5-jonas@norrbonn.se>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the timers/core branch of tip:
+Le 06/11/2019 à 06:39, Jonas Bonn a écrit :
+> This patch allows an interface outside of the current namespace to be
+> selected when setting a new IPv4 address for a device.  This uses the
+> IFA_TARGET_NETNSID attribute to select the namespace in which to search
+> for the interface to act upon.
+> 
+> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
+> ---
+[snip]
+> @@ -922,16 +917,37 @@ static int inet_rtm_newaddr(struct sk_buff *skb, struct nlmsghdr *nlh,
+>  			    struct netlink_ext_ack *extack)
+>  {
+>  	struct net *net = sock_net(skb->sk);
+> +	struct net *tgt_net = NULL;
+>  	struct in_ifaddr *ifa;
+>  	struct in_ifaddr *ifa_existing;
+>  	__u32 valid_lft = INFINITY_LIFE_TIME;
+>  	__u32 prefered_lft = INFINITY_LIFE_TIME;
+> +	struct nlattr *tb[IFA_MAX+1];
+> +	int err;
+>  
+>  	ASSERT_RTNL();
+>  
+> -	ifa = rtm_to_ifaddr(net, nlh, &valid_lft, &prefered_lft, extack);
+> -	if (IS_ERR(ifa))
+> -		return PTR_ERR(ifa);
+> +	err = nlmsg_parse_deprecated(nlh, sizeof(struct ifaddrmsg), tb, IFA_MAX,
+> +				     ifa_ipv4_policy, extack);
+> +	if (err < 0)
+> +		return err;
+> +
+> +	if (tb[IFA_TARGET_NETNSID]) {
+> +		int32_t netnsid = nla_get_s32(tb[IFA_TARGET_NETNSID]);
+> +
+> +		tgt_net = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, netnsid);
+> +		if (IS_ERR(net)) {
+if (IS_ERR(tgt_net)) ?
 
-Commit-ID:     de4db39b9f0e682e59caa828a277632510901560
-Gitweb:        https://git.kernel.org/tip/de4db39b9f0e682e59caa828a277632510901560
-Author:        Eric Dumazet <edumazet@google.com>
-AuthorDate:    Wed, 06 Nov 2019 09:48:04 -08:00
-Committer:     Thomas Gleixner <tglx@linutronix.de>
-CommitterDate: Wed, 06 Nov 2019 21:59:56 +01:00
-
-hrtimer: Annotate lockless access to timer->state
-
-syzbot reported various data-race caused by hrtimer_is_queued() reading
-timer->state. A READ_ONCE() is required there to silence the warning.
-
-Also add the corresponding WRITE_ONCE() when timer->state is set.
-
-In remove_hrtimer() the hrtimer_is_queued() helper is open coded to avoid
-loading timer->state twice.
-
-KCSAN reported these cases:
-
-BUG: KCSAN: data-race in __remove_hrtimer / tcp_pacing_check
-
-write to 0xffff8880b2a7d388 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- run_ksoftirqd+0x46/0x60 kernel/softirq.c:603
- smpboot_thread_fn+0x37d/0x4a0 kernel/smpboot.c:165
- kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
- ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-read to 0xffff8880b2a7d388 of 1 bytes by task 24652 on cpu 1:
- tcp_pacing_check net/ipv4/tcp_output.c:2235 [inline]
- tcp_pacing_check+0xba/0x130 net/ipv4/tcp_output.c:2225
- tcp_xmit_retransmit_queue+0x32c/0x5a0 net/ipv4/tcp_output.c:3044
- tcp_xmit_recovery+0x7c/0x120 net/ipv4/tcp_input.c:3558
- tcp_ack+0x17b6/0x3170 net/ipv4/tcp_input.c:3717
- tcp_rcv_established+0x37e/0xf50 net/ipv4/tcp_input.c:5696
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
-
-BUG: KCSAN: data-race in __remove_hrtimer / __tcp_ack_snd_check
-
-write to 0xffff8880a3a65588 of 1 bytes by interrupt on cpu 0:
- __remove_hrtimer+0x52/0x130 kernel/time/hrtimer.c:991
- __run_hrtimer kernel/time/hrtimer.c:1496 [inline]
- __hrtimer_run_queues+0x250/0x600 kernel/time/hrtimer.c:1576
- hrtimer_run_softirq+0x10e/0x150 kernel/time/hrtimer.c:1593
- __do_softirq+0x115/0x33f kernel/softirq.c:292
- invoke_softirq kernel/softirq.c:373 [inline]
- irq_exit+0xbb/0xe0 kernel/softirq.c:413
- exiting_irq arch/x86/include/asm/apic.h:536 [inline]
- smp_apic_timer_interrupt+0xe6/0x280 arch/x86/kernel/apic/apic.c:1137
- apic_timer_interrupt+0xf/0x20 arch/x86/entry/entry_64.S:830
-
-read to 0xffff8880a3a65588 of 1 bytes by task 22891 on cpu 1:
- __tcp_ack_snd_check+0x415/0x4f0 net/ipv4/tcp_input.c:5265
- tcp_ack_snd_check net/ipv4/tcp_input.c:5287 [inline]
- tcp_rcv_established+0x750/0xf50 net/ipv4/tcp_input.c:5708
- tcp_v4_do_rcv+0x381/0x4e0 net/ipv4/tcp_ipv4.c:1561
- sk_backlog_rcv include/net/sock.h:945 [inline]
- __release_sock+0x135/0x1e0 net/core/sock.c:2435
- release_sock+0x61/0x160 net/core/sock.c:2951
- sk_stream_wait_memory+0x3d7/0x7c0 net/core/stream.c:145
- tcp_sendmsg_locked+0xb47/0x1f30 net/ipv4/tcp.c:1393
- tcp_sendmsg+0x39/0x60 net/ipv4/tcp.c:1434
- inet_sendmsg+0x6d/0x90 net/ipv4/af_inet.c:807
- sock_sendmsg_nosec net/socket.c:637 [inline]
- sock_sendmsg+0x9f/0xc0 net/socket.c:657
- __sys_sendto+0x21f/0x320 net/socket.c:1952
- __do_sys_sendto net/socket.c:1964 [inline]
- __se_sys_sendto net/socket.c:1960 [inline]
- __x64_sys_sendto+0x89/0xb0 net/socket.c:1960
- do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 1 PID: 24652 Comm: syz-executor.3 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-
-[ tglx: Added comments ]
-
-Reported-by: syzbot <syzkaller@googlegroups.com>
-Signed-off-by: Eric Dumazet <edumazet@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Link: https://lkml.kernel.org/r/20191106174804.74723-1-edumazet@google.com
-
----
- include/linux/hrtimer.h | 14 ++++++++++----
- kernel/time/hrtimer.c   | 11 +++++++----
- 2 files changed, 17 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/hrtimer.h b/include/linux/hrtimer.h
-index 1b9a51a..6308952 100644
---- a/include/linux/hrtimer.h
-+++ b/include/linux/hrtimer.h
-@@ -456,12 +456,18 @@ extern u64 hrtimer_next_event_without(const struct hrtimer *exclude);
- 
- extern bool hrtimer_active(const struct hrtimer *timer);
- 
--/*
-- * Helper function to check, whether the timer is on one of the queues
-+/**
-+ * hrtimer_is_queued = check, whether the timer is on one of the queues
-+ * @timer:	Timer to check
-+ *
-+ * Returns: True if the timer is queued, false otherwise
-+ *
-+ * The function can be used lockless, but it gives only a current snapshot.
-  */
--static inline int hrtimer_is_queued(struct hrtimer *timer)
-+static inline bool hrtimer_is_queued(struct hrtimer *timer)
- {
--	return timer->state & HRTIMER_STATE_ENQUEUED;
-+	/* The READ_ONCE pairs with the update functions of timer->state */
-+	return !!READ_ONCE(timer->state) & HRTIMER_STATE_ENQUEUED;
- }
- 
- /*
-diff --git a/kernel/time/hrtimer.c b/kernel/time/hrtimer.c
-index 6560553..7f31932 100644
---- a/kernel/time/hrtimer.c
-+++ b/kernel/time/hrtimer.c
-@@ -966,7 +966,8 @@ static int enqueue_hrtimer(struct hrtimer *timer,
- 
- 	base->cpu_base->active_bases |= 1 << base->index;
- 
--	timer->state = HRTIMER_STATE_ENQUEUED;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, HRTIMER_STATE_ENQUEUED);
- 
- 	return timerqueue_add(&base->active, &timer->node);
- }
-@@ -988,7 +989,8 @@ static void __remove_hrtimer(struct hrtimer *timer,
- 	struct hrtimer_cpu_base *cpu_base = base->cpu_base;
- 	u8 state = timer->state;
- 
--	timer->state = newstate;
-+	/* Pairs with the lockless read in hrtimer_is_queued() */
-+	WRITE_ONCE(timer->state, newstate);
- 	if (!(state & HRTIMER_STATE_ENQUEUED))
- 		return;
- 
-@@ -1013,8 +1015,9 @@ static void __remove_hrtimer(struct hrtimer *timer,
- static inline int
- remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
- {
--	if (hrtimer_is_queued(timer)) {
--		u8 state = timer->state;
-+	u8 state = timer->state;
-+
-+	if (state & HRTIMER_STATE_ENQUEUED) {
- 		int reprogram;
- 
- 		/*
+Nicolas
