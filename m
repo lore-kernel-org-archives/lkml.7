@@ -2,169 +2,120 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20F18C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:15:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A50FC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:16:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C6C2166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 25F2D2166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:16:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="LPalTHJL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732521AbfKFSPO (ORCPT
+        id S1732467AbfKFSQT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:15:14 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:45025 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727397AbfKFSPN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:15:13 -0500
-Received: from [5.158.153.53] (helo=tip-bot2.lab.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tip-bot2@linutronix.de>)
-        id 1iSPp0-00015q-LS; Wed, 06 Nov 2019 19:14:23 +0100
-Received: from [127.0.1.1] (localhost [IPv6:::1])
-        by tip-bot2.lab.linutronix.de (Postfix) with ESMTP id 08D4C1C0334;
-        Wed,  6 Nov 2019 19:14:21 +0100 (CET)
-Date:   Wed, 06 Nov 2019 18:14:20 -0000
-From:   "tip-bot2 for Steven Rostedt (VMware)" <tip-bot2@linutronix.de>
-Reply-to: linux-kernel@vger.kernel.org
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip: perf/urgent] perf scripting engines: Iterate on tep event
- arrays directly
-Cc:     Daniel Bristot de Oliveira <bristot@redhat.com>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Tzvetomir Stoyanov <tstoyanov@vmware.com>,
-        linux-trace-devel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
-        Borislav Petkov <bp@alien8.de>, linux-kernel@vger.kernel.org
-In-Reply-To: <20191017153733.630cd5eb@gandalf.local.home>
-References: <20191017153733.630cd5eb@gandalf.local.home>
-MIME-Version: 1.0
-Message-ID: <157306406073.29376.12006121934933488297.tip-bot2@tip-bot2>
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot2.linutronix.de>
-Robot-Unsubscribe: Contact <mailto:tglx@linutronix.de> to get blacklisted from these emails
+        Wed, 6 Nov 2019 13:16:19 -0500
+Received: from mail-eopbgr760088.outbound.protection.outlook.com ([40.107.76.88]:62116
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727397AbfKFSQS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 13:16:18 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=meS9J3MJUzu1xP+9Ju78vy5r9jzvwJkkRZLsjA84Uomqv4+w+m5nGLKr/GWntnGH1eQ20WRAtIYApjqVQRamQIgqyD9EEslPDTJpvkF3p80kMEdyudtRa5eOwNtNQg+A8xe6MIuS8j+kp2PPT1NV20iDPU0qGDVqYYGGqyZlkxYX3Rp7taki4ACm8NEz3xCAHfSZ5OQ7Tv2MuVjlsB38/yWMHb7ipJOpHhm4xNDZZ58Mzh0bHPAuShi/MDVwucCCbaJ7+dAHrXhVKPA2Cloz4NM381F+MtapEodhoHY3kXEUPwR/VWBQ7cp3/hiAEo+dxEXv/U5ZMsvWzXAVhO3FDw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eLjVYJtV6BMik4OvroEnJmnQFfaDxbrStP3zmhCsQFk=;
+ b=Acjwk1Okx1OlKCsNbwH2GueWqMYrjJ72Hq488QkGi6JunCAMyXeYhMfy5g+Ol4cgShbNJtUT36ZdjOtq77iVzQlJiVaLd9z5aeJsMmkQ0caJTBgvVNq7wsQOkTo/b1rM9mXxiikp8lHW9zN8XxLb3FxkfmQuGv4cvls4wfA9YdpAg52CS63XQ7A7pJBwx70oR2c6oDGbjBJ1f/Za7YPMA4WbfSYybp1RhDHSPSp4wQr3f+bIyy1LNhHH4Lz+n17gIMFILdpCzVnSb6rS5b4Dw8Y/ZxA70RkEKAajSDsAXBKePFujRPFh75XcjwTKRCNFB1JU0l24cBHBCFj9nO9Fjw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=eLjVYJtV6BMik4OvroEnJmnQFfaDxbrStP3zmhCsQFk=;
+ b=LPalTHJLEcKaIoxqlEJWRCUaYOC1fZYpWwEYzEVPAtsLHhYWhKPc5/KGRHuyvUPf0UWh1pYtsoAVK+CKPgkKpij+qSVrpUjg1/JbSFwX3tkP9+6ELgkURP98ZuZQlxMIWcIDhCdP30qaMiLBhz63OiWJ4BJuMAq9egLvZDlIcPY=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2781.namprd12.prod.outlook.com (52.135.107.144) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 18:16:12 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba%3]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 18:16:12 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Topic: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Index: AQHVlEEBkkiHg8UvLEKx+Q/uzElWBqd+T6+AgAAi68A=
+Date:   Wed, 6 Nov 2019 18:16:12 +0000
+Message-ID: <SN6PR12MB26398D9E617DF8C0ABE0252CF8790@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+ <20191106160607.GC28380@zn.tnic>
+In-Reply-To: <20191106160607.GC28380@zn.tnic>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [165.204.25.250]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 579e1922-106d-4cc5-6bed-08d762e567e0
+x-ms-traffictypediagnostic: SN6PR12MB2781:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <SN6PR12MB278149C45D1C9EAF6EE18050F8790@SN6PR12MB2781.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(396003)(39860400002)(136003)(366004)(346002)(13464003)(189003)(199004)(6436002)(256004)(3846002)(7696005)(74316002)(8676002)(81156014)(66066001)(6116002)(86362001)(11346002)(446003)(4326008)(229853002)(9686003)(6306002)(26005)(476003)(14454004)(52536014)(478600001)(5660300002)(486006)(33656002)(966005)(6916009)(6506007)(25786009)(53546011)(316002)(102836004)(7736002)(14444005)(99286004)(186003)(2906002)(54906003)(8936002)(66946007)(305945005)(76176011)(64756008)(71190400001)(66446008)(66476007)(76116006)(71200400001)(66556008)(81166006)(55016002)(6246003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2781;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: veKks/og2/FlCFeeKwXnpUY2YoPF+kJKFNFnlujrT91Ponos/d4UW0xx99t+D0LrJIy3wQjWvi9vbqLvI1/Mp9LjdzC79GTT6Wyuw/vV1wac5eHQ/6pcZ73MLSlYx+28/HooPLLOi66JFI/w4WMArc6KHujQK5rHz1ReZ7S7bdfdIuosH3AB6YR2+V6QGPT1R0L/nbH1q12ffROmRDlHHF7BVOhmZKeGUWTgVt4lb8MX2iJykLyCYK4iAHhBFEFYhzAycCeO36MMw5L5nLvGdplY3lTCnVMk+ijAYg3jjYUWioHC49LPB+3RZ+A2w9gbQryV1udy5ib1fCQhfLrXTMYCUinA+xWU99TcexT4s3dLfU+X9m6GZD+Yne8yzWpL4yfMayzdQUfKbbYosuBbtZy8qe5/50Xnzl3pGXdnSTnEceJ1OxocWOZur1RGwdEX0CLu1Kdxfbb/UJRDBcYciuXxCDiE+Qxg+UzClFP3rNk=
+x-ms-exchange-transport-forked: True
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 579e1922-106d-4cc5-6bed-08d762e567e0
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 18:16:12.4069
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: kKXceqKKFsxPZQvNpUJUuXU+8XatwyLXxvEZ11rYRQDC0cvefyhN2JVVagMcJz2PEWeOpDd37I/lH9CU9xNcXg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2781
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The following commit has been merged into the perf/urgent branch of tip:
-
-Commit-ID:     443b0636ea7386d01dc460b4a4264e125f710b53
-Gitweb:        https://git.kernel.org/tip/443b0636ea7386d01dc460b4a4264e125f710b53
-Author:        Steven Rostedt (VMware) <rostedt@goodmis.org>
-AuthorDate:    Thu, 17 Oct 2019 17:05:22 -04:00
-Committer:     Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitterDate: Tue, 05 Nov 2019 08:39:26 -03:00
-
-perf scripting engines: Iterate on tep event arrays directly
-
-Instead of calling a useless (and broken) helper function to get the
-next event of a tep event array, just get the array directly and iterate
-over it.
-
-Note, the broken part was from trace_find_next_event() which after this
-will no longer be used, and can be removed.
-
-Committer notes:
-
-This fixes a segfault when generating python scripts from perf.data
-files with multiple tracepoint events, i.e. the following use case is
-fixed by this patch:
-
-  # perf record -e sched:* sleep 1
-  [ perf record: Woken up 31 times to write data ]
-  [ perf record: Captured and wrote 0.031 MB perf.data (9 samples) ]
-  # perf script -g python
-  Segmentation fault (core dumped)
-  #
-
-Reported-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Tested-by: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Cc: linux-trace-devel@vger.kernel.org
-Link: http://lkml.kernel.org/r/20191017153733.630cd5eb@gandalf.local.home
-Link: http://lore.kernel.org/lkml/20191017210636.061448713@goodmis.org
-Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
----
- tools/perf/util/scripting-engines/trace-event-perl.c   |  8 ++++++--
- tools/perf/util/scripting-engines/trace-event-python.c |  9 +++++++--
- 2 files changed, 13 insertions(+), 4 deletions(-)
-
-diff --git a/tools/perf/util/scripting-engines/trace-event-perl.c b/tools/perf/util/scripting-engines/trace-event-perl.c
-index 1596185..741f040 100644
---- a/tools/perf/util/scripting-engines/trace-event-perl.c
-+++ b/tools/perf/util/scripting-engines/trace-event-perl.c
-@@ -539,10 +539,11 @@ static int perl_stop_script(void)
- 
- static int perl_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.pl", outfile);
-@@ -603,8 +604,11 @@ sub print_backtrace\n\
- }\n\n\
- ");
- 
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "sub %s::%s\n{\n", event->system, event->name);
- 		fprintf(ofp, "\tmy (");
- 
-diff --git a/tools/perf/util/scripting-engines/trace-event-python.c b/tools/perf/util/scripting-engines/trace-event-python.c
-index 5d341ef..93c03b3 100644
---- a/tools/perf/util/scripting-engines/trace-event-python.c
-+++ b/tools/perf/util/scripting-engines/trace-event-python.c
-@@ -1687,10 +1687,11 @@ static int python_stop_script(void)
- 
- static int python_generate_script(struct tep_handle *pevent, const char *outfile)
- {
-+	int i, not_first, count, nr_events;
-+	struct tep_event **all_events;
- 	struct tep_event *event = NULL;
- 	struct tep_format_field *f;
- 	char fname[PATH_MAX];
--	int not_first, count;
- 	FILE *ofp;
- 
- 	sprintf(fname, "%s.py", outfile);
-@@ -1735,7 +1736,11 @@ static int python_generate_script(struct tep_handle *pevent, const char *outfile
- 	fprintf(ofp, "def trace_end():\n");
- 	fprintf(ofp, "\tprint(\"in trace_end\")\n\n");
- 
--	while ((event = trace_find_next_event(pevent, event))) {
-+	nr_events = tep_get_events_count(pevent);
-+	all_events = tep_list_events(pevent, TEP_EVENT_SORT_ID);
-+
-+	for (i = 0; all_events && i < nr_events; i++) {
-+		event = all_events[i];
- 		fprintf(ofp, "def %s__%s(", event->system, event->name);
- 		fprintf(ofp, "event_name, ");
- 		fprintf(ofp, "context, ");
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogV2VkbmVzZGF5LCBOb3ZlbWJlciA2LCAyMDE5
+IDExOjA2IEFNDQo+IFRvOiBHaGFubmFtLCBZYXplbiA8WWF6ZW4uR2hhbm5hbUBhbWQuY29tPg0K
+PiBDYzogbGludXgtZWRhY0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5l
+bC5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MyAwLzVdIEFNRDY0IEVEQUM6IENoZWNrIGZv
+ciBub2RlcyB3aXRob3V0IG1lbW9yeSwgZXRjLg0KPiANCj4gT24gV2VkLCBOb3YgMDYsIDIwMTkg
+YXQgMDE6MjQ6NTlBTSArMDAwMCwgR2hhbm5hbSwgWWF6ZW4gd3JvdGU6DQo+ID4gRnJvbTogWWF6
+ZW4gR2hhbm5hbSA8eWF6ZW4uZ2hhbm5hbUBhbWQuY29tPg0KPiA+DQo+ID4gSGkgQm9yaXMsDQo+
+ID4NCj4gPiBUaGVzZSBwYXRjaGVzIGFkZHJlc3MgdGhlIGlzc3VlIHdoZXJlIHRoZSBtb2R1bGUg
+Y2hlY2tzIGFuZCBjb21wbGFpbnMNCj4gPiBhYm91dCBEUkFNIEVDQyBvbiBub2RlcyB3aXRob3V0
+IG1lbW9yeS4NCj4gPg0KPiA+IENoYW5nZXMgZnJvbSBsYXN0IHJldmlzaW9uOg0KPiA+ICAgMSkg
+RHJvcHBlZCBwYXRjaCA2IHdoaWNoIHdhcyBmb3IgYWRkaW5nIGEgZ3JhaW4gdmFsdWUuDQo+ID4g
+ICAyKSBBZGRlZCBhbiBlcnJvciBjb2RlIGZvciAhZWNjX2VuYWJsZWQoKSBpbiBwYXRjaCA1Lg0K
+PiANCj4gU3RpbGwgZG9lc24ndCBoZWxwLiBUaGUgbG9hZCBnZXRzIGF0dGVtcHRlZCB0d2ljZSBz
+dGlsbC4gVHJ5IHJlcHJvZHVjaW5nDQo+IGl0IG9uIGEgc21hbGwsIHNpbmdsZS1ub2RlIGJveCB3
+aGVyZSBFQ0MgaXMgZGlzYWJsZWQuDQo+IA0KDQpXZSBoYWQgYSB0aHJlYWQgYmVmb3JlIGFib3V0
+IHVzZXJzYXBjZSBsb2FkaW5nIHRoZSBtb2R1bGUgbXVsdGlwbGUgdGltZXMgb24NCmZhaWx1cmU6
+DQpodHRwczovL2xvcmUua2VybmVsLm9yZy9saW51eC1lZGFjLzIwMTkwODIyMDA1MDIwLkdBNDAz
+QGFuZ2JhbmQucGwvDQoNCkkgdHJpZWQgdG8gbG9vayBpbnRvIGl0IGEgYml0LCBidXQgSSBkaWRu
+J3QgZ2V0IHZlcnkgZmFyLg0KDQpTbyBpcyB0aGUgYmVoYXZpb3IgeW91IHNlZSBvbmx5IGhhcHBl
+bmluZyB3aXRoIHRoZSBuZXcgcGF0Y2hzZXQgYXBwbGllZD8gVGhhdA0KbWF5IGJlIGEgY2x1ZSB0
+aGF0IHdlIGNhbiBmaXggdGhpcyBpbiB0aGUgbW9kdWxlLg0KDQpUaGFua3MsDQpZYXplbg0K
