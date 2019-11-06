@@ -2,92 +2,219 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 105FEC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B5668C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C941F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ae+CLWxd"
+	by mail.kernel.org (Postfix) with ESMTP id 84A7B2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731324AbfKFHEr (ORCPT
+        id S1731830AbfKFHEu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:04:47 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:44225 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731321AbfKFHEo (ORCPT
+        Wed, 6 Nov 2019 02:04:50 -0500
+Received: from esa3.mentor.iphmx.com ([68.232.137.180]:8813 "EHLO
+        esa3.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731824AbfKFHEr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:04:44 -0500
-Received: by mail-pg1-f196.google.com with SMTP id f19so7385781pgk.11;
-        Tue, 05 Nov 2019 23:04:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1tK6qAgSyW1KVyDgDREpaqmKGvD0WIXvKK/Qd6b0nDE=;
-        b=ae+CLWxdJ3cYhTJypVyTMiKYRRBjtcupazQX7FhuFJgEqDORogowjNmDWmOLcAmf3D
-         GotCPztGZjZW8WqD3qfU8baB4BYxEQ3rqzAyZya6Akj/Ixf2TRZyZ0h5O2mc3NdTjU0T
-         RAF2UP80BV91SDlLUacf0n4+28QvsyB0XCIJbtTc2aqvIIiKP4LcUESt9URLbTN7XRGi
-         Y2eX1QJMpis4kGBTmHXTBzsxs8PgML7Ul81JS8JNFt0/qUA3mXVyKitcaWwrFYSXgOa4
-         iHPnvCdA1nVzxLUpYdZ4ECjok20iHKwwcLOuCsamCiNroVDCTAfjUClIfegTtyq/VPe/
-         0QUg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1tK6qAgSyW1KVyDgDREpaqmKGvD0WIXvKK/Qd6b0nDE=;
-        b=KVqoFEpAfdEoiNPpY962euGWhqnxDe5u/7xQ5N3WvD0rdpYW4GZhWh5nnhU0m02o2I
-         hm0TOsDVXOlmn89W0HDm76f5zOvTLCPWzPdQebT0NeQkF9HJye0152em4RnHpXrOCaaA
-         eiW7ci4/NoNs4w6qI3H2V40nG/0EQ+Gc2jDcWKyic0+sPe5gQh/U1i6n3Ss4r3BGcAOg
-         dKxxKXNeVbnLClxFDA4MRD5w6kYAQt6Ic71NnoPCDy+8smLsn21CNwtT59ReWnG4QcPA
-         f0EBHh5weWe8f+8IEbNKvLH5yJpVFIC6juBeURdKBo1cEGUPO2p6ecKN/mkQiIOYRAhO
-         366w==
-X-Gm-Message-State: APjAAAUUTiFCd+TQwFaZdnZbX/MWByBGqk4bd7GRqxo0yn2vxPkZFPJ5
-        LdDYxzvUmX09j8CrAb7NDOrEa2QZP5rNhNAscjnjPdQJNig=
-X-Google-Smtp-Source: APXvYqzc4zZKIjN/CYg0KVgxmIzcwQx4OV/6km/EjesoJzoAGNrpR9KJz6tgaXVSYgCHP/jXRqIizOArh/yNANwLH0o=
-X-Received: by 2002:a65:5542:: with SMTP id t2mr1165282pgr.74.1573023882548;
- Tue, 05 Nov 2019 23:04:42 -0800 (PST)
+        Wed, 6 Nov 2019 02:04:47 -0500
+IronPort-SDR: QH8xLaVDQWFs+rPItm5HFeLF/9stWG5E1haacbvgXGYW9anuy3NdYZb8SNplJHuCW1JjXmIY2+
+ lhmkbGco8UzFlt55i9RD94x8bU144gODRF4vQkNW2gn6gQinogICLXqy5h0h446wOuYBIa8WJB
+ dnHYUlds3lOUrBlG7RIRN1+KgOV7FA9SWoRyr4yXRYT+CSD02C6qQvqoi0hF+2b1yVOMiPbJMH
+ c8rbtYc0bHY3Oh8+yeWdcc5BufZiu9i9uNRXQBrFuCuic9o4BFfLWpYSd+sm2vNO2eV+8NIPJ1
+ L9Y=
+X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
+   d="scan'208";a="42908694"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa3.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:47 -0800
+IronPort-SDR: n9fNjY9IxRlR/U4UHmshYGa3+w8TPtaail+mXL4AnBFVJXanpu4EQMzSufdMyfN4EOLRmJvhzy
+ 1o9fX0cJQu3ResWlTTYWo9L22fQDCB1q1ix4ORnlWv/cLfeNSZ7LSIc87BdvN8gwAFOX7FiMQj
+ VspGekYMAVv3iuKelmcl4hFKRvJ7Mm7lJn2RYBfSCErrzIkY+W/TwB5+T5JK53tUojCx94XsrC
+ brQBmZX2PIP6gn1BRvUQCG6MP28G3RFaOVVAT9AvngO7QPn2P1Wu1I+y2MPdXZiP5I0JijRylL
+ LvE=
+From:   Jiada Wang <jiada_wang@mentor.com>
+To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
+        <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
+        <nick@shmanahar.org>
+CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
+        <Andrew_Gabbasov@mentor.com>
+Subject: [PATCH v5 46/48] input: atmel_mxt_ts: added sysfs interface to update atmel T38 data
+Date:   Wed, 6 Nov 2019 16:01:44 +0900
+Message-ID: <20191106070146.18759-47-jiada_wang@mentor.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
+References: <20191106070146.18759-1-jiada_wang@mentor.com>
 MIME-Version: 1.0
-References: <20191104213828.18278-1-leonmaxx@gmail.com> <201911050736.UAVD3aIV%lkp@intel.com>
-In-Reply-To: <201911050736.UAVD3aIV%lkp@intel.com>
-From:   Andy Shevchenko <andy.shevchenko@gmail.com>
-Date:   Wed, 6 Nov 2019 09:04:31 +0200
-Message-ID: <CAHp75VdS5T8xVn_FFWX4DbAvP34CP3J2Ax_j9row9APQw0PY2w@mail.gmail.com>
-Subject: Re: [PATCH v2 2/3] platform/x86: asus_wmi: Support fan boost mode on FX505DY/FX705DY
-To:     kbuild test robot <lkp@intel.com>
-Cc:     Leonid Maksymchuk <leonmaxx@gmail.com>, kbuild-all@lists.01.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Platform Driver <platform-driver-x86@vger.kernel.org>,
-        acpi4asus-user <acpi4asus-user@lists.sourceforge.net>,
-        Chris Chiu <chiu@endlessm.com>,
-        Yurii Pavlovskyi <yurii.pavlovskyi@gmail.com>,
-        Kristian Klausen <kristian@klausen.dk>,
-        Andy Shevchenko <andy@infradead.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Corentin Chary <corentin.chary@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 2:01 AM kbuild test robot <lkp@intel.com> wrote:
->
-> Hi Leonid,
->
-> Thank you for the patch! Yet something to improve:
->
-> [auto build test ERROR on linus/master]
-> [also build test ERROR on v5.4-rc6 next-20191031]
+From: Naveen Chakka <Naveen.Chakka@in.bosch.com>
 
-Leonid, I may not accept patches that contributor didn't even compile.
-How had you tested?
+Atmel touch controller contains T38 object where a user can store its own
+data of length 64 bytes. T38 data will not be part of checksum
+calculation on executing T6 BACKUP command.
 
+format used to update the T38 data is given below:
+
+<offset> <length> <actual_data>
+
+offset: offset address of the data to be written in the t38 object
+	(in decimal)
+
+length: length of the data to be written into the t38 object(in decimal)
+
+data: actual data bytes to be written into the t38 object
+      (values should be in hex)
+
+Ex:
+1. 0 2 10 20
+updates first two bytes of the t38 data with values 10 and 20
+
+2. 19 6 10 2f 30 4a 50 60
+updates 6 bytes of t38 data from the index 19-24 with hex values
+
+Signed-off-by: Naveen Chakka <Naveen.Chakka@in.bosch.com>
+Signed-off-by: Sanjeev Chugh <sanjeev_chugh@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
+Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+---
+ drivers/input/touchscreen/atmel_mxt_ts.c | 102 +++++++++++++++++++++++
+ 1 file changed, 102 insertions(+)
+
+diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+index d22a00ec69c1..a867960dc59b 100644
+--- a/drivers/input/touchscreen/atmel_mxt_ts.c
++++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+@@ -4027,6 +4027,106 @@ static ssize_t mxt_touch_device_status(struct device *dev, struct
+ 	return ret;
+ }
+ 
++static ssize_t mxt_t38_data_show(struct device *dev,
++				 struct device_attribute *attr, char *buf)
++{
++	struct mxt_data *data = dev_get_drvdata(dev);
++	struct mxt_object *object;
++	size_t count = 0, size;
++	u8 i, *t38_buf;
++
++	if (!data->object_table)
++		return -ENXIO;
++
++	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
++	size = mxt_obj_size(object);
++
++	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
++	t38_buf = kmalloc(size, GFP_KERNEL);
++	if (!t38_buf)
++		return -ENOMEM;
++
++	count = __mxt_read_reg(data->client, object->start_address,
++			       size, t38_buf);
++	if (count)
++		goto end;
++
++	for (i = 0; i < size; i++)
++		count += scnprintf(buf + count, PAGE_SIZE - count,
++				   "[%2u]: %02x\n", i, t38_buf[i]);
++	count += scnprintf(buf + count, PAGE_SIZE - count, "\n");
++end:
++	kfree(t38_buf);
++	return count;
++}
++
++static ssize_t mxt_t38_data_store(struct device *dev,
++				  struct device_attribute *attr,
++				  const char *buf, size_t count)
++{
++	struct mxt_data *data = dev_get_drvdata(dev);
++	struct mxt_object *object;
++	ssize_t ret = 0, pos, offset;
++	unsigned int i, len, index;
++	u8 *t38_buf;
++
++	if (!data->object_table)
++		return -ENXIO;
++
++	object = mxt_get_object(data, MXT_SPT_USERDATA_T38);
++
++	/* Pre-allocate buffer large enough to hold max size of t38 object.*/
++	t38_buf = kmalloc(mxt_obj_size(object), GFP_KERNEL);
++	if (!t38_buf)
++		return -ENOMEM;
++
++	ret = sscanf(buf, "%zd %d%zd", &offset, &len, &pos);
++	if (ret != 2) {
++		dev_err(dev, "Bad format: Invalid parameter to update t38\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	if (len == 0) {
++		dev_err(dev,
++			"Bad format: Data length should not be equal to 0\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	if (offset < 0 || ((offset + len) > 64)) {
++		dev_err(dev, "Invalid offset value to update t38\n");
++		ret = -EINVAL;
++		goto end;
++	}
++
++	index = pos;
++	for (i = 0; i < len; i++) {
++		ret = sscanf(buf + index, "%hhx%zd", t38_buf + i, &pos);
++		if (ret != 1) {
++			dev_err(dev, "Bad format: Invalid Data\n");
++			ret = -EINVAL;
++			goto end;
++		}
++		index += pos;
++	}
++
++	ret = __mxt_write_reg(data->client, object->start_address + offset,
++			      len, t38_buf);
++	if (ret)
++		goto end;
++
++	ret = mxt_t6_command(data, MXT_COMMAND_BACKUPNV, MXT_BACKUP_VALUE,
++			     true);
++	if (ret)
++		dev_err(dev, "backup command failed\n");
++	else
++		ret = count;
++end:
++	kfree(t38_buf);
++	return ret;
++}
++
+ static DEVICE_ATTR(fw_version, S_IRUGO, mxt_fw_version_show, NULL);
+ static DEVICE_ATTR(hw_version, S_IRUGO, mxt_hw_version_show, NULL);
+ static DEVICE_ATTR(object, S_IRUGO, mxt_object_show, NULL);
+@@ -4039,6 +4139,7 @@ static DEVICE_ATTR(debug_v2_enable, S_IWUSR | S_IRUSR, NULL,
+ static DEVICE_ATTR(debug_notify, S_IRUGO, mxt_debug_notify_show, NULL);
+ static DEVICE_ATTR(t25, 0600, mxt_t25_selftest_show, mxt_t25_selftest_store);
+ static DEVICE_ATTR(touch_dev_stat, 0444, mxt_touch_device_status, NULL);
++static DEVICE_ATTR(t38_data, 0600, mxt_t38_data_show, mxt_t38_data_store);
+ 
+ static struct attribute *mxt_attrs[] = {
+ 	&dev_attr_fw_version.attr,
+@@ -4051,6 +4152,7 @@ static struct attribute *mxt_attrs[] = {
+ 	&dev_attr_debug_notify.attr,
+ 	&dev_attr_t25.attr,
+ 	&dev_attr_touch_dev_stat.attr,
++	&dev_attr_t38_data.attr,
+ 	NULL
+ };
+ 
 -- 
-With Best Regards,
-Andy Shevchenko
+2.17.1
+
