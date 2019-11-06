@@ -2,270 +2,106 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3D14C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:41:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7EA6C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FC69217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:41:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E45C2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732172AbfKFRlJ convert rfc822-to-8bit (ORCPT
+        id S1732367AbfKFRlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:41:09 -0500
-Received: from mailoutvs14.siol.net ([185.57.226.205]:38440 "EHLO
-        mail.siol.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727286AbfKFRlJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:41:09 -0500
-Received: from localhost (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTP id 68EB352577B;
-        Wed,  6 Nov 2019 18:41:03 +0100 (CET)
-X-Virus-Scanned: amavisd-new at psrvmta09.zcs-production.pri
-Received: from mail.siol.net ([127.0.0.1])
-        by localhost (psrvmta09.zcs-production.pri [127.0.0.1]) (amavisd-new, port 10032)
-        with ESMTP id NCiG5pzMJs0s; Wed,  6 Nov 2019 18:41:02 +0100 (CET)
-Received: from mail.siol.net (localhost [127.0.0.1])
-        by mail.siol.net (Postfix) with ESMTPS id C13EF525B2D;
-        Wed,  6 Nov 2019 18:41:02 +0100 (CET)
-Received: from jernej-laptop.localnet (cpe-86-58-102-7.static.triera.net [86.58.102.7])
-        (Authenticated sender: jernej.skrabec@siol.net)
-        by mail.siol.net (Postfix) with ESMTPA id C54A6525AED;
-        Wed,  6 Nov 2019 18:41:01 +0100 (CET)
-From:   Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Cc:     mripard@kernel.org, mchehab@kernel.org, hverkuil-cisco@xs4all.nl,
-        gregkh@linuxfoundation.org, wens@csie.org,
-        linux-media@vger.kernel.org, devel@driverdev.osuosl.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com
-Subject: Re: [PATCH 1/3] media: cedrus: Properly signal size in mode register
-Date:   Wed, 06 Nov 2019 18:41:01 +0100
-Message-ID: <2224545.8hcbHn5fu6@jernej-laptop>
-In-Reply-To: <20191105081034.GC584930@aptenodytes>
-References: <20191026074959.1073512-1-jernej.skrabec@siol.net> <7309638.L6IRxaGt1L@jernej-laptop> <20191105081034.GC584930@aptenodytes>
+        Wed, 6 Nov 2019 12:41:40 -0500
+Received: from foss.arm.com ([217.140.110.172]:43722 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727286AbfKFRlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:41:40 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C0BD246A;
+        Wed,  6 Nov 2019 09:41:39 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 34DA03F719;
+        Wed,  6 Nov 2019 09:41:38 -0800 (PST)
+Date:   Wed, 6 Nov 2019 17:41:35 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        vincent.guittot@linaro.org, rui.zhang@intel.com,
+        edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v5 4/6] sched/fair: update cpu_capcity to reflect thermal
+ pressure
+Message-ID: <20191106174135.gsmnwpwxfarywded@e107158-lin.cambridge.arm.com>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-5-git-send-email-thara.gopinath@linaro.org>
+ <20191106165646.vc7j4hbhj2hcrku4@e107158-lin.cambridge.arm.com>
+ <5DC30371.1000209@linaro.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8BIT
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5DC30371.1000209@linaro.org>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dne torek, 05. november 2019 ob 09:10:34 CET je Paul Kocialkowski napisal(a):
-> Hi,
-> 
-> On Mon 04 Nov 19, 17:33, Jernej Škrabec wrote:
-> > Dne ponedeljek, 04. november 2019 ob 11:02:28 CET je Paul Kocialkowski
+On 11/06/19 12:31, Thara Gopinath wrote:
+> On 11/06/2019 11:56 AM, Qais Yousef wrote:
+> > On 11/05/19 13:49, Thara Gopinath wrote:
+> >> cpu_capacity relflects the maximum available capacity of a cpu. Thermal
+> >> pressure on a cpu means this maximum available capacity is reduced. This
+> >> patch reduces the average thermal pressure for a cpu from its maximum
+> >> available capacity so that cpu_capacity reflects the actual
+> >> available capacity.
+> >>
+> >> Other signals that are deducted from cpu_capacity to reflect the actual
+> >> capacity available are rt and dl util_avg. util_avg tracks a binary signal
+> >> and uses the weights 1024 and 0. Whereas thermal pressure is tracked
+> >> using load_avg. load_avg uses the actual "delta" capacity as the weight.
 > > 
-> > napisal(a):
-> > > Hi Jernej,
-> > > 
-> > > On Sat 26 Oct 19, 09:49, Jernej Skrabec wrote:
-> > > > Mode register also holds information if video width is bigger than
-> > > > 2048
-> > > > and if it is equal to 4096.
-> > > > 
-> > > > Rework cedrus_engine_enable() to properly signal this properties.
-> > > 
-> > > Thanks for the patch, looks good to me!
-> > > 
-> > > Acked-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > > 
-> > > One minor thing: maybe we should have a way to set the maximum
-> > > dimensions
-> > > depending on the generation of the engine in use and the actual maximum
-> > > supported by the hardware.
-> > > 
-> > > Maybe either as dedicated new fields in struct cedrus_variant or as
-> > > capability flags.
+> > I think you intended to put this as comment...
 > > 
-> > I was thinking about first solution, but after going trough manuals, it
-> > was
-> > unclear what are real limitations. For example, H3 manual states that it
-> > is
-> > capable of decoding H264 1080p@60Hz. However, I know for a fact that it is
-> > also capable of decoding 4k videos, but probably not at 60 Hz. I don't own
-> > anything older that A83T, so I don't know what are capabilities of those
-> > SoCs.
-> So I guess in this case we should try and see. I could try to look into it
-> at some point in the future too if you're not particulary interested.
-
-Well, I can take a look at my HW, but I have only few SoCs with more or less 
-same capability.
-
-> > Anyway, being slow is still ok for some tasks, like transcoding, so we
-> > can't limit decoding to 1080p just because it's slow. It is probably
-> > still faster than doing it in SW. Not to mention that it's still ok for
-> > some videos, a lot of them uses 24 fps.
-> 
-> I agree, it's best to expose the maximum supported resolution by the
-> hardware, even if it means running at a lower fps.
-> 
-> Do you know if we have a way to report some estimation of the maximum
-> supported fps to userspace? It would be useful to let userspace decide
-> whether it's a better fit than software decoding.
-
-I took a quick look at existing controls, but I don't see anything 
-appropriate.
-
-Best regards,
-Jernej
-
-> 
-> Cheers,
-> 
-> Paul
-> 
-> > Best regards,
-> > Jernej
+> >>
+> >> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> >> ---
+> >>  kernel/sched/fair.c | 1 +
+> >>  1 file changed, 1 insertion(+)
+> >>
+> >> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> >> index 9fb0494..5f6c371 100644
+> >> --- a/kernel/sched/fair.c
+> >> +++ b/kernel/sched/fair.c
+> >> @@ -7738,6 +7738,7 @@ static unsigned long scale_rt_capacity(struct sched_domain *sd, int cpu)
+> >>  
+> >>  	used = READ_ONCE(rq->avg_rt.util_avg);
+> >>  	used += READ_ONCE(rq->avg_dl.util_avg);
+> >> +	used += READ_ONCE(rq->avg_thermal.load_avg);
 > > 
-> > > Anyway that can be done later since we were already hardcoding this.
-> > > 
-> > > Cheers,
-> > > 
-> > > Paul
-> > > 
-> > > > Signed-off-by: Jernej Skrabec <jernej.skrabec@siol.net>
-> > > > ---
-> > > > 
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_h264.c  | 2 +-
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_h265.c  | 2 +-
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.c    | 9 +++++++--
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_hw.h    | 2 +-
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c | 2 +-
-> > > >  drivers/staging/media/sunxi/cedrus/cedrus_regs.h  | 2 ++
-> > > >  6 files changed, 13 insertions(+), 6 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c index
-> > > > 7487f6ab7576..d2c854ecdf15 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h264.c
-> > > > @@ -485,7 +485,7 @@ static void cedrus_h264_setup(struct cedrus_ctx
-> > > > *ctx,
-> > > > 
-> > > >  {
-> > > >  
-> > > >  	struct cedrus_dev *dev = ctx->dev;
-> > > > 
-> > > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H264);
-> > > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H264);
-> > > > 
-> > > >  	cedrus_write(dev, VE_H264_SDROT_CTRL, 0);
-> > > >  	cedrus_write(dev, VE_H264_EXTRA_BUFFER1,
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c index
-> > > > 9bc921866f70..6945dc74e1d7 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_h265.c
-> > > > @@ -276,7 +276,7 @@ static void cedrus_h265_setup(struct cedrus_ctx
-> > > > *ctx,
-> > > > 
-> > > >  	}
-> > > >  	
-> > > >  	/* Activate H265 engine. */
-> > > > 
-> > > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_H265);
-> > > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_H265);
-> > > > 
-> > > >  	/* Source offset and length in bits. */
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c index
-> > > > 570a9165dd5d..3acfa21bc124 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.c
-> > > > @@ -30,7 +30,7 @@
-> > > > 
-> > > >  #include "cedrus_hw.h"
-> > > >  #include "cedrus_regs.h"
-> > > > 
-> > > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec
-> > > > codec)
-> > > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec
-> > > > codec)
-> > > > 
-> > > >  {
-> > > >  
-> > > >  	u32 reg = 0;
-> > > > 
-> > > > @@ -58,7 +58,12 @@ int cedrus_engine_enable(struct cedrus_dev *dev,
-> > > > enum
-> > > > cedrus_codec codec)>
-> > > > 
-> > > >  		return -EINVAL;
-> > > >  	
-> > > >  	}
-> > > > 
-> > > > -	cedrus_write(dev, VE_MODE, reg);
-> > > > +	if (ctx->src_fmt.width == 4096)
-> > > > +		reg |= VE_MODE_PIC_WIDTH_IS_4096;
-> > > > +	if (ctx->src_fmt.width > 2048)
-> > > > +		reg |= VE_MODE_PIC_WIDTH_MORE_2048;
-> > > > +
-> > > > +	cedrus_write(ctx->dev, VE_MODE, reg);
-> > > > 
-> > > >  	return 0;
-> > > >  
-> > > >  }
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h index
-> > > > 27d0882397aa..604ff932fbf5 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_hw.h
-> > > > @@ -16,7 +16,7 @@
-> > > > 
-> > > >  #ifndef _CEDRUS_HW_H_
-> > > >  #define _CEDRUS_HW_H_
-> > > > 
-> > > > -int cedrus_engine_enable(struct cedrus_dev *dev, enum cedrus_codec
-> > > > codec);
-> > > > +int cedrus_engine_enable(struct cedrus_ctx *ctx, enum cedrus_codec
-> > > > codec);
-> > > > 
-> > > >  void cedrus_engine_disable(struct cedrus_dev *dev);
-> > > >  
-> > > >  void cedrus_dst_format_set(struct cedrus_dev *dev,
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c index
-> > > > 13c34927bad5..8bcd6b8f9e2d 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_mpeg2.c
-> > > > @@ -96,7 +96,7 @@ static void cedrus_mpeg2_setup(struct cedrus_ctx
-> > > > *ctx,
-> > > > struct cedrus_run *run)>
-> > > > 
-> > > >  	quantization = run->mpeg2.quantization;
-> > > >  	
-> > > >  	/* Activate MPEG engine. */
-> > > > 
-> > > > -	cedrus_engine_enable(dev, CEDRUS_CODEC_MPEG2);
-> > > > +	cedrus_engine_enable(ctx, CEDRUS_CODEC_MPEG2);
-> > > > 
-> > > >  	/* Set intra quantization matrix. */
-> > > > 
-> > > > diff --git a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > > b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h index
-> > > > 4275a307d282..ace3d49fcd82 100644
-> > > > --- a/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > > +++ b/drivers/staging/media/sunxi/cedrus/cedrus_regs.h
-> > > > @@ -35,6 +35,8 @@
-> > > > 
-> > > >  #define VE_MODE					0x00
-> > > > 
-> > > > +#define VE_MODE_PIC_WIDTH_IS_4096		BIT(22)
-> > > > +#define VE_MODE_PIC_WIDTH_MORE_2048		BIT(21)
-> > > > 
-> > > >  #define VE_MODE_REC_WR_MODE_2MB			(0x01 << 20)
-> > > >  #define VE_MODE_REC_WR_MODE_1MB			(0x00 << 20)
-> > > >  #define VE_MODE_DDR_MODE_BW_128			(0x03 << 16)
+> > ... here?
+> 
+> I did not!  But I can.
+> > 
+> > I find the explanation hard to parse too. Do you think you can rephrase it?
+> > Something based on what you wrote here would be more understandable IMHO:
+> > https://lore.kernel.org/lkml/5DBB05BC.40502@linaro.org/
+> I will try to rephrase it! I am sorry that you found it hard to parse.
+> Honestly, I cannot copy paste the code snippet I pointed out to you here
+> in comment.(And I think that is the reason you found it easier to
+> understand) But I will try my best to put it in words.
+
+No worries. The problem could be me :-)
+
+But a comment in the code is very important as util_avg + load_avg is confusing
+without a comment. I wouldn't expect both signal to be compatible but the
+thermal one is special. A comment explaining why it's special is all we need.
 
 
+Thanks
 
-
+--
+Qais Yousef
