@@ -2,48 +2,69 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 76AF5C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABABC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B64F2178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2E258217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FG11Ys0W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732561AbfKFTW6 (ORCPT
+        id S1732593AbfKFTXA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:22:58 -0500
-Received: from mga02.intel.com ([134.134.136.20]:50615 "EHLO mga02.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732533AbfKFTW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:23:00 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36320 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732094AbfKFTW4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 14:22:56 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:56 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="403835196"
-Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:54 -0800
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
-        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
-        Bard liao <yung-chuan.liao@linux.intel.com>,
-        Rander Wang <rander.wang@linux.intel.com>,
-        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 18/19] soundwire: stream: do not update parameters during DISABLED-PREPARED transition
-Date:   Wed,  6 Nov 2019 13:22:22 -0600
-Message-Id: <20191106192223.6003-19-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
-References: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
+Received: by mail-wr1-f68.google.com with SMTP id r10so640541wrx.3;
+        Wed, 06 Nov 2019 11:22:54 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DGeDnMBU3pmA8xp8mQbjU2EV0w9pcuMioJOd1zEXh9U=;
+        b=FG11Ys0W/c4YpdGscjkZeHVHBT1HliODXsEp6mC3drmkjbxyCObfYMYiKUpatY9jhG
+         BthStaWEXCLDP8OB6TAgUyh0V/vghR9+XVtVYAcDST1yG9EZlsy2dZKLy3SrPloFvlxi
+         raN9cfPkxggtrw4c6UqoIKE59yHqjH7uJKFVVH7Z2r2OjaHa8klAi27DGQ8LHM/d3Gpc
+         OkM7xjK2/PMpXRUtDqppvvcFsGHXzk6IYCFmbqXVslSLqZwLKyXrWqvoh3kD//iqm6si
+         lCjSfYaEV4lzkhJPqUuo3NaODnWSuQvRKnKRnYmWIKL2RJIjbQxnE5WkJLBZJcjwXPax
+         uM/w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=DGeDnMBU3pmA8xp8mQbjU2EV0w9pcuMioJOd1zEXh9U=;
+        b=MYRtWiJweMGkb/tRMhJwPOV1zbUHnwCd5n7kiY2z9+DUIGk3B0ik7zopDus6sTKT56
+         SkD+buC1+KNvLbniJtHMfNfrxW7wHqR1Lepsrg6LyZYyOt6llqN+RKghcelfB7brop+b
+         lubsLM+q/0w9mFV0PsZfMPx2kkFd2ZjoCl0CByByQqFU7lpOF+HD5sCgwQbHxvjjia8s
+         PDqj43bQFKJyi6zRuOJPLB2WtS5HBFUbRjQPB0YD5Q+PV5uHVPQYDc7OLj08c3shh5Gm
+         8KdGcsvHo2/G3ChD4+9CeyjfHKGHXndag1J25ezvsP/NdMxAxMMv1bLlutQRROFgjP79
+         66Wg==
+X-Gm-Message-State: APjAAAW4okSLjEETeHvQJ90QFJ635NXULd3I0e7gUBpM8bRKAbgNRFnk
+        4Ku7MW3NndYWmkpCUkfQTdv/UK4SpKk=
+X-Google-Smtp-Source: APXvYqwJ9NQZetR50im9dFL9Yv2sW7+90cx/v5irwTt+3oz21K0smKGGhqpGYm/c4ktemJWLGhSQAQ==
+X-Received: by 2002:adf:c402:: with SMTP id v2mr4483761wrf.323.1573068173245;
+        Wed, 06 Nov 2019 11:22:53 -0800 (PST)
+Received: from localhost.localdomain ([213.86.25.46])
+        by smtp.googlemail.com with ESMTPSA id h7sm2331175wmb.37.2019.11.06.11.22.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 11:22:52 -0800 (PST)
+From:   Alexander Gordeev <a.gordeev.box@gmail.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Alexander Gordeev <a.gordeev.box@gmail.com>,
+        dmaengine@vger.kernel.org
+Subject: [PATCH v5 0/2] dmaengine: avalon: Intel Avalon-MM DMA Interface forPCIe
+Date:   Wed,  6 Nov 2019 20:22:40 +0100
+Message-Id: <cover.1573052725.git.a.gordeev.box@gmail.com>
+X-Mailer: git-send-email 2.24.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,78 +72,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-After a system suspend, the ALSA/ASoC core will invoke the .prepare()
-callback and a TRIGGER_START when INFO_RESUME is not supported.
+This series is against v5.4-rc6
 
-Likewise, when an underflow occurs, the .prepare callback will be invoked.
+Patch 1. Introduces "avalon-dma" driver that conforms to the standard
+"dmaengine" model;
 
-In both cases, the stream can be in DISABLED mode, and will transition
-into the PREPARED mode. We however don't want the bus bandwidth to be
-recomputed.
+Patch 2. The existing "dmatest" is not meant for DMA_SLAVE type of
+transfers needed by "avalon-dma" driver. Instead, custom "avalon-test"
+was used to debug and stress "avalon-dma". In fact, the methology used
+for testing is pretty much generic:
 
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/soundwire/stream.c | 19 +++++++++++++++++--
- 1 file changed, 17 insertions(+), 2 deletions(-)
+  - DMA to/from the remote device (memory) - oneshot or multiple times;
+  - continuously run cuncurrent threads DMAing to/from the remote device;
+  - using IOCTL to DMA data to/from user level;
 
-diff --git a/drivers/soundwire/stream.c b/drivers/soundwire/stream.c
-index 38375c9124e4..3447ef7d55e3 100644
---- a/drivers/soundwire/stream.c
-+++ b/drivers/soundwire/stream.c
-@@ -1460,7 +1460,8 @@ static void sdw_release_bus_lock(struct sdw_stream_runtime *stream)
- 	}
- }
- 
--static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
-+static int _sdw_prepare_stream(struct sdw_stream_runtime *stream,
-+			       bool update_params)
- {
- 	struct sdw_master_runtime *m_rt;
- 	struct sdw_bus *bus = NULL;
-@@ -1480,6 +1481,9 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 			return -EINVAL;
- 		}
- 
-+		if (!update_params)
-+			goto program_params;
-+
- 		/* Increment cumulative bus bandwidth */
- 		/* TODO: Update this during Device-Device support */
- 		bus->params.bandwidth += m_rt->stream->params.rate *
-@@ -1495,6 +1499,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 			}
- 		}
- 
-+program_params:
- 		/* Program params */
- 		ret = sdw_program_params(bus);
- 		if (ret < 0) {
-@@ -1544,6 +1549,7 @@ static int _sdw_prepare_stream(struct sdw_stream_runtime *stream)
-  */
- int sdw_prepare_stream(struct sdw_stream_runtime *stream)
- {
-+	bool update_params = true;
- 	int ret;
- 
- 	if (!stream) {
-@@ -1567,7 +1573,16 @@ int sdw_prepare_stream(struct sdw_stream_runtime *stream)
- 		goto state_err;
- 	}
- 
--	ret = _sdw_prepare_stream(stream);
-+	/*
-+	 * when the stream is DISABLED, this means sdw_prepare_stream()
-+	 * is called as a result of an underflow or a resume operation.
-+	 * In this case, the bus parameters shall not be recomputed, but
-+	 * still need to be re-applied
-+	 */
-+	if (stream->state == SDW_STREAM_DISABLED)
-+		update_params = false;
-+
-+	ret = _sdw_prepare_stream(stream, update_params);
- 
- 	if (ret < 0)
- 		pr_err("Prepare for stream:%s failed: %d\n", stream->name, ret);
+Such functionality could be very useful for bringing up custom embedded
+devices, i.e sensors, displays etc.
+
+With some effort "avalon-test" could even be merged into the existing
+"dmatest" or turned into a tool for testing any "dmaengine" compatible
+driver that does not need any custom hardware specifics to initiate DMA
+transfers.
+
+I am not certain that "avalon-test" in its current form is the best way
+to proceed and thus marking patch 2 as RFC. It depends on "avalon-dma",
+but the two drivers are not necessary to go along.
+
+
+Changes since v4:
+- kbuild test robot reported issues fixed;
+
+Changes since v3 ("avalon-test" only):
+- BUG_ONs, WARN_ONs, dev_dbgs removed goto labels renamed;
+- kernel configuration options removed in favour of module parameters;
+- fail paths reworked to avoid resource leaks uninitialized data crashes;
+- invalid parameter checks reworked;
+
+Changes since v2 ("avalon-dma" only):
+- avalon_dma_register() return value bug fixed;
+- device_prep_slave_sg() does not crash dmaengine_prep_slave_single();
+- kernel configuration options removed in favour of module parameters;
+- BUG_ONs, WARN_ONs, dev_dbgs removed goto labels renamed;
+- polling loop in interrupt handler commented;
+- cpu_relax() added to polling loop in interrupt handler;
+
+Changes since v1:
+- "avalon-dma" converted to "dmaengine" model;
+- "avalon-drv" renamed to "avalon-test";
+
+The Avalon-MM DMA Interface for PCIe is a design used in hard IPs for
+Intel Arria, Cyclone or Stratix FPGAs. It transfers data between on-chip
+memory and system memory.
+
+Testing was done using a custom FPGA build with Arria 10 FPGA streaming
+data to target device RAM:
+
+  +----------+    +----------+    +----------+        +----------+
+  | NIOS CPU |<-->|   RAM    |<-->|  Avalon  |<-PCIe->| Host CPU |
+  +----------+    +----------+    +----------+        +----------+
+
+The data integrity was ensured by examining target device RAM contents
+(a) from host CPU (indirectly - checking data DMAed to/from the system)
+and (b) from NIOS CPU that has direct access to the device RAM.
+
+A companion tool using "avalon-test" IOCTL commands was used to DMA files:
+https://github.com/a-gordeev/avalon-tool.git
+
+CC: dmaengine@vger.kernel.org
+
+Alexander Gordeev (2):
+  dmaengine: avalon-dma: Intel Avalon-MM DMA Interface for PCIe
+  dmaengine: avalon-test: Intel Avalon-MM DMA Interface for PCIe test
+
+ drivers/dma/Kconfig                     |   3 +
+ drivers/dma/Makefile                    |   2 +
+ drivers/dma/avalon-test/Kconfig         |  12 +
+ drivers/dma/avalon-test/Makefile        |  14 +
+ drivers/dma/avalon-test/avalon-dev.c    | 108 +++++
+ drivers/dma/avalon-test/avalon-dev.h    |  33 ++
+ drivers/dma/avalon-test/avalon-ioctl.c  | 101 +++++
+ drivers/dma/avalon-test/avalon-ioctl.h  |  13 +
+ drivers/dma/avalon-test/avalon-mmap.c   |  74 +++
+ drivers/dma/avalon-test/avalon-mmap.h   |  13 +
+ drivers/dma/avalon-test/avalon-sg-buf.c | 132 ++++++
+ drivers/dma/avalon-test/avalon-sg-buf.h |  27 ++
+ drivers/dma/avalon-test/avalon-xfer.c   | 575 ++++++++++++++++++++++++
+ drivers/dma/avalon-test/avalon-xfer.h   |  29 ++
+ drivers/dma/avalon/Kconfig              |  15 +
+ drivers/dma/avalon/Makefile             |  12 +
+ drivers/dma/avalon/avalon-core.c        | 477 ++++++++++++++++++++
+ drivers/dma/avalon/avalon-core.h        |  92 ++++
+ drivers/dma/avalon/avalon-hw.c          | 187 ++++++++
+ drivers/dma/avalon/avalon-hw.h          |  86 ++++
+ drivers/dma/avalon/avalon-pci.c         | 145 ++++++
+ include/uapi/linux/avalon-ioctl.h       |  34 ++
+ 22 files changed, 2184 insertions(+)
+ create mode 100644 drivers/dma/avalon-test/Kconfig
+ create mode 100644 drivers/dma/avalon-test/Makefile
+ create mode 100644 drivers/dma/avalon-test/avalon-dev.c
+ create mode 100644 drivers/dma/avalon-test/avalon-dev.h
+ create mode 100644 drivers/dma/avalon-test/avalon-ioctl.c
+ create mode 100644 drivers/dma/avalon-test/avalon-ioctl.h
+ create mode 100644 drivers/dma/avalon-test/avalon-mmap.c
+ create mode 100644 drivers/dma/avalon-test/avalon-mmap.h
+ create mode 100644 drivers/dma/avalon-test/avalon-sg-buf.c
+ create mode 100644 drivers/dma/avalon-test/avalon-sg-buf.h
+ create mode 100644 drivers/dma/avalon-test/avalon-xfer.c
+ create mode 100644 drivers/dma/avalon-test/avalon-xfer.h
+ create mode 100644 drivers/dma/avalon/Kconfig
+ create mode 100644 drivers/dma/avalon/Makefile
+ create mode 100644 drivers/dma/avalon/avalon-core.c
+ create mode 100644 drivers/dma/avalon/avalon-core.h
+ create mode 100644 drivers/dma/avalon/avalon-hw.c
+ create mode 100644 drivers/dma/avalon/avalon-hw.h
+ create mode 100644 drivers/dma/avalon/avalon-pci.c
+ create mode 100644 include/uapi/linux/avalon-ioctl.h
+
+
+base-commit: a99d8080aaf358d5d23581244e5da23b35e340b9
 -- 
-2.20.1
+2.24.0
 
