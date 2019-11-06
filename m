@@ -2,274 +2,397 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B48BC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:08:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E374BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:09:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 264D9206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:08:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8C3AA206DF
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:09:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="RJKoBNoP"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BfyCxg1o"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731420AbfKFHID (ORCPT
+        id S1731334AbfKFHI7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:08:03 -0500
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:33610 "EHLO
-        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731206AbfKFHIC (ORCPT
+        Wed, 6 Nov 2019 02:08:59 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:53324 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725980AbfKFHI7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:08:02 -0500
-Received-SPF: Pass (esa6.microchip.iphmx.com: domain of
-  Tudor.Ambarus@microchip.com designates 198.175.253.82 as
-  permitted sender) identity=mailfrom;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="Tudor.Ambarus@microchip.com";
-  x-conformance=spf_only; x-record-type="v=spf1";
-  x-record-text="v=spf1 mx a:ushub1.microchip.com
-  a:smtpout.microchip.com a:mx1.microchip.iphmx.com
-  a:mx2.microchip.iphmx.com include:servers.mcsv.net
-  include:mktomail.com include:spf.protection.outlook.com ~all"
-Received-SPF: None (esa6.microchip.iphmx.com: no sender
-  authenticity information available from domain of
-  postmaster@email.microchip.com) identity=helo;
-  client-ip=198.175.253.82; receiver=esa6.microchip.iphmx.com;
-  envelope-from="Tudor.Ambarus@microchip.com";
-  x-sender="postmaster@email.microchip.com";
-  x-conformance=spf_only
-Authentication-Results: esa6.microchip.iphmx.com; spf=Pass smtp.mailfrom=Tudor.Ambarus@microchip.com; spf=None smtp.helo=postmaster@email.microchip.com; dkim=pass (signature verified) header.i=@microchiptechnology.onmicrosoft.com; dmarc=pass (p=none dis=none) d=microchip.com
-IronPort-SDR: 0KHS4T2Cxhabbwr/cjWQxgKjZXDk9eMaA7+2O0mqixCRrt5f2tU+ZPNmgtUp5B4HOpb3dtd2BT
- ttPgqH4r66AcTZNHGcEMXzQiGodI1tqJnI3D/fQUQn1En2UdEnu7rxX/DCzDsxy5z3jVDmOvdt
- pO4uruA2FwvAjtrbUnyqE5wFKL5Kar31Mqgo242a/ZdcnUKOPju1/mKKjvQGQy3upHQDoITJee
- ZkPWzFa68PvoNtyLJheRDneyj8uGdIsexV6Et0NrP40rMPPZEd6AkB6JYvOkYH+H7t0q9npvVD
- GWc=
-X-IronPort-AV: E=Sophos;i="5.68,272,1569308400"; 
-   d="scan'208";a="53067295"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa6.microchip.iphmx.com with ESMTP/TLS/AES256-SHA256; 06 Nov 2019 00:08:01 -0700
-Received: from chn-vm-ex04.mchp-main.com (10.10.85.152) by
- chn-vm-ex04.mchp-main.com (10.10.85.152) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.1713.5; Wed, 6 Nov 2019 00:07:22 -0700
-Received: from NAM01-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.87.151) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
- via Frontend Transport; Wed, 6 Nov 2019 00:07:22 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=VHb9KTY4RAXgszRRXMIfQSjxLP+c1fpLmI+Gi/EuXgm23CJWiqJQ2W/kVp9I3LLrrowJUHvazluoEEWBNYXVPTrTMmovW9lQEq2Dip9S4eepTur4qAVwonZrpGy4TpZtTVSVbe5bwMQP2ywIv4H/JfHxwdFFdabDFfM+tP5dkD1l3lcX/Qygec40B2sEpm2iwb6XV2s/SyiIfGlBFk4MBS0SoTm2aN5nIbM5IFtrAbwQaRHD3DTnKTr/7ZIWTzHioapwd6ESM9YBgMhlFyiiwUwCqGVE2C4f7X/+15MQgNDmjoMS3/qUDHhh+a+E28aYtZqZ+g5eq8SXrhG1oyBbQg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YMsaRRGP2+MR/zPfEcRiut6gHr3+Gnnxz97PACCSJOU=;
- b=RO6CaDp8UT4HtqG5Q/Y7/WWJdI8wQ0oPF3B6YThqX8iI7+jK1jxPjxh3cHTETsvOjDdxNCEpyoZqz8H4M83kmnYlwmF0AfNkEkIaG4xLEPNrEOvNtyETRQUCUxBxYewBdcDgXE1Pjq1Khl4cYRSiiBlP6gVBu8cugJOsiXgvr15PsF8nQBFGWXmqU53wvQJG/3kppUvgbMIZG4yom9gORmuP/xPfFSBn7nPadrIx7xJONpVe5A+QerPbBLErCZMu8cSDpGWYtzgDH802fFlHt7DODi11V5Q4Gl23QebNX/h0yowpUk/iMml/SxcQGf18ZW7SrJSA1wYI4vux2j90pw==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=microchip.com; dmarc=pass action=none
- header.from=microchip.com; dkim=pass header.d=microchip.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector2-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=YMsaRRGP2+MR/zPfEcRiut6gHr3+Gnnxz97PACCSJOU=;
- b=RJKoBNoPbsUiUB5uoSDOmHYOhkz0AAUUlTQ/gv1TgCynNSKnFLwjXxKx/qX6ccPJzTelw3k7iK7+mYX5a7AJ0zaAvpVn0w7oEjcmPLzpDjY1UojXwI9MFhP1gy80CP8yfG/H9KHMNgPVuD7P6mw4lHBVAt+Rut6f/TTe1bTgoFI=
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com (52.135.39.157) by
- MN2PR11MB3839.namprd11.prod.outlook.com (20.178.254.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 07:07:21 +0000
-Received: from MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457]) by MN2PR11MB4448.namprd11.prod.outlook.com
- ([fe80::c09c:36c8:3301:4457%5]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
- 07:07:21 +0000
-From:   <Tudor.Ambarus@microchip.com>
-To:     <vigneshr@ti.com>, <boris.brezillon@collabora.com>
-CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
-        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4 01/20] mtd: spi-nor: Use dev_dbg insted of dev_err for
- low level info
-Thread-Topic: [PATCH v4 01/20] mtd: spi-nor: Use dev_dbg insted of dev_err for
- low level info
-Thread-Index: AQHVkW/xBgAv7ThozEyzMFjaioqIiKd8gdYAgAE86QA=
-Date:   Wed, 6 Nov 2019 07:07:21 +0000
-Message-ID: <baac5e0e-4e85-8a88-b8e5-43bd644de7c8@microchip.com>
-References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
- <20191102112316.20715-2-tudor.ambarus@microchip.com>
- <bc98d845-1994-69a8-a655-81ba1bb9253f@ti.com>
-In-Reply-To: <bc98d845-1994-69a8-a655-81ba1bb9253f@ti.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: VI1PR0902CA0057.eurprd09.prod.outlook.com
- (2603:10a6:802:1::46) To MN2PR11MB4448.namprd11.prod.outlook.com
- (2603:10b6:208:193::29)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [86.120.239.29]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 9ac96868-ab16-489b-0c27-08d76287f790
-x-ms-traffictypediagnostic: MN2PR11MB3839:
-x-microsoft-antispam-prvs: <MN2PR11MB3839AE5ECCA0020338618ABBF0790@MN2PR11MB3839.namprd11.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:6430;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(366004)(396003)(136003)(346002)(376002)(199004)(189003)(66556008)(6512007)(86362001)(66476007)(6486002)(478600001)(64756008)(66446008)(25786009)(53546011)(102836004)(8676002)(386003)(6506007)(14454004)(26005)(8936002)(81166006)(81156014)(486006)(52116002)(446003)(11346002)(476003)(2616005)(186003)(36756003)(229853002)(7736002)(316002)(110136005)(54906003)(6436002)(66066001)(31696002)(76176011)(305945005)(2501003)(99286004)(6246003)(2906002)(256004)(14444005)(6116002)(3846002)(5660300002)(4326008)(71190400001)(31686004)(71200400001)(66946007);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR11MB3839;H:MN2PR11MB4448.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: GeVFF62+Rn9DODWIKf9TpDQUYxrHQY6+G7xMJ8JtjfDsBhZUY7mguWBjs/hNw5aUd1qbRGIov6dejg6THAxXZbdqQKlUE61eJpL11UfGXt6qEtklYIxegdEL5StIwugVkkodXAK0wRGTZNgYulIvDIXauMqe6XWMKI6T8qTgD3yEhSvpxJt18Y8BWjtoTkCmduNiFvCSMyrEvrwlSSRZg/upR1Bj1CIkfblIaC8zxIhJvB0APsEPQv7sC2HZsCmo03j4G/WrDTkaixzvUexI8hgd2dkdlMalAOBpz8KLW5vP1Q0mWzhHjvRQjAPkI9iDTIuvJr3to4va/exZpnHgFCLB+hX/DC5sVeYqHKwcbJAnMY7mEZglgJJMYepA0IBEgAI6LW4wXLRcjSSuHnWc7mZ6Jb4shzun4cTHuqMV8GOPUWwjblvXTwibMYaS4yWB
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <733F7DCDABD27C41A9A8121F29C207FA@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 02:08:59 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573024137;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=ZjglcjJdfJ+rYNda606bWPhtmSxvctdSzvRhdUvjVro=;
+        b=BfyCxg1ovaWIS/1DyhtAhtX+vcnSwflSr4becIxSK8fGIJF8oBg3kActHWm2Ff4+a6/LbG
+        up8zCGcfpK/0cPWLzQB6Wj6gWhQJ6Z+sRtZNMANh9wI1fqZhlgwFexAEyUj6527ad3HZdh
+        Uma74+l3HhlKM2k/CezFD/pRBDpdWZg=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-108-AoaTpqSfNuSyDnTT12PNuw-1; Wed, 06 Nov 2019 02:08:55 -0500
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B1B661005500;
+        Wed,  6 Nov 2019 07:08:51 +0000 (UTC)
+Received: from jason-ThinkPad-X1-Carbon-6th.redhat.com (ovpn-12-193.pek2.redhat.com [10.72.12.193])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id EEBAB1001B00;
+        Wed,  6 Nov 2019 07:07:11 +0000 (UTC)
+From:   Jason Wang <jasowang@redhat.com>
+To:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com
+Cc:     virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com, Jason Wang <jasowang@redhat.com>
+Subject: [PATCH V9 1/6] mdev: class id support
+Date:   Wed,  6 Nov 2019 15:05:43 +0800
+Message-Id: <20191106070548.18980-2-jasowang@redhat.com>
+In-Reply-To: <20191106070548.18980-1-jasowang@redhat.com>
+References: <20191106070548.18980-1-jasowang@redhat.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9ac96868-ab16-489b-0c27-08d76287f790
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 07:07:21.3332
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: 7XVupPXO0AKPdWO1nxyAg67FV1cpymDfFKW7EbLtVTIk0sZ4HWawl2D9DhkPk5507fO2yP+cewiXNJ1MNQrB80d59LNvI/2As+ugzQNPi/w=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3839
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-MC-Unique: AoaTpqSfNuSyDnTT12PNuw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDExLzA1LzIwMTkgMDI6MTIgUE0sIFZpZ25lc2ggUmFnaGF2ZW5kcmEgd3JvdGU6DQo+
-IEV4dGVybmFsIEUtTWFpbA0KPiANCj4gDQo+IEhpLA0KPiANCj4gT24gMDIvMTEvMTkgNDo1MyBQ
-TSwgVHVkb3IuQW1iYXJ1c0BtaWNyb2NoaXAuY29tIHdyb3RlOg0KPj4gRnJvbTogVHVkb3IgQW1i
-YXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KPj4NCj4+IFdoYXQgbW9zdCB1c2Vy
-cyBjYXJlIGFib3V0IGlzICJteSBkZXYgaXMgbm90IHdvcmtpbmcgcHJvcGVybHkiLg0KPj4gQWxs
-IGxvdyBsZXZlbCBpbmZvcm1hdGlvbiBzaG91bGQgYmUgZGlzY292ZXJlZCB3aGVuIGFjdGl2YXRp
-bmcNCj4+IHRoZSBkZWJ1ZyB0cmFjZXMuDQo+Pg0KPj4gS2VlcCBlcnJvciBtZXNzYWdlcyBmb3Ig
-anVzdCB0aHJlZSBjYXNlczoNCj4+IC0gd2hlbiB0aGUgSkVERUMgSUQgaXMgbm90IHJlY29nbml6
-ZWQNCj4+IC0gd2hlbiB0aGUgcmVzdW1lKCkgY2FsbCBmYWlscw0KPj4gLSB3aGVuIHRoZSBzcGlf
-bm9yX2NoZWNrKCkgZmFpbHMuDQo+Pg0KPj4gU3VnZ2VzdGVkLWJ5OiBCb3JpcyBCcmV6aWxsb24g
-PGJvcmlzLmJyZXppbGxvbkBjb2xsYWJvcmEuY29tPg0KPj4gU2lnbmVkLW9mZi1ieTogVHVkb3Ig
-QW1iYXJ1cyA8dHVkb3IuYW1iYXJ1c0BtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAgZHJpdmVy
-cy9tdGQvc3BpLW5vci9zcGktbm9yLmMgfCA1MiArKysrKysrKysrKysrKysrKysrKystLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDI2IGluc2VydGlvbnMoKyksIDI2
-IGRlbGV0aW9ucygtKQ0KPj4NCj4gWy4uLl0NCj4+ICANCj4+IEBAIC02NzksOSArNjc5LDkgQEAg
-c3RhdGljIGludCBzcGlfbm9yX3NyX3JlYWR5KHN0cnVjdCBzcGlfbm9yICpub3IpDQo+PiAgCWlm
-IChub3ItPmZsYWdzICYgU05PUl9GX1VTRV9DTFNSICYmDQo+PiAgCSAgICBub3ItPmJvdW5jZWJ1
-ZlswXSAmIChTUl9FX0VSUiB8IFNSX1BfRVJSKSkgew0KPj4gIAkJaWYgKG5vci0+Ym91bmNlYnVm
-WzBdICYgU1JfRV9FUlIpDQo+PiAtCQkJZGV2X2Vycihub3ItPmRldiwgIkVyYXNlIEVycm9yIG9j
-Y3VycmVkXG4iKTsNCj4+ICsJCQlkZXZfZGJnKG5vci0+ZGV2LCAiRXJhc2UgRXJyb3Igb2NjdXJy
-ZWRcbiIpOw0KPj4gIAkJZWxzZQ0KPj4gLQkJCWRldl9lcnIobm9yLT5kZXYsICJQcm9ncmFtbWlu
-ZyBFcnJvciBvY2N1cnJlZFxuIik7DQo+PiArCQkJZGV2X2RiZyhub3ItPmRldiwgIlByb2dyYW1t
-aW5nIEVycm9yIG9jY3VycmVkXG4iKTsNCj4+ICANCj4+ICAJCXNwaV9ub3JfY2xlYXJfc3Iobm9y
-KTsNCj4+ICAJCXJldHVybiAtRUlPOw0KPj4gQEAgLTcxNCwxMiArNzE0LDEyIEBAIHN0YXRpYyBp
-bnQgc3BpX25vcl9mc3JfcmVhZHkoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4+ICANCj4+ICAJaWYg
-KG5vci0+Ym91bmNlYnVmWzBdICYgKEZTUl9FX0VSUiB8IEZTUl9QX0VSUikpIHsNCj4+ICAJCWlm
-IChub3ItPmJvdW5jZWJ1ZlswXSAmIEZTUl9FX0VSUikNCj4+IC0JCQlkZXZfZXJyKG5vci0+ZGV2
-LCAiRXJhc2Ugb3BlcmF0aW9uIGZhaWxlZC5cbiIpOw0KPj4gKwkJCWRldl9kYmcobm9yLT5kZXYs
-ICJFcmFzZSBvcGVyYXRpb24gZmFpbGVkLlxuIik7DQo+PiAgCQllbHNlDQo+PiAtCQkJZGV2X2Vy
-cihub3ItPmRldiwgIlByb2dyYW0gb3BlcmF0aW9uIGZhaWxlZC5cbiIpOw0KPj4gKwkJCWRldl9k
-Ymcobm9yLT5kZXYsICJQcm9ncmFtIG9wZXJhdGlvbiBmYWlsZWQuXG4iKTsNCj4+ICANCj4+ICAJ
-CWlmIChub3ItPmJvdW5jZWJ1ZlswXSAmIEZTUl9QVF9FUlIpDQo+PiAtCQkJZGV2X2Vycihub3It
-PmRldiwNCj4+ICsJCQlkZXZfZGJnKG5vci0+ZGV2LA0KPj4gIAkJCSJBdHRlbXB0ZWQgdG8gbW9k
-aWZ5IGEgcHJvdGVjdGVkIHNlY3Rvci5cbiIpOw0KPj4NCj4gDQo+IFNpbmNlLCB3ZSBhcmUgc3Bl
-Y2lmaWNhbGx5IHBhcnNpbmcgRlNSIGJpdHMgdG8ga25vdyB0aGUgcmVhc29uIGZvcg0KPiBmYWls
-dXJlLCBJIHRoaW5rIHdlIHNob3VsZCB1c2UgZGV2X2VycigpcyBoZXJlLg0KPiBJIHNwZWNpZmlj
-YWxseSBsaWtlIHRoZSBsYXN0IG9uZSB3aGljaCBpbmZvcm1zIHRoZSB1c2VyIHRoYXQNCj4gcHJv
-Z3JhbS9lcmFzZSBvcGVyYXRpb24gZmFpbGVkIGFzIHNlY3RvciB3YXMgd3JpdGUgcHJvdGVjdGVk
-Lg0KPiANCg0KWWVwLCB3aWxsIHVzZSBkZXZfZXJyIHRvIHJlcG9ydCBlcmFzZS9wcm9ncmFtIGVy
-cm9ycyBpbiBib3RoIHNwaV9ub3Jfc3JfcmVhZHkoKQ0KYW5kIHNwaV9ub3JfZnNyX3JlYWR5KCks
-IHRvZ2V0aGVyIHdpdGggdGhlIGF0dGVtcHQgb2YgbW9kaWZ5aW5nIGEgcHJvdGVjdGVkIHNlY3Rv
-ci4NCg0KVGhhbmtzIQ0KDQo+IFJlc3QgbG9va3MgZmluZSB0byBtZToNCj4gDQo+IFJldmlld2Vk
-LWJ5OiBWaWduZXNoIFJhZ2hhdmVuZHJhIDx2aWduZXNockB0aS5jb20+DQo+IA0KPiBSZWdhcmRz
-DQo+IFZpZ25lc2gNCj4gDQo+PiAgCQlzcGlfbm9yX2NsZWFyX2Zzcihub3IpOw0KPj4gQEAgLTc3
-MCw3ICs3NzAsNyBAQCBzdGF0aWMgaW50IHNwaV9ub3Jfd2FpdF90aWxsX3JlYWR5X3dpdGhfdGlt
-ZW91dChzdHJ1Y3Qgc3BpX25vciAqbm9yLA0KPj4gIAkJY29uZF9yZXNjaGVkKCk7DQo+PiAgCX0N
-Cj4+ICANCj4+IC0JZGV2X2Vycihub3ItPmRldiwgImZsYXNoIG9wZXJhdGlvbiB0aW1lZCBvdXRc
-biIpOw0KPj4gKwlkZXZfZGJnKG5vci0+ZGV2LCAiZmxhc2ggb3BlcmF0aW9uIHRpbWVkIG91dFxu
-Iik7DQo+PiAgDQo+PiAgCXJldHVybiAtRVRJTUVET1VUOw0KPj4gIH0NCj4+IEBAIC04MDcsNyAr
-ODA3LDcgQEAgc3RhdGljIGludCBzcGlfbm9yX3dyaXRlX3NyX2NyKHN0cnVjdCBzcGlfbm9yICpu
-b3IsIGNvbnN0IHU4ICpzcl9jcikNCj4+ICAJfQ0KPj4gIA0KPj4gIAlpZiAocmV0KSB7DQo+PiAt
-CQlkZXZfZXJyKG5vci0+ZGV2LA0KPj4gKwkJZGV2X2RiZyhub3ItPmRldiwNCj4+ICAJCQkiZXJy
-b3Igd2hpbGUgd3JpdGluZyBjb25maWd1cmF0aW9uIHJlZ2lzdGVyXG4iKTsNCj4+ICAJCXJldHVy
-biAtRUlOVkFMOw0KPj4gIAl9DQo+PiBAQCAtMTc3MSw3ICsxNzcxLDcgQEAgc3RhdGljIGludCBt
-YWNyb25peF9xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPj4gIAkJcmV0dXJuIHJl
-dDsNCj4+ICANCj4+ICAJaWYgKCEobm9yLT5ib3VuY2VidWZbMF0gJiBTUl9RVUFEX0VOX01YKSkg
-ew0KPj4gLQkJZGV2X2Vycihub3ItPmRldiwgIk1hY3Jvbml4IFF1YWQgYml0IG5vdCBzZXRcbiIp
-Ow0KPj4gKwkJZGV2X2RiZyhub3ItPmRldiwgIk1hY3Jvbml4IFF1YWQgYml0IG5vdCBzZXRcbiIp
-Ow0KPj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+PiAgCX0NCj4+ICANCj4+IEBAIC0xODE5LDcgKzE4
-MTksNyBAQCBzdGF0aWMgaW50IHNwYW5zaW9uX3F1YWRfZW5hYmxlKHN0cnVjdCBzcGlfbm9yICpu
-b3IpDQo+PiAgCQlyZXR1cm4gcmV0Ow0KPj4gIA0KPj4gIAlpZiAoIShub3ItPmJvdW5jZWJ1Zlsw
-XSAmIENSX1FVQURfRU5fU1BBTikpIHsNCj4+IC0JCWRldl9lcnIobm9yLT5kZXYsICJTcGFuc2lv
-biBRdWFkIGJpdCBub3Qgc2V0XG4iKTsNCj4+ICsJCWRldl9kYmcobm9yLT5kZXYsICJTcGFuc2lv
-biBRdWFkIGJpdCBub3Qgc2V0XG4iKTsNCj4+ICAJCXJldHVybiAtRUlOVkFMOw0KPj4gIAl9DQo+
-PiAgDQo+PiBAQCAtMTg5Nyw3ICsxODk3LDcgQEAgc3RhdGljIGludCBzcGFuc2lvbl9yZWFkX2Ny
-X3F1YWRfZW5hYmxlKHN0cnVjdCBzcGlfbm9yICpub3IpDQo+PiAgCQlyZXR1cm4gcmV0Ow0KPj4g
-IA0KPj4gIAlpZiAoIShzcl9jclsxXSAmIENSX1FVQURfRU5fU1BBTikpIHsNCj4+IC0JCWRldl9l
-cnIobm9yLT5kZXYsICJTcGFuc2lvbiBRdWFkIGJpdCBub3Qgc2V0XG4iKTsNCj4+ICsJCWRldl9k
-Ymcobm9yLT5kZXYsICJTcGFuc2lvbiBRdWFkIGJpdCBub3Qgc2V0XG4iKTsNCj4+ICAJCXJldHVy
-biAtRUlOVkFMOw0KPj4gIAl9DQo+PiAgDQo+PiBAQCAtMTkzNSw3ICsxOTM1LDcgQEAgc3RhdGlj
-IGludCBzcjJfYml0N19xdWFkX2VuYWJsZShzdHJ1Y3Qgc3BpX25vciAqbm9yKQ0KPj4gIA0KPj4g
-IAlyZXQgPSBzcGlfbm9yX3dyaXRlX3NyMihub3IsIHNyMik7DQo+PiAgCWlmIChyZXQpIHsNCj4+
-IC0JCWRldl9lcnIobm9yLT5kZXYsICJlcnJvciB3aGlsZSB3cml0aW5nIHN0YXR1cyByZWdpc3Rl
-ciAyXG4iKTsNCj4+ICsJCWRldl9kYmcobm9yLT5kZXYsICJlcnJvciB3aGlsZSB3cml0aW5nIHN0
-YXR1cyByZWdpc3RlciAyXG4iKTsNCj4+ICAJCXJldHVybiByZXQ7DQo+PiAgCX0NCj4+ICANCj4+
-IEBAIC0xOTQ5LDcgKzE5NDksNyBAQCBzdGF0aWMgaW50IHNyMl9iaXQ3X3F1YWRfZW5hYmxlKHN0
-cnVjdCBzcGlfbm9yICpub3IpDQo+PiAgCQlyZXR1cm4gcmV0Ow0KPj4gIA0KPj4gIAlpZiAoISgq
-c3IyICYgU1IyX1FVQURfRU5fQklUNykpIHsNCj4+IC0JCWRldl9lcnIobm9yLT5kZXYsICJTUjIg
-UXVhZCBiaXQgbm90IHNldFxuIik7DQo+PiArCQlkZXZfZGJnKG5vci0+ZGV2LCAiU1IyIFF1YWQg
-Yml0IG5vdCBzZXRcbiIpOw0KPj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+PiAgCX0NCj4+ICANCj4+
-IEBAIC0xOTc4LDcgKzE5NzgsNyBAQCBzdGF0aWMgaW50IHNwaV9ub3JfY2xlYXJfc3JfYnAoc3Ry
-dWN0IHNwaV9ub3IgKm5vcikNCj4+ICANCj4+ICAJcmV0ID0gc3BpX25vcl93cml0ZV9zcihub3Is
-IG5vci0+Ym91bmNlYnVmWzBdICYgfm1hc2spOw0KPj4gIAlpZiAocmV0KSB7DQo+PiAtCQlkZXZf
-ZXJyKG5vci0+ZGV2LCAid3JpdGUgdG8gc3RhdHVzIHJlZ2lzdGVyIGZhaWxlZFxuIik7DQo+PiAr
-CQlkZXZfZGJnKG5vci0+ZGV2LCAid3JpdGUgdG8gc3RhdHVzIHJlZ2lzdGVyIGZhaWxlZFxuIik7
-DQo+PiAgCQlyZXR1cm4gcmV0Ow0KPj4gIAl9DQo+PiAgDQo+PiBAQCAtMjUyNSw3ICsyNTI1LDcg
-QEAgc3RhdGljIGNvbnN0IHN0cnVjdCBmbGFzaF9pbmZvICpzcGlfbm9yX3JlYWRfaWQoc3RydWN0
-IHNwaV9ub3IgKm5vcikNCj4+ICAJCQkJCQkgICAgU1BJX05PUl9NQVhfSURfTEVOKTsNCj4+ICAJ
-fQ0KPj4gIAlpZiAodG1wKSB7DQo+PiAtCQlkZXZfZXJyKG5vci0+ZGV2LCAiZXJyb3IgJWQgcmVh
-ZGluZyBKRURFQyBJRFxuIiwgdG1wKTsNCj4+ICsJCWRldl9kYmcobm9yLT5kZXYsICJlcnJvciAl
-ZCByZWFkaW5nIEpFREVDIElEXG4iLCB0bXApOw0KPj4gIAkJcmV0dXJuIEVSUl9QVFIodG1wKTsN
-Cj4+ICAJfQ0KPj4gIA0KPj4gQEAgLTI3NDAsNyArMjc0MCw3IEBAIHN0YXRpYyBpbnQgczNhbl9u
-b3Jfc2V0dXAoc3RydWN0IHNwaV9ub3IgKm5vciwNCj4+ICANCj4+ICAJcmV0ID0gc3BpX25vcl94
-cmVhZF9zcihub3IsIG5vci0+Ym91bmNlYnVmKTsNCj4+ICAJaWYgKHJldCkgew0KPj4gLQkJZGV2
-X2Vycihub3ItPmRldiwgImVycm9yICVkIHJlYWRpbmcgWFJEU1JcbiIsIHJldCk7DQo+PiArCQlk
-ZXZfZGJnKG5vci0+ZGV2LCAiZXJyb3IgJWQgcmVhZGluZyBYUkRTUlxuIiwgcmV0KTsNCj4+ICAJ
-CXJldHVybiByZXQ7DQo+PiAgCX0NCj4+ICANCj4+IEBAIC00MTAyLDcgKzQxMDIsNyBAQCBzdGF0
-aWMgaW50IHNwaV9ub3JfcGFyc2Vfc2ZkcChzdHJ1Y3Qgc3BpX25vciAqbm9yLA0KPj4gIAkJZXJy
-ID0gc3BpX25vcl9yZWFkX3NmZHAobm9yLCBzaXplb2YoaGVhZGVyKSwNCj4+ICAJCQkJCXBzaXpl
-LCBwYXJhbV9oZWFkZXJzKTsNCj4+ICAJCWlmIChlcnIgPCAwKSB7DQo+PiAtCQkJZGV2X2Vycihk
-ZXYsICJmYWlsZWQgdG8gcmVhZCBTRkRQIHBhcmFtZXRlciBoZWFkZXJzXG4iKTsNCj4+ICsJCQlk
-ZXZfZGJnKGRldiwgImZhaWxlZCB0byByZWFkIFNGRFAgcGFyYW1ldGVyIGhlYWRlcnNcbiIpOw0K
-Pj4gIAkJCWdvdG8gZXhpdDsNCj4+ICAJCX0NCj4+ICAJfQ0KPj4gQEAgLTQzNDksNyArNDM0OSw3
-IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9kZWZhdWx0X3NldHVwKHN0cnVjdCBzcGlfbm9yICpub3Is
-DQo+PiAgCS8qIFNlbGVjdCB0aGUgKEZhc3QpIFJlYWQgY29tbWFuZC4gKi8NCj4+ICAJZXJyID0g
-c3BpX25vcl9zZWxlY3RfcmVhZChub3IsIHNoYXJlZF9tYXNrKTsNCj4+ICAJaWYgKGVycikgew0K
-Pj4gLQkJZGV2X2Vycihub3ItPmRldiwNCj4+ICsJCWRldl9kYmcobm9yLT5kZXYsDQo+PiAgCQkJ
-ImNhbid0IHNlbGVjdCByZWFkIHNldHRpbmdzIHN1cHBvcnRlZCBieSBib3RoIHRoZSBTUEkgY29u
-dHJvbGxlciBhbmQgbWVtb3J5LlxuIik7DQo+PiAgCQlyZXR1cm4gZXJyOw0KPj4gIAl9DQo+PiBA
-QCAtNDM1Nyw3ICs0MzU3LDcgQEAgc3RhdGljIGludCBzcGlfbm9yX2RlZmF1bHRfc2V0dXAoc3Ry
-dWN0IHNwaV9ub3IgKm5vciwNCj4+ICAJLyogU2VsZWN0IHRoZSBQYWdlIFByb2dyYW0gY29tbWFu
-ZC4gKi8NCj4+ICAJZXJyID0gc3BpX25vcl9zZWxlY3RfcHAobm9yLCBzaGFyZWRfbWFzayk7DQo+
-PiAgCWlmIChlcnIpIHsNCj4+IC0JCWRldl9lcnIobm9yLT5kZXYsDQo+PiArCQlkZXZfZGJnKG5v
-ci0+ZGV2LA0KPj4gIAkJCSJjYW4ndCBzZWxlY3Qgd3JpdGUgc2V0dGluZ3Mgc3VwcG9ydGVkIGJ5
-IGJvdGggdGhlIFNQSSBjb250cm9sbGVyIGFuZCBtZW1vcnkuXG4iKTsNCj4+ICAJCXJldHVybiBl
-cnI7DQo+PiAgCX0NCj4+IEBAIC00MzY1LDcgKzQzNjUsNyBAQCBzdGF0aWMgaW50IHNwaV9ub3Jf
-ZGVmYXVsdF9zZXR1cChzdHJ1Y3Qgc3BpX25vciAqbm9yLA0KPj4gIAkvKiBTZWxlY3QgdGhlIFNl
-Y3RvciBFcmFzZSBjb21tYW5kLiAqLw0KPj4gIAllcnIgPSBzcGlfbm9yX3NlbGVjdF9lcmFzZShu
-b3IpOw0KPj4gIAlpZiAoZXJyKSB7DQo+PiAtCQlkZXZfZXJyKG5vci0+ZGV2LA0KPj4gKwkJZGV2
-X2RiZyhub3ItPmRldiwNCj4+ICAJCQkiY2FuJ3Qgc2VsZWN0IGVyYXNlIHNldHRpbmdzIHN1cHBv
-cnRlZCBieSBib3RoIHRoZSBTUEkgY29udHJvbGxlciBhbmQgbWVtb3J5LlxuIik7DQo+PiAgCQly
-ZXR1cm4gZXJyOw0KPj4gIAl9DQo+PiBAQCAtNDY4Niw3ICs0Njg2LDcgQEAgc3RhdGljIGludCBz
-cGlfbm9yX2luaXQoc3RydWN0IHNwaV9ub3IgKm5vcikNCj4+ICANCj4+ICAJCWVyciA9IG5vci0+
-Y2xlYXJfc3JfYnAobm9yKTsNCj4+ICAJCWlmIChlcnIpIHsNCj4+IC0JCQlkZXZfZXJyKG5vci0+
-ZGV2LA0KPj4gKwkJCWRldl9kYmcobm9yLT5kZXYsDQo+PiAgCQkJCSJmYWlsIHRvIGNsZWFyIGJs
-b2NrIHByb3RlY3Rpb24gYml0c1xuIik7DQo+PiAgCQkJcmV0dXJuIGVycjsNCj4+ICAJCX0NCj4+
-IEBAIC00Njk0LDcgKzQ2OTQsNyBAQCBzdGF0aWMgaW50IHNwaV9ub3JfaW5pdChzdHJ1Y3Qgc3Bp
-X25vciAqbm9yKQ0KPj4gIA0KPj4gIAllcnIgPSBzcGlfbm9yX3F1YWRfZW5hYmxlKG5vcik7DQo+
-PiAgCWlmIChlcnIpIHsNCj4+IC0JCWRldl9lcnIobm9yLT5kZXYsICJxdWFkIG1vZGUgbm90IHN1
-cHBvcnRlZFxuIik7DQo+PiArCQlkZXZfZGJnKG5vci0+ZGV2LCAicXVhZCBtb2RlIG5vdCBzdXBw
-b3J0ZWRcbiIpOw0KPj4gIAkJcmV0dXJuIGVycjsNCj4+ICAJfQ0KPj4gIA0KPj4gQEAgLTQ3NjIs
-NyArNDc2Miw3IEBAIHN0YXRpYyBpbnQgc3BpX25vcl9zZXRfYWRkcl93aWR0aChzdHJ1Y3Qgc3Bp
-X25vciAqbm9yKQ0KPj4gIAl9DQo+PiAgDQo+PiAgCWlmIChub3ItPmFkZHJfd2lkdGggPiBTUElf
-Tk9SX01BWF9BRERSX1dJRFRIKSB7DQo+PiAtCQlkZXZfZXJyKG5vci0+ZGV2LCAiYWRkcmVzcyB3
-aWR0aCBpcyB0b28gbGFyZ2U6ICV1XG4iLA0KPj4gKwkJZGV2X2RiZyhub3ItPmRldiwgImFkZHJl
-c3Mgd2lkdGggaXMgdG9vIGxhcmdlOiAldVxuIiwNCj4+ICAJCQlub3ItPmFkZHJfd2lkdGgpOw0K
-Pj4gIAkJcmV0dXJuIC1FSU5WQUw7DQo+PiAgCX0NCj4+DQo+IA0K
+Mdev bus only supports vfio driver right now, so it doesn't implement
+match method. But in the future, we may add drivers other than vfio,
+the first driver could be virtio-mdev. This means we need to add
+device class id support in bus match method to pair the mdev device
+and mdev driver correctly.
+
+So this patch adds id_table to mdev_driver and class_id for mdev
+device with the match method for mdev bus.
+
+Reviewed-by: Parav Pandit <parav@mellanox.com>
+Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Jason Wang <jasowang@redhat.com>
+---
+ .../driver-api/vfio-mediated-device.rst       |  5 ++++
+ drivers/gpu/drm/i915/gvt/kvmgt.c              |  1 +
+ drivers/s390/cio/vfio_ccw_ops.c               |  1 +
+ drivers/s390/crypto/vfio_ap_ops.c             |  1 +
+ drivers/vfio/mdev/mdev_core.c                 | 17 +++++++++++++
+ drivers/vfio/mdev/mdev_driver.c               | 25 +++++++++++++++++++
+ drivers/vfio/mdev/mdev_private.h              |  1 +
+ drivers/vfio/mdev/vfio_mdev.c                 |  6 +++++
+ include/linux/mdev.h                          |  8 ++++++
+ include/linux/mod_devicetable.h               |  8 ++++++
+ samples/vfio-mdev/mbochs.c                    |  1 +
+ samples/vfio-mdev/mdpy.c                      |  1 +
+ samples/vfio-mdev/mtty.c                      |  1 +
+ 13 files changed, 76 insertions(+)
+
+diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentat=
+ion/driver-api/vfio-mediated-device.rst
+index 25eb7d5b834b..6709413bee29 100644
+--- a/Documentation/driver-api/vfio-mediated-device.rst
++++ b/Documentation/driver-api/vfio-mediated-device.rst
+@@ -102,12 +102,14 @@ structure to represent a mediated device's driver::
+       * @probe: called when new device created
+       * @remove: called when device removed
+       * @driver: device driver structure
++      * @id_table: the ids serviced by this driver
+       */
+      struct mdev_driver {
+ =09     const char *name;
+ =09     int  (*probe)  (struct device *dev);
+ =09     void (*remove) (struct device *dev);
+ =09     struct device_driver    driver;
++=09     const struct mdev_class_id *id_table;
+      };
+=20
+ A mediated bus driver for mdev should use this structure in the function c=
+alls
+@@ -170,6 +172,9 @@ that a driver should use to unregister itself with the =
+mdev core driver::
+=20
+ =09extern void mdev_unregister_device(struct device *dev);
+=20
++It is also required to specify the class_id in create() callback through::
++
++=09int mdev_set_class(struct mdev_device *mdev, u16 id);
+=20
+ Mediated Device Management Interface Through sysfs
+ =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D
+diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kv=
+mgt.c
+index 343d79c1cb7e..6420f0dbd31b 100644
+--- a/drivers/gpu/drm/i915/gvt/kvmgt.c
++++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
+@@ -678,6 +678,7 @@ static int intel_vgpu_create(struct kobject *kobj, stru=
+ct mdev_device *mdev)
+ =09=09     dev_name(mdev_dev(mdev)));
+ =09ret =3D 0;
+=20
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ out:
+ =09return ret;
+ }
+diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_op=
+s.c
+index f0d71ab77c50..cf2c013ae32f 100644
+--- a/drivers/s390/cio/vfio_ccw_ops.c
++++ b/drivers/s390/cio/vfio_ccw_ops.c
+@@ -129,6 +129,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, s=
+truct mdev_device *mdev)
+ =09=09=09   private->sch->schid.ssid,
+ =09=09=09   private->sch->schid.sch_no);
+=20
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ =09return 0;
+ }
+=20
+diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_a=
+p_ops.c
+index 5c0f53c6dde7..07c31070afeb 100644
+--- a/drivers/s390/crypto/vfio_ap_ops.c
++++ b/drivers/s390/crypto/vfio_ap_ops.c
+@@ -343,6 +343,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, st=
+ruct mdev_device *mdev)
+ =09list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
+ =09mutex_unlock(&matrix_dev->lock);
+=20
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ =09return 0;
+ }
+=20
+diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
+index b558d4cfd082..7bfa2e46e829 100644
+--- a/drivers/vfio/mdev/mdev_core.c
++++ b/drivers/vfio/mdev/mdev_core.c
+@@ -45,6 +45,17 @@ void mdev_set_drvdata(struct mdev_device *mdev, void *da=
+ta)
+ }
+ EXPORT_SYMBOL(mdev_set_drvdata);
+=20
++/*
++ * Specify the class for the mdev device, this must be called during
++ * create() callback.
++ */
++void mdev_set_class(struct mdev_device *mdev, u16 id)
++{
++=09WARN_ON(mdev->class_id);
++=09mdev->class_id =3D id;
++}
++EXPORT_SYMBOL(mdev_set_class);
++
+ struct device *mdev_dev(struct mdev_device *mdev)
+ {
+ =09return &mdev->dev;
+@@ -324,6 +335,12 @@ int mdev_device_create(struct kobject *kobj,
+ =09if (ret)
+ =09=09goto ops_create_fail;
+=20
++=09if (!mdev->class_id) {
++=09=09ret =3D -EINVAL;
++=09=09dev_warn(dev, "mdev vendor driver failed to specify device class\n")=
+;
++=09=09goto add_fail;
++=09}
++
+ =09ret =3D device_add(&mdev->dev);
+ =09if (ret)
+ =09=09goto add_fail;
+diff --git a/drivers/vfio/mdev/mdev_driver.c b/drivers/vfio/mdev/mdev_drive=
+r.c
+index 0d3223aee20b..ed06433693e8 100644
+--- a/drivers/vfio/mdev/mdev_driver.c
++++ b/drivers/vfio/mdev/mdev_driver.c
+@@ -69,8 +69,33 @@ static int mdev_remove(struct device *dev)
+ =09return 0;
+ }
+=20
++static int mdev_match(struct device *dev, struct device_driver *drv)
++{
++=09unsigned int i;
++=09struct mdev_device *mdev =3D to_mdev_device(dev);
++=09struct mdev_driver *mdrv =3D to_mdev_driver(drv);
++=09const struct mdev_class_id *ids =3D mdrv->id_table;
++
++=09if (!ids)
++=09=09return 0;
++
++=09for (i =3D 0; ids[i].id; i++)
++=09=09if (ids[i].id =3D=3D mdev->class_id)
++=09=09=09return 1;
++=09return 0;
++}
++
++static int mdev_uevent(struct device *dev, struct kobj_uevent_env *env)
++{
++=09struct mdev_device *mdev =3D to_mdev_device(dev);
++
++=09return add_uevent_var(env, "MODALIAS=3Dmdev:c%02X", mdev->class_id);
++}
++
+ struct bus_type mdev_bus_type =3D {
+ =09.name=09=09=3D "mdev",
++=09.match=09=09=3D mdev_match,
++=09.uevent=09=09=3D mdev_uevent,
+ =09.probe=09=09=3D mdev_probe,
+ =09.remove=09=09=3D mdev_remove,
+ };
+diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_priv=
+ate.h
+index 7d922950caaf..c65f436c1869 100644
+--- a/drivers/vfio/mdev/mdev_private.h
++++ b/drivers/vfio/mdev/mdev_private.h
+@@ -33,6 +33,7 @@ struct mdev_device {
+ =09struct kobject *type_kobj;
+ =09struct device *iommu_device;
+ =09bool active;
++=09u16 class_id;
+ };
+=20
+ #define to_mdev_device(dev)=09container_of(dev, struct mdev_device, dev)
+diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
+index 30964a4e0a28..38431e9ef7f5 100644
+--- a/drivers/vfio/mdev/vfio_mdev.c
++++ b/drivers/vfio/mdev/vfio_mdev.c
+@@ -120,10 +120,16 @@ static void vfio_mdev_remove(struct device *dev)
+ =09vfio_del_group_dev(dev);
+ }
+=20
++static const struct mdev_class_id vfio_id_table[] =3D {
++=09{ MDEV_CLASS_ID_VFIO },
++=09{ 0 },
++};
++
+ static struct mdev_driver vfio_mdev_driver =3D {
+ =09.name=09=3D "vfio_mdev",
+ =09.probe=09=3D vfio_mdev_probe,
+ =09.remove=09=3D vfio_mdev_remove,
++=09.id_table =3D vfio_id_table,
+ };
+=20
+ static int __init vfio_mdev_init(void)
+diff --git a/include/linux/mdev.h b/include/linux/mdev.h
+index 0ce30ca78db0..78b69d09eb54 100644
+--- a/include/linux/mdev.h
++++ b/include/linux/mdev.h
+@@ -118,6 +118,7 @@ struct mdev_type_attribute mdev_type_attr_##_name =3D=
+=09=09\
+  * @probe: called when new device created
+  * @remove: called when device removed
+  * @driver: device driver structure
++ * @id_table: the ids serviced by this driver
+  *
+  **/
+ struct mdev_driver {
+@@ -125,6 +126,7 @@ struct mdev_driver {
+ =09int  (*probe)(struct device *dev);
+ =09void (*remove)(struct device *dev);
+ =09struct device_driver driver;
++=09const struct mdev_class_id *id_table;
+ };
+=20
+ #define to_mdev_driver(drv)=09container_of(drv, struct mdev_driver, driver=
+)
+@@ -132,6 +134,7 @@ struct mdev_driver {
+ void *mdev_get_drvdata(struct mdev_device *mdev);
+ void mdev_set_drvdata(struct mdev_device *mdev, void *data);
+ const guid_t *mdev_uuid(struct mdev_device *mdev);
++void mdev_set_class(struct mdev_device *mdev, u16 id);
+=20
+ extern struct bus_type mdev_bus_type;
+=20
+@@ -145,4 +148,9 @@ struct device *mdev_parent_dev(struct mdev_device *mdev=
+);
+ struct device *mdev_dev(struct mdev_device *mdev);
+ struct mdev_device *mdev_from_dev(struct device *dev);
+=20
++enum {
++=09MDEV_CLASS_ID_VFIO =3D 1,
++=09/* New entries must be added here */
++};
++
+ #endif /* MDEV_H */
+diff --git a/include/linux/mod_devicetable.h b/include/linux/mod_devicetabl=
+e.h
+index 5714fd35a83c..f32c6e44fb1a 100644
+--- a/include/linux/mod_devicetable.h
++++ b/include/linux/mod_devicetable.h
+@@ -821,4 +821,12 @@ struct wmi_device_id {
+ =09const void *context;
+ };
+=20
++/**
++ * struct mdev_class_id - MDEV device class identifier
++ * @id: Used to identify a specific class of device, e.g vfio-mdev device.
++ */
++struct mdev_class_id {
++=09__u16 id;
++};
++
+ #endif /* LINUX_MOD_DEVICETABLE_H */
+diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
+index ac5c8c17b1ff..115bc5074656 100644
+--- a/samples/vfio-mdev/mbochs.c
++++ b/samples/vfio-mdev/mbochs.c
+@@ -561,6 +561,7 @@ static int mbochs_create(struct kobject *kobj, struct m=
+dev_device *mdev)
+ =09mbochs_reset(mdev);
+=20
+ =09mbochs_used_mbytes +=3D type->mbytes;
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ =09return 0;
+=20
+ err_mem:
+diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
+index cc86bf6566e4..665614574d50 100644
+--- a/samples/vfio-mdev/mdpy.c
++++ b/samples/vfio-mdev/mdpy.c
+@@ -269,6 +269,7 @@ static int mdpy_create(struct kobject *kobj, struct mde=
+v_device *mdev)
+ =09mdpy_reset(mdev);
+=20
+ =09mdpy_count++;
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ =09return 0;
+ }
+=20
+diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
+index ce84a300a4da..90da12ff7fd9 100644
+--- a/samples/vfio-mdev/mtty.c
++++ b/samples/vfio-mdev/mtty.c
+@@ -755,6 +755,7 @@ static int mtty_create(struct kobject *kobj, struct mde=
+v_device *mdev)
+ =09list_add(&mdev_state->next, &mdev_devices_list);
+ =09mutex_unlock(&mdev_list_lock);
+=20
++=09mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
+ =09return 0;
+ }
+=20
+--=20
+2.19.1
+
