@@ -2,101 +2,201 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_HELO_NONE,SPF_PASS,TVD_PH_BODY_ACCOUNTS_PRE,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12657C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:57:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE7A9C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:59:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5EC22187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AAAA92173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:59:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SusUVAst"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gKTrM77V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732362AbfKFQ5o (ORCPT
+        id S1732213AbfKFQ7N (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:57:44 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:43620 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727824AbfKFQ5o (ORCPT
+        Wed, 6 Nov 2019 11:59:13 -0500
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:40378 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727894AbfKFQ7N (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:57:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=W/jgvGvtlOT33baRLN2nmwKV1/9KU4FO13RDpfuZP1w=; b=SusUVAstNuToStTW3xMVgBKPL
-        L593P0GytU+ai7zW4p4x4eAe57s7aN0WvU42L2RK13FpPrvODwCO2Gul7aD6UT1zdk7UziOcyi8EI
-        56yLui1bzCNrMBImu9kLnZOXGwJ+P3IX94rMJ7a+l/Fczbc3z1Zioce8JaiQ35rnYsmQgl+DSK6de
-        i9cIQOzSOwR2YAwgKC4PY05dE9capBgdV0//9PZXWy3vY8OUsMLIHgL0p0IF3BDxeJxfHV5nlIDf9
-        Ogx8YZ0ctueyo0G8u29sQk1fJFZfkX69aNBU9Yd3rvPzx48nTHtcQNjwGBO5vUI+Avc4zxhwBozdT
-        pX+6LVGJA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSOch-0001Fi-8M; Wed, 06 Nov 2019 16:57:35 +0000
-Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 17366301A79;
-        Wed,  6 Nov 2019 17:56:29 +0100 (CET)
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 24B742025EDA7; Wed,  6 Nov 2019 17:57:33 +0100 (CET)
-Date:   Wed, 6 Nov 2019 17:57:33 +0100
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Qais Yousef <qais.yousef@arm.com>
-Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
-        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
-        pauld@redhat.com, jdesfossez@digitalocean.com,
-        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
-        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
-        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
-        kernel-team@android.com, john.stultz@linaro.org
-Subject: Re: NULL pointer dereference in pick_next_task_fair
-Message-ID: <20191106165733.GY4114@hirez.programming.kicks-ass.net>
-References: <20191028174603.GA246917@google.com>
- <20191106120525.GX4131@hirez.programming.kicks-ass.net>
- <20191106130838.GL5671@hirez.programming.kicks-ass.net>
- <20191106150450.fa5ppdejiggsb46a@e107158-lin.cambridge.arm.com>
+        Wed, 6 Nov 2019 11:59:13 -0500
+Received: by mail-ed1-f68.google.com with SMTP id p59so19922314edp.7;
+        Wed, 06 Nov 2019 08:59:11 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=gBwyi2vUMFCQ9EewZLonM+Leo+vfm/dcmTg/r5rR65Q=;
+        b=gKTrM77V4qX8X9qNz87lZHT6mwnmLivmeLFE2de2qflrNk/4mrgkX04n48Isan050a
+         BroS/XWVaIoBDhky1eGK+V5+ai5JQClyjzpVtxCRkgSQLpEwbSqLUc6NXspmxepPQgRb
+         VP0oQ2gklGPuNKrluIIM3JYg7AzWz9733JZz40PVrqFbm3t0y9d68sMPOpCfRC61UJuy
+         SQi1jOz508jT/BwIq2ZRW/+vgiIQV5UWCw+sY2TKiDyi5/VLhttTJZ+FKpLXw3nchLfL
+         BGhoxx4Q65ewLeaZmVeNBGg9dY3cV/2Yb72fFpNfsLWyoyWTPlDYAXZgOK6a1XFdmUIr
+         oLRA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=gBwyi2vUMFCQ9EewZLonM+Leo+vfm/dcmTg/r5rR65Q=;
+        b=Gfvz/AjGdrMuIcvbYh3RMBJKZnhwx8Q8gwbUZkeBFtwW/qUhIbZN9aTCTqCJu5YXS5
+         gAdakheywFGMuuwHBXD7d3nWkvKMrQPOvnvfrLMcW20V3cnvq9UnGH4DidyTIJUl2IFp
+         byUcdrcxHcvqvr496rNG+4v9zkcR3meqI3cshJAboo0Lbmsp8833X2WkOP2PvVsKn8mW
+         4WysV3quny2i1p7kaAMx38bPPTSooDwUO7Zbj5Di2BQZjdF/0xJhcSHvVQE3WkG7CBAF
+         T7boN/REC4oUCHwo26/DC4BiqyWK3ZX4FO9x4CAD29FKAox1OgkkikD8eGURbD6v+lzb
+         dzsA==
+X-Gm-Message-State: APjAAAXe9buJgk97Zc6J2VxHvif15L+2s16Y+iWvtFRqfrKAHrU0NxoJ
+        EfZ2DbqtU8u2oNJTEBjlVZ9WFMaT0AP5IS0FqHE=
+X-Google-Smtp-Source: APXvYqzEuJcVK0/OeBybxHUu1Wd00sRuScOiu/CQgbGU9BUa13nu4GW5IOo8gWnrIuuAORXFO4+BtSQHgwGPslAckYI=
+X-Received: by 2002:a50:a697:: with SMTP id e23mr3871635edc.264.1573059550755;
+ Wed, 06 Nov 2019 08:59:10 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106150450.fa5ppdejiggsb46a@e107158-lin.cambridge.arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191105000129.GA6536@onstation.org> <CAF6AEGv3gs+LFOP3AGthXd4niFb_XYOuwLfEa2G9eb27b1wMMA@mail.gmail.com>
+ <20191105100804.GA9492@onstation.org> <CAF6AEGtB+g=4eiB31jkyuBGW7r0TBSh2oMj6TGtSgQ=q1ZV1tg@mail.gmail.com>
+ <20191106091335.GA16729@onstation.org> <CAF6AEGuEO1jg6KhOFWEMUjq4ZQy5w61dWJk6uLWRzHnMZYZv=g@mail.gmail.com>
+ <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
+In-Reply-To: <CAOCk7NomH2MsZ+FvPFAMWeabOFpyOwODCb_Ro07v+2k2v_C4NA@mail.gmail.com>
+From:   Rob Clark <robdclark@gmail.com>
+Date:   Wed, 6 Nov 2019 08:58:59 -0800
+Message-ID: <CAF6AEGsZkJJTNZ8SzHsSioEnkpekr1Texu5_EeBW1hP-bsOyjQ@mail.gmail.com>
+Subject: Re: [Freedreno] drm/msm: 'pp done time out' errors after async commit changes
+To:     Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Cc:     Brian Masney <masneyb@onstation.org>,
+        Rob Clark <robdclark@chromium.org>,
+        freedreno <freedreno@lists.freedesktop.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        dri-devel <dri-devel@lists.freedesktop.org>,
+        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
+        Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 03:04:50PM +0000, Qais Yousef wrote:
-> On 11/06/19 14:08, Peter Zijlstra wrote:
-> > On Wed, Nov 06, 2019 at 01:05:25PM +0100, Peter Zijlstra wrote:
+On Wed, Nov 6, 2019 at 8:47 AM Jeffrey Hugo <jeffrey.l.hugo@gmail.com> wrote:
+>
+> On Wed, Nov 6, 2019 at 9:30 AM Rob Clark <robdclark@gmail.com> wrote:
+> >
+> > On Wed, Nov 6, 2019 at 1:13 AM Brian Masney <masneyb@onstation.org> wrote:
+> > >
+> > > On Tue, Nov 05, 2019 at 08:23:27AM -0800, Rob Clark wrote:
+> > > > On Tue, Nov 5, 2019 at 2:08 AM Brian Masney <masneyb@onstation.org> wrote:
+> > > > > The 'pp done time out' errors go away if I revert the following three
+> > > > > commits:
+> > > > >
+> > > > > cd6d923167b1 ("drm/msm/dpu: async commit support")
+> > > > > d934a712c5e6 ("drm/msm: add atomic traces")
+> > > > > 2d99ced787e3 ("drm/msm: async commit support")
+> > > > >
+> > > > > I reverted the first one to fix a compiler error, and the second one so
+> > > > > that the last patch can be reverted without any merge conflicts.
+> > > > >
+> > > > > I see that crtc_flush() calls mdp5_ctl_commit(). I tried to use
+> > > > > crtc_flush_all() in mdp5_flush_commit() and the contents of the frame
+> > > > > buffer dance around the screen like its out of sync. I renamed
+> > > > > crtc_flush_all() to mdp5_crtc_flush_all() and removed the static
+> > > > > declaration. Here's the relevant part of what I tried:
+> > > > >
+> > > > > --- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > > > > +++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_kms.c
+> > > > > @@ -171,7 +171,15 @@ static void mdp5_prepare_commit(struct msm_kms *kms, struct drm_atomic_state *st
+> > > > >
+> > > > >  static void mdp5_flush_commit(struct msm_kms *kms, unsigned crtc_mask)
+> > > > >  {
+> > > > > -       /* TODO */
+> > > > > +       struct mdp5_kms *mdp5_kms = to_mdp5_kms(to_mdp_kms(kms));
+> > > > > +       struct drm_crtc *crtc;
+> > > > > +
+> > > > > +       for_each_crtc_mask(mdp5_kms->dev, crtc, crtc_mask) {
+> > > > > +               if (!crtc->state->active)
+> > > > > +                       continue;
+> > > > > +
+> > > > > +               mdp5_crtc_flush_all(crtc);
+> > > > > +       }
+> > > > >  }
+> > > > >
+> > > > > Any tips would be appreciated.
+> > > >
+> > > >
+> > > > I think this is along the lines of what we need to enable async commit
+> > > > for mdp5 (but also removing the flush from the atomic-commit path)..
+> > > > the principle behind the async commit is to do all the atomic state
+> > > > commit normally, but defer writing the flush bits.  This way, if you
+> > > > get another async update before the next vblank, you just apply it
+> > > > immediately instead of waiting for vblank.
+> > > >
+> > > > But I guess you are on a command mode panel, if I remember?  Which is
+> > > > a case I didn't have a way to test.  And I'm not entirely about how
+> > > > kms_funcs->vsync_time() should be implemented for cmd mode panels.
+> > >
+> > > Yes, this is a command-mode panel and there's no hardware frame counter
+> > > available. The key to getting the display working on this phone was this
+> > > patch:
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=2bab52af6fe68c43b327a57e5ce5fc10eefdfadf
+> > >
+> > > > That all said, I think we should first fix what is broken, before
+> > > > worrying about extending async commit support to mdp5.. which
+> > > > shouldn't hit the async==true path, due to not implementing
+> > > > kms_funcs->vsync_time().
+> > > >
+> > > > What I think is going on is that, in the cmd mode case,
+> > > > mdp5_wait_flush() (indirectly) calls mdp5_crtc_wait_for_pp_done(),
+> > > > which waits for a pp-done irq regardless of whether there is a flush
+> > > > in progress.  Since there is no flush pending, the irq never comes.
+> > > > But the expectation is that kms_funcs->wait_flush() returns
+> > > > immediately if there is nothing to wait for.
+> > >
+> > > I don't think that's happening in this case. I added some pr_info()
+> > > statements to request_pp_done_pending() and mdp5_crtc_pp_done_irq().
+> > > Here's the first two sets of messages that appear in dmesg:
+> > >
+> > > [   14.018907] msm fd900000.mdss: pp done time out, lm=0
+> > > [   14.018993] request_pp_done_pending: HERE
+> > > [   14.074208] mdp5_crtc_pp_done_irq: HERE
+> > > [   14.074368] Console: switching to colour frame buffer device 135x120
+> > > [   14.138938] msm fd900000.mdss: pp done time out, lm=0
+> > > [   14.139021] request_pp_done_pending: HERE
+> > > [   14.158097] mdp5_crtc_pp_done_irq: HERE
+> > >
+> > > The messages go on like this with the same pattern.
+> > >
+> > > I tried two different changes:
+> > >
+> > > 1) I moved the request_pp_done_pending() and corresponding if statement
+> > >    from mdp5_crtc_atomic_flush() and into mdp5_crtc_atomic_begin().
+> > >
+> > > 2) I increased the timeout in wait_for_completion_timeout() by several
+> > >    increments; all the way to 5 seconds.
+> >
+> > increasing the timeout won't help, because the pp-done irq has already
+> > come at the point where we wait for it..
+> >
+> > maybe the easy thing is just add mdp5_crtc->needs_pp, set to true
+> > before requesting, and false when we get the irq.. and then
+> > mdp5_crtc_wait_for_pp_done() just returns if needs_pp==false..
+>
+> On the otherhand, what about trying to make command mode panels
+> resemble video mode panels slightly?  Video mode panels have a vsync
+> counter in hardware, which is missing from command mode - however it
+> seems like the driver/drm framework would prefer such a counter.
+> Would it be a reasonable idea to make a software counter, and just
+> increment it every time the pp_done irq is triggered?
+>
+> I'm just thinking that we'll avoid issues long term by trying to make
+> the code common, rather than diverging it for the two modes.
+>
 
-> > > The only thing I'm now considering is if we shouldn't be setting
-> > > ->on_cpu=2 _before_ calling put_prev_task(). I'll go audit the RT/DL
-> > > cases.
-> > 
-> > So I think it all works, but that's more by accident than anything else.
-> > I'll move the ->on_cpu=2 assignment earlier. That clearly avoids calling
-> > put_prev_task() while we're in put_prev_task().
-> 
-> Did you mean avoids calling *set_next_task()* while we're in put_prev_task()?
+*possibly*, but I think we want to account somehow periods where
+display is not updated.
 
-Either, really. The change pattern does put_prev_task() first, and then
-restores state by calling set_next_task(). And it can do that while
-we're in put_prev_task(), unless we're setting ->on_cpu=2.
+fwiw, it isn't that uncommon for userspace to use vblanks to "keep
+time" (drive animations for desktop switch, window
+maximize/unmaximize, etc).. it could be a surprise when "vblank" is
+not periodic.
 
-> So what you're saying is that put_prev_task_{rt,dl}() could drop the rq_lock()
-> too and the race could happen while we're inside these functions, correct? Or
-> is it a different reason?
-
-Indeed, except it looks like that actually works (mostly by accident).
-
-> By the way, is all reads/writes to ->on_cpu happen when a lock is held? Ie: we
-> don't need to use any smp read/write barriers?
-
-Yes, ->on_cpu is fully serialized by rq->lock. We use
-smp_store_release() in finish_task() due to ttwu spin-waiting on it
-(which reminds me, riel was seeing lots of that).
+BR,
+-R
