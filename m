@@ -2,165 +2,112 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4689DC5DF68
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:21:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D9ECC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1594C2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:21:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573068070;
-	bh=kt51GLtJRGhpxeArH7PbPGc0NGH1R9MH+9Qgg9Bbl2E=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=UIlsYpC3C11zEwQWfX67VhdzYsqnVW8lJJT54ZZ3TVXeOpuNo+LXbcFIiu4rxHyDH
-	 LyyxkVh0AjWYeMY4hiODu9F++kH9yFJ89U5PBd5+f4J9yHxiMDoz9wYBrAtMGMORM6
-	 6zKUiiJuEuDiNFfoGyG+bo3bKr4QlPkl35+oqujI=
+	by mail.kernel.org (Postfix) with ESMTP id D7B3F2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:22:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728008AbfKFTVJ (ORCPT
+        id S1728640AbfKFTWa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55470 "EHLO mail.kernel.org"
+        Wed, 6 Nov 2019 14:22:30 -0500
+Received: from mga02.intel.com ([134.134.136.20]:50594 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFTVJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:21:09 -0500
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 23E4D2075C;
-        Wed,  6 Nov 2019 19:21:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573068068;
-        bh=kt51GLtJRGhpxeArH7PbPGc0NGH1R9MH+9Qgg9Bbl2E=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=IEAPWRQpe0iBBUsDao1BwZCcAb28KOkc7oYh6GKs2SroYSjzRVbW7TXz2ar0KL9d3
-         sUnYQrBCCep8Y0basL097DguXypI0HNiAZbSzC4S+d4qPGDr14sHOzYFSytB1ET9y6
-         OdgizA3YtPO8U5omwD7mj8rkAxMmeITXadRB5Qrg=
-Received: by mail-qk1-f169.google.com with SMTP id m16so25331958qki.11;
-        Wed, 06 Nov 2019 11:21:08 -0800 (PST)
-X-Gm-Message-State: APjAAAUmMApYqHhGrHxgINZDJ2HwAvSjwYXCfLEgICffl/G18Lsag116
-        51UTpt7qPDnYGrbs3nvuSBK6iKfoEFOLJ2/Fqg==
-X-Google-Smtp-Source: APXvYqx32bwEhx99vHD/kDAS+/S75zvMWBv+yskX8CR2wiE5zYnXor6TRM6cgKz+ApVQJE7zjdsPqEDMXPf0REI1jX8=
-X-Received: by 2002:a37:4904:: with SMTP id w4mr3368103qka.119.1573068067259;
- Wed, 06 Nov 2019 11:21:07 -0800 (PST)
+        id S1726713AbfKFTWa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:22:30 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:29 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
+   d="scan'208";a="403835062"
+Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
+  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:27 -0800
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org, jank@cadence.com,
+        srinivas.kandagatla@linaro.org, slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 00/19] soundwire: code hardening and suspend-resume support
+Date:   Wed,  6 Nov 2019 13:22:04 -0600
+Message-Id: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-References: <20191018001849.27205-1-srinivas.kandagatla@linaro.org>
- <20191018001849.27205-2-srinivas.kandagatla@linaro.org> <20191025204338.GA25892@bogus>
- <90b2d83b-f2b2-3a5d-4deb-589f4b48b208@linaro.org> <371955d9-ad2d-5ddc-31b4-710729feae42@linaro.org>
- <CAL_JsqJmRReW2n0R_Sh4f7AFGYA+ZLxuFDokLTSBKoFTg6uRSg@mail.gmail.com>
- <7811be04-dfda-5953-110c-bca685fdcaa4@linaro.org> <CAL_JsqJNcXe7YSUjHWyFO_czncnR3y7w3NP8ofXfCiXpMrqzRw@mail.gmail.com>
- <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-In-Reply-To: <b3d078a1-f87d-c146-bdf7-7a6b30547bd5@linaro.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 Nov 2019 13:20:55 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Message-ID: <CAL_JsqK2yBcWbZvK3qUeYW8q+NuWrUmCTBMWqwbAU_0i1fE4rA@mail.gmail.com>
-Subject: Re: [PATCH v2 01/11] ASoC: dt-bindings: add dt bindings for
- WCD9340/WCD9341 audio codec
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        Vinod Koul <vinod.koul@linaro.org>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        devicetree@vger.kernel.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        spapothi@codeaurora.org, Banajit Goswami <bgoswami@codeaurora.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 12:09 PM Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->
->
->
-> On 05/11/2019 19:08, Rob Herring wrote:
-> > On Wed, Oct 30, 2019 at 4:55 AM Srinivas Kandagatla
-> > <srinivas.kandagatla@linaro.org> wrote:
-> >>
-> >>
-> >>
-> >> On 29/10/2019 20:47, Rob Herring wrote:
-> >>> On Mon, Oct 28, 2019 at 7:45 AM Srinivas Kandagatla
-> >>> <srinivas.kandagatla@linaro.org> wrote:
-> >>>>
-> >>>>
-> >>>>
-> >>>> On 28/10/2019 12:40, Srinivas Kandagatla wrote:
-> >>>>> Its Phandle.
-> >>>>>
-> >>>>> something like this is okay?
-> >>>>>
-> >>>>> slim-ifc-dev:
-> >>>>>      $ref: '/schemas/types.yaml#/definitions/phandle-array'
-> >>>>
-> >>>> Sorry this should not be an array, so something like this:
-> >>>>
-> >>>>      slim-ifc-dev:
-> >>>>        description: SLIMBus Interface device phandle
-> >>>
-> >>> You're just spelling out the abbreviated name. I can do that much.
-> >>> What is 'SLIMBus Interface device'?
-> >>
-> >> Each SLIMBus Component contains one Interface Device. Which is
-> >> responsible for Monitoring and reporting the status of component, Data
-> >> line to Data pin connection setup for SLIMBus streaming. Interface
-> >> device is enumerated just like any other slim device.
-> >
-> > So a standard set of registers every slimbus device has? In hindsight,
-> > I would have made reg have 2 entries with both addresses. I guess that
-> > ship has sailed.
->
-> That will break SLIMBus bindings, Which is expecting one device per
-> device node.
+this patchset applies on top of "[PATCH v2 00/14] soundwire: intel:
+implement new ASoC interfaces".
 
-Like I said, that ship has sailed...
+It implements a series of improvements for:
+a) interrupt handling on Intel platforms in MSI mode
+b) race conditions on codec probe and enumeration
+c) suspend-resume issues (clock-stop mode not supported for now)
+d) underflow handling
+e) updates to the stream state machine which did not support valid
+ALSA transitions.
 
-> >
-> > It seems strange you would need both "devices" described as separate
-> > nodes in DT.
->
-> Because they are two different devices on the SLIMBus Component.
->
-> >
-> >>
-> >> We already have exactly same bindings for WCD9335 in upstream at:
-> >>
-> >> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/sound/qcom,wcd9335.txt?h=v5.4-rc5#n42
-> >>
-> >>>
-> >>> Is it a standard SLIMBus property? If so, document it in the right
-> >>> place. If not, then needs a vendor prefix.
-> >>
-> >> "SLIMBus Interface Device" itself is documented in SLIMBus Specification.
-> >>
-> >> If I remember it correctly You suggested me to move to "slim-ifc-dev"
-> >> as this is part of SLIMBus Specification.
-> >
-> > Probably so. If it is common, then document it in bindings/slimbus/bus.txt.
-> >
-> As we are dealing with audio codecs here, it might be that
-> "slim-ifc-dev" is common across wcd9335 and wcd934x but not all devices
-> on the SLIMBus Component would need handle to interface device. SLIMbus
-> can also be used for control buses as well which might not need this.
+These patches were tested extensively on 4 different platforms and are
+viewed as required for any sort of SoundWire-based product.
 
-Like you said, it's part of the the spec, so define it somewhere
-common, not in a device specific binding.
+Changes since v1: (no feedback received since October 23)
+added support for initialization_complete, integration with Realtek
+codecs exposed an additional race condition between the resume
+operation and restoration of settings in separate thread triggered by
+Slave status change.
+No other functional change
 
-> > Then here, 'slim-ifc-dev: true' is sufficient. You can just assume we
-> > convert bus.txt to schema (or feel free to do that :) ).
->
-> We need phandle to the interface device so that we can program the
-> streaming parameters for the SLIMBus Component.
+Bard Liao (3):
+  soundwire: intel/cadence: fix timeouts in MSI mode
+  soundwire: stream: only prepare stream when it is configured.
+  soundwire: intel: reinitialize IP+DSP in .prepare()
 
-'true' just means 'I'm using the property' and have no other
-constraints. The constraints like type would be defined in the common
-binding and no need to duplicate here.
+Pierre-Louis Bossart (16):
+  soundwire: fix race between driver probe and update_status callback
+  soundwire: bus: add PM/no-PM versions of read/write functions
+  soundwire: bus: write Slave Device Number without runtime_pm
+  soundwire: intel: add helpers for link power down and shim wake
+  soundwire: intel: Add basic power management support
+  soundwire: intel: add pm_runtime support
+  soundwire: intel: reset pm_runtime status during system resume
+  soundwire: bus: add helper to reset Slave status to UNATTACHED
+  soundwire: intel: call helper to reset Slave states on resume
+  soundwire: bus: check first if Slaves become UNATTACHED
+  soundwire: add enumeration_complete signaling
+  soundwire: bus: add initialization_complete signaling
+  soundwire: intel: disable pm_runtime when removing a master
+  soundwire: bus: disable pm_runtime in sdw_slave_delete
+  soundwire: stream: update state machine and add state checks
+  soundwire: stream: do not update parameters during DISABLED-PREPARED
+    transition
 
-Rob
+ Documentation/driver-api/soundwire/stream.rst |  63 +++-
+ drivers/soundwire/bus.c                       | 165 +++++++--
+ drivers/soundwire/bus.h                       |   3 +
+ drivers/soundwire/bus_type.c                  |   5 +
+ drivers/soundwire/cadence_master.c            |  17 +-
+ drivers/soundwire/cadence_master.h            |   4 +
+ drivers/soundwire/intel.c                     | 328 ++++++++++++++++--
+ drivers/soundwire/intel.h                     |   2 +
+ drivers/soundwire/intel_init.c                |  45 ++-
+ drivers/soundwire/slave.c                     |   4 +
+ drivers/soundwire/stream.c                    |  64 +++-
+ include/linux/soundwire/sdw.h                 |   1 +
+ include/linux/soundwire/sdw_intel.h           |   2 +
+ 13 files changed, 632 insertions(+), 71 deletions(-)
+
+-- 
+2.20.1
+
