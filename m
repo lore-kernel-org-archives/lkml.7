@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7CF8C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C96D2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97DF4217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A77D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:09:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="hwEVVRAj"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="FEKUt/CI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731155AbfKFDJI (ORCPT
+        id S1731167AbfKFDJN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:09:08 -0500
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:43820 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731131AbfKFDJG (ORCPT
+        Tue, 5 Nov 2019 22:09:13 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:44878 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731131AbfKFDJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:09:06 -0500
-Received: by mail-pg1-f196.google.com with SMTP id l24so16115387pgh.10
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:09:06 -0800 (PST)
+        Tue, 5 Nov 2019 22:09:12 -0500
+Received: by mail-pf1-f194.google.com with SMTP id q26so17709671pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:09:12 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=NQVs5wwFF+ZXBQRWhQmdDS/dpWCW86lqTZTcB1oCVCs=;
-        b=hwEVVRAjUSZdGmd+zIYiiAm0BS6vQRqT7Np8QLCJa9rwgas6NUYjnhfkxHtysM2NyL
-         3gqqp68+OE4P2hnz0GpO+I46aH+QG3hAxxxcnelkgX2r/YMrlvKrsawetAKp9JCiRRqE
-         OAGyhs55+Hnz0vlSMDamrklsOrmY5Pcm97Z91Y30EhluCasiFBZpNilghWULDcjczBqO
-         mygnTgXwjiCXE0sqnj6Jz/SU6uHZH3yEKabR4lbld4B0wynD8fnk4lR02tSLVmIhdYu8
-         XJ/GpU/rAbDRkgoh8bFh0hg7qQaCVAbssY8fkgRhfF7uJO84arARAzE72rim2JzgLg06
-         wXqw==
+        bh=MbFjCcAubd11uC4jn25Hggo8LJLFYUWUem/fHxABFTk=;
+        b=FEKUt/CI+v+uoMiHa4DN5cE1nnITW5AZOfT6jXOsFTkw/ZGuaRhlwL33bXq2KOYzOJ
+         fbt7cSQ7ipBXtHdx79ufPvA2Rpjbsm67YLO0KOme19TNyDOCC3qvr7MvWNto3Lio/UhH
+         rELinsD9fmyfXXjvXyW5wYO5VKJFzG64AnPXdR9gM2vFJQGeYezPve6ADxo6mTM19EDf
+         iXR3LhxMc2/T664FpxBhu91nbf+QC3z7E9t4WK6oqyTuzLEKBBrb8xUL61zWgOiFN5co
+         H5burYeP2hKe8553Bc3GBunPVq46LseahtmTOXXOQp5Gliwb6yBCad6bpPnWnY6z8MDh
+         XNRA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=NQVs5wwFF+ZXBQRWhQmdDS/dpWCW86lqTZTcB1oCVCs=;
-        b=kzhJlMbSKj1ARRB18aWV5/Bg4kIHa6q9mfX9qoNENeVPYgzLQ7hzxlFcz5pOObcZs5
-         flvkUI0NuqsVTammf9SVlhF0yNF9JYpcFSSc/MOrrzw0Swy5QJF9a+w4bDL0bEl42sao
-         vO2cW/bSa5H8jmQcX68x487cMb+bvuSFQ2GLK6uNH0QLNBDYVr20mLZOqk/i0yT1Hqft
-         MBwjx0gWFpKq8MVXzQGZYfXe9Y0LoQAYA3iFBdjb9aIUoMgsCX+dEWZePIpfTZha9iKH
-         ry6FuS5sc4gw2Vqc9o2BlbakwLZsk3jMHetGvZPN10ot+WUDP7tb5qAc6kwvRmaphkeK
-         m6CA==
-X-Gm-Message-State: APjAAAX3kujK/N3VaExQThNlIiAV0IshIz1l2daploZQJjFWsmp0D5Zj
-        SK9qDpMX+d4XTAIpgmGA+X6XKcnInGA=
-X-Google-Smtp-Source: APXvYqzO/MiX6rzUz7ULsfgX2r4ZuEI8e6SlpcEQ3E12/qqbszPZo0vGvcYI2lG10DGwQ7pYN8yQaA==
-X-Received: by 2002:a63:c405:: with SMTP id h5mr240542pgd.60.1573009745814;
-        Tue, 05 Nov 2019 19:09:05 -0800 (PST)
+        bh=MbFjCcAubd11uC4jn25Hggo8LJLFYUWUem/fHxABFTk=;
+        b=lff5zTlL/aoRC9VSFoaSRCEWALTU5imonGHLeYgiYnovKErFtA4o0RHwx9ah7JgWD2
+         ijbHTN2d16Xl3qa3xEi9BXJ80TUBumW3cSNJ1Xs/elTR4FWQbBNHOOx+D8zgEbXV1+wt
+         LRdtAryPSkrxV0O0IhU/lNs4jtRdvUlwt6SyxtGD9d64knrZnDDqy/uWpxYzbUkwDydY
+         a/MqkoxKAFQVofgrpu8yayjcqdnCxGUTpdB2VuwL56oZ4TfMfQZXpBBrbFUGOh6HwOqI
+         6QXcbTzQ0I9bVYoRpIl96qOxHbQhOruV2ko5jVAJDAr8dTLMb6XpQ1spG3PJuedqbAML
+         hHow==
+X-Gm-Message-State: APjAAAV2ff85zXHH6MQdbBkTS8E2IyQODlvWSm+n1Pb8esmoVmF2KGdr
+        Cv1cqeakGGewCh1J4/sf1N7H4vcf8XA=
+X-Google-Smtp-Source: APXvYqxkEDOGkuoqfX+brJqg5uvyvczdQs5nnxdgLvS8d5e3/i1UmiBjK16f/wM5RXUhQq0sKHYIyA==
+X-Received: by 2002:a17:90a:22a6:: with SMTP id s35mr604467pjc.3.1573009750094;
+        Tue, 05 Nov 2019 19:09:10 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.09.02
+        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.09.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:09:05 -0800 (PST)
+        Tue, 05 Nov 2019 19:09:09 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,13 +67,16 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Daniel Thompson <daniel.thompson@linaro.org>,
-        Douglas Anderson <dianders@chromium.org>,
-        Jason Wessel <jason.wessel@windriver.com>,
-        kgdb-bugreport@lists.sourceforge.net
-Subject: [PATCH 47/50] kdb: Don't play with console_loglevel
-Date:   Wed,  6 Nov 2019 03:05:38 +0000
-Message-Id: <20191106030542.868541-48-dima@arista.com>
+        Ben Segall <bsegall@google.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Ingo Molnar <mingo@redhat.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Mel Gorman <mgorman@suse.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>
+Subject: [PATCH 48/50] sched: Print stack trace with KERN_INFO
+Date:   Wed,  6 Nov 2019 03:05:39 +0000
+Message-Id: <20191106030542.868541-49-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191106030542.868541-1-dima@arista.com>
 References: <20191106030542.868541-1-dima@arista.com>
@@ -84,53 +87,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Print the stack trace with KERN_EMERG - it should be always visible.
+Aligning with other messages printed in sched_show_task() - use
+KERN_INFO to print the backtrace.
 
-Playing with console_loglevel is a bad idea as there may be more
-messages printed than wanted. Also the stack trace might be not printed
-at all if printk() was deferred and console_loglevel was raised back
-before the trace got flushed.
-
-Cc: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Douglas Anderson <dianders@chromium.org>
-Cc: Jason Wessel <jason.wessel@windriver.com>
-Cc: kgdb-bugreport@lists.sourceforge.net
+Cc: Ben Segall <bsegall@google.com>
+Cc: Dietmar Eggemann <dietmar.eggemann@arm.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Juri Lelli <juri.lelli@redhat.com>
+Cc: Mel Gorman <mgorman@suse.de>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vincent Guittot <vincent.guittot@linaro.org>
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- kernel/debug/kdb/kdb_bt.c | 11 ++++-------
- 1 file changed, 4 insertions(+), 7 deletions(-)
+ kernel/sched/core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/debug/kdb/kdb_bt.c b/kernel/debug/kdb/kdb_bt.c
-index 7e2379aa0a1e..5ce1fe082a38 100644
---- a/kernel/debug/kdb/kdb_bt.c
-+++ b/kernel/debug/kdb/kdb_bt.c
-@@ -21,22 +21,19 @@
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 774ff0d8dfe9..eb50c70e73ea 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5932,7 +5932,7 @@ void sched_show_task(struct task_struct *p)
+ 		(unsigned long)task_thread_info(p)->flags);
  
- static void kdb_show_stack(struct task_struct *p, void *addr)
- {
--	int old_lvl = console_loglevel;
--	console_loglevel = CONSOLE_LOGLEVEL_MOTORMOUTH;
- 	kdb_trap_printk++;
- 	kdb_set_current_task(p);
- 	if (addr) {
--		show_stack((struct task_struct *)p, addr);
-+		show_stack_loglvl(p, addr, KERN_EMERG);
- 	} else if (kdb_current_regs) {
- #ifdef CONFIG_X86
--		show_stack(p, &kdb_current_regs->sp);
-+		show_stack_loglvl(p, &kdb_current_regs->sp, KERN_EMERG);
- #else
--		show_stack(p, NULL);
-+		show_stack_loglvl(p, NULL, KERN_EMERG);
- #endif
- 	} else {
--		show_stack(p, NULL);
-+		show_stack_loglvl(p, NULL, KERN_EMERG);
- 	}
--	console_loglevel = old_lvl;
- 	kdb_trap_printk--;
+ 	print_worker_info(KERN_INFO, p);
+-	show_stack(p, NULL);
++	show_stack_loglvl(p, NULL, KERN_INFO);
+ 	put_task_stack(p);
  }
- 
+ EXPORT_SYMBOL_GPL(sched_show_task);
 -- 
 2.23.0
 
