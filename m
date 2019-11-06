@@ -2,107 +2,83 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 299E0FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:37:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24790FC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:38:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE18B207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:37:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC8DE207FA
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:38:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Ws7n2u3+"
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="kxCPnkll"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727972AbfKFXhx (ORCPT
+        id S1732833AbfKFXiy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:37:53 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:40427 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727029AbfKFXhw (ORCPT
+        Wed, 6 Nov 2019 18:38:54 -0500
+Received: from mail-yb1-f195.google.com ([209.85.219.195]:36961 "EHLO
+        mail-yb1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728065AbfKFXix (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:37:52 -0500
-Received: by mail-pf1-f195.google.com with SMTP id r4so441719pfl.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 15:37:52 -0800 (PST)
+        Wed, 6 Nov 2019 18:38:53 -0500
+Received: by mail-yb1-f195.google.com with SMTP id e13so238622ybh.4
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 15:38:52 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=I8dPU8PsIcjQN/qde2NZnnh3S5qLVWrToiL1ovmtnNY=;
-        b=Ws7n2u3+b3+8KEXtZJewZYqykECNj6uA47mb/cDxScvuF7J8mD7C4qC58TQwUWfOhT
-         zKiLyWDL8556asRqUA4bS5qUDJ0dNIFZ5veM3tP5KuIsKIMokH1TKDBFqiom+XC8B1n0
-         T4MJXSSrD/wBLaLOdl4fL46deH893TQucIACAhPYdYId3aUBQigD5B1NgQDTvLr895qH
-         ZUTosV/4fPVHtkzn8PKNYjX0OcXZebWpXVqxVFWTLQxBC6S6dnG7vqt608q65h7A3kJd
-         bzeRGGVDTubEzwqtBiAnP7BRNsQnygMFmWlEtVzOeKChMgHte95VNYuCzUszrzSSQc7Z
-         KhbQ==
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=NXCGiVKTXXEjzDxDKPWm4qRbQINthtPG/DF3mE8dX04=;
+        b=kxCPnkllRFkeV9ZKT0vPLK4zwrVw+ZIGPflI0u5vk0j5pV5zLWHRpkAzf35kkz/5XC
+         RIlII4oE7WfBPgvN2mVCbQYEo9K5fyHa0b87urxXjOe1LqWcNYx1mQ+M1OENSM6qPNc1
+         KKlDhCAKesadT+zSpoL5FMzs/ZDI2z/yuaG4z8Lh7st3mJDDhqDucU7bYyX8r6Tx8tTv
+         IvWbK17y0NFyGnmfQKAGivMO8CFlccpSFp0KyWcXwip0cWszVzs5oguhC41DP9kdj+vc
+         uzSbWQgVizDX0lT+3W8BRm8iLDVZd530GuZg1sYszeXs4yPAj/n7rNX/rkb6bP6sTFt1
+         SRCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=I8dPU8PsIcjQN/qde2NZnnh3S5qLVWrToiL1ovmtnNY=;
-        b=LAof+GwM76rwO6HaUykMz/0v9YHpJNDhkXHX7KmFfrzFDJPxKS1UQuYb+L8NtUQ9hy
-         SUKVop95sfjo0F+oPcgxnYFCPL1lwSRNGTSRgdF/9h+Tb5lLjZ8Ps9PiuyMn0kae3cr7
-         TeKD8mueNuNrwKF58BNg9JmFuFZOqpSfpckvYo0NDFqsYkQFlSzBz/5xE1UWclRfbuwx
-         Jjwc8qt4LyDfSCb5NZ3kRZ64u9z3rrTOg7r0RVDFgJJnRcwqUkcWHHQZ1gg1yUoVBg53
-         YxWLXyIlcg00eFWi7XAI1XFEW0LyRk3KAN+9cRhWlCgjfDXHXXBfQKamVAJdCsEGnMw8
-         ZBRA==
-X-Gm-Message-State: APjAAAWxyb1E9LeAJa+SxRuAXYUMNL8qFZesyCIkQAzW3NNLllMvMPsJ
-        wplM8fn/tGRiKvvGD5yuo/UdpQ==
-X-Google-Smtp-Source: APXvYqw9iZMhdp6QP4E2+vOP8jk/LTcrF0hI26oCv/HF5wbRGuVeoDYZzb1ZlU6yuqTo+vQkhG8n+Q==
-X-Received: by 2002:a63:181f:: with SMTP id y31mr592777pgl.186.1573083471320;
-        Wed, 06 Nov 2019 15:37:51 -0800 (PST)
-Received: from smuckle.san.corp.google.com ([2620:15c:2d:3:8fbe:ee3b:c81d:238d])
-        by smtp.gmail.com with ESMTPSA id i13sm92639pfo.39.2019.11.06.15.37.50
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 15:37:50 -0800 (PST)
-Subject: Re: [PATCH] rtc: class: support hctosys from modular RTC drivers
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Alessandro Zummo <a.zummo@towertech.it>,
-        linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        kernel-team@android.com
-References: <20191106194625.116692-1-smuckle@google.com>
- <20191106231923.GK8309@piout.net>
-From:   Steve Muckle <smuckle@google.com>
-Message-ID: <b96f085b-8a0c-7c71-4fde-8af83d49823a@google.com>
-Date:   Wed, 6 Nov 2019 15:37:49 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=NXCGiVKTXXEjzDxDKPWm4qRbQINthtPG/DF3mE8dX04=;
+        b=sfTarDzSu2lROpWp+kc7YokLRXIJMCd0JB8YBbY997H9FuDwmz0gtaooz3tuqqxgfp
+         6OQFhDLVaXGTbsTX+uwxeT2MCtwoqjTbeUjlVb6WDghtvU/WjMPx95SLbjjQ7Pan0yBV
+         nOCt3gkD5kkFR6WyrUO/zv5Szr0Z9sKpR2/n5a3jz050RElJOrOzSypS9X4c35b67kwf
+         THMSXySKo6fdpwIZmUvQT021UuIZsMyR3/E6HHhdQsbKGW/aKBTmdcycwosKhPgh2Sfm
+         ttUkt7X3lC30rKM01hnVtla8PAFyJ+PPNyFgN7SXHF8pt7SXNrxl91XIjt23/7Tq08ns
+         62aw==
+X-Gm-Message-State: APjAAAVNhKFuocX+YDVyeErLUyGzj+RzuvfoWLyhRvscgIHk7+pCECcA
+        irkDdx5jDIXakZzbu5MEOIpyanxa3PM=
+X-Google-Smtp-Source: APXvYqym0i0romvCrdOaz7lsINZQYcGiuzpul4r2zM7EYgZuhgx34Vaj0wOMFqNyMeyL778+8rXK9g==
+X-Received: by 2002:a25:af05:: with SMTP id a5mr633074ybh.155.1573083531576;
+        Wed, 06 Nov 2019 15:38:51 -0800 (PST)
+Received: from cakuba.netronome.com ([64.63.152.34])
+        by smtp.gmail.com with ESMTPSA id z127sm194842ywb.38.2019.11.06.15.38.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 15:38:51 -0800 (PST)
+Date:   Wed, 6 Nov 2019 18:38:48 -0500
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Jonas Bonn <jonas@norrbonn.se>
+Cc:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, davem@davemloft.net
+Subject: Re: [PATCH v2 1/5] rtnetlink: allow RTM_SETLINK to reference other
+ namespaces
+Message-ID: <20191106183848.3b914620@cakuba.netronome.com>
+In-Reply-To: <20191106053923.10414-2-jonas@norrbonn.se>
+References: <20191106053923.10414-1-jonas@norrbonn.se>
+        <20191106053923.10414-2-jonas@norrbonn.se>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-In-Reply-To: <20191106231923.GK8309@piout.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 3:19 PM, Alexandre Belloni wrote:
-> On 06/11/2019 11:46:25-0800, Steve Muckle wrote:
->> Due to distribution constraints it may not be possible to statically
->> compile the required RTC driver into the kernel.
->>
->> Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
->> or not) by checking at the end of RTC device registration whether the
->> time should be synced.
->>
-> 
-> This does not really help distributions because most of them will still
-> have "rtc0" hardcoded and rtc0 is often the rtc that shouldn't be used.
+On Wed,  6 Nov 2019 06:39:19 +0100, Jonas Bonn wrote:
+> +	if (tb[IFLA_TARGET_NETNSID]) {
+> +		int32_t netnsid = nla_get_s32(tb[IFLA_TARGET_NETNSID]);
+> +		tgt_net = rtnl_get_net_ns_capable(NETLINK_CB(skb).sk, netnsid);
 
-Just for my own edification, why is that? Is rtc0 normally useless on PC 
-for some reason?
-
-On the platforms I'm working with I believe it can be assured that rtc0 
-will be the correct rtc. That doesn't help typical distributions though.
-
-What about a kernel parameter to optionally override the rtc hctosys 
-device at runtime?
-
-> Can't you move away from HCTOSYS and do the correct thing in userspace
-> instead of the crap hctosys is doing?
-
-Yes, I just figured it's a small change, and if hctosys can be made to 
-work might as well use that.
+No comments on merits but you should definitely run this through
+checkpatch..
