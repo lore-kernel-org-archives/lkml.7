@@ -2,89 +2,92 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26DDDC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F577C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE71121882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0BB421882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:00:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573012825;
-	bh=EHB0u3MVxEhZWTCAi5ESkXM4zpATJfaJBa2YTknoRTg=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=oipuylEs3Vt1mOvMe7IcKWAVbNhgtLeWr4X+xCIjjGsSEiEXd4+UwXtNOBl1i3Tn4
-	 d/0PQqE3yiVP0P2CYj7Wh/Zetuw6tVtVPTW+eyPaIeBxd5sJKxNzlklteW+lkB9a6S
-	 cnTjKPp5rsTsLIxAxpRPnif5cjKDTyaAKAJQ5kB0=
+	s=default; t=1573012828;
+	bh=EGN2Lrh3me+FAqx+ox1JwNnU297H3BtLLGtjLCglSss=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=ncmKjBaMzCqmEEMWT9yxkeio2CKCvl76lAfrPY+ziwp6EnxppMmpuMAzuMgZLVGJs
+	 uf/PTfMy3Itle9j1EFjJwfe0eAEthWmAu6/XeNqJBwqdJvsEHqzSx6/Zp4C+3g1PKz
+	 v6WaXoEScdejGpXvhGucr3siQj/Ega3o8V2FqyOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731192AbfKFEAZ (ORCPT
+        id S1731216AbfKFEA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:00:25 -0500
-Received: from mail.kernel.org ([198.145.29.99]:42600 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727266AbfKFEAY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:00:24 -0500
-Received: from localhost.localdomain (c-73-231-172-41.hsd1.ca.comcast.net [73.231.172.41])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BF06F2087E;
-        Wed,  6 Nov 2019 04:00:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573012824;
-        bh=EHB0u3MVxEhZWTCAi5ESkXM4zpATJfaJBa2YTknoRTg=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=ED+AyhOAGBVb9eR7kmanZ6wkAt4L+7d3LzYOhxHrTEdk65Q6f+V6vk5gZxfwJuoLL
-         qbbGHBThIPKa5oqbpA8lBNoUPrjZ/vauXJeSdCFvF1FM6/NL8a7CqBQxXfMecOsBMp
-         ciWGs8vlr8ZM46fm58Xbgd5Q2FC3L1aBBgaZEHWM=
-Date:   Tue, 5 Nov 2019 20:00:22 -0800
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Alexander Duyck <alexander.duyck@gmail.com>
-Cc:     kvm@vger.kernel.org, mst@redhat.com, linux-kernel@vger.kernel.org,
-        willy@infradead.org, mhocko@kernel.org, linux-mm@kvack.org,
-        mgorman@techsingularity.net, vbabka@suse.cz,
-        yang.zhang.wz@gmail.com, nitesh@redhat.com, konrad.wilk@oracle.com,
-        david@redhat.com, pagupta@redhat.com, riel@surriel.com,
-        lcapitulino@redhat.com, dave.hansen@intel.com,
-        wei.w.wang@intel.com, aarcange@redhat.com, pbonzini@redhat.com,
-        dan.j.williams@intel.com, alexander.h.duyck@linux.intel.com,
-        osalvador@suse.de
-Subject: Re: [PATCH v13 3/6] mm: Introduce Reported pages
-Message-Id: <20191105200022.ed3b5f803bef55377bcc5d30@linux-foundation.org>
-In-Reply-To: <20191105220219.15144.69031.stgit@localhost.localdomain>
-References: <20191105215940.15144.65968.stgit@localhost.localdomain>
-        <20191105220219.15144.69031.stgit@localhost.localdomain>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 5 Nov 2019 23:00:27 -0500
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45498 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKFEA0 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 23:00:26 -0500
+Received: by mail-oi1-f194.google.com with SMTP id k2so19710918oij.12;
+        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ysqS9rcdYrTtEuoWI9nbxHqCjwSJ2N3Q7Hvz5EM+mmA=;
+        b=Qry9BVoYDD8cxzLSjE/RKrBpCIwYoCdorOgRkAE8ePauvrZKkqPVSiv9aTmaasgnje
+         Xw8nbu2faNbSO7RQfp3085YljoANOOaPLbl3XDj0eK1pE7cbKkVR9UgJnfkVyiUQWcZ4
+         3gW2xv/X9ANuvl3rvnguqu2ICj89ugNCpYzucKgDGd+i0bbRLLmjlV5K9G9JCRaBdQqV
+         Ob9eGJZR0X5R0afKO1LdfhKbpdBLSJVxijVkKfOsLYjqhyJtvQX+lgf7PYDAE/vuRDBy
+         LHTS+IONBbaEQtC4m23SbE9p07tqcyQU+wcw5OxeKMfecf1dZxaf3qK03p0cdhg/m7+H
+         oxzg==
+X-Gm-Message-State: APjAAAUOzYx3Josg1ZdH7LjmbWSv2iw+bcGMrR7yY3hhowg2WRMFvh9L
+        qdSG9BzuqEAibRv4RyIJgg==
+X-Google-Smtp-Source: APXvYqyT5mAWFh8aqygKOd9JM7fV1DLfzWIErkA64Ibng0c8MMAJ375J/TSg1ewt4VmCOvZwOVxrFw==
+X-Received: by 2002:aca:5104:: with SMTP id f4mr407777oib.40.1573012825074;
+        Tue, 05 Nov 2019 20:00:25 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id p18sm6244401oip.18.2019.11.05.20.00.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 20:00:24 -0800 (PST)
+Date:   Tue, 5 Nov 2019 22:00:23 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 5/7] dt-bindings: clock: Add YAML schemas for the QCOM
+ VIDEOCC clock bindings
+Message-ID: <20191106040023.GA4519@bogus>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+ <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572524473-19344-6-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 05 Nov 2019 14:02:19 -0800 Alexander Duyck <alexander.duyck@gmail.com> wrote:
+On Thu, 31 Oct 2019 17:51:11 +0530, Taniya Das wrote:
+> The VIDEOCC clock provider have a bunch of generic properties that
+> are needed in a device tree. Add a YAML schemas for those.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,videocc.txt     | 18 -------
+>  .../devicetree/bindings/clock/qcom,videocc.yaml    | 61 ++++++++++++++++++++++
+>  2 files changed, 61 insertions(+), 18 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.txt
+>  create mode 100644 Documentation/devicetree/bindings/clock/qcom,videocc.yaml
+> 
 
-> In order to pave the way for free page reporting in virtualized
-> environments we will need a way to get pages out of the free lists and
-> identify those pages after they have been returned. To accomplish this,
-> this patch adds the concept of a Reported Buddy, which is essentially
-> meant to just be the Uptodate flag used in conjunction with the Buddy
-> page type.
-
-build fix
-
---- a/mm/page_reporting.h~mm-introduce-reported-pages-fix
-+++ a/mm/page_reporting.h
-@@ -158,7 +158,7 @@ free_area_reporting(struct zone *zone, u
- 	return false;
- }
- static inline struct list_head *
--get_unreported_tail(struct zone *zone, unsigned int order, int migratetype)
-+get_unreported_tail(unsigned int order, int migratetype)
- {
- 	return NULL;
- }
-_
-
+Reviewed-by: Rob Herring <robh@kernel.org>
