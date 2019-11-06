@@ -3,99 +3,195 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C46DC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A52CC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D94E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:35:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7876217F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="q9IIk3N0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VQOR9XFk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729435AbfKFTfx (ORCPT
+        id S1732006AbfKFTga (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:35:53 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:41848 "EHLO
+        Wed, 6 Nov 2019 14:36:30 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:36004 "EHLO
         mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfKFTfw (ORCPT
+        with ESMTP id S1726713AbfKFTga (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:35:52 -0500
-Received: by mail-wr1-f68.google.com with SMTP id p4so27441253wrm.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:35:51 -0800 (PST)
+        Wed, 6 Nov 2019 14:36:30 -0500
+Received: by mail-wr1-f68.google.com with SMTP id r10so694429wrx.3;
+        Wed, 06 Nov 2019 11:36:28 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
-        b=q9IIk3N0mImL9Zq2/ZsglmYzRHe8LvSH4HOm2W+RTudvjNo5s5lAxnFr5bmJSNSw27
-         Qw3oITHHNNjuSyYlXtyhNuzi75kFzY+upd6DMsEDo/jzMXzhf3EEDNelH3Fdi2cYhDky
-         fRwv7kxmZrslp1sKm75QW/F8HM1WlNCid38gtm3uUiGtZLND5VsrEu3pzVtZQMgqbTBR
-         mOyiZcWxhwz/98a3C2Mal9trGeroRzY5pqlHvOyJ+6YewtI7J/97G5MvL8CDEqUXgAKH
-         v6ummHlWnV3CW56zPq85BsIA0hKvApNHdOGNV3NDDQT1VAYJyRyNS2nHbVSgmsFkkBek
-         EfvQ==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WZ6A0u9VmEvIT2gJ+ANYj5GDOWs+Sp/CGhdOzWgLIBw=;
+        b=VQOR9XFkF8hzle1zZL3VAmZJDpl3K8c+jey857IVovrFUFF1ZhuV9CjTF2nBrIInwk
+         3bVlfw+gMxMQZKPLDq+BDw/OrnpkKBmIG+KSYsb3K72SApeUA/QBwWU9kd9RsivWGXKE
+         EpxQQjDrrsXXfqPT+BmeSCale7/ciRoWA4XnzLdz6ypBJQwhv9nNDMKedlU62lTLGae+
+         ISK864iEH/Dq413wdgMMChtxCja6Stncx990/jFAag/E8wggtonMTKZLdB0QSPUiuyJp
+         kOjwuVnHoziVTs/JT/6hiAf3stbEy02IKu3PgWysPzXGZ2qtvJhLxmrYx8Sr0sjtuPD6
+         vthg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=Svt0Prn9o6q9bRi2+Z71xLOP8eaZ+QBmItrF2aM0ga4=;
-        b=r1icbelU/eelPJhZCNaclf/u/neuGZR/5Tnz2VdD6aFiF4c4aKnrlwGiVOj9VbGSlN
-         1k59r2fAWQRmabXWIrDM87JGImmWcLgHRvd2Au9O72EfmM+N29zqjYHpDqTDCOTfpcNk
-         9lEa0vafB+Cu6rND01Rx1cQsQf5vkoxaCrtdN6yDglQmZPBsgziOJ1sIGGcyC7ih8fd6
-         wmXgbZcGk2cHCEsHABx+SzqplxPSWaFftzQE+F7RCv6Frq+0KOqgaXlE7PEcf5R9GoE8
-         sO5dq4boawqfE+blPUOCKAbrRGddM2y/Y+RhrQFw6uCR8I3aBAce7Jzw4JI6WnpFZg6M
-         4qAw==
-X-Gm-Message-State: APjAAAXXj0zjzub5jhIpY1LaMaK7PfwGlWt/vcmnPjLOcQOTkiISPutf
-        64pNkBqwgKBGMmsKjwqCcKALZw==
-X-Google-Smtp-Source: APXvYqz6zkvJvFecNHz0gOcK2N6VovMdJvan9hQM6kndetNbNVDayZPMavQNRQqFjByWobWfaToSrQ==
-X-Received: by 2002:adf:97dd:: with SMTP id t29mr4070073wrb.283.1573068950319;
-        Wed, 06 Nov 2019 11:35:50 -0800 (PST)
-Received: from localhost (amontpellier-652-1-71-119.w109-210.abo.wanadoo.fr. [109.210.54.119])
-        by smtp.gmail.com with ESMTPSA id w13sm30928713wrm.8.2019.11.06.11.35.49
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 11:35:49 -0800 (PST)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Christian Hewitt <christianshewitt@gmail.com>,
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=WZ6A0u9VmEvIT2gJ+ANYj5GDOWs+Sp/CGhdOzWgLIBw=;
+        b=sMeF8dWrXTozPaZ4ihmNLmkngaNxMYdpci9Q3IVSQbNpZ4P96JtyU4268aJQyU+zG4
+         LA78jKuLUgBEifEI8StSehgu03n2nxvv2UudmfqiqKHSnrKUUjCI7e1z5tZ8qdZgpDxj
+         FYwZKIaJ677Rp64iJ09YA5JecNOeX2rpABhhJ8CYoaWkEXH0Kc8vZA7u22i9gpsBVLU5
+         ktM55qjsvt8nSf/Nq57uVY3/Y9RjM81O9eeKRWE9YiLVi9PuUjto2aKZaO+mlooJjRHM
+         6AcoaOwFnjGBh0VtDpWVDHxWkaYsalpc85I3wAOcR/xIHVZKEgoUP1cX4pVAYBLEHRRN
+         xPgQ==
+X-Gm-Message-State: APjAAAVvT26B5GSbEAFRfSsS3o78ZJw0aaMusB/yZVZd4NmkdNqkiIWe
+        VOljOno0Te55Hd4JtM5ehJg=
+X-Google-Smtp-Source: APXvYqzsMldJhDxY7pKpPo6NdU98nrC0Z1fU5JfjHX9/FiEN5oWT/O5fr3eymXG+3RoUf4S68C1ACA==
+X-Received: by 2002:a5d:4885:: with SMTP id g5mr4588945wrq.287.1573068987422;
+        Wed, 06 Nov 2019 11:36:27 -0800 (PST)
+Received: from prasmi.home ([2a00:23c6:d18:6d00:1d3d:daa8:4e74:8240])
+        by smtp.gmail.com with ESMTPSA id 76sm4311737wma.0.2019.11.06.11.36.26
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 11:36:26 -0800 (PST)
+From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
+X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
+To:     Bjorn Helgaas <bhelgaas@google.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Christian Hewitt <christianshewitt@gmail.com>
-Subject: Re: [PATCH] arm64: dts: meson: khadas-vim3: move audio nodes to common dtsi
-In-Reply-To: <7h4kzg7rev.fsf@baylibre.com>
-References: <1571416185-6449-1-git-send-email-christianshewitt@gmail.com> <7h4kzg7rev.fsf@baylibre.com>
-Date:   Wed, 06 Nov 2019 20:35:48 +0100
-Message-ID: <7hk18c6bmz.fsf@baylibre.com>
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Magnus Damm <magnus.damm@gmail.com>,
+        Kishon Vijay Abraham I <kishon@ti.com>,
+        Marek Vasut <marek.vasut+renesas@gmail.com>,
+        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
+        linux-pci@vger.kernel.org
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will@kernel.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Murray <andrew.murray@arm.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-renesas-soc@vger.kernel.org,
+        Chris Paterson <Chris.Paterson2@renesas.com>,
+        "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 0/5] Add support for PCIe controller to work in endpoint mode on R-Car SoCs.
+Date:   Wed,  6 Nov 2019 19:36:04 +0000
+Message-Id: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Kevin Hilman <khilman@baylibre.com> writes:
+From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
-> Christian Hewitt <christianshewitt@gmail.com> writes:
->
->> Move VIM3 audio nodes to meson-khadas-vim3.dtsi to enable audio for all
->> boards in the VIM3 family including VIM3L.
->>
->> This change depends on [1] being merged/applied first.
->>
->> [1] https://patchwork.kernel.org/patch/11198535/
->>
->> Signed-off-by: Christian Hewitt <christianshewitt@gmail.com>
->
-> Queued for v5.5, but...
->
->> -&frddr_a {
->> -        status = "okay";
->> -};
->
-> This node doesn't exist upstream...
+This patch series adds support for PCIe controller on rcar to work in endpoint mode,
+this also extends the epf framework to handle multiple outbound regions.
 
-oops, nevermind.  I see it's not upstream because it's still in my fixes
-branch.
+Note: 
+The cadence/rockchip/designware endpoint drivers are build tested only.
 
-Kevin
+Endpoint configuration:
+$ cd /sys/kernel/config/pci_ep
+$ mkdir functions/pci_epf_test/func1
+$ echo 0x1912 > functions/pci_epf_test/func1/vendorid
+$ echo 0x002d > functions/pci_epf_test/func1/deviceid
+$ echo 32 > functions/pci_epf_test/func1/msi_interrupts
+$ ln -s functions/pci_epf_test/func1/ controllers/fe000000.pcie_ep/
+$ echo 1 > controllers/fe000000.pcie_ep/start
+
+Host side results:
+lspci output:
+01:00.0 Unassigned class [ff00]: Renesas Technology Corp. Device 002d
+        Flags: bus master, fast devsel, latency 0, IRQ 103
+        Memory at fe200200 (64-bit, non-prefetchable) [size=128]
+        Memory at fe200000 (64-bit, non-prefetchable) [size=256]
+        Memory at fe200100 (64-bit, non-prefetchable) [size=256]
+        Capabilities: [40] Power Management version 3
+        Capabilities: [50] MSI: Enable- Count=1/1 Maskable+ 64bit+
+        Capabilities: [70] Express Endpoint, MSI 00
+        Capabilities: [100] Virtual Channel
+        Kernel driver in use: pci-endpoint-test
+
+pcitest results:
+
+BAR tests
+
+BAR0:           OKAY
+BAR1:           NOT OKAY
+BAR2:           OKAY
+BAR3:           NOT OKAY
+BAR4:           OKAY
+BAR5:           NOT OKAY
+
+Interrupt tests
+
+SET IRQ TYPE TO LEGACY:         OKAY
+LEGACY IRQ:     OKAY
+Read Tests
+
+SET IRQ TYPE TO LEGACY:         OKAY
+READ (      1 bytes):           OKAY
+READ (   1024 bytes):           OKAY
+READ (   1025 bytes):           OKAY
+READ (1024000 bytes):           OKAY
+READ (1024001 bytes):           OKAY
+
+Write Tests
+
+WRITE (      1 bytes):          OKAY
+WRITE (   1024 bytes):          OKAY
+WRITE (   1025 bytes):          OKAY
+WRITE (1024000 bytes):          OKAY
+WRITE (1024001 bytes):          OKAY
+
+Copy Tests
+
+COPY (      1 bytes):           OKAY
+COPY (   1024 bytes):           OKAY
+COPY (   1025 bytes):           OKAY
+COPY (1024000 bytes):           OKAY
+COPY (1024001 bytes):           OKAY
+
+BAR tests for 1/3/5 fail because its configured to use 64bit bars
+
+Lad, Prabhakar (5):
+  pci: pcie-rcar: preparation for adding endpoint support
+  pci: endpoint: add support to handle multiple base for mapping
+    outbound memory
+  PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+  pci: rcar: add support for rcar pcie controller in endpoint mode
+  misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
+
+ .../devicetree/bindings/pci/rcar-pci-ep.txt   |   43 +
+ arch/arm64/configs/defconfig                  |    2 +-
+ arch/arm64/configs/renesas_defconfig          |    2 +-
+ drivers/misc/pci_endpoint_test.c              |    3 +
+ drivers/pci/controller/Kconfig                |   11 +-
+ drivers/pci/controller/Makefile               |    3 +-
+ .../pci/controller/dwc/pcie-designware-ep.c   |   30 +-
+ drivers/pci/controller/pcie-cadence-ep.c      |   11 +-
+ drivers/pci/controller/pcie-rcar-ep.c         |  483 +++++++
+ drivers/pci/controller/pcie-rcar-host.c       | 1058 ++++++++++++++
+ drivers/pci/controller/pcie-rcar.c            | 1231 +----------------
+ drivers/pci/controller/pcie-rcar.h            |  129 ++
+ drivers/pci/controller/pcie-rockchip-ep.c     |   13 +-
+ drivers/pci/endpoint/functions/pci-epf-test.c |   29 +-
+ drivers/pci/endpoint/pci-epc-core.c           |    7 +-
+ drivers/pci/endpoint/pci-epc-mem.c            |  189 ++-
+ include/linux/pci-epc.h                       |   43 +-
+ 17 files changed, 2016 insertions(+), 1271 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+ create mode 100644 drivers/pci/controller/pcie-rcar-ep.c
+ create mode 100644 drivers/pci/controller/pcie-rcar-host.c
+ create mode 100644 drivers/pci/controller/pcie-rcar.h
+
+-- 
+2.20.1
+
