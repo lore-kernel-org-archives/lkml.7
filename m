@@ -6,89 +6,91 @@ X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 04153C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC9BC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D07A221848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D55E21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:30:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727762AbfKFTaK (ORCPT
+        id S1730949AbfKFTa3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:30:10 -0500
-Received: from fieldses.org ([173.255.197.46]:34206 "EHLO fieldses.org"
+        Wed, 6 Nov 2019 14:30:29 -0500
+Received: from mga17.intel.com ([192.55.52.151]:12634 "EHLO mga17.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726713AbfKFTaK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:30:10 -0500
-Received: by fieldses.org (Postfix, from userid 2815)
-        id 5443E1BE7; Wed,  6 Nov 2019 14:30:10 -0500 (EST)
-Date:   Wed, 6 Nov 2019 14:30:10 -0500
-From:   "J. Bruce Fields" <bfields@fieldses.org>
-To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
-Cc:     Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-Message-ID: <20191106193010.GG17669@fieldses.org>
-References: <20191102063036.28601-1-unixbhaskar@gmail.com>
- <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
- <20191105023243.GA16635@fieldses.org>
- <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
- <20191106043120.GB6355@fieldses.org>
- <20191106044223.GA18076@Gentoo>
+        id S1727681AbfKFTa3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:30:29 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:30:28 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
+   d="scan'208";a="205931904"
+Received: from rbidasar-mobl.amr.corp.intel.com (HELO [10.251.0.251]) ([10.251.0.251])
+  by orsmga006.jf.intel.com with ESMTP; 06 Nov 2019 11:30:27 -0800
+Subject: Re: [alsa-devel] [PATCH 0/3] soundwire: use UniqueID only when
+ relevant
+To:     alsa-devel@alsa-project.org
+Cc:     tiwai@suse.de, gregkh@linuxfoundation.org,
+        linux-kernel@vger.kernel.org,
+        Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
+        vkoul@kernel.org, broonie@kernel.org,
+        srinivas.kandagatla@linaro.org, jank@cadence.com,
+        slawomir.blauciak@intel.com,
+        Bard liao <yung-chuan.liao@linux.intel.com>,
+        Rander Wang <rander.wang@linux.intel.com>
+References: <20191022234808.17432-1-pierre-louis.bossart@linux.intel.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <caa9b0cb-ea85-e7de-6ada-35ad906dec28@linux.intel.com>
+Date:   Wed, 6 Nov 2019 13:30:27 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106044223.GA18076@Gentoo>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20191022234808.17432-1-pierre-louis.bossart@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 10:12:26AM +0530, Bhaskar Chowdhury wrote:
-> On 23:31 Tue 05 Nov 2019, J. Bruce Fields wrote:
-> >On Wed, Nov 06, 2019 at 11:53:28AM +0900, Masahiro Yamada wrote:
-> >>BTW.
-> >>Bruce,
-> >>Does the current script expect RHEL or something?
-> >>I do not see 'new-kernel-pkg' on my Ubuntu machine.
-> >
-> >I test on Fedora.  Looks like on recent Fedora that's only provided by
-> >an rpm "grubby-deprecated", which is an inauspicious name....
-> >
-> >I think maybe you're supposed to use "grubby" itself now.  Do you have
-> >that?
-> >
-> >>It would still work with 'new-kernel-pkg: command not found'
-> >>warning.
-> >>
-> >>We could bypass it if we like.
-> >>
-> >>command -v new-kernel-pkg && new-kernel-pkg --remove $f
-> >
-> >Looks like it's what updates the grub configuration, which is probably a
-> >nice thing to do if you can.
-> >
-> >--b.
-> 
-> Bruce,
-> 
-> Two things,
-> 
-> If the system doesn't run grub , how the fallback policy???
-> 
-> This binary "new-kernel-pkg" also missing in other systems too...I can
-> confirm that... i.e gentoo,slackware,
-> 
-> So , you are only targeting the rpm based system????
 
-It's just what I happen to use.  If someone wants to make it work
-elsewhere that'd be great, as long as we don't break what already works.
 
-I think Debian uses grub2-mkconfig?  Might be OK for Fedora too, I
-dunno.
+On 10/22/19 6:48 PM, Pierre-Louis Bossart wrote:
+> The hardware UniqueID, typically enabled with pin-strapping, is
+> required during enumeration to avoid conflicts between devices of the
+> same type.
+> 
+> When there are no devices of the same type, using the UniqueID is
+> overkill and results in a lot of probe errors due to mismatches
+> between ACPI tables and hardware capabilities. For example it's not
+> uncommon for BIOS vendors to copy/paste the same settings between
+> platforms but the hardware pin-strapping is different. This is
+> perfectly legit and permitted by MIPI specs.
+> 
+> With this patchset, the UniqueID is only used when multiple devices of
+> the same type are detected. The loop to detect multiple identical
+> devices is not super efficient but with typically fewer than 4 devices
+> per link there's no real incentive to be smarter.
+> 
+> This change is only implemented for ACPI platforms, for DeviceTree
+> there is no change.
 
---b.
+Vinod, this series has been submitted for review on October 22 and I 
+answered to your questions. There's been no feedback since October 24, 
+so is there any sustained objection here?
+
+ACPI platforms are completely unmanageable without this patchset.
+
+> 
+> Pierre-Louis Bossart (3):
+>    soundwire: remove bitfield for unique_id, use u8
+>    soundwire: slave: add helper to extract slave ID
+>    soundwire: ignore uniqueID when irrelevant
+> 
+>   drivers/soundwire/bus.c       |  7 +--
+>   drivers/soundwire/slave.c     | 98 +++++++++++++++++++++++++++--------
+>   include/linux/soundwire/sdw.h |  4 +-
+>   3 files changed, 84 insertions(+), 25 deletions(-)
+> 
