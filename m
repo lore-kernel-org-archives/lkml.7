@@ -2,123 +2,97 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 24A13FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:16:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B64FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:16:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6B5B20656
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B7212178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:16:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aEjgQewi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="neaEdK/p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728009AbfKFXQf (ORCPT
+        id S1732363AbfKFXQ5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:16:35 -0500
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]:21272 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727080AbfKFXQe (ORCPT
+        Wed, 6 Nov 2019 18:16:57 -0500
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:45825 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727080AbfKFXQ5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:16:34 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573082193;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=5tuNiF4QO0bwSBu7oymDSjgkRdbR3Qfk0s5KVbUvZoM=;
-        b=aEjgQewi6N6FbERRhMo4FMsSWpGARB5fLJwHgxMC31DDnIqIvDiEHco+DJZLWIb4ErfOV6
-        7ext5n3RJgYgR9Ingx1dfQmMerBtglOZLQ1itbUF33aQOJrWJDdFr5OQWMpTnpIyK+FJz+
-        Qu1Nuxpq59Tju0X3S5Qm3V4OdHp0yVE=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-321-ObXpTYzpMbyrccMiwEOx3g-1; Wed, 06 Nov 2019 18:16:30 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B4ADA1800D53;
-        Wed,  6 Nov 2019 23:16:29 +0000 (UTC)
-Received: from [10.18.17.119] (dhcp-17-119.bos.redhat.com [10.18.17.119])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 5BB1860870;
-        Wed,  6 Nov 2019 23:16:29 +0000 (UTC)
-Subject: Re: [PATCH] x86/stacktrace: update kconfig help text for reliable
- unwinders
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
-References: <20191106224344.8373-1-joe.lawrence@redhat.com>
- <20191106230553.wnyltmkzwk5dph4l@treble>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <c8bae684-2a46-68e6-dc43-a8c215bdd111@redhat.com>
-Date:   Wed, 6 Nov 2019 18:16:28 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
-MIME-Version: 1.0
-In-Reply-To: <20191106230553.wnyltmkzwk5dph4l@treble>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: ObXpTYzpMbyrccMiwEOx3g-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 Nov 2019 18:16:57 -0500
+Received: by mail-pg1-f193.google.com with SMTP id w11so144161pga.12;
+        Wed, 06 Nov 2019 15:16:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=PEEwQUwm/mtCk8pRNL9DiIeL71bqH+DtmpEDVuEb4+U=;
+        b=neaEdK/p5ar2I/xlFi4UuC6GILTW3Ks2guXTHYrzRYhhB5GJHWuYAmHteeS9QtXB38
+         vpLKCrRcrgDtne+sUmpqEZdWMZsLWa5Ssry3hRvPt+l5AUgBe8AMaGUA2siXrzL8Tt84
+         1eEY/yBnhOu6s1Y2lrffcUanSuXEiTYu3WyAp+so6Q1eXsx3jz708LQ6Mdq1uvSN8Vo7
+         JJGPN6spp11oAjv6GnrPV+rZqhqQj9G6EdHNJEhFT0mtH6Yql9JJ7SVvWG6TjRr7Umk6
+         c3P7nc+lnjR33OrTvZC29nfkOE2IsU3Xy0BVcshSmyKnj79HzS1hNJh1d56jWAFEUuZj
+         ixbQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=PEEwQUwm/mtCk8pRNL9DiIeL71bqH+DtmpEDVuEb4+U=;
+        b=RtgEvvQzJx/qMUL7ErGFfiO/PdxyuxaAuUBzXCZ5IplwODu5OCiLXB0h5/OPQjT/ZF
+         uygXFgUMycmZDBBcjgY9TxY0RDtgwdiOIMSVLaLF4cbOdXQnBlLZMP5Vz3ysFIs13ckw
+         3bJkqsZ4xQl1pYfGqq1G06bkbgRRD6uVp/u7tFx3Ib7zmMgFO8ZXWQr4w5+wXDpUHOtS
+         WbundO8wIkqSYqx+5NiaXzkKLZZNk/IUhD5ypkLnIurQpynz6FHyVaxXjrPqFP9wsz4R
+         MpzLQ9fMgNM9u83liXKkkDFQd5bS4MlKeAJn8kTRY0Aq2FOG0YKpmnyDb8onOtWDp+RW
+         x1LQ==
+X-Gm-Message-State: APjAAAXLc6ZlaGD5CX85kVpYmOCkdRSZQ3by+r2lLh4QJpIYtuEmaaGz
+        5k09WM3WoKBnx2OQb9Zf8Lo=
+X-Google-Smtp-Source: APXvYqy2/Y5pxVKOfsNfYmz4miHXZKCw3E8Ru4bwJEpq+vIruTB5jjvQyXI8vZKkp+EORx5jL/IDYA==
+X-Received: by 2002:a17:90a:cd03:: with SMTP id d3mr506186pju.137.1573082214787;
+        Wed, 06 Nov 2019 15:16:54 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id d139sm49075pfd.162.2019.11.06.15.16.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 15:16:54 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     kvalo@codeaurora.org, davem@davemloft.net
+Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] ath10k: Fix qmi init error handling
+Date:   Wed,  6 Nov 2019 15:16:50 -0800
+Message-Id: <20191106231650.1580-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/6/19 6:05 PM, Josh Poimboeuf wrote:
-> On Wed, Nov 06, 2019 at 05:43:44PM -0500, Joe Lawrence wrote:
->> commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
->> for the ORC unwinder") marked the ORC unwinder as a "reliable" unwinder.
->> Update the help text to reflect that change: the frame pointer unwinder
->> is no longer the only one that provides HAVE_RELIABLE_STACKTRACE.
->>
->> Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
->> ---
->>   arch/x86/Kconfig.debug | 8 ++++----
->>   1 file changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
->> index bf9cd83de777..69cdf0558c13 100644
->> --- a/arch/x86/Kconfig.debug
->> +++ b/arch/x86/Kconfig.debug
->> @@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
->>   =09  unwinder, but the kernel text size will grow by ~3% and the kerne=
-l's
->>   =09  overall performance will degrade by roughly 5-10%.
->>  =20
->> -=09  This option is recommended if you want to use the livepatch
->> -=09  consistency model, as this is currently the only way to get a
->> -=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
->> -
->>   config UNWINDER_GUESS
->>   =09bool "Guess unwinder"
->>   =09depends on EXPERT
->> @@ -333,6 +329,10 @@ config UNWINDER_GUESS
->>   =09  useful in many cases.  Unlike the other unwinders, it has no runt=
-ime
->>   =09  overhead.
->>  =20
->> +=09  This option is not recommended if you want to use the livepatch
->> +=09  consistency model, as this unwinder cannot guarantee reliable stac=
-k
->> +=09  traces.
->> +
->=20
-> I'm not sure whether this last hunk is helpful.  At the very least the
-> wording of "not recommended" might be confusing because it's not even
-> possible to combine UNWINDER_GUESS+HAVE_RELIABLE_STACKTRACE.
->=20
-> arch/x86/Kconfig:       select HAVE_RELIABLE_STACKTRACE         if X86_64=
- && (UNWINDER_FRAME_POINTER || UNWINDER_ORC) && STACK_VALIDATION
->=20
+When ath10k_qmi_init() fails, the error handling does not free the irq
+resources, which causes an issue if we EPROBE_DEFER as we'll attempt to
+(re-)register irqs which are already registered.
 
-Ah good point.  The alternative would be to copy the recommended note to=20
-both UNWINDER_FRAME_POINTER and UNWINDER_ORC, or at least remove the=20
-"only" phrasing.  I dunno, nobody has noticed it yet, so maybe the first=20
-hunk would be good enough.
+Fixes: ba94c753ccb4 ("ath10k: add QMI message handshake for wcn3990 client")
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/net/wireless/ath/ath10k/snoc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
--- Joe
+diff --git a/drivers/net/wireless/ath/ath10k/snoc.c b/drivers/net/wireless/ath/ath10k/snoc.c
+index fc15a0037f0e..f2a0b7aaad3b 100644
+--- a/drivers/net/wireless/ath/ath10k/snoc.c
++++ b/drivers/net/wireless/ath/ath10k/snoc.c
+@@ -1729,7 +1729,7 @@ static int ath10k_snoc_probe(struct platform_device *pdev)
+ 	ret = ath10k_qmi_init(ar, msa_size);
+ 	if (ret) {
+ 		ath10k_warn(ar, "failed to register wlfw qmi client: %d\n", ret);
+-		goto err_core_destroy;
++		goto err_free_irq;
+ 	}
+ 
+ 	ath10k_dbg(ar, ATH10K_DBG_SNOC, "snoc probe\n");
+-- 
+2.17.1
 
