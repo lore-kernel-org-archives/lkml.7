@@ -2,177 +2,93 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80188C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:01:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03951C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:04:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40ADC217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:01:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="am13BAx/"
+	by mail.kernel.org (Postfix) with ESMTP id BFEFA217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:04:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730794AbfKFNB6 (ORCPT
+        id S1730768AbfKFNET (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:01:58 -0500
-Received: from mout.web.de ([217.72.192.78]:42343 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728846AbfKFNB5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:01:57 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573045235;
-        bh=07Bw2Tj3CUPiX3AUCgDENllQxMP88jdI1Qiol2W7qIk=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=am13BAx/QmAMOS/aud2yIVix+ZoM470bz9dCSaEhTX8zXQ0ZMMNKCWDBPxGZTv2xi
-         6ZTbcVv13urXWgyTmD4NCtGI/f4dX26hOZCuq8H2YUi1gIP/aJBBEv4ZD6fqD+EM8Q
-         HHo8l83IeHakFK6Uns/IA0gS89LWxOZGNhF6qQdc=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.91.235]) by smtp.web.de (mrweb102
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0McWnE-1iAfVz2QrI-00HdGD; Wed, 06
- Nov 2019 14:00:35 +0100
-Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-To:     Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Cc:     =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
-Date:   Wed, 6 Nov 2019 14:00:33 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 6 Nov 2019 08:04:19 -0500
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37410 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729430AbfKFNET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:04:19 -0500
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id C32D1F37FB2D9B81F177;
+        Wed,  6 Nov 2019 21:04:16 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.58) by
+ DGGEMS409-HUB.china.huawei.com (10.3.19.209) with Microsoft SMTP Server id
+ 14.3.439.0; Wed, 6 Nov 2019 21:04:07 +0800
+From:   John Garry <john.garry@huawei.com>
+To:     <peterz@infradead.org>, <mingo@redhat.com>, <acme@kernel.org>,
+        <alexander.shishkin@linux.intel.com>, <jolsa@redhat.com>,
+        <namhyung@kernel.org>, <mark.rutland@arm.com>
+CC:     <linux-kernel@vger.kernel.org>, <will@kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        John Garry <john.garry@huawei.com>
+Subject: [RFC PATCH] perf tools: Fix cross compile for ARM64
+Date:   Wed, 6 Nov 2019 21:00:54 +0800
+Message-ID: <1573045254-39833-1-git-send-email-john.garry@huawei.com>
+X-Mailer: git-send-email 2.8.1
 MIME-Version: 1.0
-In-Reply-To: <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:uw2cSBYDDm8CzyfFt5E5QxVSu3QnK8A4ms3ZiVxw9Wfk4qan/02
- fS2Z946QCAIGWJSyF02EAweObx2XTegYp0E/cxzRRcBUaURGurL8UVA+fKtmVwGAhTlcU+c
- BlSQd5LA5Dp+qG+bvBAAMKxgM3x5GuVZMF/EhhruQ4xKagWb9D3Ur0nH1ZoNKiDftrUw//R
- ADyLUV0hUVkpGRYqkq59A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:agDceULGBOs=:0QcRp4Eqc5cNqaaDLa4TUd
- ooji1mOhEFk3iqfXGai0zIr6OrPIEi8gjqd2xpCi9oyOX43ekpEuvw+ymsM+Ue1jDaUS8J/zD
- J2+dRB+ukAgDpf5c6uZq9qw7xHX10ZDdDTpErjlGnMjUFdmoxHrosYdcGnf4wD9e8hQLK3teu
- x5BZgMFn8GlKTCEV+NwYP4qkh7JzhRNZhJ+1dIFXCWDj/Rqar+DpmHjrdFcSAH/+aR9UyjApm
- Dx1IYWbpS3nZYnOdDjxlG+/ifi9/Gy0t+w9yzMqTpg2RyhNtEOLgHvrtZdMFicSYo9b9CwwzR
- KUXJA55bosvRgX80/FWUveN8g1P4L2prnqb3paw9YHgxm6DNnCrYwSfQHLk5ssv3lqkgcYN6M
- CD3v5rE3WdUw9XM+giYZvcGar3psyvLlbpPjimcyVxphO2s75v3aIlp0D4jnGO9GKDOoR9A0f
- aSC9dcoTiAxlpKhFS7sNZVUTHzpEnfqlWufAMOWgaVBS61TToXyRINedvo5Gr4713qwU8A6eo
- eHBrWYKq/OBAHhXNhsHCKcscVDOGndNkGcnD+JLGEa19ao7OHXJ0pcMPPidEhQ65E3k7zEWGR
- 5Teis3vptD7gUt0f9jLVhAZ/HD1N4/mh+mz0z4xup8lu1J7tPtJduwP5oG+vOHmRCj5llAa2H
- RXSD7sixeM8qoB1uBIf+Bub1yAX7nq79zIUnZYdZFDvD8C5DHOz0jpbGYAdvWX2n0EWoq2j/m
- HNsNNDWlw+fiwnnTNxuqF1oM3eqyiJtdwlLTT3T7kzHymdN+A2R5wnDsCBIheiOuwIduVOuhO
- m/5UUpS3OSH9CHMk+cO0puPi93KDgPDBbXs4perEVvhA9mirqO02McA76MKEHjvC4apzxLBgL
- uyjrgiNux0nJkE0A9phyE1Weghaz9EACivu/lAurUWvuwfjGTZjaG9KS3pXIg/TGghRdyszbX
- 1ggyGzizDaR1QfXltrNJDxjY8rrqulktd/cJ55RHwSxQQWyS4ruSRO8I0N1yvjcrMXc1XGPin
- e+IfkJzgKHF21Y4SBp4uURHR+OmTiMPLHdwXRzKuSE0RlWKrgLtuTYsuEetjsl0UiWQLqF2Ft
- w0pFMV1RvsGbFX0PTFRUzM7ri1ZQWG6x1uDy4q04AtBFNvHfiruWRQQob+qYO8P5ZNBH1PEgd
- Tdd/lvJjL8ysuc0zSjzbF+CkPjlt4XX4b6XRlm+6adYv1f4JbfVjpNR1CAf5TbN6pJFv7MB4T
- NWAcY7U0ejz8lWSclebjmbrMaPfB8qSzmlu/SZii8ObevW6amvb2SrHNceks=
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.58]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->> Reuse existing functionality from memdup_user() instead of keeping
->> duplicate source code.
->>
->> Generated by: scripts/coccinelle/api/memdup_user.cocci
-=E2=80=A6
->> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AE=
-S cipher key support")
->
-> This doesn't fix anything
+Currently when cross compiling perf tool for ARM64 on my x86 machine I get
+this error:
+arch/arm64/util/sym-handling.c:9:10: fatal error: gelf.h: No such file or directory
+ #include <gelf.h>
 
-How would you categorise the proposed source code reduction and software r=
-euse?
+For the build, libelf is reported off:
+Auto-detecting system features:
+...
+...                        libelf: [ OFF ]
 
+Indeed, test-libelf is not built successfully:
+more ./build/feature/test-libelf.make.output
+test-libelf.c:2:10: fatal error: libelf.h: No such file or directory
+ #include <libelf.h>
+          ^~~~~~~~~~
+compilation terminated.
 
-> and the Fixes: line is not appropriate.
+I have no such problems natively compiling on ARM64, and I did not
+previously have this issue for cross compiling. Fix by relocating
+the gelf.h include.
 
-Will the development opinions vary between contributors?
+Signed-off-by: John Garry <john.garry@huawei.com>
+---
 
+I marked this as RFC as I am suspicious that I have seen no other
+reports, and whether fixing up the libelf.h include issue is the proper
+approach.
 
->> +	return !ukey || keylen < MINKEYBLOBSIZE || keylen > KEYBLOBBUFSIZE
->> +	       ? ERR_PTR(-EINVAL)
->> +	       : memdup_user(ukey, keylen);
->
-> This is a very poor use of ternary ?: code.
+diff --git a/tools/perf/arch/arm64/util/sym-handling.c b/tools/perf/arch/arm64/util/sym-handling.c
+index 5df788985130..8dfa3e5229f1 100644
+--- a/tools/perf/arch/arm64/util/sym-handling.c
++++ b/tools/perf/arch/arm64/util/sym-handling.c
+@@ -6,9 +6,10 @@
+ 
+ #include "symbol.h" // for the elf__needs_adjust_symbols() prototype
+ #include <stdbool.h>
+-#include <gelf.h>
+ 
+ #ifdef HAVE_LIBELF_SUPPORT
++#include <gelf.h>
++
+ bool elf__needs_adjust_symbols(GElf_Ehdr ehdr)
+ {
+ 	return ehdr.e_type == ET_EXEC ||
+-- 
+2.17.1
 
-The conditional operator is applied once more in the intended way,
-isn't it?
-
-
-> This is much more readable for humans.
-
-Readability preferences can vary also for this code structure.
-
-
->> +	return uapqns && nr_apqns > 0
->> +	       ? memdup_user(uapqns, nr_apqns * sizeof(struct pkey_apqn))
->> +	       : NULL;
->
-> And here you reverse the form of the earlier block.
-
-I kept the previous condition specification.
-
-
-> Please be consistent and use this style:
-
-Would further developers like to get a more verbose variant for this
-software transformation?
-
-Regards,
-Markus
