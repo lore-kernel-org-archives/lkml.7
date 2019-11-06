@@ -2,137 +2,129 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB27DC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:36:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A0CA5C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:37:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8B1D02173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:36:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KIqiCb4E"
+	by mail.kernel.org (Postfix) with ESMTP id 80B722173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:37:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727935AbfKFPg6 (ORCPT
+        id S1731713AbfKFPhi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:36:58 -0500
-Received: from mail-qt1-f194.google.com ([209.85.160.194]:41075 "EHLO
-        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727129AbfKFPg6 (ORCPT
+        Wed, 6 Nov 2019 10:37:38 -0500
+Received: from lb3-smtp-cloud9.xs4all.net ([194.109.24.30]:38119 "EHLO
+        lb3-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727129AbfKFPhi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:36:58 -0500
-Received: by mail-qt1-f194.google.com with SMTP id o3so34144123qtj.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 07:36:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+7KpqrJ6c3XzLpPaCXXTrXg1Ygmesx98ds69e2jPzvI=;
-        b=KIqiCb4EgjrA+TaMrhn0slRxX6kGSDTd6hSnfUa+PqzW9hQ1zpnWnfBX4BS2zzsAG7
-         wBKeE4HPyBIZtTHUo+7v1b5oC6oyII2rV0Rci3YhCTLDiwjBeEI4Q4yEh3YbwuN50Zgg
-         baG35hf1hTnmvnEUkZ2E5ZOy14VYje3Gf/4Q47a+ee+A5y2esrKj3boyv/q8nTffCAcT
-         IES2c/qDl1jctBU6y6GZWmXGAS87QvVKSdDrhWwPvJopiIQZkXfhp/xSlm0PsQ1+vxjZ
-         orTzsuULz0wyH2lkTDM+qsVJFtZAiMjbnyeoCzjzeA+Qlhqjdv18Zj7p0Eqh458GqQM+
-         YjcA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+7KpqrJ6c3XzLpPaCXXTrXg1Ygmesx98ds69e2jPzvI=;
-        b=rans30Ysn75m6pRtMjD2NT8o0oE7xSY+Diwq64TRkqJUVtTW56e1B10qQBXwFlaPeG
-         o0ONPJzNBY6H21AhklCkuwPQyiVzt+YDxzDuc9tBCENwD0brA8xiCta/9bvpKGeSfQRG
-         K8N3fKYhyD4DJI8Q+ywg0qg2Fv8JG2z26N7QEm+2mmRq/+wSGl6Aeg3Q68uxTHWHkJHX
-         q0cv8cup+ams3dfpG4EXU2IY/qvI1cLZP0jdSVnR343aev0fsqn6zuoDSWYoCAfQSeAS
-         1Gf8eSg+6egSr7hC2eTp4kaQSLbeSXMziNZe6lkKK+7QYqqgg4cijnXz7LQXQSX4yyQx
-         9MjQ==
-X-Gm-Message-State: APjAAAUhE2rEseRFn826FYMv1BheconhqyzaSxlhaBs8NvTx+GUp0Q6h
-        D3rGBTSgofX5czIoTZZTtkX79/hcIRuoKA/oXnz6KQ==
-X-Google-Smtp-Source: APXvYqx01RSgCCKXEJT1Ax6iIpPZvFs2LcH1CVVGp7m6MH+4R7cQDIoZugPLUrxj4JccnSQWE1vErK43/SZV4av/ho8=
-X-Received: by 2002:aed:24af:: with SMTP id t44mr2869020qtc.57.1573054616672;
- Wed, 06 Nov 2019 07:36:56 -0800 (PST)
+        Wed, 6 Nov 2019 10:37:38 -0500
+Received: from [IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a]
+ ([IPv6:2001:420:44c1:2577:dd0c:75f0:7ccb:ac5a])
+        by smtp-cloud9.xs4all.net with ESMTPA
+        id SNMxiod2G9P9bSNN0ieLmp; Wed, 06 Nov 2019 16:37:32 +0100
+Subject: Re: [PATCH 0/5] Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+To:     Mirela Rabulea <mirela.rabulea@nxp.com>, mchehab@kernel.org,
+        shawnguo@kernel.org, robh+dt@kernel.org
+Cc:     paul.kocialkowski@bootlin.com, linux-media@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-imx@nxp.com,
+        s.hauer@pengutronix.de, aisheng.dong@nxp.com,
+        daniel.baluta@nxp.com, leonard.crestez@nxp.com,
+        robert.chiras@nxp.com, laurentiu.palcu@nxp.com,
+        mark.rutland@arm.com, devicetree@vger.kernel.org,
+        p.zabel@pengutronix.de, laurent.pinchart+renesas@ideasonboard.com,
+        niklas.soderlund+renesas@ragnatech.se,
+        dafna.hirschfeld@collabora.com
+References: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+From:   Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Message-ID: <87d80882-b032-f332-0808-d669600f844f@xs4all.nl>
+Date:   Wed, 6 Nov 2019 16:37:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <000000000000b2de3a0594d8b4ca@google.com> <00000000000012ff570596af15cc@google.com>
- <CAKMK7uFQt+=7XMo9jvz77QvDWLAAU_V7-_qZ=iKe-GXG7cqeJg@mail.gmail.com>
-In-Reply-To: <CAKMK7uFQt+=7XMo9jvz77QvDWLAAU_V7-_qZ=iKe-GXG7cqeJg@mail.gmail.com>
-From:   Dmitry Vyukov <dvyukov@google.com>
-Date:   Wed, 6 Nov 2019 16:36:45 +0100
-Message-ID: <CACT4Y+a3WWKLPoLD7LC44gaDNQ-p13dW5FT4w1MatcL61u_+XQ@mail.gmail.com>
-Subject: Re: WARNING in drm_mode_createblob_ioctl
-To:     Daniel Vetter <daniel@ffwll.ch>
-Cc:     syzbot <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        syzkaller-bugs <syzkaller-bugs@googlegroups.com>,
-        Al Viro <viro@zeniv.linux.org.uk>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <1573053633-21437-1-git-send-email-mirela.rabulea@nxp.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-CMAE-Envelope: MS4wfDdX7D9rseKh8lAwDMMNwaOzCMluGQOcvybOlIVb/fUHxpfIy/OVNw4K3cwguOTRZFYHEfGoT2gmmymyeKhlMGQ83J4lXFssVcGgDsa/Cd8cU2Js+1PQ
+ MUfYhEF42MUK+BxHdLzqbPhX4s4stBQY8NYQvnnUT8LtCqCd9DLBPlWGNTwpzG2Ic5mYpeIygiFFVXJtzA3EIeNOkvjsp/tzUfCsaXH43eYhPPmOy499Nval
+ zGxM1wdTJUT/U6Ig+HzXi9gJ98QthCpmAuW2/JfyRr1w1qHP7K/CEK6bs6tGdYySUTf7600I58V7AESN339D0cfNlXwzMH5j+OlGFI/Aq6ZHFiaqdRVG+rgl
+ gJgoVW78L0rGyfitVglEL4Hh0w9/iNOhjEpm79NSbiACbEWoBYYeSPy1qlmZgoiSXwwTMOiJXSpqewbs4isn4IOd0SXed/Ue3PdbrPsyq20WcwFuLwfgobN/
+ +tg83Mo6/H3Kmb5F91PYJvhE6ugJRPzn6i3k8Kx36GPmpqN8oa34LQWdzPiyEO7sofGSlioiNzjKzNd+t776a+1qjezsWzBJULhO0XOrfcejMbe6EQqRessx
+ vfeXhLQY6kqOjZqgStGEcgGEPAQRXrY8P4lIrw+gwKBObh76fnGFnJxhC48hGP/ENKLmoym+nYWTSxRL/IaJKTUmVv7MVSV8GWJ8JD5BlSIH75pBBT4AkieB
+ Enzei+gi2tz1FrVrSIq/6cztK8mdDT1jC5+GmKA5XS0Z5XBvY4W9dX4lSNCWAbr8tErSCeM9Z+csUQFBGePYMwUAuaUwZjTAKKd4+6ftQiunlBhUr5YrO9b5
+ kh8aqN/rHrGBPu4qm/u7hxki2vkKorIcrs5smHNLydRDfR2B8k/mwrF/n/iduoPRbFV2vUSip/STzItjtrOYJ29IcFkJXgX3tje6Gt+eBYH4D9rzOq/U/8Mj
+ sSSD3S4/Q4sZgLQ2mSaKqBXrr8eieNQhcQPMRS8E5KUc0Jf/fjxQ2Bed2xWiApVCyQvOQw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 4:30 PM Daniel Vetter <daniel@ffwll.ch> wrote:
->
-> On Wed, Nov 6, 2019 at 4:20 PM syzbot
-> <syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com> wrote:
-> >
-> > syzbot has bisected this bug to:
-> >
-> > commit 9e5a64c71b2f70ba530f8156046dd7dfb8a7a0ba
-> > Author: Kees Cook <keescook@chromium.org>
-> > Date:   Mon Nov 4 22:57:23 2019 +0000
-> >
-> >      uaccess: disallow > INT_MAX copy sizes
->
-> Ah cool, this explains it.
->
-> fwiw I never managed to get the WARNING in the backtrace to lign up
-> with any code. No idea what's been going on.
->
-> I'll type a patch to paper over this.
-> -Daniel
+Hi Mirela,
 
-If I get:
-git checkout 8ada228a
-then include/linux/thread_info.h:150
-points right to:
-if (WARN_ON_ONCE(bytes > INT_MAX))
+On 11/6/19 4:20 PM, Mirela Rabulea wrote:
+> This patch set adds the V4L2 driver for i.MX8QXP/QM JPEG encoder/decoder
+> and it's dependencies.
+> The driver was tested on i.MX8QXP, using a unit test application and
+> the v4l2-compliance tool, which passes when run on the encoder/decoder dev
+> node, without any other parameters:
+> v4l2-compliance -d /dev/video0
+> v4l2-compliance -d /dev/video1
+> v4l2-compliance SHA: 2ff1e6b3d67dbbdde212c8cf0de603f9f52078ed, 64 bits
 
-Is the size user-controllable here?
+That's too old. Always test with the latest version from the v4l-utils git
+repo (git://linuxtv.org/v4l-utils.git). v4l2-compliance is continually
+improved, so driver testing should always be done with the latest version.
 
+For the JPEG encoder you can add the -s option to v4l2-compliance. Unfortunately,
+the streaming tests for JPEG decoders in v4l2-compliance are not well supported
+at the moment, so you can't use -s there.
 
-> >
-> > bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=125fe6dce00000
-> > start commit:   51309b9d Add linux-next specific files for 20191105
-> > git tree:       linux-next
-> > final crash:    https://syzkaller.appspot.com/x/report.txt?x=115fe6dce00000
-> > console output: https://syzkaller.appspot.com/x/log.txt?x=165fe6dce00000
-> > kernel config:  https://syzkaller.appspot.com/x/.config?x=a9b1a641c1f1fc52
-> > dashboard link: https://syzkaller.appspot.com/bug?extid=fb77e97ebf0612ee6914
-> > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1212dc3ae00000
-> > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=145f604ae00000
-> >
-> > Reported-by: syzbot+fb77e97ebf0612ee6914@syzkaller.appspotmail.com
-> > Fixes: 9e5a64c71b2f ("uaccess: disallow > INT_MAX copy sizes")
-> >
-> > For information about bisection process see: https://goo.gl/tpsmEJ#bisection
->
->
->
-> --
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> +41 (0) 79 365 57 48 - http://blog.ffwll.ch
->
-> --
-> You received this message because you are subscribed to the Google Groups "syzkaller-bugs" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to syzkaller-bugs+unsubscribe@googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/syzkaller-bugs/CAKMK7uFQt%2B%3D7XMo9jvz77QvDWLAAU_V7-_qZ%3DiKe-GXG7cqeJg%40mail.gmail.com.
+Please provide the full output of the v4l2-compliance command as well, I'd
+like to see the actual output.
+
+Thank you very much for working on this, always nice to see new HW support.
+
+Regards,
+
+	Hans
+
+> 
+> The first patch "Add packed YUV444 24bpp pixel format" was already reviewed
+> upstream, but not accepted because there was no driver using this format,
+> until now. This pixel format, YUV444 24bpp, is now used and needed by the
+> i.MX8QXP/QM JPEG encoder/decoder driver.
+> 
+> Mirela Rabulea (5):
+>   media: v4l: Add packed YUV444 24bpp pixel format
+>   firmware: imx: scu-pd: Add power domains for imx-jpeg
+>   media: dt-bindings: Add bindings for i.MX8QXP/QM JPEG driver
+>   media: imx-jpeg: Add V4L2 driver for i.MX8 JPEG Encoder/Decoder
+>   arm64: dts: imx8qxp: Add jpeg encoder/decoder nodes
+> 
+>  .../devicetree/bindings/media/imx8-jpeg.yaml       |   83 +
+>  Documentation/media/uapi/v4l/pixfmt-packed-yuv.rst |   37 +-
+>  arch/arm64/boot/dts/freescale/imx8qxp-mek.dts      |    8 +
+>  arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   37 +
+>  drivers/firmware/imx/scu-pd.c                      |    6 +
+>  drivers/media/platform/Kconfig                     |    2 +
+>  drivers/media/platform/Makefile                    |    1 +
+>  drivers/media/platform/imx-jpeg/Kconfig            |   10 +
+>  drivers/media/platform/imx-jpeg/Makefile           |    3 +
+>  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c      |  168 ++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h      |  140 ++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg.c         | 2266 ++++++++++++++++++++
+>  drivers/media/platform/imx-jpeg/mxc-jpeg.h         |  187 ++
+>  drivers/media/v4l2-core/v4l2-ioctl.c               |    1 +
+>  include/uapi/linux/videodev2.h                     |    1 +
+>  15 files changed, 2949 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/media/imx8-jpeg.yaml
+>  create mode 100644 drivers/media/platform/imx-jpeg/Kconfig
+>  create mode 100644 drivers/media/platform/imx-jpeg/Makefile
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.c
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg-hw.h
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.c
+>  create mode 100644 drivers/media/platform/imx-jpeg/mxc-jpeg.h
+> 
+
