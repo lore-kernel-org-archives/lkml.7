@@ -2,123 +2,156 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA5BBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A0DC5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89F4C222C2
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E386721D81
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="DBRT6IKu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AakFXTDE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730927AbfKFCxq (ORCPT
+        id S1730962AbfKFCxr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 5 Nov 2019 21:53:47 -0500
+Received: from mailout3.samsung.com ([203.254.224.33]:51062 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730788AbfKFCxq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 5 Nov 2019 21:53:46 -0500
-Received: from ozlabs.org ([203.11.71.1]:49815 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730870AbfKFCxq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 21:53:46 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477B1c4YhQz9sP6;
-        Wed,  6 Nov 2019 13:53:40 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573008824;
-        bh=kXnr4JybHuzbklbCxQwtQCFx0u0ttwyvhroyoGXLmiI=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=DBRT6IKu9kyQ1mGGPvb8oK/STCflETI+H6Ksx7KHNPhZQ6hhY2nTBudO+k5Hcj5k8
-         cFry9rC29D5pkRhpU9QvhTaX3+fOwyHuFVI3YchxHPt9Qh18r287jH4sRZCXJmRhA1
-         xXgKVx6QjqI7ejSDxDQmgjt3Z1wugyAHr/xzv7tSeXtL0Xo7+mGLfd3Mo21C15XYDj
-         7hw5x1/8uu59JujYai+8xoLXFg07aix+nZOpD+g5aQBtcgmu2m6jyFIEOmrEDSdH/t
-         TT0LaIk4gSpR9bJcwJiHKdbDX28NXEUk8HPbO+is6L2/Pg1SKJ3CcW5V3T2O7r3hOz
-         5nW7K3waDwMgA==
-Date:   Wed, 6 Nov 2019 13:53:40 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Dave Airlie <airlied@linux.ie>,
-        DRI <dri-devel@lists.freedesktop.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Chris Wilson <chris@chris-wilson.co.uk>, Qian Cai <cai@lca.pw>
-Subject: Re: linux-next: build failure after merge of the tip tree
-Message-ID: <20191106135340.3fa45898@canb.auug.org.au>
-In-Reply-To: <20191010131448.482da2b2@canb.auug.org.au>
-References: <20191010131448.482da2b2@canb.auug.org.au>
+Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191106025343epoutp03ed7f08ac909af2359a27850ef20f9c3d~UczC-4IbM1274312743epoutp03P
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 02:53:43 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191106025343epoutp03ed7f08ac909af2359a27850ef20f9c3d~UczC-4IbM1274312743epoutp03P
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573008823;
+        bh=c+htrw9iv9xikd9Wwvo79t4A1HBHKqx5O+jWGfGZChs=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=AakFXTDELDA3MD9jF32eUQen/Lflv9FjmswTv6uWInOBxTfW9Vp2yWdSSS0ing+3m
+         j9gm8W91wL8JCTBdLt3FNhx5wBFDsnGQszY+cMxgHR41HxW9MeTf6WZyltsRQLXTIq
+         vBcqVwvCe9gIZ/e11dI8B7QZayMv5azYJtdiT/74=
+Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20191106025342epcas1p1487f0bb0e8e66cfd9b96bb9200306e6b~UczCZiAiP1662516625epcas1p1N;
+        Wed,  6 Nov 2019 02:53:42 +0000 (GMT)
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epsnrtp1.localdomain (Postfix) with ESMTP id 477B1c0JwTzMqYlh; Wed,  6 Nov
+        2019 02:53:40 +0000 (GMT)
+Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        C2.A7.04135.3B532CD5; Wed,  6 Nov 2019 11:53:39 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191106025339epcas1p306fb60459576ef49b786d3722267296d~Ucy-twpnV1215812158epcas1p3K;
+        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191106025339epsmtrp16de644898f53229341cab4841d289e45~Ucy-s5vYU1236412364epsmtrp1K;
+        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
+X-AuditID: b6c32a36-7e3ff70000001027-35-5dc235b331c5
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        68.4D.25663.3B532CD5; Wed,  6 Nov 2019 11:53:39 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191106025339epsmtip1275826dcc7148b13f5f397a994defc1a~Ucy-gNNlK2316223162epsmtip15;
+        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
+Subject: Re: [PATCH] MAINTAINERS: Update myself as maintainer for DEVFREQ
+ subsystem support
+To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, myungjoo.ham@samsung.com
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "chanwoo@kernel.org" <chanwoo@kernel.org>,
+        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
+        "davem@davemloft.net" <davem@davemloft.net>,
+        "robh@kernel.org" <robh@kernel.org>, CPGS <cpgs@samsung.com>
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <6a94e191-b460-bd9c-cae1-50ac93163eb1@samsung.com>
+Date:   Wed, 6 Nov 2019 11:59:16 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/VW6llrPudTqo2dW_VBOacYv";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+In-Reply-To: <11401342.1EApItjJl2@kreacher>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRD127a7Ra2uVWRCouLqHzBgFyysBFABscaLRE2MsambslJCr3Rb
+        zz/FVhQjKGgkVsT7AI1HWwniUa1GRVQQrPGOBhLFi1jAKMSj7Wrk35v53sybN99IRfILeKy0
+        yGjlLEZWT+HDxQ034xWJHqVfrfjxNp2pfPpYzHT745maVqeYcRw9hzMdTTU40xMsw5gXJadw
+        5n5Lu4T5faWRmB2l8tY9w1Tu+jJc5TtwhlB5A1vFqgpvPVL1uifm4yuLM3QcW8BZ4jij1lRQ
+        ZCzMpBYs1eRolKkKOpGeyaRRcUbWwGVSuQvzE/OK9KGhqLi1rN4WSuWzPE9Nz8qwmGxWLk5n
+        4q2ZFGcu0JtnmpN41sDbjIVJWpMhnVYokpUh4upiXWfAh5kbiPVb7OW4HQ1ItqMoKZAzYMsv
+        N7YdDZfKyUYE7c4+QgiCCFyf7iIh+Ibg/pPB0Is0UlJRtUbIX0XwapcHF4IeBKed5/Fw37Gk
+        Gr42XI9ojCPnQmdVtTiMRWQAg94SPoxxMgF8759G+KPJyRD43onCWEZmQWXNzwhfTE6Fcvth
+        SVg4mlwBLf2sQBkDzfu6IpQochq0N1UjoX0MPO86iAl4Ejgu7heFZwPSQUD/DQcSDOTCg7LV
+        gv2x8OGOlxBwLHTvLP2LN0Fd8y1cqN2GwOtr+7uvFPAd342F+4jIeDjXNF1IT4ZLgweQgGVg
+        vzBICDOMgi/9OySCrAy2lcoFyhToePMK24WmuIa4cQ1x4BriwPVf7BAS16PxnJk3FHI8bU4e
+        +tduFDnXhNRGdOThQj8ipYgaKRu27oZaLmHX8hsMfgRSETVOtqoilJIVsBs2chaTxmLTc7wf
+        KUO7rhTFRmtNoeM3WjW0MjklJYWZQacqaZqKkc05eVwtJwtZK1fMcWbO8q8Ok0bF2lHRQM/R
+        2qRHvTvUDrc24Z0HrqVNmz/ho0er8Gb3XQkS5t0j6k5kR2eNOjlr75K8D2Myvr6sCrTr6lpK
+        aksN/ntdi+0xPOGsf5G++XXrl2Wfzw5Qv2/P1tZa+iYs0n1qbp0nOpZ9k2tOCz6ZmtvWnZOb
+        vTyQv8f57vLZBb22pLdB/VVKzOtYOkFk4dk/noMqU8QDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSnO5m00OxBjOvSVtMvHGFxeLlIU2L
+        OedbWCyaF69ns7i8aw6bxftPnUwWtxtXsFmcOX2J1eL/nh3sDpweW1beZPLYtKqTzWP/3DXs
+        HluutrN49G1ZxejxeZNcAFsUl01Kak5mWWqRvl0CV8bjq/uZCraxV7Q29LI1MP5i7WLk4JAQ
+        MJHom5TWxcjJISSwm1Fi4yklEFtCQFJi2sWjzBAlwhKHDxd3MXIBlbxllFh17Cc7SI2wQKzE
+        x20HWEFsEQFXiceTprOAFDELXGeSmDutmw2i4x5Qx891TCBVbAJaEvtf3GADsfkFFCWu/njM
+        CGLzCthJTJzzlwXEZhFQkehtWAg2VVQgQuL59htQNYISJ2c+AavhFNCWuLRrOlicWUBd4s+8
+        S8wQtrjErSfzmSBseYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1qu
+        V5yYW1yal66XnJ+7iREcaVpaOxhPnIg/xCjAwajEw8tQfjBWiDWxrLgy9xCjBAezkghvTB9Q
+        iDclsbIqtSg/vqg0J7X4EKM0B4uSOK98/rFIIYH0xJLU7NTUgtQimCwTB6dUA2PVr/rznfXT
+        u9dveG4k/LDFn7vSJy7XYcm6Bd5Tb+W9lOfnMz9lwBFyOP1jQXfvJnlORmFXi7dMQtPOnvhj
+        6KvGbxGr8ntRdb3J14z4JLdzZw5GGFl0nPtUzZ5waoeFS+/1O6cyv6TXRK/bWSS1a41xS3/3
+        BZdJG57WuW17k/sk8GPYw6Pb+ZRYijMSDbWYi4oTAeliQQCwAgAA
+X-CMS-MailID: 20191106025339epcas1p306fb60459576ef49b786d3722267296d
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-Sendblock-Type: SVC_REQ_APPROVE
+X-CPGSPASS: Y
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5
+References: <1019298652.01572934681167.JavaMail.epsvc@epcpadp2>
+        <CGME20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5@epcms1p2>
+        <1019298652.01572945181528.JavaMail.epsvc@epcpadp2>
+        <11401342.1EApItjJl2@kreacher>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/VW6llrPudTqo2dW_VBOacYv
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 19. 11. 6. 오전 1:44, Rafael J. Wysocki wrote:
+> On Tuesday, November 5, 2019 8:35:05 AM CET MyungJoo Ham wrote:
+>>> Update myself to the DEVFREQ entry as maintainer from reviewer and
+>>> the git repository information to manage the devfreq patches. I've been
+>>> reviewing and tesing the devfreq support for the couple of years as reviewer.
+>> >From now, I'll help and reiview the devfreq as maintainer.
+>>>
+>>> Suggested-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>
+>> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
+>>
+>>
+>> Thanks a lot, Chanwoo!
+> 
+> I can take this one if no one is against that.
 
-Hi all,
+Thanks for picking up.
 
-On Thu, 10 Oct 2019 13:14:48 +1100 Stephen Rothwell <sfr@canb.auug.org.au> =
-wrote:
->
-> I added the following merge fix patch for today:
->=20
+> 
+> I will be expecting devfreq pull requests from Chanwoo going forward.
+> 
 
-This patch is now just:
+After you applied it, If it's not late, I'll send the pull-request
+of devfreq for v5.5. Thanks.
 
-From: Stephen Rothwell <sfr@canb.auug.org.au>
-Date: Thu, 10 Oct 2019 13:08:43 +1100
-Subject: [PATCH] drm/i915: update for mutex_release API change
-
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
----
- drivers/gpu/drm/i915/i915_active.c    | 2 +-
- 1 files changed, 1 insertions(+), 1 deletions(-)
-
-diff --git a/drivers/gpu/drm/i915/i915_active.c b/drivers/gpu/drm/i915/i915=
-_active.c
-index aa37c07004b9..a47387174434 100644
---- a/drivers/gpu/drm/i915/i915_active.c
-+++ b/drivers/gpu/drm/i915/i915_active.c
-@@ -385,7 +385,7 @@ void i915_active_set_exclusive(struct i915_active *ref,=
- struct dma_fence *f)
- 	mutex_acquire(&ref->mutex.dep_map, 0, 0, _THIS_IP_);
- 	if (!__i915_active_fence_set(&ref->excl, f))
- 		atomic_inc(&ref->count);
--	mutex_release(&ref->mutex.dep_map, 0, _THIS_IP_);
-+	mutex_release(&ref->mutex.dep_map, _THIS_IP_);
- }
-=20
- bool i915_active_acquire_if_busy(struct i915_active *ref)
---=20
-2.23.0
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/VW6llrPudTqo2dW_VBOacYv
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3CNbQACgkQAVBC80lX
-0GxdjQf/S0M3ryc3d9GRdi7jkkq0TiF/zlwiiwtKRaVqw6Gi+j0f7blRZRKizSZr
-E9PfyIhmbl+PKyCs+LvhDxG7cDDh6zdqIzVKtjBMvlldty7Z73EKvwmX8LEjpGf9
-VkXcxqCGnhQxpAQaJpxzYq6x+Vx26Ubr6LJ5B4ilChMbfTTz2qkIQJ8ARw+LR7+p
-RfZYnGxGDMsPSeLy15AJhzUXwFDL/zaotzkWvAXCF/JMr0l9rTKeZNRUXPvxeF9J
-hgU3az9xjnfkXqsV7+IKUdm0R8zUnHhyGm4AcBGWqHz2xOnYUkNxQQudMTc8aXQv
-HVzUxnHBsNZ2B7LpfFWCAzXUgPo+Bg==
-=nrAt
------END PGP SIGNATURE-----
-
---Sig_/VW6llrPudTqo2dW_VBOacYv--
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
