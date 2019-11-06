@@ -2,155 +2,91 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF79FC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:58:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7326EC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83D252087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:58:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="PYlPgvFk"
+	by mail.kernel.org (Postfix) with ESMTP id 2BAE121882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573012748;
+	bh=B5rssGLUu7rLVxRt2++B9DVXKRArQjh+/atMS5ZdJgQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PooV0lrlob9pxhzja20C6cAsxYBha1VPRPeDKi/PovIsBvkfh3QRv8GNdKaH/JkRw
+	 AHH9uguf6ty5KAPpmcTSXzaYS31Z6XNmgkI9AJej41AY9bKwojElMszfINt+/YZOKa
+	 orObjlIY83ozH1TPCatYSzPPuEb/2bSY3i0Sis7I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731157AbfKFD64 (ORCPT
+        id S1731184AbfKFD7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:58:56 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:31981 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1730780AbfKFD6z (ORCPT
+        Tue, 5 Nov 2019 22:59:07 -0500
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:37747 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725768AbfKFD7G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:58:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573012734;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=gr71+XtimEL2u6AzLjyEgsguFtJGvEEF2xUegKTV/h0=;
-        b=PYlPgvFk/IGlthBT0Uy2XvRiRiL850ZAbjAwAB+qr7+tPvvvjTbw9h0hJwgMDjAEqpbSOM
-        FKkCS4fJihkpkZzIG5xMEyekUQd6mVrM30Cuk1+A35k+XRIJe3oc2xwZzE9ld8BqRGKvP6
-        Rg329xgx1Qsg85rHtr2J+C924pOUMY8=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-183-vwBxFsjROy-3Zo-U4aD9YA-1; Tue, 05 Nov 2019 22:58:44 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 97EBA8017DE;
-        Wed,  6 Nov 2019 03:58:40 +0000 (UTC)
-Received: from [10.72.12.193] (ovpn-12-193.pek2.redhat.com [10.72.12.193])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 8514210013D9;
-        Wed,  6 Nov 2019 03:57:01 +0000 (UTC)
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105105834.469675f0@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
-Date:   Wed, 6 Nov 2019 11:56:46 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Tue, 5 Nov 2019 22:59:06 -0500
+Received: by mail-ot1-f66.google.com with SMTP id d5so7625898otp.4;
+        Tue, 05 Nov 2019 19:59:06 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=3+jUWUO/bkFGdV0o7ONSAdtw/CD/1zLOWv9k0T1s+7k=;
+        b=FQ54nInJ4rJfm4Prwwap7N+gMCsGxFtHecNhV7k4NwVxs92QFCYMR0XWu2/UdlDLXQ
+         CN9xg62hw+Mnei9UVm43fUWclwSh2JNeiC0nNGca77A8bQbsaQRvpmUrObNo6bpvfXFG
+         vcaKT4wANN1rEa7yf+sOjlsWhLbIzisf5PKykqXU2LR2UhYTRG5fIUpO9fdwu0TPnwnl
+         vmfI/wYRu2ChxyEtXptaTgl9nZWKW2gliADb3g2vDpDxw1ryfyMEAaTgfuU7KAmPe66h
+         wPZvQm0ozQjdleMnWWjRtbztapwMqTxmX21cKoZKQjXN5ITvZ6sihnymOG+y5S2mD3b5
+         g6Ag==
+X-Gm-Message-State: APjAAAWt8Pc1rft2Uqf/7prloHCC+wWzc3MXvYDZFTEgsG3ja8lFGy2b
+        qf2P3LqPKosdPDKXnPgk1arjWe8=
+X-Google-Smtp-Source: APXvYqym4eHg6yJ8m7KJdSNq9SIvske3hrK1picvTYuzgQLPgCwl5Zg8oHQpbKKuZkQsSOH3aNv20Q==
+X-Received: by 2002:a9d:1c8f:: with SMTP id l15mr203341ota.313.1573012745732;
+        Tue, 05 Nov 2019 19:59:05 -0800 (PST)
+Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
+        by smtp.gmail.com with ESMTPSA id k10sm6167581oig.25.2019.11.05.19.59.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 05 Nov 2019 19:59:05 -0800 (PST)
+Date:   Tue, 5 Nov 2019 21:59:04 -0600
+From:   Rob Herring <robh@kernel.org>
+To:     Taniya Das <tdas@codeaurora.org>
+Cc:     Stephen Boyd <sboyd@kernel.org>,
+        Michael Turquette =?iso-8859-1?Q?=A0?= 
+        <mturquette@baylibre.com>, David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
+        robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1 3/7] dt-bindings: clock: Introduce QCOM Graphics clock
+ bindings
+Message-ID: <20191106035904.GA2362@bogus>
+References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
+ <1572524473-19344-4-git-send-email-tdas@codeaurora.org>
 MIME-Version: 1.0
-In-Reply-To: <20191105105834.469675f0@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: vwBxFsjROy-3Zo-U4aD9YA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1572524473-19344-4-git-send-email-tdas@codeaurora.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, 31 Oct 2019 17:51:09 +0530, Taniya Das wrote:
+> Add device tree bindings for graphics clock controller for
+> Qualcomm Technology Inc's SC7180 SoCs.
+> 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  .../devicetree/bindings/clock/qcom,gpucc.yaml       |  1 +
+>  include/dt-bindings/clock/qcom,gpucc-sc7180.h       | 21 +++++++++++++++++++++
+>  2 files changed, 22 insertions(+)
+>  create mode 100644 include/dt-bindings/clock/qcom,gpucc-sc7180.h
+> 
 
-On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote:
-> On Tue,  5 Nov 2019 17:32:34 +0800
-> Jason Wang <jasowang@redhat.com> wrote:
->
->> Hi all:
->>
->> There are hardwares that can do virtio datapath offloading while
->> having its own control path. This path tries to implement a mdev based
->> unified API to support using kernel virtio driver to drive those
->> devices. This is done by introducing a new mdev transport for virtio
->> (virtio_mdev) and register itself as a new kind of mdev driver. Then
->> it provides a unified way for kernel virtio driver to talk with mdev
->> device implementation.
->>
->> Though the series only contains kernel driver support, the goal is to
->> make the transport generic enough to support userspace drivers. This
->> means vhost-mdev[1] could be built on top as well by resuing the
->> transport.
->>
->> A sample driver is also implemented which simulate a virito-net
->> loopback ethernet device on top of vringh + workqueue. This could be
->> used as a reference implementation for real hardware driver.
->>
->> Also a real ICF VF driver was also posted here[2] which is a good
->> reference for vendors who is interested in their own virtio datapath
->> offloading product.
->>
->> Consider mdev framework only support VFIO device and driver right now,
->> this series also extend it to support other types. This is done
->> through introducing class id to the device and pairing it with
->> id_talbe claimed by the driver. On top, this seris also decouple
->> device specific parents ops out of the common ones.
->>
->> Pktgen test was done with virito-net + mvnet loop back device.
->>
->> Please review.
->>
->> [1] https://lkml.org/lkml/2019/10/31/440
->> [2] https://lkml.org/lkml/2019/10/15/1226
->>
->> Changes from V7:
->> - drop {set|get}_mdev_features for virtio
->> - typo and comment style fixes
->
-> Seems we're nearly there, all the remaining comments are relatively
-> superficial, though I would appreciate a v9 addressing them as well as
-> the checkpatch warnings:
->
-> https://patchwork.freedesktop.org/series/68977/
-
-
-Will do.
-
-Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to=20
-go through Michael's vhost tree?
-
-Thanks
-
-
->
-> Consider this a last call for reviews or acks (or naks) from affected
-> mdev vendor drivers, mdev-core sub-maintainers (Hi Kirti), virtio
-> stakeholders, etc.  Thanks,
->
-> Alex
->
-
+Reviewed-by: Rob Herring <robh@kernel.org>
