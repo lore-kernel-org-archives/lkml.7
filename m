@@ -2,157 +2,127 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0EAC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54517C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1963C20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573046893;
-	bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=ryccSi1Eu1wSMlFS/GTL4xEifIlUtwC+LjomuZbXFVHYmI+8Dwk9Yp0kM2KHPYrhk
-	 wJYyb7RZlvCNyoKTDH4uc6fzGRvjz4QmPeal1SfjSTSJZV0OHlfrzgKABJy2J9KfiC
-	 GlzMMFAe7JPw8I11XfHVY5Y6ek9CXHnGKXZnuMMo=
+	by mail.kernel.org (Postfix) with ESMTP id 1266020663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Mo4TAU7f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730630AbfKFN2M (ORCPT
+        id S1731225AbfKFN2h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:28:12 -0500
-Received: from mail.kernel.org ([198.145.29.99]:49164 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726845AbfKFN2L (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:28:11 -0500
-Received: from mail-yw1-f51.google.com (mail-yw1-f51.google.com [209.85.161.51])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 32FE921929;
-        Wed,  6 Nov 2019 13:28:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573046890;
-        bh=acqlbOW9KRReh2d7mpWhg+dFBYpnTyamFBP3xBgfnN4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=jZCC9XWTKGCvZag4+8V0UwjSYNo7v90srn98UNulQLavQBtfjW4BMQEgF1ASG6OsF
-         4+SuurrY3gyC0uZARvElUNvI0CXVruo3sPOoVx2IZdnzOS14D7P59a36nfD22tEEaG
-         Rpp5m08UYu/81Hv/79a0uZXLlHCbQVYhq+9zqHYc=
-Received: by mail-yw1-f51.google.com with SMTP id j137so3338668ywa.12;
-        Wed, 06 Nov 2019 05:28:10 -0800 (PST)
-X-Gm-Message-State: APjAAAX3VQdw0MzNnpbtIF1HeS1S9vB5DaCbiCBDjhMwOrotI4qi25HL
-        89Kp8ilWZB3E7//w/pqXWUzHL+UPnWcw+bSroQ==
-X-Google-Smtp-Source: APXvYqx8YEmGlOUOkomM0+9+OiizTTLGhZ01a7PA3/CuWEQJuLejHW9brVzu8Jzm5uL/IT1LYjYyaenn1W38v9BxxTE=
-X-Received: by 2002:a81:2748:: with SMTP id n69mr1363487ywn.281.1573046889250;
- Wed, 06 Nov 2019 05:28:09 -0800 (PST)
-MIME-Version: 1.0
-References: <20191028124238.19224-1-t-kristo@ti.com> <20191028124238.19224-2-t-kristo@ti.com>
- <20191106032727.GA21162@bogus> <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
-In-Reply-To: <25d55648-1fad-7de2-0937-5efeee8672eb@ti.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Wed, 6 Nov 2019 07:27:56 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
-Message-ID: <CAL_JsqJd_wDMVgFkMRZ7_+0hz93zqJFWEQXY-Sn+3tT-urzRKA@mail.gmail.com>
-Subject: Re: [PATCH 01/17] dt-bindings: remoteproc: Add OMAP remoteproc bindings
-To:     Tero Kristo <t-kristo@ti.com>
-Cc:     Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" 
-        <linux-remoteproc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-omap <linux-omap@vger.kernel.org>,
-        Suman Anna <s-anna@ti.com>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Nov 2019 08:28:37 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43809 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730685AbfKFN2g (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 08:28:36 -0500
+Received: by mail-pl1-f195.google.com with SMTP id a18so10282209plm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:28:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=1g5bmlvDJmzq0j8rw+Hyiq1h7w7jIJ4WDcwt2PpU20g=;
+        b=Mo4TAU7fRjbhRaWWEK1LJyvn+DSxubqpdHRD94G9troWEwzLz8YYrBRIS2KdSpX3dT
+         FeMeoDlj7TwE3SHuoLTBKK+WrPKt4gh0PazZ1g5ozZLTZDY1XPVJRgI7Y3gApyFnHK/1
+         3cFeLTF1BcFuj3Ip+HCsBdu5/XN6JIT4IO2nzkU8wdkue1G52cekATxLLxxMGq70HiPj
+         KD2SMv14UvZ/GkEikI7a62KpToNHUOtEaKhrhhq5wGD66CXnWhHliySQH/pY23OEUsqG
+         8z4GOFi9XOisHIgTNfRfMeAu0z6FY4WyKVzYa8WTLixMCLiMNJsQHO1OZjQ+X00OG6p4
+         2vrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=1g5bmlvDJmzq0j8rw+Hyiq1h7w7jIJ4WDcwt2PpU20g=;
+        b=Zg9t1sQ43zkklSph1EEJqR9zD2HlmdlmLLpdpFLAdenDiG5mDUS+ZwNravPvc/b+hD
+         y63evsxE3lhFmaRG1PWoNBPtgXIxWKbIeWTrhJ2FTPrM0oedHhN/TA6wgTjVlk2uPzpe
+         lrO+g08/GdF43Dl9yeu2aqyarN9HlvJ+kaUjRa7wpFrAF/XzS5aiW5zHEec+hCKfeAFo
+         kW+YSQ2RWgxJFWuA6awHd1PGRxCwgaVdqFbkE5S/iMUMWDT9zg71Zexqlw/NiXBYbbmB
+         XmcFb8ciCkSTVPwhA8npc0ymUBZtrcRQSwcmtIO2Xt9EVIKgQYRv0MCtNKzxPyl67tYS
+         Ua7w==
+X-Gm-Message-State: APjAAAVyoIm1wbmA9FBAs0sSR7Lo6zngDgeNug0yzBNaZfXqNlBT+VL4
+        5+P5TwYCK+EwzcXD6Pi36OlqFEi6Kn6rjw==
+X-Google-Smtp-Source: APXvYqyAyMf4Opoy7bESQRlotkkR0kSWU/mPg+gqk7EyqL30BQrBho6L7bwwesWM6v5WR7oQnljBAw==
+X-Received: by 2002:a17:902:ac90:: with SMTP id h16mr2681286plr.147.1573046915172;
+        Wed, 06 Nov 2019 05:28:35 -0800 (PST)
+Received: from localhost ([49.248.202.230])
+        by smtp.gmail.com with ESMTPSA id x20sm23085573pfa.186.2019.11.06.05.28.34
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 05:28:34 -0800 (PST)
+From:   Amit Kucheria <amit.kucheria@linaro.org>
+To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Zhang Rui <rui.zhang@intel.com>
+Cc:     linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-pm@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org
+Subject: [PATCH 00/11] thermal: clean up output of make W=1
+Date:   Wed,  6 Nov 2019 18:58:16 +0530
+Message-Id: <cover.1573046440.git.amit.kucheria@linaro.org>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:44 AM Tero Kristo <t-kristo@ti.com> wrote:
->
-> On 06/11/2019 05:27, Rob Herring wrote:
-> > On Mon, Oct 28, 2019 at 02:42:22PM +0200, Tero Kristo wrote:
-> >> From: Suman Anna <s-anna@ti.com>
-> >>
-> >> Add the device tree bindings document for the IPU and DSP
-> >> remote processor devices on OMAP4+ SoCs.
-> >>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Suman Anna <s-anna@ti.com>
-> >> Signed-off-by: Tero Kristo <t-kristo@ti.com>
-> >> ---
-> >>   .../remoteproc/ti,omap-remoteproc.txt         | 205 ++++++++++++++++++
-> >>   1 file changed, 205 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >>
-> >
-> > Looks to be in pretty good shape, but how about doing a schema.
->
-> iommu / mailbox is not in schema format, can I just convert this one to
-> schema without considering those? If yes, I can go ahead and do it.
+Cleanup output of make W=1 inside drivers/thermal. This should allow us to
+focus on real issues that tend to get lost in the noise much better.
 
-The client side both have schema (in dt-schema repo).
+There is no functional change. This series was generate on top of
+linux-next from 20191105.
 
-> >> diff --git a/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >> new file mode 100644
-> >> index 000000000000..e2bcfcab21c1
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/remoteproc/ti,omap-remoteproc.txt
-> >> @@ -0,0 +1,205 @@
-> >> +OMAP4+ Remoteproc Devices
-> >> +=========================
-> >> +
-> >> +The OMAP family of SoCs usually have one or more slave processor sub-systems
-> >> +that are used to offload some of the processor-intensive tasks, or to manage
-> >> +other hardware accelerators, for achieving various system level goals.
-> >> +
-> >> +The processor cores in the sub-system are usually behind an IOMMU, and may
-> >> +contain additional sub-modules like Internal RAM and/or ROMs, L1 and/or L2
-> >> +caches, an Interrupt Controller, a Cache Controller etc.
-> >> +
-> >> +The OMAP SoCs usually have a DSP processor sub-system and/or an IPU processor
-> >> +sub-system. The DSP processor sub-system can contain any of the TI's C64x,
-> >> +C66x or C67x family of DSP cores as the main execution unit. The IPU processor
-> >> +sub-system usually contains either a Dual-Core Cortex-M3 or Dual-Core Cortex-M4
-> >> +processors.
-> >> +
-> >> +Remote Processor Node:
-> >> +======================
-> >> +Each remote processor sub-system is represented as a single DT node. Each node
-> >> +has a number of required or optional properties that enable the OS running on
-> >> +the host processor (MPU) to perform the device management of the remote
-> >> +processor and to communicate with the remote processor. The various properties
-> >> +can be classified as constant or variable. The constant properties are dictated
-> >> +by the SoC and does not change from one board to another having the same SoC.
-> >> +Examples of constant properties include 'iommus', 'reg'. The variable properties
-> >> +are dictated by the system integration aspects such as memory on the board, or
-> >> +configuration used within the corresponding firmware image. Examples of variable
-> >> +properties include 'mboxes', 'memory-region', 'timers', 'watchdog-timers' etc.
-> >> +
-> >> +Required properties:
-> >> +--------------------
-> >> +The following are the mandatory properties:
-> >> +
-> >> +- compatible:       Should be one of the following,
-> >> +                "ti,omap4-dsp" for DSPs on OMAP4 SoCs
-> >> +                "ti,omap5-dsp" for DSPs on OMAP5 SoCs
-> >> +                "ti,dra7-dsp" for DSPs on DRA7xx/AM57xx SoCs
-> >> +                "ti,omap4-ipu" for IPUs on OMAP4 SoCs
-> >> +                "ti,omap5-ipu" for IPUs on OMAP5 SoCs
-> >> +                "ti,dra7-ipu" for IPUs on DRA7xx/AM57xx SoCs
-> >> +
-> >> +- iommus:   phandles to OMAP IOMMU nodes, that need to be programmed
-> >> +            for this remote processor to access any external RAM memory or
-> >> +            other peripheral device address spaces. This property usually
-> >> +            has only a single phandle. Multiple phandles are used only in
-> >> +            cases where the sub-system has different ports for different
-> >> +            sub-modules within the processor sub-system (eg: DRA7 DSPs),
-> >> +            and need the same programming in both the MMUs.
->
-> ^ the target of this is not in schema.
+Regards,
+Amit
 
-You mean the OMAP IOMMU binding? That doesn't matter at all.
+Amit Kucheria (11):
+  thermal: of-thermal: Appease the kernel-doc deity
+  thermal: cpu_cooling: Appease the kernel-doc deity
+  thermal: step_wise: Appease the kernel-doc deity
+  thermal: devfreq_cooling: Appease the kernel-doc deity
+  thermal: max77620: Appease the kernel-doc deity
+  thermal: mediatek: Appease the kernel-doc deity
+  thermal: rockchip: Appease the kernel-doc deity
+  thermal: samsung: Appease the kernel-doc deity
+  thermal: tegra: Appease the kernel-doc deity
+  thermal: amlogic: Appease the kernel-doc deity
+  thermal: zx2967: Appease the kernel-doc deity
 
-Rob
+ drivers/thermal/amlogic_thermal.c    |  6 +++++-
+ drivers/thermal/cpu_cooling.c        |  1 +
+ drivers/thermal/devfreq_cooling.c    |  3 ++-
+ drivers/thermal/fair_share.c         |  4 ++--
+ drivers/thermal/gov_bang_bang.c      |  4 ++--
+ drivers/thermal/max77620_thermal.c   |  2 +-
+ drivers/thermal/mtk_thermal.c        | 12 ++++++------
+ drivers/thermal/of-thermal.c         |  2 +-
+ drivers/thermal/rockchip_thermal.c   | 22 ++++++++++++++++------
+ drivers/thermal/samsung/exynos_tmu.c |  5 ++++-
+ drivers/thermal/step_wise.c          |  4 ++--
+ drivers/thermal/tegra/soctherm.c     | 15 +++++++++++++--
+ drivers/thermal/user_space.c         |  4 ++--
+ drivers/thermal/zx2967_thermal.c     |  1 +
+ 14 files changed, 58 insertions(+), 27 deletions(-)
+
+-- 
+2.17.1
+
