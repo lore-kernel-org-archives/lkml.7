@@ -2,116 +2,251 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C358C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:18:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 08982C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E3302053B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:18:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573010320;
-	bh=794v0ru8pfalS+8Pyn18QoBVERGFnv+vgCcy8vjcww4=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=EHbN8EWOffTDjG3n4IHezpb7QYiGTkYnt/JCUQvmt/5N1STPNhkacxYjau097mMe9
-	 8Xupf8wTHMtp5wjHYQJ787XEtsbZ+RwVyZHqPRAYfjnDo4FPWDIhe6sSmzaD2taXWA
-	 7Xr5iqRMMj+vW8CscxX5OpvV13foxvvS8pp7zWew=
+	by mail.kernel.org (Postfix) with ESMTP id AD2AF2053B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:21:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730963AbfKFDSj (ORCPT
+        id S1731037AbfKFDVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:18:39 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51890 "EHLO mail.kernel.org"
+        Tue, 5 Nov 2019 22:21:06 -0500
+Received: from mx7.zte.com.cn ([202.103.147.169]:36831 "EHLO mxct.zte.com.cn"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730576AbfKFDSi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:18:38 -0500
-Received: from mail-qt1-f178.google.com (mail-qt1-f178.google.com [209.85.160.178])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8C18C2053B;
-        Wed,  6 Nov 2019 03:18:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573010317;
-        bh=794v0ru8pfalS+8Pyn18QoBVERGFnv+vgCcy8vjcww4=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=h4+X6NnESnFUg7hSGbT1qji0fnzSSyx2iXJY2mCnwfnAuYQe1ssCMb3PYIL+aPRy4
-         r42LTaTdD0fNUJoKCRiky6GIjL9rbgUsGCoPn5bQFbtCo0qQ9mG5pf/A2RK6+M51E3
-         C/4a+yVOEYe4PXxvHTOqR6XEHcFq4n7Ww72WFhVo=
-Received: by mail-qt1-f178.google.com with SMTP id p20so13910367qtq.5;
-        Tue, 05 Nov 2019 19:18:37 -0800 (PST)
-X-Gm-Message-State: APjAAAVWmKHdvEaFgZLRdy2IeAQp2ehY1U6pIXJJ7wycsTmxnVK8/u3d
-        My+2Z1u8quJN3g6EEzrDsta8zoVuWDIwLP3QgA==
-X-Google-Smtp-Source: APXvYqx/MDqiFs4boZftGQ4Sm3LD1j9ie9A1PR+9tSRnYrAzeyJ63l67XS86a0hZ+oVQ8PeNFdWmOuEziMGHCusZdFg=
-X-Received: by 2002:ac8:458c:: with SMTP id l12mr483091qtn.300.1573010316820;
- Tue, 05 Nov 2019 19:18:36 -0800 (PST)
-MIME-Version: 1.0
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org>
- <1572524473-19344-3-git-send-email-tdas@codeaurora.org> <20191106002604.A1BC72087E@mail.kernel.org>
-In-Reply-To: <20191106002604.A1BC72087E@mail.kernel.org>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 5 Nov 2019 21:18:24 -0600
-X-Gmail-Original-Message-ID: <CAL_Jsq+dihzR7Wy+9kbz+A8tJ8LCpUcci6w0oW7SxBML4jX_Fw@mail.gmail.com>
-Message-ID: <CAL_Jsq+dihzR7Wy+9kbz+A8tJ8LCpUcci6w0oW7SxBML4jX_Fw@mail.gmail.com>
-Subject: Re: [PATCH v1 2/7] dt-bindings: clock: Add YAML schemas for the QCOM
- GPUCC clock bindings
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>,
-        David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm <linux-arm-msm@vger.kernel.org>,
-        "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>,
-        linux-clk <linux-clk@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+        id S1730655AbfKFDVG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:21:06 -0500
+Received: from mse-fl1.zte.com.cn (unknown [10.30.14.238])
+        by Forcepoint Email with ESMTPS id EF20E289D0F04C342B62;
+        Wed,  6 Nov 2019 11:21:02 +0800 (CST)
+Received: from notes_smtp.zte.com.cn (notes_smtp.zte.com.cn [10.30.1.239])
+        by mse-fl1.zte.com.cn with ESMTP id xA63JtrJ068188;
+        Wed, 6 Nov 2019 11:19:55 +0800 (GMT-8)
+        (envelope-from wang.yi59@zte.com.cn)
+Received: from fox-host8.localdomain ([10.74.120.8])
+          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
+          with ESMTP id 2019110611201445-308508 ;
+          Wed, 6 Nov 2019 11:20:14 +0800 
+From:   Yi Wang <wang.yi59@zte.com.cn>
+To:     tglx@linutronix.de
+Cc:     mingo@redhat.com, peterz@infradead.org, dvhart@infradead.org,
+        linux-kernel@vger.kernel.org, xue.zhihong@zte.com.cn,
+        wang.yi59@zte.com.cn, jiang.xuexin@zte.com.cn,
+        Yang Tao <yang.tao172@zte.com.cn>
+Subject: [PATCH] Robust-futex wakes up the waiters will be missed
+Date:   Wed, 6 Nov 2019 11:23:02 +0800
+Message-Id: <1573010582-35297-1-git-send-email-wang.yi59@zte.com.cn>
+X-Mailer: git-send-email 1.8.3.1
+X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
+ 21, 2013) at 2019-11-06 11:20:14,
+        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
+ 2019-11-06 11:19:58,
+        Serialize complete at 2019-11-06 11:19:58
+X-MAIL: mse-fl1.zte.com.cn xA63JtrJ068188
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 6:26 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Taniya Das (2019-10-31 05:21:08)
-> > diff --git a/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> > new file mode 100644
-> > index 0000000..96aaf36
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/clock/qcom,gpucc.yaml
-> > @@ -0,0 +1,69 @@
-> > +# SPDX-License-Identifier: GPL-2.0-only
->
-> Can it be GPL2 or BSD? I think Rob is asking for that sort of license on
-> these files.
+From: Yang Tao <yang.tao172@zte.com.cn>
 
-I do, but only on new bindings unless we determine relicensing is
-okay. Though here it doesn't look like much is copied over.
+We found two scenarios:
+(1)When the owner of a mutex lock with robust attribute and no_pi
+will release the lock and executes pthread_mutex_unlock(),it is
+killed after setting mutex->__data.__lock = 0 and before wake
+others. It will go through the robust process, but it will not wake
+up watiers because mutex->__data.__lock = 0.
 
-> > +%YAML 1.2
-> > +---
-> > +$id: http://devicetree.org/schemas/bindings/clock/qcom,gpucc.yaml#
-> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> > +
-> > +title: Qualcomm Graphics Clock & Reset Controller Binding
-> > +
-> > +maintainers:
-> > +  - Taniya Das <tdas@codeaurora.org>
-> > +
-> > +description: |
-> > +  Qualcomm grpahics clock control module which supports the clocks, resets and
-> > +  power domains.
-> > +
-> > +properties:
-> > +  compatible:
-> > +    enum:
-> > +      - qcom,sdm845-gpucc
-> > +      - qcom,msm8998-gpucc
->
-> Sort please.
+                OWNER
 
-When you get tired of telling people to do this we can make the
-tooling do it. :) Shouldn't be too hard. The majority of the work is
-probably fixing the existing cases that aren't sorted.
+        pthread_mutex_unlock()
+                |
+                |
+                V
+        atomic_exchange_rel (&mutex->__data.__lock, 0)
+                        <------------------------killed
+            lll_futex_wake ()                   |
+                                                |
+                                                |(__lock = 0)
+                                                |(enter kernel)
+                                                |
+                                                V
+                                            do_exit()
+                                            exit_mm()
+                                          mm_release()
+                                        exit_robust_list()
+                                        handle_futex_death()
+                                                |
+                                                |(__lock = 0)
+                                                |(uval = 0)
+                                                |
+                                                V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;<------wakes up waiters will be missed
 
-Rob
+(2) When a waiter wakes up and returns to the user space, it is
+killed before getting the lock (before modifying
+mutex->__data.__lock), and other waiters will not wake up.
+
+        OWNER                         WAITER
+
+   pthread_mutex_unlock()
+                |
+                |(__lock = 0)
+                |
+                V
+         futex_wake()
+                                fuet_wait()   //awaked
+                                        |
+                                        |
+                                        |(enter userspace)
+                                        |(__lock = 0)
+                                        |
+                                        V
+                        oldval = mutex->__data.__lock
+                                          <-----------------killed
+    atomic_compare_and_exchange_val_acq (&mutex->__data.__lock,  |
+                        id | assume_other_futex_waiters, 0)      |
+                                                                 |
+                                                                 |
+                                                   (enter kernel)|
+                                                                 |
+                                                                 V
+                                                         do_exit()
+                                                        |
+                                                        |
+                                                        V
+                                        handle_futex_death()
+                                        |
+                                        |(__lock = 0)
+                                        |(uval = 0)
+                                        |
+                                        V
+        if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+                return 0;<------wakes up waiters will be missed
+So, in these scenarios, task will not wake up waiters
+
+We found that when the task was killed in two scenarios,
+task->robust_list->list_op_pending =&mutex->__data.__list.__next,
+so we can do something.
+
+We think that task should wake up once when the following conditions
+are met:
+        (1) task->robust_list->list_op_pending != NULL;
+        (2) mutex->__data.__lock = 0;
+        (3) no_pi
+In some cases, this may lead to some redundant wakeups, which will
+reduce the efficiency of the program, but it will not affectthe
+program operation, and it is very rare to meet these three
+conditions.
+
+At the same time, we only wake up and do not set the died bit,
+because mutex->__data.__lock = 0; mutex->__data.__owner = 0;
+At this time, it can be seen that there is no owner,and the wake-up
+process directly take the lock.
+
+If the died bit is set, it may cause some misoperation. Such as a
+waiter being killed when the owner is releasing the lock, it will
+mark the lock with the died bit, which is not good.
+
+We don't need to set "mutex->__data.__count"(in mutex structure),
+which will not affect repeated lock holding.
+
+Signed-off-by: Yang Tao <yang.tao172@zte.com.cn>
+---
+ kernel/futex.c | 41 ++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 36 insertions(+), 5 deletions(-)
+
+diff --git a/kernel/futex.c b/kernel/futex.c
+index bd18f60..8511dad 100644
+--- a/kernel/futex.c
++++ b/kernel/futex.c
+@@ -3456,7 +3456,9 @@ SYSCALL_DEFINE3(get_robust_list, int, pid,
+  * Process a futex-list entry, check whether it's owned by the
+  * dying task, and do notification if so:
+  */
+-static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int pi)
++static int handle_futex_death(u32 __user *uaddr,
++			      struct task_struct *curr, int pi,
++			      bool pending)
+ {
+ 	u32 uval, uninitialized_var(nval), mval;
+ 	int err;
+@@ -3469,6 +3471,35 @@ static int handle_futex_death(u32 __user *uaddr, struct task_struct *curr, int p
+ 	if (get_user(uval, uaddr))
+ 		return -1;
+ 
++	/*
++	 * When uval is 0, there may be waiters blocking on the lock:
++	 *
++	 * (1)When the owner of a mutex lock with robust attribute
++	 * and no_pi will release the lock and executes
++	 * pthread_mutex_unlock(),it is killed after setting
++	 * mutex->__data.__lock = 0 (uval = 0)and before wake others.
++	 * It will enter the robust process, but it will not wake up
++	 * watiers because uval = 0.
++	 *
++	 * (2) When a waiter wakes up and returns to the user space,
++	 * it is killed before getting the lock (before modifying
++	 * mutex->__data.__lock), and other waiters will not wake up
++	 * because uval = 0.
++	 *
++	 * We found that when the task was killed in two scenarios,
++	 * task->robust_list->list_op_pending != NULL. Therefore,
++	 * it can be judged that the task is killed when releasing
++	 * or acquiring the lock.
++	 *
++	 * We should wake up once when the following conditions are
++	 * met:
++	 *	1) task->robust_list->list_op_pending != NULL
++	 *	2) mutex->__data.__lock = 0 (uval = 0)
++	 *	3) no_pi
++	 */
++	if (pending && !pi && uval == 0)
++		futex_wake(uaddr, 1, 1, FUTEX_BITSET_MATCH_ANY);
++
+ 	if ((uval & FUTEX_TID_MASK) != task_pid_vnr(curr))
+ 		return 0;
+ 
+@@ -3590,7 +3621,7 @@ void exit_robust_list(struct task_struct *curr)
+ 		 */
+ 		if (entry != pending)
+ 			if (handle_futex_death((void __user *)entry + futex_offset,
+-						curr, pi))
++						curr, pi, 0))
+ 				return;
+ 		if (rc)
+ 			return;
+@@ -3607,7 +3638,7 @@ void exit_robust_list(struct task_struct *curr)
+ 
+ 	if (pending)
+ 		handle_futex_death((void __user *)pending + futex_offset,
+-				   curr, pip);
++				   curr, pip, 1);
+ }
+ 
+ long do_futex(u32 __user *uaddr, int op, u32 val, ktime_t *timeout,
+@@ -3784,7 +3815,7 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 		if (entry != pending) {
+ 			void __user *uaddr = futex_uaddr(entry, futex_offset);
+ 
+-			if (handle_futex_death(uaddr, curr, pi))
++			if (handle_futex_death(uaddr, curr, pi, 0))
+ 				return;
+ 		}
+ 		if (rc)
+@@ -3803,7 +3834,7 @@ void compat_exit_robust_list(struct task_struct *curr)
+ 	if (pending) {
+ 		void __user *uaddr = futex_uaddr(pending, futex_offset);
+ 
+-		handle_futex_death(uaddr, curr, pip);
++		handle_futex_death(uaddr, curr, pip, 1);
+ 	}
+ }
+ 
+-- 
+2.15.2
+
