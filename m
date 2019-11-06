@@ -2,173 +2,160 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56A22C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:40:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33D1FC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CE05207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:40:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA84E21D7E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:41:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=c-s.fr header.i=@c-s.fr header.b="uDQK58sa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731116AbfKFGkn (ORCPT
+        id S1731166AbfKFGlN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:40:43 -0500
-Received: from mailgw02.mediatek.com ([1.203.163.81]:26927 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728724AbfKFGkm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:40:42 -0500
-X-UUID: 78686ba0df8a4be7b48ecccce2e7562e-20191106
-X-UUID: 78686ba0df8a4be7b48ecccce2e7562e-20191106
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1127936845; Wed, 06 Nov 2019 14:40:25 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Wed, 6 Nov
- 2019 14:40:22 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Wed, 6 Nov 2019 14:40:21 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <mripard@kernel.org>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        CK Hu <ck.hu@mediatek.com>
-CC:     <linux-mediatek@lists.infradead.org>, <sj.huang@mediatek.com>,
-        Jitao Shi <jitao.shi@mediatek.com>
-Subject: [PATCH] drm/panel: seperate panel power control from panel prepare/unprepare
-Date:   Wed, 6 Nov 2019 14:40:05 +0800
-Message-ID: <20191106064005.8016-1-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 6 Nov 2019 01:41:13 -0500
+Received: from pegase1.c-s.fr ([93.17.236.30]:39227 "EHLO pegase1.c-s.fr"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725948AbfKFGlM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:41:12 -0500
+Received: from localhost (mailhub1-int [192.168.12.234])
+        by localhost (Postfix) with ESMTP id 477H450GyXz9v00D;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Authentication-Results: localhost; dkim=pass
+        reason="1024-bit key; insecure key"
+        header.d=c-s.fr header.i=@c-s.fr header.b=uDQK58sa; dkim-adsp=pass;
+        dkim-atps=neutral
+X-Virus-Scanned: Debian amavisd-new at c-s.fr
+Received: from pegase1.c-s.fr ([192.168.12.234])
+        by localhost (pegase1.c-s.fr [192.168.12.234]) (amavisd-new, port 10024)
+        with ESMTP id NP7mUVlPVLBt; Wed,  6 Nov 2019 07:41:08 +0100 (CET)
+Received: from messagerie.si.c-s.fr (messagerie.si.c-s.fr [192.168.25.192])
+        by pegase1.c-s.fr (Postfix) with ESMTP id 477H445kq5z9v00C;
+        Wed,  6 Nov 2019 07:41:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=c-s.fr; s=mail;
+        t=1573022468; bh=ldK6jtPphgl+yNa6VSaAerjL+prNDwgkLRC6nRKEIeI=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=uDQK58saIN0zvehZkL7oENgA4DemT8lDWmLXhETHs2fgk7tiYooqK7uit5oPw6kqK
+         UOoMgZlJGvnNPw1TVCdC6OsuYDkWv6rJFk3JlidSUeiN1jyfI5kOdxu8g2Q0UGfHfG
+         nJ9ksEtevKFg7K5FRpbJoChZCjEM1dr9rYK/i7Rk=
+Received: from localhost (localhost [127.0.0.1])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 973408B82D;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+X-Virus-Scanned: amavisd-new at c-s.fr
+Received: from messagerie.si.c-s.fr ([127.0.0.1])
+        by localhost (messagerie.si.c-s.fr [127.0.0.1]) (amavisd-new, port 10023)
+        with ESMTP id A7VVbo-RdBde; Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Received: from [172.25.230.101] (unknown [172.25.230.101])
+        by messagerie.si.c-s.fr (Postfix) with ESMTP id 27E838B7CC;
+        Wed,  6 Nov 2019 07:41:09 +0100 (CET)
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table
+ helpers
+To:     Anshuman Khandual <anshuman.khandual@arm.com>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com>
+ <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+From:   Christophe Leroy <christophe.leroy@c-s.fr>
+Message-ID: <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr>
+Date:   Wed, 6 Nov 2019 07:41:08 +0100
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-TM-SNTS-SMTP: 224C4AAF48E6FE1BCE1C6862644246DA71F19843E559249984CDFA4CC65D93E32000:8
-X-MTK:  N
+In-Reply-To: <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Some dsi panels require the dsi lanes keeping low before panel power
-on. So seperate the panel power control and the communication with panel.
 
-And put the power control in drm_panel_prepare_power and
-drm_panel_unprepare_power. Put the communication with panel in
-drm_panel_prepare and drm_panel_unprepare.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
----
- drivers/gpu/drm/drm_panel.c | 38 +++++++++++++++++++++++++++++++++++++
- include/drm/drm_panel.h     | 17 +++++++++++++++++
- 2 files changed, 55 insertions(+)
+Le 06/11/2019 à 04:22, Anshuman Khandual a écrit :
+> 
+> 
+> On 10/28/2019 10:59 AM, Anshuman Khandual wrote:
+>> +    -----------------------
+>> +    |         arch |status|
+>> +    -----------------------
+>> +    |       alpha: | TODO |
+>> +    |         arc: | TODO |
+>> +    |         arm: | TODO |
+>> +    |       arm64: |  ok  |
+>> +    |         c6x: | TODO |
+>> +    |        csky: | TODO |
+>> +    |       h8300: | TODO |
+>> +    |     hexagon: | TODO |
+>> +    |        ia64: | TODO |
+>> +    |        m68k: | TODO |
+>> +    |  microblaze: | TODO |
+>> +    |        mips: | TODO |
+>> +    |       nds32: | TODO |
+>> +    |       nios2: | TODO |
+>> +    |    openrisc: | TODO |
+>> +    |      parisc: | TODO |
+>> +    |     powerpc: | TODO |
+>> +    |       ppc32: |  ok  |
 
-diff --git a/drivers/gpu/drm/drm_panel.c b/drivers/gpu/drm/drm_panel.c
-index 6b0bf42039cf..e57f6385d2cc 100644
---- a/drivers/gpu/drm/drm_panel.c
-+++ b/drivers/gpu/drm/drm_panel.c
-@@ -131,6 +131,24 @@ void drm_panel_detach(struct drm_panel *panel)
- }
- EXPORT_SYMBOL(drm_panel_detach);
- 
-+/**
-+ * drm_panel_prepare_power - power on a panel's power
-+ * @panel: DRM panel
-+ *
-+ * Calling this function will enable power and deassert any reset signals to
-+ * the panel.
-+ *
-+ * Return: 0 on success or a negative error code on failure.
-+ */
-+int drm_panel_prepare_power(struct drm_panel *panel)
-+{
-+	if (panel && panel->funcs && panel->funcs->prepare_power)
-+		return panel->funcs->prepare_power(panel);
-+
-+	return panel ? -ENOSYS : -EINVAL;
-+}
-+EXPORT_SYMBOL(drm_panel_prepare_power);
-+
- /**
-  * drm_panel_prepare - power on a panel
-  * @panel: DRM panel
-@@ -170,6 +188,26 @@ int drm_panel_unprepare(struct drm_panel *panel)
- }
- EXPORT_SYMBOL(drm_panel_unprepare);
- 
-+/**
-+ * drm_panel_unprepare_power - power off a panel
-+ * @panel: DRM panel
-+ *
-+ * Calling this function will completely power off a panel (assert the panel's
-+ * reset, turn off power supplies, ...). After this function has completed, it
-+ * is usually no longer possible to communicate with the panel until another
-+ * call to drm_panel_prepare_power and drm_panel_prepare().
-+ *
-+ * Return: 0 on success or a negative error code on failure.
-+ */
-+int drm_panel_unprepare_power(struct drm_panel *panel)
-+{
-+	if (panel && panel->funcs && panel->funcs->unprepare_power)
-+		return panel->funcs->unprepare_power(panel);
-+
-+	return panel ? -ENOSYS : -EINVAL;
-+}
-+EXPORT_SYMBOL(drm_panel_unprepare_power);
-+
- /**
-  * drm_panel_enable - enable a panel
-  * @panel: DRM panel
-diff --git a/include/drm/drm_panel.h b/include/drm/drm_panel.h
-index 624bd15ecfab..0d8c4855405c 100644
---- a/include/drm/drm_panel.h
-+++ b/include/drm/drm_panel.h
-@@ -61,6 +61,13 @@ struct display_timing;
-  * the panel. This is the job of the .unprepare() function.
-  */
- struct drm_panel_funcs {
-+	/**
-+	 * @prepare_power:
-+	 *
-+	 * Turn on panel power.
-+	 */
-+	int (*prepare_power)(struct drm_panel *panel);
-+
- 	/**
- 	 * @prepare:
- 	 *
-@@ -89,6 +96,13 @@ struct drm_panel_funcs {
- 	 */
- 	int (*unprepare)(struct drm_panel *panel);
- 
-+	/**
-+	 * @unprepare_power:
-+	 *
-+	 * Turn off panel_power.
-+	 */
-+	int (*unprepare_power)(struct drm_panel *panel);
-+
- 	/**
- 	 * @get_modes:
- 	 *
-@@ -155,6 +169,9 @@ void drm_panel_remove(struct drm_panel *panel);
- int drm_panel_attach(struct drm_panel *panel, struct drm_connector *connector);
- void drm_panel_detach(struct drm_panel *panel);
- 
-+int drm_panel_prepare_power(struct drm_panel *panel);
-+int drm_panel_unprepare_power(struct drm_panel *panel);
-+
- int drm_panel_prepare(struct drm_panel *panel);
- int drm_panel_unprepare(struct drm_panel *panel);
- 
--- 
-2.21.0
+Note that ppc32 is a part of powerpc, not a standalone arch.
 
+Maybe something like the following would be more correct:
+|  powerpc/32: |  ok  |
+|  powerpc/64: | TODO |
+
+Christophe
+
+>> +    |       riscv: | TODO |
+>> +    |        s390: | TODO |
+>> +    |          sh: | TODO |
+>> +    |       sparc: | TODO |
+>> +    |          um: | TODO |
+>> +    |   unicore32: | TODO |
+>> +    |         x86: |  ok  |
+>> +    |      xtensa: | TODO |
+>> +    -----------------------
+> 
+> While here, are there some volunteers to test this on any of the
+> 'yet to be tested and supported' platforms ?
+> 
+> - Anshuman
+> 
