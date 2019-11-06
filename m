@@ -2,166 +2,257 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D00BBC43331
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E3B4C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:23:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF162166E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:22:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4F3B72166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:23:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="dbAPfe6w";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="Wkk1tVPc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727747AbfKFWWz (ORCPT
+        id S1728003AbfKFWXm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:22:55 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42470 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726798AbfKFWWz (ORCPT
+        Wed, 6 Nov 2019 17:23:42 -0500
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:39014 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726798AbfKFWXl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:22:55 -0500
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6MG2vb036806
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 17:22:53 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w455ebkrd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:22:53 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
-        Wed, 6 Nov 2019 22:22:50 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 22:22:45 -0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6MM9FI36569426
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 22:22:09 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F61FA4051;
-        Wed,  6 Nov 2019 22:22:44 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D218EA404D;
-        Wed,  6 Nov 2019 22:22:40 +0000 (GMT)
-Received: from oc0525413822.ibm.com (unknown [9.80.236.142])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
-        Wed,  6 Nov 2019 22:22:40 +0000 (GMT)
-Date:   Wed, 6 Nov 2019 14:22:37 -0800
-From:   Ram Pai <linuxram@us.ibm.com>
-To:     Michael Roth <mdroth@linux.vnet.ibm.com>
-Cc:     "Michael S. Tsirkin" <mst@redhat.com>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
-        david@gibson.dropbear.id.au, mpe@ellerman.id.au, paulus@ozlabs.org,
-        hch@lst.de, andmike@us.ibm.com, sukadev@linux.vnet.ibm.com,
-        ram.n.pai@gmail.com, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Reply-To: Ram Pai <linuxram@us.ibm.com>
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
- <265679db-9cb3-1660-0cf6-97f740b1b48b@ozlabs.ru>
- <20191106130558-mutt-send-email-mst@kernel.org>
- <157306632211.17570.17567742230498149897@sif>
+        Wed, 6 Nov 2019 17:23:41 -0500
+Received: from pps.filterd (m0044010.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6MLCLN026110;
+        Wed, 6 Nov 2019 14:23:32 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=0Bu79A3Kie8Zls85z7yjcV4RdlnCsTFuXg/wgFnKWcg=;
+ b=dbAPfe6wvBsm6sLz/HF+iy5sM21oyqR9fzlz4L6j522M3yWtgvuUoZTAXYYNTSTcXNsC
+ UGuzbR/1jQbQISgal2loVqhi8ObCS9mj5x78yNEPq+h/Q+b12YAnIncmIFMIEtniSSeH
+ EbfXgpyxNa/C9JfhCEl8IQaCNUle3LaEi5E= 
+Received: from maileast.thefacebook.com ([163.114.130.16])
+        by mx0a-00082601.pphosted.com with ESMTP id 2w41uj9nc7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128 verify=NOT);
+        Wed, 06 Nov 2019 14:23:32 -0800
+Received: from ash-exhub103.TheFacebook.com (2620:10d:c0a8:82::c) by
+ ash-exhub203.TheFacebook.com (2620:10d:c0a8:83::5) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.1713.5; Wed, 6 Nov 2019 14:23:31 -0800
+Received: from NAM03-CO1-obe.outbound.protection.outlook.com (100.104.31.183)
+ by o365-in.thefacebook.com (100.104.35.174) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5
+ via Frontend Transport; Wed, 6 Nov 2019 14:23:31 -0800
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=mdqHs76cO5pMygcfbPSWWJeeG+H3tKFXG9tTF880MMgedr+BQxerRgpNadlzISLP6UEvddoQBuv8d7RCbwJ9OEvQzzxfJYINm4/1VobtL8mg9ZOD/lwUxWmhwv2dwk6HQ4QFZOYsTQOqEU8ks7xgYqLXPOBvc7jqEGx5zkgb6j12Vgq9RZX04zZD9LlG5BwMmvskhPKMRnCo1JiJ3/Sj5kCYBBwc1Io/bdzchtjf9OG2GO90xIMi9C8pqww8mpj7bD1XdSR4ORUv/u33Gr8DKXpoLFIhU9ai0Zr7a9oWjQHOFVsKSQDzEF8P3P5jtKDJRnwb0/HfksINwASqDiHhvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Bu79A3Kie8Zls85z7yjcV4RdlnCsTFuXg/wgFnKWcg=;
+ b=QyfVsC6tUoX9JnCnLze3Fx5GoCUldPjqCNVlHZ+rlmJ/AGRgfDsCwd9tL8tEhLlm/EddxJOAsYAe2JTG5Tlj9PWYK0DCgjcLnVrAhVv+AoZMczgTZ1a4bfA3PdgEtVIH9iUxykvut9zm12DWp602pWdtAXZc3FlOkWLjpLCURy20VsAON3UrU47HhYSh/Rj1ioVA7huwaEY0tRKxRpsdxm8/mfFyZc12asIEkj2vIfm6ZQihHtDbD5Uk+GzlIm4AKu5v7/tu2WrawHyxLqZLpqO1rweUQi2iiopfSWNCPgyl5O924G5rOTXcxeDbx/x/dkXleA/Tf8IVUX8GcConBg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector2-fb-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0Bu79A3Kie8Zls85z7yjcV4RdlnCsTFuXg/wgFnKWcg=;
+ b=Wkk1tVPc+dosR1BbxH5vJNR+qc7TFJt1rbb1GGBhPACKiTtMtx1CwGb0q5ret1cyr/KBDWjVJxdRTP+gaVbuOLaWCSLD5mDp4EB0jM4dR/ZzJf1Tg4nPqzREzG9khV/6ABFZtpfd6dneBqdBOhspqbq9Nxb1Da5P7l7MKQH89r4=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.3.22) by
+ MWHPR15MB1840.namprd15.prod.outlook.com (10.174.99.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 22:23:14 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::fdc8:5546:bace:15f5%5]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 22:23:14 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     open list <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>,
+        "acme@kernel.org" <acme@kernel.org>,
+        "Arnaldo Carvalho de Melo" <acme@redhat.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        Alexey Budankov <alexey.budankov@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>, "Tejun Heo" <tj@kernel.org>
+Subject: Re: [PATCH v6] perf: Sharing PMU counters across compatible events
+Thread-Topic: [PATCH v6] perf: Sharing PMU counters across compatible events
+Thread-Index: AQHVbqpjjWjaDbp/ikSYoLFTNk8qM6d09EYAgAA/EQCAB+dbAIAAM8KAgAAvaoCAAKofAIAAjTwAgAAzXoCAABuigA==
+Date:   Wed, 6 Nov 2019 22:23:14 +0000
+Message-ID: <01B0B855-9433-4DFC-B4B5-A7A68F2B17FB@fb.com>
+References: <20190919052314.2925604-1-songliubraving@fb.com>
+ <20191031124332.GQ4131@hirez.programming.kicks-ass.net>
+ <19AE6C78-C54C-4C37-BBD2-0396BB97A474@fb.com>
+ <98A6264C-B833-4930-95A0-2A3186519D87@fb.com>
+ <20191105201623.GG3079@worktop.programming.kicks-ass.net>
+ <23D48724-55B7-45A3-A77A-56BAD57937F9@fb.com>
+ <20191106091458.GS4131@hirez.programming.kicks-ass.net>
+ <168F3761-98CF-4E91-B911-ECB9FCD68F0C@fb.com>
+ <20191106204419.GI3079@worktop.programming.kicks-ass.net>
+In-Reply-To: <20191106204419.GI3079@worktop.programming.kicks-ass.net>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3601.0.10)
+x-originating-ip: [2620:10d:c090:180::46e1]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: c4a0c730-835a-48b8-9e17-08d76307ea50
+x-ms-traffictypediagnostic: MWHPR15MB1840:
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <MWHPR15MB184087C7E84F499FBACDAF20B3790@MWHPR15MB1840.namprd15.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:8882;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(136003)(376002)(366004)(346002)(39860400002)(199004)(189003)(14444005)(71200400001)(71190400001)(36756003)(25786009)(256004)(6246003)(6486002)(6512007)(186003)(46003)(229853002)(4326008)(6506007)(86362001)(14454004)(53546011)(102836004)(76176011)(478600001)(7736002)(66556008)(66446008)(64756008)(66476007)(66946007)(76116006)(2906002)(6916009)(5660300002)(99286004)(54906003)(316002)(11346002)(33656002)(8936002)(50226002)(81166006)(6436002)(486006)(476003)(2616005)(446003)(6116002)(81156014)(8676002)(305945005)(21314003);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1840;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: lSkRFVlZKnLFMLxT93JJrWueLxHG2PckEF2Wa51XwA+X7D9rE+9li2yYmdvL0pGUPCbrR/DS9lzfDA64oGMzRDjawf55C61y32X9b0q9JLXw1uviNjbyjc+Qt4ygvpMhqxBDEMu6R2ICHhHYPwxHDWQS8gPPD2nHjY+0HRfevvuJcp6Co5kiDBPDb52vizikrOsdF/6AoSns1eAZ+Qjr82gCjhXgdxSerbSWGOs7a7RZA/TfAUQsYRIMWh4HnB/hbTU/xIGk4bSA758YD1HdedwkkXKMK3zjHHtiVv3BjHadkAefMqbkk5ENyULjOe07n17z23Mjh91qkmCnhjCkGnn35SeikVUhjCdhYS5lpLmeJNgroxb4ihxj9Kvp8eOBPHQ2r1nWgMHXFKZAHk3MGrqxtD6oJV1/dMDnDOwmFPgmpnJxdkqvWlIOSLoWX/bf
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <CB5EFAEB7EE2E8428469F98B5E64A83C@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157306632211.17570.17567742230498149897@sif>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-TM-AS-GCONF: 00
-x-cbid: 19110622-4275-0000-0000-0000037B7171
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110622-4276-0000-0000-0000388EC0D6
-Message-Id: <20191106222237.GE5201@oc0525413822.ibm.com>
-Subject: RE: [RFC v1 0/2] Enable IOMMU support for pseries Secure VMs
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_08:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911060212
+X-MS-Exchange-CrossTenant-Network-Message-Id: c4a0c730-835a-48b8-9e17-08d76307ea50
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 22:23:14.1688
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: k1My9S/S9YcBdsCKRvHyhXN/oWM6SUnOa4u1IELkMMJhCEW6Sn7rKd4+VfYSxE4JGRRYC+qWeN8sa/7ivnmZhA==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1840
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_08:2019-11-06,2019-11-06 signatures=0
+X-Proofpoint-Spam-Details: rule=fb_default_notspam policy=fb_default score=0 bulkscore=0 clxscore=1015
+ suspectscore=0 priorityscore=1501 spamscore=0 mlxlogscore=999
+ lowpriorityscore=0 phishscore=0 malwarescore=0 mlxscore=0 adultscore=0
+ impostorscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-1910280000 definitions=main-1911060214
+X-FB-Internal: deliver
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 12:52:02PM -0600, Michael Roth wrote:
-> Quoting Michael S. Tsirkin (2019-11-06 12:06:37)
-> > On Wed, Nov 06, 2019 at 12:59:50PM +1100, Alexey Kardashevskiy wrote:
-> > > 
-> > > 
-> > > On 05/11/2019 08:28, Ram Pai wrote:
-> > > > This patch series enables IOMMU support for pseries Secure VMs.
-> > > > 
-> > > > 
-> > > > Tested using QEMU command line option:
-> > > > 
-> > > >  "-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
-> > > >     iommu_platform=on,disable-modern=off,disable-legacy=on"
-> > > >  and 
-> > > > 
-> > > >  "-device virtio-blk-pci,scsi=off,bus=pci.0,
-> > > >     addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
-> > > >     iommu_platform=on,disable-modern=off,disable-legacy=on"
-> > > 
-> > > 
-> > > Worth mentioning that SLOF won't boot with such devices as SLOF does not know about iommu_platform=on.
-> > 
-> > Shouldn't be hard to support: set up the iommu to allow everything
-> > and ack the feature. Right?
-> 
-> It's not a static/linear mapping in this case so we need calls to map DMA
-> buffers as-needed. I've gotten it to boot with virtio-blk, but the patches
-> have some hacks and need cleanup, hoping to post them soon.
-> 
-> I'm a bit perplexed how we would manage to boot a guest without those
-> changes though, this is what I get with qemu 4.1.0:
-> 
->   qemu-system-ppc64 -M pseries,ic-mode=xics -m 512M -bios /home/mdroth/w/build/qemu-4.1.0-build/pc-bios/slof.bin -device virtio-blk-pci,drive=drive0,id=blk0,disable-modern=off,disable-legacy=on,iommu_platform=on -drive file=/home/mdroth/vm/bionic-server-cloudimg-ppc64el.img,if=none,id=drive0 -trace enable=spapr_iommu\*,file=trace.out -monitor unix:/tmp/mon.sock,server,nowait -vga none -nographic
->   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-cfpc=workaround
->   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-sbbc=workaround
->   qemu-system-ppc64: warning: TCG doesn't support requested feature, cap-ibs=workaround
->   
->   
->   SLOF **********************************************************************
->   QEMU Starting
->    Build Date = Jul  3 2019 12:26:14
->    FW Version = git-ba1ab360eebe6338
->    Press "s" to enter Open Firmware.
->   
->   Populating /vdevice methods
->   Populating /vdevice/vty@71000000
->   Populating /vdevice/nvram@71000001
->   Populating /vdevice/l-lan@71000002
->   Populating /vdevice/v-scsi@71000003
->          SCSI: Looking for devices
->             8200000000000000 CD-ROM   : "QEMU     QEMU CD-ROM      2.5+"
->   Populating /pci@800000020000000
->                        00 0000 (D) : 1af4 1042    virtio [ block ]
->   No NVRAM common partition, re-initializing...
->   Scanning USB
->   Using default console: /vdevice/vty@71000000
->   
->     Welcome to Open Firmware
->   
->     Copyright (c) 2004, 2017 IBM Corporation All rights reserved.
->     This program and the accompanying materials are made available
->     under the terms of the BSD License available at
->     https://urldefense.proofpoint.com/v2/url?u=http-3A__www.opensource.org_licenses_bsd-2Dlicense.php&d=DwIFaQ&c=jf_iaSHvJObTbx-siA1ZOg&r=m-UrKChQVkZtnPpjbF6YY99NbT8FBByQ-E-ygV8luxw&m=-xG4gaWE7BANKGOFx0wmF5ZgZVd8A1r-tsN44n4JUW4&s=QcpPgRqeZAk1pICsA-kk2gNKKiMJLASiPVi-hPinur0&e= 
->   
->   
->   Trying to load:  from: /pci@800000020000000/scsi@0 ... virtioblk_init: failed
->   virtioblk_transfer: Access beyond end of device!
-> 
-> And then it hangs. This is with TCG so maybe it behaves differently with
-> KVM, but that's the result I would expect with the current SLOF code.
-
-you are right. In my case, I was providing the kernel image
-on the qemu command line. So there was no need for SLOF to read the
-virtio disk. Hence it continued without hanging. SLOF needs to be enhanced
-to support IOMMU.
 
 
-RP
+> On Nov 6, 2019, at 12:44 PM, Peter Zijlstra <peterz@infradead.org> wrote:
+>=20
+> On Wed, Nov 06, 2019 at 05:40:29PM +0000, Song Liu wrote:
+>>> On Nov 6, 2019, at 1:14 AM, Peter Zijlstra <peterz@infradead.org> wrote=
+:
+>=20
+>>>> OTOH, non-cgroup event could also be inactive. For example, when we ha=
+ve=20
+>>>> to rotate events, we may schedule slave before master.=20
+>>>=20
+>>> Right, although I suppose in that case you can do what you did in your
+>>> patch here. If someone did IOC_DISABLE on the master, we'd have to
+>>> re-elect a master -- obviously (and IOC_ENABLE).
+>>=20
+>> Re-elect master on IOC_DISABLE is good. But we still need work for ctx
+>> rotation. Otherwise, we need keep the master on at all time.=20
+>=20
+> I meant to says that for the rotation case we can do as you did here, if
+> we do add() on a slave, add the master if it wasn't add()'ed yet.
+
+Maybe an "add-but-don't-count" state would solve this, even with event grou=
+ps?
+Say "PERF_EVENT_STATE_ACTIVE_NOT_COUNTING". Let me think more about it.=20
+
+>=20
+>>>> And if the master is in an event group, it will be more complicated...
+>>>=20
+>>> Hurmph, do you actually have that use-case? And yes, this one is tricky=
+.
+>>>=20
+>>> Would it be sufficient if we disallow group events to be master (but
+>>> allow them to be slaves) ?
+>>=20
+>> Maybe we can solve this with an extra "first_active" pointer in perf_eve=
+nt.
+>> first_active points to the first event that being added by event_pmu_add=
+().=20
+>> Then we need something like:
+>>=20
+>> event_pmu_add(event)
+>> {
+>> 	if (event->dup_master->first_active) {
+>> 		/* sync with first_active */
+>> 	} else {
+>> 		/* this event will be the first_active */
+>> 		event->dup_master->first_active =3D event;
+>> 		pmu->add(event);
+>> 	}
+>> }
+>=20
+> I'm confused on what exactly you're trying to solve with the
+> first_active thing. The problem with the group event as master is that
+> you then _must_ schedule the whole group, which is obviously difficult.
+
+With first_active, we are not required to schedule the master. A slave=20
+could be the first_active, and other slaves could read data from it.=20
+
+For group event use cases, I think only allowing non-group event to be
+the master would be a good start.=20
+
+>=20
+>>>> If we do GFP_ATOMIC in perf_event_alloc(), maybe with an extra option,=
+ we
+>>>> don't need the tmp_master hack. So we only allocate master when we wil=
+l=20
+>>>> use it.=20
+>>>=20
+>>> You can't, that's broken on -RT. ctx->lock is a raw_spinlock_t and
+>>> allocator locks are spinlock_t.
+>>=20
+>> How about we add another step in __perf_install_in_context(), like
+>>=20
+>> __perf_install_in_context()
+>> {
+>> 	bool alloc_master;
+>>=20
+>> 	perf_ctx_lock();
+>> 	alloc_master =3D find_new_sharing(event, ctx);
+>> 	perf_ctx_unlock();
+>> =09
+>> 	if (alloc_master)
+>> 		event->dup_master =3D perf_event_alloc();
+>> 	/* existing logic of __perf_install_in_context() */
+>>=20
+>> }
+>>=20
+>> In this way, we only allocate the master event when necessary, and it
+>> is outside of the locks.=20
+>=20
+> It's still broken on -RT, because __perf_install_in_context() is in
+> hardirq context (IPI) and the allocator locks are spinlock_t.
+
+Hmm... how about perf_install_in_context()? Something like:
+
+diff --git i/kernel/events/core.c w/kernel/events/core.c
+index e8bec0823763..f55a7a8b9de4 100644
+--- i/kernel/events/core.c
++++ w/kernel/events/core.c
+@@ -2860,6 +2860,13 @@ perf_install_in_context(struct perf_event_context *c=
+tx,
+         */
+        smp_store_release(&event->ctx, ctx);
+
++       raw_spin_lock_irq(&ctx->lock);
++       alloc_master =3D find_new_sharing(event, ctx);
++       raw_spin_unlock_irq(&ctx->lock);
++
++       if (alloc_master)
++               event->dup_master =3D perf_event_alloc(xxx);
++
+
+If this works, we won't need PERF_EVENT_STATE_ACTIVE_NOT_COUNTING.=20
+
+Thanks,
+Song
+
 
