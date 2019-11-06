@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85DFC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D50C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA7E821848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C35021848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QUFsaUN8"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Pw/P8Dds"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732113AbfKFPDq (ORCPT
+        id S1732166AbfKFPEG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:03:46 -0500
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43154 "EHLO
+        Wed, 6 Nov 2019 10:04:06 -0500
+Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43066 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731955AbfKFPDN (ORCPT
+        by vger.kernel.org with ESMTP id S1731913AbfKFPDM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:03:13 -0500
+        Wed, 6 Nov 2019 10:03:12 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 3CF36C0F53;
-        Wed,  6 Nov 2019 15:03:12 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EACE8C0F4B;
+        Wed,  6 Nov 2019 15:03:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573052592; bh=8Mgy8SE+u7zp7nfFF49sdswEnUy9PwnZGeHPTqEIxvs=;
+        t=1573052592; bh=lSRQ99cSkNF5cr5WxPR/Dx/0LMZ4CIS9zons/16DEj8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=QUFsaUN8n6uJW35Bjts1fuCuAV7CwwSDDXMVSR/wfROz4qCGrLjgwJwyW3NBYzqTm
-         4Y52+zxsSeebPHI6duugX6SENImDA+xrkCuD53HXMNQMrAXD9NlS4iQUN2LXbmp3hG
-         nkfUo+OaPPldukiLn10lkSxdJDFEctjD/I524uxcST9SdnNxfwf4FYxe+XVfxr8S7g
-         W1aggZr6SPa68+kwtQThFQeIK+Y0/9+ByJmuvSBgqyNkvlS7jGryNBigAV9XGIrClE
-         RXU7Hr7RqscxVQ/YC8yKXaESrRhOynXHuNcXmClQQ8TmP8jQixtv8pjgtzwI/aMwYI
-         I1lP3BEFgguaA==
+        b=Pw/P8DdssfrTW3yDFcoXSMSgTx5+bn4QCogK5YhSBJazfIS/dYqu7ydVb+0g+ar1V
+         v4BP1bkXd0MeACdt8e6KRZt/VC4V/4lTeMiQSSsnmTRQnbZZR3g0TUXbXCeK8do3HC
+         9Ksmsok+8xTucUCB7+90Ca3kxSbz1EN8yIOaalYQjuo3RaF2OBLm+U/8AeeTpz0A7O
+         eIy7g6LP4QQqyIsW8A9s8sSORSQaTWlQeU4OaogImXfaxs4yGPV0Fc93a9w7P/hwnq
+         1okPm/to7hcmIpbx7EwP06iLRhcBn8GdDydOfsUkuy8TiicOqH90vv72YT5jBiU2m3
+         xJsyeyOpaBDdg==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id EF2AAA0085;
+        by mailhost.synopsys.com (Postfix) with ESMTP id A2F9CA006C;
         Wed,  6 Nov 2019 15:03:10 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 10/11] net: stmmac: Fix TSO descriptor with Enhanced Addressing
-Date:   Wed,  6 Nov 2019 16:03:04 +0100
-Message-Id: <c9c9e9d025b2164632b24ce560ac52981f77d57e.1573052379.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 04/11] net: stmmac: xgmac: Only get SPH header len if available
+Date:   Wed,  6 Nov 2019 16:02:58 +0100
+Message-Id: <58ba72cfcc373c2f98a6a89da3da12a4fc9f7b3b.1573052379.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
 References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
@@ -65,11 +65,10 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When using addressing > 32 bits the TSO first descriptor only has the
-header so we can't set the payload field for this descriptor. Let's
-reset the variable so that buffer 2 value is zero.
+Split Header length is only available when L34T == 0. Fix this by
+correctly checking if L34T is zero before trying to get Header length.
 
-Fixes: a993db88d17d ("net: stmmac: Enable support for > 32 Bits addressing in XGMAC")
+Fixes: 67afd6d1cfdf ("net: stmmac: Add Split Header support and enable it in XGMAC cores")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -83,21 +82,23 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index 1ab1eea1556a..b0a16d7c6e3d 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -2996,6 +2996,7 @@ static netdev_tx_t stmmac_tso_xmit(struct sk_buff *skb, struct net_device *dev)
- 		stmmac_set_desc_addr(priv, first, des);
- 		tmp_pay_len = pay_len;
- 		des += proto_hdr_len;
-+		pay_len = 0;
- 	}
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+index ae48154f933c..bd5838ce1e8a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
+@@ -288,7 +288,8 @@ static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
  
- 	stmmac_tso_allocator(priv, des, tmp_pay_len, (nfrags == 0), queue);
+ static int dwxgmac2_get_rx_header_len(struct dma_desc *p, unsigned int *len)
+ {
+-	*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
++	if (le32_to_cpu(p->des3) & XGMAC_RDES3_L34T)
++		*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
+ 	return 0;
+ }
+ 
 -- 
 2.7.4
 
