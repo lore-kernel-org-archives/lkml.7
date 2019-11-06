@@ -5,41 +5,41 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB0D8C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA28C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 920EB21882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F05021882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:03:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="DOfJZRta"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YMxbEJC8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731865AbfKFPDs (ORCPT
+        id S1732143AbfKFPDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:03:48 -0500
-Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43166 "EHLO
+        Wed, 6 Nov 2019 10:03:51 -0500
+Received: from dc8-smtprelay2.synopsys.com ([198.182.47.102]:43142 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731957AbfKFPDN (ORCPT
+        by vger.kernel.org with ESMTP id S1731950AbfKFPDN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 10:03:13 -0500
 Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
         (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
         (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id C99A7C0F3F;
-        Wed,  6 Nov 2019 15:03:11 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 2E7CAC0F52;
+        Wed,  6 Nov 2019 15:03:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573052592; bh=dcR015NNz5+XlS3ua0x/mswtyC/JnJmgSn+mmJnkyEY=;
+        t=1573052592; bh=D0GsWGpmp4rSag1Ntw7umeYHLG+m0Prqvd4CjMTCUoQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=DOfJZRtajlgOeuEGRxmVQCftwcCw41PTW6fFV1stw999KI/4CF0ZNpmpKG52dNadN
-         x3tzM3rh+5+LJs9bhsd74Vy3kjwfbJM3s/hpNJ7l9NXJpv1T5E/26BvkBzjaOhEfrm
-         EfnGYAydb+NnOZJuT6St73Wx9bUxhSxjheH/YbHklxJDMJSiMR0f0QJyyrM0pZgrXM
-         svScwOBVQY0zM4k+RrBVBvZNQiESTZSYM1dkJry/ATtVjJSwccAKhHhUOvPn/g85WS
-         SQJWOrzPrGvPoT4CH0387Q3slQcX5Ru549i7bxh60rEcj2hSt1dQga5SIjNLYzHZ4a
-         BS8ZCJAnAVQag==
+        b=YMxbEJC8a6gRN46LLDwM6iEK4FeFL8dVlkhwmDVINPtljAGlYCBr3X1Y5yx4zW9lW
+         7HZy76Ln9WF9ocW9HWUgzttCpo1bGcKsKkqaDcnUKAUYoIKoSDG+DZ9s63G7RXaMmk
+         l8sdNhz1pGwi0lt5bnkfvKNiL70lLRMYr6MPaZJXc8CLZrGFH1/Mro9WYCwh13cKLX
+         Peu0dsRbZjEVDJc0gRryAHOagA6KriQnW1f68HcHCsA8dtpUNF8ne+42iAVR4r1z3F
+         Fa0SZ/BojSC+VxEp1iyNaxTVHgyJ0ZvT3ahVl43hIJW5NoiEhm3i1UajarlVcNxqPc
+         4vDODBR0CtT9w==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 7105FA005E;
+        by mailhost.synopsys.com (Postfix) with ESMTP id E6A24A0081;
         Wed,  6 Nov 2019 15:03:10 +0000 (UTC)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org
@@ -52,9 +52,9 @@ Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
         Maxime Coquelin <mcoquelin.stm32@gmail.com>,
         linux-stm32@st-md-mailman.stormreply.com,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 01/11] net: stmmac: gmac4: bitrev32 returns u32
-Date:   Wed,  6 Nov 2019 16:02:55 +0100
-Message-Id: <16c560e16fecc686284008ea0faa85a96b8a680e.1573052379.git.Jose.Abreu@synopsys.com>
+Subject: [PATCH net 09/11] net: stmmac: Fix the packet count in stmmac_rx()
+Date:   Wed,  6 Nov 2019 16:03:03 +0100
+Message-Id: <82bec6022a4e2650f9eeb8682bac2b705e3eae9a.1573052379.git.Jose.Abreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
 References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
@@ -65,9 +65,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The bitrev32 function returns an u32 var, not an int. Fix it.
+Currently, stmmac_rx() is counting the number of descriptors but it
+should count the number of packets as specified by the NAPI limit.
 
-Fixes: 477286b53f55 ("stmmac: add GMAC4 core support")
+Fix this.
+
+Fixes: ec222003bd94 ("net: stmmac: Prepare to add Split Header support")
 Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
 
 ---
@@ -81,22 +84,46 @@ Cc: linux-stm32@st-md-mailman.stormreply.com
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-index 5a7b0aca1d31..66e60c7e9850 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac4_core.c
-@@ -432,7 +432,7 @@ static void dwmac4_set_filter(struct mac_device_info *hw,
- 			 * bits used depends on the hardware configuration
- 			 * selected at core configuration time.
- 			 */
--			int bit_nr = bitrev32(~crc32_le(~0, ha->addr,
-+			u32 bit_nr = bitrev32(~crc32_le(~0, ha->addr,
- 					ETH_ALEN)) >> (32 - mcbitslog2);
- 			/* The most significant bit determines the register to
- 			 * use (H/L) while the other 5 bits determine the bit
+diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+index 4e9c848c67cc..1ab1eea1556a 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
++++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
+@@ -3506,8 +3506,6 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 		if (unlikely(status & dma_own))
+ 			break;
+ 
+-		count++;
+-
+ 		rx_q->cur_rx = STMMAC_GET_ENTRY(rx_q->cur_rx, DMA_RX_SIZE);
+ 		next_entry = rx_q->cur_rx;
+ 
+@@ -3534,6 +3532,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			goto read_again;
+ 		if (unlikely(error)) {
+ 			dev_kfree_skb(skb);
++			count++;
+ 			continue;
+ 		}
+ 
+@@ -3573,6 +3572,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 			skb = napi_alloc_skb(&ch->rx_napi, len);
+ 			if (!skb) {
+ 				priv->dev->stats.rx_dropped++;
++				count++;
+ 				continue;
+ 			}
+ 
+@@ -3638,6 +3638,7 @@ static int stmmac_rx(struct stmmac_priv *priv, int limit, u32 queue)
+ 
+ 		priv->dev->stats.rx_packets++;
+ 		priv->dev->stats.rx_bytes += len;
++		count++;
+ 	}
+ 
+ 	if (status & rx_not_ls) {
 -- 
 2.7.4
 
