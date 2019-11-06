@@ -2,118 +2,120 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40176C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:29:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2816BC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A28E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:29:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2D612166E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 21:30:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfKFV3j (ORCPT
+        id S1732392AbfKFVaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 16:29:39 -0500
-Received: from jabberwock.ucw.cz ([46.255.230.98]:56578 "EHLO
-        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726779AbfKFV3i (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 16:29:38 -0500
-Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
-        id 9B5A81C09B6; Wed,  6 Nov 2019 22:29:36 +0100 (CET)
-Date:   Wed, 6 Nov 2019 22:29:21 +0100
-From:   Pavel Machek <pavel@ucw.cz>
-To:     Keith Busch <kbusch@kernel.org>
-Cc:     Guenter Roeck <linux@roeck-us.net>, Jens Axboe <axboe@fb.com>,
-        Christoph Hellwig <hch@lst.de>,
-        Sagi Grimberg <sagi@grimberg.me>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        linux-pm@vger.kernel.org, Chris Healy <cphealy@gmail.com>
-Subject: Re: [PATCH v2] nvme: Add hardware monitoring support
-Message-ID: <20191106212921.GA7020@amd>
-References: <20191029223214.18889-1-linux@roeck-us.net>
- <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
+        Wed, 6 Nov 2019 16:30:35 -0500
+Received: from mga06.intel.com ([134.134.136.31]:14326 "EHLO mga06.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726779AbfKFVaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 16:30:35 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 13:30:34 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
+   d="scan'208";a="212860856"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
+  by fmsmga001.fm.intel.com with ESMTP; 06 Nov 2019 13:30:33 -0800
+Date:   Wed, 6 Nov 2019 13:30:32 -0800
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>, KVM list <kvm@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Adam Borowski <kilobyte@angband.pl>,
+        David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
+ reserved
+Message-ID: <20191106213032.GA20475@linux.intel.com>
+References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
+ <20191106170727.14457-2-sean.j.christopherson@intel.com>
+ <CAPcyv4gJk2cXLdT2dZwCH2AssMVNxUfdx-bYYwJwy1LwFxOs0w@mail.gmail.com>
+ <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="tKW2IUtsqtDRztdT"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191030005327.GC15332@redsun51.ssa.fujisawa.hgst.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+In-Reply-To: <1cf71906-ba99-e637-650f-fc08ac4f3d5f@redhat.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Nov 06, 2019 at 10:09:29PM +0100, Paolo Bonzini wrote:
+> On 06/11/19 19:04, Dan Williams wrote:
+> > On Wed, Nov 6, 2019 at 9:07 AM Sean Christopherson
+> > <sean.j.christopherson@intel.com> wrote:
+> > This is racy unless you can be certain that the pfn and resulting page
+> > has already been pinned by get_user_pages().
+> 
+> What is the race exactly?
 
---tKW2IUtsqtDRztdT
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The check in kvm_get_pfn() is guaranteed to be racy, but that's already
+broken with respect to ZONE_DEVICE.
+ 
+> In general KVM does not use pfn's until after having gotten them from
+> get_user_pages (or follow_pfn for VM_IO | VM_PFNMAP vmas, for which
+> get_user_pages fails, but this is not an issue here).  It then creates
+> the page tables and releases the reference to the struct page.
+> 
+> Anything else happens _after_ the reference has been released, but still
+> from an mmu notifier; this is why KVM uses pfn_to_page quite pervasively.
+> 
+> If this is enough to avoid races, then I prefer Sean's patch.  If it is
+> racy, we need to fix kvm_set_pfn_accessed and kvm_set_pfn_dirty first,
+> and second at transparent_hugepage_adjust and kvm_mmu_zap_collapsible_spte:
 
-Hi!
+transparent_hugepage_adjust() would be ok, it's called before the original
+reference is put back.
 
-> > nvme devices report temperature information in the controller informati=
-on
-> > (for limits) and in the smart log. Currently, the only means to retrieve
-> > this information is the nvme command line interface, which requires
-> > super-user privileges.
-> >=20
-> > At the same time, it would be desirable to use NVME temperature informa=
-tion
-> > for thermal control.
-> >=20
-> > This patch adds support to read NVME temperatures from the kernel using=
- the
-> > hwmon API and adds temperature zones for NVME drives. The thermal subsy=
-stem
-> > can use this information to set thermal policies, and userspace can acc=
-ess
-> > it using libsensors and/or the "sensors" command.
-> >=20
-> > Example output from the "sensors" command:
-> >=20
-> > nvme0-pci-0100
-> > Adapter: PCI adapter
-> > Composite:    +39.0=B0C  (high =3D +85.0=B0C, crit =3D +85.0=B0C)
-> > Sensor 1:     +39.0=B0C
-> > Sensor 2:     +41.0=B0C
-> >=20
-> > Signed-off-by: Guenter Roeck <linux@roeck-us.net>
->=20
-> This looks fine to me, but I'll wait a few more days to see if there are
-> any additional comments..
+> - if accessed/dirty state need not be tracked properly for ZONE_DEVICE,
+> then I suppose David's patch is okay (though I'd like to have a big
+> comment explaining all the things that went on in these emails).  If
+> they need to work, however, Sean's patch 1 is the right thing to do.
+> 
+> - if we need Sean's patch 1, but it is racy to use is_zone_device_page,
+> we could first introduce a helper similar to kvm_is_hugepage_allowed()
+> from his patch 2, but using pfn_to_online_page() to filter out
+> ZONE_DEVICE pages.  This would cover both transparent_hugepage_adjust
+> and kvm_mmu_zap_collapsible_spte.
 
-User wants to know temperature of /dev/sda... and we already have an
-userspace tools knowing about smart, etc...
+After more thought, I agree with Paolo that adding kvm_is_zone_device_pfn()
+is preferably if blocking with mmu_notifier is sufficient to avoid races.
+The only caller that isn't protected by mmu_notifier (or holding a gup()-
+obtained referece) is kvm_get_pfn(), but again, that's completely borked
+anyways.   Adding a WARN_ON(page_count()) in kvm_is_zone_device_pfn() would
+help with the auditing issue.
 
-pavel@amd:/data/film$ sudo hddtemp /dev/sda
-/dev/sda: ST1000LM014-1EJ164: 48=B0C
+The scope of the changes required to completely avoid is_zone_device_page()
+is massive, and probably would result in additional trickery :-(
 
-I see we also have sensors framework but it does _not_ handle
-harddrive temperatures.
+> > This is why I told David
+> > to steer clear of adding more is_zone_device_page() usage, it's
+> > difficult to audit. Without an existing pin the metadata to determine
+> > whether a page is ZONE_DEVICE or not could be in the process of being
+> > torn down. Ideally KVM would pass around a struct { struct page *page,
+> > unsigned long pfn } tuple so it would not have to do this "recall
+> > context" dance on every pfn operation.
+> 
+> Unfortunately once KVM has created its own page tables, the struct page*
+> reference is lost, as the PFN is the only thing that is stored in there.
 
-Does it need some kind of unification? Should NVMe devices expose
-"SMART" information in the same way other SSDs do?
-
-Best regards,
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---tKW2IUtsqtDRztdT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAl3DOzEACgkQMOfwapXb+vIMvACfQ4av1AszPWgW7jbyZuTg6fmz
-a2EAoIkF7v4EygABLAACFFwF9dxY14dS
-=o7Jq
------END PGP SIGNATURE-----
-
---tKW2IUtsqtDRztdT--
+Ya, the horrible idea I had in mind was to steal a bit from KVM_PFN_ERR_MASK
+to track whether or not the PFN is associated with a struct page.
