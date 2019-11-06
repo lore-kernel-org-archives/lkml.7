@@ -5,57 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E37A5C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30C80C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B100E21929
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0E01218AE
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 13:29:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Rye+OiPH"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="GmREb2gA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731821AbfKFN25 (ORCPT
+        id S1731844AbfKFN3C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 08:28:57 -0500
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:46683 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731803AbfKFN24 (ORCPT
+        Wed, 6 Nov 2019 08:29:02 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:39643 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731826AbfKFN3B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 08:28:56 -0500
-Received: by mail-pg1-f193.google.com with SMTP id r18so1431941pgu.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:28:56 -0800 (PST)
+        Wed, 6 Nov 2019 08:29:01 -0500
+Received: by mail-pg1-f196.google.com with SMTP id 29so5829810pgm.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 05:29:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=SZaR5E/HobZwk+pxemYk2DTTfx/38H5VTmSiCwvG6UI=;
-        b=Rye+OiPHXXnz8fja5i/j36mcB3yxJE200yCycPPv/3yhaPayJX6hhLERUxiLv6twmY
-         bRZnfcm4BeOTxHrM0T1dh3bxydk+eryZkBBgfWPuhK4aG8QNxLF6odpN7Wv1ozcxHS2x
-         EM+oMzZPi0TW1kj26d5Iwt0mWXAnHYzU9F9GgDWX6XrGEKxwV/a9nINLctgxZUw829Ce
-         5eieb5zsF3ES/aNP6VvbfBpz154Dgd0kNNgpiKwizk8XAsV3wn1HEe7DSpP35Kc42TNG
-         oye9OOHONa1HKV27klLS7W3cknlg94qFuKEXx7Mg6rY9yOx4mh6LEsdZEnrGTkQubm+j
-         RwYg==
+        bh=2JC2BSAON2aTYfWnY286zBqdcBgF1dUkhFpgqH52P8A=;
+        b=GmREb2gAFzVBw1JzE2epBfRKDBD9/8BHb4WsdWVr5lOtzpidmIw5GF3ZoJMBmiR2Lc
+         hkiJAEHW0blLAPRX292U+12+AsV/FjNwUbuecXH9XavsxZR5ZGdmfy8qUOiga8JBaCHQ
+         rCdQcLyLGFupMzXBlQpqtMxOpCb8qylIQELk0s8wrkVmGkfF79umn2K6WDk4xLVOpiLI
+         5RJyH9RUJzoadMkubpIwpy0T4PfwtaRawxNZF/W2TAMXRAOFzifYXQJu6tRRIoAW2IM2
+         ZhYtAHd6FSX09lWSsG6PADFFgZ4VKpmYAIPfmwW7hzVEJ1wgNQYi8uk7j2YsIzi3VNI/
+         dNYw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=SZaR5E/HobZwk+pxemYk2DTTfx/38H5VTmSiCwvG6UI=;
-        b=Dx4V0g/g0NSMxtdhkAAm5zKFOPbK3PmFzlPrYSCPoTU0/SG+h/OzzwxTKOJU7Ge2FL
-         WqfDwR7zYZXecxEW9pbWyHniEy+4MEuQfbw9SZp7KxFwvzjal6qe6KDt4Wm8yjGkrkt4
-         C6vBCdWorvVMtOODJb6DtgVMzBZh0TpT6eiFSCdcCpWsit065yGMjK0xZCogLyHghCEu
-         fJS1PFvR7SjKc0e38O+5SkQ/ynl4RDKyIE7TpVRuBT35utLhyYfbdcvBS+AVpuy8pnla
-         vSYGRQgRKscUsLRoaYN6hTBbKs/sazxK3RONn4oubIjXlxVexIRVYJm2lVKnGYZEKAqV
-         816g==
-X-Gm-Message-State: APjAAAWU3DLRxr83Z9d9qNH+BhwnHI3eZQZS7iTuwDq7VTHVZIPe5271
-        rY8WGMj28vKC2dKAXkr/ZY3/Vd3NEQfdZg==
-X-Google-Smtp-Source: APXvYqyZFg7LWgQLA0ps9j10NIeUGqb4RJJmvIBaoLP3lH9l+h++FT18GZ1LrFeVUa71Fch4ebAaZg==
-X-Received: by 2002:aa7:86c2:: with SMTP id h2mr3321962pfo.248.1573046935453;
-        Wed, 06 Nov 2019 05:28:55 -0800 (PST)
+        bh=2JC2BSAON2aTYfWnY286zBqdcBgF1dUkhFpgqH52P8A=;
+        b=JcSR2iOf5uz3MRl/whrPsVRUvs4Jw5ZphR5WlrKtHwBg/8kR+spyrGrugzcotmtfl9
+         5bVaeOpJsCh7oVBxq7E2mFlzB53h7/0NgjLTMnfB0AYEbPp+DS2gsvcqqo1yP0Z1IdkH
+         2Zn0lKg/pSO/7EZ1Yd/9GA7Rm7y2+bAiYeGm53SLd2Ay/kf70F/kBC+TfkS56liBzuR+
+         6ceBj7DEMhNMyRNUzTy6Yctlz02qH3Vej2zClCEEE/+TgkPv/rGDvqarFAoQW7qKW83A
+         iNoilYPJ7rwMKSrkvBVhnKbVj0AsZgyFIT5PC/FHRwADPrZeX/v+c7GyKo7JeDrkH6n0
+         L9/A==
+X-Gm-Message-State: APjAAAUWb2LnfydIQtyfTPqXe1yX3GHSbsxFxq4J6Mq78i51sP/W37mv
+        jw6IRqt1HE2Lc93GOQJiPDTd/4YMgNv2qw==
+X-Google-Smtp-Source: APXvYqzT7yY171Uj3lkOCncUrwz2j9jISfZ79+XTPrykw/o8bUa0kJNh8nso8pz12NOQBzd7gSDYaw==
+X-Received: by 2002:aa7:9192:: with SMTP id x18mr3340660pfa.229.1573046939554;
+        Wed, 06 Nov 2019 05:28:59 -0800 (PST)
 Received: from localhost ([49.248.202.230])
-        by smtp.gmail.com with ESMTPSA id a33sm23504468pgb.57.2019.11.06.05.28.54
+        by smtp.gmail.com with ESMTPSA id q8sm20785909pgg.15.2019.11.06.05.28.58
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 06 Nov 2019 05:28:54 -0800 (PST)
+        Wed, 06 Nov 2019 05:28:59 -0800 (PST)
 From:   Amit Kucheria <amit.kucheria@linaro.org>
 To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
         Amit Daniel Kachhap <amit.kachhap@gmail.com>,
@@ -74,10 +74,11 @@ To:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
         Thierry Reding <thierry.reding@gmail.com>,
         Viresh Kumar <viresh.kumar@linaro.org>,
         Zhang Rui <rui.zhang@intel.com>
-Cc:     linux-pm@vger.kernel.org
-Subject: [PATCH 05/11] thermal: max77620: Appease the kernel-doc deity
-Date:   Wed,  6 Nov 2019 18:58:21 +0530
-Message-Id: <09609109359054d2a1f7e0456402ebabad1e315f.1573046440.git.amit.kucheria@linaro.org>
+Cc:     linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: [PATCH 06/11] thermal: mediatek: Appease the kernel-doc deity
+Date:   Wed,  6 Nov 2019 18:58:22 +0530
+Message-Id: <2961e4ac4b32ea7db8b5f6916751a5c02ee85960.1573046440.git.amit.kucheria@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <cover.1573046440.git.amit.kucheria@linaro.org>
 References: <cover.1573046440.git.amit.kucheria@linaro.org>
@@ -88,29 +89,90 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fix up the following warning when compiled with make W=1:
+Replace a comment starting with /** by simply /* to avoid having it
+interpreted as a kernel-doc comment. Describe missing function
+parameters where needed.
 
-linux.git/drivers/thermal/max77620_thermal.c:48: warning: Function
-parameter or member 'temp' not described in 'max77620_thermal_read_temp'
+Fixes up the following warnings when compiled with make W=1:
+
+linux.git/drivers/thermal/mtk_thermal.c:374: warning: cannot understand
+function prototype: 'const struct mtk_thermal_data mt8173_thermal_data =
+'
+linux.git/drivers/thermal/mtk_thermal.c:413: warning: cannot understand
+function prototype: 'const struct mtk_thermal_data mt2701_thermal_data =
+'
+linux.git/drivers/thermal/mtk_thermal.c:443: warning: cannot understand
+function prototype: 'const struct mtk_thermal_data mt2712_thermal_data =
+'
+linux.git/drivers/thermal/mtk_thermal.c:499: warning: cannot understand
+function prototype: 'const struct mtk_thermal_data mt8183_thermal_data =
+'
+linux.git/drivers/thermal/mtk_thermal.c:529: warning: Function parameter
+or member 'sensno' not described in 'raw_to_mcelsius'
 
 Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 ---
- drivers/thermal/max77620_thermal.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/thermal/mtk_thermal.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/thermal/max77620_thermal.c b/drivers/thermal/max77620_thermal.c
-index 88fd0fbe0cfac..82d06c7411eb3 100644
---- a/drivers/thermal/max77620_thermal.c
-+++ b/drivers/thermal/max77620_thermal.c
-@@ -33,7 +33,7 @@ struct max77620_therm_info {
+diff --git a/drivers/thermal/mtk_thermal.c b/drivers/thermal/mtk_thermal.c
+index acf4854cbb8b8..76e30603d4d58 100644
+--- a/drivers/thermal/mtk_thermal.c
++++ b/drivers/thermal/mtk_thermal.c
+@@ -358,7 +358,7 @@ static const int mt7622_mux_values[MT7622_NUM_SENSORS] = { 0, };
+ static const int mt7622_vts_index[MT7622_NUM_SENSORS] = { VTS1 };
+ static const int mt7622_tc_offset[MT7622_NUM_CONTROLLER] = { 0x0, };
+ 
+-/**
++/*
+  * The MT8173 thermal controller has four banks. Each bank can read up to
+  * four temperature sensors simultaneously. The MT8173 has a total of 5
+  * temperature sensors. We use each bank to measure a certain area of the
+@@ -400,7 +400,7 @@ static const struct mtk_thermal_data mt8173_thermal_data = {
+ 	.sensor_mux_values = mt8173_mux_values,
+ };
+ 
+-/**
++/*
+  * The MT2701 thermal controller has one bank, which can read up to
+  * three temperature sensors simultaneously. The MT2701 has a total of 3
+  * temperature sensors.
+@@ -430,7 +430,7 @@ static const struct mtk_thermal_data mt2701_thermal_data = {
+ 	.sensor_mux_values = mt2701_mux_values,
+ };
+ 
+-/**
++/*
+  * The MT2712 thermal controller has one bank, which can read up to
+  * four temperature sensors simultaneously. The MT2712 has a total of 4
+  * temperature sensors.
+@@ -484,7 +484,7 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
+ 	.sensor_mux_values = mt7622_mux_values,
+ };
+ 
+-/**
++/*
+  * The MT8183 thermal controller has one bank for the current SW framework.
+  * The MT8183 has a total of 6 temperature sensors.
+  * There are two thermal controller to control the six sensor.
+@@ -495,7 +495,6 @@ static const struct mtk_thermal_data mt7622_thermal_data = {
+  * data, and this indeed needs the temperatures of the individual banks
+  * for making better decisions.
+  */
+-
+ static const struct mtk_thermal_data mt8183_thermal_data = {
+ 	.auxadc_channel = MT8183_TEMP_AUXADC_CHANNEL,
+ 	.num_banks = MT8183_NUM_SENSORS_PER_ZONE,
+@@ -519,7 +518,8 @@ static const struct mtk_thermal_data mt8183_thermal_data = {
+ 
  /**
-  * max77620_thermal_read_temp: Read PMIC die temperatue.
-  * @data:	Device specific data.
-- * temp:	Temperature in millidegrees Celsius
-+ * @temp:	Temperature in millidegrees Celsius
+  * raw_to_mcelsius - convert a raw ADC value to mcelsius
+- * @mt:		The thermal controller
++ * @mt:	The thermal controller
++ * @sensno:	sensor number
+  * @raw:	raw ADC value
   *
-  * The actual temperature of PMIC die is not available from PMIC.
-  * PMIC only tells the status if it has crossed or not the threshold level
+  * This converts the raw ADC value to mcelsius using the SoC specific
 -- 
 2.17.1
 
