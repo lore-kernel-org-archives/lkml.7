@@ -2,193 +2,131 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0510C5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10790C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:25:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EB5D62245C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:18:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B081F2247B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:25:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="L9fOdSwQ"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="inPdGsTZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729882AbfKFBS6 (ORCPT
+        id S1730641AbfKFBZC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 20:18:58 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:44089 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbfKFBS5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 20:18:57 -0500
-Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191106011854epoutp03efa15e310f0d934e0c59eb996dc09477~UbgRGlYXQ2138121381epoutp03S
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 01:18:54 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191106011854epoutp03efa15e310f0d934e0c59eb996dc09477~UbgRGlYXQ2138121381epoutp03S
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573003134;
-        bh=Mg/rO753XoqV3dKay771cjTtycmgelBnUyToWlFSJ5U=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=L9fOdSwQSShiNmL1usxOJpk9e/UMPIgIpbPaTzwhWPpTRJHK7yfXLrFosKNg4oqNY
-         jgW8068VHrA7bz00WJY1vXN29T4tfSUky68mUB2KB2IX49N2gPpRki5oKmmxTQON3g
-         qx+2T+vsAXKjZ3eOhfWaOzbGgviTfbdX+DMiI4u4=
-Received: from epsnrtp4.localdomain (unknown [182.195.42.165]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191106011853epcas1p1f307a7852b35e66ce64d0078169d4601~UbgQnNFWN3050330503epcas1p1Z;
-        Wed,  6 Nov 2019 01:18:53 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.158]) by
-        epsnrtp4.localdomain (Postfix) with ESMTP id 4777wC0ns9zMqYks; Wed,  6 Nov
-        2019 01:18:51 +0000 (GMT)
-Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        53.8A.04135.A7F12CD5; Wed,  6 Nov 2019 10:18:50 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20191106011850epcas1p2e2ec003e74806182e3a6de388c428f8b~UbgNbxgRH2435324353epcas1p2e;
-        Wed,  6 Nov 2019 01:18:50 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191106011850epsmtrp1d31daaea95e79fe54665e648c7eb5f9e~UbgNa4vSu2631826318epsmtrp14;
-        Wed,  6 Nov 2019 01:18:50 +0000 (GMT)
-X-AuditID: b6c32a36-7fbff70000001027-d2-5dc21f7a138f
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        EB.B4.25663.A7F12CD5; Wed,  6 Nov 2019 10:18:50 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191106011850epsmtip2010e732213c05f0fa2fc8e68a0e3afcd~UbgNKrt3f2969729697epsmtip2H;
-        Wed,  6 Nov 2019 01:18:50 +0000 (GMT)
-Subject: Re: [PATCH v9 19/19] PM / devfreq: tegra20/30: Add Dmitry as a
- maintainer
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Peter Geis <pgwipeout@gmail.com>,
-        =?UTF-8?B?TWljaGHFgiBNaXJvc8WCYXc=?= <mirq-linux@rere.qmqm.pl>
-Cc:     linux-pm@vger.kernel.org, linux-tegra@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <da10a370-de1d-67c9-a916-cdc1a31c0a96@samsung.com>
-Date:   Wed, 6 Nov 2019 10:24:27 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
-MIME-Version: 1.0
-In-Reply-To: <9bd7bfc0-508f-e7fb-d985-d32f2d9a88d8@gmail.com>
+        Tue, 5 Nov 2019 20:25:02 -0500
+Received: from mail-eopbgr820079.outbound.protection.outlook.com ([40.107.82.79]:36833
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729614AbfKFBZC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 20:25:02 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=fzxlHGmAkyhMd0k/eQudJ1133dyrRR7zStrJjss6DncOASD3JgDS0Tz9p4oq2NIVFLVFim0qmbP+5ygcA1U5GrWURr0UadfFAUWWPSNpP1QobK9wr0P0b8MPDnA8v9GYisTOZUAaRLs+3Q/KOcOjzfeRchwUOWADMkxgk3a3eKvpenUuoQcROP7+jaRVQEBQSprV2ApGoet7hyEUQ83hpB0zwfp5izCHYIPhhGvgy1VN0izCmkL+2LGZjJ5jnhfybrBqnI1Kb5bjxEUDEjs2xHu1Jrl6tGwU68Vkp+xkD3d6lR2IiCvpIWBYoiiDxdHzscHboDQ5e9E5kMv3z593eA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BfZZlLC1GaolrthWLsWfBce1z4UYwyRfPAAIgv1ezr8=;
+ b=Lf1RnztAhPTtZ19TIWTu4568eAEsQ+cLkYeFv8ctL4KgOr8wnXxsihq9RWz8Tf0mqZ6wA6mgm7IQt/3K5ekSCQcdeWZnXrt92rogBO2/flgFKOD1RvslBWX7MNeXpIUEDhorjLZPsrpf30tjvF1SIL/hnICzIui9A30TbNgnBSYG4fcfRyN1oxMfttg3kdmpG5rvWpDqxww57n8lf7HE93UnMz/b1VuLgHE/3b7Fu8RC5xHp4PR68IuhT5BLu4F77Z1gNEpQcgQjMbsgWxE3psmCkVEz6NTER/nEqJkw0Wr6Soa35JXjnnprXda+WAXqE1RAEvl7sG7kvEU6t4juSQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=BfZZlLC1GaolrthWLsWfBce1z4UYwyRfPAAIgv1ezr8=;
+ b=inPdGsTZYwWgoi5VJm2FDGilOSM4aBAkeG0uAWtcSyPV11IBvd54mOlsOrat1isZB0C+4eWeQ7NUFjglQliBAabuBaEwH89GmWUvvZWjIOTNarNc8FGGku+IXMcPz7rBVHzlpNMxx1D/UelEocLX4mJGPmUmP3XgFw2SLaHG1NE=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2783.namprd12.prod.outlook.com (52.135.107.146) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2408.24; Wed, 6 Nov 2019 01:24:59 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba%3]) with mapi id 15.20.2408.024; Wed, 6 Nov 2019
+ 01:24:59 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>
+CC:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@alien8.de" <bp@alien8.de>
+Subject: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Topic: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Index: AQHVlEEBkkiHg8UvLEKx+Q/uzElWBg==
+Date:   Wed, 6 Nov 2019 01:24:59 +0000
+Message-ID: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01TWUwTURT1tWVakOqzgFxIhDpqAkSgAxZHQ40LMU3wA5dEJRIcy1iQbnZa
-        xeUDBVEI4K6hAiqKSw0hQTTQCITSRMAlRjRBETWCC0RBRZAlGtuORv7Ou/ece++57z2JUHaP
-        CJVkGSys2cDoSMJPdLctMjZ6f7gzTdGSq6JvfetDdL6tSkQ/OvxZTHc5ygl6pMSF6MIfNoIe
-        +9iJ6J5DNwj60YdkesJRKaJLa54SK2eqG3qvInWjrVesLskbItS2gmZCXVpvR+qRurAUIjU7
-        MZNlMliznDVojBlZBq2KTN6YviZdmaCgoqll9FJSbmD0rIpMWpcSvTZL5x6PlO9hdFZ3KIXh
-        ODJ2RaLZaLWw8kwjZ1GRrClDZ1pmiuEYPWc1aGM0Rv1ySqGIU7qJ27MzL/e2i02dOGfkSjPK
-        RQPSIuQrAbwEzl/7TRQhP4kMNyBw5dsRf/iOIHeiXORhyfAYghd5miIk8SomGxbznCYEHzs+
-        CPjDMIJW5zDhEQTgTfDz4TcfTyIQ9wugyZXvrSTEW6Gt8ZbAgwkcBS2fur2C2Xg+PB/vQx4s
-        xSug+na7F4vwQrBPHhF5OgfhLfBglOEpc6CjrN9b0heroPzMqb/lg+Fl/0UBj8Mh784FoWcG
-        wMfFUOV6JuQ9J8HA+1HE4wAYvF8v5nEoDBwv+IsPwM0OF8GLjyGob3niwyfioaX6tMAzkBBH
-        Qq0jlg/Ph8apCsQ3ngVDo8U+/LakcKxAxlMWQNfbXgGPQ+DK0ULiBCJt0+zYplmwTbNg+9/s
-        EhLZ0VzWxOm1LEeZ4qZfdh3yvtyohAZU9XidE2EJIv2lM/a2psl8mD3cPr0TgURIBkq3lbpD
-        0gxm337WbEw3W3Us50RK97JPCkODNEb3PzBY0illXHx8PL2ESlBSFBksXXW9Ok2GtYyFzWZZ
-        E2v+pxNIfENzUfjlu78Gq7co5XL/X9fgqMP/k+n704B55hl+r2vH0joOjC8oPihT54Q0aexK
-        zTZtxJuAL0s3JJ/d/GzH10VjildxXMShmpuaqTJ69YYk+nbz0M7htu5dkSFczskHB7sHSx3r
-        e/ITd9/xfUd0VVSG6c7NWx7OBc+yE+MRmr2ByqRUKyniMhkqSmjmmD8T+jPYzwMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSvG6V/KFYg8375SxWf3zMaNEyaxGL
-        xdmmN+wWl3fNYbP43HuE0aLzyyw2i2/PTzFa3G5cwWZx9pm3xc9d81gs+tZeYnPg9thxdwmj
-        x85Zd9k9epvfsXnMatvH5tG3ZRWjx+dNcgFsUVw2Kak5mWWpRfp2CVwZC++eYC84JVDxefE+
-        xgbGl7xdjBwcEgImEr926HQxcnEICexmlPgx/x1LFyMnUFxSYtrFo8wQNcIShw8XQ9S8ZZR4
-        tPArG0iNsECIxPczH1lBEiICz5gkFu7dyQSSYBaIlOiZu4UNomMek8SmpW1gHWwCWhL7X9wA
-        s/kFFCWu/njMCGLzCthJLN18AsxmEVCRWPWrFewKUYEIiefbb0DVCEqcnPkELM4pYCsxZ8ok
-        Fohl6hJ/5l1ihrDFJW49mQ91hLxE89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8t
-        Niwwykst1ytOzC0uzUvXS87P3cQIjj8trR2MJ07EH2IU4GBU4uFlKD8YK8SaWFZcmXuIUYKD
-        WUmEN6YPKMSbklhZlVqUH19UmpNafIhRmoNFSZxXPv9YpJBAemJJanZqakFqEUyWiYNTqoGx
-        f312q6gTb9Tqa23fE4ONJ+pYicoz8W/9+3+fktKdCVxlivO/ebr0Lv6b4GX2I9P9bNLvcPWq
-        sIkvp93cdNL764ejblozlGOkrn2e9a30uvIs5pqqpsvv/laa7G5l/LZVNYR3klzbu9tHklP4
-        wuumLDRk7+KoNZ4et0RbZ/LfdV9mZS36GbZLiaU4I9FQi7moOBEAypfcHbsCAAA=
-X-CMS-MailID: 20191106011850epcas1p2e2ec003e74806182e3a6de388c428f8b
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191104221855epcas4p3761ca7e09ffa66b686be8b5a840ea383
-References: <20191104215617.25544-1-digetx@gmail.com>
-        <CGME20191104221855epcas4p3761ca7e09ffa66b686be8b5a840ea383@epcas4p3.samsung.com>
-        <20191104215617.25544-20-digetx@gmail.com>
-        <0e7db72b-37ff-a36e-11fe-727ed43c26a6@samsung.com>
-        <9bd7bfc0-508f-e7fb-d985-d32f2d9a88d8@gmail.com>
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SN1PR12CA0064.namprd12.prod.outlook.com
+ (2603:10b6:802:20::35) To SN6PR12MB2639.namprd12.prod.outlook.com
+ (2603:10b6:805:6f::16)
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.17.1
+x-originating-ip: [165.204.78.2]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: d79883c3-615e-4675-6a99-08d762582386
+x-ms-traffictypediagnostic: SN6PR12MB2783:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <SN6PR12MB27839A7E8E7F3B6DA20C19E5F8790@SN6PR12MB2783.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:7691;
+x-forefront-prvs: 02135EB356
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(366004)(396003)(346002)(39860400002)(136003)(189003)(199004)(186003)(5660300002)(86362001)(386003)(4326008)(102836004)(6506007)(1076003)(52116002)(966005)(6306002)(2906002)(5640700003)(99286004)(6116002)(36756003)(54906003)(14454004)(25786009)(4744005)(486006)(66556008)(81156014)(6916009)(305945005)(7736002)(26005)(6512007)(2616005)(66066001)(2501003)(66946007)(316002)(64756008)(478600001)(50226002)(71190400001)(71200400001)(81166006)(8676002)(256004)(2351001)(8936002)(6436002)(476003)(6486002)(66446008)(66476007)(3846002);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2783;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: r8kNFiK5x9oGlRN22S2TEmOrIIhH71PlAkl6te2z5et3atL1EXTPMLvbaOKZK8qDoUlQNjYHSLosgECGMMlbowPP5xKpk2kveS6/EmXbJ+KkKatesYGiMp3976CsAqFITuLH3ZT0cyXx7IpnyFZcEzI5F3cSt3KyxPu+/bSyYEMjOeblwnn7ZS1SqhKiP5be83HbwZotOtVLiW+HtqJU7wafd9KdrUB2PgISbwWWTpHosNtoNaV1MT67H1K9cowZDduXZETffQchRKeD8jrWNqEDL2XxM8FWPu50Y9v/nmj/pvdi6rJ9aY4D95kbpzQJ+KF08VoWO+o6GaV777IYqkXwo/GXJ6pLo3AadC2if1yhEEV/7sbqPd3XQXliYkM4snzklPdTE3Rqvk23EU9Qm9JMrBaM5TCC2ftgOjCoRmm/YBXb98NYA781CMCAF4HOpPxSq74n0jOgCwN1uEPkZQyfU4rEcOINSWbJgIkdvKE=
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: d79883c3-615e-4675-6a99-08d762582386
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 01:24:59.1288
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: ZINDXTHtvHSL7h2FEMXGVhUm+1jtnmk1BRpdydnuf6mJ9lA49Pi2/dl0a3Q8dD9x8mm4R856f9CXsvQHxM8AJQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2783
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry,
+From: Yazen Ghannam <yazen.ghannam@amd.com>
 
-On 19. 11. 5. 오후 10:29, Dmitry Osipenko wrote:
-> 05.11.2019 07:07, Chanwoo Choi пишет:
->> On 19. 11. 5. 오전 6:56, Dmitry Osipenko wrote:
->>> I was contributing to the NVIDIA Tegra20+ devfreq drivers recently and
->>> want to help keep them working and evolving in the future.
->>>
->>> Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
->>> ---
->>>  MAINTAINERS | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/MAINTAINERS b/MAINTAINERS
->>> index 9f69d01da3a6..4b9679988514 100644
->>> --- a/MAINTAINERS
->>> +++ b/MAINTAINERS
->>> @@ -10632,6 +10632,15 @@ F:	include/linux/memblock.h
->>>  F:	mm/memblock.c
->>>  F:	Documentation/core-api/boot-time-mm.rst
->>>  
->>> +MEMORY FREQUENCY SCALING DRIVERS FOR NVIDIA TEGRA
->>> +M:	Dmitry Osipenko <digetx@gmail.com>
->>> +L:	linux-pm@vger.kernel.org
->>> +L:	linux-tegra@vger.kernel.org
->>> +T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
+Hi Boris,
 
-From now, I'll help and review the devfreq patches as maintainer
-and the devfreq git information is changed[1]. You should change 
-the git info as following:
-[1] https://lkml.org/lkml/2019/11/5/39
+These patches address the issue where the module checks and complains
+about DRAM ECC on nodes without memory.
 
-+T:	git git://git.kernel.org/pub/scm/linux/kernel/git/chanwoo/linux.git
+Changes from last revision:
+  1) Dropped patch 6 which was for adding a grain value.
+  2) Added an error code for !ecc_enabled() in patch 5.
 
-Also, I add my acked-by tag.
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Thanks,
+Yazen
 
->>> +S:	Maintained
->>> +F:	drivers/devfreq/tegra20-devfreq.c
->>> +F:	drivers/devfreq/tegra30-devfreq.c
->>> +
->>>  MEMORY MANAGEMENT
->>>  L:	linux-mm@kvack.org
->>>  W:	https://protect2.fireeye.com/url?k=9d0ba644-c09508de-9d0a2d0b-0cc47a336fae-300ed90f1ba3077c&u=http://www.linux-mm.org/
->>>
->>
->> Looks good to me. 
->>
->> But, the merge conflict might be occurred.
->> After getting the review from Myungjoo,
->> you better to send this patch separately
->> based on the latest MAINTAINERS file.
->>
->> Thanks for your all efforts.
-> 
-> Okay, I'll wait for the rest of patches to land and then re-send this
-> patch separately. Thank you very much for the reviews.
-> 
-> 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+Link:
+https://lkml.kernel.org/r/20191022203448.13962-1-Yazen.Ghannam@amd.com
+
+Yazen Ghannam (5):
+  EDAC/amd64: Make struct amd64_family_type global
+  EDAC/amd64: Gather hardware information early
+  EDAC/amd64: Save max number of controllers to family type
+  EDAC/amd64: Use cached data when checking for ECC
+  EDAC/amd64: Check for memory before fully initializing an instance
+
+ drivers/edac/amd64_edac.c | 196 +++++++++++++++++++-------------------
+ drivers/edac/amd64_edac.h |   2 +
+ 2 files changed, 99 insertions(+), 99 deletions(-)
+
+--=20
+2.17.1
+
