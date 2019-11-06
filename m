@@ -2,81 +2,63 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 742FAC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7EE3C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24567222C9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="dGYz6wv+"
+	by mail.kernel.org (Postfix) with ESMTP id 6FFD8222C9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573009720;
+	bh=2adWG03503CxjQwiKnkzmVP8mIRVy+gwj2DXV59CqCg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=vZI8Jp732lH4r4YBBkLGwF3VMj8ESobLgb18tH6ZLdNAuYiBPkgIUQq0/r/L34xwf
+	 ZJVjamvVycZnWXmlHK2Q+QIPDVXGyjIE3vZ6O5i9ECim+iiMYPyC7f6jkbEF0ZY8V2
+	 1OpZSUunKTD7bqATBdyo1erK0s+9Hf6KmSxtVgxg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388335AbfKFDId (ORCPT
+        id S2388389AbfKFDIj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:08:33 -0500
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:34677 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388273AbfKFDI0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:08:26 -0500
-Received: by mail-pf1-f196.google.com with SMTP id n13so6017398pff.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:08:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=P3KAk4JFoRkmJY5UYpiE9Ad5UYmzG6Av2SQ7Rw3IXDc=;
-        b=dGYz6wv+PceywAO0mjiAaPM4I4bawDqWfU0ekn7Khp2ckO0xcUgC6siNIdOcsLrIJa
-         CwNbiBvkxpIeOwrQG0ige6I0s0ZUJZJXCCn0XLM9SL05aboewYqMvzrLYy474/QrUgPX
-         HSe32vbj8VdIN4wjowemksP8tv+Z4nMKtzvqmJct24falWE7rbEDc0MB/qPr1yReKu4m
-         cZSNYjqbdGQJsEhjsiC3YA5jp766XNhrQ2J8Ba7zdsJncLXScFm8v8WL1R1+JfRuozuX
-         ope2lbXxPUS1ru6xuoqxDO4VZENci0YUGSCH27LJrKvs2uF0SGZDLU2Dg/bPb4M7os2A
-         o/6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=P3KAk4JFoRkmJY5UYpiE9Ad5UYmzG6Av2SQ7Rw3IXDc=;
-        b=PADCZjHeeIJocDa7JODDjUkz+f8473Mqtv+qtJKR6RymRZiVOYz1gV4FgyDmz7t4uC
-         eu8ylfb0QLdFMsATytSVLqkJ03wvnc5lam9/we2JZ4B3+wPRy7vtz1Fal5UsN16EJEKb
-         qlpANkQv5ghCVJsaKZNvzial3ZX0YQ+YUWA/9jDQALlHCsWyBwNLeYLNahp5a1xjm2BL
-         voz+BtQUrmdvT6mZkKbBsYcqCUTQ3v6yNSatM2mq3rYsmTGA93C2iBpuEJxlsB7pE703
-         NtabvCiYk90eJz9yM4gXVH30NhOv7bU7mRIWxdX8uCxIvwr5dH2D5Aim5fEMz0+sJudV
-         JllA==
-X-Gm-Message-State: APjAAAXKENu5H004AdszW7rKxH40VBqLlaG9RJowH+aq38f1m/44xLdm
-        FD6vcF/iimNjHVGYLvpUODAjSHXzmXQ=
-X-Google-Smtp-Source: APXvYqzdoADpYOilv6zYZDLM1SN3kH63KqdGum7CjWRsWYBdHmb16/bpBc5NmIQ9TPPC/7aTNfzH4g==
-X-Received: by 2002:a17:90a:340c:: with SMTP id o12mr657765pjb.18.1573009705238;
-        Tue, 05 Nov 2019 19:08:25 -0800 (PST)
-Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.08.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:08:24 -0800 (PST)
-From:   Dmitry Safonov <dima@arista.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
-        Dmitry Safonov <dima@arista.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ingo Molnar <mingo@kernel.org>, Jiri Slaby <jslaby@suse.com>,
-        Petr Mladek <pmladek@suse.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
-        Jeff Dike <jdike@addtoit.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-um@lists.infradead.org
-Subject: [PATCH 36/50] um: Add show_stack_loglvl()
-Date:   Wed,  6 Nov 2019 03:05:27 +0000
-Message-Id: <20191106030542.868541-37-dima@arista.com>
+        Tue, 5 Nov 2019 22:08:39 -0500
+Received: from mail.kernel.org ([198.145.29.99]:44376 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388315AbfKFDIc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 22:08:32 -0500
+Received: from lenoir.home (lfbn-ncy-1-150-155.w83-194.abo.wanadoo.fr [83.194.232.155])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E6521882;
+        Wed,  6 Nov 2019 03:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573009711;
+        bh=2adWG03503CxjQwiKnkzmVP8mIRVy+gwj2DXV59CqCg=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=YJwwUYXT3+79eze5l0Wa2hNmxwGIpEBOV7bJ3oydf77EIYYNtn3bkIS7qRtOsjc4p
+         fxPuDzLL1bGs++h+5RSWwPOYhhFHkjrFqlv+ruXJ3P3YrVTdYAYYnUNq84PZvlBlJx
+         RB2ZosqUbeUiO3xU6RNsUrDQro58lkH/aBRLRZis=
+From:   Frederic Weisbecker <frederic@kernel.org>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Frederic Weisbecker <frederic@kernel.org>,
+        Jacek Anaszewski <jacek.anaszewski@gmail.com>,
+        Wanpeng Li <wanpengli@tencent.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Yauheni Kaliuta <yauheni.kaliuta@redhat.com>,
+        "Rafael J . Wysocki" <rjw@rjwysocki.net>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Rik van Riel <riel@surriel.com>
+Subject: [PATCH 5/9] sched/vtime: Bring all-in-one kcpustat accessor for vtime fields
+Date:   Wed,  6 Nov 2019 04:08:03 +0100
+Message-Id: <20191106030807.31091-6-frederic@kernel.org>
 X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106030542.868541-1-dima@arista.com>
-References: <20191106030542.868541-1-dima@arista.com>
+In-Reply-To: <20191106030807.31091-1-frederic@kernel.org>
+References: <20191106030807.31091-1-frederic@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,89 +66,231 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Currently, the log-level of show_stack() depends on a platform
-realization. It creates situations where the headers are printed with
-lower log level or higher than the stacktrace (depending on
-a platform or user).
+Many callsites want to fetch the values of system, user, user_nice, guest
+or guest_nice kcpustat fields altogether or at least a pair of these.
 
-Furthermore, it forces the logic decision from user to an architecture
-side. In result, some users as sysrq/kdb/etc are doing tricks with
-temporary rising console_loglevel while printing their messages.
-And in result it not only may print unwanted messages from other CPUs,
-but also omit printing at all in the unlucky case where the printk()
-was deferred.
+In that case calling kcpustat_field() for each requested field brings
+unecessary overhead when we could fetch all of them in a row.
 
-Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
-an easier approach than introducing more printk buffers.
-Also, it will consolidate printings with headers.
+So provide kcpustat_cputime() that fetches all vtime sensitive fields
+under the same RCU and seqcount block.
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
-
-Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
-Cc: Jeff Dike <jdike@addtoit.com>
-Cc: Richard Weinberger <richard@nod.at>
-Cc: linux-um@lists.infradead.org
-[1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
-Signed-off-by: Dmitry Safonov <dima@arista.com>
+Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
+Cc: Yauheni Kaliuta <yauheni.kaliuta@redhat.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Rik van Riel <riel@surriel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Wanpeng Li <wanpengli@tencent.com>
+Cc: Ingo Molnar <mingo@kernel.org>
 ---
- arch/um/kernel/sysrq.c | 24 ++++++++++++++++--------
- 1 file changed, 16 insertions(+), 8 deletions(-)
+ include/linux/kernel_stat.h |  23 ++++++
+ kernel/sched/cputime.c      | 138 ++++++++++++++++++++++++++++++------
+ 2 files changed, 141 insertions(+), 20 deletions(-)
 
-diff --git a/arch/um/kernel/sysrq.c b/arch/um/kernel/sysrq.c
-index c831a1c2eb94..1b54b6431499 100644
---- a/arch/um/kernel/sysrq.c
-+++ b/arch/um/kernel/sysrq.c
-@@ -17,7 +17,9 @@
- 
- static void _print_addr(void *data, unsigned long address, int reliable)
- {
--	pr_info(" [<%08lx>] %s%pS\n", address, reliable ? "" : "? ",
-+	const char *loglvl = data;
-+
-+	printk("%s [<%08lx>] %s%pS\n", loglvl, address, reliable ? "" : "? ",
- 		(void *)address);
+diff --git a/include/linux/kernel_stat.h b/include/linux/kernel_stat.h
+index 1b9b97f6946e..c76daad2d8e2 100644
+--- a/include/linux/kernel_stat.h
++++ b/include/linux/kernel_stat.h
+@@ -78,15 +78,38 @@ static inline unsigned int kstat_cpu_irqs_sum(unsigned int cpu)
+ 	return kstat_cpu(cpu).irqs_sum;
  }
  
-@@ -25,7 +27,8 @@ static const struct stacktrace_ops stackops = {
- 	.address = _print_addr
- };
- 
--void show_stack(struct task_struct *task, unsigned long *stack)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
-+		       const char *loglvl)
- {
- 	struct pt_regs *segv_regs = current->thread.segv_regs;
- 	int i;
-@@ -39,17 +42,22 @@ void show_stack(struct task_struct *task, unsigned long *stack)
- 	if (!stack)
- 		stack = get_stack_pointer(task, segv_regs);
- 
--	pr_info("Stack:\n");
-+	printk("%sStack:\n", loglvl);
- 	for (i = 0; i < 3 * STACKSLOTS_PER_LINE; i++) {
- 		if (kstack_end(stack))
- 			break;
- 		if (i && ((i % STACKSLOTS_PER_LINE) == 0))
--			pr_cont("\n");
-+			printk("%s\n", loglvl);
- 		pr_cont(" %08lx", *stack++);
- 	}
--	pr_cont("\n");
-+	printk("%s\n", loglvl);
 +
-+	printk("%sCall Trace:\n", loglvl);
-+	dump_trace(current, &stackops, (void *)loglvl);
-+	printk("%s\n", loglvl);
-+}
- 
--	pr_info("Call Trace:\n");
--	dump_trace(current, &stackops, NULL);
--	pr_info("\n");
-+void show_stack(struct task_struct *task, unsigned long *stack)
++static inline void kcpustat_cputime_raw(u64 *cpustat, u64 *user, u64 *nice,
++					u64 *system, u64 *guest, u64 *guest_nice)
 +{
-+	show_stack_loglvl(task, stack, KERN_INFO);
++	*user = cpustat[CPUTIME_USER];
++	*nice = cpustat[CPUTIME_NICE];
++	*system = cpustat[CPUTIME_SYSTEM];
++	*guest = cpustat[CPUTIME_GUEST];
++	*guest_nice = cpustat[CPUTIME_GUEST_NICE];
++}
++
+ #ifdef CONFIG_VIRT_CPU_ACCOUNTING_GEN
+ extern u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 			  enum cpu_usage_stat usage, int cpu);
++extern void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++			     u64 *user, u64 *nice, u64 *system,
++			     u64 *guest, u64 *guest_nice);
+ #else
+ static inline u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 				 enum cpu_usage_stat usage, int cpu)
+ {
+ 	return kcpustat->cpustat[usage];
  }
++
++static inline void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++				    u64 *user, u64 *nice, u64 *system,
++				    u64 *guest, u64 *guest_nice)
++{
++	kcpustat_cputime_raw(kcpustat->cpustat, user, nice,
++			     system, guest, guest_nice);
++}
++
+ #endif
+ 
+ extern void account_user_time(struct task_struct *, u64);
+diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
+index bf4b61f71194..0006dfccbeb7 100644
+--- a/kernel/sched/cputime.c
++++ b/kernel/sched/cputime.c
+@@ -1042,6 +1042,30 @@ void task_cputime(struct task_struct *t, u64 *utime, u64 *stime)
+ 	} while (read_seqcount_retry(&vtime->seqcount, seq));
+ }
+ 
++static int vtime_state_check(struct vtime *vtime, int cpu)
++{
++	/*
++	 * We raced against context switch, fetch the
++	 * kcpustat task again.
++	 */
++	if (vtime->cpu != cpu && vtime->cpu != -1)
++		return -EAGAIN;
++
++	/*
++	 * Two possible things here:
++	 * 1) We are seeing the scheduling out task (prev) or any past one.
++	 * 2) We are seeing the scheduling in task (next) but it hasn't
++	 *    passed though vtime_task_switch() yet so the pending
++	 *    cputime of the prev task may not be flushed yet.
++	 *
++	 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
++	 */
++	if (vtime->state == VTIME_INACTIVE)
++		return -EAGAIN;
++
++	return 0;
++}
++
+ static u64 kcpustat_user_vtime(struct vtime *vtime)
+ {
+ 	if (vtime->state == VTIME_USER)
+@@ -1062,26 +1086,9 @@ static int kcpustat_field_vtime(u64 *cpustat,
+ 	do {
+ 		seq = read_seqcount_begin(&vtime->seqcount);
+ 
+-		/*
+-		 * We raced against context switch, fetch the
+-		 * kcpustat task again.
+-		 */
+-		if (vtime->cpu != cpu && vtime->cpu != -1)
+-			return -EAGAIN;
+-
+-		/*
+-		 * Two possible things here:
+-		 * 1) We are seeing the scheduling out task (prev) or any past one.
+-		 * 2) We are seeing the scheduling in task (next) but it hasn't
+-		 *    passed though vtime_task_switch() yet so the pending
+-		 *    cputime of the prev task may not be flushed yet.
+-		 *
+-		 * Case 1) is ok but 2) is not. So wait for a safe VTIME state.
+-		 */
+-		if (vtime->state == VTIME_INACTIVE)
+-			return -EAGAIN;
+-
+-		err = 0;
++		err = vtime_state_check(vtime, cpu);
++		if (err < 0)
++			return err;
+ 
+ 		*val = cpustat[usage];
+ 
+@@ -1149,4 +1156,95 @@ u64 kcpustat_field(struct kernel_cpustat *kcpustat,
+ 	}
+ }
+ EXPORT_SYMBOL_GPL(kcpustat_field);
++
++static int kcpustat_cputime_vtime(u64 *cpustat, struct vtime *vtime,
++				  int cpu, u64 *user, u64 *nice,
++				  u64 *system, u64 *guest, u64 *guest_nice)
++{
++	unsigned int seq;
++	u64 delta;
++	int err;
++
++	do {
++		seq = read_seqcount_begin(&vtime->seqcount);
++
++		err = vtime_state_check(vtime, cpu);
++		if (err < 0)
++			return err;
++
++		kcpustat_cputime_raw(cpustat, user, nice,
++				     system, guest, guest_nice);
++
++		/* Task is sleeping, dead or idle, nothing to add */
++		if (vtime->state < VTIME_SYS)
++			continue;
++
++		delta = vtime_delta(vtime);
++
++		/*
++		 * Task runs either in user (including guest) or kernel space,
++		 * add pending nohz time to the right place.
++		 */
++		if (vtime->state == VTIME_SYS) {
++			*system += vtime->stime + delta;
++		} else if (vtime->state == VTIME_USER) {
++			if (vtime->nice)
++				*nice += vtime->utime + delta;
++			else
++				*user += vtime->utime + delta;
++		} else {
++			WARN_ON_ONCE(vtime->state != VTIME_GUEST);
++			if (vtime->nice) {
++				*guest_nice += vtime->gtime + delta;
++				*nice += vtime->gtime + delta;
++			} else {
++				*guest += vtime->gtime + delta;
++				*user += vtime->gtime + delta;
++			}
++		}
++	} while (read_seqcount_retry(&vtime->seqcount, seq));
++
++	return err;
++}
++
++void kcpustat_cputime(struct kernel_cpustat *kcpustat, int cpu,
++		      u64 *user, u64 *nice, u64 *system,
++		      u64 *guest, u64 *guest_nice)
++{
++	u64 *cpustat = kcpustat->cpustat;
++	struct rq *rq;
++	int err;
++
++	if (!vtime_accounting_enabled_cpu(cpu)) {
++		kcpustat_cputime_raw(cpustat, user, nice,
++				     system, guest, guest_nice);
++		return;
++	}
++
++	rq = cpu_rq(cpu);
++
++	for (;;) {
++		struct task_struct *curr;
++
++		rcu_read_lock();
++		curr = rcu_dereference(rq->curr);
++		if (WARN_ON_ONCE(!curr)) {
++			rcu_read_unlock();
++			kcpustat_cputime_raw(cpustat, user, nice,
++					     system, guest, guest_nice);
++			return;
++		}
++
++		err = kcpustat_cputime_vtime(cpustat, &curr->vtime, cpu, user,
++					     nice, system, guest, guest_nice);
++		rcu_read_unlock();
++
++		if (!err)
++			return;
++
++		cpu_relax();
++	}
++}
++EXPORT_SYMBOL_GPL(kcpustat_cputime);
++
+ #endif /* CONFIG_VIRT_CPU_ACCOUNTING_GEN */
 -- 
 2.23.0
 
