@@ -2,147 +2,138 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00620C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:01:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E1ACC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:03:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C1B45217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:01:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B8C821848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:03:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fxR4KVya"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=mxxn.io header.i=@mxxn.io header.b="BgZvCYSE";
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="o87Av97m"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731151AbfKFLBT (ORCPT
+        id S1728570AbfKFLDZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:01:19 -0500
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]:39992 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728300AbfKFLBT (ORCPT
+        Wed, 6 Nov 2019 06:03:25 -0500
+Received: from wout5-smtp.messagingengine.com ([64.147.123.21]:35703 "EHLO
+        wout5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725890AbfKFLDY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:01:19 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573038077;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=SkN/IjzaoU90YgssHGz0WFlm7IPvbJWgcf9sbT5dqA4=;
-        b=fxR4KVyaB6yFq+O7354/J51Wt/Y7tsZIOfo4A21P4N7DZmGkbq3e+ifJaf/NYZtVXz/VtR
-        nfJrxg/9Fhn3Ri2f4JwEgmoLtD7gcn0qtCs6BoCp1GATi3KTVWLIhJLxfGBsW5KSaS/0ij
-        lYZi67dhnY8OLNk0Fv7CRhoPqVZQxDQ=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-275-VRFnvVLZMmetEpaUZg4hvw-1; Wed, 06 Nov 2019 06:01:11 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 7A4B1477;
-        Wed,  6 Nov 2019 11:01:07 +0000 (UTC)
-Received: from gondolin (dhcp-192-218.str.redhat.com [10.33.192.218])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 484225D6D4;
-        Wed,  6 Nov 2019 11:00:49 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 12:00:47 +0100
-From:   Cornelia Huck <cohuck@redhat.com>
-To:     Jason Wang <jasowang@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, mst@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-Subject: Re: [PATCH V9 5/6] virtio: introduce a mdev based transport
-Message-ID: <20191106120047.5bcf49c3.cohuck@redhat.com>
-In-Reply-To: <20191106070548.18980-6-jasowang@redhat.com>
-References: <20191106070548.18980-1-jasowang@redhat.com>
-        <20191106070548.18980-6-jasowang@redhat.com>
-Organization: Red Hat GmbH
+        Wed, 6 Nov 2019 06:03:24 -0500
+Received: from compute3.internal (compute3.nyi.internal [10.202.2.43])
+        by mailout.west.internal (Postfix) with ESMTP id 03D344D7;
+        Wed,  6 Nov 2019 06:03:22 -0500 (EST)
+Received: from mailfrontend1 ([10.202.2.162])
+  by compute3.internal (MEProxy); Wed, 06 Nov 2019 06:03:23 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mxxn.io; h=from
+        :to:cc:subject:date:message-id:mime-version:content-type
+        :content-transfer-encoding; s=fm3; bh=Ii2oxrWwPIXyOz9KTyWZWso10b
+        yGznburLcw9Zjh5ao=; b=BgZvCYSEOWLQrLl7SRYAy5u+NZbovI1AEIFybvfyzt
+        MQwfOWtqj1YDSsB1yOOdFxb/9M2Hen4rosBd2qEI1HzAnBqEL0sWG6APSv84W7gA
+        Vf74wohU89kSvuOOFjIAofRDZrRpheoUnj8n8UiHbS4ZJK6q+KdgJkpc+OgOcVc7
+        DPfKL5G5YAk/wLATdYsL9cc0/g//EyUJc6U+7mcprQufGLyMiBYScQxdzPIDiVu+
+        M1/Zjrk1JWj9iaVW/8rObsmrUuxKDsw4n2EN4x2tEETgohv+gIUtzqFNQRpZFIix
+        n40KUBcM7Nww4+yPFHuev/MEj6IFTwm+1IWlIGFNyzOQ==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
+        messagingengine.com; h=cc:content-transfer-encoding:content-type
+        :date:from:message-id:mime-version:subject:to:x-me-proxy
+        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm1; bh=Ii2oxr
+        WwPIXyOz9KTyWZWso10byGznburLcw9Zjh5ao=; b=o87Av97mKTjX57VjcioQ3N
+        la1PH9XaL3wB/G1Q/SaAmH9aNV6ximiqj1dgqJHrq/W8p0v01n7l+HE/16kVw4sp
+        Br4/eJ8PcTng0/FZgKz+wAH+KWvDf36W1TG+AUiLTLXCJ97T30yZAWLEbLdl56ly
+        DFX/Vq1K95YPHGkQQqZBkv83CRNlkcIBYu7kepkWNF+c9rSBbUsRy6c3KWvkVl5I
+        iDVURqXaH+Zj4PeVda85VylY/1WKnu24dP858Ex6FXThbbMMUmDVdjX1JEh0RrG5
+        8DPD3L2M4wqynxtEMjNG+Yaw3niGIYtzMfB/Vv2E+p/eGc6Rr3oDi0ADvn1Dp7hw
+        ==
+X-ME-Sender: <xms:eqjCXSlPQceVNtPabUw40ukxAK3L7W1DC0hbhISZ1bcVZM0zNUWZlA>
+X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgedufedruddujedgvdefucetufdoteggodetrfdotf
+    fvucfrrhhofhhilhgvmecuhfgrshhtofgrihhlpdfqfgfvpdfurfetoffkrfgpnffqhgen
+    uceurghilhhouhhtmecufedttdenucesvcftvggtihhpihgvnhhtshculddquddttddmne
+    hmihhsshhinhhgucfvqfcufhhivghlugculdeftddmnegoteeftdduqddtudculdduhedm
+    necujfgurhephffvufffkffogggtgfesthekredtredtjeenucfhrhhomhepuehlrgkkuc
+    fjrhgrshhtnhhikhcuoegslhgriiesmhiggihnrdhioheqnecukfhppeduuddurddutdej
+    rddvtdelrddvvdehnecurfgrrhgrmhepmhgrihhlfhhrohhmpegslhgriiesmhiggihnrd
+    hiohenucevlhhushhtvghrufhiiigvpedt
+X-ME-Proxy: <xmx:eqjCXVhaXBg-6fXjBSMW-_nm_kXGEvOoMsAcekaLsf0qyg8gkxZCtg>
+    <xmx:eqjCXbXg5Y0kTfvtAS9mf6Yvl8aT5kYIkqryH062pklkpoCRIKc8Jg>
+    <xmx:eqjCXXiSyd0fnmkoVm8KkBN2jnyvfjzFkh-yraj964I4mGlIqLNyvQ>
+    <xmx:eqjCXUJSqQcRIgPGKUN_hlMB4jBhuWZzlj1Gkadch9kITwQkT8Uw-Q>
+Received: from localhost.localdomain (225.ec0279u.cyberhome.ne.jp [111.107.209.225])
+        by mail.messagingengine.com (Postfix) with ESMTPA id C271680062;
+        Wed,  6 Nov 2019 06:03:20 -0500 (EST)
+From:   =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>
+Cc:     =?UTF-8?q?Bla=C5=BE=20Hrastnik?= <blaz@mxxn.io>,
+        Jiri Kosina <jikos@kernel.org>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] HID: Improve Windows Precision Touchpad detection.
+Date:   Wed,  6 Nov 2019 20:02:46 +0900
+Message-Id: <20191106110246.70937-1-blaz@mxxn.io>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: VRFnvVLZMmetEpaUZg4hvw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 15:05:47 +0800
-Jason Wang <jasowang@redhat.com> wrote:
+Per Microsoft spec, usage 0xC5 (page 0xFF) returns a blob containing
+data used to verify the touchpad as a Windows Precision Touchpad.
 
-> This patch introduces a new mdev transport for virtio. This is used to
-> use kernel virtio driver to drive the mediated device that is capable
-> of populating virtqueue directly.
->=20
-> A new virtio-mdev driver will be registered to the mdev bus, when a
-> new virtio-mdev device is probed, it will register the device with
-> mdev based config ops. This means it is a software transport between
-> mdev driver and mdev device. The transport was implemented through
-> device specific ops which is a part of mdev_parent_ops now.
->=20
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-> ---
->  drivers/virtio/Kconfig       |  13 ++
->  drivers/virtio/Makefile      |   1 +
->  drivers/virtio/virtio_mdev.c | 406 +++++++++++++++++++++++++++++++++++
->  3 files changed, 420 insertions(+)
->  create mode 100644 drivers/virtio/virtio_mdev.c
->=20
-> diff --git a/drivers/virtio/Kconfig b/drivers/virtio/Kconfig
-> index 078615cf2afc..558ac607d107 100644
-> --- a/drivers/virtio/Kconfig
-> +++ b/drivers/virtio/Kconfig
-> @@ -43,6 +43,19 @@ config VIRTIO_PCI_LEGACY
-> =20
->  =09  If unsure, say Y.
-> =20
-> +config VIRTIO_MDEV
-> +=09tristate "MDEV driver for virtio devices"
-> +=09depends on VFIO_MDEV && VIRTIO
-> +=09default n
-> +=09help
-> +=09  This driver provides support for virtio based paravirtual
-> +=09  device driver over MDEV bus. This requires your environemnt
-> +=09  has appropriate virtio mdev device implementation which may
-> +=09  operate on the physical device that the datapath of virtio
-> +=09  could be offloaded to hardware.
+   0x85, REPORTID_PTPHQA,    //    REPORT_ID (PTPHQA)
+    0x09, 0xC5,              //    USAGE (Vendor Usage 0xC5)
+    0x15, 0x00,              //    LOGICAL_MINIMUM (0)
+    0x26, 0xff, 0x00,        //    LOGICAL_MAXIMUM (0xff)
+    0x75, 0x08,              //    REPORT_SIZE (8)
+    0x96, 0x00, 0x01,        //    REPORT_COUNT (0x100 (256))
+    0xb1, 0x02,              //    FEATURE (Data,Var,Abs)
 
-That sentence is a bit confusing to me... what about
+However, some devices, namely Microsoft's Surface line of products
+instead implement a "segmented device certification report" (usage 0xC6)
+which returns the same report, but in smaller chunks.
 
-"For this to be useful, you need an appropriate virtio mdev device
-implementation that operates on a physical device to allow the datapath
-of virtio to be offloaded to hardware."
+    0x06, 0x00, 0xff,        //     USAGE_PAGE (Vendor Defined)
+    0x85, REPORTID_PTPHQA,   //     REPORT_ID (PTPHQA)
+    0x09, 0xC6,              //     USAGE (Vendor usage for segment #)
+    0x25, 0x08,              //     LOGICAL_MAXIMUM (8)
+    0x75, 0x08,              //     REPORT_SIZE (8)
+    0x95, 0x01,              //     REPORT_COUNT (1)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
+    0x09, 0xC7,              //     USAGE (Vendor Usage)
+    0x26, 0xff, 0x00,        //     LOGICAL_MAXIMUM (0xff)
+    0x95, 0x20,              //     REPORT_COUNT (32)
+    0xb1, 0x02,              //     FEATURE (Data,Var,Abs)
 
-?
+By expanding Win8 touchpad detection to also look for the segmented
+report, all Surface touchpads are now properly recognized by
+hid-multitouch.
 
-> +
-> +=09  If unsure, say M
+Signed-off-by: Blaž Hrastnik <blaz@mxxn.io>
+---
+ drivers/hid/hid-core.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Building this as a module should not hurt (but please add a trailing
-'.' here :)
-
-> +
->  config VIRTIO_PMEM
->  =09tristate "Support for virtio pmem driver"
->  =09depends on VIRTIO
-
-With the changes above,
-
-Reviewed-by: Cornelia Huck <cohuck@redhat.com>
+diff --git a/drivers/hid/hid-core.c b/drivers/hid/hid-core.c
+index 63fdbf09b044..2af597cd5d65 100644
+--- a/drivers/hid/hid-core.c
++++ b/drivers/hid/hid-core.c
+@@ -742,6 +742,10 @@ static void hid_scan_feature_usage(struct hid_parser *parser, u32 usage)
+ 	if (usage == 0xff0000c5 && parser->global.report_count == 256 &&
+ 	    parser->global.report_size == 8)
+ 		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
++
++	if (usage == 0xff0000c6 && parser->global.report_count == 1 &&
++	    parser->global.report_size == 8)
++		parser->scan_flags |= HID_SCAN_FLAG_MT_WIN_8;
+ }
+ 
+ static void hid_scan_collection(struct hid_parser *parser, unsigned type)
+-- 
+2.23.0
 
