@@ -2,95 +2,251 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 008B8C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 081A0C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C573221848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C730B21929
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:35:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P1NvzCEw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731940AbfKFOfn (ORCPT
+        id S1731972AbfKFOfy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:35:43 -0500
-Received: from mx2.suse.de ([195.135.220.15]:53090 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727031AbfKFOfn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:35:43 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 95AB7B332;
-        Wed,  6 Nov 2019 14:35:39 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 2E5811E4353; Wed,  6 Nov 2019 15:35:37 +0100 (CET)
-Date:   Wed, 6 Nov 2019 15:35:37 +0100
-From:   Jan Kara <jack@suse.cz>
-To:     snazy@snazy.de
-Cc:     Jan Kara <jack@suse.cz>, Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Michal Hocko <mhocko@kernel.org>,
-        Josef Bacik <josef@toxicpanda.com>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
-Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
-Message-ID: <20191106143537.GI16085@quack2.suse.cz>
-References: <20191025132700.GJ17610@dhcp22.suse.cz>
- <707b72c6dac76c534dcce60830fa300c44f53404.camel@gmx.de>
- <20191025135749.GK17610@dhcp22.suse.cz>
- <20191025140029.GL17610@dhcp22.suse.cz>
- <c2505804fda5326acf76b2be0155d558e5481fb5.camel@gmx.de>
- <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
- <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
- <20191105182211.GA33242@cmpxchg.org>
- <20191106120315.GF16085@quack2.suse.cz>
- <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+        Wed, 6 Nov 2019 09:35:54 -0500
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:38713 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727321AbfKFOfy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:35:54 -0500
+Received: by mail-qt1-f194.google.com with SMTP id p20so15642551qtq.5;
+        Wed, 06 Nov 2019 06:35:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=gWaWc2qSkhh0jyxJemX9BkyQA39c3n/0zxtISnFYQhM=;
+        b=P1NvzCEwkmM0+gg8uED5ejPWmfxAXqQzanJBmHeoMx5xmgcfrT6y/izV5ygA0uaaCX
+         cA/mha1FGQ//zo/itj3nJNEtWtJOcFvC23CrARMXVzwCFu4+o4E4pSYfxgN6VaT6t0HD
+         KEQXcA/g1d4Dop+B0U9fRjf7Q6Lyz25M5sesM8N+XDB6edzDlqE1IO6rzM6K6U4ZZR6c
+         WWNWrkATt4PUt9H4FZ/SMG0Z55WCb6yqyptOUXRrQKPG5hyTJp9Ee21eEg6xiZHnPrWZ
+         9mNOUGiV8rghBSsCibYTZlGsWOFEN1Rk9NWzk4ibDuhNFMJxm3/PIg28pgX4th376Tkv
+         X7rw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=gWaWc2qSkhh0jyxJemX9BkyQA39c3n/0zxtISnFYQhM=;
+        b=uGwMzAZw7JhYxEK4IE8srP+s14pzGjgUujSgu+VYbbxHuJevGRcI0QI1vU/zSang65
+         W23hbSsCQlscTYG6L3TQ1ijdH5aSLBo4uJEYmTxLUfm4gUbd7vRJLVDn8qcDdYKrTjox
+         PTkFykOOYjN2PK74KtLgOojv2DMO/x69GeiHykZP5CPAaWeEi/JesSo0r6j6Nz/Swp2+
+         L1yix/kLixw9YBjLBPxZ419/D0/GzuX8IUrNNNilAFYVv/T+DiKxlfU0qpNFTS85ARjy
+         oyfAHHqHIvrZ/d7YE4pp0T3c4/huRbETSezNSyGMtSvnuHZPr41s6oltqgr3k3VHVkb2
+         mD/Q==
+X-Gm-Message-State: APjAAAWYuMoy9ZAw279rtcfTWK3LVCFIfw7LtU4HKSUxDLVCMkIn2x39
+        viQ6bnY5U6HKwM6utEmGcFg=
+X-Google-Smtp-Source: APXvYqxwVyKRBIOEKpWvi7JRAYDjFBUsjPzsDN0466AAwomTOQI+vW4JEsykotp3uq/1ur2CpbTKyg==
+X-Received: by 2002:ac8:6ec4:: with SMTP id f4mr2683702qtv.271.1573050952921;
+        Wed, 06 Nov 2019 06:35:52 -0800 (PST)
+Received: from quaco.ghostprotocols.net ([179.97.35.50])
+        by smtp.gmail.com with ESMTPSA id l14sm9990457qkj.61.2019.11.06.06.35.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 06:35:52 -0800 (PST)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id C4E6B40B1D; Wed,  6 Nov 2019 11:35:49 -0300 (-03)
+Date:   Wed, 6 Nov 2019 11:35:49 -0300
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Ian Rogers <irogers@google.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Martin KaFai Lau <kafai@fb.com>,
+        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
+        Andi Kleen <ak@linux.intel.com>,
+        Jin Yao <yao.jin@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
+        John Garry <john.garry@huawei.com>,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
+        Stephane Eranian <eranian@google.com>
+Subject: Re: [PATCH v5 06/10] perf tools: add destructors for parse event
+ terms
+Message-ID: <20191106143549.GD6259@kernel.org>
+References: <20191025180827.191916-1-irogers@google.com>
+ <20191030223448.12930-1-irogers@google.com>
+ <20191030223448.12930-7-irogers@google.com>
+ <20191106142424.GG30214@krava>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106142424.GG30214@krava>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.12.1 (2019-06-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 06-11-19 14:45:43, Robert Stupp wrote:
-> On Wed, 2019-11-06 at 13:03 +0100, Jan Kara wrote:
-> > On Tue 05-11-19 13:22:11, Johannes Weiner wrote:
-> > > What I don't quite understand yet is why the fault path doesn't
-> > > make
-> > > progress eventually. We must drop the mmap_sem without changing the
-> > > state in any way. How can we keep looping on the same page?
-> >
-> > That may be a slight suboptimality with Josef's patches. If the page
-> > is marked as PageReadahead, we always drop mmap_sem if we can and
-> > start
-> > readahead without checking whether that makes sense or not in
-> > do_async_mmap_readahead(). OTOH page_cache_async_readahead() then
-> > clears
-> > PageReadahead so the only way how I can see we could loop like this
-> > is when
-> > file->ra->ra_pages is 0. Not sure if that's what's happening through.
-> > We'd
-> > need to find which of the paths in filemap_fault() calls
-> > maybe_unlock_mmap_for_io() to tell more.
+Em Wed, Nov 06, 2019 at 03:24:24PM +0100, Jiri Olsa escreveu:
+> On Wed, Oct 30, 2019 at 03:34:44PM -0700, Ian Rogers wrote:
+> > If parsing fails then destructors are ran to clean the up the stack.
+> > Rename the head union member to make the term and evlist use cases more
+> > distinct, this simplifies matching the correct destructor.
+> > 
+> > Signed-off-by: Ian Rogers <irogers@google.com>
 > 
-> Yes, ra_pages==0
+> Acked-by: Jiri Olsa <jolsa@kernel.org>
+> 
+> thanks,
+> jirka
+> > @@ -37,6 +38,25 @@ static struct list_head* alloc_list()
+> >  	return list;
+> >  }
+> >  
+> > +static void free_list_evsel(struct list_head* list_evsel)
+> > +{
+> > +	struct evsel *evsel, *tmp;
+> > +
+> > +	list_for_each_entry_safe(evsel, tmp, list_evsel, core.node) {
+> > +		list_del_init(&evsel->core.node);
+> > +		perf_evsel__delete(evsel);
+> > +	}
+> > +	free(list_evsel);
+> > +}
 
-OK, thanks for confirmation!
+Applying, but later I think we should use something like:
 
-> 5637e22a2000-5637e22a3000 r--p 00000000 103:02 49172550                  /home/snazy/devel/misc/zzz/test
+void __perf_evlist__purge(truct list_head *list)
+{
+	with the above code
+}
 
-What kind of device & fs does your /home stay on? I don't recognize the major
-number...
+And:
 
-							Honza
+void perf_evlist__purge(struct perf_evlist *evlist)
+{
+	__perf_evlist__purge(&evlist->entries);
+	evlist->nr_entries = 0;
+}
+
+To replace the existing:
+
+static void perf_evlist__purge(struct perf_evlist *evlist)
+{
+        struct perf_evsel *pos, *n;
+
+        perf_evlist__for_each_entry_safe(evlist, n, pos) {
+                list_del_init(&pos->node);
+                perf_evsel__delete(pos);
+        }
+
+        evlist->nr_entries = 0;
+}
+
+Anyway, applied.
+
+- Arnaldo
+
+> > +static void free_term(struct parse_events_term *term)
+> > +{
+> > +	if (term->type_val == PARSE_EVENTS__TERM_TYPE_STR)
+> > +		free(term->val.str);
+> > +	zfree(&term->array.ranges);
+> > +	free(term);
+> > +}
+> > +
+> >  static void inc_group_count(struct list_head *list,
+> >  		       struct parse_events_state *parse_state)
+> >  {
+> > @@ -66,6 +86,7 @@ static void inc_group_count(struct list_head *list,
+> >  %type <num> PE_VALUE_SYM_TOOL
+> >  %type <num> PE_RAW
+> >  %type <num> PE_TERM
+> > +%type <num> value_sym
+> >  %type <str> PE_NAME
+> >  %type <str> PE_BPF_OBJECT
+> >  %type <str> PE_BPF_SOURCE
+> > @@ -76,37 +97,43 @@ static void inc_group_count(struct list_head *list,
+> >  %type <str> PE_EVENT_NAME
+> >  %type <str> PE_PMU_EVENT_PRE PE_PMU_EVENT_SUF PE_KERNEL_PMU_EVENT
+> >  %type <str> PE_DRV_CFG_TERM
+> > -%type <num> value_sym
+> > -%type <head> event_config
+> > -%type <head> opt_event_config
+> > -%type <head> opt_pmu_config
+> > +%destructor { free ($$); } <str>
+> >  %type <term> event_term
+> > -%type <head> event_pmu
+> > -%type <head> event_legacy_symbol
+> > -%type <head> event_legacy_cache
+> > -%type <head> event_legacy_mem
+> > -%type <head> event_legacy_tracepoint
+> > +%destructor { free_term ($$); } <term>
+> > +%type <list_terms> event_config
+> > +%type <list_terms> opt_event_config
+> > +%type <list_terms> opt_pmu_config
+> > +%destructor { parse_events_terms__delete ($$); } <list_terms>
+> > +%type <list_evsel> event_pmu
+> > +%type <list_evsel> event_legacy_symbol
+> > +%type <list_evsel> event_legacy_cache
+> > +%type <list_evsel> event_legacy_mem
+> > +%type <list_evsel> event_legacy_tracepoint
+> > +%type <list_evsel> event_legacy_numeric
+> > +%type <list_evsel> event_legacy_raw
+> > +%type <list_evsel> event_bpf_file
+> > +%type <list_evsel> event_def
+> > +%type <list_evsel> event_mod
+> > +%type <list_evsel> event_name
+> > +%type <list_evsel> event
+> > +%type <list_evsel> events
+> > +%type <list_evsel> group_def
+> > +%type <list_evsel> group
+> > +%type <list_evsel> groups
+> > +%destructor { free_list_evsel ($$); } <list_evsel>
+> >  %type <tracepoint_name> tracepoint_name
+> > -%type <head> event_legacy_numeric
+> > -%type <head> event_legacy_raw
+> > -%type <head> event_bpf_file
+> > -%type <head> event_def
+> > -%type <head> event_mod
+> > -%type <head> event_name
+> > -%type <head> event
+> > -%type <head> events
+> > -%type <head> group_def
+> > -%type <head> group
+> > -%type <head> groups
+> > +%destructor { free ($$.sys); free ($$.event); } <tracepoint_name>
+> >  %type <array> array
+> >  %type <array> array_term
+> >  %type <array> array_terms
+> > +%destructor { free ($$.ranges); } <array>
+> >  
+> >  %union
+> >  {
+> >  	char *str;
+> >  	u64 num;
+> > -	struct list_head *head;
+> > +	struct list_head *list_evsel;
+> > +	struct list_head *list_terms;
+> >  	struct parse_events_term *term;
+> >  	struct tracepoint_name {
+> >  		char *sys;
+> > -- 
+> > 2.24.0.rc1.363.gb1bccd3e3d-goog
+> > 
 
 -- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
+
+- Arnaldo
