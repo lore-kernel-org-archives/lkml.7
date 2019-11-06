@@ -3,109 +3,124 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9956CFC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C48D4FC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:52:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6AB322173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:47:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9660D2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:52:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QBM+UW+9"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="Gu1APcN4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732812AbfKFXra (ORCPT
+        id S1732310AbfKFXwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:47:30 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43160 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725937AbfKFXr3 (ORCPT
+        Wed, 6 Nov 2019 18:52:12 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:53368 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725937AbfKFXwM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:47:29 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 3so458141pfb.10;
-        Wed, 06 Nov 2019 15:47:29 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=IITHycz/tKeCtcoGS9oSqQaaGm3H0ejbd50X22z8NiA=;
-        b=QBM+UW+9MI+uREWzRjPCDMTdRcJ1Qg9A1mV9chE5KjhqRQK8ZTlnzavCFuKjvmApo0
-         dLMC9dCKtbzlyt2F0etYRl9F6hMMAl2ZWhnqk+1qjKTziWxKwfA9tYuxgHLUtNXUaQFY
-         OAtGyQlApB2naKonvaurwkRT8u5RsF2+hJd6dXgnsZvq4NSYZPju1+8F+8zPDs9+pZ+J
-         S2gwQtppNc/DtmGJz6rSAq4SJ5J4LjD/1ZNAluTfXjvV++shwxekEoJIQcMKzFiTHlL7
-         BPRzlUZ8gf1gO6+TvpexhzXi4VNnhOwwrCMQwpY24IymcCjHxGV2MjWegPyqB5uBNd1g
-         xyIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=IITHycz/tKeCtcoGS9oSqQaaGm3H0ejbd50X22z8NiA=;
-        b=Ke9gYUfGogLpJdxKDkjkDe8Tix2vovfNghwn58tkOhQ39XH8H81gg5EdAUcl1i/aI/
-         bOMLDCDTTEBSAjGyRfVOYPR+SfBCAaBQvrWVZ/PIQcph+ulvAxQAP1vllYkx3D+nqU4q
-         z/NpP7FfBC3HpjZ9ddFj5OmchDJl+j348GHDQJYOhetorqGqixCH/ra+vU1DnnSFOrmi
-         9jrR9UidkNrrCkQIeXWFspp15s7fc2R7dXQiaVolVXxm0z9Nw7UyNTZNeXT5lTgKZIJy
-         KQNU1kqmUPInBdovxNhC8SyNx3PUYnESY7Ta+lG/UinU8MiB79OyFQfhHgoIp1fY0RDr
-         +rdA==
-X-Gm-Message-State: APjAAAXaEO+vQu/K7QHizu35e+gP9JZY+dPnibjQNUsIPbBrNeTx0Ml0
-        +QcA5Bt+qMWR4IRN9eJDFsZ76g2d
-X-Google-Smtp-Source: APXvYqxUKtpDTnctikFB0dQsxG/rxh3cI4BqhqNcmERqcbnbqreW4bT2lTMAT4Iu/13iDxCfITTTBQ==
-X-Received: by 2002:a63:ed17:: with SMTP id d23mr620290pgi.125.1573084049060;
-        Wed, 06 Nov 2019 15:47:29 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id y26sm104198pfo.76.2019.11.06.15.47.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 15:47:28 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] ath10k: Handle "invalid" BDFs for msm8998 devices
-Date:   Wed,  6 Nov 2019 15:47:12 -0800
-Message-Id: <20191106234712.2380-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 Nov 2019 18:52:12 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 2FC6F20B7192;
+        Wed,  6 Nov 2019 15:52:11 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 2FC6F20B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573084331;
+        bh=7+TITNWnuuqtobgXFF9AfJ8kAcAt4vZ2t9MtwS6OXX4=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=Gu1APcN4pyax71gcqYaAGdCtpIOmXf+wnCOL+xZC42h5YzThdJ0hzJk82wr3IR8sr
+         1OMthYH/qbPa2X011zafPUPpOwABgK8hFxmOm96D/wJbfa5DVYlr44SFXuITIHb7CI
+         6HV2JMReS+0R5u4OtMJlXQ+E29piD77UmskPLmck=
+Subject: Re: [PATCH v4 08/10] IMA: Defined functions to queue and dequeue keys
+ for measurement
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <20191106190116.2578-1-nramas@linux.microsoft.com>
+ <20191106190116.2578-9-nramas@linux.microsoft.com>
+ <1573080281.5028.314.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <8b2fd578-7429-f5b8-4286-1face91e1ae6@linux.microsoft.com>
+Date:   Wed, 6 Nov 2019 15:52:31 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <1573080281.5028.314.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the BDF download QMI message has the end field set to 1, it signals
-the end of the transfer, and triggers the firmware to do a CRC check.  The
-BDFs for msm8998 devices fail this check, yet the firmware is happy to
-still use the BDF.  It appears that this error is not caught by the
-downstream drive by concidence, therefore there are production devices
-in the field where this issue needs to be handled otherwise we cannot
-support wifi on them.  So, attempt to detect this scenario as best we can
-and treat it as non-fatal.
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/net/wireless/ath/ath10k/qmi.c | 11 +++++++----
- 1 file changed, 7 insertions(+), 4 deletions(-)
+On 11/6/2019 2:44 PM, Mimi Zohar wrote:
 
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index eb618a2652db..5ff8cfc93778 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -265,10 +265,13 @@ static int ath10k_qmi_bdf_dnld_send_sync(struct ath10k_qmi *qmi)
- 			goto out;
- 
- 		if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
--			ath10k_err(ar, "failed to download board data file: %d\n",
--				   resp.resp.error);
--			ret = -EINVAL;
--			goto out;
-+			if (!(req->end == 1 &&
-+			      resp.resp.result == QMI_ERR_MALFORMED_MSG_V01)) {
-+				ath10k_err(ar, "failed to download board data file: %d\n",
-+					   resp.resp.error);
-+				ret = -EINVAL;
-+				goto out;
-+			}
- 		}
- 
- 		remaining -= req->data_len;
--- 
-2.17.1
+>> +int ima_queue_or_process_key_for_measurement(struct key *keyring,
+>> +					     struct key *key)
+>> +{
+>> +	int rc = 0;
+>> +	struct ima_measure_key_entry *entry = NULL;
+>> +	const struct public_key *pk;
+>> +
+>> +	if (key->type != &key_type_asymmetric)
+>> +		return 0;
+>> +
+>> +	mutex_lock(&ima_measure_keys_mutex);
 
+> 
+> Unless the key is being queued, there's no reason to take the lock.
+
+Reason the lock is taken even in the case the key is not queued is to 
+avoid the following race condition:
+
+  => ima_init() sets ima_initialized flag and calls the dequeue function
+
+  => If IMA hook checks ima_initialized flag outside the lock and sees 
+the flag is not set, it will call the queue function.
+
+  => If the above two steps race, the key could get added to the queue 
+after ima_init() has processed the queued keys.
+
+That's the reason I named the function called by the IMA hook to 
+ima_queue_or_process_key_for_measurement().
+
+But I can make the following change:
+
+  => IMA hook checks the flag.
+  => If it is set, process key immediately
+  => If the flag is not set, call ima_queue_or_process_key_for_measurement()
+
+ima_queue_or_process_key_for_measurement() will do the following:
+
+  => With the lock held check ima_initialized flag
+  => If true release the lock and call process_buffer_measurement()
+  => If false, queue the key and then release the lock
+
+Would that be acceptable?
+
+> Measuring the key should be done in ima_post_key_create_or_update()
+> unless, it is being deferred.  Please update the function name to
+> reflect this.
+
+Just wanted to confirm:
+Rename ima_post_key_create_or_update() to a more appropriate name?
+
+Another reason for doing all key related operations in 
+ima_queue_or_process_key_for_measurement() is to isolate key related 
+code in a separate C file and build it if and only if the CONFIG 
+dependencies are met.
+
+With respect to loading custom policy, I will take a look at how to 
+handle that case. Thanks for pointing that out.
+
+> Mimi
+
+thanks,
+  -lakshmi
