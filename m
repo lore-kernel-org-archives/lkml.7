@@ -2,159 +2,157 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E40CC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:48:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A18C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:50:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D84C6217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:48:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="TxDNCM9L";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="Kp90Awnu"
+	by mail.kernel.org (Postfix) with ESMTP id 40C22206A3
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:50:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573030223;
+	bh=gSCNYnvybXaFKN/pomF/RlMMre8A0JZrFJwWxYzSl54=;
+	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
+	 From;
+	b=Eh28syT5ZoQ06/XN+qnC2sjyuiz5xlJsxHoeFLThLT4t45de4kOoNoIRN8HLs7vkr
+	 xQmKQ7oNJ/euEXy0BPF3cYCqumIwXSRQb57ZeQIR8CleykLfgPQIfQIsHikRnb3QsK
+	 BBn+Bfk7OVdkFpTx5Bei471Rlq2BADJN2EKKwlDs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731552AbfKFIs2 (ORCPT
+        id S1729881AbfKFIuW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:48:28 -0500
-Received: from mx0b-0016f401.pphosted.com ([67.231.156.173]:19696 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730178AbfKFIs2 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:48:28 -0500
-Received: from pps.filterd (m0045851.ppops.net [127.0.0.1])
-        by mx0b-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA68fDvA026650;
-        Wed, 6 Nov 2019 00:48:21 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : references : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pfpt0818;
- bh=QUux3aZjTvh7MiCitro9ymouCd2ox6kfTzCqd5dDmDU=;
- b=TxDNCM9LWf52zzGSP443pEcpF7ajeW0VGraLRuRXR8SLR0VHR9zqG/CFylnNrtAJmEX4
- cSY46ux+TAerrTGd8QiEicLKRgQiG1DVtM8nTzFplLChhILeUpriDuXsHJIGAChi7KL7
- 9mAjRF3QTMSZOsBftKcjjp44StS0JqLe9qwx2jd0H845UkzPvMn/8R8H1e2vS2nYg6tc
- lNAHfvY/Em1NdjDMwuLDPbuaIAboeDsYrLFAKYUcgyMtYh5bQtlhDLTofS2UhogjZ5a3
- 0XeXUw+yoi1AS4Ci6mGMvKnppvw3qDYeInxjCHOsBgbx14kdB3TEtSdYV4RQIwkbm6KR UA== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0b-0016f401.pphosted.com with ESMTP id 2w19amy5m3-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 00:48:20 -0800
-Received: from SC-EXCH03.marvell.com (10.93.176.83) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 6 Nov
- 2019 00:48:19 -0800
-Received: from NAM03-CO1-obe.outbound.protection.outlook.com (104.47.40.55) by
- SC-EXCH03.marvell.com (10.93.176.83) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 6 Nov 2019 00:48:19 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=GFxdRRfn5MYJI6GuGJ1FUvQWQA6K0NrpAg+icohfq1P7dLI0I9wPXbh6cDZxntCFWEkP2fT1eXeRrgK3X8ODB8T5aXjEqZMOOw6zCzqa30CJFHuYmFu+iMTPmVWKktc6eQLgAFJknhX6IwnfMhzyrUJcgFy0D0xb0sy7CO8SyCtvleLeh2aj5bmQ5hiTtpcLmALGms6uOJqcPj6NMaxv1r8oXsn1dTxgdeb40hByL4NgOkZm7rfoOkZgnEZsGzciNIZvRWkUW5hmoSkqjd+j3k0EtIRa6pB7aYz+NSeSXMz0RgXV5MO3kF53n3L9lynOQKSunD2iOc3XZFMVIbsyow==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QUux3aZjTvh7MiCitro9ymouCd2ox6kfTzCqd5dDmDU=;
- b=Ullvpb0nXKyfH96o3C4WXeVVXQdDpy+DILUEMrlVYtHRKO9zH7wIwEZcpeunIKB9MWOBMEdYLc1pVJzgn8gEfXRC1N2iXlALfM46LjLG5hXxJM+EnAaqHUiWL3UDjPf5oh3cxSDV32XS742nyQfCVeA6m+HPF3iMCnIJ2g96yRnp1NXeawy+HbVuvZoT6m/hhGV+nGhzZsOzfE5twHw7aAc7jMzAxITK89JY0KhzwOfAZmUkEtbS4LudXLahvJcIsnhE5cUZuKJBDCqeY3bO5L02H7dHIOXyF7P8gZsJWxcsKJEkGRqRzCHGfsH2asEjFaggnBZ749/Bnohbo0ZSlQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=QUux3aZjTvh7MiCitro9ymouCd2ox6kfTzCqd5dDmDU=;
- b=Kp90Awnu/EOtR7NWsA1Fpge2wf+88aZPDs8yjPIWR3RUexd+K+D6Zc4vow7FzS/e8k8LqfARKJYTzi62S8c1f4aWz6NECBAxeoBDRWookpAnzzdJl+tPg+azeAgzI+e/EAPPsFhJX/zgs34h0CtndVbbUjmK45a76a4xSigMwD8=
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com (10.255.236.143) by
- MN2PR18MB2750.namprd18.prod.outlook.com (20.179.22.138) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 6 Nov 2019 08:48:16 +0000
-Received: from MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::4c1d:fb1e:ea9c:6811]) by MN2PR18MB3182.namprd18.prod.outlook.com
- ([fe80::4c1d:fb1e:ea9c:6811%6]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
- 08:48:16 +0000
-From:   Michal Kalderon <mkalderon@marvell.com>
-To:     Pan Bian <bianpan2016@163.com>, Ariel Elior <aelior@marvell.com>,
-        "Doug Ledford" <dledford@redhat.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>
-CC:     "linux-rdma@vger.kernel.org" <linux-rdma@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: [EXT] [PATCH] RDMA/qedr: fix potential use after free
-Thread-Topic: [EXT] [PATCH] RDMA/qedr: fix potential use after free
-Thread-Index: AQHVlGrc8KRGJaR2/USW+t2m4Syntad91POg
-Date:   Wed, 6 Nov 2019 08:48:16 +0000
-Message-ID: <MN2PR18MB3182E3D4E7FD120FA1F6248BA1790@MN2PR18MB3182.namprd18.prod.outlook.com>
-References: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
-In-Reply-To: <1573021434-18768-1-git-send-email-bianpan2016@163.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [199.203.130.254]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: b95c09ae-c6f7-4bf8-3efa-08d76296110c
-x-ms-traffictypediagnostic: MN2PR18MB2750:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB2750A2B289F509029754A332A1790@MN2PR18MB2750.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:569;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(366004)(39860400002)(136003)(376002)(199004)(189003)(74316002)(3846002)(6116002)(476003)(14444005)(305945005)(7696005)(2906002)(256004)(7736002)(71190400001)(71200400001)(4326008)(66066001)(4744005)(99286004)(486006)(102836004)(6506007)(33656002)(54906003)(76176011)(110136005)(316002)(76116006)(52536014)(446003)(26005)(229853002)(55016002)(8676002)(9686003)(6436002)(86362001)(14454004)(66556008)(66946007)(66446008)(64756008)(66476007)(478600001)(25786009)(81166006)(81156014)(6246003)(11346002)(5660300002)(8936002)(186003);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB2750;H:MN2PR18MB3182.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: Nqa+zeIrEenzcYr0dCCGRFb/AfhqC6jX/44nGTsuEh3Tt0rJrOHxG6gw1YmzhEQYhyEbOY/iyX+TZKNiJJ5FCf+bxI3KjYz8ii0g8ezAPByd0J9fs7E0HGxTbtLN7/zaV5v1NSM8Wv6fDi+RLzn0n27wZVfqVxm3yYKCOO9qZ5ElJ4IlXsd6S85doPmF2Ufv/2xxBKKbXQbHiHg3Xt5rVhGbpzsJHpiLARR69gILigFttC8P84BrIqoT6Q7xto4LImlx2We3OLrvhbIpyJ175EJCQw/j4XqwprtishlQLw34c4Nz2tNteVHipmGVG0xTELrs73yRUORgNOdTeU5kJ9snR2qmhhfnwGwkYXIxJf1Gyf1DKlUv3ia7F4t1Ae3ceVwvBlK3yDqfCYjlITi244mJRadVTHRvEKzHo68LUT+lnwb7TVZZ456pBtsm2cKz
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 6 Nov 2019 03:50:22 -0500
+Received: from mail.kernel.org ([198.145.29.99]:52542 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726755AbfKFIuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:50:21 -0500
+Received: from paulmck-ThinkPad-P72.home (unknown [109.144.221.45])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 824C5206A3;
+        Wed,  6 Nov 2019 08:50:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573030220;
+        bh=gSCNYnvybXaFKN/pomF/RlMMre8A0JZrFJwWxYzSl54=;
+        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
+        b=Pm30crSKj1fdy4ElGNGzdoydeJvy5t1WaBx/mKgGXojvqSd+Vn/oaJrTyqPor/us3
+         QddBzYau48K0bi63ExnBJjetNZih2EZEmmJ1K9EMjDes15ZphbIKQB4J15CaZZaJvJ
+         HZS/n8kL+2zLIFVqAijDA+EhcCs1a3vtVKJGBOY4=
+Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
+        id EAEF33520B54; Wed,  6 Nov 2019 00:50:17 -0800 (PST)
+Date:   Wed, 6 Nov 2019 00:50:17 -0800
+From:   "Paul E. McKenney" <paulmck@kernel.org>
+To:     madhuparnabhowmik04@gmail.com
+Cc:     tranmanphong@gmail.com, frextrite@gmail.com,
+        joel@joelfernandes.org, linux-doc@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        linux-kernel-mentees@lists.linuxfoundation.org,
+        skhan@linuxfoundation.org
+Subject: Re: [PATCH 2/2] Documentation: RCU: arrayRCU: Improve format for
+ arrayRCU.rst
+Message-ID: <20191106085017.GX20975@paulmck-ThinkPad-P72>
+Reply-To: paulmck@kernel.org
+References: <20191105212927.13924-1-madhuparnabhowmik04@gmail.com>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: b95c09ae-c6f7-4bf8-3efa-08d76296110c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 08:48:16.4847
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: KRaY2yRu8rk1qZPbagvOO4b2lgt01MkngFz0CthV5mHyVPkxRJ3cFIpwKTy8x2alF1JAce77kqRvy6QLeTt7zw==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB2750
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-06_02:2019-11-05,2019-11-06 signatures=0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191105212927.13924-1-madhuparnabhowmik04@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> From: Pan Bian <bianpan2016@163.com>
-> Sent: Wednesday, November 6, 2019 8:24 AM
->=20
-> External Email
->=20
-> ----------------------------------------------------------------------
-> Move the release operation after error log to avoid possible use after fr=
-ee.
->=20
-> Signed-off-by: Pan Bian <bianpan2016@163.com>
+On Wed, Nov 06, 2019 at 02:59:27AM +0530, madhuparnabhowmik04@gmail.com wrote:
+> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> 
+> This patch adds cross-references and fixes a few formtting issues.
+> 
+> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+
+Hearing no objections, applied to be squashed into this commit:
+
+7e42de651ffd ("Documentation: RCU: arrayRCU: Converted arrayRCU.txt
+to arrayRCU.rst")
+
+And with the addition of Phong's and Amol's Tested-by tags.
+
+							Thanx, Paul
+
 > ---
->  drivers/infiniband/hw/qedr/qedr_iw_cm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-> b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-> index 22881d4442b9..eedc32b72ff2 100644
-> --- a/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-> +++ b/drivers/infiniband/hw/qedr/qedr_iw_cm.c
-> @@ -451,10 +451,10 @@ qedr_addr6_resolve(struct qedr_dev *dev,
->=20
->  	if ((!dst) || dst->error) {
->  		if (dst) {
-> -			dst_release(dst);
->  			DP_ERR(dev,
->  			       "ip6_route_output returned dst->error =3D %d\n",
->  			       dst->error);
-> +			dst_release(dst);
->  		}
->  		return -EINVAL;
->  	}
-> --
-> 2.7.4
-
-Thanks,=A0
-
-Acked-by: Michal Kalderon=A0<michal.kalderon@marvell.com>
-
-
+>  Documentation/RCU/arrayRCU.rst | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
+> diff --git a/Documentation/RCU/arrayRCU.rst b/Documentation/RCU/arrayRCU.rst
+> index ed5ae24b196e..30c007edfbfb 100644
+> --- a/Documentation/RCU/arrayRCU.rst
+> +++ b/Documentation/RCU/arrayRCU.rst
+> @@ -6,16 +6,16 @@ Using RCU to Protect Read-Mostly Arrays
+>  Although RCU is more commonly used to protect linked lists, it can
+>  also be used to protect arrays.  Three situations are as follows:
+>  
+> -1.  Hash Tables
+> +1.  :ref:`Hash Tables <hash_tables>`
+>  
+> -2.  Static Arrays
+> +2.  :ref:`Static Arrays <static_arrays>`
+>  
+> -3.  Resizeable Arrays
+> +3.  :ref:`Resizeable Arrays <resizeable_arrays>`
+>  
+>  Each of these three situations involves an RCU-protected pointer to an
+>  array that is separately indexed.  It might be tempting to consider use
+>  of RCU to instead protect the index into an array, however, this use
+> -case is -not- supported.  The problem with RCU-protected indexes into
+> +case is **not** supported.  The problem with RCU-protected indexes into
+>  arrays is that compilers can play way too many optimization games with
+>  integers, which means that the rules governing handling of these indexes
+>  are far more trouble than they are worth.  If RCU-protected indexes into
+> @@ -26,6 +26,7 @@ to be safely used.
+>  That aside, each of the three RCU-protected pointer situations are
+>  described in the following sections.
+>  
+> +.. _hash_tables:
+>  
+>  Situation 1: Hash Tables
+>  ------------------------
+> @@ -35,6 +36,7 @@ has a linked-list hash chain.  Each hash chain can be protected by RCU
+>  as described in the listRCU.txt document.  This approach also applies
+>  to other array-of-list situations, such as radix trees.
+>  
+> +.. _static_arrays:
+>  
+>  Situation 2: Static Arrays
+>  --------------------------
+> @@ -50,6 +52,8 @@ Quick Quiz:
+>  
+>  :ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
+>  
+> +.. _resizeable_arrays:
+> +
+>  Situation 3: Resizeable Arrays
+>  ------------------------------
+>  
+> @@ -66,7 +70,7 @@ the remainder of the new, updates the ids->entries pointer to point to
+>  the new array, and invokes ipc_rcu_putref() to free up the old array.
+>  Note that rcu_assign_pointer() is used to update the ids->entries pointer,
+>  which includes any memory barriers required on whatever architecture
+> -you are running on.::
+> +you are running on::
+>  
+>  	static int grow_ary(struct ipc_ids* ids, int newsize)
+>  	{
+> @@ -118,7 +122,7 @@ a simple check suffices.  The pointer to the structure corresponding
+>  to the desired IPC object is placed in "out", with NULL indicating
+>  a non-existent entry.  After acquiring "out->lock", the "out->deleted"
+>  flag indicates whether the IPC object is in the process of being
+> -deleted, and, if not, the pointer is returned.::
+> +deleted, and, if not, the pointer is returned::
+>  
+>  	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
+>  	{
+> -- 
+> 2.17.1
+> 
