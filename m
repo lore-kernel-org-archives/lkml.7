@@ -2,283 +2,199 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,
-	USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1156C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:46:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C779C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:47:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C40E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:46:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bMol0jV6"
+	by mail.kernel.org (Postfix) with ESMTP id 55180217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:47:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfKFTqm (ORCPT
+        id S1732221AbfKFTro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:46:42 -0500
-Received: from mail-pf1-f202.google.com ([209.85.210.202]:40036 "EHLO
-        mail-pf1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727319AbfKFTqm (ORCPT
+        Wed, 6 Nov 2019 14:47:44 -0500
+Received: from mout.kundenserver.de ([217.72.192.74]:49881 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728725AbfKFTrn (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:46:42 -0500
-Received: by mail-pf1-f202.google.com with SMTP id h67so10518653pfb.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:46:41 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=XMIoZmq3jzflCx/mOOBG8L+JHVjKdPs5Ze6dku/isc8=;
-        b=bMol0jV6gQMh4E3B2H837bFujfxShKd7aFYex3oQh76AgZHWxQAJxDcki+arj1XaMw
-         zetFAVUTVnvecFKwY/bgQFYe4cUPxHrYu24rdycUO0yj1FKnz3QMTKlLoNMq2eScr1a8
-         OQSRIPY+UiH509bu20sMuySS8jRDCXTV54fQNGPaoZ/YhnfFEY1zSrfjLMLe2dxIu71C
-         9LawlybmZsw4CEFKGzTFHPMUYKEg0gXzNSK6IXV9JmGL/uat3VsL2ybIduQZx3HP1RNH
-         Lc71aKXI0TG0SNFTR8shGe5xf3PSIyZanQjwOGyE8OLjLNCHaezVnfJARiXRPkBsv/YS
-         6hQg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=XMIoZmq3jzflCx/mOOBG8L+JHVjKdPs5Ze6dku/isc8=;
-        b=g0qted7FEjCdLYVLTciOvrQhDj7gJn8Oerk26w0HrEDs/J5/XSz7Tzu439lw2o0PFa
-         1/z8q8DWgEQ0sjQ6NePh7k8D9NBgdkmRxttlbU5wUvJgQHfMAaUdo4nwTIS9Wx0E0hWn
-         LWDn4xh1oGEDUp8Z81vxV7U1seFCmcXbr9S8J4jmjSFuMPMJOAWZyxXEaimsxBO+MA9A
-         pXMoJohCIq3IBBNU2o0XVJWxPc6Ch1ddMaMMJ/dL1BjJdlw5XVl7SPg8vQ+aTrYjJxjV
-         ZZ69JIE0eX9gJOchCCfA8SpOTrCiHKK7vATu+hBHeywnl0ZaVGa784V96C10WX7ys0Vm
-         5dgg==
-X-Gm-Message-State: APjAAAXlgcIxujLT8jtjUIeY1g51SRrliDMMfiWyHHxlCLH0JpOXnggg
-        hEmfU9sl2YUe5cC9XCmyG7ALRQJ1CR+/
-X-Google-Smtp-Source: APXvYqwt4qM5R0zDv+lGCi4SZzw6mIxaprwzDEWcuzztj6HRSd5IOz1TMwpaUdYlD5mkkc7cZfXJTWmyTUOd
-X-Received: by 2002:a63:a05c:: with SMTP id u28mr5138858pgn.333.1573069600951;
- Wed, 06 Nov 2019 11:46:40 -0800 (PST)
-Date:   Wed,  6 Nov 2019 11:46:25 -0800
-Message-Id: <20191106194625.116692-1-smuckle@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-Subject: [PATCH] rtc: class: support hctosys from modular RTC drivers
-From:   Steve Muckle <smuckle@google.com>
-To:     Alessandro Zummo <a.zummo@towertech.it>,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org,
-        kernel-team@android.com, Steve Muckle <smuckle@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 6 Nov 2019 14:47:43 -0500
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MFbeC-1iiNih1jlm-00HBBW; Wed, 06 Nov 2019 20:47:29 +0100
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     linux-media@vger.kernel.org, linux-kernel@vger.kernel.org,
+        y2038@lists.linaro.org,
+        Boris Brezillon <boris.brezillon@collabora.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Tiffany Lin <tiffany.lin@mediatek.com>,
+        Daniel Mentz <danielmentz@google.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 7/8] media: v4l2-core: fix compat VIDIOC_DQEVENT for time64 ABI
+Date:   Wed,  6 Nov 2019 20:47:14 +0100
+Message-Id: <20191106194715.2238044-8-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20191106194715.2238044-1-arnd@arndb.de>
+References: <20191106194715.2238044-1-arnd@arndb.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:qf8MvFpIAOKyu9qPsIzcqWc1FIBAR+EwQnWxqMS7s4sjndSLP9M
+ JhdkZJSu/v8JyrjcjCMLogIrES4kA5sLj5Yo8MRnzjGfvAM9cddJJKwPlICjBorpRV+ZmvA
+ UDh0wdT00NIpt7hTey7e43qQA/ouupbH/tGVrY2f7c+Z1ZzyMSeUZYw/xta+3AhQEqPGeN4
+ OmzX+a0fMe+kChwLAmGkw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:qUzYAIJVjqk=:Nf2OyloFW8J5+zPjfLzyZj
+ 61I3SyqXJtsMgH+6B48LF/5xpbpsQYgspADWjlO/kQ2KMKKRclw6HHfwHf3DRnPL7dbbI7kwO
+ xR+80YAaLLkjUwhXg/VYj3li5Tq9p02BDka8j5npfcjr/Pyth6sSVtP/vBScDKnyXPOQUnRQE
+ Kp0ZOAPzVJAq1Oy/S81PLszB2G8tFSNHcZ8sMK0YNlU3apIIzNbQrMxaIMv1PiwDRWZKzDWGr
+ Cts2kckHbrirLFkMPrn9rzDMNvDIpvobMH7utL1A0+R3AaSpIMuI24PyvSeUlm/ZNXd5PsNzY
+ 598WB5ZEM1Gb0+ua4kyfzEh5q6anud8rpGfaK1fomD81v0q552kxdexLdUOcL0ZA/o8Ni4nUz
+ dRlLa56Ob2z1AoZSXAJkCdTisfv4/gc+fCExZYVejw2hqBcWQeZTw3Lt1pFyhihmswIE5f7Sc
+ Zy42wtHD1HCrCGw2E55C0VaBNUhcT/dsX7h4nu3cmhn0Y/fkOi3kpdST99TSUYJvHfK5O2Dtx
+ k4qkDkpZh28vIqXVT6OYlN2tJn+yMVFhT2nKUm6NT5T0xUsf4vp9Zozsill79kqHf8TfoeR5c
+ 9TfQ3y7hKJJ309W4z/H9nQ916V6UVmmCvtrzitlI9lB9EzCcPxn1kHc0L2EFU3qdmbs5XzdDR
+ Yv1aZ6+tYKBwDQ8C6sxCFThCa9qYSmEHu7rRCjjlXEFCh6snbJrRRzGq/QJVHlvnXQQOKklMQ
+ mHWakzFHrh8rEfjQkQGjWJsgvMOLIuCVnC2ZeaB08FqyH4Thyn0B/F2l6HMze1WzbL8ZMyucj
+ DeLAvJUgRitDvbNQiESqASD5BDwRR/lu/0TdsE+eaa3G85Dr/EuovzglkFafLS9oSgcOSCuuk
+ IqKwmK3Hc74J5kMsqpmA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Due to distribution constraints it may not be possible to statically
-compile the required RTC driver into the kernel.
+The native code supports the variant of struct v4l2_event for 64-bit
+time_t, so add the compat version as well.
 
-Expand RTC_HCTOSYS support to cover all RTC devices (statically compiled
-or not) by checking at the end of RTC device registration whether the
-time should be synced.
+Here, a new incompatibility arises: while almost all 32-bit architectures
+now use the same layout as 64-bit architectures and the commands can
+simply be passed through, on x86 the internal alignment of v4l2_event
+is different because of the 64-bit member in v4l2_event_ctrl.
 
-Signed-off-by: Steve Muckle <smuckle@google.com>
+To handle all architectures, this now requires defining four different
+versions of the structure to cover all possible combinations. The compat
+handling for VIDIOC_DQEVENT32 and VIDIOC_DQEVENT32_TIME32 is now inside
+of an #ifdef so it does not get used on architectures other than x86.
+
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/rtc/Kconfig   | 18 ++++++-----
- drivers/rtc/Makefile  |  1 -
- drivers/rtc/class.c   | 63 +++++++++++++++++++++++++++++++++++++++
- drivers/rtc/hctosys.c | 69 -------------------------------------------
- 4 files changed, 73 insertions(+), 78 deletions(-)
- delete mode 100644 drivers/rtc/hctosys.c
+ drivers/media/v4l2-core/v4l2-compat-ioctl32.c | 57 ++++++++++++++++++-
+ 1 file changed, 56 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 1adf9f815652..f663d77deb41 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -35,14 +35,16 @@ config RTC_HCTOSYS_DEVICE
- 	depends on RTC_HCTOSYS
- 	default "rtc0"
- 	help
--	  The RTC device that will be used to (re)initialize the system
--	  clock, usually rtc0. Initialization is done when the system
--	  starts up, and when it resumes from a low power state. This
--	  device should record time in UTC, since the kernel won't do
--	  timezone correction.
--
--	  The driver for this RTC device must be loaded before late_initcall
--	  functions run, so it must usually be statically linked.
-+	  The RTC device that will be used to (re)initialize the system clock,
-+	  usually rtc0. Initialization is done when the driver for the RTC
-+	  device registers, and when it resumes from a low power state. This
-+	  device should record time in UTC, since the kernel won't do timezone
-+	  correction.
-+
-+	  During startup it is useful to initialize the system clock from the
-+	  RTC as early as possible. For this reason the driver for this RTC
-+	  device should be statically linked, or alternately, the kernel module
-+	  for the RTC device driver loaded immediately.
- 
- 	  This clock should be battery-backed, so that it reads the correct
- 	  time when the system boots from a power-off state. Otherwise, your
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index 4ac8f19fb631..33f932d08262 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -6,7 +6,6 @@
- ccflags-$(CONFIG_RTC_DEBUG)	:= -DDEBUG
- 
- obj-$(CONFIG_RTC_LIB)		+= lib.o
--obj-$(CONFIG_RTC_HCTOSYS)	+= hctosys.o
- obj-$(CONFIG_RTC_SYSTOHC)	+= systohc.o
- obj-$(CONFIG_RTC_CLASS)		+= rtc-core.o
- obj-$(CONFIG_RTC_MC146818_LIB)	+= rtc-mc146818-lib.o
-diff --git a/drivers/rtc/class.c b/drivers/rtc/class.c
-index 9458e6d6686a..b1ed5f3be223 100644
---- a/drivers/rtc/class.c
-+++ b/drivers/rtc/class.c
-@@ -34,6 +34,64 @@ static void rtc_device_release(struct device *dev)
- #ifdef CONFIG_RTC_HCTOSYS_DEVICE
- /* Result of the last RTC to system clock attempt. */
- int rtc_hctosys_ret = -ENODEV;
-+
-+/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
-+ * whether it stores the most close value or the value with partial
-+ * seconds truncated. However, it is important that we use it to store
-+ * the truncated value. This is because otherwise it is necessary,
-+ * in an rtc sync function, to read both xtime.tv_sec and
-+ * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
-+ * of >32bits is not possible. So storing the most close value would
-+ * slow down the sync API. So here we have the truncated value and
-+ * the best guess is to add 0.5s.
-+ */
-+
-+static int rtc_hctosys(void)
-+{
-+	int err = -ENODEV;
-+	struct rtc_time tm;
-+	struct timespec64 tv64 = {
-+		.tv_nsec = NSEC_PER_SEC >> 1,
-+	};
-+	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
-+
-+	if (!rtc) {
-+		pr_info("unable to open rtc device (%s)\n",
-+			CONFIG_RTC_HCTOSYS_DEVICE);
-+		goto err_open;
-+	}
-+
-+	err = rtc_read_time(rtc, &tm);
-+	if (err) {
-+		dev_err(rtc->dev.parent,
-+			"hctosys: unable to read the hardware clock\n");
-+		goto err_read;
-+	}
-+
-+	tv64.tv_sec = rtc_tm_to_time64(&tm);
-+
-+#if BITS_PER_LONG == 32
-+	if (tv64.tv_sec > INT_MAX) {
-+		err = -ERANGE;
-+		goto err_read;
-+	}
-+#endif
-+
-+	err = do_settimeofday64(&tv64);
-+
-+	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
-+		 &tm, (long long)tv64.tv_sec);
-+
-+err_read:
-+	rtc_class_close(rtc);
-+
-+err_open:
-+	rtc_hctosys_ret = err;
-+
-+	return err;
-+}
-+
-+
- #endif
- 
- #if defined(CONFIG_PM_SLEEP) && defined(CONFIG_RTC_HCTOSYS_DEVICE)
-@@ -375,6 +433,11 @@ int __rtc_register_device(struct module *owner, struct rtc_device *rtc)
- 	dev_info(rtc->dev.parent, "registered as %s\n",
- 		 dev_name(&rtc->dev));
- 
-+#ifdef CONFIG_RTC_HCTOSYS_DEVICE
-+	if (!strcmp(dev_name(&rtc->dev), CONFIG_RTC_HCTOSYS_DEVICE))
-+		rtc_hctosys();
-+#endif
-+
+diff --git a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+index 7ad6db8dd9f6..aa4bc63dc261 100644
+--- a/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
++++ b/drivers/media/v4l2-core/v4l2-compat-ioctl32.c
+@@ -1028,7 +1028,29 @@ static int put_v4l2_ext_controls32(struct file *file,
  	return 0;
  }
- EXPORT_SYMBOL_GPL(__rtc_register_device);
-diff --git a/drivers/rtc/hctosys.c b/drivers/rtc/hctosys.c
-deleted file mode 100644
-index a74d0d890600..000000000000
---- a/drivers/rtc/hctosys.c
-+++ /dev/null
-@@ -1,69 +0,0 @@
--// SPDX-License-Identifier: GPL-2.0
--/*
-- * RTC subsystem, initialize system time on startup
-- *
-- * Copyright (C) 2005 Tower Technologies
-- * Author: Alessandro Zummo <a.zummo@towertech.it>
-- */
--
--#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
--
--#include <linux/rtc.h>
--
--/* IMPORTANT: the RTC only stores whole seconds. It is arbitrary
-- * whether it stores the most close value or the value with partial
-- * seconds truncated. However, it is important that we use it to store
-- * the truncated value. This is because otherwise it is necessary,
-- * in an rtc sync function, to read both xtime.tv_sec and
-- * xtime.tv_nsec. On some processors (i.e. ARM), an atomic read
-- * of >32bits is not possible. So storing the most close value would
-- * slow down the sync API. So here we have the truncated value and
-- * the best guess is to add 0.5s.
-- */
--
--static int __init rtc_hctosys(void)
--{
--	int err = -ENODEV;
--	struct rtc_time tm;
--	struct timespec64 tv64 = {
--		.tv_nsec = NSEC_PER_SEC >> 1,
--	};
--	struct rtc_device *rtc = rtc_class_open(CONFIG_RTC_HCTOSYS_DEVICE);
--
--	if (!rtc) {
--		pr_info("unable to open rtc device (%s)\n",
--			CONFIG_RTC_HCTOSYS_DEVICE);
--		goto err_open;
--	}
--
--	err = rtc_read_time(rtc, &tm);
--	if (err) {
--		dev_err(rtc->dev.parent,
--			"hctosys: unable to read the hardware clock\n");
--		goto err_read;
--	}
--
--	tv64.tv_sec = rtc_tm_to_time64(&tm);
--
--#if BITS_PER_LONG == 32
--	if (tv64.tv_sec > INT_MAX) {
--		err = -ERANGE;
--		goto err_read;
--	}
--#endif
--
--	err = do_settimeofday64(&tv64);
--
--	dev_info(rtc->dev.parent, "setting system clock to %ptR UTC (%lld)\n",
--		 &tm, (long long)tv64.tv_sec);
--
--err_read:
--	rtc_class_close(rtc);
--
--err_open:
--	rtc_hctosys_ret = err;
--
--	return err;
--}
--
--late_initcall(rtc_hctosys);
+ 
++#ifdef CONFIG_X86_64
++/*
++ * x86 is the only compat architecture with different struct alignment
++ * between 32-bit and 64-bit tasks.
++ *
++ * On all other architectures, v4l2_event32 and v4l2_event32_time32 are
++ * the same as v4l2_event and v4l2_event_time32, so we can use the native
++ * handlers, converting v4l2_event to v4l2_event_time32 if necessary.
++ */
+ struct v4l2_event32 {
++	__u32				type;
++	union {
++		compat_s64		value64;
++		__u8			data[64];
++	} u;
++	__u32				pending;
++	__u32				sequence;
++	struct __kernel_timespec	timestamp;
++	__u32				id;
++	__u32				reserved[8];
++};
++
++struct v4l2_event32_time32 {
+ 	__u32				type;
+ 	union {
+ 		compat_s64		value64;
+@@ -1057,6 +1079,23 @@ static int put_v4l2_event32(struct v4l2_event __user *p64,
+ 	return 0;
+ }
+ 
++static int put_v4l2_event32_time32(struct v4l2_event_time32 __user *p64,
++				   struct v4l2_event32_time32 __user *p32)
++{
++	if (!access_ok(p32, sizeof(*p32)) ||
++	    assign_in_user(&p32->type, &p64->type) ||
++	    copy_in_user(&p32->u, &p64->u, sizeof(p64->u)) ||
++	    assign_in_user(&p32->pending, &p64->pending) ||
++	    assign_in_user(&p32->sequence, &p64->sequence) ||
++	    assign_in_user(&p32->timestamp.tv_sec, &p64->timestamp.tv_sec) ||
++	    assign_in_user(&p32->timestamp.tv_nsec, &p64->timestamp.tv_nsec) ||
++	    assign_in_user(&p32->id, &p64->id) ||
++	    copy_in_user(p32->reserved, p64->reserved, sizeof(p32->reserved)))
++		return -EFAULT;
++	return 0;
++}
++#endif
++
+ struct v4l2_edid32 {
+ 	__u32 pad;
+ 	__u32 start_block;
+@@ -1121,6 +1160,7 @@ static int put_v4l2_edid32(struct v4l2_edid __user *p64,
+ #define VIDIOC_S_EXT_CTRLS32    _IOWR('V', 72, struct v4l2_ext_controls32)
+ #define VIDIOC_TRY_EXT_CTRLS32  _IOWR('V', 73, struct v4l2_ext_controls32)
+ #define	VIDIOC_DQEVENT32	_IOR ('V', 89, struct v4l2_event32)
++#define	VIDIOC_DQEVENT32_TIME32	_IOR ('V', 89, struct v4l2_event32_time32)
+ #define VIDIOC_CREATE_BUFS32	_IOWR('V', 92, struct v4l2_create_buffers32)
+ #define VIDIOC_PREPARE_BUF32	_IOWR('V', 93, struct v4l2_buffer32)
+ 
+@@ -1202,7 +1242,10 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 	case VIDIOC_G_EXT_CTRLS32: ncmd = VIDIOC_G_EXT_CTRLS; break;
+ 	case VIDIOC_S_EXT_CTRLS32: ncmd = VIDIOC_S_EXT_CTRLS; break;
+ 	case VIDIOC_TRY_EXT_CTRLS32: ncmd = VIDIOC_TRY_EXT_CTRLS; break;
+-	case VIDIOC_DQEVENT32: ncmd = VIDIOC_DQEVENT; break;
++#ifdef CONFIG_X86_64
++	case VIDIOC_DQEVENT32: cmd = VIDIOC_DQEVENT; break;
++	case VIDIOC_DQEVENT32_TIME32: cmd = VIDIOC_DQEVENT_TIME32; break;
++#endif
+ 	case VIDIOC_OVERLAY32: ncmd = VIDIOC_OVERLAY; break;
+ 	case VIDIOC_STREAMON32: ncmd = VIDIOC_STREAMON; break;
+ 	case VIDIOC_STREAMOFF32: ncmd = VIDIOC_STREAMOFF; break;
+@@ -1336,10 +1379,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 		}
+ 		compatible_arg = 0;
+ 		break;
++#ifdef CONFIG_X86_64
+ 	case VIDIOC_DQEVENT32:
+ 		err = alloc_userspace(sizeof(struct v4l2_event), 0, &new_p64);
+ 		compatible_arg = 0;
+ 		break;
++	case VIDIOC_DQEVENT32_TIME32:
++		err = alloc_userspace(sizeof(struct v4l2_event_time32), 0, &new_p64);
++		compatible_arg = 0;
++		break;
++#endif
+ 	}
+ 	if (err)
+ 		return err;
+@@ -1404,10 +1453,16 @@ static long do_video_ioctl(struct file *file, unsigned int cmd, unsigned long ar
+ 		err = put_v4l2_framebuffer32(new_p64, p32);
+ 		break;
+ 
++#ifdef CONFIG_X86_64
+ 	case VIDIOC_DQEVENT32:
+ 		err = put_v4l2_event32(new_p64, p32);
+ 		break;
+ 
++	case VIDIOC_DQEVENT32_TIME32:
++		err = put_v4l2_event32_time32(new_p64, p32);
++		break;
++#endif
++
+ 	case VIDIOC_G_EDID32:
+ 		err = put_v4l2_edid32(new_p64, p32);
+ 		break;
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+2.20.0
 
