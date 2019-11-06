@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38BF9C5DF68
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7A4FC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 011B7214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 77E23214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:02:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="IYQfPpBx"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="HsFPoEXQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732275AbfKFTB1 (ORCPT
+        id S1732538AbfKFTB7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:01:27 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:36128 "EHLO
+        Wed, 6 Nov 2019 14:01:59 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:36170 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732215AbfKFTB1 (ORCPT
+        with ESMTP id S1732259AbfKFTB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:01:27 -0500
+        Wed, 6 Nov 2019 14:01:28 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id 7E2A82010C18;
-        Wed,  6 Nov 2019 11:01:26 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 7E2A82010C18
+        by linux.microsoft.com (Postfix) with ESMTPSA id 4EDA020B4906;
+        Wed,  6 Nov 2019 11:01:27 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 4EDA020B4906
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573066886;
-        bh=fjc1SDZ6eAyerupfns9th1oRdeR4c1j0/l98r7qhoWI=;
+        s=default; t=1573066887;
+        bh=n1NP0EUOPt57DXoMwVasH/v3zddNJcqY0C3hlBcerBA=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=IYQfPpBxfFCmXMbhSh7x03hOIBgGLnV2WV8Bb94KUj/gJab9+0p32BILkWBdNZscL
-         u44Maavjs7FLkS3j7zTfE0wnqbT15F5seP9GmE7MnDZPfbb3fIRGOFN0tOQU9OgS/N
-         JMsRdnR1UP3OdLm5I6Rz2OrlUbZKGLHKpB3k0DEc=
+        b=HsFPoEXQcPIUDqX9bZ6aRXalWlW33QNp6m4uPNRI8qfX2Nk2pc4RFV/riaoCL0OV+
+         t54Kgxzd/ZVPMYvy6ZOMrr3IbfpiY/7+JpDIUqo17y9UFDPQ7awv8BeAUvA5ENngxX
+         2ZgXtkqAT2MPOIcw5xSl6tWlZfFFcRlYHweAiOmE=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com,
         matthewgarrett@google.com, sashal@kernel.org,
         jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 01/10] IMA: Defined an IMA hook to measure keys on key create or update
-Date:   Wed,  6 Nov 2019 11:01:07 -0800
-Message-Id: <20191106190116.2578-2-nramas@linux.microsoft.com>
+Subject: [PATCH v4 06/10] IMA: Measure key if the IMA policy allows measurement for the keyring to which the key is linked to
+Date:   Wed,  6 Nov 2019 11:01:12 -0800
+Message-Id: <20191106190116.2578-7-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106190116.2578-1-nramas@linux.microsoft.com>
 References: <20191106190116.2578-1-nramas@linux.microsoft.com>
@@ -51,44 +51,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Asymmetric keys used for verifying file signatures or certificates
-are currently not included in the IMA measurement list.
+process_buffer_measurement() needs to check if the keyring to which
+the given key is linked to is listed in the keyrings option in
+the IMA policy.
 
-This patch defines a new IMA hook namely ima_post_key_create_or_update()
-to measure asymmetric keys.
+This patch adds a new parameter "keyring" to process_buffer_measurement().
+
+If process_buffer_measurement() is called with func KEYRING_CHECK and
+the name of the keyring to which the key is linked to, then the given
+key is measured if:
+  1, IMA policy did not specify "keyrings=" option.
+  2, Or, the given keyring name is listed in the "keyrings=" option.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- security/integrity/ima/ima_main.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ security/integrity/ima/ima.h          |  2 +-
+ security/integrity/ima/ima_appraise.c |  2 +-
+ security/integrity/ima/ima_main.c     | 26 ++++++++++++++++++++++++--
+ 3 files changed, 26 insertions(+), 4 deletions(-)
 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index 387829afb9a2..f15199f7ff2a 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -221,7 +221,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+ 			   struct ima_template_desc *template_desc);
+ void process_buffer_measurement(const void *buf, int size,
+ 				const char *eventname, enum ima_hooks func,
+-				int pcr);
++				int pcr, const char *keyring);
+ void ima_audit_measurement(struct integrity_iint_cache *iint,
+ 			   const unsigned char *filename);
+ int ima_alloc_init_template(struct ima_event_data *event_data,
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+index 47ad4f56c0a8..a9649b04b9f1 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -330,7 +330,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
+ 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
+ 			process_buffer_measurement(digest, digestsize,
+ 						   "blacklisted-hash", NONE,
+-						   pcr);
++						   pcr, NULL);
+ 	}
+ 
+ 	return rc;
 diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index d7e987baf127..a0e233afe876 100644
+index b6d17f37ba61..56540357c854 100644
 --- a/security/integrity/ima/ima_main.c
 +++ b/security/integrity/ima/ima_main.c
-@@ -721,6 +721,22 @@ void ima_kexec_cmdline(const void *buf, int size)
- 					   KEXEC_CMDLINE, 0);
+@@ -632,12 +632,22 @@ int ima_load_data(enum kernel_load_data_id id)
+  * @eventname: event name to be used for the buffer entry.
+  * @func: IMA hook
+  * @pcr: pcr to extend the measurement
++ * @keyring: keyring for the measurement
++ *
++ *	The following scenarios are possible with respect to
++ *	the parameter "keyring":
++ *	1, keyring is NULL. In this case buffer is measured.
++ *	2, keyring is not NULL, but ima_get_action returned
++ *	   a NULL keyrings. In this case also the buffer is measured.
++ *	3, keyring is not NULL and ima_get_action returned
++ *	   a non-NULL keyrings. In this case measure the buffer
++ *	   only if the given keyring is present in the keyrings.
+  *
+  * Based on policy, the buffer is measured into the ima log.
+  */
+ void process_buffer_measurement(const void *buf, int size,
+ 				const char *eventname, enum ima_hooks func,
+-				int pcr)
++				int pcr, const char *keyring)
+ {
+ 	int ret = 0;
+ 	struct ima_template_entry *entry = NULL;
+@@ -656,6 +666,13 @@ void process_buffer_measurement(const void *buf, int size,
+ 	int action = 0;
+ 	u32 secid;
+ 
++	/*
++	 * If IMA is not yet initialized or IMA policy is empty
++	 * then there is no need to measure.
++	 */
++	if (!ima_policy_flag)
++		return;
++
+ 	/*
+ 	 * Both LSM hooks and auxilary based buffer measurements are
+ 	 * based on policy.  To avoid code duplication, differentiate
+@@ -671,6 +688,11 @@ void process_buffer_measurement(const void *buf, int size,
+ 			return;
+ 	}
+ 
++	if ((keyring != NULL) && (keyrings != NULL)
++	    && (strstr(keyrings, keyring) == NULL)) {
++		return;
++	}
++
+ 	if (!pcr)
+ 		pcr = CONFIG_IMA_MEASURE_PCR_IDX;
+ 
+@@ -719,7 +741,7 @@ void ima_kexec_cmdline(const void *buf, int size)
+ {
+ 	if (buf && size != 0)
+ 		process_buffer_measurement(buf, size, "kexec-cmdline",
+-					   KEXEC_CMDLINE, 0);
++					   KEXEC_CMDLINE, 0, NULL);
  }
  
-+/**
-+ * ima_post_key_create_or_update - measure asymmetric keys
-+ * @keyring: keyring to which the key is linked to
-+ * @key: created or updated key
-+ * @flags: key flags
-+ * @create: flag indicating whether the key was created or updated
-+ *
-+ * Keys can only be measured, not appraised.
-+ */
-+void ima_post_key_create_or_update(struct key *keyring, struct key *key,
-+				   unsigned long flags, bool create)
-+{
-+	if ((keyring != NULL) && (key != NULL))
-+		return;
-+}
-+
- static int __init init_ima(void)
- {
- 	int error;
+ /**
 -- 
 2.17.1
 
