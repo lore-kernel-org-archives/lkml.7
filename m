@@ -2,136 +2,163 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.7 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2AB2C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:55:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 526D4C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:56:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7633217F9
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:55:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="eZkTw2Mj"
+	by mail.kernel.org (Postfix) with ESMTP id 2D85420869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:56:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731861AbfKFSzJ (ORCPT
+        id S1731897AbfKFS40 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:55:09 -0500
-Received: from mout.web.de ([212.227.17.12]:43155 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727208AbfKFSzJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:55:09 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1573066502;
-        bh=yNR2i8yBHWbuPKdgETmn2ieMsq+ALmq+WPWZ9/wiV1c=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=eZkTw2MjsZdYC7Lx4hz6sW3DZNhn2qOzsIFyBhXj7i1ITIG0UAjapwK2Xo42kvNpb
-         KIXxJJIl0NEmfLAz7KJcAvqwCusQVBzeqNoCdusBxqsBNqRa9uRqO18UFympjTooPP
-         StCS6BBt4ZRV9Wfqi0FeEoO2EgeOaalUAsvN/ulI=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.2] ([78.49.91.235]) by smtp.web.de (mrweb103
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0MdLo7-1iA4G522gV-00IQqp; Wed, 06
- Nov 2019 19:55:02 +0100
-Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-To:     Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Cc:     =?UTF-8?Q?Christian_Borntr=c3=a4ger?= <borntraeger@de.ibm.com>,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <0f90b278-7b3e-6509-1633-301d16513c5d@web.de>
- <47c55ab899aafe10898e6581582363aa446b2091.camel@perches.com>
-From:   Markus Elfring <Markus.Elfring@web.de>
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- mQINBFg2+xABEADBJW2hoUoFXVFWTeKbqqif8VjszdMkriilx90WB5c0ddWQX14h6w5bT/A8
- +v43YoGpDNyhgA0w9CEhuwfZrE91GocMtjLO67TAc2i2nxMc/FJRDI0OemO4VJ9RwID6ltwt
- mpVJgXGKkNJ1ey+QOXouzlErVvE2fRh+KXXN1Q7fSmTJlAW9XJYHS3BDHb0uRpymRSX3O+E2
- lA87C7R8qAigPDZi6Z7UmwIA83ZMKXQ5stA0lhPyYgQcM7fh7V4ZYhnR0I5/qkUoxKpqaYLp
- YHBczVP+Zx/zHOM0KQphOMbU7X3c1pmMruoe6ti9uZzqZSLsF+NKXFEPBS665tQr66HJvZvY
- GMDlntZFAZ6xQvCC1r3MGoxEC1tuEa24vPCC9RZ9wk2sY5Csbva0WwYv3WKRZZBv8eIhGMxs
- rcpeGShRFyZ/0BYO53wZAPV1pEhGLLxd8eLN/nEWjJE0ejakPC1H/mt5F+yQBJAzz9JzbToU
- 5jKLu0SugNI18MspJut8AiA1M44CIWrNHXvWsQ+nnBKHDHHYZu7MoXlOmB32ndsfPthR3GSv
- jN7YD4Ad724H8fhRijmC1+RpuSce7w2JLj5cYj4MlccmNb8YUxsE8brY2WkXQYS8Ivse39MX
- BE66MQN0r5DQ6oqgoJ4gHIVBUv/ZwgcmUNS5gQkNCFA0dWXznQARAQABtCZNYXJrdXMgRWxm
- cmluZyA8TWFya3VzLkVsZnJpbmdAd2ViLmRlPokCVAQTAQgAPhYhBHDP0hzibeXjwQ/ITuU9
- Figxg9azBQJYNvsQAhsjBQkJZgGABQsJCAcCBhUICQoLAgQWAgMBAh4BAheAAAoJEOU9Figx
- g9azcyMP/iVihZkZ4VyH3/wlV3nRiXvSreqg+pGPI3c8J6DjP9zvz7QHN35zWM++1yNek7Ar
- OVXwuKBo18ASlYzZPTFJZwQQdkZSV+atwIzG3US50ZZ4p7VyUuDuQQVVqFlaf6qZOkwHSnk+
- CeGxlDz1POSHY17VbJG2CzPuqMfgBtqIU1dODFLpFq4oIAwEOG6fxRa59qbsTLXxyw+PzRaR
- LIjVOit28raM83Efk07JKow8URb4u1n7k9RGAcnsM5/WMLRbDYjWTx0lJ2WO9zYwPgRykhn2
- sOyJVXk9xVESGTwEPbTtfHM+4x0n0gC6GzfTMvwvZ9G6xoM0S4/+lgbaaa9t5tT/PrsvJiob
- kfqDrPbmSwr2G5mHnSM9M7B+w8odjmQFOwAjfcxoVIHxC4Cl/GAAKsX3KNKTspCHR0Yag78w
- i8duH/eEd4tB8twcqCi3aCgWoIrhjNS0myusmuA89kAWFFW5z26qNCOefovCx8drdMXQfMYv
- g5lRk821ZCNBosfRUvcMXoY6lTwHLIDrEfkJQtjxfdTlWQdwr0mM5ye7vd83AManSQwutgpI
- q+wE8CNY2VN9xAlE7OhcmWXlnAw3MJLW863SXdGlnkA3N+U4BoKQSIToGuXARQ14IMNvfeKX
- NphLPpUUnUNdfxAHu/S3tPTc/E/oePbHo794dnEm57LuuQINBFg2+xABEADZg/T+4o5qj4cw
- nd0G5pFy7ACxk28mSrLuva9tyzqPgRZ2bdPiwNXJUvBg1es2u81urekeUvGvnERB/TKekp25
- 4wU3I2lEhIXj5NVdLc6eU5czZQs4YEZbu1U5iqhhZmKhlLrhLlZv2whLOXRlLwi4jAzXIZAu
- 76mT813jbczl2dwxFxcT8XRzk9+dwzNTdOg75683uinMgskiiul+dzd6sumdOhRZR7YBT+xC
- wzfykOgBKnzfFscMwKR0iuHNB+VdEnZw80XGZi4N1ku81DHxmo2HG3icg7CwO1ih2jx8ik0r
- riIyMhJrTXgR1hF6kQnX7p2mXe6K0s8tQFK0ZZmYpZuGYYsV05OvU8yqrRVL/GYvy4Xgplm3
- DuMuC7/A9/BfmxZVEPAS1gW6QQ8vSO4zf60zREKoSNYeiv+tURM2KOEj8tCMZN3k3sNASfoG
- fMvTvOjT0yzMbJsI1jwLwy5uA2JVdSLoWzBD8awZ2X/eCU9YDZeGuWmxzIHvkuMj8FfX8cK/
- 2m437UA877eqmcgiEy/3B7XeHUipOL83gjfq4ETzVmxVswkVvZvR6j2blQVr+MhCZPq83Ota
- xNB7QptPxJuNRZ49gtT6uQkyGI+2daXqkj/Mot5tKxNKtM1Vbr/3b+AEMA7qLz7QjhgGJcie
- qp4b0gELjY1Oe9dBAXMiDwARAQABiQI8BBgBCAAmFiEEcM/SHOJt5ePBD8hO5T0WKDGD1rMF
- Alg2+xACGwwFCQlmAYAACgkQ5T0WKDGD1rOYSw/+P6fYSZjTJDAl9XNfXRjRRyJSfaw6N1pA
- Ahuu0MIa3djFRuFCrAHUaaFZf5V2iW5xhGnrhDwE1Ksf7tlstSne/G0a+Ef7vhUyeTn6U/0m
- +/BrsCsBUXhqeNuraGUtaleatQijXfuemUwgB+mE3B0SobE601XLo6MYIhPh8MG32MKO5kOY
- hB5jzyor7WoN3ETVNQoGgMzPVWIRElwpcXr+yGoTLAOpG7nkAUBBj9n9TPpSdt/npfok9ZfL
- /Q+ranrxb2Cy4tvOPxeVfR58XveX85ICrW9VHPVq9sJf/a24bMm6+qEg1V/G7u/AM3fM8U2m
- tdrTqOrfxklZ7beppGKzC1/WLrcr072vrdiN0icyOHQlfWmaPv0pUnW3AwtiMYngT96BevfA
- qlwaymjPTvH+cTXScnbydfOQW8220JQwykUe+sHRZfAF5TS2YCkQvsyf7vIpSqo/ttDk4+xc
- Z/wsLiWTgKlih2QYULvW61XU+mWsK8+ZlYUrRMpkauN4CJ5yTpvp+Orcz5KixHQmc5tbkLWf
- x0n1QFc1xxJhbzN+r9djSGGN/5IBDfUqSANC8cWzHpWaHmSuU3JSAMB/N+yQjIad2ztTckZY
- pwT6oxng29LzZspTYUEzMz3wK2jQHw+U66qBFk8whA7B2uAU1QdGyPgahLYSOa4XAEGb6wbI FEE=
-Message-ID: <cba4068c-0d63-fc0a-44bb-2664b690f126@web.de>
-Date:   Wed, 6 Nov 2019 19:55:00 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 6 Nov 2019 13:56:26 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5739 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727208AbfKFS4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 13:56:25 -0500
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id B9BAA58BFBDC6172BC23;
+        Thu,  7 Nov 2019 02:56:23 +0800 (CST)
+Received: from A190218597.china.huawei.com (10.202.226.45) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 7 Nov 2019 02:56:14 +0800
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     <davem@davemloft.net>, <maz@kernel.org>
+CC:     <edumazet@google.com>, <salil.mehta@huawei.com>,
+        <yisen.zhuang@huawei.com>, <lipeng321@huawei.com>,
+        <mehta.salil@opnsrc.net>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
+Subject: [PATCH net] net: hns: Fix the stray netpoll locks causing deadlock in NAPI path
+Date:   Wed, 6 Nov 2019 18:54:05 +0000
+Message-ID: <20191106185405.23112-1-salil.mehta@huawei.com>
+X-Mailer: git-send-email 2.8.3
 MIME-Version: 1.0
-In-Reply-To: <47c55ab899aafe10898e6581582363aa446b2091.camel@perches.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-X-Provags-ID: V03:K1:BjFNn5fqIyoVjEG+NH7voclOi4kz6Pj6vKE+XVVg/TN9u2QCR+g
- QW0xuV6dTodkZvp2oKDpKYoU4YtRPLXuqQFDk3wyNjqETk63FFlfSofwbUjAy/CLDFqF50f
- UlLTSTyUnZ63ddwwc3CvJnzjNR+NMZuB7NROEB0riPvzVVKa9A6vnEYSXYAghnxVS5a34N7
- u5xIf2zBmvPEWkwA+4b6A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xFgSMHn3x/U=:SWKE0t1hVHozTAw7gKZF68
- jzQ0emQku1B4HJx+cFlap6C07b+1aG/OjmCdQ91k4VqLOtNsTMIq3TjOj6O1O2EEq7oXCSRXH
- 324Sw5KKMsSZAXLyzkXewlKJrmthofX7cSGAX5j9MgFnIQ36kPa/m9Jpl6khCsNv6N++KLPdU
- /WntRWYF3332N+LFDuGVZJ+0F3m3XjnGWnlMoQ8wpwqCeL0QM9ITenNb/pQ/CiXIS+HguLRTi
- igKZWdKCuRkCPo4BecWC3S5TLnuLnulaDkYlmAfu4XJ/lHBqU+2wHyXEKRz74kZHBO+tYfc6s
- VUjcDtX0R+e8T4doqRilD6cINJoLtZWFcRbexcBU7a6e8piUnGK/RrN4TZlw+n5a1ODAT/8/T
- SrYpjaIgg5uHHMIsfSbvbwDif2HZc9kWxiZYBnXM1POZD5cUSjHljkGB6hhxxcwn9wmyM7Y7V
- intRD/wP7q2HCDiHXS1lPrYwAfQZoae0lBRBod8vdp2XhLyQtGcbQw3TbJ1X+LFs0BQCQs740
- puNzo16dP8NEso9drbCYNAPnZRc0+5D/v1VgWUmnaxz/Rb+4qC02fCsJX3MOQq2ZogOuPq6IP
- /4UQBEbhO1PFOsdH8aNJejfjMFhpvYETTpFSoWZZ4VLCImiC3stKzKyO0Ae8FoYHj1jGaXgft
- j45t++ulZEM4Y6+118oolQaYneEH8kjGYfC1PwVW7Yehz1q8e9ibh65wN8ktsqptmThb2ioCU
- MZJKLIEn7hWj51WE+0xXN6x4GxnmGXOGMwWCjBvlnEsRIJECw6ZkWb7NvrgL4idm01EcXsmld
- aAVLMKxLx19Ng710O1LPI16/r9XqhqdfM7Y4B/pE07zBOJGLoCLjKgZ7vkLASr783v5hru1JR
- AoJ6JiXndbJICVAl5NlGHscd5/KChZWsiQSFm/j2Ei+fnNJel2el02kisKqql1JRiXgPTwop5
- hdAJuIxVmZVCkAOtTTrqChA1Hzlqvpl1EHdqElun6aUONMsgnWbi4lK4ghBWcO2vq8G80L4lI
- ePtqMqjrABPb38+a3c3TYwzXV7N3ocaOLrPlAgj8K3rGxsLYMZqg4PRe44kCLxZ8fmVGvd2pG
- l13crS4X6xI8HbnoqSXxnhwdPWEJcOb3gngwpSk30Supn+fg48qfrwbrhixwLkDa51WCKhY+c
- yjKKuN7qe8X044uXoxXnnxw6pojJ7dMBxWzcWXN45ye2T6Y4ZRnRaIXyxF/ssVAddtIFCTFg3
- cQfM4pUPB3gH2CIuw6pdWQxp/uvI8i0Vy8s+LJqH8Qz2Vf17aLyEknZWA0qQ=
+Content-Type: text/plain
+X-Originating-IP: [10.202.226.45]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> There is no bug here.
+This patch fixes the problem of the spin locks, originally
+meant for the netpoll path of hns driver, causing deadlock in
+the normal NAPI poll path. The issue happened due presence of
+the stray leftover spin lock code related to the netpoll,
+whose support was earlier removed from the HNS[1], got activated
+due to enabling of NET_POLL_CONTROLLER switch.
 
-Do you find duplicated source code questionable?
+Earlier background:
+The netpoll handling code originally had this bug(as identified
+by Marc Zyngier[2]) of wrong spin lock API being used which did
+not disable the interrupts and hence could cause locking issues.
+i.e. if the lock were first acquired in context to thread like
+'ip' util and this lock if ever got later acquired again in
+context to the interrupt context like TX/RX (Interrupts could
+always pre-empt the lock holding task and acquire the lock again)
+and hence could cause deadlock.
 
-Is this also an error item?
+Proposed Solution:
+1. If the netpoll was enabled in the HNS driver, which is not
+   right now, we could have simply used spin_[un]lock_irqsave()
+2. But as netpoll is disabled, therefore, it is best to get rid
+   of the existing locks and stray code for now. This should
+   solve the problem reported by Marc.
 
-Regards,
-Markus
+@Marc,
+Could you please test this patch and confirm if the problem is
+fixed at your end?
+
+Many Thanks
+
+[1] https://git.kernel.org/torvalds/c/4bd2c03be7
+[2] https://patchwork.ozlabs.org/patch/1189139/
+
+Fixes: 4bd2c03be707 ("net: hns: remove ndo_poll_controller")
+Cc: lipeng <lipeng321@huawei.com>
+Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: David S. Miller <davem@davemloft.net>
+Reported-by: Marc Zyngier <maz@kernel.org>
+Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
+---
+ drivers/net/ethernet/hisilicon/hns/hns_enet.c | 22 +------------------
+ 1 file changed, 1 insertion(+), 21 deletions(-)
+
+diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+index a48396dd4ebb..14ab20491fd0 100644
+--- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
++++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
+@@ -943,15 +943,6 @@ static int is_valid_clean_head(struct hnae_ring *ring, int h)
+ 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
+ }
+ 
+-/* netif_tx_lock will turn down the performance, set only when necessary */
+-#ifdef CONFIG_NET_POLL_CONTROLLER
+-#define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
+-#define NETIF_TX_UNLOCK(ring) spin_unlock(&(ring)->lock)
+-#else
+-#define NETIF_TX_LOCK(ring)
+-#define NETIF_TX_UNLOCK(ring)
+-#endif
+-
+ /* reclaim all desc in one budget
+  * return error or number of desc left
+  */
+@@ -965,21 +956,16 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
+ 	int head;
+ 	int bytes, pkts;
+ 
+-	NETIF_TX_LOCK(ring);
+-
+ 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
+ 	rmb(); /* make sure head is ready before touch any data */
+ 
+-	if (is_ring_empty(ring) || head == ring->next_to_clean) {
+-		NETIF_TX_UNLOCK(ring);
++	if (is_ring_empty(ring) || head == ring->next_to_clean)
+ 		return 0; /* no data to poll */
+-	}
+ 
+ 	if (!is_valid_clean_head(ring, head)) {
+ 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
+ 			   ring->next_to_use, ring->next_to_clean);
+ 		ring->stats.io_err_cnt++;
+-		NETIF_TX_UNLOCK(ring);
+ 		return -EIO;
+ 	}
+ 
+@@ -994,8 +980,6 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
+ 	ring->stats.tx_pkts += pkts;
+ 	ring->stats.tx_bytes += bytes;
+ 
+-	NETIF_TX_UNLOCK(ring);
+-
+ 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
+ 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
+ 
+@@ -1055,16 +1039,12 @@ static void hns_nic_tx_clr_all_bufs(struct hns_nic_ring_data *ring_data)
+ 	int head;
+ 	int bytes, pkts;
+ 
+-	NETIF_TX_LOCK(ring);
+-
+ 	head = ring->next_to_use; /* ntu :soft setted ring position*/
+ 	bytes = 0;
+ 	pkts = 0;
+ 	while (head != ring->next_to_clean)
+ 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
+ 
+-	NETIF_TX_UNLOCK(ring);
+-
+ 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
+ 	netdev_tx_reset_queue(dev_queue);
+ }
+-- 
+2.17.1
+
+
