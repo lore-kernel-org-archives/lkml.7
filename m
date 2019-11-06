@@ -2,98 +2,101 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F521C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82087C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BE01217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55B6A217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:20:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LFsGgP0B"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="BOKMWt3F";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="IKT6wkNt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732451AbfKFST7 (ORCPT
+        id S1732494AbfKFSU1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:19:59 -0500
-Received: from mail-io1-f68.google.com ([209.85.166.68]:46394 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728798AbfKFST6 (ORCPT
+        Wed, 6 Nov 2019 13:20:27 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:51328 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728798AbfKFSU1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:19:58 -0500
-Received: by mail-io1-f68.google.com with SMTP id c6so27988809ioo.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 10:19:57 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=eJKRqW4UvaqMAOnNpXsdjszI/drzmMv8UZ9GHtHpvWw=;
-        b=LFsGgP0B6fgRwfJ2GnQXlpWI9IU0ebBBFM4TMgwo9SQ3z3Nh+sofKkCT7or6p/qmnk
-         tQ9JfjRd1n0iUIRhjchZ+N0BgE7EExFsxdbElUM+TGgd2kAdNtPOQaVkuqkHWUTAlv+/
-         xERx/BC/2u8BlUzSnaySZnATW3+QNWWFfEw36TT9orP+xZ3S6gGSwnXXCJI4x0IkNWHn
-         kH4hC6wPgRrpLWYoykyTt/1K2EXZL/S4JXICIb/5+LP4Vy5ieqPNGksFi+TwtD0HzzWo
-         RZJweFxB2Gq6IMlEc81biuLbPYygNV3dH54jt60DlzTl0ZQFQPy2H2XBg9ufBEaOm+jy
-         rSGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=eJKRqW4UvaqMAOnNpXsdjszI/drzmMv8UZ9GHtHpvWw=;
-        b=KHKeix2Q5CziyuRzSpzcrvFh5T/Al1yeqbU510mruu9bl09pwn6HzPP8ajsC7xNleK
-         YH3D/aInJyAJkj8dEDknGUqd9niI0pZj4RSlHyu6paVVj68YR+uD4isX4gdwpx/0ELJz
-         hFIW4m4pxvvhk+zqVEAn4FezVQsbm2NELeL8CS+sIXMeN7wVpDtlz/sFe/b8AHqlpieI
-         30XNIhg9VL+DJLBO9g/IAu+vtUZufJwnoB/8Wcss12SEnSIhGGM95JyNvIWfZzwqejCh
-         Uf9HR1kMJCpq5wYIqlR1MjIL2yFYqPQGi7IboSgAwVs0g/JQ97shG7jM7n9pLnAbEiCo
-         bykA==
-X-Gm-Message-State: APjAAAVn/UTdJ3f0ze7CnuP6NoF5qp8mKz8OahWoqYWLLFypKyS/ru+j
-        lqAN6Q8Xrdj6nP1y+Ff6wc47yxhze7fSDRxPKzKqfzS1
-X-Google-Smtp-Source: APXvYqzpqB2ggiuwN8InaSw7KuMU8cA/CXHsY95+WpEZ5VymHj85BN3zcNEpqgb9AZKDrsx1u0CAUOUK9YVoxiXC3/Q=
-X-Received: by 2002:a5d:8953:: with SMTP id b19mr278484iot.168.1573064396804;
- Wed, 06 Nov 2019 10:19:56 -0800 (PST)
+        Wed, 6 Nov 2019 13:20:27 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 09A036090E; Wed,  6 Nov 2019 18:20:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573064426;
+        bh=5ypWavDEVtsHt7SQ/MbY2KLvgfwcyST2KUyItV5eUyw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=BOKMWt3F9UIqUcQwNg2qE01VXlHm1tMR9AT1pKPy03j991Uv10/AeaH8uHmAsE36N
+         PBihNoiay4HFor4Pgrt2bSi8xuNY7NEhLx3sH2rg5ZelCsb1dRFMusi9GDhLZETJUv
+         5v8hJDbhCBKGtIGBrJJYUpk2hKpcjwaVhpEM3DWU=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 233F26016D;
+        Wed,  6 Nov 2019 18:20:22 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573064425;
+        bh=5ypWavDEVtsHt7SQ/MbY2KLvgfwcyST2KUyItV5eUyw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=IKT6wkNtnrE1Co/LI8pZlL2D5sNj3PxXYp8Bk1UNk6tW14XNze+qEZMIAIpyiJjPD
+         Rtip5KKp5zp8E+2SzG7Ui6S/uMckr5g8MwQBAPY97arb9ReMTCFMdZTpSM7b04Ochu
+         3afxhsWXpzHM8lies5w+KdfpwIKSpcf2f/MfhL/8=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 233F26016D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Wed, 6 Nov 2019 11:20:21 -0700
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Rajendra Nayak <rnayak@codeaurora.org>
+Cc:     agross@kernel.org, robh+dt@kernel.org, bjorn.andersson@linaro.org,
+        linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, mka@chromium.org,
+        swboyd@chromium.org, Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v4 07/14] drivers: irqchip: qcom-pdc: Move to an SoC
+ independent compatible
+Message-ID: <20191106182021.GF16900@codeaurora.org>
+References: <20191106065017.22144-1-rnayak@codeaurora.org>
+ <20191106065017.22144-8-rnayak@codeaurora.org>
 MIME-Version: 1.0
-References: <20191106174804.74723-1-edumazet@google.com> <alpine.DEB.2.21.1911061908070.1869@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1911061908070.1869@nanos.tec.linutronix.de>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 6 Nov 2019 10:19:44 -0800
-Message-ID: <CANn89iK12QGBagUiNr+j-ToawJ9J1behtySyL9vLattYPAD-7w@mail.gmail.com>
-Subject: Re: [PATCH] hrtimer: Annotate lockless access to timer->state
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux-kernel <linux-kernel@vger.kernel.org>,
-        Eric Dumazet <eric.dumazet@gmail.com>,
-        syzbot <syzkaller@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20191106065017.22144-8-rnayak@codeaurora.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 10:09 AM Thomas Gleixner <tglx@linutronix.de> wrote:
+On Wed, Nov 06 2019 at 23:52 -0700, Rajendra Nayak wrote:
+>Remove the sdm845 SoC specific compatible to make the driver
+>easily reusable across other SoC's with the same IP block.
+>This will reduce further churn adding any SoC specific
+>compatibles unless really needed.
 >
-> On Wed, 6 Nov 2019, Eric Dumazet wrote:
-> > @@ -1013,8 +1013,9 @@ static void __remove_hrtimer(struct hrtimer *timer,
-> >  static inline int
-> >  remove_hrtimer(struct hrtimer *timer, struct hrtimer_clock_base *base, bool restart)
-> >  {
-> > -     if (hrtimer_is_queued(timer)) {
-> > -             u8 state = timer->state;
-> > +     u8 state = timer->state;
->
-> Shouldn't that be a read once then at least for consistency sake?
+>Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+>Cc: Lina Iyer <ilina@codeaurora.org>
+>Cc: Marc Zyngier <maz@kernel.org>
+Reviewed-by: Lina Iyer <ilina@codeaurora.org>
 
-We own the lock here, this is not really needed ?
-
-Note they are other timer->state reads I chose to leave unchanged.
-
-But no big deal if you prefer I can add a READ_ONCE()
-
-Thanks.
+>---
+> drivers/irqchip/qcom-pdc.c | 2 +-
+> 1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> > +
-> > +     if (state & HRTIMER_STATE_ENQUEUED) {
-> >               int reprogram;
+>diff --git a/drivers/irqchip/qcom-pdc.c b/drivers/irqchip/qcom-pdc.c
+>index faa7d61b9d6c..c175333bb646 100644
+>--- a/drivers/irqchip/qcom-pdc.c
+>+++ b/drivers/irqchip/qcom-pdviewed-by: Lina Iyer <ilina@codeaurora.org>
+>@@ -309,4 +309,4 @@ static int qcom_pdc_init(struct device_node *node, struct device_node *parent)
+> 	return ret;
+> }
 >
-> Thanks,
+>-IRQCHIP_DECLARE(pdc_sdm845, "qcom,sdm845-pdc", qcom_pdc_init);
+>+IRQCHIP_DECLARE(qcom_pdc, "qcom,pdc", qcom_pdc_init);
+>--
+>QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+>of Code Aurora Forum, hosted by The Linux Foundation
 >
->         tglx
