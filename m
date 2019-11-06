@@ -2,189 +2,158 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3A03C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:31:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 340EBC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB21D2173B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:31:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C142173B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:32:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="uNP1KXd/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731349AbfKFIbE (ORCPT
+        id S1731370AbfKFIc3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:31:04 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:17392 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1730069AbfKFIbE (ORCPT
+        Wed, 6 Nov 2019 03:32:29 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:41973 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729951AbfKFIc3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:31:04 -0500
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA68NJbV051277
-        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 03:31:02 -0500
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w3r8hvqgb-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 03:30:18 -0500
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Wed, 6 Nov 2019 08:29:16 -0000
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 6 Nov 2019 08:29:11 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA68TAGF52428926
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 6 Nov 2019 08:29:10 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 959C642042;
-        Wed,  6 Nov 2019 08:29:10 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 44BAD42045;
-        Wed,  6 Nov 2019 08:29:10 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed,  6 Nov 2019 08:29:10 +0000 (GMT)
-Subject: Re: [PATCH 1/2] KVM: Fix NULL-ptr defer after kvm_create_vm fails
-To:     Wanpeng Li <kernellwp@gmail.com>, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     Paolo Bonzini <pbonzini@redhat.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>
-References: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- syiRa+UVlsKmx1hsEg==
-Date:   Wed, 6 Nov 2019 09:29:09 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 03:32:29 -0500
+Received: by mail-lj1-f195.google.com with SMTP id m9so25023824ljh.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 00:32:28 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=UfU4NeD6tWwvbn+OCuUBpeKGLeW4/SjBIuSOjEeExYc=;
+        b=uNP1KXd/gAPRLd0Eazn3Zf4B0u8fajPWtMoC9BhRbuQx6jrzvJIGhOKHc48SewNhIg
+         +p0aF/NYvyVmb9Z2R71vkEHF+YP0R5eZ0oKTyc1Bx7MGXTDlPXmwXkxAVfv6hyVibwXE
+         vNwWUTMz2t1bgLmyV/Iu7TrlvZx7KiiyUBdkDw0OLrjxmeBEUJkNmTCw4xdEZ/19a4Gp
+         8BiZlp/7mn4WkmyiVuD0czhy6lzDAWn4qXJEjXvSwfFb5k1x+r04X1H7OWziYK3NzUxh
+         +4XXa41XBfE4RfdqcRhV+r6tugdU/FQh9l6Gr8VqABhaCV2HpqHS9E4YuaI9kPs8b0Ma
+         crTQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=UfU4NeD6tWwvbn+OCuUBpeKGLeW4/SjBIuSOjEeExYc=;
+        b=fVnxC6yFcf+g989+jgQlQY4pLuGBevwrVxKn90t1souZiS4WiYIbL7nutmJb7zW58f
+         yUafhvLj8r2iOb4zLcgmcvdIGG++0yt0rSMdBYDJmcwWkl4rGPA/cCVmKchTgxqJ7w2N
+         IqR5ZCo8GXFqesQs2RXS+g4VUINLmGk9LVEiddBbqzOYPk/6Jgnj/4KTL1taXyjoBOo0
+         7lTPL+qrDAOG5T1hOT8XBkV4Gf6tLb6cIMey+QE86SeP4v9PAMchzct2lRKGHQ7wNTS9
+         zK7OVBcntUXt9TG1EDf1oVEDAHmCJPTdURtL3WsLhcS+IGWFgCDadkkns6Xk7MzT/abQ
+         ErOA==
+X-Gm-Message-State: APjAAAX1Rv7pTNbIWH2SzvCytlZBOSrFQD3daG5JBEz5LYBXy5TrPKC9
+        cS6ZRVr2UfBZm1IWJ1wODEsIYk31Hapxq3ddZ4eBIg==
+X-Google-Smtp-Source: APXvYqyUjaV0HLLoLBDZjU01SCdwFqenALueMpCsP0M5G1ItAp8nKWFv5O/8RqXbxvrD1P9/GlN7mNy08s4jH85/gCY=
+X-Received: by 2002:a2e:b053:: with SMTP id d19mr1001036ljl.36.1573029147514;
+ Wed, 06 Nov 2019 00:32:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <1572848879-21011-1-git-send-email-wanpengli@tencent.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110608-0028-0000-0000-000003B321E7
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110608-0029-0000-0000-000024757CB0
-Message-Id: <98cdd241-e252-82c6-dc25-a7bc1988ad13@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=951 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1908290000 definitions=main-1911060088
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org> <1572979786-20361-4-git-send-email-thara.gopinath@linaro.org>
+In-Reply-To: <1572979786-20361-4-git-send-email-thara.gopinath@linaro.org>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 6 Nov 2019 09:32:16 +0100
+Message-ID: <CAKfTPtBrOdiN+wBfy-1cHr65d48-cBZc3LS7Jt_65Ptssb0Gpg@mail.gmail.com>
+Subject: Re: [Patch v5 3/6] sched/fair: Enable periodic update of average
+ thermal pressure
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ionela Voinescu <ionela.voinescu@arm.com>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Quentin Perret <qperret@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Amit Kachhap <amit.kachhap@gmail.com>,
+        Javi Merino <javi.merino@kernel.org>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 04.11.19 07:27, Wanpeng Li wrote:
-> From: Wanpeng Li <wanpengli@tencent.com>
-> 
-> Reported by syzkaller:
-> 
->     kasan: CONFIG_KASAN_INLINE enabled
->     kasan: GPF could be caused by NULL-ptr deref or user memory access
->     general protection fault: 0000 [#1] PREEMPT SMP KASAN
->     CPU: 0 PID: 14727 Comm: syz-executor.3 Not tainted 5.4.0-rc4+ #0
->     RIP: 0010:kvm_coalesced_mmio_init+0x5d/0x110 arch/x86/kvm/../../../virt/kvm/coalesced_mmio.c:121
->     Call Trace:
->      kvm_dev_ioctl_create_vm arch/x86/kvm/../../../virt/kvm/kvm_main.c:3446 [inline]
->      kvm_dev_ioctl+0x781/0x1490 arch/x86/kvm/../../../virt/kvm/kvm_main.c:3494
->      vfs_ioctl fs/ioctl.c:46 [inline]
->      file_ioctl fs/ioctl.c:509 [inline]
->      do_vfs_ioctl+0x196/0x1150 fs/ioctl.c:696
->      ksys_ioctl+0x62/0x90 fs/ioctl.c:713
->      __do_sys_ioctl fs/ioctl.c:720 [inline]
->      __se_sys_ioctl fs/ioctl.c:718 [inline]
->      __x64_sys_ioctl+0x6e/0xb0 fs/ioctl.c:718
->      do_syscall_64+0xca/0x5d0 arch/x86/entry/common.c:290
->      entry_SYSCALL_64_after_hwframe+0x49/0xbe
-> 
-> Commit 9121923c457d ("kvm: Allocate memslots and buses before calling kvm_arch_init_vm") 
-> moves memslots and buses allocations around, however, if kvm->srcu/irq_srcu fails 
-> initialization, NULL will be returned instead of error code, NULL will not be intercepted 
-> in kvm_dev_ioctl_create_vm() and be deferenced by kvm_coalesced_mmio_init(), this patch 
-> fixes it.
-> 
-> syz repro: https://syzkaller.appspot.com/x/repro.syz?x=13509b84e00000
-> 
-> Reported-by: syzbot+89a8060879fa0bd2db4f@syzkaller.appspotmail.com
-> Fixes: 9121923c457d ("kvm: Allocate memslots and buses before calling kvm_arch_init_vm") 
-> Cc: Jim Mattson <jmattson@google.com>
-> Signed-off-by: Wanpeng Li <wanpengli@tencent.com>
-
-Acked-by: Christian Borntraeger <borntraeger@de.ibm.com>
-
+On Tue, 5 Nov 2019 at 19:49, Thara Gopinath <thara.gopinath@linaro.org> wrote:
+>
+> Introduce support in CFS periodic tick and other bookkeeping apis
+> to trigger the process of computing average thermal pressure for a
+> cpu. Also consider avg_thermal.load_avg in others_have_blocked
+> which allows for decay of pelt signals.
+>
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
 > ---
->  virt/kvm/kvm_main.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-> index d6f0696..8c272eb 100644
-> --- a/virt/kvm/kvm_main.c
-> +++ b/virt/kvm/kvm_main.c
-> @@ -675,6 +675,7 @@ static struct kvm *kvm_create_vm(unsigned long type)
->  	INIT_HLIST_HEAD(&kvm->irq_ack_notifier_list);
->  #endif
-> 
-> +	r = -ENOMEM;
->  	if (init_srcu_struct(&kvm->srcu))
->  		goto out_err_no_srcu;
->  	if (init_srcu_struct(&kvm->irq_srcu))
-> 
+>
+> v4->v5:
+>         - Updated both versions of update_blocked_averages to trigger the
+>           process of computing average thermal pressure.
+>         - Updated others_have_blocked to considerd avg_thermal.load_avg.
+>
+>  kernel/sched/fair.c | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 2e907cc..9fb0494 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -92,6 +92,8 @@ const_debug unsigned int sysctl_sched_migration_cost  = 500000UL;
+>   */
+>  static DEFINE_PER_CPU(unsigned long, thermal_pressure);
+>
+> +static void trigger_thermal_pressure_average(struct rq *rq);
+> +
+>  #ifdef CONFIG_SMP
+>  /*
+>   * For asym packing, by default the lower numbered CPU has higher priority.
+> @@ -7493,6 +7495,9 @@ static inline bool others_have_blocked(struct rq *rq)
+>         if (READ_ONCE(rq->avg_dl.util_avg))
+>                 return true;
+>
+> +       if (READ_ONCE(rq->avg_thermal.load_avg))
+> +               return true;
+> +
+>  #ifdef CONFIG_HAVE_SCHED_AVG_IRQ
+>         if (READ_ONCE(rq->avg_irq.util_avg))
+>                 return true;
+> @@ -7580,6 +7585,8 @@ static void update_blocked_averages(int cpu)
+>                 done = false;
+>
+>         update_blocked_load_status(rq, !done);
+> +
+> +       trigger_thermal_pressure_average(rq);
 
+This must be called before others_have_blocked() to take into account
+the latest update
+
+>         rq_unlock_irqrestore(rq, &rf);
+>  }
+>
+> @@ -7646,6 +7653,7 @@ static inline void update_blocked_averages(int cpu)
+>         update_dl_rq_load_avg(rq_clock_pelt(rq), rq, curr_class == &dl_sched_class);
+>         update_irq_load_avg(rq, 0);
+>         update_blocked_load_status(rq, cfs_rq_has_blocked(cfs_rq) || others_have_blocked(rq));
+> +       trigger_thermal_pressure_average(rq);
+
+idem
+
+>         rq_unlock_irqrestore(rq, &rf);
+>  }
+>
+> @@ -9939,6 +9947,8 @@ static void task_tick_fair(struct rq *rq, struct task_struct *curr, int queued)
+>
+>         update_misfit_status(curr, rq);
+>         update_overutilized_status(task_rq(curr));
+> +
+
+remove blank line
+
+> +       trigger_thermal_pressure_average(rq);
+>  }
+>
+>  /*
+> --
+> 2.1.4
+>
