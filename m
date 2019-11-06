@@ -2,99 +2,103 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0D89FC6195
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:59:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C4632FC6195
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:05:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 897FB217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:59:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90ACA217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:05:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iEu6GhMW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dTcraDs9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728382AbfKFW7t (ORCPT
+        id S1727792AbfKFXFR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:59:49 -0500
-Received: from mail-il1-f194.google.com ([209.85.166.194]:46600 "EHLO
-        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfKFW7t (ORCPT
+        Wed, 6 Nov 2019 18:05:17 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:41750 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727196AbfKFXFR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:59:49 -0500
-Received: by mail-il1-f194.google.com with SMTP id m16so23235713iln.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 14:59:48 -0800 (PST)
+        Wed, 6 Nov 2019 18:05:17 -0500
+Received: by mail-pf1-f195.google.com with SMTP id p26so308684pfq.8;
+        Wed, 06 Nov 2019 15:05:17 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=nHPMaxlZf+iGhM1WM76319OcCFkWQEtpxYutU0G9cJw=;
-        b=iEu6GhMWKGPqDdROZouQTym9Q9mYeBlBHPK+wMf5Jjgyv8+GM3AcDGzbrL384Bdlj0
-         42T8rNPK9zoNw8E1ls5Xp+9k2TClXGVOjNIm5NKUAPb+Qr172nOOfK2nE2Qn4kVqQ+cQ
-         tTuJJP0khcgz4UIaZoYhgubAp2yRU+79WvUPTtKKIWe5TLE+t3aEGLnulUnR3soGkBzj
-         huWb6mpQvbQK+Ax3gR3ThIR4y+tDj3u9RvYCPNO9cVM+YNlNgf1YcBlRIc3exBuIuG6A
-         0ovL27GT7hJ0xPeEgwkgPva+XONkIK7uzqwCRPHMoNayG12B8zH3TnKF+5uHNEhfSIZT
-         7vSw==
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=95XhoZugvCbJ1xJolEFAVKQ1p0Gkg/QHi8Sw4Nb9JUU=;
+        b=dTcraDs9Cb9V7yUZrxzBw+VAgi/PsrVEU8E5WlU733RfVD9WLAayJRB69vEzq6BE+Z
+         xLXywT9D2BG6cP9vYfYYiWat8mQvCZn8P15evlPrxot12RtuyWsHPU6aaXXzIVBCHa8E
+         jyzfLFkqkFqfKzrDJ51Hrc6DsJ14P8XQX/f0Ztf17XPh01Ny3Ik3HauOvK13denp7VSW
+         dhSXcvUkVIIGZE62T6NPRGvy/Pe2383eEcn0te7Hye9KRghq0NuSfu3mnZjoslRv3CYT
+         ebKadQx8Abn0snAlgk8LSDxrv05I14XjqD7sIwsbl02AJxks0NGaMJ6b2r/iMcLBbicp
+         myWA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=nHPMaxlZf+iGhM1WM76319OcCFkWQEtpxYutU0G9cJw=;
-        b=d6GHWW8QgrQ7Ubh9jy0pHv1NxEzOZgsSQeVl1DVqzQqZEVzGophfypWQ7eN1mknLMI
-         GhHvzGFNmNQNhCt7LF/aTlxCwD9RmHePBb8IHkO7MswMXmbzuH3BawWx48ocz1oijDoK
-         Lu3yEZNfvUn+t3ONORWde/EVd8vH09Y3ZzRGzT6VDpIi+M/lfPM/x/dew/aTxe+r1Lyv
-         rLtdLGNOtl76iZHuaAVjqa/IBfSGXtEIaRAt1hwAuySmcRvBtVz5S02mzxYdpKu5zz31
-         TBijQAC0gw90psiOtJmDa5xwnsG08jUTWNf+7PD2j/6vn9+yUejJvB3dw/1b93p6vVS/
-         Uctw==
-X-Gm-Message-State: APjAAAVPrwo6qkDrYC+1Oum9z1E+8agA/qxVdwwTFhLzJUST9FWyDt35
-        6bHdgTik7ZFRujs0m6OolpbeIveMN+eYd5Ab0FgzNjKo+dw=
-X-Google-Smtp-Source: APXvYqwRlkwl+v6Wp7sQEggmeJvHEXOHwciMoehv4q2IiT26uzaSaja/7l372WrN9H5SZ6Cg0wK3AS/BitbRtuaosIQ=
-X-Received: by 2002:a92:7e0d:: with SMTP id z13mr353370ilc.168.1573081187621;
- Wed, 06 Nov 2019 14:59:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20191106174804.74723-1-edumazet@google.com> <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
- <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
-In-Reply-To: <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Wed, 6 Nov 2019 14:59:36 -0800
-Message-ID: <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
-Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
-To:     LKML <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@kernel.org>
-Cc:     linux-tip-commits@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=95XhoZugvCbJ1xJolEFAVKQ1p0Gkg/QHi8Sw4Nb9JUU=;
+        b=Gcs9AtydITfNLz5MQJeQAzt7qq8frgFP+aJGmN39sqGhoO7YHB/ZpUDO/veQWlP80b
+         6ccIkYM7UBo40QoNiPVMwUwdnmKlgGYAo5jAOM3uEQl1/jupF24GY5dwUO1ZhrudD9dj
+         RWj2qmnedxoGVbXRduCB0GK2g4rLPszUTDZVLM17QQP1ciXgQpOMdBT3f+h9IY7asYdB
+         kAmBzjb61gW8f2QEPVslMC9Z9BT9swhOO5Njocct/Hv8M/uOVCUJly0U3uIMyy1ryoxN
+         wHW62BxxdpHKJc3d296UvVDejKzaBKbN/Lqv1Erw2V0BAGSb+0d5VKB4o5Ov1+VaKwaR
+         +R/w==
+X-Gm-Message-State: APjAAAXdVteTati7qHM9rTw3m/Cku/RNr0pMrP8FduVy9NirLAXwDYA7
+        goY0ZEsBnECytKm+NVdVYYJ0pDX3
+X-Google-Smtp-Source: APXvYqzjYfFmI0edQS67xESS7kJS4iOvGQYKfMtAXlXcpvSh2qO1c4rP7GEG2AhINNY9FH7h81JNRA==
+X-Received: by 2002:a63:ed4a:: with SMTP id m10mr391126pgk.255.1573081516638;
+        Wed, 06 Nov 2019 15:05:16 -0800 (PST)
+Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
+        by smtp.gmail.com with ESMTPSA id 70sm32538pfw.160.2019.11.06.15.05.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 15:05:16 -0800 (PST)
+From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+To:     agross@kernel.org, bjorn.andersson@linaro.org
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+Subject: [PATCH] soc: qcom: qmi: Return EPROBE_DEFER if no address family
+Date:   Wed,  6 Nov 2019 15:05:11 -0800
+Message-Id: <20191106230511.1290-1-jeffrey.l.hugo@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 2:53 PM Eric Dumazet <edumazet@google.com> wrote:
->
-> On Wed, Nov 6, 2019 at 2:24 PM tip-bot2 for Eric Dumazet
-> <tip-bot2@linutronix.de> wrote:
-> >
-> > The following commit has been merged into the timers/core branch of tip:
-> >
-> > Commit-ID:     56144737e67329c9aaed15f942d46a6302e2e3d8
-> > Gitweb:        https://git.kernel.org/tip/56144737e67329c9aaed15f942d46a6302e2e3d8
-> > Author:        Eric Dumazet <edumazet@google.com>
-> > AuthorDate:    Wed, 06 Nov 2019 09:48:04 -08:00
-> > Committer:     Thomas Gleixner <tglx@linutronix.de>
-> > CommitterDate: Wed, 06 Nov 2019 23:18:31 +01:00
-> >
-> > hrtimer: Annotate lockless access to timer->state
-> >
->
-> I guess we also need to fix timer_pending(), since timer->entry.pprev
-> could change while we read it.
->
+If a client comes up early in the boot process (perhaps was a built-in
+driver), qmi_handle_init() will likely fail with a EAFNOSUPPORT since the
+underlying ipc router hasn't init'd and registered the address family.
+This should not be a fatal error since chances are, the router will come
+up later, so recode the error to EPROBE_DEFER so that clients will retry
+later.
 
-It is interesting seeing hlist_add_head() has a WRITE_ONCE(h->first, n);,
-but no WRITE_ONCE() for the pprev change.
+Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
+---
+ drivers/soc/qcom/qmi_interface.c | 8 ++++++--
+ 1 file changed, 6 insertions(+), 2 deletions(-)
 
-The WRITE_ONCE() was added in commit 1c97be677f72b3c338312aecd36d8fff20322f32
-("list: Use WRITE_ONCE() when adding to lists and hlists")
+diff --git a/drivers/soc/qcom/qmi_interface.c b/drivers/soc/qcom/qmi_interface.c
+index f9e309f0acd3..1a03eaa38c46 100644
+--- a/drivers/soc/qcom/qmi_interface.c
++++ b/drivers/soc/qcom/qmi_interface.c
+@@ -655,8 +655,12 @@ int qmi_handle_init(struct qmi_handle *qmi, size_t recv_buf_size,
+ 
+ 	qmi->sock = qmi_sock_create(qmi, &qmi->sq);
+ 	if (IS_ERR(qmi->sock)) {
+-		pr_err("failed to create QMI socket\n");
+-		ret = PTR_ERR(qmi->sock);
++		if (PTR_ERR(qmi->sock) == -EAFNOSUPPORT) {
++			ret = -EPROBE_DEFER;
++		} else {
++			pr_err("failed to create QMI socket\n");
++			ret = PTR_ERR(qmi->sock);
++		}
+ 		goto err_destroy_wq;
+ 	}
+ 
+-- 
+2.17.1
+
