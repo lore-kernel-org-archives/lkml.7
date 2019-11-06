@@ -8,55 +8,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AD7E3C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B801C5DF68
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D697217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0CE1217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:36:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QytuGrv5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ith+FyjY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732281AbfKFTgi (ORCPT
+        id S1732215AbfKFTgh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:36:38 -0500
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39083 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfKFTgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 14:36:37 -0500
-Received: by mail-wr1-f67.google.com with SMTP id a11so27452716wra.6;
-        Wed, 06 Nov 2019 11:36:35 -0800 (PST)
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:45354 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732033AbfKFTgf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:36:35 -0500
+Received: by mail-wr1-f68.google.com with SMTP id h3so122492wrx.12;
+        Wed, 06 Nov 2019 11:36:32 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=Yf803qGOor/Cot7/OEfF6HTN0BEeLkegGJ0D7t2YoFs=;
-        b=QytuGrv5RaR8aHt2W6tADBMSK2iQnketqSww+UVW4+YHUos01ZC70IfPiU1ae0l8qy
-         EJrDiVxd2jztoK/QS4LEgMtoPk3aik9YUmAwXk1AwLGl1V4X7zUv8cJXwNIhMATYlOXn
-         bW3qI/FDnQ0+R01cCECxVGt7X1RrUW3SnkfkdE4hFzo0W4SFm+dF/RReN0CoPNDthv47
-         oPMQS65MuUFV0MYWPqsU9Eetkt7BOPlHzW0u2C9nhm7e3QSFxdnIKJDq4n61s9CaYG7X
-         7EqeJ+lilFzCWetYDPeNufRQiMHXEg3pgRy8g7JkRGbhECdh4NsNGqCP2tVBoesBlw0N
-         SwyQ==
+        bh=gj4RT4MBYSN72SobANamHwk9q8SqC3Bq4JtqR0nv/88=;
+        b=ith+FyjYfh++cNpEYyESkqNV2WQG2t3qx5/9OTWj8CcQ8Tx0Ho4mS7TB2wAukxmMe1
+         7w1KaKYooUfTUzPilS4Ailr9wwDmnAcwo9ZZCy9sAriE04kPtwxxW3z9uWgnRoZX08Aq
+         QUFk0IjDpdNvxtyLOafBA9zK4Ucrq51PpczFdg6kZiTtckcTpTW+C7hI+CuTyRm4IwlQ
+         /uTdIMeNVtt4/nrlEX8ZEt93K4LkPcbMJ7YCO21Fi0JY+L09txnvnTj1MJF8HxN8MheH
+         /WRvhJKv2WKkb71culGvsEj0lMsaKFJ4n7NGNVBk5r5TImn664O6vDBtcsK81V05I6M7
+         AQ8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=Yf803qGOor/Cot7/OEfF6HTN0BEeLkegGJ0D7t2YoFs=;
-        b=Ocyh6451wW1PJlOwDeACw3kigGTnionBEqmk7pgnczpvw04Zw/zwirtWraWLL6LAn6
-         bfodq48pKsbR+jOwvpPAghQYlqtl/mxfXXjPLklJZ/lN5o/bUUuxH5Q0QZ0f2oLv7Nn3
-         UgfXkNv0aJ9yhHRRxH3KGmYiN/vyiKHBxAaz4JpdVZ4eSUA3JT6JtBa/SA+7L/fmS8g2
-         yybR5m+dQMkLbteaNMxETi6viLKBR1STc1CU/4UWocxD+68GCqZjgjxgy/AEXS57P2UF
-         pXnQQvjNHB9vVVm5vxQmib1sobtwve1y2UqNiJZ7hV0pBH41E/cfEV1sV/IAYY5OUtxi
-         i72g==
-X-Gm-Message-State: APjAAAXqRtCZsB9sIqJpbYxJMBWEy6LYn/1ZTkiIYaS6mO7lSvwHdfrZ
-        6HqxJOpZV1bYkQh0SIKdz24=
-X-Google-Smtp-Source: APXvYqwiFZfPLdQy6v/nz6k2CH2RqPsaqZfFr+dpybZn29YX1r2YujalQoWrrhG/dLD8IDDpq/MJXg==
-X-Received: by 2002:a5d:5091:: with SMTP id a17mr4555540wrt.249.1573068994407;
-        Wed, 06 Nov 2019 11:36:34 -0800 (PST)
+        bh=gj4RT4MBYSN72SobANamHwk9q8SqC3Bq4JtqR0nv/88=;
+        b=CIJB0eAf3iflgXSc3M4z2BRqiy1Zo9HOTjFt0ebGwm205EMzzYPi2NULokAVboZAUT
+         Uu3VQc87wXI8qYSiryVCB2iQkZ+TSq1QVp/26kpY+3Sp63XShMsEgDNy048mRWE2FLCu
+         +TnJ684fpl13WN1aYbi9D9PcMPwVISGl2LVfCadFKuTT5bgqhmx4bFGIGmtLgNNpuKVc
+         82NWLql1HMYlg3jZODHqsPDV33l1g6jA/sXHkoB+WQAArfwqi5dYsXVqRBBZZ/h5dRLb
+         fbc3BJYvCyHwUFlckUwZVK+Ot+wMx5p74rLd4WJFJl0VmPIjac/JfWMxtGgbQyK/r3dO
+         WQRg==
+X-Gm-Message-State: APjAAAUbkMataFKz3Ht5ew0cKRH3Cjs1iQqNsbysOaIWrKfhV6RFMgAT
+        lO02yveHRcTs+UsSF1oRHZo=
+X-Google-Smtp-Source: APXvYqz9azLA+Dqz04lPNS8MBMy2mPkTQxd5aWdoJYpBB9Skkh0PrDAauvRn05Sa0YLfoJ0/etRUzA==
+X-Received: by 2002:a5d:4e90:: with SMTP id e16mr4567362wru.224.1573068992127;
+        Wed, 06 Nov 2019 11:36:32 -0800 (PST)
 Received: from prasmi.home ([2a00:23c6:d18:6d00:1d3d:daa8:4e74:8240])
-        by smtp.gmail.com with ESMTPSA id 76sm4311737wma.0.2019.11.06.11.36.33
+        by smtp.gmail.com with ESMTPSA id 76sm4311737wma.0.2019.11.06.11.36.30
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:36:33 -0800 (PST)
+        Wed, 06 Nov 2019 11:36:31 -0800 (PST)
 From:   Lad Prabhakar <prabhakar.csengg@gmail.com>
 X-Google-Original-From: Lad Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 To:     Bjorn Helgaas <bhelgaas@google.com>,
@@ -79,9 +79,9 @@ Cc:     Catalin Marinas <catalin.marinas@arm.com>,
         linux-renesas-soc@vger.kernel.org,
         Chris Paterson <Chris.Paterson2@renesas.com>,
         "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-Subject: [PATCH 5/5] misc: pci_endpoint_test: add device-id for RZ/G2 pcie controller
-Date:   Wed,  6 Nov 2019 19:36:09 +0000
-Message-Id: <20191106193609.19645-6-prabhakar.mahadev-lad.rj@bp.renesas.com>
+Subject: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
+Date:   Wed,  6 Nov 2019 19:36:07 +0000
+Message-Id: <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
 References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
@@ -94,32 +94,63 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
 
+This patch adds the bindings for the R-Car PCIe endpoint driver.
+
 Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
 ---
- drivers/misc/pci_endpoint_test.c | 3 +++
- 1 file changed, 3 insertions(+)
+ .../devicetree/bindings/pci/rcar-pci-ep.txt   | 43 +++++++++++++++++++
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
 
-diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-index a5e317073d95..346b03b6e4b9 100644
---- a/drivers/misc/pci_endpoint_test.c
-+++ b/drivers/misc/pci_endpoint_test.c
-@@ -66,6 +66,8 @@
- 
- #define PCI_DEVICE_ID_TI_AM654			0xb00c
- 
-+#define PCI_DEVICE_ID_RENESAS_RZG2		0x002d
+diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+new file mode 100644
+index 000000000000..b8c8616ca007
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
+@@ -0,0 +1,43 @@
++* Renesas R-Car PCIe Endpoint Controller DT description
 +
- #define is_am654_pci_dev(pdev)		\
- 		((pdev)->device == PCI_DEVICE_ID_TI_AM654)
- 
-@@ -797,6 +799,7 @@ static const struct pci_device_id pci_endpoint_test_tbl[] = {
- 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_AM654),
- 	  .driver_data = (kernel_ulong_t)&am654_data
- 	},
-+	{ PCI_DEVICE(PCI_VENDOR_ID_RENESAS, PCI_DEVICE_ID_RENESAS_RZG2) },
- 	{ }
- };
- MODULE_DEVICE_TABLE(pci, pci_endpoint_test_tbl);
++Required properties:
++	    "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
++	    "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
++				     RZ/G2 compatible device.
++
++	    When compatible with the generic version, nodes must list the
++	    SoC-specific version corresponding to the platform first
++	    followed by the generic version.
++
++- reg: Five register ranges as listed in the reg-names property
++- reg-names: Must include the following names
++	- "apb-base"
++	- "memory0"
++	- "memory1"
++	- "memory2"
++	- "memory3"
++- resets: Must contain phandles to PCIe-related reset lines exposed by IP block
++- clocks: from common clock binding: clock specifiers for the PCIe controller
++	 clock.
++- clock-names: from common clock binding: should be "pcie".
++
++Optional Property:
++- max-functions: Maximum number of functions that can be configured (default 1).
++
++Example:
++
++SoC-specific DT Entry:
++
++	pcie_ep: pcie_ep@fe000000 {
++		compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-gen2";
++		reg = <0 0xfe000000 0 0x80000>,
++			<0x0 0xfe100000 0 0x100000>,
++			<0x0 0xfe200000 0 0x200000>,
++			<0x0 0x30000000 0 0x8000000>,
++			<0x0 0x38000000 0 0x8000000>;
++		reg-names = "apb-base", "memory0", "memory1", "memory2", "memory3";
++		clocks = <&cpg CPG_MOD 319>;
++		clock-names = "pcie";
++		power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
++		resets = <&cpg 319>;
++	};
 -- 
 2.20.1
 
