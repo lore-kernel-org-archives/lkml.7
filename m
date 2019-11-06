@@ -2,89 +2,182 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51109C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E34F6C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:12:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28B8F2075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B531F2178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:12:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="JbPvNMig"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732153AbfKFQJm (ORCPT
+        id S1729098AbfKFQMK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:09:42 -0500
-Received: from foss.arm.com ([217.140.110.172]:42422 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728530AbfKFQJm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:09:42 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6A98346A;
-        Wed,  6 Nov 2019 08:09:41 -0800 (PST)
-Received: from e121166-lin.cambridge.arm.com (e121166-lin.cambridge.arm.com [10.1.196.255])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 82DC23F71A;
-        Wed,  6 Nov 2019 08:09:39 -0800 (PST)
-Date:   Wed, 6 Nov 2019 16:09:37 +0000
-From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-To:     Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        leoyang.li@nxp.com, minghuan.Lian@nxp.com, mingkai.hu@nxp.com,
-        roy.zang@nxp.com, linux-pci@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linuxppc-dev@lists.ozlabs.org, bhelgaas@google.com,
-        Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: pci: layerscape-pci: add compatible
- strings "fsl,ls1028a-pcie"
-Message-ID: <20191106160937.GB23381@e121166-lin.cambridge.arm.com>
-References: <20190902034319.14026-1-xiaowei.bao@nxp.com>
+        Wed, 6 Nov 2019 11:12:10 -0500
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:35742 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfKFQMK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:12:10 -0500
+Received: by mail-wr1-f68.google.com with SMTP id p2so1313730wro.2
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 08:12:08 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=1KzRnMH55iNF2+p95RAsnTdJw/GC1Gd3D087wCrTJsE=;
+        b=JbPvNMigLGbF2aRlJmh7roildZkpRTH0HmKUbzD0MpncGM+PFJ9Dxf3CpD+w3MvJzo
+         NVuj9nCNWxukoTVo7ajSqAxADVl7BcfyyszdjPprlZNvQKdWG/2TmGwI1zR7cuBaPCGa
+         4pnIjgNEN6Z+ONR4kUT5/MUKQOEk8uyVHK9t6MjMMSQshNij3OqXDiRWinGJ7x5eLjzn
+         H7SfrET9hvmajGBm4P3GEL9oEwpnntdddYnBB9c30cprHbEIOVuJXwKt3GwbeDYD/yjf
+         84vYrW0woBueYI+QkG9iIEhhiWtIi4186vnMTX3OUAQJcHmCsLbnOpjSQYCHH+j2I08A
+         bYJA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=1KzRnMH55iNF2+p95RAsnTdJw/GC1Gd3D087wCrTJsE=;
+        b=XT8yyMRYCxiUdJ4HevE1gnxoyUK//PjO+T7vg8/mNgVPMHHhwAw33fbeS1vS9EEN0D
+         z1eKTI1FBa/XptQ9a0FUUdxjUP4cvAAjO+62kJ6Zli09I2ZagWv6lNchVBKAx4kaz4Zs
+         DvtMtA6fToypJ8nXEkNlKwf2Twg+y+5U61vkzf5KhB+rCtw8CLfku9d8iWSXD+UslUZp
+         DsFwNlJ6S1Fmh+1ZYU+OtEtWe/KZ/27E9HZYBfaCpHc8FDshw9ObynO+/XXHs0ApZjUO
+         bUqylorfmSLO5yyyJkRaqgGgvrDbbHzsVjmQ/XZsvOzaegVJWJ8Kw5J4iKkDKaMljlpk
+         GsNg==
+X-Gm-Message-State: APjAAAWZSI0zCT4NkZopxWZbYZoPKytUg7fdmuGjrSEIuGDQ4J4uC7kI
+        E1UBXXvtIff02F/M5yzDcqHfMA==
+X-Google-Smtp-Source: APXvYqzRldwR06Ft12uvUC5PPsAi7qbapyl0hpVkWdMQWpQryY49KMOXbFkBBG9AkNRziaiU0NhoUQ==
+X-Received: by 2002:a5d:6947:: with SMTP id r7mr3556903wrw.129.1573056727073;
+        Wed, 06 Nov 2019 08:12:07 -0800 (PST)
+Received: from google.com ([2a00:79e0:d:210:e8f7:125b:61e9:733d])
+        by smtp.gmail.com with ESMTPSA id q25sm29781143wra.3.2019.11.06.08.12.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 08:12:06 -0800 (PST)
+Date:   Wed, 6 Nov 2019 16:12:05 +0000
+From:   Matthias Maennich <maennich@google.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Michal Marek <michal.lkml@markovi.net>,
+        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 3/4] scripts/nsdeps: support nsdeps for external module
+ builds
+Message-ID: <20191106161205.GB1243@google.com>
+References: <20191029123809.29301-1-yamada.masahiro@socionext.com>
+ <20191029123809.29301-4-yamada.masahiro@socionext.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Content-Disposition: inline
-In-Reply-To: <20190902034319.14026-1-xiaowei.bao@nxp.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20191029123809.29301-4-yamada.masahiro@socionext.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Sep 02, 2019 at 11:43:17AM +0800, Xiaowei Bao wrote:
-> Add the PCIe compatible string for LS1028A
+On Tue, Oct 29, 2019 at 09:38:08PM +0900, Masahiro Yamada wrote:
+>Apparently, scripts/nsdeps is written to take care of only in-tree
+>modules. Perhaps, this is not a bug, but just a design. At least,
+>Documentation/core-api/symbol-namespaces.rst focuses on in-tree modules:
+>
+>  Again, `make nsdeps` will eventually add the missing namespace imports for
+>  in-tree modules::
+>  ^^^^^^^
+>
+>Having said that, I already saw at least two people trying nsdeps for
+>external module builds. So, it would be nice to support it.
+>
+>Reported-by: Steve French <smfrench@gmail.com>
+>Reported-by: Jessica Yu <jeyu@kernel.org>
+>Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+>---
+>
 
-Sentences must be terminated with a period.
+Reviewed-by: Matthias Maennich <maennich@google.com>
+Tested-by: Matthias Maennich <maennich@google.com>
 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> Signed-off-by: Hou Zhiqiang <Zhiqiang.Hou@nxp.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> v2:
->  - No change.
-> v3:
->  - No change.
-> v4:
->  - No change.
-> v5:
->  - No change.
-> v6:
->  - No change.
-> 
->  Documentation/devicetree/bindings/pci/layerscape-pci.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> index e20ceaa..99a386e 100644
-> --- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> +++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-> @@ -21,6 +21,7 @@ Required properties:
->          "fsl,ls1046a-pcie"
->          "fsl,ls1043a-pcie"
->          "fsl,ls1012a-pcie"
-> +        "fsl,ls1028a-pcie"
->    EP mode:
->  	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
->  - reg: base addresses and lengths of the PCIe controller register blocks.
+Cheers,
+Matthias
 
-I have applied this series to pci/layerscape, thanks.
-
-Lorenzo
+> Documentation/core-api/symbol-namespaces.rst |  3 +++
+> Makefile                                     |  1 +
+> scripts/Makefile.modpost                     |  2 +-
+> scripts/nsdeps                               | 10 ++++++++--
+> 4 files changed, 13 insertions(+), 3 deletions(-)
+>
+>diff --git a/Documentation/core-api/symbol-namespaces.rst b/Documentation/core-api/symbol-namespaces.rst
+>index 982ed7b568ac..9b76337f6756 100644
+>--- a/Documentation/core-api/symbol-namespaces.rst
+>+++ b/Documentation/core-api/symbol-namespaces.rst
+>@@ -152,3 +152,6 @@ in-tree modules::
+> 	- notice the warning of modpost telling about a missing import
+> 	- run `make nsdeps` to add the import to the correct code location
+>
+>+You can also run nsdeps for external module builds. A typical usage is::
+>+
+>+	$ make -C <path_to_kernel_src> M=$PWD nsdeps
+>diff --git a/Makefile b/Makefile
+>index 1e3f307bd49b..780a65493866 100644
+>--- a/Makefile
+>+++ b/Makefile
+>@@ -1007,6 +1007,7 @@ endif
+> PHONY += prepare0
+>
+> export MODORDER := $(extmod-prefix)modules.order
+>+export MODULES_NSDEPS := $(extmod-prefix)modules.nsdeps
+>
+> ifeq ($(KBUILD_EXTMOD),)
+> core-y		+= kernel/ certs/ mm/ fs/ ipc/ security/ crypto/ block/
+>diff --git a/scripts/Makefile.modpost b/scripts/Makefile.modpost
+>index da37128c3f9f..8359f8af5ee6 100644
+>--- a/scripts/Makefile.modpost
+>+++ b/scripts/Makefile.modpost
+>@@ -66,7 +66,7 @@ __modpost:
+> else
+>
+> MODPOST += $(subst -i,-n,$(filter -i,$(MAKEFLAGS))) -s -T - \
+>-	$(if $(KBUILD_NSDEPS),-d modules.nsdeps)
+>+	$(if $(KBUILD_NSDEPS),-d $(MODULES_NSDEPS))
+>
+> ifeq ($(KBUILD_EXTMOD),)
+> MODPOST += $(wildcard vmlinux)
+>diff --git a/scripts/nsdeps b/scripts/nsdeps
+>index 08db427a7fe5..3b8a9e173ebf 100644
+>--- a/scripts/nsdeps
+>+++ b/scripts/nsdeps
+>@@ -21,6 +21,12 @@ if [ "$SPATCH_VERSION_NUM" -lt "$SPATCH_REQ_VERSION_NUM" ] ; then
+> 	exit 1
+> fi
+>
+>+if [ "$KBUILD_EXTMOD" ]; then
+>+	src_prefix=
+>+else
+>+	src_prefix=$srctree/
+>+fi
+>+
+> generate_deps_for_ns() {
+> 	$SPATCH --very-quiet --in-place --sp-file \
+> 		$srctree/scripts/coccinelle/misc/add_namespace.cocci -D ns=$1 $2
+>@@ -32,7 +38,7 @@ generate_deps() {
+> 	local namespaces="$*"
+> 	local mod_source_files=`cat $mod.mod | sed -n 1p                      \
+> 					      | sed -e 's/\.o/\.c/g'           \
+>-					      | sed "s|[^ ]* *|${srctree}/&|g"`
+>+					     | sed "s|[^ ]* *|${src_prefix}&|g"`
+> 	for ns in $namespaces; do
+> 		echo "Adding namespace $ns to module $mod.ko."
+> 		generate_deps_for_ns $ns $mod_source_files
+>@@ -54,4 +60,4 @@ generate_deps() {
+> while read line
+> do
+> 	generate_deps $line
+>-done < modules.nsdeps
+>+done < $MODULES_NSDEPS
+>-- 
+>2.17.1
+>
