@@ -2,127 +2,160 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B019CC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:03:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17812C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901EA20650
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:03:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D8FF02075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p3YMbmhL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732115AbfKFQDx (ORCPT
+        id S1728162AbfKFQGO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:03:53 -0500
-Received: from iolanthe.rowland.org ([192.131.102.54]:35416 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1727312AbfKFQDx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:03:53 -0500
-Received: (qmail 2942 invoked by uid 2102); 6 Nov 2019 11:03:52 -0500
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 6 Nov 2019 11:03:52 -0500
-Date:   Wed, 6 Nov 2019 11:03:52 -0500 (EST)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Jens Axboe <axboe@kernel.dk>
-cc:     Andrea Vai <andrea.vai@unipv.it>,
-        Damien Le Moal <Damien.LeMoal@wdc.com>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        USB list <linux-usb@vger.kernel.org>,
-        SCSI development list <linux-scsi@vger.kernel.org>,
-        Himanshu Madhani <himanshu.madhani@cavium.com>,
-        Hannes Reinecke <hare@suse.com>,
-        Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Greg KH <gregkh@linuxfoundation.org>,
-        Hans Holmberg <Hans.Holmberg@wdc.com>,
-        Kernel development list <linux-kernel@vger.kernel.org>
-Subject: Re: Slow I/O on USB media after commit f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
-In-Reply-To: <61033407-731e-8cf5-8590-b07e2567693a@kernel.dk>
-Message-ID: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+        Wed, 6 Nov 2019 11:06:14 -0500
+Received: from mail.skyhub.de ([5.9.137.197]:53778 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726926AbfKFQGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:06:14 -0500
+Received: from zn.tnic (p200300EC2F0E77001533F52C90575FC8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:7700:1533:f52c:9057:5fc8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B81E31EC0CDD;
+        Wed,  6 Nov 2019 17:06:12 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1573056372;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=AqHULZoJql977LklrjplN/5siEITgkPs6pyHRw7U4cg=;
+        b=p3YMbmhLxImOHnMqQ6NIFKZg2CaIFKsc2GT9mAa7Fq1gP8GSi45H4LPi0fJJw3sSJaqeT9
+        YNKQApVsqiPtRzn57u3TRZ89HCy2kU4gOPhQCMS6Ng8BSCd9yx+KZ4V5MLC68V+JfN5H33
+        3zZh3iQsgjJwy1aCG8e6VmHbC4MY/2A=
+Date:   Wed, 6 Nov 2019 17:06:07 +0100
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Message-ID: <20191106160607.GC28380@zn.tnic>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Jens Axboe wrote:
-
-> On 11/5/19 11:31 AM, Alan Stern wrote:
-> > On Tue, 5 Nov 2019, Andrea Vai wrote:
-> > 
-> >> Il giorno lun, 04/11/2019 alle 13.20 -0500, Alan Stern ha scritto:
-> > 
-> >>> You should be able to do something like this:
-> >>>
-> >>>          cd linux
-> >>>          patch -p1 </path/to/patch2
-> >>>
-> >>> and that should work with no errors.  You don't need to use git to
-> >>> apply a patch.
-> >>>
-> >>> In case that patch2 file was mangled somewhere along the way, I
-> >>> have
-> >>> attached a copy to this message.
-> >>
-> >> Ok, so the "patch" command worked, the kernel compiled and ran, but
-> >> the test still failed (273, 108, 104, 260, 177, 236, 179, 1123, 289,
-> >> 873 seconds to copy a 500MB file, vs. ~30 seconds with the "good"
-> >> kernel).
-> >>
-> >> Let me know what else could I do,
-> > 
-> > I'm out of suggestions.  If anyone else knows how to make a kernel with
-> > no legacy queuing support -- only multiqueue -- issue I/O requests
-> > sequentially, please speak up.
+On Wed, Nov 06, 2019 at 01:24:59AM +0000, Ghannam, Yazen wrote:
+> From: Yazen Ghannam <yazen.ghannam@amd.com>
 > 
-> Do we know for a fact that the device needs strictly serialized requests
-> to not stall?
+> Hi Boris,
+> 
+> These patches address the issue where the module checks and complains
+> about DRAM ECC on nodes without memory.
+> 
+> Changes from last revision:
+>   1) Dropped patch 6 which was for adding a grain value.
+>   2) Added an error code for !ecc_enabled() in patch 5.
 
-Not exactly, but that is far and away the most likely explanation for
-the device's behavior.  We tried making a bunch of changes, some of
-which helped a little bit, but all of them left a very large
-performance gap.  I/O monitoring showed that the only noticeable
-difference in the kernel-device interaction caused by the $SUBJECT
-commit was the non-sequential access pattern.
+Still doesn't help. The load gets attempted twice still. Try reproducing
+it on a small, single-node box where ECC is disabled.
 
-> And writes in particular?
+[    2.590123] EDAC MC: Ver: 3.0.0
+[    2.594153] EDAC DEBUG: edac_mc_sysfs_init: device mc created
+[    5.946482] EDAC amd64: F10h detected (node 0).
+[    5.952134] EDAC DEBUG: reserve_mc_sibling_devs: F1: 0000:00:18.1
+[    5.958967] EDAC DEBUG: reserve_mc_sibling_devs: F2: 0000:00:18.2
+[    5.969869] EDAC DEBUG: reserve_mc_sibling_devs: F3: 0000:00:18.3
+[    5.981125] EDAC DEBUG: read_mc_regs:   TOP_MEM:  0x00000000d0000000
+[    5.981126] EDAC DEBUG: read_mc_regs:   TOP_MEM2: 0x0000000230000000
+[    5.981130] EDAC DEBUG: read_dram_ctl_register: F2x110 (DCTSelLow): 0xffffffff, High range addrs at: 0xfffff800
+[    5.981131] EDAC DEBUG: read_dram_ctl_register:   DCTs operate in ganged mode
+[    5.981132] EDAC DEBUG: read_dram_ctl_register:   data interleave for ECC: enabled, DRAM cleared since last warm reset: yes
+[    5.981133] EDAC DEBUG: read_dram_ctl_register:   channel interleave: enabled, interleave bits selector: 0x3
+[    5.981137] EDAC DEBUG: read_mc_regs:   DRAM range[0], base: 0x0000ff0000000000; limit: 0x0000ff022fffffff
+[    5.981138] EDAC DEBUG: read_mc_regs:    IntlvEn=Disabled; Range access: RW IntlvSel=0 DstNode=0
+[    5.981144] EDAC DEBUG: read_dct_base_mask:   DCSB0[0]=0x00000001 reg: F2x40
+[    5.981146] EDAC DEBUG: read_dct_base_mask:   DCSB1[0]=0x00000000 reg: F2x140
+[    5.981147] EDAC DEBUG: read_dct_base_mask:   DCSB0[1]=0x00000101 reg: F2x44
+[    5.981148] EDAC DEBUG: read_dct_base_mask:   DCSB1[1]=0x00000000 reg: F2x144
+[    5.981149] EDAC DEBUG: read_dct_base_mask:   DCSB0[2]=0x00000201 reg: F2x48
+[    5.981150] EDAC DEBUG: read_dct_base_mask:   DCSB1[2]=0x00000000 reg: F2x148
+[    5.981151] EDAC DEBUG: read_dct_base_mask:   DCSB0[3]=0x00000301 reg: F2x4c
+[    5.981152] EDAC DEBUG: read_dct_base_mask:   DCSB1[3]=0x00000000 reg: F2x14c
+[    5.981153] EDAC DEBUG: read_dct_base_mask:   DCSB0[4]=0x00000000 reg: F2x50
+[    5.981154] EDAC DEBUG: read_dct_base_mask:   DCSB1[4]=0x00000000 reg: F2x150
+[    5.981155] EDAC DEBUG: read_dct_base_mask:   DCSB0[5]=0x00000000 reg: F2x54
+[    5.981156] EDAC DEBUG: read_dct_base_mask:   DCSB1[5]=0x00000000 reg: F2x154
+[    5.981157] EDAC DEBUG: read_dct_base_mask:   DCSB0[6]=0x00000000 reg: F2x58
+[    5.981158] EDAC DEBUG: read_dct_base_mask:   DCSB1[6]=0x00000000 reg: F2x158
+[    5.981159] EDAC DEBUG: read_dct_base_mask:   DCSB0[7]=0x00000000 reg: F2x5c
+[    5.981160] EDAC DEBUG: read_dct_base_mask:   DCSB1[7]=0x00000000 reg: F2x15c
+[    5.981161] EDAC DEBUG: read_dct_base_mask:     DCSM0[0]=0x00f83ce0 reg: F2x60
+[    5.981162] EDAC DEBUG: read_dct_base_mask:     DCSM1[0]=0x00000000 reg: F2x160
+[    5.981163] EDAC DEBUG: read_dct_base_mask:     DCSM0[1]=0x00f83ce0 reg: F2x64
+[    5.981164] EDAC DEBUG: read_dct_base_mask:     DCSM1[1]=0x00000000 reg: F2x164
+[    5.981165] EDAC DEBUG: read_dct_base_mask:     DCSM0[2]=0x00000000 reg: F2x68
+[    5.981166] EDAC DEBUG: read_dct_base_mask:     DCSM1[2]=0x00000000 reg: F2x168
+[    5.981167] EDAC DEBUG: read_dct_base_mask:     DCSM0[3]=0x00000000 reg: F2x6c
+[    5.981168] EDAC DEBUG: read_dct_base_mask:     DCSM1[3]=0x00000000 reg: F2x16c
+[    5.981169] EDAC DEBUG: read_mc_regs:   DIMM type: Unbuffered-DDR2
+[    5.981219] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 0, MCG_CTL: 0x3f, NB MSR is enabled
+[    5.981221] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 1, MCG_CTL: 0x3f, NB MSR is enabled
+[    5.981221] EDAC amd64: Node 0: DRAM ECC disabled.
+[    5.981223] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+[    6.302561] EDAC amd64: F10h detected (node 0).
+[    6.307276] EDAC DEBUG: reserve_mc_sibling_devs: F1: 0000:00:18.1
+[    6.313630] EDAC DEBUG: reserve_mc_sibling_devs: F2: 0000:00:18.2
+[    6.320589] EDAC DEBUG: reserve_mc_sibling_devs: F3: 0000:00:18.3
+[    6.328359] EDAC DEBUG: read_mc_regs:   TOP_MEM:  0x00000000d0000000
+[    6.335150] EDAC DEBUG: read_mc_regs:   TOP_MEM2: 0x0000000230000000
+[    6.342188] EDAC DEBUG: read_dram_ctl_register: F2x110 (DCTSelLow): 0xffffffff, High range addrs at: 0xfffff800
+[    6.353691] EDAC DEBUG: read_dram_ctl_register:   DCTs operate in ganged mode
+[    6.361527] EDAC DEBUG: read_dram_ctl_register:   data interleave for ECC: enabled, DRAM cleared since last warm reset: yes
+[    6.374204] EDAC DEBUG: read_dram_ctl_register:   channel interleave: enabled, interleave bits selector: 0x3
+[    6.384343] EDAC DEBUG: read_mc_regs:   DRAM range[0], base: 0x0000ff0000000000; limit: 0x0000ff022fffffff
+[    6.395942] EDAC DEBUG: read_mc_regs:    IntlvEn=Disabled; Range access: RW IntlvSel=0 DstNode=0
+[    6.406619] EDAC DEBUG: read_dct_base_mask:   DCSB0[0]=0x00000001 reg: F2x40
+[    6.414646] EDAC DEBUG: read_dct_base_mask:   DCSB1[0]=0x00000000 reg: F2x140
+[    6.422526] EDAC DEBUG: read_dct_base_mask:   DCSB0[1]=0x00000101 reg: F2x44
+[    6.430823] EDAC DEBUG: read_dct_base_mask:   DCSB1[1]=0x00000000 reg: F2x144
+[    6.438710] EDAC DEBUG: read_dct_base_mask:   DCSB0[2]=0x00000201 reg: F2x48
+[    6.446810] EDAC DEBUG: read_dct_base_mask:   DCSB1[2]=0x00000000 reg: F2x148
+[    6.454788] EDAC DEBUG: read_dct_base_mask:   DCSB0[3]=0x00000301 reg: F2x4c
+[    6.462743] EDAC DEBUG: read_dct_base_mask:   DCSB1[3]=0x00000000 reg: F2x14c
+[    6.470585] EDAC DEBUG: read_dct_base_mask:   DCSB0[4]=0x00000000 reg: F2x50
+[    6.478698] EDAC DEBUG: read_dct_base_mask:   DCSB1[4]=0x00000000 reg: F2x150
+[    6.486624] EDAC DEBUG: read_dct_base_mask:   DCSB0[5]=0x00000000 reg: F2x54
+[    6.494631] EDAC DEBUG: read_dct_base_mask:   DCSB1[5]=0x00000000 reg: F2x154
+[    6.502866] EDAC DEBUG: read_dct_base_mask:   DCSB0[6]=0x00000000 reg: F2x58
+[    6.510817] EDAC DEBUG: read_dct_base_mask:   DCSB1[6]=0x00000000 reg: F2x158
+[    6.518602] EDAC DEBUG: read_dct_base_mask:   DCSB0[7]=0x00000000 reg: F2x5c
+[    6.527120] EDAC DEBUG: read_dct_base_mask:   DCSB1[7]=0x00000000 reg: F2x15c
+[    6.534926] EDAC DEBUG: read_dct_base_mask:     DCSM0[0]=0x00f83ce0 reg: F2x60
+[    6.548356] EDAC DEBUG: read_dct_base_mask:     DCSM1[0]=0x00000000 reg: F2x160
+[    6.560715] EDAC DEBUG: read_dct_base_mask:     DCSM0[1]=0x00f83ce0 reg: F2x64
+[    6.568116] EDAC DEBUG: read_dct_base_mask:     DCSM1[1]=0x00000000 reg: F2x164
+[    6.575596] EDAC DEBUG: read_dct_base_mask:     DCSM0[2]=0x00000000 reg: F2x68
+[    6.584317] EDAC DEBUG: read_dct_base_mask:     DCSM1[2]=0x00000000 reg: F2x168
+[    6.591899] EDAC DEBUG: read_dct_base_mask:     DCSM0[3]=0x00000000 reg: F2x6c
+[    6.599460] EDAC DEBUG: read_dct_base_mask:     DCSM1[3]=0x00000000 reg: F2x16c
+[    6.606877] EDAC DEBUG: read_mc_regs:   DIMM type: Unbuffered-DDR2
+[    6.619722] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 0, MCG_CTL: 0x3f, NB MSR is enabled
+[    6.628463] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 1, MCG_CTL: 0x3f, NB MSR is enabled
+[    6.648232] EDAC amd64: Node 0: DRAM ECC disabled.
+[    6.657843] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
 
-Andrea has tested only the write behavior.  Possibly reading will be
-affected too, but my guess is that it won't be.
+-- 
+Regards/Gruss,
+    Boris.
 
-> I won't comment on how broken
-> that is, just trying to establish this as the problem that's making this
-> particular device be slow?
-
-It seems reasonable that the access pattern could make a significant
-difference.  The device's behavior suggests that it buffers incoming
-data and pauses from time to time to write the accumulated data into
-non-volatile storage.  If its algorithm for allocating, erasing, and
-writing data blocks is optimized for the sequential case, you can
-easily imagine that non-sequential accesses would cause it to pause
-more often and for longer times -- which is exactly what we observed.
-These extra pauses are what resulted in the overall performance 
-decrease.
-
-So far we have had no way to perform a direct test.  That is, we don't
-know of any setting that would change a single kernel between
-sequential and non-sequential access.  If you can suggest a simple way
-to force a kernel without the $SUBJECT commit to do non-sequential
-writes, I'm sure Andrea will be happy to try it out and see if it
-causes a slowdown.
-
-> I've lost track of this thread, but has mq-deadline been tried as the
-> IO scheduler? We do have support for strictly serialized (writes)
-> since that's required for zoned device, wouldn't be hard at all to make
-> this cover a blacklisted device like this one.
-
-Please spell out the exact procedure in detail so that Andrea can try 
-it.  He's not a kernel hacker, and I know very little about the block 
-layer.
-
-Alan Stern
-
+https://people.kernel.org/tglx/notes-about-netiquette
