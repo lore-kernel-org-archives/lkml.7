@@ -2,101 +2,188 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94230FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85C11FC6194
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:33:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6403020663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:31:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gwQTp+0U"
+	by mail.kernel.org (Postfix) with ESMTP id 565C8217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 23:33:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573083201;
+	bh=kXuPSKl+d3N16AWU48reQZ1zuDSoKWcH8SnXbdsyG1Y=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=BAAwMyGTgDkwqgVw5WsS7EfI8QGkTc1ziQWvfk7w6SH76FLae6M93KTxJucyi5KYp
+	 MLNsdF5Tn1arCqEveJyE9Ee6L4UNke7E2yuvDgAhluYfT6JScJ1OzjX9lO5WFA1ruc
+	 SK+zXmPUb3VwNRnNxnorNTDWANcQb7Z30BQOID3Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732779AbfKFXbf (ORCPT
+        id S1732806AbfKFXdU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 18:31:35 -0500
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:36612 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727296AbfKFXbf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 18:31:35 -0500
-Received: by mail-pl1-f195.google.com with SMTP id g9so12306638plp.3;
-        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=XQlBjJQQjlLiOw6f2ULlsVGlJrKy32umFggc4zmnopc=;
-        b=gwQTp+0U9NUDWWwM66Vo43vKr5F6kMz6YnYStCt7FNFJHX+scw5dGwfAbuEShRbc8v
-         XcmX1D+eSJZYvdO0k9WgO/00JGvL5kjTxBS3D/FLPLBDgT2lLsa6Gho9KRe04ezZreU7
-         ttLGuXono0x8uy6S0YxD0shypeQWo1wKv5Z08VuRXS0KnWBtOCZwzJPgnDzTEWTuq18j
-         azzWsYkZWIWokwnvKfvCfdBwDww9XJV8XRquLpogRYv8WMBwwo5SUBM1XZNZVmzI/Tez
-         1OSlIqNp3kGEIeR9fRxGBHKxWT9pIGy2pEzMpOU+X5UCTFQrjf/QBMNRR9EsM0929Ccd
-         z4zw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=XQlBjJQQjlLiOw6f2ULlsVGlJrKy32umFggc4zmnopc=;
-        b=Jppb/Fql/riqbrEgE6d4nwJIl4nGCWf2ZeFzm8BYZOEvis3Hf+EKsjeueruN/JR7ef
-         d0OTOaRd/pjPrD9Cc5L0Oo3N9VPBQywmnkY9l4oNzoMvq17WUBASb+3nawMiC6Vc3IR2
-         PyTBrX7oTs06M1CZbyUC4fzmKqbYMFKS+jSsoafKGVC+ModB7HdYVxvWSOlzLojt96BT
-         WQ1Jwksh7wRoCtoct79YwkOoLvuS6eI3xqlU7ZtwAne93OhYM1083EXSJ9YG0be9LxHg
-         fXZ86TxdEWMoZfOLnekRp4dsQCnY96Pb4sZGPVZKqpzpj03v6gi9BBTLhV3GYfpVHqE9
-         uzhw==
-X-Gm-Message-State: APjAAAXJ+pUDmwJ19HPKQz1tSui3khv3dvkXvUjfQ+mHpa5ErkUb9DJ/
-        0aPTA/my6MlKwlriCOADO5mH3rVb
-X-Google-Smtp-Source: APXvYqyxj6AvcxSxTZ1uXkDQ4TdMBL4b+00frqdfXS3bHWC4a2N3B+rJNl7uiZQ1SRrjJzBidWs0oQ==
-X-Received: by 2002:a17:902:b10c:: with SMTP id q12mr239799plr.97.1573083094431;
-        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id f7sm70667pfa.150.2019.11.06.15.31.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 15:31:34 -0800 (PST)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-To:     kvalo@codeaurora.org, davem@davemloft.net
-Cc:     ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
-        netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH] ath10k: Handle when FW doesn't support QMI_WLFW_HOST_CAP_REQ_V01
-Date:   Wed,  6 Nov 2019 15:31:30 -0800
-Message-Id: <20191106233130.2169-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 Nov 2019 18:33:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:41486 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725937AbfKFXdU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 18:33:20 -0500
+Received: from mail-qv1-f43.google.com (mail-qv1-f43.google.com [209.85.219.43])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5FE2821A49;
+        Wed,  6 Nov 2019 23:33:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573083198;
+        bh=kXuPSKl+d3N16AWU48reQZ1zuDSoKWcH8SnXbdsyG1Y=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=jtHyhFkWE3pKHvdd83jG7hT7NyR376eTuEr9ERzYU/cLPUMq8jfmu4Pc3AwMwAOfA
+         Ta5bhoJh9cqN3cZVa6vzhyOfspGH5C9cbvPH9vfe7rCAYdmt5ayL69+QublnfxuRyj
+         LKVoZnM3aCaTH+YQzn0GMYdakODsvG+TlLgH+QUU=
+Received: by mail-qv1-f43.google.com with SMTP id f12so93859qvu.3;
+        Wed, 06 Nov 2019 15:33:18 -0800 (PST)
+X-Gm-Message-State: APjAAAVvZvTUPBZxkVwGSH6lR00KcB0k/zkEHE8trLZqTFFndUUuW7eA
+        z1jPIsVnDE+w4zGiqr0xkcvAempI5hWtYUWfZQ==
+X-Google-Smtp-Source: APXvYqyC3A2flD/nPROb9ThjRdJKDCsiLA48Ab5fS1yM/Zg798U/Sn7jNMdhWcJ4s8JZjQWG/fXn9qcpyqj9go+/rgA=
+X-Received: by 2002:a0c:ca06:: with SMTP id c6mr490409qvk.136.1573083197450;
+ Wed, 06 Nov 2019 15:33:17 -0800 (PST)
+MIME-Version: 1.0
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-5-benjamin.gaignard@st.com> <20191106041518.GC5294@bogus>
+ <41c43d09-9371-8b23-a3dd-e43f5df5c5bc@st.com>
+In-Reply-To: <41c43d09-9371-8b23-a3dd-e43f5df5c5bc@st.com>
+From:   Rob Herring <robh@kernel.org>
+Date:   Wed, 6 Nov 2019 17:33:05 -0600
+X-Gmail-Original-Message-ID: <CAL_Jsq+eFew_8ULDOwL5GXUDxLRB9e+b+ZsMdWLKUO8i9Lk7AQ@mail.gmail.com>
+Message-ID: <CAL_Jsq+eFew_8ULDOwL5GXUDxLRB9e+b+ZsMdWLKUO8i9Lk7AQ@mail.gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: Convert stm32 timers bindings to json-schema
+To:     Benjamin GAIGNARD <benjamin.gaignard@st.com>
+Cc:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Firmware with the build id QC_IMAGE_VERSION_STRING=WLAN.HL.1.0.2-XXXX does
-not support the QMI_WLFW_HOST_CAP_REQ_V01 message and will return the
-QMI not supported error to the ath10k driver.  Since not supporting this
-message is not fatal to the firmware nor the ath10k driver, lets catch
-this particular scenario and ignore it so that we can still bring up
-wifi services successfully.
+On Wed, Nov 6, 2019 at 1:57 PM Benjamin GAIGNARD
+<benjamin.gaignard@st.com> wrote:
+>
+>
+> On 11/6/19 5:15 AM, Rob Herring wrote:
+> > On Thu, Oct 31, 2019 at 01:30:40PM +0100, Benjamin Gaignard wrote:
+> >> Convert the STM32 timers binding to DT schema format using json-schema
+> >>
+> >> Signed-off-by: Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> ---
+> >>   .../devicetree/bindings/mfd/st,stm32-timers.yaml   | 91 ++++++++++++++++++++++
+> >>   .../devicetree/bindings/mfd/stm32-timers.txt       | 73 -----------------
+> >>   2 files changed, 91 insertions(+), 73 deletions(-)
+> >>   create mode 100644 Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >>   delete mode 100644 Documentation/devicetree/bindings/mfd/stm32-timers.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >> new file mode 100644
+> >> index 000000000000..3f0a65fb2bc0
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mfd/st,stm32-timers.yaml
+> >> @@ -0,0 +1,91 @@
+> >> +# SPDX-License-Identifier: (GPL-2.0-only OR BSD-2-Clause)
+> >> +%YAML 1.2
+> >> +---
+> >> +$id: http://devicetree.org/schemas/mfd/st,stm32-timers.yaml#
+> >> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> >> +
+> >> +title: STMicroelectronics STM32 Timers bindings
+> >> +
+> >> +description: |
+> >> +  This hardware block provides 3 types of timer along with PWM functionality: \
+> > Don't need the \
+> ok
+> >
+> >> +    - advanced-control timers consist of a 16-bit auto-reload counter driven by a programmable \
+> >> +      prescaler, break input feature, PWM outputs and complementary PWM ouputs channels. \
+> >> +    - general-purpose timers consist of a 16-bit or 32-bit auto-reload counter driven by a \
+> >> +      programmable prescaler and PWM outputs.\
+> >> +    - basic timers consist of a 16-bit auto-reload counter driven by a programmable prescaler.
+> >> +
+> >> +maintainers:
+> >> +  - Benjamin Gaignard <benjamin.gaignard@st.com>
+> >> +  - Fabrice Gasnier <fabrice.gasnier@st.com>
+> >> +
+> >> +allOf:
+> >> +  - $ref: "../pwm/st,stm32-pwm.yaml#"
+> >> +  - $ref: "../iio/timer/st,stm32-timer-trigger.yaml#"
+> >> +  - $ref: "../counter/st,stm32-timer-cnt.yaml#"
+> > This works, but I prefer the child node names be listed under properties
+> > here with a ref:
+> >
+> > counter:
+> >    $ref: "../counter/st,stm32-timer-cnt.yaml#"
+> If I wrote everything in one file I guess what won't be needed anymore
+> >
+> >> +
+> >> +properties:
+> >> +  compatible:
+> >> +    const: st,stm32-timers
+> >> +
+> >> +  reg:
+> >> +    maxItems: 1
+> >> +
+> >> +  clocks:
+> >> +    maxItems: 1
+> >> +
+> >> +  clock-names:
+> >> +    items:
+> >> +      - const: int
+> >> +
+> >> +  reset:
+> >> +    maxItems: 1
+> >> +
+> >> +  dmas: true
+> > How many?
+>
+> from 0 up to 8, but I don't know the syntax for that. minItems = 0 isn't
+> accepted.
+>
+> Any hints for me ?
 
-Signed-off-by: Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
----
- drivers/net/wireless/ath/ath10k/qmi.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+0 is not accepted because the property is never 0 items. 0 is not
+present. So just:
 
-diff --git a/drivers/net/wireless/ath/ath10k/qmi.c b/drivers/net/wireless/ath/ath10k/qmi.c
-index 545ac1f06997..eb618a2652db 100644
---- a/drivers/net/wireless/ath/ath10k/qmi.c
-+++ b/drivers/net/wireless/ath/ath10k/qmi.c
-@@ -614,7 +614,9 @@ static int ath10k_qmi_host_cap_send_sync(struct ath10k_qmi *qmi)
- 	if (ret < 0)
- 		goto out;
- 
--	if (resp.resp.result != QMI_RESULT_SUCCESS_V01) {
-+	/* older FW didn't support this request, which is not fatal */
-+	if (resp.resp.result != QMI_RESULT_SUCCESS_V01 &&
-+	    resp.resp.error != QMI_ERR_NOT_SUPPORTED_V01) {
- 		ath10k_err(ar, "host capability request rejected: %d\n", resp.resp.error);
- 		ret = -EINVAL;
- 		goto out;
--- 
-2.17.1
+minItems: 1
+maxItems: 8
 
+
+> >> +
+> >> +  dma-names: true
+> > What are the names?
+>
+> it could be ch1 ... ch8, "trig" or "up" in any order.
+
+Why does it need to be in any order? Normally we don't want to have that.
+
+>
+> Again I haven't be able to find a syntax that allow to list the names
+> and use them in any orders.
+
+dma-names:
+  items:
+    enum: [ ch1, ch2, ..., trig, up ]
+
+Rob
