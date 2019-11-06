@@ -2,205 +2,178 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73D8BC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:29:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EB4C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43C872173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:29:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42D6A2075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eg2a+bBv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731587AbfKFJ3Y (ORCPT
+        id S1731621AbfKFJbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:29:24 -0500
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:37353 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727543AbfKFJ3X (ORCPT
+        Wed, 6 Nov 2019 04:31:38 -0500
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:36056 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726969AbfKFJbh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:29:23 -0500
-X-Originating-IP: 90.63.246.187
-Received: from gandi.net (laubervilliers-658-1-215-187.w90-63.abo.wanadoo.fr [90.63.246.187])
-        (Authenticated sender: thibaut.sautereau@clip-os.org)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 4BAE5E0008;
-        Wed,  6 Nov 2019 09:29:19 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 10:29:19 +0100
-From:   Thibaut Sautereau <thibaut.sautereau@clip-os.org>
-To:     Laura Abbott <labbott@redhat.com>
-Cc:     Vlastimil Babka <vbabka@suse.cz>, netdev@vger.kernel.org,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        "David S. Miller" <davem@davemloft.net>,
-        Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        Andrew Morton <akpm@linux-foundation.org>, clipos@ssi.gouv.fr
-Subject: Re: Double free of struct sk_buff reported by
- SLAB_CONSISTENCY_CHECKS with init_on_free
-Message-ID: <20191106092919.GD1006@gandi.net>
-References: <20191104170303.GA50361@gandi.net>
- <23c73a23-8fd9-c462-902b-eec2a0c04d36@suse.cz>
- <20191105143253.GB1006@gandi.net>
- <4fae11bc-9822-ea10-36e0-68a6fc3995bc@suse.cz>
- <af8174be-848e-5f00-d6eb-caa956e8fd71@redhat.com>
+        Wed, 6 Nov 2019 04:31:37 -0500
+Received: by mail-lf1-f65.google.com with SMTP id m6so1342366lfl.3;
+        Wed, 06 Nov 2019 01:31:36 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:from:to:references:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=zQ7HLJOmb7PEV7Bvvm45eQnx60eQFp2jSB+Y921nCUk=;
+        b=eg2a+bBvdRXPs3ywIvinqtswuKGtIjM3Kpupd49H5FyQfG3SEuWCvLceKny75NZ3zE
+         T3p+FozOLa57+VfXVuRngSe7loSgYAceIz9wTfK2N+ZpdwSd0uzHWG6Mn+zk8YnyJKfo
+         UEfShFAF+mFZgCvPUoN02dE9okO4wvE/MrfqjP4bRg7mACZkFwBdmXGhOgkN9WczBrEu
+         MUYViRSzjU70GkW0Dxs5xCpqogVlE2A0lXHKNSjk/7fUy631+zouv9Phvr1n049CbwHw
+         3q2S6Yy7Up1HZizZFP4Jfjfw41oY7mi6nuan/MDSEsOFNsGfYppzEG37CVnpylHNWyWe
+         TMfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:from:to:references:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zQ7HLJOmb7PEV7Bvvm45eQnx60eQFp2jSB+Y921nCUk=;
+        b=Bjhn7aHzxjW78dmhnbImO416TP/gNv0iBHjnhHmxM6I7Mp8kGRd14m+H/vdPNJZzML
+         GBaYz8I9Dar9uOLK2zmp8XGbWoEcxPRsp2bfH7Udh5nOi7JnDKaGyzg8elfPJqb0N8p5
+         f46Lx4ZDZUwnlz/8fS3YONAqpjlyl+CbvqypS9ZcqDOZCQACS0evfj4cc/PZRRjklRvZ
+         UyxlnT9+/Jo/TFI90vb8NtXoiYNade/Q0DuNvkQPgQo72rbOGAy+B+A5xHYnbTjkniOF
+         dWYvpNfVuX8olGsZPPLaylIf9EP6vcLkpv5cV/fFqo12CeCHi9WX9iC9l3LB/5rJ1dr9
+         lsLg==
+X-Gm-Message-State: APjAAAUjOrEKltVwYfI+Zce9hQ7zmfJk0ZCrPS8g83qopF4z7iOx24Vw
+        ixed677FhuLnlpB2/h5WQFoZMoqThto=
+X-Google-Smtp-Source: APXvYqzB/Bb4P5TC2qQgP/75MMq896H2nD6KTG/h3yqawbV/cFlVsyQ5UVbo2com+mpYyQs+W7WWIA==
+X-Received: by 2002:a19:48cf:: with SMTP id v198mr8457177lfa.59.1573032694930;
+        Wed, 06 Nov 2019 01:31:34 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id g5sm9288178ljn.101.2019.11.06.01.31.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 01:31:34 -0800 (PST)
+Subject: Re: [PATCH v2 2/2] io_uring: io_queue_link*() right after submit
+From:   Pavel Begunkov <asml.silence@gmail.com>
+To:     Bob Liu <bob.liu@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+References: <cover.1572988512.git.asml.silence@gmail.com>
+ <85a316b577e1b5204d27a96a7ce452ed6be3c2ae.1572988512.git.asml.silence@gmail.com>
+ <8700c9a3-01aa-2af6-c275-1f17734c2cc5@oracle.com>
+ <81c2db6f-e262-328a-5917-71b30d9390a5@gmail.com>
+Message-ID: <2600cd84-a953-734c-1972-2c6ae0125ce5@gmail.com>
+Date:   Wed, 6 Nov 2019 12:31:32 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
+In-Reply-To: <81c2db6f-e262-328a-5917-71b30d9390a5@gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <af8174be-848e-5f00-d6eb-caa956e8fd71@redhat.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 12:01:15PM -0500, Laura Abbott wrote:
-> On 11/5/19 10:02 AM, Vlastimil Babka wrote:
-> > On 11/5/19 3:32 PM, Thibaut Sautereau wrote:
-> > > On Tue, Nov 05, 2019 at 10:00:39AM +0100, Vlastimil Babka wrote:
-> > > > On 11/4/19 6:03 PM, Thibaut Sautereau wrote:
-> > > > > The BUG only happens when using `slub_debug=F` on the command-line (to
-> > > > > enable SLAB_CONSISTENCY_CHECKS), otherwise the double free is not
-> > > > > reported and the system keeps running.
-> > > > 
-> > > > You could change slub_debug parameter to:
-> > > > slub_debug=FU,skbuff_head_cache
-> > > > 
-> > > > That will also print out who previously allocated and freed the double
-> > > > freed object. And limit all the tracking just to the affected cache.
-> > > 
-> > > Thanks, I did not know about that.
-> > > 
-> > > However, as kind of expected, I get a BUG due to a NULL pointer
-> > > dereference in print_track():
-> > 
-> > Ah, I didn't read properly your initial mail, that there's a null
-> > pointer deference during the consistency check.
-> > 
-> > ...
-> > 
-> > > > > 
-> > > > > Bisection points to the following commit: 1b7e816fc80e ("mm: slub: Fix
-> > > > > slab walking for init_on_free"), and indeed the BUG is not triggered
-> > > > > when init_on_free is disabled.
-> > > > 
-> > > > That could be either buggy SLUB code, or the commit somehow exposed a
-> > > > real bug in skbuff users.
-> > > 
-> > > Right. At first I thought about some incompatibility between
-> > > init_on_free and SLAB_CONSISTENCY_CHECKS, but in that case why would it
-> > > only happen with skbuff_head_cache?
-> > 
-> > That's curious, yeah.
-> > 
-> > > On the other hand, if it's a bug in
-> > > skbuff users, why is the on_freelist() check in free_consistency_check()
-> > > not detecting anything when init_on_free is disabled?
-> > 
-> > I vaguely suspect the code in the commit 1b7e816fc80e you bisected,
-> > where in slab_free_freelist_hook() in the first iteration, we have void
-> > *p = NULL; and set_freepointer(s, object, p); will thus write NULL into
-> > the freelist. Is is the NULL we are crashing on? The code seems to
-> > assume that the freelist is rewritten later in the function, but that
-> > part is only active with some CONFIG_ option(s), none of which might be
-> > enabled in your case?
-> > But I don't really understand what exactly this function is supposed to
-> > do. Laura, does my theory make sense?
-> > 
-> > Thanks,
-> > Vlastimil
-> > 
+On 11/6/2019 12:06 PM, Pavel Begunkov wrote:
+> On 11/6/2019 11:36 AM, Bob Liu wrote:
+>> On 11/6/19 5:22 AM, Pavel Begunkov wrote:
+>>> After a call to io_submit_sqe(), it's already known whether it needs
+>>> to queue a link or not. Do it there, as it's simplier and doesn't keep
+>>> an extra variable across the loop.
+>>>
+>>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>>> ---
+>>>  fs/io_uring.c | 22 ++++++++++------------
+>>>  1 file changed, 10 insertions(+), 12 deletions(-)
+>>>
+>>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>>> index ebe2a4edd644..82c2da99cb5c 100644
+>>> --- a/fs/io_uring.c
+>>> +++ b/fs/io_uring.c
+>>> @@ -2687,7 +2687,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>>>  	struct io_submit_state state, *statep = NULL;
+>>>  	struct io_kiocb *link = NULL;
+>>>  	struct io_kiocb *shadow_req = NULL;
+>>> -	bool prev_was_link = false;
+>>>  	int i, submitted = 0;
+>>>  	bool mm_fault = false;
+>>>  
+>>> @@ -2710,17 +2709,6 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>>>  			}
+>>>  		}
+>>>  
+>>> -		/*
+>>> -		 * If previous wasn't linked and we have a linked command,
+>>> -		 * that's the end of the chain. Submit the previous link.
+>>> -		 */
+>>> -		if (!prev_was_link && link) {
+>>> -			io_queue_link_head(ctx, link, &link->submit, shadow_req);
+>>> -			link = NULL;
+>>> -			shadow_req = NULL;
+>>> -		}
+>>> -		prev_was_link = (s.sqe->flags & IOSQE_IO_LINK) != 0;
+>>> -
+>>>  		if (link && (s.sqe->flags & IOSQE_IO_DRAIN)) {
+>>>  			if (!shadow_req) {
+>>>  				shadow_req = io_get_req(ctx, NULL);
+>>> @@ -2741,6 +2729,16 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>>>  		trace_io_uring_submit_sqe(ctx, s.sqe->user_data, true, async);
+>>>  		io_submit_sqe(ctx, &s, statep, &link);
+>>>  		submitted++;
+>>> +
+>>> +		/*
+>>> +		 * If previous wasn't linked and we have a linked command,
+>>> +		 * that's the end of the chain. Submit the previous link.
+>>> +		 */
+>>> +		if (!(s.sqe->flags & IOSQE_IO_LINK) && link) 
+>> The behavior changed to 'current seq' instead of previous after dropping prev_was_link?
+>>
+> The old behaviour was to remember @prev_was_link for current sqe, and
+> use at the beginning of the next iteration, where it becomes
+> "previous/last sqe". See, prev_was_link was set after io_queue_link_head.
 > 
-> The note about getting re-written is referring to the fact that the trick
-> with the bulk free is that we build the detached freelist and then when
-> we do the cmpxchg it's getting (correctly) updated there.
-
-Thank you Laura for this clarification.
-
-> But looking at this again, I realize this function still has a more
-> fundamental problem: walking the freelist like this means we actually
-> end up reversing the list so head and tail are no longer pointing
-> to the correct blocks. I was able to reproduce the issue by writing a
-> simple kmem_cache_bulk_alloc/kmem_cache_bulk_free function. I'm
-> guessing that the test of ping with an unusual size was enough to
-> regularly trigger a non-trivial bulk alloc/free.
+> If @i is iteration idx, then timeline was:
+> i:   sqe[i-1].is_link -> io_queue_link_head() # if (prev_was_link)
+> i:   sqe[i].is_link = prev_was_link = (sqe[i].flags & LINK)
+> i+1: sqe[i].is_link -> io_queue_link_head() # if (prev_was_link)
+> i+1: sqe[i+1].is_link = ...
 > 
-> The fix I gave before fixed part of the problem but not all of it.
-> At this point we're basically duplicating the work of the loop
-> below so I think we can just combine it. Was there a reason this
-> wasn't just combined in the first place?
-
-Good catch about the freelist inversion, I was actually starting to
-wonder whether it was really intended. Anyway, I tested your patch (see
-one tiny inline comment below) and it seems to run fine for now, without
-me being able to reproduce the bug anymore.
-
-> diff --git a/mm/slub.c b/mm/slub.c
-> index dac41cf0b94a..1510b86b2e7e 100644
-> --- a/mm/slub.c
-> +++ b/mm/slub.c
-> @@ -1431,13 +1431,17 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
->  	void *next = *head;
->  	void *old_tail = *tail ? *tail : *head;
->  	int rsize;
-> +	next = *head;
-
-`next` is already set a few lines above.
-
-> -	if (slab_want_init_on_free(s)) {
-> -		void *p = NULL;
-> +	/* Head and tail of the reconstructed freelist */
-> +	*head = NULL;
-> +	*tail = NULL;
-> -		do {
-> -			object = next;
-> -			next = get_freepointer(s, object);
-> +	do {
-> +		object = next;
-> +		next = get_freepointer(s, object);
-> +
-> +		if (slab_want_init_on_free(s)) {
->  			/*
->  			 * Clear the object and the metadata, but don't touch
->  			 * the redzone.
-> @@ -1447,29 +1451,8 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
->  							   : 0;
->  			memset((char *)object + s->inuse, 0,
->  			       s->size - s->inuse - rsize);
-> -			set_freepointer(s, object, p);
-> -			p = object;
-> -		} while (object != old_tail);
-> -	}
-> -
-> -/*
-> - * Compiler cannot detect this function can be removed if slab_free_hook()
-> - * evaluates to nothing.  Thus, catch all relevant config debug options here.
-> - */
-> -#if defined(CONFIG_LOCKDEP)	||		\
-> -	defined(CONFIG_DEBUG_KMEMLEAK) ||	\
-> -	defined(CONFIG_DEBUG_OBJECTS_FREE) ||	\
-> -	defined(CONFIG_KASAN)
-> -	next = *head;
-> -
-> -	/* Head and tail of the reconstructed freelist */
-> -	*head = NULL;
-> -	*tail = NULL;
-> -
-> -	do {
-> -		object = next;
-> -		next = get_freepointer(s, object);
-> +		}
->  		/* If object's reuse doesn't have to be delayed */
->  		if (!slab_free_hook(s, object)) {
->  			/* Move object to the new freelist */
-> @@ -1484,9 +1467,6 @@ static inline bool slab_free_freelist_hook(struct kmem_cache *s,
->  		*tail = NULL;
->  	return *head != NULL;
-> -#else
-> -	return true;
-> -#endif
->  }
->  static void *setup_object(struct kmem_cache *s, struct page *page,
 > 
+> After the change, it's done at the same loop iteration by swapping order
+> of checking @prev_was_link and io_queue_link_head().
+> 
+> i:   sqe[i].is_link = ...
+> i:   sqe[i].is_link -> io_queue_link_head()
+> i+1: sqe[i+1].is_link = ...
+> i+1: sqe[i+1].is_link -> io_queue_link_head()
+> 
+> Shouldn't change the behavior, if I'm not missing something.
+> 
+And the same goes for ordering with io_submit_sqe(), which assembles a link.
 
--- 
-Thibaut Sautereau
-CLIP OS developer
+i:   prev_was_link = ... # for sqe[i]
+i:   io_submit_sqe() # for sqe[i]
+i+1: prev_was_link -> io_queue_link_head # for sqe[i]
+
+after:
+i:   io_submit_sqe() # for sqe[i]
+i:   is_link = ... # for sqe[i]
+i:   is_link -> io_queue_link_head # for sqe[i]
+
+> 
+>>> +			io_queue_link_head(ctx, link, &link->submit, shadow_req);
+>>> +			link = NULL;
+>>> +			shadow_req = NULL;
+>>> +		}
+>>>  	}
+>>>  
+>>>  	if (link)
+>>>
+>>
