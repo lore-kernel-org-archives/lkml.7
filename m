@@ -2,157 +2,161 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73A18C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:50:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D64D2C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:53:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40C22206A3
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:50:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573030223;
-	bh=gSCNYnvybXaFKN/pomF/RlMMre8A0JZrFJwWxYzSl54=;
-	h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:List-ID:
-	 From;
-	b=Eh28syT5ZoQ06/XN+qnC2sjyuiz5xlJsxHoeFLThLT4t45de4kOoNoIRN8HLs7vkr
-	 xQmKQ7oNJ/euEXy0BPF3cYCqumIwXSRQb57ZeQIR8CleykLfgPQIfQIsHikRnb3QsK
-	 BBn+Bfk7OVdkFpTx5Bei471Rlq2BADJN2EKKwlDs=
+	by mail.kernel.org (Postfix) with ESMTP id ABBF221882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:53:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729881AbfKFIuW (ORCPT
+        id S1728339AbfKFIxY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:50:22 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52542 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726755AbfKFIuV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:50:21 -0500
-Received: from paulmck-ThinkPad-P72.home (unknown [109.144.221.45])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 824C5206A3;
-        Wed,  6 Nov 2019 08:50:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573030220;
-        bh=gSCNYnvybXaFKN/pomF/RlMMre8A0JZrFJwWxYzSl54=;
-        h=Date:From:To:Cc:Subject:Reply-To:References:In-Reply-To:From;
-        b=Pm30crSKj1fdy4ElGNGzdoydeJvy5t1WaBx/mKgGXojvqSd+Vn/oaJrTyqPor/us3
-         QddBzYau48K0bi63ExnBJjetNZih2EZEmmJ1K9EMjDes15ZphbIKQB4J15CaZZaJvJ
-         HZS/n8kL+2zLIFVqAijDA+EhcCs1a3vtVKJGBOY4=
-Received: by paulmck-ThinkPad-P72.home (Postfix, from userid 1000)
-        id EAEF33520B54; Wed,  6 Nov 2019 00:50:17 -0800 (PST)
-Date:   Wed, 6 Nov 2019 00:50:17 -0800
-From:   "Paul E. McKenney" <paulmck@kernel.org>
-To:     madhuparnabhowmik04@gmail.com
-Cc:     tranmanphong@gmail.com, frextrite@gmail.com,
-        joel@joelfernandes.org, linux-doc@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-kernel-mentees@lists.linuxfoundation.org,
-        skhan@linuxfoundation.org
-Subject: Re: [PATCH 2/2] Documentation: RCU: arrayRCU: Improve format for
- arrayRCU.rst
-Message-ID: <20191106085017.GX20975@paulmck-ThinkPad-P72>
-Reply-To: paulmck@kernel.org
-References: <20191105212927.13924-1-madhuparnabhowmik04@gmail.com>
+        Wed, 6 Nov 2019 03:53:24 -0500
+Received: from smtprelay0180.hostedemail.com ([216.40.44.180]:54415 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726755AbfKFIxY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:53:24 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay08.hostedemail.com (Postfix) with ESMTP id 76B35182CF668;
+        Wed,  6 Nov 2019 08:53:23 +0000 (UTC)
+X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
+X-HE-Tag: books19_3a82ba9ffe32a
+X-Filterd-Recvd-Size: 4543
+Received: from grimm.local.home (unknown [94.155.134.143])
+        (Authenticated sender: rostedt@goodmis.org)
+        by omf01.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 Nov 2019 08:53:21 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 03:53:17 -0500
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
+        andriy.shevchenko@intel.com, cezary.rojewski@intel.com,
+        gustaw.lewandowski@intel.com
+Subject: Re: [PATCH 1/2] seq_buf: Add printing formatted hex dumps
+Message-ID: <20191106035317.7558e47e@grimm.local.home>
+In-Reply-To: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
+References: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
+X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105212927.13924-1-madhuparnabhowmik04@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 02:59:27AM +0530, madhuparnabhowmik04@gmail.com wrote:
-> From: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+On Wed,  6 Nov 2019 07:27:39 +0100
+Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
+
+> Provided function is an analogue of print_hex_dump().
 > 
-> This patch adds cross-references and fixes a few formtting issues.
+> Implementing this function in seq_buf allows using for multiple
+> purposes (e.g. for tracing) and therefore prevents from code duplication
+> in every layer that uses seq_buf.
 > 
-> Signed-off-by: Madhuparna Bhowmik <madhuparnabhowmik04@gmail.com>
+> print_hex_dump() is an essential part of logging data to dmesg. Adding
+> similar capability for other purposes is beneficial to all users.
 
-Hearing no objections, applied to be squashed into this commit:
+Can you add to the change log an example output of print_hex_dump().
 
-7e42de651ffd ("Documentation: RCU: arrayRCU: Converted arrayRCU.txt
-to arrayRCU.rst")
+It makes it easier for reviewers to know if what is implemented matches
+what is expected.
 
-And with the addition of Phong's and Amol's Tested-by tags.
-
-							Thanx, Paul
-
+> 
+> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
+> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
 > ---
->  Documentation/RCU/arrayRCU.rst | 16 ++++++++++------
->  1 file changed, 10 insertions(+), 6 deletions(-)
+>  include/linux/seq_buf.h |  3 +++
+>  lib/seq_buf.c           | 38 ++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 41 insertions(+)
 > 
-> diff --git a/Documentation/RCU/arrayRCU.rst b/Documentation/RCU/arrayRCU.rst
-> index ed5ae24b196e..30c007edfbfb 100644
-> --- a/Documentation/RCU/arrayRCU.rst
-> +++ b/Documentation/RCU/arrayRCU.rst
-> @@ -6,16 +6,16 @@ Using RCU to Protect Read-Mostly Arrays
->  Although RCU is more commonly used to protect linked lists, it can
->  also be used to protect arrays.  Three situations are as follows:
+> diff --git a/include/linux/seq_buf.h b/include/linux/seq_buf.h
+> index aa5deb0..fb0205d 100644
+> --- a/include/linux/seq_buf.h
+> +++ b/include/linux/seq_buf.h
+> @@ -125,6 +125,9 @@ extern int seq_buf_putmem(struct seq_buf *s, const void *mem, unsigned int len);
+>  extern int seq_buf_putmem_hex(struct seq_buf *s, const void *mem,
+>  			      unsigned int len);
+>  extern int seq_buf_path(struct seq_buf *s, const struct path *path, const char *esc);
+> +extern int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str,
+> +			    int prefix_type, int rowsize, int groupsize,
+> +			    const void *buf, size_t len, bool ascii);
 >  
-> -1.  Hash Tables
-> +1.  :ref:`Hash Tables <hash_tables>`
->  
-> -2.  Static Arrays
-> +2.  :ref:`Static Arrays <static_arrays>`
->  
-> -3.  Resizeable Arrays
-> +3.  :ref:`Resizeable Arrays <resizeable_arrays>`
->  
->  Each of these three situations involves an RCU-protected pointer to an
->  array that is separately indexed.  It might be tempting to consider use
->  of RCU to instead protect the index into an array, however, this use
-> -case is -not- supported.  The problem with RCU-protected indexes into
-> +case is **not** supported.  The problem with RCU-protected indexes into
->  arrays is that compilers can play way too many optimization games with
->  integers, which means that the rules governing handling of these indexes
->  are far more trouble than they are worth.  If RCU-protected indexes into
-> @@ -26,6 +26,7 @@ to be safely used.
->  That aside, each of the three RCU-protected pointer situations are
->  described in the following sections.
->  
-> +.. _hash_tables:
->  
->  Situation 1: Hash Tables
->  ------------------------
-> @@ -35,6 +36,7 @@ has a linked-list hash chain.  Each hash chain can be protected by RCU
->  as described in the listRCU.txt document.  This approach also applies
->  to other array-of-list situations, such as radix trees.
->  
-> +.. _static_arrays:
->  
->  Situation 2: Static Arrays
->  --------------------------
-> @@ -50,6 +52,8 @@ Quick Quiz:
->  
->  :ref:`Answer to Quick Quiz <answer_quick_quiz_seqlock>`
->  
-> +.. _resizeable_arrays:
+>  #ifdef CONFIG_BINARY_PRINTF
+>  extern int
+> diff --git a/lib/seq_buf.c b/lib/seq_buf.c
+> index bd807f5..0509706 100644
+> --- a/lib/seq_buf.c
+> +++ b/lib/seq_buf.c
+> @@ -328,3 +328,41 @@ int seq_buf_to_user(struct seq_buf *s, char __user *ubuf, int cnt)
+>  	s->readpos += cnt;
+>  	return cnt;
+>  }
 > +
->  Situation 3: Resizeable Arrays
->  ------------------------------
->  
-> @@ -66,7 +70,7 @@ the remainder of the new, updates the ids->entries pointer to point to
->  the new array, and invokes ipc_rcu_putref() to free up the old array.
->  Note that rcu_assign_pointer() is used to update the ids->entries pointer,
->  which includes any memory barriers required on whatever architecture
-> -you are running on.::
-> +you are running on::
->  
->  	static int grow_ary(struct ipc_ids* ids, int newsize)
->  	{
-> @@ -118,7 +122,7 @@ a simple check suffices.  The pointer to the structure corresponding
->  to the desired IPC object is placed in "out", with NULL indicating
->  a non-existent entry.  After acquiring "out->lock", the "out->deleted"
->  flag indicates whether the IPC object is in the process of being
-> -deleted, and, if not, the pointer is returned.::
-> +deleted, and, if not, the pointer is returned::
->  
->  	struct kern_ipc_perm* ipc_lock(struct ipc_ids* ids, int id)
->  	{
-> -- 
-> 2.17.1
-> 
+
+Requires a kernel doc header here.
+
+> +int seq_buf_hex_dump(struct seq_buf *s, const char *prefix_str, int prefix_type,
+> +		     int rowsize, int groupsize,
+> +		     const void *buf, size_t len, bool ascii)
+> +{
+> +	const u8 *ptr = buf;
+> +	int i, linelen, remaining = len;
+> +	unsigned char linebuf[32 * 3 + 2 + 32 + 1];
+
+What do the above magic numbers mean? Should have a comment explaining
+why you picked those numbers and created the length this way.
+
+Also the preferred method of declarations is to order it by longest
+first. That is, linebuf, followed by the ints, followed by ptr.
+
+
+> +	int ret;
+> +
+> +	if (rowsize != 16 && rowsize != 32)
+> +		rowsize = 16;
+> +
+> +	for (i = 0; i < len; i += rowsize) {
+> +		linelen = min(remaining, rowsize);
+> +		remaining -= rowsize;
+
+Probably should make the above:
+
+		remaining -= linelen;
+
+Yeah, what you have works, but it makes a reviewer worry about using
+remaining later and having it negative.
+
+> +
+> +		hex_dump_to_buffer(ptr + i, linelen, rowsize, groupsize,
+> +				   linebuf, sizeof(linebuf), ascii);
+> +
+> +		switch (prefix_type) {
+> +		case DUMP_PREFIX_ADDRESS:
+
+I'm curious to know what uses the above type? By default, today,
+pointers are pretty much obfuscated, and that will show up here too.
+
+-- Steve
+
+> +			ret = seq_buf_printf(s, "%s%p: %s\n",
+> +			       prefix_str, ptr + i, linebuf);
+> +			break;
+> +		case DUMP_PREFIX_OFFSET:
+> +			ret = seq_buf_printf(s, "%s%.8x: %s\n",
+> +					     prefix_str, i, linebuf);
+> +			break;
+> +		default:
+> +			ret = seq_buf_printf(s, "%s%s\n", prefix_str, linebuf);
+> +			break;
+> +		}
+> +		if (ret)
+> +			return ret;
+> +	}
+> +	return 0;
+> +}
+
