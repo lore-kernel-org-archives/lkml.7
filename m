@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DC92C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E86DAC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0EE64217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A05F7222CB
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:08:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="Hd8PtdO4"
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="KcOPoNDI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388057AbfKFDH6 (ORCPT
+        id S2388078AbfKFDIC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:07:58 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:39284 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388038AbfKFDH5 (ORCPT
+        Tue, 5 Nov 2019 22:08:02 -0500
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:37949 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2388062AbfKFDIB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:07:57 -0500
-Received: by mail-pf1-f194.google.com with SMTP id x28so14515943pfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:07:56 -0800 (PST)
+        Tue, 5 Nov 2019 22:08:01 -0500
+Received: by mail-pl1-f194.google.com with SMTP id w8so10730092plq.5
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 19:08:00 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=arista.com; s=googlenew;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ltvHqBOKpiD2l5ND4e2zUJLZaNbuv0rVXPgSgZl66Aw=;
-        b=Hd8PtdO4WQgjJ2rZRc4lcPgXWh5Jl+NOyxQUhpCFlJ/5w+XtRMZuPAOhNgsYMeOAUQ
-         KJAgOP4ckJdkVZkm83U7EVX5LWc+H/LXqs9wmjMwCAEnZbNu4kHvao4lMC6iNpj5hbzG
-         F5kc5v5Nm4ct7kNDcK5fbff3sx1DouD/iQ8J9Y/mJl34ESyofu7gVM6Ro1ROaVFijim7
-         olOnKD9ptcmp9Nh68d0gSGbzBiahE+C9UqxngJqIoCsFb8Ea5QPFGaL9VI5d5IyyURym
-         I5UvsjyXbUSooDh0PtSLxRiSqKe6KpldH623QhAN+rMonDk3siwjmXxTC36dahgARnTV
-         YbnQ==
+        bh=frWd+h9S1+DPn8N5jwfQSHDVjkeBODz9vqE7P7NufDQ=;
+        b=KcOPoNDIEO7oFCLzsGT9QUoBp69J4VxvjEf7AVmeTEWeDxKpeE3cs14xrhTnLfnjyF
+         uLcLiPVX33/j20HskIoHK20T2G0fcF4c5+XmJvNw8+7r7fiy9Fq5qsqytmGXhco3UHy1
+         +BDJM1jUtIlWbyVKo8JzZNqzcnTDslJcUDS5mSWltFtZpW8rfk8qJY3hul10/E+eEcqs
+         2JPg5ta+jvYqrdXPr+AOVW8o82Rve2oPA7VnXg+luPSTmnYBlCMCyD8NmMNhrUMEKRch
+         qGpS6gdA59ABZBM36inKeyJ0RIoN3PWigL73gwCFSI8Fqd8a1ApKjgimp2w1u7t0cOXX
+         YHPA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ltvHqBOKpiD2l5ND4e2zUJLZaNbuv0rVXPgSgZl66Aw=;
-        b=t5jNv6emgMa/uBh7Jtp7EUPtJNn+xoxORTB0vKiNklJAKfJbqw1rMy6uiD2qB2R74w
-         +UHIuPOrn/FyyOOPLJmDAVaDAqcZKsoQvafSuVJ23n8gwhcgYk2OdVC/E7sgBRzxRxZG
-         0n/CbCCchzTjnIElPGzTOxeWrzZpC3AZPzOB0RCC4Y80NpgOpdFqBRGIfyyoYkAxrpCA
-         wPUXUds+BUaR67l6gA5OQiyhrSOBezOhOGo9JTKAXr3yi8ZSApWkliSyQJCGqMBWik4o
-         b3Q7NhtwbK38S2eSZqh3to8KYRXwwgyZTOp7LTMmeWIjxPT1UaRzEHrnmA9NoL6uoEAI
-         dm/A==
-X-Gm-Message-State: APjAAAWT7igZCphGs45+6VmU59BhsZKz4rhly4AYgErLR/zNq+iazmpa
-        IvIq/yra5gJVRUWbML3Soh4peJeCWbo=
-X-Google-Smtp-Source: APXvYqxoh7SswIGfcGLUzP2eWTaPnr/Qq6dF9alaThcEfJbeFh98Jk6bm8sZB2XHEVJZ02GQMNrwLw==
-X-Received: by 2002:a17:90a:bf16:: with SMTP id c22mr570965pjs.83.1573009676053;
-        Tue, 05 Nov 2019 19:07:56 -0800 (PST)
+        bh=frWd+h9S1+DPn8N5jwfQSHDVjkeBODz9vqE7P7NufDQ=;
+        b=n5B+ajzcxRvzwH29r30nfbr8sDX+UVHmpy9faAqC/R6j+lRE7x15o2gPQx3m4npW5P
+         hQrJf8wPDHqI71zEDpsl6Ftq3c/Lqhsoh/0HgnoDHL4m6qv060TzINw3JWs6vR74jToQ
+         4zQPIo1xv4I01Ikf0Ucdxa0AOEj9Hu3X2GTfmYxURd7uzANk0o4JyR5cpaH+wR90Fxfs
+         CK5nxEvOhoRLqQv8B+NsUmlDFy2nDqBhAo8INFATikepVW7YxuD2LJnMLswjKVVrrA2i
+         M5PnzmuOjcxc4EJj6oCRMP8MmZXlEyOq/qFntdvDxxPB63okueHGN7HHWpiCdXe7bmLd
+         M2Kg==
+X-Gm-Message-State: APjAAAWafwmwS8HSW1Dfi+WU6cAI6NmTHDl9mrnMFPhq//zIqCsxOZ9K
+        T8mj5mWLrmj7b6O0LyRcuJp0di/St0Q=
+X-Google-Smtp-Source: APXvYqz0hYXGmkCjYM6Np502AswAzG6InOP8W+hdXPEcrj1L5cIKeV67dJwCFTwUEjqiHNc+ZnWrzQ==
+X-Received: by 2002:a17:902:bd82:: with SMTP id q2mr197350pls.106.1573009679698;
+        Tue, 05 Nov 2019 19:07:59 -0800 (PST)
 Received: from Mindolluin.ire.aristanetworks.com ([217.173.96.166])
-        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.07.52
+        by smtp.gmail.com with ESMTPSA id k24sm19570487pgl.6.2019.11.05.19.07.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 19:07:55 -0800 (PST)
+        Tue, 05 Nov 2019 19:07:58 -0800 (PST)
 From:   Dmitry Safonov <dima@arista.com>
 To:     linux-kernel@vger.kernel.org
 Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
@@ -67,12 +67,12 @@ Cc:     Dmitry Safonov <0x7f454c46@gmail.com>,
         Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
         Steven Rostedt <rostedt@goodmis.org>,
         Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Christian Borntraeger <borntraeger@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org
-Subject: [PATCH 28/50] s390: Add show_stack_loglvl()
-Date:   Wed,  6 Nov 2019 03:05:19 +0000
-Message-Id: <20191106030542.868541-29-dima@arista.com>
+        Rich Felker <dalias@libc.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        linux-sh@vger.kernel.org
+Subject: [PATCH 29/50] sh: Add loglvl to dump_mem()
+Date:   Wed,  6 Nov 2019 03:05:20 +0000
+Message-Id: <20191106030542.868541-30-dima@arista.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <20191106030542.868541-1-dima@arista.com>
 References: <20191106030542.868541-1-dima@arista.com>
@@ -99,55 +99,100 @@ Introducing log-level parameter and KERN_UNSUPPRESSED [1] seems
 an easier approach than introducing more printk buffers.
 Also, it will consolidate printings with headers.
 
-Introduce show_stack_loglvl(), that eventually will substitute
-show_stack().
+Add log level argument to dump_mem() as a preparation to introduce
+show_stack_loglvl().
 
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: linux-s390@vger.kernel.org
+Cc: Rich Felker <dalias@libc.org>
+Cc: Yoshinori Sato <ysato@users.sourceforge.jp>
+Cc: linux-sh@vger.kernel.org
 [1]: https://lore.kernel.org/lkml/20190528002412.1625-1-dima@arista.com/T/#u
 Signed-off-by: Dmitry Safonov <dima@arista.com>
 ---
- arch/s390/kernel/dumpstack.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ arch/sh/include/asm/kdebug.h |  3 ++-
+ arch/sh/kernel/dumpstack.c   | 17 +++++++++--------
+ arch/sh/kernel/traps.c       |  4 ++--
+ 3 files changed, 13 insertions(+), 11 deletions(-)
 
-diff --git a/arch/s390/kernel/dumpstack.c b/arch/s390/kernel/dumpstack.c
-index 34bdc60c0b11..1a89f0968742 100644
---- a/arch/s390/kernel/dumpstack.c
-+++ b/arch/s390/kernel/dumpstack.c
-@@ -123,20 +123,26 @@ int get_stack_info(unsigned long sp, struct task_struct *task,
- 	return -EINVAL;
+diff --git a/arch/sh/include/asm/kdebug.h b/arch/sh/include/asm/kdebug.h
+index 5212f5fcd752..de8693fabb1d 100644
+--- a/arch/sh/include/asm/kdebug.h
++++ b/arch/sh/include/asm/kdebug.h
+@@ -13,6 +13,7 @@ enum die_val {
+ 
+ /* arch/sh/kernel/dumpstack.c */
+ extern void printk_address(unsigned long address, int reliable);
+-extern void dump_mem(const char *str, unsigned long bottom, unsigned long top);
++extern void dump_mem(const char *str, const char *loglvl,
++		     unsigned long bottom, unsigned long top);
+ 
+ #endif /* __ASM_SH_KDEBUG_H */
+diff --git a/arch/sh/kernel/dumpstack.c b/arch/sh/kernel/dumpstack.c
+index 9f1c9c11d62d..6784b914fba0 100644
+--- a/arch/sh/kernel/dumpstack.c
++++ b/arch/sh/kernel/dumpstack.c
+@@ -16,30 +16,31 @@
+ #include <asm/unwinder.h>
+ #include <asm/stacktrace.h>
+ 
+-void dump_mem(const char *str, unsigned long bottom, unsigned long top)
++void dump_mem(const char *str, const char *loglvl,
++	      unsigned long bottom, unsigned long top)
+ {
+ 	unsigned long p;
+ 	int i;
+ 
+-	printk("%s(0x%08lx to 0x%08lx)\n", str, bottom, top);
++	printk("%s%s(0x%08lx to 0x%08lx)\n", loglvl, str, bottom, top);
+ 
+ 	for (p = bottom & ~31; p < top; ) {
+-		printk("%04lx: ", p & 0xffff);
++		printk("%s%04lx: ", loglvl,  p & 0xffff);
+ 
+ 		for (i = 0; i < 8; i++, p += 4) {
+ 			unsigned int val;
+ 
+ 			if (p < bottom || p >= top)
+-				printk("         ");
++				printk("%s         ", loglvl);
+ 			else {
+ 				if (__get_user(val, (unsigned int __user *)p)) {
+-					printk("\n");
++					printk("%s\n", loglvl);
+ 					return;
+ 				}
+-				printk("%08x ", val);
++				printk("%s%08x ", loglvl, val);
+ 			}
+ 		}
+-		printk("\n");
++		printk("%s\n", loglvl);
+ 	}
  }
  
--void show_stack(struct task_struct *task, unsigned long *stack)
-+void show_stack_loglvl(struct task_struct *task, unsigned long *stack,
-+		       const char *loglvl)
- {
- 	struct unwind_state state;
+@@ -156,7 +157,7 @@ void show_stack(struct task_struct *tsk, unsigned long *sp)
+ 		sp = (unsigned long *)tsk->thread.sp;
  
--	printk("Call Trace:\n");
-+	printk("%sCall Trace:\n", loglvl);
- 	if (!task)
- 		task = current;
- 	unwind_for_each_frame(&state, task, NULL, (unsigned long) stack)
--		printk(state.reliable ? " [<%016lx>] %pSR \n" :
--					"([<%016lx>] %pSR)\n",
--		       state.ip, (void *) state.ip);
-+		printk(state.reliable ? "%s [<%016lx>] %pSR \n" :
-+					"%s([<%016lx>] %pSR)\n",
-+		       loglvl, state.ip, (void *) state.ip);
- 	debug_show_held_locks(task ? : current);
+ 	stack = (unsigned long)sp;
+-	dump_mem("Stack: ", stack, THREAD_SIZE +
++	dump_mem("Stack: ", KERN_DEFAULT, stack, THREAD_SIZE +
+ 		 (unsigned long)task_stack_page(tsk));
+ 	show_trace(tsk, sp, NULL);
  }
+diff --git a/arch/sh/kernel/traps.c b/arch/sh/kernel/traps.c
+index 63cf17bc760d..faad65409075 100644
+--- a/arch/sh/kernel/traps.c
++++ b/arch/sh/kernel/traps.c
+@@ -38,8 +38,8 @@ void die(const char *str, struct pt_regs *regs, long err)
+ 			task_pid_nr(current), task_stack_page(current) + 1);
  
-+void show_stack(struct task_struct *task, unsigned long *stack)
-+{
-+	show_stack_loglvl(task, stack, KERN_DEFAULT);
-+}
-+
- static void show_last_breaking_event(struct pt_regs *regs)
- {
- 	printk("Last Breaking-Event-Address:\n");
+ 	if (!user_mode(regs) || in_interrupt())
+-		dump_mem("Stack: ", regs->regs[15], THREAD_SIZE +
+-			 (unsigned long)task_stack_page(current));
++		dump_mem("Stack: ", KERN_DEFAULT, regs->regs[15],
++			THREAD_SIZE + (unsigned long)task_stack_page(current));
+ 
+ 	notify_die(DIE_OOPS, str, regs, err, 255, SIGSEGV);
+ 
 -- 
 2.23.0
 
