@@ -2,105 +2,100 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BF28FC6194
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB93EC43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D013A217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573080188;
-	bh=sIJIhyS0MXsdS5o5wl8jxauoavtoO6HaIcCyLg5qR2A=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
-	b=OHrgZFMWEe8BctSCyX8bCvzVkWGLSVJpF5YgvpFeZ39MmMf/W3mkol1XGlCLWLA2L
-	 pcto5iLQ/oXaIOCZYLUgzW/ADrBpWkoGuxtLzbchw4fdtpPoAnNO6NRxf0FBKUfhpB
-	 IXzAjDoEcLAdeq4FJrWdHjSCErJXK2nOJmp/hpMQ=
+	by mail.kernel.org (Postfix) with ESMTP id B88DF217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:43:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="goMeXVsT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfKFWnH (ORCPT
+        id S1732615AbfKFWnu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:43:07 -0500
-Received: from mail.kernel.org ([198.145.29.99]:52576 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727295AbfKFWnH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:43:07 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        Wed, 6 Nov 2019 17:43:50 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:54775 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726779AbfKFWnu (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:43:50 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573080229;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding;
+        bh=lS+dCPRsw8mKe+le1Zkw7/5bXkrSkYDfn4dgVdUMQG4=;
+        b=goMeXVsTBG95ZZnE0BKy5sjJDMKWBKsTESPISAwg64M8m8iSMu+S81Nbll7pnK+bcf5aRO
+        d2RX+cV4J+pT1dZGdPK/SPpHp0Xwu6TdZVCnjEuOJOQtVNX7Pc9VjLM8AxTA91wepMoJjl
+        TEW3Q04kjGab01h7EgSjVUMyHue/3CE=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-45--x2kj8y5M569zTGeJgJ96g-1; Wed, 06 Nov 2019 17:43:47 -0500
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A85342173E;
-        Wed,  6 Nov 2019 22:43:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573080186;
-        bh=sIJIhyS0MXsdS5o5wl8jxauoavtoO6HaIcCyLg5qR2A=;
-        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-        b=OD88XhMD/Q/B3vEuWJ+r36+i67KZcYpPXGr9PLTb0wb+AoHAYEudOiF6ZgX1F2uBT
-         6ltkC+OsIobNsreQFPLQuhrXgvcZvUAklfQ++ovnM1P/yaAHZQcLluFFGakhbrHAih
-         VUQWs8glJ4k5gV5c1kO8RHLrZPwGpX6hj4ScnIz8=
-Content-Type: text/plain; charset="utf-8"
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CF84E8017DD;
+        Wed,  6 Nov 2019 22:43:46 +0000 (UTC)
+Received: from jlaw-desktop.bos.redhat.com (dhcp-17-119.bos.redhat.com [10.18.17.119])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6275860BE0;
+        Wed,  6 Nov 2019 22:43:46 +0000 (UTC)
+From:   Joe Lawrence <joe.lawrence@redhat.com>
+To:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: [PATCH] x86/stacktrace: update kconfig help text for reliable unwinders
+Date:   Wed,  6 Nov 2019 17:43:44 -0500
+Message-Id: <20191106224344.8373-1-joe.lawrence@redhat.com>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-MC-Unique: -x2kj8y5M569zTGeJgJ96g-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20191106113551.5557-1-alexandru.ardelean@analog.com>
-References: <20191106113551.5557-1-alexandru.ardelean@analog.com>
-Subject: Re: [PATCH] clk: clk-gpio: Add dt option to propagate rate change to parent
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Alexandru Ardelean <alexandru.ardelean@analog.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     mturquette@baylibre.com, jsarha@ti.com, ce3a@gmx.de,
-        Michael Hennerich <michael.hennerich@analog.com>,
-        Alexandru Ardelean <alexandru.ardelean@analog.com>
-User-Agent: alot/0.8.1
-Date:   Wed, 06 Nov 2019 14:43:05 -0800
-Message-Id: <20191106224306.A85342173E@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Alexandru Ardelean (2019-11-06 03:35:51)
-> From: Michael Hennerich <michael.hennerich@analog.com>
->=20
-> For certain setups/boards it's useful to propagate the rate change of the
-> clock up one level to the parent clock.
->=20
-> This change implements this by defining a `clk-set-rate-parent` device-tr=
-ee
-> property which sets the `CLK_SET_RATE_PARENT` flag to the clock (when set=
-).
->=20
-> Signed-off-by: Michael Hennerich <michael.hennerich@analog.com>
-> Signed-off-by: Alexandru Ardelean <alexandru.ardelean@analog.com>
-> ---
->  drivers/clk/clk-gpio.c | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
->=20
-> diff --git a/drivers/clk/clk-gpio.c b/drivers/clk/clk-gpio.c
-> index 9d930edd6516..6dfbc4b952fe 100644
-> --- a/drivers/clk/clk-gpio.c
-> +++ b/drivers/clk/clk-gpio.c
-> @@ -241,6 +241,7 @@ static int gpio_clk_driver_probe(struct platform_devi=
-ce *pdev)
->         struct device_node *node =3D pdev->dev.of_node;
->         const char **parent_names, *gpio_name;
->         unsigned int num_parents;
-> +       unsigned long clk_flags;
->         struct gpio_desc *gpiod;
->         struct clk *clk;
->         bool is_mux;
-> @@ -274,13 +275,16 @@ static int gpio_clk_driver_probe(struct platform_de=
-vice *pdev)
->                 return ret;
->         }
-> =20
-> +       clk_flags =3D of_property_read_bool(node, "clk-set-rate-parent") ?
-> +                       CLK_SET_RATE_PARENT : 0;
+commit 6415b38bae26 ("x86/stacktrace: Enable HAVE_RELIABLE_STACKTRACE
+for the ORC unwinder") marked the ORC unwinder as a "reliable" unwinder.
+Update the help text to reflect that change: the frame pointer unwinder
+is no longer the only one that provides HAVE_RELIABLE_STACKTRACE.
 
-Is there a DT binding update somewhere? It looks like a linux-ism from
-the DT perspective. I wonder if we can somehow figure out that it's OK
-to call clk_set_rate() on the parent here? Or is it safe to assume that
-we can just always call set rate on the parent? I think for a gate it's
-good and we can just do so, but for a mux maybe not. Care to describe
-your scenario a little more so we can understand why you want to set
-this flag? Is it for a mux or a gate type gpio?
+Signed-off-by: Joe Lawrence <joe.lawrence@redhat.com>
+---
+ arch/x86/Kconfig.debug | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/x86/Kconfig.debug b/arch/x86/Kconfig.debug
+index bf9cd83de777..69cdf0558c13 100644
+--- a/arch/x86/Kconfig.debug
++++ b/arch/x86/Kconfig.debug
+@@ -316,10 +316,6 @@ config UNWINDER_FRAME_POINTER
+ =09  unwinder, but the kernel text size will grow by ~3% and the kernel's
+ =09  overall performance will degrade by roughly 5-10%.
+=20
+-=09  This option is recommended if you want to use the livepatch
+-=09  consistency model, as this is currently the only way to get a
+-=09  reliable stack trace (CONFIG_HAVE_RELIABLE_STACKTRACE).
+-
+ config UNWINDER_GUESS
+ =09bool "Guess unwinder"
+ =09depends on EXPERT
+@@ -333,6 +329,10 @@ config UNWINDER_GUESS
+ =09  useful in many cases.  Unlike the other unwinders, it has no runtime
+ =09  overhead.
+=20
++=09  This option is not recommended if you want to use the livepatch
++=09  consistency model, as this unwinder cannot guarantee reliable stack
++=09  traces.
++
+ endchoice
+=20
+ config FRAME_POINTER
+--=20
+2.21.0
 
