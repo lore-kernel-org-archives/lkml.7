@@ -2,246 +2,128 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E0ECC5DF61
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49FF0C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE2B721A4A
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573000256;
-	bh=gZp+z/amWKS+opoT1nKVVWREQdTOQMs0bXoNemoIUy0=;
-	h=In-Reply-To:References:Subject:From:To:Cc:Date:List-ID:From;
-	b=YEIVv/jHEQ4PG7pqgaQIuBsT3UYGU+Ph9UPt3bACP4gtada1691Gnt6m+r6lutL4m
-	 i8s9QNVj6VhHvJ0oSlJWmTse+KSFSkQaWcfA1dZCC+d7fWJ/nl3fIFPvblQdIkTXyN
-	 SVLpKiMSDnOCYf566cBIeBt2P2ARY7pCiKX/TJ5s=
+	by mail.kernel.org (Postfix) with ESMTP id EB7352178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:35:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="iwk05Z47"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730667AbfKFAa4 (ORCPT
+        id S1730311AbfKFAff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:30:56 -0500
-Received: from mail.kernel.org ([198.145.29.99]:56720 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729494AbfKFAa4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:30:56 -0500
-Received: from kernel.org (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DA8462178F;
-        Wed,  6 Nov 2019 00:30:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573000254;
-        bh=gZp+z/amWKS+opoT1nKVVWREQdTOQMs0bXoNemoIUy0=;
-        h=In-Reply-To:References:Subject:From:To:Cc:Date:From;
-        b=i3ZUsc/nJLdk/BggWLM5WyJY3F3qmoSIz8ZV4f2m4YFz9IEqRSBzoyto/qSoE+lJk
-         11FXEHdFVaOc+ISHEququIn7KpdH8+9G/n0u2D0vg5BXZDnSxkWetRNN6PgnY0o3gz
-         7YAZqtmx1OobHgEZNrUSHEQhjLn3jfc6J40WAxtc=
-Content-Type: text/plain; charset="utf-8"
+        Tue, 5 Nov 2019 19:35:35 -0500
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:44715 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729494AbfKFAff (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 19:35:35 -0500
+Received: by mail-pf1-f193.google.com with SMTP id q26so17409940pfn.11
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:35:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=nV6+nAXCqKLxAkJ73MkPjCdygA/6kDv8a5/d5YqbKKM=;
+        b=iwk05Z47ymun6qVZ2ZqvWQVrNbyrFI4pKJaqVPuEkPVoeZ8TkgQOMYeUjohJyfTxHy
+         i35BEo94zplaDsUpCIniLT2yVpRSn0rD/LIMZNRRDFvwzV2sw5aV+CntsHEXnIS5QRWU
+         credwKAD1iKpgmUDD//nXU9d/JxDgA1iEl62DNLFnu4wvD4qkNgQ8PPueRPgDYOLgbG/
+         wRQ40/pTEPmrga86TUsN55Q89f3ccHt/vgpMxsPdm95ao3HIHGPXqJhoiqMN+sz2D0kx
+         L5TvL5vphZGSYA4WnzDDvIMRkLoCjBCDf84EfTVmSdk0cpkisx4MeLqnP8yYmbqeUxse
+         0Yng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=nV6+nAXCqKLxAkJ73MkPjCdygA/6kDv8a5/d5YqbKKM=;
+        b=MpoK2I5N+qO3U5cjBUMZhfpSHURnfoP6Rw9bOu5FOa04o2erKLyHdlk4TKWeEDJNjZ
+         6vuykOJlc9SqQKBB3aEYhTihdwm708tIPATOZCgh0VHrB+79Jvv5NdguzJ5FabATtk4i
+         7gvVcHnx/1v9wiLjYH5ivrAvWdGE40aMQpuWMROUuX33UuJS1L5lTsAAJVv2AxzwXHg0
+         VksHY4YqEB+jTXvH2nDzgJUnJR09DUk2L8o9Uj3o++rUXOHETeS06xnxnYVPiONdGR+3
+         Ph7bZDtHaQqr2s+Ai5nhF/t+r+vzlNeQe0BKmtsbzMiA20m2/C9UF2WXD+1E9qpxx1D+
+         c5cQ==
+X-Gm-Message-State: APjAAAUrwZOys6X0p5saBr+9xFCzL5NfLn7QDhrGZ7xMUTqZfH5ywLEk
+        WazWkahiE/AukopN2KFXmNS9En24CRWjIYH4vmeEFA==
+X-Google-Smtp-Source: APXvYqxx7uF9ghHiBuV0xbVds7C5n9sNEWRuLJWVo2JcGIMQ4ueurVpCMm+qC8uxe/bJIIoWwyQx/y3NuBylgqCZee4=
+X-Received: by 2002:a63:234c:: with SMTP id u12mr38258741pgm.384.1573000534052;
+ Tue, 05 Nov 2019 16:35:34 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <1572524473-19344-5-git-send-email-tdas@codeaurora.org>
-References: <1572524473-19344-1-git-send-email-tdas@codeaurora.org> <1572524473-19344-5-git-send-email-tdas@codeaurora.org>
-Subject: Re: [PATCH v1 4/7] clk: qcom: Add graphics clock controller driver for SC7180
-From:   Stephen Boyd <sboyd@kernel.org>
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Taniya Das <tdas@codeaurora.org>
-Cc:     David Brown <david.brown@linaro.org>,
-        Rajendra Nayak <rnayak@codeaurora.org>,
-        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Andy Gross <agross@kernel.org>, devicetree@vger.kernel.org,
-        robh@kernel.org, robh+dt@kernel.org,
-        Taniya Das <tdas@codeaurora.org>
-User-Agent: alot/0.8.1
-Date:   Tue, 05 Nov 2019 16:30:53 -0800
-Message-Id: <20191106003053.DA8462178F@mail.kernel.org>
+References: <20191018001816.94460-1-brendanhiggins@google.com>
+ <CAAXuY3rLEt9nqOBSNaWjLMHNg6pDHdjtg7hFiYx-KCDhyfnkcg@mail.gmail.com> <201910301157.58D0CE4D3@keescook>
+In-Reply-To: <201910301157.58D0CE4D3@keescook>
+From:   Brendan Higgins <brendanhiggins@google.com>
+Date:   Tue, 5 Nov 2019 16:35:22 -0800
+Message-ID: <CAFd5g47gfEJqRUW1PR1rtgrzekwLVqRRw0iJ4EVRW4xzUiW2Yw@mail.gmail.com>
+Subject: Re: [PATCH linux-kselftest/test v1] apparmor: add AppArmor KUnit
+ tests for policy unpack
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Iurii Zaikin <yzaikin@google.com>, shuah <shuah@kernel.org>,
+        John Johansen <john.johansen@canonical.com>, jmorris@namei.org,
+        serge@hallyn.com, Alan Maguire <alan.maguire@oracle.com>,
+        David Gow <davidgow@google.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        "Theodore Ts'o" <tytso@mit.edu>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-security-module@vger.kernel.org,
+        KUnit Development <kunit-dev@googlegroups.com>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        Mike Salvatore <mike.salvatore@canonical.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Taniya Das (2019-10-31 05:21:10)
-> diff --git a/drivers/clk/qcom/gpucc-sc7180.c b/drivers/clk/qcom/gpucc-sc7=
-180.c
-> new file mode 100644
-> index 0000000..0d893e6
-> --- /dev/null
-> +++ b/drivers/clk/qcom/gpucc-sc7180.c
-> @@ -0,0 +1,274 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
-> + */
-> +
-> +#include <linux/clk-provider.h>
-> +#include <linux/err.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
+On Wed, Oct 30, 2019 at 11:59 AM Kees Cook <keescook@chromium.org> wrote:
+>
+> On Thu, Oct 17, 2019 at 05:33:56PM -0700, Iurii Zaikin wrote:
+> > On Thu, Oct 17, 2019 at 5:19 PM Brendan Higgins
+> > <brendanhiggins@google.com> wrote:
+> >
+> > > +config SECURITY_APPARMOR_TEST
+> > > +       bool "Build KUnit tests for policy_unpack.c"
+> > > +       default n
+>
+> New options already already default n, this can be left off.
+>
+> > > +       depends on KUNIT && SECURITY_APPARMOR
+> > > +       help
+> > >
+> > select SECURITY_APPARMOR ?
+>
+> "select" doesn't enforce dependencies, so just a "depends ..." is
+> correct.
+>
+> > > +       KUNIT_EXPECT_EQ(test, size, TEST_BLOB_DATA_SIZE);
+> > > +       KUNIT_EXPECT_TRUE(test,
+> > > +               memcmp(blob, TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE) == 0);
+> > I think this must be  KUNIT_ASSERT_EQ(test, size, TEST_BLOB_DATA_SIZE);,
+> > otherwise there could be a buffer overflow in memcmp. All tests that
+> > follow such pattern
+>
+> Agreed.
+>
+> > are suspect. Also, not sure about your stylistic preference for
+> > KUNIT_EXPECT_TRUE(test,
+> >                memcmp(blob, TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE) == 0);
+> > vs
+> > KUNIT_EXPECT_EQ(test,
+> >                0,
+> >                memcmp(blob, TEST_BLOB_DATA, TEST_BLOB_DATA_SIZE));
+>
+> I like == 0.
 
-Are these of includes used?
+Oh, I almost missed this. I think the *_EQ(...) is better than the
+*_TRUE(...) because the EQ is able to provide more debug information
+if the test fails (otherwise there would really be no point in
+providing all these variants).
 
-> +#include <linux/regmap.h>
-> +
-> +#include <dt-bindings/clock/qcom,gpucc-sc7180.h>
-> +
-> +#include "clk-alpha-pll.h"
-> +#include "clk-branch.h"
-> +#include "clk-rcg.h"
-> +#include "clk-regmap.h"
-> +#include "common.h"
-> +#include "gdsc.h"
-> +
-> +#define CX_GMU_CBCR_SLEEP_MASK         0xF
-> +#define CX_GMU_CBCR_SLEEP_SHIFT                4
-> +#define CX_GMU_CBCR_WAKE_MASK          0xF
-> +#define CX_GMU_CBCR_WAKE_SHIFT         8
-> +#define CLK_DIS_WAIT_SHIFT             12
-> +#define CLK_DIS_WAIT_MASK              (0xf << CLK_DIS_WAIT_SHIFT)
-> +
-> +enum {
-> +       P_BI_TCXO,
-> +       P_CORE_BI_PLL_TEST_SE,
-> +       P_GPLL0_OUT_MAIN,
-> +       P_GPLL0_OUT_MAIN_DIV,
-> +       P_GPU_CC_PLL1_OUT_EVEN,
-> +       P_GPU_CC_PLL1_OUT_MAIN,
-> +       P_GPU_CC_PLL1_OUT_ODD,
-> +};
-> +
-> +static struct pll_vco fabia_vco[] =3D {
+Any objections?
 
-const?
-
-> +       { 249600000, 2000000000, 0 },
-> +};
-> +
-> +static struct clk_alpha_pll gpu_cc_pll1 =3D {
-> +       .offset =3D 0x100,
-> +       .vco_table =3D fabia_vco,
-> +       .num_vco =3D ARRAY_SIZE(fabia_vco),
-> +       .regs =3D clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_FABIA],
-> +       .clkr =3D {
-> +               .hw.init =3D &(struct clk_init_data){
-> +                       .name =3D "gpu_cc_pll1",
-> +                       .parent_data =3D  &(const struct clk_parent_data){
-> +                               .fw_name =3D "bi_tcxo",
-> +                               .name =3D "bi_tcxo",
-
-Do we need both? This is new so it should just work with .fw_name right?
-
-> +                       },
-> +                       .num_parents =3D 1,
-> +                       .ops =3D &clk_alpha_pll_fabia_ops,
-> +               },
-> +       },
-> +};
-> +
-> +static const struct parent_map gpu_cc_parent_map_0[] =3D {
-> +       { P_BI_TCXO, 0 },
-> +       { P_GPU_CC_PLL1_OUT_MAIN, 3 },
-> +       { P_GPLL0_OUT_MAIN, 5 },
-> +       { P_GPLL0_OUT_MAIN_DIV, 6 },
-> +       { P_CORE_BI_PLL_TEST_SE, 7 },
-> +};
-> +
-> +static const struct clk_parent_data gpu_cc_parent_data_0[] =3D {
-> +       { .fw_name =3D "bi_tcxo", .name =3D "bi_tcxo" },
-> +       { .hw =3D &gpu_cc_pll1.clkr.hw },
-> +       { .fw_name =3D "gcc_gpu_gpll0_clk_src", .name =3D "gcc_gpu_gpll0_=
-clk_src" },
-> +       { .fw_name =3D "gcc_gpu_gpll0_div_clk_src",
-> +                                       .name =3D "gcc_gpu_gpll0_div_clk_=
-src" },
-> +       { .fw_name =3D "core_bi_pll_test_se", .name =3D "core_bi_pll_test=
-_se" },
-> +};
-
-Same for these.
-
-> +
-> +static const struct freq_tbl ftbl_gpu_cc_gmu_clk_src[] =3D {
-> +       F(19200000, P_BI_TCXO, 1, 0, 0),
-> +       F(200000000, P_GPLL0_OUT_MAIN_DIV, 1.5, 0, 0),
-> +       { }
-> +};
-[..]
-> +
-> +
-> +static int gpu_cc_sc7180_probe(struct platform_device *pdev)
-> +{
-> +       struct regmap *regmap;
-> +       struct alpha_pll_config gpu_cc_pll_config =3D {};
-> +       unsigned int value, mask;
-> +
-> +       regmap =3D qcom_cc_map(pdev, &gpu_cc_sc7180_desc);
-> +       if (IS_ERR(regmap))
-> +               return PTR_ERR(regmap);
-> +
-> +       /* 360MHz Configuration */
-> +       gpu_cc_pll_config.l =3D 0x12;
-> +       gpu_cc_pll_config.alpha =3D 0xC000;
-> +       gpu_cc_pll_config.config_ctl_val =3D 0x20485699;
-> +       gpu_cc_pll_config.config_ctl_hi_val =3D 0x00002067;
-> +       gpu_cc_pll_config.user_ctl_val =3D 0x00000001;
-> +       gpu_cc_pll_config.user_ctl_hi_val =3D 0x00004805;
-> +       gpu_cc_pll_config.test_ctl_hi_val =3D 0x40000000;
-
-Is there a reason this is built on the stack? Save space or something?
-
-> +
-> +       clk_fabia_pll_configure(&gpu_cc_pll1, regmap, &gpu_cc_pll_config);
-> +
-> +       /* Recommended WAKEUP/SLEEP settings for the gpu_cc_cx_gmu_clk */
-> +       mask =3D CX_GMU_CBCR_WAKE_MASK << CX_GMU_CBCR_WAKE_SHIFT;
-> +       mask |=3D CX_GMU_CBCR_SLEEP_MASK << CX_GMU_CBCR_SLEEP_SHIFT;
-> +       value =3D 0xF << CX_GMU_CBCR_WAKE_SHIFT | 0xF << CX_GMU_CBCR_SLEE=
-P_SHIFT;
-
-mask and value can just be big constants? I'm not sure anyone cares to
-tweak this later, but I guess it's fine this way too.
-
-> +       regmap_update_bits(regmap, 0x1098, mask, value);
-> +
-> +       /* gpu_cc_ahb_clk */
-
-What are we doing to gpu_cc_ahb_clk??
-
-> +       regmap_update_bits(regmap, 0x1078, 0x1, 0x1);
-> +
-> +       /* Configure clk_dis_wait for gpu_cx_gdsc */
-> +       regmap_update_bits(regmap, 0x106c, CLK_DIS_WAIT_MASK,
-> +                                               8 << CLK_DIS_WAIT_SHIFT);
-> +
-> +       return qcom_cc_really_probe(pdev, &gpu_cc_sc7180_desc, regmap);
-> +}
-> +
-> +static struct platform_driver gpu_cc_sc7180_driver =3D {
-> +       .probe =3D gpu_cc_sc7180_probe,
-> +       .driver =3D {
-> +               .name =3D "sc7180-gpucc",
-> +               .of_match_table =3D gpu_cc_sc7180_match_table,
-> +       },
-> +};
-> +
-> +static int __init gpu_cc_sc7180_init(void)
-> +{
-> +       return platform_driver_register(&gpu_cc_sc7180_driver);
-> +}
-> +core_initcall(gpu_cc_sc7180_init);
-
-Does it need to be core initcal? Maybe module_platform_driver() works
-just as well?
-
-> +
-> +static void __exit gpu_cc_sc7180_exit(void)
-> +{
-> +       platform_driver_unregister(&gpu_cc_sc7180_driver);
-> +}
-> +module_exit(gpu_cc_sc7180_exit);
-> +
-> +MODULE_DESCRIPTION("QTI GPU_CC SC7180 Driver");
-> +MODULE_LICENSE("GPL v2");
+Thanks for the catch Iurii!
