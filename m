@@ -2,103 +2,91 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78D50C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05074C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C35021848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="Pw/P8Dds"
+	by mail.kernel.org (Postfix) with ESMTP id D6FDC217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:04:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732166AbfKFPEG (ORCPT
+        id S1728083AbfKFPE4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:04:06 -0500
-Received: from smtprelay-out1.synopsys.com ([198.182.47.102]:43066 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731913AbfKFPDM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:03:12 -0500
-Received: from mailhost.synopsys.com (mdc-mailhost2.synopsys.com [10.225.0.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id EACE8C0F4B;
-        Wed,  6 Nov 2019 15:03:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1573052592; bh=lSRQ99cSkNF5cr5WxPR/Dx/0LMZ4CIS9zons/16DEj8=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=Pw/P8DdssfrTW3yDFcoXSMSgTx5+bn4QCogK5YhSBJazfIS/dYqu7ydVb+0g+ar1V
-         v4BP1bkXd0MeACdt8e6KRZt/VC4V/4lTeMiQSSsnmTRQnbZZR3g0TUXbXCeK8do3HC
-         9Ksmsok+8xTucUCB7+90Ca3kxSbz1EN8yIOaalYQjuo3RaF2OBLm+U/8AeeTpz0A7O
-         eIy7g6LP4QQqyIsW8A9s8sSORSQaTWlQeU4OaogImXfaxs4yGPV0Fc93a9w7P/hwnq
-         1okPm/to7hcmIpbx7EwP06iLRhcBn8GdDydOfsUkuy8TiicOqH90vv72YT5jBiU2m3
-         xJsyeyOpaBDdg==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost.synopsys.com (Postfix) with ESMTP id A2F9CA006C;
-        Wed,  6 Nov 2019 15:03:10 +0000 (UTC)
-From:   Jose Abreu <Jose.Abreu@synopsys.com>
-To:     netdev@vger.kernel.org
-Cc:     Joao Pinto <Joao.Pinto@synopsys.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Jose Abreu <Jose.Abreu@synopsys.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH net 04/11] net: stmmac: xgmac: Only get SPH header len if available
-Date:   Wed,  6 Nov 2019 16:02:58 +0100
-Message-Id: <58ba72cfcc373c2f98a6a89da3da12a4fc9f7b3b.1573052379.git.Jose.Abreu@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
-References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
-In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
-References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
+        Wed, 6 Nov 2019 10:04:56 -0500
+Received: from foss.arm.com ([217.140.110.172]:41416 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727548AbfKFPE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:04:56 -0500
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 625E97CD;
+        Wed,  6 Nov 2019 07:04:55 -0800 (PST)
+Received: from e107158-lin.cambridge.arm.com (e107158-lin.cambridge.arm.com [10.1.195.21])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 442CB3F71A;
+        Wed,  6 Nov 2019 07:04:53 -0800 (PST)
+Date:   Wed, 6 Nov 2019 15:04:50 +0000
+From:   Qais Yousef <qais.yousef@arm.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Quentin Perret <qperret@google.com>, linux-kernel@vger.kernel.org,
+        aaron.lwe@gmail.com, valentin.schneider@arm.com, mingo@kernel.org,
+        pauld@redhat.com, jdesfossez@digitalocean.com,
+        naravamudan@digitalocean.com, vincent.guittot@linaro.org,
+        dietmar.eggemann@arm.com, juri.lelli@redhat.com,
+        rostedt@goodmis.org, bsegall@google.com, mgorman@suse.de,
+        kernel-team@android.com, john.stultz@linaro.org
+Subject: Re: NULL pointer dereference in pick_next_task_fair
+Message-ID: <20191106150450.fa5ppdejiggsb46a@e107158-lin.cambridge.arm.com>
+References: <20191028174603.GA246917@google.com>
+ <20191106120525.GX4131@hirez.programming.kicks-ass.net>
+ <20191106130838.GL5671@hirez.programming.kicks-ass.net>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20191106130838.GL5671@hirez.programming.kicks-ass.net>
+User-Agent: NeoMutt/20171215
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Split Header length is only available when L34T == 0. Fix this by
-correctly checking if L34T is zero before trying to get Header length.
+On 11/06/19 14:08, Peter Zijlstra wrote:
+> On Wed, Nov 06, 2019 at 01:05:25PM +0100, Peter Zijlstra wrote:
+> > On Mon, Oct 28, 2019 at 05:46:03PM +0000, Quentin Perret wrote:
+> > > 
+> > > After digging a bit, the offending commit seems to be:
+> > > 
+> > >     67692435c411 ("sched: Rework pick_next_task() slow-path")
+> > > 
+> > > By 'offending' I mean that reverting it makes the issue go away. The
+> > > issue comes from the fact that pick_next_entity() returns a NULL se in
+> > > the 'simple' path of pick_next_task_fair(), which causes obvious
+> > > problems in the subsequent call to set_next_entity().
+> > > 
+> > > I'll dig more, but if anybody understands the issue in the meatime feel
+> > > free to send me a patch to try out :)
+> > 
+> > So for all those who didn't follow along on IRC, the below seems to cure
+> > things.
+> > 
+> > The only thing I'm now considering is if we shouldn't be setting
+> > ->on_cpu=2 _before_ calling put_prev_task(). I'll go audit the RT/DL
+> > cases.
+> 
+> So I think it all works, but that's more by accident than anything else.
+> I'll move the ->on_cpu=2 assignment earlier. That clearly avoids calling
+> put_prev_task() while we're in put_prev_task().
 
-Fixes: 67afd6d1cfdf ("net: stmmac: Add Split Header support and enable it in XGMAC cores")
-Signed-off-by: Jose Abreu <Jose.Abreu@synopsys.com>
+Did you mean avoids calling *set_next_task()* while we're in put_prev_task()?
 
----
-Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Cc: Alexandre Torgue <alexandre.torgue@st.com>
-Cc: Jose Abreu <joabreu@synopsys.com>
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>
-Cc: netdev@vger.kernel.org
-Cc: linux-stm32@st-md-mailman.stormreply.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+So what you're saying is that put_prev_task_{rt,dl}() could drop the rq_lock()
+too and the race could happen while we're inside these functions, correct? Or
+is it a different reason?
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-index ae48154f933c..bd5838ce1e8a 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_descs.c
-@@ -288,7 +288,8 @@ static int dwxgmac2_get_rx_hash(struct dma_desc *p, u32 *hash,
- 
- static int dwxgmac2_get_rx_header_len(struct dma_desc *p, unsigned int *len)
- {
--	*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
-+	if (le32_to_cpu(p->des3) & XGMAC_RDES3_L34T)
-+		*len = le32_to_cpu(p->des2) & XGMAC_RDES2_HL;
- 	return 0;
- }
- 
--- 
-2.7.4
+By the way, is all reads/writes to ->on_cpu happen when a lock is held? Ie: we
+don't need to use any smp read/write barriers?
 
+Cheers
+
+--
+Qais Yousef
