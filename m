@@ -2,93 +2,129 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A4D6BC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1FF5C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78E7020679
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F439217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:50:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="qDfzgBdf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730781AbfKFOuF (ORCPT
+        id S1731891AbfKFOum (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:50:05 -0500
-Received: from foss.arm.com ([217.140.110.172]:41168 "EHLO foss.arm.com"
+        Wed, 6 Nov 2019 09:50:42 -0500
+Received: from vps0.lunn.ch ([185.16.172.187]:51840 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726945AbfKFOuF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:50:05 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A4BEE30E;
-        Wed,  6 Nov 2019 06:50:04 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 66E1A3F71A;
-        Wed,  6 Nov 2019 06:50:03 -0800 (PST)
-Date:   Wed, 6 Nov 2019 14:50:01 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     "Ben Dooks (Codethink)" <ben.dooks@codethink.co.uk>
-Cc:     linux-kernel@lists.codethink.co.uk,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf/core: fix missing static inline on
- perf_cgroup_switch
-Message-ID: <20191106145000.GD50610@lakrids.cambridge.arm.com>
-References: <20191106132527.19977-1-ben.dooks@codethink.co.uk>
+        id S1726945AbfKFOum (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:50:42 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=uBDdKmPjBDsCsId+vpm+knbnzv6iTZMNK66dCjE/fy8=; b=qDfzgBdfNKAtx+WE9GBytWMseU
+        7W+qKZ7VEH+DR7tjA8cyMcuV/DZCqBrZBPVlBMx8OL64+QJDC4q84Jx86+RQkdLSzXPtiwI+++sgj
+        V8fxqGcBvQ5GHqKaIbjhBq9VRl9McwgdhwHxIA5kojAtNBG3Vroppb8dNIEtMMR1t2vo=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
+        (envelope-from <andrew@lunn.ch>)
+        id 1iSMdq-0008Of-7A; Wed, 06 Nov 2019 15:50:38 +0100
+Date:   Wed, 6 Nov 2019 15:50:38 +0100
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc:     "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "f.fainelli@gmail.com" <f.fainelli@gmail.com>
+Subject: Re: [PATCH 06/12] staging: dpaa2-ethsw: add ACL entry to redirect
+ STP to CPU
+Message-ID: <20191106145038.GB30762@lunn.ch>
+References: <1572957275-23383-1-git-send-email-ioana.ciornei@nxp.com>
+ <1572957275-23383-7-git-send-email-ioana.ciornei@nxp.com>
+ <20191105142202.GC7189@lunn.ch>
+ <VI1PR0402MB28007254BB7614477CED4DBCE07E0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+ <20191105155954.GE17620@lunn.ch>
+ <DB6PR0402MB27899B298481E7A3460BB9BFE0790@DB6PR0402MB2789.eurprd04.prod.outlook.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20191106132527.19977-1-ben.dooks@codethink.co.uk>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+In-Reply-To: <DB6PR0402MB27899B298481E7A3460BB9BFE0790@DB6PR0402MB2789.eurprd04.prod.outlook.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 01:25:27PM +0000, Ben Dooks (Codethink) wrote:
-> It looks like a "static inline" has been missed in front
-> of the empty definition of perf_cgroup_switch under
-> certain configurations. Fixes the following sparse warning:
+On Wed, Nov 06, 2019 at 01:47:47PM +0000, Ioana Ciornei wrote:
+> > Subject: Re: [PATCH 06/12] staging: dpaa2-ethsw: add ACL entry to redirect
+> > STP to CPU
+> > 
+> > > The control queues do not form an actual interface in the sense that
+> > > the CPU does not receive unknown unicast, broadcast and multicast
+> > > frames by default.  For each frame that we want to direct to the CPU
+> > > we must add an ACL entry.
+> > 
+> > So this appears to be one of the dumbest switches so far :-(
 > 
-> kernel/events/core.c:1035:1: warning: symbol 'perf_cgroup_switch' was not declared. Should it be static?
-> 
-> Signed-off-by: Ben Dooks (Codethink) <ben.dooks@codethink.co.uk>
-> ---
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-> Cc: Jiri Olsa <jolsa@redhat.com>
-> Cc: Namhyung Kim <namhyung@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/events/core.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+> To be fair, the actual hardware can do much more.
+> The problem here is that the firmware models the switch in a non-Linux style.
 
-Acked-by: Mark Rutland <mark.rutland@arm.com>
+Well, the whole hardware is not very linux like!
 
-Mark.
+> > 
+> > Can you add an ACL which is all L2 broadcast/multicast?  That would be a good
+> > first step.
+> 
+> I can add that but it would not be enough.
+> For example, unknown unicast would not be matched thus would not reach the CPU.
 
+Not ideal, but you could rely on ARP and ND. Any conversation should
+start with a broadcast/multicast ARP or ND. The bridge should add an
+FDB based on what it just learned, and traffic should flow. And when
+the interface is not part of a bridge, you don't care about unknown
+unicast.
+
+> > Does the ACL stop further processing of the frame? Ideally you want the
+> > switch to also flood broadcast/multicast out other ports, if they are in a
+> > bridge. If it cannot, you end up with the software bridge doing the flooding.
 > 
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index aec8dba2bea4..a4bad9f32fb7 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1031,7 +1031,7 @@ perf_cgroup_set_timestamp(struct task_struct *task,
->  {
->  }
->  
-> -void
-> +static inline void
->  perf_cgroup_switch(struct task_struct *task, struct task_struct *next)
->  {
->  }
-> -- 
-> 2.24.0.rc1
+> Yes, the ACL stops any further processing. 
+
+O.K, the software bridge can handle that. It is not the best use for
+hardware, but will work.
+
+> Your assumption is true, learning, with the current implementation, is not possible for CPU frames.
+> In .ndo_start_xmit() we inject directly into the switch port's Tx queues, thus bypassing the entire learning process.
 > 
+> All in all, I do not see a way out just by using the ACL mechanism (because of unknown unicast frames).
+> 
+> I have to talk in detail with the firmware team, but from what I can understand if we make the following changes in firmware it would better fit the Linux framework:
+>  * make the CPU receive unknown unicast, broadcast and multicast frames by default (without any ACLs)
+
+Yes, that is the first step. Some switches go further. Link local L2
+frames are always passed to the CPU. All ARP and ND packets are
+passed, IGMP, etc. Once you have the first step working, you start
+thinking about the next step. That is blocking some of this traffic
+hitting the CPU. IGMP snooping is one way. You need to continue
+receiving the IGMP frames, but not the multicast traffic. But they use
+the same MAC address. So the switch needs to look deeper into the
+packet.
+
+> * frames originated on the CPU should not bypass the learning
+>   process (it should have its own Tx queues that go through the
+>   same learning process)
+
+Learning is needed. But maybe not its own Tx queue. It depends on the
+QoS architecture. Ideally you want QoS to work on CPU frames, so they
+get put into the correct egress queue for there QoS level.
+
+With DSA this is simpler, since you have a physical interface
+connected to the CPU, so you can use that interface number in all your
+tables. But with a pure switchdev driver, each port effectively
+becomes two ports, one to the front panel and one to the CPU port. And
+your tables need to differentiate this.
+
+     Andrew
