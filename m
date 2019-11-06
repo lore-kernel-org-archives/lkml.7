@@ -2,107 +2,168 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F29AC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ABEA0C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E88B02187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:02:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="jZSOsThW"
+	by mail.kernel.org (Postfix) with ESMTP id 7DCFF2173E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732440AbfKFRCJ (ORCPT
+        id S1732449AbfKFRCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:02:09 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:39208 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728777AbfKFRCI (ORCPT
+        Wed, 6 Nov 2019 12:02:11 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:24322 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728777AbfKFRCK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:02:08 -0500
-Received: by mail-wm1-f67.google.com with SMTP id t26so4268939wmi.4
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:02:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Td99yEjooCTjs2/PvMjZI2+HMS/tAjDRA3GPrGeVtEI=;
-        b=jZSOsThWQQ2LwYctC8YcYPDbJ6oRY4DPiwyay5ZNoZNVDTtdmqyGYCfK7oviW4ZtcO
-         JAXJxC2ftHojYtacL6taI2khb2bB84OqQd4AY+cdZJ+FS+WhNMuH3U8C0QpojuMzYC8J
-         LCrBgAeDbCQrhM8h/6zogR/hXJ8oNqj8/mtlAAGRUoRzAhmaUxlAkmAqExkGpmzQ68fK
-         zI5ZnHDs7yLpqxZ8Zcihf7Fh1iW3sL+Uwjl0iILXIArIbhigbYyggOc8zB0fO1DRUC/3
-         0bwMkP2fDP2c+cJarcp3NwM2fagjkXnl4hCYx99vEIH+HrcpXAtN4CAWRqLjn+0bXOuo
-         bH6A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Td99yEjooCTjs2/PvMjZI2+HMS/tAjDRA3GPrGeVtEI=;
-        b=gOZkKM+hMYSPyouL2+erEC8Kslq7HmIjlQMKVq2RnBMutXndSSXc6X/p3126Ho7GXj
-         UIHa7/a6Ugh1xeTEM5tFinvp9UyfAXFC7WFgW7DIdcKBxyeuipbk/uxwgiHk44Z1wYbM
-         lIuCyC0w/KianDVSUo/VMnk5y3J3wfO2CZ/3yHzVOQjxlm7rBDoGgldGlZsyLXZYB4UK
-         XvryArMJw7uD2OYIb/P9N62T44+fFnUVE+hrgu6i7jk/frPYf4cgvqbcauWNIY61+6Iq
-         Unc8766mtoN1yytwrmgzSTDYWuSvrQPaO7hh8uAs0WDS9USHAxVxzYdHlwLQG7TGZJwG
-         FTGw==
-X-Gm-Message-State: APjAAAWcNCerkmvBOEsvLHTLIw2VIvKPF6fDKaJvS0Nxgfi8LdEp0voE
-        s9L89svzr/XpSOLcIbl+mho+xD2xC52urZsdQ+1msA==
-X-Google-Smtp-Source: APXvYqwWWNQE9RlQ13ZOmh7HQWoRHEyqbaaMBYYVyKsS2AreAFalWLEQhhn/3Bmd7r7+YTDh7MBZtZ4hIFwtJyvXqIs=
-X-Received: by 2002:a1c:64d6:: with SMTP id y205mr3227761wmb.136.1573059726914;
- Wed, 06 Nov 2019 09:02:06 -0800 (PST)
+        Wed, 6 Nov 2019 12:02:10 -0500
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA6Grxs6110778
+        for <linux-kernel@vger.kernel.org>; Wed, 6 Nov 2019 12:02:09 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41wtgj60-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 12:02:09 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <linuxram@us.ibm.com>;
+        Wed, 6 Nov 2019 17:02:06 -0000
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Nov 2019 17:02:01 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA6H20Bx41681096
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Nov 2019 17:02:00 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8A1C74C046;
+        Wed,  6 Nov 2019 17:02:00 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id CC2054C040;
+        Wed,  6 Nov 2019 17:01:56 +0000 (GMT)
+Received: from oc0525413822.ibm.com (unknown [9.80.236.142])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Wed,  6 Nov 2019 17:01:56 +0000 (GMT)
+Date:   Wed, 6 Nov 2019 09:01:53 -0800
+From:   Ram Pai <linuxram@us.ibm.com>
+To:     Alexey Kardashevskiy <aik@ozlabs.ru>
+Cc:     linuxppc-dev@lists.ozlabs.org, benh@kernel.crashing.org,
+        david@gibson.dropbear.id.au, mpe@ellerman.id.au, paulus@ozlabs.org,
+        mdroth@linux.vnet.ibm.com, hch@lst.de, andmike@us.ibm.com,
+        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
+        cai@lca.pw, tglx@linutronix.de, bauerman@linux.ibm.com,
+        linux-kernel@vger.kernel.org
+Reply-To: Ram Pai <linuxram@us.ibm.com>
+References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
+ <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
+ <af0a236f-37b2-ee16-0ebd-576b4e12d8cd@ozlabs.ru>
 MIME-Version: 1.0
-References: <1572931429-487-1-git-send-email-anshuman.khandual@arm.com>
-In-Reply-To: <1572931429-487-1-git-send-email-anshuman.khandual@arm.com>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 6 Nov 2019 18:01:54 +0100
-Message-ID: <CAKv+Gu-q16Z=tyeb3b5NnjBkw9cRoeEM6OQaT6dGe1i+9iJa9w@mail.gmail.com>
-Subject: Re: [PATCH] efi: Return EFI_RESERVED_TYPE in efi_mem_type() for
- absent addresses
-To:     Anshuman Khandual <anshuman.khandual@arm.com>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <af0a236f-37b2-ee16-0ebd-576b4e12d8cd@ozlabs.ru>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19110617-4275-0000-0000-0000037B60E4
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110617-4276-0000-0000-0000388EAFD6
+Message-Id: <20191106170153.GC5201@oc0525413822.ibm.com>
+Subject: RE: [RFC v1 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with the
+ hypervisor.
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-06_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=48 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911060163
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019 at 21:39, Anshuman Khandual
-<anshuman.khandual@arm.com> wrote:
->
-> The function efi_mem_type() is expected (per documentation above) to return
-> EFI_RESERVED_TYPE when a given physical address is not present in the EFI
-> memory map. Even though EFI_RESERVED_TYPE is not getting checked explicitly
-> anywhere in the callers, it is always better to return expected values.
->
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: linux-efi@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+On Wed, Nov 06, 2019 at 12:58:50PM +1100, Alexey Kardashevskiy wrote:
+> 
+> 
+> On 05/11/2019 08:28, Ram Pai wrote:
+> > The hypervisor needs to access the contents of the page holding the TCE
+> > entries while setting up the TCE entries in the IOMMU's TCE table. For
+> > SecureVMs, since this page is encrypted, the hypervisor cannot access
+> > valid entries. Share the page with the hypervisor. This ensures that the
+> > hypervisor sees the valid entries.
+> > 
+> > Signed-off-by: Ram Pai <linuxram@us.ibm.com>
+> > ---
+> >  arch/powerpc/platforms/pseries/iommu.c | 20 +++++++++++++++++---
+> >  1 file changed, 17 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
+> > index 8d9c2b1..07f0847 100644
+> > --- a/arch/powerpc/platforms/pseries/iommu.c
+> > +++ b/arch/powerpc/platforms/pseries/iommu.c
+> > @@ -37,6 +37,7 @@
+> >  #include <asm/mmzone.h>
+> >  #include <asm/plpar_wrappers.h>
+> >  #include <asm/svm.h>
+> > +#include <asm/ultravisor.h>
+> >  
+> >  #include "pseries.h"
+> >  
+> > @@ -179,6 +180,19 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  
+> >  static DEFINE_PER_CPU(__be64 *, tce_page);
+> >  
+> > +/*
+> > + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
+> > + */
+> > +static __be64 *alloc_tce_page(void)
+> > +{
+> > +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+> > +
+> > +	if (tcep && is_secure_guest())
+> > +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
+> 
+> 
+> There is no matching unshare in this patch.
 
-This reverts commit f99afd08a45fbbd9ce35a7624ffd1d850a1906c0.
+The page is allocated and shared, and stays that way for the life of the
+kernel. It is not explicitly unshared or freed.  It is however
+implicitly unshared by the guest kernel, through a UV_UNSHARE_ALL_PAGES ucall
+when the guest kernel reboots. And it also gets implicitly unshared by
+the Ultravisor/Hypervisor, if the SVM abruptly terminates.
 
-Could you explain why it is better to fix the code than fix the comment?
+> 
+> 
+> > +
+> > +	return tcep;
+> > +}
+> > +
+> >  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  				     long npages, unsigned long uaddr,
+> >  				     enum dma_data_direction direction,
+> > @@ -206,8 +220,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
+> >  	 * from iommu_alloc{,_sg}()
+> >  	 */
+> >  	if (!tcep) {
+> > -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
+> > -		/* If allocation fails, fall back to the loop implementation */
+> > +		tcep = alloc_tce_page();
+> >  		if (!tcep) {
+> >  			local_irq_restore(flags);
+> >  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
+> > @@ -391,6 +404,7 @@ static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
+> >  	return rc;
+> >  }
+> >  
+> > +
+> 
+> Unrelated.
 
-> ---
->  drivers/firmware/efi/efi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 69f00f7453a3..bdda90a4601e 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -914,7 +914,7 @@ int efi_mem_type(unsigned long phys_addr)
->                                   (md->num_pages << EFI_PAGE_SHIFT))))
->                         return md->type;
->         }
-> -       return -EINVAL;
-> +       return EFI_RESERVED_TYPE;
->  }
->  #endif
->
-> --
-> 2.20.1
->
+yes. will fix it.
+
+Thanks,
+RP
+
