@@ -6,31 +6,29 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26133C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE9FDC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E87F421848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B506F21848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:51:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731822AbfKFJvO (ORCPT
+        id S1729190AbfKFJug (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:51:14 -0500
-Received: from sauhun.de ([88.99.104.3]:50186 "EHLO pokefinder.org"
+        Wed, 6 Nov 2019 04:50:36 -0500
+Received: from sauhun.de ([88.99.104.3]:50164 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727485AbfKFJuh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:50:37 -0500
+        id S1727239AbfKFJug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:50:36 -0500
 Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
-        by pokefinder.org (Postfix) with ESMTPSA id E43422C054E;
-        Wed,  6 Nov 2019 10:50:35 +0100 (CET)
+        by pokefinder.org (Postfix) with ESMTPSA id C36BD2C0548;
+        Wed,  6 Nov 2019 10:50:34 +0100 (CET)
 From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
 To:     linux-i2c@vger.kernel.org
 Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        Benson Leung <bleung@chromium.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH 04/12] platform: chrome: convert to i2c_new_scanned_device
-Date:   Wed,  6 Nov 2019 10:50:22 +0100
-Message-Id: <20191106095033.25182-5-wsa+renesas@sang-engineering.com>
+        Max Staudt <max@enpas.org>, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 02/12] i2c: icy: convert to i2c_new_scanned_device
+Date:   Wed,  6 Nov 2019 10:50:20 +0100
+Message-Id: <20191106095033.25182-3-wsa+renesas@sang-engineering.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
 References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
@@ -46,66 +44,28 @@ i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
 
 Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
+ drivers/i2c/busses/i2c-icy.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Build tested only. RFC, please comment and/or ack, but don't apply yet.
-
- drivers/platform/chrome/chromeos_laptop.c | 18 ++++++++++--------
- 1 file changed, 10 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/platform/chrome/chromeos_laptop.c b/drivers/platform/chrome/chromeos_laptop.c
-index 8723bcf10c93..4f3651fcd9fe 100644
---- a/drivers/platform/chrome/chromeos_laptop.c
-+++ b/drivers/platform/chrome/chromeos_laptop.c
-@@ -63,7 +63,7 @@ struct acpi_peripheral {
- struct chromeos_laptop {
- 	/*
- 	 * Note that we can't mark this pointer as const because
--	 * i2c_new_probed_device() changes passed in I2C board info, so.
-+	 * i2c_new_scanned_device() changes passed in I2C board info, so.
- 	 */
- 	struct i2c_peripheral *i2c_peripherals;
- 	unsigned int num_i2c_peripherals;
-@@ -87,8 +87,8 @@ chromes_laptop_instantiate_i2c_device(struct i2c_adapter *adapter,
- 	 * address we scan secondary addresses. In any case the client
- 	 * structure gets assigned primary address.
- 	 */
--	client = i2c_new_probed_device(adapter, info, addr_list, NULL);
--	if (!client && alt_addr) {
-+	client = i2c_new_scanned_device(adapter, info, addr_list, NULL);
-+	if (IS_ERR(client) && alt_addr) {
- 		struct i2c_board_info dummy_info = {
- 			I2C_BOARD_INFO("dummy", info->addr),
- 		};
-@@ -97,9 +97,9 @@ chromes_laptop_instantiate_i2c_device(struct i2c_adapter *adapter,
- 		};
- 		struct i2c_client *dummy;
+diff --git a/drivers/i2c/busses/i2c-icy.c b/drivers/i2c/busses/i2c-icy.c
+index 8382eb64b424..07baa4d8de39 100644
+--- a/drivers/i2c/busses/i2c-icy.c
++++ b/drivers/i2c/busses/i2c-icy.c
+@@ -188,10 +188,10 @@ static int icy_probe(struct zorro_dev *z,
+ 		ltc2990_info.fwnode = new_fwnode;
  
--		dummy = i2c_new_probed_device(adapter, &dummy_info,
--					      alt_addr_list, NULL);
--		if (dummy) {
-+		dummy = i2c_new_scanned_device(adapter, &dummy_info,
-+					       alt_addr_list, NULL);
-+		if (!IS_ERR(dummy)) {
- 			pr_debug("%d-%02x is probed at %02x\n",
- 				 adapter->nr, info->addr, dummy->addr);
- 			i2c_unregister_device(dummy);
-@@ -107,12 +107,14 @@ chromes_laptop_instantiate_i2c_device(struct i2c_adapter *adapter,
- 		}
+ 		i2c->ltc2990_client =
+-			i2c_new_probed_device(&i2c->adapter,
+-					      &ltc2990_info,
+-					      icy_ltc2990_addresses,
+-					      NULL);
++			i2c_new_scanned_device(&i2c->adapter,
++					       &ltc2990_info,
++					       icy_ltc2990_addresses,
++					       NULL);
  	}
  
--	if (!client)
-+	if (IS_ERR(client)) {
-+		client = NULL;
- 		pr_debug("failed to register device %d-%02x\n",
- 			 adapter->nr, info->addr);
--	else
-+	} else {
- 		pr_debug("added i2c device %d-%02x\n",
- 			 adapter->nr, info->addr);
-+	}
- 
- 	return client;
- }
+ 	return 0;
 -- 
 2.20.1
 
