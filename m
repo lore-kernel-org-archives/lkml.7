@@ -2,218 +2,174 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84DB9C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FCBEC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 162E52075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2C852084C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="doQP7LMQ"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="i+xoTHoc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729903AbfKFF7d (ORCPT
+        id S1730900AbfKFF7t (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 00:59:33 -0500
-Received: from mailout1.samsung.com ([203.254.224.24]:40646 "EHLO
-        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725913AbfKFF7c (ORCPT
+        Wed, 6 Nov 2019 00:59:49 -0500
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:48428 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFF7s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 00:59:32 -0500
-Received: from epcas5p2.samsung.com (unknown [182.195.41.40])
-        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20191106055930epoutp01d8066acd53cd935780ded6b29f7b415d~UfVQq2tPQ0507005070epoutp01s
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 05:59:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20191106055930epoutp01d8066acd53cd935780ded6b29f7b415d~UfVQq2tPQ0507005070epoutp01s
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573019970;
-        bh=5jqZLeB/t+bgdVHOVulyXWfe9MwnZ+LVz1WIl+VATmQ=;
-        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
-        b=doQP7LMQXxS6K6rD29/rhya+CzbayUU5dKWvbXBk057ShI/oIM7+WCyLyu76zYtB0
-         4ZAjz9Cx0JlkNp7mR7QAV5z9j+RqL/sh7DhoXQ9fgm35LQoTCNYsqnX8y91fY5ADto
-         +PNHj4mSpyBclZ1A2ByCRPD6VDIHp7hbVXcx5Jhc=
-Received: from epsmges5p1new.samsung.com (unknown [182.195.42.73]) by
-        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
-        20191106055928epcas5p194c6211b75e7a4c84e2dbd1b592b8a0b~UfVPML0tv1971919719epcas5p1h;
-        Wed,  6 Nov 2019 05:59:28 +0000 (GMT)
-Received: from epcas5p3.samsung.com ( [182.195.41.41]) by
-        epsmges5p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8C.2A.20293.04162CD5; Wed,  6 Nov 2019 14:59:28 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191106055928epcas5p3371c1e4a063e5bb4012abc4d37335276~UfVOzVVCF1088910889epcas5p3t;
-        Wed,  6 Nov 2019 05:59:28 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20191106055928epsmtrp2bab2a75d17ca7709ad8260f48b6c9615~UfVOyV3My2121521215epsmtrp2Z;
-        Wed,  6 Nov 2019 05:59:28 +0000 (GMT)
-X-AuditID: b6c32a49-fe3ff70000014f45-9e-5dc2614015ab
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        8A.CE.24756.04162CD5; Wed,  6 Nov 2019 14:59:28 +0900 (KST)
-Received: from pankjsharma02 (unknown [107.111.84.17]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20191106055926epsmtip28d612b8d8e1b46086452996ec625632d~UfVM8VnYB1946719467epsmtip26;
-        Wed,  6 Nov 2019 05:59:26 +0000 (GMT)
-From:   "pankj.sharma" <pankj.sharma@samsung.com>
-To:     <mkl@pengutronix.de>, <wg@grandegger.com>
-Cc:     <davem@davemloft.net>, <pankaj.dubey@samsung.com>,
-        <rcsekar@samsung.com>, <jhofstee@victronenergy.com>,
-        <simon.horman@netronome.com>,
-        "'Sriram Dash'" <sriram.dash@samsung.com>,
-        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-In-Reply-To: <1572435539-3315-1-git-send-email-pankj.sharma@samsung.com>
-Subject: RE: [PATCH v3] can: m_can: add support for handling arbitration
- error
-Date:   Wed, 6 Nov 2019 11:29:24 +0530
-Message-ID: <01db01d59467$597156c0$0c540440$@samsung.com>
+        Wed, 6 Nov 2019 00:59:48 -0500
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA65xcY6070610;
+        Tue, 5 Nov 2019 23:59:38 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573019978;
+        bh=/RK0uOCbClf9VxVsdthFZWLOyuG/GQTi/0ClInCExY8=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=i+xoTHocY4Dl3oq5ERNLhp2Fw+DfK7gwro/M0dDMtSSMriQLKQ71xgfpcQWehA3Ox
+         MntAXR3R7tJ66lE/G7NMX4M/jYRy+kdYQA6XxgVYAiv8VulqK3glK2CwiMJqPxc/A9
+         94igXccbXOm3Ctv0MG/5MryfsziLt1I20yCUFO2w=
+Received: from DFLE113.ent.ti.com (dfle113.ent.ti.com [10.64.6.34])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA65xcYW066822
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Tue, 5 Nov 2019 23:59:38 -0600
+Received: from DFLE110.ent.ti.com (10.64.6.31) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Tue, 5 Nov
+ 2019 23:59:23 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE110.ent.ti.com
+ (10.64.6.31) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Tue, 5 Nov 2019 23:59:23 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA65xYLe081054;
+        Tue, 5 Nov 2019 23:59:35 -0600
+Subject: Re: [PATCH v4 18/20] mtd: spi-nor: Rename macronix_quad_enable to
+ spi_nor_sr1_bit6_quad_enable
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
+ <20191102112316.20715-19-tudor.ambarus@microchip.com>
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Message-ID: <10b14e43-0f06-88fa-20b5-05f99cd93b6f@ti.com>
+Date:   Wed, 6 Nov 2019 11:30:10 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQGK3XpoOA41uKowC2FhnQpbH/1i7AGj5xUMqAXz66A=
-Content-Language: en-us
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrKKsWRmVeSWpSXmKPExsWy7bCmpq5D4qFYg6/HtCzmnG9hsVjxfh+r
-        xarvU5ktLu+aw2axftEUFotjC8QsFm39wm4x68IOVosbOzktbqxnt1h6byerA7fHlpU3mTw+
-        XrrN6DG9+yGzR/9fA4++LasYPT5vkvOYdPADewB7FJdNSmpOZllqkb5dAlfGg5UbWAr2SVVc
-        n3mUsYHxhGgXIyeHhICJxIK12xi7GLk4hAR2M0pMubmIGcL5xCix+NwpdgjnG6PEk/2NQGUc
-        YC3frtpBxPcySsx/1grV8ZpRYv3Ll0wgc9kE9CWmNP1lAbFFBHQl3qx9ADaJWWASk0T3rWvM
-        IAlOAQ+JX68egTUICwRIrJp8kA3EZhFQkVg+eQqYzStgKdG0bw47hC0ocXLmE7ChzALaEssW
-        vmaGeEJB4ufTZawQy6wk5q+5zAxRIy7x8ugRsMUSAv3sEgv3b4BqcJG48P4kO4QtLPHq+BYo
-        W0ri87u9bBB2tsTC3f0sEC9XSLTNEIYI20scuDIHLMwsoCmxfpc+xCo+id7fT5ggqnklOtqE
-        IKrVJKY+fccIYctI3Hm0mQ2ixAPoANkJjIqzkPw1C8lfs5DcPwth1wJGllWMkqkFxbnpqcWm
-        BYZ5qeV6xYm5xaV56XrJ+bmbGMGJS8tzB+Oscz6HGAU4GJV4eFeUHIwVYk0sK67MPcQowcGs
-        JMIb0wcU4k1JrKxKLcqPLyrNSS0+xCjNwaIkzjuJ9WqMkEB6YklqdmpqQWoRTJaJg1OqgdHS
-        5qsk66zmcOOG3rn1HLM5hI8dtlO22ngwOIyNXev9V7b9a48vZrC+JNBRFpijESmWcKY/RK3q
-        tszaw+F5hxKeW0w7YbOrepISQ1PZXSbbtzyn+3Z5G+Td0fy1u7eH1+D4L21G87J5dleWaKuy
-        R/++VhJvb3nnyker56qLGWIifV02RCyeqMRSnJFoqMVcVJwIAMO7FNlYAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrBIsWRmVeSWpSXmKPExsWy7bCSvK5D4qFYg7v7uCzmnG9hsVjxfh+r
-        xarvU5ktLu+aw2axftEUFotjC8QsFm39wm4x68IOVosbOzktbqxnt1h6byerA7fHlpU3mTw+
-        XrrN6DG9+yGzR/9fA4++LasYPT5vkvOYdPADewB7FJdNSmpOZllqkb5dAlfGuRe7GQueSVZs
-        ezubsYHxjUgXIweHhICJxLerdl2MnBxCArsZJZ7OYYYIy0gs/lwNEpYQEJZY+e85excjF1DJ
-        S0aJ1snv2EASbAL6ElOa/rKA2CJA9qJL/8GKmAVmMUl0POtlgxg6k1Hi1xsdEJtTwEPi16tH
-        TCC2sICfxIHJ68FqWARUJJZPngJm8wpYSjTtm8MOYQtKnJz5BGwBs4C2RO/DVkYYe9nC18wQ
-        1ylI/Hy6jBXiCCuJ+WsuM0PUiEu8PHqEfQKj8Cwko2YhGTULyahZSFoWMLKsYpRMLSjOTc8t
-        NiwwzEst1ytOzC0uzUvXS87P3cQIjj8tzR2Ml5fEH2IU4GBU4uFdUXIwVog1say4MvcQowQH
-        s5IIb0wfUIg3JbGyKrUoP76oNCe1+BCjNAeLkjjv07xjkUIC6YklqdmpqQWpRTBZJg5OqQbG
-        ucekzL+GvP9+a/9f/x0yE2eXZj4S3fFN+/U0mWy7+cVFy/4FJH3cyqxokyqygVt0SSXD3z/v
-        73i8y1VfJxxVXDu93UoryTvje+Ry80W+ugf5zbtfB3UKR4s25siuTuh5mR59q1zQQM9ddOOi
-        v/0ff/p1r5RbrH9l//049crzDesXP1+bxzpfiaU4I9FQi7moOBEAj31dUrsCAAA=
-X-CMS-MailID: 20191106055928epcas5p3371c1e4a063e5bb4012abc4d37335276
-X-Msg-Generator: CA
+In-Reply-To: <20191102112316.20715-19-tudor.ambarus@microchip.com>
 Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 105P
-X-CMS-RootMailID: 20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd
-References: <CGME20191030114039epcas5p434c9a7ffb715f2af2f4d3745239b5bbd@epcas5p4.samsung.com>
-        <1572435539-3315-1-git-send-email-pankj.sharma@samsung.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Gentle Ping=21
 
-> From: Pankaj Sharma <pankj.sharma=40samsung.com>
-> Subject: =5BPATCH v3=5D can: m_can: add support for handling arbitration =
-error
->=20
-> The Bosch MCAN hardware (3.1.0 and above) supports interrupt flag to dete=
-ct
-> Protocol error in arbitration phase.
->=20
-> Transmit error statistics is currently not updated from the MCAN driver.
-> Protocol error in arbitration phase is a TX error and the network statist=
-ics should
-> be updated accordingly.
->=20
-> The member =22tx_error=22 of =22struct net_device_stats=22 should be incr=
-emented as
-> arbitration is a transmit protocol error. Also =22arbitration_lost=22 of =
-=22struct
-> can_device_stats=22 should be incremented to report arbitration lost.
->=20
-> Signed-off-by: Pankaj Sharma <pankj.sharma=40samsung.com>
-> Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
+
+On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
+> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+> 
+> Rename method to a generic name: spi_nor_sr1_bit6_quad_enable().
+> 
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+Regards
+Vignesh
+
 > ---
->=20
-> changes in v3:
-> - handle arbitration lost stats even if the allocation of the skb fails
->=20
-> changes in v2:
-> - common m_can_ prefix for is_protocol_err function
-> - handling stats even if the allocation of the skb fails
-> - resolving build errors on net-next branch
->=20
->  drivers/net/can/m_can/m_can.c =7C 42
-> +++++++++++++++++++++++++++++++++++
->  1 file changed, 42 insertions(+)
->=20
-> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_can.=
-c
-> index 75e7490c4299..02c5795b7393 100644
-> --- a/drivers/net/can/m_can/m_can.c
-> +++ b/drivers/net/can/m_can/m_can.c
-> =40=40 -778,6 +778,43 =40=40 static inline bool is_lec_err(u32 psr)
->  	return psr && (psr =21=3D LEC_UNUSED);
->  =7D
->=20
-> +static inline bool m_can_is_protocol_err(u32 irqstatus) =7B
-> +	return irqstatus & IR_ERR_LEC_31X;
-> +=7D
-> +
-> +static int m_can_handle_protocol_error(struct net_device *dev, u32
-> +irqstatus) =7B
-> +	struct net_device_stats *stats =3D &dev->stats;
-> +	struct m_can_classdev *cdev =3D netdev_priv(dev);
-> +	struct can_frame *cf;
-> +	struct sk_buff *skb;
-> +
-> +	/* propagate the error condition to the CAN stack */
-> +	skb =3D alloc_can_err_skb(dev, &cf);
-> +
-> +	/* update tx error stats since there is protocol error */
-> +	stats->tx_errors++;
-> +
-> +	/* update arbitration lost status */
-> +	if (cdev->version >=3D 31 && (irqstatus & IR_PEA)) =7B
-> +		netdev_dbg(dev, =22Protocol error in Arbitration fail=5Cn=22);
-> +		cdev->can.can_stats.arbitration_lost++;
-> +		if (skb) =7B
-> +			cf->can_id =7C=3D CAN_ERR_LOSTARB;
-> +			cf->data=5B0=5D =7C=3D CAN_ERR_LOSTARB_UNSPEC;
-> +		=7D
-> +	=7D
-> +
-> +	if (unlikely(=21skb)) =7B
-> +		netdev_dbg(dev, =22allocation of skb failed=5Cn=22);
-> +		return 0;
-> +	=7D
-> +	netif_receive_skb(skb);
-> +
-> +	return 1;
-> +=7D
-> +
->  static int m_can_handle_bus_errors(struct net_device *dev, u32 irqstatus=
-,
->  				   u32 psr)
->  =7B
-> =40=40 -792,6 +829,11 =40=40 static int m_can_handle_bus_errors(struct ne=
-t_device
-> *dev, u32 irqstatus,
->  	    is_lec_err(psr))
->  		work_done +=3D m_can_handle_lec_err(dev, psr & LEC_UNUSED);
->=20
-> +	/* handle protocol errors in arbitration phase */
-> +	if ((cdev->can.ctrlmode & CAN_CTRLMODE_BERR_REPORTING) &&
-> +	    m_can_is_protocol_err(irqstatus))
-> +		work_done +=3D m_can_handle_protocol_error(dev, irqstatus);
-> +
->  	/* other unproccessed error interrupts */
->  	m_can_handle_other_err(dev, irqstatus);
->=20
-> --
-> 2.17.1
+>  drivers/mtd/spi-nor/spi-nor.c | 19 +++++++++----------
+>  include/linux/mtd/spi-nor.h   |  2 +-
+>  2 files changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+> index 8bc29cc073a0..85e5a56fb2d7 100644
+> --- a/drivers/mtd/spi-nor/spi-nor.c
+> +++ b/drivers/mtd/spi-nor/spi-nor.c
+> @@ -2078,16 +2078,15 @@ static int spi_nor_is_locked(struct mtd_info *mtd, loff_t ofs, uint64_t len)
+>  }
+>  
+>  /**
+> - * macronix_quad_enable() - set QE bit in Status Register.
+> + * spi_nor_sr1_bit6_quad_enable() - Set the Quad Enable BIT(6) in the Status
+> + * Register 1.
+>   * @nor:	pointer to a 'struct spi_nor'
+>   *
+> - * Set the Quad Enable (QE) bit in the Status Register.
+> - *
+> - * bit 6 of the Status Register is the QE bit for Macronix like QSPI memories.
+> + * Bit 6 of the Status Register 1 is the QE bit for Macronix like QSPI memories.
+>   *
+>   * Return: 0 on success, -errno otherwise.
+>   */
+> -static int macronix_quad_enable(struct spi_nor *nor)
+> +static int spi_nor_sr1_bit6_quad_enable(struct spi_nor *nor)
+>  {
+>  	int ret;
+>  
+> @@ -2095,10 +2094,10 @@ static int macronix_quad_enable(struct spi_nor *nor)
+>  	if (ret)
+>  		return ret;
+>  
+> -	if (nor->bouncebuf[0] & SR_QUAD_EN_MX)
+> +	if (nor->bouncebuf[0] & SR1_QUAD_EN_BIT6)
+>  		return 0;
+>  
+> -	nor->bouncebuf[0] |= SR_QUAD_EN_MX;
+> +	nor->bouncebuf[0] |= SR1_QUAD_EN_BIT6;
+>  
+>  	return spi_nor_write_sr1_and_check(nor, nor->bouncebuf[0]);
+>  }
+> @@ -2349,7 +2348,7 @@ static void gd25q256_default_init(struct spi_nor *nor)
+>  	 * indicate the quad_enable method for this case, we need
+>  	 * to set it in the default_init fixup hook.
+>  	 */
+> -	nor->params.quad_enable = macronix_quad_enable;
+> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  }
+>  
+>  static struct spi_nor_fixups gd25q256_fixups = {
+> @@ -3729,7 +3728,7 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+>  
+>  	case BFPT_DWORD15_QER_SR1_BIT6:
+>  		nor->flags &= ~SNOR_F_HAS_16BIT_SR;
+> -		params->quad_enable = macronix_quad_enable;
+> +		params->quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  		break;
+>  
+>  	case BFPT_DWORD15_QER_SR2_BIT7:
+> @@ -4627,7 +4626,7 @@ static int spi_nor_setup(struct spi_nor *nor,
+>  
+>  static void macronix_set_default_init(struct spi_nor *nor)
+>  {
+> -	nor->params.quad_enable = macronix_quad_enable;
+> +	nor->params.quad_enable = spi_nor_sr1_bit6_quad_enable;
+>  	nor->params.set_4byte = macronix_set_4byte;
+>  }
+>  
+> diff --git a/include/linux/mtd/spi-nor.h b/include/linux/mtd/spi-nor.h
+> index f626e0e52909..6d703df97f13 100644
+> --- a/include/linux/mtd/spi-nor.h
+> +++ b/include/linux/mtd/spi-nor.h
+> @@ -133,7 +133,7 @@
+>  #define SR_E_ERR		BIT(5)
+>  #define SR_P_ERR		BIT(6)
+>  
+> -#define SR_QUAD_EN_MX		BIT(6)	/* Macronix Quad I/O */
+> +#define SR1_QUAD_EN_BIT6	BIT(6)
+>  
+>  /* Enhanced Volatile Configuration Register bits */
+>  #define EVCR_QUAD_EN_MICRON	BIT(7)	/* Micron Quad I/O */
+> 
 
-
+-- 
+Regards
+Vignesh
