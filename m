@@ -2,127 +2,111 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C858C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:58:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC751C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:59:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CEB520869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:58:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G2HRAq47"
+	by mail.kernel.org (Postfix) with ESMTP id 7233920869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:59:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731961AbfKFS6W (ORCPT
+        id S1731867AbfKFS7f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:58:22 -0500
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:41679 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727208AbfKFS6U (ORCPT
+        Wed, 6 Nov 2019 13:59:35 -0500
+Received: from jabberwock.ucw.cz ([46.255.230.98]:39282 "EHLO
+        jabberwock.ucw.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfKFS7f (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:58:20 -0500
-Received: by mail-qk1-f194.google.com with SMTP id m125so25566412qkd.8
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 10:58:18 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=+GdGOoe6ZnJmfTS6lHkMGHRdKkX8MaWmhPSEAWY022I=;
-        b=G2HRAq475cJ++2IYh0NsQ0VSr0xf7vZl55ggnBFreaqOOw/sAYcYMvD5gVKG3Xc/ls
-         QfCB8iRRXnn1Yx8rTVZkWPPFSx2TsfjM+tCebp30g15nDlij6OLWg9H7bzh+3bP2J2ZU
-         bASZeKbe1BdMjBYcbu8IRJeu22xeN7k2lWNhaxMCqjgiVD1sqZCmZWCQCU7ZUchEN+c5
-         Q3JUMevEzatt8AREz/ZUyOxThSSimQMi/V5FC+U/tnNZBqli3UIZXbVRvWT9pq5gimKD
-         /YqHk6GCCIYdjFPR0d0LlCChoxuE7cbG247BdTuF+eydgJAGGEOima5skhBELmud+7R6
-         LwEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+GdGOoe6ZnJmfTS6lHkMGHRdKkX8MaWmhPSEAWY022I=;
-        b=LUXZxh9VTANDSUZrc59dK3FMOk7lqVsHs50K3f/nstP2t0GtAZND/5wiAU/1gjNVKy
-         kTPs5T2y4mMqPNspxV6YNRKG2XlDOdURqUCf8irnac2QihCUdVi+Tuqq/aAbsCAcTsQ7
-         HHUiTk94CX9hzIAB/uRlmhTUzVuFTwlybn8DpqiGgqMdCTfxs+ZpLJo0grtjgWe0YhRB
-         ZfMfKFL35gO7pFjCl/wOzReNl4mTaGtMeYxG7bcE9Dzs8vs5sIiPhExre9eGFpgNDZYR
-         QCojsXpAgFNDuHZyx2uyCpO44T9KzCnXwEwrq7mX2pr7Zuwl48gFm/mI66eEwQy1rGCf
-         7Cng==
-X-Gm-Message-State: APjAAAUDDyc44XHINRu3zCF1gsLIuQg37ZTQRGwyZHbqSiKFmGwalmM1
-        UmzJIimugVxlCEGOg0Ef1zI=
-X-Google-Smtp-Source: APXvYqwrIz2GujMkEIjd0G7idIrJTkY1RRgehwmNsbBDe9RzbDUedseYivpfddUe6karojZxWqaIPA==
-X-Received: by 2002:a37:8b03:: with SMTP id n3mr3472545qkd.493.1573066697228;
-        Wed, 06 Nov 2019 10:58:17 -0800 (PST)
-Received: from quaco.ghostprotocols.net (187-26-100-98.3g.claro.net.br. [187.26.100.98])
-        by smtp.gmail.com with ESMTPSA id o28sm14981710qtk.4.2019.11.06.10.58.15
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 10:58:16 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 4D11740B1D; Wed,  6 Nov 2019 15:58:07 -0300 (-03)
-Date:   Wed, 6 Nov 2019 15:58:07 -0300
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     jsun4 <jiwei.sun@windriver.com>, acme@redhat.com,
-        arnaldo.melo@gmail.com, linux-kernel@vger.kernel.org,
-        alexander.shishkin@linux.intel.com, mpetlan@redhat.com,
-        namhyung@kernel.org, a.p.zijlstra@chello.nl,
-        adrian.hunter@intel.com, Richard.Danter@windriver.com,
-        jiwei.sun.bj@qq.com
-Subject: Re: [PATCH v5] perf record: Add support for limit perf output file
- size
-Message-ID: <20191106185807.GC3636@kernel.org>
-References: <20191022080901.3841-1-jiwei.sun@windriver.com>
- <20191101081300.GA2172@krava>
+        Wed, 6 Nov 2019 13:59:35 -0500
+Received: by jabberwock.ucw.cz (Postfix, from userid 1017)
+        id 14F251C0997; Wed,  6 Nov 2019 19:59:33 +0100 (CET)
+Date:   Wed, 6 Nov 2019 19:59:32 +0100
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 00/93] 4.19.81-stable review
+Message-ID: <20191106185932.GA2183@amd>
+References: <20191027203251.029297948@linuxfoundation.org>
+ <20191029162419.cumhku6smn2x2bq4@ucw.cz>
+ <20191029180233.GA587491@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
 Content-Disposition: inline
-In-Reply-To: <20191101081300.GA2172@krava>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+In-Reply-To: <20191029180233.GA587491@kroah.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Fri, Nov 01, 2019 at 09:13:00AM +0100, Jiri Olsa escreveu:
-> On Tue, Oct 22, 2019 at 04:09:01PM +0800, jsun4 wrote:
-> > The patch adds a new option to limit the output file size, then based
-> > on it, we can create a wrapper of the perf command that uses the option
-> > to avoid exhausting the disk space by the unconscious user.
-> > 
-> > In order to make the perf.data parsable, we just limit the sample data
-> > size, since the perf.data consists of many headers and sample data and
-> > other data, the actual size of the recorded file will bigger than the
-> > setting value.
-> > 
-> > Testing it:
-> > 
-> >  # ./perf record -a -g --max-size=10M
-> >  Couldn't synthesize bpf events.
-> >  [ perf record: perf size limit reached (10249 KB), stopping session ]
-> >  [ perf record: Woken up 32 times to write data ]
-> >  [ perf record: Captured and wrote 10.133 MB perf.data (71964 samples) ]
-> > 
-> >  # ls -lh perf.data
-> >  -rw------- 1 root root 11M Oct 22 14:32 perf.data
-> > 
-> >  # ./perf record -a -g --max-size=10K
-> >  [ perf record: perf size limit reached (10 KB), stopping session ]
-> >  Couldn't synthesize bpf events.
-> >  [ perf record: Woken up 0 times to write data ]
-> >  [ perf record: Captured and wrote 1.546 MB perf.data (69 samples) ]
-> > 
-> >  # ls -l perf.data
-> >  -rw------- 1 root root 1626952 Oct 22 14:36 perf.data
-> > 
-> > Signed-off-by: Jiwei Sun <jiwei.sun@windriver.com>
-> > ---
-> > v5 changes:
-> >   - Change the output format like [ perf record: perf size limit XX ]
-> >   - change the killing perf way from "raise(SIGTERM)" to set "done == 1"
-> 
-> Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-Thanks, applied.
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-- Arnaldo
+On Tue 2019-10-29 19:02:33, Greg Kroah-Hartman wrote:
+> On Tue, Oct 29, 2019 at 05:24:19PM +0100, Pavel Machek wrote:
+> > > This is the start of the stable review cycle for the 4.19.81 release.
+> > > There are 93 patches in this series, all will be posted as a response
+> > > to this one.  If anyone has any issues with these being applied, plea=
+se
+> > > let me know.
+> > >=20
+> > > Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+> > > Anything received after that time might be too late.
+> >=20
+> > > Date: Tue, 29 Oct 2019 10:19:29 +0100
+> > > From: Greg KH <gregkh@linuxfoundation.org>
+> > > To: linux-kernel@vger.kernel.org, Andrew Morton
+> > > Subject: Linux 4.19.81
+> >=20
+> > > [-- The following data is signed --]
+> >=20
+> > >  I'm announcing the release of the 4.19.81 kernel.
+> >=20
+> > > All users of the 4.19 kernel series must upgrade.
+> >=20
+> > Am I confused or was the 4.19.81 released a bit early?
+>=20
+> I said:
+> 	Responses should be made by Tue 29 Oct 2019 08:27:02 PM UTC.
+>=20
+> And I released at:
+> 	Date: Tue, 29 Oct 2019 10:19:29 +0100
+>=20
+> So really, I was a few minutes late :)
+
+I'm confused. You said "by Tue ... 08:27:02 PM UTC". That 8 PM is 20h,
+but did the release on 10h GMT+1, or 9h UTC -- 9 AM.... so like 11
+hours early, if I got the timezones right.
+
+Does PM mean something else in the above context?
+
+Best regards,
+								Pavel
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAl3DGBQACgkQMOfwapXb+vIgvACfXy4dOoxStaX4TYXK6Hv1J6yh
+YAcAnAnHKWkiTjwoB5Cg5Y58K+iR3jvj
+=V8Qg
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
