@@ -2,63 +2,61 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FAF0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:59:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15C1AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B497221D7C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:59:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3F6F21D71
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:59:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="rPmKdpKl"
+	dkim=pass (2048-bit key) header.d=ozlabs-ru.20150623.gappssmtp.com header.i=@ozlabs-ru.20150623.gappssmtp.com header.b="oms4bk67"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730881AbfKFB7B (ORCPT
+        id S1730922AbfKFB76 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 20:59:01 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:37772 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730687AbfKFB7B (ORCPT
+        Tue, 5 Nov 2019 20:59:58 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:45273 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730636AbfKFB76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 20:59:01 -0500
-Received: by mail-pg1-f195.google.com with SMTP id z24so11453056pgu.4
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 17:58:58 -0800 (PST)
+        Tue, 5 Nov 2019 20:59:58 -0500
+Received: by mail-pg1-f194.google.com with SMTP id w11so5661559pga.12
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 17:59:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ozlabs-ru.20150623.gappssmtp.com; s=20150623;
         h=subject:to:cc:references:from:autocrypt:message-id:date:user-agent
          :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nHPCmBhzOXMTMaAkrexHD/oJ06s+K/vSclTmn73DQoI=;
-        b=rPmKdpKlJKcfe3nozueNDoygPG3IubCYR9wADRZkaUXHDz5sTRyQ7iPeFcMl1Etiba
-         K+VhSdReUZSXI5N3MhXgPlafKMPEKFvwfS/iRG/UU5l1IsKqBPa2iSW+ue32VpLTzG2u
-         /OtlyLDECkqeamhu4FcuaNzJ06avITLpBms78hQMmkRhkX29Oa7g8jFqnC7fZoqftlJb
-         qSBJ3FvUMhCOJTYEmo4j4ynBIg9xwIqTgaAdy4wGBCB77l1Eh49mEhpr7vp72TcpNctR
-         EIuUfe8xMtEy9i/JeHowE635fNZjuydl2cqJtgvQKqDxCx3yKgjnsSHYF9VUo8yLqEMO
-         Nd2w==
+        bh=54D3H2fvgmj7UfN9kcIXu5bTYFooWzrymK59XwR2oVQ=;
+        b=oms4bk67qQDm/kjDp3stqvIdXj2K5zpx+7fu35BeESCMqTCyYDCgYlMbNYvHi9K/Ti
+         jF8Vq5NFm+f6iKOIFSGvDwJ+qqZ8BVBbMgPg2se2R4c6t6doM5w7f/Yg0xxR5ycb+F3Y
+         yyQ1ZzAG6tk5vTtjSGazMmOudruqo/DFXbMzIf5Fe97kefc3gEewJCCrsaQ6XICcif6V
+         D3HpxPHg0prdsU7cqq/DTPzNRhKm2skr/V4Hay8E71DJNtyQD0/O6OeCgULNTWBYSdTT
+         KdHnRB5rcVt1KwrIxCVNr5kCkHwgAlqsshMXbcX+j0ZWHJ+Mb8G2ym3o5vRTYC3E54Ol
+         Yzlg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=nHPCmBhzOXMTMaAkrexHD/oJ06s+K/vSclTmn73DQoI=;
-        b=IUVILR5CqnEDCFLcWeBFcEG+fHlZMsXNw5N3tFuejZbOsAS2NafzwpXTyPbc04+F4z
-         4W+UAxqVxxen9k03fRzujVnKqH2kbDv29/+xUN4geCThfXy/dyzp9Rnyz614ubI6TgHR
-         TTfUnO//8WqFp7kov8FD2VsllpdMCtOduGCKGl9F84aWc84qmVID7X7cYdynVGJ2P4Vb
-         Kx9rkdvtPPfwvxouQdbAmf624rL0WSgzCf1WsfZ7SVPx7Gb+RdCmK6VQLbveLUDaXq5H
-         TTKfJROp1b9XwhREvAz6vLIHP5k7h+p26sbyScYwJ5Wbfr3jRb7Jrz8MButxZY4/qw8k
-         GuWw==
-X-Gm-Message-State: APjAAAXPZulS3f52MPKDiUpdSS+H3iibEXzTtMTzRX51WSt170hImJw8
-        fHliCoVOypk4w0gTD5w6kGRUn8FSE6Q=
-X-Google-Smtp-Source: APXvYqxGja+KxkHw3fVkuwtyCCd5HmSmZh27e2FmPb5A+/sdsZMhTqUWwQdXF7C3hp7d/iHLbiIViA==
-X-Received: by 2002:a17:90a:4fe6:: with SMTP id q93mr284516pjh.88.1573005538174;
-        Tue, 05 Nov 2019 17:58:58 -0800 (PST)
+        bh=54D3H2fvgmj7UfN9kcIXu5bTYFooWzrymK59XwR2oVQ=;
+        b=HvY+3FFNxGffLwWInPkYuM6QJdlyZeXCyPXIVqe4HDZ9Wq96N4D6T4lIvt6UnUTk+1
+         1kYJFEdstbQlHBW+n4WsDylb5cqWMrDCojZyHWqMD8MgQdxNCmlTc41ZEGJ7agj75OQ2
+         TZjV/XR1ZWrcBEJw3fHIAQK/gT0FjTaRthf1j8NF80iWhEoFe7QZntS437EzgSV2hD9z
+         oCwf6CARFbX4qgow99qAgeOu8e7kKXrstnbb2/wg1+K/pu0wKIJTTBZEyu83ffWNpheV
+         AnZc2+riKjNF85MhmbNslDgBc9r1Cq9s4LRCGhvgsaPGHMf/RAoWJrJvKe283zYWsBFX
+         L7Uw==
+X-Gm-Message-State: APjAAAVCMf5pROKGhz3BSGoDsg34kX+EDhpz+iiblsA0KB9jUCIwSkdy
+        dzzSnlWoYIbmkljx3GsJW+e14MRsTlA=
+X-Google-Smtp-Source: APXvYqyWeRKhrb4BksRnfjw0FVWf3/DiaGnWb5s0Jh47LdzDUWyhKe8fXfjIPZ3/t76sNRqO2BttYA==
+X-Received: by 2002:a63:2ac9:: with SMTP id q192mr33319100pgq.351.1573005597018;
+        Tue, 05 Nov 2019 17:59:57 -0800 (PST)
 Received: from [10.61.2.175] ([122.99.82.10])
-        by smtp.gmail.com with ESMTPSA id 70sm21869942pfw.160.2019.11.05.17.58.52
+        by smtp.gmail.com with ESMTPSA id i71sm24188969pfe.103.2019.11.05.17.59.51
         (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 05 Nov 2019 17:58:57 -0800 (PST)
-Subject: Re: [RFC v1 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page
- with the hypervisor.
+        Tue, 05 Nov 2019 17:59:56 -0800 (PST)
+Subject: Re: [RFC v1 0/2] Enable IOMMU support for pseries Secure VMs
 To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
         mpe@ellerman.id.au, paulus@ozlabs.org, mdroth@linux.vnet.ibm.com,
@@ -67,7 +65,6 @@ Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
         tglx@linutronix.de, bauerman@linux.ibm.com,
         linux-kernel@vger.kernel.org
 References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
- <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
 From:   Alexey Kardashevskiy <aik@ozlabs.ru>
 Autocrypt: addr=aik@ozlabs.ru; keydata=
  mQINBE+rT0sBEADFEI2UtPRsLLvnRf+tI9nA8T91+jDK3NLkqV+2DKHkTGPP5qzDZpRSH6mD
@@ -142,12 +139,12 @@ Autocrypt: addr=aik@ozlabs.ru; keydata=
  c7E5M+/NpslPCmYnDjs5qg0/3ihh6XuOGggZQOqrYPC3PnsNs3NxirwOkVPQgO6mXxpuifvJ
  DG9EMkK8IBXnLulqVk54kf7fE0jT/d8RTtJIA92GzsgdK2rpT1MBKKVffjRFGwN7nQVOzi4T
  XrB5p+6ML7Bd84xOEGsj/vdaXmz1esuH7BOZAGEZfLRCHJ0GVCSssg==
-Message-ID: <af0a236f-37b2-ee16-0ebd-576b4e12d8cd@ozlabs.ru>
-Date:   Wed, 6 Nov 2019 12:58:50 +1100
+Message-ID: <265679db-9cb3-1660-0cf6-97f740b1b48b@ozlabs.ru>
+Date:   Wed, 6 Nov 2019 12:59:50 +1100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
  Thunderbird/68.2.1
 MIME-Version: 1.0
-In-Reply-To: <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
+In-Reply-To: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -159,85 +156,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 05/11/2019 08:28, Ram Pai wrote:
-> The hypervisor needs to access the contents of the page holding the TCE
-> entries while setting up the TCE entries in the IOMMU's TCE table. For
-> SecureVMs, since this page is encrypted, the hypervisor cannot access
-> valid entries. Share the page with the hypervisor. This ensures that the
-> hypervisor sees the valid entries.
+> This patch series enables IOMMU support for pseries Secure VMs.
 > 
-> Signed-off-by: Ram Pai <linuxram@us.ibm.com>
-> ---
->  arch/powerpc/platforms/pseries/iommu.c | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 8d9c2b1..07f0847 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -37,6 +37,7 @@
->  #include <asm/mmzone.h>
->  #include <asm/plpar_wrappers.h>
->  #include <asm/svm.h>
-> +#include <asm/ultravisor.h>
->  
->  #include "pseries.h"
->  
-> @@ -179,6 +180,19 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  
->  static DEFINE_PER_CPU(__be64 *, tce_page);
->  
-> +/*
-> + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
-> + */
-> +static __be64 *alloc_tce_page(void)
-> +{
-> +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> +
-> +	if (tcep && is_secure_guest())
-> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
+> Tested using QEMU command line option:
+> 
+>  "-device virtio-scsi-pci,id=scsi0,bus=pci.0,addr=0x4,
+>  	iommu_platform=on,disable-modern=off,disable-legacy=on"
+>  and 
+> 
+>  "-device virtio-blk-pci,scsi=off,bus=pci.0,
+>  	addr=0x5,drive=drive-virtio-disk0,id=virtio-disk0,
+>  	iommu_platform=on,disable-modern=off,disable-legacy=on"
 
 
-There is no matching unshare in this patch.
+Worth mentioning that SLOF won't boot with such devices as SLOF does not know about iommu_platform=on.
 
-
-> +
-> +	return tcep;
-> +}
-> +
->  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  				     long npages, unsigned long uaddr,
->  				     enum dma_data_direction direction,
-> @@ -206,8 +220,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  	 * from iommu_alloc{,_sg}()
->  	 */
->  	if (!tcep) {
-> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> -		/* If allocation fails, fall back to the loop implementation */
-> +		tcep = alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_restore(flags);
->  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
-> @@ -391,6 +404,7 @@ static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
->  	return rc;
->  }
->  
-> +
-
-Unrelated.
-
-
->  static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  					unsigned long num_pfn, const void *arg)
->  {
-> @@ -405,7 +419,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  	tcep = __this_cpu_read(tce_page);
->  
->  	if (!tcep) {
-> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> +		tcep = alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_enable();
->  			return -ENOMEM;
+> 
+> Ram Pai (2):
+>   powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
+>   powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
+> 
+>  arch/powerpc/platforms/pseries/iommu.c | 30 ++++++++++++++++++------------
+>  1 file changed, 18 insertions(+), 12 deletions(-)
 > 
 
 -- 
