@@ -2,77 +2,121 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A185C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6F26C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64E5921882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B025C21882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:55:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730296AbfKFIzU (ORCPT
+        id S1731442AbfKFIzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:55:20 -0500
-Received: from smtprelay0041.hostedemail.com ([216.40.44.41]:55124 "EHLO
-        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726830AbfKFIzU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 03:55:20 -0500
-Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
-        by smtprelay04.hostedemail.com (Postfix) with ESMTP id 8824A180A68CB;
-        Wed,  6 Nov 2019 08:55:18 +0000 (UTC)
-X-Session-Marker: 726F737465647440676F6F646D69732E6F7267
-X-HE-Tag: shock61_4b3e606027b34
-X-Filterd-Recvd-Size: 1995
-Received: from grimm.local.home (unknown [94.155.134.143])
-        (Authenticated sender: rostedt@goodmis.org)
-        by omf17.hostedemail.com (Postfix) with ESMTPA;
-        Wed,  6 Nov 2019 08:55:16 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 03:55:12 -0500
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com,
-        andriy.shevchenko@intel.com, cezary.rojewski@intel.com,
-        gustaw.lewandowski@intel.com
-Subject: Re: [PATCH 2/2] tracing: Use seq_buf_hex_dump() to dump buffers
-Message-ID: <20191106035512.3ff7bc20@grimm.local.home>
-In-Reply-To: <1573021660-30540-2-git-send-email-piotrx.maziarz@linux.intel.com>
-References: <1573021660-30540-1-git-send-email-piotrx.maziarz@linux.intel.com>
-        <1573021660-30540-2-git-send-email-piotrx.maziarz@linux.intel.com>
-X-Mailer: Claws Mail 3.17.4git49 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 6 Nov 2019 03:55:35 -0500
+Received: from mx2.suse.de ([195.135.220.15]:55186 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726830AbfKFIze (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:55:34 -0500
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 07C3AABBD;
+        Wed,  6 Nov 2019 08:55:32 +0000 (UTC)
+Subject: Re: [PATCH v2 6/8] mm: prevent get_user_pages() from overflowing page
+ refcount
+To:     Ajay Kaher <akaher@vmware.com>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc:     "torvalds@linux-foundation.org" <torvalds@linux-foundation.org>,
+        "punit.agrawal@arm.com" <punit.agrawal@arm.com>,
+        "akpm@linux-foundation.org" <akpm@linux-foundation.org>,
+        "kirill.shutemov@linux.intel.com" <kirill.shutemov@linux.intel.com>,
+        "willy@infradead.org" <willy@infradead.org>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "mszeredi@redhat.com" <mszeredi@redhat.com>,
+        "stable@vger.kernel.org" <stable@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Srivatsa Bhat <srivatsab@vmware.com>,
+        "srivatsa@csail.mit.edu" <srivatsa@csail.mit.edu>,
+        Alexey Makhalov <amakhalov@vmware.com>,
+        Srinidhi Rao <srinidhir@vmware.com>,
+        Vikash Bansal <bvikas@vmware.com>,
+        Anish Swaminathan <anishs@vmware.com>,
+        Vasavi Sirnapalli <vsirnapalli@vmware.com>,
+        Steven Rostedt <srostedt@vmware.com>,
+        "stable@kernel.org" <stable@kernel.org>,
+        Ben Hutchings <ben@decadent.org.uk>
+References: <1570581863-12090-1-git-send-email-akaher@vmware.com>
+ <1570581863-12090-7-git-send-email-akaher@vmware.com>
+ <f899be71-4bc0-d07b-f650-d85a335cdebb@suse.cz>
+ <BF0587E3-D104-4DB2-B972-9BC4FD4CA014@vmware.com>
+ <0E5175FB-7058-4211-9AA4-9D5E2F6A30B9@vmware.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Message-ID: <35d74931-2c18-00ff-7622-522a79be9103@suse.cz>
+Date:   Wed, 6 Nov 2019 09:55:30 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <0E5175FB-7058-4211-9AA4-9D5E2F6A30B9@vmware.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 07:27:40 +0100
-Piotr Maziarz <piotrx.maziarz@linux.intel.com> wrote:
+On 10/25/19 8:18 AM, Ajay Kaher wrote:
+> ﻿On 17/10/19, 9:58 PM, "Ajay Kaher" <akaher@vmware.com> wrote:
+>     
+>> > This seems to have the same issue as the 4.9 stable version [1], in not
+>> > touching the arch-specific gup.c variants.
+>> >    
+>> > [1]
+>> > https://lore.kernel.org/lkml/6650323f-dbc9-f069-000b-f6b0f941a065@suse.cz/
+>>    
+>> Thanks Vlastimil for highlighting this here.
+>> 
+>> Yes, arch-specific gup.c variants also need to handle not only for 4.4.y,
+>> however it should be handled till 4.19.y. I believe it's better to start
+>> from 4.19.y and then backport those changes till 4.4.y.
+>>    
+>> Affected areas of gup.c (where page->count have been used) are:
+>> #1: get_page() used in these files and this is safe as
+>>        it's defined in mm.h (here it's already taken care of)
+>> #2: get_head_page_multiple() has following:
+>>               VM_BUG_ON_PAGE(page_count(page) == 0, page);
+>>          Need to change this to:
+>>               VM_BUG_ON_PAGE(page_ref_zero_or_close_to_overflow(page), page);
+>> #3: Some of the files have used page_cache_get_speculative(),
+>>        page_cache_add_speculative() with combination of compound_head(),
+>>        this scenario needs to be handled as it was handled here:
+>>            https://lore.kernel.org/stable/1570581863-12090-7-git-send-email-akaher@vmware.com/
+>>    
+>> Please share with me any suggestions or patches if you have already  
+>> worked on this.
+>>    
+>> Could we handle arch-specific gup.c in different patch sets and 
+>> let these patches to merge to 4.4.y?
+>   
+> Vlastimil, please suggest if it's fine to merge these patches to 4.4.y
 
-> Without this, buffers can be printed with __print_array macro that has
-> no formatting options and can be hard to read. The other way is to
-> mimic formatting capability with multiple calls of trace event with one
-> call per row which gives performance impact and different timestamp in
-> each row.
+I'm not sure if it makes much sense to merge them without the arch-specific gup
+support, when we're aware that it's missing.
+
+> and handle arch-specific gup.c in different patch sets starts from 4.19.y,
+
+Actually arch-specific gup.c were removed in 4.13, so it's enough to start from
+4.9.y, which I'm going to finally look into.
+
+> then backport all the way to 4.4.y. 
 > 
-> Signed-off-by: Piotr Maziarz <piotrx.maziarz@linux.intel.com>
-> Signed-off-by: Cezary Rojewski <cezary.rojewski@intel.com>
-> ---
->  include/linux/trace_events.h |  5 +++++
->  include/linux/trace_seq.h    |  4 ++++
->  include/trace/trace_events.h |  6 ++++++
->  kernel/trace/trace_output.c  | 15 +++++++++++++++
->  kernel/trace/trace_seq.c     | 30 ++++++++++++++++++++++++++++++
->  5 files changed, 60 insertions(+)
+> Greg, any suggestion from your side.
+> 
+>>    - Ajay
+>     
+>     
+>     
 > 
 
-I'd like to see in the patch series (patch 3?) a use case of these
-added functionality. Or at least a link to what would be using it.
-
-Thanks!
-
--- Steve
