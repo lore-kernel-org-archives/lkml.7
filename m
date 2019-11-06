@@ -2,79 +2,113 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 242BEC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 335B9C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3F71207FA
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A25D20869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:47:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732413AbfKFRqy (ORCPT
+        id S1732430AbfKFRrh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:46:54 -0500
-Received: from mga18.intel.com ([134.134.136.126]:24378 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727894AbfKFRqx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:46:53 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 09:46:52 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="228407130"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.41])
-  by FMSMGA003.fm.intel.com with ESMTP; 06 Nov 2019 09:46:52 -0800
-Date:   Wed, 6 Nov 2019 09:46:52 -0800
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     Radim =?utf-8?B?S3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Subject: Re: [PATCH 1/2] KVM: MMU: Do not treat ZONE_DEVICE pages as being
- reserved
-Message-ID: <20191106174652.GE16249@linux.intel.com>
-References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
- <20191106170727.14457-2-sean.j.christopherson@intel.com>
- <8ba98630-9ca0-85c2-3c94-45d54a448fca@redhat.com>
+        Wed, 6 Nov 2019 12:47:37 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:57167 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727286AbfKFRrh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:47:37 -0500
+IronPort-SDR: sd6OuxopJhKmmx/JuGV9b10kaT67pmrqn8wiC6tlyzdFj+YDlzaaWo1UXzpBb1JfACEtcVyNPj
+ Mlbdn9ZHvRb/uCAiV9jyr//hhfBLzrvoR9EUOsLSjB/6TapUu2J1MvjMcNHo7f7jUwD74kVccO
+ R/xAcIaY+UHvBAHc3CKY0tTebvWR59VbVufAexjyuYAWsVC5Qqf0Ye/xSO5cy25wTLM6dWRA2H
+ fBZRzZBknANkqaruul2lX2KsJ/QHUHC1xh562CleTdnYem95qr1+lCt6hxFVpifBqIhbl9UjCt
+ whc=
+X-IronPort-AV: E=Sophos;i="5.68,275,1569312000"; 
+   d="scan'208";a="42868123"
+Received: from orw-gwy-01-in.mentorg.com ([192.94.38.165])
+  by esa2.mentor.iphmx.com with ESMTP; 06 Nov 2019 09:47:09 -0800
+IronPort-SDR: g9MUu+J8OTyqvHJDx9CiNu5O73/mDmSTZYzD+voBBo9Cj6HpRaWRQjlgURahtsyp/DdA//iJ1L
+ bEZE+5fvcdQMqja8husaJyIA2kUIwmCsAp59H4JNgv7R2BaP4xiCrtHDjrm3J7AIK85zDN01PW
+ wR/DFh8DvHVrIs9NX1o5T2vkxBM1XFL2C1JWZYIFQwq/61bWQtdu9gS7xPAKTbR6reVxAEckGL
+ OPo4yOAv1RvWPrLuR7/EQFodZwvD2cYWZeuxs7bcgWk41hiKNOUo7Oc72X9IsKuRDHWKASuIoD
+ 6pU=
+From:   Andrew Gabbasov <andrew_gabbasov@mentor.com>
+To:     Takashi Iwai <tiwai@suse.de>
+CC:     <alsa-devel@alsa-project.org>, <linux-kernel@vger.kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        Takashi Iwai <tiwai@suse.com>,
+        Timo Wischer <twischer@de.adit-jv.com>
+References: <20191105143218.5948-1-andrew_gabbasov@mentor.com>  <20191105143218.5948-2-andrew_gabbasov@mentor.com>      <20191105143218.5948-3-andrew_gabbasov@mentor.com>      <20191105143218.5948-4-andrew_gabbasov@mentor.com>,<s5h36f13sv5.wl-tiwai@suse.de>
+In-Reply-To: <s5h36f13sv5.wl-tiwai@suse.de>
+Subject: Re: [PATCH v2 3/8] ALSA: aloop: loopback_timer_stop: Support return of error code
+Date:   Wed, 6 Nov 2019 20:45:51 +0300
+Organization: Mentor Graphics Corporation
+Message-ID: <000001d594ca$1dd487f0$597d97d0$@mentor.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8ba98630-9ca0-85c2-3c94-45d54a448fca@redhat.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 14.0
+Thread-Index: AQHVk+YTmTkKZHEEGEaaN+TTFIVO0Kd+THEAgAAY32M=
+Content-Language: en-us
+X-Originating-IP: [137.202.0.90]
+X-ClientProxiedBy: SVR-IES-MBX-08.mgc.mentorg.com (139.181.222.8) To
+ svr-ies-mbx-02.mgc.mentorg.com (139.181.222.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 06:14:40PM +0100, Paolo Bonzini wrote:
-> On 06/11/19 18:07, Sean Christopherson wrote:
-> >  void kvm_get_pfn(kvm_pfn_t pfn)
-> >  {
-> > -	if (!kvm_is_reserved_pfn(pfn))
-> > +	if (!kvm_is_reserved_pfn(pfn) && !WARN_ON(kvm_is_zone_device_pfn(pfn)))
-> >  		get_page(pfn_to_page(pfn));
-> >  }
-> >  EXPORT_SYMBOL_GPL(kvm_get_pfn);
+
+Thank you very much for your response.
+
+> From: Takashi Iwai <tiwai@suse.de>
+> Sent: Wednesday, November 6, 2019 18:51
 > 
-> Can you call remap_pfn_range with a source address that is ZONE_DEVICE?
->  If so, you would get a WARN from the kvm_get_pfn call in
-> hva_to_pfn_remapped.
+> On Tue, 05 Nov 2019 15:32:13 +0100,
+> Andrew Gabbasov wrote:
+> >
+> > From: Timo Wischer <twischer@de.adit-jv.com>
+> >
+> > This is required for additional timer implementations which could detect
+> > errors and want to throw them.
+> >
+> > Signed-off-by: Timo Wischer <twischer@de.adit-jv.com>
+> > Signed-off-by: Andrew Gabbasov <andrew_gabbasov@mentor.com>
+> 
+> I'd fold this into the patch 2.  Both patches do fairly same things
+> but just for start and stop.
 
-I don't know, at a quick glance I'm guessing it's possible via /dev/mem?
-But, get_page() isn't sufficient to properly grab a ZONE_DEVICE page, so
-the WARN is a good thing and intentional.
+OK, I agree. I'll squash these 2 commits into a single one in the next
+update (there will be an update for sure to fix the snd_cards reference
+in patch #7).
 
-So assuming the answer is "yes", perhaps hva_to_pfn_remapped() should
-adds its own check on kvm_is_zone_device_pfn() and return -EINVAL or
-something?  That'd likely end up kill the guest, but wouldn't break the
-kernel.
+> 
+> And the same question as patch#2 is applied to this one, too, BTW.
+
+As for the notifications in case of timer operation failures:
+
+For stop/suspend operations, the return code of the timer operation,
+and of the PCM trigger function as a whole, actually makes no difference,
+the streams state is changed anyway, so the notification should be done
+in any case.
+
+For start/resume operations, it seems OK to send notifications
+even if the timer operation fails, if the cable->running and cable->pause
+fields are set before that (as is now), so that the notified control
+reflects the changed state. In case of failure the whole operation
+will be un-done by upper PCM layer, changing the state back,
+and sending one more notifcation.
+
+Alternatively, we could re-order the code and do not set the running
+fields if timer operation fails (and do not notify in this case).
+But the undoing stop operation will be executed in this case
+that will cause the (unpaired) notification, which is probably
+not quite correct.
+
+Thanks.
+
+Best regards,
+Andrew
+
