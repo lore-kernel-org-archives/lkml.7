@@ -2,115 +2,141 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34583C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F62C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:23:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F868217F5
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:22:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE541217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:23:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wue/yaUE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732406AbfKFRWd (ORCPT
+        id S1732374AbfKFRXa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:22:33 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:28848 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732389AbfKFRWc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:22:32 -0500
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com [209.85.221.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 469A25AFE0
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 17:22:32 +0000 (UTC)
-Received: by mail-wr1-f71.google.com with SMTP id 92so14625862wro.14
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:22:32 -0800 (PST)
+        Wed, 6 Nov 2019 12:23:30 -0500
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:44043 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729259AbfKFRX3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:23:29 -0500
+Received: by mail-wr1-f66.google.com with SMTP id f2so17970750wrs.11
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:23:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=g2JUiV4cEMJ74EzA5CndgILOeZzbhz+aAeWFMe6S868=;
+        b=Wue/yaUEyKPQr5wZetfab8vqI/MzdYXYoInZoTyhPJLpCYE/99obFndF7Ijg2299pI
+         qApCkDaCbIpuu+bLWLuYrR1rnklZf6mp2lQ5KbVyQCwBpSSps9NStPbeZMAoYo9Z+BGX
+         EyXL8v5yoqddilskkPETIFCNQf/ylZt+vDiJLAPwVdohUgaeCx2PsHyQbJx6gH10WDUw
+         S/jyaAJw7WUXXTOKsXSSChRc9DJ2/lnRuWnsX2geUc6FCKDi8vvPEERMRU9JlmgcoEgJ
+         iCfpuXOXOPcA6R4ZtBVe8uJaph/NvmK47Csb/8TMxj1PMsyOHTZO+IGcl8jraJMdrGRD
+         EQ1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7lJxgAWCW8T3bcUZhMKJItz5qgGgFx2fg3nRIeSIa28=;
-        b=YQCeg2TWvoajMIvamsGTEF+oy0TiX4CdwHZ1vEyufPzdk9DCMrUuFPHv+6d5NdvdXJ
-         FpjOBs+4ug3tbaS5u0/6NjnEBaj44LDYsiIFcW23xT3hWDqxZ1sUy7CtFGvQ/ydpYPBD
-         Cnk3jxRjxnnKaYbvcgqob21laR42tTGcDItSN/OrnA7yWJJOIiLYxIQugEZ6/lO5uW54
-         wCkUfZxeBKlkWxqtlf9pWGzDBMQPWufWttPMiyd68TfsK62lqFPg0m5fcNdN9SPQ9m73
-         LgrpouZwwPYy4V2eF/v391kfEVYtqVmhxmLxIkVmjxugXPLjFGW8fQf8ARSbGHezcDnZ
-         kq4w==
-X-Gm-Message-State: APjAAAVoBoCOQ9wIWQEjTYf4trDeewOI4uZtaS9bU2brirRz7lZ1RpQI
-        Vx22sWTn+w7b7HJkKOFlDFG9C7n6Omx1hL0eGoWNms7f6KGGl2bamREuQqLpH3YYtMJVtYT+WMC
-        cW7vEeFDzb0g4eshsQHiMkZYO
-X-Received: by 2002:a7b:c853:: with SMTP id c19mr3370871wml.48.1573060950897;
-        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
-X-Google-Smtp-Source: APXvYqz6pdOPx+AAeZZqH4fmE+ZC+rck52bJZ9rsot7WpLYCv6sn/6q9wKCL5cJG5B5TqooJZUp+3g==
-X-Received: by 2002:a7b:c853:: with SMTP id c19mr3370846wml.48.1573060950602;
-        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
-Received: from ?IPv6:2001:b07:6468:f312:4051:461:136e:3f74? ([2001:b07:6468:f312:4051:461:136e:3f74])
-        by smtp.gmail.com with ESMTPSA id n22sm2988799wmk.19.2019.11.06.09.22.29
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 09:22:30 -0800 (PST)
-Subject: Re: [PATCH 2/2] KVM: x86/mmu: Add helper to consolidate huge page
- promotion
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>
-Cc:     Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Adam Borowski <kilobyte@angband.pl>,
-        David Hildenbrand <david@redhat.com>,
-        Dan Williams <dan.j.williams@intel.com>
-References: <20191106170727.14457-1-sean.j.christopherson@intel.com>
- <20191106170727.14457-3-sean.j.christopherson@intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <9b3e3cc3-9cd0-1f55-ee19-f33c4cfb7f8a@redhat.com>
-Date:   Wed, 6 Nov 2019 18:22:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=g2JUiV4cEMJ74EzA5CndgILOeZzbhz+aAeWFMe6S868=;
+        b=gOE+vk5wunB05uQyUsSmUQslbLAMjI4aDJVLGhX3E2rMRKPzsWXnsg5NfbHP3agrpR
+         pdFjgh24rzdrEqW39XqQB3/9vrSBB7vn15W85U1LeKqlQTFE/ZoT9JQ59TJLX1SnZXZW
+         w+viT0hWO34J7wDDKRvUO3MNFfOYEqpwNGjJTBHba8OiWluM0PCVxC1yF0Dg6haUxK+w
+         5Z/Oygo+sT7X09ocWeFq+OC7Bsb6G9OMmlnndfRr7jEiFC9jLrAbmyPJBescbjMndQ00
+         Npsq7ImUBB/FmuE7Keb5tpWqEEkmXNUbj3rIYw6qbu3OYc92fNlooT+9+VUFpi0Oa3C/
+         0oWQ==
+X-Gm-Message-State: APjAAAUuLfFZespcZyRizApFtoyaBqr0pToLUj/fxB8g2QJXZW67Xh1i
+        t3wsBYGPcSS265a3SDAMpg8CL70y8OREBvuPxlU=
+X-Google-Smtp-Source: APXvYqyayQQbMyVmhEdowaJu+OzAwAXm3V5BG2Ss0sHIDjOI7FfL2E25/DMgXUkarNQ141qCBId2+p5LN2ULiVsCDTs=
+X-Received: by 2002:adf:9d87:: with SMTP id p7mr3682762wre.11.1573061006001;
+ Wed, 06 Nov 2019 09:23:26 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191106170727.14457-3-sean.j.christopherson@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1573040143-25820-1-git-send-email-bianpan2016@163.com> <a3b2cc0c-2c0a-fcae-3750-9e51da46b872@amd.com>
+In-Reply-To: <a3b2cc0c-2c0a-fcae-3750-9e51da46b872@amd.com>
+From:   Alex Deucher <alexdeucher@gmail.com>
+Date:   Wed, 6 Nov 2019 12:23:14 -0500
+Message-ID: <CADnq5_Nmxt9W-+QG_xmFzfWmbLM8Pv2GGnnhiA_NC8fuyz70kA@mail.gmail.com>
+Subject: Re: [PATCH v2] drm/amdgpu: fix double reference dropping
+To:     "Koenig, Christian" <Christian.Koenig@amd.com>
+Cc:     Pan Bian <bianpan2016@163.com>,
+        "Deucher, Alexander" <Alexander.Deucher@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 18:07, Sean Christopherson wrote:
->  	 */
-> -	if (!is_error_noslot_pfn(pfn) && !kvm_is_reserved_pfn(pfn) &&
-> -	    !kvm_is_zone_device_pfn(pfn) && level == PT_PAGE_TABLE_LEVEL &&
-> -	    PageTransCompoundMap(pfn_to_page(pfn)) &&
-> +	if (level == PT_PAGE_TABLE_LEVEL && kvm_is_hugepage_allowed(pfn) &&
->  	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL)) {
->  		unsigned long mask;
->  		/*
-> @@ -5914,9 +5919,7 @@ static bool kvm_mmu_zap_collapsible_spte(struct kvm *kvm,
->  		 * the guest, and the guest page table is using 4K page size
->  		 * mapping if the indirect sp has level = 1.
->  		 */
-> -		if (sp->role.direct && !kvm_is_reserved_pfn(pfn) &&
-> -		    !kvm_is_zone_device_pfn(pfn) &&
-> -		    PageTransCompoundMap(pfn_to_page(pfn))) {
-> +		if (sp->role.direct && kvm_is_hugepage_allowed(pfn)) {
->  			pte_list_remove(rmap_head, sptep);
+On Wed, Nov 6, 2019 at 7:48 AM Koenig, Christian
+<Christian.Koenig@amd.com> wrote:
+>
+> Am 06.11.19 um 12:35 schrieb Pan Bian:
+> > The reference to object fence is dropped at the end of the loop.
+> > However, it is dropped again outside the loop. The reference can be
+> > dropped immediately after calling dma_fence_wait() in the loop and
+> > thus the dropping operation outside the loop can be removed.
+> >
+> > Signed-off-by: Pan Bian <bianpan2016@163.com>
+>
+> Reviewed-by: Christian K=C3=B6nig <christian.koenig@amd.com>
+>
 
-I don't think is_error_noslot_pfn(pfn) makes sense in
-kvm_mmu_zap_collapsible_spte, so I'd rather keep it in
-transparent_hugepage_adjust.  Actually, it must be is_noslot_pfn only at
-this point---error pfns have been sieved earlier in handle_abnormal_pfn,
-so perhaps
+Applied.  thanks!
 
-	if (WARN_ON_ONCE(is_error_pfn(pfn)) || is_noslot_pfn(pfn))
-		return;
+Alex
 
-	if (level == PT_PAGE_TABLE_LEVEL &&
-	    kvm_is_hugepage_allowed(pfn) &&
-	    !mmu_gfn_lpage_is_disallowed(vcpu, gfn, PT_DIRECTORY_LEVEL))
-
-would be the best option.
-
-Paolo
+> > ---
+> > v2: fix the bug in a more concise way
+> > ---
+> >   drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c | 6 ++----
+> >   1 file changed, 2 insertions(+), 4 deletions(-)
+> >
+> > diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c b/drivers/gp=
+u/drm/amd/amdgpu/amdgpu_benchmark.c
+> > index 649e68c4479b..d1495e1c9289 100644
+> > --- a/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c
+> > +++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_benchmark.c
+> > @@ -33,7 +33,7 @@ static int amdgpu_benchmark_do_move(struct amdgpu_dev=
+ice *adev, unsigned size,
+> >   {
+> >       unsigned long start_jiffies;
+> >       unsigned long end_jiffies;
+> > -     struct dma_fence *fence =3D NULL;
+> > +     struct dma_fence *fence;
+> >       int i, r;
+> >
+> >       start_jiffies =3D jiffies;
+> > @@ -44,16 +44,14 @@ static int amdgpu_benchmark_do_move(struct amdgpu_d=
+evice *adev, unsigned size,
+> >               if (r)
+> >                       goto exit_do_move;
+> >               r =3D dma_fence_wait(fence, false);
+> > +             dma_fence_put(fence);
+> >               if (r)
+> >                       goto exit_do_move;
+> > -             dma_fence_put(fence);
+> >       }
+> >       end_jiffies =3D jiffies;
+> >       r =3D jiffies_to_msecs(end_jiffies - start_jiffies);
+> >
+> >   exit_do_move:
+> > -     if (fence)
+> > -             dma_fence_put(fence);
+> >       return r;
+> >   }
+> >
+>
+> _______________________________________________
+> amd-gfx mailing list
+> amd-gfx@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
