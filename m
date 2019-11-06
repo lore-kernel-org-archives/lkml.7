@@ -2,160 +2,174 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17812C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A565C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D8FF02075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="p3YMbmhL"
+	by mail.kernel.org (Postfix) with ESMTP id 75FBD2084D
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:06:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728162AbfKFQGO (ORCPT
+        id S1728929AbfKFQGh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:06:14 -0500
-Received: from mail.skyhub.de ([5.9.137.197]:53778 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726926AbfKFQGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:06:14 -0500
-Received: from zn.tnic (p200300EC2F0E77001533F52C90575FC8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0e:7700:1533:f52c:9057:5fc8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id B81E31EC0CDD;
-        Wed,  6 Nov 2019 17:06:12 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1573056372;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=AqHULZoJql977LklrjplN/5siEITgkPs6pyHRw7U4cg=;
-        b=p3YMbmhLxImOHnMqQ6NIFKZg2CaIFKsc2GT9mAa7Fq1gP8GSi45H4LPi0fJJw3sSJaqeT9
-        YNKQApVsqiPtRzn57u3TRZ89HCy2kU4gOPhQCMS6Ng8BSCd9yx+KZ4V5MLC68V+JfN5H33
-        3zZh3iQsgjJwy1aCG8e6VmHbC4MY/2A=
-Date:   Wed, 6 Nov 2019 17:06:07 +0100
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
-Message-ID: <20191106160607.GC28380@zn.tnic>
-References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 6 Nov 2019 11:06:37 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:39724 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727028AbfKFQGh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 11:06:37 -0500
+Received: from linux.loongson.cn (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPDx72B+78JdqhYAAA--.24S2;
+        Thu, 07 Nov 2019 00:06:22 +0800 (CST)
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+To:     Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yinglu Yang <yangyinglu@loongson.cn>
+Subject: [PATCH] MIPS: Scan the DMI system information
+Date:   Thu,  7 Nov 2019 00:05:41 +0800
+Message-Id: <1573056341-21159-1-git-send-email-yangtiezhu@loongson.cn>
+X-Mailer: git-send-email 2.1.0
+X-CM-TRANSID: QMiowPDx72B+78JdqhYAAA--.24S2
+X-Coremail-Antispam: 1UD129KBjvJXoWxCr4xAw4DAr47GFW8KFyUWrg_yoW5KFWxpF
+        4kA3Z5tr45Wr17GFWfAFyxuF13JFs3XFW5KFW7KF9rAas8Xa4UZrsag3ZxAFy0yr4kta4F
+        ga4SgF4UGrsFyaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUU9S14x267AKxVWUJVW8JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26r1j6r1xM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26r1j
+        6r4UM28EF7xvwVC2z280aVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv6xkF7I0E14v26r1j6r
+        4UM2AIxVAIcxkEcVAq07x20xvEncxIr21l5I8CrVACY4xI64kE6c02F40Ex7xfMcIj64x0
+        Y40En7xvr7AKxVWUJVW8JwAv7VC0I7IYx2IY67AKxVWUXVWUAwAv7VC2z280aVAFwI0_Jr
+        0_Gr1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JM4x0Y48IcxkI7VAKI48G
+        6xCjnVAKz4kxM4x0x7Aq67IIx4CEVc8vx2IErcIFxwCF04k20xvY0x0EwIxGrwCFx2IqxV
+        CFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E7480Y4vE14v26r10
+        6r1rMI8E67AF67kF1VAFwI0_JF0_Jw1lIxkGc2Ij64vIr41lIxAIcVC0I7IYx2IY67AKxV
+        WUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF04k26cxKx2IYs7xG
+        6Fyj6rWUJwCI42IY6I8E87Iv67AKxVWUJVW8JwCI42IY6I8E87Iv6xkF7I0E14v26r1j6r
+        4UYxBIdaVFxhVjvjDU0xZFpf9x0JUrkuxUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 01:24:59AM +0000, Ghannam, Yazen wrote:
-> From: Yazen Ghannam <yazen.ghannam@amd.com>
-> 
-> Hi Boris,
-> 
-> These patches address the issue where the module checks and complains
-> about DRAM ECC on nodes without memory.
-> 
-> Changes from last revision:
->   1) Dropped patch 6 which was for adding a grain value.
->   2) Added an error code for !ecc_enabled() in patch 5.
+Enable DMI scanning on the MIPS architecture, this setups DMI identifiers
+(dmi_system_id) for printing it out on task dumps and prepares DIMM entry
+information (dmi_memdev_info) from the SMBIOS table. With this patch, the
+driver can easily match various of mainboards.
 
-Still doesn't help. The load gets attempted twice still. Try reproducing
-it on a small, single-node box where ECC is disabled.
+In the SMBIOS reference specification, the table anchor string "_SM_" is
+present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+but there exists a special case for loongson platform, when call function
+dmi_early_remap, it should specify the start address to 0xFFFE000 due to
+it is reserved for SMBIOS and can be normally access in the BIOS.
 
-[    2.590123] EDAC MC: Ver: 3.0.0
-[    2.594153] EDAC DEBUG: edac_mc_sysfs_init: device mc created
-[    5.946482] EDAC amd64: F10h detected (node 0).
-[    5.952134] EDAC DEBUG: reserve_mc_sibling_devs: F1: 0000:00:18.1
-[    5.958967] EDAC DEBUG: reserve_mc_sibling_devs: F2: 0000:00:18.2
-[    5.969869] EDAC DEBUG: reserve_mc_sibling_devs: F3: 0000:00:18.3
-[    5.981125] EDAC DEBUG: read_mc_regs:   TOP_MEM:  0x00000000d0000000
-[    5.981126] EDAC DEBUG: read_mc_regs:   TOP_MEM2: 0x0000000230000000
-[    5.981130] EDAC DEBUG: read_dram_ctl_register: F2x110 (DCTSelLow): 0xffffffff, High range addrs at: 0xfffff800
-[    5.981131] EDAC DEBUG: read_dram_ctl_register:   DCTs operate in ganged mode
-[    5.981132] EDAC DEBUG: read_dram_ctl_register:   data interleave for ECC: enabled, DRAM cleared since last warm reset: yes
-[    5.981133] EDAC DEBUG: read_dram_ctl_register:   channel interleave: enabled, interleave bits selector: 0x3
-[    5.981137] EDAC DEBUG: read_mc_regs:   DRAM range[0], base: 0x0000ff0000000000; limit: 0x0000ff022fffffff
-[    5.981138] EDAC DEBUG: read_mc_regs:    IntlvEn=Disabled; Range access: RW IntlvSel=0 DstNode=0
-[    5.981144] EDAC DEBUG: read_dct_base_mask:   DCSB0[0]=0x00000001 reg: F2x40
-[    5.981146] EDAC DEBUG: read_dct_base_mask:   DCSB1[0]=0x00000000 reg: F2x140
-[    5.981147] EDAC DEBUG: read_dct_base_mask:   DCSB0[1]=0x00000101 reg: F2x44
-[    5.981148] EDAC DEBUG: read_dct_base_mask:   DCSB1[1]=0x00000000 reg: F2x144
-[    5.981149] EDAC DEBUG: read_dct_base_mask:   DCSB0[2]=0x00000201 reg: F2x48
-[    5.981150] EDAC DEBUG: read_dct_base_mask:   DCSB1[2]=0x00000000 reg: F2x148
-[    5.981151] EDAC DEBUG: read_dct_base_mask:   DCSB0[3]=0x00000301 reg: F2x4c
-[    5.981152] EDAC DEBUG: read_dct_base_mask:   DCSB1[3]=0x00000000 reg: F2x14c
-[    5.981153] EDAC DEBUG: read_dct_base_mask:   DCSB0[4]=0x00000000 reg: F2x50
-[    5.981154] EDAC DEBUG: read_dct_base_mask:   DCSB1[4]=0x00000000 reg: F2x150
-[    5.981155] EDAC DEBUG: read_dct_base_mask:   DCSB0[5]=0x00000000 reg: F2x54
-[    5.981156] EDAC DEBUG: read_dct_base_mask:   DCSB1[5]=0x00000000 reg: F2x154
-[    5.981157] EDAC DEBUG: read_dct_base_mask:   DCSB0[6]=0x00000000 reg: F2x58
-[    5.981158] EDAC DEBUG: read_dct_base_mask:   DCSB1[6]=0x00000000 reg: F2x158
-[    5.981159] EDAC DEBUG: read_dct_base_mask:   DCSB0[7]=0x00000000 reg: F2x5c
-[    5.981160] EDAC DEBUG: read_dct_base_mask:   DCSB1[7]=0x00000000 reg: F2x15c
-[    5.981161] EDAC DEBUG: read_dct_base_mask:     DCSM0[0]=0x00f83ce0 reg: F2x60
-[    5.981162] EDAC DEBUG: read_dct_base_mask:     DCSM1[0]=0x00000000 reg: F2x160
-[    5.981163] EDAC DEBUG: read_dct_base_mask:     DCSM0[1]=0x00f83ce0 reg: F2x64
-[    5.981164] EDAC DEBUG: read_dct_base_mask:     DCSM1[1]=0x00000000 reg: F2x164
-[    5.981165] EDAC DEBUG: read_dct_base_mask:     DCSM0[2]=0x00000000 reg: F2x68
-[    5.981166] EDAC DEBUG: read_dct_base_mask:     DCSM1[2]=0x00000000 reg: F2x168
-[    5.981167] EDAC DEBUG: read_dct_base_mask:     DCSM0[3]=0x00000000 reg: F2x6c
-[    5.981168] EDAC DEBUG: read_dct_base_mask:     DCSM1[3]=0x00000000 reg: F2x16c
-[    5.981169] EDAC DEBUG: read_mc_regs:   DIMM type: Unbuffered-DDR2
-[    5.981219] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 0, MCG_CTL: 0x3f, NB MSR is enabled
-[    5.981221] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 1, MCG_CTL: 0x3f, NB MSR is enabled
-[    5.981221] EDAC amd64: Node 0: DRAM ECC disabled.
-[    5.981223] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
-[    6.302561] EDAC amd64: F10h detected (node 0).
-[    6.307276] EDAC DEBUG: reserve_mc_sibling_devs: F1: 0000:00:18.1
-[    6.313630] EDAC DEBUG: reserve_mc_sibling_devs: F2: 0000:00:18.2
-[    6.320589] EDAC DEBUG: reserve_mc_sibling_devs: F3: 0000:00:18.3
-[    6.328359] EDAC DEBUG: read_mc_regs:   TOP_MEM:  0x00000000d0000000
-[    6.335150] EDAC DEBUG: read_mc_regs:   TOP_MEM2: 0x0000000230000000
-[    6.342188] EDAC DEBUG: read_dram_ctl_register: F2x110 (DCTSelLow): 0xffffffff, High range addrs at: 0xfffff800
-[    6.353691] EDAC DEBUG: read_dram_ctl_register:   DCTs operate in ganged mode
-[    6.361527] EDAC DEBUG: read_dram_ctl_register:   data interleave for ECC: enabled, DRAM cleared since last warm reset: yes
-[    6.374204] EDAC DEBUG: read_dram_ctl_register:   channel interleave: enabled, interleave bits selector: 0x3
-[    6.384343] EDAC DEBUG: read_mc_regs:   DRAM range[0], base: 0x0000ff0000000000; limit: 0x0000ff022fffffff
-[    6.395942] EDAC DEBUG: read_mc_regs:    IntlvEn=Disabled; Range access: RW IntlvSel=0 DstNode=0
-[    6.406619] EDAC DEBUG: read_dct_base_mask:   DCSB0[0]=0x00000001 reg: F2x40
-[    6.414646] EDAC DEBUG: read_dct_base_mask:   DCSB1[0]=0x00000000 reg: F2x140
-[    6.422526] EDAC DEBUG: read_dct_base_mask:   DCSB0[1]=0x00000101 reg: F2x44
-[    6.430823] EDAC DEBUG: read_dct_base_mask:   DCSB1[1]=0x00000000 reg: F2x144
-[    6.438710] EDAC DEBUG: read_dct_base_mask:   DCSB0[2]=0x00000201 reg: F2x48
-[    6.446810] EDAC DEBUG: read_dct_base_mask:   DCSB1[2]=0x00000000 reg: F2x148
-[    6.454788] EDAC DEBUG: read_dct_base_mask:   DCSB0[3]=0x00000301 reg: F2x4c
-[    6.462743] EDAC DEBUG: read_dct_base_mask:   DCSB1[3]=0x00000000 reg: F2x14c
-[    6.470585] EDAC DEBUG: read_dct_base_mask:   DCSB0[4]=0x00000000 reg: F2x50
-[    6.478698] EDAC DEBUG: read_dct_base_mask:   DCSB1[4]=0x00000000 reg: F2x150
-[    6.486624] EDAC DEBUG: read_dct_base_mask:   DCSB0[5]=0x00000000 reg: F2x54
-[    6.494631] EDAC DEBUG: read_dct_base_mask:   DCSB1[5]=0x00000000 reg: F2x154
-[    6.502866] EDAC DEBUG: read_dct_base_mask:   DCSB0[6]=0x00000000 reg: F2x58
-[    6.510817] EDAC DEBUG: read_dct_base_mask:   DCSB1[6]=0x00000000 reg: F2x158
-[    6.518602] EDAC DEBUG: read_dct_base_mask:   DCSB0[7]=0x00000000 reg: F2x5c
-[    6.527120] EDAC DEBUG: read_dct_base_mask:   DCSB1[7]=0x00000000 reg: F2x15c
-[    6.534926] EDAC DEBUG: read_dct_base_mask:     DCSM0[0]=0x00f83ce0 reg: F2x60
-[    6.548356] EDAC DEBUG: read_dct_base_mask:     DCSM1[0]=0x00000000 reg: F2x160
-[    6.560715] EDAC DEBUG: read_dct_base_mask:     DCSM0[1]=0x00f83ce0 reg: F2x64
-[    6.568116] EDAC DEBUG: read_dct_base_mask:     DCSM1[1]=0x00000000 reg: F2x164
-[    6.575596] EDAC DEBUG: read_dct_base_mask:     DCSM0[2]=0x00000000 reg: F2x68
-[    6.584317] EDAC DEBUG: read_dct_base_mask:     DCSM1[2]=0x00000000 reg: F2x168
-[    6.591899] EDAC DEBUG: read_dct_base_mask:     DCSM0[3]=0x00000000 reg: F2x6c
-[    6.599460] EDAC DEBUG: read_dct_base_mask:     DCSM1[3]=0x00000000 reg: F2x16c
-[    6.606877] EDAC DEBUG: read_mc_regs:   DIMM type: Unbuffered-DDR2
-[    6.619722] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 0, MCG_CTL: 0x3f, NB MSR is enabled
-[    6.628463] EDAC DEBUG: nb_mce_bank_enabled_on_node: core: 1, MCG_CTL: 0x3f, NB MSR is enabled
-[    6.648232] EDAC amd64: Node 0: DRAM ECC disabled.
-[    6.657843] EDAC amd64: ECC disabled in the BIOS or no ECC capability, module will not load.
+Co-developed-by: Yinglu Yang <yangyinglu@loongson.cn>
+Signed-off-by: Yinglu Yang <yangyinglu@loongson.cn>
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ arch/mips/Kconfig           | 12 ++++++++++++
+ arch/mips/include/asm/dmi.h | 43 +++++++++++++++++++++++++++++++++++++++++++
+ arch/mips/kernel/setup.c    |  2 ++
+ 3 files changed, 57 insertions(+)
+ create mode 100644 arch/mips/include/asm/dmi.h
 
+diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+index 7cb8947..0a67b18 100644
+--- a/arch/mips/Kconfig
++++ b/arch/mips/Kconfig
+@@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
+ 	  Enable hardware performance counter support for perf events. If
+ 	  disabled, perf events will use software events only.
+ 
++# Mark as expert because too many people got it wrong.
++# The code disables itself when not needed.
++config DMI
++	default y
++	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
++	bool "Enable DMI scanning" if EXPERT
++	help
++	  Enabled scanning of DMI to identify machine quirks. Say Y
++	  here unless you have verified that your setup is not
++	  affected by entries in the DMI blacklist. Required by PNP
++	  BIOS code.
++
+ config SMP
+ 	bool "Multi-Processing support"
+ 	depends on SYS_SUPPORTS_SMP
+diff --git a/arch/mips/include/asm/dmi.h b/arch/mips/include/asm/dmi.h
+new file mode 100644
+index 0000000..1f3da37
+--- /dev/null
++++ b/arch/mips/include/asm/dmi.h
+@@ -0,0 +1,43 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#ifndef _ASM_MIPS_DMI_H
++#define _ASM_MIPS_DMI_H
++
++#define dmi_early_remap		mips_early_memremap
++#define dmi_early_unmap		mips_early_memunmap
++#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
++#define dmi_unmap(_x)		mips_memunmap(_x)
++
++#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
++
++void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
++{
++#if defined(CONFIG_MACH_LOONGSON64)
++	if (phys_addr == 0xF0000)
++		phys_addr = 0xFFFE000;
++
++	return (void *)TO_CAC(phys_addr);
++#else
++	return NULL;
++#endif
++}
++
++void __init mips_early_memunmap(void *addr, unsigned long size)
++{
++
++}
++
++void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
++{
++#if defined(CONFIG_MACH_LOONGSON64)
++	return (void *)TO_CAC(offset);
++#else
++	return NULL;
++#endif
++}
++
++void mips_memunmap(void *addr)
++{
++
++}
++
++#endif /* _ASM_MIPS_DMI_H */
+diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+index c3d4212..da7d312 100644
+--- a/arch/mips/kernel/setup.c
++++ b/arch/mips/kernel/setup.c
+@@ -28,6 +28,7 @@
+ #include <linux/decompress/generic.h>
+ #include <linux/of_fdt.h>
+ #include <linux/of_reserved_mem.h>
++#include <linux/dmi.h>
+ 
+ #include <asm/addrspace.h>
+ #include <asm/bootinfo.h>
+@@ -802,6 +803,7 @@ void __init setup_arch(char **cmdline_p)
+ #endif
+ 
+ 	arch_mem_init(cmdline_p);
++	dmi_setup();
+ 
+ 	resource_init();
+ 	plat_smp_setup();
 -- 
-Regards/Gruss,
-    Boris.
+2.1.0
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
