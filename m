@@ -2,99 +2,216 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33780C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:03:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3345C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:03:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E640C214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:03:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AF30217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:03:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BuATidBj"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="ublOP49X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731230AbfKFGDd (ORCPT
+        id S1731204AbfKFGDc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:03:33 -0500
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41461 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731190AbfKFGDc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 01:03:32 -0500
-Received: by mail-pg1-f194.google.com with SMTP id l3so16377468pgr.8;
-        Tue, 05 Nov 2019 22:03:30 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=5/6ILvar/Vc1NMB4f7GrkmfjN1HObi4yraIRhPcFGto=;
-        b=BuATidBjIts5hHmDKKZlujEP41wcqVP7Yk5A6SBb/teaPz7lWYAWq7vnCRk1LcWiXE
-         YjkhzUwRVWbDxPdLyCYJGkmGcBkaT3joD0mY71d5nMoXyDsuZf+axhR23/pUX9HB7tYC
-         ccVmjKURstvC5U+pQqN49oH4avpatxMn8cpZ26bbTfMlfd/Z1LwTYQD2YsvjS3IlgXye
-         d10ADmqdU+G2ckLyYY7P8KpRz5b/U/vMkTg8I4PEk51+knjsAVEqGzrEtrfGoQ67UQHU
-         T/EKR9FVNAHHOzSAY9IYC1ZOXTAkPpCUS2KOu4T/mc0ichdJdwL3mCAFwFdeeZWM+0vQ
-         z5xw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id
-         :in-reply-to:references:mime-version:content-transfer-encoding;
-        bh=5/6ILvar/Vc1NMB4f7GrkmfjN1HObi4yraIRhPcFGto=;
-        b=b+PynbWxEojGRwVsr0+3F82LG50wCLb+Ef/v97hk/9cSRx6OdWuO3Eo1iBhPlM5h2g
-         Y9OKJXcMMo4SHVyQ7f7ia0NRWDyaiBvqodNBPaSukZ2mpIP+ZRa/JSZhY8pIeQrR+Pax
-         Q8zBgVG4ypgup2DiBi1TRlknNTgT6PFDfE5+ISG6M54s3vvrnC4zg6+/5hqKicz17E/f
-         z7zXaVLIBO4lGn2+mZjJA3Li5zCdmn05SyY5CAHBfysb+ty08gAP7bRCZ5d508JIKiND
-         7V1YxJarlDak6ipvBI3lnpljVO2TeqjTCK0E8Dnj7IFooU+ggw5wPqgRxQ2xOPKHkKi8
-         5BaA==
-X-Gm-Message-State: APjAAAXI27GtHHqhfRUu7iR98Zo2jj2QG/echQr3JlFlsqlAXOFXeJvh
-        jZgqCMsRYPeEl6VR/9DKySg=
-X-Google-Smtp-Source: APXvYqweLDs9cKw9j14668DFH5DKEGGVEUDKedXgP0s4rb+8rjWCTXxUP+g39XP/Qw3NEakH6Wvdlg==
-X-Received: by 2002:aa7:8197:: with SMTP id g23mr1161202pfi.247.1573020209675;
-        Tue, 05 Nov 2019 22:03:29 -0800 (PST)
-Received: from voyager.ibm.com ([36.255.48.244])
-        by smtp.gmail.com with ESMTPSA id u65sm23177676pfb.35.2019.11.05.22.03.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 22:03:29 -0800 (PST)
-From:   Joel Stanley <joel@jms.id.au>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH 4/4] dt-bindings: fttmr010: Add ast2600 compatible
-Date:   Wed,  6 Nov 2019 16:33:01 +1030
-Message-Id: <20191106060301.17408-5-joel@jms.id.au>
-X-Mailer: git-send-email 2.24.0.rc1
-In-Reply-To: <20191106060301.17408-1-joel@jms.id.au>
-References: <20191106060301.17408-1-joel@jms.id.au>
+Received: from mailout2.samsung.com ([203.254.224.25]:63081 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725913AbfKFGD3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 01:03:29 -0500
+Received: from epcas5p3.samsung.com (unknown [182.195.41.41])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20191106060326epoutp02f7fb43d454598810aa2b51c4750cf30f~UfYtGO5370808508085epoutp02X
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 06:03:26 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20191106060326epoutp02f7fb43d454598810aa2b51c4750cf30f~UfYtGO5370808508085epoutp02X
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1573020207;
+        bh=Y0IhGjF1CLJv+DICYRimtbI6ElvDELr4R6qKhTfwWok=;
+        h=From:To:Cc:In-Reply-To:Subject:Date:References:From;
+        b=ublOP49Xy/LYBmnYMbrk0sAxdTDo6Xvar+AyFiyrqg/yYjX4lVUUVArxx+hEZuzei
+         QYgFX1PGQixyx1rByljTBGt+Kt/9RYXc3vzH6SMF6d7Q4eJKODcnJY/+IjWn7Xc7/6
+         F0VmnmEGsd/lzl02QidmldWR7cMX0V+toFqi/+ws=
+Received: from epsmges5p2new.samsung.com (unknown [182.195.42.74]) by
+        epcas5p1.samsung.com (KnoxPortal) with ESMTP id
+        20191106060325epcas5p1a0d7c3cd855093aa263766321910d70f~UfYsIXZoZ1750317503epcas5p1L;
+        Wed,  6 Nov 2019 06:03:25 +0000 (GMT)
+Received: from epcas5p2.samsung.com ( [182.195.41.40]) by
+        epsmges5p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        10.3E.48302.D2262CD5; Wed,  6 Nov 2019 15:03:25 +0900 (KST)
+Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
+        epcas5p3.samsung.com (KnoxPortal) with ESMTPA id
+        20191106060324epcas5p3d21a76cf2761b0180e98315c75284fe1~UfYrPW6TF0190401904epcas5p3A;
+        Wed,  6 Nov 2019 06:03:24 +0000 (GMT)
+Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
+        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
+        20191106060324epsmtrp1f465960ce844321f3d25fd74577bcaf9~UfYrOhOct1765417654epsmtrp1G;
+        Wed,  6 Nov 2019 06:03:24 +0000 (GMT)
+X-AuditID: b6c32a4a-327ff7000001bcae-71-5dc2622d7939
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        74.9B.25663.C2262CD5; Wed,  6 Nov 2019 15:03:24 +0900 (KST)
+Received: from pankjsharma02 (unknown [107.111.84.17]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20191106060323epsmtip19c707ac4959bc96c17a4c4400de31d3a~UfYpfUDWj2995729957epsmtip1k;
+        Wed,  6 Nov 2019 06:03:22 +0000 (GMT)
+From:   "pankj.sharma" <pankj.sharma@samsung.com>
+To:     <wg@grandegger.com>, <mkl@pengutronix.de>
+Cc:     <davem@davemloft.net>, <eugen.hristev@microchip.com>,
+        <ludovic.desroches@microchip.com>, <pankaj.dubey@samsung.com>,
+        <rcsekar@samsung.com>, "'Sriram Dash'" <sriram.dash@samsung.com>,
+        <linux-can@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+In-Reply-To: 
+Subject: RE: [PATCH v3] can: m_can: add support for one shot mode
+Date:   Wed, 6 Nov 2019 11:33:21 +0530
+Message-ID: <01dc01d59467$e6886b20$b3994160$@samsung.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQHwFvFf7BLTdmyWN921EOIqnqBEoQIzkbGZpyRmlFCAEp3M8A==
+Content-Language: en-us
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFjrEKsWRmVeSWpSXmKPExsWy7bCmhq5u0qFYg6YmM4s551tYLA78OM5i
+        ser7VGaLy7vmsFm8WHud1WL9oiksFscWiFks2vqF3WLWhR2sFjfWs1ssvbeT1YHbY8vKm0we
+        Hy/dZvS482Mpo0f/XwOPvi2rGD0+b5ILYIvisklJzcksSy3St0vgyujrmsBYcFW6Yt6GNsYG
+        xs+iXYycHBICJhL7n65l72Lk4hAS2M0o0fP1MCOE84lRYt3BZywQzjdGiQ/ff7LDtHQ2NUNV
+        7WWU+L7wECuE85pRYsmGHkaQKjYBfYkpTX9ZQGwRAV2JH5vmgXUwC8xgklh7bAVTFyMHB6cA
+        r8SEf9YgNcICjhIvF79mArFZBFQkll2cB2bzClhK/Fs0hwXCFpQ4OfMJmM0soC2xbOFrZoiL
+        FCR+Pl3GCrHLSeJB0xRWiBpxiZdHj4A9JyHQzi7xat9UVogGF4kTX06xQNjCEq+Ob4F6TUri
+        ZX8blJ0tsXB3PwvInRICFRJtM4QhwvYSB67MAQszC2hKrN+lD7GKT6L39xMmiGpeiY42IYhq
+        NYmpT98xQtgyEncebWaDsD0kPmw7wTqBUXEWksdmIXlsFpIHZiEsW8DIsopRMrWgODc9tdi0
+        wCgvtVyvODG3uDQvXS85P3cTIzhlaXntYFx2zucQowAHoxIPL0P5wVgh1sSy4srcQ4wSHMxK
+        IrwxfUAh3pTEyqrUovz4otKc1OJDjNIcLErivJNYr8YICaQnlqRmp6YWpBbBZJk4OKUaGKX8
+        b/x5cvGxlU6XguHpwB/zL6pN2Zl//0NRpcjX4hNfDwc3bX18a7q1ePi1+ocP7doLdP7eMJdn
+        TojVPOXdfI/poUVY82yR+x94mu6JRMbn+k+YYDtN9He2cXvRNffUXwefXTwZP7nL/uLZ6vO+
+        0vE51WHfU9RdHp2Jt028fSHRX18l9eSK40osxRmJhlrMRcWJAMYIjKdVAwAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrKIsWRmVeSWpSXmKPExsWy7bCSnK5O0qFYgzl3TS3mnG9hsTjw4ziL
+        xarvU5ktLu+aw2bxYu11Vov1i6awWBxbIGaxaOsXdotZF3awWtxYz26x9N5OVgdujy0rbzJ5
+        fLx0m9Hjzo+ljB79fw08+rasYvT4vEkugC2KyyYlNSezLLVI3y6BK+PH9M2MBXelKq5suc7Y
+        wPhdpIuRk0NCwESis6mZEcQWEtjNKLGgT6eLkQMoLiOx+HM1RImwxMp/z9m7GLmASl4ySsyY
+        +48JJMEmoC8xpekvC4gtAmQvnNTIBFLELLCASaJ50mpWiI7ZjBLLf25mB5nKKcArMeGfNUiD
+        sICjxMvFr8EGsQioSCy7OA/M5hWwlPi3aA4LhC0ocXLmEzCbWUBbovdhKyOMvWzha2aI6xQk
+        fj5dxgpxhJPEg6YprBA14hIvjx5hn8AoPAvJqFlIRs1CMmoWkpYFjCyrGCVTC4pz03OLDQuM
+        8lLL9YoTc4tL89L1kvNzNzGCI09LawfjiRPxhxgFOBiVeHgZyg/GCrEmlhVX5h5ilOBgVhLh
+        jekDCvGmJFZWpRblxxeV5qQWH2KU5mBREueVzz8WKSSQnliSmp2aWpBaBJNl4uCUamCMn2X7
+        KrWsSU3e3qZhUbV4vnXO094Ac6bFfkGLn7nHy78XbUy0+6Fc879ozf3gDYxWJULRXO5ZCoce
+        X6gRn+z1/oSb560G7/Xb+ioml4Y16OsV61w993vfrmOvinWYOe9Z5+cGMX86YCqgFiqvuZC5
+        pHNPT9FBz3Pve+RedVVkeoU4sfWZKrEUZyQaajEXFScCALTyrJm4AgAA
+X-CMS-MailID: 20191106060324epcas5p3d21a76cf2761b0180e98315c75284fe1
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 105P
+X-CMS-RootMailID: 20191021120513epcas5p2fd23f5dbdff6a0e6aa3b0726b30e4b60
+References: <CGME20191021120513epcas5p2fd23f5dbdff6a0e6aa3b0726b30e4b60@epcas5p2.samsung.com>
+        <1571659480-29109-1-git-send-email-pankj.sharma@samsung.com> 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ast2600 contains a fttmr010 derivative.
+Gentle Ping=21
 
-Signed-off-by: Joel Stanley <joel@jms.id.au>
----
- Documentation/devicetree/bindings/timer/faraday,fttmr010.txt | 1 +
- 1 file changed, 1 insertion(+)
+> From: pankj.sharma <pankj.sharma=40samsung.com>
+> Subject: RE: =5BPATCH v3=5D can: m_can: add support for one shot mode
+>=20
+> Gentle Ping=21
+>=20
+> > From: Pankaj Sharma <pankj.sharma=40samsung.com>
+> > Subject: =5BPATCH v3=5D can: m_can: add support for one shot mode
+> >
+> > According to the CAN Specification (see ISO 11898-1:2015, 8.3.4
+> > Recovery Management), the M_CAN provides means for automatic
+> > retransmission of frames that have lost arbitration or that have been
+> > disturbed by errors during transmission. By default automatic retransmi=
+ssion is
+> enabled.
+> >
+> > The Bosch MCAN controller has support for disabling automatic retransmi=
+ssion.
+> >
+> > To support time-triggered communication as described in ISO
+> > 11898-1:2015, chapter 9.2, the automatic retransmission may be disabled=
+ via
+> CCCR.DAR.
+> >
+> > CAN_CTRLMODE_ONE_SHOT is used for disabling automatic retransmission.
+> >
+> > Signed-off-by: Pankaj Sharma <pankj.sharma=40samsung.com>
+> > Signed-off-by: Sriram Dash <sriram.dash=40samsung.com>
+> > ---
+> >
+> > changes in v3:
+> > - resolving build errors for net-next branch
+> >
+> > changes in v2:
+> > - rebase to net-next
+> >
+> >  drivers/net/can/m_can/m_can.c =7C 12 +++++++++---
+> >  1 file changed, 9 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/drivers/net/can/m_can/m_can.c
+> > b/drivers/net/can/m_can/m_can.c index 562c8317e3aa..75e7490c4299
+> > 100644
+> > --- a/drivers/net/can/m_can/m_can.c
+> > +++ b/drivers/net/can/m_can/m_can.c
+> > =40=40 -123,6 +123,7 =40=40 enum m_can_reg =7B
+> >  =23define CCCR_CME_CANFD_BRS	0x2
+> >  =23define CCCR_TXP		BIT(14)
+> >  =23define CCCR_TEST		BIT(7)
+> > +=23define CCCR_DAR		BIT(6)
+> >  =23define CCCR_MON		BIT(5)
+> >  =23define CCCR_CSR		BIT(4)
+> >  =23define CCCR_CSA		BIT(3)
+> > =40=40 -1135,7 +1136,7 =40=40 static void m_can_chip_config(struct net_=
+device
+> > *dev)
+> >  	if (cdev->version =3D=3D 30) =7B
+> >  	/* Version 3.0.x */
+> >
+> > -		cccr &=3D =7E(CCCR_TEST =7C CCCR_MON =7C
+> > +		cccr &=3D =7E(CCCR_TEST =7C CCCR_MON =7C CCCR_DAR =7C
+> >  			(CCCR_CMR_MASK << CCCR_CMR_SHIFT) =7C
+> >  			(CCCR_CME_MASK << CCCR_CME_SHIFT));
+> >
+> > =40=40 -1145,7 +1146,7 =40=40 static void m_can_chip_config(struct net_=
+device
+> > *dev)
+> >  	=7D else =7B
+> >  	/* Version 3.1.x or 3.2.x */
+> >  		cccr &=3D =7E(CCCR_TEST =7C CCCR_MON =7C CCCR_BRSE =7C CCCR_FDOE
+> > =7C
+> > -			  CCCR_NISO);
+> > +			  CCCR_NISO =7C CCCR_DAR);
+> >
+> >  		/* Only 3.2.x has NISO Bit implemented */
+> >  		if (cdev->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO) =40=40 -
+> > 1165,6 +1166,10 =40=40 static void m_can_chip_config(struct net_device =
+*dev)
+> >  	if (cdev->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
+> >  		cccr =7C=3D CCCR_MON;
+> >
+> > +	/* Disable Auto Retransmission (all versions) */
+> > +	if (cdev->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT)
+> > +		cccr =7C=3D CCCR_DAR;
+> > +
+> >  	/* Write config */
+> >  	m_can_write(cdev, M_CAN_CCCR, cccr);
+> >  	m_can_write(cdev, M_CAN_TEST, test); =40=40 -1310,7 +1315,8 =40=40
+> static
+> > int m_can_dev_setup(struct m_can_classdev
+> > *m_can_dev)
+> >  	m_can_dev->can.ctrlmode_supported =3D CAN_CTRLMODE_LOOPBACK =7C
+> >  					CAN_CTRLMODE_LISTENONLY =7C
+> >  					CAN_CTRLMODE_BERR_REPORTING =7C
+> > -					CAN_CTRLMODE_FD;
+> > +					CAN_CTRLMODE_FD =7C
+> > +					CAN_CTRLMODE_ONE_SHOT;
+> >
+> >  	/* Set properties depending on M_CAN version */
+> >  	switch (m_can_dev->version) =7B
+> > --
+> > 2.17.1
 
-diff --git a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-index 195792270414..3cb2f4c98d64 100644
---- a/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-+++ b/Documentation/devicetree/bindings/timer/faraday,fttmr010.txt
-@@ -11,6 +11,7 @@ Required properties:
-   "moxa,moxart-timer", "faraday,fttmr010"
-   "aspeed,ast2400-timer"
-   "aspeed,ast2500-timer"
-+  "aspeed,ast2600-timer"
- 
- - reg : Should contain registers location and length
- - interrupts : Should contain the three timer interrupts usually with
--- 
-2.24.0.rc1
 
