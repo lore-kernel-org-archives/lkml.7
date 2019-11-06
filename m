@@ -2,108 +2,146 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82275C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1168BC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CCA2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="bAnOaztF"
+	by mail.kernel.org (Postfix) with ESMTP id C0F2F2087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 01:01:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfKFBBF (ORCPT
+        id S1730693AbfKFBBW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 20:01:05 -0500
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44939 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729614AbfKFBBF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 20:01:05 -0500
-Received: by mail-pg1-f195.google.com with SMTP id f19so6801763pgk.11
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 17:01:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:in-reply-to:message-id:references
-         :user-agent:mime-version;
-        bh=Txbd1n3WXZhvsgvEStK+7JvEW+gNhvfRDKuQjrimagg=;
-        b=bAnOaztFbWE11f3TZekaIQrRKnaPMyTRlYFpZE+okZwn+QrBbdHAKH2ETQBNvxGC8C
-         fPGhjhNCmDQ57/Ahb0Ege84BGpJ1Fcy6wF89RbGKmxma+d8WXt9ToPgYWi6RQTPG3hZ/
-         x4QmYNZYL169QiRIHBXisIegP2q0myfbur26HDTg+HciPsMXJl+7IcCgADTOooaMer42
-         UJ2kOO4YjXQPWztZLpQlpExB2aMVycXlHoRVdui9RExKfSRcc7DkXsOi8MRMWv3ZE5OQ
-         st3cSzg5JNOFEeMjtFYuRnxuy8CnPNUb1lW8tiYL2+wsbxF6qYOeftHzwQhPI5Z2Q2xL
-         rNBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:in-reply-to:message-id
-         :references:user-agent:mime-version;
-        bh=Txbd1n3WXZhvsgvEStK+7JvEW+gNhvfRDKuQjrimagg=;
-        b=jOHFbZ0PzD5SB735e5apb5WGsw5y+3GZ1NEPGFDVGbu7JpiFJnwxd3UiKNUZ2dSY6+
-         Pb7VSfzdlBxRXyEaQ/qjUij9fNYqXFDRQL7ogGydgKTN8lUK7uqeuVqOtKq2jJGpxYHU
-         Q6eXowD9190MZTSzMcwb9oQHK3+Bla4mx5y4H8kWuYf6XSwVbr5Pme58yaAHW/1SSmy+
-         A2a7k+mqDvRHEj8dOCm+CYhtH0alYwYzRLF9CygM6F3QR4O56pQmerM8XewBbewVNvA0
-         F6bMBhzhhYMcPHOwr5HcLyZr9VmqTGO+lFa3nsP7R6SD3y4EdMvj40qTWV6PYtv7mq9Z
-         aDUw==
-X-Gm-Message-State: APjAAAWmNDBgbg2tOX3cNfaNWWDdI3p4bZBfU3IJDwwviVh4nGAzFxEJ
-        FFlCQ9SWxV83axyep5nDnDRHdw==
-X-Google-Smtp-Source: APXvYqx9BUuMVoesQnq7M7zvoWtfFvSxkRRjqLW5cAtjA1k5ivCd6zrmcr9aY0mtelj+Oda/p8qjwA==
-X-Received: by 2002:a62:5801:: with SMTP id m1mr42129991pfb.204.1573002062623;
-        Tue, 05 Nov 2019 17:01:02 -0800 (PST)
-Received: from [2620:15c:17:3:3a5:23a7:5e32:4598] ([2620:15c:17:3:3a5:23a7:5e32:4598])
-        by smtp.gmail.com with ESMTPSA id z21sm19899398pfa.119.2019.11.05.17.01.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 17:01:01 -0800 (PST)
-Date:   Tue, 5 Nov 2019 17:01:00 -0800 (PST)
-From:   David Rientjes <rientjes@google.com>
-X-X-Sender: rientjes@chino.kir.corp.google.com
-To:     Michal Hocko <mhocko@kernel.org>
-cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Mel Gorman <mgorman@suse.de>,
-        "Kirill A. Shutemov" <kirill@shutemov.name>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: Re: [patch for-5.3 0/4] revert immediate fallback to remote
- hugepages
-In-Reply-To: <20191105130253.GO22672@dhcp22.suse.cz>
-Message-ID: <alpine.DEB.2.21.1911051659010.181254@chino.kir.corp.google.com>
-References: <20190930112817.GC15942@dhcp22.suse.cz> <20191001054343.GA15624@dhcp22.suse.cz> <20191001083743.GC15624@dhcp22.suse.cz> <20191018141550.GS5017@dhcp22.suse.cz> <53c4a6ca-a4d0-0862-8744-f999b17d82d8@suse.cz> <alpine.DEB.2.21.1910241156370.130350@chino.kir.corp.google.com>
- <08a3f4dd-c3ce-0009-86c5-9ee51aba8557@suse.cz> <20191029151549.GO31513@dhcp22.suse.cz> <20191029143351.95f781f09a9fbf254163d728@linux-foundation.org> <alpine.DEB.2.21.1910291623050.9914@chino.kir.corp.google.com> <20191105130253.GO22672@dhcp22.suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Tue, 5 Nov 2019 20:01:22 -0500
+Received: from mga09.intel.com ([134.134.136.24]:35686 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729614AbfKFBBV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 5 Nov 2019 20:01:21 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga006.jf.intel.com ([10.7.209.51])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 05 Nov 2019 17:01:21 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,272,1569308400"; 
+   d="scan'208";a="205687897"
+Received: from cqiang-mobl.ccr.corp.intel.com (HELO [10.239.198.110]) ([10.239.198.110])
+  by orsmga006.jf.intel.com with ESMTP; 05 Nov 2019 17:01:18 -0800
+Subject: Re: [PATCH] KVM: X86: Dynamically allocating MSR number
+ lists(msrs_to_save[], emulated_msrs[], msr_based_features[])
+To:     Paolo Bonzini <pbonzini@redhat.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Vitaly Kuznetsov <vkuznets@redhat.com>,
+        Jim Mattson <jmattson@google.com>,
+        Joerg Roedel <joro@8bytes.org>
+Cc:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+References: <20191105092031.8064-1-chenyi.qiang@intel.com>
+ <4a5fd5b4-64b7-726a-57a5-a5c669ce84f6@redhat.com>
+ <477da390-4bdb-c25d-24b1-5b57c3bf78bb@intel.com>
+ <cd930947-2621-550c-8a41-e1a396650928@redhat.com>
+From:   cqiang <chenyi.qiang@intel.com>
+Message-ID: <f55f719d-7aca-a0e4-54cd-8a2420dc2618@intel.com>
+Date:   Wed, 6 Nov 2019 09:01:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <cd930947-2621-550c-8a41-e1a396650928@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 5 Nov 2019, Michal Hocko wrote:
 
-> > > Thanks, I'll queue this for some more testing.  At some point we should
-> > > decide on a suitable set of Fixes: tags and a backporting strategy, if any?
-> > > 
-> > 
-> > I'd strongly suggest that Andrea test this patch out on his workload on 
-> > hosts where all nodes are low on memory because based on my understanding 
-> > of his reported issue this would result in swap storms reemerging but 
-> > worse this time because they wouldn't be constrained only locally.  (This 
-> > patch causes us to no longer circumvent excessive reclaim when using 
-> > MADV_HUGEPAGE.)
+
+On 11/5/2019 9:03 PM, Paolo Bonzini wrote:
+> On 05/11/19 13:51, Xiaoyao Li wrote:
+>> On 11/5/2019 7:30 PM, Paolo Bonzini wrote:
+>>> On 05/11/19 10:20, Chenyi Qiang wrote:
+>>>> The three msr number lists(msrs_to_save[], emulated_msrs[] and
+>>>> msr_based_features[]) are global arrays of kvm.ko, which are
+>>>> initialized/adjusted (copy supported MSRs forward to override the
+>>>> unsupported MSRs) when installing kvm-{intel,amd}.ko, but it doesn't
+>>>> reset these three arrays to their initial value when uninstalling
+>>>> kvm-{intel,amd}.ko. Thus, at the next installation, kvm-{intel,amd}.ko
+>>>> will initialize the modified arrays with some MSRs lost and some MSRs
+>>>> duplicated.
+>>>>
+>>>> So allocate and initialize these three MSR number lists dynamically when
+>>>> installing kvm-{intel,amd}.ko and free them when uninstalling.
+>>>>
+>>>> Cc: stable@vger.kernel.org
+>>>> Reviewed-by: Xiaoyao Li <xiaoyao.li@intel.com>
+>>>> Signed-off-by: Chenyi Qiang <chenyi.qiang@intel.com>
+>>>> ---
+>>>>    arch/x86/kvm/x86.c | 86 ++++++++++++++++++++++++++++++----------------
+>>>>    1 file changed, 57 insertions(+), 29 deletions(-)
+>>>>
+>>>> diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
+>>>> index ff395f812719..08efcf6351cc 100644
+>>>> --- a/arch/x86/kvm/x86.c
+>>>> +++ b/arch/x86/kvm/x86.c
+>>>> @@ -1132,13 +1132,15 @@ EXPORT_SYMBOL_GPL(kvm_rdpmc);
+>>>>     * List of msr numbers which we expose to userspace through
+>>>> KVM_GET_MSRS
+>>>>     * and KVM_SET_MSRS, and KVM_GET_MSR_INDEX_LIST.
+>>>>     *
+>>>> - * This list is modified at module load time to reflect the
+>>>> + * The three msr number lists(msrs_to_save, emulated_msrs,
+>>>> msr_based_features)
+>>>> + * are allocated and initialized at module load time and freed at
+>>>> unload time.
+>>>> + * msrs_to_save is selected from the msrs_to_save_all to reflect the
+>>>>     * capabilities of the host cpu. This capabilities test skips MSRs
+>>>> that are
+>>>> - * kvm-specific. Those are put in emulated_msrs; filtering of
+>>>> emulated_msrs
+>>>> + * kvm-specific. Those are put in emulated_msrs_all; filtering of
+>>>> emulated_msrs
+>>>>     * may depend on host virtualization features rather than host cpu
+>>>> features.
+>>>>     */
+>>>>    -static u32 msrs_to_save[] = {
+>>>> +const u32 msrs_to_save_all[] = {
+>>>
+>>> This can remain static.
+>>
+>> How about static const u32 msrs_to_save_all[] ?
+>>
+>> Or you think static is enough?
 > 
-> Could you be more specific on why this would be the case? My testing is
-> doesn't show any such signs and I am effectivelly testing memory low
-> situation. The amount of reclaimed memory matches the amount of
-> requested memory.
+> "static const" is best indeed (that's what I meant, but I wasn't very
+> clear).
 > 
 
-The follow-up allocation in alloc_pages_vma() would no longer use 
-__GFP_NORETRY and there is no special handling to avoid swap storms in the 
-page allocator anymore as a result of this patch.  I don't see any 
-indication that this allocation would behave any different than the code 
-that Andrea experienced swap storms with, but now worse if remote memory 
-is in the same state local memory is when he's using __GFP_THISNODE.
+Yes, considering the read-only property and scope of these arrays, 
+"static const" is more accurate. Thanks.
+
+> Paolo
+> 
+>>>>        MSR_IA32_SYSENTER_CS, MSR_IA32_SYSENTER_ESP,
+>>>> MSR_IA32_SYSENTER_EIP,
+>>>>        MSR_STAR,
+>>>>    #ifdef CONFIG_X86_64
+>>>> @@ -1179,9 +1181,10 @@ static u32 msrs_to_save[] = {
+>>>>        MSR_ARCH_PERFMON_EVENTSEL0 + 16, MSR_ARCH_PERFMON_EVENTSEL0 + 17,
+>>>>    };
+>>>>    +static u32 *msrs_to_save;
+>>>
+>>> You can use ARRAY_SIZE to allocate the destination arrays statically.
+>>
+>> It's much better, then we don't need to allocation and free.
+>>
+
+Got it. Thanks!
+
+>>> Paolo
+>>>
+> 
