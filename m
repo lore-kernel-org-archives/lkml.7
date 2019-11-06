@@ -2,186 +2,305 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E8A8C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:33:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE2EDC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AC8F2187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:33:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7BB3D21929
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:33:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="D9WQBq35"
+	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="sajrBsUt";
+	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="YXwbMRzr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbfKFJdu (ORCPT
+        id S1731808AbfKFJd4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:33:50 -0500
-Received: from mail-eopbgr70047.outbound.protection.outlook.com ([40.107.7.47]:47140
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731728AbfKFJdn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:33:43 -0500
+        Wed, 6 Nov 2019 04:33:56 -0500
+Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:31548 "EHLO
+        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731781AbfKFJdt (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:33:49 -0500
+Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
+        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA69Unxp003167;
+        Wed, 6 Nov 2019 01:33:42 -0800
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
+ subject : date : message-id : references : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pfpt0818;
+ bh=EnnlijSZVZFcBCN9jTmdC6iA0abMw7/Kvv7wUG4SuxM=;
+ b=sajrBsUtDagU4glmkITseJ74FyovzmmbvKst6b4pmbnuAHobda6Lu0RdSXKTqlWZIsh9
+ sf18ET2Ins3TcWY0cJ1PQn1JoLUoivfz8eUiabwsKY55cW0w0lwV4e228HvLSsLpH37q
+ V4UH2f6VNtJRUeZL4mj6xMwdM0FNC2TfzWS1ItYNbW9cUYR4xmq/HUdXpNHiQ+IsmHAl
+ vQm5Ix/QVgwGDmUHv+BPUFYOmHRmnyzIzMTPTKRKnzLbmbj5FQKhpsWUlkuwlgB3Ms1C
+ geYGMBjI5Xht49e/efB/SAxdr+OjtWRPxoPiNwJBncm+J7cD8NpttMD+Lc72bAUXmArK 1g== 
+Received: from sc-exch02.marvell.com ([199.233.58.182])
+        by mx0a-0016f401.pphosted.com with ESMTP id 2w3eud3c9c-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 01:33:42 -0800
+Received: from SC-EXCH01.marvell.com (10.93.176.81) by SC-EXCH02.marvell.com
+ (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 6 Nov
+ 2019 01:33:41 -0800
+Received: from NAM01-BN3-obe.outbound.protection.outlook.com (104.47.33.54) by
+ SC-EXCH01.marvell.com (10.93.176.81) with Microsoft SMTP Server (TLS) id
+ 15.0.1367.3 via Frontend Transport; Wed, 6 Nov 2019 01:33:41 -0800
 ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JDf0CuAwCiiJSFMdYacAUY1i4I40AWd9o4od3UXQFQ1O8k1W75W/62r2Sf5TLSQrnS5IEm779clLX9qUopZlnJF07nSGUOr9SfrZhkx9mP1TV1i7azt7k55z14bd25Jlviakm3MTlWbdQ8QvXp9k6viteadktPkBgOC1Ryf+D3W088Xzvez3xQBEdEGxdMqJ+J68N78Y6RDfn3h5CkpOtcir96l+AbOUB7iy7D5bigUEI8UwQo/4SZp38bx+QgqJ6A9kYKFtNra9bvEw4nJGgBoWClFlPxkS7DV6scf5j/BqVJBBWrLbZNUtpSThdfxkt5JzO7Yz7U2tJfnP+7xi0A==
+ b=DawAk2rno0prts1qRwkMEaeQzIWSAoJGP0+hwlAtsAv5zW7OXt+rKB0yJA54SCSUyQYjxTJaPAKrJ5R4AbbYiTV2sLfnzSEH1FjFsGJYWSLvcAEhNSVEW8cHTp8DMsldB6k3CwW1O1uCbrUUfkcjQCHthjTWuyrjknueJR9V147z+aYIKWK+d/SmqS4ZbFuzBDUjq+0lNVZ7Mka4/ONttgYFKHU7+HJZvhISeMuL1pCMoLDVs66s1+smhfKCg3o0nWB5Y7UFsD6MJj7qBsxjLiK0DqXIybRtsatFJjz18URam/no6xilW0AoBY0IUFJAIp4F2kjYusVA8HD59TH13A==
 ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
  s=arcselector9901;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYA4Mmo/kIpbj24XnxIX0rubTxkRsR3ojJNUHua/q+Q=;
- b=J3YUFWmfkiUuVS1GYFGAKTOP6FmQHXCsnYFv7YsMW8jNZlU4ZKxNkwbANbscT0lCk9/ck/IxEgLbA5XtYRIfO+WGvwdTm6NEPPpK5IPI5wvcg8wq5B/rGpyeZWvyOJMwd/v9kjASUxb0ucR5BKN8MJ8ZkjGcBwqw+S3cTdlU4O/q9IX5NoOWBoacK/CXTuVdGcvwlleAVHqZo6FPWf/RytyNIow0MVj1Sc/I6QDQ6FtN7oVTuYR1dDtgGovMa9MVTuRLvXyKLCgcJTTSxXSxr5crrJoy73nYlgQZl3m4/CeYVvtYzJn6IfO7Z470JKEMm8Xnf3m4jym/9+Q53FBcSw==
+ bh=EnnlijSZVZFcBCN9jTmdC6iA0abMw7/Kvv7wUG4SuxM=;
+ b=Clx3OBRBUIB2jsQa9eSYfU+ScMWlFUDwGoHvap35LwiT/XzYjJ4w1F0iwNIrHFhKvcSgisHgEVBDwZ/O83NB4dRWEymokdIAlqf5vdn0sK+K6roK7q/nzgbaGqxxAHIlQgoWwlOK8avZFFWBBZw9Xgo/3nH/+zWCfKnaCZo8q38PA55AIMBoMyPmEkMMUKDao9CkZ1iYdYiMEsQKUK6FWqwfi0cgdlIbUrOiQ5eGRRYv1ARNEC4o7CPfLVeOq766EWGBYmqBrPwQr0/5DHYv/8BLhs7KP6+X3RN4KadfHyRMuJdw3/Xgcg7p5ljocB2uUQx9sqE+fWHGkKBdxn9WWA==
 ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nxp.com; dmarc=pass action=none header.from=nxp.com; dkim=pass
- header.d=nxp.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector2;
+ smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
+ dkim=pass header.d=marvell.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
  h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=rYA4Mmo/kIpbj24XnxIX0rubTxkRsR3ojJNUHua/q+Q=;
- b=D9WQBq35FGSwpwuJ3oplStRKTsGjKqOLQ8qkmDKCZ/QhyvGhhtZzMH+Rxp4UE9PSry7I+3HMujDZgUMLx/6pGc94GxL3kjSd7piOpGz82EasicOnAQgQ7Bz0pIIwdbg37NtXbOcexPjPey1cJuZKrIxw+vc2kvdbRuWOquFGanA=
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) by
- AM5PR04MB3299.eurprd04.prod.outlook.com (10.173.255.158) with Microsoft SMTP
+ bh=EnnlijSZVZFcBCN9jTmdC6iA0abMw7/Kvv7wUG4SuxM=;
+ b=YXwbMRzrgzTENScrB9nheJ6ghWZgDKTSrkICtcGYxWQ9sQF1/IsthLSXxKmVrbzMoPcDCQk/hqSTpkUCRfE+yaAmmjuRwwFNWmwZuMfyUXUQjqgD2Nbr6AZAJHTU2DEM2mUVmPiLbwEuDkLeDiq25BlW+hmbzvCchMalrMbC2FA=
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
+ MN2PR18MB3165.namprd18.prod.outlook.com (10.255.236.86) with Microsoft SMTP
  Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2408.24; Wed, 6 Nov 2019 09:33:37 +0000
-Received: from AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9]) by AM5PR04MB3299.eurprd04.prod.outlook.com
- ([fe80::8ce8:9eaf:3916:4bc9%6]) with mapi id 15.20.2408.025; Wed, 6 Nov 2019
- 09:33:37 +0000
-From:   Xiaowei Bao <xiaowei.bao@nxp.com>
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>
-CC:     Andrew Murray <andrew.murray@arm.com>,
-        "gustavo.pimentel@synopsys.com" <gustavo.pimentel@synopsys.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        Leo Li <leoyang.li@nxp.com>,
-        "lorenzo.pieralisi@arm.co" <lorenzo.pieralisi@arm.co>,
-        "arnd@arndb.de" <arnd@arndb.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "M.h. Lian" <minghuan.lian@nxp.com>,
-        Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+ 15.20.2430.20; Wed, 6 Nov 2019 09:33:39 +0000
+Received: from MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::c4a:cf3c:f530:fba6]) by MN2PR18MB3408.namprd18.prod.outlook.com
+ ([fe80::c4a:cf3c:f530:fba6%6]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
+ 09:33:39 +0000
+From:   Robert Richter <rrichter@marvell.com>
+To:     Borislav Petkov <bp@alien8.de>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Tony Luck <tony.luck@intel.com>
+CC:     James Morse <james.morse@arm.com>,
+        Robert Richter <rrichter@marvell.com>,
+        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
-Subject: RE: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the doorbell
- way
-Thread-Topic: [PATCH v2 07/10] PCI: layerscape: Modify the MSIX to the
- doorbell way
-Thread-Index: AQHVWN1daYnbY17h2k2o9Z3qkBZ1lKcIw+QAgACoZvCABZeogIACm0MAgGtaroCAAV1ZQA==
-Date:   Wed, 6 Nov 2019 09:33:37 +0000
-Message-ID: <AM5PR04MB329993172A352E46D325D66BF5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190822112242.16309-1-xiaowei.bao@nxp.com>
- <20190822112242.16309-7-xiaowei.bao@nxp.com>
- <20190823135816.GH14582@e119886-lin.cambridge.arm.com>
- <AM5PR04MB3299E50BA5D7579D41B8B4F9F5A70@AM5PR04MB3299.eurprd04.prod.outlook.com>
- <20190827132504.GL14582@e119886-lin.cambridge.arm.com>
- <e64a484c-7cf5-5f65-400c-47128ab45e52@ti.com>
- <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191105123739.GB26960@e121166-lin.cambridge.arm.com>
+        "Mauro Carvalho Chehab" <mchehab+samsung@kernel.org>
+Subject: [PATCH v2 17/20] EDAC, mc: Rework edac_raw_mc_handle_error() to use
+ struct dimm_info
+Thread-Topic: [PATCH v2 17/20] EDAC, mc: Rework edac_raw_mc_handle_error() to
+ use struct dimm_info
+Thread-Index: AQHVlIVFwb2aXU0xH0qyG8z+r78p5w==
+Date:   Wed, 6 Nov 2019 09:33:39 +0000
+Message-ID: <20191106093239.25517-18-rrichter@marvell.com>
+References: <20191106093239.25517-1-rrichter@marvell.com>
+In-Reply-To: <20191106093239.25517-1-rrichter@marvell.com>
 Accept-Language: en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=xiaowei.bao@nxp.com; 
-x-originating-ip: [119.31.174.73]
+x-clientproxiedby: HE1PR05CA0287.eurprd05.prod.outlook.com
+ (2603:10a6:7:93::18) To MN2PR18MB3408.namprd18.prod.outlook.com
+ (2603:10b6:208:165::10)
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.20.1
+x-originating-ip: [31.208.96.227]
 x-ms-publictraffictype: Email
-x-ms-office365-filtering-ht: Tenant
-x-ms-office365-filtering-correlation-id: aa121ff6-301c-48e9-82c7-08d7629c66c9
-x-ms-traffictypediagnostic: AM5PR04MB3299:|AM5PR04MB3299:
+x-ms-office365-filtering-correlation-id: 049bfead-8f4b-4850-3b3c-08d7629c67db
+x-ms-traffictypediagnostic: MN2PR18MB3165:
 x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <AM5PR04MB329985A67026616C48D5BAC1F5790@AM5PR04MB3299.eurprd04.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:8273;
+x-microsoft-antispam-prvs: <MN2PR18MB3165A24BFAC08040929E5E82D9790@MN2PR18MB3165.namprd18.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6108;
 x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(396003)(346002)(376002)(136003)(39860400002)(366004)(189003)(199004)(13464003)(86362001)(99286004)(7696005)(102836004)(316002)(446003)(55016002)(71190400001)(71200400001)(486006)(53546011)(5660300002)(6506007)(305945005)(44832011)(33656002)(74316002)(76176011)(2906002)(7736002)(66066001)(476003)(54906003)(7416002)(229853002)(52536014)(26005)(25786009)(14444005)(11346002)(478600001)(256004)(6436002)(81166006)(14454004)(8676002)(81156014)(6116002)(3846002)(66446008)(110136005)(9686003)(8936002)(186003)(4326008)(6246003)(66946007)(64756008)(66556008)(76116006)(66476007);DIR:OUT;SFP:1101;SCL:1;SRVR:AM5PR04MB3299;H:AM5PR04MB3299.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(1496009)(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(199004)(189003)(52116002)(305945005)(6486002)(76176011)(71190400001)(71200400001)(256004)(11346002)(446003)(7736002)(14444005)(6436002)(4326008)(6512007)(66446008)(66556008)(66476007)(66946007)(64756008)(5660300002)(1076003)(476003)(6116002)(3846002)(110136005)(54906003)(36756003)(2906002)(8676002)(99286004)(81166006)(81156014)(316002)(8936002)(50226002)(486006)(6506007)(386003)(102836004)(66066001)(2616005)(86362001)(478600001)(25786009)(186003)(14454004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3165;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: marvell.com does not designate
  permitted sender hosts)
 x-ms-exchange-senderadcheck: 1
 x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: on3dLkXOE3Y8YQkbNmk+IeyUmfi29w+BlrUOcfFX5hs8BnbaSDTh6a6HpJCdofVt9OOper2B/8nbBZ5k/cH0Ssp5rXtK/Rxp3LcbceJQV5BF6zt6RxM6waH6FhiKJGCXD31AJkbczSQ7XVKws81HrCj4rKtiSqA/D4yi4dJlnERjwiAdOQTeEN3mlxa4gpZ1ZfVGcJ0tU0FddOxdB4lRz16JpVj450hDyvB1MAIgZ6Hi2Ip/m6nelebID29JmTHQZPT8w1rI2iDyhz1hrJO2swkwbUCIDiSEQn2gX6M+AZ4U1IW8n2V8SRcnuWvSam+wibBXDuL9rdrDTfA/SSsdhbf9I3dXFIpgo7NqwrTGr/ubtVBTKX047ljg3BTrYh5L7hmObPcFKnzDeyCBQoOWzRhjCWAIVYYyOgpGxy4HUoOdUC4mYjfWyyw2cHfw5E60
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+x-microsoft-antispam-message-info: JTD6XD9BvPWk8Hb2P+HMCTXFCer41accr/1O3VUMwJuYwThjk7W7aLON9MgWv4Wlt/2nxUyUqJsH5DEs3Em+tGjy2vh1Ost2hp2HIEl5FFx6DXZ/Ce2/4PvLu6uUfY7MNnE6pRk6UtXYa+t5bkVwO+8OOzDzyNKhwso0MJHFZluhTMafizR6Ms5VttDXNQ1GPNM20kLunC4jinIHzyTxKHlJvpBkn2P7U3ZBGlpoTjCjAimLciVOYkLG7HOOnihcx3YR995XMR9Qfu+3EUTm/nMXcoNzuzaOpESp7uDsz0F5v6NiM2/v0RJDEhBXh50vq2DjGQAweesF0QK+JheLmHGaL4xPZGZ51YPNZF57ZQmBqLY2sVJYNrPSSej/KZMCWyGRVYBmzYgv+6c2mjXYr7s8S0bUchQWbyUFKR9ndcU6689kSB3JhYjFy9+wzkI8
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: aa121ff6-301c-48e9-82c7-08d7629c66c9
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 09:33:37.4087
+X-MS-Exchange-CrossTenant-Network-Message-Id: 049bfead-8f4b-4850-3b3c-08d7629c67db
+X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 09:33:39.4994
  (UTC)
 X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
 X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: TCndZOPKuZLsXX1BmcLfiVPN39OealellLk534J2HfacgEzrVc+UqFpGu1TOYxQItgC//49mffp9KHcpedxcdg==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM5PR04MB3299
+X-MS-Exchange-CrossTenant-userprincipalname: hz/+YDEyuGa6ZnQxkPo48K1wP5HKnt4OCnkvRPKtbmJPBo/u4R76amNxGhUlydBQxpBnW1gQACLOBcCxgMiTfQ==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3165
+X-OriginatorOrg: marvell.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_02:2019-11-06,2019-11-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogTG9yZW56byBQaWVyYWxp
-c2kgPGxvcmVuem8ucGllcmFsaXNpQGFybS5jb20+DQo+IFNlbnQ6IDIwMTnlubQxMeaciDXml6Ug
-MjA6MzgNCj4gVG86IEtpc2hvbiBWaWpheSBBYnJhaGFtIEkgPGtpc2hvbkB0aS5jb20+DQo+IENj
-OiBBbmRyZXcgTXVycmF5IDxhbmRyZXcubXVycmF5QGFybS5jb20+OyBYaWFvd2VpIEJhbw0KPiA8
-eGlhb3dlaS5iYW9AbnhwLmNvbT47IGd1c3Rhdm8ucGltZW50ZWxAc3lub3BzeXMuY29tOw0KPiBi
-aGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0u
-Y29tOw0KPiBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8gTGkgPGxlb3lhbmcubGlAbnhwLmNvbT47
-DQo+IGxvcmVuem8ucGllcmFsaXNpQGFybS5jbzsgYXJuZEBhcm5kYi5kZTsgZ3JlZ2toQGxpbnV4
-Zm91bmRhdGlvbi5vcmc7IE0uaC4NCj4gTGlhbiA8bWluZ2h1YW4ubGlhbkBueHAuY29tPjsgTWlu
-Z2thaSBIdSA8bWluZ2thaS5odUBueHAuY29tPjsgUm95DQo+IFphbmcgPHJveS56YW5nQG54cC5j
-b20+OyBqaW5nb29oYW4xQGdtYWlsLmNvbTsNCj4gbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsg
-ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gbGludXhwcGMtZGV2
-QGxpc3RzLm96bGFicy5vcmcNCj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8xMF0gUENJOiBs
-YXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8gdGhlDQo+IGRvb3JiZWxsIHdheQ0KPiANCj4g
-T24gVGh1LCBBdWcgMjksIDIwMTkgYXQgMTA6NDM6MThBTSArMDUzMCwgS2lzaG9uIFZpamF5IEFi
-cmFoYW0gSSB3cm90ZToNCj4gPiBHdXN0YXZvLA0KPiA+DQo+ID4gT24gMjcvMDgvMTkgNjo1NSBQ
-TSwgQW5kcmV3IE11cnJheSB3cm90ZToNCj4gPiA+IE9uIFNhdCwgQXVnIDI0LCAyMDE5IGF0IDEy
-OjA4OjQwQU0gKzAwMDAsIFhpYW93ZWkgQmFvIHdyb3RlOg0KPiA+ID4+DQo+ID4gPj4NCj4gPiA+
-Pj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+Pj4gRnJvbTogQW5kcmV3IE11cnJh
-eSA8YW5kcmV3Lm11cnJheUBhcm0uY29tPg0KPiA+ID4+PiBTZW50OiAyMDE55bm0OOaciDIz5pel
-IDIxOjU4DQo+ID4gPj4+IFRvOiBYaWFvd2VpIEJhbyA8eGlhb3dlaS5iYW9AbnhwLmNvbT4NCj4g
-PiA+Pj4gQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gbWFy
-ay5ydXRsYW5kQGFybS5jb207DQo+ID4gPj4+IHNoYXduZ3VvQGtlcm5lbC5vcmc7IExlbyBMaSA8
-bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsNCj4gPiA+Pj4gbG9yZW56by5waWVy
-YWxpc2lAYXJtLmNvOyBhcm5kQGFybmRiLmRlOyBncmVna2hAbGludXhmb3VuZGF0aW9uLm9yZzsN
-Cj4gTS5oLg0KPiA+ID4+PiBMaWFuIDxtaW5naHVhbi5saWFuQG54cC5jb20+OyBNaW5na2FpIEh1
-IDxtaW5na2FpLmh1QG54cC5jb20+Ow0KPiBSb3kNCj4gPiA+Pj4gWmFuZyA8cm95LnphbmdAbnhw
-LmNvbT47IGppbmdvb2hhbjFAZ21haWwuY29tOw0KPiA+ID4+PiBndXN0YXZvLnBpbWVudGVsQHN5
-bm9wc3lzLmNvbTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsNCj4gPiA+Pj4gZGV2aWNldHJl
-ZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7DQo+ID4gPj4+
-IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsNCj4gPiA+Pj4gbGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcNCj4gPiA+Pj4gU3ViamVjdDogUmU6IFtQQVRDSCB2MiAwNy8x
-MF0gUENJOiBsYXllcnNjYXBlOiBNb2RpZnkgdGhlIE1TSVggdG8NCj4gPiA+Pj4gdGhlIGRvb3Ji
-ZWxsIHdheQ0KPiA+ID4+Pg0KPiA+ID4+PiBPbiBUaHUsIEF1ZyAyMiwgMjAxOSBhdCAwNzoyMjoz
-OVBNICswODAwLCBYaWFvd2VpIEJhbyB3cm90ZToNCj4gPiA+Pj4+IFRoZSBsYXllcnNjYXBlIHBs
-YXRmb3JtIHVzZSB0aGUgZG9vcmJlbGwgd2F5IHRvIHRyaWdnZXIgTVNJWA0KPiA+ID4+Pj4gaW50
-ZXJydXB0IGluIEVQIG1vZGUuDQo+ID4gPj4+Pg0KPiA+ID4+Pg0KPiA+ID4+PiBJIGhhdmUgbm8g
-cHJvYmxlbXMgd2l0aCB0aGlzIHBhdGNoLCBob3dldmVyLi4uDQo+ID4gPj4+DQo+ID4gPj4+IEFy
-ZSB5b3UgYWJsZSB0byBhZGQgdG8gdGhpcyBtZXNzYWdlIGEgcmVhc29uIGZvciB3aHkgeW91IGFy
-ZQ0KPiA+ID4+PiBtYWtpbmcgdGhpcyBjaGFuZ2U/IERpZCBkd19wY2llX2VwX3JhaXNlX21zaXhf
-aXJxIG5vdCB3b3JrIHdoZW4NCj4gPiA+Pj4gZnVuY19ubyAhPSAwPyBPciBkaWQgaXQgd29yayB5
-ZXQgZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycV9kb29yYmVsbCBpcw0KPiBtb3JlIGVmZmljaWVu
-dD8NCj4gPiA+Pg0KPiA+ID4+IFRoZSBmYWN0IGlzIHRoYXQsIHRoaXMgZHJpdmVyIGlzIHZlcmlm
-aWVkIGluIGxzMTA0NmEgcGxhdGZvcm0gb2YNCj4gPiA+PiBOWFAgYmVmb3JlLCBhbmQgbHMxMDQ2
-YSBkb24ndCBzdXBwb3J0IE1TSVggZmVhdHVyZSwgc28gSSBzZXQgdGhlDQo+ID4gPj4gbXNpeF9j
-YXBhYmxlIG9mIHBjaV9lcGNfZmVhdHVyZXMgc3RydWN0IGlzIGZhbHNlLCBidXQgaW4gb3RoZXIN
-Cj4gPiA+PiBwbGF0Zm9ybSwgZS5nLiBsczEwODhhLCBpdCBzdXBwb3J0IHRoZSBNU0lYIGZlYXR1
-cmUsIEkgdmVyaWZpZWQgdGhlIE1TSVgNCj4gZmVhdHVyZSBpbiBsczEwODhhLCBpdCBpcyBub3Qg
-T0ssIHNvIEkgY2hhbmdlZCB0byBhbm90aGVyIHdheS4gVGhhbmtzLg0KPiA+ID4NCj4gPiA+IFJp
-Z2h0LCBzbyB0aGUgZXhpc3RpbmcgcGNpLWxheWVyc2NhcGUtZXAuYyBkcml2ZXIgbmV2ZXIgc3Vw
-cG9ydGVkDQo+ID4gPiBNU0lYIHlldCBpdCBlcnJvbmVvdXNseSBoYWQgYSBzd2l0Y2ggY2FzZSBz
-dGF0ZW1lbnQgdG8gY2FsbA0KPiA+ID4gZHdfcGNpZV9lcF9yYWlzZV9tc2l4X2lycSB3aGljaCB3
-b3VsZCBuZXZlciBnZXQgdXNlZC4NCj4gPiA+DQo+ID4gPiBOb3cgdGhhdCB3ZSdyZSBhZGRpbmcg
-YSBwbGF0Zm9ybSB3aXRoIE1TSVggc3VwcG9ydCB0aGUgZXhpc3RpbmcNCj4gPiA+IGR3X3BjaWVf
-ZXBfcmFpc2VfbXNpeF9pcnEgZG9lc24ndCB3b3JrIChmb3IgdGhpcyBwbGF0Zm9ybSkgc28gd2Ug
-YXJlDQo+ID4gPiBhZGRpbmcgYSBkaWZmZXJlbnQgbWV0aG9kLg0KPiA+DQo+ID4gR3VzdGF2bywg
-Y2FuIHlvdSBjb25maXJtIGR3X3BjaWVfZXBfcmFpc2VfbXNpeF9pcnEoKSB3b3JrcyBmb3INCj4g
-PiBkZXNpZ253YXJlIGFzIGl0IGRpZG4ndCB3b3JrIGZvciBib3RoIG1lIGFuZCBYaWFvd2VpPw0K
-PiANCj4gVGhpcyBxdWVzdGlvbiBuZWVkcyBhbiBhbnN3ZXIuDQoNClRoaXMgcXVlc3Rpb24gaGF2
-ZSBhbnN3ZXJlZCBieSBHdXN0YXZvIGluICJbUEFUQ0ggdjMgMDgvMTFdIFBDSTogbGF5ZXJzY2Fw
-ZTogDQpNb2RpZnkgdGhlIE1TSVggdG8gdGhlIGRvb3JiZWxsIG1vZGUiLCBwbGVhc2UgcmVmZXIg
-dG8gdGhlIGNvbW1lbnRzLCBkdWUgdG8NCmFkZCBhIG5ldyBwYXRjaCBmb3IgdGhpcyBzZXRzIG9m
-IHBhdGNoLCB0aGlzIHBhdGNoIG51bWJlciBjaGFuZ2VkIGZyb20gMDcvMTAgb2YgdjINCnRvIDA4
-LzExIG9mIHYzLCBzb3JyeSBmb3IgY2F1c2luZyB5b3VyIGNvbmZ1c2UuDQoNCg0KVGhhbmtzIA0K
-WGlhb3dlaSAgDQoNCg0KPiANCj4gVGhhbmtzLA0KPiBMb3JlbnpvDQo=
+The error handling functions have the pos[] array argument for
+determing the dimm handle. Rework those functions to use the dimm
+handle directly.
+
+Signed-off-by: Robert Richter <rrichter@marvell.com>
+Reviewed-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ drivers/edac/edac_mc.c   | 28 +++++++++++++---------------
+ drivers/edac/edac_mc.h   |  2 ++
+ drivers/edac/ghes_edac.c |  6 +++++-
+ 3 files changed, 20 insertions(+), 16 deletions(-)
+
+diff --git a/drivers/edac/edac_mc.c b/drivers/edac/edac_mc.c
+index bbe37af487c3..e4a11218009b 100644
+--- a/drivers/edac/edac_mc.c
++++ b/drivers/edac/edac_mc.c
+@@ -925,11 +925,9 @@ const char *edac_layer_name[] =3D {
+ EXPORT_SYMBOL_GPL(edac_layer_name);
+=20
+ static void edac_inc_ce_error(struct mem_ctl_info *mci,
+-			      const int pos[EDAC_MAX_LAYERS],
++			      struct dimm_info *dimm,
+ 			      const u16 count)
+ {
+-	struct dimm_info *dimm =3D edac_get_dimm(mci, pos[0], pos[1], pos[2]);
+-
+ 	mci->ce_mc +=3D count;
+=20
+ 	if (dimm)
+@@ -939,11 +937,9 @@ static void edac_inc_ce_error(struct mem_ctl_info *mci=
+,
+ }
+=20
+ static void edac_inc_ue_error(struct mem_ctl_info *mci,
+-				    const int pos[EDAC_MAX_LAYERS],
+-				    const u16 count)
++			      struct dimm_info *dimm,
++			      const u16 count)
+ {
+-	struct dimm_info *dimm =3D edac_get_dimm(mci, pos[0], pos[1], pos[2]);
+-
+ 	mci->ue_mc +=3D count;
+=20
+ 	if (dimm)
+@@ -953,8 +949,8 @@ static void edac_inc_ue_error(struct mem_ctl_info *mci,
+ }
+=20
+ static void edac_ce_error(struct mem_ctl_info *mci,
++			  struct dimm_info *dimm,
+ 			  const u16 error_count,
+-			  const int pos[EDAC_MAX_LAYERS],
+ 			  const char *msg,
+ 			  const char *location,
+ 			  const char *label,
+@@ -982,7 +978,7 @@ static void edac_ce_error(struct mem_ctl_info *mci,
+ 				       error_count, msg, msg_aux, label,
+ 				       location, detail);
+ 	}
+-	edac_inc_ce_error(mci, pos, error_count);
++	edac_inc_ce_error(mci, dimm, error_count);
+=20
+ 	if (mci->scrub_mode =3D=3D SCRUB_SW_SRC) {
+ 		/*
+@@ -1006,8 +1002,8 @@ static void edac_ce_error(struct mem_ctl_info *mci,
+ }
+=20
+ static void edac_ue_error(struct mem_ctl_info *mci,
++			  struct dimm_info *dimm,
+ 			  const u16 error_count,
+-			  const int pos[EDAC_MAX_LAYERS],
+ 			  const char *msg,
+ 			  const char *location,
+ 			  const char *label,
+@@ -1041,15 +1037,15 @@ static void edac_ue_error(struct mem_ctl_info *mci,
+ 			      msg, msg_aux, label, location, detail);
+ 	}
+=20
+-	edac_inc_ue_error(mci, pos, error_count);
++	edac_inc_ue_error(mci, dimm, error_count);
+ }
+=20
+ void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+ 			      struct mem_ctl_info *mci,
++			      struct dimm_info *dimm,
+ 			      struct edac_raw_error_desc *e)
+ {
+ 	char detail[80];
+-	int pos[EDAC_MAX_LAYERS] =3D { e->top_layer, e->mid_layer, e->low_layer }=
+;
+ 	u8 grain_bits;
+=20
+ 	/* Sanity-check driver-supplied grain value. */
+@@ -1072,7 +1068,7 @@ void edac_raw_mc_handle_error(const enum hw_event_mc_=
+err_type type,
+ 			"page:0x%lx offset:0x%lx grain:%ld syndrome:0x%lx",
+ 			e->page_frame_number, e->offset_in_page,
+ 			e->grain, e->syndrome);
+-		edac_ce_error(mci, e->error_count, pos, e->msg, e->location,
++		edac_ce_error(mci, dimm, e->error_count, e->msg, e->location,
+ 			      e->label, detail, e->other_detail,
+ 			      e->page_frame_number, e->offset_in_page, e->grain);
+ 	} else {
+@@ -1080,7 +1076,7 @@ void edac_raw_mc_handle_error(const enum hw_event_mc_=
+err_type type,
+ 			"page:0x%lx offset:0x%lx grain:%ld",
+ 			e->page_frame_number, e->offset_in_page, e->grain);
+=20
+-		edac_ue_error(mci, e->error_count, pos, e->msg, e->location,
++		edac_ue_error(mci, dimm, e->error_count, e->msg, e->location,
+ 			      e->label, detail, e->other_detail);
+ 	}
+=20
+@@ -1244,6 +1240,8 @@ void edac_mc_handle_error(const enum hw_event_mc_err_=
+type type,
+ 	if (p > e->location)
+ 		*(p - 1) =3D '\0';
+=20
+-	edac_raw_mc_handle_error(type, mci, e);
++	dimm =3D edac_get_dimm(mci, top_layer, mid_layer, low_layer);
++
++	edac_raw_mc_handle_error(type, mci, dimm, e);
+ }
+ EXPORT_SYMBOL_GPL(edac_mc_handle_error);
+diff --git a/drivers/edac/edac_mc.h b/drivers/edac/edac_mc.h
+index 02aac5c61d00..2c3e2fbcedc4 100644
+--- a/drivers/edac/edac_mc.h
++++ b/drivers/edac/edac_mc.h
+@@ -214,6 +214,7 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_in=
+fo *mci,
+  *
+  * @type:		severity of the error (CE/UE/Fatal)
+  * @mci:		a struct mem_ctl_info pointer
++ * @dimm:		a struct dimm_info pointer
+  * @e:			error description
+  *
+  * This raw function is used internally by edac_mc_handle_error(). It shou=
+ld
+@@ -222,6 +223,7 @@ extern int edac_mc_find_csrow_by_page(struct mem_ctl_in=
+fo *mci,
+  */
+ void edac_raw_mc_handle_error(const enum hw_event_mc_err_type type,
+ 			      struct mem_ctl_info *mci,
++			      struct dimm_info *dimm,
+ 			      struct edac_raw_error_desc *e);
+=20
+ /**
+diff --git a/drivers/edac/ghes_edac.c b/drivers/edac/ghes_edac.c
+index 74017da1f72c..6eebaf28e31c 100644
+--- a/drivers/edac/ghes_edac.c
++++ b/drivers/edac/ghes_edac.c
+@@ -201,6 +201,7 @@ static void ghes_edac_dmidecode(const struct dmi_header=
+ *dh, void *arg)
+=20
+ void ghes_edac_report_mem_error(int sev, struct cper_sec_mem_err *mem_err)
+ {
++	struct dimm_info *dimm;
+ 	enum hw_event_mc_err_type type;
+ 	struct edac_raw_error_desc *e;
+ 	struct mem_ctl_info *mci;
+@@ -439,7 +440,10 @@ void ghes_edac_report_mem_error(int sev, struct cper_s=
+ec_mem_err *mem_err)
+ 	if (p > pvt->other_detail)
+ 		*(p - 1) =3D '\0';
+=20
+-	edac_raw_mc_handle_error(type, mci, e);
++	dimm =3D edac_get_dimm_by_index(mci, e->top_layer);
++
++	edac_raw_mc_handle_error(type, mci, dimm, e);
++
+ unlock:
+ 	spin_unlock_irqrestore(&ghes_lock, flags);
+ }
+--=20
+2.20.1
+
