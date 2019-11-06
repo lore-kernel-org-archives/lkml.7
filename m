@@ -2,98 +2,358 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E469C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:57:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59C86C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:57:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6A06D20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:57:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="GNUQO1RZ"
+	by mail.kernel.org (Postfix) with ESMTP id 27304217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:57:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732656AbfKFU5F (ORCPT
+        id S1732667AbfKFU5K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:57:05 -0500
-Received: from ozlabs.org ([203.11.71.1]:59531 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732639AbfKFU5D (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:57:03 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 477f3c4PfJz9sPL;
-        Thu,  7 Nov 2019 07:57:00 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573073820;
-        bh=r2WDuU2hTMAjHdwFRBiisdoThjuRRn8Tzsv998zA1S0=;
-        h=Date:From:To:Cc:Subject:From;
-        b=GNUQO1RZBNFvexq4YWF2dZK1G5vev9lbqKFawxu5B/kqof7YK+oeWdnkrf5hf3gpi
-         AnfQ9Fohp3+S8/BcrjS1qx8Be92vb6Ay3rMktqlSVA31qxCE8yz3evD9f1QGfKOflm
-         assjo9xrqRjjEdDn5AXl5kOLh5VAtcAn8//FDUn6qvIglfKz1iv5a2hu6g07kWBegs
-         z/TDSj7pE92RP80fL9QsECq7ZH3T6oisiXwg0IBh7kkaMlyjQfDeiYKVAHPvpFz2MZ
-         Ql98gIWepD/9t798wV/2EU0y34b97UlZ3YYmkVkM5C1vSK4BJzuE1tcfwdA7/zoMOX
-         h+q5OGbyiVpdQ==
-Date:   Thu, 7 Nov 2019 07:56:55 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jiri Kosina <jikos@kernel.org>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Jason Gerecke <killertofu@gmail.com>
-Subject: linux-next: Fixes tag needs some work in the hid tree
-Message-ID: <20191107075655.5a98df97@canb.auug.org.au>
+        Wed, 6 Nov 2019 15:57:10 -0500
+Received: from Galois.linutronix.de ([193.142.43.55]:45256 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727903AbfKFU4t (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 15:56:49 -0500
+Received: from localhost ([127.0.0.1] helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1iSSM7-00032f-2S; Wed, 06 Nov 2019 21:56:43 +0100
+Message-Id: <20191106202805.948064985@linutronix.de>
+User-Agent: quilt/0.65
+Date:   Wed, 06 Nov 2019 20:35:01 +0100
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     LKML <linux-kernel@vger.kernel.org>
+Cc:     x86@kernel.org, Stephen Hemminger <stephen@networkplumber.org>,
+        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+Subject: [patch 2/9] x86/process: Unify copy_thread_tls()
+References: <20191106193459.581614484@linutronix.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/MIK31HDQKP+fi4fCu3v/fT=";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Type: text/plain; charset=UTF-8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/MIK31HDQKP+fi4fCu3v/fT=
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+While looking at the TSS io bitmap it turned out that any change in that
+area would require identical changes to copy_thread_tls(). The 32 and 64
+bit variants share sufficient code to consolidate them into a common
+function to avoid duplication of upcoming modifications.
 
-Hi all,
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/include/asm/ptrace.h    |    6 ++
+ arch/x86/include/asm/switch_to.h |   10 ++++
+ arch/x86/kernel/process.c        |   94 +++++++++++++++++++++++++++++++++++++++
+ arch/x86/kernel/process_32.c     |   68 ----------------------------
+ arch/x86/kernel/process_64.c     |   75 -------------------------------
+ 5 files changed, 110 insertions(+), 143 deletions(-)
 
-In commit
+--- a/arch/x86/include/asm/ptrace.h
++++ b/arch/x86/include/asm/ptrace.h
+@@ -361,5 +361,11 @@ extern int do_get_thread_area(struct tas
+ extern int do_set_thread_area(struct task_struct *p, int idx,
+ 			      struct user_desc __user *info, int can_allocate);
+ 
++#ifdef CONFIG_X86_64
++# define do_set_thread_area_64(p, s, t)	do_arch_prctl_64(p, s, t)
++#else
++# define do_set_thread_area_64(p, s, t)	(0)
++#endif
++
+ #endif /* !__ASSEMBLY__ */
+ #endif /* _ASM_X86_PTRACE_H */
+--- a/arch/x86/include/asm/switch_to.h
++++ b/arch/x86/include/asm/switch_to.h
+@@ -103,7 +103,17 @@ static inline void update_task_stack(str
+ 	if (static_cpu_has(X86_FEATURE_XENPV))
+ 		load_sp0(task_top_of_stack(task));
+ #endif
++}
+ 
++static inline void kthread_frame_init(struct inactive_task_frame *frame,
++				      unsigned long fun, unsigned long arg)
++{
++	frame->bx = fun;
++#ifdef CONFIG_X86_32
++	frame->di = arg;
++#else
++	frame->r12 = arg;
++#endif
+ }
+ 
+ #endif /* _ASM_X86_SWITCH_TO_H */
+--- a/arch/x86/kernel/process.c
++++ b/arch/x86/kernel/process.c
+@@ -132,6 +132,100 @@ void exit_thread(struct task_struct *tsk
+ 	fpu__drop(fpu);
+ }
+ 
++static int set_new_tls(struct task_struct *p, unsigned long tls)
++{
++	struct user_desc __user *utls = (struct user_desc __user *)tls;
++
++	if (in_ia32_syscall())
++		return do_set_thread_area(p, -1, utls, 0);
++	else
++		return do_set_thread_area_64(p, ARCH_SET_FS, tls);
++}
++
++static inline int copy_io_bitmap(struct task_struct *tsk)
++{
++	if (likely(!test_tsk_thread_flag(current, TIF_IO_BITMAP)))
++		return 0;
++
++	tsk->thread.io_bitmap_ptr = kmemdup(current->thread.io_bitmap_ptr,
++					    IO_BITMAP_BYTES, GFP_KERNEL);
++	if (!tsk->thread.io_bitmap_ptr) {
++		tsk->thread.io_bitmap_max = 0;
++		return -ENOMEM;
++	}
++	set_tsk_thread_flag(tsk, TIF_IO_BITMAP);
++	return 0;
++}
++
++static inline void free_io_bitmap(struct task_struct *tsk)
++{
++	if (tsk->thread.io_bitmap_ptr) {
++		kfree(tsk->thread.io_bitmap_ptr);
++		tsk->thread.io_bitmap_ptr = NULL;
++		tsk->thread.io_bitmap_max = 0;
++	}
++}
++
++int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
++		    unsigned long arg, struct task_struct *p, unsigned long tls)
++{
++	struct inactive_task_frame *frame;
++	struct fork_frame *fork_frame;
++	struct pt_regs *childregs;
++	int ret;
++
++	childregs = task_pt_regs(p);
++	fork_frame = container_of(childregs, struct fork_frame, regs);
++	frame = &fork_frame->frame;
++
++	frame->bp = 0;
++	frame->ret_addr = (unsigned long) ret_from_fork;
++	p->thread.sp = (unsigned long) fork_frame;
++	p->thread.io_bitmap_ptr = NULL;
++	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
++
++#ifdef CONFIG_X86_64
++	savesegment(gs, p->thread.gsindex);
++	p->thread.gsbase = p->thread.gsindex ? 0 : current->thread.gsbase;
++	savesegment(fs, p->thread.fsindex);
++	p->thread.fsbase = p->thread.fsindex ? 0 : current->thread.fsbase;
++	savesegment(es, p->thread.es);
++	savesegment(ds, p->thread.ds);
++#else
++	/* Clear all status flags including IF and set fixed bit. */
++	frame->flags = X86_EFLAGS_FIXED;
++#endif
++
++	/* Kernel thread ? */
++	if (unlikely(p->flags & PF_KTHREAD)) {
++		memset(childregs, 0, sizeof(struct pt_regs));
++		kthread_frame_init(frame, sp, arg);
++		return 0;
++	}
++
++	frame->bx = 0;
++	*childregs = *current_pt_regs();
++	childregs->ax = 0;
++	if (sp)
++		childregs->sp = sp;
++
++#ifdef CONFIG_X86_32
++	task_user_gs(p) = get_user_gs(current_pt_regs());
++#endif
++
++	ret = copy_io_bitmap(p);
++	if (ret)
++		return ret;
++
++	/* Set a new TLS for the child thread? */
++	if (clone_flags & CLONE_SETTLS) {
++		ret = set_new_tls(p, tls);
++		if (ret)
++			free_io_bitmap(p);
++	}
++	return ret;
++}
++
+ void flush_thread(void)
+ {
+ 	struct task_struct *tsk = current;
+--- a/arch/x86/kernel/process_32.c
++++ b/arch/x86/kernel/process_32.c
+@@ -112,74 +112,6 @@ void release_thread(struct task_struct *
+ 	release_vm86_irqs(dead_task);
+ }
+ 
+-int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+-	unsigned long arg, struct task_struct *p, unsigned long tls)
+-{
+-	struct pt_regs *childregs = task_pt_regs(p);
+-	struct fork_frame *fork_frame = container_of(childregs, struct fork_frame, regs);
+-	struct inactive_task_frame *frame = &fork_frame->frame;
+-	struct task_struct *tsk;
+-	int err;
+-
+-	/*
+-	 * For a new task use the RESET flags value since there is no before.
+-	 * All the status flags are zero; DF and all the system flags must also
+-	 * be 0, specifically IF must be 0 because we context switch to the new
+-	 * task with interrupts disabled.
+-	 */
+-	frame->flags = X86_EFLAGS_FIXED;
+-	frame->bp = 0;
+-	frame->ret_addr = (unsigned long) ret_from_fork;
+-	p->thread.sp = (unsigned long) fork_frame;
+-	p->thread.sp0 = (unsigned long) (childregs+1);
+-	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
+-
+-	if (unlikely(p->flags & PF_KTHREAD)) {
+-		/* kernel thread */
+-		memset(childregs, 0, sizeof(struct pt_regs));
+-		frame->bx = sp;		/* function */
+-		frame->di = arg;
+-		p->thread.io_bitmap_ptr = NULL;
+-		return 0;
+-	}
+-	frame->bx = 0;
+-	*childregs = *current_pt_regs();
+-	childregs->ax = 0;
+-	if (sp)
+-		childregs->sp = sp;
+-
+-	task_user_gs(p) = get_user_gs(current_pt_regs());
+-
+-	p->thread.io_bitmap_ptr = NULL;
+-	tsk = current;
+-	err = -ENOMEM;
+-
+-	if (unlikely(test_tsk_thread_flag(tsk, TIF_IO_BITMAP))) {
+-		p->thread.io_bitmap_ptr = kmemdup(tsk->thread.io_bitmap_ptr,
+-						IO_BITMAP_BYTES, GFP_KERNEL);
+-		if (!p->thread.io_bitmap_ptr) {
+-			p->thread.io_bitmap_max = 0;
+-			return -ENOMEM;
+-		}
+-		set_tsk_thread_flag(p, TIF_IO_BITMAP);
+-	}
+-
+-	err = 0;
+-
+-	/*
+-	 * Set a new TLS for the child thread?
+-	 */
+-	if (clone_flags & CLONE_SETTLS)
+-		err = do_set_thread_area(p, -1,
+-			(struct user_desc __user *)tls, 0);
+-
+-	if (err && p->thread.io_bitmap_ptr) {
+-		kfree(p->thread.io_bitmap_ptr);
+-		p->thread.io_bitmap_max = 0;
+-	}
+-	return err;
+-}
+-
+ void
+ start_thread(struct pt_regs *regs, unsigned long new_ip, unsigned long new_sp)
+ {
+--- a/arch/x86/kernel/process_64.c
++++ b/arch/x86/kernel/process_64.c
+@@ -371,81 +371,6 @@ void x86_gsbase_write_task(struct task_s
+ 	task->thread.gsbase = gsbase;
+ }
+ 
+-int copy_thread_tls(unsigned long clone_flags, unsigned long sp,
+-		unsigned long arg, struct task_struct *p, unsigned long tls)
+-{
+-	int err;
+-	struct pt_regs *childregs;
+-	struct fork_frame *fork_frame;
+-	struct inactive_task_frame *frame;
+-	struct task_struct *me = current;
+-
+-	childregs = task_pt_regs(p);
+-	fork_frame = container_of(childregs, struct fork_frame, regs);
+-	frame = &fork_frame->frame;
+-
+-	frame->bp = 0;
+-	frame->ret_addr = (unsigned long) ret_from_fork;
+-	p->thread.sp = (unsigned long) fork_frame;
+-	p->thread.io_bitmap_ptr = NULL;
+-
+-	savesegment(gs, p->thread.gsindex);
+-	p->thread.gsbase = p->thread.gsindex ? 0 : me->thread.gsbase;
+-	savesegment(fs, p->thread.fsindex);
+-	p->thread.fsbase = p->thread.fsindex ? 0 : me->thread.fsbase;
+-	savesegment(es, p->thread.es);
+-	savesegment(ds, p->thread.ds);
+-	memset(p->thread.ptrace_bps, 0, sizeof(p->thread.ptrace_bps));
+-
+-	if (unlikely(p->flags & PF_KTHREAD)) {
+-		/* kernel thread */
+-		memset(childregs, 0, sizeof(struct pt_regs));
+-		frame->bx = sp;		/* function */
+-		frame->r12 = arg;
+-		return 0;
+-	}
+-	frame->bx = 0;
+-	*childregs = *current_pt_regs();
+-
+-	childregs->ax = 0;
+-	if (sp)
+-		childregs->sp = sp;
+-
+-	err = -ENOMEM;
+-	if (unlikely(test_tsk_thread_flag(me, TIF_IO_BITMAP))) {
+-		p->thread.io_bitmap_ptr = kmemdup(me->thread.io_bitmap_ptr,
+-						  IO_BITMAP_BYTES, GFP_KERNEL);
+-		if (!p->thread.io_bitmap_ptr) {
+-			p->thread.io_bitmap_max = 0;
+-			return -ENOMEM;
+-		}
+-		set_tsk_thread_flag(p, TIF_IO_BITMAP);
+-	}
+-
+-	/*
+-	 * Set a new TLS for the child thread?
+-	 */
+-	if (clone_flags & CLONE_SETTLS) {
+-#ifdef CONFIG_IA32_EMULATION
+-		if (in_ia32_syscall())
+-			err = do_set_thread_area(p, -1,
+-				(struct user_desc __user *)tls, 0);
+-		else
+-#endif
+-			err = do_arch_prctl_64(p, ARCH_SET_FS, tls);
+-		if (err)
+-			goto out;
+-	}
+-	err = 0;
+-out:
+-	if (err && p->thread.io_bitmap_ptr) {
+-		kfree(p->thread.io_bitmap_ptr);
+-		p->thread.io_bitmap_max = 0;
+-	}
+-
+-	return err;
+-}
+-
+ static void
+ start_thread_common(struct pt_regs *regs, unsigned long new_ip,
+ 		    unsigned long new_sp,
 
-  ff479731c385 ("HID: wacom: generic: Treat serial number and related field=
-s as unsigned")
 
-Fixes tag
-
-  Fixes: f85c9dc678 ("HID: wacom: generic: Support tool ID and additional t=
-ool types")
-
-has these problem(s):
-
-  - SHA1 should be at least 12 digits long
-    Can be fixed by setting core.abbrev to 12 (or more) or (for git v2.11
-    or later) just making sure it is not set (or set to "auto").
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/MIK31HDQKP+fi4fCu3v/fT=
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3DM5cACgkQAVBC80lX
-0GyEsgf/bf+UliNfbw+nTtT7SICIMQXHq9m8v3mh1Mfox67LXy9D273xt5BTy0oV
-FTrnLtReUStdU8EbmWBEn3LBz9aUmG/G14hqKU8DoVX1BVUmx5k6PkDoRC1Q5KMF
-QeL1mtRuB3YYaDBfU/8uY7LzHdHD4oHdX9vOPqX1Y+aNEbVO0Td7U6apJyBr/S9o
-Po/s+714v0ETkiOkt63e47iBPSzjwYk0fcg9wgf0WdoEBRxmQdjkwjQclv5Ha/zZ
-repCGJiN385F+8Cbm9nXQHi1lUPkeNwLeHNoi6yr4twVXPhSgwuAJ2XBHKkZGgm5
-cyYgpYDA5Th7a77xZWEJne9xqnP8ng==
-=QB49
------END PGP SIGNATURE-----
-
---Sig_/MIK31HDQKP+fi4fCu3v/fT=--
