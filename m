@@ -2,111 +2,239 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7493C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:07:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2476DC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D7B62178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:07:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE5D02178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:07:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="o7bvIPX7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729622AbfKFJHt (ORCPT
+        id S1730449AbfKFJH7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:07:49 -0500
-Received: from mout.kundenserver.de ([212.227.126.187]:43043 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKFJHt (ORCPT
+        Wed, 6 Nov 2019 04:07:59 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:42539 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728256AbfKFJH6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:07:49 -0500
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MIdW9-1igtkS0UiL-00EZgr; Wed, 06 Nov 2019 10:07:37 +0100
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Stanimir Varbanov <stanimir.varbanov@linaro.org>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>, stable@vger.kernel.org,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Mauro Carvalho Chehab <mchehab@s-opensource.com>,
-        Andy Gross <agross@kernel.org>,
-        Hans Verkuil <hverkuil-cisco@xs4all.nl>,
-        linux-media@vger.kernel.org, linux-arm-msm@vger.kernel.org,
+        Wed, 6 Nov 2019 04:07:58 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n5so14166160ljc.9;
+        Wed, 06 Nov 2019 01:07:56 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=zZ7MPSYFFcpgmm3jeH3xqH+uZ+rJjnrkw2QVPvW4MTk=;
+        b=o7bvIPX7gNt1ZEr0dSZOiVQrr8ABP81oaLG/Rfc3pMKvfXGP3rwADdvLyQ7HX89mOR
+         /RNrVoq9FgFFdrp/Fv90167FP+dJ8qXMuszfhY0ApxM+N5AC1juWe5XPrBQm/k26bCJe
+         jDIuECd0PUVIQgw9AKVpyMA2H3xGC00C1aktv6R/6qwDo4+t1hq8dS5iCuNzK+t1oNS6
+         t95zyC6D02g+t7tqDJ7I9ExZ2KuG5TMNy+TSR9xirxMwzywf2zpbLzozIdA04RgFf55i
+         kQ0pqfnRkWq30fJZjmUxVtEXL8p+XkkB9SDWTrv28NCpUEumWyGH2SlqMbqXmJZ3As76
+         MF6A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zZ7MPSYFFcpgmm3jeH3xqH+uZ+rJjnrkw2QVPvW4MTk=;
+        b=aDl+aaFwAX6dbvM2jgbHkvXmzoplNpzQvUivxtL8pkAPhjKvk2+XgXtvodBMG2ooL/
+         aNwAyc51hyQCglqXMoMdAMJfSsi8Pxj5P0yvKMiRsdaPtAgGPILcH7UIP6h31sBTcsEn
+         WykA3E8HcmZp0A0zrwifhvepnv6UniO1Zw0413LNn7wGV8n+etP+D+3f6ON+P14s3VT9
+         Xq4eDazVnW/W76pGQgAPVHE0HSv9i6o0VxERYVse5YHLlbHIy0NfmAeftu2GUmMiOZZg
+         /BVgPUrL9jjv+dEomBu5p0UnQnTMdRF2eqOORrzqzZ4sTyw916Ck529NGmFhwLRgIZEf
+         st9g==
+X-Gm-Message-State: APjAAAUSU4r0tYGflzspO4bVYZEBeNe7VWOWv+OemZ6oCwmjz2V1pqNe
+        KPMoMeU7d1CuCK5jxRgI+owM8Vdvh4E=
+X-Google-Smtp-Source: APXvYqw/qe+NGjrMB+1kcGS8zJR3OC5pgfpUt4m0VpiKHfCOixbv/7L870d3Qg59fulAFmfq5mVZxA==
+X-Received: by 2002:a2e:9449:: with SMTP id o9mr1039632ljh.110.1573031275355;
+        Wed, 06 Nov 2019 01:07:55 -0800 (PST)
+Received: from [172.31.190.83] ([86.57.146.226])
+        by smtp.gmail.com with ESMTPSA id 1sm7081281ljr.46.2019.11.06.01.07.54
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 01:07:54 -0800 (PST)
+Subject: Re: [PATCH v2 1/2] io_uring: Merge io_submit_sqes and io_ring_submit
+To:     Bob Liu <bob.liu@oracle.com>, Jens Axboe <axboe@kernel.dk>,
+        io-uring@vger.kernel.org, linux-block@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH] media: venus: remove invalid compat_ioctl32 handler
-Date:   Wed,  6 Nov 2019 10:06:54 +0100
-Message-Id: <20191106090731.3152446-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+References: <cover.1572988512.git.asml.silence@gmail.com>
+ <09fcce1a50f4d1a399b903e3669ba98ede408d9c.1572988512.git.asml.silence@gmail.com>
+ <4654948b-caac-3dc8-904c-ceb0c245d7c3@oracle.com>
+From:   Pavel Begunkov <asml.silence@gmail.com>
+Message-ID: <62cc24d9-0ace-3a9e-f8ed-9c2b8b920ba0@gmail.com>
+Date:   Wed, 6 Nov 2019 12:07:53 +0300
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:8RmDx4hHYVaGCRLB35n3qdiZOzUXcVe0+StcVe0UHvHpojc5T/4
- uzsWV9aOL+uHX72YbQa8qjbMgaBFg4cUcIuX3JwFT33wd+hDOHw0Gxu/AACyXMMPHDpO3qS
- e8SezUBQFDXhSY4USnlbekvkOTc1byAB440qbxJg6rA8EyNETSc1rU5kjdE6LCJiVl742X9
- hLCFCuyKLHCV6f6MIz+NA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:0e6MMvLXfls=:4/MvFiPhzD2v4dq4ei/GqJ
- upkwO1ea9eMllyQ5KzkyyMTYbb60gFwFTEtrz+i1c2gBGOvyvCLOHIHEiLQ4mc7grzJgOnLo5
- cLAI7xO9iOjJ+TLiYYsar95qpgCMbdpilVzPE5D4fAObNbjO6NbZxxKafvpaZebU/5FSGCy1R
- xsL/R0rjvdeRtCL/vRMRkiCr2+sbjYeYyQwtbTdATCP2+ZYLAMNgNux4U8+DbWB53HQHTsOL/
- yvvZx3Ib7IVG5Nl24s1cKtUNMIpPuakHOail8qcrPP4agnnQvtCcOCJLSPxK+75uo1sdlrtMN
- Hiz3h44usxXP9FjoU7DQi5/CgdKCEON9JSrsa/Ngw/rnHk+KARie5v6/I7Lfgtf4lsgiM2QXI
- iP5RScn8nQ+z48MBPpJCBsRqDGUWU04DPfosdtLeQXwoPCigrATip1eSK4DnGDYVC7Z2U2NLK
- MWHX5Auc8oQxCompC2le/breqc7FgdOj/tE9eVK/REyPzUblOwYse1MY2Pujs+ftFwt5JDVXX
- IlRu+bxvfhCaGYLK8S7q7YpBMkf3UA99ulViCXC8ZxVAv0T0+UXQ5JScvXisuCGnT1cUUTyFG
- tAi6dhVwDpJMUQcJZG/4rNfO9v7u1BO3h+w3ajKJ3P8XtpNgfFLwBlkgvT676IdMPntGQj2oy
- ueso2NPqA7MP8javvvaTs5CZg1uxO8z8ej+5qhqLCycAH9FaXkGrkQcbaZYeKcrjPDbRftAHe
- wIEkudc61tT8/Cu7fbETvo5oYwjjPvFMWlOcqzAtjH+ZA1wQFeS+BDTzIZ/219dljJ/3/donI
- HhB0FZo5AKnKawpGrRG/p1broZNesSc/6l466L377Bzj7tUJBkqWFeIPsPjmminibnprfgbbi
- QBpI7ZPdm/tcrJr3FH7w==
+In-Reply-To: <4654948b-caac-3dc8-904c-ceb0c245d7c3@oracle.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-v4l2_compat_ioctl32() is the function that calls into
-v4l2_file_operations->compat_ioctl32(), so setting that back to the same
-function leads to a trivial endless loop, followed by a kernel
-stack overrun.
+On 11/6/2019 11:57 AM, Bob Liu wrote:
+> On 11/6/19 5:22 AM, Pavel Begunkov wrote:
+>> io_submit_sqes() and io_ring_submit() are doing the same stuff with
+>> a little difference. Deduplicate them.
+>>
+>> Signed-off-by: Pavel Begunkov <asml.silence@gmail.com>
+>> ---
+>>  fs/io_uring.c | 88 +++++++++++----------------------------------------
+>>  1 file changed, 18 insertions(+), 70 deletions(-)
+>>
+>> diff --git a/fs/io_uring.c b/fs/io_uring.c
+>> index 7813bc7d5b61..ebe2a4edd644 100644
+>> --- a/fs/io_uring.c
+>> +++ b/fs/io_uring.c
+>> @@ -2681,7 +2681,8 @@ static bool io_get_sqring(struct io_ring_ctx *ctx, struct sqe_submit *s)
+>>  }
+>>  
+>>  static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>> -			  struct mm_struct **mm)
+>> +			  struct file *ring_file, int ring_fd,
+>> +			  struct mm_struct **mm, bool async)
+>>  {
+>>  	struct io_submit_state state, *statep = NULL;
+>>  	struct io_kiocb *link = NULL;
+>> @@ -2732,10 +2733,12 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>>  		}
+>>  
+>>  out:
+>> +		s.ring_file = ring_file;
+>> +		s.ring_fd = ring_fd;
+>>  		s.has_user = *mm != NULL;
+>> -		s.in_async = true;
+>> -		s.needs_fixed_file = true;
+>> -		trace_io_uring_submit_sqe(ctx, s.sqe->user_data, true, true);
+>> +		s.in_async = async;
+>> +		s.needs_fixed_file = async;
+>> +		trace_io_uring_submit_sqe(ctx, s.sqe->user_data, true, async);
+>>  		io_submit_sqe(ctx, &s, statep, &link);
+>>  		submitted++;
+>>  	}
+>> @@ -2745,6 +2748,9 @@ static int io_submit_sqes(struct io_ring_ctx *ctx, unsigned int nr,
+>>  	if (statep)
+>>  		io_submit_state_end(&state);
+>>  
+>> +	 /* Commit SQ ring head once we've consumed and submitted all SQEs */
+>> +	io_commit_sqring(ctx);
+>> +
+> 
+> Then don't need io_commit_sqring() in io_sq_thread any more?
+>
+Right, thanks! I'll resend with the change.
 
-Remove the incorrect assignment.
 
-Cc: stable@vger.kernel.org
-Fixes: 7472c1c69138 ("[media] media: venus: vdec: add video decoder files")
-Fixes: aaaa93eda64b ("[media] media: venus: venc: add video encoder files")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/media/platform/qcom/venus/vdec.c | 3 ---
- drivers/media/platform/qcom/venus/venc.c | 3 ---
- 2 files changed, 6 deletions(-)
-
-diff --git a/drivers/media/platform/qcom/venus/vdec.c b/drivers/media/platform/qcom/venus/vdec.c
-index 7f4660555ddb..59ae7a1e63bc 100644
---- a/drivers/media/platform/qcom/venus/vdec.c
-+++ b/drivers/media/platform/qcom/venus/vdec.c
-@@ -1412,9 +1412,6 @@ static const struct v4l2_file_operations vdec_fops = {
- 	.unlocked_ioctl = video_ioctl2,
- 	.poll = v4l2_m2m_fop_poll,
- 	.mmap = v4l2_m2m_fop_mmap,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl32 = v4l2_compat_ioctl32,
--#endif
- };
- 
- static int vdec_probe(struct platform_device *pdev)
-diff --git a/drivers/media/platform/qcom/venus/venc.c b/drivers/media/platform/qcom/venus/venc.c
-index 1b7fb2d5887c..30028ceb548b 100644
---- a/drivers/media/platform/qcom/venus/venc.c
-+++ b/drivers/media/platform/qcom/venus/venc.c
-@@ -1235,9 +1235,6 @@ static const struct v4l2_file_operations venc_fops = {
- 	.unlocked_ioctl = video_ioctl2,
- 	.poll = v4l2_m2m_fop_poll,
- 	.mmap = v4l2_m2m_fop_mmap,
--#ifdef CONFIG_COMPAT
--	.compat_ioctl32 = v4l2_compat_ioctl32,
--#endif
- };
- 
- static int venc_probe(struct platform_device *pdev)
--- 
-2.20.0
-
+> Anyway, looks good to me.
+> Reviewed-by: Bob Liu <bob.liu@oracle.com>
+> 
+>>  	return submitted;
+>>  }
+>>  
+>> @@ -2849,7 +2855,8 @@ static int io_sq_thread(void *data)
+>>  		}
+>>  
+>>  		to_submit = min(to_submit, ctx->sq_entries);
+>> -		inflight += io_submit_sqes(ctx, to_submit, &cur_mm);
+>> +		inflight += io_submit_sqes(ctx, to_submit, NULL, -1, &cur_mm,
+>> +					   true);
+>>  
+>>  		/* Commit SQ ring head once we've consumed all SQEs */
+>>  		io_commit_sqring(ctx);
+>> @@ -2866,69 +2873,6 @@ static int io_sq_thread(void *data)
+>>  	return 0;
+>>  }
+>>  
+>> -static int io_ring_submit(struct io_ring_ctx *ctx, unsigned int to_submit,
+>> -			  struct file *ring_file, int ring_fd)
+>> -{
+>> -	struct io_submit_state state, *statep = NULL;
+>> -	struct io_kiocb *link = NULL;
+>> -	struct io_kiocb *shadow_req = NULL;
+>> -	bool prev_was_link = false;
+>> -	int i, submit = 0;
+>> -
+>> -	if (to_submit > IO_PLUG_THRESHOLD) {
+>> -		io_submit_state_start(&state, ctx, to_submit);
+>> -		statep = &state;
+>> -	}
+>> -
+>> -	for (i = 0; i < to_submit; i++) {
+>> -		struct sqe_submit s;
+>> -
+>> -		if (!io_get_sqring(ctx, &s))
+>> -			break;
+>> -
+>> -		/*
+>> -		 * If previous wasn't linked and we have a linked command,
+>> -		 * that's the end of the chain. Submit the previous link.
+>> -		 */
+>> -		if (!prev_was_link && link) {
+>> -			io_queue_link_head(ctx, link, &link->submit, shadow_req);
+>> -			link = NULL;
+>> -			shadow_req = NULL;
+>> -		}
+>> -		prev_was_link = (s.sqe->flags & IOSQE_IO_LINK) != 0;
+>> -
+>> -		if (link && (s.sqe->flags & IOSQE_IO_DRAIN)) {
+>> -			if (!shadow_req) {
+>> -				shadow_req = io_get_req(ctx, NULL);
+>> -				if (unlikely(!shadow_req))
+>> -					goto out;
+>> -				shadow_req->flags |= (REQ_F_IO_DRAIN | REQ_F_SHADOW_DRAIN);
+>> -				refcount_dec(&shadow_req->refs);
+>> -			}
+>> -			shadow_req->sequence = s.sequence;
+>> -		}
+>> -
+>> -out:
+>> -		s.ring_file = ring_file;
+>> -		s.has_user = true;
+>> -		s.in_async = false;
+>> -		s.needs_fixed_file = false;
+>> -		s.ring_fd = ring_fd;
+>> -		submit++;
+>> -		trace_io_uring_submit_sqe(ctx, s.sqe->user_data, true, false);
+>> -		io_submit_sqe(ctx, &s, statep, &link);
+>> -	}
+>> -
+>> -	if (link)
+>> -		io_queue_link_head(ctx, link, &link->submit, shadow_req);
+>> -	if (statep)
+>> -		io_submit_state_end(statep);
+>> -
+>> -	io_commit_sqring(ctx);
+>> -
+>> -	return submit;
+>> -}
+>> -
+>>  struct io_wait_queue {
+>>  	struct wait_queue_entry wq;
+>>  	struct io_ring_ctx *ctx;
+>> @@ -4049,10 +3993,14 @@ SYSCALL_DEFINE6(io_uring_enter, unsigned int, fd, u32, to_submit,
+>>  			wake_up(&ctx->sqo_wait);
+>>  		submitted = to_submit;
+>>  	} else if (to_submit) {
+>> -		to_submit = min(to_submit, ctx->sq_entries);
+>> +		struct mm_struct *cur_mm;
+>>  
+>> +		to_submit = min(to_submit, ctx->sq_entries);
+>>  		mutex_lock(&ctx->uring_lock);
+>> -		submitted = io_ring_submit(ctx, to_submit, f.file, fd);
+>> +		/* already have mm, so io_submit_sqes() won't try to grab it */
+>> +		cur_mm = ctx->sqo_mm;
+>> +		submitted = io_submit_sqes(ctx, to_submit, f.file, fd,
+>> +					   &cur_mm, false);
+>>  		mutex_unlock(&ctx->uring_lock);
+>>  	}
+>>  	if (flags & IORING_ENTER_GETEVENTS) {
+>>
+> 
