@@ -2,106 +2,154 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0EFC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:58:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA4CAC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 26E9A2173E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 06:58:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8D8F217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:01:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FLii/lUK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731128AbfKFG6a (ORCPT
+        id S1731196AbfKFHBn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 01:58:30 -0500
-Received: from mailgate1.rohmeurope.com ([178.15.145.194]:48522 "EHLO
-        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726772AbfKFG63 (ORCPT
+        Wed, 6 Nov 2019 02:01:43 -0500
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:42111 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726772AbfKFHBi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 01:58:29 -0500
-X-AuditID: c0a8fbf4-199ff70000001fa6-b7-5dc26f136c77
-Received: from smtp.reu.rohmeu.com (will-cas001.reu.rohmeu.com [192.168.251.177])
-        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id 88.5A.08102.31F62CD5; Wed,  6 Nov 2019 07:58:27 +0100 (CET)
-Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
- WILL-CAS001.REu.RohmEu.com ([fe80::d57e:33d0:7a5d:f0a6%16]) with mapi id
- 14.03.0439.000; Wed, 6 Nov 2019 07:58:23 +0100
-From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
-To:     "linus.walleij@linaro.org" <linus.walleij@linaro.org>
-CC:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
-        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
-        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>
-Subject: Re: [PATCH 02/62] gpio: gpio-104-dio-48e: Use new
- GPIO_LINE_DIRECTION
-Thread-Topic: [PATCH 02/62] gpio: gpio-104-dio-48e: Use new
- GPIO_LINE_DIRECTION
-Thread-Index: AQHVk8E0yWwGMoSA7E67RuXMsgXB/Kd8oc+AgAEFEYA=
-Date:   Wed, 6 Nov 2019 06:58:23 +0000
-Message-ID: <d1d33dee96a4dea71a14dfdb6d590beade529c2c.camel@fi.rohmeurope.com>
-References: <cover.1572945605.git.matti.vaittinen@fi.rohmeurope.com>
-         <d25edcc3a5d912be9d7c3a927bad6baf34a1331e.1572945605.git.matti.vaittinen@fi.rohmeurope.com>
-         <CACRpkdav+Sz04WE6N5KkKMQLOtx2BZrjWrEin06yPZQ31a47hg@mail.gmail.com>
-In-Reply-To: <CACRpkdav+Sz04WE6N5KkKMQLOtx2BZrjWrEin06yPZQ31a47hg@mail.gmail.com>
-Accept-Language: en-US, de-DE
-Content-Language: de-DE
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [213.255.186.46]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <4BA1251DF78AFF4482333777D31C11BA@de.rohmeurope.com>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 02:01:38 -0500
+Received: by mail-pl1-f193.google.com with SMTP id j12so9024576plt.9;
+        Tue, 05 Nov 2019 23:01:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=MxSa1n+gHrOp6PMKGpdNcDU3YHnlnlTnVOvtpXq96hQ=;
+        b=FLii/lUKFxSP7NlBkRW8TcsfS8d12PrwyIgYxduQTcjuvyO9CSyhsJnn2Qk0TNlYZL
+         lB34iRpSXhlGGdUXgX5MmRflnU7KXpwFcbmIbkCWCtnMpq6GtOvYzOjEesFtxoTL92Nv
+         sMALWipHX2DnW1kFC+Akjuc9TXl6Zh7EP3kWO85NfzZkDgE/uuUvOeigxT1LF9oUjSee
+         s43QZDIWgxX7Z/CWGUm53hnu6aL+EoYztEHHblxLBrYIgu9aZCxgiUe94EotG4FLe1SD
+         NtpM8j7GArccqwtORn/sMlN/fuI4za73VDm5Ebe3neYfj5/ddYthqtwdXiro5ZMVOWjW
+         Y/DA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=MxSa1n+gHrOp6PMKGpdNcDU3YHnlnlTnVOvtpXq96hQ=;
+        b=Zcr14IFdH/7TlCTXKzIo9ootrVfXcHvyz8Gav/mwf5UTRu75ozWonzlDoBusY+uEVW
+         0Z2esHW0A8OwalJgQSgBJ/CJ++mAhwsT/dnyiw32T+4oM6Lbo8bVWZ459x6YFvKRGYqp
+         Z4RsMSKx4Mj4vdra4dpT7VpthQbUSCmFof/er9gNr1p/fdVK5dNbfZwO2ASCljJs4Okh
+         kINDCnfLHSsKFLJLkKiVql9FDfmcCL+vezqtru/7rusegK38YISXa8KdBoHv3Ut16x6I
+         BPKrey+TWcFKwZx7Zd1hOxJ6youpBhJfPiSuu3ueXgwnQW9dF1XNL3PDlisesKs0dZo2
+         YpAg==
+X-Gm-Message-State: APjAAAWjGzzF4NptmVat0deV8BF9wAyqsKmuc3+qLJdTQwxhFV3V1AXO
+        8z1BCcKSOsMhiaFRQs6VwDk=
+X-Google-Smtp-Source: APXvYqzJbw0+dj2HtLWRRpzgQPo9WOyJIwJJXerw9Xlczh2u7AtxkcVMkYZ8LmD3j/nBrXCnbQzT+g==
+X-Received: by 2002:a17:902:7c8d:: with SMTP id y13mr1021481pll.155.1573023697546;
+        Tue, 05 Nov 2019 23:01:37 -0800 (PST)
+Received: from Gentoo ([103.231.91.67])
+        by smtp.gmail.com with ESMTPSA id 65sm13508394pff.2.2019.11.05.23.01.31
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 05 Nov 2019 23:01:36 -0800 (PST)
+Date:   Wed, 6 Nov 2019 12:31:23 +0530
+From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
+To:     Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] scripts:patch-kernel:bash syntax replace,correct one
+Message-ID: <20191106070120.GB18076@Gentoo>
+References: <20191025080544.7209-1-unixbhaskar@gmail.com>
+ <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
+ <20191106042049.GC20442@Gentoo>
+ <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
 MIME-Version: 1.0
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sa0gUURiGOTPj7PEyMa6aR03LRZIKbxCxloldfmxZYZQJ4aKjTu7iXmx2
-        De2GhcG6lqylQcuKJormjzRNUjGrNfGC0A/poha4GeKNjFIzr8043n6d95z3e773g/NBXLrg
-        5AvVOiPL6RiNjHQh3tYsvgjx0NuV4f2mQ/KZ0l5CXrxUjckby5aAvL/VRsptVd2E/MF0FRlD
-        Kqa/3JMoWqzfJIqvn9pIxZ+GgDjismtUCmO8dkGdrguLTnZVzQ3mZL70yC7ItZO5YEZqBs4Q
-        0QfR6KqDNAMXKKU/AjQ2YZKIly6AHtdancwAQpKOQuYBiQB40pGoo9tGCDU4XY2hyTtDmGB4
-        0HFoZdJEikXn0fLnZUzUh1HTdN6aJuggNP50aK0RRZ9Dd20OXAybBKhk7BkQDGceftTzkBA0
-        oP1Rfu7PNRinvVHD6F8ncWwaVbZ9wEXthcZHVtbfZej1PwchDI3T+1Bda5iIxqDVlS5S1IGo
-        uMCxPoM76nnyg7CAndZtCdYt2rqNtm6jrdvocuBUC5CWUWvSGSMbEcqxWaGcXqXlj1S9tgGI
-        fznTDFbtp+wAg8AOfCAm86JOq98ppTtS9Gk5KsagSuKyNKzBDhDEZZ5UYiHvUWlMznWW029Y
-        fpCQeVPBjiKllBayMlg2k+U23F0QyhDVqrErpe4cm85mX1FrjFs2Bp2F5i6+ngZWl8ZyTJZR
-        lSTsR5KBXxDBcuNzSS2PU4ZMRsu/imgvOAAt46UVOHxfWlWBSwmdXsf6elNzQhItlKqydJtB
-        E8AbApkHZRIaufELvdlngo/A+IgzI+1ChJHZsnxzAVfZVHKx6sZNx+038eGRr+4/sZQ3dw+f
-        SJj/PlWbNzvogytKiso7d5uPN87XH/OJtwUULrbsUfhFrsTGYOOxoUxfqnTBPrjXcasjIrTy
-        V0LppeHAo1PtJfmJygzL75DOAcnq2eezMzXRya3x/pYpOgpeNdUHtXT21dUHJ5V5HTkpIwwq
-        JmI/zhmY/ylzeX6NAwAA
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rS8CxjVDS/+yyDmU"
+Content-Disposition: inline
+In-Reply-To: <CAK7LNARdxhr1Ab1bkUqRjz4LGuH6mUg9kmp_4U0sYcK8uWzRyw@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMTY6MjMgKzAxMDAsIExpbnVzIFdhbGxlaWogd3JvdGU6
-DQo+IE9uIFR1ZSwgTm92IDUsIDIwMTkgYXQgMTE6MTAgQU0gTWF0dGkgVmFpdHRpbmVuDQo+IDxt
-YXR0aS52YWl0dGluZW5AZmkucm9obWV1cm9wZS5jb20+IHdyb3RlOg0KPiANCj4gPiBJdCdzIGhh
-cmQgZm9yIG9jY2FzaW9uYWwgR1BJTyBjb2RlIHJlYWRlci93cml0ZXIgdG8ga25vdyBpZiB2YWx1
-ZXMNCj4gPiAwLzENCj4gPiBlcXVhbCB0byBJTiBvciBPVVQuIFVzZSBkZWZpbmVkIEdQSU9fTElO
-RV9ESVJFQ1RJT05fSU4gYW5kDQo+ID4gR1BJT19MSU5FX0RJUkVDVElPTl9PVVQgdG8gaGVscCB0
-aGVtIG91dC4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aSBWYWl0dGluZW4gPG1hdHRp
-LnZhaXR0aW5lbkBmaS5yb2htZXVyb3BlLmNvbT4NCj4gDQo+IFBsZWFzZSBtZXJnZSBhbGwgb2Yg
-dGhlc2UgcGF0Y2hlcyAyLW4gaW50byBvbmUgdG8gYXZvaWQgcGF0Y2ggYm9tYnMNCj4gYW5kIGp1
-c3QgbWFrZSBvbmUgdGVjaG5pY2FsIHN0ZXAuDQo+IA0KPiBPaCB0aGUgcGF0Y2ggYm9tYiBhbHJl
-YWR5IGRyb3BwZWQsIGhlaGUuIA0KDQpJIHdhcyBzbGlnaHRseSBpbXBhdGllbnQgXl9eOw0KDQpJ
-IGRpZCBzcGxpdCB0aGUgcGF0Y2ggc2V0IGludG8gdGhpcyBtYW55IHBhdGNoZXMgc28gdGhhdCBk
-cml2ZXINCm1haW50YWluZXJzIHdvdWxkIG9ubHkgbmVlZCB0byBjaGVjayB0aGVpciBvd24gZHJp
-dmVyIChqdXN0IGZldyBsaW5lcykuDQpJIGFsc28gdGhvdWdodCB0aGF0IGlmIHNvbWUgZHJpdmVy
-IG1haW50YWluZXJzIGhhdmUgb2JqZWN0aW9ucyB0aGVuIGl0DQppcyBlYXN5IHRvIGRyb3Agb3V0
-IHN1Y2ggcGF0Y2guIFRoZSAicGF0Y2ggYm9tYiIgDQoNCih3aGljaCB5b3UgcmVmZXJyZWQgaW4g
-dGhlIG90aGVyIG1haWwgDQpodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sL0NBQ1Jwa2RhditT
-ejA0V0U2TjVLa0tNUUxPdHgyQlpyaldyRWluMDZ5UFpRMzFhNDdoZ0BtYWlsLmdtYWlsLmNvbS8N
-CikNCg0Kd2FzIHJlYWxseSBvbmx5IHN1Y2ggYm9tYiBmb3IgeW91IGFuZCBCYXJ0b3N6ICgrR1BJ
-Ty9MS01MIG1haWwgbGlzdHMpIC0NCkkgZGlkIG5vdCBDQyBhbGwgcGF0Y2hlcyB0byBldmVyeW9u
-ZSAtIGRyaXZlciBtYWludGFpbmVycyBvbmx5IGdvdCB0aGUNCnBhdGNoIGFkZGluZyB0aGUgZGVm
-aW5lKHMpIGFuZCBhIHBhdGNoIGZvciB0aGVpciByZXNwZWN0aXZlIGRyaXZlcihzKQ0KOikgVW5m
-b3J0dW5hdGVseSBJIG1lc3NlZCB1cCB0aGUgbWVzc2FnZSBJRHMgZnJvbSBtYWlsIGhlYWRlcnMg
-c28gdGhlDQptYWlscyBmb3IgdGhlIHNlcmllcyB3ZXJlIG5vdCBwcm9wZXJseSB0aHJlYWRlZCA6
-Lw0KDQo+IEFueXdheXMgSSB3YW50IG9uZQ0KPiBiaWcgcGF0Y2ggdG8gYXBwbHkuIFBsZWFzZSBt
-YWtlIHN1cmUgaXQgYXBwbGllcyBvbiB0aGUgR1BJTyB0cmVlJ3MNCj4gImRldmVsIiBicmFuY2gu
-DQoNClJpZ2h0LiBJIGd1ZXNzIEkgY2FuIGRvIHRoYXQuDQoNCj4gQ29sbGVjdCBhbnkgQUNLcyBh
-bmQgZHJvcCBtb3N0IGZyb20gdGhlIENDIGVsc2UgdGhlIGRyaXZlcg0KPiBtYWludGFpbmVycyBt
-YXkgZ2V0IGFubm95ZWQuDQoNCk15IHByb2JsZW0gaXMgdGhhdCBJIGRvbid0IGtub3cgd2hvIGFy
-ZSB0aGUgZHJpdmVyIG1haW50YWluZXJzIEkgc2hvdWxkDQprZWVwIGFuZCB3aG8gSSBzaG91bGQg
-ZHJvcC4gSSBkb24ndCB1c3VhbGx5IGtub3cgd2hvIGFyZSBpbnRlcmVzdGVkIGluIA0Kd2hpY2gg
-Y2hhbmdlcy4NCg0KDQo+IA0KPiBZb3VycywNCj4gTGludXMgV2FsbGVpag0KDQo=
+
+--rS8CxjVDS/+yyDmU
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On 15:25 Wed 06 Nov 2019, Masahiro Yamada wrote:
+>On Wed, Nov 6, 2019 at 1:21 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> w=
+rote:
+>>
+>> On 13:15 Wed 06 Nov 2019, Masahiro Yamada wrote:
+>> >On Fri, Oct 25, 2019 at 5:06 PM Bhaskar Chowdhury <unixbhaskar@gmail.co=
+m> wrote:
+>> >>
+>> >> This patch will replace backquote to dollar parenthesis syntax
+>> >> for better readability.Corrected one.
+>> >
+>> >Talking about the commit subject,
+>> >which part is 'bash syntax' ?
+>> >
+>> >One more thing,
+>> >"correct one" is not the correct way to send
+>> >a new patch version.
+>> >See the patch submission from other people.
+>> >The version number is enclosed in the square brackets.
+>> >
+>> >[PATCH v2]
+>> >
+>> >
+>> >The commit subject should describe what it does
+>> >in imperative mood.
+>> >
+>> >https://patchwork.kernel.org/patch/11205593/
+>> You are right ..my mistake ..shouldn't have included the
+>> "correct one" ...and you are absolutely right..."bash syntax"
+>> is as vague and confusing .
+>>
+>> Again , Would you mind if I send you the correct one with
+>> proper subject line and explained what changed.
+>
+>
+>I will pick up the patch with the subject corrected
+>but you do not need to send similar patches any more.
+>
+>`...` is the correct syntax.
+>Even if $(...) is more readable,
+>the added value is quite small.
+>
+Okay , noted.
+>
+>
+>
+>--=20
+>Best Regards
+>Masahiro Yamada
+
+--rS8CxjVDS/+yyDmU
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3Cb7wACgkQsjqdtxFL
+KRWlBwgAj6yVqeQEReDZGWZ7OHnr0GRoGU13xPVK27xr0ibe2N7SJq1fwDeno/Fw
+edI7d8aufFlP+vvpzZVdjdLvbMkWv/mOW3kxnURxXcq3X95nkGDoceE5Fyh7tZ+i
+hxLrYMYOYFwlJikJJnI4S5HTGQ7A4B884zGRMqcC8bpAWAe6BNPDUZbmNaCZ02sW
+C/3olrDvpffviu4APEtLN1lAeuKVegz4k8Mybf+5dR1wH/G9FCp1/Q/oOSCUcLpt
+g7JZXEsw0xfXWtBmbI3Uwq9gEGoQ/PXDi6MC7+lRiL3LW+JBmDtlik/zKwk6DRM+
+Uhm8I6PssRajlg8Pu41UBQT0VVXBMw==
+=9wMq
+-----END PGP SIGNATURE-----
+
+--rS8CxjVDS/+yyDmU--
