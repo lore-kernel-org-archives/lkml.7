@@ -2,126 +2,130 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8310DFC6196
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:35:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 831A9C43331
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:35:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D3E3217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:35:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5583021848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 22:35:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bPSyyXqR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732805AbfKFWfP convert rfc822-to-8bit (ORCPT
+        id S1732819AbfKFWfi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 17:35:15 -0500
-Received: from mail-oln040092064088.outbound.protection.outlook.com ([40.92.64.88]:28165
-        "EHLO EUR01-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727328AbfKFWfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 17:35:15 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=Dwifi2WHenyUWZUFnMZcujqZLMuRxKAyvETGvkdnFFi6uS+u88X1LPh9IPAhk+H+GkNODmp0K0YajEFUIkMi7oduCLedXnwk9SAqamS8plArmlNG8qJEOV+7DNMd+L9nBOykDD7xyUE8vY1KDSUfWWRU4Hf2jx9Qj9fDmC5nsHLhSf4Qh8iJcsLzeRsjzN2JQSEL7OPX08JxCNjwRC0qoYYR9pn/lXHaXYOWfble54xQxYf4ft8jG5PH/oe5pi0RHPI8F9+ZrhnAtTroUZH59E3fGJKcKmJ/XNKYZeLKhSjHwDAXTzEg48yTD1qwkvsipXykY0cdkEp60diOSQFg4A==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=1OPe+fb97oluh+t9hbwEkniByC1FC63cXM4fZqXncXQ=;
- b=eznjEPhLh4p5wskj4svgGT7eSVVkrigsEUyepDvi6XuuzcuTxe8wA+Y1nqxZpvKMzI8SxNstDHDy5s07ajWCY22S+P9I8NrLqfDVRezUcB9UkvEmc8kPEKhPikyOUOzmHUau3qQ2vSSTiLOGn/Vnv1H8byxAlBS88Af3BIf2kjTZ/sqEwIhZprF82fa5S6qd8FzBUa6T1DEcRvXGCP/7+blrgywA+etVX6uQXMLiBLnPcjcuTLMqPekiX9TAaDAZyQ/fQHqh3Z9ytkykmZP2EgI6r8NNvZQmqO+Dtqn+liDNr7Q7rL1sw2aHsp9FZUSZIZeaTTULGBz0xpMx7L/ZsQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from HE1EUR01FT023.eop-EUR01.prod.protection.outlook.com
- (10.152.0.51) by HE1EUR01HT196.eop-EUR01.prod.protection.outlook.com
- (10.152.1.151) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2387.20; Wed, 6 Nov
- 2019 22:35:11 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com (10.152.0.53) by
- HE1EUR01FT023.mail.protection.outlook.com (10.152.0.162) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2387.20 via Frontend Transport; Wed, 6 Nov 2019 22:35:11 +0000
-Received: from HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc]) by HE1PR06MB4011.eurprd06.prod.outlook.com
- ([fe80::b1cf:db6f:95fc:84cc%7]) with mapi id 15.20.2408.028; Wed, 6 Nov 2019
- 22:35:11 +0000
-From:   Jonas Karlman <jonas@kwiboo.se>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Ezequiel Garcia <ezequiel@collabora.com>
-CC:     Jonas Karlman <jonas@kwiboo.se>, Hans Verkuil <hverkuil@xs4all.nl>,
-        Boris Brezillon <boris.brezillon@collabora.com>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v3 5/5] media: hantro: Set H264 FIELDPIC_FLAG_E flag correctly
-Thread-Topic: [PATCH v3 5/5] media: hantro: Set H264 FIELDPIC_FLAG_E flag
- correctly
-Thread-Index: AQHVlPJzwQY9pzF2rE6i7nBwc3b4fQ==
-Date:   Wed, 6 Nov 2019 22:35:11 +0000
-Message-ID: <HE1PR06MB4011FC02825E5F2B2389263EAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
-References: <HE1PR06MB4011EDD5F2686A05BC35F61CAC790@HE1PR06MB4011.eurprd06.prod.outlook.com>
- <20191106223456.2231-1-jonas@kwiboo.se>
-In-Reply-To: <20191106223456.2231-1-jonas@kwiboo.se>
-Accept-Language: sv-SE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1P191CA0011.EURP191.PROD.OUTLOOK.COM (2603:10a6:3:cf::21)
- To HE1PR06MB4011.eurprd06.prod.outlook.com (2603:10a6:7:9c::32)
-x-incomingtopheadermarker: OriginalChecksum:7A9562009A8B0CFA8ECB4EEBEA733DEA74AADFEDAA30AF7EB6AAE8BB6879FBEC;UpperCasedChecksum:10FD2EF91D6F598D1E1723089999768EF23398A1230DE31A40DD434EAD160D73;SizeAsReceived:7611;Count:49
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-tmn:  [oS3SogeI94SO73Q6naetwVMvFASxWXfs]
-x-microsoft-original-message-id: <20191106223456.2231-2-jonas@kwiboo.se>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 49
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 6d1ea9ed-32e4-41d3-1797-08d763099540
-x-ms-traffictypediagnostic: HE1EUR01HT196:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: WHNDBMUDpqIzdC+81JDr/cTZRrtqaB6v1P8R2b+cGmRGlmVZktfze2+FIN0OLkBYNH6A3iXsLt+/lFpLt3s6zVT94O/AcNW3b0+ibaCO7qCIpWHtZEKi2fwzzX7MRc4baVxAxZWaGgvD9i/oq05R4rkhjJUtP1jvcmqql1X3NWb5XVXuBn7t8hQHONJPrdLB
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Wed, 6 Nov 2019 17:35:38 -0500
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36785 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726779AbfKFWfh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 17:35:37 -0500
+Received: by mail-pg1-f195.google.com with SMTP id k13so60942pgh.3;
+        Wed, 06 Nov 2019 14:35:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=j+qLkwetpwDDMd9S2NQSFpmOChY51lQbcBGMbI8PvEI=;
+        b=bPSyyXqRuoJkim7wGZMqTTDtIpD89qy7d4wVPzn9adO6MJwE6XsjfY1fK6IlOJI2nd
+         LII0WsYg+XuX5e9xxCkbWzcEMWXuI/myPsUsFVec5wpEmXXLaU1csJj87xiwskzpMVCB
+         B2Bu5XgbHmGcWM9mZEVOr4jVMxH4H9RzcjKRw+tdbJxfh2aXhSe0KfYf+zaf1ZsyZHzi
+         yYLdY6mQKdnseM01SEal1QZcOlRo1UV8AQ58GQhSj2xts1dlJFh0Gyt9/DLUl1eVnYex
+         yYtY7BVwN3wtCOM6RkliRA7gesJUd9sklMxW6JAhv6POnnNCk+fW313kLszZ9Gj4PWaH
+         qMRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=j+qLkwetpwDDMd9S2NQSFpmOChY51lQbcBGMbI8PvEI=;
+        b=V7GWGi+8rqp2Wp0I8Z/Q9ba3MS1n6FugpYELt3pXFhTaF61yHAqHL8IZPZ1JphZkTQ
+         n90sSCQAUtgZaenTRH4QdF1RMOK7ZwZQ5rNLGpwLnxeFfdDkVdb78mpraJbWgY+ehwDB
+         jZAKWQOhV0q8Ko0zcUEHLKZJTyFbsG0nP/DiVloq/0M3C/Emx3VFzAxw5FkkgsPLexc7
+         ZqZC1msEOo/hT0Uy/Gof4ynMuLT79dvyvvs8cIf1r6uwgpB/TvR98btkDvwkU+NMb+sA
+         4XNg4rHHQ5IIMdD5vsd6Rpb7sxhiWzctnrBNsFPbOQczwHp1k7H+uP9ztBCxfBz35SDI
+         dZpg==
+X-Gm-Message-State: APjAAAVHP36F4t5MJH+3YCpw4dN1iExgw2+LQtN0tQl/iIK4yYb9jUkK
+        fUD0LbfN3VVxufxflgfdjdo=
+X-Google-Smtp-Source: APXvYqwcA4I/oUFrumUxBIXj2bldJNFE1aXnGLJGVtU8202f+ZbbICZy+cM1pl9WsRawNnEb0GsXAQ==
+X-Received: by 2002:a17:90a:ff04:: with SMTP id ce4mr286465pjb.133.1573079736656;
+        Wed, 06 Nov 2019 14:35:36 -0800 (PST)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id y22sm15546pfn.6.2019.11.06.14.35.35
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 06 Nov 2019 14:35:36 -0800 (PST)
+Date:   Wed, 6 Nov 2019 14:35:35 -0800
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Eddie James <eajames@linux.ibm.com>
+Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        jdelvare@suse.com
+Subject: Re: [PATCH 1/2] hwmon: (pmbus/ibm-cffps) Switch LEDs to blocking
+ brightness call
+Message-ID: <20191106223535.GA20168@roeck-us.net>
+References: <20191106200106.29519-1-eajames@linux.ibm.com>
+ <20191106200106.29519-2-eajames@linux.ibm.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 6d1ea9ed-32e4-41d3-1797-08d763099540
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 22:35:11.2471
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HE1EUR01HT196
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106200106.29519-2-eajames@linux.ibm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The FIELDPIC_FLAG_E bit should be set when field_pic_flag exists in stream,
-it is currently set based on field_pic_flag of current frame.
-The PIC_FIELDMODE_E bit is correctly set based on the field_pic_flag.
+On Wed, Nov 06, 2019 at 02:01:05PM -0600, Eddie James wrote:
+> Since i2c_smbus functions can sleep, the brightness setting function
+> for this driver must be the blocking version to avoid scheduling while
+> atomic.
+> 
+> Signed-off-by: Eddie James <eajames@linux.ibm.com>
 
-Fix this by setting the FIELDPIC_FLAG_E bit when frame_mbs_only is not set.
+Applied.
 
-Fixes: dea0a82f3d22 ("media: hantro: Add support for H264 decoding on G1")
-Signed-off-by: Jonas Karlman <jonas@kwiboo.se>
-Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
----
- drivers/staging/media/hantro/hantro_g1_h264_dec.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks,
+Guenter
 
-diff --git a/drivers/staging/media/hantro/hantro_g1_h264_dec.c b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-index 27d40d8d3728..3cd40a8f0daa 100644
---- a/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-+++ b/drivers/staging/media/hantro/hantro_g1_h264_dec.c
-@@ -63,7 +63,7 @@ static void set_params(struct hantro_ctx *ctx)
- 	/* always use the matrix sent from userspace */
- 	reg |= G1_REG_DEC_CTRL2_TYPE1_QUANT_E;
- 
--	if (slices[0].flags &  V4L2_H264_SLICE_FLAG_FIELD_PIC)
-+	if (!(sps->flags & V4L2_H264_SPS_FLAG_FRAME_MBS_ONLY))
- 		reg |= G1_REG_DEC_CTRL2_FIELDPIC_FLAG_E;
- 	vdpu_write_relaxed(vpu, reg, G1_REG_DEC_CTRL2);
- 
--- 
-2.17.1
-
+> ---
+>  drivers/hwmon/pmbus/ibm-cffps.c | 10 ++++++----
+>  1 file changed, 6 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwmon/pmbus/ibm-cffps.c b/drivers/hwmon/pmbus/ibm-cffps.c
+> index d61547ed0da0..c6a00e83aac6 100644
+> --- a/drivers/hwmon/pmbus/ibm-cffps.c
+> +++ b/drivers/hwmon/pmbus/ibm-cffps.c
+> @@ -297,8 +297,8 @@ static int ibm_cffps_read_word_data(struct i2c_client *client, int page,
+>  	return rc;
+>  }
+>  
+> -static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+> -					 enum led_brightness brightness)
+> +static int ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+> +					enum led_brightness brightness)
+>  {
+>  	int rc;
+>  	struct ibm_cffps *psu = container_of(led_cdev, struct ibm_cffps, led);
+> @@ -316,9 +316,11 @@ static void ibm_cffps_led_brightness_set(struct led_classdev *led_cdev,
+>  	rc = i2c_smbus_write_byte_data(psu->client, CFFPS_SYS_CONFIG_CMD,
+>  				       psu->led_state);
+>  	if (rc < 0)
+> -		return;
+> +		return rc;
+>  
+>  	led_cdev->brightness = brightness;
+> +
+> +	return 0;
+>  }
+>  
+>  static int ibm_cffps_led_blink_set(struct led_classdev *led_cdev,
+> @@ -356,7 +358,7 @@ static void ibm_cffps_create_led_class(struct ibm_cffps *psu)
+>  		 client->addr);
+>  	psu->led.name = psu->led_name;
+>  	psu->led.max_brightness = LED_FULL;
+> -	psu->led.brightness_set = ibm_cffps_led_brightness_set;
+> +	psu->led.brightness_set_blocking = ibm_cffps_led_brightness_set;
+>  	psu->led.blink_set = ibm_cffps_led_blink_set;
+>  
+>  	rc = devm_led_classdev_register(dev, &psu->led);
