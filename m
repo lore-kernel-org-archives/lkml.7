@@ -2,138 +2,181 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69741C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23850C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3EA892067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:22:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E457E2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:26:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EimbKafr"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="ISC8GuM8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732232AbfKFQWF (ORCPT
+        id S1728164AbfKFQ0v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:22:05 -0500
-Received: from mail-io1-f67.google.com ([209.85.166.67]:40111 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729392AbfKFQWE (ORCPT
+        Wed, 6 Nov 2019 11:26:51 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:54930 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727285AbfKFQ0v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:22:04 -0500
-Received: by mail-io1-f67.google.com with SMTP id p6so27620463iod.7;
-        Wed, 06 Nov 2019 08:22:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=59XQ5SNoCKcU9R/PCRZyan3lCrtseemq8GIa0acmfkU=;
-        b=EimbKafrvHiN3BqeZxgenZgrMpxL6E4An7CLk7ZVMlUQEPlY0T0b1oU+UNFZLUKz2j
-         k5OrGyLdz9a8i5OyGiCqzCNp3/JA+iPYUNBmVa25SO237Jn3SGbT+D3VuAlDm94BFF+3
-         pWBnQC+oXjBVTV9ecmFbZJwsM+UupVvXMQ7CrLWqtWXk0tK5X7WMLyruIv48PyK1yz44
-         Fxbwl4/C53ZI61tzw4wzR1AifUolw3CeZWC2jqHBdIRytGo1jY435GE5rpcgLS70Q57v
-         e8Tu149y9QKlxAkvgLd+ubV6GKlcXlFlSEa2p8xneHKzQiNN8/XmTNMWOu2qd28VR27r
-         rYTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=59XQ5SNoCKcU9R/PCRZyan3lCrtseemq8GIa0acmfkU=;
-        b=fv6uAZOM/K//QwwNFnlb+n+Aw7yBfx5MPK/GFEGNF5O1Be82sXqMfiOiR613KzkomY
-         iIhD1kw7qjgXIY4ZcUHGJsqE8og8QotihI9uIYmu10afKozNrrX9q/7NUvpDwjuwps0G
-         i8SbwJ3cQwmKymfmSEMFWUBhJY52iPi4rJ4zQBw6VWqOSR/ZAV23olheUeGWDfZqltF2
-         MRNM0it3CfV2TkkPtKdH/DyiZDLhcP+NL1VMP05pl0R/NnFpvMmZ3tzl7KoqrzrpMeJu
-         3OT57AQM03jv6Ez254tlg0znBzmMhH8JWHjZo3b2i2zut07nWs+EfZuktX/9R62ZUqLj
-         wkKg==
-X-Gm-Message-State: APjAAAX5I5Gj1vdfUq0y4I5C+F1etR065r54caxpFGIOqwZElKaV6J5L
-        oyB1MxtrZakoR3CtOOGYyfnnTD86jUinRGWq8i4=
-X-Google-Smtp-Source: APXvYqxLQgzXURaBRHPl1cBxULqCnEVqzdjEhkfMTD9htL1WTWIPDSZgvCkH+7/0Q5VQWQnNrR+kAlIJPF81zjHKrxI=
-X-Received: by 2002:a5e:8c0a:: with SMTP id n10mr5241548ioj.78.1573057323206;
- Wed, 06 Nov 2019 08:22:03 -0800 (PST)
+        Wed, 6 Nov 2019 11:26:51 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6GQNDb117954;
+        Wed, 6 Nov 2019 10:26:23 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573057583;
+        bh=X2oBSwJNQPZVsVwxr22Pa+22epqGXv5cpkuKVJLk37w=;
+        h=From:Subject:To:CC:References:Date:In-Reply-To;
+        b=ISC8GuM88VTWl5REKJnJPa5Uu5p5RrYZ3NzQDKRMyFVbx08bjbhxkVsmRh8eFitnk
+         JNOOWtavqblIKvUNmQs//m4KC4nrf0rFaMiTp8+Ys5bb44F6M7rgOHXGYu7RX7B6rU
+         FXQhcAKPnaN5OuaqCWiZ7M/4pObIJR+ttoMuVmvk=
+Received: from DLEE115.ent.ti.com (dlee115.ent.ti.com [157.170.170.26])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6GQNsi046367
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 10:26:23 -0600
+Received: from DLEE104.ent.ti.com (157.170.170.34) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 10:26:22 -0600
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DLEE104.ent.ti.com
+ (157.170.170.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 10:26:07 -0600
+Received: from [10.250.133.248] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA6GQKaH056886;
+        Wed, 6 Nov 2019 10:26:20 -0600
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+Subject: Re: [PATCH v4 13/20] mtd: spi-nor: Fix clearing of QE bit on
+ lock()/unlock()
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <miquel.raynal@bootlin.com>, <richard@nod.at>,
+        <linux-mtd@lists.infradead.org>, <linux-kernel@vger.kernel.org>
+References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
+ <20191102112316.20715-14-tudor.ambarus@microchip.com>
+ <14e9c474-1a92-b8be-12cf-56c7f6d0d696@ti.com>
+ <af6fa950-495f-9e49-bcfe-09188e454b6d@microchip.com>
+Message-ID: <36967b16-a52d-667f-cd61-cef9b87a83cf@ti.com>
+Date:   Wed, 6 Nov 2019 21:56:04 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191106142308.10511-1-aford173@gmail.com> <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
-In-Reply-To: <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Wed, 6 Nov 2019 10:21:52 -0600
-Message-ID: <CAHCN7xLRJ8y7039iiCbrm5ZxgXyEdKtubYNNr8TcSBDHDNEENg@mail.gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Cc:     arm-soc <linux-arm-kernel@lists.infradead.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        devicetree <devicetree@vger.kernel.org>,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <af6fa950-495f-9e49-bcfe-09188e454b6d@microchip.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 10:18 AM Marco Felsch <m.felsch@pengutronix.de> wrote:
->
-> Hi Adam,
->
-> On 19-11-06 08:23, Adam Ford wrote:
-> > The LCD used with the imx6q-logicpd board has an integrated
-> > ili2117a touch controller connected to i2c1.
-> >
-> > This patch adds the node to enable this feature.
-> >
-> > Signed-off-by: Adam Ford <aford173@gmail.com>
-> > ---
-> > ili2117 support is scheduled to be introduced for Kernel v5.5.
-> >
-> > V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
-> >
-> > diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
-> > index d96ae54be338..7a3d1d3e54a9 100644
-> > --- a/arch/arm/boot/dts/imx6q-logicpd.dts
-> > +++ b/arch/arm/boot/dts/imx6q-logicpd.dts
-> > @@ -73,6 +73,16 @@
-> >       status = "okay";
-> >  };
-> >
-> > +&i2c1 {
-> > +     touchscreen@26 {
-> > +             compatible = "ilitek,ili2117";
-> > +             reg = <0x26>;
-> > +             pinctrl-names = "default";
-> > +             pinctrl-0 = <&pinctrl_touchscreen>;
->
-> This phandle already exists?
+Hi,
 
-Yes it does exist, but it probably should not have been since there
-was no user of it.  At least this fixes that.  :-)
+On 06/11/19 2:03 PM, Tudor.Ambarus@microchip.com wrote:
+> 
+> 
+> On 11/05/2019 07:07 PM, Vignesh Raghavendra wrote:
+>> On 02-Nov-19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
+>>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>
+>>> Make sure that when doing a lock() or an unlock() operation we don't clear
+>>> the QE bit from Status Register 2.
+>>>
+>>> JESD216 revB or later offers information about the *default* Status
+>>> Register commands to use (see BFPT DWORDS[15], bits 22:20). In this
+>>> standard, Status Register 1 refers to the first data byte transferred on a
+>>> Read Status (05h) or Write Status (01h) command. Status register 2 refers
+>>> to the byte read using instruction 35h. Status register 2 is the second
+>>> byte transferred in a Write Status (01h) command.
+>>>
+>>> Industry naming and definitions of these Status Registers may differ.
+>>> The definitions are described in JESD216B, BFPT DWORDS[15], bits 22:20.
+>>> There are cases in which writing only one byte to the Status Register 1
+>>> has the side-effect of clearing Status Register 2 and implicitly the Quad
+>>> Enable bit. This side-effect is hit just by the
+>>> BFPT_DWORD15_QER_SR2_BIT1_BUGGY and BFPT_DWORD15_QER_SR2_BIT1 cases.
+>>>
+>> But I see that 1 byte SR1 write still happens as part of
+>> spi_nor_clear_sr_bp() until patch 20/20. So is this only a partial fix?
+> 
+> Fixing spi_nor_clear_sr_bp() would mean to add dead code that will be removed
+> anyway with patch 20/20. This patch fixes the clearing of the QE bit, while in
+> 20/20 the QE bit is already zero when the one byte SR1 write is used, so the
+> quad mode is not affected. 20/20 fixes indirectly the clearing of all the bits
+> from SR2 but QE bit, because it's already zero. I would say it's not a partial
+> fix, but a different bug.
+> 
 
-adam
+I was not suggesting on fixing up spi_nor_clear_sr_bp(), but pointing
+out that single byte writes SR1 can happen until patch 20/20.
 
->
-> Regards,
->   Marco
->
-> > +             interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
-> > +     };
-> > +};
-> > +
-> >  &ldb {
-> >       status = "okay";
-> >
-> > --
-> > 2.20.1
-> >
-> >
-> >
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+But now I see that these patches are fixing related but different bugs.
+
+> There are different angles to look at this, I chose the modifying of the quad
+> mode angle. Given the two arguments from above (avoid adding dead code and
+> changing of quad mode approach), I would prefer to keep things as they are. 
+
+Ok, sounds fine, no need to change...
+
+> But I get your approach too, so if you still want yours, I can do it. Please let me
+> know.
+> 
+>> Should this patch be rearranged to appear along with 20/20?
+> 
+> Not necessarily (different bugs) but I can bring 20/20 immediately after this
+> one if you want.
+> >>
+>>
+>>> Suggested-by: Boris Brezillon <boris.brezillon@collabora.com>
+>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>> ---
+>>>  drivers/mtd/spi-nor/spi-nor.c | 120 ++++++++++++++++++++++++++++++++++++++++--
+>>>  include/linux/mtd/spi-nor.h   |   3 ++
+>>>  2 files changed, 118 insertions(+), 5 deletions(-)
+>>>
+>>> diff --git a/drivers/mtd/spi-nor/spi-nor.c b/drivers/mtd/spi-nor/spi-nor.c
+>>> index 725dab241271..f96bc80c0ed1 100644
+>>> --- a/drivers/mtd/spi-nor/spi-nor.c
+>>> +++ b/drivers/mtd/spi-nor/spi-nor.c
+>>> @@ -959,12 +959,19 @@ static int spi_nor_write_sr(struct spi_nor *nor, const u8 *sr, size_t len)
+>>>  	return spi_nor_wait_till_ready(nor);
+>>>  }
+>>>  
+>> [...]
+>>> +/**
+>>>   * spi_nor_write_sr2() - Write the Status Register 2 using the
+>>>   * SPINOR_OP_WRSR2 (3eh) command.
+>>>   * @nor:	pointer to 'struct spi_nor'.
+>>> @@ -3634,19 +3723,38 @@ static int spi_nor_parse_bfpt(struct spi_nor *nor,
+>>>  		break;
+>>>  
+>>>  	case BFPT_DWORD15_QER_SR2_BIT1_BUGGY:
+>>> +		/*
+>>> +		 * Writing only one byte to the Status Register has the
+>>> +		 * side-effect of clearing Status Register 2.
+>>> +		 */
+>>>  	case BFPT_DWORD15_QER_SR2_BIT1_NO_RD:
+>>> +		/*
+>>> +		 * Read Configuration Register (35h) instruction is not
+>>> +		 * supported.
+>>> +		 */
+>>> +		nor->flags |= SNOR_F_HAS_16BIT_SR | SNOR_F_NO_READ_CR;
+>> Since SNOR_F_HAS_16BIT_SR is set by default in
+>> spi_nor_info_init_params(), no need to set the flag here again
+>>
+> 
+> I did this on purpose. I set SNOR_F_HAS_16BIT_SR here based on SFDP standard, I
+> want to indicate where the standard requires the 16 bit SR write .
+> spi_nor_info_init_params() initializes data based on info, but that data can be
+> overwritten (even with the same data) when parsing SFDP.
+> 
+
+Alright.
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+Regards
+Vignesh
