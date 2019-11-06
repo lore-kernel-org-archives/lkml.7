@@ -2,283 +2,130 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E13DC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF94C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:11:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E7C9F217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:10:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RlwfvW2F"
+	by mail.kernel.org (Postfix) with ESMTP id A31F7217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 03:11:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731243AbfKFDKr (ORCPT
+        id S1731254AbfKFDLJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 22:10:47 -0500
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36163 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730562AbfKFDKp (ORCPT
+        Tue, 5 Nov 2019 22:11:09 -0500
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:3302 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1731245AbfKFDLJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 22:10:45 -0500
-Received: by mail-pf1-f195.google.com with SMTP id v19so17733150pfm.3;
-        Tue, 05 Nov 2019 19:10:45 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=61rW3ZN687Kx3j+VgwRzZNWD70+TlJxx1UgOBW1jhZs=;
-        b=RlwfvW2FHvnQ+TqEQmEQXdzw9lKZuOOTOuydSdJA0wohAfLqDmCFF9z7AFR8fphKRW
-         Bw/OXm/vlqfX0LkDGNiqXT5TG1pu/YcY+vdq7gUml4ZMzO4QgRHKRtlbehBmCJ1Fz6T+
-         KV1lsj5D8SeZJh37loLRcMjNlY8XkPxDdocc0SLfE8l10xgRB5nh3tRBkNczxfkzbIxm
-         aJ5Y7Z802lg56hEdudzKNA37kmYZ+wnaRgR4gjh9ZFMwgh1WzVxNh6lfRMU5CMqEY7cF
-         l0v+3wrL1Z4qpWsS6D9AOaPDqKnTUhqK0NP0qR/ewdTYP+RJNQatfdxOyZ2MnRrv1HYR
-         ZV7Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=61rW3ZN687Kx3j+VgwRzZNWD70+TlJxx1UgOBW1jhZs=;
-        b=nQF2Rf4q2fmp40xpy6hM6OrVl/pQNEffbUQaoUh8E09rtT7dSqKry4bdyG9kGAp27r
-         mfELtNfNIAQ2FeCRr4KsV6f4EayEFIVUVsdyCOBbUqXDvmEs/WZ+qKBqm42semuGbBZe
-         DRdm64E8+RjfOAlvMZtRfpJ2/AbJHC/jBpJuH/JriKBH1c/Vyolc9s0bzWjs1I+Pk+KZ
-         fTD2PuJuCQhBABAOZ78nTpxvxqvUY/9ogXcAoXW8725sceLOvbEciJe2nvKVTTsLBNe4
-         1btyxk0ivd4irmI2sBDXwricHnhKqhDc4lzPr28BHnwGaVDboYwiEbSRIoyftB/7KdVc
-         WoJw==
-X-Gm-Message-State: APjAAAXDJGnCncJvP8DCxN1ePV8b9W9LnYsEziagfAAHQwWnOTN+1it/
-        9YM85QUXv8Jv955vThtrMFc=
-X-Google-Smtp-Source: APXvYqxa/auhPBR0HVhmqJA1NTLFPujr+I2Qoyq8gC+9dsGyZ4ocI2p833oFKzyrnNYhYSqwjSStSA==
-X-Received: by 2002:a63:de0b:: with SMTP id f11mr242482pgg.8.1573009844516;
-        Tue, 05 Nov 2019 19:10:44 -0800 (PST)
-Received: from Gentoo ([103.231.91.67])
-        by smtp.gmail.com with ESMTPSA id a21sm816475pjv.20.2019.11.05.19.10.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 05 Nov 2019 19:10:43 -0800 (PST)
-Date:   Wed, 6 Nov 2019 08:40:30 +0530
-From:   Bhaskar Chowdhury <unixbhaskar@gmail.com>
-To:     Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc:     "J. Bruce Fields" <bfields@fieldses.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] scripts:prune-kernel:remove old kernels and modules dir
- from system
-Message-ID: <20191106031027.GA20442@Gentoo>
-References: <20191102063036.28601-1-unixbhaskar@gmail.com>
- <50680c37-9e85-0050-c1e1-700260a0471c@infradead.org>
- <20191105023243.GA16635@fieldses.org>
- <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
+        Tue, 5 Nov 2019 22:11:09 -0500
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA639V1V144071
+        for <linux-kernel@vger.kernel.org>; Tue, 5 Nov 2019 22:11:04 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2w3j6bp8k9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 22:11:03 -0500
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <ajd@linux.ibm.com>;
+        Wed, 6 Nov 2019 03:11:01 -0000
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 6 Nov 2019 03:10:54 -0000
+Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA63ArTe57278646
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 6 Nov 2019 03:10:53 GMT
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4F0174C044;
+        Wed,  6 Nov 2019 03:10:53 +0000 (GMT)
+Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id F23DE4C040;
+        Wed,  6 Nov 2019 03:10:52 +0000 (GMT)
+Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
+        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed,  6 Nov 2019 03:10:52 +0000 (GMT)
+Received: from [10.61.2.125] (haven.au.ibm.com [9.192.254.114])
+        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
+        (No client certificate requested)
+        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 6BE5AA00F1;
+        Wed,  6 Nov 2019 14:10:50 +1100 (AEDT)
+Subject: Re: [PATCH 07/10] ocxl: Save the device serial number in ocxl_fn
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Vishal Verma <vishal.l.verma@intel.com>,
+        Dave Jiang <dave.jiang@intel.com>,
+        Keith Busch <keith.busch@intel.com>,
+        Ira Weiny <ira.weiny@intel.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Anton Blanchard <anton@ozlabs.org>,
+        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
+        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
+        Hari Bathini <hbathini@linux.ibm.com>,
+        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
+        David Gibson <david@gibson.dropbear.id.au>,
+        Greg Kurz <groug@kaod.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Oscar Salvador <osalvador@suse.com>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
+        linux-nvdimm@lists.01.org, linux-mm@kvack.org
+References: <20191025044721.16617-1-alastair@au1.ibm.com>
+ <20191025044721.16617-8-alastair@au1.ibm.com>
+From:   Andrew Donnellan <ajd@linux.ibm.com>
+Date:   Wed, 6 Nov 2019 14:10:51 +1100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="3MwIy2ne0vdjdPXF"
-Content-Disposition: inline
-In-Reply-To: <CAK7LNARAgOEnMRYAyzbvJ-xZzFfwOMckxb=bW0-E+P1HYu5nhA@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191025044721.16617-8-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-AU
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19110603-4275-0000-0000-0000037B27EB
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19110603-4276-0000-0000-0000388E73FC
+Message-Id: <59abb883-a1ad-3662-dcea-c76168294c95@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-05_09:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=659 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1908290000 definitions=main-1911060031
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On 25/10/19 3:47 pm, Alastair D'Silva wrote:
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This patch retrieves the serial number of the card and makes it available
+> to consumers of the ocxl driver via the ocxl_fn struct.
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
 
---3MwIy2ne0vdjdPXF
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
+Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
 
-On 11:53 Wed 06 Nov 2019, Masahiro Yamada wrote:
->On Tue, Nov 5, 2019 at 11:32 AM J. Bruce Fields <bfields@fieldses.org> wrote:
->>
->> On Mon, Nov 04, 2019 at 06:03:13PM -0800, Randy Dunlap wrote:
->> > On 11/1/19 11:30 PM, Bhaskar Chowdhury wrote:
->> > > This patch allow you to remove old kernels and associated modules
->> > > directory from the system.You can do it at once with the -r flag
->> > > and interactively with the -i flag.
->> > >
->> > > Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
->> > > ---
->> > >  scripts/prune-kernel | 82 +++++++++++++++++++++++++++++++++++---------
->> > >  1 file changed, 65 insertions(+), 17 deletions(-)
->> >
->> > Hi,
->> > I believe that this script now does what the patch author intends it to do.
->> > It does have a few whitespace issues, but no big deals.  (see below)
->>
->> My original comment stands: looks like it prompts for full module path
->> and kernel versions which means it's no more convenient than just doing
->> an "ls" and then removing the ones you want to.  (In fact, with "rm"
->> you'd also get the benefit of tab completion....)
->>
->> It's quite different from the original script and I don't really see the
->> advantage.
->>
->> --b.
->
->I am with Bruce.
->
->This patch is trying to replace everything
->with worse code.
-Well,Masahiro,
-I won't mind dropping the idea, which you already concluded.But, would
-you care to let me know how worse the code seems to be????
->
->
->BTW.
->Bruce,
->Does the current script expect RHEL or something?
->I do not see 'new-kernel-pkg' on my Ubuntu machine.
->
->It would still work with 'new-kernel-pkg: command not found'
->warning.
->
->We could bypass it if we like.
->
->command -v new-kernel-pkg && new-kernel-pkg --remove $f
->
->
->
->Masahiro Yamada
->
->
->
->> >
->> > Tested-by: Randy Dunlap <rdunlap@infradead.org>
->> >
->> >
->> > > diff --git a/scripts/prune-kernel b/scripts/prune-kernel
->> > > index e8aa940bc0a9..01d0778db71f 100755
->> > > --- a/scripts/prune-kernel
->> > > +++ b/scripts/prune-kernel
->> > > @@ -1,21 +1,69 @@
->> > >  #!/bin/bash
->> > >  # SPDX-License-Identifier: GPL-2.0
->> > > +#This script will remove old kernels and modules directory related to it.
->> > > +#"-r" or "--remove" show how to silently remove old kernel and modules dir.
->> > > +# "-h" or "--help" show how to use this script or show without parameter.
->> > > +#"-i" or "--interactive" show how to remove interactively.
->> > > +
->> > > +flag=$1
->> > > +kernel_version=$2
->> > > +modules_version=$3
->> > > +boot_dir=/boot
->> > > +modules_dir=/lib/modules
->> > > +
->> > > +remove_old_kernel() {
->> > > +   cd $boot_dir
->> > > +   rm -If vmlinuz-$kernel_version System.map-$kernel_version config-$kernel_version
->> > > +   return 0
->> > > +}
->> > > +
->> > > +remove_old_modules_dir() {
->> > > +   cd $modules_dir
->> > > +   rm -rf $modules_version
->> > > +   return 0
->> > > +}
->> > > +
->> > > +usage() {
->> > > +   printf "Usage: $(basename $0) [-ri]\n"
->> > > +   printf "\n -r or --remove  kernel_version modules_version\n"
->> > > +   printf "\n -i or --interactive do as interactive way\n"
->> > > +   return 0
->> > > +}
->> > > +
->> > > +case "$flag" in
->> > > +   -i | --interactive)
->> > > +           printf "\nEnter kernel version to remove or blank/empty to exit:"
->> > > +           read kernel_version
->> > > +           if [[ $kernel_version != "" ]]; then
->> > > +                   remove_old_kernel
->> > > +                   printf "\nRemoved kernel version:$kernel_version from the system.\n\n"
->> >
->> > space after ':'
->> >
->> > drop one \n above.
->> >
->> > > +                   printf "Please give the full modules directory name to remove:"
->> > > +                   read modules_version
->> > > +                   if [[ $modules_version != "" ]]; then
->> > > +                           remove_old_modules_dir
->> > > +                           printf "\n\nRemoved modules directory:$modules_version from the system.\n\n"
->> >
->> > space after ':'
->> >
->> > drop one \n above.
->> >
->> > > +                   else
->> > > +                           exit 1
->> > > +                   fi
->> > > +           fi
->> > > +           ;;
->> > > +   -h | --help)
->> > > +           usage
->> > > +           exit 0
->> > > +           ;;
->> > > +   -r | --remove)
->> > > +           if [[ $# -ne 3 ]]; then
->> > > +                    printf "You need to provide kernel version and modules directory name.\n"
->> > > +                    exit 1
->> > > +            else
->> > > +                    remove_old_kernel
->> > > +                    remove_old_modules_dir
->> > > +           fi
->> > > +           ;;
->> > > +   *)
->> > > +           usage
->> > > +           exit 1
->> > > +           ;;
->> > > +esac
->> > >
->> > > -# because I use CONFIG_LOCALVERSION_AUTO, not the same version again and
->> > > -# again, /boot and /lib/modules/ eventually fill up.
->> > > -# Dumb script to purge that stuff:
->> > >
->> >
->> > OK, the former script's loop is removed.. good.
->> > But the 2 preceding blank lines are not removed, so the script
->> > now ends with 2 unnecessary blank lines.
->> >
->> > > -for f in "$@"
->> > > -do
->> > > -        if rpm -qf "/lib/modules/$f" >/dev/null; then
->> > > -                echo "keeping $f (installed from rpm)"
->> > > -        elif [ $(uname -r) = "$f" ]; then
->> > > -                echo "keeping $f (running kernel) "
->> > > -        else
->> > > -                echo "removing $f"
->> > > -                rm -f "/boot/initramfs-$f.img" "/boot/System.map-$f"
->> > > -                rm -f "/boot/vmlinuz-$f"   "/boot/config-$f"
->> > > -                rm -rf "/lib/modules/$f"
->> > > -                new-kernel-pkg --remove $f
->> > > -        fi
->> > > -done
->> > > --
->> >
->> >
->> > --
->> > ~Randy
->
->
->
->--
->Best Regards
->
->Masahiro Yamada
 
---3MwIy2ne0vdjdPXF
-Content-Type: application/pgp-signature; name="signature.asc"
+-- 
+Andrew Donnellan              OzLabs, ADL Canberra
+ajd@linux.ibm.com             IBM Australia Limited
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEEnwF+nWawchZUPOuwsjqdtxFLKRUFAl3COZ8ACgkQsjqdtxFL
-KRWVrAf/f7XlGHTm+DCHQQvJc/N5CFlmb0pqxDZadAw3T/yDSA7HDcGjNQlxb3Gb
-9+/ald1wwaxhsFlbQ+hd0tRDPljsz6uoQlKTW+/JfBxPi+SFoojAZUhx18t7d7AK
-fruM+AjZ7nfIRmQil8zcIOp5U7WDJ26UveAcWwuDN/u/EsdqOCUJqOYYhph91L1W
-trl+5LD4NerIA8+7ULBB1wIto1Bf4F7KH3K5Qbl2aC+wLkWsEVN+VkIMjy0cTkdj
-q9SwT7VGmETkRa+NiUWgthM97z/mzdFafkHpPNMNyM/+Dlhww9Zc4sYF23yBzkwt
-xAUXFEQ2FFpIw48SYEZBAlVdQBijsw==
-=NThd
------END PGP SIGNATURE-----
-
---3MwIy2ne0vdjdPXF--
