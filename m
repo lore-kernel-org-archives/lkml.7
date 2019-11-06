@@ -2,216 +2,103 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1,
-	USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D6A9C5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:12:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73435C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:12:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55D1220869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:12:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="rgRyO6x1"
+	by mail.kernel.org (Postfix) with ESMTP id 4BB522075C
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:12:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732225AbfKFTMB (ORCPT
+        id S1732252AbfKFTM0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:12:01 -0500
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:40090 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732188AbfKFTMA (ORCPT
+        Wed, 6 Nov 2019 14:12:26 -0500
+Received: from smtprelay0201.hostedemail.com ([216.40.44.201]:38615 "EHLO
+        smtprelay.hostedemail.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727411AbfKFTMZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:12:00 -0500
-Received: by mail-wr1-f68.google.com with SMTP id i10so6672741wrs.7
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:11:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=EcgRR3fhItj7MngTpAkKZQgz86ETXxndudb9oWnZwxg=;
-        b=rgRyO6x1nGDPENAhlTeX1XD1tL7bztL4f34POmMWurjqkhpHZRc6O0seKYBMbC9u2m
-         GiOBZXsbYzd2cMwQ7Un5XYdpqxCR88JdJYcGqZ+EIZn0tz+O/gh+0gVymXtnTh3x3e+Q
-         +vgQsiFQzsAF0f1SzF6rQeWosSl4KG7cSBO0cMeY/yFMtjaD3kOQUI7B0ybY2Mp1EYRj
-         XlqQzSr4fPATOqhHF3AqAEPw28SBvkbGqiOwb13fJHc3e8IJB/HGyF85obDx5SBHYEOt
-         r5PJ8CZ3wiWvJaTMjVlEH/zcloEiB3aDDbSMcFQnX/01veFTumtByBbnmVpbWkZ+fwuV
-         UtjQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=EcgRR3fhItj7MngTpAkKZQgz86ETXxndudb9oWnZwxg=;
-        b=f+WagFzu+b1+gPp8+4agwd3k2oZjYNqoQdSAk0LJ0ItcwtFzmcwPWSX9ndNSF7Sih1
-         KBOcaGHFZfGKE1mLha78vxbd6uA27h+J9z+BtuDo9aZrzTjgeBEyiQQj4S8Pm7csog4L
-         tJC+9ijGPbbtR9TlPXhb9LVhlKfOjJ+dYFIV2Yw6gsx6SEtb3r+Ebw01u8zHebNg/msR
-         bulFKke5EJ/8gagPHMLiHSrRLmjAVdh7L2eiuT8i6957q2orDhX8a2DzEdkDu7FlLGXJ
-         +ee6Gvsyr/++Ws91DZKoGrioWHM/J7zc9A14GwMwwAx2QEB1+9GXz02C8MjG+SQPc+J5
-         wuWg==
-X-Gm-Message-State: APjAAAVjnCSNR4aKtuwEbDFje1+x1eYRTuV12dg7JNojVxglsYSQCJfn
-        +981aFHz2AtBcBpxC7rWJHnZ5g==
-X-Google-Smtp-Source: APXvYqy2j8z4zrv6pixCYXtdwfDCHIPHcMSlZiyOi4PqRbOW14W0q0tt/ziIhir+mKB+jiKw5TxZRQ==
-X-Received: by 2002:adf:f743:: with SMTP id z3mr4041566wrp.200.1573067516685;
-        Wed, 06 Nov 2019 11:11:56 -0800 (PST)
-Received: from google.com ([100.105.32.75])
-        by smtp.gmail.com with ESMTPSA id p14sm16143410wrq.72.2019.11.06.11.11.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:11:55 -0800 (PST)
-Date:   Wed, 6 Nov 2019 20:11:49 +0100
-From:   Marco Elver <elver@google.com>
-To:     Dmitry Vyukov <dvyukov@google.com>
-Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        Alexander Potapenko <glider@google.com>,
-        Andrea Parri <parri.andrea@gmail.com>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Boqun Feng <boqun.feng@gmail.com>,
-        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        David Howells <dhowells@redhat.com>,
-        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
-        Jade Alglave <j.alglave@ucl.ac.uk>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Luc Maranget <luc.maranget@inria.fr>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Nicholas Piggin <npiggin@gmail.com>, paulmck@kernel.org,
-        Peter Zijlstra <peterz@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        kasan-dev <kasan-dev@googlegroups.com>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        the arch/x86 maintainers <x86@kernel.org>
-Subject: Re: [PATCH v3 1/9] kcsan: Add Kernel Concurrency Sanitizer
- infrastructure
-Message-ID: <20191106191149.GA126960@google.com>
-References: <20191104142745.14722-1-elver@google.com>
- <20191104142745.14722-2-elver@google.com>
- <CACT4Y+a+ftjHnRx9PD48hEVm98muooHwO0Y7i3cHetTJobRDxg@mail.gmail.com>
+        Wed, 6 Nov 2019 14:12:25 -0500
+Received: from filter.hostedemail.com (clb03-v110.bra.tucows.net [216.40.38.60])
+        by smtprelay03.hostedemail.com (Postfix) with ESMTP id 3B3AF8384366;
+        Wed,  6 Nov 2019 19:12:24 +0000 (UTC)
+X-Session-Marker: 6A6F6540706572636865732E636F6D
+X-HE-Tag: club05_4efb27ab1d741
+X-Filterd-Recvd-Size: 2816
+Received: from XPS-9350.home (unknown [47.151.135.224])
+        (Authenticated sender: joe@perches.com)
+        by omf20.hostedemail.com (Postfix) with ESMTPA;
+        Wed,  6 Nov 2019 19:12:22 +0000 (UTC)
+Message-ID: <e3ee9e75d7c25e2d25b74fd1d4709f8dacb79efc.camel@perches.com>
+Subject: Re: [PATCH] staging: gasket: gasket_ioctl: Remove unnecessary
+ line-breaks in funtion signature
+From:   Joe Perches <joe@perches.com>
+To:     Valery Ivanov <ivalery111@gmail.com>, rspringer@google.com,
+        toddpoynor@google.com, benchan@chromium.org,
+        Simon Que <sque@chromium.org>,
+        John Joseph <jnjoseph@google.com>
+Cc:     gregkh@linuxfoundation.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Date:   Wed, 06 Nov 2019 11:12:09 -0800
+In-Reply-To: <20191106180821.GA19385@hwsrv-485799.hostwindsdns.com>
+References: <20191106180821.GA19385@hwsrv-485799.hostwindsdns.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACT4Y+a+ftjHnRx9PD48hEVm98muooHwO0Y7i3cHetTJobRDxg@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On Wed, 06 Nov 2019, Dmitry Vyukov wrote:
-
-> On Mon, Nov 4, 2019 at 3:28 PM Marco Elver <elver@google.com> wrote:
-> >
-> > Kernel Concurrency Sanitizer (KCSAN) is a dynamic data-race detector for
-> > kernel space. KCSAN is a sampling watchpoint-based data-race detector.
-> > See the included Documentation/dev-tools/kcsan.rst for more details.
-> ...
-> > +static inline atomic_long_t *find_watchpoint(unsigned long addr, size_t size,
-> > +                                            bool expect_write,
-> > +                                            long *encoded_watchpoint)
-> > +{
-> > +       const int slot = watchpoint_slot(addr);
-> > +       const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
-> > +       atomic_long_t *watchpoint;
-> > +       unsigned long wp_addr_masked;
-> > +       size_t wp_size;
-> > +       bool is_write;
-> > +       int i;
-> > +
-> > +       BUILD_BUG_ON(CONFIG_KCSAN_NUM_WATCHPOINTS < CHECK_NUM_SLOTS);
-> > +
-> > +       for (i = 0; i < CHECK_NUM_SLOTS; ++i) {
-> > +               watchpoint = &watchpoints[SLOT_IDX(slot, i)];
+On Wed, 2019-11-06 at 18:08 +0000, Valery Ivanov wrote:
+> 	This patch fix the function signature for trace_gasket_ioctl_page_table_data
+> 	to avoid the checkpatch.pl warning:
 > 
+> 		CHECK: Lines should not end with a '('
 > 
-> The fast path code become much nicer!
-> I did another pass looking at how we can optimize the fast path.
-> Currently we still have 2 push/pop pairs on the fast path because of
-> register pressure. The logic in SLOT_IDX seems to be the main culprit.
-> We discussed several options offline:
-> 1. Just check 1 slot and ignore all corner cases (we will miss racing
-> unaligned access to different addresses but overlapping and crossing
-> pages, which sounds pretty esoteric)
-> 2. Check 3 slots in order and without wraparound (watchpoints[slot +
-> i], where i=-1,0,1), this will require adding dummy slots around the
-> array
-> 3. An interesting option is to check just 2 slots (that's enough!), to
-> make this work we will need to slightly offset bucket number when
-> setting a watch point (namely, if an access goes to the very end of a
-> page, we set the watchpoint into the bucket corresponding to the
-> _next_ page)
-> All of these options remove push/pop in my experiments. Obviously
-> checking fewer slots will reduce dynamic overhead even more.
+> Signed-off-by: Valery Ivanov <ivalery111@gmail.com>
+
+All of this stuff is no-op and could just as easily be removed
+completely as GASKET_KERNEL_TRACE_SUPPORT is not #defined anywhere.
+
+Is the actual trace #include file supposed to be available somewhere?
+
+#ifdef GASKET_KERNEL_TRACE_SUPPORT
+#define CREATE_TRACE_POINTS
+#include <trace/events/gasket_ioctl.h>
+#else
+#define trace_gasket_ioctl_entry(x, ...)
+#define trace_gasket_ioctl_exit(x)
+#define trace_gasket_ioctl_integer_data(x)
+#define trace_gasket_ioctl_eventfd_data(x, ...)
+#define trace_gasket_ioctl_page_table_data(x, ...)
+#define trace_gasket_ioctl_config_coherent_allocator(x, ...)
+#endif
+
+trace file not found...
+
+> ---
+>  drivers/staging/gasket/gasket_ioctl.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
-> 
-> > +               *encoded_watchpoint = atomic_long_read(watchpoint);
-> > +               if (!decode_watchpoint(*encoded_watchpoint, &wp_addr_masked,
-> > +                                      &wp_size, &is_write))
-> > +                       continue;
-> > +
-> > +               if (expect_write && !is_write)
-> > +                       continue;
-> > +
-> > +               /* Check if the watchpoint matches the access. */
-> > +               if (matching_access(wp_addr_masked, wp_size, addr_masked, size))
-> > +                       return watchpoint;
-> > +       }
-> > +
-> > +       return NULL;
-> > +}
-> > +
-> > +static inline atomic_long_t *insert_watchpoint(unsigned long addr, size_t size,
-> > +                                              bool is_write)
-> > +{
-> > +       const int slot = watchpoint_slot(addr);
-> > +       const long encoded_watchpoint = encode_watchpoint(addr, size, is_write);
-> > +       atomic_long_t *watchpoint;
-> > +       int i;
-> > +
-> > +       for (i = 0; i < CHECK_NUM_SLOTS; ++i) {
-> > +               long expect_val = INVALID_WATCHPOINT;
-> > +
-> > +               /* Try to acquire this slot. */
-> > +               watchpoint = &watchpoints[SLOT_IDX(slot, i)];
-> 
-> If we do this SLOT_IDX trickery to catch unaligned accesses crossing
-> pages, then I think we should not use it insert_watchpoint at all and
-> only set the watchpoint to the exact index. Otherwise, we will
-> actually miss the corner cases which defeats the whole purpose of
-> SLOT_IDX and 3 iterations.
-> 
+> diff --git a/drivers/staging/gasket/gasket_ioctl.c b/drivers/staging/gasket/gasket_ioctl.c
+> index 240f9bb..55cb6b1 100644
+> --- a/drivers/staging/gasket/gasket_ioctl.c
+> +++ b/drivers/staging/gasket/gasket_ioctl.c
+> @@ -54,9 +54,10 @@ static int gasket_read_page_table_size(struct gasket_dev *gasket_dev,
+>  	ibuf.size = gasket_page_table_num_entries(
+>  		gasket_dev->page_table[ibuf.page_table_index]);
+>  
+> -	trace_gasket_ioctl_page_table_data(
+> -		ibuf.page_table_index, ibuf.size, ibuf.host_address,
+> -		ibuf.device_address);
+> +	trace_gasket_ioctl_page_table_data(ibuf.page_table_index,
+> +					   ibuf.size,
+> +					   ibuf.host_address,
+> +					   ibuf.device_address);
+>  
+>  	if (copy_to_user(argp, &ibuf, sizeof(ibuf)))
+>  		return -EFAULT;
 
-Just for the record, there are 2 reasons actually I decided to do this:
-
-1. the address slot is already occupied, check if any adjacent slots are
-   free;
-2. accesses that straddle a slot boundary due to size that exceeds a
-   slot's range may check adjacent slots if any watchpoint matches.
-
-In /sys/kernel/debug/kcsan I can see no_capacity with the current version stays
-below 10 for kernel boot. When I just use 1 slot, no_capacity events exceed
-90000, because point (1) is no longer addressed. This is a problem that would
-impair our ability to detect races.  One reason this happens is due to
-locality: it is just much more likely that we have multiple accesses to the
-same pages during some phase of execution from multiple threads.
-
-To avoid blowing up no_capacity events, insert_watchpoint should not change. I
-will change the iteration order in the fast-path (avoiding the complicated
-logic), and add additional overflow entries to the watchpoint array.
-
-AFAIK this generates better code, while still addressing points (1) and
-(2) above. This should be the best trade-off between absolute
-performance and our ability to detect data races.
-
--- Marco
