@@ -6,146 +6,197 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1DC9C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EE34EC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC9222178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:49:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B86B8217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:50:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfKFJtH (ORCPT
+        id S1731075AbfKFJuh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:49:07 -0500
-Received: from inva021.nxp.com ([92.121.34.21]:46790 "EHLO inva021.nxp.com"
+        Wed, 6 Nov 2019 04:50:37 -0500
+Received: from sauhun.de ([88.99.104.3]:50156 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731487AbfKFJtG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:49:06 -0500
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 924B62005EE;
-        Wed,  6 Nov 2019 10:49:03 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 159E32005DA;
-        Wed,  6 Nov 2019 10:48:59 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 35853402EE;
-        Wed,  6 Nov 2019 17:48:53 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/3] ARM: dts: imx6sll-evk: Add eMMC support
-Date:   Wed,  6 Nov 2019 17:47:29 +0800
-Message-Id: <1573033650-11848-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
-References: <1573033650-11848-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        id S1727015AbfKFJug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 04:50:36 -0500
+Received: from localhost (p54B33505.dip0.t-ipconnect.de [84.179.53.5])
+        by pokefinder.org (Postfix) with ESMTPSA id 340A62C053E;
+        Wed,  6 Nov 2019 10:50:34 +0100 (CET)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-i2c@vger.kernel.org
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wolfram Sang <wsa@the-dreams.de>, linux-kernel@vger.kernel.org
+Subject: [RFC PATCH 01/12] i2c: replace i2c_new_probed_device with an ERR_PTR variant
+Date:   Wed,  6 Nov 2019 10:50:19 +0100
+Message-Id: <20191106095033.25182-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
+References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX6SLL EVK board has eMMC connected on uSDHC2, add support
-for it.
+In the general move to have i2c_new_*_device functions which return
+ERR_PTR instead of NULL, this patch converts i2c_new_probed_device().
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+There are only few users, so this patch converts the I2C core and all
+users in one go. The function gets renamed to i2c_new_scanned_device()
+so out-of-tree users will get a build failure to understand they need to
+adapt their error checking code.
+
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 ---
- arch/arm/boot/dts/imx6sll-evk.dts | 67 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
+ Documentation/i2c/instantiating-devices.rst | 10 ++++-----
+ Documentation/i2c/writing-clients.rst       |  8 +++----
+ drivers/i2c/i2c-core-base.c                 | 25 ++++++++++++++++-----
+ include/linux/i2c.h                         | 12 +++++++---
+ 4 files changed, 37 insertions(+), 18 deletions(-)
 
-diff --git a/arch/arm/boot/dts/imx6sll-evk.dts b/arch/arm/boot/dts/imx6sll-evk.dts
-index 3e1d32f..29b284c 100644
---- a/arch/arm/boot/dts/imx6sll-evk.dts
-+++ b/arch/arm/boot/dts/imx6sll-evk.dts
-@@ -109,6 +109,14 @@
- 		enable-active-high;
- 	};
+diff --git a/Documentation/i2c/instantiating-devices.rst b/Documentation/i2c/instantiating-devices.rst
+index 1238f1fa3382..875ebe9e78e3 100644
+--- a/Documentation/i2c/instantiating-devices.rst
++++ b/Documentation/i2c/instantiating-devices.rst
+@@ -123,7 +123,7 @@ present or not (for example for an optional feature which is not present
+ on cheap variants of a board but you have no way to tell them apart), or
+ it may have different addresses from one board to the next (manufacturer
+ changing its design without notice). In this case, you can call
+-i2c_new_probed_device() instead of i2c_new_device().
++i2c_new_scanned_device() instead of i2c_new_device().
  
-+	reg_sd2_vmmc: regulator-sd2-vmmc {
-+		compatible = "regulator-fixed";
-+		regulator-name = "eMMC-VCCQ";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		regulator-boot-on;
-+	};
-+
- 	reg_sd3_vmmc: regulator-sd3-vmmc {
- 		compatible = "regulator-fixed";
- 		pinctrl-names = "default";
-@@ -314,6 +322,17 @@
- 	status = "okay";
- };
+ Example (from the nxp OHCI driver)::
  
-+&usdhc2 {
-+	pinctrl-names = "default", "state_100mhz", "state_200mhz";
-+	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-1 = <&pinctrl_usdhc2_100mhz>;
-+	pinctrl-2 = <&pinctrl_usdhc2_200mhz>;
-+	vqmmc-supply = <&reg_sd2_vmmc>;
-+	bus-width = <8>;
-+	no-removable;
-+	status = "okay";
-+};
-+
- &usdhc3 {
- 	pinctrl-names = "default", "state_100mhz", "state_200mhz";
- 	pinctrl-0 = <&pinctrl_usdhc3>;
-@@ -403,6 +422,54 @@
- 		>;
- 	};
+@@ -139,8 +139,8 @@ Example (from the nxp OHCI driver)::
+ 	i2c_adap = i2c_get_adapter(2);
+ 	memset(&i2c_info, 0, sizeof(struct i2c_board_info));
+ 	strscpy(i2c_info.type, "isp1301_nxp", sizeof(i2c_info.type));
+-	isp1301_i2c_client = i2c_new_probed_device(i2c_adap, &i2c_info,
+-						   normal_i2c, NULL);
++	isp1301_i2c_client = i2c_new_scanned_device(i2c_adap, &i2c_info,
++						    normal_i2c, NULL);
+ 	i2c_put_adapter(i2c_adap);
+ 	(...)
+   }
+@@ -153,14 +153,14 @@ simply gives up.
+ The driver which instantiated the I2C device is responsible for destroying
+ it on cleanup. This is done by calling i2c_unregister_device() on the
+ pointer that was earlier returned by i2c_new_device() or
+-i2c_new_probed_device().
++i2c_new_scanned_device().
  
-+	pinctrl_usdhc2: usdhc2grp {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x17059
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x13059
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x17059
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x17059
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x17059
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x17059
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x17059
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x17059
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x17059
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x17059
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x413059
-+		>;
-+	};
+ 
+ Method 3: Probe an I2C bus for certain devices
+ ----------------------------------------------
+ 
+ Sometimes you do not have enough information about an I2C device, not even
+-to call i2c_new_probed_device(). The typical case is hardware monitoring
++to call i2c_new_scanned_device(). The typical case is hardware monitoring
+ chips on PC mainboards. There are several dozen models, which can live
+ at 25 different addresses. Given the huge number of mainboards out there,
+ it is next to impossible to build an exhaustive list of the hardware
+diff --git a/Documentation/i2c/writing-clients.rst b/Documentation/i2c/writing-clients.rst
+index dddf0a14ab7c..ced309b5e0cc 100644
+--- a/Documentation/i2c/writing-clients.rst
++++ b/Documentation/i2c/writing-clients.rst
+@@ -185,14 +185,14 @@ Sometimes you know that a device is connected to a given I2C bus, but you
+ don't know the exact address it uses.  This happens on TV adapters for
+ example, where the same driver supports dozens of slightly different
+ models, and I2C device addresses change from one model to the next.  In
+-that case, you can use the i2c_new_probed_device() variant, which is
++that case, you can use the i2c_new_scanned_device() variant, which is
+ similar to i2c_new_device(), except that it takes an additional list of
+ possible I2C addresses to probe.  A device is created for the first
+ responsive address in the list.  If you expect more than one device to be
+-present in the address range, simply call i2c_new_probed_device() that
++present in the address range, simply call i2c_new_scanned_device() that
+ many times.
+ 
+-The call to i2c_new_device() or i2c_new_probed_device() typically happens
++The call to i2c_new_device() or i2c_new_scanned_device() typically happens
+ in the I2C bus driver. You may want to save the returned i2c_client
+ reference for later use.
+ 
+@@ -237,7 +237,7 @@ Device Deletion
+ ---------------
+ 
+ Each I2C device which has been created using i2c_new_device() or
+-i2c_new_probed_device() can be unregistered by calling
++i2c_new_scanned_device() can be unregistered by calling
+ i2c_unregister_device().  If you don't call it explicitly, it will be
+ called automatically before the underlying I2C bus itself is removed, as a
+ device can't survive its parent in the device driver model.
+diff --git a/drivers/i2c/i2c-core-base.c b/drivers/i2c/i2c-core-base.c
+index 6a5183cffdfc..380bde2dc23e 100644
+--- a/drivers/i2c/i2c-core-base.c
++++ b/drivers/i2c/i2c-core-base.c
+@@ -2277,10 +2277,10 @@ int i2c_probe_func_quick_read(struct i2c_adapter *adap, unsigned short addr)
+ EXPORT_SYMBOL_GPL(i2c_probe_func_quick_read);
+ 
+ struct i2c_client *
+-i2c_new_probed_device(struct i2c_adapter *adap,
+-		      struct i2c_board_info *info,
+-		      unsigned short const *addr_list,
+-		      int (*probe)(struct i2c_adapter *adap, unsigned short addr))
++i2c_new_scanned_device(struct i2c_adapter *adap,
++		       struct i2c_board_info *info,
++		       unsigned short const *addr_list,
++		       int (*probe)(struct i2c_adapter *adap, unsigned short addr))
+ {
+ 	int i;
+ 
+@@ -2310,11 +2310,24 @@ i2c_new_probed_device(struct i2c_adapter *adap,
+ 
+ 	if (addr_list[i] == I2C_CLIENT_END) {
+ 		dev_dbg(&adap->dev, "Probing failed, no device found\n");
+-		return NULL;
++		return ERR_PTR(-ENODEV);
+ 	}
+ 
+ 	info->addr = addr_list[i];
+-	return i2c_new_device(adap, info);
++	return i2c_new_client_device(adap, info);
++}
++EXPORT_SYMBOL_GPL(i2c_new_scanned_device);
 +
-+	pinctrl_usdhc2_100mhz: usdhc2grp_100mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170b9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130b9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170b9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170b9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170b9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170b9
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170b9
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170b9
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170b9
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170b9
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130b9
-+		>;
-+	};
++struct i2c_client *
++i2c_new_probed_device(struct i2c_adapter *adap,
++		      struct i2c_board_info *info,
++		      unsigned short const *addr_list,
++		      int (*probe)(struct i2c_adapter *adap, unsigned short addr))
++{
++	struct i2c_client *client;
 +
-+	pinctrl_usdhc2_200mhz: usdhc2grp_200mhz {
-+		fsl,pins = <
-+			MX6SLL_PAD_SD2_CMD__SD2_CMD		0x170f9
-+			MX6SLL_PAD_SD2_CLK__SD2_CLK		0x130f9
-+			MX6SLL_PAD_SD2_DATA0__SD2_DATA0		0x170f9
-+			MX6SLL_PAD_SD2_DATA1__SD2_DATA1		0x170f9
-+			MX6SLL_PAD_SD2_DATA2__SD2_DATA2		0x170f9
-+			MX6SLL_PAD_SD2_DATA3__SD2_DATA3		0x170f9
-+			MX6SLL_PAD_SD2_DATA4__SD2_DATA4		0x170f9
-+			MX6SLL_PAD_SD2_DATA5__SD2_DATA5		0x170f9
-+			MX6SLL_PAD_SD2_DATA6__SD2_DATA6		0x170f9
-+			MX6SLL_PAD_SD2_DATA7__SD2_DATA7		0x170f9
-+			MX6SLL_PAD_GPIO4_IO21__SD2_STROBE	0x4130f9
-+		>;
-+	};
++	client = i2c_new_scanned_device(adap, info, addr_list, probe);
++	return IS_ERR(client) ? NULL : client;
+ }
+ EXPORT_SYMBOL_GPL(i2c_new_probed_device);
+ 
+diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+index aaf57d9b41db..df3044513464 100644
+--- a/include/linux/i2c.h
++++ b/include/linux/i2c.h
+@@ -452,10 +452,16 @@ i2c_new_client_device(struct i2c_adapter *adap, struct i2c_board_info const *inf
+  * a default probing method is used.
+  */
+ extern struct i2c_client *
++i2c_new_scanned_device(struct i2c_adapter *adap,
++		       struct i2c_board_info *info,
++		       unsigned short const *addr_list,
++		       int (*probe)(struct i2c_adapter *adap, unsigned short addr));
 +
- 	pinctrl_usbotg1: usbotg1grp {
- 		fsl,pins = <
- 			MX6SLL_PAD_EPDC_PWR_COM__USB_OTG1_ID 0x17059
++extern struct i2c_client *
+ i2c_new_probed_device(struct i2c_adapter *adap,
+-		      struct i2c_board_info *info,
+-		      unsigned short const *addr_list,
+-		      int (*probe)(struct i2c_adapter *adap, unsigned short addr));
++		       struct i2c_board_info *info,
++		       unsigned short const *addr_list,
++		       int (*probe)(struct i2c_adapter *adap, unsigned short addr));
+ 
+ /* Common custom probe functions */
+ extern int i2c_probe_func_quick_read(struct i2c_adapter *adap, unsigned short addr);
 -- 
-2.7.4
+2.20.1
 
