@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20054C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0E6CC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F06FC2178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8820D2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:23:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732691AbfKFTXo (ORCPT
+        id S1731829AbfKFTWd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:23:44 -0500
+        Wed, 6 Nov 2019 14:22:33 -0500
 Received: from mga02.intel.com ([134.134.136.20]:50594 "EHLO mga02.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732087AbfKFTWh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:22:37 -0500
+        id S1726713AbfKFTWb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 14:22:31 -0500
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from fmsmga006.fm.intel.com ([10.253.24.20])
-  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:36 -0800
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 11:22:31 -0800
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.68,275,1569308400"; 
-   d="scan'208";a="403835096"
+   d="scan'208";a="403835068"
 Received: from vidhipat-mobl1.amr.corp.intel.com (HELO pbossart-mobl3.amr.corp.intel.com) ([10.254.33.70])
-  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:35 -0800
+  by fmsmga006.fm.intel.com with ESMTP; 06 Nov 2019 11:22:29 -0800
 From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 To:     alsa-devel@alsa-project.org
 Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
@@ -38,9 +38,9 @@ Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
         Ranjani Sridharan <ranjani.sridharan@linux.intel.com>,
         Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
         Sanyog Kale <sanyog.r.kale@intel.com>
-Subject: [PATCH v2 05/19] soundwire: intel: add helpers for link power down and shim wake
-Date:   Wed,  6 Nov 2019 13:22:09 -0600
-Message-Id: <20191106192223.6003-6-pierre-louis.bossart@linux.intel.com>
+Subject: [PATCH v2 01/19] soundwire: intel/cadence: fix timeouts in MSI mode
+Date:   Wed,  6 Nov 2019 13:22:05 -0600
+Message-Id: <20191106192223.6003-2-pierre-louis.bossart@linux.intel.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
 References: <20191106192223.6003-1-pierre-louis.bossart@linux.intel.com>
@@ -51,77 +51,291 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These routines are required for power management
+From: Bard Liao <yung-chuan.liao@linux.intel.com>
 
+The existing code uses one pair of interrupt handler/thread per link
+but at the hardware level the interrupt is shared. This works fine for
+legacy PCI interrupts, but leads to timeouts in MSI (Message-Signaled
+Interrupt) mode, likely due to edges being lost.
+
+This patch unifies interrupt handling for all links with a single
+threaded IRQ handler. The handler is simplified to the bare minimum of
+detecting a SoundWire interrupt, and the thread takes care of dealing
+with interrupt sources. This partition follows the model used for the
+SOF IPC on HDaudio platforms, where similar timeout issues were
+noticed and doing all the interrupt handling/clearing in the thread
+improved reliability/stability.
+
+Validation results with 4 links active in parallel show a night-and-day
+improvement with no timeouts noticed even during stress tests. Latency
+and quality of service are not affected by the change - mostly because
+events on a SoundWire link are throttled by the bus frame rate
+(typically 8..48kHz).
+
+Signed-off-by: Bard Liao <yung-chuan.liao@linux.intel.com>
 Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
 ---
- drivers/soundwire/intel.c | 53 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+ drivers/soundwire/cadence_master.c  | 17 ++++++-----
+ drivers/soundwire/cadence_master.h  |  4 +++
+ drivers/soundwire/intel.c           | 17 +----------
+ drivers/soundwire/intel.h           |  2 ++
+ drivers/soundwire/intel_init.c      | 45 ++++++++++++++++++++++++++++-
+ include/linux/soundwire/sdw_intel.h |  2 ++
+ 6 files changed, 62 insertions(+), 25 deletions(-)
 
+diff --git a/drivers/soundwire/cadence_master.c b/drivers/soundwire/cadence_master.c
+index fed21e2b2277..362fb6e49bfe 100644
+--- a/drivers/soundwire/cadence_master.c
++++ b/drivers/soundwire/cadence_master.c
+@@ -17,6 +17,7 @@
+ #include <linux/soundwire/sdw.h>
+ #include <sound/pcm_params.h>
+ #include <sound/soc.h>
++#include <linux/workqueue.h>
+ #include "bus.h"
+ #include "cadence_master.h"
+ 
+@@ -745,7 +746,7 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+ 			     CDNS_MCP_INT_SLAVE_MASK, 0);
+ 
+ 		int_status &= ~CDNS_MCP_INT_SLAVE_MASK;
+-		ret = IRQ_WAKE_THREAD;
++		schedule_work(&cdns->work);
+ 	}
+ 
+ 	cdns_writel(cdns, CDNS_MCP_INTSTAT, int_status);
+@@ -754,13 +755,14 @@ irqreturn_t sdw_cdns_irq(int irq, void *dev_id)
+ EXPORT_SYMBOL(sdw_cdns_irq);
+ 
+ /**
+- * sdw_cdns_thread() - Cadence irq thread handler
+- * @irq: irq number
+- * @dev_id: irq context
++ * To update slave status in a work since we will need to handle
++ * other interrupts eg. CDNS_MCP_INT_RX_WL during the update slave
++ * process.
+  */
+-irqreturn_t sdw_cdns_thread(int irq, void *dev_id)
++static void cdns_update_slave_status_work(struct work_struct *work)
+ {
+-	struct sdw_cdns *cdns = dev_id;
++	struct sdw_cdns *cdns =
++		container_of(work, struct sdw_cdns, work);
+ 	u32 slave0, slave1;
+ 
+ 	dev_dbg_ratelimited(cdns->dev, "Slave status change\n");
+@@ -777,9 +779,7 @@ irqreturn_t sdw_cdns_thread(int irq, void *dev_id)
+ 	cdns_updatel(cdns, CDNS_MCP_INTMASK,
+ 		     CDNS_MCP_INT_SLAVE_MASK, CDNS_MCP_INT_SLAVE_MASK);
+ 
+-	return IRQ_HANDLED;
+ }
+-EXPORT_SYMBOL(sdw_cdns_thread);
+ 
+ /*
+  * init routines
+@@ -1187,6 +1187,7 @@ int sdw_cdns_probe(struct sdw_cdns *cdns)
+ 	init_completion(&cdns->tx_complete);
+ 	cdns->bus.port_ops = &cdns_port_ops;
+ 
++	INIT_WORK(&cdns->work, cdns_update_slave_status_work);
+ 	return 0;
+ }
+ EXPORT_SYMBOL(sdw_cdns_probe);
+diff --git a/drivers/soundwire/cadence_master.h b/drivers/soundwire/cadence_master.h
+index 001457cbe5ad..0f108fd31fd9 100644
+--- a/drivers/soundwire/cadence_master.h
++++ b/drivers/soundwire/cadence_master.h
+@@ -126,6 +126,10 @@ struct sdw_cdns {
+ 
+ 	bool link_up;
+ 	unsigned int msg_count;
++
++	struct work_struct work;
++
++	struct list_head list;
+ };
+ 
+ #define bus_to_cdns(_bus) container_of(_bus, struct sdw_cdns, bus)
 diff --git a/drivers/soundwire/intel.c b/drivers/soundwire/intel.c
-index c918a26d0772..fe3a8b3b2c04 100644
+index cad1c0b64ee3..c918a26d0772 100644
 --- a/drivers/soundwire/intel.c
 +++ b/drivers/soundwire/intel.c
-@@ -362,6 +362,59 @@ static int intel_shim_init(struct sdw_intel *sdw)
- 	return ret;
+@@ -1095,6 +1095,7 @@ static int intel_master_probe(struct sdw_master_device *md, void *link_ctx)
+ 	sdw->cdns.msg_count = 0;
+ 	sdw->cdns.bus.dev = &md->dev;
+ 	sdw->cdns.bus.link_id = md->link_id;
++	sdw->link_res->cdns = &sdw->cdns;
+ 
+ 	sdw_cdns_probe(&sdw->cdns);
+ 
+@@ -1119,21 +1120,7 @@ static int intel_master_probe(struct sdw_master_device *md, void *link_ctx)
+ 		return 0;
+ 	}
+ 
+-	/* Acquire IRQ */
+-	ret = request_threaded_irq(sdw->link_res->irq,
+-				   sdw_cdns_irq, sdw_cdns_thread,
+-				   IRQF_SHARED, KBUILD_MODNAME, &sdw->cdns);
+-	if (ret < 0) {
+-		dev_err(sdw->cdns.dev, "unable to grab IRQ %d, disabling device\n",
+-			sdw->link_res->irq);
+-		goto err_init;
+-	}
+-
+ 	return 0;
+-
+-err_init:
+-	sdw_delete_bus_master(&sdw->cdns.bus);
+-	return ret;
  }
  
-+static void intel_shim_wake(struct sdw_intel *sdw, bool wake_enable)
+ static int intel_master_startup(struct sdw_master_device *md)
+@@ -1190,7 +1177,6 @@ static int intel_master_startup(struct sdw_master_device *md)
+ err_interrupt:
+ 	sdw_cdns_enable_interrupt(&sdw->cdns, false);
+ err_init:
+-	free_irq(sdw->link_res->irq, sdw);
+ 	sdw_delete_bus_master(&sdw->cdns.bus);
+ 	return ret;
+ }
+@@ -1204,7 +1190,6 @@ static int intel_master_remove(struct sdw_master_device *md)
+ 	if (!sdw->cdns.bus.prop.hw_disabled) {
+ 		intel_debugfs_exit(sdw);
+ 		sdw_cdns_enable_interrupt(&sdw->cdns, false);
+-		free_irq(sdw->link_res->irq, sdw);
+ 		snd_soc_unregister_component(sdw->cdns.dev);
+ 	}
+ 	sdw_delete_bus_master(&sdw->cdns.bus);
+diff --git a/drivers/soundwire/intel.h b/drivers/soundwire/intel.h
+index cfab2f00214d..2ae4fa748686 100644
+--- a/drivers/soundwire/intel.h
++++ b/drivers/soundwire/intel.h
+@@ -25,6 +25,8 @@ struct sdw_intel_link_res {
+ 	int irq;
+ 	const struct sdw_intel_ops *ops;
+ 	struct device *dev;
++	struct sdw_cdns *cdns;
++	struct list_head list;
+ };
+ 
+ #define SDW_INTEL_QUIRK_MASK_BUS_DISABLE      BIT(1)
+diff --git a/drivers/soundwire/intel_init.c b/drivers/soundwire/intel_init.c
+index 14ffe9ce2929..ed2a83989c72 100644
+--- a/drivers/soundwire/intel_init.c
++++ b/drivers/soundwire/intel_init.c
+@@ -11,8 +11,10 @@
+ #include <linux/export.h>
+ #include <linux/io.h>
+ #include <linux/module.h>
++#include <linux/interrupt.h>
+ #include <linux/soundwire/sdw.h>
+ #include <linux/soundwire/sdw_intel.h>
++#include "cadence_master.h"
+ #include "intel.h"
+ 
+ #define SDW_LINK_TYPE		4 /* from Intel ACPI documentation */
+@@ -161,6 +163,32 @@ void sdw_intel_enable_irq(void __iomem *mmio_base, bool enable)
+ }
+ EXPORT_SYMBOL(sdw_intel_enable_irq);
+ 
++static irqreturn_t sdw_intel_irq(int irq, void *dev_id)
 +{
-+	void __iomem *shim = sdw->link_res->shim;
-+	unsigned int link_id = sdw->instance;
-+	u16 wake_en, wake_sts;
++	struct sdw_intel_ctx *ctx = dev_id;
++	u32 int_status;
 +
-+	if (wake_enable) {
-+		/* Enable the wakeup */
-+		intel_writew(shim, SDW_SHIM_WAKEEN,
-+			     (SDW_SHIM_WAKEEN_ENABLE << link_id));
-+	} else {
-+		/* Disable the wake up interrupt */
-+		wake_en = intel_readw(shim, SDW_SHIM_WAKEEN);
-+		wake_en &= ~(SDW_SHIM_WAKEEN_ENABLE << link_id);
-+		intel_writew(shim, SDW_SHIM_WAKEEN, wake_en);
-+
-+		/* Clear wake status */
-+		wake_sts = intel_readw(shim, SDW_SHIM_WAKESTS);
-+		wake_sts |= (SDW_SHIM_WAKEEN_ENABLE << link_id);
-+		intel_writew(shim, SDW_SHIM_WAKESTS_STATUS, wake_sts);
++	int_status = readl(ctx->mmio_base + HDA_DSP_REG_ADSPIS2);
++	if (int_status & HDA_DSP_REG_ADSPIC2_SNDW) {
++		sdw_intel_enable_irq(ctx->mmio_base, false);
++		return IRQ_WAKE_THREAD;
 +	}
++
++	return IRQ_NONE;
 +}
 +
-+static int intel_link_power_down(struct sdw_intel *sdw)
++static irqreturn_t sdw_intel_thread(int irq, void *dev_id)
 +{
-+	int link_control, spa_mask, cpa_mask, ret;
-+	unsigned int link_id = sdw->instance;
-+	void __iomem *shim = sdw->link_res->shim;
-+	u16 ioctl;
++	struct sdw_intel_ctx *ctx = dev_id;
++	struct sdw_intel_link_res *link;
 +
-+	/* Glue logic */
-+	ioctl = intel_readw(shim, SDW_SHIM_IOCTL(link_id));
-+	ioctl |= SDW_SHIM_IOCTL_BKE;
-+	ioctl |= SDW_SHIM_IOCTL_COE;
-+	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
++	list_for_each_entry(link, &ctx->link_list, list)
++		sdw_cdns_irq(irq, link->cdns);
 +
-+	ioctl &= ~(SDW_SHIM_IOCTL_MIF);
-+	intel_writew(shim, SDW_SHIM_IOCTL(link_id), ioctl);
-+
-+	/* Link power down sequence */
-+	link_control = intel_readl(shim, SDW_SHIM_LCTL);
-+	spa_mask = ~(SDW_SHIM_LCTL_SPA << link_id);
-+	cpa_mask = (SDW_SHIM_LCTL_CPA << link_id);
-+	link_control &=  spa_mask;
-+
-+	ret = intel_clear_bit(shim, SDW_SHIM_LCTL, link_control, cpa_mask);
-+	if (ret < 0)
-+		return ret;
-+
-+	sdw->cdns.link_up = false;
-+	return 0;
++	sdw_intel_enable_irq(ctx->mmio_base, true);
++	return IRQ_HANDLED;
 +}
 +
- /*
-  * PDI routines
+ static struct sdw_intel_ctx
+ *sdw_intel_probe_controller(struct sdw_intel_res *res)
+ {
+@@ -171,6 +199,7 @@ static struct sdw_intel_ctx
+ 	u32 link_mask;
+ 	int count;
+ 	int i;
++	int ret;
+ 
+ 	if (!res)
+ 		return NULL;
+@@ -196,10 +225,13 @@ static struct sdw_intel_ctx
+ 	ctx->mmio_base = res->mmio_base;
+ 	ctx->link_mask = res->link_mask;
+ 	ctx->handle = res->handle;
++	ctx->irq = res->irq;
+ 
+ 	link = ctx->links;
+ 	link_mask = ctx->link_mask;
+ 
++	INIT_LIST_HEAD(&ctx->link_list);
++
+ 	/* Create SDW Master devices */
+ 	for (i = 0; i < count; i++, link++) {
+ 		if (link_mask && !(link_mask & BIT(i)))
+@@ -220,12 +252,22 @@ static struct sdw_intel_ctx
+ 			+ (SDW_LINK_SIZE * i);
+ 		link->shim = res->mmio_base + SDW_SHIM_BASE;
+ 		link->alh = res->mmio_base + SDW_ALH_BASE;
+-		link->irq = res->irq;
+ 		link->ops = res->ops;
+ 		link->dev = res->dev;
+ 
+ 		/* let the SoundWire master driver to its probe */
+ 		md->driver->probe(md, link);
++
++		list_add_tail(&link->list, &ctx->link_list);
++	}
++
++	ret = request_threaded_irq(ctx->irq,
++				   sdw_intel_irq, sdw_intel_thread,
++				   IRQF_SHARED, KBUILD_MODNAME, ctx);
++	if (ret < 0) {
++		dev_err(&adev->dev, "unable to grab IRQ %d, disabling device\n",
++			res->irq);
++		goto err;
+ 	}
+ 
+ 	return ctx;
+@@ -373,6 +415,7 @@ EXPORT_SYMBOL(sdw_intel_startup);
   */
+ void sdw_intel_exit(struct sdw_intel_ctx *ctx)
+ {
++	free_irq(ctx->irq, ctx);
+ 	sdw_intel_cleanup(ctx);
+ 	kfree(ctx);
+ }
+diff --git a/include/linux/soundwire/sdw_intel.h b/include/linux/soundwire/sdw_intel.h
+index 36e2b522a749..373947003cea 100644
+--- a/include/linux/soundwire/sdw_intel.h
++++ b/include/linux/soundwire/sdw_intel.h
+@@ -94,7 +94,9 @@ struct sdw_intel_ctx {
+ 	void __iomem *mmio_base;
+ 	u32 link_mask;
+ 	acpi_handle handle;
++	int irq;
+ 	struct sdw_intel_link_res *links;
++	struct list_head link_list;
+ };
+ 
+ /*
 -- 
 2.20.1
 
