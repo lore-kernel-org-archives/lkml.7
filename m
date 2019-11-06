@@ -5,44 +5,44 @@ X-Spam-Level:
 X-Spam-Status: No, score=-17.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43384C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 940E7C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EF7206DF
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 67BBC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:01:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="ngfXtDQz"
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="sZ9Gms1Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732510AbfKFTBt (ORCPT
+        id S1732524AbfKFTBv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:01:49 -0500
-Received: from linux.microsoft.com ([13.77.154.182]:36206 "EHLO
+        Wed, 6 Nov 2019 14:01:51 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:36184 "EHLO
         linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732281AbfKFTB2 (ORCPT
+        with ESMTP id S1732215AbfKFTB2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 14:01:28 -0500
 Received: from nramas-ThinkStation-P520.corp.microsoft.com (unknown [131.107.174.108])
-        by linux.microsoft.com (Postfix) with ESMTPSA id EF83C20B490A;
+        by linux.microsoft.com (Postfix) with ESMTPSA id 76F7820B4907;
         Wed,  6 Nov 2019 11:01:27 -0800 (PST)
-DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com EF83C20B490A
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 76F7820B4907
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
-        s=default; t=1573066888;
-        bh=TEn9F8AzefeWVhas63NXBgzu5ZQXoipIdRO6lRvgWaE=;
+        s=default; t=1573066887;
+        bh=vzYPZl2IGof7+mAg55CncHBag4fIUbnnADY8hCvLvn0=;
         h=From:To:Subject:Date:In-Reply-To:References:From;
-        b=ngfXtDQzvzD2intSwFGrLDT02P4QQ+LvZB0dlEug9jP3xiWTNjFae/0kKX2ZWe8rz
-         RKRCRs9GabpNgw2XBDn+zeVzBpwrJEL9o3X2sQHtU49Hh/QH+hhss9D2hYCVZfpR/B
-         +AS6fycv4gG411dpiEcxJKsfBf9R0qCGqSrelvdA=
+        b=sZ9Gms1Y/cRhVwtVw52cvtghfyKsKsh5QJAGFfeC9JYRs+tP/rItB0miMZ3rOQqg+
+         IdUT0d/T3wrymsjo4NjVwS+8woW8+0vpFxqxt2bLYP2cZyZjvc4m7l/w+vx5b/PgKH
+         m4Ys7vBSJmQYm7OOppi9WofAi0Y8igsOMhHihcH4=
 From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 To:     zohar@linux.ibm.com, dhowells@redhat.com,
         matthewgarrett@google.com, sashal@kernel.org,
         jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
         linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v4 10/10] KEYS: Call the IMA hook to measure key when a new key is created or an existing key is updated
-Date:   Wed,  6 Nov 2019 11:01:16 -0800
-Message-Id: <20191106190116.2578-11-nramas@linux.microsoft.com>
+Subject: [PATCH v4 07/10] IMA: Added a boolean flag to track IMA initialization status
+Date:   Wed,  6 Nov 2019 11:01:13 -0800
+Message-Id: <20191106190116.2578-8-nramas@linux.microsoft.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106190116.2578-1-nramas@linux.microsoft.com>
 References: <20191106190116.2578-1-nramas@linux.microsoft.com>
@@ -51,78 +51,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-key_create_or_update function needs to call the IMA hook to measure
-the key when a new key is created or an existing key is updated.
+IMA initialization status need to be checked before attempting to
+determine the action (measure, appraise, etc.) and any related options
+specified in the IMA policy.
 
-This patch adds the call to the IMA hook from key_create_or_update
-function.
+This patch defines a flag namely ima_initialized to track
+IMA initialization status.
+
+ima_policy_flag cannot be relied upon for knowing IMA initialization
+status because ima_policy_flag will be set to 0 when either IMA
+is not initialized or the IMA policy itself is empty.
 
 Signed-off-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 ---
- include/linux/ima.h | 8 ++++++++
- security/keys/key.c | 9 +++++++++
- 2 files changed, 17 insertions(+)
+ security/integrity/ima/ima.h      | 1 +
+ security/integrity/ima/ima_init.c | 9 ++++++++-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 6d904754d858..069879242a15 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -24,6 +24,9 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern void ima_kexec_cmdline(const void *buf, int size);
-+extern void ima_post_key_create_or_update(struct key *keyring,
-+					  struct key *key,
-+					  unsigned long flags, bool create);
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index f15199f7ff2a..6a86daa62c5b 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -52,6 +52,7 @@ extern int ima_policy_flag;
+ extern int ima_hash_algo;
+ extern int ima_appraise;
+ extern struct tpm_chip *ima_tpm_chip;
++extern bool ima_initialized;
  
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -92,6 +95,11 @@ static inline void ima_post_path_mknod(struct dentry *dentry)
+ /* IMA event related data */
+ struct ima_event_data {
+diff --git a/security/integrity/ima/ima_init.c b/security/integrity/ima/ima_init.c
+index 5d55ade5f3b9..a810af6df587 100644
+--- a/security/integrity/ima/ima_init.c
++++ b/security/integrity/ima/ima_init.c
+@@ -23,6 +23,7 @@
+ /* name for boot aggregate entry */
+ static const char boot_aggregate_name[] = "boot_aggregate";
+ struct tpm_chip *ima_tpm_chip;
++bool ima_initialized;
+ 
+ /* Add the boot aggregate to the IMA measurement list and extend
+  * the PCR register.
+@@ -131,5 +132,11 @@ int __init ima_init(void)
+ 
+ 	ima_init_policy();
+ 
+-	return ima_fs_init();
++	rc = ima_fs_init();
++	if (rc != 0)
++		return rc;
++
++	ima_initialized = true;
++
++	return 0;
  }
- 
- static inline void ima_kexec_cmdline(const void *buf, int size) {}
-+
-+static inline void ima_post_key_create_or_update(struct key *keyring,
-+						 struct key *key,
-+						 unsigned long flags,
-+						 bool create) {}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/security/keys/key.c b/security/keys/key.c
-index 764f4c57913e..9782d4d046fd 100644
---- a/security/keys/key.c
-+++ b/security/keys/key.c
-@@ -13,6 +13,7 @@
- #include <linux/security.h>
- #include <linux/workqueue.h>
- #include <linux/random.h>
-+#include <linux/ima.h>
- #include <linux/err.h>
- #include "internal.h"
- 
-@@ -936,6 +937,9 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 		goto error_link_end;
- 	}
- 
-+	/* let the ima module know about the created key. */
-+	ima_post_key_create_or_update(keyring, key, flags, true);
-+
- 	key_ref = make_key_ref(key, is_key_possessed(keyring_ref));
- 
- error_link_end:
-@@ -965,6 +969,11 @@ key_ref_t key_create_or_update(key_ref_t keyring_ref,
- 	}
- 
- 	key_ref = __key_update(key_ref, &prep);
-+
-+	/* let the ima module know about the updated key. */
-+	if (!IS_ERR(key_ref))
-+		ima_post_key_create_or_update(keyring, key, flags, false);
-+
- 	goto error_free_prep;
- }
- EXPORT_SYMBOL(key_create_or_update);
 -- 
 2.17.1
 
