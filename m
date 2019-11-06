@@ -2,123 +2,140 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ABD8FC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 39E53C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7EAAD20659
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0AF1D217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 11:30:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730339AbfKFL2k (ORCPT
+        id S1731154AbfKFLac (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 06:28:40 -0500
-Received: from foss.arm.com ([217.140.110.172]:38280 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725890AbfKFL2j (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 06:28:39 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id ED8BC7A7;
-        Wed,  6 Nov 2019 03:28:38 -0800 (PST)
-Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.121.207.14])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B3DC83F6C4;
-        Wed,  6 Nov 2019 03:28:37 -0800 (PST)
-Date:   Wed, 6 Nov 2019 11:28:29 +0000
-From:   Mark Rutland <mark.rutland@arm.com>
-To:     Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
-Cc:     "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>,
+        Wed, 6 Nov 2019 06:30:32 -0500
+Received: from mailgate1.rohmeurope.com ([178.15.145.194]:58652 "EHLO
+        mailgate1.rohmeurope.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFLab (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 06:30:31 -0500
+X-AuditID: c0a8fbf4-183ff70000001fa6-5d-5dc2aed5aea0
+Received: from smtp.reu.rohmeu.com (will-cas002.reu.rohmeu.com [192.168.251.178])
+        by mailgate1.rohmeurope.com (Symantec Messaging Gateway) with SMTP id EC.7C.08102.5DEA2CD5; Wed,  6 Nov 2019 12:30:29 +0100 (CET)
+Received: from WILL-MAIL002.REu.RohmEu.com ([fe80::e0c3:e88c:5f22:d174]) by
+ WILL-CAS002.REu.RohmEu.com ([fe80::fc24:4cbc:e287:8659%12]) with mapi id
+ 14.03.0439.000; Wed, 6 Nov 2019 12:30:24 +0100
+From:   "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+To:     "robh@kernel.org" <robh@kernel.org>
+CC:     "dmurphy@ti.com" <dmurphy@ti.com>,
+        "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "peterz@infradead.org" <peterz@infradead.org>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "will@kernel.org" <will@kernel.org>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "gklkml16@gmail.com" <gklkml16@gmail.com>
-Subject: Re: [PATCH 1/2] perf/core: Adding capability to disable PMUs event
- multiplexing
-Message-ID: <20191106112810.GA50610@lakrids.cambridge.arm.com>
-References: <1573002091-9744-1-git-send-email-gkulkarni@marvell.com>
- <1573002091-9744-2-git-send-email-gkulkarni@marvell.com>
+        "pavel@ucw.cz" <pavel@ucw.cz>,
+        "jacek.anaszewski@gmail.com" <jacek.anaszewski@gmail.com>,
+        "linux-leds@vger.kernel.org" <linux-leds@vger.kernel.org>
+Subject: Re: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
+ example for using fixed LED node names.
+Thread-Topic: SPAM (R/EU IT) // Re: [RFC PATCH 2/5] dt-bindings: an30259a:
+ example for using fixed LED node names.
+Thread-Index: AQHVjlcGaBdmxTof6U+YTbv1fVCiQad9euAAgACC3AA=
+Date:   Wed, 6 Nov 2019 11:30:23 +0000
+Message-ID: <17a77e44acea33dc7c43e957bbca7a3f0e863ebb.camel@fi.rohmeurope.com>
+References: <cover.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <5b9f9e7cd3dc959962fc43d27e471245e63f5f29.1572351774.git.matti.vaittinen@fi.rohmeurope.com>
+         <20191106034206.GA6299@bogus>
+In-Reply-To: <20191106034206.GA6299@bogus>
+Accept-Language: en-US, de-DE
+Content-Language: de-DE
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [213.255.186.46]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <068A4F7DFAE72141A19AE433268E98A9@de.rohmeurope.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573002091-9744-2-git-send-email-gkulkarni@marvell.com>
-User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SW0wTQRTN7G7LFFhdCshY8VUUIkQQQ8wG0eCPVuMr4cMEJbjIylZL22xb
+        AoaP+ggJYBANaqigiFQRsJIq0ZZHtNSA+JYQRMRYMcrDSIwaMai4yyLwNWfm3HPOTeZAXHlG
+        roJavZnl9YxOLfcn7tVOOFf3ODxpa3wnI+hL3qcyuvjRbRnd39RI0N3uCjnd9NkBaHvvC4yu
+        sHcS9EDXAzk92XLXL1mhabjYADQu24CfxllXKNd0vLqDaWrrf/ppvjmX7JanBiRlMOacFG2W
+        Pm7j/gBuaMyNGY9F5tqPXwVWcGJlEVBARCWgsfHnoAj4QyXVA5BrbICQLh0AnepsxIsAhHIq
+        CRX1+YmCECoKXa734SLGqRocXes2iziYMiFrV830jBmNugqAhBORd/wxIWKCWoF+f/1BiJYk
+        tRP1vt8gRXkBcg/ZpzwVVDQaeP9jCgNqMSq0fsGkrDDk/PhTJi1NoZqWZ7iEQ9Hw4N/pdzVq
+        /eWb8sepVeimO06SJqNax+j0ystRWbFvak2SCkIPyz8QpWCBbU6CbVZtm6O2zVHb5qirgKwO
+        oGxGq8tizGx8LM9aYnkDly0cBwzZTiD98fe7YNKz1QMwCDxgIcTUoeQ27f005bwMQ2Yex5i4
+        dN6iY00egCCuDiH3lQgcmcnkHWF5w39qESTUYWSU73SakhKzDrOskeX/s+EQqhGZd8OTpgzi
+        2Sw296BWZ56lMagQzf1VISZWn8nyjMXMpYv1SDcJ/RCpQCG3TJSTJiOTLbxK0i4QA0uHK6tx
+        6K20V+NKQm/Qs6owEoqjlDjKWfQzQSMgDAJ1MDlfaLQyUCj6jM+IEIEJEdsH28QIMzNLqaxg
+        p+udNyexPKI95VBgxLOVmy80DMdiIZaEUEd5f5+jpG3T0Ln2o4a+1+snYnbpkmN21L+8liCL
+        f6NwM2BDYHdBmULV1rOFjnVF7B3cHNm/+u2boEf6pYm1zanjJZ4nf/LPU2vXXX/Suiw+vHy8
+        gDNeaUo6m3/rU3OVxr3YuqfJx51SEyaOiY/GeRPzD8APS8ylAwAA
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 01:01:40AM +0000, Ganapatrao Prabhakerrao Kulkarni wrote:
-> When PMUs are registered, perf core enables event multiplexing
-> support by default. There is no provision for PMUs to disable
-> event multiplexing, if PMUs want to disable due to unavoidable
-> circumstances like hardware errata etc.
-> 
-> Adding PMU capability flag PERF_PMU_CAP_NO_MUX_EVENTS and support
-> to allow PMUs to explicitly disable event multiplexing.
-
-Even without multiplexing, this PMU activity can happen when switching
-tasks, or when creating/destroying events, so as-is I don't think this
-makes much sense.
-
-If there's an erratum whereby heavy access to the PMU can lockup the
-core, and it's possible to workaround that by minimzing accesses, that
-should be done in the back-end PMU driver.
-
-Either way, this minimzes the utility of the PMU.
-
-Thanks,
-Mark.
-
-> 
-> Signed-off-by: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
-> ---
->  include/linux/perf_event.h | 1 +
->  kernel/events/core.c       | 8 ++++++++
->  2 files changed, 9 insertions(+)
-> 
-> diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
-> index 61448c19a132..9e18d841daf7 100644
-> --- a/include/linux/perf_event.h
-> +++ b/include/linux/perf_event.h
-> @@ -247,6 +247,7 @@ struct perf_event;
->  #define PERF_PMU_CAP_HETEROGENEOUS_CPUS		0x40
->  #define PERF_PMU_CAP_NO_EXCLUDE			0x80
->  #define PERF_PMU_CAP_AUX_OUTPUT			0x100
-> +#define PERF_PMU_CAP_NO_MUX_EVENTS		0x200
->  
->  /**
->   * struct pmu - generic performance monitoring unit
-> diff --git a/kernel/events/core.c b/kernel/events/core.c
-> index 4655adbbae10..65452784f81c 100644
-> --- a/kernel/events/core.c
-> +++ b/kernel/events/core.c
-> @@ -1092,6 +1092,10 @@ static void __perf_mux_hrtimer_init(struct perf_cpu_context *cpuctx, int cpu)
->  	if (pmu->task_ctx_nr == perf_sw_context)
->  		return;
->  
-> +	/* No PMU support */
-> +	if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
-> +		return 0;
-> +
->  	/*
->  	 * check default is sane, if not set then force to
->  	 * default interval (1/tick)
-> @@ -1117,6 +1121,10 @@ static int perf_mux_hrtimer_restart(struct perf_cpu_context *cpuctx)
->  	if (pmu->task_ctx_nr == perf_sw_context)
->  		return 0;
->  
-> +	/* No PMU support */
-> +	if (pmu->capabilities & PERF_PMU_CAP_NO_MUX_EVENTS)
-> +		return 0;
-> +
->  	raw_spin_lock_irqsave(&cpuctx->hrtimer_lock, flags);
->  	if (!cpuctx->hrtimer_active) {
->  		cpuctx->hrtimer_active = 1;
-> -- 
-> 2.17.1
-> 
+SGVsbG8gUm9iICYgQWxsLA0KDQpPbiBUdWUsIDIwMTktMTEtMDUgYXQgMjE6NDIgLTA2MDAsIFJv
+YiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUdWUsIE9jdCAyOSwgMjAxOSBhdCAwMjo0NzoyNlBNICsw
+MjAwLCBNYXR0aSBWYWl0dGluZW4gd3JvdGU6DQo+ID4gVXNlIHByZWRlZmluZWQgTEVEIG5vZGUg
+bmFtZSB0byBtYXRjaCB0aGUgTEVEIG5vZGUgaW4gZHJpdmVyLg0KPiA+IA0KPiA+IEl0IHdvdWxk
+IGJlIG5pY2UgdG8gb2ZmbG9hZCBjb21tb24gTEVEIHByb3BlcnR5IHBhcnNpbmcgdG8NCj4gPiBM
+RUQgY29yZSBkcml2ZXIuIE9uZSBvZiB0aGUga2V5IHRoaW5ncyB0byBhbGxvdyB0aGlzIGlzIHNv
+bWVob3cNCj4gPiAncGFpcicgdGhlIExFRCBEVCBub2RlIHdpdGggTEVEIGRyaXZlciBpbml0aWFs
+aXphdGlvbiBkYXRhLg0KPiA+IA0KPiA+IFRoaXMgcGF0Y2ggdXNlcyBMRUQgbm9kZSBuYW1lIGFz
+IGEgJ2tleScgaW4gYSBzYW1lIGZhc2hpb24NCj4gPiBhcyByZWd1bGF0b3JzIGRvLiBUaGUgYW4z
+MDI1OWEgd2FzIHNlbGVjdGVkIGFzIGRlbW9uc3RyYXRpb24NCj4gPiBleGFtcGxlIGFuZCB0aGlz
+IGNoYW5nZSBtYXkgbm90IGJlIHJlYWxseSBmZWFzaWJsZSBmb3IgYW4zMDI1OWENCj4gPiBhcyBJ
+IGhhdmUgbm8gaWRlYSB3aGV0aGVyIHRoZSBleGlzdGluZyBEVHMgZm9yIGRldmljZXMgb3V0IHRo
+ZXJlDQo+ID4gaGF2ZSBzcGVjaWZpYyBub2RlIG5hbWVzIChvciBjYW4gYmUgY2hhbmdlZCkuIFRo
+aXMgc2VydmVycyBqdXN0DQo+ID4gYXMgYW4gZXhhbXBsZSB0byBpbml0aWF0ZSBkaXNjdXNzaW9u
+IGFzIHRvIGhvdyB3ZSBjb3VsZCBwYWlyIHRoZQ0KPiA+IGRyaXZlciBkYXRhIGFuZCBEVCBub2Rl
+Lg0KPiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IE1hdHRpIFZhaXR0aW5lbiA8bWF0dGkudmFpdHRp
+bmVuQGZpLnJvaG1ldXJvcGUuY29tPg0KPiA+IC0tLQ0KPiA+ICBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvbGVkcy9sZWRzLWFuMzAyNTlhLnR4dCB8IDkNCj4gPiArKysrKy0tLS0N
+Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkNCj4g
+PiANCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xl
+ZHMvbGVkcy0NCj4gPiBhbjMwMjU5YS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbGVkcy9sZWRzLQ0KPiA+IGFuMzAyNTlhLnR4dA0KPiA+IGluZGV4IGNiZDgzMzkwNmIy
+Yi4uYmQxYTJkMTFhMGFkIDEwMDY0NA0KPiA+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9sZWRzL2xlZHMtYW4zMDI1OWEudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xlZHMvbGVkcy1hbjMwMjU5YS50eHQNCj4gPiBAQCAtOSw3
+ICs5LDggQEAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAgCS0gI2FkZHJlc3MtY2VsbHM6IE11
+c3QgYmUgMS4NCj4gPiAgCS0gI3NpemUtY2VsbHM6IE11c3QgYmUgMC4NCj4gPiAgDQo+ID4gLUVh
+Y2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5vZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMw
+MjU5YQ0KPiA+IG5vZGUuDQo+ID4gK0VhY2ggTEVEIGlzIHJlcHJlc2VudGVkIGFzIGEgc3ViLW5v
+ZGUgb2YgdGhlIHBhbmFzb25pYyxhbjMwMjU5YQ0KPiA+IG5vZGUuIExFRCBub2Rlcw0KPiA+ICtt
+dXN0IGJlIG5hbWVkIGFzIGxlZDEgbGVkMiBhbmQgbGVkMy4NCj4gPiAgDQo+ID4gIFJlcXVpcmVk
+IHN1Yi1ub2RlIHByb3BlcnRpZXM6DQo+ID4gIAktIHJlZzogUGluIHRoYXQgdGhlIExFRCBpcyBj
+b25uZWN0ZWQgdG8uIE11c3QgYmUgMSwgMiwgb3IgMy4NCj4gPiBAQCAtMzQsMjAgKzM1LDIwIEBA
+IGxlZC1jb250cm9sbGVyQDMwIHsNCj4gPiAgCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPiA+ICAJ
+I3NpemUtY2VsbHMgPSA8MD47DQo+ID4gIA0KPiA+IC0JbGVkQDEgew0KPiA+ICsJbGVkMSB7DQo+
+ID4gIAkJcmVnID0gPDE+Ow0KPiANCj4gVGhpcyBpcyB3cm9uZy4gcmVnIHJlcXVpcmVzIGEgdW5p
+dC1hZGRyZXNzIGFuZCB2aWNlLXZlcnNhLg0KDQpSaWdodC4NCg0KSSdkIGJlIGludGVyZXN0ZWQg
+dG8ga25vdyBob3cgdXNpbmcgbm9kZSBuYW1lKHMpIHRvIG1hdGNoIHRoZSBkcml2ZXINCmRhdGEg
+KGxpa2UgcmVndWxhdG9ycyBkbykgaXMgc2VlbiBpbiBnZW5lcmFsPyBJcyB0aGlzIGEgYmFkIGlk
+ZWEgZm9yDQpMRURzPyBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSBhIGxlZHMtY29tcGF0aWJs
+ZSAobGlrZSB3ZSBoYWQNCnJlZ3VsYXRvci1jb21wYXRpYmxlIGJlZm9yZSk/DQoNCklmIG5vZGUg
+bmFtZXMgY2FuIGJlIHVzZWQgLSB3b3VsZA0KDQoJbGVkMUAxIHsNCg0KCX07DQoNCglsZWQyQDIg
+ew0KDQoJfTsNCgkuLi4gZG8/DQoNClVzaW5nIG5vZGUgbmFtZXMgYXMga2V5IHJlcXVpcmVzIHRo
+ZW0gdG8gYmUgdW5pcXVlLiBPdGhlciBvcHRpb24gY291bGQNCmJlIGRvaW5nIHRoZSBzZWFyY2gg
+YmFzZWQgb24gbm9kZSBuYW1lIGFuZCB1bml0LWFkZHJlc3MgY29tYmluYXRpb24gLSANCmJ1dCBp
+ZiB1bml0LWFkZHJlc3MgZGVwZW5kcyBvbiBib2FyZCB0aGUgbGVkIGlzIHBsYWNlZCAtIHRoZW4g
+ZHJpdmVyDQptaWdodCBub3Qga25vdyBpdC4gU2hvdWxkIEkgY29udmVydCB0aGUgUkZDIHRvIGlu
+dHJvZHVjZSBhbmQgdXNlIGxlZC0NCmNvbXBhdGlibGU/DQoNCj4gPiAgCQlsaW51eCxkZWZhdWx0
+LXRyaWdnZXIgPSAiaGVhcnRiZWF0IjsNCj4gPiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9J
+TkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8TEVEX0NPTE9SX0lEX1JFRD47DQo+ID4gIAl9Ow0K
+PiA+ICANCj4gPiAtCWxlZEAyIHsNCj4gPiArCWxlZDIgew0KPiA+ICAJCXJlZyA9IDwyPjsNCj4g
+PiAgCQlmdW5jdGlvbiA9IExFRF9GVU5DVElPTl9JTkRJQ0FUT1I7DQo+ID4gIAkJY29sb3IgPSA8
+TEVEX0NPTE9SX0lEX0dSRUVOPjsNCj4gPiAgCX07DQo+ID4gIA0KPiA+IC0JbGVkQDMgew0KPiA+
+ICsJbGVkMyB7DQo+ID4gIAkJcmVnID0gPDM+Ow0KPiA+ICAJCWZ1bmN0aW9uID0gTEVEX0ZVTkNU
+SU9OX0lORElDQVRPUjsNCj4gPiAgCQljb2xvciA9IDxMRURfQ09MT1JfSURfQkxVRT47DQo+ID4g
+LS0gDQo+ID4gMi4yMS4wDQo+ID4gDQo+ID4gDQo+ID4gLS0gDQo+ID4gTWF0dGkgVmFpdHRpbmVu
+LCBMaW51eCBkZXZpY2UgZHJpdmVycw0KPiA+IFJPSE0gU2VtaWNvbmR1Y3RvcnMsIEZpbmxhbmQg
+U1dEQw0KPiA+IEtpdmloYXJqdW5sZW5ra2kgMUUNCj4gPiA5MDIyMCBPVUxVDQo+ID4gRklOTEFO
+RA0KPiA+IA0KPiA+IH5+fiAiSSBkb24ndCB0aGluayBzbywiIHNhaWQgUmVuZSBEZXNjYXJ0ZXMu
+IEp1c3QgdGhlbiBoZSB2YW5pc2hlZA0KPiA+IH5+fg0KPiA+IFNpbW9uIHNheXMgLSBpbiBMYXRp
+biBwbGVhc2UuDQo+ID4gfn5+ICJub24gY29naXRvIG1lIiBkaXhpdCBSZW5lIERlc2NhcnRlLCBk
+ZWluZGUgZXZhbmVzY2F2aXQgfn5+DQo+ID4gVGhhbmtzIHRvIFNpbW9uIEdsYXNzIGZvciB0aGUg
+dHJhbnNsYXRpb24gPV0gDQoNCg==
