@@ -2,240 +2,207 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD11C5DF61
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:00:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CD6CBC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:02:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88ED6214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:00:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6DAAC214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:02:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MbXZiQWc"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="riESuNN7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730484AbfKFAA6 (ORCPT
+        id S1729949AbfKFACk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:00:58 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:34670 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728410AbfKFAA6 (ORCPT
+        Tue, 5 Nov 2019 19:02:40 -0500
+Received: from userp2130.oracle.com ([156.151.31.86]:44690 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfKFACk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:00:58 -0500
-Received: by mail-oi1-f196.google.com with SMTP id l202so19328818oig.1
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:00:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=1hiwhUzBCXtjT83VsDEmYQHpboeTfijrcF+AJ7syBgI=;
-        b=MbXZiQWcxLr/gVCG+4TdqJiu9bk0wCssGuEy3JC0jY361MdKBbNcQEbabZc2GwKXpg
-         cJe54VxnwZZKb1YlthhCkm0wK42efq1vPtHhHFSibIJbMtNoGy6nenFRPVN4rbBfoK57
-         Sw/B3zSfBx1U4OFn9zi9MHGwJIqq6PsVdOnJXsbSzecojJk5vfAXaNJAMdxFCwKm/BII
-         LOPCWctuW8M2PteNbNjrne7FXwL6ZVAzN9ctKGS4erPZxzyqfjx7oE3+/7SEZVIYj7NW
-         a5wspJqTqOcB8e7AGbAznLFYoM2Mb9pHqtF+afn/bSNz+GkvfTZBR16IW96xlpOfT5n9
-         mF8A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=1hiwhUzBCXtjT83VsDEmYQHpboeTfijrcF+AJ7syBgI=;
-        b=jzEYWVM8yFtZLIlYOO/oC1+jFKnbuLS21s1WFTszQ0hGU3qnRM6CUJR7S1M0xLajMi
-         LADlrzs9Q4qRCCmxz0p2+xA0EiIUMqzWbxszoMbGr0yZd/uEw0pIyJS1mXok2N3Joq9M
-         ONugIYhwL7C+6iuHjhmWbk7aqeF1KaLiyxu2fM1QOoKgXsFUfXSHCtqnAJVWs4xwTt6y
-         mffvO+PIX4xXC1pofiHkmec4GTILK1e1p1zUH0E6/IBBDI9+kZx9rVn/sooHq8ovbcWO
-         f/PB7q/kp+KcOrPtLkY2HGDawybyOdrceW37aCslsOhEutAMQbYXrwGdplVkJI3r2kgf
-         hJ1w==
-X-Gm-Message-State: APjAAAXDXqTCb1xSiR0XTbizwhXh2xFeEd0TEYjr6ZrGwAS+RPbs/00I
-        Plvkou0961UOJK07sNZozokIuexIKCWGA0qk5wahmQ==
-X-Google-Smtp-Source: APXvYqwzm4wCZExmTT9d9VK+Gdv2LNZ8t/hDnxctzxs8ZILMZJ/1pkogRUEcaomc67Ia7ab9IQrVz0Wbl2XfyNTwQMs=
-X-Received: by 2002:aca:b03:: with SMTP id 3mr1450645oil.24.1572998455036;
- Tue, 05 Nov 2019 16:00:55 -0800 (PST)
+        Tue, 5 Nov 2019 19:02:40 -0500
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5NwnEL097487;
+        Wed, 6 Nov 2019 00:02:25 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2019-08-05;
+ bh=by6LNx6WNtJ7JPgSY3hY6+LsTSFnwmTyPzoIFjvPop8=;
+ b=riESuNN78i/R6qArs5ZSON/196AA6nLZ/QS8Qpy47fXf3IDP3D7XZMULUiZ7UTr44Ryf
+ +XTaLmrwXr/6I4BhpnRd7zlJghiTPdPBFKts1A3TtxfXXlYkcE+1D94hPLlitmbDnO02
+ 7qwidmj2xJxYyfNiPorlmD1c3a3ksD7Tc7nq6HoYu8MNu7pmHGCBAoOKUm+gBFoVApG5
+ AyHBdY9Y6Bqxn/JHJLHjzzMuhRwPjlKlkDTkpg2CeLa0arEq6teqPluubiIfYWJjSHs3
+ SSZ8550skNb5JFisJU0H3k4M5gjnwwK5/a63T44WwHqfDR1vo38yXwiHBbLu4qHrYNoQ kw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2130.oracle.com with ESMTP id 2w117u27ms-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 00:02:25 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA5Nwmh6129346;
+        Wed, 6 Nov 2019 00:00:24 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2w333w76gc-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 06 Nov 2019 00:00:24 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA600MOt005551;
+        Wed, 6 Nov 2019 00:00:22 GMT
+Received: from [192.168.1.206] (/71.63.128.209)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 05 Nov 2019 16:00:22 -0800
+Subject: Re: linux-next: build failure after merge of the akpm-current tree
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>
+References: <20191105211920.787df2ab@canb.auug.org.au>
+From:   Mike Kravetz <mike.kravetz@oracle.com>
+Message-ID: <0892a018-152f-629d-3dd0-60ce79f2887b@oracle.com>
+Date:   Tue, 5 Nov 2019 16:00:20 -0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-References: <20191028220027.251605-1-saravanak@google.com> <20191028220027.251605-4-saravanak@google.com>
- <7640808.4Pc6YCm0Y9@kreacher> <CAGETcx9z86d+w7jO8Nnu+R62RrT829rj3FFHW2GvGdSsnoB3og@mail.gmail.com>
- <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
-In-Reply-To: <CAJZ5v0gfgr=y=NYyNHDeOX_JsUa+41LPucovvC5TnOB3HuonTg@mail.gmail.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Tue, 5 Nov 2019 16:00:18 -0800
-Message-ID: <CAGETcx-X938BxBeqYD8m8Wrx-hRaXk6EEeR4szh34CS5Sv7EgA@mail.gmail.com>
-Subject: Re: [PATCH v1 3/5] driver core: Allow fwnode_operations.add_links to
- differentiate errors
-To:     "Rafael J. Wysocki" <rafael@kernel.org>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Len Brown <lenb@kernel.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191105211920.787df2ab@canb.auug.org.au>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1908290000 definitions=main-1911050194
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9432 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1908290000
+ definitions=main-1911050194
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 5, 2019 at 3:07 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
->
-> On Tue, Nov 5, 2019 at 11:52 PM Saravana Kannan <saravanak@google.com> wrote:
-> >
-> > Hi Rafael,
-> >
-> > Thanks for the review.
-> >
-> > On Tue, Nov 5, 2019 at 2:43 PM Rafael J. Wysocki <rjw@rjwysocki.net> wrote:
-> > >
-> > > On Monday, October 28, 2019 11:00:24 PM CET Saravana Kannan wrote:
-> > > > When add_links() still has suppliers that it needs to link to in the
-> > > > future, this patch allows it to differentiate between suppliers that are
-> > > > needed for probing vs suppliers that are needed for sync_state()
-> > > > correctness.
-> > >
-> > > I guess you mean that it will return different error codes in the different
-> > > cases.
-> >
-> > Yes.
-> >
-> > >
-> > > > Signed-off-by: Saravana Kannan <saravanak@google.com>
-> > > > ---
-> > > >  drivers/base/core.c    | 12 ++++++++----
-> > > >  include/linux/fwnode.h | 13 +++++++++----
-> > > >  2 files changed, 17 insertions(+), 8 deletions(-)
-> > > >
-> > > > diff --git a/drivers/base/core.c b/drivers/base/core.c
-> > > > index 48cd43a91ce6..e6d3e6d485da 100644
-> > > > --- a/drivers/base/core.c
-> > > > +++ b/drivers/base/core.c
-> > > > @@ -2297,7 +2297,7 @@ int device_add(struct device *dev)
-> > > >       struct device *parent;
-> > > >       struct kobject *kobj;
-> > > >       struct class_interface *class_intf;
-> > > > -     int error = -EINVAL;
-> > > > +     int error = -EINVAL, fw_ret;
-> > > >       struct kobject *glue_dir = NULL;
-> > > >
-> > > >       dev = get_device(dev);
-> > > > @@ -2413,9 +2413,13 @@ int device_add(struct device *dev)
-> > > >        */
-> > > >       device_link_add_missing_supplier_links();
-> > > >
-> > > > -     if (fwnode_has_op(dev->fwnode, add_links)
-> > > > -         && fwnode_call_int_op(dev->fwnode, add_links, dev))
-> > > > -             device_link_wait_for_mandatory_supplier(dev, true);
-> > > > +     if (fwnode_has_op(dev->fwnode, add_links)) {
-> > >
-> > > fw_ret can be defined here and I'd just call it "ret".
-> >
-> > I thought that style of variable declaration is frowned up in the
-> > kernel coding style.
->
-> Well, I'm not aware of that. :-)
+On 11/5/19 2:19 AM, Stephen Rothwell wrote:
+> Hi all,
+> 
+> After merging the akpm-current tree, today's linux-next build (powerpc64
+> allnoconfig) failed like this:
+> 
+> In file included from arch/powerpc/mm/mem.c:30:
+> include/linux/hugetlb.h:233:19: error: redefinition of 'pmd_huge'
+>   233 | static inline int pmd_huge(pmd_t pmd)
+>       |                   ^~~~~~~~
+> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
+>                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
+>                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
+>                  from arch/powerpc/include/asm/mmu.h:356,
+>                  from arch/powerpc/include/asm/lppaca.h:47,
+>                  from arch/powerpc/include/asm/paca.h:17,
+>                  from arch/powerpc/include/asm/current.h:13,
+>                  from include/linux/sched.h:12,
+>                  from arch/powerpc/mm/mem.c:16:
+> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:74:19: note: previous definition of 'pmd_huge' was here
+>    74 | static inline int pmd_huge(pmd_t pmd) { return 0; }
+>       |                   ^~~~~~~~
+> In file included from arch/powerpc/mm/mem.c:30:
+> include/linux/hugetlb.h:238:19: error: redefinition of 'pud_huge'
+>   238 | static inline int pud_huge(pud_t pud)
+>       |                   ^~~~~~~~
+> In file included from arch/powerpc/include/asm/book3s/64/pgtable.h:301,
+>                  from arch/powerpc/include/asm/book3s/64/mmu-hash.h:20,
+>                  from arch/powerpc/include/asm/book3s/64/mmu.h:46,
+>                  from arch/powerpc/include/asm/mmu.h:356,
+>                  from arch/powerpc/include/asm/lppaca.h:47,
+>                  from arch/powerpc/include/asm/paca.h:17,
+>                  from arch/powerpc/include/asm/current.h:13,
+>                  from include/linux/sched.h:12,
+>                  from arch/powerpc/mm/mem.c:16:
+> arch/powerpc/include/asm/book3s/64/pgtable-4k.h:75:19: note: previous definition of 'pud_huge' was here
+>    75 | static inline int pud_huge(pud_t pud) { return 0; }
+>       |                   ^~~~~~~~
+> 
+> Caused by commit
+> 
+>   9823e12e021f ("hugetlbfs: convert macros to static inline, fix sparse warning")
+> 
+> I have reverted that commit for today.
 
-I've definitely seen such comments before. So I'll leave fw_ret as is.
-If you and Greg both want to change it to the way you mentioned, I'm
-happy to do it.
+Hello Michael,
 
-> > >
-> > > > +             fw_ret = fwnode_call_int_op(dev->fwnode, add_links, dev);
-> > > > +             if (fw_ret == -ENODEV)
-> > > > +                     device_link_wait_for_mandatory_supplier(dev);
-> > > > +             else if (fw_ret)
-> > > > +                     device_link_wait_for_optional_supplier(dev);
-> > > > +     }
-> > > >
-> > > >       bus_probe_device(dev);
-> > > >       if (parent)
-> > > > diff --git a/include/linux/fwnode.h b/include/linux/fwnode.h
-> > > > index 25bb81f8ded8..a19134eae5a5 100644
-> > > > --- a/include/linux/fwnode.h
-> > > > +++ b/include/linux/fwnode.h
-> > > > @@ -96,10 +96,15 @@ struct fwnode_reference_args {
-> > > >   *           available suppliers.
-> > > >   *
-> > > >   *           Return 0 if device links have been successfully created to all
-> > > > - *           the suppliers of this device or if the supplier information is
-> > > > - *           not known. Return an error if and only if the supplier
-> > > > - *           information is known but some of the suppliers are not yet
-> > > > - *           available to create device links to.
-> > > > + *           the suppliers this device needs to create device links to or if
-> > > > + *           the supplier information is not known.
-> > >
-> > > "the known suppliers of this device or if the supplier information is not known."
-> >
-> > "suppliers it needs to create device links to" is a subset of known
-> > suppliers. There's no requirement that fw needs to create links to ALL
-> > known suppliers. Just a minor distinction.
->
-> That depends on what exactly you mean by "known suppliers".  The
-> suppliers that are not listed by the firmware are not known at this
-> point.
+When I started to look into this I noticed that you added commit aad71e3928be
+("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") some time back.
+It appears that all other architectures get the definition of pmd_huge and
+pud_huge from <linux/hugetlb.h> in the !CONFIG_HUGETLB_PAGE case.  Previously,
+this was not an issue as the #define pmd_huge/pud_huge did not conflict with
+the static inline in the powerpc header files.  The conflicts above happened
+when I converted the macros to also be static inlines.  Could you live with
+a patch like the following to remove the stubs from powerpc header files and
+fix your original build break by including  <linux/hugetlb.h>?  After the
+below patch is applied, the above commit will not cause the build errors seen
+in linux-next.
 
-Ok, I'll rephrase my comment:
-"suppliers it needs to create device links to" is a subset of listed
-suppliers. There's no requirement that fw needs to create links to ALL
-listed suppliers. For example, I can't think of any reason for
-sync_state() to be necessary for an interrupt controller driver. So,
-fw doesn't need to create device links from consumer to interrupt
-supplier. So I'm being more explicit and saying "the suppliers this
-device needs to create device links to" instead of "the listed
-suppliers of this device".
+From 4b3ab017e639e4e583fff801e6d8e6727b7877e8 Mon Sep 17 00:00:00 2001
+From: Mike Kravetz <mike.kravetz@oracle.com>
+Date: Tue, 5 Nov 2019 15:12:15 -0800
+Subject: [PATCH] powerpc/mm: remove pmd_huge/pud_huge stubs and include
+ hugetlb.h
 
-Long story short, I wrote the comment this way intentionally and
-changing it to what you suggest makes it inaccurate IMHO. But I'm open
-to other wording suggestions to improve the clarity of this comment.
+This removes the power specific stubs created by commit aad71e3928be
+("powerpc/mm: Fix build break with RADIX=y & HUGETLBFS=n") used when
+!CONFIG_HUGETLB_PAGE.  Instead, it addresses the build break by
+getting the definitions from <linux/hugetlb.h>.
 
->
-> > > > + *
-> > > > + *           Return -ENODEV if and only if the suppliers needed for probing
-> > > > + *           the device are not yet available to create device links to.
-> > >
-> > > It would be more precise to say something like this:
-> > >
-> > > "Return -ENODEV if an attempt to create a device link to one of the device's
-> > > suppliers needed for probing it fails."
-> >
-> > "attempt to create a device link to one of the device's suppliers
-> > needed for probing it fails" to me means device_link_add() fails.
-> > But I'm trying to say that it should return an error if the struct
-> > device isn't even there yet.
->
-> OK, so it should be something like "if the supplier device has not
-> been registered yet".
->
-> My point is that "not yet available" is kind of ambiguous.
+Signed-off-by: Mike Kravetz <mike.kravetz@oracle.com>
+---
+ arch/powerpc/include/asm/book3s/64/pgtable-4k.h  | 3 ---
+ arch/powerpc/include/asm/book3s/64/pgtable-64k.h | 3 ---
+ arch/powerpc/mm/book3s64/radix_pgtable.c         | 1 +
+ 3 files changed, 1 insertion(+), 6 deletions(-)
 
-Agree, the latest suggestion sounds better.
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
+index a069dfcac9a9..4e697bc2f4cd 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable-4k.h
+@@ -70,9 +70,6 @@ static inline int get_hugepd_cache_index(int index)
+ 	/* should not reach */
+ }
+ 
+-#else /* !CONFIG_HUGETLB_PAGE */
+-static inline int pmd_huge(pmd_t pmd) { return 0; }
+-static inline int pud_huge(pud_t pud) { return 0; }
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+ #endif /* __ASSEMBLY__ */
+diff --git a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
+index e3d4dd4ae2fa..34d1018896b3 100644
+--- a/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
++++ b/arch/powerpc/include/asm/book3s/64/pgtable-64k.h
+@@ -59,9 +59,6 @@ static inline int get_hugepd_cache_index(int index)
+ 	BUG();
+ }
+ 
+-#else /* !CONFIG_HUGETLB_PAGE */
+-static inline int pmd_huge(pmd_t pmd) { return 0; }
+-static inline int pud_huge(pud_t pud) { return 0; }
+ #endif /* CONFIG_HUGETLB_PAGE */
+ 
+ static inline int remap_4k_pfn(struct vm_area_struct *vma, unsigned long addr,
+diff --git a/arch/powerpc/mm/book3s64/radix_pgtable.c b/arch/powerpc/mm/book3s64/radix_pgtable.c
+index 6ee17d09649c..974109bb85db 100644
+--- a/arch/powerpc/mm/book3s64/radix_pgtable.c
++++ b/arch/powerpc/mm/book3s64/radix_pgtable.c
+@@ -13,6 +13,7 @@
+ #include <linux/memblock.h>
+ #include <linux/of_fdt.h>
+ #include <linux/mm.h>
++#include <linux/hugetlb.h>
+ #include <linux/string_helpers.h>
+ #include <linux/stop_machine.h>
+ 
+-- 
+2.23.0
 
-> > > > + *
-> > > > + *           Return -EAGAIN if there are suppliers that need to be linked to
-> > > > + *           that are not yet available but none of those suppliers are
-> > > > + *           necessary for probing this device.
-> > >
-> > > "Return -EAGAIN if attempts to create device links to some of the device's
-> > > suppliers have failed, but those suppliers are not necessary for probing the
-> > > device."
-> >
-> > Same comment as before. The distinction I'm making here is that
-> > -EAGAIN is needed when the struct device itself isn't there.
-> >
-> > Btw, Greg already pulled these into driver-core-next. Let me know if
-> > you want me to send a delta patch to fix any of these comments.
->
-> Well, it's a Greg's call if he has taken the patches, but it also
-> depends on you (if you agree with the comments, it would be prudent to
-> send updates).
-
-I don't mind sending updates at all. Just trying to make sure I follow
-the maintainers' preference in case they don't want trivial (because
-my current ones aren't terrible :)) comment update patches.
-
-Once we agree on all the discussion here, I can send an update patch.
-
-Thanks again for your review.
-
--Saravana
