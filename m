@@ -2,173 +2,85 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 40EC6C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:39:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E56D4C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:39:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4E5217F4
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:39:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573029591;
-	bh=+me4BFgFFxK3alusWYfMZyVysKc/CceQK1nEa4XFxwA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=kXwH+hXOKyUxUgx344ZSJ8yKLPCCqsgwpEPubcTrPRftYpWzEEytfwlw9DeQceKON
-	 c/sJs4JYUiSxI8eI9W/azyt+q4KVL5geEX928Xq0BJT4hpgpj2X0ROvzWz3FNJ12eW
-	 +i63bwpZrTAQmy/ws/7C3PltUj80eO7pEk6jCrt4=
+	by mail.kernel.org (Postfix) with ESMTP id B475521882
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 08:39:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="L6xaRbUA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731577AbfKFIjm (ORCPT
+        id S1731557AbfKFIjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 03:39:42 -0500
-Received: from mail.kernel.org ([198.145.29.99]:48288 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731544AbfKFIjl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 6 Nov 2019 03:39:41 -0500
-Received: from localhost.localdomain (unknown [223.226.46.117])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 22C0321882;
-        Wed,  6 Nov 2019 08:39:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573029580;
-        bh=+me4BFgFFxK3alusWYfMZyVysKc/CceQK1nEa4XFxwA=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jfE4Spko4HGtPQJvXcNOqs9b05c3Aswur2NWf6BcyrGF0TvwTiE6ASBxmRxd7m2ry
-         K/qG36cbWpf76mH0ArF7s1UtoSinmKoiogG0HJtEZCYag9Puurl5zTmZ7iJhbO6m//
-         sfXflNM9u86S7kYpyok6h2/YSXyxeKAGJattTw/E=
-From:   Vinod Koul <vkoul@kernel.org>
-To:     Mathias Nyman <mathias.nyman@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-arm-msm@vger.kernel.org,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Vinod Koul <vkoul@kernel.org>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        Christian Lamparter <chunkeey@googlemail.com>,
-        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v5 3/4] usb: xhci: allow multiple firmware versions
-Date:   Wed,  6 Nov 2019 14:08:42 +0530
-Message-Id: <20191106083843.1718437-4-vkoul@kernel.org>
-X-Mailer: git-send-email 2.23.0
-In-Reply-To: <20191106083843.1718437-1-vkoul@kernel.org>
-References: <20191106083843.1718437-1-vkoul@kernel.org>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Received: from mail-m974.mail.163.com ([123.126.97.4]:34842 "EHLO
+        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730212AbfKFIjj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 03:39:39 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=+JzU+esi7fl0h4YK8N
+        PHkxPWloJ5wIl06K/wPnc/A2k=; b=L6xaRbUAJMTvsW09nge/+GKrTTCh43e6VO
+        OSswfOX+OhhilUA4bHqozbqprvxu7fxm7mTUpPgGFyqG2f+1jzHNCdrDBuDY9ZXg
+        aiCUKSIZSw9UTB4Jy1CcGxULHabKQP3rG/Ttoavt0yEO/D1/C4ALXy0Azd31k+py
+        373MrR5Mg=
+Received: from localhost.localdomain (unknown [202.112.113.212])
+        by smtp4 (Coremail) with SMTP id HNxpCgDHZtOBhsJdCHKDBQ--.289S3;
+        Wed, 06 Nov 2019 16:38:35 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Colin Ian King <colin.king@canonical.com>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Bjorn Helgaas <bhelgaas@google.com>,
+        Chuhong Yuan <hslester96@gmail.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: [PATCH] usb: gadget: pch_udc: fix use after free
+Date:   Wed,  6 Nov 2019 16:38:23 +0800
+Message-Id: <1573029503-18369-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: HNxpCgDHZtOBhsJdCHKDBQ--.289S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GrWUXr43Wr1UuF1kKF13twb_yoWfurcEk3
+        yjgFnrWryYq3Z8Kr4fJry3Ar4293ZYqan3uFnaqrZ3Z3y5Way5Xr18ZF9Y93y7uw47GF93
+        u3yqqFyYgF4S9jkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IU1jNt3UUUUU==
+X-Originating-IP: [202.112.113.212]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiDgtlclXluaTJ2AAAsu
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow multiple firmware file versions in table and load them in
-increasing order as we find them in the file system.
+The next field of the DMA descriptor is written after releasing the
+descriptor, which may result in a use-after-free issue. Set the value of
+the field before it is released to fix the bug.
 
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Christian Lamparter <chunkeey@googlemail.com>
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 ---
- drivers/usb/host/xhci-pci.c | 47 +++++++++++++++++++++++++++++++++++--
- 1 file changed, 45 insertions(+), 2 deletions(-)
+ drivers/usb/gadget/udc/pch_udc.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/usb/host/xhci-pci.c b/drivers/usb/host/xhci-pci.c
-index e1c2865df433..4d0c0fd18c23 100644
---- a/drivers/usb/host/xhci-pci.c
-+++ b/drivers/usb/host/xhci-pci.c
-@@ -336,13 +336,20 @@ static const struct renesas_fw_entry {
- 	 *  - uPD720201 ES 2.0 sample whose revision ID is 2.
- 	 *  - uPD720201 ES 2.1 sample & CS sample & Mass product, ID is 3.
- 	 *  - uPD720202 ES 2.0 sample & CS sample & Mass product, ID is 2.
-+	 *
-+	 *  Entry expected_version should be kept in decreasing order for a
-+	 *  chip, so that driver will pick latest version and if that fails
-+	 *  then next one will be picked
- 	 */
- 	{ "K2013080.mem", 0x0014, 0x02, 0x2013 },
-+	{ "K2026090.mem", 0x0014, 0x03, 0x2026 },
- 	{ "K2013080.mem", 0x0014, 0x03, 0x2013 },
-+	{ "K2026090.mem", 0x0015, 0x02, 0x2026 },
- 	{ "K2013080.mem", 0x0015, 0x02, 0x2013 },
- };
- 
- MODULE_FIRMWARE("K2013080.mem");
-+MODULE_FIRMWARE("K2026090.mem");
- 
- static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- {
-@@ -363,6 +370,24 @@ static const struct renesas_fw_entry *renesas_needs_fw_dl(struct pci_dev *dev)
- 	return NULL;
- }
- 
-+static const struct
-+renesas_fw_entry *renesas_get_next_entry(struct pci_dev *dev,
-+					 const struct renesas_fw_entry *entry)
-+{
-+	const struct renesas_fw_entry *next_entry;
-+	size_t i;
-+
-+	for (i = 0; i < ARRAY_SIZE(renesas_fw_table); i++) {
-+		next_entry = &renesas_fw_table[i];
-+		if (next_entry->device == dev->device &&
-+		    next_entry->revision == dev->revision &&
-+		    next_entry->expected_version < entry->expected_version)
-+			return next_entry;
-+	}
-+
-+	return NULL;
-+}
-+
- static int renesas_fw_download_image(struct pci_dev *dev,
- 				     const u32 *fw,
- 				     size_t step)
-@@ -707,6 +732,7 @@ struct renesas_fw_ctx {
- 	struct pci_dev *pdev;
- 	const struct pci_device_id *id;
- 	bool resume;
-+	const struct renesas_fw_entry *entry;
- };
- 
- static int xhci_pci_probe(struct pci_dev *pdev,
-@@ -966,13 +992,29 @@ static void renesas_fw_callback(const struct firmware *fw,
- 	struct renesas_fw_ctx *ctx = context;
- 	struct pci_dev *pdev = ctx->pdev;
- 	struct device *parent = pdev->dev.parent;
-+	const struct renesas_fw_entry *next_entry;
- 	bool rom;
- 	int err;
- 
- 	if (!fw) {
- 		dev_err(&pdev->dev, "firmware failed to load\n");
--
--		goto cleanup;
-+		/*
-+		 * we didn't find firmware, check if we have another
-+		 * entry for this device
-+		 */
-+		next_entry = renesas_get_next_entry(ctx->pdev, ctx->entry);
-+		if (next_entry) {
-+			ctx->entry = next_entry;
-+			dev_dbg(&pdev->dev, "Found next entry, requesting: %s\n",
-+				next_entry->firmware_name);
-+			request_firmware_nowait(THIS_MODULE, 1,
-+						next_entry->firmware_name,
-+						&pdev->dev, GFP_KERNEL,
-+						ctx, renesas_fw_callback);
-+			return;
-+		} else {
-+			goto cleanup;
-+		}
+diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
+index 265dab2bbfac..c5b8ec908aab 100644
+--- a/drivers/usb/gadget/udc/pch_udc.c
++++ b/drivers/usb/gadget/udc/pch_udc.c
+@@ -1518,8 +1518,8 @@ static void pch_udc_free_dma_chain(struct pch_udc_dev *dev,
+ 		/* do not free first desc., will be done by free for request */
+ 		td = phys_to_virt(addr);
+ 		addr2 = (dma_addr_t)td->next;
+-		dma_pool_free(dev->data_requests, td, addr);
+ 		td->next = 0x00;
++		dma_pool_free(dev->data_requests, td, addr);
+ 		addr = addr2;
  	}
- 
- 	err = renesas_fw_verify(pdev, fw->data, fw->size);
-@@ -1070,6 +1112,7 @@ static int renesas_fw_download_to_hw(struct pci_dev *pdev,
- 	ctx->pdev = pdev;
- 	ctx->resume = do_resume;
- 	ctx->id = id;
-+	ctx->entry = entry;
- 
- 	pci_dev_get(pdev);
- 	err = request_firmware_nowait(THIS_MODULE, 1, entry->firmware_name,
+ 	req->chain_len = 1;
 -- 
-2.23.0
+2.7.4
 
