@@ -2,124 +2,98 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7689AC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:28:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C683FC5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:33:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2A43E217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:28:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90C98217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 20:33:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=embeddedor.com header.i=@embeddedor.com header.b="pfLxpwjL"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="oyYbSxID"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732417AbfKFU2V (ORCPT
+        id S1732268AbfKFUdJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 15:28:21 -0500
-Received: from gateway32.websitewelcome.com ([192.185.145.122]:33816 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727666AbfKFU2U (ORCPT
+        Wed, 6 Nov 2019 15:33:09 -0500
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:46252 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727646AbfKFUdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 15:28:20 -0500
-Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id 206DE8119B7
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 14:28:20 -0600 (CST)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id SRueiS3F3BnGaSRuei4CkP; Wed, 06 Nov 2019 14:28:20 -0600
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=embeddedor.com; s=default; h=Content-Type:MIME-Version:Message-ID:Subject:
-        Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
-        List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=vu8+QyuX0r7EXS45AfHRKbJH6xWvQlIw/EGzNaMwnj8=; b=pfLxpwjLuFV5YsbCsX0NeJNKC3
-        tNQcacH44DKWtGMvizBQMz/ddtqJTs/c7+j3IzcO2r/mQZPjO9sAX244s1a0qwfpgJ5hl7rckhgWo
-        5OzR+ZhaE0ww9EUiznSr6P8K2mxcvWyI07LvpzLWPvf8kQastVityR6G8ZdhTEKNi18iLu1VPaISE
-        +a7BnrykFmYHMMjxE+MaIJ7W0tSxt1jiERGD7ATsN1eR+Ccrgvy3Tl7pZq3ijSsX9ngXK1Ichs2Oj
-        a6gtEgFzscXrSVbVC5yQ8Vv8qvwCQ5rVMLlDE7z/vHoMFv4mq3QP6bMUlFilrw/7p2IwzdmZ4+p4M
-        p2SPqu+g==;
-Received: from [187.192.2.30] (port=34892 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.92)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1iSRuc-002xp8-S9; Wed, 06 Nov 2019 14:28:18 -0600
-Date:   Wed, 6 Nov 2019 14:28:21 -0600
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Michal Nazarewicz <mina86@mina86.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH v4] usb: gadget: pch_udc: fix use after free
-Message-ID: <20191106202821.GA20347@embeddedor>
+        Wed, 6 Nov 2019 15:33:08 -0500
+Received: from lelv0266.itg.ti.com ([10.180.67.225])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA6KWfoh096274;
+        Wed, 6 Nov 2019 14:32:41 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573072361;
+        bh=4KPGIKWmTjDsaXDJhbPERAOcnx56q00US+atK5Qvn/w=;
+        h=Date:From:To:CC:Subject:References:In-Reply-To;
+        b=oyYbSxID0NOqhjsyNfcHdwfmfFyNWrQVo4Ctz2uaFW46Ct2BBiCsN7yuVj6i/7hGe
+         3x96IxZO+YCHanFnYfXY+lLSAOBp8Ui6yEptLhkIupuiJ0xun+qRw4HP8U/7yQ+6aB
+         v/0x2kR4fPKXwZ8ys6rKLjj394ttWnrw9isbQP44=
+Received: from DLEE108.ent.ti.com (dlee108.ent.ti.com [157.170.170.38])
+        by lelv0266.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA6KWfQc063526
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 6 Nov 2019 14:32:41 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 14:32:41 -0600
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 14:32:41 -0600
+Received: from ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with SMTP id xA6KWfe7059453;
+        Wed, 6 Nov 2019 14:32:41 -0600
+Date:   Wed, 6 Nov 2019 14:35:42 -0600
+From:   Benoit Parrot <bparrot@ti.com>
+To:     Sakari Ailus <sakari.ailus@iki.fi>
+CC:     Hans Verkuil <hverkuil@xs4all.nl>, <linux-media@vger.kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>, Jyri Sarha <jsarha@ti.com>
+Subject: Re: [Patch v2 07/20] media: ti-vpe: cal: add CSI2 PHY LDO errata
+ support
+Message-ID: <20191106203542.uab6bwgdrkb627q4@ti.com>
+References: <20191104193140.31145-1-bparrot@ti.com>
+ <20191104193140.31145-8-bparrot@ti.com>
+ <20191106085501.GA6253@valkosipuli.retiisi.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 187.192.2.30
-X-Source-L: No
-X-Exim-ID: 1iSRuc-002xp8-S9
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [187.192.2.30]:34892
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 6
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+In-Reply-To: <20191106085501.GA6253@valkosipuli.retiisi.org.uk>
+User-Agent: NeoMutt/20171215
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Remove pointer dereference after free.
+Sakari Ailus <sakari.ailus@iki.fi> wrote on Wed [2019-Nov-06 10:55:02 +0200]:
+> Hi Benoit,
+> 
+> On Mon, Nov 04, 2019 at 01:31:27PM -0600, Benoit Parrot wrote:
+> 
+> ...
+> 
+> > @@ -458,6 +483,8 @@
+> >  #define CAL_CSI2_PHY_REG1_CLOCK_MISS_DETECTOR_STATUS_SUCCESS		0
+> >  #define CAL_CSI2_PHY_REG1_RESET_DONE_STATUS_MASK		GENMASK(29, 28)
+> >  
+> > +#define CAL_CSI2_PHY_REG10_I933_LDO_DISABLE_MASK		BIT_MASK(6)
+> 
+> BIT(6) ?
+> 
+> BIT_MASK() is intended for a different purpose.
 
-pci_pool_free doesn't care about contents of td.
-It's just a void* for it
+Wow, good catch, I have never realized that.
 
-Addresses-Coverity-ID: 1091173 ("Use after free")
-Cc: stable@vger.kernel.org
-Acked-by: Michal Nazarewicz <mina86@mina86.com>
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
-Changes in v4:
-  Fix line-wrapping.
-  Update commit log.
-  Update subject line.
+Benoit
 
-Changes in v3:
-  Remove 'td->next = 0x00' inside for loop.
-  Remove unnecessary pointer nullification after free.
-
-Changes in v2:
-  Move pointer dereference before pci_pool_free()
-  Set pointer to NULL after free
-
- drivers/usb/gadget/udc/pch_udc.c | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/drivers/usb/gadget/udc/pch_udc.c b/drivers/usb/gadget/udc/pch_udc.c
-index 265dab2bbfac..3344fb8c4181 100644
---- a/drivers/usb/gadget/udc/pch_udc.c
-+++ b/drivers/usb/gadget/udc/pch_udc.c
-@@ -1519,7 +1519,6 @@ static void pch_udc_free_dma_chain(struct pch_udc_dev *dev,
- 		td = phys_to_virt(addr);
- 		addr2 = (dma_addr_t)td->next;
- 		dma_pool_free(dev->data_requests, td, addr);
--		td->next = 0x00;
- 		addr = addr2;
- 	}
- 	req->chain_len = 1;
--- 
-2.23.0
-
+> 
+> -- 
+> Regards,
+> 
+> Sakari Ailus
