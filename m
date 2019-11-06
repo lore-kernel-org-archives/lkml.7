@@ -2,983 +2,266 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC90C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:31:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00407C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:34:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 88B6521848
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:31:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0FE720869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 10:34:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729599AbfKFKa6 (ORCPT
+        id S1730079AbfKFKew (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 05:30:58 -0500
-Received: from cloudserver094114.home.pl ([79.96.170.134]:57207 "EHLO
-        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725890AbfKFKa5 (ORCPT
+        Wed, 6 Nov 2019 05:34:52 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:32949 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728523AbfKFKev (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 05:30:57 -0500
-Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
- by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
- id a9496bd01c0018d3; Wed, 6 Nov 2019 11:30:52 +0100
-From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
-To:     Linux PM <linux-pm@vger.kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Doug Smythies <dsmythies@telus.net>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Giovanni Gherdovich <ggherdovich@suse.cz>
-Subject: [PATCH] cpuidle: Use nanoseconds as the unit of time
-Date:   Wed, 06 Nov 2019 11:30:52 +0100
-Message-ID: <10494959.bKODIZ00nm@kreacher>
+        Wed, 6 Nov 2019 05:34:51 -0500
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1iSIe5-0004os-2G; Wed, 06 Nov 2019 11:34:37 +0100
+Received: from [IPv6:2a03:f580:87bc:d400:591d:c131:e96:905c] (unknown [IPv6:2a03:f580:87bc:d400:591d:c131:e96:905c])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits) server-digest SHA256
+         client-signature RSA-PSS (4096 bits) client-digest SHA256)
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id AA64A475D65;
+        Wed,  6 Nov 2019 10:34:33 +0000 (UTC)
+To:     Pankaj Sharma <pankj.sharma@samsung.com>,
+        linux-can@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     wg@grandegger.com, davem@davemloft.net,
+        eugen.hristev@microchip.com, ludovic.desroches@microchip.com,
+        pankaj.dubey@samsung.com, rcsekar@samsung.com,
+        Sriram Dash <sriram.dash@samsung.com>
+References: <CGME20191021120513epcas5p2fd23f5dbdff6a0e6aa3b0726b30e4b60@epcas5p2.samsung.com>
+ <1571659480-29109-1-git-send-email-pankj.sharma@samsung.com>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Subject: Re: [PATCH v3] can: m_can: add support for one shot mode
+Message-ID: <38ade7ff-0e0c-afe9-a927-17317f0f27b9@pengutronix.de>
+Date:   Wed, 6 Nov 2019 11:34:26 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <1571659480-29109-1-git-send-email-pankj.sharma@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="aeTzOOUikqsVKEOsx0QyyLYXFesD57WRP"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--aeTzOOUikqsVKEOsx0QyyLYXFesD57WRP
+Content-Type: multipart/mixed; boundary="016AdyxrEnrgKM0NsyoJtaE66CTZDe96W";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Pankaj Sharma <pankj.sharma@samsung.com>, linux-can@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: wg@grandegger.com, davem@davemloft.net, eugen.hristev@microchip.com,
+ ludovic.desroches@microchip.com, pankaj.dubey@samsung.com,
+ rcsekar@samsung.com, Sriram Dash <sriram.dash@samsung.com>
+Message-ID: <38ade7ff-0e0c-afe9-a927-17317f0f27b9@pengutronix.de>
+Subject: Re: [PATCH v3] can: m_can: add support for one shot mode
+References: <CGME20191021120513epcas5p2fd23f5dbdff6a0e6aa3b0726b30e4b60@epcas5p2.samsung.com>
+ <1571659480-29109-1-git-send-email-pankj.sharma@samsung.com>
+In-Reply-To: <1571659480-29109-1-git-send-email-pankj.sharma@samsung.com>
 
-Currently, the cpuidle subsystem uses microseconds as the unit of
-time which (among other things) causes the idle loop to incur some
-integer division overhead for no clear benefit.
+--016AdyxrEnrgKM0NsyoJtaE66CTZDe96W
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: quoted-printable
 
-In order to allow cpuidle to measure time in nanoseconds, add two
-additional fields, exit_latency_ns and target_residency_ns, to
-represent the exit latency and target residency of an idle state
-in nanoseconds, respectively, to struct cpuidle_state_usage and
-initialize them with the help of the corresponding values in
-microseconds provided by drivers.  In addition to that, change
-cpuidle_governor_latency_req() to return the idle state exit
-latency constraint in nanoseconds.
+On 10/21/19 2:04 PM, Pankaj Sharma wrote:
+> According to the CAN Specification (see ISO 11898-1:2015, 8.3.4
+> Recovery Management), the M_CAN provides means for automatic
+> retransmission of frames that have lost arbitration or that
+> have been disturbed by errors during transmission. By default
+> automatic retransmission is enabled.
+>=20
+> The Bosch MCAN controller has support for disabling automatic
+> retransmission.
+>=20
+> To support time-triggered communication as described in ISO
+> 11898-1:2015, chapter 9.2, the automatic retransmission may be
+> disabled via CCCR.DAR.
+>=20
+> CAN_CTRLMODE_ONE_SHOT is used for disabling automatic retransmission.
+>=20
+> Signed-off-by: Pankaj Sharma <pankj.sharma@samsung.com>
+> Signed-off-by: Sriram Dash <sriram.dash@samsung.com>
+> ---
+>=20
+> changes in v3:=20
+> - resolving build errors for net-next branch
+>=20
+> changes in v2:
+> - rebase to net-next
+>=20
+>  drivers/net/can/m_can/m_can.c | 12 +++++++++---
+>  1 file changed, 9 insertions(+), 3 deletions(-)
+>=20
+> diff --git a/drivers/net/can/m_can/m_can.c b/drivers/net/can/m_can/m_ca=
+n.c
+> index 562c8317e3aa..75e7490c4299 100644
+> --- a/drivers/net/can/m_can/m_can.c
+> +++ b/drivers/net/can/m_can/m_can.c
+> @@ -123,6 +123,7 @@ enum m_can_reg {
+>  #define CCCR_CME_CANFD_BRS	0x2
+>  #define CCCR_TXP		BIT(14)
+>  #define CCCR_TEST		BIT(7)
+> +#define CCCR_DAR		BIT(6)
+>  #define CCCR_MON		BIT(5)
+>  #define CCCR_CSR		BIT(4)
+>  #define CCCR_CSA		BIT(3)
+> @@ -1135,7 +1136,7 @@ static void m_can_chip_config(struct net_device *=
+dev)
+>  	if (cdev->version =3D=3D 30) {
+>  	/* Version 3.0.x */
+> =20
+> -		cccr &=3D ~(CCCR_TEST | CCCR_MON |
+> +		cccr &=3D ~(CCCR_TEST | CCCR_MON | CCCR_DAR |
+>  			(CCCR_CMR_MASK << CCCR_CMR_SHIFT) |
+>  			(CCCR_CME_MASK << CCCR_CME_SHIFT));
+> =20
+> @@ -1145,7 +1146,7 @@ static void m_can_chip_config(struct net_device *=
+dev)
+>  	} else {
+>  	/* Version 3.1.x or 3.2.x */
+>  		cccr &=3D ~(CCCR_TEST | CCCR_MON | CCCR_BRSE | CCCR_FDOE |
+> -			  CCCR_NISO);
+> +			  CCCR_NISO | CCCR_DAR);
+> =20
+>  		/* Only 3.2.x has NISO Bit implemented */
+>  		if (cdev->can.ctrlmode & CAN_CTRLMODE_FD_NON_ISO)
+> @@ -1165,6 +1166,10 @@ static void m_can_chip_config(struct net_device =
+*dev)
+>  	if (cdev->can.ctrlmode & CAN_CTRLMODE_LISTENONLY)
+>  		cccr |=3D CCCR_MON;
+> =20
+> +	/* Disable Auto Retransmission (all versions) */
+> +	if (cdev->can.ctrlmode & CAN_CTRLMODE_ONE_SHOT)
+> +		cccr |=3D CCCR_DAR;
+> +
+>  	/* Write config */
+>  	m_can_write(cdev, M_CAN_CCCR, cccr);
+>  	m_can_write(cdev, M_CAN_TEST, test);
+> @@ -1310,7 +1315,8 @@ static int m_can_dev_setup(struct m_can_classdev =
+*m_can_dev)
+>  	m_can_dev->can.ctrlmode_supported =3D CAN_CTRLMODE_LOOPBACK |
+>  					CAN_CTRLMODE_LISTENONLY |
+>  					CAN_CTRLMODE_BERR_REPORTING |
+> -					CAN_CTRLMODE_FD;
+> +					CAN_CTRLMODE_FD |
+> +					CAN_CTRLMODE_ONE_SHOT;
+> =20
+>  	/* Set properties depending on M_CAN version */
+>  	switch (m_can_dev->version) {
 
-With that, meeasure idle state residency (last_residency_ns in
-struct cpuidle_device and time_ns in struct cpuidle_driver) in
-nanoseconds and update the cpuidle core and governors accordingly.
+What happens if you have called netif_stop_queue() and the controller
+was not able to send a single frame?
 
-However, the menu governor still computes typical intervals in
-microseconds to avoid integer overflows.
+What happens to the echo_skb, if the controller was not able to send a
+frame?
 
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
----
+Marc
 
-Changes since RFC:
- - Rework the predicted_us and predicted_ns computation in the
-   menu governor (Peter).
- - Rebase on top of the current linux-next with
-   https://patchwork.kernel.org/patch/11225501/ applied.
-
----
- drivers/cpuidle/cpuidle.c            |   36 +++++------
- drivers/cpuidle/driver.c             |   29 ++++++---
- drivers/cpuidle/governor.c           |    7 +-
- drivers/cpuidle/governors/haltpoll.c |    7 --
- drivers/cpuidle/governors/ladder.c   |   25 ++++---
- drivers/cpuidle/governors/menu.c     |  111 +++++++++++++++++------------------
- drivers/cpuidle/governors/teo.c      |   76 +++++++++++------------
- drivers/cpuidle/sysfs.c              |    8 ++
- include/linux/cpuidle.h              |    8 +-
- kernel/sched/idle.c                  |    2 
- 10 files changed, 161 insertions(+), 148 deletions(-)
-
-Index: linux-pm/include/linux/cpuidle.h
-===================================================================
---- linux-pm.orig/include/linux/cpuidle.h
-+++ linux-pm/include/linux/cpuidle.h
-@@ -35,7 +35,7 @@ struct cpuidle_driver;
- struct cpuidle_state_usage {
- 	unsigned long long	disable;
- 	unsigned long long	usage;
--	unsigned long long	time; /* in US */
-+	u64			time_ns;
- 	unsigned long long	above; /* Number of times it's been too deep */
- 	unsigned long long	below; /* Number of times it's been too shallow */
- #ifdef CONFIG_SUSPEND
-@@ -48,6 +48,8 @@ struct cpuidle_state {
- 	char		name[CPUIDLE_NAME_LEN];
- 	char		desc[CPUIDLE_DESC_LEN];
- 
-+	u64		exit_latency_ns;
-+	u64		target_residency_ns;
- 	unsigned int	flags;
- 	unsigned int	exit_latency; /* in US */
- 	int		power_usage; /* in mW */
-@@ -89,7 +91,7 @@ struct cpuidle_device {
- 	ktime_t			next_hrtimer;
- 
- 	int			last_state_idx;
--	int			last_residency;
-+	u64			last_residency_ns;
- 	u64			poll_limit_ns;
- 	struct cpuidle_state_usage	states_usage[CPUIDLE_STATE_MAX];
- 	struct cpuidle_state_kobj *kobjs[CPUIDLE_STATE_MAX];
-@@ -263,7 +265,7 @@ struct cpuidle_governor {
- 
- #ifdef CONFIG_CPU_IDLE
- extern int cpuidle_register_governor(struct cpuidle_governor *gov);
--extern int cpuidle_governor_latency_req(unsigned int cpu);
-+extern s64 cpuidle_governor_latency_req(unsigned int cpu);
- #else
- static inline int cpuidle_register_governor(struct cpuidle_governor *gov)
- {return 0;}
-Index: linux-pm/drivers/cpuidle/driver.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/driver.c
-+++ linux-pm/drivers/cpuidle/driver.c
-@@ -165,16 +165,27 @@ static void __cpuidle_driver_init(struct
- 	if (!drv->cpumask)
- 		drv->cpumask = (struct cpumask *)cpu_possible_mask;
- 
--	/*
--	 * Look for the timer stop flag in the different states, so that we know
--	 * if the broadcast timer has to be set up.  The loop is in the reverse
--	 * order, because usually one of the deeper states have this flag set.
--	 */
--	for (i = drv->state_count - 1; i >= 0 ; i--) {
--		if (drv->states[i].flags & CPUIDLE_FLAG_TIMER_STOP) {
-+	for (i = 0; i < drv->state_count; i++) {
-+		struct cpuidle_state *s = &drv->states[i];
-+
-+		/*
-+		 * Look for the timer stop flag in the different states and if
-+		 * it is found, indicate that the broadcast timer has to be set
-+		 * up.
-+		 */
-+		if (s->flags & CPUIDLE_FLAG_TIMER_STOP)
- 			drv->bctimer = 1;
--			break;
--		}
-+
-+		/*
-+		 * The core will use the target residency and exit latency
-+		 * values in nanoseconds, but allow drivers to provide them in
-+		 * microseconds too.
-+		 */
-+		if (s->target_residency > 0)
-+			s->target_residency_ns = s->target_residency * NSEC_PER_USEC;
-+
-+		if (s->exit_latency > 0)
-+			s->exit_latency_ns = s->exit_latency * NSEC_PER_USEC;
- 	}
- }
- 
-Index: linux-pm/drivers/cpuidle/cpuidle.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/cpuidle.c
-+++ linux-pm/drivers/cpuidle/cpuidle.c
-@@ -75,24 +75,24 @@ int cpuidle_play_dead(void)
- 
- static int find_deepest_state(struct cpuidle_driver *drv,
- 			      struct cpuidle_device *dev,
--			      unsigned int max_latency,
-+			      u64 max_latency_ns,
- 			      unsigned int forbidden_flags,
- 			      bool s2idle)
- {
--	unsigned int latency_req = 0;
-+	u64 latency_req = 0;
- 	int i, ret = 0;
- 
- 	for (i = 1; i < drv->state_count; i++) {
- 		struct cpuidle_state *s = &drv->states[i];
- 
- 		if (dev->states_usage[i].disable ||
--		    s->exit_latency <= latency_req ||
--		    s->exit_latency > max_latency ||
-+		    s->exit_latency_ns <= latency_req ||
-+		    s->exit_latency_ns > max_latency_ns ||
- 		    (s->flags & forbidden_flags) ||
- 		    (s2idle && !s->enter_s2idle))
- 			continue;
- 
--		latency_req = s->exit_latency;
-+		latency_req = s->exit_latency_ns;
- 		ret = i;
- 	}
- 	return ret;
-@@ -124,7 +124,7 @@ void cpuidle_use_deepest_state(bool enab
- int cpuidle_find_deepest_state(struct cpuidle_driver *drv,
- 			       struct cpuidle_device *dev)
- {
--	return find_deepest_state(drv, dev, UINT_MAX, 0, false);
-+	return find_deepest_state(drv, dev, U64_MAX, 0, false);
- }
- 
- #ifdef CONFIG_SUSPEND
-@@ -180,7 +180,7 @@ int cpuidle_enter_s2idle(struct cpuidle_
- 	 * that interrupts won't be enabled when it exits and allows the tick to
- 	 * be frozen safely.
- 	 */
--	index = find_deepest_state(drv, dev, UINT_MAX, 0, true);
-+	index = find_deepest_state(drv, dev, U64_MAX, 0, true);
- 	if (index > 0)
- 		enter_s2idle_proper(drv, dev, index);
- 
-@@ -209,7 +209,7 @@ int cpuidle_enter_state(struct cpuidle_d
- 	 * CPU as a broadcast timer, this call may fail if it is not available.
- 	 */
- 	if (broadcast && tick_broadcast_enter()) {
--		index = find_deepest_state(drv, dev, target_state->exit_latency,
-+		index = find_deepest_state(drv, dev, target_state->exit_latency_ns,
- 					   CPUIDLE_FLAG_TIMER_STOP, false);
- 		if (index < 0) {
- 			default_idle_call();
-@@ -247,7 +247,7 @@ int cpuidle_enter_state(struct cpuidle_d
- 		local_irq_enable();
- 
- 	if (entered_state >= 0) {
--		s64 diff, delay = drv->states[entered_state].exit_latency;
-+		s64 diff, delay = drv->states[entered_state].exit_latency_ns;
- 		int i;
- 
- 		/*
-@@ -255,15 +255,13 @@ int cpuidle_enter_state(struct cpuidle_d
- 		 * This can be moved to within driver enter routine,
- 		 * but that results in multiple copies of same code.
- 		 */
--		diff = ktime_us_delta(time_end, time_start);
--		if (diff > INT_MAX)
--			diff = INT_MAX;
-+		diff = ktime_sub(time_end, time_start);
- 
--		dev->last_residency = (int)diff;
--		dev->states_usage[entered_state].time += dev->last_residency;
-+		dev->last_residency_ns = diff;
-+		dev->states_usage[entered_state].time_ns += diff;
- 		dev->states_usage[entered_state].usage++;
- 
--		if (diff < drv->states[entered_state].target_residency) {
-+		if (diff < drv->states[entered_state].target_residency_ns) {
- 			for (i = entered_state - 1; i >= 0; i--) {
- 				if (dev->states_usage[i].disable)
- 					continue;
-@@ -281,14 +279,14 @@ int cpuidle_enter_state(struct cpuidle_d
- 				 * Update if a deeper state would have been a
- 				 * better match for the observed idle duration.
- 				 */
--				if (diff - delay >= drv->states[i].target_residency)
-+				if (diff - delay >= drv->states[i].target_residency_ns)
- 					dev->states_usage[entered_state].below++;
- 
- 				break;
- 			}
- 		}
- 	} else {
--		dev->last_residency = 0;
-+		dev->last_residency_ns = 0;
- 	}
- 
- 	return entered_state;
-@@ -381,7 +379,7 @@ u64 cpuidle_poll_time(struct cpuidle_dri
- 		if (dev->states_usage[i].disable)
- 			continue;
- 
--		limit_ns = (u64)drv->states[i].target_residency * NSEC_PER_USEC;
-+		limit_ns = (u64)drv->states[i].target_residency_ns;
- 	}
- 
- 	dev->poll_limit_ns = limit_ns;
-@@ -552,7 +550,7 @@ static void __cpuidle_unregister_device(
- static void __cpuidle_device_init(struct cpuidle_device *dev)
- {
- 	memset(dev->states_usage, 0, sizeof(dev->states_usage));
--	dev->last_residency = 0;
-+	dev->last_residency_ns = 0;
- 	dev->next_hrtimer = 0;
- }
- 
-Index: linux-pm/drivers/cpuidle/sysfs.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/sysfs.c
-+++ linux-pm/drivers/cpuidle/sysfs.c
-@@ -277,12 +277,18 @@ define_show_state_function(exit_latency)
- define_show_state_function(target_residency)
- define_show_state_function(power_usage)
- define_show_state_ull_function(usage)
--define_show_state_ull_function(time)
- define_show_state_str_function(name)
- define_show_state_str_function(desc)
- define_show_state_ull_function(above)
- define_show_state_ull_function(below)
- 
-+static ssize_t show_state_time(struct cpuidle_state *state,
-+			       struct cpuidle_state_usage *state_usage,
-+			       char *buf)
-+{
-+	return sprintf(buf, "%llu\n", ktime_to_us(state_usage->time_ns));
-+}
-+
- static ssize_t show_state_disable(struct cpuidle_state *state,
- 				  struct cpuidle_state_usage *state_usage,
- 				  char *buf)
-Index: linux-pm/drivers/cpuidle/governor.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governor.c
-+++ linux-pm/drivers/cpuidle/governor.c
-@@ -107,11 +107,14 @@ int cpuidle_register_governor(struct cpu
-  * cpuidle_governor_latency_req - Compute a latency constraint for CPU
-  * @cpu: Target CPU
-  */
--int cpuidle_governor_latency_req(unsigned int cpu)
-+s64 cpuidle_governor_latency_req(unsigned int cpu)
- {
- 	int global_req = pm_qos_request(PM_QOS_CPU_DMA_LATENCY);
- 	struct device *device = get_cpu_device(cpu);
- 	int device_req = dev_pm_qos_raw_resume_latency(device);
- 
--	return device_req < global_req ? device_req : global_req;
-+	if (device_req < global_req)
-+		device_req = global_req;
-+
-+	return (s64)device_req * NSEC_PER_USEC;
- }
-Index: linux-pm/drivers/cpuidle/governors/ladder.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/ladder.c
-+++ linux-pm/drivers/cpuidle/governors/ladder.c
-@@ -27,8 +27,8 @@ struct ladder_device_state {
- 	struct {
- 		u32 promotion_count;
- 		u32 demotion_count;
--		u32 promotion_time;
--		u32 demotion_time;
-+		u64 promotion_time_ns;
-+		u64 demotion_time_ns;
- 	} threshold;
- 	struct {
- 		int promotion_count;
-@@ -68,9 +68,10 @@ static int ladder_select_state(struct cp
- {
- 	struct ladder_device *ldev = this_cpu_ptr(&ladder_devices);
- 	struct ladder_device_state *last_state;
--	int last_residency, last_idx = dev->last_state_idx;
-+	int last_idx = dev->last_state_idx;
- 	int first_idx = drv->states[0].flags & CPUIDLE_FLAG_POLLING ? 1 : 0;
--	int latency_req = cpuidle_governor_latency_req(dev->cpu);
-+	s64 latency_req = cpuidle_governor_latency_req(dev->cpu);
-+	s64 last_residency;
- 
- 	/* Special case when user has set very strict latency requirement */
- 	if (unlikely(latency_req == 0)) {
-@@ -80,13 +81,13 @@ static int ladder_select_state(struct cp
- 
- 	last_state = &ldev->states[last_idx];
- 
--	last_residency = dev->last_residency - drv->states[last_idx].exit_latency;
-+	last_residency = dev->last_residency_ns - drv->states[last_idx].exit_latency_ns;
- 
- 	/* consider promotion */
- 	if (last_idx < drv->state_count - 1 &&
- 	    !dev->states_usage[last_idx + 1].disable &&
--	    last_residency > last_state->threshold.promotion_time &&
--	    drv->states[last_idx + 1].exit_latency <= latency_req) {
-+	    last_residency > last_state->threshold.promotion_time_ns &&
-+	    drv->states[last_idx + 1].exit_latency_ns <= latency_req) {
- 		last_state->stats.promotion_count++;
- 		last_state->stats.demotion_count = 0;
- 		if (last_state->stats.promotion_count >= last_state->threshold.promotion_count) {
-@@ -98,11 +99,11 @@ static int ladder_select_state(struct cp
- 	/* consider demotion */
- 	if (last_idx > first_idx &&
- 	    (dev->states_usage[last_idx].disable ||
--	    drv->states[last_idx].exit_latency > latency_req)) {
-+	    drv->states[last_idx].exit_latency_ns > latency_req)) {
- 		int i;
- 
- 		for (i = last_idx - 1; i > first_idx; i--) {
--			if (drv->states[i].exit_latency <= latency_req)
-+			if (drv->states[i].exit_latency_ns <= latency_req)
- 				break;
- 		}
- 		ladder_do_selection(dev, ldev, last_idx, i);
-@@ -110,7 +111,7 @@ static int ladder_select_state(struct cp
- 	}
- 
- 	if (last_idx > first_idx &&
--	    last_residency < last_state->threshold.demotion_time) {
-+	    last_residency < last_state->threshold.demotion_time_ns) {
- 		last_state->stats.demotion_count++;
- 		last_state->stats.promotion_count = 0;
- 		if (last_state->stats.demotion_count >= last_state->threshold.demotion_count) {
-@@ -150,9 +151,9 @@ static int ladder_enable_device(struct c
- 		lstate->threshold.demotion_count = DEMOTION_COUNT;
- 
- 		if (i < drv->state_count - 1)
--			lstate->threshold.promotion_time = state->exit_latency;
-+			lstate->threshold.promotion_time_ns = state->exit_latency_ns;
- 		if (i > first_idx)
--			lstate->threshold.demotion_time = state->exit_latency;
-+			lstate->threshold.demotion_time_ns = state->exit_latency_ns;
- 	}
- 
- 	return 0;
-Index: linux-pm/drivers/cpuidle/governors/menu.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/menu.c
-+++ linux-pm/drivers/cpuidle/governors/menu.c
-@@ -33,7 +33,7 @@
- #define INTERVALS (1UL << INTERVAL_SHIFT)
- #define RESOLUTION 1024
- #define DECAY 8
--#define MAX_INTERESTING 50000
-+#define MAX_INTERESTING (50000 * NSEC_PER_USEC)
- 
- 
- /*
-@@ -120,14 +120,14 @@ struct menu_device {
- 	int             needs_update;
- 	int             tick_wakeup;
- 
--	unsigned int	next_timer_us;
-+	u64		next_timer_ns;
- 	unsigned int	bucket;
- 	unsigned int	correction_factor[BUCKETS];
- 	unsigned int	intervals[INTERVALS];
- 	int		interval_ptr;
- };
- 
--static inline int which_bucket(unsigned int duration, unsigned long nr_iowaiters)
-+static inline int which_bucket(u64 duration_ns, unsigned long nr_iowaiters)
- {
- 	int bucket = 0;
- 
-@@ -140,15 +140,15 @@ static inline int which_bucket(unsigned
- 	if (nr_iowaiters)
- 		bucket = BUCKETS/2;
- 
--	if (duration < 10)
-+	if (duration_ns < 10ULL * NSEC_PER_USEC)
- 		return bucket;
--	if (duration < 100)
-+	if (duration_ns < 100ULL * NSEC_PER_USEC)
- 		return bucket + 1;
--	if (duration < 1000)
-+	if (duration_ns < 1000ULL * NSEC_PER_USEC)
- 		return bucket + 2;
--	if (duration < 10000)
-+	if (duration_ns < 10000ULL * NSEC_PER_USEC)
- 		return bucket + 3;
--	if (duration < 100000)
-+	if (duration_ns < 100000ULL * NSEC_PER_USEC)
- 		return bucket + 4;
- 	return bucket + 5;
- }
-@@ -276,13 +276,13 @@ static int menu_select(struct cpuidle_dr
- 		       bool *stop_tick)
- {
- 	struct menu_device *data = this_cpu_ptr(&menu_devices);
--	int latency_req = cpuidle_governor_latency_req(dev->cpu);
--	int i;
--	int idx;
--	unsigned int interactivity_req;
-+	s64 latency_req = cpuidle_governor_latency_req(dev->cpu);
- 	unsigned int predicted_us;
-+	u64 predicted_ns;
-+	u64 interactivity_req;
- 	unsigned long nr_iowaiters;
- 	ktime_t delta_next;
-+	int i, idx;
- 
- 	if (data->needs_update) {
- 		menu_update(drv, dev);
-@@ -290,14 +290,14 @@ static int menu_select(struct cpuidle_dr
- 	}
- 
- 	/* determine the expected residency time, round up */
--	data->next_timer_us = ktime_to_us(tick_nohz_get_sleep_length(&delta_next));
-+	data->next_timer_ns = tick_nohz_get_sleep_length(&delta_next);
- 
- 	nr_iowaiters = nr_iowait_cpu(dev->cpu);
--	data->bucket = which_bucket(data->next_timer_us, nr_iowaiters);
-+	data->bucket = which_bucket(data->next_timer_ns, nr_iowaiters);
- 
- 	if (unlikely(drv->state_count <= 1 || latency_req == 0) ||
--	    ((data->next_timer_us < drv->states[1].target_residency ||
--	      latency_req < drv->states[1].exit_latency) &&
-+	    ((data->next_timer_ns < drv->states[1].target_residency_ns ||
-+	      latency_req < drv->states[1].exit_latency_ns) &&
- 	     !dev->states_usage[0].disable)) {
- 		/*
- 		 * In this case state[0] will be used no matter what, so return
-@@ -308,18 +308,15 @@ static int menu_select(struct cpuidle_dr
- 		return 0;
- 	}
- 
--	/*
--	 * Force the result of multiplication to be 64 bits even if both
--	 * operands are 32 bits.
--	 * Make sure to round up for half microseconds.
--	 */
--	predicted_us = DIV_ROUND_CLOSEST_ULL((uint64_t)data->next_timer_us *
--					 data->correction_factor[data->bucket],
--					 RESOLUTION * DECAY);
--	/*
--	 * Use the lowest expected idle interval to pick the idle state.
--	 */
--	predicted_us = min(predicted_us, get_typical_interval(data, predicted_us));
-+	/* Round up the result for half microseconds. */
-+	predicted_us = div_u64(data->next_timer_ns *
-+			       data->correction_factor[data->bucket] +
-+			       (RESOLUTION * DECAY * NSEC_PER_USEC) / 2,
-+			       RESOLUTION * DECAY * NSEC_PER_USEC);
-+	/* Use the lowest expected idle interval to pick the idle state. */
-+	predicted_ns = (u64)min(predicted_us,
-+				get_typical_interval(data, predicted_us)) *
-+				NSEC_PER_USEC;
- 
- 	if (tick_nohz_tick_stopped()) {
- 		/*
-@@ -330,14 +327,15 @@ static int menu_select(struct cpuidle_dr
- 		 * the known time till the closest timer event for the idle
- 		 * state selection.
- 		 */
--		if (predicted_us < TICK_USEC)
--			predicted_us = ktime_to_us(delta_next);
-+		if (predicted_ns < TICK_NSEC)
-+			predicted_ns = delta_next;
- 	} else {
- 		/*
- 		 * Use the performance multiplier and the user-configurable
- 		 * latency_req to determine the maximum exit latency.
- 		 */
--		interactivity_req = predicted_us / performance_multiplier(nr_iowaiters);
-+		interactivity_req = div64_u64(predicted_ns,
-+					      performance_multiplier(nr_iowaiters));
- 		if (latency_req > interactivity_req)
- 			latency_req = interactivity_req;
- 	}
-@@ -356,15 +354,15 @@ static int menu_select(struct cpuidle_dr
- 		if (idx == -1)
- 			idx = i; /* first enabled state */
- 
--		if (s->target_residency > predicted_us) {
-+		if (s->target_residency_ns > predicted_ns) {
- 			/*
- 			 * Use a physical idle state, not busy polling, unless
- 			 * a timer is going to trigger soon enough.
- 			 */
- 			if ((drv->states[idx].flags & CPUIDLE_FLAG_POLLING) &&
--			    s->exit_latency <= latency_req &&
--			    s->target_residency <= data->next_timer_us) {
--				predicted_us = s->target_residency;
-+			    s->exit_latency_ns <= latency_req &&
-+			    s->target_residency_ns <= data->next_timer_ns) {
-+				predicted_ns = s->target_residency_ns;
- 				idx = i;
- 				break;
- 			}
-@@ -378,7 +376,7 @@ static int menu_select(struct cpuidle_dr
- 				 * tick in that case and let the governor run
- 				 * again in the next iteration of the loop.
- 				 */
--				predicted_us = drv->states[idx].target_residency;
-+				predicted_ns = drv->states[idx].target_residency_ns;
- 				break;
- 			}
- 
-@@ -388,13 +386,13 @@ static int menu_select(struct cpuidle_dr
- 			 * closest timer event, select this one to avoid getting
- 			 * stuck in the shallow one for too long.
- 			 */
--			if (drv->states[idx].target_residency < TICK_USEC &&
--			    s->target_residency <= ktime_to_us(delta_next))
-+			if (drv->states[idx].target_residency_ns < TICK_NSEC &&
-+			    s->target_residency_ns <= delta_next)
- 				idx = i;
- 
- 			return idx;
- 		}
--		if (s->exit_latency > latency_req)
-+		if (s->exit_latency_ns > latency_req)
- 			break;
- 
- 		idx = i;
-@@ -408,12 +406,10 @@ static int menu_select(struct cpuidle_dr
- 	 * expected idle duration is shorter than the tick period length.
- 	 */
- 	if (((drv->states[idx].flags & CPUIDLE_FLAG_POLLING) ||
--	     predicted_us < TICK_USEC) && !tick_nohz_tick_stopped()) {
--		unsigned int delta_next_us = ktime_to_us(delta_next);
--
-+	     predicted_ns < TICK_NSEC) && !tick_nohz_tick_stopped()) {
- 		*stop_tick = false;
- 
--		if (idx > 0 && drv->states[idx].target_residency > delta_next_us) {
-+		if (idx > 0 && drv->states[idx].target_residency_ns > delta_next) {
- 			/*
- 			 * The tick is not going to be stopped and the target
- 			 * residency of the state to be returned is not within
-@@ -425,7 +421,7 @@ static int menu_select(struct cpuidle_dr
- 					continue;
- 
- 				idx = i;
--				if (drv->states[i].target_residency <= delta_next_us)
-+				if (drv->states[i].target_residency_ns <= delta_next)
- 					break;
- 			}
- 		}
-@@ -461,7 +457,7 @@ static void menu_update(struct cpuidle_d
- 	struct menu_device *data = this_cpu_ptr(&menu_devices);
- 	int last_idx = dev->last_state_idx;
- 	struct cpuidle_state *target = &drv->states[last_idx];
--	unsigned int measured_us;
-+	u64 measured_ns;
- 	unsigned int new_factor;
- 
- 	/*
-@@ -479,7 +475,7 @@ static void menu_update(struct cpuidle_d
- 	 * assume the state was never reached and the exit latency is 0.
- 	 */
- 
--	if (data->tick_wakeup && data->next_timer_us > TICK_USEC) {
-+	if (data->tick_wakeup && data->next_timer_ns > TICK_NSEC) {
- 		/*
- 		 * The nohz code said that there wouldn't be any events within
- 		 * the tick boundary (if the tick was stopped), but the idle
-@@ -489,7 +485,7 @@ static void menu_update(struct cpuidle_d
- 		 * have been idle long (but not forever) to help the idle
- 		 * duration predictor do a better job next time.
- 		 */
--		measured_us = 9 * MAX_INTERESTING / 10;
-+		measured_ns = 9 * MAX_INTERESTING / 10;
- 	} else if ((drv->states[last_idx].flags & CPUIDLE_FLAG_POLLING) &&
- 		   dev->poll_time_limit) {
- 		/*
-@@ -499,28 +495,29 @@ static void menu_update(struct cpuidle_d
- 		 * the CPU might have been woken up from idle by the next timer.
- 		 * Assume that to be the case.
- 		 */
--		measured_us = data->next_timer_us;
-+		measured_ns = data->next_timer_ns;
- 	} else {
- 		/* measured value */
--		measured_us = dev->last_residency;
-+		measured_ns = dev->last_residency_ns;
- 
- 		/* Deduct exit latency */
--		if (measured_us > 2 * target->exit_latency)
--			measured_us -= target->exit_latency;
-+		if (measured_ns > 2 * target->exit_latency_ns)
-+			measured_ns -= target->exit_latency_ns;
- 		else
--			measured_us /= 2;
-+			measured_ns /= 2;
- 	}
- 
- 	/* Make sure our coefficients do not exceed unity */
--	if (measured_us > data->next_timer_us)
--		measured_us = data->next_timer_us;
-+	if (measured_ns > data->next_timer_ns)
-+		measured_ns = data->next_timer_ns;
- 
- 	/* Update our correction ratio */
- 	new_factor = data->correction_factor[data->bucket];
- 	new_factor -= new_factor / DECAY;
- 
--	if (data->next_timer_us > 0 && measured_us < MAX_INTERESTING)
--		new_factor += RESOLUTION * measured_us / data->next_timer_us;
-+	if (data->next_timer_ns > 0 && measured_ns < MAX_INTERESTING)
-+		new_factor += RESOLUTION * div64_u64(measured_ns,
-+						     data->next_timer_ns);
- 	else
- 		/*
- 		 * we were idle so long that we count it as a perfect
-@@ -540,7 +537,7 @@ static void menu_update(struct cpuidle_d
- 	data->correction_factor[data->bucket] = new_factor;
- 
- 	/* update the repeating-pattern data */
--	data->intervals[data->interval_ptr++] = measured_us;
-+	data->intervals[data->interval_ptr++] = ktime_to_us(measured_ns);
- 	if (data->interval_ptr >= INTERVALS)
- 		data->interval_ptr = 0;
- }
-Index: linux-pm/drivers/cpuidle/governors/teo.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/teo.c
-+++ linux-pm/drivers/cpuidle/governors/teo.c
-@@ -104,7 +104,7 @@ struct teo_cpu {
- 	u64 sleep_length_ns;
- 	struct teo_idle_state states[CPUIDLE_STATE_MAX];
- 	int interval_idx;
--	unsigned int intervals[INTERVALS];
-+	u64 intervals[INTERVALS];
- };
- 
- static DEFINE_PER_CPU(struct teo_cpu, teo_cpus);
-@@ -117,9 +117,8 @@ static DEFINE_PER_CPU(struct teo_cpu, te
- static void teo_update(struct cpuidle_driver *drv, struct cpuidle_device *dev)
- {
- 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
--	unsigned int sleep_length_us = ktime_to_us(cpu_data->sleep_length_ns);
- 	int i, idx_hit = -1, idx_timer = -1;
--	unsigned int measured_us;
-+	u64 measured_ns;
- 
- 	if (cpu_data->time_span_ns >= cpu_data->sleep_length_ns) {
- 		/*
-@@ -127,23 +126,21 @@ static void teo_update(struct cpuidle_dr
- 		 * enough to the closest timer event expected at the idle state
- 		 * selection time to be discarded.
- 		 */
--		measured_us = UINT_MAX;
-+		measured_ns = U64_MAX;
- 	} else {
--		unsigned int lat;
-+		u64 lat_ns = drv->states[dev->last_state_idx].exit_latency_ns;
- 
--		lat = drv->states[dev->last_state_idx].exit_latency;
--
--		measured_us = ktime_to_us(cpu_data->time_span_ns);
-+		measured_ns = cpu_data->time_span_ns;
- 		/*
- 		 * The delay between the wakeup and the first instruction
- 		 * executed by the CPU is not likely to be worst-case every
- 		 * time, so take 1/2 of the exit latency as a very rough
- 		 * approximation of the average of it.
- 		 */
--		if (measured_us >= lat)
--			measured_us -= lat / 2;
-+		if (measured_ns >= lat_ns)
-+			measured_ns -= lat_ns / 2;
- 		else
--			measured_us /= 2;
-+			measured_ns /= 2;
- 	}
- 
- 	/*
-@@ -155,9 +152,9 @@ static void teo_update(struct cpuidle_dr
- 
- 		cpu_data->states[i].early_hits -= early_hits >> DECAY_SHIFT;
- 
--		if (drv->states[i].target_residency <= sleep_length_us) {
-+		if (drv->states[i].target_residency_ns <= cpu_data->sleep_length_ns) {
- 			idx_timer = i;
--			if (drv->states[i].target_residency <= measured_us)
-+			if (drv->states[i].target_residency_ns <= measured_ns)
- 				idx_hit = i;
- 		}
- 	}
-@@ -193,7 +190,7 @@ static void teo_update(struct cpuidle_dr
- 	 * Save idle duration values corresponding to non-timer wakeups for
- 	 * pattern detection.
- 	 */
--	cpu_data->intervals[cpu_data->interval_idx++] = measured_us;
-+	cpu_data->intervals[cpu_data->interval_idx++] = measured_ns;
- 	if (cpu_data->interval_idx > INTERVALS)
- 		cpu_data->interval_idx = 0;
- }
-@@ -203,11 +200,11 @@ static void teo_update(struct cpuidle_dr
-  * @drv: cpuidle driver containing state data.
-  * @dev: Target CPU.
-  * @state_idx: Index of the capping idle state.
-- * @duration_us: Idle duration value to match.
-+ * @duration_ns: Idle duration value to match.
-  */
- static int teo_find_shallower_state(struct cpuidle_driver *drv,
- 				    struct cpuidle_device *dev, int state_idx,
--				    unsigned int duration_us)
-+				    u64 duration_ns)
- {
- 	int i;
- 
-@@ -216,7 +213,7 @@ static int teo_find_shallower_state(stru
- 			continue;
- 
- 		state_idx = i;
--		if (drv->states[i].target_residency <= duration_us)
-+		if (drv->states[i].target_residency_ns <= duration_ns)
- 			break;
- 	}
- 	return state_idx;
-@@ -232,8 +229,9 @@ static int teo_select(struct cpuidle_dri
- 		      bool *stop_tick)
- {
- 	struct teo_cpu *cpu_data = per_cpu_ptr(&teo_cpus, dev->cpu);
--	int latency_req = cpuidle_governor_latency_req(dev->cpu);
--	unsigned int duration_us, hits, misses, early_hits;
-+	s64 latency_req = cpuidle_governor_latency_req(dev->cpu);
-+	u64 duration_ns;
-+	unsigned int hits, misses, early_hits;
- 	int max_early_idx, constraint_idx, idx, i;
- 	ktime_t delta_tick;
- 
-@@ -244,8 +242,8 @@ static int teo_select(struct cpuidle_dri
- 
- 	cpu_data->time_span_ns = local_clock();
- 
--	cpu_data->sleep_length_ns = tick_nohz_get_sleep_length(&delta_tick);
--	duration_us = ktime_to_us(cpu_data->sleep_length_ns);
-+	duration_ns = tick_nohz_get_sleep_length(&delta_tick);
-+	cpu_data->sleep_length_ns = duration_ns;
- 
- 	hits = 0;
- 	misses = 0;
-@@ -262,7 +260,7 @@ static int teo_select(struct cpuidle_dri
- 			 * Ignore disabled states with target residencies beyond
- 			 * the anticipated idle duration.
- 			 */
--			if (s->target_residency > duration_us)
-+			if (s->target_residency_ns > duration_ns)
- 				continue;
- 
- 			/*
-@@ -301,7 +299,7 @@ static int teo_select(struct cpuidle_dri
- 			 * shallow for that role.
- 			 */
- 			if (!(tick_nohz_tick_stopped() &&
--			      drv->states[idx].target_residency < TICK_USEC)) {
-+			      drv->states[idx].target_residency_ns < TICK_NSEC)) {
- 				early_hits = cpu_data->states[i].early_hits;
- 				max_early_idx = idx;
- 			}
-@@ -315,10 +313,10 @@ static int teo_select(struct cpuidle_dri
- 			misses = cpu_data->states[i].misses;
- 		}
- 
--		if (s->target_residency > duration_us)
-+		if (s->target_residency_ns > duration_ns)
- 			break;
- 
--		if (s->exit_latency > latency_req && constraint_idx > i)
-+		if (s->exit_latency_ns > latency_req && constraint_idx > i)
- 			constraint_idx = i;
- 
- 		idx = i;
-@@ -327,7 +325,7 @@ static int teo_select(struct cpuidle_dri
- 
- 		if (early_hits < cpu_data->states[i].early_hits &&
- 		    !(tick_nohz_tick_stopped() &&
--		      drv->states[i].target_residency < TICK_USEC)) {
-+		      drv->states[i].target_residency_ns < TICK_NSEC)) {
- 			early_hits = cpu_data->states[i].early_hits;
- 			max_early_idx = i;
- 		}
-@@ -343,7 +341,7 @@ static int teo_select(struct cpuidle_dri
- 	 */
- 	if (hits <= misses && max_early_idx >= 0) {
- 		idx = max_early_idx;
--		duration_us = drv->states[idx].target_residency;
-+		duration_ns = drv->states[idx].target_residency_ns;
- 	}
- 
- 	/*
-@@ -364,9 +362,9 @@ static int teo_select(struct cpuidle_dri
- 		 * the current expected idle duration value.
- 		 */
- 		for (i = 0; i < INTERVALS; i++) {
--			unsigned int val = cpu_data->intervals[i];
-+			u64 val = cpu_data->intervals[i];
- 
--			if (val >= duration_us)
-+			if (val >= duration_ns)
- 				continue;
- 
- 			count++;
-@@ -378,17 +376,17 @@ static int teo_select(struct cpuidle_dri
- 		 * values are in the interesting range.
- 		 */
- 		if (count > INTERVALS / 2) {
--			unsigned int avg_us = div64_u64(sum, count);
-+			u64 avg_ns = div64_u64(sum, count);
- 
- 			/*
- 			 * Avoid spending too much time in an idle state that
- 			 * would be too shallow.
- 			 */
--			if (!(tick_nohz_tick_stopped() && avg_us < TICK_USEC)) {
--				duration_us = avg_us;
--				if (drv->states[idx].target_residency > avg_us)
-+			if (!(tick_nohz_tick_stopped() && avg_ns < TICK_NSEC)) {
-+				duration_ns = avg_ns;
-+				if (drv->states[idx].target_residency_ns > avg_ns)
- 					idx = teo_find_shallower_state(drv, dev,
--								       idx, avg_us);
-+								       idx, avg_ns);
- 			}
- 		}
- 	}
-@@ -398,9 +396,7 @@ static int teo_select(struct cpuidle_dri
- 	 * expected idle duration is shorter than the tick period length.
- 	 */
- 	if (((drv->states[idx].flags & CPUIDLE_FLAG_POLLING) ||
--	    duration_us < TICK_USEC) && !tick_nohz_tick_stopped()) {
--		unsigned int delta_tick_us = ktime_to_us(delta_tick);
--
-+	    duration_ns < TICK_NSEC) && !tick_nohz_tick_stopped()) {
- 		*stop_tick = false;
- 
- 		/*
-@@ -409,8 +405,8 @@ static int teo_select(struct cpuidle_dri
- 		 * till the closest timer including the tick, try to correct
- 		 * that.
- 		 */
--		if (idx > 0 && drv->states[idx].target_residency > delta_tick_us)
--			idx = teo_find_shallower_state(drv, dev, idx, delta_tick_us);
-+		if (idx > 0 && drv->states[idx].target_residency_ns > delta_tick)
-+			idx = teo_find_shallower_state(drv, dev, idx, delta_tick);
- 	}
- 
- 	return idx;
-@@ -454,7 +450,7 @@ static int teo_enable_device(struct cpui
- 	memset(cpu_data, 0, sizeof(*cpu_data));
- 
- 	for (i = 0; i < INTERVALS; i++)
--		cpu_data->intervals[i] = UINT_MAX;
-+		cpu_data->intervals[i] = U64_MAX;
- 
- 	return 0;
- }
-Index: linux-pm/drivers/cpuidle/governors/haltpoll.c
-===================================================================
---- linux-pm.orig/drivers/cpuidle/governors/haltpoll.c
-+++ linux-pm/drivers/cpuidle/governors/haltpoll.c
-@@ -49,7 +49,7 @@ static int haltpoll_select(struct cpuidl
- 			   struct cpuidle_device *dev,
- 			   bool *stop_tick)
- {
--	int latency_req = cpuidle_governor_latency_req(dev->cpu);
-+	s64 latency_req = cpuidle_governor_latency_req(dev->cpu);
- 
- 	if (!drv->state_count || latency_req == 0) {
- 		*stop_tick = false;
-@@ -75,10 +75,9 @@ static int haltpoll_select(struct cpuidl
- 	return 0;
- }
- 
--static void adjust_poll_limit(struct cpuidle_device *dev, unsigned int block_us)
-+static void adjust_poll_limit(struct cpuidle_device *dev, u64 block_ns)
- {
- 	unsigned int val;
--	u64 block_ns = block_us*NSEC_PER_USEC;
- 
- 	/* Grow cpu_halt_poll_us if
- 	 * cpu_halt_poll_us < block_ns < guest_halt_poll_us
-@@ -115,7 +114,7 @@ static void haltpoll_reflect(struct cpui
- 	dev->last_state_idx = index;
- 
- 	if (index != 0)
--		adjust_poll_limit(dev, dev->last_residency);
-+		adjust_poll_limit(dev, dev->last_residency_ns);
- }
- 
- /**
-Index: linux-pm/kernel/sched/idle.c
-===================================================================
---- linux-pm.orig/kernel/sched/idle.c
-+++ linux-pm/kernel/sched/idle.c
-@@ -104,7 +104,7 @@ static int call_cpuidle(struct cpuidle_d
- 	 * update no idle residency and return.
- 	 */
- 	if (current_clr_polling_and_test()) {
--		dev->last_residency = 0;
-+		dev->last_residency_ns = 0;
- 		local_irq_enable();
- 		return -EBUSY;
- 	}
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
+--016AdyxrEnrgKM0NsyoJtaE66CTZDe96W--
 
+--aeTzOOUikqsVKEOsx0QyyLYXFesD57WRP
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAl3CobIACgkQWsYho5Hk
+nSA7sQf/er69fJSsoOBvGBnxpQKBjmWY1mb8W24+ZjzyfK54b6h5XI/PgTebMYZt
+O8nrRzTbhV+vTshWwN2ik77LrWDQ/YnfYtqKvz/Tyo1abacbGJKHZpORwY3zQk0t
+DXdy0XaktNnf846YGywsj2mBzUXCTClttcsW7mJ0jj0u2cCarrUZzqKgN1fGyE+W
+Zw3TtP6XiFSLPFFus4g2DH298EfL3ODPzR8Rz6bboT9p/X+jZl8V30gxjoJBKgye
+uuDHXoSLqAqr0YAMIBJ2zt4Rf4zx1omjI3vuXfvstSEUoasatcc8LCA7gKYpmLTS
+OifZ8cgIBmG+F/jbOVDG8LsPMZN02g==
+=LZVO
+-----END PGP SIGNATURE-----
+
+--aeTzOOUikqsVKEOsx0QyyLYXFesD57WRP--
