@@ -2,105 +2,117 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66B8AC5DF65
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:17:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C4BCC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D16E214D8
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:17:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573057042;
-	bh=/rYRSTyqNwWRwGHqjodYme/SP37OcL8yZ3/SusZ7Q+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=CAPt0sKLYAUcn+dTu9Zl/fCzbuakYOZfPKjaeZYZPV1W2fZic/hxCHPJpGDdVAu5z
-	 NArreV15t4yfS4rIIGTCJaQ/PAVhuCSA7LZw5hYCAz1j0EnFc8hfDYEd0Q9B20NxYA
-	 O7NZcfOmrRl+6ruZn1TwZoF5Km7by7n7MACYSPfg=
+	by mail.kernel.org (Postfix) with ESMTP id 72ED8214D8
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732150AbfKFQRV (ORCPT
+        id S1732168AbfKFQSV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:17:21 -0500
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:45510 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfKFQRV (ORCPT
+        Wed, 6 Nov 2019 11:18:21 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:50627 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727244AbfKFQSV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:17:21 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=6M+B3l0mYAuPdlo4NisvhpcZGxRIeK1UZtXEBEKLvTg=; b=fY/TbSAZEW7iHcxrOBDzEO4Ea
-        9Akm9bpl42LHWpb5rdDUtKEZwLZzNHxLlZdYkzagbcFaWeIjgw+L4DenOhDwKRw69G2bm8q4qRpxJ
-        y+eqyGboM0gsw0ycCt10QvM/OzKzcDD36PgBJjOfF4fcUMjf3pd3r6P3gchpQG4NhTYl4=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=ypsilon.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpsa (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        Wed, 6 Nov 2019 11:18:21 -0500
+Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
         (Exim 4.92)
-        (envelope-from <broonie@sirena.co.uk>)
-        id 1iSNzW-0001oA-6C; Wed, 06 Nov 2019 16:17:06 +0000
-Received: by ypsilon.sirena.org.uk (Postfix, from userid 1000)
-        id 5E53D2743035; Wed,  6 Nov 2019 16:17:05 +0000 (GMT)
-Date:   Wed, 6 Nov 2019 16:17:05 +0000
-From:   Mark Brown <broonie@kernel.org>
-To:     Robin Murphy <robin.murphy@arm.com>
-Cc:     Naresh Kamboju <naresh.kamboju@linaro.org>,
-        Russell King - ARM Linux <linux@armlinux.org.uk>,
-        catalin.marinas@arm.com, will@kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        open list <linux-kernel@vger.kernel.org>,
-        lkft-triage@lists.linaro.org, John Stultz <john.stultz@linaro.org>,
-        Linux-Next Mailing List <linux-next@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: Linux-next-20191106 : arm64: Internal error: Oops: 96000007
-Message-ID: <20191106161705.GA11849@sirena.co.uk>
-References: <CA+G9fYvm_QEq+9e+dni1Y+bJswr9bU5=shJcC+wKjjOyiPsXXQ@mail.gmail.com>
- <bfced8c8-c64f-982e-8797-d48b5ec65291@arm.com>
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iSO0f-0000VI-4J; Wed, 06 Nov 2019 17:18:17 +0100
+Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
+        (envelope-from <mfe@pengutronix.de>)
+        id 1iSO0d-0003OC-GA; Wed, 06 Nov 2019 17:18:15 +0100
+Date:   Wed, 6 Nov 2019 17:18:15 +0100
+From:   Marco Felsch <m.felsch@pengutronix.de>
+To:     Adam Ford <aford173@gmail.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH V2] ARM: dts: imx6q-logicpd: Enable ili2117a Touchscreen
+Message-ID: <20191106161815.uwcoe7spn3seupaq@pengutronix.de>
+References: <20191106142308.10511-1-aford173@gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="J/dobhs11T7y2rNN"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <bfced8c8-c64f-982e-8797-d48b5ec65291@arm.com>
-X-Cookie: Shah, shah!  Ayatollah you so!
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106142308.10511-1-aford173@gmail.com>
+X-Sent-From: Pengutronix Hildesheim
+X-URL:  http://www.pengutronix.de/
+X-IRC:  #ptxdist @freenode
+X-Accept-Language: de,en
+X-Accept-Content-Type: text/plain
+X-Uptime: 17:17:26 up 172 days, 22:35, 120 users,  load average: 0.16, 0.11,
+ 0.09
+User-Agent: NeoMutt/20170113 (1.7.2)
+X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
+X-SA-Exim-Mail-From: mfe@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Adam,
 
---J/dobhs11T7y2rNN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 19-11-06 08:23, Adam Ford wrote:
+> The LCD used with the imx6q-logicpd board has an integrated
+> ili2117a touch controller connected to i2c1.
+> 
+> This patch adds the node to enable this feature.
+> 
+> Signed-off-by: Adam Ford <aford173@gmail.com>
+> ---
+> ili2117 support is scheduled to be introduced for Kernel v5.5.
+> 
+> V2:  Change node to touchscreen@26 and move comment about 5.5 to under the dashes
+> 
+> diff --git a/arch/arm/boot/dts/imx6q-logicpd.dts b/arch/arm/boot/dts/imx6q-logicpd.dts
+> index d96ae54be338..7a3d1d3e54a9 100644
+> --- a/arch/arm/boot/dts/imx6q-logicpd.dts
+> +++ b/arch/arm/boot/dts/imx6q-logicpd.dts
+> @@ -73,6 +73,16 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c1 {
+> +	touchscreen@26 {
+> +		compatible = "ilitek,ili2117";
+> +		reg = <0x26>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_touchscreen>;
 
-On Wed, Nov 06, 2019 at 04:07:52PM +0000, Robin Murphy wrote:
+This phandle already exists?
 
-> FWIW this smells like a builtin driver had its of_device_id table marked
-> __init, leaving drv->of_match_table as a dangling pointer to freed memory by
-> this point.
+Regards,
+  Marco
 
-Indeed, in fact I sent a fix for this to Linus Walleij yesterday having
-seen the relevant build warning when testing -next.  Someone already
-reported that it fixed the boot issues.  Hopefully Linus will pick it up
-soon :/
+> +		interrupts-extended = <&gpio1 6 IRQ_TYPE_EDGE_RISING>;
+> +	};
+> +};
+> +
+>  &ldb {
+>  	status = "okay";
+>  
+> -- 
+> 2.20.1
+> 
+> 
+> 
 
---J/dobhs11T7y2rNN
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAl3C8gAACgkQJNaLcl1U
-h9D7Wgf9F9Yw6Kh7mvViQn49G9SuO0EnkXYRHUVKyoPkOmKjvTneGozwupi7xFEv
-k5zZ3ZeWF1wpyER0QTwCN4ifYYkws92Q3+EyUy+k/UuAxFjpuIXupYB+Q82Vy14Z
-8KtOGNm7ga+2kNaIW2qXUQrPrqfc2diitgP+DO/7Fsl/lUpq3gC60eSzHWx8krb6
-tkCMD/krVAGMwg35Bg3/i82x1AoDLMUSmuqvUns1ioWOaY6imO4GxH0fKV3H3IzN
-9FVhQl4pcpNGhPAvCS5nnp6mYyiJ2m2vwE4TNl8mux627sfCXKPhOR60zhTasgoU
-9Q9/phWOSE2PrOEKHfPkumPs/+YdCA==
-=R1Wg
------END PGP SIGNATURE-----
-
---J/dobhs11T7y2rNN--
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
