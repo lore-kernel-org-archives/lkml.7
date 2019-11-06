@@ -2,139 +2,177 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FAKE_REPLY_C,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 569B6C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:15:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C831EC5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:17:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2760221D6C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:15:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tMxNIDvA"
+	by mail.kernel.org (Postfix) with ESMTP id 9CBED217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 17:17:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573060621;
+	bh=Kmo1s7CxQnDK0BQrIV0JSH0SB2P/QRriqq7ZK/2nOPI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:List-ID:From;
+	b=hiUpWRSF7DKDIqrN+n9MsTXs5BcZmnKxw8WzcApovYcTwbzN5eMkUxP1TjH2PB/d3
+	 aCv3wgZ6DCQvmhYcp1PRU/2K+cd7Q/lXZ4idHrUKE77xyy+YEW88Ot7QwSA+na0EcI
+	 FBMFUFzWcSmfC+eqAjvFBb1P5Nm3nZSx2c28ZhXY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732316AbfKFRPq (ORCPT
+        id S1732276AbfKFRRA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 12:15:46 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:52248 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728448AbfKFRPp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 12:15:45 -0500
-Received: by mail-wm1-f67.google.com with SMTP id c17so4515595wmk.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 09:15:42 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=FqojnfYcPbpr6KlP+Ft2/Gak6vptdJZ9xOr44jOMXnA=;
-        b=tMxNIDvAAP/3hNNmYb9dR65I23CNeDHFutYeUIj9UPBedZMtQzp3pYv5OUT+TvGVXK
-         +be5HiG0r/qx+rEtzAVw+mNotoUdTmkLyldiFaLeag1CMBNl89KjljTBm2Kbv43R+IF1
-         ljyerVW6mBUC5F/3GrLuHyBxjdl/oaEtJLseE5zDbssgIGmn18VnhADXluty/a/s6NNQ
-         7hqapMvw//uieaJYjRfPZSG4Istnz/3w91Oj2cNmPemFqjzyOpnuWw3j8PSR+m+DNoMI
-         hCwPvrK1VPwcOtfNx2lYJr9yuIm7nvhMNiM2KDL256WYI/HiqsNe8R2XrGj3QIkrLLgc
-         ZaKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=FqojnfYcPbpr6KlP+Ft2/Gak6vptdJZ9xOr44jOMXnA=;
-        b=EyQ+e5tyuSQHuBQJhM/UUZOOw8GDcWIWa5xBIXT0wzcNoLzVQYQybk96IJWoka4h+4
-         AcsHke7DMsXwe9juRiYwq5gEFwE4PBREOaX9PhiL3hnow0tHXNfDewoInDBoQJu0qAmr
-         Fx2Gp48VIR2G2/jLrDuoRBQrbAHhP+WZBgXGbor+ZfxELZw2IOvZu9bod8bs+jaQL0qF
-         Ev7OhwdQbo+RRLrCNJlFh4JM8JPjmDoi7DqUUZKPPsryi8jXoOoEidgFhJN80mkIDcH1
-         syhvSiClsqNEpIkotD87LcFMitAIq/kjjBqendT7XHN2uVgruZbPpTnuZp80S3FlnlYD
-         3qgQ==
-X-Gm-Message-State: APjAAAXgepcMpg3X1ijazR9H9BATy4Y5Y8HAhMLPfS1oCwha7AjpxqsA
-        /J/CoYwZFIuF9TKhECooAdKliO9U2msgbPz9gug=
-X-Google-Smtp-Source: APXvYqxjPjEx3asqTpjp4vKsp2+A7S51N7f18TYCVywGXqWdqcC5r2midJFtjkDsHCgtr+/qe5CInKwpDXjoLN9dJy8=
-X-Received: by 2002:a1c:790b:: with SMTP id l11mr3718261wme.127.1573060541884;
- Wed, 06 Nov 2019 09:15:41 -0800 (PST)
+        Wed, 6 Nov 2019 12:17:00 -0500
+Received: from mail.kernel.org ([198.145.29.99]:34250 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728466AbfKFRRA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 12:17:00 -0500
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id C6C22217D7;
+        Wed,  6 Nov 2019 17:16:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573060619;
+        bh=Kmo1s7CxQnDK0BQrIV0JSH0SB2P/QRriqq7ZK/2nOPI=;
+        h=Date:From:To:Cc:Subject:In-Reply-To:From;
+        b=xcpi5412DgJ7s0+INXhrqbwVk22WtZeWoG21QqMIDOg3LnDGVIO52e3UzhuqxQYTQ
+         t/cj3MBm7uwchitdIz0+TKVSByzuMv5r23B8njQhzekXXxPC4ViJcUp5p/NHFN84sF
+         b/HBbqvbudn0Rgf46LOpYznT2Epr+AXamoHOjT/o=
+Date:   Wed, 6 Nov 2019 11:16:57 -0600
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     George Cherian <gcherian@marvell.com>
+Cc:     Robert Richter <rrichter@marvell.com>,
+        Jayachandran Chandrasekharan Nair <jnair@marvell.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "shannon.zhao@linux.alibaba.com" <shannon.zhao@linux.alibaba.com>,
+        Sunil Kovvuri Goutham <sgoutham@marvell.com>
+Subject: Re: [EXT] Re: [PATCH] PCI: Enhance the ACS quirk for Cavium devices
+Message-ID: <20191106171657.GA216284@google.com>
 MIME-Version: 1.0
-References: <1572874046-30996-1-git-send-email-yukuai3@huawei.com> <1572874046-30996-8-git-send-email-yukuai3@huawei.com>
-In-Reply-To: <1572874046-30996-8-git-send-email-yukuai3@huawei.com>
-From:   Alex Deucher <alexdeucher@gmail.com>
-Date:   Wed, 6 Nov 2019 12:15:30 -0500
-Message-ID: <CADnq5_MjhnBA-mUwPgdHRuit+=CgZjs0HC+JHqeD_gmciaONFQ@mail.gmail.com>
-Subject: Re: [PATCH 7/7] drm/amdgpu: remove set but not used variable 'mc_shared_chmap'
-To:     yu kuai <yukuai3@huawei.com>
-Cc:     "Deucher, Alexander" <alexander.deucher@amd.com>,
-        Christian Koenig <christian.koenig@amd.com>,
-        Chunming Zhou <David1.Zhou@amd.com>,
-        Dave Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        "Zhou, Jammy" <Jammy.Zhou@amd.com>, tiancyin <tianci.yin@amd.com>,
-        Sam Ravnborg <sam@ravnborg.org>,
-        "Tuikov, Luben" <luben.tuikov@amd.com>, yi.zhang@huawei.com,
-        LKML <linux-kernel@vger.kernel.org>,
-        Maling list - DRI developers 
-        <dri-devel@lists.freedesktop.org>,
-        zhengbin <zhengbin13@huawei.com>,
-        amd-gfx list <amd-gfx@lists.freedesktop.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191028213313.GA145605@google.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 8:54 AM yu kuai <yukuai3@huawei.com> wrote:
->
-> Fixes gcc '-Wunused-but-set-variable' warning:
->
-> drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c: In function
-> =E2=80=98gfx_v8_0_gpu_early_init=E2=80=99:
-> drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c:1713:6: warning: variable
-> =E2=80=98mc_shared_chmap=E2=80=99 set but not used [-Wunused-but-set-vari=
-able]
->
-> Fixes: 0bde3a95eaa9 ("drm/amdgpu: split gfx8 gpu init into sw and hw part=
-s")
-> Signed-off-by: yu kuai <yukuai3@huawei.com>
+On Mon, Oct 28, 2019 at 04:33:13PM -0500, Bjorn Helgaas wrote:
+> On Tue, Oct 22, 2019 at 04:15:39PM -0500, Bjorn Helgaas wrote:
+> > On Wed, Oct 09, 2019 at 07:42:53AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Oct 09, 2019 at 02:51:15AM +0000, George Cherian wrote:
+> > > > Hi Bjorn,
+> > > > 
+> > > > Sorry for the late reply I was off for couple of days.
+> > > > 
+> > > > On 10/8/19 2:32 PM, Bjorn Helgaas wrote:
+> > > > > External Email
+> > > > >
+> > > > > ----------------------------------------------------------------------
+> > > > > On Tue, Oct 08, 2019 at 08:25:23AM +0000, Robert Richter wrote:
+> > > > >> On 04.10.19 14:48:13, Bjorn Helgaas wrote:
+> > > > >>> commit 37b22fbfec2d
+> > > > >>> Author: George Cherian <george.cherian@marvell.com>
+> > > > >>> Date:   Thu Sep 19 02:43:34 2019 +0000
+> > > > >>>
+> > > > >>>      PCI: Apply Cavium ACS quirk to CN99xx and CN11xxx Root Ports
+> > > > >>>      
+> > > > >>>      Add an array of Cavium Root Port device IDs and apply the quirk only to the
+> > > > >>>      listed devices.
+> > > > >>>      
+> > > > >>>      Instead of applying the quirk to all Root Ports where
+> > > > >>>      "(dev->device & 0xf800) == 0xa000", apply it only to CN88xx 0xa180 and
+> > > > >>>      0xa170 Root Ports.
+> > > > 
+> > > > All the root ports of CN88xx series will have device id's 0xa180 and 0xa170.
+> > > > 
+> > > > This patch currently targets only CN88xx series and not all of the CN8xxx.
+> > > > 
+> > > > For eg:- 83xx devices don't wont the quirk to be applied as of today. 
+> > > > The quirk
+> > > > 
+> > > > needs to be applied only for TX1 series and not oncteon-tx1 series.
+> > > > 
+> > > > >> No, this can't be removed. It is a match all for all CN8xxx variants
+> > > > >> (note the 3 'x', all TX1 cores). So all device ids from 0xa000 to
+> > > > >> 0xa7FF are affected here and need the quirk.
+> > > > > OK, I'll drop the patch and wait for a new one.  Maybe what was needed
+> > > > > was to keep the "(dev->device & 0xf800) == 0xa000" part and add the
+> > > > > pci_quirk_cavium_acs_ids[] array in addition?
+> > > > >
+> > > > >>>      Also apply the quirk to CN99xx (0xaf84) and CN11xxx (0xb884) Root Ports.
+> > > > 
+> > > > The device id's for all variants of CN99xx is 0xaf84 and CN11xxx will be 
+> > > > 0xb884.
+> > > > 
+> > > > So this patch holds good for TX2 as well as TX3 series of processors.
+> > > 
+> > > OK, can you and Robert get together and post something with Robert's
+> > > Reviewed-by?  Please make the commit log a little more specific about
+> > > which families/variants are supported (the vendor IDs are very
+> > > specific, but not as user-friendly as CN99xx, etc).
+> > 
+> > Just to make sure this doesn't get lost, please post an update.  I
+> > currently do not have this patch queued up for v5.5 because I haven't
+> > seen a clear consensus on what it should look like.
+> 
+> Ping?
 
-Looks like gfx_v7_0.c and gfx_v6_0.c could have the same treatment.
-Care to send patches?
+Ping again.  This Cavium ACS quirk is *not* queued up for v5.5.
 
-Applied the series.  Thanks!
+If you still want the quirk, please repost it and get Robert's
+Reviewed-by.
 
-Alex
-
-> ---
->  drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c b/drivers/gpu/drm/amd/=
-amdgpu/gfx_v8_0.c
-> index e4c645d..80b7958 100644
-> --- a/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-> +++ b/drivers/gpu/drm/amd/amdgpu/gfx_v8_0.c
-> @@ -1710,7 +1710,7 @@ static int gfx_v8_0_do_edc_gpr_workarounds(struct a=
-mdgpu_device *adev)
->  static int gfx_v8_0_gpu_early_init(struct amdgpu_device *adev)
->  {
->         u32 gb_addr_config;
-> -       u32 mc_shared_chmap, mc_arb_ramcfg;
-> +       u32 mc_arb_ramcfg;
->         u32 dimm00_addr_map, dimm01_addr_map, dimm10_addr_map, dimm11_add=
-r_map;
->         u32 tmp;
->         int ret;
-> @@ -1850,7 +1850,6 @@ static int gfx_v8_0_gpu_early_init(struct amdgpu_de=
-vice *adev)
->                 break;
->         }
->
-> -       mc_shared_chmap =3D RREG32(mmMC_SHARED_CHMAP);
->         adev->gfx.config.mc_arb_ramcfg =3D RREG32(mmMC_ARB_RAMCFG);
->         mc_arb_ramcfg =3D adev->gfx.config.mc_arb_ramcfg;
->
-> --
-> 2.7.4
->
-> _______________________________________________
-> amd-gfx mailing list
-> amd-gfx@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/amd-gfx
+> > > > >> I thought the quirk is CN8xxx specific, but I could be wrong here.
+> > > > >>
+> > > > >> -Robert
+> > > > >>
+> > > > >>>      
+> > > > >>>      Link: https://urldefense.proofpoint.com/v2/url?u=https-3A__lore.kernel.org_r_20190919024319.GA8792-40dc5-2Deodlnx05.marvell.com&d=DwIBAg&c=nKjWec2b6R0mOyPaz7xtfQ&r=8vKOpC26NZGzQPAMiIlimxyEGCRSJiq-j8yyjPJ6VZ4&m=Vmml-rx3t63ZbbXZ0XaESAM9yAlexE29R-giTbcj4Qk&s=57jKIj8BAydbLpftLt5Ssva7vD6GuoCaIpjTi-sB5kU&e=
+> > > > >>>      Fixes: f2ddaf8dfd4a ("PCI: Apply Cavium ThunderX ACS quirk to more Root Ports")
+> > > > >>>      Fixes: b404bcfbf035 ("PCI: Add ACS quirk for all Cavium devices")
+> > > > >>>      Signed-off-by: George Cherian <george.cherian@marvell.com>
+> > > > >>>      Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+> > > > >>>      Cc: stable@vger.kernel.org      # v4.12+
+> > > > >>>
+> > > > >>> diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+> > > > >>> index 320255e5e8f8..4e5048cb5ec6 100644
+> > > > >>> --- a/drivers/pci/quirks.c
+> > > > >>> +++ b/drivers/pci/quirks.c
+> > > > >>> @@ -4311,17 +4311,24 @@ static int pci_quirk_amd_sb_acs(struct pci_dev *dev, u16 acs_flags)
+> > > > >>>   #endif
+> > > > >>>   }
+> > > > >>>   
+> > > > >>> +static const u16 pci_quirk_cavium_acs_ids[] = {
+> > > > >>> +	0xa180, 0xa170,		/* CN88xx family of devices */
+> > > > >>> +	0xaf84,			/* CN99xx family of devices */
+> > > > >>> +	0xb884,			/* CN11xxx family of devices */
+> > > > >>> +};
+> > > > >>> +
+> > > > >>>   static bool pci_quirk_cavium_acs_match(struct pci_dev *dev)
+> > > > >>>   {
+> > > > >>> -	/*
+> > > > >>> -	 * Effectively selects all downstream ports for whole ThunderX 1
+> > > > >>> -	 * family by 0xf800 mask (which represents 8 SoCs), while the lower
+> > > > >>> -	 * bits of device ID are used to indicate which subdevice is used
+> > > > >>> -	 * within the SoC.
+> > > > >>> -	 */
+> > > > >>> -	return (pci_is_pcie(dev) &&
+> > > > >>> -		(pci_pcie_type(dev) == PCI_EXP_TYPE_ROOT_PORT) &&
+> > > > >>> -		((dev->device & 0xf800) == 0xa000));
+> > > > >>> +	int i;
+> > > > >>> +
+> > > > >>> +	if (!pci_is_pcie(dev) || pci_pcie_type(dev) != PCI_EXP_TYPE_ROOT_PORT)
+> > > > >>> +		return false;
+> > > > >>> +
+> > > > >>> +	for (i = 0; i < ARRAY_SIZE(pci_quirk_cavium_acs_ids); i++)
+> > > > >>> +		if (pci_quirk_cavium_acs_ids[i] == dev->device)
+> > > > >>> +			return true;
+> > > > >>> +
+> > > > >>> +	return false;
+> > > > >>>   }
+> > > > >>>   
+> > > > >>>   static int pci_quirk_cavium_acs(struct pci_dev *dev, u16 acs_flags)
