@@ -2,86 +2,164 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F20C47E49
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DF7C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42FE42067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573013772;
-	bh=fmGAlQwZXlQwLpcFHzgo8W4Alpqb/uFeQsy1ha5K4+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=FF1sB3SCesFEOIYGtk1wB6joCIh7Zq12kJd3sxen8qKlyF/v4WEB08aZjj0dOMKw6
-	 b3CLhjzaciM603qKJwwlzpAjqF35lRs/+O6hizt8LpvZvG3Mq5MrXjzSzBggtM8w9d
-	 3IuqxCCLbCDAgPOmL3zQ2DOaR3sy/ZU+FLoMVBQc=
+	by mail.kernel.org (Postfix) with ESMTP id 620FE2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 04:16:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nifty.com header.i=@nifty.com header.b="PQGhudb9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731199AbfKFEQL (ORCPT
+        id S1731226AbfKFEQc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 23:16:11 -0500
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:46615 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727266AbfKFEQL (ORCPT
+        Tue, 5 Nov 2019 23:16:32 -0500
+Received: from conssluserg-04.nifty.com ([210.131.2.83]:33463 "EHLO
+        conssluserg-04.nifty.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727266AbfKFEQc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 23:16:11 -0500
-Received: by mail-oi1-f196.google.com with SMTP id n14so4028178oie.13;
-        Tue, 05 Nov 2019 20:16:10 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=YyIz8f1e9UfiTAitqdpO0gSzcZ8qqT+hCle9bN35WzI=;
-        b=B1NNwIIzFkTYFMJZl1shJ8EV63Xt/qewjuRSU+NKoXu78rS5+qo6GX2fCfPFrVGtTi
-         EGmAo09tjrgBkcrj5I1FcxhCbLEHmtdTAnHCaF2ICRRcxm/Kq5DjikUV7CJFJmeYSTO8
-         um/xPaDInyvcIfT5Nu4NaZtNtKSeKj742aKQvsQgtz1fa4W3Xhrk461rtm18raha3dVk
-         aBpvUHL5fATZNFF0+wrCEF+R+YlUO0GPiipUpTOncPyhVmTryAJD1FmZ7Kbgp4srtDTG
-         KfyE0xD0FANBHvEAR+AAsJlejfVmO89XimGHoWvpgb1Ir6Wh0GKKv6cw11KNG5jjAr8z
-         X0rw==
-X-Gm-Message-State: APjAAAUP9lR/QBFIbD7M8eF7hK3CoDHMkvXlrRYhKf7nFpOneq4d7cso
-        aX+PzG9yy9LqoTfk6dcYCw==
-X-Google-Smtp-Source: APXvYqx3I4HQVzBQc3zq/SLJYwhrOMbaEj1Kj7im68FUhkqovz+Jg6Aj3wFPbiVOYEEOavsrH0Th0A==
-X-Received: by 2002:aca:6207:: with SMTP id w7mr407049oib.87.1573013770143;
-        Tue, 05 Nov 2019 20:16:10 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id 103sm3515081otn.63.2019.11.05.20.16.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 20:16:09 -0800 (PST)
-Date:   Tue, 5 Nov 2019 22:16:08 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Benjamin Gaignard <benjamin.gaignard@st.com>
-Cc:     mark.rutland@arm.com, alexandre.torgue@st.com,
-        fabrice.gasnier@st.com, jic23@kernel.org, knaack.h@gmx.de,
-        lars@metafoo.de, pmeerw@pmeerw.net, lee.jones@linaro.org,
-        thierry.reding@gmail.com, u.kleine-koenig@pengutronix.de,
-        devicetree@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-iio@vger.kernel.org, linux-pwm@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: counter: Convert stm32 counter bindings
- to json-schema
-Message-ID: <20191106041608.GA24747@bogus>
-References: <20191031123040.26316-1-benjamin.gaignard@st.com>
- <20191031123040.26316-2-benjamin.gaignard@st.com>
- <20191106041023.GB5294@bogus>
+        Tue, 5 Nov 2019 23:16:32 -0500
+Received: from mail-vs1-f49.google.com (mail-vs1-f49.google.com [209.85.217.49]) (authenticated)
+        by conssluserg-04.nifty.com with ESMTP id xA64GQDP008203;
+        Wed, 6 Nov 2019 13:16:27 +0900
+DKIM-Filter: OpenDKIM Filter v2.10.3 conssluserg-04.nifty.com xA64GQDP008203
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nifty.com;
+        s=dec2015msa; t=1573013787;
+        bh=oq2kVTgJnhwHzQg6FYk0N33Gkp9WTDpEnW/af98rhL8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=PQGhudb9I08q8LPWfnqoOWuLLs5X+mGpAQziK25vEzrTIvYt5zBVFCgvQeaD6mSNz
+         8nSM9Wjtt2ecKL1ccG0YsJF7zaLURVJ2xhI3uR22YINY4XebxpTOp+AtO7wtittIvI
+         HMfhOphz2kfwtkGaQMet8OjJXAwwH1/suWVnpEq2F5RNCGx++35U357xEETqnsau4U
+         yNNj0rlxBtKHWbU2ux4iDicg9Lz5ugIsrpVOeaYClNH4HZBOsMdzyS+ezqk3HfhAL7
+         wG+cJ0dR5LNC5A8rnFkn3D/SwDefQ46T1V2PFAm1g3zaRhN8GtS89t6lvLnKTixTXf
+         u4eUobhmuJkzQ==
+X-Nifty-SrcIP: [209.85.217.49]
+Received: by mail-vs1-f49.google.com with SMTP id k15so15073726vsp.2;
+        Tue, 05 Nov 2019 20:16:26 -0800 (PST)
+X-Gm-Message-State: APjAAAUHHw2T/9q6kXRIyMsPOyIwWAqEpXstB6PNGZapLcdsVqnUIv+c
+        VUxBvlRJSiGi9em89O5uHCgO8Iei8b9plZYpJKE=
+X-Google-Smtp-Source: APXvYqyj2fn6n6xfIF0zWdZVbfoYZNCKmN0aECMFEX4AODzPIGTNIPvyzpVHP4cWRdHOCSwn4LNzAWBWw3vOWk/7IsE=
+X-Received: by 2002:a05:6102:726:: with SMTP id u6mr262077vsg.179.1573013785785;
+ Tue, 05 Nov 2019 20:16:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106041023.GB5294@bogus>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20191025080544.7209-1-unixbhaskar@gmail.com>
+In-Reply-To: <20191025080544.7209-1-unixbhaskar@gmail.com>
+From:   Masahiro Yamada <yamada.masahiro@socionext.com>
+Date:   Wed, 6 Nov 2019 13:15:50 +0900
+X-Gmail-Original-Message-ID: <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
+Message-ID: <CAK7LNAT1=e36tLgPcHUOxKUSCH7MW3egYuJMtY+OfZWvHRxfGA@mail.gmail.com>
+Subject: Re: [PATCH] scripts:patch-kernel:bash syntax replace,correct one
+To:     Bhaskar Chowdhury <unixbhaskar@gmail.com>
+Cc:     Michal Marek <michal.lkml@markovi.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Nov 05, 2019 at 10:10:23PM -0600, Rob Herring wrote:
-> On Thu, Oct 31, 2019 at 01:30:37PM +0100, Benjamin Gaignard wrote:
-> > Convert the STM32 counter binding to DT schema format using json-schema
-> 
-> Probably this should all be 1 file instead.
+On Fri, Oct 25, 2019 at 5:06 PM Bhaskar Chowdhury <unixbhaskar@gmail.com> wrote:
+>
+> This patch will replace backquote to dollar parenthesis syntax
+> for better readability.Corrected one.
 
-Also, checkpatch reports trailing whitespace in several of your patches.
+Talking about the commit subject,
+which part is 'bash syntax' ?
 
-Rob
+One more thing,
+"correct one" is not the correct way to send
+a new patch version.
+See the patch submission from other people.
+The version number is enclosed in the square brackets.
+
+[PATCH v2]
+
+
+The commit subject should describe what it does
+in imperative mood.
+
+https://patchwork.kernel.org/patch/11205593/
+
+
+
+
+
+> Signed-off-by: Bhaskar Chowdhury <unixbhaskar@gmail.com>
+> ---
+>  scripts/patch-kernel | 14 +++++++-------
+>  1 file changed, 7 insertions(+), 7 deletions(-)
+>
+> diff --git a/scripts/patch-kernel b/scripts/patch-kernel
+> index 033d5916797d..6f9443336f9a 100755
+> --- a/scripts/patch-kernel
+> +++ b/scripts/patch-kernel
+> @@ -153,7 +153,7 @@ applyPatch () {
+>      echo "failed.  Clean up yourself."
+>      return 1;
+>    fi
+> -  if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
+> +  if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
+>    then
+>      echo "Aborting.  Reject files found."
+>      return 1;
+> @@ -175,7 +175,7 @@ reversePatch () {
+>                 echo "failed.  Clean it up."
+>                 exit 1
+>         fi
+> -       if [ "`find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print`" ]
+> +       if [ "$(find $sourcedir/ '(' -name '*.rej' -o -name '.*.rej' ')' -print)" ]
+>         then
+>                 echo "Aborting.  Reject files found."
+>                 return 1
+> @@ -189,7 +189,7 @@ reversePatch () {
+>  # set current VERSION, PATCHLEVEL, SUBLEVEL, EXTRAVERSION
+>  # force $TMPFILEs below to be in local directory: a slash character prevents
+>  # the dot command from using the search path.
+> -TMPFILE=`mktemp ./.tmpver.XXXXXX` || { echo "cannot make temp file" ; exit 1; }
+> +TMPFILE=$(mktemp ./.tmpver.XXXXXX) || { echo "cannot make temp file" ; exit 1; }
+>  grep -E "^(VERSION|PATCHLEVEL|SUBLEVEL|EXTRAVERSION)" $sourcedir/Makefile > $TMPFILE
+>  tr -d [:blank:] < $TMPFILE > $TMPFILE.1
+>  . $TMPFILE.1
+> @@ -200,7 +200,7 @@ then
+>      exit 1
+>  fi
+>
+> -NAME=`grep ^NAME $sourcedir/Makefile`
+> +NAME=$(grep ^NAME $sourcedir/Makefil)
+>  NAME=${NAME##*=}
+>
+>  echo "Current kernel version is $VERSION.$PATCHLEVEL.$SUBLEVEL${EXTRAVERSION} ($NAME)"
+> @@ -216,8 +216,8 @@ fi
+>
+>  #echo "stopvers=$stopvers"
+>  if [ $stopvers != "default" ]; then
+> -       STOPSUBLEVEL=`echo $stopvers | cut -d. -f3`
+> -       STOPEXTRA=`echo $stopvers | cut -d. -f4`
+> +       STOPSUBLEVEL=$(echo $stopvers | cut -d. -f3)
+> +       STOPEXTRA=$(echo $stopvers | cut -d. -f4)
+>         STOPFULLVERSION=${stopvers%%.$STOPEXTRA}
+>         #echo "#___STOPSUBLEVEL=/$STOPSUBLEVEL/, STOPEXTRA=/$STOPEXTRA/"
+>  else
+> @@ -306,7 +306,7 @@ if [ x$gotac != x ]; then
+>                 HIGHESTPATCH=0
+>                 for PATCHNAMES in $patchdir/patch-${CURRENTFULLVERSION}-ac*\.*
+>                 do
+> -                       ACVALUE=`echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/'`
+> +                       ACVALUE=$(echo $PATCHNAMES | sed -e 's/^.*patch-[0-9.]*-ac\([0-9]*\).*/\1/')
+>                         # Check it is actually a recognised patch type
+>                         findFile $patchdir/patch-${CURRENTFULLVERSION}-ac${ACVALUE} || break
+>
+> --
+> 2.20.1
+>
+
+
+--
+Best Regards
+Masahiro Yamada
