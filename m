@@ -2,127 +2,144 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC87BC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF63AC5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA95E2067B
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91CBB2067B
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 16:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="XJZ97RoI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732265AbfKFQd2 (ORCPT
+        id S1732272AbfKFQd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 11:33:28 -0500
-Received: from youngberry.canonical.com ([91.189.89.112]:58582 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727570AbfKFQd1 (ORCPT
+        Wed, 6 Nov 2019 11:33:58 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:50433 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727570AbfKFQd6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 11:33:27 -0500
-Received: from 1.general.cking.uk.vpn ([10.172.193.212])
-        by youngberry.canonical.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.86_2)
-        (envelope-from <colin.king@canonical.com>)
-        id 1iSOFI-0006sg-V3; Wed, 06 Nov 2019 16:33:25 +0000
-To:     Eric Sandeen <sandeen@sandeen.net>,
-        "Darrick J. Wong" <darrick.wong@oracle.com>
-Cc:     linux-xfs@vger.kernel.org, kernel-janitors@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20191106155248.266489-1-colin.king@canonical.com>
- <20191106155631.GJ4153244@magnolia>
- <cbb99652-c6b2-c81c-128d-6d85be04fddc@canonical.com>
- <a77fff95-0591-bcca-2541-3fd68c0da908@sandeen.net>
-From:   Colin Ian King <colin.king@canonical.com>
-Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
- 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
-Subject: Re: [PATCH][next] xfs: remove redundant assignment to variable error
-Message-ID: <a022504e-ed58-8eb4-0a38-9feae2281086@canonical.com>
-Date:   Wed, 6 Nov 2019 16:33:24 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.1
+        Wed, 6 Nov 2019 11:33:58 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573058037;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=2/sGkcTJE/ccczjwCQaoSfIzTXnhbggMBxft/2WrJ4g=;
+        b=XJZ97RoIYoPNp1WTL/dzpyTc2UjK/FEuiDGoqVEY2dfLmhZRAhmvKWrH4ZdsQEy2clPZ/3
+        kSWH1rCcsxAC8AjWjJmoyqXD8u+qFXDpdMb/kAvNfv9+Yp30dTdL858PteknMkKAgUZ3/L
+        fNlSHZsHXr/slsas/aOS9Fv1CPbF+Sk=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-392-kuPXPneyPBSCkIQZ-8JgJg-1; Wed, 06 Nov 2019 11:33:54 -0500
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id F0F1C1005500;
+        Wed,  6 Nov 2019 16:33:52 +0000 (UTC)
+Received: from krava (ovpn-204-115.brq.redhat.com [10.40.204.115])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 498BA5D70D;
+        Wed,  6 Nov 2019 16:33:50 +0000 (UTC)
+Date:   Wed, 6 Nov 2019 17:33:50 +0100
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Andi Kleen <andi@firstfloor.org>
+Cc:     acme@kernel.org, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: Re: [PATCH v4 5/9] perf stat: Use affinity for closing file
+ descriptors
+Message-ID: <20191106163350.GL30214@krava>
+References: <20191105002522.83803-1-andi@firstfloor.org>
+ <20191105002522.83803-6-andi@firstfloor.org>
 MIME-Version: 1.0
-In-Reply-To: <a77fff95-0591-bcca-2541-3fd68c0da908@sandeen.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20191105002522.83803-6-andi@firstfloor.org>
+User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-MC-Unique: kuPXPneyPBSCkIQZ-8JgJg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2019 16:19, Eric Sandeen wrote:
-> 
-> 
-> On 11/6/19 9:59 AM, Colin Ian King wrote:
->> On 06/11/2019 15:56, Darrick J. Wong wrote:
->>> On Wed, Nov 06, 2019 at 03:52:48PM +0000, Colin King wrote:
->>>> From: Colin Ian King <colin.king@canonical.com>
->>>>
->>>> Variable error is being initialized with a value that is never read
->>>> and is being re-assigned a couple of statements later on. The
->>>> assignment is redundant and hence can be removed.
->>>>
->>>> Addresses-Coverity: ("Unused value")
->>>
->>> Er... is there a coverity id that goes with this?
->>
->> Unfortunately it is a private one, so it does not make sense to use it.
-> 
-> If it's not in the upstream coverity scan (and AFAICT it's not),
+On Mon, Nov 04, 2019 at 04:25:18PM -0800, Andi Kleen wrote:
 
-that's because I'm using coverity with improved tuned coverage settings
-and coverity scan is just set on the default low setting.
+SNIP
 
-> it makes no sense to reference coverity in the commit log.
-> It's not useful to anyone IMHO.
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index dccf96e0d01b..8f3bfbe277b5 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -18,6 +18,7 @@
+>  #include "debug.h"
+>  #include "units.h"
+>  #include <internal/lib.h> // page_size
+> +#include "affinity.h"
+>  #include "../perf.h"
+>  #include "asm/bug.h"
+>  #include "bpf-event.h"
+> @@ -1165,9 +1166,33 @@ void perf_evlist__set_selected(struct evlist *evli=
+st,
+>  void evlist__close(struct evlist *evlist)
+>  {
+>  =09struct evsel *evsel;
+> +=09struct affinity affinity;
+> +=09int cpu, i;
+> =20
+> -=09evlist__for_each_entry_reverse(evlist, evsel)
+> -=09=09evsel__close(evsel);
+> +=09if (!evlist->core.cpus) {
+> +=09=09evlist__for_each_entry_reverse(evlist, evsel)
+> +=09=09=09evsel__close(evsel);
+> +=09=09return;
+> +=09}
+> +
+> +=09if (affinity__setup(&affinity) < 0)
+> +=09=09return;
+> +=09evlist__cpu_iter_start(evlist);
+> +=09evlist__for_each_cpu (evlist, i, cpu) {
+> +=09=09affinity__set(&affinity, cpu);
+> +
+> +=09=09evlist__for_each_entry_reverse(evlist, evsel) {
+> +=09=09=09if (evlist__cpu_iter_skip(evsel, cpu))
+> +=09=09=09    continue;
+> +=09=09=09perf_evsel__close_cpu(&evsel->core, evsel->cpu_index);
+> +=09=09=09evlist__cpu_iter_next(evsel);
+> +=09=09}
+> +=09}
 
-It's useful for tracking which bugs are being picked up with Coverity
-and the kind of bug issue. I'm trying to gather stats on static analysis
-fixes that land in linux to help catagorize the types of issues with
-fixes landing upstream.
+looks much better, how about we make it even more compact
+from above patern, like:
 
-> 
-> -Eric
-> 
+=09affinity__setup
+
+=09evlist__cpu_iter(evlist, i, cpu) {
+=09=09affinity__set(&affinity, cpu);
+
+=09=09evlist__for_each_entry_reverse(evlist, evsel) {
+=09=09=09if (evsel__cpu_iter_skip(evsel, cpu))
+=09=09=09=09continue;
+=09=09=09perf_evsel__close_cpu(&evsel->core, evsel->cpu_iter);
+=09=09}
+=09}
+
+=09affinity__cleanup
+
+where:
+  - evlist__cpu_iter would call evlist__cpu_iter_start
+
+  - evlist__cpu_iter_skip could increment evsel->cpu_index in false case
+    so there's no need to have evlist__cpu_iter_next
+
+  - rename evsel->cpu_index to evsel->cpu_iter
+
+  - renamse evlist__cpu_iter_skip to evsel__cpu_iter_skip
+
+jirka
 
