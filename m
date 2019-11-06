@@ -2,107 +2,132 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8877C5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:01:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23387C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:03:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 798AD217D7
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:01:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9103217D7
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 05:03:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="Yy2IJLOf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725817AbfKFFBG (ORCPT
+        id S1725884AbfKFFDg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 00:01:06 -0500
-Received: from esa4.mentor.iphmx.com ([68.232.137.252]:63027 "EHLO
-        esa4.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725294AbfKFFBG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 00:01:06 -0500
-IronPort-SDR: LEjyBz/hShNhraoTai+ddYuiJnC1TtvDitH1geiFEYqBgSNnPJ5yyTpNes34b20w6BzO/ESa4Q
- Q1jxx0EeFreH/4yyQPN8VINzeXOuowgWy4zeF5O/d0OPcrCQwwVzZ8vrKBK5hNWMpvgmjQs4Cu
- jYLLgiedWyxri+t4QZU7bAtwAoJhuTk4C2pl/gxfMbXWZu3x/ZhMR6r7eKcBdjXbykUrVwh+X/
- 4r0BP/x4V+UipLocTcCfUhdJdo2tRZu9aFpsSLYkQjwKEs8+R1Z74YrfqMO4vQRhV7Fu6rx2/5
- WNg=
-X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
-   d="scan'208";a="42941235"
-Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa4.mentor.iphmx.com with ESMTP; 05 Nov 2019 21:01:05 -0800
-IronPort-SDR: DEnSIc8sTnkLz5TFHo1a55qhTvAGt9UxuO2A7jtmFGllmL/3TK6ahhHsxD4lub43mEv+fXH8zN
- OOSQ6QW3Os9QirBX6VSMORtYK80kVPhsmuQ+9XuZ1xJOATJZudosND+xPWiMnNXIkrHWZ2bwWX
- ZiOyKXf4fsSyTRvgBvKEJS3heEX/xY3QBHmOMKPEdKuOGUflVjVL2i+wxbBVOsiCqwb7Ksgpnj
- OUUgA3ETpDGQKv5egt0aij8PYaqRTkjVw4j9WFtWx8izFGqJytzZJ7fXQLa7UVkfvFIsEWmWtW
- JII=
-Subject: Re: [PATCH v4 01/48] Input: introduce input_mt_report_slot_inactive
-To:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>
-CC:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
-        <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <erosca@de.adit-jv.com>, <Andrew_Gabbasov@mentor.com>
-References: <20191029072010.8492-1-jiada_wang@mentor.com>
- <20191029072010.8492-2-jiada_wang@mentor.com>
- <b3de4c05-d2d1-58f8-a447-d5e127574ac0@bitmath.org>
- <20191030232311.GK57214@dtor-ws>
-From:   Jiada Wang <jiada_wang@mentor.com>
-Message-ID: <d16af9ab-0814-0986-1558-06b7ea60d4f7@mentor.com>
-Date:   Wed, 6 Nov 2019 14:00:55 +0900
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 00:03:36 -0500
+Received: from bilbo.ozlabs.org ([203.11.71.1]:50479 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725797AbfKFFDg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 00:03:36 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 477DvS1hrHz9sPF;
+        Wed,  6 Nov 2019 16:03:32 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1573016613;
+        bh=MdD6/XCrITz84UvHjAMMlm2DKaTOIlnNL24y+pFhAa0=;
+        h=Date:From:To:Cc:Subject:From;
+        b=Yy2IJLOfyLXzCIgVUmoQFaiZXtutzV6Q/qFrwaxaGaRAnkciV057MtG02kfYnoah6
+         JVeqcHXj5t7L7pblwmxXKO4XUzhuEJ5qpXBqKheOEgqwsIHyl2REJwhbyoGUyhMaxe
+         zAMemqfzUeMJVvWWWX8i4es5xwE2c6qngNgYag77NCwRy1SCS8q5n+yTffwZ9SU7Yk
+         YRQdjZE0/RyrwIIafAJqRq1e0T6G0aKzUPFJyTExJn4HqT133bcuB81PFZYKjfuSkE
+         OKci6LuCoL2TGGJb4CZQez4E79BUJFLS6X2YAfkfI7m+1m6av7pxr2amRkUak4F05w
+         Jru+wpUznRYrg==
+Date:   Wed, 6 Nov 2019 16:03:31 +1100
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kees Cook <keescook@google.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@elte.hu>, "H. Peter Anvin" <hpa@zytor.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Pankaj Bharadiya <pankaj.laxminarayan.bharadiya@intel.com>,
+        Cyrill Gorcunov <gorcunov@gmail.com>
+Subject: linux-next: manual merge of the kspp tree with the tip tree
+Message-ID: <20191106160331.016b2521@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20191030232311.GK57214@dtor-ws>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: SVR-ORW-MBX-06.mgc.mentorg.com (147.34.90.206) To
- svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
+Content-Type: multipart/signed; boundary="Sig_/PJf3dd9n9+QwGxmYo4m+6=U";
+ protocol="application/pgp-signature"; micalg=pgp-sha256
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Dmitry
+--Sig_/PJf3dd9n9+QwGxmYo4m+6=U
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-thanks for your comment,
-I will update accordingly in v5 patch-set
+Hi all,
 
-Thanks,
-Jiada
+Today's linux-next merge of the kspp tree got a conflict in:
 
-On 2019/10/31 8:23, Dmitry Torokhov wrote:
-> On Tue, Oct 29, 2019 at 06:13:09PM +0100, Henrik Rydberg wrote:
->> Hi Jiada,
->>
->>> input_mt_report_slot_state() ignores the tool when the slot is closed.
->>> which has caused a bit of confusion.
->>> This patch introduces input_mt_report_slot_inactive() to report slot
->>> inactive state.
->>> replaces all input_mt_report_slot_state() with
->>> input_mt_report_slot_inactive() in case of close of slot.
->>>
->>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->>
->> NACK on this one.
->>
->> We already discussed this patch and the potentially changed behavior to
->> existing setups stemming from ignoring the MT state.
->>
->> On the upside, what I can see this patch does exactly no difference to the
->> cases where the MT state is set, so it can be safely dropped without
->> affecting the rest of the patch series.
-> 
-> I guess Jiada's concern that we are forcing to pass tool type even
-> though we end up ignoring it intervally, which confuses users of the API
-> as they might not know what tool to specify.
-> 
-> How about we do:
-> 
-> static inline void input_mt_report_slot_inactive(struct input_dev *dev)
-> {
-> 	input_mt_report_slot_state(dev, 0, false);
-> }
-> 
-> This should not change any behavior.
-> 
-> Thanks.
-> 
+  arch/x86/kernel/fpu/xstate.c
+
+between commit:
+
+  446e693ca30b ("x86/fpu: Use XFEATURE_FP/SSE enum values instead of hardco=
+ded numbers")
+
+from the tip tree and commit:
+
+  ec2f877856e0 ("treewide: Use sizeof_member() macro")
+
+from the kspp tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/x86/kernel/fpu/xstate.c
+index 319be936c348,023b0a28e13b..000000000000
+--- a/arch/x86/kernel/fpu/xstate.c
++++ b/arch/x86/kernel/fpu/xstate.c
+@@@ -254,13 -254,10 +254,13 @@@ static void __init setup_xstate_feature
+  	 * in the fixed offsets in the xsave area in either compacted form
+  	 * or standard form.
+  	 */
+ -	xstate_offsets[0] =3D 0;
+ -	xstate_sizes[0] =3D offsetof(struct fxregs_state, xmm_space);
+ -	xstate_offsets[1] =3D xstate_sizes[0];
+ -	xstate_sizes[1] =3D sizeof_member(struct fxregs_state, xmm_space);
+ +	xstate_offsets[XFEATURE_FP]	=3D 0;
+ +	xstate_sizes[XFEATURE_FP]	=3D offsetof(struct fxregs_state,
+ +						   xmm_space);
+ +
+ +	xstate_offsets[XFEATURE_SSE]	=3D xstate_sizes[XFEATURE_FP];
+- 	xstate_sizes[XFEATURE_SSE]	=3D FIELD_SIZEOF(struct fxregs_state,
+- 						       xmm_space);
+++	xstate_sizes[XFEATURE_SSE]	=3D sizeof_member(struct fxregs_state,
+++							xmm_space);
+ =20
+  	for (i =3D FIRST_EXTENDED_XFEATURE; i < XFEATURE_MAX; i++) {
+  		if (!xfeature_enabled(i))
+
+--Sig_/PJf3dd9n9+QwGxmYo4m+6=U
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3CVCMACgkQAVBC80lX
+0GxEEAf/a3/xA9E9jpoa6PZE9i9aEcfPCqHhoaVVPXXFUWwD584mg3tO/ala5wrd
+SlwLlLN8JrofrAC7TJxjHk7jq6oEW8nT7Ulzb3L8Hjq20rDW4szJhDFZAQGs4cKW
+aNp0aj8XSfb9VvoVWk8GSx/TYcL66+oeckJB+DWP7J0Kbvy8P5CbFU7se59aD/bC
+OO+CBlBJuRFjALnYYHhaD8qZNLmXkJjZr43DQ4dzba8RyRJdE9YystEIgVvWuBOd
+It9APqMIQJyHwntuKEF3YK/wbhIoS3GsC3HfKc9rBvT/GIeVA5QIy1+AXp+fn8CU
+CzDsORCZAeV6x+m67YIVXeWWYtRUYA==
+=cs12
+-----END PGP SIGNATURE-----
+
+--Sig_/PJf3dd9n9+QwGxmYo4m+6=U--
