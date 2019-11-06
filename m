@@ -2,156 +2,377 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A0DC5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34DAEC5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E386721D81
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF744222C2
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 02:53:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="AakFXTDE"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="MoPwdOu1";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="ETazk69p"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730962AbfKFCxr (ORCPT
+        id S1731036AbfKFCxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 21:53:47 -0500
-Received: from mailout3.samsung.com ([203.254.224.33]:51062 "EHLO
-        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730788AbfKFCxq (ORCPT
+        Tue, 5 Nov 2019 21:53:50 -0500
+Received: from smtp.codeaurora.org ([198.145.29.96]:57454 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730788AbfKFCxs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 21:53:46 -0500
-Received: from epcas1p4.samsung.com (unknown [182.195.41.48])
-        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20191106025343epoutp03ed7f08ac909af2359a27850ef20f9c3d~UczC-4IbM1274312743epoutp03P
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 02:53:43 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20191106025343epoutp03ed7f08ac909af2359a27850ef20f9c3d~UczC-4IbM1274312743epoutp03P
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1573008823;
-        bh=c+htrw9iv9xikd9Wwvo79t4A1HBHKqx5O+jWGfGZChs=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=AakFXTDELDA3MD9jF32eUQen/Lflv9FjmswTv6uWInOBxTfW9Vp2yWdSSS0ing+3m
-         j9gm8W91wL8JCTBdLt3FNhx5wBFDsnGQszY+cMxgHR41HxW9MeTf6WZyltsRQLXTIq
-         vBcqVwvCe9gIZ/e11dI8B7QZayMv5azYJtdiT/74=
-Received: from epsnrtp1.localdomain (unknown [182.195.42.162]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20191106025342epcas1p1487f0bb0e8e66cfd9b96bb9200306e6b~UczCZiAiP1662516625epcas1p1N;
-        Wed,  6 Nov 2019 02:53:42 +0000 (GMT)
-Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
-        epsnrtp1.localdomain (Postfix) with ESMTP id 477B1c0JwTzMqYlh; Wed,  6 Nov
-        2019 02:53:40 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
-        C2.A7.04135.3B532CD5; Wed,  6 Nov 2019 11:53:39 +0900 (KST)
-Received: from epsmtrp1.samsung.com (unknown [182.195.40.13]) by
-        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
-        20191106025339epcas1p306fb60459576ef49b786d3722267296d~Ucy-twpnV1215812158epcas1p3K;
-        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
-Received: from epsmgms1p2new.samsung.com (unknown [182.195.42.42]) by
-        epsmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20191106025339epsmtrp16de644898f53229341cab4841d289e45~Ucy-s5vYU1236412364epsmtrp1K;
-        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
-X-AuditID: b6c32a36-7e3ff70000001027-35-5dc235b331c5
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        68.4D.25663.3B532CD5; Wed,  6 Nov 2019 11:53:39 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20191106025339epsmtip1275826dcc7148b13f5f397a994defc1a~Ucy-gNNlK2316223162epsmtip15;
-        Wed,  6 Nov 2019 02:53:39 +0000 (GMT)
-Subject: Re: [PATCH] MAINTAINERS: Update myself as maintainer for DEVFREQ
- subsystem support
-To:     "Rafael J. Wysocki" <rjw@rjwysocki.net>, myungjoo.ham@samsung.com
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "chanwoo@kernel.org" <chanwoo@kernel.org>,
-        "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "robh@kernel.org" <robh@kernel.org>, CPGS <cpgs@samsung.com>
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6a94e191-b460-bd9c-cae1-50ac93163eb1@samsung.com>
-Date:   Wed, 6 Nov 2019 11:59:16 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.9.0
+        Tue, 5 Nov 2019 21:53:48 -0500
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C6C2D60B19; Wed,  6 Nov 2019 02:53:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573008818;
+        bh=ZNbrx0OoFfiIYzKe6eKZHH36QNhXSTZh2FwseYgbt4M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=MoPwdOu1ivkyZetaCQ39eey6Jd2uj1heZNg3A2h9MO5mztTLwdV6xi5/lhP8oUVIF
+         kJt4mMvQU9gY1zUzcoXYctFv9OWFqv9yvFDXNbrQknlTwKBBNCItDYuaZSU17Lo1xt
+         3ucMaWQiE3sVI8aigWjp1TFwS/OLI55aHnO7ebCY=
+Received: from [10.79.136.17] (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: rnayak@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 5090D602C8;
+        Wed,  6 Nov 2019 02:53:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1573008817;
+        bh=ZNbrx0OoFfiIYzKe6eKZHH36QNhXSTZh2FwseYgbt4M=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=ETazk69pnq7abNzDoeg0EogzI2m+gTq5jYfrTaWEUzdu/q6SqeWL+g+P+IwWMKxPh
+         2f1Bxt8U5DV9mGI1VAliM188DpdZkxFf9+gqALKS9OfUwuYdDze6IVtzR9xNMlRIMu
+         sYwPwiIFDi3WUwTZ3lz6EgqrxLjLxBuTBhkd/x/k=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 5090D602C8
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=rnayak@codeaurora.org
+Subject: Re: [PATCH 1/1] arm64: dts: sc7180: Add qupv3_0 and qupv3_1
+To:     Roja Rani Yarubandi <rojay@codeaurora.org>,
+        Andy Gross <agross@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>
+Cc:     mgautam@codeaurora.org, akashast@codeaurora.org,
+        msavaliy@codeaurora.org, sanm@codeaurora.org,
+        skakit@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20191031074500.28523-1-rojay@codeaurora.org>
+ <20191031074500.28523-2-rojay@codeaurora.org>
+From:   Rajendra Nayak <rnayak@codeaurora.org>
+Message-ID: <13ad90c0-ff46-f85c-df5f-55e4985af76b@codeaurora.org>
+Date:   Wed, 6 Nov 2019 08:23:31 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <11401342.1EApItjJl2@kreacher>
+In-Reply-To: <20191031074500.28523-2-rojay@codeaurora.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA01SaUwTYRD127a7Ra2uVWRCouLqHzBgFyysBFABscaLRE2MsambslJCr3Rb
-        zz/FVhQjKGgkVsT7AI1HWwniUa1GRVQQrPGOBhLFi1jAKMSj7Wrk35v53sybN99IRfILeKy0
-        yGjlLEZWT+HDxQ034xWJHqVfrfjxNp2pfPpYzHT745maVqeYcRw9hzMdTTU40xMsw5gXJadw
-        5n5Lu4T5faWRmB2l8tY9w1Tu+jJc5TtwhlB5A1vFqgpvPVL1uifm4yuLM3QcW8BZ4jij1lRQ
-        ZCzMpBYs1eRolKkKOpGeyaRRcUbWwGVSuQvzE/OK9KGhqLi1rN4WSuWzPE9Nz8qwmGxWLk5n
-        4q2ZFGcu0JtnmpN41sDbjIVJWpMhnVYokpUh4upiXWfAh5kbiPVb7OW4HQ1ItqMoKZAzYMsv
-        N7YdDZfKyUYE7c4+QgiCCFyf7iIh+Ibg/pPB0Is0UlJRtUbIX0XwapcHF4IeBKed5/Fw37Gk
-        Gr42XI9ojCPnQmdVtTiMRWQAg94SPoxxMgF8759G+KPJyRD43onCWEZmQWXNzwhfTE6Fcvth
-        SVg4mlwBLf2sQBkDzfu6IpQochq0N1UjoX0MPO86iAl4Ejgu7heFZwPSQUD/DQcSDOTCg7LV
-        gv2x8OGOlxBwLHTvLP2LN0Fd8y1cqN2GwOtr+7uvFPAd342F+4jIeDjXNF1IT4ZLgweQgGVg
-        vzBICDOMgi/9OySCrAy2lcoFyhToePMK24WmuIa4cQ1x4BriwPVf7BAS16PxnJk3FHI8bU4e
-        +tduFDnXhNRGdOThQj8ipYgaKRu27oZaLmHX8hsMfgRSETVOtqoilJIVsBs2chaTxmLTc7wf
-        KUO7rhTFRmtNoeM3WjW0MjklJYWZQacqaZqKkc05eVwtJwtZK1fMcWbO8q8Ok0bF2lHRQM/R
-        2qRHvTvUDrc24Z0HrqVNmz/ho0er8Gb3XQkS5t0j6k5kR2eNOjlr75K8D2Myvr6sCrTr6lpK
-        aksN/ntdi+0xPOGsf5G++XXrl2Wfzw5Qv2/P1tZa+iYs0n1qbp0nOpZ9k2tOCz6ZmtvWnZOb
-        vTyQv8f57vLZBb22pLdB/VVKzOtYOkFk4dk/noMqU8QDAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprLIsWRmVeSWpSXmKPExsWy7bCSnO5m00OxBjOvSVtMvHGFxeLlIU2L
-        OedbWCyaF69ns7i8aw6bxftPnUwWtxtXsFmcOX2J1eL/nh3sDpweW1beZPLYtKqTzWP/3DXs
-        HluutrN49G1ZxejxeZNcAFsUl01Kak5mWWqRvl0CV8bjq/uZCraxV7Q29LI1MP5i7WLk4JAQ
-        MJHom5TWxcjJISSwm1Fi4yklEFtCQFJi2sWjzBAlwhKHDxd3MXIBlbxllFh17Cc7SI2wQKzE
-        x20HWEFsEQFXiceTprOAFDELXGeSmDutmw2i4x5Qx891TCBVbAJaEvtf3GADsfkFFCWu/njM
-        CGLzCthJTJzzlwXEZhFQkehtWAg2VVQgQuL59htQNYISJ2c+AavhFNCWuLRrOlicWUBd4s+8
-        S8wQtrjErSfzmSBseYnmrbOZJzAKz0LSPgtJyywkLbOQtCxgZFnFKJlaUJybnltsWGCUl1qu
-        V5yYW1yal66XnJ+7iREcaVpaOxhPnIg/xCjAwajEw8tQfjBWiDWxrLgy9xCjBAezkghvTB9Q
-        iDclsbIqtSg/vqg0J7X4EKM0B4uSOK98/rFIIYH0xJLU7NTUgtQimCwTB6dUA2PVr/rznfXT
-        u9dveG4k/LDFn7vSJy7XYcm6Bd5Tb+W9lOfnMz9lwBFyOP1jQXfvJnlORmFXi7dMQtPOnvhj
-        6KvGbxGr8ntRdb3J14z4JLdzZw5GGFl0nPtUzZ5waoeFS+/1O6cyv6TXRK/bWSS1a41xS3/3
-        BZdJG57WuW17k/sk8GPYw6Pb+ZRYijMSDbWYi4oTAeliQQCwAgAA
-X-CMS-MailID: 20191106025339epcas1p306fb60459576ef49b786d3722267296d
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-X-Sendblock-Type: SVC_REQ_APPROVE
-X-CPGSPASS: Y
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5
-References: <1019298652.01572934681167.JavaMail.epsvc@epcpadp2>
-        <CGME20191105053547epcas1p248c5a77579a8dd6fbd3639a12f3ca4c5@epcms1p2>
-        <1019298652.01572945181528.JavaMail.epsvc@epcpadp2>
-        <11401342.1EApItjJl2@kreacher>
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19. 11. 6. 오전 1:44, Rafael J. Wysocki wrote:
-> On Tuesday, November 5, 2019 8:35:05 AM CET MyungJoo Ham wrote:
->>> Update myself to the DEVFREQ entry as maintainer from reviewer and
->>> the git repository information to manage the devfreq patches. I've been
->>> reviewing and tesing the devfreq support for the couple of years as reviewer.
->> >From now, I'll help and reiview the devfreq as maintainer.
->>>
->>> Suggested-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>
->> Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
->>
->>
->> Thanks a lot, Chanwoo!
-> 
-> I can take this one if no one is against that.
 
-Thanks for picking up.
 
+On 10/31/2019 1:15 PM, Roja Rani Yarubandi wrote:
+> Add QUP SE instances configuration for sc7180.
 > 
-> I will be expecting devfreq pull requests from Chanwoo going forward.
+> Signed-off-by: Roja Rani Yarubandi <rojay@codeaurora.org>
+> ---
+>   arch/arm64/boot/dts/qcom/sc7180-idp.dts | 152 +++++-
+>   arch/arm64/boot/dts/qcom/sc7180.dtsi    | 683 +++++++++++++++++++++++-
+>   2 files changed, 828 insertions(+), 7 deletions(-)
 > 
+> diff --git a/arch/arm64/boot/dts/qcom/sc7180-idp.dts b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> index e0724ef3317d..189254f5ae95 100644
+> --- a/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sc7180-idp.dts
+[]..
 
-After you applied it, If it's not late, I'll send the pull-request
-of devfreq for v5.5. Thanks.
+>   
+>   		tlmm: pinctrl@3500000 {
+> @@ -230,12 +623,294 @@
+[]..
+> +
+> +			qup_i2c0_default: qup-i2c0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_i2c1_default: qup-i2c1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_i2c2_default: qup-i2c2-default {
+> +				pinmux {
+> +					pins = "gpio15", "gpio16";
+> +					function = "qup02";
+> +				};
+> +			};
+> +
+> +			qup_i2c3_default: qup-i2c3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_i2c4_default: qup-i2c4-default {
+> +				pinmux {
+> +					pins = "gpio115", "gpio116";
+> +					function = "qup04";
+> +				};
+> +			};
+> +
+> +			qup_i2c5_default: qup-i2c5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_i2c6_default: qup-i2c6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60";
+> +					function = "qup06";
+
+The pinctrl driver has no functions named qup06/07/08/09
+These are the qup functions listed
+
+         FUNCTION(qup00),
+         FUNCTION(qup01),
+         FUNCTION(qup02),
+         FUNCTION(qup03),
+         FUNCTION(qup04),
+         FUNCTION(qup05),
+         FUNCTION(qup10),
+         FUNCTION(qup11),
+         FUNCTION(qup12),
+         FUNCTION(qup13),
+         FUNCTION(qup14),
+         FUNCTION(qup15),
+
+> +				};
+> +			};
+> +
+> +			qup_i2c7_default: qup-i2c7-default {
+> +				pinmux {
+> +					pins = "gpio6", "gpio7";
+> +					function = "qup07";
+> +				};
+> +			};
+> +
+> +			qup_i2c8_default: qup-i2c8-default {
+> +				pinmux {
+> +					pins = "gpio42", "gpio43";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_i2c9_default: qup-i2c9-default {
+> +				pinmux {
+> +					pins = "gpio46", "gpio47";
+> +					function = "qup09";
+> +				};
+> +			};
+> +
+> +			qup_i2c10_default: qup-i2c10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_i2c11_default: qup-i2c11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54";
+> +					function = "qup11";
+> +				};
+> +			};
+> +
+> +			qup_spi0_default: qup-spi0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35",
+> +					       "gpio36", "gpio37";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_spi1_default: qup-spi1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1",
+> +					       "gpio2", "gpio3",
+> +					       "gpio12", "gpio94";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_spi3_default: qup-spi3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39",
+> +					       "gpio40", "gpio41";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_spi5_default: qup-spi5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26",
+> +					       "gpio27", "gpio28";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_spi6_default: qup-spi6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60",
+> +					       "gpio61", "gpio62",
+> +					       "gpio68", "gpio72";
+> +					function = "qup06";
+> +				};
+> +			};
+> +
+> +			qup_spi8_default: qup-spi8-default {
+> +				pinmux {
+> +					pins = "gpio42", "gpio43",
+> +					       "gpio44", "gpio45";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_spi10_default: qup-spi10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87",
+> +					       "gpio88", "gpio89",
+> +					       "gpio90", "gpio91";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_spi11_default: qup-spi11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54",
+> +					       "gpio55", "gpio56";
+> +					function = "qup11";
+> +				};
+> +			};
+> +
+> +			qup_uart0_default: qup-uart0-default {
+> +				pinmux {
+> +					pins = "gpio34", "gpio35",
+> +					       "gpio36", "gpio37";
+> +					function = "qup00";
+> +				};
+> +			};
+> +
+> +			qup_uart1_default: qup-uart1-default {
+> +				pinmux {
+> +					pins = "gpio0", "gpio1",
+> +					       "gpio2", "gpio3";
+> +					function = "qup01";
+> +				};
+> +			};
+> +
+> +			qup_uart2_default: qup-uart2-default {
+> +				pinmux {
+> +					pins = "gpio15", "gpio16";
+> +					function = "qup02";
+> +				};
+> +			};
+> +
+> +			qup_uart3_default: qup-uart3-default {
+> +				pinmux {
+> +					pins = "gpio38", "gpio39",
+> +					       "gpio40", "gpio41";
+> +					function = "qup03";
+> +				};
+> +			};
+> +
+> +			qup_uart4_default: qup-uart4-default {
+> +				pinmux {
+> +					pins = "gpio115", "gpio116";
+> +					function = "qup04";
+> +				};
+> +			};
+> +
+> +			qup_uart5_default: qup-uart5-default {
+> +				pinmux {
+> +					pins = "gpio25", "gpio26",
+> +					       "gpio27", "gpio28";
+> +					function = "qup05";
+> +				};
+> +			};
+> +
+> +			qup_uart6_default: qup-uart6-default {
+> +				pinmux {
+> +					pins = "gpio59", "gpio60",
+> +					       "gpio61", "gpio62";
+> +					function = "qup06";
+> +				};
+> +			};
+> +
+> +			qup_uart7_default: qup-uart7-default {
+> +				pinmux {
+> +					pins = "gpio6", "gpio7";
+> +					function = "qup07";
+> +				};
+> +			};
+> +
+> +			qup_uart8_default: qup-uart8-default {
+>   				pinmux {
+>   					pins = "gpio44", "gpio45";
+> -					function = "qup12";
+> +					function = "qup08";
+> +				};
+> +			};
+> +
+> +			qup_uart9_default: qup-uart9-default {
+> +				pinmux {
+> +					pins = "gpio46", "gpio47";
+> +					function = "qup09";
+>   				};
+>   			};
+> +
+> +			qup_uart10_default: qup-uart10-default {
+> +				pinmux {
+> +					pins = "gpio86", "gpio87",
+> +					       "gpio88", "gpio89";
+> +					function = "qup10";
+> +				};
+> +			};
+> +
+> +			qup_uart11_default: qup-uart11-default {
+> +				pinmux {
+> +					pins = "gpio53", "gpio54",
+> +					       "gpio55", "gpio56";
+> +					function = "qup11";
+> +				};
+> +			};
+> +		};
+> +
+> +		qspi: spi@88dc000 {
+> +			compatible = "qcom,qspi-v1";
+> +			reg = <0 0x088dc000 0 0x600>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			interrupts = <GIC_SPI 119 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&gcc GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +				 <&gcc GCC_QSPI_CORE_CLK>;
+> +			clock-names = "iface", "core";
+> +			status = "disabled";
+>   		};
+>   
+>   		spmi_bus: spmi@c440000 {
+> 
 
 -- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
