@@ -2,163 +2,218 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.7 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 526D4C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:56:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76845C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D85420869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:56:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 41B15217F9
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 18:58:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=poorly.run header.i=@poorly.run header.b="cIfRAAiC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731897AbfKFS40 (ORCPT
+        id S1730415AbfKFS6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 13:56:26 -0500
-Received: from szxga05-in.huawei.com ([45.249.212.191]:5739 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727208AbfKFS4Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 13:56:25 -0500
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id B9BAA58BFBDC6172BC23;
-        Thu,  7 Nov 2019 02:56:23 +0800 (CST)
-Received: from A190218597.china.huawei.com (10.202.226.45) by
- DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
- 14.3.439.0; Thu, 7 Nov 2019 02:56:14 +0800
-From:   Salil Mehta <salil.mehta@huawei.com>
-To:     <davem@davemloft.net>, <maz@kernel.org>
-CC:     <edumazet@google.com>, <salil.mehta@huawei.com>,
-        <yisen.zhuang@huawei.com>, <lipeng321@huawei.com>,
-        <mehta.salil@opnsrc.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>, <linuxarm@huawei.com>
-Subject: [PATCH net] net: hns: Fix the stray netpoll locks causing deadlock in NAPI path
-Date:   Wed, 6 Nov 2019 18:54:05 +0000
-Message-ID: <20191106185405.23112-1-salil.mehta@huawei.com>
-X-Mailer: git-send-email 2.8.3
+        Wed, 6 Nov 2019 13:58:18 -0500
+Received: from mail-yw1-f65.google.com ([209.85.161.65]:39321 "EHLO
+        mail-yw1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727208AbfKFS6S (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 13:58:18 -0500
+Received: by mail-yw1-f65.google.com with SMTP id k127so9950186ywc.6
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 10:58:17 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=poorly.run; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0MXcH0+MhIAIwCsst+sUwWj3vWo2sspD8l9LQIiuDn8=;
+        b=cIfRAAiC4qOCBoT4IlNmmCOs9EQ2pN4IhUvbQsdYXeFHylavkdQGeKM/3wVCba+aGL
+         6MUuR52YYvyBqz1Y0YG56AwHc3EnAy2Tu5xAqyEkdpBXibfAET4SUObouTM5Mnygu15K
+         ZWZPG0S/E7/dBd3Hr31G70u1SvmduxPKYYy6NVJNLPlPEmyZAv/Mz18+8BBm6IpAPVrA
+         iTryLGi9BxvHLgrgsj0XCESANItuSjZfPLcHV5bjHKT/aiqnm5KfXd3st1OSocvTdDuR
+         eA07Qzwnd/RcfAeahaxQd/rQL0DJJOw7TLyIFZ+O1CfMEdNV4jc4xp1pj8wcp31nkvZZ
+         oXlw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0MXcH0+MhIAIwCsst+sUwWj3vWo2sspD8l9LQIiuDn8=;
+        b=FC9QqfmZHL4sTXB09WE2HbU2gIZSZKG6ln8bqN85b2Bygho8cRElNwt/jyKtD6uWya
+         OaWYeiNK8W9T9rzXlQ9fscTD55oLfV92akh4BmZWt+aPMTPUmrw3bLyn9EQWhWhOs/jb
+         Ytev3Xq847dNtkGsNeCwYghVEr6t3orV+iu55USqidYJraZkIh7r2kDrq2ofTwsHJ+8s
+         xrBYu3oiqfmxQ3p+vby1C4R/69zuy2+QbAizloB44jBoq4g3eXKvIM3KYXz1gvnT+1Es
+         WsTPt9KTXCHteJk9aSCxL0H7t+V0tKk3iEMrthP7TIPtcwJe0UMhXQTclACBCemOty2A
+         8v/Q==
+X-Gm-Message-State: APjAAAXbo7RlHXAAVSJxZK8XJM5fMgda5kB6lLF0F04Qyhc8CXLP06Pb
+        6PJvopZSYuO/IdTeEMz9Ur5K2g==
+X-Google-Smtp-Source: APXvYqyoHGhHZ2Tokg56LUX7ZhWl32oT4TeFymTsLfThNayr5cMfbJBNkoJ+AUyPbHDYSJLaFfpniQ==
+X-Received: by 2002:a81:5b03:: with SMTP id p3mr2658691ywb.189.1573066696343;
+        Wed, 06 Nov 2019 10:58:16 -0800 (PST)
+Received: from localhost ([2620:0:1013:11:89c6:2139:5435:371d])
+        by smtp.gmail.com with ESMTPSA id k62sm7166332ywd.72.2019.11.06.10.58.15
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 10:58:15 -0800 (PST)
+Date:   Wed, 6 Nov 2019 13:58:14 -0500
+From:   Sean Paul <sean@poorly.run>
+To:     Rob Clark <robdclark@gmail.com>
+Cc:     dri-devel@lists.freedesktop.org, Sean Paul <seanpaul@chromium.org>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Rob Clark <robdclark@chromium.org>,
+        Maxime Ripard <mripard@kernel.org>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 1/2 v2] drm/atomic: fix self-refresh helpers crtc state
+ dereference
+Message-ID: <20191106185814.GD63329@art_vandelay>
+References: <20191104173737.142558-1-robdclark@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.202.226.45]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191104173737.142558-1-robdclark@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch fixes the problem of the spin locks, originally
-meant for the netpoll path of hns driver, causing deadlock in
-the normal NAPI poll path. The issue happened due presence of
-the stray leftover spin lock code related to the netpoll,
-whose support was earlier removed from the HNS[1], got activated
-due to enabling of NET_POLL_CONTROLLER switch.
+On Mon, Nov 04, 2019 at 09:37:36AM -0800, Rob Clark wrote:
+> From: Rob Clark <robdclark@chromium.org>
+> 
+> drm_self_refresh_helper_update_avg_times() was incorrectly accessing the
+> new incoming state after drm_atomic_helper_commit_hw_done().  But this
+> state might have already been superceeded by an !nonblock atomic update
+> resulting in dereferencing an already free'd crtc_state.
+> 
+> TODO I *think* this will more or less do the right thing.. althought I'm
+> not 100% sure if, for example, we enter psr in a nonblock commit, and
+> then leave psr in a !nonblock commit that overtakes the completion of
+> the nonblock commit.  Not sure if this sort of scenario can happen in
+> practice.  But not crashing is better than crashing, so I guess we
+> should either take this patch or rever the self-refresh helpers until
+> Sean can figure out a better solution.
+> 
+> Fixes: d4da4e33341c ("drm: Measure Self Refresh Entry/Exit times to avoid thrashing")
+> Cc: Sean Paul <seanpaul@chromium.org>
+> Signed-off-by: Rob Clark <robdclark@chromium.org>
 
-Earlier background:
-The netpoll handling code originally had this bug(as identified
-by Marc Zyngier[2]) of wrong spin lock API being used which did
-not disable the interrupts and hence could cause locking issues.
-i.e. if the lock were first acquired in context to thread like
-'ip' util and this lock if ever got later acquired again in
-context to the interrupt context like TX/RX (Interrupts could
-always pre-empt the lock holding task and acquire the lock again)
-and hence could cause deadlock.
+Thanks for tracking this down, Rob. I gave it a spin on my rk3399 kevin and it
+behaved as expected.
 
-Proposed Solution:
-1. If the netpoll was enabled in the HNS driver, which is not
-   right now, we could have simply used spin_[un]lock_irqsave()
-2. But as netpoll is disabled, therefore, it is best to get rid
-   of the existing locks and stray code for now. This should
-   solve the problem reported by Marc.
+I've pushed this patch to drm-misc-fixes in hopes it'll catch 5.4
 
-@Marc,
-Could you please test this patch and confirm if the problem is
-fixed at your end?
+Sean
 
-Many Thanks
+> ---
+>  drivers/gpu/drm/drm_atomic_helper.c       | 14 +++++++++++++-
+>  drivers/gpu/drm/drm_self_refresh_helper.c | 15 +++++++++------
+>  include/drm/drm_self_refresh_helper.h     |  3 ++-
+>  3 files changed, 24 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_atomic_helper.c b/drivers/gpu/drm/drm_atomic_helper.c
+> index 3ef2ac52ce94..648494c813e5 100644
+> --- a/drivers/gpu/drm/drm_atomic_helper.c
+> +++ b/drivers/gpu/drm/drm_atomic_helper.c
+> @@ -1581,8 +1581,11 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>  {
+>  	struct drm_device *dev = old_state->dev;
+>  	const struct drm_mode_config_helper_funcs *funcs;
+> +	struct drm_crtc_state *new_crtc_state;
+> +	struct drm_crtc *crtc;
+>  	ktime_t start;
+>  	s64 commit_time_ms;
+> +	unsigned i, new_self_refresh_mask = 0;
+>  
+>  	funcs = dev->mode_config.helper_private;
+>  
+> @@ -1602,6 +1605,14 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>  
+>  	drm_atomic_helper_wait_for_dependencies(old_state);
+>  
+> +	/*
+> +	 * We cannot safely access new_crtc_state after drm_atomic_helper_commit_hw_done()
+> +	 * so figure out which crtc's have self-refresh active beforehand:
+> +	 */
+> +	for_each_new_crtc_in_state(old_state, crtc, new_crtc_state, i)
+> +		if (new_crtc_state->self_refresh_active)
+> +			new_self_refresh_mask |= BIT(i);
+> +
+>  	if (funcs && funcs->atomic_commit_tail)
+>  		funcs->atomic_commit_tail(old_state);
+>  	else
+> @@ -1610,7 +1621,8 @@ static void commit_tail(struct drm_atomic_state *old_state)
+>  	commit_time_ms = ktime_ms_delta(ktime_get(), start);
+>  	if (commit_time_ms > 0)
+>  		drm_self_refresh_helper_update_avg_times(old_state,
+> -						 (unsigned long)commit_time_ms);
+> +						 (unsigned long)commit_time_ms,
+> +						 new_self_refresh_mask);
+>  
+>  	drm_atomic_helper_commit_cleanup_done(old_state);
+>  
+> diff --git a/drivers/gpu/drm/drm_self_refresh_helper.c b/drivers/gpu/drm/drm_self_refresh_helper.c
+> index 68f4765a5896..011b8d5f7dd6 100644
+> --- a/drivers/gpu/drm/drm_self_refresh_helper.c
+> +++ b/drivers/gpu/drm/drm_self_refresh_helper.c
+> @@ -133,6 +133,8 @@ static void drm_self_refresh_helper_entry_work(struct work_struct *work)
+>   * drm_self_refresh_helper_update_avg_times - Updates a crtc's SR time averages
+>   * @state: the state which has just been applied to hardware
+>   * @commit_time_ms: the amount of time in ms that this commit took to complete
+> + * @new_self_refresh_mask: bitmask of crtc's that have self_refresh_active in
+> + *    new state
+>   *
+>   * Called after &drm_mode_config_funcs.atomic_commit_tail, this function will
+>   * update the average entry/exit self refresh times on self refresh transitions.
+> @@ -140,22 +142,23 @@ static void drm_self_refresh_helper_entry_work(struct work_struct *work)
+>   * entering self refresh mode after activity.
+>   */
+>  void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
+> -					      unsigned int commit_time_ms)
+> +					      unsigned int commit_time_ms,
+> +					      unsigned int new_self_refresh_mask)
+>  {
+>  	struct drm_crtc *crtc;
+> -	struct drm_crtc_state *old_crtc_state, *new_crtc_state;
+> +	struct drm_crtc_state *old_crtc_state;
+>  	int i;
+>  
+> -	for_each_oldnew_crtc_in_state(state, crtc, old_crtc_state,
+> -				      new_crtc_state, i) {
+> +	for_each_old_crtc_in_state(state, crtc, old_crtc_state, i) {
+> +		bool new_self_refresh_active = new_self_refresh_mask & BIT(i);
+>  		struct drm_self_refresh_data *sr_data = crtc->self_refresh_data;
+>  		struct ewma_psr_time *time;
+>  
+>  		if (old_crtc_state->self_refresh_active ==
+> -		    new_crtc_state->self_refresh_active)
+> +		    new_self_refresh_active)
+>  			continue;
+>  
+> -		if (new_crtc_state->self_refresh_active)
+> +		if (new_self_refresh_active)
+>  			time = &sr_data->entry_avg_ms;
+>  		else
+>  			time = &sr_data->exit_avg_ms;
+> diff --git a/include/drm/drm_self_refresh_helper.h b/include/drm/drm_self_refresh_helper.h
+> index 5b79d253fb46..b2c08b328aa1 100644
+> --- a/include/drm/drm_self_refresh_helper.h
+> +++ b/include/drm/drm_self_refresh_helper.h
+> @@ -13,7 +13,8 @@ struct drm_crtc;
+>  
+>  void drm_self_refresh_helper_alter_state(struct drm_atomic_state *state);
+>  void drm_self_refresh_helper_update_avg_times(struct drm_atomic_state *state,
+> -					      unsigned int commit_time_ms);
+> +					      unsigned int commit_time_ms,
+> +					      unsigned int new_self_refresh_mask);
+>  
+>  int drm_self_refresh_helper_init(struct drm_crtc *crtc);
+>  void drm_self_refresh_helper_cleanup(struct drm_crtc *crtc);
+> -- 
+> 2.23.0
+> 
 
-[1] https://git.kernel.org/torvalds/c/4bd2c03be7
-[2] https://patchwork.ozlabs.org/patch/1189139/
-
-Fixes: 4bd2c03be707 ("net: hns: remove ndo_poll_controller")
-Cc: lipeng <lipeng321@huawei.com>
-Cc: Yisen Zhuang <yisen.zhuang@huawei.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: David S. Miller <davem@davemloft.net>
-Reported-by: Marc Zyngier <maz@kernel.org>
-Signed-off-by: Salil Mehta <salil.mehta@huawei.com>
----
- drivers/net/ethernet/hisilicon/hns/hns_enet.c | 22 +------------------
- 1 file changed, 1 insertion(+), 21 deletions(-)
-
-diff --git a/drivers/net/ethernet/hisilicon/hns/hns_enet.c b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-index a48396dd4ebb..14ab20491fd0 100644
---- a/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-+++ b/drivers/net/ethernet/hisilicon/hns/hns_enet.c
-@@ -943,15 +943,6 @@ static int is_valid_clean_head(struct hnae_ring *ring, int h)
- 	return u > c ? (h > c && h <= u) : (h > c || h <= u);
- }
- 
--/* netif_tx_lock will turn down the performance, set only when necessary */
--#ifdef CONFIG_NET_POLL_CONTROLLER
--#define NETIF_TX_LOCK(ring) spin_lock(&(ring)->lock)
--#define NETIF_TX_UNLOCK(ring) spin_unlock(&(ring)->lock)
--#else
--#define NETIF_TX_LOCK(ring)
--#define NETIF_TX_UNLOCK(ring)
--#endif
--
- /* reclaim all desc in one budget
-  * return error or number of desc left
-  */
-@@ -965,21 +956,16 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = readl_relaxed(ring->io_base + RCB_REG_HEAD);
- 	rmb(); /* make sure head is ready before touch any data */
- 
--	if (is_ring_empty(ring) || head == ring->next_to_clean) {
--		NETIF_TX_UNLOCK(ring);
-+	if (is_ring_empty(ring) || head == ring->next_to_clean)
- 		return 0; /* no data to poll */
--	}
- 
- 	if (!is_valid_clean_head(ring, head)) {
- 		netdev_err(ndev, "wrong head (%d, %d-%d)\n", head,
- 			   ring->next_to_use, ring->next_to_clean);
- 		ring->stats.io_err_cnt++;
--		NETIF_TX_UNLOCK(ring);
- 		return -EIO;
- 	}
- 
-@@ -994,8 +980,6 @@ static int hns_nic_tx_poll_one(struct hns_nic_ring_data *ring_data,
- 	ring->stats.tx_pkts += pkts;
- 	ring->stats.tx_bytes += bytes;
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_completed_queue(dev_queue, pkts, bytes);
- 
-@@ -1055,16 +1039,12 @@ static void hns_nic_tx_clr_all_bufs(struct hns_nic_ring_data *ring_data)
- 	int head;
- 	int bytes, pkts;
- 
--	NETIF_TX_LOCK(ring);
--
- 	head = ring->next_to_use; /* ntu :soft setted ring position*/
- 	bytes = 0;
- 	pkts = 0;
- 	while (head != ring->next_to_clean)
- 		hns_nic_reclaim_one_desc(ring, &bytes, &pkts);
- 
--	NETIF_TX_UNLOCK(ring);
--
- 	dev_queue = netdev_get_tx_queue(ndev, ring_data->queue_index);
- 	netdev_tx_reset_queue(dev_queue);
- }
 -- 
-2.17.1
-
-
+Sean Paul, Software Engineer, Google / Chromium OS
