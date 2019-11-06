@@ -2,204 +2,522 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 59871C5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:34:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F9E5C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:38:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1675F2087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:34:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E135E217F5
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 09:38:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=marvell.com header.i=@marvell.com header.b="Jc+eB01y";
-	dkim=pass (1024-bit key) header.d=marvell.onmicrosoft.com header.i=@marvell.onmicrosoft.com header.b="ZJFXaI/m"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="WyLOeEaE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730830AbfKFJdU (ORCPT
+        id S1728583AbfKFJiU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 04:33:20 -0500
-Received: from mx0a-0016f401.pphosted.com ([67.231.148.174]:32502 "EHLO
-        mx0b-0016f401.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727618AbfKFJdT (ORCPT
+        Wed, 6 Nov 2019 04:38:20 -0500
+Received: from mail-qk1-f193.google.com ([209.85.222.193]:34267 "EHLO
+        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725856AbfKFJiT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 04:33:19 -0500
-Received: from pps.filterd (m0045849.ppops.net [127.0.0.1])
-        by mx0a-0016f401.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA69UQxR002783;
-        Wed, 6 Nov 2019 01:33:02 -0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=marvell.com; h=from : to : cc :
- subject : date : message-id : content-type : content-transfer-encoding :
- mime-version; s=pfpt0818; bh=p2asbBPKuTPQwL9Z1tgP4EbxKegqCdylo0cRHfNbaAo=;
- b=Jc+eB01yb/LbpLJjVTw1pt5RWxm5ZKZLaoTkSJDT5IK0Tnr03M5355Z714Yg8BzrCj4U
- BBTx9pQeWNEKMDD4RY+9iQDY/WXLVcQeVC7zKe424D7Xy2bUGniOVGY2ZHYnmm7bOW9I
- gQhc3OQlED5CHhboVMMYZxt2hYRjGiQM2l8QjXwValqemfOrc+J2iO9DEebD+lZGLDBz
- suPFeSwHfN5vg1i72tlWyFx+gJWnOSfJCaAUZGAriehIztFk0axZrCId5Np76Pw2x+8x
- dS1JdMrH7C1OGE7QxIrFExp/NVunFnJObuXeEV+OGLfwMjbGGoTTNA2x+Si6WPeCGfKB uQ== 
-Received: from sc-exch02.marvell.com ([199.233.58.182])
-        by mx0a-0016f401.pphosted.com with ESMTP id 2w3eud3c5p-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Wed, 06 Nov 2019 01:33:02 -0800
-Received: from SC-EXCH02.marvell.com (10.93.176.82) by SC-EXCH02.marvell.com
- (10.93.176.82) with Microsoft SMTP Server (TLS) id 15.0.1367.3; Wed, 6 Nov
- 2019 01:32:59 -0800
-Received: from NAM05-CO1-obe.outbound.protection.outlook.com (104.47.48.54) by
- SC-EXCH02.marvell.com (10.93.176.82) with Microsoft SMTP Server (TLS) id
- 15.0.1367.3 via Frontend Transport; Wed, 6 Nov 2019 01:32:59 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=oMHVWmPpPKQE42fNj88GSNCgAtBTP7o2rNKlA/SL5Efn7W5tDV14c27ImNcsLeo/sVUzLGp777RQgwg9c2rKBVYjbfN1KR7ixnnkeWpMVFxI11r/vfzGaoNEsbkrlUUuclonObf6R4U06F1kictDulQJ8S1yZzbAUqbcaEP2eOU3EpuGRIZkUZP4/iuqDT3JXxrX1L00IOf2/OGapXX6eS/2DJTG66T9a18uW3166NjE73Lnw4H8yDbJXU+22f3w4JVRPcBFlvbGvrkLnpDeM6cnIxRoNE/SR+AZA9qd2xv9HIawd8CU/UjCqgY/lgtmal5NnjgAzptZCCwTI4/kmA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2asbBPKuTPQwL9Z1tgP4EbxKegqCdylo0cRHfNbaAo=;
- b=CIO/6pyxq5kHKj9NPe9N7Sb6GHlOiNauRXKDRt5XaCUlnZVatRwcCdQxiN+cdd/HSyQF7f1YQyDJg9/2oZXHpkqCuIqSGKYj+rBgm/B6CDOQOYkPhsrhwtlxpPKWtZufjsHjKiy/qEHGpFDr6vJQM1+EoxhWhfMZga+y2jG5oifhv+FkiZxFj/uWLu0bDeEUOP+Fy97lYNvIZscj1TM334+e0zC9uZyF9U4UPSCiMKonjFQp9X61jMfAOY3LHnfTheNO16uo2tc4sWy/tCPKvoYwysO/s+vFH5MwDaWECTzmAfH8JiF83ZUFp+9jILXMmnkfT0GcCBmvq4vGJEyovA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=marvell.com; dmarc=pass action=none header.from=marvell.com;
- dkim=pass header.d=marvell.com; arc=none
+        Wed, 6 Nov 2019 04:38:19 -0500
+Received: by mail-qk1-f193.google.com with SMTP id 205so22645894qkk.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 01:38:18 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=marvell.onmicrosoft.com; s=selector2-marvell-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=p2asbBPKuTPQwL9Z1tgP4EbxKegqCdylo0cRHfNbaAo=;
- b=ZJFXaI/mGzFQOWz9VHf/3uFW6ZEprcFQdzD17ERc6HpasWXkijcZbKLNBUrXfPZvtJZ0baGYw24t8mkbTsVEhUHHS+PZk36FHYm8BPQEI4P2pK0+vEzjB/eH/bmBnuNhDPC7nECjY8Idn7b4L1lNANr9p9TsHga+bAPq2CbPUR0=
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com (10.255.237.10) by
- MN2PR18MB3165.namprd18.prod.outlook.com (10.255.236.86) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.2430.20; Wed, 6 Nov 2019 09:32:58 +0000
-Received: from MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::c4a:cf3c:f530:fba6]) by MN2PR18MB3408.namprd18.prod.outlook.com
- ([fe80::c4a:cf3c:f530:fba6%6]) with mapi id 15.20.2430.020; Wed, 6 Nov 2019
- 09:32:58 +0000
-From:   Robert Richter <rrichter@marvell.com>
-To:     Borislav Petkov <bp@alien8.de>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Tony Luck <tony.luck@intel.com>
-CC:     James Morse <james.morse@arm.com>,
-        Robert Richter <rrichter@marvell.com>,
-        "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v2 00/20] EDAC: Rework edac_mc and ghes drivers
-Thread-Topic: [PATCH v2 00/20] EDAC: Rework edac_mc and ghes drivers
-Thread-Index: AQHVlIUsauSGdd6usk+YjQIQVCTkCw==
-Date:   Wed, 6 Nov 2019 09:32:58 +0000
-Message-ID: <20191106093239.25517-1-rrichter@marvell.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: HE1PR05CA0287.eurprd05.prod.outlook.com
- (2603:10a6:7:93::18) To MN2PR18MB3408.namprd18.prod.outlook.com
- (2603:10b6:208:165::10)
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.20.1
-x-originating-ip: [31.208.96.227]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 7e694da3-a4d3-4903-0662-08d7629c4f2b
-x-ms-traffictypediagnostic: MN2PR18MB3165:
-x-ms-exchange-transport-forked: True
-x-microsoft-antispam-prvs: <MN2PR18MB3165083D4CBC58C73909285DD9790@MN2PR18MB3165.namprd18.prod.outlook.com>
-x-ms-oob-tlc-oobclassifiers: OLM:4941;
-x-forefront-prvs: 02135EB356
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(366004)(396003)(376002)(39860400002)(346002)(136003)(199004)(189003)(52116002)(305945005)(6486002)(71190400001)(71200400001)(256004)(7736002)(14444005)(6436002)(4326008)(6512007)(66446008)(66556008)(66476007)(66946007)(64756008)(5660300002)(1076003)(476003)(6116002)(3846002)(110136005)(54906003)(36756003)(2906002)(8676002)(99286004)(81166006)(81156014)(316002)(8936002)(50226002)(486006)(6506007)(386003)(102836004)(66066001)(2616005)(86362001)(478600001)(25786009)(186003)(14454004)(26005);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR18MB3165;H:MN2PR18MB3408.namprd18.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: marvell.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: a+6FwMwePrMbR8iPhrhao9WICM0m/v/3aMBYKa1266kXg7dmKg15sD0hRCcgj4gEPrd4pa+dXaRkgYagycbCAa6rqDGg833p+f8OEeMQOMPz/eNxZ+l0hFHEzTGtQABwvGhjJmreZOgC3C1ogaNUx+ECWBvGOKh5SIO+0LgR5DlZiOAkMz2J0doNqiMkn2idU4DZ3+VkbFNah3qxNddM3ZmZCOhiQpWc2gwD4s9uLTTe6TE+7eQF9eeWWokQH7G6Zlt7HlaN6+bckTjLElpF9cqo7Wdi1tUS+qp1iIh0bkIB4zeD1ZOXebKKVXRgFACJIAv7BoIV9kIgtUvewqiybsq854Spu4s2hcPbQ+cz8jqAn/oGufppS8KZde4JVMukv9AsLGSDz3xc/txNGafBgmnyVNAYdoAwIILkoH5zh9BF9gAimk+yytE/S2na4iMD
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qhR5UVinklxMuAplLCv9Zree1TqFXmJG+VTPQkm46Kk=;
+        b=WyLOeEaE1Q93gHrjYT0u+TDcTeZlIGqeSYHcrVEybab9ogVhHqNgcnR0SO6tWMoybe
+         2irz/EKInmtvmucnwNDWY6w5tk/pEloQW9KPeNCS58CvH2uyag3P6f4tqQQpD8lB4ESA
+         p1LH3NbmXvW1Bm8Cx1bdijnfq2VsG68ykyRFwdy5+koKZkBF6/rOepvetZxaFkUQVRHu
+         YJpB7qgRzi/RtxbzbAfw+5lldd8MFBTFZkavE8O5SgkdcyZg16vnYjtFJTTR2IP2IwFD
+         nVDOQQv8KqMhKvtDB/irIYa8gFKo5AlnMZyy7qrgvUeeq4eTE9eGuHVamdilytfZEo/r
+         zbyA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qhR5UVinklxMuAplLCv9Zree1TqFXmJG+VTPQkm46Kk=;
+        b=l7xUGRpWHrEx5bRNkxOKs5S+/5/nSkObm8Z4rafxQnzG0b4iQjO8erOG1NYo3LNx8P
+         uJkvrsGIJI6Gc5zCMdwxWR9MIGSRfeiMocZr3Ff3bGnAhGllNi+1kBc8BBt0siM9ODph
+         D1whCoGH4H8gPKW6hQiQ6Hhyd+fcAEOkFztHMYgdlauruo2273JMWQxJZ68EPXH9aUff
+         OU1mtbQgKjV8+5YIyTCpaCygbsJfFZQ0HxnFv72b3EDxuAC95VBbcpduEiaZSJ7UxHsX
+         9By520bY26ThvfihdZqjB7Y1hgUEnvjI+v5F38eEiyPtVR8HPi8ritTK31+L2BiVViDa
+         GenA==
+X-Gm-Message-State: APjAAAUh9giFYj4TlDrDTNcq+FQl4lt3l1jAktnO8YraIbLB4Oa5+QQh
+        hyIIHnwijLYAbUxr1GarhK7DBUHKYC9f1UqNyB66ew==
+X-Google-Smtp-Source: APXvYqxfQD+amgZRsiQyKNHrvhJSj4SsfO+0eElMBu81G6PkL0O2lq5SMBH8+BobrRI4Oi0mQLB0ZapDkM4JSOSaVIY=
+X-Received: by 2002:a05:620a:14b9:: with SMTP id x25mr1198400qkj.8.1573033097365;
+ Wed, 06 Nov 2019 01:38:17 -0800 (PST)
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7e694da3-a4d3-4903-0662-08d7629c4f2b
-X-MS-Exchange-CrossTenant-originalarrivaltime: 06 Nov 2019 09:32:58.1982
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 70e1fb47-1155-421d-87fc-2e58f638b6e0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: Iss4iLQyR2rVCQqnYOBbx9xtiGyiPllIoKCAXAXf8OVYTgsVpB+bho/FT46/7/6qjxwwLrT2rnWrktIq1Mb0yQ==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR18MB3165
-X-OriginatorOrg: marvell.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
- definitions=2019-11-06_02:2019-11-06,2019-11-06 signatures=0
+References: <20191104142745.14722-1-elver@google.com> <20191104142745.14722-2-elver@google.com>
+In-Reply-To: <20191104142745.14722-2-elver@google.com>
+From:   Dmitry Vyukov <dvyukov@google.com>
+Date:   Wed, 6 Nov 2019 10:38:05 +0100
+Message-ID: <CACT4Y+a+ftjHnRx9PD48hEVm98muooHwO0Y7i3cHetTJobRDxg@mail.gmail.com>
+Subject: Re: [PATCH v3 1/9] kcsan: Add Kernel Concurrency Sanitizer infrastructure
+To:     Marco Elver <elver@google.com>
+Cc:     LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Alexander Potapenko <glider@google.com>,
+        Andrea Parri <parri.andrea@gmail.com>,
+        Andrey Konovalov <andreyknvl@google.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Borislav Petkov <bp@alien8.de>, Daniel Axtens <dja@axtens.net>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        David Howells <dhowells@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Ingo Molnar <mingo@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Nicholas Piggin <npiggin@gmail.com>, paulmck@kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Will Deacon <will@kernel.org>,
+        kasan-dev <kasan-dev@googlegroups.com>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        linux-efi@vger.kernel.org,
+        "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        "the arch/x86 maintainers" <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set is a rework of the ghes_edac and edac_mc driver. It
-addresses issues found during code review and while working with the
-code. The changes include:
-
- * improve function interfaces and data structures to decrease
-   complexity such as number of function arguments, unused data, etc.
-   (#1, #2, #14, #17, #18, #19),
-
- * add helper functions and factor out code (#3, #15, #16, #20)
-
- * fix style issues found by checkpatch (#4)
-
- * improve code readability (#5, #6, #7, #8)
-
- * use of standard kernel macros (#9)
-
- * code unification (#10, #11, #12)
-
- * documentation updates (#13)
-
-v2:
- * rebased onto edac-for-next and ghes locking fix
- * moved adding idx to struct dimm_info to patch "EDAC: Remove
-   EDAC_DIMM_OFF() macro"
- * added patch: "EDAC, mc: Remove needless zero string termination"
- * added Mauro's Reviewed-by: tags
- * moved patches to the end:
-   EDAC, mc: Remove per layer counters
-   EDAC, mc: Split edac_mc_alloc() into smaller functions
-   EDAC, mc: Reorder functions edac_mc_alloc*()
-   EDAC, mc: Rework edac_raw_mc_handle_error() to use struct dimm_info
-   EDAC: Store error type in struct edac_raw_error_desc
-   EDAC, mc: Determine mci pointer from the error descriptor
-   EDAC, mc: Create new function edac_inc_csrow()
+On Mon, Nov 4, 2019 at 3:28 PM Marco Elver <elver@google.com> wrote:
+>
+> Kernel Concurrency Sanitizer (KCSAN) is a dynamic data-race detector for
+> kernel space. KCSAN is a sampling watchpoint-based data-race detector.
+> See the included Documentation/dev-tools/kcsan.rst for more details.
+...
+> +static inline atomic_long_t *find_watchpoint(unsigned long addr, size_t size,
+> +                                            bool expect_write,
+> +                                            long *encoded_watchpoint)
+> +{
+> +       const int slot = watchpoint_slot(addr);
+> +       const unsigned long addr_masked = addr & WATCHPOINT_ADDR_MASK;
+> +       atomic_long_t *watchpoint;
+> +       unsigned long wp_addr_masked;
+> +       size_t wp_size;
+> +       bool is_write;
+> +       int i;
+> +
+> +       BUILD_BUG_ON(CONFIG_KCSAN_NUM_WATCHPOINTS < CHECK_NUM_SLOTS);
+> +
+> +       for (i = 0; i < CHECK_NUM_SLOTS; ++i) {
+> +               watchpoint = &watchpoints[SLOT_IDX(slot, i)];
 
 
-Robert Richter (20):
-  EDAC: Replace EDAC_DIMM_PTR() macro with edac_get_dimm() function
-  EDAC: Remove EDAC_DIMM_OFF() macro
-  EDAC: Introduce mci_for_each_dimm() iterator
-  EDAC, mc: Do not BUG_ON() in edac_mc_alloc()
-  EDAC, mc: Remove needless zero string termination
-  EDAC, mc: Reduce indentation level in edac_mc_handle_error()
-  EDAC, mc: Rename iterator variable to idx
-  EDAC: Remove misleading comment in struct edac_raw_error_desc
-  EDAC, ghes: Use standard kernel macros for page calculations
-  EDAC, ghes: Fix grain calculation
-  EDAC, ghes: Remove intermediate buffer pvt->detail_location
-  EDAC, ghes: Unify trace_mc_event() code with edac_mc driver
-  EDAC, Documentation: Describe CPER module definition and DIMM ranks
-  EDAC, mc: Remove per layer counters
-  EDAC, mc: Split edac_mc_alloc() into smaller functions
-  EDAC, mc: Reorder functions edac_mc_alloc*()
-  EDAC, mc: Rework edac_raw_mc_handle_error() to use struct dimm_info
-  EDAC: Store error type in struct edac_raw_error_desc
-  EDAC, mc: Determine mci pointer from the error descriptor
-  EDAC, mc: Create new function edac_inc_csrow()
+The fast path code become much nicer!
+I did another pass looking at how we can optimize the fast path.
+Currently we still have 2 push/pop pairs on the fast path because of
+register pressure. The logic in SLOT_IDX seems to be the main culprit.
+We discussed several options offline:
+1. Just check 1 slot and ignore all corner cases (we will miss racing
+unaligned access to different addresses but overlapping and crossing
+pages, which sounds pretty esoteric)
+2. Check 3 slots in order and without wraparound (watchpoints[slot +
+i], where i=-1,0,1), this will require adding dummy slots around the
+array
+3. An interesting option is to check just 2 slots (that's enough!), to
+make this work we will need to slightly offset bucket number when
+setting a watch point (namely, if an access goes to the very end of a
+page, we set the watchpoint into the bucket corresponding to the
+_next_ page)
+All of these options remove push/pop in my experiments. Obviously
+checking fewer slots will reduce dynamic overhead even more.
 
- Documentation/admin-guide/ras.rst |  31 +-
- drivers/edac/edac_mc.c            | 477 +++++++++++++++---------------
- drivers/edac/edac_mc.h            |   8 +-
- drivers/edac/edac_mc_sysfs.c      |  65 ++--
- drivers/edac/ghes_edac.c          |  56 ++--
- drivers/edac/i10nm_base.c         |   3 +-
- drivers/edac/i3200_edac.c         |   3 +-
- drivers/edac/i5000_edac.c         |   5 +-
- drivers/edac/i5100_edac.c         |  14 +-
- drivers/edac/i5400_edac.c         |   3 +-
- drivers/edac/i7300_edac.c         |   3 +-
- drivers/edac/i7core_edac.c        |   3 +-
- drivers/edac/ie31200_edac.c       |   7 +-
- drivers/edac/pnd2_edac.c          |   4 +-
- drivers/edac/sb_edac.c            |   2 +-
- drivers/edac/skx_base.c           |   3 +-
- drivers/edac/ti_edac.c            |   2 +-
- include/linux/edac.h              | 153 +++++-----
- 18 files changed, 401 insertions(+), 441 deletions(-)
 
---=20
-2.20.1
+> +               *encoded_watchpoint = atomic_long_read(watchpoint);
+> +               if (!decode_watchpoint(*encoded_watchpoint, &wp_addr_masked,
+> +                                      &wp_size, &is_write))
+> +                       continue;
+> +
+> +               if (expect_write && !is_write)
+> +                       continue;
+> +
+> +               /* Check if the watchpoint matches the access. */
+> +               if (matching_access(wp_addr_masked, wp_size, addr_masked, size))
+> +                       return watchpoint;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +static inline atomic_long_t *insert_watchpoint(unsigned long addr, size_t size,
+> +                                              bool is_write)
+> +{
+> +       const int slot = watchpoint_slot(addr);
+> +       const long encoded_watchpoint = encode_watchpoint(addr, size, is_write);
+> +       atomic_long_t *watchpoint;
+> +       int i;
+> +
+> +       for (i = 0; i < CHECK_NUM_SLOTS; ++i) {
+> +               long expect_val = INVALID_WATCHPOINT;
+> +
+> +               /* Try to acquire this slot. */
+> +               watchpoint = &watchpoints[SLOT_IDX(slot, i)];
 
+If we do this SLOT_IDX trickery to catch unaligned accesses crossing
+pages, then I think we should not use it insert_watchpoint at all and
+only set the watchpoint to the exact index. Otherwise, we will
+actually miss the corner cases which defeats the whole purpose of
+SLOT_IDX and 3 iterations.
+
+> +               if (atomic_long_try_cmpxchg_relaxed(watchpoint, &expect_val,
+> +                                                   encoded_watchpoint))
+> +                       return watchpoint;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +
+> +/*
+> + * Return true if watchpoint was successfully consumed, false otherwise.
+> + *
+> + * This may return false if:
+> + *
+> + *     1. another thread already consumed the watchpoint;
+> + *     2. the thread that set up the watchpoint already removed it;
+> + *     3. the watchpoint was removed and then re-used.
+> + */
+> +static inline bool try_consume_watchpoint(atomic_long_t *watchpoint,
+> +                                         long encoded_watchpoint)
+> +{
+> +       return atomic_long_try_cmpxchg_relaxed(watchpoint, &encoded_watchpoint,
+> +                                              CONSUMED_WATCHPOINT);
+> +}
+> +
+> +/*
+> + * Return true if watchpoint was not touched, false if consumed.
+> + */
+> +static inline bool remove_watchpoint(atomic_long_t *watchpoint)
+> +{
+> +       return atomic_long_xchg_relaxed(watchpoint, INVALID_WATCHPOINT) !=
+> +              CONSUMED_WATCHPOINT;
+> +}
+> +
+> +static inline struct kcsan_ctx *get_ctx(void)
+> +{
+> +       /*
+> +        * In interrupt, use raw_cpu_ptr to avoid unnecessary checks, that would
+> +        * also result in calls that generate warnings in uaccess regions.
+> +        */
+> +       return in_task() ? &current->kcsan_ctx : raw_cpu_ptr(&kcsan_cpu_ctx);
+> +}
+> +
+> +static inline bool is_atomic(const volatile void *ptr)
+> +{
+> +       struct kcsan_ctx *ctx = get_ctx();
+> +
+> +       if (unlikely(ctx->atomic_next > 0)) {
+> +               --ctx->atomic_next;
+> +               return true;
+> +       }
+> +       if (unlikely(ctx->atomic_nest_count > 0 || ctx->in_flat_atomic))
+> +               return true;
+> +
+> +       return kcsan_is_atomic(ptr);
+> +}
+> +
+> +static inline bool should_watch(const volatile void *ptr, int type)
+> +{
+> +       /*
+> +        * Never set up watchpoints when memory operations are atomic.
+> +        *
+> +        * Need to check this first, before kcsan_skip check below: (1) atomics
+> +        * should not count towards skipped instructions, and (2) to actually
+> +        * decrement kcsan_atomic_next for consecutive instruction stream.
+> +        */
+> +       if ((type & KCSAN_ACCESS_ATOMIC) != 0 || is_atomic(ptr))
+> +               return false;
+
+should_watch and is_atomic are invoked on the fast path and do more
+things than strictly necessary.
+The minimal amount of actions would be:
+ - check and decrement ctx->atomic_next for atomic accesses
+ - decrement kcsan_skip
+
+atomic_nest_count/in_flat_atomic/kcsan_is_atomic can be checked on
+uninlined slow path.
+
+It should not be necessary to set kcsan_skip to -1 if we _always_
+resetup kcsan_skip on slow path.
+
+> +       if (this_cpu_dec_return(kcsan_skip) >= 0)
+> +               return false;
+> +
+> +       /* avoid underflow if !kcsan_is_enabled() */
+> +       this_cpu_write(kcsan_skip, -1);
+> +
+> +       /* this operation should be watched */
+> +       return true;
+> +}
+> +
+> +static inline void reset_kcsan_skip(void)
+> +{
+> +       long skip_count = CONFIG_KCSAN_SKIP_WATCH -
+> +                         (IS_ENABLED(CONFIG_KCSAN_SKIP_WATCH_RANDOMIZE) ?
+> +                                  prandom_u32_max(CONFIG_KCSAN_SKIP_WATCH) :
+> +                                  0);
+> +       this_cpu_write(kcsan_skip, skip_count);
+> +}
+> +
+> +static inline bool kcsan_is_enabled(void)
+> +{
+> +       return READ_ONCE(kcsan_enabled) && get_ctx()->disable_count == 0;
+> +}
+> +
+> +static inline unsigned int get_delay(void)
+> +{
+> +       unsigned int delay = in_task() ? CONFIG_KCSAN_UDELAY_TASK :
+> +                                        CONFIG_KCSAN_UDELAY_INTERRUPT;
+> +       return delay - (IS_ENABLED(CONFIG_KCSAN_DELAY_RANDOMIZE) ?
+> +                               prandom_u32_max(delay) :
+> +                               0);
+> +}
+> +
+> +/*
+> + * Pull everything together: check_access() below contains the performance
+> + * critical operations; the fast-path (including check_access) functions should
+> + * all be inlinable by the instrumentation functions.
+> + *
+> + * The slow-path (kcsan_found_watchpoint, kcsan_setup_watchpoint) are
+> + * non-inlinable -- note that, we prefix these with "kcsan_" to ensure they can
+> + * be filtered from the stacktrace, as well as give them unique names for the
+> + * UACCESS whitelist of objtool. Each function uses user_access_save/restore(),
+> + * since they do not access any user memory, but instrumentation is still
+> + * emitted in UACCESS regions.
+> + */
+> +
+> +static noinline void kcsan_found_watchpoint(const volatile void *ptr,
+> +                                           size_t size, bool is_write,
+> +                                           bool consumed)
+> +{
+> +       unsigned long flags = user_access_save();
+> +       enum kcsan_report_type report_type;
+> +
+> +       if (!consumed) {
+> +               /*
+> +                * The other thread may not print any diagnostics, as it has
+> +                * already removed the watchpoint, or another thread consumed
+> +                * the watchpoint before this thread.
+> +                */
+> +               kcsan_counter_inc(KCSAN_COUNTER_REPORT_RACES);
+> +               report_type = KCSAN_REPORT_RACE_CHECK_RACE;
+> +       } else {
+> +               report_type = KCSAN_REPORT_RACE_CHECK;
+> +       }
+> +
+> +       kcsan_counter_inc(KCSAN_COUNTER_DATA_RACES);
+> +       kcsan_report(ptr, size, is_write, raw_smp_processor_id(), report_type);
+> +
+> +       user_access_restore(flags);
+> +}
+> +
+> +static noinline void kcsan_setup_watchpoint(const volatile void *ptr,
+> +                                           size_t size, bool is_write)
+> +{
+> +       atomic_long_t *watchpoint;
+> +       union {
+> +               u8 _1;
+> +               u16 _2;
+> +               u32 _4;
+> +               u64 _8;
+> +       } expect_value;
+> +       bool is_expected = true;
+> +       unsigned long ua_flags = user_access_save();
+> +       unsigned long irq_flags;
+> +
+> +       if (!check_encodable((unsigned long)ptr, size)) {
+> +               kcsan_counter_inc(KCSAN_COUNTER_UNENCODABLE_ACCESSES);
+> +               goto out;
+> +       }
+> +
+> +       /*
+> +        * Disable interrupts & preemptions to avoid another thread on the same
+> +        * CPU accessing memory locations for the set up watchpoint; this is to
+> +        * avoid reporting races to e.g. CPU-local data.
+> +        *
+> +        * An alternative would be adding the source CPU to the watchpoint
+> +        * encoding, and checking that watchpoint-CPU != this-CPU. There are
+> +        * several problems with this:
+> +        *   1. we should avoid stealing more bits from the watchpoint encoding
+> +        *      as it would affect accuracy, as well as increase performance
+> +        *      overhead in the fast-path;
+> +        *   2. if we are preempted, but there *is* a genuine data race, we
+> +        *      would *not* report it -- since this is the common case (vs.
+> +        *      CPU-local data accesses), it makes more sense (from a data race
+> +        *      detection point of view) to simply disable preemptions to ensure
+> +        *      as many tasks as possible run on other CPUs.
+> +        */
+> +       local_irq_save(irq_flags);
+> +
+> +       watchpoint = insert_watchpoint((unsigned long)ptr, size, is_write);
+> +       if (watchpoint == NULL) {
+> +               /*
+> +                * Out of capacity: the size of `watchpoints`, and the frequency
+> +                * with which `should_watch()` returns true should be tweaked so
+> +                * that this case happens very rarely.
+> +                */
+> +               kcsan_counter_inc(KCSAN_COUNTER_NO_CAPACITY);
+> +               goto out_unlock;
+> +       }
+> +
+> +       /*
+> +        * Reset kcsan_skip counter: only do this if we succeeded in setting up
+> +        * a watchpoint.
+> +        */
+> +       reset_kcsan_skip();
+> +
+> +       kcsan_counter_inc(KCSAN_COUNTER_SETUP_WATCHPOINTS);
+> +       kcsan_counter_inc(KCSAN_COUNTER_USED_WATCHPOINTS);
+> +
+> +       /*
+> +        * Read the current value, to later check and infer a race if the data
+> +        * was modified via a non-instrumented access, e.g. from a device.
+> +        */
+> +       switch (size) {
+> +       case 1:
+> +               expect_value._1 = READ_ONCE(*(const u8 *)ptr);
+> +               break;
+> +       case 2:
+> +               expect_value._2 = READ_ONCE(*(const u16 *)ptr);
+> +               break;
+> +       case 4:
+> +               expect_value._4 = READ_ONCE(*(const u32 *)ptr);
+> +               break;
+> +       case 8:
+> +               expect_value._8 = READ_ONCE(*(const u64 *)ptr);
+> +               break;
+> +       default:
+> +               break; /* ignore; we do not diff the values */
+> +       }
+> +
+> +       if (IS_ENABLED(CONFIG_KCSAN_DEBUG)) {
+> +               kcsan_disable_current();
+> +               pr_err("KCSAN: watching %s, size: %zu, addr: %px [slot: %d, encoded: %lx]\n",
+> +                      is_write ? "write" : "read", size, ptr,
+> +                      watchpoint_slot((unsigned long)ptr),
+> +                      encode_watchpoint((unsigned long)ptr, size, is_write));
+> +               kcsan_enable_current();
+> +       }
+> +
+> +       /*
+> +        * Delay this thread, to increase probability of observing a racy
+> +        * conflicting access.
+> +        */
+> +       udelay(get_delay());
+> +
+> +       /*
+> +        * Re-read value, and check if it is as expected; if not, we infer a
+> +        * racy access.
+> +        */
+> +       switch (size) {
+> +       case 1:
+> +               is_expected = expect_value._1 == READ_ONCE(*(const u8 *)ptr);
+> +               break;
+> +       case 2:
+> +               is_expected = expect_value._2 == READ_ONCE(*(const u16 *)ptr);
+> +               break;
+> +       case 4:
+> +               is_expected = expect_value._4 == READ_ONCE(*(const u32 *)ptr);
+> +               break;
+> +       case 8:
+> +               is_expected = expect_value._8 == READ_ONCE(*(const u64 *)ptr);
+> +               break;
+> +       default:
+> +               break; /* ignore; we do not diff the values */
+> +       }
+> +
+> +       /* Check if this access raced with another. */
+> +       if (!remove_watchpoint(watchpoint)) {
+> +               /*
+> +                * No need to increment 'data_races' counter, as the racing
+> +                * thread already did.
+> +                */
+> +               kcsan_report(ptr, size, is_write, smp_processor_id(),
+> +                            KCSAN_REPORT_RACE_SETUP);
+> +       } else if (!is_expected) {
+> +               /* Inferring a race, since the value should not have changed. */
+> +               kcsan_counter_inc(KCSAN_COUNTER_RACES_UNKNOWN_ORIGIN);
+> +               if (IS_ENABLED(CONFIG_KCSAN_REPORT_RACE_UNKNOWN_ORIGIN))
+> +                       kcsan_report(ptr, size, is_write, smp_processor_id(),
+> +                                    KCSAN_REPORT_RACE_UNKNOWN_ORIGIN);
+> +       }
+> +
+> +       kcsan_counter_dec(KCSAN_COUNTER_USED_WATCHPOINTS);
+> +out_unlock:
+> +       local_irq_restore(irq_flags);
+> +out:
+> +       user_access_restore(ua_flags);
+> +}
+> +
+> +static inline void check_access(const volatile void *ptr, size_t size, int type)
+> +{
+> +       const bool is_write = (type & KCSAN_ACCESS_WRITE) != 0;
+> +       atomic_long_t *watchpoint;
+> +       long encoded_watchpoint;
+> +
+> +       if (IS_ENABLED(CONFIG_KCSAN_PLAIN_WRITE_PRETEND_ONCE) && is_write)
+> +               type |= KCSAN_ACCESS_ATOMIC;
+> +
+> +       /*
+> +        * Avoid user_access_save in fast-path: find_watchpoint is safe without
+> +        * user_access_save, as the address that ptr points to is only used to
+> +        * check if a watchpoint exists; ptr is never dereferenced.
+> +        */
+> +       watchpoint = find_watchpoint((unsigned long)ptr, size, !is_write,
+> +                                    &encoded_watchpoint);
+> +
+> +       /*
+> +        * It is safe to check kcsan_is_enabled() after find_watchpoint, but
+> +        * right before we would enter the slow-path: no state changes that
+> +        * cause a data race to be detected and reported have occurred yet.
+> +        */
+> +
+> +       if (unlikely(watchpoint != NULL) && kcsan_is_enabled()) {
+
+I would move kcsan_is_enabled and the rest of the code in the branch
+into non-inlined slow path.
+It makes the hot function much shorter.
+There is a trick related to number of arguments, though. We would need
+to pass ptr, size, is_write, watchpoint and encoded_watchpoint. That's
+5 arguments. Only 4 are passed in registers. So it may make sense to
+combine size and type into a single word. On the inlined fast path
+compiler packs/unpacks that statically, so it does not matter. But for
+the function call it will just forward a single const.
+
+
+> +               /*
+> +                * Try consume the watchpoint as soon after finding the
+> +                * watchpoint as possible; this must always be guarded by
+> +                * kcsan_is_enabled() check, as otherwise we might erroneously
+> +                * triggering reports when disabled.
+> +                */
+> +               const bool consumed =
+> +                       try_consume_watchpoint(watchpoint, encoded_watchpoint);
+> +
+> +               kcsan_found_watchpoint(ptr, size, is_write, consumed);
+> +       } else if (unlikely(should_watch(ptr, type)) && kcsan_is_enabled()) {
+
+I would move kcsan_is_enabled check into kcsan_setup_watchpoint. It's
+not executed on fast path, but bloats the host function code.
+
+> +               kcsan_setup_watchpoint(ptr, size, is_write);
+> +       }
+> +}
