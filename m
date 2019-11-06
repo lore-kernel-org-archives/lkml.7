@@ -2,114 +2,102 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10AEBC5DF64
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:07:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2325CC5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:08:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D633E20663
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:07:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E746320663
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:08:33 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gLaTYVUn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MB1WGmx7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731790AbfKFOHG (ORCPT
+        id S1730648AbfKFOId (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:07:06 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:25899 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727324AbfKFOHG (ORCPT
+        Wed, 6 Nov 2019 09:08:33 -0500
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:46901 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726926AbfKFOIc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:07:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573049225;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=kQUJhTS5ZQPa+H7gyw31F1k30QCMAlnrwuTj8cTiw28=;
-        b=gLaTYVUn6kD9WkF0dMmEDGdz2CosD2e3eoxCQT5zEMq07ip7LyRlWM20eaBadufyP328N2
-        W+CZZttraCUlln0w3VsMbZ2ohh1e5oIt4TXccsdeMuKQXdPAFxEhMOfdouXMz2Nkya5ZJd
-        wH1/fHMAhFu6KxbOZy2rOzypHwj4R+o=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-37-HIuIU22MPBuvr-Q7-vH7Vw-1; Wed, 06 Nov 2019 09:06:59 -0500
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 257561005500;
-        Wed,  6 Nov 2019 14:06:57 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 513F25DA76;
-        Wed,  6 Nov 2019 14:06:51 +0000 (UTC)
-Date:   Wed, 6 Nov 2019 15:06:50 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Ian Rogers <irogers@google.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Wed, 6 Nov 2019 09:08:32 -0500
+Received: by mail-pg1-f196.google.com with SMTP id r18so1506044pgu.13;
+        Wed, 06 Nov 2019 06:08:32 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xh0YLDess6L96nvkYhuVlivBqcsNSJ5iJO7vqQb2cA8=;
+        b=MB1WGmx7LCN3svj1Z32NEMJi+359bYzJH064LJ6eHLnQ5EGZz73rdHSTAmS8xQ/f7k
+         hHXH0vlm9SGNPrsvszHnY5l9DNVOqCNOCYD/2BmSijIBSDEsPvO1kwDOOzCflCUtE+C3
+         5uWCFCDsGeJ+btYZbhuxZEZGz66MRbWP9PD463v41i9Y1Oi+XQ1otayKg60K6uZh5Gnc
+         4DnZXRz5ohRbcR80EUKrbJhjL/yZPXX9+guRIg4XibxuO27z0vcOTmVyl6Kr/4HGMSSS
+         /Wpq0gI97R1uFldSR/4Pmm/H3wRa0HUKiXPV/wUp+1WqruYcT72pfSlLfi8NUFXF9/2d
+         +GvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Xh0YLDess6L96nvkYhuVlivBqcsNSJ5iJO7vqQb2cA8=;
+        b=LRjnhGEgahrv5euh/a9edodoYAI7+LPT3dxFYmQkDIZNZjB6n2aAwMyM3f9C0F1J85
+         d0+Crq20lEdRjupd8Nv6m4XvwKO2FMGuNo92Vb+od+swra5oGbnyF+QMx1HfC0WvCovP
+         +Bz19lTbS1wWpq9UAk1fuD4hOQS/HpxB5XM4nFBwPPnoLBrsLVsQAiDuN21fhs2K07e+
+         mz9XN1TOe/1ZlMpxkWDBZUUUU+bnk21uXmGNSRbGVCLjWtn5sW+1svuc34j1rpvWB2Lj
+         x0l74wjFgr769b5dZRwVdpPIE96QEMVpAyDl9o87/u46kkq2egW1epeNhnwdhn0rJao0
+         vv6w==
+X-Gm-Message-State: APjAAAWK0/PI3crWjMTn088o/3K3C/nfN0bTQLdb+zFZftNChROYBiWI
+        CLi4VX9s0S8ql0pk4aZWgGs=
+X-Google-Smtp-Source: APXvYqygIEZIViXKClHYSYmolDRBmW+9kj6CnM/P3+aITpIuH+/hhzB9v23qpqr0AtWRs2EX6QzoUw==
+X-Received: by 2002:a17:90a:9201:: with SMTP id m1mr4135941pjo.74.1573049311958;
+        Wed, 06 Nov 2019 06:08:31 -0800 (PST)
+Received: from localhost.localdomain ([2001:19f0:7001:2668:5400:1ff:fe62:2bbd])
+        by smtp.gmail.com with ESMTPSA id a16sm4707345pfc.56.2019.11.06.06.08.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 06:08:26 -0800 (PST)
+From:   Chuanhong Guo <gch981213@gmail.com>
+To:     linux-mtd@lists.infradead.org
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Richard Weinberger <richard@nod.at>,
+        Vignesh Raghavendra <vigneshr@ti.com>,
+        Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Martin KaFai Lau <kafai@fb.com>,
-        Song Liu <songliubraving@fb.com>, Yonghong Song <yhs@fb.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        Jin Yao <yao.jin@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Kan Liang <kan.liang@linux.intel.com>,
-        John Garry <john.garry@huawei.com>,
-        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
-        bpf@vger.kernel.org, clang-built-linux@googlegroups.com,
-        Stephane Eranian <eranian@google.com>
-Subject: Re: [PATCH v5 01/10] perf tools: add parse events handle error
-Message-ID: <20191106140650.GE30214@krava>
-References: <20191025180827.191916-1-irogers@google.com>
- <20191030223448.12930-1-irogers@google.com>
- <20191030223448.12930-2-irogers@google.com>
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Tudor Ambarus <tudor.ambarus@microchip.com>,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Chuanhong Guo <gch981213@gmail.com>
+Subject: [PATCH 0/2] mtd: mtk-quadspi: add support for memory-mapped flash reading
+Date:   Wed,  6 Nov 2019 22:07:46 +0800
+Message-Id: <20191106140748.13100-1-gch981213@gmail.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-In-Reply-To: <20191030223448.12930-2-irogers@google.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-MC-Unique: HIuIU22MPBuvr-Q7-vH7Vw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Oct 30, 2019 at 03:34:39PM -0700, Ian Rogers wrote:
-> Parse event error handling may overwrite one error string with another
-> creating memory leaks. Introduce a helper routine that warns about
-> multiple error messages as well as avoiding the memory leak.
->=20
-> A reproduction of this problem can be seen with:
->   perf stat -e c/c/
-> After this change this produces:
-> WARNING: multiple event parsing errors
-> event syntax error: 'c/c/'
->                        \___ unknown term
->=20
-> valid terms: event,filter_rem,filter_opc0,edge,filter_isoc,filter_tid,fil=
-ter_loc,filter_nc,inv,umask,filter_opc1,tid_en,thresh,filter_all_op,filter_=
-not_nm,filter_state,filter_nm,config,config1,config2,name,period,percore
-> Run 'perf list' for a list of valid events
->=20
->  Usage: perf stat [<options>] [<command>]
->=20
->     -e, --event <event>   event selector. use 'perf list' to list availab=
-le events
->=20
-> Signed-off-by: Ian Rogers <irogers@google.com>
+This patchset adds support for optional memory-mapped flash reading.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
+BTW: This controller is a ridiculous one which only supports very limited
+spi-nor instructions. I can't rework the driver into a spi-mem one because
+MTK didn't provide register description in their datasheet and even if they
+do provide the documentation, the resulted driver will still be ridiculous
+because it'll need to check every supported instructions in support_op and
+do execution in one-by-one case in exec_op.
 
-thanks,
-jirka
+Chuanhong Guo (2):
+  mtd: mtk-quadspi: add support for memory-mapped flash reading
+  dt-bindings: mtd: mtk-quadspi: update bindings for mmap flash read
+
+ .../devicetree/bindings/mtd/mtk-quadspi.txt   | 21 ++++++++++++++++++-
+ drivers/mtd/spi-nor/mtk-quadspi.c             | 11 ++++++++++
+ 2 files changed, 31 insertions(+), 1 deletion(-)
+
+-- 
+2.21.0
 
