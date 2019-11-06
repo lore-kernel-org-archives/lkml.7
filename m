@@ -2,122 +2,141 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F19F1C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 82762C5DF65
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D15D42178F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:05:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 631992178F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 15:07:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731986AbfKFPFw (ORCPT
+        id S1731955AbfKFPHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 10:05:52 -0500
-Received: from foss.arm.com ([217.140.110.172]:41486 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727361AbfKFPFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 10:05:52 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id BD1D07CD;
-        Wed,  6 Nov 2019 07:05:51 -0800 (PST)
-Received: from [10.1.32.101] (e122027.cambridge.arm.com [10.1.32.101])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id EEA113F71A;
-        Wed,  6 Nov 2019 07:05:48 -0800 (PST)
-From:   Steven Price <steven.price@arm.com>
-Subject: Re: [PATCH v15 00/23] Generic page walk and ptdump
-To:     Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>,
-        linux-mm@kvack.org
-Cc:     Mark Rutland <Mark.Rutland@arm.com>, x86@kernel.org,
-        Arnd Bergmann <arnd@arndb.de>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        linux-kernel@vger.kernel.org,
-        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        James Morse <james.morse@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Will Deacon <will@kernel.org>,
-        linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20191101140942.51554-1-steven.price@arm.com>
- <1572896147.5937.116.camel@lca.pw>
- <7B040741-EC8A-4CC0-964B-4046AE2E617A@lca.pw>
-Message-ID: <16da6118-ac4d-a165-6202-0731a776ac72@arm.com>
-Date:   Wed, 6 Nov 2019 15:05:29 +0000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Wed, 6 Nov 2019 10:07:17 -0500
+Received: from iolanthe.rowland.org ([192.131.102.54]:35174 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1727231AbfKFPHR (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 10:07:17 -0500
+Received: (qmail 1857 invoked by uid 2102); 6 Nov 2019 10:07:15 -0500
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 6 Nov 2019 10:07:15 -0500
+Date:   Wed, 6 Nov 2019 10:07:15 -0500 (EST)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Kai-Heng Feng <kai.heng.feng@canonical.com>
+cc:     gregkh@linuxfoundation.org, <mathias.nyman@intel.com>,
+        <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: Allow USB device to be warm reset in suspended
+ state
+In-Reply-To: <20191106062710.29880-1-kai.heng.feng@canonical.com>
+Message-ID: <Pine.LNX.4.44L0.1911061006480.1694-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-In-Reply-To: <7B040741-EC8A-4CC0-964B-4046AE2E617A@lca.pw>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/2019 13:31, Qian Cai wrote:
+On Wed, 6 Nov 2019, Kai-Heng Feng wrote:
+
+> On Dell WD15 dock, sometimes USB ethernet cannot be detected after plugging
+> cable to the ethernet port, the hub and roothub get runtime resumed and
+> runtime suspended immediately:
+> ...
+> [  433.315169] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
+> [  433.315204] usb usb4: usb auto-resume
+> [  433.315226] hub 4-0:1.0: hub_resume
+> [  433.315239] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10202e2, return 0x10343
+> [  433.315264] usb usb4-port1: status 0343 change 0001
+> [  433.315279] xhci_hcd 0000:3a:00.0: clear port1 connect change, portsc: 0x10002e2
+> [  433.315293] xhci_hcd 0000:3a:00.0: Get port status 4-2 read: 0x2a0, return 0x2a0
+> [  433.317012] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+> [  433.422282] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
+> [  433.422307] usb usb4-port1: do warm reset
+> [  433.422311] usb 4-1: device reset not allowed in state 8
+> [  433.422339] hub 4-0:1.0: state 7 ports 2 chg 0002 evt 0000
+> [  433.422346] xhci_hcd 0000:3a:00.0: Get port status 4-1 read: 0x10002e2, return 0x343
+> [  433.422356] usb usb4-port1: do warm reset
+> [  433.422358] usb 4-1: device reset not allowed in state 8
+> [  433.422428] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 0 status  = 0xf0002e2
+> [  433.422455] xhci_hcd 0000:3a:00.0: set port remote wake mask, actual port 1 status  = 0xe0002a0
+> [  433.422465] hub 4-0:1.0: hub_suspend
+> [  433.422475] usb usb4: bus auto-suspend, wakeup 1
+> [  433.426161] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+> [  433.466209] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.510204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.554051] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.598235] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.642154] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.686204] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.730205] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.774203] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.818207] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.862040] xhci_hcd 0000:3a:00.0: port 0 polling in bus suspend, waiting
+> [  433.862053] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+> [  433.862077] xhci_hcd 0000:3a:00.0: xhci_suspend: stopping port polling.
+> [  433.862096] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
+> [  433.862312] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_suspend: 0
+> [  433.862445] xhci_hcd 0000:3a:00.0: PME# enabled
+> [  433.902376] xhci_hcd 0000:3a:00.0: restoring config space at offset 0xc (was 0x0, writing 0x20)
+> [  433.902395] xhci_hcd 0000:3a:00.0: restoring config space at offset 0x4 (was 0x100000, writing 0x100403)
+> [  433.902490] xhci_hcd 0000:3a:00.0: PME# disabled
+> [  433.902504] xhci_hcd 0000:3a:00.0: enabling bus mastering
+> [  433.902547] xhci_hcd 0000:3a:00.0: // Setting command ring address to 0x8578fc001
+> [  433.902649] pcieport 0000:00:1b.0: PME: Spurious native interrupt!
+> [  433.902839] xhci_hcd 0000:3a:00.0: Port change event, 4-1, id 3, portsc: 0xb0202e2
+> [  433.902842] xhci_hcd 0000:3a:00.0: resume root hub
+> [  433.902845] xhci_hcd 0000:3a:00.0: handle_port_status: starting port polling.
+> [  433.902877] xhci_hcd 0000:3a:00.0: xhci_resume: starting port polling.
+> [  433.902889] xhci_hcd 0000:3a:00.0: xhci_hub_status_data: stopping port polling.
+> [  433.902891] xhci_hcd 0000:3a:00.0: hcd_pci_runtime_resume: 0
+> [  433.902919] usb usb4: usb wakeup-resume
+> [  433.902942] usb usb4: usb auto-resume
+> [  433.902966] hub 4-0:1.0: hub_resume
+> ...
 > 
+> As Mathias pointed out, the hub enters Cold Attach Status state and
+> requires a warm reset. However usb_reset_device() bails out early when
+> the device is in suspended state, as its callers port_event() and
+> hub_event() don't always resume the device.
 > 
->> On Nov 4, 2019, at 2:35 PM, Qian Cai <cai@lca.pw> wrote:
->>
->> On Fri, 2019-11-01 at 14:09 +0000, Steven Price wrote:
-[...]
->>> Changes since v14:
->>> https://lore.kernel.org/lkml/20191028135910.33253-1-steven.price@arm.com/
->>> * Switch walk_page_range() into two functions, the existing
->>>    walk_page_range() now still requires VMAs (and treats areas without a
->>>    VMA as a 'hole'). The new walk_page_range_novma() ignores VMAs and
->>>    will report the actual page table layout. This fixes the previous
->>>    breakage of /proc/<pid>/pagemap
->>> * New patch at the end of the series which reduces the 'level' numbers
->>>    by 1 to simplify the code slightly
->>> * Added tags
->>
->> Does this new version also take care of this boot crash seen with v14? Suppose
->> it is now breaking CONFIG_EFI_PGT_DUMP=y? The full config is,
->>
->> https://raw.githubusercontent.com/cailca/linux-mm/master/x86.config
->>
+> Since there's nothing wrong to reset a suspended device, allow
+> usb_reset_device() to do so to solve the issue.
 > 
-> V15 is indeed DOA here.
+> Signed-off-by: Kai-Heng Feng <kai.heng.feng@canonical.com>
+> ---
+> v2:
+> - Update kerneldoc.
+> 
+>  drivers/usb/core/hub.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/usb/core/hub.c b/drivers/usb/core/hub.c
+> index 05a2d51bdbe0..eaf28eed51b0 100644
+> --- a/drivers/usb/core/hub.c
+> +++ b/drivers/usb/core/hub.c
+> @@ -5849,7 +5849,7 @@ static int usb_reset_and_verify_device(struct usb_device *udev)
+>  
+>  /**
+>   * usb_reset_device - warn interface drivers and perform a USB port reset
+> - * @udev: device to reset (not in SUSPENDED or NOTATTACHED state)
+> + * @udev: device to reset (not in NOTATTACHED state)
+>   *
+>   * Warns all drivers bound to registered interfaces (using their pre_reset
+>   * method), performs the port reset, and then lets the drivers know that
+> @@ -5877,8 +5877,7 @@ int usb_reset_device(struct usb_device *udev)
+>  	struct usb_host_config *config = udev->actconfig;
+>  	struct usb_hub *hub = usb_hub_to_struct_hub(udev->parent);
+>  
+> -	if (udev->state == USB_STATE_NOTATTACHED ||
+> -			udev->state == USB_STATE_SUSPENDED) {
+> +	if (udev->state == USB_STATE_NOTATTACHED) {
+>  		dev_dbg(&udev->dev, "device reset not allowed in state %d\n",
+>  				udev->state);
+>  		return -EINVAL;
 
-Thanks for finding this, it looks like EFI causes issues here. The below fixes
-this for me (booting in QEMU).
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-Andrew: do you want me to send out the entire series again for this fix, or
-can you squash this into mm-pagewalk-allow-walking-without-vma.patch?
-
-Thanks,
-
-Steve
-
----8<---
-diff --git a/mm/pagewalk.c b/mm/pagewalk.c
-index c7529dc4f82b..70dcaa23598f 100644
---- a/mm/pagewalk.c
-+++ b/mm/pagewalk.c
-@@ -90,7 +90,7 @@ static int walk_pmd_range(pud_t *pud, unsigned long addr, unsigned long end,
-  			split_huge_pmd(walk->vma, pmd, addr);
-  			if (pmd_trans_unstable(pmd))
-  				goto again;
--		} else if (pmd_leaf(*pmd)) {
-+		} else if (pmd_leaf(*pmd) || !pmd_present(*pmd)) {
-  			continue;
-  		}
-  
-@@ -141,7 +141,7 @@ static int walk_pud_range(p4d_t *p4d, unsigned long addr, unsigned long end,
-  			split_huge_pud(walk->vma, pud, addr);
-  			if (pud_none(*pud))
-  				goto again;
--		} else if (pud_leaf(*pud)) {
-+		} else if (pud_leaf(*pud) || !pud_present(*pud)) {
-  			continue;
-  		}
-  
