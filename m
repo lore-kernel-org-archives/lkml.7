@@ -6,34 +6,34 @@ X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C589C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B03C5DF62
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A4542187F
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:04:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0A0AC2187F
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 07:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731853AbfKFHE4 (ORCPT
+        id S1731374AbfKFHFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 02:04:56 -0500
-Received: from esa1.mentor.iphmx.com ([68.232.129.153]:18687 "EHLO
-        esa1.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731824AbfKFHEz (ORCPT
+        Wed, 6 Nov 2019 02:05:07 -0500
+Received: from esa2.mentor.iphmx.com ([68.232.141.98]:9081 "EHLO
+        esa2.mentor.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725948AbfKFHEO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 02:04:55 -0500
-IronPort-SDR: GXUtK91lnGhqhFsdIhspZy1fB1f8vO9Xasm1VzIxnLZAqz9mLWXsTxdALcAIlDYJj3EaiMpYxa
- GoY1aDt/bVfjJo3Cw0KNg0yoE0yeMWh3xGTg4+0M1qR0MA2d9UPpCU5JRH47h3YoaP0q89SAdV
- RV8MoNH4roKbCfg68e6vor4iBVnG+dL9ArhAniyrtjRw5YKAt/QgD4Zxo4KKarCOzWU3oEjWqx
- II5ZQ+jH4amVELfrNWwm5Q7mDzhIeNqM908Vr9Lib2sAnqfLJ49BUlucsn29cRjnja1AITIBiZ
- pIQ=
+        Wed, 6 Nov 2019 02:04:14 -0500
+IronPort-SDR: tcuC1pS3emJO1AlSAutXc/QbEcjegQWoe5MBT5FeJtw8hiQn4vu+Y59QzBnM+ELpCvKXajuVIN
+ kSqQoriQMdEAMAv0z3Bqt61bri7spLMQgXbqzWbA3OELOoAG1IwJpZxmNcQSd1a0gSywXong1V
+ Tp49O/h5kUZUXhEqKX5WoosnzDTw/4NRfdMAlhJRjDw7hIcZ0LyvHpBA6Ge7py+zrA51qF6Q9P
+ 3P0npgH8WA3yybTdC9jOkSn5sT9qUc/a7h4+QitvdwdlDVY+ctPdMBrSosdXCsaCdda6zg20tg
+ TPs=
 X-IronPort-AV: E=Sophos;i="5.68,272,1569312000"; 
-   d="scan'208";a="44759346"
+   d="scan'208";a="42848315"
 Received: from orw-gwy-02-in.mentorg.com ([192.94.38.167])
-  by esa1.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:54 -0800
-IronPort-SDR: riHpJbmBY/cMLTF4AEiPSrR6qbNyBs4glwf6GgoEx8d1aeIuZfDmrh8HAQJjZZWypZ7u2uar6d
- 7ZMOXux6jlvEdzMnTErgo72U0Q91GzSriN/QGtg80vP0hi4cNCMCvU0IUMqVxA85nUs8epoYMc
- HhQVhqPRsdrQnx96RPBGgl5hP3rQT/Xw4s036Bk+q+mFjkAywj6Z/MQV7HAhjV/OK29wJSaE+V
- 7D6IdJRVjEPO4Ks60HkOrO5gmY4Vp76hS1Z1FllYDEEENckDCL3b/U2xqAldlSfMeLSW/VMRQK
- sCE=
+  by esa2.mentor.iphmx.com with ESMTP; 05 Nov 2019 23:04:13 -0800
+IronPort-SDR: Og4fHgY6kITyoI/3Rco2BFCTQLqqF/TIe2seKNCKcxHv2yRdzoZpbOrxTEssYfxmId3TP3mbSQ
+ m3d5/zaKz9GDbFKU1SuVZRCwQjQboUp4SvowVn0Apu6UktXN8NMlnSmApXTZrOagTfhbZIVTO2
+ K0Plh4OavvqVkNxQ5wRC6dd/JiO1Nm6ewXv5UrWyp9paveN+kkiVwFRprqFytHl8BU+qDwNHug
+ zoWF+5zRYC8tQUajKLDBQ+hlL1GlU6wQbZdvNwMdqM5Rne2Ks1Ww+j/Zyd7SbMnwY5UKVmFxaM
+ Mjc=
 From:   Jiada Wang <jiada_wang@mentor.com>
 To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
         <rydberg@bitmath.org>, <dmitry.torokhov@gmail.com>,
@@ -41,9 +41,9 @@ To:     <jikos@kernel.org>, <benjamin.tissoires@redhat.com>,
 CC:     <linux-input@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <jiada_wang@mentor.com>, <erosca@de.adit-jv.com>,
         <Andrew_Gabbasov@mentor.com>
-Subject: [PATCH v5 48/48] Input: atmel_mxt_ts - Fix compilation warning
-Date:   Wed, 6 Nov 2019 16:01:46 +0900
-Message-ID: <20191106070146.18759-49-jiada_wang@mentor.com>
+Subject: [PATCH v5 37/48] Input: atmel_mxt_ts: return error from mxt_process_messages_until_invalid()
+Date:   Wed, 6 Nov 2019 16:01:35 +0900
+Message-ID: <20191106070146.18759-38-jiada_wang@mentor.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20191106070146.18759-1-jiada_wang@mentor.com>
 References: <20191106070146.18759-1-jiada_wang@mentor.com>
@@ -54,27 +54,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-fix "make W=1" compilation warnings from Atmel driver
-as per the compilation logs.
+From: Dean Jenkins <Dean_Jenkins@mentor.com>
 
+mxt_process_messages_until_invalid() failed to propagate the error
+code from mxt_read_and_process_messages() so return the error code.
+
+Signed-off-by: Dean Jenkins <Dean_Jenkins@mentor.com>
+Signed-off-by: Deepak Das <deepak_das@mentor.com>
+Signed-off-by: George G. Davis <george_davis@mentor.com>
 Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
 ---
- drivers/input/touchscreen/atmel_mxt_ts.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/input/touchscreen/atmel_mxt_ts.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
-index 243820b102b8..3e2697810cf0 100644
+index 054aacc768b8..a5af1f91d704 100644
 --- a/drivers/input/touchscreen/atmel_mxt_ts.c
 +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
-@@ -2049,7 +2049,7 @@ static int mxt_prepare_cfg_mem(struct mxt_data *data, struct mxt_cfg *cfg)
- 
- 			byte_offset = reg + i - cfg->start_ofs;
- 
--			if (byte_offset >= 0 && byte_offset < cfg->mem_size) {
-+			if (byte_offset < cfg->mem_size) {
- 				*(cfg->mem + byte_offset) = val;
- 			} else {
- 				dev_err(dev, "Bad object: reg:%d, T%d, ofs=%d\n",
+@@ -1564,6 +1564,8 @@ static int mxt_process_messages_until_invalid(struct mxt_data *data)
+ 	/* Read messages until we force an invalid */
+ 	do {
+ 		read = mxt_read_and_process_messages(data, count);
++		if (read < 0)
++			return read;
+ 		if (read < count)
+ 			return 0;
+ 	} while (--tries);
 -- 
 2.17.1
 
