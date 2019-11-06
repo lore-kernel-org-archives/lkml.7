@@ -3,167 +3,176 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
-	version=3.4.0
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CC51C5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:57:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D470C5DF63
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:57:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02DF42075C
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:57:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2650C217F4
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 19:57:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hzJh+LvM"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Fcdm62Kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732033AbfKFT5G (ORCPT
+        id S1732264AbfKFT5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 14:57:06 -0500
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35797 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfKFT5G (ORCPT
+        Wed, 6 Nov 2019 14:57:33 -0500
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:35376 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726713AbfKFT5d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 14:57:06 -0500
-Received: by mail-qt1-f193.google.com with SMTP id r22so24989324qtt.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 11:57:05 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=h6UbIbVlfISuIvel0Iqu/1JQlf1OlTg/l5tLHla0gWA=;
-        b=hzJh+LvMcsj6qZ6/Eq+oOdNhECLwQc4ziSD8lz//LKJ7+5IbIT9c7EIK08plXD+Wy7
-         wUIUmdfRVq042/avlzDgkTu6Jo+B/OyxEgasnlW2WTFXKndW0sMepFZxHj4xqQWA1Kng
-         RejA7+Ewr1e8eyQpl6DtFHQWFXn5MzEIbKy0MZeWLq0VZOHZ/dnI7k+q+cfGVKhqGYz9
-         hY/uGPO4NuWEJM3f/4M5/Sl86CETKRwGjezOJxqaC/j1h7hynOAKaRpSoa327E4ZGNil
-         XihKJsKew5WqO6QjTRm/bGPNSZPUFOR1kBfrA0gl3tXq7BB64foUCZd343yaTDK7/xsv
-         aEFw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=h6UbIbVlfISuIvel0Iqu/1JQlf1OlTg/l5tLHla0gWA=;
-        b=I4es7OECf/Xa6HNoBX6cfCN99SSw6vNKQnze2sik4bhMOqNy/IHz4iFNUdaJebUduA
-         N20t+jY8GkOYDWqd9F8uimVe7nXOea+AOq7SC0xAs5vsAjnLcWz7ZLlDVRyK+gSom5Ao
-         HmhmY8JFCgcs0z56FZ+EmiIBsMhEZuX2PwRRVrK1whlcJ3Jl1G7RfvzWYotEwxsY8oGO
-         bXriYp4Ap2AqeVVOj75W4KAPJjXmD9lwwSXKz/suEg48FeV13lTVhQPtcImtGpsgxCCB
-         bm/y+UUikrRek+yEWhzn1d9SxNXuhNRjQ6agnzKL+TE52SYKkwresFHOpQ7BRBwvAxtL
-         aEbg==
-X-Gm-Message-State: APjAAAWqdj/1r5xoF115Qcm/ZdJ8Q/rmrsiHW+vyKZ+/QR4wpRcWA8vh
-        aTAj02uGic7L/gGPnfkYujc=
-X-Google-Smtp-Source: APXvYqwm/z4N6f36Lb6K0uirXf1izF1DzNR2l9jPG1Uc7kpcqu32KlYejlHJE4RTmRrasbO+zpnA/w==
-X-Received: by 2002:aed:224f:: with SMTP id o15mr4382638qtc.86.1573070225181;
-        Wed, 06 Nov 2019 11:57:05 -0800 (PST)
-Received: from quaco.ghostprotocols.net (187-26-100-98.3g.claro.net.br. [187.26.100.98])
-        by smtp.gmail.com with ESMTPSA id h44sm12291549qtc.1.2019.11.06.11.57.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 11:57:04 -0800 (PST)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id EBEC840B1D; Wed,  6 Nov 2019 16:56:59 -0300 (-03)
-Date:   Wed, 6 Nov 2019 16:56:59 -0300
-To:     Masami Hiramatsu <mhiramat@kernel.org>
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        linux-kernel@vger.kernel.org,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>,
-        Namhyung Kim <namhyung@kernel.org>
-Subject: Re: [PATCH 4/5] perf probe: Support DW_AT_const_value constant value
-Message-ID: <20191106195659.GD11935@kernel.org>
-References: <157291299825.19771.5190465639558208592.stgit@devnote2>
- <157291303888.19771.11876536314853955934.stgit@devnote2>
+        Wed, 6 Nov 2019 14:57:33 -0500
+Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id xA6JptN7005880;
+        Wed, 6 Nov 2019 20:57:07 +0100
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=STMicroelectronics;
+ bh=1CNNscptave/lqyrM0vWi7IpPuigDr/RT5NEfJL41FQ=;
+ b=Fcdm62Ktp46Y/3LYYjtSxMRrvFQp4GYMyrRi+iset1jAuVX3iFh/tFbP/CkL4MdMYJ4G
+ g9+k/y3ak7z6W4mBnvIkafNIXHb86pUJSLczFSIpVz9W+BvbUQwM1zGNibmLD0vX4/KM
+ grsaJNycvyIloP56dhfcZw10tG4yZps5haoAXmv9Qkpz70xyuKbuzOoiyxGL5786f3tK
+ jJOLeUEUwBcUwc4Od/hpyv4x849CC+NlqD/lfZ+qB7a/y6wnlCPF0uZvHG7GFJxnY6r+
+ 5zKcg/nuEMz8Q+pXaKmpKsg4QdXmo2/ZQS8lm8QKi/XJ0aDGCQDTN5J61Bpxh0FBRzEv 1g== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2w41vgrs27-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Wed, 06 Nov 2019 20:57:07 +0100
+Received: from euls16034.sgp.st.com (euls16034.sgp.st.com [10.75.44.20])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 598EC10002A;
+        Wed,  6 Nov 2019 20:57:07 +0100 (CET)
+Received: from Webmail-eu.st.com (sfhdag5node1.st.com [10.75.127.13])
+        by euls16034.sgp.st.com (STMicroelectronics) with ESMTP id 372512C64DA;
+        Wed,  6 Nov 2019 20:57:07 +0100 (CET)
+Received: from SFHDAG3NODE3.st.com (10.75.127.9) by SFHDAG5NODE1.st.com
+ (10.75.127.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Wed, 6 Nov
+ 2019 20:57:06 +0100
+Received: from SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476]) by
+ SFHDAG3NODE3.st.com ([fe80::3507:b372:7648:476%20]) with mapi id
+ 15.00.1347.000; Wed, 6 Nov 2019 20:57:06 +0100
+From:   Benjamin GAIGNARD <benjamin.gaignard@st.com>
+To:     Rob Herring <robh@kernel.org>
+CC:     "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
+        Fabrice GASNIER <fabrice.gasnier@st.com>,
+        "jic23@kernel.org" <jic23@kernel.org>,
+        "knaack.h@gmx.de" <knaack.h@gmx.de>,
+        "lars@metafoo.de" <lars@metafoo.de>,
+        "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>,
+        "lee.jones@linaro.org" <lee.jones@linaro.org>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
+        "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: Convert stm32 timers bindings to
+ json-schema
+Thread-Topic: [PATCH 4/4] dt-bindings: mfd: Convert stm32 timers bindings to
+ json-schema
+Thread-Index: AQHVj+cLo82I5KV3I0iahvx4EoqxqKd9gQYAgAEHIoA=
+Date:   Wed, 6 Nov 2019 19:57:06 +0000
+Message-ID: <41c43d09-9371-8b23-a3dd-e43f5df5c5bc@st.com>
+References: <20191031123040.26316-1-benjamin.gaignard@st.com>
+ <20191031123040.26316-5-benjamin.gaignard@st.com>
+ <20191106041518.GC5294@bogus>
+In-Reply-To: <20191106041518.GC5294@bogus>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.44]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1FEAA25580E4C446BBC3EF2B74C20D0E@st.com>
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <157291303888.19771.11876536314853955934.stgit@devnote2>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.12.1 (2019-06-15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:6.0.95,18.0.572
+ definitions=2019-11-06_07:2019-11-06,2019-11-06 signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Nov 05, 2019 at 09:17:19AM +0900, Masami Hiramatsu escreveu:
-> Support DW_AT_const_value for variable assignment instead of location.
-> Note that this requires ftrace supporting immediate value.
-
-This one could have come before the other two, depends on the previous
-two being applied.
-
-- Arnaldo
- 
-> Signed-off-by: Masami Hiramatsu <mhiramat@kernel.org>
-> ---
->  tools/perf/util/probe-file.c   |    7 +++++++
->  tools/perf/util/probe-file.h   |    1 +
->  tools/perf/util/probe-finder.c |   11 +++++++++++
->  3 files changed, 19 insertions(+)
-> 
-> diff --git a/tools/perf/util/probe-file.c b/tools/perf/util/probe-file.c
-> index a63f1a19b0e8..5003ba403345 100644
-> --- a/tools/perf/util/probe-file.c
-> +++ b/tools/perf/util/probe-file.c
-> @@ -1008,6 +1008,7 @@ enum ftrace_readme {
->  	FTRACE_README_UPROBE_REF_CTR,
->  	FTRACE_README_USER_ACCESS,
->  	FTRACE_README_MULTIPROBE_EVENT,
-> +	FTRACE_README_IMMEDIATE_VALUE,
->  	FTRACE_README_END,
->  };
->  
-> @@ -1022,6 +1023,7 @@ static struct {
->  	DEFINE_TYPE(FTRACE_README_UPROBE_REF_CTR, "*ref_ctr_offset*"),
->  	DEFINE_TYPE(FTRACE_README_USER_ACCESS, "*[u]<offset>*"),
->  	DEFINE_TYPE(FTRACE_README_MULTIPROBE_EVENT, "*Create/append/*"),
-> +	DEFINE_TYPE(FTRACE_README_IMMEDIATE_VALUE, "*\\imm-value,*"),
->  };
->  
->  static bool scan_ftrace_readme(enum ftrace_readme type)
-> @@ -1092,3 +1094,8 @@ bool multiprobe_event_is_supported(void)
->  {
->  	return scan_ftrace_readme(FTRACE_README_MULTIPROBE_EVENT);
->  }
-> +
-> +bool immediate_value_is_supported(void)
-> +{
-> +	return scan_ftrace_readme(FTRACE_README_IMMEDIATE_VALUE);
-> +}
-> diff --git a/tools/perf/util/probe-file.h b/tools/perf/util/probe-file.h
-> index 850d1b52d60a..0dba88c0f5f0 100644
-> --- a/tools/perf/util/probe-file.h
-> +++ b/tools/perf/util/probe-file.h
-> @@ -72,6 +72,7 @@ bool kretprobe_offset_is_supported(void);
->  bool uprobe_ref_ctr_is_supported(void);
->  bool user_access_is_supported(void);
->  bool multiprobe_event_is_supported(void);
-> +bool immediate_value_is_supported(void);
->  #else	/* ! HAVE_LIBELF_SUPPORT */
->  static inline struct probe_cache *probe_cache__new(const char *tgt __maybe_unused, struct nsinfo *nsi __maybe_unused)
->  {
-> diff --git a/tools/perf/util/probe-finder.c b/tools/perf/util/probe-finder.c
-> index 9ecea45da4ca..2e3a468c8350 100644
-> --- a/tools/perf/util/probe-finder.c
-> +++ b/tools/perf/util/probe-finder.c
-> @@ -177,6 +177,17 @@ static int convert_variable_location(Dwarf_Die *vr_die, Dwarf_Addr addr,
->  	if (dwarf_attr(vr_die, DW_AT_external, &attr) != NULL)
->  		goto static_var;
->  
-> +	/* Constant value */
-> +	if (dwarf_attr(vr_die, DW_AT_const_value, &attr) &&
-> +	    immediate_value_is_supported()) {
-> +		Dwarf_Sword snum;
-> +
-> +		dwarf_formsdata(&attr, &snum);
-> +		ret = asprintf(&tvar->value, "\\%ld", (long)snum);
-> +
-> +		return ret < 0 ? -ENOMEM : 0;
-> +	}
-> +
->  	/* TODO: handle more than 1 exprs */
->  	if (dwarf_attr(vr_die, DW_AT_location, &attr) == NULL)
->  		return -EINVAL;	/* Broken DIE ? */
-
--- 
-
-- Arnaldo
+DQpPbiAxMS82LzE5IDU6MTUgQU0sIFJvYiBIZXJyaW5nIHdyb3RlOg0KPiBPbiBUaHUsIE9jdCAz
+MSwgMjAxOSBhdCAwMTozMDo0MFBNICswMTAwLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToNCj4+
+IENvbnZlcnQgdGhlIFNUTTMyIHRpbWVycyBiaW5kaW5nIHRvIERUIHNjaGVtYSBmb3JtYXQgdXNp
+bmcganNvbi1zY2hlbWENCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBCZW5qYW1pbiBHYWlnbmFyZCA8
+YmVuamFtaW4uZ2FpZ25hcmRAc3QuY29tPg0KPj4gLS0tDQo+PiAgIC4uLi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21mZC9zdCxzdG0zMi10aW1lcnMueWFtbCAgIHwgOTEgKysrKysrKysrKysrKysrKysr
+KysrKw0KPj4gICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3RtMzItdGltZXJzLnR4dCAg
+ICAgICB8IDczIC0tLS0tLS0tLS0tLS0tLS0tDQo+PiAgIDIgZmlsZXMgY2hhbmdlZCwgOTEgaW5z
+ZXJ0aW9ucygrKSwgNzMgZGVsZXRpb25zKC0pDQo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWZkL3N0LHN0bTMyLXRpbWVycy55YW1sDQo+
+PiAgIGRlbGV0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+bWZkL3N0bTMyLXRpbWVycy50eHQNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL21mZC9zdCxzdG0zMi10aW1lcnMueWFtbCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZmQvc3Qsc3RtMzItdGltZXJzLnlhbWwNCj4+IG5ldyBm
+aWxlIG1vZGUgMTAwNjQ0DQo+PiBpbmRleCAwMDAwMDAwMDAwMDAuLjNmMGE2NWZiMmJjMA0KPj4g
+LS0tIC9kZXYvbnVsbA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L21mZC9zdCxzdG0zMi10aW1lcnMueWFtbA0KPj4gQEAgLTAsMCArMSw5MSBAQA0KPj4gKyMgU1BE
+WC1MaWNlbnNlLUlkZW50aWZpZXI6IChHUEwtMi4wLW9ubHkgT1IgQlNELTItQ2xhdXNlKQ0KPj4g
+KyVZQU1MIDEuMg0KPj4gKy0tLQ0KPj4gKyRpZDogaHR0cDovL2RldmljZXRyZWUub3JnL3NjaGVt
+YXMvbWZkL3N0LHN0bTMyLXRpbWVycy55YW1sIw0KPj4gKyRzY2hlbWE6IGh0dHA6Ly9kZXZpY2V0
+cmVlLm9yZy9tZXRhLXNjaGVtYXMvY29yZS55YW1sIw0KPj4gKw0KPj4gK3RpdGxlOiBTVE1pY3Jv
+ZWxlY3Ryb25pY3MgU1RNMzIgVGltZXJzIGJpbmRpbmdzDQo+PiArDQo+PiArZGVzY3JpcHRpb246
+IHwNCj4+ICsgIFRoaXMgaGFyZHdhcmUgYmxvY2sgcHJvdmlkZXMgMyB0eXBlcyBvZiB0aW1lciBh
+bG9uZyB3aXRoIFBXTSBmdW5jdGlvbmFsaXR5OiBcDQo+IERvbid0IG5lZWQgdGhlIFwNCm9rDQo+
+DQo+PiArICAgIC0gYWR2YW5jZWQtY29udHJvbCB0aW1lcnMgY29uc2lzdCBvZiBhIDE2LWJpdCBh
+dXRvLXJlbG9hZCBjb3VudGVyIGRyaXZlbiBieSBhIHByb2dyYW1tYWJsZSBcDQo+PiArICAgICAg
+cHJlc2NhbGVyLCBicmVhayBpbnB1dCBmZWF0dXJlLCBQV00gb3V0cHV0cyBhbmQgY29tcGxlbWVu
+dGFyeSBQV00gb3VwdXRzIGNoYW5uZWxzLiBcDQo+PiArICAgIC0gZ2VuZXJhbC1wdXJwb3NlIHRp
+bWVycyBjb25zaXN0IG9mIGEgMTYtYml0IG9yIDMyLWJpdCBhdXRvLXJlbG9hZCBjb3VudGVyIGRy
+aXZlbiBieSBhIFwNCj4+ICsgICAgICBwcm9ncmFtbWFibGUgcHJlc2NhbGVyIGFuZCBQV00gb3V0
+cHV0cy5cDQo+PiArICAgIC0gYmFzaWMgdGltZXJzIGNvbnNpc3Qgb2YgYSAxNi1iaXQgYXV0by1y
+ZWxvYWQgY291bnRlciBkcml2ZW4gYnkgYSBwcm9ncmFtbWFibGUgcHJlc2NhbGVyLg0KPj4gKw0K
+Pj4gK21haW50YWluZXJzOg0KPj4gKyAgLSBCZW5qYW1pbiBHYWlnbmFyZCA8YmVuamFtaW4uZ2Fp
+Z25hcmRAc3QuY29tPg0KPj4gKyAgLSBGYWJyaWNlIEdhc25pZXIgPGZhYnJpY2UuZ2FzbmllckBz
+dC5jb20+DQo+PiArDQo+PiArYWxsT2Y6DQo+PiArICAtICRyZWY6ICIuLi9wd20vc3Qsc3RtMzIt
+cHdtLnlhbWwjIg0KPj4gKyAgLSAkcmVmOiAiLi4vaWlvL3RpbWVyL3N0LHN0bTMyLXRpbWVyLXRy
+aWdnZXIueWFtbCMiDQo+PiArICAtICRyZWY6ICIuLi9jb3VudGVyL3N0LHN0bTMyLXRpbWVyLWNu
+dC55YW1sIyINCj4gVGhpcyB3b3JrcywgYnV0IEkgcHJlZmVyIHRoZSBjaGlsZCBub2RlIG5hbWVz
+IGJlIGxpc3RlZCB1bmRlciBwcm9wZXJ0aWVzDQo+IGhlcmUgd2l0aCBhIHJlZjoNCj4NCj4gY291
+bnRlcjoNCj4gICAgJHJlZjogIi4uL2NvdW50ZXIvc3Qsc3RtMzItdGltZXItY250LnlhbWwjIg0K
+SWYgSSB3cm90ZSBldmVyeXRoaW5nIGluIG9uZSBmaWxlIEkgZ3Vlc3Mgd2hhdCB3b24ndCBiZSBu
+ZWVkZWQgYW55bW9yZQ0KPg0KPj4gKw0KPj4gK3Byb3BlcnRpZXM6DQo+PiArICBjb21wYXRpYmxl
+Og0KPj4gKyAgICBjb25zdDogc3Qsc3RtMzItdGltZXJzDQo+PiArDQo+PiArICByZWc6DQo+PiAr
+ICAgIG1heEl0ZW1zOiAxDQo+PiArDQo+PiArICBjbG9ja3M6DQo+PiArICAgIG1heEl0ZW1zOiAx
+DQo+PiArDQo+PiArICBjbG9jay1uYW1lczoNCj4+ICsgICAgaXRlbXM6DQo+PiArICAgICAgLSBj
+b25zdDogaW50DQo+PiArDQo+PiArICByZXNldDoNCj4+ICsgICAgbWF4SXRlbXM6IDENCj4+ICsN
+Cj4+ICsgIGRtYXM6IHRydWUNCj4gSG93IG1hbnk/DQoNCmZyb20gMCB1cCB0byA4LCBidXQgSSBk
+b24ndCBrbm93IHRoZSBzeW50YXggZm9yIHRoYXQuIG1pbkl0ZW1zID0gMCBpc24ndCANCmFjY2Vw
+dGVkLg0KDQpBbnkgaGludHMgZm9yIG1lID8NCg0KPg0KPj4gKw0KPj4gKyAgZG1hLW5hbWVzOiB0
+cnVlDQo+IFdoYXQgYXJlIHRoZSBuYW1lcz8NCg0KaXQgY291bGQgYmUgY2gxIC4uLiBjaDgsICJ0
+cmlnIiBvciAidXAiIGluIGFueSBvcmRlci4NCg0KQWdhaW4gSSBoYXZlbid0IGJlIGFibGUgdG8g
+ZmluZCBhIHN5bnRheCB0aGF0IGFsbG93IHRvIGxpc3QgdGhlIG5hbWVzIA0KYW5kIHVzZSB0aGVt
+IGluIGFueSBvcmRlcnMuDQoNCkJlbmphbWluDQoNCj4NCj4+ICsNCj4+ICsgICIjYWRkcmVzcy1j
+ZWxscyI6DQo+PiArICAgIGNvbnN0OiAxDQo+PiArDQo+PiArICAiI3NpemUtY2VsbHMiOg0KPj4g
+KyAgICBjb25zdDogMA0KPj4gKw0KPj4gK3JlcXVpcmVkOg0KPj4gKyAgLSAiI2FkZHJlc3MtY2Vs
+bHMiDQo+PiArICAtICIjc2l6ZS1jZWxscyINCj4+ICsgIC0gY29tcGF0aWJsZQ0KPj4gKyAgLSBy
+ZWcNCj4+ICsgIC0gY2xvY2tzDQo+PiArICAtIGNsb2NrLW5hbWVzDQo+PiArDQo+PiArZXhhbXBs
+ZXM6DQo+PiArICAtIHwNCj4+ICsgICAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2Nsb2NrL3N0bTMy
+bXAxLWNsa3MuaD4NCj4+ICsgICAgdGltZXJzMjogdGltZXJANDAwMDAwMDAgew0KPj4gKyAgICAg
+ICNhZGRyZXNzLWNlbGxzID0gPDE+Ow0KPj4gKyAgICAgICNzaXplLWNlbGxzID0gPDA+Ow0KPj4g
+KyAgICAgIGNvbXBhdGlibGUgPSAic3Qsc3RtMzItdGltZXJzIjsNCj4+ICsgICAgICByZWcgPSA8
+MHg0MDAwMDAwMCAweDQwMD47DQo+PiArICAgICAgY2xvY2tzID0gPCZyY2MgVElNMl9LPjsNCj4+
+ICsgICAgICBjbG9jay1uYW1lcyA9ICJpbnQiOw0KPj4gKyAgICAgIGRtYXMgPSA8JmRtYW11eDEg
+MTggMHg0MDAgMHgxPiwNCj4+ICsgICAgICAgICAgICAgPCZkbWFtdXgxIDE5IDB4NDAwIDB4MT4s
+DQo+PiArICAgICAgICAgICAgIDwmZG1hbXV4MSAyMCAweDQwMCAweDE+LA0KPj4gKyAgICAgICAg
+ICAgICA8JmRtYW11eDEgMjEgMHg0MDAgMHgxPiwNCj4+ICsgICAgICAgICAgICAgPCZkbWFtdXgx
+IDIyIDB4NDAwIDB4MT47DQo+PiArICAgICAgZG1hLW5hbWVzID0gImNoMSIsICJjaDIiLCAiY2gz
+IiwgImNoNCIsICJ1cCI7DQo+PiArICAgICAgcHdtIHsNCj4+ICsgICAgICAgIGNvbXBhdGlibGUg
+PSAic3Qsc3RtMzItcHdtIjsNCj4+ICsgICAgICAgICNwd20tY2VsbHMgPSA8Mz47DQo+PiArICAg
+ICAgICBzdCxicmVha2lucHV0ID0gPDAgMSA1PjsNCj4+ICsgICAgICB9Ow0KPj4gKyAgICAgIHRp
+bWVyQDAgew0KPj4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG0zMi10aW1lci10cmlnZ2Vy
+IjsNCj4+ICsgICAgICAgIHJlZyA9IDwwPjsNCj4+ICsgICAgICB9Ow0KPj4gKyAgICAgIGNvdW50
+ZXIgew0KPj4gKyAgICAgICAgY29tcGF0aWJsZSA9ICJzdCxzdG0zMi10aW1lci1jb3VudGVyIjsN
+Cj4+ICsgICAgICB9Ow0KPj4gKyAgICB9Ow0KPj4gKw0KPj4gKy4uLg==
