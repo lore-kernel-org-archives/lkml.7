@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0EC70C5DF60
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8374C5DF60
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ACD782087E
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61EC52087E
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 00:30:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="eShP+02F"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ZOQEjBet"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730608AbfKFAaI (ORCPT
+        id S2387456AbfKFAaN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 5 Nov 2019 19:30:08 -0500
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42815 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730319AbfKFAaI (ORCPT
+        Tue, 5 Nov 2019 19:30:13 -0500
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:33320 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387403AbfKFAaL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 5 Nov 2019 19:30:08 -0500
-Received: by mail-pf1-f193.google.com with SMTP id s5so9163203pfh.9
-        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:30:07 -0800 (PST)
+        Tue, 5 Nov 2019 19:30:11 -0500
+Received: by mail-pg1-f194.google.com with SMTP id u23so15869551pgo.0
+        for <linux-kernel@vger.kernel.org>; Tue, 05 Nov 2019 16:30:09 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=RGLlsN3tP5d3XlKJATDIW7JuXqbojd8kF/+EpW4xWDs=;
-        b=eShP+02FUAYXD37ksphiWSo81YU0fqTV1ZEnEJl2Hp59W5Q0/v3YhV+bksWoBsb/mg
-         bgXU6X0bANJoV1xRp8QqF0DJYTMO/Qlumfw7+LMPoyAL9Ltwd+M6z+Vgy02M413gn8ue
-         g+u1C3FCWk6048ipYYk4/y/NlH64PfdOFfrSo=
+        bh=qn/J/1PPzN9yYPx8ms3UdKQj06L6swPahcKzYXCyGo4=;
+        b=ZOQEjBetAhlpeBEjjy35YzhHVGrbMEHXWH4SxMAcEk6gHOyX7cYfh0qG3+v3Gnxete
+         swT0iYfkaaiadSbE9Sqn6OK0nwyZ9P3n6d9NzICQ6h5urypunAwaZBqNk6fuXPcAgtEr
+         FuKAnkmA3RLkbRVUYXbtQPDrh8e+iM3AsTFHk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=RGLlsN3tP5d3XlKJATDIW7JuXqbojd8kF/+EpW4xWDs=;
-        b=OaHhi5GMXOUT0h576FH6c+ztwscRfKxWwf1Xi5dehFfkertMgT+Lcak1TcVT+9EgQO
-         YcUSZyiNKJzdZ2wZomJ0K/bKPCk1jVuShD22Upo1i7PsvVFkGkX8cOFtwidsxbKiAQu7
-         0oBPvML61/8GykMh5QXRzlZklWdLQ+LQ8nwQuwl4qCSVnzaLxMuw5Xl6nW+EhRCl1SFz
-         iUbhcNB5ePcIfuM1ICAzAOaaJKxvOQrRayr1Iiyyj5+q9GwZGbEqYx9WFAs3OYriKqyE
-         Ob1YCtmGmwWIh9dA1o0ORgMgaRpTyb9dkpT4+LI7hMb922Pr87RgBJwSYNuWaMYPeQCJ
-         H9aw==
-X-Gm-Message-State: APjAAAV94qPWrK6crBmjzGLuZoet1dBE1G+DeFhAROp+2YHaJSworu73
-        72kFhc/pRKASZU3YMjxbdvqn3w==
-X-Google-Smtp-Source: APXvYqy6wFT1XdF3SZGwpxsiume7DbFSVy8MGsUh62vslfzCMWI01MwVF+XFGm978PPHeKmbuvzZiw==
-X-Received: by 2002:a63:3e0b:: with SMTP id l11mr35830888pga.448.1573000207369;
-        Tue, 05 Nov 2019 16:30:07 -0800 (PST)
+        bh=qn/J/1PPzN9yYPx8ms3UdKQj06L6swPahcKzYXCyGo4=;
+        b=Qz18DciPSRa/VeUDjEALiiw+30n37xzT5Hn1q7eiK4AfphDtBEBrsZN52wzCfu9AmP
+         NfswxUsOllyOIaJB6y32r4PEbhP0HIHHqX7zLs8DGPK2ke8XtSWKctaqszNdwmi+FsIz
+         egnwlokdLFTv+VjKzMXSksGUwZsy5y+QRI9gg2z4MwJ8cXC86BHRYOwyWNftHkoKQpLJ
+         2qtrhwA3teOR0csnkHWeBSc9vC2BLlprX4OCbE+BTK7ByL0wzHaacFCxuRQuooYkKxTz
+         26s5GD7AcKyZIV14k0X3OtHg+qTMjoQIoHyuo7w3nN8VM5+RYIXYXtlhjZgOiLnXFB1k
+         H3aQ==
+X-Gm-Message-State: APjAAAV+FjVdYwnncRnVGK17NqsFzYXM4v2EOp7MYOq0KOwr6ppKXVEk
+        dMUZZFJKgYLEvh1u5Nc8nNFhF8y5TXE=
+X-Google-Smtp-Source: APXvYqz5mZO2Oz5hXUS9MiNZ+n6TppXtk7hqUvUmmoCt0zqNVUdHs6HA1fpCBkFRp53KYB3tWDd6IQ==
+X-Received: by 2002:a63:ff26:: with SMTP id k38mr40736136pgi.128.1573000208956;
+        Tue, 05 Nov 2019 16:30:08 -0800 (PST)
 Received: from apsdesk.mtv.corp.google.com ([2620:15c:202:1:e09a:8d06:a338:aafb])
-        by smtp.gmail.com with ESMTPSA id k9sm21032835pfk.72.2019.11.05.16.30.06
+        by smtp.gmail.com with ESMTPSA id k9sm21032835pfk.72.2019.11.05.16.30.08
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 05 Nov 2019 16:30:06 -0800 (PST)
+        Tue, 05 Nov 2019 16:30:08 -0800 (PST)
 From:   Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 To:     Marcel Holtmann <marcel@holtmann.org>,
         Johan Hedberg <johan.hedberg@gmail.com>
 Cc:     linux-bluetooth@vger.kernel.org,
         Abhishek Pandit-Subedi <abhishekpandit@chromium.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/4] Bluetooth: btbcm: Support pcm configuration
-Date:   Tue,  5 Nov 2019 16:29:21 -0800
-Message-Id: <20191106002923.109344-3-abhishekpandit@chromium.org>
+Subject: [PATCH 3/4] Bluetooth: hci_bcm: Support pcm params in dts
+Date:   Tue,  5 Nov 2019 16:29:22 -0800
+Message-Id: <20191106002923.109344-4-abhishekpandit@chromium.org>
 X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 In-Reply-To: <20191106002923.109344-1-abhishekpandit@chromium.org>
 References: <20191106002923.109344-1-abhishekpandit@chromium.org>
@@ -72,88 +72,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add BCM vendor specific commands to configure PCM.
+BCM chips may require configuration of PCM to operate correctly and
+there is a vendor specific HCI command to do this. Add support in the
+hci_bcm driver to parse this from devicetree and configure the chip.
 
 Signed-off-by: Abhishek Pandit-Subedi <abhishekpandit@chromium.org>
 ---
 
- drivers/bluetooth/btbcm.c | 27 +++++++++++++++++++++++++++
- drivers/bluetooth/btbcm.h | 12 ++++++++++++
- 2 files changed, 39 insertions(+)
+ drivers/bluetooth/hci_bcm.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/bluetooth/btbcm.c b/drivers/bluetooth/btbcm.c
-index 2d2e6d862068..1b6afb11844a 100644
---- a/drivers/bluetooth/btbcm.c
-+++ b/drivers/bluetooth/btbcm.c
-@@ -105,6 +105,33 @@ int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
- }
- EXPORT_SYMBOL_GPL(btbcm_set_bdaddr);
- 
-+int btbcm_set_pcm_params(struct hci_dev *hdev,
-+			 const struct bcm_set_pcm_int_params *int_params,
-+			 const struct bcm_set_pcm_format_params *format_params)
-+{
-+	struct sk_buff *skb;
-+	int err;
+diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
+index 4fe66e52927d..e94908a7e407 100644
+--- a/drivers/bluetooth/hci_bcm.c
++++ b/drivers/bluetooth/hci_bcm.c
+@@ -79,6 +79,7 @@
+  * @hu: pointer to HCI UART controller struct,
+  *	used to disable flow control during runtime suspend and system sleep
+  * @is_suspended: whether flow control is currently disabled
++ * @pcm_params: Bytestring of pcm int and format params.
+  */
+ struct bcm_device {
+ 	/* Must be the first member, hci_serdev.c expects this. */
+@@ -112,6 +113,9 @@ struct bcm_device {
+ 	struct hci_uart		*hu;
+ 	bool			is_suspended;
+ #endif
 +
-+	skb = __hci_cmd_sync(hdev, 0xfc1c, 5, int_params, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "BCM: Set PCM int params failed (%d)", err);
-+		return err;
++	bool			has_pcm_params;
++	u8			pcm_params[BCM_PCM_PARAMS_COUNT];
+ };
+ 
+ /* generic bcm uart resources */
+@@ -529,6 +533,8 @@ static int bcm_setup(struct hci_uart *hu)
+ 	const struct firmware *fw;
+ 	unsigned int speed;
+ 	int err;
++	struct bcm_set_pcm_int_params int_params;
++	struct bcm_set_pcm_format_params format_params;
+ 
+ 	bt_dev_dbg(hu->hdev, "hu %p", hu);
+ 
+@@ -576,6 +582,23 @@ static int bcm_setup(struct hci_uart *hu)
+ 			host_set_baudrate(hu, speed);
+ 	}
+ 
++	/* PCM parameters if any*/
++	if (bcm->dev && bcm->dev->has_pcm_params) {
++		memcpy(&int_params, &(bcm->dev->pcm_params[0]),
++		       sizeof(int_params));
++		memcpy(&format_params, &(bcm->dev->pcm_params[5]),
++		       sizeof(format_params));
++
++		err = btbcm_set_pcm_params(hu->hdev, &int_params,
++					   &format_params);
++
++		if (err) {
++			bt_dev_info(hu->hdev, "BCM: Set pcm params failed (%d)",
++				    err);
++		}
++
 +	}
-+	kfree_skb(skb);
 +
-+	skb = __hci_cmd_sync(hdev, 0xfc1e, 5, int_params, HCI_INIT_TIMEOUT);
-+	if (IS_ERR(skb)) {
-+		err = PTR_ERR(skb);
-+		bt_dev_err(hdev, "BCM: Set PCM data params failed (%d)", err);
-+		return err;
-+	}
-+	kfree_skb(skb);
-+
-+	return 0;
-+}
-+EXPORT_SYMBOL_GPL(btbcm_set_pcm_params);
-+
- int btbcm_patchram(struct hci_dev *hdev, const struct firmware *fw)
+ finalize:
+ 	release_firmware(fw);
+ 
+@@ -1112,7 +1135,15 @@ static int bcm_acpi_probe(struct bcm_device *dev)
+ 
+ static int bcm_of_probe(struct bcm_device *bdev)
  {
- 	const struct hci_command_hdr *cmd;
-diff --git a/drivers/bluetooth/btbcm.h b/drivers/bluetooth/btbcm.h
-index d204be8a84bf..4cc6769f6bfb 100644
---- a/drivers/bluetooth/btbcm.h
-+++ b/drivers/bluetooth/btbcm.h
-@@ -49,11 +49,16 @@ struct bcm_set_pcm_format_params {
- 	__u8 right_justify;
- } __packed;
- 
-+#define BCM_PCM_PARAMS_COUNT 10
++	int plen;
 +
- #if IS_ENABLED(CONFIG_BT_BCM)
- 
- int btbcm_check_bdaddr(struct hci_dev *hdev);
- int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr);
- int btbcm_patchram(struct hci_dev *hdev, const struct firmware *fw);
-+int btbcm_set_pcm_params(struct hci_dev *hdev,
-+			 const struct bcm_set_pcm_int_params *int_params,
-+			 const struct bcm_set_pcm_format_params *format_params);
- 
- int btbcm_setup_patchram(struct hci_dev *hdev);
- int btbcm_setup_apple(struct hci_dev *hdev);
-@@ -74,6 +79,13 @@ static inline int btbcm_set_bdaddr(struct hci_dev *hdev, const bdaddr_t *bdaddr)
- 	return -EOPNOTSUPP;
+ 	device_property_read_u32(bdev->dev, "max-speed", &bdev->oper_speed);
++	plen = device_property_read_u8_array(bdev->dev, "pcm-parameters",
++					     bdev->pcm_params,
++					     BCM_PCM_PARAMS_COUNT);
++	if (plen == 0)
++		bdev->has_pcm_params = true;
++
+ 	return 0;
  }
  
-+int btbcm_set_pcm_params(struct hci_dev *hdev,
-+			 const struct bcm_set_pcm_int_params *int_params,
-+			 const struct bcm_set_pcm_format_params *format_params)
-+{
-+	return -EOPNOTSUPP;
-+}
-+
- static inline int btbcm_patchram(struct hci_dev *hdev, const struct firmware *fw)
- {
- 	return -EOPNOTSUPP;
 -- 
 2.24.0.rc1.363.gb1bccd3e3d-goog
 
