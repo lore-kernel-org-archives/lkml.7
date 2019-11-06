@@ -2,114 +2,172 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB6CBC5DF62
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C8827C5DF64
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EA7520869
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 941FD20869
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 12:17:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="QpM1stPs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730466AbfKFMRo (ORCPT
+        id S1731454AbfKFMRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 07:17:44 -0500
-Received: from mx1.redhat.com ([209.132.183.28]:51104 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725856AbfKFMRo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 07:17:44 -0500
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com [209.85.128.71])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id ECA6F5AFF8
-        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 12:17:43 +0000 (UTC)
-Received: by mail-wm1-f71.google.com with SMTP id 2so1108494wmd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:17:43 -0800 (PST)
+        Wed, 6 Nov 2019 07:17:47 -0500
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:34365 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730501AbfKFMRr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 07:17:47 -0500
+Received: by mail-lf1-f67.google.com with SMTP id f5so17892023lfp.1
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 04:17:45 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=pyaNKtEJ2dhdRbX0XGG2IskdfPoKWgFFcpf2S2Y9JTA=;
+        b=QpM1stPsxibreOYhSOYUvFH3b58z/8EkMAfLRJIfpyMKCIlh9GtTXfpiruDZlg8eht
+         r2JBScHEAOT2u0L9HZ+5bAYM9jptDj61F9/f6V+0yodOwA58RwzbAbAwKKBkZeB8FyYu
+         Agf48Vn+n4ExxJBgcjkDJjwCA94IHRIGaT549OBxaDMCxvilIbJHMJuUPqsEaI+RjiWT
+         IeRQp0/t5wvonASnw0GmcIyzxvHahqQRYLNqbNgmErk89iUHiA7j1+BsDWN1HY+/qcTj
+         isnsKQqi2JOPJX1VmctAkMgJLB3Cqudx0+Jsq1dQwKR6QqaUSlyDCnMjsi+27R8riVkZ
+         E0UQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:openpgp:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=3JkGp+uV4EX2YLZVMnoCzXMV7AWPPY0mdAbm7lpOXew=;
-        b=XcyZoupnHgZdqk0NH3wDL3Qd0QF5C39MZEnNkMcgddFkggSKQncy56aSbaJE67cYcl
-         X6Q4ZDjqjWKTs1WYcn+jf8me3XAx6LgSayf/afO9qWXEQEg8Q1I+h0xWQc0BQRgucLYn
-         woP6Ji2vhkvXR3Iq/WgeEntTQB+a2ai+3/oGDmCunu8hgmE6QagGgQA67EAIX9EGd619
-         1HhT0tmjv8ZDm5sDK8v869H8VlXXqiu/YZ5YFO7qi63V4ZHx3HfQ/ROJzDPp5boLmzKc
-         T1GiKWk5vFRU0nwOIif5nPRE3aEhTkqJ/V2QrFgO8At31etU13wkHfpYAZgt37QDF5Ct
-         pIlQ==
-X-Gm-Message-State: APjAAAUhhf4SIRI8H/h5qocbOXMrDiSpBz71Jf+ZtTIXywd+95nA562L
-        chE8EGEBkhr3/HtrERdJxd5HKlYpiqYOQkfz8JlgmuNca8A0QuErNmveSC4mApE91hllA92DdKf
-        7fYSPDmUmFAeDzp0EtPKvpQQO
-X-Received: by 2002:adf:e94e:: with SMTP id m14mr2467676wrn.233.1573042662550;
-        Wed, 06 Nov 2019 04:17:42 -0800 (PST)
-X-Google-Smtp-Source: APXvYqwQJTB+/eQhKDoIKLZpiIrACRJvyGIu0CSnXiN36tE+zV7iuxwSMzhyus8+dHVO26p11jq30w==
-X-Received: by 2002:adf:e94e:: with SMTP id m14mr2467638wrn.233.1573042661943;
-        Wed, 06 Nov 2019 04:17:41 -0800 (PST)
-Received: from [192.168.10.150] ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id x7sm46454174wrg.63.2019.11.06.04.17.40
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 06 Nov 2019 04:17:41 -0800 (PST)
-Subject: Re: [PATCH v2 00/14] KVM: x86: Remove emulation_result enums
-To:     Sean Christopherson <sean.j.christopherson@intel.com>,
-        Alexander Graf <graf@amazon.com>
-Cc:     =?UTF-8?B?UmFkaW0gS3LEjW3DocWZ?= <rkrcmar@redhat.com>,
-        Vitaly Kuznetsov <vkuznets@redhat.com>,
-        Wanpeng Li <wanpengli@tencent.com>,
-        Jim Mattson <jmattson@google.com>,
-        Joerg Roedel <joro@8bytes.org>, kvm@vger.kernel.org,
-        linux-kernel@vger.kernel.org, Liran Alon <liran.alon@oracle.com>
-References: <20190827214040.18710-1-sean.j.christopherson@intel.com>
- <8dec39ac-7d69-b1fd-d07c-cf9d014c4af3@redhat.com>
- <686b499e-7700-228e-3602-8e0979177acb@amazon.com>
- <20191106005806.GK23297@linux.intel.com>
-From:   Paolo Bonzini <pbonzini@redhat.com>
-Openpgp: preference=signencrypt
-Message-ID: <3d827e8b-a04e-0a93-4bb4-e0e9d59036da@redhat.com>
-Date:   Wed, 6 Nov 2019 13:17:40 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=pyaNKtEJ2dhdRbX0XGG2IskdfPoKWgFFcpf2S2Y9JTA=;
+        b=mYnrbH41enXftdT5LHBQn/1LEYtw5Q/CdX8Kq/KgPY3m0HlmzzdtixJAaBKUgIC+D3
+         BBmOsm1Xj+nMk4yS+3S4gvrT+hgUevpgOJxxktsLprPg2qPkhREESp3cqxDYRXh9U/dc
+         jANYT6Sow4bazXOR5y2RKx8vh88OS/9LYF1Tad/m3WiyA+LhJXMYXx0Nj2mL6RgYxT0W
+         izR3kp8dx/S1eOvXhhPmbQeH9I5UChXy1I7GXmEVmknPsSI9QZaoKVpZ4q536+MoQoGz
+         qj9OepYzGQdbSRSDssF6o5vKDfaBnk1B/hFmZEWiai8yoryBfYWFo0KQsXV/SpMSNtQS
+         zmFw==
+X-Gm-Message-State: APjAAAXIsO6LU8EM6H0r976a6rSZFJ6jgBWhkXUrCYCuQaDxTuMOvcys
+        yXQaKSXkg7NEYU++kXH6jq2hFGY3YQVeWhqJDLpZQw==
+X-Google-Smtp-Source: APXvYqx+lORr/vSCqzfbkFGbeK30H8ZblAIlW+SCvvXD14BAbMOWSorLfroow+ULiuR/LwyISg5vX0un2676lvzS7PU=
+X-Received: by 2002:a19:a40c:: with SMTP id q12mr11951247lfc.65.1573042664331;
+ Wed, 06 Nov 2019 04:17:44 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191106005806.GK23297@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <cover.1572326519.git.baolin.wang@linaro.org> <19910a2f34b9be81f64637a5a5fc8d07bd5f4885.1572326519.git.baolin.wang@linaro.org>
+ <a9f42792-3432-48f2-c5c4-8b03c32995dd@intel.com> <CAMz4kuK=wV1qtO4tOCcqibzKAFD-_p8+OzGOjdkvajVymJ5EgA@mail.gmail.com>
+ <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com>
+In-Reply-To: <2ed0bcd1-fa74-d095-97ee-7d0c46a4fdbb@intel.com>
+From:   Baolin Wang <baolin.wang@linaro.org>
+Date:   Wed, 6 Nov 2019 20:17:33 +0800
+Message-ID: <CAMz4kuJe64hdVGBTCvZW3t4_JGnTBRF=NhYDookrzNPiXacq_w@mail.gmail.com>
+Subject: Re: [PATCH v5 4/4] mmc: host: sdhci: Add a variable to defer to
+ complete data requests if needed
+To:     Adrian Hunter <adrian.hunter@intel.com>
+Cc:     Ulf Hansson <ulf.hansson@linaro.org>, asutoshd@codeaurora.org,
+        Orson Zhai <orsonzhai@gmail.com>,
+        Chunyan Zhang <zhang.lyra@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        baolin.wang7@gmail.com, linux-mmc <linux-mmc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 06/11/19 01:58, Sean Christopherson wrote:
->> enum kvm_return {
->>     KVM_RET_USER_EXIT = 0,
->>     KVM_RET_GUEST = 1,
->> };
->>
->> and then consistently use them as return values? That way anyone who has not
->> worked on kvm before can still make sense of the code.
-> Hmm, I think it'd make more sense to use #define instead of enum to
-> hopefully make it clear that they aren't the *only* values that can be
-> returned.  That'd also prevent anyone from changing the return types from
-> 'int' to 'enum kvm_return', which IMO would hurt readability overall.
-> 
-> And maybe KVM_EXIT_TO_USERSPACE and KVM_RETURN_TO_GUEST?
+On Wed, 6 Nov 2019 at 20:02, Adrian Hunter <adrian.hunter@intel.com> wrote:
+>
+> On 6/11/19 12:48 PM, Baolin Wang wrote:
+> > On Wed, 6 Nov 2019 at 18:10, Adrian Hunter <adrian.hunter@intel.com> wrote:
+> >>
+> >> On 29/10/19 7:43 AM, Baolin Wang wrote:
+> >>> When using the host software queue, it will trigger the next request in
+> >>> irq handler without a context switch. But the sdhci_request() can not be
+> >>> called in interrupt context when using host software queue for some host
+> >>> drivers, due to the get_cd() ops can be sleepable.
+> >>>
+> >>> But for some host drivers, such as Spreadtrum host driver, the card is
+> >>> nonremovable, so the get_cd() ops is not sleepable, which means we can
+> >>> complete the data request and trigger the next request in irq handler
+> >>> to remove the context switch for the Spreadtrum host driver.
+> >>>
+> >>> Thus we still need introduce a variable in struct sdhci_host to indicate
+> >>> that we will always to defer to complete data requests if the sdhci_request()
+> >>> can not be called in interrupt context for some host drivers, when using
+> >>> the host software queue.
+> >>>
+> >>> Suggested-by: Adrian Hunter <adrian.hunter@intel.com>
+> >>> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> >>> ---
+> >>>  drivers/mmc/host/sdhci.c |    2 +-
+> >>>  drivers/mmc/host/sdhci.h |    1 +
+> >>>  2 files changed, 2 insertions(+), 1 deletion(-)
+> >>>
+> >>> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+> >>> index 850241f..9cf2130 100644
+> >>> --- a/drivers/mmc/host/sdhci.c
+> >>> +++ b/drivers/mmc/host/sdhci.c
+> >>> @@ -3035,7 +3035,7 @@ static inline bool sdhci_defer_done(struct sdhci_host *host,
+> >>>  {
+> >>>       struct mmc_data *data = mrq->data;
+> >>>
+> >>> -     return host->pending_reset ||
+> >>> +     return host->pending_reset || (host->always_defer_done && data) ||
+>
+> To move ahead in the meantime without a new host API, just defer always i.e.
 
-That would be quite some work.  Right now there is some consistency
-between all of:
+OK.
 
-- x86_emulate_instruction and its callers
+And I'll wait for a while to see if Ulf will post some comments for
+this patch set before new version. Thanks.
 
-- vcpu->arch.complete_userspace_io
+>
+> +     return host->pending_reset || host->always_defer_done ||
+>
+> >>
+> >> I didn't realize you still wanted to call the request function in interrupt
+> >> context.  In my view that needs a new host API
+> >> i.e. int (*request_atomic)(struct mmc_host *mmc, struct mmc_request *mrq)
+> >
+> > Actually there are no documentation said that the
+> > mmc_host_ops->request() is a sleepable API, so I introduce a
+> > host->always_defer_done flag to decide if the request can be called in
+> > interrupt context or not, since for some host drivers, the request()
+> > implementation can be called in interrupt context.
+> >
+> > Yes, I agree a new host API is more reasonable, if you do not like the
+> > current approach, I can add new patches to introduce the new
+> > request_atomic() API. But can I create another separate patch set to
+> > do this? since in this patch set, the Spreadtrum host driver's
+> > request() implementation can be called in interrupt context. Or you
+> > still want these changes introducing new request_atomic() can be done
+> > in this patch set? Thanks.
+> >
+> >>
+> >>>              ((host->flags & SDHCI_REQ_USE_DMA) && data &&
+> >>>               data->host_cookie == COOKIE_MAPPED);
+> >>>  }
+> >>> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
+> >>> index d89cdb9..38fbd18 100644
+> >>> --- a/drivers/mmc/host/sdhci.h
+> >>> +++ b/drivers/mmc/host/sdhci.h
+> >>> @@ -533,6 +533,7 @@ struct sdhci_host {
+> >>>       bool pending_reset;     /* Cmd/data reset is pending */
+> >>>       bool irq_wake_enabled;  /* IRQ wakeup is enabled */
+> >>>       bool v4_mode;           /* Host Version 4 Enable */
+> >>> +     bool always_defer_done; /* Always defer to complete data requests */
+> >>>
+> >>>       struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];  /* Requests done */
+> >>>       struct mmc_command *cmd;        /* Current command */
+> >>>
+> >>
+> >
+> >
+>
 
-- vcpu_enter_guest/vcpu_block
 
-- kvm_x86_ops->handle_exit
-
-so it would be very easy to end up with a half-int-half-enum state that
-is more confusing than before...
-
-I'm more worried about cases where we have functions returning either 0
-or -errno, but 0 lets you enter the guest.  I'm not sure if the only one
-is kvm_mmu_reload or there are others.
-
-Paolo
+-- 
+Baolin Wang
+Best Regards
