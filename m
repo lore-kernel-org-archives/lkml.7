@@ -2,102 +2,138 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57CA0C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:03:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89842C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:06:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 284D420679
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:03:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="Ej7SL0ls"
+	by mail.kernel.org (Postfix) with ESMTP id 5ABBA20679
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:06:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573164386;
+	bh=zZLMhikB7hoRMy0ddDiquboV9T7zKWdmy9eBzZlKbdI=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=A9mKV7nOgNAwMfsmJL/emjqVNMp1ol21Li23+AHCSz6k4y4k9ZPLkiPa4t3ZQTZkV
+	 oNu+jxhWubrFwrlP0xoTKXjyVjapvhhww+SiE6vRWXyLRaQYFKqm0HYdFWLgq94StN
+	 rtL9UHKBsWeChLa4C//ZBLqHUnf9sp9Fb7cGAWpE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726143AbfKGWDO (ORCPT
+        id S1727002AbfKGWGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:03:14 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:39482 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGWDN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:03:13 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7LxNT7041181;
-        Thu, 7 Nov 2019 22:03:10 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2019-08-05;
- bh=caBQ4APPq5Vt6s+rJlcvYq6uLfVJB6rOPPKIIaRtFS4=;
- b=Ej7SL0ls1IlqCtSlouxb1VrEFfZRHDLNKbFBPFY8dB4BMhxmSeENZTnCtKf7+pENnKdC
- dPdCsH7wpyASnHWBQFO/PFb2ytyQhdM09lrkd8rEb+cgrKfXEAqnlddTcTXqlA1YLQby
- DqBLpj5IIXlwCsXvLxcAC3MwCV73d+N3zxgeuXqZ6hOFpJJ48p8QqfToPUFHgZH334XL
- EgNOP9wJgmxzliUm8V6ctSuA516sqjkVkwL29Ku8ejKceu3hNxc2vgq9x9xUY96Du7qP
- T/JiwIkMpQdR1ZJL7gElXFrssawnp4yoQBcaGsZu5rOcRsgPsP5lAfOR1wKDEqk53P4S eQ== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by aserp2120.oracle.com with ESMTP id 2w41w11ast-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 22:03:10 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7LxR4F132371;
-        Thu, 7 Nov 2019 22:03:09 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2w41wjaa5y-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 22:03:09 +0000
-Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA7M38Bg027285;
-        Thu, 7 Nov 2019 22:03:08 GMT
-Received: from localhost (/10.145.179.16)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 14:03:07 -0800
-Date:   Thu, 7 Nov 2019 14:03:06 -0800
-From:   "Darrick J. Wong" <darrick.wong@oracle.com>
-To:     Joe Perches <joe@perches.com>
-Cc:     linux-xfs@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] xfs: Correct comment tyops -> typos
-Message-ID: <20191107220306.GI6219@magnolia>
-References: <0ceb6a89da4424a4500789610fae4d05ba45ba86.camel@perches.com>
- <20191107212541.GF6219@magnolia>
- <e8187485a6ee7fffef738f90cddfa052ccdb927c.camel@perches.com>
+        Thu, 7 Nov 2019 17:06:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:36364 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725882AbfKGWGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:06:25 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6B3C20679;
+        Thu,  7 Nov 2019 22:06:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573164383;
+        bh=zZLMhikB7hoRMy0ddDiquboV9T7zKWdmy9eBzZlKbdI=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=vDydn33R6r2YyJxuK/ZXTPXZLfSKWZSKF67wl4TnPapyOQh8IT6ugwqfhxDQZBkrK
+         wlBAB8X/c8hTlnShZ/aB4lSb1rayLDbhlZ+lQFtF5jzh7sVqtbd8DHdIuKJq4JvURV
+         bverMnUPRudM9WGenOYLko1yBT2oa7uPbIbYk+XA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <e8187485a6ee7fffef738f90cddfa052ccdb927c.camel@perches.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070203
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070203
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191105025032.GA7664@onstation.org>
+References: <20191006010100.32053-1-masneyb@onstation.org> <20191017181329.D593C21835@mail.kernel.org> <20191105025032.GA7664@onstation.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Brian Masney <masneyb@onstation.org>
+Cc:     mturquette@baylibre.com, agross@kernel.org,
+        linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org,
+        linux-kernel@vger.kernel.org, jonathan@marek.ca
+Subject: Re: [PATCH] clk: qcom: mmcc8974: add frequency table for gfx3d
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 14:06:22 -0800
+Message-Id: <20191107220623.B6B3C20679@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 01:56:13PM -0800, Joe Perches wrote:
-> On Thu, 2019-11-07 at 13:25 -0800, Darrick J. Wong wrote:
-> > On Wed, Nov 06, 2019 at 10:01:15PM -0800, Joe Perches wrote:
-> > > Just fix the typos checkpatch notices...
-> > > 
-> > > Signed-off-by: Joe Perches <joe@perches.com>
-> > 
-> > Looks ok,
-> > Reviewed-by: Darrick J. Wong <darrick.wong@oracle.com>
-> 
-> Darrick?  You are the listed maintainer here.
-> Are you applying this or just reviewing it?
+Quoting Brian Masney (2019-11-04 18:50:32)
+> Hi Stephen,
+>=20
+> On Thu, Oct 17, 2019 at 11:13:29AM -0700, Stephen Boyd wrote:
+> > Quoting Brian Masney (2019-10-05 18:01:00)
+> > > From: Jonathan Marek <jonathan@marek.ca>
+> > >=20
+> > > Add frequency table for the gfx3d clock that's needed in order to
+> > > support the GPU upstream on msm8974-based systems.
+> > >=20
+> > > Signed-off-by: Jonathan Marek <jonathan@marek.ca>
+> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > ---
+> > >  drivers/clk/qcom/mmcc-msm8974.c | 7 +++++++
+> > >  1 file changed, 7 insertions(+)
+> > >=20
+> > > diff --git a/drivers/clk/qcom/mmcc-msm8974.c b/drivers/clk/qcom/mmcc-=
+msm8974.c
+> > > index bcb0a397ef91..e70abfe2a792 100644
+> > > --- a/drivers/clk/qcom/mmcc-msm8974.c
+> > > +++ b/drivers/clk/qcom/mmcc-msm8974.c
+> > > @@ -452,10 +452,17 @@ static struct clk_rcg2 mdp_clk_src =3D {
+> > >         },
+> > >  };
+> > > =20
+> > > +static struct freq_tbl ftbl_gfx3d_clk_src[] =3D {
+> > > +       F(37500000, P_GPLL0, 16, 0, 0),
+> > > +       F(533000000, P_MMPLL0, 1.5, 0, 0),
+> > > +       { }
+> > > +};
+> >=20
+> > On msm-3.10 kernel the gpu clk seems to be controlled by the RPM[1].
+> > What is going on here? This code just looks wrong, but I think it was
+> > added as an rcg so that the branch wasn't orphaned and would have some
+> > sane frequency. Eventually we planned to parent it to a clk exposed in
+> > the RPM clk driver. It's been a while so I'm having a hard time
+> > remembering, but I think GPU clk on this device needed to be controlled
+> > by RPM so that DDR self refresh wouldn't interact badly with ocmem? Or
+> > maybe ocmem needed GPU to be enabled to work? Maybe there is some
+> > information in the 3.10 downstream kernel.
+> >=20
+> > [1] https://source.codeaurora.org/quic/la/kernel/msm-3.10/tree/arch/arm=
+/mach-msm/clock-rpm-8974.c?h=3Dmsm-3.10#n82
+>=20
+> I looked in the MSM 3.4 and 3.10 sources and I can't find that gfx3d
+> clock in the mmss (the downstream name for the mmcc that's upstream). I
+> even looked through the git history in the 3.10 sources to see if it was
+> removed at some point.
+>=20
+> The gfx3d_clk_src was added to mmcc-msm8974.c upstream at the time the
+> file was first introduced into the kernel:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit=
+/?id=3Dd8b212014e69d6b6323773ce6898f224ef4ed0d6
+> I haven't been able to find anything else so far where that came from.
 
-Applying it, though there's another 50+ patches to go...
+Yes. I did that! :) I think it was to make sure there weren't any orphan
+clks in the tree, which is why I left the code in place to read the clk
+frequency but not change it by omitting a frequency table.
 
---D
+>=20
+> The GPU works using kmscube and KDE Plasma Mobile with this patch
+> applied but won't work without it. As for the status of the GPU working
+> upstream for MSM8974: My OCMEM and interconnect patches are now in
+> linux-next and are queued for the next merge window. All that's left is
+> 1) iommu support, 2) this patch (or whatever it needs to become), and
+> 3) add the GPU nodes to device tree for this board.
+>=20
+> Would you be willing to reconsider accepting this patch since its 8974
+> specific and is one of the pieces that gets the GPU working upstream?
+>=20
 
-> 
-> 
+No? I don't believe the kernel should be controlling this clk through
+direct register read/writes. Instead, the GPU frequency should be
+controlled through an RPM clk. See oxili_gfx3d_clk_src in the link you
+mention above [1] and how it indirects to gfx3d_clk_src via
+RPM_MEM_CLK_TYPE and OXILI_ID. In the end, anything that's parented to
+this rcg in mmcc should probably just be parented to the RPM clk
+instead.
+
