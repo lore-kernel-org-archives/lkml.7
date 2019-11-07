@@ -2,113 +2,158 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B18D6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:31:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DA8B3C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 84145217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:31:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="XFeWOMUh"
+	by mail.kernel.org (Postfix) with ESMTP id B92D7217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:32:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733114AbfKGDbH (ORCPT
+        id S1733125AbfKGDcR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:31:07 -0500
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:43802 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727751AbfKGDbG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:31:06 -0500
-Received: by mail-pl1-f193.google.com with SMTP id a18so452547plm.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:31:04 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YVMKh2e8YQpMospkl4uly62/DXfMMR6TYHQbH303b5U=;
-        b=XFeWOMUhS7MWx/RPebBtmCTa3v9cTmuIqF0sIt4h/CPMv889KM470slck2VUqYY2lo
-         2UeLrke9Zr2PjxyNv0J0juZAmCq54wv+tpRIlsvEyYIDzX3vo0vDFy/K7IFPJpUMpKMo
-         JgZ+rFiOCS4jEjPjW1LKNcPMBrqVqnAqKYXow=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=YVMKh2e8YQpMospkl4uly62/DXfMMR6TYHQbH303b5U=;
-        b=htO9Z288xvFQ9UiuydX3qANlq50EpCQTqLCPQ4rbQwGmSlOQA92LlzPSf7OM30t4ls
-         fquQY582j2P06oIoR59PLVGBRoX+eMP2icpWzeF/G4XUFF+XNY/Ts+fyuigqg83KJp0q
-         cS5u0QzNqbNp6BuDxS/YK2fvSOPrDO/KIaplu80X6C/2y5G8gSmUmaxSPuR0S5w6gwGZ
-         67U5PVNB6+e7Th2QurbLwY8YHUFf4+U5M9xdwqTcath97WbOVd6JBw6U6mE9hlwoKPpf
-         aYR8q//ruswIc6somaBOxb7qbwafPWJB79egLB27pIODF7xvHaxHsyrkhZ2id3NgfVLZ
-         hJhg==
-X-Gm-Message-State: APjAAAXtwTUWy/WIqswTfNqwCRh6nZxR1ON9Lh9K5lpqiSKGLchhk9mF
-        vbiVlXszoiDu4l2/LlS8Fbl8ew==
-X-Google-Smtp-Source: APXvYqxn6IhqqTyBR6NWv+KCnyGaorjTU5whZhdLjWbHn9627vkK/4GPQH+t7Z4ro0MKx+0DNxFmpQ==
-X-Received: by 2002:a17:902:449:: with SMTP id 67mr1331873ple.20.1573097464392;
-        Wed, 06 Nov 2019 19:31:04 -0800 (PST)
-Received: from hiroh.tok.corp.google.com ([2401:fa00:8f:2:3bf4:6372:5b56:dd4c])
-        by smtp.gmail.com with ESMTPSA id s24sm464642pfm.144.2019.11.06.19.31.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 19:31:03 -0800 (PST)
-From:   Hirokazu Honda <hiroh@chromium.org>
-To:     linux-media@vger.kernel.org, linux-mediatek@lists.infradead.org
-Cc:     mchehab@kernel.org, tiffany.lin@mediatek.com, tfiga@chromium.org,
-        acourbot@chromium.org, hiroh@chromium.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] media: mtk-vcodec: Remove extra area allocation in an input buffer on encoding
-Date:   Thu,  7 Nov 2019 12:30:57 +0900
-Message-Id: <20191107033057.238603-1-hiroh@chromium.org>
-X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 6 Nov 2019 22:32:17 -0500
+Received: from inva020.nxp.com ([92.121.34.13]:38126 "EHLO inva020.nxp.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1733028AbfKGDcR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 22:32:17 -0500
+Received: from inva020.nxp.com (localhost [127.0.0.1])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 6E41A1A0697;
+        Thu,  7 Nov 2019 04:32:14 +0100 (CET)
+Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
+        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 26CD11A0511;
+        Thu,  7 Nov 2019 04:32:08 +0100 (CET)
+Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
+        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 26DB0402B1;
+        Thu,  7 Nov 2019 11:32:00 +0800 (SGT)
+From:   Anson Huang <Anson.Huang@nxp.com>
+To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
+        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
+        aisheng.dong@nxp.com, daniel.baluta@nxp.com, peng.fan@nxp.com,
+        fugang.duan@nxp.com, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Linux-imx@nxp.com
+Subject: [PATCH] arm64: dts: imx8qxp: Remove unnecessary "interrupt-parent" property
+Date:   Thu,  7 Nov 2019 11:30:35 +0800
+Message-Id: <1573097435-19814-1-git-send-email-Anson.Huang@nxp.com>
+X-Mailer: git-send-email 2.7.4
+X-Virus-Scanned: ClamAV using ClamSMTP
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-MediaTek encoder allocates non pixel data area for an input buffer every
-plane. As the input buffer should be read-only, the driver should not write
-anything in the buffer. Therefore, the extra data should be unnecessary.
+gic is appointed as default interrupt parent for devices, so no need
+to specify it again in device nodes which use it as interrupt parent.
 
-Signed-off-by: Hirokazu Honda <hiroh@chromium.org>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 12 ------------
+ 1 file changed, 12 deletions(-)
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-index fd8de027e83e..6aad53d97d74 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc.c
-@@ -332,14 +332,12 @@ static int vidioc_try_fmt(struct v4l2_format *f,
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index 9646a41..fb5f752 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -250,7 +250,6 @@
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a060000 0x1000>;
+ 			interrupts = <GIC_SPI 225 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART0_IPG_CLK>,
+ 				 <&adma_lpcg IMX_ADMA_LPCG_UART0_BAUD_CLK>;
+ 			clock-names = "ipg", "baud";
+@@ -262,7 +261,6 @@
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a070000 0x1000>;
+ 			interrupts = <GIC_SPI 226 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART1_IPG_CLK>,
+ 				 <&adma_lpcg IMX_ADMA_LPCG_UART1_BAUD_CLK>;
+ 			clock-names = "ipg", "baud";
+@@ -274,7 +272,6 @@
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a080000 0x1000>;
+ 			interrupts = <GIC_SPI 227 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART2_IPG_CLK>,
+ 				 <&adma_lpcg IMX_ADMA_LPCG_UART2_BAUD_CLK>;
+ 			clock-names = "ipg", "baud";
+@@ -286,7 +283,6 @@
+ 			compatible = "fsl,imx8qxp-lpuart", "fsl,imx7ulp-lpuart";
+ 			reg = <0x5a090000 0x1000>;
+ 			interrupts = <GIC_SPI 228 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_UART3_IPG_CLK>,
+ 				 <&adma_lpcg IMX_ADMA_LPCG_UART3_BAUD_CLK>;
+ 			clock-names = "ipg", "baud";
+@@ -298,7 +294,6 @@
+ 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+ 			reg = <0x5a800000 0x4000>;
+ 			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C0_CLK>;
+ 			clock-names = "per";
+ 			assigned-clocks = <&clk IMX_ADMA_I2C0_CLK>;
+@@ -311,7 +306,6 @@
+ 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+ 			reg = <0x5a810000 0x4000>;
+ 			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C1_CLK>;
+ 			clock-names = "per";
+ 			assigned-clocks = <&clk IMX_ADMA_I2C1_CLK>;
+@@ -324,7 +318,6 @@
+ 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+ 			reg = <0x5a820000 0x4000>;
+ 			interrupts = <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C2_CLK>;
+ 			clock-names = "per";
+ 			assigned-clocks = <&clk IMX_ADMA_I2C2_CLK>;
+@@ -337,7 +330,6 @@
+ 			compatible = "fsl,imx8qxp-lpi2c", "fsl,imx7ulp-lpi2c";
+ 			reg = <0x5a830000 0x4000>;
+ 			interrupts = <GIC_SPI 223 IRQ_TYPE_LEVEL_HIGH>;
+-			interrupt-parent = <&gic>;
+ 			clocks = <&adma_lpcg IMX_ADMA_LPCG_I2C3_CLK>;
+ 			clock-names = "per";
+ 			assigned-clocks = <&clk IMX_ADMA_I2C3_CLK>;
+@@ -361,7 +353,6 @@
  
- 		pix_fmt_mp->num_planes = fmt->num_planes;
- 		pix_fmt_mp->plane_fmt[0].sizeimage =
--				pix_fmt_mp->width * pix_fmt_mp->height +
--				((ALIGN(pix_fmt_mp->width, 16) * 2) * 16);
-+			pix_fmt_mp->width * pix_fmt_mp->height;
- 		pix_fmt_mp->plane_fmt[0].bytesperline = pix_fmt_mp->width;
+ 		usdhc1: mmc@5b010000 {
+ 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+-			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 232 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b010000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC0_IPG_CLK>,
+@@ -374,7 +365,6 @@
  
- 		if (pix_fmt_mp->num_planes == 2) {
- 			pix_fmt_mp->plane_fmt[1].sizeimage =
--				(pix_fmt_mp->width * pix_fmt_mp->height) / 2 +
--				(ALIGN(pix_fmt_mp->width, 16) * 16);
-+				(pix_fmt_mp->width * pix_fmt_mp->height) / 2;
- 			pix_fmt_mp->plane_fmt[2].sizeimage = 0;
- 			pix_fmt_mp->plane_fmt[1].bytesperline =
- 							pix_fmt_mp->width;
-@@ -347,8 +345,7 @@ static int vidioc_try_fmt(struct v4l2_format *f,
- 		} else if (pix_fmt_mp->num_planes == 3) {
- 			pix_fmt_mp->plane_fmt[1].sizeimage =
- 			pix_fmt_mp->plane_fmt[2].sizeimage =
--				(pix_fmt_mp->width * pix_fmt_mp->height) / 4 +
--				((ALIGN(pix_fmt_mp->width, 16) / 2) * 16);
-+				(pix_fmt_mp->width * pix_fmt_mp->height) / 4;
- 			pix_fmt_mp->plane_fmt[1].bytesperline =
- 				pix_fmt_mp->plane_fmt[2].bytesperline =
- 				pix_fmt_mp->width / 2;
+ 		usdhc2: mmc@5b020000 {
+ 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+-			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 233 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b020000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC1_IPG_CLK>,
+@@ -389,7 +379,6 @@
+ 
+ 		usdhc3: mmc@5b030000 {
+ 			compatible = "fsl,imx8qxp-usdhc", "fsl,imx7d-usdhc";
+-			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 234 IRQ_TYPE_LEVEL_HIGH>;
+ 			reg = <0x5b030000 0x10000>;
+ 			clocks = <&conn_lpcg IMX_CONN_LPCG_SDHC2_IPG_CLK>,
+@@ -446,7 +435,6 @@
+ 		ddr-pmu@5c020000 {
+ 			compatible = "fsl,imx8-ddr-pmu";
+ 			reg = <0x5c020000 0x10000>;
+-			interrupt-parent = <&gic>;
+ 			interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
+ 		};
+ 	};
 -- 
-2.24.0.rc1.363.gb1bccd3e3d-goog
+2.7.4
 
