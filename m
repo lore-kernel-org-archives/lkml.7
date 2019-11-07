@@ -2,95 +2,88 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE4C9FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EFCCFC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 852A5217F5
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6B4FE217F5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:09:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="X2Ic0fSA"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="e/AK8pYY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727875AbfKGAJD (ORCPT
+        id S1728184AbfKGAJW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:09:03 -0500
-Received: from mail-pl1-f170.google.com ([209.85.214.170]:47084 "EHLO
-        mail-pl1-f170.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727498AbfKGAJD (ORCPT
+        Wed, 6 Nov 2019 19:09:22 -0500
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46303 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727498AbfKGAJV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:09:03 -0500
-Received: by mail-pl1-f170.google.com with SMTP id l4so39907plt.13
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 16:09:02 -0800 (PST)
+        Wed, 6 Nov 2019 19:09:21 -0500
+Received: by mail-pf1-f195.google.com with SMTP id 193so532063pfc.13
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 16:09:21 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=nqDRoSA2IlRCgtZEklSoyPJxix3jduddAsTI1/jyNJM=;
-        b=X2Ic0fSApnzTHNdrcWe9ggsXClLt1ZYXt51dLoiznXpJfWYe3WV0JSVtA1y/6Be8bk
-         HohaOtxR35Sl1zMaaCuBEU2N7beBAJZ2RGI4bSzq0bz0ir/9PX0PQ4GkHuPfV3Tm1TiA
-         8gHEAUPHwZf8+bIjL1S08URkQ/1PEnfN2DsVLfp5tonTKKUgKFExNd3mP7Q9z+dZEdi+
-         kQegPZECwkYzCfuFG9PngeOxvXCXj1yp/FIhILtDJqzFKtbqNLiEjUhqqzmiufO0F/Em
-         9ORpFhWbqBXvN/KD6ROet7VPkhdoEDubSk9PGlBk5PGcpq0Xcu/jpcL/NGK10FpQBF/j
-         9YBg==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=rCG7lU0priqMVKwFQzQJqK3jErBmez8plidupT5N1nI=;
+        b=e/AK8pYYZcburR/t3rfFasVBBfADxe2TQIP+JGJ/z21euTg3hoVOAveAbMaPIALq6t
+         Q0eJhSvq4LFqu2gARbckiqAAOCwBj60PXxkIq6gNlC4wCvorBNatYjqN9FZ3FH+svRGS
+         EoU0qn1nEaXq9anAwy+PTiZ3GiW/IqOFcLOYb6ppw9lfhjuhHK3F2kSvz9snbGjPXu0G
+         LeA4zFi4oLkFe4eMWl5co3meTBtDGC2jD8bsv5wY5z4BcNA1vYxEAKYVn8Y+S8EKGaMv
+         9HYa2Em/W3BPGnzaG29vHNIXa/BfZrGuNxd69hcbOcu5TT5Qb8UwwNl6hwi41y7FR/HI
+         IGzA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
          :content-transfer-encoding;
-        bh=nqDRoSA2IlRCgtZEklSoyPJxix3jduddAsTI1/jyNJM=;
-        b=BsYSweiw3/kcFHmo2lhK3kCNQ9EjfiLblmSJJCc8mwlsthYqnZpe8M4QH3V8tu1toY
-         GXG3b1gFv77VAuHozUY3XeH9bAz3VrAplE5LWCf3WQj1ac/XVMFZkjwgyWvcdcDRe7+q
-         L8ouDRhun8C2+pSmPm8VgAjmpBYuaNG0BhaucmbMLwLbopJFm8STgTibByqlnS9bpxSW
-         pEKy9cibmZlvnkLHxQp/feOn4QZWsRPChAQSBUORQA5DkY1BNe1HlgYW2ul7t/EiJDgp
-         8pSwitg6T915JXiGjD5wma0mbCo54Vu3yml6PyXQKOshAD/1BTa63lSHHwgv958KSktO
-         dRaQ==
-X-Gm-Message-State: APjAAAWvZp/DXhsF1CJkiIjkxuFAoA23S95ySqs+gI3hRb/F/B1kDvcx
-        FioJPofKIsjaTU8ngLrfFwWipg==
-X-Google-Smtp-Source: APXvYqxqztqU9P4k3+g7ZoHWN0J9tb648zdmiFnKzrsyZaQHcNLcnwOFJw9OIFwA5s+3SGE4WdvJWg==
-X-Received: by 2002:a17:902:326:: with SMTP id 35mr432341pld.248.1573085342309;
-        Wed, 06 Nov 2019 16:09:02 -0800 (PST)
-Received: from [192.168.1.188] ([66.219.217.79])
-        by smtp.gmail.com with ESMTPSA id j14sm116231pfi.168.2019.11.06.16.09.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 16:09:01 -0800 (PST)
-Subject: Re: [PATCH block/for-5.4-fixes] blkcg: make blkcg_print_stat() print
- stats only for online blkgs
-To:     Tejun Heo <tj@kernel.org>
-Cc:     Roman Gushchin <guro@fb.com>, linux-block@vger.kernel.org,
-        cgroups@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Josef Bacik <jbacik@fb.com>
-References: <20191105160951.GS3622521@devbig004.ftw2.facebook.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <1ef277bb-8591-6029-2e9b-319820b3460c@kernel.dk>
-Date:   Wed, 6 Nov 2019 17:08:59 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        bh=rCG7lU0priqMVKwFQzQJqK3jErBmez8plidupT5N1nI=;
+        b=S/AIfaJ8R9J3/efWhoOTpW2t6Wc1VyiegcAf0GhP6pqvWQ1n24CT7U+R8fbwGmZ2nY
+         EF9nuRszB5GKu9lfwTGoxbCPMkG0go/Te4oZWyX2Eys4NDTQrrW9NnRr+zOXkA94RSqc
+         KfW6Szpxg5QbhVfjrfpMTIRvlt3wpvB/C8Nq0HBCvsBhXIbIKEOFgzmqU1Uup9wY8KcB
+         Zx2fBTbHm11JTqsFjHgl1u7BnYjEQf0JNMsof6AKGEXjByvqFGf6Kqtnb9G3KJQG98FH
+         hGhnYFTFdFv47z+rRl5xYcJ4y/CRLOVDD97qLXJi6Zze9ZNcID+QF3AuLZt5XGiKldSv
+         wqpA==
+X-Gm-Message-State: APjAAAWpZEdDe3RQ5WlVN29QK4up0xDyJ1tVn1/XHzgmWfIK76KezBE0
+        ZLW8vw/d+wC+OddZtdEuSZfSLA==
+X-Google-Smtp-Source: APXvYqyiblvWdNuox/MQmOXfqbfG0RLNV24+NjZyLLck8iOnBH22XtxN4kqtN/2S6fbSGLKxWHjR3w==
+X-Received: by 2002:a63:f244:: with SMTP id d4mr703636pgk.233.1573085360870;
+        Wed, 06 Nov 2019 16:09:20 -0800 (PST)
+Received: from localhost.localdomain (104-188-17-28.lightspeed.sndgca.sbcglobal.net. [104.188.17.28])
+        by smtp.gmail.com with ESMTPSA id z23sm216549pgj.43.2019.11.06.16.09.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2019 16:09:20 -0800 (PST)
+From:   Bjorn Andersson <bjorn.andersson@linaro.org>
+To:     Kishon Vijay Abraham I <kishon@ti.com>
+Cc:     linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org
+Subject: [PATCH v3 0/5] phy: qcom-qmp: Add SDM845 QMP and QHP PHYs
+Date:   Wed,  6 Nov 2019 16:09:12 -0800
+Message-Id: <20191107000917.1092409-1-bjorn.andersson@linaro.org>
+X-Mailer: git-send-email 2.23.0
 MIME-Version: 1.0
-In-Reply-To: <20191105160951.GS3622521@devbig004.ftw2.facebook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/5/19 9:09 AM, Tejun Heo wrote:
-> blkcg_print_stat() iterates blkgs under RCU and doesn't test whether
-> the blkg is online.  This can call into pd_stat_fn() on a pd which is
-> still being initialized leading to an oops.
-> 
-> The heaviest operation - recursively summing up rwstat counters - is
-> already done while holding the queue_lock.  Expand queue_lock to cover
-> the other operations and skip the blkg if it isn't online yet.  The
-> online state is protected by both blkcg and queue locks, so this
-> guarantees that only online blkgs are processed.
+Add support for the two PCIe PHYs found in Qualcomm SDM845.
 
-Applied, thanks Tejun.
+Bjorn Andersson (5):
+  dt-bindings: phy-qcom-qmp: Add SDM845 PCIe to binding
+  phy: qcom-qmp: Increase PHY ready timeout
+  phy: qcom: qmp: Use power_on/off ops for PCIe
+  phy: qcom: qmp: Add SDM845 PCIe QMP PHY support
+  phy: qcom: qmp: Add SDM845 QHP PCIe PHY
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt  |  10 +
+ drivers/phy/qualcomm/phy-qcom-qmp.c           | 321 +++++++++++++++++-
+ drivers/phy/qualcomm/phy-qcom-qmp.h           | 114 +++++++
+ 3 files changed, 441 insertions(+), 4 deletions(-)
 
 -- 
-Jens Axboe
+2.23.0
 
