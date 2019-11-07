@@ -2,104 +2,121 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E93CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9F24C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5290A207FA
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=aepfle.de header.i=@aepfle.de header.b="jR3331fX"
+	by mail.kernel.org (Postfix) with ESMTP id AA70E207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:21:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389217AbfKGOVI (ORCPT
+        id S2389310AbfKGOVL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Thu, 7 Nov 2019 09:21:11 -0500
+Received: from szxga02-in.huawei.com ([45.249.212.188]:2504 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726924AbfKGOVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 09:21:08 -0500
-Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.53]:9181 "EHLO
-        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727093AbfKGOVH (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 09:21:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573136465;
-        s=strato-dkim-0002; d=aepfle.de;
-        h=References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:
-        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=mjZP4Hd2SkSytHO0j/Ew9/golJ/SQ3thag40MTADCEw=;
-        b=jR3331fXCb87c6ooEaA4pPdKktXoItpLW92xJ/HJrauWA5nDyPmtFsweqhJOPSekk/
-        QbH8RrFAXjnvyyc4rpBUoi7GMbcYT8TdjQ9+dWWmVsQp6uI4r3+SuHpWqfw43YudGzXh
-        UACYAzl8okvOK92TAN12Cv9KewHepFRl2PXNj5h4ktuYK3mrnJNSd/fSzrS85oj5GwIW
-        8FZ63Du++Au7BR70LOiFxsVg74VPPvwIrXFBPoKT1ieY05fPzPR2ImBW+z66Vf/Z54sh
-        mcjcrP9ocQuWzfZTXRNbryd9e75TM3Hz8Xq+Cs5GHe+KcXM6EI7TV9Z7U3oO9lq5vmGd
-        TZpA==
-X-RZG-AUTH: ":P2EQZWCpfu+qG7CngxMFH1J+3q8wa/QED/SSGq+wjGiUC4kV1cX92EW4mFvNjTRB"
-X-RZG-CLASS-ID: mo00
-Received: from sender
-        by smtp.strato.de (RZmta 44.29.0 AUTH)
-        with ESMTPSA id 20735bvA7EL5lcw
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
-        (Client did not present a certificate);
-        Thu, 7 Nov 2019 15:21:05 +0100 (CET)
-Date:   Thu, 7 Nov 2019 15:20:59 +0100
-From:   Olaf Hering <olaf@aepfle.de>
-To:     Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc:     "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "open list\:Hyper-V CORE AND DRIVERS" <linux-hyperv@vger.kernel.org>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] tools/hv: async name resolution in kvp_daemon
-Message-ID: <20191107152059.6cae8f30.olaf@aepfle.de>
-In-Reply-To: <87zhh7ai26.fsf@vitty.brq.redhat.com>
-References: <20191024144943.26199-1-olaf@aepfle.de>
-        <874kzfbybk.fsf@vitty.brq.redhat.com>
-        <20191107144850.37587edb.olaf@aepfle.de>
-        <87zhh7ai26.fsf@vitty.brq.redhat.com>
-X-Mailer: Claws Mail 2019.05.18 (GTK+ 2.24.32; x86_64-suse-linux-gnu)
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.57])
+        by Forcepoint Email with ESMTP id 16F2A35A5CA297AD0A5C;
+        Thu,  7 Nov 2019 22:21:02 +0800 (CST)
+Received: from dggeme707-chm.china.huawei.com (10.1.199.103) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.439.0; Thu, 7 Nov 2019 22:21:01 +0800
+Received: from lhreml703-chm.china.huawei.com (10.201.108.52) by
+ dggeme707-chm.china.huawei.com (10.1.199.103) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1713.5; Thu, 7 Nov 2019 22:20:59 +0800
+Received: from lhreml703-chm.china.huawei.com ([10.201.68.198]) by
+ lhreml703-chm.china.huawei.com ([10.201.68.198]) with mapi id 15.01.1713.004;
+ Thu, 7 Nov 2019 14:20:57 +0000
+From:   Salil Mehta <salil.mehta@huawei.com>
+To:     Marc Zyngier <maz@kernel.org>
+CC:     "davem@davemloft.net" <davem@davemloft.net>,
+        "edumazet@google.com" <edumazet@google.com>,
+        "Zhuangyuzeng (Yisen)" <yisen.zhuang@huawei.com>,
+        "lipeng (Y)" <lipeng321@huawei.com>,
+        "mehta.salil@opnsrc.net" <mehta.salil@opnsrc.net>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>
+Subject: RE: [PATCH net] net: hns: Fix the stray netpoll locks causing
+  deadlock in NAPI path
+Thread-Topic: [PATCH net] net: hns: Fix the stray netpoll locks causing
+  deadlock in NAPI path
+Thread-Index: AQHVlXV9oPVhm3923UeaSbHNAy05jqd/v/1g
+Date:   Thu, 7 Nov 2019 14:20:57 +0000
+Message-ID: <9c15e61f739045ee876ae3fbb1e49446@huawei.com>
+References: <20191106185405.23112-1-salil.mehta@huawei.com>
+ <a6f06cfc7ef91685746dfe5ab6c56401@www.loen.fr>
+In-Reply-To: <a6f06cfc7ef91685746dfe5ab6c56401@www.loen.fr>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.202.226.45]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=Fg_ayl37ghOOnhDjAm/6iM"; protocol="application/pgp-signature"
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=Fg_ayl37ghOOnhDjAm/6iM
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-Am Thu, 07 Nov 2019 15:15:45 +0100
-schrieb Vitaly Kuznetsov <vkuznets@redhat.com>:
-
-> Looping forever with a permanent error is pretty unusual...
-
-That might be true, but how would you detect a permanent error?
-Just because the DNS server is gone for one hour does not mean it will be g=
-one forever.
-
-Olaf
-
---Sig_/=Fg_ayl37ghOOnhDjAm/6iM
-Content-Type: application/pgp-signature
-Content-Description: Digitale Signatur von OpenPGP
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE97o7Um30LT3B+5b/86SN7mm1DoAFAl3EKEsACgkQ86SN7mm1
-DoB3Fw/+IAfvWix2lZU25z3bgy89Uc9EpGECmxAExz33zhBE+ykXSRAemjan5A9r
-bFijSJSovB00iCOfgOA0jAy5Rv/NUy/sC4S07pIQq5ESMBretC+wIi2eAzB/qIjO
-A1at0OwntEMui1c6gBv3wbqDwb2/LBDOh3rCfrMHTEd9A/icDnVzA/bS1WtdtxYD
-0FRslOjkcjst4O3WlQgK1NwrEPswft90vhaziJ6GZL47osOmm+xGvV+oWpuChSeL
-3sm5yj9yLQ2fjHnRPApxNm44iN4aJCUOSWwviQjJajDdmx2Ra7+K7Wdz7lsbkYcm
-+Rj1QT1H2fhS6aIdXjWi7wL9IPRnsNzxVTUpZSHPmrDRQHczbSbqoqkvCkgBIA9z
-CxqbUu6YCx2zJsUxPdIHsJ1wpGw00lc8XZDLhxkdTbZe7PdtmGOvlZy+jnYIS/UB
-3nLxLOMb6191Ep8DXDL/sY9Ek1F4sZifW9oq9p4S4ItasOA/A6p0Wv0T/tHP7bzj
-lSoA7EKiQkHqd82eNhf4yH/cZ9uq0Qb2/7wGzYyXs1LQJvjcLR2tsW0mRNxffiKb
-NiNdvPTmAzTtsj1PQmIthRI+dbCaWjZFaSlDtSnos85Kx1uxFKIxSIkmSuIpRl3C
-UiMgO2/ASECYOmcLJSp2ABFRe4DETZYOxCaKyN4WiaaZJYxcoxE=
-=C+B/
------END PGP SIGNATURE-----
-
---Sig_/=Fg_ayl37ghOOnhDjAm/6iM--
+SGkgTWFyYywNCg0KPiBGcm9tOiBNYXJjIFp5bmdpZXIgW21haWx0bzptYXpAa2VybmVsLm9yZ10N
+Cj4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDcsIDIwMTkgMjoxMyBQTQ0KPiBUbzogU2FsaWwg
+TWVodGEgPHNhbGlsLm1laHRhQGh1YXdlaS5jb20+DQo+IA0KPiBIaSBTYWxpbCwNCj4gDQo+IE9u
+IDIwMTktMTEtMDYgMjA6MDMsIFNhbGlsIE1laHRhIHdyb3RlOg0KPiA+IFRoaXMgcGF0Y2ggZml4
+ZXMgdGhlIHByb2JsZW0gb2YgdGhlIHNwaW4gbG9ja3MsIG9yaWdpbmFsbHkNCj4gPiBtZWFudCBm
+b3IgdGhlIG5ldHBvbGwgcGF0aCBvZiBobnMgZHJpdmVyLCBjYXVzaW5nIGRlYWRsb2NrIGluDQo+
+ID4gdGhlIG5vcm1hbCBOQVBJIHBvbGwgcGF0aC4gVGhlIGlzc3VlIGhhcHBlbmVkIGR1ZSBwcmVz
+ZW5jZSBvZg0KPiA+IHRoZSBzdHJheSBsZWZ0b3ZlciBzcGluIGxvY2sgY29kZSByZWxhdGVkIHRv
+IHRoZSBuZXRwb2xsLA0KPiA+IHdob3NlIHN1cHBvcnQgd2FzIGVhcmxpZXIgcmVtb3ZlZCBmcm9t
+IHRoZSBITlNbMV0sIGdvdCBhY3RpdmF0ZWQNCj4gPiBkdWUgdG8gZW5hYmxpbmcgb2YgTkVUX1BP
+TExfQ09OVFJPTExFUiBzd2l0Y2guDQo+ID4NCj4gPiBFYXJsaWVyIGJhY2tncm91bmQ6DQo+ID4g
+VGhlIG5ldHBvbGwgaGFuZGxpbmcgY29kZSBvcmlnaW5hbGx5IGhhZCB0aGlzIGJ1ZyhhcyBpZGVu
+dGlmaWVkDQo+ID4gYnkgTWFyYyBaeW5naWVyWzJdKSBvZiB3cm9uZyBzcGluIGxvY2sgQVBJIGJl
+aW5nIHVzZWQgd2hpY2ggZGlkDQo+ID4gbm90IGRpc2FibGUgdGhlIGludGVycnVwdHMgYW5kIGhl
+bmNlIGNvdWxkIGNhdXNlIGxvY2tpbmcgaXNzdWVzLg0KPiA+IGkuZS4gaWYgdGhlIGxvY2sgd2Vy
+ZSBmaXJzdCBhY3F1aXJlZCBpbiBjb250ZXh0IHRvIHRocmVhZCBsaWtlDQo+ID4gJ2lwJyB1dGls
+IGFuZCB0aGlzIGxvY2sgaWYgZXZlciBnb3QgbGF0ZXIgYWNxdWlyZWQgYWdhaW4gaW4NCj4gPiBj
+b250ZXh0IHRvIHRoZSBpbnRlcnJ1cHQgY29udGV4dCBsaWtlIFRYL1JYIChJbnRlcnJ1cHRzIGNv
+dWxkDQo+ID4gYWx3YXlzIHByZS1lbXB0IHRoZSBsb2NrIGhvbGRpbmcgdGFzayBhbmQgYWNxdWly
+ZSB0aGUgbG9jayBhZ2FpbikNCj4gPiBhbmQgaGVuY2UgY291bGQgY2F1c2UgZGVhZGxvY2suDQo+
+ID4NCj4gPiBQcm9wb3NlZCBTb2x1dGlvbjoNCj4gPiAxLiBJZiB0aGUgbmV0cG9sbCB3YXMgZW5h
+YmxlZCBpbiB0aGUgSE5TIGRyaXZlciwgd2hpY2ggaXMgbm90DQo+ID4gICAgcmlnaHQgbm93LCB3
+ZSBjb3VsZCBoYXZlIHNpbXBseSB1c2VkIHNwaW5fW3VuXWxvY2tfaXJxc2F2ZSgpDQo+ID4gMi4g
+QnV0IGFzIG5ldHBvbGwgaXMgZGlzYWJsZWQsIHRoZXJlZm9yZSwgaXQgaXMgYmVzdCB0byBnZXQg
+cmlkDQo+ID4gICAgb2YgdGhlIGV4aXN0aW5nIGxvY2tzIGFuZCBzdHJheSBjb2RlIGZvciBub3cu
+IFRoaXMgc2hvdWxkDQo+ID4gICAgc29sdmUgdGhlIHByb2JsZW0gcmVwb3J0ZWQgYnkgTWFyYy4N
+Cj4gPg0KPiA+IEBNYXJjLA0KPiA+IENvdWxkIHlvdSBwbGVhc2UgdGVzdCB0aGlzIHBhdGNoIGFu
+ZCBjb25maXJtIGlmIHRoZSBwcm9ibGVtIGlzDQo+ID4gZml4ZWQgYXQgeW91ciBlbmQ/DQo+IA0K
+PiBZZXMsIHRoaXMgZml4ZXMgaXQsIGFsdGhvdWdoIHlvdSBtYXkgd2FudCB0byBmdWxseSBnZXQg
+cmlkIG9mDQo+IHRoZSBub3cgdXNlbGVzcyBsb2NrOg0KDQoNCk9vcHMuLm1pc3NlZCB0aGVtLiBJ
+IHdpbGwgZml4IHRoZXNlIGFzIHdlbGwgYW5kIGZsb2F0IFYyIHZlcnNpb24NCm9mIHRoaXMgcGF0
+Y2guDQoNCg0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hu
+cy9obmFlLmMNCj4gYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9oaXNpbGljb24vaG5zL2huYWUuYw0K
+PiBpbmRleCA2ZDA0NTdlYjRmYWEuLjA4MzM5Mjc4YzcyMiAxMDA2NDQNCj4gLS0tIGEvZHJpdmVy
+cy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmMNCj4gKysrIGIvZHJpdmVycy9uZXQv
+ZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmMNCj4gQEAgLTE5OSw3ICsxOTksNiBAQCBobmFl
+X2luaXRfcmluZyhzdHJ1Y3QgaG5hZV9xdWV1ZSAqcSwgc3RydWN0DQo+IGhuYWVfcmluZyAqcmlu
+ZywgaW50IGZsYWdzKQ0KPiANCj4gICAJcmluZy0+cSA9IHE7DQo+ICAgCXJpbmctPmZsYWdzID0g
+ZmxhZ3M7DQo+IC0Jc3Bpbl9sb2NrX2luaXQoJnJpbmctPmxvY2spOw0KPiAgIAlyaW5nLT5jb2Fs
+X3BhcmFtID0gcS0+aGFuZGxlLT5jb2FsX3BhcmFtOw0KPiAgIAlhc3NlcnQoIXJpbmctPmRlc2Mg
+JiYgIXJpbmctPmRlc2NfY2IgJiYgIXJpbmctPmRlc2NfZG1hX2FkZHIpOw0KPiANCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNvbi9obnMvaG5hZS5oDQo+IGIvZHJp
+dmVycy9uZXQvZXRoZXJuZXQvaGlzaWxpY29uL2hucy9obmFlLmgNCj4gaW5kZXggZTljNjdjMDZi
+ZmQyLi42YWI5NDU4MzAyZTEgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hp
+c2lsaWNvbi9obnMvaG5hZS5oDQo+ICsrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2hpc2lsaWNv
+bi9obnMvaG5hZS5oDQo+IEBAIC0yNzQsOSArMjc0LDYgQEAgc3RydWN0IGhuYWVfcmluZyB7DQo+
+ICAgCS8qIHN0YXRpc3RpYyAqLw0KPiAgIAlzdHJ1Y3QgcmluZ19zdGF0cyBzdGF0czsNCj4gDQo+
+IC0JLyogcmluZyBsb2NrIGZvciBwb2xsIG9uZSAqLw0KPiAtCXNwaW5sb2NrX3QgbG9jazsNCj4g
+LQ0KPiAgIAlkbWFfYWRkcl90IGRlc2NfZG1hX2FkZHI7DQo+ICAgCXUzMiBidWZfc2l6ZTsgICAg
+ICAgLyogc2l6ZSBmb3IgaG5hZV9kZXNjLT5hZGRyLCBwcmVzZXQgYnkgQUUgKi8NCj4gICAJdTE2
+IGRlc2NfbnVtOyAgICAgICAvKiB0b3RhbCBudW1iZXIgb2YgZGVzYyAqLw0KPiANCj4gV2l0aCB0
+aGF0Og0KPiANCj4gQWNrZWQtYnk6IE1hcmMgWnluZ2llciA8bWF6QGtlcm5lbC5vcmc+DQo+IFRl
+c3RlZC1ieTogTWFyYyBaeW5naWVyIDxtYXpAa2VybmVsLm9yZz4NCg0KDQpNYW55IHRoYW5rcyBm
+b3IgeW91ciByZXZpZXcgYW5kIHRlc3RpbmcuDQoNCg0KQmVzdCBSZWdhcmRzDQpTYWxpbC4NCg==
