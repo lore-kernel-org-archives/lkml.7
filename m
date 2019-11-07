@@ -2,85 +2,81 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
 	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3F001C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:45:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EE0AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:47:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B50B222C9
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:45:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 552F021D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:47:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=walle.cc header.i=@walle.cc header.b="potpmc5f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727176AbfKGHpg (ORCPT
+        id S1727439AbfKGHrb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:45:36 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:46349 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726571AbfKGHpg (ORCPT
+        Thu, 7 Nov 2019 02:47:31 -0500
+Received: from ssl.serverraum.org ([176.9.125.105]:45033 "EHLO
+        ssl.serverraum.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727079AbfKGHra (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:45:36 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iScU0-0000UI-FP; Thu, 07 Nov 2019 08:45:32 +0100
-Date:   Thu, 7 Nov 2019 08:45:26 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Ingo Molnar <mingo@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
- further
-In-Reply-To: <20191107073719.GD30739@gmail.com>
-Message-ID: <alpine.DEB.2.21.1911070844550.1869@nanos.tec.linutronix.de>
-References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de> <20191107073719.GD30739@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 7 Nov 2019 02:47:30 -0500
+Received: from [IPv6:2a02:810c:c200:2e91:9c11:3c5b:d198:83e8] (unknown [IPv6:2a02:810c:c200:2e91:9c11:3c5b:d198:83e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ssl.serverraum.org (Postfix) with ESMTPSA id AB67A23E40;
+        Thu,  7 Nov 2019 08:47:27 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=walle.cc;
+        s=mail2016061301; t=1573112848;
+        bh=1TyjvgjvYw4OB/HtJtOb05TZVEDh4q+2iHLZKIbZDc0=;
+        h=Date:In-Reply-To:References:Subject:To:CC:From:From;
+        b=potpmc5fxQnZukSsGdAANNlyqe0Lv8oKGk+HN46dPJvbbW/FKgVi4fvRlZ3WxMNdS
+         AGxdCHOItnVXNmDaTgyuNdoMBHRrV53SOVABKW+VXccW57BZrZhpBJZHp9sU9dDnQP
+         sGHiEeDpqKjqMWoqa6BWHyYcujfyb+fpLLP9Eylk=
+Date:   Thu, 07 Nov 2019 08:47:25 +0100
+User-Agent: K-9 Mail for Android
+In-Reply-To: <20191107020436.GD8978@lunn.ch>
+References: <20191106223617.1655-1-michael@walle.cc> <20191106223617.1655-5-michael@walle.cc> <20191107020436.GD8978@lunn.ch>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1692257517-1573112732=:1869"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH v2 4/6] net: phy: at803x: mention AR8033 as same as AR8031
+To:     Andrew Lunn <andrew@lunn.ch>
+CC:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
+        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
+        David Miller <davem@davemloft.net>,
+        Florian Fainelli <f.fainelli@gmail.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        Oleksij Rempel <o.rempel@pengutronix.de>
+From:   Michael Walle <michael@walle.cc>
+Message-ID: <1DE4295A-1D25-4FAD-8DAB-45BD97E511C9@walle.cc>
+X-Virus-Scanned: clamav-milter 0.101.4 at web
+X-Virus-Status: Clean
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+Am 7=2E November 2019 03:04:36 MEZ schrieb Andrew Lunn <andrew@lunn=2Ech>:
+>On Wed, Nov 06, 2019 at 11:36:15PM +0100, Michael Walle wrote:
+>> The AR8033 is the AR8031 without PTP support=2E All other registers are
+>> the same=2E Unfortunately, they share the same PHY ID=2E Therefore, we
+>> cannot distinguish between the one with PTP support and the one
+>without=2E
+>
+>Not nice=2E I suppose there might be a PTP register you can read to
+>determine this, but that is not very helpful=2E
 
---8323329-1692257517-1573112732=:1869
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+I tried that actually=2E=2E There is a PTP enable bit=2E It's default is 1=
+ (according to the AR8031 datasheet)=2E Now guess what it's value is on the=
+ AR8033=2E=2E its also 1=2E Not enough=2E=2E I also tried to enable the rea=
+ltime counter=2E well that worked too=2E
 
-On Thu, 7 Nov 2019, Ingo Molnar wrote:
-> * Thomas Gleixner <tglx@linutronix.de> wrote:
-> >  	/*
-> > -	 * The extra 1 is there because the CPU will access an
-> > -	 * additional byte beyond the end of the IO permission
-> > -	 * bitmap. The extra byte must be all 1 bits, and must
-> > -	 * be within the limit.
-> > +	 * The extra 1 is there because the CPU will access an additional
-> > +	 * byte beyond the end of the I/O permission bitmap. The extra byte
-> > +	 * must have all bits set and must be within the TSS limit.
-> >  	 */
-> >  	unsigned long		io_bitmap[IO_BITMAP_LONGS + 1];
-> >  } __aligned(PAGE_SIZE);
-> 
-> Note that on 32-bit kernels this blows up our CPU area calculations:
-> 
-> ./include/linux/compiler.h:350:38: error: call to ‘__compiletime_assert_181’ declared with attribute error: BUILD_BUG_ON failed: CPU_ENTRY_AREA_PAGES * PAGE_SIZE < CPU_ENTRY_AREA_MAP_SIZE
-> ./include/linux/compiler.h:331:4: note: in definition of macro ‘__compiletime_assert’
-> ./include/linux/compiler.h:350:2: note: in expansion of macro ‘_compiletime_assert’
-> ./include/linux/build_bug.h:39:37: note: in expansion of macro ‘compiletime_assert’
-> ./include/linux/build_bug.h:50:2: note: in expansion of macro ‘BUILD_BUG_ON_MSG’
-> arch/x86/mm/cpu_entry_area.c:181:2: note: in expansion of macro ‘BUILD_BUG_ON’
-> make[2]: *** [scripts/Makefile.build:265: arch/x86/mm/cpu_entry_area.o] Error 1
+And yes=2E I've double checked the package marking=2E It definitely was an=
+ AR8033=2E So either I was just lucky, or maybe=2E=2E the AR8033 is just a =
+relabled AR8031 ;)=20
 
-Duh. /me goes investigate.
+-michael
 
---8323329-1692257517-1573112732=:1869--
