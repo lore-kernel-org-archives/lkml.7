@@ -2,208 +2,160 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26107C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAF04C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDB8E214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:19:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A5690214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:24:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FmrpN/VL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727723AbfKGSTO (ORCPT
+        id S1727084AbfKGSYM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:19:14 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:50102 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725797AbfKGSTO (ORCPT
+        Thu, 7 Nov 2019 13:24:12 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:24165 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725851AbfKGSYL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:19:14 -0500
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7I7kmD024868
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 13:19:13 -0500
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4np3fx45-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 13:19:13 -0500
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 7 Nov 2019 18:19:10 -0000
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 18:19:02 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7IJ1dU44105970
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 18:19:01 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1E2024C046;
-        Thu,  7 Nov 2019 18:19:01 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 04D9F4C044;
-        Thu,  7 Nov 2019 18:19:00 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.15.120])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 18:18:59 +0000 (GMT)
-Subject: Re: [PATCH 07/10] ocxl: Save the device serial number in ocxl_fn
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Andrew Donnellan <ajd@linux.ibm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Madhavan Srinivasan <maddy@linux.vnet.ibm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Greg Kurz <groug@kaod.org>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
+        Thu, 7 Nov 2019 13:24:11 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573151050;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=KubHtV049K2BSRPzUIF8otGa4rwY4O8d8+SI2Kib58I=;
+        b=FmrpN/VLz+ZRqK4z3ZfRhTfMzJLlHhompBO4pnDMJmuyFbfN7J4Ki2DATUTTVVB3J8ZfQw
+        52L1xAWPkadafntTA14NhCh3t5vtjv0rLdJWK3BQAl5a50p6X2q5qT/yR0gcq8cIbYOLtm
+        zpDutWD0LM3db0hephtPnV6X1YZ1opQ=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-375-H1N7h4BROg-xZsGGE_44Kg-1; Thu, 07 Nov 2019 13:23:04 -0500
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id DEE27800C61;
+        Thu,  7 Nov 2019 18:23:00 +0000 (UTC)
+Received: from mail (ovpn-121-157.rdu2.redhat.com [10.10.121.157])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 919F9600D3;
+        Thu,  7 Nov 2019 18:23:00 +0000 (UTC)
+Date:   Thu, 7 Nov 2019 13:22:59 -0500
+From:   Andrea Arcangeli <aarcange@redhat.com>
+To:     Daniel Colascione <dancol@google.com>
+Cc:     Mike Rapoport <rppt@linux.ibm.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-8-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 7 Nov 2019 19:18:59 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Lokesh Gidra <lokeshgidra@google.com>,
+        Nick Kralevich <nnk@google.com>,
+        Nosh Minwalla <nosh@google.com>,
+        Pavel Emelyanov <ovzxemul@gmail.com>,
+        Tim Murray <timmurray@google.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        linux-mm <linux-mm@kvack.org>
+Subject: Re: [PATCH 1/1] userfaultfd: require CAP_SYS_PTRACE for
+ UFFD_FEATURE_EVENT_FORK
+Message-ID: <20191107182259.GK17896@redhat.com>
+References: <1572967777-8812-1-git-send-email-rppt@linux.ibm.com>
+ <1572967777-8812-2-git-send-email-rppt@linux.ibm.com>
+ <CAKOZuev93zDGNPX+ySg_jeUg4Z3zKMcpABekUQvHA01kTVn4=A@mail.gmail.com>
+ <CALCETrX=VmSjD6kLT6tuZQ4Efhc_13vZrw1mo4Z2iKqZTT-bzg@mail.gmail.com>
+ <20191105162424.GH30717@redhat.com>
+ <CAKOZuet=g++G+biSP5bU-Rppu6fykU1TVUDj20NapqAYQY4r9A@mail.gmail.com>
+ <20191107083902.GB3247@linux.ibm.com>
+ <CAKOZuevhEXpMr49KmkBLEyMGsDz8WujKvOGCty8+p7cwVbmoXA@mail.gmail.com>
+ <20191107153801.GF17896@redhat.com>
+ <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191025044721.16617-8-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110718-0016-0000-0000-000002C1AD4F
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110718-0017-0000-0000-000033233106
-Message-Id: <11327e5f-bc88-620e-f119-495eb7d4b02f@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=775 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070167
+In-Reply-To: <CAKOZueuKttjyRBgMkaBknzn+fzufZA+gJcd5wnKgiwmO37yN1g@mail.gmail.com>
+User-Agent: Mutt/1.12.2 (2019-09-21)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-MC-Unique: H1N7h4BROg-xZsGGE_44Kg-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 08:15:53AM -0800, Daniel Colascione wrote:
+> You're already paying for bounds checking. Receiving a message via a
+> datagram socket is basically the same thing as what UFFD's read is
+> doing anyway.
 
+Except it's synchronous and there are no dynamic allocations required
+in uffd, while af_netlink and af_unix both all deal with queue of
+events in skbs dynamically allocated.
 
-Le 25/10/2019 à 06:47, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
-> 
-> This patch retrieves the serial number of the card and makes it available
-> to consumers of the ocxl driver via the ocxl_fn struct.
-> 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> ---
+Ultimately if we strip away the skbs for performance reasons, there
+wouldn't be much code to share, so if the only benefit would be to
+call recvmsg which would still be as insecure as read for the "worse"
+case than suid, so I don't see the point.
 
+And should then eventfd also become a netlink then? I mean uffd was
+supposed to work like eventfd except it requires specialized events.
 
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
+> Programs generally don't go calling recvmsg() on random FDs they get
+> from the outside world. They do call read() on those FDs, which is why
 
+That programs generally don't do something only means the attack is
+less probable.
 
+Programs generally aren't suid. Programs generally don't use
+SCM_RIGHTS. Programs generally don't ignore the retval of
+open/socket/uffd syscalls. Programs generally don't make assumptions
+on the fd ID after one of those syscalls that install fds.
 
->   drivers/misc/ocxl/config.c | 46 ++++++++++++++++++++++++++++++++++++++
->   include/misc/ocxl.h        |  1 +
->   2 files changed, 47 insertions(+)
-> 
-> diff --git a/drivers/misc/ocxl/config.c b/drivers/misc/ocxl/config.c
-> index fb0c3b6f8312..a9203c309365 100644
-> --- a/drivers/misc/ocxl/config.c
-> +++ b/drivers/misc/ocxl/config.c
-> @@ -71,6 +71,51 @@ static int find_dvsec_afu_ctrl(struct pci_dev *dev, u8 afu_idx)
->   	return 0;
->   }
->   
-> +/**
-> + * Find a related PCI device (function 0)
-> + * @device: PCI device to match
-> + *
-> + * Returns a pointer to the related device, or null if not found
-> + */
-> +static struct pci_dev *get_function_0(struct pci_dev *dev)
-> +{
-> +	unsigned int devfn = PCI_DEVFN(PCI_SLOT(dev->devfn), 0); // Look for function 0
-> +
-> +	return pci_get_domain_bus_and_slot(pci_domain_nr(dev->bus),
-> +					dev->bus->number, devfn);
-> +}
-> +
-> +static void read_serial(struct pci_dev *dev, struct ocxl_fn_config *fn)
-> +{
-> +	u32 low, high;
-> +	int pos;
-> +
-> +	pos = pci_find_ext_capability(dev, PCI_EXT_CAP_ID_DSN);
-> +	if (pos) {
-> +		pci_read_config_dword(dev, pos + 0x04, &low);
-> +		pci_read_config_dword(dev, pos + 0x08, &high);
-> +
-> +		fn->serial = low | ((u64)high) << 32;
-> +
-> +		return;
-> +	}
-> +
-> +	if (PCI_FUNC(dev->devfn) != 0) {
-> +		struct pci_dev *related = get_function_0(dev);
-> +
-> +		if (!related) {
-> +			fn->serial = 0;
-> +			return;
-> +		}
-> +
-> +		read_serial(related, fn);
-> +		pci_dev_put(related);
-> +		return;
-> +	}
-> +
-> +	fn->serial = 0;
-> +}
-> +
->   static void read_pasid(struct pci_dev *dev, struct ocxl_fn_config *fn)
->   {
->   	u16 val;
-> @@ -208,6 +253,7 @@ int ocxl_config_read_function(struct pci_dev *dev, struct ocxl_fn_config *fn)
->   	int rc;
->   
->   	read_pasid(dev, fn);
-> +	read_serial(dev, fn);
->   
->   	rc = read_dvsec_tl(dev, fn);
->   	if (rc) {
-> diff --git a/include/misc/ocxl.h b/include/misc/ocxl.h
-> index 6f7c02f0d5e3..9843051c3c5b 100644
-> --- a/include/misc/ocxl.h
-> +++ b/include/misc/ocxl.h
-> @@ -46,6 +46,7 @@ struct ocxl_fn_config {
->   	int dvsec_afu_info_pos; /* offset of the AFU information DVSEC */
->   	s8 max_pasid_log;
->   	s8 max_afu_index;
-> +	u64 serial;
->   };
->   
->   enum ocxl_endian {
-> 
+If all programs generally do the right thing (where the most important
+is to not make assumptions on the fd IDs and to check all syscall
+retvals), there was never an issue to begin with even in uffd API.
+
+> read() having unexpected side effects is terrible.
+
+If having unexpected side effects in read is "terrible" (i.e. I
+personally prefer to use terms like terrible when there's at least
+something that can be exploited in practice, not for theoretical
+issues) for an SCM_RIGHTS receiving daemon, I just don't see how the
+exact same unexpected (still theoretical) side effects in recvmsg with
+an unexpected nested cmsg->cmsg_type =3D=3D SCM_RIGHTS message being
+returned, isn't terrible too.
+
+> If you call it with a non-empty ancillary data buffer, you know to
+> react to what you get. You're *opting into* the possibility of getting
+> file descriptors. Sure, it's theoretically possible that a program
+> calls recvmsg on random FDs it gets from unknown sources, sees
+> SCM_RIGHTS unexpectedly, and just the SCM_RIGHTS message and its FD
+> payload, but that's an outright bug, while calling read() on stdin is
+> no bug.
+
+I'm not talking about stdin and suid. recvmsg might mitigate the
+concern for suid (not certain, depends on the suid, if it's generally
+doing what you expect most suid to be doing or not), I was talking
+about the SCM_RIGHTS receiving daemon instead, the "worse" more
+concerning case than the suid.
+
+I quote below Andy's relevant email:
+
+=3D=3D=3D=3D=3D=3D
+It's worse if SCM_RIGHTS is involved.
+=3D=3D=3D=3D=3D=3D
+
+Not all software will do this after calling recvmsg:
+
+    if (cmsg->cmsg_type =3D=3D SCM_RIGHTS) {
+      /* oops we got attacked and an fd was involountarily installed
+         because we received another AF_UNIX from a malicious attacker
+         in control of the other end of the SCM_RIGHTS-receiving
+         AF_UNIX connection instead of our expected socket family
+         which doesn't even support SCM_RIGHTS so we would never have
+         noticed an fd was installed after recvmsg */
+    }
 
