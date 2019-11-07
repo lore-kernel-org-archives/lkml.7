@@ -2,207 +2,184 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92FD0C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D386C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4CCB2214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C48BB21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:49:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sx+eF8Wi"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VrPFocA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387847AbfKGKs7 (ORCPT
+        id S2387924AbfKGKtH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:48:59 -0500
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:39709 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727707AbfKGKs6 (ORCPT
+        Thu, 7 Nov 2019 05:49:07 -0500
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44456 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727707AbfKGKtG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:48:58 -0500
-Received: by mail-lj1-f193.google.com with SMTP id p18so1720975ljc.6
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 02:48:57 -0800 (PST)
+        Thu, 7 Nov 2019 05:49:06 -0500
+Received: by mail-wr1-f67.google.com with SMTP id f2so2405656wrs.11
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 02:49:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IT22kOGDAtljK81pVJrF6m7J52zc/v0AXE8pR5gi9WM=;
-        b=sx+eF8WiH7x1S3cbNbtNKMOj/0P/3Tatbj+bf4L6zOJVk+cxbFO5R5F9wZvOGzxXrl
-         bfr94Y6zouFd93YwqnXNLC7vZS3U3SsHZK6GLKu2W6NpG8XHkNsbsDmNGp9ZKVwo7iwA
-         Ju0mIV5mxdU9aKbKu1d6xeacfZRApz6YdEHJmjSjxZD4csTnbM3Edrd4CBpDzkmK95Xx
-         JJEgPClqSJsiys0ze2fYXeuyhiRUr0yKGv7xGLupCnZKi14IJ5JU4ZmL1s9lqDSWez9D
-         LDreA+6oGZe35VA8x2VsIkAaHs3YBmsP5JdcBcndNhxlZvPySpq6rX5sv5ZyqSysoeH9
-         W0fQ==
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=BoJC2vTkuWcgoU9/Gd+NZ3si/SA7xiwzAE9kV4SdCkQ=;
+        b=VrPFocA9qBjuCcuN8Tn5qHHG8bdYdAAfDQXKn7yQF4JsYcVDKDKg8LZbIrc8M0c+UR
+         Uu46B6aPG+9GSNvUn3rMsVn98X/y2ci3T4qtdUCWyXITGWU30nzdKYcHCM4MhXYIJpTA
+         qWK24YuKpxU/ho6LtVdkjQnORnE0nmyfo64+sW7JYOOSKE6JwJzKGLbIzx2sXnkGtGuw
+         qMDxMdIL9aFAleVNvsXKquPC1SPET6RMeZuZEaM3ETeoVxXgLggxgCFz7kBPpvVGNywI
+         5mWEoD9kS6DDnOuZlZSuNDWyj/7mE03GpthdFKL3qPt5fafJ8+LUmVmP0c3cd2+yMK29
+         LDwQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IT22kOGDAtljK81pVJrF6m7J52zc/v0AXE8pR5gi9WM=;
-        b=PCZLpYVb+lUB+mSv20Zz+YqMcipWmEsawD4q4egJV1oOur+p2Xl72pLhdIG4HRU8Om
-         HdkxPHTgmMZdYzYNUQahSBMnh+tDkVlE2TGSUr0wXs9c++Ol8CN+r+XyXfNbVZjJpwK9
-         PyJ4uLVz8duKWUSpRxeS74XxilIUxiGzRM4FTf9nm73S6bFErsr9B6uMz7s1joBBY/iO
-         /2TPJEbY6hQYVuNacUxinWm76gHilvGX/pYou9gZ8pjtVStl77VGrYMEzfekYkpsFOO3
-         9IOitJbhu2h+BC00nGBcB7+WyIYBfm7AKYCFmEnW11/Ubk1MGQgR9U0ErbrXx5w9caaz
-         TkjA==
-X-Gm-Message-State: APjAAAVw+lNry1kvZHx2mEOulJfvU+jze+jj/pwCMp+gQHmo1BDflIJQ
-        ufZcN7ALZTde45Z5U5dUufYiRJKT4ARvkJwggIGQkw==
-X-Google-Smtp-Source: APXvYqyOPL7YXqG7JWxF9jabb9/ZexZIhJi783Or1BlVDSHpbeYxjCCH4uU5z7vl6lLEy9GxjJVE4vUDr3KOIvQtfpc=
-X-Received: by 2002:a2e:b0fa:: with SMTP id h26mr1826318ljl.206.1573123736378;
- Thu, 07 Nov 2019 02:48:56 -0800 (PST)
-MIME-Version: 1.0
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <1572979786-20361-3-git-send-email-thara.gopinath@linaro.org>
- <20191105202037.GA17494@e108754-lin> <5DC1E348.2090104@linaro.org>
- <20191105211446.GA25349@e108754-lin> <5DC1E9BC.1010001@linaro.org>
- <20191105215233.GA6450@e108754-lin> <436ad772-c727-127e-1469-d99549db03fc@arm.com>
- <5DC3088B.8070401@linaro.org> <943a8368-1f19-d981-7583-0db4e32895af@arm.com>
-In-Reply-To: <943a8368-1f19-d981-7583-0db4e32895af@arm.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=BoJC2vTkuWcgoU9/Gd+NZ3si/SA7xiwzAE9kV4SdCkQ=;
+        b=DhKwA6I0KfIjlwy1Nty3g8+oxQv1Z8JzJg0KnPqDk6QjUlgwiON5vb1JSmg/XxSbJI
+         WJlS7A0uEh3QbZ7iSdyxgS4LCrIPTJH8dOA2MiJ2rbrKdQTD6i4eTvhkcBqCJwXNY6ww
+         XI/I54ZaOsDzRRp2C2ONYv7mfv6P8l3mKphDMyWggKDkyaNrLHdRXxXbNnx78YgH8fZ+
+         9CPtpf9Obq9a+jKrvm05Q2777jKNSM54m+AmM2XMFlLqLrkRDCzM6ACyYRi7CrkEtmeP
+         bFM3/JAa7nslkidZ7GATUddYm9BP9Isbpp6fbkwYaPrj/8TRtQ+y0aEX1yICLN03w8hJ
+         5VIg==
+X-Gm-Message-State: APjAAAWYuJmbhdwp2BkZKC82sUpE50z+ZkiwFw5CSBX4lamfZkyW+0Uu
+        kEjaPd+W4+wjp+XwYBJoUlbGlA==
+X-Google-Smtp-Source: APXvYqzOETIKdw2q2EWHS49YE7Q9FgbNjhavNXZvbJwd9forsxCnZjVAbHexquaz+zezZ4hQZP0eBQ==
+X-Received: by 2002:a5d:4f06:: with SMTP id c6mr2186806wru.211.1573123744329;
+        Thu, 07 Nov 2019 02:49:04 -0800 (PST)
+Received: from linaro.org ([2a01:e0a:f:6020:7de6:e8c6:ca61:22f0])
+        by smtp.gmail.com with ESMTPSA id w81sm2074459wmg.5.2019.11.07.02.49.02
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Thu, 07 Nov 2019 02:49:03 -0800 (PST)
+Date:   Thu, 7 Nov 2019 11:49:01 +0100
 From:   Vincent Guittot <vincent.guittot@linaro.org>
-Date:   Thu, 7 Nov 2019 11:48:45 +0100
-Message-ID: <CAKfTPtBkDzYv5cFgCNjOHN53KBQZJBAJ77ft-CARo=g=GuZ8Sg@mail.gmail.com>
-Subject: Re: [Patch v5 2/6] sched/fair: Add infrastructure to store and update
- instantaneous thermal pressure
-To:     Dietmar Eggemann <dietmar.eggemann@arm.com>
-Cc:     Thara Gopinath <thara.gopinath@linaro.org>,
-        Ionela Voinescu <ionela.voinescu@arm.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Quentin Perret <qperret@google.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Amit Kachhap <amit.kachhap@gmail.com>,
-        Javi Merino <javi.merino@kernel.org>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>
-Content-Type: text/plain; charset="UTF-8"
+To:     Thara Gopinath <thara.gopinath@linaro.org>
+Cc:     mingo@redhat.com, peterz@infradead.org, ionela.voinescu@arm.com,
+        rui.zhang@intel.com, edubezval@gmail.com, qperret@google.com,
+        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        javi.merino@kernel.org, daniel.lezcano@linaro.org
+Subject: Re: [Patch v5 6/6] sched/fair: Enable tuning of decay period
+Message-ID: <20191107104901.GA472@linaro.org>
+References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
+ <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1572979786-20361-7-git-send-email-thara.gopinath@linaro.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019 at 10:32, Dietmar Eggemann <dietmar.eggemann@arm.com> wrote:
->
-> On 06/11/2019 18:53, Thara Gopinath wrote:
-> > On 11/06/2019 07:50 AM, Dietmar Eggemann wrote:
-> >> On 05/11/2019 22:53, Ionela Voinescu wrote:
-> >>> On Tuesday 05 Nov 2019 at 16:29:32 (-0500), Thara Gopinath wrote:
-> >>>> On 11/05/2019 04:15 PM, Ionela Voinescu wrote:
-> >>>>> On Tuesday 05 Nov 2019 at 16:02:00 (-0500), Thara Gopinath wrote:
-> >>>>>> On 11/05/2019 03:21 PM, Ionela Voinescu wrote:
-> >>>>>>> Hi Thara,
-> >>>>>>>
-> >>>>>>> On Tuesday 05 Nov 2019 at 13:49:42 (-0500), Thara Gopinath wrote:
-> >>>>>>> [...]
-> >>>>>>>> +static void trigger_thermal_pressure_average(struct rq *rq)
-> >>>>>>>> +{
-> >>>>>>>> +#ifdef CONFIG_SMP
-> >>>>>>>> +      update_thermal_load_avg(rq_clock_task(rq), rq,
-> >>>>>>>> +                              per_cpu(thermal_pressure, cpu_of(rq)));
-> >>>>>>>> +#endif
-> >>>>>>>> +}
-> >>>>>>>
-> >>>>>>> Why did you decide to keep trigger_thermal_pressure_average and not
-> >>>>>>> call update_thermal_load_avg directly?
-> >>>>>>>
-> >>>>>>> For !CONFIG_SMP you already have an update_thermal_load_avg function
-> >>>>>>> that does nothing, in kernel/sched/pelt.h, so you don't need that
-> >>>>>>> ifdef.
-> >>>>>> Hi,
-> >>>>>>
-> >>>>>> Yes you are right. But later with the shift option added, I shift
-> >>>>>> rq_clock_task(rq) by the shift. I thought it is better to contain it in
-> >>>>>> a function that replicate it in three different places. I can remove the
-> >>>>>> CONFIG_SMP in the next version.
-> >>>>>
-> >>>>> You could still keep that in one place if you shift the now argument of
-> >>>>> ___update_load_sum instead.
-> >>>>
-> >>>> No. I cannot do this. The authors of the pelt framework  prefers not to
-> >>>> include a shift parameter there. I had discussed this with Vincent earlier.
-> >>>>
-> >>>
-> >>> Right! I missed Vincent's last comment on this in v4.
-> >>>
-> >>> I would argue that it's more of a PELT parameter than a CFS parameter
-> >>> :), where it's currently being used. I would also argue that's more of a
-> >>> PELT parameter than a thermal parameter. It controls the PELT time
-> >>> progression for the thermal signal, but it seems more to configure the
-> >>> PELT algorithm, rather than directly characterize thermals.
-> >>>
-> >>> In any case, it only seemed to me that adding a wrapper function for
-> >>> this purpose only was not worth doing.
-> >>
-> >> Coming back to the v4 discussion
-> >> https://lore.kernel.org/r/379d23e5-79a5-9d90-0fb6-125d9be85e99@arm.com
-> >>
-> >> There is no API between pelt.c and other parts of the scheduler/kernel
-> >> so why should we keep an unnecessary parameter and wrapper functions?
-> >>
-> >> There is also no abstraction, update_thermal_load_avg() in pelt.c even
-> >> carries '_thermal_' in its name.
-> >>
-> >> So why not define this shift value '[sched_|pelt_]thermal_decay_shift'
-> >> there as well? It belongs to update_thermal_load_avg().
-> >>
-> >> All call sites of update_thermal_load_avg() use 'rq_clock_task(rq) >>
-> >> sched_thermal_decay_shift' so I don't see the need to pass it in.
-> >>
-> >> IMHO, preparing for eventual code changes (e.g. parsing different now
-> >> values) is not a good practice in the kernel. Keeping the code small and
-> >> tidy is.
-> >
-> > I think we are going in circles on this one. I acknowledge you have an
-> > issue. That being said, I also understand the need to keep the pelt
-> > framework code tight. Also Ionela pointed out that there could be a need
-> > for a faster decay in which case it could mean a left shift leading to
-> > further complications if defined in pelt.c (I am not saying that I will
-> > implement a faster decay in this patch set but it is more of a future
-> > extension if needed!)
->
-> The issue still exists so why not discussing it here?
->
-> Placing thermal related time shift operations in a
-> update_*thermal*_load_avg() PELT function look perfectly fine to me.
+Le Tuesday 05 Nov 2019 à 13:49:46 (-0500), Thara Gopinath a écrit :
+> Thermal pressure follows pelt signas which means the
+> decay period for thermal pressure is the default pelt
+> decay period. Depending on soc charecteristics and thermal
+> activity, it might be beneficial to decay thermal pressure
+> slower, but still in-tune with the pelt signals.
+> One way to achieve this is to provide a command line parameter
+> to set a decay shift parameter to an integer between 0 and 10.
+> 
+> Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
+> ---
+> 
+> v4->v5:
+> 	- Changed _coeff to _shift as per review comments on the list.
+> 
+>  Documentation/admin-guide/kernel-parameters.txt |  5 +++++
+>  kernel/sched/fair.c                             | 25 +++++++++++++++++++++++--
+>  2 files changed, 28 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index c82f87c..0b8f55e 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -4281,6 +4281,11 @@
+>  			incurs a small amount of overhead in the scheduler
+>  			but is useful for debugging and performance tuning.
+>  
+> +	sched_thermal_decay_shift=
+> +			[KNL, SMP] Set decay shift for thermal pressure signal.
+> +			Format: integer betweer 0 and 10
+> +			Default is 0.
+> +
+>  	skew_tick=	[KNL] Offset the periodic timer tick per cpu to mitigate
+>  			xtime_lock contention on larger systems, and/or RCU lock
+>  			contention on all systems with CONFIG_MAXSMP set.
+> diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+> index 5f6c371..61a020b 100644
+> --- a/kernel/sched/fair.c
+> +++ b/kernel/sched/fair.c
+> @@ -91,6 +91,18 @@ const_debug unsigned int sysctl_sched_migration_cost	= 500000UL;
+>   * and maximum available capacity due to thermal events.
+>   */
+>  static DEFINE_PER_CPU(unsigned long, thermal_pressure);
+> +/**
+> + * By default the decay is the default pelt decay period.
+> + * The decay shift can change the decay period in
+> + * multiples of 32.
+> + *  Decay shift		Decay period(ms)
+> + *	0			32
+> + *	1			64
+> + *	2			128
+> + *	3			256
+> + *	4			512
+> + */
+> +static int sched_thermal_decay_shift;
+>  
+>  static void trigger_thermal_pressure_average(struct rq *rq);
+>  
+> @@ -10435,6 +10447,15 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
+>  	delta = arch_scale_cpu_capacity(cpu) - capped_capacity;
+>  	per_cpu(thermal_pressure, cpu) = delta;
+>  }
+> +
+> +static int __init setup_sched_thermal_decay_shift(char *str)
+> +{
+> +	if (kstrtoint(str, 0, &sched_thermal_decay_shift))
+> +		pr_warn("Unable to set scheduler thermal pressure decay shift parameter\n");
+> +
+> +	return 1;
+> +}
+> +__setup("sched_thermal_decay_shift=", setup_sched_thermal_decay_shift);
+>  #endif
+>  
+>  /**
+> @@ -10444,8 +10465,8 @@ void update_thermal_pressure(int cpu, unsigned long capped_capacity)
+>  static void trigger_thermal_pressure_average(struct rq *rq)
+>  {
+>  #ifdef CONFIG_SMP
+> -	update_thermal_load_avg(rq_clock_task(rq), rq,
+> -				per_cpu(thermal_pressure, cpu_of(rq)));
+> +	update_thermal_load_avg(rq_clock_task(rq) >> sched_thermal_decay_shift,
+> +				rq, per_cpu(thermal_pressure, cpu_of(rq)));
 
-As already said, having thermal related clock shift operation in
-update_thermal_load_avg and pelt.c is a nack for me
+Would be better to create
 
->
-> > I can make trigger_thermal_pressure_average inline if that will
-> > alleviate some of the concerns.
++static inline u64 rq_clock_thermal(struct rq *rq)
++{
++       lockdep_assert_held(&rq->lock);
++       assert_clock_updated(rq);
++
++       return rq_clock_task(rq) >> sched_thermal_decay_shift;
++}
++
 
-In fact, trigger_thermal_pressure_average is only there because of
-shifting the clock which is introduced only in patch 6.
-So remove trigger_thermal_pressure_average from this patch and call directly
+and use it when calling update_thermal_load_avg(rq_clock_thermal(rq)...
 
-+       update_thermal_load_avg(rq_clock_task(rq), rq,
-+                               per_cpu(thermal_pressure, cpu_of(rq)));
 
-in patch3
-
->
-> That's not the issue here. The issue is the extra shim layer which is
-> unnecessary in the current implementation.
->
-> update_blocked_averages()
-> {
->     ...
->     update_rt_rq_load_avg()
->     update_dl_rq_load_avg()
->     update_irq_load_avg()
->     trigger_thermal_pressure_average() <--- ?
->     ...
-> }
->
-> Wouldn't a direct call to update_thermal_load_avg() here make things so
-> much more clear? And I'm not talking about today and about people
-> involved in this review.
->
-> > I would also urge you to reconsider the merits of arguing this point
-> > back and forth.
->
-> I just did.
->
-> [...]
+>  #endif
+>  }
+>  
+> -- 
+> 2.1.4
+> 
