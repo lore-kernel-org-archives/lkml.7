@@ -2,119 +2,103 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A68AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:19:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EEBEC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:20:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 043012087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:19:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA51D2087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:20:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="YNOYXZtE"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="HbllSLrC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388072AbfKGKTj (ORCPT
+        id S2388027AbfKGKUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:19:39 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:43429 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387831AbfKGKTi (ORCPT
+        Thu, 7 Nov 2019 05:20:37 -0500
+Received: from mail-yb1-f196.google.com ([209.85.219.196]:41107 "EHLO
+        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfKGKUh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:19:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573121976;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=QVyZz1ahjF7M+iWo4uedK2mFPa9wav89AuEX9XZyCnc=;
-        b=YNOYXZtEX09J5QL202sdJT6pox/xkIiRF1yZv1NHT+Iyxs/jyBxfPOfIUhDGgTlWbUKYD2
-        7rjEXu1a7Rmrip58wMtLKpEyyW8LcPcFEsWZobKmXqG+/Y22OTnBDcCL4hHFkeJgx2rrds
-        9n2WHKXPoKaqomSbQizsBWSsiPSrIs0=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-337-Cx0drvkqM2Go8N6RKbHCzw-1; Thu, 07 Nov 2019 05:19:33 -0500
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 262F41005500;
-        Thu,  7 Nov 2019 10:19:29 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 9DF295D6B7;
-        Thu,  7 Nov 2019 10:18:47 +0000 (UTC)
-Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191106133531.693-1-jasowang@redhat.com>
- <20191106133531.693-7-jasowang@redhat.com>
- <20191107040700-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
-Date:   Thu, 7 Nov 2019 18:18:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 7 Nov 2019 05:20:37 -0500
+Received: by mail-yb1-f196.google.com with SMTP id d95so242912ybi.8
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 02:20:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=djmxnkfgo5IC0LeotOkmJPKSf90Q/NYI5vMLUdSE/0c=;
+        b=HbllSLrCMvfgraY6qsfXqJYjR8v4l8SJdb5g45ZCGfzZAK2DWF2upH3pdyKzeQptgR
+         /rO7ydQYlUaumUmthGapoF79dBYfEKYnXm0HCvYM7CmC8b8c/6OeKAPdFD1fOf1/Wg11
+         tpdM8Hhsd+GnObAz6HySsK4Ug4Kp37Y0MYVAjiSVuwd9aYsaEmzFyV9bFINuh1gSIIVt
+         LZiSzEc36IIWydM3MpjJZMDUrp8tDEFNY0jwpGwjFmAc4WTgnkafqsihuC0Y/iighWbz
+         I5Bz3vBT7FfGQWOk+eHbubIGcrSsuIstlbETISvRGY4erTu9JhBIbRCaEExC7NV3mxkm
+         FuHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=djmxnkfgo5IC0LeotOkmJPKSf90Q/NYI5vMLUdSE/0c=;
+        b=YK9zCOPKAU3QE4pv6ZpeF2NIOLRi+OvscZURS83yrBNusU4S/utHLDIU8AKz+kHinw
+         dYp+G+8jxJ/YJiNEWEuNiXczkS1sZIoq8i+k1tTfCI0svoredu9rKenuYg8ZWmYAHQST
+         vxnRhZPmlAzSwer/YwyS/L9SQTkyToN2Qkk7vTggRcSnMKfFPC7DBtnjo/yYZLItdcQk
+         PYHgKyBQurcKRhW1s3hBJEaYGe1rcbVjJSpYO5G/aCWH2HgYd5HP2QEQolQr4sDeIXXU
+         kx4yAm1zdEcb/GT2+KShJh/9H/QNdrGTdpkTww14/t3Unm3QZQRuWWhtwvEpn6yaZjSd
+         xdag==
+X-Gm-Message-State: APjAAAUE1uEQC3op3McAUMdf9BFpbc8DFAhMfh79/vVU7NvLXBr/AUL+
+        RuOVsMmLo8EC1yVD4E+iVW7b3w==
+X-Google-Smtp-Source: APXvYqwBeLTlEWIuKJ4sTRvTfvckJiN0J+dRftpdoo6pE12XjJU7+Qb1XAVjF8+MEwqMFZmISrLVlA==
+X-Received: by 2002:a25:bdcb:: with SMTP id g11mr2576735ybk.359.1573122036522;
+        Thu, 07 Nov 2019 02:20:36 -0800 (PST)
+Received: from leoy-ThinkPad-X240s (li1038-30.members.linode.com. [45.33.96.30])
+        by smtp.gmail.com with ESMTPSA id z14sm600364ywj.74.2019.11.07.02.20.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Thu, 07 Nov 2019 02:20:35 -0800 (PST)
+Date:   Thu, 7 Nov 2019 18:20:29 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Jiri Olsa <jolsa@redhat.com>
+Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Naresh Kamboju <naresh.kamboju@linaro.org>
+Subject: Re: [PATCH v2] perf tests: Fix out of bounds memory access
+Message-ID: <20191107102029.GA32679@leoy-ThinkPad-X240s>
+References: <20191107020244.2427-1-leo.yan@linaro.org>
+ <20191107094226.GC14657@krava>
 MIME-Version: 1.0
-In-Reply-To: <20191107040700-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-MC-Unique: Cx0drvkqM2Go8N6RKbHCzw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191107094226.GC14657@krava>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Nov 07, 2019 at 10:42:26AM +0100, Jiri Olsa wrote:
 
-On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
-> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
->> This sample driver creates mdev device that simulate virtio net device
->> over virtio mdev transport. The device is implemented through vringh
->> and workqueue. A device specific dma ops is to make sure HVA is used
->> directly as the IOVA. This should be sufficient for kernel virtio
->> driver to work.
->>
->> Only 'virtio' type is supported right now. I plan to add 'vhost' type
->> on top which requires some virtual IOMMU implemented in this sample
->> driver.
->>
->> Acked-by: Cornelia Huck<cohuck@redhat.com>
->> Signed-off-by: Jason Wang<jasowang@redhat.com>
-> I'd prefer it that we call this something else, e.g.
-> mvnet-loopback. Just so people don't expect a fully
-> functional device somehow. Can be renamed when applying?
+[...]
 
+> > To fix this issue, we will use evlist__open() and evlist__close() pair
+> > functions to prepare and cleanup context for evlist; so 'evsel->id' and
+> > 'evsel->ids' can be initialized properly when invoke do_test() and avoid
+> > the out of bounds memory access.
+> 
+> right, we need to solve this on libperf level, so it's possible
+> to call mmap/munmap multiple time without close/open.. I'll try
+> to send something, but meanwhile this is good workaround
+> 
+> Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 
-Actually, I plan to extend it as another standard network interface for=20
-kernel. It could be either a standalone pseudo device or a stack device.=20
-Does this sounds good to you?
+Thanks for reviewing, Jiri.
 
-Thanks
+You are welcome to send us the fixing patches, I am glad to test it on
+qemu_arm.
 
-
->
->
-
+Thanks,
+Leo Yan
