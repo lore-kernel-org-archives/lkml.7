@@ -2,138 +2,133 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7372AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30CEBC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38DC62166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E707D21882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:54:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="GK2zmzQS"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="k+BoMVv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388294AbfKGLye (ORCPT
+        id S2388394AbfKGLyn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:54:34 -0500
-Received: from ozlabs.org ([203.11.71.1]:36053 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727178AbfKGLye (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:54:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 4781z871F7z9sP3;
-        Thu,  7 Nov 2019 22:54:28 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573127670;
-        bh=+OqaUvb1czjnKLj7FFJP1J5EwOqrmOwhqu8kZf47j3M=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=GK2zmzQSxVGyhgvYs0tzkcMIwkEmyTnz/zSWM6offu95DbfG3Llkgxx4r+tBceft4
-         4Ta5D1+GkMRx/Ql1gnkLxmr8Chi6MvlBz8CFAzDLc8jzQAaj2xu9rVmuKsBxh6BSyJ
-         EsRwQU96nHFL9dNtSAfdVYrFH/9FQVdh+dmxGIV09oL6eJSlafEFcPTw/EaUIjuJ2j
-         EZVyEyPKixHo/SM+ksr0D2QqBA9eXFbt7OIILwgm6es/jD6lmuGpDd2JWSWdR8HFGv
-         eYzUG6AG3LJ3Tx9WaorS4+YN5t5XUFRd0dcK1+HATaCSmEnHI2HNIJm2TqLqNrTpBc
-         EIv6mdMICtKyg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Alastair D'Silva <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>, Qian Cai <cai@lca.pw>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
+        Thu, 7 Nov 2019 06:54:43 -0500
+Received: from userp2120.oracle.com ([156.151.31.85]:59286 "EHLO
+        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727178AbfKGLyn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 06:54:43 -0500
+Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
+        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7BsGS5065558;
+        Thu, 7 Nov 2019 11:54:29 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=from : to : cc :
+ subject : date : message-id : mime-version : content-transfer-encoding;
+ s=corp-2019-08-05; bh=NfAYcg+x2BRWdeKjZp6DmQCHJxccvsCiuX38sXcbKfQ=;
+ b=k+BoMVv2VPzauh3dpUT209wHIhNZmkCO2vmj17B5OqMefort5Sd3At75HW7qtM+lZZlL
+ qj49U2nbMRZDil62piSCTleg1YicOicQWOdbFULnDQjpK/DB+hWbMScYDrmga/6qKl76
+ ww4tforsylneI+f8Ei1TN2GcgKxKxhrQ182DMnnkrNAt7ygfT2rEnpzjmpfCr4p7rTk0
+ ikDtQUccaCw6cqbVkleOfHCxpKEHqXYL3TH5h/tppeVflVc4tPna3wnVY/d9SFYwvKhi
+ qr0H9stV8m3FQcBZ2A/70mVx6pGeOSVpKZ5Cf7WWi9lCPimrsqlucfXKKUO1SrrWf+Zh qA== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by userp2120.oracle.com with ESMTP id 2w41w0wj46-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 11:54:29 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Bs86B063177;
+        Thu, 7 Nov 2019 11:54:28 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by userp3030.oracle.com with ESMTP id 2w41w9m8h5-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 11:54:28 +0000
+Received: from abhmp0020.oracle.com (abhmp0020.oracle.com [141.146.116.26])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA7BsQfc014595;
+        Thu, 7 Nov 2019 11:54:27 GMT
+Received: from abi.no.oracle.com (/10.172.144.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Thu, 07 Nov 2019 03:54:26 -0800
+From:   Knut Omang <knut.omang@oracle.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, Christoph Lameter <cl@linux.com>,
+        Pekka Enberg <penberg@kernel.org>,
+        David Rientjes <rientjes@google.com>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5 5/6] powerpc: Chunk calls to flush_dcache_range in arch_*_memory
-In-Reply-To: <20191104023305.9581-6-alastair@au1.ibm.com>
-References: <20191104023305.9581-1-alastair@au1.ibm.com> <20191104023305.9581-6-alastair@au1.ibm.com>
-Date:   Thu, 07 Nov 2019 22:54:26 +1100
-Message-ID: <87y2wr52bx.fsf@mpe.ellerman.id.au>
+        Knut Omang <knut.omang@oracle.com>
+Subject: [PATCH] mm: provide interface for retrieving kmem_cache name
+Date:   Thu,  7 Nov 2019 12:54:04 +0100
+Message-Id: <20191107115404.3030723-1-knut.omang@oracle.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=1 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070122
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=1 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070122
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-"Alastair D'Silva" <alastair@au1.ibm.com> writes:
-> From: Alastair D'Silva <alastair@d-silva.org>
->
-> When presented with large amounts of memory being hotplugged
-> (in my test case, ~890GB), the call to flush_dcache_range takes
-> a while (~50 seconds), triggering RCU stalls.
->
-> This patch breaks up the call into 1GB chunks, calling
-> cond_resched() inbetween to allow the scheduler to run.
->
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+With the restructuring done in commit 9adeaa226988
+("mm, slab: move memcg_cache_params structure to mm/slab.h")
 
-I'm going to mark this as:
-  Fixes: fb5924fddf9e ("powerpc/mm: Flush cache on memory hot(un)plug")
+it is no longer possible for code external to mm to access
+the name of a kmem_cache as struct kmem_cache has effectively become
+opaque. Having access to the cache name is helpful to kernel testing
+infrastructure.
 
-Because anyone doing large memory hotplugs on older kernels is going to
-want to backport this to at least that point, otherwise they will see
-the softlockups/RCU stalls.
+Expose a new function kmem_cache_name to mitigate that.
 
-cheers
+Signed-off-by: Knut Omang <knut.omang@oracle.com>
+---
+ include/linux/slab.h | 1 +
+ mm/slab_common.c     | 9 +++++++++
+ 2 files changed, 10 insertions(+)
 
-> diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
-> index 54d61ba15e93..a7b662fc02c8 100644
-> --- a/arch/powerpc/mm/mem.c
-> +++ b/arch/powerpc/mm/mem.c
-> @@ -104,6 +104,27 @@ int __weak remove_section_mapping(unsigned long start, unsigned long end)
->  	return -ENODEV;
->  }
->  
-> +#define FLUSH_CHUNK_SIZE SZ_1G
-> +/**
-> + * flush_dcache_range_chunked(): Write any modified data cache blocks out to
-> + * memory and invalidate them, in chunks of up to FLUSH_CHUNK_SIZE
-> + * Does not invalidate the corresponding instruction cache blocks.
-> + *
-> + * @start: the start address
-> + * @stop: the stop address (exclusive)
-> + * @chunk: the max size of the chunks
-> + */
-> +static void flush_dcache_range_chunked(unsigned long start, unsigned long stop,
-> +				       unsigned long chunk)
-> +{
-> +	unsigned long i;
-> +
-> +	for (i = start; i < stop; i += chunk) {
-> +		flush_dcache_range(i, min(stop, start + chunk));
-> +		cond_resched();
-> +	}
-> +}
-> +
->  int __ref arch_add_memory(int nid, u64 start, u64 size,
->  			struct mhp_restrictions *restrictions)
->  {
-> @@ -120,7 +141,8 @@ int __ref arch_add_memory(int nid, u64 start, u64 size,
->  			start, start + size, rc);
->  		return -EFAULT;
->  	}
-> -	flush_dcache_range(start, start + size);
-> +
-> +	flush_dcache_range_chunked(start, start + size, FLUSH_CHUNK_SIZE);
->  
->  	return __add_pages(nid, start_pfn, nr_pages, restrictions);
->  }
-> @@ -137,7 +159,8 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
->  
->  	/* Remove htab bolted mappings for this section of memory */
->  	start = (unsigned long)__va(start);
-> -	flush_dcache_range(start, start + size);
-> +	flush_dcache_range_chunked(start, start + size, FLUSH_CHUNK_SIZE);
-> +
->  	ret = remove_section_mapping(start, start + size);
->  	WARN_ON_ONCE(ret);
->  
-> -- 
-> 2.21.0
+diff --git a/include/linux/slab.h b/include/linux/slab.h
+index 4d2a2fa55ed5..3298c9db6e46 100644
+--- a/include/linux/slab.h
++++ b/include/linux/slab.h
+@@ -702,6 +702,7 @@ static inline void *kzalloc_node(size_t size, gfp_t flags, int node)
+ }
+ 
+ unsigned int kmem_cache_size(struct kmem_cache *s);
++const char *kmem_cache_name(struct kmem_cache *s);
+ void __init kmem_cache_init_late(void);
+ 
+ #if defined(CONFIG_SMP) && defined(CONFIG_SLAB)
+diff --git a/mm/slab_common.c b/mm/slab_common.c
+index f9fb27b4c843..269a99dc8214 100644
+--- a/mm/slab_common.c
++++ b/mm/slab_common.c
+@@ -82,6 +82,15 @@ unsigned int kmem_cache_size(struct kmem_cache *s)
+ }
+ EXPORT_SYMBOL(kmem_cache_size);
+ 
++/*
++ * Get the name of a slab object
++ */
++const char *kmem_cache_name(struct kmem_cache *s)
++{
++	return s->name;
++}
++EXPORT_SYMBOL(kmem_cache_name);
++
+ #ifdef CONFIG_DEBUG_VM
+ static int kmem_cache_sanity_check(const char *name, unsigned int size)
+ {
+-- 
+2.20.1
+
