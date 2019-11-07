@@ -2,95 +2,114 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_SANE_2 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21A1AC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:30:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF4AFC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC28121D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:30:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="ZyzDE7CM"
+	by mail.kernel.org (Postfix) with ESMTP id AE205214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:31:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726951AbfKGGah (ORCPT
+        id S1727042AbfKGGb4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:30:37 -0500
-Received: from mail-m974.mail.163.com ([123.126.97.4]:55064 "EHLO
-        mail-m974.mail.163.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725938AbfKGGah (ORCPT
+        Thu, 7 Nov 2019 01:31:56 -0500
+Received: from mailgw02.mediatek.com ([210.61.82.184]:4198 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1725938AbfKGGb4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:30:37 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=v/B2ToBpKvai59daRL
-        vVEWSvI0l4Py53TzTQJCqwvY4=; b=ZyzDE7CMx/26AcilhkRkb8FnIdJj+f91rb
-        3M7lm5tp2CIoMVz/mzhBkKdupchxo6bfGb7RxmjMNZasOQ/7WnxK9USR6h41npcj
-        WsiqUbipL/DAZvskwmA4MCAbQDHiHnDUVY8sksgthZlFoqsdNcB952vNOLTaIWHo
-        IiJO7+SW0=
-Received: from localhost.localdomain (unknown [202.112.113.212])
-        by smtp4 (Coremail) with SMTP id HNxpCgD3dtviucNdteMLBg--.305S3;
-        Thu, 07 Nov 2019 14:30:03 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     "David S. Miller" <davem@davemloft.net>,
-        Johannes Berg <johannes.berg@intel.com>,
-        Steve Winslow <swinslow@gmail.com>,
-        Young Xiao <92siuyang@gmail.com>,
-        Allison Randal <allison@lohutok.net>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        Andrey Konovalov <andreyknvl@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: [PATCH v2] nfc: netlink: fix double device reference drop
-Date:   Thu,  7 Nov 2019 14:29:50 +0800
-Message-Id: <1573108190-30836-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: HNxpCgD3dtviucNdteMLBg--.305S3
-X-Coremail-Antispam: 1Uf129KBjvdXoWrKw17Zr1xuF47JF4UtF18Zrb_yoWfXFcEy3
-        4rtr4UWrn8X3s3Ja12kw4UAF9FywnFqr4xCF4SkrWxZa45Zan8uw4kZ39xAry7uw43AFWj
-        q3WkJrW8t347XjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUbEoGJUUUUU==
-X-Originating-IP: [202.112.113.212]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBZAtmclQHHg832AAAsW
+        Thu, 7 Nov 2019 01:31:56 -0500
+X-UUID: 4bf44e95849642a39768ccdc4a4fedfc-20191107
+X-UUID: 4bf44e95849642a39768ccdc4a4fedfc-20191107
+Received: from mtkexhb01.mediatek.inc [(172.21.101.102)] by mailgw02.mediatek.com
+        (envelope-from <ck.hu@mediatek.com>)
+        (Cellopoint E-mail Firewall v4.1.10 Build 0809 with TLS)
+        with ESMTP id 492975280; Thu, 07 Nov 2019 14:31:48 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs08n1.mediatek.inc (172.21.101.55) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Thu, 7 Nov 2019 14:31:45 +0800
+Received: from [172.21.77.4] (172.21.77.4) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Thu, 7 Nov 2019 14:31:44 +0800
+Message-ID: <1573108306.14882.0.camel@mtksdaap41>
+Subject: Re: [PATCH v16 1/5] soc: mediatek: cmdq: remove OR opertaion from
+ err return
+From:   CK Hu <ck.hu@mediatek.com>
+To:     Bibby Hsieh <bibby.hsieh@mediatek.com>
+CC:     Jassi Brar <jassisinghbrar@gmail.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>,
+        <srv_heupstream@mediatek.com>,
+        Nicolas Boichat <drinkcat@chromium.org>,
+        Dennis-YC Hsieh <dennis-yc.hsieh@mediatek.com>,
+        Houlong Wei <houlong.wei@mediatek.com>
+Date:   Thu, 7 Nov 2019 14:31:46 +0800
+In-Reply-To: <20191024052732.7767-2-bibby.hsieh@mediatek.com>
+References: <20191024052732.7767-1-bibby.hsieh@mediatek.com>
+         <20191024052732.7767-2-bibby.hsieh@mediatek.com>
+Content-Type: text/plain; charset="UTF-8"
+X-Mailer: Evolution 3.10.4-0ubuntu2 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The function nfc_put_device(dev) is called twice to drop the reference
-to dev when there is no associated local llcp. Remove one of them to fix
-the bug.
+Hi, Bibby:
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
-v2: change subject of the patch
----
- net/nfc/netlink.c | 2 --
- 1 file changed, 2 deletions(-)
+On Thu, 2019-10-24 at 13:27 +0800, Bibby Hsieh wrote:
+> That make debugging confuseidly when we OR two error return number.
 
-diff --git a/net/nfc/netlink.c b/net/nfc/netlink.c
-index 17e6ca62f1be..afde0d763039 100644
---- a/net/nfc/netlink.c
-+++ b/net/nfc/netlink.c
-@@ -1099,7 +1099,6 @@ static int nfc_genl_llc_set_params(struct sk_buff *skb, struct genl_info *info)
- 
- 	local = nfc_llcp_find_local(dev);
- 	if (!local) {
--		nfc_put_device(dev);
- 		rc = -ENODEV;
- 		goto exit;
- 	}
-@@ -1159,7 +1158,6 @@ static int nfc_genl_llc_sdreq(struct sk_buff *skb, struct genl_info *info)
- 
- 	local = nfc_llcp_find_local(dev);
- 	if (!local) {
--		nfc_put_device(dev);
- 		rc = -ENODEV;
- 		goto exit;
- 	}
--- 
-2.7.4
+Reviewed-by: CK Hu <ck.hu@mediatek.com>
+
+> 
+> Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+> ---
+>  drivers/soc/mediatek/mtk-cmdq-helper.c | 11 ++++++++---
+>  1 file changed, 8 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/soc/mediatek/mtk-cmdq-helper.c b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> index 7aa0517ff2f3..5ea509e86488 100644
+> --- a/drivers/soc/mediatek/mtk-cmdq-helper.c
+> +++ b/drivers/soc/mediatek/mtk-cmdq-helper.c
+> @@ -149,13 +149,16 @@ int cmdq_pkt_write_mask(struct cmdq_pkt *pkt, u8 subsys,
+>  			u16 offset, u32 value, u32 mask)
+>  {
+>  	u32 offset_mask = offset;
+> -	int err = 0;
+> +	int err;
+>  
+>  	if (mask != 0xffffffff) {
+>  		err = cmdq_pkt_append_command(pkt, CMDQ_CODE_MASK, 0, ~mask);
+> +		if (err < 0)
+> +			return err;
+> +
+>  		offset_mask |= CMDQ_WRITE_ENABLE_MASK;
+>  	}
+> -	err |= cmdq_pkt_write(pkt, value, subsys, offset_mask);
+> +	err = cmdq_pkt_write(pkt, value, subsys, offset_mask);
+>  
+>  	return err;
+>  }
+> @@ -197,9 +200,11 @@ static int cmdq_pkt_finalize(struct cmdq_pkt *pkt)
+>  
+>  	/* insert EOC and generate IRQ for each command iteration */
+>  	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_EOC, 0, CMDQ_EOC_IRQ_EN);
+> +	if (err < 0)
+> +		return err;
+>  
+>  	/* JUMP to end */
+> -	err |= cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+> +	err = cmdq_pkt_append_command(pkt, CMDQ_CODE_JUMP, 0, CMDQ_JUMP_PASS);
+>  
+>  	return err;
+>  }
+
 
