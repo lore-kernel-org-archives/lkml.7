@@ -2,84 +2,164 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.5 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E56EFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:43:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F15CFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:43:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E2E18206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:43:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573087381;
-	bh=UTVHUVLnw94mErMgc3mb4c/r+hXx2TwuFuhCk/5qd+M=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=nQsi/+SyMrZeoA/+L5p8cOQ+uvv2TPUJVDU7bwmahlyqoAoZzjIw8gdhCmxVZ7Ha5
-	 8TJP3BV5ulwS1fhrbdqzCmxC2MV7VoaXeoMNANc3h7h79ziYDzNZxMaHL76LNZYXTZ
-	 31jiQ4UXxfRPvhddTEX4bzWHI5v1LhcndVM/hSeo=
+	by mail.kernel.org (Postfix) with ESMTP id 14545206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:43:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=flygoat.com header.i=@flygoat.com header.b="sjCi6TAV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732433AbfKGAm4 (ORCPT
+        id S1732614AbfKGAnw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:42:56 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:43215 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725989AbfKGAm4 (ORCPT
+        Wed, 6 Nov 2019 19:43:52 -0500
+Received: from forward101j.mail.yandex.net ([5.45.198.241]:46196 "EHLO
+        forward101j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725989AbfKGAnw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:42:56 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l20so407036oie.10;
-        Wed, 06 Nov 2019 16:42:55 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=+jCXm676NpywEWdAf4lo3fuBb+Mll4pKKjbBJhrgPA0=;
-        b=O0fVsbI10ZMEGFT/gz6kVs1MuQRh4flrEu7yMDeSQxYMrqRElWNXKk9yCZFu4zT5Hx
-         lwetC639HaAITNiGVOa83aPX3sn9d5f7RW6Oww2Tvfi5ti+frZK3uKb4Mu8IdiAqpknM
-         Q08ZemqrGBLrZmqYOz5Ug3sUmD1UdOv+6Bub628VlzH46vYocxEo07LBo3eGeLHOWbWj
-         LKGaScLUflivO55aZmPl9siBsbAuuRddHz9VkgiW1RSs1AFLrcGq7BOb8Z/c/9qlsEgu
-         GcYBys8CPTc3E4t4UehH08rzAsssBeuCrAKBU63+pztpdqzS7W1lfbpO35mzfjDmFYd1
-         W81Q==
-X-Gm-Message-State: APjAAAUjkjPw7dP4hGqFG84zWA4u2opmInZ/z7ZV11F5dH/yTBsOddTU
-        xq5a0XH1R2+e0ZFBhhdt7g==
-X-Google-Smtp-Source: APXvYqwFd7zCI9Il/rOvDXBEazmenzKa569K1JnbqfmXdXS7AQ3Ly2V2g0lny9aPjxdKR8Suc+ADSw==
-X-Received: by 2002:aca:dd0a:: with SMTP id u10mr787269oig.130.1573087375384;
-        Wed, 06 Nov 2019 16:42:55 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id g1sm209874otr.5.2019.11.06.16.42.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:42:54 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:42:54 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Saravana Kannan <saravanak@google.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Frank Rowand <frowand.list@gmail.com>,
-        Saravana Kannan <saravanak@google.com>,
-        kernel-team@android.com, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org
-Subject: Re: [PATCH v1 3/3] of: property: Add device link support for iommus,
-  mboxes and io-channels
-Message-ID: <20191107004254.GB11401@bogus>
-References: <20191105065000.50407-1-saravanak@google.com>
- <20191105065000.50407-4-saravanak@google.com>
+        Wed, 6 Nov 2019 19:43:52 -0500
+X-Greylist: delayed 462 seconds by postgrey-1.27 at vger.kernel.org; Wed, 06 Nov 2019 19:43:49 EST
+Received: from forward103q.mail.yandex.net (forward103q.mail.yandex.net [IPv6:2a02:6b8:c0e:50:0:640:b21c:d009])
+        by forward101j.mail.yandex.net (Yandex) with ESMTP id A1BAB1BE0623;
+        Thu,  7 Nov 2019 03:36:04 +0300 (MSK)
+Received: from mxback1q.mail.yandex.net (mxback1q.mail.yandex.net [IPv6:2a02:6b8:c0e:39:0:640:25b3:aea5])
+        by forward103q.mail.yandex.net (Yandex) with ESMTP id 9727561E0008;
+        Thu,  7 Nov 2019 03:36:04 +0300 (MSK)
+Received: from vla1-5ff4bc6b92b2.qloud-c.yandex.net (vla1-5ff4bc6b92b2.qloud-c.yandex.net [2a02:6b8:c0d:4201:0:640:5ff4:bc6b])
+        by mxback1q.mail.yandex.net (mxback/Yandex) with ESMTP id k9BSR2EgXn-a4jO0oEg;
+        Thu, 07 Nov 2019 03:36:04 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=flygoat.com; s=mail; t=1573086964;
+        bh=0Lq6YwOkfrlpCshPIicsfPK85Gw3mJANsusjyAh4AFE=;
+        h=From:To:Subject:CC:References:Date:In-Reply-To:Message-ID;
+        b=sjCi6TAV4u82WZ/hff7MhhJxOolG1r5XZ/xDCX2o/7UAHSF7WBQk9y0cyAkACgifr
+         kBzHO0TSv6+SgIEE3mAzyz8nFDcB696tGCe90N6iaXOfgi5l+9XoECVBlTqARKtk9h
+         ZkI/RMa89sCwbU62pvBNa2QifNOqqCQb4EJN05X0=
+Authentication-Results: mxback1q.mail.yandex.net; dkim=pass header.i=@flygoat.com
+Received: by vla1-5ff4bc6b92b2.qloud-c.yandex.net (smtp/Yandex) with ESMTPSA id TouxWHQ1UQ-a2VCkA8f;
+        Thu, 07 Nov 2019 03:36:02 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Date:   Thu, 07 Nov 2019 08:35:48 +0800
+User-Agent: K-9 Mail for Android
+In-Reply-To: <1573056341-21159-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1573056341-21159-1-git-send-email-yangtiezhu@loongson.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191105065000.50407-4-saravanak@google.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH] MIPS: Scan the DMI system information
+To:     Tiezhu Yang <yangtiezhu@loongson.cn>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>
+CC:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yinglu Yang <yangyinglu@loongson.cn>
+From:   Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <480995AF-A678-479F-A3EA-11662474E600@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  4 Nov 2019 22:50:00 -0800, Saravana Kannan wrote:
-> Add support for creating device links out of more DT properties.
-> 
-> Signed-off-by: Saravana Kannan <saravanak@google.com>
-> ---
->  drivers/of/property.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+
+=E4=BA=8E 2019=E5=B9=B411=E6=9C=887=E6=97=A5 GMT+08:00 =E4=B8=8A=E5=8D=881=
+2:05:41, Tiezhu Yang <yangtiezhu@loongson=2Ecn> =E5=86=99=E5=88=B0:
+>Enable DMI scanning on the MIPS architecture, this setups DMI
+>identifiers
+>(dmi_system_id) for printing it out on task dumps and prepares DIMM
+>entry
+>information (dmi_memdev_info) from the SMBIOS table=2E With this patch,
+>the
+>driver can easily match various of mainboards=2E
+>
+>In the SMBIOS reference specification, the table anchor string "_SM_"
+>is
+>present in the address range 0xF0000 to 0xFFFFF on a 16-byte boundary,
+>but there exists a special case for loongson platform, when call
+>function
+>dmi_early_remap, it should specify the start address to 0xFFFE000 due
+>to
+>it is reserved for SMBIOS and can be normally access in the BIOS=2E
+>
+>Co-developed-by: Yinglu Yang <yangyinglu@loongson=2Ecn>
+>Signed-off-by: Yinglu Yang <yangyinglu@loongson=2Ecn>
+>Signed-off-by: Tiezhu Yang <yangtiezhu@loongson=2Ecn>
+>---
+> arch/mips/Kconfig           | 12 ++++++++++++
+>arch/mips/include/asm/dmi=2Eh | 43
+>+++++++++++++++++++++++++++++++++++++++++++
+> arch/mips/kernel/setup=2Ec    |  2 ++
+> 3 files changed, 57 insertions(+)
+> create mode 100644 arch/mips/include/asm/dmi=2Eh
+>
+>diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>index 7cb8947=2E=2E0a67b18 100644
+>--- a/arch/mips/Kconfig
+>+++ b/arch/mips/Kconfig
+>@@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
+> 	  Enable hardware performance counter support for perf events=2E If
+> 	  disabled, perf events will use software events only=2E
+>=20
+>+# Mark as expert because too many people got it wrong=2E
+>+# The code disables itself when not needed=2E
+>+config DMI
+>+	default y
+>+	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+>+	bool "Enable DMI scanning" if EXPERT
+>+	help
+>+	  Enabled scanning of DMI to identify machine quirks=2E Say Y
+>+	  here unless you have verified that your setup is not
+>+	  affected by entries in the DMI blacklist=2E Required by PNP
+>+	  BIOS code=2E
+>+
+> config SMP
+> 	bool "Multi-Processing support"
+> 	depends on SYS_SUPPORTS_SMP
+>diff --git a/arch/mips/include/asm/dmi=2Eh b/arch/mips/include/asm/dmi=2E=
+h
+>new file mode 100644
+>index 0000000=2E=2E1f3da37
+>--- /dev/null
+>+++ b/arch/mips/include/asm/dmi=2Eh
+>@@ -0,0 +1,43 @@
+>+/* SPDX-License-Identifier: GPL-2=2E0 */
+>+#ifndef _ASM_MIPS_DMI_H
+>+#define _ASM_MIPS_DMI_H
+>+
+>+#define dmi_early_remap		mips_early_memremap
+>+#define dmi_early_unmap		mips_early_memunmap
+>+#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
+>+#define dmi_unmap(_x)		mips_memunmap(_x)
+>+
+>+#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
+>+
+>+void __init *mips_early_memremap(resource_size_t phys_addr, unsigned
+>long size)
+>+{
+>+#if defined(CONFIG_MACH_LOONGSON64)
+>+	if (phys_addr =3D=3D 0xF0000)
+>+		phys_addr =3D 0xFFFE000;
+>+
+>+	return (void *)TO_CAC(phys_addr);
+>+#else
+>+	return NULL;
+>+#endif
+>+}
+
+Hi Tiezhu,
+
+It is really tricky to hijack dmi address here during remap=2E
+I think we should set the dmi table address at  dmi_scan=2Ec by a marco or=
+ something else rather than hijack it during remap=2E
+
+Btw: Probably we should set DMI default y when MACH_LOONGSON64 is set?
+
+Thanks=2E
+
+--=20
+Jiaxun Yang
