@@ -2,585 +2,140 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3B57C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:42:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D337C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:44:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7B71F2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:42:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573166579;
-	bh=6xz/ABRBrv++wXhElnR3QeBSuoGgLeNQrOoA813p7qg=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=oQLclKhKHWKj0LvnukXkT/dxfzDME6sGQ6uloLv4NGA5Xey1Gacfma0yr/ub3zdMp
-	 J8LmYNTr8KHmhYW0jy8/JDr4VO6s5D5wFoUo/wEJNHPwoZrNXDzhoT86KlFEMgelOy
-	 BnnQoCQ9DMBDMPAc73ZClUCc8cMrPAYy4mIVa58Y=
+	by mail.kernel.org (Postfix) with ESMTP id EE0162187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:44:04 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="3nFOxHmp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728183AbfKGWm6 (ORCPT
+        id S1727693AbfKGWoD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:42:58 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:33924 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726932AbfKGWm6 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:42:58 -0500
-Received: by mail-oi1-f193.google.com with SMTP id l202so3557293oig.1;
-        Thu, 07 Nov 2019 14:42:57 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=zJvK/6JW1krikKRy92QCVYywLVAzEehynOsXWSJxglE=;
-        b=YygxF9xG3PtD/qfIIpIr9JOMyjQYNNOuI+EfWeuSnE9vvUPi5rfHR6y3gW0lpVu3xB
-         4P7u+yqsmD1Wm3MYHSzB/8ZZlZ/kvD/jLDox8apCHrC19WzxOvcyoDkq6GGMlf/mRfXK
-         hNFR0rn1DYTa9CBUayjoNQSBiiI2n7PLPDMwA2uoUYlm4Bm28FLgMwFbsevkgXeJuzXt
-         xzTpKUEHkEpBaQ6QVT1p+l5NvhOhoV0yWNRcXeoX5j2tEULlrMeBsYpJZLfxY3ZEAZLg
-         OGUeB6MQG59TsBcKzgj3Q9zX7hy9uFVbNC7E2jopWAt7rcleBab6+S8ASJy2J1EJDfKu
-         eikA==
-X-Gm-Message-State: APjAAAUakn7S8JRlh6hpiQMDI3kw5/t0xHblIsvg0mwutPfy1iKnN4wx
-        X+37+56a8tVSRrdWHCBe62tGlrU=
-X-Google-Smtp-Source: APXvYqwKuBrT1J/M9g2v20XbY+whoCvslnbX1iEPr4ZmFqyDt+iMNZK8id4kkbZXCA/cP3anKux64Q==
-X-Received: by 2002:a54:4812:: with SMTP id j18mr6044989oij.53.1573166576240;
-        Thu, 07 Nov 2019 14:42:56 -0800 (PST)
-Received: from xps15.herring.priv (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.googlemail.com with ESMTPSA id t206sm413509oib.30.2019.11.07.14.42.55
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 14:42:55 -0800 (PST)
-From:   Rob Herring <robh@kernel.org>
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Maxime Ripard <mripard@kernel.org>, linux-gpio@vger.kernel.org
-Subject: [PATCH] dt-bindings: pinctrl: Convert generic pin mux and config properties to schema
-Date:   Thu,  7 Nov 2019 16:42:54 -0600
-Message-Id: <20191107224254.15712-1-robh@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Thu, 7 Nov 2019 17:44:03 -0500
+Received: from mail-eopbgr820054.outbound.protection.outlook.com ([40.107.82.54]:17692
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725992AbfKGWoD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:44:03 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=B/e1ANGTBTS1qJhfFcVL2LLTStSPbSD5J359ENfMOVXynbGy7gM07I6VJrnLp9EBlyY2P7stpLoPPKkQvsUtvQw7rdgeRsCjxjn4eKfkvtIqdQmzgG7tU89lI2BETZCuuvLAo9AuIt2Vd+DlBh7L6d9b21vb8V690wYuEdlBI3Z6zyEiLe8MZqHs58UTeyiEQwTLVPhssBAKo4h+TYOgwDMxtjp9dVcwXZLhZpDK8BtSylqzCO3lcOj2mB3dQgvzQk0BD+Uukt40xI9xCpYw5zwjxHV5l1OuQDBRGzd6dPg9bDSZ9jdvKMbciqPQ/zrQeeAw2HjmvaqNtRq8jup3NQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fb62Vy/faSokp0T320ArZnB9rF78SgShDuWoOYYWHw8=;
+ b=dgntx5U1SViztoV9XQYgAfm+tu2bophvARn1QHPKzxiETsZLGdUywOEbspkbdEbKzcYw3zTU79Hu5uKyeHt5o8wtx4Rl7RGayhlP+m7sQIUHwXDjgu9W9Kqsr/qqfE8CnGXdmnHlwapb9mEXUdAU5exBj5w9w2ihRS08OesMHkUMRA6oiNOqJjyPAsd6yLSnrxvOG32mOnvMocv+X+ZN0icsH02rj/XeT/jpHIjoi3PcCOwzX4SlNJdnNLBkextg0cG+dPtE4kYCxy63A6dOA6hO7qtUBYDyeFc0fZslOfLo8NOKCXZj7yyPUbSvOi8eiiJ5PPAfdmDRWu/nITqXmw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Fb62Vy/faSokp0T320ArZnB9rF78SgShDuWoOYYWHw8=;
+ b=3nFOxHmpLOd6RYYBtbJaBHDDWM2DhI+qTu5OQCbpSyzgJH/149GodEcQCcMU7bIM9QF1IotnEsPu/0ikoX01yEfZOpJPj76bm/Li0LYuNuRnPVv61MUOaZnxGcumlkrHyhgH6Kp2zPv+EXaJNep0e5AUmOXsYkrxbF4y3cwOnyc=
+Received: from CY4PR12MB1813.namprd12.prod.outlook.com (10.175.80.21) by
+ CY4PR12MB1624.namprd12.prod.outlook.com (10.172.69.15) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.24; Thu, 7 Nov 2019 22:43:21 +0000
+Received: from CY4PR12MB1813.namprd12.prod.outlook.com
+ ([fe80::dc23:193b:9619:a4fc]) by CY4PR12MB1813.namprd12.prod.outlook.com
+ ([fe80::dc23:193b:9619:a4fc%4]) with mapi id 15.20.2408.025; Thu, 7 Nov 2019
+ 22:43:21 +0000
+From:   "Deucher, Alexander" <Alexander.Deucher@amd.com>
+To:     Bjorn Helgaas <helgaas@kernel.org>,
+        "Koenig, Christian" <Christian.Koenig@amd.com>,
+        "Zhou, David(ChunMing)" <David1.Zhou@amd.com>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>
+CC:     Bjorn Helgaas <bhelgaas@google.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>,
+        Frederick Lawler <fred@fredlawl.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 0/2] drm: replace magic nuumbers
+Thread-Topic: [PATCH 0/2] drm: replace magic nuumbers
+Thread-Index: AQHVlbmp0mAqJ9DIz02QItAkIGuxDaeATYQg
+Date:   Thu, 7 Nov 2019 22:43:20 +0000
+Message-ID: <CY4PR12MB1813997898E8B03859E5F457F7780@CY4PR12MB1813.namprd12.prod.outlook.com>
+References: <20191107222047.125496-1-helgaas@kernel.org>
+In-Reply-To: <20191107222047.125496-1-helgaas@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Alexander.Deucher@amd.com; 
+x-originating-ip: [71.219.59.120]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 5d6da0a3-65a6-4796-c0ec-08d763d3e430
+x-ms-traffictypediagnostic: CY4PR12MB1624:
+x-ms-exchange-purlcount: 1
+x-ms-exchange-transport-forked: True
+x-microsoft-antispam-prvs: <CY4PR12MB162422E794599A2B66363D82F7780@CY4PR12MB1624.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:5797;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(346002)(136003)(39860400002)(366004)(376002)(396003)(13464003)(189003)(199004)(25786009)(66946007)(66446008)(64756008)(316002)(110136005)(54906003)(66556008)(66476007)(2906002)(478600001)(966005)(256004)(4326008)(8676002)(8936002)(81166006)(81156014)(6436002)(33656002)(5660300002)(26005)(476003)(99286004)(6506007)(86362001)(6246003)(486006)(229853002)(11346002)(53546011)(102836004)(446003)(7696005)(52536014)(76176011)(9686003)(66066001)(6306002)(55016002)(7736002)(305945005)(6116002)(3846002)(186003)(76116006)(71190400001)(71200400001)(14454004)(74316002);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR12MB1624;H:CY4PR12MB1813.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: wQnRaEQs4ysiLeJocYdw32TjtpitgUqWy27HpwFo4kcXHdh0rfaPNgf/mvRgNJ2FQJjzsIp1ZyCAZMfUEbukuXfV9oOY6oftN6QY/JuGmrIGW40mFTtYhwZCpBJYcxmoblg7QwdATNX/JsaJM6GxjIpbWnpnvBQPr8hN6U9W/uyv5yIxKG05K9a2j5mx959yw4nwkaM0hkqNGajNGPOJg/UKiq75sWqB1LAquiEC8KK1NI8BYyAAOcNoNNCVk0Gzizy785n7QHGpj7GtCnfIfs8vKyzlRCkFZY5oCse2dGzfQVowP6WNv1/YwS2Kkm+SuOW5z8BXg/Sakr1EZPSDrBFCKDS+L0lTKRsvJPFW8iPduynRgx8Bb8tqthKCoEIQezhGYX8xQq803HaNclWdtBJ10tYjwlFvf5+Iv2tvrBRDLEdiLhdzeTRa2SBIcuNNjAH0PTIEcL3HwP3WOjxRwIgB42Cxr79ea9ucPNt6SMA=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5d6da0a3-65a6-4796-c0ec-08d763d3e430
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 22:43:20.8186
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: Qg/PlKxoFNXb2vXr8t2MqTr66f/t5xZDK3Ldlucylrk+4Xf8l4BagvfvTYe5dRG/0gDwGhCtQxo+90dETKdfpw==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR12MB1624
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As pinctrl bindings have a flexible structure and no standard child node
-naming convention, creating a single pinctrl schema doesn't work. Instead,
-create schemas for the pin mux and config nodes which device pinctrl schema
-can reference.
-
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-gpio@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
-
-We're starting to see pinctrl schema doing their own definitions for
-generic properties, so we need to get something in place to reference.
-
-Maybe this could be combined into a single schema? Spliting it was
-easier in order to just copy over the existing documentation.
-
-Reading thru pinctrl-bindings.txt, I'm wondering if some of it is out
-of date. Do we let new bindings not use the generic muxing properties?
-Do we really need to be so flexible for child node structure?
-
-Rob
-
- .../bindings/pinctrl/pincfg-node.yaml         | 140 +++++++++++++
- .../bindings/pinctrl/pinctrl-bindings.txt     | 192 +-----------------
- .../bindings/pinctrl/pinmux-node.yaml         | 132 ++++++++++++
- 3 files changed, 274 insertions(+), 190 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
- create mode 100644 Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-
-diff --git a/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-new file mode 100644
-index 000000000000..13b7ab9dd6d5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pincfg-node.yaml
-@@ -0,0 +1,140 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/pincfg-node.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic pin configuration node schema
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description:
-+  Many data items that are represented in a pin configuration node are common
-+  and generic. Pin control bindings should use the properties defined below
-+  where they are applicable; not all of these properties are relevant or useful
-+  for all hardware or binding structures. Each individual binding document
-+  should state which of these generic properties, if any, are used, and the
-+  structure of the DT nodes that contain these properties.
-+
-+properties:
-+  bias-disable:
-+    type: boolean
-+    description: disable any pin bias
-+
-+  bias-high-impedance:
-+    type: boolean
-+    description: high impedance mode ("third-state", "floating")
-+
-+  bias-bus-hold:
-+    type: boolean
-+    description: latch weakly
-+
-+  bias-pull-up:
-+    oneOf:
-+      - type: boolean
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: pull up the pin. Takes as optional argument on hardware
-+      supporting it the pull strength in Ohm.
-+
-+  bias-pull-down:
-+    oneOf:
-+      - type: boolean
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: pull down the pin. Takes as optional argument on hardware
-+      supporting it the pull strength in Ohm.
-+
-+  bias-pull-pin-default:
-+    oneOf:
-+      - type: boolean
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+    description: use pin-default pull state. Takes as optional argument on
-+      hardware supporting it the pull strength in Ohm.
-+
-+  drive-push-pull:
-+    type: boolean
-+    description: drive actively high and low
-+
-+  drive-open-drain:
-+    type: boolean
-+    description: drive with open drain
-+
-+  drive-open-source:
-+    type: boolean
-+    description: drive with open source
-+
-+  drive-strength:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: sink or source at most X mA
-+
-+  drive-strength-microamp:
-+    description: sink or source at most X uA
-+
-+  input-enable:
-+    type: boolean
-+    description: enable input on pin (no effect on output, such as
-+      enabling an input buffer)
-+
-+  input-disable:
-+    type: boolean
-+    description: disable input on pin (no effect on output, such as
-+      disabling an input buffer)
-+
-+  input-schmitt-enable:
-+    type: boolean
-+    description: enable schmitt-trigger mode
-+
-+  input-schmitt-disable:
-+    type: boolean
-+    description: disable schmitt-trigger mode
-+
-+  input-debounce:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: Takes the debounce time in usec as argument or 0 to disable
-+      debouncing
-+
-+  power-source:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: select between different power supplies
-+
-+  low-power-enable:
-+    type: boolean
-+    description: enable low power mode
-+
-+  low-power-disable:
-+    type: boolean
-+    description: disable low power mode
-+
-+  output-disable:
-+    type: boolean
-+    description: disable output on a pin (such as disable an output buffer)
-+
-+  output-enable:
-+    type: boolean
-+    description: enable output on a pin without actively driving it
-+      (such as enabling an output buffer)
-+
-+  output-low:
-+    type: boolean
-+    description: set the pin to output mode with low level
-+
-+  output-high:
-+    type: boolean
-+    description: set the pin to output mode with high level
-+
-+  sleep-hardware-state:
-+    type: boolean
-+    description: indicate this is sleep related state which will be
-+      programmed into the registers for the sleep state.
-+
-+  slew-rate:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description: set the slew rate
-+
-+  skew-delay:
-+    $ref: /schemas/types.yaml#/definitions/uint32
-+    description:
-+      this affects the expected clock skew on input pins
-+      and the delay before latching a value to an output
-+      pin. Typically indicates how many double-inverters are
-+      used to delay the signal.
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index fcd37e93ed4d..4613bb17ace3 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -141,196 +141,8 @@ controller device.
- 
- == Generic pin multiplexing node content ==
- 
--pin multiplexing nodes:
--
--function		- the mux function to select
--groups			- the list of groups to select with this function
--			  (either this or "pins" must be specified)
--pins			- the list of pins to select with this function (either
--			  this or "groups" must be specified)
--
--Example:
--
--state_0_node_a {
--	uart0 {
--		function = "uart0";
--		groups = "u0rxtx", "u0rtscts";
--	};
--};
--state_1_node_a {
--	spi0 {
--		function = "spi0";
--		groups = "spi0pins";
--	};
--};
--state_2_node_a {
--	function = "i2c0";
--	pins = "mfio29", "mfio30";
--};
--
--Optionally an alternative binding can be used if more suitable depending on the
--pin controller hardware. For hardware where there is a large number of identical
--pin controller instances, naming each pin and function can easily become
--unmaintainable. This is especially the case if the same controller is used for
--different pins and functions depending on the SoC revision and packaging.
--
--For cases like this, the pin controller driver may use pinctrl-pin-array helper
--binding with a hardware based index and a number of pin configuration values:
--
--pincontroller {
--	... /* Standard DT properties for the device itself elided */
--	#pinctrl-cells = <2>;
--
--	state_0_node_a {
--		pinctrl-pin-array = <
--			0 A_DELAY_PS(0) G_DELAY_PS(120)
--			4 A_DELAY_PS(0) G_DELAY_PS(360)
--			...
--		>;
--	};
--	...
--};
--
--Above #pinctrl-cells specifies the number of value cells in addition to the
--index of the registers. This is similar to the interrupts-extended binding with
--one exception. There is no need to specify the phandle for each entry as that
--is already known as the defined pins are always children of the pin controller
--node. Further having the phandle pointing to another pin controller would not
--currently work as the pinctrl framework uses named modes to group pins for each
--pin control device.
--
--The index for pinctrl-pin-array must relate to the hardware for the pinctrl
--registers, and must not be a virtual index of pin instances. The reason for
--this is to avoid mapping of the index in the dts files and the pin controller
--driver as it can change.
--
--For hardware where pin multiplexing configurations have to be specified for
--each single pin the number of required sub-nodes containing "pin" and
--"function" properties can quickly escalate and become hard to write and
--maintain.
--
--For cases like this, the pin controller driver may use the pinmux helper
--property, where the pin identifier is provided with mux configuration settings
--in a pinmux group. A pinmux group consists of the pin identifier and mux
--settings represented as a single integer or an array of integers.
--
--The pinmux property accepts an array of pinmux groups, each of them describing
--a single pin multiplexing configuration.
--
--pincontroller {
--	state_0_node_a {
--		pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
--	};
--};
--
--Each individual pin controller driver bindings documentation shall specify
--how pin IDs and pin multiplexing configuration are defined and assembled
--together in a pinmux group.
-+See pinmux-node.yaml
- 
- == Generic pin configuration node content ==
- 
--Many data items that are represented in a pin configuration node are common
--and generic. Pin control bindings should use the properties defined below
--where they are applicable; not all of these properties are relevant or useful
--for all hardware or binding structures. Each individual binding document
--should state which of these generic properties, if any, are used, and the
--structure of the DT nodes that contain these properties.
--
--Supported generic properties are:
--
--pins			- the list of pins that properties in the node
--			  apply to (either this, "group" or "pinmux" has to be
--			  specified)
--group			- the group to apply the properties to, if the driver
--			  supports configuration of whole groups rather than
--			  individual pins (either this, "pins" or "pinmux" has
--			  to be specified)
--pinmux			- the list of numeric pin ids and their mux settings
--			  that properties in the node apply to (either this,
--			  "pins" or "groups" have to be specified)
--bias-disable		- disable any pin bias
--bias-high-impedance	- high impedance mode ("third-state", "floating")
--bias-bus-hold		- latch weakly
--bias-pull-up		- pull up the pin
--bias-pull-down		- pull down the pin
--bias-pull-pin-default	- use pin-default pull state
--drive-push-pull		- drive actively high and low
--drive-open-drain	- drive with open drain
--drive-open-source	- drive with open source
--drive-strength		- sink or source at most X mA
--drive-strength-microamp	- sink or source at most X uA
--input-enable		- enable input on pin (no effect on output, such as
--			  enabling an input buffer)
--input-disable		- disable input on pin (no effect on output, such as
--			  disabling an input buffer)
--input-schmitt-enable	- enable schmitt-trigger mode
--input-schmitt-disable	- disable schmitt-trigger mode
--input-debounce		- debounce mode with debound time X
--power-source		- select between different power supplies
--low-power-enable	- enable low power mode
--low-power-disable	- disable low power mode
--output-disable		- disable output on a pin (such as disable an output
--			  buffer)
--output-enable		- enable output on a pin without actively driving it
--			  (such as enabling an output buffer)
--output-low		- set the pin to output mode with low level
--output-high		- set the pin to output mode with high level
--sleep-hardware-state	- indicate this is sleep related state which will be programmed
--			  into the registers for the sleep state.
--slew-rate		- set the slew rate
--skew-delay		- this affects the expected clock skew on input pins
--			  and the delay before latching a value to an output
--			  pin. Typically indicates how many double-inverters are
--			  used to delay the signal.
--
--For example:
--
--state_0_node_a {
--	cts_rxd {
--		pins = "GPIO0_AJ5", "GPIO2_AH4"; /* CTS+RXD */
--		bias-pull-up;
--	};
--};
--state_1_node_a {
--	rts_txd {
--		pins = "GPIO1_AJ3", "GPIO3_AH3"; /* RTS+TXD */
--		output-high;
--	};
--};
--state_2_node_a {
--	foo {
--		group = "foo-group";
--		bias-pull-up;
--	};
--};
--state_3_node_a {
--	mux {
--		pinmux = <GPIOx_PINm_MUXn>, <GPIOx_PINj_MUXk)>;
--		input-enable;
--	};
--};
--
--Some of the generic properties take arguments. For those that do, the
--arguments are described below.
--
--- pins takes a list of pin names or IDs as a required argument. The specific
--  binding for the hardware defines:
--  - Whether the entries are integers or strings, and their meaning.
--
--- pinmux takes a list of pin IDs and mux settings as required argument. The
--  specific bindings for the hardware defines:
--  - How pin IDs and mux settings are defined and assembled together in a single
--    integer or an array of integers.
--
--- bias-pull-up, -down and -pin-default take as optional argument on hardware
--  supporting it the pull strength in Ohm. bias-disable will disable the pull.
--
--- drive-strength takes as argument the target strength in mA.
--
--- drive-strength-microamp takes as argument the target strength in uA.
--
--- input-debounce takes the debounce time in usec as argument
--  or 0 to disable debouncing
--
--More in-depth documentation on these parameters can be found in
--<include/linux/pinctrl/pinconf-generic.h>
-+See pincfg-node.yaml
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-new file mode 100644
-index 000000000000..777623a57fd5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pinctrl/pinmux-node.yaml
-@@ -0,0 +1,132 @@
-+# SPDX-License-Identifier: GPL-2.0-only
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/pinctrl/pinmux-node.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Generic pin multiplexing node schema
-+
-+maintainers:
-+  - Linus Walleij <linus.walleij@linaro.org>
-+
-+description: |
-+  The contents of the pin configuration child nodes are defined by the binding
-+  for the individual pin controller device. The pin configuration nodes need not
-+  be direct children of the pin controller device; they may be grandchildren,
-+  for example. Whether this is legal, and whether there is any interaction
-+  between the child and intermediate parent nodes, is again defined entirely by
-+  the binding for the individual pin controller device.
-+
-+  While not required to be used, there are 3 generic forms of pin muxing nodes
-+  which pin controller devices can use.
-+
-+  pin multiplexing nodes:
-+
-+  Example:
-+
-+  state_0_node_a {
-+    uart0 {
-+      function = "uart0";
-+      groups = "u0rxtx", "u0rtscts";
-+    };
-+  };
-+  state_1_node_a {
-+    spi0 {
-+      function = "spi0";
-+      groups = "spi0pins";
-+    };
-+  };
-+  state_2_node_a {
-+    function = "i2c0";
-+    pins = "mfio29", "mfio30";
-+  };
-+
-+  Optionally an alternative binding can be used if more suitable depending on the
-+  pin controller hardware. For hardware where there is a large number of identical
-+  pin controller instances, naming each pin and function can easily become
-+  unmaintainable. This is especially the case if the same controller is used for
-+  different pins and functions depending on the SoC revision and packaging.
-+
-+  For cases like this, the pin controller driver may use pinctrl-pin-array helper
-+  binding with a hardware based index and a number of pin configuration values:
-+
-+  pincontroller {
-+    ... /* Standard DT properties for the device itself elided */
-+    #pinctrl-cells = <2>;
-+
-+    state_0_node_a {
-+      pinctrl-pin-array = <
-+        0 A_DELAY_PS(0) G_DELAY_PS(120)
-+        4 A_DELAY_PS(0) G_DELAY_PS(360)
-+        ...
-+        >;
-+    };
-+    ...
-+  };
-+
-+  Above #pinctrl-cells specifies the number of value cells in addition to the
-+  index of the registers. This is similar to the interrupts-extended binding with
-+  one exception. There is no need to specify the phandle for each entry as that
-+  is already known as the defined pins are always children of the pin controller
-+  node. Further having the phandle pointing to another pin controller would not
-+  currently work as the pinctrl framework uses named modes to group pins for each
-+  pin control device.
-+
-+  The index for pinctrl-pin-array must relate to the hardware for the pinctrl
-+  registers, and must not be a virtual index of pin instances. The reason for
-+  this is to avoid mapping of the index in the dts files and the pin controller
-+  driver as it can change.
-+
-+  For hardware where pin multiplexing configurations have to be specified for
-+  each single pin the number of required sub-nodes containing "pin" and
-+  "function" properties can quickly escalate and become hard to write and
-+  maintain.
-+
-+  For cases like this, the pin controller driver may use the pinmux helper
-+  property, where the pin identifier is provided with mux configuration settings
-+  in a pinmux group. A pinmux group consists of the pin identifier and mux
-+  settings represented as a single integer or an array of integers.
-+
-+  The pinmux property accepts an array of pinmux groups, each of them describing
-+  a single pin multiplexing configuration.
-+
-+  pincontroller {
-+    state_0_node_a {
-+      pinmux = <PINMUX_GROUP>, <PINMUX_GROUP>, ...;
-+    };
-+  };
-+
-+  Each individual pin controller driver bindings documentation shall specify
-+  how pin IDs and pin multiplexing configuration are defined and assembled
-+  together in a pinmux group.
-+
-+properties:
-+  function:
-+    $ref: /schemas/types.yaml#/definitions/string
-+    description: The mux function to select
-+
-+  pins:
-+    oneOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - $ref: /schemas/types.yaml#/definitions/string-array
-+    description:
-+      The list of pin identifiers that properties in the node apply to. The
-+      specific binding for the hardware defines whether the entries are integers
-+      or strings, and their meaning.
-+
-+  group:
-+    $ref: /schemas/types.yaml#/definitions/string-array
-+    description:
-+      the group to apply the properties to, if the driver supports
-+      configuration of whole groups rather than individual pins (either
-+      this, "pins" or "pinmux" has to be specified)
-+
-+  pinmux:
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+    description:
-+      The list of numeric pin ids and their mux settings that properties in the
-+      node apply to (either this, "pins" or "groups" have to be specified)
-+
-+  pinctrl-pin-array:
-+    $ref: /schemas/types.yaml#/definitions/uint32-array
--- 
-2.20.1
-
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBhbWQtZ2Z4IDxhbWQtZ2Z4LWJv
+dW5jZXNAbGlzdHMuZnJlZWRlc2t0b3Aub3JnPiBPbiBCZWhhbGYgT2YNCj4gQmpvcm4gSGVsZ2Fh
+cw0KPiBTZW50OiBUaHVyc2RheSwgTm92ZW1iZXIgNywgMjAxOSA1OjIxIFBNDQo+IFRvOiBEZXVj
+aGVyLCBBbGV4YW5kZXIgPEFsZXhhbmRlci5EZXVjaGVyQGFtZC5jb20+OyBLb2VuaWcsIENocmlz
+dGlhbg0KPiA8Q2hyaXN0aWFuLktvZW5pZ0BhbWQuY29tPjsgWmhvdSwgRGF2aWQoQ2h1bk1pbmcp
+DQo+IDxEYXZpZDEuWmhvdUBhbWQuY29tPjsgRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4Lmll
+PjsgRGFuaWVsIFZldHRlcg0KPiA8ZGFuaWVsQGZmd2xsLmNoPg0KPiBDYzogQmpvcm4gSGVsZ2Fh
+cyA8YmhlbGdhYXNAZ29vZ2xlLmNvbT47IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmc7
+DQo+IGFtZC1nZnhAbGlzdHMuZnJlZWRlc2t0b3Aub3JnOyBGcmVkZXJpY2sgTGF3bGVyIDxmcmVk
+QGZyZWRsYXdsLmNvbT47DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4gU3ViamVj
+dDogW1BBVENIIDAvMl0gZHJtOiByZXBsYWNlIG1hZ2ljIG51dW1iZXJzDQo+IA0KPiBGcm9tOiBC
+am9ybiBIZWxnYWFzIDxiaGVsZ2Fhc0Bnb29nbGUuY29tPg0KPiANCj4gYW1kZ3B1IGFuZCByYWRl
+b24gZG8gYSBiaXQgb2YgbXVja2luZyB3aXRoIHRoZSBQQ0llIExpbmsgQ29udHJvbCAyIHJlZ2lz
+dGVyLA0KPiBzb21lIG9mIGl0IHVzaW5nIGhhcmQtY29kZWQgbWFnaWMgbnVtYmVycy4gIFRoZSBp
+ZGVhIGhlcmUgaXMgdG8gcmVwbGFjZQ0KPiB0aG9zZSB3aXRoICNkZWZpbmVzLg0KPiANCj4gSSBo
+YXZlbid0IHNpZ25lZCBvZmYgb24gdGhlc2UgYmVjYXVzZSB0aGUgZmlyc3Qgb25lIGFjdHVhbGx5
+IGNoYW5nZXMgdGhlIGJpdHMNCj4gaW52b2x2ZWQgYmVjYXVzZSB0aGUgZXhpc3RpbmcgY29kZSBs
+b29rcyBsaWtlIGl0IG1pZ2h0IGhhdmUgYSB0eXBvLg0KPiBCdXQgSSBoYXZlIG5vIHdheSB0byBr
+bm93IGZvciBzdXJlLg0KPiANCg0KSXQgaXMgYSB0eXBvLiAgWW91ciBwYXRjaGVzIGxvb2sgY29y
+cmVjdCB0byBtZS4gIFRoZSBzZXJpZXMgaXM6DQpSZXZpZXdlZC1ieTogQWxleCBEZXVjaGVyIDxh
+bGV4YW5kZXIuZGV1Y2hlckBhbWQuY29tPg0KDQo+IEkgZG9uJ3QgaW50ZW5kIHRoZSBUYXJnZXQg
+TGluayBTcGVlZCBwYXRjaCB0byBjaGFuZ2UgYW55dGhpbmcsIHNvIGl0IHNob3VsZCBiZQ0KPiBz
+dHJhaWdodGZvcndhcmQgdG8gcmV2aWV3Lg0KPiANCj4gQmpvcm4gSGVsZ2FhcyAoMik6DQo+ICAg
+ZHJtOiByZXBsYWNlIENvbXBsaWFuY2UvTWFyZ2luIG1hZ2ljIG51bWJlcnMgd2l0aCBQQ0lfRVhQ
+X0xOS0NUTDINCj4gICAgIGRlZmluaXRpb25zDQo+ICAgZHJtOiByZXBsYWNlIFRhcmdldCBMaW5r
+IFNwZWVkIG1hZ2ljIG51bWJlcnMgd2l0aCBQQ0lfRVhQX0xOS0NUTDINCj4gICAgIGRlZmluaXRp
+b25zDQo+IA0KPiAgZHJpdmVycy9ncHUvZHJtL2FtZC9hbWRncHUvY2lrLmMgfCAyMiArKysrKysr
+KysrKysrKy0tLS0tLS0tDQo+IGRyaXZlcnMvZ3B1L2RybS9hbWQvYW1kZ3B1L3NpLmMgIHwgMTgg
+KysrKysrKysrKystLS0tLS0tDQo+ICBkcml2ZXJzL2dwdS9kcm0vcmFkZW9uL2Npay5jICAgICB8
+IDIyICsrKysrKysrKysrKysrLS0tLS0tLS0NCj4gIGRyaXZlcnMvZ3B1L2RybS9yYWRlb24vc2ku
+YyAgICAgIHwgMjIgKysrKysrKysrKysrKystLS0tLS0tLQ0KPiAgaW5jbHVkZS91YXBpL2xpbnV4
+L3BjaV9yZWdzLmggICAgfCAgMiArKw0KPiAgNSBmaWxlcyBjaGFuZ2VkLCA1NSBpbnNlcnRpb25z
+KCspLCAzMSBkZWxldGlvbnMoLSkNCj4gDQo+IC0tDQo+IDIuMjQuMC5yYzEuMzYzLmdiMWJjY2Qz
+ZTNkLWdvb2cNCj4gDQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fDQo+IGFtZC1nZnggbWFpbGluZyBsaXN0DQo+IGFtZC1nZnhAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnDQo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+YW1kLWdmeA0K
