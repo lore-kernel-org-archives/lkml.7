@@ -2,103 +2,162 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B669C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14081C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 045AA2084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1DE32085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:10:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="gThPoZTR"
+	dkim=pass (2048-bit key) header.d=gateworks-com.20150623.gappssmtp.com header.i=@gateworks-com.20150623.gappssmtp.com header.b="E4yuGYMS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfKGTKE (ORCPT
+        id S1727728AbfKGTKb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:10:04 -0500
-Received: from mout.gmx.net ([212.227.15.15]:38345 "EHLO mout.gmx.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726656AbfKGTKD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:10:03 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
-        s=badeba3b8450; t=1573153788;
-        bh=+jCINLffjUOyT+IY08Y5zx4Vxskk9OJZTse82HsxTz4=;
-        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
-        b=gThPoZTR1eidwzNRwz/Rpz8F9GxRZbr8OjLint+Fa57V8TMbCKrq3pr5YwOSBFmIB
-         u4pqHGnosQL6RsGqMG2MM9FRiYx7qmMMECkcnuseUPXPHgvpdANoOHqHZcAuZE2PYk
-         con9IEykthBhd6QArNo0lkZaKfFxtOJCVOZH3daI=
-X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
-Received: from [192.168.1.167] ([37.4.249.112]) by mail.gmx.com (mrgmx005
- [212.227.17.190]) with ESMTPSA (Nemesis) id 1N1fn0-1hn1Ge0GNM-011zQB; Thu, 07
- Nov 2019 20:09:48 +0100
-Subject: Re: [PATCH v3 1/2] ARM: dts: bcm2711: force CMA into first GB of
- memory
-To:     Florian Fainelli <f.fainelli@gmail.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Eric Anholt <eric@anholt.net>, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20191107095611.18429-1-nsaenzjulienne@suse.de>
- <20191107095611.18429-2-nsaenzjulienne@suse.de>
- <20191107112020.GA16965@arrakis.emea.arm.com>
- <4f82d3b5-fe5e-03a5-220e-f1431cb3a50c@gmail.com>
-From:   Stefan Wahren <wahrenst@gmx.net>
-Message-ID: <8c84654e-f91e-7865-0cf7-99b30820b7d0@gmx.net>
-Date:   Thu, 7 Nov 2019 20:09:46 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        Thu, 7 Nov 2019 14:10:31 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:32931 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725851AbfKGTKb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:10:31 -0500
+Received: by mail-il1-f193.google.com with SMTP id m5so2852943ilq.0
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 11:10:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gateworks-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Pkb5jMFuLCEWCYW/JsNLSSIWv1a87ksEuR1XT2B21OU=;
+        b=E4yuGYMS1pq9v1+WF35EsKgSb9HtDZWkJ3jNVKnVOGnXkuxGKERzeomvsq61IKZ+BS
+         5vDnyoe59CafR7ujung+DFAh5VrxhyezrfAPIK46pLKEGDol4nS0bHrghLG1+x8cP+Tz
+         XWUXgXGAWb8K+OefOWhoAmQ6PtfilZ7rpXyTKa4SB3qk0/4cnIWvk218Qha95C9QUZdP
+         awkOnTqUy+AocpO/EOWrjgGMutNupXwNBRObdnRnLCRIkg5KqEFN18PnhUM/IkRgjdT0
+         9bDxLZtA6buuUF4XI8ScG6JyWq3De1yqQKC53DMhnvo4wkyS+H61eoKPf70b+0N44EcV
+         lLiQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Pkb5jMFuLCEWCYW/JsNLSSIWv1a87ksEuR1XT2B21OU=;
+        b=cJK4tqjPzsMb9oXYtRu1syq6Lk2HOQErbcySdKt0Bou6UWx9NiSbAPHPFsyCJImr3a
+         ga5jeB/RJHG9JSJcoBIXVfLIWdO+2uOsIoytcICLVrnZtVF0LHsj5VRkBzzy1LnRw/q9
+         IjahZV8niPjV1oA0Wt8IQ/o3CcDLDfIp+COyIHjmSQ4hI3k19PGODdzjtJqLZEkVxV4r
+         87PSQyemduw/m+k7mZ1zsubiaCZiu6nlhOK9k1kvmSY85Ru+Dz92hrWmvYAEVENVhIGZ
+         0vt4bhwZlmgPG0xGBwzdm7cKW10NJoVfyG4iDCFtz6fdF8KZnq+sq+hUd3uV2PG+I9Pd
+         CuJQ==
+X-Gm-Message-State: APjAAAUl4bnxHVJ2HM8Gh2vRLvkfA1ETNeza7hCylCV7rIKqpYAjgbcT
+        Yb/J1dViAythns2tUjiHwhkY11pk2eCs3+YN7y5MoA==
+X-Google-Smtp-Source: APXvYqwHrMqf0QGsixAbdr9YO/brEv5lOHVZjAT153yUV3MxVGAnMIC9SdFTs2dZJSNR204F/AOxPhvAJj2cdqQv4XA=
+X-Received: by 2002:a92:3b04:: with SMTP id i4mr6543252ila.211.1573153830610;
+ Thu, 07 Nov 2019 11:10:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <4f82d3b5-fe5e-03a5-220e-f1431cb3a50c@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Provags-ID: V03:K1:ds3wIfCrqN8mXv4xV2yOkIAZhuvU/WXha9+QIZbz4jW5afq1ugo
- nxjvgEy4zXDiM3p6JevaZKdzdE1nVBUQS5rVNVX7LWE3+B06qt0Zdoi9xkuuhXBb+9hTNDK
- qIM8qmvGI0T3IGX9yQlLDgzn2yIGy1ft1bPIHFQ7zXqXayblhOKRNUs6yC+9sbQHFggoFyH
- EfjC1oBZCE8lPFuiBoHuQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:fnoUzY9B470=:Ck+piXC91e3UO6kAhBaICU
- 7ygijkBy5cG7QMTWiwVxlGSUIZ41eFePjzKTNBmlqFU6iyAYaxLvn5Yq9Z0oPwmQAzwRw47zX
- 3oU3JDLceXv21bdCiFtvGtLi4/aC+gzHPr/wfv3SSZCJdprq4ncTsuZaa3SPabyiO7z6ZSMhW
- FocRvE3+PuegJUKVimw3Lo4Y9U64vBcy6Q/gINOyZG2lNL+TJZ51VabJsNO6R1HRqbQr8PCJL
- RnJnLnZIaB61JxLTqx/DWAJacDV1NW6WGDmkYwC8O9wCYOY568oQLIntI2MI/rIPfmBBdQRps
- DZjO2AEd1Apd8MCL6NjxWyY1iAm3q/NsvdpCHEstg3fBtY0VwxWEnwRLM4fMOjYlKXBr1L00r
- 5IwCLZWa/VWV828GOSqIotecrZmZm6OOSjG3u0UHzPqKLdUz0OKFcm8725FoSTazqAeMDDwbU
- JTyyM/jB8vrTs5P07tkfHHVD3Z2GUJOwbqKGT7UCO/a96djW9iPasBBi1OzjN4t3BxLroMlh0
- OYr8baQYeLQdSH7wWqZjMzM1tKewa5yV2WKUY2O1MNDimmseaO+Gw335DZg5RmnRKrtlvEb8K
- uEjaI+iJCGK6OnX5Qb+Khm5dTHlGVNx1yRJ+08zlG29IEq+EqGsfhs7+wiksGu2qjusvALi7I
- 8NaaLrjRoa7ATT16j2xuNbLpgjIp3lcKhzqsw+vIHZsPx91oVeNWuEAZCPnlZWihvtPkbQUor
- 2u4pD7FlpOxAHOGMXRcpQoYhTlF7MPowy1cfUsBEvXBy9C83rvggrj2A2XqSvjkXLKoBM40eT
- YIUG7RqiS/+2zS4bInx5b1OFicvrzYdemOuPoc/6p5g+WktzQZhZ+Wc9vzkbS038L46VopI+q
- 0Fx3I91zjQ0gtnUytX8TKy7evYlxjAp13OTH11SIGXl7x0JFcWL5kOPrkiLlZ+s2qk+RL0V5m
- qTDhxhgLQLjnjogcyW+G0gn9S82KIr1Oy8xa8dtVYrQw+3qsET16ky4cpsisAuxB4hixxVcxl
- RI7BzRBqC2H7hwssXmBYs9yD9OGhXD/+CBeViiV4ORu4TsEfL+rzM+BIPyvbf5GDBPs+nxyUJ
- Sf+RjIOfVKNH76+Xzd+Ctk1bfcxpzSF5DKWoPacS+u7CtKiO56DwwgdiE3w/icuO7fyKziVAM
- Se46vmhmq61yCYmrTKjr7LxZZSk2XgxMDu+HlEiVa3oFJ9N+83ZcqKhHxrM9ZCPm+9g4rn0lV
- 54Nf6g/sANuMDnSQ1LOmHGrG0UcVkaVaUbRdHbdrlGXj6xa4OIQGmuoxgCLk=
+References: <20191021205426.28825-1-rjones@gateworks.com>
+In-Reply-To: <20191021205426.28825-1-rjones@gateworks.com>
+From:   Bobby Jones <rjones@gateworks.com>
+Date:   Thu, 7 Nov 2019 11:10:19 -0800
+Message-ID: <CALAE=UAEFobA2SXOTJWAqexg+VNN_VTXGLGH+VwqqjKkuFwddg@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: ventana: add fxos8700 on gateworks boards
+To:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Sascha Hauer <s.hauer@pengutronix.de>,
+        Marco Felsch <m.felsch@pengutronix.de>
+Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
+        Fabio Estevam <festevam@gmail.com>,
+        NXP Linux Team <linux-imx@nxp.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hello Shawn,
 
-Am 07.11.19 um 18:59 schrieb Florian Fainelli:
-> On 11/7/19 3:20 AM, Catalin Marinas wrote:
->> Hi Nicolas,
-...
->> Sorry, I just realised I can't merge this as it depends on a patch
->> that's only in -next: 7dbe8c62ceeb ("ARM: dts: Add minimal Raspberry Pi
->> 4 support").
->>
->> I'll queue the second patch in the series to fix the regression
->> introduces by the ZONE_DMA patches and, AFAICT, the dts update can be
->> queued independently.
-> I will take it directly, unless you have more stuff coming Stefan?
-Please take. Thanks
+I just wanted to follow up with this and see if you had a chance to
+look at this. I submitted this after responding to Marco on my initial
+submission but haven't heard anything since and didn't want it to fall
+through the cracks. It may be worth mentioning that both the bindings
+for the fxos8700 and lsm9ds1 have been accepted by iio.
 
-Stefan
+In addition to this submission I have the following that I'd like to
+check in on as well:
+
+[PATCH] ARM: dts: imx: imx6qdl-gw553x.dtsi: add lsm9ds1 iio imu/magn support
+[PATCH] ARM: dts: imx: Add GW5907
+[PATCH] ARM: dts: imx: Add GW5912
+[PATCH] ARM: dts: imx: Add GW5913
+[PATCH] ARM: dts: imx: Add GW5910
+
+Please let me know if there's anything I can do. Thanks!
+
+Regards,
+Bobby
+
+
+
+
+On Mon, Oct 21, 2019 at 1:54 PM Robert Jones <rjones@gateworks.com> wrote:
+>
+> Add fxos8700 iio imu entries for Gateworks ventana SBCs.
+>
+> Signed-off-by: Robert Jones <rjones@gateworks.com>
+> ---
+>  arch/arm/boot/dts/imx6qdl-gw52xx.dtsi | 5 +++++
+>  arch/arm/boot/dts/imx6qdl-gw53xx.dtsi | 5 +++++
+>  arch/arm/boot/dts/imx6qdl-gw54xx.dtsi | 5 +++++
+>  3 files changed, 15 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> index 1a9a9d9..2d7d01e 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw52xx.dtsi
+> @@ -313,6 +313,11 @@
+>                 interrupts = <12 2>;
+>                 wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>         };
+> +
+> +       fxos8700@1e {
+> +               compatible = "nxp,fxos8700";
+> +               reg = <0x1e>;
+> +       };
+>  };
+>
+>  &ldb {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> index 54b2bea..bf1a2c6 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw53xx.dtsi
+> @@ -304,6 +304,11 @@
+>                 interrupts = <11 2>;
+>                 wakeup-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;
+>         };
+> +
+> +       fxos8700@1e {
+> +               compatible = "nxp,fxos8700";
+> +               reg = <0x1e>;
+> +       };
+>  };
+>
+>  &ldb {
+> diff --git a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> index 1b6c133..d9e09a9 100644
+> --- a/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-gw54xx.dtsi
+> @@ -361,6 +361,11 @@
+>                 interrupts = <12 2>;
+>                 wakeup-gpios = <&gpio7 12 GPIO_ACTIVE_LOW>;
+>         };
+> +
+> +       fxos8700@1e {
+> +               compatible = "nxp,fxos8700";
+> +               reg = <0x1e>;
+> +       };
+>  };
+>
+>  &ldb {
+> --
+> 2.9.2
+>
