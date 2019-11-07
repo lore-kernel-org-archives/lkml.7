@@ -2,107 +2,93 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF97C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:49:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84F66C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:49:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A89720656
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:49:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 40CE820656
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:49:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="XTUJaW+r";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JlkrQlTX"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OMTs0Kwi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388060AbfKGJt0 (ORCPT
+        id S2388069AbfKGJtt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:49:26 -0500
-Received: from smtp.codeaurora.org ([198.145.29.96]:33056 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGJt0 (ORCPT
+        Thu, 7 Nov 2019 04:49:49 -0500
+Received: from merlin.infradead.org ([205.233.59.134]:59020 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGJts (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:49:26 -0500
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id BF5A060EA7; Thu,  7 Nov 2019 09:49:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573120165;
-        bh=nxy+6T9NnllQijOQ36oQRnPl7rCsl63sjjuRwTYBbok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XTUJaW+riPnABOShCYhB+OCyikjiHTeVb7bXQsSSe+WqHItLUkI8dSUisRC1f/ihQ
-         MPiFDxKstQrmIFFKiNQK8zgVPhfynAIbuoICKlm7qLYjhrdvBFeFMl8MNj/HUr1kvc
-         fkZrild8B3Vs639H+Bel58NdiUtMth5Nfg0bhWvs=
-Received: from pacamara-linux.qualcomm.com (i-global254.qualcomm.com [199.106.103.254])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: cang@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C0DD060CA5;
-        Thu,  7 Nov 2019 09:49:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1573120161;
-        bh=nxy+6T9NnllQijOQ36oQRnPl7rCsl63sjjuRwTYBbok=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=JlkrQlTXjkp3+VoGxH0MahNj6W5hFWq2pt8pHM2RV8h5Yp3ArlUI5HcHrBEx4TpYy
-         DrrPEvsOC8N6cb90mj9HyBBeGnesCq0hi4PClafRrf8KLi87wAjI7w3Oum6qJ95DJy
-         ISM03syxFvnOmVgRZQllY8w4xu2akfrZ9+9iVLLQ=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C0DD060CA5
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=cang@codeaurora.org
-From:   Can Guo <cang@codeaurora.org>
-To:     asutoshd@codeaurora.org, nguyenb@codeaurora.org,
-        rnayak@codeaurora.org, linux-scsi@vger.kernel.org,
-        kernel-team@android.com, saravanak@google.com, salyzyn@google.com,
-        cang@codeaurora.org
-Cc:     Alim Akhtar <alim.akhtar@samsung.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Pedro Sousa <pedrom.sousa@synopsys.com>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Stanley Chu <stanley.chu@mediatek.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Venkat Gopalakrishnan <venkatg@codeaurora.org>,
-        Subhash Jadavani <subhashj@codeaurora.org>,
-        linux-kernel@vger.kernel.org (open list)
-Subject: [PATCH v2 6/6] scsi: ufs: Fix ufshcd_hold() caused scheduling while atomic
-Date:   Thu,  7 Nov 2019 01:47:57 -0800
-Message-Id: <1573120078-15547-7-git-send-email-cang@codeaurora.org>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1573120078-15547-1-git-send-email-cang@codeaurora.org>
-References: <1573120078-15547-1-git-send-email-cang@codeaurora.org>
+        Thu, 7 Nov 2019 04:49:48 -0500
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4/YlrvbO3+I6jJmxrnw6nxmMB83D4J2ofaqNrEMIKkU=; b=OMTs0KwiJbDOIiFZ9Yuo2F98/
+        QwhMr0x7w60Rl+lYwDEcbe+g+FFVjZCMYuqUJ6FUadKy/G+3yxLjNJYPL2wY/W6xJXqa4lRDuD1iL
+        xbXj5EXOUbD9U8DesIlgUM8e474v1KbmI4mQqEPrug1RqE7pzvd4NrQauqetWsdOJFqeblNsieGZr
+        coQI3RF4LYceHEUDjSj+vDOKlTwL4ltGjpU0pZnMRDGHf4L2sVmeXQeCxBqtGKSAfxxs6vY+6CGHS
+        fzKc2M8JLQTJSPo1upwY8Aam1ZkFAgl9145bzThrltCwUGTcfDfU5wimJhaiilW2QFfD5ev35L+ll
+        luUp1EWRw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=noisy.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
+        id 1iSeQD-0002zR-TN; Thu, 07 Nov 2019 09:49:46 +0000
+Received: from hirez.programming.kicks-ass.net (hirez.programming.kicks-ass.net [192.168.1.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (Client did not present a certificate)
+        by noisy.programming.kicks-ass.net (Postfix) with ESMTPS id 6F2673040CB;
+        Thu,  7 Nov 2019 10:48:39 +0100 (CET)
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id DB4DD203C2B8B; Thu,  7 Nov 2019 10:49:43 +0100 (CET)
+Date:   Thu, 7 Nov 2019 10:49:43 +0100
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Darren Hart <darren@dvhart.com>,
+        Yi Wang <wang.yi59@zte.com.cn>,
+        Yang Tao <yang.tao172@zte.com.cn>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Florian Weimer <fweimer@redhat.com>,
+        Carlos O'Donell <carlos@redhat.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>
+Subject: Re: [patch 09/12] futex: Provide state handling for exec() as well
+Message-ID: <20191107094943.GF4131@hirez.programming.kicks-ass.net>
+References: <20191106215534.241796846@linutronix.de>
+ <20191106224556.753355618@linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20191106224556.753355618@linutronix.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The async version of ufshcd_hold(async == true), which is only called
-in queuecommand path as for now, is expected to work in atomic context,
-thus it should not sleep or schedule out. When it runs into the condition
-that clocks are ON but link is still in hibern8 state, it should bail out
-without flushing the clock ungate work.
+On Wed, Nov 06, 2019 at 10:55:43PM +0100, Thomas Gleixner wrote:
 
-Signed-off-by: Can Guo <cang@codeaurora.org>
----
- drivers/scsi/ufs/ufshcd.c | 5 +++++
- 1 file changed, 5 insertions(+)
+> +static void futex_cleanup_end(struct task_struct *tsk, int state)
+> +{
+> +	/*
+> +	 * Lockless store. The only side effect is that an observer might
+> +	 * take another loop until it becomes visible.
+> +	 */
+> +	tsk->futex_state = state;
 
-diff --git a/drivers/scsi/ufs/ufshcd.c b/drivers/scsi/ufs/ufshcd.c
-index d2d56f8..3910c58 100644
---- a/drivers/scsi/ufs/ufshcd.c
-+++ b/drivers/scsi/ufs/ufshcd.c
-@@ -1545,6 +1545,11 @@ int ufshcd_hold(struct ufs_hba *hba, bool async)
- 		 */
- 		if (ufshcd_can_hibern8_during_gating(hba) &&
- 		    ufshcd_is_link_hibern8(hba)) {
-+			if (async) {
-+				rc = -EAGAIN;
-+				hba->clk_gating.active_reqs--;
-+				break;
-+			}
- 			spin_unlock_irqrestore(hba->host->host_lock, flags);
- 			flush_work(&hba->clk_gating.ungate_work);
- 			spin_lock_irqsave(hba->host->host_lock, flags);
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+As I mentioned yesterday, paranoia would've made me write this as
+smp_store_release(), also to avoid it creaping back into the locked
+region.
+
+That is, the comment above deals with it being visible late, but it
+could be visible early.
+
+At the same time, if this is a release, what does it pair with. The
+obvious place would be the load in handle_exit_race() but that didn't
+want to make sense last night -- and I'm not sure it wants to make more
+sense today.
 
