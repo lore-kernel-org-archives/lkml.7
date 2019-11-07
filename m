@@ -2,114 +2,89 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBE51C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E1E5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9EB442178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:00:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375E921882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:01:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573131666;
+	bh=/kIrVp51INVnGZ+Kk+9uLG4BcqnGFSk3GAAMx/W7RMw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=vR9VviSDRKGJcAuaVZwicUqlTwcwv5/vsbRsQFhv8D1Ed7mtrZKy3WFlx65GvJxYr
+	 vRO2wGEj6xaNbNON11+Kvs/J34p5HvDSZgRM+2mE7iIyF5KG4OyABsGhTd5oCR9FXA
+	 Cq5MpFm7FBRPINXOrSkA5o82MDJ7R5BgiS3aAefQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388729AbfKGNAa (ORCPT
+        id S2388775AbfKGNBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:00:30 -0500
-Received: from foss.arm.com ([217.140.110.172]:55734 "EHLO foss.arm.com"
+        Thu, 7 Nov 2019 08:01:05 -0500
+Received: from mail.kernel.org ([198.145.29.99]:42406 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726873AbfKGNAa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:00:30 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 865C331B;
-        Thu,  7 Nov 2019 05:00:29 -0800 (PST)
-Received: from [192.168.0.9] (unknown [172.31.20.19])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B1BAE3F6C4;
-        Thu,  7 Nov 2019 05:00:27 -0800 (PST)
-Subject: Re: [Patch v5 5/6] thermal/cpu-cooling: Update thermal pressure in
- case of a maximum frequency capping
-From:   Dietmar Eggemann <dietmar.eggemann@arm.com>
-To:     Thara Gopinath <thara.gopinath@linaro.org>, mingo@redhat.com,
-        peterz@infradead.org, ionela.voinescu@arm.com,
-        vincent.guittot@linaro.org, rui.zhang@intel.com,
-        edubezval@gmail.com, qperret@google.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        javi.merino@kernel.org, daniel.lezcano@linaro.org
-References: <1572979786-20361-1-git-send-email-thara.gopinath@linaro.org>
- <1572979786-20361-6-git-send-email-thara.gopinath@linaro.org>
- <05c53b6f-fd16-3e8b-e8da-ea56325cec33@arm.com>
-Message-ID: <b97dab99-6796-3427-0c6d-57ea6c3dfb1f@arm.com>
-Date:   Thu, 7 Nov 2019 14:00:22 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.9.0
+        id S1726873AbfKGNBE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:01:04 -0500
+Received: from willie-the-truck (236.31.169.217.in-addr.arpa [217.169.31.236])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id EAD7F214D8;
+        Thu,  7 Nov 2019 13:01:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573131664;
+        bh=/kIrVp51INVnGZ+Kk+9uLG4BcqnGFSk3GAAMx/W7RMw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=zxZCcssfCiTaRAKMEOUnkgtiTRHB4bbqIqoNZpP85tMzpkdc8VAqfE/32Z3BcKNJF
+         iC36aS4dgYQ5JOx3qptAq5ybyNWVKzqf3bXtyDLXp3oe/U2Di2jurqlSJXsEv/Ny08
+         GeDJfWnkdOUPudA1G4JqC0nw8mqGdckwvJPkbvzs=
+Date:   Thu, 7 Nov 2019 13:00:59 +0000
+From:   Will Deacon <will@kernel.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     linux-kernel@vger.kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Elena Reshetova <elena.reshetova@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Hanjun Guo <guohanjun@huawei.com>,
+        Jan Glauber <jglauber@marvell.com>
+Subject: Re: [PATCH v4 00/10] Rework REFCOUNT_FULL using atomic_fetch_*
+ operations
+Message-ID: <20191107130059.GB12705@willie-the-truck>
+References: <20191030143035.19440-1-will@kernel.org>
+ <201910301139.ED3551BB14@keescook>
 MIME-Version: 1.0
-In-Reply-To: <05c53b6f-fd16-3e8b-e8da-ea56325cec33@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <201910301139.ED3551BB14@keescook>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 06/11/2019 13:50, Dietmar Eggemann wrote:
-> On 05/11/2019 19:49, Thara Gopinath wrote:
+On Wed, Oct 30, 2019 at 11:40:56AM -0700, Kees Cook wrote:
+> On Wed, Oct 30, 2019 at 02:30:25PM +0000, Will Deacon wrote:
+> > Hi all,
+> > 
+> > This is version four of the patches I previously posted here:
+> > 
+> >   v1: https://lkml.kernel.org/r/20190802101000.12958-1-will@kernel.org
+> >   v2: https://lkml.kernel.org/r/20190827163204.29903-1-will@kernel.org
+> >   v3: https://lkml.kernel.org/r/20191007154703.5574-1-will@kernel.org
+> > 
+> > Changes since v3 include:
+> > 
+> >   - Add description of racy behaviour include/linux/refcount.h
+> >   - Fix saturation behaviour in refcount_sub_and_test()
+> >   - Added Acks and Tested-bys
 > 
-> [...]
-> 
->> diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
->> index 391f397..c65b7c4 100644
->> --- a/drivers/thermal/cpu_cooling.c
->> +++ b/drivers/thermal/cpu_cooling.c
->> @@ -218,6 +218,27 @@ static u32 cpu_power_to_freq(struct cpufreq_cooling_device *cpufreq_cdev,
->>  }
->>  
->>  /**
->> + * update_sched_max_capacity - update scheduler about change in cpu
->> + *				max frequency.
->> + * @cpus: list of cpus whose max capacity needs udating in scheduler.
->> + * @cur_max_freq: current maximum frequency.
->> + * @max_freq: highest possible frequency.
->> + */
->> +static void update_sched_max_capacity(struct cpumask *cpus,
->> +				      unsigned int cur_max_freq,
->> +				      unsigned int max_freq)
->> +{
->> +	int cpu;
->> +	unsigned long capacity;
->> +
->> +	for_each_cpu(cpu, cpus) {
->> +		capacity = cur_max_freq * arch_scale_cpu_capacity(cpu);
->> +		capacity /= max_freq;
->> +		update_thermal_pressure(cpu, capacity);
->> +	}
->> +}
->> +
->> +/**
-> 
-> Have you seen
-> https://lore.kernel.org/r/2b19d7da-412c-932f-7251-110eadbef3e3@arm.com ?
-> 
-> Also the naming 'update_thermal_pressure()' is not really suitable for
-> an external task scheduler interface. If I see this called in the
-> cooling device code, I wouldn't guess that this is a task scheduler
-> interface.
-> 
-> [...]
+> Thanks again for this! I think this series is in good shape; I'm glad we
+> can sanely expand these protections.
 
-The current interface to bring in frequency and uarch (CPU) invariance
-information into the task scheduler is arch_scale_[freq|cpu]_capacity.
+Cheers, Kees.
 
-So why not follow this approach for the thermal->sched interface?
+Peter -- are you ok with this version? I think I've addressed all of your
+concerns from v3, including the addition of ASCII-art to explain the
+saturation behaviour (I can use .rst instead if you prefer).
 
-+#ifndef arch_scale_thermal_capacity
-+static __always_inline
-+unsigned long arch_scale_thermal_capacity(int cpu)
-+{
-+       return 0;
-+}
-+#endif
-
-Leave per_cpu(thermal_pressure, cpu) within cpu cooling and let cpu
-cooling (or even platform) #define arch_scale_thermal_capacity.
+Will
