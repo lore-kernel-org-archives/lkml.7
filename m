@@ -2,310 +2,233 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5432BFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C828FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A27B206C3
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F0C35206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=antmicro.com header.i=@antmicro.com header.b="VrcATMyU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfKGJ11 (ORCPT
+        id S1733215AbfKGJ1e (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:27:27 -0500
-Received: from mail.loongson.cn ([114.242.206.163]:58143 "EHLO
-        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGJ10 (ORCPT
+        Thu, 7 Nov 2019 04:27:34 -0500
+Received: from mail-il1-f194.google.com ([209.85.166.194]:36298 "EHLO
+        mail-il1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728051AbfKGJ1d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:27:26 -0500
-Received: from [10.20.41.27] (unknown [10.20.41.27])
-        by mail (Coremail) with SMTP id QMiowPBxc+h248NdE1wAAA--.26S3;
-        Thu, 07 Nov 2019 17:27:18 +0800 (CST)
-Subject: Re: [PATCH] MIPS: Scan the DMI system information
-References: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
-To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
-        Paul Burton <paulburton@kernel.org>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Jean Delvare <jdelvare@suse.com>,
-        Huacai Chen <chenhc@lemote.com>
-Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Yinglu Yang <yangyinglu@loongson.cn>,
-        Xuefeng Li <lixuefeng@loongson.cn>
-From:   Tiezhu Yang <yangtiezhu@loongson.cn>
-X-Forwarded-Message-Id: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
-Message-ID: <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
-Date:   Thu, 7 Nov 2019 17:26:58 +0800
-User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
- Thunderbird/45.4.0
+        Thu, 7 Nov 2019 04:27:33 -0500
+Received: by mail-il1-f194.google.com with SMTP id s75so1182261ilc.3
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 01:27:31 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=antmicro.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=zxL2pu+aN0ZYRh9GalkED+BEbSMbqeXyiC5lDAJbwEg=;
+        b=VrcATMyUB9gM2h1qTNrx6x5YrZ3FNEr1qyLafDIYgxlmwfFjsqta2N4xNBRvzebR+4
+         BZ3b3ah/Aw87W/t81zuVu4SsbGYEc6gc/g3/b3VjTmzUOqhQFl7D+E5qWKRTrPltUdRM
+         c22lL2pQqtbbN65Pi32E5QEG0JL5LgZ8ontZIBqmZWmVIKDPQ3L0XTyw7OsSWCPxdwHH
+         UPNBZscOeDxelrb8gBYlPKFsz9v6R+VMitxFN4+NwB+Y4Ov2NigkJLa5vffsWwXNqK9b
+         98zr3ITZjSGkhmeaQznpVGjKnMOZCIGDEnzsK4cCvLGgaud2Du0pSch5zggw9hrntqT5
+         a+nQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=zxL2pu+aN0ZYRh9GalkED+BEbSMbqeXyiC5lDAJbwEg=;
+        b=jYFhAyW4Y0zBUu/b46MSe42AVF+KnxuNw8ezsuQCS/UFqa9F4HRbxTLn9sHHprdbWW
+         6gGdwjgiLMrSNncP3oMbyU8Bg8nMwij8Fb/P2gEcGnUFlyWCKPF2+3YEAGh+oCNgunkI
+         SQKzUjubDv9AwC3N+iNj1D5Je8peOoCrw8f4D6GItZnkU2V1dnhYDApYZ/35Lj282r/n
+         dXzVHkDqoek6cvmzKiULjCsX4OOahX8CSD1lur4RzDSQvP35cDQF/JsjPDs4u96yAVPj
+         HX0HQU1puCrnclnZ4GUD4pKXJN2OYIjRdmkft0MalulNwcWnhgnvR7jGZvrnCGJAll0/
+         prBA==
+X-Gm-Message-State: APjAAAXEcpWnAiWE+Bb7tk0/gRqvqHNcLv/FRzv6IJl4eCwXvv3fhlqJ
+        YuRRmCwacF/9cJlm3uAH4hUB+EL+0swZOEhN3cA+Hw==
+X-Google-Smtp-Source: APXvYqw38hKm1x6/4pq2KfbrFU38zObiPQFdN2X04OcPIWVYeNi+hQaHBgFuDV5xYYxDsyS/D8qOOmpSMltMCoGQW4A=
+X-Received: by 2002:a92:3b9a:: with SMTP id n26mr3239330ilh.82.1573118850734;
+ Thu, 07 Nov 2019 01:27:30 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID: QMiowPBxc+h248NdE1wAAA--.26S3
-X-Coremail-Antispam: 1UD129KBjvJXoWxKF18JrW3XFy8Ww1Uur4xCrg_yoWxJFyUpF
-        y8Ja1rKF48Xr17GF1Sq343Wr9Iyrs5tFZ0gFy7tF17u3s8Zw17AFs3KayUCFy8Ar1DJFy0
-        9a40gFW3uFs8CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
-        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
-        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
-        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
-        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
-        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
-        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
-        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
-        0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
-        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
-        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
-        04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
-        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUqeHgUUUUU=
-X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
+References: <20191023114634.13657-0-mholenko@antmicro.com> <20191023114634.13657-2-mholenko@antmicro.com>
+ <20191026000345.GA10810@bogus>
+In-Reply-To: <20191026000345.GA10810@bogus>
+From:   Mateusz Holenko <mholenko@antmicro.com>
+Date:   Thu, 7 Nov 2019 10:27:19 +0100
+Message-ID: <CAPk366Qo916k_UggtMog875J98s5PkagiReJbO8s7eNpGZrr=g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/4] litex: add common LiteX header
+To:     Rob Herring <robh@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jiri Slaby <jslaby@suse.com>, devicetree@vger.kernel.org,
+        "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>,
+        Stafford Horne <shorne@gmail.com>,
+        Karol Gugala <kgugala@antmicro.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Filip Kokosinski <fkokosinski@internships.antmicro.com>,
+        Joel Stanley <joel@jms.id.au>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        Maxime Ripard <mripard@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Sam Ravnborg <sam@ravnborg.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Sorry to resend this email because the mail list server was denied
-due to it is not plain text.
-
-On 11/07/2019 11:42 AM, Jiaxun Yang wrote:
-> 于 2019年11月7日 GMT+08:00 上午10:42:23, Tiezhu Yang<yangtiezhu@loongson.cn>  写到:
->> On 11/07/2019 08:35 AM, Jiaxun Yang wrote:
->>> 于 2019年11月7日 GMT+08:00 上午12:05:41, Tiezhu Yang
->> <yangtiezhu@loongson.cn>  写到:
->>>> Enable DMI scanning on the MIPS architecture, this setups DMI
->>>> identifiers
->>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM
->>>> entry
->>>> information (dmi_memdev_info) from the SMBIOS table. With this
->> patch,
->>>> the
->>>> driver can easily match various of mainboards.
->>>>
->>>> In the SMBIOS reference specification, the table anchor string
->> "_SM_"
->>>> is
->>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte
->> boundary,
->>>> but there exists a special case for loongson platform, when call
->>>> function
->>>> dmi_early_remap, it should specify the start address to 0xFFFE000
->> due
->>>> to
->>>> it is reserved for SMBIOS and can be normally access in the BIOS.
->>>>
->>>> Co-developed-by: Yinglu Yang<yangyinglu@loongson.cn>
->>>> Signed-off-by: Yinglu Yang<yangyinglu@loongson.cn>
->>>> Signed-off-by: Tiezhu Yang<yangtiezhu@loongson.cn>
->>>> ---
->>>> arch/mips/Kconfig           | 12 ++++++++++++
->>>> arch/mips/include/asm/dmi.h | 43
->>>> +++++++++++++++++++++++++++++++++++++++++++
->>>> arch/mips/kernel/setup.c    |  2 ++
->>>> 3 files changed, 57 insertions(+)
->>>> create mode 100644 arch/mips/include/asm/dmi.h
->>>>
->>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
->>>> index 7cb8947..0a67b18 100644
->>>> --- a/arch/mips/Kconfig
->>>> +++ b/arch/mips/Kconfig
->>>> @@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
->>>> 	  Enable hardware performance counter support for perf events. If
->>>> 	  disabled, perf events will use software events only.
->>>>
->>>> +# Mark as expert because too many people got it wrong.
->>>> +# The code disables itself when not needed.
->>>> +config DMI
->>>> +	default y
->>>> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
->>>> +	bool "Enable DMI scanning" if EXPERT
->>>> +	help
->>>> +	  Enabled scanning of DMI to identify machine quirks. Say Y
->>>> +	  here unless you have verified that your setup is not
->>>> +	  affected by entries in the DMI blacklist. Required by PNP
->>>> +	  BIOS code.
->>>> +
->>>> config SMP
->>>> 	bool "Multi-Processing support"
->>>> 	depends on SYS_SUPPORTS_SMP
->>>> diff --git a/arch/mips/include/asm/dmi.h
->> b/arch/mips/include/asm/dmi.h
->>>> new file mode 100644
->>>> index 0000000..1f3da37
->>>> --- /dev/null
->>>> +++ b/arch/mips/include/asm/dmi.h
->>>> @@ -0,0 +1,43 @@
->>>> +/* SPDX-License-Identifier: GPL-2.0 */
->>>> +#ifndef _ASM_MIPS_DMI_H
->>>> +#define _ASM_MIPS_DMI_H
->>>> +
->>>> +#define dmi_early_remap		mips_early_memremap
->>>> +#define dmi_early_unmap		mips_early_memunmap
->>>> +#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
->>>> +#define dmi_unmap(_x)		mips_memunmap(_x)
->>>> +
->>>> +#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
->>>> +
->>>> +void __init *mips_early_memremap(resource_size_t phys_addr,
->> unsigned
->>>> long size)
->>>> +{
->>>> +#if defined(CONFIG_MACH_LOONGSON64)
->>>> +	if (phys_addr == 0xF0000)
->>>> +		phys_addr = 0xFFFE000;
->>>> +
->>>> +	return (void *)TO_CAC(phys_addr);
->>>> +#else
->>>> +	return NULL;
->>>> +#endif
->>>> +}
->>> Hi Tiezhu,
->>>
->>> It is really tricky to hijack dmi address here during remap.
->>> I think we should set the dmi table address at  dmi_scan.c by a marco
->> or something else rather than hijack it during remap.
->>
->> Hi Jiaxun,
->>
->> Thanks for your review. I agree with you, let me think about it and try
->> to
->> find a proper way, and then I will send a v2 patch.
-
-Hi Jiaxun,
-
-It seems that there is no absolutely better way to handle this case.
-
-1. use conditional compilation in drivers/firmware/dmi_scan.c:
-
-#if defined(CONFIG_MACH_LOONGSON64)
-
-p = dmi_early_remap(0xFFFE000, 0x10000);
-
-#else
-
-p = dmi_early_remap(0xF0000, 0x10000);
-
-#endif
-
-
-This will influence the common code.
-
-2. use callback function in arch/mips/include/asm/dmi.h:
-
-struct plat_dmi_ops {
-
-         void (*early_memremap)(void);
-
-         void (*memremap)(void);
-
-};
-
-extern struct plat_dmi_ops *dmi_ops;
-
-void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
-
-{
-
-         dmi_ops->early_memremap();
-
-}
-
-void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
-
-{
-
-         dmi_ops->memremap();
-
-}
-
-
-we can implement the callback function in various of MIPS platforms,
-like this:
-
-struct plat_dmi_ops loongson3_dmi_ops = {
-
-         .early_memremap = loongson3_early_memremap,
-
-         .memremap = loongson3_memremap,
-
-};
-
-register_dmi_ops(&loongson3_dmi_ops);
-
-#ifdef CONFIG_DMI
-
-void __init *loongson3_early_memremap(resource_size_t phys_addr, unsigned long size)
-
-{
-
-         if (phys_addr == 0xF0000)
-
-                 phys_addr = 0xfffe000;
-
-         return (void *)TO_CAC(phys_addr);
-
-}
-
-void *loongson3_memremap(resource_size_t offset, size_t size, unsigned long flags)
-
-{
-
-         return (void *)TO_CAC(phys_addr);
-
-}
-
-#else
-
-void __init __iomem *loongson3_early_memremap(u64 phys_addr, unsigned long size)
-
-{
-
-         return NULL;
-
-}
-
-void __init __iomem *loongson3_memremap(u64 phys_addr, unsigned long size)
-
-{
-
-         return NULL;
-
-}
-
-#endif
-
-
-This will not influence the common code.
-
-What do you think?
-
-
-Hi Jean,
-
-Could you give some suggestions?
-
->>> Btw: Probably we should set DMI default y when MACH_LOONGSON64 is
->> set?
->>
->> CONFIG_DMI is set to y by default, I think there is no need to select
->> DMI when
->> set CONFIG_MACH_LOONGSON64.
-> Sorry, I meant only default to y when MACH_LOONGSON64 is set or even depends on MACH_LOONGSON64. As Loongson is the only known MIPS platform that supports DMI. Default y unconditionally may lead to regression on other MIPS platforms.
-
-OK, I prefer to select DMI when set MACH_LOONGSON64 instead of
-DMI depends on MACH_LOONGSON64, I will modify the Kconfig file.
-
-Thanks,
-
-Tiezhu Yang
-
->> Thanks,
->>
->> Tiezhu Yang
->>
->>> Thanks.
->>>
-
+sob., 26 pa=C5=BA 2019 o 02:03 Rob Herring <robh@kernel.org> napisa=C5=82(a=
+):
+>
+> On Wed, Oct 23, 2019 at 11:47:04AM +0200, Mateusz Holenko wrote:
+> > It provides helper CSR access functions used by all
+> > LiteX drivers.
+> >
+> > Signed-off-by: Mateusz Holenko <mholenko@antmicro.com>
+> > ---
+> > This commit has been introduced in v2 of the patchset.
+> >
+> >  MAINTAINERS           |  6 +++++
+> >  include/linux/litex.h | 59 +++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 65 insertions(+)
+> >  create mode 100644 include/linux/litex.h
+> >
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> > index 296de2b51c83..eaa51209bfb2 100644
+> > --- a/MAINTAINERS
+> > +++ b/MAINTAINERS
+> > @@ -9493,6 +9493,12 @@ F:     Documentation/misc-devices/lis3lv02d.rst
+> >  F:   drivers/misc/lis3lv02d/
+> >  F:   drivers/platform/x86/hp_accel.c
+> >
+> > +LITEX PLATFORM
+> > +M:   Karol Gugala <kgugala@antmicro.com>
+> > +M:   Mateusz Holenko <mholenko@antmicro.com>
+> > +S:   Maintained
+> > +F:   include/linux/litex.h
+> > +
+> >  LIVE PATCHING
+> >  M:   Josh Poimboeuf <jpoimboe@redhat.com>
+> >  M:   Jiri Kosina <jikos@kernel.org>
+> > diff --git a/include/linux/litex.h b/include/linux/litex.h
+> > new file mode 100644
+> > index 000000000000..e793d2d7c881
+> > --- /dev/null
+> > +++ b/include/linux/litex.h
+> > @@ -0,0 +1,59 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Common LiteX header providing
+> > + * helper functions for accessing CSRs.
+> > + *
+> > + * Copyright (C) 2019 Antmicro <www.antmicro.com>
+> > + */
+> > +
+> > +#ifndef _LINUX_LITEX_H
+> > +#define _LINUX_LITEX_H
+> > +
+> > +#include <linux/io.h>
+> > +#include <linux/types.h>
+> > +#include <linux/compiler_types.h>
+> > +
+> > +#define LITEX_REG_SIZE             0x4
+> > +#define LITEX_SUBREG_SIZE          0x1
+> > +#define LITEX_SUBREG_SIZE_BIT      (LITEX_SUBREG_SIZE * 8)
+> > +
+> > +#ifdef __LITTLE_ENDIAN
+> > +# define LITEX_READ_REG(addr)                  ioread32(addr)
+> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32(addr + off)
+> > +# define LITEX_WRITE_REG(val, addr)            iowrite32(val, addr)
+> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32(val, addr + o=
+ff)
+> > +#else
+> > +# define LITEX_READ_REG(addr)                  ioread32be(addr)
+> > +# define LITEX_READ_REG_OFF(addr, off)         ioread32be(addr + off)
+> > +# define LITEX_WRITE_REG(val, addr)            iowrite32be(val, addr)
+> > +# define LITEX_WRITE_REG_OFF(val, addr, off)   iowrite32be(val, addr +=
+ off)
+>
+> Defining custom accessors makes it harder for others to understand
+> the code. The __raw_readl/writel accessors are native endian, so use
+> those. One difference though is they don't have a memory barrier, but
+> based on the below functions, you may want to do your own barrier
+> anyways. And if DMA is not involved you don't need the barriers either.
+
+LiteX CSRs are always little endian (even when combined with a big endian C=
+PU),
+so using just __raw_readl/writel won't work in all cases. This is the reaso=
+n why
+we proposed a custom accessors defined based on host CPU endianness.
+Would adding a comment explaining this be enough or do you have other ideas=
+?
+
+> The _OFF variants don't add anything. LITEX_READ_REG(addr + off) is just
+> as easy to read if not easier than LITEX_READ_REG_OFF(addr, off).
+
+I agree, LITEX_READ_REG/LITEX_WRITE_REG is enough.
+
+> > +#endif
+> > +
+> > +/* Helper functions for manipulating LiteX registers */
+> > +
+> > +static inline void litex_set_reg(void __iomem *reg, u32 reg_size, u32 =
+val)
+> > +{
+> > +     u32 shifted_data, shift, i;
+> > +
+> > +     for (i =3D 0; i < reg_size; ++i) {
+> > +             shift =3D ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             shifted_data =3D val >> shift;
+> > +             LITEX_WRITE_REG(shifted_data, reg + (LITEX_REG_SIZE * i))=
+;
+> > +     }
+> > +}
+>
+> The problem with this is it hides whether you need to do any locking.
+> Normally, you would assume a register access is atomic when it's not
+> here. You could add locking in this function, but then you're doing
+> locking even when not needed.
+>
+> It doesn't look like you actually use this in your series, so maybe
+> remove until you do.
+
+That's right. I added those functions in advance, having in mind
+further drivers,
+but maybe it will be better to drop them for now and re-introduce later.
+
+> > +
+> > +static inline u32 litex_get_reg(void __iomem *reg, u32 reg_size)
+> > +{
+> > +     u32 shifted_data, shift, i;
+> > +     u32 result =3D 0;
+> > +
+> > +     for (i =3D 0; i < reg_size; ++i) {
+> > +             shifted_data =3D LITEX_READ_REG(reg + (LITEX_REG_SIZE * i=
+));
+> > +             shift =3D ((reg_size - i - 1) * LITEX_SUBREG_SIZE_BIT);
+> > +             result |=3D (shifted_data << shift);
+> > +     }
+> > +
+> > +     return result;
+> > +}
+> > +
+> > +#endif /* _LINUX_LITEX_H */
+> > --
+> > 2.23.0
+
+
+
+--
+Mateusz Holenko
+Antmicro Ltd | www.antmicro.com
+Roosevelta 22, 60-829 Poznan, Poland
