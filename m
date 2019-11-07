@@ -2,128 +2,95 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B467FA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:49:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D28AC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:51:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EDAB321D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:49:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 715A321D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 07:51:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="OpLiqukL"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="DGew32WL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733187AbfKGHtG (ORCPT
+        id S1727224AbfKGHvG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 02:49:06 -0500
-Received: from userp2130.oracle.com ([156.151.31.86]:41640 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726618AbfKGHtF (ORCPT
+        Thu, 7 Nov 2019 02:51:06 -0500
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:45761 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726618AbfKGHvG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 02:49:05 -0500
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA77mfvP072483;
-        Thu, 7 Nov 2019 07:49:01 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : mime-version : content-type; s=corp-2019-08-05;
- bh=jWR+TnPhSA14NeH1OOvS+/rjTxIzSqL1OgNwBLErpNw=;
- b=OpLiqukL6/T+yKTuQ2BDkARL+NLCwAQ005TcrCbsaeEimafivol+/8UPC7zPUuu1nv54
- epaUzQ/riizqshB2w1fLfOpyEPJ1Lv/lV9lsDZOnsHltol3tUKdLXpLhFiUY1xpo6u6y
- KMFG/268J0JS5hXTzOLsrzxAioakoHt4BTX0FDEOWDoNAlziOll2fk/hkZjIu56YCp2A
- d58tqd3Pwuj7gKxFo0c5DtHdu97WLfzPw9MgcZhPa3PtNuFypeztKLXBIB/NckOsXv1o
- 8iiWleLFY4oRDMEkvw+GZrAcoPLou5hIpM8z3p+hztdaG8Jp5LyO7liAsO5959Kt525g /w== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2w41w145fy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 07:49:01 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA77mqQA008876;
-        Thu, 7 Nov 2019 07:49:00 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2w41w93xu2-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 07:48:59 +0000
-Received: from abhmp0006.oracle.com (abhmp0006.oracle.com [141.146.116.12])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA77mt2T019768;
-        Thu, 7 Nov 2019 07:48:56 GMT
-Received: from mwanda (/41.57.98.10)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Wed, 06 Nov 2019 23:48:55 -0800
-Date:   Thu, 7 Nov 2019 10:48:47 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Philipp Reisner <philipp.reisner@linbit.com>
-Cc:     Lars Ellenberg <lars.ellenberg@linbit.com>,
-        Jens Axboe <axboe@kernel.dk>, drbd-dev@tron.linbit.com,
-        linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kernel-janitors@vger.kernel.org
-Subject: [PATCH] block: drbd: remove a stay unlock in __drbd_send_protocol()
-Message-ID: <20191107074847.GA11695@mwanda>
+        Thu, 7 Nov 2019 02:51:06 -0500
+Received: by mail-lj1-f195.google.com with SMTP id n21so1099902ljg.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 23:51:03 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=qSQjzivSQWR3vk7yLY/YJH/RUhPjuRasO+9jC+q89bU=;
+        b=DGew32WLlEUC99wuJsG/2cOFmi/9tbj9IsU3zfo2nRYQS7rtVNcwa2pOalO0EvNk8m
+         k9dJ6Ag6CjsByBhneIUTwyqr1aqadRcLsGzPztBS1rfy+iT0DR1Biytu95CuyZXgSjo4
+         8ZN2QIuoFJzRmzxlw98K4gigwS9cNY97lYKEcQ+4IuPC+AwS0tMWY+1XsfMuQICoH/Ep
+         RvgNiOzWuHwN31kB9gfCeXRorT5C9YHJtg4M1BhNwack6xFF5SPND7/6oxhxCn21LPvf
+         kL8zn3pnzvsE6LxTaTAoUcwWAihwHQ4MbB5AccBj1JCkWQyoWYbWzngEDKX8MG8sqmYy
+         ABIQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=qSQjzivSQWR3vk7yLY/YJH/RUhPjuRasO+9jC+q89bU=;
+        b=ZNbWEfIsr84kQTpIzAnf/jyHbE2hX0u9XSObIlZtuZwYm2AsyuVZjOoftjWEPbdy5i
+         ltQ3SC2QJYM1YKaAyrnic1H/Q6F4NGpikyNJnecmuu90pBf6EJvIwm/E6xJINWq0V8hO
+         R2OkOI0tWiatYXID1shuqpH8aoxZPvllknJYU9ae3sPPLbr1jJTTvAFZb425YmA+O+up
+         1nxkc+vFiPcXdfrwOCiuMHq6CNyxTtDDhlHjBB3/LUTsYhsdfcAGjBmyGIXCA6vvgmBQ
+         6xwHD3CWP46h2TmdBeEN/U8rkJQ3OqaX1gfWryUHagHBwaQIqSVGknI4wX1s4rrrHLOC
+         c18Q==
+X-Gm-Message-State: APjAAAVZ2t6J7nRWHeyi1DSrchYK1vLeJ/UfVia7TIVIqA8uc6lK3P4O
+        oBj9shyGJ5lSG4dkhgiMg9o4tBWncIVEM+klK7r8XYQhFZg=
+X-Google-Smtp-Source: APXvYqwKHwHViiRns9nUe35XE09guXcyAAkHBHKXy6BqY0BpDujW7VYTEQakwhSoD0SR/mqO1m1nrrf0lziVhLJDa0A=
+X-Received: by 2002:a2e:9784:: with SMTP id y4mr1275845lji.77.1573113062506;
+ Wed, 06 Nov 2019 23:51:02 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-X-Mailer: git-send-email haha only kidding
-User-Agent: Mutt/1.10.1 (2018-07-13)
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=2 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070078
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=2 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070078
+References: <20191106060301.17408-1-joel@jms.id.au> <20191106060301.17408-4-joel@jms.id.au>
+In-Reply-To: <20191106060301.17408-4-joel@jms.id.au>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Nov 2019 08:50:50 +0100
+Message-ID: <CACRpkdaQsz-cbRqgRrAyP_3VpO9Upzcwc2CNKDL4GvC286Y63Q@mail.gmail.com>
+Subject: Re: [PATCH 3/4] clocksource: fttmr010: Add support for ast2600
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, Andrew Jeffery <andrew@aj.id.au>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are two callers of this function and they both unlock the mutex so
-this ends up being a double unlock.
+On Wed, Nov 6, 2019 at 7:03 AM Joel Stanley <joel@jms.id.au> wrote:
 
-Fixes: 44ed167da748 ("drbd: rcu_read_lock() and rcu_dereference() for tconn->net_conf")
-Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
----
-Static analisys.  Not tested.  There is a comment about the lock next to
-the caller in drbd_nl.c that I didn't understand:
+> The ast2600 has some minor differences to previous versions. The
+> interrupt handler must acknowledge the timer interrupt in a status
+> register. Secondly the control register becomes write to set only,
+> requiring the use of a separate set to clear register.
+>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-drivers/block/drbd/drbd_nl.c
-  2509          crypto_free_shash(connection->integrity_tfm);
-  2510          connection->integrity_tfm = crypto.integrity_tfm;
-  2511          if (connection->cstate >= C_WF_REPORT_PARAMS && connection->agreed_pro_version >= 100)
-  2512                  /* Do this without trying to take connection->data.mutex again.  */
-                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-What does this mean?  We're already holding that lock.  We took it near
-the start of the function.
+> +/*
+> +  Control register set to clear for ast2600 only.
+> + */
+> +#define TIMER_CR_CLR           (0x3c)
 
-  2513                  __drbd_send_protocol(connection, P_PROTOCOL_UPDATE);
-  2514  
-  2515          crypto_free_shash(connection->cram_hmac_tfm);
-  2516          connection->cram_hmac_tfm = crypto.cram_hmac_tfm;
-  2517  
-  2518          mutex_unlock(&connection->resource->conf_update);
-  2519          mutex_unlock(&connection->data.mutex);
-                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-Unlocked here.
+If it is AST2600-specific then please add some AST2600 prefix such as
+AST2600_TIMER_CR_CLR (0x3c)
 
- drivers/block/drbd/drbd_main.c | 1 -
- 1 file changed, 1 deletion(-)
+With that:
+Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
 
-diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
-index 5b248763a672..a18155cdce41 100644
---- a/drivers/block/drbd/drbd_main.c
-+++ b/drivers/block/drbd/drbd_main.c
-@@ -786,7 +786,6 @@ int __drbd_send_protocol(struct drbd_connection *connection, enum drbd_packet cm
- 
- 	if (nc->tentative && connection->agreed_pro_version < 92) {
- 		rcu_read_unlock();
--		mutex_unlock(&sock->mutex);
- 		drbd_err(connection, "--dry-run is not supported by peer");
- 		return -EOPNOTSUPP;
- 	}
--- 
-2.20.1
-
+Yours,
+Linus Walleij
