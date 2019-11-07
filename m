@@ -2,212 +2,147 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 78E11C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68AFBFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3AC822178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 332DE2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:32:48 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="R9pIMhgI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388538AbfKGKcl (ORCPT
+        id S2388579AbfKGKcq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:32:41 -0500
-Received: from foss.arm.com ([217.140.110.172]:53698 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387796AbfKGKci (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:32:38 -0500
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.121.207.14])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 139551FB;
-        Thu,  7 Nov 2019 02:32:38 -0800 (PST)
-Received: from localhost (unknown [10.37.6.20])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6D5D83F71A;
-        Thu,  7 Nov 2019 02:32:37 -0800 (PST)
-Date:   Thu, 7 Nov 2019 10:32:35 +0000
-From:   Andrew Murray <andrew.murray@arm.com>
-To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc:     linux-pci@vger.kernel.org, devicetree@vger.kernel.org,
-        bcm-kernel-feedback-list@broadcom.com,
-        linux-rpi-kernel@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        james.quinlan@broadcom.com, mbrugger@suse.com,
-        f.fainelli@gmail.com, phil@raspberrypi.org, wahrenst@gmx.net,
+        Thu, 7 Nov 2019 05:32:46 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([81.169.146.174]:18343 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726866AbfKGKbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:31:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573122677;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=eKQR3EPPbTjhKVGosZU1J1d+4FAu+brxjLws3a77fGY=;
+        b=R9pIMhgIJrHwBZ6/mtds/UBg9OiEGczSWyYkAKLEfq+OgQ5cZ06F+LorV70p989z6V
+        dFeTj3GlK/uKkfMrB00PBTw3BeFRbOKOz/8bXkOFW3LtYWMrEfZA2VwEfnf+277Cxyyt
+        rvQBd6ClBk/VE0SKhCmr/rSfOLAOpQuTVStPwAdVfs7Lm0FTNyHTqgfVOzPayKeGaAb/
+        kpQcrEgwZwGFivAUcrW/bnkrVYj5mIsCw2ZFHcGRju+SGXDk+wleF36fsNLYCjWJUmSy
+        FKl7lV4LaLKlwqhZKzV7E3pHmIwRzYTq/LzVBkTzE/ZFjzdsv2Vyx9gCRvkD0Uas6w8Y
+        n42Q==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vA7AUodRt
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 11:30:50 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
         Rob Herring <robh+dt@kernel.org>,
         Mark Rutland <mark.rutland@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] dt-bindings: pci: add bindings for brcmstb's PCIe
- device
-Message-ID: <20191107103235.GW9723@e119886-lin.cambridge.arm.com>
-References: <20191106214527.18736-1-nsaenzjulienne@suse.de>
- <20191106214527.18736-2-nsaenzjulienne@suse.de>
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, stable@vger.kernel.org
+Subject: [PATCH v3 04/12] mmc: host: omap_hsmmc: add code for special init of wl1251 to get rid of pandora_wl1251_init_card
+Date:   Thu,  7 Nov 2019 11:30:37 +0100
+Message-Id: <2f050912668e5e3581ccc22707df54d8bb14c696.1573122644.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
+References: <cover.1573122644.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106214527.18736-2-nsaenzjulienne@suse.de>
-User-Agent: Mutt/1.10.1+81 (426a6c1) (2018-08-26)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 10:45:23PM +0100, Nicolas Saenz Julienne wrote:
-> From: Jim Quinlan <james.quinlan@broadcom.com>
+Pandora_wl1251_init_card was used to do special pdata based
+setup of the sdio mmc interface. This does no longer work with
+v4.7 and later. A fix requires a device tree based mmc3 setup.
 
-Nit: Looking at past git history, ideally the patch subject would be
-'dt-bindings: *PCI*: *A*dd bindings for brcmstb's PCIe.
+Therefore we move the special setup to omap_hsmmc.c instead
+of calling some pdata supplied init_card function.
 
-> 
-> The DT bindings description of the brcmstb PCIe device is described.
-> This node can only be used for now on the Raspberry Pi 4.
-> 
-> This was based on Jim's original submission[1], converted to yaml and
-> adapted to the RPi4 case.
+The new code checks for a DT child node compatible to wl1251
+so it will not affect other MMC3 use cases.
 
-Thanks for picking this up.
+Generally, this code was and still is a hack and should be
+moved to mmc core to e.g. read such properties from optional
+DT child nodes.
 
-> 
-> [1] https://patchwork.kernel.org/patch/10605937/
-> 
-> Signed-off-by: Jim Quinlan <james.quinlan@broadcom.com>
-> Co-developed-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> ---
->  .../bindings/pci/brcm,stb-pcie.yaml           | 116 ++++++++++++++++++
->  1 file changed, 116 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> new file mode 100644
-> index 000000000000..0b81c26f8568
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pci/brcm,stb-pcie.yaml
-> @@ -0,0 +1,116 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/pci/brcm,stb-pcie.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Brcmstb PCIe Host Controller Device Tree Bindings
-> +
-> +maintainers:
-> +  - Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> +
-> +properties:
-> +  compatible:
-> +    const: brcm,bcm2711-pcie # The Raspberry Pi 4
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - description: PCIe host controller
-> +      - description: builtin MSI controller
-> +
-> +  interrupt-names:
-> +    minItems: 1
-> +    maxItems: 2
-> +    items:
-> +      - const: pcie
-> +      - const: msi
-> +
-> +  "#address-cells":
-> +    const: 3
-> +
-> +  "#size-cells":
-> +    const: 2
-> +
-> +  "#interrupt-cells":
-> +    const: 1
-> +
-> +  interrupt-map-mask: true
-> +
-> +  interrupt-map: true
-> +
-> +  ranges: true
-> +
-> +  dma-ranges: true
-> +
-> +  clocks:
-> +    maxItems: 1
-> +
-> +  clock-names:
-> +    items:
-> +      - const: sw_pcie
-> +
-> +  msi-controller:
-> +    description: Identifies the node as an MSI controller.
-> +    type: boolean
-> +
-> +  msi-parent:
-> +    description: MSI controller the device is capable of using.
-> +    $ref: /schemas/types.yaml#/definitions/phandle
-> +
-> +  linux,pci-domain:
-> +    description: PCI domain ID. Should be unique for each host controller.
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  brcm,enable-ssc:
-> +    description: Indicates usage of spread-spectrum clocking.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - "#address-cells"
-> +  - "#size-cells"
-> +  - "#interrupt-cells"
-> +  - interrupt-map-mask
-> +  - interrupt-map
-> +  - ranges
-> +  - dma-ranges
-> +  - linux,pci-domain
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
 
-I don't think pci-domain is *required* is it?
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Cc: <stable@vger.kernel.org> # 4.7.0
+---
+ drivers/mmc/host/omap_hsmmc.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-Thanks,
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index 952fa4063ff8..a7192731ac13 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -1512,6 +1512,34 @@ static void omap_hsmmc_init_card(struct mmc_host *mmc, struct mmc_card *card)
+ 
+ 	if (mmc_pdata(host)->init_card)
+ 		mmc_pdata(host)->init_card(card);
++	else if (card->type == MMC_TYPE_SDIO || card->type == MMC_TYPE_SD_COMBO) {
++		struct device_node *np = mmc_dev(mmc)->of_node;
++
++		/*
++		 * REVISIT: should be moved to sdio core and made more
++		 * general e.g. by expanding the DT bindings of child nodes
++		 * to provide a mechanism to provide this information:
++		 * Documentation/devicetree/bindings/mmc/mmc-card.txt
++		 */
++
++		np = of_get_compatible_child(np, "ti,wl1251");
++		if (np) {
++			/*
++			 * We have TI wl1251 attached to MMC3. Pass this information to
++			 * SDIO core because it can't be probed by normal methods.
++			 */
++
++			dev_info(host->dev, "found wl1251\n");
++			card->quirks |= MMC_QUIRK_NONSTD_SDIO;
++			card->cccr.wide_bus = 1;
++			card->cis.vendor = 0x104c;
++			card->cis.device = 0x9066;
++			card->cis.blksize = 512;
++			card->cis.max_dtr = 24000000;
++			card->ocr = 0x80;
++			of_node_put(np);
++		}
++	}
+ }
+ 
+ static void omap_hsmmc_enable_sdio_irq(struct mmc_host *mmc, int enable)
+-- 
+2.23.0
 
-Andrew Murray
-
-> +
-> +additionalProperties: false
-> +
-> +examples:
-> +  - |
-> +    #include <dt-bindings/interrupt-controller/irq.h>
-> +    #include <dt-bindings/interrupt-controller/arm-gic.h>
-> +
-> +    scb {
-> +            #address-cells = <2>;
-> +            #size-cells = <1>;
-> +            pcie0: pcie@7d500000 {
-> +                    compatible = "brcm,bcm2711-pcie";
-> +                    reg = <0x0 0x7d500000 0x9310>;
-> +                    #address-cells = <3>;
-> +                    #size-cells = <2>;
-> +                    #interrupt-cells = <1>;
-> +                    interrupts = <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
-> +                                 <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>;
-> +                    interrupt-names = "pcie", "msi";
-> +                    interrupt-map-mask = <0x0 0x0 0x0 0x7>;
-> +                    interrupt-map = <0 0 0 1 &gicv2 GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 2 &gicv2 GIC_SPI 144 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 3 &gicv2 GIC_SPI 145 IRQ_TYPE_LEVEL_HIGH
-> +                                     0 0 0 4 &gicv2 GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>;
-> +                    msi-parent = <&pcie0>;
-> +                    msi-controller;
-> +                    ranges = <0x02000000 0x0 0xf8000000 0x6 0x00000000 0x0 0x04000000>;
-> +                    dma-ranges = <0x02000000 0x0 0x00000000 0x0 0x00000000 0x0 0x80000000>;
-> +                    linux,pci-domain = <0>;
-> +                    brcm,enable-ssc;
-> +            };
-> +    };
-> -- 
-> 2.23.0
-> 
