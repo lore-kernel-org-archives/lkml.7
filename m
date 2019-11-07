@@ -2,172 +2,310 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D0E1C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:26:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5432BFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 053AA21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:26:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Wb/sKvBm"
+	by mail.kernel.org (Postfix) with ESMTP id 1A27B206C3
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 09:27:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727576AbfKGJ0n (ORCPT
+        id S1727781AbfKGJ11 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 04:26:43 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:39815 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726734AbfKGJ0m (ORCPT
+        Thu, 7 Nov 2019 04:27:27 -0500
+Received: from mail.loongson.cn ([114.242.206.163]:58143 "EHLO
+        mail.loongson.cn" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGJ10 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 04:26:42 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573118800;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=6mC1Pv6icrr2ctyAgbD+rdnRUWubvdWCUcd8FncINe4=;
-        b=Wb/sKvBmCE0C6WA8ZaFQSrYe7iVE5p2v2IWBSfQwXiV94oorIVOm2TQCHu+ILHgDAOiTHj
-        Kf+p5cp1aSOlfFhIGj/ePL83SrrtKjPfWkN91KHi6Hlt2c8NEyAn4ly8qKApB2St6d4HZr
-        7PtDf6kGbQxzIPZx2/uxfMZj9jQfpig=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-104--ByG3N9YNXC4dqQcGtIVww-1; Thu, 07 Nov 2019 04:26:37 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 25A38107ACC3;
-        Thu,  7 Nov 2019 09:26:36 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 1F1FD10013A1;
-        Thu,  7 Nov 2019 09:26:33 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 10:26:33 +0100
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     "Jin, Yao" <yao.jin@linux.intel.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-Subject: Re: [PATCH v6 7/7] perf report: Sort by sampled cycles percent per
- block for tui
-Message-ID: <20191107092633.GA14657@krava>
-References: <20191105033611.25493-1-yao.jin@linux.intel.com>
- <20191105033611.25493-8-yao.jin@linux.intel.com>
- <20191106210106.GA12156@krava>
- <cddb7e55-ae98-62c7-db9f-70e6fc734579@linux.intel.com>
+        Thu, 7 Nov 2019 04:27:26 -0500
+Received: from [10.20.41.27] (unknown [10.20.41.27])
+        by mail (Coremail) with SMTP id QMiowPBxc+h248NdE1wAAA--.26S3;
+        Thu, 07 Nov 2019 17:27:18 +0800 (CST)
+Subject: Re: [PATCH] MIPS: Scan the DMI system information
+References: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
+To:     Jiaxun Yang <jiaxun.yang@flygoat.com>,
+        Paul Burton <paulburton@kernel.org>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        James Hogan <jhogan@kernel.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Huacai Chen <chenhc@lemote.com>
+Cc:     linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Yinglu Yang <yangyinglu@loongson.cn>,
+        Xuefeng Li <lixuefeng@loongson.cn>
+From:   Tiezhu Yang <yangtiezhu@loongson.cn>
+X-Forwarded-Message-Id: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
+Message-ID: <5c042bd8-40ad-e84f-588d-f3ee56f7216d@loongson.cn>
+Date:   Thu, 7 Nov 2019 17:26:58 +0800
+User-Agent: Mozilla/5.0 (X11; Linux mips64; rv:45.0) Gecko/20100101
+ Thunderbird/45.4.0
 MIME-Version: 1.0
-In-Reply-To: <cddb7e55-ae98-62c7-db9f-70e6fc734579@linux.intel.com>
-User-Agent: Mutt/1.12.1 (2019-06-15)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: -ByG3N9YNXC4dqQcGtIVww-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Content-Disposition: inline
+In-Reply-To: <5959f904-5c46-30a7-7a4f-17f692aca320@loongson.cn>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-CM-TRANSID: QMiowPBxc+h248NdE1wAAA--.26S3
+X-Coremail-Antispam: 1UD129KBjvJXoWxKF18JrW3XFy8Ww1Uur4xCrg_yoWxJFyUpF
+        y8Ja1rKF48Xr17GF1Sq343Wr9Iyrs5tFZ0gFy7tF17u3s8Zw17AFs3KayUCFy8Ar1DJFy0
+        9a40gFW3uFs8CaDanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDU0xBIdaVrnRJUUUBa14x267AKxVW8JVW5JwAFc2x0x2IEx4CE42xK8VAvwI8IcIk0
+        rVWrJVCq3wAFIxvE14AKwVWUJVWUGwA2ocxC64kIII0Yj41l84x0c7CEw4AK67xGY2AK02
+        1l84ACjcxK6xIIjxv20xvE14v26ryj6F1UM28EF7xvwVC0I7IYx2IY6xkF7I0E14v26F4j
+        6r4UJwA2z4x0Y4vEx4A2jsIE14v26F4UJVW0owA2z4x0Y4vEx4A2jsIEc7CjxVAFwI0_Gc
+        CE3s1le2I262IYc4CY6c8Ij28IcVAaY2xG8wAqx4xG64xvF2IEw4CE5I8CrVC2j2WlYx0E
+        2Ix0cI8IcVAFwI0_Jr0_Jr4lYx0Ex4A2jsIE14v26r4j6F4UMcvjeVCFs4IE7xkEbVWUJV
+        W8JwACjcxG0xvEwIxGrwACjI8F5VA0II8E6IAqYI8I648v4I1lFIxGxcIEc7CjxVA2Y2ka
+        0xkIwI1lc7I2V7IY0VAS07AlzVAYIcxG8wCY1x0262kKe7AKxVWUtVW8ZwCF04k20xvY0x
+        0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI8I3I0E
+        7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jw0_GFylIxkGc2Ij64vIr41lIxAIcV
+        C0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIxAIcVCF
+        04k26cxKx2IYs7xG6rWUJVWrZr1UMIIF0xvEx4A2jsIE14v26r1j6r4UMIIF0xvEx4A2js
+        IEc7CjxVAFwI0_Gr0_Gr1UYxBIdaVFxhVjvjDU0xZFpf9x0JUqeHgUUUUU=
+X-CM-SenderInfo: p1dqw3xlh2x3gn0dqz5rrqw2lrqou0/
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:19:10PM +0800, Jin, Yao wrote:
->=20
->=20
-> On 11/7/2019 5:01 AM, Jiri Olsa wrote:
-> > On Tue, Nov 05, 2019 at 11:36:11AM +0800, Jin Yao wrote:
-> >=20
-> > SNIP
-> >=20
-> > >=20
-> > > Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
-> > > ---
-> > >   tools/perf/builtin-report.c    | 27 ++++++++++++---
-> > >   tools/perf/ui/browsers/hists.c | 62 +++++++++++++++++++++++++++++++=
-++-
-> > >   tools/perf/ui/browsers/hists.h |  2 ++
-> > >   tools/perf/util/block-info.c   | 12 +++++++
-> > >   tools/perf/util/block-info.h   |  3 ++
-> > >   tools/perf/util/hist.h         | 12 +++++++
-> > >   6 files changed, 112 insertions(+), 6 deletions(-)
-> > >=20
-> > > diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.=
-c
-> > > index 7a8b0be8f09a..af5a57d06f12 100644
-> > > --- a/tools/perf/builtin-report.c
-> > > +++ b/tools/perf/builtin-report.c
-> > > @@ -485,6 +485,22 @@ static size_t hists__fprintf_nr_sample_events(st=
-ruct hists *hists, struct report
-> > >   =09return ret + fprintf(fp, "\n#\n");
-> > >   }
-> > > +static int perf_evlist__tui_block_hists_browse(struct evlist *evlist=
-,
-> > > +=09=09=09=09=09       struct report *rep)
-> > > +{
-> > > +=09struct evsel *pos;
-> > > +=09int i =3D 0, ret;
-> > > +
-> > > +=09evlist__for_each_entry(evlist, pos) {
-> > > +=09=09ret =3D report__tui_browse_block_hists(&rep->block_reports[i++=
-].hist,
-> > > +=09=09=09=09=09=09     rep->min_percent, pos);
-> > > +=09=09if (ret !=3D 0)
-> > > +=09=09=09return ret;
-> > > +=09}
-> > > +
-> > > +=09return 0;
-> > > +}
-> > > +
-> > >   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
-> > >   =09=09=09=09=09 struct report *rep,
-> > >   =09=09=09=09=09 const char *help)
-> > > @@ -595,6 +611,11 @@ static int report__browse_hists(struct report *r=
-ep)
-> > >   =09switch (use_browser) {
-> > >   =09case 1:
-> > > +=09=09if (rep->total_cycles_mode) {
-> > > +=09=09=09ret =3D perf_evlist__tui_block_hists_browse(evlist, rep);
-> > > +=09=09=09break;
-> > > +=09=09}
-> >=20
-> > it's good that most of it is in the block-info.c,
-> > however what I mean was to have a single report
-> > function for rep->total_cycles_mode, like:
-> >=20
-> > =09report__browse_block_hists()
-> > =09{
-> > =09=09switch (use_browser) {
-> > =09=09case 1:
-> > =09=09=09ret =3D perf_evlist__tui_block_hists_browse(evlist, rep);
-> > =09=09=09break;
-> > =09=09case 0:
-> > =09=09=09ret =3D perf_evlist__tty_block_hists_browse(evlist, rep);
-> > =09=09=09break;
-> > =09=09...
-> > =09}
-> >=20
-> > preferable in block-info.c as well
-> >=20
-> > which would be hooked in report__browse_hists:
-> >=20
-> > =09report__browse_hists()
-> > =09{
-> > =09=09if (rep->total_cycles_mode)
-> > =09=09=09return report__browse_block_hists();
-> > =09=09...
-> > =09}
-> >=20
->=20
-> If we move all block implementations from builtin-report.c to block-info.=
-c,
-> one difficulty is that we can't reuse some codes in builtin-report.c. For
-> example, reuse the function which prints the event stats
-> (hists__fprintf_nr_sample_events)
+Sorry to resend this email because the mail list server was denied
+due to it is not plain text.
 
-aah so that's why it's deep in perf_evlist__tty_browse_hists, I see
-ok it's close enough then ;-)
+On 11/07/2019 11:42 AM, Jiaxun Yang wrote:
+> 于 2019年11月7日 GMT+08:00 上午10:42:23, Tiezhu Yang<yangtiezhu@loongson.cn>  写到:
+>> On 11/07/2019 08:35 AM, Jiaxun Yang wrote:
+>>> 于 2019年11月7日 GMT+08:00 上午12:05:41, Tiezhu Yang
+>> <yangtiezhu@loongson.cn>  写到:
+>>>> Enable DMI scanning on the MIPS architecture, this setups DMI
+>>>> identifiers
+>>>> (dmi_system_id) for printing it out on task dumps and prepares DIMM
+>>>> entry
+>>>> information (dmi_memdev_info) from the SMBIOS table. With this
+>> patch,
+>>>> the
+>>>> driver can easily match various of mainboards.
+>>>>
+>>>> In the SMBIOS reference specification, the table anchor string
+>> "_SM_"
+>>>> is
+>>>> present in the address range 0xF0000 to 0xFFFFF on a 16-byte
+>> boundary,
+>>>> but there exists a special case for loongson platform, when call
+>>>> function
+>>>> dmi_early_remap, it should specify the start address to 0xFFFE000
+>> due
+>>>> to
+>>>> it is reserved for SMBIOS and can be normally access in the BIOS.
+>>>>
+>>>> Co-developed-by: Yinglu Yang<yangyinglu@loongson.cn>
+>>>> Signed-off-by: Yinglu Yang<yangyinglu@loongson.cn>
+>>>> Signed-off-by: Tiezhu Yang<yangtiezhu@loongson.cn>
+>>>> ---
+>>>> arch/mips/Kconfig           | 12 ++++++++++++
+>>>> arch/mips/include/asm/dmi.h | 43
+>>>> +++++++++++++++++++++++++++++++++++++++++++
+>>>> arch/mips/kernel/setup.c    |  2 ++
+>>>> 3 files changed, 57 insertions(+)
+>>>> create mode 100644 arch/mips/include/asm/dmi.h
+>>>>
+>>>> diff --git a/arch/mips/Kconfig b/arch/mips/Kconfig
+>>>> index 7cb8947..0a67b18 100644
+>>>> --- a/arch/mips/Kconfig
+>>>> +++ b/arch/mips/Kconfig
+>>>> @@ -2757,6 +2757,18 @@ config HW_PERF_EVENTS
+>>>> 	  Enable hardware performance counter support for perf events. If
+>>>> 	  disabled, perf events will use software events only.
+>>>>
+>>>> +# Mark as expert because too many people got it wrong.
+>>>> +# The code disables itself when not needed.
+>>>> +config DMI
+>>>> +	default y
+>>>> +	select DMI_SCAN_MACHINE_NON_EFI_FALLBACK
+>>>> +	bool "Enable DMI scanning" if EXPERT
+>>>> +	help
+>>>> +	  Enabled scanning of DMI to identify machine quirks. Say Y
+>>>> +	  here unless you have verified that your setup is not
+>>>> +	  affected by entries in the DMI blacklist. Required by PNP
+>>>> +	  BIOS code.
+>>>> +
+>>>> config SMP
+>>>> 	bool "Multi-Processing support"
+>>>> 	depends on SYS_SUPPORTS_SMP
+>>>> diff --git a/arch/mips/include/asm/dmi.h
+>> b/arch/mips/include/asm/dmi.h
+>>>> new file mode 100644
+>>>> index 0000000..1f3da37
+>>>> --- /dev/null
+>>>> +++ b/arch/mips/include/asm/dmi.h
+>>>> @@ -0,0 +1,43 @@
+>>>> +/* SPDX-License-Identifier: GPL-2.0 */
+>>>> +#ifndef _ASM_MIPS_DMI_H
+>>>> +#define _ASM_MIPS_DMI_H
+>>>> +
+>>>> +#define dmi_early_remap		mips_early_memremap
+>>>> +#define dmi_early_unmap		mips_early_memunmap
+>>>> +#define dmi_remap(_x, _l)	mips_memremap(_x, _l, MEMREMAP_WB)
+>>>> +#define dmi_unmap(_x)		mips_memunmap(_x)
+>>>> +
+>>>> +#define dmi_alloc(l)		memblock_alloc_low(l, PAGE_SIZE)
+>>>> +
+>>>> +void __init *mips_early_memremap(resource_size_t phys_addr,
+>> unsigned
+>>>> long size)
+>>>> +{
+>>>> +#if defined(CONFIG_MACH_LOONGSON64)
+>>>> +	if (phys_addr == 0xF0000)
+>>>> +		phys_addr = 0xFFFE000;
+>>>> +
+>>>> +	return (void *)TO_CAC(phys_addr);
+>>>> +#else
+>>>> +	return NULL;
+>>>> +#endif
+>>>> +}
+>>> Hi Tiezhu,
+>>>
+>>> It is really tricky to hijack dmi address here during remap.
+>>> I think we should set the dmi table address at  dmi_scan.c by a marco
+>> or something else rather than hijack it during remap.
+>>
+>> Hi Jiaxun,
+>>
+>> Thanks for your review. I agree with you, let me think about it and try
+>> to
+>> find a proper way, and then I will send a v2 patch.
 
-thanks,
-jirka
+Hi Jiaxun,
+
+It seems that there is no absolutely better way to handle this case.
+
+1. use conditional compilation in drivers/firmware/dmi_scan.c:
+
+#if defined(CONFIG_MACH_LOONGSON64)
+
+p = dmi_early_remap(0xFFFE000, 0x10000);
+
+#else
+
+p = dmi_early_remap(0xF0000, 0x10000);
+
+#endif
+
+
+This will influence the common code.
+
+2. use callback function in arch/mips/include/asm/dmi.h:
+
+struct plat_dmi_ops {
+
+         void (*early_memremap)(void);
+
+         void (*memremap)(void);
+
+};
+
+extern struct plat_dmi_ops *dmi_ops;
+
+void __init *mips_early_memremap(resource_size_t phys_addr, unsigned long size)
+
+{
+
+         dmi_ops->early_memremap();
+
+}
+
+void *mips_memremap(resource_size_t offset, size_t size, unsigned long flags)
+
+{
+
+         dmi_ops->memremap();
+
+}
+
+
+we can implement the callback function in various of MIPS platforms,
+like this:
+
+struct plat_dmi_ops loongson3_dmi_ops = {
+
+         .early_memremap = loongson3_early_memremap,
+
+         .memremap = loongson3_memremap,
+
+};
+
+register_dmi_ops(&loongson3_dmi_ops);
+
+#ifdef CONFIG_DMI
+
+void __init *loongson3_early_memremap(resource_size_t phys_addr, unsigned long size)
+
+{
+
+         if (phys_addr == 0xF0000)
+
+                 phys_addr = 0xfffe000;
+
+         return (void *)TO_CAC(phys_addr);
+
+}
+
+void *loongson3_memremap(resource_size_t offset, size_t size, unsigned long flags)
+
+{
+
+         return (void *)TO_CAC(phys_addr);
+
+}
+
+#else
+
+void __init __iomem *loongson3_early_memremap(u64 phys_addr, unsigned long size)
+
+{
+
+         return NULL;
+
+}
+
+void __init __iomem *loongson3_memremap(u64 phys_addr, unsigned long size)
+
+{
+
+         return NULL;
+
+}
+
+#endif
+
+
+This will not influence the common code.
+
+What do you think?
+
+
+Hi Jean,
+
+Could you give some suggestions?
+
+>>> Btw: Probably we should set DMI default y when MACH_LOONGSON64 is
+>> set?
+>>
+>> CONFIG_DMI is set to y by default, I think there is no need to select
+>> DMI when
+>> set CONFIG_MACH_LOONGSON64.
+> Sorry, I meant only default to y when MACH_LOONGSON64 is set or even depends on MACH_LOONGSON64. As Loongson is the only known MIPS platform that supports DMI. Default y unconditionally may lead to regression on other MIPS platforms.
+
+OK, I prefer to select DMI when set MACH_LOONGSON64 instead of
+DMI depends on MACH_LOONGSON64, I will modify the Kconfig file.
+
+Thanks,
+
+Tiezhu Yang
+
+>> Thanks,
+>>
+>> Tiezhu Yang
+>>
+>>> Thanks.
+>>>
 
