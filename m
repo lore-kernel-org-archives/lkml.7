@@ -2,78 +2,83 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_GIT autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
+	autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C84BC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:42:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB83EC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:54:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F35EB2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:42:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="gg136++W"
+	by mail.kernel.org (Postfix) with ESMTP id 94C41214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:54:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573102473;
+	bh=Pl4qu8kzGZ9lvi3i1gt+uVv/Z5lppHLT30c0XPXoRw0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=Oa+0sW0n3q60ZYc76dK4wgQAlCN9j3cxWnb34KD48yqJ+pS3atOQpBv8iJLsfcP4R
+	 aak9IokkHO/5pIHoYayn51dogDrHLoVtg2rmAEXGhnQFSllQooOOeO/DkU0S0w+R8m
+	 ydIK/Tem7NELb9SRk9nGGJIWRa4nqqMdlP6ub+yg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733216AbfKGEmk (ORCPT
+        id S1733177AbfKGEyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:42:40 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49726 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726935AbfKGEmk (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:42:40 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 0410D886BF;
-        Thu,  7 Nov 2019 17:42:38 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1573101758;
-        bh=StLCXVge82VbJcyGSyaE6MC1vdSTbQKfxMGAum6myqU=;
-        h=From:To:Cc:Subject:Date;
-        b=gg136++WSYzW3ddjXJvecj4jSi0Cc326NAvyMSn6Y4vxV6UYnDhrC6IUokAzmnTIo
-         ovfrqcXctmnfZbXbXf6/84yvDadOOt24g7VNxznhRcK6xionwdVKWgXe0MX/B84cRX
-         7ZW2C+7R64StrFWxzrpHHcscwZ4d6pmlts82OXMrRZAjL4s20ABokXUB873Z7XTqd1
-         t5SPB/+V6Dn81XsLfz/961ci1Tc3AtDmafd0RZN5fZg4jO1MOtbZ7SGIJvC8PkiO8n
-         SZnDmSE65I+3TIgDX5hUNlYAwStfEIE+mzwZKs0WxEMHyvWtoZvNRWujCSKjjhYGVb
-         7IbOMvJtwhcsA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dc3a0be0000>; Thu, 07 Nov 2019 17:42:38 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 2D9CB13EEEB;
-        Thu,  7 Nov 2019 17:42:37 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id A694228005F; Thu,  7 Nov 2019 17:42:37 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     broonie@kernel.org, kdasu.kdev@gmail.com,
-        bcm-kernel-feedback-list@broadcom.com
-Cc:     linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH 0/2] spi: more GPIO CS work
-Date:   Thu,  7 Nov 2019 17:42:33 +1300
-Message-Id: <20191107044235.4864-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.24.0
+        Wed, 6 Nov 2019 23:54:25 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47702 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726582AbfKGEyZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:54:25 -0500
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 715C1218AE
+        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 04:54:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573102464;
+        bh=Pl4qu8kzGZ9lvi3i1gt+uVv/Z5lppHLT30c0XPXoRw0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=ykYRP6DtUkUGypCR6R6+YJS2v4Nw9HpSTGSVcgyZwjfBWCfLb6Ag+poWQuVUlrybk
+         k1t8HwCXGHx9E5dNzjSxxUbG7OpIYhnFxFie1OL8KDyO+4En4+w4Zgs9XGzXR2tJxb
+         1f/Wty+i5K/HW822ID7spFB8P2PkB4hW3jxr8DFc=
+Received: by mail-wm1-f53.google.com with SMTP id b11so949770wmb.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 20:54:24 -0800 (PST)
+X-Gm-Message-State: APjAAAXlDQH+Qb0w69fPfDXJaXmZ4mtPAzYfcoqUi+lnP5ppYGYHdF6N
+        65GEnrKCHaWodep65LUlUSfhcdilexX5XhI2CMD+aw==
+X-Google-Smtp-Source: APXvYqzsUFooU67yeXhiAtz+H363Fs4Jc9JTHz4dC5wMwcNYUT67D5nuES5s7t9BRpVPqdMzHUeqAh/sB+dhgfOUqeM=
+X-Received: by 2002:a05:600c:3cf:: with SMTP id z15mr973206wmd.76.1573102462951;
+ Wed, 06 Nov 2019 20:54:22 -0800 (PST)
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+References: <20191107044109.22272-1-laijs@linux.alibaba.com>
+In-Reply-To: <20191107044109.22272-1-laijs@linux.alibaba.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Wed, 6 Nov 2019 20:54:11 -0800
+X-Gmail-Original-Message-ID: <CALCETrWdxV7fOpqZjSqB5NuLhFbSMdgf4UOq8eweVDZ7Qbemeg@mail.gmail.com>
+Message-ID: <CALCETrWdxV7fOpqZjSqB5NuLhFbSMdgf4UOq8eweVDZ7Qbemeg@mail.gmail.com>
+Subject: Re: [PATCH untested] x86_32: fix extable entry for iret
+To:     Lai Jiangshan <laijs@linux.alibaba.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, X86 ML <x86@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I've got a platform using the BCM 58525 CPU. The hardware design
-connects to two SPI devices using a slightly odd arrangement of
-GPIOs and native chip select. These patches however should be
-relevant to any platform using that CPU with "normal" CS GPIOs
+On Wed, Nov 6, 2019 at 8:41 PM Lai Jiangshan <laijs@linux.alibaba.com> wrote:
+>
+> 3c88c692c287(x86/stackframe/32: Provide consistent pt_regs)
+> added code after label .Lirq_return and before 'iret', an instruction
+> which should be expected to be found in the extable when there is
+> an exception on it. But the extable entry stores the address of
+> .Lirq_return not the new address of 'iret', which disables
+> the corresponding fixup. This patch fixes the extable entry
+> by using a new label.
 
-Chris Packham (2):
-  spi: bcm-qspi: Convert to use CS GPIO descriptors
-  spi: spi-mem: fallback to using transfers when CS gpios are used
+Egads!
 
- drivers/spi/spi-bcm-qspi.c | 7 +++++--
- drivers/spi/spi-mem.c      | 2 +-
- 2 files changed, 6 insertions(+), 3 deletions(-)
+What happens if you run tools/testing/selftests/x86/sigreturn_32 with
+and without this patch?
 
---=20
-2.24.0
-
+--Andy
