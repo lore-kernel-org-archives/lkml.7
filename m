@@ -2,72 +2,177 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE294FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30548FC6196
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:16:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B445921848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:16:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF2EB21848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:16:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gP7dFUEn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732991AbfKGCQe (ORCPT
+        id S1733017AbfKGCQj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:16:34 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:60460 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727751AbfKGCQd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:16:33 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 4B5F51A094B;
-        Thu,  7 Nov 2019 03:16:32 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 3D8441A06A5;
-        Thu,  7 Nov 2019 03:16:26 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 7A437402B4;
-        Thu,  7 Nov 2019 10:16:18 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        manivannan.sadhasivam@linaro.org, andrew.smirnov@gmail.com,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH 2/2] dt-bindings: arm: imx: Add the i.MX7D-SDB Rev-A board
-Date:   Thu,  7 Nov 2019 10:14:53 +0800
-Message-Id: <1573092893-10612-2-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573092893-10612-1-git-send-email-Anson.Huang@nxp.com>
-References: <1573092893-10612-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 6 Nov 2019 21:16:39 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43550 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfKGCQi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:16:38 -0500
+Received: by mail-pl1-f196.google.com with SMTP id a18so349166plm.10
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:16:38 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=AI+gOwu1aF+3wMT+S8NoxHwlmqoW9zMH8lPYLClUpPk=;
+        b=gP7dFUEnFihI25GGxa8lsykD8HeDcyiUUL6WzOBIVMtjJSfZf5mSEt4eDVgkyX5CoH
+         HtWoQ6zG9C31Z+W9YUiXd0KvhEiIbu6bFbS3MlCaEXcFoeYZBQeCj5wU5kV9YJNEB13r
+         0OLNv8un2qeVJHWSjMJYcnreQdsi9zFqNp2MqbsKecLyqILhhZV4ydvF8zTgQlk3DXhM
+         dg+B2ViHdjrZxi4/FmRLkL09YmyLcZ24xAVwQMjEbQzRrXcVptebZQXy+9jA62BlwWlX
+         lp4rziFmOACU4w8Up7bUUq9/4xmv66ASIhYBSAOm/GQ+fyK47TilloBPtiJWzfBhTYuI
+         cjEQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=AI+gOwu1aF+3wMT+S8NoxHwlmqoW9zMH8lPYLClUpPk=;
+        b=e5nxV3mvwl9/7t5kl2KqOUyYFeMtRYJsOKeTHMHNfqvHkemL4YbioCbQ84ddMof8Dp
+         axnzENt133q8N7GCSaerdbbRXnDIeC4L8Bq3tnhOdr7WXJy8s411lI8ppeBveNiFUIrW
+         i7fQCbOnLIGwUxgONDY17NE7DsXVk3AD7H1O2Z7R6tGYTEIuoAAlNZF4hmUUcPukVFIj
+         gc4nnNqnlz5JBG4k5HntnIfxgtlEbfSSqO3qnXMCzprpfXZDNIcUIux6nTpYHFkwCD1a
+         JG46wWNwcW13W6qD9F0HqRQYy1tbPpvQ9MYDW25xMmI5jV6f0BbNtA85p3nQA02IR98f
+         OceA==
+X-Gm-Message-State: APjAAAXXiKSnf/bdtv3Lyc7XYJTmx4bTbOYtfU453aXwCuaWvh7qvvyS
+        Yl2PeGudGTpDWKoKoONlYoQ5WA==
+X-Google-Smtp-Source: APXvYqwiYAepICA9XmaVPKja22U7qJx9Tfo/GSQ06nwMynGCQAhxmAR45aY2J+N3PZrrC1+wAoXupw==
+X-Received: by 2002:a17:902:a510:: with SMTP id s16mr994637plq.332.1573092997605;
+        Wed, 06 Nov 2019 18:16:37 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id w7sm323241pfb.101.2019.11.06.18.16.36
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 18:16:36 -0800 (PST)
+Date:   Thu, 7 Nov 2019 07:46:33 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 03/11] thermal: step_wise: Appease the kernel-doc deity
+Message-ID: <20191107021633.6c4h2u4c4vl4ebln@vireshk-i7>
+References: <cover.1573046440.git.amit.kucheria@linaro.org>
+ <fe3fc4028189d45f8a20da48501e0ea09f2b5236.1573046440.git.amit.kucheria@linaro.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fe3fc4028189d45f8a20da48501e0ea09f2b5236.1573046440.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add board binding for i.MX7D-SDB Rev-A board which is already
-supported.
+On 06-11-19, 18:58, Amit Kucheria wrote:
+> Replace - with : to appease the kernel-doc gods and fix warnings such as
+> the following when compiled with make W=1:
+> 
+> linux-amit.git/drivers/thermal/step_wise.c:187: warning: Function
+> parameter or member 'tz' not described in 'step_wise_throttle'
+> linux-amit.git/drivers/thermal/step_wise.c:187: warning: Function
+> parameter or member 'trip' not described in 'step_wise_throttle'
+> 
+> linux.git/drivers/thermal/fair_share.c:79: warning: Function parameter
+> or member 'tz' not described in 'fair_share_throttle'
+> linux.git/drivers/thermal/fair_share.c:79: warning: Function parameter
+> or member 'trip' not described in 'fair_share_throttle'
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/fair_share.c    | 4 ++--
+>  drivers/thermal/gov_bang_bang.c | 4 ++--
+>  drivers/thermal/step_wise.c     | 4 ++--
+>  drivers/thermal/user_space.c    | 4 ++--
+>  4 files changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/thermal/fair_share.c b/drivers/thermal/fair_share.c
+> index afd99f668c65d..aaa07180ab482 100644
+> --- a/drivers/thermal/fair_share.c
+> +++ b/drivers/thermal/fair_share.c
+> @@ -58,8 +58,8 @@ static long get_target_state(struct thermal_zone_device *tz,
+>  
+>  /**
+>   * fair_share_throttle - throttles devices associated with the given zone
+> - * @tz - thermal_zone_device
+> - * @trip - trip point index
+> + * @tz: thermal_zone_device
+> + * @trip: trip point index
+>   *
+>   * Throttling Logic: This uses three parameters to calculate the new
+>   * throttle state of the cooling devices associated with the given zone.
+> diff --git a/drivers/thermal/gov_bang_bang.c b/drivers/thermal/gov_bang_bang.c
+> index b831fc77cf64a..991a1c54296de 100644
+> --- a/drivers/thermal/gov_bang_bang.c
+> +++ b/drivers/thermal/gov_bang_bang.c
+> @@ -71,8 +71,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>  
+>  /**
+>   * bang_bang_control - controls devices associated with the given zone
+> - * @tz - thermal_zone_device
+> - * @trip - the trip point
+> + * @tz: thermal_zone_device
+> + * @trip: the trip point
+>   *
+>   * Regulation Logic: a two point regulation, deliver cooling state depending
+>   * on the previous state shown in this diagram:
+> diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
+> index 6e051cbd824ff..2ae7198d3067c 100644
+> --- a/drivers/thermal/step_wise.c
+> +++ b/drivers/thermal/step_wise.c
+> @@ -174,8 +174,8 @@ static void thermal_zone_trip_update(struct thermal_zone_device *tz, int trip)
+>  
+>  /**
+>   * step_wise_throttle - throttles devices associated with the given zone
+> - * @tz - thermal_zone_device
+> - * @trip - trip point index
+> + * @tz: thermal_zone_device
+> + * @trip: trip point index
+>   *
+>   * Throttling Logic: This uses the trend of the thermal zone to throttle.
+>   * If the thermal zone is 'heating up' this throttles all the cooling
+> diff --git a/drivers/thermal/user_space.c b/drivers/thermal/user_space.c
+> index 962873fd92425..293cffd9c8adb 100644
+> --- a/drivers/thermal/user_space.c
+> +++ b/drivers/thermal/user_space.c
+> @@ -17,8 +17,8 @@
+>  
+>  /**
+>   * notify_user_space - Notifies user space about thermal events
+> - * @tz - thermal_zone_device
+> - * @trip - trip point index
+> + * @tz: thermal_zone_device
+> + * @trip: trip point index
+>   *
+>   * This function notifies the user space through UEvents.
+>   */
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index a41d9e00..70ceeac 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -241,6 +241,7 @@ properties:
-         items:
-           - enum:
-               - fsl,imx7d-sdb             # i.MX7 SabreSD Board
-+              - fsl,imx7d-sdb-reva        # i.MX7 SabreSD Rev-A Board
-               - novtech,imx7d-meerkat96   # i.MX7 Meerkat96 Board
-               - toradex,colibri-imx7d                   # Colibri iMX7 Dual Module
-               - toradex,colibri-imx7d-emmc              # Colibri iMX7 Dual 1GB (eMMC) Module
 -- 
-2.7.4
-
+viresh
