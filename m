@@ -2,101 +2,228 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1C8BFC6196
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF1FC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3B7521D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:08:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EC3B217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QS6qH6Kp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733031AbfKGCIW (ORCPT
+        id S1732577AbfKGCLo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:08:22 -0500
-Received: from inva020.nxp.com ([92.121.34.13]:50812 "EHLO inva020.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732713AbfKGCIO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:08:14 -0500
-Received: from inva020.nxp.com (localhost [127.0.0.1])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 2F5EE1A00CE;
-        Thu,  7 Nov 2019 03:08:13 +0100 (CET)
-Received: from invc005.ap-rdc01.nxp.com (invc005.ap-rdc01.nxp.com [165.114.16.14])
-        by inva020.eu-rdc02.nxp.com (Postfix) with ESMTP id 1E1BC1A00C2;
-        Thu,  7 Nov 2019 03:08:07 +0100 (CET)
-Received: from localhost.localdomain (shlinux2.ap.freescale.net [10.192.224.44])
-        by invc005.ap-rdc01.nxp.com (Postfix) with ESMTP id 60D1F402B7;
-        Thu,  7 Nov 2019 10:07:59 +0800 (SGT)
-From:   Anson Huang <Anson.Huang@nxp.com>
-To:     robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org,
-        s.hauer@pengutronix.de, kernel@pengutronix.de, festevam@gmail.com,
-        andrew.smirnov@gmail.com, manivannan.sadhasivam@linaro.org,
-        marcel.ziswiler@toradex.com, sebastien.szymanski@armadeus.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-Cc:     Linux-imx@nxp.com
-Subject: [PATCH V2 3/4] ARM: dts: imx6sll: Add Rev A board support
-Date:   Thu,  7 Nov 2019 10:06:32 +0800
-Message-Id: <1573092393-26885-3-git-send-email-Anson.Huang@nxp.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-References: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Wed, 6 Nov 2019 21:11:44 -0500
+Received: from mail-il1-f193.google.com ([209.85.166.193]:45574 "EHLO
+        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727778AbfKGCLo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 21:11:44 -0500
+Received: by mail-il1-f193.google.com with SMTP id o18so323520ils.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:11:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
+        b=QS6qH6KplAbzHfCsXrTMxGf7/EoowWyvJoRyUXZH5b5nSj1rJMvUcnL5KVNbQa9KdY
+         N7i/quh0dY0FujcDlilijbFSYfm+WYVmUB93UA2Xy8j5TZaYNXzxMRgwikJx6kcbcwjZ
+         +rW1WFH9ixpIEG9zzF8ddoItXj1z9E6alHN7AGV7acyoPCvPcI7sHP8ttXAIGmEAKtCK
+         Hz0uyLuIhA5QFb+zP2QX1ZsobUpOaQQqodCyVcoolVvXWupcllpLHiVyiD2+A+Asc8d0
+         /rB//XJsfvWLnv+UVN+KizmMR88BlZNGvmYMYj5nVVmpPKTZnYpRTre5rsbXzRdjcPfG
+         0WVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
+        b=rQcBABmJGOPjWk9eau2ytsbGVdmOgRRsWVh4BTg+kaF5wOI62RakuOZBl1H+f6+I59
+         LQsTlMYTVmNyPqEyafdA/QvmbRyAyl71E1e02C+JtOBUeVB00hr+Ns95yFvia+AyYz4o
+         UrihvWaDo6T7mKtvBVc5+kTbyN2WiCwuz+1tId5kheXe3RT3VKB+0s6xdEu5zPU+gsyy
+         +4bMQ15RAYIiIrYM0yfNw7kdjMX+JTaxnat5vqfNE7j/eaKc6b0wCPKvu8Bgxx/Hg7xF
+         OtHxedFcTVITBZbiZgnH/FtWblLSN73VUxIF9ftZsAYyeEcd/13iA7biknmd6f3YobYv
+         MX4w==
+X-Gm-Message-State: APjAAAUbgFDleGNSA01b5j809hQu1TIJSJeULb1sOzX6SA+3Dgo6/zja
+        Dqcedfj+MNjwh8kilBJF0pYpBHlKJ8HQnR6e3OOVVw==
+X-Google-Smtp-Source: APXvYqzyeDjr5TTdOJAdTcs2Mr8QC5C9jpLr0O1hsPKOR4KROaGVbyvqfBoBKMTT9YtrQzx5v4HhQifzo5shXhGLKpw=
+X-Received: by 2002:a92:4555:: with SMTP id s82mr1356329ila.228.1573092702728;
+ Wed, 06 Nov 2019 18:11:42 -0800 (PST)
+MIME-Version: 1.0
+References: <20191028075658.12143-1-green.wan@sifive.com> <20191028075658.12143-4-green.wan@sifive.com>
+ <20191105174823.GF952516@vkoul-mobl>
+In-Reply-To: <20191105174823.GF952516@vkoul-mobl>
+From:   Green Wan <green.wan@sifive.com>
+Date:   Thu, 7 Nov 2019 10:11:33 +0800
+Message-ID: <CAJivOr7ZGwm8Bp1oGcYQHkao2zr0GsMQrcdawMHukmeA8wYVnQ@mail.gmail.com>
+Subject: Re: [PATCH v5 3/4] dmaengine: sf-pdma: add platform DMA support for
+ HiFive Unleashed A00
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     kbuild test robot <lkp@intel.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Yash Shah <yash.shah@sifive.com>,
+        Bin Meng <bmeng.cn@gmail.com>,
+        Sagar Kadam <sagar.kadam@sifive.com>,
+        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-i.MX6SLL EVK Rev A board is same with latest i.MX6SLL EVK board except
-eMMC can ONLY run at HS200 mode, add support for this board.
+On Wed, Nov 6, 2019 at 1:48 AM Vinod Koul <vkoul@kernel.org> wrote:
+>
+> On 28-10-19, 15:56, Green Wan wrote:
+> > Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
+> > Rev A00 board.
+> >
+> >  - Implement dmaengine APIs, support MEM_TO_MEM async copy.
+> >  - Tested by DMA Test client
+> >  - Supports 4 channels DMA, each channel has 1 done and 1 err
+> >    interrupt connected to platform-level interrupt controller (PLIC).
+> >  - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
+> >
+> > The datasheet is here:
+> >
+> >   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> >
+> > Follow the DMAengine controller doc,
+> > "./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
+> > engine. And use the dma test client in doc,
+> > "./Documentation/driver-api/dmaengine/dmatest.rst", to test.
+> >
+> > Each DMA channel has separate HW regs and support done and error ISRs.
+> > 4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
+> > in DMA HW.
+> >
+> >    ------               ------
+> >    |    |--< done 23 >--|ch 0|
+> >    |    |--< err  24 >--|    |     (dma0chan0)
+> >    |    |               ------
+> >    |    |               ------
+> >    |    |--< done 25 >--|ch 1|
+> >    |    |--< err  26 >--|    |     (dma0chan1)
+> >    |PLIC|               ------
+> >    |    |               ------
+> >    |    |--< done 27 >--|ch 2|
+> >    |    |--< err  28 >--|    |     (dma0chan2)
+> >    |    |               ------
+> >    |    |               ------
+> >    |    |--< done 29 >--|ch 3|
+> >    |    |--< err  30 >--|    |     (dma0chan3)
+> >    ------               ------
+> >
+> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>
+> when did i provide this?
+>
+> > Signed-off-by: Green Wan <green.wan@sifive.com>
+> > Reported-by: kbuild test robot <lkp@intel.com>
+> > Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
+>
+> Fixes what... this is not a upstream commit?
+>
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
-Changes since V1:
-	- Add board model and compatible to indicate it is a Rev-A board.
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/imx6sll-evk-reva.dts | 17 +++++++++++++++++
- 2 files changed, 18 insertions(+)
- create mode 100644 arch/arm/boot/dts/imx6sll-evk-reva.dts
+Since I received a RFC patch from kbuild with the fix commit number I
+thought it was about merged. RFC requested to add the "Reported-by"
+and "Fixes" but looks miss the contributor so I added them as well.
+I'll remove them in next submit. Sorry for causing confusion.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 71f08e7..3845bbf 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -557,6 +557,7 @@ dtb-$(CONFIG_SOC_IMX6SL) += \
- 	imx6sl-warp.dtb
- dtb-$(CONFIG_SOC_IMX6SLL) += \
- 	imx6sll-evk.dtb \
-+	imx6sll-evk-reva.dtb \
- 	imx6sll-kobo-clarahd.dtb
- dtb-$(CONFIG_SOC_IMX6SX) += \
- 	imx6sx-nitrogen6sx.dtb \
-diff --git a/arch/arm/boot/dts/imx6sll-evk-reva.dts b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-new file mode 100644
-index 0000000..e813c74
---- /dev/null
-+++ b/arch/arm/boot/dts/imx6sll-evk-reva.dts
-@@ -0,0 +1,17 @@
-+// SPDX-License-Identifier: (GPL-2.0 OR MIT)
-+/*
-+ * Copyright 2016 Freescale Semiconductor, Inc.
-+ * Copyright 2017-2019 NXP.
-+ *
-+ */
-+
-+#include "imx6sll-evk.dts"
-+
-+/ {
-+	model = "Freescale i.MX6SLL EVK RevA Board";
-+	compatible = "fsl,imx6sll-evk-reva", "fsl,imx6sll";
-+};
-+
-+&usdhc2 {
-+	compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-+};
--- 
-2.7.4
+> > Signed-off-by: kbuild test robot <lkp@intel.com>
+> > ---
+>
+> Please list the changes done from prev version, here or in cover letter
+>
+will add change log.
 
+> > +static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
+> > +{
+> > +     struct sf_pdma_desc *desc;
+> > +     unsigned long flags;
+> > +
+> > +     spin_lock_irqsave(&chan->lock, flags);
+> > +
+> > +     if (chan->desc && !chan->desc->in_use) {
+> > +             spin_unlock_irqrestore(&chan->lock, flags);
+> > +             return chan->desc;
+> > +     }
+> > +
+> > +     spin_unlock_irqrestore(&chan->lock, flags);
+> > +
+> > +     desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
+> > +
+>
+> this empty line in not required
+>
+> > +static struct dma_async_tx_descriptor *
+> > +     sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
+> > +                             dma_addr_t dest,
+>
+> please make it left justified
+
+will fix.
+>
+> > +static int sf_pdma_slave_config(struct dma_chan *dchan,
+> > +                             struct dma_slave_config *cfg)
+> > +{
+> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> > +
+> > +     memcpy(&chan->cfg, cfg, sizeof(*cfg));
+> > +     chan->dma_dir = DMA_MEM_TO_MEM;
+>
+> ?? looking at changelog we have only memcpy support, so this should not
+> be here, pls remove this.
+>
+> > +static enum dma_status
+> > +sf_pdma_tx_status(struct dma_chan *dchan,
+> > +               dma_cookie_t cookie,
+> > +               struct dma_tx_state *txstate)
+> > +{
+> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
+> > +     enum dma_status status;
+> > +
+> > +     status = dma_cookie_status(dchan, cookie, txstate);
+> > +
+> > +     if (txstate && status != DMA_ERROR)
+> > +             dma_set_residue(txstate, sf_pdma_desc_residue(chan));
+>
+> which residue? the query can be for a cookie which is still in pending
+> list! you need to check the cookie and only read register for cookie if
+> submitted
+>
+
+WIll fix this.
+
+> > +static int sf_pdma_remove(struct platform_device *pdev)
+> > +{
+> > +     struct sf_pdma *pdma = platform_get_drvdata(pdev);
+> > +     struct sf_pdma_chan *ch;
+> > +     int i;
+> > +
+> > +     for (i = 0; i < PDMA_NR_CH; i++) {
+> > +             ch = &pdma->chans[i];
+> > +
+> > +             list_del(&ch->vchan.chan.device_node);
+> > +             tasklet_kill(&ch->vchan.task);
+> > +             tasklet_kill(&ch->done_tasklet);
+> > +             tasklet_kill(&ch->err_tasklet);
+>
+> you have an isr registered which can fire and schedule tasklets..
+
+will fix it by free irq first. Thanks for reviewing.
+
+> --
+> ~Vinod
