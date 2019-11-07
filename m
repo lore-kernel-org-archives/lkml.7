@@ -4,57 +4,56 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68F19C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93223C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:09:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37CC12085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:08:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 694F621D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153737;
-	bh=qOVNBNhh+a7Rh0A9ImEWgTHVRvvCQKJDJeLxlDGcj5U=;
+	s=default; t=1573153743;
+	bh=4HauTmkU2H1IrBsMQ4RhSvqdWyz3iDAG6Hl+ie0WlMo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WN3WhDaOTy+JQRUmhthIZkjRepPPwO9/u0IUZ1hZlTcTBeNL4QVJF2mMFt+H3doBd
-	 K+CKUp1SJ44lf14lR/O8UjNDPeXYgnJtiqYMH+iOd8LhBH90JNQcmIC48xGw7aKZR8
-	 7bA3khk0Nzy6U3uBdjuFRn0wM0PyCyZtCashec8s=
+	b=Ao02VVcMhR76SXtS3Au1LLcpV8t5XXXXoyo9IrHNaxHnGoSvPaymAhh6HGdHxsMmP
+	 ijPMBGqi/+Jl2pVVzZuOdhRA2YHKkloDX3exud0gQ1gCCNaRDmZlFbfRDauTEQpUyo
+	 g0mAJsVyQj/EpSEyoa+gA0jz7qJPd7E9tSyU77LU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731212AbfKGTIz (ORCPT
+        id S1731240AbfKGTJC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:08:55 -0500
-Received: from mail.kernel.org ([198.145.29.99]:47412 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:09:02 -0500
+Received: from mail.kernel.org ([198.145.29.99]:47568 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728655AbfKGTIy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:08:54 -0500
+        id S1728206AbfKGTI7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:08:59 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BAA9621882;
-        Thu,  7 Nov 2019 19:08:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8612084D;
+        Thu,  7 Nov 2019 19:08:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153733;
-        bh=qOVNBNhh+a7Rh0A9ImEWgTHVRvvCQKJDJeLxlDGcj5U=;
+        s=default; t=1573153739;
+        bh=4HauTmkU2H1IrBsMQ4RhSvqdWyz3iDAG6Hl+ie0WlMo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=noqcsVhmHUEcg6KmS15K0jAVEHZM2HDY06gaHsR1+buYpNM8Ox2o/T6gmCIZSvZpG
-         5U8ZfuEQH9gHP3cIAH2e5btgdSBKy4f9JYY07vXRWOWp7ls9hTu4Phya75pUHdwwud
-         wzgtxD2QtwvV20aOaHU8GLl49NBb6BTcSJ/V8uVk=
+        b=v8ZV3SUL3EkNRtZkkH8BYbAUL+y6933DhxbvA5UKipqihtIN4S3n4DE/hQn+BOIzm
+         vPSrhugyY1dhwRWMn+hiNfHrL50GTxqcgNbE63v5BeR/trBsurEI5g0t/wMuT3s7aS
+         F52MM1/B+HH9j8JlXEOue4IaoKvevzOL0/1nVHHo=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
 Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Clark Williams <williams@redhat.com>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        Leo Yan <leo.yan@linaro.org>,
+        Jin Yao <yao.jin@linux.intel.com>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Andi Kleen <ak@linux.intel.com>, Jin Yao <yao.jin@intel.com>,
+        Kan Liang <kan.liang@linux.intel.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Wang Nan <wangnan0@huawei.com>, stable@vger.kernel.org,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 56/63] perf tests: Fix out of bounds memory access
-Date:   Thu,  7 Nov 2019 16:00:04 -0300
-Message-Id: <20191107190011.23924-57-acme@kernel.org>
+Subject: [PATCH 57/63] perf diff: Don't use hack to skip column length calculation
+Date:   Thu,  7 Nov 2019 16:00:05 -0300
+Message-Id: <20191107190011.23924-58-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -65,93 +64,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Leo Yan <leo.yan@linaro.org>
+From: Jin Yao <yao.jin@linux.intel.com>
 
-The test case 'Read backward ring buffer' failed on 32-bit architectures
-which were found by LKFT perf testing.  The test failed on arm32 x15
-device, qemu_arm32, qemu_i386, and found intermittent failure on i386;
-the failure log is as below:
+Previously we use a nasty hack to skip the hists__calc_col_len for block
+since this function is not very suitable for block column length
+calculation.
 
-  50: Read backward ring buffer                  :
-  --- start ---
-  test child forked, pid 510
-  Using CPUID GenuineIntel-6-9E-9
-  mmap size 1052672B
-  mmap size 8192B
-  Finished reading overwrite ring buffer: rewind
-  free(): invalid next size (fast)
-  test child interrupted
-  ---- end ----
-  Read backward ring buffer: FAILED!
+This patch removes the hack code and add a check at the entry of
+hists__calc_col_len to skip for block case.
 
-The log hints there have issue for memory usage, thus free() reports
-error 'invalid next size' and directly exit for the case.  Finally, this
-issue is root caused as out of bounds memory access for the data array
-'evsel->id'.
-
-The backward ring buffer test invokes do_test() twice.  'evsel->id' is
-allocated at the first call with the flow:
-
-  test__backward_ring_buffer()
-    `-> do_test()
-	  `-> evlist__mmap()
-	        `-> evlist__mmap_ex()
-	              `-> perf_evsel__alloc_id()
-
-So 'evsel->id' is allocated with one item, and it will be used in
-function perf_evlist__id_add():
-
-   evsel->id[0] = id
-   evsel->ids   = 1
-
-At the second call for do_test(), it skips to initialize 'evsel->id'
-and reuses the array which is allocated in the first call.  But
-'evsel->ids' contains the stale value.  Thus:
-
-   evsel->id[1] = id    -> out of bound access
-   evsel->ids   = 2
-
-To fix this issue, we will use evlist__open() and evlist__close() pair
-functions to prepare and cleanup context for evlist; so 'evsel->id' and
-'evsel->ids' can be initialized properly when invoke do_test() and avoid
-the out of bounds memory access.
-
-Fixes: ee74701ed8ad ("perf tests: Add test to check backward ring buffer")
-Signed-off-by: Leo Yan <leo.yan@linaro.org>
+Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Jin Yao <yao.jin@intel.com>
+Cc: Kan Liang <kan.liang@linux.intel.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Wang Nan <wangnan0@huawei.com>
-Cc: stable@vger.kernel.org # v4.10+
-Link: http://lore.kernel.org/lkml/20191107020244.2427-1-leo.yan@linaro.org
+Link: http://lore.kernel.org/lkml/20191107074719.26139-2-yao.jin@linux.intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/tests/backward-ring-buffer.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ tools/perf/builtin-diff.c | 11 ++---------
+ tools/perf/util/hist.c    |  2 ++
+ 2 files changed, 4 insertions(+), 9 deletions(-)
 
-diff --git a/tools/perf/tests/backward-ring-buffer.c b/tools/perf/tests/backward-ring-buffer.c
-index a4cd30c0beb3..15cea518f5ad 100644
---- a/tools/perf/tests/backward-ring-buffer.c
-+++ b/tools/perf/tests/backward-ring-buffer.c
-@@ -148,6 +148,15 @@ int test__backward_ring_buffer(struct test *test __maybe_unused, int subtest __m
- 		goto out_delete_evlist;
+diff --git a/tools/perf/builtin-diff.c b/tools/perf/builtin-diff.c
+index 5281629c27b1..faf99a81ad3e 100644
+--- a/tools/perf/builtin-diff.c
++++ b/tools/perf/builtin-diff.c
+@@ -765,13 +765,6 @@ static void block_hists_match(struct hists *hists_base,
  	}
+ }
  
-+	evlist__close(evlist);
-+
-+	err = evlist__open(evlist);
-+	if (err < 0) {
-+		pr_debug("perf_evlist__open: %s\n",
-+			 str_error_r(errno, sbuf, sizeof(sbuf)));
-+		goto out_delete_evlist;
-+	}
-+
- 	err = do_test(evlist, 1, &sample_count, &comm_count);
- 	if (err != TEST_OK)
- 		goto out_delete_evlist;
+-static int filter_cb(struct hist_entry *he, void *arg __maybe_unused)
+-{
+-	/* Skip the calculation of column length in output_resort */
+-	he->filtered = true;
+-	return 0;
+-}
+-
+ static void hists__precompute(struct hists *hists)
+ {
+ 	struct rb_root_cached *root;
+@@ -820,8 +813,8 @@ static void hists__precompute(struct hists *hists)
+ 				if (bh->valid && pair_bh->valid) {
+ 					block_hists_match(&bh->block_hists,
+ 							  &pair_bh->block_hists);
+-					hists__output_resort_cb(&pair_bh->block_hists,
+-								NULL, filter_cb);
++					hists__output_resort(&pair_bh->block_hists,
++							     NULL);
+ 				}
+ 				break;
+ 			default:
+diff --git a/tools/perf/util/hist.c b/tools/perf/util/hist.c
+index 679a1d75090c..daa6eef4fde0 100644
+--- a/tools/perf/util/hist.c
++++ b/tools/perf/util/hist.c
+@@ -80,6 +80,8 @@ void hists__calc_col_len(struct hists *hists, struct hist_entry *h)
+ 	int symlen;
+ 	u16 len;
+ 
++	if (h->block_info)
++		return;
+ 	/*
+ 	 * +4 accounts for '[x] ' priv level info
+ 	 * +2 accounts for 0x prefix on raw addresses
 -- 
 2.21.0
 
