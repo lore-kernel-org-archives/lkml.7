@@ -7,56 +7,56 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7D2AAFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5DFA0FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 37C7F2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:20:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2C4E121848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:21:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="G4sld1Cn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="SDJGXLGg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733042AbfKGCUi (ORCPT
+        id S1733044AbfKGCVb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:20:38 -0500
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:43138 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfKGCUh (ORCPT
+        Wed, 6 Nov 2019 21:21:31 -0500
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41883 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfKGCVa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:20:37 -0500
-Received: by mail-pf1-f194.google.com with SMTP id 3so1109007pfb.10
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:20:37 -0800 (PST)
+        Wed, 6 Nov 2019 21:21:30 -0500
+Received: by mail-pl1-f195.google.com with SMTP id d29so364392plj.8
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:21:30 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=7nVUVPTizlGkprPOHGMGuKiTavG+4pamQJDarm5kvv0=;
-        b=G4sld1CnF+WGUMEYhkeg7b2c/ddWHkENgd9t/sjURqESd/spTRn3DckkUV+ggVqpxs
-         DX9+prVgoROWZ5ZTikOoUSh3NE/f56x4Np5XPl2GPeFRBsBi+riqR1pLcOWV0xUehBKf
-         wmp5tm/wSCDSFyRRXxKDWl6js6NUHbeQ5AnxmEHoYGfK13eYs+rAXMrJjSP7M7pX2ldn
-         i0v+116tgdd7LnHQ8iJ9Grkx8U7+zNxOumG3V2S6JaYKQm/sTmaVAi9KggcL62NTKoNH
-         sKC2yS3w1LireYqKif9W7OwD+6eWDWBfqJVc/eB1HBlNPY0DLVBj4/tFqdZKKbhpfWpk
-         /BoA==
+        bh=F8VYuNOSid43MrjVcuL5CaqvY6S8eW3r2yuK7BO5dwk=;
+        b=SDJGXLGggE+E5m+gMdad8MXvtzmZkX9FQLHSFJY3No1jFMqqPX+P84oKpd1BRIrIhv
+         iHfXEo4bZUfrs6P/8pwMKgedu8kInPSpg5nFo2uz3zf1gdd8OL1Ng0DHLWx5c7Uee8Q9
+         yJyvD+Bykzyl0Hg3JVhqGVV5HWNrOjC214hZ1NoZk6sskkkKY2Al6aqc1NU5TPF28t3M
+         Btek2alNVky8HWFU/w7EbzgdzWyIrgtDDLzh67x7C7u9sOC4exJ799z/f1N8WPY+IoGY
+         FURMba0tsOS5HB1nWufsBEGQUFaKz/ilUfP4nAKu7Ux+y/z4gug6Zwg+mxN8Jj2GEr+Q
+         pQow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:from:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=7nVUVPTizlGkprPOHGMGuKiTavG+4pamQJDarm5kvv0=;
-        b=an9RzyulxsalSklCgJO+MY/wbziOpOnjHFqlanrlMIhQOenaRAd7KRK4kSiU2OBFKl
-         I+uuMuGDKNcSvyPUrXNqG6BhZHfnaj+yvHULRliTkwT3clleyDo/vckqAjynj3nkE7LE
-         HglAawwcK+Q1C9aS3CuTGmOAJY3fuWRwLY5ckpU/bWJVBCsaX/7hJZlzyf+iDhHUN2nK
-         O7bmpn6JmoCxktLCtos8Z2czey8jusG9Yf7iH/6ATx+T9qFukzrP9jOBp5/9KKKUD+m2
-         t83QS6dmcV8fx4GjWw4BYxDmXHl/xq5f4u9b50Sw+oOAW5Dfe/g2ctYkthrqSMm9iWAS
-         kVmw==
-X-Gm-Message-State: APjAAAUtUkEcBUIVrXnCVvDDvadBr5yC1bNgr+fnNLesi/fgGi8poy8J
-        jMrw8WGFe0NiXrnTIZBQ3D0CsA==
-X-Google-Smtp-Source: APXvYqwONm0UK9rYybGAoObi3hSqRbZAToeZCLsdFmnHfwr+0izG5T3e9gW6wi0eJH6dtm/LZyXAwg==
-X-Received: by 2002:a17:90a:634c:: with SMTP id v12mr1614939pjs.27.1573093236794;
-        Wed, 06 Nov 2019 18:20:36 -0800 (PST)
+        bh=F8VYuNOSid43MrjVcuL5CaqvY6S8eW3r2yuK7BO5dwk=;
+        b=eNdwh+oEK32V4owbAxKrt0r5wYSaXNsyfd2ZOUckrivb0cebDCHe1K5ke0VXAmP+Tu
+         tRQ/zWGSG2XBTyCY1eLh4qbfz64mr44zFBGC6dN6lEAZZpGV0IKiLUhvY6Z9F90ZJdhZ
+         PDBIOpPNfscOSNcE5mCdOtuXpG/4K83eDikyvTOtolL8zmhsvFRMRRUAjs9+dp0pWyeq
+         B43W4x6hUzdR+8CPcgIjX6mKbBEfkpjCDx+QBNzerFRJm0GMFb5xoDV/RX6Yi1Fyq46q
+         l9ZO3CZS9inTnIn/BvYkG6VAh+gr04Wvvqeq0sH0ul8SbWvEjFZJWOtZGrrgCJWd8B9O
+         QDfQ==
+X-Gm-Message-State: APjAAAVxFJnDktn45xtAWmY1hIeDZAWe0BgZ6zftQBDabF50T1wN1D3f
+        Xa0MKqyj7BREVMms0hz5YX47Nw==
+X-Google-Smtp-Source: APXvYqwCjUUa2EravddhWJUCM9i3hC9daXOm5Ys3mXL0S5Zxg/iGcWx5LIEoQdFU17focrcutXV10A==
+X-Received: by 2002:a17:902:6946:: with SMTP id k6mr1064471plt.60.1573093289898;
+        Wed, 06 Nov 2019 18:21:29 -0800 (PST)
 Received: from localhost ([122.171.110.253])
-        by smtp.gmail.com with ESMTPSA id w2sm342736pfj.22.2019.11.06.18.20.35
+        by smtp.gmail.com with ESMTPSA id s23sm402279pgh.21.2019.11.06.18.21.28
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 18:20:36 -0800 (PST)
-Date:   Thu, 7 Nov 2019 07:50:32 +0530
+        Wed, 06 Nov 2019 18:21:29 -0800 (PST)
+Date:   Thu, 7 Nov 2019 07:51:25 +0530
 From:   Viresh Kumar <viresh.kumar@linaro.org>
 To:     Amit Kucheria <amit.kucheria@linaro.org>
 Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
@@ -75,16 +75,16 @@ Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
         Shawn Guo <shawnguo@kernel.org>,
         Thierry Reding <thierry.reding@gmail.com>,
         Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org
-Subject: Re: [PATCH 07/11] thermal: rockchip: Appease the kernel-doc deity
-Message-ID: <20191107022032.feqnv3gguywai6cj@vireshk-i7>
+        linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH 08/11] thermal: samsung: Appease the kernel-doc deity
+Message-ID: <20191107022125.wkdsdoolondcxhju@vireshk-i7>
 References: <cover.1573046440.git.amit.kucheria@linaro.org>
- <290895a22aa8a13c13b3a4ae77c13244b4ecee58.1573046440.git.amit.kucheria@linaro.org>
+ <ef268335454e96e6ee3d13deb1cb89af0d0a3b61.1573046440.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <290895a22aa8a13c13b3a4ae77c13244b4ecee58.1573046440.git.amit.kucheria@linaro.org>
+In-Reply-To: <ef268335454e96e6ee3d13deb1cb89af0d0a3b61.1573046440.git.amit.kucheria@linaro.org>
 User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -92,157 +92,48 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 On 06-11-19, 18:58, Amit Kucheria wrote:
-> Replace a comment starting with /** by simply /* to avoid having it
-> interpreted as a kernel-doc comment. Describe missing function
-> parameters where needed.
+> Fix up the following warning when compiled with make W=1:
 > 
-> Fixes up the following warnings when compiled with make W=1:
-> 
-> linux.git/drivers/thermal/rockchip_thermal.c:27: warning: cannot
-> understand function prototype: 'enum tshut_mode '
-> linux.git/drivers/thermal/rockchip_thermal.c:37: warning: cannot
-> understand function prototype: 'enum tshut_polarity '
-> linux.git/drivers/thermal/rockchip_thermal.c:46: warning: cannot
-> understand function prototype: 'enum sensor_id '
-> linux.git/drivers/thermal/rockchip_thermal.c:56: warning: cannot
-> understand function prototype: 'enum adc_sort_mode '
-> linux.git/drivers/thermal/rockchip_thermal.c:123: warning: Function
-> parameter or member 'chn_id' not described in 'rockchip_tsadc_chip'
-> linux.git/drivers/thermal/rockchip_thermal.c:123: warning: Function
-> parameter or member 'control' not described in 'rockchip_tsadc_chip'
-> linux.git/drivers/thermal/rockchip_thermal.c:167: warning: Function
-> parameter or member 'sensors' not described in 'rockchip_thermal_data'
-> linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
-> parameter or member 'grf' not described in 'rk_tsadcv2_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
-> parameter or member 'regs' not described in 'rk_tsadcv2_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:608: warning: Function
-> parameter or member 'tshut_polarity' not described in
-> 'rk_tsadcv2_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
-> parameter or member 'grf' not described in 'rk_tsadcv3_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
-> parameter or member 'regs' not described in 'rk_tsadcv3_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:644: warning: Function
-> parameter or member 'tshut_polarity' not described in
-> 'rk_tsadcv3_initialize'
-> linux.git/drivers/thermal/rockchip_thermal.c:732: warning: Function
-> parameter or member 'regs' not described in 'rk_tsadcv3_control'
-> linux.git/drivers/thermal/rockchip_thermal.c:732: warning: Function
-> parameter or member 'enable' not described in 'rk_tsadcv3_control'
-> linux.git/drivers/thermal/rockchip_thermal.c:1211: warning: Function
-> parameter or member 'reset' not described in
-> 'rockchip_thermal_reset_controller'
-> 
+> linux.git/drivers/thermal/mtk_thermal.c:374: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt8173_thermal_data = '
+> linux.git/drivers/thermal/mtk_thermal.c:413: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt2701_thermal_data = '
+> linux.git/drivers/thermal/mtk_thermal.c:443: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt2712_thermal_data = '
+> linux.git/drivers/thermal/mtk_thermal.c:499: warning: cannot understand function prototype: 'const struct mtk_thermal_data mt8183_thermal_data = '
+> linux.git/drivers/thermal/mtk_thermal.c:529: warning: Function parameter or member 'sensno' not described in 'raw_to_mcelsius'
+
+Incorrect log here.
+
 > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
->  drivers/thermal/rockchip_thermal.c | 22 ++++++++++++++++------
->  1 file changed, 16 insertions(+), 6 deletions(-)
+>  drivers/thermal/samsung/exynos_tmu.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/thermal/rockchip_thermal.c b/drivers/thermal/rockchip_thermal.c
-> index 343c2f5c5a259..9ed8085bb7924 100644
-> --- a/drivers/thermal/rockchip_thermal.c
-> +++ b/drivers/thermal/rockchip_thermal.c
-> @@ -19,7 +19,7 @@
->  #include <linux/mfd/syscon.h>
->  #include <linux/pinctrl/consumer.h>
->  
-> -/**
-> +/*
->   * If the temperature over a period of time High,
->   * the resulting TSHUT gave CRU module,let it reset the entire chip,
->   * or via GPIO give PMIC.
-> @@ -29,7 +29,7 @@ enum tshut_mode {
->  	TSHUT_MODE_GPIO,
->  };
->  
-> -/**
-> +/*
->   * The system Temperature Sensors tshut(tshut) polarity
->   * the bit 8 is tshut polarity.
->   * 0: low active, 1: high active
-> @@ -39,7 +39,7 @@ enum tshut_polarity {
->  	TSHUT_HIGH_ACTIVE,
->  };
->  
-> -/**
-> +/*
->   * The system has two Temperature Sensors.
->   * sensor0 is for CPU, and sensor1 is for GPU.
->   */
-> @@ -48,7 +48,7 @@ enum sensor_id {
->  	SENSOR_GPU,
->  };
->  
-> -/**
-> +/*
->   * The conversion table has the adc value and temperature.
->   * ADC_DECREMENT: the adc value is of diminishing.(e.g. rk3288_code_table)
->   * ADC_INCREMENT: the adc value is incremental.(e.g. rk3368_code_table)
-> @@ -80,13 +80,14 @@ struct chip_tsadc_table {
+> diff --git a/drivers/thermal/samsung/exynos_tmu.c b/drivers/thermal/samsung/exynos_tmu.c
+> index fb2c55123a99e..8193b66a3f831 100644
+> --- a/drivers/thermal/samsung/exynos_tmu.c
+> +++ b/drivers/thermal/samsung/exynos_tmu.c
+> @@ -138,7 +138,7 @@ enum soc_type {
 >  
 >  /**
->   * struct rockchip_tsadc_chip - hold the private data of tsadc chip
-> - * @chn_id[SOC_MAX_SENSORS]: the sensor id of chip correspond to the channel
-> + * @chn_id: array of sensor ids of chip corresponding to the channel
->   * @chn_num: the channel number of tsadc chip
->   * @tshut_temp: the hardware-controlled shutdown temperature value
->   * @tshut_mode: the hardware-controlled shutdown mode (0:CRU 1:GPIO)
->   * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
->   * @initialize: SoC special initialize tsadc controller method
->   * @irq_ack: clear the interrupt
-> + * @control: enable/disable method for the tsadc controller
->   * @get_temp: get the temperature
->   * @set_alarm_temp: set the high temperature interrupt
->   * @set_tshut_temp: set the hardware-controlled shutdown temperature
-> @@ -139,7 +140,7 @@ struct rockchip_thermal_sensor {
->   * @chip: pointer to the platform/configuration data
->   * @pdev: platform device of thermal
->   * @reset: the reset controller of tsadc
-> - * @sensors[SOC_MAX_SENSORS]: the thermal sensor
-> + * @sensors: array of thermal sensors
->   * @clk: the controller clock is divided by the exteral 24MHz
->   * @pclk: the advanced peripherals bus clock
->   * @grf: the general register file will be used to do static set by software
-> @@ -590,6 +591,9 @@ static int rk_tsadcv2_code_to_temp(const struct chip_tsadc_table *table,
->  
->  /**
->   * rk_tsadcv2_initialize - initialize TASDC Controller.
-> + * @grf: the general register file will be used to do static set by software
-> + * @regs: the base address of tsadc controller
-> + * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
->   *
->   * (1) Set TSADC_V2_AUTO_PERIOD:
->   *     Configure the interleave between every two accessing of
-> @@ -624,6 +628,9 @@ static void rk_tsadcv2_initialize(struct regmap *grf, void __iomem *regs,
->  
->  /**
->   * rk_tsadcv3_initialize - initialize TASDC Controller.
-> + * @grf: the general register file will be used to do static set by software
-> + * @regs: the base address of tsadc controller
-> + * @tshut_polarity: the hardware-controlled active polarity (0:LOW 1:HIGH)
->   *
->   * (1) The tsadc control power sequence.
->   *
-> @@ -723,6 +730,8 @@ static void rk_tsadcv2_control(void __iomem *regs, bool enable)
->  
->  /**
->   * rk_tsadcv3_control - the tsadc controller is enabled or disabled.
-> + * @regs: the base address of tsadc controller
-> + * @enable: boolean flag to enable the controller
->   *
->   * NOTE: TSADC controller works at auto mode, and some SoCs need set the
->   * tsadc_q_sel bit on TSADCV2_AUTO_CON[1]. The (1024 - tsadc_q) as output
-> @@ -1206,6 +1215,7 @@ rockchip_thermal_register_sensor(struct platform_device *pdev,
->  
->  /**
->   * Reset TSADC Controller, reset all tsadc registers.
-> + * @reset: the reset controller of tsadc
->   */
->  static void rockchip_thermal_reset_controller(struct reset_control *reset)
->  {
-
-Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
+>   * struct exynos_tmu_data : A structure to hold the private data of the TMU
+> -	driver
+> + *			    driver
+>   * @id: identifier of the one instance of the TMU controller.
+>   * @base: base address of the single instance of the TMU controller.
+>   * @base_second: base address of the common registers of the TMU controller.
+> @@ -162,8 +162,11 @@ enum soc_type {
+>   *	0 < reference_voltage <= 31
+>   * @regulator: pointer to the TMU regulator structure.
+>   * @reg_conf: pointer to structure to register with core thermal.
+> + * @tzd: pointer to thermal_zone_device structure
+>   * @ntrip: number of supported trip points.
+>   * @enabled: current status of TMU device
+> + * @tmu_set_trip_temp: SoC specific method to set trip (rising threshold)
+> + * @tmu_set_trip_hyst: SoC specific to set hysteresis (falling threshold)
+>   * @tmu_initialize: SoC specific TMU initialization method
+>   * @tmu_control: SoC specific TMU control method
+>   * @tmu_read: SoC specific TMU temperature read method
+> -- 
+> 2.17.1
 
 -- 
 viresh
