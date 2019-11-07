@@ -2,101 +2,93 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 258ECFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEAE5FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:29:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E132F217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:27:21 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="M8gbdzYI"
+	by mail.kernel.org (Postfix) with ESMTP id C46CC217D7
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:29:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728612AbfKGBZ5 (ORCPT
+        id S1732831AbfKGB3x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:25:57 -0500
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34856 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728320AbfKGBZ5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:25:57 -0500
-Received: by mail-pl1-f194.google.com with SMTP id s10so272396plp.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 17:25:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=HZQZ+QN8IcCANweURFLD872HZDrHwnyJPcIvgEMxFVY=;
-        b=M8gbdzYICn+MWkDBFF1+lka3iIWAzt7qryGm8rBazx27eQHBbnvYwX0ERS4Uzp0eRu
-         CKjC/Dzb9uKHPWEZCHx6XQLu3hT2/dyAt2ysz98WXGrTYvTY1s9mreG/GSAc+ieaa9ab
-         l0Mi04rAS48fy+ccnCbqTAE/sUNR8am7Kl1sqxG2The+epIIo+fwNdnk9azL7aW77xhm
-         gaD/th52AiSNNpgy10cyoWWmry4+R6PpQLVJiEr8De+r7XHD3RDyML5lxSuDPDyNV+Hn
-         EYrNh0K5TtYQbaJoKxc9Tfh7iJu4clg9GLvXKpFkmNYI7Wo/mOM17TUudk5oGEnPnyvd
-         ssGw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=HZQZ+QN8IcCANweURFLD872HZDrHwnyJPcIvgEMxFVY=;
-        b=fUTgdahgKgiYWlqs1fSFOJ/5puSBkRkJmidDrjlgKJmLRJiaiokzWLC47q3fWUAa5f
-         9xRNWD9QFGzb/Z+pzvQr9Y1GNJdxGzpuXdViZ1L0OaRuc4lwJ1xSYISPjKZpQwP/V1LJ
-         uSNn+js5VstDESxkViwxojn/Xa4eg7EiX7zgepkEw8kOUXhmfYb6tofH5aVgIKt4rbQM
-         4N/ga2dAj/nd6sPdrkLmiu8YfVuwesQU73XzVFfE0ke6kKn9ZF0LQViaNy9Zt8Lhyb8f
-         U8jgemHec6t8MvXVAp1Rfh3RiPUc3DOTqnmOWfv7ZQD6eo08UXTZbV9hR8IhFY3LE4jc
-         o1sA==
-X-Gm-Message-State: APjAAAVOFs6bO73vCQt1+q/2MaX5Hp957yZ5eN/APr4Cuy6nWSfl1Qah
-        B/9ScW9oj7oosfT/VCfqbWo=
-X-Google-Smtp-Source: APXvYqxb5Z3SzzsKZj4I9XTqCntS3cUrEObLSUKeJxUhmcwdCT6pqmuUbVdL6m/VxPFXGcu4UobIyw==
-X-Received: by 2002:a17:902:a717:: with SMTP id w23mr731086plq.177.1573089955342;
-        Wed, 06 Nov 2019 17:25:55 -0800 (PST)
-Received: from localhost ([103.102.7.162])
-        by smtp.gmail.com with ESMTPSA id b82sm250215pfb.33.2019.11.06.17.25.54
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 06 Nov 2019 17:25:54 -0800 (PST)
-From:   Cheng Chao <cs.os.kernel@gmail.com>
-To:     gregkh@linuxfoundation.org, jslaby@suse.com, nico@fluxnic.net,
-        textshell@uchuujin.de, sam@ravnborg.org, daniel.vetter@ffwll.ch,
-        mpatocka@redhat.com, ghalat@redhat.com
-Cc:     linux-kernel@vger.kernel.org, Cheng Chao <cs.os.kernel@gmail.com>
-Subject: [PATCH] tty: fill console_driver->driver_name
-Date:   Thu,  7 Nov 2019 09:25:48 +0800
-Message-Id: <1573089948-5944-1-git-send-email-cs.os.kernel@gmail.com>
-X-Mailer: git-send-email 2.4.11
+        Wed, 6 Nov 2019 20:29:53 -0500
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6164 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728129AbfKGB3x (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:29:53 -0500
+Received: from DGGEMS413-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 3161EDFB9257EB2A553C;
+        Thu,  7 Nov 2019 09:29:51 +0800 (CST)
+Received: from localhost.localdomain (10.69.192.56) by
+ DGGEMS413-HUB.china.huawei.com (10.3.19.213) with Microsoft SMTP Server id
+ 14.3.439.0; Thu, 7 Nov 2019 09:29:45 +0800
+From:   Huazhong Tan <tanhuazhong@huawei.com>
+To:     <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <salil.mehta@huawei.com>, <yisen.zhuang@huawei.com>,
+        <linuxarm@huawei.com>, <jakub.kicinski@netronome.com>,
+        Huazhong Tan <tanhuazhong@huawei.com>
+Subject: [PATCH net] net: hns3: add compatible handling for command HCLGE_OPC_PF_RST_DONE
+Date:   Thu, 7 Nov 2019 09:30:19 +0800
+Message-ID: <1573090219-9785-1-git-send-email-tanhuazhong@huawei.com>
+X-Mailer: git-send-email 2.7.4
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.69.192.56]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-cat /proc/tty/drivers
-...
-unknown              /dev/tty        4 1-63 console
+Since old firmware does not support HCLGE_OPC_PF_RST_DONE, it will
+return -EOPNOTSUPP to the driver when received this command. So
+for this case, it should just print a warning and return success
+to the caller.
 
-----------------------------------
-after this patch:
-
-cat /proc/tty/drivers
-...
-console              /dev/tty        4 1-63 console
-
-Signed-off-by: Cheng Chao <cs.os.kernel@gmail.com>
+Fixes: 72e2fb07997c ("net: hns3: clear reset interrupt status in hclge_irq_handle()")
+Signed-off-by: Huazhong Tan <tanhuazhong@huawei.com>
 ---
- drivers/tty/vt/vt.c | 1 +
- 1 file changed, 1 insertion(+)
+ .../net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c    | 18 +++++++++++++++++-
+ 1 file changed, 17 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/tty/vt/vt.c b/drivers/tty/vt/vt.c
-index 34aa39d..981eee9 100644
---- a/drivers/tty/vt/vt.c
-+++ b/drivers/tty/vt/vt.c
-@@ -3440,6 +3440,7 @@ int __init vty_init(const struct file_operations *console_fops)
- 	if (!console_driver)
- 		panic("Couldn't allocate console driver\n");
+diff --git a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+index e02e01b..16f7d0e 100644
+--- a/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
++++ b/drivers/net/ethernet/hisilicon/hns3/hns3pf/hclge_main.c
+@@ -3587,12 +3587,28 @@ static int hclge_set_rst_done(struct hclge_dev *hdev)
+ {
+ 	struct hclge_pf_rst_done_cmd *req;
+ 	struct hclge_desc desc;
++	int ret;
  
-+	console_driver->driver_name = "console";
- 	console_driver->name = "tty";
- 	console_driver->name_base = 1;
- 	console_driver->major = TTY_MAJOR;
+ 	req = (struct hclge_pf_rst_done_cmd *)desc.data;
+ 	hclge_cmd_setup_basic_desc(&desc, HCLGE_OPC_PF_RST_DONE, false);
+ 	req->pf_rst_done |= HCLGE_PF_RESET_DONE_BIT;
+ 
+-	return hclge_cmd_send(&hdev->hw, &desc, 1);
++	ret = hclge_cmd_send(&hdev->hw, &desc, 1);
++	/* To be compatible with the old firmware, which does not support
++	 * command HCLGE_OPC_PF_RST_DONE, just print a warning and
++	 * return success
++	 */
++	if (ret == -EOPNOTSUPP) {
++		dev_warn(&hdev->pdev->dev,
++			 "current firmware does not support command(0x%x)!\n",
++			 HCLGE_OPC_PF_RST_DONE);
++		return 0;
++	} else if (ret) {
++		dev_err(&hdev->pdev->dev, "assert PF reset done fail %d!\n",
++			ret);
++	}
++
++	return ret;
+ }
+ 
+ static int hclge_reset_prepare_up(struct hclge_dev *hdev)
 -- 
-2.4.11
+2.7.4
 
