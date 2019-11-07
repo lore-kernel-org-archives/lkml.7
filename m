@@ -2,87 +2,106 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2E6D4C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AF356FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EE14B206DF
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="lcxWbUY5"
+	by mail.kernel.org (Postfix) with ESMTP id 8DB4E206DF
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:03:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727556AbfKGIDI (ORCPT
+        id S1727605AbfKGIDT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:03:08 -0500
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:41635 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGIDI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:03:08 -0500
-Received: by mail-lj1-f194.google.com with SMTP id m9so1151721ljh.8
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:03:07 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Kmm/jBUyOVxQYEej8YoVC+NyodK4z5S7O58CZiY/vk4=;
-        b=lcxWbUY56TCq5OVhHvHP0fLd9Bnxpoto8fgVFrKDJpIxr3G9KHi3Pmy9oszlcNSXgo
-         t0YI2eSOCjOw6F3uNrPqnjVh7GN0eObzxtVPJZ31uKAuEK4RSUr85mIiDCZShGmKUDoQ
-         qTjbiNZTTyc8uZcFINlQ3Dx0xm0q4a4QMRb6gqBNz2VuiTME2L0TZn7aQ58d5uu1erAM
-         0xqVnN+znJy+EtBmwpxPP1CX03jiq0cpQZOvZqK9/405oBUdMUiFLMEAQiEPpw6NhHLS
-         NDHWrFBkfMw0NM5OGZdXgM+UKFRCGLrT0xv8SgtAXkwa8q382pidcHyxyCZiyfIfv+jQ
-         A8lA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Kmm/jBUyOVxQYEej8YoVC+NyodK4z5S7O58CZiY/vk4=;
-        b=ubyRRwRher4E1s8DFd2MwRXRAbXe5fA7LJW0qWzBFn6sdxqgg388XH7pno6/f8f54D
-         MW8NbmTFalos5ezuaEiieTs8Hk59EEFljoPGjckmFgHxapdOonJxK5oLJRPIMxB1UxJB
-         Vpjd1CADsYuV2vQHeh0w726HrWSYNxA2fgWNU+TMDLIEyHsfThItyFjpeE8B9rfF42N5
-         6r6t16RXYJIPRJfX2KlTRv8FO9kG/nZemOB5rRMpKGjWGArIyx61h2cYySVSZ3LZRY8m
-         L+5671BhaYW2xOA0z58Ny8Z0zsGqEu6IhM3OckVGJlmPTuNmC/HVlYaCojK2C2Ee/M8z
-         5TLg==
-X-Gm-Message-State: APjAAAVrBL6KixfNAmzOWdZuIhj6utUYmFsPYhby/WAvQQzJLZjbcG2j
-        0XCLQKDpFQtb+xxtunliT1ahjyIHeeEIM5bgAYJHAg==
-X-Google-Smtp-Source: APXvYqwZVpbtOHL92iEyTM3EmkgPSjCx2Af+TdzU1057vZFBlyDBU0Xbub/hP3q/v8XmhDxndZmJPv23+9MTzdzI/9U=
-X-Received: by 2002:a2e:9784:: with SMTP id y4mr1318382lji.77.1573113786425;
- Thu, 07 Nov 2019 00:03:06 -0800 (PST)
+        Thu, 7 Nov 2019 03:03:19 -0500
+Received: from szxga05-in.huawei.com ([45.249.212.191]:5740 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726734AbfKGIDS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:03:18 -0500
+Received: from DGGEMS412-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 6EEA48D711EBFC8BF3D0;
+        Thu,  7 Nov 2019 16:03:16 +0800 (CST)
+Received: from [127.0.0.1] (10.57.64.164) by DGGEMS412-HUB.china.huawei.com
+ (10.3.19.212) with Microsoft SMTP Server id 14.3.439.0; Thu, 7 Nov 2019
+ 16:03:07 +0800
+Subject: Re: [PATCH] EFI/stub: tpm: enable tpm eventlog function for ARM64
+ platform
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>
+CC:     Ingo Molnar <mingo@kernel.org>, Will Deacon <will@kernel.org>,
+        "Kate Stewart" <kstewart@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Steve Capper <steve.capper@arm.com>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linuxarm <linuxarm@huawei.com>, <zoucao@linux.alibaba.com>,
+        Xinwei Kong <kong.kongxinwei@hisilicon.com>
+References: <20191105082924.289-1-kong.kongxinwei@hisilicon.com>
+ <CAKv+Gu-V0S9EZeCjna5+P6v53evV-6uuG0rAShUA+uWb=NgH4g@mail.gmail.com>
+ <CAKv+Gu9X4vCiS+BABs34t05MdF6GaFJr4jBTeaamngx3s=sPBg@mail.gmail.com>
+From:   kongxinwei <kong.kongxinwei@hisilicon.com>
+Message-ID: <9ffbc8d5-cd95-1978-c5df-eedd4fe2b850@hisilicon.com>
+Date:   Thu, 7 Nov 2019 16:03:05 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <20191106173125.14496-1-stephan@gerhold.net> <20191106173125.14496-2-stephan@gerhold.net>
-In-Reply-To: <20191106173125.14496-2-stephan@gerhold.net>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Thu, 7 Nov 2019 09:02:55 +0100
-Message-ID: <CACRpkdZKRc1NLiWe9EnNxbFK8i4gNZ92oqtoGar-Pb3SCr6DGA@mail.gmail.com>
-Subject: Re: [PATCH 2/2] regulator: ab8500: Remove SYSCLKREQ from enum ab8505_regulator_id
-To:     Stephan Gerhold <stephan@gerhold.net>
-Cc:     Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAKv+Gu9X4vCiS+BABs34t05MdF6GaFJr4jBTeaamngx3s=sPBg@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.57.64.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 6:33 PM Stephan Gerhold <stephan@gerhold.net> wrote:
+On 2019/11/6 22:59, Ard Biesheuvel wrote:
+> On Wed, 6 Nov 2019 at 15:56, Ard Biesheuvel <ard.biesheuvel@linaro.org> wrote:
+>>
+>> On Tue, 5 Nov 2019 at 09:29, Xinwei Kong <kong.kongxinwei@hisilicon.com> wrote:
+>>>
+>>> this patch gets tpm eventlog information such as device boot status,event guid
+>>> and so on, which will be from bios stage. it use "efi_retrieve_tpm2_eventlog"
+>>> functions to get it for ARM64 platorm.
+>>>
+>>> Signed-off-by: Xinwei Kong <kong.kongxinwei@hisilicon.com>
+>>> Signed-off-by: Zou Cao <zoucao@linux.alibaba.com>
+>>> ---
+>>>  drivers/firmware/efi/libstub/arm-stub.c | 2 ++
+>>>  1 file changed, 2 insertions(+)
+>>>
+>>> diff --git a/drivers/firmware/efi/libstub/arm-stub.c b/drivers/firmware/efi/libstub/arm-stub.c
+>>> index c382a48..37c8f81 100644
+>>> --- a/drivers/firmware/efi/libstub/arm-stub.c
+>>> +++ b/drivers/firmware/efi/libstub/arm-stub.c
+>>> @@ -139,6 +139,8 @@ unsigned long efi_entry(void *handle, efi_system_table_t *sys_table,
+>>>         if (status != EFI_SUCCESS)
+>>>                 goto fail;
+>>>
+>>> +       efi_retrieve_tpm2_eventlog(sys_table);
+>>> +
+>>
+>> This function allocates memory, so calling it should be deferred until
+>> after we relocate the kernel, to prevent these allocations from using
+>> up space that we'd rather use for the kernel.
+>>
+>> Does it work for you if we move this call further down, right before
+>> the call to efi_enable_reset_attack_mitigation()? Please confirm.
+>>
 
-> Those regulators are not actually supported by the AB8500 regulator
-> driver. There is no ab8500_regulator_info for them and no entry in
-> ab8505_regulator_match.
->
-> As such, they cannot be registered successfully, and looking them
-> up in ab8505_regulator_match causes an out-of-bounds array read.
->
-> Fixes: 547f384f33db ("regulator: ab8500: add support for ab8505")
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Signed-off-by: Stephan Gerhold <stephan@gerhold.net>
+ok，I will confirm it and send V2 version patch :
 
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Also, your S-o-b chain is incorrect. If Zou Cao provided you with the
+> patch, please credit her/him as the author (using git --reset-author)
+> and move your S-o-b last. If Zou Cao was a co-author [which seems
+> unlikely for a single line patch], use Co-developed-by+Signed-off-by.
+> In any case, the S-o-b of the person sending out the patch via email
+> should come last.
+> 
+I will deal it.
+> .
+> 
 
-Yours,
-Linus Walleij
