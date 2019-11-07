@@ -2,107 +2,130 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05665C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:32:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FEBEC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:40:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D1F2321D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:32:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 71BAD2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:40:21 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573162821;
+	bh=EDAqi25SHtXpQvaMB7rqtcUVESWv2xHjqs6Tu/AI09I=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=i937Jwq9qRRWc6QOB5uLNOHXYgCXuFE9KrCmIGqb+6oTRGNtgnJChlv8ny92aYT06
+	 scwc0jvVZDhhqUeL9gdSb9y6vTiwjZdgKfYlCel3Tt1sn86YFhlKNjanYyuN2dKzqH
+	 34cYxCQVdc7bEF1GaUZaNPVrtE7n13k5JPEkm3fM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726610AbfKGVcY (ORCPT
+        id S1726111AbfKGVkU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:32:24 -0500
-Received: from Galois.linutronix.de ([193.142.43.55]:49680 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725882AbfKGVcY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:32:24 -0500
-Received: from p5b06da22.dip0.t-ipconnect.de ([91.6.218.34] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1iSpO4-0006A0-GZ; Thu, 07 Nov 2019 22:32:16 +0100
-Date:   Thu, 7 Nov 2019 22:32:15 +0100 (CET)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Brian Gerst <brgerst@gmail.com>
-cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        the arch/x86 maintainers <x86@kernel.org>,
-        Stephen Hemminger <stephen@networkplumber.org>,
-        Willy Tarreau <w@1wt.eu>, Juergen Gross <jgross@suse.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        "H. Peter Anvin" <hpa@zytor.com>
-Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
- further
-In-Reply-To: <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
-Message-ID: <alpine.DEB.2.21.1911072223000.27903@nanos.tec.linutronix.de>
-References: <20191106193459.581614484@linutronix.de> <20191106202806.241007755@linutronix.de> <CAMzpN2juuUyLuQ-tiV7hKZvG4agsHKP=rRAt_V4sZhpZW7cv9g@mail.gmail.com> <CAHk-=wiGO=+mmEb-sfCsD5mxmL5++gdwkFj_aXcfz1R41MJnEg@mail.gmail.com>
- <CAMzpN2gt4qM41=96GpNHL-kbgBsjD-zphq+5oK0BXqoCFN4F4Q@mail.gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Thu, 7 Nov 2019 16:40:20 -0500
+Received: from mail.kernel.org ([198.145.29.99]:54624 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725893AbfKGVkU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 16:40:20 -0500
+Received: from mail.kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9920F2178F;
+        Thu,  7 Nov 2019 21:40:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573162818;
+        bh=EDAqi25SHtXpQvaMB7rqtcUVESWv2xHjqs6Tu/AI09I=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QPjkVJpVAqUdXN82EgihxLyW87YEVBzRue/KEUVoHEuCOjeRhvEgdiGB3tjAE+St3
+         QImaW6VlzT5bg+4CQt/+ByquPA/GQrhLZGUV4E5qb5FRPpzn/6Yeo1Qq5ApPk8uyRa
+         t2egbDKtAFNOjNgOaAem6mopKP12gul6mZ5DjwIs=
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Stephen Boyd <sboyd@kernel.org>
+Cc:     linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org,
+        Vinod Koul <vkoul@kernel.org>, Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH] clk: qcom: rpmh: Reuse sdm845 clks for sm8150
+Date:   Thu,  7 Nov 2019 13:40:18 -0800
+Message-Id: <20191107214018.184105-1-sboyd@kernel.org>
+X-Mailer: git-send-email 2.24.0.rc1.363.gb1bccd3e3d-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 7 Nov 2019, Brian Gerst wrote:
-> On Thu, Nov 7, 2019 at 2:54 PM Linus Torvalds
-> <torvalds@linux-foundation.org> wrote:
-> >
-> > On Thu, Nov 7, 2019 at 11:24 AM Brian Gerst <brgerst@gmail.com> wrote:
-> > >
-> > > Here is a different idea:  We already map the TSS virtually in
-> > > cpu_entry_area.  Why not page-align the IO bitmap and remap it to the
-> > > task's bitmap on task switch?  That would avoid all copying on task
-> > > switch.
-> >
-> > We map the tss _once_, statically, percpu, without ever changing it,
-> > and then we just (potentially) change a couple of fields in it on
-> > process switch.
-> >
-> > Your idea isn't horrible, but it would involve a TLB flush for the
-> > page when the io bitmap changes. Which is almost certainly more
-> > expensive than just copying the bitmap intelligently.
-> >
-> > Particularly since I do think that the copy can basically be done
-> > effectively never, assuming there really aren't multiple concurrent
-> > users of ioperm() (and iopl).
-> 
-> There wouldn't have to be a flush on every task switch.  If we make it
-> so that tasks that don't use a bitmap just unmap the pages in the
-> cpu_entry_area and set tss.io_bitmap_base to outside the segment
-> limit, we would only have to flush when switching from a task using
-> the bitmap (because the next task uses a different bitmap or we are
-> unmapping it).  If the previous task doesn't have a bitmap the pages
-> in cpu_entry_area were unmapped and can't be in the TLB, so no flush
-> is needed.
+The SM8150 list of clks is almost the same as the list for SDM845,
+except there isn't an IPA clk. Just point to the SDM845 clks from the
+SM8150 list for now so we can reduce the amount of struct bloat in this
+driver.
 
-Funny. I was just debating exactly this with Peter Ziljstra over IRC :)
+Suggested-by: Vinod Koul <vkoul@kernel.org>
+Cc: Taniya Das <tdas@codeaurora.org>
+Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+---
+ drivers/clk/qcom/clk-rpmh.c | 34 ++++++++++++++--------------------
+ 1 file changed, 14 insertions(+), 20 deletions(-)
+
+diff --git a/drivers/clk/qcom/clk-rpmh.c b/drivers/clk/qcom/clk-rpmh.c
+index 7301c7739f29..2dbbe47e8d4f 100644
+--- a/drivers/clk/qcom/clk-rpmh.c
++++ b/drivers/clk/qcom/clk-rpmh.c
+@@ -334,13 +334,14 @@ static const struct clk_ops clk_rpmh_bcm_ops = {
+ 	.recalc_rate	= clk_rpmh_bcm_recalc_rate,
+ };
  
-> Going a step further, we could track which task is mapped to the
-> current cpu like proposed above, and only flush when a different task
-> needs the IO bitmap, or when the bitmap is being freed on task exit.
-
-Yes.
-
-But, we really should check what aside of DoSemu is using this still. None
-of my machines I checked have a single instance of ioperm()/iopl() usage.
-
-So the real question is whether it's worth the trouble or if we are just
-better off to copy if there is an actual user and the sequence count of the
-bitmap is different than the one which was active last time.
-
-Thanks,
-
-	tglx
-
-
-
+-/* Resource name must match resource id present in cmd-db. */
++/* Resource name must match resource id present in cmd-db */
+ DEFINE_CLK_RPMH_ARC(sdm845, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
+ DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
+ DEFINE_CLK_RPMH_VRM(sdm845, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
+ DEFINE_CLK_RPMH_VRM(sdm845, rf_clk1, rf_clk1_ao, "rfclka1", 1);
+ DEFINE_CLK_RPMH_VRM(sdm845, rf_clk2, rf_clk2_ao, "rfclka2", 1);
+ DEFINE_CLK_RPMH_VRM(sdm845, rf_clk3, rf_clk3_ao, "rfclka3", 1);
++DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
+ DEFINE_CLK_RPMH_BCM(sdm845, ipa, "IP0");
+ 
+ static struct clk_hw *sdm845_rpmh_clocks[] = {
+@@ -364,26 +365,19 @@ static const struct clk_rpmh_desc clk_rpmh_sdm845 = {
+ 	.num_clks = ARRAY_SIZE(sdm845_rpmh_clocks),
+ };
+ 
+-DEFINE_CLK_RPMH_ARC(sm8150, bi_tcxo, bi_tcxo_ao, "xo.lvl", 0x3, 2);
+-DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk2, ln_bb_clk2_ao, "lnbclka2", 2);
+-DEFINE_CLK_RPMH_VRM(sm8150, ln_bb_clk3, ln_bb_clk3_ao, "lnbclka3", 2);
+-DEFINE_CLK_RPMH_VRM(sm8150, rf_clk1, rf_clk1_ao, "rfclka1", 1);
+-DEFINE_CLK_RPMH_VRM(sm8150, rf_clk2, rf_clk2_ao, "rfclka2", 1);
+-DEFINE_CLK_RPMH_VRM(sm8150, rf_clk3, rf_clk3_ao, "rfclka3", 1);
+-
+ static struct clk_hw *sm8150_rpmh_clocks[] = {
+-	[RPMH_CXO_CLK]		= &sm8150_bi_tcxo.hw,
+-	[RPMH_CXO_CLK_A]	= &sm8150_bi_tcxo_ao.hw,
+-	[RPMH_LN_BB_CLK2]	= &sm8150_ln_bb_clk2.hw,
+-	[RPMH_LN_BB_CLK2_A]	= &sm8150_ln_bb_clk2_ao.hw,
+-	[RPMH_LN_BB_CLK3]	= &sm8150_ln_bb_clk3.hw,
+-	[RPMH_LN_BB_CLK3_A]	= &sm8150_ln_bb_clk3_ao.hw,
+-	[RPMH_RF_CLK1]		= &sm8150_rf_clk1.hw,
+-	[RPMH_RF_CLK1_A]	= &sm8150_rf_clk1_ao.hw,
+-	[RPMH_RF_CLK2]		= &sm8150_rf_clk2.hw,
+-	[RPMH_RF_CLK2_A]	= &sm8150_rf_clk2_ao.hw,
+-	[RPMH_RF_CLK3]		= &sm8150_rf_clk3.hw,
+-	[RPMH_RF_CLK3_A]	= &sm8150_rf_clk3_ao.hw,
++	[RPMH_CXO_CLK]		= &sdm845_bi_tcxo.hw,
++	[RPMH_CXO_CLK_A]	= &sdm845_bi_tcxo_ao.hw,
++	[RPMH_LN_BB_CLK2]	= &sdm845_ln_bb_clk2.hw,
++	[RPMH_LN_BB_CLK2_A]	= &sdm845_ln_bb_clk2_ao.hw,
++	[RPMH_LN_BB_CLK3]	= &sdm845_ln_bb_clk3.hw,
++	[RPMH_LN_BB_CLK3_A]	= &sdm845_ln_bb_clk3_ao.hw,
++	[RPMH_RF_CLK1]		= &sdm845_rf_clk1.hw,
++	[RPMH_RF_CLK1_A]	= &sdm845_rf_clk1_ao.hw,
++	[RPMH_RF_CLK2]		= &sdm845_rf_clk2.hw,
++	[RPMH_RF_CLK2_A]	= &sdm845_rf_clk2_ao.hw,
++	[RPMH_RF_CLK3]		= &sdm845_rf_clk3.hw,
++	[RPMH_RF_CLK3_A]	= &sdm845_rf_clk3_ao.hw,
+ };
+ 
+ static const struct clk_rpmh_desc clk_rpmh_sm8150 = {
+-- 
+Sent by a computer through tubes
 
