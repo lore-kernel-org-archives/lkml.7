@@ -2,170 +2,173 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2720FC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:41:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06B15C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:41:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF8E32077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:41:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D23752077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:41:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="VEE70/Ab"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="yt3FBYRz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730912AbfKGRk4 (ORCPT
+        id S2389696AbfKGRlR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:40:56 -0500
-Received: from bombadil.infradead.org ([198.137.202.133]:50006 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730779AbfKGRkz (ORCPT
+        Thu, 7 Nov 2019 12:41:17 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:35600 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730868AbfKGRlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:40:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
-        :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
-        :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
-        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AcNJdWRFj0IiWBDJa9CJHpHPvlD1qpX53iQGww529G4=; b=VEE70/AbA2+/80RtKkwS8hzNgH
-        0f/3J/BsSZ3aRwyDlxRdwuqsD5FF94BN++erCt7XDF1X8q3AHRFysxrvZJAJhD0rv9iTWKFDaAnWX
-        1h1fQcVVwUS5gunbzqZ42JZjy8bCD5HrwTxW7vVMAKYX4DgJY5BpSx70Mo3j1MWwbyfi6qFMl091I
-        RCm1pVnatmrIM+Q9KcbWp06hZjW9Ype5zpwVgWHyvDSxAzox7uiqAAwpt275DOYQsfbUTh2k5fO17
-        cpKC7oNOXiKaF8wHv31ngSy4RUryhOiq8SEhUwfZbxncwQXtQ17K3mnBSxVzVf6aAjWr7AUHq9iyU
-        Reb5jevQ==;
-Received: from [2001:4bb8:184:e48:c70:4a89:bc61:2] (helo=localhost)
-        by bombadil.infradead.org with esmtpsa (Exim 4.92.3 #3 (Red Hat Linux))
-        id 1iSllz-0002ON-Cw; Thu, 07 Nov 2019 17:40:43 +0000
-From:   Christoph Hellwig <hch@lst.de>
-To:     Jonas Bonn <jonas@southpole.se>,
-        Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>,
-        Stafford Horne <shorne@gmail.com>
-Cc:     Marek Szyprowski <m.szyprowski@samsung.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        openrisc@lists.librecores.org, iommu@lists.linux-foundation.org,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 2/2] openrisc: use the generic in-place uncached DMA allocator
-Date:   Thu,  7 Nov 2019 18:40:35 +0100
-Message-Id: <20191107174035.13783-3-hch@lst.de>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20191107174035.13783-1-hch@lst.de>
-References: <20191107174035.13783-1-hch@lst.de>
+        Thu, 7 Nov 2019 12:41:15 -0500
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA7Hf3ZZ013174;
+        Thu, 7 Nov 2019 11:41:03 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573148463;
+        bh=gkvS19CgRrGsYzGHjew64Q0kY91+V839loIwRfgDRFw=;
+        h=From:To:CC:Subject:Date;
+        b=yt3FBYRzHEMu3zGa4FxWgxUNosLyAtqv3HxABc9UJiISLGkptxcStgr+rlw8YB4TA
+         EAFqoMeKVSFAx/B8Osy7YG0iM0uuby8cN1GrbGs4fpedqUHhdASfUadXzoGcfCJjAW
+         x9nkF+mxTiyYqUS6vNtfHmH9eyYMJlAAZKQzWJpA=
+Received: from DFLE109.ent.ti.com (dfle109.ent.ti.com [10.64.6.30])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id xA7Hf368079645
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Thu, 7 Nov 2019 11:41:03 -0600
+Received: from DFLE113.ent.ti.com (10.64.6.34) by DFLE109.ent.ti.com
+ (10.64.6.30) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Thu, 7 Nov
+ 2019 11:40:47 -0600
+Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE113.ent.ti.com
+ (10.64.6.34) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Thu, 7 Nov 2019 11:40:47 -0600
+Received: from localhost (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA7Hf2xN014786;
+        Thu, 7 Nov 2019 11:41:02 -0600
+From:   Dan Murphy <dmurphy@ti.com>
+To:     <andrew@lunn.ch>, <f.fainelli@gmail.com>, <hkallweit1@gmail.com>,
+        <davem@davemloft.net>
+CC:     <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        Dan Murphy <dmurphy@ti.com>, Rob Herring <robh+dt@kernel.org>
+Subject: [PATCH v2 1/2] dt-bindings: net: dp83869: Add TI dp83869 phy
+Date:   Thu, 7 Nov 2019 11:40:01 -0600
+Message-ID: <20191107174002.11227-1-dmurphy@ti.com>
+X-Mailer: git-send-email 2.22.0.214.g8dca754b1e
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
+Content-Type: text/plain
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch openrisc to use the dma-direct allocator and just provide the
-hooks for setting memory uncached or cached.
+Add dt bindings for the TI dp83869 Gigabit ethernet phy
+device.
 
-Signed-off-by: Christoph Hellwig <hch@lst.de>
+Signed-off-by: Dan Murphy <dmurphy@ti.com>
+CC: Rob Herring <robh+dt@kernel.org>
 ---
- arch/openrisc/Kconfig      |  1 +
- arch/openrisc/kernel/dma.c | 51 +++++---------------------------------
- 2 files changed, 7 insertions(+), 45 deletions(-)
 
-diff --git a/arch/openrisc/Kconfig b/arch/openrisc/Kconfig
-index bf326f0edd2f..72469d2d2866 100644
---- a/arch/openrisc/Kconfig
-+++ b/arch/openrisc/Kconfig
-@@ -7,6 +7,7 @@
- config OPENRISC
- 	def_bool y
- 	select ARCH_32BIT_OFF_T
-+	select ARCH_HAS_DMA_SET_UNCACHED
- 	select ARCH_HAS_SYNC_DMA_FOR_DEVICE
- 	select OF
- 	select OF_EARLY_FLATTREE
-diff --git a/arch/openrisc/kernel/dma.c b/arch/openrisc/kernel/dma.c
-index 4d5b8bd1d795..9a5b10164b08 100644
---- a/arch/openrisc/kernel/dma.c
-+++ b/arch/openrisc/kernel/dma.c
-@@ -11,8 +11,6 @@
-  * Copyright (C) 2010-2011 Jonas Bonn <jonas@southpole.se>
-  *
-  * DMA mapping callbacks...
-- * As alloc_coherent is the only DMA callback being used currently, that's
-- * the only thing implemented properly.  The rest need looking into...
-  */
- 
- #include <linux/dma-noncoherent.h>
-@@ -67,62 +65,25 @@ static const struct mm_walk_ops clear_nocache_walk_ops = {
- 	.pte_entry		= page_clear_nocache,
- };
- 
--/*
-- * Alloc "coherent" memory, which for OpenRISC means simply uncached.
-- *
-- * This function effectively just calls __get_free_pages, sets the
-- * cache-inhibit bit on those pages, and makes sure that the pages are
-- * flushed out of the cache before they are used.
-- *
-- * If the NON_CONSISTENT attribute is set, then this function just
-- * returns "normal", cachable memory.
-- *
-- * There are additional flags WEAK_ORDERING and WRITE_COMBINE to take
-- * into consideration here, too.  All current known implementations of
-- * the OR1K support only strongly ordered memory accesses, so that flag
-- * is being ignored for now; uncached but write-combined memory is a
-- * missing feature of the OR1K.
-- */
--void *
--arch_dma_alloc(struct device *dev, size_t size, dma_addr_t *dma_handle,
--		gfp_t gfp, unsigned long attrs)
-+int arch_dma_set_uncached(void *cpu_addr, size_t size)
- {
--	unsigned long va;
--	void *page;
--
--	page = alloc_pages_exact(size, gfp | __GFP_ZERO);
--	if (!page)
--		return NULL;
--
--	/* This gives us the real physical address of the first page. */
--	*dma_handle = __pa(page);
--
--	va = (unsigned long)page;
-+	unsigned long va = (unsigned long)cpu_addr;
- 
- 	/*
- 	 * We need to iterate through the pages, clearing the dcache for
- 	 * them and setting the cache-inhibit bit.
- 	 */
--	if (walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
--			NULL)) {
--		free_pages_exact(page, size);
--		return NULL;
--	}
--
--	return (void *)va;
-+	return walk_page_range(&init_mm, va, va + size, &set_nocache_walk_ops,
-+			NULL);
- }
- 
--void
--arch_dma_free(struct device *dev, size_t size, void *vaddr,
--		dma_addr_t dma_handle, unsigned long attrs)
-+void arch_dma_clear_uncached(void *cpu_addr, size_t size)
- {
--	unsigned long va = (unsigned long)vaddr;
-+	unsigned long va = (unsigned long)cpu_addr;
- 
- 	/* walk_page_range shouldn't be able to fail here */
- 	WARN_ON(walk_page_range(&init_mm, va, va + size,
- 			&clear_nocache_walk_ops, NULL));
--
--	free_pages_exact(vaddr, size);
- }
- 
- void arch_sync_dma_for_device(struct device *dev, phys_addr_t addr, size_t size,
+v2 - No changes 
+
+ .../devicetree/bindings/net/ti,dp83869.yaml   | 84 +++++++++++++++++++
+ 1 file changed, 84 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ti,dp83869.yaml
+
+diff --git a/Documentation/devicetree/bindings/net/ti,dp83869.yaml b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+new file mode 100644
+index 000000000000..6fe3e451da8a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/ti,dp83869.yaml
+@@ -0,0 +1,84 @@
++# SPDX-License-Identifier: GPL-2.0
++# Copyright (C) 2019 Texas Instruments Incorporated
++%YAML 1.2
++---
++$id: "http://devicetree.org/schemas/net/ti,dp83869.yaml#"
++$schema: "http://devicetree.org/meta-schemas/core.yaml#"
++
++title: TI DP83869 ethernet PHY
++
++allOf:
++  - $ref: "ethernet-controller.yaml#"
++
++maintainers:
++  - Dan Murphy <dmurphy@ti.com>
++
++description: |
++  The DP83869HM device is a robust, fully-featured Gigabit (PHY) transceiver
++  with integrated PMD sublayers that supports 10BASE-Te, 100BASE-TX and
++  1000BASE-T Ethernet protocols. The DP83869 also supports 1000BASE-X and
++  100BASE-FX Fiber protocols.
++  This device interfaces to the MAC layer through Reduced GMII (RGMII) and
++  SGMII The DP83869HM supports Media Conversion in Managed mode. In this mode,
++  the DP83869HM can run 1000BASE-X-to-1000BASE-T and 100BASE-FX-to-100BASE-TX
++  conversions.  The DP83869HM can also support Bridge Conversion from RGMII to
++  SGMII and SGMII to RGMII.
++
++  Specifications about the charger can be found at:
++    http://www.ti.com/lit/ds/symlink/dp83869hm.pdf
++
++properties:
++  reg:
++    maxItems: 1
++
++  ti,min-output-impedance:
++    type: boolean
++    description: |
++       MAC Interface Impedance control to set the programmable output impedance
++       to a minimum value (35 ohms).
++
++  ti,max-output-impedance:
++    type: boolean
++    description: |
++       MAC Interface Impedance control to set the programmable output impedance
++       to a maximum value (70 ohms).
++
++  tx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Transmitt FIFO depth see dt-bindings/net/ti-dp83869.h for values
++
++  rx-fifo-depth:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Receive FIFO depth see dt-bindings/net/ti-dp83869.h for values
++
++  ti,clk-output-sel:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Muxing option for CLK_OUT pin see dt-bindings/net/ti-dp83869.h for values.
++
++  ti,op-mode:
++    $ref: /schemas/types.yaml#definitions/uint32
++    description: |
++       Operational mode for the PHY.  If this is not set then the operational
++       mode is set by the straps. see dt-bindings/net/ti-dp83869.h for values
++
++required:
++  - reg
++
++examples:
++  - |
++    #include <dt-bindings/net/ti-dp83869.h>
++    mdio0 {
++      #address-cells = <1>;
++      #size-cells = <0>;
++      ethphy0: ethernet-phy@0 {
++        reg = <0>;
++        tx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
++        rx-fifo-depth = <DP83869_PHYCR_FIFO_DEPTH_4_B_NIB>;
++        ti,op-mode = <DP83869_RGMII_COPPER_ETHERNET>;
++        ti,max-output-impedance = "true";
++        ti,clk-output-sel = <DP83869_CLK_O_SEL_CHN_A_RCLK>;
++      };
++    };
 -- 
-2.20.1
+2.22.0.214.g8dca754b1e
 
