@@ -4,44 +4,44 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCBEC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFE1FC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 386792087E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B17E21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="csIFwvNw"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="AgVLID8W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388324AbfKGLG1 (ORCPT
+        id S2388363AbfKGLGa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:06:27 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.122]:24960 "EHLO
+        Thu, 7 Nov 2019 06:06:30 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([85.215.255.123]:35715 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388289AbfKGLGZ (ORCPT
+        with ESMTP id S1727278AbfKGLG0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:06:25 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124782;
+        Thu, 7 Nov 2019 06:06:26 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124784;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=kuWxP6XI8yia7xcampj743xWvPrmABkKYwuFpHNeEY4=;
-        b=csIFwvNwRhboGCVc4PaSG+CNdUUMBj4KWyB7WYmOylJH8/pLK6cCWUaQDzWtPT1Q66
-        CqUtkR1C5ymtneWbNsU+D7UYID4ZRq3NLuwBUV4Ogm4WGLXb2I3rp4gdlSWJx3lIJrKp
-        iau7gkhiVZp0BGHd/7qNYs65Eo618myrbHtLzEFntjS6fLX6HNyA2RpCPLPwKgrP+M6/
-        0nu/N4M7TRVpQFp/jIUEJAFi4lZHKRJAHgMQC8JlhLDMoTuhq4UUVeNH3+KWrVHzqs1s
-        3JNvz+fJ7Ys3uCp+09QZCfem7SiFWYb6cdGcsFI4pao2L9et4CCbLIq8v7GwbNk4VVlX
-        tn5A==
+        bh=V4tJDHqvWbqdzKwfz6qUe3xDpoCXtYHplW9v6qCJKW4=;
+        b=AgVLID8WhH8V/do80aTnw0lrQQPouj1Ip/P1RgL9TJw83ULTLjEaQ+e4z5iYYO1ovb
+        4RLNOX7ZvvHqixMCmiFvuupcEeSE0GZT4x93ceuluB6Bu2QXGAU8vngYW41BwlGAr/42
+        rq6fmr5iNCE1ErtTpagTf71jEiaK+qNKkXIetXr14dkzqixg/iZRiuYJxzY7+zaqAdMZ
+        dFeMIHDjJd9r8gSndkG9yCPqHIAhk1lVz7AeX9SnKea2BewnmH+zKQ+TJtGu6vNX1jHF
+        +15H0RfqM2y/ydR2+XkesT4K0C7DDege9hBLaWISNpo3z+C23G4pQKP7Ki+zKo808yyx
+        xN2g==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vA7B6Fdh0
+        with ESMTPSA id L09db3vA7B6Gdh5
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Thu, 7 Nov 2019 12:06:15 +0100 (CET)
+        Thu, 7 Nov 2019 12:06:16 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -57,9 +57,9 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
         "H. Nikolaus Schaller" <hns@goldelico.com>
-Subject: [PATCH v2 5/8] ARM: DTS: omap36xx: add sgx gpu child node
-Date:   Thu,  7 Nov 2019 12:06:08 +0100
-Message-Id: <d94892eff3f2ad9b9a92f8e882121a96717a56c0.1573124770.git.hns@goldelico.com>
+Subject: [PATCH v2 7/8] ARM: DTS: omap5: add sgx gpu child node
+Date:   Thu,  7 Nov 2019 12:06:10 +0100
+Message-Id: <b71f5c9be8db254d6c0bedaaa3c94122137bd232.1573124770.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573124770.git.hns@goldelico.com>
 References: <cover.1573124770.git.hns@goldelico.com>
@@ -72,42 +72,33 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 and add interrupt.
 
-Tested on GTA04 and BeagleBoard XM.
+Tested on Pyra-Handheld.
 
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/arm/boot/dts/omap36xx.dtsi | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/omap5.dtsi | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/omap36xx.dtsi b/arch/arm/boot/dts/omap36xx.dtsi
-index 1e552f08f120..851d4abb943b 100644
---- a/arch/arm/boot/dts/omap36xx.dtsi
-+++ b/arch/arm/boot/dts/omap36xx.dtsi
-@@ -145,7 +145,7 @@
- 		 * "ti,sysc-omap4" type register with just sidle and midle bits
- 		 * available while omap34xx has "ti,sysc-omap2" type sysconfig.
- 		 */
--		sgx_module: target-module@50000000 {
-+		target-module@50000000 {
- 			compatible = "ti,sysc-omap4", "ti,sysc";
- 			reg = <0x5000fe00 0x4>,
- 			      <0x5000fe10 0x4>;
-@@ -162,10 +162,11 @@
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 1fb7937638f0..333da4788088 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -274,10 +274,11 @@
  			#size-cells = <1>;
- 			ranges = <0 0x50000000 0x2000000>;
+ 			ranges = <0 0x56000000 0x2000000>;
  
 -			/*
 -			 * Closed source PowerVR driver, no child device
 -			 * binding or driver in mainline
 -			 */
 +			sgx: gpu@0 {
-+				compatible = "ti,omap3-sgx530-125", "img,sgx530-125", "img,sgx530";
-+				reg = <0x0 0x10000>;	/* 64kB */
-+				interrupts = <21>;
++				compatible = "ti,omap5-sgx544-116", "img,sgx544-116", "img,sgx544";
++				reg = <0x0 0x10000>;
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
 +			};
  		};
- 	};
  
+ 		dss: dss@58000000 {
 -- 
 2.23.0
 
