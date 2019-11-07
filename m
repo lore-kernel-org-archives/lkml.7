@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-15.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 255C7C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:04:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BB0C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:04:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6092085B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:04:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D4DB21D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:04:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153471;
-	bh=ARgfAKIqGyaTgnszbwvPaWy1NAB17gCqB7YLPzkNJtM=;
+	s=default; t=1573153477;
+	bh=2lsZm4/HRIBdTLTkWSg2Y9RalodS/OSHq4ZaIU+nbl0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Sngyhgv1+ja4upKqUq+oGTBNjR59TvXdW4hdzPL6//oSYtagw547zoRtmWwmAEDOb
-	 BMN+Ob9F0pCI6/py8HyL2RMJ9Oy62rVNcRVVOItaJXXjLrHZc+5k3YgBgSc6Smk4DD
-	 Hw4PLO1kxQqdZkwnQntz3udnqhh8z6tt179MH2EE=
+	b=mtXFkctqRCcPQCfyokTD4PeTZxSnGaBWhKRsc9SD/iIzbmpaq7cFsQO1JedfJGSIF
+	 S93gccU8Gtqt34U2eQdByazAgg8uD1d9GzvAMMUF9sNtLmesh+ellkjMnCloVEpTHA
+	 gLYbS2nmkpBpo45L69nBh79UGQJIU+LubQezJxPY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729931AbfKGTE2 (ORCPT
+        id S1730037AbfKGTEg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:04:28 -0500
-Received: from mail.kernel.org ([198.145.29.99]:43306 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:04:36 -0500
+Received: from mail.kernel.org ([198.145.29.99]:43372 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfKGTE1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:04:27 -0500
+        id S1725871AbfKGTEf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:04:35 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 90BE4218AE;
-        Thu,  7 Nov 2019 19:04:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1788221882;
+        Thu,  7 Nov 2019 19:04:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153467;
-        bh=ARgfAKIqGyaTgnszbwvPaWy1NAB17gCqB7YLPzkNJtM=;
+        s=default; t=1573153474;
+        bh=2lsZm4/HRIBdTLTkWSg2Y9RalodS/OSHq4ZaIU+nbl0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=qp1kt+VPBTjZ5k0m7l14JpwST8keI2K/Gfgy4R8zA1m3JbxmeJ311qSG69P+TgznS
-         kocb+C4Y5CRy5mDyA7APtZ2Vhw6wWkldUDn3KN02FsHxI5M8ficMv9x76WoCnu20yO
-         PNBLqbks/hFd6HZCMePTkwB6lFCvbg5W8ROSCJLc=
+        b=xija3YerK4pawCbJ1NP+Y06XLUSbZtXR11rkvxGBwAKsfBoQRG3yrJSqEo7bSo81B
+         mHZyrL3IA6sj73L8AUVmqsdm1RxWIwcIsgjTJPJwJZinmAfU4wGvi93YFCXbRnE8N2
+         briFzpSXvuLdKn3EtZRUePc2Sn5mo+YxiwYbQq0k=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -48,9 +48,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         Arnaldo Carvalho de Melo <acme@redhat.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
         Andi Kleen <ak@linux.intel.com>
-Subject: [PATCH 28/63] perf map: Check if the map still has some refcounts on exit
-Date:   Thu,  7 Nov 2019 15:59:36 -0300
-Message-Id: <20191107190011.23924-29-acme@kernel.org>
+Subject: [PATCH 29/63] perf map: Allow map__next() to receive a NULL arg
+Date:   Thu,  7 Nov 2019 15:59:37 -0300
+Message-Id: <20191107190011.23924-30-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -63,33 +63,44 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Arnaldo Carvalho de Melo <acme@redhat.com>
 
-We were checking just if it was still on some rb tree, but that is not
-the only way that this map can still have references, map->refcnt is
-there exactly for this, use it.
+Just like free(), return NULL in that case, will simplify the
+for_each_entry_safe() iterators.
 
 Cc: Adrian Hunter <adrian.hunter@intel.com>
 Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Namhyung Kim <namhyung@kernel.org>
-Link: https://lkml.kernel.org/n/tip-hany65tbeavsax7n3xvwl9pc@git.kernel.org
+Link: https://lkml.kernel.org/n/tip-pbde2ucn49khnrebclys9pny@git.kernel.org
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/map.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/map.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index eec9b282c047..c9ba49566981 100644
+index c9ba49566981..86d8d187f872 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -288,7 +288,7 @@ bool map__has_symbols(const struct map *map)
- 
- static void map__exit(struct map *map)
- {
--	BUG_ON(!RB_EMPTY_NODE(&map->rb_node));
-+	BUG_ON(refcount_read(&map->refcnt) != 0);
- 	dso__zput(map->dso);
+@@ -1007,7 +1007,7 @@ struct map *maps__first(struct maps *maps)
+ 	return NULL;
  }
  
+-struct map *map__next(struct map *map)
++static struct map *__map__next(struct map *map)
+ {
+ 	struct rb_node *next = rb_next(&map->rb_node);
+ 
+@@ -1016,6 +1016,11 @@ struct map *map__next(struct map *map)
+ 	return NULL;
+ }
+ 
++struct map *map__next(struct map *map)
++{
++	return map ? __map__next(map) : NULL;
++}
++
+ struct kmap *__map__kmap(struct map *map)
+ {
+ 	if (!map->dso || !map->dso->kernel)
 -- 
 2.21.0
 
