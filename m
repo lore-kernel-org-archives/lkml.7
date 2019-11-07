@@ -2,228 +2,120 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 66EF1FC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09F11FC6194
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:16:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2EC3B217D7
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:11:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDA492187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 02:15:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="QS6qH6Kp"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="T59vipNJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732577AbfKGCLo (ORCPT
+        id S1732769AbfKGCP6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 21:11:44 -0500
-Received: from mail-il1-f193.google.com ([209.85.166.193]:45574 "EHLO
-        mail-il1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727778AbfKGCLo (ORCPT
+        Wed, 6 Nov 2019 21:15:58 -0500
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:45981 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727751AbfKGCP6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 21:11:44 -0500
-Received: by mail-il1-f193.google.com with SMTP id o18so323520ils.12
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:11:43 -0800 (PST)
+        Wed, 6 Nov 2019 21:15:58 -0500
+Received: by mail-pl1-f196.google.com with SMTP id y24so343006plr.12
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 18:15:58 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
-        b=QS6qH6KplAbzHfCsXrTMxGf7/EoowWyvJoRyUXZH5b5nSj1rJMvUcnL5KVNbQa9KdY
-         N7i/quh0dY0FujcDlilijbFSYfm+WYVmUB93UA2Xy8j5TZaYNXzxMRgwikJx6kcbcwjZ
-         +rW1WFH9ixpIEG9zzF8ddoItXj1z9E6alHN7AGV7acyoPCvPcI7sHP8ttXAIGmEAKtCK
-         Hz0uyLuIhA5QFb+zP2QX1ZsobUpOaQQqodCyVcoolVvXWupcllpLHiVyiD2+A+Asc8d0
-         /rB//XJsfvWLnv+UVN+KizmMR88BlZNGvmYMYj5nVVmpPKTZnYpRTre5rsbXzRdjcPfG
-         0WVQ==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4cKuNUYvAqunvz+72B7anlYEtcmjqeC5FeNltzDFT5k=;
+        b=T59vipNJYtRlVOnfzcZA23VauEahxy7MNspU0b7oX2ekYAE3qzT7B/EnaGYttLoMDQ
+         TkM+K1VxwwR9r3IAcW2Flh4PVi7CpxcgKYiJ1Gp5/FrciIQBzjIveyNa6BeFvA0Cg05m
+         iiljd57ipGroXvyQ0j/MtNI8E5IYIdVFMfilWKgYNhHQNn99lk+fFSHl2AfsNCElOeyb
+         rGDw6zIdYgXGq1SmHNxizrDSS33B0eYcuUOsZeL2H0R8tqygnUZK2kuENLHQVCDiHSXr
+         FjS14E2QKkU0EZ8CxEoVy3Em0+YdFMq2F86KoKPL8YywVWgvqHj1U6OEJg1mNqlq4fmd
+         BB1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=zj5nVV7hFwHQ61cfvcd7q5vRxcIEvVb9YfJiy7fOWvA=;
-        b=rQcBABmJGOPjWk9eau2ytsbGVdmOgRRsWVh4BTg+kaF5wOI62RakuOZBl1H+f6+I59
-         LQsTlMYTVmNyPqEyafdA/QvmbRyAyl71E1e02C+JtOBUeVB00hr+Ns95yFvia+AyYz4o
-         UrihvWaDo6T7mKtvBVc5+kTbyN2WiCwuz+1tId5kheXe3RT3VKB+0s6xdEu5zPU+gsyy
-         +4bMQ15RAYIiIrYM0yfNw7kdjMX+JTaxnat5vqfNE7j/eaKc6b0wCPKvu8Bgxx/Hg7xF
-         OtHxedFcTVITBZbiZgnH/FtWblLSN73VUxIF9ftZsAYyeEcd/13iA7biknmd6f3YobYv
-         MX4w==
-X-Gm-Message-State: APjAAAUbgFDleGNSA01b5j809hQu1TIJSJeULb1sOzX6SA+3Dgo6/zja
-        Dqcedfj+MNjwh8kilBJF0pYpBHlKJ8HQnR6e3OOVVw==
-X-Google-Smtp-Source: APXvYqzyeDjr5TTdOJAdTcs2Mr8QC5C9jpLr0O1hsPKOR4KROaGVbyvqfBoBKMTT9YtrQzx5v4HhQifzo5shXhGLKpw=
-X-Received: by 2002:a92:4555:: with SMTP id s82mr1356329ila.228.1573092702728;
- Wed, 06 Nov 2019 18:11:42 -0800 (PST)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4cKuNUYvAqunvz+72B7anlYEtcmjqeC5FeNltzDFT5k=;
+        b=HrZm7pMhqycV5HKlc0KlWVQsLZ2i50zlibqjCMTiaavaOphewh8eIW8cOoSLOzZG8x
+         Bz9Oi2LkF00T3VynX9BF1nOH1eCB9CWgnBSEbAn+8kgNFJXjJYAiDje92Q1+UvHIwKyp
+         Is4uH3xP6m9J4D/GwzXE/cHWFyLUgenr0RZOXrQLo+WAtQvQ34mmM0JayRd21wP5Zsl/
+         ohIWYOJURBqQIloJwpQxp5Rh6SRuWz9fZmyF+Xme94ytIM3ZHvbSwuJjn4/TMXn1XDfk
+         JRmLVHWXU5zs5g6MWLyY37oTxADcv/RSmFOuSod5H+GkbdKwJt8Wp7BVf7F5duNa7dnS
+         woEw==
+X-Gm-Message-State: APjAAAXca/ECqo2YuehKY/BvQ8wkM1ZV9/+Ri4nly6wyT8FLT0hbBATJ
+        um1LAk/gKuVY6BWV5N9e/g20Ig==
+X-Google-Smtp-Source: APXvYqzCKzlvkuqzRAncs0ielDj0zuGNM9QqxzhWJxgll4/9/pZjwl3R0uj4+gXExMgSAmRcPke6aw==
+X-Received: by 2002:a17:902:102:: with SMTP id 2mr1010877plb.156.1573092957436;
+        Wed, 06 Nov 2019 18:15:57 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id 70sm326657pfw.160.2019.11.06.18.15.56
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 18:15:56 -0800 (PST)
+Date:   Thu, 7 Nov 2019 07:45:52 +0530
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Amit Kucheria <amit.kucheria@linaro.org>
+Cc:     linux-kernel@vger.kernel.org, edubezval@gmail.com,
+        Amit Daniel Kachhap <amit.kachhap@gmail.com>,
+        Amit Kucheria <amit.kucheria@verdurent.com>,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
+        Daniel Lezcano <daniel.lezcano@linaro.org>,
+        Guillaume La Roque <glaroque@baylibre.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Javi Merino <javi.merino@kernel.org>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        Jun Nie <jun.nie@linaro.org>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        Kukjin Kim <kgene@kernel.org>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Zhang Rui <rui.zhang@intel.com>, linux-pm@vger.kernel.org
+Subject: Re: [PATCH 01/11] thermal: of-thermal: Appease the kernel-doc deity
+Message-ID: <20191107021552.qlg2xvan6sajntgm@vireshk-i7>
+References: <cover.1573046440.git.amit.kucheria@linaro.org>
+ <ebd5991d5554202893fbcab4707be6d26f502aef.1573046440.git.amit.kucheria@linaro.org>
 MIME-Version: 1.0
-References: <20191028075658.12143-1-green.wan@sifive.com> <20191028075658.12143-4-green.wan@sifive.com>
- <20191105174823.GF952516@vkoul-mobl>
-In-Reply-To: <20191105174823.GF952516@vkoul-mobl>
-From:   Green Wan <green.wan@sifive.com>
-Date:   Thu, 7 Nov 2019 10:11:33 +0800
-Message-ID: <CAJivOr7ZGwm8Bp1oGcYQHkao2zr0GsMQrcdawMHukmeA8wYVnQ@mail.gmail.com>
-Subject: Re: [PATCH v5 3/4] dmaengine: sf-pdma: add platform DMA support for
- HiFive Unleashed A00
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     kbuild test robot <lkp@intel.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Yash Shah <yash.shah@sifive.com>,
-        Bin Meng <bmeng.cn@gmail.com>,
-        Sagar Kadam <sagar.kadam@sifive.com>,
-        dmaengine@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <ebd5991d5554202893fbcab4707be6d26f502aef.1573046440.git.amit.kucheria@linaro.org>
+User-Agent: NeoMutt/20180716-391-311a52
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 6, 2019 at 1:48 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 28-10-19, 15:56, Green Wan wrote:
-> > Add PDMA driver, sf-pdma, to enable DMA engine on HiFive Unleashed
-> > Rev A00 board.
-> >
-> >  - Implement dmaengine APIs, support MEM_TO_MEM async copy.
-> >  - Tested by DMA Test client
-> >  - Supports 4 channels DMA, each channel has 1 done and 1 err
-> >    interrupt connected to platform-level interrupt controller (PLIC).
-> >  - Depends on DMA_ENGINE and DMA_VIRTUAL_CHANNELS
-> >
-> > The datasheet is here:
-> >
-> >   https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-> >
-> > Follow the DMAengine controller doc,
-> > "./Documentation/driver-api/dmaengine/provider.rst" to implement DMA
-> > engine. And use the dma test client in doc,
-> > "./Documentation/driver-api/dmaengine/dmatest.rst", to test.
-> >
-> > Each DMA channel has separate HW regs and support done and error ISRs.
-> > 4 channels share 1 done and 1 err ISRs. There's no expander/arbitrator
-> > in DMA HW.
-> >
-> >    ------               ------
-> >    |    |--< done 23 >--|ch 0|
-> >    |    |--< err  24 >--|    |     (dma0chan0)
-> >    |    |               ------
-> >    |    |               ------
-> >    |    |--< done 25 >--|ch 1|
-> >    |    |--< err  26 >--|    |     (dma0chan1)
-> >    |PLIC|               ------
-> >    |    |               ------
-> >    |    |--< done 27 >--|ch 2|
-> >    |    |--< err  28 >--|    |     (dma0chan2)
-> >    |    |               ------
-> >    |    |               ------
-> >    |    |--< done 29 >--|ch 3|
-> >    |    |--< err  30 >--|    |     (dma0chan3)
-> >    ------               ------
-> >
-> > Reviewed-by: Vinod Koul <vkoul@kernel.org>
->
-> when did i provide this?
->
-> > Signed-off-by: Green Wan <green.wan@sifive.com>
-> > Reported-by: kbuild test robot <lkp@intel.com>
-> > Fixes: 31c3b98b5a01 ("dmaengine: sf-pdma: add platform DMA support for HiFive Unleashed A00")
->
-> Fixes what... this is not a upstream commit?
->
+On 06-11-19, 18:58, Amit Kucheria wrote:
+> Replace a comment starting with /** by simply /* to avoid having
+> it interpreted as a kernel-doc comment.
+> 
+> Fixes the following warning when compile with make W=1:
+> linux.git/drivers/thermal/of-thermal.c:761: warning: cannot understand function prototype: 'const char *trip_types[] = '
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  drivers/thermal/of-thermal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
+> index dc5093be553ec..5235aed2fadd5 100644
+> --- a/drivers/thermal/of-thermal.c
+> +++ b/drivers/thermal/of-thermal.c
+> @@ -754,7 +754,7 @@ static int thermal_of_populate_bind_params(struct device_node *np,
+>  	return ret;
+>  }
+>  
+> -/**
+> +/*
+>   * It maps 'enum thermal_trip_type' found in include/linux/thermal.h
+>   * into the device tree binding of 'trip', property type.
+>   */
 
-Since I received a RFC patch from kbuild with the fix commit number I
-thought it was about merged. RFC requested to add the "Reported-by"
-and "Fixes" but looks miss the contributor so I added them as well.
-I'll remove them in next submit. Sorry for causing confusion.
+Reviewed-by: Viresh Kumar <viresh.kumar@linaro.org>
 
-> > Signed-off-by: kbuild test robot <lkp@intel.com>
-> > ---
->
-> Please list the changes done from prev version, here or in cover letter
->
-will add change log.
-
-> > +static struct sf_pdma_desc *sf_pdma_alloc_desc(struct sf_pdma_chan *chan)
-> > +{
-> > +     struct sf_pdma_desc *desc;
-> > +     unsigned long flags;
-> > +
-> > +     spin_lock_irqsave(&chan->lock, flags);
-> > +
-> > +     if (chan->desc && !chan->desc->in_use) {
-> > +             spin_unlock_irqrestore(&chan->lock, flags);
-> > +             return chan->desc;
-> > +     }
-> > +
-> > +     spin_unlock_irqrestore(&chan->lock, flags);
-> > +
-> > +     desc = kzalloc(sizeof(*desc), GFP_NOWAIT);
-> > +
->
-> this empty line in not required
->
-> > +static struct dma_async_tx_descriptor *
-> > +     sf_pdma_prep_dma_memcpy(struct dma_chan *dchan,
-> > +                             dma_addr_t dest,
->
-> please make it left justified
-
-will fix.
->
-> > +static int sf_pdma_slave_config(struct dma_chan *dchan,
-> > +                             struct dma_slave_config *cfg)
-> > +{
-> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> > +
-> > +     memcpy(&chan->cfg, cfg, sizeof(*cfg));
-> > +     chan->dma_dir = DMA_MEM_TO_MEM;
->
-> ?? looking at changelog we have only memcpy support, so this should not
-> be here, pls remove this.
->
-> > +static enum dma_status
-> > +sf_pdma_tx_status(struct dma_chan *dchan,
-> > +               dma_cookie_t cookie,
-> > +               struct dma_tx_state *txstate)
-> > +{
-> > +     struct sf_pdma_chan *chan = to_sf_pdma_chan(dchan);
-> > +     enum dma_status status;
-> > +
-> > +     status = dma_cookie_status(dchan, cookie, txstate);
-> > +
-> > +     if (txstate && status != DMA_ERROR)
-> > +             dma_set_residue(txstate, sf_pdma_desc_residue(chan));
->
-> which residue? the query can be for a cookie which is still in pending
-> list! you need to check the cookie and only read register for cookie if
-> submitted
->
-
-WIll fix this.
-
-> > +static int sf_pdma_remove(struct platform_device *pdev)
-> > +{
-> > +     struct sf_pdma *pdma = platform_get_drvdata(pdev);
-> > +     struct sf_pdma_chan *ch;
-> > +     int i;
-> > +
-> > +     for (i = 0; i < PDMA_NR_CH; i++) {
-> > +             ch = &pdma->chans[i];
-> > +
-> > +             list_del(&ch->vchan.chan.device_node);
-> > +             tasklet_kill(&ch->vchan.task);
-> > +             tasklet_kill(&ch->done_tasklet);
-> > +             tasklet_kill(&ch->err_tasklet);
->
-> you have an isr registered which can fire and schedule tasklets..
-
-will fix it by free irq first. Thanks for reviewing.
-
-> --
-> ~Vinod
+-- 
+viresh
