@@ -2,137 +2,178 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.7 required=3.0 tests=DATE_IN_PAST_96_XX,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F588C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9210C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:54:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0FC1A218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:52:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F4A9214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:54:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hrH1FtfB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389451AbfKGNwa (ORCPT
+        id S1730941AbfKGNyq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:52:30 -0500
-Received: from verein.lst.de ([213.95.11.211]:57503 "EHLO verein.lst.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2389401AbfKGNw1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:52:27 -0500
-Received: by verein.lst.de (Postfix, from userid 2005)
-        id 82A2468C7B; Thu,  7 Nov 2019 14:52:25 +0100 (CET)
-In-Reply-To: <20191107135018.0A04068BE1@verein.lst.de>
-References: <20191107135018.0A04068BE1@verein.lst.de>
-From:   Torsten Duwe <duwe@lst.de>
-Date:   Tue, 29 Oct 2019 13:16:57 +0100
-Subject: [PATCH v5 7/7] arm64: dts: allwinner: a64: enable ANX6345 bridge on
- Teres-I
-To:     Maxime Ripard <mripard@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Laurent Pinchart <Laurent.pinchart@ideasonboard.com>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vasily Khoruzhick <anarsoul@gmail.com>,
-        Harald Geyer <harald@ccbib.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Message-Id: <20191107135225.82A2468C7B@verein.lst.de>
+        Thu, 7 Nov 2019 08:54:46 -0500
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]:56927 "EHLO
+        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726810AbfKGNyq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:54:46 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573134884;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=t+GpHBRriMbogZ8e0AcN1f5YzGvR15HQmscsOF5sEEs=;
+        b=hrH1FtfBGQY4kLzy0TUThiaWhQYJ309mZOd1QfcdD0BkViRa+q7anb+Po3G1Rvqtso6cij
+        Jm5JrImd7UNnWV4cOc4RiTXu83GrrzQ6RPZcQmLn6zVVkzkUnHjWbNkF4vuhL5RKfpMe7X
+        aDm3wrx/2CuzKrFInBjHb+Yv7JaaQNs=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-220-csnduqu1M-CvpMRPYB7mTA-1; Thu, 07 Nov 2019 08:54:40 -0500
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 3BFB7800C72;
+        Thu,  7 Nov 2019 13:54:39 +0000 (UTC)
+Received: from ovpn-124-234.rdu2.redhat.com (ovpn-124-234.rdu2.redhat.com [10.10.124.234])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 4061D5DA32;
+        Thu,  7 Nov 2019 13:54:38 +0000 (UTC)
+Message-ID: <7467951caf48f00f7b3f6cffb588579d462c996b.camel@redhat.com>
+Subject: Re: [PATCH 2/9] c6x: Include <linux/unaligned/generic.h> instead of
+ duplicating it
+From:   Mark Salter <msalter@redhat.com>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Christoph Hellwig <hch@lst.de>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-kernel@vger.kernel.org, linux-scsi@vger.kernel.org,
+        Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+Date:   Thu, 07 Nov 2019 08:54:37 -0500
+In-Reply-To: <20191028200700.213753-3-bvanassche@acm.org>
+References: <20191028200700.213753-1-bvanassche@acm.org>
+         <20191028200700.213753-3-bvanassche@acm.org>
+Organization: Red Hat, Inc
+User-Agent: Evolution 3.32.4 (3.32.4-1.fc30)
+MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-MC-Unique: csnduqu1M-CvpMRPYB7mTA-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Teres-I has an anx6345 bridge connected to the RGB666 LCD output, and
-the I2C controlling signals are connected to I2C0 bus.
+On Mon, 2019-10-28 at 13:06 -0700, Bart Van Assche wrote:
+> Use the generic __{get,put}_unaligned_[bl]e() definitions instead of
+> duplicating these. Since a later patch will add more definitions into
+> <linux/unaligned/generic.h>, this patch ensures that these definitions
+> have to be added only once. See also commit a7f626c1948a ("C6X: headers")=
+.
+> See also commit 6510d41954dc ("kernel: Move arches to use common unaligne=
+d
+> access").
+>=20
+> Cc: Mark Salter <msalter@redhat.com>
+> Cc: Aurelien Jacquiot <jacquiot.aurelien@gmail.com>
+> Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+> ---
+>  arch/c6x/include/asm/unaligned.h | 65 +-------------------------------
+>  1 file changed, 1 insertion(+), 64 deletions(-)
+>=20
+> diff --git a/arch/c6x/include/asm/unaligned.h b/arch/c6x/include/asm/unal=
+igned.h
+> index b56ba7110f5a..d628cc170564 100644
+> --- a/arch/c6x/include/asm/unaligned.h
+> +++ b/arch/c6x/include/asm/unaligned.h
+> @@ -10,6 +10,7 @@
+>  #define _ASM_C6X_UNALIGNED_H
+> =20
+>  #include <linux/swab.h>
+> +#include <linux/unaligned/generic.h>
+> =20
+>  /*
+>   * The C64x+ can do unaligned word and dword accesses in hardware
+> @@ -100,68 +101,4 @@ static inline void put_unaligned64(u64 val, const vo=
+id *p)
+> =20
+>  #endif
+> =20
+> -/*
+> - * Cause a link-time error if we try an unaligned access other than
+> - * 1,2,4 or 8 bytes long
+> - */
+> -extern int __bad_unaligned_access_size(void);
+> -
+> -#define __get_unaligned_le(ptr) (typeof(*(ptr)))({=09=09=09\
+> -=09sizeof(*(ptr)) =3D=3D 1 ? *(ptr) :=09=09=09=09=09\
+> -=09  (sizeof(*(ptr)) =3D=3D 2 ? get_unaligned_le16((ptr)) :=09=09\
+> -=09     (sizeof(*(ptr)) =3D=3D 4 ? get_unaligned_le32((ptr)) :=09=09\
+> -=09=09(sizeof(*(ptr)) =3D=3D 8 ? get_unaligned_le64((ptr)) :=09\
+> -=09=09   __bad_unaligned_access_size())));=09=09=09\
+> -=09})
+> -
+> -#define __get_unaligned_be(ptr) (__force typeof(*(ptr)))({=09\
+> -=09sizeof(*(ptr)) =3D=3D 1 ? *(ptr) :=09=09=09=09=09\
+> -=09  (sizeof(*(ptr)) =3D=3D 2 ? get_unaligned_be16((ptr)) :=09=09\
+> -=09     (sizeof(*(ptr)) =3D=3D 4 ? get_unaligned_be32((ptr)) :=09=09\
+> -=09=09(sizeof(*(ptr)) =3D=3D 8 ? get_unaligned_be64((ptr)) :=09\
+> -=09=09   __bad_unaligned_access_size())));=09=09=09\
+> -=09})
+> -
+> -#define __put_unaligned_le(val, ptr) ({=09=09=09=09=09\
+> -=09void *__gu_p =3D (ptr);=09=09=09=09=09=09\
+> -=09switch (sizeof(*(ptr))) {=09=09=09=09=09\
+> -=09case 1:=09=09=09=09=09=09=09=09\
+> -=09=09*(u8 *)__gu_p =3D (__force u8)(val);=09=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 2:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_le16((__force u16)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 4:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_le32((__force u32)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 8:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_le64((__force u64)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09default:=09=09=09=09=09=09=09\
+> -=09=09__bad_unaligned_access_size();=09=09=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09}=09=09=09=09=09=09=09=09\
+> -=09(void)0; })
+> -
+> -#define __put_unaligned_be(val, ptr) ({=09=09=09=09=09\
+> -=09void *__gu_p =3D (ptr);=09=09=09=09=09=09\
+> -=09switch (sizeof(*(ptr))) {=09=09=09=09=09\
+> -=09case 1:=09=09=09=09=09=09=09=09\
+> -=09=09*(u8 *)__gu_p =3D (__force u8)(val);=09=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 2:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_be16((__force u16)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 4:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_be32((__force u32)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09case 8:=09=09=09=09=09=09=09=09\
+> -=09=09put_unaligned_be64((__force u64)(val), __gu_p);=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09default:=09=09=09=09=09=09=09\
+> -=09=09__bad_unaligned_access_size();=09=09=09=09\
+> -=09=09break;=09=09=09=09=09=09=09\
+> -=09}=09=09=09=09=09=09=09=09\
+> -=09(void)0; })
+> -
+>  #endif /* _ASM_C6X_UNALIGNED_H */
 
-Enable it in the device tree, and enable the display engine, video mixer
-and tcon0 as well.
+Acked-by: Mark Salter <msalter@redhat.com>
 
-Signed-off-by: Icenowy Zheng <icenowy@aosc.io>
-Signed-off-by: Torsten Duwe <duwe@suse.de>
----
- .../boot/dts/allwinner/sun50i-a64-teres-i.dts      | 45 ++++++++++++++++++++--
- 1 file changed, 41 insertions(+), 4 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-index 1069e7012c9c..970415106dcf 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-teres-i.dts
-@@ -100,18 +100,41 @@
- 	status = "okay";
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
- &ehci1 {
- 	status = "okay";
- };
- 
- 
--/* The ANX6345 eDP-bridge is on i2c0. There is no linux (mainline)
-- * driver for this chip at the moment, the bootloader initializes it.
-- * However it can be accessed with the i2c-dev driver from user space.
-- */
- &i2c0 {
- 	clock-frequency = <100000>;
- 	status = "okay";
-+
-+	anx6345: anx6345@38 {
-+		compatible = "analogix,anx6345";
-+		reg = <0x38>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_LOW>; /* PD24 */
-+		dvdd25-supply = <&reg_dldo2>;
-+		dvdd12-supply = <&reg_dldo3>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				anx6345_in: endpoint {
-+					remote-endpoint = <&tcon0_out_anx6345>;
-+				};
-+			};
-+		};
-+	};
-+};
-+
-+&mixer0 {
-+	status = "okay";
- };
- 
- &mmc0 {
-@@ -319,6 +342,20 @@
- 	status = "okay";
- };
- 
-+&tcon0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&lcd_rgb666_pins>;
-+
-+	status = "okay";
-+};
-+
-+&tcon0_out {
-+	tcon0_out_anx6345: endpoint@0 {
-+		reg = <0>;
-+		remote-endpoint = <&anx6345_in>;
-+	};
-+};
-+
- &uart0 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&uart0_pb_pins>;
--- 
-2.16.4
 
