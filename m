@@ -2,163 +2,116 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8CA8C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:08:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577F5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:08:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7411C2187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:08:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B3142187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:08:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="DTe6RNke"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733080AbfKGIIA (ORCPT
+        id S1733157AbfKGIIX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:08:00 -0500
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:61036 "EHLO
-        mx0b-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726800AbfKGIH7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:07:59 -0500
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA77rbm6017415
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 03:07:58 -0500
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w41w6rfrf-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 03:07:56 -0500
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <borntraeger@de.ibm.com>;
-        Thu, 7 Nov 2019 08:07:23 -0000
-Received: from b06avi18626390.portsmouth.uk.ibm.com (9.149.26.192)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 08:07:20 -0000
-Received: from d06av24.portsmouth.uk.ibm.com (mk.ibm.com [9.149.105.60])
-        by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA786h4M22217000
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 08:06:43 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9F3B54203F;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 55C0C4204C;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Received: from oc7455500831.ibm.com (unknown [9.152.224.123])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 08:07:18 +0000 (GMT)
-Subject: Re: s390/pkey: Use memdup_user() rather than duplicating its
- implementation
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Markus Elfring <Markus.Elfring@web.de>,
-        Joe Perches <joe@perches.com>, linux-s390@vger.kernel.org,
-        kernel-janitors@vger.kernel.org,
-        Harald Freudenberger <freude@linux.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        Ingo Franzki <ifranzki@linux.ibm.com>,
-        Vasily Gorbik <gor@linux.ibm.com>,
-        LKML <linux-kernel@vger.kernel.org>
-References: <08422b7e-2071-ee52-049e-c3ac55bc67a9@web.de>
- <6137855bb4170c438c7436cbdb7dfd21639a8855.camel@perches.com>
- <4fa0e106-2565-8610-1356-4adfba08c0a0@web.de>
- <a4eaf80e-a5dd-4da3-75ca-8231f01af193@de.ibm.com>
- <20191107064854.GM10409@kadam>
-From:   Christian Borntraeger <borntraeger@de.ibm.com>
-Autocrypt: addr=borntraeger@de.ibm.com; prefer-encrypt=mutual; keydata=
- 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
- nS4h0HDFPrrp1C2EMVYIQrMokWvlFZbCpsdYbBI=
-Date:   Thu, 7 Nov 2019 09:07:18 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 7 Nov 2019 03:08:23 -0500
+Received: from mout.gmx.net ([212.227.17.22]:37451 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726800AbfKGIIW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 03:08:22 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1573114088;
+        bh=b0EBzYCqFZrZPd2jfMXEPGSoyVe1C2IkaISedX7n3PY=;
+        h=X-UI-Sender-Class:Subject:From:Reply-To:To:Cc:Date:In-Reply-To:
+         References;
+        b=DTe6RNke47tg6kbqhOZx5eGxOd/F3TrxlSLuTIcjoMaGdozaubKil9/W6eaWcMNjS
+         JO3xrS/yb2lDrd0zUrPchScTitV0e4m/3p7HEu/6vEAMhLSImwfzLDRkTRoCfeTRJa
+         r4UnMHS6cUjeqLb3ENGe6NtwtVXQB9JUBX3xb++w=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from bear.fritz.box ([80.128.101.49]) by mail.gmx.com (mrgmx104
+ [212.227.17.168]) with ESMTPSA (Nemesis) id 1MxUrx-1hhwGn0lCr-00xrAb; Thu, 07
+ Nov 2019 09:08:08 +0100
+Message-ID: <bb7bac8adfce085cdcc080f8f26cbaae2fe916e0.camel@gmx.de>
+Subject: Re: mlockall(MCL_CURRENT) blocking infinitely
+From:   Robert Stupp <snazy@gmx.de>
+Reply-To: snazy@snazy.de
+To:     Jan Kara <jack@suse.cz>
+Cc:     Josef Bacik <josef@toxicpanda.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Michal Hocko <mhocko@kernel.org>,
+        "Kirill A. Shutemov" <kirill@shutemov.name>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        linux-kernel@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "Potyra, Stefan" <Stefan.Potyra@elektrobit.com>
+Date:   Thu, 07 Nov 2019 09:08:04 +0100
+In-Reply-To: <20191106172520.GF12685@quack2.suse.cz>
+References: <fa6599459300c61da6348cdfd0cfda79e1c17a7a.camel@gmx.de>
+         <ad13f479-3fda-b55a-d311-ef3914fbe649@suse.cz>
+         <20191105182211.GA33242@cmpxchg.org>
+         <20191106120315.GF16085@quack2.suse.cz>
+         <4edf4dea97f6c1e3c7d4fed0e12c3dc6dff7575f.camel@gmx.de>
+         <20191106145608.ucvuwsuyijvkxz22@macbook-pro-91.dhcp.thefacebook.com>
+         <20191106150524.GL16085@quack2.suse.cz>
+         <20191106151429.swqtq2dt4uelhjzn@macbook-pro-91.dhcp.thefacebook.com>
+         <9f6b707c69ceb34e3916b1d47f2e2fa6a4f025ab.camel@gmx.de>
+         <94c71621a0245db763db9e289286b79056cc9bc5.camel@gmx.de>
+         <20191106172520.GF12685@quack2.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.34.1-2 
 MIME-Version: 1.0
-In-Reply-To: <20191107064854.GM10409@kadam>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110708-4275-0000-0000-0000037B8FDE
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110708-4276-0000-0000-0000388EE035
-Message-Id: <604a921d-9240-f271-3f92-675df85784e6@de.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_01:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=495 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070079
+Content-Transfer-Encoding: quoted-printable
+X-Provags-ID: V03:K1:1WBHVNmEH131k4Ss9ghBIkrLGUmstaaz1CeQYEPL+YbdzNrloyt
+ rFmbCXeRz/nCv/dIXXv/S0zXYaewSY3fHsc3BDT0QGBYL1Tzg7a7YHlziMZ908ZUPAtQFEh
+ lxUp08wM4ID7XHoKMN0dMs4KoRorxKQEQ5lnyK7aqlVZAc6PViTnlrkIUcpN1FDx1yuSF3A
+ C4gZ5FvIONybFw5H1lENg==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:yVt/y5aAGJY=:mqEzPo5CPNozh0ZMFNvbsd
+ +Nf24ypMJfIYAJkUCqNjMFjAVgE8xngNHytSFjA0tacg57yO6QWge0HXvZ6n/0usuekeMaYaW
+ BIZRZDqLeoUeLvw1ApujuH80rqHjmV9+jULgyXWYeoIahzpOpAsAuKj8gtDEZ3feo2UBza7q9
+ mteydbUu74zdvU9ISeOttVhMAVNVY/1J/qtuvvhz6wGzLlCSHSkVQ0Lb3L8kNudJIKdwCmwy3
+ ewnSvXGRCjKFETK6pYaRMGMHDPRPeqljvWzwXTyc/TN2AthHOchkei7PyZNtTkVU8QN7qKflF
+ JMDyOuIxSrWXfLX9x8ZYGjw5R5W1ZWp3MoKPgH2t1A867u5mxWhmq3MB3yCCECadpV7ofMetz
+ urIhHSALyrjrBJEewofzfjzZlquMIC3AfE/ltivOU6UilKrMLpw7zfqXypvUF45AgQWES+t/p
+ b3MmCWHFUU5alKV66hIrBRcqhyuhiJ7jR+8JYGQ7ZgGpOo17KkbEV9gLbaBCyHZFfxYNVDs4W
+ QXJiJlGJ2FeP2dheOGYHjz9onQB6xknyO/gQzVRW1+JN/fgR2dV+F8NxwJBrVe7imNcu1QjgG
+ uW4G91zyjWBiuFMC4uWV99cjOrqO1mi7M2kwy+eqMawHV6BVuweFlgwohq8fCqSkjQU/K7q4x
+ MIEbA2WNwOsn3melpu4HDKokwqBmKqP1yDYGmf4cOghEGOPCY9Bn4FlrwIRbGX6j+VvT/yum0
+ lQcJPIX93gJr5dOHFFBtCnStPnTo9hvVH8VwilozxnyugrBzZWb1iXAxwlLiCDTRoDpAyVRC4
+ bQ6yTcgUSUKWu7qLlJmrn4KcwAd91/sI1EosaIrvcnYsUHlG7R3c964bic0Q0+mFqIg311+I5
+ HKIDzs02mrcFPyhUnLhcQHN/G9F1T2slFmo5iAP53bax8qbf1UqQw8kqPGkktDPTkmgnZNfa1
+ KCa4fXCsLObl2glJgxVtwo7CIdbG+OMfAcAsaM1HMj8sm4t3JHlZysArNsrjpjNVxK/ERq80c
+ x5KKFGNE58VQRIoZZUZ0RxitqyRiJkDSsZgP7UXFBsIWVVvtDFtSI8ivs4bacjx9+AXGBNgJl
+ cCo+IpPAZxOFcffxpBRV+C9s0X+DJP14wtvh4zooT9NyCkhNI4J1cVWQcQMegY5JE3dR9plh/
+ pilSlHmpu733V62Dk3z7GVHGuEsbxF64kKyJc2uzEzTT1YSBb9T3rO81rjAK1+dUE765MUcZy
+ 7afVYKpQ+moEmpP3rKamxjApuqD14BlcCWKtLbg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, 2019-11-06 at 18:25 +0100, Jan Kara wrote:
+> On Wed 06-11-19 18:03:10, Robert Stupp wrote:
+> > Oh, and I just realized, that I have two custom settings in my
+> > /etc/rc.local - guess, I configured that when I installed that
+> > machine
+> > years ago. Sorry, that I haven't mentioned that earlier.
+> >
+> > echo 0 > /sys/block/nvme0n1/queue/read_ahead_kb
+> > echo never >
+> > /sys/kernel/mm/transparent_hugepage/defrag
+> >
+> > That setting is probably not quite standard, but I assume there are
+> > some database server setups out there, that set RA=3D0 as well.
+>
+> Ok, yes, that explains ra_pages =3D=3D 0. Thanks for the details.
 
+Ah! And with these settings, a fresh & clean installation of Ubuntu
+eoan (5.3.x kernel), hangs during reboot.
+And if the VM's booted with these settings in /etc/rc.local, the
+mlockall(MCL_CURRENT) is reproducible as well.
 
-On 07.11.19 07:48, Dan Carpenter wrote:
-> On Wed, Nov 06, 2019 at 07:30:19PM +0100, Christian Borntraeger wrote:
->>
->>
->> On 06.11.19 14:00, Markus Elfring wrote:
->>>>> Reuse existing functionality from memdup_user() instead of keeping
->>>>> duplicate source code.
->>>>>
->>>>> Generated by: scripts/coccinelle/api/memdup_user.cocci
->>> …
->>>>> Fixes: f2bbc96e7cfad3891b7bf9bd3e566b9b7ab4553d ("s390/pkey: add CCA AES cipher key support")
->>>>
->>>> This doesn't fix anything
->>>
->>> How would you categorise the proposed source code reduction and software reuse?
->>
->> Cleanup.
->>
->> Can you please stop arguing about review feedback that is clearly right? This is not fixing 
->> anything. The Fixes tag is used to decide if something needs a backport.
-> 
-> Fixes tags are independent from backports.  If you want a backport you
-> should CC stable.
-
-I agree, but a Fixes tag increases the likelyhood of automatic backports anyway.
-(e.g. some distro kernel maintainers check for this tag).
 
