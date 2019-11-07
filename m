@@ -2,86 +2,187 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS
-	autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ADA5C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2199CC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 15419218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573150588;
-	bh=H4aBotvTCrik0Rabs8iQWvH7K8xaJTtQ0dRfRu44CuY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=LX04PKxUEjL1vcTFQwOrIl7CarY5MCvULTybkAcEx3FOLGNS3hO9EoI8A8ysCcDc1
-	 RMguJi2RgJ1bWSyCu8CS63E9v9MWYTtIIxLVZ4f0vGG4SwGpbgOS9UsNziOhMT9DwY
-	 KhVpN8Xc3qHSWpe4E6KGUlKg4WeNhSHSli++C6XI=
+	by mail.kernel.org (Postfix) with ESMTP id 01F5A218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:16:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728291AbfKGSQ1 (ORCPT
+        id S1729858AbfKGSQv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:16:27 -0500
-Received: from mail.kernel.org ([198.145.29.99]:51330 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 13:16:51 -0500
+Received: from mga18.intel.com ([134.134.136.126]:48554 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725871AbfKGSQ0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:16:26 -0500
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CF1E221D82
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 18:16:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573150586;
-        bh=H4aBotvTCrik0Rabs8iQWvH7K8xaJTtQ0dRfRu44CuY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=p4UcAioPEe71t/aPpiAyPpP4uaKeCN1fPc0/emJwxDVmQLiZgnuloPp3Xh3U6jrx7
-         8W6CD9uzzV09ebXOQpvPhjsPvVQLggBE989PGI6eO8oYzm5zTAFWryGT5JAO+AAYLg
-         5SoAdqSbbGkr8rAJ6H+e5oFLPnXc8AP/R6XCbQ5M=
-Received: by mail-wr1-f50.google.com with SMTP id r10so4175886wrx.3
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:16:25 -0800 (PST)
-X-Gm-Message-State: APjAAAUVmMvk/ABXZXcUyhzxm7XP7sLz276ixplj6tL/CJHagwfbHBN5
-        c9RzHvWk4q7Ar9oeb0PW3Msi+bQ5olcMNrFBpAz2dA==
-X-Google-Smtp-Source: APXvYqwLtGjY6ZkTJhI0Sr43dvJLSVSp97ERd6U9abpQWD2zv5w6C7Aei5pvq7FP+EbxNuTelpmDn87aLW93/QUhwBA=
-X-Received: by 2002:adf:f342:: with SMTP id e2mr4483203wrp.61.1573150584414;
- Thu, 07 Nov 2019 10:16:24 -0800 (PST)
+        id S1727046AbfKGSQu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 13:16:50 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 10:16:49 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
+   d="scan'208";a="214675547"
+Received: from tassilo.jf.intel.com (HELO tassilo.localdomain) ([10.7.201.21])
+  by orsmga002.jf.intel.com with ESMTP; 07 Nov 2019 10:16:49 -0800
+Received: by tassilo.localdomain (Postfix, from userid 1000)
+        id 9C655301BE8; Thu,  7 Nov 2019 10:16:49 -0800 (PST)
+From:   Andi Kleen <andi@firstfloor.org>
+To:     jolsa@kernel.org
+Cc:     acme@kernel.org, linux-kernel@vger.kernel.org,
+        Andi Kleen <ak@linux.intel.com>
+Subject: [PATCH v5 02/13] perf affinity: Add infrastructure to save/restore affinity
+Date:   Thu,  7 Nov 2019 10:16:35 -0800
+Message-Id: <20191107181646.506734-3-andi@firstfloor.org>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107181646.506734-1-andi@firstfloor.org>
+References: <20191107181646.506734-1-andi@firstfloor.org>
 MIME-Version: 1.0
-References: <157313371694.29677.15388731274912671071.stgit@warthog.procyon.org.uk>
- <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
-In-Reply-To: <157313375678.29677.15875689548927466028.stgit@warthog.procyon.org.uk>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Thu, 7 Nov 2019 10:16:13 -0800
-X-Gmail-Original-Message-ID: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com>
-Message-ID: <CALCETrUka9KaOKFbNKUXcA6XvoFxiXPftctSHtN4DL35Cay61w@mail.gmail.com>
-Subject: Re: [RFC PATCH 04/14] pipe: Add O_NOTIFICATION_PIPE [ver #2]
-To:     David Howells <dhowells@redhat.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        Stephen Smalley <sds@tycho.nsa.gov>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>, raven@themaw.net,
-        Christian Brauner <christian@brauner.io>,
-        keyrings@vger.kernel.org, USB list <linux-usb@vger.kernel.org>,
-        linux-block <linux-block@vger.kernel.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Linux FS Devel <linux-fsdevel@vger.kernel.org>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 5:39 AM David Howells <dhowells@redhat.com> wrote:
->
-> Add an O_NOTIFICATION_PIPE flag that can be passed to pipe2() to indicate
-> that the pipe being created is going to be used for notifications.  This
-> suppresses the use of splice(), vmsplice(), tee() and sendfile() on the
-> pipe as calling iov_iter_revert() on a pipe when a kernel notification
-> message has been inserted into the middle of a multi-buffer splice will be
-> messy.
+From: Andi Kleen <ak@linux.intel.com>
 
-How messy?  And is there some way to make it impossible for this to
-happen?  Adding a new flag to pipe2() to avoid messy kernel code seems
-like a poor tradeoff.
+The kernel perf subsystem has to IPI to the target CPU for many
+operations. On systems with many CPUs and when managing many events the
+overhead can be dominated by lots of IPIs.
+
+An alternative is to set up CPU affinity in the perf tool, then set up
+all the events for that CPU, and then move on to the next CPU.
+
+Add some affinity management infrastructure to enable such a model.
+Used in followon patches.
+
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+
+---
+
+v2: Use linux/bitmap.h functions.
+---
+ tools/perf/util/Build      |  1 +
+ tools/perf/util/affinity.c | 72 ++++++++++++++++++++++++++++++++++++++
+ tools/perf/util/affinity.h | 15 ++++++++
+ 3 files changed, 88 insertions(+)
+ create mode 100644 tools/perf/util/affinity.c
+ create mode 100644 tools/perf/util/affinity.h
+
+diff --git a/tools/perf/util/Build b/tools/perf/util/Build
+index 2c1504fe924c..c7d4eab017e5 100644
+--- a/tools/perf/util/Build
++++ b/tools/perf/util/Build
+@@ -76,6 +76,7 @@ perf-y += sort.o
+ perf-y += hist.o
+ perf-y += util.o
+ perf-y += cpumap.o
++perf-y += affinity.o
+ perf-y += cputopo.o
+ perf-y += cgroup.o
+ perf-y += target.o
+diff --git a/tools/perf/util/affinity.c b/tools/perf/util/affinity.c
+new file mode 100644
+index 000000000000..e197b0416f56
+--- /dev/null
++++ b/tools/perf/util/affinity.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Manage affinity to optimize IPIs inside the kernel perf API. */
++#define _GNU_SOURCE 1
++#include <sched.h>
++#include <stdlib.h>
++#include <linux/bitmap.h>
++#include "perf.h"
++#include "cpumap.h"
++#include "affinity.h"
++
++static int get_cpu_set_size(void)
++{
++	int sz = cpu__max_cpu() + 8 - 1;
++	/*
++	 * sched_getaffinity doesn't like masks smaller than the kernel.
++	 * Hopefully that's big enough.
++	 */
++	if (sz < 4096)
++		sz = 4096;
++	return sz/8;
++}
++
++int affinity__setup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	a->orig_cpus = bitmap_alloc(cpu_set_size*8);
++	if (!a->orig_cpus)
++		return -1;
++	sched_getaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	a->sched_cpus = bitmap_alloc(cpu_set_size*8);
++	if (!a->sched_cpus) {
++		free(a->orig_cpus);
++		return -1;
++	}
++	bitmap_zero((unsigned long *)a->sched_cpus, cpu_set_size);
++	a->changed = false;
++	return 0;
++}
++
++/*
++ * perf_event_open does an IPI internally to the target CPU.
++ * It is more efficient to change perf's affinity to the target
++ * CPU and then set up all events on that CPU, so we amortize
++ * CPU communication.
++ */
++void affinity__set(struct affinity *a, int cpu)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (cpu == -1)
++		return;
++	a->changed = true;
++	set_bit(cpu, a->sched_cpus);
++	/*
++	 * We ignore errors because affinity is just an optimization.
++	 * This could happen for example with isolated CPUs or cpusets.
++	 * In this case the IPIs inside the kernel's perf API still work.
++	 */
++	sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->sched_cpus);
++	clear_bit(cpu, a->sched_cpus);
++}
++
++void affinity__cleanup(struct affinity *a)
++{
++	int cpu_set_size = get_cpu_set_size();
++
++	if (a->changed)
++		sched_setaffinity(0, cpu_set_size, (cpu_set_t *)a->orig_cpus);
++	free(a->sched_cpus);
++	free(a->orig_cpus);
++}
+diff --git a/tools/perf/util/affinity.h b/tools/perf/util/affinity.h
+new file mode 100644
+index 000000000000..008e2c3995b9
+--- /dev/null
++++ b/tools/perf/util/affinity.h
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0
++#ifndef AFFINITY_H
++#define AFFINITY_H 1
++
++struct affinity {
++	unsigned long *orig_cpus;
++	unsigned long *sched_cpus;
++	bool changed;
++};
++
++void affinity__cleanup(struct affinity *a);
++void affinity__set(struct affinity *a, int cpu);
++int affinity__setup(struct affinity *a);
++
++#endif
+-- 
+2.23.0
+
