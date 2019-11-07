@@ -2,136 +2,90 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB7E4C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:00:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2ECAC43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D325222C6
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:00:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="OlemqC/3"
+	by mail.kernel.org (Postfix) with ESMTP id 746052077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:01:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389532AbfKGRAC (ORCPT
+        id S1730048AbfKGRBj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:00:02 -0500
-Received: from mail-il1-f195.google.com ([209.85.166.195]:35237 "EHLO
-        mail-il1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729692AbfKGRAB (ORCPT
+        Thu, 7 Nov 2019 12:01:39 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:41549 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726810AbfKGRBj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:00:01 -0500
-Received: by mail-il1-f195.google.com with SMTP id z12so2466280ilp.2
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 09:00:01 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=54zJYTA6CYjgn0y4dsSw2cHqSfHEeR/LXlBnsZVQsbs=;
-        b=OlemqC/3HDaxtIPWv5ZDga3wwveV1kqTbSf3cjh11xFe9FcbnciERfEJDJkmVBX5QJ
-         t52vt2RR2Txhhyp+cezqP9bUPsPrV/hB/UbNdAieyHG8pv3S7ZpIjIjsEtHQpgxYH4tj
-         pcAVfslVR1ueqL6MNLAeqaAjOMZ8K5eXcltGgZ4akvpnAttQorNGCyPShFfrSbwBfB2x
-         H/eImmsolpDLaBOCWyy5h73OgUVKwTre9CYt9WblFu++Xa9WSbD7ySVJvtCknwjyJLce
-         UEvsnMnzo3u8clIAgKpCZ+kEEq8DIixwR4pYv5AV62RSDPR6Y9o17CKKL3dNKCeE2u5b
-         L5SQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=54zJYTA6CYjgn0y4dsSw2cHqSfHEeR/LXlBnsZVQsbs=;
-        b=n7Uujgz2W71RdYo4ONhprU6L0pypvJn4yvG7nQAPL+h+Y8t61+0eulX5PuUED5Ud/9
-         oNBgs766nk9JT3nBzqCjWkgTyG9yfZ0eRC9bSWxXANIOTIKLI8jM4ES5f00RTdUpganu
-         T4SNp1magA9pNBOSE+4xJ/RZ24W4xivtgnBYDvL3pRb5xQBbQzEXDr3EDzlQKl+g0Mdt
-         9SvysNEmFdx9rhUnJOvWrM43/SEnzirC3S5j+6vJnpCrLTv0vIBIKBKT4kkAZlk5UEz2
-         WXlfEZ0Imi33BNA3pY0/2dw9yhMJUn1xN+XXrtHVcn2ga3J2AWZxxa4iFE/cRf305ZgG
-         xNtQ==
-X-Gm-Message-State: APjAAAUQfgYxDhxrFEUvHYMywZu+Ckn3CKOLbPSse2Ec9s2kSXdxZgIb
-        yT5dB3KtrRdkxLVXomdQ+QHpXHyonYQ9ARASujD3tg==
-X-Google-Smtp-Source: APXvYqxuI8BuTcbtVZzvXYLJmGhWiYTnRq8s080yO9vxrvuYwO18ULHq92Sn+m65YiTdVY/Al2/8tGf+c+Dg1DGbCCs=
-X-Received: by 2002:a92:109c:: with SMTP id 28mr5758698ilq.142.1573146000389;
- Thu, 07 Nov 2019 09:00:00 -0800 (PST)
+        Thu, 7 Nov 2019 12:01:39 -0500
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iSlA4-0002mw-1W; Thu, 07 Nov 2019 18:01:32 +0100
+Date:   Thu, 7 Nov 2019 18:01:31 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
+        jollys@xilinx.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Jolly Shah <jolly.shah@xilinx.com>, kernel@pengutronix.de
+Subject: Re: [PATCH] clk: zynqmp: Correct bit index for divider flag
+Message-ID: <20191107180131.63960cf1@litschi.hi.pengutronix.de>
+In-Reply-To: <1573117290-7990-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573117290-7990-1-git-send-email-rajan.vaja@xilinx.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-References: <20191106174804.74723-1-edumazet@google.com> <157307905904.29376.8711513726869840596.tip-bot2@tip-bot2>
- <CANn89iKXi3rWWruKoBwQ8rncwLvkbzjZJWuJL3K05fjAhcySwg@mail.gmail.com>
- <CANn89iL=xPxejRPC=wHY7q27fLOvFBK-7HtqU_HJo+go3S9UXA@mail.gmail.com>
- <20191107085255.GK20975@paulmck-ThinkPad-P72> <CANn89i+8Hq5j234zFRY05QxZU1n=Vr6S-kZCcvn3Z80xYaindg@mail.gmail.com>
- <20191107161149.GQ20975@paulmck-ThinkPad-P72> <CANn89iLMD0=tiQ181qQ=qKo=Nom-XX4MqonZw6pKiYUzTDVjQg@mail.gmail.com>
- <CANn89iLqcqKLRgfn7TDnBr9ZatiJVyezXmmZaeN2f2BT=qFe7Q@mail.gmail.com> <20191107165428.GR20975@paulmck-ThinkPad-P72>
-In-Reply-To: <20191107165428.GR20975@paulmck-ThinkPad-P72>
-From:   Eric Dumazet <edumazet@google.com>
-Date:   Thu, 7 Nov 2019 08:59:49 -0800
-Message-ID: <CANn89i+Cc1aOHVFnYvZ93EDee81RaGNrv47ZBVdQXmxMuuMmww@mail.gmail.com>
-Subject: Re: [tip: timers/core] hrtimer: Annotate lockless access to timer->state
-To:     paulmck@kernel.org
-Cc:     LKML <linux-kernel@vger.kernel.org>,
-        linux-tip-commits@vger.kernel.org,
-        syzbot <syzkaller@googlegroups.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 7, 2019 at 8:54 AM Paul E. McKenney <paulmck@kernel.org> wrote:
->
-> On Thu, Nov 07, 2019 at 08:39:42AM -0800, Eric Dumazet wrote:
-> > On Thu, Nov 7, 2019 at 8:35 AM Eric Dumazet <edumazet@google.com> wrote:
-> > >
-> > > On Thu, Nov 7, 2019 at 8:11 AM Paul E. McKenney <paulmck@kernel.org> wrote:
-> > > >
-> > > > OK, so this is due to timer_pending() lockless access to ->entry.pprev
-> > > > to determine whether or not the timer is on the list.  New one on me!
-> > > >
-> > > > Given that use case, I don't have an objection to your patch to list.h.
-> > > >
-> > > > Except...
-> > > >
-> > > > Would it make sense to add a READ_ONCE() to hlist_unhashed()
-> > > > and to then make timer_pending() invoke hlist_unhashed()?  That
-> > > > would better confine the needed uses of READ_ONCE().
-> > >
-> > > Sounds good to me, I had the same idea but was too lazy to look at the
-> > > history of timer_pending()
-> > > to check if the pprev pointer check was really the same underlying idea.
-> >
-> > Note that forcing READ_ONCE() in hlist_unhashed() might force the compiler
-> > to read the pprev pointer twice in some cases.
-> >
-> > This was one of the reason for me to add skb_queue_empty_lockless()
-> > variant in include/linux/skbuff.h
->
-> Ouch!
->
-> > /**
-> >  * skb_queue_empty_lockless - check if a queue is empty
-> >  * @list: queue head
-> >  *
-> >  * Returns true if the queue is empty, false otherwise.
-> >  * This variant can be used in lockless contexts.
-> >  */
-> > static inline bool skb_queue_empty_lockless(const struct sk_buff_head *list)
-> > {
-> > return READ_ONCE(list->next) == (const struct sk_buff *) list;
-> > }
-> >
-> > So maybe add a hlist_unhashed_lockless() to clearly document why
-> > callers are using the lockless variant ?
->
-> That sounds like a reasonable approach to me.  There aren't all that
-> many uses of hlist_unhashed(), so a name change should not be a problem.
+On Thu, 07 Nov 2019 01:01:30 -0800, Rajan Vaja wrote:
+> Update divider flag bit index to match with firmware.
+> 
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
+> ---
+>  drivers/clk/zynqmp/divider.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> index d8f5b70d..9e60834 100644
+> --- a/drivers/clk/zynqmp/divider.c
+> +++ b/drivers/clk/zynqmp/divider.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Zynq UltraScale+ MPSoC Divider support
+>   *
+> - *  Copyright (C) 2016-2018 Xilinx
+> + *  Copyright (C) 2016-2019 Xilinx
+>   *
+>   * Adjustable divider clock implementation
+>   */
+> @@ -25,7 +25,7 @@
+>  #define to_zynqmp_clk_divider(_hw)		\
+>  	container_of(_hw, struct zynqmp_clk_divider, hw)
+>  
+> -#define CLK_FRAC	BIT(13) /* has a fractional parent */
+> +#define CLK_FRAC	BIT(8) /* has a fractional parent */
 
-Maybe I was not clear :  I did not rename skb_queue_empty()
-I chose to add another helper.
+NACK.
 
-Contexts that can safely use skb_queue_empty() still continue to use
-it, since it might help
-the compiler to generate better code.
+This breaks the compatibility with the older/upstream versions of the
+TF-A. You have to at least make this dependent on the used version of
+the TF-A.
 
-So If I add hlist_unhashed_lockless(), I would only use it from
-timer_pending() at first.
-
-Then an audit of the code might reveal other potential users.
+>  
+>  /**
+>   * struct zynqmp_clk_divider - adjustable divider clock
