@@ -2,162 +2,105 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D7D6C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:10:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9743AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:15:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 14EC92077C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5AA922077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:15:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XIQjJ1Kk"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="s8Gr3BoV"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727761AbfKGIKh (ORCPT
+        id S1727334AbfKGIPh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:10:37 -0500
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:46856 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727012AbfKGIKh (ORCPT
+        Thu, 7 Nov 2019 03:15:37 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35079 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGIPg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:10:37 -0500
-Received: by mail-oi1-f195.google.com with SMTP id n14so1161700oie.13;
-        Thu, 07 Nov 2019 00:10:36 -0800 (PST)
+        Thu, 7 Nov 2019 03:15:36 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y6so892173lfj.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:15:33 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
+        d=linaro.org; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=1Ln1GAykiZS8RusuR4H+KQoetDdyYBnG1RhAd3RuDvU=;
-        b=XIQjJ1KkwJwDO2WBDAlhOf60GzfwCkkbNwnxofI1gvr56DlMnJZNb4jHhH9l+siPjy
-         7XUMhHNlxMeUd0C8IsfA/1LUeakE2mhibVwGsvSfeeV6D1unTFUY+jfFqzTPIcRQl5X+
-         gWKfPOXD3nsSRoQRnk8+d5iIA5qxdNdnYM0aAjr5pCDue/7MNTnR9v4pFaetY9pKAOIL
-         RcPun1cI3Qh9hzQ1HJD8sMy57glLs6u3q1iXmG7lA0FwoChXUDNfAOgr2ETpotB//xIX
-         UnxYVtmQXIYLoaVGsh7uTHXu6+JIFIEnRncdelUnehHP33ZJr4CmSpidqTtDpVy7SPn3
-         mHlQ==
+        bh=ddu1jpN900ZYw8O2527aC0Qt1kxo8E2DHWggSrL8BkA=;
+        b=s8Gr3BoVtXMT/Fb7k5L9tJbyp3KDE6/8ODrdgh3PTNxUoQ6QzlDAs7mYfYdFczW2ZP
+         sQiWPKaG06EXfzjFEZn/G0pwSp7ve/HNU0PGv8P5Ht4J/rf5ifK4t63LWYsPDpoPHNev
+         avrBqsDGp7wCgogRfGQIIOkRWyu/4n+uAtqpKZs0SEY/b1CK6fwbCkc7FBm5ZUGbW43E
+         4jfT0vcH/CV3bLDszK1HNowBQSk1ZLX1e2HdmpNXNpBnFtL/wIQSUviM73revyjNLo3C
+         voE42LyLYSaXAwDlX65a+1P/M0rCIGlFc/al1Wat71fu+ecCuqVtmITd9aEIRJWkrU1K
+         9FwA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=1Ln1GAykiZS8RusuR4H+KQoetDdyYBnG1RhAd3RuDvU=;
-        b=jXkXFJEFNJU9WLirEP/Sn7tJJOv6Ym6nWlh3UeBnYz+C86DGtGD/tU9C9pLIbJVm/t
-         cY6A1cv9WUqmSVWYSHSgNT6WGhhjzZXoNB+G9cVhYsa5x9omHRALVeRA3Yhr/el8QLzR
-         jXCn52QdIvdJ4y0i/8WQ5TJd4mYRIhTo5eSf86pNAqC7th98jkzn0sX777IhQUkg7IVP
-         eKzQ28sTXuAG+YAjEsoozPHjlNE3bH48DE6Y5/w11eM9KWOYYBplVhmUfOyW3w21X5pL
-         xdNFP1Xl33HGB8r147wHcntSqb6IEw9CVyA+t5dh3zkugZdla/vHYRQP83gVC5FEl9fh
-         7G2w==
-X-Gm-Message-State: APjAAAXu1tPNCNl+tKGRcIL8KNNGOANBC/XVvMZgQwqGcY6mVN9CtSJu
-        irTMf6I/L0dapihTroB/BkaHlp8qb3MzSp9MAWc=
-X-Google-Smtp-Source: APXvYqyCsRHXrlcNyFDdWgqpUGNUi9JY2dnU8nu8fLaBJBr7i8H4CEPtAXOaCsi6gmrcZ/dmVtw/Dn8k5G1I4v7yMqw=
-X-Received: by 2002:a05:6808:3cf:: with SMTP id o15mr2227687oie.7.1573114236156;
- Thu, 07 Nov 2019 00:10:36 -0800 (PST)
+        bh=ddu1jpN900ZYw8O2527aC0Qt1kxo8E2DHWggSrL8BkA=;
+        b=GVfEKdm1TrFddxeCte/h174NMI+OnF89wGMSNt0eS93B8QERXyovsGPkyeGfKYUAH2
+         FDCM4r84o8RsQvKkJeqBZbSnegmIF3TVruOiR6TR90VdkA+GSNYDND3/QKMWouKM8/b2
+         hGxbjWlhJq94g5Kd/kd6MJF/Ov5U4qikMkN16Zhi1Sc0/Z6WWF7sQ3hgD57pTmkeTVRQ
+         12NdsxFPtmyVVeNQWOxmfQEbXnCapKoD5q3en2p4jSbrOr/ULL+XaF7Dxtb02A96/ST1
+         eZi7KCHjav7VfmxsZ2f/WjaUk/H+FftIMWQ+S7f/Ea8bD0w1t2iGD/v19uUua6xFTMGZ
+         2/iw==
+X-Gm-Message-State: APjAAAUllZTIMkBbY/u8XdaoVlLksAevxnm/nqoaU8/5eVAsUrwXixny
+        uGZXUhCKeoGtCToFjYmdHBdG080i6Q8Mhm7A6VnvZw==
+X-Google-Smtp-Source: APXvYqww5bQPnZN3NrQQtclGOU1WQ8bslsEpjPP5aLvQl+V5ZxWWIobqARd/TgCXuy71plqbep1x1/xXRUOzWfZqWQk=
+X-Received: by 2002:a19:855:: with SMTP id 82mr1443368lfi.44.1573114533151;
+ Thu, 07 Nov 2019 00:15:33 -0800 (PST)
 MIME-Version: 1.0
-References: <20191106193609.19645-1-prabhakar.mahadev-lad.rj@bp.renesas.com>
- <20191106193609.19645-4-prabhakar.mahadev-lad.rj@bp.renesas.com> <OSBPR01MB210380ACAF35B2FE94F1589EB8780@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB210380ACAF35B2FE94F1589EB8780@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From:   "Lad, Prabhakar" <prabhakar.csengg@gmail.com>
-Date:   Thu, 7 Nov 2019 08:10:09 +0000
-Message-ID: <CA+V-a8vJrJ8Rw5OgYZN7o_i1R9ZZUfmuMWnzA0PF+pZus0o1SQ@mail.gmail.com>
-Subject: Re: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-To:     Biju Das <biju.das@bp.renesas.com>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Magnus Damm <magnus.damm@gmail.com>,
-        Kishon Vijay Abraham I <kishon@ti.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrew Murray <andrew.murray@arm.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+References: <cover.1572945605.git.matti.vaittinen@fi.rohmeurope.com>
+ <d25edcc3a5d912be9d7c3a927bad6baf34a1331e.1572945605.git.matti.vaittinen@fi.rohmeurope.com>
+ <CACRpkdav+Sz04WE6N5KkKMQLOtx2BZrjWrEin06yPZQ31a47hg@mail.gmail.com> <d1d33dee96a4dea71a14dfdb6d590beade529c2c.camel@fi.rohmeurope.com>
+In-Reply-To: <d1d33dee96a4dea71a14dfdb6d590beade529c2c.camel@fi.rohmeurope.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Thu, 7 Nov 2019 09:15:21 +0100
+Message-ID: <CACRpkdaFzW5BGgK=p8MANJn23VC5X2oBh4oYhZJOOBPT2aJmSQ@mail.gmail.com>
+Subject: Re: [PATCH 02/62] gpio: gpio-104-dio-48e: Use new GPIO_LINE_DIRECTION
+To:     "Vaittinen, Matti" <Matti.Vaittinen@fi.rohmeurope.com>
+Cc:     "mazziesaccount@gmail.com" <mazziesaccount@gmail.com>,
+        "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>,
+        "bgolaszewski@baylibre.com" <bgolaszewski@baylibre.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Chris Paterson <Chris.Paterson2@renesas.com>,
-        Prabhakar Mahadev Lad <prabhakar.mahadev-lad.rj@bp.renesas.com>
+        "vilhelm.gray@gmail.com" <vilhelm.gray@gmail.com>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Biju,
+On Wed, Nov 6, 2019 at 7:58 AM Vaittinen, Matti
+<Matti.Vaittinen@fi.rohmeurope.com> wrote:
+> On Tue, 2019-11-05 at 16:23 +0100, Linus Walleij wrote:
 
-Thank you for the review.
+> > Oh the patch bomb already dropped, hehe.
+>
+> I was slightly impatient ^_^;
 
-On Thu, Nov 7, 2019 at 7:39 AM Biju Das <biju.das@bp.renesas.com> wrote:
->
-> Hi Prabhakar,
->
-> Thanks for the patch
->
-> > Subject: [PATCH 3/5] PCI: rcar: Add R-Car PCIe endpoint device tree bindings
-> >
-> > From: "Lad, Prabhakar" <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> >
-> > This patch adds the bindings for the R-Car PCIe endpoint driver.
-> >
-> > Signed-off-by: Lad, Prabhakar <prabhakar.mahadev-lad.rj@bp.renesas.com>
-> > ---
-> >  .../devicetree/bindings/pci/rcar-pci-ep.txt   | 43 +++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > new file mode 100644
-> > index 000000000000..b8c8616ca007
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/pci/rcar-pci-ep.txt
-> > @@ -0,0 +1,43 @@
-> > +* Renesas R-Car PCIe Endpoint Controller DT description
-> > +
-> > +Required properties:
-> > +         "renesas,pcie-ep-r8a774c0" for the R8A774C0 SoC;
-> > +         "renesas,pcie-ep-rcar-gen3" for a generic R-Car Gen3 or
-> > +                                  RZ/G2 compatible device.
-> > +
-> > +         When compatible with the generic version, nodes must list the
-> > +         SoC-specific version corresponding to the platform first
-> > +         followed by the generic version.
-> > +
-> > +- reg: Five register ranges as listed in the reg-names property
-> > +- reg-names: Must include the following names
-> > +     - "apb-base"
-> > +     - "memory0"
-> > +     - "memory1"
-> > +     - "memory2"
-> > +     - "memory3"
-> > +- resets: Must contain phandles to PCIe-related reset lines exposed by IP
-> > block
-> > +- clocks: from common clock binding: clock specifiers for the PCIe controller
-> > +      clock.
-> > +- clock-names: from common clock binding: should be "pcie".
-> > +
-> > +Optional Property:
-> > +- max-functions: Maximum number of functions that can be configured
-> > (default 1).
-> > +
-> > +Example:
-> > +
-> > +SoC-specific DT Entry:
-> > +
-> > +     pcie_ep: pcie_ep@fe000000 {
-> > +             compatible = "renesas,pcie-r8a7791", "renesas,pcie-rcar-
-> > gen2";
->
-> I believe it is currently tested on RZ/G2E. so please use the same.
->
-Yes you are correct its tested on RZ/G2E board, ill fix it in next iteration.
+No big deal.
 
-Cheers,
---Prabhakar
+> > Anyways I want one
+> > big patch to apply. Please make sure it applies on the GPIO tree's
+> > "devel" branch.
+>
+> Right. I guess I can do that.
+
+Thanks!
+
+> > Collect any ACKs and drop most from the CC else the driver
+> > maintainers may get annoyed.
+>
+> My problem is that I don't know who are the driver maintainers I should
+> keep and who I should drop. I don't usually know who are interested in
+> which changes.
+
+The process is not perfect, just some best effort is fine, as subsystem
+maintainer I do merge mechanical patches like this across all drivers
+without consent of every possible stakeholder, it's impossible to
+involve everyone.
+
+Yours,
+Linus Walleij
