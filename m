@@ -2,56 +2,93 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 043DDC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:23:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 305A5C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:25:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D166F2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:23:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0393A218AE
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:25:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726470AbfKGFXN (ORCPT
+        id S1726583AbfKGFZL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:23:13 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:33762 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725763AbfKGFXN (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 00:23:13 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id EC9D715110071;
-        Wed,  6 Nov 2019 21:23:12 -0800 (PST)
-Date:   Wed, 06 Nov 2019 21:23:12 -0800 (PST)
-Message-Id: <20191106.212312.2200571105683500613.davem@davemloft.net>
-To:     Jose.Abreu@synopsys.com
-Cc:     netdev@vger.kernel.org, Joao.Pinto@synopsys.com,
-        peppe.cavallaro@st.com, alexandre.torgue@st.com,
-        mcoquelin.stm32@gmail.com,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net 00/11] net: stmmac: Fixes for -net
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <cover.1573052378.git.Jose.Abreu@synopsys.com>
-References: <cover.1573052378.git.Jose.Abreu@synopsys.com>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Wed, 06 Nov 2019 21:23:13 -0800 (PST)
+        Thu, 7 Nov 2019 00:25:11 -0500
+Received: from mga11.intel.com ([192.55.52.93]:30271 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725747AbfKGFZK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 00:25:10 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga002.fm.intel.com ([10.253.24.26])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 21:25:10 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
+   d="scan'208";a="233139016"
+Received: from dpdk-virtio-tbie-2.sh.intel.com (HELO ___) ([10.67.104.74])
+  by fmsmga002.fm.intel.com with ESMTP; 06 Nov 2019 21:25:08 -0800
+Date:   Thu, 7 Nov 2019 13:25:54 +0800
+From:   Tiwei Bie <tiwei.bie@intel.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     "Michael S. Tsirkin" <mst@redhat.com>, alex.williamson@redhat.com,
+        maxime.coquelin@redhat.com, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, virtualization@lists.linux-foundation.org,
+        netdev@vger.kernel.org, dan.daly@intel.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        lingshan.zhu@intel.com
+Subject: Re: [PATCH v5] vhost: introduce mdev based hardware backend
+Message-ID: <20191107052554.GA27721@___>
+References: <20191105115332.11026-1-tiwei.bie@intel.com>
+ <20191106075733-mutt-send-email-mst@kernel.org>
+ <20191106143907.GA10776@___>
+ <def13888-c99f-5f59-647b-05a4bb2f8657@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <def13888-c99f-5f59-647b-05a4bb2f8657@redhat.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jose Abreu <Jose.Abreu@synopsys.com>
-Date: Wed,  6 Nov 2019 16:02:54 +0100
+On Thu, Nov 07, 2019 at 12:16:01PM +0800, Jason Wang wrote:
+> On 2019/11/6 下午10:39, Tiwei Bie wrote:
+> > On Wed, Nov 06, 2019 at 07:59:02AM -0500, Michael S. Tsirkin wrote:
+> > > On Tue, Nov 05, 2019 at 07:53:32PM +0800, Tiwei Bie wrote:
+> > > > This patch introduces a mdev based hardware vhost backend.
+> > > > This backend is built on top of the same abstraction used
+> > > > in virtio-mdev and provides a generic vhost interface for
+> > > > userspace to accelerate the virtio devices in guest.
+> > > > 
+> > > > This backend is implemented as a mdev device driver on top
+> > > > of the same mdev device ops used in virtio-mdev but using
+> > > > a different mdev class id, and it will register the device
+> > > > as a VFIO device for userspace to use. Userspace can setup
+> > > > the IOMMU with the existing VFIO container/group APIs and
+> > > > then get the device fd with the device name. After getting
+> > > > the device fd, userspace can use vhost ioctls on top of it
+> > > > to setup the backend.
+> > > > 
+> > > > Signed-off-by: Tiwei Bie <tiwei.bie@intel.com>
+> > > So at this point, looks like the only thing missing is IFC, and then all
+> > > these patches can go in.
+> > > But as IFC is still being worked on anyway, it makes sense to
+> > > address the minor comments manwhile so we don't need
+> > > patches on top.
+> > > Right?
+> > Yeah, of course.
+> > 
+> > Thanks,
+> > Tiwei
+> 
+> 
+> Please send V6 and I will ack there.
 
-> Misc fixes for stmmac.
- ...
+Got it, I will send it soon.
 
-Series applied, thanks Jose.
+Thanks!
+Tiwei
