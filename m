@@ -2,292 +2,184 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32EF4C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:54:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43ED2C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:54:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D58842178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:54:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E646C2178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:54:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="B7EuBSFf"
+	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="J2h2GXut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388848AbfKGMyD (ORCPT
+        id S2388898AbfKGMy1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:54:03 -0500
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]:33840 "EHLO
-        us-smtp-delivery-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S2388701AbfKGMyB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:54:01 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573131240;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wBwft4QlWt9E17/Y8m51es3XRzb42tHRmlH3bdSf+Qg=;
-        b=B7EuBSFfcXXKKC0Rl8CyGI8KzZ6cz/GSFhSC4HMA05jIfsTcadspsWy3mRf+cvc1edvXLN
-        3AfQcJIDwmiWCF6b9HXJHPvCFwtvCUfZBRKgE4k5UiIRxpUMKJrgyQ7LEXd60tA6fUhwkY
-        LAYuOG/NEwy4c1L86pVPHV/bcN+rkks=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-158-9Ws6Tk6MMCK3LRY49-PLQA-1; Thu, 07 Nov 2019 07:53:57 -0500
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        Thu, 7 Nov 2019 07:54:27 -0500
+Received: from ozlabs.org ([203.11.71.1]:41487 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2388641AbfKGMy1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 07:54:27 -0500
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
         (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id BAFB61005502;
-        Thu,  7 Nov 2019 12:53:55 +0000 (UTC)
-Received: from virtlab512.virt.lab.eng.bos.redhat.com (virtlab512.virt.lab.eng.bos.redhat.com [10.19.152.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C64B61001DC0;
-        Thu,  7 Nov 2019 12:53:54 +0000 (UTC)
-From:   Nitesh Narayan Lal <nitesh@redhat.com>
-To:     kvm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        pbonzini@redhat.com, mtosatti@redhat.com, rkrcmar@redhat.com,
-        vkuznets@redhat.com, sean.j.christopherson@intel.com,
-        wanpengli@tencent.com, jmattson@google.com, joro@8bytes.org
-Subject: [Patch v2 2/2] KVM: x86: deliver KVM IOAPIC scan request to target vCPUs
-Date:   Thu,  7 Nov 2019 07:53:43 -0500
-Message-Id: <1573131223-5685-3-git-send-email-nitesh@redhat.com>
-In-Reply-To: <1573131223-5685-1-git-send-email-nitesh@redhat.com>
-References: <1573131223-5685-1-git-send-email-nitesh@redhat.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-MC-Unique: 9Ws6Tk6MMCK3LRY49-PLQA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 4783J72b3Dz9sR7;
+        Thu,  7 Nov 2019 23:54:14 +1100 (AEDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
+        s=201909; t=1573131261;
+        bh=kVcSRWwnPjpL30z4/b6SOIlevawzxnLE8imaExIycJY=;
+        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
+        b=J2h2GXut1G+LNf/hqVUky6Kv1okUdOEISaHZnkeLHqrnhlwT+bA9T64CihqGYeSi8
+         FHqUnJ0oF72N0INlgQid9nAvR37A00no52vbAalB76M0lCSA0BbkwPYukjEI9zgIqJ
+         tb7uzy0rwx9XsO7BF+60IISTFRNOQFeSPiO/N7vBTSKV/xk5TRX4wUogeJt5tridyc
+         ajDOlF9wzJOEvH9zg+9K3CNkwMLwmaLgT2Ak7loNO3/YuuIOYxxMGIE180Ya7SHWI7
+         TmxPjV3AUAn3SdBlwRrQJlfPszjY2prRFisV7GuIvzRBmAWb6K7cUfMqWt55qNZ9my
+         MCHuJ+1AEdMgw==
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Anshuman Khandual <anshuman.khandual@arm.com>,
+        Christophe Leroy <christophe.leroy@c-s.fr>, linux-mm@kvack.org
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mike Rapoport <rppt@linux.vnet.ibm.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Mark Brown <broonie@kernel.org>,
+        Steven Price <Steven.Price@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Kees Cook <keescook@chromium.org>,
+        Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sri Krishna chowdary <schowdary@nvidia.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Russell King - ARM Linux <linux@armlinux.org.uk>,
+        Paul Mackerras <paulus@samba.org>,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vineet Gupta <vgupta@synopsys.com>,
+        James Hogan <jhogan@kernel.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        "Kirill A . Shutemov" <kirill@shutemov.name>,
+        Gerald Schaefer <gerald.schaefer@de.ibm.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        linux-snps-arc@lists.infradead.org, linux-mips@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org,
+        linux-sh@vger.kernel.org, sparclinux@vger.kernel.org,
+        x86@kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH V8] mm/debug: Add tests validating architecture page table helpers
+In-Reply-To: <0e0c2ce9-636d-1153-2451-baf7317ed45f@arm.com>
+References: <1572240562-23630-1-git-send-email-anshuman.khandual@arm.com> <3229d68d-0b9d-0719-3370-c6e1df0ea032@arm.com> <42160baa-0e9d-73d0-bf72-58bdbacf10ff@c-s.fr> <0e0c2ce9-636d-1153-2451-baf7317ed45f@arm.com>
+Date:   Thu, 07 Nov 2019 23:54:08 +1100
+Message-ID: <87tv7f4zkf.fsf@mpe.ellerman.id.au>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In IOAPIC fixed delivery mode instead of flushing the scan
-requests to all vCPUs, we should only send the requests to
-vCPUs specified within the destination field.
-
-This patch introduces kvm_get_dest_vcpus_mask() API which
-retrieves an array of target vCPUs by using
-kvm_apic_map_get_dest_lapic() and then based on the
-vcpus_idx, it sets the bit in a bitmap. However, if the above
-fails kvm_get_dest_vcpus_mask() finds the target vCPUs by
-traversing all available vCPUs. Followed by setting the
-bits in the bitmap.
-
-If we had different vCPUs in the previous request for the
-same redirection table entry then bits corresponding to
-these vCPUs are also set. This to done to keep
-ioapic_handled_vectors synchronized.
-
-This bitmap is then eventually passed on to
-kvm_make_vcpus_request_mask() to generate a masked request
-only for the target vCPUs.
-
-This would enable us to reduce the latency overhead on isolated
-vCPUs caused by the IPI to process due to KVM_REQ_IOAPIC_SCAN.
-
-Suggested-by: Marcelo Tosatti <mtosatti@redhat.com>
-Signed-off-by: Nitesh Narayan Lal <nitesh@redhat.com>
----
- arch/x86/include/asm/kvm_host.h |  2 ++
- arch/x86/kvm/ioapic.c           | 33 +++++++++++++++++++++++++++++--
- arch/x86/kvm/lapic.c            | 44 +++++++++++++++++++++++++++++++++++++=
-++++
- arch/x86/kvm/lapic.h            |  3 +++
- arch/x86/kvm/x86.c              | 14 +++++++++++++
- include/linux/kvm_host.h        |  2 ++
- 6 files changed, 96 insertions(+), 2 deletions(-)
-
-diff --git a/arch/x86/include/asm/kvm_host.h b/arch/x86/include/asm/kvm_hos=
-t.h
-index 24d6598..b2aca6d 100644
---- a/arch/x86/include/asm/kvm_host.h
-+++ b/arch/x86/include/asm/kvm_host.h
-@@ -1571,6 +1571,8 @@ int kvm_pv_send_ipi(struct kvm *kvm, unsigned long ip=
-i_bitmap_low,
-=20
- void kvm_make_mclock_inprogress_request(struct kvm *kvm);
- void kvm_make_scan_ioapic_request(struct kvm *kvm);
-+void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-+=09=09=09=09       unsigned long *vcpu_bitmap);
-=20
- void kvm_arch_async_page_not_present(struct kvm_vcpu *vcpu,
- =09=09=09=09     struct kvm_async_pf *work);
-diff --git a/arch/x86/kvm/ioapic.c b/arch/x86/kvm/ioapic.c
-index d859ae8..c8d0a83 100644
---- a/arch/x86/kvm/ioapic.c
-+++ b/arch/x86/kvm/ioapic.c
-@@ -271,8 +271,9 @@ static void ioapic_write_indirect(struct kvm_ioapic *io=
-apic, u32 val)
- {
- =09unsigned index;
- =09bool mask_before, mask_after;
--=09int old_remote_irr, old_delivery_status;
- =09union kvm_ioapic_redirect_entry *e;
-+=09unsigned long vcpu_bitmap;
-+=09int old_remote_irr, old_delivery_status, old_dest_id, old_dest_mode;
-=20
- =09switch (ioapic->ioregsel) {
- =09case IOAPIC_REG_VERSION:
-@@ -296,6 +297,8 @@ static void ioapic_write_indirect(struct kvm_ioapic *io=
-apic, u32 val)
- =09=09/* Preserve read-only fields */
- =09=09old_remote_irr =3D e->fields.remote_irr;
- =09=09old_delivery_status =3D e->fields.delivery_status;
-+=09=09old_dest_id =3D e->fields.dest_id;
-+=09=09old_dest_mode =3D e->fields.dest_mode;
- =09=09if (ioapic->ioregsel & 1) {
- =09=09=09e->bits &=3D 0xffffffff;
- =09=09=09e->bits |=3D (u64) val << 32;
-@@ -321,7 +324,33 @@ static void ioapic_write_indirect(struct kvm_ioapic *i=
-oapic, u32 val)
- =09=09if (e->fields.trig_mode =3D=3D IOAPIC_LEVEL_TRIG
- =09=09    && ioapic->irr & (1 << index))
- =09=09=09ioapic_service(ioapic, index, false);
--=09=09kvm_make_scan_ioapic_request(ioapic->kvm);
-+=09=09if (e->fields.delivery_mode =3D=3D APIC_DM_FIXED) {
-+=09=09=09struct kvm_lapic_irq irq;
-+
-+=09=09=09irq.shorthand =3D 0;
-+=09=09=09irq.vector =3D e->fields.vector;
-+=09=09=09irq.delivery_mode =3D e->fields.delivery_mode << 8;
-+=09=09=09irq.dest_id =3D e->fields.dest_id;
-+=09=09=09irq.dest_mode =3D e->fields.dest_mode;
-+=09=09=09kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-+=09=09=09=09=09=09&vcpu_bitmap);
-+=09=09=09if (old_dest_mode !=3D e->fields.dest_mode ||
-+=09=09=09    old_dest_id !=3D e->fields.dest_id) {
-+=09=09=09=09/*
-+=09=09=09=09 * Update vcpu_bitmap with vcpus specified in
-+=09=09=09=09 * the previous request as well. This is done to
-+=09=09=09=09 * keep ioapic_handled_vectors synchronized.
-+=09=09=09=09 */
-+=09=09=09=09irq.dest_id =3D old_dest_id;
-+=09=09=09=09irq.dest_mode =3D old_dest_mode;
-+=09=09=09=09kvm_get_dest_vcpus_mask(ioapic->kvm, &irq,
-+=09=09=09=09=09=09=09&vcpu_bitmap);
-+=09=09=09}
-+=09=09=09kvm_make_scan_ioapic_request_mask(ioapic->kvm,
-+=09=09=09=09=09=09=09  &vcpu_bitmap);
-+=09=09} else {
-+=09=09=09kvm_make_scan_ioapic_request(ioapic->kvm);
-+=09=09}
- =09=09break;
- =09}
- }
-diff --git a/arch/x86/kvm/lapic.c b/arch/x86/kvm/lapic.c
-index b29d00b..411d675 100644
---- a/arch/x86/kvm/lapic.c
-+++ b/arch/x86/kvm/lapic.c
-@@ -1124,6 +1124,50 @@ static int __apic_accept_irq(struct kvm_lapic *apic,=
- int delivery_mode,
- =09return result;
- }
-=20
-+/*
-+ * This routine identifies the destination vcpus mask meant to receive the
-+ * IOAPIC interrupts. It either uses kvm_apic_map_get_dest_lapic() to find
-+ * out the destination vcpus array and set the bitmap or it traverses to
-+ * each available vcpu to identify the same.
-+ */
-+void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+=09=09=09     unsigned long *vcpu_bitmap)
-+{
-+=09struct kvm_lapic **dest_vcpu =3D NULL;
-+=09struct kvm_lapic *src =3D NULL;
-+=09struct kvm_apic_map *map;
-+=09struct kvm_vcpu *vcpu;
-+=09unsigned long bitmap;
-+=09int i, vcpu_idx;
-+=09bool ret;
-+
-+=09rcu_read_lock();
-+=09map =3D rcu_dereference(kvm->arch.apic_map);
-+
-+=09ret =3D kvm_apic_map_get_dest_lapic(kvm, &src, irq, map, &dest_vcpu,
-+=09=09=09=09=09  &bitmap);
-+=09if (ret) {
-+=09=09for_each_set_bit(i, &bitmap, 16) {
-+=09=09=09if (!dest_vcpu[i])
-+=09=09=09=09continue;
-+=09=09=09vcpu_idx =3D dest_vcpu[i]->vcpu->vcpu_idx;
-+=09=09=09__set_bit(vcpu_idx, vcpu_bitmap);
-+=09=09}
-+=09} else {
-+=09=09kvm_for_each_vcpu(i, vcpu, kvm) {
-+=09=09=09if (!kvm_apic_present(vcpu))
-+=09=09=09=09continue;
-+=09=09=09if (!kvm_apic_match_dest(vcpu, NULL,
-+=09=09=09=09=09=09 irq->delivery_mode,
-+=09=09=09=09=09=09 irq->dest_id,
-+=09=09=09=09=09=09 irq->dest_mode))
-+=09=09=09=09continue;
-+=09=09=09__set_bit(i, vcpu_bitmap);
-+=09=09}
-+=09}
-+=09rcu_read_unlock();
-+}
-+
- int kvm_apic_compare_prio(struct kvm_vcpu *vcpu1, struct kvm_vcpu *vcpu2)
- {
- =09return vcpu1->arch.apic_arb_prio - vcpu2->arch.apic_arb_prio;
-diff --git a/arch/x86/kvm/lapic.h b/arch/x86/kvm/lapic.h
-index 1f501485..49b0c6c 100644
---- a/arch/x86/kvm/lapic.h
-+++ b/arch/x86/kvm/lapic.h
-@@ -226,6 +226,9 @@ static inline int kvm_lapic_latched_init(struct kvm_vcp=
-u *vcpu)
-=20
- void kvm_wait_lapic_expire(struct kvm_vcpu *vcpu);
-=20
-+void kvm_get_dest_vcpus_mask(struct kvm *kvm, struct kvm_lapic_irq *irq,
-+=09=09=09     unsigned long *vcpu_bitmap);
-+
- bool kvm_intr_is_single_vcpu_fast(struct kvm *kvm, struct kvm_lapic_irq *i=
-rq,
- =09=09=09struct kvm_vcpu **dest_vcpu);
- int kvm_vector_to_index(u32 vector, u32 dest_vcpus,
-diff --git a/arch/x86/kvm/x86.c b/arch/x86/kvm/x86.c
-index ff395f8..445e1c7 100644
---- a/arch/x86/kvm/x86.c
-+++ b/arch/x86/kvm/x86.c
-@@ -7838,6 +7838,20 @@ static void process_smi(struct kvm_vcpu *vcpu)
- =09kvm_make_request(KVM_REQ_EVENT, vcpu);
- }
-=20
-+void kvm_make_scan_ioapic_request_mask(struct kvm *kvm,
-+=09=09=09=09       unsigned long *vcpu_bitmap)
-+{
-+=09cpumask_var_t cpus;
-+=09bool called;
-+
-+=09zalloc_cpumask_var(&cpus, GFP_ATOMIC);
-+
-+=09called =3D kvm_make_vcpus_request_mask(kvm, KVM_REQ_SCAN_IOAPIC,
-+=09=09=09=09=09     vcpu_bitmap, cpus);
-+
-+=09free_cpumask_var(cpus);
-+}
-+
- void kvm_make_scan_ioapic_request(struct kvm *kvm)
- {
- =09kvm_make_all_cpus_request(kvm, KVM_REQ_SCAN_IOAPIC);
-diff --git a/include/linux/kvm_host.h b/include/linux/kvm_host.h
-index 22068fe..09bccd8 100644
---- a/include/linux/kvm_host.h
-+++ b/include/linux/kvm_host.h
-@@ -786,6 +786,8 @@ int kvm_vcpu_write_guest(struct kvm_vcpu *vcpu, gpa_t g=
-pa, const void *data,
- bool kvm_make_vcpus_request_mask(struct kvm *kvm, unsigned int req,
- =09=09=09=09 unsigned long *vcpu_bitmap, cpumask_var_t tmp);
- bool kvm_make_all_cpus_request(struct kvm *kvm, unsigned int req);
-+bool kvm_make_cpus_request_mask(struct kvm *kvm, unsigned int req,
-+=09=09=09=09unsigned long *vcpu_bitmap);
-=20
- long kvm_arch_dev_ioctl(struct file *filp,
- =09=09=09unsigned int ioctl, unsigned long arg);
---=20
-1.8.3.1
-
+QW5zaHVtYW4gS2hhbmR1YWwgPGFuc2h1bWFuLmtoYW5kdWFsQGFybS5jb20+IHdyaXRlczoNCj4g
+T24gMTEvMDYvMjAxOSAxMjoxMSBQTSwgQ2hyaXN0b3BoZSBMZXJveSB3cm90ZToNCj4+IExlIDA2
+LzExLzIwMTkgw6AgMDQ6MjIsIEFuc2h1bWFuIEtoYW5kdWFsIGEgw6ljcml0wqA6DQo+Pj4gT24g
+MTAvMjgvMjAxOSAxMDo1OSBBTSwgQW5zaHVtYW4gS2hhbmR1YWwgd3JvdGU6DQo+Pj4+ICvCoMKg
+wqAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+Pj4gK8KgwqDCoCB8wqDCoMKgwqDCoMKgwqDC
+oCBhcmNoIHxzdGF0dXN8DQo+Pj4+ICvCoMKgwqAgLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+
+Pj4gK8KgwqDCoCB8wqDCoMKgwqDCoMKgIGFscGhhOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzC
+oMKgwqDCoMKgwqDCoMKgIGFyYzogfCBUT0RPIHwNCj4+Pj4gK8KgwqDCoCB8wqDCoMKgwqDCoMKg
+wqDCoCBhcm06IHwgVE9ETyB8DQo+Pj4+ICvCoMKgwqAgfMKgwqDCoMKgwqDCoCBhcm02NDogfMKg
+IG9rwqAgfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKgwqDCoMKgIGM2eDogfCBUT0RPIHwNCj4+
+Pj4gK8KgwqDCoCB8wqDCoMKgwqDCoMKgwqAgY3NreTogfCBUT0RPIHwNCj4+Pj4gK8KgwqDCoCB8
+wqDCoMKgwqDCoMKgIGg4MzAwOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoCBoZXhh
+Z29uOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKgwqDCoCBpYTY0OiB8IFRPRE8g
+fA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKgwqDCoCBtNjhrOiB8IFRPRE8gfA0KPj4+PiArwqDC
+oMKgIHzCoCBtaWNyb2JsYXplOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKgwqDC
+oCBtaXBzOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKgwqAgbmRzMzI6IHwgVE9E
+TyB8DQo+Pj4+ICvCoMKgwqAgfMKgwqDCoMKgwqDCoCBuaW9zMjogfCBUT0RPIHwNCj4+Pj4gK8Kg
+wqDCoCB8wqDCoMKgIG9wZW5yaXNjOiB8IFRPRE8gfA0KPj4+PiArwqDCoMKgIHzCoMKgwqDCoMKg
+IHBhcmlzYzogfCBUT0RPIHwNCj4+Pj4gK8KgwqDCoCB8wqDCoMKgwqAgcG93ZXJwYzogfCBUT0RP
+IHwNCj4+Pj4gK8KgwqDCoCB8wqDCoMKgwqDCoMKgIHBwYzMyOiB8wqAgb2vCoCB8DQo+PiANCj4+
+IE5vdGUgdGhhdCBwcGMzMiBpcyBhIHBhcnQgb2YgcG93ZXJwYywgbm90IGEgc3RhbmRhbG9uZSBh
+cmNoLg0KPg0KPiBSaWdodCwgSSB1bmRlcnN0YW5kLiBCdXQgd2UgYXJlIHlldCB0byBoZWFyIGFi
+b3V0IGhvdyB0aGlzIHRlc3QNCj4gY2FtZSBhYm91dCBvbiBwb3dlcnBjIHNlcnZlciBwbGF0Zm9y
+bXMuIFdpbGwgdXBkYXRlICdwb3dlcnBjJw0KPiBhcmNoIGxpc3RpbmcgYWJvdmUgb25jZSB3ZSBn
+ZXQgc29tZSBjb25maXJtYXRpb24uIE1heSBiZSBvbmNlDQo+IHRoaXMgd29ya3Mgb24gYWxsIHJl
+bGV2YW50IHBvd2VycGMgcGxhdGZvcm1zLCB3ZSBjYW4ganVzdCBtZXJnZQ0KPiAncG93ZXJwYycg
+YW5kICdwcGMzMicgZW50cmllcyBoZXJlIGFzIGp1c3QgJ3Bvd2VycGMnLg0KDQpPbiBwc2VyaWVz
+Og0KDQogIHdhdGNoZG9nOiBCVUc6IHNvZnQgbG9ja3VwIC0gQ1BVIzAgc3R1Y2sgZm9yIDIzcyEg
+W3N3YXBwZXIvMDoxXQ0KICBNb2R1bGVzIGxpbmtlZCBpbjoNCiAgQ1BVOiAwIFBJRDogMSBDb21t
+OiBzd2FwcGVyLzAgTm90IHRhaW50ZWQgNS40LjAtcmM2LWdjYy04LjIuMC1uZXh0LTIwMTkxMTA3
+LTAwMDAxLWcyNTAzMzlkNjc0N2ItZGlydHkgIzE1Mg0KICBOSVA6ICBjMDAwMDAwMDAxMDQzNWEw
+IExSOiBjMDAwMDAwMDAxMDQzNGI0IENUUjogMDAwMDAwMDAwMDAwMDAwMA0KICBSRUdTOiBjMDAw
+MDAwMDNhNDAzOTgwIFRSQVA6IDA5MDEgICBOb3QgdGFpbnRlZCAgKDUuNC4wLXJjNi1nY2MtOC4y
+LjAtbmV4dC0yMDE5MTEwNy0wMDAwMS1nMjUwMzM5ZDY3NDdiLWRpcnR5KQ0KICBNU1I6ICA4MDAw
+MDAwMDAyMDA5MDMzIDxTRixWRUMsRUUsTUUsSVIsRFIsUkksTEU+ICBDUjogNDQwMDAyMjIgIFhF
+UjogMDAwMDAwMDANCiAgQ0ZBUjogYzAwMDAwMDAwMTA0MzVhOCBJUlFNQVNLOiAwIA0KICBHUFIw
+MDogYzAwMDAwMDAwMTA0MzRiNCBjMDAwMDAwMDNhNDAzYzEwIGMwMDAwMDAwMDEyOTUwMDAgMDUy
+MTAwMDEwMDAwMDBjMCANCiAgR1BSMDQ6IDgwMDAwMDAwMDAwMDAxMDUgMDAwMDAwMDAwMDQwMGRj
+MCAwMDAwMDAwMDNlYjAwMDAwIDAwMDAwMDAwMDAwMDAwMDEgDQogIEdQUjA4OiAwMDAwMDAwMDAw
+MDAwMDAwIGZmZmZmZmZmZmZmZmZmZmYgMDAwMDAwMDAwMDAwMDAwMSAwMDAwMDAwMDAwMDAwMTAw
+IA0KICBHUFIxMjogMDAwMDAwMDAwMDAwMDAwMCBjMDAwMDAwMDAxOGYwMDAwIA0KICBOSVAgW2Mw
+MDAwMDAwMDEwNDM1YTBdIGRlYnVnX3ZtX3BndGFibGUrMHg0M2MvMHg4MmMNCiAgTFIgW2MwMDAw
+MDAwMDEwNDM0YjRdIGRlYnVnX3ZtX3BndGFibGUrMHgzNTAvMHg4MmMNCiAgQ2FsbCBUcmFjZToN
+CiAgW2MwMDAwMDAwM2E0MDNjMTBdIFtjMDAwMDAwMDAxMDQzNDZjXSBkZWJ1Z192bV9wZ3RhYmxl
+KzB4MzA4LzB4ODJjICh1bnJlbGlhYmxlKQ0KICBbYzAwMDAwMDAzYTQwM2NlMF0gW2MwMDAwMDAw
+MDEwMDQzMTBdIGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4MWQwLzB4MzljDQogIFtjMDAwMDAwMDNh
+NDAzZGIwXSBbYzAwMDAwMDAwMDAxMGRhMF0ga2VybmVsX2luaXQrMHgyNC8weDE3NA0KICBbYzAw
+MDAwMDAzYTQwM2UyMF0gW2MwMDAwMDAwMDAwMGJkYzRdIHJldF9mcm9tX2tlcm5lbF90aHJlYWQr
+MHg1Yy8weDc4DQogIEluc3RydWN0aW9uIGR1bXA6DQogIDdkMDc1MDc4IDdjZTc0Yjc4IDdjZTBm
+OWFkIDQwYzJmZmYwIDM4ODAwMDAwIDdmODNlMzc4IDRiMDJlZWUxIDYwMDAwMDAwIA0KICA0ODAw
+MDA4MCAzOTIwZmZmZiAzOTQwMDAwMSAzOTAwMDAwMCA8N2VhMGY4YTg+IDdlYTc1MDM5IDQwYzJm
+ZmY4IDdlYTc0ODc4IA0KDQpMb29raW5nIGF0IHRoZSBhc20gSSB0aGluayBpdCdzIHN0dWNrIGlu
+IGhhc2hfX3B0ZV91cGRhdGUoKSB3YWl0aW5nIGZvcg0KSF9QQUdFX0JVU1kgdG8gY2xlYXIsIGJ1
+dCBub3Qgc3VyZSB3aHkuDQoNClRoYXQncyBqdXN0IHVzaW5nIHFlbXUgVENHLCBpbnN0cnVjdGlv
+bnMgaGVyZSBpZiBhbnlvbmUgd2FudHMgdG8gdGVzdCBpdA0KdGhlbXNlbHZlcyA6KQ0KDQogIGh0
+dHBzOi8vZ2l0aHViLmNvbS9saW51eHBwYy93aWtpL3dpa2kvQm9vdGluZy13aXRoLVFlbXUNCg0K
+DQpJZiBJIGJvb3Qgd2l0aCAtY3B1IHBvd2VyOSAodXNpbmcgUmFkaXggTU1VKSwgSSBnZXQgYSBw
+bGFpbiBvbGQgQlVHOg0KDQogIGRlYnVnX3ZtX3BndGFibGU6IGRlYnVnX3ZtX3BndGFibGU6IFZh
+bGlkYXRpbmcgYXJjaGl0ZWN0dXJlIHBhZ2UgdGFibGUgaGVscGVycw0KICAtLS0tLS0tLS0tLS1b
+IGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0NCiAga2VybmVsIEJVRyBhdCBhcmNoL3Bvd2VycGMvbW0v
+cGd0YWJsZS5jOjI3NCENCiAgT29wczogRXhjZXB0aW9uIGluIGtlcm5lbCBtb2RlLCBzaWc6IDUg
+WyMxXQ0KICBMRSBQQUdFX1NJWkU9NjRLIE1NVT1SYWRpeCBTTVAgTlJfQ1BVUz0zMiBOVU1BIHBT
+ZXJpZXMNCiAgTW9kdWxlcyBsaW5rZWQgaW46DQogIENQVTogMCBQSUQ6IDEgQ29tbTogc3dhcHBl
+ci8wIE5vdCB0YWludGVkIDUuNC4wLXJjNi1nY2MtOC4yLjAtbmV4dC0yMDE5MTEwNy0wMDAwMS1n
+MjUwMzM5ZDY3NDdiLWRpcnR5ICMxNTINCiAgTklQOiAgYzAwMDAwMDAwMDA3MjRlOCBMUjogYzAw
+MDAwMDAwMTA0MzU4YyBDVFI6IDAwMDAwMDAwMDAwMDAwMDANCiAgUkVHUzogYzAwMDAwMDAzYTQ4
+Mzk4MCBUUkFQOiAwNzAwICAgTm90IHRhaW50ZWQgICg1LjQuMC1yYzYtZ2NjLTguMi4wLW5leHQt
+MjAxOTExMDctMDAwMDEtZzI1MDMzOWQ2NzQ3Yi1kaXJ0eSkNCiAgTVNSOiAgODAwMDAwMDAwMjAy
+OTAzMyA8U0YsVkVDLEVFLE1FLElSLERSLFJJLExFPiAgQ1I6IDI0MDAwMjI0ICBYRVI6IDIwMDAw
+MDAwDQogIENGQVI6IGMwMDAwMDAwMDEwNDM1ODggSVJRTUFTSzogMCANCiAgR1BSMDA6IGMwMDAw
+MDAwMDEwNDM1OGMgYzAwMDAwMDAzYTQ4M2MxMCBjMDAwMDAwMDAxMjk1MDAwIDAwMDAwMDAwMDAw
+MDAwMDkgDQogIEdQUjA0OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDAwMDUgMDAwMDAw
+MDAwMDAwMDAwMCAwMDAwMDAwMDAwMDAwMDA5IA0KICBHUFIwODogMDAwMDAwMDAwMDAwMDAwMSAw
+MDAwMDAwMDAwMDAwMDBlIDAwMDAwMDAwMDAwMDAwMDEgYzAwMDAwMDAzYTVmMDAwMCANCiAgR1BS
+MTI6IDAwMDAwMDAwMDAwMDAwMDAgYzAwMDAwMDAwMThmMDAwMCBjMDAwMDAwMDAwMDEwZDg0IDAw
+MDAwMDAwMDAwMDAwMDAgDQogIEdQUjE2OiAwMDAwMDAwMDAwMDAwMDAwIDAwMDAwMDAwMDAwMDAw
+MDAgYzAwMDAwMDAzYTVmMDAwMCA4MDAwMDAwMDAwMDAwMTA1IA0KICBHUFIyMDogYzAwMDAwMDAw
+MTAwM2FiOCAwMDAwMDAwMDAwMDAwMDE1IDA1MDA2MTNhMDAwMDAwODAgMDkwMDYwM2EwMDAwMDA4
+MCANCiAgR1BSMjQ6IDA5MjAyZTNhMDAwMDAwODAgYzAwMDAwMDAwMTMzYmQ5MCBjMDAwMDAwMDAx
+MzNiZDk4IGMwMDAwMDAwMDEzM2JkYTAgDQogIEdQUjI4OiBjMDAwMDAwMDNhNWUwMDAwIGMwMDAw
+MDAwM2E2MDBhZjggYzAwMDAwMDAzYTJlMmQ0OCBjMDAwMDAwMDNhNjEwMGEwIA0KICBOSVAgW2Mw
+MDAwMDAwMDAwNzI0ZThdIGFzc2VydF9wdGVfbG9ja2VkKzB4ODgvMHgxOTANCiAgTFIgW2MwMDAw
+MDAwMDEwNDM1OGNdIGRlYnVnX3ZtX3BndGFibGUrMHg0MjgvMHg4MmMNCiAgQ2FsbCBUcmFjZToN
+CiAgW2MwMDAwMDAwM2E0ODNjMTBdIFtjMDAwMDAwMDAxMDQzNDZjXSBkZWJ1Z192bV9wZ3RhYmxl
+KzB4MzA4LzB4ODJjICh1bnJlbGlhYmxlKQ0KICBbYzAwMDAwMDAzYTQ4M2NlMF0gW2MwMDAwMDAw
+MDEwMDQzMTBdIGtlcm5lbF9pbml0X2ZyZWVhYmxlKzB4MWQwLzB4MzljDQogIFtjMDAwMDAwMDNh
+NDgzZGIwXSBbYzAwMDAwMDAwMDAxMGRhMF0ga2VybmVsX2luaXQrMHgyNC8weDE3NA0KICBbYzAw
+MDAwMDAzYTQ4M2UyMF0gW2MwMDAwMDAwMDAwMGJkYzRdIHJldF9mcm9tX2tlcm5lbF90aHJlYWQr
+MHg1Yy8weDc4DQogIEluc3RydWN0aW9uIGR1bXA6DQogIDdkMjUxYTE0IDM5MDcwMDEwIDdkNDYz
+MDMwIDdkMDg0YTE0IDM4YzZmZmZmIDdjODg0NDM2IDdjYzYwN2I0IDdkMDgzMDM4IA0KICA3OTA4
+MWYyNCA3Y2NiNDAyYSA3Y2M4MDA3NCA3OTA4ZDE4MiA8MGIwODAwMDA+IDc4Y2IwMDIyIDU0Yzhj
+MDNlIDdkNDczODMwIA0KICAtLS1bIGVuZCB0cmFjZSBhNjk0ZjFiYzU2NTI5YzBlIF0tLS0NCg0K
+DQpjaGVlcnMNCg==
