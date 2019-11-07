@@ -2,177 +2,220 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 980A6C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 465E7FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68AA4218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bLpu8RsT"
+	by mail.kernel.org (Postfix) with ESMTP id 1CC37222C5
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 04:12:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387563AbfKGEMJ (ORCPT
+        id S2387591AbfKGEML (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 23:12:09 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]:50947 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S2387501AbfKGEMI (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 23:12:08 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573099927;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=Vy7XJKdY7uHiidwzfWnqy3jEytGSp6O8E3wPOjJLQeY=;
-        b=bLpu8RsTeegLIijJQ+AtutrfeZok3A+78Uuq1iPl+IxGd9vmj7KipONmHo4HIKKlQ0gJsa
-        /Lrs+3KHc08ZgXLcULahn6CtJU5NUbq+hxg5ouDvkEPK+59VzhJgoBbJYvUp+F6uSggSjr
-        sIZFT8u7flpmuBFlO/l/hAJbnwubwYY=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-424-Y7iroPMHNZ6uJ8flJrTieg-1; Wed, 06 Nov 2019 23:12:03 -0500
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 258F9107ACC3;
-        Thu,  7 Nov 2019 04:11:59 +0000 (UTC)
-Received: from [10.72.12.214] (ovpn-12-214.pek2.redhat.com [10.72.12.214])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 390AD60870;
-        Thu,  7 Nov 2019 04:11:33 +0000 (UTC)
-Subject: Re: [PATCH V8 0/6] mdev based hardware virtio offloading support
-To:     Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        tiwei.bie@intel.com, virtualization@lists.linux-foundation.org,
-        netdev@vger.kernel.org, cohuck@redhat.com,
-        maxime.coquelin@redhat.com, cunming.liang@intel.com,
-        zhihong.wang@intel.com, rob.miller@broadcom.com,
-        xiao.w.wang@intel.com, haotian.wang@sifive.com,
-        zhenyuw@linux.intel.com, zhi.a.wang@intel.com,
-        jani.nikula@linux.intel.com, joonas.lahtinen@linux.intel.com,
-        rodrigo.vivi@intel.com, airlied@linux.ie, daniel@ffwll.ch,
-        farman@linux.ibm.com, pasic@linux.ibm.com, sebott@linux.ibm.com,
-        oberpar@linux.ibm.com, heiko.carstens@de.ibm.com,
-        gor@linux.ibm.com, borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191105093240.5135-1-jasowang@redhat.com>
- <20191105105834.469675f0@x1.home>
- <393f2dc9-8c67-d3c9-6553-640b80c15aaf@redhat.com>
- <20191106120312.77a6a318@x1.home>
- <20191106142449-mutt-send-email-mst@kernel.org>
- <20191106141318.150f3b9b@x1.home>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <1c1126ec-94b8-5d1a-8ef6-616604e5a93f@redhat.com>
-Date:   Thu, 7 Nov 2019 12:11:30 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Wed, 6 Nov 2019 23:12:11 -0500
+Received: from mga17.intel.com ([192.55.52.151]:50411 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S2387569AbfKGEMK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 23:12:10 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:12:09 -0800
+X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
+   d="scan'208";a="196430523"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by orsmga008-auth.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 20:12:09 -0800
+Subject: [PATCH 14/16] x86/numa: Provide a range-to-target_node lookup
+ facility
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-nvdimm@lists.01.org
+Cc:     Dave Hansen <dave.hansen@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>, x86@kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        David Hildenbrand <david@redhat.com>,
+        Michal Hocko <mhocko@suse.com>, vishal.l.verma@intel.com,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org
+Date:   Wed, 06 Nov 2019 19:57:53 -0800
+Message-ID: <157309907296.1582359.7986676987778026949.stgit@dwillia2-desk3.amr.corp.intel.com>
+In-Reply-To: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
+References: <157309899529.1582359.15358067933360719580.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-In-Reply-To: <20191106141318.150f3b9b@x1.home>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-MC-Unique: Y7iroPMHNZ6uJ8flJrTieg-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The DEV_DAX_KMEM facility is a generic mechanism to allow device-dax
+instances, fronting performance-differentiated-memory like pmem, to be
+added to the System RAM pool. The numa node for that hot-added memory is
+derived from the device-dax instance's 'target_node' attribute.
 
-On 2019/11/7 =E4=B8=8A=E5=8D=885:13, Alex Williamson wrote:
-> On Wed, 6 Nov 2019 14:25:23 -0500
-> "Michael S. Tsirkin" <mst@redhat.com> wrote:
->
->> On Wed, Nov 06, 2019 at 12:03:12PM -0700, Alex Williamson wrote:
->>> On Wed, 6 Nov 2019 11:56:46 +0800
->>> Jason Wang <jasowang@redhat.com> wrote:
->>>   =20
->>>> On 2019/11/6 =E4=B8=8A=E5=8D=881:58, Alex Williamson wrote:
->>>>> On Tue,  5 Nov 2019 17:32:34 +0800
->>>>> Jason Wang <jasowang@redhat.com> wrote:
->>>>>    =20
->>>>>> Hi all:
->>>>>>
->>>>>> There are hardwares that can do virtio datapath offloading while
->>>>>> having its own control path. This path tries to implement a mdev bas=
-ed
->>>>>> unified API to support using kernel virtio driver to drive those
->>>>>> devices. This is done by introducing a new mdev transport for virtio
->>>>>> (virtio_mdev) and register itself as a new kind of mdev driver. Then
->>>>>> it provides a unified way for kernel virtio driver to talk with mdev
->>>>>> device implementation.
->>>>>>
->>>>>> Though the series only contains kernel driver support, the goal is t=
-o
->>>>>> make the transport generic enough to support userspace drivers. This
->>>>>> means vhost-mdev[1] could be built on top as well by resuing the
->>>>>> transport.
->>>>>>
->>>>>> A sample driver is also implemented which simulate a virito-net
->>>>>> loopback ethernet device on top of vringh + workqueue. This could be
->>>>>> used as a reference implementation for real hardware driver.
->>>>>>
->>>>>> Also a real ICF VF driver was also posted here[2] which is a good
->>>>>> reference for vendors who is interested in their own virtio datapath
->>>>>> offloading product.
->>>>>>
->>>>>> Consider mdev framework only support VFIO device and driver right no=
-w,
->>>>>> this series also extend it to support other types. This is done
->>>>>> through introducing class id to the device and pairing it with
->>>>>> id_talbe claimed by the driver. On top, this seris also decouple
->>>>>> device specific parents ops out of the common ones.
->>>>>>
->>>>>> Pktgen test was done with virito-net + mvnet loop back device.
->>>>>>
->>>>>> Please review.
->>>>>>
->>>>>> [1] https://lkml.org/lkml/2019/10/31/440
->>>>>> [2] https://lkml.org/lkml/2019/10/15/1226
->>>>>>
->>>>>> Changes from V7:
->>>>>> - drop {set|get}_mdev_features for virtio
->>>>>> - typo and comment style fixes
->>>>> Seems we're nearly there, all the remaining comments are relatively
->>>>> superficial, though I would appreciate a v9 addressing them as well a=
-s
->>>>> the checkpatch warnings:
->>>>>
->>>>> https://patchwork.freedesktop.org/series/68977/
->>>>
->>>> Will do.
->>>>
->>>> Btw, do you plan to merge vhost-mdev patch on top? Or you prefer it to
->>>> go through Michael's vhost tree?
->>> I can include it if you wish.  The mdev changes are isolated enough in
->>> that patch that I wouldn't presume it, but clearly it would require
->>> less merge coordination to drop it in my tree.  Let me know.  Thanks,
->>>
->>> Alex
->> I'm fine with merging through your tree. If you do, feel free to
->> include
->>
->> Acked-by: Michael S. Tsirkin <mst@redhat.com>
-> AFAICT, it looks like we're expecting at least one more version of
-> Tiwei's patch after V5, so it'd probably be best to provide the ack and
-> go-ahead on that next version so there's no confusion.  Thanks,
->
-> Alex
+Recall that the 'target_node' is the ACPI-PXM-to-node translation for
+memory when it comes online whereas the 'numa_node' attribute of the
+device represents the closest online cpu node.
 
+Presently useful target_node information from the ACPI SRAT is discarded
+with the expectation that "Reserved" memory will never be onlined. Now,
+DEV_DAX_KMEM violates that assumption, there is a need to retain the
+translation. Move, rather than discard, numa_memblk data to a secondary
+array that memory_add_physaddr_to_target_node() may consider at a later
+point in time.
 
-Yes, it's probably need a V6. Will give ack there.
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: <x86@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ arch/x86/mm/numa.c             |   72 +++++++++++++++++++++++++++++++++++++---
+ include/linux/memory_hotplug.h |    6 +++
+ 2 files changed, 73 insertions(+), 5 deletions(-)
 
-Thanks
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 4123100e0eaf..3bbae90b3197 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -31,6 +31,20 @@ __initdata
+ #endif
+ ;
+ 
++#if IS_ENABLED(CONFIG_DEV_DAX_KMEM)
++static struct numa_meminfo __numa_reserved_meminfo;
++
++static struct numa_meminfo *numa_reserved_meminfo(void)
++{
++	return &__numa_reserved_meminfo;
++}
++#else
++static struct numa_meminfo *numa_reserved_meminfo(void)
++{
++	return NULL;
++}
++#endif
++
+ static int numa_distance_cnt;
+ static u8 *numa_distance;
+ 
+@@ -168,6 +182,26 @@ void __init numa_remove_memblk_from(int idx, struct numa_meminfo *mi)
+ 		(mi->nr_blks - idx) * sizeof(mi->blk[0]));
+ }
+ 
++/**
++ * numa_move_memblk - Move one numa_memblk from one numa_meminfo to another
++ * @dst: numa_meminfo to move block to
++ * @idx: Index of memblk to remove
++ * @src: numa_meminfo to remove memblk from
++ *
++ * If @dst is non-NULL add it at the @dst->nr_blks index and increment
++ * @dst->nr_blks, then remove it from @src.
++ */
++void __init numa_move_memblk(struct numa_meminfo *dst, int idx,
++		struct numa_meminfo *src)
++{
++	if (dst) {
++		memcpy(&dst->blk[dst->nr_blks], &src->blk[idx],
++				sizeof(struct numa_memblk));
++		dst->nr_blks++;
++	}
++	numa_remove_memblk_from(idx, src);
++}
++
+ /**
+  * numa_add_memblk - Add one numa_memblk to numa_meminfo
+  * @nid: NUMA node ID of the new memblk
+@@ -245,7 +279,7 @@ int __init numa_cleanup_meminfo(struct numa_meminfo *mi)
+ 		if (bi->start >= bi->end ||
+ 		    !memblock_overlaps_region(&memblock.memory,
+ 			bi->start, bi->end - bi->start))
+-			numa_remove_memblk_from(i--, mi);
++			numa_move_memblk(numa_reserved_meminfo(), i--, mi);
+ 	}
+ 
+ 	/* merge neighboring / overlapping entries */
+@@ -882,15 +916,43 @@ EXPORT_SYMBOL(cpumask_of_node);
+ #endif	/* !CONFIG_DEBUG_PER_CPU_MAPS */
+ 
+ #ifdef CONFIG_MEMORY_HOTPLUG
++static int meminfo_to_nid(struct numa_meminfo *mi, u64 start, int *nid)
++{
++	int i;
++
++	for (i = 0; mi && i < mi->nr_blks; i++)
++		if (mi->blk[i].start <= start && mi->blk[i].end > start) {
++			*nid = mi->blk[i].nid;
++			break;
++		}
++	return i;
++}
++
++int memory_add_physaddr_to_target_node(u64 start)
++{
++	struct numa_meminfo *mi = &numa_meminfo;
++	int nid = mi->blk[0].nid;
++	int i = meminfo_to_nid(mi, start, &nid);
++
++	/*
++	 * Prefer online nodes, but if reserved memory might be
++	 * hot-added continue the search with reserved ranges.
++	 */
++	if (i < mi->nr_blks)
++		return nid;
++
++	mi = numa_reserved_meminfo();
++	meminfo_to_nid(mi, start, &nid);
++	return nid;
++}
++EXPORT_SYMBOL_GPL(memory_add_physaddr_to_target_node);
++
+ int memory_add_physaddr_to_nid(u64 start)
+ {
+ 	struct numa_meminfo *mi = &numa_meminfo;
+ 	int nid = mi->blk[0].nid;
+-	int i;
+ 
+-	for (i = 0; i < mi->nr_blks; i++)
+-		if (mi->blk[i].start <= start && mi->blk[i].end > start)
+-			nid = mi->blk[i].nid;
++	meminfo_to_nid(mi, start, &nid);
+ 	return nid;
+ }
+ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index f46ea71b4ffd..84efb0f20f7e 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -145,11 +145,17 @@ int add_pages(int nid, unsigned long start_pfn, unsigned long nr_pages,
+ 
+ #ifdef CONFIG_NUMA
+ extern int memory_add_physaddr_to_nid(u64 start);
++extern int memory_add_physaddr_to_target_node(u64 start);
+ #else
+ static inline int memory_add_physaddr_to_nid(u64 start)
+ {
+ 	return 0;
+ }
++
++static inline int memory_add_physaddr_to_target_node(u64 start)
++{
++	return 0;
++}
+ #endif
+ 
+ #ifdef CONFIG_HAVE_ARCH_NODEDATA_EXTENSION
 
