@@ -2,843 +2,129 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 850B8C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:39:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1D80C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C1702166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:39:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C04C02166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:41:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="fgFJhL4Z"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="fiLNYes6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727312AbfKGTjx (ORCPT
+        id S1726718AbfKGTlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:39:53 -0500
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:10382 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725785AbfKGTjw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:39:52 -0500
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5dc472c60000>; Thu, 07 Nov 2019 11:38:46 -0800
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Thu, 07 Nov 2019 11:39:46 -0800
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Thu, 07 Nov 2019 11:39:46 -0800
-Received: from [10.25.75.102] (172.20.13.39) by HQMAIL107.nvidia.com
- (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Thu, 7 Nov
- 2019 19:39:24 +0000
-Subject: Re: [PATCH V11 3/6] mdev: introduce device specific ops
-To:     Jason Wang <jasowang@redhat.com>, <kvm@vger.kernel.org>,
-        <linux-s390@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <intel-gvt-dev@lists.freedesktop.org>,
-        <alex.williamson@redhat.com>, <mst@redhat.com>,
-        <tiwei.bie@intel.com>
-CC:     <virtualization@lists.linux-foundation.org>,
-        <netdev@vger.kernel.org>, <cohuck@redhat.com>,
-        <maxime.coquelin@redhat.com>, <cunming.liang@intel.com>,
-        <zhihong.wang@intel.com>, <rob.miller@broadcom.com>,
-        <xiao.w.wang@intel.com>, <haotian.wang@sifive.com>,
-        <zhenyuw@linux.intel.com>, <zhi.a.wang@intel.com>,
-        <jani.nikula@linux.intel.com>, <joonas.lahtinen@linux.intel.com>,
-        <rodrigo.vivi@intel.com>, <airlied@linux.ie>, <daniel@ffwll.ch>,
-        <farman@linux.ibm.com>, <pasic@linux.ibm.com>,
-        <sebott@linux.ibm.com>, <oberpar@linux.ibm.com>,
-        <heiko.carstens@de.ibm.com>, <gor@linux.ibm.com>,
-        <borntraeger@de.ibm.com>, <akrowiak@linux.ibm.com>,
-        <freude@linux.ibm.com>, <lingshan.zhu@intel.com>,
-        <eperezma@redhat.com>, <lulu@redhat.com>, <parav@mellanox.com>,
-        <christophe.de.dinechin@gmail.com>, <kevin.tian@intel.com>,
-        <stefanha@redhat.com>, <rdunlap@infradead.org>
-References: <20191107151109.23261-1-jasowang@redhat.com>
- <20191107151109.23261-4-jasowang@redhat.com>
-X-Nvconfidentiality: public
-From:   Kirti Wankhede <kwankhede@nvidia.com>
-Message-ID: <26a2dedf-c8c6-ba0b-1a73-9fec082d572e@nvidia.com>
-Date:   Fri, 8 Nov 2019 01:09:18 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.2
-MIME-Version: 1.0
-In-Reply-To: <20191107151109.23261-4-jasowang@redhat.com>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL107.nvidia.com (172.20.187.13) To
- HQMAIL107.nvidia.com (172.20.187.13)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+        Thu, 7 Nov 2019 14:41:40 -0500
+Received: from mail-eopbgr820072.outbound.protection.outlook.com ([40.107.82.72]:36192
+        "EHLO NAM01-SN1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725844AbfKGTlk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:41:40 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=gK1WxUC0IS9zZaaccinKs1efktIKSHP+1+z1KWZN8fNkss/soCDrxTZvQ0F0y7km4OGWJKYwKLJTMAVcbjQ5AvHzTJkVjwFexVeLjjC/7I6n8lzuE6Y8knH/klyy+Fr9jG/W8QIIfNXIid57MehVpV/dJhJ/N+owC7h+xF3dbhqANxmxGkfWIztDMdYU/tuf9jTnTRtIh9ji1ZRB6Y+zAG6Vrm4tSOmFuxt97ZNFuBzWu66w2tllH0K8QOL9bKgD64YI7/rRq7/ITpufaPi+zTchBjhKZsY4NOs0oaDRQHQril58p2oUommpWJTh3+OEh6WWvnBex0Lc7Cnwe2SUZQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rKh1W0yIjamrWzezcgn2w5gcE54uNCwEuqSg2Uop3A=;
+ b=EH6BOWv5ycCg9zeaL0AM90vra2xa4AEcd9IN9Lqak3CHG6RTaKn9PtBsezHUGM1aHD16Tu3Rv5AtOV/7FkrlKYSZteRdXnSvNIKjvJAikKGxKq+3fnZH3/Do2wwyoPQci4O3Y/yaxCEBuuaoTUbgbMNY+124JghKqGIbbIV46MfOx5SCwM5u1UEPq1YlvgrIcVc7LVQ+fGGvFbATtQFwX81mISNjYoBdG5sltrAVKBWEtJmj2K8h90I2Z98v0/gfd0QkSZC5KN8RWT0sDTbC2FVPjNz3ulDYnFDw4kXei5HD5L8fc+F+yvPCElMhUAVijYzxLqOrkKKqchLpBOr9iQ==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=amd.com; dmarc=pass action=none header.from=amd.com; dkim=pass
+ header.d=amd.com; arc=none
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=1rKh1W0yIjamrWzezcgn2w5gcE54uNCwEuqSg2Uop3A=;
+ b=fiLNYes6dETpzPpg/vFgTYxycr5LIt5eQzr92qOgviu+ew/DqlsQmW9yWeeWrp1QDMiT/yNwU9R7KUUuMEXdYH/v+Xi6mWGX1X3X1VayBYY+WlIirPMp2fFoDTGputkSTC6jfacaLiKuMUCnQ1rSKgMAv9I1XIvuVqtb+Y5iLlQ=
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com (52.135.103.16) by
+ SN6PR12MB2687.namprd12.prod.outlook.com (52.135.103.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.2430.23; Thu, 7 Nov 2019 19:41:38 +0000
+Received: from SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba]) by SN6PR12MB2639.namprd12.prod.outlook.com
+ ([fe80::2819:e697:4314:56ba%3]) with mapi id 15.20.2408.028; Thu, 7 Nov 2019
+ 19:41:38 +0000
+From:   "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Topic: [PATCH v3 0/5] AMD64 EDAC: Check for nodes without memory, etc.
+Thread-Index: AQHVlEEBkkiHg8UvLEKx+Q/uzElWBqd+T6+AgAAi68CAABzVgIAA9yyAgAAyaVCAACG7AIAAO3twgAAGAoCAAADjwA==
+Date:   Thu, 7 Nov 2019 19:41:38 +0000
+Message-ID: <SN6PR12MB26395B751A59D86EFF3A77EBF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+References: <20191106012448.243970-1-Yazen.Ghannam@amd.com>
+ <20191106160607.GC28380@zn.tnic>
+ <SN6PR12MB26398D9E617DF8C0ABE0252CF8790@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191106195417.GF28380@zn.tnic> <20191107103857.GC19501@zn.tnic>
+ <SN6PR12MB263984026F57EC7F3B33B2BFF8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191107154006.GF19501@zn.tnic>
+ <SN6PR12MB263925E6F18C3EDC8D398932F8780@SN6PR12MB2639.namprd12.prod.outlook.com>
+ <20191107193429.GI19501@zn.tnic>
+In-Reply-To: <20191107193429.GI19501@zn.tnic>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1573155526; bh=huOsw4TCJvN0fCSwZr8zZKc46u8D7LDIYCH44uLPByk=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=fgFJhL4ZMHKuwtWgiTjpTbe0lBksRKOjY6CgrMRKwQiGok3kEWAIQmMac9Mhf2X0X
-         6BbW1W1QFzsqi2Hw3PReZOgC+2zx5o2Gp9evETcX6ci6lFkkf4FRyksddGIO86bMRe
-         sD3apfwEjPF8f9wzwelk/Y/CmCSvIuQfNEEAkPE8GPwwtWsCkzw8QIKlzXFrRg+x1F
-         ZoTYAQ1Gpn1kEh+UTrtFNTOn1izXHKm0nT7onq0h4KbCEIMxoROUt71aEqF4qvIEU/
-         FEyH0UTIuA6XZh3kqHvnkC8OkXEJi2R/tHF2yZ9M+QsLd/fr59aJOZ2Bjm5q7ML9gt
-         bOVvAHVMCJFpg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Yazen.Ghannam@amd.com; 
+x-originating-ip: [2603:9001:1a05:3100:9de1:18ac:4797:8053]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-ht: Tenant
+x-ms-office365-filtering-correlation-id: 0e5f07c5-76fa-4e7f-d9e3-08d763ba8160
+x-ms-traffictypediagnostic: SN6PR12MB2687:
+x-microsoft-antispam-prvs: <SN6PR12MB2687F28BB1590439F5542388F8780@SN6PR12MB2687.namprd12.prod.outlook.com>
+x-ms-oob-tlc-oobclassifiers: OLM:6430;
+x-forefront-prvs: 0214EB3F68
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(4636009)(376002)(39860400002)(136003)(346002)(396003)(366004)(13464003)(199004)(189003)(256004)(186003)(81166006)(5660300002)(46003)(81156014)(52536014)(8676002)(33656002)(25786009)(8936002)(229853002)(6116002)(6916009)(102836004)(7696005)(4326008)(71190400001)(71200400001)(55016002)(14454004)(6246003)(476003)(99286004)(66476007)(66946007)(305945005)(6506007)(86362001)(486006)(54906003)(66556008)(64756008)(66446008)(53546011)(76116006)(316002)(446003)(76176011)(11346002)(478600001)(74316002)(6436002)(2906002)(7736002)(9686003);DIR:OUT;SFP:1101;SCL:1;SRVR:SN6PR12MB2687;H:SN6PR12MB2639.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info: 39sEz6oQqTEIyCd/MDipaoNbfDyhkk/1KvsEtIOsdDbE6EWDZT7fSeNQ2JaBwX8R0+jz+O2Dvk+B6RP2vNAAQFp22TwZCKZYOWq+JPVp51canhp1qQ1fnN4y/bARkPmMAZHGVUbSRNsRH68TKljUcAYsjkyRJUGyc/nNzL4kti/QpFnBt86UD5JqVyYFbRJz922pM67UClvqyuYk1sma6WX92sahkeLp55j5RbRDgU9z7N544vqHXQGht6pu+Wvc6RsgSwT6cIUcr2Cq8r8apcUgLiHlWhoVFdeMQEHtp3GzX+IPTal15531TNycepQ8r/i/htcYmD/E34ebJWqf8/sFh/66Xz2tZcqzQQOOz0feAT/xZIg2PN0pjd3RufibsoiPUK+P2vPE9ovLw7CU/bFljtGuGYd9ZMsYtjUOUVk2AVxZvcj59eblL7ALjwLp
+x-ms-exchange-transport-forked: True
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0e5f07c5-76fa-4e7f-d9e3-08d763ba8160
+X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 19:41:38.0380
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 1D7NpZ3m/ZRKUSHTa+6n5gZ49Poug9LKqXg/jJVv5E2fhbRx6pG46GO/XV+u7zmtpuNH0WVKPHIk52QsLCQLSg==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR12MB2687
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 11/7/2019 8:41 PM, Jason Wang wrote:
-> Currently, except for the create and remove, the rest of
-> mdev_parent_ops is designed for vfio-mdev driver only and may not help
-> for kernel mdev driver. With the help of class id, this patch
-> introduces device specific callbacks inside mdev_device
-> structure. This allows different set of callback to be used by
-> vfio-mdev and virtio-mdev.
-> 
-> Reviewed-by: Parav Pandit <parav@mellanox.com>
-> Signed-off-by: Jason Wang <jasowang@redhat.com>
-
-
-Reviewed-by: Kirti Wankhede <kwankhede@nvidia.com>
-
-Thanks,
-Kirti
-
-> ---
->   .../driver-api/vfio-mediated-device.rst       | 35 +++++++++----
->   MAINTAINERS                                   |  1 +
->   drivers/gpu/drm/i915/gvt/kvmgt.c              | 18 ++++---
->   drivers/s390/cio/vfio_ccw_ops.c               | 18 ++++---
->   drivers/s390/crypto/vfio_ap_ops.c             | 14 +++--
->   drivers/vfio/mdev/mdev_core.c                 | 24 ++++++++-
->   drivers/vfio/mdev/mdev_private.h              |  5 ++
->   drivers/vfio/mdev/vfio_mdev.c                 | 37 ++++++-------
->   include/linux/mdev.h                          | 43 ++++-----------
->   include/linux/mdev_vfio_ops.h                 | 52 +++++++++++++++++++
->   samples/vfio-mdev/mbochs.c                    | 20 ++++---
->   samples/vfio-mdev/mdpy.c                      | 20 ++++---
->   samples/vfio-mdev/mtty.c                      | 18 ++++---
->   13 files changed, 206 insertions(+), 99 deletions(-)
->   create mode 100644 include/linux/mdev_vfio_ops.h
-> 
-> diff --git a/Documentation/driver-api/vfio-mediated-device.rst b/Documentation/driver-api/vfio-mediated-device.rst
-> index 6709413bee29..04d56884c357 100644
-> --- a/Documentation/driver-api/vfio-mediated-device.rst
-> +++ b/Documentation/driver-api/vfio-mediated-device.rst
-> @@ -152,15 +152,6 @@ callbacks per mdev parent device, per mdev type, or any other categorization.
->   Vendor drivers are expected to be fully asynchronous in this respect or
->   provide their own internal resource protection.)
->   
-> -The callbacks in the mdev_parent_ops structure are as follows:
-> -
-> -* open: open callback of mediated device
-> -* close: close callback of mediated device
-> -* ioctl: ioctl callback of mediated device
-> -* read : read emulation callback
-> -* write: write emulation callback
-> -* mmap: mmap emulation callback
-> -
->   A driver should use the mdev_parent_ops structure in the function call to
->   register itself with the mdev core driver::
->   
-> @@ -172,10 +163,34 @@ that a driver should use to unregister itself with the mdev core driver::
->   
->   	extern void mdev_unregister_device(struct device *dev);
->   
-> -It is also required to specify the class_id in create() callback through::
-> +As multiple types of mediated devices may be supported, class id needs
-> +to be specified in the create() callback. This could be done
-> +explicitly for the device that interacts with the mdev device directly
-> +through::
->   
->   	int mdev_set_class(struct mdev_device *mdev, u16 id);
->   
-> +For the device that uses the mdev bus for its operation, the class
-> +should provide helper function to set class id and device specific
-> +ops. E.g for vfio-mdev devices, the function to be called is::
-> +
-> +	int mdev_set_vfio_ops(struct mdev_device *mdev,
-> +                              const struct mdev_vfio_device_ops *vfio_ops);
-> +
-> +The class id (set by this function to MDEV_CLASS_ID_VFIO) is used to
-> +match a device with an mdev driver via its id table. The device
-> +specific callbacks (specified in *vfio_ops) are obtainable via
-> +mdev_get_vfio_ops() (for use by the mdev bus driver). A vfio-mdev
-> +device (class id MDEV_CLASS_ID_VFIO) uses the following
-> +device-specific ops:
-> +
-> +* open: open callback of vfio mediated device
-> +* close: close callback of vfio mediated device
-> +* ioctl: ioctl callback of vfio mediated device
-> +* read : read emulation callback
-> +* write: write emulation callback
-> +* mmap: mmap emulation callback
-> +
->   Mediated Device Management Interface Through sysfs
->   ==================================================
->   
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index cba1095547fd..f661d13344d6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -17121,6 +17121,7 @@ S:	Maintained
->   F:	Documentation/driver-api/vfio-mediated-device.rst
->   F:	drivers/vfio/mdev/
->   F:	include/linux/mdev.h
-> +F:	include/linux/mdev_vfio_ops.h
->   F:	samples/vfio-mdev/
->   
->   VFIO PLATFORM DRIVER
-> diff --git a/drivers/gpu/drm/i915/gvt/kvmgt.c b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> index 6420f0dbd31b..662f3a672372 100644
-> --- a/drivers/gpu/drm/i915/gvt/kvmgt.c
-> +++ b/drivers/gpu/drm/i915/gvt/kvmgt.c
-> @@ -42,6 +42,7 @@
->   #include <linux/kvm_host.h>
->   #include <linux/vfio.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <linux/debugfs.h>
->   
->   #include <linux/nospec.h>
-> @@ -643,6 +644,8 @@ static void kvmgt_put_vfio_device(void *vgpu)
->   	vfio_device_put(((struct intel_vgpu *)vgpu)->vdev.vfio_device);
->   }
->   
-> +static const struct mdev_vfio_device_ops intel_vfio_vgpu_dev_ops;
-> +
->   static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	struct intel_vgpu *vgpu = NULL;
-> @@ -678,7 +681,7 @@ static int intel_vgpu_create(struct kobject *kobj, struct mdev_device *mdev)
->   		     dev_name(mdev_dev(mdev)));
->   	ret = 0;
->   
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &intel_vfio_vgpu_dev_ops);
->   out:
->   	return ret;
->   }
-> @@ -1599,20 +1602,21 @@ static const struct attribute_group *intel_vgpu_groups[] = {
->   	NULL,
->   };
->   
-> -static struct mdev_parent_ops intel_vgpu_ops = {
-> -	.mdev_attr_groups       = intel_vgpu_groups,
-> -	.create			= intel_vgpu_create,
-> -	.remove			= intel_vgpu_remove,
-> -
-> +static const struct mdev_vfio_device_ops intel_vfio_vgpu_dev_ops = {
->   	.open			= intel_vgpu_open,
->   	.release		= intel_vgpu_release,
-> -
->   	.read			= intel_vgpu_read,
->   	.write			= intel_vgpu_write,
->   	.mmap			= intel_vgpu_mmap,
->   	.ioctl			= intel_vgpu_ioctl,
->   };
->   
-> +static struct mdev_parent_ops intel_vgpu_ops = {
-> +	.mdev_attr_groups       = intel_vgpu_groups,
-> +	.create			= intel_vgpu_create,
-> +	.remove			= intel_vgpu_remove,
-> +};
-> +
->   static int kvmgt_host_init(struct device *dev, void *gvt, const void *ops)
->   {
->   	struct attribute **kvm_type_attrs;
-> diff --git a/drivers/s390/cio/vfio_ccw_ops.c b/drivers/s390/cio/vfio_ccw_ops.c
-> index cf2c013ae32f..fa473ded71c7 100644
-> --- a/drivers/s390/cio/vfio_ccw_ops.c
-> +++ b/drivers/s390/cio/vfio_ccw_ops.c
-> @@ -12,6 +12,7 @@
->   
->   #include <linux/vfio.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <linux/nospec.h>
->   #include <linux/slab.h>
->   
-> @@ -110,6 +111,8 @@ static struct attribute_group *mdev_type_groups[] = {
->   	NULL,
->   };
->   
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops;
-> +
->   static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	struct vfio_ccw_private *private =
-> @@ -129,7 +132,7 @@ static int vfio_ccw_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->   			   private->sch->schid.ssid,
->   			   private->sch->schid.sch_no);
->   
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
->   	return 0;
->   }
->   
-> @@ -575,11 +578,7 @@ static ssize_t vfio_ccw_mdev_ioctl(struct mdev_device *mdev,
->   	}
->   }
->   
-> -static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
-> -	.owner			= THIS_MODULE,
-> -	.supported_type_groups  = mdev_type_groups,
-> -	.create			= vfio_ccw_mdev_create,
-> -	.remove			= vfio_ccw_mdev_remove,
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops = {
->   	.open			= vfio_ccw_mdev_open,
->   	.release		= vfio_ccw_mdev_release,
->   	.read			= vfio_ccw_mdev_read,
-> @@ -587,6 +586,13 @@ static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
->   	.ioctl			= vfio_ccw_mdev_ioctl,
->   };
->   
-> +static const struct mdev_parent_ops vfio_ccw_mdev_ops = {
-> +	.owner			= THIS_MODULE,
-> +	.supported_type_groups  = mdev_type_groups,
-> +	.create			= vfio_ccw_mdev_create,
-> +	.remove			= vfio_ccw_mdev_remove,
-> +};
-> +
->   int vfio_ccw_mdev_reg(struct subchannel *sch)
->   {
->   	return mdev_register_device(&sch->dev, &vfio_ccw_mdev_ops);
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index 07c31070afeb..7bdc62393112 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -16,6 +16,7 @@
->   #include <linux/bitops.h>
->   #include <linux/kvm_host.h>
->   #include <linux/module.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <asm/kvm.h>
->   #include <asm/zcrypt.h>
->   
-> @@ -321,6 +322,8 @@ static void vfio_ap_matrix_init(struct ap_config_info *info,
->   	matrix->adm_max = info->apxa ? info->Nd : 15;
->   }
->   
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops;
-> +
->   static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	struct ap_matrix_mdev *matrix_mdev;
-> @@ -343,7 +346,7 @@ static int vfio_ap_mdev_create(struct kobject *kobj, struct mdev_device *mdev)
->   	list_add(&matrix_mdev->node, &matrix_dev->mdev_list);
->   	mutex_unlock(&matrix_dev->lock);
->   
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
->   	return 0;
->   }
->   
-> @@ -1281,15 +1284,18 @@ static ssize_t vfio_ap_mdev_ioctl(struct mdev_device *mdev,
->   	return ret;
->   }
->   
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops = {
-> +	.open			= vfio_ap_mdev_open,
-> +	.release		= vfio_ap_mdev_release,
-> +	.ioctl			= vfio_ap_mdev_ioctl,
-> +};
-> +
->   static const struct mdev_parent_ops vfio_ap_matrix_ops = {
->   	.owner			= THIS_MODULE,
->   	.supported_type_groups	= vfio_ap_mdev_type_groups,
->   	.mdev_attr_groups	= vfio_ap_mdev_attr_groups,
->   	.create			= vfio_ap_mdev_create,
->   	.remove			= vfio_ap_mdev_remove,
-> -	.open			= vfio_ap_mdev_open,
-> -	.release		= vfio_ap_mdev_release,
-> -	.ioctl			= vfio_ap_mdev_ioctl,
->   };
->   
->   int vfio_ap_mdev_register(void)
-> diff --git a/drivers/vfio/mdev/mdev_core.c b/drivers/vfio/mdev/mdev_core.c
-> index 7bfa2e46e829..4e70f19ac145 100644
-> --- a/drivers/vfio/mdev/mdev_core.c
-> +++ b/drivers/vfio/mdev/mdev_core.c
-> @@ -47,7 +47,8 @@ EXPORT_SYMBOL(mdev_set_drvdata);
->   
->   /*
->    * Specify the class for the mdev device, this must be called during
-> - * create() callback.
-> + * create() callback explicitly or implicitly through the helpers
-> + * provided by each class.
->    */
->   void mdev_set_class(struct mdev_device *mdev, u16 id)
->   {
-> @@ -56,6 +57,27 @@ void mdev_set_class(struct mdev_device *mdev, u16 id)
->   }
->   EXPORT_SYMBOL(mdev_set_class);
->   
-> +/*
-> + * Specify the mdev device to be a VFIO mdev device, and set VFIO
-> + * device ops for it. This must be called from the create() callback
-> + * for VFIO mdev device.
-> + */
-> +void mdev_set_vfio_ops(struct mdev_device *mdev,
-> +		       const struct mdev_vfio_device_ops *vfio_ops)
-> +{
-> +	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev->vfio_ops = vfio_ops;
-> +}
-> +EXPORT_SYMBOL(mdev_set_vfio_ops);
-> +
-> +/* Get the VFIO device ops for the mdev device. */
-> +const struct mdev_vfio_device_ops *mdev_get_vfio_ops(struct mdev_device *mdev)
-> +{
-> +	WARN_ON(mdev->class_id != MDEV_CLASS_ID_VFIO);
-> +	return mdev->vfio_ops;
-> +}
-> +EXPORT_SYMBOL(mdev_get_vfio_ops);
-> +
->   struct device *mdev_dev(struct mdev_device *mdev)
->   {
->   	return &mdev->dev;
-> diff --git a/drivers/vfio/mdev/mdev_private.h b/drivers/vfio/mdev/mdev_private.h
-> index c65f436c1869..411227373625 100644
-> --- a/drivers/vfio/mdev/mdev_private.h
-> +++ b/drivers/vfio/mdev/mdev_private.h
-> @@ -10,6 +10,8 @@
->   #ifndef MDEV_PRIVATE_H
->   #define MDEV_PRIVATE_H
->   
-> +#include <linux/mdev_vfio_ops.h>
-> +
->   int  mdev_bus_register(void);
->   void mdev_bus_unregister(void);
->   
-> @@ -34,6 +36,9 @@ struct mdev_device {
->   	struct device *iommu_device;
->   	bool active;
->   	u16 class_id;
-> +	union {
-> +		const struct mdev_vfio_device_ops *vfio_ops;
-> +	};
->   };
->   
->   #define to_mdev_device(dev)	container_of(dev, struct mdev_device, dev)
-> diff --git a/drivers/vfio/mdev/vfio_mdev.c b/drivers/vfio/mdev/vfio_mdev.c
-> index a6641cd8b5a3..c01e2194e4b3 100644
-> --- a/drivers/vfio/mdev/vfio_mdev.c
-> +++ b/drivers/vfio/mdev/vfio_mdev.c
-> @@ -14,6 +14,7 @@
->   #include <linux/slab.h>
->   #include <linux/vfio.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   
->   #include "mdev_private.h"
->   
-> @@ -24,16 +25,16 @@
->   static int vfio_mdev_open(void *device_data)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   	int ret;
->   
-> -	if (unlikely(!parent->ops->open))
-> +	if (unlikely(!ops->open))
->   		return -EINVAL;
->   
->   	if (!try_module_get(THIS_MODULE))
->   		return -ENODEV;
->   
-> -	ret = parent->ops->open(mdev);
-> +	ret = ops->open(mdev);
->   	if (ret)
->   		module_put(THIS_MODULE);
->   
-> @@ -43,10 +44,10 @@ static int vfio_mdev_open(void *device_data)
->   static void vfio_mdev_release(void *device_data)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   
-> -	if (likely(parent->ops->release))
-> -		parent->ops->release(mdev);
-> +	if (likely(ops->release))
-> +		ops->release(mdev);
->   
->   	module_put(THIS_MODULE);
->   }
-> @@ -55,47 +56,47 @@ static long vfio_mdev_unlocked_ioctl(void *device_data,
->   				     unsigned int cmd, unsigned long arg)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   
-> -	if (unlikely(!parent->ops->ioctl))
-> +	if (unlikely(!ops->ioctl))
->   		return -EINVAL;
->   
-> -	return parent->ops->ioctl(mdev, cmd, arg);
-> +	return ops->ioctl(mdev, cmd, arg);
->   }
->   
->   static ssize_t vfio_mdev_read(void *device_data, char __user *buf,
->   			      size_t count, loff_t *ppos)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   
-> -	if (unlikely(!parent->ops->read))
-> +	if (unlikely(!ops->read))
->   		return -EINVAL;
->   
-> -	return parent->ops->read(mdev, buf, count, ppos);
-> +	return ops->read(mdev, buf, count, ppos);
->   }
->   
->   static ssize_t vfio_mdev_write(void *device_data, const char __user *buf,
->   			       size_t count, loff_t *ppos)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   
-> -	if (unlikely(!parent->ops->write))
-> +	if (unlikely(!ops->write))
->   		return -EINVAL;
->   
-> -	return parent->ops->write(mdev, buf, count, ppos);
-> +	return ops->write(mdev, buf, count, ppos);
->   }
->   
->   static int vfio_mdev_mmap(void *device_data, struct vm_area_struct *vma)
->   {
->   	struct mdev_device *mdev = device_data;
-> -	struct mdev_parent *parent = mdev->parent;
-> +	const struct mdev_vfio_device_ops *ops = mdev_get_vfio_ops(mdev);
->   
-> -	if (unlikely(!parent->ops->mmap))
-> +	if (unlikely(!ops->mmap))
->   		return -EINVAL;
->   
-> -	return parent->ops->mmap(mdev, vma);
-> +	return ops->mmap(mdev, vma);
->   }
->   
->   static const struct vfio_device_ops vfio_mdev_dev_ops = {
-> diff --git a/include/linux/mdev.h b/include/linux/mdev.h
-> index 78b69d09eb54..9e37506d1987 100644
-> --- a/include/linux/mdev.h
-> +++ b/include/linux/mdev.h
-> @@ -10,7 +10,13 @@
->   #ifndef MDEV_H
->   #define MDEV_H
->   
-> +#include <linux/types.h>
-> +#include <linux/device.h>
-> +#include <linux/mdev.h>
-> +#include <uapi/linux/uuid.h>
-> +
->   struct mdev_device;
-> +struct mdev_vfio_device_ops;
->   
->   /*
->    * Called by the parent device driver to set the device which represents
-> @@ -48,30 +54,7 @@ struct device *mdev_get_iommu_device(struct device *dev);
->    *			@mdev: mdev_device device structure which is being
->    *			       destroyed
->    *			Returns integer: success (0) or error (< 0)
-> - * @open:		Open mediated device.
-> - *			@mdev: mediated device.
-> - *			Returns integer: success (0) or error (< 0)
-> - * @release:		release mediated device
-> - *			@mdev: mediated device.
-> - * @read:		Read emulation callback
-> - *			@mdev: mediated device structure
-> - *			@buf: read buffer
-> - *			@count: number of bytes to read
-> - *			@ppos: address.
-> - *			Retuns number on bytes read on success or error.
-> - * @write:		Write emulation callback
-> - *			@mdev: mediated device structure
-> - *			@buf: write buffer
-> - *			@count: number of bytes to be written
-> - *			@ppos: address.
-> - *			Retuns number on bytes written on success or error.
-> - * @ioctl:		IOCTL callback
-> - *			@mdev: mediated device structure
-> - *			@cmd: ioctl command
-> - *			@arg: arguments to ioctl
-> - * @mmap:		mmap callback
-> - *			@mdev: mediated device structure
-> - *			@vma: vma structure
-> + *
->    * Parent device that support mediated device should be registered with mdev
->    * module with mdev_parent_ops structure.
->    **/
-> @@ -83,15 +66,6 @@ struct mdev_parent_ops {
->   
->   	int     (*create)(struct kobject *kobj, struct mdev_device *mdev);
->   	int     (*remove)(struct mdev_device *mdev);
-> -	int     (*open)(struct mdev_device *mdev);
-> -	void    (*release)(struct mdev_device *mdev);
-> -	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> -			size_t count, loff_t *ppos);
-> -	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> -			 size_t count, loff_t *ppos);
-> -	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> -			 unsigned long arg);
-> -	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
->   };
->   
->   /* interface for exporting mdev supported type attributes */
-> @@ -135,6 +109,9 @@ void *mdev_get_drvdata(struct mdev_device *mdev);
->   void mdev_set_drvdata(struct mdev_device *mdev, void *data);
->   const guid_t *mdev_uuid(struct mdev_device *mdev);
->   void mdev_set_class(struct mdev_device *mdev, u16 id);
-> +void mdev_set_vfio_ops(struct mdev_device *mdev,
-> +		       const struct mdev_vfio_device_ops *vfio_ops);
-> +const struct mdev_vfio_device_ops *mdev_get_vfio_ops(struct mdev_device *mdev);
->   
->   extern struct bus_type mdev_bus_type;
->   
-> diff --git a/include/linux/mdev_vfio_ops.h b/include/linux/mdev_vfio_ops.h
-> new file mode 100644
-> index 000000000000..317518f30621
-> --- /dev/null
-> +++ b/include/linux/mdev_vfio_ops.h
-> @@ -0,0 +1,52 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * VFIO Mediated device definition
-> + */
-> +
-> +#ifndef MDEV_VFIO_OPS_H
-> +#define MDEV_VFIO_OPS_H
-> +
-> +#include <linux/mdev.h>
-> +
-> +/**
-> + * struct mdev_vfio_device_ops - Structure to be registered for each
-> + * mdev device to register the device to vfio-mdev module.
-> + *
-> + * @open:		Open mediated device.
-> + *			@mdev: mediated device.
-> + *			Returns integer: success (0) or error (< 0)
-> + * @release:		release mediated device
-> + *			@mdev: mediated device.
-> + * @read:		Read emulation callback
-> + *			@mdev: mediated device structure
-> + *			@buf: read buffer
-> + *			@count: number of bytes to read
-> + *			@ppos: address.
-> + *			Retuns number on bytes read on success or error.
-> + * @write:		Write emulation callback
-> + *			@mdev: mediated device structure
-> + *			@buf: write buffer
-> + *			@count: number of bytes to be written
-> + *			@ppos: address.
-> + *			Retuns number on bytes written on success or error.
-> + * @ioctl:		IOCTL callback
-> + *			@mdev: mediated device structure
-> + *			@cmd: ioctl command
-> + *			@arg: arguments to ioctl
-> + * @mmap:		mmap callback
-> + *			@mdev: mediated device structure
-> + *			@vma: vma structure
-> + */
-> +struct mdev_vfio_device_ops {
-> +	int     (*open)(struct mdev_device *mdev);
-> +	void    (*release)(struct mdev_device *mdev);
-> +	ssize_t (*read)(struct mdev_device *mdev, char __user *buf,
-> +			size_t count, loff_t *ppos);
-> +	ssize_t (*write)(struct mdev_device *mdev, const char __user *buf,
-> +			 size_t count, loff_t *ppos);
-> +	long	(*ioctl)(struct mdev_device *mdev, unsigned int cmd,
-> +			 unsigned long arg);
-> +	int	(*mmap)(struct mdev_device *mdev, struct vm_area_struct *vma);
-> +};
-> +
-> +#endif
-> diff --git a/samples/vfio-mdev/mbochs.c b/samples/vfio-mdev/mbochs.c
-> index 115bc5074656..12963767ba37 100644
-> --- a/samples/vfio-mdev/mbochs.c
-> +++ b/samples/vfio-mdev/mbochs.c
-> @@ -30,6 +30,7 @@
->   #include <linux/iommu.h>
->   #include <linux/sysfs.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <linux/pci.h>
->   #include <linux/dma-buf.h>
->   #include <linux/highmem.h>
-> @@ -516,6 +517,8 @@ static int mbochs_reset(struct mdev_device *mdev)
->   	return 0;
->   }
->   
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops;
-> +
->   static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	const struct mbochs_type *type = mbochs_find_type(kobj);
-> @@ -561,7 +564,7 @@ static int mbochs_create(struct kobject *kobj, struct mdev_device *mdev)
->   	mbochs_reset(mdev);
->   
->   	mbochs_used_mbytes += type->mbytes;
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
->   	return 0;
->   
->   err_mem:
-> @@ -1419,12 +1422,7 @@ static struct attribute_group *mdev_type_groups[] = {
->   	NULL,
->   };
->   
-> -static const struct mdev_parent_ops mdev_fops = {
-> -	.owner			= THIS_MODULE,
-> -	.mdev_attr_groups	= mdev_dev_groups,
-> -	.supported_type_groups	= mdev_type_groups,
-> -	.create			= mbochs_create,
-> -	.remove			= mbochs_remove,
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops = {
->   	.open			= mbochs_open,
->   	.release		= mbochs_close,
->   	.read			= mbochs_read,
-> @@ -1433,6 +1431,14 @@ static const struct mdev_parent_ops mdev_fops = {
->   	.mmap			= mbochs_mmap,
->   };
->   
-> +static const struct mdev_parent_ops mdev_fops = {
-> +	.owner			= THIS_MODULE,
-> +	.mdev_attr_groups	= mdev_dev_groups,
-> +	.supported_type_groups	= mdev_type_groups,
-> +	.create			= mbochs_create,
-> +	.remove			= mbochs_remove,
-> +};
-> +
->   static const struct file_operations vd_fops = {
->   	.owner		= THIS_MODULE,
->   };
-> diff --git a/samples/vfio-mdev/mdpy.c b/samples/vfio-mdev/mdpy.c
-> index 665614574d50..50ee6c98b2af 100644
-> --- a/samples/vfio-mdev/mdpy.c
-> +++ b/samples/vfio-mdev/mdpy.c
-> @@ -26,6 +26,7 @@
->   #include <linux/iommu.h>
->   #include <linux/sysfs.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <linux/pci.h>
->   #include <drm/drm_fourcc.h>
->   #include "mdpy-defs.h"
-> @@ -226,6 +227,8 @@ static int mdpy_reset(struct mdev_device *mdev)
->   	return 0;
->   }
->   
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops;
-> +
->   static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	const struct mdpy_type *type = mdpy_find_type(kobj);
-> @@ -269,7 +272,7 @@ static int mdpy_create(struct kobject *kobj, struct mdev_device *mdev)
->   	mdpy_reset(mdev);
->   
->   	mdpy_count++;
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &mdev_vfio_ops);
->   	return 0;
->   }
->   
-> @@ -726,12 +729,7 @@ static struct attribute_group *mdev_type_groups[] = {
->   	NULL,
->   };
->   
-> -static const struct mdev_parent_ops mdev_fops = {
-> -	.owner			= THIS_MODULE,
-> -	.mdev_attr_groups	= mdev_dev_groups,
-> -	.supported_type_groups	= mdev_type_groups,
-> -	.create			= mdpy_create,
-> -	.remove			= mdpy_remove,
-> +static const struct mdev_vfio_device_ops mdev_vfio_ops = {
->   	.open			= mdpy_open,
->   	.release		= mdpy_close,
->   	.read			= mdpy_read,
-> @@ -740,6 +738,14 @@ static const struct mdev_parent_ops mdev_fops = {
->   	.mmap			= mdpy_mmap,
->   };
->   
-> +static const struct mdev_parent_ops mdev_fops = {
-> +	.owner			= THIS_MODULE,
-> +	.mdev_attr_groups	= mdev_dev_groups,
-> +	.supported_type_groups	= mdev_type_groups,
-> +	.create			= mdpy_create,
-> +	.remove			= mdpy_remove,
-> +};
-> +
->   static const struct file_operations vd_fops = {
->   	.owner		= THIS_MODULE,
->   };
-> diff --git a/samples/vfio-mdev/mtty.c b/samples/vfio-mdev/mtty.c
-> index 90da12ff7fd9..be476e7ad1f8 100644
-> --- a/samples/vfio-mdev/mtty.c
-> +++ b/samples/vfio-mdev/mtty.c
-> @@ -27,6 +27,7 @@
->   #include <linux/ctype.h>
->   #include <linux/file.h>
->   #include <linux/mdev.h>
-> +#include <linux/mdev_vfio_ops.h>
->   #include <linux/pci.h>
->   #include <linux/serial.h>
->   #include <uapi/linux/serial_reg.h>
-> @@ -708,6 +709,8 @@ static ssize_t mdev_access(struct mdev_device *mdev, u8 *buf, size_t count,
->   	return ret;
->   }
->   
-> +static const struct mdev_vfio_device_ops vfio_dev_ops;
-> +
->   static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
->   {
->   	struct mdev_state *mdev_state;
-> @@ -755,7 +758,7 @@ static int mtty_create(struct kobject *kobj, struct mdev_device *mdev)
->   	list_add(&mdev_state->next, &mdev_devices_list);
->   	mutex_unlock(&mdev_list_lock);
->   
-> -	mdev_set_class(mdev, MDEV_CLASS_ID_VFIO);
-> +	mdev_set_vfio_ops(mdev, &vfio_dev_ops);
->   	return 0;
->   }
->   
-> @@ -1388,6 +1391,14 @@ static struct attribute_group *mdev_type_groups[] = {
->   	NULL,
->   };
->   
-> +static const struct mdev_vfio_device_ops vfio_dev_ops = {
-> +	.open		= mtty_open,
-> +	.release	= mtty_close,
-> +	.read		= mtty_read,
-> +	.write		= mtty_write,
-> +	.ioctl		= mtty_ioctl,
-> +};
-> +
->   static const struct mdev_parent_ops mdev_fops = {
->   	.owner                  = THIS_MODULE,
->   	.dev_attr_groups        = mtty_dev_groups,
-> @@ -1395,11 +1406,6 @@ static const struct mdev_parent_ops mdev_fops = {
->   	.supported_type_groups  = mdev_type_groups,
->   	.create                 = mtty_create,
->   	.remove			= mtty_remove,
-> -	.open                   = mtty_open,
-> -	.release                = mtty_close,
-> -	.read                   = mtty_read,
-> -	.write                  = mtty_write,
-> -	.ioctl		        = mtty_ioctl,
->   };
->   
->   static void mtty_device_release(struct device *dev)
-> 
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBsaW51eC1lZGFjLW93bmVyQHZn
+ZXIua2VybmVsLm9yZyA8bGludXgtZWRhYy1vd25lckB2Z2VyLmtlcm5lbC5vcmc+IE9uIEJlaGFs
+ZiBPZiBCb3Jpc2xhdiBQZXRrb3YNCj4gU2VudDogVGh1cnNkYXksIE5vdmVtYmVyIDcsIDIwMTkg
+MjozNCBQTQ0KPiBUbzogR2hhbm5hbSwgWWF6ZW4gPFlhemVuLkdoYW5uYW1AYW1kLmNvbT4NCj4g
+Q2M6IGxpbnV4LWVkYWNAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwu
+b3JnDQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjMgMC81XSBBTUQ2NCBFREFDOiBDaGVjayBmb3Ig
+bm9kZXMgd2l0aG91dCBtZW1vcnksIGV0Yy4NCj4gDQo+IE9uIFRodSwgTm92IDA3LCAyMDE5IGF0
+IDA3OjIwOjI1UE0gKzAwMDAsIEdoYW5uYW0sIFlhemVuIHdyb3RlOg0KPiA+IFllcywgdGhhdCdz
+IHJpZ2h0LiBCdXQgaXQgbG9va3MgbGlrZSBmdXR1cmUgc3lzdGVtcyB3aWxsIHJlLXVzZSBQQ0kg
+SURzIGV2ZW4NCj4gPiBhY3Jvc3MgZmFtaWxpZXMgYW5kIG1vZGVscy4gQW5kIHRoZSBQQ0kgSURz
+IHdpbGwgYmUgbW9yZSBjbG9zZWx5IHJlbGF0ZWQgdG8NCj4gPiBoYXJkd2FyZSBjYXBhYmlsaXRp
+ZXMgdGhhbiBmYW1pbHkgYW5kIG1vZGVsLg0KPiA+DQo+ID4gSW4gYW55IGNhc2UsIHdlIGNhbiBh
+ZGRyZXNzIHRoYXQgd2hlbiB3ZSBnZXQgdGhlcmUuDQo+IA0KPiBJJ2QgYmUgZmluZSB3aXRoIGl0
+IGlmIHRoaXMgcmVhbGx5IGlzIHRoZSBjYXNlIGFuZCB3ZSBkb24ndCBlbmQgdXANCj4gaGF2aW5n
+IHRvIGtlZXAgYWRkaW5nIFBDSSBJRHMgbGlrZSBjcmF6eSBhZ2Fpbi4gVGhhdCB3YXMgYSBtb2Rl
+cmF0ZQ0KPiBQSVRBLCBBRkFJUiwgZXNwZWNpYWxseSBmb3IgZGlzdHJvIGtlcm5lbHMgaGF2aW5n
+IHRvIGNvbnN0YW50bHkgcGljayB1cA0KPiBlbmFibGVtZW50IHBhdGNoZXMgYW5kIHBlb3BsZSBj
+b21wbGFpbmluZyBhYm91dCBpdC4NCj4gDQo+IFNvIHlvdSBuZWVkIHRvIG1ha2Ugc3VyZSB0aGUg
+UENJIElEcyB3aWxsIHJlYWxseSBnZXQgcmV1c2VkIGJlZm9yZQ0KPiBjb252ZXJ0aW5nIGJhY2su
+Li4NCj4gDQoNCldpbGwgZG8uDQoNCj4gPiA+ICAgICAgICAgaWYgKCFlY2NfZW4gfHwgIW5iX21j
+ZV9lbikNCj4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gZmFsc2U7DQo+ID4gPiAgICAgICAg
+IGVsc2UNCj4gPg0KPiA+IFJpZ2h0LCBJIG1lYW50IHlvdSBjYW4gZHJvcCB0aGlzIGVsc2UgYW5k
+IGp1c3QgcmV0dXJuIHRydWUuDQo+ID4NCj4gPiA+ICAgICAgICAgICAgICAgICByZXR1cm4gdHJ1
+ZTsNCj4gDQo+IEkgcHJlZmVyIHRoZSByZWd1bGFyIGlmLWVsc2Ugd2F5IGJlY2F1c2UgaXQgcmVh
+ZHMgZmFzdGVyIGFuZCBpdCBpcw0KPiBzdHJhaWdodC1mb3J3YXJkIHdoZW4gb25lIHNraW1zIG92
+ZXIgdGhlIGNvZGUuDQo+IA0KPiBCdXQgSSBjYW4gZHJvcCBpZiBpZiB5b3UgaW5zaXN0LiA6LSkN
+Cj4gDQoNCk5vLCBJIGRvbid0IG1pbmQuDQoNClRoYW5rcywNCllhemVuDQo=
