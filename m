@@ -2,165 +2,113 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_2
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F003CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:18:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1426BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:20:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8871C214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:18:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC778214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:20:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="HHV44VKa"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="j7FjqYqY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733116AbfKGDSW (ORCPT
+        id S1733081AbfKGDUf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:18:22 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:49495 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727992AbfKGDSW (ORCPT
+        Wed, 6 Nov 2019 22:20:35 -0500
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:38472 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728047AbfKGDUf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:18:22 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id CBDA2891A9
-        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 16:18:19 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1573096699;
-        bh=1pXgkdqHole/8Dsm8mVXN3+on0yO2D/QjEpL/3OHQqk=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To;
-        b=HHV44VKamEtw22wuiidaQebIPe/KNnx6VCebLFcHrhJt1t6m7RbvPaRqd7zwgI7JP
-         2MsHXfFqQYKkeMNyg3p29V3/2QCBrUr/rZvZivO4lcqpdUmhCIBt136pqTTeW/ewM5
-         NMTTVqSHU99LoYiQKY/yPrf0qYtMlfyoAxC4Nny8tSEU/1AKNEf3u6+/NCFMgKhbJX
-         z6fkINmfU4lWfNnlL1m/8ulhq8TQo0EBcqfjFb+Fii5q8WNQiZYbXw02KBH+JZlV3U
-         qyYBurYHAEExHr9ajq8moE6+LDDi3YfMNRpAhb3XeiiFlGl0m9Q76+oUnkNhGoxb1h
-         07nkZwSuIuh5g==
-Received: from svr-chch-ex1.atlnz.lc (Not Verified[10.32.16.77]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dc38cfc0001>; Thu, 07 Nov 2019 16:18:20 +1300
-Received: from svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8)
- by svr-chch-ex1.atlnz.lc (2001:df5:b000:bc8:409d:36f5:8899:92e8) with
- Microsoft SMTP Server (TLS) id 15.0.1156.6; Thu, 7 Nov 2019 16:18:19 +1300
-Received: from svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8]) by
- svr-chch-ex1.atlnz.lc ([fe80::409d:36f5:8899:92e8%12]) with mapi id
- 15.00.1156.000; Thu, 7 Nov 2019 16:18:19 +1300
-From:   Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-To:     "christophe.leroy@c-s.fr" <christophe.leroy@c-s.fr>,
-        "paulus@samba.org" <paulus@samba.org>,
-        "mpe@ellerman.id.au" <mpe@ellerman.id.au>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "malat@debian.org" <malat@debian.org>
-CC:     "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-Thread-Topic: [PATCH v3] powerpc: Support CMDLINE_EXTEND
-Thread-Index: AQHVSLt5SSIu+9gAGkizQ6ZspvV50qbmfk4AgJhKToA=
-Date:   Thu, 7 Nov 2019 03:18:19 +0000
-Message-ID: <46da00814535270a2b525de1f75afc79f3abbf5c.camel@alliedtelesis.co.nz>
-References: <20190801225006.21952-1-chris.packham@alliedtelesis.co.nz>
-         <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr>
-In-Reply-To: <9262a291-161f-e172-9d13-88a717da9de4@c-s.fr>
-Accept-Language: en-NZ, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [2001:df5:b000:22:f81e:1e86:b004:7754]
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <28A065FD65F2544CA45F1427AEB1CE0F@atlnz.lc>
-Content-Transfer-Encoding: base64
+        Wed, 6 Nov 2019 22:20:35 -0500
+Received: by mail-pf1-f194.google.com with SMTP id c13so1282962pfp.5
+        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 19:20:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2oC3yJJXBDl4Wr0A5jeoRouH5CPSnlYcDExtnV2jGKQ=;
+        b=j7FjqYqYchtyDbwjW7ryF1WpehF5qoKiuEYjAahXifGnYIAPnQfZmD1p6vxvfB6Xlj
+         CrL4M5oduRqpQcWyDaO5DOqU+GIGt9NJQaatkqIuwJL+s0jVd+rZOh8+T7eWpZ/L3ELn
+         VLACicXal+IJHmJUtphKMXgviaJXuETGgbjXkI+RZE8GtZMHKb61wYvecNrdr4CVTx0q
+         FWg7Y2px83ntq+Y1F5gtjh15O5g0/As2XUQPDRBMLGMoY2bCu9iw+YbV2nC0A7RrmzKc
+         8Y2Ms8pzDjl6Fpw/ySvXByeADgsCSIhG9qMrMhYALp0kIXnjXdbidxA6wB8M+NHjiONq
+         7Kuw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=2oC3yJJXBDl4Wr0A5jeoRouH5CPSnlYcDExtnV2jGKQ=;
+        b=aT629UjaF5eoIHhEsud9TYDslSXjtpsgacKjom8Swf3APrfHstl7IuQxj4zyHaGUwc
+         VhPTdJMiKSXZC1Vd4RGMP6kcZCdj79yrJbz5ZDQ49L7ixq12hYGLoWu1zjY1CR8tUloZ
+         zO5URYVV/AlFnFfOmEIRzrWTrPHSWx3xgEW/pMeZj5bps0QWIhxlzoJH2TROr/r7zUdk
+         pYdSWikGGgNphFlJoFicaA5WTOxfEOkhs0TXqpIm9UY31z+Kyf0faispF1Bij4iql1gk
+         bmr+n6GtP7K0BrxgzPzfr0608S0YK4FBTBIhXgfYt2yAbBDc5NQA2TKu0ZtkBNvh6wPb
+         B3mQ==
+X-Gm-Message-State: APjAAAUMmOq3AkidBM2w6fGdsyg/UORgZ/2nnX5M2llJI0zKw9zyP2FN
+        A1ZEDGSM1rT/uxZHRAnRc2E97sJtt5o=
+X-Google-Smtp-Source: APXvYqz0puT+Kdua5STtrjcl24wC8akQcYeHP6/4jA+rq9BMZhcU+xIEkwN6yi7p0uDufuX966jCOA==
+X-Received: by 2002:a17:90a:a598:: with SMTP id b24mr1989317pjq.46.1573096834829;
+        Wed, 06 Nov 2019 19:20:34 -0800 (PST)
+Received: from localhost ([122.171.110.253])
+        by smtp.gmail.com with ESMTPSA id x20sm441541pfa.186.2019.11.06.19.20.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 06 Nov 2019 19:20:34 -0800 (PST)
+From:   Viresh Kumar <viresh.kumar@linaro.org>
+To:     Dennis Dalessandro <dennis.dalessandro@intel.com>,
+        Mike Marciniszyn <mike.marciniszyn@intel.com>
+Cc:     Viresh Kumar <viresh.kumar@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        linux-rdma@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] IB/qib: Validate ->show()/store() callbacks before calling them
+Date:   Thu,  7 Nov 2019 08:50:25 +0530
+Message-Id: <d45cc26361a174ae12dbb86c994ef334d257924b.1573096807.git.viresh.kumar@linaro.org>
+X-Mailer: git-send-email 2.21.0.rc0.269.g1a574e7a288b
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGkgQWxsLA0KDQpPbiBGcmksIDIwMTktMDgtMDIgYXQgMDY6NDAgKzAyMDAsIENocmlzdG9waGUg
-TGVyb3kgd3JvdGU6DQo+IA0KPiBMZSAwMi8wOC8yMDE5IMOgIDAwOjUwLCBDaHJpcyBQYWNraGFt
-IGEgw6ljcml0IDoNCj4gPiBCcmluZyBwb3dlcnBjIGluIGxpbmUgd2l0aCBvdGhlciBhcmNoaXRl
-Y3R1cmVzIHRoYXQgc3VwcG9ydCBleHRlbmRpbmcgb3INCj4gPiBvdmVycmlkaW5nIHRoZSBib290
-bG9hZGVyIHByb3ZpZGVkIGNvbW1hbmQgbGluZS4NCj4gPiANCj4gPiBUaGUgY3VycmVudCBiZWhh
-dmlvdXIgaXMgbW9zdCBsaWtlIENNRExJTkVfRlJPTV9CT09UTE9BREVSIHdoZXJlIHRoZQ0KPiA+
-IGJvb3Rsb2FkZXIgY29tbWFuZCBsaW5lIGlzIHByZWZlcnJlZCBidXQgdGhlIGtlcm5lbCBjb25m
-aWcgY2FuIHByb3ZpZGUgYQ0KPiA+IGZhbGxiYWNrIHNvIENNRExJTkVfRlJPTV9CT09UTE9BREVS
-IGlzIHRoZSBkZWZhdWx0LiBDTURMSU5FX0VYVEVORCBjYW4NCj4gPiBiZSB1c2VkIHRvIGFwcGVu
-ZCB0aGUgQ01ETElORSBmcm9tIHRoZSBrZXJuZWwgY29uZmlnIHRvIHRoZSBvbmUgcHJvdmlkZWQN
-Cj4gPiBieSB0aGUgYm9vdGxvYWRlci4NCj4gPiANCj4gPiBTaWduZWQtb2ZmLWJ5OiBDaHJpcyBQ
-YWNraGFtIDxjaHJpcy5wYWNraGFtQGFsbGllZHRlbGVzaXMuY28ubno+DQo+IA0KPiBSZXZpZXdl
-ZC1ieTogQ2hyaXN0b3BoZSBMZXJveSA8Y2hyaXN0b3BoZS5sZXJveUBjLXMuZnI+DQoNCkp1c3Qg
-Z29pbmcgb3ZlciBzb21lIG9sZCBwYXRjaGVzIHRoaXMgZG9lc24ndCBhcHBlYXIgdG8gYmUgaW4g
-bmV4dC4gSXMNCnRoZXJlIGFueXRoaW5nIHN0b3BwaW5nIGl0IGZyb20gYmVpbmcgYWNjZXB0ZWQ/
-DQoNCj4gDQo+ID4gLS0tDQo+ID4gQ2hhbmdlcyBpbiB2MzoNCj4gPiAtIGRvbid0IHVzZSBCVUdf
-T04gaW4gcHJvbV9zdHJsY2F0DQo+ID4gLSByZWFycmFuZ2UgdGhpbmdzIHRvIGVsaW1pbmF0ZSBw
-cm9tX3N0cmxjcHkNCj4gPiANCj4gPiBDaGFuZ2VzIGluIHYyOg0KPiA+IC0gaW5jb3Jwb3JhdGUg
-aWRlYXMgZnJvbSBDaHJpc3RvcGUncyBwYXRjaCBodHRwczovL3BhdGNod29yay5vemxhYnMub3Jn
-L3BhdGNoLzEwNzQxMjYvDQo+ID4gLSBzdXBwb3J0IENNRExJTkVfRk9SQ0UNCj4gPiANCj4gPiAg
-IGFyY2gvcG93ZXJwYy9LY29uZmlnICAgICAgICAgICAgfCAyMCArKysrKysrKysrKysrKysrKy0N
-Cj4gPiAgIGFyY2gvcG93ZXJwYy9rZXJuZWwvcHJvbV9pbml0LmMgfCAzNiArKysrKysrKysrKysr
-KysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiAgIDIgZmlsZXMgY2hhbmdlZCwgNDMgaW5zZXJ0aW9u
-cygrKSwgMTMgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJw
-Yy9LY29uZmlnIGIvYXJjaC9wb3dlcnBjL0tjb25maWcNCj4gPiBpbmRleCA3N2Y2ZWJmOTcxMTMu
-LmQ0MTNmZTFiNDA1OCAxMDA2NDQNCj4gPiAtLS0gYS9hcmNoL3Bvd2VycGMvS2NvbmZpZw0KPiA+
-ICsrKyBiL2FyY2gvcG93ZXJwYy9LY29uZmlnDQo+ID4gQEAgLTg1MiwxNSArODUyLDMzIEBAIGNv
-bmZpZyBDTURMSU5FDQo+ID4gICAJICBzb21lIGNvbW1hbmQtbGluZSBvcHRpb25zIGF0IGJ1aWxk
-IHRpbWUgYnkgZW50ZXJpbmcgdGhlbSBoZXJlLiAgSW4NCj4gPiAgIAkgIG1vc3QgY2FzZXMgeW91
-IHdpbGwgbmVlZCB0byBzcGVjaWZ5IHRoZSByb290IGRldmljZSBoZXJlLg0KPiA+ICAgDQo+ID4g
-K2Nob2ljZQ0KPiA+ICsJcHJvbXB0ICJLZXJuZWwgY29tbWFuZCBsaW5lIHR5cGUiIGlmIENNRExJ
-TkUgIT0gIiINCj4gPiArCWRlZmF1bHQgQ01ETElORV9GUk9NX0JPT1RMT0FERVINCj4gPiArDQo+
-ID4gK2NvbmZpZyBDTURMSU5FX0ZST01fQk9PVExPQURFUg0KPiA+ICsJYm9vbCAiVXNlIGJvb3Rs
-b2FkZXIga2VybmVsIGFyZ3VtZW50cyBpZiBhdmFpbGFibGUiDQo+ID4gKwloZWxwDQo+ID4gKwkg
-IFVzZXMgdGhlIGNvbW1hbmQtbGluZSBvcHRpb25zIHBhc3NlZCBieSB0aGUgYm9vdCBsb2FkZXIu
-IElmDQo+ID4gKwkgIHRoZSBib290IGxvYWRlciBkb2Vzbid0IHByb3ZpZGUgYW55LCB0aGUgZGVm
-YXVsdCBrZXJuZWwgY29tbWFuZA0KPiA+ICsJICBzdHJpbmcgcHJvdmlkZWQgaW4gQ01ETElORSB3
-aWxsIGJlIHVzZWQuDQo+ID4gKw0KPiA+ICtjb25maWcgQ01ETElORV9FWFRFTkQNCj4gPiArCWJv
-b2wgIkV4dGVuZCBib290bG9hZGVyIGtlcm5lbCBhcmd1bWVudHMiDQo+ID4gKwloZWxwDQo+ID4g
-KwkgIFRoZSBjb21tYW5kLWxpbmUgYXJndW1lbnRzIHByb3ZpZGVkIGJ5IHRoZSBib290IGxvYWRl
-ciB3aWxsIGJlDQo+ID4gKwkgIGFwcGVuZGVkIHRvIHRoZSBkZWZhdWx0IGtlcm5lbCBjb21tYW5k
-IHN0cmluZy4NCj4gPiArDQo+ID4gICBjb25maWcgQ01ETElORV9GT1JDRQ0KPiA+ICAgCWJvb2wg
-IkFsd2F5cyB1c2UgdGhlIGRlZmF1bHQga2VybmVsIGNvbW1hbmQgc3RyaW5nIg0KPiA+IC0JZGVw
-ZW5kcyBvbiBDTURMSU5FX0JPT0wNCj4gPiAgIAloZWxwDQo+ID4gICAJICBBbHdheXMgdXNlIHRo
-ZSBkZWZhdWx0IGtlcm5lbCBjb21tYW5kIHN0cmluZywgZXZlbiBpZiB0aGUgYm9vdA0KPiA+ICAg
-CSAgbG9hZGVyIHBhc3NlcyBvdGhlciBhcmd1bWVudHMgdG8gdGhlIGtlcm5lbC4NCj4gPiAgIAkg
-IFRoaXMgaXMgdXNlZnVsIGlmIHlvdSBjYW5ub3Qgb3IgZG9uJ3Qgd2FudCB0byBjaGFuZ2UgdGhl
-DQo+ID4gICAJICBjb21tYW5kLWxpbmUgb3B0aW9ucyB5b3VyIGJvb3QgbG9hZGVyIHBhc3NlcyB0
-byB0aGUga2VybmVsLg0KPiA+ICAgDQo+ID4gK2VuZGNob2ljZQ0KPiA+ICsNCj4gPiAgIGNvbmZp
-ZyBFWFRSQV9UQVJHRVRTDQo+ID4gICAJc3RyaW5nICJBZGRpdGlvbmFsIGRlZmF1bHQgaW1hZ2Ug
-dHlwZXMiDQo+ID4gICAJaGVscA0KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2VycGMva2VybmVs
-L3Byb21faW5pdC5jIGIvYXJjaC9wb3dlcnBjL2tlcm5lbC9wcm9tX2luaXQuYw0KPiA+IGluZGV4
-IDUxNDcwN2VmNjc3OS4uMWM3MDEwY2M2ZWM5IDEwMDY0NA0KPiA+IC0tLSBhL2FyY2gvcG93ZXJw
-Yy9rZXJuZWwvcHJvbV9pbml0LmMNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMva2VybmVsL3Byb21f
-aW5pdC5jDQo+ID4gQEAgLTI5OCwxNiArMjk4LDI0IEBAIHN0YXRpYyBjaGFyIF9faW5pdCAqcHJv
-bV9zdHJzdHIoY29uc3QgY2hhciAqczEsIGNvbnN0IGNoYXIgKnMyKQ0KPiA+ICAgCXJldHVybiBO
-VUxMOw0KPiA+ICAgfQ0KPiA+ICAgDQo+ID4gLXN0YXRpYyBzaXplX3QgX19pbml0IHByb21fc3Ry
-bGNweShjaGFyICpkZXN0LCBjb25zdCBjaGFyICpzcmMsIHNpemVfdCBzaXplKQ0KPiA+IC17DQo+
-ID4gLQlzaXplX3QgcmV0ID0gcHJvbV9zdHJsZW4oc3JjKTsNCj4gPiArc3RhdGljIHNpemVfdCBf
-X2luaXQgcHJvbV9zdHJsY2F0KGNoYXIgKmRlc3QsIGNvbnN0IGNoYXIgKnNyYywgc2l6ZV90IGNv
-dW50KQ0KPiA+ICt7DQo+ID4gKwlzaXplX3QgZHNpemUgPSBwcm9tX3N0cmxlbihkZXN0KTsNCj4g
-PiArCXNpemVfdCBsZW4gPSBwcm9tX3N0cmxlbihzcmMpOw0KPiA+ICsJc2l6ZV90IHJlcyA9IGRz
-aXplICsgbGVuOw0KPiA+ICsNCj4gPiArCS8qIFRoaXMgd291bGQgYmUgYSBidWcgKi8NCj4gPiAr
-CWlmIChkc2l6ZSA+PSBjb3VudCkNCj4gPiArCQlyZXR1cm4gY291bnQ7DQo+ID4gKw0KPiA+ICsJ
-ZGVzdCArPSBkc2l6ZTsNCj4gPiArCWNvdW50IC09IGRzaXplOw0KPiA+ICsJaWYgKGxlbiA+PSBj
-b3VudCkNCj4gPiArCQlsZW4gPSBjb3VudC0xOw0KPiA+ICsJbWVtY3B5KGRlc3QsIHNyYywgbGVu
-KTsNCj4gPiArCWRlc3RbbGVuXSA9IDA7DQo+ID4gKwlyZXR1cm4gcmVzOw0KPiA+ICAgDQo+ID4g
-LQlpZiAoc2l6ZSkgew0KPiA+IC0JCXNpemVfdCBsZW4gPSAocmV0ID49IHNpemUpID8gc2l6ZSAt
-IDEgOiByZXQ7DQo+ID4gLQkJbWVtY3B5KGRlc3QsIHNyYywgbGVuKTsNCj4gPiAtCQlkZXN0W2xl
-bl0gPSAnXDAnOw0KPiA+IC0JfQ0KPiA+IC0JcmV0dXJuIHJldDsNCj4gPiAgIH0NCj4gPiAgIA0K
-PiA+ICAgI2lmZGVmIENPTkZJR19QUENfUFNFUklFUw0KPiA+IEBAIC03NTksMTAgKzc2NywxNCBA
-QCBzdGF0aWMgdm9pZCBfX2luaXQgZWFybHlfY21kbGluZV9wYXJzZSh2b2lkKQ0KPiA+ICAgDQo+
-ID4gICAJcHJvbV9jbWRfbGluZVswXSA9IDA7DQo+ID4gICAJcCA9IHByb21fY21kX2xpbmU7DQo+
-ID4gLQlpZiAoKGxvbmcpcHJvbS5jaG9zZW4gPiAwKQ0KPiA+ICsNCj4gPiArCWlmICghSVNfRU5B
-QkxFRChDT05GSUdfQ01ETElORV9GT1JDRSkgJiYgKGxvbmcpcHJvbS5jaG9zZW4gPiAwKQ0KPiA+
-ICAgCQlsID0gcHJvbV9nZXRwcm9wKHByb20uY2hvc2VuLCAiYm9vdGFyZ3MiLCBwLCBDT01NQU5E
-X0xJTkVfU0laRS0xKTsNCj4gPiAtCWlmIChJU19FTkFCTEVEKENPTkZJR19DTURMSU5FX0JPT0wp
-ICYmIChsIDw9IDAgfHwgcFswXSA9PSAnXDAnKSkgLyogZGJsIGNoZWNrICovDQo+ID4gLQkJcHJv
-bV9zdHJsY3B5KHByb21fY21kX2xpbmUsIENPTkZJR19DTURMSU5FLCBzaXplb2YocHJvbV9jbWRf
-bGluZSkpOw0KPiA+ICsNCj4gPiArCWlmIChJU19FTkFCTEVEKENPTkZJR19DTURMSU5FX0VYVEVO
-RCkgfHwgbCA8PSAwIHx8IHBbMF0gPT0gJ1wwJykNCj4gPiArCQlwcm9tX3N0cmxjYXQocHJvbV9j
-bWRfbGluZSwgIiAiIENPTkZJR19DTURMSU5FLA0KPiA+ICsJCQkgICAgIHNpemVvZihwcm9tX2Nt
-ZF9saW5lKSk7DQo+ID4gKw0KPiA+ICAgCXByb21fcHJpbnRmKCJjb21tYW5kIGxpbmU6ICVzXG4i
-LCBwcm9tX2NtZF9saW5lKTsNCj4gPiAgIA0KPiA+ICAgI2lmZGVmIENPTkZJR19QUEM2NA0KPiA+
-IA0K
+The permissions of the read-only or write-only sysfs files can be
+changed (as root) and the user can then try to read a write-only file or
+write to a read-only file which will lead to kernel crash here.
+
+Protect against that by always validating the show/store callbacks.
+
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+ drivers/infiniband/hw/qib/qib_sysfs.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/infiniband/hw/qib/qib_sysfs.c b/drivers/infiniband/hw/qib/qib_sysfs.c
+index 3926be78036e..568b21eb6ea1 100644
+--- a/drivers/infiniband/hw/qib/qib_sysfs.c
++++ b/drivers/infiniband/hw/qib/qib_sysfs.c
+@@ -301,6 +301,9 @@ static ssize_t qib_portattr_show(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->show)
++		return -EIO;
++
+ 	return pattr->show(ppd, buf);
+ }
+ 
+@@ -312,6 +315,9 @@ static ssize_t qib_portattr_store(struct kobject *kobj,
+ 	struct qib_pportdata *ppd =
+ 		container_of(kobj, struct qib_pportdata, pport_kobj);
+ 
++	if (!pattr->store)
++		return -EIO;
++
+ 	return pattr->store(ppd, buf, len);
+ }
+ 
+-- 
+2.21.0.rc0.269.g1a574e7a288b
+
