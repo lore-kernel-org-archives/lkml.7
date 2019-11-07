@@ -7,79 +7,72 @@ X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 15712C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:31:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E3EC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:34:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2EC92187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:31:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD21C21D7E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 08:34:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="a2E3yMQ/"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JRkRa/R1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733202AbfKGIbs (ORCPT
+        id S1727866AbfKGIeB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 03:31:48 -0500
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:55777 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726734AbfKGIbs (ORCPT
+        Thu, 7 Nov 2019 03:34:01 -0500
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:34499 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726734AbfKGIeB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 03:31:48 -0500
-Received: by mail-wm1-f67.google.com with SMTP id b11so1441531wmb.5
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:31:43 -0800 (PST)
+        Thu, 7 Nov 2019 03:34:01 -0500
+Received: by mail-wm1-f66.google.com with SMTP id v3so4273602wmh.1
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 00:33:57 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:cc:subject:message-id:mail-followup-to
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=kNm6dJzrRMYX4k/I2/IeuLmgKApgz9Wlrz46mUCJtlw=;
-        b=a2E3yMQ/cbv6xI+BLoO6wpgtNq8LzdyY3mj//euDFAPMYBAmo+bGTZmTEja0wJLIto
-         1K4ailIup2uCkKfntdTKKElou1jRPL7FIgeYsgeVKxVyzNJMwBsphQ3tGvgjzmIXSHYg
-         6denNHRTiSlE1vbjO3sEb8U9cuDSWpWbZdCfU=
+        bh=s8siO8c5nG2oA4yleva52f8UrXXloSdu8Edj03PJpK0=;
+        b=JRkRa/R1N2W5Q9fECuduw7TIszePzpuIf+wxSx2MpS7SVRD2xH3wNupZLXTrfgmaJh
+         mGoLnytxEdFYu1k8s1FTzVDv/O0IW/WSVdoccxvdGjvYKtdyrKLfx+CzEHFryhCO3JAw
+         KYb8NmrLgGyx511ItajYvxS7EXqMNegvbQbqg=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=kNm6dJzrRMYX4k/I2/IeuLmgKApgz9Wlrz46mUCJtlw=;
-        b=uAUgeZgo79gg/2R6ElpRSL2PualqTe04s7LUOkjjwbd/sti2aYb04Wy0iwPQLNZ6zs
-         6Y7vDBCox5asXb/j+syBRDCgxQe/TVgUUHCvz4I0JJgNJfbwVVemK6jDlAWN2q1uT5Nh
-         iosIGOVI8kjYItjwnDiC/SapxlMYlNNIvhIJbacCY8VExc7aS60KdyeY3/o8QVDnQXEF
-         MdgccnWusx3cFqhT3IYA7DfCccWqYPfsmvLZoCCL27z4ePNnPfv8r0ZhGYnmEeq3hbLY
-         y5onvMH81YGkK4SNgK+x1pH7wfb/RC6glvpvHYmFSXLL94AUXKW7si/rpg4Rlrzj0FYd
-         mY7Q==
-X-Gm-Message-State: APjAAAVGU5/EKMcuuQzKDvv7lpdTZgQgkgJRHmaGKcXVEFQh8IjmYDtU
-        /Wu2rAgYw0QsgVxjXrMCk5sapw==
-X-Google-Smtp-Source: APXvYqzel5AMUwR60sylWzS3030mPe6fSHaxKepjaLlyOW4FnloapklZvmaQp+yv0IEmyxc4DdB+Hg==
-X-Received: by 2002:a05:600c:20c9:: with SMTP id y9mr1593254wmm.72.1573115502604;
-        Thu, 07 Nov 2019 00:31:42 -0800 (PST)
+        bh=s8siO8c5nG2oA4yleva52f8UrXXloSdu8Edj03PJpK0=;
+        b=fJTMVEJRiGsySmtfzzMDgymG1KZQquWA7aTIG7wxPKNxo8gQktJvbpjezOqmuVFyK6
+         uGdnCr0DPltJkrqo0HAgKlKiQTIVCzWYtGgawahcVwNJgNPKruDTKQjq36mx97gp2DAC
+         jK0LfA8iQMOLX97qHckFrNYrIaySJjkbNJeLIwhHvcWQwwKSskP9M6TtRWewU4hKNjsk
+         xnBJbsoHVH/fqn7q2VHQFrP/h6FcHUzuW8CPtPZA9sFl71+aIKXK5qOglBqQAzYQ5wz5
+         vyiDJBOV+m/9YWCSfgc+Jhqt4xbW3NfD3lQPK9AdMJCbrde3LxG37SrqsbG0oPPd+UaT
+         fveA==
+X-Gm-Message-State: APjAAAXjgD0R0l9ymCxLS48xWz+ejgiOWss7llX1Dj4XYq/4ztF0px3i
+        S9m3ee+xY4iRjC0avIQ9oeSZNg==
+X-Google-Smtp-Source: APXvYqxKMCfhiclD4wFqY8ApTHpX3Q1Ro0gZKnJrP51xrd4JOijhRLOYoIdKgYqifQ0PrRuhN8PtPg==
+X-Received: by 2002:a1c:4946:: with SMTP id w67mr1729615wma.16.1573115636920;
+        Thu, 07 Nov 2019 00:33:56 -0800 (PST)
 Received: from phenom.ffwll.local (212-51-149-96.fiber7.init7.net. [212.51.149.96])
-        by smtp.gmail.com with ESMTPSA id r19sm2003740wrr.47.2019.11.07.00.31.41
+        by smtp.gmail.com with ESMTPSA id v128sm2249296wmb.14.2019.11.07.00.33.56
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2019 00:31:41 -0800 (PST)
-Date:   Thu, 7 Nov 2019 09:31:40 +0100
+        Thu, 07 Nov 2019 00:33:56 -0800 (PST)
+Date:   Thu, 7 Nov 2019 09:33:54 +0100
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
-Cc:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 2/2] drm/gma500: Add page flip support on psb/cdv
-Message-ID: <20191107083140.GJ23790@phenom.ffwll.local>
-Mail-Followup-To: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel <dri-devel@lists.freedesktop.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        James Hilliard <james.hilliard1@gmail.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-References: <20191106094400.445834-1-paul.kocialkowski@bootlin.com>
- <20191106094400.445834-3-paul.kocialkowski@bootlin.com>
- <CAMeQTsa=SWXHt8ZvToa9x5qc6W29B6B4Ssvixs3nd-w=+dYGzA@mail.gmail.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [RFC PATCH 05/12] video: fbdev: matrox: convert to
+ i2c_new_scanned_device
+Message-ID: <20191107083354.GK23790@phenom.ffwll.local>
+Mail-Followup-To: Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+References: <20191106095033.25182-1-wsa+renesas@sang-engineering.com>
+ <20191106095033.25182-6-wsa+renesas@sang-engineering.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAMeQTsa=SWXHt8ZvToa9x5qc6W29B6B4Ssvixs3nd-w=+dYGzA@mail.gmail.com>
+In-Reply-To: <20191106095033.25182-6-wsa+renesas@sang-engineering.com>
 X-Operating-System: Linux phenom 5.2.0-3-amd64 
 User-Agent: Mutt/1.12.2 (2019-09-21)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -87,203 +80,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 04:24:59PM +0100, Patrik Jakobsson wrote:
-> On Wed, Nov 6, 2019 at 10:44 AM Paul Kocialkowski
-> <paul.kocialkowski@bootlin.com> wrote:
-> >
-> > Legacy (non-atomic) page flip support is added to the driver by using the
-> > mode_set_base CRTC function, that allows configuring a new framebuffer for
-> > display. Since the function requires the primary plane's fb to be set
-> > already, this is done prior to calling the function in the page flip helper
-> > and reverted if the flip fails.
-> >
-> > The vblank interrupt handler is also refactored to support passing an event.
-> > The PIPE_TE_STATUS bit is also considered to indicate vblank on medfield
-> > only, as explained in psb_enable_vblank.
-> >
-> > It was tested by running weston on both poulsbo and cedartrail.
-> >
-> > Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-> > ---
-> >  drivers/gpu/drm/gma500/cdv_intel_display.c |  1 +
-> >  drivers/gpu/drm/gma500/gma_display.c       | 46 ++++++++++++++++++++++
-> >  drivers/gpu/drm/gma500/gma_display.h       |  6 +++
-> >  drivers/gpu/drm/gma500/psb_intel_display.c |  1 +
-> >  drivers/gpu/drm/gma500/psb_intel_drv.h     |  3 ++
-> >  drivers/gpu/drm/gma500/psb_irq.c           | 18 +++++++--
-> >  6 files changed, 72 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/gpu/drm/gma500/cdv_intel_display.c b/drivers/gpu/drm/gma500/cdv_intel_display.c
-> > index 8b784947ed3b..7109d3d19be0 100644
-> > --- a/drivers/gpu/drm/gma500/cdv_intel_display.c
-> > +++ b/drivers/gpu/drm/gma500/cdv_intel_display.c
-> > @@ -979,6 +979,7 @@ const struct drm_crtc_funcs cdv_intel_crtc_funcs = {
-> >         .gamma_set = gma_crtc_gamma_set,
-> >         .set_config = gma_crtc_set_config,
-> >         .destroy = gma_crtc_destroy,
-> > +       .page_flip = gma_crtc_page_flip,
-> >  };
-> >
-> >  const struct gma_clock_funcs cdv_clock_funcs = {
-> > diff --git a/drivers/gpu/drm/gma500/gma_display.c b/drivers/gpu/drm/gma500/gma_display.c
-> > index bc07ae2a9a1d..17f136985d21 100644
-> > --- a/drivers/gpu/drm/gma500/gma_display.c
-> > +++ b/drivers/gpu/drm/gma500/gma_display.c
-> > @@ -503,6 +503,52 @@ void gma_crtc_destroy(struct drm_crtc *crtc)
-> >         kfree(gma_crtc);
-> >  }
-> >
-> > +int gma_crtc_page_flip(struct drm_crtc *crtc,
-> > +                      struct drm_framebuffer *fb,
-> > +                      struct drm_pending_vblank_event *event,
-> > +                      uint32_t page_flip_flags,
-> > +                      struct drm_modeset_acquire_ctx *ctx)
-> > +{
-> > +       struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
-> > +       struct drm_framebuffer *current_fb = crtc->primary->fb;
-> > +       struct drm_framebuffer *old_fb = crtc->primary->old_fb;
-> > +       const struct drm_crtc_helper_funcs *crtc_funcs = crtc->helper_private;
-> > +       struct drm_device *dev = crtc->dev;
-> > +       unsigned long flags;
-> > +       int ret;
-> > +
-> > +       if (!crtc_funcs->mode_set_base)
-> > +               return -EINVAL;
-> > +
-> > +       /* Using mode_set_base requires the new fb to be set already. */
-> > +       crtc->primary->fb = fb;
-> > +
-> > +       if (event) {
-> > +               spin_lock_irqsave(&dev->event_lock, flags);
-> > +
-> > +               WARN_ON(drm_crtc_vblank_get(crtc) != 0);
-> > +
-> > +               gma_crtc->page_flip_event = event;
-> > +
-> > +               /* Call this locked if we want an event at vblank interrupt. */
-> > +               ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
-> > +               if (ret) {
-> > +                       gma_crtc->page_flip_event = NULL;
-> > +                       drm_crtc_vblank_put(crtc);
-> > +               }
-> > +
-> > +               spin_unlock_irqrestore(&dev->event_lock, flags);
-> > +       } else {
-> > +               ret = crtc_funcs->mode_set_base(crtc, crtc->x, crtc->y, old_fb);
-> > +       }
-> > +
-> > +       /* Restore previous fb in case of failure. */
-> > +       if (ret)
-> > +               crtc->primary->fb = current_fb;
-> > +
-> > +       return ret;
-> > +}
-> > +
-> >  int gma_crtc_set_config(struct drm_mode_set *set,
-> >                         struct drm_modeset_acquire_ctx *ctx)
-> >  {
-> > diff --git a/drivers/gpu/drm/gma500/gma_display.h b/drivers/gpu/drm/gma500/gma_display.h
-> > index fdbd7ecaa59c..7bd6c1ee8b21 100644
-> > --- a/drivers/gpu/drm/gma500/gma_display.h
-> > +++ b/drivers/gpu/drm/gma500/gma_display.h
-> > @@ -11,6 +11,7 @@
-> >  #define _GMA_DISPLAY_H_
-> >
-> >  #include <linux/pm_runtime.h>
-> > +#include <drm/drm_vblank.h>
-> >
-> >  struct drm_encoder;
-> >  struct drm_mode_set;
-> > @@ -71,6 +72,11 @@ extern void gma_crtc_prepare(struct drm_crtc *crtc);
-> >  extern void gma_crtc_commit(struct drm_crtc *crtc);
-> >  extern void gma_crtc_disable(struct drm_crtc *crtc);
-> >  extern void gma_crtc_destroy(struct drm_crtc *crtc);
-> > +extern int gma_crtc_page_flip(struct drm_crtc *crtc,
-> > +                             struct drm_framebuffer *fb,
-> > +                             struct drm_pending_vblank_event *event,
-> > +                             uint32_t page_flip_flags,
-> > +                             struct drm_modeset_acquire_ctx *ctx);
-> >  extern int gma_crtc_set_config(struct drm_mode_set *set,
-> >                                struct drm_modeset_acquire_ctx *ctx);
-> >
-> > diff --git a/drivers/gpu/drm/gma500/psb_intel_display.c b/drivers/gpu/drm/gma500/psb_intel_display.c
-> > index 4256410535f0..fed3b563e62e 100644
-> > --- a/drivers/gpu/drm/gma500/psb_intel_display.c
-> > +++ b/drivers/gpu/drm/gma500/psb_intel_display.c
-> > @@ -432,6 +432,7 @@ const struct drm_crtc_funcs psb_intel_crtc_funcs = {
-> >         .gamma_set = gma_crtc_gamma_set,
-> >         .set_config = gma_crtc_set_config,
-> >         .destroy = gma_crtc_destroy,
-> > +       .page_flip = gma_crtc_page_flip,
-> >  };
-> >
-> >  const struct gma_clock_funcs psb_clock_funcs = {
-> > diff --git a/drivers/gpu/drm/gma500/psb_intel_drv.h b/drivers/gpu/drm/gma500/psb_intel_drv.h
-> > index cdf10333d1c2..16c6136f778b 100644
-> > --- a/drivers/gpu/drm/gma500/psb_intel_drv.h
-> > +++ b/drivers/gpu/drm/gma500/psb_intel_drv.h
-> > @@ -12,6 +12,7 @@
-> >  #include <drm/drm_crtc_helper.h>
-> >  #include <drm/drm_encoder.h>
-> >  #include <drm/drm_probe_helper.h>
-> > +#include <drm/drm_vblank.h>
-> >  #include <linux/gpio.h>
-> >  #include "gma_display.h"
-> >
-> > @@ -182,6 +183,8 @@ struct gma_crtc {
-> >         struct psb_intel_crtc_state *crtc_state;
-> >
-> >         const struct gma_clock_funcs *clock_funcs;
-> > +
-> > +       struct drm_pending_vblank_event *page_flip_event;
-> >  };
-> >
-> >  #define to_gma_crtc(x) \
-> > diff --git a/drivers/gpu/drm/gma500/psb_irq.c b/drivers/gpu/drm/gma500/psb_irq.c
-> > index e6265fb85626..f787a51f6335 100644
-> > --- a/drivers/gpu/drm/gma500/psb_irq.c
-> > +++ b/drivers/gpu/drm/gma500/psb_irq.c
-> > @@ -165,11 +165,23 @@ static void mid_pipe_event_handler(struct drm_device *dev, int pipe)
-> >                 "%s, can't clear status bits for pipe %d, its value = 0x%x.\n",
-> >                 __func__, pipe, PSB_RVDC32(pipe_stat_reg));
-> >
-> > -       if (pipe_stat_val & PIPE_VBLANK_STATUS)
-> > -               drm_handle_vblank(dev, pipe);
-> > +       if (pipe_stat_val & PIPE_VBLANK_STATUS ||
-> > +           (IS_MFLD(dev) && pipe_stat_val & PIPE_TE_STATUS)) {
-> > +               struct drm_crtc *crtc = drm_crtc_from_index(dev, pipe);
-> > +               struct gma_crtc *gma_crtc = to_gma_crtc(crtc);
-> > +               unsigned long flags;
-> >
-> > -       if (pipe_stat_val & PIPE_TE_STATUS)
-> >                 drm_handle_vblank(dev, pipe);
-> > +
-> > +               spin_lock_irqsave(&dev->event_lock, flags);
-> > +               if (gma_crtc->page_flip_event) {
-> > +                       drm_crtc_send_vblank_event(crtc,
-> > +                                                  gma_crtc->page_flip_event);
-> > +                       gma_crtc->page_flip_event = NULL;
-> > +                       drm_crtc_vblank_put(crtc);
-> > +               }
-> > +               spin_unlock_irqrestore(&dev->event_lock, flags);
-> > +       }
-> >  }
-> >
-> >  /*
-> > --
-> > 2.23.0
-> >
+On Wed, Nov 06, 2019 at 10:50:23AM +0100, Wolfram Sang wrote:
+> Move from the deprecated i2c_new_probed_device() to the new
+> i2c_new_scanned_device(). Make use of the new ERRPTR if suitable.
 > 
-> Looks good!
-> 
-> Reviewed-by: Patrik Jakobsson <patrik.r.jakobsson@gmail.com>
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-I'm assuming you'll also push these?
-
-Always confusing when maintainer/committers r-b but don't say anything
-about pushing the patch. Good chances it'll fall through cracks if that
-happens.
+Ack for merging through whatever tree you think this should best land
+through.
 -Daniel
+
+> ---
+> 
+> Build tested only. RFC, please comment and/or ack, but don't apply yet.
+> 
+>  drivers/video/fbdev/matrox/i2c-matroxfb.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/fbdev/matrox/i2c-matroxfb.c b/drivers/video/fbdev/matrox/i2c-matroxfb.c
+> index 34e2659c3189..e2e4705e3fe0 100644
+> --- a/drivers/video/fbdev/matrox/i2c-matroxfb.c
+> +++ b/drivers/video/fbdev/matrox/i2c-matroxfb.c
+> @@ -191,8 +191,8 @@ static void* i2c_matroxfb_probe(struct matrox_fb_info* minfo) {
+>  				0x1b, I2C_CLIENT_END
+>  			};
+>  
+> -			i2c_new_probed_device(&m2info->maven.adapter,
+> -					      &maven_info, addr_list, NULL);
+> +			i2c_new_scanned_device(&m2info->maven.adapter,
+> +					       &maven_info, addr_list, NULL);
+>  		}
+>  	}
+>  	return m2info;
+> -- 
+> 2.20.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
 Daniel Vetter
 Software Engineer, Intel Corporation
