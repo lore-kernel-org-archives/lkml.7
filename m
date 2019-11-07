@@ -2,123 +2,148 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B11C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B608C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE9A2214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:50:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0C3F7214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:51:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388930AbfKGNuk convert rfc822-to-8bit (ORCPT
+        id S2389044AbfKGNvC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:50:40 -0500
-Received: from mail-oln040092255024.outbound.protection.outlook.com ([40.92.255.24]:26028
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726754AbfKGNuk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:50:40 -0500
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=hyW4jD7c4aNhyBGCA/O9xmIUYbXzW79slfSIlIJUKIXVdnvj5fkuJsV2MsTorKxbrbJsTaEkDem+rRT82Bz4IGpwJuYx8jR4b1kSAFxfOClldRuqTKBO/81zLtZvopSsaWaoMhMvWDbh+ijuogkwtDUTTazcsqmvJXUrj3nFdZQu9ZQ/aN9ZbI5zl04+yKKCT1TIe03oLAVdAQ//t0AeFFnxryOQHujl+jEV7xxInwwd6Pl94q2BmrjTxR7ZKzRNFie6VCoNzacfzMVhbVd3YLyZoY96kd3B7w9bsB28Ct/mHIRldNVgvDd1eqSRYzbAj5Q685PETwSINBRuKDuzDA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=lL1zA+7xxsDjv1AoC7YE0ERD3trobstTIUiXUuSMPvY=;
- b=gNZhEnmpHBJiIylDBqRKk4CxNTrS8LNyh0PeCCwJyTjAlHlvcbAAkkRJSis5YNikKxSUnMX1kaqZYHmINZ/ujJSCYtc0+H8siT4AhrmMIiTuzCT2NpfyDa/NLNjJwl5wS0YRJn94SOuxoOvdbcfAzCeJmlQGdpBIsUj7hS732iW78r6fP99xzQ2/HBNRtyqV6Om1QWu3RrgikTb5k2C5NVpUXC83VHW/u5PlHZyL4olQTCR1a654jhtxshqZ5pqGNfSXTlSGZGaoUbZ/vzto65KjdC9u+AHl/S6xsRQFnX9KTz+zQkcm6TPeCrSTX/UzxtXWAvnQUpAxvUhzs2dUkA==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none; dmarc=none;
- dkim=none; arc=none
-Received: from PU1APC01FT033.eop-APC01.prod.protection.outlook.com
- (10.152.252.53) by PU1APC01HT128.eop-APC01.prod.protection.outlook.com
- (10.152.253.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.2387.20; Thu, 7 Nov
- 2019 13:50:35 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (10.152.252.57) by
- PU1APC01FT033.mail.protection.outlook.com (10.152.252.223) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.2387.20 via Frontend Transport; Thu, 7 Nov 2019 13:50:35 +0000
-Received: from PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602]) by PS2P216MB0755.KORP216.PROD.OUTLOOK.COM
- ([fe80::44f5:f4bb:1601:2602%9]) with mapi id 15.20.2430.020; Thu, 7 Nov 2019
- 13:50:35 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        "benh@kernel.crashing.org" <benh@kernel.crashing.org>,
-        "logang@deltatee.com" <logang@deltatee.com>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned to
- MMIO window
-Thread-Topic: [PATCH 0/1] Fix bug resulting in double hpmemsize being assigned
- to MMIO window
-Thread-Index: AQHVlXJUhp9PbcoR4kC5jZUBBr2m9A==
-Date:   Thu, 7 Nov 2019 13:50:35 +0000
-Message-ID: <PS2P216MB075530CB1B7B099AAF9F42D580780@PS2P216MB0755.KORP216.PROD.OUTLOOK.COM>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SYBPR01CA0005.ausprd01.prod.outlook.com (2603:10c6:10::17)
- To PS2P216MB0755.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::13)
-x-incomingtopheadermarker: OriginalChecksum:4833630A5206E2BAAC844A20D74826C8B87B72E8CBF726BD549D133F4CD81F1B;UpperCasedChecksum:FA45B66410C2BB9C971AAE5F699130F017D86B9B335BFF3ECCF08B5CD4F4FB00;SizeAsReceived:7665;Count:47
-x-ms-exchange-messagesentrepresentingtype: 1
-x-tmn:  [sbY4bW8gD5e+lSTvcFKb3azynKVSSTW4AH2T0YYK5b2xG4aQW+WS1YK5zYc5883REpecftTRPBo=]
-x-microsoft-original-message-id: <20191107135020.GA2223@nicholas-dell-linux>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 47
-x-eopattributedmessage: 0
-x-ms-office365-filtering-correlation-id: 06c526d2-e7b6-4704-6efd-08d7638976c0
-x-ms-exchange-slblob-mailprops: q+fD6XS3/UJ+cHfC79vTglgpmgHPQ8pO7kwHZOy/nL5Q8v/5m2RBRNEo5e0DEaYdXl7DHjrsOykSjswkNYnOLYaPlG6UExHe2D7YOu8hF48y1VPw54zXW6H3q/HnT98o7VwJUV8AUrNnTZPSJ+rPZFbk2MwFjtsmPgZbzQt6ur9H3H9/dt9w2QK+F/FImWMw9vFo7qCxaSE6kOl/3lfmcuvPqyaRkcjk2MC7P8IC3LsyS7B9k8t06nlcUchSLdel5OKg86m7OOYV7VnR10op8l8+g+0UA4rCCZUQMrAgD/djNHbGQ8nmVeaTK7OR51SW0gHsjb516qW3raae1us+jXya0sGTx9M3FQ3MmHST785eU96x8fsCB+ArPRa3+JGJzpr7hVcYsckwcEU6prTndFVwYpfBD8wII8MDn5oeJYh2ntx29dDMMpVcIarUz6r6DQntg1VdI0KC514kktC7ku4oOIzk6nR9uzsAI3L5mUNdUvaKxgT/qjUYpZoAi1NloRY0Q+QIwax42kkGYE2GBxqZmCJj8TXuZdYgzPfux7mGAN+oM9mV+ZCpjlFwMUhabGARcYwqtcT6Z1T8gH/oGu9qRBIvt5vCrZlm3yzfdAKsrOo1aheZ+7OE7QO0GwzBoH3WUkasY+Rx+sakJQwfKPy1tpWtzo1PSM48v5C4rwKHKNZ4CTCGGb7aY4eoH6KxEhDoFvfMS8ZtO7fNofC31A==
-x-ms-traffictypediagnostic: PU1APC01HT128:
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: P7bipwHuplET77EHetdtuQFj+/2uGv4vwSXEQdLajNzjn9jnMf7uPFryZGGoxX2SFB09pbCJ7KZg8O0jhLCZ4clOzOHNyFf8TfKo9xW/WLuW2mMSOHzu/ENyAp+g4Fr2y1nSp59+vaKe1dNYMbN6FxY8SgYJXs6ElnVWCxmYa6htbcXoOyRx1sTJHYIC4yXK
-x-ms-exchange-transport-forked: True
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <190531C10E9ACD4091B7CD6D3345C048@KORP216.PROD.OUTLOOK.COM>
-Content-Transfer-Encoding: 8BIT
+        Thu, 7 Nov 2019 08:51:02 -0500
+Received: from mx1.redhat.com ([209.132.183.28]:51794 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728417AbfKGNvB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 08:51:01 -0500
+Received: from mail-qk1-f198.google.com (mail-qk1-f198.google.com [209.85.222.198])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id CD01085541
+        for <linux-kernel@vger.kernel.org>; Thu,  7 Nov 2019 13:51:00 +0000 (UTC)
+Received: by mail-qk1-f198.google.com with SMTP id r2so2344413qkb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 05:51:00 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to;
+        bh=nkZBN+5zxQ42o26GlAg4Gu8zR9MU5cE0CTJ+GrFRdeo=;
+        b=fMR1BcvruBuNyZ/mA61ilIQdSbIkB3mHKOoNDUWDpd5kxtcWO3jr6CS+Stf5ctekmc
+         pfgeFiucZ6vz11yMgegsb8K1UOYsigXjI36cBGsvFGk3q9gROsXclm8AoSk3586PbFaE
+         p+mF31JJkKCzC9PYQd4vjtQ5LuBRdnI4qJ5/MiJozRGa08JDu+oin/cILm2IrG1ER0rv
+         Vtky1DZDj+I1h+CI8a8/XphCL3ZyzoDpfFf9Vz9Seut3PLQx2LcuxVMpcNE6uV3yAePZ
+         iTAvefm+9MGpLybXBEcK/rNKPvrbJFyld4c6BmaD9x0qMmJA1pWJXuiuyt62FEuCw4Js
+         gSsA==
+X-Gm-Message-State: APjAAAXdFqhxy/4hQqyks4ttMCjBoKFhher7/Bz+U7jsLBlX9iaarjdL
+        Rb/8tEn+g5thYn/aVVoggDfSS1Vn0dPXDhPKUrGIhISdhzNtSp0QouP+FrE0SDV+B6QejtOqxsK
+        1S/Cj8WAZnqKYp+XAG6YZ8b5o
+X-Received: by 2002:a37:f605:: with SMTP id y5mr2957979qkj.288.1573134659998;
+        Thu, 07 Nov 2019 05:50:59 -0800 (PST)
+X-Google-Smtp-Source: APXvYqwR0XN8Xkg7npgZmypT2TC+6FrvcOeN+9aUQy/VsChc7srS+8pQqGTXKUbO8NQlTjtab+Vs0A==
+X-Received: by 2002:a37:f605:: with SMTP id y5mr2957932qkj.288.1573134659680;
+        Thu, 07 Nov 2019 05:50:59 -0800 (PST)
+Received: from redhat.com (bzq-79-178-12-128.red.bezeqint.net. [79.178.12.128])
+        by smtp.gmail.com with ESMTPSA id p3sm1052072qkf.107.2019.11.07.05.50.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2019 05:50:58 -0800 (PST)
+Date:   Thu, 7 Nov 2019 08:50:46 -0500
+From:   "Michael S. Tsirkin" <mst@redhat.com>
+To:     Jason Wang <jasowang@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+Message-ID: <20191107085013-mutt-send-email-mst@kernel.org>
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+ <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+ <20191107080834-mutt-send-email-mst@kernel.org>
+ <b2265e3a-6f86-c21a-2ebd-d0e4eea2886f@redhat.com>
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 06c526d2-e7b6-4704-6efd-08d7638976c0
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 07 Nov 2019 13:50:35.3355
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1APC01HT128
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b2265e3a-6f86-c21a-2ebd-d0e4eea2886f@redhat.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I have split this patch off my main series, as I realised that it does 
-not need to be part of that series.
+On Thu, Nov 07, 2019 at 09:32:29PM +0800, Jason Wang wrote:
+> 
+> On 2019/11/7 下午9:08, Michael S. Tsirkin wrote:
+> > On Thu, Nov 07, 2019 at 08:43:29PM +0800, Jason Wang wrote:
+> > > On 2019/11/7 下午7:21, Michael S. Tsirkin wrote:
+> > > > On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+> > > > > On 2019/11/7 下午5:08, Michael S. Tsirkin wrote:
+> > > > > > On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+> > > > > > > This sample driver creates mdev device that simulate virtio net device
+> > > > > > > over virtio mdev transport. The device is implemented through vringh
+> > > > > > > and workqueue. A device specific dma ops is to make sure HVA is used
+> > > > > > > directly as the IOVA. This should be sufficient for kernel virtio
+> > > > > > > driver to work.
+> > > > > > > 
+> > > > > > > Only 'virtio' type is supported right now. I plan to add 'vhost' type
+> > > > > > > on top which requires some virtual IOMMU implemented in this sample
+> > > > > > > driver.
+> > > > > > > 
+> > > > > > > Acked-by: Cornelia Huck<cohuck@redhat.com>
+> > > > > > > Signed-off-by: Jason Wang<jasowang@redhat.com>
+> > > > > > I'd prefer it that we call this something else, e.g.
+> > > > > > mvnet-loopback. Just so people don't expect a fully
+> > > > > > functional device somehow. Can be renamed when applying?
+> > > > > Actually, I plan to extend it as another standard network interface for
+> > > > > kernel. It could be either a standalone pseudo device or a stack device.
+> > > > > Does this sounds good to you?
+> > > > > 
+> > > > > Thanks
+> > > > That's a big change in an interface so it's a good reason
+> > > > to rename the driver at that point right?
+> > > > Oherwise users of an old kernel would expect a stacked driver
+> > > > and get a loopback instead.
+> > > > 
+> > > > Or did I miss something?
+> > > 
+> > > My understanding is that it was a sample driver in /doc. It should not be
+> > > used in production environment. Otherwise we need to move it to
+> > > driver/virtio.
+> > > 
+> > > But if you insist, I can post a V11.
+> > > 
+> > > Thanks
+> > this can be a patch on top.
+> 
+> 
+> Then maybe it's better just extend it to work as a normal networking device
+> on top?
+> 
+> Thanks
 
-I have made some recent improvements to add assurance against it 
-breaking existing behaviour. Instead of returning the first resource of 
-the desired type regardless of it being assigned, now it goes through 
-all of the resources and returns only those of type that are not 
-assigned. Only then does it go through and return the first resource of 
-desired type that is assigned. If none are found then it returns NULL as 
-usual.
-
-I have made extensive changes to the patch notes, also.
-
-Logan Gunthorpe <logang@deltatee.com> has an alternative method of 
-fixing this same bug. Please also consider his patch and accept 
-whichever is best for Linux. All I care is that the bug be fixed.
-
-Nicholas Johnson (1):
-  PCI: Fix bug resulting in double hpmemsize being assigned to MMIO
-    window
-
- drivers/pci/setup-bus.c | 34 +++++++++++++++++++++++-----------
- 1 file changed, 23 insertions(+), 11 deletions(-)
-
--- 
-2.23.0
+That would be a substantial change. Maybe drop 6/6 for now until
+we have a better handle on this?
 
