@@ -2,175 +2,113 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL autolearn=no
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C140C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 051D3C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:58:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BAD521D79
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C213C214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 05:58:44 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="ALQB/XyV"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="zKOvttBm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726738AbfKGF43 (ORCPT
+        id S1726824AbfKGF6n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 00:56:29 -0500
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:35378 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725875AbfKGF42 (ORCPT
+        Thu, 7 Nov 2019 00:58:43 -0500
+Received: from lelv0143.ext.ti.com ([198.47.23.248]:36942 "EHLO
+        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725938AbfKGF6n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 00:56:28 -0500
-Received: by mail-ot1-f66.google.com with SMTP id z6so1025133otb.2
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 21:56:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=384NhWXS6hyuU3CrnbFQGK7zYahu2OSuAafYFZok/GY=;
-        b=ALQB/XyVc7B5EJqmTqKtC1ivXh3QHthxsqqvHDFO4J8EggG7OX55reyqRG+5UItmIr
-         FibbXT1F85aFPWkvP04Q6/rHkuG4qO/vLoD7jKXvT3g6OU0Fg5vsyAiVT/rELL23aVhG
-         VNXVHgVKROBA0xTVEKnkH7Ul+J1v506Zn6pHmUhMdLlOMSK6E+nYA0GqGAXq0xijxxR6
-         kXjeMx9zRWuCxIDA2SYewLY2VkvX359xdEzVXWX2C0/QvSMFXulCxWyc57qAgHmoQzk0
-         k/VLHybR8vZXfYI7pEOyzLz9qK88VUlsVRt8ecr8XhfBhxjfsYumWR7L8nHqqpo4aA3K
-         Hv4Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=384NhWXS6hyuU3CrnbFQGK7zYahu2OSuAafYFZok/GY=;
-        b=ekMeZDqqrmeROuEEtl+N6KKBMQwzshSw+M15HXpKXn6mY0ICDJUGk9cx3QPjKZcUn7
-         GKyAyS6tmzQ1YAkTi88W6jLoy7tMdeeYyCc6ofbnZZ96QMS3oyEUWI6GQJBAEzvxfbOg
-         qXEtPLgr+4AYizGON4S7F9OC8t41J5BRdlMMMn70aaUBsOikJ6TE2ZVirPkyyMpQZ5mb
-         a6ChiT0xhjOg+mOzY1KQZEsvhN10BSoypvxwxiyki9nUEHLymRFZ625xd1kd9HfXGKcj
-         0oURKcN3gyggFSZgydE/CejevX/BeBHfRJlCHLwW621EgaQBfQytifnczeIzyDF/zIta
-         iVTA==
-X-Gm-Message-State: APjAAAVqpw2y9H/fLHxxiQksO5VlrOZ46DZ18dq2Q6jSkl+Lgn+pAS8W
-        GGUh1yWFylFZPqdbYQkJ2uGYmXcF5q42KIWe/laG7Q==
-X-Google-Smtp-Source: APXvYqwE5cMZ/VONPPJ2zbPPDhCLvPbRf+ga6RQbpjxRNgWTVnxUx51Coq2BSPJianYSV7WfGrYJ85IK1/yswKZdMGw=
-X-Received: by 2002:a9d:7ac2:: with SMTP id m2mr1378956otn.225.1573106186955;
- Wed, 06 Nov 2019 21:56:26 -0800 (PST)
+        Thu, 7 Nov 2019 00:58:43 -0500
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id xA75wKIM089847;
+        Wed, 6 Nov 2019 23:58:20 -0600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1573106300;
+        bh=jtcXtrt/XDwk6BSUhAeIZP7HNrh+PkVsne/qDgcO6vE=;
+        h=Subject:From:To:CC:References:Date:In-Reply-To;
+        b=zKOvttBmaqGMMkWIvhdYDoMbOrJNqeCRTEY7h8d53PdNc4vNJyHrLqoGZrY4UYslz
+         QH5BrwOqpaMQgMQ+vr2zYfp67G47/cmNesYMBwY/+mR+0rSwyWRA2k3QKd9UCKGfB7
+         lVhAx93kY9/CmiTnmSafhEw9As3gBbkA/MEPYqe0=
+Received: from DLEE103.ent.ti.com (dlee103.ent.ti.com [157.170.170.33])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA75wKHh086371;
+        Wed, 6 Nov 2019 23:58:20 -0600
+Received: from DLEE108.ent.ti.com (157.170.170.38) by DLEE103.ent.ti.com
+ (157.170.170.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3; Wed, 6 Nov
+ 2019 23:58:04 -0600
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE108.ent.ti.com
+ (157.170.170.38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1847.3 via
+ Frontend Transport; Wed, 6 Nov 2019 23:58:19 -0600
+Received: from [172.24.145.136] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id xA75wGDW122702;
+        Wed, 6 Nov 2019 23:58:17 -0600
+Subject: Re: [PATCH v4 12/20] mtd: spi-nor: Print debug message when the read
+ back test fails
+From:   Vignesh Raghavendra <vigneshr@ti.com>
+To:     <Tudor.Ambarus@microchip.com>, <boris.brezillon@collabora.com>
+CC:     <richard@nod.at>, <linux-mtd@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <miquel.raynal@bootlin.com>
+References: <20191102112316.20715-1-tudor.ambarus@microchip.com>
+ <20191102112316.20715-13-tudor.ambarus@microchip.com>
+ <9474c875-94a1-3d19-ddab-b90d352967a9@ti.com>
+ <5abf94c6-f2bb-b317-4796-3f9ea1fbf55e@microchip.com>
+ <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
+Message-ID: <b54c6e97-079e-7ec6-7f25-a70c031fd4a6@ti.com>
+Date:   Thu, 7 Nov 2019 11:28:52 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-References: <20191030145112.19738-1-will@kernel.org> <6e457227-ca06-2998-4ffa-a58ab171ce32@arm.com>
- <20191030155444.GC19096@willie-the-truck> <CAGETcx9ogWQC1ZtnS_4xC3ShqBpuRSKudWEEWC22UZUEhdEU4A@mail.gmail.com>
- <20191031193758.GA2607492@lophozonia> <CAGETcx-MuMVvj0O-MFdfmLADEq=cQY_=x+irvhgwHhG4VeeSdg@mail.gmail.com>
- <20191101114148.GA2694906@lophozonia> <20191101122825.GA318@e121166-lin.cambridge.arm.com>
- <CAGETcx_U1huHHT=_xo6ArTWpmKMkr=rAy4ceoVUQv6XZGEDA_w@mail.gmail.com> <20191104114312.GA15105@e121166-lin.cambridge.arm.com>
-In-Reply-To: <20191104114312.GA15105@e121166-lin.cambridge.arm.com>
-From:   Saravana Kannan <saravanak@google.com>
-Date:   Wed, 6 Nov 2019 21:55:50 -0800
-Message-ID: <CAGETcx_0kwQTjM2BkW__ux8kRvazR-PuX4Hcp4fP_97QRLSkTQ@mail.gmail.com>
-Subject: Re: [PATCH 0/7] iommu: Permit modular builds of ARM SMMU[v3] drivers
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc:     Jean-Philippe Brucker <jean-philippe@linaro.org>,
-        Will Deacon <will@kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        iommu@lists.linux-foundation.org,
-        Bjorn Helgaas <bhelgaas@google.com>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <ae91a133-590b-17a4-4a68-be1b8baccce9@ti.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Nov 4, 2019 at 3:43 AM Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
->
-> On Fri, Nov 01, 2019 at 02:26:05PM -0700, Saravana Kannan wrote:
-> > On Fri, Nov 1, 2019 at 5:28 AM Lorenzo Pieralisi
-> > <lorenzo.pieralisi@arm.com> wrote:
-> > >
-> > > On Fri, Nov 01, 2019 at 12:41:48PM +0100, Jean-Philippe Brucker wrote:
-> > >
-> > > [...]
-> > >
-> > > > > > I'm also wondering about ACPI support.
-> > > > >
-> > > > > I'd love to add ACPI support too, but I have zero knowledge of ACPI.
-> > > > > I'd be happy to help anyone who wants to add ACPI support that allows
-> > > > > ACPI to add device links.
-> > > >
-> > > > It's not as generic as device-tree, each vendor has their own table to
-> > > > describe the IOMMU topology. I don't see a nice way to transpose the
-> > > > add_links() callback there. Links need to be created either in a common
-> > > > path (iommu_probe_device()) or in the APCI IORT driver.
-> > >
-> > > We can create a generic stub that calls into respective firmware
-> > > handling paths (eg iort_dma_setup() in acpi_dma_configure()).
-> > >
-> > > There are three arches booting with ACPI so stubbing it out in
-> > > specific firmware handlers is not such a big deal, less generic
-> > > sure, but not catastrophically bad.
-> >
-> > Ok, good to know.
-> >
-> > > Obviously this works for IOMMU masters links
-> >
-> > It's unclear to me what you are referring to here and it's throwing me
-> > off on the rest of the email.
-> >
-> > Did you mean to say "IOMMU master's links"? As in the bus masters
-> > whose accesses go through IOMMUs? And "links" as in device links?
-> >
-> > OR
-> >
-> > Do you mean device links from bus master devices to IOMMUs here?
->
-> I meant associating endpoints devices to the IOMMU they are connected
-> to.
->
-> In DT you do it through "iommus", "iommu-map" properties, in ACPI
-> it is arch specific, doable nonetheless through ACPI (IORT on ARM)
-> static tables data.
->
-> > > - for resources
-> > > dependencies (eg power domains) it deserves some thought, keeping in
-> > > mind that IOMMUs are static table entries in ACPI and not device objects
-> > > so they are not even capable of expressing eg power resources and
-> > > suchlike.
-> >
-> > If you can reword this sentence for me with more context or split it
-> > into separate sentences, I'd appreciate that very much. I'd help me
-> > understand this better and allow me to try to help out.
->
-> In ACPI (at least on ARM but on x86 I suspect that's the same story with
-> the DMAR table) an SMMU is presented in FW as an entry in a static
-> table (eg IORT on ARM). I noticed that your patch series takes into
-> account for instance eg clock dependencies in DT; this way the OS knows
-> the clock(s) the SMMU depends on to be activated.
->
-> In ACPI there is not a notion of "clock" (hopefully - unless someone
-> sneaked that in using _DSD properties) but rather every device in the
-> ACPI namespace (which is part of tables containing code that needs the
-> ACPI interpreter to be used such as SSDT/DSDT - it is AML code) has ACPI
-> objects describing power resources (ie ACPI specification 6.3, 7.2).
->
-> The SMMU, since it is not itself an ACPI object in the ACPI namespace
-> but rather an entry in a static ACPI table (IORT on ARM), can't have
-> PowerResource object in it which means that at the moment there is no
-> way you can detect a dependency on other power resources to be ON to
-> build the device links you require to sort out the probe dependencies,
-> which I *assume* that's the reason why you require to detect
-> clock dependencies in DT.
->
-> Maybe it is not even needed at all but in case it is I was giving
-> a heads-up to say that clocks (or rather an all encompassing "power
-> resource" dependency) dependencies in ACPI to build an SMMU as
-> a module are not straightforward and most certainly will require
-> firmware specifications updates.
->
-> *Hopefully* in the short term all you need to detect is how endpoint
-> devices are connected to an IOMMU and build device links to describe
-> that probe dependency, if we need to throw power management into
-> the picture there is more work to be done.
->
-> I hope that's clearer, if it is not please let me know and I will
-> try to be more precise.
 
-Thanks for the detailed explanation and context Lorenzo. I understand
-it better now.
 
--Saravana
+On 06/11/19 1:09 PM, Vignesh Raghavendra wrote:
+> 
+> 
+> On 06/11/19 12:54 PM, Tudor.Ambarus@microchip.com wrote:
+>>
+>>
+>> On 11/05/2019 02:37 PM, Vignesh Raghavendra wrote:
+>>> On 02/11/19 4:53 PM, Tudor.Ambarus@microchip.com wrote:
+>>>> From: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>>
+>>>> Demystify where the EIO error occurs.
+>>>>
+>>>> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
+>>>> ---
+>>> I think this is a small enough change that can be squashed into previous
+>>> patch itself
+>>>
+>>
+>> I made separate patches because this is a separate logical change. The previous
+>> patch extends the check on all bits of the Status Register, while this one
+>> prints a debug message in case of EIO. Thus I tried to have a single logical
+>> change contained in a single patch. I'm clearly no expert in this (Boris asked
+>> me in v3 to split patches because I did too many things in one patch :) ), so I
+>> would keep this as is, but if you still feel that it should be squashed, then
+>> I'll do it. Please let me know.
+>>
+> 
+> I am fine either way. I don't have a strong preference...
+> 
+
+If you want to keep these separate:
+
+Reviewed-by: Vignesh Raghavendra <vigneshr@ti.com>
+
+Regards
+Vignesh
+
