@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-10.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BFAC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:00:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35417C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:00:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32C0521882
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:00:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08F0A2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 19:00:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573153244;
-	bh=1HhX0mVkjZHlC7ebxk1WahbvWU66vxaRhGg1q3Ijzr8=;
+	s=default; t=1573153250;
+	bh=Hj+jYQfvAqWK+5/QfVa6D4pHkGr2gBT1M/a0j2YaHmw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=rqvTeeml89ypomFx4IYuYww3t6IySAplzlk8HtYB1gByBPVoFMbtko3ud8busdlLK
-	 s87AF41Qy8Cs+ZjF1Lo6IsIZ4+t09eLqdgM7/LHRaxDSDQNtEGZ5rWXDpX5CSC6WWa
-	 duO/yF3yyeg0c0ThnzX/j9G5OAF+Upi7K/L4C3SY=
+	b=fKE8/2dEz142+dNOkvT74Ko11v17k21HLRGdN/BwQAzFKTntQhnFFnolRoIA1orGE
+	 9BctSn7mSB6RClAlYyVM0aTEadVzeF79bASiau0lHtzukMg/Cz4KzunhE0OaDyQz74
+	 WQZFnq7Ci9gTYMZlVG4w4GMcN1KcWuyJpSfuqMq8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727275AbfKGTAn (ORCPT
+        id S1727414AbfKGTAt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 14:00:43 -0500
-Received: from mail.kernel.org ([198.145.29.99]:40198 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 14:00:49 -0500
+Received: from mail.kernel.org ([198.145.29.99]:40300 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725883AbfKGTAm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 14:00:42 -0500
+        id S1725883AbfKGTAs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 14:00:48 -0500
 Received: from quaco.ghostprotocols.net (179-240-172-58.3g.claro.net.br [179.240.172.58])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CFF4E218AE;
-        Thu,  7 Nov 2019 19:00:36 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2BA4E21D79;
+        Thu,  7 Nov 2019 19:00:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573153242;
-        bh=1HhX0mVkjZHlC7ebxk1WahbvWU66vxaRhGg1q3Ijzr8=;
+        s=default; t=1573153248;
+        bh=Hj+jYQfvAqWK+5/QfVa6D4pHkGr2gBT1M/a0j2YaHmw=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=b/8BOTWZcbNcws2EI3x4uY8PyWYw7MNIRLbdGEaAcunk6gAs3wI756bvCwIYmrLAY
-         p7tuw4UV4HV591cEFtpgTftJcLqtNdY4LeUK8l+L7n4PWLj0Iw6pU+uUi+1cCVFpkx
-         xk7IglaGVgyMSwHxhOVZO31y0N+NAuQ/oEPWB+x8=
+        b=PDNQpfZIsEleBdRPMGPNEtKwyn5D0qgIwm/7s5yqz/iYWZ4qz5LrvdggCyc4a/VFD
+         G6MmRZsBQPY0uIcxNmxB7dcRaf+5f+whG+OJSEyyTqRAk8RLno7n11uZzxc9BsSrlK
+         pLYdPCWtHDqH55IRsccQYi4z4T0Bxa27cRiY4R+w=
 From:   Arnaldo Carvalho de Melo <acme@kernel.org>
 To:     Ingo Molnar <mingo@kernel.org>,
         Thomas Gleixner <tglx@linutronix.de>
@@ -47,9 +47,9 @@ Cc:     Jiri Olsa <jolsa@kernel.org>, Namhyung Kim <namhyung@kernel.org>,
         linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
         Adrian Hunter <adrian.hunter@intel.com>,
         Arnaldo Carvalho de Melo <acme@redhat.com>
-Subject: [PATCH 01/63] perf data: Correctly identify directory data files
-Date:   Thu,  7 Nov 2019 15:59:09 -0300
-Message-Id: <20191107190011.23924-2-acme@kernel.org>
+Subject: [PATCH 02/63] perf data: Move perf_dir_version into data.h
+Date:   Thu,  7 Nov 2019 15:59:10 -0300
+Message-Id: <20191107190011.23924-3-acme@kernel.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20191107190011.23924-1-acme@kernel.org>
 References: <20191107190011.23924-1-acme@kernel.org>
@@ -62,30 +62,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Adrian Hunter <adrian.hunter@intel.com>
 
-In order to rename the "header" file to "data" without conflicting,
-correctly identify the non-header files as starting with "data."
+perf_dir_version belongs to struct perf_data which is declared in data.h.
+To allow its use in inline perf_data functions, move perf_dir_version to
+data.h
 
 Signed-off-by: Adrian Hunter <adrian.hunter@intel.com>
 Reviewed-by: Jiri Olsa <jolsa@kernel.org>
-Link: http://lore.kernel.org/lkml/20191004083121.12182-2-adrian.hunter@intel.com
+Link: http://lore.kernel.org/lkml/20191004083121.12182-3-adrian.hunter@intel.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/perf/util/data.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/data.h   | 4 ++++
+ tools/perf/util/header.h | 4 ----
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
-index 88fba2ba549f..8993253c5564 100644
---- a/tools/perf/util/data.c
-+++ b/tools/perf/util/data.c
-@@ -96,7 +96,7 @@ int perf_data__open_dir(struct perf_data *data)
- 		if (stat(path, &st))
- 			continue;
+diff --git a/tools/perf/util/data.h b/tools/perf/util/data.h
+index 259868a39019..218fe9a16801 100644
+--- a/tools/perf/util/data.h
++++ b/tools/perf/util/data.h
+@@ -9,6 +9,10 @@ enum perf_data_mode {
+ 	PERF_DATA_MODE_READ,
+ };
  
--		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data", 4))
-+		if (!S_ISREG(st.st_mode) || strncmp(dent->d_name, "data.", 5))
- 			continue;
++enum perf_dir_version {
++	PERF_DIR_VERSION	= 1,
++};
++
+ struct perf_data_file {
+ 	char		*path;
+ 	int		 fd;
+diff --git a/tools/perf/util/header.h b/tools/perf/util/header.h
+index ca53a929e9fd..840f95cee349 100644
+--- a/tools/perf/util/header.h
++++ b/tools/perf/util/header.h
+@@ -52,10 +52,6 @@ enum perf_header_version {
+ 	PERF_HEADER_VERSION_2,
+ };
  
- 		ret = -ENOMEM;
+-enum perf_dir_version {
+-	PERF_DIR_VERSION	= 1,
+-};
+-
+ struct perf_file_section {
+ 	u64 offset;
+ 	u64 size;
 -- 
 2.21.0
 
