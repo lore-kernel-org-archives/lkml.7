@@ -2,147 +2,63 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA904FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:33:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2584BFC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:33:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DE462178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:33:09 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JuKqHTEX"
+	by mail.kernel.org (Postfix) with ESMTP id 063782178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 13:33:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388209AbfKGNdI (ORCPT
+        id S2388770AbfKGNdx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 08:33:08 -0500
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:45039 "EHLO
-        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727738AbfKGNdH (ORCPT
+        Thu, 7 Nov 2019 08:33:53 -0500
+Received: from cloudserver094114.home.pl ([79.96.170.134]:50720 "EHLO
+        cloudserver094114.home.pl" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730985AbfKGNdw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 08:33:07 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-        s=mimecast20190719; t=1573133586;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=wtVPfNetgN4OJ+kdxUdEeGOlhfhZVM+OtnzXrAWUlvU=;
-        b=JuKqHTEXHI2vUrDRLUkSdATj5JdKDdInnR2XJbmlW+FBegts6jggMCiQSF0xflxt1hEouh
-        zA2GWpuXUNKII8/wN7BhsRPB1UJoqM0cY44blFgyHxdAKYlk0oC+42Ywteb/v52DW0gWxd
-        YFsyF6iQs1BgaZ5ujMHpNe46wxjHm4A=
-Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
- [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
- us-mta-51-OCtDdWVKNrKS2VpNpFxOEw-1; Thu, 07 Nov 2019 08:33:00 -0500
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id CA6831005500;
-        Thu,  7 Nov 2019 13:32:56 +0000 (UTC)
-Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id D50B360BE0;
-        Thu,  7 Nov 2019 13:32:30 +0000 (UTC)
-Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
- implement virtio-mdev framework
-To:     "Michael S. Tsirkin" <mst@redhat.com>
-Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        intel-gfx@lists.freedesktop.org,
-        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
-        alex.williamson@redhat.com, tiwei.bie@intel.com,
-        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
-        cohuck@redhat.com, maxime.coquelin@redhat.com,
-        cunming.liang@intel.com, zhihong.wang@intel.com,
-        rob.miller@broadcom.com, xiao.w.wang@intel.com,
-        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
-        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
-        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
-        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
-        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
-        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
-        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
-        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
-        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
-        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
-        stefanha@redhat.com
-References: <20191106133531.693-1-jasowang@redhat.com>
- <20191106133531.693-7-jasowang@redhat.com>
- <20191107040700-mutt-send-email-mst@kernel.org>
- <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
- <20191107061942-mutt-send-email-mst@kernel.org>
- <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
- <20191107080834-mutt-send-email-mst@kernel.org>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <b2265e3a-6f86-c21a-2ebd-d0e4eea2886f@redhat.com>
-Date:   Thu, 7 Nov 2019 21:32:29 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.8.0
+        Thu, 7 Nov 2019 08:33:52 -0500
+Received: from 79.184.254.83.ipv4.supernova.orange.pl (79.184.254.83) (HELO kreacher.localnet)
+ by serwer1319399.home.pl (79.96.170.134) with SMTP (IdeaSmtpServer 0.83.292)
+ id aec6358fbcca9be9; Thu, 7 Nov 2019 14:33:50 +0100
+From:   "Rafael J. Wysocki" <rjw@rjwysocki.net>
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     LKML <linux-kernel@vger.kernel.org>,
+        Linux PCI <linux-pci@vger.kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>,
+        Mika Westerberg <mika.westerberg@linux.intel.com>
+Subject: Re: [PATCH 0/5] PCI: PM: Cleanups related to power state changes
+Date:   Thu, 07 Nov 2019 14:33:44 +0100
+Message-ID: <1774412.xs4Eg1OkIx@kreacher>
+In-Reply-To: <20191106190250.GA238633@google.com>
+References: <20191106190250.GA238633@google.com>
 MIME-Version: 1.0
-In-Reply-To: <20191107080834-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-MC-Unique: OCtDdWVKNrKS2VpNpFxOEw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset="us-ascii"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wednesday, November 6, 2019 8:02:50 PM CET Bjorn Helgaas wrote:
+> On Tue, Nov 05, 2019 at 11:11:57AM +0100, Rafael J. Wysocki wrote:
+> > Hi,
+> > 
+> > This series rearranges some PCI power management code to make it somewhat
+> > easier to follow and explicitly consolidate the power-up (transitions to
+> > D0) code path.
+> > 
+> > It is not intended to change the functionality of the code.
+> 
+> Applied with Mika's reviewed-by to pci/pm for v5.5, thanks!
 
-On 2019/11/7 =E4=B8=8B=E5=8D=889:08, Michael S. Tsirkin wrote:
-> On Thu, Nov 07, 2019 at 08:43:29PM +0800, Jason Wang wrote:
->> On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
->>> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
->>>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
->>>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
->>>>>> This sample driver creates mdev device that simulate virtio net devi=
-ce
->>>>>> over virtio mdev transport. The device is implemented through vringh
->>>>>> and workqueue. A device specific dma ops is to make sure HVA is used
->>>>>> directly as the IOVA. This should be sufficient for kernel virtio
->>>>>> driver to work.
->>>>>>
->>>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' typ=
-e
->>>>>> on top which requires some virtual IOMMU implemented in this sample
->>>>>> driver.
->>>>>>
->>>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
->>>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
->>>>> I'd prefer it that we call this something else, e.g.
->>>>> mvnet-loopback. Just so people don't expect a fully
->>>>> functional device somehow. Can be renamed when applying?
->>>> Actually, I plan to extend it as another standard network interface fo=
-r
->>>> kernel. It could be either a standalone pseudo device or a stack devic=
-e.
->>>> Does this sounds good to you?
->>>>
->>>> Thanks
->>> That's a big change in an interface so it's a good reason
->>> to rename the driver at that point right?
->>> Oherwise users of an old kernel would expect a stacked driver
->>> and get a loopback instead.
->>>
->>> Or did I miss something?
->>
->> My understanding is that it was a sample driver in /doc. It should not b=
-e
->> used in production environment. Otherwise we need to move it to
->> driver/virtio.
->>
->> But if you insist, I can post a V11.
->>
->> Thanks
-> this can be a patch on top.
+Thank you!
+
+> Thanks for the git tips, too!
+
+You're vwelcome. :-)
 
 
-Then maybe it's better just extend it to work as a normal networking=20
-device on top?
-
-Thanks
 
