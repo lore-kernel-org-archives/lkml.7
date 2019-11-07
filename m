@@ -2,103 +2,149 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,UNWANTED_LANGUAGE_BODY,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EE68DC43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:05:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49A61C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:05:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C06D12166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:05:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573146322;
-	bh=suEeE7KwP1izl/rCD0Y/Vv5c6KOXHEIBOSklRCpzCec=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=fEybKBdLNB/x4eyYL3kI15LGg3TBEsWkhNAOtOdIzZWR8uWuQxqQlabV5ZzBT+mAL
-	 RH/6IgJslZPiR56KD1xoi5xZEOa5gRyPMsMqtgCQBh4Zv+2svFtqqJIY0ws2B4rcv2
-	 WMcZivGMpl5cDoBsQW27KS/PbmnfQiO8GYfMqUz8=
+	by mail.kernel.org (Postfix) with ESMTP id 2B4752166E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:05:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730492AbfKGRFV (ORCPT
+        id S2389610AbfKGRFZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:05:21 -0500
-Received: from mail.kernel.org ([198.145.29.99]:55606 "EHLO mail.kernel.org"
+        Thu, 7 Nov 2019 12:05:25 -0500
+Received: from mga05.intel.com ([192.55.52.43]:48853 "EHLO mga05.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728847AbfKGRFV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:05:21 -0500
-Received: from sol.localdomain (c-24-5-143-220.hsd1.ca.comcast.net [24.5.143.220])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8A9CB2077C;
-        Thu,  7 Nov 2019 17:05:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1573146320;
-        bh=suEeE7KwP1izl/rCD0Y/Vv5c6KOXHEIBOSklRCpzCec=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=lU/ax5EmmTN1jc10dY9Tf8BnVtFnHEzEc5WXGMVkVSD3rfRvqqAORta9ZCUybEOM8
-         RdMd0YIVIpb1PKFeF8HpGQaXe9MvyC3wcxtIsVKzNxXswd8aMPFP5xrZrAamc2OpVU
-         KR9sTRKkfurg2rEfeUwtb4/0KdFynvhppsgZP1TM=
-Date:   Thu, 7 Nov 2019 09:05:19 -0800
-From:   Eric Biggers <ebiggers@kernel.org>
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     jaegeuk@kernel.org, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Subject: Re: [f2fs-dev] [PATCH] f2fs: fix to update dir's i_pino during
- cross_rename
-Message-ID: <20191107170519.GA766@sol.localdomain>
-Mail-Followup-To: Chao Yu <yuchao0@huawei.com>, jaegeuk@kernel.org,
-        linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-References: <20191107061205.120972-1-yuchao0@huawei.com>
+        id S1728847AbfKGRFY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 12:05:24 -0500
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 09:05:23 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
+   d="scan'208";a="192880761"
+Received: from cjense2x-mobl1.amr.corp.intel.com (HELO [10.251.130.63]) ([10.251.130.63])
+  by orsmga007.jf.intel.com with ESMTP; 07 Nov 2019 09:05:21 -0800
+Subject: Re: [alsa-devel] [PATCH v3 2/6] ASoC: amd: Refactoring of DAI from
+ DMA driver
+To:     Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+Cc:     "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Maruthi Bayyavarapu <maruthi.bayyavarapu@amd.com>,
+        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.com>,
+        YueHaibing <yuehaibing@huawei.com>,
+        Liam Girdwood <lgirdwood@gmail.com>, Akshu.Agrawal@amd.com,
+        Mark Brown <broonie@kernel.org>, djkurtz@google.com,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>
+References: <1573133093-28208-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+ <1573133093-28208-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <2547cf06-6f2f-78d8-d7c8-d0eb9c84f880@linux.intel.com>
+Date:   Thu, 7 Nov 2019 09:13:21 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107061205.120972-1-yuchao0@huawei.com>
-User-Agent: Mutt/1.12.2 (2019-09-21)
+In-Reply-To: <1573133093-28208-3-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Nov 07, 2019 at 02:12:05PM +0800, Chao Yu wrote:
-> As Eric reported:
-> 
-> RENAME_EXCHANGE support was just added to fsstress in xfstests:
-> 
-> 	commit 65dfd40a97b6bbbd2a22538977bab355c5bc0f06
-> 	Author: kaixuxia <xiakaixu1987@gmail.com>
-> 	Date:   Thu Oct 31 14:41:48 2019 +0800
-> 
-> 	    fsstress: add EXCHANGE renameat2 support
-> 
-> This is causing xfstest generic/579 to fail due to fsck.f2fs reporting errors.
-> I'm not sure what the problem is, but it still happens even with all the
-> fs-verity stuff in the test commented out, so that the test just runs fsstress.
-> 
-> generic/579 23s ... 	[10:02:25]
-> [    7.745370] run fstests generic/579 at 2019-11-04 10:02:25
-> _check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-> (see /results/f2fs/results-default/generic/579.full for details)
->  [10:02:47]
-> Ran: generic/579
-> Failures: generic/579
-> Failed 1 of 1 tests
-> Xunit report: /results/f2fs/results-default/result.xml
-> 
-> Here's the contents of 579.full:
-> 
-> _check_generic_filesystem: filesystem on /dev/vdc is inconsistent
-> *** fsck.f2fs output ***
-> [ASSERT] (__chk_dots_dentries:1378)  --> Bad inode number[0x24] for '..', parent parent ino is [0xd10]
-> 
-> The root cause is that we forgot to update directory's i_pino during
-> cross_rename, fix it.
-> 
-> Fixes: 32f9bc25cbda0 ("f2fs: support ->rename2()")
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
 
-Tested-by: Eric Biggers <ebiggers@kernel.org>
+> +static int acp3x_dai_probe(struct platform_device *pdev)
+> +{
+> +	int status;
+> +	struct resource *res;
+> +	struct i2s_dev_data *adata;
+> +
+> +	if (!pdev->dev.platform_data) {
+> +		dev_err(&pdev->dev, "platform_data not retrieved\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	adata = devm_kzalloc(&pdev->dev, sizeof(struct i2s_dev_data),
+> +			GFP_KERNEL);
 
-The i_pino field is only valid on directories, right?
+if (!adata)
+	return -ENOMEM;
+	> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res) {
+> +		dev_err(&pdev->dev, "IORESOURCE_MEM FAILED\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	adata->acp3x_base = devm_ioremap(&pdev->dev, res->start,
+> +			resource_size(res));
+> +	if (IS_ERR(adata->acp3x_base))
+> +		return PTR_ERR(adata->acp3x_base);
+> +
+> +	adata->i2s_irq = res->start;
+> +	dev_set_drvdata(&pdev->dev, adata);
+> +	status = devm_snd_soc_register_component(&pdev->dev,
+> +			&acp3x_dai_component,
+> +			&acp3x_i2s_dai, 1);
+> +	if (status) {
+> +		dev_err(&pdev->dev, "Fail to register acp i2s dai\n");
+> +		return -ENODEV;
 
-- Eric
+if the probe fails for such errors, don't you have a memory leak?
+
+> +	}
+> +
+> +	pm_runtime_set_autosuspend_delay(&pdev->dev, 10000);
+> +	pm_runtime_use_autosuspend(&pdev->dev);
+> +	pm_runtime_enable(&pdev->dev);
+> +	return 0;
+
+err:
+	kree(adata)
+	return ret;
+?
+
+
+>   static const struct snd_pcm_hardware acp3x_pcm_hardware_playback = {
+>   	.info = SNDRV_PCM_INFO_INTERLEAVED |
+>   		SNDRV_PCM_INFO_BLOCK_TRANSFER |
+> @@ -279,7 +261,11 @@ static int acp3x_dma_open(struct snd_soc_component *component,
+>   			  struct snd_pcm_substream *substream)
+>   {
+>   	int ret = 0;
+> +
+
+newline?
+
+> -
+>   static const struct snd_soc_component_driver acp3x_i2s_component = {
+>   	.name		= DRV_NAME,
+>   	.open		= acp3x_dma_open,
+> @@ -619,6 +415,9 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+>   		return -ENODEV;
+>   	}
+>   	irqflags = *((unsigned int *)(pdev->dev.platform_data));
+> +	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
+> +	if (!adata)
+> +		return -ENOMEM;
+>   
+>   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>   	if (!res) {
+> @@ -626,10 +425,6 @@ static int acp3x_audio_probe(struct platform_device *pdev)
+>   		return -ENODEV;
+>   	}
+>   
+> -	adata = devm_kzalloc(&pdev->dev, sizeof(*adata), GFP_KERNEL);
+> -	if (!adata)
+> -		return -ENOMEM;
+> -
+
+that part is hard to review with diff, please double-check the changes.
