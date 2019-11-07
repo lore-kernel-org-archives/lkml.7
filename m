@@ -2,29 +2,29 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91CF9FC6195
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:33:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B34FC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:33:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C09A21D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:33:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C2AB207FA
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 14:33:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389586AbfKGOdG (ORCPT
+        id S2389537AbfKGOdD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 09:33:06 -0500
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:58364 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S2389205AbfKGOdD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
         Thu, 7 Nov 2019 09:33:03 -0500
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R801e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0ThQoCKT_1573137161;
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:40285 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1731082AbfKGOdC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 09:33:02 -0500
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R391e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=shile.zhang@linux.alibaba.com;NM=1;PH=DS;RN=11;SR=0;TI=SMTPD_---0ThQoCKT_1573137161;
 Received: from e18g09479.et15sqa.tbsite.net(mailfrom:shile.zhang@linux.alibaba.com fp:SMTPD_---0ThQoCKT_1573137161)
           by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 07 Nov 2019 22:32:57 +0800
+          Thu, 07 Nov 2019 22:32:55 +0800
 From:   shile.zhang@linux.alibaba.com
 To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
         Michal Marek <michal.lkml@markovi.net>,
@@ -34,9 +34,9 @@ To:     Masahiro Yamada <yamada.masahiro@socionext.com>,
 Cc:     "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org,
         linux-kbuild@vger.kernel.org,
         Shile Zhang <shile.zhang@linux.alibaba.com>
-Subject: [RFC PATCH 3/4] x86/unwind/orc: Skip sorting if BUILDTIME_ORCTABLE_SORT is configured
-Date:   Thu,  7 Nov 2019 22:32:04 +0800
-Message-Id: <20191107143205.206606-4-shile.zhang@linux.alibaba.com>
+Subject: [RFC PATCH 2/4] kbuild: Sort ORC unwind tables in vmlinux link process
+Date:   Thu,  7 Nov 2019 22:32:03 +0800
+Message-Id: <20191107143205.206606-3-shile.zhang@linux.alibaba.com>
 X-Mailer: git-send-email 2.24.0.rc2
 In-Reply-To: <20191107143205.206606-1-shile.zhang@linux.alibaba.com>
 References: <20191107143205.206606-1-shile.zhang@linux.alibaba.com>
@@ -49,30 +49,42 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Shile Zhang <shile.zhang@linux.alibaba.com>
 
-The orc_unwind and orc_unwind_ip tables are sorted at build time if
-BUILDTIME_ORCTABLE_SORT is configured, skip sort at boot time.
+To sort the ORC unwind tables in vmlinux link process, controlled
+by configure BUILDTIME_ORCTABLE_SORT.
 
 Signed-off-by: Shile Zhang <shile.zhang@linux.alibaba.com>
 ---
- arch/x86/kernel/unwind_orc.c | 2 ++
- 1 file changed, 2 insertions(+)
+ scripts/link-vmlinux.sh | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/kernel/unwind_orc.c b/arch/x86/kernel/unwind_orc.c
-index 332ae6530fa8..2c2fa9ef116e 100644
---- a/arch/x86/kernel/unwind_orc.c
-+++ b/arch/x86/kernel/unwind_orc.c
-@@ -273,9 +273,11 @@ void __init unwind_init(void)
- 		return;
- 	}
+diff --git a/scripts/link-vmlinux.sh b/scripts/link-vmlinux.sh
+index 06495379fcd8..43fe8c151c8d 100755
+--- a/scripts/link-vmlinux.sh
++++ b/scripts/link-vmlinux.sh
+@@ -183,6 +183,11 @@ sortextable()
+ 	${objtree}/scripts/sortextable ${1}
+ }
  
-+#ifndef CONFIG_BUILDTIME_ORCTABLE_SORT
- 	/* Sort the .orc_unwind and .orc_unwind_ip tables: */
- 	sort(__start_orc_unwind_ip, num_entries, sizeof(int), orc_sort_cmp,
- 	     orc_sort_swap);
-+#endif
++sortorctable()
++{
++	${objtree}/scripts/sortorctable ${1}
++}
++
+ # Delete output files in case of error
+ cleanup()
+ {
+@@ -303,6 +308,11 @@ if [ -n "${CONFIG_BUILDTIME_EXTABLE_SORT}" ]; then
+ 	sortextable vmlinux
+ fi
  
- 	/* Initialize the fast lookup table: */
- 	lookup_num_blocks = orc_lookup_end - orc_lookup;
++if [ -n "${CONFIG_BUILDTIME_ORCTABLE_SORT}" ]; then
++	info SORTORC vmlinux
++	sortorctable vmlinux
++fi
++
+ info SYSMAP System.map
+ mksysmap vmlinux System.map
+ 
 -- 
 2.24.0.rc2
 
