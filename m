@@ -2,91 +2,111 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1EDCBFC6194
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:52:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47011FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:54:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E33BA21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:52:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573087974;
-	bh=5QB4QSTucNYkjwzcZ+8wfRaK0eztI7JHd9jmoTVSi+Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=MaW8F8/LVuHPWXG4h3kgbbHnLxtsjnpUuWaxQuxQrG0exTLZ0TAe/fWGq91gYm8bz
-	 4c3PIR1VyLvAViQEQR+wfA8PQ9knTbtyJvT8vfIkBM4lAhseS7e/g8pYgTlLVtqWN8
-	 /m9jTCMMeliTnWl1P+uVYSTpmd8I5hzc6ofMiX/k=
+	by mail.kernel.org (Postfix) with ESMTP id 1884421848
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 00:54:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GCq9q+Fe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732921AbfKGAww (ORCPT
+        id S1732827AbfKGAyK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 19:52:52 -0500
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:39017 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727646AbfKGAww (ORCPT
+        Wed, 6 Nov 2019 19:54:10 -0500
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:35186 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727393AbfKGAyJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 19:52:52 -0500
-Received: by mail-oi1-f193.google.com with SMTP id v138so447627oif.6;
-        Wed, 06 Nov 2019 16:52:51 -0800 (PST)
+        Wed, 6 Nov 2019 19:54:09 -0500
+Received: by mail-lf1-f66.google.com with SMTP id y6so183501lfj.2;
+        Wed, 06 Nov 2019 16:54:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
+        b=GCq9q+Few97eqD4meVi9vr6WXF86OJWKPepBpJq2bST6zm532Bf+rW18Vv/GFWldBQ
+         x23hBWeI563PFN4/5Jz8qPQEa7utPzvJcVfne9cywHFgiRbhiYZJWpeupr4BpH86JubU
+         tX6S2yzfsKyboUJ5rfZpHNXbbRxr8ieGiQUMtHL4XtmJybGmuj4YuoDzwXQNWH7BBdMO
+         x39BGyk4Ap/TzrRuGrm8j+VR+7mO6B+u4Daz2AkfGT5LHRE+/7DJN2V3zyPppfE3rpgH
+         ++qtEMpxzSEfkUZUDvS9SMIO/FXadF6FirpIEV8EvaA2quWfJKFpSa+6APIpswftHG0V
+         sfiA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bNBnmiV/O0F2tV/c5hmPcF5IquwvqitpsBpHKXWwdd8=;
-        b=Xz1hY8bYn3i9UofkB6Aba9Anh9wofnHa4abTfqH1ED526rUfFjfuLOSzbfWwJgaBMy
-         IlPIonQ/DDoKlZwMJ4leS0r9ghZzdWtpQ29dlszXhkMRPm+b8ywK3gcFeuNfoydNz9Za
-         wzlJL5z2qoJpzyDZR3UMfy1qoy5vPQb1eOv6UD4MvWEckwY3jFKx49SoBY/fTDeN8AVL
-         wDK2jYuzLkXP6R0Eb5y0pOicK/xV6nL9xt7zDE+7kLXx9Ctm7ufCJeA9KKBmTle6vuob
-         PXv9Z7WIs4WniKNzRh1BCxJBDa7YDctxqBXZ54Jfo+CumX4i6t11nxr9lLY/YL+AzyF8
-         AQsA==
-X-Gm-Message-State: APjAAAUXS6MSPqoS4/lfKDbIY8YbubgdDmnEfn2UVQn2aHWeN61jUjmm
-        pgM5aGWu/we72JY5DLgefg==
-X-Google-Smtp-Source: APXvYqyCY4nQynNp+n6/6pCwXxB4zCgESl1l11DWbSH0BoeflOM/MjfcnsL93dCEW+0DsG7lf8PZsw==
-X-Received: by 2002:aca:5b89:: with SMTP id p131mr856276oib.52.1573087970613;
-        Wed, 06 Nov 2019 16:52:50 -0800 (PST)
-Received: from localhost (24-155-109-49.dyn.grandenetworks.net. [24.155.109.49])
-        by smtp.gmail.com with ESMTPSA id w33sm214006otb.68.2019.11.06.16.52.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2019 16:52:49 -0800 (PST)
-Date:   Wed, 6 Nov 2019 18:52:49 -0600
-From:   Rob Herring <robh@kernel.org>
-To:     Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc:     Kishon Vijay Abraham I <kishon@ti.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org,
-        Masami Hiramatsu <masami.hiramatsu@linaro.org>,
-        Jassi Brar <jaswinder.singh@linaro.org>,
-        Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Subject: Re: [PATCH 2/6] dt-bindings: phy: socionext: Add Pro5 support and
- remove Pro4 from usb3-hsphy
-Message-ID: <20191107005249.GA26022@bogus>
-References: <1573035979-32200-1-git-send-email-hayashi.kunihiko@socionext.com>
- <1573035979-32200-3-git-send-email-hayashi.kunihiko@socionext.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=WQhkDsKZrkd8TdxE2xc3dtoaBDRq8YTpJQNlzZYmMQw=;
+        b=TLdh/gNVKij56gmGcXENtWxZ+1GRIhP4yf9xY1xoTD4H2sStJlkBlUqBz4JWNEWflj
+         6shdtvkmwxlBX+WsxriXf9scKWZqDDCMKi+xJ80hf7XvPweR6nVfjIbfsmbGm0jD8hox
+         l29nDgPY7//Rq/qFyuXkAw8UMwXhgPJCRJoNQhkhcey6BrpOHJt+HnXe8tEXZmAoUnbs
+         IKUpWfcnuJfyRTeWf+WdEzOzOowE26RFmi8zrkPb6vZ2sVh175cZPUhEXwujje8uymqV
+         ogpn2J7jZi+Nl4RMskm5JmBiT9fVfvRfQ8CEEP9t9eu9BGdQinJb07QVM9QWWlhpjWH/
+         88fg==
+X-Gm-Message-State: APjAAAWOuEhrXjRb5wjvLpo7hR8nG8/hdDbvHFeDexQqOMBdv8MeptC1
+        SIo2LctMpM9zlGEAfJU+1ivsIP4x
+X-Google-Smtp-Source: APXvYqwSDxsXmzI4SWeAa6XTM1UPrLMKJFFjcYjACzxgTxJr0xgjPyPe8Ycsw9Y3hBHkx1n12bZAOA==
+X-Received: by 2002:a19:820e:: with SMTP id e14mr210299lfd.29.1573088046030;
+        Wed, 06 Nov 2019 16:54:06 -0800 (PST)
+Received: from [192.168.2.145] (94-29-10-250.dynamic.spd-mgts.ru. [94.29.10.250])
+        by smtp.googlemail.com with ESMTPSA id f25sm198094lfm.26.2019.11.06.16.54.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Wed, 06 Nov 2019 16:54:04 -0800 (PST)
+Subject: Re: [PATCH v9 07/22] clk: Add API to get index of the clock parent
+To:     Stephen Boyd <sboyd@kernel.org>,
+        Sowjanya Komatineni <skomatineni@nvidia.com>,
+        jason@lakedaemon.net, jonathanh@nvidia.com,
+        linus.walleij@linaro.org, marc.zyngier@arm.com,
+        mark.rutland@arm.com, stefan@agner.ch, tglx@linutronix.de,
+        thierry.reding@gmail.com
+Cc:     pdeschrijver@nvidia.com, pgaikwad@nvidia.com,
+        linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org,
+        jckuo@nvidia.com, josephl@nvidia.com, talho@nvidia.com,
+        linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        mperttunen@nvidia.com, spatra@nvidia.com, robh+dt@kernel.org,
+        devicetree@vger.kernel.org, rjw@rjwysocki.net,
+        viresh.kumar@linaro.org, linux-pm@vger.kernel.org
+References: <1565984527-5272-1-git-send-email-skomatineni@nvidia.com>
+ <1565984527-5272-8-git-send-email-skomatineni@nvidia.com>
+ <20191106231005.F2CD820869@mail.kernel.org>
+From:   Dmitry Osipenko <digetx@gmail.com>
+Message-ID: <fcc43ccb-8c6e-d518-4c70-503501706ffd@gmail.com>
+Date:   Thu, 7 Nov 2019 03:54:03 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
+ Thunderbird/68.1.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1573035979-32200-3-git-send-email-hayashi.kunihiko@socionext.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20191106231005.F2CD820869@mail.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed,  6 Nov 2019 19:26:15 +0900, Kunihiko Hayashi wrote:
-> This adds compatible string for Pro5 SoC that needs to manage gio clock
-> and reset. And Pro4 SoC uses USB2 PHY instead of USB3 HS-PHY, so this
-> removes Pro4 description from usb3-hsphy.
-> 
-> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-> ---
->  Documentation/devicetree/bindings/phy/uniphier-pcie-phy.txt | 13 +++++++++----
->  .../devicetree/bindings/phy/uniphier-usb3-hsphy.txt         |  6 +++---
->  .../devicetree/bindings/phy/uniphier-usb3-ssphy.txt         |  5 +++--
->  3 files changed, 15 insertions(+), 9 deletions(-)
-> 
+07.11.2019 02:10, Stephen Boyd пишет:
+> Quoting Sowjanya Komatineni (2019-08-16 12:41:52)
+>> This patch adds an API clk_hw_get_parent_index to get index of the
+>> clock parent to use during the clock restore operations on system
+>> resume.
+>  
+> Is there a reason we can't save the clk hw index at suspend time by
+> reading the hardware to understand the current parent? The parent index
+> typically doesn't matter unless we're trying to communicate something
+> from the framework to the provider driver. Put another way, I would
+> think the provider driver can figure out the index itself without having
+> to go through the framework to do so.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Isn't it a bit wasteful to duplicate information about the parent within
+a provider if framework already has that info? The whole point of this
+new API is to allow providers to avoid that unnecessary duplication.
+
+Please note that clk_hw_get_parent_index is getting used only at the
+resume time and not at suspend.
+
+[snip]
