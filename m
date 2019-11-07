@@ -2,118 +2,112 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.4 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
+	URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7781AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 190DBC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:59:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5502D218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:55:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E77BB2085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:59:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=unipv-it.20150623.gappssmtp.com header.i=@unipv-it.20150623.gappssmtp.com header.b="iPZ79ADk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727538AbfKGSzK (ORCPT
+        id S1726965AbfKGS74 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:55:10 -0500
-Received: from mail-il1-f199.google.com ([209.85.166.199]:52579 "EHLO
-        mail-il1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726843AbfKGSzK (ORCPT
+        Thu, 7 Nov 2019 13:59:56 -0500
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:35557 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfKGS74 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:55:10 -0500
-Received: by mail-il1-f199.google.com with SMTP id t23so3578009ila.19
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:55:09 -0800 (PST)
+        Thu, 7 Nov 2019 13:59:56 -0500
+Received: by mail-ot1-f68.google.com with SMTP id z6so2977972otb.2
+        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 10:59:55 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unipv-it.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=rgwxQZHa6ldii1pWiRxVyykr5nSYdGqgGsnTVFnT84Y=;
+        b=iPZ79ADka3j4nmgFew4aV8GDcZgyEwjLMdxp0Mh5gVImbZONvzSBW9L1sDFI8fDn3H
+         tnob8FIWxwGjDxp9eXuUAyD7X+O9J00fk8t56cyUl1HBcq0UNvZEFDD7/H+/lhhzvKYj
+         SgIFewwBSBs+CRZJu4aSqVjtbsfPz4Ia4NSA5kd8fqnHx+ad24lm/tMPtATyuujAgPXh
+         1XKicq1x1Q5xCLuAe65ljYXBxTPoh9Q9cqz2zM2+OCgrTkmSh/OTID/oUW0ztm5864wN
+         wN4GNgZiZRtRUKL6RJ6zJRdQh59WYXHqXthL1ObImv7honOLN59FTmXsawrwD0Dyt9e/
+         vpFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=ebPwios/a/BkGm6Az/riO5vBmQU4SCQIjm285Fi84Ok=;
-        b=A5Ae7sIoHrtzIV1vExqxZUt3iWXxbbjxf4/Isu5oMqylYztsEGxKRzVkU8HO2f26Zr
-         Ky1WFsXtCTSzlhff1E5/e5Jghtp0U55hWWE4xqjXJQGpN+x1W9JZW6KxPmxu2nutx+oQ
-         R/V3w3EJtutFcoT3FUxEPiPHy4xQcL+brZRjbymXlT0+isxBhcFo5ggodbRNoae7J8YG
-         wsWm0ldpHQ96h9OHDoSjTmuvsUjtrURe+WQsIvAQQWnukQX29yoMr4lN+I1O6EWJS8dx
-         yZ2BRcHesnaQEv0AXNxeDVtzuO68oA0fvU9SZCfq30DFXPLhmeGQJ6kg+sGyvFfhIcZE
-         KV1w==
-X-Gm-Message-State: APjAAAWx2P16jU8ZcUVC0amD8Ork/2imPLqF33HixRo+B3jUtLkHuOjh
-        EP2Sjf4fcdvTayWvCGWQqEzja3Emxp+QFnXcHSl+GbXP8DgY
-X-Google-Smtp-Source: APXvYqzBDOsS8mZ6Itklvqdj/v5vZqjYnnpcPTCDdNcQNyvmaEezCkV7wemNSVu35PiJ/FVLAvrE/7UlYClNkml7HmY5onoPiX9g
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=rgwxQZHa6ldii1pWiRxVyykr5nSYdGqgGsnTVFnT84Y=;
+        b=GRB5Oomtd/sujrzc2P7Tdz3XsCHAIqMhm1y60JKeK8aBUqaT51QTPtyqByKrmzia7J
+         +InWep5/vk3cYFFmvhI346QBOccGj8FEjq+ZhXH0pj2s6jUdPqtNB+IrWn5EKOi8Yy1Q
+         Z9InZKASOYTw4bqTUq8XsafBKz7FBoN/UwHLqYdzoCUxuIMtTXEKW9xHoWiYuIoTXX5i
+         rAllDasKUwaCjozbyoxgQklK+KsveaFu3MxNbSELfeL1YGupvAwsVvxQxhPZkKn+mjDV
+         TGREzvBEaZ7yiyyQG/a2Sg4Jgc3s9lS9ufjyVqr4VIqb3kPEvUwHfn9K/a25xSDBJfp5
+         zBRg==
+X-Gm-Message-State: APjAAAXIt8rVnxU1mepc7EVBO2pk2stkdKKg6oALIff7Mcwl7EJwZRYL
+        6Agn7lqs9AuRTR5YZpFGO2ZwzcVoTmkhhSjJzVCa+w==
+X-Google-Smtp-Source: APXvYqzZ2xDwFA4+o+16DbpXyR0jc2MOPlP3+u/QTC5jyvI5FJY3d9mHmZ9im0K4MWchyT/eP41C3qrbM2OhGj3lIpU=
+X-Received: by 2002:a9d:5a0f:: with SMTP id v15mr4513902oth.266.1573153195073;
+ Thu, 07 Nov 2019 10:59:55 -0800 (PST)
 MIME-Version: 1.0
-X-Received: by 2002:a92:3ad4:: with SMTP id i81mr6080862ilf.18.1573152909497;
- Thu, 07 Nov 2019 10:55:09 -0800 (PST)
-Date:   Thu, 07 Nov 2019 10:55:09 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <0000000000005927bf0596c634a2@google.com>
-Subject: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
-From:   syzbot <syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com>
-To:     davem@davemloft.net, elver@google.com,
-        linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
-        marcelo.leitner@gmail.com, netdev@vger.kernel.org,
-        nhorman@tuxdriver.com, syzkaller-bugs@googlegroups.com,
-        vyasevich@gmail.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+References: <Pine.LNX.4.44L0.1911061044070.1694-100000@iolanthe.rowland.org>
+ <BYAPR04MB5816640CEF40CB52430BBD3AE7790@BYAPR04MB5816.namprd04.prod.outlook.com>
+ <b22c1dd95e6a262cf2667bee3913b412c1436746.camel@unipv.it> <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+In-Reply-To: <BYAPR04MB58167B95AF6B7CDB39D24C52E7780@BYAPR04MB5816.namprd04.prod.outlook.com>
+From:   Andrea Vai <andrea.vai@unipv.it>
+Date:   Thu, 7 Nov 2019 19:59:44 +0100
+Message-ID: <CAOsYWL3NkDw6iK3q81=5L-02w=VgPF_+tYvfgnTihgCcwKgA+g@mail.gmail.com>
+Subject: Re: Slow I/O on USB media after commit f664a3cc17b7d0a2bc3b3ab96181e1029b0ec0e6
+To:     Damien Le Moal <Damien.LeMoal@wdc.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        Jens Axboe <axboe@kernel.dk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        USB list <linux-usb@vger.kernel.org>,
+        SCSI development list <linux-scsi@vger.kernel.org>,
+        Himanshu Madhani <himanshu.madhani@cavium.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Ming Lei <ming.lei@redhat.com>, Omar Sandoval <osandov@fb.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Greg KH <gregkh@linuxfoundation.org>,
+        Hans Holmberg <Hans.Holmberg@wdc.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+[Sorry for the duplicate message, it didn't reach the lists due to
+html formatting]
+Il giorno gio 7 nov 2019 alle ore 08:54 Damien Le Moal
+<Damien.LeMoal@wdc.com> ha scritto:
+>
+> On 2019/11/07 16:04, Andrea Vai wrote:
+> > Il giorno mer, 06/11/2019 alle 22.13 +0000, Damien Le Moal ha scritto:
+> >>
+> >>
+> >> Please simply try your write tests after doing this:
+> >>
+> >> echo mq-deadline > /sys/block/<name of your USB
+> >> disk>/queue/scheduler
+> >>
+> >> And confirm that mq-deadline is selected with:
+> >>
+> >> cat /sys/block/<name of your USB disk>/queue/scheduler
+> >> [mq-deadline] kyber bfq none
+> >
+> > ok, which kernel should I test with this: the fresh git cloned, or the
+> > one just patched with Alan's patch, or doesn't matter which one?
+>
+> Probably all of them to see if there are any differences.
 
-syzbot found the following crash on:
+with both kernels, the output of
+cat /sys/block/sdh/queue/schedule
 
-HEAD commit:    05f22368 x86, kcsan: Enable KCSAN for x86
-git tree:       https://github.com/google/ktsan.git kcsan
-console output: https://syzkaller.appspot.com/x/log.txt?x=1046796ce00000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=87d111955f40591f
-dashboard link: https://syzkaller.appspot.com/bug?extid=e3b35fe7918ff0ee474e
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+already contains [mq-deadline]: is it correct to assume that the echo
+command and the subsequent testing is useless? What to do now?
 
-Unfortunately, I don't have any reproducer for this crash yet.
-
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+e3b35fe7918ff0ee474e@syzkaller.appspotmail.com
-
-==================================================================
-BUG: KCSAN: data-race in sctp_assoc_migrate / sctp_hash_obj
-
-write to 0xffff8880b67c0020 of 8 bytes by task 18908 on cpu 1:
-  sctp_assoc_migrate+0x1a6/0x290 net/sctp/associola.c:1091
-  sctp_sock_migrate+0x8aa/0x9b0 net/sctp/socket.c:9465
-  sctp_accept+0x3c8/0x470 net/sctp/socket.c:4916
-  inet_accept+0x7f/0x360 net/ipv4/af_inet.c:734
-  __sys_accept4+0x224/0x430 net/socket.c:1754
-  __do_sys_accept net/socket.c:1795 [inline]
-  __se_sys_accept net/socket.c:1792 [inline]
-  __x64_sys_accept+0x4e/0x60 net/socket.c:1792
-  do_syscall_64+0xcc/0x370 arch/x86/entry/common.c:290
-  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-
-read to 0xffff8880b67c0020 of 8 bytes by task 12003 on cpu 0:
-  sctp_hash_obj+0x4f/0x2d0 net/sctp/input.c:894
-  rht_key_get_hash include/linux/rhashtable.h:133 [inline]
-  rht_key_hashfn include/linux/rhashtable.h:159 [inline]
-  rht_head_hashfn include/linux/rhashtable.h:174 [inline]
-  head_hashfn lib/rhashtable.c:41 [inline]
-  rhashtable_rehash_one lib/rhashtable.c:245 [inline]
-  rhashtable_rehash_chain lib/rhashtable.c:276 [inline]
-  rhashtable_rehash_table lib/rhashtable.c:316 [inline]
-  rht_deferred_worker+0x468/0xab0 lib/rhashtable.c:420
-  process_one_work+0x3d4/0x890 kernel/workqueue.c:2269
-  worker_thread+0xa0/0x800 kernel/workqueue.c:2415
-  kthread+0x1d4/0x200 drivers/block/aoe/aoecmd.c:1253
-  ret_from_fork+0x1f/0x30 arch/x86/entry/entry_64.S:352
-
-Reported by Kernel Concurrency Sanitizer on:
-CPU: 0 PID: 12003 Comm: kworker/0:6 Not tainted 5.4.0-rc3+ #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Workqueue: events rht_deferred_worker
-==================================================================
-
-
----
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+Thanks, and bye
+Andrea
