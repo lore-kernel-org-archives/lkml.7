@@ -2,220 +2,144 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.2 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48501C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:19:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D0BC5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:23:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2206621D6C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:19:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9B3421D6C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 06:23:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="PsAkcftL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726985AbfKGGTO (ORCPT
+        id S1726749AbfKGGXe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 01:19:14 -0500
-Received: from mga09.intel.com ([134.134.136.24]:38815 "EHLO mga09.intel.com"
+        Thu, 7 Nov 2019 01:23:34 -0500
+Received: from mout.gmx.net ([212.227.15.19]:54711 "EHLO mout.gmx.net"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725938AbfKGGTO (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 01:19:14 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 22:19:13 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="200948309"
-Received: from yjin15-mobl.ccr.corp.intel.com (HELO [10.239.196.43]) ([10.239.196.43])
-  by fmsmga008.fm.intel.com with ESMTP; 06 Nov 2019 22:19:11 -0800
-Subject: Re: [PATCH v6 7/7] perf report: Sort by sampled cycles percent per
- block for tui
-To:     Jiri Olsa <jolsa@redhat.com>
-Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
-        mingo@redhat.com, alexander.shishkin@linux.intel.com,
-        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
-        kan.liang@intel.com, yao.jin@intel.com
-References: <20191105033611.25493-1-yao.jin@linux.intel.com>
- <20191105033611.25493-8-yao.jin@linux.intel.com>
- <20191106210106.GA12156@krava>
-From:   "Jin, Yao" <yao.jin@linux.intel.com>
-Message-ID: <cddb7e55-ae98-62c7-db9f-70e6fc734579@linux.intel.com>
-Date:   Thu, 7 Nov 2019 14:19:10 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+        id S1725938AbfKGGXd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 01:23:33 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1573107798;
+        bh=rMybS4P7iltlkP4byw7w3d9o/YVha1a/UZ09FyOoiS4=;
+        h=X-UI-Sender-Class:Subject:To:Cc:References:From:Date:In-Reply-To;
+        b=PsAkcftLqIIRKKPXkqyflogW2HN8uODBSdoRTNvKwtaNMVm180rYa5RH/TX9pZ39U
+         y58lEYWn2YkaUr0ADhcixqGrA6qlaMYNTHz7GS8EH12LBB70NDL30ZNZoyC9+NdOXJ
+         LFjoRiq67XmQk3FMTXvxw26u2WDj/IBAOqvk7S1E=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from [192.168.1.167] ([37.4.249.112]) by mail.gmx.com (mrgmx004
+ [212.227.17.190]) with ESMTPSA (Nemesis) id 1MPGW7-1iITMp1nq9-00PamQ; Thu, 07
+ Nov 2019 07:23:18 +0100
+Subject: Re: [PATCH v2 1/2] ARM: dts: bcm2711: force CMA into first GB of
+ memory
+To:     Nicolas Saenz Julienne <nsaenzjulienne@suse.de>,
+        catalin.marinas@arm.com, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Eric Anholt <eric@anholt.net>
+Cc:     linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org,
+        bcm-kernel-feedback-list@broadcom.com,
+        linux-rpi-kernel@lists.infradead.org
+References: <20191106095945.22933-1-nsaenzjulienne@suse.de>
+ <20191106095945.22933-2-nsaenzjulienne@suse.de>
+From:   Stefan Wahren <wahrenst@gmx.net>
+Message-ID: <09138a9d-40a5-4c5f-0cf4-1cb73579c600@gmx.net>
+Date:   Thu, 7 Nov 2019 07:23:15 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.9.0
 MIME-Version: 1.0
-In-Reply-To: <20191106210106.GA12156@krava>
-Content-Type: text/plain; charset=windows-1252; format=flowed
+In-Reply-To: <20191106095945.22933-2-nsaenzjulienne@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:isuZZlBG5UxboGSxgwfmqyHaD9A6OpC2okXbCmRW7mOwxXPrscu
+ Tm2iA8YgaKQdwROG6va+wQ0Nk3NMQp0c4CjfKSaOvHaU7rKonxWRaVD62MfNqA4QGAxu0jY
+ uD9oh/fEyCJIbQTEljLyE7n3HQ3dA59DIGjFLU2PwbifysxP9D/7xuFX1AbqrVYK7QY2rIq
+ 0iE8ck42bewxgxafzxtxA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:Euer4+Yr0NQ=:nYc0yQ1rDQBHSguAAdEg6L
+ J6yEEL9rjb2roz+VGOUdBd+R7ha55/wvCNxVaqADIfvNBXk9T7qh4y6Sw3iveESt4TbdrCmI5
+ Ia5BcOee944TfRCBD3qQvtkdY0dAEez61vC50FmJEpZZS7/7ah74CWT7sSLhh8H9GfyIkdBjW
+ gP1XG3v51mVYPpIAwYA7trbbWZaJCNrjjWHzoNpbLdu4xTHvWAPFBXsPYcUnwqXOwDtLdmjLz
+ SOXkeuZKgGX5/NlicycGtteWkpC+eDiCClU76JEcKJ6ODNUglUudGBT9uW4KM0iR53WdaFCbK
+ 4bx4JthGKVibFxNTBBPozw42XvmX8EYHkGhy+Rk1hjlpCmKRYPXVs0Jq69i3Pu4qG7INi9ARe
+ l1tOzk1eGgqZQEYWXuNl0NHPNZ23f5Ge6u10aNV1YySgSR2PNzLfqOsSHkpEHlTDYdlAz2jG5
+ ljc8pfSu7KTsgLPwYqvsPxcCUjg33ImERrCQBFKnrg7KNixTANz52FLZwfla8Agm9kwjPzDdo
+ 9s34bEAr1grLgnsDBJG602Ad5PqOaAtOgJttCphan9INq6vrITvYyPJsjLsnyhXn6646/EuJs
+ Z05DZIIrFHVCaGUj50pT+kOEcL4YnXTLrxRl6riKkoXNrLuScFwcBtYes73B2uQAxTSw6SK/C
+ qmM7LihX3uay2RBTwkmi3Ab/dWFqiXm5lYXFyEs71NR/9W1XEwH65+7luDzGj/yN5FvhRIO4o
+ /9Uy+ENMTXBQLF8a6APqp3XtybTrAtomnAiEMxKK1NmEMHEPD7u7mEmaNap5JN6EfPoGWuMR/
+ 1FYq6VlTYzssqFtsdgogwL4kBI3HxarPko4pneMXs0neOkth2QgIMC03ff3Gqts6yMISTz1Mo
+ rvsjbLAu7Z8hM3TGhDmKR6biwD26B+3CG+rrrguFBOZZVzIl1oKqpQ4ZIDVELqf+MswKbMeVc
+ 9NO9fKsKm1kYa/V4wzl7G5dr8V0tf1XCH38dVdjnYg0f1P9jHCTg4BIQWhbk2YuDXIz2Qgbpn
+ eC1+AJ8/OLlPEwE9uB6wO4YMAiNatWCbz9mfc5cwgYiF38JVKGr5RFoFtA89mQiX038K+EUOL
+ iy90uKbMJDAWAaysuVoOhldg+eJYhZwbzKi8AQdB3fO/AB3vMfazzCEYCljL8zX4i3epN5qjL
+ 8oaZ4Yeo1rRjgYP7u9JwWTc3Cy+zxeH/cVPjL2h1XpOCzluUzv5mj9idD57aurJtMiltRGuOC
+ rnoIaCETwpj0xjH6sU4dqJIR7+dwujAhO86/OTOmH8UAdgZUr5muue2VkHpg=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Nicolas,
 
+Am 06.11.19 um 10:59 schrieb Nicolas Saenz Julienne:
+> arm64 places the CMA in ZONE_DMA32, which is not good enough for the
+> Raspberry Pi 4 since it contains peripherals that can only address the
+> first GB of memory. Explicitly place the CMA into that area.
+>
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+>
+> ---
+>
+> Changes since v1:
+>   - Move into bcm2711.dtsi
+>
+>  arch/arm/boot/dts/bcm2711.dtsi | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2711.dtsi b/arch/arm/boot/dts/bcm2711.=
+dtsi
+> index 1f3acd3363ea..6000a01652fa 100644
+> --- a/arch/arm/boot/dts/bcm2711.dtsi
+> +++ b/arch/arm/boot/dts/bcm2711.dtsi
+> @@ -12,6 +12,26 @@
+>
+>  	interrupt-parent =3D <&gicv2>;
+>
+> +	reserved-memory {
+> +		#address-cells =3D <2>;
+> +		#size-cells =3D <1>;
+> +		ranges;
+> +
+> +		/*
+> +		 * arm64 reserves the CMA by default somewhere in ZONE_DMA32,
+> +		 * that's not good enough for the Raspberry Pi 4 as some
 
-On 11/7/2019 5:01 AM, Jiri Olsa wrote:
-> On Tue, Nov 05, 2019 at 11:36:11AM +0800, Jin Yao wrote:
-> 
-> SNIP
-> 
->>
->> Signed-off-by: Jin Yao <yao.jin@linux.intel.com>
->> ---
->>   tools/perf/builtin-report.c    | 27 ++++++++++++---
->>   tools/perf/ui/browsers/hists.c | 62 +++++++++++++++++++++++++++++++++-
->>   tools/perf/ui/browsers/hists.h |  2 ++
->>   tools/perf/util/block-info.c   | 12 +++++++
->>   tools/perf/util/block-info.h   |  3 ++
->>   tools/perf/util/hist.h         | 12 +++++++
->>   6 files changed, 112 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/perf/builtin-report.c b/tools/perf/builtin-report.c
->> index 7a8b0be8f09a..af5a57d06f12 100644
->> --- a/tools/perf/builtin-report.c
->> +++ b/tools/perf/builtin-report.c
->> @@ -485,6 +485,22 @@ static size_t hists__fprintf_nr_sample_events(struct hists *hists, struct report
->>   	return ret + fprintf(fp, "\n#\n");
->>   }
->>   
->> +static int perf_evlist__tui_block_hists_browse(struct evlist *evlist,
->> +					       struct report *rep)
->> +{
->> +	struct evsel *pos;
->> +	int i = 0, ret;
->> +
->> +	evlist__for_each_entry(evlist, pos) {
->> +		ret = report__tui_browse_block_hists(&rep->block_reports[i++].hist,
->> +						     rep->min_percent, pos);
->> +		if (ret != 0)
->> +			return ret;
->> +	}
->> +
->> +	return 0;
->> +}
->> +
->>   static int perf_evlist__tty_browse_hists(struct evlist *evlist,
->>   					 struct report *rep,
->>   					 const char *help)
->> @@ -595,6 +611,11 @@ static int report__browse_hists(struct report *rep)
->>   
->>   	switch (use_browser) {
->>   	case 1:
->> +		if (rep->total_cycles_mode) {
->> +			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
->> +			break;
->> +		}
-> 
-> it's good that most of it is in the block-info.c,
-> however what I mean was to have a single report
-> function for rep->total_cycles_mode, like:
-> 
-> 	report__browse_block_hists()
-> 	{
-> 		switch (use_browser) {
-> 		case 1:
-> 			ret = perf_evlist__tui_block_hists_browse(evlist, rep);
-> 			break;
-> 		case 0:
-> 			ret = perf_evlist__tty_block_hists_browse(evlist, rep);
-> 			break;
-> 		...
-> 	}
-> 
-> preferable in block-info.c as well
-> 
-> which would be hooked in report__browse_hists:
-> 
-> 	report__browse_hists()
-> 	{
-> 		if (rep->total_cycles_mode)
-> 			return report__browse_block_hists();
-> 		...
-> 	}
-> 
+sorry for the nitpicking but i hope the Raspberry Pi 4 B wont be the
+only user of BCM2711.
 
-If we move all block implementations from builtin-report.c to 
-block-info.c, one difficulty is that we can't reuse some codes in 
-builtin-report.c. For example, reuse the function which prints the event 
-stats (hists__fprintf_nr_sample_events)
+So please s/Raspberry Pi 4/BCM2711/
 
-# Total Lost Samples: 0
-#
-# Samples: 2M of event 'cycles'
-# Event count (approx.): 2753248
+Beside that:
 
-So I want to achieve a balance. I move most of block codes to 
-builtin-report.c but I have to keep a bit of them in builtin-report.c. I 
-will implement that in v7.
+Acked-by: Stefan Wahren <wahrenst@gmx.net>
 
-> plus below
-> 
-> SNIP
-> 
->> +
->> +static int block_hists_browser__title(struct hist_browser *browser, char *bf,
->> +				      size_t size)
->> +{
->> +	struct hists *hists = evsel__hists(browser->block_evsel);
->> +	const char *evname = perf_evsel__name(browser->block_evsel);
->> +	unsigned long nr_samples = hists->stats.nr_events[PERF_RECORD_SAMPLE];
->> +	int ret;
->> +
->> +	ret = scnprintf(bf, size, "# Samples: %lu", nr_samples);
->> +	if (evname)
->> +		scnprintf(bf + ret, size -  ret, " of event '%s'", evname);
->> +
->> +	return 0;
->> +}
->> +
->> +int block_hists_tui_browse(struct block_hist *bh, struct evsel *evsel,
->> +			   float min_percent)
->> +{
->> +	struct hists *hists = &bh->block_hists;
->> +	struct hist_browser *browser;
->> +	int key = -1;
->> +	static const char help[] =
->> +	" q             Quit \n";
->> +
->> +	browser = hist_browser__new(hists);
->> +	if (!browser)
->> +		return -1;
->> +
->> +	browser->block_evsel = evsel;
->> +	browser->title = block_hists_browser__title;
->> +	browser->min_pcnt = min_percent;
->> +
->> +	/* reset abort key so that it can get Ctrl-C as a key */
->> +	SLang_reset_tty();
->> +	SLang_init_tty(0, 0, 0);
->> +
->> +	while (1) {
->> +		key = hist_browser__run(browser, "? - help", true);
->> +
->> +		switch (key) {
->> +		case 'q':
->> +			goto out;
->> +		case '?':
->> +			ui_browser__help_window(&browser->b, help);
->> +			break;
->> +		default:
->> +			break;
->> +		}
->> +	}
->> +
->> +out:
->> +	hist_browser__delete(browser);
->> +	return 0;
->> +}
-> 
-> also could this go to block-info.c as well?
-> 
-> thanks,
-> jirka
-> 
-
-I will move them to block-info.c
-
-Thanks
-Jin Yao
+> +		 * devices can only address the lower 1G of memory (ZONE_DMA).
+> +		 */
+> +		linux,cma {
+> +			compatible =3D "shared-dma-pool";
+> +			size =3D <0x2000000>; /* 32MB */
+> +			alloc-ranges =3D <0x0 0x00000000 0x40000000>;
+> +			reusable;
+> +			linux,cma-default;
+> +		};
+> +	};
+> +
+> +
+>  	soc {
+>  		/*
+>  		 * Defined ranges:
