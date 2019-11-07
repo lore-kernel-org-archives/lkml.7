@@ -2,133 +2,136 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75039C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:30:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9CDEC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC63214D8
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:30:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B3B522085B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:31:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="Ez26eB0/"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="rl6bOLIi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387784AbfKGK37 (ORCPT
+        id S2388197AbfKGKbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:29:59 -0500
-Received: from bilbo.ozlabs.org ([203.11.71.1]:41817 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfKGK36 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:29:58 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47805b3GX7z9sPT;
-        Thu,  7 Nov 2019 21:29:55 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573122595;
-        bh=a4m1nWotTG2jewKpNRdw9eW8MeOxKL/KXr8bS4jNwEw=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=Ez26eB0/Hao264oY8mdCEcLSGzesBH8ckKBuWVZsrTh7FwY+3G0FRpQcMW8t07TIL
-         GxNEm5xTZqeXEz/Oge1/J59c/E03qxZuVJKwy5G52tt5n75byMSGD078yUa5X+WFeU
-         jDJXX5hY6t9FhEANapoy+TL4hGXNpYWoe7eiypzProrFH+5clfz5BLdQgJOdh6jWTp
-         uShCQT5qGdJROGj3Yv4OrneWx0IRvISROWJ7LC0GVYLQ/sqZiVa6FkMAFyCIW2DdVN
-         /tk6hZpqkJw9/rPKaKSxObLxRbuQ7EDWVWPouPRR6KrI63QH1o8ucesuGyBhHK//Z0
-         8Yqlq6lO/s81g==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        linuxram@us.ibm.com, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v1 1/2] powerpc/pseries/iommu: Share the per-cpu TCE page with the hypervisor.
-In-Reply-To: <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com> <1572902923-8096-2-git-send-email-linuxram@us.ibm.com>
-Date:   Thu, 07 Nov 2019 21:29:54 +1100
-Message-ID: <87h83g568t.fsf@mpe.ellerman.id.au>
+        Thu, 7 Nov 2019 05:31:25 -0500
+Received: from mo4-p03-ob.smtp.rzone.de ([85.215.255.104]:19700 "EHLO
+        mo4-p03-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387629AbfKGKbV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:31:21 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573122675;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=Akg2H2vT9+ztBCmpxMTf1owqj+fzemCAJBbd+AfL414=;
+        b=rl6bOLIiXtcxU8RIU6QpB7ZmMJpdzs6+FFpM7r8gkLIOB0xx++V6An1INw2MldN7ht
+        zD34MUTC3OfEaplXpRwWJEHM60FRMJtPkLUPZyNi3N1gMkHlEornFrJUzLwsR94SKM6O
+        Gr+b3sWWu2hO9GpmWPMAZqX6c7F1Y9Gih3Uo7AUucmDFECBS88IcUJEOIKBL5AK1k5Lz
+        h5Yq+wu2ZtQ8hWTZu/1XdzOLovr7tJuML2ETElw7tw8MA+ENS0PJtra1rGVd2OBLG3TK
+        SXR7GenjrZSGY90EkZlaf6ldHrS1F8dPlpMEqGjDOHa8p8o0j1BizrHu01DXVdi+fAUf
+        sbaQ==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
+X-RZG-CLASS-ID: mo00
+Received: from iMac.fritz.box
+        by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
+        with ESMTPSA id L09db3vA7AUndRq
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Thu, 7 Nov 2019 11:30:49 +0100 (CET)
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+To:     =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>,
+        Tony Lindgren <tony@atomide.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Russell King <linux@armlinux.org.uk>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        David Sterba <dsterba@suse.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Petr Mladek <pmladek@suse.com>,
+        Sakari Ailus <sakari.ailus@linux.intel.com>,
+        "H. Nikolaus Schaller" <hns@goldelico.com>,
+        Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Yangtao Li <tiny.windzz@gmail.com>,
+        Alexios Zavras <alexios.zavras@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Allison Randal <allison@lohutok.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        John Stultz <john.stultz@linaro.org>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-omap@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org,
+        netdev@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com
+Subject: [PATCH v3 02/12] net: wireless: ti: wl1251 add device tree support
+Date:   Thu,  7 Nov 2019 11:30:35 +0100
+Message-Id: <c128cf34cf3858538eac8abffa02a2af8ce845b2.1573122644.git.hns@goldelico.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <cover.1573122644.git.hns@goldelico.com>
+References: <cover.1573122644.git.hns@goldelico.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ram Pai <linuxram@us.ibm.com> writes:
-> The hypervisor needs to access the contents of the page holding the TCE
-> entries while setting up the TCE entries in the IOMMU's TCE table. For
-> SecureVMs, since this page is encrypted, the hypervisor cannot access
-> valid entries. Share the page with the hypervisor. This ensures that the
-> hypervisor sees the valid entries.
+We will have the wl1251 defined as a child node of the mmc interface
+and can read setup for gpios, interrupts and the ti,use-eeprom
+property from there instead of pdata to be provided by pdata-quirks.
 
-Can you please give people some explanation of why this is safe. After
-all the point of the Ultravisor is to protect the guest from a malicious
-hypervisor. Giving the hypervisor access to a page of TCEs sounds
-dangerous, so please explain why it's not.
+Fixes: 81eef6ca9201 ("mmc: omap_hsmmc: Use dma_request_chan() for requesting DMA channel")
 
-cheers
+Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
+Acked-by: Kalle Valo <kvalo@codeaurora.org>
+---
+ drivers/net/wireless/ti/wl1251/sdio.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 8d9c2b1..07f0847 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -37,6 +37,7 @@
->  #include <asm/mmzone.h>
->  #include <asm/plpar_wrappers.h>
->  #include <asm/svm.h>
-> +#include <asm/ultravisor.h>
->  
->  #include "pseries.h"
->  
-> @@ -179,6 +180,19 @@ static int tce_build_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  
->  static DEFINE_PER_CPU(__be64 *, tce_page);
->  
-> +/*
-> + * Allocate a tce page.  If secure VM, share the page with the hypervisor.
-> + */
-> +static __be64 *alloc_tce_page(void)
-> +{
-> +	__be64 *tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> +
-> +	if (tcep && is_secure_guest())
-> +		uv_share_page(PHYS_PFN(__pa(tcep)), 1);
-> +
-> +	return tcep;
-> +}
-> +
->  static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  				     long npages, unsigned long uaddr,
->  				     enum dma_data_direction direction,
-> @@ -206,8 +220,7 @@ static int tce_buildmulti_pSeriesLP(struct iommu_table *tbl, long tcenum,
->  	 * from iommu_alloc{,_sg}()
->  	 */
->  	if (!tcep) {
-> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> -		/* If allocation fails, fall back to the loop implementation */
-> +		tcep = alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_restore(flags);
->  			return tce_build_pSeriesLP(tbl, tcenum, npages, uaddr,
-> @@ -391,6 +404,7 @@ static int tce_clearrange_multi_pSeriesLP(unsigned long start_pfn,
->  	return rc;
->  }
->  
-> +
->  static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  					unsigned long num_pfn, const void *arg)
->  {
-> @@ -405,7 +419,7 @@ static int tce_setrange_multi_pSeriesLP(unsigned long start_pfn,
->  	tcep = __this_cpu_read(tce_page);
->  
->  	if (!tcep) {
-> -		tcep = (__be64 *)__get_free_page(GFP_ATOMIC);
-> +		tcep = alloc_tce_page();
->  		if (!tcep) {
->  			local_irq_enable();
->  			return -ENOMEM;
-> -- 
-> 1.8.3.1
+diff --git a/drivers/net/wireless/ti/wl1251/sdio.c b/drivers/net/wireless/ti/wl1251/sdio.c
+index 677f1146ccf0..c54a273713ed 100644
+--- a/drivers/net/wireless/ti/wl1251/sdio.c
++++ b/drivers/net/wireless/ti/wl1251/sdio.c
+@@ -16,6 +16,9 @@
+ #include <linux/irq.h>
+ #include <linux/pm_runtime.h>
+ #include <linux/gpio.h>
++#include <linux/of.h>
++#include <linux/of_gpio.h>
++#include <linux/of_irq.h>
+ 
+ #include "wl1251.h"
+ 
+@@ -217,6 +220,7 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+ 	struct ieee80211_hw *hw;
+ 	struct wl1251_sdio *wl_sdio;
+ 	const struct wl1251_platform_data *wl1251_board_data;
++	struct device_node *np = func->dev.of_node;
+ 
+ 	hw = wl1251_alloc_hw();
+ 	if (IS_ERR(hw))
+@@ -248,6 +252,15 @@ static int wl1251_sdio_probe(struct sdio_func *func,
+ 		wl->power_gpio = wl1251_board_data->power_gpio;
+ 		wl->irq = wl1251_board_data->irq;
+ 		wl->use_eeprom = wl1251_board_data->use_eeprom;
++	} else if (np) {
++		wl->use_eeprom =of_property_read_bool(np, "ti,wl1251-has-eeprom");
++		wl->power_gpio = of_get_named_gpio(np, "ti,power-gpio", 0);
++		wl->irq = of_irq_get(np, 0);
++
++		if (wl->power_gpio == -EPROBE_DEFER || wl->irq == -EPROBE_DEFER) {
++			ret = -EPROBE_DEFER;
++			goto disable;
++		}
+ 	}
+ 
+ 	if (gpio_is_valid(wl->power_gpio)) {
+-- 
+2.23.0
+
