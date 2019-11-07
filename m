@@ -2,68 +2,116 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=no
+X-Spam-Status: No, score=-9.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS,USER_AGENT_SANE_1,USER_IN_DEF_DKIM_WL autolearn=no
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AB40C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:37:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAB9C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:42:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3F1E2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:37:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B69482178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 18:42:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=linux.microsoft.com header.i=@linux.microsoft.com header.b="kyb8YsJH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727022AbfKGShe (ORCPT
+        id S1727028AbfKGSmh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 13:37:34 -0500
-Received: from shards.monkeyblade.net ([23.128.96.9]:45814 "EHLO
-        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726036AbfKGShd (ORCPT
+        Thu, 7 Nov 2019 13:42:37 -0500
+Received: from linux.microsoft.com ([13.77.154.182]:54996 "EHLO
+        linux.microsoft.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725883AbfKGSmh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 13:37:33 -0500
-Received: from localhost (unknown [IPv6:2601:601:9f00:1e2::d71])
-        (using TLSv1 with cipher AES256-SHA (256/256 bits))
-        (Client did not present a certificate)
-        (Authenticated sender: davem-davemloft)
-        by shards.monkeyblade.net (Postfix) with ESMTPSA id 27433151EA471;
-        Thu,  7 Nov 2019 10:37:33 -0800 (PST)
-Date:   Thu, 07 Nov 2019 10:37:32 -0800 (PST)
-Message-Id: <20191107.103732.1582617319935662216.davem@davemloft.net>
-To:     jonas@norrbonn.se
-Cc:     nicolas.dichtel@6wind.com, netdev@vger.kernel.org,
+        Thu, 7 Nov 2019 13:42:37 -0500
+Received: from [10.137.112.111] (unknown [131.107.147.111])
+        by linux.microsoft.com (Postfix) with ESMTPSA id 0142220B7192;
+        Thu,  7 Nov 2019 10:42:35 -0800 (PST)
+DKIM-Filter: OpenDKIM Filter v2.11.0 linux.microsoft.com 0142220B7192
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.microsoft.com;
+        s=default; t=1573152156;
+        bh=IIgQX9NCafdzdKDo68gnRTo2ABhXlMLZcXZGDGbYSCo=;
+        h=Subject:To:References:From:Date:In-Reply-To:From;
+        b=kyb8YsJHumSyLq3rC7RM6o3mGIu3AVQWDCrlcnyVYtfYPHWkv+eJuLBSFC405C9T3
+         7Jk3GCscYZavGCi1Rjs4+R1pLaWhEcUk3LhLrP4fO6jBQylW6mXz4hpORlSCvHVGQw
+         RuyPFSx2n2sxVy4qNUTvAnCh4hvVxn6CLoWPg/wI=
+Subject: Re: [PATCH v4 01/10] IMA: Defined an IMA hook to measure keys on key
+ create or update
+To:     Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com,
+        matthewgarrett@google.com, sashal@kernel.org,
+        jamorris@linux.microsoft.com, linux-integrity@vger.kernel.org,
+        linux-security-module@vger.kernel.org, keyrings@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/6] Add namespace awareness to Netlink methods
-From:   David Miller <davem@davemloft.net>
-In-Reply-To: <20191107132755.8517-1-jonas@norrbonn.se>
-References: <20191107132755.8517-1-jonas@norrbonn.se>
-X-Mailer: Mew version 6.8 on Emacs 26.1
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Thu, 07 Nov 2019 10:37:33 -0800 (PST)
+References: <20191106190116.2578-1-nramas@linux.microsoft.com>
+ <20191106190116.2578-2-nramas@linux.microsoft.com>
+ <1573080189.5028.313.camel@linux.ibm.com>
+ <c838a233-28fb-cad2-4694-18366c2643a4@linux.microsoft.com>
+ <1573098037.5028.325.camel@linux.ibm.com>
+From:   Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <7ce84aa0-729e-c58e-f16a-25490b4e336d@linux.microsoft.com>
+Date:   Thu, 7 Nov 2019 10:42:55 -0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:68.0) Gecko/20100101
+ Thunderbird/68.2.1
+MIME-Version: 1.0
+In-Reply-To: <1573098037.5028.325.camel@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jonas Bonn <jonas@norrbonn.se>
-Date: Thu,  7 Nov 2019 14:27:49 +0100
+On 11/6/2019 7:40 PM, Mimi Zohar wrote:
 
-> Changed in v3:
-> - added patch 6 for setting IPv6 address outside current namespace
-> - address checkpatch warnings
-> - address comment from Nicolas
+>>> I would move the patch that defines the "keyring=" policy option prior
+>>> to this one.  Include the call to process_buffer_measurement() in this
+>>> patch.  A subsequent patch would add support to defer measuring the
+>>> key, by calling a function named something like
+>>> ima_queue_key_measurement().
+>>>
+>>> Mimi
+>>
+>> As I'd stated in the other response, I wanted to isolate all key related
+>> code in a separate C file and build it if and only if all CONFIG
+>> dependencies are met.
 > 
-> Changed in v2:
-> - address comment from Nicolas
-> - add accumulated ACK's
-> 
-> Currently, Netlink has partial support for acting outside of the current
-> namespace.  It appears that the intention was to extend this to all the
-> methods eventually, but it hasn't been done to date.
-> 
-> With this series RTM_SETLINK, RTM_NEWLINK, RTM_NEWADDR, and RTM_NEWNSID
-> are extended to respect the selection of the namespace to work in.
+> The basic measuring of keys shouldn't be any different than any other
+> policy rule, other than it is a key and not a file.  This is the
+> reason that I keep saying start out with the basics and then add
+> support to defer measuring keys on the trusted keyrings.
 
-This patch series does not apply cleanly to net-next, please respin.
+I'll make the changes, rearrange the patches and send an updated set.
 
-I think v2 had this problem too.
+I do have a few questions since I am still not fully understanding the 
+requirements you are targeting. Appreciate if you could please clarify.
+
+As you already know, I am using the "public key" of the given asymmetric 
+key as the "buffer" to measure in process_buffer_measurement().
+
+The measurement decision is not based on whether the keyring is a 
+trusted one or an untrusted one. As long as the IMA policy allows 
+(through the "keyrings=" option) the key will be measured.
+
+Do you want only trusted keyrings to be allowed in the measurement?
+In my opinion, that decision should be deferred to whoever is setting up 
+the IMA policy.
+
+> Only the queueing code needed for measuring keys on the trusted
+> keyrings would be in a separate file.
+> 
+> Mimi
+
+The decision to process key immediately or defer (queue) is based on 
+whether IMA has been initialized or not. Keyring is not used for this 
+decision.
+
+Could you please clarify how queuing is related to keyring's 
+trustworthiness?
+
+The check for whether the key is an asymmetric one or not, and 
+extracting the "public key" if it is an asymmetric key needs to be in a 
+separate file to handle the CONFIG dependencies in IMA.
+
+thanks,
+  -lakshmi
+
