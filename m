@@ -2,96 +2,78 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5679C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:26:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 882C2C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:28:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 55CC32084D
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:26:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ellerman.id.au header.i=@ellerman.id.au header.b="gb5wc+hW"
+	by mail.kernel.org (Postfix) with ESMTP id 4A0C42087E
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 10:28:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387918AbfKGK0e (ORCPT
+        id S2387705AbfKGK2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 05:26:34 -0500
-Received: from ozlabs.org ([203.11.71.1]:38627 "EHLO ozlabs.org"
+        Thu, 7 Nov 2019 05:28:51 -0500
+Received: from wtarreau.pck.nerim.net ([62.212.114.60]:14670 "EHLO 1wt.eu"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726866AbfKGK0e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 05:26:34 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 47801f5SWCz9sPT;
-        Thu,  7 Nov 2019 21:26:30 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ellerman.id.au;
-        s=201909; t=1573122391;
-        bh=ubT6PqHfq+AeskgzniFZvOikXlHxhlqZ5cQjsrS0lnQ=;
-        h=From:To:Cc:Subject:In-Reply-To:References:Date:From;
-        b=gb5wc+hWL6b3Ya0OtGZix/sJtUue+204GeoQas8US15HICstxZ6MRb2umgOieCFtU
-         tWQs99Bxp0Yj0OgxFyw4ItXJq4B85MoXu32FHmXJJtfQiAdj9aPEQuBwaVDllUDxP9
-         MlFZLvd+TSUoWnRv7YTnrRClNDLH+hhP9lW0oGcog0c7uzG6s7VUjNqKW16QFJzZz4
-         Un9NpYnNSvlucUMGeg00xE+Az8F/e3URCB2Vmrgw9mC+/DpXJ4g6RLVQUSmjbstMi8
-         Q1ima+wUoaMn0mwroazcEZk4jB2LBbwIrH7yCZRdQn4SD1BvK3hc26dAmxSnzbKCP8
-         xJKrpXUcxgaIg==
-From:   Michael Ellerman <mpe@ellerman.id.au>
-To:     Ram Pai <linuxram@us.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc:     benh@kernel.crashing.org, david@gibson.dropbear.id.au,
-        paulus@ozlabs.org, mdroth@linux.vnet.ibm.com, hch@lst.de,
-        linuxram@us.ibm.com, andmike@us.ibm.com,
-        sukadev@linux.vnet.ibm.com, mst@redhat.com, ram.n.pai@gmail.com,
-        aik@ozlabs.ru, cai@lca.pw, tglx@linutronix.de,
-        bauerman@linux.ibm.com, linux-kernel@vger.kernel.org
-Subject: Re: [RFC v1 2/2] powerpc/pseries/iommu: Use dma_iommu_ops for Secure VMs aswell.
-In-Reply-To: <1572902923-8096-3-git-send-email-linuxram@us.ibm.com>
-References: <1572902923-8096-1-git-send-email-linuxram@us.ibm.com> <1572902923-8096-2-git-send-email-linuxram@us.ibm.com> <1572902923-8096-3-git-send-email-linuxram@us.ibm.com>
-Date:   Thu, 07 Nov 2019 21:26:28 +1100
-Message-ID: <87k18c56ej.fsf@mpe.ellerman.id.au>
+        id S1726866AbfKGK2u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 05:28:50 -0500
+Received: (from willy@localhost)
+        by pcw.home.local (8.15.2/8.15.2/Submit) id xA7ARuBv015631;
+        Thu, 7 Nov 2019 11:27:56 +0100
+Date:   Thu, 7 Nov 2019 11:27:56 +0100
+From:   Willy Tarreau <w@1wt.eu>
+To:     hpa@zytor.com
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Stephen Hemminger <stephen@networkplumber.org>,
+        Juergen Gross <jgross@suse.com>,
+        Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: Re: [patch 5/9] x86/ioport: Reduce ioperm impact for sane usage
+ further
+Message-ID: <20191107102756.GD15536@1wt.eu>
+References: <20191106193459.581614484@linutronix.de>
+ <20191106202806.241007755@linutronix.de>
+ <CAHk-=wjXcS--G3Wd8ZGEOdCNRAWPaUneyN1ryShQL-_yi1kvOA@mail.gmail.com>
+ <20191107082541.GF30739@gmail.com>
+ <20191107091704.GA15536@1wt.eu>
+ <alpine.DEB.2.21.1911071058260.4256@nanos.tec.linutronix.de>
+ <71DE81AC-3AD4-47B3-9CBA-A2C7841A3370@zytor.com>
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <71DE81AC-3AD4-47B3-9CBA-A2C7841A3370@zytor.com>
+User-Agent: Mutt/1.6.1 (2016-04-27)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ram Pai <linuxram@us.ibm.com> writes:
-> This enables IOMMU support for pseries Secure VMs.
+On Thu, Nov 07, 2019 at 02:19:19AM -0800, hpa@zytor.com wrote:
+> >Changing ioperm(single port, port range) to be ioperm(all) is going to
+> >break a bunch of test cases which actually check whether the permission
+> >is restricted to a single I/O port or the requested port range.
+> >
+> >Thanks,
+> >
+> >	tglx
+> 
+> This seems very undesirable... as much as we might wish otherwise, the port
+> bitmap is the equivalent to the MMU, and there are definitely users doing
+> direct device I/O out there.
 
-Can you give us some more explanation please?
+Doing these, sure, but doing these while ranges are really checked ?
+I mean, the MMU grants you access to the pages you were assigned. Here
+with the I/O bitmap you just have to ask for access to port X and you
+get it. I could understand the benefit if we had EBUSY in return but
+that's not the case, you can actually request access to a port range
+another device driver or process is currently using, and mess up with
+what it does even by accident. I remember streaming 1-bit music in
+userland from the LED of my floppy drive in the late-90s, it used to
+cause some trouble to the floppy driver when using mtools in parallel :-)
 
-This is basically a revert of commit:
-  edea902c1c1e ("powerpc/pseries/iommu: Don't use dma_iommu_ops on secure guests")
-
-But neglects to remove the now unnecessary include of svm.h.
-
-> diff --git a/arch/powerpc/platforms/pseries/iommu.c b/arch/powerpc/platforms/pseries/iommu.c
-> index 07f0847..189717b 100644
-> --- a/arch/powerpc/platforms/pseries/iommu.c
-> +++ b/arch/powerpc/platforms/pseries/iommu.c
-> @@ -1333,15 +1333,7 @@ void iommu_init_early_pSeries(void)
->  	of_reconfig_notifier_register(&iommu_reconfig_nb);
->  	register_memory_notifier(&iommu_mem_nb);
->  
-> -	/*
-> -	 * Secure guest memory is inacessible to devices so regular DMA isn't
-> -	 * possible.
-> -	 *
-> -	 * In that case keep devices' dma_map_ops as NULL so that the generic
-> -	 * DMA code path will use SWIOTLB to bounce buffers for DMA.
-
-Please explain what has changed to make this no longer necessary.
-
-cheers
-
-> -	 */
-> -	if (!is_secure_guest())
-> -		set_pci_dma_ops(&dma_iommu_ops);
-> +	set_pci_dma_ops(&dma_iommu_ops);
->  }
->  
->  static int __init disable_multitce(char *str)
-> -- 
-> 1.8.3.1
+Willy
