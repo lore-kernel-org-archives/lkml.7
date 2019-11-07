@@ -7,41 +7,41 @@ X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE763C5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80BC5C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 926D221D7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 44EC221D7B
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 11:06:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="MD16q24A"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="dWW6JDb4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388393AbfKGLGe (ORCPT
+        id S2388420AbfKGLGj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 06:06:34 -0500
-Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.223]:24922 "EHLO
+        Thu, 7 Nov 2019 06:06:39 -0500
+Received: from mo4-p04-ob.smtp.rzone.de ([81.169.146.223]:24472 "EHLO
         mo4-p04-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2388339AbfKGLGa (ORCPT
+        with ESMTP id S2388352AbfKGLGb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 06:06:30 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124788;
+        Thu, 7 Nov 2019 06:06:31 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1573124789;
         s=strato-dkim-0002; d=goldelico.com;
         h=References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
-        bh=11dnnmhb1p7k4nx66KvKMNZIk0qpx8gkJedgWR7HCNM=;
-        b=MD16q24A1R2bYKAfpnmEOq3W+ptbEbMOskZ5Y0iG6nUI/VC2OCgSZf2TnIYI4bQM/D
-        fssLymsiK70+cBOSRSBIhII0AiCahIYiViR0rMzEf4EfCVTnk/lhQ/mb39iob6MJb8jr
-        i43UXGqNc2rg7Jhf3AUIzf1Av4e3GQxyAxbpSirEEBCB28yiaWTIVOgYCoRFQdPM5JAH
-        JJzqJey3yjiRQFa4ybu+BoMCf2j1t1ahUF1v+BDg8soELrWGlk+/n2wHYIsp8msZmtbO
-        t79YA8YT6zk8oP2S3w6SM0aFFovOkjuSzqR8OpmYnihjKYNt3mdeJSFlUG+S1sFFEuWo
-        vGpg==
+        bh=qGPJFeRp1eB4AfwyXs5VJSlMXRQUTzAbitlIJh64goY=;
+        b=dWW6JDb4SMgSCbPCSmBRqgsUEg/847loszW//thPjgwSUvjWW691qt/+kAaTjVjC3/
+        kNBt21w/jXrQFb9CqiR5AiAbqA7IIc4ZMj8VwMh2zlJca1lz28BIrDmZyh6JK4+q/sKK
+        6p1M0UpOhTKDUDyjxeDvqhZZ7sINJ4TXu9HzbTlTtM2epwfUarQx/wjNpRuWPHW+8FHx
+        n40MBfw+LWrS9pU5K6TGbmh4VdDhoRW0jfnM6dgucE2LN4Se96rkBvQm7Z2IpBJH6oHN
+        zMPPh76yvBFF+y+l7zLjEQnw/pxVXuVXyh/aC1EVJii6FBkpgJKYIyShBxvzp8UumrUS
+        eDOA==
 X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMhflhwDubTJ9o1OAA2UNf2M7PR5/L9P0"
 X-RZG-CLASS-ID: mo00
 Received: from iMac.fritz.box
         by smtp.strato.de (RZmta 44.29.0 DYNA|AUTH)
-        with ESMTPSA id L09db3vA7B6Hdh7
+        with ESMTPSA id L09db3vA7B6Gdh2
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
         (Client did not present a certificate);
-        Thu, 7 Nov 2019 12:06:17 +0100 (CET)
+        Thu, 7 Nov 2019 12:06:16 +0100 (CET)
 From:   "H. Nikolaus Schaller" <hns@goldelico.com>
 To:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
         Rob Herring <robh+dt@kernel.org>,
@@ -56,11 +56,10 @@ Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org,
         openpvrsgx-devgroup@letux.org, letux-kernel@openphoenux.org,
         kernel@pyra-handheld.com, linux-mips@vger.kernel.org,
-        "H. Nikolaus Schaller" <hns@goldelico.com>,
-        Paul Boddie <paul@boddie.org.uk>
-Subject: [PATCH v2 8/8] MIPS: DTS: jz4780: add sgx gpu node
-Date:   Thu,  7 Nov 2019 12:06:11 +0100
-Message-Id: <9e5dae8c163c2183e4c6fac5c0c9218782fad665.1573124770.git.hns@goldelico.com>
+        "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2 6/8] ARM: DTS: omap4: add sgx gpu child node
+Date:   Thu,  7 Nov 2019 12:06:09 +0100
+Message-Id: <011fcf5317cc57bd3af4715374a99db131e6e588.1573124770.git.hns@goldelico.com>
 X-Mailer: git-send-email 2.23.0
 In-Reply-To: <cover.1573124770.git.hns@goldelico.com>
 References: <cover.1573124770.git.hns@goldelico.com>
@@ -71,38 +70,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-and add interrupt and clocks.
+and add interrupt.
 
-Tested to build for CI20 board and load a (non-working) driver.
+Since omap4420/30/60 and omap4470 come with different SGX variants
+we need to introduce a new omap4470.dtsi. If an omap4470 board
+does not want to use SGX it is no problem to still include
+omap4460.dtsi.
 
-Suggested-by: Paul Boddie <paul@boddie.org.uk>
+Tested on PandaBoard ES.
+
 Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
 ---
- arch/mips/boot/dts/ingenic/jz4780.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm/boot/dts/omap4.dtsi   |  9 +++++----
+ arch/arm/boot/dts/omap4470.dts | 15 +++++++++++++++
+ 2 files changed, 20 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/omap4470.dts
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4780.dtsi b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-index c54bd7cfec55..21ea5f4a405b 100644
---- a/arch/mips/boot/dts/ingenic/jz4780.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4780.dtsi
-@@ -46,6 +46,17 @@
- 		#clock-cells = <1>;
- 	};
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 7cc95bc1598b..4d5958fbe1ef 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -347,10 +347,11 @@
+ 			#size-cells = <1>;
+ 			ranges = <0 0x56000000 0x2000000>;
  
-+	gpu: gpu@13040000 {
-+		compatible = "ingenic,jz4780-sgx540-120", "img,sgx540-120", "img,sgx540", "img,sgx5";
-+		reg = <0x13040000 0x4000>;
+-			/*
+-			 * Closed source PowerVR driver, no child device
+-			 * binding or driver in mainline
+-			 */
++			sgx: img@0 {
++				compatible = "ti,omap4-sgx540-120", "img,sgx540-120", "img,sgx540";
++				reg = <0x0 0x2000000>;	/* 32MB */
++				interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>;
++			};
+ 		};
+ 
+ 		dss: dss@58000000 {
+diff --git a/arch/arm/boot/dts/omap4470.dts b/arch/arm/boot/dts/omap4470.dts
+new file mode 100644
+index 000000000000..19b554612401
+--- /dev/null
++++ b/arch/arm/boot/dts/omap4470.dts
+@@ -0,0 +1,15 @@
++// SPDX-License-Identifier: GPL-2.0-only
++/*
++ * Device Tree Source for OMAP4470 SoC
++ *
++ * Copyright (C) 2012 Texas Instruments Incorporated - http://www.ti.com/
++ *
++ * This file is licensed under the terms of the GNU General Public License
++ * version 2.  This program is licensed "as is" without any warranty of any
++ * kind, whether express or implied.
++ */
++#include "omap4460.dtsi"
 +
-+		clocks = <&cgu JZ4780_CLK_GPU>;
-+		clock-names = "gpu";
-+
-+		interrupt-parent = <&intc>;
-+		interrupts = <63>;
-+	};
-+
- 	tcu: timer@10002000 {
- 		compatible = "ingenic,jz4780-tcu",
- 			     "ingenic,jz4770-tcu",
++&sgx {
++	compatible = "img,sgx544-112", "img,sgx544", "ti,omap-omap4-sgx544-112";
++};
 -- 
 2.23.0
 
