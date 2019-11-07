@@ -2,192 +2,111 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.7 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.6 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D56F9C5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:16:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16753FC6197
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:17:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A99A22187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:16:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC873214D8
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 03:17:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="DVq4bSIw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733070AbfKGDQn (ORCPT
+        id S1733106AbfKGDR2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 22:16:43 -0500
-Received: from mga03.intel.com ([134.134.136.65]:33378 "EHLO mga03.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727581AbfKGDQn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 22:16:43 -0500
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga002.fm.intel.com ([10.253.24.26])
-  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 06 Nov 2019 19:16:41 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,276,1569308400"; 
-   d="scan'208";a="233106400"
-Received: from chenyu-office.sh.intel.com ([10.239.158.173])
-  by fmsmga002.fm.intel.com with ESMTP; 06 Nov 2019 19:16:39 -0800
-From:   Chen Yu <yu.c.chen@intel.com>
-To:     x86@kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Reinette Chatre <reinette.chatre@intel.com>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Tony Luck <tony.luck@intel.com>, linux-kernel@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org, Chen Yu <yu.c.chen@intel.com>
-Subject: [PATCH] x86/resctrl: Add task resctrl information display
-Date:   Thu,  7 Nov 2019 11:27:31 +0800
-Message-Id: <20191107032731.7790-1-yu.c.chen@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 6 Nov 2019 22:17:28 -0500
+Received: from gateway23.websitewelcome.com ([192.185.49.60]:48455 "EHLO
+        gateway23.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1733084AbfKGDR1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 22:17:27 -0500
+Received: from cm14.websitewelcome.com (cm14.websitewelcome.com [100.42.49.7])
+        by gateway23.websitewelcome.com (Postfix) with ESMTP id 6918F94D6
+        for <linux-kernel@vger.kernel.org>; Wed,  6 Nov 2019 21:17:26 -0600 (CST)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id SYIYiZwubBnGaSYIYiC0Hb; Wed, 06 Nov 2019 21:17:26 -0600
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=Content-Transfer-Encoding:MIME-Version:
+        References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:
+        Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=0e1qX27Ap8ajDLmuZXwZOfgehLgO/33J03C0zj3Kqnk=; b=DVq4bSIwsgmsIRc1uFEMPTBB3B
+        0T99PELzm9lMsc/uAVu8qlx7USbWsv6442onIkbkgwCRNYa2ZlHQxJdCBX6i1KVsPYjKXhlFD6sG4
+        EkGgemDID9w1s+TkHBAcem3zch+0NuWKR/2GTlerMynE8LgH8zmh+dakDJ9+1wROhgBhuJUySpisD
+        FIdf8My4YZ4YQ70UXLWNUUvnk1n/42+f31nqPbEDf0veOBlc4790ox24NmQLdYv6PV7COkRqagPQv
+        Q/21hAozKyOKDhNI3aLBBCuXxBPSppz75ATRS/J4yuAj9LtADQMlQQeeTrNjL8ineiiT1fiQv6BKw
+        m2EyeYcg==;
+Received: from [191.31.194.59] (port=34854 helo=castello.castello)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.92)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1iSYIX-000Mrk-CG; Thu, 07 Nov 2019 00:17:25 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v6 3/5] devicetree: mfd: max14577: Add reference to max14040_battery.txt descriptions
+Date:   Thu,  7 Nov 2019 00:17:08 -0300
+Message-Id: <20191107031710.5672-4-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.24.0.rc2
+In-Reply-To: <20191107031710.5672-1-matheus@castello.eng.br>
+References: <20191105095905.GA31721@pi3>
+ <20191107031710.5672-1-matheus@castello.eng.br>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.31.194.59
+X-Source-L: No
+X-Exim-ID: 1iSYIX-000Mrk-CG
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (castello.castello) [191.31.194.59]:34854
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 49
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Monitoring tools that want to find out which resctrl CTRL
-and MONITOR groups a task belongs to must currently read
-the "tasks" file in every group until they locate the process
-ID.
+max77836 MFD has a fuel gauge that has a low SOC alert feature that is
+described in Documentation/devicetree/bindings/power/supply/max17040_battery.txt.
+Adding the reference to de documentation here.
 
-Add an additional file /proc/{pid}/resctrl to provide this
-information.
-
-For example:
- cat /proc/1193/resctrl
-CTRL_MON:/ctrl_grp0
-MON:/ctrl_grp0/mon_groups/mon_grp0
-
-If the resctrl filesystem has not been mounted,
-reading /proc/{pid}/resctrl returns an error:
-cat: /proc/1193/resctrl: No such device
-
-Tested-by: Jinshi Chen <jinshi.chen@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Tony Luck <tony.luck@intel.com>
-Signed-off-by: Chen Yu <yu.c.chen@intel.com>
-
+Signed-off-by: Matheus Castello <matheus@castello.eng.br>
 ---
- arch/x86/include/asm/resctrl_sched.h   |  4 +++
- arch/x86/kernel/cpu/resctrl/rdtgroup.c | 46 ++++++++++++++++++++++++++
- fs/proc/base.c                         |  9 +++++
- 3 files changed, 59 insertions(+)
+ Documentation/devicetree/bindings/mfd/max14577.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/x86/include/asm/resctrl_sched.h b/arch/x86/include/asm/resctrl_sched.h
-index f6b7fe2833cc..bba362e0e00f 100644
---- a/arch/x86/include/asm/resctrl_sched.h
-+++ b/arch/x86/include/asm/resctrl_sched.h
-@@ -5,6 +5,7 @@
- #ifdef CONFIG_X86_CPU_RESCTRL
- 
- #include <linux/sched.h>
-+#include <linux/proc_fs.h>
- #include <linux/jump_label.h>
- 
- #define IA32_PQR_ASSOC	0x0c8f
-@@ -84,6 +85,9 @@ static inline void resctrl_sched_in(void)
- 		__resctrl_sched_in();
- }
- 
-+int proc_resctrl_show(struct seq_file *m, struct pid_namespace *ns,
-+		      struct pid *pid, struct task_struct *tsk);
-+
- #else
- 
- static inline void resctrl_sched_in(void) {}
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index a46dee8e78db..2317174174e9 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -727,6 +727,52 @@ static int rdtgroup_tasks_show(struct kernfs_open_file *of,
- 	return ret;
- }
- 
-+int proc_resctrl_show(struct seq_file *s, struct pid_namespace *ns,
-+		      struct pid *pid, struct task_struct *tsk)
-+{
-+	struct rdtgroup *rdtg;
-+	int ret = 0;
-+
-+	mutex_lock(&rdtgroup_mutex);
-+
-+	/* Make sure resctrl has been mounted. */
-+	if (!static_branch_unlikely(&rdt_enable_key)) {
-+		ret = -ENODEV;
-+		goto unlock;
-+	}
-+
-+	list_for_each_entry(rdtg, &rdt_all_groups, rdtgroup_list) {
-+		struct rdtgroup *crg;
-+
-+		/*
-+		 * Task information is only relevant for shareable
-+		 * and exclusive groups.
-+		 */
-+		if (rdtg->mode != RDT_MODE_SHAREABLE &&
-+		    rdtg->mode != RDT_MODE_EXCLUSIVE)
-+			continue;
-+
-+		if (rdtg->closid == tsk->closid) {
-+			seq_printf(s, "CTRL_MON:/%s\n", rdtg->kn->name);
-+			list_for_each_entry(crg, &rdtg->mon.crdtgrp_list,
-+					    mon.crdtgrp_list) {
-+				if (tsk->rmid != crg->mon.rmid)
-+					continue;
-+				seq_printf(s, "MON:%s%s/mon_groups/%s\n",
-+					   rdtg == &rdtgroup_default ? "" : "/",
-+					   rdtg->kn->name, crg->kn->name);
-+				goto unlock;
-+			}
-+			goto unlock;
-+		}
-+	}
-+	ret = -ENOENT;
-+unlock:
-+	mutex_unlock(&rdtgroup_mutex);
-+
-+	return ret;
-+}
-+
- static int rdt_last_cmd_status_show(struct kernfs_open_file *of,
- 				    struct seq_file *seq, void *v)
- {
-diff --git a/fs/proc/base.c b/fs/proc/base.c
-index ebea9501afb8..d8a61db78db5 100644
---- a/fs/proc/base.c
-+++ b/fs/proc/base.c
-@@ -95,6 +95,9 @@
- #include <linux/sched/stat.h>
- #include <linux/posix-timers.h>
- #include <trace/events/oom.h>
-+#ifdef CONFIG_X86_CPU_RESCTRL
-+#include <asm/resctrl_sched.h>
-+#endif
- #include "internal.h"
- #include "fd.h"
- 
-@@ -3060,6 +3063,9 @@ static const struct pid_entry tgid_base_stuff[] = {
- #endif
- #ifdef CONFIG_CGROUPS
- 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-+#endif
-+#ifdef CONFIG_X86_CPU_RESCTRL
-+	ONE("resctrl", S_IRUGO, proc_resctrl_show),
- #endif
- 	ONE("oom_score",  S_IRUGO, proc_oom_score),
- 	REG("oom_adj",    S_IRUGO|S_IWUSR, proc_oom_adj_operations),
-@@ -3460,6 +3466,9 @@ static const struct pid_entry tid_base_stuff[] = {
- #endif
- #ifdef CONFIG_CGROUPS
- 	ONE("cgroup",  S_IRUGO, proc_cgroup_show),
-+#endif
-+#ifdef CONFIG_X86_CPU_RESCTRL
-+	ONE("resctrl", S_IRUGO, proc_resctrl_show),
- #endif
- 	ONE("oom_score", S_IRUGO, proc_oom_score),
- 	REG("oom_adj",   S_IRUGO|S_IWUSR, proc_oom_adj_operations),
--- 
-2.17.1
+diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+index fc6f0f4e8beb..04d790b1513c 100644
+--- a/Documentation/devicetree/bindings/mfd/max14577.txt
++++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+@@ -5,6 +5,8 @@ Battery Charger and SFOUT LDO output for powering USB devices. It is
+ interfaced to host controller using I2C.
+
+ MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
++For the description of Fuel Gauge low SOC alert interrupt see:
++Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
+
+ Required properties:
+--
+2.24.0.rc2
 
