@@ -2,110 +2,159 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=no autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 293FCC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:50:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4ED26C5DF60
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:53:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA40A2084C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:50:25 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eR4K+ubh"
+	by mail.kernel.org (Postfix) with ESMTP id 2093021D79
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:53:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573163611;
+	bh=q6SKsLHXv+qLDAv/Si1jE9FsC4EPM3DgeowAA3ZAaX8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YcXbwH5BisQ7T+7YfnyUZPIGkRvG61vT8dBRlunUMf+Pa3vhNO/z/nkf920meaBs9
+	 YJd9vgEhQT6aamdJR+ETY389uFx6iGkANdrMc0fmF3318GOmrfowXqjnHvHXgaNu7Y
+	 dwFbQ7xHWleB/AKRC0emxszM5UCTI8o4z9ZwQTmQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726730AbfKGVuZ (ORCPT
+        id S1726436AbfKGVxa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:50:25 -0500
-Received: from aserp2120.oracle.com ([141.146.126.78]:52764 "EHLO
-        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725870AbfKGVuY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:50:24 -0500
-Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
-        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Ln8UK033167;
-        Thu, 7 Nov 2019 21:50:00 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2019-08-05;
- bh=JOiMpIMuzkYYPmC19kfrXihQ9r3/nAyAF0rQELnGtrA=;
- b=eR4K+ubhN0/lrGO2pFeQKCgt0FG1+3rl3CuT9/oIA8tWurYylZTxlZxgbaCY9hmepMlW
- xxVXgBqsRTWzM99h2ofljbzzYEDEFmf0htjkCtLm/t7WIWEh7h42DEdIMIaFh/tAniEW
- lcrs9VKUPd05esnbaK8udEq6aTeMO3LcUutP48+okaqO4CcK4HbFM1vwmzBtvQ+vhj5Z
- o1VAeOqRTbVej2vhou2sWga3Qy+gbRwA28NP1MHTPneOO0v/+7gp8pBDmJ81CibJNm+J
- OThpHBFmuVCGyvktuJyi4PpmlANdEc4V7FahmV3uPXbf2C29ZM/9hRCBcqS+efi1ZcBw ag== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by aserp2120.oracle.com with ESMTP id 2w41w118rc-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 21:50:00 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA7Ln6o9181290;
-        Thu, 7 Nov 2019 21:49:59 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by aserp3020.oracle.com with ESMTP id 2w4k2x5hv8-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 07 Nov 2019 21:49:59 +0000
-Received: from abhmp0015.oracle.com (abhmp0015.oracle.com [141.146.116.21])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xA7LnvNK003884;
-        Thu, 7 Nov 2019 21:49:57 GMT
-Received: from [192.168.1.206] (/71.63.128.209)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Thu, 07 Nov 2019 13:49:57 -0800
-Subject: Re: [PATCH] hugetlbfs: Take read_lock on i_mmap for PMD sharing
-To:     Matthew Wilcox <willy@infradead.org>,
-        Waiman Long <longman@redhat.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>
-References: <20191107190628.22667-1-longman@redhat.com>
- <20191107195441.GF11823@bombadil.infradead.org>
-From:   Mike Kravetz <mike.kravetz@oracle.com>
-Message-ID: <ed46ef09-7766-eb80-a4ad-4c72d8dba188@oracle.com>
-Date:   Thu, 7 Nov 2019 13:49:55 -0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.2.0
+        Thu, 7 Nov 2019 16:53:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:33440 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725870AbfKGVx3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 16:53:29 -0500
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9828E222C5;
+        Thu,  7 Nov 2019 21:53:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573163608;
+        bh=q6SKsLHXv+qLDAv/Si1jE9FsC4EPM3DgeowAA3ZAaX8=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=IEYJ+z+Mor70QcV2yPq7FiaLWy/3ZTvRV6Xh2eM7/xHDjOvmKWGtDoe1mQSYfMdBc
+         yeyqQm0HIVYRAEhXqnY1mPoCdIIFufty6Fcs/zHKqQVlXu+OQ3CPzOonJTvYYTHxvR
+         6+J+ri0oYQD/oIRQ4Np94MW11oMSPnBmp1gvonaA=
+Received: by mail-qk1-f176.google.com with SMTP id 205so3485224qkk.1;
+        Thu, 07 Nov 2019 13:53:28 -0800 (PST)
+X-Gm-Message-State: APjAAAWcvbBtKAc+5M4yugkY6w24c6HpVtt4uKEEepHwO5/hnbyBk6na
+        LCRPS8J1HHk5lLGEshtd4zK306COH0eRDjEdGg==
+X-Google-Smtp-Source: APXvYqxRrpYDbcHtlqqkdKNshF+TFNs6h/MBQZGDRhUH8Ti1BBiIS+leA9f/5p/0YVNfUwuJ2LVn2w4ciKgHvtx6mNQ=
+X-Received: by 2002:a05:620a:205d:: with SMTP id d29mr5534809qka.152.1573163607663;
+ Thu, 07 Nov 2019 13:53:27 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20191107195441.GF11823@bombadil.infradead.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=982
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1910280000 definitions=main-1911070201
-X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9434 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
- definitions=main-1911070201
+References: <20191028215919.83697-1-john.stultz@linaro.org>
+ <20191028215919.83697-6-john.stultz@linaro.org> <87k18nj4mj.fsf@gmail.com>
+In-Reply-To: <87k18nj4mj.fsf@gmail.com>
+From:   Rob Herring <robh+dt@kernel.org>
+Date:   Thu, 7 Nov 2019 15:53:16 -0600
+X-Gmail-Original-Message-ID: <CAL_JsqJtKMG7FfrHFjKpMx1As954UE2QqzMBOWEB4wGn=rsAug@mail.gmail.com>
+Message-ID: <CAL_JsqJtKMG7FfrHFjKpMx1As954UE2QqzMBOWEB4wGn=rsAug@mail.gmail.com>
+Subject: Re: [PATCH v4 5/9] usb: dwc3: Rework clock initialization to be more flexible
+To:     Felipe Balbi <balbi@kernel.org>
+Cc:     John Stultz <john.stultz@linaro.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        ShuFan Lee <shufan_lee@richtek.com>,
+        Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Chunfeng Yun <chunfeng.yun@mediatek.com>,
+        Yu Chen <chenyu56@huawei.com>,
+        Hans de Goede <hdegoede@redhat.com>,
+        Andy Shevchenko <andy.shevchenko@gmail.com>,
+        Jun Li <lijun.kernel@gmail.com>,
+        Valentin Schneider <valentin.schneider@arm.com>,
+        Jack Pham <jackp@codeaurora.org>,
+        Linux USB List <linux-usb@vger.kernel.org>,
+        devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/7/19 11:54 AM, Matthew Wilcox wrote:
-> Are there other current users of the write lock that could use a read lock?
-> At first blush, it would seem that unmap_ref_private() also only needs
-> a read lock on the i_mmap tree.  I don't think hugetlb_change_protection()
-> needs the write lock either.  Nor retract_page_tables().
+On Tue, Oct 29, 2019 at 4:14 AM Felipe Balbi <balbi@kernel.org> wrote:
+>
+>
+> Hi,
+>
+> John Stultz <john.stultz@linaro.org> writes:
+>
+> > The dwc3 core binding specifies three clocks:
+> >   ref, bus_early, and suspend
+> >
+> > which are all controlled in the driver together.
+> >
+> > However some variants of the hardware my not have all three clks
+>                                         ^^
+>                                         may
+>
+> In fact *all* platforms have all three clocks. It's just that in some
+> cases clock pins are shorted together (or take input from same clock).
+>
+> > So this patch reworks the reading of the clks from the dts to
+> > use devm_clk_bulk_get_all() will will fetch all the clocks
+>                               ^^^^
+>                               which?
+>
+> > specified in the dts together.
+> >
+> > This patch was reccomended by Rob Herring <robh@kernel.org>
+> > as an alternative to creating multiple bindings for each variant
+> > of hardware when the only unique bits were clocks and resets.
+> >
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > CC: ShuFan Lee <shufan_lee@richtek.com>
+> > Cc: Heikki Krogerus <heikki.krogerus@linux.intel.com>
+> > Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
+> > Cc: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > Cc: Yu Chen <chenyu56@huawei.com>
+> > Cc: Felipe Balbi <balbi@kernel.org>
+> > Cc: Hans de Goede <hdegoede@redhat.com>
+> > Cc: Andy Shevchenko <andy.shevchenko@gmail.com>
+> > Cc: Jun Li <lijun.kernel@gmail.com>
+> > Cc: Valentin Schneider <valentin.schneider@arm.com>
+> > Cc: Jack Pham <jackp@codeaurora.org>
+> > Cc: linux-usb@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Suggested-by: Rob Herring <robh@kernel.org>
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> > v3: Rework dwc3 core rather then adding another dwc-of-simple
+> >     binding.
+> > ---
+> >  drivers/usb/dwc3/core.c | 20 +++++---------------
+> >  1 file changed, 5 insertions(+), 15 deletions(-)
+> >
+> > diff --git a/drivers/usb/dwc3/core.c b/drivers/usb/dwc3/core.c
+> > index a039e35ec7ad..4d4f1836b62c 100644
+> > --- a/drivers/usb/dwc3/core.c
+> > +++ b/drivers/usb/dwc3/core.c
+> > @@ -305,12 +305,6 @@ static int dwc3_core_soft_reset(struct dwc3 *dwc)
+> >       return 0;
+> >  }
+> >
+> > -static const struct clk_bulk_data dwc3_core_clks[] = {
+> > -     { .id = "ref" },
+> > -     { .id = "bus_early" },
+> > -     { .id = "suspend" },
+> > -};
+>
+> another option would be to pass three clocks with the same phandle. That
+> would even make sure that clock usage counts are correct, no?
 
-I believe that the semaphore still needs to be held in write mode while
-calling huge_pmd_unshare (as is done in the call sites above).  Why?
-There is this check for sharing in huge_pmd_unshare,
+If you have the datasheet for the block, then perhaps some suggestion
+of which clocks code be the same. My guess would be ref and suspend.
 
-	if (page_count(virt_to_page(ptep)) == 1)
-		return 0;	// implies no sharing
+Maybe suspend is a fixed clock which is unmanaged on HiSilicon
+platforms. If we allow for no clocks on some platforms, then why does
+it have to be all or none?
 
-Note that huge_pmd_share now increments the page count with the semaphore
-held just in read mode.  It is OK to do increments in parallel without
-synchronization.  However, we don't want anyone else changing the count
-while that check in huge_pmd_unshare is happening.  Hence, the need for
-taking the semaphore in write mode.
--- 
-Mike Kravetz
+Rob
