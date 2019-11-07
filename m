@@ -2,171 +2,102 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E12C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B2F9C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7ED552178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E4C62178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="fSiWiSwm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731074AbfKGR6A (ORCPT
+        id S1730939AbfKGR6k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:58:00 -0500
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:39881 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730722AbfKGR6A (ORCPT
+        Thu, 7 Nov 2019 12:58:40 -0500
+Received: from forwardcorp1j.mail.yandex.net ([5.45.199.163]:38238 "EHLO
+        forwardcorp1j.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1730616AbfKGR6j (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:58:00 -0500
-Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.92)
-        (envelope-from <m.tretter@pengutronix.de>)
-        id 1iSm2b-00008c-Ap; Thu, 07 Nov 2019 18:57:53 +0100
-Date:   Thu, 7 Nov 2019 18:57:51 +0100
-From:   Michael Tretter <m.tretter@pengutronix.de>
-To:     Rajan Vaja <rajan.vaja@xilinx.com>
-Cc:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
-        jollys@xilinx.com, linux-clk@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tejas Patel <tejas.patel@xilinx.com>,
-        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
-        kernel@pengutronix.de
-Subject: Re: [PATCH] clk: zynqmp: Add support for clock with
- CLK_DIVIDER_POWER_OF_TWO flag
-Message-ID: <20191107185751.4bb873d9@litschi.hi.pengutronix.de>
-In-Reply-To: <1573116902-7240-1-git-send-email-rajan.vaja@xilinx.com>
-References: <1573116902-7240-1-git-send-email-rajan.vaja@xilinx.com>
-Organization: Pengutronix
-X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+        Thu, 7 Nov 2019 12:58:39 -0500
+Received: from mxbackcorp1o.mail.yandex.net (mxbackcorp1o.mail.yandex.net [IPv6:2a02:6b8:0:1a2d::301])
+        by forwardcorp1j.mail.yandex.net (Yandex) with ESMTP id 55CC52E1552;
+        Thu,  7 Nov 2019 20:58:36 +0300 (MSK)
+Received: from iva8-b53eb3f76dc7.qloud-c.yandex.net (iva8-b53eb3f76dc7.qloud-c.yandex.net [2a02:6b8:c0c:2ca1:0:640:b53e:b3f7])
+        by mxbackcorp1o.mail.yandex.net (mxbackcorp/Yandex) with ESMTP id LeW1YeuNw9-wZAq1p8Q;
+        Thu, 07 Nov 2019 20:58:36 +0300
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
+        t=1573149516; bh=ZKdu7DjjRRV4ojXOZkKZpV6414Sz8SohQFYN9jwXu5M=;
+        h=In-Reply-To:Message-ID:Date:References:To:From:Subject:Cc;
+        b=fSiWiSwmZIWSDf1pPkRCMufYGjtpdUYoIkhXriAlVklPLO91jvQmjFKlkJ1HXG0gZ
+         zb4QTwTE+3I9avjaWF3Ig2isFVpfgsPx7BNulA9xzvM049hlJkSi9xp1pI+oTXBDMO
+         t8QPSVnvIQ5z+SdhTZUNfYwI5vEu+NBYXQQKiUu8=
+Authentication-Results: mxbackcorp1o.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
+Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:8554:53c0:3d75:2e8a])
+        by iva8-b53eb3f76dc7.qloud-c.yandex.net (smtpcorp/Yandex) with ESMTPSA id dPaRliDqHU-wZWqNkRQ;
+        Thu, 07 Nov 2019 20:58:35 +0300
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (Client certificate not present)
+Subject: Re: [PATCH] ext4: deaccount delayed allocations at freeing inode in
+ ext4_evict_inode()
+From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+To:     Andreas Dilger <adilger.kernel@dilger.ca>,
+        linux-ext4@vger.kernel.org, Theodore Ts'o <tytso@mit.edu>,
+        linux-kernel@vger.kernel.org
+Cc:     Dmitry Monakhov <dmtrmonakhov@yandex-team.ru>,
+        Eric Whitney <enwlinux@gmail.com>, Jan Kara <jack@suse.cz>
+References: <157233344808.4027.17162642259754563372.stgit@buzz>
+Message-ID: <c7cb2ea9-2cb8-0af1-3f6d-e5c42d4a016d@yandex-team.ru>
+Date:   Thu, 7 Nov 2019 20:58:34 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.9.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <157233344808.4027.17162642259754563372.stgit@buzz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-CA
 Content-Transfer-Encoding: 7bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
-X-SA-Exim-Mail-From: m.tretter@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 07 Nov 2019 00:55:02 -0800, Rajan Vaja wrote:
-> From: Tejas Patel <tejas.patel@xilinx.com>
++jack@suse.cz into Cc.
+
+On 29/10/2019 10.17, Konstantin Khlebnikov wrote:
+> If inode->i_blocks is zero then ext4_evict_inode() skips ext4_truncate().
+> Delayed allocation extents are freed later in ext4_clear_inode() but this
+> happens when quota reference is already dropped. This leads to leak of
+> reserved space in quota block, which disappears after umount-mount.
 > 
-> Existing clock divider functions is not checking for
-> base of divider. So, if any clock divider is power of 2
-> then clock rate calculation will be wrong.
+> This seems broken for a long time but worked somehow until recent changes
+> in delayed allocation.
 > 
-> Add support to calculate divider value for the clocks
-> with CLK_DIVIDER_POWER_OF_TWO flag.
-> 
-> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
-> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
-> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
 > ---
->  drivers/clk/zynqmp/divider.c | 36 +++++++++++++++++++++++++++++++-----
->  1 file changed, 31 insertions(+), 5 deletions(-)
+>   fs/ext4/inode.c |    9 +++++++++
+>   1 file changed, 9 insertions(+)
 > 
-> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
-> index d8f5b70d..ce63cf5 100644
-> --- a/drivers/clk/zynqmp/divider.c
-> +++ b/drivers/clk/zynqmp/divider.c
-> @@ -2,7 +2,7 @@
->  /*
->   * Zynq UltraScale+ MPSoC Divider support
->   *
-> - *  Copyright (C) 2016-2018 Xilinx
-> + *  Copyright (C) 2016-2019 Xilinx
->   *
->   * Adjustable divider clock implementation
->   */
-> @@ -44,9 +44,26 @@ struct zynqmp_clk_divider {
->  };
->  
->  static inline int zynqmp_divider_get_val(unsigned long parent_rate,
-> -					 unsigned long rate)
-> +					 unsigned long rate, u16 flags)
->  {
-> -	return DIV_ROUND_CLOSEST(parent_rate, rate);
-> +	int up, down;
-> +	unsigned long up_rate, down_rate;
-> +
-> +	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
-> +		up = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
-> +		down = parent_rate / rate;
-
-Maybe use DIV_ROUND_DOWN_ULL()?
-
-> +
-> +		up = __roundup_pow_of_two(up);
-> +		down = __rounddown_pow_of_two(down);
-> +
-> +		up_rate = DIV_ROUND_UP_ULL((u64)parent_rate, up);
-> +		down_rate = DIV_ROUND_UP_ULL((u64)parent_rate, down);
-> +
-> +		return (rate - up_rate) <= (down_rate - rate) ? up : down;
-
-The calculation looks correct. Maybe there could be a common helper
-with the _div_round_closest() function?
-
-> +
-> +	} else {
-> +		return DIV_ROUND_CLOSEST(parent_rate, rate);
-> +	}
->  }
->  
->  /**
-> @@ -78,6 +95,9 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
->  	else
->  		value = div >> 16;
->  
-> +	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-> +		value = 1 << value;
-
-Not sure, but I think a small helper similar to _get_div() would help
-with the readability. Just hide the difference between the normal and
-power of two divisors behind some helper functions.
-
-Michael
-
-> +
->  	if (!value) {
->  		WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
->  		     "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
-> @@ -120,10 +140,13 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
->  		else
->  			bestdiv  = bestdiv >> 16;
->  
-> +		if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-> +			bestdiv = 1 << bestdiv;
-> +
->  		return DIV_ROUND_UP_ULL((u64)*prate, bestdiv);
->  	}
->  
-> -	bestdiv = zynqmp_divider_get_val(*prate, rate);
-> +	bestdiv = zynqmp_divider_get_val(*prate, rate, divider->flags);
->  
->  	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
->  		bestdiv = rate % *prate ? 1 : bestdiv;
-> @@ -151,7 +174,7 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
->  	int ret;
->  	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
->  
-> -	value = zynqmp_divider_get_val(parent_rate, rate);
-> +	value = zynqmp_divider_get_val(parent_rate, rate, divider->flags);
->  	if (div_type == TYPE_DIV1) {
->  		div = value & 0xFFFF;
->  		div |= 0xffff << 16;
-> @@ -160,6 +183,9 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
->  		div |= value << 16;
->  	}
->  
-> +	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
-> +		div = __ffs(div);
-> +
->  	ret = eemi_ops->clock_setdivider(clk_id, div);
->  
->  	if (ret)
+> diff --git a/fs/ext4/inode.c b/fs/ext4/inode.c
+> index 516faa280ced..580898145e8f 100644
+> --- a/fs/ext4/inode.c
+> +++ b/fs/ext4/inode.c
+> @@ -293,6 +293,15 @@ void ext4_evict_inode(struct inode *inode)
+>   				   inode->i_ino, err);
+>   			goto stop_handle;
+>   		}
+> +	} else if (EXT4_I(inode)->i_reserved_data_blocks) {
+> +		/* Deaccount reserve if inode has only delayed allocations. */
+> +		err = ext4_es_remove_extent(inode, 0, EXT_MAX_BLOCKS);
+> +		if (err) {
+> +			ext4_warning(inode->i_sb,
+> +				     "couldn't remove extents %lu (err %d)",
+> +				     inode->i_ino, err);
+> +			goto stop_handle;
+> +		}
+>   	}
+>   
+>   	/* Remove xattr references. */
+> 
