@@ -2,107 +2,167 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS autolearn=no
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEF1CC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D980AC5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1A821D7B
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9BC921882
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 22:55:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573167311;
+	bh=jExGSxODnj6qW8jJKoeORibxwrOMTybXfuDaiSWa98s=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=YJHqyfKOZo/Oarwrtbe3sshhYMLODrF5OQTgPLwZj9FXeUzySs4LYjpWaX62xNnTs
+	 P09Kvo+kiJGi7ZwEvIYKEoc2d+TToThZl0hhsll+XDENRbRH57Tzf9cE1sFdwuSrAq
+	 2qpwy76tu1bWMZhMTWvmF8Aip9qPVEsArDOkkvGo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728292AbfKGWwT (ORCPT
+        id S1727362AbfKGWzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 17:52:19 -0500
-Received: from mga01.intel.com ([192.55.52.88]:21274 "EHLO mga01.intel.com"
+        Thu, 7 Nov 2019 17:55:10 -0500
+Received: from mail.kernel.org ([198.145.29.99]:51138 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725992AbfKGWwT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 17:52:19 -0500
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 14:52:18 -0800
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.68,279,1569308400"; 
-   d="asc'?scan'208";a="205819558"
-Received: from karaker-mobl.amr.corp.intel.com ([10.254.95.244])
-  by orsmga003.jf.intel.com with ESMTP; 07 Nov 2019 14:52:18 -0800
-Message-ID: <6784fee2096c9bb103b8e0b8eb50cc1d9e494ad1.camel@intel.com>
-Subject: Re: [PATCH net-next 1/2] net: ethernet: intel: Demote MTU change
- prints to debug
-From:   Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-To:     Florian Fainelli <f.fainelli@gmail.com>, netdev@vger.kernel.org
-Cc:     "David S. Miller" <davem@davemloft.net>,
-        Timur Tabi <timur@kernel.org>,
-        "moderated list:INTEL ETHERNET DRIVERS" 
-        <intel-wired-lan@lists.osuosl.org>,
-        open list <linux-kernel@vger.kernel.org>
-Date:   Thu, 07 Nov 2019 14:52:17 -0800
-In-Reply-To: <20191107223537.23440-2-f.fainelli@gmail.com>
-References: <20191107223537.23440-1-f.fainelli@gmail.com>
-         <20191107223537.23440-2-f.fainelli@gmail.com>
-Content-Type: multipart/signed; micalg="pgp-sha512";
-        protocol="application/pgp-signature"; boundary="=-+hEZUL/LnhJlbIkpTIaT"
-User-Agent: Evolution 3.32.4 (3.32.4-1.fc30) 
+        id S1725882AbfKGWzK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 17:55:10 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5C3732085B;
+        Thu,  7 Nov 2019 22:55:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573167309;
+        bh=jExGSxODnj6qW8jJKoeORibxwrOMTybXfuDaiSWa98s=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=CoYtf+xLGfDiQfquE2zCW0O1/SA4w1+/M3OThuKGMHV++4ZFRd6kg/yDEDY6ACVnf
+         zWTq4MY7EGiGMrRQElaTliKuFz7ml3CGC40OfboKtZEAOA1bialhhSgwlrz4MbJikR
+         x8CZmnN5FnxlQLarGfonSlGiXRYosy1u01MJFdlw=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <1573111012-29095-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573111012-29095-1-git-send-email-rajan.vaja@xilinx.com>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>, mark.rutland@arm.com,
+        mturquette@baylibre.com, robh+dt@kernel.org
+Cc:     linux-clk@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>,
+        Jolly Shah <jolly.shah@xilinx.com>,
+        Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH] dt-bindings: clock: Add bindings for versal clock driver
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 14:55:08 -0800
+Message-Id: <20191107225509.5C3732085B@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
---=-+hEZUL/LnhJlbIkpTIaT
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2019-11-07 at 14:35 -0800, Florian Fainelli wrote:
-> Changing a network device MTU can be a fairly frequent operation, and
-> failure to change the MTU is reflected to user-space properly, both by
-> an appropriate message as well as by looking at whether the device's MTU
-> matches the configuration.
+Quoting Rajan Vaja (2019-11-06 23:16:52)
+> Add documentation to describe Xilinx Versal clock driver
+> bindings.
 >=20
-> Demote the prints to debug prints by using netdev_dbg(), making all
-> Intel wired LAN drivers consistent, since they used a mixture of PCI
-> device and network device prints before.
->=20
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+> Signed-off-by: Jolly Shah <jolly.shah@xilinx.com>
+> Signed-off-by: Michal Simek <michal.simek@xilinx.com>
 
-Acked-by: Jeff Kirsher <jeffrey.t.kirsher@intel.com>
+Signoff chain is all wrong. The sender should come last. Please read up
+on how to submit patches to the kernel with proper SoB chains in kernel
+docs. I can dig it up if you can't find it.
 
 > ---
->  drivers/net/ethernet/intel/e1000/e1000_main.c | 4 ++--
->  drivers/net/ethernet/intel/e1000e/netdev.c    | 3 ++-
->  drivers/net/ethernet/intel/i40e/i40e_main.c   | 4 ++--
->  drivers/net/ethernet/intel/igb/igb_main.c     | 5 ++---
->  drivers/net/ethernet/intel/igbvf/netdev.c     | 4 ++--
->  drivers/net/ethernet/intel/igc/igc_main.c     | 5 ++---
->  drivers/net/ethernet/intel/ixgbe/ixgbe_main.c | 3 ++-
->  7 files changed, 14 insertions(+), 14 deletions(-)
+>  .../devicetree/bindings/clock/xlnx,versal-clk.txt  |  48 ++++++++
+>  include/dt-bindings/clock/xlnx-versal-clk.h        | 123 +++++++++++++++=
+++++++
+>  2 files changed, 171 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/xlnx,versal-c=
+lk.txt
+>  create mode 100644 include/dt-bindings/clock/xlnx-versal-clk.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt =
+b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt
+> new file mode 100644
+> index 0000000..398e751
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/xlnx,versal-clk.txt
 
+Can you write this in YAML so we can validate it?
 
---=-+hEZUL/LnhJlbIkpTIaT
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
+> @@ -0,0 +1,48 @@
+> +------------------------------------------------------------------------=
+--
+> +Device Tree Clock bindings for the Xilinx Versal
+> +------------------------------------------------------------------------=
+--
+> +The clock controller is a h/w block of Xilinx versal clock tree. It reads
+> +required input clock frequencies from the devicetree and acts as clock p=
+rovider
+> +for all clock consumers of PS clocks.
+> +
+> +See clock_bindings.txt for more information on the generic clock binding=
+s.
+> +
+> +Required properties:
+> + - #clock-cells:       Must be 1
+> + - compatible:         Must contain:   "xlnx,versal-clk"
+> + - clocks:             List of clock specifiers which are external input
+> +                       clocks to the given clock controller. Please refer
+> +                       the next section to find the input clocks for a
+> +                       given controller.
+> + - clock-names:                List of clock names which are exteral inp=
+ut clocks
+> +                       to the given clock controller. Please refer to the
+> +                       clock bindings for more details.
+> +
+> +Input clocks for Xilinx Versal clock controller:
+> +
+> +The Xilinx Versal has one primary and two alternative reference clock in=
+puts.
+> +These required clock inputs are:
+> + - ref_clk
+> + - alt_ref_clk
+> + - pl_alt_ref_clk
+> +
+> +Output clocks are registered based on clock information received
+> +from firmware. Output clocks indexes are mentioned in
+> +include/dt-bindings/clock/xlnx-versal-clk.h.
+> +
+> +-------
+> +Example
+> +-------
+> +
+> +firmware {
+> +       versal_firmware: versal-firmware {
+> +               compatible =3D "xlnx,versal-firmware";
+> +               method =3D "smc";
+> +               versal_clk: clock-controller {
+> +                       #clock-cells =3D <1>;
+> +                       compatible =3D "xlnx,versal-clk";
+> +                       clocks =3D <&ref_clk>, <&alt_ref_clk>, <&pl_alt_r=
+ef_clk>;
+> +                       clock-names =3D "ref_clk", "alt_ref_clk", "pl_alt=
+_ref_clk";
+> +               };
+> +       };
+> +};
+> diff --git a/include/dt-bindings/clock/xlnx-versal-clk.h b/include/dt-bin=
+dings/clock/xlnx-versal-clk.h
+> new file mode 100644
+> index 0000000..264d634
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/xlnx-versal-clk.h
+> @@ -0,0 +1,123 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + *  Copyright (C) 2019 Xilinx Inc.
+> + *
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLK_VERSAL_H
+> +#define _DT_BINDINGS_CLK_VERSAL_H
+> +
+> +#define PMC_PLL                                        1
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEiTyZWz+nnTrOJ1LZ5W/vlVpL7c4FAl3EoCEACgkQ5W/vlVpL
-7c6Hkw//RAJ6/Y27nm995XzPzodZn0WzSEYsVPgc31gxVqdbPB3ZjbKCqxAgbnth
-EA0ktXZh15OLcrONJB73WKDbPaeAGGXB+nPiGWa+6YApJ6YLh1feoqMUnB2Ah6RF
-S8o2z3vsXFhzt28Zl0OEIou6/haJLy5ZhSOo9ftaKJmAWgQXbJ8IKQX5HEx4Y4W3
-UQ/Zgcly2OgwoHHBwyYEyawhVJbl7+vOyjuk7DZUc9zWuCAOhd2whv74q6JNxS95
-1QS3IpETL/S5GJ+FRM5Ijd8FmKxp9/FyknnxWF6mirtqlDTY+jwmmuQtVoKseH/+
-RIxJ83NjX8PUtFNRXdRtW16y6OUGe1A1KGMC25u35N4ZSV63fma0d9+zIQzymKfr
-8zVP5W1eGK+4lIJq8t8vZUybYPGXF+XevodBpavPX5x89c0yqe3XKNVrjgH1/FVv
-J42nRFPijGxnDiUOz+5AgLmNrHy3zV8014fn7rTfpRoPIx+Wq+NoB3fZBZMeFfWA
-IVBa7VWe+Xfg7N8GJbAiqTdiy5OScb0bcgv3vKt2f4kWdels0Zk3EkyqybozuKN3
-QHl35P0L+p2K5wcC5LGS5jk8iQhcC61fQVar/aAOTR8uXKj9HmPScrQVf48ovA55
-lcNSdYZobNrqG2jt/HgTu2pLMzi2Hy8Hc1Ux8thywIzrPKVad/Q=
-=wWG1
------END PGP SIGNATURE-----
-
---=-+hEZUL/LnhJlbIkpTIaT--
+Why not start with 0?
 
