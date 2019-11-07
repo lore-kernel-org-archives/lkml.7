@@ -2,143 +2,172 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_HELO_NONE,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0EDCC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:40:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A44F1C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:42:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B72DB2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:40:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bJbjU2Mf"
+	by mail.kernel.org (Postfix) with ESMTP id 7E5A02178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 15:42:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389182AbfKGPkg (ORCPT
+        id S2387412AbfKGPmP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 10:40:36 -0500
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:46981 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730114AbfKGPkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 10:40:35 -0500
-Received: by mail-lf1-f66.google.com with SMTP id 19so1920245lft.13;
-        Thu, 07 Nov 2019 07:40:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=3wfpECuF12H+DE1PZtlOEqiGcYmjEL0HWEfgaBT4lbM=;
-        b=bJbjU2MfoF4N8Ri1rVIdHg4m03cNn8SW9jOhXXeQO0kuaNF5bTOtxzBq2S8NFzKBqP
-         IcO351Le3xMLgl1iFeBBatrsr5reYoa+jHbcwtbD58rr0qAIr8fEtMilenNIwJnyrQV8
-         sd+ikiYu0r4wz/yBI65aSBNf3EmWzm1wL7ybh3ynGl88ftf3CmwDglI+jO2IJTJmxIO9
-         gOfvPtpEDb9BwNg7Ws3/69WrgaKiPX9ti0q3PTbSK/Lw5sTu+iXWHJdE9yUEOLnWU3Wd
-         iigsas+K15fxkvfyafGu1jxtNiEDVX2mnkDNwrVSPLhxRYu2FRpbLtJwKiZxC9HcRmmX
-         hx3w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=3wfpECuF12H+DE1PZtlOEqiGcYmjEL0HWEfgaBT4lbM=;
-        b=KXwJREQWQSpbSKirq5ke0Lmqafocc6dwSimYQo7KXtpFCp1Snn641OFMrTgxkGmqML
-         D5yfcMm8oKvoiRB0NPHmOu5pVcy3BhmH1kRWF9Sp1tBJDRRgjV/JN3u+M3AxDRDPSdpX
-         21oB4bn83NVtf1UfNGUFs/9SWZokd4kTMT+TNhEPhbxlTgLl9afhAsA3SDCscTQhQVV3
-         UataU8xae1CSdVDvT5cZ0U8h+YewXupmzgn4bKcm80TUB3+g23gSwUBoNCgFzJ02YSRY
-         l/SyE+kuYHzjCYVqAnFWtGQnULbUWnEkdmn3E+kB2DgzWE8RkBGokYcgyb0+yzLRU4YX
-         hFMQ==
-X-Gm-Message-State: APjAAAXYVCMcJHmsc+2+V4WSmm5qfu01nn5GX6uHJu0mjQjfw1RbiKzU
-        O5aiAFxIv5mawjrewDwFQxEtZbGwiEjACiAKTK8=
-X-Google-Smtp-Source: APXvYqy28CEsAIgaxf8ySUF97vlGB/pLswajdJxXB007SZ9AZuUinPdeAUK7kjTrQQ6CfPiZrS5vS5B4dWjHsnv6E7A=
-X-Received: by 2002:ac2:4a8a:: with SMTP id l10mr2816632lfp.185.1573141233381;
- Thu, 07 Nov 2019 07:40:33 -0800 (PST)
+        Thu, 7 Nov 2019 10:42:15 -0500
+Received: from mga12.intel.com ([192.55.52.136]:36427 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726231AbfKGPmP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 10:42:15 -0500
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 07 Nov 2019 07:42:14 -0800
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.68,278,1569308400"; 
+   d="scan'208";a="201426943"
+Received: from stinkbox.fi.intel.com (HELO stinkbox) ([10.237.72.174])
+  by fmsmga007.fm.intel.com with SMTP; 07 Nov 2019 07:42:10 -0800
+Received: by stinkbox (sSMTP sendmail emulation); Thu, 07 Nov 2019 17:42:09 +0200
+Date:   Thu, 7 Nov 2019 17:42:09 +0200
+From:   Ville =?iso-8859-1?Q?Syrj=E4l=E4?= <ville.syrjala@linux.intel.com>
+To:     allen <allen.chen@ite.com.tw>
+Cc:     Jau-Chih Tseng <Jau-Chih.Tseng@ite.com.tw>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        open list <linux-kernel@vger.kernel.org>,
+        "open list:DRM DRIVERS" <dri-devel@lists.freedesktop.org>,
+        David Airlie <airlied@linux.ie>,
+        Pi-Hsun Shih <pihsun@chromium.org>, Sean Paul <sean@poorly.run>
+Subject: Re: [PATCH] drm/edid: fixup EDID 1.3 and 1.4 judge reduced-blanking
+ timings logic
+Message-ID: <20191107154209.GC1208@intel.com>
+References: <1572856969-12115-1-git-send-email-allen.chen@ite.com.tw>
 MIME-Version: 1.0
-References: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1573092393-26885-1-git-send-email-Anson.Huang@nxp.com>
-From:   Fabio Estevam <festevam@gmail.com>
-Date:   Thu, 7 Nov 2019 12:40:24 -0300
-Message-ID: <CAOMZO5CiR7-YmAUggdt9rdZpNYKzQTFY5zGGGQ2k06Qc7pkg_Q@mail.gmail.com>
-Subject: Re: [PATCH V2 1/4] ARM: dts: imx6sll: Update usdhc fallback
- compatible to support HS400 mode
-To:     Anson Huang <Anson.Huang@nxp.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Marcel Ziswiler <marcel.ziswiler@toradex.com>,
-        =?UTF-8?Q?S=C3=A9bastien_Szymanski?= 
-        <sebastien.szymanski@armadeus.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        NXP Linux Team <Linux-imx@nxp.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <1572856969-12115-1-git-send-email-allen.chen@ite.com.tw>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Anson,
+On Mon, Nov 04, 2019 at 04:42:49PM +0800, allen wrote:
+> According to VESA ENHANCED EXTENDED DISPLAY IDENTIFICATION DATA STANDARD
+> (Defines EDID Structure Version 1, Revision 4) page: 39
+> How to determine whether the monitor support RB timing or not?
+> EDID 1.4
+> First:  read detailed timing descriptor and make sure byte0 = 0,
+> 	byte1 = 0, byte2 = 0 and byte3 = 0xFD
 
-On Wed, Nov 6, 2019 at 11:08 PM Anson Huang <Anson.Huang@nxp.com> wrote:
->
-> The latest i.MX6SLL EVK board supports HS400 mode, update usdhc's
+That should probably be some new function:
+bool is_display_descriptor(const u8 *desc, u8 tag);
+is_display_descriptor(EDID_DETAIL_MONITOR_RANGE)
+or something along those lines
 
-Since this is a dtsi patch, it is better not to mention a specific
-board here in the commit log.
+We don't seem to check that in most places so should be rolled out all
+over. The usage of struct detailed_timing all over also makes everything
+rather confusing.
 
-It would be better to say that unlike i.MX6SL, the i.MX6SLL SoC can
-support HS400 mode, hence fsl,imx7d-usdhc should be used as compatible
-string.
+> Second: read detailed timing descriptor byte10 = 0x04 and
+> 	EDID byte18h bit0 = 1
 
-Regards,
+Indicates CVT support. Should give these things real names so
+one wouldn't have to decode by hand.
 
-Fabio Estevam
-> fallback compatible to support HS400 mode by default.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Third:  if EDID byte18h bit0 == 1 && byte10 == 0x04,
+> 	then we can check byte15, if byte15 bit4 =1 is support RB
+>         if EDID byte18h bit0 != 1 || byte10 != 0x04,
+> 	then byte15 can not be used
+> 
+> The linux code is_rb function not follow the VESA's rule
+> 
+> EDID 1.3
+> LCD flat panels do not require long blanking intervals as a retrace
+> period so default support reduced-blanking timings.
+> 
+> Signed-off-by: Allen Chen <allen.chen@ite.com.tw>
+> Reported-by: kbuild test robot <lkp@intel.com>
 > ---
-> No changes.
-> ---
->  arch/arm/boot/dts/imx6sll.dtsi | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-> index 85aa8bb..1c8101f 100644
-> --- a/arch/arm/boot/dts/imx6sll.dtsi
-> +++ b/arch/arm/boot/dts/imx6sll.dtsi
-> @@ -698,7 +698,7 @@
->                         };
->
->                         usdhc1: mmc@2190000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02190000 0x4000>;
->                                 interrupts = <GIC_SPI 22 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC1>,
-> @@ -712,7 +712,7 @@
->                         };
->
->                         usdhc2: mmc@2194000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02194000 0x4000>;
->                                 interrupts = <GIC_SPI 23 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC2>,
-> @@ -726,7 +726,7 @@
->                         };
->
->                         usdhc3: mmc@2198000 {
-> -                               compatible = "fsl,imx6sll-usdhc", "fsl,imx6sx-usdhc";
-> +                               compatible = "fsl,imx6sll-usdhc", "fsl,imx7d-usdhc";
->                                 reg = <0x02198000 0x4000>;
->                                 interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
->                                 clocks = <&clks IMX6SLL_CLK_USDHC3>,
-> --
-> 2.7.4
->
+>  drivers/gpu/drm/drm_edid.c | 28 +++++++++++++++++++++-------
+>  1 file changed, 21 insertions(+), 7 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_edid.c b/drivers/gpu/drm/drm_edid.c
+> index e5e7e65..9b67b80 100644
+> --- a/drivers/gpu/drm/drm_edid.c
+> +++ b/drivers/gpu/drm/drm_edid.c
+> @@ -93,6 +93,11 @@ struct detailed_mode_closure {
+>  	int modes;
+>  };
+>  
+> +struct edid_support_rb_closure {
+> +	struct edid *edid;
+> +	s8 support_rb;
+
+bool
+
+> +};
+> +
+>  #define LEVEL_DMT	0
+>  #define LEVEL_GTF	1
+>  #define LEVEL_GTF2	2
+> @@ -2018,22 +2023,31 @@ struct drm_display_mode *drm_mode_find_dmt(struct drm_device *dev,
+>  is_rb(struct detailed_timing *t, void *data)
+>  {
+>  	u8 *r = (u8 *)t;
+> -	if (r[3] == EDID_DETAIL_MONITOR_RANGE)
+> -		if (r[15] & 0x10)
+> -			*(bool *)data = true;
+> +	struct edid_support_rb_closure *closure = data;
+> +	struct edid *edid = closure->edid;
+> +
+> +	if (!r[0] && !r[1] && !r[2] && r[3] == EDID_DETAIL_MONITOR_RANGE) {
+> +		if (edid->features & BIT(0) && r[10] == BIT(2))
+> +			closure->support_rb = (r[15] & 0x10) ? 1 : 0;
+
+With the bool the ternary operator is not needed. Also should maybe 
+be |= in case we have multiple range descriptors? Not sure that is
+legal.
+
+> +	}
+>  }
+>  
+>  /* EDID 1.4 defines this explicitly.  For EDID 1.3, we guess, badly. */
+>  static bool
+>  drm_monitor_supports_rb(struct edid *edid)
+>  {
+> +	struct edid_support_rb_closure closure = {
+> +		.edid = edid,
+> +		.support_rb = -1,
+> +	};
+> +
+>  	if (edid->revision >= 4) {
+> -		bool ret = false;
+> -		drm_for_each_detailed_block((u8 *)edid, is_rb, &ret);
+> -		return ret;
+> +		drm_for_each_detailed_block((u8 *)edid, is_rb, &closure);
+> +		if (closure.support_rb >= 0)
+> +			return closure.support_rb;
+>  	}
+>  
+> -	return ((edid->input & DRM_EDID_INPUT_DIGITAL) != 0);
+> +	return true;
+
+Why are we now assuming rb for all pre 1.4 EDIDs?
+
+>  }
+>  
+>  static void
+> -- 
+> 1.9.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Ville Syrjälä
+Intel
