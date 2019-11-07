@@ -2,124 +2,72 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
-	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
+	SPF_PASS,URIBL_BLOCKED autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB679C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:11:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18085C5DF61
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:11:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D8B421D7E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:11:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="j95uG9wU"
+	by mail.kernel.org (Postfix) with ESMTP id D9B5F20869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 21:11:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1573161090;
+	bh=gqfDfrBnuQo+Z0mKDvJgEmduNsQSfl0fa6i3Yyq/oTM=;
+	h=In-Reply-To:References:From:To:Cc:Subject:Date:List-ID:From;
+	b=PuJXeJrMt8LPkfbKE3dxI0VqdqjJYi9B61wp9wEqS2Tlm1TjNsZt8TftjpUv1KguF
+	 j6r4vpH05bEaq74nXHhp6XhmFCYM6pg7C5mjvhnogxK0ZC7bdNXv5Xlrzi2xq4mfTu
+	 tldwbd8NUMRqTHpZFCoHGpobiZHCxwt2dMhlpRmM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727151AbfKGVLZ (ORCPT
+        id S1727401AbfKGVLa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 16:11:25 -0500
-Received: from ozlabs.org ([203.11.71.1]:44457 "EHLO ozlabs.org"
+        Thu, 7 Nov 2019 16:11:30 -0500
+Received: from mail.kernel.org ([198.145.29.99]:45724 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725893AbfKGVLZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 16:11:25 -0500
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1725893AbfKGVL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 16:11:29 -0500
+Received: from kernel.org (unknown [104.132.0.74])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 478GKj2gtzz9sP4;
-        Fri,  8 Nov 2019 08:11:20 +1100 (AEDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1573161082;
-        bh=DqoFjaTZQRDfZA2fZkgv0zwhVGYU6OelHQKxH+WDsiQ=;
-        h=Date:From:To:Cc:Subject:From;
-        b=j95uG9wU4r0F0qIdKklgRuZ0B6qGF/B55YbuHVoQTbQVhM6QzysmUn5D0GQ2Vyj0A
-         p5iOZdSRdvcm/ze1BO3vaHrE15Fdva5I9yax0p4rMndTDfwhUGrF0dSyoYOnjb2tIh
-         8WbGxecXrETC43+0+srTkLEgWMm6k9l/8akctJAWpbqt1I+ausACanvbYm1oAAL2pV
-         NJvVv88PORWM9JWPYKO6JEanLkt04z6jyCYEEptDHETzF0uN55QfeqG+XppWhu2qbA
-         M1TpkCHqC7OsgKjEgaFP6lagvRGMerA/FGeksj4FzNtNBchMpwI0NH4VLMxQrh9yjF
-         r4wEgqNqeSiQw==
-Date:   Fri, 8 Nov 2019 08:11:09 +1100
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will@kernel.org>, Christoph Hellwig <hch@lst.de>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: linux-next: manual merge of the arm64 tree with the dma-mapping
- tree
-Message-ID: <20191108081109.28867ba1@canb.auug.org.au>
+        by mail.kernel.org (Postfix) with ESMTPSA id AC26820869;
+        Thu,  7 Nov 2019 21:11:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1573161088;
+        bh=gqfDfrBnuQo+Z0mKDvJgEmduNsQSfl0fa6i3Yyq/oTM=;
+        h=In-Reply-To:References:From:To:Cc:Subject:Date:From;
+        b=e95Pv5qsUcRTsMOAv/RrDINlnv8VDglS0sUGW0z4CPRc3LXVsk9pN7eXyANqba8Rx
+         lJf2Pxz/OfHK7+CNZQnUSmePybr8ucuKme9fImLFZt3/9n9LGsf6HJiNzsvKbgyelx
+         vrA9giSMo11+pHDl6PIz0mQ7jS0QprigXZQ1OVKA=
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="Sig_/U6c804ldPHEs8oBD9=TaX3_";
- protocol="application/pgp-signature"; micalg=pgp-sha256
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20191014102308.27441-2-tdas@codeaurora.org>
+References: <20191014102308.27441-1-tdas@codeaurora.org> <20191014102308.27441-2-tdas@codeaurora.org>
+From:   Stephen Boyd <sboyd@kernel.org>
+To:     Michael Turquette <mturquette@baylibre.com>,
+        Taniya Das <tdas@codeaurora.org>
+Cc:     David Brown <david.brown@linaro.org>,
+        Rajendra Nayak <rnayak@codeaurora.org>,
+        linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org,
+        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
+        devicetree@vger.kernel.org, robh@kernel.org, robh+dt@kernel.org,
+        Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v4 1/5] clk: qcom: rcg: update the DFS macro for RCG
+User-Agent: alot/0.8.1
+Date:   Thu, 07 Nov 2019 13:11:27 -0800
+Message-Id: <20191107211128.AC26820869@mail.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/U6c804ldPHEs8oBD9=TaX3_
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Quoting Taniya Das (2019-10-14 03:23:04)
+> Update the init data name for each of the dynamic frequency switch
+> controlled clock associated with the RCG clock name, so that it can be
+> generated as per the hardware plan. Thus update the macro accordingly.
+>=20
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
 
-Hi all,
+Applied to clk-next
 
-Today's linux-next merge of the arm64 tree got a conflict in:
-
-  include/linux/dma-direct.h
-
-between commit:
-
-  b0817901ba21 ("dma-direct: check for overflows on 32 bit DMA addresses")
-
-from the dma-mapping tree and commit:
-
-  8b5369ea5809 ("dma/direct: turn ARCH_ZONE_DMA_BITS into a variable")
-
-from the arm64 tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/dma-direct.h
-index 6db863c3eb93,d03af3605460..000000000000
---- a/include/linux/dma-direct.h
-+++ b/include/linux/dma-direct.h
-@@@ -3,11 -3,10 +3,13 @@@
-  #define _LINUX_DMA_DIRECT_H 1
- =20
-  #include <linux/dma-mapping.h>
- +#include <linux/memblock.h> /* for min_low_pfn */
-  #include <linux/mem_encrypt.h>
- =20
-+ extern unsigned int zone_dma_bits;
-+=20
- +static inline dma_addr_t phys_to_dma(struct device *dev, phys_addr_t padd=
-r);
- +
-  #ifdef CONFIG_ARCH_HAS_PHYS_TO_DMA
-  #include <asm/dma-direct.h>
-  #else
-
---Sig_/U6c804ldPHEs8oBD9=TaX3_
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAl3EiG0ACgkQAVBC80lX
-0Gzrmgf9F0EJ6X6GP7knhR0Pxq1/XXlIb8EvhDJTuAbTR9FeLBISLm1ptgXYE4+G
-11E+IgxnhLNvSuJjYKy8mjbC1zCZX3TXLc6LEbyLhC4119fIpvG1LrfM5+9ptkfA
-H+IxA0E9n5bFc3mFjDomuMF/AFKHxcDvfIOs6JNknbdwjRU90MyjuxG/5KMDgjyN
-KvKMImWZzR76erivz/QFt1bfn3COSW0S86bdHswcbcN9fbKvpETMJJX/qH3wTW19
-SQ+wjAzaxKPM6M+7uEXyaEW4vuXNF9YZYzVO1wKanhaoS/n/cs+/BTl3cIDZoijT
-XGk2tIxwIx07GKy1QELFay2wxGk8VA==
-=nJXk
------END PGP SIGNATURE-----
-
---Sig_/U6c804ldPHEs8oBD9=TaX3_--
