@@ -2,108 +2,108 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_HELO_NONE,SPF_PASS,
-	USER_AGENT_SANE_1 autolearn=no autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.8 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D217AC5DF61
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:02:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 487F0C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A91B92166E
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:02:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1573146124;
-	bh=W+CKAoVKOrQ1tCetrkjkS2dgjL5jTJK79aS6yD98cYw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=BBj/srM/XeNovUt2KfwZ1W2ZRMJ0rWFzo98g6hyYHMQwMtbDAtrpE61c4Y9eppmt9
-	 H0YrSMHmHn4psP7J8yGLVPbHehweZO9KRjpU3oBY6Wem4EduXZHKAYEiggl1ygKGHp
-	 s1CEHTnczsHxGXM5Omvy47sJ0agQ8FaQoB4YiOWY=
+	by mail.kernel.org (Postfix) with ESMTP id 25D262077C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:03:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2389414AbfKGRCD (ORCPT
+        id S1730579AbfKGRD1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:02:03 -0500
-Received: from mx2.suse.de ([195.135.220.15]:47682 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726231AbfKGRCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:02:03 -0500
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 92CBAAB9D;
-        Thu,  7 Nov 2019 17:02:01 +0000 (UTC)
-Date:   Thu, 7 Nov 2019 18:02:00 +0100
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Roman Gushchin <guro@fb.com>
-Cc:     "linux-mm@kvack.org" <linux-mm@kvack.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Kernel Team <Kernel-team@fb.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 1/2] mm: memcg: switch to css_tryget() in
- get_mem_cgroup_from_mm()
-Message-ID: <20191107170200.GX8314@dhcp22.suse.cz>
-References: <20191106225131.3543616-1-guro@fb.com>
- <20191107122125.GS8314@dhcp22.suse.cz>
- <20191107164236.GB2919@castle.dhcp.thefacebook.com>
+        Thu, 7 Nov 2019 12:03:27 -0500
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46612 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727606AbfKGRD1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Thu, 7 Nov 2019 12:03:27 -0500
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7GsG0T144728;
+        Thu, 7 Nov 2019 12:03:12 -0500
+Received: from ppma01dal.us.ibm.com (83.d6.3fa9.ip4.static.sl-reverse.com [169.63.214.131])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4nfans6p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Nov 2019 12:03:10 -0500
+Received: from pps.filterd (ppma01dal.us.ibm.com [127.0.0.1])
+        by ppma01dal.us.ibm.com (8.16.0.27/8.16.0.27) with SMTP id xA7H1Yvb030675;
+        Thu, 7 Nov 2019 17:03:04 GMT
+Received: from b01cxnp22035.gho.pok.ibm.com (b01cxnp22035.gho.pok.ibm.com [9.57.198.25])
+        by ppma01dal.us.ibm.com with ESMTP id 2w41ujmptj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Thu, 07 Nov 2019 17:03:04 +0000
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7H34CT52167014
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 7 Nov 2019 17:03:04 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EAADCAE064;
+        Thu,  7 Nov 2019 17:03:03 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id D78E8AE060;
+        Thu,  7 Nov 2019 17:03:02 +0000 (GMT)
+Received: from LeoBras.br.ibm.com (unknown [9.18.235.40])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Thu,  7 Nov 2019 17:03:02 +0000 (GMT)
+From:   Leonardo Bras <leonardo@linux.ibm.com>
+To:     kvm-ppc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        linux-kernel@vger.kernel.org
+Cc:     Leonardo Bras <leonardo@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>
+Subject: [PATCH v2 1/4] powerpc/kvm/book3s: Fixes possible 'use after release' of kvm
+Date:   Thu,  7 Nov 2019 14:02:55 -0300
+Message-Id: <20191107170258.36379-2-leonardo@linux.ibm.com>
+X-Mailer: git-send-email 2.23.0
+In-Reply-To: <20191107170258.36379-1-leonardo@linux.ibm.com>
+References: <20191107170258.36379-1-leonardo@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191107164236.GB2919@castle.dhcp.thefacebook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=887 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1910280000 definitions=main-1911070159
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 07-11-19 16:42:41, Roman Gushchin wrote:
-> On Thu, Nov 07, 2019 at 01:21:25PM +0100, Michal Hocko wrote:
-> > On Wed 06-11-19 14:51:30, Roman Gushchin wrote:
-> > > We've encountered a rcu stall in get_mem_cgroup_from_mm():
-> > > 
-> > >  rcu: INFO: rcu_sched self-detected stall on CPU
-> > >  rcu: 33-....: (21000 ticks this GP) idle=6c6/1/0x4000000000000002 softirq=35441/35441 fqs=5017
-> > >  (t=21031 jiffies g=324821 q=95837) NMI backtrace for cpu 33
-> > >  <...>
-> > >  RIP: 0010:get_mem_cgroup_from_mm+0x2f/0x90
-> > >  <...>
-> > >  __memcg_kmem_charge+0x55/0x140
-> > >  __alloc_pages_nodemask+0x267/0x320
-> > >  pipe_write+0x1ad/0x400
-> > >  new_sync_write+0x127/0x1c0
-> > >  __kernel_write+0x4f/0xf0
-> > >  dump_emit+0x91/0xc0
-> > >  writenote+0xa0/0xc0
-> > >  elf_core_dump+0x11af/0x1430
-> > >  do_coredump+0xc65/0xee0
-> > >  ? unix_stream_sendmsg+0x37d/0x3b0
-> > >  get_signal+0x132/0x7c0
-> > >  do_signal+0x36/0x640
-> > >  ? recalc_sigpending+0x17/0x50
-> > >  exit_to_usermode_loop+0x61/0xd0
-> > >  do_syscall_64+0xd4/0x100
-> > >  entry_SYSCALL_64_after_hwframe+0x44/0xa9
-> > > 
-> > > The problem is caused by an exiting task which is associated with
-> > > an offline memcg.
-> > 
-> > Hmm, how can we have a task in an offline memcg? I thought that any
-> > existing task will prevent cgroup removal from proceeding. Is this some
-> > sort of race where the task managed to disassociate from the cgroup
-> > while there is still a binding to a memcg existing? What am I missing?
-> 
-> It's an exiting task with the PF_EXITING flag set and it's in their late stages
-> of life.
+Fixes a possible 'use after free' of kvm variable in
+kvm_vm_ioctl_create_spapr_tce, where it does a mutex_unlock(&kvm->lock)
+after a kvm_put_kvm(kvm).
 
-This is a signal delivery path AFAIU (get_signal) and the coredumping
-happens before do_exit. My understanding is that that unlinking
-happens from cgroup_exit. So either I am misreading the backtrace or
-there is some other way to leave cgroups or there is something more
-going on.
+Signed-off-by: Leonardo Bras <leonardo@linux.ibm.com>
+---
+ arch/powerpc/kvm/book3s_64_vio.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-JFTR I am not really disputing the patch but I simply do not understand
-how the problem really happened.
-
+diff --git a/arch/powerpc/kvm/book3s_64_vio.c b/arch/powerpc/kvm/book3s_64_vio.c
+index 5834db0a54c6..a402ead833b6 100644
+--- a/arch/powerpc/kvm/book3s_64_vio.c
++++ b/arch/powerpc/kvm/book3s_64_vio.c
+@@ -316,14 +316,13 @@ long kvm_vm_ioctl_create_spapr_tce(struct kvm *kvm,
+ 
+ 	if (ret >= 0)
+ 		list_add_rcu(&stt->list, &kvm->arch.spapr_tce_tables);
+-	else
+-		kvm_put_kvm(kvm);
+ 
+ 	mutex_unlock(&kvm->lock);
+ 
+ 	if (ret >= 0)
+ 		return ret;
+ 
++	kvm_put_kvm(kvm);
+ 	kfree(stt);
+  fail_acct:
+ 	account_locked_vm(current->mm, kvmppc_stt_pages(npages), false);
 -- 
-Michal Hocko
-SUSE Labs
+2.23.0
+
