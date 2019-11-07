@@ -2,176 +2,171 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-8.3 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_SANE_2 autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD075C43331
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:57:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2E12C43331
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A0725218AE
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:57:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7ED552178F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 17:58:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730788AbfKGR5h (ORCPT
+        id S1731074AbfKGR6A (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 12:57:37 -0500
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:7476 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726608AbfKGR5h (ORCPT
+        Thu, 7 Nov 2019 12:58:00 -0500
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:39881 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730722AbfKGR6A (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 12:57:37 -0500
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id xA7HoS8K123051
-        for <linux-kernel@vger.kernel.org>; Thu, 7 Nov 2019 12:57:35 -0500
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2w4np5p446-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 12:57:35 -0500
-Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
-        Thu, 7 Nov 2019 17:57:27 -0000
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Thu, 7 Nov 2019 17:57:19 -0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id xA7HvHmQ262624
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Thu, 7 Nov 2019 17:57:17 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AD5DD4C04E;
-        Thu,  7 Nov 2019 17:57:17 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 83D734C044;
-        Thu,  7 Nov 2019 17:57:16 +0000 (GMT)
-Received: from pic2.home (unknown [9.145.15.120])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Thu,  7 Nov 2019 17:57:16 +0000 (GMT)
-Subject: Re: [PATCH 03/10] powerpc: Add OPAL calls for LPC memory
- alloc/release
-To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
-Cc:     Andrew Donnellan <ajd@linux.ibm.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Vishal Verma <vishal.l.verma@intel.com>,
-        Dave Jiang <dave.jiang@intel.com>,
-        Keith Busch <keith.busch@intel.com>,
-        Ira Weiny <ira.weiny@intel.com>,
-        Anton Blanchard <anton@ozlabs.org>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vasant Hegde <hegdevasant@linux.vnet.ibm.com>,
-        Anju T Sudhakar <anju@linux.vnet.ibm.com>,
-        Hari Bathini <hbathini@linux.ibm.com>,
-        Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>,
-        =?UTF-8?Q?C=c3=a9dric_Le_Goater?= <clg@kaod.org>,
-        Allison Randal <allison@lohutok.net>,
-        Greg Kurz <groug@kaod.org>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        David Gibson <david@gibson.dropbear.id.au>,
-        Alexey Kardashevskiy <aik@ozlabs.ru>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        David Hildenbrand <david@redhat.com>,
-        Oscar Salvador <osalvador@suse.com>,
-        Michal Hocko <mhocko@suse.com>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        linux-nvdimm@lists.01.org, linux-mm@kvack.org
-References: <20191025044721.16617-1-alastair@au1.ibm.com>
- <20191025044721.16617-4-alastair@au1.ibm.com>
-From:   Frederic Barrat <fbarrat@linux.ibm.com>
-Date:   Thu, 7 Nov 2019 18:57:16 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:68.0) Gecko/20100101
- Thunderbird/68.1.1
+        Thu, 7 Nov 2019 12:58:00 -0500
+Received: from litschi.hi.pengutronix.de ([2001:67c:670:100:feaa:14ff:fe6a:8db5])
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.92)
+        (envelope-from <m.tretter@pengutronix.de>)
+        id 1iSm2b-00008c-Ap; Thu, 07 Nov 2019 18:57:53 +0100
+Date:   Thu, 7 Nov 2019 18:57:51 +0100
+From:   Michael Tretter <m.tretter@pengutronix.de>
+To:     Rajan Vaja <rajan.vaja@xilinx.com>
+Cc:     mturquette@baylibre.com, sboyd@kernel.org, michal.simek@xilinx.com,
+        jollys@xilinx.com, linux-clk@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tejas Patel <tejas.patel@xilinx.com>,
+        Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>,
+        kernel@pengutronix.de
+Subject: Re: [PATCH] clk: zynqmp: Add support for clock with
+ CLK_DIVIDER_POWER_OF_TWO flag
+Message-ID: <20191107185751.4bb873d9@litschi.hi.pengutronix.de>
+In-Reply-To: <1573116902-7240-1-git-send-email-rajan.vaja@xilinx.com>
+References: <1573116902-7240-1-git-send-email-rajan.vaja@xilinx.com>
+Organization: Pengutronix
+X-Mailer: Claws Mail 3.14.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-In-Reply-To: <20191025044721.16617-4-alastair@au1.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19110717-0020-0000-0000-000003837F8B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19110717-0021-0000-0000-000021D9B527
-Message-Id: <150de4f8-a257-4b4b-8495-73f3aa6954c0@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-11-07_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1910280000 definitions=main-1911070165
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:feaa:14ff:fe6a:8db5
+X-SA-Exim-Mail-From: m.tretter@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-Le 25/10/2019 à 06:46, Alastair D'Silva a écrit :
-> From: Alastair D'Silva <alastair@d-silva.org>
+On Thu, 07 Nov 2019 00:55:02 -0800, Rajan Vaja wrote:
+> From: Tejas Patel <tejas.patel@xilinx.com>
 > 
-> Add OPAL calls for LPC memory alloc/release
+> Existing clock divider functions is not checking for
+> base of divider. So, if any clock divider is power of 2
+> then clock rate calculation will be wrong.
 > 
-> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
-> Acked-by: Andrew Donnellan <ajd@linux.ibm.com>
+> Add support to calculate divider value for the clocks
+> with CLK_DIVIDER_POWER_OF_TWO flag.
+> 
+> Signed-off-by: Tejas Patel <tejas.patel@xilinx.com>
+> Signed-off-by: Radhey Shyam Pandey <radhey.shyam.pandey@xilinx.com>
+> Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
 > ---
-
-
-Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
-
-
-
->   arch/powerpc/include/asm/opal-api.h        | 2 ++
->   arch/powerpc/include/asm/opal.h            | 3 +++
->   arch/powerpc/platforms/powernv/opal-call.c | 2 ++
->   3 files changed, 7 insertions(+)
+>  drivers/clk/zynqmp/divider.c | 36 +++++++++++++++++++++++++++++++-----
+>  1 file changed, 31 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/powerpc/include/asm/opal-api.h b/arch/powerpc/include/asm/opal-api.h
-> index 378e3997845a..2c88c02e69ed 100644
-> --- a/arch/powerpc/include/asm/opal-api.h
-> +++ b/arch/powerpc/include/asm/opal-api.h
-> @@ -208,6 +208,8 @@
->   #define OPAL_HANDLE_HMI2			166
->   #define	OPAL_NX_COPROC_INIT			167
->   #define OPAL_XIVE_GET_VP_STATE			170
-> +#define OPAL_NPU_MEM_ALLOC			171
-> +#define OPAL_NPU_MEM_RELEASE			172
->   #define OPAL_MPIPL_UPDATE			173
->   #define OPAL_MPIPL_REGISTER_TAG			174
->   #define OPAL_MPIPL_QUERY_TAG			175
-> diff --git a/arch/powerpc/include/asm/opal.h b/arch/powerpc/include/asm/opal.h
-> index a0cf8fba4d12..4db135fb54ab 100644
-> --- a/arch/powerpc/include/asm/opal.h
-> +++ b/arch/powerpc/include/asm/opal.h
-> @@ -39,6 +39,9 @@ int64_t opal_npu_spa_clear_cache(uint64_t phb_id, uint32_t bdfn,
->   				uint64_t PE_handle);
->   int64_t opal_npu_tl_set(uint64_t phb_id, uint32_t bdfn, long cap,
->   			uint64_t rate_phys, uint32_t size);
-> +int64_t opal_npu_mem_alloc(uint64_t phb_id, uint32_t bdfn,
-> +			uint64_t size, uint64_t *bar);
-> +int64_t opal_npu_mem_release(uint64_t phb_id, uint32_t bdfn);
->   
->   int64_t opal_console_write(int64_t term_number, __be64 *length,
->   			   const uint8_t *buffer);
-> diff --git a/arch/powerpc/platforms/powernv/opal-call.c b/arch/powerpc/platforms/powernv/opal-call.c
-> index a2aa5e433ac8..27c4b93c774c 100644
-> --- a/arch/powerpc/platforms/powernv/opal-call.c
-> +++ b/arch/powerpc/platforms/powernv/opal-call.c
-> @@ -287,6 +287,8 @@ OPAL_CALL(opal_pci_set_pbcq_tunnel_bar,		OPAL_PCI_SET_PBCQ_TUNNEL_BAR);
->   OPAL_CALL(opal_sensor_read_u64,			OPAL_SENSOR_READ_U64);
->   OPAL_CALL(opal_sensor_group_enable,		OPAL_SENSOR_GROUP_ENABLE);
->   OPAL_CALL(opal_nx_coproc_init,			OPAL_NX_COPROC_INIT);
-> +OPAL_CALL(opal_npu_mem_alloc,			OPAL_NPU_MEM_ALLOC);
-> +OPAL_CALL(opal_npu_mem_release,			OPAL_NPU_MEM_RELEASE);
->   OPAL_CALL(opal_mpipl_update,			OPAL_MPIPL_UPDATE);
->   OPAL_CALL(opal_mpipl_register_tag,		OPAL_MPIPL_REGISTER_TAG);
->   OPAL_CALL(opal_mpipl_query_tag,			OPAL_MPIPL_QUERY_TAG);
-> 
+> diff --git a/drivers/clk/zynqmp/divider.c b/drivers/clk/zynqmp/divider.c
+> index d8f5b70d..ce63cf5 100644
+> --- a/drivers/clk/zynqmp/divider.c
+> +++ b/drivers/clk/zynqmp/divider.c
+> @@ -2,7 +2,7 @@
+>  /*
+>   * Zynq UltraScale+ MPSoC Divider support
+>   *
+> - *  Copyright (C) 2016-2018 Xilinx
+> + *  Copyright (C) 2016-2019 Xilinx
+>   *
+>   * Adjustable divider clock implementation
+>   */
+> @@ -44,9 +44,26 @@ struct zynqmp_clk_divider {
+>  };
+>  
+>  static inline int zynqmp_divider_get_val(unsigned long parent_rate,
+> -					 unsigned long rate)
+> +					 unsigned long rate, u16 flags)
+>  {
+> -	return DIV_ROUND_CLOSEST(parent_rate, rate);
+> +	int up, down;
+> +	unsigned long up_rate, down_rate;
+> +
+> +	if (flags & CLK_DIVIDER_POWER_OF_TWO) {
+> +		up = DIV_ROUND_UP_ULL((u64)parent_rate, rate);
+> +		down = parent_rate / rate;
 
+Maybe use DIV_ROUND_DOWN_ULL()?
+
+> +
+> +		up = __roundup_pow_of_two(up);
+> +		down = __rounddown_pow_of_two(down);
+> +
+> +		up_rate = DIV_ROUND_UP_ULL((u64)parent_rate, up);
+> +		down_rate = DIV_ROUND_UP_ULL((u64)parent_rate, down);
+> +
+> +		return (rate - up_rate) <= (down_rate - rate) ? up : down;
+
+The calculation looks correct. Maybe there could be a common helper
+with the _div_round_closest() function?
+
+> +
+> +	} else {
+> +		return DIV_ROUND_CLOSEST(parent_rate, rate);
+> +	}
+>  }
+>  
+>  /**
+> @@ -78,6 +95,9 @@ static unsigned long zynqmp_clk_divider_recalc_rate(struct clk_hw *hw,
+>  	else
+>  		value = div >> 16;
+>  
+> +	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
+> +		value = 1 << value;
+
+Not sure, but I think a small helper similar to _get_div() would help
+with the readability. Just hide the difference between the normal and
+power of two divisors behind some helper functions.
+
+Michael
+
+> +
+>  	if (!value) {
+>  		WARN(!(divider->flags & CLK_DIVIDER_ALLOW_ZERO),
+>  		     "%s: Zero divisor and CLK_DIVIDER_ALLOW_ZERO not set\n",
+> @@ -120,10 +140,13 @@ static long zynqmp_clk_divider_round_rate(struct clk_hw *hw,
+>  		else
+>  			bestdiv  = bestdiv >> 16;
+>  
+> +		if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
+> +			bestdiv = 1 << bestdiv;
+> +
+>  		return DIV_ROUND_UP_ULL((u64)*prate, bestdiv);
+>  	}
+>  
+> -	bestdiv = zynqmp_divider_get_val(*prate, rate);
+> +	bestdiv = zynqmp_divider_get_val(*prate, rate, divider->flags);
+>  
+>  	if ((clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT) && divider->is_frac)
+>  		bestdiv = rate % *prate ? 1 : bestdiv;
+> @@ -151,7 +174,7 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+>  	int ret;
+>  	const struct zynqmp_eemi_ops *eemi_ops = zynqmp_pm_get_eemi_ops();
+>  
+> -	value = zynqmp_divider_get_val(parent_rate, rate);
+> +	value = zynqmp_divider_get_val(parent_rate, rate, divider->flags);
+>  	if (div_type == TYPE_DIV1) {
+>  		div = value & 0xFFFF;
+>  		div |= 0xffff << 16;
+> @@ -160,6 +183,9 @@ static int zynqmp_clk_divider_set_rate(struct clk_hw *hw, unsigned long rate,
+>  		div |= value << 16;
+>  	}
+>  
+> +	if (divider->flags & CLK_DIVIDER_POWER_OF_TWO)
+> +		div = __ffs(div);
+> +
+>  	ret = eemi_ops->clock_setdivider(clk_id, div);
+>  
+>  	if (ret)
