@@ -2,128 +2,221 @@ Return-Path: <SRS0=fWiu=Y6=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-4.5 required=3.0 tests=DATE_IN_FUTURE_12_24,
+	DKIM_SIGNED,DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,
+	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CBAAC5DF63
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:38:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19A5DC47E49
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:39:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4B6621882
-	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:38:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D334321848
+	for <linux-kernel@archiver.kernel.org>; Wed,  6 Nov 2019 14:38:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ktGit0VF"
+	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vqnF6Rji"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732048AbfKFOiu (ORCPT
+        id S1732060AbfKFOi6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 09:38:50 -0500
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:53898 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731652AbfKFOit (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 09:38:49 -0500
-Received: by mail-wm1-f65.google.com with SMTP id x4so3728513wmi.3
-        for <linux-kernel@vger.kernel.org>; Wed, 06 Nov 2019 06:38:47 -0800 (PST)
+        Wed, 6 Nov 2019 09:38:58 -0500
+Received: from mail-eopbgr760081.outbound.protection.outlook.com ([40.107.76.81]:43360
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731665AbfKFOi5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 09:38:57 -0500
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=RdRY872VFb+0RfmVD0r1HHzi/m0jT/woCgo+2pj7VpBgkfIDOcC0Q8T54+r/E6xml2vCJEi6JELlg24EvjUr7OpJlxm8HOQSmIn3BOzj89RgcxG0lIvKWKmSQ86AdrrL368QrdDW9Xksj1iikzM3MIWKmw5WR1my5g0i6Yzv1WEbv2ke10IOkNI8nhWo+mT6b+SW+HwrZIJDEs8KamAXF6FlP/vdDeOglEuOEY6vTuTAY89fy3pEsP7je2DFAzfzSCzynTA7nNw8wWNZDLo+u/ioksTavrTKQ0nevid+/dIoNhCywgp/ktRA5lpO01Gz1RBFis13T/Bi4JwfJpC1fw==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0B/t1v2Z1NWhdEa0GLPIRGJsFm50+cqhiczf9o7Kvo4=;
+ b=h2ydmLeuQFCs2b1AKLxxKV/5s9923MlXyTnC1MpJ5ivkk1ck5Yh0ZePyoCpbKjjDMdVgeu3L2GLHu2vnKs6nRdeenSRRRFpDMbsAnRImx1IWc4eJ6gZ/AkYLJn/B55uLYtNLQs+vT3SNTsGYFKkqZYr5+RfVKeyV2mnFVtixAmY7TaAArmd32KffN35NXI0vpUKkSN2gu76dXetK7f66kcoqxbph2mPDuZEsLkNmAwq3+ERvcV0S6q9T2NoEFFIKXe2C1pjG+VuF/gOYtEiKW6O+qwYKjhqRILf2B3WdFrMh0AOaTK5IaadADXY9oN+UI7vApgAuhObLamr0Sglceg==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=none (sender ip is
+ 165.204.84.17) smtp.rcpttodomain=google.com smtp.mailfrom=amd.com;
+ dmarc=permerror action=none header.from=amd.com; dkim=none (message not
+ signed); arc=none
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0CmhjeEoOQoK9M5oulxkBYRkuF7RbofIT7XEOkOeNWE=;
-        b=ktGit0VF9Pxxc2/SjGSBp3d6X4n8cJFJ4br8gEOGqIViyC092DbDEwdKKGer70dwDc
-         oU2GKqS7sdlPU6wXLYKhTFkXnij5YQ+dz0iYFoJdw8gOtIGJAw2XqKlcNZmQW1Q3EOhv
-         CoBfrgfoq9g4PCYmo9Y6+VbZhP/PT0l7Kp+h3is+q7uYfzrrJSRO2rxN+8uBaL9l1zLp
-         7XJl1Z+UtMGW9JajovMtp5EWoTYN9zmKQ1nYptsuH5kzE/TcU/1onD2K8odPxfR1RKyo
-         tlTRURHVU0Yk4Jv31PHyU3a7qJJhoOnwegfEEH4bsesYN7JFFArT551NnzWFGEatzMop
-         h3Dw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0CmhjeEoOQoK9M5oulxkBYRkuF7RbofIT7XEOkOeNWE=;
-        b=G0GlEe6RTLPvMj+JFZbibGe+QMhfR9GKY2aj6SNCnDbwToGLTc0rF9UkwiNq1Vvko5
-         ANWOpCiZAfSx9srRVCzX1oE+M43aYV+XvzMIV5oeExFrlyUqNVyxnQ+2BeBsRQRhmCuy
-         C84dgALh7Ri8QJCBOq09utgyr8t471AqZCyrfUZLNTPZ3P1jSllAYPGx7LvVgAYSS5m2
-         HWSJOiV+Zj1WgwVjSR3uuN4PN41Pz7zQSlFR/Q1X44CPuiD5v83egXrUJ9fm5gpk5CWD
-         DrcKDC3sEg8N09NFD1sN9KITkfh05RC41MpEG6dWdlgEYaPalNSW83pqYDZENEIycxJ0
-         17Pw==
-X-Gm-Message-State: APjAAAVMEES+FeiIiqI4hSza2LsUJIItmSSw5eW2zwSRwLCfhNoxxzVi
-        0P5ChLRTfaftM4VQInqW4pVAic0a2bs8eBphG8ZK+g==
-X-Google-Smtp-Source: APXvYqy354XW0WaNEasezP+akPpMtBVn/pAmBzbclSTi01iL8mgWfF+4/y7OkaAL60YF+aXmWnd00k3RptH4Bv2MeMg=
-X-Received: by 2002:a1c:3d08:: with SMTP id k8mr2662313wma.119.1573051126981;
- Wed, 06 Nov 2019 06:38:46 -0800 (PST)
+ d=amdcloud.onmicrosoft.com; s=selector2-amdcloud-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=0B/t1v2Z1NWhdEa0GLPIRGJsFm50+cqhiczf9o7Kvo4=;
+ b=vqnF6Rji/1UDDMvmV8qWffOieyTAvs/YY7kOcIUbtFiu+iz4xZr8/nNtQHo573WuXa0BGM75Jrd4Gt8Cdn/Iu8q7LEAZMhhNQvffNc73e8yRoekTW/3c3VBecWAtQi97as0xKvwsqUYYrvzbiFgo5Qg894Q19FFI2/DatmNJYbk=
+Received: from MWHPR12CA0047.namprd12.prod.outlook.com (2603:10b6:301:2::33)
+ by CY4PR1201MB2486.namprd12.prod.outlook.com (2603:10b6:903:d6::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.20; Wed, 6 Nov
+ 2019 14:38:52 +0000
+Received: from DM3NAM03FT024.eop-NAM03.prod.protection.outlook.com
+ (2a01:111:f400:7e49::206) by MWHPR12CA0047.outlook.office365.com
+ (2603:10b6:301:2::33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.2430.22 via Frontend
+ Transport; Wed, 6 Nov 2019 14:38:52 +0000
+Authentication-Results: spf=none (sender IP is 165.204.84.17)
+ smtp.mailfrom=amd.com; google.com; dkim=none (message not signed)
+ header.d=none;google.com; dmarc=permerror action=none header.from=amd.com;
+Received-SPF: None (protection.outlook.com: amd.com does not designate
+ permitted sender hosts)
+Received: from SATLEXMB01.amd.com (165.204.84.17) by
+ DM3NAM03FT024.mail.protection.outlook.com (10.152.82.182) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.20.2430.20 via Frontend Transport; Wed, 6 Nov 2019 14:38:51 +0000
+Received: from SATLEXMB02.amd.com (10.181.40.143) by SATLEXMB01.amd.com
+ (10.181.40.142) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 6 Nov 2019
+ 08:38:51 -0600
+Received: from vishnu-All-Series.amd.com (10.180.168.240) by
+ SATLEXMB02.amd.com (10.181.40.143) with Microsoft SMTP Server id 15.1.1713.5
+ via Frontend Transport; Wed, 6 Nov 2019 08:38:40 -0600
+From:   Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>
+CC:     <Alexander.Deucher@amd.com>, <djkurtz@google.com>,
+        <Akshu.Agrawal@amd.com>,
+        Ravulapati Vishnu vardhan rao 
+        <Vishnuvardhanrao.Ravulapati@amd.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Jaroslav Kysela <perex@perex.cz>,
+        "Takashi Iwai" <tiwai@suse.com>,
+        Vijendar Mukunda <Vijendar.Mukunda@amd.com>,
+        "Maruthi Srinivas Bayyavarapu" <Maruthi.Bayyavarapu@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>,
+        Colin Ian King <colin.king@canonical.com>,
+        "Dan Carpenter" <dan.carpenter@oracle.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: [RESEND PATCH v2 7/7] ASoC: amd: Added ACP3x system resume and runtime pm ops
+Date:   Thu, 7 Nov 2019 20:06:04 +0530
+Message-ID: <1573137364-5592-8-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1573137364-5592-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
+References: <1573137364-5592-1-git-send-email-Vishnuvardhanrao.Ravulapati@amd.com>
 MIME-Version: 1.0
-References: <20191106070613.227833-1-linux@dominikbrodowski.net>
-In-Reply-To: <20191106070613.227833-1-linux@dominikbrodowski.net>
-From:   Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Date:   Wed, 6 Nov 2019 15:38:34 +0100
-Message-ID: <CAKv+Gu-SMOXK_K-Nh3=8UtB5zbmGnaSQcQSGdC+bnWzyZ4aW8g@mail.gmail.com>
-Subject: Re: [PATCH 0/2] x86, efi/random: invoke EFI_RNG_PROTOCOL in the x86
- EFI stub
-To:     Dominik Brodowski <linux@dominikbrodowski.net>
-Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Matt Fleming <matt@codeblueprint.co.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Kees Cook <keescook@chromium.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Hsin-Yi Wang <hsinyi@chromium.org>,
-        Stephen Boyd <swboyd@chromium.org>,
-        Rob Herring <robh@kernel.org>, "Theodore Ts'o" <tytso@mit.edu>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "the arch/x86 maintainers" <x86@kernel.org>,
-        linux-efi <linux-efi@vger.kernel.org>,
-        Mario Limonciello <Mario.Limonciello@dell.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:165.204.84.17;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(4636009)(376002)(346002)(396003)(39860400002)(136003)(428003)(199004)(189003)(6666004)(4326008)(1671002)(76176011)(51416003)(7696005)(86362001)(14444005)(305945005)(26005)(48376002)(109986005)(356004)(50466002)(47776003)(186003)(36756003)(70586007)(70206006)(11346002)(446003)(8936002)(478600001)(316002)(126002)(476003)(2616005)(2906002)(50226002)(426003)(53416004)(81156014)(336012)(16586007)(81166006)(5660300002)(54906003)(486006)(8676002)(266003)(32563001);DIR:OUT;SFP:1101;SCL:1;SRVR:CY4PR1201MB2486;H:SATLEXMB01.amd.com;FPR:;SPF:None;LANG:en;PTR:InfoDomainNonexistent;A:1;MX:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 6db894fe-0b41-4b1d-1ec8-08d762c70b16
+X-MS-TrafficTypeDiagnostic: CY4PR1201MB2486:
+X-Microsoft-Antispam-PRVS: <CY4PR1201MB2486C1688583DFC87AF4A6C5E7790@CY4PR1201MB2486.namprd12.prod.outlook.com>
+X-MS-Oob-TLC-OOBClassifiers: OLM:3173;
+X-Forefront-PRVS: 02135EB356
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam: BCL:0;
+X-Microsoft-Antispam-Message-Info: qq0udayBe7hoAj94WJYufJOSLp9cKtHQY9AhovbqUpf7Zua3xZ1ldtxw2TCJfdBI7UUzvsXJ+exJpNEdhkWTh0PvuAF4VrNeCRKeWdNSx6qjeXOFoorby5X0iOySB/IlKtqbRzr29FETpW2cejfuDHNUez9p9jm+T6Ul9Xrmzv2NpXIV2UVpEICgWRC1wyUGJZ8jHX7saSzbVt1ePkiKw0TuYNQV3B6v6MY2zKTzqbcE2E2fncUc1LBLB+r/CW6RRgevbd8WdrWuu5ket3fwcCvbqofFuNSfukUbs9k8kPSonqY9KBh66+0nYnUKh2Z747KjLGyCZbwC1HulwWtNgZjRNAMYRi3wFtyMCxjE/ydCR8p1hXqBrICrsZqp/owwmCSa6dDAcyoXkuFaGMty7WkpIizQQxi6Ue6/PGnAg56zkLjAkQkLFY7WkHLQznww
+X-OriginatorOrg: amd.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 06 Nov 2019 14:38:51.9366
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 6db894fe-0b41-4b1d-1ec8-08d762c70b16
+X-MS-Exchange-CrossTenant-Id: 3dd8961f-e488-4e60-8e11-a82d994e183d
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=3dd8961f-e488-4e60-8e11-a82d994e183d;Ip=[165.204.84.17];Helo=[SATLEXMB01.amd.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CY4PR1201MB2486
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 6 Nov 2019 at 08:09, Dominik Brodowski
-<linux@dominikbrodowski.net> wrote:
->
-> EFI v2.4 and later may provide for a EFI_RNG_PROTOCOL, which can be called
-> from the EFI stubs to seed the kernel entropy pool. So far, this feature has
-> only been implemented on arm/arm64. This series makes the relevant EFI
-> libstub code arch-independent and enables the feature also on x86.
->
-> Please note that this feature only works if Linux is booted as an EFI stub,
-> and that the EFI-provided randomness is not credited as entropy unless
-> RANDOM_TRUST_BOOTLOADER is set.
->
-> Thanks to Ard Biesheuvel for his hints on how to test the EFI_RNG_PROTOCOL
-> from the UEFI shell ( RngTest-X64.efi ), and especially to Mario Limonciello:
-> he gave me highly useful hints on the implementation of the EFI_RNG_PROTOCOL
-> which ultimately helped me to determine why the earlier RFC patch did not
-> work out as expected.
->
-> The patches are also available in the Git repository at:
->
->   https://git.kernel.org/pub/scm/linux/kernel/git/brodo/linux.git/ random
->
-> Dominik Brodowski (2):
->   efi/random: use arch-independent efi_call_proto()
->   x86: efi/random: Invoke EFI_RNG_PROTOCOL to seed the UEFI RNG table
->
+When system wide suspend happens, ACP will be powered off
+and when system resumes,for audio usecase to continue,
+all the runtime configuration data needs to be programmed again.
+Added resume pm call back to ACP pm ops and
+also Added runtime PM operations for ACP3x PCM platform device.
+Device will enter into D3 state when there is no activity
+on audio I2S lines.
 
-Thanks Dominik. I'll get these queued up.
+Signed-off-by: Ravulapati Vishnu vardhan rao <Vishnuvardhanrao.Ravulapati@amd.com>
+---
+ sound/soc/amd/raven/pci-acp3x.c | 47 ++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 46 insertions(+), 1 deletion(-)
 
-For others reading this, it is worth mentioning that there is an open
-source UEFI driver for the ChaosKey, which produces the EFI RNG
-protocol and can be loaded into UEFI persistently using 'efibootmgr
--r'.
+diff --git a/sound/soc/amd/raven/pci-acp3x.c b/sound/soc/amd/raven/pci-acp3x.c
+index 7727c9d..d567585 100644
+--- a/sound/soc/amd/raven/pci-acp3x.c
++++ b/sound/soc/amd/raven/pci-acp3x.c
+@@ -9,6 +9,9 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/interrupt.h>
++#include <linux/pm_runtime.h>
++#include <linux/delay.h>
++#include <sound/pcm.h>
+ 
+ #include "acp3x.h"
+ 
+@@ -247,6 +250,11 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 		}
+ 		break;
+ 	}
++	pm_runtime_set_autosuspend_delay(&pci->dev, 10000);
++	pm_runtime_use_autosuspend(&pci->dev);
++	pm_runtime_set_active(&pci->dev);
++	pm_runtime_put_noidle(&pci->dev);
++	pm_runtime_enable(&pci->dev);
+ 	return 0;
+ 
+ unmap_mmio:
+@@ -268,6 +276,39 @@ static int snd_acp3x_probe(struct pci_dev *pci,
+ 	return ret;
+ }
+ 
++static int  snd_acp3x_suspend(struct device *dev)
++{
++	int status;
++	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
++
++	status = acp3x_deinit(adata->acp3x_base);
++	if (status)
++		dev_err(dev, "ACP de-init failed\n");
++	else
++		dev_info(dev, "ACP de-initialized\n");
++
++	return 0;
++}
++static int  snd_acp3x_resume(struct device *dev)
++{
++	int status;
++	struct acp3x_dev_data *adata = dev_get_drvdata(dev);
++
++	status = acp3x_init(adata->acp3x_base);
++	if (status) {
++		dev_err(dev, "ACP init failed\n");
++		return status;
++	}
++
++	return 0;
++}
++
++static const struct dev_pm_ops acp3x_pm = {
++	.runtime_suspend = snd_acp3x_suspend,
++	.runtime_resume =  snd_acp3x_resume,
++	.resume =       snd_acp3x_resume,
++};
++
+ static void snd_acp3x_remove(struct pci_dev *pci)
+ {
+ 	int i, ret;
+@@ -283,7 +324,8 @@ static void snd_acp3x_remove(struct pci_dev *pci)
+ 	else
+ 		dev_info(&pci->dev, "ACP de-initialized\n");
+ 	iounmap(adata->acp3x_base);
+-
++	pm_runtime_disable(&pci->dev);
++	pm_runtime_get_noresume(&pci->dev);
+ 	pci_disable_msi(pci);
+ 	pci_release_regions(pci);
+ 	pci_disable_device(pci);
+@@ -302,6 +344,9 @@ static struct pci_driver acp3x_driver  = {
+ 	.id_table = snd_acp3x_ids,
+ 	.probe = snd_acp3x_probe,
+ 	.remove = snd_acp3x_remove,
++	.driver = {
++		.pm = &acp3x_pm,
++	}
+ };
+ 
+ module_pci_driver(acp3x_driver);
+-- 
+2.7.4
 
->  arch/x86/boot/compressed/eboot.c       |  3 +++
->  drivers/firmware/efi/libstub/Makefile  |  5 +++--
->  drivers/firmware/efi/libstub/efistub.h |  2 --
->  drivers/firmware/efi/libstub/random.c  | 21 ++++++++++++++++-----
->  include/linux/efi.h                    |  2 ++
->  5 files changed, 24 insertions(+), 9 deletions(-)
->
-> --
-> 2.24.0
->
