@@ -2,68 +2,100 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_HELO_NONE,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_SANE_1 autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_HELO_NONE,SPF_PASS,UNPARSEABLE_RELAY autolearn=no autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F43FFA372C
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B74FA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4072B2178F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:51:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29E7320869
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:57:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="g1odS0jD"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="eF/HmLvl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732953AbfKGBvk (ORCPT
+        id S1728152AbfKGB45 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:51:40 -0500
-Received: from vps0.lunn.ch ([185.16.172.187]:53092 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727778AbfKGBvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:51:38 -0500
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=nmKx7wji3qmcoOogImEap1jlfatkXDxtFWOPRbr3HYc=; b=g1odS0jDMvWWS3xEEFAJlFLNPm
-        jtEx6ADqv9buymCOTDNXezrh8M3U+pG39DHhXT3Ekj8vaPoWx2qT28p1yABV9VjFFVw3crUFJ4DHj
-        RXU+Fn3YpM2nBgGFdNEYZ4kVRkIafVVbIcQFF9eY5mtdigfKz6vgm5ZwhahI1S96HwaQ=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.92.2)
-        (envelope-from <andrew@lunn.ch>)
-        id 1iSWxU-0002im-K6; Thu, 07 Nov 2019 02:51:36 +0100
-Date:   Thu, 7 Nov 2019 02:51:36 +0100
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Michael Walle <michael@walle.cc>
-Cc:     linux-kernel@vger.kernel.org, devicetree@vger.kernel.org,
-        netdev@vger.kernel.org, Rob Herring <robh@kernel.org>,
-        David Miller <davem@davemloft.net>,
-        Florian Fainelli <f.fainelli@gmail.com>,
-        Simon Horman <simon.horman@netronome.com>,
-        Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: Re: [PATCH v2 2/6] dt-bindings: net: phy: Add support for AT803X
-Message-ID: <20191107015136.GC8978@lunn.ch>
-References: <20191106223617.1655-1-michael@walle.cc>
- <20191106223617.1655-3-michael@walle.cc>
+        Wed, 6 Nov 2019 20:56:57 -0500
+Received: from aserp2120.oracle.com ([141.146.126.78]:43094 "EHLO
+        aserp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727328AbfKGB45 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:56:57 -0500
+Received: from pps.filterd (aserp2120.oracle.com [127.0.0.1])
+        by aserp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71s5YH187038;
+        Thu, 7 Nov 2019 01:56:41 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2019-08-05;
+ bh=hHR5/nxvketnU54a1k1e33bJv4PJgcmLZua+X2UwC5I=;
+ b=eF/HmLvludviEdI7FYGvN0fyZo+Y58fqWFjoOYN4lACrGMPNnLKKcvTlYmCgbmlS2+MU
+ fHFGW7QlbGrnA/m/v7g6mmk/V31asBxRb61FHsTZUzMNlPTvPVUrRQlH5jKZsvKJMG3z
+ wJDdBmR3FJTkVGkszvM72/aiRUaNFOZRtuw9L3fiCEVgLZv0m4ZF1BA0OI+mlxz+MwzN
+ MxWPrXo6QfyWFG+EqVlDB1OF/P54jZ7cKV7//fhikgUbzhSNeEKJVI2cHWm47GRh37c+
+ hKpI8TmivpqiIrytuWVayss+yZdUdkkgDOtr5gu2ADeT8WMxmAN7r8fSwlNGQrhu8/f5 uQ== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2120.oracle.com with ESMTP id 2w41w0tsjq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 01:56:41 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xA71s3wG026240;
+        Thu, 7 Nov 2019 01:56:40 GMT
+Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
+        by userp3030.oracle.com with ESMTP id 2w41w8g75p-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Thu, 07 Nov 2019 01:56:40 +0000
+Received: from abhmp0022.oracle.com (abhmp0022.oracle.com [141.146.116.28])
+        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id xA71ub1N025231;
+        Thu, 7 Nov 2019 01:56:37 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Wed, 06 Nov 2019 17:56:37 -0800
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Damien Le Moal <damien.lemoal@wdc.com>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: Re: linux-next: manual merge of the scsi-fixes tree with Linus' tree
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20191106082239.5c4d139c@canb.auug.org.au>
+Date:   Wed, 06 Nov 2019 20:56:34 -0500
+In-Reply-To: <20191106082239.5c4d139c@canb.auug.org.au> (Stephen Rothwell's
+        message of "Wed, 6 Nov 2019 08:22:39 +1100")
+Message-ID: <yq1mud8zbxp.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20191106223617.1655-3-michael@walle.cc>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=989
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1910280000 definitions=main-1911070018
+X-Proofpoint-Virus-Version: vendor=nai engine=6000 definitions=9433 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1910280000
+ definitions=main-1911070018
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Nov 06, 2019 at 11:36:13PM +0100, Michael Walle wrote:
-> Document the Atheros AR803x PHY bindings.
-> 
-> Signed-off-by: Michael Walle <michael@walle.cc>
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Reviewed-by: Andrew Lunn <andrew@lunn.ch>
+Stephen,
 
-    Andrew
+[Looks like this mail didn't go out last night]
+
+> 8437bb81853e claims to fix d81e9d494354, however the latter is not an
+> ancestor of the former ...
+
+Should be fixed now. d81e9d494354 was part of a series that went through
+Jens' tree post -rc1.
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
