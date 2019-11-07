@@ -2,118 +2,96 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_HELO_NONE,
+	SPF_PASS autolearn=no autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8911EFC6196
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDD5AFA372C
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 58C8C21848
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 10E542187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 01:13:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=alliedtelesis.co.nz header.i=@alliedtelesis.co.nz header.b="q1dvCrlD"
+	dkim=pass (2048-bit key) header.d=redchan.it header.i=@redchan.it header.b="Rgj7kSek"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732816AbfKGBNC (ORCPT
+        id S1732912AbfKGBNa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 6 Nov 2019 20:13:02 -0500
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20]:48992 "EHLO
-        gate2.alliedtelesis.co.nz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727393AbfKGBNB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 6 Nov 2019 20:13:01 -0500
-Received: from mmarshal3.atlnz.lc (mmarshal3.atlnz.lc [10.32.18.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (Client did not present a certificate)
-        by gate2.alliedtelesis.co.nz (Postfix) with ESMTPS id 3CA908365A;
-        Thu,  7 Nov 2019 14:12:56 +1300 (NZDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alliedtelesis.co.nz;
-        s=mail181024; t=1573089176;
-        bh=BRGEYlyoHZxHSnXUdYbHANXyj64ZkbYo9cpJq3/Hmcs=;
-        h=From:To:Cc:Subject:Date;
-        b=q1dvCrlDc9Tclr+trmoR0TahhRju1SeYal0jv5KCqXXT+PaGDXZrVe01gQsicEy4e
-         44LY2myFUIImDyHMeMi0uEy+HN3zs39ZD6KiJUienQpork3lPsa6mrQX7fbfp/mpS2
-         Z1H+sI8UR42dBVZYh7eEuDZcGr117dkgajptclnTaL3kry6XTIHi35e1gleNicGD9h
-         0++AXdyjdWe+yJgwOg0dMYhlSirvnzbDo0cYfBCijSEFvmLj41iRaj9VTilhjE0Qmb
-         aBdcN/4bsTZ0djEvqRKi1UPc8rhvsUzXGCxIcTY0Q0r3ZHif+vXkk1o74vq2tWbMKe
-         P6vqHsu2mv0TA==
-Received: from smtp (Not Verified[10.32.16.33]) by mmarshal3.atlnz.lc with Trustwave SEG (v7,5,8,10121)
-        id <B5dc36f950000>; Thu, 07 Nov 2019 14:12:56 +1300
-Received: from chrisp-dl.ws.atlnz.lc (chrisp-dl.ws.atlnz.lc [10.33.22.20])
-        by smtp (Postfix) with ESMTP id 9A15213EEEB;
-        Thu,  7 Nov 2019 14:12:52 +1300 (NZDT)
-Received: by chrisp-dl.ws.atlnz.lc (Postfix, from userid 1030)
-        id F3EAC28005F; Thu,  7 Nov 2019 14:12:52 +1300 (NZDT)
-From:   Chris Packham <chris.packham@alliedtelesis.co.nz>
-To:     a.zummo@towertech.it, alexandre.belloni@bootlin.com
-Cc:     linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        John Collis <john.collis@alliedtelesis.co.nz>,
-        Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] rtc: ds1307: check for oscillator fault on ds1388
-Date:   Thu,  7 Nov 2019 14:12:45 +1300
-Message-Id: <20191107011245.26796-1-chris.packham@alliedtelesis.co.nz>
-X-Mailer: git-send-email 2.24.0
+        Wed, 6 Nov 2019 20:13:30 -0500
+Received: from mx1.cock.li ([185.10.68.5]:51649 "EHLO cock.li"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732830AbfKGBNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 6 Nov 2019 20:13:30 -0500
 MIME-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
-x-atlnz-ls: pat
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=redchan.it; s=mail;
+        t=1573089207; bh=MCFCyZFA+R/grFl5Y2rE92Eb8Uri540v+janPTouvX8=;
+        h=Date:From:To:Subject:In-Reply-To:References:From;
+        b=Rgj7kSekxjbhYs49nfHAd+vm8lt5Q/SpBWnXHXXlyr/fUcwCL6yTmxJR6cdX9TTIr
+         8+Cf6vEdQGrWEdLnfFhZ6UIoIiXRLLDXgc2et52+G5Zo5QUcqJFb869nQ59LH0Ob/Y
+         kR4UGbPEv6+XcqCcajfsPwUwCJSWWF7l7TuDfxBO1n0JBYWgygceXmp7EbXhL9kXpE
+         bZ4XCc34wipvnvT0fm+AA8BEy9mH/HaplG9q6O3gz1Q5qk/DBbbCqmIXkfu5eLxMwP
+         q1AwSP2jDjJ6cjf2HohhWmX37zV+O/bhFuSyXKvYMGo/lwXh2M9BETlKcTuMOXUgqn
+         AcegDgQEnOCeA==
+Content-Type: text/plain; charset=UTF-8;
+ format=flowed
+Content-Transfer-Encoding: 8bit
+Date:   Thu, 07 Nov 2019 01:13:27 +0000
+From:   gameonlinux@redchan.it
+To:     linux-kernel@vger.kernel.org
+Subject: Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the
+ blobs (compile time option). - Why the [edits]?
+In-Reply-To: <2107461.UNNuzpZhlB@pc-713>
+References: <b1b6ab4e31856450d82afccaba587b0f@redchan.it>
+ <30253120.XGK1vlv84B@pc-713> <8f3618bbab5e5c354b68396dfea2e3b8@redchan.it>
+ <2107461.UNNuzpZhlB@pc-713>
+Message-ID: <9ba69dffb684e181a997a5a91dcd6ae5@redchan.it>
+X-Sender: gameonlinux@redchan.it
+User-Agent: Roundcube Webmail/1.3.6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Ensure that the oscillator is running and check the OSF bit for the
-ds1388 variant. The FLAG and CONTROL registers are at a different
-location to the other supported RTCs so this requires an extra case in
-the existing switch statement.
+I study hebrew, paelo-hebrew, greek, latin, QuakeC, C, Perl, PHP, 
+Python, Java (sorry), Bash, and occasionally sanskrit, for etymological 
+reasons.
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
- drivers/rtc/rtc-ds1307.c | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Devarim (5th law book of Torah) allows men to marry (girl) children 
+(na'ar, padia, puella (hebrew, greek, latin: MT, LXX, Vulgate)) Ch 22, v 
+28.
 
-diff --git a/drivers/rtc/rtc-ds1307.c b/drivers/rtc/rtc-ds1307.c
-index 1f7e8aefc1eb..865c06347d0a 100644
---- a/drivers/rtc/rtc-ds1307.c
-+++ b/drivers/rtc/rtc-ds1307.c
-@@ -101,6 +101,10 @@ enum ds_type {
- #	define DS1337_BIT_A2I		0x02
- #	define DS1337_BIT_A1I		0x01
- #define DS1339_REG_ALARM1_SECS	0x07
-+#define DS1388_REG_FLAG		0x0b
-+#	define DS1388_BIT_OSF		0x80
-+#define DS1388_REG_CONTROL	0x0c
-+#	define DS1388_BIT_nEOSC		0x80
-=20
- #define DS13XX_TRICKLE_CHARGER_MAGIC	0xa0
-=20
-@@ -1688,6 +1692,26 @@ static int ds1307_probe(struct i2c_client *client,
- 		}
- 		break;
-=20
-+	case ds_1388:
-+		err =3D regmap_bulk_read(ds1307->regmap, DS1388_REG_FLAG,
-+				       regs, 2);
-+		if (err) {
-+			dev_dbg(ds1307->dev, "read error %d\n", err);
-+			goto exit;
-+		}
-+
-+		if (regs[1] & DS1388_BIT_nEOSC) {
-+			regmap_write(ds1307->regmap, DS1388_REG_CONTROL,
-+				     regs[1] & ~DS1388_BIT_nEOSC);
-+		}
-+
-+		if (regs[0] & DS1388_BIT_OSF) {
-+			regmap_write(ds1307->regmap, DS1388_REG_FLAG,
-+				     regs[0]  & ~DS1388_BIT_OSF);
-+			dev_warn(ds1307->dev, "SET TIME!\n");
-+		}
-+		break;
-+
- 	case rx_8025:
- 		err =3D regmap_bulk_read(ds1307->regmap,
- 				       RX8025_REG_CTRL1 << 4 | 0x08, regs, 2);
---=20
-2.24.0
+Bukari book 5 allows child brides in Sunni Islam (Ashia was a child when 
+married to Muhammed)
 
+The vedic traditions damn a father who fails to marry off his girl child 
+by 9 or 12.
+
+When you send me an email with the subject line:
+> Re: Coreboot vs Libreboot - GNU: Please use Coreboot without the blobs 
+> (compile time option). - Why the [edits]?
+You are surprised when it goes back to the mailing list?
+
+Are you just angry that I showed how uneducated you are?
+Remember: I'm Both a programmer, and a lawyer.
+Study is what I do.
+
+In law we do not flap our gums like the white cattle do, so I do not 
+understand what you mean by "speak". I am eternally silent: I write and 
+read, all day.
+
+
+
+On 2019-11-07 00:12, Alexandre François Garreau wrote:
+> Le jeudi 7 novembre 2019 01:10:57 CET, vous avez écrit :
+>> > I’m pretty much sure the old religions, especially some popular
+>> > branches of
+>> > Islam and Christianism condemn what you say about women.
+>> 
+>> You're wrong.
+> 
+> Not reading anymore.  You brought publicly what I said privately.  
+> That’s
+> enough to close any kind of conversation.
+> 
+> And you still didn’t say me where were you from.  What languages do you 
+> speak,
+> beside english, btw?
