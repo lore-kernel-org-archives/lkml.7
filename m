@@ -2,153 +2,132 @@ Return-Path: <SRS0=GkzU=Y7=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_HELO_NONE,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-5.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_HELO_NONE,SPF_PASS,USER_AGENT_SANE_1 autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A53AC5DF60
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:41:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E4F5FC6195
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:43:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E6C952187F
-	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:41:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C86D2187F
+	for <linux-kernel@archiver.kernel.org>; Thu,  7 Nov 2019 12:43:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Q7mof4I7"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V/nFimh8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2388640AbfKGMlp (ORCPT
+        id S2388656AbfKGMny (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Thu, 7 Nov 2019 07:41:45 -0500
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:33107 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726873AbfKGMlp (ORCPT
+        Thu, 7 Nov 2019 07:43:54 -0500
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]:24620 "EHLO
+        us-smtp-1.mimecast.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1733250AbfKGMnx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Thu, 7 Nov 2019 07:41:45 -0500
-Received: by mail-lj1-f195.google.com with SMTP id t5so2127370ljk.0
-        for <linux-kernel@vger.kernel.org>; Thu, 07 Nov 2019 04:41:44 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=e2XfEnWtfgJ6guYxPo+ALFnkJVTOUcEM3sbl6pL7pOE=;
-        b=Q7mof4I7FOaxy3d+UFM0BB9pfgpIP3AyAFwHi9KEOqPChO4Kqi8JBZZTu2iAj3OvDj
-         HFBY+cKHBFOasbUFe4BIkNtfwOu3bzZDaslcwoZBTVpYTREHHpK1OM8rvRBg/TWlAkke
-         GV5I1pIEljfinoxgo9SFFi+9rG9squV334ktjUTClh6ieeu/gOicpnrlP6lqgY0PDegS
-         B9b3YfFvIiMA7Sszif6u/upfutt7Ldu+vLiV9D5urpTQbX+6jO8ZTNzENlt87SNIDKsj
-         edhWy1BXJS5xMt9GZ4iYjxfWd8wi7YTin0/oyHqxOdlMfnfkDZkwxX1IaoF96oD/69Gg
-         VWEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=e2XfEnWtfgJ6guYxPo+ALFnkJVTOUcEM3sbl6pL7pOE=;
-        b=sEerY5qa5cknQ4eXTMdNIuVjbaS3Ka96Hc9s0ksmn4CdjXA3ALKEd/RX2EBhPkiCbO
-         tlDS6GPYLjNBGZ5mD+jW7+jJJtPYmQCsJ3MECdj67Ld7KZapoL24zvZ37JpttWbLo4OR
-         cT/S1gkMe2FTUe7VP2noKXoSpI69MSSR64+suL8c3hY6dVunlLjKBuJvh6A+cDpOzmC9
-         6NJ8UI/abkbRRRgTztUEc29dCdiBBewVjd5CSEL35jRDmUaGIYVpWwXhlhTC9/LO2Etd
-         ZeK2kR2CkoCCs2fw9SNJGq28KXpnhp0pyK0CFxRhjlb0apGaNZsr7aksHe5rKFy8SJT7
-         YJfw==
-X-Gm-Message-State: APjAAAW3a96AKbodAHKbpuSst+B9BRuQZU++FkoGR9mmWrvVCZX/Eoe4
-        wn3oBXRV4/UFdMhLjr/8K0wmNY/elgAYrAzdJE3f8g==
-X-Google-Smtp-Source: APXvYqzQsGf3lRKhF5F/h8hDWqVsPGYawSImG2ui3D0iu+FOTegCaudNUxxMLoUqzshJaX1Eea9gOiNNjlB92kwgNlk=
-X-Received: by 2002:a2e:898a:: with SMTP id c10mr2253609lji.177.1573130503712;
- Thu, 07 Nov 2019 04:41:43 -0800 (PST)
+        Thu, 7 Nov 2019 07:43:53 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+        s=mimecast20190719; t=1573130632;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:content-transfer-encoding:
+         in-reply-to:in-reply-to:references:references;
+        bh=pATjVuxpgA+rUzNn2lzZ9Qgz3lzYzBUuXos2KOBhUA8=;
+        b=V/nFimh8jiR45m70yKJXar3TIbl+K8V+IjUOKa+Ct/GANAshtNranAnmL2N8+hEUIBmX8U
+        TX/JuEh53syYtY+5H4QzBFeFX1f3rEbT+QlO5IboW+ElnAsMZR2dpg6v3ewAI+8uXzkxhB
+        9p4c+er9tDwi3aBMtvuQXgVMQAsOs0g=
+Received: from mimecast-mx01.redhat.com (mimecast-mx01.redhat.com
+ [209.132.183.4]) (Using TLS) by relay.mimecast.com with ESMTP id
+ us-mta-255-8LDROsBLN-2gMmnotsVoag-1; Thu, 07 Nov 2019 07:43:49 -0500
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 1CEED477;
+        Thu,  7 Nov 2019 12:43:45 +0000 (UTC)
+Received: from [10.72.12.21] (ovpn-12-21.pek2.redhat.com [10.72.12.21])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A587D608AC;
+        Thu,  7 Nov 2019 12:43:31 +0000 (UTC)
+Subject: Re: [PATCH V10 6/6] docs: sample driver to demonstrate how to
+ implement virtio-mdev framework
+To:     "Michael S. Tsirkin" <mst@redhat.com>
+Cc:     kvm@vger.kernel.org, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org,
+        intel-gvt-dev@lists.freedesktop.org, kwankhede@nvidia.com,
+        alex.williamson@redhat.com, tiwei.bie@intel.com,
+        virtualization@lists.linux-foundation.org, netdev@vger.kernel.org,
+        cohuck@redhat.com, maxime.coquelin@redhat.com,
+        cunming.liang@intel.com, zhihong.wang@intel.com,
+        rob.miller@broadcom.com, xiao.w.wang@intel.com,
+        haotian.wang@sifive.com, zhenyuw@linux.intel.com,
+        zhi.a.wang@intel.com, jani.nikula@linux.intel.com,
+        joonas.lahtinen@linux.intel.com, rodrigo.vivi@intel.com,
+        airlied@linux.ie, daniel@ffwll.ch, farman@linux.ibm.com,
+        pasic@linux.ibm.com, sebott@linux.ibm.com, oberpar@linux.ibm.com,
+        heiko.carstens@de.ibm.com, gor@linux.ibm.com,
+        borntraeger@de.ibm.com, akrowiak@linux.ibm.com,
+        freude@linux.ibm.com, lingshan.zhu@intel.com, idos@mellanox.com,
+        eperezma@redhat.com, lulu@redhat.com, parav@mellanox.com,
+        christophe.de.dinechin@gmail.com, kevin.tian@intel.com,
+        stefanha@redhat.com
+References: <20191106133531.693-1-jasowang@redhat.com>
+ <20191106133531.693-7-jasowang@redhat.com>
+ <20191107040700-mutt-send-email-mst@kernel.org>
+ <bd2f7796-8d88-0eb3-b55b-3ec062b186b7@redhat.com>
+ <20191107061942-mutt-send-email-mst@kernel.org>
+From:   Jason Wang <jasowang@redhat.com>
+Message-ID: <d09229bc-c3e4-8d4b-c28f-565fe150ced2@redhat.com>
+Date:   Thu, 7 Nov 2019 20:43:29 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.8.0
 MIME-Version: 1.0
-References: <1572527274-21925-1-git-send-email-sumit.garg@linaro.org> <20191107110603.GA8790@jax>
-In-Reply-To: <20191107110603.GA8790@jax>
-From:   Sumit Garg <sumit.garg@linaro.org>
-Date:   Thu, 7 Nov 2019 18:11:32 +0530
-Message-ID: <CAFA6WYMuHqNZTtoda=P4-pweNOKXw_TLKNcBa-XuR5yBV3uRDw@mail.gmail.com>
-Subject: Re: [PATCH] tee: optee: Fix dynamic shm pool allocations
-To:     Jens Wiklander <jens.wiklander@linaro.org>
-Cc:     Volodymyr Babchuk <Volodymyr_Babchuk@epam.com>,
-        "tee-dev @ lists . linaro . org" <tee-dev@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        etienne.carriere@linaro.org
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20191107061942-mutt-send-email-mst@kernel.org>
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-MC-Unique: 8LDROsBLN-2gMmnotsVoag-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jens,
 
-On Thu, 7 Nov 2019 at 16:36, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+On 2019/11/7 =E4=B8=8B=E5=8D=887:21, Michael S. Tsirkin wrote:
+> On Thu, Nov 07, 2019 at 06:18:45PM +0800, Jason Wang wrote:
+>> On 2019/11/7 =E4=B8=8B=E5=8D=885:08, Michael S. Tsirkin wrote:
+>>> On Wed, Nov 06, 2019 at 09:35:31PM +0800, Jason Wang wrote:
+>>>> This sample driver creates mdev device that simulate virtio net device
+>>>> over virtio mdev transport. The device is implemented through vringh
+>>>> and workqueue. A device specific dma ops is to make sure HVA is used
+>>>> directly as the IOVA. This should be sufficient for kernel virtio
+>>>> driver to work.
+>>>>
+>>>> Only 'virtio' type is supported right now. I plan to add 'vhost' type
+>>>> on top which requires some virtual IOMMU implemented in this sample
+>>>> driver.
+>>>>
+>>>> Acked-by: Cornelia Huck<cohuck@redhat.com>
+>>>> Signed-off-by: Jason Wang<jasowang@redhat.com>
+>>> I'd prefer it that we call this something else, e.g.
+>>> mvnet-loopback. Just so people don't expect a fully
+>>> functional device somehow. Can be renamed when applying?
+>> Actually, I plan to extend it as another standard network interface for
+>> kernel. It could be either a standalone pseudo device or a stack device.
+>> Does this sounds good to you?
+>>
+>> Thanks
+> That's a big change in an interface so it's a good reason
+> to rename the driver at that point right?
+> Oherwise users of an old kernel would expect a stacked driver
+> and get a loopback instead.
 >
-> Hi Sumit,
->
-> On Thu, Oct 31, 2019 at 06:37:54PM +0530, Sumit Garg wrote:
-> > In case of dynamic shared memory pool, kernel memory allocated using
-> > dmabuf_mgr pool needs to be registered with OP-TEE prior to its usage
-> > during optee_open_session() or optee_invoke_func().
-> >
-> > So fix dmabuf_mgr pool allocations via an additional call to
-> > optee_shm_register().
-> >
-> > Fixes: 9733b072a12a ("optee: allow to work without static shared memory")
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
->
-> Looks good, I'm picking this up. Etienne told me has tested this on some
-> of his hardware so I'll add:
-> Tested-by: Etienne Carriere <etienne.carriere@linaro.org>
->
+> Or did I miss something?
 
-Thanks for picking this up.
 
->
-> > ---
-> >
-> > Depends on patch: https://lkml.org/lkml/2019/7/30/506 that adds support
-> > to allow registration of kernel buffers with OP-TEE.
+My understanding is that it was a sample driver in /doc. It should not=20
+be used in production environment. Otherwise we need to move it to=20
+driver/virtio.
 
-You also need to pick up the dependency patch too. The latest v3 of
-this patch is here [1] although its unchanged from v2. Also, If you
-pick that up I will drop it from future revisions of Trusted Keys
-patchset [2].
+But if you insist, I can post a V11.
 
-[1] https://lkml.org/lkml/2019/10/31/431
-[2] https://lkml.org/lkml/2019/10/31/430
+Thanks
 
--Sumit
-
-> >
-> >  drivers/tee/optee/shm_pool.c | 12 +++++++++++-
-> >  1 file changed, 11 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/tee/optee/shm_pool.c b/drivers/tee/optee/shm_pool.c
-> > index de1d9b8..0332a53 100644
-> > --- a/drivers/tee/optee/shm_pool.c
-> > +++ b/drivers/tee/optee/shm_pool.c
-> > @@ -17,6 +17,7 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
-> >  {
-> >       unsigned int order = get_order(size);
-> >       struct page *page;
-> > +     int rc = 0;
-> >
-> >       page = alloc_pages(GFP_KERNEL | __GFP_ZERO, order);
-> >       if (!page)
-> > @@ -26,12 +27,21 @@ static int pool_op_alloc(struct tee_shm_pool_mgr *poolm,
-> >       shm->paddr = page_to_phys(page);
-> >       shm->size = PAGE_SIZE << order;
-> >
-> > -     return 0;
-> > +     if (shm->flags & TEE_SHM_DMA_BUF) {
-> > +             shm->flags |= TEE_SHM_REGISTER;
-> > +             rc = optee_shm_register(shm->ctx, shm, &page, 1 << order,
-> > +                                     (unsigned long)shm->kaddr);
-> > +     }
-> > +
-> > +     return rc;
-> >  }
-> >
-> >  static void pool_op_free(struct tee_shm_pool_mgr *poolm,
-> >                        struct tee_shm *shm)
-> >  {
-> > +     if (shm->flags & TEE_SHM_DMA_BUF)
-> > +             optee_shm_unregister(shm->ctx, shm);
-> > +
-> >       free_pages((unsigned long)shm->kaddr, get_order(shm->size));
-> >       shm->kaddr = NULL;
-> >  }
-> > --
-> > 2.7.4
-> >
